@@ -13,6 +13,8 @@ body {
 	text-align: center;
 	padding: 0 5px 2px 5px;
 	word-wrap: break-word;
+	-khtml-line-break: after-white-space;
+	-khtml-nbsp-mode: space;
 }
 
 .error:before {
@@ -35,6 +37,8 @@ body {
 
 .message {
 	word-wrap: break-word;
+	-khtml-line-break: after-white-space;
+	-khtml-nbsp-mode: space;
 }
 
 .member {

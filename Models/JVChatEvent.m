@@ -20,6 +20,9 @@
 	_transcript = nil; // weak reference
 	_node = NULL;
 
+	if( _doc ) xmlFreeDoc( _doc );
+	_doc = NULL;
+
 	[super dealloc];
 }
 
@@ -109,99 +112,6 @@
 #pragma mark -
 
 - (void *) node {
-	return _node;
-}
-
-- (void) _setNode:(xmlNode *) node {
-	_node = node;
-}
-
-#pragma mark -
-
-- (JVChatTranscript *) transcript {
-	return _transcript;
-}
-
-- (NSString *) eventIdentifier {
-	return _eventIdentifier;
-}
-
-#pragma mark -
-
-- (NSDate *) date {
-	[self loadSmall];
-	return _date;
-}
-
-#pragma mark -
-
-- (NSString *) name {
-	[self loadSmall];
-	return _name;
-}
-
-#pragma mark -
-
-- (NSTextStorage *) message {
-	[self loadMessage];
-	return _message;
-}
-
-- (NSString *) messageAsPlainText {
-	return [[self message] string];
-}
-
-- (NSString *) messageAsHTML {
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
-	return [[self message] HTMLFormatWithOptions:options];
-}
-
-#pragma mark -
-
-- (NSDictionary *) attributes {
-	[self loadAttributes];
-	return _attributes;
-}
-@end
-
-#pragma mark -
-
-@implementation JVMutableChatEvent
-+ (id) chatEventWithName:(NSString *) name andMessage:(id) message {
-	return [[[self alloc] initWithName:name andMessage:message] autorelease];
-}
-
-#pragma mark -
-
-- (id) init {
-	if( ( self = [super init] ) ) _doc = NULL;
-	return self;
-}
-
-- (id) initWithName:(NSString *) name andMessage:(id) message {
-	if( ( self = [self init] ) ) {
-		_loadedMessage = YES;
-		_loadedAttributes = YES;
-		_loadedSmall = YES;
-		[self setDate:[NSDate date]];
-		[self setName:name];
-		[self setMessage:message];
-		[self setEventIdentifier:[NSString locallyUniqueString]];
-	}
-
-	return self;
-}
-
-- (void) dealloc {
-	if( _doc ) xmlFreeDoc( _doc );
-	_doc = NULL;
-
-	[super dealloc];
-}
-
-#pragma mark -
-
-- (void *) node {
 	if( ! _node ) {
 		if( _doc ) xmlFreeDoc( _doc );
 		_doc = xmlNewDoc( (xmlChar *) "1.0" );
@@ -270,7 +180,7 @@
 	return _node;
 }
 
-- (void) setNode:(xmlNode *) node {
+- (void) _setNode:(xmlNode *) node {
 	if( _doc ) {
 		xmlFreeDoc( _doc );
 		_doc = NULL;
@@ -281,14 +191,88 @@
 
 #pragma mark -
 
+- (JVChatTranscript *) transcript {
+	return _transcript;
+}
+
+- (NSString *) eventIdentifier {
+	return _eventIdentifier;
+}
+
+#pragma mark -
+
+- (NSDate *) date {
+	[self loadSmall];
+	return _date;
+}
+
+- (NSString *) name {
+	[self loadSmall];
+	return _name;
+}
+
+#pragma mark -
+
+- (NSTextStorage *) message {
+	[self loadMessage];
+	return _message;
+}
+
+- (NSString *) messageAsPlainText {
+	return [[self message] string];
+}
+
+- (NSString *) messageAsHTML {
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	return [[self message] HTMLFormatWithOptions:options];
+}
+
+#pragma mark -
+
+- (NSDictionary *) attributes {
+	[self loadAttributes];
+	return _attributes;
+}
+@end
+
+#pragma mark -
+
+@implementation JVMutableChatEvent
++ (id) chatEventWithName:(NSString *) name andMessage:(id) message {
+	return [[[self alloc] initWithName:name andMessage:message] autorelease];
+}
+
+#pragma mark -
+
+- (id) init {
+	if( ( self = [super init] ) ) _doc = NULL;
+	return self;
+}
+
+- (id) initWithName:(NSString *) name andMessage:(id) message {
+	if( ( self = [self init] ) ) {
+		_loadedMessage = YES;
+		_loadedAttributes = YES;
+		_loadedSmall = YES;
+		[self setDate:[NSDate date]];
+		[self setName:name];
+		[self setMessage:message];
+		[self setEventIdentifier:[NSString locallyUniqueString]];
+	}
+
+	return self;
+}
+
+#pragma mark -
+
 - (void) setDate:(NSDate *) date {
-	[self setNode:NULL];
+	[self _setNode:NULL];
 	[_date autorelease];
 	_date = [date copyWithZone:[self zone]];
 }
 
 - (void) setName:(NSString *) name {
-	[self setNode:NULL];
+	[self _setNode:NULL];
 	[_name autorelease];
 	_name = [name copyWithZone:[self zone]];
 }
@@ -296,7 +280,7 @@
 #pragma mark -
 
 - (void) setMessage:(id) message {
-	[self setNode:NULL];
+	[self _setNode:NULL];
 	if( ! _message ) {
 		if( [message isKindOfClass:[NSTextStorage class]] ) _message = [message retain];
 		else if( [message isKindOfClass:[NSAttributedString class]] ) _message = [[NSTextStorage alloc] initWithAttributedString:message];
@@ -320,7 +304,7 @@
 #pragma mark -
 
 - (void) setAttributes:(NSDictionary *) attributes {
-	[self setNode:NULL];
+	[self _setNode:NULL];
 	[_attributes autorelease];
 	_attributes = [attributes copyWithZone:[self zone]];
 }
@@ -328,7 +312,7 @@
 #pragma mark -
 
 - (void) setEventIdentifier:(NSString *) identifier {
-	[self setNode:NULL];
+	[self _setNode:NULL];
 	[_eventIdentifier autorelease];
 	_eventIdentifier = [identifier copyWithZone:[self zone]];
 }

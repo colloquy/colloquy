@@ -130,16 +130,83 @@
 	_senderClass = nil;
 	_senderBuddyIdentifier = nil;
 
+	if( _doc ) xmlFreeDoc( _doc );
+	_doc = NULL;
+
 	[super dealloc];
 }
 
 #pragma mark -
 
 - (void *) node {
+	if( ! _node ) {
+		if( _doc ) xmlFreeDoc( _doc );
+		_doc = xmlNewDoc( (xmlChar *) "1.0" );
+
+		xmlNodePtr child = NULL;
+		xmlNodePtr root = xmlNewNode( NULL, (xmlChar *) "envelope" );
+		xmlDocSetRootElement( _doc, root );
+
+		if( _source ) xmlSetProp( root, (xmlChar *) "source", (xmlChar *) [[[self source] absoluteString] UTF8String] );
+
+		id sender = nil;
+		if( [self respondsToSelector:@selector( sender )] )
+			sender = [self performSelector:@selector( sender )];
+
+		if( sender && [sender respondsToSelector:@selector( xmlDescriptionWithTagName: )] ) {
+			const char *sendDesc = [(NSString *)[sender performSelector:@selector( xmlDescriptionWithTagName: ) withObject:@"sender"] UTF8String];
+
+			if( sendDesc ) {
+				xmlDocPtr tempDoc = xmlParseMemory( sendDesc, strlen( sendDesc ) );
+				if( ! tempDoc ) return NULL; // somthing bad with the message contents
+
+				child = xmlDocCopyNode( xmlDocGetRootElement( tempDoc ), _doc, 1 );
+				xmlAddChild( root, child );
+				xmlFreeDoc( tempDoc );
+			}
+		} else {
+			child = xmlNewTextChild( root, NULL, (xmlChar *) "sender", ( [self senderName] ? (xmlChar *) [[self senderName] UTF8String] : @"" ) );
+			if( [self senderIsLocalUser] ) xmlSetProp( child, (xmlChar *) "self", (xmlChar *) "yes" );
+			if( [self senderNickname] && ! [[self senderName] isEqualToString:[self senderNickname]] )
+				xmlSetProp( child, (xmlChar *) "nickname", (xmlChar *) [[self senderNickname] UTF8String] );
+			if( [self senderHostmask] )
+				xmlSetProp( child, (xmlChar *) "hostmask", (xmlChar *) [[self senderNickname] UTF8String] );
+			if( [self senderIdentifier] )
+				xmlSetProp( child, (xmlChar *) "identifier", (xmlChar *) [[self senderIdentifier] UTF8String] );
+			if( [self senderClass] )
+				xmlSetProp( child, (xmlChar *) "class", (xmlChar *) [[self senderClass] UTF8String] );
+			if( [self senderBuddyIdentifier] && ! [self senderIsLocalUser] )
+				xmlSetProp( child, (xmlChar *) "buddy", (xmlChar *) [[self senderBuddyIdentifier] UTF8String] );
+		}
+
+		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+		NSString *htmlMessage = ( [self body] ? [[self body] HTMLFormatWithOptions:options] : @"" );
+		const char *msgStr = [[NSString stringWithFormat:@"<message>%@</message>", [htmlMessage stringByStrippingIllegalXMLCharacters]] UTF8String];
+		xmlDocPtr msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
+		if( ! msgDoc ) return NULL; // somthing bad with the message contents
+
+		_node = child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), _doc, 1 );
+		xmlSetProp( child, (xmlChar *) "id", (xmlChar *) [[self messageIdentifier] UTF8String] );
+		xmlSetProp( child, (xmlChar *) "received", (xmlChar *) [[[self date] description] UTF8String] );
+		if( [self isAction] ) xmlSetProp( child, (xmlChar *) "action", (xmlChar *) "yes" );
+		if( [self isHighlighted] ) xmlSetProp( child, (xmlChar *) "highlight", (xmlChar *) "yes" );
+		if( [self ignoreStatus] == JVMessageIgnored ) xmlSetProp( child, (xmlChar *) "ignored", (xmlChar *) "yes" );
+		else if( [self ignoreStatus] == JVUserIgnored ) xmlSetProp( root, (xmlChar *) "ignored", (xmlChar *) "yes" );
+		if( [self type] == JVChatMessageNoticeType ) xmlSetProp( child, (xmlChar *) "type", (xmlChar *) "notice" );
+		xmlAddChild( root, child );
+
+		xmlFreeDoc( msgDoc );
+	}
+
 	return _node;
 }
 
 - (void) _setNode:(xmlNode *) node {
+	if( _doc ) {
+		xmlFreeDoc( _doc );
+		_doc = NULL;
+	}
+
 	_node = node;
 }
 
@@ -148,6 +215,13 @@
 - (NSDate *) date {
 	[self load];
 	return _date;
+}
+
+#pragma mark -
+
+- (unsigned) consecutiveOffset {
+	[self load];
+	return _consecutiveOffset;
 }
 
 #pragma mark -
@@ -322,83 +396,10 @@
 }
 
 - (void) dealloc {
-	if( _doc ) xmlFreeDoc( _doc );
-	_doc = NULL;
-
 	[_sender release];
 	_sender = nil;
 
 	[super dealloc];
-}
-
-#pragma mark -
-
-- (void *) node {
-	if( ! _node ) {
-		if( _doc ) xmlFreeDoc( _doc );
-		_doc = xmlNewDoc( (xmlChar *) "1.0" );
-
-		xmlNodePtr child = NULL;
-		xmlNodePtr root = xmlNewNode( NULL, (xmlChar *) "envelope" );
-		xmlDocSetRootElement( _doc, root );
-
-		if( _source ) xmlSetProp( root, (xmlChar *) "source", (xmlChar *) [[[self source] absoluteString] UTF8String] );
-
-		if( [self sender] && [[self sender] respondsToSelector:@selector( xmlDescriptionWithTagName: )] ) {
-			const char *sendDesc = [(NSString *)[[self sender] performSelector:@selector( xmlDescriptionWithTagName: ) withObject:@"sender"] UTF8String];
-
-			if( sendDesc ) {
-				xmlDocPtr tempDoc = xmlParseMemory( sendDesc, strlen( sendDesc ) );
-				if( ! tempDoc ) return NULL; // somthing bad with the message contents
-
-				child = xmlDocCopyNode( xmlDocGetRootElement( tempDoc ), _doc, 1 );
-				xmlAddChild( root, child );
-				xmlFreeDoc( tempDoc );
-			}
-		} else if( [self senderName] ) {
-			child = xmlNewTextChild( root, NULL, (xmlChar *) "sender", (xmlChar *) [[self senderName] UTF8String] );
-			if( [self senderIsLocalUser] ) xmlSetProp( child, (xmlChar *) "self", (xmlChar *) "yes" );
-			if( [self senderNickname] && ! [[self senderName] isEqualToString:[self senderNickname]] )
-				xmlSetProp( child, (xmlChar *) "nickname", (xmlChar *) [[self senderNickname] UTF8String] );
-			if( [self senderHostmask] )
-				xmlSetProp( child, (xmlChar *) "hostmask", (xmlChar *) [[self senderNickname] UTF8String] );
-			if( [self senderIdentifier] )
-				xmlSetProp( child, (xmlChar *) "identifier", (xmlChar *) [[self senderIdentifier] UTF8String] );
-			if( [self senderClass] )
-				xmlSetProp( child, (xmlChar *) "class", (xmlChar *) [[self senderClass] UTF8String] );
-			if( [self senderBuddyIdentifier] && ! [self senderIsLocalUser] )
-				xmlSetProp( child, (xmlChar *) "buddy", (xmlChar *) [[self senderBuddyIdentifier] UTF8String] );
-		} else return NULL;
-
-		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
-		NSString *htmlMessage = ( [self body] ? [[self body] HTMLFormatWithOptions:options] : @"" );
-		const char *msgStr = [[NSString stringWithFormat:@"<message>%@</message>", [htmlMessage stringByStrippingIllegalXMLCharacters]] UTF8String];
-		xmlDocPtr msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
-		if( ! msgDoc ) return NULL; // somthing bad with the message contents
-
-		_node = child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), _doc, 1 );
-		xmlSetProp( child, (xmlChar *) "id", (xmlChar *) [[self messageIdentifier] UTF8String] );
-		xmlSetProp( child, (xmlChar *) "received", (xmlChar *) [[[self date] description] UTF8String] );
-		if( [self isAction] ) xmlSetProp( child, (xmlChar *) "action", (xmlChar *) "yes" );
-		if( [self isHighlighted] ) xmlSetProp( child, (xmlChar *) "highlight", (xmlChar *) "yes" );
-		if( [self ignoreStatus] == JVMessageIgnored ) xmlSetProp( child, (xmlChar *) "ignored", (xmlChar *) "yes" );
-		else if( [self ignoreStatus] == JVUserIgnored ) xmlSetProp( root, (xmlChar *) "ignored", (xmlChar *) "yes" );
-		if( [self type] == JVChatMessageNoticeType ) xmlSetProp( child, (xmlChar *) "type", (xmlChar *) "notice" );
-		xmlAddChild( root, child );
-
-		xmlFreeDoc( msgDoc );
-	}
-
-	return _node;
-}
-
-- (void) _setNode:(xmlNode *) node {
-	if( _doc ) {
-		xmlFreeDoc( _doc );
-		_doc = NULL;
-	}
-
-	_node = node;
 }
 
 #pragma mark -

@@ -5,7 +5,7 @@
 
 	<xsl:template match="/">
 		<xsl:choose>
-			<xsl:when test="count( /envelope/message ) &gt; 1">
+			<xsl:when test="$consecutiveMessage = 'yes'">
 				<xsl:apply-templates select="/envelope/message[last()]" />
 			</xsl:when>
 			<xsl:otherwise>

@@ -230,12 +230,13 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) setStyleParameters:(NSDictionary *) parameters {
-	[_styleParameters autorelease];
+	id old = _styleParameters;
 	_styleParameters = [parameters mutableCopyWithZone:[self zone]];
+	[old release];
 }
 
 - (NSDictionary *) styleParameters {
-	return _styleParameters;
+	return [NSDictionary dictionaryWithDictionary:_styleParameters];
 }
 
 #pragma mark -
@@ -335,28 +336,29 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (BOOL) appendChatMessage:(JVChatMessage *) message {
 	if( ! _contentFrameReady ) return YES; // don't schedule this to fire later since the transcript will be processed
 
-	NSString *result = nil;
-
 	if( _requiresFullMessage ) {
 		DOMHTMLElement *replaceElement = (DOMHTMLElement *)[_domDocument getElementById:@"consecutiveInsert"];
 		if( replaceElement ) _requiresFullMessage = NO; // a full message was assumed, but we can do a consecutive one
 	}
 
-	@try {
-		if( _requiresFullMessage ) {
-			NSArray *elements = [NSArray arrayWithObject:message];
-			result = [[self style] transformChatTranscriptElements:elements withParameters:[self styleParameters]];
-			_requiresFullMessage = NO;
-		} else {
-			result = [[self style] transformChatMessage:message withParameters:[self styleParameters]];
-		}
-	} @catch ( NSException *exception ) {
-		result = nil;
-		[self _styleError];
-		return NO;
+	unsigned consecutiveOffset = [message consecutiveOffset];
+	NSString *result = nil;
+
+	if( _requiresFullMessage && consecutiveOffset > 0 ) {
+		NSArray *elements = [[NSArray allocWithZone:nil] initWithObjects:message, nil];
+		result = [[self style] transformChatTranscriptElements:elements withParameters:_styleParameters];
+		[elements release];
+	} else {
+		if( ! _requiresFullMessage && consecutiveOffset > 0 )
+			[_styleParameters setObject:@"'yes'" forKey:@"consecutiveMessage"];
+		result = [[self style] transformChatMessage:message withParameters:_styleParameters];
+		[_styleParameters removeObjectForKey:@"consecutiveMessage"];
 	}
 
-	if( [result length] ) [self _appendMessage:result];
+	if( [result length] ) {
+		[self _appendMessage:result];
+		_requiresFullMessage = NO;
+	}
 
 	return ( [result length] ? YES : NO );
 }
@@ -364,15 +366,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (BOOL) appendChatTranscriptElement:(id <JVChatTranscriptElement>) element {
 	if( ! _contentFrameReady ) return YES; // don't schedule this to fire later since the transcript will be processed
 
-	NSString *result = nil;
-
-	@try {
-		result = [[self style] transformChatTranscriptElement:element withParameters:[self styleParameters]];
-	} @catch ( NSException *exception ) {
-		result = nil;
-		[self _styleError];
-		return NO;
-	}
+	NSString *result = [[self style] transformChatTranscriptElement:element withParameters:_styleParameters];
 
 	if( [result length] ) [self _appendMessage:result];
 
@@ -601,32 +595,22 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	JVStyle *style = [[self style] retain];
 	JVChatTranscript *transcript = [[self transcript] retain];
-	NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:[self styleParameters]];
+	NSMutableArray *highlightedMsgs = [[NSMutableArray allocWithZone:nil] initWithCapacity:( [self scrollbackLimit] / 8 )];
+	NSMutableDictionary *parameters = [[NSMutableDictionary allocWithZone:nil] initWithDictionary:_styleParameters copyItems:NO];
 	unsigned long elementCount = [transcript elementCount];
-	unsigned long i = elementCount;
-	NSEnumerator *enumerator = nil;
-	NSArray *elements = nil;
-	id element = nil;
-	NSString *result = nil;
-	NSMutableArray *highlightedMsgs = [NSMutableArray arrayWithCapacity:( [self scrollbackLimit] / 8 )];
 
 	[parameters setObject:@"'yes'" forKey:@"bulkTransform"];
 
-	for( i = elementCount; i > ( elementCount - MIN( [self scrollbackLimit], elementCount ) ); i -= MIN( 25, i ) ) {
-		elements = [transcript elementsInRange:NSMakeRange( i - MIN( 25, i ), MIN( 25, i ) )];
+	for( unsigned long i = elementCount; i > ( elementCount - MIN( [self scrollbackLimit], elementCount ) ); i -= MIN( 25, i ) ) {
+		NSArray *elements = [transcript elementsInRange:NSMakeRange( i - MIN( 25, i ), MIN( 25, i ) )];
 
-		enumerator = [elements objectEnumerator];
+		id element = nil;
+		NSEnumerator *enumerator = [elements objectEnumerator];
 		while( ( element = [enumerator nextObject] ) )
 			if( [element isKindOfClass:[JVChatMessage class]] && [element isHighlighted] )
 				[highlightedMsgs addObject:element];
 
-		@try {
-			result = [style transformChatTranscriptElements:elements withParameters:parameters];
-		} @catch ( NSException *exception ) {
-			result = nil;
-			[self performSelectorOnMainThread:@selector( _styleError ) withObject:exception waitUntilDone:YES];
-			goto quickEnd;
-		}
+		NSString *result = [style transformChatTranscriptElements:elements withParameters:parameters];
 
 		if( [self style] != style ) goto quickEnd;
 		if( result ) {
@@ -643,7 +627,9 @@ quickEnd:
 
 	NSNotification *note = [NSNotification notificationWithName:JVStyleViewDidChangeStylesNotification object:self userInfo:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-	
+
+	[highlightedMsgs release];
+	[parameters release];
 	[style release];
 	[transcript release];
 	[pool release];
@@ -663,10 +649,10 @@ quickEnd:
 
 	unsigned int messageCount = [self _visibleMessageCount] + 1;
 	unsigned int scrollbackLimit = [self scrollbackLimit];
-	BOOL subsequent = ( [message rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
+	BOOL consecutive = ( [message rangeOfString:@"<?message type=\"consecutive\"?>"].location != NSNotFound );
 
 	long shiftAmount = 0;
-	if( ! subsequent && messageCount > scrollbackLimit ) {
+	if( ! consecutive && messageCount > scrollbackLimit ) {
 		shiftAmount = [self _locationOfElementAtIndex:( messageCount - scrollbackLimit )];
 		if( shiftAmount > 0 && shiftAmount != NSNotFound )
 			[[self verticalMarkedScroller] shiftMarksAndShadedAreasBy:( shiftAmount * -1 )];
@@ -675,11 +661,10 @@ quickEnd:
 	DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument createElement:@"span"];
 	DOMHTMLElement *insertElement = (DOMHTMLElement *)[_domDocument getElementById:@"insert"];
 	DOMHTMLElement *consecutiveReplaceElement = (DOMHTMLElement *)[_domDocument getElementById:@"consecutiveInsert"];
-	if( ! consecutiveReplaceElement ) subsequent = NO;
+	if( ! consecutiveReplaceElement ) consecutive = NO;
 
-	NSMutableString *transformedMessage = [message mutableCopy];
+	NSMutableString *transformedMessage = [message mutableCopyWithZone:nil];
 	[transformedMessage replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
-	[transformedMessage replaceOccurrencesOfString:@"<?message type=\"subsequent\"?>" withString:@"" options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
 
 	// parses the message so we can get the DOM tree
 	[element setInnerHTML:transformedMessage];
@@ -692,11 +677,11 @@ quickEnd:
 	BOOL scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.985 );
 
 	unsigned int i = 0;
-	if( ! subsequent ) { // append message normally
+	if( ! consecutive ) { // append message normally
 		[[consecutiveReplaceElement parentNode] removeChild:consecutiveReplaceElement];
 		while( [element hasChildNodes] ) // append all children
 			[_body insertBefore:[element firstChild] :insertElement];
-	} else if( [element hasChildNodes] ) { // append as a subsequent message
+	} else if( [element hasChildNodes] ) { // append as a consecutive message
 		DOMNode *parent = [consecutiveReplaceElement parentNode];
 		DOMNode *nextSib = [consecutiveReplaceElement nextSibling];
 		[parent replaceChild:[element firstChild] :consecutiveReplaceElement]; // replaces the consecutiveInsert node

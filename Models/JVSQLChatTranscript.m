@@ -295,11 +295,6 @@ static int _specificElementsInRangeCallback( void *context, int fieldCount, char
 	return nil;
 }
 
-- (NSArray *) messagesInEnvelopeWithMessage:(JVChatMessage *) message {
-	// this might be hard to do. need to select all adjacent messages from the same user
-	return nil;
-}
-
 - (id) lastMessage {
 	NSMutableArray *results = [[NSMutableArray alloc] initWithCapacity:1];
 	Class class = [JVChatMessage class];
@@ -772,16 +767,17 @@ static void _printSQL( void *context, const char *sql ) {
 - (void) _loadFromSQL {
 	if( _loaded ) return;
 
-	char query[200] = "";
-	sqlite3_snprintf( sizeof( query ), query, "SELECT received, action, highlighted, ignored, type FROM message WHERE id = '%q' LIMIT 1", [_messageIdentifier UTF8String] );
+	char query[512] = "";
+	sqlite3_snprintf( sizeof( query ), query, "SELECT received, action, highlighted, ignored, type, user FROM message WHERE id = '%q' LIMIT 1", [_messageIdentifier UTF8String] );
 
 	unsigned long count = 0;
 	char **tables = NULL;
 	int rows = 0, cols = 0;
+	char *userIdentifier = NULL;
 
 	@synchronized( _transcript ) {
 		sqlite3_get_table( [(JVSQLChatTranscript *)_transcript _database], query, &tables, &rows, &cols, NULL );
-		if( rows == 1 && cols == 5 ) {
+		if( rows == 1 && cols == 6 ) {
 			char **results = tables + cols;
 
 			id old = _date;
@@ -807,9 +803,37 @@ static void _printSQL( void *context, const char *sql ) {
 				else if( ! strncasecmp( *results, "normal", 6 ) ) _type = JVChatMessageNormalType;
 				else _type = JVChatMessageNormalType;
 			} else _type = JVChatMessageNormalType;
+
+			results++;
+			if( *results ) userIdentifier = strdup( *results );
 		}
 
 		sqlite3_free_table( tables );
+
+		if( userIdentifier ) {
+			char *digestPosition = NULL;
+
+			sqlite3_snprintf( sizeof( query ), query, "SELECT position FROM digest WHERE entity = 'message' AND link = '%q' LIMIT 1", [_messageIdentifier UTF8String] );
+			sqlite3_get_table( [(JVSQLChatTranscript *)_transcript _database], query, &tables, &rows, &cols, NULL );
+			if( rows == 1 && cols == 1 && tables[1] )
+				digestPosition = strdup( tables[1] );
+
+			sqlite3_free_table( tables );
+
+			if( digestPosition ) {
+				sqlite3_snprintf( sizeof( query ), query, "SELECT '%q' - ( position + 1 ) FROM (SELECT position, entity, user FROM digest LEFT OUTER JOIN message ON message.id = link WHERE position <= '%q' ORDER BY position DESC) WHERE user != '%q' OR entity != 'message' LIMIT 1", digestPosition, digestPosition, userIdentifier );
+
+				sqlite3_get_table( [(JVSQLChatTranscript *)_transcript _database], query, &tables, &rows, &cols, NULL );
+				if( rows == 1 && cols == 1 ) {
+					if( tables[1] && tables[1][0] != '-' ) _consecutiveOffset = strtoull( tables[1], NULL, 10 );
+				} else _consecutiveOffset = strtoull( digestPosition, NULL, 10 ) - 1;
+				sqlite3_free_table( tables );
+
+				free( digestPosition );
+			}
+
+			free( userIdentifier );
+		}
 	}
 
 	_loaded = YES;
@@ -823,17 +847,22 @@ static void _printSQL( void *context, const char *sql ) {
 	int rows = 0, cols = 0;
 
 	char query[200] = "";
-	sqlite3_snprintf( sizeof( query ), query, "SELECT self, nickname, identifier, hostmask, class, buddy FROM user, message WHERE message.user = user.id AND message.id = '%q' LIMIT 1", [_messageIdentifier UTF8String] );
+	sqlite3_snprintf( sizeof( query ), query, "SELECT self, name, nickname, identifier, hostmask, class, buddy FROM user, message WHERE message.user = user.id AND message.id = '%q' LIMIT 1", [_messageIdentifier UTF8String] );
 
 	@synchronized( _transcript ) {
 		sqlite3_get_table( [(JVSQLChatTranscript *)_transcript _database], query, &tables, &rows, &cols, NULL );
-		if( rows == 1 && cols == 6 ) {
+		if( rows == 1 && cols == 7 ) {
 			char **results = tables + cols;
 
 			_senderIsLocalUser = ( *results && ! ( **results == '0' && *(*results + 1) == '\0' ) );
 
 			results++;
-			id old = _senderNickname;
+			id old = _senderName;
+			_senderName = ( *results ? [[NSString allocWithZone:nil] initWithUTF8String:*results] : nil );
+			[old release];
+
+			results++;
+			old = _senderNickname;
 			_senderNickname = ( *results ? [[NSString allocWithZone:nil] initWithUTF8String:*results] : nil );
 			[old release];
 

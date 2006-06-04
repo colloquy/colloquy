@@ -202,6 +202,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 - (NSString *) transformChatTranscript:(JVChatTranscript *) transcript withParameters:(NSDictionary *) parameters {
 	@synchronized( transcript ) {
+		if( ! [transcript document] ) return nil;
 		return [self transformXMLDocument:[transcript document] withParameters:parameters];
 	}
 }
@@ -209,8 +210,33 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 - (NSString *) transformChatTranscriptElement:(id <JVChatTranscriptElement>) element withParameters:(NSDictionary *) parameters {
 	@synchronized( ( [element transcript] ? (id) [element transcript] : (id) element ) ) {
 		xmlDoc *doc = xmlNewDoc( (xmlChar *) "1.0" );
+		if( ! doc ) return nil;
+
 		xmlNode *root = xmlDocCopyNode( (xmlNode *) [element node], doc, 1 );
+		if( ! root ) return nil;
+
 		xmlDocSetRootElement( doc, root );
+
+		NSString *result = [self transformXMLDocument:doc withParameters:parameters];
+
+		xmlFreeDoc( doc );
+
+		return result;
+	}
+}
+
+- (NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary *) parameters {
+	@synchronized( ( [message transcript] ? (id) [message transcript] : (id) message ) ) {
+		// Styles depend on being passed all the messages in the same envelope.
+		// This lets them know it is a consecutive message.
+
+		xmlDoc *doc = xmlNewDoc( (xmlChar *) "1.0" );
+		if( ! doc ) return nil;
+
+		xmlNode *envelope = xmlDocCopyNode( ((xmlNode *) [message node]) -> parent, doc, 1 );
+		if( ! envelope ) return nil;
+
+		xmlDocSetRootElement( doc, envelope );
 
 		NSString *result = [self transformXMLDocument:doc withParameters:parameters];
 
@@ -227,23 +253,6 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	return ret;
 }
 
-- (NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary *) parameters {
-	@synchronized( ( [message transcript] ? (id) [message transcript] : (id) message ) ) {
-		// Styles depend on being passed all the messages in the same envelope.
-		// This lets them know it is a consecutive message.
-
-		xmlDoc *doc = xmlNewDoc( (xmlChar *) "1.0" );
-		xmlNode *envelope = xmlDocCopyNode( ((xmlNode *) [message node]) -> parent, doc, 1 );
-		xmlDocSetRootElement( doc, envelope );
-
-		NSString *result = [self transformXMLDocument:doc withParameters:parameters];
-
-		xmlFreeDoc( doc );
-
-		return result;
-	}
-}
-
 #pragma mark -
 
 - (NSString *) transformXML:(NSString *) xml withParameters:(NSDictionary *) parameters {
@@ -254,6 +263,8 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	if( ! string ) return nil;
 
 	xmlDoc *doc = xmlParseMemory( string, strlen( string ) );
+	if( ! doc ) return nil;
+
 	NSString *result = [self transformXMLDocument:doc withParameters:parameters];
 	xmlFreeDoc( doc );
 
@@ -265,7 +276,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 	@synchronized( self ) {
 		if( ! _XSLStyle ) [self _setXSLStyle:[self XMLStyleSheetLocation]];
-		NSAssert( _XSLStyle, @"XSL not allocated." );
+		if( ! _XSLStyle ) return nil;
 
 		NSMutableDictionary *pms = (NSMutableDictionary *)[self mainParameters];
 		if( parameters ) {

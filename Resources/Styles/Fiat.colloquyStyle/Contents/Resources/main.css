@@ -145,6 +145,8 @@ a:hover {
 	margin: 1px 4px 0;
 	padding: 0;
 	word-wrap: break-word;
+	-khtml-line-break: after-white-space;
+	-khtml-nbsp-mode: space;
 }
 
 .messages_bottom {
@@ -201,6 +203,8 @@ a:hover {
 	padding: 0;
 	color: #303030;
 	word-wrap: break-word;
+	-khtml-line-break: after-white-space;
+	-khtml-nbsp-mode: space;
 }
 
 .event a {

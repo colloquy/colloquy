@@ -7,6 +7,7 @@
 #import "JVEmoticonSet.h"
 #import "JVStyleView.h"
 #import "JVChatTranscript.h"
+#import "JVSQLChatTranscript.h"
 #import "JVChatMessage.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
@@ -42,17 +43,12 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 @implementation JVChatTranscriptPanel
 - (id) init {
 	if( ( self = [super init] ) ) {
-		display = nil;
-		contents = nil;
-		_styleMenu = nil;
-		_emoticonMenu = nil;
-		_windowController = nil;
-		_disposed = NO;
-
 		_transcript = [[JVChatTranscript allocWithZone:[self zone]] init];
 
 		id classDescription = [NSClassDescription classDescriptionForClass:[JVChatTranscriptPanel class]];
-		[_transcript setObjectSpecifier:[[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"transcript"] autorelease]];
+		id specifier = [[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"transcript"];
+		[_transcript setObjectSpecifier:specifier];
+		[specifier release];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateStylesMenu ) name:JVStylesScannedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateStylesMenu ) name:JVNewStyleVariantAddedNotification object:nil];
@@ -64,14 +60,31 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 - (id) initWithTranscript:(NSString *) filename {
 	if( ( self = [self init] ) ) {
-		[_transcript autorelease];
-		_transcript = [[JVChatTranscript allocWithZone:[self zone]] initWithContentsOfFile:filename];
+		if( ! [[NSFileManager defaultManager] isReadableFileAtPath:filename] ) {
+			[self release];
+			return nil;
+		}
+
+		NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:filename];
+		BOOL sqliteFormat = [[NSData dataWithBytes:"SQLite format 3" length:16] isEqualToData:[handle readDataOfLength:16]];
+		[handle closeFile];
+
+		if( sqliteFormat ) _transcript = [[JVSQLChatTranscript allocWithZone:[self zone]] initWithContentsOfFile:filename];
+		else _transcript = [[JVChatTranscript allocWithZone:[self zone]] initWithContentsOfFile:filename];
+
+		if( ! _transcript ) {
+			[self release];
+			return nil;
+		}
 
 		id classDescription = [NSClassDescription classDescriptionForClass:[JVChatTranscriptPanel class]];
-		[_transcript setObjectSpecifier:[[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"transcript"] autorelease]];
+		id specifier = [[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"transcript"];
+		[_transcript setObjectSpecifier:specifier];
+		[specifier release];
 
 		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:filename]];
 	}
+
 	return self;
 }
 

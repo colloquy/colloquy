@@ -9,6 +9,7 @@ typedef enum _JVChatMessageType {
 @interface JVChatMessage : NSObject <NSMutableCopying, JVChatTranscriptElement> {
 	@public
 	/* xmlNode */ void *_node;
+	/* xmlDoc */ void *_doc;
 	NSString *_messageIdentifier;
 	NSScriptObjectSpecifier *_objectSpecifier;
 	JVChatTranscript *_transcript;
@@ -25,6 +26,7 @@ typedef enum _JVChatMessageType {
 	NSURL *_source;
 	JVIgnoreMatchResult _ignoreStatus;
 	JVChatMessageType _type;
+	unsigned _consecutiveOffset;
 	BOOL _senderIsLocalUser;
 	BOOL _action;
 	BOOL _highlighted;
@@ -35,6 +37,8 @@ typedef enum _JVChatMessageType {
 - (/* xmlNode */ void *) node;
 
 - (NSDate *) date;
+
+- (unsigned) consecutiveOffset;
 
 - (NSString *) senderName;
 - (NSString *) senderIdentifier;
@@ -64,7 +68,6 @@ typedef enum _JVChatMessageType {
 @interface JVMutableChatMessage : JVChatMessage {
 	@protected
 	id _sender;
-	/* xmlDoc */ void *_doc;
 }
 + (id) messageWithText:(id) body sender:(id) sender;
 - (id) initWithText:(id) body sender:(id) sender;

@@ -3,6 +3,7 @@
 @interface JVChatEvent : NSObject <JVChatTranscriptElement> {
 	@protected
 	/* xmlNode */ void *_node;
+	/* xmlDoc */ void *_doc;
 	NSString *_eventIdentifier;
 	NSScriptObjectSpecifier *_objectSpecifier;
 	JVChatTranscript *_transcript;
@@ -29,10 +30,7 @@
 - (NSDictionary *) attributes;
 @end
 
-@interface JVMutableChatEvent : JVChatEvent {
-	@protected
-	/* xmlDoc */ void *_doc;
-}
+@interface JVMutableChatEvent : JVChatEvent
 + (id) chatEventWithName:(NSString *) name andMessage:(id) message;
 - (id) initWithName:(NSString *) name andMessage:(id) message;
 

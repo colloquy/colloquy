@@ -21,6 +21,8 @@ body {
 	padding-bottom: 2px;
 	margin-bottom: 0;
 	word-wrap: break-word;
+	-khtml-line-break: after-white-space;
+	-khtml-nbsp-mode: space;
 }
 
 .message.self {
@@ -44,6 +46,8 @@ span.message.searchHighlight {
 	padding-top: 2px;
 	margin-bottom: 0;
 	word-wrap: break-word;
+	-khtml-line-break: after-white-space;
+	-khtml-nbsp-mode: space;
 }
 
 .submessage.self {
@@ -103,6 +107,8 @@ span.submessage.searchHighlight {
 	font-size: smaller;
 	color: white;
 	word-wrap: break-word;
+	-khtml-line-break: after-white-space;
+	-khtml-nbsp-mode: space;
 }
 
 .event .reason:before {

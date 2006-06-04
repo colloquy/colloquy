@@ -12,6 +12,8 @@ body {
 	margin-top: 6px;
 	margin-bottom: 6px;
 	word-wrap: break-word;
+	-khtml-line-break: after-white-space;
+	-khtml-nbsp-mode: space;
 }
 
 .event .member {
@@ -81,6 +83,8 @@ table {
 table td {
 	background-repeat: no-repeat;
 	word-wrap: break-word;
+	-khtml-line-break: after-white-space;
+	-khtml-nbsp-mode: space;
 }
 
 table td.topRight {

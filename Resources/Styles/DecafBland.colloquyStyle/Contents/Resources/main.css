@@ -31,6 +31,8 @@ body {
   margin-left: 16ex;
   margin-right: 9ex;
   word-wrap: break-word;
+  -khtml-line-break: after-white-space;
+  -khtml-nbsp-mode: space;
 }
 
 .event .message:before {
@@ -46,12 +48,16 @@ body {
   overflow: hidden;
   padding-bottom: 0;
   word-wrap: break-word;
+  -khtml-line-break: after-white-space;
+  -khtml-nbsp-mode: space;
 }
 
 .envelope {
   overflow: hidden;
   padding-bottom: 0;
   word-wrap: break-word;
+  -khtml-line-break: after-white-space;
+  -khtml-nbsp-mode: space;
 }
 
 a.member         { text-decoration: none; }

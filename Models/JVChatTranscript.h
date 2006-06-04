@@ -56,7 +56,6 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 - (NSArray *) messagesInRange:(NSRange) range;
 - (JVChatMessage *) messageAtIndex:(unsigned long) index;
 - (JVChatMessage *) messageWithIdentifier:(NSString *) identifier;
-- (NSArray *) messagesInEnvelopeWithMessage:(JVChatMessage *) message;
 - (JVChatMessage *) lastMessage;
 
 - (BOOL) containsMessageWithIdentifier:(NSString *) identifier;
@@ -72,7 +71,7 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 - (JVChatSession *) lastSession;
 
 - (JVChatSession *) startNewSession;
-- (JVChatSession *) appendSessionWithStartDate:(NSDate *) startDate;
+- (JVChatSession *) appendSession:(JVChatSession *) session;
 
 - (NSArray *) events;
 - (NSArray *) eventsInRange:(NSRange) range;

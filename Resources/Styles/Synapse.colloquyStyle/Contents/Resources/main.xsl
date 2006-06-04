@@ -1,11 +1,12 @@
 <xsl:transform xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	<xsl:output omit-xml-declaration="yes" indent="no" />
+	<xsl:param name="consecutiveMessage" />
 	<xsl:param name="bulkTransform" />
 	<xsl:param name="timeFormat" />
 
 	<xsl:template match="/">
 		<xsl:choose>
-			<xsl:when test="count( /envelope/message ) &gt; 1">
+			<xsl:when test="$consecutiveMessage = 'yes'">
 				<xsl:apply-templates select="/envelope/message[last()]" />
 			</xsl:when>
 			<xsl:otherwise>
@@ -39,7 +40,7 @@
 
 	<xsl:template match="message">
 		<xsl:choose>
-			<xsl:when test="count( ../message[not( @ignored = 'yes' )] ) = 1 and not( @ignored = 'yes' )">
+			<xsl:when test="not( $consecutiveMessage = 'yes' ) and count( ../message[not( @ignored = 'yes' )] ) = 1 and not( @ignored = 'yes' )">
 				<xsl:apply-templates select=".." />
 			</xsl:when>
 			<xsl:otherwise>
@@ -93,7 +94,7 @@
 						<br />
 					</span>
 					<xsl:if test="not( $bulkTransform = 'yes' )">
-						<xsl:processing-instruction name="message">type="subsequent"</xsl:processing-instruction>
+						<xsl:processing-instruction name="message">type="consecutive"</xsl:processing-instruction>
 						<span id="consecutiveInsert">&#8203;</span>
 					</xsl:if>
 				</xsl:if>

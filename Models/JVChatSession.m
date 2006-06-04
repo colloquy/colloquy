@@ -2,30 +2,6 @@
 #import <libxml/tree.h>
 
 @implementation JVChatSession
-- (id) initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
-	if( ( self = [self init] ) ) {
-		_node = node;
-		_transcript = transcript; // weak reference
-
-		if( ! _node || node -> type != XML_ELEMENT_NODE ) {
-			[self release];
-			return nil;
-		}
-
-		@synchronized( _transcript ) {
-			xmlChar *startedStr = xmlGetProp( (xmlNode *) _node, (xmlChar *) "started" );
-			_startDate = ( startedStr ? [[NSDate allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:(char *) startedStr]] : nil );
-			xmlFree( startedStr );
-		}
-	}
-
-	return self;
-}
-
-+ (id) sessionWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
-	return [[[self alloc] initWithNode:node andTranscript:transcript] autorelease];
-}
-
 - (void) dealloc {
 	[_startDate release];
 	_startDate = nil;

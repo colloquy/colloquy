@@ -31,9 +31,8 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 */
 
 @interface JVChatSession (JVChatSessionPrivate)
-+ (id) sessionWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript;
-- (id) initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript;
-- (void) setNode:(xmlNode *) node;
+- (id) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript;
+- (void) _setNode:(xmlNode *) node;
 @end
 
 #pragma mark -
@@ -305,8 +304,9 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 				} while( subNode && ( subNode = subNode -> next ) );
 			} else if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", (char *) node -> name, 7 ) ) {
 				if( NSLocationInRange( i, range ) ) {
-					JVChatSession *session = [JVChatSession sessionWithNode:node andTranscript:self];
+					JVChatSession *session = [[JVChatSession allocWithZone:nil] _initWithNode:node andTranscript:self];
 					if( session ) [ret addObject:session];
+					[session release];
 				}
 
 				if( ++i > ( range.location + range.length ) ) goto done;
@@ -341,7 +341,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 						return [[[JVChatMessage allocWithZone:nil] _initWithNode:subNode andTranscript:self] autorelease];
 				} while( subNode && ( subNode = subNode -> prev ) );
 			} else if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", (char *) node -> name, 7 ) ) {
-				return [JVChatSession sessionWithNode:node andTranscript:self];
+				return [[[JVChatSession allocWithZone:nil] _initWithNode:node andTranscript:self] autorelease];
 			} else if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "event", (char *) node -> name, 5 ) ) {
 				return [[[JVChatEvent allocWithZone:nil] _initWithNode:node andTranscript:self] autorelease];
 			}
@@ -364,7 +364,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 			id newElement = nil;
 			if( [element isKindOfClass:[JVChatMessage class]] ) newElement = [self appendMessage:element];
 			else if( [element isKindOfClass:[JVChatEvent class]] ) newElement = [self appendEvent:element];
-			else if( [element isKindOfClass:[JVChatSession class]] ) newElement = [self appendSessionWithStartDate:[element startDate]];
+			else if( [element isKindOfClass:[JVChatSession class]] ) newElement = [self appendSession:element];
 			if( newElement ) [ret addObject:newElement];
 		}
 	}
@@ -475,29 +475,6 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 		return ( foundNode ? [[[JVChatMessage allocWithZone:nil] _initWithNode:foundNode andTranscript:self] autorelease] : nil );
 	}
-}
-
-- (NSArray *) messagesInEnvelopeWithMessage:(JVChatMessage *) message {
-	NSParameterAssert( message != nil );
-	NSParameterAssert( [message node] != NULL );
-
-	@synchronized( self ) {
-		xmlNode *envelope = ((xmlNode *)[message node]) -> parent;
-		xmlNode *node = envelope -> children;
-		NSMutableArray *results = [NSMutableArray allocWithZone:nil];
-
-		do {
-			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) node -> name, 7 ) ) {
-				JVChatMessage *msg = [[JVChatMessage allocWithZone:nil] _initWithNode:node andTranscript:self];
-				if( msg ) [results addObject:msg];
-				[msg release];
-			}
-		} while( node && ( node = node -> next ) );
-
-		return [results autorelease];
-	}
-
-	return nil;
 }
 
 - (JVChatMessage *) lastMessage {
@@ -686,8 +663,9 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		do {
 			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", (char *) node -> name, 7 ) ) {
 				if( NSLocationInRange( i, range ) ) {
-					JVChatSession *session = [JVChatSession sessionWithNode:node andTranscript:self];
+					JVChatSession *session = [[JVChatSession allocWithZone:nil] _initWithNode:node andTranscript:self];
 					if( session ) [ret addObject:session];
+					[session release];
 				}
 
 				if( ++i > ( range.location + range.length ) ) goto done;
@@ -708,7 +686,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		xmlNode *node = xmlGetLastChild( xmlDocGetRootElement( _xmlLog ) );
 		do {
 			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "session", (char *) node -> name, 7 ) )
-				return [JVChatSession sessionWithNode:node andTranscript:self];
+				return [[[JVChatSession allocWithZone:nil] _initWithNode:node andTranscript:self] autorelease];
 		} while( node && ( node = node -> prev ) );
 	}
 
@@ -718,16 +696,19 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 #pragma mark -
 
 - (JVChatSession *) startNewSession {
-	return [self appendSessionWithStartDate:[NSDate date]];
+	return nil;
+//	return [self appendSession:[NSDate date]];
 }
 
-- (JVChatSession *) appendSessionWithStartDate:(NSDate *) startDate {
+- (JVChatSession *) appendSession:(JVChatSession *) session {
 	xmlNodePtr sessionNode = xmlNewNode( NULL, (xmlChar *) "session" );
-	xmlSetProp( sessionNode, (xmlChar *) "started", (xmlChar *) [[startDate description] UTF8String] );
+	xmlSetProp( sessionNode, (xmlChar *) "started", (xmlChar *) [[[session startDate] description] UTF8String] );
 	xmlAddChild( xmlDocGetRootElement( _xmlLog ), sessionNode );
+
 	[self _enforceElementLimit];
 	[self _incrementalWriteToLog:sessionNode continuation:NO];
-	return [JVChatSession sessionWithNode:sessionNode andTranscript:self];
+
+	return [[[JVChatSession allocWithZone:nil] _initWithNode:sessionNode andTranscript:self] autorelease];
 }
 
 #pragma mark -
@@ -1273,6 +1254,30 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
+@implementation JVChatSession (JVChatSessionChatTranscriptPrivate)
+- (id) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
+	if( ( self = [self init] ) ) {
+		_node = node;
+		_transcript = transcript; // weak reference
+
+		if( ! _node || node -> type != XML_ELEMENT_NODE ) {
+			[self release];
+			return nil;
+		}
+
+		@synchronized( _transcript ) {
+			xmlChar *startedStr = xmlGetProp( (xmlNode *) _node, (xmlChar *) "started" );
+			_startDate = ( startedStr ? [[NSDate allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:(char *) startedStr]] : nil );
+			xmlFree( startedStr );
+		}
+	}
+
+	return self;
+}
+@end
+
+#pragma mark -
+
 @implementation JVChatMessage (JVChatMessageChatTranscriptPrivate)
 - (id) _initWithNode:(xmlNode *) node andTranscript:(JVChatTranscript *) transcript {
 	if( ( self = [self init] ) ) {
@@ -1319,14 +1324,25 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		_type = ( ( prop && ! strcmp( (char *) prop, "notice" ) ) ? JVChatMessageNoticeType : JVChatMessageNormalType );
 		xmlFree( prop );
 
-		prop = xmlGetProp( ((xmlNode *) _node) -> parent, (xmlChar *) "ignored" );
+		xmlNode *envelope = ((xmlNode *) _node) -> parent;
+
+		prop = xmlGetProp( envelope, (xmlChar *) "ignored" );
 		_ignoreStatus = ( ( prop && ! strcmp( (char *) prop, "yes" ) ) ? JVUserIgnored : _ignoreStatus );
 		xmlFree( prop );
 
-		prop = xmlGetProp( ((xmlNode *) _node) -> parent, (xmlChar *) "source" );
+		prop = xmlGetProp( envelope, (xmlChar *) "source" );
 		[_source autorelease];
 		_source = ( prop ? [[NSURL allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
 		xmlFree( prop );
+
+		xmlNode *node = envelope -> children;
+
+		do {
+			if( node && node -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) node -> name, 7 ) ) {
+				if( node == _node ) break;
+				_consecutiveOffset++;
+			}
+		} while( node && ( node = node -> next ) );
 	}
 
 	_loaded = YES;
@@ -1341,33 +1357,38 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		do {
 			if( subNode -> type == XML_ELEMENT_NODE && ! strncmp( "sender", (char *) subNode -> name, 6 ) ) {
 				xmlChar *prop = xmlNodeGetContent( subNode );
-				[_senderName autorelease];
+				id old = _senderName;
 				if( prop ) _senderName = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
 				else _senderName = nil;
+				[old release];
 				xmlFree( prop );
 
 				prop = xmlGetProp( subNode, (xmlChar *) "nickname" );
-				[_senderNickname autorelease];
+				old = _senderNickname;
 				if( prop ) _senderNickname = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
 				else _senderNickname = nil;
+				[old release];
 				xmlFree( prop );
 
 				prop = xmlGetProp( subNode, (xmlChar *) "identifier" );
-				[_senderIdentifier autorelease];
+				old = _senderIdentifier;
 				if( prop ) _senderIdentifier = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
 				else _senderIdentifier = nil;
+				[old release];
 				xmlFree( prop );
 
 				prop = xmlGetProp( subNode, (xmlChar *) "hostmask" );
-				[_senderHostmask autorelease];
+				old = _senderHostmask;
 				if( prop ) _senderHostmask = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
 				else _senderHostmask = nil;
+				[old release];
 				xmlFree( prop );
 
 				prop = xmlGetProp( subNode, (xmlChar *) "class" );
-				[_senderClass autorelease];
+				old = _senderClass;
 				if( prop ) _senderClass = [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop];
 				else _senderClass = nil;
+				[old release];
 				xmlFree( prop );
 
 				prop = xmlGetProp( subNode, (xmlChar *) "self" );

@@ -38,6 +38,8 @@ q:after {
 	margin-bottom: 5px;
 	line-height: 1.1em;
 	word-wrap: break-word;
+	-khtml-line-break: after-white-space;
+	-khtml-nbsp-mode: space;
 }
 
 .envelopeHighlight {
