@@ -636,7 +636,10 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 	id object = [[element objectForKey:WebElementImageURLKey] description];
 	if( ! object ) object = [[element objectForKey:WebElementLinkURLKey] description];
-	if( ! object ) object = [(id <WebDocumentText>)[[[display mainFrame] frameView] documentView] selectedString];
+	if( ! object ) {
+		WebFrame *frame = [element objectForKey:WebElementFrameKey];
+		object = [(id <WebDocumentText>)[[frame frameView] documentView] selectedString];
+	}
 
 	[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
 	[invocation setArgument:&object atIndex:2];
