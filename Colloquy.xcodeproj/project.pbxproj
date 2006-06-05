@@ -97,7 +97,7 @@
 		1C77830708FA4BD3006AD8E5 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F5394C070378E44D01A35792 /* Credits.rtf */; };
 		1C77831208FA4EA2006AD8E5 /* topicToggleDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */; };
 		1C77831308FA4EA2006AD8E5 /* topicToggleUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */; };
-		1C7C773B07DBAAB800FB5F83 /* WebSearch.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1CD4C098078249C10003620F /* WebSearch.scpt */; };
+		1C7C773B07DBAAB800FB5F83 /* Google.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1CD4C098078249C10003620F /* Google.scpt */; };
 		1C7C773C07DBAABC00FB5F83 /* iTunes.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1C8CE1EB05A921A00020D841 /* iTunes.scpt */; };
 		1C7E76070A313AF8009655D0 /* admin-idle.png in Resources */ = {isa = PBXBuildFile; fileRef = F5BEC20E01F1EF1901EE70DE /* admin-idle.png */; };
 		1C7E76080A313AF9009655D0 /* super-op-idle.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC1B76C0A2D70DF0000A797 /* super-op-idle.png */; };
@@ -440,7 +440,7 @@
 				0A6571BD0868800D001FF007 /* F-Script Support.plugin in Copy Plugins */,
 				1C0A19B008B041C200324E25 /* Python Support.plugin in Copy Plugins */,
 				1C7C773C07DBAABC00FB5F83 /* iTunes.scpt in Copy Plugins */,
-				1C7C773B07DBAAB800FB5F83 /* WebSearch.scpt in Copy Plugins */,
+				1C7C773B07DBAAB800FB5F83 /* Google.scpt in Copy Plugins */,
 			);
 			name = "Copy Plugins";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -735,7 +735,7 @@
 		1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSURLAdditions.m; path = Additions/NSURLAdditions.m; sourceTree = "<group>"; };
 		1CD4BD9B05AA773800F72EE6 /* favorites.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = favorites.png; path = Resources/favorites.png; sourceTree = SOURCE_ROOT; };
 		1CD4BD9C05AA773800F72EE6 /* favoritesPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = favoritesPressed.png; path = Resources/favoritesPressed.png; sourceTree = SOURCE_ROOT; };
-		1CD4C098078249C10003620F /* WebSearch.scpt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.scpt; name = WebSearch.scpt; path = "Plug-Ins/WebSearch/WebSearch.scpt"; sourceTree = "<group>"; };
+		1CD4C098078249C10003620F /* Google.scpt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.scpt; name = Google.scpt; path = "Plug-Ins/Google/Google.scpt"; sourceTree = "<group>"; };
 		1CD6C413051DFA1C00A8FE10 /* JVChatTranscriptPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatTranscriptPanel.h; path = Panels/JVChatTranscriptPanel.h; sourceTree = "<group>"; };
 		1CD6C414051DFA1D00A8FE10 /* JVChatTranscriptPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatTranscriptPanel.m; path = Panels/JVChatTranscriptPanel.m; sourceTree = "<group>"; };
 		1CD6C417051E0B3000A8FE10 /* JVChatTranscript.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVChatTranscript.nib; path = Resources/JVChatTranscript.nib; sourceTree = SOURCE_ROOT; };
@@ -1373,7 +1373,7 @@
 				1C0A199A08B0416C00324E25 /* Python Support */,
 				1CE87EC308B6E98400538B50 /* Ruby Support */,
 				1CA56CCD042A713E00000102 /* iTunes */,
-				1CD4C093078249A50003620F /* WebSearch */,
+				1CD4C093078249A50003620F /* Google */,
 			);
 			name = "Plug–Ins";
 			sourceTree = "<group>";
@@ -1387,12 +1387,12 @@
 			name = "Standard Commands";
 			sourceTree = "<group>";
 		};
-		1CD4C093078249A50003620F /* WebSearch */ = {
+		1CD4C093078249A50003620F /* Google */ = {
 			isa = PBXGroup;
 			children = (
-				1CD4C098078249C10003620F /* WebSearch.scpt */,
+				1CD4C098078249C10003620F /* Google.scpt */,
 			);
-			name = WebSearch;
+			name = Google;
 			sourceTree = "<group>";
 		};
 		1CE3F7BC07C7B60A0049A366 /* F-Script Support */ = {
