@@ -7,6 +7,7 @@
 	NSLineBreakMode _lineBreakMode;
 	unsigned _statusNumber;
 	unsigned _importantStatusNumber;
+	BOOL _boldAndWhiteOnHighlight;
 }
 - (void) setStatusImage:(NSImage *) image;
 - (NSImage *) statusImage;
@@ -22,6 +23,9 @@
 
 - (void) setLineBreakMode:(NSLineBreakMode) mode;
 - (NSLineBreakMode) lineBreakMode;
+
+- (void) setBoldAndWhiteOnHighlight:(BOOL) boldAndWhite;
+- (BOOL) boldAndWhiteOnHighlight;
 
 - (void) setStatusNumber:(unsigned) number;
 - (unsigned) statusNumber;

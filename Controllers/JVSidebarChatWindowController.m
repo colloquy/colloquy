@@ -1,5 +1,6 @@
 #import "JVSidebarChatWindowController.h"
 #import "JVSideSplitView.h"
+#import "JVDetailCell.h"
 
 @interface JVChatWindowController (JVChatWindowControllerPrivate)
 - (void) _refreshWindowTitle;
@@ -22,6 +23,7 @@
 	[super windowDidLoad];
 
 	[chatViewsOutlineView setAllowsEmptySelection:NO];
+//	[[[chatViewsOutlineView outlineTableColumn] dataCell] setBoldAndWhiteOnHighlight:YES];
 
 	[splitView setMainSubviewIndex:1];
 	[splitView setPositionUsingName:@"JVSidebarSplitViewPosition"];

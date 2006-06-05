@@ -107,6 +107,16 @@
 
 #pragma mark -
 
+- (void) setBoldAndWhiteOnHighlight:(BOOL) boldAndWhite {
+	_boldAndWhiteOnHighlight = boldAndWhite;
+}
+
+- (BOOL) boldAndWhiteOnHighlight {
+	return _boldAndWhiteOnHighlight;
+}
+
+#pragma mark -
+
 - (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView {
 	float imageWidth = 0.;
 	BOOL highlighted = ( [self isHighlighted] && [[controlView window] firstResponder] == controlView && [[controlView window] isKeyWindow] && [[NSApplication sharedApplication] isActive] );
@@ -115,11 +125,31 @@
 	[paraStyle setLineBreakMode:_lineBreakMode];
 	[paraStyle setAlignment:[self alignment]];
 
-	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[self font], NSFontAttributeName, paraStyle, NSParagraphStyleAttributeName, ( [self isEnabled] ? ( highlighted ? [NSColor alternateSelectedControlTextColor] : [NSColor controlTextColor] ) : ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.50] ) ), NSForegroundColorAttributeName, nil];
-	NSDictionary *subAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:9.], NSFontAttributeName, paraStyle, NSParagraphStyleAttributeName, ( [self isEnabled] ? ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.75] ) : ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.40] ) ), NSForegroundColorAttributeName, nil];
+	NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:[self font], NSFontAttributeName, paraStyle, NSParagraphStyleAttributeName, ( [self isEnabled] ? ( highlighted ? [NSColor alternateSelectedControlTextColor] : [NSColor controlTextColor] ) : ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.50] ) ), NSForegroundColorAttributeName, nil];
+	NSMutableDictionary *subAttributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:9.], NSFontAttributeName, paraStyle, NSParagraphStyleAttributeName, ( [self isEnabled] ? ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.75] ) : ( highlighted ? [NSColor alternateSelectedControlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.40] ) ), NSForegroundColorAttributeName, nil];
 	NSImage *mainImage = nil, *curImage = nil;
 	NSSize mainStringSize = [_mainText sizeWithAttributes:attributes];
 	NSSize subStringSize = [_infoText sizeWithAttributes:subAttributes];
+
+	if( _boldAndWhiteOnHighlight && [self isHighlighted] ) {
+		NSFont *boldFont = [[NSFontManager sharedFontManager] fontWithFamily:@"Lucida Grande" traits:0 weight:15 size:11.];
+		NSShadow *shadow = [[NSShadow allocWithZone:nil] init];
+		NSColor *whiteColor = [NSColor whiteColor];
+		if( ! [self isEnabled] ) whiteColor = [whiteColor colorWithAlphaComponent:0.5];
+
+        [shadow setShadowOffset:NSMakeSize( 0, -1 )];
+		[shadow setShadowBlurRadius:0.1];
+
+		[attributes setObject:boldFont forKey:NSFontAttributeName];
+		[attributes setObject:whiteColor forKey:NSForegroundColorAttributeName];
+		[attributes setObject:shadow forKey:NSShadowAttributeName];
+
+		boldFont = [[NSFontManager sharedFontManager] fontWithFamily:@"Lucida Grande" traits:0 weight:15 size:9.];
+		[subAttributes setObject:boldFont forKey:NSFontAttributeName];
+		[subAttributes setObject:whiteColor forKey:NSForegroundColorAttributeName];
+		[subAttributes setObject:shadow forKey:NSShadowAttributeName];
+		[shadow release];
+	}
 
 	if( highlighted && _altImage ) {
 		mainImage = [[self image] retain];
@@ -174,7 +204,7 @@
 	float statusWidth = ( _statusImage ? [_statusImage size].width + JVDetailCellStatusImageRightPadding : 0. );
 	if( ! _statusImage && _statusNumber || _importantStatusNumber ) {
 		NSColor *textColor = [NSColor whiteColor];
-		NSColor *backgroundColor = [NSColor colorWithCalibratedRed:0.5803921568627451 green:0.6705882352941176 blue:0.7882352941176471 alpha:1.];
+		NSColor *backgroundColor = [NSColor colorWithCalibratedRed:0.6 green:0.6705882352941176 blue:0.7725490196078431 alpha:1.];
 		NSColor *importantColor = [NSColor colorWithCalibratedRed:0.831372549019608 green:0.572549019607843 blue:0.541176470588235 alpha:1.];
 
 		if( ! _statusNumber && _importantStatusNumber )
