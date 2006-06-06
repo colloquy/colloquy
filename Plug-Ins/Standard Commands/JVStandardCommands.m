@@ -442,20 +442,17 @@
 
 - (BOOL) handleServerConnectWithArguments:(NSString *) arguments {
 	NSURL *url = nil;
-	if( arguments && ( url = [NSURL URLWithString:arguments] ) ) {
+	if( [arguments length] && [arguments rangeOfString:@"://"].location != NSNotFound && ( url = [NSURL URLWithString:arguments] ) ) {
 		[[MVConnectionsController defaultController] handleURL:url andConnectIfPossible:YES];
-	} else if( arguments ) {
+	} else if( [arguments length] ) {
 		NSString *address = nil;
 		int port = 0;
 		NSScanner *scanner = [NSScanner scannerWithString:arguments];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&address];
-		if( [arguments length] >= [scanner scanLocation] + 1 ) {
-			[scanner setScanLocation:[scanner scanLocation] + 1];
-			[scanner scanInt:&port];
-		}
+		[scanner scanInt:&port];
 
-		if( address && port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@:%du", [address stringByEncodingIllegalURLCharacters], port]];
-		else if( address && ! port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@", [address stringByEncodingIllegalURLCharacters]]];
+		if( [address length] && port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@:%u", [address stringByEncodingIllegalURLCharacters], port]];
+		else if( [address length] && ! port ) url = [NSURL URLWithString:[NSString stringWithFormat:@"irc://%@", [address stringByEncodingIllegalURLCharacters]]];
 		else [[MVConnectionsController defaultController] newConnection:nil];
 
 		if( url ) [[MVConnectionsController defaultController] handleURL:url andConnectIfPossible:YES];

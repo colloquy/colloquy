@@ -253,6 +253,8 @@ static NSMenu *favoritesMenu = nil;
 	if( rooms ) [_joinRooms setArray:rooms];
 	else [_joinRooms removeAllObjects];
 
+	[newJoinRooms reloadData];
+
 	if( [showDetails state] != NSOffState ) {
 		[showDetails setState:NSOffState];
 		[self toggleNewConnectionDetails:showDetails];
@@ -715,12 +717,13 @@ static NSMenu *favoritesMenu = nil;
 
 		if( ! handled && ! [url user] ) {
 			[newAddress setObjectValue:[url host]];
-			if( [url port] ) [newPort setObjectValue:[url port]];
 
 			unsigned index = [newType indexOfItemWithTag:( [[url scheme] isEqualToString:@"silc"] ? 2 : 1 )];
 			[newType selectItemAtIndex:index];
 
 			[self newConnectionWithJoinRooms:( target ? [NSArray arrayWithObject:target] : nil )];
+
+			if( [url port] ) [newPort setObjectValue:[url port]];
 
 			handled = YES;
 		} else if( ! handled && [url user] ) {
