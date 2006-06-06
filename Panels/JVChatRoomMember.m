@@ -265,8 +265,8 @@
 	else if( modes & MVChatRoomMemberHalfOperatorMode ) iconName = @"half-op";
 	else if( modes & MVChatRoomMemberVoicedMode ) iconName = @"voice";
 
-	if( [[self user] status] == MVChatUserAwayStatus || [[self user] idleTime] > 600. )
-		iconName = [iconName stringByAppendingString:@"-idle"];
+//	if( [[self user] status] == MVChatUserAwayStatus || [[self user] idleTime] > 600. )
+//		iconName = [iconName stringByAppendingString:@"-idle"];
 
 	return [NSImage imageNamed:iconName];
 }
@@ -310,7 +310,7 @@
 }
 
 - (BOOL) isEnabled {
-	return [[self room] isEnabled];
+	return [[self room] isEnabled] && ! ( [[self user] status] == MVChatUserAwayStatus || [[self user] idleTime] > 600. );
 }
 
 #pragma mark -
