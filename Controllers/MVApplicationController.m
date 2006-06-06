@@ -3,7 +3,6 @@
 #import "MVApplicationController.h"
 #import "JVChatWindowController.h"
 #import "MVCrashCatcher.h"
-#import "MVSoftwareUpdate.h"
 #import "JVInspectorController.h"
 #import "JVPreferencesController.h"
 #import "JVGeneralPreferences.h"
@@ -23,6 +22,7 @@
 #import "JVDirectChatPanel.h"
 #import "JVChatTranscriptBrowserPanel.h"
 
+#import <Sparkle/SUUpdater.h>
 #import <Foundation/NSDebug.h>
 
 @interface WebCoreCache
@@ -130,7 +130,8 @@ static BOOL applicationIsTerminating = NO;
 #pragma mark -
 
 - (IBAction) checkForUpdate:(id) sender {
-	[MVSoftwareUpdate checkAutomatically:NO];
+	if( ! _updater ) _updater = [[SUUpdater allocWithZone:nil] init];
+	[_updater checkForUpdates:sender];
 }
 
 - (IBAction) connectToSupportRoom:(id) sender {
@@ -383,8 +384,11 @@ static BOOL applicationIsTerminating = NO;
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
 	[MVCrashCatcher check];
 
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"] )
-		[MVSoftwareUpdate checkAutomatically:YES];
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"] ) {
+		_updater = [[SUUpdater allocWithZone:nil] init];
+		[_updater checkForUpdatesInBackground];
+		[_updater scheduleCheckWithInterval:60. * 60. * 12.]; // check every 12 hours
+	}
 
 	[[MVColorPanel sharedColorPanel] attachColorList:[[[NSColorList alloc] initWithName:@"Chat" fromFile:[[NSBundle mainBundle] pathForResource:@"Chat" ofType:@"clr"]] autorelease]];
 

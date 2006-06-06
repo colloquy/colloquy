@@ -49,6 +49,8 @@
 		1C23927306795020000E89A7 /* aquaTabCloseBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C23927206795020000E89A7 /* aquaTabCloseBack.png */; };
 		1C2462A505F9205900505752 /* JVStyleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2462A305F9205900505752 /* JVStyleView.m */; };
 		1C2E98C406207AD0000715D8 /* half-op.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C2E98C306207AD0000715D8 /* half-op.png */; };
+		1C2EDD790A3551B70051E9C2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C2EDD660A3551B60051E9C2 /* Sparkle.framework */; };
+		1C2EDDA10A35530F0051E9C2 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C2EDD660A3551B60051E9C2 /* Sparkle.framework */; };
 		1C3972DE082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3972DC082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.m */; };
 		1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C397368082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib */; };
 		1C397391082D4ADA00DCF3CF /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C397390082D4ADA00DCF3CF /* IOKit.framework */; };
@@ -78,11 +80,8 @@
 		1C703EF507E4B956005CEA40 /* JVSmartTranscriptFilterSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C703EF307E4B956005CEA40 /* JVSmartTranscriptFilterSheet.nib */; };
 		1C710A0209F23730007B4515 /* JVSidebarChatWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C710A0009F23730007B4515 /* JVSidebarChatWindowController.m */; };
 		1C710A2009F2396C007B4515 /* JVSidebarChatWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C710A1F09F2396C007B4515 /* JVSidebarChatWindow.nib */; };
-		1C710A6B09F23AF0007B4515 /* JVSideSplitView.h in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C710A6509F23AF0007B4515 /* JVSideSplitView.h */; };
 		1C710A6C09F23AF0007B4515 /* JVSideSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C710A6609F23AF0007B4515 /* JVSideSplitView.m */; };
-		1C710A6D09F23AF0007B4515 /* JVSideStatusView.h in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C710A6709F23AF0007B4515 /* JVSideStatusView.h */; };
 		1C710A6E09F23AF0007B4515 /* JVSideStatusView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C710A6809F23AF0007B4515 /* JVSideStatusView.m */; };
-		1C710A6F09F23AF0007B4515 /* JVSideOutlineView.h in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C710A6909F23AF0007B4515 /* JVSideOutlineView.h */; };
 		1C710A7009F23AF0007B4515 /* JVSideOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C710A6A09F23AF0007B4515 /* JVSideOutlineView.m */; };
 		1C710ABE09F23D9C007B4515 /* sidebarActionWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710ABA09F23D9C007B4515 /* sidebarActionWidget.png */; };
 		1C710ABF09F23D9C007B4515 /* sidebarActionWidgetPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710ABB09F23D9C007B4515 /* sidebarActionWidgetPressed.png */; };
@@ -193,7 +192,6 @@
 		1CB2CD64052DDC560094AAA4 /* MVMenuButton.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F9AF5801711CD401A84BDE /* MVMenuButton.m */; };
 		1CB2CD65052DDC560094AAA4 /* MVTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = F599994901890E4601EE70DE /* MVTextView.m */; };
 		1CB2CD67052DDC560094AAA4 /* MVCrashCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = F555208701F0DC2B01EE70DE /* MVCrashCatcher.m */; };
-		1CB2CD68052DDC560094AAA4 /* MVSoftwareUpdate.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BEC21401F2256301EE70DE /* MVSoftwareUpdate.m */; };
 		1CB2CD69052DDC560094AAA4 /* MVKeyChain.m in Sources */ = {isa = PBXBuildFile; fileRef = F551EE490209FB3301EE70DE /* MVKeyChain.m */; };
 		1CB2CD6A052DDC560094AAA4 /* MVFileTransferController.m in Sources */ = {isa = PBXBuildFile; fileRef = F51A4F2B01C2DDD201EE70DE /* MVFileTransferController.m */; };
 		1CB2CD6B052DDC560094AAA4 /* MVConnectionsController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C497750385713801000102 /* MVConnectionsController.m */; };
@@ -415,9 +413,7 @@
 				1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */,
 				1C6C75490630AD9500698F55 /* AGRegex.framework in Copy Frameworks */,
 				1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */,
-				1C710A6B09F23AF0007B4515 /* JVSideSplitView.h in Copy Frameworks */,
-				1C710A6D09F23AF0007B4515 /* JVSideStatusView.h in Copy Frameworks */,
-				1C710A6F09F23AF0007B4515 /* JVSideOutlineView.h in Copy Frameworks */,
+				1C2EDDA10A35530F0051E9C2 /* Sparkle.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -509,6 +505,7 @@
 		1C258E55050B9656000001C8 /* Emoticons */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = Emoticons; path = Resources/Emoticons; sourceTree = SOURCE_ROOT; };
 		1C2E98C306207AD0000715D8 /* half-op.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "half-op.png"; path = "Resources/half-op.png"; sourceTree = "<group>"; };
 		1C2E98C506207AE1000715D8 /* half-op-idle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "half-op-idle.png"; path = "Resources/half-op-idle.png"; sourceTree = "<group>"; };
+		1C2EDD660A3551B60051E9C2 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = SOURCE_ROOT; };
 		1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatPluginManager.h; path = "Chat Core/MVChatPluginManager.h"; sourceTree = "<group>"; };
 		1C3972DB082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatTranscriptBrowserPanel.h; path = Panels/JVChatTranscriptBrowserPanel.h; sourceTree = "<group>"; };
 		1C3972DC082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatTranscriptBrowserPanel.m; path = Panels/JVChatTranscriptBrowserPanel.m; sourceTree = "<group>"; };
@@ -980,8 +977,6 @@
 		F5BEC20B01F13B0001EE70DE /* voice-idle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "voice-idle.png"; path = "Resources/voice-idle.png"; sourceTree = "<group>"; };
 		F5BEC20D01F1EF1901EE70DE /* admin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = admin.png; path = Resources/admin.png; sourceTree = "<group>"; };
 		F5BEC20E01F1EF1901EE70DE /* admin-idle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "admin-idle.png"; path = "Resources/admin-idle.png"; sourceTree = "<group>"; };
-		F5BEC21401F2256301EE70DE /* MVSoftwareUpdate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVSoftwareUpdate.m; path = Controllers/MVSoftwareUpdate.m; sourceTree = "<group>"; };
-		F5BEC21501F2256301EE70DE /* MVSoftwareUpdate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVSoftwareUpdate.h; path = Controllers/MVSoftwareUpdate.h; sourceTree = "<group>"; };
 		F5C3D42303973E7B01000102 /* addWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addWidget.png; sourceTree = "<group>"; };
 		F5C3D42403973E7B01000102 /* addWidgetSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addWidgetSelected.png; sourceTree = "<group>"; };
 		F5C3D42503973E7B01000102 /* removeWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = removeWidget.png; sourceTree = "<group>"; };
@@ -1059,6 +1054,7 @@
 				1C397391082D4ADA00DCF3CF /* IOKit.framework in Frameworks */,
 				1CEEAB17095BD23500166A54 /* ChatCore.framework in Frameworks */,
 				1CC1AE630A2987E20000A797 /* sqlite3.a in Frameworks */,
+				1C2EDD790A3551B70051E9C2 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1130,6 +1126,7 @@
 				1CF8030C070C893500C9B54C /* libsilc.framework */,
 				1CF8030D070C893500C9B54C /* libsilcclient.framework */,
 				1CF5F8D107D537E50019DC13 /* Growl.framework */,
+				1C2EDD660A3551B60051E9C2 /* Sparkle.framework */,
 				1CC1AE400A2987230000A797 /* sqlite3.a */,
 			);
 			name = "Linked Frameworks";
@@ -1505,8 +1502,6 @@
 				1CBC62E205488C73009E59E1 /* JVPreferencesController.h */,
 				F555208701F0DC2B01EE70DE /* MVCrashCatcher.m */,
 				F555208801F0DC2B01EE70DE /* MVCrashCatcher.h */,
-				F5BEC21401F2256301EE70DE /* MVSoftwareUpdate.m */,
-				F5BEC21501F2256301EE70DE /* MVSoftwareUpdate.h */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -1857,6 +1852,7 @@
 				1C7F300D085545E600D41FB0 /* Copy Spotlight Importer */,
 				1CF038FF062F8DBB009774D8 /* Touch Styles & Emoticons */,
 				1C91DEAC06972EC0007C1638 /* Remove Headers */,
+				1C2EDE8B0A3568EF0051E9C2 /* Update Build Number */,
 			);
 			buildRules = (
 			);
@@ -2206,6 +2202,20 @@
 /* End PBXRezBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1C2EDE8B0A3568EF0051E9C2 /* Update Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Update Build Number";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /usr/bin/perl;
+			shellScript = "# Xcode auto-versioning script for Subversion\n# by Axel Andersson, modified by Daniel Jalkut\n\nuse strict;\n\ndie \"$0: Must be run from Xcode\" unless $ENV{\"BUILT_PRODUCTS_DIR\"};\n\n# Get the current subversion revision number and use it to set the CFBundleVersion value\nmy $REV = `/usr/local/bin/svnversion -n ./`;\nmy $INFO = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{WRAPPER_NAME}/Contents/Info.plist\";\n\nmy $version = $REV;\n\n# (Match the last group of digits and optional letter M/S):\n($version =~ m/\\d+[MS]*$/) && ($version = $&);\n\ndie \"$0: No Subversion revision found\" unless $version;\n\nopen(FH, \"$INFO\") or die \"$0: $INFO: $!\";\nmy $info = join(\"\", <FH>);\nclose(FH);\n\n$info =~ s/(\\s+<key>CFBundleVersion<\\/key>\\s+<string>).*?(<\\/string>)/$1$version$2/;\n\nopen(FH, \">$INFO\") or die \"$0: $INFO: $!\";\nprint FH $info;\nclose(FH);\n";
+		};
 		1C7A60B509FDE8560029AC64 /* Run Tests */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2232,7 +2242,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "find \"$TARGET_BUILD_DIR/$WRAPPER_NAME\" -name 'Headers' -print0 | xargs -0 rm -rf\n";
+			shellScript = "find \"$TARGET_BUILD_DIR/$WRAPPER_NAME\" -name 'Headers' -delete\n";
 		};
 		1CAF6496099EA9350036A727 /* Unarchive Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2244,6 +2254,7 @@
 			);
 			name = "Unarchive Frameworks";
 			outputPaths = (
+				"$(SRCROOT)/Frameworks/Sparkle.framework",
 				"$(SRCROOT)/Frameworks/Growl.framework",
 				"$(SRCROOT)/Frameworks/libsilc.framework",
 				"$(SRCROOT)/Frameworks/libsilcclient.framework",
@@ -2297,7 +2308,6 @@
 				1CB2CD64052DDC560094AAA4 /* MVMenuButton.m in Sources */,
 				1CB2CD65052DDC560094AAA4 /* MVTextView.m in Sources */,
 				1CB2CD67052DDC560094AAA4 /* MVCrashCatcher.m in Sources */,
-				1CB2CD68052DDC560094AAA4 /* MVSoftwareUpdate.m in Sources */,
 				1CB2CD69052DDC560094AAA4 /* MVKeyChain.m in Sources */,
 				1CB2CD6A052DDC560094AAA4 /* MVFileTransferController.m in Sources */,
 				1CB2CD6B052DDC560094AAA4 /* MVConnectionsController.m in Sources */,

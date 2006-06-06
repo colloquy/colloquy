@@ -3,11 +3,12 @@ extern NSString *JVChatEmoticonSetInstalledNotification;
 extern NSString *JVMachineBecameIdleNotification;
 extern NSString *JVMachineStoppedIdlingNotification;
 
-@class JVChatTranscriptBrowserPanel;
+@class SUUpdater;
 
 @interface MVApplicationController : NSObject {
 	io_registry_entry_t _hidEntry;
 	NSTimer *_idleCheck;
+	SUUpdater *_updater;
 	NSTimeInterval _lastIdle;
 	BOOL _isIdle;
 	BOOL _terminateWithoutConfirm;

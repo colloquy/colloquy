@@ -106,7 +106,7 @@
 	<key>LSMinimumSystemVersion</key>
 	<string>10.3.9</string>
 	<key>CFBundleVersion</key>
-	<string>2D43 source</string>
+	<string>source</string>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
 	<string>http://colloquy.info</string>
 	<key>NSAppleScriptEnabled</key>
@@ -202,5 +202,11 @@
 	<string>Colloquy</string>
 	<key>SmartCrashReports_URL</key>
 	<string>http://www.colloquy.info/crash.php</string>
+	<key>SUFeedURL</key>
+	<string>http://www.colloquy.info/update.php?rss</string>
+	<key>SUCheckAtStartup</key>
+	<false/>
+	<key>SUAllowsAutomaticUpdates</key>
+	<true/>
 </dict>
 </plist>
