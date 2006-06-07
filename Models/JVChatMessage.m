@@ -165,7 +165,7 @@
 				xmlFreeDoc( tempDoc );
 			}
 		} else {
-			child = xmlNewTextChild( root, NULL, (xmlChar *) "sender", ( [self senderName] ? (xmlChar *) [[self senderName] UTF8String] : @"" ) );
+			child = xmlNewTextChild( root, NULL, (xmlChar *) "sender", ( [self senderName] ? (xmlChar *) [[self senderName] UTF8String] : "" ) );
 			if( [self senderIsLocalUser] ) xmlSetProp( child, (xmlChar *) "self", (xmlChar *) "yes" );
 			if( [self senderNickname] && ! [[self senderName] isEqualToString:[self senderNickname]] )
 				xmlSetProp( child, (xmlChar *) "nickname", (xmlChar *) [[self senderNickname] UTF8String] );
