@@ -2,6 +2,7 @@
 <xsl:stylesheet version='1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 	<xsl:output omit-xml-declaration="yes" indent="no" />
 	<xsl:param name="bulkTransform" />
+	<xsl:param name="consecutiveMessage" />
 
 	<xsl:template match="/">
 		<xsl:choose>
