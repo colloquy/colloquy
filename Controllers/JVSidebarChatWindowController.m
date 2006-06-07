@@ -23,7 +23,9 @@
 	[super windowDidLoad];
 
 	[chatViewsOutlineView setAllowsEmptySelection:NO];
-//	[[[chatViewsOutlineView outlineTableColumn] dataCell] setBoldAndWhiteOnHighlight:YES];
+
+	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSidebarSelectedRowHasBlackText"] )
+		[[[chatViewsOutlineView outlineTableColumn] dataCell] setBoldAndWhiteOnHighlight:YES];
 
 	[splitView setMainSubviewIndex:1];
 	[splitView setPositionUsingName:@"JVSidebarSplitViewPosition"];
