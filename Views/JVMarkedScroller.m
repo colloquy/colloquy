@@ -140,7 +140,7 @@ struct _mark {
 	// This is so we can draw the colored lines after the regular lines
 	enumerator = [lineArray objectEnumerator];
 	NSColor *lineColor = nil;
-	while( lineColor = [enumerator nextObject] ) {
+	while( ( lineColor = [enumerator nextObject] ) ) {
 		[lineColor set];
 		[[enumerator nextObject] stroke];
 	}
@@ -284,7 +284,7 @@ struct _mark {
 	NSValue *obj = nil;
 	BOOL foundMark = NO;
 
-	while( obj = [e nextObject] ) {
+	while( ( obj = [e nextObject] ) ) {
 		struct _mark mark;
 		[obj getValue:&mark];
 		if( [mark.identifier isEqualToString:identifier] ) {
@@ -395,7 +395,7 @@ struct _mark {
 - (void) removeMarkWithIdentifier:(NSString *) identifier {
 	NSEnumerator *e = [[[_marks copy] autorelease] objectEnumerator];
 	NSValue *obj = nil;
-	while( obj = [e nextObject] ) {
+	while( ( obj = [e nextObject] ) ) {
 		struct _mark mark;
 		[obj getValue:&mark];
 		if( [mark.identifier isEqualToString:identifier] ) {
@@ -410,7 +410,7 @@ struct _mark {
 	NSEnumerator *enumerator = [[[_marks copy] autorelease] objectEnumerator];
 	NSValue *obj = nil;
 
-	while( obj = [enumerator nextObject] ) {
+	while( ( obj = [enumerator nextObject] ) ) {
 		struct _mark mark;
 		[obj getValue:&mark];
 		if( mark.location > location )
@@ -424,7 +424,7 @@ struct _mark {
 	NSEnumerator *enumerator = [[[_marks copy] autorelease] objectEnumerator];
 	NSValue *obj = nil;
 
-	while( obj = [enumerator nextObject] ) {
+	while( ( obj = [enumerator nextObject] ) ) {
 		struct _mark mark;
 		[obj getValue:&mark];
 		if( mark.location < location )
@@ -438,7 +438,7 @@ struct _mark {
 	NSEnumerator *enumerator = [[[_marks copy] autorelease] objectEnumerator];
 	NSValue *obj = nil;
 
-	while( obj = [enumerator nextObject] ) {
+	while( ( obj = [enumerator nextObject] ) ) {
 		struct _mark mark;
 		[obj getValue:&mark];
 		if( NSLocationInRange( (unsigned int)mark.location, range ) )

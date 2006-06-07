@@ -35,7 +35,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	breaks = [[[desc allKeys] mutableCopy] autorelease];
 	[breaks sortUsingSelector:@selector( compare: )];
 
-	while( i < [breaks count] && secs >= (NSTimeInterval) [[breaks objectAtIndex:i] unsignedIntValue] ) i++;
+	while( i < [breaks count] && secs >= [[breaks objectAtIndex:i] doubleValue] ) i++;
 	if( i > 0 ) i--;
 	stop = [[breaks objectAtIndex:i] unsignedIntValue];
 
@@ -136,7 +136,6 @@ finish:
 #pragma mark -
 
 + (MVFileTransferController *) defaultController {
-	extern MVFileTransferController *sharedInstance;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
 
@@ -173,8 +172,6 @@ finish:
 }
 
 - (void) dealloc {
-	extern MVFileTransferController *sharedInstance;
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
@@ -388,7 +385,7 @@ finish:
 		[cell setMainText:[[NSFileManager defaultManager] displayNameAtPath:path]];
 	} else if( [[column identifier] isEqual:@"status"] ) {
 		id controller = [[self _infoForTransferAtIndex:row] objectForKey:@"controller"];
-		MVFileTransferStatus status = (MVFileTransferStatus) [[[self _infoForTransferAtIndex:row] objectForKey:@"status"] unsignedIntValue];
+		MVFileTransferStatus status = [[[self _infoForTransferAtIndex:row] objectForKey:@"status"] unsignedLongValue];
 		NSString *imageName = @"pending";
 		if( status == MVFileTransferErrorStatus ) imageName = @"error";
 		else if( status == MVFileTransferStoppedStatus ) imageName = @"stopped";

@@ -384,14 +384,16 @@
 	[_sortColumn autorelease];
 	_sortColumn = [[column identifier] copy];
 
-	unsigned int index = [roomsTable selectedRow];
-	NSString *selectedRoom = ( index != -1 && [_roomOrder count] ? [[[_roomOrder objectAtIndex:index] copy] autorelease] : nil );
+	int index = [roomsTable selectedRow];
+	NSString *selectedRoom = ( index != -1 && [_roomOrder count] ? [[_roomOrder objectAtIndex:index] copy] : nil );
 	[roomsTable deselectAll:nil];
 
 	[self _resortResults];
 
 	if( selectedRoom ) index = [_roomOrder indexOfObject:selectedRoom];
 	else index = NSNotFound;
+
+	[selectedRoom release];
 
 	if( index != NSNotFound ) {
 		[roomsTable selectRow:index byExtendingSelection:NO];
@@ -414,22 +416,22 @@
 
 #pragma mark -
 
-NSComparisonResult sortByRoomNameAscending( NSString *room1, NSString *room2, void *context ) {
+static NSComparisonResult sortByRoomNameAscending( NSString *room1, NSString *room2, void *context ) {
 	return [room1 caseInsensitiveCompare:room2];
 }
 
-NSComparisonResult sortByRoomNameDescending( NSString *room1, NSString *room2, void *context ) {
+static NSComparisonResult sortByRoomNameDescending( NSString *room1, NSString *room2, void *context ) {
 	return [room2 caseInsensitiveCompare:room1];
 }
 
-NSComparisonResult sortByNumberOfMembersAscending( NSString *room1, NSString *room2, void *context ) {
+static NSComparisonResult sortByNumberOfMembersAscending( NSString *room1, NSString *room2, void *context ) {
 	NSDictionary *info = context;
 	NSComparisonResult res = [(NSNumber *)[[info objectForKey:room1] objectForKey:@"users"] compare:[[info objectForKey:room2] objectForKey:@"users"]];
 	if( res != NSOrderedSame ) return res;
 	return [room1 caseInsensitiveCompare:room2];
 }
 
-NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSString *room2, void *context ) {
+static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSString *room2, void *context ) {
 	NSDictionary *info = context;
 	NSComparisonResult res = [(NSNumber *)[[info objectForKey:room2] objectForKey:@"users"] compare:[[info objectForKey:room1] objectForKey:@"users"]];
 	if( res != NSOrderedSame ) return res;
@@ -495,8 +497,8 @@ NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSString *r
 }
 
 - (void) _refreshResults:(id) sender {
-	unsigned int index = [roomsTable selectedRow];
-	NSString *selectedRoom = ( index != -1 && [_roomOrder count] ? [[[_roomOrder objectAtIndex:index] copy] autorelease] : nil );
+	int index = [roomsTable selectedRow];
+	NSString *selectedRoom = ( index != -1 && [_roomOrder count] ? [[_roomOrder objectAtIndex:index] copy] : nil );
 
 	if( _collapsed || ! [_currentFilter length] ) {
 		[_roomOrder setArray:[_roomResults allKeys]];
@@ -554,6 +556,8 @@ refresh:
 
 	if( selectedRoom ) index = [_roomOrder indexOfObject:selectedRoom];
 	else index = NSNotFound;
+
+	[selectedRoom release];
 
 	if( index != NSNotFound ) {
 		[roomsTable selectRow:index byExtendingSelection:NO];

@@ -203,7 +203,7 @@ static  NSImage			*tabDivider = nil;
 		NSEnumerator 	*enumerator = [tabCellArray objectEnumerator];
 		AICustomTabCell *tabCell;
 
-		while(tabCell = [enumerator nextObject]){
+		while( ( tabCell = [enumerator nextObject] ) ) {
 			if(tabCell != targetCell){
 				[delegate customTabView:self closeTabViewItem:[tabCell tabViewItem]];
 			}
@@ -466,7 +466,7 @@ static  NSImage			*tabDivider = nil;
     //Position the tabs
     xLocation = CUSTOM_TABS_INDENT;
     enumerator = [tabCellArray objectEnumerator];
-    int index = 0;
+    unsigned index = 0;
 
     while((tabCell = [enumerator nextObject])){
 		if(tabCell != dragCell){
@@ -570,7 +570,7 @@ static  NSImage			*tabDivider = nil;
 }
 
 //Constrain a rect horizontally
-NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
+static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 {
 	if(rect.origin.x < left){
 		rect.size.width -= left - rect.origin.x;
@@ -655,7 +655,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
     lastClickLocation = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 
 	//Give the tab cell a chance to handle tracking
-    if(tabCell = [self tabAtPoint:lastClickLocation]){
+    if((tabCell = [self tabAtPoint:lastClickLocation])){
         if(![tabCell willTrackMouse:theEvent inRect:[tabCell frame] ofView:self]){
 //			if(!( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask )){ //Allow background dragging
                 [tabView selectTabViewItem:[tabCell tabViewItem]];
@@ -741,7 +741,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		success = YES;
 
     }else{
-        if(tabCell = [self tabAtPoint:[sender draggingLocation]]){
+        if((tabCell = [self tabAtPoint:[sender draggingLocation]])){
             if([delegate respondsToSelector:@selector(customTabView:didAcceptDragPasteboard:onTabViewItem:)]){
                 success = [delegate customTabView:self didAcceptDragPasteboard:pboard
 									onTabViewItem:[tabCell tabViewItem]];
@@ -795,7 +795,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
     }else{
 		AICustomTabCell	*tabCell;
 
-        if(tabCell = [self tabAtPoint:location]){
+        if((tabCell = [self tabAtPoint:location])){
             //Select the tab being hovered
             if([tabView selectedTabViewItem] != [tabCell tabViewItem]){
                 [tabView selectTabViewItem:[tabCell tabViewItem]];
@@ -835,11 +835,11 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		NSEnumerator 	*enumerator;
 		AICustomTabCell	*tabCell;
 		float			lastLocation = CUSTOM_TABS_INDENT;
-		int 			hoverIndex = 0;
+		unsigned 		hoverIndex = 0;
 
 		//Figure out where the user is hovering the tabcell item
 		enumerator = [tabCellArray objectEnumerator];
-		while(tabCell = [enumerator nextObject]){
+		while((tabCell = [enumerator nextObject])){
 			if(tabCell != dragCell){
 				if(inPoint.x < lastLocation + (([tabCell frame].size.width + dragTabWidth) / 2.0) ) break;
 				lastLocation += [tabCell frame].size.width + CUSTOM_TABS_GAP;
@@ -858,7 +858,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		int					hover;
 
 		//If dragging is disallowed, ask our delegate where this tab should go
-		int	desiredIndex = [delegate customTabView:self indexForInsertingTabViewItem:tabViewItem];
+		unsigned desiredIndex = [delegate customTabView:self indexForInsertingTabViewItem:tabViewItem];
 		if(outIndex) *outIndex = desiredIndex;
 
 		//Position the hover tab

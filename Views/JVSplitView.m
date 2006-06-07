@@ -52,7 +52,7 @@
 	return NO;
 }
 
-#pragma amrk -
+#pragma mark -
 
 - (void) setMainSubviewIndex:(long) index {
 	_mainSubviewIndex = index;
@@ -62,7 +62,7 @@
 	return _mainSubviewIndex;
 }
 
-#pragma amrk -
+#pragma mark -
 
 - (void) resetCursorRects {
 	if( ! [self isPaneSplitter] )

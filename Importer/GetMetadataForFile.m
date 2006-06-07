@@ -155,6 +155,8 @@
 }
 @end
 
+Boolean GetMetadataForFile( void *thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile );
+
 Boolean GetMetadataForFile( void *thisInterface, CFMutableDictionaryRef attributes, CFStringRef contentTypeUTI, CFStringRef pathToFile ) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 

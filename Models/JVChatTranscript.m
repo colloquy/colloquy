@@ -323,7 +323,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 	done:
 		return [ret autorelease];
-	}
+	} return nil;
 }
 
 - (id) elementAtIndex:(unsigned long) index {
@@ -434,10 +434,12 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 	done:
 		return [ret autorelease];
-	}
+	} return nil;
 }
 
 - (JVChatMessage *) messageAtIndex:(unsigned long) index {
+	NSRange range = NSMakeRange( index, 1 );
+
 	@synchronized( self ) {
 		if( [_messages count] > index ) {
 			id obj = [_messages objectAtIndex:index];
@@ -447,7 +449,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		}
 	}
 
-	return [[self messagesInRange:NSMakeRange( index, 1 )] lastObject];
+	return [[self messagesInRange:range] lastObject];
 }
 
 - (JVChatMessage *) messageWithIdentifier:(NSString *) identifier {
@@ -474,7 +476,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		} while( node && ( node = node -> next ) );
 
 		return ( foundNode ? [[[JVChatMessage allocWithZone:nil] _initWithNode:foundNode andTranscript:self] autorelease] : nil );
-	}
+	} return nil;
 }
 
 - (JVChatMessage *) lastMessage {
@@ -495,7 +497,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		} while( node && ( node = node -> prev ) );
 
 		return ( foundNode ? [[[JVChatMessage allocWithZone:nil] _initWithNode:foundNode andTranscript:self] autorelease] : nil );
-	}
+	} return nil;
 }
 
 #pragma mark -
@@ -522,9 +524,9 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 				} while( subNode && ( subNode = subNode -> next ) );
 			}
 		} while( node && ( node = node -> next ) );
-
-		return NO;
 	}
+
+	return NO;
 }
 
 #pragma mark -
@@ -621,7 +623,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		_requiresNewEnvelope = NO;
 
 		return [[[JVChatMessage allocWithZone:nil] _initWithNode:child andTranscript:self] autorelease];
-	}
+	} return nil;
 }
 
 - (NSArray *) appendMessages:(NSArray *) messages {
@@ -674,7 +676,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 	done:
 		return [ret autorelease];
-	}
+	} return nil;
 }
 
 - (JVChatSession *) sessionAtIndex:(unsigned long) index {
@@ -739,7 +741,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 	done:
 		return [ret autorelease];
-	}
+	} return nil;
 }
 
 - (JVChatEvent *) eventAtIndex:(unsigned long) index {
@@ -777,9 +779,9 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 				if( found ) return YES;
 			}
 		} while( node && ( node = node -> next ) );
-
-		return NO;
 	}
+
+	return NO;
 }
 
 #pragma mark -
@@ -794,7 +796,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		[self _enforceElementLimit];
 		[self _incrementalWriteToLog:root continuation:NO];
 		return [[[JVChatEvent allocWithZone:nil] _initWithNode:root andTranscript:self] autorelease];
-	}
+	} return nil;
 }
 
 #pragma mark -
@@ -1047,8 +1049,6 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 				xmlFree( value );
 			}
 		}
-
-		NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
 
 		[logElement appendString:@">"];
 		if( format ) [logElement appendString:@"\n"];

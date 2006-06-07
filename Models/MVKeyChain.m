@@ -6,12 +6,10 @@ static MVKeyChain *sharedInstance = nil;
 
 @implementation MVKeyChain
 + (MVKeyChain *) defaultKeyChain {
-	extern MVKeyChain *sharedInstance;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
 }
 
 - (void) dealloc {
-	extern MVKeyChain *sharedInstance;
 	if( sharedInstance == self ) sharedInstance = nil;
 	[super dealloc];
 }

@@ -263,11 +263,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
-- (void) setScrollbackLimit:(unsigned int) limit {
+- (void) setScrollbackLimit:(unsigned long) limit {
 	_scrollbackLimit = limit;
 }
 
-- (unsigned int) scrollbackLimit {
+- (unsigned long) scrollbackLimit {
 	return _scrollbackLimit;
 }
 
@@ -601,8 +601,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	[parameters setObject:@"'yes'" forKey:@"bulkTransform"];
 
-	for( unsigned long i = elementCount; i > ( elementCount - MIN( [self scrollbackLimit], elementCount ) ); i -= MIN( 25, i ) ) {
-		NSArray *elements = [transcript elementsInRange:NSMakeRange( i - MIN( 25, i ), MIN( 25, i ) )];
+#define min(a,b) a > b ? b : a
+#define max(a,b) a < b ? b : a
+
+	for( unsigned long i = elementCount; i > ( elementCount - min( [self scrollbackLimit], elementCount ) ); i -= min( 25, i ) ) {
+		NSArray *elements = [transcript elementsInRange:NSMakeRange( i - min( 25, i ), min( 25, i ) )];
 
 		id element = nil;
 		NSEnumerator *enumerator = [elements objectEnumerator];

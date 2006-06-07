@@ -390,14 +390,19 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (BOOL) upArrowKeyPressed {
 	if( ! _historyIndex && [_sendHistory count] )
 		[_sendHistory replaceObjectAtIndex:0 withObject:[[[send textStorage] copy] autorelease]];
+
 	_historyIndex++;
-	if( _historyIndex >= [_sendHistory count] ) {
-		_historyIndex = [_sendHistory count] - 1;
-		if( (signed) _historyIndex < 0 ) _historyIndex = 0;
+
+	if( _historyIndex >= (int) [_sendHistory count] ) {
+		if( [_sendHistory count] >= 1 )
+			_historyIndex = [_sendHistory count] - 1;
+		else _historyIndex = 0;
 		return YES;
 	}
+
 	[send reset:nil];
 	[[send textStorage] insertAttributedString:[_sendHistory objectAtIndex:_historyIndex] atIndex:0];
+
 	return YES;
 }
 

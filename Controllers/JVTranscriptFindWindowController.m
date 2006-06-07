@@ -14,7 +14,6 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 
 @implementation JVTranscriptFindWindowController
 + (JVTranscriptFindWindowController *) sharedController {
-	extern JVTranscriptFindWindowController *sharedInstance;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
 
@@ -35,8 +34,6 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 }
 
 - (void) dealloc {
-	extern JVTranscriptFindWindowController *sharedInstance;
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 

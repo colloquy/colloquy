@@ -15,7 +15,7 @@
 
 @implementation MVColorPanel
 - (id) init {
-	if( ( self = [super init] ) );
+	if( ( self = [super init] ) )
 		[self setAccessoryView:[self _makeAccessoryView]];
 	return self;
 }

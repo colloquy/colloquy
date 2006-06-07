@@ -45,18 +45,15 @@ static NSMenu *favoritesMenu = nil;
 
 @implementation MVConnectionsController
 + (MVConnectionsController *) defaultController {
-	extern MVConnectionsController *sharedInstance;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
 
 + (NSMenu *) favoritesMenu {
-	extern NSMenu *favoritesMenu;
 	[self refreshFavoritesMenu];
 	return favoritesMenu;
 }
 
 + (void) refreshFavoritesMenu {
-	extern NSMenu *favoritesMenu;
 	if( ! favoritesMenu ) favoritesMenu = [[NSMenu alloc] initWithTitle:@""];
 
 	NSMenuItem *menuItem = nil;
@@ -127,7 +124,6 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) dealloc {
-	extern MVConnectionsController *sharedInstance;
 	[self _saveBookmarkList];
 
 	[connections setDelegate:nil];
@@ -1456,8 +1452,8 @@ static NSMenu *favoritesMenu = nil;
 			NSMutableDictionary *data = [NSMutableDictionary dictionary];
 			[data setObject:[NSNumber numberWithBool:[[info objectForKey:@"automatic"] boolValue]] forKey:@"automatic"];
 			[data setObject:[NSNumber numberWithBool:[connection isSecure]] forKey:@"secure"];
-			[data setObject:[NSNumber numberWithInt:(int)[connection proxyType]] forKey:@"proxy"];
-			[data setObject:[NSNumber numberWithLong:(long)[connection encoding]] forKey:@"encoding"];
+			[data setObject:[NSNumber numberWithLong:[connection proxyType]] forKey:@"proxy"];
+			[data setObject:[NSNumber numberWithLong:[connection encoding]] forKey:@"encoding"];
 			[data setObject:[connection server] forKey:@"server"];
 			[data setObject:[NSNumber numberWithUnsignedShort:[connection serverPort]] forKey:@"port"];
 			[data setObject:[connection preferredNickname] forKey:@"nickname"];
@@ -1517,7 +1513,7 @@ static NSMenu *favoritesMenu = nil;
 
 		[connection setPersistentInformation:[info objectForKey:@"persistentInformation"]];
 
-		[connection setProxyType:(MVChatConnectionProxy)[[info objectForKey:@"proxy"] unsignedIntValue]];
+		[connection setProxyType:[[info objectForKey:@"proxy"] unsignedLongValue]];
 
 		if( [[info objectForKey:@"encoding"] longValue] ) [connection setEncoding:[[info objectForKey:@"encoding"] longValue]];
 		else [connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
@@ -1671,12 +1667,12 @@ static NSMenu *favoritesMenu = nil;
 - (void) _requestPublicKeyVerification:(NSNotification *) notification {
 	NSDictionary *dict = [notification userInfo];
 
-	if ( [publicKeyVerification isVisible] ) {
+	if( [publicKeyVerification isVisible] ) {
 		[_publicKeyRequestQueue addObject:notification];
 		return;
 	}
 
-	switch ( (MVChatConnectionPublicKeyType) [[dict objectForKey:@"publicKeyType"] unsignedIntValue] ) {
+	switch( [[dict objectForKey:@"publicKeyType"] unsignedLongValue] ) {
 		case MVChatConnectionClientPublicKeyType:
 			[publicKeyNameDescription setObjectValue:@"User name:"];
 			[publicKeyDescription setObjectValue:@"Please verify the users public key."];
@@ -1781,13 +1777,13 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (IBAction) _disconnect:(id) sender {
-	unsigned int row = [connections selectedRow];
+	int row = [connections selectedRow];
 	if( row == -1 ) return;
 	[[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] disconnect];
 }
 
 - (void) _delete:(id) sender {
-	unsigned int row = [connections selectedRow];
+	int row = [connections selectedRow];
 	if( row == -1 ) return;
 
 	MVChatConnection *connection = [[_bookmarks objectAtIndex:row] objectForKey:@"connection"];
@@ -1796,7 +1792,7 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) _deleteConnectionSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	if( returnCode != NSCancelButton ) return; // the cancel button because we have them flipped above
-	unsigned int row = [connections selectedRow];
+	int row = [connections selectedRow];
 	if( row == -1 ) return;
 	[connections deselectAll:nil];
 	[self removeConnectionAtIndex:row];
@@ -1808,7 +1804,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (IBAction) _openConsole:(id) sender {
-	unsigned int row = [connections selectedRow];
+	int row = [connections selectedRow];
 	if( row == -1 ) return;
 	[[JVChatController defaultController] chatConsoleForConnection:[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] ifExists:NO];
 }

@@ -1,6 +1,8 @@
 #import "JVGeneralPreferences.h"
 #import "JVBuddy.h"
 
+extern const NSStringEncoding JVAllowedTextEncodings[];
+
 @implementation JVGeneralPreferences
 - (NSString *) preferencesNibName {
 	return @"JVGeneralPreferences";
@@ -23,7 +25,6 @@
 }
 
 - (void) buildEncodingMenu {
-	extern const NSStringEncoding JVAllowedTextEncodings[];
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *menuItem = nil;
 	unsigned int i = 0;

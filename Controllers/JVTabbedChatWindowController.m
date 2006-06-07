@@ -59,8 +59,8 @@
 - (void) insertChatViewController:(id <JVChatViewController>) controller atIndex:(unsigned int) index {
 	NSParameterAssert( controller != nil );
 	NSAssert1( ! [_views containsObject:controller], @"%@ already added.", controller );
-	NSAssert( index >= 0 && index <= [_views count], @"Index is beyond bounds." );
-	NSAssert( index >= 0 && index <= [_tabItems count], @"Index is beyond bounds." );
+	NSAssert( index <= [_views count], @"Index is beyond bounds." );
+	NSAssert( index <= [_tabItems count], @"Index is beyond bounds." );
 
 	[super insertChatViewController:controller atIndex:index];
 
@@ -91,8 +91,8 @@
 - (void) replaceChatViewControllerAtIndex:(unsigned int) index withController:(id <JVChatViewController>) controller {
 	NSParameterAssert( controller != nil );
 	NSAssert1( ! [_views containsObject:controller], @"%@ is already a member of this window controller.", controller );
-	NSAssert( index >= 0 && index <= [_views count], @"Index is beyond bounds." );
-	NSAssert( index >= 0 && index <= [_tabItems count], @"Index is beyond bounds." );
+	NSAssert( index <= [_views count], @"Index is beyond bounds." );
+	NSAssert( index <= [_tabItems count], @"Index is beyond bounds." );
 
 	JVChatTabItem *newTab = [[[JVChatTabItem alloc] initWithChatViewController:controller] autorelease];
 

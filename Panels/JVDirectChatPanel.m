@@ -916,7 +916,6 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 			} else {
 				if( [[subMsg string] hasPrefix:@"//"] ) [subMsg deleteCharactersInRange:NSMakeRange( 0, 1 )];
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && ! action ) {
-					extern NSSet *actionVerbs;
 					if( ! actionVerbs ) {
 						NSArray *verbs = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]];
 						actionVerbs = [[NSSet allocWithZone:nil] initWithArray:verbs];
@@ -1049,14 +1048,18 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 - (BOOL) upArrowKeyPressed {
 	if( ! _historyIndex && [_sendHistory count] )
 		[_sendHistory replaceObjectAtIndex:0 withObject:[[[send textStorage] copy] autorelease]];
+
 	_historyIndex++;
-	if( _historyIndex >= [_sendHistory count] ) {
+
+	if( _historyIndex >= (int) [_sendHistory count] ) {
 		_historyIndex = [_sendHistory count] - 1;
 		if( (signed) _historyIndex < 0 ) _historyIndex = 0;
 		return YES;
 	}
+
 	[send reset:nil];
 	[[send textStorage] insertAttributedString:[_sendHistory objectAtIndex:_historyIndex] atIndex:0];
+
 	return YES;
 }
 
@@ -1535,9 +1538,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 				[menu removeItem:menuItem];
 	}
 
-	NSDictionary *info = nil;
 	unsigned int count = 0;
-
 	if( ! [menu indexOfItemWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item label" )] )
 		count++;
 
@@ -1830,6 +1831,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	if( realLocalEcho ) [self echoSentMessageToDisplay:cmessage];
 
 	[cmessage release];
+	return nil;
 }
 
 #pragma mark -

@@ -40,7 +40,7 @@
 		return;
 	}
 
-	while( anEvent = [e nextObject] ) {
+	while( ( anEvent = [e nextObject] ) ) {
 		if( [self checkKeyEvent:anEvent] ) {
 			if( [newArray count] > 0 ) {
 				[super interpretKeyEvents:newArray];
@@ -367,7 +367,7 @@
 
 			NSString *tempWord = [[self string] substringWithRange:wordRange];
 			BOOL keepSearching = YES;
-			int count = 0;
+			unsigned count = 0;
 
 			do {
 				keepSearching = ! [[possibleNicks objectAtIndex:count] isEqualToString:tempWord];

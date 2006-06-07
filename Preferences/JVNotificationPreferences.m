@@ -64,10 +64,9 @@
 	AGRegex *regex = [AGRegex regexWithPattern:@"(?:\\s|^)(/.*?/)(?:\\s|$)"];
 	NSArray *matches = [regex findAllInString:words];
 	NSEnumerator *e = [matches objectEnumerator];
-	AGRegexMatch *match;
-	while( match = [e nextObject] ) {
+	AGRegexMatch *match = nil;
+	while( ( match = [e nextObject] ) )
 		[components addObject:[match groupAtIndex:1]];
-	}
 	words = [regex replaceWithString:@"" inString:words];
 	[components addObjectsFromArray:[words componentsSeparatedByString:@" "]];
 	[components removeObject:@""];
@@ -101,7 +100,7 @@
 	NSMenu *availableSounds = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 
 	enumerator = [[[NSBundle mainBundle] pathsForResourcesOfType:@"aiff" inDirectory:@"Sounds"] objectEnumerator];
-	while( sound = [enumerator nextObject] ) {
+	while( ( sound = [enumerator nextObject] ) ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[[sound lastPathComponent] stringByDeletingPathExtension] action:NULL keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:[sound lastPathComponent]];
 		[menuItem setImage:[NSImage imageNamed:@"sound"]];
@@ -119,8 +118,8 @@
 		[@"~/Library/Sounds" stringByExpandingTildeInPath],
 		nil];
 	NSEnumerator *pathEnum = [paths objectEnumerator];
-	NSString *aPath;
-	while( aPath = [pathEnum nextObject] ) {
+	NSString *aPath = nil;
+	while( ( aPath = [pathEnum nextObject] ) ) {
 		if( [aPath isEqualToString:@"-"] ) {
 			first = YES;
 			continue;

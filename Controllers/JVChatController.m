@@ -24,18 +24,15 @@ static NSMenu *smartTranscriptMenu = nil;
 
 @implementation JVChatController
 + (JVChatController *) defaultController {
-	extern JVChatController *sharedInstance;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
 }
 
 + (NSMenu *) smartTranscriptMenu {
-	extern NSMenu *smartTranscriptMenu;
 	[self refreshSmartTranscriptMenu];
 	return smartTranscriptMenu;
 }
 
 + (void) refreshSmartTranscriptMenu {
-	extern NSMenu *smartTranscriptMenu;
 	if( ! smartTranscriptMenu ) smartTranscriptMenu = [[NSMenu alloc] initWithTitle:@""];
 
 	NSMenuItem *menuItem = nil;
@@ -103,8 +100,6 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (void) dealloc {
-	extern JVChatController *sharedInstance;
-
 	[[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeyPath:@"JVChatWindowRuleSets"];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
@@ -1004,8 +999,8 @@ static NSMenu *smartTranscriptMenu = nil;
 		if( ! [chatViews count] ) [NSArray array];
 
 		if( ( ! startSpec || [startKey isEqualToString:@"chatViews"] || [startKey isEqualToString:@"chatRooms"] || [startKey isEqualToString:@"directChats"] || [startKey isEqualToString:@"chatConsoles"] || [startKey isEqualToString:@"chatTranscripts"] ) && ( ! endSpec || [endKey isEqualToString:@"chatViews"] || [endKey isEqualToString:@"chatRooms"] || [endKey isEqualToString:@"directChats"] || [endKey isEqualToString:@"chatConsoles"] || [endKey isEqualToString:@"chatTranscripts"] ) ) {
-			int startIndex = 0;
-			int endIndex = 0;
+			unsigned startIndex = 0;
+			unsigned endIndex = 0;
 
 			// The strategy here is going to be to find the index of the start and stop object in the full chat views array, regardless of what its key is.  Then we can find what we're looking for in that range of the chat views key (weeding out objects we don't want, if necessary).
 			// First find the index of the first start object in the chat views array
@@ -1034,7 +1029,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 			// Accept backwards ranges gracefully
 			if( endIndex < startIndex ) {
-				int temp = endIndex;
+				unsigned temp = endIndex;
 				endIndex = startIndex;
 				startIndex = temp;
 			}
@@ -1045,10 +1040,10 @@ static NSMenu *smartTranscriptMenu = nil;
 			NSMutableArray *result = [NSMutableArray array];
 			BOOL keyIsGeneric = [key isEqualToString:@"chatViews"];
 			NSArray *rangeKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
-			unsigned curKeyIndex = 0, i = 0;
+			unsigned curKeyIndex = 0;
 			id obj = nil;
 
-			for( i = startIndex; i <= endIndex; i++ ) {
+			for( unsigned i = startIndex; i <= endIndex; i++ ) {
 				if( keyIsGeneric ) {
 					[result addObject:[NSNumber numberWithInt:i]];
 				} else {
@@ -1080,7 +1075,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		if( ! [chatViews count] ) return [NSArray array];
 
 		if( [baseKey isEqualToString:@"chatViews"] || [baseKey isEqualToString:@"chatRooms"] || [baseKey isEqualToString:@"directChats"] || [baseKey isEqualToString:@"chatConsoles"] || [baseKey isEqualToString:@"chatTranscripts"] ) {
-			int baseIndex = 0;
+			unsigned baseIndex = 0;
 
 			// The strategy here is going to be to find the index of the base object in the full chat views array, regardless of what its key is.  Then we can find what we're looking for before or after it.
 			// First find the index of the first or last base object in the master array
@@ -1112,7 +1107,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			if( relPos == NSRelativeBefore ) baseIndex--;
 			else baseIndex++;
 
-			while( baseIndex >= 0 && baseIndex < viewCount ) {
+			while( baseIndex < viewCount ) {
 				if( keyIsGeneric ) {
 					[result addObject:[NSNumber numberWithInt:baseIndex]];
 					break;

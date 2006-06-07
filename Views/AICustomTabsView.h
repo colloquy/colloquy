@@ -42,8 +42,8 @@
 
 	//Tab Dragging
     BOOL                removingLastTabHidesWindow;	//Removing the last tab hides our window
-	int 				tabGapWidth;				//Gap in our tabs
-	int 				tabGapIndex;				//Location of the gap
+	unsigned 			tabGapWidth;				//Gap in our tabs
+	unsigned 			tabGapIndex;				//Location of the gap
     NSPoint				lastClickLocation;			//Last click location
     NSTimer             *arrangeCellTimer;			//Timer for tab animations
 

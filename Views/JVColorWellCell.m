@@ -6,7 +6,6 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 
 @implementation JVColorWellCell
 + (void) colorPanelColorChanged:(NSNotification *) notification {
-	extern NSMutableSet *colorWellCells;
 	NSColorPanel *panel = [notification object];
 	NSEnumerator *enumerator = [colorWellCells objectEnumerator];
 	JVColorWellCell *cell = nil;
@@ -20,7 +19,6 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 }
 
 + (void) colorPanelClosed:(NSNotification *) notification {
-	extern NSMutableSet *colorWellCells;
 	NSEnumerator *enumerator = [colorWellCells objectEnumerator];
 	JVColorWellCell *cell = nil;
 
@@ -51,7 +49,6 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	}
 
 	if( ( self = [super initImageCell:nil] ) ) {
-		extern NSMutableSet *colorWellCells;
 		if( ! colorWellCells ) colorWellCells = [[NSMutableSet set] retain];
 		[colorWellCells addObject:self];
 		_releasing = NO;
@@ -87,7 +84,6 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 
 - (void) release {
 	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
-		extern NSMutableSet *colorWellCells;
 		_releasing = YES;
 		[colorWellCells removeObject:self];
 		if( ! [colorWellCells count] ) {
@@ -155,7 +151,6 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 
 - (void) activate:(BOOL) exclusive {
 	if( exclusive ) {
-		extern NSMutableSet *colorWellCells;
 		NSEnumerator *enumerator = [colorWellCells objectEnumerator];
 		JVColorWellCell *cell = nil;
 

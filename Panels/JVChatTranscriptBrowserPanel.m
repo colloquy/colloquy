@@ -47,7 +47,6 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 	if( ! sharedBrowser && ( self = [super init] ) ) {
 		NSMutableDictionary *tempDictionary = [NSMutableDictionary dictionary];
 		int org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
-		int session = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptSessionHandling"];
 
 		AGRegex *regex = nil;
 		switch( org ) {

@@ -70,7 +70,6 @@ static BOOL applicationIsTerminating = NO;
 #pragma mark -
 
 + (BOOL) isTerminating {
-	extern BOOL applicationIsTerminating;
 	return applicationIsTerminating;
 }
 
@@ -80,7 +79,7 @@ static BOOL applicationIsTerminating = NO;
 
 - (NSTimeInterval) idleTime {
 	NSMutableDictionary *hidProperties = nil;
-	kern_return_t err = IORegistryEntryCreateCFProperties( _hidEntry, (CFMutableDictionaryRef *) &hidProperties, kCFAllocatorDefault, 0 );
+	IORegistryEntryCreateCFProperties( _hidEntry, (CFMutableDictionaryRef *) &hidProperties, kCFAllocatorDefault, 0 );
 
 	id hidIdleTimeObj = [hidProperties objectForKey:@"HIDIdleTime"];
 	unsigned long long result;
@@ -413,7 +412,6 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (void) applicationWillTerminate:(NSNotification *) notification {
-	extern BOOL applicationIsTerminating;
 	applicationIsTerminating = YES;
 
 	[[NSAppleEventManager sharedAppleEventManager] removeEventHandlerForEventClass:kInternetEventClass andEventID:kAEGetURL];

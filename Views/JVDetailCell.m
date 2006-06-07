@@ -202,7 +202,7 @@
 #define JVDetailCellStatusImageRightPadding JVDetailCellStatusImageLeftPadding
 
 	float statusWidth = ( _statusImage ? [_statusImage size].width + JVDetailCellStatusImageRightPadding : 0. );
-	if( ! _statusImage && _statusNumber || _importantStatusNumber ) {
+	if( ! _statusImage && ( _statusNumber || _importantStatusNumber ) ) {
 		NSColor *textColor = [NSColor whiteColor];
 		NSColor *backgroundColor = [NSColor colorWithCalibratedRed:0.6 green:0.6705882352941176 blue:0.7725490196078431 alpha:1.];
 		NSColor *importantColor = [NSColor colorWithCalibratedRed:0.831372549019608 green:0.572549019607843 blue:0.541176470588235 alpha:1.];

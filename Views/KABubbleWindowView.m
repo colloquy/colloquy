@@ -1,6 +1,6 @@
 #import "KABubbleWindowView.h"
 
-void KABubbleShadeInterpolate( void *info, float const *inData, float *outData ) {
+static void KABubbleShadeInterpolate( void *info, float const *inData, float *outData ) {
 	static float dark[4] = { .69412, .83147, .96078, .95 };
 	static float light[4] = { .93725, .96863, .99216, .95 };
 	float a = inData[0];
@@ -14,7 +14,7 @@ void KABubbleShadeInterpolate( void *info, float const *inData, float *outData )
 
 @implementation KABubbleWindowView
 - (id) initWithFrame:(NSRect) frame {
-	if( self = [super initWithFrame:frame] ) {
+	if( ( self = [super initWithFrame:frame] ) ) {
 		_icon = nil;
 		_title = nil;
 		_text = nil;

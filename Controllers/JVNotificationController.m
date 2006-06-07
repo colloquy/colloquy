@@ -18,7 +18,6 @@ static JVNotificationController *sharedInstance = nil;
 
 @implementation JVNotificationController
 + (JVNotificationController *) defaultController {
-	extern JVNotificationController *sharedInstance;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
 }
 
@@ -37,8 +36,6 @@ static JVNotificationController *sharedInstance = nil;
 }
 
 - (void) dealloc {
-	extern JVNotificationController *sharedInstance;
-
 	[_bubbles release];
 	[_sounds release];
 

@@ -37,7 +37,6 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 + (MVBuddyListController *) sharedBuddyList {
-	extern MVBuddyListController *sharedInstance;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
 
@@ -59,7 +58,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 		[self _loadBuddyList];
 
-		[JVBuddy setPreferredName:(JVBuddyName)[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatBuddyNameStyle"]];
+		[JVBuddy setPreferredName:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatBuddyNameStyle"]];
 
 		[self setShowIcons:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatBuddyListShowIcons"]];
 		[self setShowFullNames:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatBuddyListShowFullNames"]];
@@ -78,7 +77,6 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) dealloc {
-	extern MVBuddyListController *sharedInstance;
 	[self _saveBuddyList];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -591,7 +589,7 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
-	if( row == -1 || row >= [_buddyOrder count] ) return nil;
+	if( row == -1 || row >= (int)[_buddyOrder count] ) return nil;
 
 	if( [[column identifier] isEqualToString:@"buddy"] ) {
 		if( _showIcons ) {
@@ -610,7 +608,7 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(int) row {
-	if( row == -1 || row >= [_buddyOrder count] ) return;
+	if( row == -1 || row >= (int)[_buddyOrder count] ) return;
 	if( [[column identifier] isEqualToString:@"buddy"] ) {
 		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 		MVChatUser *user = [buddy activeUser];
@@ -678,7 +676,7 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) tableColumn row:(int) row {
-	if( row == -1 || row >= [_buddyOrder count] ) return;
+	if( row == -1 || row >= (int)[_buddyOrder count] ) return;
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 	id users = [buddy users];
 
@@ -730,7 +728,7 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (NSString *) tableView:(MVTableView *) tableView toolTipForTableColumn:(NSTableColumn *) column row:(int) row {
-	if( row == -1 || row >= [_buddyOrder count] ) return nil;
+	if( row == -1 || row >= (int)[_buddyOrder count] ) return nil;
 	NSMutableString *ret = [NSMutableString string];
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 	MVChatUser *user = [buddy activeUser];
@@ -801,7 +799,8 @@ static MVBuddyListController *sharedInstance = nil;
 
 		float t = _animationPosition;
 
-		float rowPos = ( (float) row / (float) [_buddyOrder count] );
+		unsigned count = [_buddyOrder count];
+		float rowPos = ( (float) row / (float) count );
 		float rowPosAdjusted = _viewingTop ? ( 1. - rowPos ) : rowPos;
 		float curve = 0.3;
 		float p = rowPosAdjusted * ( curve * 2. ) + 1. - curve;
@@ -876,7 +875,7 @@ static MVBuddyListController *sharedInstance = nil;
 	NSArray *oldOrder = [[_buddyOrder copy] autorelease];
 
 	id selectedObject = nil;
-	if( [buddies selectedRow] != -1 && [buddies selectedRow] < [oldOrder count] )
+	if( [buddies selectedRow] != -1 && [buddies selectedRow] < (int)[oldOrder count] )
 		selectedObject = [oldOrder objectAtIndex:[buddies selectedRow]];
 
 	[self _sortBuddies];

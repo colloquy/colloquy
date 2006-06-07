@@ -339,16 +339,8 @@ static int _specificElementsInRangeCallback( void *context, int fieldCount, char
 	NSParameterAssert( message != nil );
 	NSParameterAssert( [message transcript] != self );
 
-	char **tables = NULL;
-	int rows = 0, cols = 0;
 	unsigned long long userIdentifier = 0;
 	unsigned long long messageIdentifier = 0;
-	NSString *senderName = [message senderName];
-	NSString *senderNickname = [message senderNickname];
-	NSString *senderIdentifier = [message senderIdentifier];
-	NSString *senderHostmask = [message senderHostmask];
-	NSString *senderClass = [message senderClass];
-	NSString *senderBuddyIdentifier = [message senderBuddyIdentifier];
 
 	@synchronized( self ) {
 		if( sqlite3_exec( _database, "BEGIN TRANSACTION", NULL, NULL, NULL ) != SQLITE_OK )
@@ -356,7 +348,7 @@ static int _specificElementsInRangeCallback( void *context, int fieldCount, char
 
 		userIdentifier = [self _findOrInsertUserRowForObject:message];
 
-		char *msgQuery = "INSERT INTO message (context, session, user, received, action, highlighted, ignored, type, content) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		const char *msgQuery = "INSERT INTO message (context, session, user, received, action, highlighted, ignored, type, content) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		sqlite3_stmt *compiledMsgQuery = NULL;
 		if( sqlite3_prepare( _database, msgQuery, -1, &compiledMsgQuery, NULL ) != SQLITE_OK ) {
 			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
@@ -444,7 +436,7 @@ static int _specificElementsInRangeCallback( void *context, int fieldCount, char
 		if( sqlite3_exec( _database, "BEGIN TRANSACTION", NULL, NULL, NULL ) != SQLITE_OK )
 			return nil;
 
-		char *query = "INSERT INTO event (context, session, name, occurred, content) VALUES (?, ?, ?, ?, ?)";
+		const char *query = "INSERT INTO event (context, session, name, occurred, content) VALUES (?, ?, ?, ?, ?)";
 		sqlite3_stmt *compiledQuery = NULL;
 		if( sqlite3_prepare( _database, query, -1, &compiledQuery, NULL ) != SQLITE_OK ) {
 			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
@@ -596,7 +588,7 @@ static int _specificElementsInRangeCallback( void *context, int fieldCount, char
 #pragma mark -
 
 - (BOOL) writeToFile:(NSString *) path atomically:(BOOL) atomically {
-	
+	return NO;
 }
 
 - (BOOL) writeToURL:(NSURL *) url atomically:(BOOL) atomically {
@@ -693,7 +685,7 @@ static void _printSQL( void *context, const char *sql ) {
 	sqlite3_free_table( tables );
 
 	if( ! userIdentifier ) {
-		char *query = "INSERT INTO user (self, name, nickname, identifier, hostmask, class, buddy) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		const char *query = "INSERT INTO user (self, name, nickname, identifier, hostmask, class, buddy) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		sqlite3_stmt *compiledQuery = NULL;
 		if( sqlite3_prepare( _database, query, -1, &compiledQuery, NULL ) != SQLITE_OK ) {
 			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
@@ -770,7 +762,6 @@ static void _printSQL( void *context, const char *sql ) {
 	char query[512] = "";
 	sqlite3_snprintf( sizeof( query ), query, "SELECT received, action, highlighted, ignored, type, user FROM message WHERE id = '%q' LIMIT 1", [_messageIdentifier UTF8String] );
 
-	unsigned long count = 0;
 	char **tables = NULL;
 	int rows = 0, cols = 0;
 	char *userIdentifier = NULL;
@@ -842,7 +833,6 @@ static void _printSQL( void *context, const char *sql ) {
 - (void) _loadSenderFromSQL {
 	if( _senderLoaded ) return;
 
-	unsigned long count = 0;
 	char **tables = NULL;
 	int rows = 0, cols = 0;
 
@@ -896,7 +886,6 @@ static void _printSQL( void *context, const char *sql ) {
 - (void) _loadBodyFromSQL {
 	if( _bodyLoaded ) return;
 
-	unsigned long count = 0;
 	char **tables = NULL;
 	int rows = 0, cols = 0;
 

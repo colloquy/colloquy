@@ -14,7 +14,6 @@ static NSMutableSet *inspectors = nil;
 
 @implementation JVInspectorController
 + (JVInspectorController *) sharedInspector {
-	extern JVInspectorController *sharedInstance;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithObject:nil lockedOn:NO] ) );
 }
 
@@ -23,7 +22,6 @@ static NSMutableSet *inspectors = nil;
 }
 
 + (JVInspectorController *) inspectorOfObject:(id <JVInspection>) object {
-	extern NSMutableSet *inspectors;
 	NSEnumerator *e = [inspectors objectEnumerator];
 	JVInspectorController *inspector = nil;
 
@@ -57,7 +55,6 @@ static NSMutableSet *inspectors = nil;
 		_object = [object retain];
 		_inspector = [[_object inspector] retain];
 		if( _locked ) {
-			extern NSMutableSet *inspectors;
 			if( ! inspectors ) inspectors = [[NSMutableSet set] retain];
 			[inspectors addObject:self];
 		} else [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( keyWindowChanged: ) name:NSWindowDidBecomeKeyNotification object:nil];
@@ -70,8 +67,6 @@ static NSMutableSet *inspectors = nil;
 }
 
 - (void) dealloc {
-	extern JVInspectorController *sharedInstance;
-
 	[[self window] close];
 
 	if( [_inspector respondsToSelector:@selector( didUnload )] )
@@ -92,7 +87,6 @@ static NSMutableSet *inspectors = nil;
 #pragma mark -
 
 - (IBAction) show:(id) sender {
-	extern NSPoint inspectorLastPoint;
 	[self _loadInspector];
 	if( _locked && ! [[self window] isVisible] )
 		inspectorLastPoint = [[self window] cascadeTopLeftFromPoint:inspectorLastPoint];
@@ -145,7 +139,6 @@ static NSMutableSet *inspectors = nil;
 		should = [(NSObject *)_inspector shouldUnload];
 
 	if( should ) {
-		extern NSMutableSet *inspectors;
 		[inspectors removeObject:self];
 		if( ! [inspectors count] ) {
 			[inspectors release];

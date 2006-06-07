@@ -470,6 +470,6 @@
 		return [booleanKindButton titleOfSelectedItem];
 	} else if( [self format] == JVTranscriptListCriterionFormat ) {
 		return [NSString stringWithFormat:@"%@ %@ %@", [listKindButton titleOfSelectedItem], [listOperationButton titleOfSelectedItem], [listQuery titleOfSelectedItem]];
-	}
+	} else return [super description];
 }
 @end

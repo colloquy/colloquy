@@ -63,7 +63,7 @@
 	[editAutomatic setState:[[MVConnectionsController defaultController] autoConnectForConnection:_connection]];
 	[sslConnection setState:[_connection isSecure]];
 	[editAddress setObjectValue:[_connection server]];
-	[editProxy selectItemAtIndex:[editProxy indexOfItemWithTag:(int)[_connection proxyType]]];
+	[editProxy selectItemAtIndex:[editProxy indexOfItemWithTag:[_connection proxyType]]];
 	[editPort setIntValue:[_connection serverPort]];
 	[editNickname setObjectValue:[_connection preferredNickname]];
 	[editAltNicknames setObjectValue:[[_connection alternateNicknames] componentsJoinedByString:@" "]];

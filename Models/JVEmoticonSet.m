@@ -13,8 +13,6 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 @implementation JVEmoticonSet
 + (void) scanForEmoticonSets {
-	extern NSMutableSet *allEmoticonSets;
-
 	NSMutableSet *styles = [NSMutableSet set];
 	if( ! allEmoticonSets ) allEmoticonSets = [styles retain];
 
@@ -48,7 +46,6 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 }
 
 + (NSSet *) emoticonSets {
-	extern NSMutableSet *allEmoticonSets;
 	return allEmoticonSets;
 }
 
@@ -56,7 +53,6 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 	if( [identifier isEqualToString:@"cc.javelin.colloquy.emoticons.text-only"] )
 		return [self textOnlyEmoticonSet];
 
-	extern NSMutableSet *allEmoticonSets;
 	NSEnumerator *enumerator = [allEmoticonSets objectEnumerator];
 	JVEmoticonSet *emoticon = nil;
 
@@ -91,7 +87,6 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 	static JVEmoticonSet *ret = nil;
 	if( ! ret ) {
 		ret = [[JVEmoticonSet alloc] initWithBundle:[NSBundle mainBundle]];
-		extern NSMutableSet *allEmoticonSets;
 		[allEmoticonSets removeObject:ret];
 	}
 
@@ -107,7 +102,6 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 	}
 
 	if( ( self = [self init] ) ) {
-		extern NSMutableSet *allEmoticonSets;
 		[allEmoticonSets addObject:self];
 
 		_bundle = nil;
@@ -127,7 +121,6 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 #pragma mark -
 
 - (void) unlink {
-	extern NSMutableSet *allEmoticonSets;
 	[allEmoticonSets removeObject:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVEmoticonSetsScannedNotification object:allEmoticonSets];
 }

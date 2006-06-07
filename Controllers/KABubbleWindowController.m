@@ -26,8 +26,6 @@ static unsigned int bubbleWindowDepth = 0;
 }
 
 - (id) init {
-	extern unsigned int bubbleWindowDepth;
-
 	NSPanel *panel = [[[NSPanel alloc] initWithContentRect:NSMakeRect( 0., 0., 270., 65. ) styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO] autorelease];
 	[panel setBecomesKeyOnlyIfNeeded:YES];
 	[panel setHidesOnDeactivate:NO];
@@ -75,7 +73,6 @@ static unsigned int bubbleWindowDepth = 0;
 	_delegate = nil;
 	_animationTimer = nil;
 
-	extern unsigned int bubbleWindowDepth;
 	if( _depth == bubbleWindowDepth ) bubbleWindowDepth = 0;
 
 	[super dealloc];

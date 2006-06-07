@@ -30,8 +30,6 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 @implementation JVStyle
 + (void) scanForStyles {
-	extern NSMutableSet *allStyles;
-
 	NSMutableSet *styles = [NSMutableSet set];
 	if( ! allStyles ) allStyles = [styles retain];
 
@@ -66,12 +64,10 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 + (NSSet *) styles {
-	extern NSMutableSet *allStyles;
 	return allStyles;
 }
 
 + (id) styleWithIdentifier:(NSString *) identifier {
-	extern NSMutableSet *allStyles;
 	NSEnumerator *enumerator = [allStyles objectEnumerator];
 	JVStyle *style = nil;
 
@@ -125,13 +121,12 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 #pragma mark -
 
 - (id) initWithBundle:(NSBundle *) bundle {
-	if( ! bundle ) {
-		[self release];
-		return nil;
-	}
-
 	if( ( self = [self init] ) ) {
-		extern NSMutableSet *allStyles;
+		if( ! bundle ) {
+			[self release];
+			return nil;
+		}
+
 		[allStyles addObject:self];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _clearVariantCache ) name:JVNewStyleVariantAddedNotification object:self];
@@ -164,7 +159,6 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 #pragma mark -
 
 - (void) unlink {
-	extern NSMutableSet *allStyles;
 	[allStyles removeObject:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVStylesScannedNotification object:allStyles];
 }
@@ -204,7 +198,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	@synchronized( transcript ) {
 		if( ! [transcript document] ) return nil;
 		return [self transformXMLDocument:[transcript document] withParameters:parameters];
-	}
+	} return nil;
 }
 
 - (NSString *) transformChatTranscriptElement:(id <JVChatTranscriptElement>) element withParameters:(NSDictionary *) parameters {
@@ -222,7 +216,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		xmlFreeDoc( doc );
 
 		return result;
-	}
+	} return nil;
 }
 
 - (NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary *) parameters {
@@ -243,7 +237,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		xmlFreeDoc( doc );
 
 		return result;
-	}
+	} return nil;
 }
 
 - (NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters {
@@ -304,7 +298,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		[[self class] _freeXsltParamArray:params];
 
 		return ret;
-	}
+	} return nil;
 }
 
 #pragma mark -

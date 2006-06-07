@@ -20,12 +20,10 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 
 @implementation JVBuddy
 + (JVBuddyName) preferredName {
-	extern JVBuddyName _mainPreferredName;
 	return _mainPreferredName;
 }
 
 + (void) setPreferredName:(JVBuddyName) preferred {
-	extern JVBuddyName _mainPreferredName;
 	_mainPreferredName = preferred;
 }
 
@@ -151,7 +149,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 	return [[self activeUser] status];	
 }
 
-- (NSAttributedString *) awayStatusMessage {
+- (NSData *) awayStatusMessage {
 	return [[self activeUser] awayStatusMessage];
 }
 

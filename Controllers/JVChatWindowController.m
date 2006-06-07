@@ -276,8 +276,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (IBAction) selectNextPanel:(id) sender {
-	int currentIndex = [_views indexOfObject:_activeViewController];
-	int index = 0;
+	unsigned currentIndex = [_views indexOfObject:_activeViewController];
+	unsigned index = 0;
 
 	if( currentIndex + 1 < [_views count] ) index = ( currentIndex + 1 );
 	else index = 0;
@@ -286,8 +286,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (IBAction) selectNextActivePanel:(id) sender {
-	int currentIndex = [_views indexOfObject:_activeViewController];
-	int index = currentIndex;
+	unsigned currentIndex = [_views indexOfObject:_activeViewController];
+	unsigned index = currentIndex;
 	BOOL done = NO;
 
 	do {
@@ -324,7 +324,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) insertChatViewController:(id <JVChatViewController>) controller atIndex:(unsigned int) index {
 	NSParameterAssert( controller != nil );
 	NSAssert1( ! [_views containsObject:controller], @"%@ already added.", controller );
-	NSAssert( index >= 0 && index <= [_views count], @"Index is beyond bounds." );
+	NSAssert( index <= [_views count], @"Index is beyond bounds." );
 
 	BOOL needShow = ( ! [_views count] );
 
@@ -375,7 +375,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) removeChatViewControllerAtIndex:(unsigned int) index {
-	NSAssert( index >= 0 && index <= [_views count], @"Index is beyond bounds." );
+	NSAssert( index <= [_views count], @"Index is beyond bounds." );
 	[self removeChatViewController:[_views objectAtIndex:index]];
 }
 
@@ -412,7 +412,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) replaceChatViewControllerAtIndex:(unsigned int) index withController:(id <JVChatViewController>) controller {
 	NSParameterAssert( controller != nil );
 	NSAssert1( ! [_views containsObject:controller], @"%@ is already a member of this window controller.", controller );
-	NSAssert( index >= 0 && index <= [_views count], @"Index is beyond bounds." );
+	NSAssert( index <= [_views count], @"Index is beyond bounds." );
 
 	id <JVChatViewController> oldController = [_views objectAtIndex:index];
 
@@ -794,7 +794,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[dragedController retain];
 
 		if( [_views containsObject:dragedController] ) {
-			if( index != NSOutlineViewDropOnItemIndex && index >= [_views indexOfObjectIdenticalTo:dragedController] ) index--;
+			if( index != NSOutlineViewDropOnItemIndex && index >= (int) [_views indexOfObjectIdenticalTo:dragedController] ) index--;
 			[_views removeObjectIdenticalTo:dragedController];
 		} else {
 			[[dragedController windowController] removeChatViewController:dragedController];
@@ -1324,8 +1324,8 @@ end:
 		if( ! [chatViews count] ) [NSArray array];
 
 		if( ( ! startSpec || [startKey isEqualToString:@"chatViews"] || [startKey isEqualToString:@"chatRooms"] || [startKey isEqualToString:@"directChats"] || [startKey isEqualToString:@"chatConsoles"] || [startKey isEqualToString:@"chatTranscripts"] ) && ( ! endSpec || [endKey isEqualToString:@"chatViews"] || [endKey isEqualToString:@"chatRooms"] || [endKey isEqualToString:@"directChats"] || [endKey isEqualToString:@"chatConsoles"] || [endKey isEqualToString:@"chatTranscripts"] ) ) {
-			int startIndex = 0;
-			int endIndex = 0;
+			unsigned startIndex = 0;
+			unsigned endIndex = 0;
 
 			// The strategy here is going to be to find the index of the start and stop object in the full graphics array, regardless of what its key is.  Then we can find what we're looking for in that range of the graphics key (weeding out objects we don't want, if necessary).
 			// First find the index of the first start object in the graphics array
@@ -1354,7 +1354,7 @@ end:
 
 			// Accept backwards ranges gracefully
 			if( endIndex < startIndex ) {
-				int temp = endIndex;
+				unsigned temp = endIndex;
 				endIndex = startIndex;
 				startIndex = temp;
 			}
@@ -1365,10 +1365,10 @@ end:
 			NSMutableArray *result = [NSMutableArray array];
 			BOOL keyIsGeneric = [key isEqualToString:@"chatViews"];
 			NSArray *rangeKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
-			unsigned curKeyIndex = 0, i = 0;
+			unsigned curKeyIndex = 0;
 			id obj = nil;
 
-			for( i = startIndex; i <= endIndex; i++ ) {
+			for( unsigned i = startIndex; i <= endIndex; i++ ) {
 				if( keyIsGeneric ) {
 					[result addObject:[NSNumber numberWithInt:i]];
 				} else {
@@ -1400,7 +1400,7 @@ end:
 		if( ! [chatViews count] ) return [NSArray array];
 
 		if( [baseKey isEqualToString:@"chatViews"] || [baseKey isEqualToString:@"chatRooms"] || [baseKey isEqualToString:@"directChats"] || [baseKey isEqualToString:@"chatConsoles"] || [baseKey isEqualToString:@"chatTranscripts"] ) {
-			int baseIndex = 0;
+			unsigned baseIndex = 0;
 
 			// The strategy here is going to be to find the index of the base object in the full graphics array, regardless of what its key is.  Then we can find what we're looking for before or after it.
 			// First find the index of the first or last base object in the master array
@@ -1408,7 +1408,7 @@ end:
 
 			id baseObject = [baseSpec objectsByEvaluatingWithContainers:self];
 			if( [baseObject isKindOfClass:[NSArray class]] ) {
-				int baseCount = [(NSArray *)baseObject count];
+				unsigned baseCount = [(NSArray *)baseObject count];
 				if( baseCount ) {
 					if( relPos == NSRelativeBefore ) baseObject = [baseObject objectAtIndex:0];
 					else baseObject = [baseObject objectAtIndex:( baseCount - 1 )];
@@ -1432,7 +1432,7 @@ end:
 			if( relPos == NSRelativeBefore ) baseIndex--;
 			else baseIndex++;
 
-			while( baseIndex >= 0 && baseIndex < viewCount ) {
+			while( baseIndex < viewCount ) {
 				if( keyIsGeneric ) {
 					[result addObject:[NSNumber numberWithInt:baseIndex]];
 					break;

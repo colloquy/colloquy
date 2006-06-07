@@ -39,7 +39,7 @@ typedef enum {
 - (void) setActiveUser:(MVChatUser *) user;
 
 - (MVChatUserStatus) status;
-- (NSAttributedString *) awayStatusMessage;
+- (NSData *) awayStatusMessage;
 
 - (BOOL) isOnline;
 - (NSDate *) dateConnected;

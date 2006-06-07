@@ -154,7 +154,7 @@
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
 			NSString *arg = nil;
-			while( arg = [e nextObject] ) {
+			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] setMode:MVChatRoomMemberOperatorMode forMemberUser:user];
@@ -165,7 +165,7 @@
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
 			NSString *arg = nil;
-			while( arg = [e nextObject] ) {
+			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] removeMode:MVChatRoomMemberOperatorMode forMemberUser:user];
@@ -176,7 +176,7 @@
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
 			NSString *arg = nil;
-			while( arg = [e nextObject] ) {
+			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
@@ -187,7 +187,7 @@
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
 			NSString *arg = nil;
-			while( arg = [e nextObject] ) {
+			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
@@ -198,7 +198,7 @@
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
 			NSString *arg = nil;
-			while( arg = [e nextObject] ) {
+			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] setMode:MVChatRoomMemberVoicedMode forMemberUser:user];
@@ -209,7 +209,7 @@
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
 			NSString *arg = nil;
-			while( arg = [e nextObject] ) {
+			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] removeMode:MVChatRoomMemberVoicedMode forMemberUser:user];
@@ -220,7 +220,7 @@
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
 			NSString *arg = nil;
-			while( arg = [e nextObject] ) {
+			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] setMode:MVChatRoomMemberQuietedMode forMemberUser:user];
@@ -231,7 +231,7 @@
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
 			NSString *arg = nil;
-			while( arg = [e nextObject] ) {
+			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] removeMode:MVChatRoomMemberQuietedMode forMemberUser:user];
@@ -242,7 +242,7 @@
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
 			NSString *arg = nil;
-			while( arg = [e nextObject] ) {
+			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
 					MVChatUser *user = [MVChatUser wildcardUserFromString:arg];
 					if( user ) [[room target] addBanForUser:user];
@@ -253,7 +253,7 @@
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
 			NSEnumerator *e = [args objectEnumerator];
 			NSString *arg = nil;
-			while( arg = [e nextObject] ) {
+			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
 					MVChatUser *user = [MVChatUser wildcardUserFromString:arg];
 					if( user ) [[room target] removeBanForUser:user];
@@ -502,7 +502,7 @@
 		NSEnumerator *chanEnum = [channels objectEnumerator];
 		NSString *channel = nil;
 
-		while( channel = [chanEnum nextObject] ) {
+		while( ( channel = [chanEnum nextObject] ) ) {
 			//channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 			if( [channel length] ) [[connection joinedChatRoomWithName:channel] partWithReason:reason];
 		}
@@ -625,7 +625,7 @@
 	BOOL permanent = NO;
 	BOOL member = YES;
 	BOOL message = NO;
-	int offset = 0;
+	unsigned offset = 0;
 
 	if( ! [args length] ) {
 		id info = [JVInspectorController inspectorOfObject:[view connection]];
