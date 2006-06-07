@@ -93,10 +93,10 @@ static char encodingTable[64] = {
 	NSMutableString *result = [NSMutableString stringWithCapacity:[self length]];
 	unsigned long ixtext = 0;
 	unsigned long lentext = [self length];
-	long ctremaining = 0;
+	unsigned long ctremaining = 0;
 	unsigned char inbuf[3], outbuf[4];
-	short i = 0;
-	short charsonline = 0, ctcopy = 0;
+	unsigned short i = 0;
+	unsigned short charsonline = 0, ctcopy = 0;
 	unsigned long ix = 0;
 
 	while( YES ) {
@@ -134,7 +134,7 @@ static char encodingTable[64] = {
 		charsonline += 4;
 
 		if( lineLength > 0 ) {
-			if (charsonline >= lineLength) {
+			if( charsonline >= lineLength ) {
 				charsonline = 0;
 				[result appendString:@"\n"];
 			}

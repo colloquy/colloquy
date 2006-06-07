@@ -419,7 +419,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (NSSet *) knownChatUsers {
 	@synchronized( _knownUsers ) {
 		return [NSSet setWithArray:[_knownUsers allValues]];
-	}
+	} return nil;
 }
 
 - (NSSet *) chatUsersWithNickname:(NSString *) nickname {
@@ -1491,7 +1491,10 @@ end:
 	if( ! command ) command = [[NSString allocWithZone:nil] initWithBytes:current length:(line - current) encoding:NSISOLatin1StringEncoding];
 
 	NSMutableData *arguments = nil;
-	if( line != end ) arguments = [[NSMutableData allocWithZone:nil] initWithBytes:++line length:(end - line)];
+	if( line != end ) {
+		line++;
+		arguments = [[NSMutableData allocWithZone:nil] initWithBytes:line length:(end - line)];
+	}
 
 	if( [command caseInsensitiveCompare:@"ACTION"] == NSOrderedSame && arguments ) {
 		// special case ACTION and send it out like a message with the action flag
@@ -2103,7 +2106,6 @@ end:
 
 - (void) _handle352WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOREPLY
 	if( [parameters count] >= 7 ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
 		MVChatUser *member = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:5]];
 		[member _setUsername:[parameters objectAtIndex:2]];
 		[member _setAddress:[parameters objectAtIndex:3]];

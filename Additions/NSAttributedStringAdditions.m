@@ -237,7 +237,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	NSMutableData *newData = [NSMutableData dataWithCapacity:[data length]];
 	const char *bytes = [data bytes];
 	unsigned length = [data length];
-	int i, j, start, end;
+	unsigned i = 0, j = 0, start = 0, end = 0;
 	NSStringEncoding currentEncoding = encoding;
 	for( i = 0, start = 0; i < length; i++ ) {
 		if( bytes[i] == '\006' ) {
@@ -660,7 +660,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 	NSCharacterSet *nonASCIISet = [[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 127 )] invertedSet];
 
-	char *ctcpEncoding = NULL;
+	const char *ctcpEncoding = NULL;
 	if( [[self string] rangeOfCharacterFromSet:nonASCIISet].location != NSNotFound ) {
 		switch( encoding ) {
 		case NSUTF8StringEncoding:

@@ -552,7 +552,7 @@ static const NSStringEncoding supportedEncodings[] = {
 			NSData *stringData = [[object description] dataUsingEncoding:[self encoding] allowLossyConversion:YES];
 			[data appendData:stringData];
 		}
-	} while( object = va_arg( ap, void * ) );
+	} while( ( object = va_arg( ap, void * ) ) );
 
 	va_end( ap );
 
@@ -579,7 +579,7 @@ static const NSStringEncoding supportedEncodings[] = {
 			NSData *stringData = [[object description] dataUsingEncoding:[self encoding] allowLossyConversion:YES];
 			[data appendData:stringData];
 		}
-	} while( object = va_arg( ap, void * ) );
+	} while( ( object = va_arg( ap, void * ) ) );
 
 	va_end( ap );
 
@@ -1087,7 +1087,6 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		if( ! [connection isConnected] ) return nil;
 
-		NSString *nickname = target;
 		target = [[connection chatUsersWithNickname:[target description]] allObjects];
 
 		if( ! target || ( target && [target isKindOfClass:[NSArray class]] && ! [target count] ) )

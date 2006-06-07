@@ -424,7 +424,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 				killerNickname = @"Unknown";
 			}
 
-			if( ! kill_message ) kill_message = "";
+			if( ! kill_message ) kill_message = (char *) "";
 			NSString *killMessage = [NSString stringWithUTF8String:kill_message];
 
 			NSString *quitReason = [NSString stringWithFormat:@"Killed by %@ (%@)", killerNickname, killMessage];
@@ -544,7 +544,6 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 	case SILC_COMMAND_IDENTIFY:
 		break;
 	case SILC_COMMAND_NICK: {
-		SilcClientEntry local_entry = va_arg( list, SilcClientEntry );
 		char *nickname = va_arg( list, char * );
 		/*const SilcClientID *old_client_id =*/ va_arg( list, SilcClientID * );
 		
@@ -569,7 +568,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		SilcUInt32 user_count = va_arg( list, SilcUInt32 );
 
 		if( ! channel_name ) break;
-		if( ! channel_topic ) channel_topic = "";
+		if( ! channel_topic ) channel_topic = (char *) "";
 
 		NSString *r = [[NSString allocWithZone:nil] initWithUTF8String:channel_name];
 		NSData *t = [[NSData allocWithZone:nil] initWithBytes:channel_topic length:strlen( channel_topic )];
@@ -624,7 +623,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		[room _clearMemberUsers];
 		[room _clearBannedUsers];
 
-		if( ! topic ) topic = "";
+		if( ! topic ) topic = (char *) "";
 
 		NSData *msgData = [[NSData allocWithZone:nil] initWithBytes:topic length:strlen( topic )];
 		[room _setTopic:msgData];

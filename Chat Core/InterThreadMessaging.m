@@ -55,7 +55,7 @@ struct InterThreadMessage
    messages to the target thread. */
 
 static NSMapTable *pThreadMessagePorts = NULL;
-static pthread_mutex_t pGate = { 0 };
+static pthread_mutex_t pGate;
 
 @interface InterThreadManager : NSObject
 + (void) threadDied:(NSNotification *)notification;

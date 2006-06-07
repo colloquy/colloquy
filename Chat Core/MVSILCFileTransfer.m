@@ -9,7 +9,7 @@
 
 #pragma mark -
 
-void silc_client_file_monitor( SilcClient client, SilcClientConnection conn, SilcClientMonitorStatus status, SilcClientFileError error, SilcUInt64 offset, SilcUInt64 filesize, SilcClientEntry client_entry, SilcUInt32 session_id, const char *filepath, void *context ) {
+static void silc_client_file_monitor( SilcClient client, SilcClientConnection conn, SilcClientMonitorStatus status, SilcClientFileError error, SilcUInt64 offset, SilcUInt64 filesize, SilcClientEntry client_entry, SilcUInt32 session_id, const char *filepath, void *context ) {
 	MVFileTransfer *transfer = context;
 
 	switch ( status ) {

@@ -99,7 +99,7 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 {
 @public
 	NSMutableData *buffer;
-	CFIndex bytesDone;
+	unsigned bytesDone;
 	NSTimeInterval timeout;
 	long tag;
 	NSData *term;
@@ -137,7 +137,7 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 {
 	@public
 	NSData *buffer;
-	CFIndex bytesDone;
+	unsigned bytesDone;
 	long tag;
 	NSTimeInterval timeout;
 }
@@ -430,7 +430,8 @@ Failed:;
 {
 	NSData *resultData = nil;
 	
-	struct addrinfo hints = {0}, *result;
+	struct addrinfo hints;
+	struct addrinfo *result = NULL;
 	hints.ai_family	 = PF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_protocol = IPPROTO_TCP;
@@ -1100,9 +1101,9 @@ Failed:;
 	else
 	{
 		int percentDone;
-		if ([theCurrentRead->buffer length] != 0)
-			percentDone = (float)theCurrentRead->bytesDone /
-						  (float)[theCurrentRead->buffer length] * 100.0;
+		unsigned length = [theCurrentRead->buffer length];
+		if (length != 0)
+			percentDone = (float)theCurrentRead->bytesDone / (float)length * 100.0;
 		else
 			percentDone = 100;
 
@@ -1116,9 +1117,9 @@ Failed:;
 	else
 	{
 		int percentDone;
-		if ([theCurrentWrite->buffer length] != 0)
-			percentDone = (float)theCurrentWrite->bytesDone /
-						  (float)[theCurrentWrite->buffer length] * 100.0;
+		unsigned length = [theCurrentWrite->buffer length];
+		if (length != 0)
+			percentDone = (float)theCurrentWrite->bytesDone / (float)length * 100.0;
 		else
 			percentDone = 100;
 
@@ -1243,7 +1244,7 @@ Failed:;
 			CFIndex bytesToRead = [theCurrentRead->buffer length] - theCurrentRead->bytesDone;
 
 			// Read stuff into start of unfilled packet buffer space.
-			UInt8 *packetbuf = (UInt8 *)( [theCurrentRead->buffer mutableBytes] + theCurrentRead->bytesDone );
+			UInt8 *packetbuf = ( (UInt8 *)[theCurrentRead->buffer mutableBytes] + theCurrentRead->bytesDone );
 			CFIndex bytesRead = CFReadStreamRead (theReadStream, packetbuf, bytesToRead);
 
 			// Check results.
@@ -1260,10 +1261,10 @@ Failed:;
 				if (theCurrentRead->term != nil)
 				{
 					// Search for the terminating sequence in the buffer.
-					int termlen = [theCurrentRead->term length];
+					unsigned termlen = [theCurrentRead->term length];
 					if (theCurrentRead->bytesDone >= termlen)
 					{
-						const void *buf = [theCurrentRead->buffer bytes] + (theCurrentRead->bytesDone - termlen);
+						const void *buf = (UInt8 *)[theCurrentRead->buffer bytes] + (theCurrentRead->bytesDone - termlen);
 						const void *seq = [theCurrentRead->term bytes];
 						done = (memcmp (buf, seq, termlen) == 0);
 					}
@@ -1381,7 +1382,7 @@ Failed:;
 			// Figure out what to write.
 			CFIndex bytesRemaining = [theCurrentWrite->buffer length] - theCurrentWrite->bytesDone;
 			CFIndex bytesToWrite = (bytesRemaining < WRITE_CHUNKSIZE) ? bytesRemaining : WRITE_CHUNKSIZE;
-			UInt8 *writestart = (UInt8 *)([theCurrentWrite->buffer bytes] + theCurrentWrite->bytesDone);
+			UInt8 *writestart = ((UInt8 *)[theCurrentWrite->buffer bytes] + theCurrentWrite->bytesDone);
 
 			// Write.
 			CFIndex bytesWritten = CFWriteStreamWrite (theWriteStream, writestart, bytesToWrite);
