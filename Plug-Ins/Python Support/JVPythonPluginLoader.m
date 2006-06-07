@@ -6,7 +6,7 @@
 
 @implementation JVPythonPluginLoader
 - (id) initWithManager:(MVChatPluginManager *) manager {
-	if( self = [super init] ) {
+	if( ( self = [super init] ) ) {
 		_manager = manager;
 		_pyobjcInstalled = ( PyObjC_ImportAPI != NULL ? YES : NO );
 	}
@@ -48,7 +48,7 @@
 				NSEnumerator *pluginEnum = [_manager enumeratorOfPluginsOfClass:[JVPythonChatPlugin class] thatRespondToSelector:@selector( init )];
 				JVPythonChatPlugin *plugin = nil;
 
-				while( plugin = [pluginEnum nextObject] )
+				while( ( plugin = [pluginEnum nextObject] ) )
 					if( [[[plugin scriptFilePath] stringByDeletingPathExtension] isEqualToString:[path stringByDeletingPathExtension]] || [[[[plugin scriptFilePath] lastPathComponent] stringByDeletingPathExtension] isEqualToString:path] )
 						break;
 
@@ -96,7 +96,7 @@
 
 		NSEnumerator *enumerator = [paths objectEnumerator];
 		NSString *path = nil;
-		while( path = [enumerator nextObject] ) {
+		while( ( path = [enumerator nextObject] ) ) {
 			path = [path stringByAppendingPathComponent:[name stringByDeletingPathExtension]];
 			NSString *pathExt = [path stringByAppendingPathExtension:@"py"];
 			if( ! [fm fileExistsAtPath:pathExt] ) pathExt = [path stringByAppendingPathExtension:@"pyo"];
@@ -129,7 +129,7 @@
 	NSFileManager *fm = [NSFileManager defaultManager];
 
 	NSEnumerator *enumerator = [paths objectEnumerator];
-	while( path = [enumerator nextObject] ) {
+	while( ( path = [enumerator nextObject] ) ) {
 		NSEnumerator *denumerator = [[fm directoryContentsAtPath:path] objectEnumerator];
 		while( ( file = [denumerator nextObject] ) ) {
 			if( [[file pathExtension] isEqualToString:@"pyc"] || [[file pathExtension] isEqualToString:@"py"] || [[file pathExtension] isEqualToString:@"pyo"] ) {

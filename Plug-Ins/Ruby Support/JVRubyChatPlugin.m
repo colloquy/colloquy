@@ -9,7 +9,7 @@ NSString *JVRubyErrorDomain = @"JVRubyErrorDomain";
 
 @implementation JVRubyChatPlugin
 + (void) initialize {
-	static tooLate = NO;
+	static BOOL tooLate = NO;
 	if( ! tooLate ) {
 		ruby_init();
 		ruby_init_loadpath();
@@ -19,7 +19,7 @@ NSString *JVRubyErrorDomain = @"JVRubyErrorDomain";
 }
 
 - (id) initWithManager:(MVChatPluginManager *) manager {
-	if( self = [self init] ) {
+	if( ( self = [self init] ) ) {
 		_manager = manager;
 		_path = nil;
 		_modDate = [[NSDate date] retain];
@@ -29,11 +29,8 @@ NSString *JVRubyErrorDomain = @"JVRubyErrorDomain";
 }
 
 - (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
-	if( self = [self initWithManager:manager] ) {
+	if( ( self = [self initWithManager:manager] ) ) {
 		_path = [path copyWithZone:[self zone]];
-
-		NSString *moduleName = [[path lastPathComponent] stringByDeletingPathExtension];
-		NSString *moduleFolder = [path stringByDeletingLastPathComponent];
 		_firstLoad = YES;
 
 		[self reloadFromDisk];

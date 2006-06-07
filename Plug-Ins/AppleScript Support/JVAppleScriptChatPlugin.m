@@ -151,7 +151,6 @@
 
 - (void) reloadFromDisk {
 	NSString *filePath = [self scriptFilePath];
-	MVChatPluginManager *manager = [self pluginManager];
 
 	NSAppleScript *script = [[[NSAppleScript alloc] initWithContentsOfURL:[NSURL fileURLWithPath:filePath] error:NULL] autorelease];
 	if( ! [script compileAndReturnError:nil] ) return;
@@ -376,7 +375,8 @@
 				if( ! enabled || ( enabled && [enabled boolValue] ) ) [mitem setTarget:self];
 				if( enabled && ! [enabled boolValue] ) [mitem setEnabled:[enabled boolValue]];
 				if( checked ) [mitem setState:[checked intValue]];
-				if( indent ) [mitem setIndentationLevel:MIN( 15, [indent unsignedIntValue] )];
+#define min(a,b) a > b ? b : a
+				if( indent ) [mitem setIndentationLevel:min( 15, [indent unsignedIntValue] )];
 				if( tooltip ) [mitem setToolTip:tooltip];
 				
 				if( alternate && [alternate unsignedIntValue] == 1 ) {

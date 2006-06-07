@@ -10,13 +10,13 @@ static PyObject *LoadArbitraryPythonModule( const char *name, const char *direct
 	if( ! name || ! directory ) return NULL;
 	if( ! newname ) newname = name;
 
-	PyObject *impModule = PyImport_ImportModule( "imp" );
+	PyObject *impModule = PyImport_ImportModule( (char *) "imp" );
 	if( ! impModule ) return NULL;
 
-	PyObject *result = PyObject_CallMethod( impModule, "find_module", "s[s]", name, directory );
+	PyObject *result = PyObject_CallMethod( impModule, (char *) "find_module", (char *) "s[s]", name, directory );
 	if( ! result || PyTuple_Size( result ) != 3 ) return NULL;
 
-	PyObject *ret = PyObject_CallMethod( impModule, "load_module", "sOOO", newname, PyTuple_GetItem( result, 0 ), PyTuple_GetItem( result, 1 ), PyTuple_GetItem( result, 2 ) );
+	PyObject *ret = PyObject_CallMethod( impModule, (char *) "load_module", (char *) "sOOO", newname, PyTuple_GetItem( result, 0 ), PyTuple_GetItem( result, 1 ), PyTuple_GetItem( result, 2 ) );
 
 	Py_DECREF( result );
 	Py_DECREF( impModule );
@@ -37,7 +37,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 }
 
 - (id) initWithManager:(MVChatPluginManager *) manager {
-	if( self = [self init] ) {
+	if( ( self = [self init] ) ) {
 		_manager = manager;
 		_path = nil;
 		_modDate = [[NSDate date] retain];
@@ -47,11 +47,8 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 }
 
 - (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
-	if( self = [self initWithManager:manager] ) {
+	if( ( self = [self initWithManager:manager] ) ) {
 		_path = [path copyWithZone:[self zone]];
-
-		NSString *moduleName = [[path lastPathComponent] stringByDeletingPathExtension];
-		NSString *moduleFolder = [path stringByDeletingLastPathComponent];
 		_uniqueModuleName = [[NSString locallyUniqueString] retain];
 		_firstLoad = YES;
 

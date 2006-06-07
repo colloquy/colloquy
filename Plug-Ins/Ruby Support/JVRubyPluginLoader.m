@@ -5,7 +5,7 @@
 
 @implementation JVRubyPluginLoader
 - (id) initWithManager:(MVChatPluginManager *) manager {
-	if( self = [super init] ) {
+	if( ( self = [super init] ) ) {
 		_manager = manager;
 		_rubyCocoaInstalled = ( RBRubyCocoaInit != NULL ? YES : NO );
 	}
@@ -47,7 +47,7 @@
 				NSEnumerator *pluginEnum = [_manager enumeratorOfPluginsOfClass:[JVRubyChatPlugin class] thatRespondToSelector:@selector( init )];
 				JVRubyChatPlugin *plugin = nil;
 
-				while( plugin = [pluginEnum nextObject] )
+				while( ( plugin = [pluginEnum nextObject] ) )
 					if( [[[plugin scriptFilePath] stringByDeletingPathExtension] isEqualToString:[path stringByDeletingPathExtension]] || [[[[plugin scriptFilePath] lastPathComponent] stringByDeletingPathExtension] isEqualToString:path] )
 						break;
 
@@ -95,7 +95,7 @@
 
 		NSEnumerator *enumerator = [paths objectEnumerator];
 		NSString *path = nil;
-		while( path = [enumerator nextObject] ) {
+		while( ( path = [enumerator nextObject] ) ) {
 			path = [path stringByAppendingPathComponent:[name stringByDeletingPathExtension]];
 			path = [path stringByAppendingPathExtension:@"rb"];
 
@@ -121,12 +121,10 @@
 
 	NSArray *paths = [[_manager class] pluginSearchPaths];
 	NSString *file = nil, *path = nil;
-
-	NSMutableSet *foundModules = [NSMutableSet set];
 	NSFileManager *fm = [NSFileManager defaultManager];
 
 	NSEnumerator *enumerator = [paths objectEnumerator];
-	while( path = [enumerator nextObject] ) {
+	while( ( path = [enumerator nextObject] ) ) {
 		NSEnumerator *denumerator = [[fm directoryContentsAtPath:path] objectEnumerator];
 		while( ( file = [denumerator nextObject] ) ) {
 			if( [[file pathExtension] isEqualToString:@"rb"] ) {

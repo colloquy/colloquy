@@ -12,7 +12,7 @@
 
 @implementation JVFScriptPluginLoader
 - (id) initWithManager:(MVChatPluginManager *) manager {
-	if( self = [super init] ) {
+	if( ( self = [super init] ) ) {
 		_manager = manager;
 		_fscriptInstalled = ( NSClassFromString( @"FSInterpreter" ) ? YES : NO );
 	}
@@ -65,7 +65,7 @@
 					NSEnumerator *pluginEnum = [_manager enumeratorOfPluginsOfClass:[JVFScriptChatPlugin class] thatRespondToSelector:@selector( init )];
 					JVFScriptChatPlugin *plugin = nil;
 
-					while( plugin = [pluginEnum nextObject] )
+					while( ( plugin = [pluginEnum nextObject] ) )
 						if( [[plugin scriptFilePath] isEqualToString:path] || [[[[plugin scriptFilePath] lastPathComponent] stringByDeletingPathExtension] isEqualToString:path] )
 							break;
 
@@ -116,7 +116,7 @@
 	
 		NSEnumerator *enumerator = [paths objectEnumerator];
 		NSString *path = nil;
-		while( path = [enumerator nextObject] ) {
+		while( ( path = [enumerator nextObject] ) ) {
 			path = [path stringByAppendingPathComponent:[name stringByDeletingPathExtension]];
 			path = [path stringByAppendingPathExtension:@"fscript"];
 			if( [fm fileExistsAtPath:path] ) {
@@ -143,7 +143,7 @@
 	NSString *file = nil, *path = nil;
 
 	NSEnumerator *enumerator = [paths objectEnumerator];
-	while( path = [enumerator nextObject] ) {
+	while( ( path = [enumerator nextObject] ) ) {
 		NSEnumerator *denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
 		while( ( file = [denumerator nextObject] ) ) {
 			if( [[file pathExtension] isEqualToString:@"fscript"] ) {

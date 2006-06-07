@@ -19,7 +19,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 
 @implementation JVFScriptChatPlugin
 - (id) initWithManager:(MVChatPluginManager *) manager {
-	if( self = [self init] ) {
+	if( ( self = [self init] ) ) {
 		_manager = manager;
 		_scriptInterpreter = nil;
 		_path = nil;
@@ -30,7 +30,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 }
 
 - (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
-	if( self = [self initWithManager:manager] ) {
+	if( ( self = [self initWithManager:manager] ) ) {
 		_path = [path copyWithZone:[self zone]];
 		_scriptInterpreter = [[FSInterpreter interpreter] retain];
 		if( ! _scriptInterpreter ) {
@@ -162,10 +162,9 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 
 	if( found && [object isKindOfClass:[Block class]] ) {
 		if( ! arguments ) arguments = [NSArray arrayWithObject:[NSNull null]];
-		if( [(Block *)object argumentCount] > [arguments count] ) {
+		if( (unsigned)[(Block *)object argumentCount] > [arguments count] ) {
 			NSMutableArray *newArgs = [[arguments mutableCopy] autorelease];
-			unsigned int i = 0;
-			for( i = [arguments count]; i < [(Block *)object argumentCount]; i++ )
+			for( unsigned i = [arguments count]; i < (unsigned)[(Block *)object argumentCount]; i++ )
 				[newArgs addObject:[NSNull null]];
 			arguments = newArgs;
 		}

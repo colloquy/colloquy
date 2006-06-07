@@ -6,10 +6,8 @@
 
 @implementation JVAppleScriptPluginLoader
 - (id) initWithManager:(MVChatPluginManager *) manager {
-	if( self = [super init] ) {
+	if( ( self = [super init] ) )
 		_manager = manager;
-	}
-
 	return self;
 }
 
