@@ -9,27 +9,15 @@
 	<key>JVChatTranscriptFolderOrganization</key>
 	<integer>1</integer>
 	<key>JVChatTranscriptSessionHandling</key>
-	<integer>1</integer>
+	<integer>2</integer>
 	<key>JVChatScrollbackLimit</key>
 	<integer>300</integer>
-	<key>JVChatScrollTopTimeThreshold</key>
-	<string>0.5</string>
-	<key>JVChatScrollTopDeferedThreshold</key>
-	<integer>1000</integer>
 	<key>JVAutoAcceptFilesFrom</key>
 	<integer>1</integer>
-	<key>JVChatConsolePanelPreferredOpenMode</key>
-	<integer>0</integer>
-	<key>JVChatRoomPanelPreferredOpenMode</key>
-	<integer>2</integer>
-	<key>JVChatTranscriptPanelPreferredOpenMode</key>
-	<integer>0</integer>
-	<key>JVDirectChatPanelPreferredOpenMode</key>
-	<integer>3</integer>
 	<key>JVChatSelfNameStyle</key>
-	<integer>1</integer>
+	<integer>0</integer>
 	<key>JVChatBuddyNameStyle</key>
-	<integer>1</integer>
+	<integer>0</integer>
 	<key>JVChatEncoding</key>
 	<integer>4</integer>
 	<key>MVChatHighlightNames</key>
@@ -57,7 +45,7 @@
 	<key>JVChatBuddyListShowOfflineBuddies</key>
 	<true/>
 	<key>JVSortRoomMembersByStatus</key>
-	<false/>
+	<true/>
 	<key>JVShowConnectionsWindowOnLaunch</key>
 	<true/>
 	<key>MVChatSendOnReturn</key>
@@ -226,8 +214,6 @@
 	<true/>
 	<key>JVRemoveTransferedItems</key>
 	<integer>1</integer>
-	<key>JVSortRoomMembersByStatus</key>
-	<true/>
 	<key>JVChatDefaultStyle</key>
 	<string>cc.javelin.colloquy.style.standard</string>
 	<key>JVChatDefaultEmoticons cc.javelin.colloquy.style.bland</key>
