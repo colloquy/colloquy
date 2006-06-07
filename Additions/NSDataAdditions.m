@@ -93,7 +93,7 @@ static char encodingTable[64] = {
 	NSMutableString *result = [NSMutableString stringWithCapacity:[self length]];
 	unsigned long ixtext = 0;
 	unsigned long lentext = [self length];
-	unsigned long ctremaining = 0;
+	long ctremaining = 0;
 	unsigned char inbuf[3], outbuf[4];
 	unsigned short i = 0;
 	unsigned short charsonline = 0, ctcopy = 0;
