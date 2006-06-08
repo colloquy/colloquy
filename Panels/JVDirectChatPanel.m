@@ -394,6 +394,12 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	[item setTarget:self];
 	[menu addItem:item]; */
 
+	if( ! [[MVBuddyListController sharedBuddyList] buddyForUser:[self target]] ) {
+		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add To Buddy List", "add to buddy list contextual menu") action:@selector( addBuddy: ) keyEquivalent:@""] autorelease];
+		[item setTarget:self];
+		[menu addItem:item];
+	}
+
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( _sendFile: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];
@@ -495,6 +501,13 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	[[NSWorkspace sharedWorkspace] noteFileSystemChanged:path];
 
 	[MVConnectionsController refreshFavoritesMenu];
+}
+
+- (IBAction) addBuddy:(id) sender {
+	[[MVBuddyListController sharedBuddyList] showBuddyPickerSheet:self];
+	[[MVBuddyListController sharedBuddyList] setNewBuddyNickname:[[self target] nickname]];
+	[[MVBuddyListController sharedBuddyList] setNewBuddyFullname:[[self target] realName]];
+	[[MVBuddyListController sharedBuddyList] setNewBuddyServer:[self connection]];
 }
 
 #pragma mark -
