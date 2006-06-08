@@ -7,6 +7,7 @@
                 bounceIconUntilFront = id; 
                 keepBubbleOnScreen = id; 
                 playSound = id; 
+                playSoundIfBackground = id; 
                 saveHighlightWords = id; 
                 showBubble = id; 
                 showBubbleIfBackground = id; 
@@ -23,6 +24,7 @@
                 onlyIfBackground = NSButton; 
                 playSound = NSButton; 
                 showBubble = NSButton; 
+                soundOnlyIfBackground = NSButton; 
                 sounds = NSPopUpButton; 
                 untilAttention = NSButton; 
             }; 
