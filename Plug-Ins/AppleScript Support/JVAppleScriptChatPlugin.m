@@ -375,7 +375,7 @@
 				if( ! enabled || ( enabled && [enabled boolValue] ) ) [mitem setTarget:self];
 				if( enabled && ! [enabled boolValue] ) [mitem setEnabled:[enabled boolValue]];
 				if( checked ) [mitem setState:[checked intValue]];
-#define min(a,b) a > b ? b : a
+#define min(a,b) ((a) > (b) ? (b) : (a))
 				if( indent ) [mitem setIndentationLevel:min( 15, [indent unsignedIntValue] )];
 				if( tooltip ) [mitem setToolTip:tooltip];
 				

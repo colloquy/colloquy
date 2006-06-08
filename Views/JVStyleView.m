@@ -601,8 +601,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	[parameters setObject:@"'yes'" forKey:@"bulkTransform"];
 
-#define min(a,b) a > b ? b : a
-#define max(a,b) a < b ? b : a
+#define min(a,b) ((a) > (b) ? (b) : (a))
+#define max(a,b) ((a) < (b) ? (b) : (a))
 
 	for( unsigned long i = elementCount; i > ( elementCount - min( [self scrollbackLimit], elementCount ) ); i -= min( 25, i ) ) {
 		NSArray *elements = [transcript elementsInRange:NSMakeRange( i - min( 25, i ), min( 25, i ) )];

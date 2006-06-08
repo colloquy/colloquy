@@ -3,7 +3,7 @@
 
 #import "NSScannerAdditions.h"
 
-#define min(a,b) (a) > (b) ? (b) : (a)
+#define min(a,b) ((a) > (b) ? (b) : (a))
 
 @implementation NSScanner (NSScannerAdditions)
 - (BOOL) scanCharacterInto:(unichar *) unicharValue {
