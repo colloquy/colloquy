@@ -69,7 +69,7 @@
 #pragma mark -
 
 - (JVIgnoreMatchResult) matchUser:(MVChatUser *) user message:(NSString *) message inView:(id <JVChatViewController>) view {
-	if( ! [_rooms count] || ( [view isKindOfClass:[JVDirectChatPanel class]] && [_rooms containsObject:[(JVDirectChatPanel *)view target]] ) ) {
+	if( ! [_rooms count] || ! view || ( [view isKindOfClass:[JVDirectChatPanel class]] && [_rooms containsObject:[[(JVDirectChatPanel *)view target] displayName]] ) ) {
 		BOOL userFound = NO;
 		BOOL messageFound = NO;
 		BOOL userRequired = ( _userRegex || [_ignoredUser length] );
@@ -78,8 +78,8 @@
 		if( _userRegex && [_userRegex findInString:[user nickname]] ) userFound = YES;
 		else if( [_ignoredUser length] ) userFound = [_ignoredUser isEqualToString:[user nickname]];
 
-		if( _messageRegex && [_messageRegex findInString:message] ) messageFound = YES;
-		else if( [_ignoredMessage length] ) messageFound = ( [message rangeOfString:_ignoredMessage options:NSCaseInsensitiveSearch].location != NSNotFound );
+		if( _messageRegex && message && [_messageRegex findInString:message] ) messageFound = YES;
+		else if( [_ignoredMessage length] && message ) messageFound = ( [message rangeOfString:_ignoredMessage options:NSCaseInsensitiveSearch].location != NSNotFound );
 
 		if( userRequired ) {
 			if( ! userFound || ( messageRequired && ! messageFound ) ) return JVNotIgnored;
