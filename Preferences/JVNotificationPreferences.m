@@ -31,7 +31,10 @@
 
 	BOOL boolValue = [[_eventPrefs objectForKey:@"playSound"] boolValue];
 	[playSound setState:boolValue];
+	[soundOnlyIfBackground setEnabled:boolValue];
 	[sounds setEnabled:boolValue];
+	if( ! boolValue ) [soundOnlyIfBackground setState:NSOffState];
+	else [soundOnlyIfBackground setState:[[_eventPrefs objectForKey:@"playSoundOnlyIfBackground"] boolValue]];
 	[self selectSoundWithPath:[_eventPrefs objectForKey:@"soundPath"]];
 
 	boolValue = [[_eventPrefs objectForKey:@"bounceIcon"] boolValue];
@@ -175,6 +178,9 @@
 
 - (void) playSound:(id) sender {
 	[sounds setEnabled:(BOOL)[sender state]];
+	[soundOnlyIfBackground setEnabled:(BOOL)[sender state]];
+	if( [sender state] == NSOffState ) [soundOnlyIfBackground setState:NSOffState];
+	else [soundOnlyIfBackground setState:[[_eventPrefs objectForKey:@"playSoundOnlyIfBackground"] boolValue]];
 	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"playSound"];
 	[self switchSound:sounds];
 	[self saveEventSettings];

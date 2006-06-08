@@ -51,8 +51,12 @@ static JVNotificationController *sharedInstance = nil;
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context {
 	NSDictionary *eventPrefs = [[NSUserDefaults standardUserDefaults] dictionaryForKey:[NSString stringWithFormat:@"JVNotificationSettings %@", identifier]];
 
-	if( [[eventPrefs objectForKey:@"playSound"] boolValue] && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatNotificationsMuted"] )
-		[self _playSound:[eventPrefs objectForKey:@"soundPath"]];
+	if( [[eventPrefs objectForKey:@"playSound"] boolValue] && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatNotificationsMuted"] ) {
+		if( [[eventPrefs objectForKey:@"playSoundOnlyIfBackground"] boolValue] && ! [[NSApplication sharedApplication] isActive] )
+			[self _playSound:[eventPrefs objectForKey:@"soundPath"]];
+		else if( ! [[eventPrefs objectForKey:@"playSoundOnlyIfBackground"] boolValue] )
+			[self _playSound:[eventPrefs objectForKey:@"soundPath"]];
+	}
 
 	if( [[eventPrefs objectForKey:@"bounceIcon"] boolValue] ) {
 		if( [[eventPrefs objectForKey:@"bounceIconUntilFront"] boolValue] )

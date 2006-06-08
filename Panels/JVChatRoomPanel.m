@@ -284,7 +284,7 @@
 		[_preferredTabCompleteNicknames insertObject:[[message sender] nickname] atIndex:0];
 	}
 
-	if( [message ignoreStatus] == JVNotIgnored && [[message sender] respondsToSelector:@selector( isLocalUser )] && ! [[message sender] isLocalUser] && ( ! [[[self view] window] isMainWindow] || ! _isActive ) ) {
+	if( [message ignoreStatus] == JVNotIgnored && [[message sender] respondsToSelector:@selector( isLocalUser )] && ! [[message sender] isLocalUser] ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ Room Activity", "room activity bubble title" ), [self title]] forKey:@"title"];
 		if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has a message waiting from %@.", "new single room message bubble text" ), [self title], [member displayName]] forKey:@"description"];

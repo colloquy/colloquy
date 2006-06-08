@@ -23,6 +23,7 @@
                 onlyIfBackground = NSButton; 
                 playSound = NSButton; 
                 showBubble = NSButton; 
+                soundOnlyIfBackground = NSButton; 
                 sounds = NSPopUpButton; 
                 untilAttention = NSButton; 
             }; 

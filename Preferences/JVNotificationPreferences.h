@@ -4,6 +4,7 @@
 	IBOutlet NSTextField *highlightWords;
 	IBOutlet NSPopUpButton *chatActions;
 	IBOutlet NSButton *playSound;
+	IBOutlet NSButton *soundOnlyIfBackground;
 	IBOutlet NSPopUpButton *sounds;
 	IBOutlet NSButton *bounceIcon;
 	IBOutlet NSButton *untilAttention;
