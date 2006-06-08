@@ -291,6 +291,9 @@
 
 	unsigned int localUserModes = ( [[_room connection] localUser] ? [(MVChatRoom *)[_room target] modesForMemberUser:[[_room connection] localUser]] : 0 );
 	BOOL canEdit = ( localUserModes & MVChatRoomMemberOperatorMode );
+	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberHalfOperatorMode );
+	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberAdministratorMode );
+	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberFounderMode );
 
 	[newBanButton setEnabled:canEdit];
 	[deleteBanButton setEnabled:( canEdit && [banRules selectedRow] != -1 )];
