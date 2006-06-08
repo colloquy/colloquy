@@ -23,6 +23,7 @@
 
 - (void) selectSoundWithPath:(NSString *) path;
 - (void) playSound:(id) sender;
+- (void) playSoundIfBackground:(id) sender;
 - (void) switchSound:(id) sender;
 
 - (void) bounceIcon:(id) sender;

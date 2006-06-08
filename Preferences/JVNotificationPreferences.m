@@ -186,6 +186,11 @@
 	[self saveEventSettings];
 }
 
+- (void) playSoundIfBackground:(id) sender {
+	[_eventPrefs setObject:[NSNumber numberWithBool:(BOOL)[sender state]] forKey:@"playSoundOnlyIfBackground"];
+	[self saveEventSettings];
+}
+
 - (void) switchSound:(id) sender {
 	NSString *path = [[sounds selectedItem] representedObject];
 
