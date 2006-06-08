@@ -362,7 +362,14 @@
 		[menu addItem:item];
 	}
 
-	if( [[[self room] localChatRoomMember] operator] ) {
+	unsigned int localUserModes = ( [[self connection] localUser] ? [(MVChatRoom *)[[self room] target] modesForMemberUser:[[self connection] localUser]] : 0 );
+	BOOL canEdit = ( localUserModes & MVChatRoomMemberOperatorMode );
+	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberHalfOperatorMode );
+	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberAdministratorMode );
+	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberFounderMode );
+	if( ! canEdit ) canEdit = [[[self connection] localUser] isServerOperator];
+
+	if( canEdit ) {
 		[menu addItem:[NSMenuItem separatorItem]];
 
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kick From Room", "kick from room contextual menu - admin only" ) action:@selector( kick: ) keyEquivalent:@""] autorelease];

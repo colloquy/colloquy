@@ -294,6 +294,7 @@
 	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberHalfOperatorMode );
 	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberAdministratorMode );
 	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberFounderMode );
+	if( ! canEdit ) canEdit = [[[_room connection] localUser] isServerOperator];
 
 	[newBanButton setEnabled:canEdit];
 	[deleteBanButton setEnabled:( canEdit && [banRules selectedRow] != -1 )];
