@@ -25,8 +25,7 @@
 
 - (void) showPreferencesPanel {
 	[super showPreferencesPanel];
-	// let us poke transparant holes in the window
-	if( NSAppKitVersionNumber >= 700. ) [_preferencesPanel setOpaque:NO];
+	[_preferencesPanel setOpaque:NO]; // let us poke transparant holes in the window
 	if( [_preferencesPanel respondsToSelector:@selector( _setContentHasShadow: )] )
 		[_preferencesPanel _setContentHasShadow:NO]; // this is new in Tiger
 	if( [_preferencesPanel respondsToSelector:@selector( setShowsToolbarButton: )] )
@@ -35,8 +34,7 @@
 
 - (void) showPreferencesPanelForOwner:(id) owner {
 	[super showPreferencesPanelForOwner:owner];
-	// let us poke transparant holes in the window
-	if( NSAppKitVersionNumber >= 700. ) [_preferencesPanel setOpaque:NO];
+	[_preferencesPanel setOpaque:NO]; // let us poke transparant holes in the window
 	if( [_preferencesPanel respondsToSelector:@selector( _setContentHasShadow: )] )
 		[_preferencesPanel _setContentHasShadow:NO]; // this is new in Tiger
 	if( [_preferencesPanel respondsToSelector:@selector( setShowsToolbarButton: )] )

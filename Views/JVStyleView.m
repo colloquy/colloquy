@@ -488,8 +488,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) drawRect:(NSRect) rect {
-	[[NSColor clearColor] set];
-	NSRectFill( rect ); // allows poking holes in the window with rgba background colors
+	if( ! [self drawsBackground] ) {
+		[[NSColor clearColor] set];
+		NSRectFill( rect ); // allows poking holes in the window with rgba background colors
+	}
+
 	[super drawRect:rect];
 }
 
