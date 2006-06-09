@@ -560,9 +560,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) _contentFrameIsReady {
 	_contentFrameReady = YES;
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVStyleViewDidClearNotification object:self];
-	if( _switchingStyles ) {
+	if( _switchingStyles )
 		[NSThread detachNewThreadSelector:@selector( _switchStyle ) toTarget:self withObject:nil];
-	}
 }
 
 - (void) _reallyAwakeFromNib {
@@ -781,6 +780,9 @@ quickEnd:
 		shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"]];
 	else shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
 
+	if( [shell length] < 600 )
+		NSLog( @"ERROR: template.html was only %d bytes, bad content? Try: /reload style (%@)", [shell length], shell );
+
 	return [NSString stringWithFormat:shell, @"", [resources absoluteString]];
 }
 
@@ -793,6 +795,9 @@ quickEnd:
 	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
 		shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
 	else shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
+
+	if( [shell length] < 600 )
+		NSLog( @"ERROR: template.html was only %d bytes, bad content? Try: /reload style (%@)", [shell length], shell );
 
 	return [NSString stringWithFormat:shell, @"", @"", [resources absoluteString], [[[self emoticons] styleSheetLocation] absoluteString], [[[self style] mainStyleSheetLocation] absoluteString], variantStyleSheetLocation, [[[self style] baseLocation] absoluteString], [[self style] contentsOfBodyTemplateWithName:[self bodyTemplate]]];
 }
