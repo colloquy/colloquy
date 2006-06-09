@@ -99,6 +99,9 @@
 - (void) setAutoConnect:(BOOL) autoConnect forConnection:(MVChatConnection *) connection;
 - (BOOL) autoConnectForConnection:(MVChatConnection *) connection;
 
+- (void) setShowConsoleOnConnect:(BOOL) autoConsole forConnection:(MVChatConnection *) connection;
+- (BOOL) showConsoleOnConnectForConnection:(MVChatConnection *) connection;
+
 - (void) setJoinRooms:(NSArray *) rooms forConnection:(MVChatConnection *) connection;
 - (NSMutableArray *) joinRoomsForConnection:(MVChatConnection *) connection;
 

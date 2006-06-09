@@ -25,6 +25,7 @@
 	IBOutlet NSPopUpButton *editProxy;
 	IBOutlet NSTextField *editPort;
 	IBOutlet NSButton *editAutomatic;
+	IBOutlet NSButton *editShowConsoleOnConnect;
 	IBOutlet NSTableView *editRooms;
 	IBOutlet NSButton *editRemoveRoom;
 	IBOutlet NSTextView *connectCommands;
@@ -66,6 +67,7 @@
 - (IBAction) openNetworkPreferences:(id) sender;
 - (IBAction) editText:(id) sender;
 - (IBAction) toggleAutoConnect:(id) sender;
+- (IBAction) toggleShowConsoleOnConnect:(id) sender;
 - (IBAction) toggleSSLConnection:(id) sender;
 - (IBAction) changeProxy:(id) sender;
 

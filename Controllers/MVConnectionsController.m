@@ -389,7 +389,7 @@ static NSMenu *favoritesMenu = nil;
 	[connection setRealName:[newRealName stringValue]];
 	if( [_joinRooms count] ) [connection joinChatRoomsNamed:_joinRooms];
 
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
+	if( [self showConsoleOnConnectForConnection:connection] )
 		[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
 
 	[connection connectToServer:[newAddress stringValue] onPort:[newPort intValue] asUser:[newNickname stringValue]];
@@ -697,7 +697,7 @@ static NSMenu *favoritesMenu = nil;
 				&& ( ! [connection serverPort] || ! [[url port] unsignedShortValue] || [connection serverPort] == [[url port] unsignedShortValue] ) ) {
 
 				if( ! [connection isConnected] && connect ) {
-					if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
+					if( [self showConsoleOnConnectForConnection:connection] )
 						[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
 					[connection connect];
 				}
@@ -728,7 +728,7 @@ static NSMenu *favoritesMenu = nil;
 			[connection setOutgoingChatFormat:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"]];
 
 			if( connect ) {
-				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
+				if( [self showConsoleOnConnectForConnection:connection] )
 					[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
 				if( target ) [connection joinChatRoomNamed:target];
 				[connection connect];
@@ -769,6 +769,35 @@ static NSMenu *favoritesMenu = nil;
 
 	return NO;
 }
+
+#pragma mark -
+
+- (void) setShowConsoleOnConnect:(BOOL) autoConsole forConnection:(MVChatConnection *) connection {
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	NSMutableDictionary *info = nil;
+
+	while( ( info = [enumerator nextObject] ) ) {
+		if( [info objectForKey:@"connection"] == connection ) {
+			[info setObject:[NSNumber numberWithBool:autoConsole] forKey:@"showConsole"];
+			[self _saveBookmarkList];
+			break;
+		}
+	}
+}
+
+- (BOOL) showConsoleOnConnectForConnection:(MVChatConnection *) connection {
+	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
+	NSMutableDictionary *info = nil;
+
+	while( ( info = [enumerator nextObject] ) ) {
+		if( [info objectForKey:@"connection"] == connection ) {
+			return [[info objectForKey:@"showConsole"] boolValue];
+		}
+	}
+
+	return NO;
+}
+
 
 #pragma mark -
 
@@ -1451,6 +1480,7 @@ static NSMenu *favoritesMenu = nil;
 
 			NSMutableDictionary *data = [NSMutableDictionary dictionary];
 			[data setObject:[NSNumber numberWithBool:[[info objectForKey:@"automatic"] boolValue]] forKey:@"automatic"];
+			[data setObject:[NSNumber numberWithBool:[[info objectForKey:@"showConsole"] boolValue]] forKey:@"showConsole"];
 			[data setObject:[NSNumber numberWithBool:[connection isSecure]] forKey:@"secure"];
 			[data setObject:[NSNumber numberWithLong:[connection proxyType]] forKey:@"proxy"];
 			[data setObject:[NSNumber numberWithLong:[connection encoding]] forKey:@"encoding"];
@@ -1538,7 +1568,7 @@ static NSMenu *favoritesMenu = nil;
 		[connection setSecure:[[info objectForKey:@"secure"] boolValue]];
 
 		if( [[info objectForKey:@"automatic"] boolValue] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) ) {
-			if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
+			if( [[info objectForKey:@"showConsole"] boolValue] )
 				[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
 
 			[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
@@ -1699,14 +1729,14 @@ static NSMenu *favoritesMenu = nil;
 	if( [connections selectedRow] == -1 ) return;
 	MVChatConnection *connection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
 	[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
+	if( [self showConsoleOnConnectForConnection:connection] )
 		[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
 	[connection connect];
 }
 
 - (void) _willConnect:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatOpenConsoleOnConnect"] )
+	if( [self showConsoleOnConnectForConnection:connection] )
 		[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
 }
 

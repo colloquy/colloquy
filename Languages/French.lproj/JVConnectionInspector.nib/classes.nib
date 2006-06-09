@@ -18,6 +18,7 @@
                 saveRule = id; 
                 toggleAutoConnect = id; 
                 toggleSSLConnection = id; 
+                toggleShowConsoleOnConnect = id; 
             }; 
             CLASS = JVConnectionInspector; 
             LANGUAGE = ObjC; 
@@ -44,6 +45,7 @@
                 editRuleSender = NSTextField; 
                 editRules = NSTableView; 
                 editServerPassword = NSTextField; 
+                editShowConsoleOnConnect = NSButton; 
                 editUsername = NSTextField; 
                 encoding = NSPopUpButton; 
                 makeRulePermanent = NSButton; 

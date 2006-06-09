@@ -61,6 +61,7 @@
 	[tabView removeTabViewItem:[tabView tabViewItemAtIndex:[tabView indexOfTabViewItemWithIdentifier:@"Proxy"]]];
 
 	[editAutomatic setState:[[MVConnectionsController defaultController] autoConnectForConnection:_connection]];
+	[editShowConsoleOnConnect setState:[[MVConnectionsController defaultController] showConsoleOnConnectForConnection:_connection]];
 	[sslConnection setState:[_connection isSecure]];
 	[editAddress setObjectValue:[_connection server]];
 	[editProxy selectItemAtIndex:[editProxy indexOfItemWithTag:[_connection proxyType]]];
@@ -171,6 +172,10 @@
 
 - (IBAction) toggleAutoConnect:(id) sender {
 	[[MVConnectionsController defaultController] setAutoConnect:[sender state] forConnection:_connection];
+}
+
+- (IBAction) toggleShowConsoleOnConnect:(id) sender {
+	[[MVConnectionsController defaultController] setShowConsoleOnConnect:[sender state] forConnection:_connection];
 }
 
 - (IBAction) toggleSSLConnection:(id) sender {
