@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1C0A13E708B036DA00324E25 /* Python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C0A139C08B036DA00324E25 /* Python.framework */; };
 		1C4FD36807C6BC25000EA451 /* JVJavaScriptPluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FD36607C6BC25000EA451 /* JVJavaScriptPluginLoader.m */; };
 		1CEF8F1C0A3AB66F0054298A /* JVJavaScriptChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEF8E6B0A3AAF530054298A /* JVJavaScriptChatPlugin.m */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
@@ -17,7 +16,6 @@
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		1C0A139C08B036DA00324E25 /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = /System/Library/Frameworks/Python.framework; sourceTree = "<absolute>"; };
 		1C0A13F308B0374800324E25 /* JVJavaScriptChatPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVJavaScriptChatPlugin.h; sourceTree = "<group>"; };
 		1C4FD36507C6BC25000EA451 /* JVJavaScriptPluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVJavaScriptPluginLoader.h; sourceTree = "<group>"; };
 		1C4FD36607C6BC25000EA451 /* JVJavaScriptPluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVJavaScriptPluginLoader.m; sourceTree = "<group>"; };
@@ -33,7 +31,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */,
-				1C0A13E708B036DA00324E25 /* Python.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,7 +81,6 @@
 			isa = PBXGroup;
 			children = (
 				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
-				1C0A139C08B036DA00324E25 /* Python.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";

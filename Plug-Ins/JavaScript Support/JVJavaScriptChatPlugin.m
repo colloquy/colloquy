@@ -1,11 +1,118 @@
 #import "JVJavaScriptChatPlugin.h"
+#import "JVChatController.h"
 #import "JVChatWindowController.h"
+#import "JVChatTranscript.h"
 #import "JVChatMessage.h"
+#import "JVChatEvent.h"
+#import "JVChatTranscriptPanel.h"
 #import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
 #import "NSStringAdditions.h"
+#import "MVChatConnection.h"
+#import "MVChatRoom.h"
+#import "MVChatUser.h"
 
 #import <WebKit/WebKit.h>
+
+@implementation JVChatController (JVChatControllerWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
+
+@implementation JVChatWindowController (JVChatWindowControllerWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
+
+@implementation JVChatTranscript (JVChatTranscriptWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
+
+@implementation JVChatMessage (JVChatMessageWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
+
+@implementation JVChatEvent (JVChatEventWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
+
+@implementation JVChatTranscriptPanel (JVChatTranscriptPanelWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
+
+@implementation JVChatRoomMember (JVChatRoomMemberWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
+
+@implementation MVChatConnection (MVChatConnectionWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
+
+@implementation MVChatRoom (MVChatRoomWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
+
+@implementation MVChatUser (MVChatUserWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
 
 NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 
@@ -66,6 +173,8 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	id old = _webview;
 	_webview = [[WebView allocWithZone:nil] initWithFrame:NSZeroRect];
 	[old release];
+
+	[[_webview windowScriptObject] setValue:[JVChatController defaultController] forKey:@"chatController"];
 
 	NSString *contents = nil;
 	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3

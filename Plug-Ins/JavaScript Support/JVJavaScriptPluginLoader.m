@@ -57,7 +57,7 @@
 					} else if( ! [subcmd caseInsensitiveCompare:@"unload"] ) {
 						[_manager removePlugin:plugin];
 					/* } else if( view && ! [subcmd caseInsensitiveCompare:@"console"] ) {
-						JVJavaScriptConsolePanel *console = [[[JVJavaScriptConsolePanel alloc] initWithPythonChatPlugin:plugin] autorelease];
+						JVJavaScriptConsolePanel *console = [[[JVJavaScriptConsolePanel alloc] initWithJavaScriptChatPlugin:plugin] autorelease];
 						[[view windowController] addChatViewController:console];
 						[[view windowController] showChatViewController:console]; */
 					} else if( ! [subcmd caseInsensitiveCompare:@"edit"] ) {
