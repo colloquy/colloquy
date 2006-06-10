@@ -467,6 +467,12 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
 		[contentFrame loadHTMLString:[self _contentHTMLWithBody:@""] baseURL:nil];
 	} else if( _mainFrameReady) {
+		if( [[[[[frame dataSource] response] URL] absoluteString] isEqualToString:@"about:blank"] ) {
+			// this was a false content frame load, try again
+			[frame loadHTMLString:[self _contentHTMLWithBody:@""] baseURL:nil];
+			return;
+		}
+
 		[_domDocument autorelease];
 		_domDocument = (DOMHTMLDocument *)[[frame DOMDocument] retain];
 
