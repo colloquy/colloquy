@@ -272,6 +272,7 @@
 		1CEE3F06057AEC0200AD6DE2 /* JVBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEE3F04057AEC0200AD6DE2 /* JVBuddy.m */; };
 		1CEEAB17095BD23500166A54 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
 		1CEEAB1A095BD25500166A54 /* ChatCore.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
+		1CEF8F830A3AB7E90054298A /* JavaScript Support.plugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1CEF8F800A3AB7BB0054298A /* JavaScript Support.plugin */; };
 		1CF16CDF083ADE590037F222 /* deleteWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF16CDB083ADE590037F222 /* deleteWidget.png */; };
 		1CF16CE0083ADE590037F222 /* deleteWidgetPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF16CDC083ADE590037F222 /* deleteWidgetPressed.png */; };
 		1CF16CE1083ADE590037F222 /* editWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF16CDD083ADE590037F222 /* editWidget.png */; };
@@ -388,6 +389,20 @@
 			remoteGlobalIDString = 1C51B46E052DE0CB00BB459B;
 			remoteInfo = "Chat Core (Framework)";
 		};
+		1CEF8F7F0A3AB7BB0054298A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1CEF8F7B0A3AB7BB0054298A /* JavaScript Support.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D5B49B6048680CD000E48DA /* JavaScript Support.plugin */;
+			remoteInfo = "JavaScript Support Plugin";
+		};
+		1CEF8F810A3AB7D30054298A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1CEF8F7B0A3AB7BB0054298A /* JavaScript Support.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D5B49AC048680CD000E48DA /* JavaScript Support Plugin */;
+			remoteInfo = "JavaScript Support Plugin";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -426,6 +441,7 @@
 			files = (
 				0A6571D40868816B001FF007 /* Standard Commands.plugin in Copy Plugins */,
 				0A6571B508687F86001FF007 /* AppleScript Support.plugin in Copy Plugins */,
+				1CEF8F830A3AB7E90054298A /* JavaScript Support.plugin in Copy Plugins */,
 				0A6571BD0868800D001FF007 /* F-Script Support.plugin in Copy Plugins */,
 				1C0A19B008B041C200324E25 /* Python Support.plugin in Copy Plugins */,
 				1C7C773C07DBAABC00FB5F83 /* iTunes.scpt in Copy Plugins */,
@@ -761,6 +777,7 @@
 		1CEE3B160578491B00AD6DE2 /* statusOffline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = statusOffline.png; path = Resources/statusOffline.png; sourceTree = "<group>"; };
 		1CEE3F03057AEC0200AD6DE2 /* JVBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVBuddy.h; path = Models/JVBuddy.h; sourceTree = "<group>"; };
 		1CEE3F04057AEC0200AD6DE2 /* JVBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVBuddy.m; path = Models/JVBuddy.m; sourceTree = "<group>"; };
+		1CEF8F7B0A3AB7BB0054298A /* JavaScript Support.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "JavaScript Support.xcodeproj"; path = "Plug-Ins/JavaScript Support/JavaScript Support.xcodeproj"; sourceTree = "<group>"; };
 		1CF16CDB083ADE590037F222 /* deleteWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = deleteWidget.png; path = Resources/deleteWidget.png; sourceTree = SOURCE_ROOT; };
 		1CF16CDC083ADE590037F222 /* deleteWidgetPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = deleteWidgetPressed.png; path = Resources/deleteWidgetPressed.png; sourceTree = SOURCE_ROOT; };
 		1CF16CDD083ADE590037F222 /* editWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = editWidget.png; path = Resources/editWidget.png; sourceTree = SOURCE_ROOT; };
@@ -1357,6 +1374,7 @@
 		1CC478470427BB2C00000102 /* Plug–Ins */ = {
 			isa = PBXGroup;
 			children = (
+				1CEF8F340A3AB70E0054298A /* JavaScript Support */,
 				1CC478480427BB5500000102 /* Standard Commands */,
 				1C04393E07CAFC5800304949 /* AppleScript Support */,
 				1CE3F7BC07C7B60A0049A366 /* F-Script Support */,
@@ -1416,6 +1434,22 @@
 			isa = PBXGroup;
 			children = (
 				1CEEAB16095BD23100166A54 /* ChatCore.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1CEF8F340A3AB70E0054298A /* JavaScript Support */ = {
+			isa = PBXGroup;
+			children = (
+				1CEF8F7B0A3AB7BB0054298A /* JavaScript Support.xcodeproj */,
+			);
+			name = "JavaScript Support";
+			sourceTree = "<group>";
+		};
+		1CEF8F7C0A3AB7BB0054298A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1CEF8F800A3AB7BB0054298A /* JavaScript Support.plugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1861,6 +1895,7 @@
 				1C7F30010855456D00D41FB0 /* PBXTargetDependency */,
 				1C09DFF7052DFF6600D748CF /* PBXTargetDependency */,
 				0A6571A908687EF9001FF007 /* PBXTargetDependency */,
+				1CEF8F820A3AB7D30054298A /* PBXTargetDependency */,
 				0A6571AB08687F01001FF007 /* PBXTargetDependency */,
 				1C0A19AF08B041A800324E25 /* PBXTargetDependency */,
 			);
@@ -1928,6 +1963,10 @@
 					ProjectRef = 1CE3F9BB07C7C29A0049A366 /* F-Script Support.xcodeproj */;
 				},
 				{
+					ProductGroup = 1CEF8F7C0A3AB7BB0054298A /* Products */;
+					ProjectRef = 1CEF8F7B0A3AB7BB0054298A /* JavaScript Support.xcodeproj */;
+				},
+				{
 					ProductGroup = 1C0A19A308B0418600324E25 /* Products */;
 					ProjectRef = 1C0A19A208B0418600324E25 /* Python Support.xcodeproj */;
 				},
@@ -1979,6 +2018,13 @@
 			fileType = wrapper.framework;
 			path = ChatCore.framework;
 			remoteRef = 1CEEAB15095BD23100166A54 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1CEF8F800A3AB7BB0054298A /* JavaScript Support.plugin */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "JavaScript Support.plugin";
+			remoteRef = 1CEF8F7F0A3AB7BB0054298A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -2427,6 +2473,11 @@
 			isa = PBXTargetDependency;
 			name = "Chat Core (Framework)";
 			targetProxy = 1CEEAB18095BD24100166A54 /* PBXContainerItemProxy */;
+		};
+		1CEF8F820A3AB7D30054298A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "JavaScript Support Plugin";
+			targetProxy = 1CEF8F810A3AB7D30054298A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

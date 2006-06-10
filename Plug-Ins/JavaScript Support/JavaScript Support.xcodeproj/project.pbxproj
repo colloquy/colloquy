@@ -1,0 +1,326 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1C0A13E708B036DA00324E25 /* Python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C0A139C08B036DA00324E25 /* Python.framework */; };
+		1C4FD36807C6BC25000EA451 /* JVJavaScriptPluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FD36607C6BC25000EA451 /* JVJavaScriptPluginLoader.m */; };
+		1CEF8F1C0A3AB66F0054298A /* JVJavaScriptChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEF8E6B0A3AAF530054298A /* JVJavaScriptChatPlugin.m */; };
+		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1C0A139C08B036DA00324E25 /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = /System/Library/Frameworks/Python.framework; sourceTree = "<absolute>"; };
+		1C0A13F308B0374800324E25 /* JVJavaScriptChatPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVJavaScriptChatPlugin.h; sourceTree = "<group>"; };
+		1C4FD36507C6BC25000EA451 /* JVJavaScriptPluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVJavaScriptPluginLoader.h; sourceTree = "<group>"; };
+		1C4FD36607C6BC25000EA451 /* JVJavaScriptPluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVJavaScriptPluginLoader.m; sourceTree = "<group>"; };
+		1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
+		1CEF8E6B0A3AAF530054298A /* JVJavaScriptChatPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVJavaScriptChatPlugin.m; sourceTree = "<group>"; };
+		8D5B49B6048680CD000E48DA /* JavaScript Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "JavaScript Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D5B49B3048680CD000E48DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */,
+				1C0A13E708B036DA00324E25 /* Python.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		089C166AFE841209C02AAC07 /* FScript Plugin */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77AFFE84173DC02AAC07 /* Classes */,
+				089C167CFE841241C02AAC07 /* Resources */,
+				1C9AE940086A59CF008ED7AD /* Configurations */,
+				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
+				19C28FB8FE9D52D311CA2CBB /* Products */,
+			);
+			name = "FScript Plugin";
+			sourceTree = "<group>";
+		};
+		089C1671FE841209C02AAC07 /* Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */,
+				1058C7AEFEA557BF11CA2CBB /* Other Frameworks */,
+			);
+			name = "Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		089C167CFE841241C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8D5B49B7048680CD000E48DA /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		08FB77AFFE84173DC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				1CEF8E6B0A3AAF530054298A /* JVJavaScriptChatPlugin.m */,
+				1C0A13F308B0374800324E25 /* JVJavaScriptChatPlugin.h */,
+				1C4FD36607C6BC25000EA451 /* JVJavaScriptPluginLoader.m */,
+				1C4FD36507C6BC25000EA451 /* JVJavaScriptPluginLoader.h */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
+				1C0A139C08B036DA00324E25 /* Python.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7AEFEA557BF11CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				089C1672FE841209C02AAC07 /* Foundation.framework */,
+				089C167FFE841241C02AAC07 /* AppKit.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FB8FE9D52D311CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D5B49B6048680CD000E48DA /* JavaScript Support.plugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1C9AE940086A59CF008ED7AD /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */,
+			);
+			name = Configurations;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D5B49AC048680CD000E48DA /* JavaScript Support Plugin */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1C7F306B0855489300D41FB0 /* Build configuration list for PBXNativeTarget "JavaScript Support Plugin" */;
+			buildPhases = (
+				8D5B49B1048680CD000E48DA /* Sources */,
+				8D5B49B3048680CD000E48DA /* Frameworks */,
+				8D5B49AF048680CD000E48DA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "JavaScript Support Plugin";
+			productInstallPath = "$(HOME)/Library/Bundles";
+			productName = "FScript Plugin";
+			productReference = 8D5B49B6048680CD000E48DA /* JavaScript Support.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1C7F306F0855489300D41FB0 /* Build configuration list for PBXProject "JavaScript Support" */;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				zh_TW,
+			);
+			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
+			projectDirPath = "";
+			targets = (
+				8D5B49AC048680CD000E48DA /* JavaScript Support Plugin */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D5B49AF048680CD000E48DA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D5B49B1048680CD000E48DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C4FD36807C6BC25000EA451 /* JVJavaScriptPluginLoader.m in Sources */,
+				1CEF8F1C0A3AB66F0054298A /* JVJavaScriptChatPlugin.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1C7F306C0855489300D41FB0 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
+					"$(HOME)/Library/Frameworks",
+				);
+				GCC_PREFIX_HEADER = ../../Basic.pch;
+				HEADER_SEARCH_PATHS = (
+					../../Additions,
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					../../Controllers,
+					../../Models,
+					../../Panels,
+				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "../../Chat\\ Core";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = "JavaScript Support";
+				SYMROOT = ../../build;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Development;
+		};
+		1C7F306D0855489300D41FB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
+					"$(HOME)/Library/Frameworks",
+				);
+				GCC_PREFIX_HEADER = ../../Basic.pch;
+				HEADER_SEARCH_PATHS = (
+					../../Additions,
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					../../Controllers,
+					../../Models,
+					../../Panels,
+				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "../../Chat\\ Core";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = "JavaScript Support";
+				SYMROOT = ../../build;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+		1C7F306E0855489300D41FB0 /* Release (Universal) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					/Library/Frameworks,
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
+					"$(HOME)/Library/Frameworks",
+				);
+				GCC_PREFIX_HEADER = ../../Basic.pch;
+				HEADER_SEARCH_PATHS = (
+					../../Additions,
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					../../Controllers,
+					../../Models,
+					../../Panels,
+				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "../../Chat\\ Core";
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = "JavaScript Support";
+				SYMROOT = ../../build;
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = "Release (Universal)";
+		};
+		1C7F30700855489300D41FB0 /* Development */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PREBINDING = NO;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		1C7F30710855489300D41FB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		1C7F30720855489300D41FB0 /* Release (Universal) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = "Release (Universal)";
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1C7F306B0855489300D41FB0 /* Build configuration list for PBXNativeTarget "JavaScript Support Plugin" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C7F306C0855489300D41FB0 /* Development */,
+				1C7F306D0855489300D41FB0 /* Release */,
+				1C7F306E0855489300D41FB0 /* Release (Universal) */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1C7F306F0855489300D41FB0 /* Build configuration list for PBXProject "JavaScript Support" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C7F30700855489300D41FB0 /* Development */,
+				1C7F30710855489300D41FB0 /* Release */,
+				1C7F30720855489300D41FB0 /* Release (Universal) */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+}
