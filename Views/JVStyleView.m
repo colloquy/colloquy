@@ -551,7 +551,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) _checkForTransparantStyle {
 	DOMCSSStyleDeclaration *style = [self computedStyleForElement:_body pseudoElement:nil];
 	DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
-	NSLog( @"DEBUG: background-color: %@", [value cssText] );
+
+	if( ! value || [[value cssText] isEqualToString:@"rgba(0, 0, 0, 0)"] ) {
+		NSLog(@"ERROR: %@", [(DOMHTMLElement *)[_domDocument documentElement] outerHTML] );
+	}
+
 	if( ( value && [[value cssText] rangeOfString:@"rgba"].location != NSNotFound ) )
 		[self setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
 	else [self setDrawsBackground:YES];
@@ -781,9 +785,6 @@ quickEnd:
 		shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"]];
 	else shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
 
-	if( [shell length] < 600 )
-		NSLog( @"ERROR: template.html was only %d bytes, bad content? Try: /reload style (%@)", [shell length], shell );
-
 	return [NSString stringWithFormat:shell, @"", [resources absoluteString]];
 }
 
@@ -796,11 +797,6 @@ quickEnd:
 	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
 		shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
 	else shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
-
-	NSLog(@"DEBUG: %d %@ %@", [shell length], [[[self style] mainStyleSheetLocation] absoluteString], variantStyleSheetLocation );
-
-	if( [shell length] < 600 )
-		NSLog( @"ERROR: template.html was only %d bytes, bad content? Try: /reload style (%@)", [shell length], shell );
 
 	return [NSString stringWithFormat:shell, @"", @"", [resources absoluteString], [[[self emoticons] styleSheetLocation] absoluteString], [[[self style] mainStyleSheetLocation] absoluteString], variantStyleSheetLocation, [[[self style] baseLocation] absoluteString], [[self style] contentsOfBodyTemplateWithName:[self bodyTemplate]]];
 }
