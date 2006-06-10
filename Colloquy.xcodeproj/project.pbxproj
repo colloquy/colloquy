@@ -393,14 +393,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1CEF8F7B0A3AB7BB0054298A /* JavaScript Support.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8D5B49B6048680CD000E48DA /* JavaScript Support.plugin */;
+			remoteGlobalIDString = 8D5B49B6048680CD000E48DA;
 			remoteInfo = "JavaScript Support Plugin";
 		};
 		1CEF8F810A3AB7D30054298A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1CEF8F7B0A3AB7BB0054298A /* JavaScript Support.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8D5B49AC048680CD000E48DA /* JavaScript Support Plugin */;
+			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
 			remoteInfo = "JavaScript Support Plugin";
 		};
 /* End PBXContainerItemProxy section */
@@ -1374,9 +1374,9 @@
 		1CC478470427BB2C00000102 /* Plug–Ins */ = {
 			isa = PBXGroup;
 			children = (
-				1CEF8F340A3AB70E0054298A /* JavaScript Support */,
 				1CC478480427BB5500000102 /* Standard Commands */,
 				1C04393E07CAFC5800304949 /* AppleScript Support */,
+				1CEF8F340A3AB70E0054298A /* JavaScript Support */,
 				1CE3F7BC07C7B60A0049A366 /* F-Script Support */,
 				1C0A199A08B0416C00324E25 /* Python Support */,
 				1CE87EC308B6E98400538B50 /* Ruby Support */,

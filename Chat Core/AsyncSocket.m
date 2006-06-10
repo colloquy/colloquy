@@ -456,8 +456,7 @@ Failed:;
 		}
 		else if (errPtr)
 		{
-			NSString *errMsg = [NSString stringWithCString: gai_strerror(err)
-												  encoding: NSASCIIStringEncoding];
+			NSString *errMsg = [NSString stringWithUTF8String: gai_strerror(err)];
 
 			NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
 				errMsg, NSLocalizedDescriptionKey, nil];
@@ -892,8 +891,7 @@ Failed:;
 	else if (err.domain == kCFStreamErrorDomainNetDB)
 	{
 		domain = @"kCFStreamErrorDomainNetDB";
-		message = [NSString stringWithCString: gai_strerror(err.error)
-									 encoding: NSASCIIStringEncoding];
+		message = [NSString stringWithUTF8String: gai_strerror(err.error)];
 	}
 	else if (err.domain == kCFStreamErrorDomainNetServices)
 		domain = @"kCFStreamErrorDomainNetServices";
@@ -1046,7 +1044,7 @@ Failed:;
 	if (pStr == NULL) [NSException raise: NSInternalInconsistencyException
 								  format: @"Cannot convert address to string."];
 
-	return [NSString stringWithCString:pStr encoding:NSASCIIStringEncoding];
+	return [NSString stringWithUTF8String:pStr];
 }
 
 - (UInt16) addressPort: (CFDataRef)cfaddr

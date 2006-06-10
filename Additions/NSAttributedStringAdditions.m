@@ -247,7 +247,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			if( i >= length ) break;
 			if( i == j ) continue;
 			if( bytes[j++] == 'E' ) {
-				NSString *encodingStr = [NSString stringWithCString:&(bytes[j]) length:(i-j)];
+				NSString *encodingStr = [[NSString allocWithZone:nil] initWithBytes:&(bytes[j]) length:(i-j) encoding:NSASCIIStringEncoding];
 				NSStringEncoding newEncoding = 0;
 				if( ! [encodingStr length] ) { // if no encoding is declared, go back to user default
 					newEncoding = encoding;
@@ -288,6 +288,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 							break;
 					}
 				}
+
+				[encodingStr release];
 
 				if( newEncoding && newEncoding != currentEncoding ) {
 					if( ( end - start ) > 0 ) {

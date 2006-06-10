@@ -33,10 +33,10 @@ static MVKeyChain *sharedInstance = nil;
 	NSString *string = nil;
 
 	ret = SecKeychainFindGenericPassword( NULL, MVStringByteLength( service ), [service UTF8String], MVStringByteLength( account ), [account UTF8String], &len, &p, NULL );
-	if( ret == noErr ) string = [NSString stringWithCString:(const char *) p length:len];
+	if( ret == noErr ) string = [[NSString allocWithZone:nil] initWithBytes:(const void *) p length:len encoding:NSUTF8StringEncoding];
 	SecKeychainItemFreeContent( NULL, p );
 
-	return string;
+	return [string autorelease];
 }
 
 - (void) removeGenericPasswordForService:(NSString *) service account:(NSString *) account {
@@ -68,10 +68,10 @@ static MVKeyChain *sharedInstance = nil;
 	NSString *string = nil;
 
 	ret = SecKeychainFindInternetPassword( NULL, MVStringByteLength( server ), [server UTF8String], MVStringByteLength( domain ), [domain UTF8String], MVStringByteLength( account ), [account UTF8String], MVStringByteLength( path ), [path UTF8String], port, protocol, authType, &len, &p, NULL );
-	if( ret == noErr ) string = [NSString stringWithCString:(const char *) p length:len];
+	if( ret == noErr ) string = [[NSString allocWithZone:nil] initWithBytes:(const void *) p length:len encoding:NSUTF8StringEncoding];
 	SecKeychainItemFreeContent( NULL, p );
 
-	return string;
+	return [string autorelease];
 }
 
 - (void) removeInternetPasswordForServer:(NSString *) server securityDomain:(NSString *) domain account:(NSString *) account path:(NSString *) path port:(unsigned short) port protocol:(MVKeyChainProtocol) protocol authenticationType:(MVKeyChainAuthenticationType) authType {
