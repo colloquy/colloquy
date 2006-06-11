@@ -996,8 +996,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	return [[[NSTextStorage allocWithZone:nil] initWithAttributedString:_awayMessage] autorelease];
 }
 
-- (void) setScriptTypedAwayMessage:(NSString *) message {
-	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
+- (void) setScriptTypedAwayMessage:(id) message {
+	NSString *msg = message;
+	if( [message isKindOfClass:[NSTextStorage class]] ) msg = [message string];
+	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:msg baseURL:nil];
 	[self setAwayStatusWithMessage:attributeMsg];
 }
 
