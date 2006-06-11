@@ -22,6 +22,9 @@ NSString *MVChatUserPublicKeyAttribute = @"MVChatUserPublicKeyAttribute";
 NSString *MVChatUserServerPublicKeyAttribute = @"MVChatUserServerPublicKeyAttribute";
 NSString *MVChatUserDigitalSignatureAttribute = @"MVChatUserDigitalSignatureAttribute";
 NSString *MVChatUserServerDigitalSignatureAttribute = @"MVChatUserServerDigitalSignatureAttribute";
+NSString *MVChatUserBanServerAttribute = @"MVChatUserBanServerAttribute";
+NSString *MVChatUserBanAuthorAttribute = @"MVChatUserBanAuthorAttribute";
+NSString *MVChatUserBanDateAttribute = @"MVChatUserBanDateAttribute";
 
 NSString *MVChatUserNicknameChangedNotification = @"MVChatUserNicknameChangedNotification";
 NSString *MVChatUserStatusChangedNotification = @"MVChatUserStatusChangedNotification";
@@ -383,8 +386,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 #pragma mark -
 
 - (NSSet *) supportedAttributes {
-// subclass this method, if needed
-	return nil;
+	return [NSSet setWithObjects:MVChatUserBanServerAttribute, MVChatUserBanAuthorAttribute, MVChatUserBanDateAttribute, nil];
 }
 
 #pragma mark -

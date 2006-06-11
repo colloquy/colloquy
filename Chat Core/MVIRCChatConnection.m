@@ -1920,7 +1920,6 @@ end:
 #undef inviteExcludeMode
 
 	unsigned int changedModes = ( oldModes ^ [room modes] );
-	NSLog(@"%@", [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", sender, @"by", nil]);
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", sender, @"by", nil]];
 }
 
@@ -2175,6 +2174,15 @@ end:
 	if( [parameters count] >= 3 ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
 		MVChatUser *user = [MVChatUser wildcardUserFromString:[parameters objectAtIndex:2]];
+		if( [parameters count] >= 5 ) {
+			[user setAttribute:[parameters objectAtIndex:3] forKey:MVChatUserBanServerAttribute];
+
+			NSString *dateString = [self _stringFromPossibleData:[parameters objectAtIndex:4]];
+			NSTimeInterval time = [dateString doubleValue];
+			if( time > 631138520 ) // this makes sure it is a viable date
+				[user setAttribute:[NSDate dateWithTimeIntervalSince1970:time] forKey:MVChatUserBanDateAttribute];
+		}
+
 		if( [room _bansSynced] ) [room _clearBannedUsers];
 		[room _addBanForUser:user];
 	}

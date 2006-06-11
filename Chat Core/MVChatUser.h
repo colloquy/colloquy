@@ -35,6 +35,9 @@ extern NSString *MVChatUserPublicKeyAttribute;
 extern NSString *MVChatUserServerPublicKeyAttribute;
 extern NSString *MVChatUserDigitalSignatureAttribute;
 extern NSString *MVChatUserServerDigitalSignatureAttribute;
+extern NSString *MVChatUserBanServerAttribute;
+extern NSString *MVChatUserBanAuthorAttribute;
+extern NSString *MVChatUserBanDateAttribute;
 
 extern NSString *MVChatUserNicknameChangedNotification;
 extern NSString *MVChatUserStatusChangedNotification;

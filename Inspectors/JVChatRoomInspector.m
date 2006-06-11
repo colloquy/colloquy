@@ -3,6 +3,8 @@
 #import "JVDirectChatPanel.h"
 #import "JVChatTranscriptPanel.h"
 
+#import <ChatCore/MVChatUser.h>
+
 @interface JVChatTranscriptPanel (JVChatTranscriptPrivate)
 - (NSMenu *) _stylesMenu;
 - (NSMenu *) _emoticonsMenu;
@@ -240,6 +242,24 @@
 
 - (id) tableView:(NSTableView *) tableView objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
 	return [[_latestBanList objectAtIndex:row] description];
+}
+
+- (NSString *) tableView:(NSTableView *) tableView toolTipForCell:(NSCell *) cell rect:(NSRectPointer) rect tableColumn:(NSTableColumn *) column row:(int) row mouseLocation:(NSPoint) mouseLocation {
+	MVChatUser *user = [_latestBanList objectAtIndex:row];
+	NSDateFormatter *formatter = nil;
+	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) {
+		formatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%1m/%1d/%Y %1I:%M%p" allowNaturalLanguage:YES] autorelease];
+	} else {
+		formatter = [[[NSDateFormatter alloc] init] autorelease];
+		[formatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+		[formatter setDateStyle:NSDateFormatterShortStyle];
+		[formatter setTimeStyle:NSDateFormatterShortStyle];
+	}
+
+	NSDate *date = [user attributeForKey:MVChatUserBanDateAttribute];
+	NSString *server = [user attributeForKey:MVChatUserBanServerAttribute];
+
+	return [NSString stringWithFormat:@"%@ (%@)", [formatter stringFromDate:date], server];
 }
 
 - (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
