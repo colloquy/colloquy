@@ -63,13 +63,23 @@
 
 - (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments {
 	NSParameterAssert( command != nil );
-	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
-		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"NOTICE %@ :\001%@ ", [self nickname], command];
-		[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
-		[prefix release];
-	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
-		[[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@ %@\001", [self nickname], command, arguments];
-	} else [[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@\001", [self nickname], command];
+	if( [[self connection] status] == MVChatConnectionConnectingStatus ) {
+		if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
+			NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"NOTICE %@ :\001%@ ", [self nickname], command];
+			[[self connection] sendRawMessageImmediatelyWithComponents:prefix, arguments, @"\001", nil];
+			[prefix release];
+		} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
+			[[self connection] sendRawMessageImmediatelyWithFormat:@"NOTICE %@ :\001%@ %@\001", [self nickname], command, arguments];
+		} else [[self connection] sendRawMessageImmediatelyWithFormat:@"NOTICE %@ :\001%@\001", [self nickname], command];
+	} else {
+		if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
+			NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"NOTICE %@ :\001%@ ", [self nickname], command];
+			[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
+			[prefix release];
+		} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
+			[[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@ %@\001", [self nickname], command, arguments];
+		} else [[self connection] sendRawMessageWithFormat:@"NOTICE %@ :\001%@\001", [self nickname], command];
+	}
 }
 
 #pragma mark -
