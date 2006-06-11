@@ -480,7 +480,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		_body = (DOMHTMLElement *)[[_domDocument getElementById:@"contents"] retain];
 		if( ! _body ) _body = (DOMHTMLElement *)[[_domDocument body] retain];
 
-		[self performSelector:@selector( _checkForTransparantStyle )];
+		[self performSelector:@selector( _checkForTransparantStyle ) withObject:nil afterDelay:0.];
 
 		[self setPreferencesIdentifier:[[self style] identifier]];
 
@@ -560,7 +560,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( ( value && [[value cssText] rangeOfString:@"rgba"].location != NSNotFound ) )
 		[self setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
 	else [self setDrawsBackground:YES];
+
 	[self setNeedsDisplay:YES];
+	[[[self mainFrame] frameView] setNeedsDisplay:YES];
+	[[[[self mainFrame] findFrameNamed:@"content"] frameView] setNeedsDisplay:YES];
+	[[self window] display];
 }
 
 - (void) _contentFrameIsReady {
