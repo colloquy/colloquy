@@ -579,7 +579,7 @@
 }
 
 - (IBAction) ban:(id) sender {
-	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nil andHostMask:[NSString stringWithFormat:@"*@%@", [self address]]];
+	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nil andHostMask:[NSString stringWithFormat:@"*!*@%@", [self address]]];
 	[[[self room] target] addBanForUser:user];
 }
 
@@ -623,7 +623,8 @@
 	[banTitle setStringValue:[NSString stringWithFormat:NSLocalizedString( @"Ban %@ from the %@ room.", "ban user from room label" ), [self title], [[self room] title]]];
 	[firstTitle setStringValue:NSLocalizedString( @"With hostmask:", "ban hostmask label")];
 
-	if( [self address]) [firstField setStringValue:[NSString stringWithFormat:@"%@!%@", [self nickname], [self address]]];
+	if( [self username] && [self address] )
+		[firstField setStringValue:[NSString stringWithFormat:@"%@!%@@%@", [self nickname], [self username], [self address]]];
 	else [firstField setStringValue:@""];
 
 	[banWindow makeFirstResponder:firstField];
@@ -666,7 +667,8 @@
 	[firstTitle setStringValue:NSLocalizedString( @"With hostmask:", "ban hostmask" )];
 	[secondTitle setStringValue:NSLocalizedString( @"And reason:", "kick reason (secondary)" )];
 
-	if( [self address] ) [firstField setStringValue:[NSString stringWithFormat:@"%@!%@", [self nickname], [self address]]];
+	if( [self username] && [self address] )
+		[firstField setStringValue:[NSString stringWithFormat:@"%@!%@@%@", [self nickname], [self username], [self address]]];
 	else [firstField setStringValue:@""];
 	[secondField setStringValue:@""];
 
