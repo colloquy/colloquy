@@ -549,7 +549,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( [NSThread currentThread] == _connectionThread )
 		_connectionThread = nil;
 
-	[pool drain];
+	if( [pool respondsToSelector:@selector( drain )] )
+		[pool drain];
 	[pool release];
 }
 
@@ -2094,7 +2095,8 @@ end:
 				[room _setModes:modes forMemberUser:member];
 			}
 
-			[pool drain];
+			if( [pool respondsToSelector:@selector( drain )] )
+				[pool drain];
 			[pool release];
 		}
 	}

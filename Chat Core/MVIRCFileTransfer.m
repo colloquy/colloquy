@@ -351,7 +351,8 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	if( [NSThread currentThread] == _connectionThread )
 		_connectionThread = nil;
 
-	[pool drain];
+	if( [pool respondsToSelector:@selector( drain )] )
+		[pool drain];
 	[pool release];
 }
 
@@ -601,7 +602,8 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	if( [NSThread currentThread] == _connectionThread )
 		_connectionThread = nil;
 
-	[pool drain];
+	if( [pool respondsToSelector:@selector( drain )] )
+		[pool drain];
 	[pool release];
 }
 

@@ -1390,7 +1390,8 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
 		pool = [[NSAutoreleasePool allocWithZone:nil] init];
 		silc_schedule_one( _silcClient -> schedule, -1 );
-		[pool drain];
+		if( [pool respondsToSelector:@selector( drain )] )
+			[pool drain];
 		[pool release];
 	}
 }
