@@ -2,8 +2,7 @@
 #import "JVChatRoomMember.h"
 #import "JVDirectChatPanel.h"
 #import "JVChatTranscriptPanel.h"
-
-#import <ChatCore/MVChatUser.h>
+#import "MVChatUser.h"
 
 @interface JVChatTranscriptPanel (JVChatTranscriptPrivate)
 - (NSMenu *) _stylesMenu;
