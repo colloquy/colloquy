@@ -557,11 +557,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) _checkForTransparantStyle {
 	DOMCSSStyleDeclaration *style = [self computedStyleForElement:_body pseudoElement:nil];
 	DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
-
-	if( ! value || [[value cssText] isEqualToString:@"rgba(0, 0, 0, 0)"] ) {
-		NSLog(@"ERROR: %@", [(DOMHTMLElement *)[_domDocument documentElement] outerHTML] );
-	}
-
 	if( ( value && [[value cssText] rangeOfString:@"rgba"].location != NSNotFound ) )
 		[self setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
 	else [self setDrawsBackground:YES];

@@ -1796,139 +1796,150 @@ end:
 	}
 }
 
-- (void) _handleModeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	if( [parameters count] >= 2 ) {
-		NSString *targetName = [parameters objectAtIndex:0];
-		if( [[self chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]] ) {
-			MVChatRoom *room = [self joinedChatRoomWithName:targetName];
-
+- (void) _parseRoomModes:(NSArray *) parameters forRoom:(MVChatRoom *) room fromSender:(MVChatUser *) sender {
 #define enabledHighBit ( 1 << 31 )
 #define banMode ( 1 << 30 )
 #define banExcludeMode ( 1 << 29 )
 #define inviteExcludeMode ( 1 << 28 )
 
-			unsigned long oldModes = [room modes];
-			unsigned long value = 0;
-			NSMutableArray *argsNeeded = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
-			unsigned int i = 1, count = [parameters count];
-			while( i < count ) {
-				NSString *param = [parameters objectAtIndex:i++];
-				if( [param length] ) {
-					char chr = [param characterAtIndex:0];
-					if( chr == '+' || chr == '-' ) {
-						unsigned enabled = YES;
-						unsigned int j = 0, length = [param length];
-						while( j < length ) {
-							chr = [param characterAtIndex:j++];
-							switch( chr ) {
-								case '+': enabled = YES; break;
-								case '-': enabled = NO; break;
-								case 'i':
-									if( enabled ) [room _setMode:MVChatRoomInviteOnlyMode withAttribute:nil];
-									else [room _removeMode:MVChatRoomInviteOnlyMode];
-									break;
-								case 'p':
-									if( enabled ) [room _setMode:MVChatRoomPrivateMode withAttribute:nil];
-									else [room _removeMode:MVChatRoomPrivateMode];
-									break;
-								case 's':
-									if( enabled ) [room _setMode:MVChatRoomSecretMode withAttribute:nil];
-									else [room _removeMode:MVChatRoomSecretMode];
-									break;
-								case 'm':
-									if( enabled ) [room _setMode:MVChatRoomNormalUsersSilencedMode withAttribute:nil];
-									else [room _removeMode:MVChatRoomNormalUsersSilencedMode];
-									break;
-								case 'n':
-									if( enabled ) [room _setMode:MVChatRoomNoOutsideMessagesMode withAttribute:nil];
-									else [room _removeMode:MVChatRoomNoOutsideMessagesMode];
-									break;
-								case 't':
-									if( enabled ) [room _setMode:MVChatRoomOperatorsOnlySetTopicMode withAttribute:nil];
-									else [room _removeMode:MVChatRoomOperatorsOnlySetTopicMode];
-									break;
-								case 'l':
-									if( ! enabled ) {
-										[room _removeMode:MVChatRoomLimitNumberOfMembersMode];
-										break;
-									}
-									value = MVChatRoomLimitNumberOfMembersMode;
-									goto queue;
-								case 'k':
-									if( ! enabled ) [room _removeMode:MVChatRoomPassphraseToJoinMode];
-									value = MVChatRoomPassphraseToJoinMode;
-									goto queue;
-								case 'b':
-									value = banMode;
-									goto queue;
-								case 'e':
-									value = banExcludeMode;
-									goto queue;
-								case 'I':
-									value = inviteExcludeMode;
-									goto queue;
-								case 'o':
-									value = MVChatRoomMemberOperatorMode;
-									goto queue;
-								case 'v':
-									value = MVChatRoomMemberVoicedMode;
-									goto queue;
-								queue:
-									if( enabled ) value |= enabledHighBit;
-									[argsNeeded addObject:[NSNumber numberWithUnsignedLong:value]];
-									break;
-								default: {
-									if( _serverInformation ) {
-										NSMutableDictionary *supportedModes = [_serverInformation objectForKey:@"roomMemberModeTable"];
-										value = [[supportedModes objectForKey:[NSString stringWithFormat:@"%c", chr]] unsignedLongValue];
-										if( value ) goto queue;
-									}
-								}
+	unsigned long oldModes = [room modes];
+	unsigned long value = 0;
+	NSMutableArray *argsNeeded = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
+	unsigned int i = 0, count = [parameters count];
+	while( i < count ) {
+		NSString *param = [parameters objectAtIndex:i++];
+		if( [param length] ) {
+			char chr = [param characterAtIndex:0];
+			if( chr == '+' || chr == '-' ) {
+				unsigned enabled = YES;
+				unsigned int j = 0, length = [param length];
+				while( j < length ) {
+					chr = [param characterAtIndex:j++];
+					switch( chr ) {
+						case '+': enabled = YES; break;
+						case '-': enabled = NO; break;
+						case 'i':
+							if( enabled ) [room _setMode:MVChatRoomInviteOnlyMode withAttribute:nil];
+							else [room _removeMode:MVChatRoomInviteOnlyMode];
+							break;
+						case 'p':
+							if( enabled ) [room _setMode:MVChatRoomPrivateMode withAttribute:nil];
+							else [room _removeMode:MVChatRoomPrivateMode];
+							break;
+						case 's':
+							if( enabled ) [room _setMode:MVChatRoomSecretMode withAttribute:nil];
+							else [room _removeMode:MVChatRoomSecretMode];
+							break;
+						case 'm':
+							if( enabled ) [room _setMode:MVChatRoomNormalUsersSilencedMode withAttribute:nil];
+							else [room _removeMode:MVChatRoomNormalUsersSilencedMode];
+							break;
+						case 'n':
+							if( enabled ) [room _setMode:MVChatRoomNoOutsideMessagesMode withAttribute:nil];
+							else [room _removeMode:MVChatRoomNoOutsideMessagesMode];
+							break;
+						case 't':
+							if( enabled ) [room _setMode:MVChatRoomOperatorsOnlySetTopicMode withAttribute:nil];
+							else [room _removeMode:MVChatRoomOperatorsOnlySetTopicMode];
+							break;
+						case 'l':
+							if( ! enabled ) {
+								[room _removeMode:MVChatRoomLimitNumberOfMembersMode];
+								break;
 							}
-						}
-					} else {
-						if( [argsNeeded count] ) {
-							unsigned long value = [[argsNeeded objectAtIndex:0] unsignedLongValue];
-							BOOL enabled = ( ( value & enabledHighBit ) ? YES : NO );
-							unsigned long mode = ( value & ~enabledHighBit );
-
-							if( mode == MVChatRoomMemberOperatorMode || mode == MVChatRoomMemberHalfOperatorMode || mode == MVChatRoomMemberVoicedMode ) {
-								MVChatUser *member = [self chatUserWithUniqueIdentifier:param];
-								if( enabled ) [room _setMode:mode forMemberUser:member];
-								else [room _removeMode:mode forMemberUser:member];
-								[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", [NSNumber numberWithBool:enabled], @"enabled", [NSNumber numberWithUnsignedLong:mode], @"mode", sender, @"by", nil]];
-							} else if( mode == banMode ) {
-								MVChatUser *user = [MVChatUser wildcardUserFromString:param];
-								if( enabled ) {
-									[room _addBanForUser:user];
-									[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserBannedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", sender, @"byUser", nil]];
-								} else {
-									[room _removeBanForUser:user];
-									[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserBanRemovedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", sender, @"byUser", nil]];
-								}
-							} else if( mode == MVChatRoomLimitNumberOfMembersMode && enabled ) {
-								[room _setMode:MVChatRoomLimitNumberOfMembersMode withAttribute:[NSNumber numberWithInt:[param intValue]]];
-							} else if( mode == MVChatRoomPassphraseToJoinMode ) {
-								if( enabled ) [room _setMode:MVChatRoomPassphraseToJoinMode withAttribute:param];
-								else [room _removeMode:MVChatRoomPassphraseToJoinMode];
+							value = MVChatRoomLimitNumberOfMembersMode;
+							goto queue;
+						case 'k':
+							if( ! enabled ) [room _removeMode:MVChatRoomPassphraseToJoinMode];
+							value = MVChatRoomPassphraseToJoinMode;
+							goto queue;
+						case 'b':
+							value = banMode;
+							goto queue;
+						case 'e':
+							value = banExcludeMode;
+							goto queue;
+						case 'I':
+							value = inviteExcludeMode;
+							goto queue;
+						case 'o':
+							value = MVChatRoomMemberOperatorMode;
+							goto queue;
+						case 'v':
+							value = MVChatRoomMemberVoicedMode;
+							goto queue;
+						queue:
+							if( enabled ) value |= enabledHighBit;
+							[argsNeeded addObject:[NSNumber numberWithUnsignedLong:value]];
+							break;
+						default: {
+							if( _serverInformation ) {
+								NSMutableDictionary *supportedModes = [_serverInformation objectForKey:@"roomMemberModeTable"];
+								value = [[supportedModes objectForKey:[NSString stringWithFormat:@"%c", chr]] unsignedLongValue];
+								if( value ) goto queue;
 							}
-
-							[argsNeeded removeObjectAtIndex:0];
 						}
 					}
 				}
+			} else {
+				if( [argsNeeded count] ) {
+					unsigned long value = [[argsNeeded objectAtIndex:0] unsignedLongValue];
+					BOOL enabled = ( ( value & enabledHighBit ) ? YES : NO );
+					unsigned long mode = ( value & ~enabledHighBit );
+
+					if( mode == MVChatRoomMemberOperatorMode || mode == MVChatRoomMemberHalfOperatorMode || mode == MVChatRoomMemberVoicedMode ) {
+						MVChatUser *member = [self chatUserWithUniqueIdentifier:param];
+						if( enabled ) [room _setMode:mode forMemberUser:member];
+						else [room _removeMode:mode forMemberUser:member];
+						[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserModeChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:member, @"who", [NSNumber numberWithBool:enabled], @"enabled", [NSNumber numberWithUnsignedLong:mode], @"mode", sender, @"by", nil]];
+					} else if( mode == banMode ) {
+						MVChatUser *user = [MVChatUser wildcardUserFromString:param];
+						if( enabled ) {
+							[room _addBanForUser:user];
+							[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserBannedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", sender, @"byUser", nil]];
+						} else {
+							[room _removeBanForUser:user];
+							[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserBanRemovedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", sender, @"byUser", nil]];
+						}
+					} else if( mode == MVChatRoomLimitNumberOfMembersMode && enabled ) {
+						[room _setMode:MVChatRoomLimitNumberOfMembersMode withAttribute:[NSNumber numberWithInt:[param intValue]]];
+					} else if( mode == MVChatRoomPassphraseToJoinMode ) {
+						if( enabled ) [room _setMode:MVChatRoomPassphraseToJoinMode withAttribute:param];
+						else [room _removeMode:MVChatRoomPassphraseToJoinMode];
+					}
+
+					[argsNeeded removeObjectAtIndex:0];
+				}
 			}
+		}
+	}
 
 #undef enabledHighBit
 #undef banMode
 #undef banExcludeMode
 #undef inviteExcludeMode
 
-			unsigned int changedModes = ( oldModes ^ [room modes] );
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", sender, @"by", nil]];
+	unsigned int changedModes = ( oldModes ^ [room modes] );
+	NSLog(@"%@", [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", sender, @"by", nil]);
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", sender, @"by", nil]];
+}
+
+- (void) _handleModeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	if( [parameters count] >= 2 ) {
+		NSString *targetName = [parameters objectAtIndex:0];
+		if( [[self chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]] ) {
+			MVChatRoom *room = [self joinedChatRoomWithName:targetName];
+			[self _parseRoomModes:[parameters subarrayWithRange:NSMakeRange( 1, [parameters count] - 1)] forRoom:room fromSender:sender];
 		} else {
 			// user modes
 		}
+	}
+}
+
+- (void) _handle324WithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender { // RPL_CHANNELMODEIS
+	if( [parameters count] >= 3 ) {
+		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		[self _parseRoomModes:[parameters subarrayWithRange:NSMakeRange( 2, [parameters count] - 2)] forRoom:room fromSender:nil];
 	}
 }
 
