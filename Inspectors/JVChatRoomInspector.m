@@ -219,15 +219,19 @@
 
 	unsigned int count = [selection count];
 	unsigned int buffer[count];
-	count = [selection getIndexes:buffer maxCount:( count + 1 ) inIndexRange:NULL];
+	count = [selection getIndexes:buffer maxCount:count inIndexRange:NULL];
+	if( ! count ) return;
 
-	for( unsigned i = ( count - 1 ); i != 0; i-- ) {
+	unsigned int i = count;
+
+	do {
+		if( i >= 1 ) i--;
 		unsigned int index = buffer[i];
 		if( index >= [_latestBanList count] ) continue;
 		MVChatUser *ban = [_latestBanList objectAtIndex:index];
 		[[_room target] removeBanForUser:ban];
 		[_latestBanList removeObjectAtIndex:index];
-	}
+	} while( i );
 
 	[banRules reloadData];
 }
