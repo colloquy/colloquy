@@ -1110,7 +1110,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	} else if( chr == NSDownArrowFunctionKey && ( usesOnlyArrows || [event modifierFlags] & NSAlternateKeyMask ) ) {
 		return [self downArrowKeyPressed];
 	} else if( chr == NSPageUpFunctionKey || chr == NSPageDownFunctionKey || chr == NSHomeFunctionKey || chr == NSBeginFunctionKey || chr == NSEndFunctionKey ) {
-		[[[display mainFrame] frameView] keyDown:event];
+		[[[[display mainFrame] findFrameNamed:@"content"] frameView] keyDown:event];
 		return YES;
 	}
 
