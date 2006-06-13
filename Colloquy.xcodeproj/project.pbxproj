@@ -1884,7 +1884,6 @@
 				1CB2CD82052DDC560094AAA4 /* Copy Frameworks */,
 				1CB2CD88052DDC560094AAA4 /* Copy Plugins */,
 				1C7F300D085545E600D41FB0 /* Copy Spotlight Importer */,
-				1CF038FF062F8DBB009774D8 /* Touch Styles & Emoticons */,
 				1C91DEAC06972EC0007C1638 /* Remove Headers */,
 				1C2EDE8B0A3568EF0051E9C2 /* Update Build Number */,
 			);
@@ -2288,7 +2287,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "find \"$TARGET_BUILD_DIR/$WRAPPER_NAME\" -name 'Headers' -delete\n";
+			shellScript = "find \"$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH\" -name \"Headers\" -print0 | xargs -0 rm -rf\n";
 		};
 		1CAF6496099EA9350036A727 /* Unarchive Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2310,20 +2309,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd $SRCROOT/Frameworks\nrm -rf $SRCROOT/*.framework\ntar xzf frameworks.tar.gz\nranlib $SRCROOT/Frameworks/*.a\n";
-		};
-		1CF038FF062F8DBB009774D8 /* Touch Styles & Emoticons */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Touch Styles & Emoticons";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "touch Resources/Styles\ntouch Resources/Emoticons\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
