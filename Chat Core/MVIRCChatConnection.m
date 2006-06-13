@@ -676,6 +676,8 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
+	[self setNickname:[self preferredNickname]];
+
 	if( [[self password] length] ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", [self password]];
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self nickname]];
 	[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", ( [[self username] length] ? [self username] : @"anonymous" ), ( [[self realName] length] ? [self realName] : @"anonymous" )];
