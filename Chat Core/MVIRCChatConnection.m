@@ -2043,8 +2043,8 @@ end:
 - (void) _handle301WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_AWAY
 	if( [parameters count] == 3 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
-		if( [[user awayStatusMessage] isEqual:[parameters objectAtIndex:2]] ) {
-			[sender _setStatus:MVChatUserAwayStatus];
+		if( ! [[user awayStatusMessage] isEqual:[parameters objectAtIndex:2]] ) {
+			[user _setStatus:MVChatUserAwayStatus];
 			[user _setAwayStatusMessage:[parameters objectAtIndex:2]];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserAwayStatusMessageChangedNotification object:user userInfo:nil];
 		}
@@ -2232,6 +2232,7 @@ end:
 		[user _setAddress:[parameters objectAtIndex:3]];
 		[user _setRealName:[self _stringFromPossibleData:[parameters objectAtIndex:5]]];
 		[user _setDateDisconnected:nil];
+		[user _setAwayStatusMessage:nil]; // set this to nil, we will get it if we get a 301
 
 		[self _sendPossibleOnlineNotificationForUser:user];
 	}

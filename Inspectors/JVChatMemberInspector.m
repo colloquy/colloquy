@@ -88,6 +88,21 @@
 
 #pragma mark -
 
+- (NSMutableAttributedString *) _convertRawMessage:(NSData *) message withBaseFont:(NSFont *) baseFont {
+	if( ! message || ! [message length] ) return nil;
+	if( ! baseFont ) baseFont = [NSFont labelFontOfSize:11.];
+
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[[_member connection] encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
+	NSMutableAttributedString *messageString = [NSMutableAttributedString attributedStringWithChatFormat:message options:options];
+
+	if( ! messageString ) {
+		[options setObject:[NSNumber numberWithUnsignedInt:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
+		messageString = [NSMutableAttributedString attributedStringWithChatFormat:message options:options];
+	}
+
+	return messageString;
+}
+
 - (void) gotAddress:(NSString *) ip {
 	[address setObjectValue:( ip ? ip : NSLocalizedString( @"n/a", "not applicable or not available" ) )];
 	[address setToolTip:( ip ? ip : nil )];
@@ -110,6 +125,11 @@
 	} else {
 		[class setObjectValue:NSLocalizedString( @"Normal user", "normal user class" )];
 	}
+	
+	NSData *awayData = [[_member user] awayStatusMessage];
+	NSAttributedString *awayString = [self _convertRawMessage:awayData withBaseFont:nil];
+	if( ! awayString || ! [awayString length] ) [away setObjectValue:NSLocalizedString( @"n/a", "not applicable or not available" )];
+	else [away setObjectValue:awayString];
 
 	[username setObjectValue:[[_member user] username]];
 
