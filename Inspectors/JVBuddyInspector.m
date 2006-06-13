@@ -78,6 +78,11 @@
 	[self changeServer:servers];
 }
 
+- (BOOL) shouldUnload {
+	[[view window] makeFirstResponder:view];
+	return YES;
+}
+
 #pragma mark -
 
 - (IBAction) changeServer:(id) sender {

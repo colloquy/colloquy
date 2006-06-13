@@ -94,6 +94,11 @@
 	_ignoreRules = [[MVConnectionsController defaultController] ignoreRulesForConnection:_connection];
 }
 
+- (BOOL) shouldUnload {
+	[[view window] makeFirstResponder:view];
+	return YES;
+}
+
 - (void) didUnload {
 	[[MVConnectionsController defaultController] setJoinRooms:_editingRooms forConnection:_connection];
 	[[MVConnectionsController defaultController] setConnectCommands:[connectCommands string] forConnection:_connection];
@@ -165,9 +170,14 @@
 		[_connection setRealName:[sender stringValue]];
 	} else if( sender == editUsername ) {
 		[_connection setUsername:[sender stringValue]];
-	} else if( sender == editUsername ) {
+	} else if( sender == editPort ) {
 		[_connection setServerPort:(unsigned short)[sender intValue]];
 	}
+}
+
+- (void) controlTextDidEndEditing:(NSNotification *) notification {
+	// Sends the new text to editText:
+	[self editText:[notification object]];
 }
 
 - (IBAction) toggleAutoConnect:(id) sender {

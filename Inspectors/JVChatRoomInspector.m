@@ -108,6 +108,11 @@
 	[self refreshBanList:nil];
 }
 
+- (BOOL) shouldUnload {
+	[[view window] makeFirstResponder:view];
+	return YES;
+}
+
 #pragma mark -
 
 - (IBAction) changeChatOption:(id) sender {

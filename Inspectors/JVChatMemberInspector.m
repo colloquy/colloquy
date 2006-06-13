@@ -74,6 +74,11 @@
 	if( [[_member buddy] picture] ) [image setImage:[[_member buddy] picture]];
 }
 
+- (BOOL) shouldUnload {
+	[[view window] makeFirstResponder:view];
+	return YES;
+}
+
 #pragma mark -
 
 - (void) updateInformation {
