@@ -165,7 +165,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	if( [_windowController isMemberOfClass:[JVTabbedChatWindowController class]] )
 		return ( _newMessages ? [NSImage imageNamed:@"smartTranscriptTabActivity"] : nil );
 
-	return ( _newMessages ? [NSImage imageNamed:@"newMessage"] : nil );
+	return nil;
 }
 
 #pragma mark -
