@@ -1,9 +1,9 @@
 #import <Cocoa/Cocoa.h>
 #import <SenTestingKit/SenTestingKit.h>
 #import <AGRegex/AGRegex.h>
+#import <ChatCore/ChatCore.h>
 
 #import "JVChatWindowController.h"
-#import "MVChatUser.h"
 #import "JVDirectChatPanel.h"
 
 @interface JVTestChatViewController : NSObject <JVChatViewController> {
