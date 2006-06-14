@@ -422,6 +422,8 @@
 #pragma mark -
 
 - (void) joinChat:(id) sender {
+	if( ! [[self connection] isConnected] )
+		[[self connection] connect];
 	if( ! [[self target] isJoined] )
 		[[self target] join];
 }
