@@ -179,10 +179,11 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 - (void) didUnselect {
 	_newMessages = 0;
 	_isActive = NO;
+	[JVChatController refreshSmartTranscriptMenu];
 	[super didUnselect];
 }
 
-- (void) didSelect {
+- (void) willSelect {
 	_newMessages = 0;
 	_isActive = YES;
 	[JVChatController refreshSmartTranscriptMenu];
