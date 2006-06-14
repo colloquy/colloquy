@@ -152,7 +152,12 @@
 
 - (void) attributeUpdated:(NSNotification *) notification {
 	NSString *key = [[notification userInfo] objectForKey:@"attribute"];
-	if( [key isEqualToString:MVChatUserLocalTimeDifferenceAttribute] ) {
+	if( [key isEqualToString:MVChatUserPingAttribute] ) {
+		NSTimeInterval pingSeconds = [[[_member user] attributeForKey:key] doubleValue];
+		NSString *pingString = [NSString stringWithFormat:@"%.2f %@", pingSeconds, NSLocalizedString( @"seconds", "plural seconds" )];
+		[ping setObjectValue:pingString];
+		[ping setToolTip:pingString];
+	} else if( [key isEqualToString:MVChatUserLocalTimeDifferenceAttribute] ) {
 		if( ! _localTimeUpdateTimer )
 			_localTimeUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:10. target:self selector:@selector( updateLocalTime ) userInfo:nil repeats:YES] retain];
 	} else if( [key isEqualToString:MVChatUserClientInfoAttribute] ) {
@@ -181,7 +186,7 @@
 }
 
 - (IBAction) sendPing:(id) sender {
-
+	[[_member user] refreshAttributeForKey:MVChatUserPingAttribute];
 }
 
 - (IBAction) requestLocalTime:(id) sender {

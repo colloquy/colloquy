@@ -6,6 +6,7 @@
 
 NSString *MVChatUserKnownRoomsAttribute = @"MVChatUserKnownRoomsAttribute";
 NSString *MVChatUserPictureAttribute = @"MVChatUserPictureAttribute";
+NSString *MVChatUserPingAttribute = @"MVChatUserPingAttribute";
 NSString *MVChatUserLocalTimeDifferenceAttribute = @"MVChatUserLocalTimeDifferenceAttribute";
 NSString *MVChatUserClientInfoAttribute = @"MVChatUserClientInfoAttribute";
 NSString *MVChatUserVCardAttribute = @"MVChatUserVCardAttribute";
@@ -398,14 +399,12 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (BOOL) hasAttributeForKey:(NSString *) key {
-	NSParameterAssert( [[self supportedAttributes] containsObject:key] );
 	@synchronized( _attributes ) {
 		return ( [_attributes objectForKey:key] ? YES : NO );
 	} return NO;
 }
 
 - (id) attributeForKey:(NSString *) key {
-	NSParameterAssert( [[self supportedAttributes] containsObject:key] );
 	@synchronized( _attributes ) {
 		return [[[_attributes objectForKey:key] retain] autorelease];
 	} return nil;

@@ -281,14 +281,12 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (BOOL) hasAttributeForKey:(NSString *) key {
-	NSParameterAssert( [[self supportedAttributes] containsObject:key] );
 	@synchronized( _attributes ) {
 		return ( [_attributes objectForKey:key] ? YES : NO );
 	} return NO;
 }
 
 - (id) attributeForKey:(NSString *) key {
-	NSParameterAssert( [[self supportedAttributes] containsObject:key] );
 	@synchronized( _attributes ) {
 		return [[[_attributes objectForKey:key] retain] autorelease];
 	} return nil;

@@ -40,7 +40,7 @@
 }
 
 - (NSSet *) supportedAttributes {
-	return [NSSet setWithObjects:MVChatUserKnownRoomsAttribute, MVChatUserLocalTimeDifferenceAttribute, MVChatUserClientInfoAttribute, nil];
+	return [NSSet setWithObjects:MVChatUserPingAttribute, MVChatUserKnownRoomsAttribute, MVChatUserLocalTimeDifferenceAttribute, MVChatUserClientInfoAttribute, nil];
 }
 
 #pragma mark -
@@ -97,7 +97,10 @@
 
 - (void) refreshAttributeForKey:(NSString *) key {
 	[super refreshAttributeForKey:key];
-	if( [key isEqualToString:MVChatUserLocalTimeDifferenceAttribute] ) {
+	if( [key isEqualToString:MVChatUserPingAttribute] ) {
+		[self setAttribute:[NSDate date] forKey:@"MVChatUserPingSendDateAttribute"];
+		[self sendSubcodeRequest:@"PING" withArguments:nil];
+	} else if( [key isEqualToString:MVChatUserLocalTimeDifferenceAttribute] ) {
 		[self sendSubcodeRequest:@"TIME" withArguments:nil];
 	} else if( [key isEqualToString:MVChatUserClientInfoAttribute] ) {
 		[self sendSubcodeRequest:@"VERSION" withArguments:nil];
@@ -111,7 +114,11 @@
 - (void) ctcpReplyNotification:(NSNotification *) notification {
 	NSString *command = [[notification userInfo] objectForKey:@"command"];
 	NSData *arguments = [[notification userInfo] objectForKey:@"arguments"];
-	if( [command caseInsensitiveCompare:@"VERSION"] == NSOrderedSame ) {
+	if( [command caseInsensitiveCompare:@"PING"] == NSOrderedSame ) {
+		NSTimeInterval diff = [[NSDate date] timeIntervalSinceDate:[self attributeForKey:@"MVChatUserPingSendDateAttribute"]];
+		[self setAttribute:[NSNumber numberWithDouble:diff] forKey:MVChatUserPingAttribute];
+		[self setAttribute:nil forKey:@"MVChatUserPingSendDateAttribute"];
+	} else if( [command caseInsensitiveCompare:@"VERSION"] == NSOrderedSame ) {
 		NSString *info = [[NSString allocWithZone:nil] initWithData:arguments encoding:[[self connection] encoding]];
 		[self setAttribute:info forKey:MVChatUserClientInfoAttribute];
 		[info release];
