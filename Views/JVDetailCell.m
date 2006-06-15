@@ -139,6 +139,7 @@
 
         [shadow setShadowOffset:NSMakeSize( 0, -1 )];
 		[shadow setShadowBlurRadius:0.1];
+		[shadow setShadowColor:[[NSColor shadowColor] colorWithAlphaComponent:0.2]];
 
 		[attributes setObject:boldFont forKey:NSFontAttributeName];
 		[attributes setObject:whiteColor forKey:NSForegroundColorAttributeName];
