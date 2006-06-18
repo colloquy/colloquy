@@ -643,7 +643,11 @@ static NSMenu *favoritesMenu = nil;
 	MVChatConnection *connection = [[[[_bookmarks objectAtIndex:index] objectForKey:@"connection"] retain] autorelease];
     if( ! connection ) return;
 
-	[connection disconnect];
+	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
+	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage]; 
+	[connection disconnectWithReason:quitMessageString];
+	[quitMessageString release];
+
 	[self _deregisterNotificationsForConnection:connection];
 
 	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
@@ -661,7 +665,11 @@ static NSMenu *favoritesMenu = nil;
 	[info setObject:connection forKey:@"connection"];
 
 	MVChatConnection *oldConnection = [[[[_bookmarks objectAtIndex:index] objectForKey:@"connection"] retain] autorelease];
-    [oldConnection disconnect];
+	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
+	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage]; 
+	[oldConnection disconnectWithReason:quitMessageString];
+	[quitMessageString release];
+
 	[self _deregisterNotificationsForConnection:connection];
 
 	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[oldConnection server] securityDomain:[oldConnection server] account:[oldConnection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
@@ -1809,7 +1817,11 @@ static NSMenu *favoritesMenu = nil;
 - (IBAction) _disconnect:(id) sender {
 	int row = [connections selectedRow];
 	if( row == -1 ) return;
-	[[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] disconnect];
+
+	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
+	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage]; 
+	[[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] disconnectWithReason:quitMessageString];
+	[quitMessageString release];
 }
 
 - (void) _delete:(id) sender {
