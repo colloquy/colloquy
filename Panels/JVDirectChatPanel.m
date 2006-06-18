@@ -1125,12 +1125,14 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 }
 
 - (NSArray *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix {
-	NSArray *retVal = nil;
+	NSMutableArray *possibleNicks = [NSMutableArray array];
 
 	if( [[self title] rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
-		retVal = [NSArray arrayWithObject:[self title]];
+		[possibleNicks addObject:[self title]];
+	if( [[[self connection] nickname] rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
+		[possibleNicks addObject:[[self connection] nickname]];
 
-	return retVal;
+	return possibleNicks;
 }
 
 - (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(int *) index {
@@ -1141,6 +1143,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 	if( [search length] <= [[self title] length] && [search caseInsensitiveCompare:[[[self target] description] substringToIndex:[search length]]] == NSOrderedSame )
 		[ret addObject:[[self title] stringByAppendingString:suffix]];
+	if( [search length] <= [[[self connection] nickname] length] && [search caseInsensitiveCompare:[[[self connection] nickname] substringToIndex:[search length]]] == NSOrderedSame )
+		[ret addObject:[[[self connection] nickname] stringByAppendingString:suffix]];
 
 	unichar chr = 0;
 	if( [[event charactersIgnoringModifiers] length] )
