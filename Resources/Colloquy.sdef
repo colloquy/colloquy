@@ -317,14 +317,14 @@
 			</property>
 		</class>
 		<class name="panel" code="chvC" description="Generic window panel that all panels inherit from (e.g. direct chat panel, chat room panel, etc.)" inherits="list item">
-			<property name="id" code="ID  " description="The unique identifier of the chat view controler." type="integer" access="r">
+			<property name="id" code="ID  " description="The unique identifier of the chat view controller." type="integer" access="r">
 				<cocoa key="uniqueIdentifier"/>
 			</property>
 			<property name="connection" code="conM" description="Connection this view uses." type="connection" access="r"/>
 			<property name="window" code="cwin" description="Parent window." type="window" access="r">
 				<cocoa key="window"/>
 			</property>
-			<property name="description" code="idtA" description="Consicse description of the chat view and what it represents." type="text" access="r">
+			<property name="description" code="idtA" description="Concise description of the chat view and what it represents." type="text" access="r">
 				<cocoa key="identifier"/>
 			</property>
 			<responds-to name="close">
@@ -339,7 +339,7 @@
 			<contents name="transcript" code="traM" description="The transcript shown in the panel." type="transcript" access="r">
 				<cocoa key="transcript"/>
 			</contents>
-			<property name="transcript" code="traM" description="The transcript shown in the panel. (Default subcontainer.)" type="transcript" access="r">
+			<property name="transcript" code="traM" description="The transcript shown in the panel. (Default sub-container.)" type="transcript" access="r">
 				<cocoa key="transcript"/>
 			</property>
 		</class>
@@ -354,7 +354,7 @@
 			<property name="encoding" code="eNcA" description="The encoding to use when reading and sending messages." type="encoding" access="rw">
 				<cocoa key="scriptTypedEncoding"/>
 			</property>
-			<property name="current message" code="cRmA" description="The current emssage that is being passed to plugins to process." type="message" access="r">
+			<property name="current message" code="cRmA" description="The current message that is being passed to plugins to process." type="message" access="r">
 				<cocoa key="currentMessage"/>
 			</property>
 			<property name="new messages waiting" code="nemA" description="The number of new messages since the panel was last active." type="integer" access="r">
@@ -400,7 +400,7 @@
 			<property name="chat room panel" code="crmM" description="The chat room panel this member is part of." type="chat room panel" access="r">
 				<cocoa key="room"/>
 			</property>
-			<property name="chat user" code="chUs" description="The chat user for this member. (Default subcontainer.)" type="chat user" access="r">
+			<property name="chat user" code="chUs" description="The chat user for this member. (Default sub-container.)" type="chat user" access="r">
 				<cocoa key="user"/>
 			</property>
 			<property name="buddy" code="budM" description="The buddy (if any) this member represents." type="buddy" access="r">
@@ -474,7 +474,7 @@
 			<property name="action tense" code="isAc" description="Does the message have action tense?" type="boolean" access="rw">
 				<cocoa key="isAction"/>
 			</property>
-			<property name="body" code="maPA" description="The body of the message. (Default subcontainer.)" type="rich text" access="rw">
+			<property name="body" code="maPA" description="The body of the message. (Default sub-container.)" type="rich text" access="rw">
 				<cocoa key="body"/>
 			</property>
 			<property name="HTML" code="maHA" description="The message with possible HTML formatting." type="text" access="rw">
@@ -608,13 +608,13 @@
 			<property name="display name" code="dNmA" description="Display name, almost always the nickname." type="text" access="r">
 				<cocoa key="displayName"/>
 			</property>
-			<property name="real name" code="rElA" description="The real name supplied by the user, not always a person's realname." type="text" access="r">
+			<property name="real name" code="rElA" description="The real name supplied by the user, not always a person's real name." type="text" access="r">
 				<cocoa key="realName"/>
 			</property>
 			<property name="user name" code="uSnA" description="The user name supplied by the user." type="text" access="r">
 				<cocoa key="username"/>
 			</property>
-			<property name="address" code="adRA" description="The address the user connected to the server from. Somtimes this is a fake (masked) address." type="text" access="r">
+			<property name="address" code="adRA" description="The address the user connected to the server from. Sometimes this is a fake (masked) address." type="text" access="r">
 				<cocoa key="address"/>
 			</property>
 			<property name="server address" code="sevA" description="The server address the user is connected to. This might be a different address than you are connected to, since servers are sometimes clustered." type="text" access="r">
@@ -638,7 +638,7 @@
 			<property name="away message" code="aStA" description="The user's away message." type="rich text" access="r">
 				<cocoa key="scriptTypedAwayMessage"/>
 			</property>
-			<property name="attributes" code="atRA" description="User attributes containing various itmes." type="record" access="rw">
+			<property name="attributes" code="atRA" description="User attributes containing various times." type="record" access="rw">
 				<cocoa key="attributes"/>
 			</property>
 			<responds-to name="refresh information">
@@ -672,7 +672,7 @@
 			<property name="encoding" code="eNcA" description="Default encoding for outgoing messages." type="encoding" access="rw">
 				<cocoa key="scriptTypedEncoding"/>
 			</property>
-			<property name="attributes" code="atRA" description="Room attributes containing various itmes." type="record" access="rw">
+			<property name="attributes" code="atRA" description="Room attributes containing various times." type="record" access="rw">
 				<cocoa key="attributes"/>
 			</property>
 			<property name="joined" code="joIA" description="Are we currently in the room?" type="boolean" access="r">
@@ -906,7 +906,7 @@
 		</command>
 		<command name="build contextual menu for item" code="cplGcMiX" description="Called for every object that the user can access a contextual/action menu. This handler is called when the selection changes in a table or right before the menu is shown, allowing you to provide a list of titles to show.">
 			<direct-parameter description="Object that the user has requested a contextual menu for. Can be a member, chat room, direct chat, transcript, connection, text, etc." type="any"/>
-			<parameter name="in" code="cMi1" description="The chat panel this context menu is assocated with, if any." optional="yes">
+			<parameter name="in" code="cMi1" description="The chat panel this context menu is associated with, if any." optional="yes">
 				<cocoa key="view"/>
 				<type type="panel"/>
 				<type type="chat room panel"/>
@@ -951,7 +951,7 @@
 		<command name="joined chat room" code="cplGjRmX" description="Called when we join a room.">
 			<direct-parameter description="The chat room." type="chat room panel"/>
 		</command>
-		<command name="parting chat room" code="cplGpRmX" description="Called when we are in the process of laveing a room. Messages can still be sent.">
+		<command name="parting chat room" code="cplGpRmX" description="Called when we are in the process of leaving a room. Messages can still be sent.">
 			<direct-parameter description="The chat room." type="chat room panel"/>
 		</command>
 		<command name="connected" code="cplGcTsX" description="Called when we have just finished connecting to a chat server.">
