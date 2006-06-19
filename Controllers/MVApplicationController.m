@@ -133,6 +133,10 @@ static BOOL applicationIsTerminating = NO;
 	[_updater checkForUpdates:sender];
 }
 
+- (IBAction) helpWebsite:(id) sender {
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://project.colloquy.info/wiki/Documentation"]];
+}
+
 - (IBAction) connectToSupportRoom:(id) sender {
 	[[MVConnectionsController defaultController] handleURL:[NSURL URLWithString:@"irc://irc.freenode.net/#colloquy"] andConnectIfPossible:YES];
 }

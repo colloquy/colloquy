@@ -37,6 +37,7 @@
                 checkForUpdate = id; 
                 connectToSupportRoom = id; 
                 emailDeveloper = id; 
+                helpWebsite = id; 
                 markAllDisplays = id; 
                 productWebsite = id; 
                 showBuddyList = id; 

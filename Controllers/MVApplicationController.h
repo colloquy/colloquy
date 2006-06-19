@@ -14,6 +14,7 @@ extern NSString *JVMachineStoppedIdlingNotification;
 	BOOL _terminateWithoutConfirm;
 }
 - (IBAction) checkForUpdate:(id) sender;
+- (IBAction) helpWebsite:(id) sender;
 - (IBAction) connectToSupportRoom:(id) sender;
 - (IBAction) emailDeveloper:(id) sender;
 - (IBAction) productWebsite:(id) sender;
