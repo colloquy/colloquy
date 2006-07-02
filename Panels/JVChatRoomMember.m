@@ -579,7 +579,7 @@
 }
 
 - (IBAction) ban:(id) sender {
-	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nil andHostMask:[NSString stringWithFormat:@"*!*@%@", [self address]]];
+	MVChatUser *user = [MVChatUser wildcardUserWithNicknameMask:nil andHostMask:[NSString stringWithFormat:@"*@%@", [self address]]];
 	[[[self room] target] addBanForUser:user];
 }
 
