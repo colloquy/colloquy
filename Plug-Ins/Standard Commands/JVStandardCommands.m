@@ -299,10 +299,8 @@
 		JVChatRoomBrowser *browser = [JVChatRoomBrowser chatRoomBrowserForConnection:connection];
 		[connection fetchChatRoomList];
 		[browser showWindow:nil];
-		if( [[arguments string] length] ) {
-			[browser setFilter:[arguments string]];
-			[browser showRoomBrowser:nil];
-		}
+		[browser setFilter:[arguments string]];
+		[browser showRoomBrowser:nil];
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"quit"] || ! [command caseInsensitiveCompare:@"disconnect"] ) {
 		[connection disconnectWithReason:arguments];
@@ -477,7 +475,6 @@
 	} else {
 		id browser = [JVChatRoomBrowser chatRoomBrowserForConnection:connection];
 		[browser showWindow:nil];
-		[browser setFilter:arguments];
 		[browser showRoomBrowser:nil];
 		return YES;
 	}
