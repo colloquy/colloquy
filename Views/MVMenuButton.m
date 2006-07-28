@@ -151,4 +151,14 @@
 - (void) setDrawsArrow:(BOOL) arrow {
 	_drawsArrow = arrow;
 }
+
+- (id) accessibilityAttributeValue:(NSString *) attribute {
+	if( [attribute isEqualToString:NSAccessibilityTitleAttribute] )
+		return [toolbarItem label];
+	if( [attribute isEqualToString:NSAccessibilityHelpAttribute] )
+		return [toolbarItem toolTip];
+	if( [attribute isEqualToString:NSAccessibilityToolbarButtonAttribute] )
+		return [self toolbarItem];
+	return [super accessibilityAttributeValue:attribute];
+}
 @end
