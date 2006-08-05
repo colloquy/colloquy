@@ -6,6 +6,7 @@
 #import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
 #import "JVChatTranscript.h"
+#import "JVSQLChatTranscript.h"
 #import "JVChatMessage.h"
 #import "JVChatEvent.h"
 #import "JVNotificationController.h"

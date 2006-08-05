@@ -1,5 +1,6 @@
 #import "JVChatWindowController.h"
 #import "MVConnectionsController.h"
+#import "JVSmartTranscriptPanel.h"
 #import "JVChatController.h"
 #import "JVChatRoomPanel.h"
 #import "JVChatConsolePanel.h"
