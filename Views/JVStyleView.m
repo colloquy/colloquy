@@ -291,15 +291,17 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) mark {
 	if( _contentFrameReady ) {
-		unsigned int location = 0;
-
-		DOMElement *elt = [_domDocument getElementById:@"mark"];
+		DOMHTMLElement *elt = (DOMHTMLElement *)[_domDocument getElementById:@"mark"];
 		if( elt ) [[elt parentNode] removeChild:elt];
-		elt = [_domDocument createElement:@"hr"];
+		elt = (DOMHTMLElement *)[_domDocument createElement:@"hr"];
 		[elt setAttribute:@"id" :@"mark"];
 		[_body appendChild:elt];
 		[self scrollToBottom];
-		location = [[elt valueForKey:@"offsetTop"] longValue];
+
+		unsigned int location = 0;
+		if( [elt respondsToSelector:@selector( scrollTop )] )
+			location = [elt offsetTop];
+		else location = [[elt valueForKey:@"offsetTop"] longValue];
 
 		JVMarkedScroller *scroller = [self verticalMarkedScroller];
 		[scroller removeMarkWithIdentifier:@"mark"];
@@ -547,7 +549,9 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		return;
 	}
 
-	[_body setValue:[_body valueForKey:@"scrollHeight"] forKey:@"scrollTop"];
+	if( [_body respondsToSelector:@selector( scrollHeight )] )
+		[_body setValue:[NSNumber numberWithUnsignedInt:[_body scrollHeight]] forKey:@"scrollTop"];
+	else [_body setValue:[_body valueForKey:@"scrollHeight"] forKey:@"scrollTop"];
 }
 @end
 
@@ -587,7 +591,9 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	_contentFrameReady = NO;
 	if( _rememberScrollPosition ) {
-		_lastScrollPosition = [[_body valueForKey:@"scrollTop"] longValue];
+		if( [_body respondsToSelector:@selector( scrollTop )] )
+			_lastScrollPosition = [_body offsetTop];
+		else _lastScrollPosition = [[_body valueForKey:@"scrollTop"] longValue];
 	} else _lastScrollPosition = 0;
 
 	[[self window] disableFlushWindow];
@@ -713,7 +719,10 @@ quickEnd:
 	}
 
 	if( ! scrollNeeded && shiftAmount > 0 ) {
-		unsigned long scrollTop = [[_body valueForKey:@"scrollTop"] longValue];
+		unsigned long scrollTop = 0;
+		if( [_body respondsToSelector:@selector( scrollTop )] )
+			scrollTop = [_body offsetTop];
+		else scrollTop = [[_body valueForKey:@"scrollTop"] longValue];
 		[_body setValue:[NSNumber numberWithUnsignedLong:( scrollTop - shiftAmount )] forKey:@"scrollTop"];
 	}
 
@@ -809,10 +818,12 @@ quickEnd:
 #pragma mark -
 
 - (long) _locationOfMessageWithIdentifier:(NSString *) identifier {
-	if( ! _contentFrameReady ) return 0;
-	if( ! [identifier length] ) return 0;
+	if( ! _contentFrameReady ) return NSNotFound;
+	if( ! [identifier length] ) return NSNotFound;
 
-	DOMElement *element = [_domDocument getElementById:identifier];
+	DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument getElementById:identifier];
+	if( [element respondsToSelector:@selector( offsetTop )] )
+		return [element offsetTop];
 	id value = [element valueForKey:@"offsetTop"];
 	if( [value respondsToSelector:@selector( longValue )] )
 		return [value longValue];
@@ -824,9 +835,15 @@ quickEnd:
 }
 
 - (long) _locationOfElementAtIndex:(unsigned long) index {
-	if( ! _contentFrameReady ) return NSNotFound;
-	id value = [[[_body childNodes] item:index] valueForKey:@"offsetTop"];
-	if( index < [[_body childNodes] length] && [value respondsToSelector:@selector( longValue )] )
+	if( ! _contentFrameReady || index >= [[_body childNodes] length] )
+		return NSNotFound;
+	DOMNode *node = [[_body childNodes] item:index];
+	if( ! [node isKindOfClass:[DOMHTMLElement class]] )
+		return NSNotFound;
+	if( [node respondsToSelector:@selector( offsetTop )] )
+		return [(DOMHTMLElement *)node offsetTop];
+	id value = [node valueForKey:@"offsetTop"];
+	if( [value respondsToSelector:@selector( longValue )] )
 		return [value longValue];
 	return NSNotFound;
 }
