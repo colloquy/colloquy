@@ -154,11 +154,11 @@
 
 - (id) accessibilityAttributeValue:(NSString *) attribute {
 	if( [attribute isEqualToString:NSAccessibilityTitleAttribute] )
-		return [toolbarItem label];
+		return [_toolbarItem label];
 	if( [attribute isEqualToString:NSAccessibilityHelpAttribute] )
-		return [toolbarItem toolTip];
+		return [_toolbarItem toolTip];
 	if( [attribute isEqualToString:NSAccessibilityToolbarButtonAttribute] )
-		return [self toolbarItem];
+		return _toolbarItem;
 	return [super accessibilityAttributeValue:attribute];
 }
 @end
