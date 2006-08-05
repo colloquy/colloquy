@@ -371,6 +371,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1C041DDE08553AD200A5A5BA /* Build configuration list for PBXProject "Chat Core" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -391,6 +392,8 @@
 			mainGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
 			productRefGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
 			projectDirPath = "";
+			projectRoot = "";
+			shouldCheckCompatibility = 1;
 			targets = (
 				1C51B46E052DE0CB00BB459B /* Chat Core (Framework) */,
 			);
@@ -526,10 +529,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				PREBINDING = NO;
-				ZERO_LINK = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 			};
 			name = Development;
 		};

@@ -1910,6 +1910,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1C041A700854E97700A5A5BA /* Build configuration list for PBXProject "Colloquy" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -1958,6 +1959,8 @@
 					ProjectRef = 1CBBDF5608B6EA92002A8BA6 /* Ruby Support.xcodeproj */;
 				},
 			);
+			projectRoot = "";
+			shouldCheckCompatibility = 1;
 			targets = (
 				1CB2CCF5052DDC560094AAA4 /* Colloquy (Application) */,
 				1C51B4BB052DE14B00BB459B /* Standard Commands (Plug-In) */,
