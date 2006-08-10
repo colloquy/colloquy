@@ -100,6 +100,8 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) finalize {
 	[self disconnect];
 	[_chatConnection setDelegate:nil];
+	if( [_connectionThread respondsToSelector:@selector( cancel )] )
+		[_connectionThread cancel];
 	_connectionThread = nil;
 	[super finalize];
 }
@@ -128,6 +130,9 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_roomPrefixes release];
 	[_serverInformation release];
 	[_supportedFeatures release];
+
+	if( [_connectionThread respondsToSelector:@selector( cancel )] )
+		[_connectionThread cancel];
 
 	_chatConnection = nil;
 	_connectionThread = nil;
@@ -534,7 +539,12 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	[_threadWaitLock lockWhenCondition:0];
 
+	if( [_connectionThread respondsToSelector:@selector( cancel )] )
+		[_connectionThread cancel];
+
 	_connectionThread = [NSThread currentThread];
+	if( [_connectionThread respondsToSelector:@selector( setName: )] )
+		[_connectionThread setName:[[self url] absoluteString]];
 	[NSThread prepareForInterThreadMessages];
 
 	[_threadWaitLock unlockWithCondition:1];
