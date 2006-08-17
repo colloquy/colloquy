@@ -2900,6 +2900,7 @@
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
+					"-lexslt",
 				);
 				PRODUCT_NAME = Colloquy;
 				SECTORDER_FLAGS = (

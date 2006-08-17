@@ -1,11 +1,13 @@
 #import <libxml/globals.h>
 #import <libxml/parser.h>
 #import <libxslt/xslt.h>
+#import <libexslt/exslt.h>
 
 int main( int count, const char *arg[] ) {
 	srandom( time( NULL ) );
 
 	xmlInitParser();
+	exsltRegisterAll();
 	xmlSubstituteEntitiesDefault( 1 );
 	xmlLoadExtDtdDefaultValue = 1;
 
@@ -19,9 +21,5 @@ int main( int count, const char *arg[] ) {
 
 	[pool release];
 
-	int ret = NSApplicationMain( count, arg );
-
-	xsltCleanupGlobals();
-	xmlCleanupParser();
-	return ret;
+	return NSApplicationMain( count, arg );
 }
