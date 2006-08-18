@@ -175,6 +175,9 @@ finish:
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
+	if( [self isWindowLoaded] )
+		[[[self window] toolbar] setDelegate:nil];
+
 	[_transferStorage release];
 	[_safeFileExtentions release];
 	[_calculationItems release];
@@ -706,6 +709,7 @@ finish:
 
 - (void) _incomingFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	MVDownloadFileTransfer *transfer = [(MVDownloadFileTransfer *)contextInfo autorelease];
+	[sheet setDelegate:nil];
 	[sheet autorelease];
 
 	if( returnCode == NSOKButton ) {
@@ -744,7 +748,9 @@ finish:
 
 - (void) _downloadFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	WebDownload *download = [(WebDownload *) contextInfo autorelease]; // for the previous retain
+	[sheet setDelegate:nil];
 	[sheet autorelease];
+
 	if( returnCode == NSOKButton ) {
 		NSEnumerator *enumerator = nil;
 		NSMutableDictionary *info = nil;

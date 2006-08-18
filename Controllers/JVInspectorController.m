@@ -67,7 +67,8 @@ static NSMutableSet *inspectors = nil;
 }
 
 - (void) dealloc {
-	[[self window] close];
+	if( [self isWindowLoaded] )
+		[[self window] close];
 
 	if( [_inspector respondsToSelector:@selector( didUnload )] )
 		[(NSObject *)_inspector didUnload];

@@ -37,6 +37,9 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
+	[subviewTableView setDataSource:nil];
+	[subviewTableView setDelegate:nil];
+
 	[_rules release];
 	[_results release];
 

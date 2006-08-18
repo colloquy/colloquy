@@ -100,6 +100,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	if( [self isWindowLoaded] ) {
+		[[self window] setDelegate:nil];
+		[[[self window] toolbar] setDelegate:nil];
+		[[self window] close];
+	}
+
 	NSEnumerator *enumerator = [_views objectEnumerator];
 	id <JVChatViewController> controller = nil;
 	while( ( controller = [enumerator nextObject] ) )
