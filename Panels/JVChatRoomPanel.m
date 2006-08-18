@@ -124,19 +124,28 @@
 	if( ! [_sortedMembers count] )
 		return NSLocalizedString( @"joining...", "joining status info line in drawer" );
 	if( [[self connection] isConnected] ) {
-		if( [[[MVConnectionsController defaultController] connectedConnections] count] == 1 )
-			return [NSString stringWithFormat:NSLocalizedString( @"%d members", "number of room members information line" ), [_sortedMembers count]];
-		else return [[self connection] server];
+		if( [[[MVConnectionsController defaultController] connectedConnections] count] == 1 ) {
+			if( [_sortedMembers count] > 1 )
+				return [NSString stringWithFormat:NSLocalizedString( @"%d members", "number of room members information line" ), [_sortedMembers count]];
+			else if( [_sortedMembers count] == 1 )
+				return NSLocalizedString( @"1 member", "one room member information line" );
+		} else return [[self connection] server];
 	}
 	return NSLocalizedString( @"disconnected", "disconnected status info line in drawer" );
 }
 
 - (NSString *) toolTip {
 	NSString *messageCount = @"";
+	NSString *memberCount = @"";
+
 	if( [self newMessagesWaiting] == 0 ) messageCount = NSLocalizedString( @"no messages waiting", "no messages waiting room tooltip" );
 	else if( [self newMessagesWaiting] == 1 ) messageCount = NSLocalizedString( @"1 message waiting", "one message waiting room tooltip" );
 	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), [self newMessagesWaiting]];
-	return [NSString stringWithFormat:NSLocalizedString( @"%@ (%@)\n%d members\n%@", "room status info tooltip in drawer" ), _target, [[self connection] server], [_sortedMembers count], messageCount];
+
+	if( [_sortedMembers count] == 1 ) memberCount = NSLocalizedString( @"1 member", "one member room status info tooltip" );
+	else memberCount = [NSString stringWithFormat:NSLocalizedString( @"%d members", "number of members room status info tooltip" ), [_sortedMembers count]];
+
+	return [NSString stringWithFormat:@"%@ (%@)\n%@\n%@", _target, [[self connection] server], memberCount, messageCount];
 }
 
 - (NSString *) identifier {
