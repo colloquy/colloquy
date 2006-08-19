@@ -2,6 +2,8 @@
 body {
 	background-color: white;
 	color: black;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 .hidden {
