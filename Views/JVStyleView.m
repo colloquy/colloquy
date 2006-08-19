@@ -668,51 +668,47 @@ quickEnd:
 - (void) _appendMessage:(NSString *) message {
 	if( ! _body ) return;
 
+	long shiftAmount = 0;
 	unsigned int messageCount = [self _visibleMessageCount] + 1;
 	unsigned int scrollbackLimit = [self scrollbackLimit];
 	BOOL consecutive = ( [message rangeOfString:@"<?message type=\"consecutive\"?>"].location != NSNotFound );
+	JVMarkedScroller *scroller = [self verticalMarkedScroller];
 
-	long shiftAmount = 0;
+	// check if we are near the bottom of the chat area, and if we should scroll down later
+	BOOL scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.990 );
+
+	// check how much we need to shift the scrollbar marks
 	if( ! consecutive && messageCount > scrollbackLimit ) {
 		shiftAmount = [self _locationOfElementAtIndex:( messageCount - scrollbackLimit )];
 		if( shiftAmount > 0 && shiftAmount != NSNotFound )
-			[[self verticalMarkedScroller] shiftMarksAndShadedAreasBy:( shiftAmount * -1 )];
+			[scroller shiftMarksAndShadedAreasBy:( shiftAmount * -1 )];
 	}
-
-	DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument createElement:@"span"];
-	DOMHTMLElement *insertElement = (DOMHTMLElement *)[_domDocument getElementById:@"insert"];
-	DOMHTMLElement *consecutiveReplaceElement = (DOMHTMLElement *)[_domDocument getElementById:@"consecutiveInsert"];
-	if( ! consecutiveReplaceElement ) consecutive = NO;
 
 	NSMutableString *transformedMessage = [message mutableCopyWithZone:nil];
 	[transformedMessage replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
 
-	// parses the message so we can get the DOM tree
-	[element setInnerHTML:transformedMessage];
+	DOMHTMLElement *consecutiveReplaceElement = (DOMHTMLElement *)[_domDocument getElementById:@"consecutiveInsert"];
+	if( consecutive && consecutiveReplaceElement ) {  // append as a consecutive message
+		[consecutiveReplaceElement setOuterHTML:transformedMessage]; // replace the consecutiveInsert node
+	} else { // append message normally
+		if( consecutiveReplaceElement ) // remove the consecutiveReplaceElement node
+			[[consecutiveReplaceElement parentNode] removeChild:consecutiveReplaceElement];
+
+		DOMHTMLElement *insertElement = (DOMHTMLElement *)[_domDocument getElementById:@"insert"];
+		if( ! insertElement ) {
+			DOMHTMLElement *newElement = (DOMHTMLElement *)[_body appendChild:[_domDocument createElement:@"span"]];
+			[newElement setOuterHTML:transformedMessage]; // replace the newElement node
+		} else {
+			[insertElement setOuterHTML:transformedMessage]; // replace the insertElement node
+		}
+	}
 
 	[transformedMessage release];
 	transformedMessage = nil;
 
-	// check if we are near the bottom of the chat area, and if we should scroll down later
-	JVMarkedScroller *scroller = [self verticalMarkedScroller];
-	BOOL scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.985 );
-
-	unsigned int i = 0;
-	if( ! consecutive ) { // append message normally
-		[[consecutiveReplaceElement parentNode] removeChild:consecutiveReplaceElement];
-		while( [element hasChildNodes] ) // append all children
-			[_body insertBefore:[element firstChild] :insertElement];
-	} else if( [element hasChildNodes] ) { // append as a consecutive message
-		DOMNode *parent = [consecutiveReplaceElement parentNode];
-		DOMNode *nextSib = [consecutiveReplaceElement nextSibling];
-		[parent replaceChild:[element firstChild] :consecutiveReplaceElement]; // replaces the consecutiveInsert node
-		while( [element hasChildNodes] ) // append all remaining children (in reverse order)
-			[parent insertBefore:[element firstChild] :nextSib];
-	}
-
 	// enforce the scrollback limit
 	if( scrollbackLimit > 0 && messageCount > scrollbackLimit ) {
-		for( i = 0; messageCount > scrollbackLimit && i < ( messageCount - scrollbackLimit ); i++ ) {
+		for( unsigned int i = 0; messageCount > scrollbackLimit && i < ( messageCount - scrollbackLimit ); i++ ) {
 			[_body removeChild:[_body firstChild]];
 			messageCount--;
 		}
