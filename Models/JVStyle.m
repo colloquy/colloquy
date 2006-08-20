@@ -33,11 +33,14 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	NSMutableSet *styles = [NSMutableSet set];
 	if( ! allStyles ) allStyles = [styles retain];
 
-	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:4];
-	[paths addObject:[NSString stringWithFormat:@"%@/Styles", [[NSBundle mainBundle] resourcePath]]];
-	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByExpandingTildeInPath]];
-	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
-	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Styles", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]]];
+	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:5];
+	[paths addObject:[NSString stringWithFormat:@"%@/Styles", [[NSBundle bundleForClass:[self class]] resourcePath]]];
+	if( ! [[NSBundle mainBundle] isEqual:[NSBundle bundleForClass:[self class]]] )
+		[paths addObject:[NSString stringWithFormat:@"%@/Styles", [[NSBundle mainBundle] resourcePath]]];
+	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles", bundleName] stringByExpandingTildeInPath]];
+	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Styles", bundleName]];
+	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Styles", bundleName]];
 
 	NSEnumerator *enumerator = [paths objectEnumerator];
 	NSString *path = nil;
