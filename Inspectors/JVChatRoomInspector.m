@@ -257,20 +257,24 @@
 
 - (NSString *) tableView:(NSTableView *) tableView toolTipForCell:(NSCell *) cell rect:(NSRectPointer) rect tableColumn:(NSTableColumn *) column row:(int) row mouseLocation:(NSPoint) mouseLocation {
 	MVChatUser *user = [_latestBanList objectAtIndex:row];
-	NSDateFormatter *formatter = nil;
+	NSDate *date = [user attributeForKey:MVChatUserBanDateAttribute];
+	NSString *dateString = nil;
+
 	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) {
-		formatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%1m/%1d/%Y %1I:%M%p" allowNaturalLanguage:YES] autorelease];
+		NSString *dateFormat = @"%1m/%1d/%Y %1I:%M%p";
+		NSDictionary *locale = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
+		dateString = [date descriptionWithCalendarFormat:dateFormat timeZone:nil locale:locale];
 	} else {
-		formatter = [[[NSDateFormatter alloc] init] autorelease];
+		NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
 		[formatter setFormatterBehavior:NSDateFormatterBehavior10_4];
 		[formatter setDateStyle:NSDateFormatterShortStyle];
 		[formatter setTimeStyle:NSDateFormatterShortStyle];
+		dateString = [formatter stringFromDate:date];
 	}
 
-	NSDate *date = [user attributeForKey:MVChatUserBanDateAttribute];
 	NSString *server = [user attributeForKey:MVChatUserBanServerAttribute];
 
-	return [NSString stringWithFormat:@"%@ (%@)", [formatter stringFromDate:date], server];
+	return [NSString stringWithFormat:@"%@ (%@)", dateString, server];
 }
 
 - (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
