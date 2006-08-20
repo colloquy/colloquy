@@ -18,6 +18,13 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 @interface WebView (WebViewPrivate) // WebKit 1.3/2.0 pending public API
 - (void) setDrawsBackground:(BOOL) draws;
 - (BOOL) drawsBackground;
+- (WebFrame *) selectedFrame;
+- (WebFrame *) _frameForCurrentSelection;
+@end
+
+@interface DOMHTMLElement (DOMHTMLElementPrivate)
+- (int) offsetTop;
+- (int) scrollHeight;
 @end
 
 #pragma mark -
@@ -492,6 +499,24 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[[self window] displayIfNeeded];
 
 		[self performSelector:@selector( _contentFrameIsReady ) withObject:nil afterDelay:0.];
+	}
+}
+
+- (IBAction) copySelectionToFindPboard:(id) sender {
+	WebFrame *frame = nil;
+	if( [self respondsToSelector:@selector( selectedFrame )] )
+		frame = [self selectedFrame];
+	else if( [self respondsToSelector:@selector( _frameForCurrentSelection )] )
+		frame = [self _frameForCurrentSelection];
+
+	if( ! frame ) return;
+
+	NSString *selectedString = [(id <WebDocumentText>)[[frame frameView] documentView] selectedString];
+
+	if( [selectedString length] ) {
+		NSPasteboard *pboard = [NSPasteboard pasteboardWithName:NSFindPboard];
+		[pboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
+		[pboard setString:selectedString forType:NSStringPboardType];
 	}
 }
 

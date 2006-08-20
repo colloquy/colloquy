@@ -5,6 +5,7 @@
                 bold = id; 
                 clearDisplay = id; 
                 closeCurrentPanel = id; 
+                copySelectionToFindPboard = id; 
                 copyStripped = id; 
                 detachCurrentPanel = id; 
                 findNext = id; 
