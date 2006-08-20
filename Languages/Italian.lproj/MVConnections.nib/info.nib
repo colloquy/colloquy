@@ -5,7 +5,7 @@
 	<key>IBDocumentLocation</key>
 	<string>39 73 381 300 0 0 1440 878 </string>
 	<key>IBFramework Version</key>
-	<string>443.0</string>
+	<string>446.1</string>
 	<key>IBLockedObjects</key>
 	<array>
 		<integer>5</integer>
@@ -15,7 +15,12 @@
 		<integer>337</integer>
 		<integer>706</integer>
 	</array>
+	<key>IBOpenObjects</key>
+	<array>
+		<integer>267</integer>
+		<integer>776</integer>
+	</array>
 	<key>IBSystem Version</key>
-	<string>8I127</string>
+	<string>8J2135a</string>
 </dict>
 </plist>
