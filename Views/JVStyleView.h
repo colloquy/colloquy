@@ -82,6 +82,7 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 - (IBAction) jumpToNextHighlight:(id) sender;
 - (void) jumpToMessage:(JVChatMessage *) message;
 - (void) scrollToBottom;
+- (BOOL) scrolledNearBottom;
 
 - (NSTextView *) nextTextView;
 - (void) setNextTextView:(NSTextView *) textView;

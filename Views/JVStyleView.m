@@ -15,15 +15,19 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
-@interface WebView (WebViewPrivate) // WebKit 1.3/2.0 pending public API
-- (void) setDrawsBackground:(BOOL) draws;
-- (BOOL) drawsBackground;
+@interface WebView (WebViewLeopard)
+- (void) setDrawsBackground:(BOOL) draws; // supported in 10.3.9/Tiger
+- (BOOL) drawsBackground; // supported in 10.3.9/Tiger
 - (WebFrame *) selectedFrame;
+@end
+
+@interface WebView (WebViewPrivate)
 - (WebFrame *) _frameForCurrentSelection;
 @end
 
-@interface DOMHTMLElement (DOMHTMLElementPrivate)
+@interface DOMHTMLElement (DOMHTMLElementLeopard)
 - (int) offsetTop;
+- (int) offsetHeight;
 - (int) scrollHeight;
 @end
 
@@ -41,8 +45,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) _appendMessage:(NSString *) message;
 - (void) _prependMessages:(NSString *) messages;
 - (void) _styleError;
-- (NSString *) _baseHTML;
 - (NSString *) _contentHTMLWithBody:(NSString *) html;
+- (NSURL *) _baseURL;
 - (unsigned long) _visibleMessageCount;
 - (long) _locationOfMessage:(JVChatMessage *) message;
 - (long) _locationOfElementAtIndex:(unsigned long) index;
@@ -306,7 +310,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[self scrollToBottom];
 
 		unsigned int location = 0;
-		if( [elt respondsToSelector:@selector( scrollTop )] )
+		if( [elt respondsToSelector:@selector( offsetTop )] )
 			location = [elt offsetTop];
 		else location = [[elt valueForKey:@"offsetTop"] longValue];
 
@@ -474,11 +478,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		_mainDocument = (DOMHTMLDocument *)[[frame DOMDocument] retain];
 
 		WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
-		[contentFrame loadHTMLString:[self _contentHTMLWithBody:@""] baseURL:nil];
-	} else if( _mainFrameReady) {
+		[contentFrame loadHTMLString:[self _contentHTMLWithBody:@""] baseURL:[self _baseURL]];
+	} else if( _mainFrameReady ) {
 		if( [[[[[frame dataSource] response] URL] absoluteString] isEqualToString:@"about:blank"] ) {
 			// this was a false content frame load, try again
-			[frame loadHTMLString:[self _contentHTMLWithBody:@""] baseURL:nil];
+			[frame loadHTMLString:[self _contentHTMLWithBody:@""] baseURL:[self _baseURL]];
 			return;
 		}
 
@@ -578,6 +582,25 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[_body setValue:[NSNumber numberWithUnsignedInt:[_body scrollHeight]] forKey:@"scrollTop"];
 	else [_body setValue:[_body valueForKey:@"scrollHeight"] forKey:@"scrollTop"];
 }
+
+- (BOOL) scrolledNearBottom {
+	WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
+	DOMHTMLElement *contentFrameElement = [contentFrame frameElement];
+	unsigned int frameHeight = 0;
+	if( [contentFrameElement respondsToSelector:@selector( offsetHeight )] )
+		frameHeight = [contentFrameElement offsetHeight];
+	else frameHeight = [[contentFrameElement valueForKey:@"offsetHeight"] unsignedIntValue];
+
+	unsigned int scrollHeight = 0;
+	if( [_body respondsToSelector:@selector( scrollHeight )] )
+		scrollHeight = [_body scrollHeight];
+	else scrollHeight = [[_body valueForKey:@"scrollHeight"] unsignedIntValue];
+
+	unsigned int scrollTop = [[_body valueForKey:@"scrollTop"] unsignedIntValue];
+
+	// check if we are near the bottom 10 pixels of the chat area
+	return ( ( frameHeight + scrollTop ) >= ( scrollHeight - 15 ) );
+}
 @end
 
 #pragma mark -
@@ -616,17 +639,19 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	_contentFrameReady = NO;
 	if( _rememberScrollPosition ) {
-		if( [_body respondsToSelector:@selector( scrollTop )] )
-			_lastScrollPosition = [_body offsetTop];
-		else _lastScrollPosition = [[_body valueForKey:@"scrollTop"] longValue];
+		_lastScrollPosition = [[_body valueForKey:@"scrollTop"] longValue];
 	} else _lastScrollPosition = 0;
 
 	[[self window] disableFlushWindow];
 
 	if( _mainFrameReady ) {
 		WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
-		[contentFrame loadHTMLString:[self _contentHTMLWithBody:@""] baseURL:nil];
-	} else [[self mainFrame] loadHTMLString:[self _baseHTML] baseURL:nil];
+		[contentFrame loadHTMLString:[self _contentHTMLWithBody:@""] baseURL:[self _baseURL]];
+	} else {
+		NSString *path = [[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"];
+		NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:path] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:5.];
+		[[self mainFrame] loadRequest:request];
+	}
 }
 
 - (void) _switchStyle {
@@ -700,7 +725,7 @@ quickEnd:
 	JVMarkedScroller *scroller = [self verticalMarkedScroller];
 
 	// check if we are near the bottom of the chat area, and if we should scroll down later
-	BOOL scrollNeeded = ( ! [(NSScrollView *)[scroller superview] hasVerticalScroller] || [scroller floatValue] >= 0.990 );
+	BOOL scrollNeeded = [self scrolledNearBottom];
 
 	// check how much we need to shift the scrollbar marks
 	if( ! consecutive && messageCount > scrollbackLimit ) {
@@ -740,10 +765,7 @@ quickEnd:
 	}
 
 	if( ! scrollNeeded && shiftAmount > 0 ) {
-		unsigned long scrollTop = 0;
-		if( [_body respondsToSelector:@selector( scrollTop )] )
-			scrollTop = [_body offsetTop];
-		else scrollTop = [[_body valueForKey:@"scrollTop"] longValue];
+		unsigned long scrollTop = [[_body valueForKey:@"scrollTop"] longValue];
 		[_body setValue:[NSNumber numberWithUnsignedLong:( scrollTop - shiftAmount )] forKey:@"scrollTop"];
 	}
 
@@ -759,8 +781,7 @@ quickEnd:
 	[result replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [result length] )];
 
 	// check if we are near the bottom of the chat area, and if we should scroll down later
-	JVMarkedScroller *scroller = [self verticalMarkedScroller];
-	BOOL scrollNeeded = ( ! scroller || [scroller floatValue] >= 0.985 );
+	BOOL scrollNeeded = [self scrolledNearBottom];
 
 	// parses the message so we can get the DOM tree
 	DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument createElement:@"span"];
@@ -812,19 +833,7 @@ quickEnd:
 
 #pragma mark -
 
-- (NSString *) _baseHTML {
-	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
-
-	NSString *shell = nil;
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"]];
-	else shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
-
-	return [NSString stringWithFormat:shell, @"", [resources absoluteString]];
-}
-
 - (NSString *) _contentHTMLWithBody:(NSString *) html {
-	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
 	NSString *variantStyleSheetLocation = [[[self style] variantStyleSheetLocationWithName:[self styleVariant]] absoluteString];
 	if( ! variantStyleSheetLocation ) variantStyleSheetLocation = @"";
 
@@ -833,7 +842,11 @@ quickEnd:
 		shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
 	else shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
 
-	return [NSString stringWithFormat:shell, @"", @"", [resources absoluteString], [[[self emoticons] styleSheetLocation] absoluteString], [[[self style] mainStyleSheetLocation] absoluteString], variantStyleSheetLocation, [[[self style] baseLocation] absoluteString], [[self style] contentsOfBodyTemplateWithName:[self bodyTemplate]]];
+	return [NSString stringWithFormat:shell, @"", @"", [[[self emoticons] styleSheetLocation] absoluteString], [[[self style] mainStyleSheetLocation] absoluteString], variantStyleSheetLocation, [[[self style] baseLocation] absoluteString], [[self style] contentsOfBodyTemplateWithName:[self bodyTemplate]]];
+}
+
+- (NSURL *) _baseURL {
+	return [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
 }
 
 #pragma mark -

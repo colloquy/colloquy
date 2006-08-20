@@ -311,10 +311,14 @@
 }
 
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
-	if( [[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"about"]  ) {
+	NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
+
+	if( [[url scheme] isEqualToString:@"about"] ) {
+		if( [[[url standardizedURL] path] length] ) [listener ignore];
+		else [listener use];
+	} else if( [url isFileURL] && [[url path] hasPrefix:[[NSBundle mainBundle] resourcePath]] ) {
 		[listener use];
 	} else {
-		NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
 		[[NSWorkspace sharedWorkspace] openURL:url];
 		[listener ignore];
 	}

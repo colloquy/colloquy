@@ -669,16 +669,14 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	return UINT_MAX; // WebDragSourceActionAny
 }
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_2
-#define NSWorkspaceLaunchWithoutActivation 0x00000200
-#endif
-
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
 	NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
 
 	if( [[url scheme] isEqualToString:@"about"] ) {
 		if( [[[url standardizedURL] path] length] ) [listener ignore];
 		else [listener use];
+	} else if( [url isFileURL] && [[url path] hasPrefix:[[NSBundle mainBundle] resourcePath]] ) {
+		[listener use];
 	} else if( [[url scheme] isEqualToString:@"self"] ) {
 		NSString *resource = [url resourceSpecifier];
 		NSRange range = [resource rangeOfString:@"?"];
