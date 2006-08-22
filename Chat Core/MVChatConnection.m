@@ -260,8 +260,8 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setEncoding:(NSStringEncoding) encoding {
-	NSParameterAssert( [self supportsStringEncoding:encoding] );
-	_encoding = encoding;
+	if( [self supportsStringEncoding:encoding] )
+		_encoding = encoding;
 }
 
 - (NSStringEncoding) encoding {

@@ -24,7 +24,6 @@
 static const NSStringEncoding supportedEncodings[] = {
 	/* Universal */
 	NSUTF8StringEncoding,
-	NSNonLossyASCIIStringEncoding,
 	/* Western */
 	NSASCIIStringEncoding,
 	NSISOLatin1StringEncoding,			// ISO Latin 1
@@ -45,6 +44,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	(NSStringEncoding) 0x80000205,		// ISO Latin 5
 	(NSStringEncoding) 0x80000007,		// Mac
 	NSWindowsCP1251StringEncoding,		// Windows
+	/* Greek */
+	(NSStringEncoding) 0x80000207,		// ISO Latin 7
+	(NSStringEncoding) 0x80000006,		// Mac
+	NSWindowsCP1253StringEncoding,		// Windows
 	/* Japanese */
 	(NSStringEncoding) 0x80000A01,		// ShiftJIS
 	NSISO2022JPStringEncoding,			// ISO-2022-JP
@@ -67,10 +70,18 @@ static const NSStringEncoding supportedEncodings[] = {
 	(NSStringEncoding) 0x80000940,		// EUC
 	(NSStringEncoding) 0x80000003,		// Mac
 	(NSStringEncoding) 0x80000422,		// Windows
+	/* Thai */
+	(NSStringEncoding) 0x8000020b,		// ISO-8859-11
+	(NSStringEncoding) 0x80000015,		// Mac
+	(NSStringEncoding) 0x8000041d,		// Windows
 	/* Hebrew */
 	(NSStringEncoding) 0x80000208,		// ISO-8859-8
 	(NSStringEncoding) 0x80000005,		// Mac
 	(NSStringEncoding) 0x80000505,		// Windows
+	/* Arabic */
+	(NSStringEncoding) 0x80000206,		// ISO-8859-6
+	(NSStringEncoding) 0x80000004,		// Mac
+	(NSStringEncoding) 0x80000506,		// Windows
 	0
 };
 
