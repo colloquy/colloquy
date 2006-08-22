@@ -2089,7 +2089,6 @@ end:
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:2]];
 		if( room && ! [room _namesSynced] ) {
 			NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
-			NSMutableDictionary *prefixes = [_serverInformation objectForKey:@"roomMemberPrefixTable"];
 			NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
 			NSArray *members = [names componentsSeparatedByString:@" "];
 			NSEnumerator *enumerator = [members objectEnumerator];
@@ -2098,32 +2097,26 @@ end:
 			while( ( memberName = [enumerator nextObject] ) ) {
 				if( ! [memberName length] ) break;
 
-				MVChatRoomMemberMode mode = MVChatRoomMemberNoModes;
-
-				unsigned int i = 0;
-				unsigned int length = [memberName length];
-				for( i = 0; i < length; i++ ) {
-					unichar chr = [memberName characterAtIndex:i];
-					if( ! isalpha( chr ) ) {
-						if( prefixes ) {
-							NSString *key = [[NSString allocWithZone:nil] initWithFormat:@"%c", chr];
-							mode = [[prefixes objectForKey:key] unsignedLongValue];
-							[key release];
-						} else {
-							switch( chr ) {
-								case '+': mode = MVChatRoomMemberVoicedMode; break;
-								case '@': mode = MVChatRoomMemberOperatorMode; break;
-								default: break;
-							}
-						}
-					} else break;
+				MVChatRoomMemberMode modes = MVChatRoomMemberNoModes;
+				if( _serverInformation ) {
+					NSMutableDictionary *prefixes = [_serverInformation objectForKey:@"roomMemberPrefixTable"];
+					NSString *key = [[NSString allocWithZone:nil] initWithFormat:@"%c", [memberName characterAtIndex:0]];
+					modes = [[prefixes objectForKey:key] unsignedLongValue];
+					[key release];
+				} else {
+					switch( [memberName characterAtIndex:0] ) {
+						case '+': modes = MVChatRoomMemberVoicedMode; break;
+						case '@': modes = MVChatRoomMemberOperatorMode; break;
+						default: break;
+					}
 				}
 
-				if( i ) memberName = [memberName substringFromIndex:i];
+				if( modes != MVChatRoomMemberNoModes )
+					memberName = [memberName substringFromIndex:1];
 
 				MVChatUser *member = [self chatUserWithUniqueIdentifier:memberName];
 				[room _addMemberUser:member];
-				[room _setModes:mode forMemberUser:member];
+				[room _setModes:modes forMemberUser:member];
 			}
 
 			if( [pool respondsToSelector:@selector( drain )] )
