@@ -13,20 +13,9 @@
 
 @implementation JVChatMemberInspector
 - (id) initWithChatMember:(JVChatRoomMember *) member {
-	if( ( self = [self init] ) ) {
+	if( ( self = [self init] ) )
 		_member = [member retain];
-		_localTimeUpdateTimer = nil;
-		_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:30. target:self selector:@selector( updateInformation ) userInfo:nil repeats:YES] retain];
-	}
 	return self;
-}
-
-- (void) release {
-	if( ( [self retainCount] - ( _localTimeUpdateTimer ? 2 : 1 ) ) == 1 ) {
-		[_localTimeUpdateTimer invalidate];
-		[_updateTimer invalidate];
-	}
-	[super release];
 }
 
 - (void) dealloc {
@@ -67,9 +56,14 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( attributeUpdated: ) name:MVChatUserAttributeUpdatedNotification object:[_member user]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( errorOccurred: ) name:MVChatConnectionErrorNotification object:[[_member user] connection]];
 
-	[[_member user] refreshInformation];
-	[progress startAnimation:nil];
 	_addressResolved = NO;
+	[progress startAnimation:nil];
+	[[_member user] refreshInformation];
+
+	[_updateTimer invalidate];
+	[_updateTimer release];
+	_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:30. target:self selector:@selector( updateInformation ) userInfo:nil repeats:YES] retain];
+
 	[nickname setObjectValue:[_member nickname]];
 	if( [[_member buddy] picture] ) [image setImage:[[_member buddy] picture]];
 }
@@ -77,6 +71,16 @@
 - (BOOL) shouldUnload {
 	[[view window] makeFirstResponder:view];
 	return YES;
+}
+
+- (void) didUnload {
+	[_localTimeUpdateTimer invalidate];
+	[_localTimeUpdateTimer release];
+	_localTimeUpdateTimer = nil;
+
+	[_updateTimer invalidate];
+	[_updateTimer release];
+	_updateTimer = nil;
 }
 
 #pragma mark -

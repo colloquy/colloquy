@@ -11,9 +11,8 @@
 
 @implementation JVBuddyInspector
 - (id) initWithBuddy:(JVBuddy *) buddy {
-	if( ( self = [self init] ) ) {
+	if( ( self = [self init] ) )
 		_buddy = [buddy retain];
-	}
 	return self;
 }
 

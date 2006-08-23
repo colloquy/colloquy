@@ -21,10 +21,8 @@
 
 @implementation JVConnectionInspector
 - (id) initWithConnection:(MVChatConnection *) connection {
-	if( ( self = [self init] ) ) {
+	if( ( self = [self init] ) )
 		_connection = [connection retain];
-		_editingRooms = nil;
-	}
 	return self;
 }
 
