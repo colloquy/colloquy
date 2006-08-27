@@ -186,11 +186,11 @@ static int _elementsInRangeCallback( void *context, int fieldCount, char **field
 	struct _elementsInRangeCallbackData *data = (struct _elementsInRangeCallbackData *) context;
 	NSString *identifier = [[NSString allocWithZone:nil] initWithUTF8String:fields[1]];
 
-	if( ! strncmp( "message", fields[0], 7 ) ) {
+	if( ! strcmp( "message", fields[0] ) ) {
 		JVChatMessage *message = [[JVChatMessage allocWithZone:nil] _initWithSQLIdentifier:identifier andTranscript:data -> transcript];
 		if( message ) [data -> results addObject:message];
 		[message release];
-	} else if( ! strncmp( "event", fields[0], 5 ) ) {
+	} else if( ! strcmp( "event", fields[0] ) ) {
 		JVChatEvent *event = [[JVChatEvent allocWithZone:nil] _initWithSQLIdentifier:identifier andTranscript:data -> transcript];
 		if( event ) [data -> results addObject:event];
 		[event release];

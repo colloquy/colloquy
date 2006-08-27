@@ -51,7 +51,7 @@
 		xmlNode *subNode = ((xmlNode *) _node) -> children;
 
 		do {
-			if( subNode -> type == XML_ELEMENT_NODE && ! strncmp( "message", (char *) subNode -> name, 6 ) ) {
+			if( subNode -> type == XML_ELEMENT_NODE && ! strcmp( "message", (char *) subNode -> name ) ) {
 				_message = [[NSTextStorage allocWithZone:[self zone]] initWithXHTMLTree:subNode baseURL:nil defaultAttributes:nil];
 				break;
 			}
@@ -69,7 +69,7 @@
 		NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 
 		do {
-			if( subNode -> type == XML_ELEMENT_NODE && strncmp( "message", (char *) subNode -> name, 6 ) ) { // everything but "message"
+			if( subNode -> type == XML_ELEMENT_NODE && strcmp( "message", (char *) subNode -> name ) ) { // everything but "message"
 				NSMutableDictionary *properties = [NSMutableDictionary dictionary];
 				xmlAttrPtr prop = NULL;
 				for( prop = subNode -> properties; prop; prop = prop -> next ) {
