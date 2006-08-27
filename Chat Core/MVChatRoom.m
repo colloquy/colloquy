@@ -52,21 +52,12 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_connection = nil;
-		_name = nil;
-		_uniqueIdentifier = nil;
-		_dateJoined = nil;
-		_dateParted = nil;
-		_topicData = nil;
-		_topicAuthor = nil;
-		_dateTopicChanged = nil;
 		_attributes = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:2];
 		_memberUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:100];
 		_bannedUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
 		_modeAttributes = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:2];
 		_memberModes = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:100];
 		_encoding = NSUTF8StringEncoding;
-		_modes = 0;
 	}
 
 	return self;
@@ -86,7 +77,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[_uniqueIdentifier release];
 	[_dateJoined release];
 	[_dateParted release];
-	[_topicData release];
+	[_topic release];
 	[_topicAuthor release];
 	[_dateTopicChanged release];
 	[_attributes release];
@@ -100,7 +91,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	_uniqueIdentifier = nil;
 	_dateJoined = nil;
 	_dateParted = nil;
-	_topicData = nil;
+	_topic = nil;
 	_topicAuthor = nil;
 	_dateTopicChanged = nil;
 	_attributes = nil;
@@ -114,9 +105,11 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (MVChatConnection *) connection {
 	return _connection;
 }
+#endif
 
 #pragma mark -
 
@@ -156,22 +149,26 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 #pragma mark -
 
 - (NSURL *) url {
-	NSString *url = [NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[[self connection] server] stringByEncodingIllegalURLCharacters], [[self name] stringByEncodingIllegalURLCharacters]];
-	if( url ) return [NSURL URLWithString:url];
+	NSString *urlString = [NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[[self connection] server] stringByEncodingIllegalURLCharacters], [[self name] stringByEncodingIllegalURLCharacters]];
+	if( urlString ) return [NSURL URLWithString:urlString];
 	return nil;
 }
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSString *) name {
 	return [[_name retain] autorelease];
 }
+#endif
 
 - (NSString *) displayName {
 	return [self name];
 }
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (id) uniqueIdentifier {
 	return [[_uniqueIdentifier retain] autorelease];
 }
+#endif
 
 #pragma mark -
 
@@ -193,10 +190,15 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(readonly, getter=isJoined) BOOL joined;
+#endif
+
 - (BOOL) isJoined {
 	return ( [self dateJoined] && ! [self dateParted] );
 }
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSDate *) dateJoined {
 	return [[_dateJoined retain] autorelease];
 }
@@ -204,9 +206,11 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (NSDate *) dateParted {
 	return [[_dateParted retain] autorelease];
 }
+#endif
 
 #pragma mark -
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSStringEncoding) encoding {
 	return _encoding;
 }
@@ -214,6 +218,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (void) setEncoding:(NSStringEncoding) encoding {
 	_encoding = encoding;
 }
+#endif
 
 #pragma mark -
 
@@ -238,10 +243,17 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSData *) topic {
-	return [[_topicData retain] autorelease];
+	return [[_topic retain] autorelease];
+}
+#endif
+
+- (void) setTopic:(NSAttributedString *) topic {
+// subclass this method, if needed
 }
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (MVChatUser *) topicAuthor {
 	return [[_topicAuthor retain] autorelease];
 }
@@ -249,10 +261,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (NSDate *) dateTopicChanged {
 	return [[_dateTopicChanged retain] autorelease];
 }
-
-- (void) setTopic:(NSAttributedString *) topic {
-// subclass this method, if needed
-}
+#endif
 
 #pragma mark -
 
@@ -313,9 +322,11 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (unsigned long) modes {
 	return _modes;
 }
+#endif
 
 - (id) attributeForMode:(MVChatRoomMode) mode {
 	NSParameterAssert( [self supportedModes] & mode );
@@ -326,16 +337,16 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (void) setModes:(unsigned long) modes {
-	NSParameterAssert( [self supportedModes] & modes );
+- (void) setModes:(unsigned long) newModes {
+	NSParameterAssert( [self supportedModes] & newModes );
 
 	unsigned long curModes = [self modes];
-	unsigned long diffModes = ( curModes ^ modes );
+	unsigned long diffModes = ( curModes ^ newModes );
 
 	unsigned i = 0;
 	for( i = 0; i <= 8; i++ ) {
 		if( ( 1 << i ) & diffModes ) {
-			if( ( 1 << i ) & modes ) [self setMode:( 1 << i ) withAttribute:nil];
+			if( ( 1 << i ) & newModes ) [self setMode:( 1 << i ) withAttribute:nil];
 			else [self removeMode:( 1 << i )];
 		}
 	}
@@ -363,14 +374,14 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	} return nil;
 }
 
-- (NSSet *) memberUsersWithModes:(unsigned long) modes {
+- (NSSet *) memberUsersWithModes:(unsigned long) newModes {
 	NSMutableSet *users = [[NSMutableSet allocWithZone:nil] init];
 
 	@synchronized( _memberUsers ) {
 		NSEnumerator *enumerator = [_memberUsers objectEnumerator];
 		MVChatUser *user = nil;
 		while( ( user = [enumerator nextObject] ) )
-			if( [self modesForMemberUser:user] & modes )
+			if( [self modesForMemberUser:user] & newModes )
 				[users addObject:user];
 	}
 
@@ -467,17 +478,17 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (void) setModes:(unsigned long) modes forMemberUser:(MVChatUser *) user {
+- (void) setModes:(unsigned long) newModes forMemberUser:(MVChatUser *) user {
 	NSParameterAssert( user != nil );
-	NSParameterAssert( [self supportedMemberUserModes] & modes );
+	NSParameterAssert( [self supportedMemberUserModes] & newModes );
 
 	unsigned long curModes = [self modesForMemberUser:user];
-	unsigned long diffModes = ( curModes ^ modes );
+	unsigned long diffModes = ( curModes ^ newModes );
 
 	unsigned i = 0;
 	for( i = 0; i <= 8; i++ ) {
 		if( ( 1 << i ) & diffModes ) {
-			if( ( 1 << i ) & modes ) [self setMode:( 1 << i ) forMemberUser:user];
+			if( ( 1 << i ) & newModes ) [self setMode:( 1 << i ) forMemberUser:user];
 			else [self removeMode:( 1 << i ) forMemberUser:user];
 		}
 	}
@@ -545,23 +556,23 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	}
 }
 
-- (void) _setModes:(unsigned long) modes forMemberUser:(MVChatUser *) user {
+- (void) _setModes:(unsigned long) newModes forMemberUser:(MVChatUser *) user {
 	@synchronized( _memberModes ) {
-		[_memberModes setObject:[NSNumber numberWithUnsignedLong:modes] forKey:[user uniqueIdentifier]];
+		[_memberModes setObject:[NSNumber numberWithUnsignedLong:newModes] forKey:[user uniqueIdentifier]];
 	}	
 }
 
 - (void) _setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user {
 	@synchronized( _memberModes ) {
-		unsigned long modes = ( [[_memberModes objectForKey:[user uniqueIdentifier]] unsignedLongValue] | mode );
-		[_memberModes setObject:[NSNumber numberWithUnsignedLong:modes] forKey:[user uniqueIdentifier]];
+		unsigned long newModes = ( [[_memberModes objectForKey:[user uniqueIdentifier]] unsignedLongValue] | mode );
+		[_memberModes setObject:[NSNumber numberWithUnsignedLong:newModes] forKey:[user uniqueIdentifier]];
 	}
 }
 
 - (void) _removeMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user {
 	@synchronized( _memberModes ) {
-		unsigned long modes = ( [[_memberModes objectForKey:[user uniqueIdentifier]] unsignedLongValue] & ~mode );
-		[_memberModes setObject:[NSNumber numberWithUnsignedLong:modes] forKey:[user uniqueIdentifier]];
+		unsigned long newModes = ( [[_memberModes objectForKey:[user uniqueIdentifier]] unsignedLongValue] & ~mode );
+		[_memberModes setObject:[NSNumber numberWithUnsignedLong:newModes] forKey:[user uniqueIdentifier]];
 	}
 }
 
@@ -599,9 +610,9 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[old release];
 }
 
-- (void) _setTopic:(NSData *) topic {
-	id old = _topicData;
-	_topicData = [topic copyWithZone:nil];
+- (void) _setTopic:(NSData *) newTopic {
+	id old = _topic;
+	_topic = [newTopic copyWithZone:nil];
 	[old release];
 }
 
@@ -619,11 +630,11 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 - (void) _updateMemberUser:(MVChatUser *) user fromOldUniqueIdentifier:(id) identifier {
 	@synchronized( _memberModes ) {
-		NSNumber *modes = [[_memberModes objectForKey:identifier] retain];
-		if( ! modes ) return;
+		NSNumber *userModes = [[_memberModes objectForKey:identifier] retain];
+		if( ! userModes ) return;
 		[_memberModes removeObjectForKey:identifier];
-		[_memberModes setObject:modes forKey:[user uniqueIdentifier]];
-		[modes release];
+		[_memberModes setObject:userModes forKey:[user uniqueIdentifier]];
+		[userModes release];
 	}
 }
 @end
@@ -661,12 +672,12 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return [self memberUserWithUniqueIdentifier:identifier];
 }
 
-- (MVChatUser *) valueInMemberUsersArrayWithName:(NSString *) name {
+- (MVChatUser *) valueInMemberUsersArrayWithName:(NSString *) memberName {
 	NSEnumerator *enumerator = [[self memberUsers] objectEnumerator];
 	MVChatUser *user = nil;
 
 	while( ( user = [enumerator nextObject] ) )
-		if( [[user nickname] caseInsensitiveCompare:name] == NSOrderedSame )
+		if( [[user nickname] caseInsensitiveCompare:memberName] == NSOrderedSame )
 			return user;
 
 	return nil;
@@ -690,8 +701,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return [NSString scriptTypedEncodingFromStringEncoding:[self encoding]];
 }
 
-- (void) setScriptTypedEncoding:(unsigned long) encoding {
-	[self setEncoding:[NSString stringEncodingFromScriptTypedEncoding:encoding]];
+- (void) setScriptTypedEncoding:(unsigned long) newEncoding {
+	[self setEncoding:[NSString stringEncodingFromScriptTypedEncoding:newEncoding]];
 }
 
 #pragma mark -

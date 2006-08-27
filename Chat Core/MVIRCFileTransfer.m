@@ -360,9 +360,9 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 	return _passiveId;
 }
 
-- (void) _setStartOffset:(unsigned long long) startOffset {
-	[_fileHandle seekToFileOffset:startOffset];
-	[super _setStartOffset:startOffset];
+- (void) _setStartOffset:(unsigned long long) newStartOffset {
+	[_fileHandle seekToFileOffset:newStartOffset];
+	[super _setStartOffset:newStartOffset];
 }
 @end
 

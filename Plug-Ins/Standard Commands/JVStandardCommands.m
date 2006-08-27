@@ -264,7 +264,7 @@
 	} else if( ! [command caseInsensitiveCompare:@"amsg"] || ! [command caseInsensitiveCompare:@"ame"] || ! [command caseInsensitiveCompare:@"broadcast"] || ! [command caseInsensitiveCompare:@"bract"] ) {
 		return [self handleMassMessageCommand:command withMessage:arguments forConnection:connection];
 	} else if( ! [command caseInsensitiveCompare:@"away"] ) {
-		[connection setAwayStatusWithMessage:arguments];
+		[connection setAwayStatusMessage:arguments];
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"aaway"] ) {
 		return [self handleMassAwayWithMessage:arguments];
@@ -593,7 +593,7 @@
 	NSEnumerator *enumerator = [[[MVConnectionsController defaultController] connectedConnections] objectEnumerator];
 	id item = nil;
 	while( ( item = [enumerator nextObject] ) )
-		[item setAwayStatusWithMessage:message];
+		[item setAwayStatusMessage:message];
 	return YES;
 }
 

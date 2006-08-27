@@ -90,42 +90,42 @@ static const NSStringEncoding supportedEncodings[] = {
 	return self;
 }
 
-- (id) initWithType:(MVChatConnectionType) type {
+- (id) initWithType:(MVChatConnectionType) connectionType {
 	[self release];
 
-	if( type == MVChatConnectionIRCType ) {
+	if( connectionType == MVChatConnectionIRCType ) {
 		self = [[MVIRCChatConnection allocWithZone:nil] init];
-	} else if ( type == MVChatConnectionSILCType ) {
+	} else if ( connectionType == MVChatConnectionSILCType ) {
 		self = [[MVSILCChatConnection allocWithZone:nil] init];
 	} else self = nil;
 
 	return self;
 }
 
-- (id) initWithURL:(NSURL *) url {
-	NSParameterAssert( [MVChatConnection supportsURLScheme:[url scheme]] );
+- (id) initWithURL:(NSURL *) serverURL {
+	NSParameterAssert( [MVChatConnection supportsURLScheme:[serverURL scheme]] );
 
-	int type = 0;
-	if( [[url scheme] isEqualToString:@"irc"] ) type = MVChatConnectionIRCType;
-	else if( [[url scheme] isEqualToString:@"silc"] ) type = MVChatConnectionSILCType;
+	int connectionType = 0;
+	if( [[serverURL scheme] isEqualToString:@"irc"] ) connectionType = MVChatConnectionIRCType;
+	else if( [[serverURL scheme] isEqualToString:@"silc"] ) connectionType = MVChatConnectionSILCType;
 
-	if( ( self = [self initWithServer:[url host] type:type port:[[url port] unsignedShortValue] user:[url user]] ) ) {
-		[self setNicknamePassword:[url password]];
+	if( ( self = [self initWithServer:[serverURL host] type:connectionType port:[[serverURL port] unsignedShortValue] user:[serverURL user]] ) ) {
+		[self setNicknamePassword:[serverURL password]];
 
-		if( [url fragment] && [[url fragment] length] > 0 ) {
-			[self joinChatRoomNamed:[url fragment]];
-		} else if( [url path] && [[url path] length] > 1 ) {
-			[self joinChatRoomNamed:[[url path] substringFromIndex:1]];
+		if( [serverURL fragment] && [[serverURL fragment] length] > 0 ) {
+			[self joinChatRoomNamed:[serverURL fragment]];
+		} else if( [serverURL path] && [[serverURL path] length] > 1 ) {
+			[self joinChatRoomNamed:[[serverURL path] substringFromIndex:1]];
 		}
 	}
 
 	return self;
 }
 
-- (id) initWithServer:(NSString *) server type:(MVChatConnectionType) type port:(unsigned short) port user:(NSString *) nickname {
-	if( ( self = [self initWithType:type] ) ) {
-		if( [nickname length] ) [self setNickname:nickname];
-		if( [server length] ) [self setServer:server];
+- (id) initWithServer:(NSString *) serverAddress type:(MVChatConnectionType) serverType port:(unsigned short) port user:(NSString *) localNickname {
+	if( ( self = [self initWithType:serverType] ) ) {
+		if( [localNickname length] ) [self setNickname:localNickname];
+		if( [serverAddress length] ) [self setServer:serverAddress];
 		[self setServerPort:port];
 	}
 
@@ -203,12 +203,12 @@ static const NSStringEncoding supportedEncodings[] = {
 	return supportedEncodings;
 }
 
-- (BOOL) supportsStringEncoding:(NSStringEncoding) encoding {
+- (BOOL) supportsStringEncoding:(NSStringEncoding) supportedEncoding {
 	const NSStringEncoding *encodings = [self supportedStringEncodings];
 	unsigned i = 0;
 
 	for( i = 0; encodings[i]; i++ )
-		if( encodings[i] == encoding ) return YES;
+		if( encodings[i] == supportedEncoding ) return YES;
 
 	return NO;
 }
@@ -220,9 +220,9 @@ static const NSStringEncoding supportedEncodings[] = {
 	[self doesNotRecognizeSelector:_cmd];
 }
 
-- (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname {
-	if( [nickname length] ) [self setNickname:nickname];
-	if( [server length] ) [self setServer:server];
+- (void) connectToServer:(NSString *) address onPort:(unsigned short) port asUser:(NSString *) nick {
+	if( [nick length] ) [self setNickname:nick];
+	if( [address length] ) [self setServer:address];
 	[self setServerPort:port];
 	[self disconnect];
 	[self connect];
@@ -252,16 +252,16 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSURL *) url {
-	NSString *url = [NSString stringWithFormat:@"%@://%@@%@:%hu", [self urlScheme], [[self preferredNickname] stringByEncodingIllegalURLCharacters], [[self server] stringByEncodingIllegalURLCharacters], [self serverPort]];
-	if( url ) return [NSURL URLWithString:url];
+	NSString *urlString = [NSString stringWithFormat:@"%@://%@@%@:%hu", [self urlScheme], [[self preferredNickname] stringByEncodingIllegalURLCharacters], [[self server] stringByEncodingIllegalURLCharacters], [self serverPort]];
+	if( urlString ) return [NSURL URLWithString:urlString];
 	return nil;
 }
 
 #pragma mark -
 
-- (void) setEncoding:(NSStringEncoding) encoding {
-	if( [self supportsStringEncoding:encoding] )
-		_encoding = encoding;
+- (void) setEncoding:(NSStringEncoding) newEncoding {
+	if( [self supportsStringEncoding:newEncoding] )
+		_encoding = newEncoding;
 }
 
 - (NSStringEncoding) encoding {
@@ -322,9 +322,9 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) setNicknamePassword:(NSString *) password {
+- (void) setNicknamePassword:(NSString *) newPassword {
 	id old = _npassword;
-	if( [password length] ) _npassword = [password copyWithZone:nil];
+	if( [newPassword length] ) _npassword = [newPassword copyWithZone:nil];
 	else _npassword = nil;
 	[old release];
 }
@@ -415,14 +415,18 @@ static const NSStringEncoding supportedEncodings[] = {
 	_secure = ssl;
 }
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(getter=isSecure, setter=setSecure:) BOOL secure;
+#endif
+
 - (BOOL) isSecure {
 	return _secure;
 }
 
 #pragma mark -
 
-- (void) setProxyType:(MVChatConnectionProxy) type {
-	_proxy = type;
+- (void) setProxyType:(MVChatConnectionProxy) newType {
+	_proxy = newType;
 }
 
 - (MVChatConnectionProxy) proxyType {
@@ -453,9 +457,9 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) setProxyUsername:(NSString *) username {
+- (void) setProxyUsername:(NSString *) newUsername {
 	id old = _proxyUsername;
-	_proxyUsername = [username copyWithZone:nil];
+	_proxyUsername = [newUsername copyWithZone:nil];
 	[old release];
 }
 
@@ -465,9 +469,9 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) setProxyPassword:(NSString *) password {
+- (void) setProxyPassword:(NSString *) newPassword {
 	id old = _proxyPassword;
-	_proxyPassword = [password copyWithZone:nil];
+	_proxyPassword = [newPassword copyWithZone:nil];
 	[old release];
 }
 
@@ -709,19 +713,19 @@ static const NSStringEncoding supportedEncodings[] = {
 	return [[_awayMessage retain] autorelease];
 }
 
-- (void) setAwayStatusWithMessage:(NSAttributedString *) message {
+- (void) setAwayStatusMessage:(NSAttributedString *) message {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
 }
 
-- (void) clearAwayStatus {
-	[self setAwayStatusWithMessage:nil];
-}
-
 #pragma mark -
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(readonly, getter=isConnected) BOOL connected;
+#endif
+
 - (BOOL) isConnected {
-	return (BOOL) ( _status == MVChatConnectionConnectedStatus );
+	return ( _status == MVChatConnectionConnectedStatus );
 }
 
 - (MVChatConnectionStatus) status {
@@ -748,6 +752,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_reconnectTimer release];
 	_reconnectTimer = nil;
 }
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(readonly, getter=isWaitingToReconnect) BOOL waitingToReconnect;
+#endif
 
 - (BOOL) isWaitingToReconnect {
 	return ( ! [self isConnected] && _reconnectTimer ? YES : NO );
@@ -860,8 +868,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObject:_lastError forKey:@"error"]];
 }
 
-- (void) _setStatus:(MVChatConnectionStatus) status {
-	_status = status;
+- (void) _setStatus:(MVChatConnectionStatus) newStatus {
+	_status = newStatus;
 }
 
 #pragma mark -
@@ -1000,7 +1008,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	NSString *msg = message;
 	if( [message isKindOfClass:[NSTextStorage class]] ) msg = [message string];
 	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:msg baseURL:nil];
-	[self setAwayStatusWithMessage:attributeMsg];
+	[self setAwayStatusMessage:attributeMsg];
 }
 
 #pragma mark -
@@ -1009,8 +1017,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	return [NSString scriptTypedEncodingFromStringEncoding:[self encoding]];
 }
 
-- (void) setScriptTypedEncoding:(unsigned long) encoding {
-	[self setEncoding:[NSString stringEncodingFromScriptTypedEncoding:encoding]];
+- (void) setScriptTypedEncoding:(unsigned long) newEncoding {
+	[self setEncoding:[NSString stringEncodingFromScriptTypedEncoding:newEncoding]];
 }
 
 #pragma mark -

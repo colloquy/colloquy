@@ -3,11 +3,11 @@
 #import "MVIRCChatConnection.h"
 
 @implementation MVIRCChatRoom
-- (id) initWithName:(NSString *) name andConnection:(MVIRCChatConnection *) connection {
+- (id) initWithName:(NSString *) roomName andConnection:(MVIRCChatConnection *) roomConnection {
 	if( ( self = [self init] ) ) {
-		_connection = connection; // prevent circular retain
-		_name = [name copyWithZone:nil];
-		_uniqueIdentifier = [[name lowercaseString] retain];
+		_connection = roomConnection; // prevent circular retain
+		_name = [roomName copyWithZone:nil];
+		_uniqueIdentifier = [[roomName lowercaseString] retain];
 	}
 
 	return self;
@@ -20,10 +20,10 @@
 }
 
 - (unsigned long) supportedMemberUserModes {
-	unsigned long modes = ( MVChatRoomMemberVoicedMode | MVChatRoomMemberOperatorMode );
-	modes |= MVChatRoomMemberQuietedMode; // optional later
-	modes |= MVChatRoomMemberHalfOperatorMode; // optional later
-	return modes;
+	unsigned long supported = ( MVChatRoomMemberVoicedMode | MVChatRoomMemberOperatorMode );
+	supported |= MVChatRoomMemberQuietedMode; // optional later
+	supported |= MVChatRoomMemberHalfOperatorMode; // optional later
+	return supported;
 }
 
 - (NSString *) displayName {
@@ -41,9 +41,9 @@
 
 #pragma mark -
 
-- (void) setTopic:(NSAttributedString *) topic {
-	NSParameterAssert( topic != nil );
-	NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:topic withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
+- (void) setTopic:(NSAttributedString *) newTopic {
+	NSParameterAssert( newTopic != nil );
+	NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:newTopic withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
 	NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"TOPIC %@ :", [self name]];
 	[[self connection] sendRawMessageWithComponents:prefix, msg, nil];
 	[prefix release];
@@ -51,9 +51,9 @@
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
+- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) msgEncoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
-	[[self connection] _sendMessage:message withEncoding:encoding toTarget:[self name] asAction:action];
+	[[self connection] _sendMessage:message withEncoding:msgEncoding toTarget:[self name] asAction:action];
 }
 
 #pragma mark -

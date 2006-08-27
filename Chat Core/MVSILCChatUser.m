@@ -2,8 +2,8 @@
 #import "MVSILCChatConnection.h"
 
 @implementation MVSILCChatUser
-- (id) initLocalUserWithConnection:(MVSILCChatConnection *) connection {
-	if( ( self = [self initWithClientEntry:[connection _silcConn] -> local_entry andConnection:connection] ) ) {
+- (id) initLocalUserWithConnection:(MVSILCChatConnection *) userConnection {
+	if( ( self = [self initWithClientEntry:[userConnection _silcConn] -> local_entry andConnection:userConnection] ) ) {
 		_type = MVChatLocalUserType;
 
 		// this info will be pulled live from the connection
@@ -19,10 +19,10 @@
 	return self;
 }
 
-- (id) initWithClientEntry:(SilcClientEntry) clientEntry andConnection:(MVSILCChatConnection *) connection {
+- (id) initWithClientEntry:(SilcClientEntry) clientEntry andConnection:(MVSILCChatConnection *) userConnection {
 	if( ( self = [self init] ) ) {
 		_type = MVChatRemoteUserType;
-		_connection = connection; // prevent circular retain
+		_connection = userConnection; // prevent circular retain
 		[self updateWithClientEntry:clientEntry];
 	}
 

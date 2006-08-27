@@ -8,21 +8,18 @@ extern NSString *MVChatPluginManagerDidReloadPluginsNotification;
 + (MVChatPluginManager *) defaultManager;
 + (NSArray *) pluginSearchPaths;
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(readonly) NSArray *plugins;
+#else
+- (NSArray *) plugins;
+#endif
+
 - (void) reloadPlugins;
 - (void) addPlugin:(id) plugin;
 - (void) removePlugin:(id) plugin;
 
-- (NSArray *) plugins;
 - (NSArray *) pluginsThatRespondToSelector:(SEL) selector;
 - (NSArray *) pluginsOfClass:(Class) class thatRespondToSelector:(SEL) selector;
-
-- (NSEnumerator *) pluginEnumerator;
-- (NSEnumerator *) enumeratorOfPluginsThatRespondToSelector:(SEL) selector;
-- (NSEnumerator *) enumeratorOfPluginsOfClass:(Class) class thatRespondToSelector:(SEL) selector;
-
-- (unsigned int) numberOfPlugins;
-- (unsigned int) numberOfPluginsThatRespondToSelector:(SEL) selector;
-- (unsigned int) numberOfPluginsOfClass:(Class) class thatRespondToSelector:(SEL) selector;
 
 - (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation;
 - (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation stoppingOnFirstSuccessfulReturn:(BOOL) stop;

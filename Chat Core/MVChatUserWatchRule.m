@@ -132,9 +132,9 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 	return [[_nickname retain] autorelease];
 }
 
-- (void) setNickname:(NSString *) nickname {
+- (void) setNickname:(NSString *) newNickname {
 	id old = _nickname;
-	_nickname = [nickname copyWithZone:nil];
+	_nickname = [newNickname copyWithZone:nil];
 	[old release];
 
 	old = _nicknameRegex;
@@ -152,9 +152,9 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 	return [[_realName retain] autorelease];
 }
 
-- (void) setRealName:(NSString *) realName {
+- (void) setRealName:(NSString *) newRealName {
 	id old = _realName;
-	_realName = [realName copyWithZone:nil];
+	_realName = [newRealName copyWithZone:nil];
 	[old release];
 
 	old = _realNameRegex;
@@ -172,9 +172,9 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 	return [[_username retain] autorelease];
 }
 
-- (void) setUsername:(NSString *) username {
+- (void) setUsername:(NSString *) newUsername {
 	id old = _username;
-	_username = [username copyWithZone:nil];
+	_username = [newUsername copyWithZone:nil];
 	[old release];
 
 	old = _usernameRegex;
@@ -192,9 +192,9 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 	return [[_address retain] autorelease];
 }
 
-- (void) setAddress:(NSString *) address {
+- (void) setAddress:(NSString *) newAddress {
 	id old = _address;
-	_address = [address copyWithZone:nil];
+	_address = [newAddress copyWithZone:nil];
 	[old release];
 
 	old = _addressRegex;
@@ -208,6 +208,7 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 	return ( _addressRegex ? YES : NO );
 }
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSData *) publicKey {
 	return [[_publicKey retain] autorelease];
 }
@@ -217,11 +218,17 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 	_publicKey = [publicKey copyWithZone:nil];
 	[old release];
 }
+#endif
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(ivar, getter=isInterim) BOOL interim;
+#endif
 
 - (BOOL) isInterim {
 	return _interim;
 }
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (void) setInterim:(BOOL) interim {
 	_interim = interim;
 }
@@ -235,4 +242,5 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 	_applicableServerDomains = [serverDomains copyWithZone:nil];
 	[old release];
 }
+#endif
 @end

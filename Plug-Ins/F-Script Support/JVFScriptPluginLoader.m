@@ -62,7 +62,7 @@
 				} else {
 					path = [path stringByStandardizingPath];
 
-					NSEnumerator *pluginEnum = [_manager enumeratorOfPluginsOfClass:[JVFScriptChatPlugin class] thatRespondToSelector:@selector( init )];
+					NSEnumerator *pluginEnum = [[_manager pluginsOfClass:[JVFScriptChatPlugin class] thatRespondToSelector:@selector( init )] objectEnumerator];
 					JVFScriptChatPlugin *plugin = nil;
 
 					while( ( plugin = [pluginEnum nextObject] ) )

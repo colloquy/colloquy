@@ -1,3 +1,7 @@
 #ifdef __OBJC__
 #import <Cocoa/Cocoa.h>
 #endif
+
+#ifndef MAC_OS_X_VERSION_10_4
+#define MAC_OS_X_VERSION_10_5 1050
+#endif

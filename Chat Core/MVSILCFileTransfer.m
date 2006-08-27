@@ -132,8 +132,8 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 
 #pragma mark -
 
-- (id) initWithSessionID:(SilcUInt32) sessionID toUser:(MVChatUser *) user {
-	if( ( self = [self initWithUser:user] ) )
+- (id) initWithSessionID:(SilcUInt32) sessionID toUser:(MVChatUser *) chatUser {
+	if( ( self = [self initWithUser:chatUser] ) )
 		[self _setSessionID:sessionID];
 	return self;
 }
@@ -171,8 +171,8 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 
 #pragma mark -
 
-- (id) initWithSessionID:(SilcUInt32) sessionID toUser:(MVChatUser *) user {
-	if( ( self = [self initWithUser:user] ) )
+- (id) initWithSessionID:(SilcUInt32) sessionID toUser:(MVChatUser *) chatUser {
+	if( ( self = [self initWithUser:chatUser] ) )
 		[self _setSessionID:sessionID];
 	return self;
 }

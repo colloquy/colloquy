@@ -53,12 +53,10 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 + (id) wildcardUserFromString:(NSString *) mask {
 	NSArray *parts = [mask componentsSeparatedByString:@"!"];
-	if( [parts count] == 1 ) {
+	if( [parts count] == 1 )
 		return [self wildcardUserWithNicknameMask:[parts objectAtIndex:0] andHostMask:nil];
-	} else if( [parts count] >= 2 ) {
+	if( [parts count] >= 2 )
 		return [self wildcardUserWithNicknameMask:[parts objectAtIndex:0] andHostMask:[parts objectAtIndex:1]];
-	}
-
 	return [self wildcardUserWithNicknameMask:mask andHostMask:nil];
 }
 
@@ -92,25 +90,9 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_connection = nil;
-		_uniqueIdentifier = nil;
-		_nickname = nil;
-		_realName = nil;
-		_username = nil;
-		_address = nil;
-		_serverAddress = nil;
-		_publicKey = nil;
-		_fingerprint = nil;
-		_dateConnected = nil;
-		_dateDisconnected = nil;
 		_attributes = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
 		_type = MVChatRemoteUserType;
 		_status = MVChatUserUnknownStatus;
-		_modes = 0;
-		_idleTime = 0.;
-		_lag = 0.;
-		_identified = NO;
-		_serverOperator = NO;
 	}
 
 	return self;
@@ -147,17 +129,23 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (MVChatConnection *) connection {
 	return _connection;
 }
 
-#pragma mark -
-
 - (MVChatUserType) type {
 	return _type;
 }
+#endif
 
 #pragma mark -
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(readonly, getter=isRemoteUser) BOOL remoteUser;
+@property(readonly, getter=isLocalUser) BOOL localUser;
+@property(readonly, getter=isWildcardUser) BOOL wildcardUser;
+#endif
 
 - (BOOL) isRemoteUser {
 	return ( _type == MVChatRemoteUserType );
@@ -172,6 +160,12 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 #pragma mark -
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(readonly, getter=isIdentified) BOOL identified;
+@property(readonly, getter=isServerOperator) BOOL serverOperator;
+@property(readonly, getter=isWatched) BOOL watched;
+#endif
 
 - (BOOL) isIdentified {
 	return _identified;
@@ -272,6 +266,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (MVChatUserStatus) status {
 	return _status;
 }
@@ -303,6 +298,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 - (NSTimeInterval) lag {
 	return _lag;
 }
+#endif
 
 #pragma mark -
 
@@ -341,6 +337,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (id) uniqueIdentifier {
 	return [[_uniqueIdentifier retain] autorelease];
 }
@@ -352,6 +349,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 - (NSString *) fingerprint {
 	return [[_fingerprint retain] autorelease];
 }
+#endif
 
 #pragma mark -
 
@@ -360,9 +358,11 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	return 0;
 }
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (unsigned long) modes {
 	return _modes;
 }
+#endif
 
 #pragma mark -
 
@@ -477,15 +477,15 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	[old release];
 }
 
-- (void) _setAddress:(NSString *) address {
+- (void) _setAddress:(NSString *) newAddress {
 	id old = _address;
-	_address = [address copyWithZone:nil];
+	_address = [newAddress copyWithZone:nil];
 	[old release];
 }
 
-- (void) _setServerAddress:(NSString *) address {
+- (void) _setServerAddress:(NSString *) newServerAddress {
 	id old = _serverAddress;
-	_serverAddress = [address copyWithZone:nil];
+	_serverAddress = [newServerAddress copyWithZone:nil];
 	[old release];
 }
 
@@ -495,22 +495,22 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	[old release];
 }
 
-- (void) _setFingerprint:(NSString *) fingerprint {
+- (void) _setFingerprint:(NSString *) newFingerprint {
 	id old = _fingerprint;
-	_fingerprint = [fingerprint copyWithZone:nil];
+	_fingerprint = [newFingerprint copyWithZone:nil];
 	[old release];
 }
 
-- (void) _setServerOperator:(BOOL) operator {
-	_serverOperator = operator;
+- (void) _setServerOperator:(BOOL) isServerOperator {
+	_serverOperator = isServerOperator;
 }
 
-- (void) _setIdentified:(BOOL) identified {
-	_identified = identified;
+- (void) _setIdentified:(BOOL) isIdentified {
+	_identified = isIdentified;
 }
 
-- (void) _setWatched:(BOOL) watched {
-	_watched = watched;
+- (void) _setWatched:(BOOL) isWatched {
+	_watched = isWatched;
 }
 
 - (void) _setIdleTime:(NSTimeInterval) time {
@@ -518,9 +518,9 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserIdleTimeUpdatedNotification object:self userInfo:nil];
 }
 
-- (void) _setStatus:(MVChatUserStatus) status {
-	if( _status == status ) return;
-	_status = status;
+- (void) _setStatus:(MVChatUserStatus) newStatus {
+	if( _status == newStatus ) return;
+	_status = newStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserStatusChangedNotification object:self userInfo:nil];
 }
 
@@ -542,9 +542,9 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	[old release];
 }
 
-- (void) _setAwayStatusMessage:(NSData *) awayStatusMessage {
+- (void) _setAwayStatusMessage:(NSData *) newAwayStatusMessage {
 	id old = _awayStatusMessage;
-	_awayStatusMessage = [awayStatusMessage copyWithZone:nil];
+	_awayStatusMessage = [newAwayStatusMessage copyWithZone:nil];
 	[old release];
 }
 

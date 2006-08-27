@@ -82,27 +82,49 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 + (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host;
 + (id) wildcardUserWithFingerprint:(NSString *) fingerprint;
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(readonly, ivar) MVChatConnection *connection;
+@property(readonly, ivar) MVChatUserType type;
+
+@property(readonly) BOOL remoteUser;
+@property(readonly) BOOL localUser;
+@property(readonly) BOOL wildcardUser;
+
+@property(readonly) BOOL identified;
+@property(readonly) BOOL serverOperator;
+@property(readonly) BOOL watched;
+
+@property(readonly, ivar) MVChatUserStatus status;
+@property(readonly, ivar) NSData *awayStatusMessage;
+
+@property(readonly, ivar) NSDate *dateConnected;
+@property(readonly, ivar) NSDate *dateDisconnected;
+@property(readonly, ivar) NSDate *dateUpdated;
+
+@property(readonly, ivar) NSTimeInterval idleTime;
+@property(readonly, ivar) NSTimeInterval lag;
+
+@property(readonly) NSString *displayName;
+@property(readonly) NSString *nickname;
+@property(readonly) NSString *realName;
+@property(readonly) NSString *username;
+@property(readonly) NSString *address;
+@property(readonly) NSString *serverAddress;
+
+@property(readonly, ivar) id uniqueIdentifier;
+@property(readonly, ivar) NSData *publicKey;
+@property(readonly, ivar) NSString *fingerprint;
+
+@property(readonly) unsigned long supportedModes;
+@property(readonly, ivar) unsigned long modes;
+
+@property(readonly) NSSet *supportedAttributes;
+@property(readonly) NSDictionary *attributes;
+
+#else
+
 - (MVChatConnection *) connection;
-
 - (MVChatUserType) type;
-
-- (BOOL) isRemoteUser;
-- (BOOL) isLocalUser;
-- (BOOL) isWildcardUser;
-
-- (BOOL) isIdentified;
-- (BOOL) isServerOperator;
-- (BOOL) isWatched;
-
-- (BOOL) isEqual:(id) object;
-- (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser;
-
-- (NSComparisonResult) compare:(MVChatUser *) otherUser;
-- (NSComparisonResult) compareByNickname:(MVChatUser *) otherUser;
-- (NSComparisonResult) compareByUsername:(MVChatUser *) otherUser;
-- (NSComparisonResult) compareByAddress:(MVChatUser *) otherUser;
-- (NSComparisonResult) compareByRealName:(MVChatUser *) otherUser;
-- (NSComparisonResult) compareByIdleTime:(MVChatUser *) otherUser;
 
 - (MVChatUserStatus) status;
 - (NSData *) awayStatusMessage;
@@ -128,14 +150,33 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 - (unsigned long) supportedModes;
 - (unsigned long) modes;
 
+- (NSSet *) supportedAttributes;
+- (NSDictionary *) attributes;
+#endif
+
+- (BOOL) isRemoteUser;
+- (BOOL) isLocalUser;
+- (BOOL) isWildcardUser;
+
+- (BOOL) isIdentified;
+- (BOOL) isServerOperator;
+- (BOOL) isWatched;
+
+- (BOOL) isEqual:(id) object;
+- (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser;
+
+- (NSComparisonResult) compare:(MVChatUser *) otherUser;
+- (NSComparisonResult) compareByNickname:(MVChatUser *) otherUser;
+- (NSComparisonResult) compareByUsername:(MVChatUser *) otherUser;
+- (NSComparisonResult) compareByAddress:(MVChatUser *) otherUser;
+- (NSComparisonResult) compareByRealName:(MVChatUser *) otherUser;
+- (NSComparisonResult) compareByIdleTime:(MVChatUser *) otherUser;
+
 - (void) refreshInformation;
 
 - (void) refreshAttributes;
 - (void) refreshAttributeForKey:(NSString *) key;
 
-- (NSSet *) supportedAttributes;
-
-- (NSDictionary *) attributes;
 - (BOOL) hasAttributeForKey:(NSString *) key;
 - (id) attributeForKey:(NSString *) key;
 - (void) setAttribute:(id) attribute forKey:(id) key;
@@ -150,6 +191,11 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 #pragma mark -
 
 @interface MVChatUser (MVChatUserScripting)
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(readonly) NSString *scriptUniqueIdentifier;
+@property(readonly) NSScriptObjectSpecifier *objectSpecifier;
+#endif
+
 - (NSString *) scriptUniqueIdentifier;
 - (NSScriptObjectSpecifier *) objectSpecifier;
 @end

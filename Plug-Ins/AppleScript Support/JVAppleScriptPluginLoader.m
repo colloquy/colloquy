@@ -30,7 +30,7 @@
 
 		path = [path stringByStandardizingPath];
 
-		NSEnumerator *enumerator = [_manager enumeratorOfPluginsOfClass:[JVAppleScriptChatPlugin class] thatRespondToSelector:@selector( init )];
+		NSEnumerator *enumerator = [[_manager pluginsOfClass:[JVAppleScriptChatPlugin class] thatRespondToSelector:@selector( init )] objectEnumerator];
 		JVAppleScriptChatPlugin *plugin = nil;
 
 		while( ( plugin = [enumerator nextObject] ) )

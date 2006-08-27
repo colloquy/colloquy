@@ -1085,17 +1085,17 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-- (void) setNickname:(NSString *) nickname {
-	NSParameterAssert( nickname != nil );
-	NSParameterAssert( [nickname length] > 0 );
+- (void) setNickname:(NSString *) newNickname {
+	NSParameterAssert( newNickname != nil );
+	NSParameterAssert( [newNickname length] > 0 );
 	if( ! _silcClient ) return;
 
 	if( _silcClient -> nickname) free(_silcClient -> nickname);
-	_silcClient -> nickname = strdup( [nickname UTF8String] );
+	_silcClient -> nickname = strdup( [newNickname UTF8String] );
 
 	if( [self isConnected] ) {
-		if( ! [nickname isEqualToString:[self nickname]] )
-			[self sendRawMessageWithFormat:@"NICK %@", nickname];
+		if( ! [newNickname isEqualToString:[self nickname]] )
+			[self sendRawMessageWithFormat:@"NICK %@", newNickname];
 	}
 }
 
@@ -1116,9 +1116,9 @@ static SilcClientOperations silcClientOps = {
 	return @"SILC Keypair";
 }
 
-- (BOOL) setCertificatePassword:(NSString *) password {
+- (BOOL) setCertificatePassword:(NSString *) newPassword {
 	[_certificatePassword release];
-	_certificatePassword = [password copy];
+	_certificatePassword = [newPassword copyWithZone:nil];
 
 	if( _waitForCertificatePassword ) {
 		_waitForCertificatePassword = NO;
@@ -1135,9 +1135,9 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-- (void) setPassword:(NSString *) password {
+- (void) setPassword:(NSString *) newPassword {
 	[_silcPassword release];
-	if( [password length] ) _silcPassword = [password copy];
+	if( [newPassword length] ) _silcPassword = [newPassword copyWithZone:nil];
 	else _silcPassword = nil;
 }
 
@@ -1147,13 +1147,13 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-- (void) setUsername:(NSString *) username {
-	NSParameterAssert( username != nil );
-	NSParameterAssert( [username length] > 0 );
+- (void) setUsername:(NSString *) newUsername {
+	NSParameterAssert( newUsername != nil );
+	NSParameterAssert( [newUsername length] > 0 );
 	if( ! _silcClient ) return;
 
 	if( _silcClient -> username ) free( _silcClient -> username );
-	_silcClient -> username = strdup( [username UTF8String] );
+	_silcClient -> username = strdup( [newUsername UTF8String] );
 }
 
 - (NSString *) username {
@@ -1163,9 +1163,9 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-- (void) setServer:(NSString *) server {
+- (void) setServer:(NSString *) newServer {
 	id old = _silcServer;
-	_silcServer = [server copyWithZone:nil];
+	_silcServer = [newServer copyWithZone:nil];
 	[old release];
 }
 
@@ -1256,9 +1256,9 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	return [NSSet setWithArray:[_knownUsers allValues]];
 }
 
-- (NSSet *) chatUsersWithNickname:(NSString *) nickname {
+- (NSSet *) chatUsersWithNickname:(NSString *) findNickname {
 	SilcLock( [self _silcClient] );
-	silc_client_get_clients_whois( [self _silcClient], [self _silcConn], [nickname UTF8String], NULL, NULL, usersFoundCallback, self );
+	silc_client_get_clients_whois( [self _silcClient], [self _silcConn], [findNickname UTF8String], NULL, NULL, usersFoundCallback, self );
 	silc_schedule_wakeup( [self _silcClient] -> schedule );
 	SilcUnlock( [self _silcClient] );
 
@@ -1271,7 +1271,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	SilcLock( [self _silcClient] );
 
 	SilcUInt32 clientsCount = 0;
-	SilcClientEntry *clients = silc_client_get_clients_local( [self _silcClient], [self _silcConn], [nickname UTF8String], NULL, &clientsCount );
+	SilcClientEntry *clients = silc_client_get_clients_local( [self _silcClient], [self _silcConn], [findNickname UTF8String], NULL, &clientsCount );
 
 	unsigned int i = 0;
 	NSMutableSet *results = [[[NSMutableSet allocWithZone:nil] initWithCapacity:clientsCount] autorelease];
@@ -1326,7 +1326,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	}
 }
 
-- (void) setAwayStatusWithMessage:(NSAttributedString *) message {
+- (void) setAwayStatusMessage:(NSAttributedString *) message {
 	[_awayMessage release];
 	_awayMessage = nil;
 

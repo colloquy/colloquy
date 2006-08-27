@@ -255,15 +255,15 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) setNickname:(NSString *) nickname {
-	NSParameterAssert( nickname != nil );
-	NSParameterAssert( [nickname length] > 0 );
+- (void) setNickname:(NSString *) newNickname {
+	NSParameterAssert( newNickname != nil );
+	NSParameterAssert( [newNickname length] > 0 );
 
-	if( [nickname isEqualToString:[self nickname]] )
+	if( [newNickname isEqualToString:[self nickname]] )
 		return;
 
 	id old = _nickname;
-	_nickname = [nickname copyWithZone:nil];
+	_nickname = [newNickname copyWithZone:nil];
 	[old release];
 
 	if( ! _currentNickname || ! [self isConnected] ) {
@@ -273,7 +273,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	}
 
 	if( [self isConnected] )
-		[self sendRawMessageImmediatelyWithFormat:@"NICK %@", nickname];
+		[self sendRawMessageImmediatelyWithFormat:@"NICK %@", newNickname];
 }
 
 - (NSString *) nickname {
@@ -286,17 +286,17 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) setNicknamePassword:(NSString *) password {
-	if( ! [[self localUser] isIdentified] && password && [self isConnected] )
-		[self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", password];
-	[super setNicknamePassword:password];
+- (void) setNicknamePassword:(NSString *) newPassword {
+	if( ! [[self localUser] isIdentified] && newPassword && [self isConnected] )
+		[self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", newPassword];
+	[super setNicknamePassword:newPassword];
 }
 
 #pragma mark -
 
-- (void) setPassword:(NSString *) password {
+- (void) setPassword:(NSString *) newPassword {
 	id old = _password;
-	_password = [password copyWithZone:nil];
+	_password = [newPassword copyWithZone:nil];
 	[old release];
 }
 
@@ -306,12 +306,12 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) setUsername:(NSString *) username {
-	NSParameterAssert( username != nil );
-	NSParameterAssert( [username length] > 0 );
+- (void) setUsername:(NSString *) newUsername {
+	NSParameterAssert( newUsername != nil );
+	NSParameterAssert( [newUsername length] > 0 );
 
 	id old = _username;
-	_username = [username copyWithZone:nil];
+	_username = [newUsername copyWithZone:nil];
 	[old release];
 }
 
@@ -321,12 +321,12 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) setServer:(NSString *) server {
-	NSParameterAssert( server != nil );
-	NSParameterAssert( [server length] > 0 );
+- (void) setServer:(NSString *) newServer {
+	NSParameterAssert( newServer != nil );
+	NSParameterAssert( [newServer length] > 0 );
 
 	id old = _server;
-	_server = [server copyWithZone:nil];
+	_server = [newServer copyWithZone:nil];
 	[old release];
 }
 
@@ -438,8 +438,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	} return nil;
 }
 
-- (NSSet *) chatUsersWithNickname:(NSString *) nickname {
-	return [NSSet setWithObject:[self chatUserWithUniqueIdentifier:nickname]];
+- (NSSet *) chatUsersWithNickname:(NSString *) name {
+	return [NSSet setWithObject:[self chatUserWithUniqueIdentifier:name]];
 }
 
 - (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
@@ -509,7 +509,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) setAwayStatusWithMessage:(NSAttributedString *) message {
+- (void) setAwayStatusMessage:(NSAttributedString *) message {
 	[_awayMessage release];
 	_awayMessage = nil;
 
@@ -921,8 +921,8 @@ end:
 	return [message chatFormatWithOptions:options];
 }
 
-- (void) _sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding toTarget:(NSString *) target asAction:(BOOL) action {
-	NSData *msg = [[self class] _flattenedIRCDataForMessage:message withEncoding:encoding andChatFormat:[self outgoingChatFormat]];
+- (void) _sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) msgEncoding toTarget:(NSString *) target asAction:(BOOL) action {
+	NSData *msg = [[self class] _flattenedIRCDataForMessage:message withEncoding:msgEncoding andChatFormat:[self outgoingChatFormat]];
 	if( action ) {
 		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@ :\001ACTION ", target];
 		[self sendRawMessageWithComponents:prefix, msg, @"\001", nil];
@@ -968,20 +968,20 @@ end:
 
 #pragma mark -
 
-- (void) _updateKnownUser:(MVChatUser *) user withNewNickname:(NSString *) nickname {
+- (void) _updateKnownUser:(MVChatUser *) user withNewNickname:(NSString *) newNickname {
 	@synchronized( _knownUsers ) {
 		[user retain];
 		[_knownUsers removeObjectForKey:[user uniqueIdentifier]];
-		[user _setUniqueIdentifier:[nickname lowercaseString]];
-		[user _setNickname:nickname];
+		[user _setUniqueIdentifier:[newNickname lowercaseString]];
+		[user _setNickname:newNickname];
 		[_knownUsers setObject:user forKey:[user uniqueIdentifier]];
 		[user release];
 	}
 }
 
-- (void) _setCurrentNickname:(NSString *) nickname {
+- (void) _setCurrentNickname:(NSString *) currentNickname {
 	id old = _currentNickname;
-	_currentNickname = [nickname copyWithZone:nil];
+	_currentNickname = [currentNickname copyWithZone:nil];
 	[old release];
 }
 
@@ -1261,10 +1261,10 @@ end:
 	if( [[self nicknamePassword] length] )
 		[self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", [self nicknamePassword]];
 	if( [parameters count] >= 1 ) {
-		NSString *nickname = [parameters objectAtIndex:0];
-		if( ! [nickname isEqualToString:[self nickname]] ) {
-			[self _setCurrentNickname:nickname];
-			[[self localUser] _setUniqueIdentifier:[nickname lowercaseString]];
+		NSString *nick = [parameters objectAtIndex:0];
+		if( ! [nick isEqualToString:[self nickname]] ) {
+			[self _setCurrentNickname:nick];
+			[[self localUser] _setUniqueIdentifier:[nick lowercaseString]];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
 		}
 	}
@@ -1988,7 +1988,7 @@ end:
 
 - (void) _handleNickWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	if( [parameters count] == 1 ) {
-		NSString *nickname = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
+		NSString *nick = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		NSString *oldNickname = [[sender nickname] retain];
 		NSString *oldIdentifier = [[sender uniqueIdentifier] retain];
 
@@ -1998,12 +1998,12 @@ end:
 
 		NSNotification *note = nil;
 		if( [sender isLocalUser] ) {
-			[self _setCurrentNickname:nickname];
+			[self _setCurrentNickname:nick];
 			[sender _setIdentified:NO];
-			[sender _setUniqueIdentifier:[nickname lowercaseString]];
+			[sender _setUniqueIdentifier:[nick lowercaseString]];
 			note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
 		} else {
-			[self _updateKnownUser:sender withNewNickname:nickname];
+			[self _updateKnownUser:sender withNewNickname:nick];
 			note = [NSNotification notificationWithName:MVChatUserNicknameChangedNotification object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldNickname, @"oldNickname", nil]];
 		}
 
@@ -2147,10 +2147,10 @@ end:
 		[member _setAddress:[parameters objectAtIndex:3]];
 
 		NSString *statusString = [self _stringFromPossibleData:[parameters objectAtIndex:6]];
-		unichar status = ( [statusString length] ? [statusString characterAtIndex:0] : 0 );
-		if( status == 'H' ) {
+		unichar userStatus = ( [statusString length] ? [statusString characterAtIndex:0] : 0 );
+		if( userStatus == 'H' ) {
 			[member _setStatus:MVChatUserAvailableStatus];
-		} else if( status == 'G' ) {
+		} else if( userStatus == 'G' ) {
 			[member _setStatus:MVChatUserAwayStatus];
 		}
 
@@ -2160,8 +2160,8 @@ end:
 			NSString *lastParam = [self _stringFromPossibleData:[parameters objectAtIndex:7]];
 			NSRange range = [lastParam rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]];
 			if( range.location != NSNotFound ) {
-				NSString *realName = [lastParam substringFromIndex:range.location + range.length];
-				if( [realName length] ) [member _setRealName:realName];
+				NSString *name = [lastParam substringFromIndex:range.location + range.length];
+				if( [name length] ) [member _setRealName:name];
 				else [member _setRealName:nil];
 			} else [member _setRealName:nil];
 		}

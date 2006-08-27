@@ -137,44 +137,6 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 
 #pragma mark -
 
-- (NSEnumerator *) pluginEnumerator {
-	return [_plugins objectEnumerator];
-}
-
-- (NSEnumerator *) enumeratorOfPluginsThatRespondToSelector:(SEL) selector {
-	return [self enumeratorOfPluginsOfClass:NULL thatRespondToSelector:selector];
-}
-
-- (NSEnumerator *) enumeratorOfPluginsOfClass:(Class) class thatRespondToSelector:(SEL) selector {
-	return [[self pluginsOfClass:class thatRespondToSelector:selector] objectEnumerator];
-}
-
-#pragma mark -
-
-- (unsigned int) numberOfPlugins {
-	return [_plugins count];
-}
-
-- (unsigned int) numberOfPluginsThatRespondToSelector:(SEL) selector {
-	return [self numberOfPluginsOfClass:NULL thatRespondToSelector:selector];
-}
-
-- (unsigned int) numberOfPluginsOfClass:(Class) class thatRespondToSelector:(SEL) selector {
-	NSParameterAssert( selector != NULL );
-
-	unsigned int ret = 0;
-	NSEnumerator *enumerator = [_plugins objectEnumerator];
-	id plugin = nil;
-
-	while( ( plugin = [enumerator nextObject] ) )
-		if( ( ! class || ( class && [plugin isKindOfClass:class] ) ) && [plugin respondsToSelector:selector] )
-			ret++;
-
-	return ret;
-}
-
-#pragma mark -
-
 - (NSArray *) makePluginsPerformInvocation:(NSInvocation *) invocation {
 	return [self makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
 }
@@ -187,7 +149,7 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 	NSParameterAssert( invocation != nil );
 	NSParameterAssert( [invocation selector] != NULL );
 
-	NSEnumerator *enumerator = [self enumeratorOfPluginsOfClass:class thatRespondToSelector:[invocation selector]];
+	NSEnumerator *enumerator = [[self pluginsOfClass:class thatRespondToSelector:[invocation selector]] objectEnumerator];
 	id plugin = nil;
 
 	if( ! enumerator ) return nil;

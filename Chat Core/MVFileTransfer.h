@@ -42,11 +42,26 @@ typedef enum {
 + (void) setFileTransferPortRange:(NSRange) range;
 + (NSRange) fileTransferPortRange;
 
-- (id) initWithUser:(MVChatUser *) user;
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(readonly) BOOL upload;
+@property(readonly) BOOL download;
+@property(readonly) BOOL passive;
+@property(readonly, ivar) MVFileTransferStatus status;
+@property(readonly, ivar) NSError *lastError;
 
-- (BOOL) isUpload;
-- (BOOL) isDownload;
-- (BOOL) isPassive;
+@property(readonly, ivar) unsigned long long finalSize;
+@property(readonly, ivar) unsigned long long transfered;
+
+@property(readonly, ivar) NSDate *startDate;
+@property(readonly, ivar) unsigned long long startOffset;
+
+@property(readonly, ivar) NSHost *host;
+@property(readonly, ivar) unsigned short port;
+
+@property(readonly, ivar) MVChatUser *user;
+
+#else
+
 - (MVFileTransferStatus) status;
 - (NSError *) lastError;
 
@@ -60,6 +75,13 @@ typedef enum {
 - (unsigned short) port;
 
 - (MVChatUser *) user;
+#endif
+
+- (id) initWithUser:(MVChatUser *) user;
+
+- (BOOL) isUpload;
+- (BOOL) isDownload;
+- (BOOL) isPassive;
 
 - (void) cancel;
 @end
@@ -72,20 +94,31 @@ typedef enum {
 }
 + (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive;
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(readonly, ivar) NSString *source;
+#else
 - (NSString *) source;
+#endif
 @end
 
 #pragma mark -
 
 @interface MVDownloadFileTransfer : MVFileTransfer {
 @protected
+	BOOL _rename;
 	NSString *_destination;
 	NSString *_originalFileName;
 }
-- (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) allow;
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(ivar, bycopy) NSString *destination;
+@property(readonly, ivar) NSString *originalFileName;
+#else
 - (NSString *) destination;
-
+- (void) setDestination:(NSString *) path;
 - (NSString *) originalFileName;
+#endif
+
+- (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) allow;
 
 - (void) reject;
 

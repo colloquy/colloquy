@@ -23,9 +23,32 @@ extern NSString *MVChatUserWatchRuleMatchedNotification;
 - (BOOL) isEqualToChatUserWatchRule:(MVChatUserWatchRule *) anotherRule;
 
 - (BOOL) matchChatUser:(MVChatUser *) user;
+- (void) removeMatchedUser:(MVChatUser *) user;
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(readonly) NSSet *matchedChatUsers;
+
+@property(bycopy) NSString *nickname;
+@property(readonly) BOOL nicknameIsRegularExpression;
+
+@property(bycopy) NSString *realName;
+@property(readonly) BOOL realNameIsRegularExpression;
+
+@property(bycopy) NSString *username;
+@property(readonly) BOOL usernameIsRegularExpression;
+
+@property(bycopy) NSString *address;
+@property(readonly) BOOL addressIsRegularExpression;
+
+@property(ivar, bycopy) NSData *publicKey;
+
+@property(ivar) BOOL interim;
+
+@property(ivar, bycopy) NSArray *applicableServerDomains;
+
+#else
 
 - (NSSet *) matchedChatUsers;
-- (void) removeMatchedUser:(MVChatUser *) user;
 
 - (NSString *) nickname;
 - (void) setNickname:(NSString *) nickname;
@@ -51,4 +74,7 @@ extern NSString *MVChatUserWatchRuleMatchedNotification;
 
 - (NSArray *) applicableServerDomains;
 - (void) setApplicableServerDomains:(NSArray *) serverDomains;
+#endif
+
+- (BOOL) isInterim;
 @end

@@ -45,7 +45,7 @@
 			if( path ) {
 				path = [path stringByStandardizingPath];
 
-				NSEnumerator *pluginEnum = [_manager enumeratorOfPluginsOfClass:[JVPythonChatPlugin class] thatRespondToSelector:@selector( init )];
+				NSEnumerator *pluginEnum = [[_manager pluginsOfClass:[JVPythonChatPlugin class] thatRespondToSelector:@selector( init )] objectEnumerator];
 				JVPythonChatPlugin *plugin = nil;
 
 				while( ( plugin = [pluginEnum nextObject] ) )

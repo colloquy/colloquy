@@ -26,10 +26,10 @@ static NSRange portRange = { 1024, 24 };
 
 #pragma mark -
 
-- (id) initWithUser:(MVChatUser *) user {
+- (id) initWithUser:(MVChatUser *) chatUser {
 	if( ( self = [super init] ) ) {
 		_status = MVFileTransferHoldingStatus;
-		_user = [user retain];
+		_user = [chatUser retain];
 	}
 
 	return self;
@@ -58,6 +58,12 @@ static NSRange portRange = { 1024, 24 };
 
 #pragma mark -
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(readonly, getter=isUpload) BOOL upload;
+@property(readonly, getter=isDownload) BOOL download;
+@property(readonly, getter=isPassive) BOOL passive;
+#endif
+
 - (BOOL) isUpload {
 	return NO;
 }
@@ -70,6 +76,7 @@ static NSRange portRange = { 1024, 24 };
 	return _passive;
 }
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (MVFileTransferStatus) status {
 	return _status;
 }
@@ -113,6 +120,7 @@ static NSRange portRange = { 1024, 24 };
 - (MVChatUser *) user {
 	return [[_user retain] autorelease];
 }
+#endif
 
 #pragma mark -
 
@@ -125,40 +133,40 @@ static NSRange portRange = { 1024, 24 };
 #pragma mark -
 
 @implementation MVFileTransfer (MVFileTransferPrivate)
-- (void) _setStatus:(MVFileTransferStatus) status {
-	_status = status;
+- (void) _setStatus:(MVFileTransferStatus) newStatus {
+	_status = newStatus;
 }
 
-- (void) _setFinalSize:(unsigned long long) finalSize {
-	_finalSize = finalSize;
+- (void) _setFinalSize:(unsigned long long) newFinalSize {
+	_finalSize = newFinalSize;
 }
 
-- (void) _setTransfered:(unsigned long long) transfered {
-	_transfered = transfered;
+- (void) _setTransfered:(unsigned long long) newTransfered {
+	_transfered = newTransfered;
 }
 
-- (void) _setStartOffset:(unsigned long long) startOffset {
-	_startOffset = startOffset;
+- (void) _setStartOffset:(unsigned long long) newStartOffset {
+	_startOffset = newStartOffset;
 }
 
-- (void) _setStartDate:(NSDate *) startDate {
+- (void) _setStartDate:(NSDate *) newStartDate {
 	id old = _startDate;
-	_startDate = [startDate retain];
+	_startDate = [newStartDate retain];
 	[old release];
 }
 
-- (void) _setHost:(NSHost *) host {
+- (void) _setHost:(NSHost *) newHost {
 	id old = _host;
-	_host = [host retain];
+	_host = [newHost retain];
 	[old release];
 }
 
-- (void) _setPort:(unsigned short) port {
-	_port = port;
+- (void) _setPort:(unsigned short) newPort {
+	_port = newPort;
 }
 
-- (void) _setPassive:(BOOL) passive {
-	_passive = passive;
+- (void) _setPassive:(BOOL) isPassive {
+	_passive = isPassive;
 }
 
 - (void) _postError:(NSError *) error {
@@ -197,9 +205,11 @@ static NSRange portRange = { 1024, 24 };
 
 #pragma mark -
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSString *) source {
 	return [[_source retain] autorelease];
 }
+#endif
 
 #pragma mark -
 
@@ -211,9 +221,9 @@ static NSRange portRange = { 1024, 24 };
 #pragma mark -
 
 @implementation MVUploadFileTransfer (MVUploadFileTransferPrivate)
-- (void) _setSource:(NSString *) source {
+- (void) _setSource:(NSString *) newSource {
 	id old = _source;
-	_source = [[source stringByStandardizingPath] retain];
+	_source = [[newSource stringByStandardizingPath] retain];
 	[old release];
 }
 @end
@@ -236,10 +246,19 @@ static NSRange portRange = { 1024, 24 };
 - (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) rename {
 	// subclass if needed, call super
 	id old = _destination;
+	_rename = rename;
 	_destination = [[path stringByStandardizingPath] copyWithZone:nil];
 	[old release];
 }
 
+- (void) setDestination:(NSString *) path {
+	// subclass if needed, call super
+	id old = _destination;
+	_destination = [[path stringByStandardizingPath] copyWithZone:nil];
+	[old release];
+}
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSString *) destination {
 	return [[_destination retain] autorelease];
 }
@@ -249,6 +268,7 @@ static NSRange portRange = { 1024, 24 };
 - (NSString *) originalFileName {
 	return [[_originalFileName retain] autorelease];
 }
+#endif
 
 #pragma mark -
 
@@ -278,9 +298,9 @@ static NSRange portRange = { 1024, 24 };
 #pragma mark -
 
 @implementation MVDownloadFileTransfer (MVDownloadFileTransferPrivate)
-- (void) _setOriginalFileName:(NSString *) originalFileName {
+- (void) _setOriginalFileName:(NSString *) newOriginalFileName {
 	id old = _originalFileName;
-	_originalFileName = [originalFileName copyWithZone:nil];
+	_originalFileName = [newOriginalFileName copyWithZone:nil];
 	[old release];
 }
 @end

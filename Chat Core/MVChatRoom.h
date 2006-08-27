@@ -58,7 +58,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 	NSString *_name;
 	NSDate *_dateJoined;
 	NSDate *_dateParted;
-	NSData *_topicData;
+	NSData *_topic;
 	MVChatUser *_topicAuthor;
 	NSDate *_dateTopicChanged;
 	NSMutableDictionary *_attributes;
@@ -71,7 +71,64 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 	unsigned int _hash;
 	BOOL _releasing;
 }
+
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(readonly, ivar) MVChatConnection *connection;
+
+@property(readonly) NSURL *url;
+@property(readonly, ivar) NSString *name;
+@property(readonly) NSString *displayName;
+@property(readonly, ivar) id uniqueIdentifier;
+
+@property(readonly) BOOL joined;
+@property(readonly, ivar) NSDate *dateJoined;
+@property(readonly, ivar) NSDate *dateParted;
+
+@property(ivar) NSStringEncoding encoding;
+
+@property(readonly, ivar) NSData *topic;
+@property(readonly, ivar) MVChatUser *topicAuthor;
+@property(readonly, ivar) NSDate *dateTopicChanged;
+
+@property(readonly) NSSet *supportedAttributes;
+@property(readonly) NSDictionary *attributes;
+
+@property(readonly) unsigned long supportedModes;
+@property(readonly) unsigned long supportedMemberUserModes;
+@property(readonly, ivar) unsigned long modes;
+
+@property(readonly) NSSet *memberUsers;
+@property(readonly) NSSet *bannedUsers;
+
+#else
+
 - (MVChatConnection *) connection;
+
+- (NSURL *) url;
+- (NSString *) name;
+- (NSString *) displayName;
+- (id) uniqueIdentifier;
+
+- (NSDate *) dateJoined;
+- (NSDate *) dateParted;
+
+- (NSStringEncoding) encoding;
+- (void) setEncoding:(NSStringEncoding) encoding;
+
+- (NSData *) topic;
+- (MVChatUser *) topicAuthor;
+- (NSDate *) dateTopicChanged;
+
+- (NSSet *) supportedAttributes;
+- (NSDictionary *) attributes;
+
+- (unsigned long) supportedModes;
+- (unsigned long) supportedMemberUserModes;
+- (unsigned long) modes;
+
+- (NSSet *) memberUsers;
+- (NSSet *) bannedUsers;
+#endif
 
 - (BOOL) isEqual:(id) object;
 - (BOOL) isEqualToChatRoom:(MVChatRoom *) anotherUser;
@@ -79,21 +136,13 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 - (NSComparisonResult) compare:(MVChatRoom *) otherRoom;
 - (NSComparisonResult) compareByUserCount:(MVChatRoom *) otherRoom;
 
-- (NSURL *) url;
-- (NSString *) name;
-- (NSString *) displayName;
-- (id) uniqueIdentifier;
+- (BOOL) isJoined;
 
 - (void) join;
 - (void) part;
 - (void) partWithReason:(NSAttributedString *) reason;
 
-- (BOOL) isJoined;
-- (NSDate *) dateJoined;
-- (NSDate *) dateParted;
-
-- (NSStringEncoding) encoding;
-- (void) setEncoding:(NSStringEncoding) encoding;
+- (void) setTopic:(NSAttributedString *) topic;
 
 - (void) sendMessage:(NSAttributedString *) message asAction:(BOOL) action;
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
@@ -101,23 +150,13 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 - (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments;
 - (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments;
 
-- (NSData *) topic;
-- (MVChatUser *) topicAuthor;
-- (void) setTopic:(NSAttributedString *) topic;
-
 - (void) refreshAttributes;
 - (void) refreshAttributeForKey:(NSString *) key;
 
-- (NSSet *) supportedAttributes;
-
-- (NSDictionary *) attributes;
 - (BOOL) hasAttributeForKey:(NSString *) key;
 - (id) attributeForKey:(NSString *) key;
 - (void) setAttribute:(id) attribute forKey:(id) key;
 
-- (unsigned long) supportedModes;
-
-- (unsigned long) modes;
 - (id) attributeForMode:(MVChatRoomMode) mode;
 
 - (void) setModes:(unsigned long) modes;
@@ -125,7 +164,6 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 - (void) setMode:(MVChatRoomMode) mode withAttribute:(id) attribute;
 - (void) removeMode:(MVChatRoomMode) mode;
 
-- (NSSet *) memberUsers;
 - (NSSet *) memberUsersWithModes:(unsigned long) modes;
 - (NSSet *) memberUsersWithNickname:(NSString *) nickname;
 - (NSSet *) memberUsersWithFingerprint:(NSString *) fingerprint;
@@ -134,11 +172,8 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 
 - (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason;
 
-- (NSSet *) bannedUsers;
 - (void) addBanForUser:(MVChatUser *) user;
 - (void) removeBanForUser:(MVChatUser *) user;
-
-- (unsigned long) supportedMemberUserModes;
 
 - (unsigned long) modesForMemberUser:(MVChatUser *) user;
 
@@ -150,6 +185,11 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 #pragma mark -
 
 @interface MVChatRoom (MVChatRoomScripting)
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+@property(readonly) NSString *scriptUniqueIdentifier;
+@property(readonly) NSScriptObjectSpecifier *objectSpecifier;
+#endif
+
 - (NSString *) scriptUniqueIdentifier;
 - (NSScriptObjectSpecifier *) objectSpecifier;
 @end

@@ -3,9 +3,9 @@
 #import "MVSILCChatConnection.h"
 
 @implementation MVSILCChatRoom
-- (id) initWithChannelEntry:(SilcChannelEntry) channelEntry andConnection:(MVSILCChatConnection *) connection {
+- (id) initWithChannelEntry:(SilcChannelEntry) channelEntry andConnection:(MVSILCChatConnection *) roomConnection {
 	if( ( self = [self init] ) ) {
-		_connection = connection; // prevent circular retain
+		_connection = roomConnection; // prevent circular retain
 		[self updateWithChannelEntry:channelEntry];
 	}
 
@@ -15,9 +15,9 @@
 #pragma mark -
 
 - (void) updateWithChannelEntry:(SilcChannelEntry) channelEntry {
-	MVSILCChatConnection *connection = (MVSILCChatConnection *)[self connection];
+	MVSILCChatConnection *roomConnection = (MVSILCChatConnection *)[self connection];
 
-	SilcLock( [connection _silcClient] );
+	SilcLock( [roomConnection _silcClient] );
 
 	[_name release];
 	_name = [[NSString allocWithZone:nil] initWithUTF8String:channelEntry -> channel_name];
@@ -29,7 +29,7 @@
 
 	_channelEntry = channelEntry;
 
-	SilcUnlock( [connection _silcClient] );
+	SilcUnlock( [roomConnection _silcClient] );
 }
 
 #pragma mark -
@@ -57,9 +57,9 @@
 
 #pragma mark -
 
-- (void) setTopic:(NSAttributedString *) topic {
-	NSParameterAssert( topic != nil );
-	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:topic andChatFormat:[[self connection] outgoingChatFormat]];
+- (void) setTopic:(NSAttributedString *) newTopic {
+	NSParameterAssert( newTopic != nil );
+	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:newTopic andChatFormat:[[self connection] outgoingChatFormat]];
 	[[self connection] sendRawMessageWithFormat:@"TOPIC %@ %s", [self name], msg];
 }
 
