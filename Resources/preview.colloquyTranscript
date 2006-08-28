@@ -2,36 +2,34 @@
 <log began="2003-10-25 13:26:25 -0400" source="irc://timothy@irc.javelin.cc:6667/#colloquy" ended="2003-10-25 13:52:33 -0400" style="cc.javelin.colloquy.style.standard">
   <event name="memberJoined" occurred="2003-10-25 13:26:37 -0400">
     <message><span class="member">nonex</span> joined the chat room.</message>
-    <who>nonex</who>
-    <mask>~nonex@colloquy.info</mask>
-    <nickname>nonex</nickname>
+    <who hostmask="~nonex@colloquy.info">nonex</who>
   </event>
-  <envelope count="1">
-    <sender self="yes">timothy</sender>
+  <envelope>
+    <sender self="yes" hostmask="~timothy@colloquy.info" class="operator">timothy</sender>
     <message received="2003-10-25 13:28:02 -0400" action="yes">waves to <span class="member">nonex</span></message>
   </envelope>
-  <envelope count="2">
-    <sender>nonex</sender>
+  <envelope>
+    <sender hostmask="~nonex@colloquy.info">nonex</sender>
     <message received="2003-10-25 13:28:32 -0400" highlight="yes">hello <span class="highlight"><span class="member">timothy</span></span>, what is going on in here?</message>
   </envelope>
-  <envelope count="3">
-    <sender self="yes">timothy</sender>
+  <envelope>
+    <sender self="yes" hostmask="~timothy@colloquy.info" class="operator">timothy</sender>
     <message received="2003-10-25 13:28:40 -0400">not a whole lot <span class="emoticon smile"><samp>:)</samp></span></message>
     <message received="2003-10-25 13:28:52 -0400">just surfing the internet.</message>
     <message received="2003-10-25 13:28:54 -0400">seen <a href="http://www.apple.com">http://www.apple.com</a> today?</message>
   </envelope>
-  <envelope count="5">
-    <sender>nonex</sender>
+  <envelope>
+    <sender hostmask="~nonex@colloquy.info">nonex</sender>
     <message received="2003-10-25 13:50:38 -0400">no, I haven't had a chance</message>
     <message received="2003-10-25 13:50:42 -0400" highlight="yes"><span class="highlight"><span class="member">timothy</span></span>: cool new things!</message>
   </envelope>
-  <event name="memberPromoted" occurred="2003-10-25 13:50:53 -0400">
+  <event name="memberPromotedToOperator" occurred="2003-10-25 13:50:53 -0400">
     <message><span class="member">nonex</span> was promoted to operator by you.</message>
-    <by>timothy</by>
-    <who>nonex</who>
+    <by self="yes" hostmask="~timothy@colloquy.info" class="operator">timothy</by>
+    <who hostmask="~nonex@colloquy.info" class="operator">nonex</who>
   </event>
-  <envelope count="6">
-    <sender self="yes">timothy</sender>
-    <message received="2003-10-25 13:51:25 -0400">there you go <span class="emoticon wink"><samp>;)</samp></span> <b>enjoy!</b></message>
+  <envelope>
+    <sender self="yes" hostmask="~timothy@colloquy.info" class="operator">timothy</sender>
+    <message received="2003-10-25 13:51:25 -0400">there you go <span class="emoticon wink"><samp>;)</samp></span> enjoy!</message>
   </envelope>
 </log>
