@@ -356,7 +356,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	JVSmartTranscriptPanel *smartTranscript = nil;
 
 	while( ( smartTranscript = [enumerator nextObject] ) ) {
-		NSData *archived = [NSKeyedArchiver archivedDataWithRootObject:smartTranscript]
+		NSData *archived = [NSKeyedArchiver archivedDataWithRootObject:smartTranscript];
 		if( archived ) [smartTranscripts addObject:archived];
 	}
 

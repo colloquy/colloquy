@@ -547,10 +547,11 @@ static NSMenu *favoritesMenu = nil;
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	id info = nil;
 
-	while( ( info = [enumerator nextObject] ) )
+	while( ( info = [enumerator nextObject] ) ) {
 		MVChatConnection *connection = [info objectForKey:@"connection"];
 		if( [connection isConnected] )
 			[ret addObject:connection];
+	}
 
 	return ret;
 }
