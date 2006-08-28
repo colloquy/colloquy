@@ -1,5 +1,12 @@
 #import "MVChatConnection.h"
 
+@interface NSThread (NSThreadLeopard)
+- (void) cancel;
+- (void) setName:(NSString *) name;
+@end
+
+#pragma mark -
+
 @interface MVChatConnection (MVChatConnectionPrivate)
 - (void) _willConnect;
 - (void) _didConnect;
