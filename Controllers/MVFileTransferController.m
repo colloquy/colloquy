@@ -266,11 +266,10 @@ finish:
 }
 
 - (void) addFileTransfer:(id) transfer {
-	NSEnumerator *enumerator = nil;
-	NSMutableDictionary *info = nil;
 	NSParameterAssert( transfer != nil );
 
-	enumerator = [_transferStorage objectEnumerator];
+	NSEnumerator *enumerator = [_transferStorage objectEnumerator];
+	NSMutableDictionary *info = nil;
 	while( ( info = [enumerator nextObject] ) )
 		if( [[info objectForKey:@"transfer"] isEqualTo:transfer] )
 			return;

@@ -112,7 +112,7 @@ struct _mark {
 		point.y = ( sFlags.isHoriz ? point.y : roundf( point.y ) + 0.5 );
 
 		if( ! NSPointInRect( point, knobRect ) ) {
-			if( mark.color != nil ) {
+			if( mark.color ) {
 				NSBezierPath *line = [NSBezierPath bezierPath];
 				[line moveToPoint:point];
 

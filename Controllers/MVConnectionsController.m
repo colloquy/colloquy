@@ -69,8 +69,10 @@ static NSMenu *favoritesMenu = nil;
 	while( ( item = [enumerator nextObject] ) ) {
 		if( [[item pathExtension] isEqualToString:@"inetloc"] ) {
 			url = [NSURL URLWithInternetLocationFile:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@", item] stringByExpandingTildeInPath]];
-			[rooms addObject:url];
-			[roomNames addObject:[item stringByDeletingPathExtension]];
+			if( url ) {
+				[rooms addObject:url];
+				[roomNames addObject:[item stringByDeletingPathExtension]];
+			}
 		}
 	}
 
@@ -412,8 +414,8 @@ static NSMenu *favoritesMenu = nil;
 		NSSet *users = [[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] chatUsersWithNickname:[userToMessage stringValue]];
 		MVChatUser *user;
 		
-		if ( [users count] == 0 ) return;
-		else if ( [users count] == 1 ) user = [users anyObject];
+		if( [users count] == 0 ) return;
+		else if( [users count] == 1 ) user = [users anyObject];
 		else {
 			[self _validateToolbar];
 		
@@ -481,22 +483,22 @@ static NSMenu *favoritesMenu = nil;
 
 	BOOL accepted = NO;
 
-	if ( [sender tag] )
+	if( [sender tag] )
 		accepted = YES;
 
 	BOOL alwaysAccept = NO;
 
-	if ( [publicKeyAlwaysAccept state] == NSOnState )
+	if( [publicKeyAlwaysAccept state] == NSOnState )
 		alwaysAccept = YES;
 
 	[connection publicKeyVerified:dict andAccepted:accepted andAlwaysAccept:alwaysAccept];
 
 	[publicKeyVerification orderOut:nil];
 
-	if ( [_publicKeyRequestQueue count] ) {
+	if( [_publicKeyRequestQueue count] ) {
 		NSNotification *note = [_publicKeyRequestQueue anyObject];
 
-		if ( note ) {
+		if( note ) {
 			[_publicKeyRequestQueue removeObject:note];
 			[[NSNotificationCenter defaultCenter] postNotification:note];
 		}
@@ -512,7 +514,7 @@ static NSMenu *favoritesMenu = nil;
 	
 	int row = [userSelectionTable selectedRow];
 	
-	if ( [sender tag] || row == -1 ) { 
+	if( [sender tag] || row == -1 ) { 
 		[_userSelectionPossibleUsers release];
 		_userSelectionPossibleUsers = nil;
 		return;
@@ -532,10 +534,12 @@ static NSMenu *favoritesMenu = nil;
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	id info = nil;
 
-	while( ( info = [enumerator nextObject] ) )
-		[ret addObject:[info objectForKey:@"connection"]];
+	while( ( info = [enumerator nextObject] ) ) {
+		MVChatConnection *connection = [info objectForKey:@"connection"];
+		if( connection ) [ret addObject:connection];
+	}
 
-	return [[ret retain] autorelease];
+	return ret;
 }
 
 - (NSArray *) connectedConnections {
@@ -544,25 +548,26 @@ static NSMenu *favoritesMenu = nil;
 	id info = nil;
 
 	while( ( info = [enumerator nextObject] ) )
-		if( [[info objectForKey:@"connection"] isConnected] )
-			[ret addObject:[info objectForKey:@"connection"]];
+		MVChatConnection *connection = [info objectForKey:@"connection"];
+		if( [connection isConnected] )
+			[ret addObject:connection];
 
-	return [[ret retain] autorelease];
+	return ret;
 }
 
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address {
-	MVChatConnection *ret = nil;
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	id info = nil;
 
 	while( ( info = [enumerator nextObject] ) ) {
-		if( [[(MVChatConnection *)[info objectForKey:@"connection"] server] compare:address options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch )] == NSOrderedSame ) {
-			ret = [info objectForKey:@"connection"];
-			if( [ret isConnected] ) return ret;
+		MVChatConnection *connection = [info objectForKey:@"connection"];
+		if( [[connection server] compare:address options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch )] == NSOrderedSame ) {
+			if( [connection isConnected] )
+				return connection;
 		}
 	}
 
-	return ret;
+	return nil;
 }
 
 - (NSArray *) connectionsForServerAddress:(NSString *) address {
@@ -989,7 +994,7 @@ static NSMenu *favoritesMenu = nil;
 		}
 	} else if( view == newJoinRooms ) {
 		return [_joinRooms objectAtIndex:row];
-	} else if ( view == userSelectionTable ) {
+	} else if( view == userSelectionTable ) {
 		MVChatUser *user = [_userSelectionPossibleUsers objectAtIndex:row];
 		
 		if( [[column identifier] isEqualToString:@"hostname"] ) {
@@ -1511,9 +1516,12 @@ static NSMenu *favoritesMenu = nil;
 			NSEnumerator *ie = [[info objectForKey:@"ignores"] objectEnumerator];
 			KAIgnoreRule *rule = nil;
 
-			while( ( rule = [ie nextObject] ) )
-				if( [rule isPermanent] )
-					[permIgnores addObject:[NSKeyedArchiver archivedDataWithRootObject:rule]];
+			while( ( rule = [ie nextObject] ) ) {
+				if( [rule isPermanent] ) {
+					NSData *archive = [NSKeyedArchiver archivedDataWithRootObject:rule];
+					if( archive ) [permIgnores addObject:archive];
+				}
+			}
 
 			if( [permIgnores count] ) [data setObject:permIgnores forKey:@"ignores"];
 
@@ -1568,8 +1576,10 @@ static NSMenu *favoritesMenu = nil;
 		NSEnumerator *ie = [[info objectForKey:@"ignores"] objectEnumerator];
 		NSData *rule = nil;
 
-		while( ( rule = [ie nextObject] ) )
-			[permIgnores addObject:[NSKeyedUnarchiver unarchiveObjectWithData:rule]];
+		while( ( rule = [ie nextObject] ) ) {
+			NSData *archive = [NSKeyedUnarchiver unarchiveObjectWithData:rule];
+			if( archive ) [permIgnores addObject:archive];
+		}
 
 		[info setObject:permIgnores forKey:@"ignores"];
 

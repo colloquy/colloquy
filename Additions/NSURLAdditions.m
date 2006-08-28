@@ -6,18 +6,18 @@
 
 	FSRef ref;
 	if( FSPathMakeRef( (UInt8 *)fileSystemPath, &ref, NULL ) ) {
-		NSLog( @"Couldn't make FSRef from: %@", path );
+		if( NSDebugEnabled ) NSLog( @"Couldn't make FSRef from: %@", path );
 		return nil;
 	}
 
 	short fileRefNum = 0;
-	if( ( fileRefNum = FSOpenResFile(&ref, fsRdPerm ) ) == -1 ) {
-		NSLog(@"Couldn't open inetloc file at: %@", path);
+	if( ( fileRefNum = FSOpenResFile( &ref, fsRdPerm ) ) == -1 ) {
+		if( NSDebugEnabled ) NSLog(@"Couldn't open inetloc file at: %@", path);
 		return nil;
 	}
 
 	if( ! Count1Resources('url ') ) {
-		NSLog(@"Inetloc file '%@' contains no 'url ' resources", path);
+		if( NSDebugEnabled ) NSLog(@"Inetloc file '%@' contains no 'url ' resources", path);
 		CloseResFile( fileRefNum );
 		return nil;
 	}
@@ -43,7 +43,7 @@
 
 	FSRef ref, parentRef;
 	if( FSPathMakeRef( (unsigned char *) fileSystemPath, &parentRef, FALSE ) ) {
-		NSLog( @"Couldn't make FSRef from: %@", parentPath );
+		if( NSDebugEnabled ) NSLog( @"Couldn't make FSRef from: %@", parentPath );
 		return;
 	}
 
@@ -54,7 +54,7 @@
 	free( buffer );
 
 	if( ( fileRefNum = FSOpenResFile( &ref, fsWrPerm ) ) == -1 ) {
-		NSLog( @"Couldn't open inetloc at: %@", path );
+		if( NSDebugEnabled ) NSLog( @"Couldn't open inetloc at: %@", path );
 		[[NSFileManager defaultManager] removeFileAtPath:path handler:nil];
 		return;
 	}

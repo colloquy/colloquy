@@ -23,7 +23,6 @@
 #import "JVChatTranscriptBrowserPanel.h"
 
 #import <Sparkle/SUUpdater.h>
-#import <Foundation/NSDebug.h>
 
 @interface WebCoreCache
 + (void) setDisabled:(BOOL) disabled;

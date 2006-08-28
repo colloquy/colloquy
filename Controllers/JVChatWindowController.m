@@ -450,7 +450,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		if( [controller connection] == connection )
 			[ret addObject:controller];
 
-	return [NSArray arrayWithArray:ret];
+	return ret;
 }
 
 - (NSArray *) chatViewControllersWithControllerClass:(Class) class {
@@ -465,7 +465,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		if( [controller isMemberOfClass:class] )
 			[ret addObject:controller];
 
-	return [NSArray arrayWithArray:ret];
+	return ret;
 }
 
 - (NSArray *) allChatViewControllers {

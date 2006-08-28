@@ -5,6 +5,7 @@
 #import <AddressBook/AddressBook.h>
 #import <AGRegex/AGRegex.h>
 #import <ChatCore/ChatCore.h>
+#import <Foundation/NSDebug.h>
 
 #endif
 

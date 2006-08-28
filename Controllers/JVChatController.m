@@ -194,7 +194,8 @@ static NSMenu *smartTranscriptMenu = nil;
 			 || [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUseTabbedWindows"] )
 		windowController = [[[JVTabbedChatWindowController alloc] init] autorelease];
 	else windowController = [[[JVChatWindowController alloc] init] autorelease];
-	[_chatWindows addObject:windowController];
+	if( windowController ) 
+		[_chatWindows addObject:windowController];
 	return windowController;
 }
 
@@ -354,8 +355,10 @@ static NSMenu *smartTranscriptMenu = nil;
 	NSEnumerator *enumerator = [[self smartTranscripts] objectEnumerator];
 	JVSmartTranscriptPanel *smartTranscript = nil;
 
-	while( ( smartTranscript = [enumerator nextObject] ) )
-		[smartTranscripts addObject:[NSKeyedArchiver archivedDataWithRootObject:smartTranscript]];
+	while( ( smartTranscript = [enumerator nextObject] ) ) {
+		NSData *archived = [NSKeyedArchiver archivedDataWithRootObject:smartTranscript]
+		if( archived ) [smartTranscripts addObject:archived];
+	}
 
 	[[self class] refreshSmartTranscriptMenu];
 	[[NSUserDefaults standardUserDefaults] setObject:smartTranscripts forKey:@"JVSmartTranscripts"];

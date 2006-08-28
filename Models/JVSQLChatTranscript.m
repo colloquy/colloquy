@@ -5,7 +5,6 @@
 #import "JVBuddy.h"
 #import "NSAttributedStringMoreAdditions.h"
 
-#import <Foundation/NSDebug.h>
 #import <sys/stat.h>
 #import <unistd.h>
 
