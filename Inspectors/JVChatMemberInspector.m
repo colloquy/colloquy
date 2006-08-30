@@ -162,6 +162,7 @@
 		[ping setObjectValue:pingString];
 		[ping setToolTip:pingString];
 	} else if( [key isEqualToString:MVChatUserLocalTimeDifferenceAttribute] ) {
+		[self updateLocalTime];
 		if( ! _localTimeUpdateTimer )
 			_localTimeUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:10. target:self selector:@selector( updateLocalTime ) userInfo:nil repeats:YES] retain];
 	} else if( [key isEqualToString:MVChatUserClientInfoAttribute] ) {

@@ -33,6 +33,7 @@
 	BOOL _addressResolved;
 }
 - (id) initWithChatMember:(JVChatRoomMember *) member;
+- (void) updateLocalTime;
 
 - (IBAction) requestLocalTime:(id) sender;
 - (IBAction) requestClientInfo:(id) sender;
