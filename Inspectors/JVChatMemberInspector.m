@@ -62,7 +62,7 @@
 
 	[_updateTimer invalidate];
 	[_updateTimer release];
-	_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:30. target:self selector:@selector( updateInformation ) userInfo:nil repeats:YES] retain];
+	_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:120. target:self selector:@selector( updateInformation ) userInfo:nil repeats:YES] retain];
 
 	[nickname setObjectValue:[_member nickname]];
 	if( [[_member buddy] picture] ) [image setImage:[[_member buddy] picture]];
