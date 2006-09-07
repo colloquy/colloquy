@@ -22,7 +22,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 - (IBAction) hideTransferManager:(id) sender;
 
 - (void) downloadFileAtURL:(NSURL *) url toLocalFile:(NSString *) path;
-- (void) addFileTransfer:(id) transfer;
+- (void) addFileTransfer:(MVFileTransfer *) transfer;
 
 - (IBAction) stopSelectedTransfer:(id) sender;
 - (IBAction) clearFinishedTransfers:(id) sender;

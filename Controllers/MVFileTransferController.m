@@ -41,14 +41,14 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	val = (unsigned int) ( secs / (float) stop );
 	use = ( val > 1 ? plural : desc );
-	retval = [NSString stringWithFormat:@"%d %@", val, [use objectForKey:[NSNumber numberWithUnsignedInt:stop]]];
+	retval = [NSString stringWithFormat:@"%u %@", val, [use objectForKey:[NSNumber numberWithUnsignedInt:stop]]];
 	if( longFormat && i > 0 ) {
 		unsigned int rest = (unsigned int) ( (unsigned int) secs % stop );
 		stop = [[breaks objectAtIndex:--i] unsignedIntValue];
 		rest = (unsigned int) ( rest / (float) stop );
 		if( rest > 0 ) {
 			use = ( rest > 1 ? plural : desc );
-			retval = [retval stringByAppendingFormat:@" %d %@", rest, [use objectForKey:[breaks objectAtIndex:i]]];
+			retval = [retval stringByAppendingFormat:@" %u %@", rest, [use objectForKey:[breaks objectAtIndex:i]]];
 		}
 	}
 
@@ -250,9 +250,9 @@ finish:
 	if( path ) [download setDestination:path allowOverwrite:NO];
 
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
-	[info setObject:[NSNumber numberWithUnsignedLong:0] forKey:@"transfered"];
-	[info setObject:[NSNumber numberWithUnsignedInt:0] forKey:@"rate"];
-	[info setObject:[NSNumber numberWithUnsignedLong:0] forKey:@"size"];
+	[info setObject:[NSNumber numberWithUnsignedLongLong:0] forKey:@"transfered"];
+	[info setObject:[NSNumber numberWithDouble:0.] forKey:@"rate"];
+	[info setObject:[NSNumber numberWithUnsignedLongLong:0] forKey:@"size"];
 	[info setObject:download forKey:@"controller"];
 	[info setObject:url forKey:@"url"];
 
@@ -265,22 +265,22 @@ finish:
 	[self _startUpdateTimerIfNeeded];
 }
 
-- (void) addFileTransfer:(id) transfer {
+- (void) addFileTransfer:(MVFileTransfer *) transfer {
 	NSParameterAssert( transfer != nil );
 
 	NSEnumerator *enumerator = [_transferStorage objectEnumerator];
 	NSMutableDictionary *info = nil;
 	while( ( info = [enumerator nextObject] ) )
-		if( [[info objectForKey:@"transfer"] isEqualTo:transfer] )
+		if( [[info objectForKey:@"controller"] isEqualTo:transfer] )
 			return;
 
 	info = [NSMutableDictionary dictionary];
-	[info setObject:[NSNumber numberWithUnsignedInt:0] forKey:@"rate"];
-	[info setObject:[NSNumber numberWithUnsignedInt:[transfer status]] forKey:@"status"];
+	[info setObject:transfer forKey:@"controller"];
+	[info setObject:[NSNumber numberWithDouble:0.] forKey:@"rate"];
+	[info setObject:[NSNumber numberWithUnsignedLong:[transfer status]] forKey:@"status"];
 	[info setObject:[NSNumber numberWithUnsignedLongLong:[transfer finalSize]] forKey:@"size"];
 	if( [transfer isDownload] ) [info setObject:[(MVDownloadFileTransfer *)transfer destination] forKey:@"path"];
 	else if( [transfer isUpload] ) [info setObject:[(MVUploadFileTransfer *)transfer source] forKey:@"path"];
-	[info setObject:transfer forKey:@"controller"];
 
 	[_transferStorage addObject:info];
 	[currentFiles reloadData];
@@ -295,7 +295,7 @@ finish:
 	if( [currentFiles selectedRow] != -1 ) {
 		info = [self _infoForTransferAtIndex:[currentFiles selectedRow]];
 		[[info objectForKey:@"controller"] cancel];
-		[info setObject:[NSNumber numberWithUnsignedInt:MVFileTransferStoppedStatus] forKey:@"status"];
+		[info setObject:[NSNumber numberWithUnsignedLong:MVFileTransferStoppedStatus] forKey:@"status"];
 	}
 
 	[currentFiles reloadData];
@@ -329,9 +329,8 @@ finish:
 }
 
 - (IBAction) revealSelectedFile:(id) sender {
-	NSDictionary *info = nil;
 	if( [currentFiles numberOfSelectedRows] == 1 ) {
-		info = [self _infoForTransferAtIndex:[currentFiles selectedRow]];
+		NSDictionary *info = [self _infoForTransferAtIndex:[currentFiles selectedRow]];
 		[[NSWorkspace sharedWorkspace] selectFile:[info objectForKey:@"path"] inFileViewerRootedAtPath:@""];
 	}
 }
@@ -343,14 +342,16 @@ finish:
 	NSMutableArray *array = [NSMutableArray array];
 	NSMutableString *string = [NSMutableString string];
 	id row = nil;
-	unsigned i = 0;
+
 	[[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType,nil] owner:self];
+
 	while( ( row = [enumerator nextObject] ) ) {
-		i = [row unsignedIntValue];
+		unsigned i = [row unsignedIntValue];
 		[array addObject:[[self _infoForTransferAtIndex:i] objectForKey:@"path"]];
 		[string appendString:[[[self _infoForTransferAtIndex:i] objectForKey:@"path"] lastPathComponent]];
 		if( ! [[[enumerator allObjects] lastObject] isEqual:row] ) [string appendString:@"\n"];
 	}
+
 	[[NSPasteboard generalPasteboard] setPropertyList:array forType:NSFilenamesPboardType];
 	[[NSPasteboard generalPasteboard] setString:string forType:NSStringPboardType];
 }
@@ -386,8 +387,9 @@ finish:
 		NSString *path = [[self _infoForTransferAtIndex:row] objectForKey:@"path"];
 		[cell setMainText:[[NSFileManager defaultManager] displayNameAtPath:path]];
 	} else if( [[column identifier] isEqual:@"status"] ) {
-		id controller = [[self _infoForTransferAtIndex:row] objectForKey:@"controller"];
-		MVFileTransferStatus status = [[[self _infoForTransferAtIndex:row] objectForKey:@"status"] unsignedLongValue];
+		NSDictionary *info = [self _infoForTransferAtIndex:row];
+		id controller = [info objectForKey:@"controller"];
+		MVFileTransferStatus status = [[info objectForKey:@"status"] unsignedLongValue];
 		NSString *imageName = @"pending";
 		if( status == MVFileTransferErrorStatus ) imageName = @"error";
 		else if( status == MVFileTransferStoppedStatus ) imageName = @"stopped";
@@ -530,7 +532,7 @@ finish:
 	enumerator = [_transferStorage objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"controller"] == download ) {
-			[info setObject:[NSNumber numberWithUnsignedLong:0] forKey:@"transfered"];
+			[info setObject:[NSNumber numberWithUnsignedLongLong:0] forKey:@"transfered"];
 
 			unsigned long size = [response expectedContentLength];
 			if( (long)size == -1 ) size = 0;
@@ -554,13 +556,13 @@ finish:
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"controller"] == download ) {
 			NSTimeInterval timeslice = [[info objectForKey:@"started"] timeIntervalSinceNow] * -1;
-			unsigned long long transfered = [[info objectForKey:@"transfered"] unsignedIntValue] + length;
+			unsigned long long transfered = [[info objectForKey:@"transfered"] unsignedLongLongValue] + length;
 
-			[info setObject:[NSNumber numberWithUnsignedInt:MVFileTransferNormalStatus] forKey:@"status"];
-			[info setObject:[NSNumber numberWithUnsignedLong:transfered] forKey:@"transfered"];
+			[info setObject:[NSNumber numberWithUnsignedLong:MVFileTransferNormalStatus] forKey:@"status"];
+			[info setObject:[NSNumber numberWithUnsignedLongLong:transfered] forKey:@"transfered"];
 
 			if( transfered > [[info objectForKey:@"size"] unsignedLongLongValue] )
-				[info setObject:[NSNumber numberWithUnsignedLong:transfered] forKey:@"size"];
+				[info setObject:[NSNumber numberWithUnsignedLongLong:transfered] forKey:@"size"];
 
 			if( transfered != [[info objectForKey:@"size"] unsignedLongLongValue] )
 				[info setObject:[NSNumber numberWithDouble:( transfered / timeslice )] forKey:@"rate"];
@@ -586,7 +588,7 @@ finish:
 	enumerator = [[[_transferStorage copy] autorelease] objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"controller"] == download ) {
-			[info setObject:[NSNumber numberWithUnsignedInt:MVFileTransferDoneStatus] forKey:@"status"];
+			[info setObject:[NSNumber numberWithUnsignedLong:MVFileTransferDoneStatus] forKey:@"status"];
 
 			[[NSWorkspace sharedWorkspace] noteFileSystemChanged:[info objectForKey:@"path"]];
 
@@ -612,7 +614,7 @@ finish:
 	enumerator = [_transferStorage objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		if( [info objectForKey:@"controller"] == download ) {
-			[info setObject:[NSNumber numberWithUnsignedInt:MVFileTransferErrorStatus] forKey:@"status"];
+			[info setObject:[NSNumber numberWithUnsignedLong:MVFileTransferErrorStatus] forKey:@"status"];
 			[currentFiles reloadData];
 			break;
 		}
@@ -772,7 +774,7 @@ finish:
 		enumerator = [_transferStorage objectEnumerator];
 		while( ( info = [enumerator nextObject] ) ) {
 			if( [info objectForKey:@"controller"] == download ) {
-				[info setObject:[NSNumber numberWithUnsignedInt:MVFileTransferStoppedStatus] forKey:@"status"];
+				[info setObject:[NSNumber numberWithUnsignedLong:MVFileTransferStoppedStatus] forKey:@"status"];
 				break;
 			}
 		}
@@ -805,30 +807,29 @@ finish:
 	else enumerator = [_transferStorage objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		id controller = [info objectForKey:@"controller"];
-		if( [controller isKindOfClass:[MVUploadFileTransfer class]] ) {
-			totalSizeUp += [controller finalSize];
-			totalTransferedUp += [controller transfered];
+		if( [controller isKindOfClass:[MVFileTransfer class]] ) {
+			MVFileTransfer *transferController = controller;
+			NSTimeInterval timeslice = [[transferController startDate] timeIntervalSinceNow] * -1;
+			double currentRate = 0.;
 
-			NSTimeInterval timeslice = [[controller startDate] timeIntervalSinceNow] * -1;
-			if( [controller status] == MVFileTransferNormalStatus && [controller transfered] != [controller finalSize] )
-				[info setObject:[NSNumber numberWithDouble:( ( [controller transfered] - [(MVUploadFileTransfer *)controller startOffset] ) / timeslice )] forKey:@"rate"];
+			if( [transferController status] == MVFileTransferNormalStatus && [transferController transfered] != [transferController finalSize] ) {
+				currentRate = ( ( [transferController transfered] - [transferController startOffset] ) / timeslice );
+				[info setObject:[NSNumber numberWithDouble:currentRate] forKey:@"rate"];
+			} else currentRate = [[info valueForKey:@"rate"] doubleValue];
 
-			[info setObject:[NSNumber numberWithUnsignedInt:[controller status]] forKey:@"status"];
+			[info setObject:[NSNumber numberWithUnsignedLong:[transferController status]] forKey:@"status"];
 
-			upRate += [[info objectForKey:@"rate"] doubleValue];
-			upCount++;
-		} else if( [controller isKindOfClass:[MVDownloadFileTransfer class]] ) {
-			totalSizeDown += [controller finalSize];
-			totalTransferedDown += [controller transfered];
-
-			NSTimeInterval timeslice = [[controller startDate] timeIntervalSinceNow] * -1;
-			if( [controller status] == MVFileTransferNormalStatus && [controller transfered] != [controller finalSize] )
-				[info setObject:[NSNumber numberWithDouble:( ( [controller transfered] - [(MVDownloadFileTransfer *)controller startOffset] ) / timeslice )] forKey:@"rate"];
-
-			[info setObject:[NSNumber numberWithUnsignedInt:[controller status]] forKey:@"status"];
-
-			downRate += [[info objectForKey:@"rate"] doubleValue];
-			downCount++;
+			if( [transferController isUpload] ) {
+				totalSizeUp += [transferController finalSize];
+				totalTransferedUp += [transferController transfered];
+				upRate += currentRate;
+				upCount++;
+			} else {
+				totalSizeDown += [transferController finalSize];
+				totalTransferedDown += [transferController transfered];
+				downRate += currentRate;
+				downCount++;
+			}
 		} else if( [controller isKindOfClass:[WebDownload class]] ) {
 			totalSizeDown += [[info objectForKey:@"size"] unsignedLongValue];
 			totalTransferedDown += [[info objectForKey:@"transfered"] unsignedLongValue];
@@ -903,8 +904,7 @@ finish:
 
 	if( [[info objectForKey:@"controller"] isKindOfClass:[MVFileTransfer class]] ) {
 		MVFileTransfer *transfer = [info objectForKey:@"controller"];
-		[info setObject:[NSNumber numberWithUnsignedLongLong:[transfer transfered]] forKey:@"transfered"];
-		[info setObject:[NSNumber numberWithUnsignedInt:[transfer status]] forKey:@"status"];
+		[info setObject:[NSNumber numberWithUnsignedLong:[transfer status]] forKey:@"status"];
 		[info setObject:[transfer user] forKey:@"user"];
 	}
 

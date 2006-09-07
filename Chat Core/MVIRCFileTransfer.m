@@ -34,79 +34,6 @@ static id dccFriendlyAddress( AsyncSocket *connection ) {
 	return address;
 }
 
-/*static void MVFileTransferClosed( FILE_DCC_REC *dcc ) {
-	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
-	if( ! self ) return;
-
-	if( [self status] == MVFileTransferStoppedStatus ) {
-		// nothing to do
-	} else if( [self finalSize] != [self transfered] ) {
-		NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:@"The file transfer terminated unexpectedly.", NSLocalizedDescriptionKey, nil];
-		NSError *error = [[NSError allocWithZone:nil] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferUnexpectedlyEndedError userInfo:info];
-		[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
-		[error release];
-		[info release];
-	} else {
-		[self _setStatus:MVFileTransferDoneStatus];
-		NSNotification *note = [NSNotification notificationWithName:MVFileTransferFinishedNotification object:self];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
-	}
-}
-
-static void MVFileTransferErrorConnect( FILE_DCC_REC *dcc ) {
-	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
-	if( ! self ) return;
-
-	[self performSelector:@selector( _destroying )];
-
-	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:@"The file transfer connection could not be made.", NSLocalizedDescriptionKey, nil];
-	NSError *error = [[NSError allocWithZone:nil] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferConnectionError userInfo:info];
-	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
-	[error release];
-	[info release];
-}
-
-static void MVFileTransferErrorFileCreate( FILE_DCC_REC *dcc, char *filename ) {
-	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
-	if( ! self ) return;
-
-	[self performSelector:@selector( _destroying )];
-
-	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:@"The file %@ could not be created, please make sure you have write permissions in the %@ folder.", NSLocalizedDescriptionKey, nil];
-	NSError *error = [[NSError allocWithZone:nil] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileCreationError userInfo:info];
-	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
-	[error release];
-	[info release];
-}
-
-static void MVFileTransferErrorFileOpen( FILE_DCC_REC *dcc, char *filename, int errno ) {
-	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
-	if( ! self ) return;
-
-	[self performSelector:@selector( _destroying )];
-
-	NSError *ferror = [[NSError allocWithZone:nil] initWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
-	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:@"The file %@ could not be opened, please make sure you have read permissions for this file.", NSLocalizedDescriptionKey, ferror, @"NSUnderlyingErrorKey", nil];
-	NSError *error = [[NSError allocWithZone:nil] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferFileOpenError userInfo:info];
-	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
-	[error release];
-	[ferror release];
-	[info release];
-}
-
-static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *filename ) {
-	MVFileTransfer *self = [MVFileTransfer _transferForDCCFileRecord:dcc];
-	if( ! self ) return;
-
-	[self performSelector:@selector( _destroying )];
-
-	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:@"The file %@ is already being offerend to %@.", NSLocalizedDescriptionKey, nil];
-	NSError *error = [[NSError allocWithZone:nil] initWithDomain:MVFileTransferErrorDomain code:MVFileTransferAlreadyExistsError userInfo:info];
-	[self performSelectorOnMainThread:@selector( _postError: ) withObject:error waitUntilDone:NO];
-	[error release];
-	[info release];
-} */
-
 @implementation MVIRCUploadFileTransfer
 + (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	static unsigned passiveId = 0;
@@ -217,6 +144,8 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 - (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
 	[self _setStatus:MVFileTransferNormalStatus];
+	[self _setStartDate:[NSDate date]];
+
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:self];
 
 	[self _sendNextPacket];
@@ -474,6 +403,7 @@ static void MVFileTransferErrorSendExists( FILE_DCC_REC *dcc, char *nick, char *
 
 - (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
 	[self _setStatus:MVFileTransferNormalStatus];
+	[self _setStartDate:[NSDate date]];
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferStartedNotification object:self];
 
