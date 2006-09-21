@@ -830,7 +830,9 @@ end:
 			}
 
 			MVChatUser *chatUser = nil;
-			if( senderString && user && userLength ) { // if user is not null that shows it was a user not a server sender 
+			// if user is not null that shows it was a user not a server sender.
+			// the sender was also a user if senderString equals the current local nickname (some bouncers will do this).
+			if( ( senderString && user && userLength ) || [senderString isEqualToString:_currentNickname] ) {
 				chatUser = [self chatUserWithUniqueIdentifier:senderString];
 				if( ! [chatUser address] && host && hostLength ) {
 					NSString *hostString = [[NSString allocWithZone:nil] initWithBytes:host length:hostLength encoding:[self encoding]];
@@ -1248,7 +1250,7 @@ end:
 
 #pragma mark Connecting Replies
 
-- (void) _handle001WithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+- (void) _handle001WithParameters:(NSArray *) parameters fromSender:(id) sender {
 	id old = _queueWait;
 	_queueWait = [[NSDate dateWithTimeIntervalSinceNow:0.5] retain];
 	[old release];
@@ -1260,6 +1262,8 @@ end:
 	// Identify if we have a user password
 	if( [[self nicknamePassword] length] )
 		[self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", [self nicknamePassword]];
+
+	// set the current nick name if it is not the same as what re requested (some servers/bouncers will give us a new nickname)
 	if( [parameters count] >= 1 ) {
 		NSString *nick = [parameters objectAtIndex:0];
 		if( ! [nick isEqualToString:[self nickname]] ) {
@@ -1272,7 +1276,7 @@ end:
 	[self performSelector:@selector( _checkWatchedUsers ) withObject:nil afterDelay:2.];
 }
 
-- (void) _handle005WithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender { // RPL_ISUPPORT
+- (void) _handle005WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ISUPPORT
 	if( ! _serverInformation )
 		_serverInformation = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
 
@@ -1399,7 +1403,7 @@ end:
 	}
 }
 
-- (void) _handle433WithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender { // ERR_NICKNAMEINUSE
+- (void) _handle433WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NICKNAMEINUSE
 	if( ! [self isConnected] ) {
 		NSString *nick = [self nextAlternateNickname];
 		if( ! [nick length] ) nick = [[self nickname] stringByAppendingString:@"_"];
@@ -1721,7 +1725,7 @@ end:
 #pragma mark Room Replies
 
 - (void) _handleJoinWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	if( [parameters count] ) {
+	if( [parameters count] && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *name = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		MVChatRoom *room = [self joinedChatRoomWithName:name];
 
@@ -1751,7 +1755,7 @@ end:
 }
 
 - (void) _handlePartWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	if( [parameters count] >= 1 ) {
+	if( [parameters count] >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *roomName = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		MVChatRoom *room = [self joinedChatRoomWithName:roomName];
 		if( ! room ) return;
@@ -1768,8 +1772,9 @@ end:
 }
 
 - (void) _handleQuitWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	if( [sender isLocalUser] ) return;
-	if( [parameters count] ) {
+	if( [parameters count] && [sender isKindOfClass:[MVChatUser class]] ) {
+		if( [sender isLocalUser] ) return;
+
 		[sender _setDateDisconnected:[NSDate date]];
 		[sender _setStatus:MVChatUserOfflineStatus];
 
@@ -1794,7 +1799,12 @@ end:
 }
 
 - (void) _handleKickWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	if( [parameters count] >= 2 ) {
+	// if the sender is a server lets make a user for the server name
+	// this is not ideal but the notifications need user objects
+	if( [sender isKindOfClass:[NSString class]] )
+		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
+
+	if( [parameters count] >= 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:0]];
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		if( ! room || ! user ) return;
@@ -1812,7 +1822,12 @@ end:
 }
 
 - (void) _handleTopicWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	if( [parameters count] == 2 ) {
+	// if the sender is a server lets make a user for the server name
+	// this is not ideal but the notifications need user objects
+	if( [sender isKindOfClass:[NSString class]] )
+		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
+
+	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:0]];
 		[room _setTopic:[parameters objectAtIndex:1]];
 		[room _setTopicAuthor:sender];
@@ -1949,6 +1964,11 @@ end:
 }
 
 - (void) _handleModeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
+	// if the sender is a server lets make a user for the server name
+	// this is not ideal but the notifications need user objects
+	if( [sender isKindOfClass:[NSString class]] )
+		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
+
 	if( [parameters count] >= 2 ) {
 		NSString *targetName = [parameters objectAtIndex:0];
 		if( [[self chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]] ) {
@@ -1960,7 +1980,7 @@ end:
 	}
 }
 
-- (void) _handle324WithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender { // RPL_CHANNELMODEIS
+- (void) _handle324WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_CHANNELMODEIS
 	if( [parameters count] >= 3 ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
 		[self _parseRoomModes:[parameters subarrayWithRange:NSMakeRange( 2, [parameters count] - 2)] forRoom:room fromSender:nil];
@@ -1979,7 +1999,12 @@ end:
 }
 
 - (void) _handleInviteWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	if( [parameters count] == 2 ) {
+	// if the sender is a server lets make a user for the server name
+	// this is not ideal but the notifications need user objects
+	if( [sender isKindOfClass:[NSString class]] )
+		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
+
+	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *roomName = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomInvitedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", roomName, @"room", nil]];
 		[self _sendPossibleOnlineNotificationForUser:sender];
@@ -1987,7 +2012,7 @@ end:
 }
 
 - (void) _handleNickWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	if( [parameters count] == 1 ) {
+	if( [parameters count] == 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *nick = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		NSString *oldNickname = [[sender nickname] retain];
 		NSString *oldIdentifier = [[sender uniqueIdentifier] retain];
