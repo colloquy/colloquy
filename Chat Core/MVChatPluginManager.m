@@ -17,6 +17,7 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	NSMutableArray *paths = [[NSMutableArray allocWithZone:nil] initWithCapacity:5];
 	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/PlugIns", bundleName] stringByExpandingTildeInPath]];
+	[paths addObject:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Plugins", bundleName] stringByExpandingTildeInPath]];
 	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/PlugIns", bundleName]];
 	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/PlugIns", bundleName]];
 	[paths addObject:[[NSBundle bundleForClass:[self class]] builtInPlugInsPath]];
