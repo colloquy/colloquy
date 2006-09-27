@@ -51,7 +51,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[[display layoutManager] setDelegate:self];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
-		[(JVSplitView *)[[[send superview] superview] superview] setIsPaneSplitter:YES];
+		[(JVSplitView *)[[send enclosingScrollView] superview] setIsPaneSplitter:YES];
 }
 
 - (void) dealloc {
@@ -203,7 +203,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) didSelect {
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] ) {
-		[(JVSplitView *)[[[send superview] superview] superview] setPositionUsingName:@"JVChatSplitViewPosition"];
+		[(JVSplitView *)[[send enclosingScrollView] superview] setPositionUsingName:@"JVChatSplitViewPosition"];
 	} else [self textDidChange:nil];
 }
 
@@ -289,8 +289,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	else [attrs setObject:[[NSFontManager sharedFontManager] fontWithFamily:@"Monaco" traits:0 weight:5 size:9.] forKey:NSFontAttributeName];
 	[attrs setObject:para forKey:NSParagraphStyleAttributeName];
 
-	NSScroller *scroller = [(NSScrollView *)[[display superview] superview] verticalScroller];
-	if( ! scroller || [scroller floatValue] == 1. ) _scrollerIsAtBottom = YES;
+	NSScrollView *scrollView = [display enclosingScrollView];
+	NSScroller *scroller = [scrollView verticalScroller];
+	if( ! [scrollView hasVerticalScroller] || [scroller floatValue] >= 0.995 ) _scrollerIsAtBottom = YES;
 	else _scrollerIsAtBottom = NO;
 
 	msg = [[[NSAttributedString alloc] initWithString:strMsg attributes:attrs] autorelease];
@@ -374,7 +375,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	[send reset:nil];
 	[self textDidChange:nil];
-	[display scrollRangeToVisible:NSMakeRange( [[display string] length], 0 )];
+	[self performScrollToBottom];
 }
 
 - (BOOL) textView:(NSTextView *) textView enterKeyPressed:(NSEvent *) event {
@@ -461,17 +462,17 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	// We need to resize the textview to fit the content.
 	// The scroll views are two superviews up: NSTextView -> NSClipView -> NSScrollView
-	NSSplitView *splitView = (NSSplitView *)[[[send superview] superview] superview];
+	NSSplitView *splitView = (NSSplitView *)[[send enclosingScrollView] superview];
 	NSRect splitViewFrame = [splitView frame];
 	NSSize contentSize = [send minimumSizeForContent];
-	NSRect sendFrame = [[[send superview] superview] frame];
+	NSRect sendFrame = [[send enclosingScrollView] frame];
 	float dividerThickness = [splitView dividerThickness];
 	float maxContentHeight = ( NSHeight( splitViewFrame ) - dividerThickness - 75. );
 	float newContentHeight =  MIN( maxContentHeight, MAX( 25., contentSize.height + 8. ) );
 
 	if( newContentHeight == NSHeight( sendFrame ) ) return;
 
-	NSRect displayFrame = [[[display superview] superview] frame];
+	NSRect displayFrame = [[display enclosingScrollView] frame];
 
 	// Set size of the web view to the maximum size possible
 	displayFrame.size.height = NSHeight( splitViewFrame ) - dividerThickness - newContentHeight;
@@ -483,16 +484,17 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	[[display window] disableFlushWindow]; // prevent any draw (white) flashing that might occur
 
-	NSScroller *scroller = [(NSScrollView *)[[display superview] superview] verticalScroller];
-	if( ! scroller || [scroller floatValue] == 1. ) _scrollerIsAtBottom = YES;
+	NSScrollView *scrollView = [display enclosingScrollView];
+	NSScroller *scroller = [scrollView verticalScroller];
+	if( ! [scrollView hasVerticalScroller] || [scroller floatValue] >= 0.995 ) _scrollerIsAtBottom = YES;
 	else _scrollerIsAtBottom = NO;
 
 	// Commit the changes
-	[[[send superview] superview] setFrame:sendFrame];
-	[[[display superview] superview] setFrame:displayFrame];
+	[[send enclosingScrollView] setFrame:sendFrame];
+	[[display enclosingScrollView] setFrame:displayFrame];
 
 	if( _scrollerIsAtBottom )
-		[display scrollRangeToVisible:NSMakeRange( [[display string] length], 0 )];
+		[self performScrollToBottom];
 
 	[splitView setNeedsDisplay:YES]; // makes the divider redraw correctly later
 	[[display window] enableFlushWindow]; // flush everything we have drawn
@@ -589,11 +591,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) splitViewDidResizeSubviews:(NSNotification *) notification {
 	// Cache the height of the send box so we can keep it constant during window resizes.
-	NSRect sendFrame = [[[send superview] superview] frame];
+	NSRect sendFrame = [[send enclosingScrollView] frame];
 	_sendHeight = sendFrame.size.height;
 
 	if( _scrollerIsAtBottom )
-		[display scrollRangeToVisible:NSMakeRange( [[display string] length], 0 )];
+		[self performScrollToBottom];
 
 	if( ! _forceSplitViewPosition && ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
 		[(JVSplitView *)[notification object] savePositionUsingName:@"JVChatSplitViewPosition"];
@@ -602,8 +604,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) splitViewWillResizeSubviews:(NSNotification *) notification {
-	NSScroller *scroller = [(NSScrollView *)[[display superview] superview] verticalScroller];
-	if( ! scroller || [scroller floatValue] == 1. ) _scrollerIsAtBottom = YES;
+	NSScrollView *scrollView = [display enclosingScrollView];
+	NSScroller *scroller = [scrollView verticalScroller];
+	if( ! [scrollView hasVerticalScroller] || [scroller floatValue] >= 0.995 ) _scrollerIsAtBottom = YES;
 	else _scrollerIsAtBottom = NO;
 }
 
@@ -615,8 +618,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	// We need to resize the scroll view frames of the webview and the textview.
 	// The scroll views are two superviews up: NSTextView(WebView) -> NSClipView -> NSScrollView
-	NSRect sendFrame = [[[send superview] superview] frame];
-	NSRect displayFrame = [[[display superview] superview] frame];
+	NSRect sendFrame = [[send enclosingScrollView] frame];
+	NSRect displayFrame = [[display enclosingScrollView] frame];
 
 	// Set size of the web view to the maximum size possible
 	displayFrame.size.height = NSHeight( newFrame ) - dividerThickness - _sendHeight;
@@ -629,8 +632,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	sendFrame.origin.y = NSHeight( displayFrame ) + dividerThickness;
 
 	// Commit the changes
-	[[[send superview] superview] setFrame:sendFrame];
-	[[[display superview] superview] setFrame:displayFrame];
+	[[send enclosingScrollView] setFrame:sendFrame];
+	[[display enclosingScrollView] setFrame:displayFrame];
 }
 @end
 
