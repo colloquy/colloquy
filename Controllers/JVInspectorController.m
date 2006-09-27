@@ -73,6 +73,8 @@ static NSMutableSet *inspectors = nil;
 	if( [_inspector respondsToSelector:@selector( didUnload )] )
 		[(NSObject *)_inspector didUnload];
 
+	_inspectorLoaded = NO;
+
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
@@ -112,11 +114,11 @@ static NSMutableSet *inspectors = nil;
 	id oldInspector = _inspector;
 	[_inspector autorelease];
 	_inspector = [[_object inspector] retain];
+	_inspectorLoaded = NO;
 
 	if( [[self window] isVisible] ) {
 		if( [oldInspector respondsToSelector:@selector( didUnload )] )
 			[(NSObject *)oldInspector didUnload];
-
 		[self _loadInspector];
 	}
 }
@@ -185,6 +187,7 @@ static NSMutableSet *inspectors = nil;
 
 		if( [_inspector respondsToSelector:@selector( didLoad )] )
 			[(NSObject *)_inspector didLoad];
+		_inspectorLoaded = YES;
 	} else {
 		[[self window] setTitle:NSLocalizedString( @"No Info", "no info inspector title" )];
 		[[self window] setContentView:[[[NSView alloc] initWithFrame:[[[self window] contentView] frame]] autorelease]];
@@ -205,7 +208,7 @@ static NSMutableSet *inspectors = nil;
 }
 
 - (void) _applicationQuitting:(NSNotification *) notification {
-	if( [_inspector respondsToSelector:@selector( didUnload )] )
+	if( _inspectorLoaded && [_inspector respondsToSelector:@selector( didUnload )] )
 		[(NSObject *)_inspector didUnload];
 }
 @end

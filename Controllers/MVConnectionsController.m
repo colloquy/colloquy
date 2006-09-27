@@ -823,6 +823,7 @@ static NSMenu *favoritesMenu = nil;
 		if( [info objectForKey:@"connection"] == connection ) {
 			if( [rooms count] ) [info setObject:[[rooms mutableCopy] autorelease] forKey:@"rooms"];
 			else [info removeObjectForKey:@"rooms"];
+			[self _saveBookmarkList];
 			break;
 		}
 	}
@@ -838,7 +839,6 @@ static NSMenu *favoritesMenu = nil;
 			if( ! ret ) {
 				ret = [NSMutableArray array];
 				[info setObject:ret forKey:@"rooms"];
-				[self _saveBookmarkList];
 			}
 			return ret;
 		}
@@ -1399,7 +1399,20 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _deregisterNotificationsForConnection:(MVChatConnection *) connection {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:connection];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionWillConnectNotification object:connection];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidConnectNotification object:connection];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidNotConnectNotification object:connection];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidDisconnectNotification object:connection];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:connection];
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionWillConnectNotification object:connection];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidConnectNotification object:connection];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidDisconnectNotification object:connection];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionErrorNotification object:connection];
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNeedNicknamePasswordNotification object:connection];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNeedCertificatePasswordNotification object:connection];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNeedPublicKeyVerificationNotification object:connection];
 }
 
 - (void) _refresh:(NSNotification *) notification {
@@ -1408,16 +1421,21 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _applicationQuitting:(NSNotification *) notification {
+	[self _saveBookmarkList];
+
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	MVChatConnection *connection = nil;
 	NSDictionary *info = nil;
 
+	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
+	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage]; 
+
 	while( ( info = [enumerator nextObject] ) ) {
 		connection = [info objectForKey:@"connection"];
-		[connection sendRawMessage:@"QUIT"];
+		[connection disconnectWithReason:quitMessageString];
 	}
 
-	[self _saveBookmarkList];
+	[quitMessageString release];
 }
 
 - (void) _errorOccurred:(NSNotification *) notification {
