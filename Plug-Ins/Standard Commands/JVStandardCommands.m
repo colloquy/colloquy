@@ -186,7 +186,7 @@
 			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
-					if( user ) [[room target] setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
+					if( user ) [[room target] removeMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
 				}
 			}
 			return YES;
