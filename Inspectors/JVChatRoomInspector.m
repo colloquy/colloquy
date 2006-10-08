@@ -295,8 +295,14 @@
 
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
 	unsigned int localUserModes = ( [[_room connection] localUser] ? [(MVChatRoom *)[_room target] modesForMemberUser:[[_room connection] localUser]] : 0 );
-	[deleteBanButton setEnabled:( ( localUserModes & MVChatRoomMemberOperatorMode ) && [banRules selectedRow] != -1 )];
-	[editBanButton setEnabled:( ( localUserModes & MVChatRoomMemberOperatorMode ) && [banRules selectedRow] != -1 && [banRules numberOfSelectedRows] == 1 )];
+	BOOL canEdit = ( localUserModes & MVChatRoomMemberOperatorMode );
+	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberHalfOperatorMode );
+	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberAdministratorMode );
+	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberFounderMode );
+	if( ! canEdit ) canEdit = [[[_room connection] localUser] isServerOperator];
+
+	[deleteBanButton setEnabled:( canEdit && [banRules selectedRow] != -1 )];
+	[editBanButton setEnabled:( canEdit && [banRules selectedRow] != -1 && [banRules numberOfSelectedRows] == 1 )];
 }
 @end
 
@@ -333,7 +339,7 @@
 
 	[newBanButton setEnabled:canEdit];
 	[deleteBanButton setEnabled:( canEdit && [banRules selectedRow] != -1 )];
-	[editBanButton setEnabled:( canEdit && [banRules selectedRow] != -1 )];
+	[editBanButton setEnabled:( canEdit && [banRules selectedRow] != -1 && [banRules numberOfSelectedRows] == 1 )];
 
 	NSTableColumn *column = [banRules tableColumnWithIdentifier:@"rule"];
 	[column setEditable:canEdit];
