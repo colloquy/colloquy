@@ -56,7 +56,7 @@
 		</xsl:variable>
 
 		<!-- Not sure I caught all legal characters found in an IRC nick -->
-		<xsl:variable name="senderHash" select="number(translate($senderNick,'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM-_^[]{}','12345678901234567890123456789012345678901234567890123456789'))" />
+		<xsl:variable name="senderHash" select="number(translate($senderNick,'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM-_^[]{}|','123456789012345678901234567890123456789012345678901234567890'))" />
 
 		<!-- Lighter-weight alternate hash, but only tracks up to longest nick -->
 		<!--<xsl:variable name="senderHash" select="string-length($senderNick)" />-->
