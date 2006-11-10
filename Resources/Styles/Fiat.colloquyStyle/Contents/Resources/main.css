@@ -17,6 +17,7 @@ img {
 	padding-top: 5px;
 	padding-bottom: 5px;
 	margin: auto;
+	max-width: 100%;
 }
 
 a:hover {
