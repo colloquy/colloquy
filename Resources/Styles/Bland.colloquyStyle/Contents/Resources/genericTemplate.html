@@ -12,6 +12,7 @@
 		}
 	}
 
-//	window.onresize = bottomAlignChat;
-//	bottomAlignChat();
+	document.body.addEventListener('DOMNodeInserted', bottomAlignChat);
+	window.addEventListener('resize', bottomAlignChat);
+	bottomAlignChat();
 </script>
