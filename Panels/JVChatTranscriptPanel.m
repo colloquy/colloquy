@@ -669,6 +669,18 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	return UINT_MAX; // WebDragSourceActionAny
 }
 
+- (void)webView:(WebView *)sender runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WebFrame *)frame
+{
+    NSRange range = [message rangeOfString:@"\t"];
+    NSString *title = @"Alert";
+    if (range.location != NSNotFound) {
+        title = [message substringToIndex:range.location];
+        message = [message substringFromIndex:(range.location + range.length)];
+    }
+
+    NSBeginInformationalAlertSheet(title, nil, nil, nil, [sender window], nil, NULL, NULL, NULL, message);
+}
+
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
 	NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
 

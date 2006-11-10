@@ -49,8 +49,8 @@
 		<dict>
 			<key>style</key>
 			<array>
-				<string>.messageFadeIn { color: #000000; }</string>
-				<string>.messageFadeIn { color: #FFFFFF; }</string>
+				<string>.messageFadeIn { content: "off"; }</string>
+				<string>.messageFadeIn { content: "on"; }</string>
 			</array>
 			<key>default</key>
 			<integer>0</integer>
