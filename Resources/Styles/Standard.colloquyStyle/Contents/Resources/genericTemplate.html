@@ -2,7 +2,7 @@
 	document.body.addEventListener('DOMNodeInserted', startFadeIfNeeded);
 
 	function startFadeIfNeeded(event) {
-		if( event.target.className.indexOf('envelope') == -1) return;
+		if( event.target.className.indexOf('envelope') == -1 && event.target.className.indexOf('event') == -1) return;
 		if( ! document.styleSheets[3] ) return;
 
 		var fadeBool = false;
