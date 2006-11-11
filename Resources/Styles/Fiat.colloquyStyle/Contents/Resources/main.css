@@ -121,15 +121,13 @@ a:hover {
 }
 
 .messages .time.inline {
-	float: left;
 	margin: 1px 4px 0;
 	padding: 0;
 	text-shadow: rgba( 0, 0, 0, .125 ) 0 1px 1px;
 }
 
 .messages .time[title]:after {
-	float: left;
-	margin: 1px 1px 0 4px;
+	margin: 1px 4px 0;
 	padding: 0;
 	text-shadow: rgba( 0, 0, 0, .125 ) 0 1px 1px;
 	content: attr( title );
