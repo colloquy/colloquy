@@ -87,3 +87,4 @@ _MVChatPluginManagerWillReloadPluginsNotification
 _MVChatPluginManagerDidReloadPluginsNotification
 _NSChatWindowsIRCFormatType
 _NSChatCTCPTwoFormatType
+test
