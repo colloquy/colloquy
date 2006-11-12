@@ -343,23 +343,40 @@
 	} else if( ! [command caseInsensitiveCompare:@"globops"] && [connection type] == MVChatConnectionIRCType ) {
 		[connection sendRawMessage:[NSString stringWithFormat:@"%@ :%@", command, [arguments string]]];
 		return YES;
-	} else if( ! [command caseInsensitiveCompare:@"notice"] && [connection type] == MVChatConnectionIRCType ) {
+	} else if( ( ! [command caseInsensitiveCompare:@"notice"] || ! [command caseInsensitiveCompare:@"onotice"] ) && [connection type] == MVChatConnectionIRCType ) {
+        NSString *targetPrefix = nil;
         NSString *target = nil;
         NSString *message = nil;
         NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+        NSMutableCharacterSet *prefixes = [[connection chatRoomNamePrefixes] mutableCopy];
+		[prefixes addCharactersInString:@"@"];
+
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
-		[scanner scanUpToCharactersFromSet:whitespace intoString:&target];
+		if( [scanner scanCharactersFromSet:prefixes intoString:&targetPrefix] || ! isChatRoom ) {
+			[scanner scanUpToCharactersFromSet:whitespace intoString:&target];
+			if( [targetPrefix length] ) target = [targetPrefix stringByAppendingString:target];
+		} else if( isChatRoom ) {
+			if( ! [command caseInsensitiveCompare:@"onotice"] )
+				target = [[room target] name];
+			else [scanner scanUpToCharactersFromSet:whitespace intoString:&target];
+		}
+		[prefixes release];
+
 		[scanner scanCharactersFromSet:whitespace intoString:NULL];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n"] intoString:&message];
-		[connection sendRawMessage:[NSString stringWithFormat:@"%@ %@ :%@", command, target, message]];
 
 		if( ! [target length] || ! [message length] ) return YES;
+
+		if( ! [command caseInsensitiveCompare:@"onotice"] && ! [target hasPrefix:@"@"] )
+			target = [@"@" stringByAppendingString:[connection properNameForChatRoomNamed:target]];
+
+		[connection sendRawMessage:[NSString stringWithFormat:@"NOTICE %@ :%@", target, message]];
 
 		NSCharacterSet *chanSet = [connection chatRoomNamePrefixes];
 		JVDirectChatPanel *chatView = nil;
 
 		// this is an IRC specific command for sending to room operators only.
-		if( [connection type] == MVChatConnectionIRCType && [target hasPrefix:@"@"] && [target length] > 1 )
+		if( [target hasPrefix:@"@"] && [target length] > 1 )
 			target = [target substringFromIndex:1];
 
 		if( ! chanSet || [chanSet characterIsMember:[target characterAtIndex:0]] ) {
