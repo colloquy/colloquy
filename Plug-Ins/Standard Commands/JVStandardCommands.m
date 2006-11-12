@@ -268,6 +268,8 @@
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"aaway"] ) {
 		return [self handleMassAwayWithMessage:arguments];
+	} else if( ! [command caseInsensitiveCompare:@"anick"] ) {
+		return [self handleMassNickChangeWithName:[arguments string]];
 	} else if( ! [command caseInsensitiveCompare:@"j"] || ! [command caseInsensitiveCompare:@"join"] ) {
 		return [self handleJoinWithArguments:[arguments string] forConnection:connection];
 	} else if( ! [command caseInsensitiveCompare:@"leave"] || ! [command caseInsensitiveCompare:@"part"] ) {
@@ -594,6 +596,14 @@
 	id item = nil;
 	while( ( item = [enumerator nextObject] ) )
 		[item setAwayStatusMessage:message];
+	return YES;
+}
+
+- (BOOL) handleMassNickChangeWithName:(NSString *) nickname {
+	NSEnumerator *enumerator = [[[MVConnectionsController defaultController] connectedConnections] objectEnumerator];
+	id item = nil;
+	while( ( item = [enumerator nextObject] ) )
+		[item setNickname:nickname];
 	return YES;
 }
 
