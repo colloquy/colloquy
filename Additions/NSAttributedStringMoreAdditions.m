@@ -308,7 +308,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 @implementation NSMutableAttributedString (NSMutableAttributedStringHTMLAdditions)
 - (void) makeLinkAttributesAutomatically {
 	// catch well-formed urls like "http://www.apple.com", "www.apple.com" or "irc://irc.javelin.cc"
-	AGRegex *regex = [AGRegex regexWithPattern:@"(?:[a-zA-Z][a-zA-Z0-9+.-]*://|www\\.)(?:[\\w:-]+@)?(?:\\d{1,3}(?:\\.\\d{1,3}){3}|(?:[\\p{L}\\p{N}-]+\\.)+\\w{2,4}\\.?|localhost)(?:\\:\\d+)?(?:[/?][\\p{L}\\p{N}$\\-_.+!*',=:\\|/\\\\()%@&;#?~]*)*(?=[>}\\]):;,.!?'\"]|\\b)" options:AGRegexCaseInsensitive];
+	AGRegex *regex = [AGRegex regexWithPattern:@"(?:[a-zA-Z][a-zA-Z0-9+.-]*:(?://)?|www\\.)[\\p{L}\\p{N}$\\-_+*'\"=:\\|/\\\\()%@&#~,;.!?]+[\\p{L}\\p{N}$\\-_+*=:\\|/\\\\()%@&#~]" options:AGRegexCaseInsensitive];
 	NSArray *matches = [regex findAllInString:[self string]];
 	NSEnumerator *enumerator = [matches objectEnumerator];
 	AGRegexMatch *match = nil;
@@ -320,7 +320,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 	}
 
 	// catch well-formed email addresses like "timothy@hatcher.name" or "timothy@javelin.cc"
-	regex = [AGRegex regexWithPattern:@"[\\w.+-]+@(?:[\\p{L}-]+\\.)+[\\w]{2,}" options:AGRegexCaseInsensitive];
+	regex = [AGRegex regexWithPattern:@"[\\p{L}\\p{N}.+-]+@(?:[\\p{L}-]+\\.)+[\\w]{2,}" options:AGRegexCaseInsensitive];
 	matches = [regex findAllInString:[self string]];
 	enumerator = [matches objectEnumerator];
 	match = nil;
