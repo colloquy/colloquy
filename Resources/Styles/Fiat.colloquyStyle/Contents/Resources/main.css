@@ -115,20 +115,23 @@ a:hover {
 	background: #fafafa;
 }
 
-.messages .time {
+.messages .time[title] {
 	display: block;
-	float: left;
 }
 
 .messages .time.inline {
-	margin: 1px 4px 0;
 	padding: 0;
+	margin: 1px 4px 0;
+	display: block;
+	float: left;
 	text-shadow: rgba( 0, 0, 0, .125 ) 0 1px 1px;
 }
 
 .messages .time[title]:after {
-	margin: 1px 4px 0;
 	padding: 0;
+	margin: 1px 4px 0;
+	display: block;
+	float: left;
 	text-shadow: rgba( 0, 0, 0, .125 ) 0 1px 1px;
 	content: attr( title );
 }
@@ -179,26 +182,15 @@ a:hover {
 }
 
 .event .time {
+	margin: 0 4px;
+	padding: 0;
 	display: block;
 	float: left;
-}
-
-.event .time.inline {
-	margin: 0 4px;
-	padding: 0;
 	color: #404040;
-}
-
-.event .time[title]:after {
-	float: left;
-	margin: 0 4px;
-	padding: 0;
-	color: #404040;
-	content: attr( title )
 }
 
 .event .message {
-	margin: 0 4px;
+	margin: 0 4px 0 0;
 	padding: 0;
 	color: #303030;
 	word-wrap: break-word;

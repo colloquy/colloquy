@@ -44,7 +44,7 @@
 						</xsl:choose>
 					</xsl:variable>
 
-					<span class="sep">&#8203;</span>
+					<span class="sep"><xsl:text> </xsl:text></span>
 					<span class="hidden">[</span>
 					<span class="time inline"><xsl:value-of select="$timestamp" /></span>
 					<span class="hidden">] <xsl:if test="not( @action = 'yes' )"><xsl:value-of select="../sender" />: </xsl:if></span>
@@ -63,7 +63,7 @@
 						<xsl:if test="$fromEnvelope = 'no'">
 							<xsl:processing-instruction name="message">type="consecutive"</xsl:processing-instruction>
 						</xsl:if>
-						<span id="consecutiveInsert">&#8203;</span>
+						<span id="consecutiveInsert"><xsl:text> </xsl:text></span>
 					</xsl:if>
 				</xsl:if>
 			</xsl:otherwise>
@@ -108,7 +108,7 @@
 
 			<span class="{$senderClasses}">
 				<span class="hidden">[<xsl:value-of select="$timestamp" />] </span>
-				<span class="header_top">&#8203;</span>
+				<span class="header_top"><xsl:text> </xsl:text></span>
 				<span class="header">
 					<span>
 						<span>
@@ -119,14 +119,14 @@
 						</span>
 						</span>
 					</span>
-					<span class="left">&#8203;</span>
-					<span class="right">&#8203;</span>
+					<span class="left"><xsl:text> </xsl:text></span>
+					<span class="right"><xsl:text> </xsl:text></span>
 				</span>
 				<span class="hidden">: </span>
 				<span class="messages">
 					<span>
 						<span>
-							<span class="time" title="{$timestamp}">&#8203;</span>
+							<span class="time" title="{$timestamp}"><xsl:text> </xsl:text></span>
 							<span id="{message[not( @ignored = 'yes' )][1]/@id}" class="message">
 								<xsl:if test="message[not( @ignored = 'yes' )][1]/@action = 'yes'">
 									<xsl:text>&#8226; </xsl:text>
@@ -142,14 +142,14 @@
 								<xsl:with-param name="fromEnvelope" select="'yes'" />
 							</xsl:apply-templates>
 							<xsl:if test="position() = last()">
-								<span id="consecutiveInsert">&#8203;</span>
+								<span id="consecutiveInsert"><xsl:text> </xsl:text></span>
 							</xsl:if>
 						</span>
 					</span>
 				</span>
 				<span class="messages_bottom">
-					<span class="left">&#8203;</span>
-					<span class="right">&#8203;</span>
+					<span class="left"><xsl:text> </xsl:text></span>
+					<span class="right"><xsl:text> </xsl:text></span>
 				</span>
 			</span>
 		</xsl:if>
