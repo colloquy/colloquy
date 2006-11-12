@@ -27,6 +27,15 @@
 }
 
 - (void) dealloc {
+	[editRooms setDataSource:nil];
+	[editRooms setDelegate:nil];
+
+	[editRules setDataSource:nil];
+	[editRules setDelegate:nil];
+
+	[editRuleRooms setDataSource:nil];
+	[editRuleRooms setDelegate:nil];
+
 	[_connection release];
 	[_editingRooms release];
 	_connection = nil;
