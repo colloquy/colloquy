@@ -95,7 +95,7 @@
 					</span>
 					<xsl:if test="not( $bulkTransform = 'yes' )">
 						<xsl:processing-instruction name="message">type="consecutive"</xsl:processing-instruction>
-						<span id="consecutiveInsert">&#8203;</span>
+						<span id="consecutiveInsert"><xsl:text> </xsl:text></span>
 					</xsl:if>
 				</xsl:if>
 			</xsl:otherwise>
@@ -145,7 +145,7 @@
 						<a href="{$memberLink}" class="name"><xsl:value-of select="sender" /></a>
 					</span>
 					<span class="hidden">: </span>
-					<span class="time" title="{$timestamp}">&#8203;</span>
+					<span class="time" title="{$timestamp}"><xsl:text> </xsl:text></span>
 					<xsl:if test="message[not( @ignored = 'yes' )][1]/@action = 'yes'">
 						<xsl:text>&#8226; </xsl:text>
 						<a href="{$memberLink}" class="member action">
@@ -158,9 +158,9 @@
 				</span>
 				<xsl:apply-templates select="message[not( @ignored = 'yes' )][position() &gt; 1]" />
 				<xsl:if test="position() = last()">
-					<span id="consecutiveInsert">&#8203;</span>
+					<span id="consecutiveInsert"><xsl:text> </xsl:text></span>
 				</xsl:if>
-				<span class="shadow">&#8203;</span>
+				<span class="shadow"><xsl:text> </xsl:text></span>
 			</span>
 		</xsl:if>
 	</xsl:template>
