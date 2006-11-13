@@ -133,8 +133,6 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (void) finalize {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 	[self cancelPendingReconnectAttempts];
 	[super finalize];
 }

@@ -66,13 +66,7 @@ static id dccFriendlyAddress( AsyncSocket *connection ) {
 
 - (void) finalize {
 	[_connection disconnect];
-	[_connection setDelegate:nil];
-
 	[_fileHandle closeFile];
-	_fileHandle = nil;
-
-	_connectionThread = nil;
-
 	[super finalize];
 }
 
@@ -300,13 +294,9 @@ static id dccFriendlyAddress( AsyncSocket *connection ) {
 @implementation MVIRCDownloadFileTransfer
 - (void) finalize {
 	[_connection disconnect];
-	[_connection setDelegate:nil];
 
 	[_fileHandle closeFile];
 	[_fileHandle synchronizeFile];
-	_fileHandle = nil;
-
-	_connectionThread = nil;
 
 	[super finalize];
 }

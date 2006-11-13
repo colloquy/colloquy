@@ -916,8 +916,6 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (void) finalize {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
 	[self disconnect];
 
 	// if we don't have a scheduler, we don't have a lock. but we don't need to

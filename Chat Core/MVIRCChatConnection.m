@@ -110,10 +110,8 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) finalize {
 	[self disconnect];
-	[_chatConnection setDelegate:nil];
 	if( [_connectionThread respondsToSelector:@selector( cancel )] )
 		[_connectionThread cancel];
-	_connectionThread = nil;
 	[super finalize];
 }
 
