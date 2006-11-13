@@ -234,9 +234,6 @@ static const NSStringEncoding supportedEncodings[] = {
 			[self sendRawMessageImmediatelyWithComponents:@"QUIT :", msg, nil];
 		} else [self sendRawMessage:@"QUIT" immediately:YES];
 	}
-
-	if( _connectionThread )
-		[_chatConnection performSelector:@selector( disconnectAfterWriting ) inThread:_connectionThread];
 }
 
 #pragma mark -

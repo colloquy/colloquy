@@ -486,7 +486,8 @@
 		channels = [NSMutableArray array];
 		while( ( channel = [chanEnum nextObject] ) ) {
 			channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-			[(NSMutableArray *)channels addObject:channel];
+			if( [channel length] )
+				[(NSMutableArray *)channels addObject:channel];
 		}
 
 		[connection joinChatRoomsNamed:channels];
