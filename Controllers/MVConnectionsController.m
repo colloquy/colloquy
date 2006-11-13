@@ -131,6 +131,12 @@ static NSMenu *favoritesMenu = nil;
 	[connections setDelegate:nil];
 	[connections setDataSource:nil];
 
+	[newJoinRooms setDelegate:nil];
+	[newJoinRooms setDataSource:nil];
+
+	[userSelectionTable setDelegate:nil];
+	[userSelectionTable setDataSource:nil];
+
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 

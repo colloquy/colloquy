@@ -19,6 +19,9 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	[nicknames setDataSource:nil];
+	[nicknames setDelegate:nil];
+
 	[_buddy release];
 	_buddy = nil;
 

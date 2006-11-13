@@ -175,6 +175,9 @@ finish:
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
+	[currentFiles setDataSource:nil];
+	[currentFiles setDelegate:nil];
+
 	if( [self isWindowLoaded] )
 		[[[self window] toolbar] setDelegate:nil];
 

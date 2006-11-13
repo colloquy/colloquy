@@ -8,6 +8,27 @@
 static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePreferencesWindowDragPboardType";
 
 @implementation JVInterfacePreferences
+- (void) dealloc {
+	[windowSetsTable setDataSource:nil];
+	[windowSetsTable setDelegate:nil];
+
+	[rulesTable setDataSource:nil];
+	[rulesTable setDelegate:nil];
+
+	[ruleEditTable setDataSource:nil];
+	[ruleEditTable setDelegate:nil];
+
+	[_windowSets release];
+	[_editingRuleCriterion release];
+
+	_windowSets = nil;
+	_editingRuleCriterion = nil;
+
+	[super dealloc];
+}
+
+#pragma mark -
+
 - (NSString *) preferencesNibName {
 	return @"JVInterfacePreferences";
 }

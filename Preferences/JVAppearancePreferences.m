@@ -38,6 +38,9 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	[optionsTable setDataSource:nil];
+	[optionsTable setDelegate:nil];
+
 	[_style release];
 	_style = nil;
 

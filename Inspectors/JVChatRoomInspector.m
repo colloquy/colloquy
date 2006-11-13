@@ -43,6 +43,9 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	[banRules setDataSource:nil];
+	[banRules setDelegate:nil];
+
 	[_room release];
 	[_latestBanList release];
 

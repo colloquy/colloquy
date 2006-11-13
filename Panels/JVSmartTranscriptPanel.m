@@ -66,6 +66,9 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	[subviewTableView setDataSource:nil];
+	[subviewTableView setDelegate:nil];
+
 	[_title release];
 	[_rules release];
 	[_editingRules release];

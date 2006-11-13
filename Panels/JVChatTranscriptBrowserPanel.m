@@ -155,6 +155,9 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 	CFRelease( _logsIndex ); // was SKIndexClose, functionally equivalent
 	CFRelease( _searchGroup );
 
+	[tableView setDataSource:nil];
+	[tableView setDelegate:nil];
+
 	[_dirtyLogs release];
 	[_filteredTranscripts release];
 	[_transcripts release];
