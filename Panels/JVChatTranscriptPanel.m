@@ -109,6 +109,9 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[display setUIDelegate:nil];
+	[display setResourceLoadDelegate:nil];
+	[display setDownloadDelegate:nil];
+	[display setFrameLoadDelegate:nil];
 	[display setPolicyDelegate:nil];
 
 	[contents release];

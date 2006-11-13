@@ -106,6 +106,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[[self window] close];
 	}
 
+	[viewsDrawer setDelegate:nil];
+	[chatViewsOutlineView setDelegate:nil];
+
 	NSEnumerator *enumerator = [_views objectEnumerator];
 	id <JVChatViewController> controller = nil;
 	while( ( controller = [enumerator nextObject] ) )

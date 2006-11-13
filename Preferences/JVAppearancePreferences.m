@@ -41,6 +41,14 @@
 	[optionsTable setDataSource:nil];
 	[optionsTable setDelegate:nil];
 
+	[optionsDrawer setDelegate:nil];
+
+	[preview setUIDelegate:nil];
+	[preview setResourceLoadDelegate:nil];
+	[preview setDownloadDelegate:nil];
+	[preview setFrameLoadDelegate:nil];
+	[preview setPolicyDelegate:nil];
+
 	[_style release];
 	_style = nil;
 
