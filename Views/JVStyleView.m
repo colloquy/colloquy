@@ -18,6 +18,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 @interface WebView (WebViewLeopard)
 - (void) setDrawsBackground:(BOOL) draws; // supported in 10.3.9/Tiger
 - (BOOL) drawsBackground; // supported in 10.3.9/Tiger
+- (void) setBackgroundColor:(NSColor *) color; // new in Leopard
 - (WebFrame *) selectedFrame;
 @end
 
@@ -609,9 +610,15 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) _checkForTransparantStyle {
 	DOMCSSStyleDeclaration *style = [self computedStyleForElement:_body pseudoElement:nil];
 	DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
-	if( ( value && [[value cssText] rangeOfString:@"rgba"].location != NSNotFound ) )
-		[self setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
-	else [self setDrawsBackground:YES];
+	BOOL transparent = ( value && [[value cssText] rangeOfString:@"rgba"].location != NSNotFound );
+
+	if( [self respondsToSelector:@selector(setBackgroundColor:)] ) {
+		if( transparent ) [self setBackgroundColor:[NSColor clearColor]]; // allows rgba backgrounds to see through to the Desktop
+		else [self setBackgroundColor:[NSColor whiteColor]];
+	} else {
+		if( transparent ) [self setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
+		else [self setDrawsBackground:YES];
+	}
 
 	[self setNeedsDisplay:YES];
 	[[[self mainFrame] frameView] setNeedsDisplay:YES];
