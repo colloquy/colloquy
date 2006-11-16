@@ -32,6 +32,10 @@ body {
 	background-color: rgba( 255, 128, 0, 0.75 ) !important;
 }
 
+.hostmask {
+	display: none;
+}
+
 /* For the display mark */
 hr#mark {
 	width: 80%;

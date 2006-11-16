@@ -110,6 +110,24 @@
 	</dict>
 	<dict>
 		<key>style</key>
+		<array>
+			<string>.hostmask { display: inline; }</string>
+			<string>.hostmask { display: none; }</string>
+		</array>
+		<key>default</key>
+		<integer>1</integer>
+		<key>description</key>
+		<string>Display hostmasks</string>
+		<key>type</key>
+		<string>list</string>
+		<key>options</key>
+		<array>
+			<string>Yes</string>
+			<string>No</string>
+		</array>
+	</dict>
+	<dict>
+		<key>style</key>
 		<string>.searchHighlight { color: %@ !important; }</string>
 		<key>default</key>
 		<string>rgba( 255, 128, 0, 0.75 )</string>

@@ -24,7 +24,7 @@
 
 		<span class="event">
 			<span class="hidden">[<xsl:value-of select="$timestamp" />] </span>
-			<xsl:apply-templates select="message/child::node()" mode="copy" />
+			<xsl:apply-templates select="message/child::node()" mode="event" />
 			<xsl:text> (</xsl:text>
 			<xsl:value-of select="$timestamp" />
 			<xsl:text>) </xsl:text>
@@ -163,6 +163,26 @@
 				<span class="shadow"><xsl:text> </xsl:text></span>
 			</span>
 		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="span[contains(@class,'member')]" mode="event">
+		<xsl:variable name="nickname" select="current()" />
+		<xsl:choose>
+			<xsl:when test="../../node()[node() = $nickname]/@hostmask">
+				<xsl:variable name="hostmask" select="../../node()[node() = $nickname]/@hostmask" />
+				<a href="member:{$nickname}" title="{$hostmask}" class="member"><xsl:value-of select="$nickname" /></a>
+				<xsl:if test="../../@name = 'memberJoined' or ../../@name = 'memberParted'">
+					<span class="hostmask">
+						<xsl:text> (</xsl:text>
+						<xsl:value-of select="$hostmask" />
+						<xsl:text>) </xsl:text>
+					</span>
+				</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				<a href="member:{$nickname}" class="member"><xsl:value-of select="$nickname" /></a>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="span[contains(@class,'member')]" mode="copy">

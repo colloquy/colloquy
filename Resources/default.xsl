@@ -54,6 +54,8 @@
 			</xsl:choose>
 		</xsl:variable>
 
+		<xsl:variable name="hostmask" select="sender/@hostmask | ../sender/@hostmask"/>
+		
 		<div id="{message[1]/@id | @id}" class="{$envelopeClasses}">
 			<span class="timestamp hidden">[</span>
 			<span class="timestamp">
@@ -65,7 +67,7 @@
 			<xsl:if test="message[1]/@action = 'yes' or @action = 'yes'">
 				<span class="hidden">• </span>
 			</xsl:if>
-			<a href="{$memberLink}" class="{$senderClasses}"><xsl:value-of select="sender | ../sender" /></a>
+			<a href="{$memberLink}" title="{$hostmask}" class="{$senderClasses}"><xsl:value-of select="sender | ../sender" /></a>
 			<xsl:choose>
 				<xsl:when test="message[1]/@action = 'yes' or @action = 'yes'">
 					<span class="hidden"><xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text></span>
@@ -98,7 +100,7 @@
 				</xsl:call-template>
 			</span>
 			<span class="timestamp hidden">] </span>
-			<xsl:apply-templates select="message/child::node()" mode="copy" />
+			<xsl:apply-templates select="message/child::node()" mode="event" />
 			<xsl:if test="string-length( reason )">
 				<span class="reason">
 					<xsl:text> (</xsl:text>
@@ -107,6 +109,26 @@
 				</span>
 			</xsl:if>
 		</div>
+	</xsl:template>
+
+	<xsl:template match="span[contains(@class,'member')]" mode="event">
+		<xsl:variable name="nickname" select="current()" />
+		<xsl:choose>
+			<xsl:when test="../../node()[node() = $nickname]/@hostmask">
+				<xsl:variable name="hostmask" select="../../node()[node() = $nickname]/@hostmask" />
+				<a href="member:{$nickname}" title="{$hostmask}" class="member"><xsl:value-of select="$nickname" /></a>
+				<xsl:if test="../../@name = 'memberJoined' or ../../@name = 'memberParted'">
+					<span class="hostmask">
+						<xsl:text> (</xsl:text>
+						<xsl:value-of select="$hostmask" />
+						<xsl:text>) </xsl:text>
+					</span>
+				</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				<a href="member:{$nickname}" class="member"><xsl:value-of select="$nickname" /></a>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="span[contains(@class,'member')]" mode="copy">
