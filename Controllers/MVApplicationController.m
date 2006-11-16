@@ -271,8 +271,10 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) joinRoom:(id) sender {
-	NSArray *connections = [[MVConnectionsController defaultController] connections];
-	MVChatConnection *connection = ( [connections count] ? [connections objectAtIndex:1] : nil );
+	if( ! [[[MVConnectionsController defaultController] connections] count] )
+		return;
+	NSArray *connections = [[MVConnectionsController defaultController] connectedConnections];
+	MVChatConnection *connection = ( [connections count] ? [connections objectAtIndex:0] : nil );
 	[[JVChatRoomBrowser chatRoomBrowserForConnection:connection] showWindow:nil];
 }
 

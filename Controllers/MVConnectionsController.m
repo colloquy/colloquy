@@ -443,7 +443,7 @@ static NSMenu *favoritesMenu = nil;
 - (IBAction) joinRoom:(id) sender {
 	if( ! [_bookmarks count] ) return;
 	NSArray *connectedConnections = [self connectedConnections];
-	JVChatRoomBrowser *browser = [JVChatRoomBrowser chatRoomBrowserForConnection:( [connections selectedRow] == -1 ? ( [connectedConnections count] ? [connectedConnections objectAtIndex:0] : [[_bookmarks objectAtIndex:0] objectForKey:@"connection"] ) : [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] )];
+	JVChatRoomBrowser *browser = [JVChatRoomBrowser chatRoomBrowserForConnection:( [connections selectedRow] == -1 ? ( [connectedConnections count] ? [connectedConnections objectAtIndex:0] : nil ) : [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] )];
 	[[NSApplication sharedApplication] beginSheet:[browser window] modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
 
