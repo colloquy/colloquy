@@ -269,9 +269,11 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 	[[searchField cell] setPlaceholderString:[sender title]];
 	_selectedTag = [sender tag];
 
-	int i = 0;
-	for( i = 0; i < 4; i++ )
-		[[[searchField menu] itemWithTag:i] setState:( i == _selectedTag ? NSOnState : NSOffState )];
+	NSMenu *template = [[[searchField cell] searchMenuTemplate] copy];
+	for( int i = 0; i < 4; i++ )
+		[[template itemWithTag:i] setState:( i == _selectedTag ? NSOnState : NSOffState )];
+	[[searchField cell] setSearchMenuTemplate:template];
+	[template release];
 
 	[self search:self];
 }
