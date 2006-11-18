@@ -728,8 +728,9 @@ quickEnd:
 	long shiftAmount = 0;
 	unsigned int messageCount = [self _visibleMessageCount] + 1;
 	unsigned int scrollbackLimit = [self scrollbackLimit];
-	BOOL consecutive = ( [message rangeOfString:@"<?message type=\"consecutive\"?>"].location != NSNotFound );
 	JVMarkedScroller *scroller = [self verticalMarkedScroller];
+	BOOL consecutive = ( [message rangeOfString:@"<?message type=\"consecutive\"?>"].location != NSNotFound );
+	if( ! consecutive ) consecutive = ( [message rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
 
 	// check if we are near the bottom of the chat area, and if we should scroll down later
 	BOOL scrollNeeded = [self scrolledNearBottom];
