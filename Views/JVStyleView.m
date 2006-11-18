@@ -608,17 +608,15 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 @implementation JVStyleView (JVStyleViewPrivate)
 - (void) _checkForTransparantStyle {
+	if( [self respondsToSelector:@selector(setBackgroundColor:)] )
+		return; // setDrawsBackground is not needed on a newer WebKit now that it supports -webkit-background-composite: copy.
+
 	DOMCSSStyleDeclaration *style = [self computedStyleForElement:_body pseudoElement:nil];
 	DOMCSSValue *value = [style getPropertyCSSValue:@"background-color"];
 	BOOL transparent = ( value && [[value cssText] rangeOfString:@"rgba"].location != NSNotFound );
 
-	if( [self respondsToSelector:@selector(setBackgroundColor:)] ) {
-		if( transparent ) [self setBackgroundColor:[NSColor clearColor]]; // allows rgba backgrounds to see through to the Desktop
-		else [self setBackgroundColor:[NSColor whiteColor]];
-	} else {
-		if( transparent ) [self setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
-		else [self setDrawsBackground:YES];
-	}
+	if( transparent ) [self setDrawsBackground:NO]; // allows rgba backgrounds to see through to the Desktop
+	else [self setDrawsBackground:YES];
 
 	[self setNeedsDisplay:YES];
 	[[[self mainFrame] frameView] setNeedsDisplay:YES];
