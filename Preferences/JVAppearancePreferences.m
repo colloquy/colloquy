@@ -311,10 +311,10 @@
 #pragma mark -
 
 - (void) fontPreviewField:(JVFontPreviewField *) field didChangeToFont:(NSFont *) font {
-	[[preview preferences] setStandardFontFamily:[font fontName]];
-	[[preview preferences] setFixedFontFamily:[font fontName]];
-	[[preview preferences] setSerifFontFamily:[font fontName]];
-	[[preview preferences] setSansSerifFontFamily:[font fontName]];
+	[[preview preferences] setStandardFontFamily:[font familyName]];
+	[[preview preferences] setFixedFontFamily:[font familyName]];
+	[[preview preferences] setSerifFontFamily:[font familyName]];
+	[[preview preferences] setSansSerifFontFamily:[font familyName]];
 }
 
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
