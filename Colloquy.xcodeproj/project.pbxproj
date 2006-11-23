@@ -104,7 +104,7 @@
 		1C7EF5C206B346E50037F173 /* privateChatTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF5C006B346E50037F173 /* privateChatTab.png */; };
 		1C7EF5C306B346E50037F173 /* privateChatTabNewMessage.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF5C106B346E50037F173 /* privateChatTabNewMessage.png */; };
 		1C7F30160855467F00D41FB0 /* Colloquy.mdimporter in Copy Spotlight Importer */ = {isa = PBXBuildFile; fileRef = CBF685150820186F00F498FB /* Colloquy.mdimporter */; };
-		1C8BDCF4054345160035B84A /* JVChatMemberInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8BDCF2054345160035B84A /* JVChatMemberInspector.m */; };
+		1C8BDCF4054345160035B84A /* JVChatUserInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8BDCF2054345160035B84A /* JVChatUserInspector.m */; };
 		1C8BDD2205436A030035B84A /* JVChatMemberInspector.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C8BDD2005436A020035B84A /* JVChatMemberInspector.nib */; };
 		1C8D2E72065D0BB600AC28C5 /* Message.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F555208B01F0DE0601EE70DE /* Message.framework */; };
 		1C9014C107A2D798002942A7 /* MVChatUserAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9014BF07A2D798002942A7 /* MVChatUserAdditions.m */; };
@@ -611,8 +611,8 @@
 		1C7EF53F06B341890037F173 /* roomTabNewMessage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = roomTabNewMessage.png; path = Resources/roomTabNewMessage.png; sourceTree = "<group>"; };
 		1C7EF5C006B346E50037F173 /* privateChatTab.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = privateChatTab.png; path = Resources/privateChatTab.png; sourceTree = "<group>"; };
 		1C7EF5C106B346E50037F173 /* privateChatTabNewMessage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = privateChatTabNewMessage.png; path = Resources/privateChatTabNewMessage.png; sourceTree = "<group>"; };
-		1C8BDCF1054345160035B84A /* JVChatMemberInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatMemberInspector.h; path = Inspectors/JVChatMemberInspector.h; sourceTree = "<group>"; };
-		1C8BDCF2054345160035B84A /* JVChatMemberInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatMemberInspector.m; path = Inspectors/JVChatMemberInspector.m; sourceTree = "<group>"; };
+		1C8BDCF1054345160035B84A /* JVChatUserInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatUserInspector.h; path = Inspectors/JVChatUserInspector.h; sourceTree = "<group>"; };
+		1C8BDCF2054345160035B84A /* JVChatUserInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatUserInspector.m; path = Inspectors/JVChatUserInspector.m; sourceTree = "<group>"; };
 		1C8BDD2105436A020035B84A /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVChatMemberInspector.nib; sourceTree = "<group>"; };
 		1C8CE1EB05A921A00020D841 /* iTunes.scpt */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.scpt; name = iTunes.scpt; path = "Plug-Ins/iTunes/iTunes.scpt"; sourceTree = "<group>"; };
 		1C8CF8E1066530D60080A2F5 /* MVFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVFileTransfer.h; path = "Chat Core/MVFileTransfer.h"; sourceTree = "<group>"; };
@@ -1479,8 +1479,8 @@
 				1C1ACFB505344FCC00F71D4E /* JVConnectionInspector.h */,
 				1CB4DCAF0536282B0080D36F /* JVChatRoomInspector.m */,
 				1CB4DCAE0536282B0080D36F /* JVChatRoomInspector.h */,
-				1C8BDCF2054345160035B84A /* JVChatMemberInspector.m */,
-				1C8BDCF1054345160035B84A /* JVChatMemberInspector.h */,
+				1C8BDCF2054345160035B84A /* JVChatUserInspector.m */,
+				1C8BDCF1054345160035B84A /* JVChatUserInspector.h */,
 				1CDEE4780583DC58000B9075 /* JVBuddyInspector.m */,
 				1CDEE4770583DC58000B9075 /* JVBuddyInspector.h */,
 			);
@@ -2342,7 +2342,7 @@
 				1C1ACE440533943900F71D4E /* JVInspectorController.m in Sources */,
 				1C1ACFB805344FCC00F71D4E /* JVConnectionInspector.m in Sources */,
 				1CB4DCB10536282B0080D36F /* JVChatRoomInspector.m in Sources */,
-				1C8BDCF4054345160035B84A /* JVChatMemberInspector.m in Sources */,
+				1C8BDCF4054345160035B84A /* JVChatUserInspector.m in Sources */,
 				1CBC62E505488C73009E59E1 /* JVPreferencesController.m in Sources */,
 				1CBC630C05489484009E59E1 /* JVGeneralPreferences.m in Sources */,
 				1CC6FC530549FCD80075807C /* JVAppearancePreferences.m in Sources */,

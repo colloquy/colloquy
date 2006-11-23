@@ -1,4 +1,4 @@
-#import "JVChatMemberInspector.h"
+#import "JVChatUserInspector.h"
 #import "JVChatRoomPanel.h"
 #import "JVBuddy.h"
 #import "MVFileTransferController.h"

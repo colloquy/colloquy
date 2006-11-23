@@ -7,7 +7,7 @@
 #import "JVChatRoomMember.h"
 #import "JVChatMessage.h"
 #import "JVInspectorController.h"
-#import "JVChatMemberInspector.h"
+#import "JVChatUserInspector.h"
 #import "JVChatRoomBrowser.h"
 #import "JVStyle.h"
 #import "JVEmoticonSet.h"

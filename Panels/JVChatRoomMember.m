@@ -4,7 +4,7 @@
 #import "MVBuddyListController.h"
 #import "MVFileTransferController.h"
 #import "JVBuddy.h"
-#import "JVChatMemberInspector.h"
+#import "JVChatUserInspector.h"
 #import "MVConnectionsController.h"
 
 @interface JVChatRoomMember (JVChatMemberPrivate)
