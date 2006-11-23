@@ -11,6 +11,7 @@
 #import "JVStyleView.h"
 #import "NSURLAdditions.h"
 #import "NSAttributedStringMoreAdditions.h"
+#import "MVChatUserAdditions.h"
 
 @interface JVChatRoomPanel (JVChatRoomPrivate)
 - (void) _topicChanged:(id) sender;
@@ -536,13 +537,15 @@
 		BOOL specific = [resource hasPrefix:@"identifier:"];
 		NSString *nick = [resource substringFromIndex:( specific ? 11 : 0 )];
 		JVChatRoomMember *mbr = nil;
+		MVChatUser *user = nil;
 
-		if( specific ) {
-			MVChatUser *user = [[self connection] chatUserWithUniqueIdentifier:nick];
-			if( user ) mbr = [self chatRoomMemberForUser:user];
-		} else {
-			mbr = [self firstChatRoomMemberWithName:nick];
-		}
+		if( specific ) user = [[self connection] chatUserWithUniqueIdentifier:nick];
+		else user = [[self firstChatRoomMemberWithName:nick] user];
+
+		if( ! user ) user = [[[self connection] chatUsersWithNickname:nick] anyObject];
+
+		if( user ) mbr = [self chatRoomMemberForUser:user];
+		else mbr = [self firstChatRoomMemberWithName:nick];
 
 		NSMutableArray *ret = [NSMutableArray array];
 		NSMenuItem *item = nil;
@@ -554,40 +557,35 @@
 				[ret addObject:item];
 				[item release];
 			}
+		} else if( user ) {
+			NSEnumerator *enumerator = [[user standardMenuItems] objectEnumerator];
+			while( ( item = [enumerator nextObject] ) )
+				[ret addObject:item];
+		}
 
-			NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
-			NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
+		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
-			[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
-			[invocation setArgument:&mbr atIndex:2];
-			[invocation setArgument:&self atIndex:3];
+		[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
+		if( mbr ) [invocation setArgument:&mbr atIndex:2];
+		else [invocation setArgument:&user atIndex:2];
+		[invocation setArgument:&self atIndex:3];
 
-			NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
-			if( [results count] ) {
-				[ret addObject:[NSMenuItem separatorItem]];
+		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+		if( [results count] ) {
+			[ret addObject:[NSMenuItem separatorItem]];
 
-				NSArray *items = nil;
-				enumerator = [results objectEnumerator];
-				while( ( items = [enumerator nextObject] ) ) {
-					if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
-					NSEnumerator *ienumerator = [items objectEnumerator];
-					while( ( item = [ienumerator nextObject] ) )
-						if( [item isKindOfClass:[NSMenuItem class]] ) [ret addObject:item];
-				}
-
-				if( [[ret lastObject] isSeparatorItem] )
-					[ret removeObjectIdenticalTo:[ret lastObject]];
+			NSArray *items = nil;
+			NSEnumerator *enumerator = [results objectEnumerator];
+			while( ( items = [enumerator nextObject] ) ) {
+				if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
+				NSEnumerator *ienumerator = [items objectEnumerator];
+				while( ( item = [ienumerator nextObject] ) )
+					if( [item isKindOfClass:[NSMenuItem class]] ) [ret addObject:item];
 			}
-		} else {
-			MVChatUser *user = [[[self connection] chatUsersWithNickname:nick] anyObject];
-			if( ! user ) return ret;
 
-			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:NULL keyEquivalent:@""];
-			[item setRepresentedObject:user];
-			[item setTarget:self];
-			[item setAction:@selector( _startChatWithNonMember: )];
-			[ret addObject:item];
-			[item release];
+			if( [[ret lastObject] isSeparatorItem] )
+				[ret removeObjectIdenticalTo:[ret lastObject]];
 		}
 
 		return ret;
@@ -1374,10 +1372,6 @@
 
 	NSArray *args = [NSArray arrayWithObjects:topicString, ( author ? [author title] : [[[self target] topicAuthor] displayName] ), [NSNumber numberWithBool:emptyTopic], nil];
 	[[display windowScriptObject] callWebScriptMethod:@"changeTopic" withArguments:args];	
-}
-
-- (void) _startChatWithNonMember:(id) sender {
-	[[JVChatController defaultController] chatViewControllerForUser:[sender representedObject] ifExists:NO];
 }
 @end
 

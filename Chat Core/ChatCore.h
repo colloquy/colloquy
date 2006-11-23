@@ -1,6 +1,7 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
+#import <ChatCore/MVChatUserWatchRule.h>
 #import <ChatCore/MVFileTransfer.h>
 #import <ChatCore/MVChatPluginManager.h>
 

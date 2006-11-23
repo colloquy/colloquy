@@ -6,11 +6,11 @@
 #import "JVBuddy.h"
 #import "JVChatUserInspector.h"
 #import "MVConnectionsController.h"
+#import "MVChatUserAdditions.h"
 
 @interface JVChatRoomMember (JVChatMemberPrivate)
 - (NSString *) _selfStoredNickname;
 - (NSString *) _selfCompositeName;
-- (KAIgnoreRule *) _tempIgnoreRule;
 @end
 
 #pragma mark -
@@ -334,33 +334,10 @@
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""] autorelease];
-	[item setTarget:self];
-	[menu addItem:item];
-
-	if( ! [self isLocalUser] ) {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:@selector( startChat: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
+	NSArray *standardItems = [[self user] standardMenuItems];
+	NSEnumerator *enumerator = [standardItems objectEnumerator];
+	while( ( item = [enumerator nextObject] ) )
 		[menu addItem:item];
-
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( sendFile: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		[menu addItem:item];
-	}
-
-	if( ! [self buddy] ) {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add To Buddy List", "add to buddy list contextual menu") action:@selector( addBuddy: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		[menu addItem:item];
-	}
-
-	if( ! [self isLocalUser] ) {
-		[menu addItem:[NSMenuItem separatorItem]];
-
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Ignore", "ignore user contextual menu") action:@selector( toggleIgnore: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		[menu addItem:item];
-	}
 
 	unsigned int localUserModes = ( [[self connection] localUser] ? [(MVChatRoom *)[[self room] target] modesForMemberUser:[[self connection] localUser]] : 0 );
 	BOOL canEdit = ( localUserModes & MVChatRoomMemberOperatorMode );
@@ -471,7 +448,7 @@
 			[menuItem setTitle:NSLocalizedString( @"Make Half Operator", "make half-operator contextual menu - admin only" )];
 		}
 	} else if( [menuItem action] == @selector( toggleIgnore: ) ) {
-		KAIgnoreRule *rule = [self _tempIgnoreRule];
+		KAIgnoreRule *rule = [[self user] tempIgnoreRule];
 		if( rule ) [menuItem setState:NSOnState];
 		else [menuItem setState:NSOffState];
 	}
@@ -493,60 +470,23 @@
 #pragma mark GUI Actions
 
 - (IBAction) doubleClicked:(id) sender {
-	[self startChat:sender];
+	[[self user] startChat:sender];
 }
 
 - (IBAction) startChat:(id) sender {
-	if( [self isLocalUser] ) return;
-	[[JVChatController defaultController] chatViewControllerForUser:[self user] ifExists:NO];
+	[[self user] startChat:sender];
 }
 
 - (IBAction) sendFile:(id) sender {
-	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
-	NSString *path = nil;
-	NSOpenPanel *panel = [NSOpenPanel openPanel];
-	[panel setResolvesAliases:YES];
-	[panel setCanChooseFiles:YES];
-	[panel setCanChooseDirectories:NO];
-	[panel setAllowsMultipleSelection:YES];
-
-	NSView *view = [[[NSView alloc] initWithFrame:NSMakeRect( 0., 0., 200., 28. )] autorelease];
-	[view setAutoresizingMask:( NSViewWidthSizable | NSViewMaxXMargin )];
-
-	NSButton *passiveButton = [[[NSButton alloc] initWithFrame:NSMakeRect( 0., 6., 200., 18. )] autorelease];
-	[[passiveButton cell] setButtonType:NSSwitchButton];
-	[passiveButton setState:passive];
-	[passiveButton setTitle:NSLocalizedString( @"Send File Passively", "send files passively file send open dialog button" )];
-	[passiveButton sizeToFit];
-
-	NSRect frame = [view frame];
-	frame.size.width = NSWidth( [passiveButton frame] );
-
-	[view setFrame:frame];
-	[view addSubview:passiveButton];
-
-	[panel setAccessoryView:view];
-
-	if( [panel runModalForTypes:nil] == NSOKButton ) {
-		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
-		passive = [passiveButton state];
-		while( ( path = [enumerator nextObject] ) )
-			[[MVFileTransferController defaultController] addFileTransfer:[[self user] sendFile:path passively:passive]];
-	}
+	[[self user] sendFile:sender];
 }
 
 - (IBAction) addBuddy:(id) sender {
-	[[MVBuddyListController sharedBuddyList] showBuddyPickerSheet:self];
-	[[MVBuddyListController sharedBuddyList] setNewBuddyNickname:[self nickname]];
-	[[MVBuddyListController sharedBuddyList] setNewBuddyFullname:[self realName]];
-	[[MVBuddyListController sharedBuddyList] setNewBuddyServer:[self connection]];
+	[[self user] addBuddy:sender];
 }
 
 - (IBAction) toggleIgnore:(id) sender {
-	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:[self connection]];
-	KAIgnoreRule *rule = [self _tempIgnoreRule];
-	if( rule ) [rules removeObjectIdenticalTo:rule];
-	else [rules addObject:[KAIgnoreRule ruleForUser:[self nickname] message:nil inRooms:nil isPermanent:NO friendlyName:[NSString stringWithFormat:@"%@ %@", [self displayName], NSLocalizedString( @" (Temporary)", "temporary ignore title suffix" )]]];
+	[[self user] toggleIgnore:sender];
 }
 
 #pragma mark -
@@ -756,19 +696,6 @@
 #pragma mark -
 
 @implementation JVChatRoomMember (JVChatMemberPrivate)
-- (KAIgnoreRule *) _tempIgnoreRule {
-	NSString *ignoreSuffix = NSLocalizedString( @" (Temporary)", "temporary ignore title suffix" );
-	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:[self connection]];
-	NSEnumerator *enumerator = [rules objectEnumerator];
-	KAIgnoreRule *rule = nil;
-
-	while( ( rule = [enumerator nextObject] ) )
-		if( ! [rule isPermanent] && [[rule friendlyName] hasSuffix:ignoreSuffix]
-			&& [rule matchUser:[self user] message:nil inView:[self room]] != JVNotIgnored ) break;
-
-	return rule;
-}
-
 - (void) _refreshIcon:(NSNotification *) notification {
 	[[[self room] windowController] reloadListItem:self andChildren:NO];
 }

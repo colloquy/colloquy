@@ -1,6 +1,4 @@
 #import "JVBuddy.h"
-
-#import <ChatCore/MVChatUserWatchRule.h>
 #import "MVConnectionsController.h"
 
 NSString *JVBuddyCameOnlineNotification = @"JVBuddyCameOnlineNotification";
