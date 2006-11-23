@@ -684,14 +684,14 @@ static const NSStringEncoding supportedEncodings[] = {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _whoisWatchedUsers ) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _checkWatchedUsers ) object:nil];
 
-	if( _status == MVChatConnectionConnectingStatus )
+	if( _status == MVChatConnectionConnectingStatus && _lastError ) {
 		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
+	} else {
+		if( _lastError )
+			_status = MVChatConnectionServerDisconnectedStatus;
 
-	if( _lastError )
-		_status = MVChatConnectionServerDisconnectedStatus;
-
-	if( _status != MVChatConnectionConnectingStatus )
 		[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
+	}
 }
 
 - (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
