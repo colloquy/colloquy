@@ -44,7 +44,7 @@
 	return [NSString stringWithString:ret];
 }
 
-- (KAIgnoreRule *) tempIgnoreRule {
+- (KAIgnoreRule *) _tempIgnoreRule {
 	NSString *ignoreSuffix = NSLocalizedString( @" (Temporary)", "temporary ignore title suffix" );
 	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:[self connection]];
 	NSEnumerator *enumerator = [rules objectEnumerator];
@@ -144,8 +144,19 @@
 
 - (IBAction) toggleIgnore:(id) sender {
 	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:[self connection]];
-	KAIgnoreRule *rule = [self tempIgnoreRule];
+	KAIgnoreRule *rule = [self _tempIgnoreRule];
 	if( rule ) [rules removeObjectIdenticalTo:rule];
 	else [rules addObject:[KAIgnoreRule ruleForUser:[self nickname] message:nil inRooms:nil isPermanent:NO friendlyName:[NSString stringWithFormat:@"%@ %@", [self displayName], NSLocalizedString( @" (Temporary)", "temporary ignore title suffix" )]]];
+}
+
+- (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
+	 if( [menuItem action] == @selector( toggleIgnore: ) ) {
+		KAIgnoreRule *rule = [self _tempIgnoreRule];
+		if( rule ) [menuItem setState:NSOnState];
+		else [menuItem setState:NSOffState];
+		return YES;
+	}
+
+	return YES;
 }
 @end

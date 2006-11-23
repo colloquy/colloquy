@@ -1,10 +1,6 @@
-@class KAIgnoreRule;
-
 @interface MVChatUser (MVChatUserAdditions)
 - (NSString *) xmlDescription;
 - (NSString *) xmlDescriptionWithTagName:(NSString *) tag;
-
-- (KAIgnoreRule *) tempIgnoreRule;
 
 - (NSArray *) standardMenuItems;
 

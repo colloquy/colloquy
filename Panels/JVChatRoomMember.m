@@ -447,10 +447,6 @@
 		} else {
 			[menuItem setTitle:NSLocalizedString( @"Make Half Operator", "make half-operator contextual menu - admin only" )];
 		}
-	} else if( [menuItem action] == @selector( toggleIgnore: ) ) {
-		KAIgnoreRule *rule = [[self user] tempIgnoreRule];
-		if( rule ) [menuItem setState:NSOnState];
-		else [menuItem setState:NSOffState];
 	}
 	return YES;
 }
