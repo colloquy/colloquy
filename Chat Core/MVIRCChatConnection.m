@@ -231,6 +231,9 @@ static const NSStringEncoding supportedEncodings[] = {
 			NSData *msg = [[self class] _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 			[self sendRawMessageImmediatelyWithComponents:@"QUIT :", msg, nil];
 		} else [self sendRawMessage:@"QUIT" immediately:YES];
+	} else if( _status == MVChatConnectionConnectingStatus ) {
+		if( _connectionThread )
+			[[self _chatConnection] performSelector:@selector( disconnect ) inThread:_connectionThread];
 	}
 }
 
