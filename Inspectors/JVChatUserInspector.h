@@ -5,7 +5,11 @@
 - (id <JVInspector>) inspector;
 @end
 
-@interface JVChatMemberInspector : NSObject <JVInspector> {
+@interface MVChatUser (MVChatUserInspection) <JVInspection>
+- (id <JVInspector>) inspector;
+@end
+
+@interface JVChatUserInspector : NSObject <JVInspector> {
 	IBOutlet NSView *view;
 	IBOutlet NSImageView *image;
 	IBOutlet NSTextField *nickname;
@@ -26,13 +30,13 @@
 	IBOutlet NSButton *requestTime;
 	IBOutlet NSTextField *clientInfo;
 	IBOutlet NSButton *requestInfo;
-	JVChatRoomMember *_member;
+	MVChatUser *_user;
 	NSTimer *_localTimeUpdateTimer;
 	NSTimer *_updateTimer;
 	BOOL _nibLoaded;
 	BOOL _addressResolved;
 }
-- (id) initWithChatMember:(JVChatRoomMember *) member;
+- (id) initWithChatUser:(MVChatUser *) user;
 - (void) updateLocalTime;
 
 - (IBAction) requestLocalTime:(id) sender;

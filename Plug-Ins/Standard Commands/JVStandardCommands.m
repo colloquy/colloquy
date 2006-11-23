@@ -4,7 +4,6 @@
 #import "MVConnectionsController.h"
 #import "JVDirectChatPanel.h"
 #import "JVChatRoomPanel.h"
-#import "JVChatRoomMember.h"
 #import "JVChatMessage.h"
 #import "JVInspectorController.h"
 #import "JVChatUserInspector.h"
@@ -72,8 +71,7 @@
 			NSString *nick = [[arguments string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 			MVChatUser *user = [[connection chatUsersWithNickname:nick] anyObject];
 			if( ! user ) return NO;
-			JVChatRoomMember *member = [[[JVChatRoomMember alloc] initWithRoom:nil andUser:user] autorelease];
-			[[JVInspectorController inspectorOfObject:member] show:nil];
+			[[JVInspectorController inspectorOfObject:user] show:nil];
 			return YES;
 		}
 	}
