@@ -1,5 +1,10 @@
 #import "JVChatRoomMember.h"
+#import "JVDirectChatPanel.h"
 #import "JVInspectorController.h"
+
+@interface JVDirectChatPanel (JVDirectChatPanelInspection) <JVInspection>
+- (id <JVInspector>) inspector;
+@end
 
 @interface JVChatRoomMember (JVChatRoomMemberInspection) <JVInspection>
 - (id <JVInspector>) inspector;

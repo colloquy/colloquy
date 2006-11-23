@@ -75,11 +75,11 @@
 		[items addObject:item];
 	}
 
-//	if( ! [self buddy] ) {
+	if( ! [[MVBuddyListController sharedBuddyList] buddyForUser:self] ) {
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add To Buddy List", "add to buddy list contextual menu") action:@selector( addBuddy: ) keyEquivalent:@""] autorelease];
 		[item setTarget:self];
 		[items addObject:item];
-//	}
+	}
 
 	if( ! [self isLocalUser] ) {
 		[items addObject:[NSMenuItem separatorItem]];

@@ -3,6 +3,14 @@
 #import "JVBuddy.h"
 #import "MVFileTransferController.h"
 
+@implementation JVDirectChatPanel (JVDirectChatPanelInspection)
+- (id <JVInspector>) inspector {
+	return [[[JVChatUserInspector alloc] initWithChatUser:[self target]] autorelease];
+}
+@end
+
+#pragma mark -
+
 @implementation JVChatRoomMember (JVChatRoomMemberInspection)
 - (id <JVInspector>) inspector {
 	return [[[JVChatUserInspector alloc] initWithChatUser:[self user]] autorelease];
