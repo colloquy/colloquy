@@ -8,6 +8,8 @@
 #import <sys/stat.h>
 #import <unistd.h>
 
+#define DEBUG_SQL 0
+
 @interface JVSQLChatTranscript (JVSQLChatTranscriptPrivate)
 - (BOOL) _initializeDatabase;
 - (sqlite3 *) _database;
@@ -350,7 +352,7 @@ static int _specificElementsInRangeCallback( void *context, int fieldCount, char
 		const char *msgQuery = "INSERT INTO message (context, session, user, received, action, highlighted, ignored, type, content) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		sqlite3_stmt *compiledMsgQuery = NULL;
 		if( sqlite3_prepare( _database, msgQuery, -1, &compiledMsgQuery, NULL ) != SQLITE_OK ) {
-			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
+			if( DEBUG_SQL ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
 			sqlite3_exec( _database, "ROLLBACK TRANSACTION", NULL, NULL, NULL );
 			return nil;
 		}
@@ -369,20 +371,20 @@ static int _specificElementsInRangeCallback( void *context, int fieldCount, char
 
 		sqlite3_step( compiledMsgQuery );
 		if( sqlite3_finalize( compiledMsgQuery ) != SQLITE_OK ) {
-			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
+			if( DEBUG_SQL ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
 			sqlite3_exec( _database, "ROLLBACK TRANSACTION", NULL, NULL, NULL );
 			return nil;
 		}
 
 		messageIdentifier = sqlite3_last_insert_rowid( _database );
 		if( ! messageIdentifier ) {
-			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
+			if( DEBUG_SQL ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
 			sqlite3_exec( _database, "ROLLBACK TRANSACTION", NULL, NULL, NULL );
 			return nil;
 		}
 
 		if( sqlite3_exec( _database, "COMMIT TRANSACTION", NULL, NULL, NULL ) != SQLITE_OK ) {
-			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
+			if( DEBUG_SQL ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
 			sqlite3_exec( _database, "ROLLBACK TRANSACTION", NULL, NULL, NULL );
 			return nil;
 		}
@@ -438,7 +440,7 @@ static int _specificElementsInRangeCallback( void *context, int fieldCount, char
 		const char *query = "INSERT INTO event (context, session, name, occurred, content) VALUES (?, ?, ?, ?, ?)";
 		sqlite3_stmt *compiledQuery = NULL;
 		if( sqlite3_prepare( _database, query, -1, &compiledQuery, NULL ) != SQLITE_OK ) {
-			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
+			if( DEBUG_SQL ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
 			sqlite3_exec( _database, "ROLLBACK TRANSACTION", NULL, NULL, NULL );
 			return nil;
 		}
@@ -452,21 +454,21 @@ static int _specificElementsInRangeCallback( void *context, int fieldCount, char
 
 		sqlite3_step( compiledQuery );
 		if( sqlite3_finalize( compiledQuery ) != SQLITE_OK ) {
-			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
+			if( DEBUG_SQL ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
 			sqlite3_exec( _database, "ROLLBACK TRANSACTION", NULL, NULL, NULL );
 			return nil;
 		}
 
 		eventIdentifier = sqlite3_last_insert_rowid( _database );
 		if( ! eventIdentifier ) {
-			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
+			if( DEBUG_SQL ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
 			sqlite3_exec( _database, "ROLLBACK TRANSACTION", NULL, NULL, NULL );
 			return nil;
 		}
 
 		query = "INSERT INTO attribute (entity, link, identifier, value, type) VALUES (?, ?, ?, ?, ?)";
 		if( sqlite3_prepare( _database, query, -1, &compiledQuery, NULL ) != SQLITE_OK ) {
-			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
+			if( DEBUG_SQL ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
 			sqlite3_exec( _database, "ROLLBACK TRANSACTION", NULL, NULL, NULL );
 			return nil;
 		}
@@ -510,13 +512,13 @@ static int _specificElementsInRangeCallback( void *context, int fieldCount, char
 		}
 
 		if( sqlite3_finalize( compiledQuery ) != SQLITE_OK ) {
-			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
+			if( DEBUG_SQL ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
 			sqlite3_exec( _database, "ROLLBACK TRANSACTION", NULL, NULL, NULL );
 			return nil;
 		}
 
 		if( sqlite3_exec( _database, "COMMIT TRANSACTION", NULL, NULL, NULL ) != SQLITE_OK ) {
-			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
+			if( DEBUG_SQL ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
 			sqlite3_exec( _database, "ROLLBACK TRANSACTION", NULL, NULL, NULL );
 			return nil;
 		}
@@ -611,10 +613,10 @@ static void _printSQL( void *context, const char *sql ) {
 	NSString *setup = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"transcriptSchema" ofType:@"sql"]];
 
 	@synchronized( self ) {
-		if( NSDebugEnabled ) sqlite3_trace( _database, _printSQL, NULL );
+		if( DEBUG_SQL ) sqlite3_trace( _database, _printSQL, NULL );
 		sqlite3_busy_timeout( _database, 2500 ); // 2.5 seconds
 		if( sqlite3_exec( _database, [setup UTF8String], NULL, NULL, NULL ) != SQLITE_OK ) {
-			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
+			if( DEBUG_SQL ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
 			sqlite3_exec( _database, "ROLLBACK TRANSACTION", NULL, NULL, NULL );
 			return NO;
 		}
@@ -687,7 +689,7 @@ static void _printSQL( void *context, const char *sql ) {
 		const char *query = "INSERT INTO user (self, name, nickname, identifier, hostmask, class, buddy) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		sqlite3_stmt *compiledQuery = NULL;
 		if( sqlite3_prepare( _database, query, -1, &compiledQuery, NULL ) != SQLITE_OK ) {
-			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
+			if( DEBUG_SQL ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
 			sqlite3_exec( _database, "ROLLBACK TRANSACTION", NULL, NULL, NULL );
 			return 0;
 		}
@@ -702,14 +704,14 @@ static void _printSQL( void *context, const char *sql ) {
 
 		sqlite3_step( compiledQuery );
 		if( sqlite3_finalize( compiledQuery ) != SQLITE_OK ) {
-			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
+			if( DEBUG_SQL ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
 			sqlite3_exec( _database, "ROLLBACK TRANSACTION", NULL, NULL, NULL );
 			return 0;
 		}
 
 		userIdentifier = sqlite3_last_insert_rowid( _database );
 		if( ! userIdentifier ) {
-			if( NSDebugEnabled ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
+			if( DEBUG_SQL ) NSLog( @"SQL ERROR: %s", sqlite3_errmsg( _database ) );
 			sqlite3_exec( _database, "ROLLBACK TRANSACTION", NULL, NULL, NULL );
 			return 0;
 		}
