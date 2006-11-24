@@ -1957,6 +1957,8 @@ end:
 #undef banExcludeMode
 #undef inviteExcludeMode
 
+	[argsNeeded release];
+
 	unsigned int changedModes = ( oldModes ^ [room modes] );
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", sender, @"by", nil]];
 }
