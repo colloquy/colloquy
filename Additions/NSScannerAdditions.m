@@ -3,8 +3,6 @@
 
 #import "NSScannerAdditions.h"
 
-#define min(a,b) ((a) > (b) ? (b) : (a))
-
 @implementation NSScanner (NSScannerAdditions)
 - (BOOL) scanCharacterInto:(unichar *) unicharValue {
 	if( ! [self isAtEnd] ) {
@@ -21,7 +19,7 @@
 	if( ! [self isAtEnd] ) {
 		unsigned location = [self scanLocation];
 		NSString *source = [self string];
-		unsigned length = min( maxLength, [source length] - location );
+		unsigned length = MIN( maxLength, [source length] - location );
 		if( length > 0 ) {
 			*stringValue = [[self string] substringWithRange:NSMakeRange( location, length )];
 			[self setScanLocation:( location + length )];
@@ -36,7 +34,7 @@
 	if( ! [self isAtEnd] ) {
 		unsigned location = [self scanLocation];
 		NSString *source = [self string];
-		unsigned length = min( maxLength, [source length] - location );
+		unsigned length = MIN( maxLength, [source length] - location );
 		if( length > 0 ) {
 			unichar *chars = calloc( length, sizeof( unichar ) );
 			[source getCharacters:chars range:NSMakeRange( location, length )];

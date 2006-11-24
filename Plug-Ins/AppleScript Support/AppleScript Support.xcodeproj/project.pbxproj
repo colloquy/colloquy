@@ -146,9 +146,11 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1C7F30420855482D00D41FB0 /* Build configuration list for PBXProject "AppleScript Support" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
 			projectDirPath = "";
+			shouldCheckCompatibility = 1;
 			targets = (
 				8D5B49AC048680CD000E48DA /* AppleScript Support Plugin */,
 			);

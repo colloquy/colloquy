@@ -97,7 +97,7 @@
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( checkForModifications: ) name:NSApplicationWillBecomeActiveNotification object:[NSApplication sharedApplication]];
 
-		[self performSelector:@selector( idle: ) withObject:nil afterDelay:1.];
+		[self performSelector:@selector( idle ) withObject:nil afterDelay:0.];
 	}
 	return self;
 }
@@ -143,8 +143,9 @@
 }
 
 - (void) setScript:(NSAppleScript *) script {
-	[_script autorelease];
+	id old = _script;
 	_script = [script retain];
+	[old release];
 }
 
 #pragma mark -
@@ -159,9 +160,9 @@
 
 	[self setScript:script];
 	[_doseNotRespond removeAllObjects];
-	[self performSelector:@selector( idle: ) withObject:nil afterDelay:1.];
 
 	[self performSelector:@selector( load )];
+	[self performSelector:@selector( idle ) withObject:nil afterDelay:0.];
 }
 
 #pragma mark -
@@ -177,8 +178,9 @@
 }
 
 - (void) setScriptFilePath:(NSString *) path {
-	[_path autorelease];
+	id old = _path;
 	_path = [path copyWithZone:[self zone]];
+	[old release];
 }
 
 #pragma mark -
@@ -252,8 +254,9 @@
 		NSDictionary *info = [[NSFileManager defaultManager] fileAttributesAtPath:[self scriptFilePath] traverseLink:YES];
 		NSDate *fileModDate = [info fileModificationDate];
 		if( [fileModDate compare:_modDate] == NSOrderedDescending && [fileModDate compare:[NSDate date]] == NSOrderedAscending ) { // newer script file
-			[_modDate autorelease];
+			id old = _modDate;
 			_modDate = [[NSDate date] retain];
+			[old release];
 			[self performSelector:@selector( promptForReload ) withObject:nil afterDelay:0.];
 		}
 	}
@@ -261,15 +264,18 @@
 
 #pragma mark -
 
-- (void) idle:(id) sender {
+- (void) idle {
+	NSTimeInterval finalTime = _idleTimer ? [_idleTimer timeInterval] : 30.;
+
 	[_idleTimer invalidate];
-	[_idleTimer autorelease];
+	[_idleTimer release];
 	_idleTimer = nil;
 
-	NSNumber *newTime = [self callScriptHandler:'iDlX' withArguments:nil forSelector:_cmd];
-	if( [newTime isMemberOfClass:[NSError class]] ) return;
-	if( ! [newTime isKindOfClass:[NSNumber class]] ) _idleTimer = [[NSTimer scheduledTimerWithTimeInterval:5. target:self selector:_cmd userInfo:nil repeats:NO] retain];
-	else _idleTimer = [[NSTimer scheduledTimerWithTimeInterval:[newTime doubleValue] target:self selector:_cmd userInfo:nil repeats:NO] retain];
+	NSNumber *resultTime = [self callScriptHandler:'iDlX' withArguments:nil forSelector:_cmd];
+	if( [resultTime isKindOfClass:[NSNumber class]] && [resultTime doubleValue] > 0. )
+		finalTime = [resultTime doubleValue];
+
+	_idleTimer = [[NSTimer scheduledTimerWithTimeInterval:finalTime target:self selector:_cmd userInfo:nil repeats:NO] retain];
 }
 
 #pragma mark -
@@ -319,14 +325,14 @@
 - (IBAction) performContextualMenuItemAction:(id) sender {
 	id object = [sender representedObject];
 	NSMutableArray *submenu = [NSMutableArray array];
-	
+
 	NSMenu *menu = [sender menu];
 	NSMenu *parent = nil;
 	while( ( parent = [menu supermenu] ) ) {
 		[submenu insertObject:[menu title] atIndex:0];
 		menu = parent;
 	}
-	
+
 	NSString *title = [sender title];
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:title, @"----", object, @"pcM1", submenu, @"pcM2", nil];
 	[self callScriptHandler:'pcMX' withArguments:args forSelector:_cmd];
@@ -336,16 +342,17 @@
 	if( [container respondsToSelector:@selector( objectEnumerator )] ) {
 		NSEnumerator *enumerator = [container objectEnumerator];
 		id item = nil;
-		
+
 		while( ( item = [enumerator nextObject] ) ) {
 			if( [item isKindOfClass:[NSString class]] ) {
 				if( [item isEqualToString:@"-"] ) {
 					[itemList addObject:[NSMenuItem separatorItem]];
 				} else {
-					NSMenuItem *mitem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( performContextualMenuItemAction: ) keyEquivalent:@""] autorelease];
+					NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:item action:@selector( performContextualMenuItemAction: ) keyEquivalent:@""];
 					[mitem setTarget:self];
 					[mitem setRepresentedObject:object];
 					[itemList addObject:mitem];
+					[mitem release];
 				}
 			} else if( [item isKindOfClass:[NSDictionary class]] ) {
 				NSString *title = [item objectForKey:@"title"];
@@ -358,7 +365,7 @@
 				id iconSize = [item objectForKey:@"iconsize"];
 				NSString *tooltip = [item objectForKey:@"tooltip"];
 				id context = [item objectForKey:@"context"];
-				
+
 				if( ! [title isKindOfClass:[NSString class]] ) continue;
 				if( ! [tooltip isKindOfClass:[NSString class]] ) tooltip = nil;
 				if( ! [enabled isKindOfClass:[NSNumber class]] ) enabled = nil;
@@ -368,17 +375,16 @@
 				if( ! [iconPath isKindOfClass:[NSString class]] && ! [iconPath isKindOfClass:[NSArray class]] ) iconPath = nil;
 				if( ! [iconSize isKindOfClass:[NSArray class]] && ! [iconSize isKindOfClass:[NSNumber class]] ) iconSize = nil;
 				if( ! [sub isKindOfClass:[NSArray class]] && ! [sub isKindOfClass:[NSDictionary class]] ) sub = nil;
-				
-				NSMenuItem *mitem = [[[NSMenuItem alloc] initWithTitle:title action:@selector( performContextualMenuItemAction: ) keyEquivalent:@""] autorelease];
+
+				NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:title action:@selector( performContextualMenuItemAction: ) keyEquivalent:@""];
 				if( context ) [mitem setRepresentedObject:context];
 				else [mitem setRepresentedObject:object];
 				if( ! enabled || ( enabled && [enabled boolValue] ) ) [mitem setTarget:self];
 				if( enabled && ! [enabled boolValue] ) [mitem setEnabled:[enabled boolValue]];
 				if( checked ) [mitem setState:[checked intValue]];
-#define min(a,b) ((a) > (b) ? (b) : (a))
-				if( indent ) [mitem setIndentationLevel:min( 15, [indent unsignedIntValue] )];
+				if( indent ) [mitem setIndentationLevel:[indent unsignedIntValue]];
 				if( tooltip ) [mitem setToolTip:tooltip];
-				
+
 				if( alternate && [alternate unsignedIntValue] == 1 ) {
 					[mitem setKeyEquivalentModifierMask:NSAlternateKeyMask];
 					[mitem setAlternate:YES];
@@ -389,7 +395,7 @@
 					[mitem setKeyEquivalentModifierMask:( NSShiftKeyMask | NSAlternateKeyMask | NSControlKeyMask )];
 					[mitem setAlternate:YES];
 				}
-				
+
 				if( [iconPath isKindOfClass:[NSString class]] && [(NSString *)iconPath length] ) {
 					NSURL *iconURL = nil;
 					if( [iconPath hasPrefix:@"#"] ) {
@@ -399,33 +405,33 @@
 						} else if( [iconSize isKindOfClass:[NSNumber class]] ) {
 							size = NSMakeSize( [iconSize unsignedIntValue], [iconSize unsignedIntValue] );
 						} else size = NSMakeSize( 24., 12. );
-						
+
 						NSColor *color = [NSColor colorWithHTMLAttributeValue:iconPath];
-						NSImage *icon = [[[NSImage alloc] initWithSize:size] autorelease];
-						
+						NSImage *icon = [[NSImage alloc] initWithSize:size];
+
 						[icon lockFocus];
 						[[color shadowWithLevel:0.1] set];
 						[NSBezierPath fillRect:NSMakeRect( 0., 0., size.width, size.height )];
 						[color drawSwatchInRect:NSMakeRect( 1., 1., size.width - 2., size.height - 2. )];
 						[icon unlockFocus];
-						
+
 						[mitem setImage:icon];
+						[icon release];
 					} else if( ( iconURL = [NSURL URLWithString:iconPath] ) ) {
-						// NSImage *icon = [[[NSImage allocWithZone:[self zone]] initByReferencingURL:[NSURL URLWithString:iconPath]] autorelease];
-						// Lets download the icon with a 1-second timeout
-						// Let's also ask for the cache if it exists rather than using protocol default
 						NSURLRequest *iconRequest = [NSURLRequest requestWithURL:iconURL cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:1.0];
 						NSData *iconData = [NSURLConnection sendSynchronousRequest:iconRequest returningResponse:nil error:nil];
-						NSImage *icon = [[[NSImage alloc] initWithData:iconData] autorelease];
+						NSImage *icon = [[NSImage alloc] initWithData:iconData];
 						if( icon ) [mitem setImage:icon];
+						[icon release];
 					} else {
 						if( ! [iconPath isAbsolutePath] ) {
 							NSString *dir = [[self scriptFilePath] stringByDeletingLastPathComponent];
 							iconPath = [dir stringByAppendingPathComponent:iconPath];
 						}
-						
-						NSImage *icon = [[[NSImage allocWithZone:[self zone]] initByReferencingFile:iconPath] autorelease];
+
+						NSImage *icon = [[NSImage allocWithZone:[self zone]] initByReferencingFile:iconPath];
 						if( icon ) [mitem setImage:icon];
+						[icon release];
 					}
 					
 					NSSize size = NSZeroSize;
@@ -446,10 +452,10 @@
 					} else if( [iconSize isKindOfClass:[NSNumber class]] ) {
 						size = NSMakeSize( [iconSize unsignedIntValue], [iconSize unsignedIntValue] );
 					} else size = NSMakeSize( 24., 12. );
-					
+
 					NSColor *color = [NSColor colorWithCalibratedRed:( [[iconPath objectAtIndex:0] unsignedIntValue] / 65535. ) green:( [[iconPath objectAtIndex:1] unsignedIntValue] / 65535. ) blue:( [[iconPath objectAtIndex:2] unsignedIntValue] / 65535. ) alpha:1.];
-					NSImage *icon = [[[NSImage alloc] initWithSize:size] autorelease];
-					
+					NSImage *icon = [[NSImage alloc] initWithSize:size];
+
 					[icon lockFocus];
 					[[color shadowWithLevel:0.1] set];
 					[NSBezierPath fillRect:NSMakeRect( 0., 0., size.width, size.height )];
@@ -457,23 +463,27 @@
 					[icon unlockFocus];
 					
 					[mitem setImage:icon];
+					[icon release];
 				}
-				
+
 				[itemList addObject:mitem];
-				
+
 				if( [sub respondsToSelector:@selector( objectEnumerator )] && [sub respondsToSelector:@selector( count )] && [sub count] ) {
-					NSMenu *submenu = [[[NSMenu allocWithZone:[self zone]] initWithTitle:title] autorelease];
+					NSMenu *submenu = [[NSMenu allocWithZone:[self zone]] initWithTitle:title];
 					NSMutableArray *subArray = [NSMutableArray array];
-					
+
 					[self buildMenuInto:subArray fromReturnContainer:sub withRepresentedObject:object];
-					
+
 					id subItem = nil;
 					NSEnumerator *subenumerator = [subArray objectEnumerator];
 					while( ( subItem = [subenumerator nextObject] ) )
 						[submenu addItem:subItem];
-					
+
 					[mitem setSubmenu:submenu];
+					[submenu release];
 				}
+
+				[mitem release];
 			}
 		}
 	}
