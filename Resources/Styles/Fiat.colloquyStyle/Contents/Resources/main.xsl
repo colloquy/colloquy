@@ -233,6 +233,10 @@
 		<a href="member:{current()}" class="member"><xsl:value-of select="current()" /></a>
 	</xsl:template>
 
+	<xsl:template match="@*|*" mode="event">
+		<xsl:copy><xsl:apply-templates select="@*|node()" mode="event" /></xsl:copy>
+	</xsl:template>
+
 	<xsl:template match="@*|*" mode="copy">
 		<xsl:copy><xsl:apply-templates select="@*|node()" mode="copy" /></xsl:copy>
 	</xsl:template>
