@@ -107,7 +107,7 @@
 				<key>attributes</key>
 				<dict>
 					<key>Description</key>
-					<string>Room attributes containing various itmes.</string>
+					<string>Room attributes containing various items.</string>
 					<key>Name</key>
 					<string>attributes</string>
 				</dict>
@@ -189,14 +189,14 @@
 				<key>address</key>
 				<dict>
 					<key>Description</key>
-					<string>The address the user connected to the server from. Somtimes this is a fake (masked) address.</string>
+					<string>The address the user connected to the server from. Sometimes this is a fake (masked) address.</string>
 					<key>Name</key>
 					<string>address</string>
 				</dict>
 				<key>attributes</key>
 				<dict>
 					<key>Description</key>
-					<string>User attributes containing various itmes.</string>
+					<string>User attributes containing various items.</string>
 					<key>Name</key>
 					<string>attributes</string>
 				</dict>
@@ -245,7 +245,7 @@
 				<key>realName</key>
 				<dict>
 					<key>Description</key>
-					<string>The real name supplied by the user, not always a person's realname.</string>
+					<string>The real name supplied by the user, not always a person's real name.</string>
 					<key>Name</key>
 					<string>real name</string>
 				</dict>
@@ -275,7 +275,7 @@
 					<key>Description</key>
 					<string>The current status of the user.</string>
 					<key>Name</key>
-					<string>user status</string>
+					<string>status</string>
 				</dict>
 				<key>username</key>
 				<dict>
@@ -661,12 +661,12 @@
 				<key>Name</key>
 				<string>Mac OS Roman</string>
 			</dict>
-			<key>MacOSSimp.Chinese</key>
+			<key>MacOSSimpChinese</key>
 			<dict>
 				<key>Name</key>
 				<string>Mac OS Simp. Chinese</string>
 			</dict>
-			<key>MacOSTrad.Chinese</key>
+			<key>MacOSTradChinese</key>
 			<dict>
 				<key>Name</key>
 				<string>Mac OS Trad. Chinese</string>
@@ -681,12 +681,12 @@
 				<key>Name</key>
 				<string>Shift JIS</string>
 			</dict>
-			<key>Simp.ChineseEUC</key>
+			<key>SimpChineseEUC</key>
 			<dict>
 				<key>Name</key>
 				<string>Simp. Chinese EUC</string>
 			</dict>
-			<key>Trad.ChineseEUC</key>
+			<key>TradChineseEUC</key>
 			<dict>
 				<key>Name</key>
 				<string>Trad. Chinese EUC</string>
@@ -716,12 +716,12 @@
 				<key>Name</key>
 				<string>Windows Latin 2</string>
 			</dict>
-			<key>WindowsSimp.Chinese</key>
+			<key>WindowsSimpChinese</key>
 			<dict>
 				<key>Name</key>
 				<string>Windows Simp. Chinese</string>
 			</dict>
-			<key>WindowsTrad.Chinese</key>
+			<key>WindowsTradChinese</key>
 			<dict>
 				<key>Name</key>
 				<string>Windows Trad. Chinese</string>

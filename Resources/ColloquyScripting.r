@@ -97,21 +97,19 @@ resource 'aete' (0, "Colloquy Terminology") {
 			{
 			},
 
-			"chat room panel, console panel, direct chat panel or panel", 't004', "", { }, { },
+			"chat room or chat user", 't002', "", { }, { },
 
-			"list of text or text", '****', "", { }, { },
+			"chat room panel, console panel, direct chat panel, panel or transcript panel", 't007', "", { }, { },
 
 			"chat user, member or text", 't001', "", { }, { },
 
-			"chat room panel, console panel, direct chat panel, panel or transcript panel", 't008', "", { }, { },
+			"chat user or member", 't011', "", { }, { },
 
-			"chat room panel, direct chat panel, panel or transcript panel", 't009', "", { }, { },
+			"chat room panel, direct chat panel, panel or transcript panel", 't008', "", { }, { },
 
-			"chat user or member", 't012', "", { }, { },
+			"chat room panel, console panel, direct chat panel or panel", 't003', "", { }, { },
 
-			"chat room or chat user", 't002', "", { }, { },
-
-			"chat room panel or direct chat panel", 't007', "", { }, { }
+			"chat room panel or direct chat panel", 't006', "", { }, { }
 		},
 		{
 			/* Comparisons */
@@ -614,7 +612,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"id", 'ID  ', 'long',
-				"The unique identifier of the chat view controler.",
+				"The unique identifier of the chat view controller.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"connection", 'conM', 'conM',
@@ -626,7 +624,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"description", 'idtA', 'TEXT',
-				"Consicse description of the chat view and what it represents.",
+				"Concise description of the chat view and what it represents.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12
 			},
 			{
@@ -645,7 +643,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"transcript", 'traM', 'traM',
-				"The transcript shown in the panel. (Default subcontainer.)",
+				"The transcript shown in the panel. (Default sub-container.)",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12
 			},
 			{
@@ -686,7 +684,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, enumerated, readWrite, Reserved12,
 
 				"current message", 'cRmA', 'cmsM',
-				"The current emssage that is being passed to plugins to process.",
+				"The current message that is being passed to plugins to process.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"new messages waiting", 'nemA', 'long',
@@ -749,7 +747,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"chat user", 'chUs', 'chUs',
-				"The chat user for this member. (Default subcontainer.)",
+				"The chat user for this member. (Default sub-container.)",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"buddy", 'budM', 'budM',
@@ -855,7 +853,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
 				"body", 'maPA', 'ctxt',
-				"The body of the message. (Default subcontainer.)",
+				"The body of the message. (Default sub-container.)",
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
 				"HTML", 'maHA', 'TEXT',
@@ -977,10 +975,10 @@ resource 'aete' (0, "Colloquy Terminology") {
 			"Join a chat room.",
 			'ccoR', 'jCrX',
 			reply_none__,
-			'****',
+			'TEXT',
 			"Chat room(s) to join.",
 			directParamRequired,
-			listOfItems, notEnumerated, Reserved13,
+			singleItem, notEnumerated, Reserved13,
 			{
 				"on", 'jCr1', 'conM',
 				"The connection to join on. Optional if the nearest enclosing tell block responds to this command.",
@@ -1028,7 +1026,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"real name", 'rElA', 'TEXT',
-				"The real name supplied by the user, not always a person's realname.",
+				"The real name supplied by the user, not always a person's real name.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"user name", 'uSnA', 'TEXT',
@@ -1036,7 +1034,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"address", 'adRA', 'TEXT',
-				"The address the user connected to the server from. Somtimes this is a fake (masked) address.",
+				"The address the user connected to the server from. Sometimes this is a fake (masked) address.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"server address", 'sevA', 'TEXT',
@@ -1059,7 +1057,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The date the user disconnected from the server. This will not be available for all users.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
-				"user status", 'stsA', 'cusE',
+				"status", 'stsA', 'cusE',
 				"The current status of the user.",
 				reserved, singleItem, enumerated, readOnly, Reserved12,
 
@@ -1068,7 +1066,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
 				"attributes", 'atRA', 'reco',
-				"User attributes containing various itmes.",
+				"User attributes containing various items.",
 				reserved, singleItem, notEnumerated, readWrite, Reserved12
 			},
 			{
@@ -1103,7 +1101,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				reserved, singleItem, enumerated, readWrite, Reserved12,
 
 				"attributes", 'atRA', 'reco',
-				"Room attributes containing various itmes.",
+				"Room attributes containing various items.",
 				reserved, singleItem, notEnumerated, readWrite, Reserved12,
 
 				"joined", 'joIA', 'bool',
@@ -1344,7 +1342,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"Any arguments given with the command.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"for", 'pcC2', 't004',
+				"for", 'pcC2', 't003',
 				"The panel the command was entered in.",
 				optional,
 				singleItem, notEnumerated, Reserved13
@@ -1359,11 +1357,11 @@ resource 'aete' (0, "Colloquy Terminology") {
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
-				"from", 'piM2', 't012',
+				"from", 'piM2', 't011',
 				"The user this message came from.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"in", 'piM3', 't007',
+				"in", 'piM3', 't006',
 				"The chat room or direct chat this message is in.",
 				optional,
 				singleItem, notEnumerated, Reserved13
@@ -1378,7 +1376,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
-				"in", 'poM2', 't007',
+				"in", 'poM2', 't006',
 				"The chat room or direct chat this message is in.",
 				optional,
 				singleItem, notEnumerated, Reserved13
@@ -1443,8 +1441,8 @@ resource 'aete' (0, "Colloquy Terminology") {
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
-				"in", 'cMi1', 't008',
-				"The chat panel this context menu is assocated with, if any.",
+				"in", 'cMi1', 't007',
+				"The chat panel this context menu is associated with, if any.",
 				optional,
 				singleItem, notEnumerated, Reserved13
 			},
@@ -1479,7 +1477,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
-				"in", 'hCl1', 't009',
+				"in", 'hCl1', 't008',
 				"The chat panel this link was clicked in.",
 				optional,
 				singleItem, notEnumerated, Reserved13
@@ -1517,7 +1515,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			},
 
 			"parting chat room",
-			"Called when we are in the process of laveing a room. Messages can still be sent.",
+			"Called when we are in the process of leaving a room. Messages can still be sent.",
 			'cplG', 'pRmX',
 			reply_none__,
 			'crmM',
@@ -1561,7 +1559,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 			directParamRequired,
 			singleItem, notEnumerated, Reserved13,
 			{
-				"by", 'kRm1', 't012',
+				"by", 'kRm1', 't011',
 				"The member who kicked us out.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
@@ -1618,7 +1616,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The chat room.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"by", 'mKr2', 't012',
+				"by", 'mKr2', 't011',
 				"The member who kicked the other member out.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
@@ -1638,7 +1636,7 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The chat room.",
 				optional,
 				singleItem, notEnumerated, Reserved13,
-				"by", 'rTc2', 't012',
+				"by", 'rTc2', 't011',
 				"The member who changed the topic.",
 				optional,
 				singleItem, notEnumerated, Reserved13,

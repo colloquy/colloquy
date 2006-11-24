@@ -572,7 +572,7 @@
 			<key>UnnamedArgument</key>
 			<dict>
 				<key>Type</key>
-				<string>NSArray</string>
+				<string>NSString</string>
 			</dict>
 		</dict>
 		<key>RefreshInformation</key>
@@ -749,17 +749,17 @@
 				<string>mcKr</string>
 				<key>MacOSRoman</key>
 				<string>mcRo</string>
-				<key>MacOSSimp.Chinese</key>
+				<key>MacOSSimpChinese</key>
 				<string>mcSc</string>
-				<key>MacOSTrad.Chinese</key>
+				<key>MacOSTradChinese</key>
 				<string>mcTc</string>
 				<key>NonlossyASCII</key>
 				<string>nlAs</string>
 				<key>ShiftJIS</key>
 				<string>sJiS</string>
-				<key>Simp.ChineseEUC</key>
+				<key>SimpChineseEUC</key>
 				<string>scUC</string>
-				<key>Trad.ChineseEUC</key>
+				<key>TradChineseEUC</key>
 				<string>tcUC</string>
 				<key>UTF8</key>
 				<string>utF8</string>
@@ -771,9 +771,9 @@
 				<string>cp52</string>
 				<key>WindowsLatin2</key>
 				<string>cp50</string>
-				<key>WindowsSimp.Chinese</key>
+				<key>WindowsSimpChinese</key>
 				<string>wnSc</string>
-				<key>WindowsTrad.Chinese</key>
+				<key>WindowsTradChinese</key>
 				<string>wnTc</string>
 			</dict>
 		</dict>

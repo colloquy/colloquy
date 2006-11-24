@@ -11,7 +11,7 @@
 				<key>view</key>
 				<dict>
 					<key>Description</key>
-					<string>The chat panel this context menu is assocated with, if any.</string>
+					<string>The chat panel this context menu is associated with, if any.</string>
 					<key>Name</key>
 					<string>in</string>
 				</dict>
@@ -256,7 +256,7 @@
 		<key>PartingChatRoom</key>
 		<dict>
 			<key>Description</key>
-			<string>Called when we are in the process of laveing a room. Messages can still be sent.</string>
+			<string>Called when we are in the process of leaving a room. Messages can still be sent.</string>
 			<key>Name</key>
 			<string>parting chat room</string>
 			<key>UnnamedArgument</key>

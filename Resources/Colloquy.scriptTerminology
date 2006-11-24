@@ -292,7 +292,7 @@
 				<key>currentMessage</key>
 				<dict>
 					<key>Description</key>
-					<string>The current emssage that is being passed to plugins to process.</string>
+					<string>The current message that is being passed to plugins to process.</string>
 					<key>Name</key>
 					<string>current message</string>
 				</dict>
@@ -444,14 +444,14 @@
 				<key>identifier</key>
 				<dict>
 					<key>Description</key>
-					<string>Consicse description of the chat view and what it represents.</string>
+					<string>Concise description of the chat view and what it represents.</string>
 					<key>Name</key>
 					<string>description</string>
 				</dict>
 				<key>uniqueIdentifier</key>
 				<dict>
 					<key>Description</key>
-					<string>The unique identifier of the chat view controler.</string>
+					<string>The unique identifier of the chat view controller.</string>
 					<key>Name</key>
 					<string>id</string>
 				</dict>
