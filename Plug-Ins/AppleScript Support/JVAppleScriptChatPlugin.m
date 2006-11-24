@@ -265,17 +265,19 @@
 #pragma mark -
 
 - (void) idle {
-	NSTimeInterval finalTime = _idleTimer ? [_idleTimer timeInterval] : 30.;
-
-	[_idleTimer invalidate];
-	[_idleTimer release];
-	_idleTimer = nil;
+	NSTimeInterval lastTime = _idleTimer ? [_idleTimer timeInterval] : 30.;
 
 	NSNumber *resultTime = [self callScriptHandler:'iDlX' withArguments:nil forSelector:_cmd];
-	if( [resultTime isKindOfClass:[NSNumber class]] && [resultTime doubleValue] > 0. )
-		finalTime = [resultTime doubleValue];
-
-	_idleTimer = [[NSTimer scheduledTimerWithTimeInterval:finalTime target:self selector:_cmd userInfo:nil repeats:NO] retain];
+	if( [resultTime isKindOfClass:[NSNumber class]] && [resultTime doubleValue] > 0. ) {
+		NSTimeInterval newTime = [resultTime doubleValue];
+		if( newTime != lastTime ) {
+			[_idleTimer invalidate];
+			[_idleTimer release];
+			_idleTimer = [[NSTimer scheduledTimerWithTimeInterval:newTime target:self selector:_cmd userInfo:nil repeats:YES] retain];
+		}
+	} else if( ! _idleTimer ) {
+		_idleTimer = [[NSTimer scheduledTimerWithTimeInterval:lastTime target:self selector:_cmd userInfo:nil repeats:YES] retain];
+	}
 }
 
 #pragma mark -
