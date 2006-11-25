@@ -205,7 +205,7 @@
 	NSString *format = [[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString];
 	NSDate *current = [[NSDate dateWithTimeIntervalSinceNow:[[_user attributeForKey:MVChatUserLocalTimeDifferenceAttribute] doubleValue]] dateWithCalendarFormat:format timeZone:nil];
 	[localTime setObjectValue:current];
-	[localTime setToolTip:current];
+	[localTime setToolTip:[current description]];
 }
 
 - (IBAction) sendPing:(id) sender {

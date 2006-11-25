@@ -45,7 +45,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 + (id) coerceChatRoom:(id) value toString:(Class) class {
-	return [value name];
+	return [(MVChatRoom *)value name];
 }
 
 #pragma mark -
