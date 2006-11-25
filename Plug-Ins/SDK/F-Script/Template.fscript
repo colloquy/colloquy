@@ -1,0 +1,83 @@
+"called on load and reload"
+load := [ :scriptFilePath |
+].
+
+"called on unload and relead"
+unload := [
+].
+
+"return an array of NSMenuItems that should be dispalyed for 'item' associated with 'view'"
+contextualMenuItems := [ :item :view |
+].
+
+"process the command and return true if you handle it or false to pass on to another plugin"
+processUserCommand := [ :command :arguments :connection :view |
+	"return YES if the command was handled or to prevent other plugins or Colloquy from handling it"
+	NO.
+].
+
+"handle a ctcp request and return true if you handle it or false to pass on to another plugin"
+processSubcodeRequest := [ :command :arguments :user |
+	"return YES if the command was handled or to prevent other plugins or Colloquy from handling it"
+	NO.
+].
+
+"handle a ctcp reply and return true if you handle it or false to pass on to another plugin"
+processSubcodeReply := [ :command :arguments :user |
+	"return YES if the command was handled or to prevent other plugins or Colloquy from handling it"
+	NO.
+].
+
+"called when 'connection' connects"
+connected := [ :connection |
+].
+
+"called when 'connection' is disconnecting"
+disconnecting := [ :connection |
+].
+
+"perform a notification"
+performNotification := [ :identifier :context :preferences |
+].
+
+"called when an unhandled URL scheme is clicked in 'view'"
+handleClickedLink := [ :url :view |
+	"return true if the link was handled or to prevent other plugins or Colloquy from handling it"
+	NO.
+].
+
+"called for each incoming message :the message is mutable"
+processIncomingMessage := [ :message :view |
+].
+
+"called for each outgoing message :the message is mutable"
+processOutgoingMessage := [ :message :view |
+].
+
+"called when a member joins 'room'"
+memberJoined := [ :member :room |
+].
+
+"called when a member parts 'room'"
+memberParted := [ :member :room |
+].
+
+"called when a member is kicked from 'room' for 'reason'"
+memberKicked := [ :member :room :by :reason |
+].
+
+"called when the local user joins 'room'"
+joinedRoom := [ :room |
+].
+
+"called when the local user is parting 'room'"
+partingFromRoom := [ :room |
+].
+
+"called when the local user is kicked from 'room' for 'reason'"
+kickedFromRoom := [ :room :by :reason |
+].
+
+"called when the topic changes in 'room' by 'user'"
+topicChanged := [ :topic :room :user |
+].
