@@ -150,6 +150,7 @@
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
 			projectDirPath = "";
+			projectRoot = "";
 			shouldCheckCompatibility = 1;
 			targets = (
 				8D5B49AC048680CD000E48DA /* AppleScript Support Plugin */,
@@ -173,27 +174,21 @@
 		1C7F303F0855482D00D41FB0 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
-				);
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					../../Additions,
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					../../Controllers,
 					../../Models,
 					../../Panels,
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "../../Chat\\ Core";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
 				);
 				PRODUCT_NAME = "AppleScript Support";
-				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Development;
@@ -201,27 +196,21 @@
 		1C7F30410855482D00D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
-				);
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					../../Additions,
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					../../Controllers,
 					../../Models,
 					../../Panels,
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "../../Chat\\ Core";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
 				);
 				PRODUCT_NAME = "AppleScript Support";
-				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -233,6 +222,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				PREBINDING = NO;
+				SYMROOT = ../../build;
 				ZERO_LINK = YES;
 			};
 			name = Development;
@@ -241,33 +231,28 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
+				SYMROOT = ../../build;
 			};
 			name = Release;
 		};
 		1C7F307A085548E700D41FB0 /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
-				);
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					../../Additions,
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					../../Controllers,
 					../../Models,
 					../../Panels,
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "../../Chat\\ Core";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
 				);
 				PRODUCT_NAME = "AppleScript Support";
-				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = "Release (Universal)";
@@ -281,6 +266,7 @@
 					i386,
 				);
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../../build;
 			};
 			name = "Release (Universal)";
 		};

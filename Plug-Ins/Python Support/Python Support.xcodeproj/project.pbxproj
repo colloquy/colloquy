@@ -155,6 +155,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1C7F306F0855489300D41FB0 /* Build configuration list for PBXProject "Python Support" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -165,6 +166,8 @@
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
 			projectDirPath = "";
+			projectRoot = "";
+			shouldCheckCompatibility = 1;
 			targets = (
 				8D5B49AC048680CD000E48DA /* Python Support Plugin */,
 			);
@@ -210,28 +213,21 @@
 		1C7F306C0855489300D41FB0 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
-					"$(HOME)/Library/Frameworks",
-				);
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					../../Additions,
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					../../Controllers,
 					../../Models,
 					../../Panels,
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "../../Chat\\ Core";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
 				);
 				PRODUCT_NAME = "Python Support";
-				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Development;
@@ -239,28 +235,21 @@
 		1C7F306D0855489300D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
-					"$(HOME)/Library/Frameworks",
-				);
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					../../Additions,
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					../../Controllers,
 					../../Models,
 					../../Panels,
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "../../Chat\\ Core";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
 				);
 				PRODUCT_NAME = "Python Support";
-				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
@@ -268,28 +257,21 @@
 		1C7F306E0855489300D41FB0 /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
-					"$(HOME)/Library/Frameworks",
-				);
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					../../Additions,
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					../../Controllers,
 					../../Models,
 					../../Panels,
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "../../Chat\\ Core";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
 				);
 				PRODUCT_NAME = "Python Support";
-				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = "Release (Universal)";
@@ -301,6 +283,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				PREBINDING = NO;
+				SYMROOT = ../../build;
 				ZERO_LINK = YES;
 			};
 			name = Development;
@@ -309,6 +292,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
+				SYMROOT = ../../build;
 			};
 			name = Release;
 		};
@@ -321,6 +305,7 @@
 					i386,
 				);
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../../build;
 			};
 			name = "Release (Universal)";
 		};

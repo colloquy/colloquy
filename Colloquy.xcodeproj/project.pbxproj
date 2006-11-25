@@ -2866,7 +2866,6 @@
 		1C041A650854E97700A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(CONFIGURATION_BUILD_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				GCC_PREFIX_HEADER = Basic.pch;
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
 				OTHER_LDFLAGS = (
@@ -2881,7 +2880,6 @@
 		1C041A660854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(CONFIGURATION_BUILD_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				GCC_PREFIX_HEADER = Basic.pch;
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
 				OTHER_LDFLAGS = (
@@ -2976,7 +2974,6 @@
 		1C041DC90855377900A5A5BA /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(CONFIGURATION_BUILD_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
 				GCC_PREFIX_HEADER = Basic.pch;
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
 				OTHER_LDFLAGS = (
