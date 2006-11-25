@@ -78,7 +78,7 @@
 
 	if( isChatRoom ) {
 		if( ! [command caseInsensitiveCompare:@"leave"] || ! [command caseInsensitiveCompare:@"part"] ) {
-			if( ! [arguments length] ) return [self handlePartWithArguments:[[room target] name] forConnection:[room connection]];
+			if( ! [arguments length] ) return [self handlePartWithArguments:[(MVChatRoom *)[room target] name] forConnection:[room connection]];
 			else return [self handlePartWithArguments:[arguments string] forConnection:[room connection]];
 		} else if( ! [command caseInsensitiveCompare:@"topic"] || ! [command caseInsensitiveCompare:@"t"] ) {
 			if( ! [arguments length] && [connection type] == MVChatConnectionIRCType ) {
@@ -355,7 +355,7 @@
 			if( [targetPrefix length] ) target = [targetPrefix stringByAppendingString:target];
 		} else if( isChatRoom ) {
 			if( ! [command caseInsensitiveCompare:@"onotice"] )
-				target = [[room target] name];
+				target = [(MVChatRoom *)[room target] name];
 			else [scanner scanUpToCharactersFromSet:whitespace intoString:&target];
 		}
 		[prefixes release];

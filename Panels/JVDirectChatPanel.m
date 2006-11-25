@@ -159,7 +159,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		NSURL *connURL = [[self connection] url];
 		NSString *targetName = nil;
 
-		if( [target respondsToSelector:@selector( name )] ) targetName = [target name];
+		if( [target respondsToSelector:@selector( name )] ) targetName = [(MVChatRoom *)target name];
 		else targetName = [target nickname];
 
 		NSURL *source = [[NSURL alloc] initWithScheme:[connURL scheme] host:[connURL host] path:[[connURL path] stringByAppendingString:[NSString stringWithFormat:@"/%@",targetName]]];
