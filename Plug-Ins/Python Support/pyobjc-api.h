@@ -16,7 +16,27 @@
 #include <Python/Python.h>
 #include <objc/objc.h>
 
+#ifndef PyObjC_COMPAT_H
+#if (PY_VERSION_HEX < 0x02050000)
+typedef int Py_ssize_t;
+#define PY_FORMAT_SIZE_T ""
+#define Py_ARG_SIZE_T "n"
+#define PY_SSIZE_T_MAX INT_MAX
+
+#else
+
+#define Py_ARG_SIZE_T "i"
+#endif
+#endif
+
+
 #import <Foundation/NSException.h>
+
+struct PyObjC_WeakLink {
+	const char* name;
+	void (*func)(void);
+};
+
 
 /* threading support */
 #define PyObjC_DURING \
@@ -136,8 +156,10 @@
  * - Version 13 adds PyObjCCreateOpaquePointerType
  * - Version 14 adds PyObjCObject_NewTransient, PyObjCObject_ReleaseTransient
  * - Version 15 changes the interface of PyObjCObject_New
+ * - Version 16 adds PyObjC_PerformWeaklinking
+ * - Version 17 introduces Py_ssize_t support
  */
-#define PYOBJC_API_VERSION 15
+#define PYOBJC_API_VERSION 17
 
 #define PYOBJC_API_NAME "__C_API__"
 
@@ -197,7 +219,7 @@ struct pyobjc_api {
 	PyObject* (*objc_to_py)(const char*, void*);
 
 	/* PyObjC_SizeOfType */
-	int 	   (*sizeof_type)(const char*);
+	Py_ssize_t   (*sizeof_type)(const char*);
 
 	/* PyObjCSelector_GetClass */
 	Class	   (*sel_get_class)(PyObject* sel);
@@ -224,7 +246,7 @@ struct pyobjc_api {
 	void (*err_python_to_objc_gil)(PyGILState_STATE* state);
 
 	/* PyObjCRT_AlignOfType */
-	int (*alignof_type)(const char* typestr);
+	Py_ssize_t (*alignof_type)(const char* typestr);
 
 	/* PyObjCRT_SELName */
 	const char* (*selname)(SEL sel);
@@ -239,10 +261,10 @@ struct pyobjc_api {
 	int     (*py_to_c_array)(const char*, PyObject*, PyObject*, void**, int*);
 	
 	/* PyObjC_CArrayToPython */
-	PyObject* (*c_array_to_py)(const char*, void*, int);
+	PyObject* (*c_array_to_py)(const char*, void*, Py_ssize_t);
 
 	/* PyObjC_RegisterStructType */
-	PyObject* (*register_struct)(const char*, const char*, const char*, initproc, int, const char**);
+	PyObject* (*register_struct)(const char*, const char*, const char*, initproc, Py_ssize_t, const char**);
 
 	/* PyObjCIMP_Type */
 	PyTypeObject* imp_type;
@@ -288,7 +310,8 @@ struct pyobjc_api {
 
 	/* void PyObjCObject_ReleaseTransient(PyObject* proxy, int cookie); */
 	void (*releasetransient)(PyObject* proxy, int cookie);
-	
+
+	void (*doweaklink)(PyObject*, struct PyObjC_WeakLink*);
 	
 };
 
@@ -346,6 +369,7 @@ static struct pyobjc_api*	PyObjC_API;
 #define PyObjCCreateOpaquePointerType (PyObjC_API->pointer_type_new)
 #define PyObjCObject_NewTransient (PyObjC_API->newtransient)
 #define PyObjCObject_ReleaseTransient (PyObjC_API->releasetransient)
+#define PyObjC_PerformWeaklinking (PyObjC_API->doweaklink)
 
 #ifndef PYOBJC_METHOD_STUB_IMPL
 
