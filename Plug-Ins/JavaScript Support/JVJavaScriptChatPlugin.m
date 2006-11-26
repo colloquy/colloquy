@@ -1,16 +1,22 @@
 #import "JVJavaScriptChatPlugin.h"
+
 #import "JVChatController.h"
-#import "JVChatWindowController.h"
-#import "JVChatTranscript.h"
-#import "JVChatMessage.h"
 #import "JVChatEvent.h"
-#import "JVChatTranscriptPanel.h"
-#import "JVChatRoomPanel.h"
+#import "JVChatMessage.h"
 #import "JVChatRoomMember.h"
-#import "NSStringAdditions.h"
+#import "JVChatRoomPanel.h"
+#import "JVChatTranscript.h"
+#import "JVChatTranscriptPanel.h"
+#import "JVChatWindowController.h"
+#import "JVNotificationController.h"
+#import "JVSpeechController.h"
+#import "MVBuddyListController.h"
 #import "MVChatConnection.h"
 #import "MVChatRoom.h"
 #import "MVChatUser.h"
+#import "MVConnectionsController.h"
+#import "MVFileTransferController.h"
+#import "NSStringAdditions.h"
 
 #import <WebKit/WebKit.h>
 
@@ -114,6 +120,66 @@
 }
 @end
 
+@implementation MVConnectionsController (MVConnectionsControllerWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
+
+@implementation MVFileTransferController (MVFileTransferControllerWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
+
+@implementation MVBuddyListController (MVBuddyListControllerWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
+
+@implementation JVSpeechController (JVSpeechControllerWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
+
+@implementation JVNotificationController (JVNotificationControllerWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
+
+@implementation MVChatPluginManager (MVChatPluginManagerWebScripting)
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+	return NO;
+}
+
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+	return NO;
+}
+@end
+
 NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 
 @implementation JVJavaScriptChatPlugin
@@ -174,7 +240,13 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	_webview = [[WebView allocWithZone:nil] initWithFrame:NSZeroRect];
 	[old release];
 
-	[[_webview windowScriptObject] setValue:[JVChatController defaultController] forKey:@"chatController"];
+	[[_webview windowScriptObject] setValue:[JVChatController defaultController] forKey:@"ChatController"];
+	[[_webview windowScriptObject] setValue:[MVConnectionsController defaultController] forKey:@"ConnectionsController"];
+	[[_webview windowScriptObject] setValue:[MVFileTransferController defaultController] forKey:@"FileTransferController"];
+	[[_webview windowScriptObject] setValue:[MVBuddyListController sharedBuddyList] forKey:@"BuddyListController"];
+	[[_webview windowScriptObject] setValue:[JVSpeechController sharedSpeechController] forKey:@"SpeechController"];
+	[[_webview windowScriptObject] setValue:[JVNotificationController defaultController] forKey:@"NotificationController"];
+	[[_webview windowScriptObject] setValue:[MVChatPluginManager defaultManager] forKey:@"ChatPluginManager"];
 
 	NSString *contents = nil;
 	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
