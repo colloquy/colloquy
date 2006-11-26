@@ -59,7 +59,7 @@ memberJoined := [ :member :room |
 ].
 
 "called when a member parts 'room'"
-memberParted := [ :member :room |
+memberParted := [ :member :room :reason |
 ].
 
 "called when a member is kicked from 'room' for 'reason'"

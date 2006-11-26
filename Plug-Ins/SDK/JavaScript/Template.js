@@ -59,7 +59,7 @@ function memberJoined( member, room ) {
 }
 
 // called when a member parts 'room'
-function memberParted( member, room ) {
+function memberParted( member, room, reason ) {
 }
 
 // called when a member is kicked from 'room' for 'reason'

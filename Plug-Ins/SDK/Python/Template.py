@@ -59,7 +59,7 @@ def memberJoined( member, room ):
 	pass
 
 # called when a member parts 'room'
-def memberParted( member, room ):
+def memberParted( member, room, reason ):
 	pass
 
 # called when a member is kicked from 'room' for 'reason'
