@@ -161,7 +161,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 
 		if( PyErr_GivenExceptionMatches( errType, PyExc_SyntaxError ) ) {
 			if( PyTuple_Check( errValue ) ) {
-				// old style tupple errors
+				// old style tuple errors
 				PyArg_Parse( errValue, (char *) "(O(zi))", &message, &filename, &line );
 			} else {
 				// new style errors
@@ -319,12 +319,16 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
 	NSArray *args = [NSArray arrayWithObjects:command, ( arguments ? (id)arguments : (id)[NSNull null] ), ( connection ? (id)connection : (id)[NSNull null] ), ( view ? (id)view : (id)[NSNull null] ), nil];
 	id result = [self callScriptFunctionNamed:@"processUserCommand" withArguments:args forSelector:_cmd];
+	if( [[result description] isEqualToString:@"True"] )
+		return YES;
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (BOOL) handleClickedLink:(NSURL *) url inView:(id <JVChatViewController>) view {
 	NSArray *args = [NSArray arrayWithObjects:url, ( view ? (id)view : (id)[NSNull null] ), nil];
 	id result = [self callScriptFunctionNamed:@"handleClickedLink" withArguments:args forSelector:_cmd];
+	if( [[result description] isEqualToString:@"True"] )
+		return YES;
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
@@ -376,12 +380,16 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 - (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user {
 	NSArray *args = [NSArray arrayWithObjects:command, ( arguments ? (id)arguments : (id)[NSNull null] ), user, nil];
 	id result = [self callScriptFunctionNamed:@"processSubcodeRequest" withArguments:args forSelector:_cmd];
+	if( [[result description] isEqualToString:@"True"] )
+		return YES;
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
 - (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSString *) arguments fromUser:(MVChatUser *) user {
 	NSArray *args = [NSArray arrayWithObjects:command, ( arguments ? (id)arguments : (id)[NSNull null] ), user, nil];
 	id result = [self callScriptFunctionNamed:@"processSubcodeReply" withArguments:args forSelector:_cmd];
+	if( [[result description] isEqualToString:@"True"] )
+		return YES;
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
 
