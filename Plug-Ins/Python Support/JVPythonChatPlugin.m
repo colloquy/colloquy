@@ -104,33 +104,8 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 	Py_XDECREF( _scriptModule );
 	_scriptModule = LoadArbitraryPythonModule( [moduleName fileSystemRepresentation], [moduleFolder fileSystemRepresentation], [_uniqueModuleName UTF8String] );
 
-	if( ! _scriptModule ) {
-		PyObject *errType = NULL, *errValue = NULL, *errTrace = NULL;
-		PyErr_Fetch( &errType, &errValue, &errTrace );
-		PyErr_NormalizeException( &errType, &errValue, &errTrace );
-
-		NSString *errorDesc = nil;
-		if( errValue && PyTuple_Size( errValue ) >= 2 ) {
-			errorDesc = @"Reason: ";
-
-			char *errStr = PyString_AsString( PyTuple_GetItem( errValue, 0 ) );
-			if( errStr ) errorDesc = [errorDesc stringByAppendingString:[NSString stringWithUTF8String:errStr]];
-			else errorDesc = NSLocalizedStringFromTableInBundle( @"Unknown Error", nil, [NSBundle bundleForClass:[self class]], "unknown error" );
-
-			PyObject *info = PyTuple_GetItem( errValue, 1 );
-			if( info && PyTuple_Size( info ) >= 2 ) {
-				char *lineNum = PyString_AsString( PyObject_Str( PyTuple_GetItem( info, 1 ) ) );
-				if( lineNum ) errorDesc = [errorDesc stringByAppendingFormat:@" near line %s.", lineNum];
-			}
-		} else errorDesc = NSLocalizedStringFromTableInBundle( @"Unknown Error", nil, [NSBundle bundleForClass:[self class]], "unknown error" );
-
-		PyErr_Restore( errType, errValue, errTrace );
-		PyErr_Print();
-
-		int result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python script error title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while loading.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "Python script error message" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], errorDesc );
-		if( result == NSCancelButton ) [[NSWorkspace sharedWorkspace] openFile:[self scriptFilePath]];
+	if( [self reportErrorIfNeededInFunction:nil] || ! _scriptModule )
 		return;
-	}
 
 	if( ! _firstLoad ) [self performSelector:@selector( load )];
 }
@@ -170,6 +145,117 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 
 #pragma mark -
 
+- (BOOL) reportErrorIfNeededInFunction:(NSString *) functionName {
+	if( PyErr_Occurred() ) {
+		PyObject *errType = NULL, *errValue = NULL, *errTrace = NULL;
+		PyErr_Fetch( &errType, &errValue, &errTrace );
+		if( ! errType ) return NO;
+
+		PyErr_NormalizeException( &errType, &errValue, &errTrace );
+
+		NSMutableString *errorDesc = [[NSMutableString alloc] initWithCapacity:64];
+
+		PyObject *message = errValue;
+		char *filename = NULL;
+		int line = -1;
+
+		if( PyErr_GivenExceptionMatches( errType, PyExc_SyntaxError ) ) {
+			if( PyTuple_Check( errValue ) ) {
+				// old style tupple errors
+				PyArg_Parse( errValue, (char *) "(O(zi))", &message, &filename, &line );
+			} else {
+				// new style errors
+				PyObject *value = NULL;
+				if( ( value = PyObject_GetAttrString( errValue, (char *) "msg" ) ) )
+					message = value;
+
+				if( ( value = PyObject_GetAttrString( errValue, (char *) "filename" ) ) ) {
+					if( value == Py_None )
+						filename = NULL;
+					else filename = PyString_AsString( value );
+					Py_DECREF( value );
+				}
+
+				if( ( value = PyObject_GetAttrString( errValue, (char *) "lineno" ) ) && value != Py_None ) {
+					long hold = PyInt_AsLong( value );
+					Py_DECREF( value );
+
+					if( ! ( hold == -1 && PyErr_Occurred() ) )
+						line = (int) hold;
+				}
+			}
+		} else if( errTrace ) {
+			PyObject *errFrame = PyObject_GetAttrString( errTrace, (char *) "tb_frame" );
+			if( errFrame && errFrame != Py_None ) {
+				PyObject *value = NULL;
+
+				PyObject *code = PyObject_GetAttrString( errFrame, (char *) "f_code" );
+				if( code && code != Py_None && ( value = PyObject_GetAttrString( code, (char *) "co_filename" ) ) ) {
+					if( value == Py_None )
+						filename = NULL;
+					else filename = PyString_AsString( value );
+					Py_DECREF( value );
+				}
+
+				if( ( value = PyObject_GetAttrString( errFrame, (char *) "f_lineno" ) ) && value != Py_None ) {
+					long hold = PyInt_AsLong( value );
+					Py_DECREF( value );
+
+					if( ! ( hold == -1 && PyErr_Occurred() ) )
+						line = (int) hold;
+				}
+			}
+		}
+
+		char *str = NULL;
+		PyObject *strObj = PyObject_Str( errType );
+		if( strObj && ( str = PyString_AsString( strObj ) ) ) {
+			NSString *errorName = [NSString stringWithUTF8String:str];
+			if( [errorName hasPrefix:@"exceptions."] )
+				errorName = [errorName substringFromIndex:[@"exceptions." length]];
+			[errorDesc appendString:errorName];
+			Py_DECREF( strObj );
+		} else [errorDesc appendString:NSLocalizedStringFromTableInBundle( @"Unknown Error", nil, [NSBundle bundleForClass:[self class]], "unknown error" )];
+
+		if( message && ( strObj = PyObject_Str( message ) ) && ( str = PyString_AsString( strObj ) ) ) {
+			[errorDesc appendString:NSLocalizedStringFromTableInBundle( @": ", nil, [NSBundle bundleForClass:[self class]], "error reason prefix" )];
+			[errorDesc appendString:[NSString stringWithUTF8String:str]];
+			Py_DECREF( strObj );
+		}
+
+		if( line != -1 ) {
+			[errorDesc appendString:@"\n"];
+			[errorDesc appendFormat:NSLocalizedStringFromTableInBundle( @"Line number: %d", nil, [NSBundle bundleForClass:[self class]], "error line number" ), line];
+		}
+
+		NSString *scriptTitle = [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension];
+		int result = NSOKButton;
+		if( functionName )
+			result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python script error title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while calling the \"%@\" function.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error message" ), nil, ( filename ? NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ) : nil ), nil, scriptTitle, functionName, errorDesc );
+		else result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python script error title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while loading.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "Python script error message" ), nil, ( filename ? NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ) : nil ), nil, scriptTitle, errorDesc );
+		if( result == NSCancelButton && filename ) [[NSWorkspace sharedWorkspace] openFile:[NSString stringWithUTF8String:filename]];
+
+		[errorDesc release];
+
+		NSLog(@"Python plugin script error in %@:", scriptTitle);
+		PyErr_Restore( errType, errValue, errTrace );
+		PyErr_Print();
+		PyErr_Clear();
+
+		if( message != errValue ) {
+			Py_XDECREF( message );
+		}
+
+		Py_XDECREF(errType);
+		Py_XDECREF(errValue);
+		Py_XDECREF(errTrace);
+
+		return YES;
+	}
+
+	return NO;
+}
+
 - (id) callScriptFunctionNamed:(NSString *) functionName withArguments:(NSArray *) arguments forSelector:(SEL) selector {
 	if( ! _scriptModule ) return nil;
 
@@ -199,21 +285,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 		Py_XDECREF( ret );
 		Py_DECREF( args );
 
-		PyObject *errType = NULL, *errValue = NULL, *errTrace = NULL;
-		PyErr_Fetch( &errType, &errValue, &errTrace );
-
-		if( errValue ) {
-			PyObject *errorString = PyObject_Str( errValue );
-			NSString *errorDesc = nil;
-
-			if( errorString ) {
-				char *errStr = PyString_AsString( errorString );
-				if( errStr ) errorDesc = [NSString stringWithUTF8String:errStr];
-			} else errorDesc = NSLocalizedStringFromTableInBundle( @"Unknown Error", nil, [NSBundle bundleForClass:[self class]], "unknown error" );
-
-			int result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python script error title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while calling the \"%@\" function.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "F-Script plugin error message" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], functionName, errorDesc );
-			if( result == NSCancelButton ) [[NSWorkspace sharedWorkspace] openFile:[self scriptFilePath]];
-		}
+		[self reportErrorIfNeededInFunction:functionName];
 
 		return realRet;
 	}

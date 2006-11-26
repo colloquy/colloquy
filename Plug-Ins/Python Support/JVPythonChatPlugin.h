@@ -17,5 +17,6 @@ extern NSString *JVPythonErrorDomain;
 - (NSString *) scriptFilePath;
 - (void) reloadFromDisk;
 
+- (BOOL) reportErrorIfNeededInFunction:(NSString *) functionName;
 - (id) callScriptFunctionNamed:(NSString *) functionName withArguments:(NSArray *) arguments forSelector:(SEL) selector;
 @end
