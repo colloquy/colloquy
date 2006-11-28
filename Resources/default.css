@@ -1,7 +1,6 @@
 /* Generic items for all styles, these can be overridden */
 body {
 	background-color: white;
-	-webkit-background-composite: copy;
 	color: black;
 	overflow-y: auto;
 	overflow-x: hidden;
