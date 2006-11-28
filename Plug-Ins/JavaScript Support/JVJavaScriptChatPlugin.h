@@ -18,5 +18,7 @@ extern NSString *JVJavaScriptErrorDomain;
 - (NSString *) scriptFilePath;
 - (void) reloadFromDisk;
 
+- (void) setupScriptGlobalsForWebView:(WebView *) webView;
+
 - (id) callScriptFunctionNamed:(NSString *) functionName withArguments:(NSArray *) arguments forSelector:(SEL) selector;
 @end

@@ -35,7 +35,7 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_plugins = [[NSMutableArray allocWithZone:nil] init];
-		[self reloadPlugins];
+		[self performSelector:@selector(reloadPlugins) withObject:nil afterDelay:0.];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
 	}
 	return self;

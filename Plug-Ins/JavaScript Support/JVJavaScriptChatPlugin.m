@@ -20,6 +20,12 @@
 
 #import <WebKit/WebKit.h>
 
+@interface NSWindow (NSWindowPrivate) // new Tiger private method
+- (void) _setContentHasShadow:(BOOL) shadow;
+@end
+
+#pragma mark -
+
 @implementation JVChatController (JVChatControllerWebScripting)
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
 	return NO;
@@ -225,6 +231,76 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 
 #pragma mark -
 
+- (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
+	NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
+
+	if( [[url scheme] isEqualToString:@"about"] ) {
+		if( [[[url standardizedURL] path] length] ) [listener ignore];
+		else [listener use];
+	} else {
+		[[NSWorkspace sharedWorkspace] openURL:url];
+		[listener ignore];
+	}
+}
+
+- (void) webView:(WebView *) webView windowScriptObjectAvailable:(WebScriptObject *) windowScriptObject {
+	[self setupScriptGlobalsForWebView:webView];
+}
+
+- (WebView *) webView:(WebView *) sender createWebViewWithRequest:(NSURLRequest *) request {
+	WebView *newWebView = [[WebView alloc] initWithFrame:NSZeroRect frameName:nil groupName:nil];
+	[newWebView setAutoresizingMask:( NSViewWidthSizable | NSViewHeightSizable )];
+	[newWebView setFrameLoadDelegate:self];
+	[newWebView setUIDelegate:self];
+	if( request ) [[newWebView mainFrame] loadRequest:request];
+
+	NSWindow *window = [[NSWindow alloc] initWithContentRect:NSZeroRect styleMask:( NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask ) backing:NSBackingStoreBuffered defer:NO screen:[[sender window] screen]];
+	[window setOpaque:NO];
+	[window setBackgroundColor:[NSColor clearColor]];
+	if( [window respondsToSelector:@selector( _setContentHasShadow: )] )
+		[window _setContentHasShadow:NO];
+	[window setReleasedWhenClosed:YES];
+	[newWebView setFrame:[[window contentView] frame]];
+	[window setContentView:newWebView];
+	[newWebView release];
+
+	return newWebView;
+}
+
+- (void) webView:(WebView *) sender runJavaScriptAlertPanelWithMessage:(NSString *) message initiatedByFrame:(WebFrame *) frame {
+    NSRange range = [message rangeOfString:@"\t"];
+    NSString *title = @"Alert";
+    if( range.location != NSNotFound ) {
+        title = [message substringToIndex:range.location];
+        message = [message substringFromIndex:( range.location + range.length )];
+    }
+
+    NSBeginInformationalAlertSheet( title, nil, nil, nil, [sender window], nil, NULL, NULL, NULL, message );
+}
+
+- (void) webViewShow:(WebView *) sender {
+	[[sender window] makeKeyAndOrderFront:sender];
+}
+
+- (void) webView:(WebView *) sender setResizable:(BOOL) resizable {
+	[[sender window] setShowsResizeIndicator:resizable];
+	[[[sender window] standardWindowButton:NSWindowZoomButton] setEnabled:resizable];
+}
+
+#pragma mark -
+
+- (void) setupScriptGlobalsForWebView:(WebView *) webView {
+	[[webView windowScriptObject] setValue:[JVChatController defaultController] forKey:@"ChatController"];
+	[[webView windowScriptObject] setValue:[MVConnectionsController defaultController] forKey:@"ConnectionsController"];
+	[[webView windowScriptObject] setValue:[MVFileTransferController defaultController] forKey:@"FileTransferController"];
+	[[webView windowScriptObject] setValue:[MVBuddyListController sharedBuddyList] forKey:@"BuddyListController"];
+	[[webView windowScriptObject] setValue:[JVSpeechController sharedSpeechController] forKey:@"SpeechController"];
+	[[webView windowScriptObject] setValue:[JVNotificationController defaultController] forKey:@"NotificationController"];
+	[[webView windowScriptObject] setValue:[MVChatPluginManager defaultManager] forKey:@"ChatPluginManager"];
+}
+
+#pragma mark -
+
 - (MVChatPluginManager *) pluginManager {
 	return _manager;
 }
@@ -240,13 +316,11 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	_webview = [[WebView allocWithZone:nil] initWithFrame:NSZeroRect];
 	[old release];
 
-	[[_webview windowScriptObject] setValue:[JVChatController defaultController] forKey:@"ChatController"];
-	[[_webview windowScriptObject] setValue:[MVConnectionsController defaultController] forKey:@"ConnectionsController"];
-	[[_webview windowScriptObject] setValue:[MVFileTransferController defaultController] forKey:@"FileTransferController"];
-	[[_webview windowScriptObject] setValue:[MVBuddyListController sharedBuddyList] forKey:@"BuddyListController"];
-	[[_webview windowScriptObject] setValue:[JVSpeechController sharedSpeechController] forKey:@"SpeechController"];
-	[[_webview windowScriptObject] setValue:[JVNotificationController defaultController] forKey:@"NotificationController"];
-	[[_webview windowScriptObject] setValue:[MVChatPluginManager defaultManager] forKey:@"ChatPluginManager"];
+	[_webview setPolicyDelegate:self];
+	[_webview setFrameLoadDelegate:self];
+	[_webview setUIDelegate:self];
+
+	[self setupScriptGlobalsForWebView:_webview];
 
 	NSString *contents = nil;
 	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3

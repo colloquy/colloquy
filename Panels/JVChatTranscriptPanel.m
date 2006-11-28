@@ -23,6 +23,12 @@ NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";
 NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
+@interface NSWindow (NSWindowPrivate) // new Tiger private method
+- (void) _setContentHasShadow:(BOOL) shadow;
+@end
+
+#pragma mark -
+
 @interface JVChatTranscriptPanel (JVChatTranscriptPrivate)
 - (void) _refreshWindowFileProxy;
 - (void) _refreshSearch;
@@ -672,16 +678,15 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	return UINT_MAX; // WebDragSourceActionAny
 }
 
-- (void)webView:(WebView *)sender runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WebFrame *)frame
-{
+- (void) webView:(WebView *) sender runJavaScriptAlertPanelWithMessage:(NSString *) message initiatedByFrame:(WebFrame *) frame {
     NSRange range = [message rangeOfString:@"\t"];
     NSString *title = @"Alert";
-    if (range.location != NSNotFound) {
+    if( range.location != NSNotFound ) {
         title = [message substringToIndex:range.location];
-        message = [message substringFromIndex:(range.location + range.length)];
+        message = [message substringFromIndex:( range.location + range.length )];
     }
 
-    NSBeginInformationalAlertSheet(title, nil, nil, nil, [sender window], nil, NULL, NULL, NULL, message);
+    NSBeginInformationalAlertSheet( title, nil, nil, nil, [sender window], nil, NULL, NULL, NULL, message );
 }
 
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
@@ -729,6 +734,34 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 		[listener ignore];
 	}
+}
+
+- (WebView *) webView:(WebView *) sender createWebViewWithRequest:(NSURLRequest *) request {
+	WebView *newWebView = [[WebView alloc] initWithFrame:NSZeroRect frameName:nil groupName:nil];
+	[newWebView setAutoresizingMask:( NSViewWidthSizable | NSViewHeightSizable )];
+	[newWebView setUIDelegate:self];
+	if( request ) [[newWebView mainFrame] loadRequest:request];
+
+	NSWindow *window = [[NSWindow alloc] initWithContentRect:NSZeroRect styleMask:( NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask ) backing:NSBackingStoreBuffered defer:NO screen:[[sender window] screen]];
+	[window setOpaque:NO];
+	[window setBackgroundColor:[NSColor clearColor]];
+	if( [window respondsToSelector:@selector( _setContentHasShadow: )] )
+		[window _setContentHasShadow:NO];
+	[window setReleasedWhenClosed:YES];
+	[newWebView setFrame:[[window contentView] frame]];
+	[window setContentView:newWebView];
+	[newWebView release];
+
+	return newWebView;
+}
+
+- (void) webViewShow:(WebView *) sender {
+	[[sender window] makeKeyAndOrderFront:sender];
+}
+
+- (void) webView:(WebView *) sender setResizable:(BOOL) resizable {
+	[[sender window] setShowsResizeIndicator:resizable];
+	[[[sender window] standardWindowButton:NSWindowZoomButton] setEnabled:resizable];
 }
 @end
 
