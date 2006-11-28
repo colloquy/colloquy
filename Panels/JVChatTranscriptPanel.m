@@ -367,7 +367,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 - (void) setStyle:(JVStyle *) style withVariant:(NSString *) variant {
 	if( ! [self _usingSpecificEmoticons] )
-		[display setEmoticons:[style defaultEmoticonSet]];
+		[self setEmoticons:[style defaultEmoticonSet]];
 	[display setStyle:style withVariant:variant];
 	[self _changeStyleMenuSelection];
 }
