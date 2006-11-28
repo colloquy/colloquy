@@ -737,12 +737,14 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (WebView *) webView:(WebView *) sender createWebViewWithRequest:(NSURLRequest *) request {
-	WebView *newWebView = [[WebView alloc] initWithFrame:NSZeroRect frameName:nil groupName:nil];
+	NSRect frame = NSMakeRect( NSMinX( [[sender window] frame] ) + 15., NSMaxY( [[sender window] frame] ) - 190., 150., 150. );
+
+	WebView *newWebView = [[WebView alloc] initWithFrame:frame frameName:nil groupName:nil];
 	[newWebView setAutoresizingMask:( NSViewWidthSizable | NSViewHeightSizable )];
 	[newWebView setUIDelegate:self];
 	if( request ) [[newWebView mainFrame] loadRequest:request];
 
-	NSWindow *window = [[NSWindow alloc] initWithContentRect:NSZeroRect styleMask:( NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask ) backing:NSBackingStoreBuffered defer:NO screen:[[sender window] screen]];
+	NSWindow *window = [[NSWindow alloc] initWithContentRect:frame styleMask:( NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask ) backing:NSBackingStoreBuffered defer:NO screen:[[sender window] screen]];
 	[window setOpaque:NO];
 	[window setBackgroundColor:[NSColor clearColor]];
 	if( [window respondsToSelector:@selector( _setContentHasShadow: )] )
