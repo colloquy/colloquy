@@ -26,169 +26,44 @@
 
 #pragma mark -
 
-@implementation JVChatController (JVChatControllerWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
+static BOOL replacementIsSelectorExcludedFromWebScript( id self, SEL cmd, SEL selector ) {
 	return NO;
 }
 
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
+static BOOL replacementIsKeyExcludedFromWebScript( id self, SEL cmd, const char *name ) {
 	return NO;
+}
+
+#pragma mark -
+
+@implementation NSObject (JVJavaScriptName)
++ (NSString *) webScriptNameForSelector:(SEL) selector {
+	NSString *name = NSStringFromSelector( selector );
+	NSRange colonRange = [name rangeOfString:@":"];
+	if( colonRange.location != NSNotFound )
+		return [name substringToIndex:colonRange.location];
+	return name;
 }
 @end
 
-@implementation JVChatWindowController (JVChatWindowControllerWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
-}
-@end
-
-@implementation JVChatTranscript (JVChatTranscriptWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
-}
-@end
-
-@implementation JVChatMessage (JVChatMessageWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
-}
-@end
-
-@implementation JVChatEvent (JVChatEventWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
-}
-@end
-
-@implementation JVChatTranscriptPanel (JVChatTranscriptPanelWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
-}
-@end
-
-@implementation JVChatRoomMember (JVChatRoomMemberWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
-}
-@end
-
-@implementation MVChatConnection (MVChatConnectionWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
-}
-@end
-
-@implementation MVChatRoom (MVChatRoomWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
-}
-@end
-
-@implementation MVChatUser (MVChatUserWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
-}
-@end
-
-@implementation MVConnectionsController (MVConnectionsControllerWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
-}
-@end
-
-@implementation MVFileTransferController (MVFileTransferControllerWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
-}
-@end
-
-@implementation MVBuddyListController (MVBuddyListControllerWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
-}
-@end
-
-@implementation JVSpeechController (JVSpeechControllerWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
-}
-@end
-
-@implementation JVNotificationController (JVNotificationControllerWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
-}
-@end
-
-@implementation MVChatPluginManager (MVChatPluginManagerWebScripting)
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector {
-	return NO;
-}
-
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name {
-	return NO;
-}
-@end
+#pragma mark -
 
 NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 
 @implementation JVJavaScriptChatPlugin
++ (void) initialize {
+	static BOOL tooLate = NO;
+	if( ! tooLate ) {
+		Method method = class_getClassMethod( [NSObject class], @selector( isSelectorExcludedFromWebScript: ) );
+		if( method ) method -> method_imp = (IMP) replacementIsSelectorExcludedFromWebScript;
+
+		method = class_getClassMethod( [NSObject class], @selector( isKeyExcludedFromWebScript: ) );
+		if( method ) method -> method_imp = (IMP) replacementIsKeyExcludedFromWebScript;
+
+		tooLate = YES;
+	}
+}
+
 - (id) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [self init] ) ) {
 		_manager = manager;
@@ -202,11 +77,8 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 - (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager {
 	if( ( self = [self initWithManager:manager] ) ) {
 		_path = [path copyWithZone:[self zone]];
-		_firstLoad = YES;
 
 		[self reloadFromDisk];
-
-		_firstLoad = NO;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( checkForModifications: ) name:NSApplicationWillBecomeActiveNotification object:[NSApplication sharedApplication]];
 	}
@@ -234,12 +106,34 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
 	NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
 
-	if( [[url scheme] isEqualToString:@"about"] ) {
+	if( sender == _webview && [url isFileURL] && [[url path] isEqualToString:[[NSBundle bundleForClass:[self class]] pathForResource:@"plugin" ofType:@"html"]] ) {
+		[listener use];
+	} else if( [[url scheme] isEqualToString:@"about"] ) {
 		if( [[[url standardizedURL] path] length] ) [listener ignore];
 		else [listener use];
 	} else {
 		[[NSWorkspace sharedWorkspace] openURL:url];
 		[listener ignore];
+	}
+}
+
+- (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
+	if( sender == _webview ) {
+		NSString *contents = nil;
+		if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
+			contents = [NSString stringWithContentsOfFile:[self scriptFilePath]];
+		else contents = [NSString stringWithContentsOfFile:[self scriptFilePath] encoding:NSUTF8StringEncoding error:NULL];
+
+		@try {
+			[[_webview windowScriptObject] evaluateWebScript:contents];
+		} @catch (NSException *exception) {
+			NSString *errorDesc = [exception reason];
+			int result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"JavaScript Error", nil, [NSBundle bundleForClass:[self class]], "JavaScript error title" ), NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error while loading.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript error message" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], errorDesc );
+			if( result == NSCancelButton ) [[NSWorkspace sharedWorkspace] openFile:[self scriptFilePath]];
+			return;
+		}
+
+		[self performSelector:@selector( load )];
 	}
 }
 
@@ -322,23 +216,9 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	[_webview setFrameLoadDelegate:self];
 	[_webview setUIDelegate:self];
 
-	[self setupScriptGlobalsForWebView:_webview];
-
-	NSString *contents = nil;
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		contents = [NSString stringWithContentsOfFile:[self scriptFilePath]];
-	else contents = [NSString stringWithContentsOfFile:[self scriptFilePath] encoding:NSUTF8StringEncoding error:NULL];
-
-	@try {
-		[[_webview windowScriptObject] evaluateWebScript:contents];
-	} @catch (NSException *exception) {
-		NSString *errorDesc = [exception reason];
-		int result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"JavaScript Error", nil, [NSBundle bundleForClass:[self class]], "JavaScript error title" ), NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error while loading.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript error message" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], errorDesc );
-		if( result == NSCancelButton ) [[NSWorkspace sharedWorkspace] openFile:[self scriptFilePath]];
-		return;
-	}
-
-	if( ! _firstLoad ) [self performSelector:@selector( load )];
+	NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"plugin" ofType:@"html"];
+	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:path] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:5.];
+	[[_webview mainFrame] loadRequest:request];
 }
 
 #pragma mark -
@@ -405,7 +285,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
-	NSArray *args = [NSArray arrayWithObjects:command, ( arguments ? (id)arguments : (id)[NSNull null] ), ( connection ? (id)connection : (id)[NSNull null] ), ( view ? (id)view : (id)[NSNull null] ), nil];
+	NSArray *args = [NSArray arrayWithObjects:command, ( arguments ? (id)[arguments string] : (id)[NSNull null] ), ( connection ? (id)connection : (id)[NSNull null] ), ( view ? (id)view : (id)[NSNull null] ), nil];
 	id result = [self callScriptFunctionNamed:@"processUserCommand" withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
@@ -432,12 +312,12 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 }
 
 - (void) memberParted:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room forReason:(NSAttributedString *) reason {
-	NSArray *args = [NSArray arrayWithObjects:member, room, ( reason ? (id)reason : (id)[NSNull null] ), nil];
+	NSArray *args = [NSArray arrayWithObjects:member, room, ( reason ? (id)[reason string] : (id)[NSNull null] ), nil];
 	[self callScriptFunctionNamed:@"memberParted" withArguments:args forSelector:_cmd];
 }
 
 - (void) memberKicked:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSArray *args = [NSArray arrayWithObjects:member, room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)reason : (id)[NSNull null] ), nil];
+	NSArray *args = [NSArray arrayWithObjects:member, room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)[reason string] : (id)[NSNull null] ), nil];
 	[self callScriptFunctionNamed:@"memberKicked" withArguments:args forSelector:_cmd];
 }
 
@@ -452,12 +332,12 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 }
 
 - (void) kickedFromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSArray *args = [NSArray arrayWithObjects:room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)reason : (id)[NSNull null] ), nil];
+	NSArray *args = [NSArray arrayWithObjects:room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)[reason string] : (id)[NSNull null] ), nil];
 	[self callScriptFunctionNamed:@"kickedFromRoom" withArguments:args forSelector:_cmd];
 }
 
 - (void) topicChangedTo:(NSAttributedString *) topic inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) member {
-	NSArray *args = [NSArray arrayWithObjects:topic, room, ( member ? (id)member : (id)[NSNull null] ), nil];
+	NSArray *args = [NSArray arrayWithObjects:[topic string], room, ( member ? (id)member : (id)[NSNull null] ), nil];
 	[self callScriptFunctionNamed:@"topicChanged" withArguments:args forSelector:_cmd];
 }
 

@@ -10,7 +10,6 @@ extern NSString *JVJavaScriptErrorDomain;
 	NSDate *_modDate;
 	NSString *_uniqueModuleName;
 	WebView *_webview;
-	BOOL _firstLoad;
 }
 - (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 
