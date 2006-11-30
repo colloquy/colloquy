@@ -19,6 +19,7 @@
 #import "NSStringAdditions.h"
 
 #import <WebKit/WebKit.h>
+#import <objc/objc-runtime.h>
 
 @interface NSWindow (NSWindowPrivate) // new Tiger private method
 - (void) _setContentHasShadow:(BOOL) shadow;
