@@ -8,8 +8,9 @@ extern NSString *JVJavaScriptErrorDomain;
 	MVChatPluginManager *_manager;
 	NSString *_path;
 	NSDate *_modDate;
-	NSString *_uniqueModuleName;
 	WebView *_webview;
+	NSString *_currentFunction;
+	BOOL _loading;
 }
 - (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 
@@ -19,5 +20,6 @@ extern NSString *JVJavaScriptErrorDomain;
 
 - (void) setupScriptGlobalsForWebView:(WebView *) webView;
 
+- (void) reportError:(NSDictionary *) error inFunction:(NSString *) functionName whileLoading:(BOOL) whileLoading;
 - (id) callScriptFunctionNamed:(NSString *) functionName withArguments:(NSArray *) arguments forSelector:(SEL) selector;
 @end

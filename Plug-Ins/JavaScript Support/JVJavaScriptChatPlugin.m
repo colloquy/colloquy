@@ -107,9 +107,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
 	NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
 
-	if( sender == _webview && [url isFileURL] && [[url path] isEqualToString:[[NSBundle bundleForClass:[self class]] pathForResource:@"plugin" ofType:@"html"]] ) {
-		[listener use];
-	} else if( [[url scheme] isEqualToString:@"about"] ) {
+	if( [[url scheme] isEqualToString:@"about"] ) {
 		if( [[[url standardizedURL] path] length] ) [listener ignore];
 		else [listener use];
 	} else {
@@ -120,26 +118,17 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 
 - (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
 	if( sender == _webview ) {
-		NSString *contents = nil;
-		if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-			contents = [NSString stringWithContentsOfFile:[self scriptFilePath]];
-		else contents = [NSString stringWithContentsOfFile:[self scriptFilePath] encoding:NSUTF8StringEncoding error:NULL];
-
-		@try {
-			[[_webview windowScriptObject] evaluateWebScript:contents];
-		} @catch (NSException *exception) {
-			NSString *errorDesc = [exception reason];
-			int result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"JavaScript Error", nil, [NSBundle bundleForClass:[self class]], "JavaScript error title" ), NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error while loading.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript error message" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], errorDesc );
-			if( result == NSCancelButton ) [[NSWorkspace sharedWorkspace] openFile:[self scriptFilePath]];
-			return;
-		}
-
+		_loading = NO;
 		[self performSelector:@selector( load )];
 	}
 }
 
 - (void) webView:(WebView *) webView windowScriptObjectAvailable:(WebScriptObject *) windowScriptObject {
 	[self setupScriptGlobalsForWebView:webView];
+}
+
+- (void) webView:(WebView *) webView addMessageToConsole:(NSDictionary *) message {
+	[self reportError:message inFunction:_currentFunction whileLoading:_loading];
 }
 
 - (WebView *) webView:(WebView *) sender createWebViewWithRequest:(NSURLRequest *) request {
@@ -209,6 +198,8 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 - (void) reloadFromDisk {
 	[self performSelector:@selector( unload )];
 
+	_loading = YES;
+
 	id old = _webview;
 	_webview = [[WebView allocWithZone:nil] initWithFrame:NSZeroRect];
 	[old release];
@@ -217,9 +208,14 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	[_webview setFrameLoadDelegate:self];
 	[_webview setUIDelegate:self];
 
-	NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"plugin" ofType:@"html"];
-	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:path] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:5.];
-	[[_webview mainFrame] loadRequest:request];
+	NSString *contents = nil;
+	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
+		contents = [NSString stringWithContentsOfFile:[self scriptFilePath]];
+	else contents = [NSString stringWithContentsOfFile:[self scriptFilePath] encoding:NSUTF8StringEncoding error:NULL];
+
+	NSString *html = [[NSString allocWithZone:nil] initWithFormat:@"<script>%@</script>", contents];
+	[[_webview mainFrame] loadHTMLString:html baseURL:nil];
+	[html release];
 }
 
 #pragma mark -
@@ -249,15 +245,50 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 
 #pragma mark -
 
+- (void) reportError:(NSDictionary *) error inFunction:(NSString *) functionName whileLoading:(BOOL) whileLoading {
+	NSMutableString *errorDesc = [[NSMutableString alloc] initWithCapacity:64];
+
+	NSString *message = [error objectForKey:@"message"];
+	NSString *sourceFile = [error objectForKey:@"sourceURL"];
+	if( ! sourceFile || [sourceFile hasPrefix:@"applewebdata:"] || [sourceFile hasPrefix:@"about:"] )
+		sourceFile = [self scriptFilePath];
+	unsigned int line = [[error objectForKey:@"lineNumber"] unsignedIntValue];
+
+	[errorDesc appendString:message];
+	if( line ) {
+		[errorDesc appendString:@"\n"];
+		[errorDesc appendFormat:NSLocalizedStringFromTableInBundle( @"Line number: %d", nil, [NSBundle bundleForClass:[self class]], "error line number" ), line];
+	}
+
+	NSString *alertTitle = NSLocalizedStringFromTableInBundle( @"JavaScript Error", nil, [NSBundle bundleForClass:[self class]], "JavaScript error title" );
+	NSString *scriptTitle = [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension];
+	int result = NSOKButton;
+
+	if( whileLoading ) result = NSRunCriticalAlertPanel( alertTitle, NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error while loading.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript error message while loading" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, scriptTitle, errorDesc );
+	else if( functionName ) result = NSRunCriticalAlertPanel( alertTitle, NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error while calling the \"%@\" function.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript plugin error message calling function" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, scriptTitle, functionName, errorDesc );
+	else result = NSRunCriticalAlertPanel( alertTitle, NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript error message" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, scriptTitle, errorDesc );
+
+	if( result == NSCancelButton ) [[NSWorkspace sharedWorkspace] openFile:sourceFile];
+
+	[errorDesc release];
+}
+
 - (id) callScriptFunctionNamed:(NSString *) functionName withArguments:(NSArray *) arguments forSelector:(SEL) selector {
 	if( ! [_webview windowScriptObject] ) return nil;
 
+	_currentFunction = functionName;
+
 	@try {
-		return [[_webview windowScriptObject] callWebScriptMethod:functionName withArguments:arguments];
+		id result = [[_webview windowScriptObject] callWebScriptMethod:functionName withArguments:arguments];
+		_currentFunction = nil;
+		return result;
 	} @catch (NSException *exception) {
-		int result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"JavaScript Error", nil, [NSBundle bundleForClass:[self class]], "JavaScript error title" ), NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error while calling the \"%@\" function.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript plugin error message" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension], functionName, [exception reason] );
-		if( result == NSCancelButton ) [[NSWorkspace sharedWorkspace] openFile:[self scriptFilePath]];
+		NSDictionary *error = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[exception reason], @"message", nil];
+		[self reportError:error inFunction:functionName whileLoading:NO];
+		[error release];
 	}
+
+	_currentFunction = nil;
 
 	NSDictionary *error = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Function named \"%@\" could not be found or is not callable", functionName] forKey:NSLocalizedDescriptionKey];
 	return [NSError errorWithDomain:JVJavaScriptErrorDomain code:-1 userInfo:error];

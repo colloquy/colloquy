@@ -3,10 +3,17 @@
 #import "MVChatConnection.h"
 #import "JVChatWindowController.h"
 
+@interface WebCoreStatistics
++ (void) setShouldPrintExceptions:(BOOL) print;
+@end
+
 @implementation JVJavaScriptPluginLoader
 - (id) initWithManager:(MVChatPluginManager *) manager {
-	if( ( self = [super init] ) )
+	if( ( self = [super init] ) ) {
+		[WebCoreStatistics setShouldPrintExceptions:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableJavaScriptDebugging"]];
 		_manager = manager;
+	}
+
 	return self;
 }
 
@@ -26,7 +33,16 @@
 				[[view windowController] addChatViewController:console];
 				[[view windowController] performSelector:@selector( showChatViewController: ) withObject:console afterDelay:0];
 			}
-		} else */ if( [args count] > 1 ) {
+		} else */ if( [args count] == 2 && ( ! [subcmd caseInsensitiveCompare:@"exceptions"] || ! [subcmd caseInsensitiveCompare:@"debugging"] || ! [subcmd caseInsensitiveCompare:@"debug"] ) ) {
+			NSString *state = [args objectAtIndex:1];
+			if( ! [state caseInsensitiveCompare:@"on"] || ! [state caseInsensitiveCompare:@"yes"] || ! [state caseInsensitiveCompare:@"true"] || ! [state caseInsensitiveCompare:@"1"] ) {
+				[WebCoreStatistics setShouldPrintExceptions:YES];
+				[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVEnableJavaScriptDebugging"];
+			} else if( ! [state caseInsensitiveCompare:@"off"] || ! [state caseInsensitiveCompare:@"no"] || ! [state caseInsensitiveCompare:@"false"] || ! [state caseInsensitiveCompare:@"0"] ) {
+				[WebCoreStatistics setShouldPrintExceptions:NO];
+				[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"JVEnableJavaScriptDebugging"];
+			}
+		} else if( [args count] > 1 ) {
 			NSString *path = [[args subarrayWithRange:NSMakeRange( 1, ( [args count] - 1 ) )] componentsJoinedByString:@" "];
 			path = [path stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 			if( path ) {
