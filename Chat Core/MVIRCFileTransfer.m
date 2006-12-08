@@ -29,6 +29,13 @@ static BOOL acceptConnectionOnFirstPortInRange( AsyncSocket *connection, NSRange
 
 static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 	NSString *address = [connection localHost];
+
+	NSURL *url = [NSURL URLWithString:@"http://colloquy.info/ip.php"];
+	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:3.];
+	NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL];
+	if( [result length] >= 6 && [result length] <= 40 ) // should be a valid IPv4 or IPv6 address
+		address = [[[NSString allocWithZone:nil] initWithData:result encoding:NSASCIIStringEncoding] autorelease];
+
 	if( [address rangeOfString:@"."].location != NSNotFound )
 		return [NSString stringWithFormat:@"%lu", ntohl( inet_addr( [address UTF8String] ) )];
 	return address;
@@ -207,7 +214,7 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 	BOOL success = acceptConnectionOnFirstPortInRange( _acceptConnection, [[self class] fileTransferPortRange] );
 
 	if( success ) {
-		id address = dccFriendlyAddress( [(MVIRCChatConnection *)[[self user] connection] _chatConnection] );
+		NSString *address = dccFriendlyAddress( _acceptConnection );
 		[self _setPort:[_acceptConnection localPort]];
 
 		NSString *fileName = [[self source] lastPathComponent];
@@ -471,7 +478,7 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 	BOOL success = acceptConnectionOnFirstPortInRange( _acceptConnection, [[self class] fileTransferPortRange] );
 
 	if( success ) {
-		id address = dccFriendlyAddress( [(MVIRCChatConnection *)[[self user] connection] _chatConnection] );
+		NSString *address = dccFriendlyAddress( _acceptConnection );
 		[self _setPort:[_acceptConnection localPort]];
 
 		if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" %@ %hu %llu %lu", [self originalFileName], address, [self port], [self finalSize], [self _passiveIdentifier]]];
