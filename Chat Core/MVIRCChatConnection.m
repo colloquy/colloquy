@@ -1604,7 +1604,7 @@ end:
 				[scanner scanLongLong:&size];
 
 				if( [address rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@".:"]].location == NSNotFound ) {
-					unsigned int ip4;
+					unsigned int ip4 = 0;
 					sscanf( [address UTF8String], "%u", &ip4 );
 					address = [NSString stringWithFormat:@"%lu.%lu.%lu.%lu", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
 				}

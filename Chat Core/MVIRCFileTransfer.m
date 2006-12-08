@@ -27,10 +27,10 @@ static BOOL acceptConnectionOnFirstPortInRange( AsyncSocket *connection, NSRange
 	return success;
 }
 
-static id dccFriendlyAddress( AsyncSocket *connection ) {
-	id address = [connection localHost];
+static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
+	NSString *address = [connection localHost];
 	if( [address rangeOfString:@"."].location != NSNotFound )
-		address = [NSNumber numberWithUnsignedLong:ntohl( inet_addr( [address UTF8String] ) )];
+		return [NSString stringWithFormat:@"%lu", ntohl( inet_addr( [address UTF8String] ) )];
 	return address;
 }
 
