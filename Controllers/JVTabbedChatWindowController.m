@@ -333,7 +333,11 @@
 		if( [item respondsToSelector:@selector( childAtIndex: )] )
 			return [item childAtIndex:index];
 		else return nil;
-	} else return [(id)_activeViewController childAtIndex:index];
+	}
+
+	if( [_activeViewController respondsToSelector:@selector( childAtIndex: )] )
+		return [(id)_activeViewController childAtIndex:index];
+	return nil;
 }
 
 - (id) outlineView:(NSOutlineView *) outlineView objectValueForTableColumn:(NSTableColumn *) tableColumn byItem:(id) item {
