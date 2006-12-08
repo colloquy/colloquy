@@ -44,6 +44,8 @@
 - (SilcClientConnection) _silcConn;
 - (void) _setSilcConn:(SilcClientConnection) aSilcConn;
 
+- (void) _stopSilcRunloop;
+
 - (BOOL) _loadKeyPair;
 - (BOOL) _isKeyPairLoaded;
 - (void) _connectKeyPairLoaded:(NSNotification *) notification;

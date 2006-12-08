@@ -558,9 +558,21 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	[_threadWaitLock unlockWithCondition:1];
 
+	if( [pool respondsToSelector:@selector( drain )] )
+		[pool drain];
+	[pool release];
+	pool = nil;
+
 	BOOL active = YES;
-	while( active && ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus || [_chatConnection isConnected] ) )
+	while( active && ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus || [_chatConnection isConnected] ) ) {
+		pool = [[NSAutoreleasePool allocWithZone:nil] init];
 		active = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
+		if( [pool respondsToSelector:@selector( drain )] )
+			[pool drain];
+		[pool release];
+	}
+
+	pool = [[NSAutoreleasePool allocWithZone:nil] init];
 
 	// make sure the connection has sent all the delegate calls it has scheduled
 	[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.]];
