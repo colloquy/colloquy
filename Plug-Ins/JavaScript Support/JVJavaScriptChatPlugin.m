@@ -27,6 +27,24 @@
 
 #pragma mark -
 
+@interface WebView (WebViewPrivate) // new Tiger private method
+- (void) setScriptDebugDelegate:(id) delegate;
+@end
+
+#pragma mark -
+
+@interface WebScriptCallFrame : NSObject
+- (void)setUserInfo:(id)userInfo;
+- (id)userInfo;
+- (WebScriptCallFrame *)caller;
+- (NSArray *)scopeChain;
+- (NSString *)functionName;
+- (id)exception;
+- (id)evaluateWebScript:(NSString *)script;
+@end
+
+#pragma mark -
+
 static BOOL replacementIsSelectorExcludedFromWebScript( id self, SEL cmd, SEL selector ) {
 	return NO;
 }
@@ -167,7 +185,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 
 - (void) webView:(WebView *) sender runJavaScriptAlertPanelWithMessage:(NSString *) message initiatedByFrame:(WebFrame *) frame {
     NSRange range = [message rangeOfString:@"\t"];
-    NSString *title = @"Alert";
+    NSString *title = NSLocalizedStringFromTableInBundle( @"Alert", nil, [NSBundle bundleForClass:[self class]], "default JavaScript alert title" );
     if( range.location != NSNotFound ) {
         title = [message substringToIndex:range.location];
         message = [message substringFromIndex:( range.location + range.length )];
@@ -183,6 +201,44 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 - (void) webView:(WebView *) sender setResizable:(BOOL) resizable {
 	[[sender window] setShowsResizeIndicator:resizable];
 	[[[sender window] standardWindowButton:NSWindowZoomButton] setEnabled:resizable];
+}
+
+- (void) webView:(WebView *) sender failedToParseSource:(NSString *) source baseLineNumber:(unsigned) lineNumber fromURL:(NSURL *) url withError:(NSError *) error forWebFrame:(WebFrame *) webFrame {
+	NSDictionary *errorInfo = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:NSLocalizedStringFromTableInBundle( @"Failed to parse script.", nil, [NSBundle bundleForClass:[self class]], "failed to parse JavaScript error message" ), @"message", ( [url isFileURL] ? [url path] : nil ), @"sourceURL", nil];
+	[self reportError:errorInfo inFunction:_currentFunction whileLoading:_loading];
+	[errorInfo release];
+}
+
+- (void) webView:(WebView *) sender willLeaveCallFrame:(WebScriptCallFrame *) frame sourceId:(int) sid line:(int) line forWebFrame:(WebFrame *) webFrame {
+	if( ! [[frame userInfo] isEqual:@"handled"] && [frame exception] ) {
+		id exception = [frame exception];
+		NSString *sourceURL = nil;
+		@try {
+			sourceURL = [exception valueForKey:@"sourceURL"];
+		} @catch( NSException *e ) {
+			sourceURL = nil;
+		}
+
+		NSDictionary *error = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[exception valueForKey:@"message"], @"message", [exception valueForKey:@"line"], @"lineNumber", sourceURL, @"sourceURL", nil];
+		[self reportError:error inFunction:_currentFunction whileLoading:_loading];
+		[error release];
+	}
+}
+
+- (void) webView:(WebView *) sender exceptionWasRaised:(WebScriptCallFrame *) frame sourceId:(int) sid line:(int) line forWebFrame:(WebFrame *) webFrame {
+	[frame setUserInfo:@"handled"];
+
+	id exception = [frame exception];
+	NSString *sourceURL = nil;
+	@try {
+		sourceURL = [exception valueForKey:@"sourceURL"];
+	} @catch( NSException *e ) {
+		sourceURL = nil;
+	}
+
+	NSDictionary *error = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[exception valueForKey:@"message"], @"message", [exception valueForKey:@"line"], @"lineNumber", sourceURL, @"sourceURL", nil];
+	[self reportError:error inFunction:_currentFunction whileLoading:_loading];
+	[error release];
 }
 
 #pragma mark -
@@ -219,6 +275,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	[_webview setPolicyDelegate:self];
 	[_webview setFrameLoadDelegate:self];
 	[_webview setUIDelegate:self];
+	[_webview setScriptDebugDelegate:self];
 
 	NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"plugin" ofType:@"html"];
 	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:path] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:5.];
@@ -261,7 +318,9 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 		sourceFile = [self scriptFilePath];
 	unsigned int line = [[error objectForKey:@"lineNumber"] unsignedIntValue];
 
-	[errorDesc appendString:message];
+	if( [message length] ) [errorDesc appendString:message];
+	else [errorDesc appendString:NSLocalizedStringFromTableInBundle( @"Unknown error.", nil, [NSBundle bundleForClass:[self class]], "unknown error message" )];
+
 	if( line ) {
 		[errorDesc appendString:@"\n"];
 		[errorDesc appendFormat:NSLocalizedStringFromTableInBundle( @"Line number: %d", nil, [NSBundle bundleForClass:[self class]], "error line number" ), line];
