@@ -107,7 +107,11 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {
 	NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
 
-	if( [[url scheme] isEqualToString:@"about"] ) {
+	NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"plugin" ofType:@"html"];
+
+	if( [[url scheme] isEqualToString:@"file"] && [[url path] isEqualToString:path] ) {
+		[listener use];
+	} else if( [[url scheme] isEqualToString:@"about"] ) {
 		if( [[[url standardizedURL] path] length] ) [listener ignore];
 		else [listener use];
 	} else {
@@ -119,6 +123,14 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 - (void) webView:(WebView *) sender didFinishLoadForFrame:(WebFrame *) frame {
 	if( sender == _webview ) {
 		_loading = NO;
+
+		NSString *contents = nil;
+		if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
+			contents = [NSString stringWithContentsOfFile:[self scriptFilePath]];
+		else contents = [NSString stringWithContentsOfFile:[self scriptFilePath] encoding:NSUTF8StringEncoding error:NULL];
+
+		[[sender windowScriptObject] evaluateWebScript:contents];
+
 		[self performSelector:@selector( load )];
 	}
 }
@@ -208,14 +220,9 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	[_webview setFrameLoadDelegate:self];
 	[_webview setUIDelegate:self];
 
-	NSString *contents = nil;
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		contents = [NSString stringWithContentsOfFile:[self scriptFilePath]];
-	else contents = [NSString stringWithContentsOfFile:[self scriptFilePath] encoding:NSUTF8StringEncoding error:NULL];
-
-	NSString *html = [[NSString allocWithZone:nil] initWithFormat:@"<script>%@</script>", contents];
-	[[_webview mainFrame] loadHTMLString:html baseURL:nil];
-	[html release];
+	NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"plugin" ofType:@"html"];
+	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:path] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:5.];
+	[[_webview mainFrame] loadRequest:request];
 }
 
 #pragma mark -
@@ -250,7 +257,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 
 	NSString *message = [error objectForKey:@"message"];
 	NSString *sourceFile = [error objectForKey:@"sourceURL"];
-	if( ! sourceFile || [sourceFile hasPrefix:@"applewebdata:"] || [sourceFile hasPrefix:@"about:"] )
+	if( ! sourceFile || [sourceFile isEqualToString:[[NSBundle bundleForClass:[self class]] pathForResource:@"plugin" ofType:@"html"]] )
 		sourceFile = [self scriptFilePath];
 	unsigned int line = [[error objectForKey:@"lineNumber"] unsignedIntValue];
 
