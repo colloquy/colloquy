@@ -105,6 +105,12 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	return self;
 }
 
+- (void) release {
+	if( ( [self retainCount] - 1 ) == 1 )
+		[[_webview windowScriptObject] removeWebScriptKey:@"Plugin"];
+	[super release];
+}
+
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
@@ -244,6 +250,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 #pragma mark -
 
 - (void) setupScriptGlobalsForWebView:(WebView *) webView {
+	[[webView windowScriptObject] setValue:self forKey:@"Plugin"];
 	[[webView windowScriptObject] setValue:[JVChatController defaultController] forKey:@"ChatController"];
 	[[webView windowScriptObject] setValue:[MVConnectionsController defaultController] forKey:@"ConnectionsController"];
 	[[webView windowScriptObject] setValue:[MVFileTransferController defaultController] forKey:@"FileTransferController"];
@@ -251,6 +258,12 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	[[webView windowScriptObject] setValue:[JVSpeechController sharedSpeechController] forKey:@"SpeechController"];
 	[[webView windowScriptObject] setValue:[JVNotificationController defaultController] forKey:@"NotificationController"];
 	[[webView windowScriptObject] setValue:[MVChatPluginManager defaultManager] forKey:@"ChatPluginManager"];
+}
+
+#pragma mark -
+
+- (id) allocInstance:(NSString *) class {
+	return [NSClassFromString(class) allocWithZone:nil];
 }
 
 #pragma mark -
