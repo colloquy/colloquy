@@ -245,19 +245,21 @@
 #pragma mark -
 
 - (id) init {
-	if( ( self = [super init] ) ) _doc = NULL;
+	if( ( self = [super init] ) ) {
+		_loadedMessage = YES;
+		_loadedAttributes = YES;
+		_loadedSmall = YES;
+		[self setDate:[NSDate date]];
+		[self setEventIdentifier:[NSString locallyUniqueString]];
+	}
+
 	return self;
 }
 
 - (id) initWithName:(NSString *) name andMessage:(id) message {
 	if( ( self = [self init] ) ) {
-		_loadedMessage = YES;
-		_loadedAttributes = YES;
-		_loadedSmall = YES;
-		[self setDate:[NSDate date]];
 		[self setName:name];
 		[self setMessage:message];
-		[self setEventIdentifier:[NSString locallyUniqueString]];
 	}
 
 	return self;

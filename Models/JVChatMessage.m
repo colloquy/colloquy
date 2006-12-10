@@ -381,15 +381,22 @@
 
 #pragma mark -
 
-- (id) initWithText:(id) body sender:(id) sender {
-	if( ( self = [self init] ) ) {
+- (id) init {
+	if( ( self = [super init] ) ) {
 		_loaded = YES;
 		_bodyLoaded = YES;
 		_senderLoaded = YES;
 		[self setDate:[NSDate date]];
+		[self setMessageIdentifier:[NSString locallyUniqueString]];
+	}
+
+	return self;
+}
+
+- (id) initWithText:(id) body sender:(id) sender {
+	if( ( self = [self init] ) ) {
 		[self setBody:body];
 		[self setSender:sender];
-		[self setMessageIdentifier:[NSString locallyUniqueString]];
 	}
 
 	return self;

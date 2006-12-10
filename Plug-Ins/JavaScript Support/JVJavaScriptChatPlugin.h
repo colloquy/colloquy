@@ -2,6 +2,7 @@
 
 extern NSString *JVJavaScriptErrorDomain;
 
+@class WebScriptCallFrame;
 @class WebView;
 
 @interface JVJavaScriptChatPlugin : NSObject <MVChatPlugin> {
@@ -10,6 +11,7 @@ extern NSString *JVJavaScriptErrorDomain;
 	NSDate *_modDate;
 	WebView *_webview;
 	NSString *_currentFunction;
+	id _currentException;
 	BOOL _loading;
 }
 - (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
@@ -20,6 +22,7 @@ extern NSString *JVJavaScriptErrorDomain;
 
 - (void) setupScriptGlobalsForWebView:(WebView *) webView;
 
+- (void) reportErrorForCallFrame:(WebScriptCallFrame *) frame lineNumber:(unsigned int) line;
 - (void) reportError:(NSDictionary *) error inFunction:(NSString *) functionName whileLoading:(BOOL) whileLoading;
 - (id) callScriptFunctionNamed:(NSString *) functionName withArguments:(NSArray *) arguments forSelector:(SEL) selector;
 @end

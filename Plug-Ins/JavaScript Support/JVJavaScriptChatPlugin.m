@@ -215,36 +215,17 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	[errorInfo release];
 }
 
-- (void) webView:(WebView *) sender willLeaveCallFrame:(WebScriptCallFrame *) frame sourceId:(int) sid line:(int) line forWebFrame:(WebFrame *) webFrame {
-	if( ! [[frame userInfo] isEqual:@"handled"] && [frame exception] ) {
-		id exception = [frame exception];
-		NSString *sourceURL = nil;
-		@try {
-			sourceURL = [exception valueForKey:@"sourceURL"];
-		} @catch( NSException *e ) {
-			sourceURL = nil;
-		}
+- (void) webView:(WebView *) sender didEnterCallFrame:(WebScriptCallFrame *) frame sourceId:(int) sid line:(int) line forWebFrame:(WebFrame *) webFrame {
+	[_currentException release];
+	_currentException = nil;
+}
 
-		NSDictionary *error = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[exception valueForKey:@"message"], @"message", [exception valueForKey:@"line"], @"lineNumber", sourceURL, @"sourceURL", nil];
-		[self reportError:error inFunction:_currentFunction whileLoading:_loading];
-		[error release];
-	}
+- (void) webView:(WebView *) sender willLeaveCallFrame:(WebScriptCallFrame *) frame sourceId:(int) sid line:(int) line forWebFrame:(WebFrame *) webFrame {
+	if( [frame exception] ) [self reportErrorForCallFrame:frame lineNumber:line];
 }
 
 - (void) webView:(WebView *) sender exceptionWasRaised:(WebScriptCallFrame *) frame sourceId:(int) sid line:(int) line forWebFrame:(WebFrame *) webFrame {
-	[frame setUserInfo:@"handled"];
-
-	id exception = [frame exception];
-	NSString *sourceURL = nil;
-	@try {
-		sourceURL = [exception valueForKey:@"sourceURL"];
-	} @catch( NSException *e ) {
-		sourceURL = nil;
-	}
-
-	NSDictionary *error = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[exception valueForKey:@"message"], @"message", [exception valueForKey:@"line"], @"lineNumber", sourceURL, @"sourceURL", nil];
-	[self reportError:error inFunction:_currentFunction whileLoading:_loading];
-	[error release];
+	if( [frame exception] ) [self reportErrorForCallFrame:frame lineNumber:line];
 }
 
 #pragma mark -
@@ -263,7 +244,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 #pragma mark -
 
 - (id) allocInstance:(NSString *) class {
-	return [NSClassFromString(class) allocWithZone:nil];
+	return [[NSClassFromString(class) allocWithZone:nil] autorelease];
 }
 
 #pragma mark -
@@ -322,6 +303,33 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 }
 
 #pragma mark -
+
+- (void) reportErrorForCallFrame:(WebScriptCallFrame *) frame lineNumber:(unsigned int) line {
+	id handled = nil;
+	id exception = [frame exception];
+	@try { handled = [exception valueForKey:@"handled"]; } @catch( NSException *e ) { handled = nil; }
+
+	if( exception && ! handled && ! [_currentException isEqual:exception] ) {
+		[_currentException release];
+		_currentException = [exception retain];
+
+		NSNumber *lineNumber = ( line ? [NSNumber numberWithUnsignedInt:line] : nil );
+		NSString *sourceURL = nil;
+		NSString *message = exception;
+
+		if( [exception isKindOfClass:[WebScriptObject class]] ) {
+			[exception setValue:[NSNumber numberWithBool:YES] forKey:@"handled"];
+
+			@try { lineNumber = [exception valueForKey:@"line"]; } @catch( NSException *e ) { lineNumber = nil; }
+			@try { sourceURL = [exception valueForKey:@"sourceURL"]; } @catch( NSException *e ) { sourceURL = nil; }
+			@try { message = [exception valueForKey:@"message"]; } @catch( NSException *e ) { message = exception; }
+		}
+
+		NSDictionary *error = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:message, @"message", lineNumber, @"lineNumber", sourceURL, @"sourceURL", nil];
+		[self reportError:error inFunction:_currentFunction whileLoading:_loading];
+		[error release];
+	}
+}
 
 - (void) reportError:(NSDictionary *) error inFunction:(NSString *) functionName whileLoading:(BOOL) whileLoading {
 	NSMutableString *errorDesc = [[NSMutableString alloc] initWithCapacity:64];
