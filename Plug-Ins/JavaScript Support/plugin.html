@@ -44,9 +44,102 @@ function JVChatEvent() {
 function JVMutableChatEvent(name, message) {
 	var obj = Plugin.allocInstance('JVMutableChatEvent');
 	if( name !== undefined && message !== undefined )
-		return obj.initWithName(name, message);
+		return obj.initWithName(name.toString(), message);
 	return obj.init();
 }
+
+MVChatConnectionIRCType = 'ircC'.fourCharCode();
+MVChatConnectionSILCType = 'silC'.fourCharCode();
+
+MVChatConnectionDisconnectedStatus = 'disC'.fourCharCode();
+MVChatConnectionServerDisconnectedStatus = 'sdsC'.fourCharCode();
+MVChatConnectionConnectingStatus = 'conG'.fourCharCode();
+MVChatConnectionConnectedStatus = 'conD'.fourCharCode();
+MVChatConnectionSuspendedStatus = 'susP'.fourCharCode();
+
+MVChatConnectionNoProxy = 'nonE'.fourCharCode();
+MVChatConnectionHTTPProxy = 'httP'.fourCharCode();
+MVChatConnectionHTTPSProxy = 'htpS'.fourCharCode();
+MVChatConnectionSOCKS4Proxy = 'soK4'.fourCharCode();
+MVChatConnectionSOCKS5Proxy = 'soK5'.fourCharCode();
+
+MVChatConnectionServerPublicKeyType = 'serV'.fourCharCode();
+MVChatConnectionClientPublicKeyType = 'clnT'.fourCharCode();
+
+MVChatConnectionDefaultMessageFormat = 'cDtF'.fourCharCode();
+MVChatNoMessageFormat = 'nOcF'.fourCharCode();
+MVChatWindowsIRCMessageFormat = 'mIrF'.fourCharCode();
+MVChatCTCPTwoMessageFormat = 'ct2F'.fourCharCode();
+
+MVChatConnectionNoSuchUserError = -1;
+MVChatConnectionNoSuchRoomError = -2;
+MVChatConnectionNoSuchServerError = -3;
+MVChatConnectionCantSendToRoomError = -4;
+MVChatConnectionNotInRoomError = -5;
+MVChatConnectionUserNotInRoomError = -6;
+MVChatConnectionRoomIsFullError = -7;
+MVChatConnectionInviteOnlyRoomError = -8;
+MVChatConnectionRoomPasswordIncorrectError = -9;
+MVChatConnectionBannedFromRoomError = -10;
+MVChatConnectionUnknownCommandError = -11;
+MVChatConnectionErroneusNicknameError = -12;
+MVChatConnectionBannedFromServerError = -13;
+MVChatConnectionServerPasswordIncorrectError = -14;
+
+function MVChatConnection(type, server, port, user) {
+	var obj = Plugin.allocInstance('MVChatConnection');
+	if( type !== undefined && ! isNaN(type) && server !== undefined && port !== undefined && ! isNaN(port) && user !== undefined )
+		return obj.initWithServer(server, parseInt(type), parseInt(port), user);
+	if( type !== undefined && ! isNaN(type) )
+		return obj.initWithType(parseInt(type));
+	throw "Can't create a MVChatConnection without a type.";
+}
+
+MVChatRoomNoModes = 0;
+MVChatRoomPrivateMode = 1 << 0;
+MVChatRoomSecretMode = 1 << 1;
+MVChatRoomInviteOnlyMode = 1 << 2;
+MVChatRoomNormalUsersSilencedMode = 1 << 3;
+MVChatRoomOperatorsSilencedMode = 1 << 4;
+MVChatRoomOperatorsOnlySetTopicMode = 1 << 5;
+MVChatRoomNoOutsideMessagesMode = 1 << 6;
+MVChatRoomPassphraseToJoinMode = 1 << 7;
+MVChatRoomLimitNumberOfMembersMode = 1 << 8;
+
+MVChatRoomMemberNoModes = 0;
+MVChatRoomMemberQuietedMode = 1 << 0;
+MVChatRoomMemberVoicedMode = 1 << 1;
+MVChatRoomMemberHalfOperatorMode = 1 << 2;
+MVChatRoomMemberOperatorMode = 1 << 3;
+MVChatRoomMemberAdministratorMode = 1 << 4;
+MVChatRoomMemberFounderMode = 1 << 5;
+
+MVChatRemoteUserType = 'remT'.fourCharCode();
+MVChatLocalUserType = 'locL'.fourCharCode();
+MVChatWildcardUserType = 'wilD'.fourCharCode();
+
+MVChatUserUnknownStatus = 'uKnw'.fourCharCode();
+MVChatUserOfflineStatus = 'oflN'.fourCharCode();
+MVChatUserDetachedStatus = 'detA'.fourCharCode();
+MVChatUserAvailableStatus = 'avaL'.fourCharCode();
+MVChatUserAwayStatus = 'awaY'.fourCharCode();
+
+MVChatUserNoModes = 0;
+MVChatUserInvisibleMode = 1 << 0;
+
+MVFileTransferDoneStatus = 'trDn'.fourCharCode();
+MVFileTransferNormalStatus = 'trNo'.fourCharCode();
+MVFileTransferHoldingStatus = 'trHo'.fourCharCode();
+MVFileTransferStoppedStatus = 'trSt'.fourCharCode();
+MVFileTransferErrorStatus = 'trEr'.fourCharCode();
+
+MVFileTransferConnectionError = -1;
+MVFileTransferFileCreationError = -2;
+MVFileTransferFileOpenError = -3;
+MVFileTransferAlreadyExistsError = -4;
+MVFileTransferUnexpectedlyEndedError = -5;
+MVFileTransferKeyAgreementError = -6;
+
 </script>
 </head>
 <body></body>
