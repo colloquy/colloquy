@@ -10,18 +10,27 @@
 		background-image: url( topicBackground.png );
 		background-repeat: repeat-x;
 		background-position: top;
+		border-bottom: 1px solid rgb( 154, 154, 154 );
+		overflow: hidden;
+		min-height: 17px;
 		height: 17px;
+	}
+
+	#topicMessage {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		min-height: 15px;
+		padding: 0 20px 0 8px;
 		font-size: 11px;
 		font-family: Lucida Grande, sans-serif;
 		line-height: 15px;
 		text-align: center;
-		padding: 0 20px 0 8px;
+		color: black !important;
 		word-wrap: break-word;
 		-khtml-line-break: after-white-space;
 		-khtml-nbsp-mode: space;
-		overflow: hidden;
-		color: black !important;
-		border-bottom: 1px solid rgb( 154, 154, 154 );
 	}
 
 	#topicMessage a {
@@ -35,6 +44,8 @@
 		background-image: url( topicToggleDown.png );
 		width: 17px;
 		height: 16px;
+		z-index: 10;
+		cursor: default;
 	}
 
 	#toggleButton.up {
@@ -46,6 +57,6 @@
 	}
 	</style>
 	<div id="toggleButton" onclick="toggleTopic( event )" style="display: none"></div>
-	<span id="topicMessage"></span>
+	<div id="topicMessage"></div>
 </div>
 </div>
