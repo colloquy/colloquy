@@ -493,13 +493,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (IBAction) toggleViewsDrawer:(id) sender {
-	if( [viewsDrawer state] == NSDrawerClosedState || [viewsDrawer state] == NSDrawerClosingState ) {
+	if( [viewsDrawer state] == NSDrawerClosedState || [viewsDrawer state] == NSDrawerClosingState )
 		[self openViewsDrawer:sender];
-		[self setPreference:[NSNumber numberWithBool:YES] forKey:@"drawer open"];
-	} else if( [viewsDrawer state] == NSDrawerOpenState || [viewsDrawer state] == NSDrawerOpeningState ) {
+	else if( [viewsDrawer state] == NSDrawerOpenState || [viewsDrawer state] == NSDrawerOpeningState )
 		[self closeViewsDrawer:sender];
-		[self setPreference:[NSNumber numberWithBool:NO] forKey:@"drawer open"];
-	}
 }
 
 - (IBAction) openViewsDrawer:(id) sender {
@@ -823,10 +820,16 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) outlineViewItemDidCollapse:(NSNotification *) notification {
 	[chatViewsOutlineView performSelector:@selector( sizeLastColumnToFit ) withObject:nil afterDelay:0.];
 	[chatViewsOutlineView performSelector:@selector( display ) withObject:nil afterDelay:0.];
+	id item = [[notification userInfo] objectForKey:@"NSObject"];
+	if( [item respondsToSelector:@selector( setPreference:forKey: )] )
+		[(id)item setPreference:[NSNumber numberWithBool:NO] forKey:@"expanded"];
 }
 
 - (void) outlineViewItemDidExpand:(NSNotification *) notification {
 	[chatViewsOutlineView performSelector:@selector( sizeLastColumnToFit ) withObject:nil afterDelay:0.];
+	id item = [[notification userInfo] objectForKey:@"NSObject"];
+	if( [item respondsToSelector:@selector( setPreference:forKey: )] )
+		[(id)item setPreference:[NSNumber numberWithBool:YES] forKey:@"expanded"];
 }
 @end
 

@@ -102,6 +102,12 @@
 #pragma mark -
 #pragma mark Chat View Protocol Support
 
+- (void) setWindowController:(JVChatWindowController *) controller {
+	[super setWindowController:controller];
+	if( [[self preferenceForKey:@"expanded"] boolValue] )
+		[controller performSelector:@selector( expandListItem: ) withObject:self afterDelay:0.];
+}
+
 - (void) willDispose {
 	[super willDispose];
 	[self partChat:nil];

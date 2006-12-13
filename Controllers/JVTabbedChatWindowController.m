@@ -137,6 +137,20 @@
 	}
 }
 
+- (IBAction) openViewsDrawer:(id) sender {
+	[super openViewsDrawer:sender];
+
+	if( [_activeViewController respondsToSelector:@selector( setPreference:forKey: )] )
+		[(id)_activeViewController setPreference:[NSNumber numberWithBool:YES] forKey:@"expanded"];
+}
+
+- (IBAction) closeViewsDrawer:(id) sender {
+	[super closeViewsDrawer:sender];
+
+	if( [_activeViewController respondsToSelector:@selector( setPreference:forKey: )] )
+		[(id)_activeViewController setPreference:[NSNumber numberWithBool:NO] forKey:@"expanded"];
+}
+
 #pragma mark -
 
 - (id <JVInspection>) objectToInspect {
@@ -187,10 +201,11 @@
 		[self _refreshSelectionMenu];
 
 		id controller = [(JVChatTabItem *)tabViewItem chatViewController];
-		if( [[self preferenceForKey:@"drawer open"] boolValue] &&
-			[controller respondsToSelector:@selector( numberOfChildren )] && [controller numberOfChildren] ) {
-			[viewsDrawer open:nil];
-		} else if( ! [controller respondsToSelector:@selector( numberOfChildren )] ) [viewsDrawer close:nil];
+		if( [controller respondsToSelector:@selector( preferenceForKey: )] && [controller preferenceForKey:@"expanded"] ) {
+			BOOL expanded = [[controller preferenceForKey:@"expanded"] boolValue];
+			if( expanded ) [self openViewsDrawer:nil];
+			else [self closeViewsDrawer:nil];
+		}
 	}
 }
 
