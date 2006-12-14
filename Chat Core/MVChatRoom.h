@@ -69,7 +69,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 	NSStringEncoding _encoding;
 	unsigned long _modes;
 	unsigned int _hash;
-	BOOL _releasing;
+	BOOL _releasing : 1;
 }
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5

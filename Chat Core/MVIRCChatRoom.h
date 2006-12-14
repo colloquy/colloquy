@@ -4,8 +4,8 @@
 @class MVIRCChatConnection;
 
 @interface MVIRCChatRoom : MVChatRoom {
-	BOOL _namesSynced;
-	BOOL _bansSynced;
+	BOOL _namesSynced : 1;
+	BOOL _bansSynced : 1;
 }
 - (id) initWithName:(NSString *) name andConnection:(MVIRCChatConnection *) connection;
 @end
