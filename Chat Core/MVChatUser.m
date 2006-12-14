@@ -272,21 +272,21 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (NSData *) awayStatusMessage {
-	return [[_awayStatusMessage retain] autorelease];
+	return _awayStatusMessage;
 }
 
 #pragma mark -
 
 - (NSDate *) dateConnected {
-	return [[_dateConnected retain] autorelease];
+	return _dateConnected;
 }
 
 - (NSDate *) dateDisconnected {
-	return [[_dateDisconnected retain] autorelease];
+	return _dateDisconnected;
 }
 
 - (NSDate *) dateUpdated {
-	return [[_dateUpdated retain] autorelease];
+	return _dateUpdated;
 }
 
 #pragma mark -
@@ -311,43 +311,43 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 - (NSString *) nickname {
 	if( _type == MVChatLocalUserType )
 		return [[self connection] nickname];
-	return [[_nickname retain] autorelease];
+	return _nickname;
 }
 
 - (NSString *) realName {
 	if( _type == MVChatLocalUserType )
 		return [[self connection] realName];
-	return [[_realName retain] autorelease];
+	return _realName;
 }
 
 - (NSString *) username {
 	if( _type == MVChatLocalUserType )
 		return [[self connection] username];
-	return [[_username retain] autorelease];
+	return _username;
 }
 
 - (NSString *) address {
-	return [[_address retain] autorelease];
+	return _address;
 }
 
 - (NSString *) serverAddress {
 	if( ! _serverAddress ) return [[self connection] server];
-	return [[_serverAddress retain] autorelease];
+	return _serverAddress;
 }
 
 #pragma mark -
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (id) uniqueIdentifier {
-	return [[_uniqueIdentifier retain] autorelease];
+	return _uniqueIdentifier;
 }
 
 - (NSData *) publicKey {
-	return [[_publicKey retain] autorelease];
+	return _publicKey;
 }
 
 - (NSString *) fingerprint {
-	return [[_fingerprint retain] autorelease];
+	return _fingerprint;
 }
 #endif
 
@@ -406,7 +406,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (id) attributeForKey:(NSString *) key {
 	@synchronized( _attributes ) {
-		return [[[_attributes objectForKey:key] retain] autorelease];
+		return [_attributes objectForKey:key];
 	} return nil;
 }
 

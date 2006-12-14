@@ -129,7 +129,7 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 }
 
 - (NSString *) nickname {
-	return [[_nickname retain] autorelease];
+	return _nickname;
 }
 
 - (void) setNickname:(NSString *) newNickname {
@@ -149,7 +149,7 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 }
 
 - (NSString *) realName {
-	return [[_realName retain] autorelease];
+	return _realName;
 }
 
 - (void) setRealName:(NSString *) newRealName {
@@ -169,7 +169,7 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 }
 
 - (NSString *) username {
-	return [[_username retain] autorelease];
+	return _username;
 }
 
 - (void) setUsername:(NSString *) newUsername {
@@ -189,7 +189,7 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 }
 
 - (NSString *) address {
-	return [[_address retain] autorelease];
+	return _address;
 }
 
 - (void) setAddress:(NSString *) newAddress {
@@ -210,7 +210,7 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSData *) publicKey {
-	return [[_publicKey retain] autorelease];
+	return _publicKey;
 }
 
 - (void) setPublicKey:(NSData *) publicKey {
@@ -234,7 +234,7 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 }
 
 - (NSArray *) applicableServerDomains {
-	return [[_applicableServerDomains retain] autorelease];
+	return _applicableServerDomains;
 }
 
 - (void) setApplicableServerDomains:(NSArray *) serverDomains {

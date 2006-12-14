@@ -275,11 +275,11 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSString *) nickname {
-	return [[_currentNickname retain] autorelease];
+	return _currentNickname;
 }
 
 - (NSString *) preferredNickname {
-	return [[_nickname retain] autorelease];
+	return _nickname;
 }
 
 #pragma mark -
@@ -299,7 +299,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSString *) password {
-	return [[_password retain] autorelease];
+	return _password;
 }
 
 #pragma mark -
@@ -314,7 +314,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSString *) username {
-	return [[_username retain] autorelease];
+	return _username;
 }
 
 #pragma mark -
@@ -329,7 +329,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSString *) server {
-	return [[_server retain] autorelease];
+	return _server;
 }
 
 #pragma mark -
@@ -453,7 +453,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	MVChatUser *user = nil;
 	@synchronized( _knownUsers ) {
 		user = [_knownUsers objectForKey:uniqueIdentfier];
-		if( user ) return [[user retain] autorelease];
+		if( user ) return user;
 
 		user = [[MVIRCChatUser allocWithZone:nil] initWithNickname:identifier andConnection:self];
 		if( user ) [_knownUsers setObject:user forKey:uniqueIdentfier];

@@ -206,7 +206,7 @@
 		NSEnumerator *enumerator = [_memberUsers objectEnumerator];
 		while( ( user = [enumerator nextObject] ) )
 			if( [[user uniqueIdentifier] isEqualToString:uniqueIdentfier] )
-				return [[user retain] autorelease];
+				return user;
 	}
 
 	return nil;

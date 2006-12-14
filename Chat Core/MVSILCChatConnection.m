@@ -1309,7 +1309,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	MVChatUser *user = nil;
 	@synchronized( _knownUsers ) {
 		user = [_knownUsers objectForKey:data];
-		if( user ) return [[user retain] autorelease];
+		if( user ) return user;
 
 		SilcClientID *clientID = silc_id_str2id( [(NSData *)data bytes], [(NSData *)data length], SILC_ID_CLIENT );
 		if( clientID ) {
@@ -1611,7 +1611,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	MVChatUser *user = nil;
 	@synchronized( _knownUsers ) {
 		user = [_knownUsers objectForKey:uniqueIdentfier];
-		if( user ) return [[user retain] autorelease];
+		if( user ) return user;
 
 		user = [[MVSILCChatUser allocWithZone:nil] initWithClientEntry:clientEntry andConnection:self];
 		if( user ) [_knownUsers setObject:user forKey:uniqueIdentfier];

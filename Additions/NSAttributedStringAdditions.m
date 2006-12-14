@@ -220,7 +220,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	if( [[options objectForKey:@"FullDocument"] boolValue] )
 		[ret appendString: @"</body></html>"];
 
-	return [[ret retain] autorelease];
+	return ret;
 }
 
 #pragma mark -

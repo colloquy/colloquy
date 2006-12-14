@@ -82,7 +82,7 @@ static NSRange portRange = { 1024, 24 };
 }
 
 - (NSError *) lastError {
-	return [[_lastError retain] autorelease];
+	return _lastError;
 }
 
 #pragma mark -
@@ -98,7 +98,7 @@ static NSRange portRange = { 1024, 24 };
 #pragma mark -
 
 - (NSDate *) startDate {
-	return [[_startDate retain] autorelease];
+	return _startDate;
 }
 
 - (unsigned long long) startOffset {
@@ -108,7 +108,7 @@ static NSRange portRange = { 1024, 24 };
 #pragma mark -
 
 - (NSHost *) host {
-	return [[_host retain] autorelease];
+	return _host;
 }
 
 - (unsigned short) port {
@@ -118,7 +118,7 @@ static NSRange portRange = { 1024, 24 };
 #pragma mark -
 
 - (MVChatUser *) user {
-	return [[_user retain] autorelease];
+	return _user;
 }
 #endif
 
@@ -207,7 +207,7 @@ static NSRange portRange = { 1024, 24 };
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSString *) source {
-	return [[_source retain] autorelease];
+	return _source;
 }
 #endif
 
@@ -260,13 +260,13 @@ static NSRange portRange = { 1024, 24 };
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSString *) destination {
-	return [[_destination retain] autorelease];
+	return _destination;
 }
 
 #pragma mark -
 
 - (NSString *) originalFileName {
-	return [[_originalFileName retain] autorelease];
+	return _originalFileName;
 }
 #endif
 

@@ -156,7 +156,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSString *) name {
-	return [[_name retain] autorelease];
+	return _name;
 }
 #endif
 
@@ -166,7 +166,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (id) uniqueIdentifier {
-	return [[_uniqueIdentifier retain] autorelease];
+	return _uniqueIdentifier;
 }
 #endif
 
@@ -200,11 +200,11 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSDate *) dateJoined {
-	return [[_dateJoined retain] autorelease];
+	return _dateJoined;
 }
 
 - (NSDate *) dateParted {
-	return [[_dateParted retain] autorelease];
+	return _dateParted;
 }
 #endif
 
@@ -245,7 +245,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSData *) topic {
-	return [[_topic retain] autorelease];
+	return _topic;
 }
 #endif
 
@@ -255,11 +255,11 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (MVChatUser *) topicAuthor {
-	return [[_topicAuthor retain] autorelease];
+	return _topicAuthor;
 }
 
 - (NSDate *) dateTopicChanged {
-	return [[_dateTopicChanged retain] autorelease];
+	return _dateTopicChanged;
 }
 #endif
 
@@ -297,7 +297,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 - (id) attributeForKey:(NSString *) key {
 	@synchronized( _attributes ) {
-		return [[[_attributes objectForKey:key] retain] autorelease];
+		return [_attributes objectForKey:key];
 	} return nil;
 }
 
@@ -331,7 +331,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (id) attributeForMode:(MVChatRoomMode) mode {
 	NSParameterAssert( [self supportedModes] & mode );
 	@synchronized( _modeAttributes ) {
-		return [[[_modeAttributes objectForKey:[NSNumber numberWithUnsignedInt:mode]] retain] autorelease];
+		return [_modeAttributes objectForKey:[NSNumber numberWithUnsignedInt:mode]];
 	} return nil;
 }
 
@@ -422,7 +422,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 		NSEnumerator *enumerator = [_memberUsers objectEnumerator];
 		while( ( user = [enumerator nextObject] ) )
 			if( [[user uniqueIdentifier] isEqual:identifier] )
-				return [[user retain] autorelease];
+				return user;
 	}
 
 	return nil;

@@ -312,7 +312,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( [[self alternateNicknames] count] && _nextAltNickIndex < [[self alternateNicknames] count] ) {
 		NSString *nick = [[self alternateNicknames] objectAtIndex:_nextAltNickIndex];
 		_nextAltNickIndex++;
-		return [[nick retain] autorelease];
+		return nick;
 	}
 
 	return nil;
@@ -328,7 +328,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSString *) nicknamePassword {
-	return [[_npassword retain] autorelease];
+	return _npassword;
 }
 
 #pragma mark -
@@ -440,7 +440,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSString *) proxyServer {
-	return [[_proxyServer retain] autorelease];
+	return _proxyServer;
 }
 
 #pragma mark -
@@ -462,7 +462,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSString *) proxyUsername {
-	return [[_proxyUsername retain] autorelease];
+	return _proxyUsername;
 }
 
 #pragma mark -
@@ -474,7 +474,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSString *) proxyPassword {
-	return [[_proxyPassword retain] autorelease];
+	return _proxyPassword;
 }
 
 #pragma mark -
@@ -662,7 +662,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (MVChatUser *) localUser {
-	return [[_localUser retain] autorelease];
+	return _localUser;
 }
 
 #pragma mark -
@@ -702,13 +702,13 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSMutableDictionary *) chatRoomListResults {
-	return [[_roomsCache retain] autorelease];
+	return _roomsCache;
 }
 
 #pragma mark -
 
 - (NSAttributedString *) awayStatusMessage {
-	return [[_awayMessage retain] autorelease];
+	return _awayMessage;
 }
 
 - (void) setAwayStatusMessage:(NSAttributedString *) message {
