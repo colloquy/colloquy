@@ -248,7 +248,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSString *) realName {
-	return [[_realName retain] autorelease];
+	return _realName;
 }
 
 #pragma mark -
