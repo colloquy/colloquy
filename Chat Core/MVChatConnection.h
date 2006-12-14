@@ -396,9 +396,9 @@ extern NSString *MVChatConnectionErrorDomain;
 @interface MVChatConnection (MVChatConnectionScripting)
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 @property(readonly) NSNumber *uniqueIdentifier;
-#endif
-
+#else
 - (NSNumber *) uniqueIdentifier;
+#endif
 @end
 
 #pragma mark -

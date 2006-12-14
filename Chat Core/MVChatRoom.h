@@ -188,8 +188,8 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 @property(readonly) NSString *scriptUniqueIdentifier;
 @property(readonly) NSScriptObjectSpecifier *objectSpecifier;
-#endif
-
+#else
 - (NSString *) scriptUniqueIdentifier;
 - (NSScriptObjectSpecifier *) objectSpecifier;
+#endif
 @end
