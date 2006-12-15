@@ -929,9 +929,22 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		_activeViewController = [item retain];
 		[old release];
 
+		NSToolbar *newToolbar = [_activeViewController toolbar];
+		NSToolbar *oldToolbar = [[self window] toolbar];
+		BOOL toolbarAutoSave = [newToolbar autosavesConfiguration];
+		if( oldToolbar ) {
+			[newToolbar setAutosavesConfiguration:NO];
+			[newToolbar setDisplayMode:[oldToolbar displayMode]];
+			[newToolbar setSizeMode:[oldToolbar sizeMode]];
+			[newToolbar setVisible:[oldToolbar isVisible]];
+		}
+
 		[[self window] setContentView:[_activeViewController view]];
-		[[self window] setToolbar:[_activeViewController toolbar]];
+		[[self window] setToolbar:newToolbar];
 		[[self window] makeFirstResponder:[[_activeViewController view] nextKeyView]];
+
+		if( toolbarAutoSave )
+			[newToolbar setAutosavesConfiguration:YES];
 
 		if( [lastActive respondsToSelector:@selector( didUnselect )] )
 			[(NSObject *)lastActive didUnselect];

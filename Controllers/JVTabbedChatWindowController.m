@@ -547,11 +547,25 @@
 		if( [item respondsToSelector:@selector( willSelect )] )
 			[(NSObject *)item willSelect];
 
-		[_activeViewController autorelease];
+		id old = _activeViewController;
 		_activeViewController = [item retain];
+		[old release];
+
+		NSToolbar *newToolbar = [_activeViewController toolbar];
+		NSToolbar *oldToolbar = [[self window] toolbar];
+		BOOL toolbarAutoSave = [newToolbar autosavesConfiguration];
+		if( oldToolbar ) {
+			[newToolbar setAutosavesConfiguration:NO];
+			[newToolbar setDisplayMode:[oldToolbar displayMode]];
+			[newToolbar setSizeMode:[oldToolbar sizeMode]];
+			[newToolbar setVisible:[oldToolbar isVisible]];
+		}
 
 		[[self window] setToolbar:[_activeViewController toolbar]];
 		[[self window] makeFirstResponder:[[_activeViewController view] nextKeyView]];
+
+		if( toolbarAutoSave )
+			[newToolbar setAutosavesConfiguration:YES];
 
 		if( [lastActive respondsToSelector:@selector( didUnselect )] )
 			[(NSObject *)lastActive didUnselect];
