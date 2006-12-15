@@ -586,7 +586,7 @@ static NSMenu *favoritesMenu = nil;
 		if( [[(MVChatConnection *)[info objectForKey:@"connection"] server] compare:address options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch )] == NSOrderedSame )
 			[ret addObject:[info objectForKey:@"connection"]];
 
-	return [[ret retain] autorelease];
+	return ret;
 }
 
 - (BOOL) managesConnection:(MVChatConnection *) connection {
@@ -652,7 +652,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) removeConnectionAtIndex:(unsigned) index {
-	MVChatConnection *connection = [[[[_bookmarks objectAtIndex:index] objectForKey:@"connection"] retain] autorelease];
+	MVChatConnection *connection = [[[_bookmarks objectAtIndex:index] objectForKey:@"connection"] retain];
     if( ! connection ) return;
 
 	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
@@ -665,6 +665,8 @@ static NSMenu *favoritesMenu = nil;
 	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:[connection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 
+	[connection release];
+
 	[_bookmarks removeObjectAtIndex:index];
 	[self _saveBookmarkList];
 
@@ -676,7 +678,7 @@ static NSMenu *favoritesMenu = nil;
 	[info setObject:[NSDate date] forKey:@"created"];
 	[info setObject:connection forKey:@"connection"];
 
-	MVChatConnection *oldConnection = [[[[_bookmarks objectAtIndex:index] objectForKey:@"connection"] retain] autorelease];
+	MVChatConnection *oldConnection = [[[_bookmarks objectAtIndex:index] objectForKey:@"connection"] retain];
 	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
 	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage]; 
 	[oldConnection disconnectWithReason:quitMessageString];
@@ -686,6 +688,8 @@ static NSMenu *favoritesMenu = nil;
 
 	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[oldConnection server] securityDomain:[oldConnection server] account:[oldConnection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[oldConnection server] securityDomain:[oldConnection server] account:nil path:nil port:[oldConnection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
+
+	[oldConnection release];
 
 	[_bookmarks replaceObjectAtIndex:index withObject:info];
 	[self _saveBookmarkList];
@@ -1094,7 +1098,7 @@ static NSMenu *favoritesMenu = nil;
 		if( [[[menu itemArray] lastObject] isSeparatorItem] )
 			[menu removeItem:[[menu itemArray] lastObject]];
 
-		return [[menu retain] autorelease];
+		return menu;
 	}
 
 	return nil;
@@ -1213,12 +1217,14 @@ static NSMenu *favoritesMenu = nil;
 	if( view == connections ) {
 		if( [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:MVConnectionPboardType]] ) {
 			int index = -1;
-			id item = nil;
 			[[[info draggingPasteboard] dataForType:MVConnectionPboardType] getBytes:&index];
 			if( row > index ) row--;
-			item = [[[_bookmarks objectAtIndex:index] retain] autorelease];
+
+			id item = [[_bookmarks objectAtIndex:index] retain];
 			[_bookmarks removeObjectAtIndex:index];
 			[_bookmarks insertObject:item atIndex:row];
+			[item release];
+
 			[self _refresh:nil];
 			return YES;
 		} else {

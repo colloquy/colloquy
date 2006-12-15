@@ -149,7 +149,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	[item setTarget:self];
 	[menu addItem:item];
 
-	return [[menu retain] autorelease];
+	return menu;
 }
 
 - (NSImage *) icon {

@@ -126,11 +126,11 @@ static NSMutableSet *inspectors = nil;
 #pragma mark -
 
 - (id <JVInspection>) inspectedObject {
-	return [[_object retain] autorelease];
+	return _object;
 }
 
 - (id <JVInspector>) inspector {
-	return [[_inspector retain] autorelease];
+	return _inspector;
 }
 
 #pragma mark -

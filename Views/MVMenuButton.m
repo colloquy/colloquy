@@ -128,7 +128,7 @@
 }
 
 - (NSImage *) smallImage {
-	return [[_smallImage retain] autorelease];
+	return _smallImage;
 }
 
 - (void) setSmallImage:(NSImage *) image {
@@ -137,7 +137,7 @@
 }
 
 - (NSToolbarItem *) toolbarItem {
-	return [[_toolbarItem retain] autorelease];
+	return _toolbarItem;
 }
 
 - (void) setToolbarItem:(NSToolbarItem *) item {

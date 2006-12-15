@@ -148,7 +148,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #pragma mark Window Controller and Proxy Icon Support
 
 - (JVChatWindowController *) windowController {
-	return [[_windowController retain] autorelease];
+	return _windowController;
 }
 
 - (void) setWindowController:(JVChatWindowController *) controller {
@@ -246,13 +246,13 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	[item setTarget:self];
 	[menu addItem:item];
 
-	return [[menu retain] autorelease];
+	return menu;
 }
 
 - (NSImage *) icon {
 	NSImage *ret = [NSImage imageNamed:@"Generic"];
 	[ret setSize:NSMakeSize( 32., 32. )];
-	return [[ret retain] autorelease];
+	return ret;
 }
 
 #pragma mark -
@@ -804,7 +804,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (NSMenu *) _stylesMenu {
-	return [[_styleMenu retain] autorelease];
+	return _styleMenu;
 }
 
 - (void) _changeStyleMenuSelection {
@@ -921,7 +921,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 - (NSMenu *) _emoticonsMenu {
 	if( [_emoticonMenu itemWithTag:20] )
 		return [[_emoticonMenu itemWithTag:20] submenu];
-	return [[_emoticonMenu retain] autorelease];
+	return _emoticonMenu;
 }
 
 - (void) _changeEmoticonsMenuSelection {

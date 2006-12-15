@@ -316,7 +316,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (id <JVChatViewController>) activeChatViewController {
-	return [[_activeViewController retain] autorelease];
+	return _activeViewController;
 }
 
 - (id <JVChatListItem>) selectedListItem {

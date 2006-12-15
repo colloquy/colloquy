@@ -461,7 +461,7 @@ struct _mark {
 }
 
 - (NSSet *) marks {
-	return [[_marks retain] autorelease];
+	return _marks;
 }
 
 #pragma mark -

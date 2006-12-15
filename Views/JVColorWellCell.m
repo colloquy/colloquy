@@ -191,7 +191,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 }
 
 - (NSColor *) color {
-	return [[_color retain] autorelease];
+	return _color;
 }
 
 #pragma mark -
@@ -211,7 +211,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 }
 
 - (id) objectValue {
-	return [[_color retain] autorelease];
+	return _color;
 }
 
 - (void) setObjectValue:(id <NSCopying>) obj {

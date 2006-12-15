@@ -49,7 +49,7 @@
 }
 
 - (NSImage *) statusImage {
-	return [[_statusImage retain] autorelease];
+	return _statusImage;
 }
 
 #pragma mark -
@@ -80,7 +80,7 @@
 }
 
 - (NSImage *) highlightedImage {
-	return [[_altImage retain] autorelease];
+	return _altImage;
 }
 
 #pragma mark -
@@ -91,7 +91,7 @@
 }
 
 - (NSString *) mainText {
-	return [[_mainText retain] autorelease];
+	return _mainText;
 }
 
 #pragma mark -
@@ -102,7 +102,7 @@
 }
 
 - (NSString *) informationText {
-	return [[_infoText retain] autorelease];
+	return _infoText;
 }
 
 #pragma mark -

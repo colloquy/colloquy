@@ -206,7 +206,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (JVStyle *) style {
-	return [[_style retain] autorelease];
+	return _style;
 }
 
 #pragma mark -

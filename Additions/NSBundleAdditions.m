@@ -8,6 +8,6 @@
 - (NSString *) displayName {
 	NSString *label = [self objectForInfoDictionaryKey:@"CFBundleName"];
 	if( ! label ) label = [self bundleIdentifier];
-	return [[label retain] autorelease];
+	return label;
 }
 @end

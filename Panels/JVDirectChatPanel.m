@@ -325,7 +325,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 #pragma mark -
 
 - (id) target {
-	return [[_target retain] autorelease];
+	return _target;
 }
 
 - (NSURL *) url {
@@ -357,7 +357,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 - (NSString *) title {
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
 		return [_buddy preferredName]; */
-	return [[[[self target] displayName] retain] autorelease];
+	return [[self target] displayName];
 }
 
 - (NSString *) windowTitle {
@@ -419,7 +419,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	[item setTarget:self];
 	[menu addItem:item];
 
-	return [[menu retain] autorelease];
+	return menu;
 }
 
 - (NSImage *) icon {
@@ -524,7 +524,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		if( alert ) [[NSApplication sharedApplication] beginSheet:alert modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( _alertSheetDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
 	} else {
 		if( name && [_waitingAlertNames objectForKey:name] ) {
-			NSPanel *sheet = [[[_waitingAlertNames objectForKey:name] retain] autorelease];
+			NSPanel *sheet = [[_waitingAlertNames objectForKey:name] retain];
+
 			if( alert ) {
 				[_waitingAlerts replaceObjectAtIndex:[_waitingAlerts indexOfObjectIdenticalTo:[_waitingAlertNames objectForKey:name]] withObject:alert];
 				[_waitingAlertNames setObject:alert forKey:name];
@@ -532,7 +533,9 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 				[_waitingAlerts removeObjectAtIndex:[_waitingAlerts indexOfObjectIdenticalTo:[_waitingAlertNames objectForKey:name]]];
 				[_waitingAlertNames removeObjectForKey:name];
 			}
+
 			NSReleaseAlertPanel( sheet );
+			[sheet release];
 		} else {
 			if( name && alert ) [_waitingAlertNames setObject:alert forKey:name];
 			if( alert ) [_waitingAlerts addObject:alert];
@@ -560,7 +563,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 - (id) preferenceForKey:(NSString *) key {
 	NSParameterAssert( key != nil );
 	NSParameterAssert( [key length] );
-	return [[[_settings objectForKey:key] retain] autorelease];
+	return [_settings objectForKey:key];
 }
 
 #pragma mark -
@@ -886,7 +889,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 }
 
 - (JVMutableChatMessage *) currentMessage {
-	return [[_currentMessage retain] autorelease];
+	return _currentMessage;
 }
 
 #pragma mark -
@@ -967,12 +970,14 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		[[send textStorage] deleteCharactersInRange:NSMakeRange( 0, range.location )];
 	}
 
-	NSDictionary *typingAttributes = [[[send typingAttributes] retain] autorelease];
+	NSDictionary *typingAttributes = [[send typingAttributes] retain];
 
 	[send reset:nil];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputRetainsFormatting"] )
 		[send setTypingAttributes:typingAttributes];
+
+	[typingAttributes release];
 
 	[self textDidChange:nil];
 	[display scrollToBottom];
@@ -1429,7 +1434,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 - (NSMenu *) _encodingMenu {
 	if( ! _nibLoaded ) [self view];
-	return [[_encodingMenu retain] autorelease];
+	return _encodingMenu;
 }
 
 - (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message {

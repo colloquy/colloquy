@@ -17,7 +17,7 @@ NSString *MVPrettyFileSize( unsigned long long size ) {
 	else if( size >= pow( 1024., 2. ) && size < pow( 1024., 3. ) ) ret = [NSString stringWithFormat:NSLocalizedString( @"%.2f MB", "file size measured in megabytes" ), ( size / pow( 1024., 2. ) )];
 	else if( size >= pow( 1024., 3. ) && size < pow( 1024., 4. ) ) ret = [NSString stringWithFormat:NSLocalizedString( @"%.3f GB", "file size measured in gigabytes" ), ( size / pow( 1024., 3. ) )];
 	else if( size >= pow( 1024., 4. ) ) ret = [NSString stringWithFormat:NSLocalizedString( @"%.4f TB", "file size measured in terabytes" ), ( size / pow( 1024., 4. ) )];
-	return [[ret retain] autorelease];
+	return ret;
 }
 
 NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
@@ -52,7 +52,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		}
 	}
 
-	return [[retval retain] autorelease];
+	return retval;
 }
 
 #pragma mark -

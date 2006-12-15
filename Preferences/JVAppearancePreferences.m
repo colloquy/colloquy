@@ -721,7 +721,7 @@
 	if( [[column identifier] isEqualToString:@"value"] ) {
 		NSMutableDictionary *options = [_styleOptions objectAtIndex:row];
 		if( [options objectForKey:@"cell"] ) {
-			return [[[options objectForKey:@"cell"] retain] autorelease];
+			return [options objectForKey:@"cell"];
 		} else if( [[options objectForKey:@"type"] isEqualToString:@"color"] ) {
 			id cell = [[JVColorWellCell new] autorelease];
 			[cell setRepresentedObject:[NSNumber numberWithInt:row]];

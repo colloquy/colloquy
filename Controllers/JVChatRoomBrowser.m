@@ -232,7 +232,7 @@
 }
 
 - (NSString *) filter {
-	return [[_currentFilter retain] autorelease];
+	return _currentFilter;
 }
 
 #pragma mark -
@@ -264,7 +264,7 @@
 }
 
 - (MVChatConnection *) connection {
-	return [[_connection retain] autorelease];
+	return _connection;
 }
 
 #pragma mark -

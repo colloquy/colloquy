@@ -124,7 +124,7 @@
 #pragma mark -
 
 - (NSArray *) rooms {
-    return [[_rooms retain] autorelease];
+    return _rooms;
 }
 
 - (void) setRooms:(NSArray *) rooms {
@@ -135,7 +135,7 @@
 #pragma mark -
 
 - (NSString *) message {
-    return [[_ignoredMessage retain] autorelease];
+    return _ignoredMessage;
 }
 
 - (void) setMessage:(NSString *) message {
@@ -154,7 +154,7 @@
 #pragma mark -
 
 - (NSString *) user {
-    return [[_ignoredUser retain] autorelease];
+    return _ignoredUser;
 }
 
 - (void) setUser:(NSString *) user {

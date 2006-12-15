@@ -94,7 +94,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 - (JVChatWindowController *) windowController {
-	return [[_windowController retain] autorelease];
+	return _windowController;
 }
 
 - (void) setWindowController:(JVChatWindowController *) controller {
@@ -182,7 +182,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[item setTarget:self];
 	[menu addItem:item];
 
-	return [[menu retain] autorelease];
+	return menu;
 }
 
 - (NSImage *) icon {
@@ -572,12 +572,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
 	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarClearItemIdentifier, nil];
-	return [[list retain] autorelease];
+	return list;
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
 	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarToggleVerboseItemIdentifier, JVToolbarTogglePrivateMessagesItemIdentifier, JVToolbarClearItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
-	return [[list retain] autorelease];
+	return list;
 }
 
 #pragma mark -

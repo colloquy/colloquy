@@ -576,10 +576,11 @@ static MVBuddyListController *sharedInstance = nil;
 @implementation MVBuddyListController (MVBuddyListControllerDelegate)
 - (void) clear:(id) sender {
 	if( [buddies selectedRow] == -1 ) return;
-	JVBuddy *buddy = [[[_buddyOrder objectAtIndex:[buddies selectedRow]] retain] autorelease];
+	JVBuddy *buddy = [[_buddyOrder objectAtIndex:[buddies selectedRow]] retain];
 	[_buddyList removeObject:buddy];
 	[_onlineBuddies removeObject:buddy];
 	[_buddyOrder removeObjectIdenticalTo:buddy];
+	[buddy release];
 	[self _manuallySortAndUpdate];
 	[self _saveBuddyList];
 }
@@ -1021,10 +1022,11 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) removeFromBuddiesAtIndex:(unsigned) index {
-	JVBuddy *buddy = [[[_buddyOrder objectAtIndex:index] retain] autorelease];
+	JVBuddy *buddy = [[_buddyOrder objectAtIndex:index] retain];
 	[_buddyList removeObject:buddy];
 	[_onlineBuddies removeObject:buddy];
 	[_buddyOrder removeObjectIdenticalTo:buddy];
+	[buddy release];
 	[self _manuallySortAndUpdate];
 	[self _saveBuddyList];
 }

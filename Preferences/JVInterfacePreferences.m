@@ -38,7 +38,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 }
 
 - (NSImage *) imageForPreferenceNamed:(NSString *) name {
-	return [[[NSImage imageNamed:@"InterfacePreferences"] retain] autorelease];
+	return [NSImage imageNamed:@"InterfacePreferences"];
 }
 
 - (BOOL) isResizable {
@@ -296,9 +296,10 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 		[[[info draggingPasteboard] dataForType:JVInterfacePreferencesWindowDragPboardType] getBytes:&index];
 		if( row > index ) row--;
 
-		id item = [[[_windowSets objectAtIndex:index] retain] autorelease];
+		id item = [[_windowSets objectAtIndex:index] retain];
 		[_windowSets removeObjectAtIndex:index];
 		[_windowSets insertObject:item atIndex:row];
+		[item release];
 
 		[windowSetsTable selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
 		[view reloadData];
