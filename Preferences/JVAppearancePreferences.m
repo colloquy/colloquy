@@ -7,12 +7,6 @@
 #import "JVDetailCell.h"
 #import "NSBundleAdditions.h"
 
-@interface WebCoreCache
-+ (void) empty;
-@end
-
-#pragma mark -
-
 @interface WebView (WebViewPrivate) // WebKit 1.3 pending public API
 - (void) setDrawsBackground:(BOOL) draws;
 - (BOOL) drawsBackground;

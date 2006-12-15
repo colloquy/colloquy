@@ -30,6 +30,12 @@
 
 #pragma mark -
 
+@interface WebCache
++ (void) setDisabled:(BOOL) disabled;
+@end
+
+#pragma mark -
+
 NSString *JVChatStyleInstalledNotification = @"JVChatStyleInstalledNotification";
 NSString *JVChatEmoticonSetInstalledNotification = @"JVChatEmoticonSetInstalledNotification";
 NSString *JVMachineBecameIdleNotification = @"JVMachineBecameIdleNotification";
@@ -396,7 +402,10 @@ static BOOL applicationIsTerminating = NO;
 
 	[[MVColorPanel sharedColorPanel] attachColorList:[[[NSColorList alloc] initWithName:@"Chat" fromFile:[[NSBundle mainBundle] pathForResource:@"Chat" ofType:@"clr"]] autorelease]];
 
-	[WebCoreCache setDisabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"]];
+	if( NSClassFromString( @"WebCoreCache" ) )
+		[NSClassFromString( @"WebCoreCache" ) setDisabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"]];
+	else if( NSClassFromString( @"WebCache" ) )
+		[NSClassFromString( @"WebCache" ) setDisabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"]];
 
 	[MVChatPluginManager defaultManager];
 	[MVConnectionsController defaultController];
