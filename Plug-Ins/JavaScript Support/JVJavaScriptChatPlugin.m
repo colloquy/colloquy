@@ -49,10 +49,6 @@ static BOOL replacementIsSelectorExcludedFromWebScript( id self, SEL cmd, SEL se
 	return NO;
 }
 
-static BOOL replacementIsKeyExcludedFromWebScript( id self, SEL cmd, const char *name ) {
-	return NO;
-}
-
 #pragma mark -
 
 @implementation NSObject (JVJavaScriptName)
@@ -75,10 +71,6 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	if( ! tooLate ) {
 		Method method = class_getClassMethod( [NSObject class], @selector( isSelectorExcludedFromWebScript: ) );
 		if( method ) method -> method_imp = (IMP) replacementIsSelectorExcludedFromWebScript;
-
-		method = class_getClassMethod( [NSObject class], @selector( isKeyExcludedFromWebScript: ) );
-		if( method ) method -> method_imp = (IMP) replacementIsKeyExcludedFromWebScript;
-
 		tooLate = YES;
 	}
 }
