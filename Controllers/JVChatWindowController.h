@@ -83,7 +83,7 @@ extern NSString *JVChatViewPboardType;
 
 - (NSView *) view;
 - (NSResponder *) firstResponder;
-- (NSToolbar *) toolbar;
+- (NSString *) toolbarIdentifier;
 - (NSString *) windowTitle;
 - (NSString *) identifier;
 @end

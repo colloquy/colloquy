@@ -81,6 +81,10 @@
 	return [toolbar autorelease];
 }
 
+- (NSString *) toolbarIdentifier {
+	return @"F-Script Console";
+}
+
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
 	if( [identifier isEqualToString:@"JVFScriptBrowseToolbarItem"] ) {
 		NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];

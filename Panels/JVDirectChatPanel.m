@@ -1271,12 +1271,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 #pragma mark -
 #pragma mark Toolbar Support
 
-- (NSToolbar *) toolbar {
-	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Direct Chat"];
-	[toolbar setDelegate:self];
-	[toolbar setAllowsUserCustomization:YES];
-	[toolbar setAutosavesConfiguration:YES];
-	return [toolbar autorelease];
+- (NSString *) toolbarIdentifier {
+	return @"Direct Chat";
 }
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
@@ -1362,10 +1358,6 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	[list addObject:JVToolbarClearScrollbackItemIdentifier];
 	[list addObject:JVToolbarMarkItemIdentifier];
 	return list;
-}
-
-- (BOOL) validateToolbarItem:(NSToolbarItem *) toolbarItem {
-	return [super validateToolbarItem:toolbarItem];
 }
 
 #pragma mark-

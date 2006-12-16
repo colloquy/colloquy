@@ -405,12 +405,8 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 #pragma mark -
 #pragma mark Toolbar Support
 
-- (NSToolbar *) toolbar {
-	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Smart Transcript"];
-	[toolbar setDelegate:self];
-	[toolbar setAllowsUserCustomization:YES];
-	[toolbar setAutosavesConfiguration:YES];
-	return [toolbar autorelease];
+- (NSString *) toolbarIdentifier {
+	return @"Smart Transcript";
 }
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {

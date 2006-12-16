@@ -7,6 +7,7 @@
 - (void) _claimMenuCommands;
 - (void) _resignMenuCommands;
 - (void) _refreshSelectionMenu;
+- (void) _refreshToolbar;
 - (void) _refreshWindow;
 - (void) _refreshWindowTitle;
 - (void) _refreshList;
@@ -551,21 +552,9 @@
 		_activeViewController = [item retain];
 		[old release];
 
-		NSToolbar *newToolbar = [_activeViewController toolbar];
-		NSToolbar *oldToolbar = [[self window] toolbar];
-		BOOL toolbarAutoSave = [newToolbar autosavesConfiguration];
-		if( oldToolbar ) {
-			[newToolbar setAutosavesConfiguration:NO];
-			[newToolbar setDisplayMode:[oldToolbar displayMode]];
-			[newToolbar setSizeMode:[oldToolbar sizeMode]];
-			[newToolbar setVisible:[oldToolbar isVisible]];
-		}
-
-		[[self window] setToolbar:[_activeViewController toolbar]];
 		[[self window] makeFirstResponder:[[_activeViewController view] nextKeyView]];
 
-		if( toolbarAutoSave )
-			[newToolbar setAutosavesConfiguration:YES];
+		[self _refreshToolbar];
 
 		if( [lastActive respondsToSelector:@selector( didUnselect )] )
 			[(NSObject *)lastActive didUnselect];

@@ -442,12 +442,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #pragma mark -
 #pragma mark Toolbar Methods
 
-- (NSToolbar *) toolbar {
-	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Chat Transcript"];
-	[toolbar setDelegate:self];
-	[toolbar setAllowsUserCustomization:YES];
-	[toolbar setAutosavesConfiguration:YES];
-	return [toolbar autorelease];
+- (NSString *) toolbarIdentifier {
+	return @"Chat Transcript";
 }
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {

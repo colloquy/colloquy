@@ -28,6 +28,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) _claimMenuCommands;
 - (void) _resignMenuCommands;
 - (void) _refreshSelectionMenu;
+- (void) _refreshToolbar;
 - (void) _refreshWindow;
 - (void) _refreshWindowTitle;
 - (void) _refreshList;
@@ -654,6 +655,30 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 #pragma mark -
 
+- (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
+	if( [_activeViewController respondsToSelector:@selector( toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar: )] )
+		return [(id)_activeViewController toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];
+	return nil;
+}
+
+- (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
+	if( [_activeViewController respondsToSelector:@selector( toolbarDefaultItemIdentifiers: )] )
+		return [(id)_activeViewController toolbarDefaultItemIdentifiers:toolbar];
+	return nil;
+}
+
+- (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
+	if( [_activeViewController respondsToSelector:@selector( toolbarAllowedItemIdentifiers: )] )
+		return [(id)_activeViewController toolbarAllowedItemIdentifiers:toolbar];
+	return nil;
+}
+
+- (BOOL) validateToolbarItem:(NSToolbarItem *) toolbarItem {
+	return YES;
+}
+
+#pragma mark -
+
 - (void) outlineView:(NSOutlineView *) outlineView willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) tableColumn item:(id) item {
 	[(JVDetailCell *) cell setRepresentedObject:item];
 	[(JVDetailCell *) cell setMainText:[item title]];
@@ -929,22 +954,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		_activeViewController = [item retain];
 		[old release];
 
-		NSToolbar *newToolbar = [_activeViewController toolbar];
-		NSToolbar *oldToolbar = [[self window] toolbar];
-		BOOL toolbarAutoSave = [newToolbar autosavesConfiguration];
-		if( oldToolbar ) {
-			[newToolbar setAutosavesConfiguration:NO];
-			[newToolbar setDisplayMode:[oldToolbar displayMode]];
-			[newToolbar setSizeMode:[oldToolbar sizeMode]];
-			[newToolbar setVisible:[oldToolbar isVisible]];
-		}
-
 		[[self window] setContentView:[_activeViewController view]];
-		[[self window] setToolbar:newToolbar];
 		[[self window] makeFirstResponder:[[_activeViewController view] nextKeyView]];
 
-		if( toolbarAutoSave )
-			[newToolbar setAutosavesConfiguration:YES];
+		[self _refreshToolbar];
 
 		if( [lastActive respondsToSelector:@selector( didUnselect )] )
 			[(NSObject *)lastActive didUnselect];
@@ -965,6 +978,27 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 end:
 	[[self window] enableFlushWindow];
 	[[self window] displayIfNeeded];
+}
+
+- (void) _refreshToolbar {
+	NSToolbar *oldToolbar = [[[self window] toolbar] retain];
+	BOOL oldToolbarVisisble = [oldToolbar isVisible];
+
+	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:[_activeViewController toolbarIdentifier]];
+	[toolbar setDelegate:self];
+	[toolbar setAllowsUserCustomization:YES];
+	[toolbar setAutosavesConfiguration:YES];
+
+	[[self window] setToolbar:toolbar];
+
+	if( oldToolbar ) {
+		[toolbar setDisplayMode:[oldToolbar displayMode]];
+		[toolbar setSizeMode:[oldToolbar sizeMode]];
+		[toolbar setVisible:oldToolbarVisisble];
+	}
+
+	[oldToolbar release];
+	[toolbar release];
 }
 
 - (void) _refreshWindowTitle {

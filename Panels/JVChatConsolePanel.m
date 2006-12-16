@@ -112,14 +112,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	return send;
 }
 
-- (NSToolbar *) toolbar {
-	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Console"];
-	[toolbar setDelegate:self];
-	[toolbar setAllowsUserCustomization:YES];
-	[toolbar setAutosavesConfiguration:YES];
-	return [toolbar autorelease];
-}
-
 #pragma mark -
 
 - (BOOL) isEnabled {
@@ -534,6 +526,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 #pragma mark -
 #pragma mark Toolbar Support
+
+- (NSString *) toolbarIdentifier {
+	return @"Console";
+}
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
 	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];

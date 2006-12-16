@@ -679,23 +679,9 @@
 
 #pragma mark -
 #pragma mark Toolbar Support
-- (NSToolbar *) toolbar {
-	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Chat Room"];
-	[toolbar setDelegate:self];
-	[toolbar setAllowsUserCustomization:YES];
-	[toolbar setAutosavesConfiguration:YES];
-
-//	[_toolbarItems release];
-//	_toolbarItems = [[NSMutableDictionary dictionary] retain];
-
-	return [toolbar autorelease];
+- (NSString *) toolbarIdentifier {
+	return @"Chat Room";
 }
-
-/* - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
-	NSToolbarItem *toolbarItem = nil;
-	if( toolbarItem ) return toolbarItem;
-	else return [super toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];
-} */
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
 	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarDefaultItemIdentifiers:toolbar]];
@@ -707,15 +693,6 @@
 	[list addObject:JVToolbarQuickSearchItemIdentifier];
 	return list;
 }
-
-/* - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSMutableArray *list = [NSMutableArray arrayWithArray:[super toolbarAllowedItemIdentifiers:toolbar]];
-	return list;
-}
-
-- (BOOL) validateToolbarItem:(NSToolbarItem *) toolbarItem {
-	return [super validateToolbarItem:toolbarItem];
-} */
 @end
 
 #pragma mark -

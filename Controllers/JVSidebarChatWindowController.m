@@ -3,6 +3,7 @@
 #import "JVDetailCell.h"
 
 @interface JVChatWindowController (JVChatWindowControllerPrivate)
+- (void) _refreshToolbar;
 - (void) _refreshWindowTitle;
 @end
 
@@ -85,16 +86,6 @@
 		_activeViewController = [item retain];
 		[old release];
 
-		NSToolbar *newToolbar = [_activeViewController toolbar];
-		NSToolbar *oldToolbar = [[self window] toolbar];
-		BOOL toolbarAutoSave = [newToolbar autosavesConfiguration];
-		if( oldToolbar ) {
-			[newToolbar setAutosavesConfiguration:NO];
-			[newToolbar setDisplayMode:[oldToolbar displayMode]];
-			[newToolbar setSizeMode:[oldToolbar sizeMode]];
-			[newToolbar setVisible:[oldToolbar isVisible]];
-		}
-
 		[[[bodyView subviews] lastObject] removeFromSuperview];
 
 		NSView *newView = [_activeViewController view];
@@ -102,11 +93,9 @@
 		[newView setFrame:[bodyView bounds]];
 		[bodyView addSubview:newView];
 
-		[[self window] setToolbar:newToolbar];
 		[[self window] makeFirstResponder:[[_activeViewController view] nextKeyView]];
 
-		if( toolbarAutoSave )
-			[newToolbar setAutosavesConfiguration:YES];
+		[self _refreshToolbar];
 
 		if( [lastActive respondsToSelector:@selector( didUnselect )] )
 			[(NSObject *)lastActive didUnselect];
