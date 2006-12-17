@@ -1276,10 +1276,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 }
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
-	NSToolbarItem *toolbarItem = nil;
-
 	if( [identifier isEqual:JVToolbarTextEncodingItemIdentifier] ) {
-		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Encoding", "encoding menu toolbar item" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Text Encoding", "encoding menu toolbar customize palette name" )];
@@ -1300,8 +1298,10 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		[menuItem setSubmenu:_spillEncodingMenu];
 
 		[toolbarItem setMenuFormRepresentation:menuItem];
+
+		return [toolbarItem autorelease];
 	} else if( [identifier isEqual:JVToolbarClearScrollbackItemIdentifier] ) {
-		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Clear", "clear display toolbar button name" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Clear Display", "clear display toolbar customize palette name" )];
@@ -1311,8 +1311,10 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( clearDisplay: )];
+
+		return [toolbarItem autorelease];
 	} else if( [identifier isEqual:JVToolbarMarkItemIdentifier] ) {
-		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Mark", "mark display toolbar button name" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Mark Display", "mark display toolbar customize palette name" )];
@@ -1322,8 +1324,10 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( markDisplay: )];
+
+		return [toolbarItem autorelease];
 	} else if( [identifier isEqual:JVToolbarSendFileItemIdentifier] ) {
-		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Send File", "send file toolbar button name" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Send File", "send file toolbar customize palette name" )];
@@ -1333,8 +1337,11 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( _sendFile: )];
-	} else return [super toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];
-	return toolbarItem;
+
+		return [toolbarItem autorelease];
+	}
+
+	return [super toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {

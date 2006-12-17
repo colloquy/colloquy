@@ -532,10 +532,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
-	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
-	if( [identifier isEqual:JVToolbarToggleChatDrawerItemIdentifier] ) {
-		toolbarItem = [_windowController toggleChatDrawerToolbarItem];
-	} else if( [identifier isEqual:JVToolbarClearItemIdentifier] ) {
+	if( [identifier isEqual:JVToolbarClearItemIdentifier] ) {
+		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+
 		[toolbarItem setLabel:NSLocalizedString( @"Clear", "clear console toolbar button name" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Clear Console", "clear console toolbar customize palette name" )];
 
@@ -544,7 +543,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( clearConsole: )];
+
+		return [toolbarItem autorelease];
 	} else if( [identifier isEqual:JVToolbarToggleVerboseItemIdentifier] ) {
+		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+
 		[toolbarItem setLabel:NSLocalizedString( @"Verbose", "verbose toolbar button name" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Toggle Verbose", "toggle verbose toolbar customize palette name" )];
 
@@ -553,7 +556,11 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( toggleVerbose: )];
+
+		return [toolbarItem autorelease];
 	} else if( [identifier isEqual:JVToolbarTogglePrivateMessagesItemIdentifier] ) {
+		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+
 		[toolbarItem setLabel:NSLocalizedString( @"Messages", "toggle private messages toolbar button name" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Toggle Messages", "toggle private messages toolbar customize palette name" )];
 
@@ -562,18 +569,19 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( toggleMessages: )];
-	} else toolbarItem = nil;
-	return toolbarItem;
+
+		return [toolbarItem autorelease];
+	}
+
+	return nil;
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarClearItemIdentifier, nil];
-	return list;
+	return [NSArray arrayWithObject:JVToolbarClearItemIdentifier];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier, JVToolbarToggleVerboseItemIdentifier, JVToolbarTogglePrivateMessagesItemIdentifier, JVToolbarClearItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
-	return list;
+	return [NSArray arrayWithObjects:JVToolbarToggleVerboseItemIdentifier, JVToolbarTogglePrivateMessagesItemIdentifier, JVToolbarClearItemIdentifier, nil];
 }
 
 #pragma mark -

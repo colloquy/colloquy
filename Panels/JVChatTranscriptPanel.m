@@ -447,18 +447,18 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
-	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
-
-	if( [identifier isEqualToString:JVToolbarToggleChatDrawerItemIdentifier] ) {
-		toolbarItem = [_windowController toggleChatDrawerToolbarItem];
-	} else if( [identifier isEqualToString:JVToolbarFindItemIdentifier] ) {
+	if( [identifier isEqualToString:JVToolbarFindItemIdentifier] ) {
+		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 		[toolbarItem setLabel:NSLocalizedString( @"Find", "find toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Find", "find toolbar item patlette label" )];
 		[toolbarItem setToolTip:NSLocalizedString( @"Show Find Panel", "find toolbar item tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"reveal"]];
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( orderFrontFindPanel: )];
+		return [toolbarItem autorelease];
 	} else if( [identifier isEqualToString:JVToolbarQuickSearchItemIdentifier] ) {
+		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+
 		[toolbarItem setLabel:NSLocalizedString( @"Search", "search toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Search", "search patlette label" )];
 
@@ -482,11 +482,17 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 		NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Search", "search toolbar item menu representation title" ) action:@selector( performQuickSearch: ) keyEquivalent:@""] autorelease];
 		[toolbarItem setMenuFormRepresentation:menuItem];
+
+		return [toolbarItem autorelease];
 	} else if( [identifier isEqualToString:JVToolbarChooseStyleItemIdentifier] && ! willBeInserted ) {
+		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 		[toolbarItem setLabel:NSLocalizedString( @"Style", "choose style toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Style", "choose style toolbar item patlette label" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"chooseStyle"]];
+		return [toolbarItem autorelease];
 	} else if( [identifier isEqualToString:JVToolbarChooseStyleItemIdentifier] && willBeInserted ) {
+		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+
 		[toolbarItem setLabel:NSLocalizedString( @"Style", "choose style toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Style", "choose style toolbar item patlette label" )];
 
@@ -508,11 +514,17 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		[menuItem setSubmenu:_styleMenu];
 
 		[toolbarItem setMenuFormRepresentation:menuItem];
+
+		return [toolbarItem autorelease];
 	} else if( [identifier isEqualToString:JVToolbarEmoticonsItemIdentifier] && ! willBeInserted ) {
+		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 		[toolbarItem setLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item patlette label" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"emoticon"]];
+		return [toolbarItem autorelease];
 	} else if( [identifier isEqualToString:JVToolbarEmoticonsItemIdentifier] && willBeInserted ) {
+		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+
 		[toolbarItem setLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item patlette label" )];
 
@@ -534,25 +546,19 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		[menuItem setSubmenu:_emoticonMenu];
 
 		[toolbarItem setMenuFormRepresentation:menuItem];
-	} else toolbarItem = nil;
 
-	return toolbarItem;
+		return [toolbarItem autorelease];
+	}
+
+	return nil;
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects:JVToolbarToggleChatDrawerItemIdentifier,
-		JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, nil];
-	return list;
+	return [NSArray arrayWithObjects:JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, nil];
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSArray *list = [NSArray arrayWithObjects: JVToolbarToggleChatDrawerItemIdentifier,
-		JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier,
-		JVToolbarFindItemIdentifier, JVToolbarQuickSearchItemIdentifier, NSToolbarShowColorsItemIdentifier,
-		NSToolbarCustomizeToolbarItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier,
-		NSToolbarSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier, nil];
-
-	return list;
+	return [NSArray arrayWithObjects:JVToolbarChooseStyleItemIdentifier, JVToolbarEmoticonsItemIdentifier, JVToolbarFindItemIdentifier, JVToolbarQuickSearchItemIdentifier, nil];
 }
 
 - (BOOL) validateToolbarItem:(NSToolbarItem *) toolbarItem {

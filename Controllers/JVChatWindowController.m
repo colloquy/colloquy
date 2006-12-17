@@ -668,24 +668,35 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( [[items lastObject] isKindOfClass:[NSToolbarItem class]] )
 		return [items lastObject];
 
-	if( [_activeViewController respondsToSelector:@selector( toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar: )] )
-		return [(id)_activeViewController toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];
+	if( [_activeViewController respondsToSelector:@selector( toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar: )] ) {
+		NSToolbarItem *item = [(id)_activeViewController toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];
+		if( item ) return item;
+	}
+
+	if( [identifier isEqualToString:JVToolbarToggleChatDrawerItemIdentifier] )
+		return [self toggleChatDrawerToolbarItem];
+
 	return nil;
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
-	if( [_activeViewController respondsToSelector:@selector( toolbarDefaultItemIdentifiers: )] )
-		return [(id)_activeViewController toolbarDefaultItemIdentifiers:toolbar];
-	return nil;
+	NSMutableArray *result = [NSMutableArray arrayWithObject:JVToolbarToggleChatDrawerItemIdentifier];
+
+	if( [_activeViewController respondsToSelector:@selector( toolbarDefaultItemIdentifiers: )] ) {
+		NSArray *identifiers = [(id)_activeViewController toolbarDefaultItemIdentifiers:toolbar];
+		if( identifiers ) [result addObjectsFromArray:identifiers];
+	}
+
+	return result;
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	NSMutableArray *result = [NSMutableArray array];
+	NSMutableArray *result = [NSMutableArray arrayWithObjects:NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSpaceItemIdentifier,
+		NSToolbarSeparatorItemIdentifier, NSToolbarCustomizeToolbarItemIdentifier, JVToolbarToggleChatDrawerItemIdentifier, nil];
 
 	if( [_activeViewController respondsToSelector:@selector( toolbarAllowedItemIdentifiers: )] ) {
 		NSArray *identifiers = [(id)_activeViewController toolbarAllowedItemIdentifiers:toolbar];
-		if( [identifiers count] )
-			[result addObjectsFromArray:identifiers];
+		if( [identifiers count] ) [result addObjectsFromArray:identifiers];
 	}
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), nil];
@@ -695,7 +706,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[invocation setArgument:&_activeViewController atIndex:2];
 
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
-	NSLog(@"toolbarItemIdentifiersForView %@", results);
 	if( [results count] ) {
 		NSEnumerator *enumerator = [results objectEnumerator];
 		NSArray *identifiers = nil;

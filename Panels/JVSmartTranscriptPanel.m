@@ -410,10 +410,8 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 }
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
-	NSToolbarItem *toolbarItem = nil;
-
 	if( [identifier isEqual:JVToolbarRuleSettingsItemIdentifier] ) {
-		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Settings", "settings toolbar button name" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Settings", "settings toolbar customize palette name" )];
@@ -423,8 +421,10 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( editSettings: )];
+
+		return [toolbarItem autorelease];
 	} else if( [identifier isEqual:JVToolbarClearScrollbackItemIdentifier] ) {
-		toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Clear", "clear display toolbar button name" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Clear Display", "clear display toolbar customize palette name" )];
@@ -434,8 +434,11 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( clearDisplay: )];
-	} else return [super toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];
-	return toolbarItem;
+
+		return [toolbarItem autorelease];
+	}
+
+	return [super toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];
 }
 
 - (NSArray *) toolbarDefaultItemIdentifiers:(NSToolbar *) toolbar {
