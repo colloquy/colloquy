@@ -89,9 +89,11 @@ MVChatConnectionServerPasswordIncorrectError = -14;
 function MVChatConnection(type, server, port, user) {
 	var obj = Plugin.allocInstance('MVChatConnection');
 	if( typeof type == 'number' && typeof server == 'string' && typeof port == 'number' && typeof user == 'string' )
-		return obj.initWithServer(server, type, port, user).autorelease();
+		return obj.initWithServer(server, type, port, user);
+
 	if( typeof type == 'number' )
-		return obj.initWithType(type).autorelease();
+		return obj.initWithType(type);
+
 	throw "Can't create a MVChatConnection without a type.";
 }
 
