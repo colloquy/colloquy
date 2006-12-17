@@ -22,6 +22,7 @@
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		0A61C7FF07E05F6000C326B4 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1C415F750B35144900239EB3 /* Template.fscript */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Template.fscript; path = "../SDK/F-Script/Template.fscript"; sourceTree = SOURCE_ROOT; };
 		1C4FD32907C6B9F5000EA451 /* FScript.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FScript.framework; path = /Library/Frameworks/FScript.framework; sourceTree = "<absolute>"; };
 		1C4FD36507C6BC25000EA451 /* JVFScriptPluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVFScriptPluginLoader.h; sourceTree = "<group>"; };
 		1C4FD36607C6BC25000EA451 /* JVFScriptPluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFScriptPluginLoader.m; sourceTree = "<group>"; };
@@ -53,6 +54,7 @@
 		089C166AFE841209C02AAC07 /* FScript Plugin */ = {
 			isa = PBXGroup;
 			children = (
+				1C415F750B35144900239EB3 /* Template.fscript */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				1C9AE940086A59CF008ED7AD /* Configurations */,

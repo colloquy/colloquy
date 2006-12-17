@@ -14,6 +14,18 @@ def unload():
 def contextualMenuItems( item, view ):
 	pass
 
+# return an array of toolbar item identifier strings that can be associated with 'view'
+def toolbarItemIdentifiers( view ):
+	pass
+
+# return an NSToolbarItem for 'identifier' associated with 'view'
+def toolbarItem( identifier, view, willBeInserted ):
+	pass
+
+# perform the action associated with 'toolbarItem' for 'view'
+def handleClickedToolbarItem( toolbarItem, view ):
+	pass
+
 # process the command and return true if you handle it or False to pass on to another plugin
 def processUserCommand( command, arguments, connection, view ):
 	# return true if the command was handled or to prevent other plugins or Colloquy from handling it

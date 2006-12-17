@@ -3,6 +3,7 @@
 #import "JVChatMessage.h"
 #import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
+#import "JVToolbarItem.h"
 #import "NSStringAdditions.h"
 #import "pyobjc-api.h"
 
@@ -309,6 +310,30 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 	NSArray *args = [NSArray arrayWithObjects:( object ? (id)object : (id)[NSNull null] ), ( view ? (id)view : (id)[NSNull null] ), nil];
 	id result = [self callScriptFunctionNamed:@"contextualMenuItems" withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSArray class]] ? result : nil );
+}
+
+- (NSArray *) toolbarItemIdentifiersForView:(id <JVChatViewController>) view {
+	NSArray *args = [NSArray arrayWithObjects:view, nil];
+	id result = [self callScriptFunctionNamed:@"toolbarItemIdentifiers" withArguments:args forSelector:_cmd];
+	return ( [result isKindOfClass:[NSArray class]] ? result : nil );
+}
+
+- (NSToolbarItem *) toolbarItemForIdentifier:(NSString *) identifier inView:(id <JVChatViewController>) view willBeInsertedIntoToolbar:(BOOL) willBeInserted {
+	NSArray *args = [NSArray arrayWithObjects:identifier, view, [NSNumber numberWithBool:willBeInserted], nil];
+	JVToolbarItem *result = [self callScriptFunctionNamed:@"toolbarItem" withArguments:args forSelector:_cmd];
+	if( [result isKindOfClass:[JVToolbarItem class]] ) {
+		[result setTarget:self];
+		[result setAction:@selector( handleClickedToolbarItem: )];
+		[result setRepresentedObject:view];
+		return result;
+	}
+
+	return nil;
+}
+
+- (void) handleClickedToolbarItem:(JVToolbarItem *) sender {
+	NSArray *args = [NSArray arrayWithObjects:sender, [sender representedObject], nil];
+	[self callScriptFunctionNamed:@"handleClickedToolbarItem" withArguments:args forSelector:_cmd];
 }
 
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context andPreferences:(NSDictionary *) preferences {

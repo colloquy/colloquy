@@ -10,6 +10,18 @@ function unload() {
 function contextualMenuItems( item, view ) {
 }
 
+// return an array of toolbar item identifier strings that can be associated with 'view'
+function toolbarItemIdentifiers( view ) {
+}
+
+// return a NSToolbarItem for 'identifier' associated with 'view'
+function toolbarItem( identifier, view, willBeInserted ) {
+}
+
+// perform the action associated with 'toolbarItem' for 'view'
+function handleClickedToolbarItem( toolbarItem, view ) {
+}
+
 // process the command and return true if you handle it or false to pass on to another plugin
 function processUserCommand( command, arguments, connection, view ) {
 	// return true if the command was handled or to prevent other plugins or Colloquy from handling it

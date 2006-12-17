@@ -18,6 +18,7 @@
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		1C0A13F308B0374800324E25 /* JVJavaScriptChatPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVJavaScriptChatPlugin.h; sourceTree = "<group>"; };
+		1C415F6A0B35126500239EB3 /* Template.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = Template.js; path = ../SDK/JavaScript/Template.js; sourceTree = SOURCE_ROOT; };
 		1C4FD36507C6BC25000EA451 /* JVJavaScriptPluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVJavaScriptPluginLoader.h; sourceTree = "<group>"; };
 		1C4FD36607C6BC25000EA451 /* JVJavaScriptPluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVJavaScriptPluginLoader.m; sourceTree = "<group>"; };
 		1C8748F30B2A801800286F24 /* plugin.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = plugin.html; sourceTree = "<group>"; };
@@ -42,6 +43,7 @@
 		089C166AFE841209C02AAC07 /* FScript Plugin */ = {
 			isa = PBXGroup;
 			children = (
+				1C415F6A0B35126500239EB3 /* Template.js */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				1C9AE940086A59CF008ED7AD /* Configurations */,
@@ -193,6 +195,7 @@
 					../../Controllers,
 					../../Models,
 					../../Panels,
+					../../Views,
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
@@ -215,6 +218,7 @@
 					../../Controllers,
 					../../Models,
 					../../Panels,
+					../../Views,
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
@@ -237,6 +241,7 @@
 					../../Controllers,
 					../../Models,
 					../../Panels,
+					../../Views,
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;

@@ -656,6 +656,18 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSToolbarItem * ), @encode( NSString * ), @encode( id ), @encode( BOOL ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+	[invocation setSelector:@selector( toolbarItemForIdentifier:inView:willBeInsertedIntoToolbar: )];
+	[invocation setArgument:&identifier atIndex:2];
+	[invocation setArgument:&_activeViewController atIndex:3];
+	[invocation setArgument:&willBeInserted atIndex:4];
+
+	NSArray *items = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
+	if( [[items lastObject] isKindOfClass:[NSToolbarItem class]] )
+		return [items lastObject];
+
 	if( [_activeViewController respondsToSelector:@selector( toolbar:itemForItemIdentifier:willBeInsertedIntoToolbar: )] )
 		return [(id)_activeViewController toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];
 	return nil;
@@ -668,9 +680,32 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (NSArray *) toolbarAllowedItemIdentifiers:(NSToolbar *) toolbar {
-	if( [_activeViewController respondsToSelector:@selector( toolbarAllowedItemIdentifiers: )] )
-		return [(id)_activeViewController toolbarAllowedItemIdentifiers:toolbar];
-	return nil;
+	NSMutableArray *result = [NSMutableArray array];
+
+	if( [_activeViewController respondsToSelector:@selector( toolbarAllowedItemIdentifiers: )] ) {
+		NSArray *identifiers = [(id)_activeViewController toolbarAllowedItemIdentifiers:toolbar];
+		if( [identifiers count] )
+			[result addObjectsFromArray:identifiers];
+	}
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+	[invocation setSelector:@selector( toolbarItemIdentifiersForView: )];
+	[invocation setArgument:&_activeViewController atIndex:2];
+
+	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+	NSLog(@"toolbarItemIdentifiersForView %@", results);
+	if( [results count] ) {
+		NSEnumerator *enumerator = [results objectEnumerator];
+		NSArray *identifiers = nil;
+
+		while( ( identifiers = [enumerator nextObject] ) )
+			if( [identifiers isKindOfClass:[NSArray class]] && [identifiers count] )
+				[result addObjectsFromArray:identifiers];
+	}
+
+	return result;
 }
 
 - (BOOL) validateToolbarItem:(NSToolbarItem *) toolbarItem {

@@ -9,6 +9,7 @@
 #import "JVChatTranscriptPanel.h"
 #import "JVChatWindowController.h"
 #import "JVNotificationController.h"
+#import "JVToolbarItem.h"
 #import "JVSpeechController.h"
 #import "MVBuddyListController.h"
 #import "MVChatConnection.h"
@@ -374,6 +375,27 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	return [NSError errorWithDomain:JVJavaScriptErrorDomain code:-1 userInfo:error];
 }
 
+- (NSArray *) arrayFromJavaScriptArray:(WebScriptObject *) javaScriptArray {
+	@try {
+		id lengthObj = [javaScriptArray valueForKey:@"length"];
+		if( ! [lengthObj respondsToSelector:@selector( unsignedIntValue )] )
+			return nil;
+
+		unsigned length = [lengthObj unsignedIntValue];
+		NSMutableArray *result = [NSMutableArray arrayWithCapacity:length];
+		for( unsigned i = 0; i < length; ++i ) {
+			id item = [javaScriptArray webScriptValueAtIndex:i];
+			if( item ) [result addObject:item];
+		}
+
+		return result;
+	} @catch( NSException *e ) {
+		// do nothing
+	}
+
+	return nil;
+}
+
 #pragma mark -
 
 - (void) load {
@@ -388,7 +410,35 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 - (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view {
 	NSArray *args = [NSArray arrayWithObjects:( object ? (id)object : (id)[NSNull null] ), ( view ? (id)view : (id)[NSNull null] ), nil];
 	id result = [self callScriptFunctionNamed:@"contextualMenuItems" withArguments:args forSelector:_cmd];
-	return ( [result isKindOfClass:[NSArray class]] ? result : nil );
+	if( [result isKindOfClass:[WebScriptObject class]] )
+		return [self arrayFromJavaScriptArray:result];
+	return nil;
+}
+
+- (NSArray *) toolbarItemIdentifiersForView:(id <JVChatViewController>) view {
+	NSArray *args = [NSArray arrayWithObjects:view, nil];
+	id result = [self callScriptFunctionNamed:@"toolbarItemIdentifiers" withArguments:args forSelector:_cmd];
+	if( [result isKindOfClass:[WebScriptObject class]] )
+		return [self arrayFromJavaScriptArray:result];
+	return nil;
+}
+
+- (NSToolbarItem *) toolbarItemForIdentifier:(NSString *) identifier inView:(id <JVChatViewController>) view willBeInsertedIntoToolbar:(BOOL) willBeInserted {
+	NSArray *args = [NSArray arrayWithObjects:identifier, view, [NSNumber numberWithBool:willBeInserted], nil];
+	JVToolbarItem *result = [self callScriptFunctionNamed:@"toolbarItem" withArguments:args forSelector:_cmd];
+	if( [result isKindOfClass:[JVToolbarItem class]] ) {
+		[result setTarget:self];
+		[result setAction:@selector( handleClickedToolbarItem: )];
+		[result setRepresentedObject:view];
+		return result;
+	}
+
+	return nil;
+}
+
+- (void) handleClickedToolbarItem:(JVToolbarItem *) sender {
+	NSArray *args = [NSArray arrayWithObjects:sender, [sender representedObject], nil];
+	[self callScriptFunctionNamed:@"handleClickedToolbarItem" withArguments:args forSelector:_cmd];
 }
 
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context andPreferences:(NSDictionary *) preferences {

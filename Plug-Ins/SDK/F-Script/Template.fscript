@@ -10,6 +10,14 @@ unload := [
 contextualMenuItems := [ :item :view |
 ].
 
+"return an array of toolbar item identifier strings that can be associated with 'view'"
+toolbarItemIdentifiers := [ :view |
+].
+
+"return a NSToolbarItem for 'identifier' associated with 'view'"
+toolbarItem := [ :identifier :view :willBeInserted |
+].
+
 "process the command and return true if you handle it or false to pass on to another plugin"
 processUserCommand := [ :command :arguments :connection :view |
 	"return YES if the command was handled or to prevent other plugins or Colloquy from handling it"

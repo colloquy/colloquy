@@ -55,6 +55,8 @@
 		1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C397368082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib */; };
 		1C397391082D4ADA00DCF3CF /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C397390082D4ADA00DCF3CF /* IOKit.framework */; };
 		1C3B290806529E720066197C /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; };
+		1C415F260B350CA300239EB3 /* JVToolbarItem.h in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C415F240B350CA300239EB3 /* JVToolbarItem.h */; };
+		1C415F270B350CA300239EB3 /* JVToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C415F250B350CA300239EB3 /* JVToolbarItem.m */; };
 		1C45BFA5086F4BD80079E014 /* newWindow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C45BFA4086F4BD80079E014 /* newWindow.png */; };
 		1C4671E606D7759100071DC6 /* NSTextStorageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */; };
 		1C51B4C7052DE14B00BB459B /* JVStandardCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3B4D570427BD5200000102 /* JVStandardCommands.m */; };
@@ -429,6 +431,7 @@
 				1C6C75490630AD9500698F55 /* AGRegex.framework in Copy Frameworks */,
 				1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */,
 				1C2EDDA10A35530F0051E9C2 /* Sparkle.framework in Copy Frameworks */,
+				1C415F260B350CA300239EB3 /* JVToolbarItem.h in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -534,6 +537,8 @@
 		1C3C116205029E03000001C8 /* Styles */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = Styles; path = Resources/Styles; sourceTree = SOURCE_ROOT; };
 		1C3D55A305A4CB2B00F25F5E /* NSNumberAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSNumberAdditions.h; path = Additions/NSNumberAdditions.h; sourceTree = "<group>"; };
 		1C3D562105A4DCCD00F25F5E /* NSMethodSignatureAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSMethodSignatureAdditions.h; path = Additions/NSMethodSignatureAdditions.h; sourceTree = "<group>"; };
+		1C415F240B350CA300239EB3 /* JVToolbarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVToolbarItem.h; path = Views/JVToolbarItem.h; sourceTree = "<group>"; };
+		1C415F250B350CA300239EB3 /* JVToolbarItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVToolbarItem.m; path = Views/JVToolbarItem.m; sourceTree = "<group>"; };
 		1C45BFA4086F4BD80079E014 /* newWindow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = newWindow.png; path = Resources/newWindow.png; sourceTree = "<group>"; };
 		1C4671E306D7759100071DC6 /* NSTextStorageAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSTextStorageAdditions.h; path = Additions/NSTextStorageAdditions.h; sourceTree = "<group>"; };
 		1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSTextStorageAdditions.m; path = Additions/NSTextStorageAdditions.m; sourceTree = "<group>"; };
@@ -1358,6 +1363,8 @@
 				1C0730C70677765B008D8AD9 /* AICustomTabsView.h */,
 				1C0730D206777678008D8AD9 /* ESFloater.m */,
 				1C0730D106777678008D8AD9 /* ESFloater.h */,
+				1C415F250B350CA300239EB3 /* JVToolbarItem.m */,
+				1C415F240B350CA300239EB3 /* JVToolbarItem.h */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2396,6 +2403,7 @@
 				1C710A6E09F23AF0007B4515 /* JVSideStatusView.m in Sources */,
 				1C710A7009F23AF0007B4515 /* JVSideOutlineView.m in Sources */,
 				1CEC00570A20F05F004C2B86 /* JVSQLChatTranscript.m in Sources */,
+				1C415F270B350CA300239EB3 /* JVToolbarItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

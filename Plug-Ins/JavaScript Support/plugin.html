@@ -140,6 +140,20 @@ MVFileTransferAlreadyExistsError = -4;
 MVFileTransferUnexpectedlyEndedError = -5;
 MVFileTransferKeyAgreementError = -6;
 
+function NSToolbarItem(identifier) {
+	var obj = Plugin.allocInstance('JVToolbarItem'); // a special subclass
+	if( identifier !== undefined )
+		return obj.initWithItemIdentifier(identifier.toString());
+	throw "Can't create a NSToolbarItem without an identifier.";
+}
+
+function NSImage(filePath) {
+	var obj = Plugin.allocInstance('NSImage');
+	if( filePath !== undefined )
+		return obj.initByReferencingFile(filePath.toString());
+	throw "Can't create a NSImage without a file path.";
+}
+
 </script>
 </head>
 <body></body>
