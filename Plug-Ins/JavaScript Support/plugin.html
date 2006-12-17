@@ -88,10 +88,10 @@ MVChatConnectionServerPasswordIncorrectError = -14;
 
 function MVChatConnection(type, server, port, user) {
 	var obj = Plugin.allocInstance('MVChatConnection');
-	if( type !== undefined && ! isNaN(type) && server !== undefined && port !== undefined && ! isNaN(port) && user !== undefined )
-		return obj.initWithServer(server, parseInt(type), parseInt(port), user);
-	if( type !== undefined && ! isNaN(type) )
-		return obj.initWithType(parseInt(type));
+	if( typeof type == 'number' && typeof server == 'string' && typeof port == 'number' && typeof user == 'string' )
+		return obj.initWithServer(server, type, port, user).autorelease();
+	if( typeof type == 'number' )
+		return obj.initWithType(type).autorelease();
 	throw "Can't create a MVChatConnection without a type.";
 }
 
@@ -142,22 +142,29 @@ MVFileTransferKeyAgreementError = -6;
 
 function NSToolbarItem(identifier) {
 	var obj = Plugin.allocInstance('JVToolbarItem'); // a special subclass
-	if( identifier !== undefined )
-		return obj.initWithItemIdentifier(identifier.toString());
-	throw "Can't create a NSToolbarItem without an identifier.";
+	if( typeof identifier == 'string' )
+		return obj.initWithItemIdentifier(identifier);
+	throw "Can't create a NSToolbarItem without a string identifier.";
 }
 
-function NSImage(url) {
+function NSImage(urlOrFile) {
 	var obj = Plugin.allocInstance('NSImage');
-	if( url !== undefined )
-		return obj.initByReferencingURL(url);
-	throw "Can't create a NSImage without a NSURL.";
+	if( typeof urlOrFile == 'string' ) {
+		if( urlOrFile.indexOf('://') == -1 ) // not a URL
+			return obj.initByReferencingFile(urlOrFile);
+		urlOrFile = new NSURL(urlOrFile);
+	}
+
+	if( typeof urlOrFile == 'object' )
+		return obj.initByReferencingURL(urlOrFile);
+
+	throw "Can't create a NSImage without a NSURL or file path string.";
 }
 
 function NSURL(url) {
 	var obj = Plugin.allocInstance('NSURL');
-	if( url !== undefined )
-		return obj.initWithString(url.toString());
+	if( typeof url == 'string' )
+		return obj.initWithString(url);
 	throw "Can't create a NSURL without a URL string.";
 }
 
