@@ -147,11 +147,18 @@ function NSToolbarItem(identifier) {
 	throw "Can't create a NSToolbarItem without an identifier.";
 }
 
-function NSImage(filePath) {
+function NSImage(url) {
 	var obj = Plugin.allocInstance('NSImage');
-	if( filePath !== undefined )
-		return obj.initByReferencingFile(filePath.toString());
-	throw "Can't create a NSImage without a file path.";
+	if( url !== undefined )
+		return obj.initByReferencingURL(url);
+	throw "Can't create a NSImage without a NSURL.";
+}
+
+function NSURL(url) {
+	var obj = Plugin.allocInstance('NSURL');
+	if( url !== undefined )
+		return obj.initWithString(url.toString());
+	throw "Can't create a NSURL without a URL string.";
 }
 
 </script>
