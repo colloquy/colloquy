@@ -528,7 +528,8 @@
 	[tabView setFrame:newFrame];
 	[tabView setNeedsDisplay:YES];
 
-	[[self window] enableFlushWindow];
+	if( [[self window] isFlushWindowDisabled] )
+		[[self window] enableFlushWindow];
 	[[self window] displayIfNeeded];
 
 	// return YES when the desired height is reached
@@ -536,10 +537,10 @@
 }
 
 - (void) _refreshWindow {
-	[[self window] disableFlushWindow];
-
 	id item = [(JVChatTabItem *)[tabView selectedTabViewItem] chatViewController];
-	if( ! item ) goto end;
+	if( ! item ) return;
+
+	[[self window] disableFlushWindow];
 
 	if( ( [item conformsToProtocol:@protocol( JVChatViewController )] && item != (id) _activeViewController ) || ( ! _activeViewController && [[item parent] conformsToProtocol:@protocol( JVChatViewController )] && ( item = [item parent] ) ) ) {
 		id lastActive = _activeViewController;
@@ -569,8 +570,8 @@
 
 	[self _refreshWindowTitle];
 
-end:
-	[[self window] enableFlushWindow];
+	if( [[self window] isFlushWindowDisabled] )
+		[[self window] enableFlushWindow];
 	[[self window] displayIfNeeded];
 }
 

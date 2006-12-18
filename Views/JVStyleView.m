@@ -501,12 +501,14 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 			return;
 		}
 
-		[_domDocument autorelease];
+		id old = _domDocument;
 		_domDocument = (DOMHTMLDocument *)[[frame DOMDocument] retain];
+		[old release];
 
-		[_body autorelease];
+		old = _body;
 		_body = (DOMHTMLElement *)[[_domDocument getElementById:@"contents"] retain];
 		if( ! _body ) _body = (DOMHTMLElement *)[[_domDocument body] retain];
+		[old release];
 
 		[self performSelector:@selector( _checkForTransparantStyle ) withObject:nil afterDelay:0.];
 
@@ -514,7 +516,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 		[self clearScrollbarMarks];
 
-		if( [[self window] isFlushWindowDisabled] ) [[self window] enableFlushWindow];
+		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _enableFlushWindowTimeout ) object:nil];
+
+		if( [[self window] isFlushWindowDisabled] )
+			[[self window] enableFlushWindow];
 		[[self window] displayIfNeeded];
 
 		[self performSelector:@selector( _contentFrameIsReady ) withObject:nil afterDelay:0.];
@@ -664,6 +669,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	} else _lastScrollPosition = 0;
 
 	[[self window] disableFlushWindow];
+	[self performSelector:@selector( _enableFlushWindowTimeout ) withObject:nil afterDelay:2.];
 
 	if( _mainFrameReady ) {
 		WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
@@ -673,6 +679,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:path] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:5.];
 		[[self mainFrame] loadRequest:request];
 	}
+}
+
+- (void) _enableFlushWindowTimeout {
+	if( [[self window] isFlushWindowDisabled] )
+		[[self window] enableFlushWindow];
 }
 
 - (void) _switchStyle {

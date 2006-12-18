@@ -99,10 +99,6 @@
 
 #pragma mark -
 
-- (void) awakeFromNib {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( styleDidReload: ) name:JVStyleViewDidChangeStylesNotification object:preview];
-}
-
 - (void) initializeFromDefaults {
 	[preview setPolicyDelegate:self];
 	[preview setUIDelegate:self];
@@ -290,16 +286,7 @@
 
 - (void) updateVariant {
 	[preview setStyleVariant:[_style defaultVariantName]];
-
-	if( [[preview window] isFlushWindowDisabled] ) [[preview window] enableFlushWindow];
-
-	[[preview window] disableFlushWindow];
 	[preview reloadCurrentStyle];
-}
-
-- (void) styleDidReload:(NSNotification *) notification {
-	if( [[preview window] isFlushWindowDisabled] ) [[preview window] enableFlushWindow];
-	[[preview window] displayIfNeeded];
 }
 
 #pragma mark -

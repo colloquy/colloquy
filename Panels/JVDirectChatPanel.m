@@ -1210,7 +1210,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	if( _scrollerIsAtBottom ) [display scrollToBottom];
 
 	[splitView setNeedsDisplay:YES]; // makes the divider redraw correctly later
-	[[display window] enableFlushWindow]; // flush everything we have drawn
+	if( [[display window] isFlushWindowDisabled] )
+		[[display window] enableFlushWindow]; // flush everything we have drawn
 	[[display window] displayIfNeeded];
 }
 
