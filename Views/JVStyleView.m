@@ -516,6 +516,12 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 		[self clearScrollbarMarks];
 
+		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _enableFlushWindowTimeout ) object:nil];
+
+		if( [[self window] isFlushWindowDisabled] )
+			[[self window] enableFlushWindow];
+		[[self window] displayIfNeeded];
+
 		[self performSelector:@selector( _contentFrameIsReady ) withObject:nil afterDelay:0.];
 	}
 }
@@ -657,9 +663,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		_lastScrollPosition = [[_body valueForKey:@"scrollTop"] longValue];
 	} else _lastScrollPosition = 0;
 
-	if( [self respondsToSelector:@selector(setBackgroundColor:)] )
-		[self setBackgroundColor:[NSColor whiteColor]];
-	else [self setDrawsBackground:YES];
+	[[self window] disableFlushWindow];
+	[self performSelector:@selector( _enableFlushWindowTimeout ) withObject:nil afterDelay:2.];
 
 	if( _mainFrameReady ) {
 		WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
@@ -669,6 +674,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:path] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:5.];
 		[[self mainFrame] loadRequest:request];
 	}
+}
+
+- (void) _enableFlushWindowTimeout {
+	if( [[self window] isFlushWindowDisabled] )
+		[[self window] enableFlushWindow];
 }
 
 - (void) _switchStyle {

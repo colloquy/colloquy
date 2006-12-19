@@ -357,8 +357,8 @@ static int _specificElementsInRangeCallback( void *context, int fieldCount, char
 			return nil;
 		}
 
-		sqlite3_bind_int64( compiledMsgQuery, 1, 0 ); // context
-		sqlite3_bind_int64( compiledMsgQuery, 2, 0 ); // session
+		sqlite3_bind_int64( compiledMsgQuery, 1, _currentContext ); // context
+		sqlite3_bind_int64( compiledMsgQuery, 2, _currentSession ); // session
 		sqlite3_bind_int64( compiledMsgQuery, 3, userIdentifier ); // user
 		if( [message date] ) sqlite3_bind_text( compiledMsgQuery, 4, [[[message date] description] UTF8String], -1, SQLITE_STATIC ); // received
 		else sqlite3_bind_text( compiledMsgQuery, 4, [[[NSDate date] description] UTF8String], -1, SQLITE_STATIC ); // received
@@ -445,8 +445,8 @@ static int _specificElementsInRangeCallback( void *context, int fieldCount, char
 			return nil;
 		}
 
-		sqlite3_bind_int64( compiledQuery, 1, 0 ); // context
-		sqlite3_bind_int64( compiledQuery, 2, 0 ); // session
+		sqlite3_bind_int64( compiledQuery, 1, _currentContext ); // context
+		sqlite3_bind_int64( compiledQuery, 2, _currentSession ); // session
 		if( [event name] ) sqlite3_bind_text( compiledQuery, 3, [[event name] UTF8String], -1, SQLITE_STATIC ); // name
 		if( [event date] ) sqlite3_bind_text( compiledQuery, 4, [[[event date] description] UTF8String], -1, SQLITE_STATIC ); // occurred
 		else sqlite3_bind_text( compiledQuery, 4, [[[NSDate date] description] UTF8String], -1, SQLITE_STATIC ); // occurred
