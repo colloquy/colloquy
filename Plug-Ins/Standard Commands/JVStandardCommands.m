@@ -82,8 +82,7 @@
 			else return [self handlePartWithArguments:[arguments string] forConnection:[room connection]];
 		} else if( ! [command caseInsensitiveCompare:@"topic"] || ! [command caseInsensitiveCompare:@"t"] ) {
 			if( ! [arguments length] && [connection type] == MVChatConnectionIRCType ) {
-				// request the current topic, this is handy if you connect with a proxy that doesn't forward the current topic
-				[connection sendRawMessage:[NSString stringWithFormat:@"TOPIC %@", [[room target] name]]];
+				[[[room display] windowScriptObject] callWebScriptMethod:@"toggleTopic" withArguments:nil];
 				return YES;
 			} else if( [arguments length] ) {
 				[[room target] setTopic:arguments];

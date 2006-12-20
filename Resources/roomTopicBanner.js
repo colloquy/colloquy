@@ -2,7 +2,7 @@ var topicSize = 0;
 var topicToggled = false;
 
 function toggleTopic( e ) {
-	if( e.altKey ) {
+	if( e && e.altKey ) {
 		topicSize++;
 		if( topicSize > 3 ) topicSize = 0;
 		topicAreaSize = ( ! topicSize ? 17 : ( topicSize == 1 ? 32 : ( topicSize == 2 ? 47 : 62 ) ) );
