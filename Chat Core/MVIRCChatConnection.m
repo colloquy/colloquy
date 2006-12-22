@@ -2361,7 +2361,9 @@ end:
 		if( ! modeChars ) modeChars = [[NSCharacterSet characterSetWithCharactersInString:@"@+"] retain];
 
 		while( ( room = [enumerator nextObject] ) ) {
-			room = [room stringByTrimmingCharactersInSet:modeChars];
+			NSRange prefixRange = [room rangeOfCharacterFromSet:modeChars options:NSAnchoredSearch];
+			if( prefixRange.location != NSNotFound )
+				room = [room substringFromIndex:( prefixRange.location + prefixRange.length )];
 			room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 			if( [room length] ) [results addObject:room];
 		}
