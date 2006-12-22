@@ -20,6 +20,7 @@
 #define JVSendQueueDelayIncrement 0.01
 #define JVWatchedUserWHOISDelay 300.
 #define JVWatchedUserISONDelay 60.
+#define JVMaximumMembersForWhoRequest 100
 
 static const NSStringEncoding supportedEncodings[] = {
 	/* Universal */
@@ -1018,7 +1019,8 @@ end:
 		MVChatRoom *room = nil;
 
 		while( ( room = [enumerator nextObject] ) )
-			[self sendRawMessageWithFormat:@"WHO %@", [room name]];
+			if( [[room memberUsers] count] <= JVMaximumMembersForWhoRequest )
+				[self sendRawMessageWithFormat:@"WHO %@", [room name]];
 	}
 
 	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:600.];
@@ -1750,9 +1752,6 @@ end:
 			[room _setNamesSynced:NO];
 			[room _clearMemberUsers];
 			[room _clearBannedUsers];
-
-			[self sendRawMessageImmediatelyWithFormat:@"WHO %@", name];
-			[self sendRawMessageImmediatelyWithFormat:@"MODE %@ b", name];
 		} else {
 			if( [sender status] != MVChatUserAwayStatus )
 				[sender _setStatus:MVChatUserAvailableStatus];
@@ -2169,6 +2168,11 @@ end:
 		if( room && ! [room _namesSynced] ) {
 			[room _setNamesSynced:YES];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomJoinedNotification object:room];
+
+			if( [[room memberUsers] count] <= JVMaximumMembersForWhoRequest )
+				[self sendRawMessageImmediatelyWithFormat:@"WHO %@", [room name]];
+			[self sendRawMessageImmediatelyWithFormat:@"MODE %@ b", [room name]];
+
 			[room release]; // balance the alloc or retain from _handleJoinWithParameters
 		}
 	}
