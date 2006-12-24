@@ -1091,7 +1091,9 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 - (BOOL) downArrowKeyPressed {
 	if( ! _historyIndex && [_sendHistory count] )
 		[_sendHistory replaceObjectAtIndex:0 withObject:[[[send textStorage] copy] autorelease]];
+
 	if( [[send string] length] ) _historyIndex--;
+
 	if( _historyIndex < 0 ) {
 		[send reset:nil];
 		_historyIndex = -1;
@@ -1100,8 +1102,10 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		_historyIndex = 0;
 		return YES;
 	}
+
 	[send reset:nil];
 	[[send textStorage] insertAttributedString:[_sendHistory objectAtIndex:_historyIndex] atIndex:0];
+
 	return YES;
 }
 

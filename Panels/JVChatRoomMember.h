@@ -6,7 +6,7 @@
 @class JVBuddy;
 
 @interface JVChatRoomMember : NSObject <JVChatListItem, JVChatListItemScripting> {
-	JVChatRoomPanel *_parent;
+	JVChatRoomPanel *_room;
 	MVChatUser *_user;
 
 	// Custom ban ivars
