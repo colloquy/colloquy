@@ -13,6 +13,7 @@ extern NSString *JVJavaScriptErrorDomain;
 	NSString *_currentFunction;
 	id _currentException;
 	BOOL _loading;
+	BOOL _errorShown;
 }
 - (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 

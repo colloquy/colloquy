@@ -231,9 +231,12 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 
 		NSString *scriptTitle = [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension];
 		int result = NSOKButton;
-		if( functionName )
-			result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python script error title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while calling the \"%@\" function.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "Python script plugin error message" ), nil, ( filename ? NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ) : nil ), nil, scriptTitle, functionName, errorDesc );
+
+		_errorShown = YES;
+		if( functionName ) result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python script error title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while calling the \"%@\" function.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "Python script plugin error message" ), nil, ( filename ? NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ) : nil ), nil, scriptTitle, functionName, errorDesc );
 		else result = NSRunCriticalAlertPanel( NSLocalizedStringFromTableInBundle( @"Python Script Error", nil, [NSBundle bundleForClass:[self class]], "Python script error title" ), NSLocalizedStringFromTableInBundle( @"The Python script \"%@\" had an error while loading.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "Python script error message" ), nil, ( filename ? NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ) : nil ), nil, scriptTitle, errorDesc );
+		_errorShown = NO;
+
 		if( result == NSCancelButton && filename ) [[NSWorkspace sharedWorkspace] openFile:[NSString stringWithUTF8String:filename]];
 
 		[errorDesc release];
@@ -243,9 +246,8 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 		PyErr_Print();
 		PyErr_Clear();
 
-		if( message != errValue ) {
+		if( message != errValue )
 			Py_XDECREF( message );
-		}
 
 		Py_XDECREF(errType);
 		Py_XDECREF(errValue);

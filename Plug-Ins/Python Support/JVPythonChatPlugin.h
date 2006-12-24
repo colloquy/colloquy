@@ -10,6 +10,7 @@ extern NSString *JVPythonErrorDomain;
 	NSString *_uniqueModuleName;
 	PyObject *_scriptModule;
 	BOOL _firstLoad;
+	BOOL _errorShown;
 }
 - (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 

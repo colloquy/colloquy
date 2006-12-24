@@ -325,6 +325,8 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 }
 
 - (void) reportError:(NSDictionary *) error inFunction:(NSString *) functionName whileLoading:(BOOL) whileLoading {
+	if( _errorShown ) return;
+
 	NSMutableString *errorDesc = [[NSMutableString alloc] initWithCapacity:64];
 
 	NSString *message = [error objectForKey:@"message"];
@@ -345,9 +347,11 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	NSString *scriptTitle = [[[self scriptFilePath] lastPathComponent] stringByDeletingPathExtension];
 	int result = NSOKButton;
 
+	_errorShown = YES;
 	if( whileLoading ) result = NSRunCriticalAlertPanel( alertTitle, NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error while loading.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript error message while loading" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, scriptTitle, errorDesc );
 	else if( functionName ) result = NSRunCriticalAlertPanel( alertTitle, NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error while calling the \"%@\" function.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript plugin error message calling function" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, scriptTitle, functionName, errorDesc );
 	else result = NSRunCriticalAlertPanel( alertTitle, NSLocalizedStringFromTableInBundle( @"The JavaScript \"%@\" had an error.\n\n%@", nil, [NSBundle bundleForClass:[self class]], "JavaScript error message" ), nil, NSLocalizedStringFromTableInBundle( @"Edit...", nil, [NSBundle bundleForClass:[self class]], "edit button title" ), nil, scriptTitle, errorDesc );
+	_errorShown = NO;
 
 	if( result == NSCancelButton ) [[NSWorkspace sharedWorkspace] openFile:sourceFile];
 

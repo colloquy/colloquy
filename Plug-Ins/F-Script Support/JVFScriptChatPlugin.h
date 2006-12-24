@@ -9,6 +9,7 @@ extern NSString *JVFScriptErrorDomain;
 	FSInterpreter *_scriptInterpreter;
 	NSString *_path;
 	NSDate *_modDate;
+	BOOL _errorShown;
 }
 - (id) initWithScriptAtPath:(NSString *) path withManager:(MVChatPluginManager *) manager;
 
