@@ -1,18 +1,20 @@
-INSTALL_DIR:=$(shell if [[ -d $(HOME)/Applications/Colloquy.app ]]; then echo $(HOME)/Applications; else echo /Applications; fi)
-BUILD_DIR=build/Release
-PRODUCT_NAME=Colloquy.app
+INSTALL_DIR := $(shell if [[ -d $(HOME)/Applications/Colloquy.app ]]; then echo $(HOME)/Applications; else echo /Applications; fi)
+BUILD_DIR = build/Release
+PRODUCT_NAME = Colloquy.app
 
-CP=ditto --rsrc
-RM=rm
+CP = ditto --rsrc
+RM = rm
+COMMON_XCODE_OPTIONS = -project Colloquy.xcodeproj -target 'Colloquy (Application)'
+IGNORE_COMMAND = grep -v setenv && exit $${PIPESTATUS[0]}
 
 all release r:
-	xcodebuild -project Colloquy.xcodeproj -target 'Colloquy (Application)' -configuration Release build
+	( xcodebuild $(COMMON_XCODE_OPTIONS)  -configuration Release build | $(IGNORE_COMMAND) )
 
 universal u:
-	xcodebuild -project Colloquy.xcodeproj -target 'Colloquy (Application)' -configuration 'Release (Universal)' build
+	( xcodebuild $(COMMON_XCODE_OPTIONS)  -configuration 'Release (Universal)' build | $(IGNORE_COMMAND) )
 
 development dev d:
-	xcodebuild -project Colloquy.xcodeproj -target 'Colloquy (Application)' -configuration Development build
+	( xcodebuild $(COMMON_XCODE_OPTIONS)  -configuration Development build | $(IGNORE_COMMAND) )
 
 clean c:
 	xcodebuild -project Colloquy.xcodeproj -alltargets clean
