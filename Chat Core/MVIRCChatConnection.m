@@ -17,6 +17,9 @@
 
 #define JVMinimumSendQueueDelay 0.2
 #define JVMaximumSendQueueDelay 2.0
+#define JVQueueWaitBeforeConnected 120.
+#define JVPingServerInterval 120.
+#define JVPeriodicEventsInterval 600.
 #define JVSendQueueDelayIncrement 0.01
 #define JVWatchedUserWHOISDelay 300.
 #define JVWatchedUserISONDelay 60.
@@ -205,7 +208,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[old release];
 
 	old = _queueWait;
-	_queueWait = [[NSDate dateWithTimeIntervalSinceNow:120.] retain];
+	_queueWait = [[NSDate dateWithTimeIntervalSinceNow:JVQueueWaitBeforeConnected] retain];
 	[old release];
 
 	[self _resetSendQueueInterval];
@@ -718,8 +721,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
 	[old release];
 
-	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:600.];
-	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:120.];
+	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:JVPeriodicEventsInterval];
+	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:JVPingServerInterval];
 
 	[self _readNextMessageFromServer];
 }
@@ -906,10 +909,10 @@ end:
 }
 
 - (void) _readNextMessageFromServer {
-	static NSData *delimeter = nil;
+	static NSData *delimiter = nil;
 	// IRC messages end in \x0D\x0A, but some non-compliant servers only use \x0A during the connecting phase
-	if( ! delimeter ) delimeter = [[NSData allocWithZone:nil] initWithBytes:"\x0A" length:1];
-	[_chatConnection readDataToData:delimeter withTimeout:-1. tag:0];
+	if( ! delimiter ) delimiter = [[NSData allocWithZone:nil] initWithBytes:"\x0A" length:1];
+	[_chatConnection readDataToData:delimiter withTimeout:-1. tag:0];
 }
 
 #pragma mark -
@@ -1023,12 +1026,12 @@ end:
 				[self sendRawMessageWithFormat:@"WHO %@", [room name]];
 	}
 
-	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:600.];
+	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:JVPeriodicEventsInterval];
 }
 
 - (void) _pingServer {
 	[self sendRawMessageImmediatelyWithFormat:@"PING %@", [self server]];
-	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:120.];
+	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:JVPingServerInterval];
 }
 
 - (void) _startSendQueue {
@@ -2074,7 +2077,7 @@ end:
 
 			if( [_lastSentIsonNicknames containsObject:nick] ) {
 				MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
-				if( [[user dateUpdated] timeIntervalSinceNow] < -240. || ! [user dateUpdated] ) // 4 minutes
+				if( [[user dateUpdated] timeIntervalSinceNow] < -JVWatchedUserWHOISDelay || ! [user dateUpdated] )
 					[self _scheduleWhoisForUser:user];
 
 				[self _sendPossibleOnlineNotificationForUser:user];
@@ -2438,7 +2441,7 @@ end:
 
 		[self _sendPossibleOnlineNotificationForUser:user];
 
-		if( [[user dateUpdated] timeIntervalSinceNow] < -240. || ! [user dateUpdated] ) // 4 minutes
+		if( [[user dateUpdated] timeIntervalSinceNow] < -JVWatchedUserWHOISDelay || ! [user dateUpdated] )
 			[self _scheduleWhoisForUser:user];
 	}
 }
