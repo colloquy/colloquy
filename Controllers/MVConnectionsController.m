@@ -1530,14 +1530,17 @@ static NSMenu *favoritesMenu = nil;
 			[data setObject:[NSNumber numberWithLong:[connection encoding]] forKey:@"encoding"];
 			[data setObject:[connection server] forKey:@"server"];
 			[data setObject:[NSNumber numberWithUnsignedShort:[connection serverPort]] forKey:@"port"];
-			[data setObject:[connection preferredNickname] forKey:@"nickname"];
+			if( [connection preferredNickname] )
+				[data setObject:[connection preferredNickname] forKey:@"nickname"];
 			if( [[connection alternateNicknames] count] )
 				[data setObject:[connection alternateNicknames] forKey:@"alternateNicknames"];
 			if( [(NSArray *)[info objectForKey:@"rooms"] count] ) [data setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
 			if( [info objectForKey:@"commands"] ) [data setObject:[info objectForKey:@"commands"] forKey:@"commands"];
 			[data setObject:[info objectForKey:@"created"] forKey:@"created"];
-			[data setObject:[connection realName] forKey:@"realName"];
-			[data setObject:[connection username] forKey:@"username"];
+			if( [connection realName] )
+				[data setObject:[connection realName] forKey:@"realName"];
+			if( [connection username] )
+				[data setObject:[connection username] forKey:@"username"];
 			[data setObject:[connection urlScheme] forKey:@"type"];
 
 			if( [[connection persistentInformation] count] )
