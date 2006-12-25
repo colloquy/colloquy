@@ -9,7 +9,6 @@ extern NSString *JVBuddyUserIdleTimeUpdatedNotification;
 extern NSString *JVBuddyActiveUserChangedNotification;
 
 @class ABPerson;
-@class MVChatUserWatchRule;
 
 extern NSString * const JVBuddyAddressBookIRCNicknameProperty;
 extern NSString* const JVBuddyAddressBookSpeechVoiceProperty;
@@ -25,6 +24,13 @@ typedef enum {
 	NSMutableArray *_rules;
 	NSMutableArray *_users;
 	MVChatUser *_activeUser;
+	NSImage *_picture;
+	NSString *_firstName;
+	NSString *_lastName;
+	NSString *_primaryEmail;
+	NSString *_givenNickname;
+	NSString *_speechVoice;
+	NSString *_uniqueIdentifier;
 }
 + (JVBuddyName) preferredName;
 + (void) setPreferredName:(JVBuddyName) preferred;
@@ -32,7 +38,9 @@ typedef enum {
 - (id) initWithDictionaryRepresentation:(NSDictionary *) dictionary;
 - (NSDictionary *) dictionaryRepresentation;
 
+- (void) registerWithConnection:(MVChatConnection *) connection;
 - (void) registerWithApplicableConnections;
+- (void) unregisterWithConnection:(MVChatConnection *) connection;
 - (void) unregisterWithApplicableConnections;
 
 - (MVChatUser *) activeUser;
@@ -64,15 +72,15 @@ typedef enum {
 - (NSString *) primaryEmail;
 - (NSString *) givenNickname;
 - (NSString *) speechVoice;
+- (NSString *) uniqueIdentifier;
 
 - (void) setFirstName:(NSString *) name;
 - (void) setLastName:(NSString *) name;
 - (void) setPrimaryEmail:(NSString *) email;
 - (void) setGivenNickname:(NSString *) name;
 - (void) setSpeechVoice:(NSString *) voice;
-- (NSString *) uniqueIdentifier;
-- (ABPerson *) person;
 
+- (ABPerson *) addressBookPersonRecord;
 - (void) editInAddressBook;
 - (void) viewInAddressBook;
 

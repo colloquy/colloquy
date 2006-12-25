@@ -36,11 +36,11 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 
 - (NSDictionary *) dictionaryRepresentation {
 	NSMutableDictionary *dictionary = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
-	if( _username ) [dictionary setObject:_nickname forKey:@"username"];
+	if( _username ) [dictionary setObject:_username forKey:@"username"];
 	if( _nickname ) [dictionary setObject:_nickname forKey:@"nickname"];
-	if( _realName ) [dictionary setObject:_nickname forKey:@"realName"];
-	if( _address ) [dictionary setObject:_nickname forKey:@"address"];
-	if( _publicKey ) [dictionary setObject:_nickname forKey:@"publicKey"];
+	if( _realName ) [dictionary setObject:_realName forKey:@"realName"];
+	if( _address ) [dictionary setObject:_address forKey:@"address"];
+	if( _publicKey ) [dictionary setObject:_publicKey forKey:@"publicKey"];
 	if( _interim ) [dictionary setObject:[NSNumber numberWithBool:_interim] forKey:@"interim"];
 	if( _applicableServerDomains ) [dictionary setObject:_applicableServerDomains forKey:@"applicableServerDomains"];
 	return [dictionary autorelease];

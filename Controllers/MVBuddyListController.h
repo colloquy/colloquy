@@ -52,6 +52,8 @@ typedef enum {
 }
 + (MVBuddyListController *) sharedBuddyList;
 
+- (void) save;
+
 - (IBAction) getInfo:(id) sender;
 
 - (IBAction) showBuddyList:(id) sender;

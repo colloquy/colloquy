@@ -18,7 +18,6 @@ static MVBuddyListController *sharedInstance = nil;
 #pragma mark -
 
 @interface MVBuddyListController (MVBuddyListControllerPrivate)
-- (void) _saveBuddyList;
 - (void) _loadBuddyList;
 - (void) _sortBuddies;
 - (void) _manuallySortAndUpdate;
@@ -77,7 +76,7 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) dealloc {
-	[self _saveBuddyList];
+	[self save];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
@@ -128,6 +127,22 @@ static MVBuddyListController *sharedInstance = nil;
 
 	[buddies reloadData];
 	[self _setBuddiesNeedSortAnimated];
+}
+
+#pragma mark -
+
+- (void) save {
+	NSMutableArray *list = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_buddyList count]];
+	NSEnumerator *enumerator = [_buddyList objectEnumerator];
+	JVBuddy *buddy = nil;
+
+	while( ( buddy = [enumerator nextObject] ) ) {
+		NSDictionary *buddyRep = [buddy dictionaryRepresentation];
+		if( buddyRep ) [list addObject:buddyRep];
+	}
+
+	[list writeToFile:[@"~/Library/Application Support/Colloquy/Buddy List.plist" stringByExpandingTildeInPath] atomically:YES];
+	[list release];
 }
 
 #pragma mark -
@@ -232,7 +247,7 @@ static MVBuddyListController *sharedInstance = nil;
 	} else {
 //		JVBuddy *buddy = [JVBuddy buddyWithPerson:person];
 //		[self _addBuddyToList:buddy];
-		[self _saveBuddyList];
+		[self save];
 	}
 }
 
@@ -337,7 +352,7 @@ static MVBuddyListController *sharedInstance = nil;
 	if( person ) {
 //		JVBuddy *buddy = [JVBuddy buddyWithPerson:person];
 //		[self _addBuddyToList:buddy];
-		[self _saveBuddyList];
+		[self save];
 	}
 
 	[_addPerson autorelease];
@@ -582,7 +597,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[_buddyOrder removeObjectIdenticalTo:buddy];
 	[buddy release];
 	[self _manuallySortAndUpdate];
-	[self _saveBuddyList];
+	[self save];
 }
 
 - (int) numberOfRowsInTableView:(NSTableView *) view {
@@ -965,18 +980,6 @@ static MVBuddyListController *sharedInstance = nil;
 	}
 }
 
-- (void) _saveBuddyList {
-	NSMutableArray *list = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_buddyList count]];
-	NSEnumerator *enumerator = [_buddyList objectEnumerator];
-	JVBuddy *buddy = nil;
-
-	while( ( buddy = [enumerator nextObject] ) )
-		[list addObject:[buddy dictionaryRepresentation]];
-
-	[list writeToFile:[@"~/Library/Application Support/Colloquy/Buddy List.plist" stringByExpandingTildeInPath] atomically:YES];
-	[list release];
-}
-
 - (void) _loadBuddyList {
 	NSArray *list = [[NSArray allocWithZone:nil] initWithContentsOfFile:[@"~/Library/Application Support/Colloquy/Buddy List.plist" stringByExpandingTildeInPath]];
 	NSEnumerator *enumerator = [list objectEnumerator];
@@ -1028,7 +1031,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[_buddyOrder removeObjectIdenticalTo:buddy];
 	[buddy release];
 	[self _manuallySortAndUpdate];
-	[self _saveBuddyList];
+	[self save];
 }
 
 - (void) replaceInBuddies:(JVBuddy *) buddy atIndex:(unsigned) index {

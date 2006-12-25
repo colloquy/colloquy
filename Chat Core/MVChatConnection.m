@@ -920,20 +920,20 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) _sendPossibleOnlineNotificationForUser:(MVChatUser *) user {
 	if( [user _onlineNotificationSent] ) return;
 	if( [user isWatched] || [self _watchRulesMatchingUser:user] ) {
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWatchedUserOnlineNotification object:user userInfo:nil];
 		[user _setOnlineNotificationSent:YES];
 		[user _setDateDisconnected:nil];
 		if( [user status] != MVChatUserAwayStatus )
 			[user _setStatus:MVChatUserAvailableStatus];
 		if( ! [user dateDisconnected] )
 			[user _setDateConnected:[NSDate date]];
+
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWatchedUserOnlineNotification object:user userInfo:nil];
 	}
 }
 
 - (void) _sendPossibleOfflineNotificationForUser:(MVChatUser *) user {
 	if( ! [user _onlineNotificationSent] ) return;
 	if( [user isWatched] ) {
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWatchedUserOfflineNotification object:user userInfo:nil];
 		[user _setOnlineNotificationSent:NO];
 		[user _setWatched:NO];
 
@@ -941,12 +941,18 @@ static const NSStringEncoding supportedEncodings[] = {
 			[user _setDateDisconnected:[NSDate date]];
 		[user _setStatus:MVChatUserOfflineStatus];
 
+		[user retain]; // retain since removeMatchedUser might hold the last reference
+
 		@synchronized( _chatUserWatchRules ) {
 			NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
 			MVChatUserWatchRule *rule = nil;
 			while( ( rule = [enumerator nextObject] ) )
 				[rule removeMatchedUser:user];
 		}
+
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWatchedUserOfflineNotification object:user userInfo:nil];
+
+		[user release];
 	}
 }
 @end

@@ -1,6 +1,8 @@
 #import "JVBuddy.h"
 #import "MVConnectionsController.h"
 
+#import <ChatCore/NSStringAdditions.h>
+
 NSString *JVBuddyCameOnlineNotification = @"JVBuddyCameOnlineNotification";
 NSString *JVBuddyWentOfflineNotification = @"JVBuddyWentOfflineNotification";
 
@@ -29,14 +31,47 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 
 - (id) initWithDictionaryRepresentation:(NSDictionary *) dictionary {
 	if( ( self = [super init] ) ) {
-		_rules = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
+		_rules = [[NSMutableArray allocWithZone:nil] initWithCapacity:5];
 		_users = [[NSMutableArray allocWithZone:nil] initWithCapacity:5];
-		_activeUser = nil;
+
+		NSData *data = [dictionary objectForKey:@"picture"];
+		if( [data isKindOfClass:[NSData class]] && [data length] )
+			_picture = [[NSKeyedUnarchiver unarchiveObjectWithData:data] retain];
+
+		NSString *string = [dictionary objectForKey:@"firstName"];
+		if( [string isKindOfClass:[NSString class]] )
+			_firstName = [string copyWithZone:nil];
+
+		string = [dictionary objectForKey:@"lastName"];
+		if( [string isKindOfClass:[NSString class]] )
+			_lastName = [string copyWithZone:nil];
+
+		string = [dictionary objectForKey:@"primaryEmail"];
+		if( [string isKindOfClass:[NSString class]] )
+			_primaryEmail = [string copyWithZone:nil];
+
+		string = [dictionary objectForKey:@"givenNickname"];
+		if( [string isKindOfClass:[NSString class]] )
+			_givenNickname = [string copyWithZone:nil];
+
+		string = [dictionary objectForKey:@"speechVoice"];
+		if( [string isKindOfClass:[NSString class]] )
+			_speechVoice = [string copyWithZone:nil];
+
+		string = [dictionary objectForKey:@"uniqueIdentifier"];
+		if( [string isKindOfClass:[NSString class]] )
+			_uniqueIdentifier = [string copyWithZone:nil];
+		if( ! [_uniqueIdentifier length] )
+			_uniqueIdentifier = [[NSString locallyUniqueString] retain];
+
+		string = [dictionary objectForKey:@"addressBookPersonRecord"];
+		if( [string isKindOfClass:[NSString class]] )
+			_person = [[[ABAddressBook sharedAddressBook] recordForUniqueId:string] retain];
 
 		NSEnumerator *enumerator = [[dictionary objectForKey:@"rules"] objectEnumerator];
 		NSDictionary *ruleDictionary = nil;
 		while( ( ruleDictionary = [enumerator nextObject] ) ) {
-			MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:[self zone]] initWithDictionaryRepresentation:ruleDictionary];
+			MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:nil] initWithDictionaryRepresentation:ruleDictionary];
 			if( rule ) [self addWatchRule:rule];
 			[rule release];
 		}
@@ -59,11 +94,25 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 	[_rules release];
 	[_users release];
 	[_activeUser release];
+	[_picture release];
+	[_firstName release];
+	[_lastName release];
+	[_primaryEmail release];
+	[_givenNickname release];
+	[_speechVoice release];
+	[_uniqueIdentifier release];
 
 	_person = nil;
 	_users = nil;
 	_rules = nil;
 	_activeUser = nil;
+	_picture = nil;
+	_firstName = nil;
+	_lastName = nil;
+	_primaryEmail = nil;
+	_givenNickname = nil;
+	_speechVoice = nil;
+	_uniqueIdentifier = nil;
 
 	[super dealloc];
 }
@@ -71,12 +120,69 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 #pragma mark -
 
 - (NSDictionary *) dictionaryRepresentation {
-	NSMutableDictionary *dictionary = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
-	[dictionary setObject:_rules forKey:@"rules"];
-	return dictionary;
+	NSMutableDictionary *dictionary = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:8];
+
+	NSEnumerator *enumerator = [_rules objectEnumerator];
+	NSMutableArray *rules = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_rules count]];
+	MVChatUserWatchRule *rule = nil;
+
+	while( ( rule = [enumerator nextObject] ) ) {
+		NSDictionary *dictRep = [rule dictionaryRepresentation];
+		if( dictRep ) [rules addObject:dictRep];
+	}
+
+	[dictionary setObject:rules forKey:@"rules"];
+	[rules release];
+
+	if( _picture ) {
+		NSData *imageData = [NSKeyedArchiver archivedDataWithRootObject:_picture];
+		if( imageData ) [dictionary setObject:imageData forKey:@"picture"];
+	}
+
+	if( _firstName )
+		[dictionary setObject:_firstName forKey:@"firstName"];
+
+	if( _lastName )
+		[dictionary setObject:_lastName forKey:@"lastName"];
+
+	if( _primaryEmail )
+		[dictionary setObject:_primaryEmail forKey:@"primaryEmail"];
+
+	if( _givenNickname )
+		[dictionary setObject:_givenNickname forKey:@"givenNickname"];
+
+	if( _speechVoice )
+		[dictionary setObject:_speechVoice forKey:@"speechVoice"];
+
+	if( _uniqueIdentifier )
+		[dictionary setObject:_uniqueIdentifier forKey:@"uniqueIdentifier"];
+
+	if( _person && [_person uniqueId] )
+		[dictionary setObject:[_person uniqueId] forKey:@"addressBookPersonRecord"];
+
+	return [dictionary autorelease];
 }
 
 #pragma mark -
+
+- (void) registerWithConnection:(MVChatConnection *) connection {
+	NSEnumerator *enumerator = [_rules objectEnumerator];
+	MVChatUserWatchRule *rule = nil;
+
+	while( ( rule = [enumerator nextObject] ) ) {
+		if( [[rule applicableServerDomains] count] ) {
+			NSEnumerator *domainEnumerator = [[rule applicableServerDomains] objectEnumerator];
+			NSString *domain = nil;
+
+			while( ( domain = [domainEnumerator nextObject] ) ) {
+				if( [[connection server] compare:domain options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch )] == NSOrderedSame ) {
+					[connection addChatUserWatchRule:rule];
+					break;
+				}
+			}
+		} else [connection addChatUserWatchRule:rule];
+	}
+}
 
 - (void) registerWithApplicableConnections {
 	NSEnumerator *enumerator = [_rules objectEnumerator];
@@ -104,29 +210,24 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 	}
 }
 
+- (void) unregisterWithConnection:(MVChatConnection *) connection {
+	NSEnumerator *enumerator = [_rules objectEnumerator];
+	MVChatUserWatchRule *rule = nil;
+
+	while( ( rule = [enumerator nextObject] ) )
+		[connection removeChatUserWatchRule:rule];
+}
+
 - (void) unregisterWithApplicableConnections {
 	NSEnumerator *enumerator = [_rules objectEnumerator];
 	MVChatUserWatchRule *rule = nil;
 
 	while( ( rule = [enumerator nextObject] ) ) {
-		if( [[rule applicableServerDomains] count] ) {
-			NSEnumerator *domainEnumerator = [[rule applicableServerDomains] objectEnumerator];
-			NSString *domain = nil;
+		NSEnumerator *connectionEnumerator = [[[MVConnectionsController defaultController] connections] objectEnumerator];
+		MVChatConnection *connection = nil;
 
-			while( ( domain = [domainEnumerator nextObject] ) ) {
-				NSEnumerator *connectionEnumerator = [[[MVConnectionsController defaultController] connectionsForServerAddress:domain] objectEnumerator];
-				MVChatConnection *connection = nil;
-
-				while( ( connection = [connectionEnumerator nextObject] ) )
-					[connection removeChatUserWatchRule:rule];
-			}
-		} else {
-			NSEnumerator *connectionEnumerator = [[[MVConnectionsController defaultController] connections] objectEnumerator];
-			MVChatConnection *connection = nil;
-
-			while( ( connection = [connectionEnumerator nextObject] ) )
-				[connection removeChatUserWatchRule:rule];
-		}
+		while( ( connection = [connectionEnumerator nextObject] ) )
+			[connection removeChatUserWatchRule:rule];
 	}
 }
 
@@ -137,8 +238,9 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 }
 
 - (void) setActiveUser:(MVChatUser *) user {
-	[_activeUser autorelease];
+	id old = _activeUser;
 	_activeUser = [user retain];
+	[old release];
 }
 
 #pragma mark -
@@ -154,7 +256,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 #pragma mark -
 
 - (BOOL) isOnline {
-	return ( [_users count] > 0 ? YES : NO );
+	return ( [_users count] > 0 );
 }
 
 - (NSDate *) dateConnected {
@@ -177,7 +279,8 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 	switch( [[self class] preferredName] ) {
 		default:
 		case JVBuddyFullName:
-			return [self compositeName];
+			if( [[self compositeName] length] )
+				return [self compositeName];
 		case JVBuddyGivenNickname:
 			if( [[self givenNickname] length] )
 				return [self givenNickname];
@@ -215,11 +318,17 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 #pragma mark -
 
 - (NSImage *) picture {
-	return [[[NSImage alloc] initWithData:[_person imageData]] autorelease];
+	if( _picture )
+		return _picture;
+	if( _person )
+		return [[[NSImage alloc] initWithData:[_person imageData]] autorelease];
+	return nil;
 }
 
 - (void) setPicture:(NSImage *) picture {
-	[_person setImageData:[picture TIFFRepresentation]];
+	id old = _picture;
+	_picture = [picture copyWithZone:nil];
+	[old release];
 }
 
 #pragma mark -
@@ -228,81 +337,92 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 	NSString *firstName = [self firstName];
 	NSString *lastName = [self lastName];
 
-	if( ! firstName && lastName ) return lastName;
-	else if( firstName && ! lastName ) return firstName;
-	else if( firstName && lastName ) {
+	if( ! [firstName length] && [lastName length] )
+		return lastName;
+	if( [firstName length] && ! [lastName length] )
+		return firstName;
+	if( [firstName length] && [lastName length] )
 		return [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-	}
 
 	firstName = [self givenNickname];
-	if( [firstName length] ) return firstName;
+	if( [firstName length] )
+		return firstName;
 
 	return [[self activeUser] nickname];
 }
 
 - (NSString *) firstName {
-	return [_person valueForProperty:kABFirstNameProperty];
+	if( _firstName ) return _firstName;
+	if( _person ) return [_person valueForProperty:kABFirstNameProperty];
+	return nil;
 }
 
 - (NSString *) lastName {
-	return [_person valueForProperty:kABLastNameProperty];
+	if( _lastName ) return _lastName;
+	if( _person ) return [_person valueForProperty:kABLastNameProperty];
+	return nil;
 }
 
 - (NSString *) primaryEmail {
-	ABMultiValue *value = [_person valueForProperty:kABEmailProperty];
-	return [value valueAtIndex:[value indexForIdentifier:[value primaryIdentifier]]];
+	if( _primaryEmail ) return _primaryEmail;
+
+	if( _person ) {
+		ABMultiValue *value = [_person valueForProperty:kABEmailProperty];
+		return [value valueAtIndex:[value indexForIdentifier:[value primaryIdentifier]]];
+	}
+
+	return nil;
 }
 
 - (NSString *) givenNickname {
-	return [_person valueForProperty:kABNicknameProperty];
+	if( _givenNickname ) return _givenNickname;
+	if( _person ) return [_person valueForProperty:kABNicknameProperty];
+	return nil;
 }
 
 - (NSString *) speechVoice {
-	return [_person valueForProperty:JVBuddyAddressBookSpeechVoiceProperty];
+	return _speechVoice;
+}
+
+- (NSString *) uniqueIdentifier {
+	return _uniqueIdentifier;
 }
 
 #pragma mark -
 
 - (void) setFirstName:(NSString *) name {
-	[_person setValue:name forProperty:kABFirstNameProperty];
-	[[ABAddressBook sharedAddressBook] save];
+	id old = _firstName;
+	_firstName = [name copyWithZone:nil];
+	[old release];
 }
 
 - (void) setLastName:(NSString *) name {
-	[_person setValue:name forProperty:kABLastNameProperty];
-	[[ABAddressBook sharedAddressBook] save];
+	id old = _lastName;
+	_lastName = [name copyWithZone:nil];
+	[old release];
 }
 
 - (void) setPrimaryEmail:(NSString *) email {
-	ABMutableMultiValue *value = [[[_person valueForProperty:kABEmailProperty] mutableCopy] autorelease];
-
-	if( ! value ) {
-		value = [[[ABMutableMultiValue alloc] init] autorelease];
-		[value addValue:email withLabel:kABOtherLabel];
-	} else [value replaceValueAtIndex:[value indexForIdentifier:[value primaryIdentifier]] withValue:email];
-
-	[_person setValue:value forProperty:kABEmailProperty];
-	[[ABAddressBook sharedAddressBook] save];
+	id old = _primaryEmail;
+	_primaryEmail = [email copyWithZone:nil];
+	[old release];
 }
 
 - (void) setGivenNickname:(NSString *) name {
-	[_person setValue:name forProperty:kABNicknameProperty];
-	[[ABAddressBook sharedAddressBook] save];
+	id old = _givenNickname;
+	_givenNickname = [name copyWithZone:nil];
+	[old release];
 }
 
 - (void) setSpeechVoice:(NSString *) voice {
-	if( [voice length] ) [_person setValue:voice forProperty:JVBuddyAddressBookSpeechVoiceProperty];	
-	else [_person removeValueForProperty:JVBuddyAddressBookSpeechVoiceProperty];	
-	[[ABAddressBook sharedAddressBook] save];
+	id old = _speechVoice;
+	_speechVoice = [voice copyWithZone:nil];
+	[old release];
 }
 
 #pragma mark -
 
-- (NSString *) uniqueIdentifier {
-	return [_person uniqueId];
-}
-
-- (ABPerson *) person {
+- (ABPerson *) addressBookPersonRecord {
 	return _person;
 }
 
@@ -409,7 +529,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 	BOOL cameOnline = ( ! [_users count] ? YES : NO );
 	[_users addObject:user];
 
-	if( [self status] != MVChatUserAvailableStatus || [self status] != MVChatUserAwayStatus ) [self setActiveUser:user];
+	if( [self status] != MVChatUserAvailableStatus && [self status] != MVChatUserAwayStatus ) [self setActiveUser:user];
 	if( cameOnline ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyCameOnlineNotification object:self userInfo:nil];
 }
 
@@ -417,10 +537,8 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 	MVChatUser *user = [notification object];
 	[_users removeObject:user];
 
-	if( [[self activeUser] isEqualToChatUser:user] ) {
-		if( [_users count] ) [self setActiveUser:[_users lastObject]];
-		else [self setActiveUser:nil];
-	}
+	if( [[self activeUser] isEqualToChatUser:user] )
+		[self setActiveUser:[_users lastObject]];
 
 	if( ! [_users count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
 }
@@ -439,20 +557,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 
 - (void) _registerWithConnection:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
-	NSEnumerator *enumerator = [_rules objectEnumerator];
-	MVChatUserWatchRule *rule = nil;
-
-	while( ( rule = [enumerator nextObject] ) ) {
-		if( [[rule applicableServerDomains] count] ) {
-			NSEnumerator *domainEnumerator = [[rule applicableServerDomains] objectEnumerator];
-			NSString *domain = nil;
-
-			while( ( domain = [domainEnumerator nextObject] ) ) {
-				if( [[connection server] compare:domain options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch )] == NSOrderedSame )
-					[connection addChatUserWatchRule:rule];
-			}
-		} else [connection addChatUserWatchRule:rule];
-	}
+	[self registerWithConnection:connection];
 }
 
 - (void) _disconnected:(NSNotification *) notification {
@@ -460,25 +565,21 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 	NSEnumerator *enumerator = [[[_users copy] autorelease] objectEnumerator];
 	MVChatUser *user = nil;
 
-	while( ( user = [enumerator nextObject] ) ) {
-		if( [[user connection] isEqual:connection] ) {
+	while( ( user = [enumerator nextObject] ) )
+		if( [[user connection] isEqual:connection] )
 			[_users removeObject:user];
-			if( ! [_users count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
-		}
-	}
 
 	if( [[[self activeUser] connection] isEqual:connection] )
 		[self setActiveUser:[_users lastObject]];
+
+	if( ! [_users count] )
+		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
 }
 
 - (void) _ruleMatched:(NSNotification *) notification {
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 
-	[_users addObject:user];
-	if( ! [self activeUser] )
-		[self setActiveUser:user];
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyOnline: ) name:MVChatConnectionWatchedUserOfflineNotification object:user];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyOnline: ) name:MVChatConnectionWatchedUserOnlineNotification object:user];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyOffline: ) name:MVChatConnectionWatchedUserOfflineNotification object:user];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyIdleUpdate: ) name:MVChatUserIdleTimeUpdatedNotification object:user];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyStatusChanged: ) name:MVChatUserStatusChangedNotification object:user];

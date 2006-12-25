@@ -1,4 +1,5 @@
 #import "MVConnectionsController.h"
+#import "MVBuddyListController.h"
 #import "JVBuddyInspector.h"
 
 @implementation JVBuddy (JVBuddyInspection)
@@ -82,6 +83,7 @@
 
 - (BOOL) shouldUnload {
 	[[view window] makeFirstResponder:view];
+	[[MVBuddyListController sharedBuddyList] save];
 	return YES;
 }
 
