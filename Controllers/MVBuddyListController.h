@@ -26,17 +26,19 @@ typedef enum {
 
 	IBOutlet NSWindow *newPersonWindow;
 	IBOutlet NSTextField *nickname;
-	IBOutlet NSPopUpButton *server;
+	IBOutlet NSTableView *servers;
 	IBOutlet NSTextField *firstName;
 	IBOutlet NSTextField *lastName;
 	IBOutlet NSTextField *email;
 	IBOutlet NSImageView *image;
 	IBOutlet NSButton *addButton;
 
+	NSString *_addPerson;
+	NSMutableSet *_addServers;
+
 	NSMutableSet *_buddyList;
 	NSMutableSet *_onlineBuddies;
 	NSMutableArray *_buddyOrder;
-	NSString *_addPerson;
 
 	BOOL _showFullNames;
 	BOOL _showNicknameAndServer;

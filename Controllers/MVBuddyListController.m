@@ -10,13 +10,6 @@
 
 static MVBuddyListController *sharedInstance = nil;
 
-@interface ABPerson (ABPersonPrivate)
-+ (ABPerson *) personFromDictionary:(NSDictionary *) dictionary;
-- (NSDictionary *) dictionaryRepresentation;
-@end
-
-#pragma mark -
-
 @interface MVBuddyListController (MVBuddyListControllerPrivate)
 - (void) _loadBuddyList;
 - (void) _sortBuddies;
@@ -29,12 +22,6 @@ static MVBuddyListController *sharedInstance = nil;
 #pragma mark -
 
 @implementation MVBuddyListController
-+ (void) initialize {
-	[ABPerson addPropertiesAndTypes:[NSDictionary dictionaryWithObjectsAndKeys:
-		[NSNumber numberWithUnsignedInt:kABMultiStringProperty], JVBuddyAddressBookIRCNicknameProperty,
-		[NSNumber numberWithUnsignedInt:kABStringProperty], JVBuddyAddressBookSpeechVoiceProperty, nil]];
-}
-
 + (MVBuddyListController *) sharedBuddyList {
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
 }
@@ -86,12 +73,14 @@ static MVBuddyListController *sharedInstance = nil;
 	[_buddyOrder release];
 	[_oldPositions release];
 	[_addPerson release];
+	[_addServers release];
 
 	_onlineBuddies = nil;
 	_buddyList = nil;
 	_buddyOrder = nil;
 	_oldPositions = nil;
 	_addPerson = nil;
+	_addServers = nil;
 
 	[super dealloc];
 }
@@ -112,8 +101,13 @@ static MVBuddyListController *sharedInstance = nil;
 	[prototypeCell setFont:[NSFont systemFontOfSize:11.]];
 	[theColumn setDataCell:prototypeCell];
 
-	[pickerView addProperty:JVBuddyAddressBookIRCNicknameProperty];
-	[pickerView setColumnTitle:NSLocalizedString( @"IRC Nickname", "irc nickname buddy picker column title" ) forProperty:JVBuddyAddressBookIRCNicknameProperty];
+	[pickerView addProperty:kABNicknameProperty];
+	[pickerView addProperty:kABAIMInstantProperty];
+	[pickerView addProperty:kABJabberInstantProperty];
+	[pickerView addProperty:kABMSNInstantProperty];
+	[pickerView addProperty:kABYahooInstantProperty];
+	[pickerView addProperty:kABICQInstantProperty];
+	[pickerView addProperty:kABEmailProperty];
 
 	[pickerView setAllowsMultipleSelection:NO];
 	[pickerView setAllowsGroupSelection:NO];
@@ -202,25 +196,8 @@ static MVBuddyListController *sharedInstance = nil;
 		[[[self window] attachedSheet] orderOut:nil];
 	}
 
-	[_addPerson autorelease];
+	[_addPerson release];
 	_addPerson = nil;
-
-	NSEnumerator *enumerator = [[[MVConnectionsController defaultController] connections] objectEnumerator];
-	MVChatConnection *connection = nil;
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-	NSMenuItem *item = nil;
-
-	while( ( connection = [enumerator nextObject] ) ) {
-		item = [[[NSMenuItem alloc] initWithTitle:[connection server] action:NULL keyEquivalent:@""] autorelease];
-		[menu addItem:item];
-	}
-
-	[server setMenu:menu];
-
-	[firstName setObjectValue:@""];
-	[lastName setObjectValue:@""];
-	[email setObjectValue:@""];
-	[image setImage:nil];
 
 	[[NSApplication sharedApplication] beginSheet:pickerWindow modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
@@ -239,16 +216,10 @@ static MVBuddyListController *sharedInstance = nil;
 	}
 
 	ABPerson *person = [[pickerView selectedRecords] lastObject];
+	[_addPerson release];
+	_addPerson = [[person uniqueId] copy];
 
-	if( ! [(NSDictionary *)[person valueForProperty:JVBuddyAddressBookIRCNicknameProperty] count] ) {
-		[_addPerson autorelease];
-		_addPerson = [[person uniqueId] copy];
-		[self showNewPersonSheet:nil];
-	} else {
-//		JVBuddy *buddy = [JVBuddy buddyWithPerson:person];
-//		[self _addBuddyToList:buddy];
-		[self save];
-	}
+	[self showNewPersonSheet:nil];
 }
 
 #pragma mark -
@@ -259,16 +230,35 @@ static MVBuddyListController *sharedInstance = nil;
 		[[[self window] attachedSheet] orderOut:nil];
 	}
 
-	ABPerson *person = nil;
-	if( _addPerson ) person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:_addPerson];
-	if( person ) {
-		[firstName setObjectValue:[person valueForProperty:kABFirstNameProperty]];
-		[lastName setObjectValue:[person valueForProperty:kABLastNameProperty]];
-		ABMultiValue *value = [person valueForProperty:kABEmailProperty];
-		unsigned index = [value indexForIdentifier:[value primaryIdentifier]];
-		if( index != NSNotFound ) [email setObjectValue:[value valueAtIndex:index]];
-		[image setImage:[[[NSImage alloc] initWithData:[person imageData]] autorelease]];
+	[_addServers release];
+	_addServers = [[NSMutableSet allocWithZone:nil] init];
+
+	[servers reloadData];
+
+	if( _addPerson ) {
+		ABPerson *person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:_addPerson];
+		if( person ) {
+			[nickname setObjectValue:[person valueForProperty:kABNicknameProperty]];
+			[firstName setObjectValue:[person valueForProperty:kABFirstNameProperty]];
+			[lastName setObjectValue:[person valueForProperty:kABLastNameProperty]];
+
+			ABMultiValue *value = [person valueForProperty:kABEmailProperty];
+			unsigned index = [value indexForIdentifier:[value primaryIdentifier]];
+			if( index != NSNotFound ) [email setObjectValue:[value valueAtIndex:index]];
+
+			[image setImage:[[[NSImage alloc] initWithData:[person imageData]] autorelease]];
+		}
+	} else {
+		[nickname setObjectValue:@""];
+		[firstName setObjectValue:@""];
+		[lastName setObjectValue:@""];
+		[email setObjectValue:@""];
+		[image setImage:nil];
 	}
+
+	if( [[nickname stringValue] length] && [_addServers count] )
+		[addButton setEnabled:YES];
+	else [addButton setEnabled:NO];
 
 	[[NSApplication sharedApplication] beginSheet:newPersonWindow modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
@@ -279,8 +269,11 @@ static MVBuddyListController *sharedInstance = nil;
 		[[[self window] attachedSheet] orderOut:nil];
 	}
 
-	[_addPerson autorelease];
+	[_addPerson release];
 	_addPerson = nil;
+
+	[_addServers release];
+	_addServers = nil;
 }
 
 - (IBAction) confirmNewBuddy:(id) sender {
@@ -289,78 +282,37 @@ static MVBuddyListController *sharedInstance = nil;
 		[[[self window] attachedSheet] orderOut:nil];
 	}
 
-	ABPerson *person = nil;
-	if( _addPerson ) person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:_addPerson];
-	if( ! person ) {
-		NSMutableDictionary *info = [NSMutableDictionary dictionary];
-		NSMutableDictionary *sub = nil;
+	JVBuddy *buddy = [[JVBuddy allocWithZone:nil] init];
 
-		if( [(NSString *)[firstName objectValue] length] || [(NSString *)[lastName objectValue] length] || [(NSString *)[email objectValue] length] ) {
-			[info setObject:[firstName objectValue] forKey:kABFirstNameProperty];
-		} else [info setObject:[nickname objectValue] forKey:kABFirstNameProperty];
+	[buddy setGivenNickname:[nickname stringValue]];
+	[buddy setFirstName:[firstName stringValue]];
+	[buddy setLastName:[lastName stringValue]];
+	[buddy setPrimaryEmail:[email stringValue]];
+	[buddy setPicture:[image image]];
 
-		if( [(NSString *)[lastName objectValue] length] )
-			[info setObject:[lastName objectValue] forKey:kABLastNameProperty];
-
-		if( [(NSString *)[email objectValue] length] ) {
-			sub = [NSMutableDictionary dictionary];
-			[sub setObject:[NSArray arrayWithObject:kABOtherLabel] forKey:@"labels"];
-			[sub setObject:[NSArray arrayWithObject:[email objectValue]] forKey:@"values"];
-			[info setObject:sub forKey:kABEmailProperty];
-		}
-
-		sub = [NSMutableDictionary dictionary];
-		[sub setObject:[NSArray arrayWithObject:[server titleOfSelectedItem]] forKey:@"labels"];
-		[sub setObject:[NSArray arrayWithObject:[nickname objectValue]] forKey:@"values"];
-		[info setObject:sub forKey:JVBuddyAddressBookIRCNicknameProperty];
-
-		[info setObject:[NSString stringWithFormat:NSLocalizedString( @"IRC Nickname: %@ (%@)", "new buddy card note" ), [nickname objectValue], [server titleOfSelectedItem]] forKey:kABNoteProperty];
-
-		person = [ABPerson personFromDictionary:info];
-
-		[person setImageData:[[image image] TIFFRepresentation]];
-
-		[[ABAddressBook sharedAddressBook] addRecord:person];
-		[[ABAddressBook sharedAddressBook] save];
-	} else {
-		ABMutableMultiValue *value = [[[ABMutableMultiValue alloc] init] autorelease];
-		[value addValue:[nickname objectValue] withLabel:[server titleOfSelectedItem]];
-		[person setValue:value forProperty:JVBuddyAddressBookIRCNicknameProperty];
-
-		if( [(NSString *)[firstName objectValue] length] || [(NSString *)[lastName objectValue] length] || [(NSString *)[email objectValue] length] ) {
-			[person setValue:[firstName objectValue] forProperty:kABFirstNameProperty];
-		} else [person setValue:[nickname objectValue] forProperty:kABFirstNameProperty];
-		[person setValue:[lastName objectValue] forProperty:kABLastNameProperty];
-
-		ABMutableMultiValue *emailValue = [[[person valueForProperty:kABEmailProperty] mutableCopy] autorelease];
-		unsigned index = [emailValue indexForIdentifier:[emailValue primaryIdentifier]];
-		if( emailValue && index != NSNotFound ) {
-			[emailValue replaceValueAtIndex:index withValue:[email objectValue]];
-		} else if( [(NSString *)[email objectValue] length] ) {
-			emailValue = [[[ABMutableMultiValue alloc] init] autorelease];
-			[emailValue addValue:[email objectValue] withLabel:kABOtherLabel];
-		}
-
-		if( [emailValue count] )
-			[person setValue:emailValue forProperty:kABEmailProperty];
-
-		[person setImageData:[[image image] TIFFRepresentation]];
-
-		[[ABAddressBook sharedAddressBook] save];
+	if( _addPerson ) {
+		ABPerson *person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:_addPerson];
+		if( person ) [buddy setAddressBookPersonRecord:person];
 	}
 
-	if( person ) {
-//		JVBuddy *buddy = [JVBuddy buddyWithPerson:person];
-//		[self _addBuddyToList:buddy];
-		[self save];
-	}
+	MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:nil] init];
+	[rule setNickname:[nickname stringValue]];
+	[rule setApplicableServerDomains:[_addServers allObjects]];
+	[buddy addWatchRule:rule];
 
-	[_addPerson autorelease];
+	[self _addBuddyToList:buddy];
+	[self save];
+
+	[_addPerson release];
 	_addPerson = nil;
+
+	[_addServers release];
+	_addServers = nil;
 }
 
 - (void) controlTextDidChange:(NSNotification *) notification {
-	if( [(NSString *)[nickname objectValue] length] >= 1 ) [addButton setEnabled:YES];
+	if( [[nickname stringValue] length] && [_addServers count] )
+		[addButton setEnabled:YES];
 	else [addButton setEnabled:NO];
 }
 
@@ -387,7 +339,7 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) setNewBuddyServer:(MVChatConnection *) connection {
-	[server selectItemWithTitle:[connection server]];
+	
 }
 
 #pragma mark -
@@ -605,7 +557,15 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
-	if( row == -1 || row >= (int)[_buddyOrder count] ) return nil;
+	if( view == servers ) {
+		MVChatConnection *connection = [[[MVConnectionsController defaultController] connections] objectAtIndex:row];
+		if( [[column identifier] isEqualToString:@"domain"] )
+			return [connection server];
+		return nil;
+	}
+
+	if( view != buddies || row == -1 || row >= (int)[_buddyOrder count] )
+		return nil;
 
 	if( [[column identifier] isEqualToString:@"buddy"] ) {
 		if( _showIcons ) {
@@ -624,7 +584,16 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(int) row {
-	if( row == -1 || row >= (int)[_buddyOrder count] ) return;
+	if( view == servers ) {
+		MVChatConnection *connection = [[[MVConnectionsController defaultController] connections] objectAtIndex:row];
+		if( [[column identifier] isEqualToString:@"check"] )
+			[cell setState:( [_addServers containsObject:[connection server]] )];
+		return;
+	}
+
+	if( view != buddies || row == -1 || row >= (int)[_buddyOrder count] )
+		return;
+
 	if( [[column identifier] isEqualToString:@"buddy"] ) {
 		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 		MVChatUser *user = [buddy activeUser];
@@ -692,7 +661,25 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) tableColumn row:(int) row {
-	if( row == -1 || row >= (int)[_buddyOrder count] ) return;
+	if( tableView == servers ) {
+		if( [[tableColumn identifier] isEqualToString:@"check"] ) {
+			if( [object isKindOfClass:[NSNumber class]] ) {
+				MVChatConnection *connection = [[[MVConnectionsController defaultController] connections] objectAtIndex:row];
+				if( [object boolValue] ) [_addServers addObject:[connection server]];
+				else [_addServers removeObject:[connection server]];
+
+				if( [[nickname stringValue] length] && [_addServers count] )
+					[addButton setEnabled:YES];
+				else [addButton setEnabled:NO];
+			}
+		}
+
+		return;
+	}
+
+	if( tableView != buddies || row == -1 || row >= (int)[_buddyOrder count] )
+		return;
+
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 	id users = [buddy users];
 
@@ -711,6 +698,8 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (NSMenu *) tableView:(MVTableView *) tableView menuForTableColumn:(NSTableColumn *) tableColumn row:(int) row {
+	if( tableView != buddies ) return nil;
+
 	NSMenu *menu = [[actionMenu copyWithZone:[self zone]] autorelease];
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 
@@ -744,7 +733,8 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (NSString *) tableView:(MVTableView *) tableView toolTipForTableColumn:(NSTableColumn *) column row:(int) row {
-	if( row == -1 || row >= (int)[_buddyOrder count] ) return nil;
+	if( tableView != buddies || row == -1 || row >= (int)[_buddyOrder count] ) return nil;
+
 	NSMutableString *ret = [NSMutableString string];
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 	MVChatUser *user = [buddy activeUser];
@@ -768,6 +758,8 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
+	if( [notification object] != buddies ) return;
+
 	BOOL enabled = ! ( [buddies selectedRow] == -1 );
 	[sendMessageButton setEnabled:enabled];
 	[infoButton setEnabled:enabled];
@@ -775,12 +767,16 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (NSDragOperation) tableView:(NSTableView *) tableView validateDrop:(id <NSDraggingInfo>) info proposedRow:(int) row proposedDropOperation:(NSTableViewDropOperation) operation {
+	if( tableView != buddies ) return NSDragOperationNone;
+
 	if( operation == NSTableViewDropOn && row != -1 )
 		return NSDragOperationMove;
 	return NSDragOperationNone;
 }
 
 - (BOOL) tableView:(NSTableView *) tableView acceptDrop:(id <NSDraggingInfo>) info row:(int) row dropOperation:(NSTableViewDropOperation) operation {
+	if( tableView != buddies ) return NO;
+
 	NSPasteboard *board = [info draggingPasteboard];
 	if( [board availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]] ) {
 		BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
@@ -800,6 +796,8 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (NSRange) tableView:(MVTableView *) tableView rowsInRect:(NSRect) rect defaultRange:(NSRange) defaultRange {
+	if( tableView != buddies ) return defaultRange;
+
 	if( _animating ) return NSMakeRange( 0, [_buddyOrder count] );
 	else return defaultRange;
 }
@@ -978,6 +976,8 @@ static MVBuddyListController *sharedInstance = nil;
 		[_buddyOrder addObject:buddy];
 		[self _manuallySortAndUpdate];
 	}
+
+	[buddy registerWithApplicableConnections];
 }
 
 - (void) _loadBuddyList {

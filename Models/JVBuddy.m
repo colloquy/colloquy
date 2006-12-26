@@ -29,11 +29,21 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 
 #pragma mark -
 
-- (id) initWithDictionaryRepresentation:(NSDictionary *) dictionary {
+- (id) init {
 	if( ( self = [super init] ) ) {
 		_rules = [[NSMutableArray allocWithZone:nil] initWithCapacity:5];
 		_users = [[NSMutableArray allocWithZone:nil] initWithCapacity:5];
+		_uniqueIdentifier = [[NSString locallyUniqueString] retain];
 
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _registerWithConnection: ) name:MVChatConnectionDidConnectNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _disconnected: ) name:MVChatConnectionDidDisconnectNotification object:nil];
+	}
+
+	return self;
+}
+
+- (id) initWithDictionaryRepresentation:(NSDictionary *) dictionary {
+	if( ( self = [self init] ) ) {
 		NSData *data = [dictionary objectForKey:@"picture"];
 		if( [data isKindOfClass:[NSData class]] && [data length] )
 			_picture = [[NSKeyedUnarchiver unarchiveObjectWithData:data] retain];
@@ -59,10 +69,15 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 			_speechVoice = [string copyWithZone:nil];
 
 		string = [dictionary objectForKey:@"uniqueIdentifier"];
-		if( [string isKindOfClass:[NSString class]] )
+		if( [string isKindOfClass:[NSString class]] ) {
+			[_uniqueIdentifier release];
 			_uniqueIdentifier = [string copyWithZone:nil];
-		if( ! [_uniqueIdentifier length] )
+		}
+
+		if( ! [_uniqueIdentifier length] ) {
+			[_uniqueIdentifier release];
 			_uniqueIdentifier = [[NSString locallyUniqueString] retain];
+		}
 
 		string = [dictionary objectForKey:@"addressBookPersonRecord"];
 		if( [string isKindOfClass:[NSString class]] )
@@ -75,11 +90,6 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 			if( rule ) [self addWatchRule:rule];
 			[rule release];
 		}
-
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _registerWithConnection: ) name:MVChatConnectionDidConnectNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _disconnected: ) name:MVChatConnectionDidDisconnectNotification object:nil];
-
-		[self registerWithApplicableConnections];
 	}
 
 	return self;
@@ -428,6 +438,12 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 
 - (ABPerson *) addressBookPersonRecord {
 	return _person;
+}
+
+- (void) setAddressBookPersonRecord:(ABPerson *) record {
+	id old = _person;
+	_person = [record retain];
+	[old release];
 }
 
 - (void) editInAddressBook {

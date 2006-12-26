@@ -82,6 +82,7 @@ typedef enum {
 - (void) setSpeechVoice:(NSString *) voice;
 
 - (ABPerson *) addressBookPersonRecord;
+- (void) setAddressBookPersonRecord:(ABPerson *) record;
 - (void) editInAddressBook;
 - (void) viewInAddressBook;
 
