@@ -41,7 +41,7 @@ typedef enum {
 - (void) registerWithConnection:(MVChatConnection *) connection;
 - (void) registerWithApplicableConnections;
 - (void) unregisterWithConnection:(MVChatConnection *) connection;
-- (void) unregisterWithApplicableConnections;
+- (void) unregisterWithConnections;
 
 - (MVChatUser *) activeUser;
 - (void) setActiveUser:(MVChatUser *) user;
@@ -60,6 +60,7 @@ typedef enum {
 
 - (NSArray *) users;
 
+- (NSArray *) watchRules;
 - (void) addWatchRule:(MVChatUserWatchRule *) rule;
 - (void) removeWatchRule:(MVChatUserWatchRule *) rule;
 

@@ -306,7 +306,6 @@
 }
 
 - (void) ruleSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	// contextInfo: YES if we have to create a new rule, NO to change an existing one
 	if( returnCode ) {
 		NSString *user = nil;
 		if( [ruleUsesSender state] == NSOnState ) {

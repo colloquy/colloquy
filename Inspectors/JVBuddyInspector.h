@@ -12,14 +12,29 @@
 	IBOutlet NSTextField *lastName;
 	IBOutlet NSTextField *nickname;
 	IBOutlet NSTextField *email;
-	IBOutlet NSPopUpButton *servers;
-	IBOutlet NSTableView *nicknames;
-	IBOutlet NSButton *removeNickname;
-	IBOutlet NSButton *addNickname;
 	IBOutlet NSPopUpButton *voices;
+	IBOutlet NSTableView *identifiersTable;
+	IBOutlet NSButton *removeIdentifier;
+	IBOutlet NSButton *addIdentifier;
+	IBOutlet NSButton *editIdentifier;
+
+	IBOutlet NSPanel *identifierEditPanel;
+	IBOutlet NSTextField *identifierNickname;
+	IBOutlet NSTextField *identifierRealName;
+	IBOutlet NSTextField *identifierUsername;
+	IBOutlet NSTextField *identifierHostname;
+	IBOutlet NSMatrix *identifierConnections;
+	IBOutlet NSTableView *identifierDomainsTable;
+	IBOutlet NSButton *removeDomain;
+	IBOutlet NSButton *addDomain;
+	IBOutlet NSButton *identifierOkay;
+
+	MVChatUserWatchRule *_currentRule;
+	NSMutableArray *_editDomains;
+
 	JVBuddy *_buddy;
-	NSMutableArray *_activeUsers;
 	BOOL _nibLoaded;
+	BOOL _identifierIsNew;
 }
 - (id) initWithBuddy:(JVBuddy *) buddy;
 
@@ -30,10 +45,17 @@
 - (IBAction) changeEmail:(id) sender;
 - (IBAction) changeSpeechVoice:(id) sender;
 
-- (IBAction) changeServer:(id) sender;
+- (IBAction) addIdentifier:(id) sender;
+- (IBAction) editIdentifier:(id) sender;
+- (IBAction) removeIdentifier:(id) sender;
 
-- (IBAction) addNickname:(id) sender;
-- (IBAction) removeNickname:(id) sender;
+- (IBAction) addDomain:(id) sender;
+- (IBAction) removeDomain:(id) sender;
 
-- (IBAction) editCard:(id) sender;
+- (IBAction) changeConnectionState:(id) sender;
+
+- (IBAction) discardIdentifierChanges:(id) sender;
+- (IBAction) saveIdentifierChanges:(id) sender;
+
+- (IBAction) changeCard:(id) sender;
 @end

@@ -86,7 +86,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 }
 
 - (void) dealloc {
-	[self unregisterWithApplicableConnections];
+	[self unregisterWithConnections];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
@@ -218,7 +218,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 		[connection removeChatUserWatchRule:rule];
 }
 
-- (void) unregisterWithApplicableConnections {
+- (void) unregisterWithConnections {
 	NSEnumerator *enumerator = [_rules objectEnumerator];
 	MVChatUserWatchRule *rule = nil;
 
@@ -302,6 +302,10 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 }
 
 #pragma mark -
+
+- (NSArray *) watchRules {
+	return _rules;
+}
 
 - (void) addWatchRule:(MVChatUserWatchRule *) rule {
 	if( [_rules containsObject:rule] ) return;
