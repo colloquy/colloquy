@@ -63,7 +63,7 @@ typedef enum {
 
 - (JVBuddy *) buddyForUser:(MVChatUser *) user;
 - (NSArray *) buddies;
-- (NSArray *) onlineBuddies;
+- (NSSet *) onlineBuddies;
 
 - (IBAction) showBuddyPickerSheet:(id) sender;
 - (IBAction) cancelBuddySelection:(id) sender;

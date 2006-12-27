@@ -182,8 +182,8 @@ static MVBuddyListController *sharedInstance = nil;
 	return _buddyOrder;
 }
 
-- (NSArray *) onlineBuddies {
-	return [_onlineBuddies allObjects];
+- (NSSet *) onlineBuddies {
+	return _onlineBuddies;
 }
 
 #pragma mark -
@@ -297,7 +297,28 @@ static MVBuddyListController *sharedInstance = nil;
 
 	MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:nil] init];
 	[rule setNickname:[nickname stringValue]];
-	[rule setApplicableServerDomains:[_addServers allObjects]];
+
+	NSMutableArray *newServers = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_addServers count]];
+	NSEnumerator *enumerator = [_addServers objectEnumerator];
+	NSString *server = nil;
+
+	while( ( server = [enumerator nextObject] ) ) {
+		unsigned int ip = 0;
+		BOOL ipAddress = ( sscanf( [server UTF8String], "%u.%u.%u.%u", &ip, &ip, &ip, &ip ) == 4 );
+
+		if( ! ipAddress ) {
+			NSArray *parts = [server componentsSeparatedByString:@"."];
+			unsigned count = [parts count];
+			if( count > 2 )
+				server = [NSString stringWithFormat:@"%@.%@", [parts objectAtIndex:(count - 2)], [parts objectAtIndex:(count - 1)]];
+		}
+
+		[newServers addObject:server];
+	}
+
+	[rule setApplicableServerDomains:newServers];
+	[newServers release];
+
 	[buddy addWatchRule:rule];
 
 	[self _addBuddyToList:buddy];
@@ -623,7 +644,7 @@ static MVBuddyListController *sharedInstance = nil;
 		}
 	} else if( [[column identifier] isEqualToString:@"switch"] ) {
 		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
-		id users = [buddy users];
+		NSSet *users = [buddy users];
 
 		if( [users count] >= 2 ) {
 			NSMutableArray *ordered = nil;
@@ -681,12 +702,9 @@ static MVBuddyListController *sharedInstance = nil;
 		return;
 
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
-	id users = [buddy users];
+	NSSet *users = [buddy users];
 
-	NSMutableArray *ordered = nil;
-	if( [users isKindOfClass:[NSArray class]] ) ordered = [users mutableCopyWithZone:nil];
-	else if( [users isKindOfClass:[NSSet class]] ) ordered = [[users allObjects] mutableCopyWithZone:nil];
-
+	NSMutableArray *ordered = [[users allObjects] mutableCopyWithZone:nil];
 	[ordered sortUsingSelector:@selector( compareByNickname: )];
 
 	[buddy setActiveUser:[ordered objectAtIndex:[object unsignedIntValue]]];

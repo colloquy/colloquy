@@ -32,7 +32,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 - (id) init {
 	if( ( self = [super init] ) ) {
 		_rules = [[NSMutableArray allocWithZone:nil] initWithCapacity:5];
-		_users = [[NSMutableArray allocWithZone:nil] initWithCapacity:5];
+		_users = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
 		_uniqueIdentifier = [[NSString locallyUniqueString] retain];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _registerWithConnection: ) name:MVChatConnectionDidConnectNotification object:nil];
@@ -307,7 +307,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 
 #pragma mark -
 
-- (NSArray *) users {
+- (NSSet *) users {
 	return _users;
 }
 
@@ -558,7 +558,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 	[_users removeObject:user];
 
 	if( [[self activeUser] isEqualToChatUser:user] )
-		[self setActiveUser:[_users lastObject]];
+		[self setActiveUser:[_users anyObject]];
 
 	if( ! [_users count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
 }
@@ -590,7 +590,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 			[_users removeObject:user];
 
 	if( [[[self activeUser] connection] isEqual:connection] )
-		[self setActiveUser:[_users lastObject]];
+		[self setActiveUser:[_users anyObject]];
 
 	if( ! [_users count] )
 		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];

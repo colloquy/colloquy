@@ -118,8 +118,7 @@ static NSMenu *favoritesMenu = nil;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationQuitting: ) name:NSApplicationWillTerminateNotification object:nil];
 
-		// do this later to catch modifier keys being held down to prevent automatic actions
-		[self performSelector:@selector( _loadBookmarkList ) withObject:nil afterDelay:0.];
+		[self _loadBookmarkList];
 	}
 
 	return self;
@@ -566,12 +565,14 @@ static NSMenu *favoritesMenu = nil;
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	id info = nil;
 
+	address = [address stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@". \t\n"]];
+
 	while( ( info = [enumerator nextObject] ) ) {
 		MVChatConnection *connection = [info objectForKey:@"connection"];
-		if( [[connection server] compare:address options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch )] == NSOrderedSame ) {
-			if( [connection isConnected] )
-				return connection;
-		}
+		NSString *server = [connection server];
+		NSRange range = [server rangeOfString:address options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch ) range:NSMakeRange( 0, [server length] )];
+		if( range.location != NSNotFound && ( range.location == 0 || [server characterAtIndex:( range.location - 1 )] == '.' ) )
+			return connection;
 	}
 
 	return nil;
@@ -582,9 +583,15 @@ static NSMenu *favoritesMenu = nil;
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	id info = nil;
 
-	while( ( info = [enumerator nextObject] ) )
-		if( [[(MVChatConnection *)[info objectForKey:@"connection"] server] compare:address options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch )] == NSOrderedSame )
-			[ret addObject:[info objectForKey:@"connection"]];
+	address = [address stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@". \t\n"]];
+
+	while( ( info = [enumerator nextObject] ) ) {
+		MVChatConnection *connection = [info objectForKey:@"connection"];
+		NSString *server = [connection server];
+		NSRange range = [server rangeOfString:address options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch ) range:NSMakeRange( 0, [server length] )];
+		if( range.location != NSNotFound && ( range.location == 0 || [server characterAtIndex:( range.location - 1 )] == '.' ) )
+			[ret addObject:connection];
+	}
 
 	return ret;
 }

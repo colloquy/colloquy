@@ -22,7 +22,7 @@ typedef enum {
 @interface JVBuddy : NSObject {
 	ABPerson *_person;
 	NSMutableArray *_rules;
-	NSMutableArray *_users;
+	NSMutableSet *_users;
 	MVChatUser *_activeUser;
 	NSImage *_picture;
 	NSString *_firstName;
@@ -58,7 +58,7 @@ typedef enum {
 - (NSString *) displayName;
 - (NSString *) nickname;
 
-- (NSArray *) users;
+- (NSSet *) users;
 
 - (NSArray *) watchRules;
 - (void) addWatchRule:(MVChatUserWatchRule *) rule;
