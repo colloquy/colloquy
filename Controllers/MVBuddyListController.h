@@ -61,6 +61,8 @@ typedef enum {
 - (IBAction) showBuddyList:(id) sender;
 - (IBAction) hideBuddyList:(id) sender;
 
+- (void) addBuddy:(JVBuddy *) buddy;
+
 - (JVBuddy *) buddyForUser:(MVChatUser *) user;
 - (NSArray *) buddies;
 - (NSSet *) onlineBuddies;

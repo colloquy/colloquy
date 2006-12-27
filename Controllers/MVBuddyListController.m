@@ -16,7 +16,6 @@ static MVBuddyListController *sharedInstance = nil;
 - (void) _manuallySortAndUpdate;
 - (void) _setBuddiesNeedSortAnimated;
 - (void) _sortBuddiesAnimated:(id) sender;
-- (void) _addBuddyToList:(JVBuddy *) buddy;
 @end
 
 #pragma mark -
@@ -163,6 +162,18 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (IBAction) hideBuddyList:(id) sender {
 	[[self window] orderOut:nil];
+}
+
+#pragma mark -
+
+- (void) addBuddy:(JVBuddy *) buddy {
+	[_buddyList addObject:buddy];
+	if( _showOfflineBuddies && ! [_buddyOrder containsObject:buddy] ) {
+		[_buddyOrder addObject:buddy];
+		[self _manuallySortAndUpdate];
+	}
+
+	[buddy registerWithApplicableConnections];
 }
 
 #pragma mark -
@@ -321,7 +332,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 	[buddy addWatchRule:rule];
 
-	[self _addBuddyToList:buddy];
+	[self addBuddy:buddy];
 	[self save];
 
 	[_addPerson release];
@@ -386,10 +397,10 @@ static MVBuddyListController *sharedInstance = nil;
 	[panel setCanChooseDirectories:NO];
 	[panel setAllowsMultipleSelection:YES];
 
-	NSView *view = [[[NSView alloc] initWithFrame:NSMakeRect( 0., 0., 200., 28. )] autorelease];
+	NSView *view = [[NSView alloc] initWithFrame:NSMakeRect( 0., 0., 200., 28. )];
 	[view setAutoresizingMask:( NSViewWidthSizable | NSViewMaxXMargin )];
 
-	NSButton *passiveButton = [[[NSButton alloc] initWithFrame:NSMakeRect( 0., 6., 200., 18. )] autorelease];
+	NSButton *passiveButton = [[NSButton alloc] initWithFrame:NSMakeRect( 0., 6., 200., 18. )];
 	[[passiveButton cell] setButtonType:NSSwitchButton];
 	[passiveButton setState:passive];
 	[passiveButton setTitle:NSLocalizedString( @"Send File Passively", "send files passively file send open dialog button" )];
@@ -400,8 +411,10 @@ static MVBuddyListController *sharedInstance = nil;
 
 	[view setFrame:frame];
 	[view addSubview:passiveButton];
+	[passiveButton release];
 
 	[panel setAccessoryView:view];
+	[view release];
 
 	if( [panel runModalForTypes:nil] == NSOKButton ) {
 		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
@@ -597,8 +610,9 @@ static MVBuddyListController *sharedInstance = nil;
 				[ret setScalesWhenResized:YES];
 				[ret setSize:NSMakeSize( 32., 32. )];
 			}
+
 			return ret;
-		} else return nil;
+		}
 	}
 
 	return nil;
@@ -647,31 +661,32 @@ static MVBuddyListController *sharedInstance = nil;
 		NSSet *users = [buddy users];
 
 		if( [users count] >= 2 ) {
-			NSMutableArray *ordered = nil;
-			if( [users isKindOfClass:[NSArray class]] ) ordered = [users mutableCopyWithZone:nil];
-			else if( [users isKindOfClass:[NSSet class]] ) ordered = [[users allObjects] mutableCopyWithZone:nil];
-			else return;
-
+			NSMutableArray *ordered = [[users allObjects] mutableCopyWithZone:nil];
 			[ordered sortUsingSelector:@selector( compareByNickname: )];
 
-			NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-			NSMenuItem *item = nil;
+			NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+			[menu setAutoenablesItems:NO];
+
 			NSEnumerator *userEnumerator = [ordered objectEnumerator];
 			MVChatUser *activeUser = [buddy activeUser];
+			NSMenuItem *item = nil;
 			MVChatUser *user = nil;
 
-			[menu setAutoenablesItems:NO];
 			while( ( user = [userEnumerator nextObject] ) ) {
-				item = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [user nickname], [user serverAddress]] action:NULL keyEquivalent:@""] autorelease];
+				item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [user nickname], [user serverAddress]] action:NULL keyEquivalent:@""];
 				if( [user isEqualToChatUser:activeUser] ) [item setState:NSOnState];
 				[menu addItem:item];
+				[item release];
 			}
 
 			[ordered release];
 
 			[cell setMenu:menu];
+			[menu release];
+
 			[cell setArrowPosition:NSPopUpArrowAtCenter];
 			[cell setEnabled:YES];
+
 			if( _showIcons || _showNicknameAndServer ) [cell setControlSize:NSRegularControlSize];
 			else [cell setControlSize:NSSmallControlSize];
 		} else {
@@ -718,7 +733,7 @@ static MVBuddyListController *sharedInstance = nil;
 - (NSMenu *) tableView:(MVTableView *) tableView menuForTableColumn:(NSTableColumn *) tableColumn row:(int) row {
 	if( tableView != buddies ) return nil;
 
-	NSMenu *menu = [[actionMenu copyWithZone:[self zone]] autorelease];
+	NSMenu *menu = [actionMenu copyWithZone:[self zone]];
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
@@ -747,7 +762,7 @@ static MVBuddyListController *sharedInstance = nil;
 			[menu removeItem:[[menu itemArray] lastObject]];
 	}
 
-	return menu;
+	return [menu autorelease];
 }
 
 - (NSString *) tableView:(MVTableView *) tableView toolTipForTableColumn:(NSTableColumn *) column row:(int) row {
@@ -851,7 +866,7 @@ static MVBuddyListController *sharedInstance = nil;
 - (void) _animateStep:(NSTimer *) timer {
 	static NSDate *start = nil;
 	if( ! _animationPosition ) {
-		[start autorelease];
+		[start release];
 		start = [[NSDate date] retain];
 	}
 
@@ -859,14 +874,17 @@ static MVBuddyListController *sharedInstance = nil;
 	_animationPosition = MIN( 1., elapsed / .25 );
 
 	if( fabs( _animationPosition - 1. ) <= 0.01 ) {
-		[start autorelease];
+		[start release];
 		start = nil;
+
 		[timer invalidate];
-		[timer autorelease];
+		[timer release];
+
 		_animationPosition = 0.;
 		_animating = NO;
-		[buddies display];
-	} else [buddies display];
+	}
+
+	[buddies display];
 }
 
 - (void) _manuallySortAndUpdate {
@@ -904,7 +922,7 @@ static MVBuddyListController *sharedInstance = nil;
 	if( _animating ) return;
 
 	NSRange visibleRows;
-	NSArray *oldOrder = [[_buddyOrder copy] autorelease];
+	NSArray *oldOrder = [_buddyOrder copy];
 
 	id selectedObject = nil;
 	if( [buddies selectedRow] != -1 && [buddies selectedRow] < (int)[oldOrder count] )
@@ -922,8 +940,9 @@ static MVBuddyListController *sharedInstance = nil;
 
 	_animating = YES;
 
-	[_oldPositions autorelease];
+	[_oldPositions release];
 	_oldPositions = [[NSMutableArray arrayWithCapacity:[_buddyOrder count]] retain];
+
 	NSEnumerator *enumerator = [_buddyOrder objectEnumerator];
 	id object = nil;
 
@@ -934,6 +953,8 @@ static MVBuddyListController *sharedInstance = nil;
 	_viewingTop = NSMaxRange( visibleRows ) < 0.6 * [_buddyOrder count];
 
 	[[NSTimer scheduledTimerWithTimeInterval:( 1. / 240. ) target:self selector:@selector( _animateStep: ) userInfo:nil repeats:YES] retain];
+
+	[oldOrder release];
 }
 
 - (void) _buddyChanged:(NSNotification *) notification {
@@ -988,16 +1009,6 @@ static MVBuddyListController *sharedInstance = nil;
 	}
 }
 
-- (void) _addBuddyToList:(JVBuddy *) buddy {
-	[_buddyList addObject:buddy];
-	if( _showOfflineBuddies && ! [_buddyOrder containsObject:buddy] ) {
-		[_buddyOrder addObject:buddy];
-		[self _manuallySortAndUpdate];
-	}
-
-	[buddy registerWithApplicableConnections];
-}
-
 - (void) _loadBuddyList {
 	NSArray *list = [[NSArray allocWithZone:nil] initWithContentsOfFile:[@"~/Library/Application Support/Colloquy/Buddy List.plist" stringByExpandingTildeInPath]];
 	NSEnumerator *enumerator = [list objectEnumerator];
@@ -1005,7 +1016,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 	while( ( buddyDictionary = [enumerator nextObject] ) ) {
 		JVBuddy *buddy = [[JVBuddy allocWithZone:[self zone]] initWithDictionaryRepresentation:buddyDictionary];
-		if( buddy ) [self _addBuddyToList:buddy];
+		if( buddy ) [self addBuddy:buddy];
 		[buddy release];
 	}
 
