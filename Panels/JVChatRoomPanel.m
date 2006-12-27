@@ -1300,6 +1300,33 @@
 }
 
 - (void) _membersSynced:(NSNotification *) notification {
+	NSDictionary *userInfo = [notification userInfo];
+	if( userInfo ) {
+		NSArray *added = [userInfo objectForKey:@"added"];
+		if( added ) {
+			NSEnumerator *enumerator = [added objectEnumerator];
+			MVChatUser *member = nil;
+			while( ( member = [enumerator nextObject] ) ) {
+				if( [self chatRoomMemberForUser:member] ) {
+					JVChatRoomMember *listItem = [[JVChatRoomMember alloc] initWithRoom:self andUser:member];
+					[_sortedMembers addObject:listItem];
+					[listItem release];
+				}
+			}
+		}
+
+		NSArray *removed = [userInfo objectForKey:@"removed"];
+		if( removed ) {
+			NSEnumerator *enumerator = [removed objectEnumerator];
+			MVChatUser *member = nil;
+			while( ( member = [enumerator nextObject] ) ) {
+				JVChatRoomMember *listItem = [self chatRoomMemberForUser:member];
+				if( listItem )
+					[_sortedMembers removeObject:listItem];
+			}
+		}
+	}
+
 	[self resortMembers];
 }
 
