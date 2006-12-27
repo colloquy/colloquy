@@ -1307,7 +1307,7 @@
 			NSEnumerator *enumerator = [added objectEnumerator];
 			MVChatUser *member = nil;
 			while( ( member = [enumerator nextObject] ) ) {
-				if( [self chatRoomMemberForUser:member] ) {
+				if( ! [self chatRoomMemberForUser:member] ) {
 					JVChatRoomMember *listItem = [[JVChatRoomMember alloc] initWithRoom:self andUser:member];
 					[_sortedMembers addObject:listItem];
 					[listItem release];
