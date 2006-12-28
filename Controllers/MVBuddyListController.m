@@ -210,6 +210,9 @@ static MVBuddyListController *sharedInstance = nil;
 	[_addPerson release];
 	_addPerson = nil;
 
+	[_addServers release];
+	_addServers = [[NSMutableSet allocWithZone:nil] init];
+
 	[[NSApplication sharedApplication] beginSheet:pickerWindow modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
 
@@ -218,6 +221,9 @@ static MVBuddyListController *sharedInstance = nil;
 		[[NSApplication sharedApplication] endSheet:[[self window] attachedSheet]];
 		[[[self window] attachedSheet] orderOut:nil];
 	}
+
+	[_addServers release];
+	_addServers = nil;
 }
 
 - (IBAction) confirmBuddySelection:(id) sender {
@@ -241,15 +247,13 @@ static MVBuddyListController *sharedInstance = nil;
 		[[[self window] attachedSheet] orderOut:nil];
 	}
 
-	[_addServers release];
-	_addServers = [[NSMutableSet allocWithZone:nil] init];
-
 	[servers reloadData];
 
 	if( _addPerson ) {
 		ABPerson *person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:_addPerson];
 		if( person ) {
-			[nickname setObjectValue:[person valueForProperty:kABNicknameProperty]];
+			if( ! [[nickname stringValue] length] )
+				[nickname setObjectValue:[person valueForProperty:kABNicknameProperty]];
 			[firstName setObjectValue:[person valueForProperty:kABFirstNameProperty]];
 			[lastName setObjectValue:[person valueForProperty:kABLastNameProperty]];
 
@@ -259,12 +263,6 @@ static MVBuddyListController *sharedInstance = nil;
 
 			[image setImage:[[[NSImage alloc] initWithData:[person imageData]] autorelease]];
 		}
-	} else {
-		[nickname setObjectValue:@""];
-		[firstName setObjectValue:@""];
-		[lastName setObjectValue:@""];
-		[email setObjectValue:@""];
-		[image setImage:nil];
 	}
 
 	if( [[nickname stringValue] length] && [_addServers count] )
@@ -279,6 +277,12 @@ static MVBuddyListController *sharedInstance = nil;
 		[[NSApplication sharedApplication] endSheet:[[self window] attachedSheet]];
 		[[[self window] attachedSheet] orderOut:nil];
 	}
+
+	[nickname setObjectValue:@""];
+	[firstName setObjectValue:@""];
+	[lastName setObjectValue:@""];
+	[email setObjectValue:@""];
+	[image setImage:nil];
 
 	[_addPerson release];
 	_addPerson = nil;
@@ -335,6 +339,12 @@ static MVBuddyListController *sharedInstance = nil;
 	[self addBuddy:buddy];
 	[self save];
 
+	[nickname setObjectValue:@""];
+	[firstName setObjectValue:@""];
+	[lastName setObjectValue:@""];
+	[email setObjectValue:@""];
+	[image setImage:nil];
+
 	[_addPerson release];
 	_addPerson = nil;
 
@@ -352,9 +362,6 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (void) setNewBuddyNickname:(NSString *) nick {
 	[nickname setObjectValue:nick];
-
-	if( [nick length] >= 1 ) [addButton setEnabled:YES];
-	else [addButton setEnabled:NO];
 }
 
 - (void) setNewBuddyFullname:(NSString *) name {
@@ -371,7 +378,7 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) setNewBuddyServer:(MVChatConnection *) connection {
-	
+	[_addServers addObject:[connection server]];
 }
 
 #pragma mark -
