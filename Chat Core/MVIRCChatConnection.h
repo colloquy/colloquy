@@ -15,7 +15,6 @@
 	NSDate *_lastCommand;
 	NSMutableArray *_sendQueue;
 	NSMutableDictionary *_knownUsers;
-	NSMutableSet *_matchedUsers;
 	NSMutableSet *_pendingWhoisUsers;
 	NSMutableSet *_fileTransfers;
 	NSMutableSet *_supportedFeatures;

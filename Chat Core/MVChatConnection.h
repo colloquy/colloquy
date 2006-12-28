@@ -71,9 +71,6 @@ extern NSString *MVChatConnectionChatRoomListUpdatedNotification;
 
 extern NSString *MVChatConnectionSelfAwayStatusChangedNotification;
 
-extern NSString *MVChatConnectionWatchedUserOnlineNotification;
-extern NSString *MVChatConnectionWatchedUserOfflineNotification;
-
 extern NSString *MVChatConnectionNicknameAcceptedNotification;
 extern NSString *MVChatConnectionNicknameRejectedNotification;
 

@@ -6,6 +6,7 @@
 #import <AGRegex/AGRegex.h>
 
 NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedNotification";
+NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchRuleRemovedMatchedUserNotification";
 
 @implementation MVChatUserWatchRule
 - (id) initWithDictionaryRepresentation:(NSDictionary *) dictionary {
@@ -20,6 +21,34 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 	}
 
 	return self;
+}
+
+- (void) dealloc {
+	[_matchedChatUsers release];
+	[_nickname release];
+	[_nicknameRegex release];
+	[_realName release];
+	[_realNameRegex release];
+	[_username release];
+	[_usernameRegex release];
+	[_address release];
+	[_addressRegex release];
+	[_publicKey release];
+	[_applicableServerDomains release];
+
+	_matchedChatUsers = nil;
+	_nickname = nil;
+	_nicknameRegex = nil;
+	_realName = nil;
+	_realNameRegex = nil;
+	_username = nil;
+	_usernameRegex = nil;
+	_address = nil;
+	_addressRegex = nil;
+	_publicKey = nil;
+	_applicableServerDomains = nil;
+
+	[super dealloc];
 }
 
 - (id) copyWithZone:(NSZone *) zone {
@@ -77,6 +106,9 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 - (BOOL) matchChatUser:(MVChatUser *) user {
 	if( ! user ) return NO;
 
+	if( ! _matchedChatUsers )
+		_matchedChatUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
+
 	@synchronized( _matchedChatUsers ) {
 		if( [_matchedChatUsers containsObject:user] )
 			return YES;
@@ -107,7 +139,6 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 
 	@synchronized( _matchedChatUsers ) {
 		if( ! [_matchedChatUsers containsObject:user] ) {
-			[user _setWatched:YES];
 			[_matchedChatUsers addObject:user];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserWatchRuleMatchedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
 		}
@@ -124,7 +155,28 @@ NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedN
 
 - (void) removeMatchedUser:(MVChatUser *) user {
 	@synchronized( _matchedChatUsers ) {
-		[_matchedChatUsers removeObject:user];
+		if( [_matchedChatUsers containsObject:user] ) {
+			[user retain];
+			[_matchedChatUsers removeObject:user];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserWatchRuleRemovedMatchedUserNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
+			[user release];
+		}
+	}
+}
+
+- (void) removeMatchedUsersForConnection:(MVChatConnection *) connection {
+	@synchronized( _matchedChatUsers ) {
+		NSEnumerator *enumerator = [[[_matchedChatUsers copy] autorelease] objectEnumerator];
+		MVChatUser *user = nil;
+
+		while( ( user = [enumerator nextObject] ) ) {
+			if( [[user connection] isEqual:connection] ) {
+				[user retain];
+				[_matchedChatUsers removeObject:user];
+				[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserWatchRuleRemovedMatchedUserNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
+				[user release];
+			}
+		}
 	}
 }
 

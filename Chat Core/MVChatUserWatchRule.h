@@ -1,7 +1,9 @@
 @class MVChatUser;
+@class MVChatConnection;
 @class AGRegex;
 
 extern NSString *MVChatUserWatchRuleMatchedNotification;
+extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
 
 @interface MVChatUserWatchRule : NSObject <NSCopying> {
 	NSMutableSet *_matchedChatUsers;
@@ -24,6 +26,7 @@ extern NSString *MVChatUserWatchRuleMatchedNotification;
 
 - (BOOL) matchChatUser:(MVChatUser *) user;
 - (void) removeMatchedUser:(MVChatUser *) user;
+- (void) removeMatchedUsersForConnection:(MVChatConnection *) connection;
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 @property(readonly) NSSet *matchedChatUsers;

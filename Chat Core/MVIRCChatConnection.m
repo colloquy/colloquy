@@ -138,7 +138,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_sendQueue release];
 	[_queueWait release];
 	[_lastCommand release];
-	[_matchedUsers release];
 	[_pendingWhoisUsers release];
 	[_roomPrefixes release];
 	[_serverInformation release];
@@ -162,7 +161,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	_sendQueue = nil;
 	_queueWait = nil;
 	_lastCommand = nil;
-	_matchedUsers = nil;
 	_pendingWhoisUsers = nil;
 	_roomPrefixes = nil;
 	_serverInformation = nil;
@@ -482,6 +480,13 @@ static const NSStringEncoding supportedEncodings[] = {
 			if( _watchCommandSupported ) [self sendRawMessageWithFormat:@"WATCH +%@", [rule nickname]];
 			else [self sendRawMessageWithFormat:@"ISON %@", [rule nickname]];
 		}
+	} else {
+		@synchronized( _knownUsers ) {
+			NSEnumerator *enumerator = [_knownUsers objectEnumerator];
+			MVChatUser *user = nil;
+			while( ( user = [enumerator nextObject] ) )
+				[rule matchChatUser:user];
+		}
 	}
 }
 
@@ -685,10 +690,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	_lastSentIsonNicknames = nil;
 	[old release];
 
-	old = _matchedUsers;
-	_matchedUsers = nil;
-	[old release];
-
 	old = _pendingWhoisUsers;
 	_pendingWhoisUsers = nil;
 	[old release];
@@ -707,6 +708,21 @@ static const NSStringEncoding supportedEncodings[] = {
 			_status = MVChatConnectionServerDisconnectedStatus;
 
 		[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
+	}
+
+	@synchronized( _knownUsers ) {
+		NSEnumerator *enumerator = [_knownUsers objectEnumerator];
+		MVChatUser *user = nil;
+
+		while( ( user = [enumerator nextObject] ) )
+			[user _setStatus:MVChatUserUnknownStatus];
+	}
+
+	@synchronized( _chatUserWatchRules ) {
+		NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
+		MVChatUserWatchRule *rule = nil;
+		while( ( rule = [enumerator nextObject] ) )
+			[rule removeMatchedUsersForConnection:self];
 	}
 }
 
@@ -1114,35 +1130,6 @@ end:
 
 #pragma mark -
 
-- (unsigned int) _watchRulesMatchingUser:(MVChatUser *) user {
-	if( ! _matchedUsers )
-		_matchedUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:25];
-
-	unsigned int count = 0;
-	@synchronized( _chatUserWatchRules ) {
-		NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
-		MVChatUserWatchRule *rule = nil;
-		while( ( rule = [enumerator nextObject] ) ) {
-			if( [rule matchChatUser:user] ) {
-				count++;
-				@synchronized( _matchedUsers ) {
-					[_matchedUsers addObject:user];
-				}
-			}
-		}
-	}
-
-	return count;
-}
-
-- (void) _sendPossibleOfflineNotificationForUser:(MVChatUser *) user {
-	@synchronized( _matchedUsers ) {
-		if( [user isWatched] ) [_matchedUsers removeObject:user];
-	}
-
-	[super _sendPossibleOfflineNotificationForUser:user];
-}
-
 - (void) _scheduleWhoisForUser:(MVChatUser *) user {
 	if( ! _pendingWhoisUsers )
 		_pendingWhoisUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:50];
@@ -1161,14 +1148,20 @@ end:
 - (void) _whoisWatchedUsers {
 	[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
 
-	@synchronized( _matchedUsers ) {
-		if( ! [_matchedUsers count] ) return; // nothing to do, return and wait until the next scheduled fire
+	NSMutableSet *matchedUsers = [NSMutableSet set];
+	@synchronized( _chatUserWatchRules ) {
+		if( ! [_chatUserWatchRules count] ) return; // nothing to do, return and wait until the next scheduled fire
 
-		NSEnumerator *enumerator = [_matchedUsers objectEnumerator];
-		MVChatUser *user = nil;
-		while( ( user = [enumerator nextObject] ) )
-			[self _scheduleWhoisForUser:user];
+		NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
+		MVChatUserWatchRule *rule = nil;
+		while( ( rule = [enumerator nextObject] ) )
+			[matchedUsers unionSet:[rule matchedChatUsers]];
 	}
+
+	NSEnumerator *enumerator = [matchedUsers objectEnumerator];
+	MVChatUser *user = nil;
+	while( ( user = [enumerator nextObject] ) )
+		[self _scheduleWhoisForUser:user];
 }
 
 - (void) _checkWatchedUsers {
@@ -1178,11 +1171,14 @@ end:
 
 	if( [_lastSentIsonNicknames count] ) return; // there is already pending ISON requests, skip this round to catch up
 
-	@synchronized( _matchedUsers ) {
-		@synchronized( _chatUserWatchRules ) {
-			if( ! [_matchedUsers count] && ! [_chatUserWatchRules count] )
-				return; // nothing to do, return and wait until the next scheduled fire
-		}
+	NSMutableSet *matchedUsers = [NSMutableSet set];
+	@synchronized( _chatUserWatchRules ) {
+		if( ! [_chatUserWatchRules count] ) return; // nothing to do, return and wait until the next scheduled fire
+
+		NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
+		MVChatUserWatchRule *rule = nil;
+		while( ( rule = [enumerator nextObject] ) )
+			[matchedUsers unionSet:[rule matchedChatUsers]];
 	}
 
 	NSMutableString *request = [[NSMutableString allocWithZone:nil] initWithCapacity:510];
@@ -1191,28 +1187,26 @@ end:
 	_isonSentCount = 0;
 
 	[_lastSentIsonNicknames release];
-	_lastSentIsonNicknames = [[NSMutableSet allocWithZone:nil] initWithCapacity:[_chatUserWatchRules count]];
+	_lastSentIsonNicknames = [[NSMutableSet allocWithZone:nil] initWithCapacity:( [_chatUserWatchRules count] * 5 )];
 
-	@synchronized( _matchedUsers ) {
-		NSEnumerator *enumerator = [_matchedUsers objectEnumerator];
-		MVChatUser *user = nil;
+	NSEnumerator *enumerator = [matchedUsers objectEnumerator];
+	MVChatUser *user = nil;
 
-		while( ( user = [enumerator nextObject] ) ) {
-			NSString *nick = [user nickname];
-			if( ( [nick length] + [request length] ) > 510 ) {
-				[self sendRawMessage:request];
-				[request release];
-				_isonSentCount++;
+	while( ( user = [enumerator nextObject] ) ) {
+		NSString *nick = [user nickname];
+		if( ( [nick length] + [request length] ) > 510 ) {
+			[self sendRawMessage:request];
+			[request release];
+			_isonSentCount++;
 
-				request = [[NSMutableString allocWithZone:nil] initWithCapacity:510];
-				[request setString:@"ISON "];
-			}
-
-			[request appendString:nick];
-			[request appendString:@" "];
-
-			[_lastSentIsonNicknames addObject:nick];
+			request = [[NSMutableString allocWithZone:nil] initWithCapacity:510];
+			[request setString:@"ISON "];
 		}
+
+		[request appendString:nick];
+		[request appendString:@" "];
+
+		[_lastSentIsonNicknames addObject:nick];
 	}
 
 	@synchronized( _chatUserWatchRules ) {
@@ -1221,7 +1215,7 @@ end:
 
 		while( ( rule = [enumerator nextObject] ) ) {
 			NSString *nick = [rule nickname];
-            if( nick && ! [rule nicknameIsRegularExpression] && ! [_lastSentIsonNicknames containsObject:nick] ) { 
+			if( [nick length] && ! [rule nicknameIsRegularExpression] && ! [_lastSentIsonNicknames containsObject:nick] ) { 
 				if( ( [nick length] + [request length] ) > 510 ) {
 					[self sendRawMessage:request];
 					[request release];
@@ -1453,9 +1447,8 @@ end:
 		const char *bytes = (const char *)[msgData bytes];
 		BOOL ctcp = ( *bytes == '\001' && [msgData length] > 2 );
 
-		if( [sender status] != MVChatUserAwayStatus )
-			[sender _setStatus:MVChatUserAvailableStatus];
 		[sender _setIdleTime:0.];
+		[self _markUserAsOnline:sender];
 
 		if( [[self chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]] ) {
 			MVChatRoom *room = [self joinedChatRoomWithName:targetName];
@@ -1756,12 +1749,10 @@ end:
 			[room _clearMemberUsers];
 			[room _clearBannedUsers];
 		} else {
-			if( [sender status] != MVChatUserAwayStatus )
-				[sender _setStatus:MVChatUserAvailableStatus];
 			[sender _setIdleTime:0.];
+			[self _markUserAsOnline:sender];
 			[room _addMemberUser:sender];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserJoinedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
-			[self _sendPossibleOnlineNotificationForUser:sender];
 		}
 	}
 }
@@ -1787,8 +1778,8 @@ end:
 	if( [parameters count] && [sender isKindOfClass:[MVChatUser class]] ) {
 		if( [sender isLocalUser] ) return;
 
-		[sender _setDateDisconnected:[NSDate date]];
-		[sender _setStatus:MVChatUserOfflineStatus];
+		[self _markUserAsOffline:sender];
+		[_pendingWhoisUsers removeObject:sender];
 
 		NSData *reason = [parameters objectAtIndex:0];
 		if( ! [reason isKindOfClass:[NSData class]] ) reason = nil;
@@ -1803,10 +1794,6 @@ end:
 		}
 
 		[info release];
-
-		[self _sendPossibleOfflineNotificationForUser:sender];
-
-		[_pendingWhoisUsers removeObject:sender];
 	}
 }
 
@@ -2006,9 +1993,12 @@ end:
 
 - (void) _handlePingWithParameters:(NSArray *) parameters fromSender:(id) sender {
 	if( [parameters count] >= 1 ) {
-		if( [parameters count] == 1 ) [self sendRawMessageImmediatelyWithComponents:@"PONG :", [parameters objectAtIndex:0], nil];
+		if( [parameters count] == 1 )
+			[self sendRawMessageImmediatelyWithComponents:@"PONG :", [parameters objectAtIndex:0], nil];
 		else [self sendRawMessageImmediatelyWithComponents:@"PONG ", [parameters objectAtIndex:1], @" :", [parameters objectAtIndex:0], nil];
-		if( [sender isKindOfClass:[MVChatUser class]] ) [self _sendPossibleOnlineNotificationForUser:sender];
+
+		if( [sender isKindOfClass:[MVChatUser class]] )
+			[self _markUserAsOnline:sender];
 	}
 }
 
@@ -2020,8 +2010,8 @@ end:
 
 	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *roomName = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+		[self _markUserAsOnline:sender];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomInvitedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", roomName, @"room", nil]];
-		[self _sendPossibleOnlineNotificationForUser:sender];
 	}
 }
 
@@ -2031,9 +2021,8 @@ end:
 		NSString *oldNickname = [[sender nickname] retain];
 		NSString *oldIdentifier = [[sender uniqueIdentifier] retain];
 
-		if( [sender status] != MVChatUserAwayStatus )
-			[sender _setStatus:MVChatUserAvailableStatus];
 		[sender _setIdleTime:0.];
+		[self _markUserAsOnline:sender];
 
 		NSNotification *note = nil;
 		if( [sender isLocalUser] ) {
@@ -2058,8 +2047,6 @@ end:
 
 		[oldNickname release];
 		[oldIdentifier release];
-
-		[self _sendPossibleOnlineNotificationForUser:sender];
 	}
 }
 
@@ -2079,8 +2066,7 @@ end:
 				MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
 				if( [[user dateUpdated] timeIntervalSinceNow] < -JVWatchedUserWHOISDelay || ! [user dateUpdated] )
 					[self _scheduleWhoisForUser:user];
-
-				[self _sendPossibleOnlineNotificationForUser:user];
+				[self _markUserAsOnline:user];
 				[_lastSentIsonNicknames removeObject:nick];
 			}
 		}
@@ -2089,7 +2075,7 @@ end:
 			enumerator = [_lastSentIsonNicknames objectEnumerator];
 			while( ( nick = [enumerator nextObject] ) ) {
 				MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
-				[self _sendPossibleOfflineNotificationForUser:user];
+				[self _markUserAsOffline:user];
 			}
 
 			[_lastSentIsonNicknames release];
@@ -2156,6 +2142,8 @@ end:
 				MVChatUser *member = [self chatUserWithUniqueIdentifier:memberName];
 				[room _addMemberUser:member];
 				[room _setModes:modes forMemberUser:member];
+
+				[self _markUserAsOnline:member];
 			}
 
 			if( [pool respondsToSelector:@selector( drain )] )
@@ -2210,7 +2198,7 @@ end:
 			} else [member _setRealName:nil];
 		}
 
-		[self _sendPossibleOnlineNotificationForUser:member];
+		[self _markUserAsOnline:member];
 	}
 }
 
@@ -2293,14 +2281,13 @@ end:
 - (void) _handle311WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISUSER
 	if( [parameters count] == 6 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
-		[user _setServerOperator:NO]; // set these to NO now so we get the true values later in the WHOIS
 		[user _setUsername:[parameters objectAtIndex:2]];
 		[user _setAddress:[parameters objectAtIndex:3]];
 		[user _setRealName:[self _stringFromPossibleData:[parameters objectAtIndex:5]]];
-		[user _setDateDisconnected:nil];
-		[user _setAwayStatusMessage:nil]; // set this to nil, we will get it if we get a 301
+		[user _setAwayStatusMessage:nil]; // set this to nil, we will get it if we get a RPL_AWAY
+		[user _setServerOperator:NO]; // set this to NO now so we get the true values later in the RPL_WHOISOPERATOR
 
-		[self _sendPossibleOnlineNotificationForUser:user];
+		[self _markUserAsOnline:user];
 	}
 }
 
@@ -2338,9 +2325,6 @@ end:
 	if( [parameters count] >= 2 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		[user _setDateUpdated:[NSDate date]];
-
-		if( [user status] != MVChatUserAwayStatus )
-			[user _setStatus:MVChatUserAvailableStatus];
 
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];
 
@@ -2397,7 +2381,7 @@ end:
 - (void) _handle401WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOSUCHNICK
 	if( [parameters count] >= 2 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
-		[self _sendPossibleOfflineNotificationForUser:user];
+		[self _markUserAsOffline:user];
 		if( [_pendingWhoisUsers containsObject:user] ) {
 			[_pendingWhoisUsers removeObject:user];
 			[self _whoisNextScheduledUser];
@@ -2409,7 +2393,7 @@ end:
 	// some servers send back 402 (No such server) when we send our double nickname WHOIS requests, treat as a user
 	if( [parameters count] >= 2 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
-		[self _sendPossibleOfflineNotificationForUser:user];
+		[self _markUserAsOffline:user];
 		if( [_pendingWhoisUsers containsObject:user] ) {
 			[_pendingWhoisUsers removeObject:user];
 			[self _whoisNextScheduledUser];
@@ -2437,9 +2421,8 @@ end:
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		[user _setUsername:[parameters objectAtIndex:2]];
 		[user _setAddress:[parameters objectAtIndex:3]];
-		[user _setDateDisconnected:nil];
 
-		[self _sendPossibleOnlineNotificationForUser:user];
+		[self _markUserAsOnline:user];
 
 		if( [[user dateUpdated] timeIntervalSinceNow] < -JVWatchedUserWHOISDelay || ! [user dateUpdated] )
 			[self _scheduleWhoisForUser:user];

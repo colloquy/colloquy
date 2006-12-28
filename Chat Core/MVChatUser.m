@@ -164,7 +164,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 @property(readonly, getter=isIdentified) BOOL identified;
 @property(readonly, getter=isServerOperator) BOOL serverOperator;
-@property(readonly, getter=isWatched) BOOL watched;
 #endif
 
 - (BOOL) isIdentified {
@@ -173,10 +172,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (BOOL) isServerOperator {
 	return _serverOperator;
-}
-
-- (BOOL) isWatched {
-	return _watched;
 }
 
 #pragma mark -
@@ -507,10 +502,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (void) _setIdentified:(BOOL) isIdentified {
 	_identified = isIdentified;
-}
-
-- (void) _setWatched:(BOOL) isWatched {
-	_watched = isWatched;
 }
 
 - (void) _setIdleTime:(NSTimeInterval) time {

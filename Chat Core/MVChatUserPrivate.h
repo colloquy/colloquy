@@ -11,7 +11,6 @@
 - (void) _setFingerprint:(NSString *) fingerprint;
 - (void) _setServerOperator:(BOOL) operator;
 - (void) _setIdentified:(BOOL) identified;
-- (void) _setWatched:(BOOL) watched;
 - (void) _setIdleTime:(NSTimeInterval) time;
 - (void) _setStatus:(MVChatUserStatus) status;
 - (void) _setDateConnected:(NSDate *) date;

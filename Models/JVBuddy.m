@@ -226,6 +226,16 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 
 	while( ( rule = [enumerator nextObject] ) )
 		[connection removeChatUserWatchRule:rule];
+
+	enumerator = [[[_users copy] autorelease] objectEnumerator];
+	MVChatUser *user = nil;
+
+	while( ( user = [enumerator nextObject] ) )
+		if( [[user connection] isEqual:connection] )
+			[_users removeObject:user];
+
+	if( [[[self activeUser] connection] isEqual:connection] )
+		[self setActiveUser:[_users anyObject]];
 }
 
 - (void) unregisterWithConnections {
@@ -239,6 +249,9 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 		while( ( connection = [connectionEnumerator nextObject] ) )
 			[connection removeChatUserWatchRule:rule];
 	}
+
+	[_users removeAllObjects];
+	[self setActiveUser:nil];
 }
 
 #pragma mark -
@@ -320,12 +333,14 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 - (void) addWatchRule:(MVChatUserWatchRule *) rule {
 	if( [_rules containsObject:rule] ) return;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _ruleMatched: ) name:MVChatUserWatchRuleMatchedNotification object:rule];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _ruleUserRemoved: ) name:MVChatUserWatchRuleRemovedMatchedUserNotification object:rule];
 	[_rules addObject:rule];
 }
 
 - (void) removeWatchRule:(MVChatUserWatchRule *) rule {
 	if( ! [_rules containsObject:rule] ) return;
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserWatchRuleMatchedNotification object:rule];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserWatchRuleRemovedMatchedUserNotification object:rule];
 	[_rules removeObject:rule];
 }
 
@@ -544,23 +559,31 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 #pragma mark -
 
 @implementation JVBuddy (JVBuddyPrivate)
-- (void) _buddyOnline:(NSNotification *) notification {
-	MVChatUser *user = [notification object];
-	BOOL cameOnline = ( ! [_users count] ? YES : NO );
+- (void) _addUser:(MVChatUser *) user {
+	if( [_users containsObject:user] )
+		return;
+
+	BOOL cameOnline = ! [_users count];
 	[_users addObject:user];
 
-	if( [self status] != MVChatUserAvailableStatus && [self status] != MVChatUserAwayStatus ) [self setActiveUser:user];
-	if( cameOnline ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyCameOnlineNotification object:self userInfo:nil];
+	if( [self status] != MVChatUserAvailableStatus && [self status] != MVChatUserAwayStatus )
+		[self setActiveUser:user];
+
+	if( cameOnline )
+		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyCameOnlineNotification object:self userInfo:nil];
 }
 
-- (void) _buddyOffline:(NSNotification *) notification {
-	MVChatUser *user = [notification object];
+- (void) _removeUser:(MVChatUser *) user {
+	if( ! [_users containsObject:user] )
+		return;
+
 	[_users removeObject:user];
 
 	if( [[self activeUser] isEqualToChatUser:user] )
 		[self setActiveUser:[_users anyObject]];
 
-	if( ! [_users count] ) [[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
+	if( ! [_users count] )
+		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
 }
 
 - (void) _buddyIdleUpdate:(NSNotification *) notification {
@@ -571,8 +594,19 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 
 - (void) _buddyStatusChanged:(NSNotification *) notification {
 	MVChatUser *user = [notification object];
-	NSNotification *note = [NSNotification notificationWithName:JVBuddyUserStatusChangedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
-	[[NSNotificationQueue defaultQueue] enqueueNotification:note postingStyle:NSPostASAP coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
+
+	switch( [user status] ) {
+		case MVChatUserAvailableStatus:
+		case MVChatUserAwayStatus:
+			[self _addUser:user];
+			break;
+		case MVChatUserOfflineStatus:
+		case MVChatUserDetachedStatus:
+			[self _removeUser:user];
+		default: break;
+	}
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyUserStatusChangedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
 }
 
 - (void) _registerWithConnection:(NSNotification *) notification {
@@ -599,10 +633,20 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 - (void) _ruleMatched:(NSNotification *) notification {
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyOnline: ) name:MVChatConnectionWatchedUserOnlineNotification object:user];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyOffline: ) name:MVChatConnectionWatchedUserOfflineNotification object:user];
+	if( [user status] == MVChatUserAvailableStatus || [user status] == MVChatUserAwayStatus )
+		[self _addUser:user];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyIdleUpdate: ) name:MVChatUserIdleTimeUpdatedNotification object:user];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _buddyStatusChanged: ) name:MVChatUserStatusChangedNotification object:user];
+}
+
+- (void) _ruleUserRemoved:(NSNotification *) notification {
+	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserIdleTimeUpdatedNotification object:user];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserStatusChangedNotification object:user];
+
+	[self _removeUser:user];
 }
 @end
 /*
