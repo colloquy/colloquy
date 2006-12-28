@@ -76,7 +76,6 @@
 	} else if( yourStatus > myStatus ) {
 		retVal = NSOrderedDescending;
 	} else {
-		// retVal = [self compareUsingBuddyStatus:member];
 		retVal = [[self title] caseInsensitiveCompare:[member title]];
 	}
 
@@ -86,16 +85,18 @@
 - (NSComparisonResult) compareUsingBuddyStatus:(JVChatRoomMember *) member {
 	NSComparisonResult retVal;
 
-	if( ( [self buddy] && [member buddy]) || ( ! [self buddy] && ! [member buddy]) ) {
-		if( [self buddy] && [member buddy] ) {
+	JVBuddy *buddy1 = [self buddy];
+	JVBuddy *buddy2 = [member buddy];
+
+	if( ( buddy1 && buddy2) || ( ! buddy1 && ! buddy2) ) {
+		if( buddy1 && buddy2 ) {
 			// if both are buddies, sort by availability
-			retVal = [[self buddy] availabilityCompare:[member buddy]];
+			retVal = [buddy1 availabilityCompare:buddy2];
 		} else {
 			retVal = [[self title] caseInsensitiveCompare:[member title]]; // maybe an alpha sort here
 		}
-	} else if( [self buddy] ) {
+	} else if( buddy1 ) {
 		// we have a buddy but since the first test failed, member does not
-		// so of course the buddy is greater :)
 		retVal = NSOrderedAscending;
 	} else {
 		// member is a buddy
@@ -261,13 +262,15 @@
 
 - (NSImage *) statusImage {
 	if( [self buddy] ) {
-		switch( [[self buddy] status] ) {
-			case MVChatUserAwayStatus: return [NSImage imageNamed:@"statusAway"];
+		switch( [_user status] ) {
+			case MVChatUserAwayStatus:
+				return [NSImage imageNamed:@"statusAway"];
 			case MVChatUserAvailableStatus:
-				if( [[self buddy] idleTime] >= 600. ) return [NSImage imageNamed:@"statusIdle"];
-				else return [NSImage imageNamed:@"statusAvailable"];
-			case MVChatUserOfflineStatus:
-			default: return nil;
+				if( [_user idleTime] >= 600. )
+					return [NSImage imageNamed:@"statusIdle"];
+				return [NSImage imageNamed:@"statusAvailable"];
+			default:
+				return nil;
 		}
 	}
 
@@ -277,9 +280,21 @@
 - (NSString *) title {
 	if( [self isLocalUser] ) {
 		JVBuddyName nameStyle = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatSelfNameStyle"];
-		if( nameStyle == JVBuddyFullName ) return [self _selfCompositeName];
-		else if( nameStyle == JVBuddyGivenNickname ) return [self _selfStoredNickname];
-	} else if( [self buddy] ) return [[self buddy] displayName];
+		if( nameStyle == JVBuddyFullName )
+			return [self _selfCompositeName];
+		if( nameStyle == JVBuddyGivenNickname )
+			return [self _selfStoredNickname];
+		return [self nickname];
+	}
+
+	JVBuddy *buddy = [self buddy];
+	if( buddy ) {
+		if( [JVBuddy preferredName] == JVBuddyFullName && [[buddy compositeName] length] )
+			return [buddy compositeName];
+		if( [JVBuddy preferredName] == JVBuddyGivenNickname && [[buddy givenNickname] length] )
+			return [buddy givenNickname];
+	}
+
 	return [self nickname];
 }
 
