@@ -587,7 +587,13 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (int) numberOfRowsInTableView:(NSTableView *) view {
-	return [_buddyOrder count];
+	if( view == servers )
+		return [[[MVConnectionsController defaultController] connections] count];
+
+	if( view == buddies )
+		return [_buddyOrder count];
+
+	return 0;
 }
 
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
