@@ -352,7 +352,7 @@
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
 	NSTableView *tableView = [notification object];
 	if( [tableView isEqual:identifiersTable] ) {
-		[removeIdentifier setEnabled:( [identifiersTable selectedRow] != -1 )];
+		[removeIdentifier setEnabled:( [identifiersTable selectedRow] != -1 && [[_buddy watchRules] count] > 1 )];
 		[editIdentifier setEnabled:( [identifiersTable selectedRow] != -1 )];
 	} else if( [tableView isEqual:identifierDomainsTable] ) {
 		[removeDomain setEnabled:( [identifierDomainsTable selectedRow] != -1 )];
