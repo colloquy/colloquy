@@ -89,6 +89,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _joinedRoom: ) name:MVChatRoomJoinedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _invitedToRoom: ) name:MVChatRoomInvitedNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotBeep: ) name:MVChatConnectionGotBeepNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotPrivateMessage: ) name:MVChatConnectionGotPrivateMessageNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotRoomMessage: ) name:MVChatRoomGotMessageNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred: ) name:MVChatConnectionErrorNotification object:nil];
@@ -491,6 +492,20 @@ static NSMenu *smartTranscriptMenu = nil;
 	[context setObject:NSLocalizedString( @"Invited to Chat", "bubble title invited to room" ) forKey:@"title"];
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message invited to room" ), room, [user nickname]] forKey:@"description"];
 	[[JVNotificationController defaultController] performNotification:@"JVChatRoomInvite" withContextInfo:context];
+}
+
+- (void) _gotBeep:(NSNotification *) notification {
+	NSDictionary *userInfo = [notification userInfo];
+	MVChatUser *user = [userInfo objectForKey:@"user"];
+
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	[context setObject:NSLocalizedString( @"Beep received", "beep bubble title" ) forKey:@"title"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ is reclaiming your attention by means of a beep.", "beep bubble text" ), [user nickname]] forKey:@"description"];
+	[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
+	[context setObject:[[user nickname] stringByAppendingString:@"JVChatBeeped"] forKey:@"coalesceKey"];
+	[context setObject:self forKey:@"target"];
+	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
+	[[JVNotificationController defaultController] performNotification:@"JVChatBeeped" withContextInfo:context];
 }
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {

@@ -64,6 +64,7 @@ extern NSString *MVChatConnectionNeedNicknamePasswordNotification;
 extern NSString *MVChatConnectionNeedCertificatePasswordNotification;
 extern NSString *MVChatConnectionNeedPublicKeyVerificationNotification;
 
+extern NSString *MVChatConnectionGotBeepNotification;
 extern NSString *MVChatConnectionGotRawMessageNotification;
 extern NSString *MVChatConnectionGotPrivateMessageNotification;
 extern NSString *MVChatConnectionChatRoomListUpdatedNotification;

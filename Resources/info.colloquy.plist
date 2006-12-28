@@ -186,6 +186,21 @@
 		<key>soundPath</key>
 		<string>Switch.aiff</string>
 	</dict>
+	<key>JVNotificationSettings JVChatBeeped</key>
+	<dict>
+		<key>bounceIcon</key>
+		<true/>
+		<key>bounceIconUntilFront</key>
+		<true/>
+		<key>playSound</key>
+		<true/>
+		<key>soundPath</key>
+		<string>Bell 1.aiff</string>
+		<key>showBubble</key>
+		<true/>
+		<key>showBubbleOnlyIfBackground</key>
+		<true/>
+	</dict>
 	<key>JVNotificationSettings JVChatMentioned</key>
 	<dict>
 		<key>bounceIcon</key>

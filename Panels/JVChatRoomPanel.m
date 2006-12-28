@@ -306,7 +306,7 @@
 		if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has a message waiting from %@.", "new single room message bubble text" ), [self title], [member displayName]] forKey:@"description"];
 		else [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has %d messages waiting. \nLast from %@", "new room messages bubble text" ), [self title], [self newMessagesWaiting], [member displayName]] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"room"] forKey:@"image"];
-		[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatRoomActivity"] forKey:@"coalesceKey"];
+		[context setObject:[[self windowTitle] stringByAppendingString:@"JVChatRoomActivity"] forKey:@"coalesceKey"];
 		[context setObject:self forKey:@"target"];
 		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 		[[JVNotificationController defaultController] performNotification:@"JVChatRoomActivity" withContextInfo:context];

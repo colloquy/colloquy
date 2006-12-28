@@ -773,7 +773,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		if( [self isMemberOfClass:[JVChatRoomPanel class]] ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "chat room mentioned bubble text" ), [self title]] forKey:@"description"];
 		else [context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned by %@.", "private chat mentioned bubble text" ), [self title]] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
-		[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatMentioned"] forKey:@"coalesceKey"];
+		[context setObject:[[self windowTitle] stringByAppendingString:@"JVChatMentioned"] forKey:@"coalesceKey"];
 		[context setObject:self forKey:@"target"];
 		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 		[[JVNotificationController defaultController] performNotification:@"JVChatMentioned" withContextInfo:context];
@@ -832,7 +832,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 			[context setObject:NSLocalizedString( @"New Private Message", "first message bubble title" ) forKey:@"title"];
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ wrote you a private message.", "first message bubble text" ), [self title]] forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
-			[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatPrivateMessage"] forKey:@"coalesceKey"];
+			[context setObject:[[self windowTitle] stringByAppendingString:@"JVChatPrivateMessage"] forKey:@"coalesceKey"];
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 			[[JVNotificationController defaultController] performNotification:@"JVChatFirstMessage" withContextInfo:context];
@@ -842,7 +842,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 			if( [self newMessagesWaiting] == 1 ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"You have 1 message waiting from %@.", "new single message bubble text" ), [self title]] forKey:@"description"];
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You have %d messages waiting from %@.", "new messages bubble text" ), [self newMessagesWaiting], [self title]] forKey:@"description"];
 			[context setObject:[NSImage imageNamed:@"messageUser"] forKey:@"image"];
-			[context setObject:[[self windowTitle] stringByAppendingString:@" JVChatPrivateMessage"] forKey:@"coalesceKey"];
+			[context setObject:[[self windowTitle] stringByAppendingString:@"JVChatPrivateMessage"] forKey:@"coalesceKey"];
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 			[[JVNotificationController defaultController] performNotification:@"JVChatAdditionalMessages" withContextInfo:context];
