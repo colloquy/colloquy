@@ -246,8 +246,9 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 		PyErr_Print();
 		PyErr_Clear();
 
-		if( message != errValue )
+		if( message != errValue ) {
 			Py_XDECREF( message );
+		}
 
 		Py_XDECREF(errType);
 		Py_XDECREF(errValue);
