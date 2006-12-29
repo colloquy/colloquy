@@ -274,6 +274,23 @@
 	[result stripIllegalXMLCharacters];
 	return [result autorelease];
 }
+
+#pragma mark -
+
+- (NSString *) stringWithDomainNameSegmentOfAddress {
+	NSString *ret = self;
+	unsigned int ip = 0;
+	BOOL ipAddress = ( sscanf( [self UTF8String], "%u.%u.%u.%u", &ip, &ip, &ip, &ip ) == 4 );
+
+	if( ! ipAddress ) {
+		NSArray *parts = [self componentsSeparatedByString:@"."];
+		unsigned count = [parts count];
+		if( count > 2 )
+			ret = [NSString stringWithFormat:@"%@.%@", [parts objectAtIndex:(count - 2)], [parts objectAtIndex:(count - 1)]];
+	}
+
+	return ret;
+}
 @end
 
 #pragma mark -

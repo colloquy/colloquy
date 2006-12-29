@@ -318,17 +318,9 @@ static MVBuddyListController *sharedInstance = nil;
 	NSString *server = nil;
 
 	while( ( server = [enumerator nextObject] ) ) {
-		unsigned int ip = 0;
-		BOOL ipAddress = ( sscanf( [server UTF8String], "%u.%u.%u.%u", &ip, &ip, &ip, &ip ) == 4 );
-
-		if( ! ipAddress ) {
-			NSArray *parts = [server componentsSeparatedByString:@"."];
-			unsigned count = [parts count];
-			if( count > 2 )
-				server = [NSString stringWithFormat:@"%@.%@", [parts objectAtIndex:(count - 2)], [parts objectAtIndex:(count - 1)]];
-		}
-
-		[newServers addObject:server];
+		server = [server stringWithDomainNameSegmentOfAddress];
+		if( [server length] )
+			[newServers addObject:server];
 	}
 
 	[rule setApplicableServerDomains:newServers];
@@ -1022,8 +1014,64 @@ static MVBuddyListController *sharedInstance = nil;
 	}
 }
 
+- (void) _importOldBuddyList {
+	NSArray *list = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatBuddies"];
+	if( ! [list count] ) return;
+
+	NSEnumerator *enumerator = [list objectEnumerator];
+	NSString *identifier = nil;
+
+	while( ( identifier = [enumerator nextObject] ) ) {
+		ABPerson *person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:identifier];
+		if( ! person ) continue;
+
+		JVBuddy *buddy = [[JVBuddy allocWithZone:[self zone]] init];
+
+		[buddy setPicture:[[[NSImage alloc] initWithData:[person imageData]] autorelease]];
+		[buddy setGivenNickname:[person valueForProperty:kABNicknameProperty]];
+		[buddy setFirstName:[person valueForProperty:kABFirstNameProperty]];
+		[buddy setLastName:[person valueForProperty:kABLastNameProperty]];
+
+		ABMultiValue *value = [person valueForProperty:kABEmailProperty];
+		[buddy setPrimaryEmail:[value valueAtIndex:[value indexForIdentifier:[value primaryIdentifier]]]];
+
+		[buddy setSpeechVoice:[person valueForProperty:@"cc.javelin.colloquy.JVBuddy.TTSvoice"]];
+
+		[buddy setAddressBookPersonRecord:person];
+
+		value = [person valueForProperty:@"IRCNickname"];
+		unsigned count = [value count];
+
+		for( unsigned i = 0; i < count; i++ ) {
+			NSString *nick = [value valueAtIndex:i];
+			NSString *server = [[value labelAtIndex:i] stringWithDomainNameSegmentOfAddress];
+			if( ! [nick length] || ! [server length] )
+				continue;
+
+			MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:nil] init];
+			[rule setNickname:nick];
+			[rule setApplicableServerDomains:[NSArray arrayWithObject:server]];
+
+			[buddy addWatchRule:rule];
+
+			[rule release];
+		}
+
+		if( buddy && [[buddy watchRules] count] )
+			[self addBuddy:buddy];
+
+		[buddy release];
+	}
+
+	[self save];
+
+	[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVChatBuddies"];
+}
+
 - (void) _loadBuddyList {
 	NSArray *list = [[NSArray allocWithZone:nil] initWithContentsOfFile:[@"~/Library/Application Support/Colloquy/Buddy List.plist" stringByExpandingTildeInPath]];
+	if( ! [list count] ) [self _importOldBuddyList];
+
 	NSEnumerator *enumerator = [list objectEnumerator];
 	NSDictionary *buddyDictionary = nil;
 

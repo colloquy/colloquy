@@ -22,6 +22,8 @@
 - (NSString *) stringByDecodingIllegalURLCharacters;
 
 - (NSString *) stringByStrippingIllegalXMLCharacters;
+
+- (NSString *) stringWithDomainNameSegmentOfAddress;
 @end
 
 @interface NSMutableString (NSMutableStringAdditions)
