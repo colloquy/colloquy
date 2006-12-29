@@ -9,6 +9,7 @@
                 confirmBuddySelection = id; 
                 confirmNewBuddy = id; 
                 getInfo = id; 
+                hideBuddyList = id; 
                 messageSelectedBuddy = id; 
                 sendFileToSelectedBuddy = id; 
                 showBuddyList = id; 
@@ -36,10 +37,10 @@
                 lastName = NSTextField; 
                 newPersonWindow = NSWindow; 
                 nickname = NSTextField; 
-                pickerView = NSView; 
+                pickerView = ABPeoplePickerView; 
                 pickerWindow = NSWindow; 
                 sendMessageButton = NSButton; 
-                server = NSPopUpButton; 
+                servers = NSTableView; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 
