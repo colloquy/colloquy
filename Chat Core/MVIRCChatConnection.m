@@ -2181,6 +2181,7 @@ end:
 		NSString *statusString = [self _stringFromPossibleData:[parameters objectAtIndex:6]];
 		unichar userStatus = ( [statusString length] ? [statusString characterAtIndex:0] : 0 );
 		if( userStatus == 'H' ) {
+			[member _setAwayStatusMessage:nil];
 			[member _setStatus:MVChatUserAvailableStatus];
 		} else if( userStatus == 'G' ) {
 			[member _setStatus:MVChatUserAwayStatus];
@@ -2284,6 +2285,7 @@ end:
 		[user _setUsername:[parameters objectAtIndex:2]];
 		[user _setAddress:[parameters objectAtIndex:3]];
 		[user _setRealName:[self _stringFromPossibleData:[parameters objectAtIndex:5]]];
+		[user _setStatus:MVChatUserAvailableStatus]; // set this to available, we will change it if we get a RPL_AWAY
 		[user _setAwayStatusMessage:nil]; // set this to nil, we will get it if we get a RPL_AWAY
 		[user _setServerOperator:NO]; // set this to NO now so we get the true values later in the RPL_WHOISOPERATOR
 
