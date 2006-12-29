@@ -3,29 +3,44 @@
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {
-                addNickname = id; 
+                addDomain = id; 
+                addIdentifier = id; 
                 changeBuddyIcon = id; 
+                changeCard = id; 
+                changeConnectionState = id; 
                 changeEmail = id; 
                 changeFirstName = id; 
                 changeLastName = id; 
                 changeNickname = id; 
-                changeServer = id; 
                 changeSpeechVoice = id; 
-                editCard = id; 
-                removeNickname = id; 
+                discardIdentifierChanges = id; 
+                editIdentifier = id; 
+                removeDomain = id; 
+                removeIdentifier = id; 
+                saveIdentifierChanges = id; 
             }; 
             CLASS = JVBuddyInspector; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                addNickname = NSButton; 
+                addDomain = NSButton; 
+                addIdentifier = NSButton; 
+                editIdentifier = NSButton; 
                 email = NSTextField; 
                 firstName = NSTextField; 
+                identifierConnections = NSMatrix; 
+                identifierDomainsTable = NSTableView; 
+                identifierEditPanel = NSPanel; 
+                identifierHostname = NSTextField; 
+                identifierNickname = NSTextField; 
+                identifierOkay = NSButton; 
+                identifierRealName = NSTextField; 
+                identifierUsername = NSTextField; 
+                identifiersTable = NSTableView; 
                 lastName = NSTextField; 
                 nickname = NSTextField; 
-                nicknames = NSTableView; 
                 picture = NSImageView; 
-                removeNickname = NSButton; 
-                servers = NSPopUpButton; 
+                removeDomain = NSButton; 
+                removeIdentifier = NSButton; 
                 view = NSView; 
                 voices = NSPopUpButton; 
             }; 
