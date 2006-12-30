@@ -51,7 +51,6 @@ static BOOL acceptConnectionOnFirstPortInRange( id transfer, AsyncSocket *connec
 
 	if( success && [[transfer class] isAutoPortMappingEnabled] ) {
 		tr_msgInit();
-		tr_setMessageLevel( 3 );
 
 		static tr_fd_t *fd = NULL;
 		if( ! fd ) fd = tr_fdInit();
