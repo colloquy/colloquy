@@ -23,6 +23,7 @@
 #define JVSendQueueDelayIncrement 0.01
 #define JVWatchedUserWHOISDelay 300.
 #define JVWatchedUserISONDelay 60.
+#define JVMaximumISONCommandLength 450
 #define JVMaximumMembersForWhoRequest 100
 
 static const NSStringEncoding supportedEncodings[] = {
@@ -1181,7 +1182,7 @@ end:
 			[matchedUsers unionSet:[rule matchedChatUsers]];
 	}
 
-	NSMutableString *request = [[NSMutableString allocWithZone:nil] initWithCapacity:510];
+	NSMutableString *request = [[NSMutableString allocWithZone:nil] initWithCapacity:JVMaximumISONCommandLength];
 	[request setString:@"ISON "];
 
 	_isonSentCount = 0;
@@ -1193,20 +1194,27 @@ end:
 	MVChatUser *user = nil;
 
 	while( ( user = [enumerator nextObject] ) ) {
+		if( ! [[user connection] isEqual:self] )
+			continue;
+
 		NSString *nick = [user nickname];
-		if( ( [nick length] + [request length] ) > 510 ) {
-			[self sendRawMessage:request];
-			[request release];
-			_isonSentCount++;
+		NSString *nickLower = [nick lowercaseString];
 
-			request = [[NSMutableString allocWithZone:nil] initWithCapacity:510];
-			[request setString:@"ISON "];
+		if( [nick length] && ! [_lastSentIsonNicknames containsObject:nickLower] ) { 
+			if( ( [nick length] + [request length] ) > JVMaximumISONCommandLength ) {
+				[self sendRawMessage:request];
+				[request release];
+				_isonSentCount++;
+
+				request = [[NSMutableString allocWithZone:nil] initWithCapacity:JVMaximumISONCommandLength];
+				[request setString:@"ISON "];
+			}
+
+			[request appendString:nick];
+			[request appendString:@" "];
+
+			[_lastSentIsonNicknames addObject:nickLower];
 		}
-
-		[request appendString:nick];
-		[request appendString:@" "];
-
-		[_lastSentIsonNicknames addObject:nick];
 	}
 
 	@synchronized( _chatUserWatchRules ) {
@@ -1215,20 +1223,22 @@ end:
 
 		while( ( rule = [enumerator nextObject] ) ) {
 			NSString *nick = [rule nickname];
-			if( [nick length] && ! [rule nicknameIsRegularExpression] && ! [_lastSentIsonNicknames containsObject:nick] ) { 
-				if( ( [nick length] + [request length] ) > 510 ) {
+			NSString *nickLower = [nick lowercaseString];
+
+			if( [nick length] && ! [rule nicknameIsRegularExpression] && ! [_lastSentIsonNicknames containsObject:nickLower] ) { 
+				if( ( [nick length] + [request length] ) > JVMaximumISONCommandLength ) {
 					[self sendRawMessage:request];
 					[request release];
 					_isonSentCount++;
 
-					request = [[NSMutableString allocWithZone:nil] initWithCapacity:510];
+					request = [[NSMutableString allocWithZone:nil] initWithCapacity:JVMaximumISONCommandLength];
 					[request setString:@"ISON "];
 				}
 
 				[request appendString:nick];
 				[request appendString:@" "];
 
-				[_lastSentIsonNicknames addObject:nick];
+				[_lastSentIsonNicknames addObject:nickLower];
 			}
 		}
 	}
@@ -2062,12 +2072,15 @@ end:
 		while( ( nick = [enumerator nextObject] ) ) {
 			if( ! [nick length] ) continue;
 
-			if( [_lastSentIsonNicknames containsObject:nick] ) {
+			NSString *nickLower = [nick lowercaseString];
+			if( [_lastSentIsonNicknames containsObject:nickLower] ) {
 				MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
+				if( ! [[user nickname] isEqualToString:nick] && [[user nickname] caseInsensitiveCompare:nick] == NSOrderedSame )
+					[user _setNickname:nick]; // nick differed only in case, change to the proper case
 				if( [[user dateUpdated] timeIntervalSinceNow] < -JVWatchedUserWHOISDelay || ! [user dateUpdated] )
 					[self _scheduleWhoisForUser:user];
 				[self _markUserAsOnline:user];
-				[_lastSentIsonNicknames removeObject:nick];
+				[_lastSentIsonNicknames removeObject:nickLower];
 			}
 		}
 
@@ -2080,6 +2093,20 @@ end:
 
 			[_lastSentIsonNicknames release];
 			_lastSentIsonNicknames = nil;
+		}
+	} else if( [parameters count] == 2 ) {
+		NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+		NSArray *users = [names componentsSeparatedByString:@" "];
+		NSEnumerator *enumerator = [users objectEnumerator];
+		NSString *nick = nil;
+
+		while( ( nick = [enumerator nextObject] ) ) {
+			if( ! [nick length] ) continue;
+
+			MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
+			if( ! [[user nickname] isEqualToString:nick] && [[user nickname] caseInsensitiveCompare:nick] == NSOrderedSame )
+				[user _setNickname:nick]; // nick differed only in case, change to the proper case
+			[self _markUserAsOnline:user];
 		}
 	}
 }
@@ -2281,7 +2308,10 @@ end:
 
 - (void) _handle311WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISUSER
 	if( [parameters count] == 6 ) {
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		NSString *nick = [parameters objectAtIndex:1];
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
+		if( ! [[user nickname] isEqualToString:nick] && [[user nickname] caseInsensitiveCompare:nick] == NSOrderedSame )
+			[user _setNickname:nick]; // nick differed only in case, change to the proper case
 		[user _setUsername:[parameters objectAtIndex:2]];
 		[user _setAddress:[parameters objectAtIndex:3]];
 		[user _setRealName:[self _stringFromPossibleData:[parameters objectAtIndex:5]]];
