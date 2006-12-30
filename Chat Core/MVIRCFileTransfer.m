@@ -6,10 +6,35 @@
 #import "NSNotificationAdditions.h"
 #import "AsyncSocket.h"
 #import "InterThreadMessaging.h"
+#import "Transmission.h"
 
 #define DCCPacketSize 4096
 
-static BOOL acceptConnectionOnFirstPortInRange( AsyncSocket *connection, NSRange ports ) {
+static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
+	int statuses[] = {
+		TR_NAT_TRAVERSAL_MAPPED,
+		TR_NAT_TRAVERSAL_MAPPING,
+		TR_NAT_TRAVERSAL_UNMAPPING,
+		TR_NAT_TRAVERSAL_ERROR,
+		TR_NAT_TRAVERSAL_NOTFOUND,
+		TR_NAT_TRAVERSAL_DISABLED,
+		-1
+	};
+
+	int upnpStatus = TR_NAT_TRAVERSAL_DISABLED;
+	int natpmpStatus = TR_NAT_TRAVERSAL_DISABLED;
+
+	if( upnp ) upnpStatus = tr_upnpStatus( upnp );
+	if( natpmp ) natpmpStatus = tr_natpmpStatus( natpmp );
+
+	for( unsigned i = 0; statuses[i] >= 0; i++ )
+		if( statuses[i] == upnpStatus || statuses[i] == natpmpStatus )
+			return statuses[i];
+
+	return TR_NAT_TRAVERSAL_ERROR;
+}
+
+static BOOL acceptConnectionOnFirstPortInRange( id transfer, AsyncSocket *connection, NSRange ports ) {
 	unsigned int port = ports.location;
 	BOOL success = NO;
 	while( ! success ) {
@@ -17,10 +42,38 @@ static BOOL acceptConnectionOnFirstPortInRange( AsyncSocket *connection, NSRange
 			success = YES;
 			break;
 		} else {
-			if( port == 0 ) break;
 			[connection disconnect];
+			if( port == 0 ) break;
 			if( ++port > NSMaxRange( ports ) )
 				port = 0; // just use a random port since the user defined range is in use
+		}
+	}
+
+	if( success && [[transfer class] isAutoPortMappingEnabled] ) {
+		tr_msgInit();
+		tr_setMessageLevel( 3 );
+
+		static tr_fd_t *fd = NULL;
+		if( ! fd ) fd = tr_fdInit();
+		if( fd ) {
+			tr_upnp_t *upnp = tr_upnpInit( fd );
+			tr_upnpStart( upnp );
+			tr_upnpForwardPort( upnp, port );
+			[transfer _setUPnP:upnp];
+
+			tr_natpmp_t *natpmp = tr_natpmpInit( fd );
+			tr_natpmpStart( natpmp );
+			tr_natpmpForwardPort( natpmp, port );
+			[transfer _setNATPMP:natpmp];
+
+			NSDate *mappingStart = [NSDate date];
+			int status = 0;
+			do {
+				tr_upnpPulse( upnp );
+				tr_natpmpPulse( natpmp );
+				status = natTraversalStatus( upnp, natpmp );
+			} while( ( status == TR_NAT_TRAVERSAL_MAPPING || status == TR_NAT_TRAVERSAL_NOTFOUND )
+					   && ABS( [mappingStart timeIntervalSinceNow] ) < 5. ); 
 		}
 	}
 
@@ -74,6 +127,13 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 - (void) finalize {
 	[_connection disconnect];
 	[_fileHandle closeFile];
+
+	if( _upnp ) tr_upnpClose( _upnp );
+	_upnp = NULL;
+
+	if( _natpmp ) tr_natpmpClose( _natpmp );
+	_natpmp = NULL;
+
 	[super finalize];
 }
 
@@ -94,6 +154,12 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 	_fileHandle = nil;
 	[old closeFile];
 	[old release];
+
+	if( _upnp ) tr_upnpClose( _upnp );
+	_upnp = NULL;
+
+	if( _natpmp ) tr_natpmpClose( _natpmp );
+	_natpmp = NULL;
 
 	_connectionThread = nil;
 
@@ -211,7 +277,7 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 - (void) _waitForConnection {
 	_acceptConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
 
-	BOOL success = acceptConnectionOnFirstPortInRange( _acceptConnection, [[self class] fileTransferPortRange] );
+	BOOL success = acceptConnectionOnFirstPortInRange( self, _acceptConnection, [[self class] fileTransferPortRange] );
 
 	if( success ) {
 		NSString *address = dccFriendlyAddress( _acceptConnection );
@@ -240,6 +306,9 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 
 - (void) _finish {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _finish ) object:nil];	
+
+	if( _upnp ) tr_upnpClose( _upnp );
+	if( _natpmp ) tr_natpmpClose( _natpmp );
 
 	id old = _acceptConnection;
 	_acceptConnection = nil;
@@ -270,6 +339,9 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 
 	BOOL active = YES;
 	while( active && ! _done ) {
+		if( _upnp ) tr_upnpPulse( _upnp );
+		if( _natpmp ) tr_natpmpPulse( _natpmp );
+
 		NSDate *timeout = [[NSDate allocWithZone:nil] initWithTimeIntervalSinceNow:5.];
 		active = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeout];
 		[timeout release];
@@ -294,6 +366,14 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 	[_fileHandle seekToFileOffset:newStartOffset];
 	[super _setStartOffset:newStartOffset];
 }
+
+- (void) _setUPnP:(tr_upnp_t *) upnp {
+	_upnp = upnp;
+}
+
+- (void) _setNATPMP:(tr_natpmp_t *) natpmp {
+	_natpmp = natpmp;
+}
 @end
 
 #pragma mark -
@@ -304,6 +384,12 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 
 	[_fileHandle closeFile];
 	[_fileHandle synchronizeFile];
+
+	if( _upnp ) tr_upnpClose( _upnp );
+	_upnp = NULL;
+
+	if( _natpmp ) tr_natpmpClose( _natpmp );
+	_natpmp = NULL;
 
 	[super finalize];
 }
@@ -326,6 +412,12 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 	[old synchronizeFile];
 	[old closeFile];
 	[old release];
+
+	if( _upnp ) tr_upnpClose( _upnp );
+	_upnp = NULL;
+
+	if( _natpmp ) tr_natpmpClose( _natpmp );
+	_natpmp = NULL;
 
 	_connectionThread = nil;
 
@@ -475,7 +567,7 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 - (void) _waitForConnection {
 	_acceptConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
 
-	BOOL success = acceptConnectionOnFirstPortInRange( _acceptConnection, [[self class] fileTransferPortRange] );
+	BOOL success = acceptConnectionOnFirstPortInRange( self, _acceptConnection, [[self class] fileTransferPortRange] );
 
 	if( success ) {
 		NSString *address = dccFriendlyAddress( _acceptConnection );
@@ -488,6 +580,9 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 
 - (void) _finish {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _finish ) object:nil];	
+
+	if( _upnp ) tr_upnpClose( _upnp );
+	if( _natpmp ) tr_natpmpClose( _natpmp );
 
 	id old = _connection;
 	_connection = nil;
@@ -518,6 +613,9 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 
 	BOOL active = YES;
 	while( active && ! _done ) {
+		if( _upnp ) tr_upnpPulse( _upnp );
+		if( _natpmp ) tr_natpmpPulse( _natpmp );
+
 		NSDate *timeout = [[NSDate allocWithZone:nil] initWithTimeIntervalSinceNow:5.];
 		active = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeout];
 		[timeout release];
@@ -548,5 +646,13 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 
 - (void) _setFileNameQuoted:(unsigned int) quoted {
 	_fileNameQuoted = quoted;
+}
+
+- (void) _setUPnP:(tr_upnp_t *) upnp {
+	_upnp = upnp;
+}
+
+- (void) _setNATPMP:(tr_natpmp_t *) natpmp {
+	_natpmp = natpmp;
 }
 @end

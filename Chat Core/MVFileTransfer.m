@@ -14,6 +14,7 @@ NSString *MVFileTransferErrorOccurredNotification = @"MVFileTransferErrorOccurre
 NSString *MVFileTransferErrorDomain = @"MVFileTransferErrorDomain";
 
 static NSRange portRange = { 1024, 24 };
+static BOOL autoPortMapping = YES;
 
 @implementation MVFileTransfer
 + (void) setFileTransferPortRange:(NSRange) range {
@@ -22,6 +23,14 @@ static NSRange portRange = { 1024, 24 };
 
 + (NSRange) fileTransferPortRange {
 	return portRange;
+}
+
++ (void) setAutoPortMappingEnabled:(BOOL) enable {
+	autoPortMapping = enable;
+}
+
++ (BOOL) isAutoPortMappingEnabled {
+	return autoPortMapping;
 }
 
 #pragma mark -

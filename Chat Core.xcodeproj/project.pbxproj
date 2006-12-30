@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C11689A0B45F98700F57D2C /* libtransmission.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C1168990B45F98700F57D2C /* libtransmission.a */; };
 		1C11B7A109C27AC800789814 /* BSD License.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1C11B7A009C27AC800789814 /* BSD License.txt */; };
 		1C3D55BC05A4CBBE00F25F5E /* NSNumberAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3D55BA05A4CBBE00F25F5E /* NSNumberAdditions.m */; };
 		1C3D55C205A4DC1E00F25F5E /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3D55C005A4DC1E00F25F5E /* NSMethodSignatureAdditions.m */; };
@@ -67,6 +68,8 @@
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1C1168990B45F98700F57D2C /* libtransmission.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtransmission.a; path = Frameworks/libtransmission.a; sourceTree = "<group>"; };
+		1C1168CC0B45FA4700F57D2C /* Transmission.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transmission.h; path = "Chat Core/Transmission.h"; sourceTree = "<group>"; };
 		1C11B7A009C27AC800789814 /* BSD License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "BSD License.txt"; path = "Resources/BSD License.txt"; sourceTree = "<group>"; };
 		1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatPluginManager.h; path = "Chat Core/MVChatPluginManager.h"; sourceTree = "<group>"; };
 		1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatPluginManager.m; path = "Chat Core/MVChatPluginManager.m"; sourceTree = "<group>"; };
@@ -148,6 +151,7 @@
 				1C5A234006FA4FEE00A51F10 /* libsilcclient.framework in Frameworks */,
 				1CEEB173095BE3A000166A54 /* CoreServices.framework in Frameworks */,
 				1C8AAF2B09D6A0A100CF29EB /* AGRegex.framework in Frameworks */,
+				1C11689A0B45F98700F57D2C /* libtransmission.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,6 +189,7 @@
 				1C5A233D06FA4FEE00A51F10 /* libsilc.framework */,
 				1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */,
 				1C8AAF2609D6A0A100CF29EB /* AGRegex.framework */,
+				1C1168990B45F98700F57D2C /* libtransmission.a */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -271,6 +276,7 @@
 				1CEEB163095BE36700166A54 /* AsyncSocket.h */,
 				1CD6290D096118B900BD1DD2 /* InterThreadMessaging.m */,
 				1CD6290C096118B900BD1DD2 /* InterThreadMessaging.h */,
+				1C1168CC0B45FA4700F57D2C /* Transmission.h */,
 			);
 			name = "Sources & Headers";
 			sourceTree = "<group>";

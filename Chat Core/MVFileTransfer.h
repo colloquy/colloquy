@@ -42,6 +42,9 @@ typedef enum {
 + (void) setFileTransferPortRange:(NSRange) range;
 + (NSRange) fileTransferPortRange;
 
++ (void) setAutoPortMappingEnabled:(BOOL) enable;
++ (BOOL) isAutoPortMappingEnabled;
+
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 @property(readonly) BOOL upload;
 @property(readonly) BOOL download;

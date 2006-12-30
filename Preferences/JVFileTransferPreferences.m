@@ -23,6 +23,9 @@
 	[minRate setIntValue:range.location];
 	[maxRate setIntValue:( range.location + range.length )];
 
+	BOOL autoOpen = [MVFileTransfer isAutoPortMappingEnabled];
+	[autoOpenPorts setState:( autoOpen ? NSOnState: NSOffState )];
+
 	NSString *path = [MVFileTransferController userPreferredDownloadFolder];
 	NSMenuItem *menuItem = [saveDownloads itemAtIndex:[saveDownloads indexOfItemWithTag:2]];
 	NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
@@ -44,6 +47,12 @@
 	NSRange range = NSMakeRange( [minRate intValue], ( [maxRate intValue] - [minRate intValue] ) );
 	[[NSUserDefaults standardUserDefaults] setObject:NSStringFromRange( range ) forKey:@"JVFileTransferPortRange"];
 	[MVFileTransfer setFileTransferPortRange:range];
+}
+
+- (IBAction) changeAutoOpenPorts:(id) sender {
+	BOOL autoOpen = ( [sender state] == NSOnState );
+	[[NSUserDefaults standardUserDefaults] setBool:autoOpen forKey:@"JVAutoOpenTransferPorts"];
+	[MVFileTransfer setAutoPortMappingEnabled:autoOpen];
 }
 
 - (IBAction) changeSaveDownloads:(id) sender {
