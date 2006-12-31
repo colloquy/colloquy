@@ -15,9 +15,6 @@ NSString *JVBuddyActiveUserChangedNotification = @"JVBuddyActiveUserChangedNotif
 
 static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
-NSString* const JVBuddyAddressBookIRCNicknameProperty = @"IRCNickname";
-NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JVBuddy.TTSvoice";
-
 @implementation JVBuddy
 + (JVBuddyName) preferredName {
 	return _mainPreferredName;
@@ -630,13 +627,7 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 
 	while( ( user = [enumerator nextObject] ) )
 		if( [[user connection] isEqual:connection] )
-			[_users removeObject:user];
-
-	if( [[[self activeUser] connection] isEqual:connection] )
-		[self setActiveUser:[_users anyObject]];
-
-	if( ! [_users count] )
-		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
+			[self _removeUser:user];
 }
 
 - (void) _ruleMatched:(NSNotification *) notification {

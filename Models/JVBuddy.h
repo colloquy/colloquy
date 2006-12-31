@@ -10,9 +10,6 @@ extern NSString *JVBuddyActiveUserChangedNotification;
 
 @class ABPerson;
 
-extern NSString * const JVBuddyAddressBookIRCNicknameProperty;
-extern NSString* const JVBuddyAddressBookSpeechVoiceProperty;
-
 typedef enum {
 	JVBuddyActiveNickname = 0x0,
 	JVBuddyGivenNickname = 0x1,
