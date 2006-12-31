@@ -36,6 +36,7 @@
 	IBOutlet NSTextField *clientInfo;
 	IBOutlet NSButton *requestInfo;
 	MVChatUser *_user;
+	NSDate *_localTimeUpdated;
 	NSTimer *_localTimeUpdateTimer;
 	NSTimer *_updateTimer;
 	BOOL _nibLoaded;

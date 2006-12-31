@@ -35,7 +35,7 @@
 }
 
 - (NSSet *) supportedAttributes {
-	return [NSSet setWithObjects:MVChatUserPingAttribute, MVChatUserKnownRoomsAttribute, MVChatUserLocalTimeDifferenceAttribute, MVChatUserClientInfoAttribute, nil];
+	return [NSSet setWithObjects:MVChatUserPingAttribute, MVChatUserKnownRoomsAttribute, MVChatUserLocalTimeAttribute, MVChatUserClientInfoAttribute, nil];
 }
 
 #pragma mark -
@@ -95,7 +95,7 @@
 	if( [key isEqualToString:MVChatUserPingAttribute] ) {
 		[self setAttribute:[NSDate date] forKey:@"MVChatUserPingSendDateAttribute"];
 		[self sendSubcodeRequest:@"PING" withArguments:nil];
-	} else if( [key isEqualToString:MVChatUserLocalTimeDifferenceAttribute] ) {
+	} else if( [key isEqualToString:MVChatUserLocalTimeAttribute] ) {
 		[self sendSubcodeRequest:@"TIME" withArguments:nil];
 	} else if( [key isEqualToString:MVChatUserClientInfoAttribute] ) {
 		[self sendSubcodeRequest:@"VERSION" withArguments:nil];
@@ -119,11 +119,8 @@
 		[info release];
 	} else if( [command caseInsensitiveCompare:@"TIME"] == NSOrderedSame ) {
 		NSString *date = [[NSString allocWithZone:nil] initWithData:arguments encoding:[[self connection] encoding]];
-		NSDate *localThere = [NSDate dateWithNaturalLanguageString:date];
-		if( localThere ) {
-			NSTimeInterval diff = [localThere timeIntervalSinceDate:[NSDate date]];
-			[self setAttribute:[NSNumber numberWithDouble:diff] forKey:MVChatUserLocalTimeDifferenceAttribute];
-		} else [self setAttribute:nil forKey:MVChatUserLocalTimeDifferenceAttribute];
+		NSCalendarDate *localThere = [NSCalendarDate dateWithNaturalLanguageString:date];
+		[self setAttribute:localThere forKey:MVChatUserLocalTimeAttribute];
 		[date release];
 	}
 }

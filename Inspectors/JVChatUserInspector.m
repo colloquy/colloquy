@@ -37,10 +37,12 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	[_localTimeUpdated release];
 	[_localTimeUpdateTimer release];
 	[_updateTimer release];
 	[_user release];
 
+	_localTimeUpdated = nil;
 	_localTimeUpdateTimer = nil;
 	_updateTimer = nil;
 	_user = nil;
@@ -91,6 +93,9 @@
 }
 
 - (void) didUnload {
+	[_localTimeUpdated release];
+	_localTimeUpdated = nil;
+
 	[_localTimeUpdateTimer invalidate];
 	[_localTimeUpdateTimer release];
 	_localTimeUpdateTimer = nil;
@@ -178,7 +183,10 @@
 		NSString *pingString = [NSString stringWithFormat:@"%.2f %@", pingSeconds, NSLocalizedString( @"seconds", "plural seconds" )];
 		[ping setObjectValue:pingString];
 		[ping setToolTip:pingString];
-	} else if( [key isEqualToString:MVChatUserLocalTimeDifferenceAttribute] ) {
+	} else if( [key isEqualToString:MVChatUserLocalTimeAttribute] ) {
+		[_localTimeUpdated release];
+		_localTimeUpdated = [[NSDate date] retain];
+
 		[self updateLocalTime];
 		if( ! _localTimeUpdateTimer )
 			_localTimeUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:10. target:self selector:@selector( updateLocalTime ) userInfo:nil repeats:YES] retain];
@@ -202,10 +210,16 @@
 }
 
 - (void) updateLocalTime {
+	NSCalendarDate *current = [_user attributeForKey:MVChatUserLocalTimeAttribute];
+	NSTimeInterval diff = ABS( [_localTimeUpdated timeIntervalSinceNow] );
+
+	NSCalendarDate *adjusted = [[NSCalendarDate alloc] initWithTimeInterval:diff sinceDate:current];
 	NSString *format = [[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString];
-	NSDate *current = [[NSDate dateWithTimeIntervalSinceNow:[[_user attributeForKey:MVChatUserLocalTimeDifferenceAttribute] doubleValue]] dateWithCalendarFormat:format timeZone:nil];
-	[localTime setObjectValue:current];
-	[localTime setToolTip:[current description]];
+	NSCalendarDate *formatedDate = [adjusted dateWithCalendarFormat:format timeZone:[current timeZone]];
+	[adjusted release];
+
+	[localTime setObjectValue:formatedDate];
+	[localTime setToolTip:[formatedDate description]];
 }
 
 - (IBAction) sendPing:(id) sender {
@@ -213,7 +227,7 @@
 }
 
 - (IBAction) requestLocalTime:(id) sender {
-	[_user refreshAttributeForKey:MVChatUserLocalTimeDifferenceAttribute];
+	[_user refreshAttributeForKey:MVChatUserLocalTimeAttribute];
 }
 
 - (IBAction) requestClientInfo:(id) sender {

@@ -20,7 +20,7 @@ typedef enum {
 extern NSString *MVChatUserKnownRoomsAttribute;
 extern NSString *MVChatUserPictureAttribute;
 extern NSString *MVChatUserPingAttribute;
-extern NSString *MVChatUserLocalTimeDifferenceAttribute;
+extern NSString *MVChatUserLocalTimeAttribute;
 extern NSString *MVChatUserClientInfoAttribute;
 extern NSString *MVChatUserVCardAttribute;
 extern NSString *MVChatUserServiceAttribute;
