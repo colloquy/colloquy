@@ -261,9 +261,14 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 }
 
 - (void) setActiveUser:(MVChatUser *) user {
+	if( [_activeUser isEqual:user] )
+		return;
+
 	id old = _activeUser;
 	_activeUser = [user retain];
 	[old release];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyActiveUserChangedNotification object:self userInfo:nil];
 }
 
 #pragma mark -
@@ -569,6 +574,8 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 	if( [self status] != MVChatUserAvailableStatus && [self status] != MVChatUserAwayStatus )
 		[self setActiveUser:user];
 
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyUserCameOnlineNotification object:self userInfo:[NSDictionary dictionaryWithObject:user forKey:@"user"]];
+
 	if( cameOnline )
 		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyCameOnlineNotification object:self userInfo:nil];
 }
@@ -582,13 +589,15 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 	if( [[self activeUser] isEqualToChatUser:user] )
 		[self setActiveUser:[_users anyObject]];
 
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyUserWentOfflineNotification object:self userInfo:[NSDictionary dictionaryWithObject:user forKey:@"user"]];
+
 	if( ! [_users count] )
 		[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyWentOfflineNotification object:self userInfo:nil];
 }
 
 - (void) _buddyIdleUpdate:(NSNotification *) notification {
 	MVChatUser *user = [notification object];
-	NSNotification *note = [NSNotification notificationWithName:JVBuddyUserIdleTimeUpdatedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", nil]];
+	NSNotification *note = [NSNotification notificationWithName:JVBuddyUserIdleTimeUpdatedNotification object:self userInfo:[NSDictionary dictionaryWithObject:user forKey:@"user"]];
 	[[NSNotificationQueue defaultQueue] enqueueNotification:note postingStyle:NSPostASAP coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
 }
 
