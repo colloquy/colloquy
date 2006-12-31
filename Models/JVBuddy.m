@@ -543,10 +543,10 @@ NSString* const JVBuddyAddressBookSpeechVoiceProperty = @"cc.javelin.colloquy.JV
 }
 
 - (NSComparisonResult) serverCompare:(JVBuddy *) buddy {
-	NSString *name1 = [[self activeUser] serverAddress];
-	NSString *name2 = [[buddy activeUser] serverAddress];
-	NSComparisonResult ret = [name1 caseInsensitiveCompare:name2];
-	return ( ret != NSOrderedSame ? ret : [self availabilityCompare:buddy] );
+	NSString *server1 = [[self activeUser] serverAddress];
+	NSString *server2 = [[buddy activeUser] serverAddress];
+	NSComparisonResult ret = [server1 caseInsensitiveCompare:server2];
+	return ( ret != NSOrderedSame ? ret : [self nicknameCompare:buddy] );
 }
 
 - (NSComparisonResult) nicknameCompare:(JVBuddy *) buddy {
