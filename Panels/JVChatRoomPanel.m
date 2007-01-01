@@ -916,10 +916,13 @@
 
 - (void) _memberJoined:(NSNotification *) notification {
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
-	JVChatRoomMember *listItem = [[JVChatRoomMember alloc] initWithRoom:self andUser:user];
-	[_sortedMembers addObject:listItem];
+	JVChatRoomMember *listItem = [[self chatRoomMemberForUser:user] retain];
 
-	[self resortMembers];
+	if( ! listItem ) {
+		listItem = [[JVChatRoomMember alloc] initWithRoom:self andUser:user];
+		[_sortedMembers addObject:listItem];
+		[self resortMembers];
+	}
 
 	NSString *name = [listItem title];
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> joined the chat room.", "a user has join a chat room status message" ), name];
@@ -1321,8 +1324,7 @@
 			MVChatUser *member = nil;
 			while( ( member = [enumerator nextObject] ) ) {
 				JVChatRoomMember *listItem = [self chatRoomMemberForUser:member];
-				if( listItem )
-					[_sortedMembers removeObject:listItem];
+				if( listItem ) [_sortedMembers removeObjectIdenticalTo:listItem];
 			}
 		}
 	}
