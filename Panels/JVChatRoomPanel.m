@@ -61,8 +61,6 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _membersSynced: ) name:MVChatRoomMemberUsersSyncedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _bannedMembersSynced: ) name:MVChatRoomBannedUsersSyncedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberNicknameChanged: ) name:MVChatUserNicknameChangedNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _reloadMemberListItem: ) name:MVChatUserStatusChangedNotification object:target];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _reloadMemberListItem: ) name:MVChatUserIdleTimeUpdatedNotification object:target];
 	}
 
 	return self;
@@ -905,13 +903,6 @@
 	if( index != NSNotFound ) [_preferredTabCompleteNicknames replaceObjectAtIndex:index withObject:[member nickname]];
 
 	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as <span class=\"member\">%@</span>.", "user has changed nicknames" ), oldNickname, [member nickname]] withName:@"memberNewNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:oldNickname, @"old", member, @"who", nil]];
-}
-
-- (void) _reloadMemberListItem:(NSNotification *) notification {
-	if( ! [[self target] hasUser:[notification object]] ) return;
-
-	JVChatRoomMember *member = [self chatRoomMemberForUser:[notification object]];
-	if( member ) [_windowController reloadListItem:member andChildren:NO];
 }
 
 - (void) _memberJoined:(NSNotification *) notification {
