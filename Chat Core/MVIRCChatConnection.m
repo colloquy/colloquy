@@ -2271,7 +2271,11 @@ end:
 				[user setAttribute:[NSDate dateWithTimeIntervalSince1970:time] forKey:MVChatUserBanDateAttribute];
 		}
 
-		if( [room _bansSynced] ) [room _clearBannedUsers];
+		if( [room _bansSynced] ) {
+			[room _clearBannedUsers];
+			[room _setBansSynced:NO];
+		}
+
 		[room _addBanForUser:user];
 	}
 }
