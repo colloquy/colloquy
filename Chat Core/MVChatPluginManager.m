@@ -81,8 +81,9 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 			if( [[file pathExtension] isEqualToString:@"bundle"] || [[file pathExtension] isEqualToString:@"plugin"] ) {
 				NSBundle *bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]];
 				if( [bundle load] && [[bundle principalClass] conformsToProtocol:@protocol( MVChatPlugin )] ) {
-					id plugin = [[[[bundle principalClass] allocWithZone:nil] initWithManager:self] autorelease];
+					id plugin = [[[bundle principalClass] allocWithZone:nil] initWithManager:self];
 					if( plugin ) [self addPlugin:plugin];
+					[plugin release];
 				}
 			}
 		}

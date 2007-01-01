@@ -61,10 +61,12 @@ static void silc_say( SilcClient client, SilcClientConnection conn, SilcClientMe
 		va_start( list, msg );
 
 		NSString *tmp = [NSString stringWithUTF8String:msg];
-		NSString *msgString = [[[NSString allocWithZone:nil] initWithFormat:tmp arguments:list] autorelease];
+		NSString *msgString = [[NSString allocWithZone:nil] initWithFormat:tmp arguments:list];
 		va_end( list );
 
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
+
+		[msgString release];
 	}
 }
 
@@ -88,16 +90,21 @@ static void silc_channel_message( SilcClient client, SilcClientConnection conn, 
 		memset( enc, 0, sizeof( enc ) );
 		if( silc_mime_parse( message, message_len, NULL, 0, type, sizeof( type ) - 1, enc, sizeof( enc ) - 1, &data, &data_len ) ) {
 			if( strstr( enc, "base64" ) ) {
-				NSString *body = [[[NSString allocWithZone:nil] initWithBytes:data length:data_len encoding:NSASCIIStringEncoding] autorelease];
-				msgData = [[[NSData allocWithZone:nil] initWithBase64EncodedString:body] autorelease];
-			} else msgData = [[[NSData allocWithZone:nil] initWithBytes:data length:data_len] autorelease];
-			mimeType = [NSString stringWithBytes:type encoding:NSASCIIStringEncoding];
+				NSString *body = [[NSString allocWithZone:nil] initWithBytes:data length:data_len encoding:NSASCIIStringEncoding];
+				msgData = [[NSData allocWithZone:nil] initWithBase64EncodedString:body];
+				[body release];
+			} else msgData = [[NSData allocWithZone:nil] initWithBytes:data length:data_len];
+
+			mimeType = [[NSString allocWithZone:nil] initWithBytes:type length:strlen( type ) encoding:NSASCIIStringEncoding];
 		}
 	}
 
-	if( ! msgData ) msgData = [NSData dataWithBytes:message length:message_len];
+	if( ! msgData ) msgData = [[NSData allocWithZone:nil] initWithBytes:message length:message_len];
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", mimeType, @"mimeType", [NSNumber numberWithBool:action], @"action", nil]];
+
+	[msgData release];
+	[mimeType release];
 }
 
 static void silc_private_message( SilcClient client, SilcClientConnection conn, SilcClientEntry sender, SilcMessagePayload payload, SilcMessageFlags flags, const unsigned char *message, SilcUInt32 message_len ) {
@@ -119,16 +126,21 @@ static void silc_private_message( SilcClient client, SilcClientConnection conn, 
 		memset( enc, 0, sizeof( enc ) );
 		if( silc_mime_parse( message, message_len, NULL, 0, type, sizeof( type ) - 1, enc, sizeof( enc ) - 1, &data, &data_len ) ) {
 			if( strstr( enc, "base64" ) ) {
-				NSString *body = [[[NSString allocWithZone:nil] initWithBytes:data length:data_len encoding:NSASCIIStringEncoding] autorelease];
-				msgData = [[[NSData allocWithZone:nil] initWithBase64EncodedString:body] autorelease];
-			} else msgData = [[[NSData allocWithZone:nil] initWithBytes:data length:data_len] autorelease];
-			mimeType = [NSString stringWithBytes:type encoding:NSASCIIStringEncoding];
+				NSString *body = [[NSString allocWithZone:nil] initWithBytes:data length:data_len encoding:NSASCIIStringEncoding];
+				msgData = [[NSData allocWithZone:nil] initWithBase64EncodedString:body];
+				[body release];
+			} else msgData = [[NSData allocWithZone:nil] initWithBytes:data length:data_len];
+
+			mimeType = [[NSString allocWithZone:nil] initWithBytes:type length:strlen( type ) encoding:NSASCIIStringEncoding];
 		}
 	}
 
-	if( ! msgData ) msgData = [NSData dataWithBytes:message length:message_len];
+	if( ! msgData ) msgData = [[NSData allocWithZone:nil] initWithBytes:message length:message_len];
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotPrivateMessageNotification object:user userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", mimeType, @"mimeType", [NSNumber numberWithBool:action], @"action", nil]];
+
+	[msgData release];
+	[mimeType release];
 }
 
 static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotifyType type, ... ) {
@@ -613,8 +625,9 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 
 		MVSILCChatRoom *room = (MVSILCChatRoom *)[self joinedChatRoomWithName:[NSString stringWithUTF8String:channel -> channel_name]];
 		if( ! room ) {
-			room = [[[MVSILCChatRoom allocWithZone:nil] initWithChannelEntry:channel andConnection:self] autorelease];
+			room = [[MVSILCChatRoom allocWithZone:nil] initWithChannelEntry:channel andConnection:self];
 			[self _addJoinedRoom:room];
+			[room release];
 		} else {
 			[room updateWithChannelEntry:channel];
 		}
@@ -833,10 +846,12 @@ static bool silc_key_agreement( SilcClient client, SilcClientConnection conn, Si
 		// other user didn't supply hostname - we need to make the connection
 		NSURL *url = [NSURL URLWithString:@"http://colloquy.info/ip.php"];
 		NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:3.];
-		NSMutableData *result = [[[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL] mutableCopy] autorelease];
+		NSMutableData *result = [[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL] mutableCopy];
 		[result appendBytes:"\0" length:1];
 
 		silc_client_send_key_agreement( client, conn, client_entry, [result bytes], NULL, 0, 60, silcgaim_buddy_keyagr_cb, a );
+
+		[result release];
 	}
 #endif
 
