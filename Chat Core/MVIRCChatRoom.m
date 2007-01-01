@@ -254,4 +254,14 @@
 - (void) _setBansSynced:(BOOL) synced {
 	_bansSynced = synced;
 }
+
+- (void) _clearMemberUsers {
+	[super _clearMemberUsers];
+	[self _setNamesSynced:NO];
+}
+
+- (void) _clearBannedUsers {
+	[super _clearBannedUsers];
+	[self _setBansSynced:NO];
+}
 @end

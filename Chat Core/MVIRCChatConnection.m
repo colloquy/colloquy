@@ -1757,7 +1757,6 @@ end:
 
 			[room _setDateJoined:[NSDate date]];
 			[room _setDateParted:nil];
-			[room _setNamesSynced:NO];
 			[room _clearMemberUsers];
 			[room _clearBannedUsers];
 		} else {
@@ -2187,6 +2186,7 @@ end:
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
 		if( room && ! [room _namesSynced] ) {
 			[room _setNamesSynced:YES];
+
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomJoinedNotification object:room];
 
 			if( [[room memberUsers] count] <= JVMaximumMembersForWhoRequest )
@@ -2271,10 +2271,8 @@ end:
 				[user setAttribute:[NSDate dateWithTimeIntervalSince1970:time] forKey:MVChatUserBanDateAttribute];
 		}
 
-		if( [room _bansSynced] ) {
+		if( [room _bansSynced] )
 			[room _clearBannedUsers];
-			[room _setBansSynced:NO];
-		}
 
 		[room _addBanForUser:user];
 	}
