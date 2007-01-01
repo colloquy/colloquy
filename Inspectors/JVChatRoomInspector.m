@@ -89,7 +89,7 @@
 		[saveTopic setBezelStyle:NSShadowlessSquareBezelStyle];
 		[resetTopic setBezelStyle:NSShadowlessSquareBezelStyle];
 
-		NSString *dateFormat = @"%1m/%1d/%Y %1I:%M%p";
+		NSString *dateFormat = [[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString];
 		NSDictionary *locale = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
 		if( [[_room target] isJoined] )
 			[infoField setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"Joined: %@", "chat room joined date label" ), [[[_room target] dateJoined] descriptionWithCalendarFormat:dateFormat timeZone:nil locale:locale]]];
@@ -264,7 +264,7 @@
 	NSString *dateString = nil;
 
 	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) {
-		NSString *dateFormat = @"%1m/%1d/%Y %1I:%M%p";
+		NSString *dateFormat = [[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString];
 		NSDictionary *locale = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
 		dateString = [date descriptionWithCalendarFormat:dateFormat timeZone:nil locale:locale];
 	} else {
