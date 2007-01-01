@@ -318,8 +318,6 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (IBAction) connectNewConnection:(id) sender {
-	MVChatConnection *connection = nil;
-
 	if( ! [[newNickname stringValue] length] ) {
 		[[self window] makeFirstResponder:newNickname];
 		NSRunCriticalAlertPanel( NSLocalizedString( @"Nickname is blank", "chat invalid nickname dialog title" ), NSLocalizedString( @"The nickname is invalid because it was left blank.", "chat nickname blank dialog message" ), nil, nil, nil );
@@ -364,20 +362,25 @@ static NSMenu *favoritesMenu = nil;
 	}
 
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	id data = nil;
+	NSDictionary *info = nil;
 
-	while( ( data = [enumerator nextObject] ) ) {
-		if( [[(MVChatConnection *)[data objectForKey:@"connection"] server] isEqualToString:[newAddress stringValue]] &&
-			[[(MVChatConnection *)[data objectForKey:@"connection"] nickname] isEqualToString:[newNickname stringValue]] ) {
-			if( [(MVChatConnection *)[data objectForKey:@"connection"] isConnected] ) {
+	while( ( info = [enumerator nextObject] ) ) {
+		MVChatConnection *connection = [info objectForKey:@"connection"];
+
+		if( [[connection server] isEqualToString:[newAddress stringValue]] && [connection serverPort] == [newPort intValue] &&
+			[[connection nickname] isEqualToString:[newNickname stringValue]] &&
+			[[connection username] isEqualToString:[newUsername stringValue]] &&
+			[[connection password] isEqualToString:[newServerPassword stringValue]] ) {
+			if( [connection isConnected] ) {
 				NSRunCriticalAlertPanel( NSLocalizedString( @"Already connected", "already connected dialog title" ), NSLocalizedString( @"The chat server with the nickname you specified is already connected to from this computer. Use another nickname if you desire multiple connections.", "chat already connected message" ), nil, nil, nil );
 				[openConnection makeFirstResponder:newNickname];
 			} else {
-				[connections selectRow:[_bookmarks indexOfObject:data] byExtendingSelection:NO];
+				[connections selectRow:[_bookmarks indexOfObject:info] byExtendingSelection:NO];
 				[self _connect:nil];
 				[[self window] makeKeyAndOrderFront:nil];
 				[openConnection orderOut:nil];
 			}
+
 			return;
 		}
 	}
@@ -386,7 +389,7 @@ static NSMenu *favoritesMenu = nil;
 
 	MVChatConnectionType type = ( [[newType selectedItem] tag] == 1 ? MVChatConnectionIRCType : MVChatConnectionSILCType );
 
-	connection = [[[MVChatConnection alloc] initWithType:type] autorelease];
+	MVChatConnection *connection = [[[MVChatConnection alloc] initWithType:type] autorelease];
 	[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
 	[connection setOutgoingChatFormat:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"]];
 	[connection setProxyType:[[newProxy selectedItem] tag]];
@@ -708,7 +711,6 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) handleURL:(NSURL *) url andConnectIfPossible:(BOOL) connect {
 	if( [MVChatConnection supportsURLScheme:[url scheme]] ) {
-		MVChatConnection *connection = nil;
 		NSString *target = nil;
 		BOOL handled = NO;
 
@@ -719,13 +721,14 @@ static NSMenu *favoritesMenu = nil;
 		}
 
 		NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-		id data = nil;
+		NSDictionary *info = nil;
 
-		while( ( data = [enumerator nextObject] ) ) {
-			connection = [data objectForKey:@"connection"];
-			if( [[connection server] isEqualToString:[url host]]
-				&& ( ! [url user] || [[connection nickname] isEqualToString:[url user]] )
-				&& ( ! [connection serverPort] || ! [[url port] unsignedShortValue] || [connection serverPort] == [[url port] unsignedShortValue] ) ) {
+		while( ( info = [enumerator nextObject] ) ) {
+			MVChatConnection *connection = [info objectForKey:@"connection"];
+
+			if( [[connection server] isEqualToString:[url host]] &&
+				( ! [[url user] length] || [[connection nickname] isEqualToString:[url user]] ) &&
+				( ! [[url port] unsignedShortValue] || [connection serverPort] == [[url port] unsignedShortValue] ) ) {
 
 				if( ! [connection isConnected] && connect ) {
 					if( [self showConsoleOnConnectForConnection:connection] )
@@ -736,13 +739,14 @@ static NSMenu *favoritesMenu = nil;
 				if( target ) [connection joinChatRoomNamed:target];
 				else [[self window] orderFront:nil];
 
-				[connections selectRow:[_bookmarks indexOfObject:data] byExtendingSelection:NO];
+				[connections selectRow:[_bookmarks indexOfObject:info] byExtendingSelection:NO];
+
 				handled = YES;
 				break;
 			}
 		}
 
-		if( ! handled && ! [url user] ) {
+		if( ! handled && ! [[url user] length] ) {
 			[newAddress setObjectValue:[url host]];
 
 			unsigned index = [newType indexOfItemWithTag:( [[url scheme] isEqualToString:@"silc"] ? 2 : 1 )];
@@ -753,8 +757,8 @@ static NSMenu *favoritesMenu = nil;
 			if( [url port] ) [newPort setObjectValue:[url port]];
 
 			handled = YES;
-		} else if( ! handled && [url user] ) {
-			connection = [[[MVChatConnection alloc] initWithURL:url] autorelease];
+		} else if( ! handled && [[url user] length] ) {
+			MVChatConnection *connection = [[[MVChatConnection alloc] initWithURL:url] autorelease];
 			[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
 			[connection setOutgoingChatFormat:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"]];
 
