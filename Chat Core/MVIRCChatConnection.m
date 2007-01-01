@@ -858,7 +858,7 @@ end:
 			MVChatUser *chatUser = nil;
 			// if user is not null that shows it was a user not a server sender.
 			// the sender was also a user if senderString equals the current local nickname (some bouncers will do this).
-			if( ( senderString && user && userLength ) || [senderString isEqualToString:_currentNickname] ) {
+			if( ( [senderString length] && user && userLength ) || [senderString isEqualToString:_currentNickname] ) {
 				chatUser = [self chatUserWithUniqueIdentifier:senderString];
 				if( ! [chatUser address] && host && hostLength ) {
 					NSString *hostString = [self _newStringWithBytes:host length:hostLength];
@@ -1256,7 +1256,8 @@ end:
 		return ret;
 	}
 
-	if( ! length ) return @"";
+	if( bytes && ! length )
+		return @"";
 	return nil;
 }
 
