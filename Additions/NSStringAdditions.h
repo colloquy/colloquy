@@ -1,3 +1,5 @@
+BOOL isValidUTF8( const char *s, unsigned len );
+
 @interface NSString (NSStringAdditions)
 + (NSString *) locallyUniqueString;
 

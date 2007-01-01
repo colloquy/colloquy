@@ -25,6 +25,7 @@
 #define JVWatchedUserISONDelay 60.
 #define JVMaximumISONCommandLength 450
 #define JVMaximumMembersForWhoRequest 100
+#define JVFallbackEncoding NSISOLatin1StringEncoding
 
 static const NSStringEncoding supportedEncodings[] = {
 	/* Universal */
@@ -745,8 +746,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (void) socket:(AsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
-	NSString *rawString = [[NSString allocWithZone:nil] initWithData:data encoding:[self encoding]];
-	if( ! rawString ) rawString = [[NSString allocWithZone:nil] initWithData:data encoding:NSISOLatin1StringEncoding];
+	NSString *rawString = [self _newStringWithBytes:[data bytes] length:[data length]];
 
 	const char *line = (const char *)[data bytes];
 	unsigned int len = [data length];
@@ -826,8 +826,7 @@ static const NSStringEncoding supportedEncodings[] = {
 			} else {
 				currentParameter = line;
 				while( notEndOfLine() && *line != ' ' ) line++;
-				param = [[NSString allocWithZone:nil] initWithBytes:currentParameter length:(line - currentParameter) encoding:[self encoding]];
-				if( ! param ) param = [[NSString allocWithZone:nil] initWithBytes:currentParameter length:(line - currentParameter) encoding:NSISOLatin1StringEncoding];
+				param = [self _newStringWithBytes:currentParameter length:(line - currentParameter)];
 				checkAndMarkIfDone();
 				if( ! done ) line++;
 			}
@@ -854,11 +853,7 @@ end:
 		[commandString release];
 
 		if( [self respondsToSelector:selector] ) {
-			NSString *senderString = nil;
-			if( sender && senderLength ) {
-				senderString = [[NSString allocWithZone:nil] initWithBytes:sender length:senderLength encoding:[self encoding]];
-				if( ! senderString ) senderString = [[NSString allocWithZone:nil] initWithBytes:sender length:senderLength encoding:NSISOLatin1StringEncoding];
-			}
+			NSString *senderString = [self _newStringWithBytes:sender length:senderLength];
 
 			MVChatUser *chatUser = nil;
 			// if user is not null that shows it was a user not a server sender.
@@ -866,15 +861,13 @@ end:
 			if( ( senderString && user && userLength ) || [senderString isEqualToString:_currentNickname] ) {
 				chatUser = [self chatUserWithUniqueIdentifier:senderString];
 				if( ! [chatUser address] && host && hostLength ) {
-					NSString *hostString = [[NSString allocWithZone:nil] initWithBytes:host length:hostLength encoding:[self encoding]];
-					if( ! hostString ) hostString = [[NSString allocWithZone:nil] initWithBytes:host length:hostLength encoding:NSISOLatin1StringEncoding];
+					NSString *hostString = [self _newStringWithBytes:host length:hostLength];
 					[chatUser _setAddress:hostString];
 					[hostString release];
 				}
 
 				if( ! [chatUser username] ) {
-					NSString *userString = [[NSString allocWithZone:nil] initWithBytes:user length:userLength encoding:[self encoding]];
-					if( ! userString ) userString = [[NSString allocWithZone:nil] initWithBytes:user length:userLength encoding:NSISOLatin1StringEncoding];
+					NSString *userString = [self _newStringWithBytes:user length:userLength];
 					[chatUser _setUsername:userString];
 					[userString release];
 				}
@@ -1253,12 +1246,22 @@ end:
 
 #pragma mark -
 
-- (NSString *) _stringFromPossibleData:(id) input {
-	if( [input isKindOfClass:[NSData class]] ) {
-		NSString *ret = [[[NSString allocWithZone:nil] initWithData:input encoding:[self encoding]] autorelease];
-		if( ret ) return ret;
-		return [[[NSString allocWithZone:nil] initWithData:input encoding:NSISOLatin1StringEncoding] autorelease];
+- (NSString *) _newStringWithBytes:(const char *) bytes length:(unsigned) length {
+	if( bytes && length ) {
+		BOOL validUTF8 = isValidUTF8( bytes, length );
+		NSStringEncoding encoding = ( [self encoding] != NSUTF8StringEncoding ? [self encoding] : JVFallbackEncoding );
+		NSString *ret = [[NSString allocWithZone:nil] initWithBytes:bytes length:length encoding:( validUTF8 ? NSUTF8StringEncoding : encoding )];
+		if( ! ret && encoding != JVFallbackEncoding ) ret = [[NSString allocWithZone:nil] initWithBytes:bytes length:length encoding:JVFallbackEncoding];
+		return ret;
 	}
+
+	if( ! length ) return @"";
+	return nil;
+}
+
+- (NSString *) _stringFromPossibleData:(id) input {
+	if( [input isKindOfClass:[NSData class]] )
+		return [[self _newStringWithBytes:[input bytes] length:[input length]] autorelease];
 	return input;
 }
 @end
@@ -1504,8 +1507,8 @@ end:
 			else {
 				[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", nil]];
 				if( [[sender nickname] isEqualToString:@"NickServ"] ) {
-					NSString *msg = [[NSString allocWithZone:nil] initWithData:msgData encoding:[self encoding]];
-					if( ! msg ) msg = [[NSString allocWithZone:nil] initWithData:msgData encoding:NSISOLatin1StringEncoding];
+					NSString *msg = [self _newStringWithBytes:[msgData bytes] length:[msgData length]];
+
 					if( [msg rangeOfString:@"NickServ"].location != NSNotFound && [msg rangeOfString:@"IDENTIFY"].location != NSNotFound ) {
 						if( ! [self nicknamePassword] ) {
 							[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
@@ -1515,6 +1518,7 @@ end:
 					} else if( [msg rangeOfString:@"authentication required"].location != NSNotFound ) {
 						[[self localUser] _setIdentified:NO];
 					}
+
 					[msg release];
 				}
 			}
@@ -1533,9 +1537,8 @@ end:
 	const char *current = line;
 
 	while( line != end && *line != ' ' ) line++;
-	NSString *command = [[NSString allocWithZone:nil] initWithBytes:current length:(line - current) encoding:[self encoding]];
-	if( ! command ) command = [[NSString allocWithZone:nil] initWithBytes:current length:(line - current) encoding:NSISOLatin1StringEncoding];
 
+	NSString *command = [self _newStringWithBytes:current length:(line - current)];
 	NSMutableData *arguments = nil;
 	if( line != end ) {
 		line++;
@@ -1595,9 +1598,7 @@ end:
 			// only reply with packets less than 100 bytes, anything over that is bad karma
 			if( [arguments length] < 100 ) [sender sendSubcodeReply:command withArguments:arguments];
 		} else if( [command caseInsensitiveCompare:@"DCC"] == NSOrderedSame ) {
-			NSString *msg = [[NSString allocWithZone:nil] initWithData:arguments encoding:[self encoding]];
-			if( ! msg ) msg = [[NSString allocWithZone:nil] initWithData:arguments encoding:NSISOLatin1StringEncoding];
-
+			NSString *msg = [self _newStringWithBytes:[arguments bytes] length:[arguments length]];
 			NSString *subCommand = nil;
 			NSString *fileName = nil;
 			BOOL quotedFileName = NO;

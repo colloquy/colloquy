@@ -66,5 +66,6 @@
 
 - (void) _resetSupportedFeatures;
 
+- (NSString *) _newStringWithBytes:(const char *) bytes length:(unsigned) length;
 - (NSString *) _stringFromPossibleData:(id) input;
 @end

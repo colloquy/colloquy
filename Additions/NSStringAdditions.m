@@ -1,6 +1,85 @@
 #import "NSStringAdditions.h"
 #include <sys/time.h>
 
+#define is7Bit(ch) (((ch) & 0x80) == 0)
+#define isUTF8Tupel(ch) (((ch) & 0xE0) == 0xC0)
+#define isUTF8LongTupel(ch) (((ch) & 0xFE) == 0xC0)
+#define isUTF8Triple(ch) (((ch) & 0xF0) == 0xE0)
+#define isUTF8LongTriple(ch1,ch2) (((ch1) & 0xFF) == 0xE0 && ((ch2) & 0xE0) == 0x80)
+#define isUTF8Quartet(ch) (((ch) & 0xF8) == 0xF0)
+#define isUTF8LongQuartet(ch1,ch2) (((ch1) & 0xFF) == 0xF0 && ((ch2) & 0xF0) == 0x80)
+#define isUTF8Quintet(ch) (((ch) & 0xFC) == 0xF8)
+#define isUTF8LongQuintet(ch1,ch2) (((ch1) & 0xFF) == 0xF8 && ((ch2) & 0xF8) == 0x80)
+#define isUTF8Sextet(ch) (((ch) & 0xFE) == 0xFC)
+#define isUTF8LongSextet(ch1,ch2) (((ch1) & 0xFF) == 0xFC && ((ch2) & 0xFC) == 0x80)
+#define isUTF8Cont(ch) (((ch) & 0xC0) == 0x80)
+
+BOOL isValidUTF8( const char *s, unsigned len ) {
+	for( unsigned i = 0; i < len; ++i ) {
+		const unsigned char ch = s[i];
+
+		if( is7Bit( ch ) )
+			continue;
+
+		if( isUTF8Tupel( ch ) ) {
+			if( len - i < 1 ) // too short
+				return NO;
+			if( isUTF8LongTupel( ch ) ) // not minimally encoded
+				return NO;
+			if( ! isUTF8Cont( s[i + 1] ) )
+				return NO;
+			i += 1;
+		} else if( isUTF8Triple( ch ) ) {
+			if( len - i < 2 ) // too short
+				return NO;
+			if( isUTF8LongTriple( ch, s[i + 1] ) ) // not minimally encoded
+				return NO;
+			if( ! isUTF8Cont( s[i + 2] ) )
+				return NO;
+			i += 2;
+		} else if( isUTF8Quartet( ch ) ) {
+			if( len - i < 3 ) // too short
+				return NO;
+			if( isUTF8LongQuartet( ch, s[i + 1] ) ) // not minimally encoded
+				return NO;
+			if( ! isUTF8Cont( s[i + 2] ) || ! isUTF8Cont( s[i + 3] ) )
+				return NO;
+			i += 3;
+		} else if( isUTF8Quintet( ch ) ) {
+			if( len - i < 4 ) // too short
+				return NO;
+			if( isUTF8LongQuintet( ch, s[i + 1] ) ) // not minimally encoded
+				return NO;
+			if( ! isUTF8Cont( s[i + 2] ) || ! isUTF8Cont( s[i + 3] ) || ! isUTF8Cont( s[i + 4] ) )
+				return NO;
+			i += 4;
+		} else if( isUTF8Sextet( ch ) ) {
+			if( len - i < 5 ) // too short
+				return NO;
+			if( isUTF8LongSextet( ch, s[i + 1] ) ) // not minimally encoded
+				return NO;
+			if( ! isUTF8Cont( s[i + 2] ) || ! isUTF8Cont( s[i + 3] ) || ! isUTF8Cont( s[i + 4] ) || ! isUTF8Cont( s[i + 5] ) )
+				return NO;
+			i += 5;
+		} else return NO;
+	}
+
+	return YES;
+}
+
+#undef is7Bit
+#undef isUTF8Tupel
+#undef isUTF8LongTupel
+#undef isUTF8Triple
+#undef isUTF8LongTriple
+#undef isUTF8Quartet
+#undef isUTF8LongQuartet
+#undef isUTF8Quintet
+#undef isUTF8LongQuintet
+#undef isUTF8Sextet
+#undef isUTF8LongSextet
+#undef isUTF8Cont
+
 @implementation NSString (NSStringAdditions)
 + (NSString *) locallyUniqueString {
 	struct timeval tv;

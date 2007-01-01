@@ -243,9 +243,11 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		if( bytes[i] == '\006' ) {
 			end = i;
 			j = ++i;
-			for( ; i < length && bytes[i] != '\006' ; i++ ) ;
+
+			for( ; i < length && bytes[i] != '\006' ; i++ );
 			if( i >= length ) break;
 			if( i == j ) continue;
+
 			if( bytes[j++] == 'E' ) {
 				NSString *encodingStr = [[NSString allocWithZone:nil] initWithBytes:&(bytes[j]) length:(i-j) encoding:NSASCIIStringEncoding];
 				NSStringEncoding newEncoding = 0;
@@ -293,12 +295,12 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 				if( newEncoding && newEncoding != currentEncoding ) {
 					if( ( end - start ) > 0 ) {
-						NSData *subdata = [data subdataWithRange:NSMakeRange(start, end-start)];
+						NSData *subdata = [data subdataWithRange:NSMakeRange( start, ( end - start ) )];
 						if( currentEncoding != NSUTF8StringEncoding ) {
 							NSString *tempStr = [[NSString allocWithZone:nil] initWithData:subdata encoding:currentEncoding];
-							// I'd check for nil, except only UTF-8 could fail since the others all
-							// define values for all bytes 0-255
-							subdata = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
+							NSData *tempData = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
+							if( tempData ) subdata = tempData;
+							[tempStr release];
 						}
 
 						[newData appendData:subdata];
@@ -313,10 +315,12 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 	if( [newData length] > 0 || currentEncoding != encoding ) {
 		if( start < length ) {
-			NSData *subdata = [data subdataWithRange:NSMakeRange(start, length-start)];
+			NSData *subdata = [data subdataWithRange:NSMakeRange( start, ( length - start) )];
 			if( currentEncoding != NSUTF8StringEncoding ) {
 				NSString *tempStr = [[NSString allocWithZone:nil] initWithData:subdata encoding:currentEncoding];
-				subdata = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
+				NSData *tempData = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
+				if( tempData ) subdata = tempData;
+				[tempStr release];
 			}
 
 			[newData appendData:subdata];
@@ -326,7 +330,8 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		data = newData;
 	}
 
-	NSString *message = [[[NSString allocWithZone:nil] initWithData:data encoding:encoding] autorelease];
+	BOOL validUTF8 = isValidUTF8( [data bytes], [data length] );
+	NSString *message = [[[NSString allocWithZone:nil] initWithBytes:[data bytes] length:[data length] encoding:( validUTF8 ? NSUTF8StringEncoding : encoding )] autorelease];
 	if( ! message ) {
 		[self release];
 		return nil;
