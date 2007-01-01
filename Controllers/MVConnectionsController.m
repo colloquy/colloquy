@@ -173,7 +173,16 @@ static NSMenu *favoritesMenu = nil;
 	[connections registerForDraggedTypes:[NSArray arrayWithObjects:MVConnectionPboardType,NSURLPboardType,@"CorePasteboardFlavorType 0x75726C20",nil]];
 	[connections setTarget:self];
 	[connections setDoubleAction:@selector( _connect: )];
-	
+
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+	NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"New Connection", "new connection contextual menu item title" ) action:@selector( newConnection: ) keyEquivalent:@""];
+	[item setTarget:self];
+	[menu addItem:item];
+	[item release];
+
+	[connections setMenu:menu];
+	[menu release];
+
 	[userSelectionTable setTarget:self];
 	[userSelectionTable setDoubleAction:@selector( userSelectionSelected: )];
 
@@ -1052,37 +1061,48 @@ static NSMenu *favoritesMenu = nil;
 		NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 		NSMenuItem *item = nil;
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
+		[item release];
 
 		if( connected ) {
-			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Disconnect", "disconnect from server title" ) action:@selector( _disconnect: ) keyEquivalent:@""] autorelease];
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Disconnect", "disconnect from server title" ) action:@selector( _disconnect: ) keyEquivalent:@""];
 			[item setTarget:self];
 			[menu addItem:item];
+			[item release];
 		} else {
-			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Connect", "connect to server title" ) action:@selector( _connect: ) keyEquivalent:@""] autorelease];
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Connect", "connect to server title" ) action:@selector( _connect: ) keyEquivalent:@""];
 			[item setTarget:self];
 			[menu addItem:item];
+			[item release];
 		}
 
 		[menu addItem:[NSMenuItem separatorItem]];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Join Room...", "join room contextual menu item title" ) action:@selector( joinRoom: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Join Room...", "join room contextual menu item title" ) action:@selector( joinRoom: ) keyEquivalent:@""];
 		[item setTarget:self];
 		if( ! [_bookmarks count] ) [item setAction:NULL];
 		[menu addItem:item];
+		[item release];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Message User...", "message user contextual menu item title" ) action:@selector( _messageUser: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Message User...", "message user contextual menu item title" ) action:@selector( _messageUser: ) keyEquivalent:@""];
 		[item setTarget:self];
 		if( ! connected ) [item setAction:NULL];
 		[menu addItem:item];
+		[item release];
 
 		[menu addItem:[NSMenuItem separatorItem]];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Delete", "delete item title" ) action:@selector( _delete: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"New Connection", "new connection contextual menu item title" ) action:@selector( newConnection: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
+		[item release];
+
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Delete", "delete item title" ) action:@selector( _delete: ) keyEquivalent:@""];
+		[item setTarget:self];
+		[menu addItem:item];
+		[item release];
 
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
