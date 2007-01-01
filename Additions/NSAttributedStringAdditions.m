@@ -244,12 +244,12 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			end = i;
 			j = ++i;
 
-			for( ; i < length && bytes[i] != '\006' ; i++ );
+			for( ; i < length && bytes[i] != '\006'; i++ );
 			if( i >= length ) break;
 			if( i == j ) continue;
 
 			if( bytes[j++] == 'E' ) {
-				NSString *encodingStr = [[NSString allocWithZone:nil] initWithBytes:&(bytes[j]) length:(i-j) encoding:NSASCIIStringEncoding];
+				NSString *encodingStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + j ) length:( i - j ) encoding:NSASCIIStringEncoding];
 				NSStringEncoding newEncoding = 0;
 				if( ! [encodingStr length] ) { // if no encoding is declared, go back to user default
 					newEncoding = encoding;
@@ -295,15 +295,18 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 				if( newEncoding && newEncoding != currentEncoding ) {
 					if( ( end - start ) > 0 ) {
-						NSData *subdata = [data subdataWithRange:NSMakeRange( start, ( end - start ) )];
+						NSData *subData = nil;
 						if( currentEncoding != NSUTF8StringEncoding ) {
-							NSString *tempStr = [[NSString allocWithZone:nil] initWithData:subdata encoding:currentEncoding];
-							NSData *tempData = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
-							if( tempData ) subdata = tempData;
+							NSString *tempStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + start ) length:( end - start ) encoding:currentEncoding];
+							NSData *utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
+							if( utf8Data ) subData = [utf8Data retain];
 							[tempStr release];
+						} else {
+							subData = [[NSData allocWithZone:nil] initWithBytesNoCopy:(void *)( bytes + start ) length:( end - start )];
 						}
 
-						[newData appendData:subdata];
+						if( subData ) [newData appendData:subData];
+						[subData release];
 					}
 
 					currentEncoding = newEncoding;
@@ -315,23 +318,28 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 	if( [newData length] > 0 || currentEncoding != encoding ) {
 		if( start < length ) {
-			NSData *subdata = [data subdataWithRange:NSMakeRange( start, ( length - start) )];
+			NSData *subData = nil;
 			if( currentEncoding != NSUTF8StringEncoding ) {
-				NSString *tempStr = [[NSString allocWithZone:nil] initWithData:subdata encoding:currentEncoding];
-				NSData *tempData = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
-				if( tempData ) subdata = tempData;
+				NSString *tempStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + start ) length:( length - start ) encoding:currentEncoding];
+				NSData *utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
+				if( utf8Data ) subData = [utf8Data retain];
 				[tempStr release];
+			} else {
+				subData = [[NSData allocWithZone:nil] initWithBytesNoCopy:(void *)( bytes + start ) length:( length - start )];
 			}
 
-			[newData appendData:subdata];
+			if( subData ) [newData appendData:subData];
+			[subData release];
 		}
 
 		encoding = NSUTF8StringEncoding;
 		data = newData;
 	}
 
-	BOOL validUTF8 = isValidUTF8( [data bytes], [data length] );
-	NSString *message = [[[NSString allocWithZone:nil] initWithBytes:[data bytes] length:[data length] encoding:( validUTF8 ? NSUTF8StringEncoding : encoding )] autorelease];
+	if( encoding != NSUTF8StringEncoding && isValidUTF8( [data bytes], [data length] ) )
+		encoding = NSUTF8StringEncoding;
+
+	NSString *message = [[[NSString allocWithZone:nil] initWithBytes:[data bytes] length:[data length] encoding:encoding] autorelease];
 	if( ! message ) {
 		[self release];
 		return nil;

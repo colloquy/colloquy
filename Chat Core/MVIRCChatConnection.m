@@ -23,7 +23,7 @@
 #define JVSendQueueDelayIncrement 0.01
 #define JVWatchedUserWHOISDelay 300.
 #define JVWatchedUserISONDelay 60.
-#define JVMaximumISONCommandLength 450
+#define JVMaximumISONCommandLength 510
 #define JVMaximumMembersForWhoRequest 100
 #define JVFallbackEncoding NSISOLatin1StringEncoding
 
@@ -1248,9 +1248,10 @@ end:
 
 - (NSString *) _newStringWithBytes:(const char *) bytes length:(unsigned) length {
 	if( bytes && length ) {
-		BOOL validUTF8 = isValidUTF8( bytes, length );
-		NSStringEncoding encoding = ( [self encoding] != NSUTF8StringEncoding ? [self encoding] : JVFallbackEncoding );
-		NSString *ret = [[NSString allocWithZone:nil] initWithBytes:bytes length:length encoding:( validUTF8 ? NSUTF8StringEncoding : encoding )];
+		NSStringEncoding encoding = [self encoding];
+		if( encoding != NSUTF8StringEncoding && isValidUTF8( bytes, length ) )
+			encoding = NSUTF8StringEncoding;
+		NSString *ret = [[NSString allocWithZone:nil] initWithBytes:bytes length:length encoding:encoding];
 		if( ! ret && encoding != JVFallbackEncoding ) ret = [[NSString allocWithZone:nil] initWithBytes:bytes length:length encoding:JVFallbackEncoding];
 		return ret;
 	}
