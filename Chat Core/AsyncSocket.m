@@ -216,6 +216,14 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 	return self;
 }
 
+- (oneway void) release
+{
+	unsigned timerCount = ( thePollTimer ? 1 : 0 ) + ( theWriteTimer ? 1 : 0 ) + ( theReadTimer ? 1 : 0 );
+	if( ( [self retainCount] - timerCount ) == 1 )
+		[self close];
+	[super release];
+}
+
 // The socket may been initialized in a connected state and auto-released, so this should close it down cleanly.
 - (void) dealloc
 {
@@ -654,7 +662,9 @@ Failed:;
 		}
 		
 		// Schedule a poll timer to make up for lost ready-to-read/write notifications. This doesn't have to have a tight poll interval, since it is a backup system.
-		thePollTimer = [NSTimer scheduledTimerWithTimeInterval:POLL_INTERVAL target:self selector:@selector(doPoll:) userInfo:nil repeats:YES];
+		[thePollTimer invalidate];
+		[thePollTimer release];
+		thePollTimer = [[NSTimer scheduledTimerWithTimeInterval:POLL_INTERVAL target:self selector:@selector(doPoll:) userInfo:nil repeats:YES] retain];
 
 		// Call the delegate.
 		CFDataRef peer = CFSocketCopyPeerAddress (theSocket);
@@ -738,6 +748,7 @@ Failed:;
 {
 	// Stop polling.
 	[thePollTimer invalidate];
+	[thePollTimer release];
 	thePollTimer = nil;
 	
 	// Empty queues.
@@ -1214,7 +1225,9 @@ Failed:;
 		// Start time-out timer.
 		if (theCurrentRead->timeout >= 0.0)
 		{
-			theReadTimer = [NSTimer scheduledTimerWithTimeInterval:theCurrentRead->timeout target:self selector:@selector(doReadTimeout:) userInfo:nil repeats:NO];
+			[theReadTimer invalidate];
+			[theReadTimer release];
+			theReadTimer = [[NSTimer scheduledTimerWithTimeInterval:theCurrentRead->timeout target:self selector:@selector(doReadTimeout:) userInfo:nil repeats:NO] retain];
 		}
 
 		// Immediately read, if possible.
@@ -1312,6 +1325,7 @@ Failed:;
 {
 	NSAssert (theCurrentRead, @"Trying to end current read when there is no current read.");
 	[theReadTimer invalidate];
+	[theReadTimer release];
 	theReadTimer = nil;
 	[theCurrentRead release];
 	theCurrentRead = nil;
@@ -1320,6 +1334,11 @@ Failed:;
 - (void) doReadTimeout:(NSTimer *)timer
 {
 	if (timer != theReadTimer) return; // Old timer. Ignore it.
+
+	[theReadTimer invalidate];
+	[theReadTimer release];
+	theReadTimer = nil;
+
 	if (theCurrentRead != nil)
 	{
 		// Send what we got.
@@ -1362,7 +1381,9 @@ Failed:;
 		// Start time-out timer.
 		if (theCurrentWrite->timeout >= 0.0)
 		{
-			theWriteTimer = [NSTimer scheduledTimerWithTimeInterval:theCurrentWrite->timeout target:self selector:@selector(doWriteTimeout:) userInfo:nil repeats:NO];
+			[theWriteTimer invalidate];
+			[theWriteTimer release];
+			theWriteTimer = [[NSTimer scheduledTimerWithTimeInterval:theCurrentWrite->timeout target:self selector:@selector(doWriteTimeout:) userInfo:nil repeats:NO] retain];
 		}
 
 		// Immediately write, if possible.
@@ -1429,6 +1450,7 @@ Failed:;
 {
 	NSAssert (theCurrentWrite, @"Trying to complete current write when there is no current write.");
 	[theWriteTimer invalidate];
+	[theWriteTimer release];
 	theWriteTimer = nil;
 	[theCurrentWrite release];
 	theCurrentWrite = nil;
@@ -1446,6 +1468,11 @@ Failed:;
 - (void) doWriteTimeout:(NSTimer *)timer
 {
 	if (timer != theWriteTimer) return; // Old timer. Ignore it.
+
+	[theWriteTimer invalidate];
+	[theWriteTimer release];
+	theWriteTimer = nil;
+
 	if (theCurrentWrite != nil)
 	{
 		// Send what we got.
