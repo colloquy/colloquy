@@ -31,7 +31,7 @@ typedef enum {
 	unsigned long long _transfered;
 	NSDate *_startDate;
 	NSHost *_host;
-	BOOL _passive : 1;
+	BOOL _passive;
 	unsigned short _port;
 	unsigned long long _startOffset;
 	MVChatUser *_user;

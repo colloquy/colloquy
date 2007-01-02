@@ -4,7 +4,7 @@
 @class MVIRCChatConnection;
 
 @interface MVIRCChatUser : MVChatUser {
-	BOOL _hasPendingRefreshInformationRequest : 1;
+	BOOL _hasPendingRefreshInformationRequest;
 }
 - (id) initLocalUserWithConnection:(MVIRCChatConnection *) connection;
 - (id) initWithNickname:(NSString *) nickname andConnection:(MVIRCChatConnection *) connection;

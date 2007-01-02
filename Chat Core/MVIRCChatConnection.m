@@ -1640,9 +1640,16 @@ end:
 
 					@synchronized( _fileTransfers ) {
 						NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
-						while( ( transfer = [enumerator nextObject] ) )
-							if( [transfer isUpload] && [transfer isPassive] && [[transfer user] isEqualToChatUser:sender] && [(id)transfer _passiveIdentifier] == passiveId )
+						while( ( transfer = [enumerator nextObject] ) ) {
+							if( ! [transfer isUpload] )
+								continue;
+							if( ! [transfer isPassive] )
+								continue;
+							if( ! [[transfer user] isEqualToChatUser:sender] )
+								continue;
+							if( [transfer _passiveIdentifier] == passiveId )
 								break;
+						}
 					}
 
 					if( transfer ) {
@@ -1684,10 +1691,19 @@ end:
 
 				@synchronized( _fileTransfers ) {
 					NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
-					MVFileTransfer *transfer = nil;
+					MVIRCDownloadFileTransfer *transfer = nil;
 					while( ( transfer = [enumerator nextObject] ) ) {
-						if( [transfer isDownload] && [transfer isPassive] == passive && [[transfer user] isEqualToChatUser:sender] &&
-							( ! passive ? [transfer port] == port : [(id)transfer _passiveIdentifier] == passiveId ) ) {
+						if( ! [transfer isDownload] )
+							continue;
+						if( [transfer isPassive] != passive )
+							continue;
+						if( ! [[transfer user] isEqualToChatUser:sender] )
+							continue;
+
+						BOOL portMatches = ( ! passive && [transfer port] == port );
+						BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == passiveId );
+
+						if( portMatches || passiveIdMatches ) {
 							[transfer _setTransfered:(unsigned long long)size];
 							[transfer _setStartOffset:(unsigned long long)size];
 							[(MVIRCDownloadFileTransfer *)transfer _setupAndStart];
@@ -1709,33 +1725,23 @@ end:
 
 				@synchronized( _fileTransfers ) {
 					NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
-					MVFileTransfer *transfer = nil;
+					MVIRCUploadFileTransfer *transfer = nil;
 					while( ( transfer = [enumerator nextObject] ) ) {
-						if( [transfer isUpload] && [transfer isPassive] == passive && [[transfer user] isEqualToChatUser:sender] &&
-							( ! passive ? [transfer port] == port : [(id)transfer _passiveIdentifier] == passiveId ) ) {
+						if( ! [transfer isUpload] )
+							continue;
+						if( [transfer isPassive] != passive )
+							continue;
+						if( ! [[transfer user] isEqualToChatUser:sender] )
+							continue;
+
+						BOOL portMatches = ( ! passive && [transfer port] == port );
+						BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == passiveId );
+
+						if( portMatches || passiveIdMatches ) {
 							[transfer _setTransfered:(unsigned long long)size];
 							[transfer _setStartOffset:(unsigned long long)size];
 							[sender sendSubcodeRequest:@"DCC ACCEPT" withArguments:[msg substringFromIndex:7]];
 							break;
-						}
-					}
-				}
-			} else if( [subCommand caseInsensitiveCompare:@"REJECT"] == NSOrderedSame ) {
-				if( [fileName caseInsensitiveCompare:@"SEND"] == NSOrderedSame ) {
-					if( [scanner scanString:@"\"" intoString:NULL] && [scanner scanUpToString:@"\"" intoString:&fileName] && [scanner scanString:@"\"" intoString:NULL] ) {
-						quotedFileName = YES;
-					} else {
-						[scanner scanUpToCharactersFromSet:whitespace intoString:&fileName];
-					}
-				}
-
-				@synchronized( _fileTransfers ) {
-					NSEnumerator *enumerator = [[[_fileTransfers copy] autorelease] objectEnumerator];
-					MVFileTransfer *transfer = nil;
-					while( ( transfer = [enumerator nextObject] ) ) {
-						if( [transfer isDownload] && [[transfer user] isEqualToChatUser:sender] &&
-							[[(MVDownloadFileTransfer *)transfer originalFileName] caseInsensitiveCompare:fileName] == NSOrderedSame ) {
-							[transfer cancel];
 						}
 					}
 				}
@@ -1745,6 +1751,68 @@ end:
 		} else if( [command caseInsensitiveCompare:@"CLIENTINFO"] == NSOrderedSame ) {
 			// make this extnesible later with a plugin registration method
 			[sender sendSubcodeReply:command withArguments:@"VERSION TIME PING DCC CLIENTINFO"];
+		}
+	} else {
+		if( [command caseInsensitiveCompare:@"DCC"] == NSOrderedSame ) {
+			NSString *msg = [self _newStringWithBytes:[arguments bytes] length:[arguments length]];
+			NSString *subCommand = nil;
+
+			NSCharacterSet *whitespace = [NSCharacterSet whitespaceCharacterSet];
+			NSScanner *scanner = [NSScanner scannerWithString:msg];
+
+			[scanner scanUpToCharactersFromSet:whitespace intoString:&subCommand];
+
+			if( [subCommand caseInsensitiveCompare:@"REJECT"] == NSOrderedSame ) {
+				[scanner scanUpToCharactersFromSet:whitespace intoString:&subCommand];
+
+				if( [subCommand caseInsensitiveCompare:@"SEND"] == NSOrderedSame ) {
+					NSString *fileName = nil;
+					BOOL portKnown = NO;
+					BOOL passive = NO;
+					int port = 0;
+					long long passiveId = 0;
+
+					// scan the filename
+					if( [scanner scanString:@"\"" intoString:NULL] && [scanner scanUpToString:@"\"" intoString:&fileName] && [scanner scanString:@"\"" intoString:NULL] ) {
+						// nothing to do
+					} else {
+						[scanner scanUpToCharactersFromSet:whitespace intoString:&fileName];
+					}
+
+					// skip the address and scan for the port
+					if( [scanner scanUpToCharactersFromSet:whitespace intoString:NULL] && [scanner scanInt:&port] )
+						portKnown = YES;
+
+					// skip the file size and scan for the passive id
+					if( [scanner scanLongLong:NULL] && [scanner scanLongLong:&passiveId] )
+						passive = YES;
+
+					@synchronized( _fileTransfers ) {
+						NSEnumerator *enumerator = [[[_fileTransfers copy] autorelease] objectEnumerator];
+						MVIRCUploadFileTransfer *transfer = nil;
+						while( ( transfer = [enumerator nextObject] ) ) {
+							if( ! [transfer isUpload] )
+								continue;
+							if( [transfer isPassive] != passive )
+								continue;
+							if( ! [[transfer user] isEqualToChatUser:sender] )
+								continue;
+
+							BOOL fileMatches = ( [[[(MVUploadFileTransfer *)transfer source] lastPathComponent] caseInsensitiveCompare:fileName] == NSOrderedSame );
+							if( ! fileMatches && ! portKnown && ! passive )
+								continue;
+
+							BOOL portMatches = ( portKnown && ! passive && [transfer port] == port );
+							BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == passiveId );
+
+							if( fileMatches || portMatches || passiveIdMatches )
+								[transfer cancel];
+						}
+					}
+				}
+			}
+
+			[msg release];
 		}
 	}
 

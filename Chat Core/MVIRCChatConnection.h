@@ -30,8 +30,8 @@
 	NSConditionLock *_threadWaitLock;
 	unsigned short _serverPort;
 	unsigned short _isonSentCount;
-	BOOL _watchCommandSupported : 1;
-	BOOL _sendQueueProcessing : 1;
+	BOOL _watchCommandSupported;
+	BOOL _sendQueueProcessing;
 }
 + (NSArray *) defaultServerPorts;
 @end

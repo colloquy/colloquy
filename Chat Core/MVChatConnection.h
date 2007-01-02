@@ -103,8 +103,8 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSString *_proxyPassword;
 	unsigned short _proxyServerPort;
 
-	BOOL _secure : 1;
-	BOOL _roomListDirty : 1;
+	BOOL _secure;
+	BOOL _roomListDirty;
 
 	NSArray *_alternateNicks;
 	unsigned short _nextAltNickIndex;

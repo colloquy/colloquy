@@ -17,7 +17,7 @@ extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
 	AGRegex *_addressRegex;
 	NSData *_publicKey;
 	NSArray *_applicableServerDomains;
-	BOOL _interim : 1;
+	BOOL _interim;
 }
 - (id) initWithDictionaryRepresentation:(NSDictionary *) dictionary;
 - (NSDictionary *) dictionaryRepresentation;

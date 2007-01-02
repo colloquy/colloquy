@@ -12,11 +12,11 @@
 	NSThread *_connectionThread;
 	NSFileHandle *_fileHandle;
 	NSConditionLock *_threadWaitLock;
-	BOOL _fileNameQuoted : 1;
-	BOOL _readData : 1;
-	BOOL _doneSending : 1;
-	BOOL _done : 1;
-	BOOL _releasing : 1;
+	BOOL _fileNameQuoted;
+	BOOL _readData;
+	BOOL _doneSending;
+	BOOL _done;
+	BOOL _releasing;
 	unsigned int _passiveId;
 }
 - (void) _setupAndStart;
@@ -37,10 +37,10 @@
 	NSThread *_connectionThread;
 	NSFileHandle *_fileHandle;
 	NSConditionLock *_threadWaitLock;
-	BOOL _fileNameQuoted : 1;
-	BOOL _done : 1;
-	BOOL _turbo : 1;
-	BOOL _releasing : 1;
+	BOOL _fileNameQuoted;
+	BOOL _done;
+	BOOL _turbo;
+	BOOL _releasing;
 	unsigned int _passiveId;
 }
 - (void) _setupAndStart;
