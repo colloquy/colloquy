@@ -307,7 +307,10 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _finish ) object:nil];	
 
 	if( _upnp ) tr_upnpClose( _upnp );
+	_upnp = NULL;
+
 	if( _natpmp ) tr_natpmpClose( _natpmp );
+	_natpmp = NULL;
 
 	id old = _acceptConnection;
 	_acceptConnection = nil;
@@ -590,7 +593,10 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _finish ) object:nil];	
 
 	if( _upnp ) tr_upnpClose( _upnp );
+	_upnp = NULL;
+
 	if( _natpmp ) tr_natpmpClose( _natpmp );
+	_natpmp = NULL;
 
 	id old = _connection;
 	_connection = nil;
