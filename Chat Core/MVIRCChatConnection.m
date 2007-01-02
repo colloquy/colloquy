@@ -1691,6 +1691,7 @@ end:
 							[transfer _setTransfered:(unsigned long long)size];
 							[transfer _setStartOffset:(unsigned long long)size];
 							[(MVIRCDownloadFileTransfer *)transfer _setupAndStart];
+							break;
 						}
 					}
 				}
@@ -1715,6 +1716,26 @@ end:
 							[transfer _setTransfered:(unsigned long long)size];
 							[transfer _setStartOffset:(unsigned long long)size];
 							[sender sendSubcodeRequest:@"DCC ACCEPT" withArguments:[msg substringFromIndex:7]];
+							break;
+						}
+					}
+				}
+			} else if( [subCommand caseInsensitiveCompare:@"REJECT"] == NSOrderedSame ) {
+				if( [fileName caseInsensitiveCompare:@"SEND"] == NSOrderedSame ) {
+					if( [scanner scanString:@"\"" intoString:NULL] && [scanner scanUpToString:@"\"" intoString:&fileName] && [scanner scanString:@"\"" intoString:NULL] ) {
+						quotedFileName = YES;
+					} else {
+						[scanner scanUpToCharactersFromSet:whitespace intoString:&fileName];
+					}
+				}
+
+				@synchronized( _fileTransfers ) {
+					NSEnumerator *enumerator = [[[_fileTransfers copy] autorelease] objectEnumerator];
+					MVFileTransfer *transfer = nil;
+					while( ( transfer = [enumerator nextObject] ) ) {
+						if( [transfer isDownload] && [[transfer user] isEqualToChatUser:sender] &&
+							[[(MVDownloadFileTransfer *)transfer originalFileName] caseInsensitiveCompare:fileName] == NSOrderedSame ) {
+							[transfer cancel];
 						}
 					}
 				}

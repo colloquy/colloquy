@@ -424,8 +424,8 @@ static NSString *dccFriendlyAddress( AsyncSocket *connection ) {
 }
 
 - (void) reject {
-	if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT \"%@\"", [self originalFileName]]];
-	else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT %@", [self originalFileName]]];
+	if( _fileNameQuoted ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT SEND \"%@\"", [self originalFileName]]];
+	else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT SEND %@", [self originalFileName]]];
 	[self cancel];
 }
 

@@ -167,7 +167,7 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 			[invocation invokeWithTarget:plugin];
 		} @catch ( NSException *exception ) {
 			NSString *pluginName = [[NSBundle bundleForClass:[plugin class]] objectForInfoDictionaryKey:@"CFBundleName"];
-			NSLog(@"An error occured when calling %@ of plugin %@. %@.", NSStringFromSelector( [invocation selector] ), pluginName, [exception reason] );
+			NSLog( @"An error occured when calling %@ of plugin %@. %@.", NSStringFromSelector( [invocation selector] ), pluginName, [exception reason] );
 			continue;
 		}
 
