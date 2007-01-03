@@ -627,8 +627,8 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		if( ! room ) {
 			room = [[MVSILCChatRoom allocWithZone:nil] initWithChannelEntry:channel andConnection:self];
 			[self _addJoinedRoom:room];
-			[room release];
 		} else {
+			[room retain];
 			[room updateWithChannelEntry:channel];
 		}
 
@@ -645,7 +645,6 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
 
-		[room retain];
 		silc_client_get_clients_by_list( client, conn, list_count, client_id_list, silc_channel_get_clients_per_list_callback, room );
 	}	break;
 	case SILC_COMMAND_MOTD:
