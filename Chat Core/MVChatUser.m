@@ -3,6 +3,7 @@
 #import "MVFileTransfer.h"
 #import "NSNotificationAdditions.h"
 #import "NSDataAdditions.h"
+#import "MVUtilities.h"
 
 NSString *MVChatUserKnownRoomsAttribute = @"MVChatUserKnownRoomsAttribute";
 NSString *MVChatUserPictureAttribute = @"MVChatUserPictureAttribute";
@@ -449,51 +450,35 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 @implementation MVChatUser (MVChatUserPrivate)
 - (void) _setUniqueIdentifier:(id) identifier {
-	id old = _uniqueIdentifier;
-	_uniqueIdentifier = ( [identifier conformsToProtocol:@protocol( NSCopying )] ? [identifier copyWithZone:nil] : [identifier retain] );
-	[old release];
+	MVSafeAssign( &_uniqueIdentifier, ( [identifier conformsToProtocol:@protocol( NSCopying )] ? [identifier copyWithZone:nil] : [identifier retain] ) );
 }
 
 - (void) _setNickname:(NSString *) name {
-	id old = _nickname;
-	_nickname = [name copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_nickname, name );
 }
 
 - (void) _setRealName:(NSString *) name {
-	id old = _realName;
-	_realName = [name copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_realName, name );
 }
 
 - (void) _setUsername:(NSString *) name {
-	id old = _username;
-	_username = [name copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_username, name );
 }
 
 - (void) _setAddress:(NSString *) newAddress {
-	id old = _address;
-	_address = [newAddress copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_address, newAddress );
 }
 
 - (void) _setServerAddress:(NSString *) newServerAddress {
-	id old = _serverAddress;
-	_serverAddress = [newServerAddress copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_serverAddress, newServerAddress );
 }
 
 - (void) _setPublicKey:(NSData *) key {
-	id old = _publicKey;
-	_publicKey = [key copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_publicKey, key );
 }
 
 - (void) _setFingerprint:(NSString *) newFingerprint {
-	id old = _fingerprint;
-	_fingerprint = [newFingerprint copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_fingerprint, newFingerprint );
 }
 
 - (void) _setServerOperator:(BOOL) isServerOperator {
@@ -516,27 +501,19 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (void) _setDateConnected:(NSDate *) date {
-	id old = _dateConnected;
-	_dateConnected = [date copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_dateConnected, date );
 }
 
 - (void) _setDateDisconnected:(NSDate *) date {
-	id old = _dateDisconnected;
-	_dateDisconnected = [date copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_dateDisconnected, date );
 }
 
 - (void) _setDateUpdated:(NSDate *) date {
-	id old = _dateUpdated;
-	_dateUpdated = [date copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_dateUpdated, date );
 }
 
 - (void) _setAwayStatusMessage:(NSData *) newAwayStatusMessage {
-	id old = _awayStatusMessage;
-	_awayStatusMessage = [newAwayStatusMessage copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_awayStatusMessage, newAwayStatusMessage );
 }
 
 - (BOOL) _onlineNotificationSent {

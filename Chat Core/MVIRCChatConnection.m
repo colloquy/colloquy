@@ -14,6 +14,7 @@
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
 #import "NSDataAdditions.h"
+#import "MVUtilities.h"
 
 #define JVMinimumSendQueueDelay 0.2
 #define JVMaximumSendQueueDelay 2.0
@@ -203,13 +204,8 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) connect {
 	if( _status != MVChatConnectionDisconnectedStatus && _status != MVChatConnectionServerDisconnectedStatus && _status != MVChatConnectionSuspendedStatus ) return;
 
-	id old = _lastConnectAttempt;
-	_lastConnectAttempt = [[NSDate allocWithZone:nil] init];
-	[old release];
-
-	old = _queueWait;
-	_queueWait = [[NSDate dateWithTimeIntervalSinceNow:JVQueueWaitBeforeConnected] retain];
-	[old release];
+	MVSafeAssign( &_lastConnectAttempt, [[NSDate allocWithZone:nil] init] );
+	MVSafeRetainAssign( &_queueWait, [NSDate dateWithTimeIntervalSinceNow:JVQueueWaitBeforeConnected] );
 
 	[self _resetSendQueueInterval];
 	[self _resetSupportedFeatures];
@@ -245,10 +241,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) setRealName:(NSString *) name {
 	NSParameterAssert( name != nil );
-
-	id old = _realName;
-	_realName = [name copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_realName, name );
 }
 
 - (NSString *) realName {
@@ -264,15 +257,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( [newNickname isEqualToString:[self nickname]] )
 		return;
 
-	id old = _nickname;
-	_nickname = [newNickname copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_nickname, newNickname );
 
-	if( ! _currentNickname || ! [self isConnected] ) {
-		id old = _currentNickname;
-		_currentNickname = [_nickname retain];
-		[old release];
-	}
+	if( ! _currentNickname || ! [self isConnected] )
+		MVSafeCopyAssign( &_currentNickname, _nickname );
 
 	if( [self isConnected] )
 		[self sendRawMessageImmediatelyWithFormat:@"NICK %@", newNickname];
@@ -297,9 +285,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setPassword:(NSString *) newPassword {
-	id old = _password;
-	_password = [newPassword copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_password, newPassword );
 }
 
 - (NSString *) password {
@@ -311,10 +297,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) setUsername:(NSString *) newUsername {
 	NSParameterAssert( newUsername != nil );
 	NSParameterAssert( [newUsername length] > 0 );
-
-	id old = _username;
-	_username = [newUsername copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_username, newUsername );
 }
 
 - (NSString *) username {
@@ -326,10 +309,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) setServer:(NSString *) newServer {
 	NSParameterAssert( newServer != nil );
 	NSParameterAssert( [newServer length] > 0 );
-
-	id old = _server;
-	_server = [newServer copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_server, newServer );
 }
 
 - (NSString *) server {
@@ -364,10 +344,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( now ) {
 		if( _connectionThread )
 			[self performSelector:@selector( _writeDataToServer: ) withObject:raw inThread:_connectionThread];
-
-		id old = _lastCommand;
-		_lastCommand = [[NSDate allocWithZone:nil] init];
-		[old release];
+		MVSafeAssign( &_lastCommand, [[NSDate allocWithZone:nil] init] );
 	} else {
 		if( ! _sendQueue )
 			_sendQueue = [[NSMutableArray allocWithZone:nil] initWithCapacity:20];
@@ -504,10 +481,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) fetchChatRoomList {
 	if( ! _cachedDate || ABS( [_cachedDate timeIntervalSinceNow] ) > 300. ) {
 		[self sendRawMessage:@"LIST"];
-
-		id old = _cachedDate;
-		_cachedDate = [[NSDate allocWithZone:nil] init];
-		[old release];
+		MVSafeAssign( &_cachedDate, [[NSDate allocWithZone:nil] init] );
 	}
 }
 
@@ -661,9 +635,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {
 	NSLog(@"connection error: %@", error );
-	id old = _lastError;
-	_lastError = [error retain];
-	[old release];
+	MVSafeRetainAssign( &_lastError, error );
 }
 
 - (void) socketDidDisconnect:(AsyncSocket *) sock {
@@ -680,21 +652,10 @@ static const NSStringEncoding supportedEncodings[] = {
 		[_sendQueue removeAllObjects];
 	}
 
-	old = _lastCommand;
-	_lastCommand = nil;
-	[old release];
-
-	old = _queueWait;
-	_queueWait = nil;
-	[old release];
-
-	old = _lastSentIsonNicknames;
-	_lastSentIsonNicknames = nil;
-	[old release];
-
-	old = _pendingWhoisUsers;
-	_pendingWhoisUsers = nil;
-	[old release];
+	MVSafeAssign( &_lastCommand, nil );
+	MVSafeAssign( &_queueWait, nil );
+	MVSafeAssign( &_lastSentIsonNicknames, nil );
+	MVSafeAssign( &_pendingWhoisUsers, nil );
 
 	_isonSentCount = 0;
 
@@ -735,9 +696,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self nickname]];
 	[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", ( [[self username] length] ? [self username] : @"anonymous" ), ( [[self realName] length] ? [self realName] : @"anonymous" )];
 
-	id old = _localUser;
-	_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
-	[old release];
+	MVSafeAssign( &_localUser, [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self] );
 
 	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:JVPeriodicEventsInterval];
 	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:JVPingServerInterval];
@@ -1006,9 +965,7 @@ end:
 }
 
 - (void) _setCurrentNickname:(NSString *) currentNickname {
-	id old = _currentNickname;
-	_currentNickname = [currentNickname copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_currentNickname, currentNickname );
 }
 
 #pragma mark -
@@ -1091,9 +1048,7 @@ end:
 	[self _writeDataToServer:data];
 	[data release];
 
-	id old = _lastCommand;
-	_lastCommand = [[NSDate allocWithZone:nil] init];
-	[old release];
+	MVSafeAssign( &_lastCommand, [[NSDate allocWithZone:nil] init] );
 }
 
 #pragma mark -
@@ -1275,9 +1230,7 @@ end:
 #pragma mark Connecting Replies
 
 - (void) _handle001WithParameters:(NSArray *) parameters fromSender:(id) sender {
-	id old = _queueWait;
-	_queueWait = [[NSDate dateWithTimeIntervalSinceNow:0.5] retain];
-	[old release];
+	MVSafeRetainAssign( &_queueWait, [NSDate dateWithTimeIntervalSinceNow:0.5] );
 
 	[self _resetSendQueueInterval];
 
@@ -1341,11 +1294,8 @@ end:
 			[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
 		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"CHANTYPES="] ) {
 			NSString *types = [feature substringFromIndex:10]; // length of "CHANTYPES="
-			if( [types length] ) {
-				id old = _roomPrefixes;
-				_roomPrefixes = [[NSCharacterSet characterSetWithCharactersInString:types] retain];
-				[old release];
-			}
+			if( [types length] )
+				MVSafeRetainAssign( &_roomPrefixes, [NSCharacterSet characterSetWithCharactersInString:types] );
 		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"PREFIX="] ) {
 			NSScanner *scanner = [NSScanner scannerWithString:feature];
 			[scanner setScanLocation:7]; // length of "PREFIX="

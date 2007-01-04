@@ -2,6 +2,7 @@
 #import "MVChatConnectionPrivate.h"
 #import "MVChatRoom.h"
 #import "MVChatUser.h"
+#import "MVUtilities.h"
 
 #import "NSStringAdditions.h"
 #import "NSDataAdditions.h"
@@ -599,33 +600,23 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (void) _setDateJoined:(NSDate *) date {
-	id old = _dateJoined;
-	_dateJoined = [date copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_dateJoined, date );
 }
 
 - (void) _setDateParted:(NSDate *) date {
-	id old = _dateParted;
-	_dateParted = [date copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_dateParted, date );
 }
 
 - (void) _setTopic:(NSData *) newTopic {
-	id old = _topic;
-	_topic = [newTopic copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_topic, newTopic );
 }
 
 - (void) _setTopicAuthor:(MVChatUser *) author {
-	id old = _topicAuthor;
-	_topicAuthor = [author retain];
-	[old release];
+	MVSafeRetainAssign( &_topicAuthor, author );
 }
 
 - (void) _setTopicDate:(NSDate *) date {
-	id old = _dateTopicChanged;
-	_dateTopicChanged = [date copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_dateTopicChanged, date );
 }
 
 - (void) _updateMemberUser:(MVChatUser *) user fromOldUniqueIdentifier:(id) identifier {

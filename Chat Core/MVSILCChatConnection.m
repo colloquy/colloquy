@@ -9,6 +9,7 @@
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
 #import "NSDataAdditions.h"
+#import "MVUtilities.h"
 
 static SilcPKCS silcPkcs;
 static SilcPublicKey silcPublicKey;
@@ -1181,9 +1182,7 @@ static SilcClientOperations silcClientOps = {
 #pragma mark -
 
 - (void) setServer:(NSString *) newServer {
-	id old = _silcServer;
-	_silcServer = [newServer copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_silcServer, newServer );
 }
 
 - (NSString *) server {
@@ -1437,9 +1436,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 #pragma mark -
 
 - (void) _initLocalUser {
-	id old = _localUser;
-	_localUser = [[MVSILCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
-	[old release];
+	MVSafeAssign( &_localUser, [[MVSILCChatUser allocWithZone:nil] initLocalUserWithConnection:self] );
 }
 
 #pragma mark -

@@ -13,6 +13,7 @@
 #import "NSMethodSignatureAdditions.h"
 #import "NSScriptCommandAdditions.h"
 #import "NSNotificationAdditions.h"
+#import "MVUtilities.h"
 
 NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
 NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectNotification";
@@ -299,9 +300,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setAlternateNicknames:(NSArray *) nicknames {
-	id old = _alternateNicks;
-	_alternateNicks = [nicknames copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_alternateNicks, nicknames );
 	_nextAltNickIndex = 0;
 }
 
@@ -322,10 +321,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setNicknamePassword:(NSString *) newPassword {
-	id old = _npassword;
-	if( [newPassword length] ) _npassword = [newPassword copyWithZone:nil];
-	else _npassword = nil;
-	[old release];
+	MVSafeCopyAssign( &_npassword, newPassword );
 }
 
 - (NSString *) nicknamePassword {
@@ -435,9 +431,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setProxyServer:(NSString *) address {
-	id old = _proxyServer;
-	_proxyServer = [address copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_proxyServer, address );
 }
 
 - (NSString *) proxyServer {
@@ -457,9 +451,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setProxyUsername:(NSString *) newUsername {
-	id old = _proxyUsername;
-	_proxyUsername = [newUsername copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_proxyUsername, newUsername );
 }
 
 - (NSString *) proxyUsername {
@@ -469,9 +461,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setProxyPassword:(NSString *) newPassword {
-	id old = _proxyPassword;
-	_proxyPassword = [newPassword copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_proxyPassword, newPassword );
 }
 
 - (NSString *) proxyPassword {
@@ -788,9 +778,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) _willConnect {
-	id old = _lastError;
-	_lastError = nil;
-	[old release];
+	MVSafeAssign( &_lastError, nil );
 
 	_nextAltNickIndex = 0;
 	_status = MVChatConnectionConnectingStatus;
@@ -853,22 +841,14 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	[_roomsCache removeAllObjects];
 
-	id old = _localUser;
-	_localUser = nil;
-	[old release];
-
-	old = _cachedDate;
-	_cachedDate = nil;
-	[old release];
+	MVSafeAssign( &_localUser, nil );
+	MVSafeAssign( &_cachedDate, nil );
 
 	if( wasConnected ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidDisconnectNotification object:self];
 }
 
 - (void) _postError:(NSError *) error {
-	id old = _lastError;
-	_lastError = [error copyWithZone:nil];
-	[old release];
-
+	MVSafeCopyAssign( &_lastError, error );
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObject:_lastError forKey:@"error"]];
 }
 

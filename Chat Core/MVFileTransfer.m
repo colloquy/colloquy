@@ -4,6 +4,7 @@
 #import "MVChatConnection.h"
 #import "MVIRCChatConnection.h"
 #import "MVChatUser.h"
+#import "MVUtilities.h"
 #import "NSNotificationAdditions.h"
 
 NSString *MVDownloadFileTransferOfferNotification = @"MVDownloadFileTransferOfferNotification";
@@ -159,15 +160,11 @@ static BOOL autoPortMapping = YES;
 }
 
 - (void) _setStartDate:(NSDate *) newStartDate {
-	id old = _startDate;
-	_startDate = [newStartDate retain];
-	[old release];
+	MVSafeRetainAssign( &_startDate, newStartDate );
 }
 
 - (void) _setHost:(NSHost *) newHost {
-	id old = _host;
-	_host = [newHost retain];
-	[old release];
+	MVSafeRetainAssign( &_host, newHost );
 }
 
 - (void) _setPort:(unsigned short) newPort {
@@ -181,9 +178,7 @@ static BOOL autoPortMapping = YES;
 - (void) _postError:(NSError *) error {
 	[self _setStatus:MVFileTransferErrorStatus];
 
-	id old = _lastError;
-	_lastError = [error retain];
-	[old release];
+	MVSafeRetainAssign( &_lastError, error );
 
 	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:error, @"error", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferErrorOccurredNotification object:self userInfo:info];
@@ -231,9 +226,7 @@ static BOOL autoPortMapping = YES;
 
 @implementation MVUploadFileTransfer (MVUploadFileTransferPrivate)
 - (void) _setSource:(NSString *) newSource {
-	id old = _source;
-	_source = [[newSource stringByStandardizingPath] retain];
-	[old release];
+	MVSafeCopyAssign( &_source, [newSource stringByStandardizingPath] );
 }
 @end
 
@@ -254,17 +247,13 @@ static BOOL autoPortMapping = YES;
 
 - (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) rename {
 	// subclass if needed, call super
-	id old = _destination;
+	MVSafeCopyAssign( &_destination, [path stringByStandardizingPath] );
 	_rename = rename;
-	_destination = [[path stringByStandardizingPath] copyWithZone:nil];
-	[old release];
 }
 
 - (void) setDestination:(NSString *) path {
 	// subclass if needed, call super
-	id old = _destination;
-	_destination = [[path stringByStandardizingPath] copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_destination, [path stringByStandardizingPath] );
 }
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
@@ -308,8 +297,6 @@ static BOOL autoPortMapping = YES;
 
 @implementation MVDownloadFileTransfer (MVDownloadFileTransferPrivate)
 - (void) _setOriginalFileName:(NSString *) newOriginalFileName {
-	id old = _originalFileName;
-	_originalFileName = [newOriginalFileName copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_originalFileName, newOriginalFileName );
 }
 @end

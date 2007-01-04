@@ -2,6 +2,7 @@
 #import "MVChatUser.h"
 #import "MVChatUserPrivate.h"
 #import "NSNotificationAdditions.h"
+#import "MVUtilities.h"
 
 #import <AGRegex/AGRegex.h>
 
@@ -185,11 +186,9 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 }
 
 - (void) setNickname:(NSString *) newNickname {
-	id old = _nickname;
-	_nickname = [newNickname copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_nickname, newNickname );
 
-	old = _nicknameRegex;
+	id old = _nicknameRegex;
 	if( _nickname && ( [_nickname length] > 2 ) && [_nickname hasPrefix:@"/"] && [_nickname hasSuffix:@"/"] )
 		_nicknameRegex = [[AGRegex alloc] initWithPattern:[_nickname substringWithRange:NSMakeRange( 1, [_nickname length] - 2)] options:AGRegexCaseInsensitive];
 	else _nicknameRegex = nil;
@@ -205,11 +204,9 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 }
 
 - (void) setRealName:(NSString *) newRealName {
-	id old = _realName;
-	_realName = [newRealName copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_realName, newRealName );
 
-	old = _realNameRegex;
+	id old = _realNameRegex;
 	if( _realName && ( [_realName length] > 2 ) && [_realName hasPrefix:@"/"] && [_realName hasSuffix:@"/"] )
 		_realNameRegex = [[AGRegex alloc] initWithPattern:[_realName substringWithRange:NSMakeRange( 1, [_realName length] - 2)] options:AGRegexCaseInsensitive];
 	else _realNameRegex = nil;
@@ -225,11 +222,9 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 }
 
 - (void) setUsername:(NSString *) newUsername {
-	id old = _username;
-	_username = [newUsername copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_username, newUsername );
 
-	old = _usernameRegex;
+	id old = _usernameRegex;
 	if( _username && ( [_username length] > 2 ) && [_username hasPrefix:@"/"] && [_username hasSuffix:@"/"] )
 		_usernameRegex = [[AGRegex alloc] initWithPattern:[_username substringWithRange:NSMakeRange( 1, [_username length] - 2)] options:AGRegexCaseInsensitive];
 	else _usernameRegex = nil;
@@ -245,11 +240,9 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 }
 
 - (void) setAddress:(NSString *) newAddress {
-	id old = _address;
-	_address = [newAddress copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_address, newAddress );
 
-	old = _addressRegex;
+	id old = _addressRegex;
 	if( _address && ( [_address length] > 2 ) && [_address hasPrefix:@"/"] && [_address hasSuffix:@"/"] )
 		_addressRegex = [[AGRegex alloc] initWithPattern:[_address substringWithRange:NSMakeRange( 1, [_address length] - 2)] options:AGRegexCaseInsensitive];
 	else _addressRegex = nil;
@@ -266,9 +259,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 }
 
 - (void) setPublicKey:(NSData *) publicKey {
-	id old = _publicKey;
-	_publicKey = [publicKey copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_publicKey, publicKey );
 }
 #endif
 
@@ -290,9 +281,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 }
 
 - (void) setApplicableServerDomains:(NSArray *) serverDomains {
-	id old = _applicableServerDomains;
-	_applicableServerDomains = [serverDomains copyWithZone:nil];
-	[old release];
+	MVSafeCopyAssign( &_applicableServerDomains, serverDomains );
 }
 #endif
 @end

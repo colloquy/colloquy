@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1C11689A0B45F98700F57D2C /* libtransmission.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C1168990B45F98700F57D2C /* libtransmission.a */; };
 		1C11B7A109C27AC800789814 /* BSD License.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1C11B7A009C27AC800789814 /* BSD License.txt */; };
+		1C3560060B4CCE95008A93FA /* MVUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C3560050B4CCE95008A93FA /* MVUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C3D55BC05A4CBBE00F25F5E /* NSNumberAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3D55BA05A4CBBE00F25F5E /* NSNumberAdditions.m */; };
 		1C3D55C205A4DC1E00F25F5E /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3D55C005A4DC1E00F25F5E /* NSMethodSignatureAdditions.m */; };
 		1C51B483052DE0CB00BB459B /* NSAttributedStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E98622018B412B01EE70DE /* NSAttributedStringAdditions.m */; };
@@ -73,6 +74,7 @@
 		1C11B7A009C27AC800789814 /* BSD License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "BSD License.txt"; path = "Resources/BSD License.txt"; sourceTree = "<group>"; };
 		1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatPluginManager.h; path = "Chat Core/MVChatPluginManager.h"; sourceTree = "<group>"; };
 		1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatPluginManager.m; path = "Chat Core/MVChatPluginManager.m"; sourceTree = "<group>"; };
+		1C3560050B4CCE95008A93FA /* MVUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVUtilities.h; path = Additions/MVUtilities.h; sourceTree = "<group>"; };
 		1C3D55B905A4CBBE00F25F5E /* NSNumberAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSNumberAdditions.h; path = Additions/NSNumberAdditions.h; sourceTree = "<group>"; };
 		1C3D55BA05A4CBBE00F25F5E /* NSNumberAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSNumberAdditions.m; path = Additions/NSNumberAdditions.m; sourceTree = "<group>"; };
 		1C3D55BF05A4DC1E00F25F5E /* NSMethodSignatureAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSMethodSignatureAdditions.h; path = Additions/NSMethodSignatureAdditions.h; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 				1C7B83C90668D765004F1EFE /* NSNotificationAdditions.h */,
 				1C7C776807DBBA4500FB5F83 /* NSScriptCommandAdditions.m */,
 				1C7C776707DBBA4500FB5F83 /* NSScriptCommandAdditions.h */,
+				1C3560050B4CCE95008A93FA /* MVUtilities.h */,
 			);
 			name = "Other Sources & Additions";
 			sourceTree = "<group>";
@@ -345,6 +348,7 @@
 				1CE4632F095ECDE600AB7732 /* MVFileTransferPrivate.h in Headers */,
 				1CE4633C095ECE4F00AB7732 /* MVChatConnectionPrivate.h in Headers */,
 				1C8AAEFE09D69F2700CF29EB /* MVChatUserWatchRule.h in Headers */,
+				1C3560060B4CCE95008A93FA /* MVUtilities.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
