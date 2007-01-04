@@ -27,3 +27,9 @@ NS_INLINE void MVSafeCopyAssign( id *var, id newValue ) {
 NS_INLINE id MVSafeReturn( id var ) {
 	return [[var retain] autorelease];
 }
+
+#define MVAssertMainThreadRequired() \
+	NSAssert1( [NSThread isMainThread], @"Method needs to run on the main thread, not %@.", [NSThread currentThread] )
+
+#define MVAssertCorrectThreadRequired(thread) \
+	NSAssert2( [NSThread currentThread] == (thread), @"Method needs to run on %@, not %@.", (thread), [NSThread currentThread] )
