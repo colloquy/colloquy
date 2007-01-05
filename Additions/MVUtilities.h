@@ -1,6 +1,8 @@
-#import <Foundation/NSObjCRuntime.h>
+#import <pthread.h>
 
-NS_INLINE void MVSafeAssign( id *var, id newValue ) {
+#define MVInline static __inline__ __attribute__((always_inline))
+
+MVInline void MVSafeAssign( id *var, id newValue ) {
 	if( *var == newValue )
 		return;
 	id old = *var;
@@ -8,7 +10,7 @@ NS_INLINE void MVSafeAssign( id *var, id newValue ) {
 	[old release];
 }
 
-NS_INLINE void MVSafeRetainAssign( id *var, id newValue ) {
+MVInline void MVSafeRetainAssign( id *var, id newValue ) {
 	if( *var == newValue )
 		return;
 	id old = *var;
@@ -16,7 +18,7 @@ NS_INLINE void MVSafeRetainAssign( id *var, id newValue ) {
 	[old release];
 }
 
-NS_INLINE void MVSafeCopyAssign( id *var, id newValue ) {
+MVInline void MVSafeCopyAssign( id *var, id newValue ) {
 	if( *var == newValue )
 		return;
 	id old = *var;
@@ -24,12 +26,12 @@ NS_INLINE void MVSafeCopyAssign( id *var, id newValue ) {
 	[old release];
 }
 
-NS_INLINE id MVSafeReturn( id var ) {
+MVInline id MVSafeReturn( id var ) {
 	return [[var retain] autorelease];
 }
 
 #define MVAssertMainThreadRequired() \
-	NSAssert1( [NSThread isMainThread], @"Method needs to run on the main thread, not %@.", [NSThread currentThread] )
+	NSAssert1( pthread_main_np(), @"Method needs to run on the main thread, not %@.", [NSThread currentThread] )
 
 #define MVAssertCorrectThreadRequired(thread) \
 	NSAssert2( [NSThread currentThread] == (thread), @"Method needs to run on %@, not %@.", (thread), [NSThread currentThread] )

@@ -1,13 +1,14 @@
 #import "NSNotificationAdditions.h"
+#import <pthread.h>
 
 @implementation NSNotificationCenter (NSNotificationCenterAdditions)
 - (void) postNotificationOnMainThread:(NSNotification *) notification {
-	if( [NSThread isMainThread] ) return [self postNotification:notification];
+	if( pthread_main_np() ) return [self postNotification:notification];
 	[self postNotificationOnMainThread:notification waitUntilDone:NO];
 }
 
 - (void) postNotificationOnMainThread:(NSNotification *) notification waitUntilDone:(BOOL) wait {
-	if( [NSThread isMainThread] ) return [self postNotification:notification];
+	if( pthread_main_np() ) return [self postNotification:notification];
 	[[self class] performSelectorOnMainThread:@selector( _postNotification: ) withObject:notification waitUntilDone:wait];
 }
 
@@ -16,17 +17,17 @@
 }
 
 - (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id) object {
-	if( [NSThread isMainThread] ) return [self postNotificationName:name object:object userInfo:nil];
+	if( pthread_main_np() ) return [self postNotificationName:name object:object userInfo:nil];
 	[self postNotificationOnMainThreadWithName:name object:object userInfo:nil waitUntilDone:NO];
 }
 
 - (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id) object userInfo:(NSDictionary *) userInfo {
-	if( [NSThread isMainThread] ) return [self postNotificationName:name object:object userInfo:userInfo];
+	if( pthread_main_np() ) return [self postNotificationName:name object:object userInfo:userInfo];
 	[self postNotificationOnMainThreadWithName:name object:object userInfo:userInfo waitUntilDone:NO];
 }
 
 - (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id) object userInfo:(NSDictionary *) userInfo waitUntilDone:(BOOL) wait {
-	if( [NSThread isMainThread] ) return [self postNotificationName:name object:object userInfo:userInfo];
+	if( pthread_main_np() ) return [self postNotificationName:name object:object userInfo:userInfo];
 
 	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:3];
 	if( name ) [info setObject:name forKey:@"name"];
@@ -49,12 +50,12 @@
 
 @implementation NSNotificationQueue (NSNotificationQueueAdditions)
 - (void) enqueueNotificationOnMainThread:(NSNotification *) notification postingStyle:(NSPostingStyle) postingStyle {
-	if( [NSThread isMainThread] ) return [self enqueueNotification:notification postingStyle:postingStyle coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
+	if( pthread_main_np() ) return [self enqueueNotification:notification postingStyle:postingStyle coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
 	[self enqueueNotificationOnMainThread:notification postingStyle:postingStyle coalesceMask:( NSNotificationCoalescingOnName | NSNotificationCoalescingOnSender ) forModes:nil];
 }
 
 - (void) enqueueNotificationOnMainThread:(NSNotification *) notification postingStyle:(NSPostingStyle) postingStyle coalesceMask:(unsigned) coalesceMask forModes:(NSArray *) modes {
-	if( [NSThread isMainThread] ) return [self enqueueNotification:notification postingStyle:postingStyle coalesceMask:coalesceMask forModes:modes];
+	if( pthread_main_np() ) return [self enqueueNotification:notification postingStyle:postingStyle coalesceMask:coalesceMask forModes:modes];
 
 	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:4];
 	if( notification ) [info setObject:notification forKey:@"notification"];
