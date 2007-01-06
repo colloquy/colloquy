@@ -1703,7 +1703,7 @@ end:
 						if( portMatches || passiveIdMatches ) {
 							[transfer _setTransfered:(unsigned long long)size];
 							[transfer _setStartOffset:(unsigned long long)size];
-							[(MVIRCDownloadFileTransfer *)transfer _setupAndStart];
+							[transfer _setupAndStart];
 							break;
 						}
 					}

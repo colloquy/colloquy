@@ -4,6 +4,7 @@
 @class MVIRCChatConnection;
 
 @interface MVIRCChatRoom : MVChatRoom {
+@private
 	BOOL _namesSynced;
 	BOOL _bansSynced;
 }

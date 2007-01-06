@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C0FE8AB0B4F647D00855B9C /* MVDirectClientConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0FE8A90B4F647D00855B9C /* MVDirectClientConnection.m */; };
 		1C11689A0B45F98700F57D2C /* libtransmission.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C1168990B45F98700F57D2C /* libtransmission.a */; };
 		1C11B7A109C27AC800789814 /* BSD License.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1C11B7A009C27AC800789814 /* BSD License.txt */; };
 		1C3560060B4CCE95008A93FA /* MVUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C3560050B4CCE95008A93FA /* MVUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -69,6 +70,8 @@
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectClientConnection.h; path = "Chat Core/MVDirectClientConnection.h"; sourceTree = "<group>"; };
+		1C0FE8A90B4F647D00855B9C /* MVDirectClientConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDirectClientConnection.m; path = "Chat Core/MVDirectClientConnection.m"; sourceTree = "<group>"; };
 		1C1168990B45F98700F57D2C /* libtransmission.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtransmission.a; path = Frameworks/libtransmission.a; sourceTree = "<group>"; };
 		1C1168CC0B45FA4700F57D2C /* Transmission.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transmission.h; path = "Chat Core/Transmission.h"; sourceTree = "<group>"; };
 		1C11B7A009C27AC800789814 /* BSD License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "BSD License.txt"; path = "Resources/BSD License.txt"; sourceTree = "<group>"; };
@@ -216,6 +219,8 @@
 				1C914B130705BFE100CBA5F1 /* MVIRCChatUser.h */,
 				1C74433B06FE3AB3009AA696 /* MVIRCFileTransfer.m */,
 				1C74433A06FE3AB3009AA696 /* MVIRCFileTransfer.h */,
+				1C0FE8A90B4F647D00855B9C /* MVDirectClientConnection.m */,
+				1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */,
 				1CD62AA10962114500BD1DD2 /* MVIRCNumerics.h */,
 			);
 			name = "IRC Support";
@@ -473,6 +478,7 @@
 				1CEEB166095BE36700166A54 /* AsyncSocket.m in Sources */,
 				1CD6296709611B9100BD1DD2 /* InterThreadMessaging.m in Sources */,
 				1C8AAEFF09D69F2700CF29EB /* MVChatUserWatchRule.m in Sources */,
+				1C0FE8AB0B4F647D00855B9C /* MVDirectClientConnection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

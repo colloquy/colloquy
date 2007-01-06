@@ -3,52 +3,46 @@
 #import "Transmission.h"
 
 @class AsyncSocket;
+@class MVDirectClientConnection;
 
 @interface MVIRCUploadFileTransfer : MVUploadFileTransfer {
-	AsyncSocket *_connection;
-	AsyncSocket *_acceptConnection;
-	tr_natpmp_t *_natpmp;
-	tr_upnp_t *_upnp;
-	NSThread *_connectionThread;
+@private
+	MVDirectClientConnection *_directClientConnection;
 	NSFileHandle *_fileHandle;
-	NSConditionLock *_threadWaitLock;
 	BOOL _fileNameQuoted;
 	BOOL _readData;
 	BOOL _doneSending;
-	BOOL _done;
 	BOOL _releasing;
 	unsigned int _passiveId;
 }
 - (void) _setupAndStart;
 - (void) _sendNextPacket;
-- (void) _finish;
+
+- (void) _setPassiveIdentifier:(unsigned int) identifier;
 - (unsigned int) _passiveIdentifier;
-- (void) _setUPnP:(tr_upnp_t *) upnp;
-- (void) _setNATPMP:(tr_natpmp_t *) natpmp;
+
+- (void) _setFileNameQuoted:(unsigned int) quoted;
+- (BOOL) _fileNameQuoted;
 @end
 
 #pragma mark -
 
 @interface MVIRCDownloadFileTransfer : MVDownloadFileTransfer {
-	AsyncSocket *_connection;
-	AsyncSocket *_acceptConnection;
-	tr_natpmp_t *_natpmp;
-	tr_upnp_t *_upnp;
-	NSThread *_connectionThread;
+	MVDirectClientConnection *_directClientConnection;
 	NSFileHandle *_fileHandle;
-	NSConditionLock *_threadWaitLock;
 	BOOL _fileNameQuoted;
-	BOOL _done;
 	BOOL _turbo;
 	BOOL _releasing;
 	unsigned int _passiveId;
 }
 - (void) _setupAndStart;
-- (void) _finish;
+
 - (void) _setTurbo:(BOOL) turbo;
+- (BOOL) _turbo;
+
 - (void) _setPassiveIdentifier:(unsigned int) identifier;
 - (unsigned int) _passiveIdentifier;
+
 - (void) _setFileNameQuoted:(unsigned int) quoted;
-- (void) _setUPnP:(tr_upnp_t *) upnp;
-- (void) _setNATPMP:(tr_natpmp_t *) natpmp;
+- (BOOL) _fileNameQuoted;
 @end
