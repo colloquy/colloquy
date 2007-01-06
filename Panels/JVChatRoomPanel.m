@@ -214,6 +214,11 @@
 	[menu addItem:item];
 	[item release];
 
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Auto Join", "auto join contextual menu") action:@selector( toggleAutoJoin: ) keyEquivalent:@""];
+	[item setTarget:self];
+	[menu addItem:item];
+	[item release];
+
 	[menu addItem:[NSMenuItem separatorItem]];
 
 	if( [[[self windowController] allChatViewControllers] count] > 1 ) {
@@ -254,6 +259,13 @@
 - (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
 	if( [menuItem action] == @selector( addToFavorites: ) && [menuItem tag] == 10 )
 		[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Add \"%@ (%@)\"", "add to favorites contextual menu"), _target, [[self connection] server]]];
+	else if( [menuItem action] == @selector( toggleAutoJoin: ) ) {
+		NSMutableArray *rooms = [[MVConnectionsController defaultController] joinRoomsForConnection:[self connection]];
+		if( [rooms containsObject:[_target name]] )
+			[menuItem setState:NSOnState];
+		else [menuItem setState:NSOffState];
+	}
+	
 	return YES;
 }
 
@@ -273,6 +285,18 @@
 	[[NSWorkspace sharedWorkspace] noteFileSystemChanged:path];
 
 	[MVConnectionsController refreshFavoritesMenu];
+}
+
+- (IBAction) toggleAutoJoin:(id) sender {
+	NSMutableArray *rooms = [[[MVConnectionsController defaultController] joinRoomsForConnection:[self connection]] mutableCopy];
+
+	if( [rooms containsObject:[_target name]] )
+		[rooms removeObject:[_target name]];
+	else [rooms addObject:[_target name]];
+
+	[[MVConnectionsController defaultController] setJoinRooms:rooms forConnection:[self connection]];
+
+	[rooms release];
 }
 
 - (IBAction) changeEncoding:(id) sender {
