@@ -212,19 +212,19 @@ BOOL isValidUTF8( const char *s, unsigned len ) {
 #pragma mark -
 
 - (BOOL) isCaseInsensitiveEqualToString:(NSString *) string {
-	return [self compare:string options:NSCaseInsensitiveSearch range:NSMakeRange( 0, [self length] ) locale:nil] == NSOrderedSame;
+	return [self compare:string options:NSCaseInsensitiveSearch range:NSMakeRange( 0, [self length] )] == NSOrderedSame;
 }
 
 - (BOOL) hasCaseInsensitivePrefix:(NSString *) prefix {
-	return [self rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch ) range:NSMakeRange( 0, [self length] ) locale:nil].location != NSNotFound;
+	return [self rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch ) range:NSMakeRange( 0, [self length] )].location != NSNotFound;
 }
 
 - (BOOL) hasCaseInsensitiveSuffix:(NSString *) suffix {
-	return [self rangeOfString:suffix options:( NSCaseInsensitiveSearch | NSBackwardsSearch | NSAnchoredSearch ) range:NSMakeRange( 0, [self length] ) locale:nil].location != NSNotFound;
+	return [self rangeOfString:suffix options:( NSCaseInsensitiveSearch | NSBackwardsSearch | NSAnchoredSearch ) range:NSMakeRange( 0, [self length] )].location != NSNotFound;
 }
 
 - (BOOL) hasCaseInsensitiveSubstring:(NSString *) substring {
-	return [self rangeOfString:substring options:NSCaseInsensitiveSearch range:NSMakeRange( 0, [self length] ) locale:nil].location != NSNotFound;
+	return [self rangeOfString:substring options:NSCaseInsensitiveSearch range:NSMakeRange( 0, [self length] )].location != NSNotFound;
 }
 
 #pragma mark -
