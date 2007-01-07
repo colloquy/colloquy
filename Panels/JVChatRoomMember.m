@@ -351,13 +351,13 @@
 		[menu addItem:item];
 
 	unsigned int localUserModes = ( [[self connection] localUser] ? [(MVChatRoom *)[_room target] modesForMemberUser:[[self connection] localUser]] : 0 );
-	BOOL canEdit = ( localUserModes & MVChatRoomMemberOperatorMode );
-	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberHalfOperatorMode );
-	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberAdministratorMode );
-	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberFounderMode );
-	if( ! canEdit ) canEdit = [[[self connection] localUser] isServerOperator];
+	BOOL localUserIsOperator = ( localUserModes & MVChatRoomMemberOperatorMode );
+	BOOL localUserIsHalfOperator = ( localUserModes & MVChatRoomMemberHalfOperatorMode );
+	BOOL localUserIsAdministrator = ( localUserModes & MVChatRoomMemberAdministratorMode );
+	BOOL localUserIsFounder = ( localUserModes & MVChatRoomMemberFounderMode );
+//	BOOL localUserIsServerOperator = [[[self connection] localUser] isServerOperator];
 
-	if( canEdit ) {
+	if( localUserIsHalfOperator || localUserIsOperator || localUserIsAdministrator || localUserIsFounder ) {
 		[menu addItem:[NSMenuItem separatorItem]];
 
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kick From Room", "kick from room contextual menu - admin only" ) action:@selector( kick: ) keyEquivalent:@""] autorelease];
@@ -394,39 +394,46 @@
 			[item setTarget:self];
 			[menu addItem:item];
 		}
+	}
 
-		[menu addItem:[NSMenuItem separatorItem]];
+	[menu addItem:[NSMenuItem separatorItem]];
 
-		NSSet *features = [[self connection] supportedFeatures];
+	NSSet *features = [[self connection] supportedFeatures];
 
+	if( ( localUserIsOperator || localUserIsAdministrator || localUserIsFounder ) && ( (localUserIsOperator && ! ([self roomAdministrator] || [self roomFounder])) || (localUserIsAdministrator && ! [self roomFounder]) ) ) {
 		if( [features containsObject:MVChatRoomMemberOperatorFeature] ) {
-			// correct title is added later in validateMenuItem:
-			item = [[[NSMenuItem alloc] initWithTitle:@"" action:@selector( toggleOperatorStatus: ) keyEquivalent:@""] autorelease];
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Operator", "operator contextual menu - admin only") action:@selector( toggleOperatorStatus: ) keyEquivalent:@""];
 			[item setTarget:self];
 			[menu addItem:item];
+			[item release];
 		}
 
 		if( [features containsObject:MVChatRoomMemberHalfOperatorFeature] ) {
-			// correct title is added later in validateMenuItem:
-			item = [[[NSMenuItem alloc] initWithTitle:@"" action:@selector( toggleHalfOperatorStatus: ) keyEquivalent:@""] autorelease];
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Half Operator", "half operator contextual menu - admin only") action:@selector( toggleHalfOperatorStatus: ) keyEquivalent:@""];
 			[item setTarget:self];
 			[menu addItem:item];
+			[item release];
 		}
+	}
 
-		if( [features containsObject:MVChatRoomMemberVoicedFeature] ) {
-			// correct title is added later in validateMenuItem:
-			item = [[[NSMenuItem alloc] initWithTitle:@"" action:@selector( toggleVoiceStatus: ) keyEquivalent:@""] autorelease];
+	if( localUserIsHalfOperator || localUserIsOperator || localUserIsAdministrator || localUserIsFounder ) {
+		if( [features containsObject:MVChatRoomMemberVoicedFeature] && ( (localUserIsHalfOperator && ! ([self operator] || [self roomAdministrator] || [self roomFounder]) ) || (localUserIsOperator && ! ([self roomAdministrator] || [self roomFounder])) || (localUserIsAdministrator && ! [self roomFounder]) ) ) {
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Voice", "voice contextual menu - admin only") action:@selector( toggleVoiceStatus: ) keyEquivalent:@""];
 			[item setTarget:self];
 			[menu addItem:item];
+			[item release];
 		}
 
 		if( [features containsObject:MVChatRoomMemberQuietedFeature] ) {
-			// correct title is added later in validateMenuItem:
-			item = [[[NSMenuItem alloc] initWithTitle:@"" action:@selector( toggleQuietedStatus: ) keyEquivalent:@""] autorelease];
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Quieted", "quieted contextual menu - admin only") action:@selector( toggleQuietedStatus: ) keyEquivalent:@""];
 			[item setTarget:self];
 			[menu addItem:item];
+			[item release];
 		}
 	}
+
+	if( [[[menu itemArray] lastObject] isSeparatorItem] )
+		[menu removeItem:[[menu itemArray] lastObject]];
 
 	return menu;
 }
@@ -435,28 +442,27 @@
 	if( ! [[self connection] isConnected] ) return NO;
 	if( [menuItem action] == @selector( toggleVoiceStatus: ) ) {
 		if( [self voice] ) {
-			[menuItem setTitle:NSLocalizedString( @"Remove Voice", "remove voice contextual menu - admin only" )];
+			[menuItem setState:NSOnState];
 		} else {
-			[menuItem setTitle:NSLocalizedString( @"Grant Voice", "grant voice contextual menu - admin only" )];
-			if( [self operator] || ! [[self connection] isConnected] ) return NO;
+			[menuItem setState:NSOffState];
 		}
 	} else if( [menuItem action] == @selector( toggleQuietedStatus: ) ) {
 		if( [self quieted] ) {
-			[menuItem setTitle:NSLocalizedString( @"Remove Quiet", "remove quiet contextual menu - admin only" )];
+			[menuItem setState:NSOnState];
 		} else {
-			[menuItem setTitle:NSLocalizedString( @"Force Quiet", "force quiet contextual menu - admin only" )];
+			[menuItem setState:NSOffState];
 		}
 	} else if( [menuItem action] == @selector( toggleOperatorStatus: ) ) {
 		if( [self operator] ) {
-			[menuItem setTitle:NSLocalizedString( @"Demote Operator", "demote operator contextual menu - admin only" )];
+			[menuItem setState:NSOnState];
 		} else {
-			[menuItem setTitle:NSLocalizedString( @"Make Operator", "make operator contextual menu - admin only" )];
+			[menuItem setState:NSOffState];
 		}
 	} else if( [menuItem action] == @selector( toggleHalfOperatorStatus: ) ) {
 		if( [self halfOperator] ) {
-			[menuItem setTitle:NSLocalizedString( @"Demote Half Operator", "demote half-operator contextual menu - admin only" )];
+			[menuItem setState:NSOnState];
 		} else {
-			[menuItem setTitle:NSLocalizedString( @"Make Half Operator", "make half-operator contextual menu - admin only" )];
+			[menuItem setState:NSOffState];
 		}
 	}
 	return YES;
@@ -501,22 +507,36 @@
 
 - (IBAction) toggleOperatorStatus:(id) sender {
 	if( [self operator] ) [[_room target] removeMode:MVChatRoomMemberOperatorMode forMemberUser:_user];
-	else [[_room target] setMode:MVChatRoomMemberOperatorMode forMemberUser:_user];
+	else {
+		[[_room target] setMode:MVChatRoomMemberOperatorMode forMemberUser:_user];
+		if( [self halfOperator] ) [[_room target] removeMode:MVChatRoomMemberHalfOperatorMode forMemberUser:_user];
+		if( [self voice] ) [[_room target] removeMode:MVChatRoomMemberVoicedMode forMemberUser:_user];
+	}
 }
 
 - (IBAction) toggleHalfOperatorStatus:(id) sender {
 	if( [self halfOperator] ) [[_room target] removeMode:MVChatRoomMemberHalfOperatorMode forMemberUser:_user];
-	else [[_room target] setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:_user];
+	else { 
+		[[_room target] setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:_user];
+		if( [self operator] ) [[_room target] removeMode:MVChatRoomMemberOperatorMode forMemberUser:_user];
+		if( [self voice] ) [[_room target] removeMode:MVChatRoomMemberVoicedMode forMemberUser:_user];
+	}
 }
 
 - (IBAction) toggleVoiceStatus:(id) sender {
 	if( [self voice] ) [[_room target] removeMode:MVChatRoomMemberVoicedMode forMemberUser:_user];
-	else [[_room target] setMode:MVChatRoomMemberVoicedMode forMemberUser:_user];
+	else {
+		[[_room target] setMode:MVChatRoomMemberVoicedMode forMemberUser:_user];
+		if( [self operator] ) [[_room target] removeMode:MVChatRoomMemberOperatorMode forMemberUser:_user];
+		if( [self halfOperator] ) [[_room target] removeMode:MVChatRoomMemberHalfOperatorMode forMemberUser:_user];
+	}
 }
 
 - (IBAction) toggleQuietedStatus:(id) sender {
 	if( [self quieted] ) [[_room target] removeMode:MVChatRoomMemberQuietedMode forMemberUser:_user];
-	else [[_room target] setMode:MVChatRoomMemberQuietedMode forMemberUser:_user];
+	else {
+		[[_room target] setMode:MVChatRoomMemberQuietedMode forMemberUser:_user];
+	}
 }
 
 #pragma mark -
