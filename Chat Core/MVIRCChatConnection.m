@@ -3,6 +3,7 @@
 #import "MVIRCChatUser.h"
 #import "MVIRCFileTransfer.h"
 #import "MVIRCNumerics.h"
+#import "MVDirectChatConnectionPrivate.h"
 
 #import "AsyncSocket.h"
 #import "InterThreadMessaging.h"
@@ -1506,13 +1507,13 @@ end:
 				if( [[sender nickname] isEqualToString:@"NickServ"] ) {
 					NSString *msg = [self _newStringWithBytes:[msgData bytes] length:[msgData length]];
 
-					if( [msg rangeOfString:@"NickServ"].location != NSNotFound && [msg rangeOfString:@"IDENTIFY"].location != NSNotFound ) {
+					if( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"IDENTIFY"] ) {
 						if( ! [self nicknamePassword] ) {
 							[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 						} else [self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", [self nicknamePassword]];
-					} else if( [msg rangeOfString:@"Password accepted"].location != NSNotFound ) {
+					} else if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ) {
 						[[self localUser] _setIdentified:YES];
-					} else if( [msg rangeOfString:@"authentication required"].location != NSNotFound ) {
+					} else if( [msg hasCaseInsensitiveSubstring:@"authentication required"] || [msg hasCaseInsensitiveSubstring:@"nickname is owned"] ) {
 						[[self localUser] _setIdentified:NO];
 					}
 
@@ -1538,13 +1539,13 @@ end:
 	while( line != end && *line != ' ' ) line++;
 
 	NSString *command = [self _newStringWithBytes:current length:(line - current)];
-	NSMutableData *arguments = nil;
+	NSData *arguments = nil;
 	if( line != end ) {
 		line++;
-		arguments = [[NSMutableData allocWithZone:nil] initWithBytes:line length:(end - line)];
+		arguments = [[NSData allocWithZone:nil] initWithBytes:line length:(end - line)];
 	}
 
-	if( [command caseInsensitiveCompare:@"ACTION"] == NSOrderedSame && arguments ) {
+	if( [command isCaseInsensitiveEqualToString:@"ACTION"] && arguments ) {
 		// special case ACTION and send it out like a message with the action flag
 		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", arguments, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
 		else [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:arguments, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", nil]];
@@ -1573,7 +1574,7 @@ end:
 	}
 
 	if( request ) {
-		if( [command caseInsensitiveCompare:@"VERSION"] == NSOrderedSame ) {
+		if( [command isCaseInsensitiveEqualToString:@"VERSION"] ) {
 			NSDictionary *systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/ServerVersion.plist"];
 			if( ! [systemVersion count] ) systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
 			NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
@@ -1591,12 +1592,12 @@ end:
 
 			[reply release];
 			[systemVersion release];
-		} else if( [command caseInsensitiveCompare:@"TIME"] == NSOrderedSame ) {
+		} else if( [command isCaseInsensitiveEqualToString:@"TIME"] ) {
 			[sender sendSubcodeReply:command withArguments:[[NSDate date] description]];
-		} else if( [command caseInsensitiveCompare:@"PING"] == NSOrderedSame ) {
+		} else if( [command isCaseInsensitiveEqualToString:@"PING"] ) {
 			// only reply with packets less than 100 bytes, anything over that is bad karma
 			if( [arguments length] < 100 ) [sender sendSubcodeReply:command withArguments:arguments];
-		} else if( [command caseInsensitiveCompare:@"DCC"] == NSOrderedSame ) {
+		} else if( [command isCaseInsensitiveEqualToString:@"DCC"] ) {
 			NSString *msg = [self _newStringWithBytes:[arguments bytes] length:[arguments length]];
 			NSString *subCommand = nil;
 			NSString *fileName = nil;
@@ -1613,7 +1614,7 @@ end:
 				[scanner scanUpToCharactersFromSet:whitespace intoString:&fileName];
 			}
 
-			if( [subCommand caseInsensitiveCompare:@"SEND"] == NSOrderedSame ) {
+			if( [subCommand isCaseInsensitiveEqualToString:@"SEND"] ) {
 				NSString *address = nil;
 				int port = 0;
 				long long size = 0;
@@ -1674,7 +1675,7 @@ end:
 					[self _addFileTransfer:transfer];
 					[transfer release];
 				}
-			} else if( [subCommand caseInsensitiveCompare:@"ACCEPT"] == NSOrderedSame ) {
+			} else if( [subCommand isCaseInsensitiveEqualToString:@"ACCEPT"] ) {
 				BOOL passive = NO;
 				int port = 0;
 				long long size = 0;
@@ -1708,7 +1709,7 @@ end:
 						}
 					}
 				}
-			} else if( [subCommand caseInsensitiveCompare:@"RESUME"] == NSOrderedSame ) {
+			} else if( [subCommand isCaseInsensitiveEqualToString:@"RESUME"] ) {
 				BOOL passive = NO;
 				int port = 0;
 				long long size = 0;
@@ -1742,15 +1743,40 @@ end:
 						}
 					}
 				}
+			} else if( [subCommand isCaseInsensitiveEqualToString:@"CHAT"] ) {
+				NSString *address = nil;
+				int port = 0;
+
+				[scanner scanUpToCharactersFromSet:whitespace intoString:&address];
+				[scanner scanInt:&port];
+
+				if( [address rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@".:"]].location == NSNotFound ) {
+					unsigned int ip4 = 0;
+					sscanf( [address UTF8String], "%u", &ip4 );
+					address = [NSString stringWithFormat:@"%lu.%lu.%lu.%lu", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
+				}
+
+				NSHost *host = [NSHost hostWithAddress:address];
+
+				if( [fileName isCaseInsensitiveEqualToString:@"CHAT"] || [fileName isCaseInsensitiveEqualToString:@"C H A T"] ) {
+					MVDirectChatConnection *directChatConnection = [(MVDirectChatConnection *)[MVDirectChatConnection allocWithZone:nil] initWithUser:sender];
+					[directChatConnection _setPassive:NO];
+					[directChatConnection _setHost:host];
+					[directChatConnection _setPort:port];
+
+					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionOfferNotification object:directChatConnection userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
+
+					[directChatConnection release];
+				}
 			}
 
 			[msg release];
-		} else if( [command caseInsensitiveCompare:@"CLIENTINFO"] == NSOrderedSame ) {
+		} else if( [command isCaseInsensitiveEqualToString:@"CLIENTINFO"] ) {
 			// make this extnesible later with a plugin registration method
 			[sender sendSubcodeReply:command withArguments:@"VERSION TIME PING DCC CLIENTINFO"];
 		}
 	} else {
-		if( [command caseInsensitiveCompare:@"DCC"] == NSOrderedSame ) {
+		if( [command isCaseInsensitiveEqualToString:@"DCC"] ) {
 			NSString *msg = [self _newStringWithBytes:[arguments bytes] length:[arguments length]];
 			NSString *subCommand = nil;
 
@@ -1759,10 +1785,10 @@ end:
 
 			[scanner scanUpToCharactersFromSet:whitespace intoString:&subCommand];
 
-			if( [subCommand caseInsensitiveCompare:@"REJECT"] == NSOrderedSame ) {
+			if( [subCommand isCaseInsensitiveEqualToString:@"REJECT"] ) {
 				[scanner scanUpToCharactersFromSet:whitespace intoString:&subCommand];
 
-				if( [subCommand caseInsensitiveCompare:@"SEND"] == NSOrderedSame ) {
+				if( [subCommand isCaseInsensitiveEqualToString:@"SEND"] ) {
 					NSString *fileName = nil;
 					BOOL portKnown = NO;
 					BOOL passive = NO;
@@ -1795,7 +1821,7 @@ end:
 							if( ! [[transfer user] isEqualToChatUser:sender] )
 								continue;
 
-							BOOL fileMatches = ( [[[(MVUploadFileTransfer *)transfer source] lastPathComponent] caseInsensitiveCompare:fileName] == NSOrderedSame );
+							BOOL fileMatches = ( [[[(MVUploadFileTransfer *)transfer source] lastPathComponent] isCaseInsensitiveEqualToString:fileName] );
 							if( ! fileMatches && ! portKnown && ! passive )
 								continue;
 
@@ -2187,7 +2213,7 @@ end:
 			NSString *nickLower = [nick lowercaseString];
 			if( [_lastSentIsonNicknames containsObject:nickLower] ) {
 				MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
-				if( ! [[user nickname] isEqualToString:nick] && [[user nickname] caseInsensitiveCompare:nick] == NSOrderedSame )
+				if( ! [[user nickname] isEqualToString:nick] && [[user nickname] isCaseInsensitiveEqualToString:nick] )
 					[user _setNickname:nick]; // nick differed only in case, change to the proper case
 				if( [[user dateUpdated] timeIntervalSinceNow] < -JVWatchedUserWHOISDelay || ! [user dateUpdated] )
 					[self _scheduleWhoisForUser:user];
@@ -2216,7 +2242,7 @@ end:
 			if( ! [nick length] ) continue;
 
 			MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
-			if( ! [[user nickname] isEqualToString:nick] && [[user nickname] caseInsensitiveCompare:nick] == NSOrderedSame )
+			if( ! [[user nickname] isEqualToString:nick] && [[user nickname] isCaseInsensitiveEqualToString:nick] )
 				[user _setNickname:nick]; // nick differed only in case, change to the proper case
 			[self _markUserAsOnline:user];
 		}
@@ -2449,7 +2475,7 @@ end:
 	if( [parameters count] == 6 ) {
 		NSString *nick = [parameters objectAtIndex:1];
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
-		if( ! [[user nickname] isEqualToString:nick] && [[user nickname] caseInsensitiveCompare:nick] == NSOrderedSame )
+		if( ! [[user nickname] isEqualToString:nick] && [[user nickname] isCaseInsensitiveEqualToString:nick] )
 			[user _setNickname:nick]; // nick differed only in case, change to the proper case
 		[user _setUsername:[parameters objectAtIndex:2]];
 		[user _setAddress:[parameters objectAtIndex:3]];
@@ -2551,7 +2577,7 @@ end:
 
 	if( [parameters count] == 3 ) {
 		NSString *comment = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
-		if( [comment rangeOfString:@"identified" options:NSCaseInsensitiveSearch].location != NSNotFound ) {
+		if( [comment hasCaseInsensitiveSubstring:@"identified"] ) {
 			MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 			[user _setIdentified:YES];
 		}
@@ -2593,7 +2619,7 @@ end:
 
 	if( [parameters count] >= 2 ) {
 		NSString *command = [parameters objectAtIndex:1];
-		if( [command caseInsensitiveCompare:@"NickServ"] == NSOrderedSame ) {
+		if( [command isCaseInsensitiveEqualToString:@"NickServ"] ) {
 			// the NickServ command isn't supported, this is an older server
 			// lets send a private message to NickServ to identify
 			if( [[self nicknamePassword] length] )

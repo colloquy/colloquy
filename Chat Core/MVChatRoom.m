@@ -668,7 +668,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	MVChatUser *user = nil;
 
 	while( ( user = [enumerator nextObject] ) )
-		if( [[user nickname] caseInsensitiveCompare:memberName] == NSOrderedSame )
+		if( [[user nickname] isCaseInsensitiveEqualToString:memberName] )
 			return user;
 
 	return nil;

@@ -19,6 +19,7 @@
 		1C5A1A2506F8F4A000A51F10 /* MVIRCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5A1A2306F8F4A000A51F10 /* MVIRCChatConnection.m */; };
 		1C5A233F06FA4FEE00A51F10 /* libsilc.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C5A233D06FA4FEE00A51F10 /* libsilc.framework */; };
 		1C5A234006FA4FEE00A51F10 /* libsilcclient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */; };
+		1C5A491E0B50B7C000BC8CAD /* MVDirectChatConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C9C13370B50A7AC005F9F28 /* MVDirectChatConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C63E9ED086E59D700A40DD4 /* ChatCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C63E9EC086E59D700A40DD4 /* ChatCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C668DBA07BF9C4C008400F7 /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C668DB807BF9C4C008400F7 /* NSScannerAdditions.m */; };
 		1C668DBC07BF9C66008400F7 /* NSAttributedStringAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = F5E98623018B412B01EE70DE /* NSAttributedStringAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -43,6 +44,7 @@
 		1C914D360706148800CBA5F1 /* MVIRCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C914D340706148800CBA5F1 /* MVIRCChatRoom.m */; };
 		1C943AAB063C260800618CD9 /* MVFileTransfer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C943AA9063C260800618CD9 /* MVFileTransfer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C943AAC063C260800618CD9 /* MVFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C943AAA063C260800618CD9 /* MVFileTransfer.m */; };
+		1C9C133A0B50A7AC005F9F28 /* MVDirectChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9C13380B50A7AC005F9F28 /* MVDirectChatConnection.m */; };
 		1C9CF4FE0615091400330D8D /* MVChatPluginManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C9CF4FF0615091500330D8D /* MVChatPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */; };
 		1C9CF5010615091700330D8D /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F52D043001873FC401EE70DE /* MVChatConnection.m */; };
@@ -114,6 +116,9 @@
 		1C943AA9063C260800618CD9 /* MVFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVFileTransfer.h; path = "Chat Core/MVFileTransfer.h"; sourceTree = "<group>"; };
 		1C943AAA063C260800618CD9 /* MVFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVFileTransfer.m; path = "Chat Core/MVFileTransfer.m"; sourceTree = "<group>"; };
 		1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
+		1C9C13370B50A7AC005F9F28 /* MVDirectChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectChatConnection.h; path = "Chat Core/MVDirectChatConnection.h"; sourceTree = "<group>"; };
+		1C9C13380B50A7AC005F9F28 /* MVDirectChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDirectChatConnection.m; path = "Chat Core/MVDirectChatConnection.m"; sourceTree = "<group>"; };
+		1C9C14170B50B3AB005F9F28 /* MVDirectChatConnectionPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectChatConnectionPrivate.h; path = "Chat Core/MVDirectChatConnectionPrivate.h"; sourceTree = "<group>"; };
 		1CCA517E0598AFBA00F0A4CD /* ChatCore.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ChatCore.scriptSuite; path = Resources/ChatCore.scriptSuite; sourceTree = "<group>"; };
 		1CCA517F0598AFBA00F0A4CD /* ChatCore.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ChatCore.scriptTerminology; path = Resources/ChatCore.scriptTerminology; sourceTree = "<group>"; };
 		1CCB3C3705228EFD000001C8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
@@ -219,8 +224,6 @@
 				1C914B130705BFE100CBA5F1 /* MVIRCChatUser.h */,
 				1C74433B06FE3AB3009AA696 /* MVIRCFileTransfer.m */,
 				1C74433A06FE3AB3009AA696 /* MVIRCFileTransfer.h */,
-				1C0FE8A90B4F647D00855B9C /* MVDirectClientConnection.m */,
-				1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */,
 				1CD62AA10962114500BD1DD2 /* MVIRCNumerics.h */,
 			);
 			name = "IRC Support";
@@ -277,6 +280,11 @@
 				1C943AAA063C260800618CD9 /* MVFileTransfer.m */,
 				1C943AA9063C260800618CD9 /* MVFileTransfer.h */,
 				1CE4632E095ECDE600AB7732 /* MVFileTransferPrivate.h */,
+				1C0FE8A90B4F647D00855B9C /* MVDirectClientConnection.m */,
+				1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */,
+				1C9C13380B50A7AC005F9F28 /* MVDirectChatConnection.m */,
+				1C9C13370B50A7AC005F9F28 /* MVDirectChatConnection.h */,
+				1C9C14170B50B3AB005F9F28 /* MVDirectChatConnectionPrivate.h */,
 				1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */,
 				1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */,
 				1CEEB164095BE36700166A54 /* AsyncSocket.m */,
@@ -354,6 +362,7 @@
 				1CE4633C095ECE4F00AB7732 /* MVChatConnectionPrivate.h in Headers */,
 				1C8AAEFE09D69F2700CF29EB /* MVChatUserWatchRule.h in Headers */,
 				1C3560060B4CCE95008A93FA /* MVUtilities.h in Headers */,
+				1C5A491E0B50B7C000BC8CAD /* MVDirectChatConnection.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -479,6 +488,7 @@
 				1CD6296709611B9100BD1DD2 /* InterThreadMessaging.m in Sources */,
 				1C8AAEFF09D69F2700CF29EB /* MVChatUserWatchRule.m in Sources */,
 				1C0FE8AB0B4F647D00855B9C /* MVDirectClientConnection.m in Sources */,
+				1C9C133A0B50A7AC005F9F28 /* MVDirectChatConnection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

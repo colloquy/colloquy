@@ -2,6 +2,7 @@
 #import "JVChatController.h"
 #import "MVFileTransferController.h"
 #import "MVConnectionsController.h"
+#import "MVChatUserAdditions.h"
 #import "JVDirectChatPanel.h"
 #import "JVChatRoomPanel.h"
 #import "JVChatMessage.h"
@@ -279,8 +280,17 @@
 		NSString *subcmd = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&subcmd];
-		if( ! [subcmd caseInsensitiveCompare:@"send"] )
+		if( ! [subcmd caseInsensitiveCompare:@"send"] ) {
 			return [self handleFileSendWithArguments:[arguments string] forConnection:connection];
+		} else if( ! [subcmd caseInsensitiveCompare:@"chat"] ) {
+			NSString *nick = nil;
+			[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&nick];
+
+			MVChatUser *user = [[connection chatUsersWithNickname:nick] anyObject];
+			[user startDirectChat:nil];
+			return YES;
+		}
+
 		return NO;
 	} else if( ! [command caseInsensitiveCompare:@"raw"] || ! [command caseInsensitiveCompare:@"quote"] ) {
 		[connection sendRawMessage:[arguments string] immediately:YES];

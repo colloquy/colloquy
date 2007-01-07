@@ -7,6 +7,7 @@
 - (IBAction) getInfo:(id) sender;
 
 - (IBAction) startChat:(id) sender;
+- (IBAction) startDirectChat:(id) sender;
 - (IBAction) sendFile:(id) sender;
 - (IBAction) addBuddy:(id) sender;
 

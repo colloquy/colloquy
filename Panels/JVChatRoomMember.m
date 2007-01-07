@@ -72,10 +72,9 @@
 
 - (NSComparisonResult) compareUsingStatus:(JVChatRoomMember *) member {
 	NSComparisonResult retVal = NSOrderedSame;
-	unsigned long myStatus = 0, yourStatus = 0;
 
-	myStatus = ( [self serverOperator] ? 1 << 8 : [[_room target] modesForMemberUser:_user] & ~MVChatRoomMemberQuietedMode );
-	yourStatus = ( [member serverOperator] ? 1 << 8 : [[[member room] target] modesForMemberUser:[member user]] & ~MVChatRoomMemberQuietedMode );
+	unsigned long myStatus = ( [self serverOperator] ? 1 << 8 : [[_room target] modesForMemberUser:_user] & ~MVChatRoomMemberQuietedMode );
+	unsigned long yourStatus = ( [member serverOperator] ? 1 << 8 : [[[member room] target] modesForMemberUser:[member user]] & ~MVChatRoomMemberQuietedMode );
 
 	if( myStatus > yourStatus ) {
 		retVal = NSOrderedAscending;

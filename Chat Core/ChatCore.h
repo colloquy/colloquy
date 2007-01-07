@@ -5,6 +5,7 @@
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatUserWatchRule.h>
 #import <ChatCore/MVFileTransfer.h>
+#import <ChatCore/MVDirectChatConnection.h>
 #import <ChatCore/MVChatPluginManager.h>
 
 #import <ChatCore/NSAttributedStringAdditions.h>

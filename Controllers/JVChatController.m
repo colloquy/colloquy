@@ -89,9 +89,11 @@ static NSMenu *smartTranscriptMenu = nil;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _joinedRoom: ) name:MVChatRoomJoinedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _invitedToRoom: ) name:MVChatRoomInvitedNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _invitedToDirectChat: ) name:MVDirectChatConnectionOfferNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotBeep: ) name:MVChatConnectionGotBeepNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotPrivateMessage: ) name:MVChatConnectionGotPrivateMessageNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotRoomMessage: ) name:MVChatRoomGotMessageNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotDirectChatMessage: ) name:MVDirectChatConnectionGotMessageNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred: ) name:MVChatConnectionErrorNotification object:nil];
 
 		[[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeyPath:@"values.JVChatWindowRuleSets" options:NSKeyValueObservingOptionNew context:NULL];
@@ -324,6 +326,30 @@ static NSMenu *smartTranscriptMenu = nil;
 	return ret;
 }
 
+- (JVDirectChatPanel *) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists {
+	return [self chatViewControllerForDirectChatConnection:connection ifExists:exists userInitiated:YES];
+}
+
+- (JVDirectChatPanel *) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
+	NSParameterAssert( connection != nil );
+
+	NSEnumerator *enumerator = [_chatControllers objectEnumerator];
+	id ret = nil;
+
+	while( ( ret = [enumerator nextObject] ) )
+		if( [ret isMemberOfClass:[JVDirectChatPanel class]] && [[ret target] isEqual:connection] )
+			break;
+
+	if( ! ret && ! exists ) {
+		if( ( ret = [[[JVDirectChatPanel alloc] initWithTarget:connection] autorelease] ) ) {
+			[_chatControllers addObject:ret];
+			[self addViewControllerToPreferedWindowController:ret userInitiated:initiated];
+		}
+	}
+
+	return ret;
+}
+
 - (JVChatTranscriptPanel *) chatViewControllerForTranscript:(NSString *) filename {
 	id ret = nil;
 	if( ( ret = [[[JVChatTranscriptPanel alloc] initWithTranscript:filename] autorelease] ) ) {
@@ -485,13 +511,33 @@ static NSMenu *smartTranscriptMenu = nil;
 	NSString *title = NSLocalizedString( @"Chat Room Invite", "member invited to room title" );
 	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", "you were invited to join a chat room status message" ), room, [user nickname]];
 
-	if( NSRunInformationalAlertPanel( title, message, NSLocalizedString( @"Join", "join button" ), NSLocalizedString( @"Decline", "decline button" ), nil ) == NSOKButton )
-		[connection joinChatRoomNamed:room];
-
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:NSLocalizedString( @"Invited to Chat", "bubble title invited to room" ) forKey:@"title"];
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message invited to room" ), room, [user nickname]] forKey:@"description"];
 	[[JVNotificationController defaultController] performNotification:@"JVChatRoomInvite" withContextInfo:context];
+
+	if( NSRunInformationalAlertPanel( title, message, NSLocalizedString( @"Join", "join button" ), NSLocalizedString( @"Decline", "decline button" ), nil ) == NSOKButton )
+		[connection joinChatRoomNamed:room];
+}
+
+- (void) _invitedToDirectChat:(NSNotification *) notification {
+	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
+	MVDirectChatConnection *connection = [notification object];
+
+	if( ! [[MVConnectionsController defaultController] managesConnection:[user connection]] ) return;
+
+	NSString *title = NSLocalizedString( @"Direct Chat Invite", "invited to direct chat title" );
+	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to participate in a chat with %@. Would you like to accept this invitation?", "you were invited to a direct chat status message" ), [user nickname]];
+
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	[context setObject:NSLocalizedString( @"Invited to Direct Chat", "bubble title invited to direct chat" ) forKey:@"title"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to participate in a chat with %@.", "bubble message invited to participate in a direct chat" ), [user nickname]] forKey:@"description"];
+	[[JVNotificationController defaultController] performNotification:@"JVDirectChatInvite" withContextInfo:context];
+
+	if( NSRunInformationalAlertPanel( title, message, NSLocalizedString( @"Accept", "accept button" ), NSLocalizedString( @"Decline", "decline button" ), nil ) == NSOKButton ) {
+		[self chatViewControllerForDirectChatConnection:connection ifExists:NO userInitiated:NO];
+		[connection initiate];
+	}
 }
 
 - (void) _gotBeep:(NSNotification *) notification {
@@ -506,6 +552,26 @@ static NSMenu *smartTranscriptMenu = nil;
 	[context setObject:self forKey:@"target"];
 	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 	[[JVNotificationController defaultController] performNotification:@"JVChatBeeped" withContextInfo:context];
+}
+
+- (void) _gotDirectChatMessage:(NSNotification *) notification {
+	MVDirectChatConnection *connection = [notification object];
+	NSData *message = [[notification userInfo] objectForKey:@"message"];
+	MVChatUser *user = [connection user];
+
+	if( ! [[MVConnectionsController defaultController] managesConnection:[user connection]] ) return;
+
+	if( ( [self shouldIgnoreUser:user withMessage:nil inView:nil] == JVNotIgnored ) ) {
+		JVDirectChatPanel *controller = [self chatViewControllerForDirectChatConnection:connection ifExists:NO userInitiated:NO];
+		[controller addMessageToDisplay:message fromUser:user asAction:[[[notification userInfo] objectForKey:@"action"] boolValue] withIdentifier:[[notification userInfo] objectForKey:@"identifier"] andType:JVChatMessageNormalType];
+	}
+}
+
+- (void) _gotRoomMessage:(NSNotification *) notification {
+	// we do this here to make sure we catch early messages right when we join (this includes dircproxy's dump)
+	MVChatRoom *room = [notification object];
+	JVChatRoomPanel *controller = [self chatViewControllerForRoom:room ifExists:NO];
+	[controller handleRoomMessageNotification:notification];
 }
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {
@@ -567,13 +633,6 @@ static NSMenu *smartTranscriptMenu = nil;
 		JVChatMessageType type = ( [[[notification userInfo] objectForKey:@"notice"] boolValue] ? JVChatMessageNoticeType : JVChatMessageNormalType );
 		[controller addMessageToDisplay:message fromUser:user asAction:[[[notification userInfo] objectForKey:@"action"] boolValue] withIdentifier:[[notification userInfo] objectForKey:@"identifier"] andType:type];
 	}
-}
-
-- (void) _gotRoomMessage:(NSNotification *) notification {
-	// we do this here to make sure we catch early messages right when we join (this includes dircproxy's dump)
-	MVChatRoom *room = [notification object];
-	JVChatRoomPanel *controller = [self chatViewControllerForRoom:room ifExists:NO];
-	[controller handleRoomMessageNotification:notification];
 }
 
 - (void) _errorOccurred:(NSNotification *) notification {

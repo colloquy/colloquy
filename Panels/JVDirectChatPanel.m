@@ -156,83 +156,88 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	if( ( self = [self init] ) ) {
 		_target = [target retain];
 
-		NSURL *connURL = [[self connection] url];
-		NSString *targetName = nil;
+		if( [self connection] ) {
+			NSURL *connURL = [[self connection] url];
+			NSString *targetName = nil;
 
-		if( [target respondsToSelector:@selector( name )] ) targetName = [(MVChatRoom *)target name];
-		else targetName = [target nickname];
+			if( [target respondsToSelector:@selector( name )] )
+				targetName = [(MVChatRoom *)target name];
+			else if( [target respondsToSelector:@selector( nickname )] )
+				targetName = [(MVChatUser *)target nickname];
+			else targetName = [target description];
 
-		NSURL *source = [[NSURL alloc] initWithScheme:[connURL scheme] host:[connURL host] path:[[connURL path] stringByAppendingString:[NSString stringWithFormat:@"/%@",targetName]]];
+			NSURL *source = [[NSURL alloc] initWithScheme:[connURL scheme] host:[connURL host] path:[[connURL path] stringByAppendingString:[NSString stringWithFormat:@"/%@", targetName]]];
 
-		if( ( [self isMemberOfClass:[JVDirectChatPanel class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogPrivateChats"] ) ||
-			( [self isMemberOfClass:[JVChatRoomPanel class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogChatRooms"] ) ) {
-			NSString *logs = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
-			NSFileManager *fileManager = [NSFileManager defaultManager];
+			if( ( [self isMemberOfClass:[JVDirectChatPanel class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogPrivateChats"] ) ||
+				( [self isMemberOfClass:[JVChatRoomPanel class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVLogChatRooms"] ) ) {
+				NSString *logs = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
+				NSFileManager *fileManager = [NSFileManager defaultManager];
 
-			if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
-
-			int org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
-			if( org == 1 ) {
-				logs = [logs stringByAppendingPathComponent:[[self connection] server]];
-				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
-			} else if( org == 2 ) {
-				logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", [self target], [[self connection] server]]];
-				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
-			} else if( org == 3 ) {
-				logs = [logs stringByAppendingPathComponent:[[self connection] server]];
 				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 
-				logs = [logs stringByAppendingPathComponent:[self title]];
-				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
-			}
+				int org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
+				if( org == 1 ) {
+					logs = [logs stringByAppendingPathComponent:[[self connection] server]];
+					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
+				} else if( org == 2 ) {
+					logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", [self target], [[self connection] server]]];
+					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
+				} else if( org == 3 ) {
+					logs = [logs stringByAppendingPathComponent:[[self connection] server]];
+					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 
-			NSString *logName = nil;
-			NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
-
-			int session = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptSessionHandling"];
-
-			if( ! session ) {
-				BOOL nameFound = NO;
-				unsigned int i = 1;
-
-				if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
-				else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self connection] server]];
-				nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
-
-				while( ! nameFound ) {
-					if( org ) logName = [NSString stringWithFormat:@"%@ %d.colloquyTranscript", [self target], i++];
-					else logName = [NSString stringWithFormat:@"%@ (%@) %d.colloquyTranscript", [self target], [[self connection] server], i++];
-					nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
+					logs = [logs stringByAppendingPathComponent:[self title]];
+					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 				}
-			} else if( session == 1 ) {
-				if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
-				else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self connection] server]];
-			} else if( session == 2 ) {
-				if( org ) logName = [NSMutableString stringWithFormat:@"%@ %@.colloquyTranscript", [self target], dateString];
-				else logName = [NSMutableString stringWithFormat:@"%@ (%@) %@.colloquyTranscript", [self target], [[self connection] server], dateString];
-				[(NSMutableString *)logName replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
-				[(NSMutableString *)logName replaceOccurrencesOfString:@":" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
+
+				NSString *logName = nil;
+				NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
+
+				int session = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptSessionHandling"];
+
+				if( ! session ) {
+					BOOL nameFound = NO;
+					unsigned int i = 1;
+
+					if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
+					else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self connection] server]];
+					nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
+
+					while( ! nameFound ) {
+						if( org ) logName = [NSString stringWithFormat:@"%@ %d.colloquyTranscript", [self target], i++];
+						else logName = [NSString stringWithFormat:@"%@ (%@) %d.colloquyTranscript", [self target], [[self connection] server], i++];
+						nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
+					}
+				} else if( session == 1 ) {
+					if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
+					else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self connection] server]];
+				} else if( session == 2 ) {
+					if( org ) logName = [NSMutableString stringWithFormat:@"%@ %@.colloquyTranscript", [self target], dateString];
+					else logName = [NSMutableString stringWithFormat:@"%@ (%@) %@.colloquyTranscript", [self target], [[self connection] server], dateString];
+					[(NSMutableString *)logName replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
+					[(NSMutableString *)logName replaceOccurrencesOfString:@":" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
+				}
+
+				logs = [logs stringByAppendingPathComponent:logName];
+
+				_sqlTestTranscript = [[JVSQLChatTranscript alloc] initWithContentsOfFile:[[logs stringByDeletingPathExtension] stringByAppendingPathExtension:@"colloquySQLTranscript"]];
+
+				if( [fileManager fileExistsAtPath:logs] )
+					[[self transcript] startNewSession];
+
+				[[self transcript] setFilePath:logs];
+				[[self transcript] setSource:source];
+				[source release];
+				[[self transcript] setAutomaticallyWritesChangesToFile:YES];
 			}
 
-			logs = [logs stringByAppendingPathComponent:logName];
+			[[self transcript] setElementLimit:0]; // start with zero limit
 
-			_sqlTestTranscript = [[JVSQLChatTranscript alloc] initWithContentsOfFile:[[logs stringByDeletingPathExtension] stringByAppendingPathExtension:@"colloquySQLTranscript"]];
-
-			if( [fileManager fileExistsAtPath:logs] )
-				[[self transcript] startNewSession];
-
-			[[self transcript] setFilePath:logs];
-			[[self transcript] setSource:source];
-			[source release];
-			[[self transcript] setAutomaticallyWritesChangesToFile:YES];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _awayStatusChanged: ) name:MVChatConnectionSelfAwayStatusChangedNotification object:[self connection]];
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred: ) name:MVChatConnectionErrorNotification object:[self connection]];
 		}
-
-		[[self transcript] setElementLimit:0]; // start with zero limit
-
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _awayStatusChanged: ) name:MVChatConnectionSelfAwayStatusChangedNotification object:[self connection]];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred: ) name:MVChatConnectionErrorNotification object:[self connection]];
 
 		_settings = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]]] retain];
 	}
@@ -334,7 +339,11 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 }
 
 - (MVChatConnection *) connection {
-	return [(MVChatUser *)[self target] connection];
+	if( [[self target] respondsToSelector:@selector( connection )] )
+		return (MVChatConnection *)[[self target] connection];
+	if( [[self target] respondsToSelector:@selector( user )] )
+		return (MVChatConnection *)[(MVChatUser *)[[self target] user] connection];
+	return nil;
 }
 
 #pragma mark -
@@ -351,24 +360,34 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 #pragma mark -
 
 - (BOOL) isEnabled {
+	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
+		return ( [(MVDirectChatConnection *)[self target] status] == MVDirectChatConnectionNormalStatus );
 	return [[self connection] isConnected];
 }
 
 - (NSString *) title {
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
 		return [_buddy preferredName]; */
-	return [[self target] displayName];
+	if( [[self target] respondsToSelector:@selector( displayName )] )
+		return [[self target] displayName];
+	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
+		return [[(MVDirectChatConnection *)[self target] user] displayName];
+	return [[self target] description];
 }
 
 - (NSString *) windowTitle {
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
 		return [NSString stringWithFormat:@"%@ (%@)", [_buddy preferredName], [[self connection] server]]; */
+	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
+		return [NSString stringWithFormat:@"%@ (%@)", [self title], [[(MVDirectChatConnection *)[self target] host] name]];
 	return [NSString stringWithFormat:@"%@ (%@)", [self title], [[self connection] server]];
 }
 
 - (NSString *) information {
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname && ! [[self target] isEqualToString:[_buddy preferredName]] )
 		return [NSString stringWithFormat:@"%@ (%@)", [self target], [[self connection] server]]; */
+	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
+		return [[(MVDirectChatConnection *)[self target] host] name];
 	return [[self connection] server];
 }
 
@@ -379,7 +398,9 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), [self newMessagesWaiting]];
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
 		return [NSString stringWithFormat:@"%@\n%@ (%@)\n%@", [_buddy preferredName], [self target], [[self connection] server], messageCount]; */
-	return [NSString stringWithFormat:@"%@ (%@)\n%@", [self target], [[self connection] server], messageCount];
+	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
+		return [NSString stringWithFormat:@"%@ (%@)\n%@", [self title], [[(MVDirectChatConnection *)[self target] host] name], messageCount];
+	return [NSString stringWithFormat:@"%@ (%@)\n%@", [self title], [[self connection] server], messageCount];
 }
 
 #pragma mark -
@@ -445,6 +466,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 #pragma mark -
 
 - (NSString *) identifier {
+	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
+		return [NSString stringWithFormat:@"Direct Chat %@", [(MVDirectChatConnection *)[self target] user]];
 	return [NSString stringWithFormat:@"Direct Chat %@ (%@)", [self target], [[self connection] server]];
 }
 
@@ -604,6 +627,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 }
 
 - (IBAction) changeEncoding:(id) sender {
+	if( ! [self connection] || ! [[self connection] supportedStringEncodings] ) return;
+
 	NSMenuItem *menuItem = nil;
 	unsigned i = 0, count = 0;
 	BOOL new = NO;
@@ -722,7 +747,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 	[[self emoticons] performEmoticonSubstitution:messageString];
 
-	if( ! [user isLocalUser] ) {
+	if( ! [user isLocalUser] && [self connection] ) {
 		NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 		NSMutableArray *names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
 		[names addObject:[[self connection] nickname]];

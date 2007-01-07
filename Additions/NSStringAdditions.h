@@ -6,6 +6,11 @@ BOOL isValidUTF8( const char *s, unsigned len );
 + (unsigned long) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding;
 + (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(unsigned long) encoding;
 
+- (BOOL) isCaseInsensitiveEqualToString:(NSString *) string;
+- (BOOL) hasCaseInsensitivePrefix:(NSString *) prefix;
+- (BOOL) hasCaseInsensitiveSuffix:(NSString *) suffix;
+- (BOOL) hasCaseInsensitiveSubstring:(NSString *) substring;
+
 - (NSString *) stringByEncodingXMLSpecialCharactersAsEntities;
 - (NSString *) stringByDecodingXMLSpecialCharacterEntities;
 

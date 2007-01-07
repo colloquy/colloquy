@@ -109,15 +109,15 @@
 - (void) ctcpReplyNotification:(NSNotification *) notification {
 	NSString *command = [[notification userInfo] objectForKey:@"command"];
 	NSData *arguments = [[notification userInfo] objectForKey:@"arguments"];
-	if( [command caseInsensitiveCompare:@"PING"] == NSOrderedSame ) {
+	if( [command isCaseInsensitiveEqualToString:@"PING"] ) {
 		NSTimeInterval diff = [[NSDate date] timeIntervalSinceDate:[self attributeForKey:@"MVChatUserPingSendDateAttribute"]];
 		[self setAttribute:[NSNumber numberWithDouble:diff] forKey:MVChatUserPingAttribute];
 		[self setAttribute:nil forKey:@"MVChatUserPingSendDateAttribute"];
-	} else if( [command caseInsensitiveCompare:@"VERSION"] == NSOrderedSame ) {
+	} else if( [command isCaseInsensitiveEqualToString:@"VERSION"] ) {
 		NSString *info = [[NSString allocWithZone:nil] initWithData:arguments encoding:[[self connection] encoding]];
 		[self setAttribute:info forKey:MVChatUserClientInfoAttribute];
 		[info release];
-	} else if( [command caseInsensitiveCompare:@"TIME"] == NSOrderedSame ) {
+	} else if( [command isCaseInsensitiveEqualToString:@"TIME"] ) {
 		NSString *date = [[NSString allocWithZone:nil] initWithData:arguments encoding:[[self connection] encoding]];
 		NSCalendarDate *localThere = [NSCalendarDate dateWithNaturalLanguageString:date];
 		[self setAttribute:localThere forKey:MVChatUserLocalTimeAttribute];

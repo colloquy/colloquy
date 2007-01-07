@@ -2,6 +2,8 @@
 
 @class AsyncSocket;
 
+NSString *MVDCCFriendlyAddress( NSString *address );
+
 @interface MVDirectClientConnection : NSObject {
 @private
 	id _delegate;

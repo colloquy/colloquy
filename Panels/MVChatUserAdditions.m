@@ -61,32 +61,44 @@
 	NSMutableArray *items = [[NSMutableArray alloc] initWithCapacity:5];
 	NSMenuItem *item = nil;
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""] autorelease];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""];
 	[item setTarget:self];
 	[items addObject:item];
+	[item release];
 
 	if( ! [self isLocalUser] ) {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:@selector( startChat: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:@selector( startChat: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[items addObject:item];
+		[item release];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( sendFile: ) keyEquivalent:@""] autorelease];
+		if( [[self connection] type] == MVChatConnectionIRCType ) {
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Initiate DCC Chat", "initiate DCC chat contextual menu") action:@selector( startDirectChat: ) keyEquivalent:@""];
+			[item setTarget:self];
+			[items addObject:item];
+			[item release];
+		}
+
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( sendFile: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[items addObject:item];
+		[item release];
 	}
 
 	if( ! [[MVBuddyListController sharedBuddyList] buddyForUser:self] ) {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add To Buddy List", "add to buddy list contextual menu") action:@selector( addBuddy: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add To Buddy List", "add to buddy list contextual menu") action:@selector( addBuddy: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[items addObject:item];
+		[item release];
 	}
 
 	if( ! [self isLocalUser] ) {
 		[items addObject:[NSMenuItem separatorItem]];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Ignore", "ignore user contextual menu") action:@selector( toggleIgnore: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Ignore", "ignore user contextual menu") action:@selector( toggleIgnore: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[items addObject:item];
+		[item release];
 	}
 
 	return [items autorelease];
@@ -99,6 +111,14 @@
 - (IBAction) startChat:(id) sender {
 	if( [self isLocalUser] ) return;
 	[[JVChatController defaultController] chatViewControllerForUser:self ifExists:NO];
+}
+
+- (IBAction) startDirectChat:(id) sender {
+	if( [self isLocalUser] ) return;
+	MVDirectChatConnection *connection = [(MVDirectChatConnection *)[MVDirectChatConnection alloc] initWithUser:self];
+	[[JVChatController defaultController] chatViewControllerForDirectChatConnection:connection ifExists:NO];
+	[connection initiate];
+	[connection release];
 }
 
 - (IBAction) sendFile:(id) sender {

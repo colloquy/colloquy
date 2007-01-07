@@ -1023,7 +1023,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	MVChatUser *user = nil;
 
 	while( ( user = [enumerator nextObject] ) )
-		if( [[user nickname] caseInsensitiveCompare:name] == NSOrderedSame )
+		if( [[user nickname] isCaseInsensitiveEqualToString:name] )
 			return user;
 
 	return nil;

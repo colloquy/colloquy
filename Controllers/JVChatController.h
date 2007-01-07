@@ -3,6 +3,7 @@
 @class MVChatConnection;
 @class MVChatRoom;
 @class MVChatUser;
+@class MVDirectChatConnection;
 @class JVChatWindowController;
 @class JVChatRoomPanel;
 @class JVDirectChatPanel;
@@ -37,6 +38,8 @@
 - (JVChatRoomPanel *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists;
 - (JVDirectChatPanel *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists;
 - (JVDirectChatPanel *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) requested;
+- (JVDirectChatPanel *) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists;
+- (JVDirectChatPanel *) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists userInitiated:(BOOL) initiated;
 - (JVChatTranscriptPanel *) chatViewControllerForTranscript:(NSString *) filename;
 - (JVChatConsolePanel *) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 
