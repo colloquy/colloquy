@@ -1,5 +1,6 @@
 #import "MVIRCChatUser.h"
 #import "MVIRCChatConnection.h"
+#import "NSStringAdditions.h"
 
 @implementation MVIRCChatUser
 - (id) initLocalUserWithConnection:(MVIRCChatConnection *) userConnection {
