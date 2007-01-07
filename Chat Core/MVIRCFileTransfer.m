@@ -27,7 +27,7 @@
 	NSString *fileName = [[ret source] lastPathComponent];	
 	[ret _setFileNameQuoted:( [fileName rangeOfString:@" "].location != NSNotFound )];
 
-	[(MVIRCChatConnection *)[user connection] _addFileTransfer:ret];
+	[(MVIRCChatConnection *)[user connection] _addDirectClientConnection:ret];
 
 	if( passive ) {
 		if( ++passiveId > 999 ) passiveId = 1;
@@ -47,7 +47,7 @@
 - (void) release {
 	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
 		_releasing = YES;
-		[(MVIRCChatConnection *)[[self user] connection] _removeFileTransfer:self];
+		[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
 	}
 
 	[super release];
@@ -76,8 +76,6 @@
 #pragma mark -
 
 - (void) cancel {
-	[(MVIRCChatConnection *)[[self user] connection] _removeFileTransfer:self];
-
 	[self _setStatus:MVFileTransferStoppedStatus];
 
 	[_directClientConnection disconnect];
@@ -86,6 +84,9 @@
 	_fileHandle = nil;
 	[old closeFile];
 	[old release];
+
+	// do this last incase the connection is the last thing retaining us
+	[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
 }
 
 #pragma mark -
@@ -103,7 +104,7 @@
 
 	// now that we are connected deregister with the connection
 	// do this last incase the connection is the last thing retaining us
-	[(MVIRCChatConnection *)[[self user] connection] _removeFileTransfer:self];
+	[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection acceptingConnectionsToHost:(NSString *) host port:(unsigned short) port {
@@ -226,7 +227,7 @@
 - (void) release {
 	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
 		_releasing = YES;
-		[(MVIRCChatConnection *)[[self user] connection] _removeFileTransfer:self];
+		[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
 	}
 
 	[super release];
@@ -282,7 +283,8 @@
 	[old closeFile];
 	[old release];
 
-	[(MVIRCChatConnection *)[[self user] connection] _removeFileTransfer:self];
+	// do this last incase the connection is the last thing retaining us
+	[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
 }
 
 - (void) acceptByResumingIfPossible:(BOOL) resume {
@@ -318,7 +320,7 @@
 
 	// now that we are connected deregister with the connection
 	// do this last incase the connection is the last thing retaining us
-	[(MVIRCChatConnection *)[[self user] connection] _removeFileTransfer:self];
+	[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection acceptingConnectionsToHost:(NSString *) host port:(unsigned short) port {

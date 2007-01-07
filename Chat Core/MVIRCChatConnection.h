@@ -16,7 +16,7 @@
 	NSMutableArray *_sendQueue;
 	NSMutableDictionary *_knownUsers;
 	NSMutableSet *_pendingWhoisUsers;
-	NSMutableSet *_fileTransfers;
+	NSMutableSet *_directClientConnections;
 	NSMutableSet *_supportedFeatures;
 	NSMutableDictionary *_serverInformation;
 	NSString *_server;
@@ -51,8 +51,8 @@
 
 - (void) _updateKnownUser:(MVChatUser *) user withNewNickname:(NSString *) nickname;
 
-- (void) _addFileTransfer:(MVFileTransfer *) transfer;
-- (void) _removeFileTransfer:(MVFileTransfer *) transfer;
+- (void) _addDirectClientConnection:(id) connection;
+- (void) _removeDirectClientConnection:(id) connection;
 
 - (void) _setCurrentNickname:(NSString *) nickname;
 

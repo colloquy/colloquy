@@ -115,10 +115,10 @@
 
 - (IBAction) startDirectChat:(id) sender {
 	if( [self isLocalUser] ) return;
-	MVDirectChatConnection *connection = [(MVDirectChatConnection *)[MVDirectChatConnection alloc] initWithUser:self];
+
+	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
+	MVDirectChatConnection *connection = [MVDirectChatConnection directChatConnectionWithUser:self passively:passive];
 	[[JVChatController defaultController] chatViewControllerForDirectChatConnection:connection ifExists:NO];
-	[connection initiate];
-	[connection release];
 }
 
 - (IBAction) sendFile:(id) sender {

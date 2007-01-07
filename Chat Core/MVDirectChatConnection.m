@@ -3,6 +3,7 @@
 
 #import "InterThreadMessaging.h"
 #import "MVDirectClientConnection.h"
+#import "MVIRCChatConnection.h"
 #import "MVFileTransfer.h"
 #import "MVChatUser.h"
 #import "MVUtilities.h"
@@ -22,17 +23,35 @@ NSString *MVDirectChatConnectionGotMessageNotification = @"";
 NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomain";
 
 @implementation MVDirectChatConnection
-- (id) initWithUser:(MVChatUser *) chatUser {
-	if( ( self = [super init] ) ) {
-		_status = MVDirectChatConnectionHoldingStatus;
-		_encoding = NSUTF8StringEncoding;
-		_outgoingChatFormat = MVChatConnectionDefaultMessageFormat;
-		_user = [chatUser retain];
-		_host = [[NSHost currentHost] retain];
-		_passive = YES;
++ (id) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive {
+	static unsigned passiveId = 0;
+
+	MVDirectChatConnection *ret = [(MVDirectChatConnection *)[MVDirectChatConnection allocWithZone:nil] initWithUser:user];
+	[ret _setLocalRequest:YES];
+	[ret _setPassive:passive];
+
+	if( passive ) {
+		if( ++passiveId > 999 ) passiveId = 1;
+		[ret _setPassiveIdentifier:passiveId];
+
+		// register with the main connection so the passive reply can find the original
+		[(MVIRCChatConnection *)[user connection] _addDirectClientConnection:ret];
+
+		[user sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"CHAT chat 16843009 0 %lu", passiveId]];
+	} else {
+		[ret initiate];
 	}
 
-	return self;
+	return [ret autorelease];
+}
+
+- (void) release {
+	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
+		_releasing = YES;
+		[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
+	}
+
+	[super release];
 }
 
 - (void) dealloc {
@@ -90,8 +109,13 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 	MVSafeAssign( &_directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
 	[_directClientConnection setDelegate:self];
 
-	if( [self isPassive] ) [_directClientConnection acceptConnectionOnFirstPortInRange:[MVFileTransfer fileTransferPortRange]];
-	else [_directClientConnection connectToHost:[[self host] address] onPort:[self port]];
+	if( _localRequest ) {
+		if( ! [self isPassive] ) [_directClientConnection acceptConnectionOnFirstPortInRange:[MVFileTransfer fileTransferPortRange]];
+		else [_directClientConnection connectToHost:[[self host] address] onPort:[self port]];
+	} else {
+		if( [self isPassive] ) [_directClientConnection acceptConnectionOnFirstPortInRange:[MVFileTransfer fileTransferPortRange]];
+		else [_directClientConnection connectToHost:[[self host] address] onPort:[self port]];
+	}
 }
 
 - (void) disconnect {
@@ -175,13 +199,18 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 	[self _setStartDate:[NSDate date]];
 
 	[self _readNextMessage];
+
+	// now that we are connected deregister with the connection
+	// do this last incase the connection is the last thing retaining us
+	[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection acceptingConnectionsToHost:(NSString *) host port:(unsigned short) port {
 	NSString *address = MVDCCFriendlyAddress( host );
 	[self _setPort:port];
 
-	[[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"CHAT chat %@ %hu", address, [self port]]];
+	if( [self isPassive] ) [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"CHAT chat %@ %hu %lu", address, [self port], [self _passiveIdentifier]]];
+	else [[self user] sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"CHAT chat %@ %hu", address, [self port]]];
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection willDisconnectWithError:(NSError *) error {
@@ -240,6 +269,18 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 #pragma mark -
 
 @implementation MVDirectChatConnection (MVDirectChatConnectionPrivate)
+- (id) initWithUser:(MVChatUser *) chatUser {
+	if( ( self = [super init] ) ) {
+		_status = MVDirectChatConnectionHoldingStatus;
+		_encoding = NSUTF8StringEncoding;
+		_outgoingChatFormat = MVChatConnectionDefaultMessageFormat;
+		_user = [chatUser retain];
+		_host = [[NSHost currentHost] retain];
+	}
+
+	return self;
+}
+
 - (void) _writeMessage:(NSData *) message {
 	MVAssertCorrectThreadRequired( [_directClientConnection connectionThread] );
 	[_directClientConnection writeData:message withTimeout:-1 withTag:0];
@@ -272,6 +313,18 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 - (void) _setPassive:(BOOL) isPassive {
 	_passive = isPassive;
+}
+
+- (void) _setLocalRequest:(BOOL) localRequest {
+	_localRequest = localRequest;
+}
+
+- (void) _setPassiveIdentifier:(unsigned int) identifier {
+	_passiveId = identifier;
+}
+
+- (unsigned int) _passiveIdentifier {
+	return _passiveId;
 }
 
 - (void) _postError:(NSError *) error {

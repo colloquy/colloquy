@@ -130,7 +130,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	[_chatConnection release];
 	[_knownUsers release];
-	[_fileTransfers release];
+	[_directClientConnections release];
 	[_server release];
 	[_currentNickname release];
 	[_nickname release];
@@ -153,7 +153,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	_chatConnection = nil;
 	_connectionThread = nil;
 	_knownUsers = nil;
-	_fileTransfers = nil;
+	_directClientConnections = nil;
 	_server = nil;
 	_currentNickname = nil;
 	_nickname = nil;
@@ -724,7 +724,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	unsigned int len = [data length];
 	const char *end = line + len - 2; // minus the line endings
 
-	if( *( line + len - 2 ) != '\x0D' )
+	if( *end != '\x0D' )
 		end = line + len - 1; // this server only uses \x0A for the message line ending, lets work with it
 
 	const char *sender = NULL;
@@ -1081,17 +1081,17 @@ end:
 
 #pragma mark -
 
-- (void) _addFileTransfer:(MVFileTransfer *) transfer {
-	if( ! _fileTransfers )
-		_fileTransfers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
-	@synchronized( _fileTransfers ) {
-		if( transfer ) [_fileTransfers addObject:transfer];
+- (void) _addDirectClientConnection:(id) connection {
+	if( ! _directClientConnections )
+		_directClientConnections = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
+	@synchronized( _directClientConnections ) {
+		if( connection ) [_directClientConnections addObject:connection];
 	}
 }
 
-- (void) _removeFileTransfer:(MVFileTransfer *) transfer {
-	@synchronized( _fileTransfers ) {
-		if( transfer ) [_fileTransfers removeObject:transfer];
+- (void) _removeDirectClientConnection:(id) connection {
+	@synchronized( _directClientConnections ) {
+		if( connection ) [_directClientConnections removeObject:connection];
 	}
 }
 
@@ -1615,6 +1615,7 @@ end:
 			}
 
 			if( [subCommand isCaseInsensitiveEqualToString:@"SEND"] ) {
+				BOOL passive = NO;
 				NSString *address = nil;
 				int port = 0;
 				long long size = 0;
@@ -1624,20 +1625,21 @@ end:
 				[scanner scanInt:&port];
 				[scanner scanLongLong:&size];
 
+				if( [scanner scanLongLong:&passiveId] )
+					passive = YES;
+
 				if( [address rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@".:"]].location == NSNotFound ) {
 					unsigned int ip4 = 0;
 					sscanf( [address UTF8String], "%u", &ip4 );
 					address = [NSString stringWithFormat:@"%lu.%lu.%lu.%lu", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
 				}
 
-				NSHost *host = [NSHost hostWithAddress:address];
-
-				if( [scanner scanLongLong:&passiveId] && port > 0 ) {
+				if( passive && port > 0 ) {
 					// this is a passive reply, look up the original transfer
 					MVIRCUploadFileTransfer *transfer = nil;
 
-					@synchronized( _fileTransfers ) {
-						NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
+					@synchronized( _directClientConnections ) {
+						NSEnumerator *enumerator = [_directClientConnections objectEnumerator];
 						while( ( transfer = [enumerator nextObject] ) ) {
 							if( ! [transfer isUpload] )
 								continue;
@@ -1651,28 +1653,29 @@ end:
 					}
 
 					if( transfer ) {
-						[transfer _setHost:host];
+						[transfer _setHost:[NSHost hostWithAddress:address]];
 						[transfer _setPort:port];
 						[transfer _setupAndStart];
 					}
 				} else {
 					MVIRCDownloadFileTransfer *transfer = [(MVIRCDownloadFileTransfer *)[MVIRCDownloadFileTransfer allocWithZone:nil] initWithUser:sender];
 
-					if( port == 0 ) {
+					if( port == 0 && passive ) {
 						[transfer _setPassiveIdentifier:passiveId];
 						[transfer _setPassive:YES];
+					} else {
+						[transfer _setHost:[NSHost hostWithAddress:address]];
+						[transfer _setPort:port];
 					}
 
 					[transfer _setTurbo:[scanner scanString:@"T" intoString:NULL]];
 					[transfer _setOriginalFileName:fileName];
 					[transfer _setFileNameQuoted:quotedFileName];
 					[transfer _setFinalSize:(unsigned long long)size];
-					[transfer _setHost:host];
-					[transfer _setPort:port];
 
 					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDownloadFileTransferOfferNotification object:transfer];
 
-					[self _addFileTransfer:transfer];
+					[self _addDirectClientConnection:transfer];
 					[transfer release];
 				}
 			} else if( [subCommand isCaseInsensitiveEqualToString:@"ACCEPT"] ) {
@@ -1687,8 +1690,8 @@ end:
 				if( [scanner scanLongLong:&passiveId] )
 					passive = YES;
 
-				@synchronized( _fileTransfers ) {
-					NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
+				@synchronized( _directClientConnections ) {
+					NSEnumerator *enumerator = [_directClientConnections objectEnumerator];
 					MVIRCDownloadFileTransfer *transfer = nil;
 					while( ( transfer = [enumerator nextObject] ) ) {
 						if( ! [transfer isDownload] )
@@ -1721,8 +1724,8 @@ end:
 				if( [scanner scanLongLong:&passiveId] )
 					passive = YES;
 
-				@synchronized( _fileTransfers ) {
-					NSEnumerator *enumerator = [_fileTransfers objectEnumerator];
+				@synchronized( _directClientConnections ) {
+					NSEnumerator *enumerator = [_directClientConnections objectEnumerator];
 					MVIRCUploadFileTransfer *transfer = nil;
 					while( ( transfer = [enumerator nextObject] ) ) {
 						if( ! [transfer isUpload] )
@@ -1744,11 +1747,16 @@ end:
 					}
 				}
 			} else if( [subCommand isCaseInsensitiveEqualToString:@"CHAT"] ) {
+				BOOL passive = NO;
 				NSString *address = nil;
 				int port = 0;
+				long long passiveId = 0;
 
 				[scanner scanUpToCharactersFromSet:whitespace intoString:&address];
 				[scanner scanInt:&port];
+
+				if( [scanner scanLongLong:&passiveId] )
+					passive = YES;
 
 				if( [address rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@".:"]].location == NSNotFound ) {
 					unsigned int ip4 = 0;
@@ -1756,17 +1764,44 @@ end:
 					address = [NSString stringWithFormat:@"%lu.%lu.%lu.%lu", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
 				}
 
-				NSHost *host = [NSHost hostWithAddress:address];
-
 				if( [fileName isCaseInsensitiveEqualToString:@"CHAT"] || [fileName isCaseInsensitiveEqualToString:@"C H A T"] ) {
-					MVDirectChatConnection *directChatConnection = [(MVDirectChatConnection *)[MVDirectChatConnection allocWithZone:nil] initWithUser:sender];
-					[directChatConnection _setPassive:NO];
-					[directChatConnection _setHost:host];
-					[directChatConnection _setPort:port];
+					if( passive && port > 0 ) {
+						// this is a passive reply, look up the original chat request
+						MVDirectChatConnection *directChat = nil;
 
-					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionOfferNotification object:directChatConnection userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
+						@synchronized( _directClientConnections ) {
+							NSEnumerator *enumerator = [_directClientConnections objectEnumerator];
+							while( ( directChat = [enumerator nextObject] ) ) {
+								if( ! [directChat isPassive] )
+									continue;
+								if( ! [[directChat user] isEqualToChatUser:sender] )
+									continue;
+								if( [directChat _passiveIdentifier] == passiveId )
+									break;
+							}
+						}
 
-					[directChatConnection release];
+						if( directChat ) {
+							[directChat _setHost:[NSHost hostWithAddress:address]];
+							[directChat _setPort:port];
+							[directChat initiate];
+						}
+					} else {
+						MVDirectChatConnection *directChatConnection = [(MVDirectChatConnection *)[MVDirectChatConnection allocWithZone:nil] initWithUser:sender];
+
+						if( port == 0 && passive ) {
+							[directChatConnection _setPassiveIdentifier:passiveId];
+							[directChatConnection _setPassive:YES];
+						} else {
+							[directChatConnection _setHost:[NSHost hostWithAddress:address]];
+							[directChatConnection _setPort:port];
+						}
+
+						[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionOfferNotification object:directChatConnection userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
+
+						[self _addDirectClientConnection:directChatConnection];
+						[directChatConnection release];
+					}
 				}
 			}
 
@@ -1810,8 +1845,8 @@ end:
 					if( [scanner scanLongLong:NULL] && [scanner scanLongLong:&passiveId] )
 						passive = YES;
 
-					@synchronized( _fileTransfers ) {
-						NSEnumerator *enumerator = [[[_fileTransfers copy] autorelease] objectEnumerator];
+					@synchronized( _directClientConnections ) {
+						NSEnumerator *enumerator = [[[_directClientConnections copy] autorelease] objectEnumerator];
 						MVIRCUploadFileTransfer *transfer = nil;
 						while( ( transfer = [enumerator nextObject] ) ) {
 							if( ! [transfer isUpload] )
