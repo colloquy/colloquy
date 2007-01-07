@@ -197,16 +197,16 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection didReadData:(NSData *) data withTag:(long) tag {
 	const char *bytes = (const char *)[data bytes];
-	BOOL ctcp = ( *bytes == '\001' && [data length] > 2 );
+	unsigned int len = [data length];
+	const char *end = bytes + len - 2; // minus the line endings
+	BOOL ctcp = ( *bytes == '\001' && [data length] > 3 ); // three is the one minimum line ending and two \001 chars
+
+	if( *end != '\x0D' )
+		end = bytes + len - 1; // this client only uses \x0A for the message line ending, lets work with it
 
 	if( ctcp ) {
-		const char *line = bytes + 1; // skip the \001 char
-		unsigned int len = [data length];
-		const char *end = bytes + len - 2; // minus the line endings
+		const char *line = bytes + 1; // skip the first \001 char
 		const char *current = line;
-
-		if( *end != '\x0D' )
-			end = bytes + len - 1; // this client only uses \x0A for the message line ending, lets work with it
 
 		if( *( end - 1 ) == '\001' )
 			end = end - 1; // minus the last \001 char
@@ -228,7 +228,9 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 		[command release];
 		[arguments release];
 	} else {
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionGotMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:data, @"message", [NSString locallyUniqueString], @"identifier", nil]];
+		NSData *msg = [[NSData allocWithZone:nil] initWithBytes:bytes length:(end - bytes)];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionGotMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msg, @"message", [NSString locallyUniqueString], @"identifier", nil]];
+		[msg release];
 	}
 
 	[self _readNextMessage];
