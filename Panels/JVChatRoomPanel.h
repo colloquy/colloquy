@@ -20,6 +20,8 @@
 - (void) joinChat:(id) sender;
 - (void) partChat:(id) sender;
 
+- (IBAction) addToFavorites:(id) sender;
+
 - (BOOL) keepAfterPart;
 - (void) setKeepAfterPart:(BOOL) keep;
 

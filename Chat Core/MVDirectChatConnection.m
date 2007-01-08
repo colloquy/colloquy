@@ -14,7 +14,6 @@
 NSString *MVDirectChatConnectionOfferNotification = @"MVDirectChatConnectionOfferNotification";
 
 NSString *MVDirectChatConnectionDidConnectNotification = @"MVDirectChatConnectionDidConnectNotification";
-NSString *MVDirectChatConnectionDidNotConnectNotification = @"MVDirectChatConnectionDidNotConnectNotification";
 NSString *MVDirectChatConnectionDidDisconnectNotification = @"MVDirectChatConnectionDidDisconnectNotification";
 NSString *MVDirectChatConnectionErrorOccurredNotification = @"MVDirectChatConnectionErrorOccurredNotification";
 
@@ -59,14 +58,14 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 	[_directClientConnection setDelegate:nil];
 	[_directClientConnection release];
 
-	[_startDate release];
 	[_host release];
+	[_connectedHost release];
 	[_user release];
 	[_lastError release];
 
 	_directClientConnection = nil;
-	_startDate = nil;
 	_host = nil;
+	_connectedHost = nil;
 	_user = nil;
 	_lastError = nil;
 
@@ -97,8 +96,16 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 	return _host;
 }
 
+- (NSHost *) connectedHost {
+	return _connectedHost;
+}
+
 - (unsigned short) port {
 	return _port;
+}
+
+- (NSString *) description {
+	return [[self user] description];
 }
 
 #pragma mark -
@@ -120,6 +127,8 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 - (void) disconnect {
 	[_directClientConnection disconnect];
+	if( [self status] != MVDirectChatConnectionErrorStatus )
+		[self _setStatus:MVDirectChatConnectionDisconnectedStatus];
 }
 
 #pragma mark -
@@ -152,7 +161,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
 
-	if( [self status] != MVDirectChatConnectionNormalStatus )
+	if( [self status] != MVDirectChatConnectionConnectedStatus )
 		return;
 
 	NSString *cformat = nil;
@@ -195,8 +204,9 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 #pragma mark -
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection didConnectToHost:(NSString *) host port:(unsigned short) port {
-	[self _setStatus:MVDirectChatConnectionNormalStatus];
-	[self _setStartDate:[NSDate date]];
+	[self _setStatus:MVDirectChatConnectionConnectedStatus];
+
+	MVSafeRetainAssign( &_connectedHost, [NSHost hostWithAddress:host] );
 
 	[self _readNextMessage];
 
@@ -215,13 +225,12 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection willDisconnectWithError:(NSError *) error {
 	NSLog(@"DCC chat willDisconnectWithError: %@", error );
-	if( [self status] != MVDirectChatConnectionStoppedStatus )
-		[self _setStatus:MVDirectChatConnectionErrorStatus];
+	if( error ) [self _postError:error];
 }
 
 - (void) directClientConnectionDidDisconnect:(MVDirectClientConnection *) connection {
-	if( [self status] != MVDirectChatConnectionStoppedStatus )
-		[self _setStatus:MVDirectChatConnectionErrorStatus];
+	if( [self status] != MVDirectChatConnectionErrorStatus )
+		[self _setStatus:MVDirectChatConnectionDisconnectedStatus];
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection didReadData:(NSData *) data withTag:(long) tag {
@@ -271,7 +280,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 @implementation MVDirectChatConnection (MVDirectChatConnectionPrivate)
 - (id) initWithUser:(MVChatUser *) chatUser {
 	if( ( self = [super init] ) ) {
-		_status = MVDirectChatConnectionHoldingStatus;
+		_status = MVDirectChatConnectionWaitingStatus;
 		_encoding = NSUTF8StringEncoding;
 		_outgoingChatFormat = MVChatConnectionDefaultMessageFormat;
 		_user = [chatUser retain];
@@ -296,11 +305,16 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 }
 
 - (void) _setStatus:(MVDirectChatConnectionStatus) newStatus {
+	unsigned int oldStatus = _status;
 	_status = newStatus;
-}
 
-- (void) _setStartDate:(NSDate *) newStartDate {
-	MVSafeRetainAssign( &_startDate, newStartDate );
+	if( oldStatus == newStatus )
+		return;
+
+	if( newStatus == MVDirectChatConnectionConnectedStatus )
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionDidConnectNotification object:self];
+	else if( newStatus == MVDirectChatConnectionDisconnectedStatus )
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionDidDisconnectNotification object:self];
 }
 
 - (void) _setHost:(NSHost *) newHost {

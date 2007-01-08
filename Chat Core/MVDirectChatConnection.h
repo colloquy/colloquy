@@ -3,7 +3,6 @@
 extern NSString *MVDirectChatConnectionOfferNotification;
 
 extern NSString *MVDirectChatConnectionDidConnectNotification;
-extern NSString *MVDirectChatConnectionDidNotConnectNotification;
 extern NSString *MVDirectChatConnectionDidDisconnectNotification;
 extern NSString *MVDirectChatConnectionErrorOccurredNotification;
 
@@ -12,9 +11,9 @@ extern NSString *MVDirectChatConnectionGotMessageNotification;
 extern NSString *MVDirectChatConnectionErrorDomain;
 
 typedef enum {
-	MVDirectChatConnectionNormalStatus = 'dcNo',
-	MVDirectChatConnectionHoldingStatus = 'dcHo',
-	MVDirectChatConnectionStoppedStatus = 'dcSt',
+	MVDirectChatConnectionConnectedStatus = 'dcCo',
+	MVDirectChatConnectionWaitingStatus = 'dcWa',
+	MVDirectChatConnectionDisconnectedStatus = 'dcDs',
 	MVDirectChatConnectionErrorStatus = 'dcEr'
 } MVDirectChatConnectionStatus;
 
@@ -26,8 +25,8 @@ typedef enum {
 	MVDirectClientConnection *_directClientConnection;
 	MVChatMessageFormat _outgoingChatFormat;
 	NSStringEncoding _encoding;
-	NSDate *_startDate;
 	NSHost *_host;
+	NSHost *_connectedHost;
 	BOOL _passive;
 	BOOL _localRequest;
 	unsigned short _port;
@@ -45,6 +44,7 @@ typedef enum {
 
 - (MVChatUser *) user;
 - (NSHost *) host;
+- (NSHost *) connectedHost;
 - (unsigned short) port;
 
 - (void) initiate;

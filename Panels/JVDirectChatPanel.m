@@ -235,10 +235,12 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 			[[self transcript] setElementLimit:0]; // start with zero limit
 
-			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
-			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
-			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _awayStatusChanged: ) name:MVChatConnectionSelfAwayStatusChangedNotification object:[self connection]];
-			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred: ) name:MVChatConnectionErrorNotification object:[self connection]];
+			if( ! [target isKindOfClass:[MVDirectChatConnection class]] ) {
+				[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
+				[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
+				[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _awayStatusChanged: ) name:MVChatConnectionSelfAwayStatusChangedNotification object:[self connection]];
+				[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred: ) name:MVChatConnectionErrorNotification object:[self connection]];
+			}
 		}
 
 		_settings = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]]] retain];
@@ -252,8 +254,13 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	NSString *variant = nil;
 	JVEmoticonSet *emoticon = nil;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
+	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] ) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVDirectChatConnectionDidConnectNotification object:[self target]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVDirectChatConnectionDidDisconnectNotification object:[self target]];
+	} else {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];		
+	}
 
 	if( [self preferenceForKey:@"style"] ) {
 		style = [JVStyle styleWithIdentifier:[self preferenceForKey:@"style"]];
@@ -345,14 +352,14 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 - (NSURL *) url {
 	NSString *server = [[[self connection] url] absoluteString];
-	return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", server, [[[self target] description] stringByEncodingIllegalURLCharacters]]];
+	return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", server, [[[self user] nickname] stringByEncodingIllegalURLCharacters]]];
 }
 
 - (MVChatConnection *) connection {
 	if( [[self target] respondsToSelector:@selector( connection )] )
 		return (MVChatConnection *)[[self target] connection];
-	if( [[self target] respondsToSelector:@selector( user )] )
-		return (MVChatConnection *)[(MVChatUser *)[[self target] user] connection];
+	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
+		return [[(MVDirectChatConnection *)[self target] user] connection];
 	return nil;
 }
 
@@ -371,33 +378,44 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 - (BOOL) isEnabled {
 	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
-		return ( [(MVDirectChatConnection *)[self target] status] == MVDirectChatConnectionNormalStatus );
+		return ( [(MVDirectChatConnection *)[self target] status] == MVDirectChatConnectionConnectedStatus );
 	return [[self connection] isConnected];
 }
 
 - (NSString *) title {
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
 		return [_buddy preferredName]; */
-	if( [[self target] respondsToSelector:@selector( displayName )] )
-		return [[self target] displayName];
-	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
-		return [[(MVDirectChatConnection *)[self target] user] displayName];
-	return [[self target] description];
+	return [[self user] displayName];
 }
 
 - (NSString *) windowTitle {
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
 		return [NSString stringWithFormat:@"%@ (%@)", [_buddy preferredName], [[self connection] server]]; */
-	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
-		return [NSString stringWithFormat:@"%@ (%@)", [self title], [[(MVDirectChatConnection *)[self target] host] name]];
+
+	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] ) {
+		NSString *host = [[(MVDirectChatConnection *)[self target] connectedHost] name];
+		if( ! [host length] ) host = [[self user] address];
+		if( [host length] ) return [NSString stringWithFormat:@"%@ (%@)", [self title], host];
+		return [self title];
+	}
+
 	return [NSString stringWithFormat:@"%@ (%@)", [self title], [[self connection] server]];
 }
 
 - (NSString *) information {
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname && ! [[self target] isEqualToString:[_buddy preferredName]] )
 		return [NSString stringWithFormat:@"%@ (%@)", [self target], [[self connection] server]]; */
-	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
-		return [[(MVDirectChatConnection *)[self target] host] name];
+	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] ) {
+		if( [(MVDirectChatConnection *)[self target] status] == MVDirectChatConnectionWaitingStatus )
+			return NSLocalizedString( @"waiting for connection", "waiting for connection information" );
+		if( [(MVDirectChatConnection *)[self target] status] == MVDirectChatConnectionDisconnectedStatus )
+			return NSLocalizedString( @"disconnected", "disconnected information" );
+
+		NSString *host = [[(MVDirectChatConnection *)[self target] connectedHost] name];
+		if( ! [host length] ) host = [[self user] address];
+		return host;
+	}
+
 	return [[self connection] server];
 }
 
@@ -406,10 +424,25 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	if( [self newMessagesWaiting] == 0 ) messageCount = NSLocalizedString( @"no messages waiting", "no messages waiting room tooltip" );
 	else if( [self newMessagesWaiting] == 1 ) messageCount = NSLocalizedString( @"1 message waiting", "one message waiting room tooltip" );
 	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), [self newMessagesWaiting]];
+
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
 		return [NSString stringWithFormat:@"%@\n%@ (%@)\n%@", [_buddy preferredName], [self target], [[self connection] server], messageCount]; */
-	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
-		return [NSString stringWithFormat:@"%@ (%@)\n%@", [self title], [[(MVDirectChatConnection *)[self target] host] name], messageCount];
+
+	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] ) {
+		NSString *info = nil;
+		if( [(MVDirectChatConnection *)[self target] status] == MVDirectChatConnectionWaitingStatus )
+			info = NSLocalizedString( @"waiting for connection", "waiting for connection tooltip" );
+		else if( [(MVDirectChatConnection *)[self target] status] == MVDirectChatConnectionDisconnectedStatus )
+			info = NSLocalizedString( @"disconnected", "disconnected tooltip" );
+		else {
+			info = [[(MVDirectChatConnection *)[self target] connectedHost] name];
+			if( ! [info length] ) info = [[self user] address];
+		}
+
+		if( [info length] ) return [NSString stringWithFormat:@"%@ (%@)\n%@", [self title], info, messageCount];
+		return [NSString stringWithFormat:@"%@\n%@", [self title], messageCount];
+	}
+
 	return [NSString stringWithFormat:@"%@ (%@)\n%@", [self title], [[self connection] server], messageCount];
 }
 
@@ -474,8 +507,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 - (NSString *) identifier {
 	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
-		return [NSString stringWithFormat:@"Direct Chat %@", [(MVDirectChatConnection *)[self target] user]];
-	return [NSString stringWithFormat:@"Direct Chat %@ (%@)", [self target], [[self connection] server]];
+		return [NSString stringWithFormat:@"Direct Chat %@", [self user]];
+	return [NSString stringWithFormat:@"Direct Chat %@ (%@)", [self user], [[self connection] server]];
 }
 
 #pragma mark -
@@ -519,7 +552,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 - (void) handleDraggedFile:(NSString *) path {
 	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
-	[[MVFileTransferController defaultController] addFileTransfer:[[self target] sendFile:path passively:passive]];
+	[[MVFileTransferController defaultController] addFileTransfer:[[self user] sendFile:path passively:passive]];
 }
 
 #pragma mark -
@@ -527,24 +560,6 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 - (IBAction) getInfo:(id) sender {
 	[[JVInspectorController inspectorOfObject:self] show:sender];
-}
-
-- (IBAction) addToFavorites:(id) sender {
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[self connection] server], [[[self target] description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
-	NSString *path = [[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@ (%@).inetloc", [self target], [[self connection] server]] stringByExpandingTildeInPath] retain];
-
-	[url writeToInternetLocationFile:path];
-	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:path];
-	[[NSWorkspace sharedWorkspace] noteFileSystemChanged:path];
-
-	[MVConnectionsController refreshFavoritesMenu];
-}
-
-- (IBAction) addBuddy:(id) sender {
-	[[MVBuddyListController sharedBuddyList] showBuddyPickerSheet:self];
-	[[MVBuddyListController sharedBuddyList] setNewBuddyNickname:[[self target] nickname]];
-	[[MVBuddyListController sharedBuddyList] setNewBuddyFullname:[[self target] realName]];
-	[[MVBuddyListController sharedBuddyList] setNewBuddyServer:[self connection]];
 }
 
 #pragma mark -
@@ -634,7 +649,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 }
 
 - (IBAction) changeEncoding:(id) sender {
-	if( ! [self connection] || ! [[self connection] supportedStringEncodings] ) return;
+	if( ! [[self connection] supportedStringEncodings] ) return;
 
 	NSMenuItem *menuItem = nil;
 	unsigned i = 0, count = 0;
@@ -754,10 +769,11 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 	[[self emoticons] performEmoticonSubstitution:messageString];
 
-	if( ! [user isLocalUser] && [self connection] ) {
+	if( ! [user isLocalUser] ) {
 		NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
-		NSMutableArray *names = [[[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy] autorelease];
-		[names addObject:[[self connection] nickname]];
+		NSMutableArray *names = [[[NSUserDefaults standardUserDefaults] stringArrayForKey:@"MVChatHighlightNames"] mutableCopy];
+		if( [self connection] )
+			[names addObject:[[self connection] nickname]];
 
 		NSEnumerator *enumerator = [names objectEnumerator];
 		AGRegex *regex = nil;
@@ -785,6 +801,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 				[cmessage setHighlighted:YES];
 			}
 		}
+
+		[names release];
 	}
 	
 	[self processIncomingMessage:cmessage];
@@ -933,7 +951,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	NSRange range;
 
 	// allow commands to be passed to plugins if we arn't connected, allow commands to pass to plugins and server if we are just out of the room
-	if( ( _cantSendMessages || ! [[self connection] isConnected] ) && ( ! [[[send textStorage] string] hasPrefix:@"/"] || [[[send textStorage] string] hasPrefix:@"//"] ) ) return;
+	if( ( _cantSendMessages || ! [self isEnabled] ) && ( ! [[[send textStorage] string] hasPrefix:@"/"] || [[[send textStorage] string] hasPrefix:@"//"] ) ) return;
 
 	_historyIndex = 0;
 	if( ! [[send string] length] ) return;
@@ -1189,7 +1207,7 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	NSMutableArray *ret = [NSMutableArray array];
 	NSString *suffix = ( ! ( [event modifierFlags] & NSAlternateKeyMask ) ? ( charRange.location == 0 ? @": " : @" " ) : @"" );
 
-	if( [search length] <= [[self title] length] && [search caseInsensitiveCompare:[[[self target] description] substringToIndex:[search length]]] == NSOrderedSame )
+	if( [search length] <= [[self title] length] && [search caseInsensitiveCompare:[[[self user] nickname] substringToIndex:[search length]]] == NSOrderedSame )
 		[ret addObject:[[self title] stringByAppendingString:suffix]];
 	if( [search length] <= [[[self connection] nickname] length] && [search caseInsensitiveCompare:[[[self connection] nickname] substringToIndex:[search length]]] == NSOrderedSame )
 		[ret addObject:[[[self connection] nickname] stringByAppendingString:suffix]];
@@ -1553,8 +1571,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	NSError *error = [[notification userInfo] objectForKey:@"error"];
 	if( [error code] == MVChatConnectionNoSuchUserError ) {
 		MVChatUser *user = [[error userInfo] objectForKey:@"user"];
-		if( [user isEqualTo:[self target]] )
-			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is not online. Any messages sent will not be received.", "user not online" ), [self target]] withName:@"offline" andAttributes:nil];
+		if( [user isEqualTo:[self user]] )
+			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is not online. Any messages sent will not be received.", "user not online" ), [self user]] withName:@"offline" andAttributes:nil];
 	}
 }
 
