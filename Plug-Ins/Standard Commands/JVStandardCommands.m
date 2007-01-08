@@ -432,17 +432,9 @@
 	MVChatUser *user = [[connection chatUsersWithNickname:to] anyObject];
 
 	if( ! [path length] ) {
-		NSOpenPanel *panel = [NSOpenPanel openPanel];
-		[panel setResolvesAliases:YES];
-		[panel setCanChooseFiles:YES];
-		[panel setCanChooseDirectories:NO];
-		[panel setAllowsMultipleSelection:YES];
-		if( [panel runModalForTypes:nil] == NSOKButton ) {
-			NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
-			while( ( path = [enumerator nextObject] ) )
-				[[MVFileTransferController defaultController] addFileTransfer:[user sendFile:path passively:passive]];
-		}
+		[user sendFile:nil];
 	} else [[MVFileTransferController defaultController] addFileTransfer:[user sendFile:path passively:passive]];
+
 	return YES;
 }
 

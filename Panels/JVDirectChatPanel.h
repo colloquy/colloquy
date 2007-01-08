@@ -44,6 +44,7 @@ extern NSString *JVChatMessageWasProcessedNotification;
 }
 - (id) initWithTarget:(id) target;
 - (id) target;
+- (MVChatUser *) user;
 - (NSURL *) url;
 
 - (IBAction) addToFavorites:(id) sender;

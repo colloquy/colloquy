@@ -1,12 +1,14 @@
 #import "MVBuddyListController.h"
+
 #import "JVBuddy.h"
 #import "JVChatController.h"
+#import "JVDetailCell.h"
+#import "JVInspectorController.h"
+#import "JVNotificationController.h"
+#import "MVChatUserAdditions.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
-#import "JVNotificationController.h"
-#import "JVInspectorController.h"
 #import "MVTableView.h"
-#import "JVDetailCell.h"
 
 static MVBuddyListController *sharedInstance = nil;
 
@@ -16,6 +18,7 @@ static MVBuddyListController *sharedInstance = nil;
 - (void) _manuallySortAndUpdate;
 - (void) _setBuddiesNeedSortAnimated;
 - (void) _sortBuddiesAnimated:(id) sender;
+- (NSMenu *) _menuForBuddy:(JVBuddy *) buddy;
 @end
 
 #pragma mark -
@@ -385,43 +388,9 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (IBAction) sendFileToSelectedBuddy:(id) sender {
 	if( [buddies selectedRow] == -1 ) return;
-	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:[buddies selectedRow]];
 	MVChatUser *user = [buddy activeUser];
-	if( [user type] != MVChatRemoteUserType ) return;
-
-	NSOpenPanel *panel = [NSOpenPanel openPanel];
-	[panel setResolvesAliases:YES];
-	[panel setCanChooseFiles:YES];
-	[panel setCanChooseDirectories:NO];
-	[panel setAllowsMultipleSelection:YES];
-
-	NSView *view = [[NSView alloc] initWithFrame:NSMakeRect( 0., 0., 200., 28. )];
-	[view setAutoresizingMask:( NSViewWidthSizable | NSViewMaxXMargin )];
-
-	NSButton *passiveButton = [[NSButton alloc] initWithFrame:NSMakeRect( 0., 6., 200., 18. )];
-	[[passiveButton cell] setButtonType:NSSwitchButton];
-	[passiveButton setState:passive];
-	[passiveButton setTitle:NSLocalizedString( @"Send File Passively", "send files passively file send open dialog button" )];
-	[passiveButton sizeToFit];
-
-	NSRect frame = [view frame];
-	frame.size.width = NSWidth( [passiveButton frame] );
-
-	[view setFrame:frame];
-	[view addSubview:passiveButton];
-	[passiveButton release];
-
-	[panel setAccessoryView:view];
-	[view release];
-
-	if( [panel runModalForTypes:nil] == NSOKButton ) {
-		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
-		passive = [passiveButton state];
-		NSString *path = nil;
-		while( ( path = [enumerator nextObject] ) )
-			[[MVFileTransferController defaultController] addFileTransfer:[user sendFile:path passively:passive]];
-	}
+	[user sendFile:sender];
 }
 
 #pragma mark -
@@ -736,38 +705,9 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (NSMenu *) tableView:(MVTableView *) tableView menuForTableColumn:(NSTableColumn *) tableColumn row:(int) row {
-	if( tableView != buddies ) return nil;
-
-	NSMenu *menu = [actionMenu copyWithZone:[self zone]];
+	if( tableView != buddies || row == -1 || row >= (int)[_buddyOrder count] ) return nil;
 	JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
-
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
-	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-	id view = nil;
-
-	[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
-	[invocation setArgument:&buddy atIndex:2];
-	[invocation setArgument:&view atIndex:3];
-
-	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
-	if( [results count] ) {
-		[menu addItem:[NSMenuItem separatorItem]];
-
-		NSArray *items = nil;
-		NSMenuItem *item = nil;
-		NSEnumerator *enumerator = [results objectEnumerator];
-		while( ( items = [enumerator nextObject] ) ) {
-			if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
-			NSEnumerator *ienumerator = [items objectEnumerator];
-			while( ( item = [ienumerator nextObject] ) )
-				if( [item isKindOfClass:[NSMenuItem class]] ) [menu addItem:item];
-		}
-
-		if( [[[menu itemArray] lastObject] isSeparatorItem] )
-			[menu removeItem:[[menu itemArray] lastObject]];
-	}
-
-	return [menu autorelease];
+	return [self _menuForBuddy:buddy];
 }
 
 - (NSString *) tableView:(MVTableView *) tableView toolTipForTableColumn:(NSTableColumn *) column row:(int) row {
@@ -801,6 +741,15 @@ static MVBuddyListController *sharedInstance = nil;
 	BOOL enabled = ! ( [buddies selectedRow] == -1 );
 	[sendMessageButton setEnabled:enabled];
 	[infoButton setEnabled:enabled];
+	[actionButton setEnabled:enabled];
+
+	if( [buddies selectedRow] != -1 ) {
+		JVBuddy *buddy = [_buddyOrder objectAtIndex:[buddies selectedRow]];
+		[actionButton setMenu:[self _menuForBuddy:buddy]];
+	} else {
+		[actionButton setMenu:nil];
+	}
+
 	[[JVInspectorController sharedInspector] inspectObject:[self objectToInspect]];
 }
 
@@ -1082,6 +1031,50 @@ static MVBuddyListController *sharedInstance = nil;
 	}
 
 	[list release];
+}
+
+- (NSMenu *) _menuForBuddy:(JVBuddy *) buddy {
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+	NSMenuItem *item = nil;
+
+	NSArray *standardItems = [[buddy activeUser] standardMenuItems];
+	NSEnumerator *enumerator = [standardItems objectEnumerator];
+	while( ( item = [enumerator nextObject] ) ) {
+		if( [item action] == @selector( addBuddy: ) )
+			continue;
+		if( [item action] == @selector( toggleIgnore: ) )
+			continue;
+		[menu addItem:item];
+	}
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	id view = nil;
+
+	[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
+	[invocation setArgument:&buddy atIndex:2];
+	[invocation setArgument:&view atIndex:3];
+
+	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+	if( [results count] ) {
+		if( [menu numberOfItems ] && ! [[[menu itemArray] lastObject] isSeparatorItem] )
+			[menu addItem:[NSMenuItem separatorItem]];
+
+		NSArray *items = nil;
+		NSMenuItem *item = nil;
+		NSEnumerator *enumerator = [results objectEnumerator];
+		while( ( items = [enumerator nextObject] ) ) {
+			if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
+			NSEnumerator *ienumerator = [items objectEnumerator];
+			while( ( item = [ienumerator nextObject] ) )
+				if( [item isKindOfClass:[NSMenuItem class]] ) [menu addItem:item];
+		}
+
+		if( [[[menu itemArray] lastObject] isSeparatorItem] )
+			[menu removeItem:[[menu itemArray] lastObject]];
+	}
+
+	return [menu autorelease];
 }
 @end
 

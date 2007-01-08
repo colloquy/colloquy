@@ -130,10 +130,10 @@
 	[panel setCanChooseDirectories:NO];
 	[panel setAllowsMultipleSelection:YES];
 
-	NSView *view = [[[NSView alloc] initWithFrame:NSMakeRect( 0., 0., 200., 28. )] autorelease];
+	NSView *view = [[NSView alloc] initWithFrame:NSMakeRect( 0., 0., 200., 28. )];
 	[view setAutoresizingMask:( NSViewWidthSizable | NSViewMaxXMargin )];
 
-	NSButton *passiveButton = [[[NSButton alloc] initWithFrame:NSMakeRect( 0., 6., 200., 18. )] autorelease];
+	NSButton *passiveButton = [[NSButton alloc] initWithFrame:NSMakeRect( 0., 6., 200., 18. )];
 	[[passiveButton cell] setButtonType:NSSwitchButton];
 	[passiveButton setState:passive];
 	[passiveButton setTitle:NSLocalizedString( @"Send File Passively", "send files passively file send open dialog button" )];
@@ -144,8 +144,10 @@
 
 	[view setFrame:frame];
 	[view addSubview:passiveButton];
+	[passiveButton release];
 
 	[panel setAccessoryView:view];
+	[view release];
 
 	if( [panel runModalForTypes:nil] == NSOKButton ) {
 		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];

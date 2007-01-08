@@ -1,30 +1,32 @@
-#import "JVChatController.h"
-#import "KAIgnoreRule.h"
-#import "JVTabbedChatWindowController.h"
-#import "JVStyle.h"
-#import "JVEmoticonSet.h"
-#import "JVChatRoomPanel.h"
-#import "JVChatRoomMember.h"
-#import "JVChatTranscript.h"
-#import "JVSQLChatTranscript.h"
-#import "JVChatMessage.h"
-#import "JVChatEvent.h"
-#import "JVNotificationController.h"
-#import "MVConnectionsController.h"
 #import "JVDirectChatPanel.h"
-#import "MVBuddyListController.h"
-#import "MVFileTransferController.h"
+
 #import "JVBuddy.h"
-#import "MVTextView.h"
-#import "MVMenuButton.h"
+#import "JVChatController.h"
+#import "JVChatEvent.h"
+#import "JVChatMessage.h"
+#import "JVChatRoomMember.h"
+#import "JVChatRoomPanel.h"
+#import "JVChatTranscript.h"
+#import "JVChatUserInspector.h"
+#import "JVEmoticonSet.h"
 #import "JVMarkedScroller.h"
+#import "JVNotificationController.h"
+#import "JVSQLChatTranscript.h"
+#import "JVSpeechController.h"
 #import "JVSplitView.h"
+#import "JVStyle.h"
 #import "JVStyleView.h"
+#import "JVTabbedChatWindowController.h"
+#import "KAIgnoreRule.h"
+#import "MVBuddyListController.h"
+#import "MVChatUserAdditions.h"
+#import "MVConnectionsController.h"
+#import "MVFileTransferController.h"
+#import "MVMenuButton.h"
+#import "MVTextView.h"
+#import "NSAttributedStringMoreAdditions.h"
 #import "NSBundleAdditions.h"
 #import "NSURLAdditions.h"
-#import "NSAttributedStringMoreAdditions.h"
-#import "JVSpeechController.h"
-#import "JVChatUserInspector.h"
 
 static NSSet *actionVerbs = nil;
 
@@ -333,6 +335,14 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	return _target;
 }
 
+- (MVChatUser *) user {
+	if( [[self target] isKindOfClass:[MVChatUser class]] )
+		return [self target];
+	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
+		return [(MVDirectChatConnection *)[self target] user];
+	return nil;
+}
+
 - (NSURL *) url {
 	NSString *server = [[[self connection] url] absoluteString];
 	return [NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", server, [[[self target] description] stringByEncodingIllegalURLCharacters]]];
@@ -406,41 +416,38 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 #pragma mark -
 
 - (NSMenu *) menu {
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 	NSMenuItem *item = nil;
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""] autorelease];
-	[item setTarget:self];
-	[menu addItem:item];
-
-/*	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") action:@selector( addToFavorites: ) keyEquivalent:@""] autorelease];
-	[item setTarget:self];
-	[menu addItem:item]; */
-
-	if( ! [[MVBuddyListController sharedBuddyList] buddyForUser:[self target]] ) {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add To Buddy List", "add to buddy list contextual menu") action:@selector( addBuddy: ) keyEquivalent:@""] autorelease];
-		[item setTarget:self];
-		[menu addItem:item];
-	}
-
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( _sendFile: ) keyEquivalent:@""] autorelease];
-	[item setTarget:self];
-	[menu addItem:item];
+	NSArray *standardItems = [[self user] standardMenuItems];
+	NSEnumerator *enumerator = [standardItems objectEnumerator];
+	while( ( item = [enumerator nextObject] ) )
+		if( [item action] != @selector( startDirectChat: ) )
+			[menu addItem:item];
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
 	if( [[[self windowController] allChatViewControllers] count] > 1 ) {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""];
 		[item setRepresentedObject:self];
 		[item setTarget:[JVChatController defaultController]];
 		[menu addItem:item];
+		[item release];
 	}
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
+	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] ) {
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Disconnect", "disconnect contextual menu item title" ) action:@selector( disconnect ) keyEquivalent:@""];
+		[item setTarget:[self target]];
+		[menu addItem:item];
+		[item release];
+	}
+
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""];
 	[item setTarget:self];
 	[menu addItem:item];
+	[item release];
 
-	return menu;
+	return [menu autorelease];
 }
 
 - (NSImage *) icon {
@@ -1365,8 +1372,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 		[toolbarItem setToolTip:NSLocalizedString( @"Send File", "send file toolbar tooltip" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"fileSend"]];
 
-		[toolbarItem setTarget:self];
-		[toolbarItem setAction:@selector( _sendFile: )];
+		[toolbarItem setTarget:[self user]];
+		[toolbarItem setAction:@selector( sendFile: )];
 
 		return [toolbarItem autorelease];
 	}
@@ -1734,40 +1741,6 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 
 - (void) _refreshIcon:(NSNotification *) notification {
 	[_windowController reloadListItem:self andChildren:NO];
-}
-
-- (IBAction) _sendFile:(id) sender {
-	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
-	NSString *path = nil;
-	NSOpenPanel *panel = [NSOpenPanel openPanel];
-	[panel setResolvesAliases:YES];
-	[panel setCanChooseFiles:YES];
-	[panel setCanChooseDirectories:NO];
-	[panel setAllowsMultipleSelection:YES];
-
-	NSView *view = [[[NSView alloc] initWithFrame:NSMakeRect( 0., 0., 200., 28. )] autorelease];
-	[view setAutoresizingMask:( NSViewWidthSizable | NSViewMaxXMargin )];
-
-	NSButton *passiveButton = [[[NSButton alloc] initWithFrame:NSMakeRect( 0., 6., 200., 18. )] autorelease];
-	[[passiveButton cell] setButtonType:NSSwitchButton];
-	[passiveButton setState:passive];
-	[passiveButton setTitle:NSLocalizedString( @"Send File Passively", "send files passively file send open dialog button" )];
-	[passiveButton sizeToFit];
-
-	NSRect frame = [view frame];
-	frame.size.width = NSWidth( [passiveButton frame] );
-
-	[view setFrame:frame];
-	[view addSubview:passiveButton];
-
-	[panel setAccessoryView:view];
-
-	if( [panel runModalForTypes:nil] == NSOKButton ) {
-		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
-		passive = [passiveButton state];
-		while( ( path = [enumerator nextObject] ) )
-			[[MVFileTransferController defaultController] addFileTransfer:[[self target] sendFile:path passively:passive]];
-	}
 }
 
 - (void) _setCurrentMessage:(JVMutableChatMessage *) message {

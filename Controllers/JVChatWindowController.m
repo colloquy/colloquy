@@ -961,7 +961,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( [results count] ) {
-		[menu addItem:[NSMenuItem separatorItem]];
+		if( [menu numberOfItems ] && ! [[[menu itemArray] lastObject] isSeparatorItem] )
+			[menu addItem:[NSMenuItem separatorItem]];
 
 		NSArray *items = nil;
 		enumerator = [results objectEnumerator];

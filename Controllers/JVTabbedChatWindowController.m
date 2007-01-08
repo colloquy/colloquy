@@ -286,7 +286,8 @@
 
 		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		if( [results count] ) {
-			[menu addItem:[NSMenuItem separatorItem]];
+			if( [menu numberOfItems ] && ! [[[menu itemArray] lastObject] isSeparatorItem] )
+				[menu addItem:[NSMenuItem separatorItem]];
 
 			NSArray *items = nil;
 			NSMenuItem *item = nil;

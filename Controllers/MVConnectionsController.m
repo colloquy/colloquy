@@ -1114,7 +1114,8 @@ static NSMenu *favoritesMenu = nil;
 
 		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		if( [results count] ) {
-			[menu addItem:[NSMenuItem separatorItem]];
+			if( [menu numberOfItems ] && ! [[[menu itemArray] lastObject] isSeparatorItem] )
+				[menu addItem:[NSMenuItem separatorItem]];
 
 			NSArray *items = nil;
 			NSEnumerator *enumerator = [results objectEnumerator];

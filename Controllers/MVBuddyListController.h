@@ -17,8 +17,8 @@ typedef enum {
 @interface MVBuddyListController : NSWindowController <JVInspectionDelegator> {
 	@private
 	IBOutlet MVTableView *buddies;
-	IBOutlet NSMenu *actionMenu;
 	IBOutlet NSButton *sendMessageButton;
+	IBOutlet NSButton *actionButton;
 	IBOutlet NSButton *infoButton;
 
 	IBOutlet NSWindow *pickerWindow;

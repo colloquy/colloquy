@@ -27,7 +27,7 @@
             CLASS = MVBuddyListController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                actionMenu = NSMenu; 
+                actionButton = NSButton; 
                 addButton = NSButton; 
                 buddies = MVTableView; 
                 email = NSTextField; 
