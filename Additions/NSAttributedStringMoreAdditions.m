@@ -2,8 +2,10 @@
 // Changes by Timothy Hatcher for Colloquy.
 // Copyright Graham Booker and Timothy Hatcher. All rights reserved.
 
-#import <libxml/tree.h>
 #import "NSAttributedStringMoreAdditions.h"
+
+#import <libxml/tree.h>
+#import <ChatCore/NSStringAdditions.h>
 
 static void setItalicOrObliqueFont( NSMutableDictionary *attrs ) {
 	NSFontManager *fm = [NSFontManager sharedFontManager];
@@ -289,7 +291,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 }
 
 - (id) initWithXHTMLFragment:(NSString *) fragment baseURL:(NSURL *) base defaultAttributes:(NSDictionary *) attributes {
-	const char *string = [[NSString stringWithFormat:@"<root>%@</root>", fragment] UTF8String];
+	const char *string = [[NSString stringWithFormat:@"<root>%@</root>", [fragment stringByStrippingIllegalXMLCharacters]] UTF8String];
 
 	if( string ) {
 		xmlDocPtr tempDoc = xmlParseMemory( string, strlen( string ) );
