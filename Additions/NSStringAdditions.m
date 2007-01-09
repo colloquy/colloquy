@@ -15,11 +15,16 @@
 #define isUTF8Cont(ch) (((ch) & 0xC0) == 0x80)
 
 BOOL isValidUTF8( const char *s, unsigned len ) {
+	BOOL only7bit = YES;
+
 	for( unsigned i = 0; i < len; ++i ) {
 		const unsigned char ch = s[i];
 
 		if( is7Bit( ch ) )
 			continue;
+
+		if( only7bit )
+			only7bit = NO;
 
 		if( isUTF8Tupel( ch ) ) {
 			if( len - i < 1 ) // too short
@@ -64,6 +69,8 @@ BOOL isValidUTF8( const char *s, unsigned len ) {
 		} else return NO;
 	}
 
+	if( only7bit )
+		return NO; // technically it can be UTF8, but it might be another 7-bit encoding
 	return YES;
 }
 
