@@ -237,12 +237,21 @@ BOOL isValidUTF8( const char *s, unsigned len ) {
 #pragma mark -
 
 - (NSString *) stringByEncodingXMLSpecialCharactersAsEntities {
+	NSCharacterSet *special = [NSCharacterSet characterSetWithCharactersInString:@"&<>\"'"];
+	NSRange range = [self rangeOfCharacterFromSet:special options:NSLiteralSearch];
+	if( range.location == NSNotFound )
+		return self;
+
 	NSMutableString *result = [self mutableCopyWithZone:nil];
 	[result encodeXMLSpecialCharactersAsEntities];
 	return [result autorelease];
 }
 
 - (NSString *) stringByDecodingXMLSpecialCharacterEntities {
+	NSRange range = [self rangeOfString:@"&" options:NSLiteralSearch];
+	if( range.location == NSNotFound )
+		return self;
+
 	NSMutableString *result = [self mutableCopyWithZone:nil];
 	[result decodeXMLSpecialCharacterEntities];
 	return [result autorelease];
@@ -251,6 +260,10 @@ BOOL isValidUTF8( const char *s, unsigned len ) {
 #pragma mark -
 
 - (NSString *) stringByEscapingCharactersInSet:(NSCharacterSet *) set {
+	NSRange range = [self rangeOfCharacterFromSet:set];
+	if( range.location == NSNotFound )
+		return self;
+
 	NSMutableString *result = [self mutableCopyWithZone:nil];
 	[result escapeCharactersInSet:set];
 	return [result autorelease];
@@ -269,6 +282,17 @@ BOOL isValidUTF8( const char *s, unsigned len ) {
 #pragma mark -
 
 - (NSString *) stringByStrippingIllegalXMLCharacters {
+	NSMutableCharacterSet *illegalSet = [[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 0x1f )] mutableCopyWithZone:nil];
+	[illegalSet addCharactersInRange:NSMakeRange( 0x7f, 1 )];
+	[illegalSet addCharactersInRange:NSMakeRange( 0xfffe, 1 )];
+	[illegalSet addCharactersInRange:NSMakeRange( 0xffff, 1 )];
+
+	NSRange range = [self rangeOfCharacterFromSet:illegalSet];
+	[illegalSet release];
+
+	if( range.location == NSNotFound )
+		return self;
+
 	NSMutableString *result = [self mutableCopyWithZone:nil];
 	[result stripIllegalXMLCharacters];
 	return [result autorelease];
@@ -296,6 +320,11 @@ BOOL isValidUTF8( const char *s, unsigned len ) {
 
 @implementation NSMutableString (NSMutableStringAdditions)
 - (void) encodeXMLSpecialCharactersAsEntities {
+	NSCharacterSet *special = [NSCharacterSet characterSetWithCharactersInString:@"&<>\"'"];
+	NSRange range = [self rangeOfCharacterFromSet:special options:NSLiteralSearch];
+	if( range.location == NSNotFound )
+		return;
+
 	[self replaceOccurrencesOfString:@"&" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
 	[self replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
 	[self replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
@@ -304,6 +333,10 @@ BOOL isValidUTF8( const char *s, unsigned len ) {
 }
 
 - (void) decodeXMLSpecialCharacterEntities {
+	NSRange range = [self rangeOfString:@"&" options:NSLiteralSearch];
+	if( range.location == NSNotFound )
+		return;
+
 	[self replaceOccurrencesOfString:@"&lt;" withString:@"<" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
 	[self replaceOccurrencesOfString:@"&gt;" withString:@">" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
 	[self replaceOccurrencesOfString:@"&quot;" withString:@"\"" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
@@ -314,6 +347,10 @@ BOOL isValidUTF8( const char *s, unsigned len ) {
 #pragma mark -
 
 - (void) escapeCharactersInSet:(NSCharacterSet *) set {
+	NSRange range = [self rangeOfCharacterFromSet:set];
+	if( range.location == NSNotFound )
+		return;
+
 	NSScanner *scanner = [[NSScanner allocWithZone:nil] initWithString:self];
 
 	unsigned offset = 0;
@@ -341,7 +378,7 @@ BOOL isValidUTF8( const char *s, unsigned len ) {
 #pragma mark -
 
 - (void) stripIllegalXMLCharacters {
-	NSMutableCharacterSet *illegalSet = [[[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 0x1f )] mutableCopyWithZone:nil] autorelease];
+	NSMutableCharacterSet *illegalSet = [[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 0x1f )] mutableCopyWithZone:nil];
 	[illegalSet addCharactersInRange:NSMakeRange( 0x7f, 1 )];
 	[illegalSet addCharactersInRange:NSMakeRange( 0xfffe, 1 )];
 	[illegalSet addCharactersInRange:NSMakeRange( 0xffff, 1 )];
@@ -351,5 +388,7 @@ BOOL isValidUTF8( const char *s, unsigned len ) {
 		[self deleteCharactersInRange:range];
 		range = [self rangeOfCharacterFromSet:illegalSet];
 	}
+
+	[illegalSet release];
 }
 @end
