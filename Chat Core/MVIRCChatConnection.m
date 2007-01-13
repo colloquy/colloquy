@@ -222,7 +222,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
-	[self performSelectorOnMainThread:@selector( cancelPendingReconnectAttempts ) withObject:nil waitUntilDone:NO];
+	[self performSelectorOnMainThread:@selector( cancelPendingReconnectAttempts ) withObject:nil waitUntilDone:YES];
 
 	if( _sendQueueProcessing && _connectionThread )
 		[self performSelector:@selector( _stopSendQueue ) withObject:nil inThread:_connectionThread];
