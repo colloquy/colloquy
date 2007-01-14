@@ -192,9 +192,12 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1C7F30420855482D00D41FB0 /* Build configuration list for PBXProject "Web Interface" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
 			projectDirPath = "";
+			projectRoot = ../..;
+			shouldCheckCompatibility = 1;
 			targets = (
 				8D5B49AC048680CD000E48DA /* Web Interface Plugin */,
 			);
@@ -249,6 +252,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
 					HAVE_STRSEP,
 					HAVE_ERRNO_H,
+					LOG_HTTP,
 				);
 				HEADER_SEARCH_PATHS = "../../**";
 				INFOPLIST_FILE = Info.plist;
