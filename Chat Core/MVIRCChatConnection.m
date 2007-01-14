@@ -25,8 +25,11 @@
 #define JVSendQueueDelayIncrement 0.01
 #define JVWatchedUserWHOISDelay 300.
 #define JVWatchedUserISONDelay 60.
-#define JVMaximumISONCommandLength 510
+#define JVMaximumCommandLength 510
+#define JVMaximumISONCommandLength JVMaximumCommandLength
+#define JVMaximumWatchCommandLength JVMaximumCommandLength
 #define JVMaximumMembersForWhoRequest 100
+#define JVFirstViableTimestamp 631138520
 #define JVFallbackEncoding NSISOLatin1StringEncoding
 
 static const NSStringEncoding supportedEncodings[] = {
@@ -495,16 +498,20 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) setAwayStatusMessage:(NSAttributedString *) message {
 	if( [[message string] length] ) {
-		[[self localUser] _setStatus:MVChatUserAwayStatus];
-
 		MVSafeCopyAssign( &_awayMessage, message );
 
 		NSData *msg = [[self class] _flattenedIRCDataForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 		[self sendRawMessageImmediatelyWithComponents:@"AWAY :", msg, nil];
+
+		[[self localUser] _setAwayStatusMessage:msg];
+		[[self localUser] _setStatus:MVChatUserAwayStatus];
 	} else {
 		MVSafeAssign( &_awayMessage, nil );
-		[[self localUser] _setStatus:MVChatUserAvailableStatus];
+
 		[self sendRawMessage:@"AWAY" immediately:YES];
+
+		[[self localUser] _setAwayStatusMessage:nil];
+		[[self localUser] _setStatus:MVChatUserAvailableStatus];
 	}
 }
 @end
@@ -881,7 +888,7 @@ end:
 	// the trailing CR-LF. Thus, there are 510 characters maximum allowed
 	// for the command and its parameters.
 
-	if( [data length] > 510 ) [data setLength:510];
+	if( [data length] > JVMaximumCommandLength ) [data setLength:JVMaximumCommandLength];
 	[data appendBytes:"\x0D\x0A" length:2];
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
@@ -1303,7 +1310,7 @@ end:
 		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"WATCH"] ) {
 			_watchCommandSupported = YES;
 
-			NSMutableString *request = [[NSMutableString allocWithZone:nil] initWithCapacity:510];
+			NSMutableString *request = [[NSMutableString allocWithZone:nil] initWithCapacity:JVMaximumWatchCommandLength];
 			[request setString:@"WATCH "];
 
 			@synchronized( _chatUserWatchRules ) {
@@ -1313,11 +1320,11 @@ end:
 				while( ( rule = [ruleEnumerator nextObject] ) ) {
 					NSString *nick = [rule nickname];
 					if( nick && ! [rule nicknameIsRegularExpression] ) {
-						if( ( [nick length] + [request length] + 1 ) > 510 ) {
+						if( ( [nick length] + [request length] + 1 ) > JVMaximumWatchCommandLength ) {
 							[self sendRawMessage:request];
 							[request release];
 
-							request = [[NSMutableString allocWithZone:nil] initWithCapacity:510];
+							request = [[NSMutableString allocWithZone:nil] initWithCapacity:JVMaximumWatchCommandLength];
 							[request setString:@"WATCH "];
 						}
 
@@ -1583,6 +1590,8 @@ end:
 			NSString *processor = @"PowerPC";
 #elif __i386__
 			NSString *processor = @"Intel";
+#elif __arm__
+			NSString *processor = @"ARM";
 #else
 			NSString *processor = @"Unknown Architecture";
 #endif
@@ -1999,7 +2008,9 @@ end:
 
 	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:0]];
-		[room _setTopic:[parameters objectAtIndex:1]];
+		NSData *topic = [parameters objectAtIndex:1];
+		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
+		[room _setTopic:topic];
 		[room _setTopicAuthor:sender];
 		[room _setTopicDate:[NSDate date]];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
@@ -2017,7 +2028,7 @@ end:
 	NSMutableArray *argsNeeded = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
 	unsigned int i = 0, count = [parameters count];
 	while( i < count ) {
-		NSString *param = [parameters objectAtIndex:i++];
+		NSString *param = [self _stringFromPossibleData:[parameters objectAtIndex:i++]];
 		if( [param length] ) {
 			char chr = [param characterAtIndex:0];
 			if( chr == '+' || chr == '-' ) {
@@ -2149,7 +2160,7 @@ end:
 			MVChatRoom *room = [self joinedChatRoomWithName:targetName];
 			[self _parseRoomModes:[parameters subarrayWithRange:NSMakeRange( 1, [parameters count] - 1)] forRoom:room fromSender:sender];
 		} else {
-			// user modes
+			// user modes not handled yet
 		}
 	}
 }
@@ -2292,9 +2303,13 @@ end:
 
 	if( [parameters count] == 3 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
-		if( ! [[user awayStatusMessage] isEqual:[parameters objectAtIndex:2]] ) {
+		NSData *awayMsg = [parameters objectAtIndex:2];
+		if( ! [awayMsg isKindOfClass:[NSData class]] ) awayMsg = nil;
+
+		if( ! [[user awayStatusMessage] isEqual:awayMsg] ) {
+			[user _setAwayStatusMessage:awayMsg];
 			[user _setStatus:MVChatUserAwayStatus];
-			[user _setAwayStatusMessage:[parameters objectAtIndex:2]];
+
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserAwayStatusMessageChangedNotification object:user userInfo:nil];
 		}
 	}
@@ -2302,11 +2317,18 @@ end:
 
 - (void) _handle305WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_UNAWAY
 	MVAssertCorrectThreadRequired( _connectionThread );
+
+	[[self localUser] _setAwayStatusMessage:nil];
+	[[self localUser] _setStatus:MVChatUserAvailableStatus];
+
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionSelfAwayStatusChangedNotification object:self userInfo:nil];
 }
 
 - (void) _handle306WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_NOWAWAY
 	MVAssertCorrectThreadRequired( _connectionThread );
+
+	[[self localUser] _setStatus:MVChatUserAwayStatus];
+
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionSelfAwayStatusChangedNotification object:self userInfo:nil];
 }
 
@@ -2418,7 +2440,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 2 ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		MVChatRoom *room = [self joinedChatRoomWithName:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomMemberUsersSyncedNotification object:room];
 	}
 }
@@ -2455,7 +2477,7 @@ end:
 
 			NSString *dateString = [self _stringFromPossibleData:[parameters objectAtIndex:4]];
 			NSTimeInterval time = [dateString doubleValue];
-			if( time > 631138520 ) // this makes sure it is a viable date
+			if( time > JVFirstViableTimestamp )
 				[user setAttribute:[NSDate dateWithTimeIntervalSince1970:time] forKey:MVChatUserBanDateAttribute];
 		}
 
@@ -2470,7 +2492,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 2 ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		MVChatRoom *room = [self joinedChatRoomWithName:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[room _setBansSynced:YES];
 		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomBannedUsersSyncedNotification object:room];
 	}
@@ -2484,7 +2506,9 @@ end:
 
 	if( [parameters count] == 3 ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
-		[room _setTopic:[parameters objectAtIndex:2]];
+		NSData *topic = [parameters objectAtIndex:2];
+		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
+		[room _setTopic:topic];
 	}
 }
 
@@ -2495,8 +2519,12 @@ end:
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
 		MVChatUser *author = [MVChatUser wildcardUserFromString:[parameters objectAtIndex:2]];
 		[room _setTopicAuthor:author];
-		if( [[parameters objectAtIndex:3] doubleValue] > 631138520 )
-			[room _setTopicDate:[NSDate dateWithTimeIntervalSince1970:[[parameters objectAtIndex:3] doubleValue]]];
+
+		NSString *setTime = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
+		NSTimeInterval time = [setTime doubleValue];
+		if( time > JVFirstViableTimestamp )
+			[room _setTopicDate:[NSDate dateWithTimeIntervalSince1970:time]];
+
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
 	}
 }
@@ -2528,7 +2556,7 @@ end:
 
 	if( [parameters count] >= 3 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
-		[user _setServerAddress:[parameters objectAtIndex:2]];
+		[user _setServerAddress:[self _stringFromPossibleData:[parameters objectAtIndex:2]]];
 	}
 }
 
@@ -2546,15 +2574,16 @@ end:
 
 	if( [parameters count] >= 3 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
-		[user _setIdleTime:[[parameters objectAtIndex:2] doubleValue]];
+		NSString *idleTime = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
+		[user _setIdleTime:[idleTime doubleValue]];
 		[user _setDateConnected:nil];
 
 		// parameter 4 is connection time on some servers
 		if( [parameters count] >= 4 ) {
 			NSString *connectedTime = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
 			NSTimeInterval time = [connectedTime doubleValue];
-			// prevent showing 34+ years connected time, this makes sure it is a viable date
-			if( time > 631138520 ) [user _setDateConnected:[NSDate dateWithTimeIntervalSince1970:time]];
+			if( time > JVFirstViableTimestamp )
+				[user _setDateConnected:[NSDate dateWithTimeIntervalSince1970:time]];
 		}
 	}
 }
