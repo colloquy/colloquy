@@ -1643,6 +1643,8 @@ end:
 					address = [NSString stringWithFormat:@"%lu.%lu.%lu.%lu", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
 				}
 
+				port %= 65535; // some clients use ports greater than 65535, mod with 65535 to get the real port
+
 				if( passive && port > 0 ) {
 					// this is a passive reply, look up the original transfer
 					MVIRCUploadFileTransfer *transfer = nil;
@@ -1699,6 +1701,8 @@ end:
 				if( [scanner scanLongLong:&passiveId] )
 					passive = YES;
 
+				port %= 65535; // some clients use ports greater than 65535, mod with 65535 to get the real port
+
 				@synchronized( _directClientConnections ) {
 					NSEnumerator *enumerator = [_directClientConnections objectEnumerator];
 					MVIRCDownloadFileTransfer *transfer = nil;
@@ -1732,6 +1736,8 @@ end:
 
 				if( [scanner scanLongLong:&passiveId] )
 					passive = YES;
+
+				port %= 65535; // some clients use ports greater than 65535, mod with 65535 to get the real port
 
 				@synchronized( _directClientConnections ) {
 					NSEnumerator *enumerator = [_directClientConnections objectEnumerator];
@@ -1772,6 +1778,8 @@ end:
 					sscanf( [address UTF8String], "%u", &ip4 );
 					address = [NSString stringWithFormat:@"%lu.%lu.%lu.%lu", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
 				}
+
+				port %= 65535; // some clients use ports greater than 65535, mod with 65535 to get the real port
 
 				if( [fileName isCaseInsensitiveEqualToString:@"CHAT"] || [fileName isCaseInsensitiveEqualToString:@"C H A T"] ) {
 					if( passive && port > 0 ) {
@@ -1853,6 +1861,8 @@ end:
 					// skip the file size and scan for the passive id
 					if( [scanner scanLongLong:NULL] && [scanner scanLongLong:&passiveId] )
 						passive = YES;
+
+					port %= 65535; // some clients use ports greater than 65535, mod with 65535 to get the real port
 
 					@synchronized( _directClientConnections ) {
 						NSEnumerator *enumerator = [[[_directClientConnections copy] autorelease] objectEnumerator];

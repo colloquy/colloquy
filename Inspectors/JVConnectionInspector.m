@@ -178,7 +178,7 @@
 	} else if( sender == editUsername ) {
 		[_connection setUsername:[sender stringValue]];
 	} else if( sender == editPort ) {
-		[_connection setServerPort:(unsigned short)[sender intValue]];
+		[_connection setServerPort:( (unsigned int)[sender intValue] % 65535 )];
 	}
 }
 

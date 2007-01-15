@@ -339,7 +339,7 @@ static NSMenu *favoritesMenu = nil;
 		return;
 	}
 
-	if( [newPort intValue] < 0 || [newPort intValue] > 65535 ) {
+	if( [newPort intValue] < 0 ) {
 		[[self window] makeFirstResponder:newPort];
 		NSRunCriticalAlertPanel( NSLocalizedString( @"Chat Server Port is invalid", "chat invalid nickname dialog title" ), NSLocalizedString( @"The chat server port you specified is invalid because it can't be negative or greater than 65535.", "chat server port invalid dialog message" ), nil, nil, nil );
 		return;
@@ -1147,7 +1147,7 @@ static NSMenu *favoritesMenu = nil;
 		} else if( [[column identifier] isEqual:@"address"] ) {
 			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServer:object];
 		} else if( [[column identifier] isEqual:@"port"] ) {
-			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServerPort:[object unsignedShortValue]];
+			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServerPort:( [object unsignedIntValue] % 65535 )];
 		}
 		[self _saveBookmarkList];
 	} else if( view == newJoinRooms ) {
