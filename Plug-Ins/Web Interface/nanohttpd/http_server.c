@@ -63,9 +63,7 @@ http_server_t *http_server_new( const char *host, const char *svc ) {
 	return me;
 }
 
-static void *http_server_run_process( void *context ) {
-	http_server_t *server = (http_server_t *) context;
-
+static void *http_server_run_process( http_server_t *server ) {
 	signal( SIGPIPE, SIG_IGN );
 
 	while( server -> running ) {
@@ -99,7 +97,7 @@ static void http_server_fork_process( http_server_t *me, int count ) {
 		pthread_attr_init( &attr );
 		pthread_attr_setscope( &attr, PTHREAD_SCOPE_SYSTEM );
 		pthread_attr_setdetachstate( &attr, PTHREAD_CREATE_DETACHED );
-		if( ! pthread_create( &tid, &attr, http_server_run_process, (void *) me ) )
+		if( ! pthread_create( &tid, &attr, (void *(*)(void *)) http_server_run_process, (void *) me ) )
 			me -> nb_process++;
 		pthread_attr_destroy( &attr );
 	}
