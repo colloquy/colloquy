@@ -111,7 +111,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( [[serverURL scheme] isEqualToString:@"irc"] ) connectionType = MVChatConnectionIRCType;
 	else if( [[serverURL scheme] isEqualToString:@"silc"] ) connectionType = MVChatConnectionSILCType;
 
-	if( ( self = [self initWithServer:[serverURL host] type:connectionType port:( [[serverURL port] unsignedIntValue] % 65535 ) user:[serverURL user]] ) ) {
+	if( ( self = [self initWithServer:[serverURL host] type:connectionType port:( [[serverURL port] unsignedIntValue] % 65536 ) user:[serverURL user]] ) ) {
 		[self setNicknamePassword:[serverURL password]];
 
 		if( [serverURL fragment] && [[serverURL fragment] length] > 0 ) {

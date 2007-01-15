@@ -1643,7 +1643,7 @@ end:
 					address = [NSString stringWithFormat:@"%lu.%lu.%lu.%lu", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
 				}
 
-				port %= 65535; // some clients use ports greater than 65535, mod with 65535 to get the real port
+				port %= 65536; // some clients use ports greater than 65535, mod with 65536 to get the real port
 
 				if( passive && port > 0 ) {
 					// this is a passive reply, look up the original transfer
@@ -1701,7 +1701,7 @@ end:
 				if( [scanner scanLongLong:&passiveId] )
 					passive = YES;
 
-				port %= 65535; // some clients use ports greater than 65535, mod with 65535 to get the real port
+				port %= 65536; // some clients use ports greater than 65535, mod with 65536 to get the real port
 
 				@synchronized( _directClientConnections ) {
 					NSEnumerator *enumerator = [_directClientConnections objectEnumerator];
@@ -1737,7 +1737,7 @@ end:
 				if( [scanner scanLongLong:&passiveId] )
 					passive = YES;
 
-				port %= 65535; // some clients use ports greater than 65535, mod with 65535 to get the real port
+				port %= 65536; // some clients use ports greater than 65535, mod with 65536 to get the real port
 
 				@synchronized( _directClientConnections ) {
 					NSEnumerator *enumerator = [_directClientConnections objectEnumerator];
@@ -1779,7 +1779,7 @@ end:
 					address = [NSString stringWithFormat:@"%lu.%lu.%lu.%lu", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
 				}
 
-				port %= 65535; // some clients use ports greater than 65535, mod with 65535 to get the real port
+				port %= 65536; // some clients use ports greater than 65535, mod with 65536 to get the real port
 
 				if( [fileName isCaseInsensitiveEqualToString:@"CHAT"] || [fileName isCaseInsensitiveEqualToString:@"C H A T"] ) {
 					if( passive && port > 0 ) {
@@ -1862,7 +1862,7 @@ end:
 					if( [scanner scanLongLong:NULL] && [scanner scanLongLong:&passiveId] )
 						passive = YES;
 
-					port %= 65535; // some clients use ports greater than 65535, mod with 65535 to get the real port
+					port %= 65536; // some clients use ports greater than 65535, mod with 65536 to get the real port
 
 					@synchronized( _directClientConnections ) {
 						NSEnumerator *enumerator = [[[_directClientConnections copy] autorelease] objectEnumerator];

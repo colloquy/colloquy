@@ -1147,7 +1147,7 @@ static NSMenu *favoritesMenu = nil;
 		} else if( [[column identifier] isEqual:@"address"] ) {
 			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServer:object];
 		} else if( [[column identifier] isEqual:@"port"] ) {
-			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServerPort:( [object unsignedIntValue] % 65535 )];
+			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServerPort:( [object unsignedIntValue] % 65536 )];
 		}
 		[self _saveBookmarkList];
 	} else if( view == newJoinRooms ) {
