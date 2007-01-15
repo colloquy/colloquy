@@ -3,7 +3,7 @@
 #include <string.h>
 #include "nanohttpd.h"
 
-int	http_req_parse( http_req_t * );
+int http_req_parse( http_req_t * );
 void http_req_free( void * );
 
 const hash_t *http_req_get_headers( http_req_t * );
@@ -85,7 +85,7 @@ const char *http_req_get_parameter( http_req_t *me, const char *param ) {
 	return me -> parameters -> get( me -> parameters, param );
 }
 
-int	http_req_add_header( http_req_t *me, const char *header, char *value ) {
+static int http_req_add_header( http_req_t *me, const char *header, char *value ) {
 	char *head = strdup( header );
 	strtolower( head );
 
@@ -100,7 +100,7 @@ int	http_req_add_header( http_req_t *me, const char *header, char *value ) {
 	return 0;
 }
 
-hash_t *http_req_parse_parameters( http_req_t *me ) {
+static hash_t *http_req_parse_parameters( http_req_t *me ) {
 	if( ! me -> query || ! strlen( me -> query ) )
 		return NULL;
 
@@ -193,7 +193,6 @@ int http_req_parse( http_req_t *me ) {
 	free( org );
 
 	if( me -> headers -> get( me -> headers, "content-type" ) ) {
-		char *buf;
 		list_t *list = (list_t *) me -> headers -> get( me -> headers, "content-length" );
 
 		if( list ) {
@@ -201,13 +200,13 @@ int http_req_parse( http_req_t *me ) {
 			me -> content_length = buflen;
 
 #ifdef LOG_HTTP
-			http_log( LOG_DEBUG, "Reading %i(%s) bytes", buflen, (char *) list -> first( list ) );
+			http_log( LOG_DEBUG, "Reading %lu(%s) bytes", buflen, (char *) list -> first( list ) );
 #endif
 
 			if( buflen > 0 ) {
 				me -> content = (char *) malloc( buflen );
 
-				int nread = 0;
+				unsigned long nread = 0;
 				while( nread < buflen )
 					nread += me -> netbuf -> read( me -> netbuf, me -> content + nread, buflen - nread );
 

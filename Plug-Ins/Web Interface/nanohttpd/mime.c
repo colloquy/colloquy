@@ -2,21 +2,21 @@
 #include <stdio.h>
 #include "nanohttpd.h"
 
-void mime_header_free( void *_me ) {
+static void mime_header_free( void *_me ) {
 	mime_header_t *me = (mime_header_t *) _me;
 	if( ! me ) return;
 	if( me -> params ) me -> params -> delete( me -> params, 0, 0, NULL );
 	free( me );
 }
 
-void mime_part_free( void *_me ) {
+static void mime_part_free( void *_me ) {
 	mime_part_t *me = (mime_part_t *) _me;
 	if( ! me ) return;
 	if( me -> headers ) me -> headers -> delete_func( me -> headers, mime_header_free );
 	free( me );
 }
 
-void mime_msg_free( void *_me ) {
+static void mime_msg_free( void *_me ) {
 	mime_message_t *me = (mime_message_t *) _me;
 	if( ! me ) return;
 	if( me -> parts ) me -> parts -> delete_func( me -> parts, mime_part_free );
@@ -29,7 +29,7 @@ void mime_msg_free( void *_me ) {
 
 #define NEXT_LINE( ptr, buflen ) if(( *ptr ) =='\n' ) {( ptr )++;( buflen )--;}
 
-int mime_parse_part( mime_message_t *msg, char * *content, unsigned long *buflen, char *boundary ) {
+static int mime_parse_part( mime_message_t *msg, char * *content, unsigned long *buflen, char *boundary ) {
 	// move the cursor to the beginning of this part 
 	char search[255];
 	snprintf( search, 255, "--%s", boundary );
@@ -62,7 +62,7 @@ int mime_parse_part( mime_message_t *msg, char * *content, unsigned long *buflen
 
 	mime_part_t *me = (mime_part_t *) malloc( sizeof( mime_part_t ) );
 	me -> boundary = boundary;
-	me -> headers = list_new( );
+	me -> headers = list_new();
 
 	// parse the mime headers 
 	line = strsep( content, "\r\n" );
@@ -85,7 +85,7 @@ int mime_parse_part( mime_message_t *msg, char * *content, unsigned long *buflen
 			// try to parse them
 
 			if( tmp ) {
-				header -> params = hash_new( );
+				header -> params = hash_new();
 
 				while( *tmp == ' ' ) tmp++; // left trim
 				while( tmp ) {
@@ -178,9 +178,9 @@ parse_part:
 		len++;
 	}
 
-	if( (*buflen) < 0 ) {
+	if( (*buflen) > 0 ) {
 #ifdef LOG_HTTP
-		http_log( LOG_DEBUG, "unexpected end of part, (rest = %s), bl = %i", *content, *buflen );
+		http_log( LOG_DEBUG, "unexpected end of part, (rest = %s), bl = %lu", *content, *buflen );
 #endif
 		return MIME_ERR;
 	}
@@ -205,7 +205,7 @@ mime_message_t *mime_parse_message( char *buf, unsigned long *buflen, char *boun
 		free( me ); return NULL;
 	}
 
-	me -> parts = list_new( );
+	me -> parts = list_new();
 	while( mime_parse_part( me, &content, buflen, boundary ) == MIME_READ_NEXT_PART ) {}
 
 	return me;

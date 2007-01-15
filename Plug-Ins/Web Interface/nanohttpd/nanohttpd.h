@@ -4,7 +4,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #ifndef HAVE_STRSEP
-extern char *strsep( char **stringp, char *delim );
+char *strsep( char **stringp, char *delim );
 #endif
 #endif
 
@@ -32,8 +32,8 @@ typedef struct _list_t {
 	void ( *delete_func )( void *, void(*)( void * ));
 } list_t;
 
-extern list_t *list_new();
-extern void list_free( void * );
+list_t *list_new( void );
+void list_free( void * );
 
 // hash.c
 typedef struct _hash_item_t {
@@ -51,10 +51,10 @@ typedef struct _hash_t {
 	void( *delete )( struct _hash_t *, int, int, void(*)( void * ));
 } hash_t;
 
-extern hash_t *	hash_new();
+hash_t *hash_new( void );
 
 // netbuf.c
-#ifndef	NETBUF_LEN
+#ifndef NETBUF_LEN
 #define NETBUF_LEN 8192
 #endif
 
@@ -63,7 +63,7 @@ typedef struct _netbuf_in_t {
 	char * data;
 	size_t buflen;
 	size_t datalen;
-	int	fd;
+	int fd;
 
 	int ( *read )( struct _netbuf_in_t *, char *, size_t );
 	int ( *read_line )( struct _netbuf_in_t *, char *, size_t );
@@ -76,18 +76,18 @@ typedef struct _netbuf_out_t {
 	size_t datalen;
 	int fd;
 
-	int ( *write )( struct _netbuf_out_t *, char *, size_t );
-	int ( *printf )( struct _netbuf_out_t *, char *, ... );
-	int ( *vprintf )( struct _netbuf_out_t *, char *, va_list );
+	int ( *write )( struct _netbuf_out_t *, const char *, size_t );
+	int ( *printf )( struct _netbuf_out_t *, const char *, ... ) __attribute__ ((format (printf, 2, 3)));
+	int ( *vprintf )( struct _netbuf_out_t *, const char *, va_list ) __attribute__ ((format (printf, 2, 0)));
 	void ( *delete )( struct _netbuf_out_t * );
 } netbuf_out_t;
 
-extern netbuf_in_t *netbuf_in_new( int fd );
-extern netbuf_out_t *netbuf_out_new( int fd );
+netbuf_in_t *netbuf_in_new( int fd );
+netbuf_out_t *netbuf_out_new( int fd );
 
 // utils.c
-extern void strtolower( char *string );
-extern void url_decode( char *string, int queryString );
+void strtolower( char *string );
+void url_decode( char *string, int queryString );
 
 // mime.c
 typedef struct _st_mime_message {
@@ -108,7 +108,7 @@ typedef struct _st_mime_header {
 	hash_t *params;
 } mime_header_t;
 
-extern mime_message_t *mime_parse_message( char *buf, unsigned long *buflen, char *boundary );
+mime_message_t *mime_parse_message( char *buf, unsigned long *buflen, char *boundary );
 
 // http_req.c
 #define REQ_GET 1
@@ -124,7 +124,7 @@ extern mime_message_t *mime_parse_message( char *buf, unsigned long *buflen, cha
 typedef struct _http_req_t {
 	int sock;
 	netbuf_in_t *netbuf;
-	int	method;
+	int method;
 	int version;
 
 	char *uri;
@@ -145,38 +145,38 @@ typedef struct _http_req_t {
 	void ( *delete )( void * );
 } http_req_t;
 
-extern http_req_t *http_req_new( int sock );
+http_req_t *http_req_new( int sock );
 
 // http_resp.c
 typedef struct _http_resp_t {
 	int sock;
 	netbuf_out_t *netbuf;
-	int	status_code;
-	char *reason_phrase;
-	char *content_type;
-	int	headers_sent;
+	int status_code;
+	const char *reason_phrase;
+	const char *content_type;
+	int headers_sent;
 
 	http_req_t *req;
 	hash_t *headers;
 	list_t *cookies;
 
 	void ( *delete )( void * );
-	int ( *write )( struct _http_resp_t *, char *,size_t );
-	int ( *printf )( struct _http_resp_t *, char *, ... );
-	int ( *send_redirect )( struct _http_resp_t *, char * );
-	void ( *add_cookie )( struct _http_resp_t *, char * );
-	int ( *add_header )( struct _http_resp_t *, const char *, char * );
+	int ( *write )( struct _http_resp_t *, const char *, size_t );
+	int ( *printf )( struct _http_resp_t *, const char *, ... ) __attribute__ ((format (printf, 2, 3)));
+	int ( *send_redirect )( struct _http_resp_t *, const char * );
+	void ( *add_cookie )( struct _http_resp_t *, const char * );
+	int ( *add_header )( struct _http_resp_t *, const char *, const char * );
 } http_resp_t;
 
-extern http_resp_t *http_resp_new( int sock, http_req_t *req );
+http_resp_t *http_resp_new( int sock, http_req_t *req );
 
 // http_server.c
 typedef struct _http_server_t http_server_t;
 typedef void( *http_server_handler )( http_req_t *,http_resp_t *, http_server_t * );
 
 struct _http_server_t {
-	char *host;
-	char *svc;
+	const char *host;
+	const char *svc;
 	int sock;
 
 	char *document_root;
@@ -185,8 +185,8 @@ struct _http_server_t {
 	list_t *url_mappings;
 	void *context;
 
-	int	initial_process;
-	int	nb_process;
+	int initial_process;
+	int nb_process;
 	char running;
 	char stopped;
 
@@ -196,7 +196,7 @@ struct _http_server_t {
 	const char *( *get_mime )( struct _http_server_t *, const char * );
 };
 
-extern http_server_t *http_server_new( char *hostname, char *port );
+http_server_t *http_server_new( const char *hostname, const char *port );
 
 // url_map.c
 #include <sys/types.h>
@@ -208,12 +208,12 @@ typedef struct _url_map_t {
 	void ( *delete )( void * );
 } url_map_t;
 
-extern url_map_t *url_map_new( const char *regex, http_server_handler handler );
-extern void url_map_free( void *url );
+url_map_t *url_map_new( const char *regex, http_server_handler handler );
+void url_map_free( void *url );
 
 // basic_modules.c
-extern void mod_file( http_req_t *req, http_resp_t *resp, http_server_t *server );
-extern void mod_dir( http_req_t *req, http_resp_t *resp, http_server_t *server );
+void mod_file( http_req_t *req, http_resp_t *resp, http_server_t *server );
+void mod_dir( http_req_t *req, http_resp_t *resp, http_server_t *server );
 
 #ifdef LOG_HTTP
 // http_log.c
@@ -221,8 +221,8 @@ extern void mod_dir( http_req_t *req, http_resp_t *resp, http_server_t *server )
 #define LOG_INFO 2
 #define LOG_DEBUG 3
 
-extern void http_log( int, char *, ... );
-extern void http_log_perror( int, char * );
+void http_log( int, const char *, ... ) __attribute__ ((format (printf, 2, 3)));
+void http_log_perror( int, const char * );
 #endif
 
 #endif

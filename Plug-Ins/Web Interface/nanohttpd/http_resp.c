@@ -3,12 +3,12 @@
 #include <stdio.h>
 #include "nanohttpd.h"
 
-int http_resp_write( http_resp_t *, char *, size_t );
-int http_resp_printf( http_resp_t *, char *, ... );
-int http_resp_send_redirect( http_resp_t *, char *);
+int http_resp_write( http_resp_t *, const char *, size_t );
+int http_resp_printf( http_resp_t *, const char *, ... ) __attribute__ ((format (printf, 2, 3)));
+int http_resp_send_redirect( http_resp_t *, const char *);
 void http_resp_free( void *);
-int http_resp_add_header( http_resp_t *, const char *, char *);
-void http_resp_add_cookie( http_resp_t *, char *);
+int http_resp_add_header( http_resp_t *, const char *, const char *);
+void http_resp_add_cookie( http_resp_t *, const char *);
 
 http_resp_t *http_resp_new( int sock, http_req_t *req ) {
 	http_resp_t *me = (http_resp_t *) malloc( sizeof( http_resp_t ) );
@@ -33,7 +33,7 @@ http_resp_t *http_resp_new( int sock, http_req_t *req ) {
 	return me;
 }
 
-void http_resp_send_headers( http_resp_t *me ) {
+static void http_resp_send_headers( http_resp_t *me ) {
 	if( me -> headers_sent ) return;
 
 	http_req_t *req = me -> req;
@@ -80,13 +80,13 @@ void http_resp_send_headers( http_resp_t *me ) {
 	}
 }
 
-int	http_resp_write( http_resp_t *me, char *buf, size_t buflen ) {
+int http_resp_write( http_resp_t *me, const char *buf, size_t buflen ) {
 	if( ! me -> headers_sent )
 		http_resp_send_headers( me );
 	return me -> netbuf -> write( me -> netbuf, buf, buflen );
 }
 
-int http_resp_printf( http_resp_t *me, char *fmt, ... ) {
+int http_resp_printf( http_resp_t *me, const char *fmt, ... ) {
 	va_list ap;
 	va_start( ap, fmt );
 
@@ -96,7 +96,7 @@ int http_resp_printf( http_resp_t *me, char *fmt, ... ) {
 	return me -> netbuf -> vprintf( me -> netbuf, fmt, ap );
 }
 
-int	http_resp_add_header( http_resp_t *me, const char *header, char *value ) {
+int http_resp_add_header( http_resp_t *me, const char *header, const char *value ) {
 	list_t *h = (list_t *) me -> headers -> get( me -> headers, header );
 	if( h ) h -> add( h, strdup( value ) );
 	else {
@@ -108,7 +108,7 @@ int	http_resp_add_header( http_resp_t *me, const char *header, char *value ) {
 	return 0;
 }
 
-int http_resp_send_redirect( http_resp_t *me, char *location ) {
+int http_resp_send_redirect( http_resp_t *me, const char *location ) {
 	if( me -> headers_sent ) {
 #ifdef LOG_HTTP
 		http_log(LOG_ERR, "Can not send redirect, headers already sent.");
@@ -128,7 +128,7 @@ int http_resp_send_redirect( http_resp_t *me, char *location ) {
 	return 0;
 }
 
-void http_resp_add_cookie( http_resp_t *me, char *cookie ) {
+void http_resp_add_cookie( http_resp_t *me, const char *cookie ) {
 	me -> cookies -> add( me -> cookies, cookie );
 }
 

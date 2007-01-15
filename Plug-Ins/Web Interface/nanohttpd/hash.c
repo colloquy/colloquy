@@ -8,12 +8,12 @@ const void *hash_get( hash_t *, const char * );
 list_t *hash_get_keys( const hash_t * );
 void hash_free( hash_t *, int, int, void(*)( void * ) );
 
-short hash_get_hash( const char *key ) {
+static short hash_get_hash( const char *key ) {
 	if( key ) return key[0];
 	return 0;
 }
 
-hash_t *hash_new() {
+hash_t *hash_new( void ) {
 	hash_t *me = (hash_t *) malloc( sizeof( hash_t ) );
 	me -> slots = (hash_item_t **) calloc( 255, sizeof( hash_item_t * ) );
 	me -> set = hash_set;

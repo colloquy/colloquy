@@ -14,7 +14,7 @@ extern int errno;
 
 #include "nanohttpd.h"
 
-char *getext( char *in ) {
+static char *getext( char *in ) {
 	char *ext = strrchr( in, '.' );
 	if( ! ext ) return ext;
 	return ext + 1;

@@ -11,9 +11,9 @@ extern int errno;
 
 #include "nanohttpd.h"
 
-void http_log( int level, char *fmt, ... ) {
+void http_log( int level, const char *fmt, ... ) {
 	va_list ap;
-	char *lmsg;
+	const char *lmsg;
 
 	va_start( ap, fmt );
 
@@ -37,7 +37,7 @@ void http_log( int level, char *fmt, ... ) {
 	va_end( ap );
 }
 
-void http_log_perror( int level, char *msg ) {
+void http_log_perror( int level, const char *msg ) {
 	http_log( level, "%s: %s", msg, strerror( errno ) );
 }
 #endif

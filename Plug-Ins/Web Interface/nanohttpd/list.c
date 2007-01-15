@@ -4,12 +4,12 @@
 void list_add( list_t *, const void * );
 const void *list_first_elem( list_t * );
 const void *list_next_elem( list_t * );
-int	list_remove_func( list_t *, int(*)( void *, void * ), void *, void(*)( void * ) );
+int list_remove_func( list_t *, int(*)( void *, void * ), void *, void(*)( void * ) );
 void list_free( void * );
 void list_free2( void * );
 void list_free_func( void *, void(*)( void * ) );
 
-list_t *list_new() {
+list_t *list_new( void ) {
 	list_t *me = (list_t *) malloc( sizeof( list_t));
 	me -> data = NULL;
 	me -> position = NULL;
@@ -33,7 +33,7 @@ void list_add( list_t *me, const void *data ) {
 	me -> data = elem;
 }
 
-int	list_remove_func( list_t *me, int(*cmp_func)( void *, void * ), void *search, void(*free_func)( void * ) ) {
+int list_remove_func( list_t *me, int(*cmp_func)( void *, void * ), void *search, void(*free_func)( void * ) ) {
 	int ret = 0;
 
 	list_elem_t *next = NULL;

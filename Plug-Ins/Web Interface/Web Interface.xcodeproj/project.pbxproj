@@ -22,6 +22,7 @@
 		1C3699C708FF768900F34892 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699BB08FF768900F34892 /* utils.c */; };
 		1CC7250C0901A775004651F8 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CC7250B0901A775004651F8 /* index.html */; };
 		1CC726710901BBD2004651F8 /* common.js in Resources */ = {isa = PBXBuildFile; fileRef = 1CC7265F0901BAAE004651F8 /* common.js */; };
+		1CF3AE700B5B05B100183925 /* smallIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF3AE6F0B5B05B100183925 /* smallIcon.png */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
@@ -29,7 +30,7 @@
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		1C3458F10905FC4800AC2C16 /* base.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = base.css; path = Resources/base.css; sourceTree = "<group>"; };
+		1C3458F10905FC4800AC2C16 /* base.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = base.css; sourceTree = "<group>"; };
 		1C36998108FF75A200F34892 /* JVWebInterfacePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVWebInterfacePlugin.h; sourceTree = "<group>"; };
 		1C36998208FF75A200F34892 /* JVWebInterfacePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVWebInterfacePlugin.m; sourceTree = "<group>"; };
 		1C3699AF08FF768900F34892 /* basic_modules.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = basic_modules.c; path = nanohttpd/basic_modules.c; sourceTree = "<group>"; };
@@ -45,10 +46,11 @@
 		1C3699BA08FF768900F34892 /* url_map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = url_map.c; path = nanohttpd/url_map.c; sourceTree = "<group>"; };
 		1C3699BB08FF768900F34892 /* utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = utils.c; path = nanohttpd/utils.c; sourceTree = "<group>"; };
 		1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
-		1CC7250B0901A775004651F8 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = index.html; path = Resources/index.html; sourceTree = "<group>"; };
-		1CC7265F0901BAAE004651F8 /* common.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = common.js; path = Resources/common.js; sourceTree = "<group>"; };
+		1CC7250B0901A775004651F8 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		1CC7265F0901BAAE004651F8 /* common.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = common.js; sourceTree = "<group>"; };
+		1CF3AE6F0B5B05B100183925 /* smallIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smallIcon.png; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* Web Interface.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Web Interface.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = "<group>"; };
+		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,8 +94,9 @@
 				1CC7250B0901A775004651F8 /* index.html */,
 				1CC7265F0901BAAE004651F8 /* common.js */,
 				1C3458F10905FC4800AC2C16 /* base.css */,
+				1CF3AE6F0B5B05B100183925 /* smallIcon.png */,
 			);
-			name = Resources;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		08FB77AFFE84173DC02AAC07 /* Classes */ = {
@@ -212,6 +215,7 @@
 				1CC7250C0901A775004651F8 /* index.html in Resources */,
 				1CC726710901BBD2004651F8 /* common.js in Resources */,
 				1C3458F20905FC4F00AC2C16 /* base.css in Resources */,
+				1CF3AE700B5B05B100183925 /* smallIcon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,10 +247,6 @@
 		1C7F303F0855482D00D41FB0 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
-				);
 				GCC_FAST_OBJC_DISPATCH = YES;
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
@@ -254,7 +254,15 @@
 					HAVE_ERRNO_H,
 					LOG_HTTP,
 				);
-				HEADER_SEARCH_PATHS = "../../**";
+				HEADER_SEARCH_PATHS = (
+					../../Additions,
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					../../Controllers,
+					../../Models,
+					../../Panels,
+					../../Views,
+				);
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
@@ -270,17 +278,21 @@
 		1C7F30410855482D00D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
-				);
 				GCC_FAST_OBJC_DISPATCH = YES;
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
 					HAVE_STRSEP,
 					HAVE_ERRNO_H,
 				);
-				HEADER_SEARCH_PATHS = "../../**";
+				HEADER_SEARCH_PATHS = (
+					../../Additions,
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					../../Controllers,
+					../../Models,
+					../../Panels,
+					../../Views,
+				);
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (
@@ -314,17 +326,21 @@
 		1C7F307A085548E700D41FB0 /* Release (Universal) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					/Library/Frameworks,
-					"$(SYSTEM_LIBRARY_DIR)/Frameworks",
-				);
 				GCC_FAST_OBJC_DISPATCH = YES;
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
 					HAVE_STRSEP,
 					HAVE_ERRNO_H,
 				);
-				HEADER_SEARCH_PATHS = "../../**";
+				HEADER_SEARCH_PATHS = (
+					../../Additions,
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					../../Controllers,
+					../../Models,
+					../../Panels,
+					../../Views,
+				);
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				OTHER_LDFLAGS = (

@@ -10,7 +10,7 @@ void http_server_free( void * );
 const char *http_server_get_mime( http_server_t *, const char * );
 int http_server_add_url_mapping( http_server_t *,const char *, http_server_handler );
 
-void handle_conn( int sock, http_server_t *me ) {
+static void handle_conn( int sock, http_server_t *me ) {
 	http_req_t *req = http_req_new( sock );
 	http_resp_t	*resp = http_resp_new( sock, req );
 
@@ -39,7 +39,7 @@ void handle_conn( int sock, http_server_t *me ) {
 	resp -> delete( resp );	
 }
 
-http_server_t *http_server_new( char *host, char *svc ) {
+http_server_t *http_server_new( const char *host, const char *svc ) {
 	http_server_t *me = (http_server_t *) malloc( sizeof( http_server_t ) );
 	me -> host = host;
 	me -> svc = svc;
@@ -63,21 +63,21 @@ http_server_t *http_server_new( char *host, char *svc ) {
 	return me;
 }
 
-void *http_server_run_process( void *context ) {
+static void *http_server_run_process( void *context ) {
 	http_server_t *server = (http_server_t *) context;
 
 	signal( SIGPIPE, SIG_IGN );
 
 	while( server -> running ) {
 #ifdef LOG_HTTP
-		struct sockaddr_storage from_addr;
+		struct sockaddr from_addr;
 		socklen_t from_addr_len = sizeof( struct sockaddr_storage );
 		int from_sock = accept( server -> sock, (struct sockaddr *) &from_addr, &from_addr_len );
 
 		char host[NI_MAXHOST], serv[NI_MAXSERV];
 		int errcode = getnameinfo( &from_addr, from_addr_len, host, NI_MAXHOST, serv, NI_MAXSERV, 0 );
-		if( errcode ) http_log( LOG_ERR, "getnameinfo( ): %s", gai_strerror( errcode ) );
-		http_log( LOG_INFO, "[Thread %i] accepting connection from %s:%s", pthread_self(), host, serv );
+		if( errcode ) http_log( LOG_ERR, "getnameinfo(): %s", gai_strerror( errcode ) );
+		http_log( LOG_INFO, "[Thread %p] accepting connection from %s:%s", pthread_self(), host, serv );
 #else
 		int from_sock = accept( server -> sock, NULL, NULL );
 #endif
@@ -92,7 +92,7 @@ void *http_server_run_process( void *context ) {
 	return NULL;
 }
 
-void http_server_fork_process( http_server_t *me, int count ) {
+static void http_server_fork_process( http_server_t *me, int count ) {
 	for( int i = 0; i < count; i++ ) {
 		pthread_attr_t attr;
 		pthread_t tid;
@@ -117,7 +117,7 @@ void http_server_run( http_server_t *me ) {
 	int errcode = getaddrinfo( me -> host, me -> svc, &hints, &res );
 	if( errcode || ! res ) {
 #ifdef LOG_HTTP
-		http_log( LOG_ERR, "getaddrinfo( ), errcode=%i:", errcode, gai_strerror( errcode ) );
+		http_log( LOG_ERR, "getaddrinfo(), errcode=%i: %s", errcode, gai_strerror( errcode ) );
 #endif
 		return;
 	}
@@ -125,7 +125,7 @@ void http_server_run( http_server_t *me ) {
 	me -> sock = socket( res -> ai_family, res -> ai_socktype, res -> ai_protocol );
 	if( me -> sock < 0 ) {
 #ifdef LOG_HTTP
-		http_log_perror( LOG_ERR, "socket( )" );
+		http_log_perror( LOG_ERR, "socket()" );
 #endif
 		return;
 	}
@@ -135,7 +135,7 @@ void http_server_run( http_server_t *me ) {
 
 	if( bind( me -> sock, res -> ai_addr, res -> ai_addrlen ) < 0 ) {
 #ifdef LOG_HTTP
-		http_log_perror( LOG_ERR, "bind( )" );
+		http_log_perror( LOG_ERR, "bind()" );
 #endif
 		return;
 	}
@@ -155,7 +155,7 @@ const char*	http_server_get_mime(http_server_t *me, const char *ext ) {
 	return me -> mime_types -> get( me -> mime_types, ext );
 }
 
-int	http_server_add_url_mapping( http_server_t *me, const char *url, http_server_handler handler ) {
+int http_server_add_url_mapping( http_server_t *me, const char *url, http_server_handler handler ) {
 	url_map_t *url_map = url_map_new(url, handler );
 	if( ! url_map ) return -1;
 	me -> url_mappings -> add ( me -> url_mappings, url_map );	

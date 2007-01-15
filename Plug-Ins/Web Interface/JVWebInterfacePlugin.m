@@ -17,7 +17,7 @@ static NSString *JVWebInterfaceRequestContent = @"JVWebInterfaceRequestContent";
 static NSString *JVWebInterfaceResponse = @"JVWebInterfaceResponse";
 static NSString *JVWebInterfaceClientIdentifier = @"JVWebInterfaceClientIdentifier";
 
-void processCommand( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
+static void processCommand( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	JVWebInterfacePlugin *self = (JVWebInterfacePlugin *) server -> context;
@@ -62,7 +62,7 @@ void processCommand( http_req_t *req, http_resp_t *resp, http_server_t *server )
 	[pool release];
 }
 
-void passThruFile( NSString *path, http_req_t *req, http_resp_t *resp, http_server_t *server ) {
+static void passThruFile( NSString *path, http_req_t *req, http_resp_t *resp, http_server_t *server ) {
 	BOOL isDir = NO;
 	if( ! [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir] || isDir ) {
 		resp -> status_code = 404;
@@ -87,7 +87,7 @@ void passThruFile( NSString *path, http_req_t *req, http_resp_t *resp, http_serv
 	resp -> write( resp, (char *)[contents bytes], [contents length] );
 }
 
-void processResources( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
+static void processResources( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	// example: /resources/Colloquy.png
@@ -103,7 +103,7 @@ void processResources( http_req_t *req, http_resp_t *resp, http_server_t *server
 	[pool release];
 }
 
-void processStyles( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
+static void processStyles( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	// example: /styles/cc.javelin.colloquy.synapse/main.css
@@ -153,7 +153,7 @@ void processStyles( http_req_t *req, http_resp_t *resp, http_server_t *server ) 
 	[pool release];
 }
 
-void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
+static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	// example: /emoticons/cc.javelin.colloquy.standard/main.css
@@ -187,10 +187,11 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 
 @implementation JVWebInterfacePlugin
 - (id) initWithManager:(MVChatPluginManager *) manager {
-	if( self = [super init] ) {
+	if( ( self = [super init] ) ) {
 		_clients = [[NSMutableDictionary alloc] initWithCapacity:5];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( newMessage: ) name:@"JVChatMessageWasProcessedNotification" object:nil];
 	}
+
 	return self;
 }
 
@@ -235,18 +236,18 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 	_httpServer -> directory_index -> add( _httpServer -> directory_index, "index.html" );
 
 	_httpServer -> mime_types = hash_new();
-	_httpServer -> mime_types -> set( _httpServer -> mime_types, "png", "image/png" );
-	_httpServer -> mime_types -> set( _httpServer -> mime_types, "jpg", "image/jpeg" );
-	_httpServer -> mime_types -> set( _httpServer -> mime_types, "gif", "image/gif" );
-	_httpServer -> mime_types -> set( _httpServer -> mime_types, "tif", "image/tiff" );
-	_httpServer -> mime_types -> set( _httpServer -> mime_types, "tiff", "image/tiff" );
-	_httpServer -> mime_types -> set( _httpServer -> mime_types, "html", "text/html" );
-	_httpServer -> mime_types -> set( _httpServer -> mime_types, "xml", "text/xml" );
-	_httpServer -> mime_types -> set( _httpServer -> mime_types, "plist", "text/xml" );
-	_httpServer -> mime_types -> set( _httpServer -> mime_types, "txt", "text/plain" );
-	_httpServer -> mime_types -> set( _httpServer -> mime_types, "css", "text/css" );
-	_httpServer -> mime_types -> set( _httpServer -> mime_types, "js", "text/javascript" );
-	_httpServer -> mime_types -> set( _httpServer -> mime_types, "rtf", "text/rtf" );
+	_httpServer -> mime_types -> set( _httpServer -> mime_types, (char *)"png", (char *)"image/png" );
+	_httpServer -> mime_types -> set( _httpServer -> mime_types, (char *)"jpg", (char *)"image/jpeg" );
+	_httpServer -> mime_types -> set( _httpServer -> mime_types, (char *)"gif", (char *)"image/gif" );
+	_httpServer -> mime_types -> set( _httpServer -> mime_types, (char *)"tif", (char *)"image/tiff" );
+	_httpServer -> mime_types -> set( _httpServer -> mime_types, (char *)"tiff", (char *)"image/tiff" );
+	_httpServer -> mime_types -> set( _httpServer -> mime_types, (char *)"html", (char *)"text/html" );
+	_httpServer -> mime_types -> set( _httpServer -> mime_types, (char *)"xml", (char *)"text/xml" );
+	_httpServer -> mime_types -> set( _httpServer -> mime_types, (char *)"plist", (char *)"text/xml" );
+	_httpServer -> mime_types -> set( _httpServer -> mime_types, (char *)"txt", (char *)"text/plain" );
+	_httpServer -> mime_types -> set( _httpServer -> mime_types, (char *)"css", (char *)"text/css" );
+	_httpServer -> mime_types -> set( _httpServer -> mime_types, (char *)"js", (char *)"text/javascript" );
+	_httpServer -> mime_types -> set( _httpServer -> mime_types, (char *)"rtf", (char *)"text/rtf" );
 
 	_httpServer -> run( _httpServer ); // spawns 3 threads to handle incoming requests
 }
@@ -373,7 +374,7 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 		char *bodyContent = (char *)[body UTF8String];
 		resp -> content_type = "text/html";
 		resp -> write( resp, bodyContent, strlen( bodyContent ) );
-	} else resp -> printf( resp, "" );
+	} else resp -> write( resp, "", 0 );
 }
 
 - (void) logoutCommand:(NSDictionary *) arguments {
@@ -427,7 +428,7 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 		}
 	}
 
-	resp -> printf( resp, "" );
+	resp -> write( resp, "", 0 );
 }
 
 - (void) checkActivityCommand:(NSDictionary *) arguments {
@@ -446,7 +447,7 @@ void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t *server
 		resp -> content_type = "text/xml";
 		resp -> write( resp, (char *)[xml bytes], [xml length] );
 		[[doc rootElement] setChildren:nil]; // clear the queue
-	} else resp -> printf( resp, "" );
+	} else resp -> write( resp, "", 0 );
 }
 
 - (void) addElementToClientQueues:(NSXMLElement *) element {
