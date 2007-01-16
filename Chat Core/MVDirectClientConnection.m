@@ -2,6 +2,7 @@
 
 #import "AsyncSocket.h"
 #import "InterThreadMessaging.h"
+#import "MVChatConnectionPrivate.h"
 #import "MVFileTransfer.h"
 #import "MVUtilities.h"
 
