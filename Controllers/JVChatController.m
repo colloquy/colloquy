@@ -516,7 +516,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message invited to room" ), room, [user nickname]] forKey:@"description"];
 	[[JVNotificationController defaultController] performNotification:@"JVChatRoomInvite" withContextInfo:context];
 
-	if( NSRunInformationalAlertPanel( title, message, NSLocalizedString( @"Join", "join button" ), NSLocalizedString( @"Decline", "decline button" ), nil ) == NSOKButton )
+	if( NSRunInformationalAlertPanel( title, @"%@", NSLocalizedString( @"Join", "join button" ), NSLocalizedString( @"Decline", "decline button" ), nil, message ) == NSOKButton )
 		[connection joinChatRoomNamed:room];
 }
 
@@ -534,7 +534,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to participate in a chat with %@.", "bubble message invited to participate in a direct chat" ), [user nickname]] forKey:@"description"];
 	[[JVNotificationController defaultController] performNotification:@"JVDirectChatInvite" withContextInfo:context];
 
-	if( NSRunInformationalAlertPanel( title, message, NSLocalizedString( @"Accept", "accept button" ), NSLocalizedString( @"Decline", "decline button" ), nil ) == NSOKButton ) {
+	if( NSRunInformationalAlertPanel( title, @"%@", NSLocalizedString( @"Accept", "accept button" ), NSLocalizedString( @"Decline", "decline button" ), nil, message ) == NSOKButton ) {
 		[self chatViewControllerForDirectChatConnection:connection ifExists:NO userInitiated:NO];
 		[connection initiate];
 	}
