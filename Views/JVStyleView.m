@@ -867,7 +867,18 @@ quickEnd:
 		shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
 	else shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
 
-	return [NSString stringWithFormat:shell, @"", @"", [[[self emoticons] styleSheetLocation] absoluteString], [[[self style] mainStyleSheetLocation] absoluteString], variantStyleSheetLocation, [[[self style] baseLocation] absoluteString], [[self style] contentsOfBodyTemplateWithName:[self bodyTemplate]]];
+	NSString *bodyTemplate = [[self style] contentsOfBodyTemplateWithName:[self bodyTemplate]];
+	if( [bodyTemplate length] && [html length] ) {
+		if( [bodyTemplate rangeOfString:@"%@"].location != NSNotFound )
+			bodyTemplate = [NSString stringWithFormat:bodyTemplate, html];
+		else bodyTemplate = [bodyTemplate stringByAppendingString:html];
+	} else if( ! [bodyTemplate length] && [html length] ) {
+		bodyTemplate = html;
+	}
+
+	NSString *baseURL = [[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]] absoluteString];
+
+	return [NSString stringWithFormat:shell, @"", @"", baseURL, [[[self emoticons] styleSheetLocation] absoluteString], [[[self style] mainStyleSheetLocation] absoluteString], variantStyleSheetLocation, [[[self style] baseLocation] absoluteString], bodyTemplate];
 }
 
 - (NSURL *) _baseURL {

@@ -20,6 +20,8 @@
 		1C3699C508FF768900F34892 /* netbuf.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699B908FF768900F34892 /* netbuf.c */; };
 		1C3699C608FF768900F34892 /* url_map.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699BA08FF768900F34892 /* url_map.c */; };
 		1C3699C708FF768900F34892 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699BB08FF768900F34892 /* utils.c */; };
+		1C7F7CC90B5FF71700D8676C /* utilities.js in Resources */ = {isa = PBXBuildFile; fileRef = 1C7F7CC70B5FF71000D8676C /* utilities.js */; };
+		1CAB90660B606FA90051E0E7 /* prototype.js in Resources */ = {isa = PBXBuildFile; fileRef = 1CAB90650B606FA10051E0E7 /* prototype.js */; };
 		1CC7250C0901A775004651F8 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CC7250B0901A775004651F8 /* index.html */; };
 		1CC726710901BBD2004651F8 /* common.js in Resources */ = {isa = PBXBuildFile; fileRef = 1CC7265F0901BAAE004651F8 /* common.js */; };
 		1CF3AE700B5B05B100183925 /* smallIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF3AE6F0B5B05B100183925 /* smallIcon.png */; };
@@ -45,7 +47,9 @@
 		1C3699B908FF768900F34892 /* netbuf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = netbuf.c; path = nanohttpd/netbuf.c; sourceTree = "<group>"; };
 		1C3699BA08FF768900F34892 /* url_map.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = url_map.c; path = nanohttpd/url_map.c; sourceTree = "<group>"; };
 		1C3699BB08FF768900F34892 /* utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = utils.c; path = nanohttpd/utils.c; sourceTree = "<group>"; };
+		1C7F7CC70B5FF71000D8676C /* utilities.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = utilities.js; sourceTree = "<group>"; };
 		1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
+		1CAB90650B606FA10051E0E7 /* prototype.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = prototype.js; sourceTree = "<group>"; };
 		1CC7250B0901A775004651F8 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		1CC7265F0901BAAE004651F8 /* common.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = common.js; sourceTree = "<group>"; };
 		1CF3AE6F0B5B05B100183925 /* smallIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smallIcon.png; sourceTree = "<group>"; };
@@ -92,8 +96,10 @@
 			children = (
 				8D5B49B7048680CD000E48DA /* Info.plist */,
 				1CC7250B0901A775004651F8 /* index.html */,
-				1CC7265F0901BAAE004651F8 /* common.js */,
 				1C3458F10905FC4800AC2C16 /* base.css */,
+				1CC7265F0901BAAE004651F8 /* common.js */,
+				1CAB90650B606FA10051E0E7 /* prototype.js */,
+				1C7F7CC70B5FF71000D8676C /* utilities.js */,
 				1CF3AE6F0B5B05B100183925 /* smallIcon.png */,
 			);
 			path = Resources;
@@ -195,12 +201,10 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1C7F30420855482D00D41FB0 /* Build configuration list for PBXProject "Web Interface" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
 			projectDirPath = "";
 			projectRoot = ../..;
-			shouldCheckCompatibility = 1;
 			targets = (
 				8D5B49AC048680CD000E48DA /* Web Interface Plugin */,
 			);
@@ -214,6 +218,8 @@
 			files = (
 				1CC7250C0901A775004651F8 /* index.html in Resources */,
 				1CC726710901BBD2004651F8 /* common.js in Resources */,
+				1CAB90660B606FA90051E0E7 /* prototype.js in Resources */,
+				1C7F7CC90B5FF71700D8676C /* utilities.js in Resources */,
 				1C3458F20905FC4F00AC2C16 /* base.css in Resources */,
 				1CF3AE700B5B05B100183925 /* smallIcon.png in Resources */,
 			);
@@ -269,6 +275,7 @@
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
+				INSTALL_MODE_FLAG = "u+w,go-w,a+rX";
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = (
@@ -305,6 +312,7 @@
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
+				INSTALL_MODE_FLAG = "u+w,go-w,a+rX";
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = (
@@ -359,6 +367,7 @@
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
+				INSTALL_MODE_FLAG = "u+w,go-w,a+rX";
 				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = (

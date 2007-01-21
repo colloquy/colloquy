@@ -283,19 +283,20 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 
 	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
 
-	NSURL *bodyShellLocation = [[panel style] bodyTemplateLocationWithName:[[panel display] bodyTemplate]];
-
-	NSString *bodyShell = @"";
-	if( bodyShellLocation )
-		bodyShell = [NSString stringWithContentsOfURL:bodyShellLocation encoding:NSUTF8StringEncoding error:NULL];
-
-	bodyShell = ( [bodyShell length] ? [NSString stringWithFormat:bodyShell, @"/resources", ( content ? content : @"" )] : ( content ? content : @"" ) );
+	NSString *bodyTemplate = [[panel style] contentsOfBodyTemplateWithName:[[panel display] bodyTemplate]];
+	if( [bodyTemplate length] && [content length] ) {
+		if( [bodyTemplate rangeOfString:@"%@"].location != NSNotFound )
+			bodyTemplate = [NSString stringWithFormat:bodyTemplate, content];
+		else bodyTemplate = [bodyTemplate stringByAppendingString:content];
+	} else if( ! [bodyTemplate length] && [content length] ) {
+		bodyTemplate = content;
+	}
 
 	int fontSize = [[[panel display] preferences] defaultFontSize];
 	NSString *fontFamily = [[[panel display] preferences] sansSerifFontFamily];
 	NSString *header = [NSString stringWithFormat:@"<style type=\"text/css\">body { font-size: %dpx; font-family: %@ }</style>", fontSize, fontFamily];
 
-	return [NSString stringWithFormat:shell, [panel description], header, @"/resources", emoticonStyleSheet, mainStyleSheet, variant, baseLocation, bodyShell];
+	return [NSString stringWithFormat:shell, [panel description], header, @"/resources", emoticonStyleSheet, mainStyleSheet, variant, baseLocation, bodyTemplate];
 }
 
 - (void) setupCommand:(NSDictionary *) arguments {
@@ -366,7 +367,7 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 		NSMutableDictionary *styles = [info objectForKey:@"originalStyles"];
 		[styles setObject:[[panel style] identifier] forKey:[panel uniqueIdentifier]];
 
-		DOMHTMLDocument *document = (DOMHTMLDocument *)[[[panel display] mainFrame] DOMDocument];
+		DOMHTMLDocument *document = (DOMHTMLDocument *)[[[[panel display] mainFrame] findFrameNamed:@"content"] DOMDocument];
 		DOMHTMLElement *bodyNode = (DOMHTMLElement *)[document getElementById:@"contents"];
 		if( ! bodyNode ) bodyNode = (DOMHTMLElement *)[document body];
 
@@ -396,9 +397,10 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	JVDirectChatPanel *panel = [self panelForIdentifier:[arguments objectForKey:@"panel"]];
 
 	if( panel ) {
-		NSString *text = [[[NSString alloc] initWithData:[arguments objectForKey:JVWebInterfaceRequestContent] encoding:NSUTF8StringEncoding] autorelease];
+		NSString *text = [[NSString alloc] initWithData:[arguments objectForKey:JVWebInterfaceRequestContent] encoding:NSUTF8StringEncoding];
 		NSArray *strings = [text componentsSeparatedByString:@"\n"];
 		NSEnumerator *enumerator = [strings objectEnumerator];
+		[text release];
 
 		while( ( text = [enumerator nextObject] ) ) {
 			if( ! [text length] ) continue;
@@ -414,10 +416,12 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 					[scanner setScanLocation:[scanner scanLocation] + 1];
 
 				arguments = [text substringWithRange:NSMakeRange( [scanner scanLocation], [text length] - [scanner scanLocation] )];
-				arguments = [[[NSAttributedString alloc] initWithString:arguments] autorelease];
+				arguments = [[NSAttributedString alloc] initWithString:arguments];
 
 				if( ! ( handled = [panel processUserCommand:command withArguments:arguments] ) && [[panel connection] isConnected] )
 					[[panel connection] sendRawMessage:[command stringByAppendingFormat:@" %@", [arguments string]]];
+
+				[arguments release];
 			} else {
 				if( [text hasPrefix:@"//"] ) text = [text substringWithRange:NSMakeRange( 1, [text length] - 1 )];
 				JVMutableChatMessage *message = [JVMutableChatMessage messageWithText:@"" sender:[[panel connection] localUser]];
@@ -496,6 +500,11 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	[attributes setObject:[[message date] description] forKey:@"received"];
 	[element setAttributesAsDictionary:attributes];
 
+	NSMutableDictionary *styleParams = [[[view display] styleParameters] mutableCopy];
+
+	if( [message consecutiveOffset] > 0 )
+		[styleParams setObject:@"'yes'" forKey:@"consecutiveMessage"];
+
 	NSEnumerator *enumerator = [_clients objectEnumerator];
 	NSDictionary *info = nil;
 
@@ -504,16 +513,20 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 		if( ! doc ) continue;
 
 		JVStyle *style = [JVStyle styleWithIdentifier:[[info objectForKey:@"originalStyles"] objectForKey:[view uniqueIdentifier]]];
-		NSString *tmessage = [style transformChatMessage:message withParameters:[[view display] styleParameters]]; // this will break once styles use custom styleParameters!!
+		NSString *tmessage = [style transformChatMessage:message withParameters:styleParams]; // this will break once styles use custom styleParameters!!
 
-		NSXMLNode *body = [[[NSXMLNode alloc] initWithKind:NSXMLTextKind options:NSXMLNodeIsCDATA] autorelease];
+		NSXMLNode *body = [[NSXMLNode alloc] initWithKind:NSXMLTextKind options:NSXMLNodeIsCDATA];
 		[body setStringValue:tmessage];
 
 		NSXMLElement *copy = [element copyWithZone:[self zone]];
 		[copy addChild:body];
 		[[doc rootElement] addChild:copy];
+
+		[body release];
 		[copy release];
 	}
+
+	[styleParams release];
 }
 
 - (void) memberJoined:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room {

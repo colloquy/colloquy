@@ -8,14 +8,16 @@
 	<title>Colloquy</title>
 	<link rel="icon" href="smallIcon.png" type="image/png" />
 	<link rel="stylesheet" type="text/css" href="base.css" encoding="utf-8" />
-	<script type="text/ecmascript" defer="defer" src="common.js" encoding="utf-8"></script>
+	<script type="text/ecmascript" src="prototype.js" encoding="utf-8"></script>
+	<script type="text/ecmascript" src="utilities.js" encoding="utf-8"></script>
+	<script type="text/ecmascript" src="common.js" encoding="utf-8"></script>
 </head>
-<body onload="setup()" oncontextmenu="return false">
+<body>
 <div id="main">
 <div id="panels"></div>
 <div id="input" contenteditable="true"></div>
 <div id="drawer" onselectstart="return false"><ul id="panelList"></ul></div>
 </div>
-<div id="timer">4.0 secs</div>
+<div id="timer">4 secs</div>
 </body>
 </html>

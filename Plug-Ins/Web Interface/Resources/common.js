@@ -1,265 +1,210 @@
-var panels = new Array();
-var queueCheckInterval = null;
-var queueCheckSpeed = 4000;
+function extendClass( subClass, baseClass ) {
+	function inheritance() {}
+	inheritance.prototype = baseClass.prototype;
+
+	subClass.prototype = new inheritance();
+	subClass.prototype.constructor = subClass;
+	subClass.baseConstructor = baseClass;
+	subClass.superClass = baseClass.prototype;
+}
+
+var activityCheckInterval = null;
+var activityCheckSpeed = 4000;
 var scrollBackLimit = 300;
 var activePanel = null;
 var foreground = true;
-var currentRequest = null;
 
-function createRequestObject() {
-	if( navigator.appName == "Microsoft Internet Explorer" )
-		return new ActiveXObject( "Microsoft.XMLHTTP" );
-	return new XMLHttpRequest();
+var ChatController = {
+	panels: new Array()
+};
+
+ChatController.createPanel = function( node ) {
+	var type = node.getAttribute( "class" );
+	if( type == "JVDirectChatPanel" )
+		return new DirectChatPanel( node );
+	else if( type == "JVChatRoomPanel" )
+		return new ChatRoomPanel( node );
+	return undefined;
+};
+
+ChatController.panel = function( id ) {
+	for( var i = 0, l = this.panels.length; i < l; ++i )
+		if( this.panels[i].id == id ) return this.panels[i];
+	return undefined;
 }
 
-function setup() {
-	document.body.addEventListener( "keypress", documentKeyInput, true );
-	document.getElementById( "input" ).addEventListener( "keypress", inputKeyPressed, false );
-	document.body.addEventListener( "blur", windowBlured, false );
-	document.body.addEventListener( "focus", windowFocused, false );
+ChatController.checkActivity = function() {
+	new Ajax.Request( "/command/checkActivity", {
+		method: "get",
+		onSuccess: function( transport ) {
+			var updateIntervalDelta = 100;
 
-	currentRequest = createRequestObject();
-	currentRequest.onreadystatechange = processSetup;
-	currentRequest.open( "GET", "/command/setup" );
-	currentRequest.send( null );
+			if( transport.responseText && transport.responseXML ) {
+				var children = transport.responseXML.documentElement.childNodes;
+				for( var i = 0; i < children.length; ++i ) {
+					switch( children[i].tagName ) {
+					case "open":
+						ChatController.createPanel( children[i] );
+						break;
+					case "close":
+						var panel = ChatController.panel( children[i].getAttribute( "identifier" ) );
+						panel.close();
+						break;
+					case "message":
+						var message = children[i];
+						if( message.firstChild ) {
+							var panel = ChatController.panel( message.getAttribute( "panel" ) );
+							panel.appendMessage( message.firstChild.nodeValue );
+							if( ( ( ! foreground && panel.active ) || ! panel.active ) && ! panel.listItem.hasClassName( "newMessage" ) ) {
+								panel.listItem.addClassName( "newMessage" );
+								panel.newMessage++;
+								panel.listItem.title = panel.newMessage + " messages waiting";
+							}
+						}
+						break;
+					}
+				}
+
+				if( children.length >= 1 )
+					updateIntervalDelta = ( -500 * children.length ) - 100;
+			}
+
+			var newActivityCheckSpeed = Math.max( Math.min( ( activityCheckSpeed + updateIntervalDelta ), 4000 ), 500 );
+			if( newActivityCheckSpeed != activityCheckSpeed ) {
+				activityCheckSpeed = newActivityCheckSpeed;
+
+				clearInterval( activityCheckInterval );
+				activityCheckInterval = setInterval( ChatController.checkActivity, activityCheckSpeed );
+
+				$("timer").innerText = activityCheckSpeed / 1000 + " secs";
+			}
+		},
+		onFailure: function( transport ) {
+			clearInterval( activityCheckInterval );
+			activityCheckInterval = setInterval( ChatController.checkActivity, 1000 );
+		},
+		onException: function( transport, exception ) {
+			throw exception;
+		}
+	} );
+};
+
+function Panel( node ) {
+	var panel = this;
+
+	this.id = node.getAttribute( "identifier" );
+	this.name = node.getAttribute( "name" );
+	this.server = node.getAttribute( "server" );
+	this.type = node.getAttribute( "class" );
+	this.active = false;
+
+	this.listItem = $(document.createElement( "li" ));
+	this.listItem.className = "listItem";
+	this.listItem.addEventListener( "click", function( event ) { panel.show(); }, false );
+	this.listItem.appendChild( document.createTextNode( this.name ) );
+
+	this.frame = $(document.createElement( "iframe" ));
+	this.frame.className = "panel";
+
+	if( ChatController.panels.length )
+		this.frame.style.setProperty( "visibility", "hidden", "" );
+
+	ChatController.panels.push( this );
+	$("panelList").appendChild( this.listItem );
+	$("panels").appendChild( this.frame );
+
+	if( ChatController.panels.length == 1 )
+		this.show();
 }
 
-function windowBlured() {
-	foreground = false;
-	document.getElementById( "timer" ).innerText = "blured";
+Panel.prototype.toString = function() {
+	return this.name + " (" + this.type + ":" + this.id + ")";
 }
 
-function windowFocused() {
-	foreground = true;
-	activePanel.newMessage = 0;
-	activePanel.newHighlightMessage = 0;
-	activePanel.listItem.className = activePanel.listItem.className.replace( /\s*newMessage/g, "" );
-	activePanel.listItem.className = activePanel.listItem.className.replace( /\s*newHighlight/g, "" );
-	activePanel.listItem.title = "No messages waiting";
-	document.getElementById( "timer" ).innerText = "focused";
-}
-
-function checkQueue() {
-	currentRequest = createRequestObject();
-	currentRequest.onreadystatechange = processQueue;
-	currentRequest.open( "GET", "/command/checkActivity" );
-	currentRequest.send( null );	
-}
-
-function panelForIdentifier( id ) {
-	for( var i = 0; i < panels.length; i++ )
-		if( panels[i].id == id )
-			return panels[i];
-	return null;
-}
-
-function switchPanel( id ) {
-	for( var i = 0; i < panels.length; i++ ) {
-		var panel = panels[i];
-		if( panel.id == id ) {
+Panel.prototype.show = function() {
+	for( var i = 0, l = ChatController.panels.length; i < l; ++i ) {
+		var panel = ChatController.panels[i];
+		if( panel.id == this.id ) {
 			if( ! panel.active ) {
 				panel.frame.style.setProperty( "visibility", "visible", "" );
-				panel.listItem.className += " selected";
+				panel.listItem.addClassName( "selected" );
 				panel.active = true;
 				panel.newMessage = 0;
 				panel.newHighlightMessage = 0;
-				panel.listItem.className = panel.listItem.className.replace( /\s*newMessage/g, "" );
-				panel.listItem.className = panel.listItem.className.replace( /\s*newHighlight/g, "" );
+				panel.listItem.removeClassName( "newMessage" );
+				panel.listItem.removeClassName( "newHighlight" );
 				panel.listItem.title = "No messages waiting";
 				activePanel = panel;
 			}
 		} else {
 			panel.frame.style.setProperty( "visibility", "hidden", "" );
-			panel.listItem.className = panel.listItem.className.replace( /\s*selected/g, "" );
+			panel.listItem.removeClassName( "selected" );
 			panel.active = false;
 		}
 	}
 }
 
-function toggleMemberList( event, id ) {
-	var panel = panelForIdentifier( id );
-	panel.memberListVisible = ! panel.memberListVisible;
-	if( panel.memberListVisible ) panel.memberList.style.setProperty( "display", "none", "" );
-	else panel.memberList.style.setProperty( "display", "block", "" );
-	event.preventDefault();
-	event.stopPropagation();
+Panel.prototype.close = function() {
+	for( var i = 0, l = ChatController.panels.length; i < l; ++i )
+		if( ChatController.panels[i].id == this.id ) break;
+
+	if( i < ChatController.panels.length )
+		ChatController.panels.slice( i, 1 );
+
+	this.frame.parentNode.removeChild( this.frame );
+	this.listItem.parentNode.removeChild( this.listItem );
+
+	ChatController.panels[0].show();
 }
 
-function createPanel( node ) {
-	if( panelForIdentifier( node.getAttribute( "identifier" ) ) ) return;
+function DirectChatPanel( node ) {
+	DirectChatPanel.baseConstructor.call( this, node );
 
-	var panel = new Object();
-	panel.id = node.getAttribute( "identifier" );
-	panel.name = node.getAttribute( "name" );
-	panel.server = node.getAttribute( "server" );
-	panel.type = node.getAttribute( "class" );
-	panel.newMessage = 0;
-	panel.newHighlightMessage = 0;
-	panel.active = false;
-	panel.memberListVisible = false;
-	panel.frame = document.createElement( "iframe" );
-	panel.listItem = document.createElement( "li" );
-	panels.push( panel );
+	this.newMessage = 0;
+	this.newHighlightMessage = 0;
 
-	panel.frame.id = "panel" + panel.id;
-	panel.frame.className = "panel";
-	panel.frame.src = "/command/panelContents?panel=" + panel.id;
-	if( panels.length > 1 ) panel.frame.style.setProperty( "visibility", "hidden", "" );
-	document.getElementById( "panels" ).appendChild( panel.frame );
+	this.listItem.addClassName( "directChat" );
 
-	panel.listItem.id = "listItem" + panel.id;
-	panel.listItem.className = "listItem";
+	var panel = this;
+	this.frame.onload = function() {
+		panel.contentFrame = $(panel.frame.document.getElementById( "content" ));
+		panel.contentFrame.onload = function() { panel.scrollToBottom() };
+		panel.contentFrame.src = "/command/panelContents?panel=" + panel.id;
+	};
 
-	if( panel.type == "JVChatRoomPanel" ) {
-		panel.listItem.className += " chatRoom";
-		panel.members = new Array();
-		panel.memberList = document.createElement( "ol" );
-		panel.memberList.className = "memberList";
-		panel.memberList.style.setProperty( "display", "none", "" );
-
-		var memberNode = null;
-		var members = node.childNodes;
-		for( var i = 0; i < members.length; i++ ) {
-			memberNode = members[i];
-
-			var member = new Object();
-			member.name = memberNode.firstChild.nodeValue;
-			member.nickname = memberNode.getAttribute( "nickname" );
-			member.hostmask = memberNode.getAttribute( "hostmask" );
-			member.identifier = memberNode.getAttribute( "identifier" );
-			member.buddy = memberNode.getAttribute( "buddy" );
-			member.type = memberNode.getAttribute( "class" );
-			member.self = ( memberNode.getAttribute( "self" ) == "yes" );
-			panel.members.push( member );
-
-			member.listItem = document.createElement( "li" );
-			member.listItem.title = member.hostmask;
-			member.listItem.className = "listItem member" + ( member.type ? " " + member.type : "" );
-			member.listItem.appendChild( document.createTextNode( member.name ) );
-			panel.memberList.appendChild( member.listItem );
-		}
-	} else if( panel.type == "JVDirectChatPanel" ) panel.listItem.className += " directChat";
-
-	panel.listItem.setAttribute( "onclick", "switchPanel(" + panel.id + ")" );
-	panel.listItem.setAttribute( "ondblclick", "toggleMemberList(event," + panel.id + ")" );
-	panel.listItem.appendChild( document.createTextNode( panel.name ) );
-	document.getElementById( "panelList" ).appendChild( panel.listItem );
-	if( panel.memberList ) document.getElementById( "panelList" ).appendChild( panel.memberList );
-
-	setTimeout( scrollToBottom, 50, panel.frame );
-
-	if( panels.length == 1 ) switchPanel( panel.id );
+	this.frame.src = "/resources/base.html";
 }
 
-function closePanel( id ) {
-	for( var i = 0; i < panels.length; i++ )
-		if( panels[i].id == id ) break;
+extendClass( DirectChatPanel, Panel );
 
-	if( i >= panels.length ) return;
-
-	var panel = panels[i];
-	panels.slice( i, 1 );
-
-	panel.frame.parentNode.removeChild( panel.frame );
-	panel.listItem.parentNode.removeChild( panel.listItem );
-
-	switchPanel( panels[0].id );
-}
-
-function processSetup() {
-	if( currentRequest.readyState == 4 && currentRequest.status == 200 ) {
-		var xml = currentRequest.responseXML;
-		var children = xml.documentElement.getElementsByTagName( "panels" ).item( 0 ).childNodes;
-
-		for( var i = 0; i < children.length; i++ )
-			createPanel( children[i] );
-
-		checkQueue();
-		queueCheckInterval = setInterval( checkQueue, queueCheckSpeed );
-	}
-}
-
-function processQueue() {
-	if( currentRequest.readyState == 4 && currentRequest.status == 200 && currentRequest.responseText.length ) {
-		var xml = currentRequest.responseXML;
-		var children = xml.documentElement.childNodes;
-
-		var messages = 0;
-		for( var i = 0; i < children.length; i++ ) {
-			switch( children[i].tagName ) {
-			case "open":
-				createPanel( children[i] );
-				break;
-			case "close":
-				closePanel( children[i].getAttribute( "identifier" ) );
-				break;
-			case "message":
-				messages++;
-				var message = children[i];
-				var id = message.getAttribute( "panel" );
-				if( message.firstChild ) {
-					appendMessage( id, message.firstChild.nodeValue );
-					var panel = panelForIdentifier( id );
-					if( ( ( ! foreground && panel.active ) || ! panel.active ) && panel.listItem.className.indexOf( "newMessage" ) == -1 ) {
-						panel.listItem.className += " newMessage";
-						panel.newMessage++;
-						panel.listItem.title = panel.newMessage + " messages waiting";
-					}
-				}
-				break;
-			}
-		}
-
-		if( messages >= 1 ) {
-			queueCheckSpeed -= ( 500 * messages );
-			if( queueCheckSpeed < 500 ) queueCheckSpeed = 500;
-			clearInterval( queueCheckInterval );
-			queueCheckInterval = setInterval( checkQueue, queueCheckSpeed );
-			document.getElementById( "timer" ).innerText = queueCheckSpeed / 1000 + " secs";
-		}
-	} else if( currentRequest.readyState == 4 ) {
-		if( queueCheckSpeed < 4000 ) {
-			queueCheckSpeed += 100;
-			if( queueCheckSpeed > 4000 ) queueCheckSpeed = 4000;
-			clearInterval( queueCheckInterval );
-			queueCheckInterval = setInterval( checkQueue, queueCheckSpeed );
-			document.getElementById( "timer" ).innerText = queueCheckSpeed / 1000 + " secs";
-		}
-	}
-}
-
-function documentKeyInput( event ) {
-	if( event.target.id == "input" || event.target.parentNode.id == "input" ) return;
-	if( event.keyCode == 13 && ! event.altKey ) inputKeyPressed( event );
-	else if( event.keyCode == 32 ) input.innerHTML += "&nbsp;";
-	else input.innerHTML += String.fromCharCode( event.keyCode );
-}
-
-function inputKeyPressed( event ) {
-	if( event.keyCode == 13 && ! event.altKey ) {
-		var input = document.getElementById( "input" );
-		sendMessage( activePanel.id, input.innerText );
-		input.innerHTML = "";
-	}
-}
-
-function sendMessage( panel, html ) {
+DirectChatPanel.prototype.sendMessage = function( html ) {
 	if( ! html.length ) return;
-	currentRequest = createRequestObject();
-	currentRequest.onreadystatechange = processQueue;
-	currentRequest.open( "POST", "/command/send?panel=" + panel );
-	currentRequest.send( html );
-	setTimeout( checkQueue, 250 );
+
+	new Ajax.Request( "/command/send?panel=" + this.id, {
+		method: "post",
+		contentType: "text/html",
+		postBody: html,
+		onSuccess: function( transport ) {
+			clearInterval( activityCheckInterval );
+			activityCheckInterval = setInterval( ChatController.checkActivity, 250 );
+		},
+		onException: function( transport, exception ) {
+			throw exception;
+		}
+	} );
 }
 
-function appendMessage( panel, html ) {
-	var frame = document.getElementById( "panel" + panel );
-	if( html.indexOf( "<?message type=\"subsequent\"?>" ) != -1 && frame.document.getElementById( "consecutiveInsert" ) ) {
-		appendConsecutiveMessage( panel, html );
+DirectChatPanel.prototype.appendMessage = function( html ) {
+	var frame = this.contentFrame;
+
+	var consecutive = ( html.indexOf( "<?message type=\"consecutive\"?>" ) != -1 );
+	if( ! consecutive ) consecutive = ( html.indexOf( "<?message type=\"subsequent\"?>" ) != -1 );
+	if( consecutive && frame.document.getElementById( "consecutiveInsert" ) ) {
+		this.appendConsecutiveMessage( html );
 		return;
 	}
 
-	var needed = checkIfScrollToBottomIsNeeded( frame );
+	var needed = this.checkIfScrollToBottomIsNeeded();
 
 	var bodyNode = frame.document.getElementById( "contents" );
 	if( ! bodyNode ) bodyNode = frame.document.body;
@@ -272,17 +217,17 @@ function appendMessage( panel, html ) {
 	var documentFragment = range.createContextualFragment( html );
 	bodyNode.appendChild( documentFragment );
 
-	enforceScrollBackLimit( frame );
-	if( needed ) scrollToBottom( frame );
+	this.enforceScrollBackLimit();
+	if( needed ) this.scrollToBottom();
 }
 
-function appendConsecutiveMessage( panel, html ) {
-	var needed = checkIfScrollToBottomIsNeeded( frame );
+DirectChatPanel.prototype.appendConsecutiveMessage = function( html ) {
+	var frame = this.contentFrame;
+	var needed = this.checkIfScrollToBottomIsNeeded();
 
-	var frame = document.getElementById( "panel" + panel );
 	var insert = frame.document.getElementById( "consecutiveInsert" );
 	if( ! insert ) {
-		appendMessage( panel, html );
+		this.appendMessage( html );
 		return;
 	}
 
@@ -291,27 +236,134 @@ function appendConsecutiveMessage( panel, html ) {
 	var documentFragment = range.createContextualFragment( html );
 	insert.parentNode.replaceChild( documentFragment, insert );
 
-	enforceScrollBackLimit( frame );
-	if( needed ) scrollToBottom( frame );
+	this.enforceScrollBackLimit();
+	if( needed ) this.scrollToBottom();
 }
 
-function enforceScrollBackLimit( frame ) {
+DirectChatPanel.prototype.enforceScrollBackLimit = function() {
+	var frame = this.contentFrame;
 	var bodyNode = frame.document.getElementById( "contents" );
 	if( ! bodyNode ) bodyNode = frame.document.body;
 	if( scrollBackLimit > 0 && bodyNode.childNodes.length > scrollBackLimit )
-		for( var i = 0; bodyNode.childNodes.length > scrollBackLimit && i < ( bodyNode.childNodes.length - scrollBackLimit ); i++ )
+		for( var i = 0; bodyNode.childNodes.length > scrollBackLimit && i < ( bodyNode.childNodes.length - scrollBackLimit ); ++i )
 			bodyNode.removeChild( bodyNode.childNodes[0] );
 }
 
-function scrollToBottom( frame ) {
+DirectChatPanel.prototype.scrollToBottom = function() {
+	var frame = this.contentFrame;
 	var bodyNode = frame.document.getElementById( "contents" );
 	if( ! bodyNode ) bodyNode = frame.document.body;
 	bodyNode.scrollTop = bodyNode.scrollHeight;
 }
 
-function checkIfScrollToBottomIsNeeded( frame ) {
+DirectChatPanel.prototype.checkIfScrollToBottomIsNeeded = function() {
+//	var frame = this.contentFrame;
 	return true;
 /*	var bodyNode = frame.document.getElementById( "contents" );
 	if( ! bodyNode ) bodyNode = frame.document.body;
 	scrollToBottomIsNeeded = ( bodyNode.scrollTop >= ( bodyNode.offsetHeight - ( window.innerHeight * 1.1 ) ) ); */
+}
+
+function ChatRoomPanel( node ) {
+	ChatRoomPanel.baseConstructor.call( this, node );
+
+	this.memberListVisible = false;
+
+	this.listItem.removeClassName( "directChat" );
+	this.listItem.addClassName( "chatRoom" );
+
+	this.members = new Array();
+
+	this.memberList = $(document.createElement( "ol" ));
+	this.memberList.className = "memberList";
+	this.memberList.style.setProperty( "display", "none", "" );
+	$("panelList").appendChild( this.memberList );
+
+	var memberNodes = node.childNodes;
+	for( var i = 0; i < memberNodes.length; ++i ) {
+		var memberNode = memberNodes[i];
+
+		var member = new Object();
+		member.name = memberNode.firstChild.nodeValue;
+		member.nickname = memberNode.getAttribute( "nickname" );
+		member.hostmask = memberNode.getAttribute( "hostmask" );
+		member.identifier = memberNode.getAttribute( "identifier" );
+		member.buddy = memberNode.getAttribute( "buddy" );
+		member.type = memberNode.getAttribute( "class" );
+		member.self = ( memberNode.getAttribute( "self" ) == "yes" );
+
+		this.members.push( member );
+
+		member.listItem = $(document.createElement( "li" ));
+		member.listItem.title = member.hostmask;
+		member.listItem.className = "listItem member" + ( member.type ? " " + member.type : "" );
+		member.listItem.appendChild( document.createTextNode( member.name ) );
+
+		this.memberList.appendChild( member.listItem );
+	}
+
+	var panel = this;
+	this.listItem.addEventListener( "dblclick", function( event ) { panel.toggleMemberList(); event.preventDefault(); event.stopPropagation(); }, false );
+}
+
+extendClass( ChatRoomPanel, DirectChatPanel );
+
+ChatRoomPanel.prototype.toggleMemberList = function() {
+	this.memberListVisible = ! this.memberListVisible;
+	if( this.memberListVisible ) this.memberList.style.setProperty( "display", "none", "" );
+	else this.memberList.style.setProperty( "display", "block", "" );
+}
+
+ChatRoomPanel.prototype.close = function() {
+	ChatRoomPanel.superClass.close.call(this);
+	this.memberList.parentNode.removeChild( this.memberList );
+}
+
+window.addEventListener( "load", setup, false );
+
+function setup() {
+	$("input").addEventListener( "keydown", inputKeyDown, false );
+	window.addEventListener( "blur", windowBlured, false );
+	window.addEventListener( "focus", windowFocused, false );
+
+	new Ajax.Request( "/command/setup", {
+		method: "get",
+		onSuccess: function( transport ) {
+			var xml = transport.responseXML;
+			var children = xml.documentElement.getElementsByTagName( "panels" ).item( 0 ).childNodes;
+
+			for( var i = 0; i < children.length; ++i )
+				ChatController.createPanel( children[i] );
+
+			ChatController.checkActivity();
+			activityCheckInterval = setInterval( ChatController.checkActivity, activityCheckSpeed );
+		},
+		onException: function( transport, exception ) {
+			throw exception;
+		}
+	} );
+}
+
+function windowBlured() {
+	foreground = false;
+}
+
+function windowFocused() {
+	foreground = true;
+	if( ! activePanel ) return;
+
+	activePanel.newMessage = 0;
+	activePanel.newHighlightMessage = 0;
+	activePanel.listItem.removeClassName( "newMessage" );
+	activePanel.listItem.removeClassName( "newHighlight" );
+	activePanel.listItem.title = "No messages waiting";
+}
+
+function inputKeyDown( event ) {
+	if( event.keyCode == 13 && ! event.altKey ) {
+		var input = $("input");
+		activePanel.sendMessage( input.innerText );
+		input.innerHTML = "";
+		event.preventDefault();
+	}
 }

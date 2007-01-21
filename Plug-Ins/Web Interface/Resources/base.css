@@ -85,23 +85,23 @@ ul, ol {
 }
 
 .listItem.member:before {
-	content: url( /resources/person.tif );
+	content: url( /resources/person.png );
 }
 
 .listItem.member.server.operator:before {
-	content: url( /resources/admin.tif );
+	content: url( /resources/admin.png );
 }
 
 .listItem.member.operator:before {
-	content: url( /resources/op.tif );
+	content: url( /resources/op.png );
 }
 
 .listItem.member.half.operator:before {
-	content: url( /resources/op.tif );
+	content: url( /resources/half-op.png );
 }
 
 .listItem.member.voice:before {
-	content: url( /resources/voice.tif );
+	content: url( /resources/voice.png );
 }
 
 .listItem {
