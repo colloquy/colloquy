@@ -17,6 +17,7 @@
 #import "MVChatUser.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
+#import "NSAttributedStringAdditions.h"
 #import "NSStringAdditions.h"
 
 #import <WebKit/WebKit.h>
@@ -451,7 +452,11 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments toConnection:(MVChatConnection *) connection inView:(id <JVChatViewController>) view {
-	NSArray *args = [NSArray arrayWithObjects:command, ( arguments ? (id)[arguments string] : (id)[NSNull null] ), ( connection ? (id)connection : (id)[NSNull null] ), ( view ? (id)view : (id)[NSNull null] ), nil];
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	NSString *argumentsHTML = [arguments HTMLFormatWithOptions:options];
+	argumentsHTML = [argumentsHTML stringByStrippingIllegalXMLCharacters];
+
+	NSArray *args = [NSArray arrayWithObjects:command, ( argumentsHTML ? (id)argumentsHTML : (id)[NSNull null] ), ( connection ? (id)connection : (id)[NSNull null] ), ( view ? (id)view : (id)[NSNull null] ), nil];
 	id result = [self callScriptFunctionNamed:@"processUserCommand" withArguments:args forSelector:_cmd];
 	return ( [result isKindOfClass:[NSNumber class]] ? [result boolValue] : NO );
 }
@@ -478,12 +483,20 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 }
 
 - (void) memberParted:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room forReason:(NSAttributedString *) reason {
-	NSArray *args = [NSArray arrayWithObjects:member, room, ( reason ? (id)[reason string] : (id)[NSNull null] ), nil];
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	NSString *reasonHTML = [reason HTMLFormatWithOptions:options];
+	reasonHTML = [reasonHTML stringByStrippingIllegalXMLCharacters];
+
+	NSArray *args = [NSArray arrayWithObjects:member, room, ( reasonHTML ? (id)reasonHTML : (id)[NSNull null] ), nil];
 	[self callScriptFunctionNamed:@"memberParted" withArguments:args forSelector:_cmd];
 }
 
 - (void) memberKicked:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSArray *args = [NSArray arrayWithObjects:member, room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)[reason string] : (id)[NSNull null] ), nil];
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	NSString *reasonHTML = [reason HTMLFormatWithOptions:options];
+	reasonHTML = [reasonHTML stringByStrippingIllegalXMLCharacters];
+
+	NSArray *args = [NSArray arrayWithObjects:member, room, ( by ? (id)by : (id)[NSNull null] ), ( reasonHTML ? (id)reasonHTML : (id)[NSNull null] ), nil];
 	[self callScriptFunctionNamed:@"memberKicked" withArguments:args forSelector:_cmd];
 }
 
@@ -498,12 +511,20 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 }
 
 - (void) kickedFromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSArray *args = [NSArray arrayWithObjects:room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)[reason string] : (id)[NSNull null] ), nil];
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	NSString *reasonHTML = [reason HTMLFormatWithOptions:options];
+	reasonHTML = [reasonHTML stringByStrippingIllegalXMLCharacters];
+
+	NSArray *args = [NSArray arrayWithObjects:room, ( by ? (id)by : (id)[NSNull null] ), ( reasonHTML ? (id)reasonHTML : (id)[NSNull null] ), nil];
 	[self callScriptFunctionNamed:@"kickedFromRoom" withArguments:args forSelector:_cmd];
 }
 
 - (void) topicChangedTo:(NSAttributedString *) topic inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) member {
-	NSArray *args = [NSArray arrayWithObjects:[topic string], room, ( member ? (id)member : (id)[NSNull null] ), nil];
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+	NSString *topicHTML = [topic HTMLFormatWithOptions:options];
+	topicHTML = [topicHTML stringByStrippingIllegalXMLCharacters];
+
+	NSArray *args = [NSArray arrayWithObjects:topicHTML, room, ( member ? (id)member : (id)[NSNull null] ), nil];
 	[self callScriptFunctionNamed:@"topicChanged" withArguments:args forSelector:_cmd];
 }
 
