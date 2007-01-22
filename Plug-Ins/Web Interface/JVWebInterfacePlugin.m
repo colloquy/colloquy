@@ -1,15 +1,18 @@
 #import "JVWebInterfacePlugin.h"
+
 #import <WebKit/WebKit.h>
-#import "NSStringAdditions.h"
+
 #import "JVChatController.h"
-#import "JVDirectChatPanel.h"
-#import "JVChatRoomPanel.h"
-#import "JVChatRoomMember.h"
+#import "JVChatEvent.h"
 #import "JVChatMessage.h"
-#import "MVChatConnection.h"
-#import "JVStyle.h"
+#import "JVChatRoomMember.h"
+#import "JVChatRoomPanel.h"
+#import "JVDirectChatPanel.h"
 #import "JVEmoticonSet.h"
+#import "JVStyle.h"
 #import "JVStyleView.h"
+#import "MVChatConnection.h"
+#import "NSStringAdditions.h"
 #import "nanohttpd.h"
 
 static NSString *JVWebInterfaceRequest = @"JVWebInterfaceRequest";
@@ -190,6 +193,7 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	if( ( self = [super init] ) ) {
 		_clients = [[NSMutableDictionary alloc] initWithCapacity:5];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( newMessage: ) name:@"JVChatMessageWasProcessedNotification" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( newEvent: ) name:@"JVChatEventMessageWasProcessedNotification" object:nil];
 	}
 
 	return self;
@@ -514,6 +518,46 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 
 		JVStyle *style = [JVStyle styleWithIdentifier:[[info objectForKey:@"originalStyles"] objectForKey:[view uniqueIdentifier]]];
 		NSString *tmessage = [style transformChatMessage:message withParameters:styleParams]; // this will break once styles use custom styleParameters!!
+
+		NSXMLNode *body = [[NSXMLNode alloc] initWithKind:NSXMLTextKind options:NSXMLNodeIsCDATA];
+		[body setStringValue:tmessage];
+
+		NSXMLElement *copy = [element copyWithZone:[self zone]];
+		[copy addChild:body];
+		[[doc rootElement] addChild:copy];
+
+		[body release];
+		[copy release];
+	}
+
+	[styleParams release];
+}
+
+- (void) newEvent:(NSNotification *) notification {
+	if( ! [_clients count] ) return;
+
+	JVMutableChatEvent *event = [[notification userInfo] objectForKey:@"event"];
+	JVDirectChatPanel *view = [notification object];
+	if( ! [view isKindOfClass:[JVDirectChatPanel class]] ) return;
+
+	NSXMLElement *element = [NSXMLElement elementWithName:@"event"];
+
+	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+	[attributes setObject:[view uniqueIdentifier] forKey:@"panel"];
+	[attributes setObject:[[event date] description] forKey:@"received"];
+	[element setAttributesAsDictionary:attributes];
+
+	NSMutableDictionary *styleParams = [[[view display] styleParameters] mutableCopy];
+
+	NSEnumerator *enumerator = [_clients objectEnumerator];
+	NSDictionary *info = nil;
+
+	while( ( info = [enumerator nextObject] ) ) {
+		NSXMLDocument *doc = [info objectForKey:@"activityQueue"];
+		if( ! doc ) continue;
+
+		JVStyle *style = [JVStyle styleWithIdentifier:[[info objectForKey:@"originalStyles"] objectForKey:[view uniqueIdentifier]]];
+		NSString *tmessage = [style transformChatTranscriptElement:event withParameters:styleParams]; // this will break once styles use custom styleParameters!!
 
 		NSXMLNode *body = [[NSXMLNode alloc] initWithKind:NSXMLTextKind options:NSXMLNodeIsCDATA];
 		[body setStringValue:tmessage];

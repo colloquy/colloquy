@@ -62,6 +62,13 @@ ChatController.checkActivity = function() {
 							}
 						}
 						break;
+					case "event":
+						var event = children[i];
+						if( event.firstChild ) {
+							var panel = ChatController.panel( event.getAttribute( "panel" ) );
+							panel.appendMessage( event.firstChild.nodeValue );
+						}
+						break;
 					}
 				}
 
@@ -195,49 +202,33 @@ DirectChatPanel.prototype.sendMessage = function( html ) {
 }
 
 DirectChatPanel.prototype.appendMessage = function( html ) {
+	var scrollNeeded = this.checkIfScrollToBottomIsNeeded();
+
 	var frame = this.contentFrame;
-
-	var consecutive = ( html.indexOf( "<?message type=\"consecutive\"?>" ) != -1 );
-	if( ! consecutive ) consecutive = ( html.indexOf( "<?message type=\"subsequent\"?>" ) != -1 );
-	if( consecutive && frame.document.getElementById( "consecutiveInsert" ) ) {
-		this.appendConsecutiveMessage( html );
-		return;
-	}
-
-	var needed = this.checkIfScrollToBottomIsNeeded();
-
 	var bodyNode = frame.document.getElementById( "contents" );
 	if( ! bodyNode ) bodyNode = frame.document.body;
 
-	var insert = frame.document.getElementById( "consecutiveInsert" );
-	if( insert ) insert.parentNode.removeChild( insert );
-
-	var range = frame.document.createRange();
-	range.selectNode( bodyNode );
-	var documentFragment = range.createContextualFragment( html );
-	bodyNode.appendChild( documentFragment );
-
-	this.enforceScrollBackLimit();
-	if( needed ) this.scrollToBottom();
-}
-
-DirectChatPanel.prototype.appendConsecutiveMessage = function( html ) {
-	var frame = this.contentFrame;
-	var needed = this.checkIfScrollToBottomIsNeeded();
+	var consecutive = ( html.indexOf( "<?message type=\"consecutive\"?>" ) != -1 );
+	if( ! consecutive ) consecutive = ( html.indexOf( "<?message type=\"subsequent\"?>" ) != -1 );
 
 	var insert = frame.document.getElementById( "consecutiveInsert" );
-	if( ! insert ) {
-		this.appendMessage( html );
-		return;
+
+	if( consecutive && insert ) {
+		var range =  frame.document.createRange();
+		range.selectNode( insert.parentNode );
+		var documentFragment = range.createContextualFragment( html );
+		insert.parentNode.replaceChild( documentFragment, insert );
+	} else {
+		if( insert ) insert.parentNode.removeChild( insert );
+
+		var range = frame.document.createRange();
+		range.selectNode( bodyNode );
+		var documentFragment = range.createContextualFragment( html );
+		bodyNode.appendChild( documentFragment );
 	}
 
-	var range =  frame.document.createRange();
-	range.selectNode( insert.parentNode );
-	var documentFragment = range.createContextualFragment( html );
-	insert.parentNode.replaceChild( documentFragment, insert );
-
 	this.enforceScrollBackLimit();
-	if( needed ) this.scrollToBottom();
+	if( scrollNeeded ) this.scrollToBottom();
 }
 
 DirectChatPanel.prototype.enforceScrollBackLimit = function() {

@@ -13,6 +13,7 @@ extern NSString *JVToolbarSendFileItemIdentifier;
 extern NSString *JVToolbarMarkItemIdentifier;
 
 extern NSString *JVChatMessageWasProcessedNotification;
+extern NSString *JVChatEventMessageWasProcessedNotification;
 
 @interface JVDirectChatPanel : JVChatTranscriptPanel {
 	@protected

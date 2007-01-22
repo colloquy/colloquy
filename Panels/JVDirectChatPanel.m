@@ -97,6 +97,7 @@ NSString *JVToolbarSendFileItemIdentifier = @"JVToolbarSendFileItem";
 NSString *JVToolbarMarkItemIdentifier = @"JVToolbarMarkItem";
 
 NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNotification";
+NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasProcessedNotification";
 
 @interface JVDirectChatPanel (JVDirectChatPrivate) <ABImageClient>
 - (NSString *) _selfCompositeName;
@@ -715,6 +716,8 @@ NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNot
 	JVChatEvent *newEvent = [[self transcript] appendEvent:event];
 	[_sqlTestTranscript appendEvent:event];
 	[display appendChatTranscriptElement:newEvent];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:JVChatEventMessageWasProcessedNotification object:self userInfo:[NSDictionary dictionaryWithObject:newEvent forKey:@"event"]];
 
 	if( ! [[[_windowController window] representedFilename] length] )
 		[self _refreshWindowFileProxy];
