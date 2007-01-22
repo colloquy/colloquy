@@ -26,7 +26,7 @@ static void processCommand( http_req_t *req, http_resp_t *resp, http_server_t *s
 	JVWebInterfacePlugin *self = (JVWebInterfacePlugin *) server -> context;
 	NSURL *url = [NSURL URLWithString:[NSString stringWithUTF8String:req -> uri]];
 
-	NSMutableDictionary *arguments = [NSMutableDictionary dictionaryWithCapacity:20];
+	NSMutableDictionary *arguments = [[NSMutableDictionary alloc] initWithCapacity:10];
 	[arguments setObject:[NSValue valueWithPointer:req] forKey:JVWebInterfaceRequest];
 	[arguments setObject:[NSValue valueWithPointer:resp] forKey:JVWebInterfaceResponse];
 
@@ -62,6 +62,9 @@ static void processCommand( http_req_t *req, http_resp_t *resp, http_server_t *s
 	if( [self respondsToSelector:selector] )
 		[self performSelectorOnMainThread:selector withObject:arguments waitUntilDone:YES];
 
+	resp -> write( resp, "", 0 );
+
+	[arguments release];
 	[pool release];
 }
 
@@ -188,6 +191,8 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	[pool release];
 }
 
+#pragma mark -
+
 @implementation JVWebInterfacePlugin
 - (id) initWithManager:(MVChatPluginManager *) manager {
 	if( ( self = [super init] ) ) {
@@ -223,6 +228,8 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 
 	[super dealloc];
 }
+
+#pragma mark -
 
 - (void) load {
 	[self deallocServer];
@@ -260,6 +267,8 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	[self deallocServer];
 }
 
+#pragma mark -
+
 - (JVDirectChatPanel *) panelForIdentifier:(NSString *) identifier {
 	NSNumber *identifierNum = [NSNumber numberWithUnsignedInt:[identifier intValue]];
 	NSEnumerator *enumerator = [[[JVChatController defaultController] allChatViewControllers] objectEnumerator];
@@ -271,6 +280,8 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 
 	return panel;
 }
+
+#pragma mark -
 
 - (NSString *) displayHTMLForPanel:(JVDirectChatPanel *) panel withContent:(NSString *) content {
 	NSString *variant = [[panel display] styleVariant];
@@ -303,6 +314,8 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	return [NSString stringWithFormat:shell, [panel description], header, @"/resources", emoticonStyleSheet, mainStyleSheet, variant, baseLocation, bodyTemplate];
 }
 
+#pragma mark -
+
 - (void) setupCommand:(NSDictionary *) arguments {
 	http_resp_t *resp = [[arguments objectForKey:JVWebInterfaceResponse] pointerValue];
 	if( ! resp ) return;
@@ -312,7 +325,6 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 		identifier = [NSString locallyUniqueString];
 
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
-	[_clients setObject:info forKey:identifier];
 
 	NSXMLDocument *doc = [NSXMLDocument documentWithRootElement:[NSXMLElement elementWithName:@"queue"]];
 	[info setObject:doc forKey:@"activityQueue"];
@@ -350,6 +362,10 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 		}
 	}
 
+	@synchronized( _clients ) {
+		[_clients setObject:info forKey:identifier];
+	}
+
 	resp -> content_type = "text/xml";
 	resp -> add_cookie( resp, (char *)[[NSString stringWithFormat:@"identifier=%@; path=/", identifier] UTF8String] );
 
@@ -362,24 +378,27 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	if( ! resp ) return;
 
 	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
-	NSDictionary *info = [_clients objectForKey:identifier];
-	if( ! info ) return;
 
-	JVDirectChatPanel *panel = [self panelForIdentifier:[arguments objectForKey:@"panel"]];
+	@synchronized( _clients ) {
+		NSDictionary *info = [_clients objectForKey:identifier];
+		if( ! info ) return;
 
-	if( panel ) {
-		NSMutableDictionary *styles = [info objectForKey:@"originalStyles"];
-		[styles setObject:[[panel style] identifier] forKey:[panel uniqueIdentifier]];
+		JVDirectChatPanel *panel = [self panelForIdentifier:[arguments objectForKey:@"panel"]];
 
-		DOMHTMLDocument *document = (DOMHTMLDocument *)[[[[panel display] mainFrame] findFrameNamed:@"content"] DOMDocument];
-		DOMHTMLElement *bodyNode = (DOMHTMLElement *)[document getElementById:@"contents"];
-		if( ! bodyNode ) bodyNode = (DOMHTMLElement *)[document body];
+		if( panel ) {
+			NSMutableDictionary *styles = [info objectForKey:@"originalStyles"];
+			[styles setObject:[[panel style] identifier] forKey:[panel uniqueIdentifier]];
 
-		NSString *body = [self displayHTMLForPanel:panel withContent:[bodyNode innerHTML]];
-		char *bodyContent = (char *)[body UTF8String];
-		resp -> content_type = "text/html";
-		resp -> write( resp, bodyContent, strlen( bodyContent ) );
-	} else resp -> write( resp, "", 0 );
+			DOMHTMLDocument *document = (DOMHTMLDocument *)[[[[panel display] mainFrame] findFrameNamed:@"content"] DOMDocument];
+			DOMHTMLElement *bodyNode = (DOMHTMLElement *)[document getElementById:@"contents"];
+			if( ! bodyNode ) bodyNode = (DOMHTMLElement *)[document body];
+
+			NSString *body = [self displayHTMLForPanel:panel withContent:[bodyNode innerHTML]];
+			char *bodyContent = (char *)[body UTF8String];
+			resp -> content_type = "text/html";
+			resp -> write( resp, bodyContent, strlen( bodyContent ) );
+		}
+	}
 }
 
 - (void) logoutCommand:(NSDictionary *) arguments {
@@ -387,16 +406,15 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	if( ! resp ) return;
 
 	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
-	[_clients removeObjectForKey:identifier];
+
+	@synchronized( _clients ) {
+		[_clients removeObjectForKey:identifier];
+	}
 }
 
 - (void) sendCommand:(NSDictionary *) arguments {
 	http_resp_t *resp = [[arguments objectForKey:JVWebInterfaceResponse] pointerValue];
 	if( ! resp ) return;
-
-	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
-	NSDictionary *info = [_clients objectForKey:identifier];
-	if( ! info ) return;
 
 	JVDirectChatPanel *panel = [self panelForIdentifier:[arguments objectForKey:@"panel"]];
 
@@ -412,20 +430,19 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 				BOOL handled = NO;
 				NSScanner *scanner = [NSScanner scannerWithString:text];
 				NSString *command = nil;
-				id arguments = nil;
 
 				[scanner scanString:@"/" intoString:nil];
 				[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&command];
 				if( [text length] >= [scanner scanLocation] + 1 )
 					[scanner setScanLocation:[scanner scanLocation] + 1];
 
-				arguments = [text substringWithRange:NSMakeRange( [scanner scanLocation], [text length] - [scanner scanLocation] )];
-				arguments = [[NSAttributedString alloc] initWithString:arguments];
+				NSString *subArgs = [text substringWithRange:NSMakeRange( [scanner scanLocation], [text length] - [scanner scanLocation] )];
+				NSAttributedString *cmdArguments = [[NSAttributedString alloc] initWithString:subArgs];
 
-				if( ! ( handled = [panel processUserCommand:command withArguments:arguments] ) && [[panel connection] isConnected] )
-					[[panel connection] sendRawMessage:[command stringByAppendingFormat:@" %@", [arguments string]]];
+				if( ! ( handled = [panel processUserCommand:command withArguments:cmdArguments] ) && [[panel connection] isConnected] )
+					[[panel connection] sendRawMessage:[command stringByAppendingFormat:@" %@", [cmdArguments string]]];
 
-				[arguments release];
+				[cmdArguments release];
 			} else {
 				if( [text hasPrefix:@"//"] ) text = [text substringWithRange:NSMakeRange( 1, [text length] - 1 )];
 				JVMutableChatMessage *message = [JVMutableChatMessage messageWithText:@"" sender:[[panel connection] localUser]];
@@ -435,8 +452,6 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 			}
 		}
 	}
-
-	resp -> write( resp, "", 0 );
 }
 
 - (void) checkActivityCommand:(NSDictionary *) arguments {
@@ -444,133 +459,134 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	if( ! resp ) return;
 
 	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
-	NSDictionary *info = [_clients objectForKey:identifier];
-	if( ! info ) return;
 
-	NSXMLDocument *doc = [info objectForKey:@"activityQueue"];
-	if( ! doc ) return;
+	@synchronized( _clients ) {
+		NSDictionary *info = [_clients objectForKey:identifier];
+		if( ! info ) return;
 
-	if( [[doc rootElement] childCount] ) {
-		NSData *xml = [doc XMLData];
-		resp -> content_type = "text/xml";
-		resp -> write( resp, (char *)[xml bytes], [xml length] );
-		[[doc rootElement] setChildren:nil]; // clear the queue
-	} else resp -> write( resp, "", 0 );
-}
-
-- (void) addElementToClientQueues:(NSXMLElement *) element {
-	if( ! [_clients count] ) return;
-
-	NSEnumerator *enumerator = [_clients objectEnumerator];
-	NSDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) ) {
 		NSXMLDocument *doc = [info objectForKey:@"activityQueue"];
-		if( ! doc ) continue;
+		if( ! doc ) return;
 
-		NSXMLElement *copy = [element copyWithZone:[self zone]];
-		[[doc rootElement] addChild:copy];
-		[copy release];
+		if( [[doc rootElement] childCount] ) {
+			NSData *xml = [doc XMLData];
+			resp -> content_type = "text/xml";
+			resp -> write( resp, (char *)[xml bytes], [xml length] );
+			[[doc rootElement] setChildren:nil]; // clear the queue
+		}
 	}
 }
+
+#pragma mark -
+
+- (void) addElementToClientQueues:(NSXMLElement *) element {
+	@synchronized( _clients ) {
+		if( ! [_clients count] ) return;
+
+		NSEnumerator *enumerator = [_clients objectEnumerator];
+		NSDictionary *info = nil;
+
+		while( ( info = [enumerator nextObject] ) ) {
+			NSXMLDocument *doc = [info objectForKey:@"activityQueue"];
+			if( ! doc ) continue;
+
+			NSXMLElement *copy = [element copyWithZone:[self zone]];
+			[[doc rootElement] addChild:copy];
+			[copy release];
+		}
+	}
+}
+
+#pragma mark -
 
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context andPreferences:(NSDictionary *) preferences {
 	
 }
 
 - (void) newMessage:(NSNotification *) notification {
-	if( ! [_clients count] ) return;
+	@synchronized( _clients ) {
+		if( ! [_clients count] ) return;
 
-	JVMutableChatMessage *message = [[notification userInfo] objectForKey:@"message"];
-	JVDirectChatPanel *view = [notification object];
-	if( ! [view isKindOfClass:[JVDirectChatPanel class]] ) return;
+		JVMutableChatMessage *message = [[notification userInfo] objectForKey:@"message"];
+		JVDirectChatPanel *view = [notification object];
+		if( ! [view isKindOfClass:[JVDirectChatPanel class]] ) return;
 
-	if( [view isMemberOfClass:[JVDirectChatPanel class]] ) {
-		NSXMLElement *element = [NSXMLElement elementWithName:@"open"];
+		if( [view isMemberOfClass:[JVDirectChatPanel class]] ) {
+			NSXMLElement *element = [NSXMLElement elementWithName:@"open"];
+			NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+			[attributes setObject:NSStringFromClass( [view class] ) forKey:@"class"];
+			[attributes setObject:[[view target] description] forKey:@"name"];
+			[attributes setObject:[[view connection] server] forKey:@"server"];
+			[attributes setObject:[view uniqueIdentifier] forKey:@"identifier"];
+			[element setAttributesAsDictionary:attributes];
+
+			[self addElementToClientQueues:element];
+		}
+
 		NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-		[attributes setObject:NSStringFromClass( [view class] ) forKey:@"class"];
-		[attributes setObject:[[view target] description] forKey:@"name"];
-		[attributes setObject:[[view connection] server] forKey:@"server"];
-		[attributes setObject:[view uniqueIdentifier] forKey:@"identifier"];
-		[element setAttributesAsDictionary:attributes];
+		[attributes setObject:[view uniqueIdentifier] forKey:@"panel"];
+		[attributes setObject:[[message date] description] forKey:@"received"];
 
-		[self addElementToClientQueues:element];
+		NSMutableDictionary *styleParams = [[[view display] styleParameters] mutableCopy];
+
+		if( [message consecutiveOffset] > 0 )
+			[styleParams setObject:@"'yes'" forKey:@"consecutiveMessage"];
+
+		NSEnumerator *enumerator = [_clients objectEnumerator];
+		NSDictionary *info = nil;
+
+		while( ( info = [enumerator nextObject] ) ) {
+			JVStyle *style = [JVStyle styleWithIdentifier:[[info objectForKey:@"originalStyles"] objectForKey:[view uniqueIdentifier]]];
+			NSString *tmessage = [style transformChatMessage:message withParameters:styleParams]; // this will break once styles use custom styleParameters!!
+
+			NSXMLNode *body = [[NSXMLNode alloc] initWithKind:NSXMLTextKind options:NSXMLNodeIsCDATA];
+			[body setStringValue:tmessage];
+
+			NSXMLElement *element = [NSXMLElement elementWithName:@"message"];
+			[element setAttributesAsDictionary:attributes];
+			[element addChild:body];
+			[body release];
+
+			[self addElementToClientQueues:element];
+		}
+
+		[styleParams release];
 	}
-
-	NSXMLElement *element = [NSXMLElement elementWithName:@"message"];
-
-	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-	[attributes setObject:[view uniqueIdentifier] forKey:@"panel"];
-	[attributes setObject:[[message date] description] forKey:@"received"];
-	[element setAttributesAsDictionary:attributes];
-
-	NSMutableDictionary *styleParams = [[[view display] styleParameters] mutableCopy];
-
-	if( [message consecutiveOffset] > 0 )
-		[styleParams setObject:@"'yes'" forKey:@"consecutiveMessage"];
-
-	NSEnumerator *enumerator = [_clients objectEnumerator];
-	NSDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) ) {
-		NSXMLDocument *doc = [info objectForKey:@"activityQueue"];
-		if( ! doc ) continue;
-
-		JVStyle *style = [JVStyle styleWithIdentifier:[[info objectForKey:@"originalStyles"] objectForKey:[view uniqueIdentifier]]];
-		NSString *tmessage = [style transformChatMessage:message withParameters:styleParams]; // this will break once styles use custom styleParameters!!
-
-		NSXMLNode *body = [[NSXMLNode alloc] initWithKind:NSXMLTextKind options:NSXMLNodeIsCDATA];
-		[body setStringValue:tmessage];
-
-		NSXMLElement *copy = [element copyWithZone:[self zone]];
-		[copy addChild:body];
-		[[doc rootElement] addChild:copy];
-
-		[body release];
-		[copy release];
-	}
-
-	[styleParams release];
 }
 
 - (void) newEvent:(NSNotification *) notification {
-	if( ! [_clients count] ) return;
+	@synchronized( _clients ) {
+		if( ! [_clients count] ) return;
 
-	JVMutableChatEvent *event = [[notification userInfo] objectForKey:@"event"];
-	JVDirectChatPanel *view = [notification object];
-	if( ! [view isKindOfClass:[JVDirectChatPanel class]] ) return;
+		JVMutableChatEvent *event = [[notification userInfo] objectForKey:@"event"];
+		JVDirectChatPanel *view = [notification object];
+		if( ! [view isKindOfClass:[JVDirectChatPanel class]] ) return;
 
-	NSXMLElement *element = [NSXMLElement elementWithName:@"event"];
+		NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
+		[attributes setObject:[view uniqueIdentifier] forKey:@"panel"];
+		[attributes setObject:[[event date] description] forKey:@"received"];
 
-	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
-	[attributes setObject:[view uniqueIdentifier] forKey:@"panel"];
-	[attributes setObject:[[event date] description] forKey:@"received"];
-	[element setAttributesAsDictionary:attributes];
+		NSMutableDictionary *styleParams = [[[view display] styleParameters] mutableCopy];
 
-	NSMutableDictionary *styleParams = [[[view display] styleParameters] mutableCopy];
+		NSEnumerator *enumerator = [_clients objectEnumerator];
+		NSDictionary *info = nil;
 
-	NSEnumerator *enumerator = [_clients objectEnumerator];
-	NSDictionary *info = nil;
+		while( ( info = [enumerator nextObject] ) ) {
+			JVStyle *style = [JVStyle styleWithIdentifier:[[info objectForKey:@"originalStyles"] objectForKey:[view uniqueIdentifier]]];
+			NSString *tmessage = [style transformChatTranscriptElement:event withParameters:styleParams]; // this will break once styles use custom styleParameters!!
 
-	while( ( info = [enumerator nextObject] ) ) {
-		NSXMLDocument *doc = [info objectForKey:@"activityQueue"];
-		if( ! doc ) continue;
+			NSXMLNode *body = [[NSXMLNode alloc] initWithKind:NSXMLTextKind options:NSXMLNodeIsCDATA];
+			[body setStringValue:tmessage];
 
-		JVStyle *style = [JVStyle styleWithIdentifier:[[info objectForKey:@"originalStyles"] objectForKey:[view uniqueIdentifier]]];
-		NSString *tmessage = [style transformChatTranscriptElement:event withParameters:styleParams]; // this will break once styles use custom styleParameters!!
+			NSXMLElement *element = [NSXMLElement elementWithName:@"message"];
+			[element setAttributesAsDictionary:attributes];
+			[element addChild:body];
+			[body release];
 
-		NSXMLNode *body = [[NSXMLNode alloc] initWithKind:NSXMLTextKind options:NSXMLNodeIsCDATA];
-		[body setStringValue:tmessage];
+			[self addElementToClientQueues:element];
+		}
 
-		NSXMLElement *copy = [element copyWithZone:[self zone]];
-		[copy addChild:body];
-		[[doc rootElement] addChild:copy];
-
-		[body release];
-		[copy release];
+		[styleParams release];
 	}
-
-	[styleParams release];
 }
 
 - (void) memberJoined:(JVChatRoomMember *) member inRoom:(JVChatRoomPanel *) room {
@@ -586,8 +602,6 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 }
 
 - (void) joinedRoom:(JVChatRoomPanel *) room {
-	if( ! [_clients count] ) return;
-
 	NSXMLElement *element = [NSXMLElement elementWithName:@"open"];
 	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 	[attributes setObject:NSStringFromClass( [room class] ) forKey:@"class"];
@@ -600,12 +614,11 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 }
 
 - (void) partingFromRoom:(JVChatRoomPanel *) room {
-	if( ! [_clients count] ) return;
-
 	NSXMLElement *element = [NSXMLElement elementWithName:@"close"];
 	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 	[attributes setObject:[room uniqueIdentifier] forKey:@"identifier"];
 	[element setAttributesAsDictionary:attributes];
+
 	[self addElementToClientQueues:element];
 }
 

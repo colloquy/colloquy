@@ -8,14 +8,19 @@ function extendClass( subClass, baseClass ) {
 	subClass.superClass = baseClass.prototype;
 }
 
+var UserDefaults = {
+	minimumActivityCheckInterval: 500,
+	maximumActivityCheckInterval: 5000,
+	scrollBackMessageLimit: 300
+};
+
 var activityCheckInterval = null;
-var activityCheckSpeed = 4000;
-var scrollBackLimit = 300;
-var activePanel = null;
+var currentActivityCheckInterval = ( UserDefaults.maximumActivityCheckInterval / 2 );
 var foreground = true;
 
 var ChatController = {
-	panels: new Array()
+	panels: new Array(),
+	activePanel: null
 };
 
 ChatController.createPanel = function( node ) {
@@ -27,26 +32,27 @@ ChatController.createPanel = function( node ) {
 		return new DirectChatPanel( node );
 	else if( type == "JVChatRoomPanel" )
 		return new ChatRoomPanel( node );
-	return undefined;
+	return null;
 };
 
 ChatController.panel = function( id ) {
 	for( var i = 0, l = this.panels.length; i < l; ++i )
 		if( this.panels[i].id == id ) return this.panels[i];
-	return undefined;
+	return null;
 }
 
 ChatController.checkActivity = function() {
 	new Ajax.Request( "/command/checkActivity", {
 		method: "get",
 		onSuccess: function( transport ) {
-			var updateIntervalDelta = 100;
+			var updateIntervalDelta = 0;
 
 			if( transport.responseText && transport.responseXML ) {
 				var children = transport.responseXML.documentElement.childNodes;
 				for( var i = 0; i < children.length; ++i ) {
 					switch( children[i].tagName ) {
 					case "open":
+						updateIntervalDelta -= 200;
 						ChatController.createPanel( children[i] );
 						break;
 					case "close":
@@ -54,18 +60,16 @@ ChatController.checkActivity = function() {
 						panel.close();
 						break;
 					case "message":
+						updateIntervalDelta -= 500;
 						var message = children[i];
 						if( message.firstChild ) {
 							var panel = ChatController.panel( message.getAttribute( "panel" ) );
 							panel.appendMessage( message.firstChild.nodeValue );
-							if( ( ( ! foreground && panel.active ) || ! panel.active ) && ! panel.listItem.hasClassName( "newMessage" ) ) {
-								panel.listItem.addClassName( "newMessage" );
-								panel.newMessage++;
-								panel.listItem.title = panel.newMessage + " messages waiting";
-							}
+							panel.updateNewMessageCount( panel.newMessages + 1 );
 						}
 						break;
 					case "event":
+						updateIntervalDelta -= 200;
 						var event = children[i];
 						if( event.firstChild ) {
 							var panel = ChatController.panel( event.getAttribute( "panel" ) );
@@ -74,24 +78,25 @@ ChatController.checkActivity = function() {
 						break;
 					}
 				}
-
-				if( children.length >= 1 )
-					updateIntervalDelta = ( -500 * children.length ) - 100;
 			}
 
-			var newActivityCheckSpeed = Math.max( Math.min( ( activityCheckSpeed + updateIntervalDelta ), 4000 ), 500 );
-			if( newActivityCheckSpeed != activityCheckSpeed ) {
-				activityCheckSpeed = newActivityCheckSpeed;
+			if( ! updateIntervalDelta ) updateIntervalDelta = 100;
 
-				clearInterval( activityCheckInterval );
-				activityCheckInterval = setInterval( ChatController.checkActivity, activityCheckSpeed );
+			var newActivityCheckInterval = Math.min( ( currentActivityCheckInterval + updateIntervalDelta ), UserDefaults.maximumActivityCheckInterval );
+			newActivityCheckInterval = Math.max( newActivityCheckInterval, UserDefaults.minimumActivityCheckInterval );
 
-				$("timer").innerText = activityCheckSpeed / 1000 + " secs";
+			if( newActivityCheckInterval != currentActivityCheckInterval ) {
+				currentActivityCheckInterval = newActivityCheckInterval;
+
+				if( activityCheckInterval ) clearInterval( activityCheckInterval );
+				activityCheckInterval = setInterval( ChatController.checkActivity, currentActivityCheckInterval );
+
+				$("timer").innerText = currentActivityCheckInterval / 1000 + " secs";
 			}
 		},
 		onFailure: function( transport ) {
-			clearInterval( activityCheckInterval );
-			activityCheckInterval = setInterval( ChatController.checkActivity, 1000 );
+			if( activityCheckInterval ) clearInterval( activityCheckInterval );
+			activityCheckInterval = setInterval( ChatController.checkActivity, UserDefaults.minimumActivityCheckInterval );
 		},
 		onException: function( transport, exception ) {
 			throw exception;
@@ -132,20 +137,16 @@ Panel.prototype.toString = function() {
 }
 
 Panel.prototype.show = function() {
+	if( this.active ) return;
+
 	for( var i = 0, l = ChatController.panels.length; i < l; ++i ) {
 		var panel = ChatController.panels[i];
 		if( panel.id == this.id ) {
-			if( ! panel.active ) {
-				panel.frame.style.setProperty( "visibility", "visible", "" );
-				panel.listItem.addClassName( "selected" );
-				panel.active = true;
-				panel.newMessage = 0;
-				panel.newHighlightMessage = 0;
-				panel.listItem.removeClassName( "newMessage" );
-				panel.listItem.removeClassName( "newHighlight" );
-				panel.listItem.title = "No messages waiting";
-				activePanel = panel;
-			}
+			ChatController.activePanel = panel;
+			panel.frame.style.setProperty( "visibility", "visible", "" );
+			panel.listItem.addClassName( "selected" );
+			panel.active = true;
+			panel.focused();
 		} else {
 			panel.frame.style.setProperty( "visibility", "hidden", "" );
 			panel.listItem.removeClassName( "selected" );
@@ -170,8 +171,8 @@ Panel.prototype.close = function() {
 function DirectChatPanel( node ) {
 	DirectChatPanel.baseConstructor.call( this, node );
 
-	this.newMessage = 0;
-	this.newHighlightMessage = 0;
+	this.newMessages = 0;
+	this.newHighlightMessages = 0;
 
 	this.listItem.addClassName( "directChat" );
 
@@ -195,7 +196,7 @@ DirectChatPanel.prototype.sendMessage = function( html ) {
 		contentType: "text/html",
 		postBody: html,
 		onSuccess: function( transport ) {
-			clearInterval( activityCheckInterval );
+			if( activityCheckInterval ) clearInterval( activityCheckInterval );
 			activityCheckInterval = setInterval( ChatController.checkActivity, 250 );
 		},
 		onException: function( transport, exception ) {
@@ -238,8 +239,8 @@ DirectChatPanel.prototype.enforceScrollBackLimit = function() {
 	var frame = this.contentFrame;
 	var bodyNode = frame.document.getElementById( "contents" );
 	if( ! bodyNode ) bodyNode = frame.document.body;
-	if( scrollBackLimit > 0 && bodyNode.childNodes.length > scrollBackLimit )
-		for( var i = 0; bodyNode.childNodes.length > scrollBackLimit && i < ( bodyNode.childNodes.length - scrollBackLimit ); ++i )
+	if( UserDefaults.scrollBackMessageLimit > 0 && bodyNode.childNodes.length > UserDefaults.scrollBackMessageLimit )
+		for( var i = 0; bodyNode.childNodes.length > UserDefaults.scrollBackMessageLimit && i < ( bodyNode.childNodes.length - UserDefaults.scrollBackMessageLimit ); ++i )
 			bodyNode.removeChild( bodyNode.childNodes[0] );
 }
 
@@ -256,6 +257,31 @@ DirectChatPanel.prototype.checkIfScrollToBottomIsNeeded = function() {
 /*	var bodyNode = frame.document.getElementById( "contents" );
 	if( ! bodyNode ) bodyNode = frame.document.body;
 	scrollToBottomIsNeeded = ( bodyNode.scrollTop >= ( bodyNode.offsetHeight - ( window.innerHeight * 1.1 ) ) ); */
+}
+
+DirectChatPanel.prototype.updateNewMessageCount = function( messages ) {
+	if( ( ( ! foreground && this.active ) || ! this.active ) ) {
+		if( ! this.listItem.hasClassName( "newMessage" ) )
+			this.listItem.addClassName( "newMessage" );
+		this.newMessages = messages;
+		this.listItem.title = messages + " messages waiting";
+	}
+}
+
+DirectChatPanel.prototype.updateHighlightMessageCount = function( messages ) {
+	if( ( ( ! foreground && this.active ) || ! this.active ) ) {
+		if( ! this.listItem.hasClassName( "newHighlight" ) )
+			this.listItem.addClassName( "newHighlight" );
+		this.newHighlightMessages = messages;
+	}
+}
+
+DirectChatPanel.prototype.focused = function() {
+	this.newMessages = 0;
+	this.newHighlightMessages = 0;
+	this.listItem.removeClassName( "newMessage" );
+	this.listItem.removeClassName( "newHighlight" );
+	this.listItem.title = "No messages waiting";
 }
 
 function ChatRoomPanel( node ) {
@@ -330,7 +356,9 @@ function setup() {
 				ChatController.createPanel( children[i] );
 
 			ChatController.checkActivity();
-			activityCheckInterval = setInterval( ChatController.checkActivity, activityCheckSpeed );
+
+			if( activityCheckInterval ) clearInterval( activityCheckInterval );
+			activityCheckInterval = setInterval( ChatController.checkActivity, currentActivityCheckInterval );
 		},
 		onException: function( transport, exception ) {
 			throw exception;
@@ -344,19 +372,15 @@ function windowBlured() {
 
 function windowFocused() {
 	foreground = true;
-	if( ! activePanel ) return;
 
-	activePanel.newMessage = 0;
-	activePanel.newHighlightMessage = 0;
-	activePanel.listItem.removeClassName( "newMessage" );
-	activePanel.listItem.removeClassName( "newHighlight" );
-	activePanel.listItem.title = "No messages waiting";
+	if( ChatController.activePanel )
+		ChatController.activePanel.focused();
 }
 
 function inputKeyDown( event ) {
 	if( event.keyCode == 13 && ! event.altKey ) {
 		var input = $("input");
-		activePanel.sendMessage( input.innerText );
+		ChatController.activePanel.sendMessage( input.innerText );
 		input.innerHTML = "";
 		event.preventDefault();
 	}
