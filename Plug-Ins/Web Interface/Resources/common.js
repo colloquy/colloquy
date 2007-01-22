@@ -19,6 +19,9 @@ var ChatController = {
 };
 
 ChatController.createPanel = function( node ) {
+	var panel = ChatController.panel( node.getAttribute( "identifier" ) );
+	if( panel ) return panel;
+
 	var type = node.getAttribute( "class" );
 	if( type == "JVDirectChatPanel" )
 		return new DirectChatPanel( node );
