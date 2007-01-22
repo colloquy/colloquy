@@ -264,12 +264,12 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 }
 
 - (void) memberParted:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room forReason:(NSAttributedString *) reason {
-	NSArray *args = [NSArray arrayWithObjects:member, room, ( reason ? (id)[reason string] : (id)[NSNull null] ), nil];
+	NSArray *args = [NSArray arrayWithObjects:member, room, ( reason ? (id)reason : (id)[NSNull null] ), nil];
 	[self callScriptBlockNamed:@"memberParted" withArguments:args forSelector:_cmd];
 }
 
 - (void) memberKicked:(JVChatRoomMember *) member fromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSArray *args = [NSArray arrayWithObjects:member, room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)[reason string] : (id)[NSNull null] ), nil];
+	NSArray *args = [NSArray arrayWithObjects:member, room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)reason : (id)[NSNull null] ), nil];
 	[self callScriptBlockNamed:@"memberKicked" withArguments:args forSelector:_cmd];
 }
 
@@ -284,7 +284,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 }
 
 - (void) kickedFromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason {
-	NSArray *args = [NSArray arrayWithObjects:room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)[reason string] : (id)[NSNull null] ), nil];
+	NSArray *args = [NSArray arrayWithObjects:room, ( by ? (id)by : (id)[NSNull null] ), ( reason ? (id)reason : (id)[NSNull null] ), nil];
 	[self callScriptBlockNamed:@"kickedFromRoom" withArguments:args forSelector:_cmd];
 }
 
