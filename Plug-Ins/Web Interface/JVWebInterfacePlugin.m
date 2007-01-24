@@ -525,6 +525,7 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 		NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 		[attributes setObject:[view uniqueIdentifier] forKey:@"panel"];
 		[attributes setObject:[[message date] description] forKey:@"received"];
+		if( [message isHighlighted] ) [attributes setObject:@"yes" forKey:@"highlighted"];
 
 		NSMutableDictionary *styleParams = [[[view display] styleParameters] mutableCopy];
 
@@ -546,7 +547,8 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 			[element addChild:body];
 			[body release];
 
-			[self addElementToClientQueues:element];
+			NSXMLDocument *doc = [info objectForKey:@"activityQueue"];
+			[[doc rootElement] addChild:element];
 		}
 
 		[styleParams release];
@@ -577,12 +579,13 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 			NSXMLNode *body = [[NSXMLNode alloc] initWithKind:NSXMLTextKind options:NSXMLNodeIsCDATA];
 			[body setStringValue:tmessage];
 
-			NSXMLElement *element = [NSXMLElement elementWithName:@"message"];
+			NSXMLElement *element = [NSXMLElement elementWithName:@"event"];
 			[element setAttributesAsDictionary:attributes];
 			[element addChild:body];
 			[body release];
 
-			[self addElementToClientQueues:element];
+			NSXMLDocument *doc = [info objectForKey:@"activityQueue"];
+			[[doc rootElement] addChild:element];
 		}
 
 		[styleParams release];

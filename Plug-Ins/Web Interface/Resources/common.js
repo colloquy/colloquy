@@ -65,7 +65,11 @@ ChatController.checkActivity = function() {
 						if( message.firstChild ) {
 							var panel = ChatController.panel( message.getAttribute( "panel" ) );
 							panel.appendMessage( message.firstChild.nodeValue );
-							panel.updateNewMessageCount( panel.newMessages + 1 );
+							if( ( ( ! foreground && panel.active ) || ! panel.active ) ) {
+								panel.updateNewMessageCount( panel.newMessages + 1 );
+								if( message.getAttribute( "highlighted" ) )
+									panel.updateHighlightMessageCount( panel.newHighlightMessages + 1 );
+							}
 						}
 						break;
 					case "event":
@@ -90,8 +94,6 @@ ChatController.checkActivity = function() {
 
 				if( activityCheckInterval ) clearInterval( activityCheckInterval );
 				activityCheckInterval = setInterval( ChatController.checkActivity, currentActivityCheckInterval );
-
-				$("timer").innerText = currentActivityCheckInterval / 1000 + " secs";
 			}
 		},
 		onFailure: function( transport ) {
@@ -116,7 +118,33 @@ function Panel( node ) {
 	this.listItem = $(document.createElement( "li" ));
 	this.listItem.className = "listItem";
 	this.listItem.addEventListener( "click", function( event ) { panel.show(); }, false );
-	this.listItem.appendChild( document.createTextNode( this.name ) );
+
+	var iconElement = $(document.createElement( "div" ));
+	iconElement.className = "icon";
+	this.listItem.appendChild( iconElement );
+
+	this.labelElement = $(document.createElement( "div" ));
+	this.labelElement.className = "label";
+	this.labelElement.appendChild( document.createTextNode( this.name ) );
+	this.listItem.appendChild( this.labelElement );
+
+	this.infoLabelElement = $(document.createElement( "div" ));
+	this.infoLabelElement.className = "info";
+	this.infoLabelElement.appendChild( document.createTextNode( this.server ) );
+	this.listItem.appendChild( this.infoLabelElement );
+
+	var waitingElement = $(document.createElement( "div" ));
+	waitingElement.className = "waiting";
+
+	this.highlightsElement = $(document.createElement( "div" ));
+	this.highlightsElement.className = "highlights";
+	waitingElement.appendChild( this.highlightsElement );
+
+	this.messagesElement = $(document.createElement( "div" ));
+	this.messagesElement.className = "messages";
+	waitingElement.appendChild( this.messagesElement );
+
+	this.listItem.appendChild( waitingElement );
 
 	this.frame = $(document.createElement( "iframe" ));
 	this.frame.className = "panel";
@@ -125,7 +153,7 @@ function Panel( node ) {
 		this.frame.style.setProperty( "visibility", "hidden", "" );
 
 	ChatController.panels.push( this );
-	$("panelList").appendChild( this.listItem );
+	$("sidebar").appendChild( this.listItem );
 	$("panels").appendChild( this.frame );
 
 	if( ChatController.panels.length == 1 )
@@ -260,28 +288,54 @@ DirectChatPanel.prototype.checkIfScrollToBottomIsNeeded = function() {
 }
 
 DirectChatPanel.prototype.updateNewMessageCount = function( messages ) {
-	if( ( ( ! foreground && this.active ) || ! this.active ) ) {
-		if( ! this.listItem.hasClassName( "newMessage" ) )
-			this.listItem.addClassName( "newMessage" );
-		this.newMessages = messages;
-		this.listItem.title = messages + " messages waiting";
+	this.newMessages = messages;
+
+	if( messages == 0 ) this.listItem.title = "No messages waiting";
+	else if( messages == 1 ) this.listItem.title = "1 message waiting";
+	else this.listItem.title = messages + " messages waiting";
+
+	this.messagesElement.removeClassName( "small" );
+	this.messagesElement.removeClassName( "medium" );
+	this.messagesElement.removeClassName( "large" );
+
+	if( messages > 0 && messages <= 9 ) {
+		if( ! this.messagesElement.hasClassName( "small" ) )
+			this.messagesElement.addClassName( "small" );
+	} else if( messages >= 10 && messages <= 99 ) {
+		if( ! this.messagesElement.hasClassName( "medium" ) )
+			this.messagesElement.addClassName( "medium" );
+	} else if( messages >= 100 ) {
+		if( ! this.messagesElement.hasClassName( "large" ) )
+			this.messagesElement.addClassName( "large" );
 	}
+
+	this.messagesElement.innerText = ( messages > 0 ? messages : "" );
 }
 
 DirectChatPanel.prototype.updateHighlightMessageCount = function( messages ) {
-	if( ( ( ! foreground && this.active ) || ! this.active ) ) {
-		if( ! this.listItem.hasClassName( "newHighlight" ) )
-			this.listItem.addClassName( "newHighlight" );
-		this.newHighlightMessages = messages;
+	this.newHighlightMessages = messages;
+
+	this.highlightsElement.removeClassName( "small" );
+	this.highlightsElement.removeClassName( "medium" );
+	this.highlightsElement.removeClassName( "large" );
+
+	if( messages > 0 && messages <= 9 ) {
+		if( ! this.highlightsElement.hasClassName( "small" ) )
+			this.highlightsElement.addClassName( "small" );
+	} else if( messages >= 10 && messages <= 99 ) {
+		if( ! this.highlightsElement.hasClassName( "medium" ) )
+			this.highlightsElement.addClassName( "medium" );
+	} else if( messages >= 100 ) {
+		if( ! this.highlightsElement.hasClassName( "large" ) )
+			this.highlightsElement.addClassName( "large" );
 	}
+
+	this.highlightsElement.innerText = ( messages > 0 ? messages : "" );
 }
 
 DirectChatPanel.prototype.focused = function() {
-	this.newMessages = 0;
-	this.newHighlightMessages = 0;
-	this.listItem.removeClassName( "newMessage" );
-	this.listItem.removeClassName( "newHighlight" );
-	this.listItem.title = "No messages waiting";
+	this.updateNewMessageCount( 0 );
+	this.updateHighlightMessageCount( 0 );
 }
 
 function ChatRoomPanel( node ) {
@@ -297,7 +351,7 @@ function ChatRoomPanel( node ) {
 	this.memberList = $(document.createElement( "ol" ));
 	this.memberList.className = "memberList";
 	this.memberList.style.setProperty( "display", "none", "" );
-	$("panelList").appendChild( this.memberList );
+	$("sidebar").appendChild( this.memberList );
 
 	var memberNodes = node.childNodes;
 	for( var i = 0; i < memberNodes.length; ++i ) {
@@ -317,7 +371,15 @@ function ChatRoomPanel( node ) {
 		member.listItem = $(document.createElement( "li" ));
 		member.listItem.title = member.hostmask;
 		member.listItem.className = "listItem member" + ( member.type ? " " + member.type : "" );
-		member.listItem.appendChild( document.createTextNode( member.name ) );
+
+		var iconElement = $(document.createElement( "div" ));
+		iconElement.className = "icon";
+		member.listItem.appendChild( iconElement );
+
+		member.labelElement = $(document.createElement( "div" ));
+		member.labelElement.className = "label";
+		member.labelElement.appendChild( document.createTextNode( member.name ) );
+		member.listItem.appendChild( member.labelElement );
 
 		this.memberList.appendChild( member.listItem );
 	}
