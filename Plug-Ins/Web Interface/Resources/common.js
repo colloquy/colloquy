@@ -17,6 +17,7 @@ var UserDefaults = {
 var activityCheckInterval = null;
 var currentActivityCheckInterval = ( UserDefaults.maximumActivityCheckInterval / 2 );
 var foreground = true;
+var finished = false;
 
 var ChatController = {
 	panels: new Array(),
@@ -402,6 +403,8 @@ ChatRoomPanel.prototype.close = function() {
 }
 
 window.addEventListener( "load", setup, false );
+window.addEventListener( "beforeunload", teardown, false );
+window.addEventListener( "unload", teardown, false );
 
 function setup() {
 	$("input").addEventListener( "keydown", inputKeyDown, false );
@@ -422,6 +425,18 @@ function setup() {
 			if( activityCheckInterval ) clearInterval( activityCheckInterval );
 			activityCheckInterval = setInterval( ChatController.checkActivity, currentActivityCheckInterval );
 		},
+		onException: function( transport, exception ) {
+			throw exception;
+		}
+	} );
+}
+
+function teardown() {
+	if( finished ) return;
+	finished = true;
+	new Ajax.Request( "/command/logout", {
+		method: "get",
+		asynchronous: false,
 		onException: function( transport, exception ) {
 			throw exception;
 		}

@@ -23,6 +23,10 @@ static NSString *JVWebInterfaceClientIdentifier = @"JVWebInterfaceClientIdentifi
 static void processCommand( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
+	static NSSet *threadSafeCommands = nil;
+	if( ! threadSafeCommands )
+		threadSafeCommands = [[NSSet alloc] initWithObjects:@"checkActivity", @"logout", nil];
+
 	JVWebInterfacePlugin *self = (JVWebInterfacePlugin *) server -> context;
 	NSURL *url = [NSURL URLWithString:[NSString stringWithUTF8String:req -> uri]];
 
@@ -50,17 +54,18 @@ static void processCommand( http_req_t *req, http_resp_t *resp, http_server_t *s
 	if( [command hasPrefix:@"/command/"] )
 		command = [command substringFromIndex:9];
 
-	command = [command stringByAppendingString:@"Command:"];
-	SEL selector = NSSelectorFromString( command );
-
 	char *ident = req -> get_cookie( req, "identifier" );
 	NSString *identifier = ( ident ? [NSString stringWithUTF8String:ident] : nil );
 	if( ident ) free( ident );
 
 	if( identifier ) [arguments setObject:identifier forKey:JVWebInterfaceClientIdentifier];
 
-	if( [self respondsToSelector:selector] )
-		[self performSelectorOnMainThread:selector withObject:arguments waitUntilDone:YES];
+	SEL selector = NSSelectorFromString( [command stringByAppendingString:@"Command:"] );
+	if( [self respondsToSelector:selector] ) {
+		if( [threadSafeCommands containsObject:command] )
+			[self performSelector:selector withObject:arguments];
+		else [self performSelectorOnMainThread:selector withObject:arguments waitUntilDone:YES];
+	}
 
 	resp -> write( resp, "", 0 );
 
@@ -339,7 +344,7 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	NSSet *chats = [[JVChatController defaultController] chatViewControllersKindOfClass:[JVDirectChatPanel class]];
 	NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 	NSEnumerator *enumerator = [chats objectEnumerator];
-	JVChatRoomPanel *panel = nil;
+	JVDirectChatPanel *panel = nil;
 
 	while( ( panel = [enumerator nextObject] ) ) {
 		NSXMLElement *chat = [NSXMLElement elementWithName:@"panel"];
@@ -356,7 +361,7 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 			JVChatRoomMember *member = nil;
 			while( ( member = [members nextObject] ) ) {
 				NSXMLElement *memberNode = [[NSXMLElement alloc] initWithXMLString:[member xmlDescription] error:NULL];
-				[chat addChild:memberNode];
+				if( memberNode ) [chat addChild:memberNode];
 				[memberNode release];
 			}
 		}
