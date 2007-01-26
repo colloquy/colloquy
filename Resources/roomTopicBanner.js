@@ -33,7 +33,7 @@ function changeTopic( topic, author, empty ) {
 	refreshTopicSize();
 }
 
-function refreshTopicSize() {
+function refreshTopicSize( event ) {
 	topicMessage = document.getElementById( 'topicMessage' );
 	if( topicMessage.clientHeight > 17 )
 		document.getElementById( 'toggleButton' ).style.setProperty( 'display', 'block', null );
@@ -46,4 +46,4 @@ function refreshTopicSize() {
 	}
 }
 
-window.addEventListener( 'resize', refreshTopicSize );
+window.addEventListener( 'resize', refreshTopicSize, false );

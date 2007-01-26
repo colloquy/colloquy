@@ -8,10 +8,12 @@
 	html {
 		height: 100%;
 		width: 100%;
+		overflow: hidden;
 	}
 
 	body {
 		display: table;
+		border: none;
 		border-spacing: 0;
 		margin: 0;
 		height: 100%;
@@ -25,20 +27,29 @@
 
 	.banner > * {
 		display: table-cell;
+		border: none;
 	}
 
 	.body {
 		display: table-row;
+		border: none;
 	}
 
 	.body > * {
 		display: table-cell;
+		border: none;
+		height: 100%;
+		width: 100%;
+	}
+
+	.body > * > iframe {
+		border: none;
 		height: 100%;
 		width: 100%;
 	}
 	</style>
 </head>
 <body>
-<div class="body"><iframe id="content"></iframe></div>
+<div class="body"><div><iframe id="content"></iframe></div></div>
 </body>
 </html>
