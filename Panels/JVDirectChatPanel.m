@@ -461,6 +461,13 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Ignore Notifications", "lists whether or not notifications are enabled for this conversation") action:@selector( toggleNotifications: ) keyEquivalent:@""];
+	[item setTarget:self];
+	[menu addItem:item];
+	[item release];
+	
+	[menu addItem:[NSMenuItem separatorItem]];
+
 	if( [[[self windowController] allChatViewControllers] count] > 1 ) {
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""];
 		[item setRepresentedObject:self];
@@ -482,6 +489,16 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[item release];
 
 	return [menu autorelease];
+}
+
+- (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
+	if( [menuItem action] == @selector( toggleNotifications: ) ) {
+		if( [[self preferenceForKey:@"muted"] boolValue] )
+			[menuItem setState:NSOnState];
+		else [menuItem setState:NSOffState];
+	}
+	
+	return YES;
 }
 
 - (NSImage *) icon {
@@ -829,7 +846,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[context setObject:[[self windowTitle] stringByAppendingString:@"JVChatMentioned"] forKey:@"coalesceKey"];
 		[context setObject:self forKey:@"target"];
 		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-		[[JVNotificationController defaultController] performNotification:@"JVChatMentioned" withContextInfo:context];
+		[self performNotification:@"JVChatMentioned" withContextInfo:context];
 	}
 
 	if( [cmessage ignoreStatus] != JVNotIgnored ) {
@@ -838,7 +855,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		if( [self isMemberOfClass:[JVChatRoomPanel class]] ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@'s message was ignored in %@.", "chat room user ignored bubble text" ), user, [self title]] forKey:@"description"];
 		else [context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@'s message was ignored.", "direct chat user ignored bubble text" ), user] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activity"] forKey:@"image"];
-		[[JVNotificationController defaultController] performNotification:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
+		[self performNotification:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? @"JVUserIgnored" : @"JVMessageIgnored" ) withContextInfo:context];
 	}
 
 	[display setScrollbackLimit:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"]];
@@ -888,7 +905,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 			[context setObject:[[self windowTitle] stringByAppendingString:@"JVChatPrivateMessage"] forKey:@"coalesceKey"];
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-			[[JVNotificationController defaultController] performNotification:@"JVChatFirstMessage" withContextInfo:context];
+			[self performNotification:@"JVChatFirstMessage" withContextInfo:context];
 		} else if( [message ignoreStatus] == JVNotIgnored ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:NSLocalizedString( @"Private Message", "new message bubble title" ) forKey:@"title"];
@@ -898,7 +915,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 			[context setObject:[[self windowTitle] stringByAppendingString:@"JVChatPrivateMessage"] forKey:@"coalesceKey"];
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
-			[[JVNotificationController defaultController] performNotification:@"JVChatAdditionalMessages" withContextInfo:context];
+			[self performNotification:@"JVChatAdditionalMessages" withContextInfo:context];
 		}
 	}
 
@@ -943,6 +960,28 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 - (JVMutableChatMessage *) currentMessage {
 	return _currentMessage;
+}
+
+#pragma mark -
+#pragma mark Notifications Handling
+
+/**
+ * This method should be used to handle all notification processing. It will check to see if
+ * notifications have been muted for the given chat room, and if they have, it will not pass
+ * the notification request on to the JVNotificationController.
+ */
+- (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context {
+	if( ![[self preferenceForKey:@"muted"] boolValue] )
+		[[JVNotificationController defaultController] performNotification:identifier withContextInfo:context];
+}
+
+/**
+ * Toggles notifications (this is for private, direct user-user chats)
+ */
+- (IBAction) toggleNotifications:(id) sender {
+	if( [self preferenceForKey:@"muted"] == [NSNumber numberWithBool:YES] )
+		[self setPreference:[NSNumber numberWithBool:NO] forKey:@"muted"];
+	else [self setPreference:[NSNumber numberWithBool:YES] forKey:@"muted"];
 }
 
 #pragma mark -
