@@ -383,6 +383,7 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	if( ! resp ) return;
 
 	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
+	if( ! identifier ) return;
 
 	@synchronized( _clients ) {
 		NSDictionary *info = [_clients objectForKey:identifier];
@@ -411,6 +412,7 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	if( ! resp ) return;
 
 	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
+	if( ! identifier ) return;
 
 	@synchronized( _clients ) {
 		[_clients removeObjectForKey:identifier];
@@ -464,6 +466,7 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	if( ! resp ) return;
 
 	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
+	if( ! identifier ) return;
 
 	@synchronized( _clients ) {
 		NSDictionary *info = [_clients objectForKey:identifier];
