@@ -271,27 +271,24 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 
 	if( success && [MVFileTransfer isAutoPortMappingEnabled] ) {
 		tr_msgInit();
+		tr_fdInit();
 
-		static tr_fd_t *fd = NULL;
-		if( ! fd ) fd = tr_fdInit();
-		if( fd ) {
-			_upnp = tr_upnpInit( fd );
-			tr_upnpStart( _upnp );
-			tr_upnpForwardPort( _upnp, port );
+		_upnp = tr_upnpInit();
+		tr_upnpStart( _upnp );
+		tr_upnpForwardPort( _upnp, port );
 
-			_natpmp = tr_natpmpInit( fd );
-			tr_natpmpStart( _natpmp );
-			tr_natpmpForwardPort( _natpmp, port );
+		_natpmp = tr_natpmpInit();
+		tr_natpmpStart( _natpmp );
+		tr_natpmpForwardPort( _natpmp, port );
 
-			NSDate *mappingStart = [NSDate date];
-			int status = 0;
+		NSDate *mappingStart = [NSDate date];
+		int status = 0;
 
-			do {
-				tr_upnpPulse( _upnp );
-				tr_natpmpPulse( _natpmp );
-				status = natTraversalStatus( _upnp, _natpmp );
-			} while( ( status == 1 || status == 3 ) && ABS( [mappingStart timeIntervalSinceNow] ) < 5. ); 
-		}
+		do {
+			tr_upnpPulse( _upnp );
+			tr_natpmpPulse( _natpmp );
+			status = natTraversalStatus( _upnp, _natpmp );
+		} while( ( status == 1 || status == 3 ) && ABS( [mappingStart timeIntervalSinceNow] ) < 5. ); 
 	}
 
 	if( success && [_delegate respondsToSelector:@selector( directClientConnection:acceptingConnectionsToHost:port: )] )

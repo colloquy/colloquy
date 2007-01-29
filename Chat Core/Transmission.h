@@ -23,13 +23,11 @@ DEALINGS IN THE SOFTWARE.
 void tr_msgInit( void );
 void tr_setMessageLevel( int level );
 
-typedef struct tr_fd_s tr_fd_t;
-
-tr_fd_t *tr_fdInit( void );
+void tr_fdInit( void );
 
 typedef struct tr_natpmp_s tr_natpmp_t; 
 
-tr_natpmp_t *tr_natpmpInit( tr_fd_t * );
+tr_natpmp_t *tr_natpmpInit( void );
 void tr_natpmpStart( tr_natpmp_t * );
 void tr_natpmpStop( tr_natpmp_t * );
 int tr_natpmpStatus( tr_natpmp_t * );
@@ -39,7 +37,7 @@ void tr_natpmpClose( tr_natpmp_t * );
 
 typedef struct tr_upnp_s tr_upnp_t; 
 
-tr_upnp_t *tr_upnpInit( tr_fd_t * );
+tr_upnp_t *tr_upnpInit( void );
 void tr_upnpStart( tr_upnp_t * );
 void tr_upnpStop( tr_upnp_t * );
 int tr_upnpStatus( tr_upnp_t * );
