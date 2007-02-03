@@ -314,7 +314,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSMutableAttributedString *subMsg = nil;
 	NSRange range;
 
-	if( ! [[self connection] isConnected] ) return;
+	if( [[self connection] status] != MVChatConnectionConnectingStatus && [[self connection] status] != MVChatConnectionConnectedStatus )
+		return;
 
 	[self resume];
 
