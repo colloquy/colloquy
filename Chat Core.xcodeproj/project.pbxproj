@@ -395,6 +395,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1C041DDE08553AD200A5A5BA /* Build configuration list for PBXProject "Chat Core" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -416,6 +417,7 @@
 			productRefGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
 			projectDirPath = "";
 			projectRoot = "";
+			shouldCheckCompatibility = 1;
 			targets = (
 				1C51B46E052DE0CB00BB459B /* Chat Core (Framework) */,
 			);

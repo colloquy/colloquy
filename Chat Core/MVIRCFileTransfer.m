@@ -263,7 +263,8 @@
 		else [[self user] sendSubcodeReply:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT SEND %@ 16843009 0 %llu %luT", [self originalFileName], [self finalSize], [self _passiveIdentifier]]];
 	} else {
 		NSString *address = [[self host] address];
-		if( [address rangeOfString:@"."].location != NSNotFound )
+		if( ! address ) address = @"16843009";
+		if( address && [address rangeOfString:@"."].location != NSNotFound )
 			address = [NSString stringWithFormat:@"%lu", ntohl( inet_addr( [address UTF8String] ) )];
 		if( _fileNameQuoted ) [[self user] sendSubcodeReply:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT SEND \"%@\" %@ %hu %llu T", [self originalFileName], address, [self port], [self finalSize]]];
 		else [[self user] sendSubcodeReply:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT SEND %@ %@ %hu %llu T", [self originalFileName], address, [self port], [self finalSize]]];
