@@ -9,12 +9,15 @@
 		<key>209</key>
 		<string>585 427 270 342 0 0 1440 878 </string>
 		<key>5</key>
-		<string>427 352 585 491 0 0 1440 878 </string>
+		<string>447 352 595 491 0 0 1440 878 </string>
 	</dict>
 	<key>IBFramework Version</key>
 	<string>446.1</string>
 	<key>IBLockedObjects</key>
-	<array/>
+	<array>
+		<integer>5</integer>
+		<integer>6</integer>
+	</array>
 	<key>IBOpenObjects</key>
 	<array>
 		<integer>5</integer>
