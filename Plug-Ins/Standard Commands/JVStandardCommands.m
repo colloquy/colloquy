@@ -259,7 +259,7 @@
 		}
 	}
 
-	if( ! [command caseInsensitiveCompare:@"msg"] || ! [command caseInsensitiveCompare:@"omsg"] || ! [command caseInsensitiveCompare:@"query"] ) {
+	if( ! [command caseInsensitiveCompare:@"msg"] || ! [command caseInsensitiveCompare:@"query"] ) {
 		return [self handleMessageCommand:command withMessage:arguments forConnection:connection alwaysShow:( isChatRoom || isDirectChat )];
 	} else if( ! [command caseInsensitiveCompare:@"amsg"] || ! [command caseInsensitiveCompare:@"ame"] || ! [command caseInsensitiveCompare:@"broadcast"] || ! [command caseInsensitiveCompare:@"bract"] ) {
 		return [self handleMassMessageCommand:command withMessage:arguments forConnection:connection];
@@ -353,12 +353,13 @@
 		[connection sendRawMessage:[NSString stringWithFormat:@"%@ :%@", command, [arguments string]]];
 		return YES;
 	} else if( ( ! [command caseInsensitiveCompare:@"notice"] || ! [command caseInsensitiveCompare:@"onotice"] ) && [connection type] == MVChatConnectionIRCType ) {
+        NSString *targetPrefix = nil;
+        NSString *target = nil;
+        NSString *message = nil;
         NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
         NSMutableCharacterSet *prefixes = [[connection chatRoomNamePrefixes] mutableCopy];
 		[prefixes addCharactersInString:@"@"];
 
-        NSString *target = nil;
-        NSString *targetPrefix = nil;
 		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 		if( [scanner scanCharactersFromSet:prefixes intoString:&targetPrefix] || ! isChatRoom ) {
 			[scanner scanUpToCharactersFromSet:whitespace intoString:&target];
@@ -368,25 +369,17 @@
 				target = [(MVChatRoom *)[room target] name];
 			else [scanner scanUpToCharactersFromSet:whitespace intoString:&target];
 		}
-
 		[prefixes release];
 
 		[scanner scanCharactersFromSet:whitespace intoString:NULL];
-
-        NSAttributedString *message = nil;
-		if( [arguments length] >= [scanner scanLocation] ) {
-			[scanner setScanLocation:[scanner scanLocation]];
-			message = [arguments attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], [arguments length] - [scanner scanLocation] )];
-		}
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"\n"] intoString:&message];
 
 		if( ! [target length] || ! [message length] ) return YES;
 
 		if( ! [command caseInsensitiveCompare:@"onotice"] && ! [target hasPrefix:@"@"] )
 			target = [@"@" stringByAppendingString:[connection properNameForChatRoomNamed:target]];
 
-		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"NOTICE %@ :", target];
-		[connection sendRawMessageWithComponents:prefix, message, nil];
-		[prefix release];
+		[connection sendRawMessage:[NSString stringWithFormat:@"NOTICE %@ :%@", target, message]];
 
 		NSCharacterSet *chanSet = [connection chatRoomNamePrefixes];
 		JVDirectChatPanel *chatView = nil;
@@ -540,12 +533,11 @@
 	NSScanner *scanner = [NSScanner scannerWithString:[message string]];
 
 	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&to];
-	[scanner scanCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:NULL];
 
 	if( ! [to length] ) return NO;
 
-	if( [message length] >= [scanner scanLocation] ) {
-		[scanner setScanLocation:[scanner scanLocation]];
+	if( [message length] >= [scanner scanLocation] + 1 ) {
+		[scanner setScanLocation:[scanner scanLocation] + 1];
 		msg = [message attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], [message length] - [scanner scanLocation] )];
 	}
 
@@ -558,13 +550,8 @@
 	JVDirectChatPanel *chatView = nil;
 
 	// this is an IRC specific command for sending to room operators only.
-	if( [connection type] == MVChatConnectionIRCType && ( ( [to hasPrefix:@"@"] && [to length] > 1 ) || ! [command caseInsensitiveCompare:@"omsg"] ) ) {
-		if( ! [command caseInsensitiveCompare:@"omsg"] && ! [to hasPrefix:@"@"] )
-			to = [@"@" stringByAppendingString:[connection properNameForChatRoomNamed:to]];
-
-		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@ :", to];
-		[connection sendRawMessageWithComponents:prefix, msg, nil];
-		[prefix release];
+	if( [connection type] == MVChatConnectionIRCType && [to hasPrefix:@"@"] && [to length] > 1 ) {
+		[connection sendRawMessage:[NSString stringWithFormat:@"PRIVMSG %@ :%@", to, [msg string]]];
 
 		to = [to substringFromIndex:1];
 
