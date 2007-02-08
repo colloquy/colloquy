@@ -2118,7 +2118,7 @@ end:
 					BOOL enabled = ( ( value & enabledHighBit ) ? YES : NO );
 					unsigned long mode = ( value & ~enabledHighBit );
 
-					if( mode == MVChatRoomMemberOperatorMode || mode == MVChatRoomMemberHalfOperatorMode || mode == MVChatRoomMemberVoicedMode ) {
+					if( mode == MVChatRoomMemberFounderMode || mode == MVChatRoomMemberAdministratorMode || mode == MVChatRoomMemberOperatorMode || mode == MVChatRoomMemberHalfOperatorMode || mode == MVChatRoomMemberVoicedMode ) {
 						MVChatUser *member = [self chatUserWithUniqueIdentifier:param];
 						if( enabled ) [room _setMode:mode forMemberUser:member];
 						else [room _removeMode:mode forMemberUser:member];

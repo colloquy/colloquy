@@ -419,14 +419,14 @@
 		[item release];
 	}
 
-	if( ( ( localUserIsAdministrator || localUserIsFounder ) && (localUserIsAdministrator && ! [self roomFounder]) ) && ( [features containsObject:MVChatRoomMemberAdministratorFeature] ) ) {
+	if( ( ( localUserIsAdministrator || localUserIsFounder ) && ( (localUserIsAdministrator && ! [self roomFounder]) || localUserIsFounder ) ) && ( [features containsObject:MVChatRoomMemberAdministratorFeature] ) ) {
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Administrator", "administrator contextual menu - admin only") action:@selector( toggleAdministratorStatus: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
 		[item release];
 	}
 
-	if( ( localUserIsOperator || localUserIsAdministrator || localUserIsFounder ) && ( (localUserIsOperator && ! ([self roomAdministrator] || [self roomFounder])) || (localUserIsAdministrator && ! [self roomFounder]) ) ) {
+	if( ( localUserIsOperator || localUserIsAdministrator || localUserIsFounder ) && ( (localUserIsOperator && ! ([self roomAdministrator] || [self roomFounder])) || (localUserIsAdministrator && ! [self roomFounder]) || localUserIsFounder ) ) {
 		if( [features containsObject:MVChatRoomMemberOperatorFeature] ) {
 			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Operator", "operator contextual menu - admin only") action:@selector( toggleOperatorStatus: ) keyEquivalent:@""];
 			[item setTarget:self];
@@ -443,7 +443,7 @@
 	}
 
 	if( localUserIsHalfOperator || localUserIsOperator || localUserIsAdministrator || localUserIsFounder ) {
-		if( [features containsObject:MVChatRoomMemberVoicedFeature] && ( (localUserIsHalfOperator && ! ([self operator] || [self roomAdministrator] || [self roomFounder]) ) || (localUserIsOperator && ! ([self roomAdministrator] || [self roomFounder])) || (localUserIsAdministrator && ! [self roomFounder]) ) ) {
+		if( [features containsObject:MVChatRoomMemberVoicedFeature] && ( (localUserIsHalfOperator && ! ([self operator] || [self roomAdministrator] || [self roomFounder]) ) || (localUserIsOperator && ! ([self roomAdministrator] || [self roomFounder])) || (localUserIsAdministrator && ! [self roomFounder]) || localUserIsFounder ) ) {
 			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Voice", "voice contextual menu - admin only") action:@selector( toggleVoiceStatus: ) keyEquivalent:@""];
 			[item setTarget:self];
 			[menu addItem:item];
@@ -490,6 +490,18 @@
 		} else {
 			[menuItem setState:NSOffState];
 		}
+	} else if( [menuItem action] == @selector( toggleAdministratorStatus: ) ) {
+		if( [self roomAdministrator] ) {
+			[menuItem setState:NSOnState];
+		} else {
+			[menuItem setState:NSOffState];
+		}
+	} else if( [menuItem action] == @selector( toggleFounderStatus: ) ) {
+		if( [self roomFounder] ) {
+			[menuItem setState:NSOnState];
+		} else {
+			[menuItem setState:NSOffState];
+		}
 	}
 	return YES;
 }
@@ -532,12 +544,12 @@
 #pragma mark Operator Actions
 
 - (IBAction) toggleFounderStatus:(id) sender {
-	if( [self founder] ) [[_room target] removeMode:MVChatRoomMemberFounderMode forMemberUser:_user];
+	if( [self roomFounder] ) [[_room target] removeMode:MVChatRoomMemberFounderMode forMemberUser:_user];
 	else [[_room target] setMode:MVChatRoomMemberFounderMode forMemberUser:_user];
 }
 
 - (IBAction) toggleAdministratorStatus:(id) sender {
-	if( [self administrator] ) [[_room target] removeMode:MVChatRoomMemberAdministratorMode forMemberUser:_user];
+	if( [self roomAdministrator] ) [[_room target] removeMode:MVChatRoomMemberAdministratorMode forMemberUser:_user];
 	else [[_room target] setMode:MVChatRoomMemberAdministratorMode forMemberUser:_user];
 }
 
