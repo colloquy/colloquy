@@ -23,6 +23,8 @@
 	unsigned long supported = ( MVChatRoomMemberVoicedMode | MVChatRoomMemberOperatorMode );
 	supported |= MVChatRoomMemberQuietedMode; // optional later
 	supported |= MVChatRoomMemberHalfOperatorMode; // optional later
+	supported |= MVChatRoomMemberAdministratorMode; // optional later
+	supported |= MVChatRoomMemberFounderMode; // optional later
 	return supported;
 }
 
@@ -152,6 +154,12 @@
 	[super setMode:mode forMemberUser:user];
 
 	switch( mode ) {
+	case MVChatRoomMemberFounderMode:
+		[[self connection] sendRawMessageWithFormat:@"MODE %@ +q %@", [self name], [user nickname]];
+		break;
+	case MVChatRoomMemberAdministratorMode:
+		[[self connection] sendRawMessageWithFormat:@"MODE %@ +a %@", [self name], [user nickname]];
+		break;
 	case MVChatRoomMemberOperatorMode:
 		[[self connection] sendRawMessageWithFormat:@"MODE %@ +o %@", [self name], [user nickname]];
 		break;
@@ -172,6 +180,12 @@
 	[super removeMode:mode forMemberUser:user];
 
 	switch( mode ) {
+	case MVChatRoomMemberFounderMode:
+		[[self connection] sendRawMessageWithFormat:@"MODE %@ -q %@", [self name], [user nickname]];
+		break;
+	case MVChatRoomMemberAdministratorMode:
+		[[self connection] sendRawMessageWithFormat:@"MODE %@ -a %@", [self name], [user nickname]];
+		break;
 	case MVChatRoomMemberOperatorMode:
 		[[self connection] sendRawMessageWithFormat:@"MODE %@ -o %@", [self name], [user nickname]];
 		break;
