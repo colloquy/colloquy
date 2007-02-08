@@ -412,6 +412,20 @@
 
 	NSSet *features = [[self connection] supportedFeatures];
 
+	if( ( localUserIsFounder ) && ( [features containsObject:MVChatRoomMemberFounderFeature] ) ) {
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Founder", "founder contextual menu - admin only") action:@selector( toggleFounderStatus: ) keyEquivalent:@""];
+		[item setTarget:self];
+		[menu addItem:item];
+		[item release];
+	}
+
+	if( ( ( localUserIsAdministrator || localUserIsFounder ) && (localUserIsAdministrator && ! [self roomFounder]) ) && ( [features containsObject:MVChatRoomMemberAdministratorFeature] ) ) {
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Administrator", "administrator contextual menu - admin only") action:@selector( toggleAdministratorStatus: ) keyEquivalent:@""];
+		[item setTarget:self];
+		[menu addItem:item];
+		[item release];
+	}
+
 	if( ( localUserIsOperator || localUserIsAdministrator || localUserIsFounder ) && ( (localUserIsOperator && ! ([self roomAdministrator] || [self roomFounder])) || (localUserIsAdministrator && ! [self roomFounder]) ) ) {
 		if( [features containsObject:MVChatRoomMemberOperatorFeature] ) {
 			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Operator", "operator contextual menu - admin only") action:@selector( toggleOperatorStatus: ) keyEquivalent:@""];
@@ -517,38 +531,34 @@
 #pragma mark -
 #pragma mark Operator Actions
 
+- (IBAction) toggleFounderStatus:(id) sender {
+	if( [self founder] ) [[_room target] removeMode:MVChatRoomMemberFounderMode forMemberUser:_user];
+	else [[_room target] setMode:MVChatRoomMemberFounderMode forMemberUser:_user];
+}
+
+- (IBAction) toggleAdministratorStatus:(id) sender {
+	if( [self administrator] ) [[_room target] removeMode:MVChatRoomMemberAdministratorMode forMemberUser:_user];
+	else [[_room target] setMode:MVChatRoomMemberAdministratorMode forMemberUser:_user];
+}
+
 - (IBAction) toggleOperatorStatus:(id) sender {
 	if( [self operator] ) [[_room target] removeMode:MVChatRoomMemberOperatorMode forMemberUser:_user];
-	else {
-		[[_room target] setMode:MVChatRoomMemberOperatorMode forMemberUser:_user];
-		if( [self halfOperator] ) [[_room target] removeMode:MVChatRoomMemberHalfOperatorMode forMemberUser:_user];
-		if( [self voice] ) [[_room target] removeMode:MVChatRoomMemberVoicedMode forMemberUser:_user];
-	}
+	else [[_room target] setMode:MVChatRoomMemberOperatorMode forMemberUser:_user];
 }
 
 - (IBAction) toggleHalfOperatorStatus:(id) sender {
 	if( [self halfOperator] ) [[_room target] removeMode:MVChatRoomMemberHalfOperatorMode forMemberUser:_user];
-	else { 
-		[[_room target] setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:_user];
-		if( [self operator] ) [[_room target] removeMode:MVChatRoomMemberOperatorMode forMemberUser:_user];
-		if( [self voice] ) [[_room target] removeMode:MVChatRoomMemberVoicedMode forMemberUser:_user];
-	}
+	else [[_room target] setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:_user];
 }
 
 - (IBAction) toggleVoiceStatus:(id) sender {
 	if( [self voice] ) [[_room target] removeMode:MVChatRoomMemberVoicedMode forMemberUser:_user];
-	else {
-		[[_room target] setMode:MVChatRoomMemberVoicedMode forMemberUser:_user];
-		if( [self operator] ) [[_room target] removeMode:MVChatRoomMemberOperatorMode forMemberUser:_user];
-		if( [self halfOperator] ) [[_room target] removeMode:MVChatRoomMemberHalfOperatorMode forMemberUser:_user];
-	}
+	else [[_room target] setMode:MVChatRoomMemberVoicedMode forMemberUser:_user];
 }
 
 - (IBAction) toggleQuietedStatus:(id) sender {
 	if( [self quieted] ) [[_room target] removeMode:MVChatRoomMemberQuietedMode forMemberUser:_user];
-	else {
-		[[_room target] setMode:MVChatRoomMemberQuietedMode forMemberUser:_user];
-	}
+	else [[_room target] setMode:MVChatRoomMemberQuietedMode forMemberUser:_user];
 }
 
 #pragma mark -

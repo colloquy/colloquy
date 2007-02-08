@@ -174,7 +174,7 @@
 		<key>soundPath</key>
 		<string>Whip.aiff</string>
 	</dict>
-	<key>JVNotificationSettings JVChatMemberPromoted</key>
+	<key>JVNotificationSettings JVChatMemberPromotedOperator</key>
 	<dict>
 		<key>playSound</key>
 		<true/>

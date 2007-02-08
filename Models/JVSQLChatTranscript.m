@@ -657,6 +657,7 @@ static void _printSQL( void *context, const char *sql ) {
 		senderHostmask = [member hostmask];
 		if( [member serverOperator] ) senderClass = @"server operator";
 		else if( [member roomFounder] ) senderClass = @"room founder";
+		else if( [member roomAdministrator] ) senderClass = @"room administrator";
 		else if( [member operator] ) senderClass = @"operator";
 		else if( [member halfOperator] ) senderClass = @"half operator";
 		else if( [member voice] ) senderClass = @"voice";

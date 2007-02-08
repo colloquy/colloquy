@@ -64,13 +64,25 @@
 	</dict>
 	<dict>
 		<key>identifier</key>
-		<string>JVChatMemberPromoted</string>
+		<string>JVChatMemberPromotedAdministrator</string>
+		<key>title</key>
+		<string>Member Promoted to Administrator</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatMemberDemotedAdministrator</string>
+		<key>title</key>
+		<string>Member Demoted from Administrator</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVChatMemberPromotedOperator</string>
 		<key>title</key>
 		<string>Member Promoted to Operator</string>
 	</dict>
 	<dict>
 		<key>identifier</key>
-		<string>JVChatMemberDemoted</string>
+		<string>JVChatMemberDemotedOperator</string>
 		<key>title</key>
 		<string>Member Demoted from Operator</string>
 	</dict>

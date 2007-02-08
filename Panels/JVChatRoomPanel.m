@@ -1140,7 +1140,7 @@
 	// sort again if needed
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] )
 		[self resortMembers];
-
+		
 	MVChatUser *user = [[notification userInfo] objectForKey:@"who"];
 	MVChatUser *byUser = [[notification userInfo] objectForKey:@"by"];
 
@@ -1183,9 +1183,41 @@
 		} else {
 			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from room founder by <span class=\"member\">%@</span>.", "user is no longer a chat room founder status message" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] )];
 		}
+	} else if( mode == MVChatRoomMemberAdministratorMode && enabled ) {
+		name = @"memberPromotedToAdministrator";
+		notificationKey = @"JVChatMemberPromotedAdministrator";
+		title = NSLocalizedString( @"New Room Administrator", "room administrator promoted title" );
+		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was promoted to administrator by %@ in %@.", "bubble message member administrator promotion string" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] ), [self title]];
+		if( [mbr isLocalUser] && [byMbr isLocalUser] ) { // only server oppers would ever see this
+			message = NSLocalizedString( @"You promoted yourself to Administrator.", "we gave ourself the chat room administrator privilege status message" );
+			name = @"promotedToAdministrator";
+		} else if( [mbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"You were promoted to administrator by <span class=\"member\">%@</span>.", "we are now a chat room administrator status message" ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+			name = @"promotedToAdministrator";
+		} else if( [byMbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to administrator by you.", "we gave user chat room administrator status message" ), ( mbr ? [mbr title] : [user nickname] )];
+		} else {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was promoted to administrator by <span class=\"member\">%@</span>.", "user is now a chat room administrator status message" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+		}
+	} else if( mode == MVChatRoomMemberAdministratorMode && ! enabled ) {
+		name = @"memberDemotedFromAdministrator";
+		notificationKey = @"JVChatMemberDemotedAdministrator";
+		title = NSLocalizedString( @"Room Administrator Demoted", "room administrator demoted title" );
+		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was demoted from administrator by %@ in %@.", "bubble message member administrator demotion string" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] ), [self title]];
+		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
+			message = NSLocalizedString( @"You demoted yourself from administrator.", "we removed our chat room administrator privilege status message" );
+			name = @"demotedFromAdministrator";
+		} else if( [mbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"You were demoted from administrator by <span class=\"member\">%@</span>.", "we are no longer a chat room administrator status message" ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+			name = @"demotedFromAdministrator";
+		} else if( [byMbr isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from administrator by you.", "we removed user's chat room administrator status message" ), ( mbr ? [mbr title] : [user nickname] )];
+		} else {
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was demoted from administrator by <span class=\"member\">%@</span>.", "user is no longer a chat room administrator status message" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] )];
+		}
 	} else if( mode == MVChatRoomMemberOperatorMode && enabled ) {
 		name = @"memberPromotedToOperator";
-		notificationKey = @"JVChatMemberPromoted";
+		notificationKey = @"JVChatMemberPromotedOperator";
 		title = NSLocalizedString( @"New Room Operator", "member promoted title" );
 		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was promoted to operator by %@ in %@.", "bubble message member operator promotion string" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] ), [self title]];
 		if( [mbr isLocalUser] && [byMbr isLocalUser] ) { // only server oppers would ever see this
@@ -1201,7 +1233,7 @@
 		}
 	} else if( mode == MVChatRoomMemberOperatorMode && ! enabled ) {
 		name = @"memberDemotedFromOperator";
-		notificationKey = @"JVChatMemberDemoted";
+		notificationKey = @"JVChatMemberDemotedOperator";
 		title = NSLocalizedString( @"Room Operator Demoted", "room operator demoted title" );
 		description = [NSString stringWithFormat:NSLocalizedString( @"%@ was demoted from operator by %@ in %@.", "bubble message member operator demotion string" ), ( mbr ? [mbr title] : [user nickname] ), ( byMbr ? [byMbr title] : [byUser nickname] ), [self title]];
 		if( [mbr isLocalUser] && [byMbr isLocalUser] ) {
