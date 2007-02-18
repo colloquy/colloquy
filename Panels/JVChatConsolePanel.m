@@ -22,6 +22,8 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		_verbose = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatVerboseConsoleMessages"];
 		_ignorePRIVMSG = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatConsolePanelIgnoreUserChatMessages"];
 
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotImportantMessage: ) name:MVChatConnectionGotImportantMessageNotification object:connection];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotInformationalMessage: ) name:MVChatConnectionGotInformationalMessageNotification object:connection];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotRawMessage: ) name:MVChatConnectionGotRawMessageNotification object:connection];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( clearConsole: ) name:MVChatConnectionWillConnectNotification object:connection];
 
@@ -646,6 +648,16 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 @implementation JVChatConsolePanel (JVChatConsolePanelPrivate)
+- (void) _gotImportantMessage:(NSNotification *) notification {
+	if( _paused ) return;
+	[self addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] asOutboundMessage:NO];
+}
+
+- (void) _gotInformationalMessage:(NSNotification *) notification {
+	if( _paused ) return;
+	[self addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] asOutboundMessage:NO];
+}
+
 - (void) _gotRawMessage:(NSNotification *) notification {
 	if( _paused ) return;
 	[self addMessageToDisplay:[[notification userInfo] objectForKey:@"message"] asOutboundMessage:[[[notification userInfo] objectForKey:@"outbound"] boolValue]];

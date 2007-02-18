@@ -637,7 +637,14 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (void) _errorOccurred:(NSNotification *) notification {
 	NSError *error = [[notification userInfo] objectForKey:@"error"];
-	if( [error code] == MVChatConnectionNoSuchUserError ) {
+	if( [error code] == MVChatConnectionErroneusNicknameError ) {
+		NSString *nickname = [[error userInfo] objectForKey:@"nickname"];
+		NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+		[alert setMessageText:NSLocalizedString( @"Connection error", "connection error alert dialog title" )];
+		[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"Could not connect to server because the requested nickname (%@) was unavailable or invalid.", "connection error alert dialog message" ), nickname]];
+		[alert setAlertStyle:NSInformationalAlertStyle];
+		[alert runModal];
+	} else if( [error code] == MVChatConnectionNoSuchUserError ) {
 		MVChatUser *user = [[error userInfo] objectForKey:@"user"];
 		JVDirectChatPanel *panel = [self chatViewControllerForUser:user ifExists:YES];
 		if( ! panel || ( panel && [[panel windowController] activeChatViewController] != panel ) ) {
@@ -647,6 +654,13 @@ static NSMenu *smartTranscriptMenu = nil;
 			[alert setAlertStyle:NSInformationalAlertStyle];
 			[alert runModal];
 		}
+	} else if( [error code] == MVChatConnectionProtocolError ) {
+		NSString *reason = [[error userInfo] objectForKey:@"reason"];
+		NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+		[alert setMessageText:[NSString stringWithFormat:NSLocalizedString( @"Chat protocol error", "malformed packet alert dialog title" )]];
+		[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"Client got a malformed packet: %@", "malformd packet alert dialog message" ), reason]];
+		[alert setAlertStyle:NSInformationalAlertStyle];
+		[alert runModal];
 	}
 }
 

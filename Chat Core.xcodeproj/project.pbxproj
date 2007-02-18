@@ -65,6 +65,14 @@
 		1CF6B82D07122670008ABEFA /* MVSILCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5A230806FA4F2700A51F10 /* MVSILCChatConnection.m */; };
 		1CF6B82E07122672008ABEFA /* MVSILCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF6B4970710894D008ABEFA /* MVSILCChatRoom.m */; };
 		1CF6B82F07122673008ABEFA /* MVSILCChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF6B4990710894D008ABEFA /* MVSILCChatUser.m */; };
+		322F54D10B53F6730023AE39 /* ICBPacket.h in Headers */ = {isa = PBXBuildFile; fileRef = 322F54CF0B53F6730023AE39 /* ICBPacket.h */; };
+		322F54D20B53F6730023AE39 /* ICBPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 322F54D00B53F6730023AE39 /* ICBPacket.m */; };
+		325F167E0B39A22C008C627B /* MVICBChatConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 325F167C0B39A22C008C627B /* MVICBChatConnection.h */; };
+		325F167F0B39A22C008C627B /* MVICBChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 325F167D0B39A22C008C627B /* MVICBChatConnection.m */; };
+		3272C2C90B3DA84900DF650E /* MVICBChatRoom.h in Headers */ = {isa = PBXBuildFile; fileRef = 3272C2C70B3DA84900DF650E /* MVICBChatRoom.h */; };
+		3272C2CA0B3DA84900DF650E /* MVICBChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 3272C2C80B3DA84900DF650E /* MVICBChatRoom.m */; };
+		32C46E1A0B3AB37E00B96B27 /* MVICBChatUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 32C46E180B3AB37E00B96B27 /* MVICBChatUser.h */; };
+		32C46E1B0B3AB37E00B96B27 /* MVICBChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 32C46E190B3AB37E00B96B27 /* MVICBChatUser.m */; };
 		431261C3072EE37A00720AD1 /* MVSILCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */; };
 /* End PBXBuildFile section */
 
@@ -142,6 +150,14 @@
 		1CF6B4970710894D008ABEFA /* MVSILCChatRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVSILCChatRoom.m; path = "Chat Core/MVSILCChatRoom.m"; sourceTree = "<group>"; };
 		1CF6B4980710894D008ABEFA /* MVSILCChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVSILCChatUser.h; path = "Chat Core/MVSILCChatUser.h"; sourceTree = "<group>"; };
 		1CF6B4990710894D008ABEFA /* MVSILCChatUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVSILCChatUser.m; path = "Chat Core/MVSILCChatUser.m"; sourceTree = "<group>"; };
+		322F54CF0B53F6730023AE39 /* ICBPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ICBPacket.h; path = "Chat Core/ICBPacket.h"; sourceTree = "<group>"; };
+		322F54D00B53F6730023AE39 /* ICBPacket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ICBPacket.m; path = "Chat Core/ICBPacket.m"; sourceTree = "<group>"; };
+		325F167C0B39A22C008C627B /* MVICBChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVICBChatConnection.h; path = "Chat Core/MVICBChatConnection.h"; sourceTree = "<group>"; };
+		325F167D0B39A22C008C627B /* MVICBChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVICBChatConnection.m; path = "Chat Core/MVICBChatConnection.m"; sourceTree = "<group>"; };
+		3272C2C70B3DA84900DF650E /* MVICBChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVICBChatRoom.h; path = "Chat Core/MVICBChatRoom.h"; sourceTree = "<group>"; };
+		3272C2C80B3DA84900DF650E /* MVICBChatRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVICBChatRoom.m; path = "Chat Core/MVICBChatRoom.m"; sourceTree = "<group>"; };
+		32C46E180B3AB37E00B96B27 /* MVICBChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVICBChatUser.h; path = "Chat Core/MVICBChatUser.h"; sourceTree = "<group>"; };
+		32C46E190B3AB37E00B96B27 /* MVICBChatUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVICBChatUser.m; path = "Chat Core/MVICBChatUser.m"; sourceTree = "<group>"; };
 		431261C0072EE37A00720AD1 /* MVSILCFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = MVSILCFileTransfer.h; path = "Chat Core/MVSILCFileTransfer.h"; sourceTree = "<group>"; };
 		431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MVSILCFileTransfer.m; path = "Chat Core/MVSILCFileTransfer.m"; sourceTree = "<group>"; };
 		F52D043001873FC401EE70DE /* MVChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatConnection.m; path = "Chat Core/MVChatConnection.m"; sourceTree = "<group>"; };
@@ -260,9 +276,25 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		32C46E1F0B3AB3BC00B96B27 /* ICB Support */ = {
+			isa = PBXGroup;
+			children = (
+				322F54CF0B53F6730023AE39 /* ICBPacket.h */,
+				322F54D00B53F6730023AE39 /* ICBPacket.m */,
+				325F167C0B39A22C008C627B /* MVICBChatConnection.h */,
+				325F167D0B39A22C008C627B /* MVICBChatConnection.m */,
+				3272C2C70B3DA84900DF650E /* MVICBChatRoom.h */,
+				3272C2C80B3DA84900DF650E /* MVICBChatRoom.m */,
+				32C46E180B3AB37E00B96B27 /* MVICBChatUser.h */,
+				32C46E190B3AB37E00B96B27 /* MVICBChatUser.m */,
+			);
+			name = "ICB Support";
+			sourceTree = "<group>";
+		};
 		F50B0A9F0170C89301A84BDE /* Sources & Headers */ = {
 			isa = PBXGroup;
 			children = (
+				32C46E1F0B3AB3BC00B96B27 /* ICB Support */,
 				1C5CBF2D06FF92C90006C5B1 /* IRC Support */,
 				1C5CBF3006FF93550006C5B1 /* SILC Support */,
 				1C63E9EC086E59D700A40DD4 /* ChatCore.h */,
@@ -363,6 +395,10 @@
 				1C8AAEFE09D69F2700CF29EB /* MVChatUserWatchRule.h in Headers */,
 				1C3560060B4CCE95008A93FA /* MVUtilities.h in Headers */,
 				1C5A491E0B50B7C000BC8CAD /* MVDirectChatConnection.h in Headers */,
+				325F167E0B39A22C008C627B /* MVICBChatConnection.h in Headers */,
+				32C46E1A0B3AB37E00B96B27 /* MVICBChatUser.h in Headers */,
+				3272C2C90B3DA84900DF650E /* MVICBChatRoom.h in Headers */,
+				322F54D10B53F6730023AE39 /* ICBPacket.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -489,6 +525,10 @@
 				1C8AAEFF09D69F2700CF29EB /* MVChatUserWatchRule.m in Sources */,
 				1C0FE8AB0B4F647D00855B9C /* MVDirectClientConnection.m in Sources */,
 				1C9C133A0B50A7AC005F9F28 /* MVDirectChatConnection.m in Sources */,
+				325F167F0B39A22C008C627B /* MVICBChatConnection.m in Sources */,
+				32C46E1B0B3AB37E00B96B27 /* MVICBChatUser.m in Sources */,
+				3272C2CA0B3DA84900DF650E /* MVICBChatRoom.m in Sources */,
+				322F54D20B53F6730023AE39 /* ICBPacket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

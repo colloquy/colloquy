@@ -108,6 +108,25 @@ static NSMenu *favoritesMenu = nil;
 
 #pragma mark -
 
+- (MVChatConnectionType) newTypeToConnectionType {
+	MVChatConnectionType type;
+	switch( [[newType selectedItem] tag] ) {
+	case 0:
+		type = MVChatConnectionICBType;
+		break;
+	case 1:
+		type = MVChatConnectionIRCType;
+		break;
+	case 2:
+		type = MVChatConnectionSILCType;
+		break;
+	default:
+		NSAssert(NO, @"Unsupported tag type\n");
+		type = nil;
+	}
+	return type;
+}
+
 - (id) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:@"MVConnections"] ) ) {
 		_bookmarks = nil;
@@ -274,7 +293,7 @@ static NSMenu *favoritesMenu = nil;
 
 	[newServerPassword setObjectValue:@""];
 
-	MVChatConnectionType type = ( [[newType selectedItem] tag] == 1 ? MVChatConnectionIRCType : MVChatConnectionSILCType );
+	MVChatConnectionType type = [self newTypeToConnectionType];
 	if( [[MVChatConnection defaultServerPortsForType:type] count] )
 		[newPort setObjectValue:[[MVChatConnection defaultServerPortsForType:type] objectAtIndex:0]];
 
@@ -283,13 +302,16 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (IBAction) changeNewConnectionProtocol:(id) sender {
-	MVChatConnectionType type = ( [[newType selectedItem] tag] == 1 ? MVChatConnectionIRCType : MVChatConnectionSILCType );
+	MVChatConnectionType type = [self newTypeToConnectionType];
 
 	[newPort reloadData];
 	if( [[MVChatConnection defaultServerPortsForType:type] count] )
 		[newPort setObjectValue:[[MVChatConnection defaultServerPortsForType:type] objectAtIndex:0]];
 
-	if( type == MVChatConnectionIRCType ) {
+	if( type == MVChatConnectionICBType ) {
+		[sslConnection setEnabled:NO];
+		[newProxy setEnabled:NO];
+	} else if( type == MVChatConnectionIRCType ) {
 		[sslConnection setEnabled:YES];
 		[newProxy setEnabled:YES];
 	} else if( type == MVChatConnectionSILCType ) {
@@ -396,7 +418,7 @@ static NSMenu *favoritesMenu = nil;
 
 	[openConnection orderOut:nil];
 
-	MVChatConnectionType type = ( [[newType selectedItem] tag] == 1 ? MVChatConnectionIRCType : MVChatConnectionSILCType );
+	MVChatConnectionType type = [self newTypeToConnectionType];
 
 	MVChatConnection *connection = [[[MVChatConnection alloc] initWithType:type] autorelease];
 	[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
@@ -1294,7 +1316,7 @@ static NSMenu *favoritesMenu = nil;
 	if( comboBox == newAddress ) {
 		return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] count];
 	} else if( comboBox == newPort ) {
-		MVChatConnectionType type = ( [[newType selectedItem] tag] == 1 ? MVChatConnectionIRCType : MVChatConnectionSILCType );
+		MVChatConnectionType type = [self newTypeToConnectionType];
 		return [[MVChatConnection defaultServerPortsForType:type] count];
 	}
 
@@ -1305,7 +1327,7 @@ static NSMenu *favoritesMenu = nil;
 	if( comboBox == newAddress ) {
 		return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] objectAtIndex:index];
 	} else if( comboBox == newPort ) {
-		MVChatConnectionType type = ( [[newType selectedItem] tag] == 1 ? MVChatConnectionIRCType : MVChatConnectionSILCType );
+		MVChatConnectionType type = [self newTypeToConnectionType];
 		return [[MVChatConnection defaultServerPortsForType:type] objectAtIndex:index];
 	}
 
@@ -1613,7 +1635,20 @@ static NSMenu *favoritesMenu = nil;
 		info = [NSMutableDictionary dictionaryWithDictionary:info];
 
 		MVChatConnection *connection = nil;
-		MVChatConnectionType type = ( ! [(NSString *)[info objectForKey:@"type"] length] ? MVChatConnectionIRCType : ( [[info objectForKey:@"type"] isEqualToString:@"irc"] ? MVChatConnectionIRCType : ( [[info objectForKey:@"type"] isEqualToString:@"silc"] ? MVChatConnectionSILCType : MVChatConnectionIRCType ) ) );
+
+		MVChatConnectionType type;
+		if( ! [(NSString *)[info objectForKey:@"type"] length] )
+		    type = MVChatConnectionIRCType;
+		else {
+			if( [[info objectForKey:@"type"] isEqualToString:@"icb"] )
+				type = MVChatConnectionICBType;
+			else if( [[info objectForKey:@"type"] isEqualToString:@"irc"] )
+				type = MVChatConnectionIRCType;
+		    else if( [[info objectForKey:@"type"] isEqualToString:@"silc"] )
+		        type = MVChatConnectionSILCType;
+			else
+				type = MVChatConnectionIRCType;
+		}
 
 		if( [info objectForKey:@"url"] ) {
 			connection = [[[MVChatConnection alloc] initWithURL:[NSURL URLWithString:[info objectForKey:@"url"]]] autorelease];

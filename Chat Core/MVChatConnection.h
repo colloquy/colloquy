@@ -1,4 +1,5 @@
 typedef enum {
+	MVChatConnectionICBType = 'icbC',
 	MVChatConnectionIRCType = 'ircC',
 	MVChatConnectionSILCType = 'silC'
 } MVChatConnectionType;
@@ -45,7 +46,8 @@ typedef enum {
 	MVChatConnectionUnknownCommandError = -11,
 	MVChatConnectionErroneusNicknameError = -12,
 	MVChatConnectionBannedFromServerError = -13,
-	MVChatConnectionServerPasswordIncorrectError = -14
+	MVChatConnectionServerPasswordIncorrectError = -14,
+	MVChatConnectionProtocolError = -15
 } MVChatConnectionError;
 
 @class MVChatRoom;
@@ -65,6 +67,8 @@ extern NSString *MVChatConnectionNeedCertificatePasswordNotification;
 extern NSString *MVChatConnectionNeedPublicKeyVerificationNotification;
 
 extern NSString *MVChatConnectionGotBeepNotification;
+extern NSString *MVChatConnectionGotImportantMessageNotification;
+extern NSString *MVChatConnectionGotInformationalMessageNotification;
 extern NSString *MVChatConnectionGotRawMessageNotification;
 extern NSString *MVChatConnectionGotPrivateMessageNotification;
 extern NSString *MVChatConnectionChatRoomListUpdatedNotification;

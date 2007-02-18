@@ -3,6 +3,7 @@
 #import "MVChatRoomPrivate.h"
 #import "MVChatUser.h"
 #import "MVChatUserPrivate.h"
+#import "MVICBChatConnection.h"
 #import "MVIRCChatConnection.h"
 #import "MVSILCChatConnection.h"
 #import "MVFileTransfer.h"
@@ -27,6 +28,8 @@ NSString *MVChatConnectionNeedCertificatePasswordNotification = @"MVChatConnecti
 NSString *MVChatConnectionNeedPublicKeyVerificationNotification = @"MVChatConnectionNeedPublicKeyVerificationNotification";
 
 NSString *MVChatConnectionGotBeepNotification = @"MVChatConnectionGotBeepNotification";
+NSString *MVChatConnectionGotImportantMessageNotification = @"MVChatConnectionGotInformationalMessageNotification";
+NSString *MVChatConnectionGotInformationalMessageNotification = @"MVChatConnectionGotInformationalMessageNotification";
 NSString *MVChatConnectionGotRawMessageNotification = @"MVChatConnectionGotRawMessageNotification";
 NSString *MVChatConnectionGotPrivateMessageNotification = @"MVChatConnectionGotPrivateMessageNotification";
 NSString *MVChatConnectionChatRoomListUpdatedNotification = @"MVChatConnectionChatRoomListUpdatedNotification";
@@ -53,11 +56,12 @@ static const NSStringEncoding supportedEncodings[] = {
 @implementation MVChatConnection
 + (BOOL) supportsURLScheme:(NSString *) scheme {
 	if( ! scheme ) return NO;
-	return ( [scheme isEqualToString:@"irc"] || [scheme isEqualToString:@"silc"] );
+	return ( [scheme isEqualToString:@"icb"] || [scheme isEqualToString:@"irc"] || [scheme isEqualToString:@"silc"] );
 }
 
 + (NSArray *) defaultServerPortsForType:(MVChatConnectionType) type {
-	if( type == MVChatConnectionIRCType ) return [MVIRCChatConnection defaultServerPorts];
+	if( type == MVChatConnectionICBType ) return [MVICBChatConnection defaultServerPorts];
+	else if( type == MVChatConnectionIRCType ) return [MVIRCChatConnection defaultServerPorts];
 	else if( type == MVChatConnectionSILCType ) return [MVSILCChatConnection defaultServerPorts];
 	return nil;
 }
@@ -95,7 +99,9 @@ static const NSStringEncoding supportedEncodings[] = {
 - (id) initWithType:(MVChatConnectionType) connectionType {
 	[self release];
 
-	if( connectionType == MVChatConnectionIRCType ) {
+	if( connectionType == MVChatConnectionICBType ) {
+		self = [[MVICBChatConnection allocWithZone:nil] init];
+	} else if( connectionType == MVChatConnectionIRCType ) {
 		self = [[MVIRCChatConnection allocWithZone:nil] init];
 	} else if ( connectionType == MVChatConnectionSILCType ) {
 		self = [[MVSILCChatConnection allocWithZone:nil] init];
@@ -108,7 +114,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	NSParameterAssert( [MVChatConnection supportsURLScheme:[serverURL scheme]] );
 
 	int connectionType = 0;
-	if( [[serverURL scheme] isEqualToString:@"irc"] ) connectionType = MVChatConnectionIRCType;
+	if( [[serverURL scheme] isEqualToString:@"icb"] ) connectionType = MVChatConnectionICBType;
+	else if( [[serverURL scheme] isEqualToString:@"irc"] ) connectionType = MVChatConnectionIRCType;
 	else if( [[serverURL scheme] isEqualToString:@"silc"] ) connectionType = MVChatConnectionSILCType;
 
 	if( ( self = [self initWithServer:[serverURL host] type:connectionType port:( [[serverURL port] unsignedIntValue] % 65536 ) user:[serverURL user]] ) ) {
