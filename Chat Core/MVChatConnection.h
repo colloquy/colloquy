@@ -406,6 +406,9 @@ extern NSString *MVChatConnectionErrorDomain;
 #pragma mark -
 
 @interface NSObject (MVChatPluginConnectionSupport)
+- (void) processIncomingMessageAsData:(NSMutableData *) message from:(MVChatUser *) sender to:(id) receiver isNotice:(BOOL) notice;
+- (void) processOutgoingMessageAsData:(NSMutableData *) message to:(id) receiver;
+
 - (BOOL) processSubcodeRequest:(NSString *) command withArguments:(NSData *) arguments fromUser:(MVChatUser *) user;
 - (BOOL) processSubcodeReply:(NSString *) command withArguments:(NSData *) arguments fromUser:(MVChatUser *) user;
 

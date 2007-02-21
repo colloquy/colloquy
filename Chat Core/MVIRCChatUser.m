@@ -43,7 +43,7 @@
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
-	[[self connection] _sendMessage:message withEncoding:encoding toTarget:[self nickname] asAction:action];
+	[[self connection] _sendMessage:message withEncoding:encoding toTarget:self asAction:action];
 }
 
 - (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments {

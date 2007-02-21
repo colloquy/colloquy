@@ -55,7 +55,7 @@
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) msgEncoding asAction:(BOOL) action {
 	NSParameterAssert( message != nil );
-	[[self connection] _sendMessage:message withEncoding:msgEncoding toTarget:[self name] asAction:action];
+	[[self connection] _sendMessage:message withEncoding:msgEncoding toTarget:self asAction:action];
 }
 
 #pragma mark -
