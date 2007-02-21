@@ -264,26 +264,16 @@
 - (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
 
-	NSString *uniqueIdentfier = [identifier lowercaseString];
-	if( [uniqueIdentfier isEqualToString:[_room uniqueIdentifier]] )
-		return _room;
-
-	if( ! _knownRooms )
-		_knownRooms = [[NSMutableDictionary alloc] initWithCapacity:200];
-
-	MVChatRoom *room = nil;
-	@synchronized( _knownRooms ) {
-		room = [_knownRooms objectForKey:uniqueIdentfier];
-		if( room )
-			return room;
-
-		room = [[MVICBChatRoom alloc] initWithName:identifier
-									  andConnection:self];
-		if( room )
-			[_knownRooms setObject:room forKey:uniqueIdentfier];
+	MVChatRoom *room;
+	@synchronized( _joinedRooms ) {
+		room = [self joinedChatRoomWithName:identifier];
+		if( !room ) {
+			room = [[MVICBChatRoom alloc] initWithName:identifier
+										  andConnection:self];
+			[self _addJoinedRoom:room];
+		}
 	}
-
-	return [room autorelease];
+	return room;
 }
 
 - (void) fetchChatRoomList {
