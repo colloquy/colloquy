@@ -69,8 +69,11 @@
 				0A61C80307E05F7200C326B4 /* Localizable.strings */,
 				8D5B49B7048680CD000E48DA /* Info.plist */,
 			);
+			indentWidth = 4;
 			name = Resources;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		08FB77AFFE84173DC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
@@ -80,8 +83,11 @@
 				1C4FD36607C6BC25000EA451 /* JVRubyPluginLoader.m */,
 				1C4FD36507C6BC25000EA451 /* JVRubyPluginLoader.h */,
 			);
+			indentWidth = 4;
 			name = Classes;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
@@ -114,8 +120,11 @@
 			children = (
 				1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */,
 			);
+			indentWidth = 4;
 			name = Configurations;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 /* End PBXGroup section */
 

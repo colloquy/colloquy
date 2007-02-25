@@ -22,7 +22,7 @@
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		0A61C7FF07E05F6000C326B4 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		1C415F750B35144900239EB3 /* Template.fscript */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Template.fscript; path = "../SDK/F-Script/Template.fscript"; sourceTree = SOURCE_ROOT; };
+		1C415F750B35144900239EB3 /* Template.fscript */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = text; name = Template.fscript; path = "../SDK/F-Script/Template.fscript"; sourceTree = SOURCE_ROOT; tabWidth = 4; usesTabs = 1; };
 		1C4FD32907C6B9F5000EA451 /* FScript.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FScript.framework; path = /Library/Frameworks/FScript.framework; sourceTree = "<absolute>"; };
 		1C4FD36507C6BC25000EA451 /* JVFScriptPluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVFScriptPluginLoader.h; sourceTree = "<group>"; };
 		1C4FD36607C6BC25000EA451 /* JVFScriptPluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVFScriptPluginLoader.m; sourceTree = "<group>"; };
@@ -81,8 +81,11 @@
 				1CE3FB5407C7DFD50049A366 /* F-ScriptConsole.nib */,
 				8D5B49B7048680CD000E48DA /* Info.plist */,
 			);
+			indentWidth = 4;
 			name = Resources;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		08FB77AFFE84173DC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
@@ -94,8 +97,11 @@
 				1C4FD36607C6BC25000EA451 /* JVFScriptPluginLoader.m */,
 				1C4FD36507C6BC25000EA451 /* JVFScriptPluginLoader.h */,
 			);
+			indentWidth = 4;
 			name = Classes;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
@@ -128,8 +134,11 @@
 			children = (
 				1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */,
 			);
+			indentWidth = 4;
 			name = Configurations;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 /* End PBXGroup section */
 

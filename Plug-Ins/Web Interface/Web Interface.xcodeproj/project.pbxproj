@@ -141,8 +141,11 @@
 				1CD02E470B66C75400957AF0 /* messagesNormalSmall.png */,
 				1CD02E480B66C75400957AF0 /* rowHighlight.png */,
 			);
+			indentWidth = 4;
 			path = Resources;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		08FB77AFFE84173DC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
@@ -150,8 +153,11 @@
 				1C36998208FF75A200F34892 /* JVWebInterfacePlugin.m */,
 				1C36998108FF75A200F34892 /* JVWebInterfacePlugin.h */,
 			);
+			indentWidth = 4;
 			name = Classes;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
@@ -202,16 +208,22 @@
 			children = (
 				1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */,
 			);
+			indentWidth = 4;
 			name = Configurations;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		32C88E010371C26100C91783 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
 				1C3699AC08FF765600F34892 /* NanoHTTPD */,
 			);
+			indentWidth = 4;
 			name = "Other Sources";
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 /* End PBXGroup section */
 

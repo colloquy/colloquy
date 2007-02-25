@@ -1205,16 +1205,22 @@
 			children = (
 				1C59A91F09FDEBA3000682B8 /* JVChatWindowControllerTests.m */,
 			);
+			indentWidth = 4;
 			name = "Unit Tests";
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		1C6A13E608666DDC009EE6D2 /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
 				1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */,
 			);
+			indentWidth = 4;
 			name = Configurations;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		1C710AB009F23D84007B4515 /* Sidebar Interface Images */ = {
 			isa = PBXGroup;
@@ -1571,8 +1577,11 @@
 				1CC478470427BB2C00000102 /* Plug–Ins */,
 				CBF684F00820174000F498FB /* Metadata Importer */,
 			);
+			indentWidth = 4;
 			name = "Sources & Headers";
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		F50B0AA00170C89301A84BDE /* Other Sources & Additions */ = {
 			isa = PBXGroup;
@@ -1591,8 +1600,11 @@
 				1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */,
 				1C4671E306D7759100071DC6 /* NSTextStorageAdditions.h */,
 			);
+			indentWidth = 4;
 			name = "Other Sources & Additions";
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		F50B0AA10170C89301A84BDE /* Resources */ = {
 			isa = PBXGroup;
@@ -1645,8 +1657,11 @@
 				F5C3D42203973E7B01000102 /* Widget Images */,
 				F52955590181EB5901EE70DE /* Misc. Icons */,
 			);
+			indentWidth = 4;
 			name = Resources;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		F5185C82018626F701EE70DE /* Interfaces */ = {
 			isa = PBXGroup;

@@ -23,7 +23,7 @@
 		1C0A13F308B0374800324E25 /* JVPythonChatPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVPythonChatPlugin.h; sourceTree = "<group>"; };
 		1C0A13F408B0374800324E25 /* JVPythonChatPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVPythonChatPlugin.m; sourceTree = "<group>"; };
 		1C0A141508B0380800324E25 /* pyobjc-api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "pyobjc-api.h"; sourceTree = "<group>"; };
-		1C415F690B35122700239EB3 /* Template.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = Template.py; path = ../SDK/Python/Template.py; sourceTree = SOURCE_ROOT; };
+		1C415F690B35122700239EB3 /* Template.py */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = text.script.python; name = Template.py; path = ../SDK/Python/Template.py; sourceTree = SOURCE_ROOT; tabWidth = 4; usesTabs = 1; };
 		1C4FD36507C6BC25000EA451 /* JVPythonPluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVPythonPluginLoader.h; sourceTree = SOURCE_ROOT; };
 		1C4FD36607C6BC25000EA451 /* JVPythonPluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVPythonPluginLoader.m; sourceTree = SOURCE_ROOT; };
 		1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
@@ -74,8 +74,11 @@
 				0A61C80307E05F7200C326B4 /* Localizable.strings */,
 				8D5B49B7048680CD000E48DA /* Info.plist */,
 			);
+			indentWidth = 4;
 			name = Resources;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		08FB77AFFE84173DC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
@@ -85,8 +88,11 @@
 				1C4FD36607C6BC25000EA451 /* JVPythonPluginLoader.m */,
 				1C4FD36507C6BC25000EA451 /* JVPythonPluginLoader.h */,
 			);
+			indentWidth = 4;
 			name = Classes;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
@@ -119,16 +125,22 @@
 			children = (
 				1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */,
 			);
+			indentWidth = 4;
 			name = Configurations;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		32C88E010371C26100C91783 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
 				1C0A141508B0380800324E25 /* pyobjc-api.h */,
 			);
+			indentWidth = 4;
 			name = "Other Sources";
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 /* End PBXGroup section */
 

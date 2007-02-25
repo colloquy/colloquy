@@ -265,8 +265,11 @@
 			children = (
 				1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */,
 			);
+			indentWidth = 4;
 			name = Configurations;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		1CB2C8CC052DDA360094AAA4 /* Products */ = {
 			isa = PBXGroup;
@@ -325,8 +328,11 @@
 				1CD6290C096118B900BD1DD2 /* InterThreadMessaging.h */,
 				1C1168CC0B45FA4700F57D2C /* Transmission.h */,
 			);
+			indentWidth = 4;
 			name = "Sources & Headers";
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		F50B0AA00170C89301A84BDE /* Other Sources & Additions */ = {
 			isa = PBXGroup;
@@ -351,8 +357,11 @@
 				1C7C776707DBBA4500FB5F83 /* NSScriptCommandAdditions.h */,
 				1C3560050B4CCE95008A93FA /* MVUtilities.h */,
 			);
+			indentWidth = 4;
 			name = "Other Sources & Additions";
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 		F50B0AA10170C89301A84BDE /* Resources */ = {
 			isa = PBXGroup;
@@ -363,8 +372,11 @@
 				1CCA517F0598AFBA00F0A4CD /* ChatCore.scriptTerminology */,
 				1C8AA4B609D60B1100CF29EB /* Chat Core.exp */,
 			);
+			indentWidth = 4;
 			name = Resources;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 1;
 		};
 /* End PBXGroup section */
 
