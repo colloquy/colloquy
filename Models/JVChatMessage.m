@@ -96,6 +96,7 @@
 		ret -> _highlighted = [self isHighlighted];
 		ret -> _ignoreStatus = [self ignoreStatus];
 		ret -> _type = [self type];
+		ret -> _attributes = [[self attributes] copyWithZone:zone];
 	}
 
 	return ret;
@@ -107,6 +108,7 @@
 	[_date release];
 	[_source release];
 	[_objectSpecifier release];
+	[_attributes release];
 
 	[_senderIdentifier release];
 	[_senderName release];
@@ -324,6 +326,21 @@
 	id old = _objectSpecifier;
 	_objectSpecifier = [objectSpecifier retain];
 	[old release];
+}
+
+#pragma mark -
+
+- (NSDictionary *) attributes {
+	// Add important attributes which are set via normal setters, and therefore don't exist normally in the attributes-dict.
+	if( ! _attributes )
+		_attributes = [[NSMutableDictionary alloc] init];
+	[_attributes setObject:[NSNumber numberWithBool:_action] forKey:@"action"];
+
+	return _attributes;
+}
+
+- (id) attributeForKey:(id) key {
+	return [_attributes objectForKey:key];
 }
 
 #pragma mark -
@@ -554,6 +571,24 @@
 	id old = _messageIdentifier;
 	_messageIdentifier = [identifier copyWithZone:[self zone]];
 	[old release];
+}
+
+- (NSMutableDictionary *) attributes {
+	// This depends on the implementation of JVChatMessage using an NSMutableDictionary for its attributes, and actually returning a mutable version of it.
+	return (NSMutableDictionary *)[super attributes];
+}
+
+- (void) setAttributes:(NSDictionary *) attributes {
+	[self _setNode:NULL];
+	id old = _attributes;
+	_attributes = [attributes mutableCopyWithZone:[self zone]];
+	[old release];
+}
+
+- (void) setAttribute:(id) object forKey:(id) key {
+	if( ! _attributes )
+		_attributes = [[NSMutableDictionary alloc] init];
+	[_attributes setObject:object forKey:key];
 }
 
 #pragma mark -

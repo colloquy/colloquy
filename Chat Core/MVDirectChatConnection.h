@@ -57,4 +57,5 @@ typedef enum {
 - (MVChatMessageFormat) outgoingChatFormat;
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
+- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *)attributes;
 @end

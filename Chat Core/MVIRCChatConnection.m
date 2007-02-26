@@ -930,16 +930,17 @@ end:
 	return [message chatFormatWithOptions:options];
 }
 
-- (void) _sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) msgEncoding toTarget:(id) target asAction:(BOOL) action {
+- (void) _sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) msgEncoding toTarget:(id) target withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( [target isKindOfClass:[MVChatUser class]] || [target isKindOfClass:[MVChatRoom class]] );
 
 	NSMutableData *msg = [[[self class] _flattenedIRCDataForMessage:message withEncoding:msgEncoding andChatFormat:[self outgoingChatFormat]] mutableCopyWithZone:nil];
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( id ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( id ), @encode( NSDictionary * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-	[invocation setSelector:@selector( processOutgoingMessageAsData:to: )];
+	[invocation setSelector:@selector( processOutgoingMessageAsData:to:attributes: )];
 	[invocation setArgument:&msg atIndex:2];
 	[invocation setArgument:&target atIndex:3];
+	[invocation setArgument:&attributes atIndex:4];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( ! [msg length] ) {
@@ -949,7 +950,7 @@ end:
 
 	NSString *targetName = [target isKindOfClass:[MVChatRoom class]] ? [target name] : [target nickname];
 
-	if( action ) {
+	if( [[attributes objectForKey:@"action"] boolValue] ) {
 		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@ :\001ACTION ", targetName];
 		[self sendRawMessageWithComponents:prefix, msg, @"\001", nil];
 		[prefix release];
@@ -1462,23 +1463,24 @@ end:
 	MVChatRoom *room = [privmsgInfo objectForKey:@"room"];
 	MVChatUser *sender = [privmsgInfo objectForKey:@"user"];
 	NSMutableData *message = [privmsgInfo objectForKey:@"message"];
-	BOOL isNotice = NO;
+	NSMutableDictionary *msgAttributes = [privmsgInfo mutableCopyWithZone:nil];
+	[msgAttributes setObject:[NSNumber numberWithBool:NO] forKey:@"notice"];
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatUser * ), @encode( id ), @encode( BOOL ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatUser * ), @encode( id ), @encode( NSMutableDictionary * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-	[invocation setSelector:@selector( processIncomingMessageAsData:from:to:isNotice: )];
+	[invocation setSelector:@selector( processIncomingMessageAsData:from:to:attributes: )];
 	[invocation setArgument:&message atIndex:2];
 	[invocation setArgument:&sender atIndex:3];
 	[invocation setArgument:&room atIndex:4];
-	[invocation setArgument:&isNotice atIndex:5];
+	[invocation setArgument:&msgAttributes atIndex:5];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( ! [message length] ) return;
 
 	if( room ) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:privmsgInfo];
+		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:msgAttributes];
 	} else {
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:privmsgInfo];
+		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:msgAttributes];
 	}
 }
 
@@ -1530,23 +1532,24 @@ end:
 	MVChatRoom *room = [noticeInfo objectForKey:@"room"];
 	MVChatUser *sender = [noticeInfo objectForKey:@"user"];
 	NSMutableData *message = [noticeInfo objectForKey:@"message"];
-	BOOL isNotice = YES;
+	NSMutableDictionary *msgAttributes = [noticeInfo mutableCopyWithZone:nil];
+	[msgAttributes setObject:[NSNumber numberWithBool:YES] forKey:@"notice"];
 
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatUser * ), @encode( id ), @encode( BOOL ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatUser * ), @encode( id ), @encode( NSMutableDictionary * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-	[invocation setSelector:@selector( processIncomingMessageAsData:from:to:isNotice: )];
+	[invocation setSelector:@selector( processIncomingMessageAsData:from:to:attributes: )];
 	[invocation setArgument:&message atIndex:2];
 	[invocation setArgument:&sender atIndex:3];
 	[invocation setArgument:&room atIndex:4];
-	[invocation setArgument:&isNotice atIndex:5];
+	[invocation setArgument:&msgAttributes atIndex:5];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( ! [message length] ) return;
 
 	if( room ) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:noticeInfo];
+		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:msgAttributes];
 	} else {
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:noticeInfo];
+		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:msgAttributes];
 
 		if( [[sender nickname] isEqualToString:@"NickServ"] ) {
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];

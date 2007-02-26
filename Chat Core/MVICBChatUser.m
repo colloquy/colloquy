@@ -69,7 +69,7 @@
 
 - (void) sendMessage:(NSAttributedString *) message
          withEncoding:(NSStringEncoding) encoding
-		 asAction:(BOOL) action {
+		 withAttributes:(NSDictionary *) attributes {
 	[(MVICBChatConnection *)_connection ctsCommandPersonal:_nickname withMessage:[message string]];
 }
 

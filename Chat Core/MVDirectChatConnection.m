@@ -159,6 +159,10 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 }
 
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
+	[self sendMessage:message withEncoding:encoding withAttributes:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:action] forKey:@"action"]];
+}
+
+- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *)attributes {
 	NSParameterAssert( message != nil );
 
 	if( [self status] != MVDirectChatConnectionConnectedStatus )
@@ -182,7 +186,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:encoding], @"StringEncoding", cformat, @"FormatType", nil];
 	NSData *msg = [message chatFormatWithOptions:options];
 
-	if( action ) {
+	if( [[attributes objectForKey:@"action"] boolValue] ) {
 		NSMutableData *newMsg = [[NSMutableData allocWithZone:nil] initWithCapacity:[msg length] + 11];
 		[newMsg appendBytes:"\001ACTION " length:8];
 		[newMsg appendData:msg];

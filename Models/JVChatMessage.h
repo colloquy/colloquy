@@ -33,6 +33,7 @@ typedef enum _JVChatMessageType {
 	BOOL _loaded;
 	BOOL _bodyLoaded;
 	BOOL _senderLoaded;
+	NSMutableDictionary *_attributes;
 }
 - (/* xmlNode */ void *) node;
 
@@ -63,6 +64,9 @@ typedef enum _JVChatMessageType {
 
 - (NSScriptObjectSpecifier *) objectSpecifier;
 - (void) setObjectSpecifier:(NSScriptObjectSpecifier *) objectSpecifier;
+
+- (NSDictionary *) attributes;
+- (id) attributeForKey:(id) key;
 @end
 
 @interface JVMutableChatMessage : JVChatMessage {
@@ -88,4 +92,8 @@ typedef enum _JVChatMessageType {
 
 - (void) setSource:(NSURL *) source;
 - (void) setMessageIdentifier:(NSString *) identifier;
+
+- (NSMutableDictionary *) attributes;
+- (void) setAttributes:(NSDictionary *) attributes;
+- (void) setAttribute:(id) object forKey:(id) key;
 @end

@@ -45,5 +45,5 @@
 - (void) partWithReason:(NSAttributedString *) reason;
 - (void) setTopic:(NSAttributedString *) newTopic;
 - (void) sendMessage:(NSAttributedString *) message
-         withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
+         withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes;
 @end

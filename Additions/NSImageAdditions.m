@@ -85,7 +85,7 @@
 		if( [object isKindOfClass:[NSBitmapImageRep class]] )
 			imageRep = object;
 
-	if ( ! imageRep ) {
+	if( ! imageRep ) {
 		imageRep = [NSBitmapImageRep imageRepWithData:[self TIFFRepresentation]];
 		if( imageRep ) [self addRepresentation:imageRep];
 	}

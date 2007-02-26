@@ -41,9 +41,9 @@
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
+- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( message != nil );
-	[[self connection] _sendMessage:message withEncoding:encoding toTarget:self asAction:action];
+	[[self connection] _sendMessage:message withEncoding:encoding toTarget:self withAttributes:attributes];
 }
 
 - (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments {

@@ -60,7 +60,7 @@
 }
 
 - (void) sendMessage:(NSAttributedString *) message
-         withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
+         withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
 	if( [_memberUsers count] > 1 )
 		[(MVICBChatConnection *)_connection ctsOpenPacket:[message string]];
 }

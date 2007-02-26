@@ -740,7 +740,12 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[self _refreshWindowFileProxy];
 }
 
-- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier andType:(JVChatMessageType) type {
+- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier andType:(JVChatMessageType) type;
+{
+	[self addMessageToDisplay:message fromUser:user withAttributes:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:action] forKey:@"action"] withIdentifier:identifier andType:type];
+}
+
+- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user withAttributes:(NSDictionary *) msgAttributes withIdentifier:(NSString *) identifier andType:(JVChatMessageType) type {
 	if( ! _nibLoaded ) [self view];
 
 	NSParameterAssert( message != nil );
@@ -769,7 +774,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:messageString sender:user];
 	[cmessage setMessageIdentifier:identifier];
-	[cmessage setAction:action];
+	[cmessage setAttributes:msgAttributes];
+	[cmessage setAction:[[msgAttributes objectForKey:@"action"] boolValue]];
 	[cmessage setType:type];
 
 	messageString = [cmessage body]; // just incase
@@ -947,7 +953,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[self encoding]], @"StringEncoding", cformat, @"FormatType", nil];
 	NSData *msgData = [[message body] chatFormatWithOptions:options]; // we could save this back to the message object before sending
-	[self addMessageToDisplay:msgData fromUser:[message sender] asAction:[message isAction] withIdentifier:[message messageIdentifier] andType:[message type]];
+	[self addMessageToDisplay:msgData fromUser:[message sender] withAttributes:[message attributes] withIdentifier:[message messageIdentifier] andType:[message type]];
 }
 
 - (unsigned int) newMessagesWaiting {
@@ -1088,7 +1094,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[self _setCurrentMessage:nil];
 
 	if( [[message body] length] )
-		[[self target] sendMessage:[message body] withEncoding:_encoding asAction:[message isAction]];
+		[[self target] sendMessage:[message body] withEncoding:_encoding withAttributes:[message attributes]];
 }
 
 - (BOOL) processUserCommand:(NSString *) command withArguments:(NSAttributedString *) arguments {
@@ -1148,7 +1154,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		ret = NO;
 	} else if( ( [event modifierFlags] & NSAlternateKeyMask ) != 0 ) {
 		ret = NO;
-	} else if ( ([event modifierFlags] & NSControlKeyMask) != 0 ) {
+	} else if( ([event modifierFlags] & NSControlKeyMask) != 0 ) {
 		[self send:[NSNumber numberWithBool:YES]];
 		ret = YES;
 	} else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatSendOnReturn"] ) {

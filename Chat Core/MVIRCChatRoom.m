@@ -53,9 +53,9 @@
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) msgEncoding asAction:(BOOL) action {
+- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) msgEncoding withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( message != nil );
-	[[self connection] _sendMessage:message withEncoding:msgEncoding toTarget:self asAction:action];
+	[[self connection] _sendMessage:message withEncoding:msgEncoding toTarget:self withAttributes:attributes];
 }
 
 #pragma mark -
