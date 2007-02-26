@@ -45,6 +45,7 @@
 #import "AsyncSocket.h"
 #import "ICBPacket.h"
 #import "InterThreadMessaging.h"
+#import "MVUtilities.h"
 #import "NSStringAdditions.h"
 #import "NSNotificationAdditions.h"
 
@@ -63,6 +64,8 @@
 - (void) _joinChatRoomNamed:(NSString *) name
 		 withPassphrase:(NSString *) passphrase
 	     alreadyJoined:(BOOL) joined;
+- (void) _updateKnownUser:(MVChatUser *) user
+         withNewNickname:(NSString *) newNickname;
 @end
 
 #pragma mark -
@@ -140,13 +143,11 @@
 	NSParameterAssert( [newNickname length] > 0 );
 
 	if( ! [newNickname isEqualToString:_nickname] ) {
-		id old = _nickname;
-		_nickname = [newNickname copyWithZone:nil];
-		[old release];
-
 		if( [self isConnected] )
 			[self performSelector:@selector( ctsCommandName: )
-			      withObject:_nickname inThread:_connectionThread];
+			      withObject:newNickname inThread:_connectionThread];
+		else
+			MVSafeCopyAssign( &_nickname, newNickname );
 	}
 }
 
@@ -237,8 +238,20 @@
 
 - (void) sendRawMessage:(id) raw immediately:(BOOL) now {
 	NSParameterAssert( raw );
-	NSParameterAssert( [raw isKindOfClass:[NSData class]] ||
-	                   [raw isKindOfClass:[NSString class]] );
+	
+	// XXX Colloquy assumes in multiple places that sendRawMessage can
+	// take a plain string and send it to the server as a valid message.
+	// This is not the case for ICB, nor it is a proper abstraction
+	// because different protocols need not share the same protocol syntax.
+	// We simply discard such messages at the moment until the code in
+	// the upper layers is "corrected".
+	if( [raw isKindOfClass:[NSString class]] ) {
+		NSLog(@"MVICBChatConnection: sendRawMessage ignored message %@",
+		      raw);
+		return;
+	}
+
+	NSParameterAssert( [raw isKindOfClass:[NSData class]] );
 
 	if( now ) {
 		if( _connectionThread )
@@ -546,6 +559,20 @@
 		     object:oldroom];
 			 [oldroom release];
 		}
+	}
+}
+
+#pragma mark Users handling
+
+- (void) _updateKnownUser:(MVChatUser *) user
+         withNewNickname:(NSString *) newNickname {
+	@synchronized( _knownUsers ) {
+		[user retain];
+		[_knownUsers removeObjectForKey:[user uniqueIdentifier]];
+		[user _setUniqueIdentifier:[newNickname lowercaseString]];
+		[user _setNickname:newNickname];
+		[_knownUsers setObject:user forKey:[user uniqueIdentifier]];
+		[user release];
 	}
 }
 
@@ -1001,6 +1028,35 @@
 	 postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification
 	 object:_room
 	 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
+}
+
+- (void) stcStatusPacketName:(NSArray *) fields {
+	NSString *msg = [fields objectAtIndex:1];
+
+	NSRange r;
+
+	r = [msg rangeOfString:@" changed nickname to "];
+	if( r.location != NSNotFound ) {
+		NSString *oldnick = [msg substringToIndex:r.location];
+		NSString *newnick = [msg substringFromIndex:r.location + r.length];
+
+		MVChatUser *who = [self chatUserWithUniqueIdentifier:oldnick];
+		if( [who isLocalUser] ) {
+			MVSafeCopyAssign( &_nickname, newnick );
+			[who _setUniqueIdentifier:[newnick lowercaseString]];
+
+			[[NSNotificationCenter defaultCenter]
+			 postNotificationOnMainThreadWithName:MVChatConnectionNicknameAcceptedNotification
+			 object:self userInfo:nil];
+		} else {
+			[self _updateKnownUser:who withNewNickname:newnick];
+
+			[[NSNotificationCenter defaultCenter]
+			 postNotificationOnMainThreadWithName:MVChatUserNicknameChangedNotification
+			 object:who
+			 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldnick, @"oldNickname", nil]];
+		}
+	}
 }
 
 - (void) stcStatusPacketNoPass:(NSArray *) fields {
