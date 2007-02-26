@@ -405,6 +405,11 @@
 		}
 
 		return YES;
+	} else if( ! [command caseInsensitiveCompare:@"nick"] ) {
+		NSString *newNickname = [arguments string];
+		if( [newNickname length] > 0 )
+			[connection setNickname:newNickname];
+		return YES;
 	}
 
 	return NO;
