@@ -49,6 +49,27 @@
 #import "NSStringAdditions.h"
 #import "NSNotificationAdditions.h"
 
+#pragma mark Prototypes for auxiliary functions
+
+static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r );
+
+#pragma mark Bodies for auxiliary functions
+
+/*
+ * Takes a string and a substring within it and returns a boolean
+ * indicating whether the latter was found inside the former.
+ * If found, the given range is updated accordingly.
+ *
+ * The whole point of this function is to ease the usage of NSString's
+ * rangeOfString in conditions.
+ */
+static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
+	*r = [str rangeOfString:substr];
+	return r->location != NSNotFound;
+}
+
+#pragma mark -
+
 @interface MVICBChatConnection (MVICBChatConnectionPrivate)
 - (void) _connect;
 - (void) _startSendQueue;
@@ -822,6 +843,7 @@
 	NSParameterAssert( [fields count] == 1 );
 
 	NSString *message = [fields objectAtIndex:0];
+	NSRange r;
 
 	if( [message compare:@"Open messages not permitted in quiet groups."] == 0 ) {
 		NSError *error = [NSError errorWithDomain:MVChatConnectionErrorDomain
@@ -845,6 +867,8 @@
 		          withObject:nil waitUntilDone:NO];
 		}
 	} else if( [message compare:@"You aren't the moderator."] == 0 ) {
+		// XXX
+	} else if( hasSubstring( message, @" is not in the database.", &r ) ) {
 		// XXX
 	} else
 		[self _postProtocolError:[NSString stringWithFormat:@"Received an "
