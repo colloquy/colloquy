@@ -546,6 +546,11 @@
 		[_room _clearMemberUsers];
 		[_room _clearBannedUsers];
 
+		// Update the initial channel to point to the joined room so that
+		// a reconnect after a disconnection works fine and rejoins us to
+		// the (only) room that we left.
+		MVSafeCopyAssign( &_initialChannel, name );
+
 		[[NSNotificationCenter defaultCenter]
 		 postNotificationOnMainThreadWithName:MVChatRoomJoinedNotification
 		 object:_room];
@@ -876,7 +881,6 @@
 	_localUser = [[MVICBChatUser alloc] initLocalUserWithConnection:self];
 	[self _markUserAsOnline:_localUser];
 
-	[_room release];
 	_room = (MVICBChatRoom *)[self chatRoomWithUniqueIdentifier:_initialChannel];
 	[_room _setDateJoined:[NSDate date]];
 	[_room _setDateParted:nil];
