@@ -77,6 +77,7 @@
 - (void) setServerPort:(unsigned short) port;
 - (unsigned short) serverPort;
 - (void) sendRawMessage:(id) raw immediately:(BOOL) now;
+- (void) joinChatRoomsNamed:(NSArray *) rooms;
 - (void) joinChatRoomNamed:(NSString *) room withPassphrase:
                            (NSString *) passphrase;
 - (NSSet *) knownChatUsers;

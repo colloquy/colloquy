@@ -313,9 +313,29 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 - (void) fetchChatRoomList {
 }
 
+- (void) joinChatRoomsNamed:(NSArray *) rooms {
+	NSParameterAssert( rooms != nil );
+
+	if( ! [rooms count] )
+		return;
+
+	NSEnumerator *enumerator = [rooms objectEnumerator];
+	NSString *room = nil;
+
+	while( ( room = [enumerator nextObject] ) ) {
+		if( [room length] ) {
+			[self joinChatRoomNamed:room withPassphrase:nil];
+			break;
+		}
+	}
+}
+
 - (void) joinChatRoomNamed:(NSString *) name
 			withPassphrase:(NSString *) passphrase {
-	[self _joinChatRoomNamed:name withPassphrase:passphrase alreadyJoined:NO];
+	if( _loggedIn )
+		[self _joinChatRoomNamed:name withPassphrase:passphrase alreadyJoined:NO];
+	else
+		MVSafeCopyAssign( &_initialChannel, name );
 }
 
 #pragma mark Users handling

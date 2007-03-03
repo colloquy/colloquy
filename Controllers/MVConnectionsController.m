@@ -1856,12 +1856,10 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) _willConnect:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
+
 	if( [self showConsoleOnConnectForConnection:connection] )
 		[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
-}
 
-- (void) _didConnect:(NSNotification *) notification {
-	MVChatConnection *connection = [notification object];
 	NSArray *rooms = [self joinRoomsForConnection:connection];
 	NSString *strcommands = [self connectCommandsForConnection:connection];
 
@@ -1907,7 +1905,10 @@ static NSMenu *favoritesMenu = nil;
 
 	if( [rooms count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
 		[connection joinChatRoomsNamed:rooms];
+}
 
+- (void) _didConnect:(NSNotification *) notification {
+	MVChatConnection *connection = [notification object];
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:NSLocalizedString( @"Connected", "connected bubble title" ) forKey:@"title"];
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You're now connected to %@ as %@.", "you are now connected bubble text" ), [connection server], [connection nickname]] forKey:@"description"];
