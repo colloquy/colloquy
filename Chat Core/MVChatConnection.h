@@ -1,4 +1,5 @@
 typedef enum {
+	MVChatConnectionUnsupportedType = 0,
 	MVChatConnectionICBType = 'icbC',
 	MVChatConnectionIRCType = 'ircC',
 	MVChatConnectionSILCType = 'silC'

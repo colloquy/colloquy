@@ -109,7 +109,8 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark -
 
 - (MVChatConnectionType) newTypeToConnectionType {
-	MVChatConnectionType type;
+	MVChatConnectionType type = MVChatConnectionUnsupportedType;
+
 	switch( [[newType selectedItem] tag] ) {
 	case 0:
 		type = MVChatConnectionICBType;
@@ -121,9 +122,9 @@ static NSMenu *favoritesMenu = nil;
 		type = MVChatConnectionSILCType;
 		break;
 	default:
-		NSAssert(NO, @"Unsupported tag type\n");
-		type = nil;
+		NSAssert1( NO, @"Unsupported connection type %d", [[newType selectedItem] tag] );
 	}
+
 	return type;
 }
 
