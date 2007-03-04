@@ -664,7 +664,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		NSString *reason = [[error userInfo] objectForKey:@"reason"];
 		NSAlert *alert = [[[NSAlert alloc] init] autorelease];
 		[alert setMessageText:[NSString stringWithFormat:NSLocalizedString( @"Chat protocol error", "malformed packet alert dialog title" )]];
-		[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"Client got a malformed packet: %@", "malformd packet alert dialog message" ), reason]];
+		[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"Client got a malformed packet: %@", "malformed packet alert dialog message" ), reason]];
 		[alert setAlertStyle:NSInformationalAlertStyle];
 		[alert runModal];
 	}
