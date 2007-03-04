@@ -1,0 +1,11 @@
+//
+// Prefix header for all source files of the 'Avatar Support' target in the 'Avatar Support' project.
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif
+
+#ifndef MAC_OS_X_VERSION_10_5
+   #define MAC_OS_X_VERSION_10_5 1050
+#endif
