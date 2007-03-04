@@ -49,12 +49,12 @@
 					// We're avoiding /say for now, as that really should just output exactly what
 					// the input was so we should still bypass plugins for /say
 					[message setAction:YES];
-					[chat echoSentMessageToDisplay:message];
 					[chat sendMessage:message];
-				} else {
 					[chat echoSentMessageToDisplay:message];
+				} else {
 					if( isChatRoom ) [[room target] sendMessage:[message body] asAction:NO];
 					else [[chat target] sendMessage:[message body] withEncoding:[chat encoding] asAction:NO];
+					[chat echoSentMessageToDisplay:message];
 				}
 			}
 			return YES;
@@ -564,8 +564,8 @@
 		if( room ) chatView = [[JVChatController defaultController] chatViewControllerForRoom:room ifExists:YES];
 
 		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:msg sender:[connection localUser]];
-		[chatView echoSentMessageToDisplay:cmessage];
 		[chatView sendMessage:cmessage];
+		[chatView echoSentMessageToDisplay:cmessage];
 
 		return YES;
 	}
@@ -584,8 +584,8 @@
 
 	if( chatView && [msg length] ) {
 		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:msg sender:[connection localUser]];
-		[chatView echoSentMessageToDisplay:cmessage];
 		[chatView sendMessage:cmessage];
+		[chatView echoSentMessageToDisplay:cmessage];
 		return YES;
 	} else if( ( user || room ) && [msg length] ) {
 		id target = room;
@@ -608,8 +608,8 @@
 	while( ( room = [enumerator nextObject] ) ) {
 		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:message sender:[connection localUser]];
 		[cmessage setAction:action];
-		[room echoSentMessageToDisplay:cmessage];
 		[room sendMessage:cmessage];
+		[room echoSentMessageToDisplay:cmessage];
 	}
 
 	return YES;
