@@ -963,11 +963,9 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	MVChatUser *user = [self chatUserWithUniqueIdentifier:who];
 	[user _setIdleTime:0.];
 
-	NSData *msgdata = [NSData dataWithBytes:[msg cString] length:[msg length]];
-
 	NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
 	                          user, @"user",
-							  msgdata, @"message",
+							  [msg dataUsingEncoding:[self encoding]], @"message",
 							  [NSString locallyUniqueString], @"identifier",
 							  nil];
 	[[NSNotificationCenter defaultCenter]
@@ -983,10 +981,9 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	NSString *msg = [fields objectAtIndex:1];
 
 	MVChatUser *user = [self chatUserWithUniqueIdentifier:who];
-	NSData *msgdata = [NSData dataWithBytes:[msg cString] length:[msg length]];
 
 	NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-	                          msgdata, @"message",
+	                          [msg dataUsingEncoding:[self encoding]], @"message",
 							  [NSString locallyUniqueString], @"identifier",
 							  nil];
 	[[NSNotificationCenter defaultCenter]
@@ -1111,7 +1108,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 		 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:who, @"user", nil]];
 	} else {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:@"server"];
-		NSData *msgdata = [NSData dataWithBytes:[msg cString] length:[msg length]];
+		NSData *msgdata = [msg dataUsingEncoding:[self encoding]];
 
 		NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
 								  msgdata, @"message",
@@ -1137,10 +1134,9 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	 */
 
 	MVChatUser *user = [self chatUserWithUniqueIdentifier:@"server"];
-	NSData *msgdata = [NSData dataWithBytes:[msg cString] length:[msg length]];
 
 	NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-	                          msgdata, @"message",
+	                          [msg dataUsingEncoding:[self encoding]], @"message",
 							  [NSString locallyUniqueString], @"identifier",
 							  @"yes", @"notice",
 							  nil];
