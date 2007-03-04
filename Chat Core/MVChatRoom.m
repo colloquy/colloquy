@@ -29,6 +29,7 @@ NSString *MVChatRoomUserKickedNotification = @"MVChatRoomUserKickedNotification"
 NSString *MVChatRoomUserBannedNotification = @"MVChatRoomUserBannedNotification";
 NSString *MVChatRoomUserBanRemovedNotification = @"MVChatRoomUserBanRemovedNotification";
 NSString *MVChatRoomUserModeChangedNotification = @"MVChatRoomUserModeChangedNotification";
+NSString *MVChatRoomUserBrickedNotification = @"MVChatRoomUserBrickedNotification";
 
 NSString *MVChatRoomGotMessageNotification = @"MVChatRoomGotMessageNotification";
 NSString *MVChatRoomTopicChangedNotification = @"MVChatRoomTopicChangedNotification";

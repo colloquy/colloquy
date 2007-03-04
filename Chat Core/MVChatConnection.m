@@ -496,6 +496,13 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
+- (void) sendUserCommand:(NSString *) command withArguments:(NSString *) args {
+// subclass this method
+	[self doesNotRecognizeSelector:_cmd];
+}
+
+#pragma mark -
+
 - (void) sendRawMessage:(id) raw {
 	[self sendRawMessage:raw immediately:NO];
 }

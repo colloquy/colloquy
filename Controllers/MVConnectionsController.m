@@ -1896,9 +1896,9 @@ static NSMenu *favoritesMenu = nil;
 
 				NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 				if( ! [[results lastObject] boolValue] )
-					[connection sendRawMessage:[command stringByAppendingFormat:@" %@", arguments]];
+					[connection sendUserCommand:command withArguments:arguments];
 			} else if( [command length] ) {
-				[connection sendRawMessage:command];
+				[connection sendUserCommand:command withArguments:nil];
 			}
 		}
 	}

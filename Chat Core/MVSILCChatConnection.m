@@ -1224,6 +1224,15 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
+- (void) sendUserCommand:(NSString *) command withArguments:(NSString *) args {
+	if( args && [args length] > 0 )
+		[self sendRawMessage:[NSString stringWithFormat:@"%@ %@", command, args]];
+	else
+		[self sendRawMessage:command];
+}
+
+#pragma mark -
+
 - (void) sendRawMessage:(NSString *) raw immediately:(BOOL) now {
 	NSParameterAssert( raw != nil );
 

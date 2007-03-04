@@ -42,6 +42,7 @@ extern NSString *MVChatRoomUserKickedNotification;
 extern NSString *MVChatRoomUserBannedNotification;
 extern NSString *MVChatRoomUserBanRemovedNotification;
 extern NSString *MVChatRoomUserModeChangedNotification;
+extern NSString *MVChatRoomUserBrickedNotification;
 
 extern NSString *MVChatRoomGotMessageNotification;
 extern NSString *MVChatRoomTopicChangedNotification;

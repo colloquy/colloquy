@@ -175,6 +175,12 @@
 		<string>Someone Mentioned You</string>
 	</dict>
 	<dict>
+		<key>identifier</key>
+		<string>JVChatUserBricked</string>
+		<key>title</key>
+		<string>User Was Bricked</string>
+	</dict>
+	<dict>
 		<key>seperator</key>
 		<true />
 	</dict>

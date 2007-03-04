@@ -43,5 +43,7 @@
 - (void) partingFromRoom:(JVChatRoomPanel *) room;
 - (void) kickedFromRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) by forReason:(NSAttributedString *) reason;
 
+- (void) userBricked:(MVChatUser *) user inRoom:(JVChatRoomPanel *) room;
+
 - (void) topicChangedTo:(NSAttributedString *) topic inRoom:(JVChatRoomPanel *) room by:(JVChatRoomMember *) member;
 @end

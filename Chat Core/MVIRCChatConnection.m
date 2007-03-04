@@ -332,6 +332,15 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
+- (void) sendUserCommand:(NSString *) command withArguments:(NSString *) args {
+	if( args && [args length] > 0 )
+		[self sendRawMessage:[NSString stringWithFormat:@"%@ %@", command, args]];
+	else
+		[self sendRawMessage:command];
+}
+
+#pragma mark -
+
 - (void) sendRawMessage:(id) raw immediately:(BOOL) now {
 	NSParameterAssert( raw != nil );
 	NSParameterAssert( [raw isKindOfClass:[NSData class]] || [raw isKindOfClass:[NSString class]] );

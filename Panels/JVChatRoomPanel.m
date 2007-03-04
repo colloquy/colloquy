@@ -61,6 +61,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _membersSynced: ) name:MVChatRoomMemberUsersSyncedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _bannedMembersSynced: ) name:MVChatRoomBannedUsersSyncedNotification object:target];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _memberNicknameChanged: ) name:MVChatUserNicknameChangedNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _userBricked: ) name:MVChatRoomUserBrickedNotification object:target];
 	}
 
 	return self;
@@ -1006,6 +1007,47 @@
 	[_sortedMembers removeObjectIdenticalTo:mbr];
 	[_nextMessageAlertMembers removeObject:mbr];
 	[_windowController reloadListItem:self andChildren:YES];
+}
+
+- (void) _userBricked:(NSNotification *) notification {
+	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
+
+	NSString *message = nil;
+	NSString *ctxmessage = nil;
+	if( user ) {
+		if( [user isLocalUser] ) {
+			message = [NSString stringWithFormat:NSLocalizedString( @"You have been bricked.", "you have been bricked status message" )];
+			ctxmessage = [NSString stringWithFormat:NSLocalizedString( @"You have been bricked.", "bubble message user bricked string" )];
+		} else {
+			NSString *name = [user nickname];
+			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> has been bricked.", "a user has been bricked status message" ), name];
+			ctxmessage = [NSString stringWithFormat:NSLocalizedString( @"%@ has been bricked.", "bubble message user bricked string" ), name];
+		}
+
+		[self addEventMessageToDisplay:message withName:@"userBricked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:user, @"who", nil]];
+	} else {
+		message = [NSString stringWithFormat:NSLocalizedString( @"A brick flies off into the ether.", "a brick flies off into the ether status message" )];
+		ctxmessage = [NSString stringWithFormat:NSLocalizedString( @"A brick flies off into the ether.", "bubble message nobody bricked string" )];
+
+		[self addEventMessageToDisplay:message withName:@"userBricked" andAttributes:nil];
+	}
+	NSAssert( message, @"message not initialized in conditional" );
+	NSAssert( ctxmessage, @"ctxmessage not initialized in conditional" );
+
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( MVChatUser * ), @encode( JVChatRoomPanel * ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+
+	[invocation setSelector:@selector( userBricked:inRoom: )];
+	[invocation setArgument:&user atIndex:2];
+	[invocation setArgument:&self atIndex:3];
+
+	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	[context setObject:NSLocalizedString( @"Chat User Bricked", "user bricked title" ) forKey:@"title"];
+	[context setObject:ctxmessage forKey:@"description"];
+	[context setObject:self forKey:@"target"];
+	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 }
 
 - (void) _kicked:(NSNotification *) notification {

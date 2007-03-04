@@ -48,7 +48,8 @@ typedef enum {
 	MVChatConnectionErroneusNicknameError = -12,
 	MVChatConnectionBannedFromServerError = -13,
 	MVChatConnectionServerPasswordIncorrectError = -14,
-	MVChatConnectionProtocolError = -15
+	MVChatConnectionProtocolError = -15,
+	MVChatConnectionOutOfBricksError = -16
 } MVChatConnectionError;
 
 @class MVChatRoom;
@@ -347,6 +348,10 @@ extern NSString *MVChatConnectionErrorDomain;
 
 - (BOOL) setCertificatePassword:(NSString *) password;
 - (void) publicKeyVerified:(NSDictionary *) dictionary andAccepted:(BOOL) accepted andAlwaysAccept:(BOOL) alwaysAccept;
+
+#pragma mark -
+
+- (void) sendUserCommand:(NSString *) command withArguments:(NSString *) args;
 
 #pragma mark -
 

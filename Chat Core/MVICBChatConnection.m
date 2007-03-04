@@ -257,6 +257,14 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	}
 }
 
+- (void) sendUserCommand:(NSString *) command withArguments:(NSString *) args {
+	if( [command compare:@"brick" ] == 0 ) {
+		[self ctsCommandPersonal:@"server" withMessage:[NSString stringWithFormat:@"%@ %@", command, args]];
+	} else {
+		// XXX Unknown command.
+	}
+}
+
 - (void) sendRawMessage:(id) raw immediately:(BOOL) now {
 	NSParameterAssert( raw );
 	
@@ -886,6 +894,12 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 			[self performSelectorOnMainThread:@selector( disconnect )
 		          withObject:nil waitUntilDone:NO];
 		}
+	} else if( [message compare:@"You are out of bricks."] == 0 ) {
+		NSError *error = [NSError errorWithDomain:MVChatConnectionErrorDomain
+						          code:MVChatConnectionOutOfBricksError
+								  userInfo:nil];
+		[self performSelectorOnMainThread:@selector( _postError: )
+		      withObject:error waitUntilDone:NO];
 	} else if( [message compare:@"You aren't the moderator."] == 0 ) {
 		// XXX
 	} else if( hasSubstring( message, @" is not in the database.", &r ) ) {
@@ -1076,6 +1090,63 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	 postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification
 	 object:_room
 	 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
+}
+
+- (void) stcStatusPacketFYI:(NSArray *) fields {
+	NSString *msg = [fields objectAtIndex:1];
+	
+	NSRange r;
+	
+	if( [msg compare:@"A brick flies off into the ether."] == 0 ) {
+		[[NSNotificationCenter defaultCenter]
+		 postNotificationOnMainThreadWithName:MVChatRoomUserBrickedNotification
+		 object:_room userInfo:nil];
+	} else if( hasSubstring(msg, @" has been bricked.", &r) ) {
+		NSString *nick = [msg substringToIndex:r.location];
+		MVChatUser *who = [self chatUserWithUniqueIdentifier:nick];
+
+		[[NSNotificationCenter defaultCenter]
+		 postNotificationOnMainThreadWithName:MVChatRoomUserBrickedNotification
+		 object:_room
+		 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:who, @"user", nil]];
+	} else {
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:@"server"];
+		NSData *msgdata = [NSData dataWithBytes:[msg cString] length:[msg length]];
+
+		NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+								  msgdata, @"message",
+								  [NSString locallyUniqueString], @"identifier",
+								  @"yes", @"notice",
+								  nil];
+		[[NSNotificationCenter defaultCenter]
+		 postNotificationOnMainThreadWithName:MVChatConnectionGotPrivateMessageNotification
+		 object:user userInfo:userInfo];
+	}
+}
+
+- (void) stcStatusPacketMessage:(NSArray *) fields {
+	NSString *msg = [fields objectAtIndex:1];
+
+	/*
+	 * Known message notifications.  Maybe they should be handled in some
+	 * other way, but for now we just report these as notices:
+	 *
+	 * You owe %d bricks.
+	 * You have no bricks remaining.
+	 * You have %d bricks remaining.
+	 */
+
+	MVChatUser *user = [self chatUserWithUniqueIdentifier:@"server"];
+	NSData *msgdata = [NSData dataWithBytes:[msg cString] length:[msg length]];
+
+	NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+	                          msgdata, @"message",
+							  [NSString locallyUniqueString], @"identifier",
+							  @"yes", @"notice",
+							  nil];
+	[[NSNotificationCenter defaultCenter]
+	 postNotificationOnMainThreadWithName:MVChatConnectionGotPrivateMessageNotification
+	 object:user userInfo:userInfo];
 }
 
 - (void) stcStatusPacketName:(NSArray *) fields {

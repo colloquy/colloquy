@@ -203,6 +203,13 @@
 		<key>showBubbleOnlyIfBackground</key>
 		<true/>
 	</dict>
+	<key>JVNotificationSettings JVChatUserBricked</key>
+	<dict>
+		<key>playSound</key>
+		<true/>
+		<key>soundPath</key>
+		<string>Clap.aiff</string>
+	</dict>
 	<key>JVNotificationSettings JVChatMentioned</key>
 	<dict>
 		<key>bounceIcon</key>
