@@ -431,13 +431,10 @@ static NSMenu *favoritesMenu = nil;
 	[connection setRealName:[newRealName stringValue]];
 	if( [_joinRooms count] ) [connection joinChatRoomsNamed:_joinRooms];
 
-	if( [self showConsoleOnConnectForConnection:connection] )
-		[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
-
-	[connection connectToServer:[newAddress stringValue] onPort:[newPort intValue] asUser:[newNickname stringValue]];
-
 	[self addConnection:connection keepBookmark:(BOOL)[newRemember state]];
 	[self setJoinRooms:_joinRooms forConnection:connection];
+
+	[connection connectToServer:[newAddress stringValue] onPort:[newPort intValue] asUser:[newNickname stringValue]];
 
 	[[self window] makeKeyAndOrderFront:nil];
 }
@@ -762,14 +759,11 @@ static NSMenu *favoritesMenu = nil;
 				( ! [[url user] length] || [[connection nickname] isEqualToString:[url user]] ) &&
 				( ! [[url port] unsignedShortValue] || [connection serverPort] == [[url port] unsignedShortValue] ) ) {
 
-				if( ! [connection isConnected] && connect ) {
-					if( [self showConsoleOnConnectForConnection:connection] )
-						[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
-					[connection connect];
-				}
-
 				if( target ) [connection joinChatRoomNamed:target];
 				else [[self window] orderFront:nil];
+
+				if( ! [connection isConnected] && connect )
+					[connection connect];
 
 				[connections selectRow:[_bookmarks indexOfObject:info] byExtendingSelection:NO];
 
@@ -794,14 +788,12 @@ static NSMenu *favoritesMenu = nil;
 			[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
 			[connection setOutgoingChatFormat:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"]];
 
+			[self addConnection:connection keepBookmark:NO];
+
 			if( connect ) {
-				if( [self showConsoleOnConnectForConnection:connection] )
-					[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
 				if( target ) [connection joinChatRoomNamed:target];
 				[connection connect];
 			}
-
-			[self addConnection:connection keepBookmark:NO];
 
 			[[self window] orderFront:nil];
 		}
@@ -1627,10 +1619,12 @@ static NSMenu *favoritesMenu = nil;
 - (void) _loadBookmarkList {
 	NSArray *list = [[NSUserDefaults standardUserDefaults] arrayForKey:@"MVChatBookmarks"];
 	NSEnumerator *enumerator = [list objectEnumerator];
-	NSMutableArray *bookmarks = [NSMutableArray array];
 	NSMutableDictionary *info = nil;
 
 	[self _deregisterNotificationsForConnection:nil]; // deregister all connections
+
+	[_bookmarks release];
+	_bookmarks = [[NSMutableArray alloc] init];
 
 	while( ( info = [enumerator nextObject] ) ) {
 		info = [NSMutableDictionary dictionaryWithDictionary:info];
@@ -1687,23 +1681,17 @@ static NSMenu *favoritesMenu = nil;
 
 		[connection setSecure:[[info objectForKey:@"secure"] boolValue]];
 
-		if( [[info objectForKey:@"automatic"] boolValue] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) ) {
-			if( [[info objectForKey:@"showConsole"] boolValue] )
-				[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
-
-			[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-
-			[connection connect];
-		}
-
 		[info setObject:connection forKey:@"connection"];
+
+		[_bookmarks addObject:info];
+
 		[self _registerNotificationsForConnection:connection];
 
-		[bookmarks addObject:info];
+		if( [[info objectForKey:@"automatic"] boolValue] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) ) {
+			[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
+			[connection connect];
+		}
 	}
-
-	[_bookmarks autorelease];
-	_bookmarks = [bookmarks retain];
 
 	[connections noteNumberOfRowsChanged];
 
@@ -1849,8 +1837,6 @@ static NSMenu *favoritesMenu = nil;
 	if( [connections selectedRow] == -1 ) return;
 	MVChatConnection *connection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
 	[connection setPassword:[[MVKeyChain defaultKeyChain] internetPasswordForServer:[connection server] securityDomain:[connection server] account:nil path:nil port:[connection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault]];
-	if( [self showConsoleOnConnectForConnection:connection] )
-		[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
 	[connection connect];
 }
 
