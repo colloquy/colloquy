@@ -27,9 +27,13 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (WebFrame *) selectedFrame;
 @end
 
+#pragma mark -
+
 @interface WebView (WebViewPrivate)
 - (WebFrame *) _frameForCurrentSelection;
 @end
+
+#pragma mark -
 
 @interface DOMHTMLElement (DOMHTMLElementLeopard)
 - (int) offsetTop;
@@ -41,6 +45,41 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 @interface NSScrollView (NSScrollViewWebKitPrivate)
 - (void) setAllowsHorizontalScrolling:(BOOL) allow;
+@end
+
+#pragma mark -
+
+@interface DOMHTMLElement (DOMHTMLElementExtras)
+- (unsigned) childElementLength;
+- (DOMNode *) childElementAtIndex:(unsigned) index;
+@end
+
+#pragma mark -
+
+@implementation DOMHTMLElement (DOMHTMLElementExtras)
+- (unsigned) childElementLength {
+	unsigned length = 0;
+
+	DOMNode *node = [self firstChild];
+	while (node) {
+		if( [node nodeType] == DOM_ELEMENT_NODE ) ++length;
+		node = [node nextSibling];
+	}
+
+	return length;
+}
+
+- (DOMNode *) childElementAtIndex:(unsigned) index {
+	unsigned count = 0;
+	DOMNode *node = [self firstChild];
+	while (node) {
+		if( [node nodeType] == DOM_ELEMENT_NODE && count++ == index )
+			return node;
+		node = [node nextSibling];
+	}
+
+	return nil;
+}
 @end
 
 #pragma mark -
@@ -588,7 +627,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		JVMarkedScroller *scroller = [self verticalMarkedScroller];
 		long shift = [scroller shiftAmountToCenterAlign];
 		[scroller setLocationOfCurrentMark:loc];
-		[_body setValue:[NSNumber numberWithUnsignedLong:( loc - shift )] forKey:@"scrollTop"];
+		[[_domDocument body] setValue:[NSNumber numberWithUnsignedLong:( loc - shift )] forKey:@"scrollTop"];
 	}
 }
 
@@ -598,9 +637,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		return;
 	}
 
-	if( [_body respondsToSelector:@selector( scrollHeight )] )
-		[_body setValue:[NSNumber numberWithUnsignedInt:[_body scrollHeight]] forKey:@"scrollTop"];
-	else [_body setValue:[_body valueForKey:@"scrollHeight"] forKey:@"scrollTop"];
+	DOMHTMLElement *body = [_domDocument body];
+	if( [body respondsToSelector:@selector( scrollHeight )] )
+		[body setValue:[NSNumber numberWithUnsignedInt:[body scrollHeight]] forKey:@"scrollTop"];
+	else [body setValue:[body valueForKey:@"scrollHeight"] forKey:@"scrollTop"];
 }
 
 - (BOOL) scrolledNearBottom {
@@ -612,11 +652,12 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	else frameHeight = [[contentFrameElement valueForKey:@"offsetHeight"] unsignedIntValue];
 
 	unsigned int scrollHeight = 0;
-	if( [_body respondsToSelector:@selector( scrollHeight )] )
-		scrollHeight = [_body scrollHeight];
-	else scrollHeight = [[_body valueForKey:@"scrollHeight"] unsignedIntValue];
+	DOMHTMLElement *body = [_domDocument body];
+	if( [body respondsToSelector:@selector( scrollHeight )] )
+		scrollHeight = [body scrollHeight];
+	else scrollHeight = [[body valueForKey:@"scrollHeight"] unsignedIntValue];
 
-	unsigned int scrollTop = [[_body valueForKey:@"scrollTop"] unsignedIntValue];
+	unsigned int scrollTop = [[body valueForKey:@"scrollTop"] unsignedIntValue];
 
 	// check if we are near the bottom 10 pixels of the chat area
 	return ( ( frameHeight + scrollTop ) >= ( scrollHeight - 15 ) );
@@ -660,7 +701,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	_contentFrameReady = NO;
 	if( _rememberScrollPosition ) {
-		_lastScrollPosition = [[_body valueForKey:@"scrollTop"] longValue];
+		_lastScrollPosition = [[[_domDocument body] valueForKey:@"scrollTop"] longValue];
 	} else _lastScrollPosition = 0;
 
 	[[self window] disableFlushWindow];
@@ -735,14 +776,13 @@ quickEnd:
 
 	if( _rememberScrollPosition ) {
 		_rememberScrollPosition = NO;
-		[_body setValue:[NSNumber numberWithUnsignedLong:_lastScrollPosition] forKey:@"scrollTop"];
+		[[_domDocument body] setValue:[NSNumber numberWithUnsignedLong:_lastScrollPosition] forKey:@"scrollTop"];
 	}
 }
 
 - (void) _appendMessage:(NSString *) message {
 	if( ! _body ) return;
 
-	long shiftAmount = 0;
 	unsigned int messageCount = [self _visibleMessageCount] + 1;
 	unsigned int scrollbackLimit = [self scrollbackLimit];
 	JVMarkedScroller *scroller = [self verticalMarkedScroller];
@@ -750,14 +790,7 @@ quickEnd:
 	if( ! consecutive ) consecutive = ( [message rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
 
 	// check if we are near the bottom of the chat area, and if we should scroll down later
-	BOOL scrollNeeded = [self scrolledNearBottom];
-
-	// check how much we need to shift the scrollbar marks
-	if( ! consecutive && messageCount > scrollbackLimit ) {
-		shiftAmount = [self _locationOfElementAtIndex:( messageCount - scrollbackLimit )];
-		if( shiftAmount > 0 && shiftAmount != NSNotFound )
-			[scroller shiftMarksAndShadedAreasBy:( shiftAmount * -1 )];
-	}
+	BOOL scrollToBottomNeeded = [self scrolledNearBottom];
 
 	NSMutableString *transformedMessage = [message mutableCopyWithZone:nil];
 	[transformedMessage replaceOccurrencesOfString:@"  " withString:@"&nbsp; " options:NSLiteralSearch range:NSMakeRange( 0, [transformedMessage length] )];
@@ -781,22 +814,29 @@ quickEnd:
 	[transformedMessage release];
 	transformedMessage = nil;
 
+	long shiftAmount = 0;
+	// check how much we need to shift the scrollbar marks
+	if( ! consecutive && messageCount > scrollbackLimit )
+		shiftAmount = [self _locationOfElementAtIndex:( messageCount - scrollbackLimit )];
+
 	// enforce the scrollback limit
-	if( scrollbackLimit > 0 && messageCount > scrollbackLimit ) {
+	if( scrollToBottomNeeded && scrollbackLimit > 0 && messageCount > scrollbackLimit ) {
 		for( unsigned int i = 0; messageCount > scrollbackLimit && i < ( messageCount - scrollbackLimit ); i++ ) {
 			[_body removeChild:[_body firstChild]];
 			messageCount--;
 		}
 	}
 
-	if( ! scrollNeeded && shiftAmount > 0 ) {
-		unsigned long scrollTop = [[_body valueForKey:@"scrollTop"] longValue];
-		[_body setValue:[NSNumber numberWithUnsignedLong:( scrollTop - shiftAmount )] forKey:@"scrollTop"];
+	if( scrollToBottomNeeded && shiftAmount > 0 && shiftAmount != NSNotFound ) {
+		DOMHTMLElement *body = [_domDocument body];
+		unsigned long scrollTop = [[body valueForKey:@"scrollTop"] longValue];
+		[body setValue:[NSNumber numberWithUnsignedLong:( scrollTop - shiftAmount )] forKey:@"scrollTop"];
+		[scroller shiftMarksAndShadedAreasBy:( shiftAmount * -1 )];
 	}
 
 	[[self verticalMarkedScroller] setNeedsDisplay:YES];
 
-	if( scrollNeeded ) [self scrollToBottom];
+	if( scrollToBottomNeeded ) [self scrollToBottom];
 }
 
 - (void) _prependMessages:(NSString *) messages {
@@ -905,10 +945,10 @@ quickEnd:
 }
 
 - (long) _locationOfElementAtIndex:(unsigned long) index {
-	if( ! _contentFrameReady || index >= [[_body childNodes] length] )
+	if( ! _contentFrameReady )
 		return NSNotFound;
-	DOMNode *node = [[_body childNodes] item:index];
-	if( ! [node isKindOfClass:[DOMHTMLElement class]] )
+	DOMNode *node = [_body childElementAtIndex:index];
+	if( ! node || ! [node isKindOfClass:[DOMHTMLElement class]] )
 		return NSNotFound;
 	if( [node respondsToSelector:@selector( offsetTop )] )
 		return [(DOMHTMLElement *)node offsetTop];
@@ -920,6 +960,6 @@ quickEnd:
 
 - (unsigned long) _visibleMessageCount {
 	if( ! _contentFrameReady ) return 0;
-	return [[_body childNodes] length];
+	return [_body childElementLength];
 }
 @end
