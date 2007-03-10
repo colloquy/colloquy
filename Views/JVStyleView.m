@@ -814,27 +814,29 @@ quickEnd:
 	[transformedMessage release];
 	transformedMessage = nil;
 
-	long shiftAmount = 0;
-	// check how much we need to shift the scrollbar marks
-	if( ! consecutive && messageCount > scrollbackLimit )
-		shiftAmount = [self _locationOfElementAtIndex:( messageCount - scrollbackLimit )];
-
-	// enforce the scrollback limit
+	// enforce the scrollback limit and shift scrollbar marks
 	if( scrollToBottomNeeded && scrollbackLimit > 0 && messageCount > scrollbackLimit ) {
-		for( unsigned int i = 0; messageCount > scrollbackLimit && i < ( messageCount - scrollbackLimit ); i++ ) {
-			[_body removeChild:[_body firstChild]];
-			messageCount--;
+		unsigned limit = ( messageCount - scrollbackLimit );
+		long shiftAmount = [self _locationOfElementAtIndex:limit];
+
+		DOMNode *node = [_body firstChild];
+		for( unsigned i = 0; node && i < limit; ) {
+			DOMNode *next = [node nextSibling];
+
+			if( [node nodeType] == DOM_ELEMENT_NODE ) {
+				[_body removeChild:node];
+				++i;
+			}
+
+			node = next;
 		}
-	}
 
-	if( scrollToBottomNeeded && shiftAmount > 0 && shiftAmount != NSNotFound ) {
-		DOMHTMLElement *body = [_domDocument body];
-		unsigned long scrollTop = [[body valueForKey:@"scrollTop"] longValue];
-		[body setValue:[NSNumber numberWithUnsignedLong:( scrollTop - shiftAmount )] forKey:@"scrollTop"];
-		[scroller shiftMarksAndShadedAreasBy:( shiftAmount * -1 )];
-	}
+		long firstItemShift = [self _locationOfElementAtIndex:0];
+		if( firstItemShift != NSNotFound ) shiftAmount -= firstItemShift;
 
-	[[self verticalMarkedScroller] setNeedsDisplay:YES];
+		if( scrollToBottomNeeded && shiftAmount > 0 && shiftAmount != NSNotFound )
+			[scroller shiftMarksAndShadedAreasBy:( shiftAmount * -1 )];
+	}
 
 	if( scrollToBottomNeeded ) [self scrollToBottom];
 }
