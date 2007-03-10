@@ -83,6 +83,9 @@
 		ret -> _senderLoaded = YES;
 		ret -> _bodyLoaded = YES;
 
+		// release anything alloced in [JVMutableChatMessage init] and [JVChatMessage init] that we copy below
+		[ret -> _date release];
+
 		ret -> _senderIsLocalUser = [self senderIsLocalUser];
 		ret -> _senderIdentifier = [[self senderIdentifier] copyWithZone:zone];
 		ret -> _senderName = [[self senderName] copyWithZone:zone];
