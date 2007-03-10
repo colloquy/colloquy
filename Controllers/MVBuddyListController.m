@@ -884,7 +884,10 @@ static MVBuddyListController *sharedInstance = nil;
 
 	[self _sortBuddies];
 
-	if( [oldOrder isEqualToArray:_buddyOrder] ) return;
+	if( [oldOrder isEqualToArray:_buddyOrder] ) {
+		[oldOrder release];
+		return;
+	}
 
 	if( selectedObject ) {
 		[buddies deselectAll:nil];

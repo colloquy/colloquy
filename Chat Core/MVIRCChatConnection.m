@@ -1491,6 +1491,8 @@ end:
 	} else {
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:msgAttributes];
 	}
+
+	[msgAttributes release];
 }
 
 - (void) _handlePrivmsgWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
@@ -1576,6 +1578,8 @@ end:
 			[msg release];
 		}
 	}
+
+	[msgAttributes release];
 }
 
 - (void) _handleNoticeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
