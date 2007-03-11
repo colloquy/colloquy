@@ -382,7 +382,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) addBanner:(NSString *) name {
 	if( ! _mainFrameReady ) {
-		[self performSelector:_cmd withObject:name afterDelay:0.5];
+		[self performSelector:_cmd withObject:name afterDelay:0.];
 		return;
 	}
 

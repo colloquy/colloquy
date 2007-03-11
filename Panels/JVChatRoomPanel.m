@@ -1463,7 +1463,8 @@
 		emptyTopic = YES;
 	}
 
-	NSArray *args = [NSArray arrayWithObjects:topicString, ( author ? [author title] : [[[self target] topicAuthor] displayName] ), [NSNumber numberWithBool:emptyTopic], nil];
+	id authorArg = ( author ? [author title] : [[[self target] topicAuthor] displayName] );
+	NSArray *args = [NSArray arrayWithObjects:topicString, ( authorArg ? authorArg : [NSNull null] ), [NSNumber numberWithBool:emptyTopic], nil];
 	[[display windowScriptObject] callWebScriptMethod:@"changeTopic" withArguments:args];
 }
 
@@ -1479,7 +1480,8 @@
 		emptyTopic = YES;
 	}
 
-	NSArray *args = [NSArray arrayWithObjects:topicString, ( author ? [author title] : [[[self target] topicAuthor] displayName] ), [NSNumber numberWithBool:emptyTopic], nil];
+	id authorArg = ( author ? [author title] : [[[self target] topicAuthor] displayName] );
+	NSArray *args = [NSArray arrayWithObjects:topicString, ( authorArg ? authorArg : [NSNull null] ), [NSNumber numberWithBool:emptyTopic], nil];
 	[[display windowScriptObject] callWebScriptMethod:@"changeTopic" withArguments:args];	
 }
 @end

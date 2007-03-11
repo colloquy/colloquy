@@ -29,7 +29,7 @@ function toggleTopic( e ) {
 function changeTopic( topic, author, empty ) {
 	topicMessage = document.getElementById( 'topicMessage' );
 	topicMessage.innerHTML = topic;
-	topicMessage.title = topicMessage.innerText + ' set by ' + author;
+	topicMessage.title = topicMessage.innerText + ( author ? ' set by ' + author : '' );
 	refreshTopicSize();
 }
 
