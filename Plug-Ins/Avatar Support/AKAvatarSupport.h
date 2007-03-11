@@ -17,11 +17,11 @@
 
 }
 
+- (void) requestAvatarFromUser:(MVChatUser *)chatUser;
+- (void) offerAvatarToUser:(MVChatUser *)chatUser;
+
 - (void) saveAvatar:(NSImage *)anImage forUser:(MVChatUser *)chatUser;
 - (void) addAvatarToUser:(MVChatUser *)chatUser;
 - (NSImage *) avatarForUser:(MVChatUser *)chatUser;
-
-//TODO: remove this when testing is done
-- (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 
 @end

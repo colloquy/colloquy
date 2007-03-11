@@ -16,6 +16,9 @@
 //MVChatPluginChatConnectionSupport
 #import "MVChatConnection.h"
 
+//For Growl output
+#import "/Users/Alex/dev/svn/colloquy/Controllers/JVNotificationController.h"
+
 //some classes
 #import "JVChatMessage.h"
 #import "MVChatUser.h"
@@ -38,19 +41,7 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 - (id) initWithManager:(MVChatPluginManager *)manager
 {
 	self = [super init];
-	//NSLog(@"Avatar Support Plugin loaded");
-	
-	NSLog(cacheDir);
-	if ([[NSFileManager defaultManager] fileExistsAtPath: [cacheDir stringByExpandingTildeInPath]] == NO)
-	{
-		[[NSFileManager defaultManager] createDirectoryAtPath: [cacheDir stringByExpandingTildeInPath] attributes: nil];
-		NSLog(@"Avatar Cache Dir created");
-	}
-//	else
-//	{
-//		NSLog(@"Avatar Cache Dir exists");
-//	}
-	
+	//NSLog(@"Avatar Support: ** Plugin loaded");
 	return self;
 }
 
@@ -64,7 +55,11 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 
 - (void) load
 {
-	
+	if ([[NSFileManager defaultManager] fileExistsAtPath: [cacheDir stringByExpandingTildeInPath]] == NO)
+	{
+		[[NSFileManager defaultManager] createDirectoryAtPath: [cacheDir stringByExpandingTildeInPath] attributes: nil];
+		NSLog(@"Avatar Support: ** Cache directory created at %@.", cacheDir);
+	}
 }
 
 - (void) unload
@@ -77,10 +72,41 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 
 - (void) processIncomingMessage:(JVMutableChatMessage *)message inView:(id <JVChatViewController>)view
 {
+	//TODO: use this if to put the user object into a var, call addavatartouser after the if (#1)
 	if([[message sender] isMemberOfClass:[JVChatRoomMember class]])
 	{
-		//TODO: check first if the user already has an icon, no need to do this over and over again. also: check for buddies.
-		[self addAvatarToUser:[(JVChatRoomMember *)[message sender] user]];
+		//NSLog(@"Avatar Support: -- %@ (class), user: %@/%@: %@ (class)", [[[message sender] class] description], [[(JVChatRoomMember *)[message sender] user] serverAddress], [[(JVChatRoomMember *)[message sender] user] nickname], [[[[message sender] user] class] description]);
+		
+		//TODO: check for buddies, unless this works for them too (doesnt, *.quakenet.org bug)
+		if ([[[(JVChatRoomMember *)[message sender] user] attributes] objectForKey:@"MVChatUserPictureAttribute"] == nil)
+		{
+			//NSLog(@"Avatar Support: -- nil: %@", [[[[(JVChatRoomMember *)[message sender] user] attributes] objectForKey:@"MVChatUserPictureAttribute"] description]);
+			[self addAvatarToUser:[(JVChatRoomMember *)[message sender] user]];
+		}
+		else
+		{
+			//NSLog(@"Avatar Support: -- nicht nil: %@", [[[[(JVChatRoomMember *)[message sender] user] attributes] objectForKey:@"MVChatUserPictureAttribute"] description]);
+			//TODO: remove this
+			[[JVNotificationController defaultController] performNotification:@"JVPluginNotification" withContextInfo:[NSDictionary dictionaryWithObjectsAndKeys:[[[(JVChatRoomMember *)[message sender] user] attributes] objectForKey:@"MVChatUserPictureAttribute"],@"image",@"Avatar Support",@"title",[NSString stringWithFormat:@"%@ already has an Avatar.", [[(JVChatRoomMember *)[message sender] user] nickname]],@"description",nil]];
+		}
+	}
+	else
+	{
+		//TODO: this is for direct chats, see comment #1 above
+		//NSLog(@"Avatar Support: -- %@/%@: %@ (class)", [(MVChatUser *)[message sender] serverAddress], [(MVChatUser *)[message sender] nickname], [[[message sender] class] description]);
+		
+		//TODO: check for buddies, unless this works for them too (doesnt)
+		if ([[(MVChatUser *)[message sender] attributes] objectForKey:@"MVChatUserPictureAttribute"] == nil)
+		{
+			//NSLog(@"Avatar Support: -- nil: %@", [[[(MVChatUser *)[message sender] attributes] objectForKey:@"MVChatUserPictureAttribute"] description]);
+			[self addAvatarToUser:(MVChatUser *)[message sender]];
+		}
+		else
+		{
+			//NSLog(@"Avatar Support: --nicht nil: %@", [[[(MVChatUser *)[message sender] attributes] objectForKey:@"MVChatUserPictureAttribute"] description]);
+			//TODO: remove this
+			[[JVNotificationController defaultController] performNotification:@"JVPluginNotification" withContextInfo:[NSDictionary dictionaryWithObjectsAndKeys:[[(MVChatUser *)[message sender] attributes] objectForKey:@"MVChatUserPictureAttribute"],@"image",@"Avatar Support",@"title",[NSString stringWithFormat:@"%@ already has an Avatar.", [(MVChatUser *)[message sender] nickname]],@"description",nil]];
+		}
 	}
 }
 
@@ -92,70 +118,92 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 #pragma mark -
 #pragma mark MVChatPluginChatConnectionSupport
 
-- (BOOL) processSubcodeRequest:(NSString *)command withArguments:(NSData *)arguments fromUser:(MVChatUser *)user
+- (BOOL) processSubcodeRequest:(NSString *)command withArguments:(NSData *)arguments fromUser:(MVChatUser *)chatUser
 {
-	//TODO: remove NSLog
-//	NSLog([@"AVATAR: Subcode Request: " stringByAppendingString:command]);
-//	NSLog([user nickname]);
-	
+	if ([[command uppercaseString] isEqualToString:@"AVATEST"])
+	{
+		//TODO: remove NSLog
+		NSLog(@"Avatar Support: <- Bogus request event for %@.", [chatUser nickname]);
+		[self requestAvatarFromUser:chatUser];
+		return YES;
+	}
 	if ([[command uppercaseString] isEqualToString:AKAvatarSupportCTCPCommand])
 	{
-		if (arguments)
-		{
-			NSLog(@"das war ein angebot von %@", [user nickname]);
+		//TODO: remove NSLog
+		NSLog(@"Avatar Support: -> request by %@.", [chatUser nickname]);
+//		if (weWantToSendAvatarToUser:chatUser)
+//		{
+			[self offerAvatarToUser:chatUser];
+			return YES;
+//		}
+	}
+	return NO;
+}
+
+- (BOOL) processSubcodeReply:(NSString *)command withArguments:(NSData *)arguments fromUser:(MVChatUser *)chatUser
+{
+	if ([[command uppercaseString] isEqualToString:AKAvatarSupportCTCPCommand])
+	{
+		NSArray *argumentArray = [[[[NSString alloc] initWithData:arguments encoding:[[chatUser connection] encoding]] autorelease] componentsSeparatedByString:@" "];
+		
+		//TODO: remove NSLog
+		NSLog(@"Avatar Support: <- reply from %@ with arguments %@.", [chatUser nickname], [argumentArray description]);
+		
+//		if (weWantToReceiveAvatarFromUser:chatUser)
+//		{
+			//NSLog(@"Avatar Support: <- accepting avatar from %@.", [chatUser nickname]);
+			NSImage *receivedImage = [NSImage alloc];
 			
-			NSArray *argumentArray = [[[[NSString alloc] initWithData:arguments encoding:[[user connection] encoding]] autorelease] componentsSeparatedByString:@" "];
-			NSLog(@"Arguments: %@",[argumentArray description]);
-//			if (weWantToReceiveAvatarFromUser:user)
+			//TODO: do some checks first: filezise, evil filetypes...
+			if ([receivedImage initWithContentsOfURL:[NSURL URLWithString:[argumentArray objectAtIndex:0]]])
+			{
+				[self saveAvatar:receivedImage forUser:chatUser];
+				[self addAvatarToUser:chatUser];
+				[[JVNotificationController defaultController] performNotification:@"JVPluginNotification" withContextInfo:[NSDictionary dictionaryWithObjectsAndKeys:[[chatUser attributes] objectForKey:@"MVChatUserPictureAttribute"],@"image",@"Avatar Support",@"title",[NSString stringWithFormat:@"Received Avatar from user %@.", [chatUser nickname]],@"description",nil]];
+				return YES;
+			}
+//			else
 //			{
-				NSLog(@"wir wollen annehmen");
-				NSImage *receivedImage = [NSImage alloc];
-				
-				//TODO: do some checks first: filezise, evil filetypes...
-				if ([receivedImage initWithContentsOfURL:[NSURL URLWithString:[argumentArray objectAtIndex:0]]])
-				{
-					[self saveAvatar:receivedImage forUser:user];
-					[self addAvatarToUser:user];
-					return YES;
-				}
-//				else
+//				if (filesizeisokay)
 //				{
-//					if (filesizeisokay)
-//					{
-						//NSLog(@"DCC Filetransfer required");
-						//[18:39] <xenon> there is, just dont add it to the MVFileTransferManager
-						//MVFileTransferController
-						//MVFileTransfer
-						//filetransfer <- requestAvatarFromUser:user
-						//filetransferdelegate: [self addAvatarToUser:user];
-//					}
+					//NSLog(@"Avatar Support: <- dcc file transfer request for %@ required.", [chatUser nickname]);
+					//[18:39] <xenon> there is, just dont add it to the MVFileTransferManager
+					//MVFileTransferController
+					//MVFileTransfer
+					//filetransfer <- requestAvatarFromUser:chatUser
+					//filetransferdelegate: [self addAvatarToUser:chatUser];
+					//return YES;
 //				}
 //			}
-		}
-		else
-		{
-			//TODO: remove this!
-			NSLog(@"%@ has requested our avatar", [user nickname]);
-//			if (weWantToSendAvatarToUser:user)
-//			{
-				NSLog(@"wir schicken unseren avatar los!");
-				return YES;
-//			}
-		}
+//		}
 	}
-	
 	return NO;
 }
 
 #pragma mark -
 #pragma mark Plugin Methods
 
+
+- (void) requestAvatarFromUser:(MVChatUser *)chatUser
+{
+	//TODO: remove NSLog
+	NSLog(@"Avatar Support: <- request from %@.", [chatUser nickname]);
+	[chatUser sendSubcodeRequest:AKAvatarSupportCTCPCommand withArguments:@"?"];
+}
+
+- (void) offerAvatarToUser:(MVChatUser *)chatUser
+{
+	//TODO: remove NSLog
+	NSLog(@"Avatar Support: -> reply to %@.", [chatUser nickname]);
+	[chatUser sendSubcodeReply:AKAvatarSupportCTCPCommand withArguments:@"http://alex.speanet.info/stuff/AKAvatarSupportIcon.png"];
+}
+
 - (void) saveAvatar:(NSImage *)theImage forUser:(MVChatUser *)chatUser
 {
 	//TODO: add filetype extensions somehow, overwrite rules
 	if([[theImage TIFFRepresentation] writeToFile:[[[cacheDir stringByExpandingTildeInPath] stringByAppendingPathComponent:[chatUser serverAddress]] stringByAppendingPathComponent:[chatUser nickname]] atomically: NO])
 	{
-		NSLog(@"Avatar written for user %@.", [chatUser nickname]);
+		NSLog(@"Avatar Support: <- image written for %@/%@.", [chatUser serverAddress], [chatUser nickname]);
 	}
 }
 
@@ -163,41 +211,43 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 {
 	if([self avatarForUser:chatUser])
 	{
+	//TODO: handle buddies differnetly (ask: "add as buddy icon?")
+	
 	//TODO This has no actual effect in the app yet
 	[chatUser setAttribute:[self avatarForUser:chatUser] forKey:@"MVChatUserPictureAttribute"];
 	
-	//TODO: Remove this test output of the image
-	NSAlert *alert = [[[NSAlert alloc] init] autorelease];
-	[alert addButtonWithTitle:@"OK"];
-	[alert setMessageText:@"Added avatar to user"];
-	[alert setInformativeText:[chatUser nickname]];
-	[alert setIcon:[self avatarForUser:chatUser]];
-	[alert setAlertStyle:NSInformationalAlertStyle];
-	[alert beginSheetModalForWindow:nil modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:nil];
+	//TODO: remove this later, its enough to growl on "received avatar"
+	[[JVNotificationController defaultController] performNotification:@"JVPluginNotification" withContextInfo:[NSDictionary dictionaryWithObjectsAndKeys:[[chatUser attributes] objectForKey:@"MVChatUserPictureAttribute"],@"image",@"Avatar Support",@"title",[NSString stringWithFormat:@"Avatar added for user %@.", [chatUser nickname]],@"description",nil]];
 	}
-}
-
-- (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo
-{
-	//TODO: remove this here and in the header, just for testing
 }
 
 - (NSImage *) avatarForUser:(MVChatUser *)chatUser
 {
 	/*if ([[NSFileManager defaultManager] fileExistsAtPath: [[[[cacheDir stringByExpandingTildeInPath] stringByAppendingPathComponent:[chatUser serverAddress]] stringByAppendingPathComponent:[chatUser nickname]] stringByAppendingPathExtension:@"png"]])
 	{
-		NSLog(@"Avatar exists for user %@", [chatUser nickname]);
+		NSLog(@"Avatar Support: -- Avatar exists for user %@", [chatUser nickname]);
 	}*/
-	
+		
 	//TODO: what about file type extenstions?
 	return [[NSImage alloc]initWithContentsOfFile: [[[cacheDir stringByExpandingTildeInPath] stringByAppendingPathComponent:[chatUser serverAddress]] stringByAppendingPathComponent:[chatUser nickname]]];
 }
 
+/*
+TODO:
+context menu, command line interface
+file transfer support (send/receive)
+local user defineable avatar
+custom avatars for users
+actual file management (with file extensions -> nsdictionary, lazy nsimages)
+...
+(fix colloquys buddies/ bubbles style)
+*/
 
 /*
 Context Menu:
 Avatar >
 Request Avatar
+Offer Avatar
 Manually Select Avatar
 -
 clear cache
