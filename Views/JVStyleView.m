@@ -5,6 +5,8 @@
 #import "JVStyle.h"
 #import "JVEmoticonSet.h"
 
+#import <objc/objc-runtime.h>
+
 NSString *JVStyleViewDidClearNotification = @"JVStyleViewDidClearNotification";
 NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesNotification";
 
@@ -52,6 +54,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 @interface DOMHTMLElement (DOMHTMLElementExtras)
 - (unsigned) childElementLength;
 - (DOMNode *) childElementAtIndex:(unsigned) index;
+- (int) integerForDOMProperty:(NSString *) property;
+- (void) setInteger:(int) value forDOMProperty:(NSString *) property;
 @end
 
 #pragma mark -
@@ -80,6 +84,26 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	return nil;
 }
+
+- (int) integerForDOMProperty:(NSString *) property {
+	SEL selector = NSSelectorFromString( property );
+	if( [self respondsToSelector:selector] )
+		return ((int(*)(id, SEL))objc_msgSend)(self, selector);
+	NSNumber *value = [self valueForKey:property];
+	if( [value isKindOfClass:[NSNumber class]] )
+		return [value intValue];
+	return 0;
+}
+
+- (void) setInteger:(int) value forDOMProperty:(NSString *) property {
+	SEL selector = NSSelectorFromString( [@"set" stringByAppendingString:[property capitalizedString]] );
+	if( [self respondsToSelector:selector] ) {
+		((void(*)(id, SEL, int))objc_msgSend)(self, selector, value);
+	} else {
+		NSNumber *number = [NSNumber numberWithInt:value];
+		[self setValue:number forKey:property];
+	}
+}
 @end
 
 #pragma mark -
@@ -92,9 +116,9 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) _styleError;
 - (NSString *) _contentHTMLWithBody:(NSString *) html;
 - (NSURL *) _baseURL;
-- (unsigned long) _visibleMessageCount;
-- (long) _locationOfMessage:(JVChatMessage *) message;
-- (long) _locationOfElementAtIndex:(unsigned long) index;
+- (unsigned) _visibleMessageCount;
+- (int) _locationOfMessage:(JVChatMessage *) message;
+- (int) _locationOfElementAtIndex:(unsigned) index;
 - (void) _setupMarkedScroller;
 @end
 
@@ -363,10 +387,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[_body appendChild:elt];
 		[self scrollToBottom];
 
-		unsigned int location = 0;
-		if( [elt respondsToSelector:@selector( offsetTop )] )
-			location = [elt offsetTop];
-		else location = [[elt valueForKey:@"offsetTop"] longValue];
+		int location = [elt integerForDOMProperty:@"offsetTop"];
 
 		JVMarkedScroller *scroller = [self verticalMarkedScroller];
 		[scroller removeMarkWithIdentifier:@"mark"];
@@ -483,14 +504,14 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		return;
 	}
 
-	long loc = [self _locationOfMessage:message];
+	int loc = [self _locationOfMessage:message];
 	if( loc != NSNotFound ) [[self verticalMarkedScroller] addMarkAt:loc];
 }
 
 - (void) markScrollbarForMessage:(JVChatMessage *) message usingMarkIdentifier:(NSString *) identifier andColor:(NSColor *) color {
 	if( _switchingStyles || ! _contentFrameReady ) return; // can't queue, too many args. NSInvocation?
 
-	long loc = [self _locationOfMessage:message];
+	int loc = [self _locationOfMessage:message];
 	if( loc != NSNotFound ) [[self verticalMarkedScroller] addMarkAt:loc withIdentifier:identifier withColor:color];
 }
 
@@ -505,7 +526,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	JVChatMessage *message = nil;
 
 	while( ( message = [enumerator nextObject] ) ) {
-		long loc = [self _locationOfMessage:message];
+		int loc = [self _locationOfMessage:message];
 		if( loc != NSNotFound ) [scroller addMarkAt:loc];
 	}
 }
@@ -622,12 +643,13 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) jumpToMessage:(JVChatMessage *) message {
-	unsigned long loc = [self _locationOfMessage:message];
+	unsigned loc = [self _locationOfMessage:message];
 	if( loc != NSNotFound ) {
 		JVMarkedScroller *scroller = [self verticalMarkedScroller];
-		long shift = [scroller shiftAmountToCenterAlign];
+		int shift = [scroller shiftAmountToCenterAlign];
 		[scroller setLocationOfCurrentMark:loc];
-		[[_domDocument body] setValue:[NSNumber numberWithUnsignedLong:( loc - shift )] forKey:@"scrollTop"];
+
+		[[_domDocument body] setInteger:( loc - shift ) forDOMProperty:@"scrollTop"];
 	}
 }
 
@@ -638,26 +660,17 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	}
 
 	DOMHTMLElement *body = [_domDocument body];
-	if( [body respondsToSelector:@selector( scrollHeight )] )
-		[body setValue:[NSNumber numberWithUnsignedInt:[body scrollHeight]] forKey:@"scrollTop"];
-	else [body setValue:[body valueForKey:@"scrollHeight"] forKey:@"scrollTop"];
+	[body setInteger:[body integerForDOMProperty:@"scrollHeight"] forDOMProperty:@"scrollTop"];
 }
 
 - (BOOL) scrolledNearBottom {
 	WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
 	DOMHTMLElement *contentFrameElement = [contentFrame frameElement];
-	unsigned int frameHeight = 0;
-	if( [contentFrameElement respondsToSelector:@selector( offsetHeight )] )
-		frameHeight = [contentFrameElement offsetHeight];
-	else frameHeight = [[contentFrameElement valueForKey:@"offsetHeight"] unsignedIntValue];
+	int frameHeight = [contentFrameElement integerForDOMProperty:@"offsetHeight"];
 
-	unsigned int scrollHeight = 0;
 	DOMHTMLElement *body = [_domDocument body];
-	if( [body respondsToSelector:@selector( scrollHeight )] )
-		scrollHeight = [body scrollHeight];
-	else scrollHeight = [[body valueForKey:@"scrollHeight"] unsignedIntValue];
-
-	unsigned int scrollTop = [[body valueForKey:@"scrollTop"] unsignedIntValue];
+	int scrollHeight = [body integerForDOMProperty:@"scrollHeight"];
+	int scrollTop = [body integerForDOMProperty:@"scrollTop"];
 
 	// check if we are near the bottom 10 pixels of the chat area
 	return ( ( frameHeight + scrollTop ) >= ( scrollHeight - 15 ) );
@@ -701,7 +714,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	_contentFrameReady = NO;
 	if( _rememberScrollPosition ) {
-		_lastScrollPosition = [[[_domDocument body] valueForKey:@"scrollTop"] longValue];
+		_lastScrollPosition = [[_domDocument body] integerForDOMProperty:@"scrollTop"];
 	} else _lastScrollPosition = 0;
 
 	[[self window] disableFlushWindow];
@@ -776,15 +789,15 @@ quickEnd:
 
 	if( _rememberScrollPosition ) {
 		_rememberScrollPosition = NO;
-		[[_domDocument body] setValue:[NSNumber numberWithUnsignedLong:_lastScrollPosition] forKey:@"scrollTop"];
+		[[_domDocument body] setInteger:_lastScrollPosition forDOMProperty:@"scrollTop"];
 	}
 }
 
 - (void) _appendMessage:(NSString *) message {
 	if( ! _body ) return;
 
-	unsigned int messageCount = [self _visibleMessageCount] + 1;
-	unsigned int scrollbackLimit = [self scrollbackLimit];
+	unsigned messageCount = [self _visibleMessageCount] + 1;
+	unsigned scrollbackLimit = [self scrollbackLimit];
 	JVMarkedScroller *scroller = [self verticalMarkedScroller];
 	BOOL consecutive = ( [message rangeOfString:@"<?message type=\"consecutive\"?>"].location != NSNotFound );
 	if( ! consecutive ) consecutive = ( [message rangeOfString:@"<?message type=\"subsequent\"?>"].location != NSNotFound );
@@ -929,38 +942,28 @@ quickEnd:
 
 #pragma mark -
 
-- (long) _locationOfMessageWithIdentifier:(NSString *) identifier {
+- (int) _locationOfMessageWithIdentifier:(NSString *) identifier {
 	if( ! _contentFrameReady ) return NSNotFound;
 	if( ! [identifier length] ) return NSNotFound;
 
 	DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument getElementById:identifier];
-	if( [element respondsToSelector:@selector( offsetTop )] )
-		return [element offsetTop];
-	id value = [element valueForKey:@"offsetTop"];
-	if( [value respondsToSelector:@selector( longValue )] )
-		return [value longValue];
-	return NSNotFound;
+	return [element integerForDOMProperty:@"offsetTop"];
 }
 
-- (long) _locationOfMessage:(JVChatMessage *) message {
+- (int) _locationOfMessage:(JVChatMessage *) message {
 	return [self _locationOfMessageWithIdentifier:[message messageIdentifier]];
 }
 
-- (long) _locationOfElementAtIndex:(unsigned long) index {
+- (int) _locationOfElementAtIndex:(unsigned) index {
 	if( ! _contentFrameReady )
 		return NSNotFound;
-	DOMNode *node = [_body childElementAtIndex:index];
-	if( ! node || ! [node isKindOfClass:[DOMHTMLElement class]] )
+	DOMHTMLElement *element = (DOMHTMLElement *)[_body childElementAtIndex:index];
+	if( ! element || ! [element isKindOfClass:[DOMHTMLElement class]] )
 		return NSNotFound;
-	if( [node respondsToSelector:@selector( offsetTop )] )
-		return [(DOMHTMLElement *)node offsetTop];
-	id value = [node valueForKey:@"offsetTop"];
-	if( [value respondsToSelector:@selector( longValue )] )
-		return [value longValue];
-	return NSNotFound;
+	return [element integerForDOMProperty:@"offsetTop"];
 }
 
-- (unsigned long) _visibleMessageCount {
+- (unsigned) _visibleMessageCount {
 	if( ! _contentFrameReady ) return 0;
 	return [_body childElementLength];
 }
