@@ -212,5 +212,15 @@
 		<key>title</key>
 		<string>User Ignored</string>
 	</dict>
+	<dict>
+		<key>seperator</key>
+		<true />
+	</dict>
+	<dict>
+		<key>identifier</key>
+		<string>JVPluginNotification</string>
+		<key>title</key>
+		<string>Plugin Notification</string>
+	</dict>
 </array>
 </plist>
