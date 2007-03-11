@@ -811,6 +811,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 			if( [name hasPrefix:@"/"] && [name hasSuffix:@"/"] && [name length] > 1 ) {
 				regex = [AGRegex regexWithPattern:[name substringWithRange:NSMakeRange( 1, [name length] - 2 )] options:AGRegexCaseInsensitive];
 			} else {
+				name = [name stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'"]];
 				NSString *pattern = [NSString stringWithFormat:@"\\b%@\\b", [name stringByEscapingCharactersInSet:escapeSet]];
 				regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
 			}
