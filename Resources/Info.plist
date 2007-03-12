@@ -201,9 +201,9 @@
 	<key>SmartCrashReports_CompanyName</key>
 	<string>Colloquy</string>
 	<key>SmartCrashReports_URL</key>
-	<string>http://www.colloquy.info/crash.php</string>
+	<string>http://colloquy.info/crash.php</string>
 	<key>SUFeedURL</key>
-	<string>http://www.colloquy.info/update.php?rss</string>
+	<string>http://colloquy.info/update.php?rss</string>
 	<key>SUCheckAtStartup</key>
 	<false/>
 	<key>SUAllowsAutomaticUpdates</key>
