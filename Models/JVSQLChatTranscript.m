@@ -610,7 +610,10 @@ static void _printSQL( void *context, const char *sql ) {
 }
 
 - (BOOL) _initializeDatabase {
-	NSString *setup = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"transcriptSchema" ofType:@"sql"]];
+	NSString *setup = nil;
+	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
+		setup = [NSString performSelector:@selector( stringWithContentsOfFile: ) withObject:[[NSBundle mainBundle] pathForResource:@"transcriptSchema" ofType:@"sql"]];
+	else setup = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"transcriptSchema" ofType:@"sql"] encoding:NSUTF8StringEncoding error:NULL];
 
 	@synchronized( self ) {
 		if( DEBUG_SQL ) sqlite3_trace( _database, _printSQL, NULL );
