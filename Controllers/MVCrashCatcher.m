@@ -93,7 +93,7 @@
 	NSData *trace = [[log string] dataUsingEncoding:NSUTF8StringEncoding];
 	[body appendFormat:@"page_source=%@", ( trace ? [trace base64Encoding] : @"" )];
 
-	NSURL *url = [NSURL URLWithString:@"http://www.colloquy.info/crash.php"];
+	NSURL *url = [NSURL URLWithString:@"http://colloquy.info/crash.php"];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.];
 	[request setHTTPMethod:@"POST"];
 	[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
