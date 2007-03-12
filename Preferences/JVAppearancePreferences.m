@@ -7,6 +7,8 @@
 #import "JVDetailCell.h"
 #import "NSBundleAdditions.h"
 
+#import <objc/objc-runtime.h>
+
 @interface WebView (WebViewPrivate) // WebKit 1.3 pending public API
 - (void) setDrawsBackground:(BOOL) draws;
 - (BOOL) drawsBackground;
@@ -560,7 +562,10 @@
 // Saves the custom variant to the user's area.
 - (void) saveStyleOptions {
 	if( _variantLocked ) return;
-	[_userStyle writeToURL:[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] atomically:YES];
+
+	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
+		((void(*)(id, SEL, id, BOOL))objc_msgSend)( _userStyle, @selector( writeToURL: ), [_style variantStyleSheetLocationWithName:[_style defaultVariantName]], YES );
+	else [_userStyle writeToURL:[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[_style defaultVariantName], @"variant", nil];
 	NSNotification *notification = [NSNotification notificationWithName:JVStyleVariantChangedNotification object:_style userInfo:info];
@@ -758,7 +763,10 @@
 	[[NSFileManager defaultManager] createDirectoryAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/", [_style identifier]] stringByExpandingTildeInPath] attributes:nil];
 
 	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", [_style identifier], name] stringByExpandingTildeInPath];
-	[_userStyle writeToFile:path atomically:YES];
+
+	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
+		((void(*)(id, SEL, id, BOOL))objc_msgSend)( _userStyle, @selector( writeToFile: ), path, YES );
+	else [_userStyle writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:NULL];
 
 	[_style setDefaultVariantName:name];
 

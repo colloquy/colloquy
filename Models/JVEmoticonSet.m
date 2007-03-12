@@ -245,7 +245,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 - (NSString *) contentsOfStyleSheet {
 	NSString *contents = nil;
 	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		contents = [NSString stringWithContentsOfURL:[self styleSheetLocation]];
+		contents = [NSString performSelector:@selector( stringWithContentsOfURL: ) withObject:[self styleSheetLocation]];
 	else contents = [NSString stringWithContentsOfURL:[self styleSheetLocation] encoding:NSUTF8StringEncoding error:NULL];
 	return ( contents ? contents : @"" );
 }

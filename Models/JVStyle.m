@@ -494,7 +494,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 - (NSString *) contentsOfMainStyleSheet {
 	NSString *contents = nil;
 	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		contents = [NSString stringWithContentsOfURL:[self mainStyleSheetLocation]];
+		contents = [NSString performSelector:@selector( stringWithContentsOfURL: ) withObject:[self mainStyleSheetLocation]];
 	else contents = [NSString stringWithContentsOfURL:[self mainStyleSheetLocation] encoding:NSUTF8StringEncoding error:NULL];
 	return ( contents ? contents : @"" );
 }
@@ -502,7 +502,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 - (NSString *) contentsOfVariantStyleSheetWithName:(NSString *) name {
 	NSString *contents = nil;
 	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		contents = [NSString stringWithContentsOfURL:[self variantStyleSheetLocationWithName:name]];
+		contents = [NSString performSelector:@selector( stringWithContentsOfURL: ) withObject:[self variantStyleSheetLocationWithName:name]];
 	else contents = [NSString stringWithContentsOfURL:[self variantStyleSheetLocationWithName:name] encoding:NSUTF8StringEncoding error:NULL];
 	return ( contents ? contents : @"" );
 }
@@ -513,7 +513,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 	NSString *contents = nil;
 	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		contents = [NSString stringWithContentsOfURL:url];
+		contents = [NSString performSelector:@selector( stringWithContentsOfURL: ) withObject:url];
 	else contents = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
 
 	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];

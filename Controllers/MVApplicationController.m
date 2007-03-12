@@ -66,7 +66,7 @@ static BOOL applicationIsTerminating = NO;
 - (void) dealloc {
 	if( _hidEntry ) {
 		IOObjectRelease( _hidEntry );
-		_hidEntry = nil;
+		_hidEntry = 0;
 	}
 
 	[super dealloc];
