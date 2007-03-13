@@ -1060,6 +1060,7 @@ Failed:;
 
 - (UInt16) addressPort: (CFDataRef)cfaddr
 {
+	if (cfaddr == NULL) return 0;
 	struct sockaddr_in *pAddr = (struct sockaddr_in *) CFDataGetBytePtr (cfaddr);
 	return ntohs (pAddr->sin_port);
 }
