@@ -34,6 +34,7 @@
 @interface JVChatRoomMember (JVChatMemberPrivate)
 - (NSString *) _selfStoredNickname;
 - (NSString *) _selfCompositeName;
+- (void) _detach;
 @end
 
 #pragma mark -
@@ -86,6 +87,9 @@
 	[self partChat:nil];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
+	[_sortedMembers makeObjectsPerformSelector:@selector( _detach )];
+	[_nextMessageAlertMembers makeObjectsPerformSelector:@selector( _detach )];
 
 	[_sortedMembers release];
 	[_preferredTabCompleteNicknames release];
@@ -409,8 +413,13 @@
 
 - (void) joined {
 	_banListSynced = NO;
+
+	[_sortedMembers makeObjectsPerformSelector:@selector( _detach )];
 	[_sortedMembers removeAllObjects];
+
 	[_preferredTabCompleteNicknames removeAllObjects];
+
+	[_nextMessageAlertMembers makeObjectsPerformSelector:@selector( _detach )];
 	[_nextMessageAlertMembers removeAllObjects];
 
 	NSEnumerator *enumerator = [[[self target] memberUsers] objectEnumerator];
@@ -1003,6 +1012,8 @@
 	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 	[self performNotification:@"JVChatMemberLeftRoom" withContextInfo:context];
 
+	[mbr _detach];
+
 	[_preferredTabCompleteNicknames removeObject:[mbr nickname]];
 	[_sortedMembers removeObjectIdenticalTo:mbr];
 	[_nextMessageAlertMembers removeObject:mbr];
@@ -1072,6 +1083,8 @@
 	if( [_windowController selectedListItem] == mbr )
 		[_windowController showChatViewController:[_windowController activeChatViewController]];
 
+	[mbr _detach];
+
 	[_preferredTabCompleteNicknames removeObject:[mbr nickname]];
 	[_sortedMembers removeObjectIdenticalTo:mbr];
 	[_nextMessageAlertMembers removeObject:mbr];
@@ -1119,6 +1132,8 @@
 
 	if( [_windowController selectedListItem] == mbr )
 		[_windowController showChatViewController:[_windowController activeChatViewController]];
+
+	[mbr _detach];
 
 	[_preferredTabCompleteNicknames removeObject:[mbr nickname]];
 	[_sortedMembers removeObjectIdenticalTo:mbr];
@@ -1421,7 +1436,10 @@
 			MVChatUser *member = nil;
 			while( ( member = [enumerator nextObject] ) ) {
 				JVChatRoomMember *listItem = [self chatRoomMemberForUser:member];
-				if( listItem ) [_sortedMembers removeObjectIdenticalTo:listItem];
+				if( listItem ) {
+					[listItem _detach];
+					[_sortedMembers removeObjectIdenticalTo:listItem];
+				}
 			}
 		}
 	}

@@ -11,6 +11,7 @@
 @interface JVChatRoomMember (JVChatMemberPrivate)
 - (NSString *) _selfStoredNickname;
 - (NSString *) _selfCompositeName;
+- (void) _detach;
 @end
 
 #pragma mark -
@@ -50,10 +51,7 @@
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserInformationUpdatedNotification object:_user];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserStatusChangedNotification object:_user];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserAwayStatusMessageChangedNotification object:_user];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserIdleTimeUpdatedNotification object:_user];
+	[self _detach];
 
 	[_user release];
 
@@ -757,6 +755,15 @@
 #pragma mark -
 
 @implementation JVChatRoomMember (JVChatMemberPrivate)
+- (void) _detach {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserInformationUpdatedNotification object:_user];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserStatusChangedNotification object:_user];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserAwayStatusMessageChangedNotification object:_user];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserIdleTimeUpdatedNotification object:_user];
+
+	_room = nil;
+}
+
 - (void) _refreshIcon:(NSNotification *) notification {
 	[[_room windowController] reloadListItem:self andChildren:NO];
 }
