@@ -1316,7 +1316,7 @@ end:
 
 	// set the current nick name if it is not the same as what re requested (some servers/bouncers will give us a new nickname)
 	if( [parameters count] >= 1 ) {
-		NSString *nick = [parameters objectAtIndex:0];
+		NSString *nick = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		if( ! [nick isEqualToString:[self nickname]] ) {
 			[self _setCurrentNickname:nick];
 			[[self localUser] _setUniqueIdentifier:[nick lowercaseString]];
@@ -2007,7 +2007,7 @@ end:
 - (void) _handleJoinWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] && [sender isKindOfClass:[MVChatUser class]] ) {
+	if( [parameters count] >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *name = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		MVChatRoom *room = [self joinedChatRoomWithName:name];
 
@@ -2052,7 +2052,7 @@ end:
 - (void) _handleQuitWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] && [sender isKindOfClass:[MVChatUser class]] ) {
+	if( [parameters count] >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		if( [sender isLocalUser] ) return;
 
 		[self _markUserAsOffline:sender];
@@ -2084,7 +2084,7 @@ end:
 
 	if( [parameters count] >= 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:0]];
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		if( ! room || ! user ) return;
 
 		NSData *reason = ( [parameters count] == 3 ? [parameters objectAtIndex:2] : nil );
@@ -2486,7 +2486,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 2 ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		MVChatRoom *room = [self joinedChatRoomWithName:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		if( room && ! [room _namesSynced] ) {
 			[room _setNamesSynced:YES];
 
@@ -2572,7 +2572,7 @@ end:
 
 	if( [parameters count] >= 3 ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
-		MVChatUser *user = [MVChatUser wildcardUserFromString:[parameters objectAtIndex:2]];
+		MVChatUser *user = [MVChatUser wildcardUserFromString:[self _stringFromPossibleData:[parameters objectAtIndex:2]]];
 		if( [parameters count] >= 5 ) {
 			[user setAttribute:[parameters objectAtIndex:3] forKey:MVChatUserBanServerAttribute];
 
@@ -2665,7 +2665,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 2 ) {
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[user _setServerOperator:YES];
 	}
 }
@@ -2693,7 +2693,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 2 ) {
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[user _setDateUpdated:[NSDate date]];
 
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];
@@ -2756,7 +2756,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 2 ) {
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[self _markUserAsOffline:user];
 		if( [_pendingWhoisUsers containsObject:user] ) {
 			[_pendingWhoisUsers removeObject:user];
@@ -2770,7 +2770,7 @@ end:
 
 	// some servers send back 402 (No such server) when we send our double nickname WHOIS requests, treat as a user
 	if( [parameters count] >= 2 ) {
-		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[self _markUserAsOffline:user];
 		if( [_pendingWhoisUsers containsObject:user] ) {
 			[_pendingWhoisUsers removeObject:user];
@@ -2783,7 +2783,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 2 ) {
-		NSString *command = [parameters objectAtIndex:1];
+		NSString *command = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 		if( [command isCaseInsensitiveEqualToString:@"NickServ"] ) {
 			// the NickServ command isn't supported, this is an older server
 			// lets send a private message to NickServ to identify
@@ -2793,13 +2793,28 @@ end:
 	}
 }
 
+- (void) _handle475WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BADCHANNELKEY
+	MVAssertCorrectThreadRequired( _connectionThread );
+
+	if( [parameters count] >= 2 ) {
+		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+
+		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+		[userInfo setObject:self forKey:@"connection"];
+		[userInfo setObject:room forKey:@"room"];
+		[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" is password protected.", "room password protected error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
+
+		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionRoomPasswordIncorrectError userInfo:userInfo]];
+	}
+}
+
 #pragma mark -
 #pragma mark Watch Replies
 
 - (void) _handle604WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_NOWON_BAHAMUT_UNREAL
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 5 ) {
+	if( [parameters count] >= 4 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		[user _setUsername:[parameters objectAtIndex:2]];
 		[user _setAddress:[parameters objectAtIndex:3]];
@@ -2814,7 +2829,7 @@ end:
 - (void) _handle600WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_LOGON_BAHAMUT_UNREAL
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 5 )
+	if( [parameters count] >= 4 )
 		[self _handle604WithParameters:parameters fromSender:sender]; // do everything we do above
 }
 @end
