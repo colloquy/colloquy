@@ -2267,6 +2267,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = "/usr/bin/perl -w";
 			shellScript = "# Xcode auto-versioning script for Subversion\n# by Axel Andersson, modified by Daniel Jalkut and Timothy Hatcher\n\nuse strict;\n\n# Get the current subversion revision number and use it to set the CFBundleVersion value\nmy $infoFile = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{INFOPLIST_PATH}\";\nmy $version = undef;\n$version = `/usr/bin/svnversion -n .` if -e \"/usr/bin/svnversion\";\n$version = `/usr/local/bin/svnversion -n .` if -e \"/usr/local/bin/svnversion\";\n$version = `/opt/local/bin/svnversion -n .` if -e \"/opt/local/bin/svnversion\";\n\n# Match the last group of digits:\n($version =~ m/(\\d+)[MS]*$/) && ($version = $1);\n\nif( $version ) {\n\topen( FH, \"$infoFile\" ) or die \"$0: $infoFile: $!\";\n\tmy $content = join( \"\", <FH> );\n\tclose( FH );\n\n\t$content =~ s/(\\s+<key>CFBundleVersion<\\/key>\\s+<string>).*?(<\\/string>)/$1$version$2/;\n\n\topen( FH, \">$infoFile\" ) or die \"$0: $infoFile: $!\";\n\tprint FH $content;\n\tclose( FH );\n}\n";
+			showEnvVarsInLog = 0;
 		};
 		1C7A60B509FDE8560029AC64 /* Run Tests */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2295,6 +2296,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "find \"$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH\" -name \"Headers\" -print0 | xargs -0 rm -rf\n";
+			showEnvVarsInLog = 0;
 		};
 		1CAF6496099EA9350036A727 /* Unarchive Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2316,6 +2318,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd $SRCROOT/Frameworks\nrm -rf $SRCROOT/*.framework\ntar xzf frameworks.tar.gz\nranlib $SRCROOT/Frameworks/*.a\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 

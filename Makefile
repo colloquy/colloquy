@@ -5,16 +5,15 @@ PRODUCT_NAME = Colloquy.app
 CP = ditto --rsrc
 RM = rm
 COMMON_XCODE_OPTIONS = -project Colloquy.xcodeproj -target 'Colloquy (Application)'
-IGNORE_COMMAND = grep -v setenv && exit $${PIPESTATUS[0]}
 
 all release r:
-	( xcodebuild $(COMMON_XCODE_OPTIONS)  -configuration Release build | $(IGNORE_COMMAND) )
+	xcodebuild $(COMMON_XCODE_OPTIONS) -configuration Release build
 
 universal u:
-	( xcodebuild $(COMMON_XCODE_OPTIONS)  -configuration 'Release (Universal)' build | $(IGNORE_COMMAND) )
+	xcodebuild $(COMMON_XCODE_OPTIONS) -configuration 'Release (Universal)' build
 
 development dev d:
-	( xcodebuild $(COMMON_XCODE_OPTIONS)  -configuration Development build | $(IGNORE_COMMAND) )
+	xcodebuild $(COMMON_XCODE_OPTIONS) -configuration Development build
 
 clean c:
 	xcodebuild -project Colloquy.xcodeproj -alltargets clean
