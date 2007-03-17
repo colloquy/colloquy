@@ -1889,6 +1889,7 @@
 				1CB2CD88052DDC560094AAA4 /* Copy Plugins */,
 				1C7F300D085545E600D41FB0 /* Copy Spotlight Importer */,
 				1C91DEAC06972EC0007C1638 /* Remove Headers */,
+				1CB5A8F10BAB7E3700C1BDE2 /* Strip Localizations */,
 				1C2EDE8B0A3568EF0051E9C2 /* Update Build Number */,
 			);
 			buildRules = (
@@ -2308,6 +2309,7 @@
 			);
 			name = "Unarchive Frameworks";
 			outputPaths = (
+				"$(SRCROOT)/Frameworks/libtransmission.a",
 				"$(SRCROOT)/Frameworks/Sparkle.framework",
 				"$(SRCROOT)/Frameworks/Growl.framework",
 				"$(SRCROOT)/Frameworks/libsilc.framework",
@@ -2317,7 +2319,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd $SRCROOT/Frameworks\nrm -rf $SRCROOT/*.framework\ntar xzf frameworks.tar.gz\nranlib $SRCROOT/Frameworks/*.a\n";
+			shellScript = "cd \"$SRCROOT/Frameworks\"\nrm -rf *.{framework,a}\ntar xzf frameworks.tar.gz\nranlib *.a\n";
+			showEnvVarsInLog = 0;
+		};
+		1CB5A8F10BAB7E3700C1BDE2 /* Strip Localizations */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Strip Localizations";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "find \"$TARGET_BUILD_DIR/$WRAPPER_NAME\" \\( -name \"classes.nib\" -or -name \"info.nib\" \\) -delete\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
