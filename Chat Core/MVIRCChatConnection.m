@@ -1458,7 +1458,11 @@ end:
 
 	if( ! [self isConnected] ) {
 		NSString *nick = [self nextAlternateNickname];
-		if( ! [nick length] ) nick = [[self nickname] stringByAppendingString:@"_"];
+		if( ! [nick length] && [parameters count] >= 2 ) {
+			NSString *lastNickTried = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+			nick = [lastNickTried stringByAppendingString:@"_"];
+		}
+
 		if( [nick length] ) [self sendRawMessage:[NSString stringWithFormat:@"NICK %@", nick] immediately:YES];
 	}
 }

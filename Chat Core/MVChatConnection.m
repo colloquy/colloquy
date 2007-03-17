@@ -316,12 +316,8 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSString *) nextAlternateNickname {
-	if( [[self alternateNicknames] count] && _nextAltNickIndex < [[self alternateNicknames] count] ) {
-		NSString *nick = [[self alternateNicknames] objectAtIndex:_nextAltNickIndex];
-		_nextAltNickIndex++;
-		return nick;
-	}
-
+	if( [[self alternateNicknames] count] && _nextAltNickIndex < [[self alternateNicknames] count] )
+		return [[self alternateNicknames] objectAtIndex:_nextAltNickIndex++];
 	return nil;
 }
 
