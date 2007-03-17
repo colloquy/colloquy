@@ -414,7 +414,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	DOMHTMLElement *element = (DOMHTMLElement *)[_mainDocument createElement:@"div"];
 	[element setClassName:@"banner"];
-	[element setInnerHTML:shell];
+	if( [shell length] ) [element setInnerHTML:shell];
 
 	[[_mainDocument body] insertBefore:element :[[_mainDocument body] firstChild]];
 }
@@ -865,7 +865,7 @@ quickEnd:
 
 	// parses the message so we can get the DOM tree
 	DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument createElement:@"span"];
-	[element setInnerHTML:result];
+	if( [result length] ) [element setInnerHTML:result];
 
 	[result release];
 	result = nil;
