@@ -2106,6 +2106,28 @@ end:
 	}
 }
 
+- (void) _handleTopic:(NSDictionary *)topicInfo {
+	MVAssertMainThreadRequired();
+	
+	MVChatRoom *room = [topicInfo objectForKey:@"room"];
+	MVChatUser *author = [topicInfo objectForKey:@"author"];
+	NSMutableData *topic = [[topicInfo objectForKey:@"topic"] mutableCopyWithZone:nil];
+	
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatRoom * ), @encode( MVChatUser ), nil];
+	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+	[invocation setSelector:@selector( processTopicAsData:inRoom:author: )];
+	[invocation setArgument:&topic atIndex:2];
+	[invocation setArgument:&room atIndex:3];
+	[invocation setArgument:&author atIndex:4];
+	
+	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+	
+	[room _setTopic:topic];
+	[room _setTopicAuthor:author];
+	[room _setTopicDate:[NSDate date]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
+}
+
 - (void) _handleTopicWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
@@ -2117,11 +2139,8 @@ end:
 	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:0]];
 		NSData *topic = [parameters objectAtIndex:1];
-		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
-		[room _setTopic:topic];
-		[room _setTopicAuthor:sender];
-		[room _setTopicDate:[NSDate date]];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
+		if( ! [topic isKindOfClass:[NSData class]] ) topic = [NSData data];
+		[self performSelectorOnMainThread:@selector(_handleTopic:) withObject:[NSDictionary dictionaryWithObjectsAndKeys:room, @"room", topic, @"topic", sender, @"author", nil] waitUntilDone:NO];
 	}
 }
 
