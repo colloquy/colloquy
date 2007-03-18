@@ -477,8 +477,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	sendFrame.size.height = newContentHeight;
 	sendFrame.origin.y = NSHeight( displayFrame ) + dividerThickness;
 
-	[[display window] disableFlushWindow]; // prevent any draw (white) flashing that might occur
-
 	NSScrollView *scrollView = [display enclosingScrollView];
 	NSScroller *scroller = [scrollView verticalScroller];
 	if( ! [scrollView hasVerticalScroller] || [scroller floatValue] >= 0.995 ) _scrollerIsAtBottom = YES;
@@ -492,9 +490,6 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[self performScrollToBottom];
 
 	[splitView setNeedsDisplay:YES]; // makes the divider redraw correctly later
-	if( [[display window] isFlushWindowDisabled] )
-		[[display window] enableFlushWindow]; // flush everything we have drawn
-	[[display window] displayIfNeeded];
 }
 
 #pragma mark -

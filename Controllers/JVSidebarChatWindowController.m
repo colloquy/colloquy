@@ -73,8 +73,6 @@
 	id item = [self selectedListItem];
 	if( ! item ) return;
 
-	[[self window] disableFlushWindow];
-
 	if( ( [item conformsToProtocol:@protocol( JVChatViewController )] && item != (id) _activeViewController ) || ( ! _activeViewController && [[item parent] conformsToProtocol:@protocol( JVChatViewController )] && ( item = [item parent] ) ) ) {
 		id lastActive = _activeViewController;
 		if( [_activeViewController respondsToSelector:@selector( willUnselect )] )
@@ -109,9 +107,5 @@
 	}
 
 	[self _refreshWindowTitle];
-
-	if( [[self window] isFlushWindowDisabled] )
-		[[self window] enableFlushWindow];
-	[[self window] displayIfNeeded];
 }
 @end

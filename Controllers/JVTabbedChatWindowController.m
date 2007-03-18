@@ -516,8 +516,6 @@
 	int distance = ( destHeight - tabSize.height ) * 0.6;
 	if( absolute || ( distance > -1 && distance < 1 ) ) distance = destHeight - tabSize.height;
 
-	[[self window] disableFlushWindow];
-
 	tabSize.height += distance;
 	[customTabsView setFrameSize:tabSize];
 	[customTabsView setNeedsDisplay:YES];
@@ -529,10 +527,6 @@
 	[tabView setFrame:newFrame];
 	[tabView setNeedsDisplay:YES];
 
-	if( [[self window] isFlushWindowDisabled] )
-		[[self window] enableFlushWindow];
-	[[self window] displayIfNeeded];
-
 	// return YES when the desired height is reached
 	return ( tabSize.height == destHeight );
 }
@@ -540,8 +534,6 @@
 - (void) _refreshWindow {
 	id item = [(JVChatTabItem *)[tabView selectedTabViewItem] chatViewController];
 	if( ! item ) return;
-
-	[[self window] disableFlushWindow];
 
 	if( ( [item conformsToProtocol:@protocol( JVChatViewController )] && item != (id) _activeViewController ) || ( ! _activeViewController && [[item parent] conformsToProtocol:@protocol( JVChatViewController )] && ( item = [item parent] ) ) ) {
 		id lastActive = _activeViewController;
@@ -570,10 +562,6 @@
 	}
 
 	[self _refreshWindowTitle];
-
-	if( [[self window] isFlushWindowDisabled] )
-		[[self window] enableFlushWindow];
-	[[self window] displayIfNeeded];
 }
 
 - (void) _refreshPreferences {

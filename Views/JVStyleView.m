@@ -576,10 +576,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 		[self clearScrollbarMarks];
 
-		[[self window] displayIfNeeded];
 		if( [[self window] isFlushWindowDisabled] )
 			[[self window] enableFlushWindow];
-		[[self window] flushWindowIfNeeded];
 
 		[self performSelector:@selector( _contentFrameIsReady ) withObject:nil afterDelay:0.];
 	}
