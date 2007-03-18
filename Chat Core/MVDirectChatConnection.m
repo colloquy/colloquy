@@ -113,7 +113,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 - (void) initiate {
 	if( [_directClientConnection connectionThread] ) return;
 
-	MVSafeAssign( &_directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
+	MVSafeAdoptAssign( &_directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
 	[_directClientConnection setDelegate:self];
 
 	if( _localRequest ) {

@@ -454,7 +454,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 @implementation MVChatUser (MVChatUserPrivate)
 - (void) _setUniqueIdentifier:(id) identifier {
-	MVSafeAssign( &_uniqueIdentifier, ( [identifier conformsToProtocol:@protocol( NSCopying )] ? [identifier copyWithZone:nil] : [identifier retain] ) );
+	MVSafeAdoptAssign( &_uniqueIdentifier, ( [identifier conformsToProtocol:@protocol( NSCopying )] ? [identifier copyWithZone:nil] : [identifier retain] ) );
 }
 
 - (void) _setNickname:(NSString *) name {

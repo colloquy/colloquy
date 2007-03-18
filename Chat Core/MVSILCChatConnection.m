@@ -1445,7 +1445,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 #pragma mark -
 
 - (void) _initLocalUser {
-	MVSafeAssign( &_localUser, [[MVSILCChatUser allocWithZone:nil] initLocalUserWithConnection:self] );
+	MVSafeAdoptAssign( &_localUser, [[MVSILCChatUser allocWithZone:nil] initLocalUserWithConnection:self] );
 }
 
 #pragma mark -

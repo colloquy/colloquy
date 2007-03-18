@@ -178,7 +178,7 @@
 
 	[_fileHandle seekToFileOffset:[self startOffset]];
 
-	MVSafeAssign( &_directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
+	MVSafeAdoptAssign( &_directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
 	[_directClientConnection setDelegate:self];
 
 	if( ! [self isPassive] ) [_directClientConnection acceptConnectionOnFirstPortInRange:[[self class] fileTransferPortRange]];
@@ -389,7 +389,7 @@
 
 	[_fileHandle truncateFileAtOffset:[self startOffset]];
 
-	MVSafeAssign( &_directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
+	MVSafeAdoptAssign( &_directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
 	[_directClientConnection setDelegate:self];
 
 	if( [self isPassive] ) [_directClientConnection acceptConnectionOnFirstPortInRange:[[self class] fileTransferPortRange]];

@@ -2,7 +2,7 @@
 
 #define MVInline static __inline__ __attribute__((always_inline))
 
-MVInline void MVSafeAssign( id *var, id newValue ) {
+MVInline void MVSafeAdoptAssign( id *var, id newValue ) {
 	if( *var == newValue )
 		return;
 	id old = *var;

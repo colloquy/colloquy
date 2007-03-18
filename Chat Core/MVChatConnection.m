@@ -788,7 +788,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) _willConnect {
-	MVSafeAssign( &_lastError, nil );
+	MVSafeAdoptAssign( &_lastError, nil );
 
 	_nextAltNickIndex = 0;
 	_status = MVChatConnectionConnectingStatus;
@@ -851,8 +851,8 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	[_roomsCache removeAllObjects];
 
-	MVSafeAssign( &_localUser, nil );
-	MVSafeAssign( &_cachedDate, nil );
+	MVSafeAdoptAssign( &_localUser, nil );
+	MVSafeAdoptAssign( &_cachedDate, nil );
 
 	if( wasConnected ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidDisconnectNotification object:self];
 }
