@@ -2113,7 +2113,7 @@ end:
 	MVChatUser *author = [topicInfo objectForKey:@"author"];
 	NSMutableData *topic = [[topicInfo objectForKey:@"topic"] mutableCopyWithZone:nil];
 	
-	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatRoom * ), @encode( MVChatUser ), nil];
+	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatRoom * ), @encode( MVChatUser * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processTopicAsData:inRoom:author: )];
 	[invocation setArgument:&topic atIndex:2];
@@ -2126,6 +2126,8 @@ end:
 	[room _setTopicAuthor:author];
 	[room _setTopicDate:[NSDate date]];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
+	
+	[topic release];
 }
 
 - (void) _handleTopicWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
