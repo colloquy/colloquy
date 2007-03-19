@@ -315,7 +315,7 @@
 - (IBAction) changeEncoding:(id) sender {
 	[super changeEncoding:sender];
 	[[self target] setEncoding:[self encoding]];
-	[self _topicChanged:nil];
+	if( sender ) [self _topicChanged:nil];
 }
 
 #pragma mark -

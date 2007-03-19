@@ -1935,7 +1935,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 - (void) setScriptTypedEncoding:(unsigned long) encoding {
 	[self setPreference:[NSNumber numberWithLong:encoding] forKey:@"encoding"];
-	[self changeEncoding:nil];
+	[self changeEncoding:self];
 }
 @end
 
