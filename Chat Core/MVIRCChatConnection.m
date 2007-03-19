@@ -1574,7 +1574,7 @@ end:
 
 			if( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"IDENTIFY"] ) {
 				if( ! [self nicknamePassword] ) {
-					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+					[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 				} else [self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", [self nicknamePassword]];
 			} else if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ) {
 				[[self localUser] _setIdentified:YES];
@@ -1660,7 +1660,7 @@ end:
 		return;
 	}
 
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:( request ? MVChatConnectionSubcodeRequestNotification : MVChatConnectionSubcodeReplyNotification ) object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationName:( request ? MVChatConnectionSubcodeRequestNotification : MVChatConnectionSubcodeReplyNotification ) object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatUser * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -1782,7 +1782,7 @@ end:
 					[transfer _setFileNameQuoted:quotedFileName];
 					[transfer _setFinalSize:(unsigned long long)size];
 
-					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDownloadFileTransferOfferNotification object:transfer];
+					[[NSNotificationCenter defaultCenter] postNotificationName:MVDownloadFileTransferOfferNotification object:transfer];
 
 					[self _addDirectClientConnection:transfer];
 					[transfer release];
@@ -1912,7 +1912,7 @@ end:
 							[directChatConnection _setPort:port];
 						}
 
-						[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionOfferNotification object:directChatConnection userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
+						[[NSNotificationCenter defaultCenter] postNotificationName:MVDirectChatConnectionOfferNotification object:directChatConnection userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
 
 						[self _addDirectClientConnection:directChatConnection];
 						[directChatConnection release];
@@ -2108,25 +2108,25 @@ end:
 
 - (void) _handleTopic:(NSDictionary *)topicInfo {
 	MVAssertMainThreadRequired();
-	
+
 	MVChatRoom *room = [topicInfo objectForKey:@"room"];
 	MVChatUser *author = [topicInfo objectForKey:@"author"];
 	NSMutableData *topic = [[topicInfo objectForKey:@"topic"] mutableCopyWithZone:nil];
-	
+
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatRoom * ), @encode( MVChatUser * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processTopicAsData:inRoom:author: )];
 	[invocation setArgument:&topic atIndex:2];
 	[invocation setArgument:&room atIndex:3];
 	[invocation setArgument:&author atIndex:4];
-	
+
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
-	
+
 	[room _setTopic:topic];
 	[room _setTopicAuthor:author];
 	[room _setTopicDate:[NSDate date]];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
-	
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
+
 	[topic release];
 }
 
@@ -2141,8 +2141,8 @@ end:
 	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:0]];
 		NSData *topic = [parameters objectAtIndex:1];
-		if( ! [topic isKindOfClass:[NSData class]] ) topic = [NSData data];
-		[self performSelectorOnMainThread:@selector(_handleTopic:) withObject:[NSDictionary dictionaryWithObjectsAndKeys:room, @"room", topic, @"topic", sender, @"author", nil] waitUntilDone:NO];
+		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
+		[self performSelectorOnMainThread:@selector( _handleTopic: ) withObject:[NSDictionary dictionaryWithObjectsAndKeys:room, @"room", sender, @"author", topic, @"topic", nil] waitUntilDone:NO];
 	}
 }
 
