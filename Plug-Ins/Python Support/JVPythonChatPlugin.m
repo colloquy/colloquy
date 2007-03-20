@@ -263,6 +263,8 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 - (id) callScriptFunctionNamed:(NSString *) functionName withArguments:(NSArray *) arguments forSelector:(SEL) selector {
 	if( ! _scriptModule ) return nil;
 
+    PyGILState_STATE state;
+	
 	PyObject *dict = PyModule_GetDict( _scriptModule );
 	if( ! dict ) return nil;
 
@@ -281,6 +283,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 			} else PyTuple_SetItem( args, i, PyObjC_IdToPython( object ) );
 		}
 
+		state = PyGILState_Ensure();
 		PyObject *ret = PyObject_CallObject( func, args );
 
 		id realRet = nil;
@@ -288,8 +291,10 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 
 		Py_XDECREF( ret );
 		Py_DECREF( args );
-
+		
 		[self reportErrorIfNeededInFunction:functionName];
+
+		PyGILState_Release(state);
 
 		return realRet;
 	}
