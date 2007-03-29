@@ -144,7 +144,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 
 		NSString *contents = nil;
 		if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-			contents = [NSString stringWithContentsOfFile:[self scriptFilePath]];
+			contents = [NSString performSelector:@selector( stringWithContentsOfFile: ) withObject:[self scriptFilePath]];
 		else contents = [NSString stringWithContentsOfFile:[self scriptFilePath] encoding:NSUTF8StringEncoding error:NULL];
 
 		[[sender windowScriptObject] evaluateWebScript:contents];
