@@ -140,7 +140,7 @@
 		<xsl:choose>
 			<xsl:when test="../../node()[node() = $nickname]/@hostmask">
 				<xsl:variable name="hostmask" select="../../node()[node() = $nickname]/@hostmask" />
-				<a href="member:{$nickname}" title="{$hostmask}" class="member"><xsl:value-of select="$nickname" /></a>
+				<a href="member:{$nickname}" title="{$hostmask}"><xsl:copy-of select="@*" /><xsl:apply-templates select="current()/child::node()" mode="copy" /></a>
 				<xsl:if test="../../@name = 'memberJoined' or ../../@name = 'memberParted'">
 					<span class="hostmask">
 						<xsl:text> (</xsl:text>
@@ -150,13 +150,13 @@
 				</xsl:if>
 			</xsl:when>
 			<xsl:otherwise>
-				<a href="member:{$nickname}" class="member"><xsl:value-of select="$nickname" /></a>
+				<a href="member:{$nickname}"><xsl:copy-of select="@*" /><xsl:apply-templates select="current()/child::node()" mode="copy" /></a>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="span[contains(@class,'member')]" mode="copy">
-		<a href="member:{current()}" class="member"><xsl:value-of select="current()" /></a>
+		<a href="member:{current()}"><xsl:copy-of select="@*" /><xsl:apply-templates select="current()/child::node()" mode="copy" /></a>
 	</xsl:template>
 
 	<xsl:template match="@*|*" mode="event">
