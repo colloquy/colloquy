@@ -463,7 +463,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSRect sendFrame = [[send enclosingScrollView] frame];
 	float dividerThickness = [splitView dividerThickness];
 	float maxContentHeight = ( NSHeight( splitViewFrame ) - dividerThickness - 75. );
-	float newContentHeight =  MIN( maxContentHeight, MAX( 25., contentSize.height + 8. ) );
+	float newContentHeight =  MIN( maxContentHeight, MAX( 22., contentSize.height + 8. ) );
 
 	if( newContentHeight == NSHeight( sendFrame ) ) return;
 
@@ -486,10 +486,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	[[send enclosingScrollView] setFrame:sendFrame];
 	[[display enclosingScrollView] setFrame:displayFrame];
 
+	[splitView adjustSubviews];
+
 	if( _scrollerIsAtBottom )
 		[self performScrollToBottom];
-
-	[splitView setNeedsDisplay:YES]; // makes the divider redraw correctly later
 }
 
 #pragma mark -

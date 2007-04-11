@@ -669,7 +669,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	int scrollHeight = [body integerForDOMProperty:@"scrollHeight"];
 	int scrollTop = [body integerForDOMProperty:@"scrollTop"];
 
-	// check if we are near the bottom 10 pixels of the chat area
+	// check if we are near the bottom 15 pixels of the chat area
 	return ( ( frameHeight + scrollTop ) >= ( scrollHeight - 15 ) );
 }
 @end

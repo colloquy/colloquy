@@ -1286,7 +1286,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	NSRect sendFrame = [[[send superview] superview] frame];
 	float dividerThickness = [splitView dividerThickness];
 	float maxContentHeight = ( NSHeight( splitViewFrame ) - dividerThickness - 75. );
-	float newContentHeight =  MIN( maxContentHeight, MAX( 25., contentSize.height + 8. ) );
+	float newContentHeight =  MIN( maxContentHeight, MAX( 22., contentSize.height + 8. ) );
 
 	if( newContentHeight == NSHeight( sendFrame ) ) return;
 
@@ -1300,17 +1300,15 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	sendFrame.size.height = newContentHeight;
 	sendFrame.origin.y = NSHeight( webFrame ) + dividerThickness;
 
-	JVMarkedScroller *scroller = [display verticalMarkedScroller];
-	if( ! scroller || [scroller floatValue] >= 0.985 ) _scrollerIsAtBottom = YES;
-	else _scrollerIsAtBottom = NO;
+	_scrollerIsAtBottom = [display scrolledNearBottom];
 
 	// Commit the changes
 	[[[send superview] superview] setFrame:sendFrame];
 	[display setFrame:webFrame];
 
-	if( _scrollerIsAtBottom ) [display scrollToBottom];
+	[splitView adjustSubviews];
 
-	[splitView setNeedsDisplay:YES]; // makes the divider redraw correctly later
+	if( _scrollerIsAtBottom ) [display scrollToBottom];
 }
 
 #pragma mark -
@@ -1336,9 +1334,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 }
 
 - (void) splitViewWillResizeSubviews:(NSNotification *) notification {
-	JVMarkedScroller *scroller = [display verticalMarkedScroller];
-	if( ! scroller || [scroller floatValue] == 1. ) _scrollerIsAtBottom = YES;
-	else _scrollerIsAtBottom = NO;
+	_scrollerIsAtBottom = [display scrolledNearBottom];
 }
 
 - (void) splitView:(NSSplitView *) sender resizeSubviewsWithOldSize:(NSSize) oldSize {
