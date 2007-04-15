@@ -97,8 +97,6 @@
 		1C77830708FA4BD3006AD8E5 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F5394C070378E44D01A35792 /* Credits.rtf */; };
 		1C77831208FA4EA2006AD8E5 /* topicToggleDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */; };
 		1C77831308FA4EA2006AD8E5 /* topicToggleUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */; };
-		1C7C773B07DBAAB800FB5F83 /* Google.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1CD4C098078249C10003620F /* Google.scpt */; };
-		1C7C773C07DBAABC00FB5F83 /* iTunes.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1C8CE1EB05A921A00020D841 /* iTunes.scpt */; };
 		1C7EF54006B341890037F173 /* roomTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF53D06B341890037F173 /* roomTab.png */; };
 		1C7EF54106B341890037F173 /* roomTabNewHighlightMessage.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF53E06B341890037F173 /* roomTabNewHighlightMessage.png */; };
 		1C7EF54206B341890037F173 /* roomTabNewMessage.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF53F06B341890037F173 /* roomTabNewMessage.png */; };
@@ -303,6 +301,10 @@
 		CBF6856208201B7A00F498FB /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF685310820190D00F498FB /* GetMetadataForFile.m */; };
 		CBF6856308201B7A00F498FB /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = CBF685330820190D00F498FB /* main.c */; };
 		CBF6857708201C4C00F498FB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 089C1672FE841209C02AAC07 /* Foundation.framework */; };
+		DD2143690BD2EDB4005F13DF /* iTunes.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1C8CE1EB05A921A00020D841 /* iTunes.scpt */; };
+		DD21436C0BD2EDC0005F13DF /* Google.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1CD4C098078249C10003620F /* Google.scpt */; };
+		DDF64DA60BD2B0C3009E8FF6 /* Acid.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDF64DA50BD2B0C3009E8FF6 /* Acid.framework */; };
+		DDF64DA80BD2B0D7009E8FF6 /* Acid.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = DDF64DA50BD2B0C3009E8FF6 /* Acid.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -427,6 +429,7 @@
 				1CEEAB1A095BD25500166A54 /* ChatCore.framework in Copy Frameworks */,
 				1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */,
 				1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */,
+				DDF64DA80BD2B0D7009E8FF6 /* Acid.framework in Copy Frameworks */,
 				1C6C75490630AD9500698F55 /* AGRegex.framework in Copy Frameworks */,
 				1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */,
 				1C2EDDA10A35530F0051E9C2 /* Sparkle.framework in Copy Frameworks */,
@@ -445,8 +448,8 @@
 				1CEF8F830A3AB7E90054298A /* JavaScript Support.plugin in Copy Plugins */,
 				0A6571BD0868800D001FF007 /* F-Script Support.plugin in Copy Plugins */,
 				1C0A19B008B041C200324E25 /* Python Support.plugin in Copy Plugins */,
-				1C7C773C07DBAABC00FB5F83 /* iTunes.scpt in Copy Plugins */,
-				1C7C773B07DBAAB800FB5F83 /* Google.scpt in Copy Plugins */,
+				DD2143690BD2EDB4005F13DF /* iTunes.scpt in Copy Plugins */,
+				DD21436C0BD2EDC0005F13DF /* Google.scpt in Copy Plugins */,
 			);
 			name = "Copy Plugins";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -952,6 +955,7 @@
 		CBF685330820190D00F498FB /* main.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = main.c; path = Importer/main.c; sourceTree = "<group>"; };
 		CBF685340820190D00F498FB /* schema.xml */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = schema.xml; path = Importer/schema.xml; sourceTree = "<group>"; };
 		CBF687A508202F3F00F498FB /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
+		DDF64DA50BD2B0C3009E8FF6 /* Acid.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Acid.framework; path = Frameworks/Acid.framework; sourceTree = "<group>"; };
 		F50B0AA20170CAD701A84BDE /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F51A4F2B01C2DDD201EE70DE /* MVFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVFileTransferController.m; path = Controllers/MVFileTransferController.m; sourceTree = "<group>"; };
 		F51A4F2C01C2DDD201EE70DE /* MVFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVFileTransferController.h; path = Controllers/MVFileTransferController.h; sourceTree = "<group>"; };
@@ -1067,6 +1071,7 @@
 				1CEEAB17095BD23500166A54 /* ChatCore.framework in Frameworks */,
 				1CC1AE630A2987E20000A797 /* sqlite3.a in Frameworks */,
 				1C2EDD790A3551B70051E9C2 /* Sparkle.framework in Frameworks */,
+				DDF64DA60BD2B0C3009E8FF6 /* Acid.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1132,6 +1137,7 @@
 				F555208B01F0DE0601EE70DE /* Message.framework */,
 				1C3C112E050265AE000001C8 /* WebKit.framework */,
 				F5FB4CE60393C15601000102 /* AddressBook.framework */,
+				DDF64DA50BD2B0C3009E8FF6 /* Acid.framework */,
 				1C6C75450630AD5300698F55 /* AGRegex.framework */,
 				1C3B290706529E720066197C /* ChatCore.framework */,
 				1CF8030C070C893500C9B54C /* libsilc.framework */,
@@ -1930,6 +1936,9 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+			};
 			buildConfigurationList = 1C041A700854E97700A5A5BA /* Build configuration list for PBXProject "Colloquy" */;
 			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;

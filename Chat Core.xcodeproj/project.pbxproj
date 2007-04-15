@@ -74,6 +74,9 @@
 		32C46E1A0B3AB37E00B96B27 /* MVICBChatUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 32C46E180B3AB37E00B96B27 /* MVICBChatUser.h */; };
 		32C46E1B0B3AB37E00B96B27 /* MVICBChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 32C46E190B3AB37E00B96B27 /* MVICBChatUser.m */; };
 		431261C3072EE37A00720AD1 /* MVSILCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */; };
+		DDF64CE60BD29E41009E8FF6 /* MVXMPPChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF64CE40BD29E41009E8FF6 /* MVXMPPChatConnection.m */; };
+		DDF64D530BD2A4F6009E8FF6 /* Acid.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDF64D520BD2A4F6009E8FF6 /* Acid.framework */; };
+		DDF64E1A0BD2CABE009E8FF6 /* MVXMPPChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF64E180BD2CABE009E8FF6 /* MVXMPPChatUser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -160,6 +163,11 @@
 		32C46E190B3AB37E00B96B27 /* MVICBChatUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVICBChatUser.m; path = "Chat Core/MVICBChatUser.m"; sourceTree = "<group>"; };
 		431261C0072EE37A00720AD1 /* MVSILCFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = MVSILCFileTransfer.h; path = "Chat Core/MVSILCFileTransfer.h"; sourceTree = "<group>"; };
 		431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MVSILCFileTransfer.m; path = "Chat Core/MVSILCFileTransfer.m"; sourceTree = "<group>"; };
+		DDF64CE30BD29E41009E8FF6 /* MVXMPPChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVXMPPChatConnection.h; path = "Chat Core/MVXMPPChatConnection.h"; sourceTree = "<group>"; };
+		DDF64CE40BD29E41009E8FF6 /* MVXMPPChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVXMPPChatConnection.m; path = "Chat Core/MVXMPPChatConnection.m"; sourceTree = "<group>"; };
+		DDF64D520BD2A4F6009E8FF6 /* Acid.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Acid.framework; path = Frameworks/Acid.framework; sourceTree = "<group>"; };
+		DDF64E170BD2CABE009E8FF6 /* MVXMPPChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVXMPPChatUser.h; path = "Chat Core/MVXMPPChatUser.h"; sourceTree = "<group>"; };
+		DDF64E180BD2CABE009E8FF6 /* MVXMPPChatUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVXMPPChatUser.m; path = "Chat Core/MVXMPPChatUser.m"; sourceTree = "<group>"; };
 		F52D043001873FC401EE70DE /* MVChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatConnection.m; path = "Chat Core/MVChatConnection.m"; sourceTree = "<group>"; };
 		F52D043101873FC401EE70DE /* MVChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatConnection.h; path = "Chat Core/MVChatConnection.h"; sourceTree = "<group>"; };
 		F5E98622018B412B01EE70DE /* NSAttributedStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSAttributedStringAdditions.m; path = Additions/NSAttributedStringAdditions.m; sourceTree = "<group>"; };
@@ -178,6 +186,7 @@
 				1CEEB173095BE3A000166A54 /* CoreServices.framework in Frameworks */,
 				1C8AAF2B09D6A0A100CF29EB /* AGRegex.framework in Frameworks */,
 				1C11689A0B45F98700F57D2C /* libtransmission.a in Frameworks */,
+				DDF64D530BD2A4F6009E8FF6 /* Acid.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,6 +223,7 @@
 				1CCB3C3705228EFD000001C8 /* SystemConfiguration.framework */,
 				1C5A233D06FA4FEE00A51F10 /* libsilc.framework */,
 				1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */,
+				DDF64D520BD2A4F6009E8FF6 /* Acid.framework */,
 				1C8AAF2609D6A0A100CF29EB /* AGRegex.framework */,
 				1C1168990B45F98700F57D2C /* libtransmission.a */,
 			);
@@ -294,12 +304,24 @@
 			name = "ICB Support";
 			sourceTree = "<group>";
 		};
+		DDF64CE20BD29DA4009E8FF6 /* XMPP Support */ = {
+			isa = PBXGroup;
+			children = (
+				DDF64CE40BD29E41009E8FF6 /* MVXMPPChatConnection.m */,
+				DDF64CE30BD29E41009E8FF6 /* MVXMPPChatConnection.h */,
+				DDF64E180BD2CABE009E8FF6 /* MVXMPPChatUser.m */,
+				DDF64E170BD2CABE009E8FF6 /* MVXMPPChatUser.h */,
+			);
+			name = "XMPP Support";
+			sourceTree = "<group>";
+		};
 		F50B0A9F0170C89301A84BDE /* Sources & Headers */ = {
 			isa = PBXGroup;
 			children = (
 				32C46E1F0B3AB3BC00B96B27 /* ICB Support */,
 				1C5CBF2D06FF92C90006C5B1 /* IRC Support */,
 				1C5CBF3006FF93550006C5B1 /* SILC Support */,
+				DDF64CE20BD29DA4009E8FF6 /* XMPP Support */,
 				1C63E9EC086E59D700A40DD4 /* ChatCore.h */,
 				F52D043001873FC401EE70DE /* MVChatConnection.m */,
 				F52D043101873FC401EE70DE /* MVChatConnection.h */,
@@ -442,6 +464,9 @@
 /* Begin PBXProject section */
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+			};
 			buildConfigurationList = 1C041DDE08553AD200A5A5BA /* Build configuration list for PBXProject "Chat Core" */;
 			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
@@ -542,6 +567,8 @@
 				32C46E1B0B3AB37E00B96B27 /* MVICBChatUser.m in Sources */,
 				3272C2CA0B3DA84900DF650E /* MVICBChatRoom.m in Sources */,
 				322F54D20B53F6730023AE39 /* ICBPacket.m in Sources */,
+				DDF64CE60BD29E41009E8FF6 /* MVXMPPChatConnection.m in Sources */,
+				DDF64E1A0BD2CABE009E8FF6 /* MVXMPPChatUser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -554,10 +581,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
 				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS)",
-					"$(SRCROOT)/Frameworks",
-				);
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Basic.pch;
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
@@ -578,10 +601,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
 				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS)",
-					"$(SRCROOT)/Frameworks",
-				);
 				FRAMEWORK_VERSION = A;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = Basic.pch;
@@ -619,10 +638,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
 				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS)",
-					"$(SRCROOT)/Frameworks",
-				);
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Basic.pch;
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";

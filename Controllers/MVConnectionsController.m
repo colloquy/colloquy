@@ -121,6 +121,9 @@ static NSMenu *favoritesMenu = nil;
 	case 2:
 		type = MVChatConnectionSILCType;
 		break;
+	case 3:
+		type = MVChatConnectionXMPPType;
+		break;
 	default:
 		NSAssert1( NO, @"Unsupported connection type %d", [[newType selectedItem] tag] );
 	}
@@ -317,6 +320,9 @@ static NSMenu *favoritesMenu = nil;
 		[newProxy setEnabled:YES];
 	} else if( type == MVChatConnectionSILCType ) {
 		[sslConnection setEnabled:NO];
+		[newProxy setEnabled:NO];
+	} else if( type == MVChatConnectionXMPPType ) {
+		[sslConnection setEnabled:YES];
 		[newProxy setEnabled:NO];
 	}
 }
@@ -1641,8 +1647,9 @@ static NSMenu *favoritesMenu = nil;
 				type = MVChatConnectionIRCType;
 		    else if( [[info objectForKey:@"type"] isEqualToString:@"silc"] )
 		        type = MVChatConnectionSILCType;
-			else
-				type = MVChatConnectionIRCType;
+		    else if( [[info objectForKey:@"type"] isEqualToString:@"xmpp"] )
+		        type = MVChatConnectionXMPPType;
+			else type = MVChatConnectionIRCType;
 		}
 
 		if( [info objectForKey:@"url"] ) {

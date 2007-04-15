@@ -112,7 +112,6 @@ static const NSStringEncoding supportedEncodings[] = {
 		_currentNickname = [_nickname retain];
 		_realName = [NSFullUserName() retain];
 		_threadWaitLock = [[NSConditionLock allocWithZone:nil] initWithCondition:0];
-		_supportedFeatures = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 		[self _resetSupportedFeatures];
 	}
 
@@ -148,7 +147,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_pendingWhoisUsers release];
 	[_roomPrefixes release];
 	[_serverInformation release];
-	[_supportedFeatures release];
 
 	if( [_connectionThread respondsToSelector:@selector( cancel )] )
 		[_connectionThread cancel];
@@ -171,7 +169,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	_pendingWhoisUsers = nil;
 	_roomPrefixes = nil;
 	_serverInformation = nil;
-	_supportedFeatures = nil;
 
 	[super dealloc];
 }
@@ -184,19 +181,6 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (MVChatConnectionType) type {
 	return MVChatConnectionIRCType;
-}
-
-- (NSSet *) supportedFeatures {
-	@synchronized( _supportedFeatures ) {
-		return [NSSet setWithSet:_supportedFeatures];
-	} return nil;
-}
-
-- (BOOL) supportsFeature:(NSString *) key {
-	NSParameterAssert( key != nil );
-	@synchronized( _supportedFeatures ) {
-		return [_supportedFeatures containsObject:key];
-	} return NO;
 }
 
 - (const NSStringEncoding *) supportedStringEncodings {

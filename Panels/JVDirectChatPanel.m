@@ -417,7 +417,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		return host;
 	}
 
-	return [[self connection] server];
+	return [[self user] serverAddress];
 }
 
 - (NSString *) toolTip {

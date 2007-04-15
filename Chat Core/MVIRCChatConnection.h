@@ -17,7 +17,6 @@
 	NSMutableDictionary *_knownUsers;
 	NSMutableSet *_pendingWhoisUsers;
 	NSMutableSet *_directClientConnections;
-	NSMutableSet *_supportedFeatures;
 	NSMutableDictionary *_serverInformation;
 	NSString *_server;
 	NSString *_currentNickname;

@@ -6,6 +6,7 @@
 #import "MVICBChatConnection.h"
 #import "MVIRCChatConnection.h"
 #import "MVSILCChatConnection.h"
+#import "MVXMPPChatConnection.h"
 #import "MVFileTransfer.h"
 #import "MVChatPluginManager.h"
 #import "MVChatUserWatchRule.h"
@@ -56,13 +57,14 @@ static const NSStringEncoding supportedEncodings[] = {
 @implementation MVChatConnection
 + (BOOL) supportsURLScheme:(NSString *) scheme {
 	if( ! scheme ) return NO;
-	return ( [scheme isEqualToString:@"icb"] || [scheme isEqualToString:@"irc"] || [scheme isEqualToString:@"silc"] );
+	return ( [scheme isEqualToString:@"icb"] || [scheme isEqualToString:@"irc"] || [scheme isEqualToString:@"silc"] || [scheme isEqualToString:@"xmpp"] );
 }
 
 + (NSArray *) defaultServerPortsForType:(MVChatConnectionType) type {
 	if( type == MVChatConnectionICBType ) return [MVICBChatConnection defaultServerPorts];
 	else if( type == MVChatConnectionIRCType ) return [MVIRCChatConnection defaultServerPorts];
 	else if( type == MVChatConnectionSILCType ) return [MVSILCChatConnection defaultServerPorts];
+	else if( type == MVChatConnectionXMPPType ) return [MVXMPPChatConnection defaultServerPorts];
 	return nil;
 }
 
@@ -85,6 +87,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		_roomsCache = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:500];
 		_persistentInformation = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
 		_joinedRooms = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:10];
+		_supportedFeatures = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 		_localUser = nil;
 
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
@@ -105,6 +108,8 @@ static const NSStringEncoding supportedEncodings[] = {
 		self = [[MVIRCChatConnection allocWithZone:nil] init];
 	} else if ( connectionType == MVChatConnectionSILCType ) {
 		self = [[MVSILCChatConnection allocWithZone:nil] init];
+	} else if ( connectionType == MVChatConnectionXMPPType ) {
+		self = [[MVXMPPChatConnection allocWithZone:nil] init];
 	} else self = nil;
 
 	return self;
@@ -117,6 +122,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( [[serverURL scheme] isEqualToString:@"icb"] ) connectionType = MVChatConnectionICBType;
 	else if( [[serverURL scheme] isEqualToString:@"irc"] ) connectionType = MVChatConnectionIRCType;
 	else if( [[serverURL scheme] isEqualToString:@"silc"] ) connectionType = MVChatConnectionSILCType;
+	else if( [[serverURL scheme] isEqualToString:@"xmpp"] ) connectionType = MVChatConnectionXMPPType;
 
 	if( ( self = [self initWithServer:[serverURL host] type:connectionType port:( [[serverURL port] unsignedIntValue] % 65536 ) user:[serverURL user]] ) ) {
 		[self setNicknamePassword:[serverURL password]];
@@ -162,6 +168,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_proxyServer release];
 	[_proxyUsername release];
 	[_proxyPassword release];
+	[_supportedFeatures release];
 
 	_npassword = nil;
 	_roomsCache = nil;
@@ -175,7 +182,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	_proxyServer = nil;
 	_proxyUsername = nil;
 	_proxyPassword = nil;
-	
+	_supportedFeatures = nil;
+
 	[super dealloc];
 }
 
@@ -195,13 +203,16 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (NSSet *) supportedFeatures {
-// subclass this method, if needed
-	return nil;
+	@synchronized( _supportedFeatures ) {
+		return [NSSet setWithSet:_supportedFeatures];
+	} return nil;
 }
 
 - (BOOL) supportsFeature:(NSString *) key {
 	NSParameterAssert( key != nil );
-	return [[self supportedFeatures] containsObject:key];
+	@synchronized( _supportedFeatures ) {
+		return [_supportedFeatures containsObject:key];
+	} return NO;
 }
 
 #pragma mark -

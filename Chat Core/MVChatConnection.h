@@ -2,7 +2,8 @@ typedef enum {
 	MVChatConnectionUnsupportedType = 0,
 	MVChatConnectionICBType = 'icbC',
 	MVChatConnectionIRCType = 'ircC',
-	MVChatConnectionSILCType = 'silC'
+	MVChatConnectionSILCType = 'silC',
+	MVChatConnectionXMPPType = 'xmpC'
 } MVChatConnectionType;
 
 typedef enum {
@@ -87,6 +88,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @interface MVChatConnection : NSObject {
 @protected
+	NSMutableSet *_supportedFeatures;
 	MVChatConnectionStatus _status;
 	MVChatMessageFormat _outgoingChatFormat;
 	NSStringEncoding _encoding;

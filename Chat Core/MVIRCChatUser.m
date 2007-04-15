@@ -1,12 +1,13 @@
 #import "MVIRCChatUser.h"
 #import "MVIRCChatConnection.h"
 #import "NSStringAdditions.h"
+#import "MVUtilities.h"
 
 @implementation MVIRCChatUser
 - (id) initLocalUserWithConnection:(MVIRCChatConnection *) userConnection {
 	if( ( self = [self initWithNickname:nil andConnection:userConnection] ) ) {
 		_type = MVChatLocalUserType;
-		_uniqueIdentifier = [[[self nickname] lowercaseString] retain];
+		MVSafeCopyAssign( &_uniqueIdentifier, [[self nickname] lowercaseString] );
 	}
 
 	return self;
@@ -14,10 +15,10 @@
 
 - (id) initWithNickname:(NSString *) userNickname andConnection:(MVIRCChatConnection *) userConnection {
 	if( ( self = [self init] ) ) {
-		_connection = userConnection; // prevent circular retain
-		_nickname = [userNickname copyWithZone:nil];
-		_uniqueIdentifier = [[userNickname lowercaseString] retain];
 		_type = MVChatRemoteUserType;
+		_connection = userConnection; // prevent circular retain
+		MVSafeCopyAssign( &_nickname, userNickname );
+		MVSafeCopyAssign( &_uniqueIdentifier, [userNickname lowercaseString] );
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( ctcpReplyNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
 	}
 
