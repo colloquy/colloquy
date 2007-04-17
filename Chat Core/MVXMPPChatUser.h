@@ -6,8 +6,13 @@
 
 @interface MVXMPPChatUser : MVChatUser {
 @private
-	JabberID *_identifier;
+	BOOL _roomMember;
 }
 - (id) initLocalUserWithConnection:(MVXMPPChatConnection *) connection;
 - (id) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) connection;
+@end
+
+@interface MVXMPPChatUser (MVXMPPChatUserPrivate)
+- (void) _setRoomMember:(BOOL) member;
+- (BOOL) _isRoomMember;
 @end

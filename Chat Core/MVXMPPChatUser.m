@@ -15,8 +15,7 @@
 	if( ( self = [self init] ) ) {
 		_type = MVChatRemoteUserType;
 		_connection = userConnection; // prevent circular retain
-		MVSafeRetainAssign( &_identifier, identifier );
-		MVSafeCopyAssign( &_uniqueIdentifier, [identifier completeID] );
+		MVSafeRetainAssign( &_uniqueIdentifier, identifier );
 	}
 
 	return self;
@@ -30,15 +29,11 @@
 #pragma mark -
 
 - (NSString *) displayName {
-	if( _type == MVChatWildcardUserType )
-		return [NSString stringWithFormat:@"%@@%@", ( [self username] ? [self username] : @"*" ), ( [self address] ? [self address] : @"*" )];
-	return [self nickname];
+	return [self username];
 }
 
 - (NSString *) nickname {
-	if( _type == MVChatLocalUserType )
-		return [[self connection] username];
-	return [_identifier username];
+	return [self username];
 }
 
 - (NSString *) realName {
@@ -46,17 +41,19 @@
 }
 
 - (NSString *) username {
+	if( _roomMember )
+		return [_uniqueIdentifier resource];
 	if( _type == MVChatLocalUserType )
 		return [[self connection] username];
-	return [_identifier username];
+	return [_uniqueIdentifier username];
 }
 
 - (NSString *) address {
-	return [_identifier hostname];
+	return [_uniqueIdentifier hostname];
 }
 
 - (NSString *) serverAddress {
-	return [_identifier hostname];
+	return [_uniqueIdentifier hostname];
 }
 
 #pragma mark -
@@ -74,10 +71,22 @@
 - (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( message != nil );
 
-	JabberMessage *jabberMsg = [[JabberMessage alloc] initWithRecipient:_identifier andBody:[message string]];
+	JabberMessage *jabberMsg = [[JabberMessage alloc] initWithRecipient:_uniqueIdentifier andBody:[message string]];
 	[jabberMsg setType:@"chat"];
 	[jabberMsg addComposingRequest];
 	[[(MVXMPPChatConnection *)_connection _chatSession] sendElement:jabberMsg];
 	[jabberMsg release];
+}
+@end
+
+#pragma mark -
+
+@implementation MVXMPPChatUser (MVXMPPChatUserPrivate)
+- (void) _setRoomMember:(BOOL) member {
+	_roomMember = member;
+}
+
+- (BOOL) _isRoomMember {
+	return _roomMember;
 }
 @end

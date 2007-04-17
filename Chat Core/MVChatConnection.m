@@ -632,10 +632,23 @@ static const NSStringEncoding supportedEncodings[] = {
 	} return nil;
 }
 
+- (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
+	@synchronized( _joinedRooms ) {
+		return [_joinedRooms objectForKey:identifier];
+	} return nil;
+}
+
 - (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
 	@synchronized( _joinedRooms ) {
-		return [_joinedRooms objectForKey:[name lowercaseString]];
-	} return nil;
+		NSEnumerator *enumerator = [_joinedRooms objectEnumerator];
+		MVChatRoom *room = nil;
+
+		while( ( room = [enumerator nextObject] ) )
+			if( [[room name] isEqualToString:name] )
+				return room;
+	}
+
+	return nil;
 }
 
 #pragma mark -
@@ -898,13 +911,13 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) _addJoinedRoom:(MVChatRoom *) room {
 	@synchronized( _joinedRooms ) {
-		[_joinedRooms setObject:room forKey:[[room name] lowercaseString]];
+		[_joinedRooms setObject:room forKey:[room uniqueIdentifier]];
 	}
 }
 
 - (void) _removeJoinedRoom:(MVChatRoom *) room {
 	@synchronized( _joinedRooms ) {
-		[_joinedRooms removeObjectForKey:[[room name] lowercaseString]];
+		[_joinedRooms removeObjectForKey:[room uniqueIdentifier]];
 	}
 }
 

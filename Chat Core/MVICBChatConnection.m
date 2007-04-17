@@ -306,15 +306,13 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 - (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
 
-	MVChatRoom *room;
-	@synchronized( _joinedRooms ) {
-		room = [self joinedChatRoomWithName:identifier];
-		if( !room ) {
-			room = [[MVICBChatRoom alloc] initWithName:identifier
-										  andConnection:self];
-			[self _addJoinedRoom:room];
-		}
+	MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:identifier];
+	if( !room ) {
+		room = [[MVICBChatRoom alloc] initWithName:identifier
+									  andConnection:self];
+		[self _addJoinedRoom:room];
 	}
+
 	return room;
 }
 

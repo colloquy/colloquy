@@ -98,6 +98,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 @property(readonly) unsigned long supportedMemberUserModes;
 @property(readonly, ivar) unsigned long modes;
 
+@property(readonly) MVChatUser *localMemberUser;
 @property(readonly) NSSet *memberUsers;
 @property(readonly) NSSet *bannedUsers;
 
@@ -127,6 +128,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 - (unsigned long) supportedMemberUserModes;
 - (unsigned long) modes;
 
+- (MVChatUser *) localMemberUser;
 - (NSSet *) memberUsers;
 - (NSSet *) bannedUsers;
 #endif

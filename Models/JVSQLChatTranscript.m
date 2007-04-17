@@ -655,8 +655,6 @@ static void _printSQL( void *context, const char *sql ) {
 		senderName = [member displayName];
 		senderNickname = [member nickname];
 		senderIdentifier = [[member user] uniqueIdentifier];
-		if( [senderIdentifier isKindOfClass:[NSData class]] )
-			senderIdentifier = [senderIdentifier base64Encoding];
 		senderHostmask = [member hostmask];
 		if( [member serverOperator] ) senderClass = @"server operator";
 		else if( [member roomFounder] ) senderClass = @"room founder";
@@ -672,12 +670,15 @@ static void _printSQL( void *context, const char *sql ) {
 		senderName = [chatUser displayName];
 		senderNickname = [chatUser nickname];
 		senderIdentifier = [chatUser uniqueIdentifier];
-		if( [senderIdentifier isKindOfClass:[NSData class]] )
-			senderIdentifier = [senderIdentifier base64Encoding];
 		if( [[chatUser username] length] && [[chatUser address] length] )
 			senderHostmask = [NSString stringWithFormat:@"%@@%@", [chatUser username], [chatUser address]];
 		senderLocalUser = [chatUser isLocalUser];
 	}
+
+	if( [senderIdentifier isKindOfClass:[NSData class]] )
+		senderIdentifier = [senderIdentifier base64Encoding];
+	else if( ! [senderIdentifier isKindOfClass:[NSString class]] )
+		senderIdentifier = [senderIdentifier description];
 
 	char userQuery[512] = "";
 	sqlite3_snprintf( sizeof( userQuery ), userQuery, "SELECT id FROM user WHERE self = %d AND name = '%q' AND (identifier IS NULL OR identifier = '%q') AND (nickname IS NULL OR nickname = '%q') AND (hostmask IS NULL OR hostmask = '%q') AND (class IS NULL OR class = '%q') AND (buddy IS NULL OR buddy = '%q') ORDER BY identifier, nickname, hostmask, class, buddy DESC LIMIT 1", senderLocalUser, ( senderName ? [senderName UTF8String] : "" ), ( senderIdentifier ? [senderIdentifier UTF8String] : "" ), ( senderNickname ? [senderNickname UTF8String] : "" ), ( senderHostmask ? [senderHostmask UTF8String] : "" ), ( senderClass ? [senderClass UTF8String] : "" ), ( senderBuddyIdentifier ? [senderBuddyIdentifier UTF8String] : "" ) );

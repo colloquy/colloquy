@@ -453,6 +453,10 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 #pragma mark -
 
 @implementation MVChatUser (MVChatUserPrivate)
+- (void) _setType:(MVChatUserType) type {
+	_type = type;
+}
+
 - (void) _setUniqueIdentifier:(id) identifier {
 	MVSafeAdoptAssign( &_uniqueIdentifier, ( [identifier conformsToProtocol:@protocol( NSCopying )] ? [identifier copyWithZone:nil] : [identifier retain] ) );
 }

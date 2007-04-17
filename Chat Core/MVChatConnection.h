@@ -372,6 +372,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
+- (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier;
 - (MVChatRoom *) joinedChatRoomWithName:(NSString *) room;
 
 #pragma mark -

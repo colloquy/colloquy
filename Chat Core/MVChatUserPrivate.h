@@ -1,6 +1,7 @@
 #import "MVChatUser.h"
 
 @interface MVChatUser (MVChatUserPrivate)
+- (void) _setType:(MVChatUserType) type;
 - (void) _setUniqueIdentifier:(id) identifier;
 - (void) _setNickname:(NSString *) name;
 - (void) _setRealName:(NSString *) name;

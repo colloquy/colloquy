@@ -374,6 +374,10 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
+- (MVChatUser *) localMemberUser {
+	return [[self connection] localUser];
+}
+
 - (NSSet *) memberUsers {
 	@synchronized( _memberUsers ) {
 		return [NSSet setWithSet:_memberUsers];
