@@ -24,6 +24,7 @@
 
 #import "acid-dom.h"
 #import <objc/objc-runtime.h>
+#import <expat.h>
 
 @interface BufferParser : NSObject <XMLElementStreamListener>
 {

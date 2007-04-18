@@ -89,13 +89,13 @@ extern "C"
     enum Stringprep_profile_steps operation;
     enum Stringprep_profile_flags flags;
     Stringprep_table_element *table;
-    char *name;
+    const char *name;
   };
   typedef struct Stringprep_table Stringprep_profile;
 
   struct Stringprep_profiles
   {
-    char *name;
+    const char *name;
     Stringprep_profile *tables;
   };
   typedef struct Stringprep_profiles Stringprep_profiles;

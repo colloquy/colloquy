@@ -23,6 +23,7 @@
 //============================================================================
 
 #import "acid-dom.h"
+#import <expat.h>
 
 @implementation XMLAccumulator
 
@@ -110,6 +111,11 @@
                     prefix, [qname name], prefix, [qname uri], uri];
         }
     }
+}
+
+-(void) selfCloseElement
+{
+	[_data appendString:@"/>"];
 }
 
 -(void) closeElement:(XMLElement*)elem

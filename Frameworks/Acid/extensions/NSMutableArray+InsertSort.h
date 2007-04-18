@@ -22,7 +22,7 @@
 // $Id: NSMutableArray+InsertSort.h,v 1.1 2004/07/19 03:49:03 jtownsend Exp $
 //============================================================================
 
-#import <Foundation/Foundation.h>
+#import <Foundation/NSArray.h>
 
 @interface NSMutableArray (AcidExtensions)
 

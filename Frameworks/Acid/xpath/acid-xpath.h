@@ -27,7 +27,8 @@
   @header acid-xpath.
   @abstract implements XPath-based querying
 */
-#import <Foundation/Foundation.h>
+#import <Foundation/NSObject.h>
+#import <Foundation/NSString.h>
 
 /*!
   @class NSMutableString (_ACID_EXT)

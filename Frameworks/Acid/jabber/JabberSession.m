@@ -59,7 +59,7 @@ NSString* STREAM_ROOT = @"<stream:stream xmlns='jabber:client' xmlns:stream='htt
     _ncenter     = [NSNotificationCenter defaultCenter];
     _curr_id = (int)self;
     _expressions = [[NSMutableDictionary alloc] init];
-    _observerMap = [[NSMutableDictionary alloc] init];
+    _observerMap = CFDictionaryCreateMutable( NULL, 0, NULL, &kCFTypeDictionaryValueCallBacks );
     _authMgr     = [[JabberStdAuthManager alloc] init];
     _roster      = [[JabberRoster alloc] initWithSession:self];
     _pres        = [[JabberPresenceTracker alloc] initWithSession:self];
@@ -80,28 +80,24 @@ NSString* STREAM_ROOT = @"<stream:stream xmlns='jabber:client' xmlns:stream='htt
 
 -(void) dealloc
 {
-    id oldObserverMap = _observerMap;
-    NSLog(@"Releasing session.");
-
     [_ncenter removeObserver:self];
     [_authMgr release];
     [_roster release];
     [_pres release];
     [_expressions release];
-    //Make sure there are no opperations on _observerMap while we are releasing it
-    _observerMap = nil;
-    [oldObserverMap release];
+
+	CFRelease(_observerMap);
     
     [super dealloc];
 }
 
 -(NSMutableArray*) getQueriesForObserver:(id)observer
 {
-    NSMutableArray* result = [_observerMap objectForKey:observer];
+    NSMutableArray* result = (NSMutableArray*)CFDictionaryGetValue(_observerMap, observer);
     if (result == nil)
     {
         result = [[NSMutableArray alloc] init];
-        [_observerMap setObject:result forKey:observer];
+		CFDictionarySetValue(_observerMap, observer, result);
         [result release];
     }
 
@@ -184,7 +180,7 @@ NSString* STREAM_ROOT = @"<stream:stream xmlns='jabber:client' xmlns:stream='htt
 {
     // Remove observer from _observerMap and unregister with the
     // notification centre
-    [_observerMap removeObjectForKey:observer];
+	CFDictionaryRemoveValue(_observerMap, observer);
     [_ncenter removeObserver:observer];
 }
 
@@ -192,7 +188,7 @@ NSString* STREAM_ROOT = @"<stream:stream xmlns='jabber:client' xmlns:stream='htt
 {
     NSString* eventName = [NSString stringWithFormat:@"/packet/%@", path];
     XPathQuery* query = [_expressions objectForKey:path];
-    NSMutableArray* queryList = [_observerMap objectForKey:observer];
+    NSMutableArray* queryList = (NSMutableArray*)CFDictionaryGetValue(_observerMap, observer);
 
     if ((query == nil) || (queryList == nil))
     {
@@ -207,7 +203,7 @@ NSString* STREAM_ROOT = @"<stream:stream xmlns='jabber:client' xmlns:stream='htt
     // from the observer map
     if ([queryList count] == 0)
     {
-        [_observerMap removeObjectForKey:observer];
+		CFDictionaryRemoveValue(_observerMap, observer);
     }
 
     // If the retainCount is 1, there are no observers interested in

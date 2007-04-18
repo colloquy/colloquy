@@ -22,6 +22,8 @@
 // $Id: JabberID.h,v 1.2 2005/04/29 18:44:44 gbooker Exp $
 //============================================================================
 
+#import <Foundation/NSObject.h>
+
 /*!
   @class JabberID
   @abstract provides a representation for a Jabber Identifier
@@ -154,7 +156,6 @@
 */
 -(NSString*) completeID;
 -(NSString*) escapedCompleteID;
--(JabberID*) userhostJID;
 
 /*!
     @method isEqual:

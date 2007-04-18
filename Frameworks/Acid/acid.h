@@ -22,13 +22,6 @@
 // $Id: acid.h,v 1.1 2004/07/19 03:49:03 jtownsend Exp $
 //============================================================================
 
-#import <Foundation/Foundation.h>
-
-#import <string.h>
-
-#import "DizSocket.h"
-
 #import "acid-dom.h"
 #import "acid-xpath.h"
 #import "acid-jabber.h"
-

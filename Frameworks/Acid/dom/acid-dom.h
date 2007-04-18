@@ -22,10 +22,7 @@
 // $Id: acid-dom.h,v 1.2 2004/10/16 21:09:47 alangh Exp $
 //============================================================================
 
-#import <Foundation/Foundation.h>
-/* Fire Specific change to get rid of cdecl warnings */
-#define XMLCALL
-#import <expat.h>
+#import <Foundation/NSObject.h>
 
 @interface XMLQName : NSObject <NSCopying>
 {
@@ -209,6 +206,7 @@
 -(NSString*) generatePrefix:(NSString*)uri;
 
 -(void) openElement:(XMLElement*)elem;
+-(void) selfCloseElement;
 -(void) closeElement:(XMLElement*)elem;
 -(void) addAttribute:(XMLQName*)qname withValue:(NSString*)value ofElement:(XMLElement*)elem;
 -(void) addChildren:(NSArray*)children ofElement:(XMLElement*)elem;
@@ -230,7 +228,7 @@
     BOOL _document_started;
     BOOL _document_ended;
 
-    XML_Parser       _parser;
+    void*       _parser;
     XMLElement*      _current_element;
 
     NSMutableArray*  _default_uri_stack;

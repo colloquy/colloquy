@@ -23,7 +23,6 @@
 //
 //============================================================================
 
-#import <Foundation/Foundation.h>
 #import "acid.h"
 
 XPathQuery* QRY_MESSAGE;

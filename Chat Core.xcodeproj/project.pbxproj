@@ -80,6 +80,23 @@
 		DDF64E1A0BD2CABE009E8FF6 /* MVXMPPChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = DDF64E180BD2CABE009E8FF6 /* MVXMPPChatUser.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		DDBB43A60BD5DF9400EC6E55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DDBB43A20BD5DF9400EC6E55 /* Acid.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216 /* Acid.framework */;
+			remoteInfo = Acid;
+		};
+		DDBB43B80BD5DFB000EC6E55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DDBB43A20BD5DF9400EC6E55 /* Acid.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* Acid */;
+			remoteInfo = Acid;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -166,9 +183,10 @@
 		431261C1072EE37A00720AD1 /* MVSILCFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = MVSILCFileTransfer.m; path = "Chat Core/MVSILCFileTransfer.m"; sourceTree = "<group>"; };
 		DD47412E0BD35A2E00D93AB9 /* MVXMPPChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVXMPPChatRoom.h; path = "Chat Core/MVXMPPChatRoom.h"; sourceTree = "<group>"; };
 		DD47412F0BD35A2E00D93AB9 /* MVXMPPChatRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVXMPPChatRoom.m; path = "Chat Core/MVXMPPChatRoom.m"; sourceTree = "<group>"; };
+		DDBB43A20BD5DF9400EC6E55 /* Acid.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Acid.xcodeproj; path = Frameworks/Acid/Acid.xcodeproj; sourceTree = "<group>"; };
 		DDF64CE30BD29E41009E8FF6 /* MVXMPPChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVXMPPChatConnection.h; path = "Chat Core/MVXMPPChatConnection.h"; sourceTree = "<group>"; };
 		DDF64CE40BD29E41009E8FF6 /* MVXMPPChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVXMPPChatConnection.m; path = "Chat Core/MVXMPPChatConnection.m"; sourceTree = "<group>"; };
-		DDF64D520BD2A4F6009E8FF6 /* Acid.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Acid.framework; path = Frameworks/Acid.framework; sourceTree = "<group>"; };
+		DDF64D520BD2A4F6009E8FF6 /* Acid.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Acid.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDF64E170BD2CABE009E8FF6 /* MVXMPPChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVXMPPChatUser.h; path = "Chat Core/MVXMPPChatUser.h"; sourceTree = "<group>"; };
 		DDF64E180BD2CABE009E8FF6 /* MVXMPPChatUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVXMPPChatUser.m; path = "Chat Core/MVXMPPChatUser.m"; sourceTree = "<group>"; };
 		F52D043001873FC401EE70DE /* MVChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatConnection.m; path = "Chat Core/MVChatConnection.m"; sourceTree = "<group>"; };
@@ -307,9 +325,18 @@
 			name = "ICB Support";
 			sourceTree = "<group>";
 		};
+		DDBB43A30BD5DF9400EC6E55 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DDBB43A70BD5DF9400EC6E55 /* Acid.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		DDF64CE20BD29DA4009E8FF6 /* XMPP Support */ = {
 			isa = PBXGroup;
 			children = (
+				DDBB43A20BD5DF9400EC6E55 /* Acid.xcodeproj */,
 				DDF64CE40BD29E41009E8FF6 /* MVXMPPChatConnection.m */,
 				DDF64CE30BD29E41009E8FF6 /* MVXMPPChatConnection.h */,
 				DD47412F0BD35A2E00D93AB9 /* MVXMPPChatRoom.m */,
@@ -457,6 +484,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DDBB43B90BD5DFB000EC6E55 /* PBXTargetDependency */,
 			);
 			name = "Chat Core (Framework)";
 			productInstallPath = "@executable_path/../Frameworks";
@@ -494,6 +522,12 @@
 			mainGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
 			productRefGroup = 089C166AFE841209C02AAC07 /* Massinova Menu Extra */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = DDBB43A30BD5DF9400EC6E55 /* Products */;
+					ProjectRef = DDBB43A20BD5DF9400EC6E55 /* Acid.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			shouldCheckCompatibility = 1;
 			targets = (
@@ -501,6 +535,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		DDBB43A70BD5DF9400EC6E55 /* Acid.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Acid.framework;
+			remoteRef = DDBB43A60BD5DF9400EC6E55 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		1C51B47A052DE0CB00BB459B /* Resources */ = {
@@ -580,6 +624,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		DDBB43B90BD5DFB000EC6E55 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Acid;
+			targetProxy = DDBB43B80BD5DFB000EC6E55 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
 		1C041DDB08553AD200A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -608,7 +660,6 @@
 				DYLIB_CURRENT_VERSION = 2;
 				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
 				FRAMEWORK_VERSION = A;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = Basic.pch;
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";

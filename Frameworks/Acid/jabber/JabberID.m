@@ -388,11 +388,17 @@ static NSMutableDictionary* G_cache;
 
 -(BOOL) isEqual:(JabberID*)other
 {
+	if (self == other)
+		return YES;
+	if (!other || ![other isKindOfClass:[JabberID class]])
+		return NO;
     return [self compare:other] == NSOrderedSame;
 }
 
 -(NSComparisonResult) compare:(JabberID*)other;
 {
+	if (self == other)
+		return NSOrderedSame;
     return [_complete compare:other->_complete];
 }
 

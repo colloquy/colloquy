@@ -198,7 +198,6 @@
 		1CB2CD6D052DDC560094AAA4 /* JVChatWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE2BC1E042F4AD300000102 /* JVChatWindowController.m */; };
 		1CB2CD6E052DDC560094AAA4 /* JVChatRoomPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE2BC4A042F53AD00000102 /* JVChatRoomPanel.m */; };
 		1CB2CD6F052DDC560094AAA4 /* JVChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE2BC54042F75FB00000102 /* JVChatController.m */; };
-		1CB2CD70052DDC560094AAA4 /* JVDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBB23DA04F03CA7000001C8 /* JVDetailCell.m */; };
 		1CB2CD71052DDC560094AAA4 /* JVChatRoomMember.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C088A0F04FCFEE700A8FE6E /* JVChatRoomMember.m */; };
 		1CB2CD72052DDC560094AAA4 /* JVDirectChatPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB279E04FE93FE00A8FE6E /* JVDirectChatPanel.m */; };
 		1CB2CD73052DDC560094AAA4 /* MVTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F592CABF01824AE801EE70DE /* MVTableView.m */; };
@@ -301,8 +300,9 @@
 		CBF6856208201B7A00F498FB /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF685310820190D00F498FB /* GetMetadataForFile.m */; };
 		CBF6856308201B7A00F498FB /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = CBF685330820190D00F498FB /* main.c */; };
 		CBF6857708201C4C00F498FB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 089C1672FE841209C02AAC07 /* Foundation.framework */; };
-		DD2143690BD2EDB4005F13DF /* iTunes.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1C8CE1EB05A921A00020D841 /* iTunes.scpt */; };
-		DD21436C0BD2EDC0005F13DF /* Google.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1CD4C098078249C10003620F /* Google.scpt */; };
+		DDBB44E20BD5E13300EC6E55 /* iTunes.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1C8CE1EB05A921A00020D841 /* iTunes.scpt */; };
+		DDBB44E30BD5E13300EC6E55 /* Google.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1CD4C098078249C10003620F /* Google.scpt */; };
+		DDF034100BD529AE0096B109 /* JVDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBB23DA04F03CA7000001C8 /* JVDetailCell.m */; };
 		DDF64DA60BD2B0C3009E8FF6 /* Acid.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDF64DA50BD2B0C3009E8FF6 /* Acid.framework */; };
 		DDF64DA80BD2B0D7009E8FF6 /* Acid.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = DDF64DA50BD2B0C3009E8FF6 /* Acid.framework */; };
 /* End PBXBuildFile section */
@@ -448,8 +448,8 @@
 				1CEF8F830A3AB7E90054298A /* JavaScript Support.plugin in Copy Plugins */,
 				0A6571BD0868800D001FF007 /* F-Script Support.plugin in Copy Plugins */,
 				1C0A19B008B041C200324E25 /* Python Support.plugin in Copy Plugins */,
-				DD2143690BD2EDB4005F13DF /* iTunes.scpt in Copy Plugins */,
-				DD21436C0BD2EDC0005F13DF /* Google.scpt in Copy Plugins */,
+				DDBB44E20BD5E13300EC6E55 /* iTunes.scpt in Copy Plugins */,
+				DDBB44E30BD5E13300EC6E55 /* Google.scpt in Copy Plugins */,
 			);
 			name = "Copy Plugins";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -955,7 +955,7 @@
 		CBF685330820190D00F498FB /* main.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = main.c; path = Importer/main.c; sourceTree = "<group>"; };
 		CBF685340820190D00F498FB /* schema.xml */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = schema.xml; path = Importer/schema.xml; sourceTree = "<group>"; };
 		CBF687A508202F3F00F498FB /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
-		DDF64DA50BD2B0C3009E8FF6 /* Acid.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Acid.framework; path = Frameworks/Acid.framework; sourceTree = "<group>"; };
+		DDF64DA50BD2B0C3009E8FF6 /* Acid.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Acid.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F50B0AA20170CAD701A84BDE /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F51A4F2B01C2DDD201EE70DE /* MVFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVFileTransferController.m; path = Controllers/MVFileTransferController.m; sourceTree = "<group>"; };
 		F51A4F2C01C2DDD201EE70DE /* MVFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVFileTransferController.h; path = Controllers/MVFileTransferController.h; sourceTree = "<group>"; };
@@ -2382,7 +2382,6 @@
 				1CB2CD6D052DDC560094AAA4 /* JVChatWindowController.m in Sources */,
 				1CB2CD6E052DDC560094AAA4 /* JVChatRoomPanel.m in Sources */,
 				1CB2CD6F052DDC560094AAA4 /* JVChatController.m in Sources */,
-				1CB2CD70052DDC560094AAA4 /* JVDetailCell.m in Sources */,
 				1CB2CD71052DDC560094AAA4 /* JVChatRoomMember.m in Sources */,
 				1CB2CD72052DDC560094AAA4 /* JVDirectChatPanel.m in Sources */,
 				1CB2CD73052DDC560094AAA4 /* MVTableView.m in Sources */,
@@ -2446,6 +2445,7 @@
 				1C710A7009F23AF0007B4515 /* JVSideOutlineView.m in Sources */,
 				1CEC00570A20F05F004C2B86 /* JVSQLChatTranscript.m in Sources */,
 				1C415F270B350CA300239EB3 /* JVToolbarItem.m in Sources */,
+				DDF034100BD529AE0096B109 /* JVDetailCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

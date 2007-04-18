@@ -113,7 +113,7 @@ static void _setup_cipher(int encrypt_flag, ESessionCipherAlgo algo,
     EVP_CipherInit(result, cipher_type, keybuf, ivbuf, encrypt_flag);
 }
 
-void _compute_sid(const char* key, BIGNUM* e, BIGNUM* f, BUF_MEM K,
+static void _compute_sid(const char* key, BIGNUM* e, BIGNUM* f, BUF_MEM K,
                       Buffer* result)
 {
     EVP_MD_CTX     ctx;

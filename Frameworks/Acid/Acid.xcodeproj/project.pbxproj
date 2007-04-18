@@ -1,0 +1,553 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DD4A10890BD5DA910051366F /* xmlparse.c in Sources */ = {isa = PBXBuildFile; fileRef = DD4A10770BD5DA910051366F /* xmlparse.c */; };
+		DD4A108A0BD5DA910051366F /* xmlrole.c in Sources */ = {isa = PBXBuildFile; fileRef = DD4A10780BD5DA910051366F /* xmlrole.c */; };
+		DD4A108C0BD5DA910051366F /* xmltok.c in Sources */ = {isa = PBXBuildFile; fileRef = DD4A107A0BD5DA910051366F /* xmltok.c */; };
+		DD5BB1140BD5DAE9005DDA42 /* expat.h in Headers */ = {isa = PBXBuildFile; fileRef = DD4A10710BD5DA910051366F /* expat.h */; };
+		DD8ADFBB0BD1741A009AB74D /* sha1.c in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF5B0BD1741A009AB74D /* sha1.c */; };
+		DD8ADFBD0BD1741A009AB74D /* acid.h in Headers */ = {isa = PBXBuildFile; fileRef = DD8ADF5D0BD1741A009AB74D /* acid.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DD8ADFC90BD1741A009AB74D /* acid-dom.h in Headers */ = {isa = PBXBuildFile; fileRef = DD8ADF6E0BD1741A009AB74D /* acid-dom.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DD8ADFCA0BD1741A009AB74D /* XMLAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF6F0BD1741A009AB74D /* XMLAccumulator.m */; };
+		DD8ADFCB0BD1741A009AB74D /* XMLCData.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF700BD1741A009AB74D /* XMLCData.m */; };
+		DD8ADFCC0BD1741A009AB74D /* XMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF710BD1741A009AB74D /* XMLElement.m */; };
+		DD8ADFCD0BD1741A009AB74D /* XMLElementStream.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF720BD1741A009AB74D /* XMLElementStream.m */; };
+		DD8ADFCE0BD1741A009AB74D /* XMLQName.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF730BD1741A009AB74D /* XMLQName.m */; };
+		DD8ADFE30BD1741A009AB74D /* NSMutableArray+InsertSort.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF8C0BD1741A009AB74D /* NSMutableArray+InsertSort.m */; };
+		DD8ADFE40BD1741A009AB74D /* NSMutableString.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF8D0BD1741A009AB74D /* NSMutableString.m */; };
+		DD8ADFE60BD1741A009AB74D /* NSString+Misc.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF8F0BD1741A009AB74D /* NSString+Misc.m */; };
+		DD8ADFE70BD1741A009AB74D /* acid-jabber.h in Headers */ = {isa = PBXBuildFile; fileRef = DD8ADF910BD1741A009AB74D /* acid-jabber.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DD8ADFE80BD1741A009AB74D /* Jabber.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF920BD1741A009AB74D /* Jabber.m */; };
+		DD8ADFE90BD1741A009AB74D /* JabberGroupTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF930BD1741A009AB74D /* JabberGroupTracker.m */; };
+		DD8ADFEA0BD1741A009AB74D /* JabberID.h in Headers */ = {isa = PBXBuildFile; fileRef = DD8ADF940BD1741A009AB74D /* JabberID.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DD8ADFEB0BD1741A009AB74D /* JabberID.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF950BD1741A009AB74D /* JabberID.m */; };
+		DD8ADFEC0BD1741A009AB74D /* JabberIQ.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF960BD1741A009AB74D /* JabberIQ.m */; };
+		DD8ADFED0BD1741A009AB74D /* JabberMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF970BD1741A009AB74D /* JabberMessage.m */; };
+		DD8ADFEE0BD1741A009AB74D /* JabberPresence.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF980BD1741A009AB74D /* JabberPresence.m */; };
+		DD8ADFEF0BD1741A009AB74D /* JabberPresenceTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF990BD1741A009AB74D /* JabberPresenceTracker.m */; };
+		DD8ADFF00BD1741A009AB74D /* JabberRoster.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF9A0BD1741A009AB74D /* JabberRoster.m */; };
+		DD8ADFF10BD1741A009AB74D /* JabberSession.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF9B0BD1741A009AB74D /* JabberSession.m */; };
+		DD8ADFF20BD1741A009AB74D /* JabberSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF9C0BD1741A009AB74D /* JabberSocket.m */; };
+		DD8ADFF30BD1741A009AB74D /* JabberStdAuthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF9D0BD1741A009AB74D /* JabberStdAuthManager.m */; };
+		DD8ADFF40BD1741A009AB74D /* JabberSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADF9E0BD1741A009AB74D /* JabberSubscriptionRequest.m */; };
+		DD8ADFF90BD1741A009AB74D /* base64.c in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADFA50BD1741A009AB74D /* base64.c */; };
+		DD8ADFFA0BD1741A009AB74D /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADFA60BD1741A009AB74D /* buffer.c */; };
+		DD8ADFFC0BD1741A009AB74D /* esession.c in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADFA80BD1741A009AB74D /* esession.c */; };
+		DD8ADFFE0BD1741A009AB74D /* keycache.c in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADFAA0BD1741A009AB74D /* keycache.c */; };
+		DD8AE0030BD1741A009AB74D /* nfkc.c in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADFB00BD1741A009AB74D /* nfkc.c */; };
+		DD8AE0040BD1741A009AB74D /* profiles.c in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADFB10BD1741A009AB74D /* profiles.c */; };
+		DD8AE0050BD1741A009AB74D /* stringprep.c in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADFB20BD1741A009AB74D /* stringprep.c */; };
+		DD8AE0070BD1741A009AB74D /* stringprep_generic.c in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADFB40BD1741A009AB74D /* stringprep_generic.c */; };
+		DD8AE0080BD1741A009AB74D /* toutf8.c in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADFB50BD1741A009AB74D /* toutf8.c */; };
+		DD8AE0090BD1741A009AB74D /* acid-xpath.h in Headers */ = {isa = PBXBuildFile; fileRef = DD8ADFB70BD1741A009AB74D /* acid-xpath.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DD8AE00A0BD1741A009AB74D /* XPathQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADFB80BD1741A009AB74D /* XPathQuery.m */; };
+		DD8AE00B0BD1741A009AB74D /* XPLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADFB90BD1741A009AB74D /* XPLocation.m */; };
+		DD8AE00C0BD1741A009AB74D /* XPPredicate.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADFBA0BD1741A009AB74D /* XPPredicate.m */; };
+		DDBE55910BD1845D004ED228 /* libssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDBE55900BD1845D004ED228 /* libssl.dylib */; };
+		DDBE55BA0BD187D5004ED228 /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDBE55B90BD187D5004ED228 /* libcrypto.dylib */; };
+		DDF45AC40BD5CC500050911E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
+		DDF45BBD0BD5CD6D0050911E /* AsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = DDF45BBC0BD5CD6D0050911E /* AsyncSocket.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8DC2EF5B0486A6940098B216 /* Acid.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Acid.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD4A106D0BD5DA910051366F /* ascii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ascii.h; sourceTree = "<group>"; };
+		DD4A106E0BD5DA910051366F /* asciitab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asciitab.h; sourceTree = "<group>"; };
+		DD4A106F0BD5DA910051366F /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		DD4A10710BD5DA910051366F /* expat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = expat.h; sourceTree = "<group>"; };
+		DD4A10720BD5DA910051366F /* iasciitab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iasciitab.h; sourceTree = "<group>"; };
+		DD4A10730BD5DA910051366F /* latin1tab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = latin1tab.h; sourceTree = "<group>"; };
+		DD4A10740BD5DA910051366F /* nametab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nametab.h; sourceTree = "<group>"; };
+		DD4A10750BD5DA910051366F /* utf8tab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utf8tab.h; sourceTree = "<group>"; };
+		DD4A10760BD5DA910051366F /* winconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = winconfig.h; sourceTree = "<group>"; };
+		DD4A10770BD5DA910051366F /* xmlparse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmlparse.c; sourceTree = "<group>"; };
+		DD4A10780BD5DA910051366F /* xmlrole.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmlrole.c; sourceTree = "<group>"; };
+		DD4A10790BD5DA910051366F /* xmlrole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlrole.h; sourceTree = "<group>"; };
+		DD4A107A0BD5DA910051366F /* xmltok.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok.c; sourceTree = "<group>"; };
+		DD4A107B0BD5DA910051366F /* xmltok.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltok.h; sourceTree = "<group>"; };
+		DD4A107C0BD5DA910051366F /* xmltok_impl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok_impl.c; sourceTree = "<group>"; };
+		DD4A107D0BD5DA910051366F /* xmltok_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltok_impl.h; sourceTree = "<group>"; };
+		DD4A107E0BD5DA910051366F /* xmltok_ns.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok_ns.c; sourceTree = "<group>"; };
+		DD8ADF5B0BD1741A009AB74D /* sha1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sha1.c; sourceTree = "<group>"; };
+		DD8ADF5C0BD1741A009AB74D /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
+		DD8ADF5D0BD1741A009AB74D /* acid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = acid.h; sourceTree = "<group>"; };
+		DD8ADF6E0BD1741A009AB74D /* acid-dom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "acid-dom.h"; sourceTree = "<group>"; };
+		DD8ADF6F0BD1741A009AB74D /* XMLAccumulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLAccumulator.m; sourceTree = "<group>"; };
+		DD8ADF700BD1741A009AB74D /* XMLCData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLCData.m; sourceTree = "<group>"; };
+		DD8ADF710BD1741A009AB74D /* XMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLElement.m; sourceTree = "<group>"; };
+		DD8ADF720BD1741A009AB74D /* XMLElementStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLElementStream.m; sourceTree = "<group>"; };
+		DD8ADF730BD1741A009AB74D /* XMLQName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMLQName.m; sourceTree = "<group>"; };
+		DD8ADF8B0BD1741A009AB74D /* NSMutableArray+InsertSort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+InsertSort.h"; sourceTree = "<group>"; };
+		DD8ADF8C0BD1741A009AB74D /* NSMutableArray+InsertSort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+InsertSort.m"; sourceTree = "<group>"; };
+		DD8ADF8D0BD1741A009AB74D /* NSMutableString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMutableString.m; sourceTree = "<group>"; };
+		DD8ADF8E0BD1741A009AB74D /* NSString+Misc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Misc.h"; sourceTree = "<group>"; };
+		DD8ADF8F0BD1741A009AB74D /* NSString+Misc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Misc.m"; sourceTree = "<group>"; };
+		DD8ADF910BD1741A009AB74D /* acid-jabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "acid-jabber.h"; sourceTree = "<group>"; };
+		DD8ADF920BD1741A009AB74D /* Jabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Jabber.m; sourceTree = "<group>"; };
+		DD8ADF930BD1741A009AB74D /* JabberGroupTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JabberGroupTracker.m; sourceTree = "<group>"; };
+		DD8ADF940BD1741A009AB74D /* JabberID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JabberID.h; sourceTree = "<group>"; };
+		DD8ADF950BD1741A009AB74D /* JabberID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JabberID.m; sourceTree = "<group>"; };
+		DD8ADF960BD1741A009AB74D /* JabberIQ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JabberIQ.m; sourceTree = "<group>"; };
+		DD8ADF970BD1741A009AB74D /* JabberMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JabberMessage.m; sourceTree = "<group>"; };
+		DD8ADF980BD1741A009AB74D /* JabberPresence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JabberPresence.m; sourceTree = "<group>"; };
+		DD8ADF990BD1741A009AB74D /* JabberPresenceTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JabberPresenceTracker.m; sourceTree = "<group>"; };
+		DD8ADF9A0BD1741A009AB74D /* JabberRoster.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JabberRoster.m; sourceTree = "<group>"; };
+		DD8ADF9B0BD1741A009AB74D /* JabberSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JabberSession.m; sourceTree = "<group>"; };
+		DD8ADF9C0BD1741A009AB74D /* JabberSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JabberSocket.m; sourceTree = "<group>"; };
+		DD8ADF9D0BD1741A009AB74D /* JabberStdAuthManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JabberStdAuthManager.m; sourceTree = "<group>"; };
+		DD8ADF9E0BD1741A009AB74D /* JabberSubscriptionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JabberSubscriptionRequest.m; sourceTree = "<group>"; };
+		DD8ADFA50BD1741A009AB74D /* base64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = base64.c; sourceTree = "<group>"; };
+		DD8ADFA60BD1741A009AB74D /* buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = buffer.c; sourceTree = "<group>"; };
+		DD8ADFA70BD1741A009AB74D /* buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = buffer.h; sourceTree = "<group>"; };
+		DD8ADFA80BD1741A009AB74D /* esession.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = esession.c; sourceTree = "<group>"; };
+		DD8ADFA90BD1741A009AB74D /* esession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = esession.h; sourceTree = "<group>"; };
+		DD8ADFAA0BD1741A009AB74D /* keycache.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = keycache.c; sourceTree = "<group>"; };
+		DD8ADFAD0BD1741A009AB74D /* gunicomp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gunicomp.h; sourceTree = "<group>"; };
+		DD8ADFAE0BD1741A009AB74D /* gunidecomp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gunidecomp.h; sourceTree = "<group>"; };
+		DD8ADFAF0BD1741A009AB74D /* internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = internal.h; sourceTree = "<group>"; };
+		DD8ADFB00BD1741A009AB74D /* nfkc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nfkc.c; sourceTree = "<group>"; };
+		DD8ADFB10BD1741A009AB74D /* profiles.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = profiles.c; sourceTree = "<group>"; };
+		DD8ADFB20BD1741A009AB74D /* stringprep.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stringprep.c; sourceTree = "<group>"; };
+		DD8ADFB30BD1741A009AB74D /* stringprep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringprep.h; sourceTree = "<group>"; };
+		DD8ADFB40BD1741A009AB74D /* stringprep_generic.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stringprep_generic.c; sourceTree = "<group>"; };
+		DD8ADFB50BD1741A009AB74D /* toutf8.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = toutf8.c; sourceTree = "<group>"; };
+		DD8ADFB70BD1741A009AB74D /* acid-xpath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "acid-xpath.h"; sourceTree = "<group>"; };
+		DD8ADFB80BD1741A009AB74D /* XPathQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPathQuery.m; sourceTree = "<group>"; };
+		DD8ADFB90BD1741A009AB74D /* XPLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPLocation.m; sourceTree = "<group>"; };
+		DD8ADFBA0BD1741A009AB74D /* XPPredicate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPPredicate.m; sourceTree = "<group>"; };
+		DDBE55900BD1845D004ED228 /* libssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.dylib; path = /usr/lib/libssl.dylib; sourceTree = "<absolute>"; };
+		DDBE55B90BD187D5004ED228 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = /usr/lib/libcrypto.dylib; sourceTree = "<absolute>"; };
+		DDCB77A00BD5CB8700693892 /* Acid.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Acid.pch; sourceTree = "<group>"; };
+		DDF45BBC0BD5CD6D0050911E /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncSocket.h; path = "../../Chat Core/AsyncSocket.h"; sourceTree = SOURCE_ROOT; };
+		DDF45C0C0BD5CF0E0050911E /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8DC2EF560486A6940098B216 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DDBE55910BD1845D004ED228 /* libssl.dylib in Frameworks */,
+				DDBE55BA0BD187D5004ED228 /* libcrypto.dylib in Frameworks */,
+				DDF45AC40BD5CC500050911E /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		034768DFFF38A50411DB9C8B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8DC2EF5B0486A6940098B216 /* Acid.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0867D691FE84028FC02AAC07 /* Acid */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77AEFE84172EC02AAC07 /* Classes */,
+				089C1665FE841158C02AAC07 /* Resources */,
+				DDF45C0B0BD5CF0E0050911E /* Configurations */,
+				0867D69AFE84028FC02AAC07 /* Frameworks */,
+				034768DFFF38A50411DB9C8B /* Products */,
+			);
+			name = Acid;
+			sourceTree = "<group>";
+		};
+		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		089C1665FE841158C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8DC2EF5A0486A6940098B216 /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		08FB77AEFE84172EC02AAC07 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				DDCB77A00BD5CB8700693892 /* Acid.pch */,
+				DD8ADF5D0BD1741A009AB74D /* acid.h */,
+				DD8ADF5A0BD1741A009AB74D /* 3rdparty */,
+				DD8ADF6D0BD1741A009AB74D /* dom */,
+				DD8ADF8A0BD1741A009AB74D /* extensions */,
+				DD8ADF900BD1741A009AB74D /* jabber */,
+				DD8ADF9F0BD1741A009AB74D /* utility */,
+				DD8ADFB60BD1741A009AB74D /* xpath */,
+				DD4A106C0BD5DA910051366F /* expat */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DDBE55B90BD187D5004ED228 /* libcrypto.dylib */,
+				DDBE55900BD1845D004ED228 /* libssl.dylib */,
+				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		DD4A106C0BD5DA910051366F /* expat */ = {
+			isa = PBXGroup;
+			children = (
+				DD4A106D0BD5DA910051366F /* ascii.h */,
+				DD4A106E0BD5DA910051366F /* asciitab.h */,
+				DD4A106F0BD5DA910051366F /* config.h */,
+				DD4A10710BD5DA910051366F /* expat.h */,
+				DD4A10720BD5DA910051366F /* iasciitab.h */,
+				DD4A10730BD5DA910051366F /* latin1tab.h */,
+				DD4A10740BD5DA910051366F /* nametab.h */,
+				DD4A10750BD5DA910051366F /* utf8tab.h */,
+				DD4A10760BD5DA910051366F /* winconfig.h */,
+				DD4A10770BD5DA910051366F /* xmlparse.c */,
+				DD4A10780BD5DA910051366F /* xmlrole.c */,
+				DD4A10790BD5DA910051366F /* xmlrole.h */,
+				DD4A107A0BD5DA910051366F /* xmltok.c */,
+				DD4A107B0BD5DA910051366F /* xmltok.h */,
+				DD4A107C0BD5DA910051366F /* xmltok_impl.c */,
+				DD4A107D0BD5DA910051366F /* xmltok_impl.h */,
+				DD4A107E0BD5DA910051366F /* xmltok_ns.c */,
+			);
+			path = expat;
+			sourceTree = "<group>";
+		};
+		DD8ADF5A0BD1741A009AB74D /* 3rdparty */ = {
+			isa = PBXGroup;
+			children = (
+				DD8ADF5B0BD1741A009AB74D /* sha1.c */,
+				DD8ADF5C0BD1741A009AB74D /* sha1.h */,
+			);
+			path = 3rdparty;
+			sourceTree = "<group>";
+		};
+		DD8ADF6D0BD1741A009AB74D /* dom */ = {
+			isa = PBXGroup;
+			children = (
+				DD8ADF6E0BD1741A009AB74D /* acid-dom.h */,
+				DD8ADF6F0BD1741A009AB74D /* XMLAccumulator.m */,
+				DD8ADF700BD1741A009AB74D /* XMLCData.m */,
+				DD8ADF710BD1741A009AB74D /* XMLElement.m */,
+				DD8ADF720BD1741A009AB74D /* XMLElementStream.m */,
+				DD8ADF730BD1741A009AB74D /* XMLQName.m */,
+			);
+			path = dom;
+			sourceTree = "<group>";
+		};
+		DD8ADF8A0BD1741A009AB74D /* extensions */ = {
+			isa = PBXGroup;
+			children = (
+				DD8ADF8B0BD1741A009AB74D /* NSMutableArray+InsertSort.h */,
+				DD8ADF8C0BD1741A009AB74D /* NSMutableArray+InsertSort.m */,
+				DD8ADF8D0BD1741A009AB74D /* NSMutableString.m */,
+				DD8ADF8E0BD1741A009AB74D /* NSString+Misc.h */,
+				DD8ADF8F0BD1741A009AB74D /* NSString+Misc.m */,
+			);
+			path = extensions;
+			sourceTree = "<group>";
+		};
+		DD8ADF900BD1741A009AB74D /* jabber */ = {
+			isa = PBXGroup;
+			children = (
+				DD8ADF910BD1741A009AB74D /* acid-jabber.h */,
+				DD8ADF920BD1741A009AB74D /* Jabber.m */,
+				DD8ADF930BD1741A009AB74D /* JabberGroupTracker.m */,
+				DD8ADF940BD1741A009AB74D /* JabberID.h */,
+				DD8ADF950BD1741A009AB74D /* JabberID.m */,
+				DD8ADF960BD1741A009AB74D /* JabberIQ.m */,
+				DD8ADF970BD1741A009AB74D /* JabberMessage.m */,
+				DD8ADF980BD1741A009AB74D /* JabberPresence.m */,
+				DD8ADF990BD1741A009AB74D /* JabberPresenceTracker.m */,
+				DD8ADF9A0BD1741A009AB74D /* JabberRoster.m */,
+				DD8ADF9B0BD1741A009AB74D /* JabberSession.m */,
+				DD8ADF9C0BD1741A009AB74D /* JabberSocket.m */,
+				DD8ADF9D0BD1741A009AB74D /* JabberStdAuthManager.m */,
+				DD8ADF9E0BD1741A009AB74D /* JabberSubscriptionRequest.m */,
+			);
+			path = jabber;
+			sourceTree = "<group>";
+		};
+		DD8ADF9F0BD1741A009AB74D /* utility */ = {
+			isa = PBXGroup;
+			children = (
+				DDF45BBC0BD5CD6D0050911E /* AsyncSocket.h */,
+				DD8ADFA40BD1741A009AB74D /* esession */,
+				DD8ADFAC0BD1741A009AB74D /* idn */,
+			);
+			path = utility;
+			sourceTree = "<group>";
+		};
+		DD8ADFA40BD1741A009AB74D /* esession */ = {
+			isa = PBXGroup;
+			children = (
+				DD8ADFA50BD1741A009AB74D /* base64.c */,
+				DD8ADFA60BD1741A009AB74D /* buffer.c */,
+				DD8ADFA70BD1741A009AB74D /* buffer.h */,
+				DD8ADFA80BD1741A009AB74D /* esession.c */,
+				DD8ADFA90BD1741A009AB74D /* esession.h */,
+				DD8ADFAA0BD1741A009AB74D /* keycache.c */,
+			);
+			path = esession;
+			sourceTree = "<group>";
+		};
+		DD8ADFAC0BD1741A009AB74D /* idn */ = {
+			isa = PBXGroup;
+			children = (
+				DD8ADFAD0BD1741A009AB74D /* gunicomp.h */,
+				DD8ADFAE0BD1741A009AB74D /* gunidecomp.h */,
+				DD8ADFAF0BD1741A009AB74D /* internal.h */,
+				DD8ADFB00BD1741A009AB74D /* nfkc.c */,
+				DD8ADFB10BD1741A009AB74D /* profiles.c */,
+				DD8ADFB20BD1741A009AB74D /* stringprep.c */,
+				DD8ADFB30BD1741A009AB74D /* stringprep.h */,
+				DD8ADFB40BD1741A009AB74D /* stringprep_generic.c */,
+				DD8ADFB50BD1741A009AB74D /* toutf8.c */,
+			);
+			path = idn;
+			sourceTree = "<group>";
+		};
+		DD8ADFB60BD1741A009AB74D /* xpath */ = {
+			isa = PBXGroup;
+			children = (
+				DD8ADFB70BD1741A009AB74D /* acid-xpath.h */,
+				DD8ADFB80BD1741A009AB74D /* XPathQuery.m */,
+				DD8ADFB90BD1741A009AB74D /* XPLocation.m */,
+				DD8ADFBA0BD1741A009AB74D /* XPPredicate.m */,
+			);
+			path = xpath;
+			sourceTree = "<group>";
+		};
+		DDF45C0B0BD5CF0E0050911E /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				DDF45C0C0BD5CF0E0050911E /* Common Settings.xcconfig */,
+			);
+			name = Configurations;
+			path = ../../Settings;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		8DC2EF500486A6940098B216 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD8ADFBD0BD1741A009AB74D /* acid.h in Headers */,
+				DD8ADFC90BD1741A009AB74D /* acid-dom.h in Headers */,
+				DD8ADFE70BD1741A009AB74D /* acid-jabber.h in Headers */,
+				DD8AE0090BD1741A009AB74D /* acid-xpath.h in Headers */,
+				DD8ADFEA0BD1741A009AB74D /* JabberID.h in Headers */,
+				DDF45BBD0BD5CD6D0050911E /* AsyncSocket.h in Headers */,
+				DD5BB1140BD5DAE9005DDA42 /* expat.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		8DC2EF4F0486A6940098B216 /* Acid */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "Acid" */;
+			buildPhases = (
+				8DC2EF500486A6940098B216 /* Headers */,
+				8DC2EF540486A6940098B216 /* Sources */,
+				8DC2EF560486A6940098B216 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Acid;
+			productInstallPath = "$(HOME)/Library/Frameworks";
+			productName = Acid;
+			productReference = 8DC2EF5B0486A6940098B216 /* Acid.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+			};
+			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "Acid" */;
+			compatibilityVersion = "Xcode 3.0";
+			hasScannedForEncodings = 1;
+			mainGroup = 0867D691FE84028FC02AAC07 /* Acid */;
+			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			shouldCheckCompatibility = 1;
+			targets = (
+				8DC2EF4F0486A6940098B216 /* Acid */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8DC2EF540486A6940098B216 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD8ADFBB0BD1741A009AB74D /* sha1.c in Sources */,
+				DD8ADFCA0BD1741A009AB74D /* XMLAccumulator.m in Sources */,
+				DD8ADFCB0BD1741A009AB74D /* XMLCData.m in Sources */,
+				DD8ADFCC0BD1741A009AB74D /* XMLElement.m in Sources */,
+				DD8ADFCD0BD1741A009AB74D /* XMLElementStream.m in Sources */,
+				DD8ADFCE0BD1741A009AB74D /* XMLQName.m in Sources */,
+				DD8ADFE30BD1741A009AB74D /* NSMutableArray+InsertSort.m in Sources */,
+				DD8ADFE40BD1741A009AB74D /* NSMutableString.m in Sources */,
+				DD8ADFE60BD1741A009AB74D /* NSString+Misc.m in Sources */,
+				DD8ADFE80BD1741A009AB74D /* Jabber.m in Sources */,
+				DD8ADFE90BD1741A009AB74D /* JabberGroupTracker.m in Sources */,
+				DD8ADFEB0BD1741A009AB74D /* JabberID.m in Sources */,
+				DD8ADFEC0BD1741A009AB74D /* JabberIQ.m in Sources */,
+				DD8ADFED0BD1741A009AB74D /* JabberMessage.m in Sources */,
+				DD8ADFEE0BD1741A009AB74D /* JabberPresence.m in Sources */,
+				DD8ADFEF0BD1741A009AB74D /* JabberPresenceTracker.m in Sources */,
+				DD8ADFF00BD1741A009AB74D /* JabberRoster.m in Sources */,
+				DD8ADFF10BD1741A009AB74D /* JabberSession.m in Sources */,
+				DD8ADFF20BD1741A009AB74D /* JabberSocket.m in Sources */,
+				DD8ADFF30BD1741A009AB74D /* JabberStdAuthManager.m in Sources */,
+				DD8ADFF40BD1741A009AB74D /* JabberSubscriptionRequest.m in Sources */,
+				DD8ADFF90BD1741A009AB74D /* base64.c in Sources */,
+				DD8ADFFA0BD1741A009AB74D /* buffer.c in Sources */,
+				DD8ADFFC0BD1741A009AB74D /* esession.c in Sources */,
+				DD8ADFFE0BD1741A009AB74D /* keycache.c in Sources */,
+				DD8AE0030BD1741A009AB74D /* nfkc.c in Sources */,
+				DD8AE0040BD1741A009AB74D /* profiles.c in Sources */,
+				DD8AE0050BD1741A009AB74D /* stringprep.c in Sources */,
+				DD8AE0070BD1741A009AB74D /* stringprep_generic.c in Sources */,
+				DD8AE0080BD1741A009AB74D /* toutf8.c in Sources */,
+				DD8AE00A0BD1741A009AB74D /* XPathQuery.m in Sources */,
+				DD8AE00B0BD1741A009AB74D /* XPLocation.m in Sources */,
+				DD8AE00C0BD1741A009AB74D /* XPPredicate.m in Sources */,
+				DD4A10890BD5DA910051366F /* xmlparse.c in Sources */,
+				DD4A108A0BD5DA910051366F /* xmlrole.c in Sources */,
+				DD4A108C0BD5DA910051366F /* xmltok.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91AE08733DA50010E9CD /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = Acid.pch;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				PRODUCT_NAME = Acid;
+				SYMROOT = ../../build;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Development;
+		};
+		1DEB91AF08733DA50010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = Acid.pch;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				PRODUCT_NAME = Acid;
+				SYMROOT = ../../build;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		1DEB91B208733DA50010E9CD /* Development */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DDF45C0C0BD5CF0E0050911E /* Common Settings.xcconfig */;
+			buildSettings = {
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+			};
+			name = Development;
+		};
+		1DEB91B308733DA50010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DDF45C0C0BD5CF0E0050911E /* Common Settings.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		DDF45C080BD5CEF40050911E /* Release (Universal) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DDF45C0C0BD5CF0E0050911E /* Common Settings.xcconfig */;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = "Release (Universal)";
+		};
+		DDF45C090BD5CEF40050911E /* Release (Universal) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = Acid.pch;
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				PRODUCT_NAME = Acid;
+				SYMROOT = ../../build;
+				WRAPPER_EXTENSION = framework;
+			};
+			name = "Release (Universal)";
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91AD08733DA50010E9CD /* Build configuration list for PBXNativeTarget "Acid" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91AE08733DA50010E9CD /* Development */,
+				1DEB91AF08733DA50010E9CD /* Release */,
+				DDF45C090BD5CEF40050911E /* Release (Universal) */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "Acid" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91B208733DA50010E9CD /* Development */,
+				1DEB91B308733DA50010E9CD /* Release */,
+				DDF45C080BD5CEF40050911E /* Release (Universal) */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}

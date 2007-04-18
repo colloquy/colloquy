@@ -22,7 +22,7 @@
 // $Id: NSString+Misc.h,v 1.3 2004/10/25 22:09:00 bdash Exp $
 //============================================================================
 
-#import <Foundation/Foundation.h>
+#import <Foundation/NSString.h>
 
 @interface NSString (AcidExtensions)
 - (id)initWithUTF8String:(const char *)bytes length:(unsigned)length;

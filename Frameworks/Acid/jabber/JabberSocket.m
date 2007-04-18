@@ -23,6 +23,7 @@
 //============================================================================
 
 #import "acid.h"
+#import "AsyncSocket.h"
 
 @interface JabberSocket (PRIVATE)
 -(void) onKeepAliveTick:(NSTimer*)t;
@@ -34,7 +35,7 @@
 {
     [super init];
 
-    _socket = [[DizSocket alloc] initWithDelegate:self];
+    _socket = [[NSClassFromString(@"AsyncSocket") alloc] initWithDelegate:self];
     _session = [session retain];    
 
     return self;
@@ -66,7 +67,7 @@
 {
     assert(![_socket isConnected]);
 
-    [_socket connectToHost:host onPort:port];
+    [_socket connectToHost:host onPort:port error:NULL];
 }
 
 -(void) disconnect
@@ -99,45 +100,28 @@
 -(void) onDocumentEnd
 {}
 
--(void) onSocketConnected
+- (void) socket:(AsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
 {
-    if (_useSSL)
-    {
-        [_socket startSSL];
-        return;
-    }
-    else
-    {
-        [_session postNotificationName:JSESSION_CONNECTED object:self];
-        _parser = [[XMLElementStream alloc] initWithListener:self];
-    }
+	[_session postNotificationName:JSESSION_CONNECTED object:self];
+	_parser = [[XMLElementStream alloc] initWithListener:self];
+	[_socket readDataWithTimeout:-1. tag:0];
 }
 
--(void) onSocketSSLConnected
-{
-    [_session postNotificationName:JSESSION_CONNECTED object:self];
-    _parser = [[XMLElementStream alloc] initWithListener:self];
-}
-
--(void) onSocketReadData:(NSData*)data
+- (void) socket:(AsyncSocket *)sock didReadData:(NSData*)data withTag:(long)tag
 {
     [_session postNotificationName:JSESSION_RAWDATA_IN object:data];
     [_parser pushData:[data bytes] ofSize:[data length]];
+	[_socket readDataWithTimeout:-1. tag:0];
 }
 
--(void) onSocketWroteData:(NSData*)data
-{
-    [_session postNotificationName:JSESSION_RAWDATA_OUT object:data];
-}
-
--(void) onSocketDisconnected
+- (void) socketDidDisconnect:(AsyncSocket *)sock;
 {
     [_timer invalidate];
     _timer = nil;
     [_session postNotificationName:JSESSION_ENDED object:self];
 }
 
--(void) onSocketConnectFailed:(int)errorcode
+- (void) socket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err;
 {
     [_session postNotificationName:JSESSION_ERROR_CONNECT_FAILED object:nil];
 }
@@ -145,7 +129,8 @@
 -(void) sendString:(NSString*)data
 {
     NSData* d = [data dataUsingEncoding:NSUTF8StringEncoding];
-    [_socket writeData:d];
+    [_socket writeData:d withTimeout:-1. tag:0];
+    [_session postNotificationName:JSESSION_RAWDATA_OUT object:d];
 }
 
 -(void) setUseSSL:(BOOL)useSSL

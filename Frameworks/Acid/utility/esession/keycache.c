@@ -63,12 +63,12 @@ static unsigned long _hashkey(ESessionKeyType keytype, const char* keyid)
     return result;
 }
 
-unsigned long PUBKEY_hash(const PUBKEY* k)
+static unsigned long PUBKEY_hash(const PUBKEY* k)
 {
     return _hashkey(k->keytype, k->id);
 }
 
-int PUBKEY_cmp(const PUBKEY* lhs, const PUBKEY* rhs)
+static int PUBKEY_cmp(const PUBKEY* lhs, const PUBKEY* rhs)
 {
     int rc;
     rc = !(lhs->keytype == rhs->keytype);
@@ -76,12 +76,12 @@ int PUBKEY_cmp(const PUBKEY* lhs, const PUBKEY* rhs)
     return rc;
 }
 
-unsigned long PRIVKEY_hash(const PRIVKEY* k)
+static unsigned long PRIVKEY_hash(const PRIVKEY* k)
 {
     return _hashkey(k->keytype, k->fingerprint);
 }
 
-int PRIVKEY_cmp(const PRIVKEY* lhs, const PRIVKEY* rhs)
+static int PRIVKEY_cmp(const PRIVKEY* lhs, const PRIVKEY* rhs)
 {
     int rc;
     rc = !(lhs->keytype == rhs->keytype);

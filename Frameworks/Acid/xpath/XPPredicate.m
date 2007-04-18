@@ -22,9 +22,8 @@
 // $Id: XPPredicate.m,v 1.2 2004/10/16 21:40:05 gbooker Exp $
 //============================================================================
 
-#import "acid-xpath.h"
-#import "acid-dom.h"
-#import "acid-jabber.h"
+#import "acid.h"
+
 // ---------------------------
 // XP_AttrValue
 // ---------------------------

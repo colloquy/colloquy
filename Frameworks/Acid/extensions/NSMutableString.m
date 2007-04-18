@@ -22,8 +22,6 @@
 // $Id: NSMutableString.m,v 1.1 2004/07/19 03:49:03 jtownsend Exp $
 //============================================================================
 
-#import <Foundation/Foundation.h>
-
 @implementation NSMutableString(_ACID_EXT)
 
 -(NSString*) nextTokenDelimitedBy:(NSString*)tokens searchFromIndex:(int)index

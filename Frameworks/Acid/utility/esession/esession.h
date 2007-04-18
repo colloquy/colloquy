@@ -26,6 +26,7 @@
 #define ESESSION_H_INCLUDE
 
 #include <openssl/ssl.h>
+#include <zlib.h>
 
 typedef enum
 {

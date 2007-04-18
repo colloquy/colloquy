@@ -22,11 +22,9 @@
 // $Id: acid-jabber.h,v 1.1 2004/07/19 03:49:03 jtownsend Exp $
 //============================================================================
 
-#import <Foundation/Foundation.h>
-#import "DizSocket.h"
-#import "NSMutableArray+InsertSort.h"
+#import <Foundation/NSObject.h>
+#import <Acid/JabberID.h>
 
-#import "JabberID.h"
 /*!
   @header acid-jabber.h
   @discussion This file includes the Jabber-specific classes for use
@@ -38,9 +36,8 @@
     XMLCData,
     XMLElementStream,
     XMLElementStreamListener;
-@class FZSocket;
+@class AsyncSocket;
 @class JabberSession;
-
 
 /*!
   @class JabberSocket
@@ -48,7 +45,7 @@
 */
 @interface JabberSocket : NSObject <XMLElementStreamListener>
 {
-    DizSocket*        _socket;
+    AsyncSocket*      _socket;
     XMLElementStream* _parser;
     JabberSession*    _session;
     bool              _useSSL;
@@ -477,7 +474,7 @@ typedef enum
 */
 @interface JabberSession : NSObject
 {
-    NSMutableDictionary*   _observerMap;
+    CFMutableDictionaryRef _observerMap;
     NSMutableDictionary*   _expressions;
     NSNotificationCenter*  _ncenter;
     JabberSocket*          _jsocket;

@@ -21,6 +21,7 @@
 #define BUFFER_H
 
 #include <openssl/bn.h>
+#include <sys/types.h>
 
 typedef struct {
 	u_char	*buf;		/* Buffer for data. */

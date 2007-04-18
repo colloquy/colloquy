@@ -112,7 +112,7 @@ Stringprep_profile stringprep_generic[] = {
    stringprep_generic_A_1, "A.1"}
   ,
 
-  {0}
+  {0, 0, NULL, NULL}
 };
 
 Stringprep_profile stringprep_nameprep[] = {
@@ -152,7 +152,7 @@ Stringprep_profile stringprep_nameprep[] = {
   {STRINGPREP_UNASSIGNED_TABLE, ~STRINGPREP_NO_UNASSIGNED,
    stringprep_generic_A_1, "A.1"}
   ,
-  {0}
+  {0, 0, NULL, NULL}
 };
 
 Stringprep_profile stringprep_kerberos5[] = {
@@ -194,27 +194,27 @@ Stringprep_profile stringprep_kerberos5[] = {
   {STRINGPREP_UNASSIGNED_TABLE, ~STRINGPREP_NO_UNASSIGNED,
    stringprep_generic_A_1, "A.1"}
   ,
-  {0}
+  {0, 0, NULL, NULL}
 };
 
 Stringprep_table_element stringprep_xmpp_nodeprep_prohibit[] = {
-  {0x000022}
+	{0x000022, 0, {0}}
   ,				/* #x22 (") */
-  {0x000026}
+	{0x000026, 0, {0}}
   ,				/* #x26 (&) */
-  {0x000027}
+	{0x000027, 0, {0}}
   ,				/* #x27 (') */
-  {0x00002F}
+	{0x00002F, 0, {0}}
   ,				/* #x2F (/) */
-  {0x00003A}
+	{0x00003A, 0, {0}}
   ,				/* #x3A (:) */
-  {0x00003C}
+	{0x00003C, 0, {0}}
   ,				/* #x3C (<) */
-  {0x00003E}
+	{0x00003E, 0, {0}}
   ,				/* #x3E (>) */
-  {0x000040}			/* #x40 (@) */
+	{0x000040, 0, {0}}			/* #x40 (@) */
   ,
-  {0}
+  {0, 0, {0}}
 };
 
 Stringprep_profile stringprep_xmpp_nodeprep[] = {
@@ -260,7 +260,7 @@ Stringprep_profile stringprep_xmpp_nodeprep[] = {
   {STRINGPREP_UNASSIGNED_TABLE, ~STRINGPREP_NO_UNASSIGNED,
    stringprep_generic_A_1, "A.1"}
   ,
-  {0}
+  {0, 0, NULL, NULL}
 };
 
 Stringprep_profile stringprep_xmpp_resourceprep[] = {
@@ -301,7 +301,7 @@ Stringprep_profile stringprep_xmpp_resourceprep[] = {
   {STRINGPREP_UNASSIGNED_TABLE, ~STRINGPREP_NO_UNASSIGNED,
    stringprep_generic_A_1, "A.1"}
   ,
-  {0}
+  {0, 0, NULL, NULL}
 };
 
 Stringprep_profile stringprep_plain[] = {
@@ -331,139 +331,139 @@ Stringprep_profile stringprep_plain[] = {
   {STRINGPREP_BIDI_L_TABLE, ~STRINGPREP_NO_BIDI, stringprep_generic_D_2,
    "D.2"}
   ,
-  {0}
+	{0, 0, NULL, NULL}
 };
 
 Stringprep_table_element stringprep_iscsi_prohibit[] = {
-  {0x0000}
+	{0x0000, 0, {0}}
   ,				/* [ASCII CONTROL CHARACTERS and SPACE through ,] */
-  {0x0001}
+	{0x0001, 0, {0}}
   ,
-  {0x0002}
+	{0x0002, 0, {0}}
   ,
-  {0x0003}
+	{0x0003, 0, {0}}
   ,
-  {0x0004}
+	{0x0004, 0, {0}}
   ,
-  {0x0005}
+	{0x0005, 0, {0}}
   ,
-  {0x0006}
+	{0x0006, 0, {0}}
   ,
-  {0x0007}
+	{0x0007, 0, {0}}
   ,
-  {0x0008}
+	{0x0008, 0, {0}}
   ,
-  {0x0009}
+	{0x0009, 0, {0}}
   ,
-  {0x000A}
+	{0x000A, 0, {0}}
   ,
-  {0x000B}
+	{0x000B, 0, {0}}
   ,
-  {0x000C}
+	{0x000C, 0, {0}}
   ,
-  {0x000D}
+	{0x000D, 0, {0}}
   ,
-  {0x000E}
+	{0x000E, 0, {0}}
   ,
-  {0x000F}
+	{0x000F, 0, {0}}
   ,
-  {0x0010}
+	{0x0010, 0, {0}}
   ,
-  {0x0011}
+	{0x0011, 0, {0}}
   ,
-  {0x0012}
+	{0x0012, 0, {0}}
   ,
-  {0x0013}
+	{0x0013, 0, {0}}
   ,
-  {0x0014}
+	{0x0014, 0, {0}}
   ,
-  {0x0015}
+	{0x0015, 0, {0}}
   ,
-  {0x0016}
+	{0x0016, 0, {0}}
   ,
-  {0x0017}
+	{0x0017, 0, {0}}
   ,
-  {0x0018}
+	{0x0018, 0, {0}}
   ,
-  {0x0019}
+	{0x0019, 0, {0}}
   ,
-  {0x001A}
+	{0x001A, 0, {0}}
   ,
-  {0x001B}
+	{0x001B, 0, {0}}
   ,
-  {0x001C}
+	{0x001C, 0, {0}}
   ,
-  {0x001D}
+	{0x001D, 0, {0}}
   ,
-  {0x001E}
+	{0x001E, 0, {0}}
   ,
-  {0x001F}
+	{0x001F, 0, {0}}
   ,
-  {0x0020}
+	{0x0020, 0, {0}}
   ,
-  {0x0021}
+	{0x0021, 0, {0}}
   ,
-  {0x0022}
+	{0x0022, 0, {0}}
   ,
-  {0x0023}
+	{0x0023, 0, {0}}
   ,
-  {0x0024}
+	{0x0024, 0, {0}}
   ,
-  {0x0025}
+	{0x0025, 0, {0}}
   ,
-  {0x0026}
+	{0x0026, 0, {0}}
   ,
-  {0x0027}
+	{0x0027, 0, {0}}
   ,
-  {0x0028}
+	{0x0028, 0, {0}}
   ,
-  {0x0029}
+	{0x0029, 0, {0}}
   ,
-  {0x002A}
+	{0x002A, 0, {0}}
   ,
-  {0x002B}
+	{0x002B, 0, {0}}
   ,
-  {0x002C}
+	{0x002C, 0, {0}}
   ,
-  {0x002F}
+	{0x002F, 0, {0}}
   ,				/* [ASCII /] */
-  {0x003B}
+	{0x003B, 0, {0}}
   ,				/* [ASCII ; through @] */
-  {0x003C}
+	{0x003C, 0, {0}}
   ,
-  {0x003D}
+	{0x003D, 0, {0}}
   ,
-  {0x003E}
+	{0x003E, 0, {0}}
   ,
-  {0x003F}
+	{0x003F, 0, {0}}
   ,
-  {0x0040}
+	{0x0040, 0, {0}}
   ,
-  {0x005B}
+	{0x005B, 0, {0}}
   ,				/* [ASCII [ through `] */
-  {0x005C}
+	{0x005C, 0, {0}}
   ,
-  {0x005D}
+	{0x005D, 0, {0}}
   ,
-  {0x005E}
+	{0x005E, 0, {0}}
   ,
-  {0x005F}
+	{0x005F, 0, {0}}
   ,
-  {0x0060}
+	{0x0060, 0, {0}}
   ,
-  {0x007B}
+	{0x007B, 0, {0}}
   ,				/* [ASCII { through DEL] */
-  {0x007C}
+	{0x007C, 0, {0}}
   ,
-  {0x007D}
+	{0x007D, 0, {0}}
   ,
-  {0x007E}
+	{0x007E, 0, {0}}
   ,
-  {0x007F}
+	{0x007F, 0, {0}}
   ,
-  {0x3002}
+	{0x3002, 0, {0}}
   ,				/* ideographic full stop */
-  {0}
+	{0, 0, {0}}
 };
 
 Stringprep_profile stringprep_iscsi[] = {
@@ -508,7 +508,7 @@ Stringprep_profile stringprep_iscsi[] = {
   {STRINGPREP_UNASSIGNED_TABLE, ~STRINGPREP_NO_UNASSIGNED,
    stringprep_generic_A_1, "A.1"}
   ,
-  {0}
+  {0, 0, NULL, NULL}
 };
 
 Stringprep_table_element stringprep_saslprep_space_map[] = {
@@ -563,7 +563,7 @@ Stringprep_table_element stringprep_saslprep_space_map[] = {
   {0x003000, 0, {0x0020}
    }
   ,				/* 3000; IDEOGRAPHIC SPACE */
-  {0}
+	{0, 0, {0}}
 };
 
 Stringprep_profile stringprep_saslprep[] = {
@@ -604,5 +604,5 @@ Stringprep_profile stringprep_saslprep[] = {
   {STRINGPREP_UNASSIGNED_TABLE, ~STRINGPREP_NO_UNASSIGNED,
    stringprep_generic_A_1, "A.1"}
   ,
-  {0}
+  {0, 0, NULL, NULL}
 };

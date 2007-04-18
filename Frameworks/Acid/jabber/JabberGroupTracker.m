@@ -23,8 +23,8 @@
 // $Id: JabberGroupTracker.m,v 1.2 2004/11/09 20:12:23 gbooker Exp $
 //============================================================================
 
-#import <Foundation/Foundation.h>
 #import "acid.h"
+#import "NSMutableArray+InsertSort.h"
 
 @interface JRGroup : NSObject <JabberGroup>
 {

@@ -23,6 +23,7 @@
 //============================================================================
 
 #import "acid-dom.h"
+#import <Foundation/NSEnumerator.h>
 
 @interface _ElementEnumerator : NSEnumerator
 {
@@ -295,8 +296,12 @@
         [acc addAttribute:it withValue:[_attribs objectForKey:it] ofElement:self];
     }
 
-    [acc addChildren:_children ofElement:self];
-    [acc closeElement:self];
+	if ([_children count]) {
+		[acc addChildren:_children ofElement:self];
+		[acc closeElement:self];
+	} else {
+		[acc selfCloseElement];
+	}
 }
 
 -(id<XMLNode>) firstChild
