@@ -95,6 +95,27 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* Acid */;
 			remoteInfo = Acid;
 		};
+		DDBB45B40BD5E92F00EC6E55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DDBB45AF0BD5E92F00EC6E55 /* AGRegex.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C6A0C360865E09C009EE6D2 /* AGRegex.framework */;
+			remoteInfo = "AGRegex (Framework)";
+		};
+		DDBB45B60BD5E92F00EC6E55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DDBB45AF0BD5E92F00EC6E55 /* AGRegex.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C6A0C4C0865E09C009EE6D2 /* RegexTest.app */;
+			remoteInfo = "RegexTest (Application)";
+		};
+		DDBB45B80BD5E94000EC6E55 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DDBB45AF0BD5E92F00EC6E55 /* AGRegex.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1C6A0C250865E09C009EE6D2 /* AGRegex (Framework) */;
+			remoteInfo = "AGRegex (Framework)";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -137,7 +158,7 @@
 		1C8AA4B609D60B1100CF29EB /* Chat Core.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = "Chat Core.exp"; sourceTree = "<group>"; };
 		1C8AAEFC09D69F2700CF29EB /* MVChatUserWatchRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUserWatchRule.h; path = "Chat Core/MVChatUserWatchRule.h"; sourceTree = "<group>"; };
 		1C8AAEFD09D69F2700CF29EB /* MVChatUserWatchRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatUserWatchRule.m; path = "Chat Core/MVChatUserWatchRule.m"; sourceTree = "<group>"; };
-		1C8AAF2609D6A0A100CF29EB /* AGRegex.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGRegex.framework; path = Frameworks/AGRegex.framework; sourceTree = SOURCE_ROOT; };
+		1C8AAF2609D6A0A100CF29EB /* AGRegex.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AGRegex.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C914B130705BFE100CBA5F1 /* MVIRCChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVIRCChatUser.h; path = "Chat Core/MVIRCChatUser.h"; sourceTree = "<group>"; };
 		1C914B140705BFE100CBA5F1 /* MVIRCChatUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVIRCChatUser.m; path = "Chat Core/MVIRCChatUser.m"; sourceTree = "<group>"; };
 		1C914D330706148800CBA5F1 /* MVIRCChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVIRCChatRoom.h; path = "Chat Core/MVIRCChatRoom.h"; sourceTree = "<group>"; };
@@ -184,6 +205,7 @@
 		DD47412E0BD35A2E00D93AB9 /* MVXMPPChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVXMPPChatRoom.h; path = "Chat Core/MVXMPPChatRoom.h"; sourceTree = "<group>"; };
 		DD47412F0BD35A2E00D93AB9 /* MVXMPPChatRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVXMPPChatRoom.m; path = "Chat Core/MVXMPPChatRoom.m"; sourceTree = "<group>"; };
 		DDBB43A20BD5DF9400EC6E55 /* Acid.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Acid.xcodeproj; path = Frameworks/Acid/Acid.xcodeproj; sourceTree = "<group>"; };
+		DDBB45AF0BD5E92F00EC6E55 /* AGRegex.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AGRegex.xcodeproj; path = Frameworks/AGRegex/AGRegex.xcodeproj; sourceTree = "<group>"; };
 		DDF64CE30BD29E41009E8FF6 /* MVXMPPChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVXMPPChatConnection.h; path = "Chat Core/MVXMPPChatConnection.h"; sourceTree = "<group>"; };
 		DDF64CE40BD29E41009E8FF6 /* MVXMPPChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVXMPPChatConnection.m; path = "Chat Core/MVXMPPChatConnection.m"; sourceTree = "<group>"; };
 		DDF64D520BD2A4F6009E8FF6 /* Acid.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Acid.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -217,6 +239,7 @@
 		089C166AFE841209C02AAC07 /* Massinova Menu Extra */ = {
 			isa = PBXGroup;
 			children = (
+				DDBB45AF0BD5E92F00EC6E55 /* AGRegex.xcodeproj */,
 				F50B0A9F0170C89301A84BDE /* Sources & Headers */,
 				F50B0AA00170C89301A84BDE /* Other Sources & Additions */,
 				F50B0AA10170C89301A84BDE /* Resources */,
@@ -329,6 +352,15 @@
 			isa = PBXGroup;
 			children = (
 				DDBB43A70BD5DF9400EC6E55 /* Acid.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DDBB45B00BD5E92F00EC6E55 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DDBB45B50BD5E92F00EC6E55 /* AGRegex.framework */,
+				DDBB45B70BD5E92F00EC6E55 /* RegexTest.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -485,6 +517,7 @@
 			);
 			dependencies = (
 				DDBB43B90BD5DFB000EC6E55 /* PBXTargetDependency */,
+				DDBB45B90BD5E94000EC6E55 /* PBXTargetDependency */,
 			);
 			name = "Chat Core (Framework)";
 			productInstallPath = "@executable_path/../Frameworks";
@@ -527,6 +560,10 @@
 					ProductGroup = DDBB43A30BD5DF9400EC6E55 /* Products */;
 					ProjectRef = DDBB43A20BD5DF9400EC6E55 /* Acid.xcodeproj */;
 				},
+				{
+					ProductGroup = DDBB45B00BD5E92F00EC6E55 /* Products */;
+					ProjectRef = DDBB45AF0BD5E92F00EC6E55 /* AGRegex.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			shouldCheckCompatibility = 1;
@@ -542,6 +579,20 @@
 			fileType = wrapper.framework;
 			path = Acid.framework;
 			remoteRef = DDBB43A60BD5DF9400EC6E55 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DDBB45B50BD5E92F00EC6E55 /* AGRegex.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AGRegex.framework;
+			remoteRef = DDBB45B40BD5E92F00EC6E55 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DDBB45B70BD5E92F00EC6E55 /* RegexTest.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = RegexTest.app;
+			remoteRef = DDBB45B60BD5E92F00EC6E55 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -629,6 +680,11 @@
 			isa = PBXTargetDependency;
 			name = Acid;
 			targetProxy = DDBB43B80BD5DFB000EC6E55 /* PBXContainerItemProxy */;
+		};
+		DDBB45B90BD5E94000EC6E55 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "AGRegex (Framework)";
+			targetProxy = DDBB45B80BD5E94000EC6E55 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
