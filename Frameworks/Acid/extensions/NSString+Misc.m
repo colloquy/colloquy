@@ -1,0 +1,47 @@
+//============================================================================
+// 
+//     License:
+// 
+//     This library is free software; you can redistribute it and/or
+//     modify it under the terms of the GNU Lesser General Public
+//     License as published by the Free Software Foundation; either
+//     version 2.1 of the License, or (at your option) any later version.
+// 
+//     This library is distributed in the hope that it will be useful,
+//     but WITHOUT ANY WARRANTY; without even the implied warranty of
+//     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+//     Lesser General Public License for more details.
+// 
+//     You should have received a copy of the GNU Lesser General Public
+//     License along with this library; if not, write to the Free Software
+//     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
+//     USA
+// 
+//     Copyright (C) 2002 Max Horn
+// 
+// $Id: NSString+Misc.m,v 1.3 2004/10/25 22:09:00 bdash Exp $
+//============================================================================
+
+#import "NSString+Misc.h"
+
+@implementation NSString (AcidExtensions)
+
+- (id)initWithUTF8String:(const char *)bytes length:(unsigned)length
+{
+    NSData *data = [[NSData alloc] initWithBytes:bytes length:length];
+    self = [self initWithData:data encoding:NSUTF8StringEncoding];
+    [data release];
+    return self;
+}
+
+- (id)initWithUTF8StringNoCopy:(char*)bytes length:(unsigned)length
+    freeWhenDone:(BOOL)free
+{
+    NSData* data = [[NSData alloc] initWithBytesNoCopy:bytes length:length 
+                                  freeWhenDone:free];
+    self = [self initWithData:data encoding:NSUTF8StringEncoding];
+    [data release];
+    return self;
+}
+
+@end
