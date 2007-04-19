@@ -8,7 +8,6 @@
 @private
 	BOOL _roomMember;
 }
-- (id) initLocalUserWithConnection:(MVXMPPChatConnection *) connection;
 - (id) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) connection;
 @end
 

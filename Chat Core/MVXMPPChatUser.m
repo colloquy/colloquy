@@ -5,12 +5,6 @@
 #import "MVUtilities.h"
 
 @implementation MVXMPPChatUser
-- (id) initLocalUserWithConnection:(MVXMPPChatConnection *) userConnection {
-	if( ( self = [self initWithJabberID:[userConnection _localUserID] andConnection:userConnection] ) )
-		_type = MVChatLocalUserType;
-	return self;
-}
-
 - (id) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) userConnection {
 	if( ( self = [self init] ) ) {
 		_type = MVChatRemoteUserType;
@@ -43,8 +37,6 @@
 - (NSString *) username {
 	if( _roomMember )
 		return [_uniqueIdentifier resource];
-	if( _type == MVChatLocalUserType )
-		return [[self connection] username];
 	return [_uniqueIdentifier username];
 }
 

@@ -180,13 +180,13 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 				int org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
 				if( org == 1 ) {
-					logs = [logs stringByAppendingPathComponent:[[self connection] server]];
+					logs = [logs stringByAppendingPathComponent:[[self user] serverAddress]];
 					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 				} else if( org == 2 ) {
-					logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", [self target], [[self connection] server]]];
+					logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", [self target], [[self user] serverAddress]]];
 					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 				} else if( org == 3 ) {
-					logs = [logs stringByAppendingPathComponent:[[self connection] server]];
+					logs = [logs stringByAppendingPathComponent:[[self user] serverAddress]];
 					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 
 					logs = [logs stringByAppendingPathComponent:[self title]];
@@ -203,20 +203,20 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 					unsigned int i = 1;
 
 					if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
-					else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self connection] server]];
+					else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self user] serverAddress]];
 					nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
 
 					while( ! nameFound ) {
 						if( org ) logName = [NSString stringWithFormat:@"%@ %d.colloquyTranscript", [self target], i++];
-						else logName = [NSString stringWithFormat:@"%@ (%@) %d.colloquyTranscript", [self target], [[self connection] server], i++];
+						else logName = [NSString stringWithFormat:@"%@ (%@) %d.colloquyTranscript", [self target], [[self user] serverAddress], i++];
 						nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
 					}
 				} else if( session == 1 ) {
 					if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
-					else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self connection] server]];
+					else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self user] serverAddress]];
 				} else if( session == 2 ) {
 					if( org ) logName = [NSMutableString stringWithFormat:@"%@ %@.colloquyTranscript", [self target], dateString];
-					else logName = [NSMutableString stringWithFormat:@"%@ (%@) %@.colloquyTranscript", [self target], [[self connection] server], dateString];
+					else logName = [NSMutableString stringWithFormat:@"%@ (%@) %@.colloquyTranscript", [self target], [[self user] serverAddress], dateString];
 					[(NSMutableString *)logName replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
 					[(NSMutableString *)logName replaceOccurrencesOfString:@":" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [logName length] )];
 				}
@@ -281,9 +281,9 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[self changeEncoding:nil];
 
 /*	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) {
-		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[self connection] server], [[[self target] description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[self user] serverAddress], [[[self target] description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
 
-		NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Recent Acquaintances/%@ (%@).inetloc", [self target], [[self connection] server]] stringByExpandingTildeInPath];
+		NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Recent Acquaintances/%@ (%@).inetloc", [self target], [[self user] serverAddress]] stringByExpandingTildeInPath];
 
 		[url writeToInternetLocationFile:path];
 		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:path];
@@ -391,7 +391,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 - (NSString *) windowTitle {
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
-		return [NSString stringWithFormat:@"%@ (%@)", [_buddy preferredName], [[self connection] server]]; */
+		return [NSString stringWithFormat:@"%@ (%@)", [_buddy preferredName], [[self user] serverAddress]]; */
 
 	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] ) {
 		NSString *host = [[(MVDirectChatConnection *)[self target] connectedHost] name];
@@ -400,12 +400,12 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		return [self title];
 	}
 
-	return [NSString stringWithFormat:@"%@ (%@)", [self title], [[self connection] server]];
+	return [NSString stringWithFormat:@"%@ (%@)", [self title], [[self user] serverAddress]];
 }
 
 - (NSString *) information {
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname && ! [[self target] isEqualToString:[_buddy preferredName]] )
-		return [NSString stringWithFormat:@"%@ (%@)", [self target], [[self connection] server]]; */
+		return [NSString stringWithFormat:@"%@ (%@)", [self target], [[self user] serverAddress]]; */
 	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] ) {
 		if( [(MVDirectChatConnection *)[self target] status] == MVDirectChatConnectionWaitingStatus )
 			return NSLocalizedString( @"waiting for connection", "waiting for connection information" );
@@ -427,7 +427,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	else messageCount = [NSString stringWithFormat:NSLocalizedString( @"%d messages waiting", "messages waiting room tooltip" ), [self newMessagesWaiting]];
 
 /*	if( _buddy && [_buddy preferredNameWillReturn] != JVBuddyActiveNickname )
-		return [NSString stringWithFormat:@"%@\n%@ (%@)\n%@", [_buddy preferredName], [self target], [[self connection] server], messageCount]; */
+		return [NSString stringWithFormat:@"%@\n%@ (%@)\n%@", [_buddy preferredName], [self target], [[self user] serverAddress], messageCount]; */
 
 	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] ) {
 		NSString *info = nil;
@@ -444,7 +444,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		return [NSString stringWithFormat:@"%@\n%@", [self title], messageCount];
 	}
 
-	return [NSString stringWithFormat:@"%@ (%@)\n%@", [self title], [[self connection] server], messageCount];
+	return [NSString stringWithFormat:@"%@ (%@)\n%@", [self title], [[self user] serverAddress], messageCount];
 }
 
 #pragma mark -
@@ -526,7 +526,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 - (NSString *) identifier {
 	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
 		return [NSString stringWithFormat:@"Direct Chat %@", [self user]];
-	return [NSString stringWithFormat:@"Direct Chat %@ (%@)", [self user], [[self connection] server]];
+	return [NSString stringWithFormat:@"Direct Chat %@ (%@)", [self user], [[self user] serverAddress]];
 }
 
 #pragma mark -

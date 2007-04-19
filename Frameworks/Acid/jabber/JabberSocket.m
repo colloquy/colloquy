@@ -100,6 +100,21 @@
 -(void) onDocumentEnd
 {}
 
+- (BOOL) socketWillConnect:(AsyncSocket *)sock {
+	if( _useSSL ) {
+		CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL );
+		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL );
+
+		NSMutableDictionary *settings = [[NSMutableDictionary allocWithZone:nil] init];
+		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
+
+		CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
+		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
+	}
+
+	return YES;
+}
+
 - (void) socket:(AsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
 {
 	[_session postNotificationName:JSESSION_CONNECTED object:self];

@@ -87,10 +87,20 @@
 
 	[self _willConnect];	
 
-	MVSafeAdoptAssign( &_localID, [[JabberID alloc] initWithFormat:@"%@@%@/colloquy", _username, _server] );
-	MVSafeAdoptAssign( &_localUser, [[MVXMPPChatUser allocWithZone:nil] initLocalUserWithConnection:self] );
+	JabberID *localId = nil;
+	NSRange atRange = [_username rangeOfString:@"@" options:NSLiteralSearch];
+	if( atRange.location == NSNotFound )
+		localId = [[JabberID alloc] initWithFormat:@"%@@%@/colloquy", _username, _server];
+	else localId = [[JabberID alloc] initWithFormat:@"%@/colloquy", _username];
 
-    [_session startSession:_localID onPort:_serverPort];
+	MVChatUser *localUser = [[MVXMPPChatUser allocWithZone:nil] initWithJabberID:localId andConnection:self];
+	[localUser _setType:MVChatLocalUserType];
+
+	MVSafeAdoptAssign( &_localID, localId );
+	MVSafeAdoptAssign( &_localUser, localUser );
+
+	[_session setUseSSL:_secure];
+	[_session startSession:_localID onPort:_serverPort withServer:_server];
 }
 
 - (void) disconnectWithReason:(NSAttributedString *) reason {
@@ -234,10 +244,8 @@
 		return;
 	}
 
-	JabberPresence *presence = [[JabberPresence allocWithZone:nil] initWithQName:JABBER_PRESENCE_QN];
-	[presence putAttribute:@"from" withValue:[_localID escapedCompleteID]];
-
 	NSString *localUserStringId = [[NSString allocWithZone:nil] initWithFormat:@"%@/%@", room, [self nickname]];
+	JabberPresence *presence = [[JabberPresence allocWithZone:nil] initWithQName:JABBER_PRESENCE_QN];
 	[presence putAttribute:@"to" withValue:localUserStringId];
 
 	[presence addElement:[self _capabilitiesElement]];
@@ -282,7 +290,8 @@
 }
 
 - (void) authorizationReady:(NSNotification *) notification {
-	[[notification object] authenticateWithPassword:_password];
+	if( _password )
+		[[notification object] authenticateWithPassword:_password];
 }
 
 - (void) authorizationFailed:(NSNotification *) notification {
@@ -304,18 +313,23 @@
 }
 
 - (void) incomingPacket:(NSNotification *) notification {
-    NSString *string = [[NSString alloc] initWithData:[notification object] encoding:NSUTF8StringEncoding];
+	NSString *string = [[NSString alloc] initWithData:[notification object] encoding:NSUTF8StringEncoding];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
 	[string release];
 }
 
 - (void) incomingMessage:(NSNotification *) notification {
-    JabberMessage *message = [notification object];
+	JabberMessage *message = [notification object];
 
-    switch( [message eventType] ) {
-    case JMEVENT_COMPOSING_REQUEST:
+	if( [[message type] isEqualToString:@"error"] ) {
+		// handle error
+		return;
+	}
+
+	switch( [message eventType] ) {
+	case JMEVENT_COMPOSING_REQUEST:
 		// fall through
-    case JMEVENT_NONE: {
+	case JMEVENT_NONE: {
 		MVChatRoom *room = nil;
 		MVChatUser *sender = nil;
 
@@ -353,18 +367,18 @@
 
 		[msgData release];
 		[msgAttributes release];
-        break;
+		break;
 	}
 
-    case JMEVENT_COMPOSING:
-        break;
-    case JMEVENT_COMPOSING_CANCEL:
-        break;
-    }
+	case JMEVENT_COMPOSING:
+		break;
+	case JMEVENT_COMPOSING_CANCEL:
+		break;
+	}
 }
 
 - (void) incomingPresence:(NSNotification *) notification {
-    JabberPresence *presence = [notification object];
+	JabberPresence *presence = [notification object];
 	JabberID *roomID = [[presence from] userhostJID];
 	MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:roomID];
 
@@ -422,8 +436,8 @@
 
 - (XMLElement *) _capabilitiesElement {
 	XMLElement *caps = [[XMLElement allocWithZone:nil] initWithQName:JABBER_CLIENTCAP_QN];
-    [caps putAttribute:@"node" withValue:@"http://colloquy.info/caps"];
-    [caps putAttribute:@"ver" withValue:@"2.1"];
+	[caps putAttribute:@"node" withValue:@"http://colloquy.info/caps"];
+	[caps putAttribute:@"ver" withValue:@"2.1"];
 	return [caps autorelease];
 }
 

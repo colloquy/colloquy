@@ -51,6 +51,7 @@
 		DD8AE00C0BD1741A009AB74D /* XPPredicate.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8ADFBA0BD1741A009AB74D /* XPPredicate.m */; };
 		DDBE55910BD1845D004ED228 /* libssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDBE55900BD1845D004ED228 /* libssl.dylib */; };
 		DDBE55BA0BD187D5004ED228 /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDBE55B90BD187D5004ED228 /* libcrypto.dylib */; };
+		DDE46AAD0BD7246C0064D202 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE46AAC0BD7246C0064D202 /* CoreServices.framework */; };
 		DDF45AC40BD5CC500050911E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
 		DDF45BBD0BD5CD6D0050911E /* AsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = DDF45BBC0BD5CD6D0050911E /* AsyncSocket.h */; };
 /* End PBXBuildFile section */
@@ -126,6 +127,7 @@
 		DDBE55900BD1845D004ED228 /* libssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.dylib; path = /usr/lib/libssl.dylib; sourceTree = "<absolute>"; };
 		DDBE55B90BD187D5004ED228 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = /usr/lib/libcrypto.dylib; sourceTree = "<absolute>"; };
 		DDCB77A00BD5CB8700693892 /* Acid.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Acid.pch; sourceTree = "<group>"; };
+		DDE46AAC0BD7246C0064D202 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		DDF45BBC0BD5CD6D0050911E /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncSocket.h; path = "../../Chat Core/AsyncSocket.h"; sourceTree = SOURCE_ROOT; };
 		DDF45C0C0BD5CF0E0050911E /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -138,6 +140,7 @@
 				DDBE55910BD1845D004ED228 /* libssl.dylib in Frameworks */,
 				DDBE55BA0BD187D5004ED228 /* libcrypto.dylib in Frameworks */,
 				DDF45AC40BD5CC500050911E /* Foundation.framework in Frameworks */,
+				DDE46AAD0BD7246C0064D202 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,6 +204,7 @@
 			children = (
 				DDBE55B90BD187D5004ED228 /* libcrypto.dylib */,
 				DDBE55900BD1845D004ED228 /* libssl.dylib */,
+				DDE46AAC0BD7246C0064D202 /* CoreServices.framework */,
 				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
 			);
 			name = "Linked Frameworks";
