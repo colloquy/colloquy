@@ -60,6 +60,7 @@
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* Acid.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Acid.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD438C530BD87CBD0042117F /* Acid.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = Acid.exp; sourceTree = "<group>"; };
 		DD4A106D0BD5DA910051366F /* ascii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ascii.h; sourceTree = "<group>"; };
 		DD4A106E0BD5DA910051366F /* asciitab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asciitab.h; sourceTree = "<group>"; };
 		DD4A106F0BD5DA910051366F /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
@@ -186,6 +187,7 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				DD438C530BD87CBD0042117F /* Acid.exp */,
 				DDCB77A00BD5CB8700693892 /* Acid.pch */,
 				DD8ADF5D0BD1741A009AB74D /* acid.h */,
 				DD8ADF5A0BD1741A009AB74D /* 3rdparty */,
@@ -460,6 +462,7 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				EXPORTED_SYMBOLS_FILE = Acid.exp;
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Acid.pch;
 				INFOPLIST_FILE = Info.plist;
@@ -475,6 +478,7 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				EXPORTED_SYMBOLS_FILE = Acid.exp;
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Acid.pch;
 				INFOPLIST_FILE = Info.plist;
@@ -518,6 +522,7 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				EXPORTED_SYMBOLS_FILE = Acid.exp;
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Acid.pch;
 				INFOPLIST_FILE = Info.plist;
