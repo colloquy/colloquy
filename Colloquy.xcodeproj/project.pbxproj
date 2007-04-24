@@ -300,8 +300,6 @@
 		CBF6856208201B7A00F498FB /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF685310820190D00F498FB /* GetMetadataForFile.m */; };
 		CBF6856308201B7A00F498FB /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = CBF685330820190D00F498FB /* main.c */; };
 		CBF6857708201C4C00F498FB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 089C1672FE841209C02AAC07 /* Foundation.framework */; };
-		DDBB45C80BD5E9E100EC6E55 /* iTunes.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1C8CE1EB05A921A00020D841 /* iTunes.scpt */; };
-		DDBB45C90BD5E9E100EC6E55 /* Google.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1CD4C098078249C10003620F /* Google.scpt */; };
 		DDF034100BD529AE0096B109 /* JVDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBB23DA04F03CA7000001C8 /* JVDetailCell.m */; };
 		DDF64DA60BD2B0C3009E8FF6 /* Acid.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDF64DA50BD2B0C3009E8FF6 /* Acid.framework */; };
 		DDF64DA80BD2B0D7009E8FF6 /* Acid.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = DDF64DA50BD2B0C3009E8FF6 /* Acid.framework */; };
@@ -448,8 +446,6 @@
 				1CEF8F830A3AB7E90054298A /* JavaScript Support.plugin in Copy Plugins */,
 				0A6571BD0868800D001FF007 /* F-Script Support.plugin in Copy Plugins */,
 				1C0A19B008B041C200324E25 /* Python Support.plugin in Copy Plugins */,
-				DDBB45C80BD5E9E100EC6E55 /* iTunes.scpt in Copy Plugins */,
-				DDBB45C90BD5E9E100EC6E55 /* Google.scpt in Copy Plugins */,
 			);
 			name = "Copy Plugins";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3008,6 +3004,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
+				SYMROOT = build;
 			};
 			name = Release;
 		};
@@ -3017,6 +3014,7 @@
 			buildSettings = {
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				SYMROOT = build;
 			};
 			name = Development;
 		};
@@ -3079,6 +3077,7 @@
 					i386,
 				);
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = build;
 			};
 			name = "Release (Universal)";
 		};
