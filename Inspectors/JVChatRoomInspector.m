@@ -134,6 +134,7 @@
 		BOOL enabled = ( [[sender stringValue] length] ? YES : NO );
 		if( enabled ) [(MVChatRoom *)[_room target] setMode:MVChatRoomPassphraseToJoinMode withAttribute:[sender stringValue]];
 		else {
+			[(MVChatRoom *)[_room target] removeMode:MVChatRoomPassphraseToJoinMode];
 			[requiresPassword setState:NSOffState];
 			[sender setEnabled:NO];
 		}
@@ -141,6 +142,7 @@
 		BOOL enabled = ( [sender intValue] > 1 ? YES : NO );
 		if( enabled ) [(MVChatRoom *)[_room target] setMode:MVChatRoomLimitNumberOfMembersMode withAttribute:[sender stringValue]];
 		else {
+			[(MVChatRoom *)[_room target] removeMode:MVChatRoomLimitNumberOfMembersMode];
 			[limitMembers setState:NSOffState];
 			[sender setEnabled:NO];
 		}

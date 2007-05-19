@@ -2137,6 +2137,7 @@ end:
 #define inviteExcludeMode ( 1 << 28 )
 
 	unsigned long oldModes = [room modes];
+	unsigned long argModes = 0;
 	unsigned long value = 0;
 	NSMutableArray *argsNeeded = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
 	unsigned int i = 0, count = [parameters count];
@@ -2184,7 +2185,10 @@ end:
 							value = MVChatRoomLimitNumberOfMembersMode;
 							goto queue;
 						case 'k':
-							if( ! enabled ) [room _removeMode:MVChatRoomPassphraseToJoinMode];
+							if( ! enabled ) {
+								[room _removeMode:MVChatRoomPassphraseToJoinMode];
+								break;
+							}
 							value = MVChatRoomPassphraseToJoinMode;
 							goto queue;
 						case 'b':
@@ -2236,10 +2240,11 @@ end:
 							[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserBanRemovedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", sender, @"byUser", nil]];
 						}
 					} else if( mode == MVChatRoomLimitNumberOfMembersMode && enabled ) {
+						argModes |= MVChatRoomLimitNumberOfMembersMode;
 						[room _setMode:MVChatRoomLimitNumberOfMembersMode withAttribute:[NSNumber numberWithInt:[param intValue]]];
-					} else if( mode == MVChatRoomPassphraseToJoinMode ) {
-						if( enabled ) [room _setMode:MVChatRoomPassphraseToJoinMode withAttribute:param];
-						else [room _removeMode:MVChatRoomPassphraseToJoinMode];
+					} else if( mode == MVChatRoomPassphraseToJoinMode && enabled ) {
+						argModes |= MVChatRoomPassphraseToJoinMode;
+						[room _setMode:MVChatRoomPassphraseToJoinMode withAttribute:param];
 					}
 
 					[argsNeeded removeObjectAtIndex:0];
@@ -2255,7 +2260,7 @@ end:
 
 	[argsNeeded release];
 
-	unsigned int changedModes = ( oldModes ^ [room modes] );
+	unsigned int changedModes = ( oldModes ^ [room modes] ) | argModes;
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", sender, @"by", nil]];
 }
 
