@@ -846,16 +846,12 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( [cmessage isHighlighted] && [cmessage ignoreStatus] == JVNotIgnored ) {
 		_newHighlightMessageCount++;
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
-		[context setObject:NSLocalizedString( @"You Were Mentioned", "mentioned bubble title" ) forKey:@"title"];
-		if( [self isMemberOfClass:[JVChatRoomPanel class]] ) [context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned in %@.", "chat room mentioned bubble text" ), [self title]] forKey:@"description"];
-		else [context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words was mentioned by %@.", "private chat mentioned bubble text" ), [self title]] forKey:@"description"];
+		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words mentioned by %@", "mention bubble title" ), [user displayName]] forKey:@"title"];
+		[context setObject:messageString forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
-		[context setObject:[[self windowTitle] stringByAppendingString:@"JVChatMentioned"] forKey:@"coalesceKey"];
-		[context setObject:self forKey:@"target"];
-		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 		[self performNotification:@"JVChatMentioned" withContextInfo:context];
-	}
-
+	}	
+	
 	if( [cmessage ignoreStatus] != JVNotIgnored ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? NSLocalizedString( @"User Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];

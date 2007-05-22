@@ -172,7 +172,7 @@
 		<key>identifier</key>
 		<string>JVChatMentioned</string>
 		<key>title</key>
-		<string>Someone Mentioned You</string>
+		<string>Highlight Word Was Mentioned</string>
 	</dict>
 	<dict>
 		<key>identifier</key>
