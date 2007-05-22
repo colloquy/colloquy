@@ -257,6 +257,13 @@
 }
 
 - (id) tableView:(NSTableView *) tableView objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
+	if ( [[column identifier] isEqualToString:@"author"] ) {
+		MVChatUser *user = [_latestBanList objectAtIndex:row];
+		if( [user respondsToSelector:@selector( attributeForKey: )] ) {
+			return [user attributeForKey:MVChatUserBanServerAttribute];
+		}
+		return nil;
+	}
 	return [[_latestBanList objectAtIndex:row] description];
 }
 
