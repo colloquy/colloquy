@@ -849,6 +849,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words mentioned by %@", "mention bubble title" ), [user displayName]] forKey:@"title"];
 		[context setObject:messageString forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
+		[context setObject:self forKey:@"target"]; 
+		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"]; 
 		[self performNotification:@"JVChatMentioned" withContextInfo:context];
 	}	
 	
