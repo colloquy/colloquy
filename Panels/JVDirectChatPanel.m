@@ -847,7 +847,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		_newHighlightMessageCount++;
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"One of your highlight words mentioned by %@", "mention bubble title" ), [user displayName]] forKey:@"title"];
-		[context setObject:messageString forKey:@"description"];
+		[context setObject:[messageString string] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
 		[context setObject:self forKey:@"target"]; 
 		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"]; 
