@@ -101,7 +101,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 
 - (void) release {
 	if( ( [self retainCount] - 1 ) == 1 )
-		[[_webview windowScriptObject] removeWebScriptKey:@"Plugin"];
+		[self performSelector:@selector(removeScriptGlobalsForWebView:) withObject:_webview afterDelay:0];
 	[super release];
 }
 
@@ -235,6 +235,20 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	[[webView windowScriptObject] setValue:[MVChatPluginManager defaultManager] forKey:@"ChatPluginManager"];
 }
 
+- (void) removeScriptGlobalsForWebView:(WebView *) webView {
+	if (!webView)
+		return;
+
+	[[webView windowScriptObject] removeWebScriptKey:@"Plugin"];
+	[[webView windowScriptObject] removeWebScriptKey:@"ChatController"];
+	[[webView windowScriptObject] removeWebScriptKey:@"ConnectionsController"];
+	[[webView windowScriptObject] removeWebScriptKey:@"FileTransferController"];
+	[[webView windowScriptObject] removeWebScriptKey:@"BuddyListController"];
+	[[webView windowScriptObject] removeWebScriptKey:@"SpeechController"];
+	[[webView windowScriptObject] removeWebScriptKey:@"NotificationController"];
+	[[webView windowScriptObject] removeWebScriptKey:@"ChatPluginManager"];
+}
+
 #pragma mark -
 
 - (id) allocInstance:(NSString *) class {
@@ -256,15 +270,17 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 
 	_loading = YES;
 
-	id old = _webview;
-	_webview = [[WebView allocWithZone:nil] initWithFrame:NSZeroRect];
-	[old release];
+	if (!_webview) {
+		_webview = [[WebView allocWithZone:nil] initWithFrame:NSZeroRect];
 
-	[_webview setPolicyDelegate:self];
-	[_webview setFrameLoadDelegate:self];
-	[_webview setUIDelegate:self];
-	if( [_webview respondsToSelector:@selector( setScriptDebugDelegate: )] )
-		[_webview setScriptDebugDelegate:self];
+		[_webview setPolicyDelegate:self];
+		[_webview setFrameLoadDelegate:self];
+		[_webview setUIDelegate:self];
+		if( [_webview respondsToSelector:@selector( setScriptDebugDelegate: )] )
+			[_webview setScriptDebugDelegate:self];
+	} else {
+		[self removeScriptGlobalsForWebView:_webview];
+	}
 
 	NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"plugin" ofType:@"html"];
 	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:path] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:5.];

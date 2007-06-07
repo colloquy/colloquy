@@ -22,6 +22,7 @@ extern NSString *JVJavaScriptErrorDomain;
 - (void) reloadFromDisk;
 
 - (void) setupScriptGlobalsForWebView:(WebView *) webView;
+- (void) removeScriptGlobalsForWebView:(WebView *) webView;
 
 - (void) reportErrorForCallFrame:(WebScriptCallFrame *) frame lineNumber:(unsigned int) line;
 - (void) reportError:(NSDictionary *) error inFunction:(NSString *) functionName whileLoading:(BOOL) whileLoading;
