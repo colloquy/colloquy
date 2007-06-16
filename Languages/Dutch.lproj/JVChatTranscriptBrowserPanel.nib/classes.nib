@@ -1,0 +1,40 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {changeCriterion = id; search = id; showBrowser = id; }; 
+            CLASS = JVChatTranscriptBrowserPanel; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                searchField = NSSearchField; 
+                statusText = NSTextField; 
+                tableView = NSTableView; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = JVChatTranscriptPanel; 
+        }, 
+        {
+            ACTIONS = {
+                activate = id; 
+                changeEmoticons = id; 
+                changeStyle = id; 
+                changeStyleVariant = id; 
+                close = id; 
+                performQuickSearch = id; 
+            }; 
+            CLASS = JVChatTranscriptPanel; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {contents = NSView; display = JVStyleView; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            ACTIONS = {jumpToMark = id; jumpToNextHighlight = id; jumpToPreviousHighlight = id; }; 
+            CLASS = JVStyleView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {nextTextView = NSTextView; }; 
+            SUPERCLASS = WebView; 
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}
