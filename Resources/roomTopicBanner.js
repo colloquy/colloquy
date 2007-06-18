@@ -4,20 +4,20 @@ var topicToggled = false;
 function toggleTopic( e ) {
 	if( e && e.altKey ) {
 		topicSize++;
-		if( topicSize > 3 ) topicSize = 0;
-		topicAreaSize = ( ! topicSize ? 17 : ( topicSize == 1 ? 32 : ( topicSize == 2 ? 47 : 62 ) ) );
-		if( topicSize == 3 ) document.getElementById( 'toggleButton' ).className = "up";
+		if( topicSize > 6 ) topicSize = 0;
+		topicAreaSize = ( ! topicSize ? 17 : ( topicSize == 1 ? 32 : ( topicSize == 2 ? 47 : ( topicSize == 3 ? 62 : ( topicSize == 4 ? 77 : ( topicSize == 5 ? 92 : 107 ) ) ) ) ) );
+		if( topicSize == 6 ) document.getElementById( 'toggleButton' ).className = "up";
 		else document.getElementById( 'toggleButton' ).className = "";
 	} else {
-		if( ! topicToggled && topicSize < 3 ) {
+		if( ! topicToggled && topicSize < 6 ) {
 			topicAreaSize = document.getElementById( 'topicMessage' ).clientHeight + 2;
-			if( topicAreaSize > 62 ) topicAreaSize = 62;
+			if( topicAreaSize > 107 ) topicAreaSize = 107;
 			else if( topicAreaSize < 17 ) topicAreaSize = 17;
 			document.getElementById( 'toggleButton' ).className = "up";
 			topicToggled = true;
 		} else {
-			if( topicSize == 3 ) topicSize = 0;
-			topicAreaSize = ( ! topicSize ? 17 : ( topicSize == 1 ? 32 : ( topicSize == 2 ? 47 : 62 ) ) );
+			if( topicSize == 6 ) topicSize = 0;
+			topicAreaSize = ( ! topicSize ? 17 : ( topicSize == 1 ? 32 : ( topicSize == 2 ? 47 : ( topicSize == 3 ? 62 : ( topicSize == 4 ? 77 : ( topicSize == 5 ? 92 : 107 ) ) ) ) ) );
 			document.getElementById( 'toggleButton' ).className = "";
 			topicToggled = false;
 		}
@@ -40,7 +40,7 @@ function refreshTopicSize( event ) {
 	else document.getElementById( 'toggleButton' ).style.setProperty( 'display', 'none', null );
 	if( topicToggled ) {
 		topicAreaSize = topicMessage.clientHeight + 2;
-		if( topicAreaSize > 62 ) topicAreaSize = 62;
+		if( topicAreaSize > 107 ) topicAreaSize = 107;
 		else if( topicAreaSize < 17 ) topicAreaSize = 17;
 		document.getElementById( 'topicArea' ).style.setProperty( 'height', topicAreaSize + 'px', null );
 	}
