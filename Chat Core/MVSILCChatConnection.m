@@ -1265,6 +1265,15 @@ static SilcClientOperations silcClientOps = {
 	else [self sendRawMessageWithFormat:@"JOIN %@", [self properNameForChatRoomNamed:room]];
 }
 
+- (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
+	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
+	return [super joinedChatRoomWithUniqueIdentifier:[(NSString *)identifier lowercaseString]];
+}
+
+- (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
+	return [super joinedChatRoomWithUniqueIdentifier:[name lowercaseString]];
+}
+
 #pragma mark -
 
 - (NSCharacterSet *) chatRoomNamePrefixes {
