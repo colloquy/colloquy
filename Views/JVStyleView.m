@@ -25,7 +25,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 @interface WebView (WebViewLeopard)
 - (void) setDrawsBackground:(BOOL) draws; // supported in 10.3.9/Tiger
 - (BOOL) drawsBackground; // supported in 10.3.9/Tiger
-- (void) setBackgroundColor:(NSColor *) color; // new in Leopard
+- (void) setBackgroundColor:(NSColor *) color; // new in Safari 3/Leopard
+- (void) setProhibitsMainFrameScrolling:(BOOL) prohibit; // new in Safari 3/Leopard
 - (WebFrame *) selectedFrame;
 @end
 
@@ -147,6 +148,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) awakeFromNib {
 	[self setFrameLoadDelegate:self];
+	if( [self respondsToSelector:@selector(setProhibitsMainFrameScrolling:)] )
+		[self setProhibitsMainFrameScrolling:YES];
 	[self performSelector:@selector( _reallyAwakeFromNib ) withObject:nil afterDelay:0.];
 }
 
