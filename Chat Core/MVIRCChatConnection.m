@@ -1428,7 +1428,7 @@ end:
 							case '@': mode = MVChatRoomMemberOperatorMode; break;
 							case '&': mode = MVChatRoomMemberAdministratorMode; break;
 							case '!': mode = MVChatRoomMemberAdministratorMode; break;
-							case '*': mode = MVChatRoomMemberAdministratorMode; break;
+							case '*': mode = MVChatRoomMemberFounderMode; break;
 							case '~': mode = MVChatRoomMemberFounderMode; break;
 							case '.': mode = MVChatRoomMemberFounderMode; break;
 							default: break;
