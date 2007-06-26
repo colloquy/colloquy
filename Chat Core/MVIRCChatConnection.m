@@ -1413,36 +1413,36 @@ end:
 
 					if( [modesTable count] ) [_serverInformation setObject:modesTable forKey:@"roomMemberModeTable"];
 					[_serverInformation setObject:[NSCharacterSet characterSetWithCharactersInString:modes] forKey:@"roomMemberModes"];
+				}
 
-					NSString *prefixes = [feature substringFromIndex:[scanner scanLocation]];
-					if( [prefixes length] ) {
-						NSMutableDictionary *prefixTable = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:[modes length]];
-						unsigned length = [prefixes length];
-						unsigned i = 0;
-						for( i = 0; i < length; i++ ) {
-							MVChatRoomMemberMode mode = MVChatRoomMemberNoModes;
-							switch( [prefixes characterAtIndex:i] ) {
-								case '+': mode = MVChatRoomMemberVoicedMode; break;
-								case '%': mode = MVChatRoomMemberHalfOperatorMode; break;
-								case '@': mode = MVChatRoomMemberOperatorMode; break;
-								case '&': mode = MVChatRoomMemberAdministratorMode; break;
-								case '!': mode = MVChatRoomMemberAdministratorMode; break;
-								case '*': mode = MVChatRoomMemberAdministratorMode; break;
-								case '~': mode = MVChatRoomMemberFounderMode; break;
-								case '.': mode = MVChatRoomMemberFounderMode; break;
-								default: break;
-							}
-
-							if( mode != MVChatRoomMemberNoModes ) {
-								NSString *key = [[NSString allocWithZone:nil] initWithFormat:@"%c", [prefixes characterAtIndex:i]];
-								[prefixTable setObject:[NSNumber numberWithUnsignedLong:mode] forKey:key];
-								[key release];
-							}
+				NSString *prefixes = [feature substringFromIndex:[scanner scanLocation]];
+				if( [prefixes length] ) {
+					NSMutableDictionary *prefixTable = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:[modes length]];
+					unsigned length = [prefixes length];
+					unsigned i = 0;
+					for( i = 0; i < length; i++ ) {
+						MVChatRoomMemberMode mode = MVChatRoomMemberNoModes;
+						switch( [prefixes characterAtIndex:i] ) {
+							case '+': mode = MVChatRoomMemberVoicedMode; break;
+							case '%': mode = MVChatRoomMemberHalfOperatorMode; break;
+							case '@': mode = MVChatRoomMemberOperatorMode; break;
+							case '&': mode = MVChatRoomMemberAdministratorMode; break;
+							case '!': mode = MVChatRoomMemberAdministratorMode; break;
+							case '*': mode = MVChatRoomMemberAdministratorMode; break;
+							case '~': mode = MVChatRoomMemberFounderMode; break;
+							case '.': mode = MVChatRoomMemberFounderMode; break;
+							default: break;
 						}
 
-						if( [prefixTable count] ) [_serverInformation setObject:prefixTable forKey:@"roomMemberPrefixTable"];
-						[_serverInformation setObject:[NSCharacterSet characterSetWithCharactersInString:prefixes] forKey:@"roomMemberPrefixes"];
+						if( mode != MVChatRoomMemberNoModes ) {
+							NSString *key = [[NSString allocWithZone:nil] initWithFormat:@"%c", [prefixes characterAtIndex:i]];
+							[prefixTable setObject:[NSNumber numberWithUnsignedLong:mode] forKey:key];
+							[key release];
+						}
 					}
+
+					if( [prefixTable count] ) [_serverInformation setObject:prefixTable forKey:@"roomMemberPrefixTable"];
+					[_serverInformation setObject:[NSCharacterSet characterSetWithCharactersInString:prefixes] forKey:@"roomMemberPrefixes"];
 				}
 			}
 		}
@@ -2220,8 +2220,8 @@ end:
 							[argsNeeded addObject:[NSNumber numberWithUnsignedLong:value]];
 							break;
 						default: {
-							if( _serverInformation ) {
-								NSMutableDictionary *supportedModes = [_serverInformation objectForKey:@"roomMemberModeTable"];
+							NSMutableDictionary *supportedModes = [_serverInformation objectForKey:@"roomMemberModeTable"];
+							if( [supportedModes count] ) {
 								value = [[supportedModes objectForKey:[NSString stringWithFormat:@"%c", chr]] unsignedLongValue];
 								if( value ) goto queue;
 							}
@@ -2478,8 +2478,8 @@ end:
 				if( ! [memberName length] ) break;
 
 				MVChatRoomMemberMode modes = MVChatRoomMemberNoModes;
-				if( _serverInformation ) {
-					NSMutableDictionary *prefixes = [_serverInformation objectForKey:@"roomMemberPrefixTable"];
+				NSMutableDictionary *prefixes = [_serverInformation objectForKey:@"roomMemberPrefixTable"];
+				if( [prefixes count] ) {
 					NSString *key = [[NSString allocWithZone:nil] initWithFormat:@"%c", [memberName characterAtIndex:0]];
 					modes = [[prefixes objectForKey:key] unsignedLongValue];
 					[key release];
