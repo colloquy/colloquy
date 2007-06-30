@@ -22,6 +22,9 @@
 		1C3699C708FF768900F34892 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699BB08FF768900F34892 /* utils.c */; };
 		1C7F7CC90B5FF71700D8676C /* utilities.js in Resources */ = {isa = PBXBuildFile; fileRef = 1C7F7CC70B5FF71000D8676C /* utilities.js */; };
 		1CAB90660B606FA90051E0E7 /* prototype.js in Resources */ = {isa = PBXBuildFile; fileRef = 1CAB90650B606FA10051E0E7 /* prototype.js */; };
+		1CBF0ACE0C359F71007EFB64 /* iphone in Resources */ = {isa = PBXBuildFile; fileRef = 1CBF0AB90C359F71007EFB64 /* iphone */; };
+		1CBF0AE10C35B1AD007EFB64 /* chat.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CBF0AE00C35B1AD007EFB64 /* chat.html */; };
+		1CBF0AE80C35B1F1007EFB64 /* colloquy.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBF0AE70C35B1F1007EFB64 /* colloquy.png */; };
 		1CC7250C0901A775004651F8 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CC7250B0901A775004651F8 /* index.html */; };
 		1CC726710901BBD2004651F8 /* common.js in Resources */ = {isa = PBXBuildFile; fileRef = 1CC7265F0901BAAE004651F8 /* common.js */; };
 		1CD02E490B66C75400957AF0 /* highlightsInvertedLarge.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD02E3C0B66C75400957AF0 /* highlightsInvertedLarge.png */; };
@@ -37,6 +40,7 @@
 		1CD02E530B66C75400957AF0 /* messagesNormalMedium.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD02E460B66C75400957AF0 /* messagesNormalMedium.png */; };
 		1CD02E540B66C75400957AF0 /* messagesNormalSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD02E470B66C75400957AF0 /* messagesNormalSmall.png */; };
 		1CD02E550B66C75400957AF0 /* rowHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD02E480B66C75400957AF0 /* rowHighlight.png */; };
+		1CDA83B60C33FDFB000606AA /* XML.colloquyStyle in Resources */ = {isa = PBXBuildFile; fileRef = 1CDA83B50C33FDFB000606AA /* XML.colloquyStyle */; };
 		1CF3AE700B5B05B100183925 /* smallIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF3AE6F0B5B05B100183925 /* smallIcon.png */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
@@ -63,6 +67,9 @@
 		1C7F7CC70B5FF71000D8676C /* utilities.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = utilities.js; sourceTree = "<group>"; };
 		1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
 		1CAB90650B606FA10051E0E7 /* prototype.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = prototype.js; sourceTree = "<group>"; };
+		1CBF0AB90C359F71007EFB64 /* iphone */ = {isa = PBXFileReference; lastKnownFileType = folder; path = iphone; sourceTree = "<group>"; };
+		1CBF0AE00C35B1AD007EFB64 /* chat.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = chat.html; sourceTree = "<group>"; };
+		1CBF0AE70C35B1F1007EFB64 /* colloquy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = colloquy.png; sourceTree = "<group>"; };
 		1CC7250B0901A775004651F8 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		1CC7265F0901BAAE004651F8 /* common.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = common.js; sourceTree = "<group>"; };
 		1CD02E3C0B66C75400957AF0 /* highlightsInvertedLarge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = highlightsInvertedLarge.png; sourceTree = "<group>"; };
@@ -78,6 +85,7 @@
 		1CD02E460B66C75400957AF0 /* messagesNormalMedium.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = messagesNormalMedium.png; sourceTree = "<group>"; };
 		1CD02E470B66C75400957AF0 /* messagesNormalSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = messagesNormalSmall.png; sourceTree = "<group>"; };
 		1CD02E480B66C75400957AF0 /* rowHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rowHighlight.png; sourceTree = "<group>"; };
+		1CDA83B50C33FDFB000606AA /* XML.colloquyStyle */ = {isa = PBXFileReference; lastKnownFileType = folder; path = XML.colloquyStyle; sourceTree = "<group>"; };
 		1CF3AE6F0B5B05B100183925 /* smallIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smallIcon.png; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* Web Interface.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Web Interface.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
@@ -122,10 +130,12 @@
 			children = (
 				8D5B49B7048680CD000E48DA /* Info.plist */,
 				1CC7250B0901A775004651F8 /* index.html */,
+				1CBF0AE00C35B1AD007EFB64 /* chat.html */,
 				1C3458F10905FC4800AC2C16 /* base.css */,
 				1CC7265F0901BAAE004651F8 /* common.js */,
 				1CAB90650B606FA10051E0E7 /* prototype.js */,
 				1C7F7CC70B5FF71000D8676C /* utilities.js */,
+				1CBF0AE70C35B1F1007EFB64 /* colloquy.png */,
 				1CF3AE6F0B5B05B100183925 /* smallIcon.png */,
 				1CD02E3C0B66C75400957AF0 /* highlightsInvertedLarge.png */,
 				1CD02E3D0B66C75400957AF0 /* highlightsInvertedMedium.png */,
@@ -140,6 +150,8 @@
 				1CD02E460B66C75400957AF0 /* messagesNormalMedium.png */,
 				1CD02E470B66C75400957AF0 /* messagesNormalSmall.png */,
 				1CD02E480B66C75400957AF0 /* rowHighlight.png */,
+				1CBF0AB90C359F71007EFB64 /* iphone */,
+				1CDA83B50C33FDFB000606AA /* XML.colloquyStyle */,
 			);
 			indentWidth = 4;
 			path = Resources;
@@ -257,7 +269,6 @@
 			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
 			projectDirPath = "";
 			projectRoot = ../..;
-			shouldCheckCompatibility = 1;
 			targets = (
 				8D5B49AC048680CD000E48DA /* Web Interface Plugin */,
 			);
@@ -288,6 +299,10 @@
 				1CD02E530B66C75400957AF0 /* messagesNormalMedium.png in Resources */,
 				1CD02E540B66C75400957AF0 /* messagesNormalSmall.png in Resources */,
 				1CD02E550B66C75400957AF0 /* rowHighlight.png in Resources */,
+				1CDA83B60C33FDFB000606AA /* XML.colloquyStyle in Resources */,
+				1CBF0ACE0C359F71007EFB64 /* iphone in Resources */,
+				1CBF0AE10C35B1AD007EFB64 /* chat.html in Resources */,
+				1CBF0AE80C35B1F1007EFB64 /* colloquy.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

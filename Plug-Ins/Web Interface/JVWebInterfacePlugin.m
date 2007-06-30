@@ -19,6 +19,7 @@ static NSString *JVWebInterfaceRequest = @"JVWebInterfaceRequest";
 static NSString *JVWebInterfaceRequestContent = @"JVWebInterfaceRequestContent";
 static NSString *JVWebInterfaceResponse = @"JVWebInterfaceResponse";
 static NSString *JVWebInterfaceClientIdentifier = @"JVWebInterfaceClientIdentifier";
+static NSString *JVWebInterfaceOverrideStyle = @"overrideStyle";
 
 static void processCommand( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
@@ -204,6 +205,7 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 		_clients = [[NSMutableDictionary alloc] initWithCapacity:5];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( newMessage: ) name:@"JVChatMessageWasProcessedNotification" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( newEvent: ) name:@"JVChatEventMessageWasProcessedNotification" object:nil];
+		[[NSBundle bundleWithPath:[[NSBundle bundleForClass:[self class]] pathForResource:@"XML" ofType:@"colloquyStyle"]] load];
 	}
 
 	return self;
@@ -239,7 +241,9 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 - (void) load {
 	[self deallocServer];
 
-	_httpServer = http_server_new( NULL, "6667" ); // bind to any IP on port 6667
+	NSString *port = [[NSUserDefaults standardUserDefaults] stringForKey:@"WebInterfacePort"];
+
+	_httpServer = http_server_new( NULL, ( port ? [port UTF8String] : "6667" ) );
 	_httpServer -> context = self;
 	_httpServer -> document_root = strdup( [[[NSBundle bundleForClass:[self class]] resourcePath] fileSystemRepresentation] );
 
@@ -321,21 +325,67 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 
 #pragma mark -
 
-- (void) setupCommand:(NSDictionary *) arguments {
+- (void) loginCommand:(NSDictionary *) arguments {
 	http_resp_t *resp = [[arguments objectForKey:JVWebInterfaceResponse] pointerValue];
 	if( ! resp ) return;
+
+	http_req_t *req = [[arguments objectForKey:JVWebInterfaceRequest] pointerValue];
+	if( ! req ) return;
 
 	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
 	if( ! [identifier length] )
 		identifier = [NSString locallyUniqueString];
 
+	unsigned int contentLength = req->content_length;
+	NSString *content = [[NSString alloc] initWithBytes:req->content length:contentLength encoding:NSASCIIStringEncoding];
+
+	NSArray *fields = [content componentsSeparatedByString:@"&"];
+	NSEnumerator *enumerator = [fields objectEnumerator];
+	NSString *field = nil;
+
+	BOOL passwordMatches = NO;
+	BOOL rememberMe = NO;
+
+	NSString *password = [[NSUserDefaults standardUserDefaults] stringForKey:@"WebInterfacePassword"];
+
+	while( ( field = [enumerator nextObject] ) ) {
+		NSArray *parts = [field componentsSeparatedByString:@"="];
+		if( [parts count] == 2 ) {
+			NSString *key = [parts objectAtIndex:0];
+			NSString *value = [parts objectAtIndex:1];
+			if( [key isEqualToString:@"p"] )
+				passwordMatches = [value isEqualToString:password];
+			else if( [key isEqualToString:@"r"] )
+				rememberMe = YES;
+		}
+	}
+
+	if( passwordMatches ) {
+		if( rememberMe )
+			resp -> add_cookie( resp, (char *)[[NSString stringWithFormat:@"identifier=%@; path=/; expires=Wed, 1 Jan 2014 23:59:59 UTC", identifier] UTF8String] );
+		else
+			resp -> add_cookie( resp, (char *)[[NSString stringWithFormat:@"identifier=%@; path=/", identifier] UTF8String] );
+		resp -> content_type = "text/plain";
+		resp -> write( resp, "authenticated", 13 );
+	}
+}
+
+- (void) setupCommand:(NSDictionary *) arguments {
+	http_resp_t *resp = [[arguments objectForKey:JVWebInterfaceResponse] pointerValue];
+	if( ! resp ) return;
+
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
+	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
 
 	NSXMLDocument *doc = [NSXMLDocument documentWithRootElement:[NSXMLElement elementWithName:@"queue"]];
 	[info setObject:doc forKey:@"activityQueue"];
 
 	NSMutableDictionary *styles = [NSMutableDictionary dictionary];
-	[info setObject:styles forKey:@"originalStyles"];
+	[info setObject:styles forKey:@"styles"];
+
+	NSString *overrideStyle = [arguments objectForKey:JVWebInterfaceOverrideStyle];
+	if( [overrideStyle length] )
+		[info setObject:overrideStyle forKey:@"overrideStyle"];
 
 	doc = [NSXMLDocument documentWithRootElement:[NSXMLElement elementWithName:@"setup"]];
 	NSXMLElement *node = [NSXMLElement elementWithName:@"panels"];
@@ -372,7 +422,6 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	}
 
 	resp -> content_type = "text/xml";
-	resp -> add_cookie( resp, (char *)[[NSString stringWithFormat:@"identifier=%@; path=/", identifier] UTF8String] );
 
 	NSData *xml = [doc XMLData];
 	resp -> write( resp, (char *)[xml bytes], [xml length] );
@@ -392,8 +441,14 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 		JVDirectChatPanel *panel = [self panelForIdentifier:[arguments objectForKey:@"panel"]];
 
 		if( panel ) {
-			NSMutableDictionary *styles = [info objectForKey:@"originalStyles"];
-			[styles setObject:[[panel style] identifier] forKey:[panel uniqueIdentifier]];
+			NSMutableDictionary *styles = [info objectForKey:@"styles"];
+
+			JVStyle *style = nil;
+			NSString *overrideStyle = [info objectForKey:@"overrideStyle"];
+			if( [overrideStyle length] ) style = [JVStyle styleWithIdentifier:overrideStyle];
+			if( ! style ) style = [JVStyle styleWithIdentifier:[[panel style] identifier]];
+
+			[styles setObject:style forKey:[panel uniqueIdentifier]];
 
 			DOMHTMLDocument *document = (DOMHTMLDocument *)[[[[panel display] mainFrame] findFrameNamed:@"content"] DOMDocument];
 			DOMHTMLElement *bodyNode = (DOMHTMLElement *)[document getElementById:@"contents"];
@@ -516,7 +571,7 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 
 		JVMutableChatMessage *message = [[notification userInfo] objectForKey:@"message"];
 		JVDirectChatPanel *view = [notification object];
-		if( ! [view isKindOfClass:[JVDirectChatPanel class]] ) return;
+		if( ! [view isKindOfClass:[JVDirectChatPanel class]] || ! message ) return;
 
 		if( [view isMemberOfClass:[JVDirectChatPanel class]] ) {
 			NSXMLElement *element = [NSXMLElement elementWithName:@"open"];
@@ -544,7 +599,17 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 		NSDictionary *info = nil;
 
 		while( ( info = [enumerator nextObject] ) ) {
-			JVStyle *style = [JVStyle styleWithIdentifier:[[info objectForKey:@"originalStyles"] objectForKey:[view uniqueIdentifier]]];
+			JVStyle *style = [[info objectForKey:@"styles"] objectForKey:[view uniqueIdentifier]];
+			if( ! style ) {
+				NSMutableDictionary *styles = [info objectForKey:@"styles"];
+	
+				NSString *overrideStyle = [info objectForKey:@"overrideStyle"];
+				if( [overrideStyle length] ) style = [JVStyle styleWithIdentifier:overrideStyle];
+				if( ! style ) style = [JVStyle styleWithIdentifier:[[view style] identifier]];
+	
+				[styles setObject:style forKey:[view uniqueIdentifier]];
+			}
+
 			NSString *tmessage = [style transformChatMessage:message withParameters:styleParams]; // this will break once styles use custom styleParameters!!
 
 			NSXMLNode *body = [[NSXMLNode alloc] initWithKind:NSXMLTextKind options:NSXMLNodeIsCDATA];
@@ -569,7 +634,7 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 
 		JVMutableChatEvent *event = [[notification userInfo] objectForKey:@"event"];
 		JVDirectChatPanel *view = [notification object];
-		if( ! [view isKindOfClass:[JVDirectChatPanel class]] ) return;
+		if( ! [view isKindOfClass:[JVDirectChatPanel class]] || ! event ) return;
 
 		NSMutableDictionary *attributes = [NSMutableDictionary dictionary];
 		[attributes setObject:[view uniqueIdentifier] forKey:@"panel"];
@@ -581,7 +646,17 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 		NSDictionary *info = nil;
 
 		while( ( info = [enumerator nextObject] ) ) {
-			JVStyle *style = [JVStyle styleWithIdentifier:[[info objectForKey:@"originalStyles"] objectForKey:[view uniqueIdentifier]]];
+			JVStyle *style = [[info objectForKey:@"styles"] objectForKey:[view uniqueIdentifier]];
+			if( ! style ) {
+				NSMutableDictionary *styles = [info objectForKey:@"styles"];
+	
+				NSString *overrideStyle = [info objectForKey:@"overrideStyle"];
+				if( [overrideStyle length] ) style = [JVStyle styleWithIdentifier:overrideStyle];
+				if( ! style ) style = [JVStyle styleWithIdentifier:[[view style] identifier]];
+	
+				[styles setObject:style forKey:[view uniqueIdentifier]];
+			}
+
 			NSString *tmessage = [style transformChatTranscriptElement:event withParameters:styleParams]; // this will break once styles use custom styleParameters!!
 
 			NSXMLNode *body = [[NSXMLNode alloc] initWithKind:NSXMLTextKind options:NSXMLNodeIsCDATA];
