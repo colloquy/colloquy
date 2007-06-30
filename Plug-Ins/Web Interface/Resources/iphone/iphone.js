@@ -462,6 +462,7 @@ DirectChatPanel.prototype.keyboardVisible = function(visible) {
 		document.body.style.height = null;
 	}
 
+	window.location.hash = "bottom"; // pan to the bottom, hides the location bar
 	this.scrollToBottom();
 }
 

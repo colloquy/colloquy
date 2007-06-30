@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html lang="en">
+<head>
+	<title>Colloquy</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=320, initial-scale=1.0">
+	<link rel="icon" href="smallIcon.png" type="image/png" />
+	<script type="text/ecmascript" src="prototype.js" encoding="utf-8"></script>
+	<style>
+	body {
+		text-align: center;
+		font-size: 14px;
+		font-family: Lucida Grande, sans-serif;
+		color: rgb(20%, 20%, 20%);
+		-webkit-text-size-adjust: none;
+	}
+
+	form {
+		border: 0;
+		margin: 0;
+	}
+
+	img {
+		vertical-align: middle;
+	}
+
+	#login {
+		margin: 10px;
+		vertical-align: middle;
+		border: 2px solid gray;
+		background-image: url(iphone/images/gradientHighlight.png);
+		background-repeat: repeat-x;
+		-webkit-background-size: 150%;
+		-webkit-border-radius: 16px;
+		background-color: rgb(66%, 66%, 66%);
+		width: 210px;
+		display: inline-block;
+		padding: 10px;
+	}
+
+	label[for] {
+		display: inline-block;
+		width: 70px;
+		text-align: right;
+	}
+
+	input[type=text], input[type=password] {
+		width: 120px;
+		font-size: 14px;
+	}
+
+	#submit {
+		float: right;
+		margin-top: 5px;
+		background-color: transparent;
+		border-style: none;
+		border-width: 0 15px 0 15px;
+		padding: 0;
+		-webkit-border-image: url(iphone/images/blueButton.png) 0 15 0 15;
+		height: 31px;
+		max-height: 31px;
+		min-height: 31px;
+		min-width: 31px;
+		line-height: 30px;
+		font-size: 16px;
+		font-weight: bold;
+		color: white;
+		text-shadow: rgb(13, 60, 143) 0 1px 2px;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+	#submit:active {
+		background-color: transparent;
+		-webkit-border-image: url(iphone/images/blueButtonPressed.png) 0 15 0 15;
+	}
+
+	#remember-label {
+		margin-top: 13px;
+		float: left;
+	}
+	</style>
+	<script>
+	new Image().src = "iphone/images/blueButton.png";
+	new Image().src = "iphone/images/blueButtonPressed.png";
+
+	if (document.cookie.match(/identifier/))
+		redirect();
+
+	function redirect() {
+		if (navigator.userAgent.match(/iPhone/i))
+			location.href = "/iphone/";
+		else location.href = "/chat.html";
+	}
+
+	function login(event) {
+		event.preventDefault();
+
+		var password = $("password").value;
+
+		var loginData = "p=" + password;
+		if($("remember").checked)
+			loginData += "&r=1";
+
+		new Ajax.Request( "/command/login", {
+			method: "post",
+			postBody: loginData,
+			onSuccess: function( transport ) {
+				if (transport.responseText.match(/authenticated/)) {
+					redirect();
+				} else {
+					$("login").style.backgroundColor = "red";
+					$("login").style.borderColor = "red";
+				}
+			},
+			onError: function( transport ) {
+				$("login").style.backgroundColor = "orange";
+				$("login").style.borderColor = "orange";
+			},
+			onException: function( transport, exception ) {
+				throw exception;
+			}
+		} );
+
+		return false;
+	}
+	</script>
+</head>
+<body>
+<img src="colloquy.png" width="200" height="200">
+<div id="login">
+<form onsubmit="login(event)">
+<label for="password">Password:</label> <input type="password" value="" id="password"><br>
+<label id="remember-label"><input type="checkbox" checked id="remember" value="1"> Remember Me</label>
+<input type="submit" id="submit" value="Login">
+</form>
+</div>
+</body>
+</html>
