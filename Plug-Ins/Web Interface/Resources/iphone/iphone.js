@@ -18,12 +18,8 @@ Colloquy.loaded = function(event)
 	new Image().src = "images/blueGradient.png";
 	new Image().src = "images/backButton.png";
 	new Image().src = "images/backButtonPressed.png";
-//	new Image().src = "images/forwardButton.png";
-//	new Image().src = "images/forwardButtonPressed.png";
 	new Image().src = "images/button.png";
 	new Image().src = "images/buttonPressed.png";
-	new Image().src = "images/blueButton.png";
-	new Image().src = "images/blueButtonPressed.png";
 	new Image().src = "images/person.png";
 	new Image().src = "images/messagesNormalSmall.png";
 	new Image().src = "images/messagesNormalMedium.png";
@@ -216,8 +212,9 @@ function extendClass( subClass, baseClass ) {
 }
 
 var UserDefaults = {
-	minimumActivityCheckInterval: 1000,
+	minimumActivityCheckInterval: 2000,
 	maximumActivityCheckInterval: 10000,
+	activityCheckIntervalIncrement: 200,
 	scrollBackMessageLimit: 200
 };
 
@@ -291,7 +288,7 @@ ChatController.checkActivity = function() {
 				}
 			}
 
-			if( ! updateIntervalDelta ) updateIntervalDelta = 100;
+			if( ! updateIntervalDelta ) updateIntervalDelta = UserDefaults.activityCheckIntervalIncrement;
 
 			var newActivityCheckInterval = Math.min( ( currentActivityCheckInterval + updateIntervalDelta ), UserDefaults.maximumActivityCheckInterval );
 			newActivityCheckInterval = Math.max( newActivityCheckInterval, UserDefaults.minimumActivityCheckInterval );
@@ -449,20 +446,22 @@ extendClass( DirectChatPanel, Panel );
 DirectChatPanel.prototype.send = function() {
 	this.sendMessage(this.panelInputElement.value);
 	this.panelInputElement.value = "";
+	this.panelInputElement.focus();
+	this.panelInputElement.selectionStart = 0;
+	this.panelInputElement.selectionEnd = 0;
 }
 
 DirectChatPanel.prototype.keyboardVisible = function(visible) {
 	if( visible ) {
-		this.panelTranscriptElement.style.height = "74px";
-		Colloquy.mainElement.style.height = "156px";
-		document.body.style.height = "216px";
+		this.panelTranscriptElement.style.height = "119px";
+
+		this.panelInputElement.focus();
+		this.panelInputElement.selectionStart = 0;
+		this.panelInputElement.selectionEnd = 0;
 	} else {
 		this.panelTranscriptElement.style.height = null;
-		Colloquy.mainElement.style.height = null;
-		document.body.style.height = null;
 	}
 
-	window.location.hash = "bottom"; // pan to the bottom, hides the location bar
 	this.scrollToBottom();
 }
 
@@ -494,6 +493,12 @@ DirectChatPanel.prototype.appendMessage = function( xml ) {
 	senderNode.textContent = sender.firstChild.nodeValue + ": ";
 
 	preview.appendChild(senderNode);
+
+	var links = xmlobject.getElementsByTagName("a");
+	for (var i = 0; i < links.length; ++i) {
+		var link = links[i];
+		link.setAttribute("target", "_new");
+	}
 
 	var msgString = "";
 	var current = message.firstChild;
