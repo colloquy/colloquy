@@ -452,8 +452,8 @@ DirectChatPanel.prototype.send = function() {
 	this.panelInputElement.selectionStart = valueLength;
 	this.panelInputElement.selectionEnd = valueLength;
 
-	for( var i = 0; i < valueLength; ++i)
-		document.execCommand("delete");
+	document.execCommand("selectAll");
+	document.execCommand("delete");
 }
 
 DirectChatPanel.prototype.keyboardVisible = function(visible) {
