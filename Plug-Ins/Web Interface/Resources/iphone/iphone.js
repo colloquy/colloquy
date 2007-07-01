@@ -445,10 +445,15 @@ extendClass( DirectChatPanel, Panel );
 
 DirectChatPanel.prototype.send = function() {
 	this.sendMessage(this.panelInputElement.value);
-	this.panelInputElement.value = "";
+
 	this.panelInputElement.focus();
-	this.panelInputElement.selectionStart = 0;
-	this.panelInputElement.selectionEnd = 0;
+
+	var valueLength = this.panelInputElement.value.length;
+	this.panelInputElement.selectionStart = valueLength;
+	this.panelInputElement.selectionEnd = valueLength;
+
+	for( var i = 0; i < valueLength; ++i)
+		document.execCommand("delete");
 }
 
 DirectChatPanel.prototype.keyboardVisible = function(visible) {
@@ -456,8 +461,10 @@ DirectChatPanel.prototype.keyboardVisible = function(visible) {
 		this.panelTranscriptElement.style.height = "119px";
 
 		this.panelInputElement.focus();
-		this.panelInputElement.selectionStart = 0;
-		this.panelInputElement.selectionEnd = 0;
+
+		var valueLength = this.panelInputElement.value.length;
+		this.panelInputElement.selectionStart = valueLength;
+		this.panelInputElement.selectionEnd = valueLength;
 	} else {
 		this.panelTranscriptElement.style.height = null;
 	}
