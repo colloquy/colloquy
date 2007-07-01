@@ -84,7 +84,7 @@ Colloquy.updateMainTitle = function()
 			waitingHighlightMsgs += panel.newHighlightMessages;
 	}
 
-	var title = "Colloquies";
+	var title = "Colloquy";
 	if (waitingMsgs + waitingHighlightMsgs)
 		title += " (" + (waitingMsgs + waitingHighlightMsgs) + ")";
 
