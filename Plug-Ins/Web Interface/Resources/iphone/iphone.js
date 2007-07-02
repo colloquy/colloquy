@@ -11,15 +11,16 @@ Colloquy.loaded = function(event)
 	this.backElement.addEventListener("click", function(event) { Colloquy.showColloquiesList(event) }, false);
 
 	this.joinElement = $("join");
+
 	this.membersElement = $("members");
+	this.membersElement.addEventListener("click", function(event) { ChatController.activePanel.showMembersList(event) }, false);
 
 	new Image().src = "images/bottomShadow.png";
 	new Image().src = "images/gradientHighlight.png";
 	new Image().src = "images/blueGradient.png";
 	new Image().src = "images/backButton.png";
-	new Image().src = "images/backButtonPressed.png";
 	new Image().src = "images/button.png";
-	new Image().src = "images/buttonPressed.png";
+	new Image().src = "images/squareBlueButton.png";
 	new Image().src = "images/person.png";
 	new Image().src = "images/messagesNormalSmall.png";
 	new Image().src = "images/messagesNormalMedium.png";
@@ -113,7 +114,7 @@ Colloquy.showColloquiesList = function(event)
 		Colloquy.colloquyTitleElement.style.display = null;
 		Colloquy.membersElement.style.display = null;
 
-		ChatController.activePanel.keyboardVisible(false);
+		ChatController.activePanel.setKeyboardVisible(false);
 		ChatController.activePanel.active = false;
 
 		if (ChatController.activePanel.closeAfterAnimate)
@@ -364,10 +365,13 @@ Panel.prototype.show = function() {
 	Colloquy.animatingMenu = true;
 
 	var animations = [{element: Colloquy.backElement, end: {left: 6, opacity: 1}},
-		{element: Colloquy.joinElement, end: {opacity: 0}}, {element: Colloquy.membersElement, end: {opacity: 1}},
+		{element: Colloquy.joinElement, end: {opacity: 0}},
 		{element: Colloquy.colloquyTitleElement, end: {left: 0, opacity: 1}},
 		{element: Colloquy.mainTitleElement, end: {left: -110, top: 6, "font-size": 12, "line-height": 28}},
 		{element: Colloquy.colloquiesElement, end: {left: -321}}, {element: this.panelElement, end: {left: 0}}];
+
+	if (this.type == "JVChatRoomPanel")
+		animations.push({element: Colloquy.membersElement, end: {opacity: 1}});
 
 	Colloquy.backElement.style.display = "block";
 	Colloquy.colloquyTitleElement.style.display = "block";
@@ -435,8 +439,8 @@ function DirectChatPanel( node ) {
 	this.panelInputElement = document.createElement("input");
 	form.appendChild(this.panelInputElement);
 
-	this.panelInputElement.addEventListener("focus", function(event) { panel.keyboardVisible(true) }, false);
-	this.panelInputElement.addEventListener("blur", function(event) { panel.keyboardVisible(false) }, false);
+	this.panelInputElement.addEventListener("focus", function(event) { panel.setKeyboardVisible(true) }, false);
+	this.panelInputElement.addEventListener("blur", function(event) { panel.setKeyboardVisible(false) }, false);
 
 	this.panelInputBarElement.appendChild(form);
 }
@@ -456,7 +460,9 @@ DirectChatPanel.prototype.send = function() {
 	document.execCommand("delete");
 }
 
-DirectChatPanel.prototype.keyboardVisible = function(visible) {
+DirectChatPanel.prototype.setKeyboardVisible = function(visible) {
+	this.keyboardVisible = visible;
+
 	if( visible ) {
 		this.panelTranscriptElement.style.height = "119px";
 
@@ -617,12 +623,43 @@ DirectChatPanel.prototype.focused = function() {
 }
 
 function ChatRoomPanel( node ) {
+	var panel = this;
+
 	ChatRoomPanel.baseConstructor.call( this, node );
 
 	this.memberListVisible = false;
 
 	this.menuElement.removeClassName( "directChat" );
 	this.menuElement.addClassName( "chatRoom" );
+
+	this.membersElement = $(document.createElement("div"));
+	this.membersElement.className = "colloquy-members";
+
+	var header = document.createElement("div");
+	header.className = "header";
+
+	var title = document.createElement("div");
+	title.className = "colloquy-members-title";
+	title.textContent = this.name + " Members";
+
+	header.appendChild(title);
+
+	var done = document.createElement("div");
+	done.className = "button action";
+	done.textContent = "Done";
+
+	done.addEventListener("click", function(event) { panel.hideMembersList(event) }, false);
+
+	header.appendChild(done);
+
+	this.membersElement.appendChild(header);
+
+	this.membersListElement = document.createElement("div");
+	this.membersListElement.className = "colloquy-member-list";
+
+	this.membersElement.appendChild(this.membersListElement);
+
+	Colloquy.mainElement.appendChild(this.membersElement);
 
 	this.members = new Array();
 
@@ -640,11 +677,43 @@ function ChatRoomPanel( node ) {
 		member.self = ( memberNode.getAttribute( "self" ) == "yes" );
 
 		this.members.push( member );
+
+		var memberElement = document.createElement( "div" );
+		memberElement.title = member.hostmask;
+		memberElement.className = "member" + ( member.type ? " " + member.type : "" );
+		memberElement.textContent = member.name + " ";
+
+		this.membersListElement.appendChild(memberElement);
 	}
 }
 
 extendClass( ChatRoomPanel, DirectChatPanel );
 
-ChatRoomPanel.prototype.toggleMemberList = function() {
-	// not implemented
+ChatRoomPanel.prototype.showMembersList = function(event) {
+	if (this.showingMembers)
+		return;
+
+	this.showingMembers = true;
+
+	var animations = [{element: this.membersElement, end: {top: 0}}];
+
+	this.membersElement.style.display = "block";
+
+	Colloquy.animateStyle(animations, (event.shiftKey ? 2500 : 250));
+}
+
+ChatRoomPanel.prototype.hideMembersList = function(event) {
+	if (!this.showingMembers)
+		return;
+
+	var animations = [{element: this.membersElement, end: {top: 416}}];
+
+	this.membersElement.style.display = "block";
+
+	var panel = this;
+	var animateStyleFinished = function() {
+		delete panel.showingMembers;
+	};
+
+	Colloquy.animateStyle(animations, (event.shiftKey ? 2500 : 250), animateStyleFinished);
 }

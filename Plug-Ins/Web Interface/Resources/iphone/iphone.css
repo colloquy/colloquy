@@ -36,7 +36,7 @@ body {
 	position: relative;
 }
 
-#header {
+.header {
 	position: relative;
 	height: 44px;
 	-webkit-box-sizing: border-box;
@@ -55,7 +55,7 @@ body {
 	line-height: 42px;
 }
 
-#header .button {
+.header .button {
 	position: absolute;
 	font-weight: bold;
 	line-height: 28px;
@@ -66,19 +66,16 @@ body {
 	max-height: 29px;
 	min-height: 29px;
 	min-width: 32px;
-	line-height: 26px;
-	font-size: 18px;
+	font-size: 12px;
 	text-shadow: rgba(0, 0, 0, 0.6) 0 -1px 0;
+	font-weight: bold;
+	line-height: 28px;
 	color: white;
 	z-index: 100;
 	right: 6px;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	text-align: center;
-}
-
-#header .button:active {
-	-webkit-border-image: url(images/buttonPressed.png) 0 8 0 8;
 }
 
 #members {
@@ -89,6 +86,12 @@ body {
 #members img {
 	margin-top: 5px;
 	content: url(images/person.png);
+}
+
+#join {
+	line-height: 26px;
+	font-size: 18px;
+	padding-left: 1px;
 }
 
 .back {
@@ -110,10 +113,6 @@ body {
 	display: none;
 }
 
-.back:active {
-	-webkit-border-image: url(images/backButtonPressed.png) 0 8 0 14;
-}
-
 .forward {
 	position: absolute;
 	border-width: 0 14px 0 8px;
@@ -133,8 +132,8 @@ body {
 	display: none;
 }
 
-.forward:active {
-	-webkit-border-image: url(images/forwardButtonPressed.png) 0 14 0 8;
+.header .button.action {
+	-webkit-border-image: url(images/squareBlueButton.png) 0 8 0 8;
 }
 
 #colloquy-title, #main-title {
@@ -183,7 +182,7 @@ body {
 .colloquy-panel-transcript {
 	background-color: white;
 	width: 100%;
-	height: 334px;
+	height: 335px;
 	overflow: auto;
 }
 
@@ -221,11 +220,42 @@ body {
 	box-sizing: border-box;
 }
 
+.colloquy-members {
+	position: absolute;
+	top: 416px;
+	left: 0;
+	width: 320px;
+	height: 416px;
+	background-color: white;
+	display: none;
+	z-index: 200;
+}
+
+.colloquy-members-title {
+	text-align: right;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	margin-left: 10px;
+	margin-right: 70px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.colloquy-member-list {
+	width: 100%;
+	height: 372px;
+	overflow: auto;
+	padding: 8px;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
 .colloquy {
 	position: relative;
 	height: 48px;
 	padding: 8px;
-	border-bottom: 1px solid rgb(66%, 66%, 66%);
+	border-bottom: 1px solid rgb(75%, 75%, 75%);
 }
 
 .colloquy.selected {
@@ -343,7 +373,7 @@ body {
 
 .message-wrapper {
 	padding: 4px 8px;
-	border-bottom: 1px solid rgb(66%, 66%, 66%);
+	border-bottom: 1px solid rgb(75%, 75%, 75%);
 }
 
 .sender {
@@ -355,4 +385,40 @@ body {
 	word-wrap: break-word;
 	-khtml-line-break: after-white-space;
 	-khtml-nbsp-mode: space;
+}
+
+.colloquy-member-list .member {
+	margin-bottom: 3px;
+}
+
+.colloquy-member-list .member:before {
+	width: 16px;
+	height: 16px;
+	content: url(/resources/person.png);
+	vertical-align: middle;
+	margin-right: 4px;
+}
+
+.colloquy-member-list .member.server.operator:before {
+	content: url( /resources/admin.png );
+}
+
+.colloquy-member-list .member.operator:before {
+	content: url( /resources/op.png );
+}
+
+.colloquy-member-list .member.administrator:before {
+	content: url( /resources/super-op.png );
+}
+
+.colloquy-member-list .member.founder:before {
+	content: url( /resources/founder.png );
+}
+
+.colloquy-member-list .member.half.operator:before {
+	content: url( /resources/half-op.png );
+}
+
+.colloquy-member-list .member.voice:before {
+	content: url( /resources/voice.png );
 }
