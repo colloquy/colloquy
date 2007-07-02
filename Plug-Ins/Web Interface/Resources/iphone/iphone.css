@@ -377,6 +377,10 @@ body {
 	font-weight: 13px;
 }
 
+.event + .message-wrapper {
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 .message-wrapper.highlight {
 	background-color: rgb(204, 255, 102);
 	background-image: url(http://10.0.1.3:6667/iphone/images/gradientHighlight.png);
@@ -409,6 +413,17 @@ body {
 .sender:after {
 	content: ": ";
 	font-weight: bold;
+}
+
+.event {
+	font-size: smaller;
+	color: rgb(66%, 66%, 66%);
+	text-align: center;
+	padding: 2px 8px;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	-khtml-line-break: after-white-space;
+	-khtml-nbsp-mode: space;
 }
 
 .message {

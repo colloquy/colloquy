@@ -282,7 +282,7 @@ ChatController.checkActivity = function() {
 						var event = children[i];
 						if( event.firstChild ) {
 							var panel = ChatController.panel( event.getAttribute( "panel" ) );
-							//panel.appendEvent( event.firstChild.nodeValue );
+							panel.appendEvent( event.firstChild.nodeValue );
 						}
 						break;
 					}
@@ -555,6 +555,35 @@ DirectChatPanel.prototype.appendMessage = function( xml ) {
 	var scrolledNearBottom = this.scrolledNearBottom();
 
 	this.panelTranscriptElement.appendChild(messageWrapper);
+
+	this.enforceScrollBackLimit();
+	if( scrolledNearBottom ) this.scrollToBottom();
+}
+
+DirectChatPanel.prototype.appendEvent = function( xml ) {
+	var xmlobject = (new DOMParser()).parseFromString(xml, "text/xml");
+	var message = xmlobject.getElementsByTagName("message")[0];
+
+	var links = xmlobject.getElementsByTagName("a");
+	for (var i = 0; i < links.length; ++i) {
+		var link = links[i];
+		link.setAttribute("target", "_blank");
+	}
+
+	var msgString = "";
+	var current = message.firstChild;
+	while (current) {
+		msgString += (new XMLSerializer()).serializeToString(current);
+		current = current.nextSibling;
+	}
+
+	var eventDiv = document.createElement("div");
+	eventDiv.className = "event";
+	eventDiv.innerHTML = msgString;
+
+	var scrolledNearBottom = this.scrolledNearBottom();
+
+	this.panelTranscriptElement.appendChild(eventDiv);
 
 	this.enforceScrollBackLimit();
 	if( scrolledNearBottom ) this.scrollToBottom();
