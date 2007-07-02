@@ -124,7 +124,7 @@ Colloquy.showColloquiesList = function(event)
 		delete Colloquy.animatingMenu;
 	};
 
-	this.animateStyle(animations, (event.shiftKey ? 3000 : 300), animateStyleFinished);
+	this.animateStyle(animations, (event.shiftKey ? 2500 : 250), animateStyleFinished);
 }
 
 Colloquy.animateStyle = function(animations, duration, callback, complete)
@@ -383,7 +383,7 @@ Panel.prototype.show = function() {
 		delete Colloquy.animatingMenu;
 	};
 
-	Colloquy.animateStyle(animations, (event.shiftKey ? 3000 : 300), animateStyleFinished);
+	Colloquy.animateStyle(animations, (event.shiftKey ? 2500 : 250), animateStyleFinished);
 
 	this.menuElement.addClassName( "selected" );
 	this.active = true;
