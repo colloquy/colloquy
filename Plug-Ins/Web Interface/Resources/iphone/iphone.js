@@ -532,9 +532,18 @@ DirectChatPanel.prototype.appendMessage = function( xml ) {
 	var messageWrapper = document.createElement("div");
 	messageWrapper.className = "message-wrapper";
 
+	if( message.getAttribute( "highlight" ) )
+		messageWrapper.className += " highlight";
+
+	if( message.getAttribute( "action" ) )
+		messageWrapper.className += " action";
+
 	var senderDiv = document.createElement("div");
 	senderDiv.className = "sender";
 	senderDiv.textContent = sender.firstChild.nodeValue;
+
+	if( sender.getAttribute( "self" ) )
+		senderDiv.className += " self";
 
 	var messageDiv = document.createElement("div");
 	messageDiv.className = "message";
