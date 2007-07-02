@@ -322,7 +322,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 	}
 
 	// catch well-formed email addresses like "timothy@hatcher.name" or "timothy@javelin.cc"
-	regex = [AGRegex regexWithPattern:@"[\\p{L}\\p{N}.+-_]+@(?:[\\p{L}-_]+\\.)+[\\w]{2,}" options:AGRegexCaseInsensitive];
+	regex = [AGRegex regexWithPattern:@"[\\p{L}\\p{N}.+\\-_]+@(?:[\\p{L}\\-_]+\\.)+[\\w]{2,}" options:AGRegexCaseInsensitive];
 	matches = [regex findAllInString:[self string]];
 	enumerator = [matches objectEnumerator];
 	match = nil;
