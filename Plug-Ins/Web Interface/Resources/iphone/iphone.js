@@ -503,7 +503,9 @@ DirectChatPanel.prototype.appendMessage = function( xml ) {
 	var preview = $(document.createElement("div"));
 
 	var senderNode = document.createElement("b");
-	senderNode.textContent = sender.firstChild.nodeValue + ": ";
+	if( message.getAttribute( "action" ) )
+		senderNode.textContent = "\u2022" + sender.firstChild.nodeValue + " ";
+	else senderNode.textContent = sender.firstChild.nodeValue + ": ";
 
 	preview.appendChild(senderNode);
 
