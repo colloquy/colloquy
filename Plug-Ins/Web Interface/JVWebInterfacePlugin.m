@@ -376,6 +376,7 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
 	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
+	if( ! identifier ) return;
 
 	NSXMLDocument *doc = [NSXMLDocument documentWithRootElement:[NSXMLElement elementWithName:@"queue"]];
 	[info setObject:doc forKey:@"activityQueue"];
@@ -477,6 +478,9 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 - (void) sendCommand:(NSDictionary *) arguments {
 	http_resp_t *resp = [[arguments objectForKey:JVWebInterfaceResponse] pointerValue];
 	if( ! resp ) return;
+
+	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
+	if( ! identifier ) return;
 
 	JVDirectChatPanel *panel = [self panelForIdentifier:[arguments objectForKey:@"panel"]];
 
