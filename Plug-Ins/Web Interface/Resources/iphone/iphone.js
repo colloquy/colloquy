@@ -115,6 +115,7 @@ Colloquy.showColloquiesList = function(event)
 		Colloquy.colloquyTitleElement.style.display = null;
 		Colloquy.membersElement.style.display = null;
 
+		ChatController.activePanel.panelElement.style.display = null;
 		ChatController.activePanel.setKeyboardVisible(false);
 		ChatController.activePanel.active = false;
 
@@ -374,6 +375,7 @@ Panel.prototype.show = function() {
 	if (this.type == "JVChatRoomPanel")
 		animations.push({element: Colloquy.membersElement, end: {opacity: 1}});
 
+	this.panelElement.style.display = "block";
 	Colloquy.backElement.style.display = "block";
 	Colloquy.colloquyTitleElement.style.display = "block";
 	Colloquy.membersElement.style.display = "block";
@@ -753,6 +755,7 @@ ChatRoomPanel.prototype.hideMembersList = function(event) {
 
 	var panel = this;
 	var animateStyleFinished = function() {
+		panel.membersElement.style.display = null;
 		delete panel.showingMembers;
 	};
 

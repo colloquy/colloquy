@@ -145,7 +145,6 @@ body {
 	width: 320px;
 	height: 372px;
 	overflow: auto;
-	border-right: 1px solid rgb(66%, 66%, 66%);
 }
 
 .colloquy-panel {
@@ -155,6 +154,7 @@ body {
 	width: 320px;
 	height: 372px;
 	background-color: gray;
+	display: none;
 }
 
 .colloquy-panel-transcript {
@@ -203,7 +203,7 @@ body {
 	top: 416px;
 	left: 0;
 	width: 320px;
-	height: 416px;
+	height: 417px;
 	background-color: white;
 	display: none;
 	z-index: 200;
