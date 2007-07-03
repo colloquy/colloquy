@@ -1,5 +1,7 @@
 Colloquy = {};
 
+Colloquy.nextOrderIdentifier = 1;
+
 Colloquy.loaded = function(event)
 {
 	this.mainElement = $("main");
@@ -18,7 +20,7 @@ Colloquy.loaded = function(event)
 	// pan to the bottom, hides the location bar
 	setTimeout(function() { window.scrollTo(0, 1) }, 100);
 
-	new Ajax.Request( "/command/setup?overrideStyle=info.colloquy.style.xml", {
+	new Ajax.Request( "/command/setup?overrideStyle=info.colloquy.style.xml&uinque=" + Math.round(Math.random() * 1000000), {
 		method: "get",
 		onSuccess: function( transport ) {
 			var xml = transport.responseXML;
@@ -236,7 +238,7 @@ ChatController.panel = function( id ) {
 }
 
 ChatController.checkActivity = function() {
-	new Ajax.Request( "/command/checkActivity", {
+	new Ajax.Request( "/command/checkActivity?order=" + Colloquy.nextOrderIdentifier++ + "&uinque=" + Math.round(Math.random() * 1000000), {
 		method: "get",
 		onSuccess: function( transport ) {
 			var updateIntervalDelta = 0;
@@ -473,7 +475,7 @@ DirectChatPanel.prototype.setKeyboardVisible = function(visible) {
 DirectChatPanel.prototype.sendMessage = function( html ) {
 	if( ! html.length ) return;
 
-	new Ajax.Request( "/command/send?panel=" + this.id, {
+	new Ajax.Request( "/command/send?panel=" + this.id + "&order=" + Colloquy.nextOrderIdentifier++ + "&uinque=" + Math.round(Math.random() * 1000000), {
 		method: "post",
 		contentType: "text/html",
 		postBody: html,
