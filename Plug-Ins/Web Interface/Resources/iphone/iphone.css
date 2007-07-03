@@ -2,33 +2,11 @@ body {
 	margin: 0;
 	padding: 0;
 	width: 320px;
-	height: 476px;
+	height: 416px;
 	font-family: Helvetica;
 	-webkit-user-select: none;
 	cursor: default;
 	-webkit-text-size-adjust: none;
-}
-
-#pandown {
-	background-color: gray;
-	background-image: url(images/bottomShadow.png);
-	background-repeat: repeat-x;
-	background-position: bottom;
-	height: 60px;
-	color: white;
-	text-align: center;
-	line-height: 60px;
-	font-size: 14px;
-	font-weight: bold;
-	text-shadow: rgba(0, 0, 0, 0.6) 0 -1px 0;
-}
-
-#pandown a {
-	display: block;
-	color: inherit;
-	text-decoration: none;
-	width: 100%;
-	height: 100%;
 }
 
 #main {

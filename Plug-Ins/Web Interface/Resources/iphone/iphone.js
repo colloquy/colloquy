@@ -29,7 +29,8 @@ Colloquy.loaded = function(event)
 	new Image().src = "images/highlightsNormalMedium.png";
 	new Image().src = "images/highlightsNormalLarge.png";
 
-	window.location.hash = "bottom"; // pan to the bottom, hides the location bar
+	// pan to the bottom, hides the location bar
+	setTimeout(function() { window.scrollTo(0, 1) }, 100);
 
 	new Ajax.Request( "/command/setup?overrideStyle=info.colloquy.style.xml", {
 		method: "get",
