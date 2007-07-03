@@ -50,8 +50,13 @@ Colloquy.updateLayout = function()
 	if (window.innerWidth !== Colloquy.currentWidth) {
 		Colloquy.currentWidth = window.innerWidth;
 
+		var scrolledNearBottom = ChatController.activePanel && ChatController.activePanel.scrolledNearBottom();
+
 		var orient = Colloquy.currentWidth == 320 ? "profile" : "landscape";
 		document.body.setAttribute("orient", orient);
+
+		if (ChatController.activePanel && scrolledNearBottom)
+			ChatController.activePanel.scrollToBottom();
 
 		// pan to the bottom, hides the location bar
 		window.scrollTo(0, 1);
