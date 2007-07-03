@@ -115,6 +115,7 @@ Colloquy.showColloquiesList = function(event)
 		Colloquy.colloquyTitleElement.style.display = null;
 		Colloquy.membersElement.style.display = null;
 
+		ChatController.activePanel.lastScrollPosition = ChatController.activePanel.panelTranscriptElement.scrollTop;
 		ChatController.activePanel.panelElement.style.display = null;
 		ChatController.activePanel.setKeyboardVisible(false);
 		ChatController.activePanel.active = false;
@@ -379,6 +380,8 @@ Panel.prototype.show = function() {
 	Colloquy.backElement.style.display = "block";
 	Colloquy.colloquyTitleElement.style.display = "block";
 	Colloquy.membersElement.style.display = "block";
+
+	this.panelTranscriptElement.scrollTop = this.lastScrollPosition;
 
 	Colloquy.colloquyTitleElement.textContent = this.name;
 
