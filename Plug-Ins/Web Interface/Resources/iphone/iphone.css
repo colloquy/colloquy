@@ -1,12 +1,24 @@
 body {
 	margin: 0;
 	padding: 0;
-	width: 320px;
 	height: 416px;
 	font-family: Helvetica;
 	-webkit-user-select: none;
 	cursor: default;
 	-webkit-text-size-adjust: none;
+}
+
+body[orient="landscape"], body[orient="landscape"] .colloquy-members {
+	height: 268px;
+}
+
+body[orient="landscape"] #colloquies, body[orient="landscape"] .colloquy-panel,
+body[orient="landscape"] .colloquy-panel-transcript, body[orient="landscape"] .colloquy-member-list {
+	height: 224px;
+}
+
+body[orient="landscape"] .colloquy-panel-input {
+	display: none;
 }
 
 #main {
@@ -117,32 +129,24 @@ body {
 #colloquy-title, #main-title {
 	position: absolute;
 	width: 100%;
-}
-
-#main-title {
 	top: 0;
 	left: 0;
-}
-
-#colloquy-title {
-	display: none;
-	opacity: 0;
-	top: 0;
-	left: 200px;
-	text-align: left;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
-	padding-left: 125px;
-	padding-right: 45px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
+#colloquy-title {
+	display: none;
+	opacity: 0;
+}
+
 #colloquies {
 	position: relative;
 	left: 0;
-	width: 320px;
+	width: 100%;
 	height: 372px;
 	overflow: auto;
 }
@@ -150,8 +154,8 @@ body {
 .colloquy-panel {
 	position: absolute;
 	top: 44px;
-	left: 320px;
-	width: 320px;
+	left: 100%;
+	width: 100%;
 	height: 372px;
 	background-color: gray;
 	display: none;
@@ -159,7 +163,6 @@ body {
 
 .colloquy-panel-transcript {
 	background-color: white;
-	width: 100%;
 	height: 335px;
 	overflow: auto;
 }
@@ -167,7 +170,6 @@ body {
 .colloquy-panel-input {
 	white-space: nowrap;
 	height: 38px;
-	width: 100%;
 	background-color: rgb(66%, 66%, 66%);
 	background-image: url(images/gradientHighlight.png);
 	background-repeat: repeat-x;
@@ -202,7 +204,7 @@ body {
 	position: absolute;
 	top: 416px;
 	left: 0;
-	width: 320px;
+	width: 100%;
 	height: 417px;
 	background-color: white;
 	display: none;
@@ -210,18 +212,14 @@ body {
 }
 
 .colloquy-members-title {
-	text-align: right;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
-	margin-left: 10px;
-	margin-right: 70px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
 .colloquy-member-list {
-	width: 100%;
 	height: 372px;
 	overflow: auto;
 	padding: 8px;
@@ -361,7 +359,7 @@ body {
 
 .message-wrapper.highlight {
 	background-color: rgb(204, 255, 102);
-	background-image: url(http://10.0.1.3:6667/iphone/images/gradientHighlight.png);
+	background-image: url(images/gradientHighlight.png);
 	background-repeat: repeat-x;
 }
 
@@ -431,25 +429,25 @@ body {
 }
 
 .colloquy-member-list .member.server.operator:before {
-	content: url( /resources/admin.png );
+	content: url(/resources/admin.png);
 }
 
 .colloquy-member-list .member.operator:before {
-	content: url( /resources/op.png );
+	content: url(/resources/op.png);
 }
 
 .colloquy-member-list .member.administrator:before {
-	content: url( /resources/super-op.png );
+	content: url(/resources/super-op.png);
 }
 
 .colloquy-member-list .member.founder:before {
-	content: url( /resources/founder.png );
+	content: url(/resources/founder.png);
 }
 
 .colloquy-member-list .member.half.operator:before {
-	content: url( /resources/half-op.png );
+	content: url(/resources/half-op.png);
 }
 
 .colloquy-member-list .member.voice:before {
-	content: url( /resources/voice.png );
+	content: url(/resources/voice.png);
 }

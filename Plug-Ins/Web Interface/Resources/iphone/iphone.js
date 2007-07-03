@@ -20,6 +20,8 @@ Colloquy.loaded = function(event)
 	// pan to the bottom, hides the location bar
 	setTimeout(function() { window.scrollTo(0, 1) }, 100);
 
+	setInterval(Colloquy.updateLayout, 400);
+
 	new Ajax.Request( "/command/setup?overrideStyle=info.colloquy.style.xml&uinque=" + Math.round(Math.random() * 1000000), {
 		method: "get",
 		onSuccess: function( transport ) {
@@ -41,6 +43,19 @@ Colloquy.loaded = function(event)
 
 	window.addEventListener( "beforeunload", function(event) { Colloquy.teardown(event) }, false );
 	window.addEventListener( "unload", function(event) { Colloquy.teardown(event) }, false );
+}
+
+Colloquy.updateLayout = function()
+{
+	if (window.innerWidth !== Colloquy.currentWidth) {
+		Colloquy.currentWidth = window.innerWidth;
+
+		var orient = Colloquy.currentWidth == 320 ? "profile" : "landscape";
+		document.body.setAttribute("orient", orient);
+
+		// pan to the bottom, hides the location bar
+		window.scrollTo(0, 1);
+	}
 }
 
 window.addEventListener("load", function(event) { setTimeout( function(event) { Colloquy.loaded(event) }, 0) }, false);
@@ -88,14 +103,14 @@ Colloquy.showColloquiesList = function(event)
 
 	Colloquy.animatingMenu = true;
 
-	var animations = [{element: this.backElement, end: {left: 120, opacity: 0}},
-		{element: this.joinElement, end: {opacity: 1}}, {element: this.membersElement, end: {opacity: 0}},
-		{element: this.colloquyTitleElement, end: {left: 200, opacity: 0}},
-		{element: this.mainTitleElement, end: {left: 0, top: 0, "font-size": 20, "line-height": 42}},
-		{element: this.colloquiesElement, end: {left: 0}}, {element: ChatController.activePanel.panelElement, end: {left: 320}}];
-
 	Colloquy.joinElement.style.display = null;
 	Colloquy.mainTitleElement.style.display = null;
+
+	var animations = [{element: this.backElement, end: {left: 120, opacity: 0}},
+		{element: this.joinElement, end: {opacity: 1}}, {element: this.membersElement, end: {opacity: 0}},
+		{element: this.colloquyTitleElement, end: {left: document.body.offsetWidth / 2, opacity: 0}},
+		{element: this.mainTitleElement, end: {left: 0, top: 0, "font-size": 20, "line-height": 42}},
+		{element: this.colloquiesElement, end: {left: 0}}, {element: ChatController.activePanel.panelElement, end: {left: document.body.offsetWidth}}];
 
 	var panel = this;
 	var animateStyleFinished = function() {
@@ -357,19 +372,19 @@ Panel.prototype.show = function() {
 
 	Colloquy.animatingMenu = true;
 
-	var animations = [{element: Colloquy.backElement, end: {left: 6, opacity: 1}},
-		{element: Colloquy.joinElement, end: {opacity: 0}},
-		{element: Colloquy.colloquyTitleElement, end: {left: 0, opacity: 1}},
-		{element: Colloquy.mainTitleElement, end: {left: -110, top: 6, "font-size": 12, "line-height": 28}},
-		{element: Colloquy.colloquiesElement, end: {left: -321}}, {element: this.panelElement, end: {left: 0}}];
-
-	if (this.type == "JVChatRoomPanel")
-		animations.push({element: Colloquy.membersElement, end: {opacity: 1}});
-
 	this.panelElement.style.display = "block";
 	Colloquy.backElement.style.display = "block";
 	Colloquy.colloquyTitleElement.style.display = "block";
 	Colloquy.membersElement.style.display = "block";
+
+	var animations = [{element: Colloquy.backElement, end: {left: 6, opacity: 1}},
+		{element: Colloquy.joinElement, end: {opacity: 0}},
+		{element: Colloquy.colloquyTitleElement, end: {left: 0, opacity: 1}},
+		{element: Colloquy.mainTitleElement, end: {left: (-document.body.offsetWidth / 2) + (Colloquy.backElement.offsetWidth / 2), top: 6, "font-size": 12, "line-height": 28}},
+		{element: Colloquy.colloquiesElement, end: {left: -document.body.offsetWidth - 1}}, {element: this.panelElement, end: {left: 0}}];
+
+	if (this.type == "JVChatRoomPanel")
+		animations.push({element: Colloquy.membersElement, end: {opacity: 1}});
 
 	if (this.wasScrolledNearBottom)
 		this.scrollToBottom();
@@ -733,9 +748,9 @@ ChatRoomPanel.prototype.showMembersList = function(event) {
 
 	this.showingMembers = true;
 
-	var animations = [{element: this.membersElement, end: {top: 0}}];
-
 	this.membersElement.style.display = "block";
+
+	var animations = [{element: this.membersElement, end: {top: 0}}];
 
 	Colloquy.animateStyle(animations, (event.shiftKey ? 2500 : 250));
 }
@@ -744,9 +759,9 @@ ChatRoomPanel.prototype.hideMembersList = function(event) {
 	if (!this.showingMembers)
 		return;
 
-	var animations = [{element: this.membersElement, end: {top: 416}}];
-
 	this.membersElement.style.display = "block";
+
+	var animations = [{element: this.membersElement, end: {top: document.body.offsetHeight}}];
 
 	var panel = this;
 	var animateStyleFinished = function() {
