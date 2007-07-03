@@ -412,7 +412,7 @@ body {
 	-khtml-nbsp-mode: space;
 }
 
-.message .emoticon samp {
+.emoticon samp {
 	font-weight: bold;
 	font-family: inherit;
 	font-size: inherit;
