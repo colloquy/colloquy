@@ -15,20 +15,6 @@ Colloquy.loaded = function(event)
 	this.membersElement = $("members");
 	this.membersElement.addEventListener("click", function(event) { ChatController.activePanel.showMembersList(event) }, false);
 
-	new Image().src = "images/bottomShadow.png";
-	new Image().src = "images/gradientHighlight.png";
-	new Image().src = "images/blueGradient.png";
-	new Image().src = "images/backButton.png";
-	new Image().src = "images/button.png";
-	new Image().src = "images/squareBlueButton.png";
-	new Image().src = "images/person.png";
-	new Image().src = "images/messagesNormalSmall.png";
-	new Image().src = "images/messagesNormalMedium.png";
-	new Image().src = "images/messagesNormalLarge.png";
-	new Image().src = "images/highlightsNormalSmall.png";
-	new Image().src = "images/highlightsNormalMedium.png";
-	new Image().src = "images/highlightsNormalLarge.png";
-
 	// pan to the bottom, hides the location bar
 	setTimeout(function() { window.scrollTo(0, 1) }, 100);
 
@@ -55,7 +41,7 @@ Colloquy.loaded = function(event)
 	window.addEventListener( "unload", function(event) { Colloquy.teardown(event) }, false );
 }
 
-window.addEventListener("load", function(event) { Colloquy.loaded(event) }, false);
+window.addEventListener("load", function(event) { setTimeout( function(event) { Colloquy.loaded(event) }, 0) }, false);
 
 Colloquy.teardown = function(event)
 {
