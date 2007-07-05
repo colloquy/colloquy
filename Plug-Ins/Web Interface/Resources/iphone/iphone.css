@@ -154,7 +154,6 @@ body[orient="landscape"] .colloquy-panel-input {
 .colloquy-panel {
 	position: absolute;
 	top: 44px;
-	left: 100%;
 	width: 100%;
 	height: 372px;
 	background-color: gray;

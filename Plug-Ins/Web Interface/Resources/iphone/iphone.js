@@ -1,20 +1,37 @@
+Element.prototype.removeStyleClass = function(className) 
+{
+    if (this.hasStyleClass(className))
+        this.className = this.className.replace(className, "");
+}
+
+Element.prototype.addStyleClass = function(className) 
+{
+    if (!this.hasStyleClass(className))
+        this.className += (this.className.length ? " " + className : className);
+}
+
+Element.prototype.hasStyleClass = function(className) 
+{
+    return this.className.indexOf(className) !== -1;
+}
+
 Colloquy = {};
 
 Colloquy.nextOrderIdentifier = 1;
 
 Colloquy.loaded = function(event)
 {
-	this.mainElement = $("main");
-	this.mainTitleElement = $("main-title");
-	this.colloquyTitleElement = $("colloquy-title");
-	this.colloquiesElement = $("colloquies");
+	this.mainElement = document.getElementById("main");
+	this.mainTitleElement = document.getElementById("main-title");
+	this.colloquyTitleElement = document.getElementById("colloquy-title");
+	this.colloquiesElement = document.getElementById("colloquies");
 
-	this.backElement = $("back");
+	this.backElement = document.getElementById("back");
 	this.backElement.addEventListener("click", function(event) { Colloquy.showColloquiesList(event) }, false);
 
-	this.joinElement = $("join");
+	this.joinElement = document.getElementById("join");
 
-	this.membersElement = $("members");
+	this.membersElement = document.getElementById("members");
 	this.membersElement.addEventListener("click", function(event) { ChatController.activePanel.showMembersList(event) }, false);
 
 	// pan to the bottom, hides the location bar
@@ -22,32 +39,34 @@ Colloquy.loaded = function(event)
 
 	setInterval(Colloquy.updateLayout, 400);
 
-	new Ajax.Request( "/command/setup?overrideStyle=info.colloquy.style.xml&uinque=" + Math.round(Math.random() * 1000000), {
-		method: "get",
-		onSuccess: function( transport ) {
-			var xml = transport.responseXML;
-			var children = xml.documentElement.getElementsByTagName( "panels" ).item( 0 ).childNodes;
+	var request = new XMLHttpRequest();
 
-			for( var i = 0; i < children.length; ++i )
-				ChatController.createPanel( children[i] );
+	request.onreadystatechange = function() {
+		if(request.readyState != 4 || request.status < 200 || request.status >= 300)
+			return;
 
-			ChatController.checkActivity();
+		var xml = request.responseXML;
+		var children = xml.documentElement.getElementsByTagName("panels").item(0).childNodes;
 
-			if( activityCheckInterval ) clearInterval( activityCheckInterval );
-			activityCheckInterval = setInterval( ChatController.checkActivity, currentActivityCheckInterval );
-		},
-		onException: function( transport, exception ) {
-			throw exception;
-		}
-	} );
+		for(var i = 0; i < children.length; ++i)
+			ChatController.createPanel(children[i]);
 
-	window.addEventListener( "beforeunload", function(event) { Colloquy.teardown(event) }, false );
-	window.addEventListener( "unload", function(event) { Colloquy.teardown(event) }, false );
+		ChatController.checkActivity();
+
+		if(activityCheckInterval) clearInterval(activityCheckInterval);
+		activityCheckInterval = setInterval(ChatController.checkActivity, currentActivityCheckInterval);
+	};
+
+	request.open("get", "/command/setup?overrideStyle=info.colloquy.style.xml&uinque=" + Math.round(Math.random() * 1000000), true);
+	request.send();
+
+	window.addEventListener("beforeunload", function(event) { Colloquy.teardown(event) }, false);
+	window.addEventListener("unload", function(event) { Colloquy.teardown(event) }, false);
 }
 
 Colloquy.updateLayout = function()
 {
-	if (window.innerWidth !== Colloquy.currentWidth) {
+	if(window.innerWidth !== Colloquy.currentWidth) {
 		Colloquy.currentWidth = window.innerWidth;
 
 		var scrolledNearBottom = ChatController.activePanel && ChatController.activePanel.scrolledNearBottom();
@@ -55,7 +74,7 @@ Colloquy.updateLayout = function()
 		var orient = Colloquy.currentWidth == 320 ? "profile" : "landscape";
 		document.body.setAttribute("orient", orient);
 
-		if (ChatController.activePanel && scrolledNearBottom)
+		if(ChatController.activePanel && scrolledNearBottom)
 			ChatController.activePanel.scrollToBottom();
 
 		// pan to the bottom, hides the location bar
@@ -63,20 +82,16 @@ Colloquy.updateLayout = function()
 	}
 }
 
-window.addEventListener("load", function(event) { setTimeout( function(event) { Colloquy.loaded(event) }, 0) }, false);
+window.addEventListener("load", function(event) { setTimeout(function(event) { Colloquy.loaded(event) }, 0) }, false);
 
 Colloquy.teardown = function(event)
 {
-	if( finished ) return;
+	if(finished) return;
 	finished = true;
 
-	new Ajax.Request( "/command/logout", {
-		method: "get",
-		asynchronous: false,
-		onException: function( transport, exception ) {
-			throw exception;
-		}
-	} );
+	var request = new XMLHttpRequest();
+	request.open("get", "/command/logout?uinque=" + Math.round(Math.random() * 1000000), false);
+	request.send();
 }
 
 Colloquy.updateMainTitle = function()
@@ -84,18 +99,18 @@ Colloquy.updateMainTitle = function()
 	var waitingMsgs = 0;
 	var waitingHighlightMsgs = 0;
 
-	for (var i = 0; i < ChatController.panels.length; ++i) {
+	for(var i = 0; i < ChatController.panels.length; ++i) {
 		var panel = ChatController.panels[i];
-		if (panel.active)
+		if(panel.active)
 			continue;
-		if ("newMessages" in panel && panel.type == "JVDirectChatPanel")
+		if("newMessages" in panel && panel.type == "JVDirectChatPanel")
 			waitingMsgs += panel.newMessages;
-		if ("newHighlightMessages" in panel && panel.type == "JVChatRoomPanel")
+		if("newHighlightMessages" in panel && panel.type == "JVChatRoomPanel")
 			waitingHighlightMsgs += panel.newHighlightMessages;
 	}
 
 	var title = "Colloquy";
-	if (waitingMsgs + waitingHighlightMsgs)
+	if(waitingMsgs + waitingHighlightMsgs)
 		title += " (" + (waitingMsgs + waitingHighlightMsgs) + ")";
 
 	Colloquy.mainTitleElement.textContent = title;
@@ -104,14 +119,14 @@ Colloquy.updateMainTitle = function()
 
 Colloquy.showColloquiesList = function(event)
 {
-	if (Colloquy.animatingMenu) return;
+	if(Colloquy.animatingMenu) return;
 
 	Colloquy.animatingMenu = true;
 
 	Colloquy.joinElement.style.display = null;
 	Colloquy.mainTitleElement.style.display = null;
 
-	var animations = [{element: this.backElement, end: {left: 120, opacity: 0}},
+	var animations = [{element: this.backElement, end: {left: document.body.offsetWidth / 4, opacity: 0}},
 		{element: this.joinElement, end: {opacity: 1}}, {element: this.membersElement, end: {opacity: 0}},
 		{element: this.colloquyTitleElement, end: {left: document.body.offsetWidth / 2, opacity: 0}},
 		{element: this.mainTitleElement, end: {left: 0, top: 0, "font-size": 20, "line-height": 42}},
@@ -124,13 +139,13 @@ Colloquy.showColloquiesList = function(event)
 		Colloquy.membersElement.style.display = null;
 
 		ChatController.activePanel.wasScrolledNearBottom = ChatController.activePanel.scrolledNearBottom();
-		if (!ChatController.activePanel.wasScrolledNearBottom)
+		if(!ChatController.activePanel.wasScrolledNearBottom)
 			ChatController.activePanel.lastScrollPosition = ChatController.activePanel.panelTranscriptElement.scrollTop;
 		ChatController.activePanel.panelElement.style.display = null;
 		ChatController.activePanel.setKeyboardVisible(false);
 		ChatController.activePanel.active = false;
 
-		if (ChatController.activePanel.closeAfterAnimate)
+		if(ChatController.activePanel.closeAfterAnimate)
 			ChatController.activePanel.close();
 
 		ChatController.activePanel = null;
@@ -143,62 +158,62 @@ Colloquy.showColloquiesList = function(event)
 
 Colloquy.animateStyle = function(animations, duration, callback, complete)
 {
-	if (complete === undefined)
+	if(complete === undefined)
 		complete = 0;
 	var slice = (1000 / 15); // 15 frames per second
 
 	var defaultUnit = "px";
 	var propertyUnit = {opacity: ""};
 
-	for (var i = 0; i < animations.length; ++i) {
+	for(var i = 0; i < animations.length; ++i) {
 		var animation = animations[i];
 		var element = null;
 		var start = null;
 		var current = null;
 		var end = null;
-		for (key in animation) {
-			if (key === "element")
+		for(key in animation) {
+			if(key === "element")
 				element = animation[key];
-			else if (key === "start")
+			else if(key === "start")
 				start = animation[key];
-			else if (key == "current")
+			else if(key == "current")
 				current = animation[key];
-			else if (key === "end")
+			else if(key === "end")
 				end = animation[key];
 		}
 
-		if (!element || !end)
+		if(!element || !end)
 			continue;
 
 		var computedStyle = element.ownerDocument.defaultView.getComputedStyle(element);
-		if (!start) {
+		if(!start) {
 			start = {};
-			for (key in end)
+			for(key in end)
 				start[key] = parseFloat(computedStyle.getPropertyValue(key));
 			animation.start = start;
-		} else if (complete == 0)
-			for (key in start)
+		} else if(complete == 0)
+			for(key in start)
 				element.style.setProperty(key, start[key] + (key in propertyUnit ? propertyUnit[key] : defaultUnit));
 
-		if (!current) {
+		if(!current) {
 			current = {};
-			for (key in start)
+			for(key in start)
 				current[key] = start[key];
 			animation.current = current;
 		}
 
 		function cubicInOut(t, b, c, d)
 		{
-			if ((t/=d/2) < 1) return c/2*t*t*t + b;
+			if((t/=d/2) < 1) return c/2*t*t*t + b;
 			return c/2*((t-=2)*t*t + 2) + b;
 		}
 
 		var style = element.style;
-		for (key in end) {
+		for(key in end) {
 			var startValue = start[key];
 			var currentValue = current[key];
 			var endValue = end[key];
-			if ((complete + slice) < duration) {
+			if((complete + slice) < duration) {
 				var delta = (endValue - startValue) / (duration / slice);
 				var newValue = cubicInOut(complete, startValue, endValue - startValue, duration);
 				style.setProperty(key, newValue + (key in propertyUnit ? propertyUnit[key] : defaultUnit));
@@ -209,13 +224,13 @@ Colloquy.animateStyle = function(animations, duration, callback, complete)
 		}
 	}
 
-	if (complete < duration)
+	if(complete < duration)
 		setTimeout(Colloquy.animateStyle, slice, animations, duration, callback, complete + slice);
-	else if (callback)
+	else if(callback)
 		callback();
 }
 
-function extendClass( subClass, baseClass ) {
+function extendClass(subClass, baseClass) {
 	function inheritance() {}
 	inheritance.prototype = baseClass.prototype;
 
@@ -233,7 +248,7 @@ var UserDefaults = {
 };
 
 var activityCheckInterval = null;
-var currentActivityCheckInterval = ( UserDefaults.maximumActivityCheckInterval / 2 );
+var currentActivityCheckInterval = (UserDefaults.maximumActivityCheckInterval / 2);
 var finished = false;
 
 var ChatController = {
@@ -241,131 +256,135 @@ var ChatController = {
 	activePanel: null
 };
 
-ChatController.createPanel = function( node ) {
-	var panel = ChatController.panel( node.getAttribute( "identifier" ) );
-	if( panel ) return panel;
+ChatController.createPanel = function(node) {
+	var panel = ChatController.panel(node.getAttribute("identifier"));
+	if(panel) return panel;
 
-	var type = node.getAttribute( "class" );
-	if( type == "JVDirectChatPanel" )
-		return new DirectChatPanel( node );
-	else if( type == "JVChatRoomPanel" )
-		return new ChatRoomPanel( node );
+	var type = node.getAttribute("class");
+	if(type == "JVDirectChatPanel")
+		return new DirectChatPanel(node);
+	else if(type == "JVChatRoomPanel")
+		return new ChatRoomPanel(node);
 	return null;
 };
 
-ChatController.panel = function( id ) {
-	for( var i = 0, l = this.panels.length; i < l; ++i )
-		if( this.panels[i].id == id ) return this.panels[i];
+ChatController.panel = function(id) {
+	for(var i = 0, l = this.panels.length; i < l; ++i)
+		if(this.panels[i].id == id) return this.panels[i];
 	return null;
 }
 
 ChatController.checkActivity = function() {
-	new Ajax.Request( "/command/checkActivity?order=" + Colloquy.nextOrderIdentifier++ + "&uinque=" + Math.round(Math.random() * 1000000), {
-		method: "get",
-		onSuccess: function( transport ) {
-			var updateIntervalDelta = 0;
+	var request = new XMLHttpRequest();
 
-			if( transport.responseText && transport.responseXML ) {
-				var children = transport.responseXML.documentElement.childNodes;
-				for( var i = 0; i < children.length; ++i ) {
-					switch( children[i].tagName ) {
-					case "open":
-						updateIntervalDelta -= 200;
-						ChatController.createPanel( children[i] );
-						break;
-					case "close":
-						var panel = ChatController.panel( children[i].getAttribute( "identifier" ) );
-						panel.close();
-						break;
-					case "message":
-						updateIntervalDelta -= 500;
-						var message = children[i];
-						if( message.firstChild ) {
-							var panel = ChatController.panel( message.getAttribute( "panel" ) );
-							panel.appendMessage( message.firstChild.nodeValue );
-							if( ! panel.active ) {
-								panel.updateNewMessageCount( panel.newMessages + 1 );
-								if( message.getAttribute( "highlighted" ) )
-									panel.updateHighlightMessageCount( panel.newHighlightMessages + 1 );
-							}
+	request.onreadystatechange = function() {
+		if(request.readyState != 4)
+			return;
+
+		if(request.status < 200 || request.status >= 300) {
+			if(activityCheckInterval) clearInterval(activityCheckInterval);
+			activityCheckInterval = setInterval(ChatController.checkActivity, UserDefaults.minimumActivityCheckInterval);
+			return;
+		}
+
+		var updateIntervalDelta = 0;
+
+		if(request.responseText && request.responseXML) {
+			var children = request.responseXML.documentElement.childNodes;
+			for(var i = 0; i < children.length; ++i) {
+				switch(children[i].tagName) {
+				case "open":
+					updateIntervalDelta -= 200;
+					ChatController.createPanel(children[i]);
+					break;
+				case "close":
+					var panel = ChatController.panel(children[i].getAttribute("identifier"));
+					panel.close();
+					break;
+				case "message":
+					updateIntervalDelta -= 500;
+					var message = children[i];
+					if(message.firstChild) {
+						var panel = ChatController.panel(message.getAttribute("panel"));
+						panel.appendMessage(message.firstChild.nodeValue);
+						if(! panel.active) {
+							panel.updateNewMessageCount(panel.newMessages + 1);
+							if(message.getAttribute("highlighted"))
+								panel.updateHighlightMessageCount(panel.newHighlightMessages + 1);
 						}
-						break;
-					case "event":
-						updateIntervalDelta -= 200;
-						var event = children[i];
-						if( event.firstChild ) {
-							var panel = ChatController.panel( event.getAttribute( "panel" ) );
-							panel.appendEvent( event.firstChild.nodeValue );
-						}
-						break;
 					}
+					break;
+				case "event":
+					updateIntervalDelta -= 200;
+					var event = children[i];
+					if(event.firstChild) {
+						var panel = ChatController.panel(event.getAttribute("panel"));
+						panel.appendEvent(event.firstChild.nodeValue);
+					}
+					break;
 				}
 			}
-
-			if( ! updateIntervalDelta ) updateIntervalDelta = UserDefaults.activityCheckIntervalIncrement;
-
-			var newActivityCheckInterval = Math.min( ( currentActivityCheckInterval + updateIntervalDelta ), UserDefaults.maximumActivityCheckInterval );
-			newActivityCheckInterval = Math.max( newActivityCheckInterval, UserDefaults.minimumActivityCheckInterval );
-
-			if( newActivityCheckInterval != currentActivityCheckInterval ) {
-				currentActivityCheckInterval = newActivityCheckInterval;
-
-				if( activityCheckInterval ) clearInterval( activityCheckInterval );
-				activityCheckInterval = setInterval( ChatController.checkActivity, currentActivityCheckInterval );
-			}
-		},
-		onFailure: function( transport ) {
-			if( activityCheckInterval ) clearInterval( activityCheckInterval );
-			activityCheckInterval = setInterval( ChatController.checkActivity, UserDefaults.minimumActivityCheckInterval );
-		},
-		onException: function( transport, exception ) {
-			throw exception;
 		}
-	} );
+
+		if(! updateIntervalDelta) updateIntervalDelta = UserDefaults.activityCheckIntervalIncrement;
+
+		var newActivityCheckInterval = Math.min((currentActivityCheckInterval + updateIntervalDelta), UserDefaults.maximumActivityCheckInterval);
+		newActivityCheckInterval = Math.max(newActivityCheckInterval, UserDefaults.minimumActivityCheckInterval);
+
+		if(newActivityCheckInterval != currentActivityCheckInterval) {
+			currentActivityCheckInterval = newActivityCheckInterval;
+
+			if(activityCheckInterval) clearInterval(activityCheckInterval);
+			activityCheckInterval = setInterval(ChatController.checkActivity, currentActivityCheckInterval);
+		}
+	};
+
+	request.open("get", "/command/checkActivity?order=" + Colloquy.nextOrderIdentifier++ + "&uinque=" + Math.round(Math.random() * 1000000), true);
+	request.send();
 };
 
-function Panel( node ) {
+function Panel(node) {
 	var panel = this;
 
-	this.id = node.getAttribute( "identifier" );
-	this.name = node.getAttribute( "name" );
-	this.server = node.getAttribute( "server" );
-	this.type = node.getAttribute( "class" );
+	this.id = node.getAttribute("identifier");
+	this.name = node.getAttribute("name");
+	this.server = node.getAttribute("server");
+	this.type = node.getAttribute("class");
 	this.active = false;
 
-	this.menuElement = $(document.createElement( "div" ));
+	this.menuElement = document.createElement("div");
 	this.menuElement.className = "colloquy";
-	this.menuElement.addEventListener( "click", function( event ) { panel.show(); }, false );
+	this.menuElement.addEventListener("click", function(event) { panel.show(); }, false);
 
-	this.menuTitleElement = $(document.createElement( "div" ));
+	this.menuTitleElement = document.createElement("div");
 	this.menuTitleElement.className = "colloquy-title";
 	this.menuTitleElement.textContent = this.name + " (" + this.server + ")";
 	this.menuElement.appendChild(this.menuTitleElement);
 
-	this.menuPreviewElement = $(document.createElement( "div" ));
+	this.menuPreviewElement = document.createElement("div");
 	this.menuPreviewElement.className = "colloquy-preview";
 	this.menuElement.appendChild(this.menuPreviewElement);
 
-	var waitingElement = $(document.createElement( "div" ));
+	var waitingElement = document.createElement("div");
 	waitingElement.className = "waiting";
 
-	this.highlightsElement = $(document.createElement( "div" ));
+	this.highlightsElement = document.createElement("div");
 	this.highlightsElement.className = "highlights";
-	waitingElement.appendChild( this.highlightsElement );
+	waitingElement.appendChild(this.highlightsElement);
 
-	this.messagesElement = $(document.createElement( "div" ));
+	this.messagesElement = document.createElement("div");
 	this.messagesElement.className = "messages";
-	waitingElement.appendChild( this.messagesElement );
+	waitingElement.appendChild(this.messagesElement);
 
-	this.menuElement.appendChild( waitingElement );
+	this.menuElement.appendChild(waitingElement);
 
-	this.panelElement = $(document.createElement( "div" ));
+	this.panelElement = document.createElement("div");
 	this.panelElement.className = "colloquy-panel";
 
 	Colloquy.mainElement.appendChild(this.panelElement);
 
-	ChatController.panels.push( this );
-	Colloquy.colloquiesElement.appendChild( this.menuElement );
+	ChatController.panels.push(this);
+	Colloquy.colloquiesElement.appendChild(this.menuElement);
 }
 
 Panel.prototype.toString = function() {
@@ -373,14 +392,18 @@ Panel.prototype.toString = function() {
 }
 
 Panel.prototype.show = function() {
-	if( ChatController.activePanel || Colloquy.animatingMenu ) return;
+	if(ChatController.activePanel || Colloquy.animatingMenu) return;
 
 	Colloquy.animatingMenu = true;
 
-	this.panelElement.style.display = "block";
 	Colloquy.backElement.style.display = "block";
-	Colloquy.colloquyTitleElement.style.display = "block";
 	Colloquy.membersElement.style.display = "block";
+
+	Colloquy.colloquyTitleElement.style.display = "block";
+	Colloquy.colloquyTitleElement.style.left = (document.body.offsetWidth / 2) + "px";
+
+	this.panelElement.style.display = "block";
+	this.panelElement.style.left = document.body.offsetWidth + "px";
 
 	var animations = [{element: Colloquy.backElement, end: {left: 6, opacity: 1}},
 		{element: Colloquy.joinElement, end: {opacity: 0}},
@@ -388,10 +411,10 @@ Panel.prototype.show = function() {
 		{element: Colloquy.mainTitleElement, end: {left: (-document.body.offsetWidth / 2) + (Colloquy.backElement.offsetWidth / 2), top: 6, "font-size": 12, "line-height": 28}},
 		{element: Colloquy.colloquiesElement, end: {left: -document.body.offsetWidth - 1}}, {element: this.panelElement, end: {left: 0}}];
 
-	if (this.type == "JVChatRoomPanel")
+	if(this.type == "JVChatRoomPanel")
 		animations.push({element: Colloquy.membersElement, end: {opacity: 1}});
 
-	if (this.wasScrolledNearBottom)
+	if(this.wasScrolledNearBottom)
 		this.scrollToBottom();
 	else this.panelTranscriptElement.scrollTop = this.lastScrollPosition;
 
@@ -399,7 +422,7 @@ Panel.prototype.show = function() {
 
 	var panel = this;
 	var animateStyleFinished = function() {
-		panel.menuElement.removeClassName( "selected" );
+		panel.menuElement.removeStyleClass("selected");
 		Colloquy.joinElement.style.display = "none";
 		Colloquy.mainTitleElement.style.display = "none";
 		delete Colloquy.animatingMenu;
@@ -407,7 +430,7 @@ Panel.prototype.show = function() {
 
 	Colloquy.animateStyle(animations, (event.shiftKey ? 2500 : 250), animateStyleFinished);
 
-	this.menuElement.addClassName( "selected" );
+	this.menuElement.addStyleClass("selected");
 	this.active = true;
 	this.focused();
 
@@ -415,39 +438,39 @@ Panel.prototype.show = function() {
 }
 
 Panel.prototype.close = function() {
-	if (this.active) {
+	if(this.active) {
 		this.closeAfterAnimate = true;
 		Colloquy.showColloquiesList();
 		return;
 	}
 
-	for( var i = 0, l = ChatController.panels.length; i < l; ++i )
-		if( ChatController.panels[i].id == this.id ) break;
+	for(var i = 0, l = ChatController.panels.length; i < l; ++i)
+		if(ChatController.panels[i].id == this.id) break;
 
-	if( i < ChatController.panels.length )
-		ChatController.panels.slice( i, 1 );
+	if(i < ChatController.panels.length)
+		ChatController.panels.slice(i, 1);
 
-	this.panelElement.parentNode.removeChild( this.panelElement );
-	this.menuElement.parentNode.removeChild( this.menuElement );
+	this.panelElement.parentNode.removeChild(this.panelElement);
+	this.menuElement.parentNode.removeChild(this.menuElement);
 
 	Colloquy.updateMainTitle();
 }
 
-function DirectChatPanel( node ) {
+function DirectChatPanel(node) {
 	var panel = this;
 
-	DirectChatPanel.baseConstructor.call( this, node );
+	DirectChatPanel.baseConstructor.call(this, node);
 
 	this.newMessages = 0;
 	this.newHighlightMessages = 0;
 
-	this.menuElement.addClassName( "directChat" );
+	this.menuElement.addStyleClass("directChat");
 
-	this.panelTranscriptElement = $(document.createElement( "div" ));
+	this.panelTranscriptElement = document.createElement("div");
 	this.panelTranscriptElement.className = "colloquy-panel-transcript";
 	this.panelElement.appendChild(this.panelTranscriptElement);
 
-	this.panelInputBarElement = $(document.createElement( "div" ));
+	this.panelInputBarElement = document.createElement("div");
 	this.panelInputBarElement.className = "colloquy-panel-input";
 	this.panelElement.appendChild(this.panelInputBarElement);
 
@@ -463,7 +486,7 @@ function DirectChatPanel( node ) {
 	this.panelInputBarElement.appendChild(form);
 }
 
-extendClass( DirectChatPanel, Panel );
+extendClass(DirectChatPanel, Panel);
 
 DirectChatPanel.prototype.send = function() {
 	this.sendMessage(this.panelInputElement.value);
@@ -481,7 +504,7 @@ DirectChatPanel.prototype.send = function() {
 DirectChatPanel.prototype.setKeyboardVisible = function(visible) {
 	this.keyboardVisible = visible;
 
-	if( visible ) {
+	if(visible) {
 		this.panelTranscriptElement.style.height = "119px";
 
 		this.panelInputElement.focus();
@@ -496,46 +519,53 @@ DirectChatPanel.prototype.setKeyboardVisible = function(visible) {
 	this.scrollToBottom();
 }
 
-DirectChatPanel.prototype.sendMessage = function( html ) {
-	if( ! html.length ) return;
+DirectChatPanel.prototype.sendMessage = function(html) {
+	if(! html.length) return;
 
-	new Ajax.Request( "/command/send?panel=" + this.id + "&order=" + Colloquy.nextOrderIdentifier++ + "&uinque=" + Math.round(Math.random() * 1000000), {
-		method: "post",
-		contentType: "text/html",
-		postBody: html,
-		onSuccess: function( transport ) {
-			if( activityCheckInterval ) clearInterval( activityCheckInterval );
-			activityCheckInterval = setInterval( ChatController.checkActivity, 250 );
-		},
-		onException: function( transport, exception ) {
-			throw exception;
+	var request = new XMLHttpRequest();
+	var panel = this;
+
+	request.onreadystatechange = function() {
+		if(request.readyState != 4)
+			return;
+
+		if(request.status < 200 || request.status >= 300) {
+			// failed, try again
+			setTimeout(function() { panel.sendMessage(html) }, 100);
+			return;
 		}
-	} );
+
+		if(activityCheckInterval) clearInterval(activityCheckInterval);
+		activityCheckInterval = setInterval(ChatController.checkActivity, 250);
+	};
+
+	request.open("post", "/command/send?panel=" + this.id + "&order=" + Colloquy.nextOrderIdentifier++ + "&uinque=" + Math.round(Math.random() * 1000000), true);
+	request.send(html);
 }
 
-DirectChatPanel.prototype.appendMessage = function( xml ) {
+DirectChatPanel.prototype.appendMessage = function(xml) {
 	var xmlobject = (new DOMParser()).parseFromString(xml, "text/xml");
 	var sender = xmlobject.getElementsByTagName("sender")[0];
 	var message = xmlobject.getElementsByTagName("message")[0];
 
-	var preview = $(document.createElement("div"));
+	var preview = document.createElement("div");
 
 	var senderNode = document.createElement("b");
-	if( message.getAttribute( "action" ) )
+	if(message.getAttribute("action"))
 		senderNode.textContent = "\u2022" + sender.firstChild.nodeValue + " ";
 	else senderNode.textContent = sender.firstChild.nodeValue + ": ";
 
 	preview.appendChild(senderNode);
 
 	var links = xmlobject.getElementsByTagName("a");
-	for (var i = 0; i < links.length; ++i) {
+	for(var i = 0; i < links.length; ++i) {
 		var link = links[i];
 		link.setAttribute("target", "_blank");
 	}
 
 	var msgString = "";
 	var current = message.firstChild;
-	while (current) {
+	while(current) {
 		msgString += (new XMLSerializer()).serializeToString(current);
 		current = current.nextSibling;
 	}
@@ -544,7 +574,7 @@ DirectChatPanel.prototype.appendMessage = function( xml ) {
 	msgSpan.innerHTML = msgString;
 	preview.appendChild(msgSpan);
 
-	if (this.menuPreviewElement.childNodes.length > 1)
+	if(this.menuPreviewElement.childNodes.length > 1)
 		this.menuPreviewElement.removeChild(this.menuPreviewElement.firstChild);
 
 	this.menuPreviewElement.appendChild(preview);
@@ -552,17 +582,17 @@ DirectChatPanel.prototype.appendMessage = function( xml ) {
 	var messageWrapper = document.createElement("div");
 	messageWrapper.className = "message-wrapper";
 
-	if( message.getAttribute( "highlight" ) )
+	if(message.getAttribute("highlight"))
 		messageWrapper.className += " highlight";
 
-	if( message.getAttribute( "action" ) )
+	if(message.getAttribute("action"))
 		messageWrapper.className += " action";
 
 	var senderDiv = document.createElement("div");
 	senderDiv.className = "sender";
 	senderDiv.textContent = sender.firstChild.nodeValue;
 
-	if( sender.getAttribute( "self" ) )
+	if(sender.getAttribute("self"))
 		senderDiv.className += " self";
 
 	var messageDiv = document.createElement("div");
@@ -577,22 +607,22 @@ DirectChatPanel.prototype.appendMessage = function( xml ) {
 	this.panelTranscriptElement.appendChild(messageWrapper);
 
 	this.enforceScrollBackLimit();
-	if( scrolledNearBottom ) this.scrollToBottom();
+	if(scrolledNearBottom) this.scrollToBottom();
 }
 
-DirectChatPanel.prototype.appendEvent = function( xml ) {
+DirectChatPanel.prototype.appendEvent = function(xml) {
 	var xmlobject = (new DOMParser()).parseFromString(xml, "text/xml");
 	var message = xmlobject.getElementsByTagName("message")[0];
 
 	var links = xmlobject.getElementsByTagName("a");
-	for (var i = 0; i < links.length; ++i) {
+	for(var i = 0; i < links.length; ++i) {
 		var link = links[i];
 		link.setAttribute("target", "_blank");
 	}
 
 	var msgString = "";
 	var current = message.firstChild;
-	while (current) {
+	while(current) {
 		msgString += (new XMLSerializer()).serializeToString(current);
 		current = current.nextSibling;
 	}
@@ -606,14 +636,14 @@ DirectChatPanel.prototype.appendEvent = function( xml ) {
 	this.panelTranscriptElement.appendChild(eventDiv);
 
 	this.enforceScrollBackLimit();
-	if( scrolledNearBottom ) this.scrollToBottom();
+	if(scrolledNearBottom) this.scrollToBottom();
 }
 
 DirectChatPanel.prototype.enforceScrollBackLimit = function() {
 	var bodyNode = this.panelTranscriptElement;
-	if( UserDefaults.scrollBackMessageLimit > 0 && bodyNode.childNodes.length > UserDefaults.scrollBackMessageLimit )
-		for( var i = 0; bodyNode.childNodes.length > UserDefaults.scrollBackMessageLimit && i < ( bodyNode.childNodes.length - UserDefaults.scrollBackMessageLimit ); ++i )
-			bodyNode.removeChild( bodyNode.firstChild );
+	if(UserDefaults.scrollBackMessageLimit > 0 && bodyNode.childNodes.length > UserDefaults.scrollBackMessageLimit)
+		for(var i = 0; bodyNode.childNodes.length > UserDefaults.scrollBackMessageLimit && i < (bodyNode.childNodes.length - UserDefaults.scrollBackMessageLimit); ++i)
+			bodyNode.removeChild(bodyNode.firstChild);
 }
 
 DirectChatPanel.prototype.scrollToBottom = function() {
@@ -622,75 +652,75 @@ DirectChatPanel.prototype.scrollToBottom = function() {
 
 DirectChatPanel.prototype.scrolledNearBottom = function() {
 	var transcriptHeight = this.panelTranscriptElement.offsetHeight;
-	return ( ( transcriptHeight + this.panelTranscriptElement.scrollTop ) >= ( this.panelTranscriptElement.scrollHeight - 15 ) );
+	return ((transcriptHeight + this.panelTranscriptElement.scrollTop) >= (this.panelTranscriptElement.scrollHeight - 15));
 }
 
-DirectChatPanel.prototype.updateNewMessageCount = function( messages ) {
+DirectChatPanel.prototype.updateNewMessageCount = function(messages) {
 	this.newMessages = messages;
 
 	Colloquy.updateMainTitle();
 
-	if( messages == 0 ) this.menuElement.title = "No messages waiting";
-	else if( messages == 1 ) this.menuElement.title = "1 message waiting";
+	if(messages == 0) this.menuElement.title = "No messages waiting";
+	else if(messages == 1) this.menuElement.title = "1 message waiting";
 	else this.menuElement.title = messages + " messages waiting";
 
-	this.messagesElement.removeClassName( "small" );
-	this.messagesElement.removeClassName( "medium" );
-	this.messagesElement.removeClassName( "large" );
+	this.messagesElement.removeStyleClass("small");
+	this.messagesElement.removeStyleClass("medium");
+	this.messagesElement.removeStyleClass("large");
 
-	if( messages > 0 && messages <= 9 ) {
-		if( ! this.messagesElement.hasClassName( "small" ) )
-			this.messagesElement.addClassName( "small" );
-	} else if( messages >= 10 && messages <= 99 ) {
-		if( ! this.messagesElement.hasClassName( "medium" ) )
-			this.messagesElement.addClassName( "medium" );
-	} else if( messages >= 100 ) {
-		if( ! this.messagesElement.hasClassName( "large" ) )
-			this.messagesElement.addClassName( "large" );
+	if(messages > 0 && messages <= 9) {
+		if(! this.messagesElement.hasStyleClass("small"))
+			this.messagesElement.addStyleClass("small");
+	} else if(messages >= 10 && messages <= 99) {
+		if(! this.messagesElement.hasStyleClass("medium"))
+			this.messagesElement.addStyleClass("medium");
+	} else if(messages >= 100) {
+		if(! this.messagesElement.hasStyleClass("large"))
+			this.messagesElement.addStyleClass("large");
 	}
 
-	this.messagesElement.innerText = ( messages > 0 ? messages : "" );
+	this.messagesElement.innerText = (messages > 0 ? messages : "");
 }
 
-DirectChatPanel.prototype.updateHighlightMessageCount = function( messages ) {
+DirectChatPanel.prototype.updateHighlightMessageCount = function(messages) {
 	this.newHighlightMessages = messages;
 
 	Colloquy.updateMainTitle();
 
-	this.highlightsElement.removeClassName( "small" );
-	this.highlightsElement.removeClassName( "medium" );
-	this.highlightsElement.removeClassName( "large" );
+	this.highlightsElement.removeStyleClass("small");
+	this.highlightsElement.removeStyleClass("medium");
+	this.highlightsElement.removeStyleClass("large");
 
-	if( messages > 0 && messages <= 9 ) {
-		if( ! this.highlightsElement.hasClassName( "small" ) )
-			this.highlightsElement.addClassName( "small" );
-	} else if( messages >= 10 && messages <= 99 ) {
-		if( ! this.highlightsElement.hasClassName( "medium" ) )
-			this.highlightsElement.addClassName( "medium" );
-	} else if( messages >= 100 ) {
-		if( ! this.highlightsElement.hasClassName( "large" ) )
-			this.highlightsElement.addClassName( "large" );
+	if(messages > 0 && messages <= 9) {
+		if(! this.highlightsElement.hasStyleClass("small"))
+			this.highlightsElement.addStyleClass("small");
+	} else if(messages >= 10 && messages <= 99) {
+		if(! this.highlightsElement.hasStyleClass("medium"))
+			this.highlightsElement.addStyleClass("medium");
+	} else if(messages >= 100) {
+		if(! this.highlightsElement.hasStyleClass("large"))
+			this.highlightsElement.addStyleClass("large");
 	}
 
-	this.highlightsElement.innerText = ( messages > 0 ? messages : "" );
+	this.highlightsElement.innerText = (messages > 0 ? messages : "");
 }
 
 DirectChatPanel.prototype.focused = function() {
-	this.updateNewMessageCount( 0 );
-	this.updateHighlightMessageCount( 0 );
+	this.updateNewMessageCount(0);
+	this.updateHighlightMessageCount(0);
 }
 
-function ChatRoomPanel( node ) {
+function ChatRoomPanel(node) {
 	var panel = this;
 
-	ChatRoomPanel.baseConstructor.call( this, node );
+	ChatRoomPanel.baseConstructor.call(this, node);
 
 	this.memberListVisible = false;
 
-	this.menuElement.removeClassName( "directChat" );
-	this.menuElement.addClassName( "chatRoom" );
+	this.menuElement.removeStyleClass("directChat");
+	this.menuElement.addStyleClass("chatRoom");
 
-	this.membersElement = $(document.createElement("div"));
+	this.membersElement = document.createElement("div");
 	this.membersElement.className = "colloquy-members";
 
 	var header = document.createElement("div");
@@ -722,33 +752,33 @@ function ChatRoomPanel( node ) {
 	this.members = new Array();
 
 	var memberNodes = node.childNodes;
-	for( var i = 0; i < memberNodes.length; ++i ) {
+	for(var i = 0; i < memberNodes.length; ++i) {
 		var memberNode = memberNodes[i];
 
 		var member = new Object();
 		member.name = memberNode.firstChild.nodeValue;
-		member.nickname = memberNode.getAttribute( "nickname" );
-		member.hostmask = memberNode.getAttribute( "hostmask" );
-		member.identifier = memberNode.getAttribute( "identifier" );
-		member.buddy = memberNode.getAttribute( "buddy" );
-		member.type = memberNode.getAttribute( "class" );
-		member.self = ( memberNode.getAttribute( "self" ) == "yes" );
+		member.nickname = memberNode.getAttribute("nickname");
+		member.hostmask = memberNode.getAttribute("hostmask");
+		member.identifier = memberNode.getAttribute("identifier");
+		member.buddy = memberNode.getAttribute("buddy");
+		member.type = memberNode.getAttribute("class");
+		member.self = (memberNode.getAttribute("self") == "yes");
 
-		this.members.push( member );
+		this.members.push(member);
 
-		var memberElement = document.createElement( "div" );
+		var memberElement = document.createElement("div");
 		memberElement.title = member.hostmask;
-		memberElement.className = "member" + ( member.type ? " " + member.type : "" );
+		memberElement.className = "member" + (member.type ? " " + member.type : "");
 		memberElement.textContent = member.name + " ";
 
 		this.membersListElement.appendChild(memberElement);
 	}
 }
 
-extendClass( ChatRoomPanel, DirectChatPanel );
+extendClass(ChatRoomPanel, DirectChatPanel);
 
 ChatRoomPanel.prototype.showMembersList = function(event) {
-	if (this.showingMembers)
+	if(this.showingMembers)
 		return;
 
 	this.showingMembers = true;
@@ -761,7 +791,7 @@ ChatRoomPanel.prototype.showMembersList = function(event) {
 }
 
 ChatRoomPanel.prototype.hideMembersList = function(event) {
-	if (!this.showingMembers)
+	if(!this.showingMembers)
 		return;
 
 	this.membersElement.style.display = "block";
