@@ -109,8 +109,17 @@ static void processResources( http_req_t *req, http_resp_t *resp, http_server_t 
 
 	path = [NSString pathWithComponents:parts];
 	path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:path];
+	path = [path stringByStandardizingPath];
 
-	passThruFile( path, req, resp, server );
+	if( ! [path hasPrefix:[[NSBundle mainBundle] resourcePath]] ) {
+		resp -> status_code = 404;
+		resp -> reason_phrase = "Not Found";
+		resp -> printf( resp, "404: Not Found" );
+		return;
+	}
+
+	if( path && [path length] )
+		passThruFile( path, req, resp, server );
 
 	[pool release];
 }
@@ -158,9 +167,18 @@ static void processStyles( http_req_t *req, http_resp_t *resp, http_server_t *se
 		path = [location path];
 	} else {
 		path = [[[style bundle] resourcePath] stringByAppendingPathComponent:path];
+		path = [path stringByStandardizingPath];
+	
+		if( ! [path hasPrefix:[[style bundle] resourcePath]] ) {
+			resp -> status_code = 404;
+			resp -> reason_phrase = "Not Found";
+			resp -> printf( resp, "404: Not Found" );
+			return;
+		}
 	}
 
-	passThruFile( path, req, resp, server );
+	if( path && [path length] )
+		passThruFile( path, req, resp, server );
 
 	[pool release];
 }
@@ -191,8 +209,17 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 
 	path = [NSString pathWithComponents:parts];
 	path = [[emoticons resourcePath] stringByAppendingPathComponent:path];
+	path = [path stringByStandardizingPath];
 
-	passThruFile( path, req, resp, server );
+	if( ! [path hasPrefix:[emoticons resourcePath]] ) {
+		resp -> status_code = 404;
+		resp -> reason_phrase = "Not Found";
+		resp -> printf( resp, "404: Not Found" );
+		return;
+	}
+
+	if( path && [path length] )
+		passThruFile( path, req, resp, server );
 
 	[pool release];
 }

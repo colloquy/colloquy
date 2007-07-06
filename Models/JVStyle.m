@@ -444,8 +444,9 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	NSString *path = [_bundle pathForResource:name ofType:@"css" inDirectory:@"Variants"];
 	if( path ) return [NSURL fileURLWithPath:path];
 
-	path = [[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles/Variants/%@/%@.css", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], [self identifier], name] stringByExpandingTildeInPath];
-	if( [[NSFileManager defaultManager] isReadableFileAtPath:path] )
+	NSString *root = [[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles/Variants/", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"]] stringByStandardizingPath];
+	path = [[NSString stringWithFormat:@"%@/%@/%@.css", root, [self identifier], name] stringByExpandingTildeInPath];
+	if( [path hasPrefix:root] && [[NSFileManager defaultManager] isReadableFileAtPath:path] )
 		return [NSURL fileURLWithPath:path];
 
 	return nil;
