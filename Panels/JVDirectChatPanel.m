@@ -1611,7 +1611,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( [error code] == MVChatConnectionNoSuchUserError ) {
 		MVChatUser *user = [[error userInfo] objectForKey:@"user"];
 		if( [user isEqualTo:[self user]] )
-			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is not online. Any messages sent will not be received.", "user not online" ), [self user]] withName:@"offline" andAttributes:nil];
+			[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is not online. Any messages sent will not be received.", "user not online" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"offline" andAttributes:nil];
 	}
 }
 
