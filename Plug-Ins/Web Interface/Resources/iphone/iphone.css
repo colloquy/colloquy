@@ -32,11 +32,9 @@ body[orient="landscape"] .colloquy-panel-input {
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	background-color: rgb(111, 135, 168);
-	border-top: 1px solid rgb(179, 186, 201);
-	border-bottom: 1px solid rgb(73, 95, 144);
-	background-image: url(images/gradientHighlight.png);
+	border-bottom: 1px solid rgb(45, 54, 66);
+	background-image: url(images/header.png);
 	background-repeat: repeat-x;
-	-webkit-background-size: 100%;
 	color: white;
 	font-size: 20px;
 	text-shadow: rgba(0, 0, 0, 0.6) 0 -1px 0;
@@ -48,21 +46,21 @@ body[orient="landscape"] .colloquy-panel-input {
 .header .button {
 	position: absolute;
 	font-weight: bold;
-	line-height: 28px;
-	top: 6px;
-	border-width: 0 8px 0 8px;
-	-webkit-border-image: url(images/button.png) 0 8 0 8;
-	height: 29px;
-	max-height: 29px;
-	min-height: 29px;
+	line-height: 29px;
+	top: 7px;
+	border-width: 0 5px 0 5px;
+	-webkit-border-image: url(images/button.png) 0 5 0 5;
+	height: 31px;
+	max-height: 31px;
+	min-height: 31px;
 	min-width: 32px;
 	font-size: 12px;
 	text-shadow: rgba(0, 0, 0, 0.6) 0 -1px 0;
 	font-weight: bold;
-	line-height: 28px;
+	line-height: 30px;
 	color: white;
 	z-index: 100;
-	right: 6px;
+	right: 5px;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	text-align: center;
@@ -86,15 +84,15 @@ body[orient="landscape"] .colloquy-panel-input {
 
 .back {
 	position: absolute;
-	border-width: 0 8px 0 14px;
+	border-width: 0 5px 0 14px;
 	min-width: 20px;
-	height: 30px;
-	-webkit-border-image: url(images/backButton.png) 0 8 0 14;
+	height: 31px;
+	-webkit-border-image: url(images/backButton.png) 0 5 0 14;
 	font-size: 12px;
 	text-shadow: rgba(0, 0, 0, 0.6) 0 -1px 0;
 	font-weight: bold;
-	line-height: 28px;
-	top: 6px;
+	line-height: 29px;
+	top: 7px;
 	left: 120px;
 	padding: 0 3px 0 2px;
 	color: white;
@@ -103,27 +101,9 @@ body[orient="landscape"] .colloquy-panel-input {
 	display: none;
 }
 
-.forward {
-	position: absolute;
-	border-width: 0 14px 0 8px;
-	min-width: 20px;
-	height: 30px;
-	-webkit-border-image: url(images/forwardButton.png) 0 14 0 8;
-	font-size: 12px;
-	text-shadow: rgba(0, 0, 0, 0.6) 0 -1px 0;
-	font-weight: bold;
-	line-height: 28px;
-	top: 6px;
-	right: 6px;
-	padding: 0;
-	color: white;
-	z-index: 100;
-	opacity: 0;
-	display: none;
-}
-
 .header .button.action {
-	-webkit-border-image: url(images/squareBlueButton.png) 0 8 0 8;
+	-webkit-border-image: url(images/squareBlueButton.png) 0 5 0 5;
+	padding: 0 5px 0 5px;
 }
 
 #colloquy-title, #main-title {

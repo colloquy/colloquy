@@ -405,10 +405,10 @@ Panel.prototype.show = function() {
 	this.panelElement.style.display = "block";
 	this.panelElement.style.left = document.body.offsetWidth + "px";
 
-	var animations = [{element: Colloquy.backElement, end: {left: 6, opacity: 1}},
+	var animations = [{element: Colloquy.backElement, end: {left: 5, opacity: 1}},
 		{element: Colloquy.joinElement, end: {opacity: 0}},
 		{element: Colloquy.colloquyTitleElement, end: {left: 0, opacity: 1}},
-		{element: Colloquy.mainTitleElement, end: {left: (-document.body.offsetWidth / 2) + (Colloquy.backElement.offsetWidth / 2), top: 6, "font-size": 12, "line-height": 28}},
+		{element: Colloquy.mainTitleElement, end: {left: (-document.body.offsetWidth / 2) + (Colloquy.backElement.offsetWidth / 2), top: 7, "font-size": 12, "line-height": 28}},
 		{element: Colloquy.colloquiesElement, end: {left: -document.body.offsetWidth - 1}}, {element: this.panelElement, end: {left: 0}}];
 
 	if(this.type == "JVChatRoomPanel")
