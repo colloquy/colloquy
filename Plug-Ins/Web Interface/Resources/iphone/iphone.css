@@ -31,7 +31,7 @@ body[orient="landscape"] .colloquy-panel-input {
 	height: 44px;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
-	background-color: rgb(106, 130, 158);
+	background-color: rgb(111, 135, 168);
 	border-top: 1px solid rgb(179, 186, 201);
 	border-bottom: 1px solid rgb(73, 95, 144);
 	background-image: url(images/gradientHighlight.png);

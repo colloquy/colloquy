@@ -3,7 +3,7 @@
 <head>
 	<title>Colloquy</title>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<meta name="viewport" content="width=320, initial-scale=1.0">
+	<meta name="viewport" content="width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<link rel="icon" href="smallIcon.png" type="image/png" />
 	<script type="text/ecmascript" src="prototype.js" encoding="utf-8"></script>
 	<style>
@@ -76,7 +76,8 @@
 	}
 
 	#remember-label {
-		margin-top: 13px;
+		vertical-align: middle;
+		margin-top: 10px;
 		float: left;
 	}
 	</style>
@@ -131,8 +132,8 @@
 <div id="login">
 <form onsubmit="login(event)">
 <label for="password">Password:</label> <input type="password" value="" id="password"><br>
-<label id="remember-label"><input type="checkbox" checked id="remember" value="1"> Remember Me</label>
-<input type="submit" id="submit" value="Login">
+<label id="remember-label"><input type="checkbox" id="remember" value="1"> Remember Me</label>
+<div id="submit" onclick="login(event)">Login</div>
 </form>
 </div>
 </body>
