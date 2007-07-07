@@ -35,7 +35,7 @@ Colloquy.loaded = function(event)
 	this.membersElement.addEventListener("click", function(event) { ChatController.activePanel.showMembersList(event) }, false);
 
 	// pan to the bottom, hides the location bar
-	setTimeout(function() { window.scrollTo(0, 1) }, 100);
+	setTimeout(window.scrollTo, 100, 0, 1);
 
 	setInterval(Colloquy.updateLayout, 400);
 
@@ -71,8 +71,9 @@ Colloquy.updateLayout = function()
 
 		var scrolledNearBottom = ChatController.activePanel && ChatController.activePanel.scrolledNearBottom();
 
-		var orient = Colloquy.currentWidth == 320 ? "profile" : "landscape";
-		document.body.setAttribute("orient", orient);
+		if(Colloquy.currentWidth == 320)
+			document.body.removeStyleClass("landscape");
+		else document.body.addStyleClass("landscape");
 
 		if(ChatController.activePanel && scrolledNearBottom)
 			ChatController.activePanel.scrollToBottom();
@@ -121,6 +122,9 @@ Colloquy.showColloquiesList = function(event)
 {
 	if(Colloquy.animatingMenu) return;
 
+	// pan to the bottom, hides the location bar
+	window.scrollTo(0, 1);
+
 	Colloquy.animatingMenu = true;
 
 	Colloquy.joinElement.style.display = null;
@@ -153,14 +157,14 @@ Colloquy.showColloquiesList = function(event)
 		delete Colloquy.animatingMenu;
 	};
 
-	this.animateStyle(animations, (event.shiftKey ? 2500 : 250), animateStyleFinished);
+	this.animateStyle(animations, (event.shiftKey ? 3000 : 180), animateStyleFinished);
 }
 
 Colloquy.animateStyle = function(animations, duration, callback, complete)
 {
 	if(complete === undefined)
 		complete = 0;
-	var slice = (1000 / 15); // 15 frames per second
+	var slice = (1000 / 20); // 20 frames per second
 
 	var defaultUnit = "px";
 	var propertyUnit = {opacity: ""};
@@ -356,17 +360,9 @@ function Panel(node) {
 	this.menuElement.className = "colloquy";
 	this.menuElement.addEventListener("click", function(event) { panel.show(); }, false);
 
-	this.menuTitleElement = document.createElement("div");
-	this.menuTitleElement.className = "colloquy-title";
-	this.menuTitleElement.textContent = this.name + " (" + this.server + ")";
-	this.menuElement.appendChild(this.menuTitleElement);
-
-	this.menuPreviewElement = document.createElement("div");
-	this.menuPreviewElement.className = "colloquy-preview";
-	this.menuElement.appendChild(this.menuPreviewElement);
-
 	var waitingElement = document.createElement("div");
 	waitingElement.className = "waiting";
+	waitingElement.addEventListener("click", function(event) { event.stopPropagation(); panel.updateNewMessageCount(0); panel.updateHighlightMessageCount(0); }, false);
 
 	this.highlightsElement = document.createElement("div");
 	this.highlightsElement.className = "highlights";
@@ -377,6 +373,15 @@ function Panel(node) {
 	waitingElement.appendChild(this.messagesElement);
 
 	this.menuElement.appendChild(waitingElement);
+
+	this.menuTitleElement = document.createElement("div");
+	this.menuTitleElement.className = "colloquy-title";
+	this.menuTitleElement.textContent = this.name + " (" + this.server + ")";
+	this.menuElement.appendChild(this.menuTitleElement);
+
+	this.menuPreviewElement = document.createElement("div");
+	this.menuPreviewElement.className = "colloquy-preview";
+	this.menuElement.appendChild(this.menuPreviewElement);
 
 	this.panelElement = document.createElement("div");
 	this.panelElement.className = "colloquy-panel";
@@ -393,6 +398,9 @@ Panel.prototype.toString = function() {
 
 Panel.prototype.show = function() {
 	if(ChatController.activePanel || Colloquy.animatingMenu) return;
+
+	// pan to the bottom, hides the location bar
+	window.scrollTo(0, 1);
 
 	Colloquy.animatingMenu = true;
 
@@ -422,17 +430,17 @@ Panel.prototype.show = function() {
 
 	var panel = this;
 	var animateStyleFinished = function() {
+		panel.focused();
 		panel.menuElement.removeStyleClass("selected");
 		Colloquy.joinElement.style.display = "none";
 		Colloquy.mainTitleElement.style.display = "none";
 		delete Colloquy.animatingMenu;
 	};
 
-	Colloquy.animateStyle(animations, (event.shiftKey ? 2500 : 250), animateStyleFinished);
+	Colloquy.animateStyle(animations, (event.shiftKey ? 3000 : 180), animateStyleFinished);
 
 	this.menuElement.addStyleClass("selected");
 	this.active = true;
-	this.focused();
 
 	ChatController.activePanel = this;
 }
@@ -463,6 +471,7 @@ function DirectChatPanel(node) {
 
 	this.newMessages = 0;
 	this.newHighlightMessages = 0;
+	this.wasScrolledNearBottom = true;
 
 	this.menuElement.addStyleClass("directChat");
 
@@ -660,24 +669,8 @@ DirectChatPanel.prototype.updateNewMessageCount = function(messages) {
 
 	Colloquy.updateMainTitle();
 
-	if(messages == 0) this.menuElement.title = "No messages waiting";
-	else if(messages == 1) this.menuElement.title = "1 message waiting";
-	else this.menuElement.title = messages + " messages waiting";
-
-	this.messagesElement.removeStyleClass("small");
-	this.messagesElement.removeStyleClass("medium");
-	this.messagesElement.removeStyleClass("large");
-
-	if(messages > 0 && messages <= 9) {
-		if(! this.messagesElement.hasStyleClass("small"))
-			this.messagesElement.addStyleClass("small");
-	} else if(messages >= 10 && messages <= 99) {
-		if(! this.messagesElement.hasStyleClass("medium"))
-			this.messagesElement.addStyleClass("medium");
-	} else if(messages >= 100) {
-		if(! this.messagesElement.hasStyleClass("large"))
-			this.messagesElement.addStyleClass("large");
-	}
+	if(messages > 0) this.messagesElement.style.display = "block";
+	else this.messagesElement.style.display = null;
 
 	this.messagesElement.innerText = (messages > 0 ? messages : "");
 }
@@ -687,20 +680,8 @@ DirectChatPanel.prototype.updateHighlightMessageCount = function(messages) {
 
 	Colloquy.updateMainTitle();
 
-	this.highlightsElement.removeStyleClass("small");
-	this.highlightsElement.removeStyleClass("medium");
-	this.highlightsElement.removeStyleClass("large");
-
-	if(messages > 0 && messages <= 9) {
-		if(! this.highlightsElement.hasStyleClass("small"))
-			this.highlightsElement.addStyleClass("small");
-	} else if(messages >= 10 && messages <= 99) {
-		if(! this.highlightsElement.hasStyleClass("medium"))
-			this.highlightsElement.addStyleClass("medium");
-	} else if(messages >= 100) {
-		if(! this.highlightsElement.hasStyleClass("large"))
-			this.highlightsElement.addStyleClass("large");
-	}
+	if(messages > 0) this.highlightsElement.style.display = "block";
+	else this.highlightsElement.style.display = null;
 
 	this.highlightsElement.innerText = (messages > 0 ? messages : "");
 }
@@ -781,18 +762,24 @@ ChatRoomPanel.prototype.showMembersList = function(event) {
 	if(this.showingMembers)
 		return;
 
+	// pan to the bottom, hides the location bar
+	window.scrollTo(0, 1);
+
 	this.showingMembers = true;
 
 	this.membersElement.style.display = "block";
 
 	var animations = [{element: this.membersElement, end: {top: 0}}];
 
-	Colloquy.animateStyle(animations, (event.shiftKey ? 2500 : 250));
+	Colloquy.animateStyle(animations, (event.shiftKey ? 3000 : 180));
 }
 
 ChatRoomPanel.prototype.hideMembersList = function(event) {
 	if(!this.showingMembers)
 		return;
+
+	// pan to the bottom, hides the location bar
+	window.scrollTo(0, 1);
 
 	this.membersElement.style.display = "block";
 
@@ -804,5 +791,5 @@ ChatRoomPanel.prototype.hideMembersList = function(event) {
 		delete panel.showingMembers;
 	};
 
-	Colloquy.animateStyle(animations, (event.shiftKey ? 2500 : 250), animateStyleFinished);
+	Colloquy.animateStyle(animations, (event.shiftKey ? 3000 : 180), animateStyleFinished);
 }
