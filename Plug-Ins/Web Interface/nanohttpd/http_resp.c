@@ -123,7 +123,7 @@ int http_resp_send_redirect( http_resp_t *me, const char *location ) {
 
 	http_resp_send_headers( me );
 
-	me -> netbuf -> printf( me -> netbuf, "The document can be found here: <a href = \"%s\">%s</a>", location, location );
+	me -> netbuf -> printf( me -> netbuf, "The document can be found here: <a href=\"%s\">%s</a>", location, location );
 
 	return 0;
 }

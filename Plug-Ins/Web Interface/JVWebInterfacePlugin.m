@@ -364,7 +364,11 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	if( ! resp ) return;
 
 	http_req_t *req = [[arguments objectForKey:JVWebInterfaceRequest] pointerValue];
-	if( ! req || ! req->content ) return;
+	if( ! req || ! req->content ) {
+		resp -> status_code = 500;
+		resp -> reason_phrase = "Insufficient Information";
+		return;
+	}
 
 	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
 	if( ! [identifier length] )
@@ -395,10 +399,13 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	}
 
 	if( passwordMatches ) {
-		if( rememberMe )
-			resp -> add_cookie( resp, (char *)[[NSString stringWithFormat:@"identifier=%@; path=/; expires=Wed, 1 Jan 2014 23:59:59 UTC", identifier] UTF8String] );
-		else
-			resp -> add_cookie( resp, (char *)[[NSString stringWithFormat:@"identifier=%@; path=/", identifier] UTF8String] );
+		@synchronized( _clients ) {
+			[_clients setObject:[NSMutableDictionary dictionary] forKey:identifier];
+		}
+
+		if( rememberMe ) resp -> add_cookie( resp, (char *)[[NSString stringWithFormat:@"identifier=%@; path=/; expires=Wed, 1 Jan 2014 23:59:59 UTC", identifier] UTF8String] );
+		else resp -> add_cookie( resp, (char *)[[NSString stringWithFormat:@"identifier=%@; path=/", identifier] UTF8String] );
+
 		resp -> content_type = "text/plain";
 		resp -> write( resp, "authenticated", 13 );
 	}
@@ -408,21 +415,36 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	http_resp_t *resp = [[arguments objectForKey:JVWebInterfaceResponse] pointerValue];
 	if( ! resp ) return;
 
-	NSMutableDictionary *info = [NSMutableDictionary dictionary];
 	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
-	if( ! identifier ) return;
+	if( ! identifier ) {
+		resp -> status_code = 403;
+		resp -> reason_phrase = "Access Forbidden";
+		return;
+	}
 
-	NSXMLDocument *doc = [NSXMLDocument documentWithRootElement:[NSXMLElement elementWithName:@"queue"]];
-	[info setObject:doc forKey:@"activityQueue"];
+	@synchronized( _clients ) {
+		NSMutableDictionary *info = [_clients objectForKey:identifier];
+		if( ! info ) {
+			resp -> status_code = 403;
+			resp -> reason_phrase = "Access Forbidden";
+			return;
+		}
 
-	NSMutableDictionary *styles = [NSMutableDictionary dictionary];
-	[info setObject:styles forKey:@"styles"];
+		// reset everything
+		[info removeAllObjects];
 
-	NSString *overrideStyle = [arguments objectForKey:JVWebInterfaceOverrideStyle];
-	if( [overrideStyle length] )
-		[info setObject:overrideStyle forKey:@"overrideStyle"];
+		NSXMLDocument *doc = [NSXMLDocument documentWithRootElement:[NSXMLElement elementWithName:@"queue"]];
+		[info setObject:doc forKey:@"activityQueue"];
+	
+		NSMutableDictionary *styles = [NSMutableDictionary dictionary];
+		[info setObject:styles forKey:@"styles"];
+	
+		NSString *overrideStyle = [arguments objectForKey:JVWebInterfaceOverrideStyle];
+		if( [overrideStyle length] )
+			[info setObject:overrideStyle forKey:@"overrideStyle"];
+	}
 
-	doc = [NSXMLDocument documentWithRootElement:[NSXMLElement elementWithName:@"setup"]];
+	NSXMLDocument *doc = [NSXMLDocument documentWithRootElement:[NSXMLElement elementWithName:@"setup"]];
 	NSXMLElement *node = [NSXMLElement elementWithName:@"panels"];
 	[[doc rootElement] addChild:node];
 
@@ -452,10 +474,6 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 		}
 	}
 
-	@synchronized( _clients ) {
-		[_clients setObject:info forKey:identifier];
-	}
-
 	resp -> content_type = "text/xml";
 
 	NSData *xml = [doc XMLData];
@@ -471,7 +489,11 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 
 	@synchronized( _clients ) {
 		NSDictionary *info = [_clients objectForKey:identifier];
-		if( ! info ) return;
+		if( ! info ) {
+			resp -> status_code = 403;
+			resp -> reason_phrase = "Access Forbidden";
+			return;
+		}
 
 		JVDirectChatPanel *panel = [self panelForIdentifier:[arguments objectForKey:@"panel"]];
 
@@ -502,7 +524,11 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	if( ! resp ) return;
 
 	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
-	if( ! identifier ) return;
+	if( ! identifier ) {
+		resp -> status_code = 403;
+		resp -> reason_phrase = "Access Forbidden";
+		return;
+	}
 
 	@synchronized( _clients ) {
 		[_clients removeObjectForKey:identifier];
@@ -514,7 +540,20 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	if( ! resp ) return;
 
 	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
-	if( ! identifier ) return;
+	if( ! identifier ) {
+		resp -> status_code = 403;
+		resp -> reason_phrase = "Access Forbidden";
+		return;
+	}
+
+	@synchronized( _clients ) {
+		NSDictionary *info = [_clients objectForKey:identifier];
+		if( ! info ) {
+			resp -> status_code = 403;
+			resp -> reason_phrase = "Access Forbidden";
+			return;
+		}
+	}
 
 	JVDirectChatPanel *panel = [self panelForIdentifier:[arguments objectForKey:@"panel"]];
 
@@ -559,11 +598,19 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	if( ! resp ) return;
 
 	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
-	if( ! identifier ) return;
+	if( ! identifier ) {
+		resp -> status_code = 403;
+		resp -> reason_phrase = "Access Forbidden";
+		return;
+	}
 
 	@synchronized( _clients ) {
 		NSDictionary *info = [_clients objectForKey:identifier];
-		if( ! info ) return;
+		if( ! info ) {
+			resp -> status_code = 403;
+			resp -> reason_phrase = "Access Forbidden";
+			return;
+		}
 
 		NSXMLDocument *doc = [info objectForKey:@"activityQueue"];
 		if( ! doc ) return;
