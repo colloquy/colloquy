@@ -5,8 +5,7 @@
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta name="viewport" content="width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<link rel="icon" href="smallIcon.png" type="image/png" />
-	<script type="text/ecmascript" src="prototype.js" encoding="utf-8"></script>
-	<style>
+	<style type="text/css">
 	body {
 		text-align: center;
 		font-size: 14px;
@@ -95,41 +94,45 @@
 	}
 
 	function autologin() {
-		new Ajax.Request( "/command/login", {
-			method: "get",
-			onSuccess: function( transport ) {
-				if (transport.responseText.match(/authenticated/))
-					redirect();
-			},
-			onException: function( transport, exception ) {
-				throw exception;
-			}
-		} );
+		var request = new XMLHttpRequest();
+
+		request.onreadystatechange = function() {
+			if(request.readyState != 4 || request.status < 200 || request.status >= 300)
+				return;
+			redirect();
+		};
+
+		request.open("get", "/command/login", true);
+		request.send();
 	}
 
 	function login(event) {
 		event.preventDefault();
 
-		var password = $("password").value;
+		var password = document.getElementById("password").value;
 
 		var loginData = "p=" + password;
-		if($("remember").checked)
+		if(document.getElementById("remember").checked)
 			loginData += "&r=1";
 
-		new Ajax.Request( "/command/login", {
-			method: "post",
-			postBody: loginData,
-			onSuccess: function( transport ) {
-				redirect();
-			},
-			onFailure: function( transport ) {
-				$("login").style.backgroundColor = "red";
-				$("login").style.borderColor = "red";
-			},
-			onException: function( transport, exception ) {
-				throw exception;
+		var request = new XMLHttpRequest();
+
+		request.onreadystatechange = function() {
+			if(request.readyState != 4)
+				return;
+
+			if(request.status < 200 || request.status >= 300) {
+				var loginElement = document.getElementById("login");
+				loginElement.style.backgroundColor = "red";
+				loginElement.style.borderColor = "red";
+				return;
 			}
-		} );
+
+			redirect();
+		};
+
+		request.open("post", "/command/login", true);
+		request.send(loginData);
 
 		return false;
 	}
