@@ -364,7 +364,7 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	if( ! resp ) return;
 
 	http_req_t *req = [[arguments objectForKey:JVWebInterfaceRequest] pointerValue];
-	if( ! req ) return;
+	if( ! req || ! req->content ) return;
 
 	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
 	if( ! [identifier length] )
