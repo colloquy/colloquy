@@ -271,8 +271,15 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	NSString *port = [[NSUserDefaults standardUserDefaults] stringForKey:@"WebInterfacePort"];
 
 	_httpServer = http_server_new( NULL, ( port ? [port UTF8String] : "6667" ) );
+
+	char realDocumentRoot[1024];
+	if( ! realpath( [[[NSBundle bundleForClass:[self class]] resourcePath] fileSystemRepresentation], realDocumentRoot ) ) {
+		_httpServer -> delete( _httpServer );
+		return;
+	}
+
+	_httpServer -> document_root = strdup( realDocumentRoot );
 	_httpServer -> context = self;
-	_httpServer -> document_root = strdup( [[[NSBundle bundleForClass:[self class]] resourcePath] fileSystemRepresentation] );
 
 	_httpServer -> add_url( _httpServer, "^/resources/", processResources );
 	_httpServer -> add_url( _httpServer, "^/styles/", processStyles );

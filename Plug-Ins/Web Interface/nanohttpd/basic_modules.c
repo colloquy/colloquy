@@ -46,9 +46,14 @@ void mod_dir( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
 	snprintf( filename, 1024, "%s%s", server -> document_root, req -> file_name );
 
 	char real[1024];
-	realpath( filename, real );
+	if( ! realpath( filename, real ) ) {
+		resp -> status_code = 403;
+		resp -> reason_phrase = "Access Forbidden";
+		resp -> printf( resp, "403: Access Forbidden" );
+		return;
+	}
 
-	if( strlen( real ) < strlen( server -> document_root ) ) {
+	if( strstr( server -> document_root, real ) != server -> document_root ) {
 		resp -> status_code = 403;
 		resp -> reason_phrase = "Access Forbidden";
 		resp -> printf( resp, "403: Access Forbidden" );
@@ -97,9 +102,14 @@ void mod_file( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
 	snprintf( filename, 1024, "%s%s", server -> document_root, req -> file_name );
 
 	char real[1024];
-	realpath( filename, real );
+	if( ! realpath( filename, real ) ) {
+		resp -> status_code = 403;
+		resp -> reason_phrase = "Access Forbidden";
+		resp -> printf( resp, "403: Access Forbidden" );
+		return;
+	}
 
-	if( strlen( real ) < strlen( server -> document_root ) ) {
+	if( strstr( real, server -> document_root ) != real ) {
 		resp -> status_code = 403;
 		resp -> reason_phrase = "Access Forbidden";
 		resp -> printf( resp, "403: Access Forbidden" );
