@@ -61,6 +61,7 @@ char *http_req_get_cookie( http_req_t *me, const char *name ) {
 			char *key = strsep( &buf, "=;" );
 			if( *key != '\0' ) {
 				char *value = strsep( &buf, ";" );
+				while( *key == ' ' ) key++;
 				if( ! strcmp( name, key ) ) {
 					free( tmp );
 					return ( value ? strdup( value ) : NULL );

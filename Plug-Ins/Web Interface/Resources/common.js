@@ -425,6 +425,9 @@ function setup() {
 			if( activityCheckInterval ) clearInterval( activityCheckInterval );
 			activityCheckInterval = setInterval( ChatController.checkActivity, currentActivityCheckInterval );
 		},
+		onFailure: function( transport ) {
+			location.href = "/";
+		},
 		onException: function( transport, exception ) {
 			throw exception;
 		}

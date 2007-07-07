@@ -86,12 +86,25 @@
 	new Image().src = "iphone/images/blueButtonPressed.png";
 
 	if (document.cookie.match(/identifier/))
-		redirect();
+		autologin();
 
 	function redirect() {
 		if (navigator.userAgent.match(/iPhone/i))
 			location.href = "/iphone/";
 		else location.href = "/chat.html";
+	}
+
+	function autologin() {
+		new Ajax.Request( "/command/login", {
+			method: "get",
+			onSuccess: function( transport ) {
+				if (transport.responseText.match(/authenticated/))
+					redirect();
+			},
+			onException: function( transport, exception ) {
+				throw exception;
+			}
+		} );
 	}
 
 	function login(event) {
@@ -107,16 +120,11 @@
 			method: "post",
 			postBody: loginData,
 			onSuccess: function( transport ) {
-				if (transport.responseText.match(/authenticated/)) {
-					redirect();
-				} else {
-					$("login").style.backgroundColor = "red";
-					$("login").style.borderColor = "red";
-				}
+				redirect();
 			},
-			onError: function( transport ) {
-				$("login").style.backgroundColor = "orange";
-				$("login").style.borderColor = "orange";
+			onFailure: function( transport ) {
+				$("login").style.backgroundColor = "red";
+				$("login").style.borderColor = "red";
 			},
 			onException: function( transport, exception ) {
 				throw exception;

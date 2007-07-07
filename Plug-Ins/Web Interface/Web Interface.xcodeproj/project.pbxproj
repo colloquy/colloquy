@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C2507790C40040A00E8B668 /* libssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C2507780C40040A00E8B668 /* libssl.dylib */; };
 		1C3458F20905FC4F00AC2C16 /* base.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C3458F10905FC4800AC2C16 /* base.css */; };
 		1C36998308FF75A200F34892 /* JVWebInterfacePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C36998208FF75A200F34892 /* JVWebInterfacePlugin.m */; };
 		1C3699BC08FF768900F34892 /* basic_modules.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C3699AF08FF768900F34892 /* basic_modules.c */; };
@@ -49,6 +50,7 @@
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		1C2507780C40040A00E8B668 /* libssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.dylib; path = /usr/lib/libssl.dylib; sourceTree = "<absolute>"; };
 		1C3458F10905FC4800AC2C16 /* base.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = base.css; sourceTree = "<group>"; };
 		1C36998108FF75A200F34892 /* JVWebInterfacePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JVWebInterfacePlugin.h; sourceTree = "<group>"; };
 		1C36998208FF75A200F34892 /* JVWebInterfacePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JVWebInterfacePlugin.m; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */,
+				1C2507790C40040A00E8B668 /* libssl.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,6 +178,7 @@
 			isa = PBXGroup;
 			children = (
 				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
+				1C2507780C40040A00E8B668 /* libssl.dylib */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";

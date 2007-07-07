@@ -42,8 +42,13 @@ Colloquy.loaded = function(event)
 	var request = new XMLHttpRequest();
 
 	request.onreadystatechange = function() {
-		if(request.readyState != 4 || request.status < 200 || request.status >= 300)
+		if(request.readyState != 4)
 			return;
+
+		if(request.status < 200 || request.status >= 300) {
+			location.href = "/";
+			return;
+		}
 
 		var xml = request.responseXML;
 		var children = xml.documentElement.getElementsByTagName("panels").item(0).childNodes;

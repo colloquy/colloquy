@@ -1,6 +1,7 @@
 #import "JVWebInterfacePlugin.h"
 
 #import <WebKit/WebKit.h>
+#include <openssl/sha.h>
 
 #import "JVChatController.h"
 #import "JVChatEvent.h"
@@ -13,6 +14,7 @@
 #import "JVStyleView.h"
 #import "MVChatConnection.h"
 #import "NSStringAdditions.h"
+#import "NSDataAdditions.h"
 #import "nanohttpd.h"
 
 static NSString *JVWebInterfaceRequest = @"JVWebInterfaceRequest";
@@ -55,11 +57,11 @@ static void processCommand( http_req_t *req, http_resp_t *resp, http_server_t *s
 	if( [command hasPrefix:@"/command/"] )
 		command = [command substringFromIndex:9];
 
-	char *ident = req -> get_cookie( req, "identifier" );
-	NSString *identifier = ( ident ? [NSString stringWithUTF8String:ident] : nil );
-	if( ident ) free( ident );
+	char *client = req -> get_cookie( req, "client" );
+	NSString *clientString = ( client ? [NSString stringWithUTF8String:client] : nil );
+	if( client ) free( client );
 
-	if( identifier ) [arguments setObject:identifier forKey:JVWebInterfaceClientIdentifier];
+	if( clientString ) [arguments setObject:clientString forKey:JVWebInterfaceClientIdentifier];
 
 	SEL selector = NSSelectorFromString( [command stringByAppendingString:@"Command:"] );
 	if( [self respondsToSelector:selector] ) {
@@ -357,6 +359,31 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	return [NSString stringWithFormat:shell, [panel description], header, @"/resources", emoticonStyleSheet, mainStyleSheet, variant, baseLocation, bodyTemplate];
 }
 
+- (NSData *) passwordHash {
+	NSString *password = [[NSUserDefaults standardUserDefaults] stringForKey:@"WebInterfacePassword"];
+	NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
+
+	unsigned char hashTemp[SHA_DIGEST_LENGTH];
+	unsigned char *passwordHash = SHA1([passwordData bytes], [passwordData length], hashTemp);
+
+	return [NSData dataWithBytes:passwordHash length:SHA_DIGEST_LENGTH];
+}
+
+- (BOOL) isRememberedUser:(http_req_t *) req {
+	BOOL passwordMatches = NO;
+
+	char *identifierHash = req -> get_cookie( req, "identifier" );
+	if( identifierHash ) {
+		NSData *passwordHash = [self passwordHash];
+		NSData *identifierData = [NSData dataWithBase64EncodedString:[NSString stringWithUTF8String:identifierHash]];
+		free( identifierHash );
+
+		passwordMatches = [identifierData isEqual:passwordHash];
+	}
+
+	return passwordMatches;
+}
+
 #pragma mark -
 
 - (void) loginCommand:(NSDictionary *) arguments {
@@ -364,50 +391,56 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	if( ! resp ) return;
 
 	http_req_t *req = [[arguments objectForKey:JVWebInterfaceRequest] pointerValue];
-	if( ! req || ! req->content ) {
+	if( ! req ) {
 		resp -> status_code = 500;
 		resp -> reason_phrase = "Insufficient Information";
 		return;
 	}
 
-	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
-	if( ! [identifier length] )
-		identifier = [NSString locallyUniqueString];
+	NSString *client = [arguments objectForKey:JVWebInterfaceClientIdentifier];
+	if( ! [client length] )
+		client = [NSString locallyUniqueString];
 
-	unsigned int contentLength = req->content_length;
-	NSString *content = [[NSString alloc] initWithBytes:req->content length:contentLength encoding:NSASCIIStringEncoding];
-
-	NSArray *fields = [content componentsSeparatedByString:@"&"];
-	NSEnumerator *enumerator = [fields objectEnumerator];
-	NSString *field = nil;
-
-	BOOL passwordMatches = NO;
+	BOOL passwordMatches = [self isRememberedUser:req];
 	BOOL rememberMe = NO;
 
-	NSString *password = [[NSUserDefaults standardUserDefaults] stringForKey:@"WebInterfacePassword"];
+	if( ! passwordMatches && req->content ) {
+		NSString *password = [[NSUserDefaults standardUserDefaults] stringForKey:@"WebInterfacePassword"];
 
-	while( ( field = [enumerator nextObject] ) ) {
-		NSArray *parts = [field componentsSeparatedByString:@"="];
-		if( [parts count] == 2 ) {
-			NSString *key = [parts objectAtIndex:0];
-			NSString *value = [parts objectAtIndex:1];
-			if( [key isEqualToString:@"p"] )
-				passwordMatches = [value isEqualToString:password];
-			else if( [key isEqualToString:@"r"] )
-				rememberMe = YES;
+		unsigned int contentLength = req->content_length;
+		NSString *content = [[NSString alloc] initWithBytes:req->content length:contentLength encoding:NSASCIIStringEncoding];
+
+		NSArray *fields = [content componentsSeparatedByString:@"&"];
+		NSEnumerator *enumerator = [fields objectEnumerator];
+		NSString *field = nil;
+
+		while( ( field = [enumerator nextObject] ) ) {
+			NSArray *parts = [field componentsSeparatedByString:@"="];
+			if( [parts count] == 2 ) {
+				NSString *key = [parts objectAtIndex:0];
+				NSString *value = [parts objectAtIndex:1];
+				if( [key isEqualToString:@"p"] )
+					passwordMatches = [value isEqualToString:password];
+				else if( [key isEqualToString:@"r"] )
+					rememberMe = YES;
+			}
 		}
 	}
 
 	if( passwordMatches ) {
 		@synchronized( _clients ) {
-			[_clients setObject:[NSMutableDictionary dictionary] forKey:identifier];
+			[_clients setObject:[NSMutableDictionary dictionary] forKey:client];
 		}
 
-		if( rememberMe ) resp -> add_cookie( resp, (char *)[[NSString stringWithFormat:@"identifier=%@; path=/; expires=Wed, 1 Jan 2014 23:59:59 UTC", identifier] UTF8String] );
-		else resp -> add_cookie( resp, (char *)[[NSString stringWithFormat:@"identifier=%@; path=/", identifier] UTF8String] );
+		if( rememberMe ) resp -> add_cookie( resp, (char *)[[NSString stringWithFormat:@"identifier=%@; path=/; expires=Wed, 1 Jan 2014 23:59:59 UTC", [[self passwordHash] base64Encoding]] UTF8String] );
+		resp -> add_cookie( resp, (char *)[[NSString stringWithFormat:@"client=%@; path=/", client] UTF8String] );
+	} else {
+		// remove all of the cookies if the login fails
+		resp -> add_cookie( resp, "identifier=; path=/; expires=Thu, 1 Jan 1970 23:59:59 UTC" );
+		resp -> add_cookie( resp, "client=; path=/; expires=Thu, 1 Jan 1970 23:59:59 UTC" );
 
-		resp -> content_type = "text/plain";
-		resp -> write( resp, "authenticated", 13 );
+		resp -> status_code = 403;
+		resp -> reason_phrase = "Access Forbidden";
 	}
 }
 
@@ -415,19 +448,31 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	http_resp_t *resp = [[arguments objectForKey:JVWebInterfaceResponse] pointerValue];
 	if( ! resp ) return;
 
-	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
-	if( ! identifier ) {
+	NSString *client = [arguments objectForKey:JVWebInterfaceClientIdentifier];
+	if( ! client ) {
 		resp -> status_code = 403;
 		resp -> reason_phrase = "Access Forbidden";
 		return;
 	}
 
 	@synchronized( _clients ) {
-		NSMutableDictionary *info = [_clients objectForKey:identifier];
+		NSMutableDictionary *info = [_clients objectForKey:client];
 		if( ! info ) {
-			resp -> status_code = 403;
-			resp -> reason_phrase = "Access Forbidden";
-			return;
+			http_req_t *req = [[arguments objectForKey:JVWebInterfaceRequest] pointerValue];
+			if( ! req ) {
+				resp -> status_code = 500;
+				resp -> reason_phrase = "Insufficient Information";
+				return;
+			}
+
+			if( [self isRememberedUser:req] ) {
+				info = [NSMutableDictionary dictionary];
+				[_clients setObject:info forKey:client];
+			} else {
+				resp -> status_code = 403;
+				resp -> reason_phrase = "Access Forbidden";
+				return;
+			}
 		}
 
 		// reset everything
@@ -484,11 +529,15 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	http_resp_t *resp = [[arguments objectForKey:JVWebInterfaceResponse] pointerValue];
 	if( ! resp ) return;
 
-	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
-	if( ! identifier ) return;
+	NSString *client = [arguments objectForKey:JVWebInterfaceClientIdentifier];
+	if( ! client ) {
+		resp -> status_code = 403;
+		resp -> reason_phrase = "Access Forbidden";
+		return;
+	}
 
 	@synchronized( _clients ) {
-		NSDictionary *info = [_clients objectForKey:identifier];
+		NSDictionary *info = [_clients objectForKey:client];
 		if( ! info ) {
 			resp -> status_code = 403;
 			resp -> reason_phrase = "Access Forbidden";
@@ -523,15 +572,15 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	http_resp_t *resp = [[arguments objectForKey:JVWebInterfaceResponse] pointerValue];
 	if( ! resp ) return;
 
-	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
-	if( ! identifier ) {
+	NSString *client = [arguments objectForKey:JVWebInterfaceClientIdentifier];
+	if( ! client ) {
 		resp -> status_code = 403;
 		resp -> reason_phrase = "Access Forbidden";
 		return;
 	}
 
 	@synchronized( _clients ) {
-		[_clients removeObjectForKey:identifier];
+		[_clients removeObjectForKey:client];
 	}
 }
 
@@ -539,15 +588,15 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	http_resp_t *resp = [[arguments objectForKey:JVWebInterfaceResponse] pointerValue];
 	if( ! resp ) return;
 
-	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
-	if( ! identifier ) {
+	NSString *client = [arguments objectForKey:JVWebInterfaceClientIdentifier];
+	if( ! client ) {
 		resp -> status_code = 403;
 		resp -> reason_phrase = "Access Forbidden";
 		return;
 	}
 
 	@synchronized( _clients ) {
-		NSDictionary *info = [_clients objectForKey:identifier];
+		NSDictionary *info = [_clients objectForKey:client];
 		if( ! info ) {
 			resp -> status_code = 403;
 			resp -> reason_phrase = "Access Forbidden";
@@ -597,15 +646,15 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 	http_resp_t *resp = [[arguments objectForKey:JVWebInterfaceResponse] pointerValue];
 	if( ! resp ) return;
 
-	NSString *identifier = [arguments objectForKey:JVWebInterfaceClientIdentifier];
-	if( ! identifier ) {
+	NSString *client = [arguments objectForKey:JVWebInterfaceClientIdentifier];
+	if( ! client ) {
 		resp -> status_code = 403;
 		resp -> reason_phrase = "Access Forbidden";
 		return;
 	}
 
 	@synchronized( _clients ) {
-		NSDictionary *info = [_clients objectForKey:identifier];
+		NSDictionary *info = [_clients objectForKey:client];
 		if( ! info ) {
 			resp -> status_code = 403;
 			resp -> reason_phrase = "Access Forbidden";
