@@ -691,8 +691,8 @@ static int socketStatus( int sock, int timeoutSecs, int timeoutMsecs ) {
 			return;
 		}
 
-		activityLock = [info objectForKey:@"activityLock"];
-		activityQueue = [info objectForKey:@"activityQueue"];
+		activityLock = [[info objectForKey:@"activityLock"] retain];
+		activityQueue = [[info objectForKey:@"activityQueue"] retain];
 
 		if( ! activityLock || ! activityQueue ) {
 			resp -> status_code = 500;
@@ -703,6 +703,8 @@ static int socketStatus( int sock, int timeoutSecs, int timeoutMsecs ) {
 	if( wait && ! [activityLock lockWhenCondition:ActivityQueueFull beforeDate:[NSDate dateWithTimeIntervalSinceNow:60.]] ) {
 		resp -> status_code = 204;
 		resp -> reason_phrase = "No Content";
+		[activityLock release];
+		[activityQueue release];
 		return;
 	}
 
@@ -731,6 +733,9 @@ static int socketStatus( int sock, int timeoutSecs, int timeoutMsecs ) {
 		if( success && [activityLock tryLockWhenCondition:ActivityQueueFull] )
 			[activityLock unlockWithCondition:ActivityQueueEmpty];
 	}
+
+	[activityLock release];
+	[activityQueue release];
 }
 
 #pragma mark -
