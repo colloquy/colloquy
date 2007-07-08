@@ -829,8 +829,6 @@ static int socketStatus( int sock, int timeoutSecs, int timeoutMsecs ) {
 			NSConditionLock *activityLock = [info objectForKey:@"activityLock"];
 			if( ! activityQueue || ! activityLock ) continue;
 
-			NSLog(@"append %d", [activityLock condition]);
-
 			@synchronized( activityQueue ) {
 				[[activityQueue rootElement] addChild:element];
 			}
