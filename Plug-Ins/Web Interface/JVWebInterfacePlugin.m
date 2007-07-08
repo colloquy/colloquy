@@ -23,6 +23,9 @@ static NSString *JVWebInterfaceResponse = @"JVWebInterfaceResponse";
 static NSString *JVWebInterfaceClientIdentifier = @"JVWebInterfaceClientIdentifier";
 static NSString *JVWebInterfaceOverrideStyle = @"overrideStyle";
 
+#define ActivityQueueFull 1
+#define ActivityQueueEmpty 2
+
 static void processCommand( http_req_t *req, http_resp_t *resp, http_server_t *server ) {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
@@ -224,6 +227,24 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 		passThruFile( path, req, resp, server );
 
 	[pool release];
+}
+
+static int socketStatus( int sock, int timeoutSecs, int timeoutMsecs ) { 
+	int selectResult = 0;
+	fd_set checkSet;
+	struct timeval timeout;
+
+	FD_ZERO( &checkSet );
+	FD_SET( sock, &checkSet );
+
+	timeout.tv_sec = timeoutSecs;
+	timeout.tv_usec = timeoutMsecs;
+
+	if( ( selectResult = select( sock + 1, &checkSet, 0, 0, &timeout ) ) < 0 )
+		return -1;
+	if( ! selectResult )
+		return 0;
+	return 1;
 }
 
 #pragma mark -
@@ -480,7 +501,11 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 
 		NSXMLDocument *doc = [NSXMLDocument documentWithRootElement:[NSXMLElement elementWithName:@"queue"]];
 		[info setObject:doc forKey:@"activityQueue"];
-	
+
+		NSConditionLock *activityLock = [[NSConditionLock alloc] initWithCondition:ActivityQueueEmpty];
+		[info setObject:activityLock forKey:@"activityLock"];
+		[activityLock release];
+
 		NSMutableDictionary *styles = [NSMutableDictionary dictionary];
 		[info setObject:styles forKey:@"styles"];
 	
@@ -653,6 +678,11 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 		return;
 	}
 
+	BOOL wait = ( [arguments objectForKey:@"wait"] ? YES : NO );
+
+	NSConditionLock *activityLock = nil;
+	NSXMLDocument *activityQueue = nil;
+
 	@synchronized( _clients ) {
 		NSDictionary *info = [_clients objectForKey:client];
 		if( ! info ) {
@@ -661,15 +691,45 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 			return;
 		}
 
-		NSXMLDocument *doc = [info objectForKey:@"activityQueue"];
-		if( ! doc ) return;
+		activityLock = [info objectForKey:@"activityLock"];
+		activityQueue = [info objectForKey:@"activityQueue"];
 
-		if( [[doc rootElement] childCount] ) {
-			NSData *xml = [doc XMLData];
-			resp -> content_type = "text/xml";
-			resp -> write( resp, (char *)[xml bytes], [xml length] );
-			[[doc rootElement] setChildren:nil]; // clear the queue
+		if( ! activityLock || ! activityQueue ) {
+			resp -> status_code = 500;
+			resp -> reason_phrase = "Internal Error";
 		}
+	}
+
+	if( wait && ! [activityLock lockWhenCondition:ActivityQueueFull beforeDate:[NSDate dateWithTimeIntervalSinceNow:60.]] ) {
+		resp -> status_code = 204;
+		resp -> reason_phrase = "No Content";
+		return;
+	}
+
+	BOOL success = NO;
+
+	@synchronized( activityQueue ) {
+		if( [[activityQueue rootElement] childCount] ) {
+			NSData *xml = [activityQueue XMLData];
+
+			resp -> content_type = "text/xml";
+			success = ( (unsigned) resp -> write( resp, (char *)[xml bytes], [xml length] ) == [xml length] );
+
+			if( success && socketStatus( resp -> sock, 0, 1) )
+				success = NO;
+
+			if( success ) [[activityQueue rootElement] setChildren:nil]; // clear the queue
+		} else {
+			resp -> status_code = 204;
+			resp -> reason_phrase = "No Content";
+		}
+	}
+
+	if( wait ) {
+		[activityLock unlockWithCondition:( success ? ActivityQueueEmpty : ActivityQueueFull )];
+	} else {
+		if( success && [activityLock tryLockWhenCondition:ActivityQueueFull] )
+			[activityLock unlockWithCondition:ActivityQueueEmpty];
 	}
 }
 
@@ -683,12 +743,18 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 		NSDictionary *info = nil;
 
 		while( ( info = [enumerator nextObject] ) ) {
-			NSXMLDocument *doc = [info objectForKey:@"activityQueue"];
-			if( ! doc ) continue;
+			NSXMLDocument *activityQueue = [info objectForKey:@"activityQueue"];
+			NSConditionLock *activityLock = [info objectForKey:@"activityLock"];
+			if( ! activityQueue || ! activityLock ) continue;
 
-			NSXMLElement *copy = [element copyWithZone:[self zone]];
-			[[doc rootElement] addChild:copy];
-			[copy release];
+			@synchronized( activityQueue ) {
+				NSXMLElement *copy = [element copyWithZone:[self zone]];
+				[[activityQueue rootElement] addChild:copy];
+				[copy release];
+			}
+
+			if( [activityLock tryLockWhenCondition:ActivityQueueEmpty] )
+				[activityLock unlockWithCondition:ActivityQueueFull];
 		}
 	}
 }
@@ -754,8 +820,18 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 			[element addChild:body];
 			[body release];
 
-			NSXMLDocument *doc = [info objectForKey:@"activityQueue"];
-			[[doc rootElement] addChild:element];
+			NSXMLDocument *activityQueue = [info objectForKey:@"activityQueue"];
+			NSConditionLock *activityLock = [info objectForKey:@"activityLock"];
+			if( ! activityQueue || ! activityLock ) continue;
+
+			NSLog(@"append %d", [activityLock condition]);
+
+			@synchronized( activityQueue ) {
+				[[activityQueue rootElement] addChild:element];
+			}
+
+			if( [activityLock tryLockWhenCondition:ActivityQueueEmpty] )
+				[activityLock unlockWithCondition:ActivityQueueFull];
 		}
 
 		[styleParams release];
@@ -801,8 +877,16 @@ static void processEmoticons( http_req_t *req, http_resp_t *resp, http_server_t 
 			[element addChild:body];
 			[body release];
 
-			NSXMLDocument *doc = [info objectForKey:@"activityQueue"];
-			[[doc rootElement] addChild:element];
+			NSXMLDocument *activityQueue = [info objectForKey:@"activityQueue"];
+			NSConditionLock *activityLock = [info objectForKey:@"activityLock"];
+			if( ! activityQueue || ! activityLock ) continue;
+
+			@synchronized( activityQueue ) {
+				[[activityQueue rootElement] addChild:element];
+			}
+
+			if( [activityLock tryLockWhenCondition:ActivityQueueEmpty] )
+				[activityLock unlockWithCondition:ActivityQueueFull];
 		}
 
 		[styleParams release];

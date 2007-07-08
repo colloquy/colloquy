@@ -58,8 +58,10 @@ Colloquy.loaded = function(event)
 
 		ChatController.checkActivity();
 
-		if(activityCheckInterval) clearInterval(activityCheckInterval);
-		activityCheckInterval = setInterval(ChatController.checkActivity, currentActivityCheckInterval);
+		if( ! UserDefaults.longPollActivityChecking ) {
+			if(activityCheckInterval) clearInterval(activityCheckInterval);
+			activityCheckInterval = setInterval(ChatController.checkActivity, currentActivityCheckInterval);
+		}
 	};
 
 	request.open("get", "/command/setup?overrideStyle=info.colloquy.style.xml&uinque=" + Math.round(Math.random() * 1000000), true);
@@ -253,7 +255,8 @@ var UserDefaults = {
 	minimumActivityCheckInterval: 2000,
 	maximumActivityCheckInterval: 10000,
 	activityCheckIntervalIncrement: 200,
-	scrollBackMessageLimit: 200
+	scrollBackMessageLimit: 200,
+	longPollActivityChecking: true
 };
 
 var activityCheckInterval = null;
@@ -291,10 +294,17 @@ ChatController.checkActivity = function() {
 			return;
 
 		if(request.status < 200 || request.status >= 300) {
-			if(activityCheckInterval) clearInterval(activityCheckInterval);
-			activityCheckInterval = setInterval(ChatController.checkActivity, UserDefaults.minimumActivityCheckInterval);
+			if( UserDefaults.longPollActivityChecking ) {
+				setTimeout(ChatController.checkActivity, 1000); // check in a bit, not right away
+			} else {
+				if(activityCheckInterval) clearInterval(activityCheckInterval);
+				activityCheckInterval = setInterval(ChatController.checkActivity, UserDefaults.minimumActivityCheckInterval);
+			}
 			return;
 		}
+
+		if( UserDefaults.longPollActivityChecking )
+			setTimeout(ChatController.checkActivity, 0); // check again right away
 
 		var updateIntervalDelta = 0;
 
@@ -335,20 +345,22 @@ ChatController.checkActivity = function() {
 			}
 		}
 
-		if(! updateIntervalDelta) updateIntervalDelta = UserDefaults.activityCheckIntervalIncrement;
+		if( ! UserDefaults.longPollActivityChecking ) {
+			if(! updateIntervalDelta) updateIntervalDelta = UserDefaults.activityCheckIntervalIncrement;
 
-		var newActivityCheckInterval = Math.min((currentActivityCheckInterval + updateIntervalDelta), UserDefaults.maximumActivityCheckInterval);
-		newActivityCheckInterval = Math.max(newActivityCheckInterval, UserDefaults.minimumActivityCheckInterval);
+			var newActivityCheckInterval = Math.min((currentActivityCheckInterval + updateIntervalDelta), UserDefaults.maximumActivityCheckInterval);
+			newActivityCheckInterval = Math.max(newActivityCheckInterval, UserDefaults.minimumActivityCheckInterval);
 
-		if(newActivityCheckInterval != currentActivityCheckInterval) {
-			currentActivityCheckInterval = newActivityCheckInterval;
+			if(newActivityCheckInterval != currentActivityCheckInterval) {
+				currentActivityCheckInterval = newActivityCheckInterval;
 
-			if(activityCheckInterval) clearInterval(activityCheckInterval);
-			activityCheckInterval = setInterval(ChatController.checkActivity, currentActivityCheckInterval);
+				if(activityCheckInterval) clearInterval(activityCheckInterval);
+				activityCheckInterval = setInterval(ChatController.checkActivity, currentActivityCheckInterval);
+			}
 		}
 	};
 
-	request.open("get", "/command/checkActivity?order=" + Colloquy.nextOrderIdentifier++ + "&uinque=" + Math.round(Math.random() * 1000000), true);
+	request.open("get", "/command/checkActivity?order=" + Colloquy.nextOrderIdentifier++ + "&uinque=" + (Math.round(Math.random() * 1000000) + ( UserDefaults.longPollActivityChecking ? "&wait" : "" ) ), true);
 	request.send();
 };
 
@@ -549,8 +561,10 @@ DirectChatPanel.prototype.sendMessage = function(html) {
 			return;
 		}
 
-		if(activityCheckInterval) clearInterval(activityCheckInterval);
-		activityCheckInterval = setInterval(ChatController.checkActivity, 250);
+		if( ! UserDefaults.longPollActivityChecking ) {
+			if(activityCheckInterval) clearInterval(activityCheckInterval);
+			activityCheckInterval = setInterval(ChatController.checkActivity, 250);
+		}
 	};
 
 	request.open("post", "/command/send?panel=" + this.id + "&order=" + Colloquy.nextOrderIdentifier++ + "&uinque=" + Math.round(Math.random() * 1000000), true);
