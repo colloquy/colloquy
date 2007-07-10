@@ -15,6 +15,11 @@ Element.prototype.hasStyleClass = function(className)
     return this.className.indexOf(className) !== -1;
 }
 
+String.prototype.escapeHTML = function()
+{
+    return this.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 Colloquy = {};
 
 Colloquy.nextOrderIdentifier = 1;
@@ -515,7 +520,7 @@ function DirectChatPanel(node) {
 extendClass(DirectChatPanel, Panel);
 
 DirectChatPanel.prototype.send = function() {
-	this.sendMessage(this.panelInputElement.value);
+	this.sendMessage(this.panelInputElement.value.escapeHTML());
 
 	this.panelInputElement.focus();
 
