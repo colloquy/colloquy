@@ -564,24 +564,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 			return;
 		}
 
-		id old = _domDocument;
-		_domDocument = (DOMHTMLDocument *)[[frame DOMDocument] retain];
-		[old release];
-
-		old = _body;
-		_body = (DOMHTMLElement *)[[_domDocument getElementById:@"contents"] retain];
-		if( ! _body ) _body = (DOMHTMLElement *)[[_domDocument body] retain];
-		[old release];
-
-		[self performSelector:@selector( _checkForTransparantStyle ) withObject:nil afterDelay:0.];
-
-		[self setPreferencesIdentifier:[[self style] identifier]];
-
-		[self clearScrollbarMarks];
-
-		if( [[self window] isFlushWindowDisabled] )
-			[[self window] enableFlushWindow];
-
 		[self performSelector:@selector( _contentFrameIsReady ) withObject:nil afterDelay:0.];
 	}
 }
@@ -695,6 +677,26 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) _contentFrameIsReady {
+	WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
+
+	id old = _domDocument;
+	_domDocument = (DOMHTMLDocument *)[[contentFrame DOMDocument] retain];
+	[old release];
+
+	old = _body;
+	_body = (DOMHTMLElement *)[[_domDocument getElementById:@"contents"] retain];
+	if( ! _body ) _body = (DOMHTMLElement *)[[_domDocument body] retain];
+	[old release];
+
+	[self performSelector:@selector( _checkForTransparantStyle ) withObject:nil afterDelay:0.];
+
+	[self setPreferencesIdentifier:[[self style] identifier]];
+
+	[self clearScrollbarMarks];
+
+	if( [[self window] isFlushWindowDisabled] )
+		[[self window] enableFlushWindow];
+
 	_contentFrameReady = YES;
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVStyleViewDidClearNotification object:self];
 	if( _switchingStyles )
