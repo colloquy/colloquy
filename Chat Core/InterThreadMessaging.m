@@ -55,6 +55,7 @@ struct InterThreadMessage
    messages to the target thread. */
 
 static NSMapTable *pThreadMessagePorts = NULL;
+static NSMapTable *pThreadRunLoops = NULL;
 static pthread_mutex_t pGate;
 
 @interface InterThreadManager : NSObject
@@ -70,6 +71,7 @@ createMessagePortForThread (NSThread *thread, NSRunLoop *runLoop)
     assert(nil != thread);
     assert(nil != runLoop);
     assert(NULL != pThreadMessagePorts);
+    assert(NULL != pThreadRunLoops);
 
     pthread_mutex_lock(&pGate);
 
@@ -79,6 +81,7 @@ createMessagePortForThread (NSThread *thread, NSRunLoop *runLoop)
         [port setDelegate:[InterThreadManager class]];
         [port scheduleInRunLoop:runLoop forMode:NSDefaultRunLoopMode];
         NSMapInsertKnownAbsent(pThreadMessagePorts, thread, port);
+        NSMapInsertKnownAbsent(pThreadRunLoops, thread, runLoop);
 
         /* Transfer ownership of this port to the map table. */
         [port release];
@@ -110,7 +113,7 @@ messagePortForThread (NSThread *thread)
 }
 
 static void
-removeMessagePortForThread (NSThread *thread, NSRunLoop *runLoop)
+removeMessagePortForThread (NSThread *thread)
 {
     NSPort *port;
 
@@ -121,7 +124,9 @@ removeMessagePortForThread (NSThread *thread, NSRunLoop *runLoop)
     
     port = (NSPort *) NSMapGet(pThreadMessagePorts, thread);
     if (nil != port) {
+        NSRunLoop *runLoop = NSMapGet(pThreadRunLoops, thread);
         [port removeFromRunLoop:runLoop forMode:NSDefaultRunLoopMode];
+        NSMapRemove(pThreadRunLoops, thread);
         NSMapRemove(pThreadMessagePorts, thread);
     }
 
@@ -147,10 +152,6 @@ removeMessagePortForThread (NSThread *thread, NSRunLoop *runLoop)
 
 
 
-@interface NSThread (SecretStuff)
-- (NSRunLoop *) runLoop;
-@end
-
 @implementation InterThreadManager
 
 + (void) initialize
@@ -162,6 +163,9 @@ removeMessagePortForThread (NSThread *thread, NSRunLoop *runLoop)
         pthread_mutex_init(&pGate, NULL);
 
         pThreadMessagePorts =
+            NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks,
+                             NSObjectMapValueCallBacks, 0);
+        pThreadRunLoops =
             NSCreateMapTable(NSNonRetainedObjectMapKeyCallBacks,
                              NSObjectMapValueCallBacks, 0);
 
@@ -179,10 +183,7 @@ removeMessagePortForThread (NSThread *thread, NSRunLoop *runLoop)
     NSRunLoop *runLoop;
 
     thread = [notification object];
-    runLoop = [thread runLoop];
-    if (nil != runLoop) {
-        removeMessagePortForThread(thread, [thread runLoop]);
-    }
+    removeMessagePortForThread(thread);
 }
 
 + (void) handlePortMessage:(NSPortMessage *)portMessage
