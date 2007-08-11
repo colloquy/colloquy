@@ -82,8 +82,10 @@ static NSString* generateDigest(NSString* password)
     SHA1_CTX ctx;
     unsigned char digest[20];
 
+    NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
+
     SHA1Init(&ctx);
-    SHA1Update(&ctx, (const unsigned char *)[password cString], [password cStringLength]);
+    SHA1Update(&ctx, [passwordData bytes], [passwordData length]);
     SHA1Final(digest, &ctx);
 
     return [NSString stringWithFormat:DFMT,

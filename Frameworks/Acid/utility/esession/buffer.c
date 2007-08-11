@@ -48,14 +48,10 @@
  */
 
 #include "buffer.h"
+#include "base64.h"
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-
-/* Pre-decls */
-char *b64_encode(char *buf, int len);
-int ap_base64decode(char *bufplain, const char *bufcoded);
-int ap_base64decode_len(const char *bufcoded);
 
 /* Initializes the buffer structure. */
 
@@ -211,7 +207,7 @@ buffer_ptr(Buffer *buffer)
 void
 buffer_dump(Buffer *buffer)
 {
-    int i;
+    unsigned int i;
     u_char *ucp = buffer->buf;
 
     for (i = buffer->offset; i < buffer->end; i++) {
@@ -409,7 +405,7 @@ buffer_put_char(Buffer *buffer, int value)
 unsigned char*
 buffer_base64_encode(Buffer *buffer)
 {
-    return b64_encode(buffer->buf + buffer->offset,
+    return (unsigned char *)b64_encode(((char *)buffer->buf) + buffer->offset,
                       buffer->end - buffer->offset);
 }
 
@@ -419,8 +415,8 @@ buffer_base64_encode(Buffer *buffer)
 void
 buffer_init_from_base64(Buffer *buffer, const u_char* b64str)
 {
-    buffer->alloc = ap_base64decode_len(buffer->buf);
+    buffer->alloc = ap_base64decode_len((const char *)buffer->buf);
     buffer->buf = (u_char*)malloc(buffer->alloc);
     buffer->offset = 0;
-    buffer->end = ap_base64decode(buffer->buf, b64str);
+    buffer->end = ap_base64decode((char *)buffer->buf, (const char *)b64str);
 }

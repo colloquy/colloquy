@@ -172,7 +172,7 @@
 	for( unsigned int i = 0; i < [_fields count]; i++) {
 		const NSString *f = [_fields objectAtIndex:i];
 
-		length = strlcat(data, [f cString], maxDataLength);
+		length = strlcat(data, [f UTF8String], maxDataLength);
 		if (i < [_fields count] - 1)
 			length = strlcat(data, "\x01", maxDataLength);
 	}

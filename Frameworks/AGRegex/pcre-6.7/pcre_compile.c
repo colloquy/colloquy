@@ -805,7 +805,7 @@ for (; *ptr != 0; ptr++)
   ptr += 4;
   thisname = ptr;
   while (*ptr != '>') ptr++;
-  if (namelen == ptr - thisname && strncmp(name, thisname, namelen) == 0)
+  if (namelen == ptr - thisname && strncmp((const char *)name, (const char *)thisname, namelen) == 0)
     return count;
   }
 return -1;

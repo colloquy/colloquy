@@ -27,6 +27,7 @@
 #include <assert.h>
 #include "buffer.h"
 #include "esession.h"
+#include "keycache.h"
 
 typedef struct
 {
@@ -58,38 +59,38 @@ static unsigned long _hashkey(ESessionKeyType keytype, const char* keyid)
     else
         buffer_put_cstring(&b, "dsakey");
     b.buf[b.end] = '\0';
-    result = lh_strhash(b.buf);
+    result = lh_strhash((char *)b.buf);
     buffer_free(&b);
     return result;
 }
 
-static unsigned long PUBKEY_hash(const PUBKEY* k)
+static unsigned long PUBKEY_hash(const void* k)
 {
-    return _hashkey(k->keytype, k->id);
+    return _hashkey(((PUBKEY*)k)->keytype, ((PUBKEY*)k)->id);
 }
 
-static int PUBKEY_cmp(const PUBKEY* lhs, const PUBKEY* rhs)
+static int PUBKEY_cmp(const void* lhs, const void* rhs)
 {
     int rc;
-    rc = !(lhs->keytype == rhs->keytype);
-    rc = rc || strcmp(lhs->id, rhs->id);
+    rc = !(((PUBKEY*)lhs)->keytype == ((PUBKEY*)rhs)->keytype);
+    rc = rc || strcmp(((PUBKEY*)lhs)->id, ((PUBKEY*)rhs)->id);
     return rc;
 }
 
-static unsigned long PRIVKEY_hash(const PRIVKEY* k)
+static unsigned long PRIVKEY_hash(const void* k)
 {
-    return _hashkey(k->keytype, k->fingerprint);
+    return _hashkey(((PRIVKEY*)k)->keytype, ((PRIVKEY*)k)->fingerprint);
 }
 
-static int PRIVKEY_cmp(const PRIVKEY* lhs, const PRIVKEY* rhs)
+static int PRIVKEY_cmp(const void* lhs, const void* rhs)
 {
     int rc;
-    rc = !(lhs->keytype == rhs->keytype);
-    rc = rc || strcmp(lhs->fingerprint, rhs->fingerprint);
+    rc = !(((PRIVKEY*)lhs)->keytype == ((PRIVKEY*)rhs)->keytype);
+    rc = rc || strcmp(((PRIVKEY*)lhs)->fingerprint, ((PRIVKEY*)rhs)->fingerprint);
     return rc;
 }
 
-void init_key_caches()
+void init_key_caches(void)
 {
     _public_key_cache = lh_new(PUBKEY_hash, PUBKEY_cmp);
     _private_key_cache = lh_new(PRIVKEY_hash, PRIVKEY_cmp);
@@ -146,10 +147,3 @@ const char* cache_personal_key(ESessionKeyType keytype, EVP_PKEY* pkey,
 
     return newkey->fingerprint;
 }
-
-
-
-
-
-
-

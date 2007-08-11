@@ -377,7 +377,6 @@ NSString* XP_ROSTERPUSH = @"/iq[@type='set']/query[%jabber:iq:roster]";
 - (void)onRosterResult:(NSNotification *)n
 {
     // XXX: There should probably be some code for handling errors here.
-    //NSLog(@"Roster update result: %@", n);
 }
 
 @end

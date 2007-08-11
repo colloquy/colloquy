@@ -23,14 +23,12 @@
 //============================================================================
 
 #include "esession.h"
+#include "keycache.h"
+#include "base64.h"
 #include <openssl/ssl.h>
 #include <assert.h>
 #include "buffer.h"
 #include <string.h>
-
-/* Pre-decls */
-char* b64_encode(char* buf, int len);
-void b64_decode(const char* data, char* result, int* result_len);
 
 /* 
  * Internal module variables 
@@ -46,15 +44,6 @@ ESessionChangedKeyCallback* _changedkey_cb;
 void*                       _changedkey_cb_arg;
 ESessionGetPassCallback*    _getpass_cb;
 void*                       _getpass_cb_arg;
-
-/* Public key cache -- see keycache.c */
-void init_key_caches();
-const char* cache_public_key(const char* id, ESessionKeyType keytype, 
-                             const char* fingerprint);
-const char* find_public_fingerprint(const char* id, 
-                                    ESessionKeyType keytype);
-const char* cache_personal_key(ESessionKeyType keytype, EVP_PKEY* pkey,
-                               char* fingerprint, char* public_key);
 
 /* MODP groups, as defined in RFC 3526 */
 static const char* MODP_5 = "FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245E485B576625E7EC6F44C42E9A637ED6B0BFF5CB6F406B7EDEE386BFB5A899FA5AE9F24117C4B1FE649286651ECE45B3DC2007CB8A163BF0598DA48361C55D39A69163FA8FD24CF5F83655D23DCA3AD961C62F356208552BB9ED529077096966D670C354E4ABC9804F1746C08CA237327FFFFFFFFFFFFFFFF";
@@ -85,7 +74,7 @@ static void _setup_cipher(int encrypt_flag, ESessionCipherAlgo algo,
     unsigned int ivbuf_len;
     unsigned char keybuf[EVP_MAX_MD_SIZE];
     unsigned int keybuf_len;
-    EVP_CIPHER* cipher_type;
+    const EVP_CIPHER* cipher_type;
 
     /* Ensure the size of the biggest max digest is bigger
        than the max key length and IV length -- avoid some
@@ -146,14 +135,14 @@ static char* _key_hex_fingerprint(Buffer* rawkeybuf)
 {
     EVP_MD_CTX ctx;
     char keydigest[EVP_MAX_MD_SIZE];
-    int keydigest_len;
+    unsigned int keydigest_len;
     char* result;
-    int i;
+    unsigned int i;
 
     /* Generate MD5 hash */
     EVP_DigestInit(&ctx, EVP_md5());
     EVP_DigestUpdate(&ctx, buffer_ptr(rawkeybuf), buffer_len(rawkeybuf));
-    EVP_DigestFinal(&ctx, keydigest, &keydigest_len);
+    EVP_DigestFinal(&ctx, (unsigned char *)keydigest, &keydigest_len);
 
     /* Turn it into something meaningful... */
     result = (char*)calloc(1, (keydigest_len * 3) + 1);
@@ -175,7 +164,7 @@ static EVP_PKEY* _process_public_key(const char* id, ESessionKeyType keytype,
     ESessionCBResult cb_result;
     
     /* First of all, base64 decode this keystring */
-    buffer_init_from_base64(&rawkeybuf, keystr);
+    buffer_init_from_base64(&rawkeybuf, (unsigned char *)keystr);
 
     /* Turn the MD5 hash into printed form */
     fingerprint = _key_hex_fingerprint(&rawkeybuf);
@@ -258,7 +247,7 @@ static EVP_PKEY* _process_public_key(const char* id, ESessionKeyType keytype,
  *
  */
 
-int es_get_last_error()
+int es_get_last_error(void)
 {
     return _last_error;
 }
@@ -330,7 +319,7 @@ const char* es_add_personal_key(const char* private_key)
     fingerprint = _key_hex_fingerprint(&b);
 
     /* Generate a base64 encoded public key */
-    public_key = buffer_base64_encode(&b);
+    public_key = (char *)buffer_base64_encode(&b);
 
     /* Ok, we have enough info to cache this key:
        EVP_PKEY, key type, fingerprint, public_key */
@@ -351,7 +340,7 @@ const char* es_add_public_key(const char* id, ESessionKeyType keytype, const cha
     const char* result;
 
     /* First of all, base64 decode the keystring */
-    buffer_init_from_base64(&rawkeybuf, public_key);
+    buffer_init_from_base64(&rawkeybuf, (unsigned char *)public_key);
 
     /* Turn the MD5 hash into printed form */
     fingerprint = _key_hex_fingerprint(&rawkeybuf);
@@ -417,7 +406,7 @@ ESessionKeyPair es_generate_keypair(ESessionKeyType keytype, int bits,
         buffer_init(&b);
         buffer_put_bignum2(&b, rkey->e);
         buffer_put_bignum2(&b, rkey->n);
-        result->public_key = buffer_base64_encode(&b);
+        result->public_key = (char *)buffer_base64_encode(&b);
         buffer_free(&b);
 
         /* Store the resulting key into a EVP_PKEY struct */
@@ -436,7 +425,7 @@ ESessionKeyPair es_generate_keypair(ESessionKeyType keytype, int bits,
         buffer_put_bignum2(&b, dkey->q);
         buffer_put_bignum2(&b, dkey->g);
         buffer_put_bignum2(&b, dkey->pub_key);
-        result->public_key = buffer_base64_encode(&b);
+        result->public_key = (char *)buffer_base64_encode(&b);
         buffer_free(&b);
         
         /* Store the resulting key into a EVP_PKEY struct */
@@ -446,7 +435,7 @@ ESessionKeyPair es_generate_keypair(ESessionKeyType keytype, int bits,
     /* Now, let's encode the private key in standard PEM format */
     membio = BIO_new(BIO_s_mem());
     PEM_write_bio_PrivateKey(membio, evpkey, EVP_des_ede3_cbc(),
-                             (char*)privatepass, strlen(privatepass),
+                             (unsigned char *)privatepass, strlen(privatepass),
                              NULL, NULL);
 
     /* Write the PEM data into a string... */
@@ -547,7 +536,7 @@ ESessionHandshake esession_handshake_load(ESession es, const char* e_str, ESessi
     ESessionHandshake result;
     EVP_MD_CTX signctx;
     char* sig;
-    int   sig_len;
+    unsigned int   sig_len;
    
 
     /* Ensure state is good */
@@ -584,8 +573,8 @@ ESessionHandshake esession_handshake_load(ESession es, const char* e_str, ESessi
 
     /* Step 2.7: Calculate K by completing the DH handshake */    
     K.length = DH_size(es->_dh);
-    K.data = (unsigned char*)malloc(K.length);
-    rc = DH_compute_key(K.data, e, es->_dh);
+    K.data = malloc(K.length);
+    rc = DH_compute_key((unsigned char *)K.data, e, es->_dh);
     if (rc == -1)
     {
         free(K.data);
@@ -595,14 +584,14 @@ ESessionHandshake esession_handshake_load(ESession es, const char* e_str, ESessi
     }
 
     /* Step 2.8: Compute a SHA1 hash of (Bob's public key, e, f, K) */
-    _compute_sid(es->_public_key, e, f, K, &sid);
+    _compute_sid((const char *)es->_public_key, e, f, K, &sid);
 
 
     /* Setup for results */
     result = (ESessionHandshake)calloc(1, sizeof(_ESessionHandshake_st));
     result->type = 1;
     result->f = BN_bn2hex(f);
-    result->public_key = strdup(es->_public_key);
+    result->public_key = strdup((const char *)es->_public_key);
 
 
     /* Step 2.9: Create a signed version of the SID hash, then base64
@@ -610,7 +599,7 @@ ESessionHandshake esession_handshake_load(ESession es, const char* e_str, ESessi
     sig = (char*)calloc(1, EVP_PKEY_size(es->_pkey));
     EVP_SignInit(&signctx, EVP_sha1());
     EVP_SignUpdate(&signctx, buffer_ptr(&sid), buffer_len(&sid));
-    EVP_SignFinal(&signctx, sig, &sig_len, es->_pkey);
+    EVP_SignFinal(&signctx, (unsigned char *)sig, &sig_len, es->_pkey);
     result->sig = b64_encode(sig, sig_len);
     free(sig);
 
@@ -674,8 +663,8 @@ int esession_handshake_complete(ESession es, const char* f_str,
 
     /* Step 2.11: Calculate K by completing the DH handshake */
     K.length = DH_size(es->_dh);
-    K.data = (unsigned char*)malloc(K.length);
-    rc = DH_compute_key(K.data, f, es->_dh);
+    K.data = malloc(K.length);
+    rc = DH_compute_key((unsigned char *)K.data, f, es->_dh);
     if (rc == -1)
     {
         free(K.data);
@@ -705,7 +694,7 @@ int esession_handshake_complete(ESession es, const char* f_str,
     b64_decode(sig_str, sig, &sig_len);
     EVP_VerifyInit(&verifyctx, EVP_sha1());
     EVP_VerifyUpdate(&verifyctx, buffer_ptr(&sid), buffer_len(&sid));
-    rc = EVP_VerifyFinal(&verifyctx, sig, sig_len, bobkey);
+    rc = EVP_VerifyFinal(&verifyctx, (unsigned char *)sig, sig_len, bobkey);
     if (rc != 1)
     {
         free(sig);

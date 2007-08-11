@@ -159,7 +159,7 @@ typedef struct
  *
  */
 
-int es_get_last_error();
+int es_get_last_error(void);
 
 const char* es_add_personal_key(const char* private_key);
 

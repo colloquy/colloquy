@@ -179,11 +179,7 @@ removeMessagePortForThread (NSThread *thread)
 
 + (void) threadDied:(NSNotification *)notification
 {
-    NSThread *thread;
-    NSRunLoop *runLoop;
-
-    thread = [notification object];
-    removeMessagePortForThread(thread);
+    removeMessagePortForThread([notification object]);
 }
 
 + (void) handlePortMessage:(NSPortMessage *)portMessage

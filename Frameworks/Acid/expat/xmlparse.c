@@ -1317,7 +1317,7 @@ const XML_LChar *XML_ErrorString(int code)
     XML_T("document is not standalone"),
     XML_T("unexpected parser state - please send a bug report")
   };
-  if (code > 0 && code < sizeof(message)/sizeof(message[0]))
+  if (code > 0 && (unsigned int)code < sizeof(message)/sizeof(message[0]))
     return message[code];
   return 0;
 }
@@ -2734,7 +2734,7 @@ doProlog(XML_Parser parser,
     case XML_ROLE_ATTRIBUTE_NOTATION_VALUE:
       if (attlistDeclHandler)
       {
-	char *prefix;                       
+	const char *prefix;                       
 	if (declAttributeType) {
 	  prefix = "|";                   
 	}

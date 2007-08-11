@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 44;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -58,6 +58,8 @@
 
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		1CF24BB60C6E2648006BD6A5 /* keycache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keycache.h; sourceTree = "<group>"; };
+		1CF24BFC0C6E26F2006BD6A5 /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* Acid.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Acid.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD438C530BD87CBD0042117F /* Acid.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = Acid.exp; sourceTree = "<group>"; };
@@ -305,11 +307,13 @@
 			isa = PBXGroup;
 			children = (
 				DD8ADFA50BD1741A009AB74D /* base64.c */,
+				1CF24BFC0C6E26F2006BD6A5 /* base64.h */,
 				DD8ADFA60BD1741A009AB74D /* buffer.c */,
 				DD8ADFA70BD1741A009AB74D /* buffer.h */,
 				DD8ADFA80BD1741A009AB74D /* esession.c */,
 				DD8ADFA90BD1741A009AB74D /* esession.h */,
 				DD8ADFAA0BD1741A009AB74D /* keycache.c */,
+				1CF24BB60C6E2648006BD6A5 /* keycache.h */,
 			);
 			path = esession;
 			sourceTree = "<group>";
@@ -403,7 +407,6 @@
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
-			shouldCheckCompatibility = 1;
 			targets = (
 				8DC2EF4F0486A6940098B216 /* Acid */,
 			);
@@ -513,7 +516,7 @@
 					ppc,
 					i386,
 				);
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
 			};
 			name = "Release (Universal)";
 		};

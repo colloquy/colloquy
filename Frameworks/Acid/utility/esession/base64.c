@@ -64,10 +64,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-
-/* Pre-decls */
-int ap_base64decode_binary(unsigned char *bufplain, const char *bufcoded);
-int ap_base64encode_binary(char *encoded, const unsigned char *string, int len);
+#include "base64.h"
 
 /* aaaack but it's fast and const should make it shared text page. */
 static const unsigned char pr2six[256] =
@@ -106,16 +103,7 @@ int ap_base64decode_len(const char *bufcoded)
     return nbytesdecoded + 1;
 }
 
-int ap_base64decode(char *bufplain, const char *bufcoded)
-{
-    int len;
-    
-    len = ap_base64decode_binary((unsigned char *) bufplain, bufcoded);
-    bufplain[len] = '\0';
-    return len;
-}
-
-int ap_base64decode_binary(unsigned char *bufplain,
+static int ap_base64decode_binary(unsigned char *bufplain,
 				   const char *bufcoded)
 {
     int nbytesdecoded;
@@ -160,20 +148,24 @@ int ap_base64decode_binary(unsigned char *bufplain,
     return nbytesdecoded;
 }
 
+int ap_base64decode(char *bufplain, const char *bufcoded)
+{
+    int len;
+    
+    len = ap_base64decode_binary((unsigned char *) bufplain, bufcoded);
+    bufplain[len] = '\0';
+    return len;
+}
+
 static const char basis_64[] =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-int ap_base64encode_len(int len)
+static int ap_base64encode_len(int len)
 {
     return ((len + 2) / 3 * 4) + 1;
 }
 
-int ap_base64encode(char *encoded, const char *string, int len)
-{
-    return ap_base64encode_binary(encoded, (const unsigned char *) string, len);
-}
-
-int ap_base64encode_binary(char *encoded,
+static int ap_base64encode_binary(char *encoded,
                                        const unsigned char *string, int len)
 {
     int i;
@@ -204,6 +196,11 @@ int ap_base64encode_binary(char *encoded,
 
     *p++ = '\0';
     return p - encoded;
+}
+
+static int ap_base64encode(char *encoded, const char *string, int len)
+{
+    return ap_base64encode_binary(encoded, (const unsigned char *) string, len);
 }
 
 /* convenience functions for j2 */

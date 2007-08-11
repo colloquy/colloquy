@@ -266,7 +266,8 @@ static NSMutableDictionary* G_cache;
 
 -(id) initWithEscapedString:(NSString*)jidstring
 {
-    return [self initWithString:[XMLCData unescape:[jidstring cString] ofLength:[jidstring length]]];
+    NSData *jidstringData = [jidstring dataUsingEncoding:NSUTF8StringEncoding];
+    return [self initWithString:[XMLCData unescape:[jidstringData bytes] ofLength:[jidstringData length]]];
 }
 
 
