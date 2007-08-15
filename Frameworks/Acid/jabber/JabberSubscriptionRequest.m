@@ -25,9 +25,6 @@
 
 #import "acid.h"
 
-XPathQuery* QRY_MESSAGE;
-NSDictionary* PRESSUBTYPE;
-
 NSString* JXML_SUB_REQUEST = @"/presence[@type='subscribe']";        // subscribe
 NSString* JXML_SUB_GRANTED = @"/presence[@type='subscribed']";        // subscribed
 NSString* JXML_SUB_CANCELED = @"/presence[@type='unsubscribed']";       // unsubscribed
@@ -51,16 +48,6 @@ NSString* JXML_SUB_CANCEL_REQUEST = @"/presence[@type='unsubscribe']"; // unsubs
         return nil;
 }
 
-+(void) initialize
-{
-    QRY_MESSAGE = [[XPathQuery alloc] initWithPath:@"/presence/status"];
-    PRESSUBTYPE = [[NSDictionary alloc] initWithObjectsAndKeys:
-                   [NSNumber numberWithLong:JSUBSCRIBE], @"subscribe",
-                   [NSNumber numberWithLong:JSUBSCRIBED], "@subscribed",
-                   [NSNumber numberWithLong:JUNSUBSCRIBE], "@unsubscribed",
-                   [NSNumber numberWithLong:JUNSUBSCRIBED], "@unsubscribed", nil];
-}
-
 -(id) initWithRecipient:(JabberID*)jid
 {
     [super initWithQName:JABBER_PRESENCE_QN];
@@ -78,6 +65,20 @@ NSString* JXML_SUB_CANCEL_REQUEST = @"/presence[@type='unsubscribe']"; // unsubs
 
 -(void) resync
 {
+    static XPathQuery *QRY_MESSAGE = nil;
+    static NSDictionary *PRESSUBTYPE = nil;
+
+    if(!QRY_MESSAGE)
+        QRY_MESSAGE = [[XPathQuery alloc] initWithPath:@"/presence/status"];
+
+    if(!PRESSUBTYPE) {
+        PRESSUBTYPE = [[NSDictionary alloc] initWithObjectsAndKeys:
+            [NSNumber numberWithLong:JSUBSCRIBE], @"subscribe",
+            [NSNumber numberWithLong:JSUBSCRIBED], @"subscribed",
+            [NSNumber numberWithLong:JUNSUBSCRIBE], @"unsubscribed",
+            [NSNumber numberWithLong:JUNSUBSCRIBED], @"unsubscribed", nil];
+    }
+
     [_to release];
     _to      = [[JabberID alloc] initWithString:[self getAttribute:@"to"]];
     [_from release];
