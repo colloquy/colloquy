@@ -413,14 +413,13 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	[pool release];
 	pool = nil;
 
-	BOOL active = YES;
-	while( active && ( _status == MVChatConnectionConnectedStatus ||
-					   _status == MVChatConnectionConnectingStatus ||
-					   [_chatConnection isConnected] ) ) {
+	while( _status == MVChatConnectionConnectedStatus ||
+           _status == MVChatConnectionConnectingStatus ||
+           [_chatConnection isConnected] ) {
 		pool = [[NSAutoreleasePool alloc] init];
-		active = [[NSRunLoop currentRunLoop]
-		          runMode:NSDefaultRunLoopMode
-				  beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
+		[[NSRunLoop currentRunLoop]
+            runMode:NSDefaultRunLoopMode
+            beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
 		if( [pool respondsToSelector:@selector( drain )] )
 			[pool drain];
 		[pool release];
