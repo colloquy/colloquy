@@ -134,6 +134,10 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	return _password;
 }
 
+- (NSString *) preferredNickname {
+	return _nickname;
+}
+
 - (NSString *) server {
 	return _server;
 }
