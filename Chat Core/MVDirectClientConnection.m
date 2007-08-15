@@ -5,6 +5,7 @@
 #import "MVChatConnectionPrivate.h"
 #import "MVFileTransfer.h"
 #import "MVUtilities.h"
+#import "Transmission.h"
 
 #import <arpa/inet.h>
 
@@ -104,7 +105,9 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 
 	if( ! _connectionThread ) return;
 
-	[self performSelector:@selector( _connectToHost:onPort: ) withObject:host withObject:[NSNumber numberWithUnsignedShort:port] inThread:_connectionThread];
+	NSDictionary *info = [[NSDictionary allocWithZone:NULL] initWithObjectsAndKeys:[NSNumber numberWithUnsignedShort:port], @"port", host, @"host", nil];
+	[self performSelector:@selector( _connect: ) withObject:info inThread:_connectionThread];
+	[info release];
 }
 
 - (void) acceptConnectionOnFirstPortInRange:(NSRange) ports {
@@ -231,12 +234,15 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 	_threadWaitLock = nil;
 }
 
-- (void) _connectToHost:(NSString *) host onPort:(NSNumber *) port {
+- (void) _connect:(NSDictionary *) info {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( _acceptConnection || _connection ) return;
 
 	_connection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
+
+	NSString *host = [info objectForKey:@"host"];
+	NSNumber *port = [info objectForKey:@"port"];
 
 	if( ! [_connection connectToHost:host onPort:[port unsignedShortValue] error:NULL] ) {
 		NSLog(@"can't connect to DCC %@ on port %d", host, [port unsignedShortValue] );
@@ -337,15 +343,14 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 	[pool release];
 	pool = nil;
 
-	BOOL active = YES;
-	while( active && ! _done ) {
+	while( ! _done ) {
 		if( _upnp ) tr_upnpPulse( _upnp );
 		if( _natpmp ) tr_natpmpPulse( _natpmp );
 
 		pool = [[NSAutoreleasePool allocWithZone:nil] init];
 
 		NSDate *timeout = [[NSDate allocWithZone:nil] initWithTimeIntervalSinceNow:5.];
-		active = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeout];
+		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeout];
 		[timeout release];
 
 		if( [pool respondsToSelector:@selector( drain )] )

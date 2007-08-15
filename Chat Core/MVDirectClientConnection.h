@@ -1,5 +1,3 @@
-#import "Transmission.h"
-
 @class AsyncSocket;
 
 NSString *MVDCCFriendlyAddress( NSString *address );
@@ -9,8 +7,8 @@ NSString *MVDCCFriendlyAddress( NSString *address );
 	id _delegate;
 	AsyncSocket *_connection;
 	AsyncSocket *_acceptConnection;
-	tr_natpmp_t *_natpmp;
-	tr_upnp_t *_upnp;
+	void *_natpmp;
+	void *_upnp;
 	NSThread *_connectionThread;
 	NSConditionLock *_threadWaitLock;
 	BOOL _done;
