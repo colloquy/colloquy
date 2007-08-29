@@ -498,6 +498,7 @@
 			buildSettings = {
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				SYMROOT = ../../build;
 			};
 			name = Development;
 		};
@@ -505,6 +506,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DDF45C0C0BD5CF0E0050911E /* Common Settings.xcconfig */;
 			buildSettings = {
+				SYMROOT = ../../build;
 			};
 			name = Release;
 		};
@@ -517,6 +519,7 @@
 					i386,
 				);
 				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				SYMROOT = ../../build;
 			};
 			name = "Release (Universal)";
 		};

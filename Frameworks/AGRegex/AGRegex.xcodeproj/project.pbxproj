@@ -302,7 +302,6 @@
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
-			shouldCheckCompatibility = 1;
 			targets = (
 				1C6A0C250865E09C009EE6D2 /* AGRegex (Framework) */,
 				1C6A0C370865E09C009EE6D2 /* RegexTest (Application) */,
@@ -390,6 +389,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-fconstant-cfstrings";
 				PREBINDING = YES;
+				SYMROOT = ../../build;
 				UNSTRIPPED_PRODUCT = YES;
 				ZERO_LINK = NO;
 			};
@@ -412,6 +412,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-fconstant-cfstrings";
 				PREBINDING = YES;
+				SYMROOT = ../../build;
 				UNSTRIPPED_PRODUCT = YES;
 				ZERO_LINK = NO;
 			};
@@ -585,6 +586,7 @@
 				OTHER_CFLAGS = "-fconstant-cfstrings";
 				PREBINDING = YES;
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SYMROOT = ../../build;
 				UNSTRIPPED_PRODUCT = YES;
 				ZERO_LINK = NO;
 			};
