@@ -600,19 +600,9 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address {
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	id info = nil;
-
-	address = [address stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@". \t\n"]];
-
-	while( ( info = [enumerator nextObject] ) ) {
-		MVChatConnection *connection = [info objectForKey:@"connection"];
-		NSString *server = [connection server];
-		NSRange range = [server rangeOfString:address options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch ) range:NSMakeRange( 0, [server length] )];
-		if( range.location != NSNotFound && ( range.location == 0 || [server characterAtIndex:( range.location - 1 )] == '.' ) )
-			return connection;
-	}
-
+	NSArray *result = [self connectionsForServerAddress:address];
+	if( [result count] )
+		return [result objectAtIndex:0];
 	return nil;
 }
 
@@ -729,12 +719,14 @@ static NSMenu *favoritesMenu = nil;
 	[oldConnection disconnectWithReason:quitMessageString];
 	[quitMessageString release];
 
-	[self _deregisterNotificationsForConnection:connection];
+	[self _deregisterNotificationsForConnection:oldConnection];
 
 	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[oldConnection server] securityDomain:[oldConnection server] account:[oldConnection nickname] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 	[[MVKeyChain defaultKeyChain] setInternetPassword:nil forServer:[oldConnection server] securityDomain:[oldConnection server] account:nil path:nil port:[oldConnection serverPort] protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 
 	[oldConnection release];
+
+	[self _registerNotificationsForConnection:connection];
 
 	[_bookmarks replaceObjectAtIndex:index withObject:info];
 	[self _saveBookmarkList];
