@@ -36,9 +36,9 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 		c = [_dirtyLogs count];
 	}
 
-	if( c > 1 ) [statusText setStringValue:[NSString stringWithFormat:@"%d logs still have to be indexed",c]];
-	else if( c == 1 ) [statusText setStringValue:@"One log still has to be indexed"];
-	else [statusText setStringValue:@"Indexing is complete"];
+	if( c > 1 ) [statusText setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%d logs still have to be indexed", "number of transcripts indexing remains message" ),c]];
+	else if( c == 1 ) [statusText setStringValue:NSLocalizedString( @"One log still has to be indexed", "one  indexing remains message" )];
+	else [statusText setStringValue:NSLocalizedString( @"Indexing is complete", "transcripts indexing finished message" )];
 }
 
 #pragma mark -

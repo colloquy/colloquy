@@ -463,13 +463,13 @@
 - (NSString *) description {
 	[self view];
 	if( [self format] == JVTranscriptTextCriterionFormat ) {
-		return [NSString stringWithFormat:@"%@ %@ \"%@\"", [textKindButton titleOfSelectedItem], [textOperationButton titleOfSelectedItem], [self query]];
+		return [NSString stringWithFormat:NSLocalizedString( @"%@ %@ \"%@\"", "description format for kind, operation and query, JVTranscriptCriterionController" ), [textKindButton titleOfSelectedItem], [textOperationButton titleOfSelectedItem], [self query]];
 	} else if( [self format] == JVTranscriptDateCriterionFormat ) {
-		return [NSString stringWithFormat:@"%@ %@ %@ %@", [dateKindButton titleOfSelectedItem], [dateOperationButton titleOfSelectedItem], [self query], [dateUnitsButton titleOfSelectedItem]];
+		return [NSString stringWithFormat:NSLocalizedString( @"%@ %@ %@ %@", "description format for kind, operation, query and unit, JVTranscriptCriterionController" ), [dateKindButton titleOfSelectedItem], [dateOperationButton titleOfSelectedItem], [self query], [dateUnitsButton titleOfSelectedItem]];
 	} else if( [self format] == JVTranscriptBooleanCriterionFormat ) {
 		return [booleanKindButton titleOfSelectedItem];
 	} else if( [self format] == JVTranscriptListCriterionFormat ) {
-		return [NSString stringWithFormat:@"%@ %@ %@", [listKindButton titleOfSelectedItem], [listOperationButton titleOfSelectedItem], [listQuery titleOfSelectedItem]];
+		return [NSString stringWithFormat:NSLocalizedString( @"%@ %@ %@", "description format for kind, operation and type, JVTranscriptCriterionController" ), [listKindButton titleOfSelectedItem], [listOperationButton titleOfSelectedItem], [listQuery titleOfSelectedItem]];
 	} else return [super description];
 }
 @end

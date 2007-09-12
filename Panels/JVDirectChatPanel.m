@@ -1987,7 +1987,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		return nil;
 	}
 
-	if( ! name ) name = @"unknown";
+	if( ! name ) name = NSLocalizedString( @"unknown", "unknown name for script event" );
 	if( ! [name isKindOfClass:[NSString class]] ) {
 		name = [[NSScriptCoercionHandler sharedCoercionHandler] coerceValue:name toClass:[NSString class]];
 		if( ! [name isKindOfClass:[NSString class]] ) {

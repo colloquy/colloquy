@@ -602,7 +602,7 @@ static NSMenu *smartTranscriptMenu = nil;
 				if( [[messageString string] rangeOfString:@"password accepted" options:NSCaseInsensitiveSearch].location != NSNotFound ) {
 					NSMutableDictionary *context = [NSMutableDictionary dictionary];
 					[context setObject:NSLocalizedString( @"You Have Been Identified", "identified bubble title" ) forKey:@"title"];
-					[context setObject:[NSString stringWithFormat:@"%@ on %@", [messageString string], [connection server]] forKey:@"description"];
+					[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ on %@", "identified bubble message, server message and server name" ), [messageString string], [connection server]] forKey:@"description"];
 					[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
 					[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
 				}

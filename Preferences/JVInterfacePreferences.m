@@ -145,8 +145,8 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	BOOL first = YES;
 
 	while( ( rule = [enumerator nextObject] ) ) {
-		if( ! first && operation ) [title appendString:@" and "];
-		else if( ! first && ! operation ) [title appendString:@" or "];
+		if( ! first && operation ) [title appendString:NSLocalizedString( @" and ", "operation label, interface preferences" )];
+		else if( ! first && ! operation ) [title appendString:NSLocalizedString( @" or ", "operation label, interface preferences" )];
 		[title appendString:[rule description]];
 		first = NO;
 	}

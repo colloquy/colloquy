@@ -105,7 +105,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 #pragma mark -
 
 - (NSString *) title {
-	return ( [_title length] ? _title : @"Smart Transcript" );
+	return ( [_title length] ? _title : NSLocalizedString( @"Smart Transcript", "default smart transcript name" ) );
 }
 
 - (NSString *) windowTitle {

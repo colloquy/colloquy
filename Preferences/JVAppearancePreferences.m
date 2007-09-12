@@ -597,7 +597,7 @@
 
 - (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
 	if( [[column identifier] isEqualToString:@"key"] ) {
-		return [[_styleOptions objectAtIndex:row] objectForKey:@"description"];
+		return NSLocalizedString( [[_styleOptions objectAtIndex:row] objectForKey:@"description"], "description of style options, appearance preferences" );
 	} else if( [[column identifier] isEqualToString:@"value"] ) {
 		NSDictionary *info = [_styleOptions objectAtIndex:row];
 		id value = [info objectForKey:@"value"];
@@ -721,9 +721,15 @@
 			return cell;
 		} else if( [[options objectForKey:@"type"] isEqualToString:@"list"] ) {
 			NSPopUpButtonCell *cell = [[NSPopUpButtonCell new] autorelease];
+			NSMutableArray *localizedOptions = [NSMutableArray array];
+			NSString *optionTitle = nil;
+			NSEnumerator *enumerator = [[options objectForKey:@"options"] objectEnumerator];
+			while( ( optionTitle = [enumerator nextObject] ) ) {
+				[localizedOptions addObject:NSLocalizedString( optionTitle, "title of style option value" )];
+			}
 			[cell setControlSize:NSSmallControlSize];
 			[cell setFont:[NSFont menuFontOfSize:[NSFont smallSystemFontSize]]];
-			[cell addItemsWithTitles:[options objectForKey:@"options"]];
+			[cell addItemsWithTitles:localizedOptions];
 			[options setObject:cell forKey:@"cell"];
 			return cell;
         } else if( [[options objectForKey:@"type"] isEqualToString:@"file"] ) {

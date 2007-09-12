@@ -100,7 +100,7 @@ static NSMenu *favoritesMenu = nil;
 	[menuItem setTarget:self];
 	[favoritesMenu addItem:menuItem];
 
-	menuItem = [[[NSMenuItem alloc] initWithTitle:@"Add to Favorites" action:@selector( addToFavorites: ) keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") action:@selector( addToFavorites: ) keyEquivalent:@""] autorelease];
 	[menuItem setEnabled:NO];
 	[menuItem setTag:10];
 	[favoritesMenu addItem:menuItem];
@@ -1507,10 +1507,10 @@ static NSMenu *favoritesMenu = nil;
 			case MVChatPacketError:
 			case MVChatPacketSizeError:
 				if( ! [connection isConnected] ) {
-					if( NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), NSLocalizedString( @"The server may have shutdown for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Reconnect", "reconnect to server button" ), @"Cancel", nil ) == NSOKButton )
+					if( NSRunCriticalAlertPanel( NSLocalizedString( @"You have been disconnected", "title of the you have been disconnected error" ), NSLocalizedString( @"The server may have shutdown for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Reconnect", "reconnect to server button" ), NSLocalizedString( @"Cancel", "cancel button" ), nil ) == NSOKButton )
 						[connection connect];
 				} else {
-					if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect", "title of the could not connect error" ), NSLocalizedString( @"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Retry", "retry connecting to server" ), @"Cancel", nil ) == NSOKButton )
+					if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect", "title of the could not connect error" ), NSLocalizedString( @"The server may be down for maintenance, or the connection was broken between your computer and the server. Check your connection and try again.", "connection dropped" ), NSLocalizedString( @"Retry", "retry connecting to server" ), NSLocalizedString( @"Cancel" "cancel buttun" ), nil ) == NSOKButton )
 						[connection connect];
 				}
 				break;
@@ -1522,7 +1522,7 @@ static NSMenu *favoritesMenu = nil;
 		switch( error ) {
 			case MVChatSocketError:
 			case MVChatDNSError:
-				if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect to Chat server", "chat invalid password dialog title" ), NSLocalizedString( @"The server is disconnected or refusing connections from your computer. Make sure you are connected to the internet and have access to the server.", "chat invalid password dialog message" ), NSLocalizedString( @"Retry", "retry connecting to server" ), @"Cancel", nil ) == NSOKButton )
+				if( NSRunCriticalAlertPanel( NSLocalizedString( @"Could not connect to Chat server", "chat invalid password dialog title" ), NSLocalizedString( @"The server is disconnected or refusing connections from your computer. Make sure you are connected to the internet and have access to the server.", "chat invalid password dialog message" ), NSLocalizedString( @"Retry", "retry connecting to server" ), NSLocalizedString( @"Cancel", "cancel button" ), nil ) == NSOKButton )
 					[connection connect];
 				break;
 			case MVChatBadUserPasswordError:
@@ -1811,12 +1811,12 @@ static NSMenu *favoritesMenu = nil;
 
 	switch( [[dict objectForKey:@"publicKeyType"] unsignedLongValue] ) {
 		case MVChatConnectionClientPublicKeyType:
-			[publicKeyNameDescription setObjectValue:@"User name:"];
-			[publicKeyDescription setObjectValue:@"Please verify the users public key."];
+			[publicKeyNameDescription setObjectValue:NSLocalizedString( @"User name:", "verification target name" )];
+			[publicKeyDescription setObjectValue:NSLocalizedString( @"Please verify the users public key.", "message of verification for public key" )];
 			break;
 		case MVChatConnectionServerPublicKeyType:
-			[publicKeyNameDescription setObjectValue:@"Server name"];
-			[publicKeyDescription setObjectValue:@"Please verify the servers public key."];
+			[publicKeyNameDescription setObjectValue:NSLocalizedString( @"Server name:", "verification target name" )];
+			[publicKeyDescription setObjectValue:NSLocalizedString( @"Please verify the servers public key.", "message of verification for public key" )];
 			break;
 	}
 
@@ -1927,7 +1927,7 @@ static NSMenu *favoritesMenu = nil;
 	if( row == -1 ) return;
 
 	MVChatConnection *connection = [[_bookmarks objectAtIndex:row] objectForKey:@"connection"];
-	NSBeginCriticalAlertSheet( NSLocalizedString( @"Are you sure you want to delete?", "delete confirm dialog title" ), @"Cancel", @"OK", nil, [self window], self, @selector( _deleteConnectionSheetDidEnd:returnCode:contextInfo: ), NULL, NULL, NSLocalizedString( @"Are you sure you want to delete the connection for %@? Any associated Keychain passwords will also be deleted.", "confirm the delete of a connection" ), [connection server] );
+	NSBeginCriticalAlertSheet( NSLocalizedString( @"Are you sure you want to delete?", "delete confirm dialog title" ), NSLocalizedString( @"Cancel", "cancel button" ), NSLocalizedString( @"OK", "OK button" ), nil, [self window], self, @selector( _deleteConnectionSheetDidEnd:returnCode:contextInfo: ), NULL, NULL, NSLocalizedString( @"Are you sure you want to delete the connection for %@? Any associated Keychain passwords will also be deleted.", "confirm the delete of a connection" ), [connection server] );
 }
 
 - (void) _deleteConnectionSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {

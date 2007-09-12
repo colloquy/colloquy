@@ -90,7 +90,7 @@
 	enumerator = [[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"notifications" ofType:@"plist"]] objectEnumerator];
 	while( ( info = [enumerator nextObject] ) ) {
 		if( ! [info objectForKey:@"seperator"] ) {
-			menuItem = [[[NSMenuItem alloc] initWithTitle:[info objectForKey:@"title"] action:NULL keyEquivalent:@""] autorelease];
+			menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( [info objectForKey:@"title"], "notification event menu items, notification preferences" ) action:NULL keyEquivalent:@""] autorelease];
 			[menuItem setRepresentedObject:[info objectForKey:@"identifier"]];
 			[availableEvents addItem:menuItem];
 		} else [availableEvents addItem:[NSMenuItem separatorItem]];
