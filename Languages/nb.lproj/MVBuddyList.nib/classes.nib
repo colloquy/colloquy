@@ -1,0 +1,58 @@
+{
+    IBClasses = (
+        {CLASS = ASExtendedOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                cancelBuddySelection = id; 
+                cancelNewBuddy = id; 
+                confirmBuddySelection = id; 
+                confirmNewBuddy = id; 
+                getInfo = id; 
+                hideBuddyList = id; 
+                messageSelectedBuddy = id; 
+                sendFileToSelectedBuddy = id; 
+                showBuddyList = id; 
+                showBuddyPickerSheet = id; 
+                showNewPersonSheet = id; 
+                sortByAvailability = id; 
+                sortByFirstName = id; 
+                sortByLastName = id; 
+                sortByServer = id; 
+                toggleShowFullNames = id; 
+                toggleShowIcons = id; 
+                toggleShowNicknameAndServer = id; 
+                toggleShowOfflineBuddies = id; 
+            }; 
+            CLASS = MVBuddyListController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                actionButton = NSButton; 
+                addButton = NSButton; 
+                buddies = MVTableView; 
+                email = NSTextField; 
+                firstName = NSTextField; 
+                image = NSImageView; 
+                infoButton = NSButton; 
+                lastName = NSTextField; 
+                newPersonWindow = NSWindow; 
+                nickname = NSTextField; 
+                pickerView = ABPeoplePickerView; 
+                pickerWindow = NSWindow; 
+                sendMessageButton = NSButton; 
+                servers = NSTableView; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {displayMenu = id; }; 
+            CLASS = MVMenuButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {menu = NSMenu; }; 
+            SUPERCLASS = NSButton; 
+        }, 
+        {CLASS = MVTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}

@@ -1,0 +1,32 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {changeTranscriptFolder = id; }; 
+            CLASS = JVTranscriptPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {transcriptFolder = NSPopUpButton; }; 
+            SUPERCLASS = NSPreferencesModule; 
+        }, 
+        {
+            ACTIONS = {apply = id; cancel = id; ok = id; selectModule = id; }; 
+            CLASS = NSPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                applyButton = id; 
+                cancelButton = id; 
+                moduleMatrix = id; 
+                okButton = id; 
+                preferencesPanel = id; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = NSPreferencesModule; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"_preferencesView" = NSBox; preferencesView = NSBox; }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}

@@ -1,0 +1,66 @@
+{
+    IBClasses = (
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                addRoom = id; 
+                addRoomToRule = id; 
+                addRule = id; 
+                changeEncoding = id; 
+                changeProxy = id; 
+                configureRule = id; 
+                discardChangesToRule = id; 
+                editText = id; 
+                openNetworkPreferences = id; 
+                removeRoom = id; 
+                removeRoomFromRule = id; 
+                removeRule = id; 
+                saveRule = id; 
+                toggleAutoConnect = id; 
+                toggleSSLConnection = id; 
+                toggleShowConsoleOnConnect = id; 
+            }; 
+            CLASS = JVConnectionInspector; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                addRoomToRule = NSButton; 
+                addRule = NSButton; 
+                connectCommands = NSTextView; 
+                deleteRoomFromRule = NSButton; 
+                deleteRule = NSButton; 
+                editAddress = NSTextField; 
+                editAltNicknames = NSTextField; 
+                editAutomatic = NSButton; 
+                editNickname = NSTextField; 
+                editPassword = NSTextField; 
+                editPort = NSTextField; 
+                editProxy = NSPopUpButton; 
+                editRealName = NSTextField; 
+                editRemoveRoom = NSButton; 
+                editRooms = NSTableView; 
+                editRule = NSButton; 
+                editRuleMessage = NSTextField; 
+                editRuleName = NSTextField; 
+                editRuleRooms = NSTableView; 
+                editRuleSender = NSTextField; 
+                editRules = NSTableView; 
+                editServerPassword = NSTextField; 
+                editShowConsoleOnConnect = NSButton; 
+                editUsername = NSTextField; 
+                encoding = NSPopUpButton; 
+                makeRulePermanent = NSButton; 
+                messageType = NSPopUpButton; 
+                ruleSheet = NSPanel; 
+                ruleUsesMessage = NSButton; 
+                ruleUsesRooms = NSButton; 
+                ruleUsesSender = NSButton; 
+                senderType = NSPopUpButton; 
+                sslConnection = NSButton; 
+                tabView = NSTabView; 
+                view = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }
+    ); 
+    IBVersion = 1; 
+}
