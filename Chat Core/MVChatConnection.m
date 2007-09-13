@@ -1310,6 +1310,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		[target sendMessage:realMessage withEncoding:realEncoding asAction:realAction];
 
 		if( realLocalEcho ) {
+#if USE(ATTRIBUTED_CHAT_STRING)
 			NSString *cformat = nil;
 
 			switch( [[(MVChatRoom *)target connection] outgoingChatFormat] ) {
@@ -1328,6 +1329,9 @@ static const NSStringEncoding supportedEncodings[] = {
 			NSDictionary *options = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:realEncoding], @"StringEncoding", cformat, @"FormatType", nil];
 			NSData *msgData = [realMessage chatFormatWithOptions:options];
 			[options release];
+#elif USE(PLAIN_CHAT_STRING)
+			NSData *msgData = [realMessage dataUsingEncoding:realEncoding];
+#endif
 
 			if( [target isKindOfClass:[MVChatRoom class]] ) {
 				NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[[(MVChatRoom *)target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:realAction], @"action", nil];
