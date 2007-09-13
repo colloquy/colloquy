@@ -1,5 +1,6 @@
 #import "MVChatUser.h"
 #import "MVChatConnection.h"
+#import "MVChatConnectionPrivate.h"
 #import "MVFileTransfer.h"
 #import "NSNotificationAdditions.h"
 #import "NSDataAdditions.h"
@@ -37,6 +38,7 @@ NSString *MVChatUserInformationUpdatedNotification = @"MVChatUserInformationUpda
 NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedNotification";
 
 @implementation MVChatUser
+#if ENABLE(SCRIPTING)
 + (void) initialize {
 	[super initialize];
 	static BOOL tooLate = NO;
@@ -49,6 +51,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 + (id) coerceChatUser:(id) value toString:(Class) class {
 	return [value nickname];
 }
+#endif
 
 #pragma mark -
 
@@ -535,6 +538,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
+#if ENABLE(SCRIPTING)
 @implementation MVChatUser (MVChatUserScripting)
 - (NSString *) scriptUniqueIdentifier {
 	if( [[self uniqueIdentifier] isKindOfClass:[NSString class]] )
@@ -584,3 +588,4 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	[super setValue:value forUndefinedKey:key];
 }
 @end
+#endif

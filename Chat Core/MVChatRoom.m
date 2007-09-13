@@ -37,6 +37,7 @@ NSString *MVChatRoomModesChangedNotification = @"MVChatRoomModesChangedNotificat
 NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedNotification";
 
 @implementation MVChatRoom
+#if ENABLE(SCRIPTING)
 + (void) initialize {
 	[super initialize];
 	static BOOL tooLate = NO;
@@ -49,6 +50,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 + (id) coerceChatRoom:(id) value toString:(Class) class {
 	return [(MVChatRoom *)value name];
 }
+#endif
 
 #pragma mark -
 
@@ -641,6 +643,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
+#if ENABLE(SCRIPTING)
 @implementation MVChatRoom (MVChatRoomScripting)
 - (NSString *) scriptUniqueIdentifier {
 	if( [[self uniqueIdentifier] isKindOfClass:[NSString class]] )
@@ -727,3 +730,4 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[super setValue:value forUndefinedKey:key];
 }
 @end
+#endif
