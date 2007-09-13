@@ -34,7 +34,7 @@
 
 #pragma mark -
 
-- (void) partWithReason:(NSAttributedString *) reason {
+- (void) partWithReason:(MVChatString *) reason {
 	if( ! [self isJoined] ) return;
 	if( ! [reason length] ) [[self connection] sendRawMessageImmediatelyWithFormat:@"PART %@", [self name]];
 	else [[self connection] sendRawMessageImmediatelyWithFormat:@"PART %@ :%@", [self name], [reason string]];
@@ -43,7 +43,7 @@
 
 #pragma mark -
 
-- (void) setTopic:(NSAttributedString *) newTopic {
+- (void) setTopic:(MVChatString *) newTopic {
 	NSParameterAssert( newTopic != nil );
 	NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:newTopic withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
 	NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"TOPIC %@ :", [self name]];
@@ -53,7 +53,7 @@
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) msgEncoding withAttributes:(NSDictionary *) attributes {
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) msgEncoding withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( message != nil );
 	[[self connection] _sendMessage:message withEncoding:msgEncoding toTarget:self withAttributes:attributes];
 }
@@ -228,7 +228,7 @@
 
 #pragma mark -
 
-- (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason {
+- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString *) reason {
 	[super kickOutMemberUser:user forReason:reason];
 
 	if( reason ) {

@@ -7,6 +7,7 @@
 #import "MVChatPluginManager.h"
 #import "NSMethodSignatureAdditions.h"
 #import "NSStringAdditions.h"
+#import "MVChatString.h"
 
 @implementation MVXMPPChatConnection
 + (NSArray *) defaultServerPorts {
@@ -103,7 +104,7 @@
 	[_session startSession:_localID onPort:_serverPort withServer:_server];
 }
 
-- (void) disconnectWithReason:(NSAttributedString *) reason {
+- (void) disconnectWithReason:(MVChatString *) reason {
 	[self _willDisconnect];
 	[_session stopSession];
 }

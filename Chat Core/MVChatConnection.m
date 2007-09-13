@@ -1,21 +1,44 @@
 #import "MVChatConnection.h"
+#import "MVChatConnectionPrivate.h"
 #import "MVChatRoom.h"
 #import "MVChatRoomPrivate.h"
 #import "MVChatUser.h"
 #import "MVChatUserPrivate.h"
-#import "MVICBChatConnection.h"
-#import "MVIRCChatConnection.h"
-#import "MVSILCChatConnection.h"
-#import "MVXMPPChatConnection.h"
 #import "MVFileTransfer.h"
-#import "MVChatPluginManager.h"
 #import "MVChatUserWatchRule.h"
 #import "NSStringAdditions.h"
-#import "NSAttributedStringAdditions.h"
-#import "NSMethodSignatureAdditions.h"
-#import "NSScriptCommandAdditions.h"
 #import "NSNotificationAdditions.h"
 #import "MVUtilities.h"
+#import "MVChatString.h"
+
+#if USE(ATTRIBUTED_CHAT_STRING)
+#import "NSAttributedStringAdditions.h"
+#endif
+
+#if ENABLE(SCRIPTING)
+#import "NSScriptCommandAdditions.h"
+#endif
+
+#if ENABLE(PLUGINS)
+#import "NSMethodSignatureAdditions.h"
+#import "MVChatPluginManager.h"
+#endif
+
+#if ENABLE(ICB)
+#import "MVICBChatConnection.h"
+#endif
+
+#if ENABLE(IRC)
+#import "MVIRCChatConnection.h"
+#endif
+
+#if ENABLE(SILC)
+#import "MVSILCChatConnection.h"
+#endif
+
+#if ENABLE(XMPP)
+#import "MVXMPPChatConnection.h"
+#endif
 
 NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
 NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectNotification";
@@ -57,14 +80,40 @@ static const NSStringEncoding supportedEncodings[] = {
 @implementation MVChatConnection
 + (BOOL) supportsURLScheme:(NSString *) scheme {
 	if( ! scheme ) return NO;
-	return ( [scheme isEqualToString:@"icb"] || [scheme isEqualToString:@"irc"] || [scheme isEqualToString:@"silc"] || [scheme isEqualToString:@"xmpp"] );
+
+	return
+#if ENABLE(ICB)
+		[scheme isEqualToString:@"icb"] ||
+#endif
+#if ENABLE(IRC)
+		[scheme isEqualToString:@"irc"] ||
+#endif
+#if ENABLE(SILC)
+		[scheme isEqualToString:@"silc"] ||
+#endif
+#if ENABLE(XMPP)
+		[scheme isEqualToString:@"xmpp"] ||
+#endif
+		NO;
 }
 
 + (NSArray *) defaultServerPortsForType:(MVChatConnectionType) type {
-	if( type == MVChatConnectionICBType ) return [MVICBChatConnection defaultServerPorts];
-	else if( type == MVChatConnectionIRCType ) return [MVIRCChatConnection defaultServerPorts];
-	else if( type == MVChatConnectionSILCType ) return [MVSILCChatConnection defaultServerPorts];
-	else if( type == MVChatConnectionXMPPType ) return [MVXMPPChatConnection defaultServerPorts];
+#if ENABLE(ICB)
+	if( type == MVChatConnectionICBType )
+		return [MVICBChatConnection defaultServerPorts];
+#endif
+#if ENABLE(IRC)
+	if( type == MVChatConnectionIRCType )
+		return [MVIRCChatConnection defaultServerPorts];
+#endif
+#if ENABLE(SILC)
+	if( type == MVChatConnectionSILCType )
+		return [MVSILCChatConnection defaultServerPorts];
+#endif
+#if ENABLE(XMPP)
+	if( type == MVChatConnectionXMPPType )
+		return [MVXMPPChatConnection defaultServerPorts];
+#endif
 	return nil;
 }
 
@@ -102,15 +151,30 @@ static const NSStringEncoding supportedEncodings[] = {
 - (id) initWithType:(MVChatConnectionType) connectionType {
 	[self release];
 
-	if( connectionType == MVChatConnectionICBType ) {
+	switch(connectionType) {
+#if ENABLE(ICB)
+	case MVChatConnectionICBType:
 		self = [[MVICBChatConnection allocWithZone:nil] init];
-	} else if( connectionType == MVChatConnectionIRCType ) {
+		break;
+#endif
+#if ENABLE(IRC)
+	case MVChatConnectionIRCType:
 		self = [[MVIRCChatConnection allocWithZone:nil] init];
-	} else if ( connectionType == MVChatConnectionSILCType ) {
+		break;
+#endif
+#if ENABLE(SILC)
+	case MVChatConnectionSILCType:
 		self = [[MVSILCChatConnection allocWithZone:nil] init];
-	} else if ( connectionType == MVChatConnectionXMPPType ) {
+		break;
+#endif
+#if ENABLE(XMPP)
+	case MVChatConnectionXMPPType:
 		self = [[MVXMPPChatConnection allocWithZone:nil] init];
-	} else self = nil;
+		break;
+#endif
+	default:
+		self = nil;
+	}
 
 	return self;
 }
@@ -119,10 +183,23 @@ static const NSStringEncoding supportedEncodings[] = {
 	NSParameterAssert( [MVChatConnection supportsURLScheme:[serverURL scheme]] );
 
 	int connectionType = 0;
-	if( [[serverURL scheme] isEqualToString:@"icb"] ) connectionType = MVChatConnectionICBType;
-	else if( [[serverURL scheme] isEqualToString:@"irc"] ) connectionType = MVChatConnectionIRCType;
-	else if( [[serverURL scheme] isEqualToString:@"silc"] ) connectionType = MVChatConnectionSILCType;
-	else if( [[serverURL scheme] isEqualToString:@"xmpp"] ) connectionType = MVChatConnectionXMPPType;
+
+#if ENABLE(ICB)
+	if( [[serverURL scheme] isEqualToString:@"icb"] )
+		connectionType = MVChatConnectionICBType;
+#endif
+#if ENABLE(IRC)
+	if( [[serverURL scheme] isEqualToString:@"irc"] )
+		connectionType = MVChatConnectionIRCType;
+#endif
+#if ENABLE(SILC)
+	if( [[serverURL scheme] isEqualToString:@"silc"] )
+		connectionType = MVChatConnectionSILCType;
+#endif
+#if ENABLE(XMPP)
+	if( [[serverURL scheme] isEqualToString:@"xmpp"] )
+		connectionType = MVChatConnectionXMPPType;
+#endif
 
 	if( ( self = [self initWithServer:[serverURL host] type:connectionType port:( [[serverURL port] unsignedIntValue] % 65536 ) user:[serverURL user]] ) ) {
 		[self setNicknamePassword:[serverURL password]];
@@ -250,7 +327,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[self disconnectWithReason:nil];
 }
 
-- (void) disconnectWithReason:(NSAttributedString *) reason {
+- (void) disconnectWithReason:(MVChatString *) reason {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
 }
@@ -737,11 +814,11 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (NSAttributedString *) awayStatusMessage {
+- (MVChatString *) awayStatusMessage {
 	return _awayMessage;
 }
 
-- (void) setAwayStatusMessage:(NSAttributedString *) message {
+- (void) setAwayStatusMessage:(MVChatString *) message {
 // subclass this method
 	[self doesNotRecognizeSelector:_cmd];
 }
@@ -829,6 +906,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	_status = MVChatConnectionConnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidConnectNotification object:self];
 
+#if ENABLE(PLUGINS)
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( MVChatConnection * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
@@ -836,6 +914,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[invocation setArgument:&self atIndex:2];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+#endif
 }
 
 - (void) _didNotConnect {
@@ -847,6 +926,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) _willDisconnect {
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWillDisconnectNotification object:self];
 
+#if ENABLE(PLUGINS)
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( MVChatConnection * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
@@ -854,6 +934,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[invocation setArgument:&self atIndex:2];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+#endif
 }
 
 - (void) _didDisconnect {
@@ -972,6 +1053,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
+#if ENABLE(SCRIPTING)
 @implementation MVChatConnection (MVChatConnectionScripting)
 - (NSNumber *) uniqueIdentifier {
 	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
@@ -1018,14 +1100,23 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (NSTextStorage *) scriptTypedAwayMessage {
-	return [[[NSTextStorage allocWithZone:nil] initWithAttributedString:_awayMessage] autorelease];
+#if USE(ATTRIBUTED_CHAT_STRING)
+	return [[[NSTextStorage allocWithZone:nil] initWithAttributedString:(NSAttributedString *)_awayMessage] autorelease];
+#elif USE(PLAIN_CHAT_STRING)
+	return [[[NSTextStorage allocWithZone:nil] initWithString:(NSString *)_awayMessage] autorelease];
+#endif
 }
 
 - (void) setScriptTypedAwayMessage:(id) message {
+#if USE(ATTRIBUTED_CHAT_STRING)
 	NSString *msg = message;
 	if( [message isKindOfClass:[NSTextStorage class]] ) msg = [message string];
 	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:msg baseURL:nil];
 	[self setAwayStatusMessage:attributeMsg];
+#elif USE(PLAIN_CHAT_STRING)
+	if( [message isKindOfClass:[NSString class]] );
+		[self setAwayStatusMessage:message];
+#endif
 }
 
 #pragma mark -
@@ -1189,7 +1280,12 @@ static const NSStringEncoding supportedEncodings[] = {
 		return nil;
 	}
 
+#if USE(ATTRIBUTED_CHAT_STRING)
 	NSAttributedString *realMessage = [NSAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
+#elif USE(PLAIN_CHAT_STRING)
+	NSString *realMessage = message;
+#endif
+
 	NSStringEncoding realEncoding = NSUTF8StringEncoding;
 	BOOL realAction = ( action ? [action boolValue] : NO );
 	BOOL realLocalEcho = ( localEcho ? [localEcho boolValue] : YES );
@@ -1378,3 +1474,4 @@ static const NSStringEncoding supportedEncodings[] = {
 	return nil;
 }
 @end
+#endif

@@ -3,13 +3,17 @@
 #import "MVSILCChatUser.h"
 #import "MVFileTransfer.h"
 #import "MVChatPluginManager.h"
-#import "NSAttributedStringAdditions.h"
 #import "NSColorAdditions.h"
 #import "NSMethodSignatureAdditions.h"
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
 #import "NSDataAdditions.h"
 #import "MVUtilities.h"
+#import "MVChatString.h"
+
+#if USE(ATTRIBUTED_CHAT_STRING)
+#import "NSAttributedStringAdditions.h"
+#endif
 
 static SilcPKCS silcPkcs;
 static SilcPublicKey silcPublicKey;
@@ -1060,14 +1064,14 @@ static SilcClientOperations silcClientOps = {
 	else [NSThread detachNewThreadSelector:@selector( _silcRunloop ) toTarget:self withObject:nil];
 }
 
-- (void) disconnectWithReason:(NSAttributedString *) reason {
+- (void) disconnectWithReason:(MVChatString *) reason {
 	[self cancelPendingReconnectAttempts];
 
 	if( [self status] != MVChatConnectionConnectedStatus ) return;
 
 	_sentQuitCommand = YES;
 
-	if( [[reason string] length] ) {
+	if( [reason length] ) {
 		const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:reason andChatFormat:[self outgoingChatFormat]];
 		[self sendRawMessageWithFormat:@"QUIT %s", msg];
 	} else {
@@ -1367,13 +1371,13 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	}
 }
 
-- (void) setAwayStatusMessage:(NSAttributedString *) message {
+- (void) setAwayStatusMessage:(MVChatString *) message {
 	if( ! [self _silcConn] ) return;
 
 	[_awayMessage release];
 	_awayMessage = nil;
 
-	if( [[message string] length] ) {
+	if( [message length] ) {
 		_awayMessage = [message copy];
 
 		[self sendRawMessage:@"UMODE +g"];
@@ -1404,7 +1408,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 #pragma mark -
 
 @implementation MVSILCChatConnection (MVSILCChatConnectionPrivate)
-+ (const char *) _flattenedSILCStringForMessage:(NSAttributedString *) message andChatFormat:(MVChatMessageFormat) format {
++ (const char *) _flattenedSILCStringForMessage:(MVChatString *) message andChatFormat:(MVChatMessageFormat) format {
 	NSString *cformat = nil;
 
 	switch( format ) {

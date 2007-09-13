@@ -1,3 +1,5 @@
+#import <ChatCore/MVChatString.h>
+
 typedef enum {
 	MVChatRoomNoModes = 0,
 	MVChatRoomPrivateMode = 1 << 0,
@@ -143,13 +145,14 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 
 - (void) join;
 - (void) part;
-- (void) partWithReason:(NSAttributedString *) reason;
 
-- (void) setTopic:(NSAttributedString *) topic;
+- (void) partWithReason:(MVChatString *) reason;
 
-- (void) sendMessage:(NSAttributedString *) message asAction:(BOOL) action;
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes;
+- (void) setTopic:(MVChatString *) topic;
+
+- (void) sendMessage:(MVChatString *) message asAction:(BOOL) action;
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes;
 
 - (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments;
 - (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments;
@@ -174,7 +177,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 - (MVChatUser *) memberUserWithUniqueIdentifier:(id) identifier;
 - (BOOL) hasUser:(MVChatUser *) user;
 
-- (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason;
+- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString *) reason;
 
 - (void) addBanForUser:(MVChatUser *) user;
 - (void) removeBanForUser:(MVChatUser *) user;

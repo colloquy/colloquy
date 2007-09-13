@@ -185,7 +185,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[self partWithReason:nil];
 }
 
-- (void) partWithReason:(NSAttributedString *) reason {
+- (void) partWithReason:(MVChatString *) reason {
 // subclass this method, don't call super
 	[self doesNotRecognizeSelector:_cmd];
 }
@@ -224,15 +224,15 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message asAction:(BOOL) action {
+- (void) sendMessage:(MVChatString *) message asAction:(BOOL) action {
 	[self sendMessage:message withEncoding:[self encoding] asAction:action];
 }
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	[self sendMessage:message withEncoding:encoding withAttributes:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:action] forKey:@"action"]];
 }
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
 	// subclass this method, don't call super
 	[self doesNotRecognizeSelector:_cmd];
 }
@@ -255,7 +255,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 #endif
 
-- (void) setTopic:(NSAttributedString *) topic {
+- (void) setTopic:(MVChatString *) topic {
 // subclass this method, if needed
 }
 
@@ -447,7 +447,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-- (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason {
+- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString *) reason {
 	NSParameterAssert( user != nil );
 // subclass this method, call super first
 }

@@ -3,6 +3,7 @@
 #import "MVXMPPChatUser.h"
 #import "MVXMPPChatConnection.h"
 #import "MVUtilities.h"
+#import "MVChatString.h"
 
 @implementation MVXMPPChatUser
 - (id) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) userConnection {
@@ -60,7 +61,7 @@
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( message != nil );
 
 	JabberMessage *jabberMsg = [[JabberMessage alloc] initWithRecipient:_uniqueIdentifier andBody:[message string]];

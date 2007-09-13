@@ -1,4 +1,5 @@
 #import <ChatCore/MVUtilities.h>
+#import <ChatCore/MVChatString.h>
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>

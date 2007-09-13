@@ -5,6 +5,7 @@
 #import "MVXMPPChatConnection.h"
 #import "MVUtilities.h"
 #import "NSStringAdditions.h"
+#import "MVChatString.h"
 
 @implementation MVXMPPChatRoom
 - (id) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) connection {
@@ -44,7 +45,7 @@
 
 #pragma mark -
 
-- (void) partWithReason:(NSAttributedString *) reason {
+- (void) partWithReason:(MVChatString *) reason {
 	if( ! [self isJoined] ) return;
 	[self _setDateParted:[NSDate date]];
 
@@ -52,14 +53,14 @@
 
 #pragma mark -
 
-- (void) setTopic:(NSAttributedString *) newTopic {
+- (void) setTopic:(MVChatString *) newTopic {
 	NSParameterAssert( newTopic != nil );
 
 }
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) msgEncoding withAttributes:(NSDictionary *) attributes {
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) msgEncoding withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( message != nil );
 
 	JabberMessage *jabberMsg = [[JabberMessage alloc] initWithRecipient:_uniqueIdentifier andBody:[message string]];
@@ -106,7 +107,7 @@
 
 #pragma mark -
 
-- (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason {
+- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString *) reason {
 	[super kickOutMemberUser:user forReason:reason];
 
 }

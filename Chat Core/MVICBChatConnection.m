@@ -160,7 +160,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 #pragma mark Modifiers
 
-- (void) setAwayStatusMessage:(NSAttributedString *) message {
+- (void) setAwayStatusMessage:(MVChatString *) message {
 }
 
 - (void) setNickname:(NSString *) newNickname {
@@ -241,7 +241,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 		      inThread:_connectionThread];
 }
 
-- (void) disconnectWithReason:(NSAttributedString *) reason {
+- (void) disconnectWithReason:(MVChatString *) reason {
 	[self cancelPendingReconnectAttempts];
 	if( _sendQueueProcessing && _connectionThread )
 		[self performSelector:@selector( _stopSendQueue )

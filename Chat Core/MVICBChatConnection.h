@@ -60,33 +60,7 @@
 }
 + (NSArray *) defaultServerPorts;
 
-- (id) init;
-- (void) finalize;
-- (MVChatConnectionType) type;
-- (void) connect;
-- (void) disconnectWithReason:(NSAttributedString *) reason;
-- (NSString *) urlScheme;
-- (void) setUsername:(NSString *) newUsername;
-- (NSString *) username;
-- (void) setNickname:(NSString *) newNickname;
-- (NSString *) nickname;
-- (void) setPassword:(NSString *) newPassword;
-- (NSString *) password;
-- (void) setServer:(NSString *) newServer;
-- (NSString *) server;
-- (void) setServerPort:(unsigned short) port;
-- (unsigned short) serverPort;
-- (void) sendRawMessage:(id) raw immediately:(BOOL) now;
-- (void) joinChatRoomsNamed:(NSArray *) rooms;
-- (void) joinChatRoomNamed:(NSString *) room withPassphrase:
-                           (NSString *) passphrase;
-- (NSSet *) knownChatUsers;
-- (NSSet *) chatUsersWithNickname:(NSString *) nickname;
-- (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier;
 - (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier;
-- (void) fetchChatRoomList;
-- (void) setAwayStatusMessage:(NSAttributedString *) message;
-
 @end
 
 @class ICBPacket;

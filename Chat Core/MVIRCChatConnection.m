@@ -4,18 +4,24 @@
 #import "MVIRCFileTransfer.h"
 #import "MVIRCNumerics.h"
 #import "MVDirectChatConnectionPrivate.h"
+#import "MVChatString.h"
 
 #import "AsyncSocket.h"
 #import "InterThreadMessaging.h"
 #import "MVChatuserWatchRule.h"
-#import "MVChatPluginManager.h"
-#import "NSAttributedStringAdditions.h"
-#import "NSColorAdditions.h"
 #import "NSMethodSignatureAdditions.h"
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
 #import "NSDataAdditions.h"
 #import "MVUtilities.h"
+
+#if USE(ATTRIBUTED_CHAT_STRING)
+#import "NSAttributedStringAdditions.h"
+#endif
+
+#if ENABLE(PLUGINS)
+#import "MVChatPluginManager.h"
+#endif
 
 #define JVMinimumSendQueueDelay 0.2
 #define JVMaximumSendQueueDelay 2.0
@@ -208,14 +214,14 @@ static const NSStringEncoding supportedEncodings[] = {
 		[self performSelector:@selector( _connect ) inThread:_connectionThread];
 }
 
-- (void) disconnectWithReason:(NSAttributedString *) reason {
+- (void) disconnectWithReason:(MVChatString *) reason {
 	[self performSelectorOnMainThread:@selector( cancelPendingReconnectAttempts ) withObject:nil waitUntilDone:YES];
 
 	if( _sendQueueProcessing && _connectionThread )
 		[self performSelector:@selector( _stopSendQueue ) withObject:nil inThread:_connectionThread];
 
 	if( _status == MVChatConnectionConnectedStatus ) {
-		if( [[reason string] length] ) {
+		if( [reason length] ) {
 			NSData *msg = [[self class] _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 			[self sendRawMessageImmediatelyWithComponents:@"QUIT :", msg, nil];
 		} else [self sendRawMessage:@"QUIT" immediately:YES];
@@ -501,8 +507,8 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) setAwayStatusMessage:(NSAttributedString *) message {
-	if( [[message string] length] ) {
+- (void) setAwayStatusMessage:(MVChatString *) message {
+	if( [message length] ) {
 		MVSafeCopyAssign( &_awayMessage, message );
 
 		NSData *msg = [[self class] _flattenedIRCDataForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
@@ -914,7 +920,8 @@ end:
 
 #pragma mark -
 
-+ (NSData *) _flattenedIRCDataForMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format {
+#if USE(ATTRIBUTED_CHAT_STRING)
++ (NSData *) _flattenedIRCDataForMessage:(MVChatString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format {
 	NSString *cformat = nil;
 
 	switch( format ) {
@@ -933,12 +940,18 @@ end:
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:enc], @"StringEncoding", cformat, @"FormatType", nil];
 	return [message chatFormatWithOptions:options];
 }
+#elif USE(PLAIN_CHAT_STRING)
++ (NSData *) _flattenedIRCDataForMessage:(MVChatString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format {
+	return [message dataUsingEncoding:enc allowLossyConversion:YES];
+}
+#endif
 
-- (void) _sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) msgEncoding toTarget:(id) target withAttributes:(NSDictionary *) attributes {
+- (void) _sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) msgEncoding toTarget:(id) target withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( [target isKindOfClass:[MVChatUser class]] || [target isKindOfClass:[MVChatRoom class]] );
 
 	NSMutableData *msg = [[[self class] _flattenedIRCDataForMessage:message withEncoding:msgEncoding andChatFormat:[self outgoingChatFormat]] mutableCopyWithZone:nil];
 
+#if ENABLE(PLUGINS)
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( id ), @encode( NSDictionary * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processOutgoingMessageAsData:to:attributes: )];
@@ -947,6 +960,8 @@ end:
 	[invocation setArgument:&attributes atIndex:4];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+#endif
+
 	if( ! [msg length] ) {
 		[msg release];
 		return;
@@ -1073,6 +1088,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	[self _stopSendQueue];
+
 	@synchronized( _sendQueue ) {
 		if( [_sendQueue count] )
 			[self _startSendQueue];
@@ -1474,6 +1490,7 @@ end:
 	NSMutableDictionary *msgAttributes = [privmsgInfo mutableCopyWithZone:nil];
 	[msgAttributes setObject:[NSNumber numberWithBool:NO] forKey:@"notice"];
 
+#if ENABLE(PLUGINS)
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatUser * ), @encode( id ), @encode( NSMutableDictionary * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processIncomingMessageAsData:from:to:attributes: )];
@@ -1483,6 +1500,8 @@ end:
 	[invocation setArgument:&msgAttributes atIndex:5];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+#endif
+
 	if( ! [message length] ) return;
 
 	if( room ) {
@@ -1545,6 +1564,7 @@ end:
 	NSMutableDictionary *msgAttributes = [noticeInfo mutableCopyWithZone:nil];
 	[msgAttributes setObject:[NSNumber numberWithBool:YES] forKey:@"notice"];
 
+#if ENABLE(PLUGINS)
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatUser * ), @encode( id ), @encode( NSMutableDictionary * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processIncomingMessageAsData:from:to:attributes: )];
@@ -1554,6 +1574,8 @@ end:
 	[invocation setArgument:&msgAttributes atIndex:5];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+#endif
+
 	if( ! [message length] ) return;
 
 	if( room ) {
@@ -1563,7 +1585,6 @@ end:
 
 		if( [[sender nickname] isEqualToString:@"NickServ"] ) {
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
-
 			if( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"IDENTIFY"] ) {
 				if( ! [self nicknamePassword] ) {
 					[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
@@ -1654,6 +1675,7 @@ end:
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:( request ? MVChatConnectionSubcodeRequestNotification : MVChatConnectionSubcodeReplyNotification ) object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
 
+#if ENABLE(PLUGINS)
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatUser * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	if( request ) [invocation setSelector:@selector( processSubcodeRequest:withArguments:fromUser: )];
@@ -1669,6 +1691,7 @@ end:
 		[ctcpInfo release];
 		return;
 	}
+#endif
 
 	if( request ) {
 		if( [command isCaseInsensitiveEqualToString:@"VERSION"] ) {
@@ -2105,6 +2128,7 @@ end:
 	MVChatUser *author = [topicInfo objectForKey:@"author"];
 	NSMutableData *topic = [[topicInfo objectForKey:@"topic"] mutableCopyWithZone:nil];
 
+#if ENABLE(PLUGINS)
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatRoom * ), @encode( MVChatUser * ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	[invocation setSelector:@selector( processTopicAsData:inRoom:author: )];
@@ -2113,6 +2137,7 @@ end:
 	[invocation setArgument:&author atIndex:4];
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+#endif
 
 	[room _setTopic:topic];
 	[room _setTopicAuthor:author];

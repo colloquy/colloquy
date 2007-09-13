@@ -1,7 +1,9 @@
 #import "MVIRCChatUser.h"
 #import "MVIRCChatConnection.h"
+#import "MVChatConnectionPrivate.h"
 #import "NSStringAdditions.h"
 #import "MVUtilities.h"
+#import "MVChatString.h"
 
 @implementation MVIRCChatUser
 - (id) initLocalUserWithConnection:(MVIRCChatConnection *) userConnection {
@@ -42,7 +44,7 @@
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( message != nil );
 	[[self connection] _sendMessage:message withEncoding:encoding toTarget:self withAttributes:attributes];
 }

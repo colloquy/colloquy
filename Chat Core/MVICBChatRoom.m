@@ -34,6 +34,7 @@
 
 #import "MVICBChatConnection.h"
 #import "MVICBChatRoom.h"
+#import "MVChatString.h"
 
 @implementation MVICBChatRoom
 
@@ -51,15 +52,15 @@
 
 #pragma mark Generic room handling
 
-- (void) partWithReason:(NSAttributedString *) reason {
+- (void) partWithReason:(MVChatString *) reason {
 }
 
-- (void) setTopic:(NSAttributedString *) newTopic {
+- (void) setTopic:(MVChatString *) newTopic {
 	NSParameterAssert( newTopic );
 	[(MVICBChatConnection *)_connection ctsCommandTopicSet:[newTopic string]];
 }
 
-- (void) sendMessage:(NSAttributedString *) message
+- (void) sendMessage:(MVChatString *) message
          withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
 	if( [_memberUsers count] > 1 )
 		[(MVICBChatConnection *)_connection ctsOpenPacket:[message string]];

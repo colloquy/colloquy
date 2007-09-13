@@ -1,3 +1,5 @@
+#import <ChatCore/MVChatString.h>
+
 typedef enum {
 	MVChatConnectionUnsupportedType = 0,
 	MVChatConnectionICBType = 'icbC',
@@ -101,7 +103,8 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSDate *_cachedDate;
 	NSDate *_lastConnectAttempt;
 	NSTimer *_reconnectTimer;
-	NSAttributedString *_awayMessage;
+	MVChatString *_awayMessage;
+
 	NSMutableDictionary *_persistentInformation;
 	NSError *_lastError;
 
@@ -187,7 +190,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property(readonly) NSSet *chatUserWatchRules;
 
-@property(bycopy) NSAttributedString *awayStatusMessage;
+@property(bycopy) MVChatString *awayStatusMessage;
 
 @property(readonly) BOOL connected;
 @property(readonly) BOOL waitingToReconnect;
@@ -319,8 +322,8 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-- (NSAttributedString *) awayStatusMessage;
-- (void) setAwayStatusMessage:(NSAttributedString *) message;
+- (MVChatString *) awayStatusMessage;
+- (void) setAwayStatusMessage:(MVChatString *) message;
 
 #pragma mark -
 
@@ -344,7 +347,7 @@ extern NSString *MVChatConnectionErrorDomain;
 - (void) connect;
 - (void) connectToServer:(NSString *) server onPort:(unsigned short) port asUser:(NSString *) nickname;
 - (void) disconnect;
-- (void) disconnectWithReason:(NSAttributedString *) reason;
+- (void) disconnectWithReason:(MVChatString *) reason;
 
 #pragma mark -
 

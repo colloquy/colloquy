@@ -20,6 +20,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	return address;
 }
 
+#if ENABLE(AUTO_PORT_MAPPING)
 static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 	int statuses[] = {
 		TR_NAT_TRAVERSAL_MAPPED,
@@ -43,6 +44,7 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 
 	return TR_NAT_TRAVERSAL_ERROR;
 }
+#endif
 
 #pragma mark -
 
@@ -59,11 +61,13 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 	[_acceptConnection disconnect];
 	[_connection disconnect];
 
+#if ENABLE(AUTO_PORT_MAPPING)
 	if( _upnp ) tr_upnpClose( _upnp );
 	_upnp = NULL;
 
 	if( _natpmp ) tr_natpmpClose( _natpmp );
 	_natpmp = NULL;
+#endif
 
 	[super finalize];
 }
@@ -84,11 +88,13 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 	[_threadWaitLock release];
 	_threadWaitLock = nil;
 
+#if ENABLE(AUTO_PORT_MAPPING)
 	if( _upnp ) tr_upnpClose( _upnp );
 	_upnp = NULL;
 
 	if( _natpmp ) tr_natpmpClose( _natpmp );
 	_natpmp = NULL;
+#endif
 
 	_connectionThread = nil;
 	_delegate = nil;
@@ -274,6 +280,7 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 		}
 	}
 
+#if ENABLE(AUTO_PORT_MAPPING)
 	if( success && [MVFileTransfer isAutoPortMappingEnabled] ) {
 		tr_msgInit();
 		tr_fdInit();
@@ -295,6 +302,7 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 			status = natTraversalStatus( _upnp, _natpmp );
 		} while( ( status == 1 || status == 3 ) && ABS( [mappingStart timeIntervalSinceNow] ) < 5. ); 
 	}
+#endif
 
 	if( success && [_delegate respondsToSelector:@selector( directClientConnection:acceptingConnectionsToHost:port: )] )
 		[_delegate directClientConnection:self acceptingConnectionsToHost:[_acceptConnection localHost] port:port];
@@ -303,11 +311,13 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 - (void) _finish {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _finish ) object:nil];	
 
+#if ENABLE(AUTO_PORT_MAPPING)
 	if( _upnp ) tr_upnpClose( _upnp );
 	_upnp = NULL;
 
 	if( _natpmp ) tr_natpmpClose( _natpmp );
 	_natpmp = NULL;
+#endif
 
 	id old = _acceptConnection;
 	_acceptConnection = nil;
@@ -344,8 +354,10 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 	pool = nil;
 
 	while( ! _done ) {
+#if ENABLE(AUTO_PORT_MAPPING)
 		if( _upnp ) tr_upnpPulse( _upnp );
 		if( _natpmp ) tr_natpmpPulse( _natpmp );
+#endif
 
 		pool = [[NSAutoreleasePool allocWithZone:nil] init];
 

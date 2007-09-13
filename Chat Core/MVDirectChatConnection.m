@@ -6,10 +6,14 @@
 #import "MVIRCChatConnection.h"
 #import "MVFileTransfer.h"
 #import "MVChatUser.h"
+#import "MVChatString.h"
 #import "MVUtilities.h"
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
+
+#if USE(ATTRIBUTED_CHAT_STRING)
 #import "NSAttributedStringAdditions.h"
+#endif
 
 NSString *MVDirectChatConnectionOfferNotification = @"MVDirectChatConnectionOfferNotification";
 
@@ -154,20 +158,21 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message asAction:(BOOL) action {
+- (void) sendMessage:(MVChatString *) message asAction:(BOOL) action {
 	[self sendMessage:message withEncoding:[self encoding] asAction:action];
 }
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action {
 	[self sendMessage:message withEncoding:encoding withAttributes:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:action] forKey:@"action"]];
 }
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *)attributes {
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *)attributes {
 	NSParameterAssert( message != nil );
 
 	if( [self status] != MVDirectChatConnectionConnectedStatus )
 		return;
 
+#if USE(ATTRIBUTED_CHAT_STRING)
 	NSString *cformat = nil;
 
 	switch( [self outgoingChatFormat] ) {
@@ -185,6 +190,9 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:encoding], @"StringEncoding", cformat, @"FormatType", nil];
 	NSData *msg = [message chatFormatWithOptions:options];
+#elif USE(PLAIN_CHAT_STRING)
+	NSData *msg = [message dataUsingEncoding:encoding allowLossyConversion:YES];
+#endif
 
 	if( [[attributes objectForKey:@"action"] boolValue] ) {
 		NSMutableData *newMsg = [[NSMutableData allocWithZone:nil] initWithCapacity:[msg length] + 11];

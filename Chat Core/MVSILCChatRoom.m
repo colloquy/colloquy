@@ -1,6 +1,7 @@
 #import "MVSILCChatRoom.h"
 #import "MVSILCChatUser.h"
 #import "MVSILCChatConnection.h"
+#import "MVChatString.h"
 
 @implementation MVSILCChatRoom
 - (id) initWithChannelEntry:(SilcChannelEntry) channelEntry andConnection:(MVSILCChatConnection *) roomConnection {
@@ -48,7 +49,7 @@
 
 #pragma mark -
 
-- (void) partWithReason:(NSAttributedString *) reason {
+- (void) partWithReason:(MVChatString *) reason {
 	if( ! [self isJoined] ) return;
 	if( [reason length] ) [[self connection] sendRawMessageWithFormat:@"LEAVE %@ %@", [self name], reason];
 	else [[self connection] sendRawMessageWithFormat:@"LEAVE %@", [self name]];
@@ -57,7 +58,7 @@
 
 #pragma mark -
 
-- (void) setTopic:(NSAttributedString *) newTopic {
+- (void) setTopic:(MVChatString *) newTopic {
 	NSParameterAssert( newTopic != nil );
 	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:newTopic andChatFormat:[[self connection] outgoingChatFormat]];
 	[[self connection] sendRawMessageWithFormat:@"TOPIC %@ %s", [self name], msg];
@@ -65,7 +66,7 @@
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( message != nil );
 
 	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:message andChatFormat:[[self connection] outgoingChatFormat]];
@@ -181,7 +182,7 @@
 
 #pragma mark -
 
-- (void) kickOutMemberUser:(MVChatUser *) user forReason:(NSAttributedString *) reason {
+- (void) kickOutMemberUser:(MVChatUser *) user forReason:(MVChatString *) reason {
 	SilcBuffer roomBuffer, userBuffer;
 	MVSILCChatUser *silcUser = (MVSILCChatUser *) user;
 

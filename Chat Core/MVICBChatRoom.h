@@ -41,9 +41,4 @@
 
 - (id) initWithName:(NSString *) name
        andConnection:(MVICBChatConnection *) connection;
-
-- (void) partWithReason:(NSAttributedString *) reason;
-- (void) setTopic:(NSAttributedString *) newTopic;
-- (void) sendMessage:(NSAttributedString *) message
-         withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes;
 @end

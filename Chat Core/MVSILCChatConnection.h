@@ -34,7 +34,7 @@
 #pragma mark -
 
 @interface MVChatConnection (MVSILCChatConnectionPrivate)
-+ (const char *) _flattenedSILCStringForMessage:(NSAttributedString *) message andChatFormat:(MVChatMessageFormat) format;
++ (const char *) _flattenedSILCStringForMessage:(MVChatString *) message andChatFormat:(MVChatMessageFormat) format;
 
 - (void) _initLocalUser;
 

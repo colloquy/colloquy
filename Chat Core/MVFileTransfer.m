@@ -1,11 +1,18 @@
 #import "MVFileTransfer.h"
-#import "MVIRCFileTransfer.h"
-#import "MVSILCFileTransfer.h"
+#import "MVChatConnectionPrivate.h"
 #import "MVChatConnection.h"
-#import "MVIRCChatConnection.h"
 #import "MVChatUser.h"
 #import "MVUtilities.h"
 #import "NSNotificationAdditions.h"
+
+#if ENABLE(IRC)
+#import "MVIRCFileTransfer.h"
+#import "MVIRCChatConnection.h"
+#endif
+
+#if ENABLE(SILC)
+#import "MVSILCFileTransfer.h"
+#endif
 
 NSString *MVDownloadFileTransferOfferNotification = @"MVDownloadFileTransferOfferNotification";
 NSString *MVFileTransferStartedNotification = @"MVFileTransferStartedNotification";
@@ -31,7 +38,11 @@ static BOOL autoPortMapping = YES;
 }
 
 + (BOOL) isAutoPortMappingEnabled {
+#if ENABLE(AUTO_PORT_MAPPING)
 	return autoPortMapping;
+#else
+	return NO;
+#endif
 }
 
 #pragma mark -
@@ -190,13 +201,18 @@ static BOOL autoPortMapping = YES;
 
 @implementation MVUploadFileTransfer
 + (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
-	if( [[user connection] type] == MVChatConnectionIRCType ) {
+	switch([[user connection] type]) {
+#if ENABLE(IRC)
+	case MVChatConnectionIRCType:
 		return [MVIRCUploadFileTransfer transferWithSourceFile:path toUser:user passively:passive];
-	} else if ( [[user connection] type] == MVChatConnectionSILCType ) {
+#endif
+#if ENABLE(SILC)
+	case MVChatConnectionSILCType:
 		return [MVSILCUploadFileTransfer transferWithSourceFile:path toUser:user passively:passive];
+#endif
+	default:
+		return nil;
 	}
-
-	return nil;
 }
 
 #pragma mark -

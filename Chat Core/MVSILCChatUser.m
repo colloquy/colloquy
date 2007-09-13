@@ -1,5 +1,6 @@
 #import "MVSILCChatUser.h"
 #import "MVSILCChatConnection.h"
+#import "MVChatString.h"
 
 @implementation MVSILCChatUser
 - (id) initLocalUserWithConnection:(MVSILCChatConnection *) userConnection {
@@ -104,7 +105,7 @@
 
 #pragma mark -
 
-- (void) sendMessage:(NSAttributedString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( message != nil );
 
 	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:message andChatFormat:[[self connection] outgoingChatFormat]];
