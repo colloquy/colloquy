@@ -36,8 +36,14 @@
 
 - (void) partWithReason:(MVChatString *) reason {
 	if( ! [self isJoined] ) return;
-	if( ! [reason length] ) [[self connection] sendRawMessageImmediatelyWithFormat:@"PART %@", [self name]];
-	else [[self connection] sendRawMessageImmediatelyWithFormat:@"PART %@ :%@", [self name], [reason string]];
+
+	if( [reason length] ) {
+		NSData *reasonData = [MVIRCChatConnection _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
+		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PART %@ :", [self name]];
+		[[self connection] sendRawMessageWithComponents:prefix, reasonData, nil];
+		[prefix release];
+	} else [[self connection] sendRawMessageImmediatelyWithFormat:@"PART %@", [self name]];
+
 	[self _setDateParted:[NSDate date]];
 }
 
