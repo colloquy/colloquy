@@ -3121,7 +3121,10 @@
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					DEBUG,
+					"$(GCC_PREPROCESSOR_DEFINITIONS)",
+				);
 				SYMROOT = build;
 			};
 			name = Development;
