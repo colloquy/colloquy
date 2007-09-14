@@ -1281,7 +1281,7 @@ static SilcClientOperations silcClientOps = {
 	unsigned char *identifier = silc_id_id2str( channel -> id, SILC_ID_CHANNEL );
 	if( identifier ) {
 		unsigned length = silc_id_get_len( channel -> id, SILC_ID_CHANNEL );
-		NSData *uniqueIdentifier = [[NSData allocWithZone:nil] initWithBytes:identifier length:length];
+		NSData *uniqueIdentifier = [[NSData allocWithZone:nil] initWithBytesNoCopy:identifier length:length freeWhenDone:NO];
 		room = [self joinedChatRoomWithUniqueIdentifier:uniqueIdentifier];
 		[uniqueIdentifier release];
 	}
