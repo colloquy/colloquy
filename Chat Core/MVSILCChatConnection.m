@@ -81,7 +81,7 @@ static void silc_channel_message( SilcClient client, SilcClientConnection conn, 
 	BOOL action = NO;
 	if( flags & SILC_MESSAGE_FLAG_ACTION ) action = YES;
 
-	MVChatRoom *room = [self joinedChatRoomWithName:[NSString stringWithUTF8String:channel -> channel_name]];
+	MVChatRoom *room = [self joinedChatRoomWithChannel:channel];
 	MVChatUser *user = [self _chatUserWithClientEntry:sender];
 	NSString *mimeType = @"text/plain";
 	NSData *msgData = nil;
@@ -258,7 +258,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			// we send a notification that we joined the channel in the COMMAND callback, no need to do it here too.
 			if( joining_client == conn -> local_entry ) break;
 
-			MVChatRoom *room = [self joinedChatRoomWithName:[NSString stringWithUTF8String:channel -> channel_name]];
+			MVChatRoom *room = [self joinedChatRoomWithChannel:channel];
 			MVChatUser *member = [self _chatUserWithClientEntry:joining_client];
 
 			[member _setDateDisconnected:nil];
@@ -285,7 +285,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 
 			if( ! leaving_client || ! channel ) break;
 
-			MVChatRoom *room = [self joinedChatRoomWithName:[NSString stringWithUTF8String:channel -> channel_name]];
+			MVChatRoom *room = [self joinedChatRoomWithChannel:channel];
 			MVChatUser *member = [self _chatUserWithClientEntry:leaving_client];
 
 			[room _removeMemberUser:member];
@@ -304,7 +304,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			if( setter_id_type == SILC_ID_CLIENT )
 				authorUser = [self _chatUserWithClientEntry:(SilcClientEntry)setter_entry];
 
-			MVChatRoom *room = [self joinedChatRoomWithName:[NSString stringWithUTF8String:channel -> channel_name]];
+			MVChatRoom *room = [self joinedChatRoomWithChannel:channel];
 			NSData *msgData = ( topic ? [[NSData allocWithZone:nil] initWithBytes:topic length:strlen( topic )] : nil );
 			[room _setTopic:msgData];
 			[msgData release];
@@ -329,7 +329,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			if( changer_id_type == SILC_ID_CLIENT )
 				changerUser = [self _chatUserWithClientEntry:(SilcClientEntry)changer_entry];
 
-			MVChatRoom *room = [self joinedChatRoomWithName:[NSString stringWithUTF8String:channel -> channel_name]];
+			MVChatRoom *room = [self joinedChatRoomWithChannel:channel];
 			MVChatUser *member = [self _chatUserWithClientEntry:target_client];
 
 			BOOL enabled = NO;
@@ -396,7 +396,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 
 			NSData *msgData = ( kick_message ? [[NSData allocWithZone:nil] initWithBytes:kick_message length:strlen( kick_message )] : nil );
 
-			MVChatRoom *room = [self joinedChatRoomWithName:[NSString stringWithUTF8String:channel -> channel_name]];
+			MVChatRoom *room = [self joinedChatRoomWithChannel:channel];
 			MVChatUser *member = [self _chatUserWithClientEntry:kicked];
 			MVChatUser *byMember = [self _chatUserWithClientEntry:kicker];
 			[room _removeMemberUser:member];
@@ -628,7 +628,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		/* SilcBuffer channel_pubkeys = */ va_arg( list, SilcBuffer );
 		/* SilcUInt32 user_limit = */ va_arg( list, SilcUInt32 );
 
-		MVSILCChatRoom *room = (MVSILCChatRoom *)[self joinedChatRoomWithName:[NSString stringWithUTF8String:channel -> channel_name]];
+		MVSILCChatRoom *room = (MVSILCChatRoom *)[self joinedChatRoomWithChannel:channel];
 		if( ! room ) {
 			room = [[MVSILCChatRoom allocWithZone:nil] initWithChannelEntry:channel andConnection:self];
 			[self _addJoinedRoom:room];
@@ -672,7 +672,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		break;
 	case SILC_COMMAND_LEAVE: {
 		SilcChannelEntry channel = va_arg( list, SilcChannelEntry );
-		MVChatRoom *room = [self joinedChatRoomWithName:[NSString stringWithUTF8String:channel -> channel_name]];
+		MVChatRoom *room = [self joinedChatRoomWithChannel:channel];
 		[room _setDateParted:[NSDate date]];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomPartedNotification object:room userInfo:nil];
 	}	break;
@@ -1270,12 +1270,26 @@ static SilcClientOperations silcClientOps = {
 }
 
 - (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
-	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
-	return [super joinedChatRoomWithUniqueIdentifier:[(NSString *)identifier lowercaseString]];
+	NSParameterAssert( [identifier isKindOfClass:[NSData class]] );
+	return [super joinedChatRoomWithUniqueIdentifier:identifier];
 }
 
-- (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
-	return [super joinedChatRoomWithUniqueIdentifier:[name lowercaseString]];
+- (MVChatRoom *) joinedChatRoomWithChannel:(SilcChannelEntry) channel {
+	if( ! channel ) return nil;
+
+	MVChatRoom *room = nil;
+	unsigned char *identifier = silc_id_id2str( channel -> id, SILC_ID_CHANNEL );
+	if( identifier ) {
+		unsigned length = silc_id_get_len( channel -> id, SILC_ID_CHANNEL );
+		NSData *uniqueIdentifier = [[NSData allocWithZone:nil] initWithBytes:identifier length:length];
+		room = [self joinedChatRoomWithUniqueIdentifier:uniqueIdentifier];
+		[uniqueIdentifier release];
+	}
+
+	if( ! room && channel -> channel_name )
+		room = [self joinedChatRoomWithName:[NSString stringWithUTF8String:channel -> channel_name]];
+
+	return room;
 }
 
 #pragma mark -

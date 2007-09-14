@@ -29,6 +29,8 @@
 	BOOL _lookingUpUsers;
 }
 + (NSArray *) defaultServerPorts;
+
+- (MVChatRoom *) joinedChatRoomWithChannel:(SilcChannelEntry) channel;
 @end
 
 #pragma mark -
