@@ -3187,7 +3187,7 @@
 					ppc,
 					i386,
 				);
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				SDKROOT = /Developer/MacOSX10.4u.sdk;
 				SYMROOT = build;
 			};
 			name = "Release (Universal)";

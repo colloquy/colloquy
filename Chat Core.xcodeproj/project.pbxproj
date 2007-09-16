@@ -749,7 +749,6 @@
 				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Basic.pch;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "USE_ATTRIBUTED_CHAT_STRING=1";
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
@@ -770,7 +769,6 @@
 				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Basic.pch;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "USE_ATTRIBUTED_CHAT_STRING=1";
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
@@ -809,7 +807,6 @@
 				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Basic.pch;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "USE_ATTRIBUTED_CHAT_STRING=1";
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (

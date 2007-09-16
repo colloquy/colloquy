@@ -47,7 +47,6 @@ ONLY_LINK_ESSENTIAL_SYMBOLS = YES
 OTHER_CFLAGS = -fconstant-cfstrings
 PREBINDING = NO
 PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO
-GCC_PREPROCESSOR_DEFINITIONS = USE_ATTRIBUTED_CHAT_STRING=1
 STRIP_INSTALLED_PRODUCT = NO
 VALID_ARCHS = i386 ppc ppc970 ppc7400
 WARNING_CFLAGS = -Wall -W -Wcast-align -Wchar-subscripts -Wformat-security -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-format-y2k -Wno-unused-parameter -Wbad-function-cast -Wmissing-declarations -Wnested-externs
