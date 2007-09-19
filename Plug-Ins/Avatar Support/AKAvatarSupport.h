@@ -13,9 +13,12 @@
 @class MVChatUser;
 
 
-@interface AKAvatarSupport : NSObject <MVChatPlugin> {
-
+@interface AKAvatarSupport : NSObject <MVChatPlugin>
+{
+	//NSMutableSet *_throttledRequests;
 }
+- (IBAction) requestAvatarMenuItemAction:(id) sender;
+- (IBAction) offerAvatarMenuItemAction:(id) sender;
 
 - (void) requestAvatarFromUser:(MVChatUser *)chatUser;
 - (void) offerAvatarToUser:(MVChatUser *)chatUser;

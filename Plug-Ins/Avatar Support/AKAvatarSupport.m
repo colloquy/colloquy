@@ -11,18 +11,21 @@
 
 //MVChatPlugin and MVChatPluginReloadSupport
 #import "MVChatPluginManager.h"
+//MVChatPluginContextualMenuSupport
+#import "MVApplicationController.h"
 //MVChatPluginDirectChatSupport
 @class JVDirectChatPanel;
 //MVChatPluginChatConnectionSupport
 #import "MVChatConnection.h"
 
-//For Growl output
+//For Bubbles/Growl output
 #import "/Users/Alex/dev/svn/colloquy/Controllers/JVNotificationController.h"
 
 //some classes
 #import "JVChatMessage.h"
 #import "MVChatUser.h"
 #import "JVChatRoomMember.h"
+#import "MVChatRoom.h"
 
 //the chat view controller protocol
 @protocol JVChatViewController;
@@ -41,6 +44,8 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 - (id) initWithManager:(MVChatPluginManager *)manager
 {
 	self = [super init];
+	//_throttledRequests = (NSMutableSet *)[NSMutableSet set];
+	//NSLog([_throttledRequests className]);
 	//NSLog(@"Avatar Support: ** Plugin loaded");
 	return self;
 }
@@ -60,11 +65,94 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 		[[NSFileManager defaultManager] createDirectoryAtPath: [cacheDir stringByExpandingTildeInPath] attributes: nil];
 		NSLog(@"Avatar Support: ** Cache directory created at %@.", cacheDir);
 	}
+	//NSLog([_throttledRequests className]);
 }
 
 - (void) unload
 {
 	
+}
+
+#pragma mark -
+#pragma mark  MVChatPluginContextualMenuSupport
+
+- (NSArray *) contextualMenuItemsForObject:(id)object inView:(id <JVChatViewController>)view
+{
+	NSMutableArray *avatarContextMenuItems = [NSMutableArray array];
+	//if ([object isKindOfClass:NSClassFromString(@"JVChatRoomMember")]/* && ! [object isLocalUser]*/)
+	//{
+		NSMenuItem *requestAvatarMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Request Avatar" action:@selector(requestAvatarMenuItemAction:) keyEquivalent:@""] autorelease];
+		[requestAvatarMenuItem setTarget:self];
+		[requestAvatarMenuItem setRepresentedObject:object];
+		[avatarContextMenuItems addObject: requestAvatarMenuItem];
+		NSMenuItem *offerAvatarMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Offer Avatar" action:@selector(offerAvatarMenuItemAction:) keyEquivalent:@""] autorelease];
+		[offerAvatarMenuItem setTarget:self];
+		[offerAvatarMenuItem setRepresentedObject:object];
+		[avatarContextMenuItems addObject: offerAvatarMenuItem];
+		[avatarContextMenuItems addObject: [NSMenuItem separatorItem]];
+	//}
+	return avatarContextMenuItems;
+}
+
+- (IBAction) requestAvatarMenuItemAction:(id) sender
+{
+//	if ( ! [object isLocalUser])
+		if ( [[sender representedObject] isKindOfClass:NSClassFromString(@"JVChatRoomMember")] )
+		{
+			[self requestAvatarFromUser: [(JVChatRoomMember *)[sender representedObject] user]];
+		}
+		else if ( [[sender representedObject] isKindOfClass:NSClassFromString(@"MVChatUser")] )
+		{
+			[self requestAvatarFromUser: (MVChatUser *)[sender representedObject]];
+		}
+		else if ( [[sender representedObject] isMemberOfClass:NSClassFromString(@"JVDirectChatPanel")] )
+		{
+			[self requestAvatarFromUser: (MVChatUser *)[[sender representedObject] user]];
+		}
+		else if ( [[sender representedObject] isMemberOfClass:NSClassFromString(@"JVChatRoomPanel")] )
+		{
+			//NSLog([_throttledRequests className]);
+			//[_throttledRequests unionSet:[(MVChatRoom *)[[sender representedObject] target] memberUsers]];
+			//NSTimer *timer = 
+			//[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(requestAvatarThrottled:) userInfo:nil repeats:YES];
+			
+			/*NSEnumerator *enumerator = [[(MVChatRoom *)[[sender representedObject] target] memberUsers] objectEnumerator];
+			MVChatUser *chatUser = nil;
+
+			while( ( chatUser = [enumerator nextObject] ) ) {
+				[self requestAvatarFromUser:chatUser];
+			}*/
+		}
+		else
+		{
+			NSLog([[[[sender representedObject] target] class ]description]);
+		}
+//	}
+//	else
+//	{ localuser actions }
+}
+
+/*- (void) requestAvatarThrottled:(NSTimer *)timer
+{
+	MVChatUser *chatUser = (MVChatUser *)[_throttledRequests anyObject];
+	[self requestAvatarFromUser:chatUser];
+	[_throttledRequests removeObject:chatUser];
+	if ([_throttledRequests count] == 0)
+	{
+		[timer invalidate];
+	}
+}*/
+
+- (IBAction) offerAvatarMenuItemAction:(id) sender
+{
+	if ([[sender representedObject] isKindOfClass:NSClassFromString(@"JVChatRoomMember")]/* && ! [object isLocalUser]*/)
+	{
+		[self offerAvatarToUser: [(JVChatRoomMember *)[sender representedObject] user]];
+	}
+	else if ([[sender representedObject] isKindOfClass:NSClassFromString(@"MVChatUser")]/* && ! [object isLocalUser]*/)
+	{
+		[self offerAvatarToUser: (MVChatUser *)[sender representedObject]];
+	}
 }
 
 #pragma mark -
@@ -162,8 +250,8 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 				[[JVNotificationController defaultController] performNotification:@"JVPluginNotification" withContextInfo:[NSDictionary dictionaryWithObjectsAndKeys:[[chatUser attributes] objectForKey:@"MVChatUserPictureAttribute"],@"image",@"Avatar Support",@"title",[NSString stringWithFormat:@"Received Avatar from user %@.", [chatUser nickname]],@"description",nil]];
 				return YES;
 			}
-//			else
-//			{
+			else
+			{
 //				if (filesizeisokay)
 //				{
 					//NSLog(@"Avatar Support: <- dcc file transfer request for %@ required.", [chatUser nickname]);
@@ -174,7 +262,7 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 					//filetransferdelegate: [self addAvatarToUser:chatUser];
 					//return YES;
 //				}
-//			}
+			}
 //		}
 	}
 	return NO;
@@ -188,7 +276,7 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 {
 	//TODO: remove NSLog
 	NSLog(@"Avatar Support: <- request from %@.", [chatUser nickname]);
-	[chatUser sendSubcodeRequest:AKAvatarSupportCTCPCommand withArguments:@"?"];
+	[chatUser sendSubcodeRequest:AKAvatarSupportCTCPCommand withArguments:nil];
 }
 
 - (void) offerAvatarToUser:(MVChatUser *)chatUser
@@ -237,8 +325,12 @@ TODO:
 context menu, command line interface
 file transfer support (send/receive)
 local user defineable avatar
+ui for choosing local users avatar
 custom avatars for users
 actual file management (with file extensions -> nsdictionary, lazy nsimages)
+bundle "default local user avatar"
+bundle some default icons (nickserv/chanserv, q/l, jibot, lisppaste, regulars?)
+use custom bundle icon
 ...
 (fix colloquys buddies/ bubbles style)
 */
