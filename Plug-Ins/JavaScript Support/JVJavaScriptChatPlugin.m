@@ -100,7 +100,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 }
 
 - (void) release {
-	if( ( [self retainCount] - 1 ) == 1 && !_scriptGlobalsRemoved )
+	if( ( [self retainCount] - 1 ) == 1 && _scriptGlobalsAdded )
 		[self performSelector:@selector(removeScriptGlobalsForWebView:) withObject:_webview afterDelay:0];
 	[super release];
 }
@@ -225,7 +225,10 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 #pragma mark -
 
 - (void) setupScriptGlobalsForWebView:(WebView *) webView {
-	_scriptGlobalsRemoved = NO;
+	if (!webView)
+		return;
+
+	_scriptGlobalsAdded = YES;
 
 	[[webView windowScriptObject] setValue:self forKey:@"Plugin"];
 	[[webView windowScriptObject] setValue:[JVChatController defaultController] forKey:@"ChatController"];
@@ -238,10 +241,10 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 }
 
 - (void) removeScriptGlobalsForWebView:(WebView *) webView {
-	if (!webView && !_scriptGlobalsRemoved)
+	if (!webView || !_scriptGlobalsAdded)
 		return;
 
-	_scriptGlobalsRemoved = YES;
+	_scriptGlobalsAdded = NO;
 
 	[[webView windowScriptObject] removeWebScriptKey:@"Plugin"];
 	[[webView windowScriptObject] removeWebScriptKey:@"ChatController"];
