@@ -19,7 +19,7 @@
 #import "MVChatConnection.h"
 
 //For Bubbles/Growl output
-#import "/Users/Alex/dev/svn/colloquy/Controllers/JVNotificationController.h"
+#import "../Controllers/JVNotificationController.h"
 
 //some classes
 #import "JVChatMessage.h"
@@ -44,8 +44,6 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 - (id) initWithManager:(MVChatPluginManager *)manager
 {
 	self = [super init];
-	//_throttledRequests = (NSMutableSet *)[NSMutableSet set];
-	//NSLog([_throttledRequests className]);
 	//NSLog(@"Avatar Support: ** Plugin loaded");
 	return self;
 }
@@ -63,9 +61,8 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 	if ([[NSFileManager defaultManager] fileExistsAtPath: [cacheDir stringByExpandingTildeInPath]] == NO)
 	{
 		[[NSFileManager defaultManager] createDirectoryAtPath: [cacheDir stringByExpandingTildeInPath] attributes: nil];
-		NSLog(@"Avatar Support: ** Cache directory created at %@.", cacheDir);
+		//NSLog(@"Avatar Support: ** Cache directory created at %@.", cacheDir);
 	}
-	//NSLog([_throttledRequests className]);
 }
 
 - (void) unload
@@ -79,70 +76,62 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 - (NSArray *) contextualMenuItemsForObject:(id)object inView:(id <JVChatViewController>)view
 {
 	NSMutableArray *avatarContextMenuItems = [NSMutableArray array];
-	//if ([object isKindOfClass:NSClassFromString(@"JVChatRoomMember")]/* && ! [object isLocalUser]*/)
-	//{
+	if ( [object isKindOfClass:NSClassFromString(@"JVChatRoomMember")]
+		|| [object isKindOfClass:NSClassFromString(@"MVChatUser")]
+		|| [object isKindOfClass:NSClassFromString(@"JVDirectChatPanel")]
+		|| [object isKindOfClass:NSClassFromString(@"JVChatRoomPanel")]
+		//TODO: activate when done testing
+		/*&& ! [object isLocalUser] */)
+	{
 		NSMenuItem *requestAvatarMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Request Avatar" action:@selector(requestAvatarMenuItemAction:) keyEquivalent:@""] autorelease];
 		[requestAvatarMenuItem setTarget:self];
 		[requestAvatarMenuItem setRepresentedObject:object];
 		[avatarContextMenuItems addObject: requestAvatarMenuItem];
+		
+		//TODO: is this functionality really required? (see below)
 		NSMenuItem *offerAvatarMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Offer Avatar" action:@selector(offerAvatarMenuItemAction:) keyEquivalent:@""] autorelease];
 		[offerAvatarMenuItem setTarget:self];
 		[offerAvatarMenuItem setRepresentedObject:object];
 		[avatarContextMenuItems addObject: offerAvatarMenuItem];
 		[avatarContextMenuItems addObject: [NSMenuItem separatorItem]];
-	//}
+	}
 	return avatarContextMenuItems;
 }
 
 - (IBAction) requestAvatarMenuItemAction:(id) sender
 {
-//	if ( ! [object isLocalUser])
-		if ( [[sender representedObject] isKindOfClass:NSClassFromString(@"JVChatRoomMember")] )
-		{
-			[self requestAvatarFromUser: [(JVChatRoomMember *)[sender representedObject] user]];
-		}
-		else if ( [[sender representedObject] isKindOfClass:NSClassFromString(@"MVChatUser")] )
-		{
-			[self requestAvatarFromUser: (MVChatUser *)[sender representedObject]];
-		}
-		else if ( [[sender representedObject] isMemberOfClass:NSClassFromString(@"JVDirectChatPanel")] )
-		{
-			[self requestAvatarFromUser: (MVChatUser *)[[sender representedObject] user]];
-		}
-		else if ( [[sender representedObject] isMemberOfClass:NSClassFromString(@"JVChatRoomPanel")] )
-		{
-			//NSLog([_throttledRequests className]);
-			//[_throttledRequests unionSet:[(MVChatRoom *)[[sender representedObject] target] memberUsers]];
-			//NSTimer *timer = 
-			//[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(requestAvatarThrottled:) userInfo:nil repeats:YES];
-			
-			/*NSEnumerator *enumerator = [[(MVChatRoom *)[[sender representedObject] target] memberUsers] objectEnumerator];
-			MVChatUser *chatUser = nil;
+	if ( [[sender representedObject] isKindOfClass:NSClassFromString(@"JVChatRoomMember")] )
+	{
+		[self requestAvatarFromUser: [(JVChatRoomMember *)[sender representedObject] user]];
+	}
+	else if ( [[sender representedObject] isKindOfClass:NSClassFromString(@"MVChatUser")] )
+	{
+		[self requestAvatarFromUser: (MVChatUser *)[sender representedObject]];
+	}
+	else if ( [[sender representedObject] isMemberOfClass:NSClassFromString(@"JVDirectChatPanel")] )
+	{
+		[self requestAvatarFromUser: (MVChatUser *)[[sender representedObject] user]];
+	}
+	else if ( [[sender representedObject] isMemberOfClass:NSClassFromString(@"JVChatRoomPanel")] )
+	{
+		//TODO: ctcp flood handling by the application
+		
+		//TODO: enable later
+		/*NSEnumerator *enumerator = [[(MVChatRoom *)[[sender representedObject] target] memberUsers] objectEnumerator];
+		MVChatUser *chatUser = nil;
 
-			while( ( chatUser = [enumerator nextObject] ) ) {
-				[self requestAvatarFromUser:chatUser];
-			}*/
-		}
-		else
-		{
-			NSLog([[[[sender representedObject] target] class ]description]);
-		}
-//	}
-//	else
-//	{ localuser actions }
+		while( ( chatUser = [enumerator nextObject] ) ) {
+			[self requestAvatarFromUser:chatUser];
+		}*/
+	}
+	else
+	{	
+		//TODO: Remove this when done testing
+		NSLog(@"AVATAR: unknown sender for requestAvatarMenuItem: @%", [[[[sender representedObject] target] class ]description]);
+	}
 }
 
-/*- (void) requestAvatarThrottled:(NSTimer *)timer
-{
-	MVChatUser *chatUser = (MVChatUser *)[_throttledRequests anyObject];
-	[self requestAvatarFromUser:chatUser];
-	[_throttledRequests removeObject:chatUser];
-	if ([_throttledRequests count] == 0)
-	{
-		[timer invalidate];
-	}
-}*/
-
+//TODO: is this functionality really required?
 - (IBAction) offerAvatarMenuItemAction:(id) sender
 {
 	if ([[sender representedObject] isKindOfClass:NSClassFromString(@"JVChatRoomMember")]/* && ! [object isLocalUser]*/)
@@ -160,41 +149,34 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 
 - (void) processIncomingMessage:(JVMutableChatMessage *)message inView:(id <JVChatViewController>)view
 {
-	//TODO: use this if to put the user object into a var, call addavatartouser after the if (#1)
+	MVChatUser *_writingUser;
 	if([[message sender] isMemberOfClass:[JVChatRoomMember class]])
 	{
-		//NSLog(@"Avatar Support: -- %@ (class), user: %@/%@: %@ (class)", [[[message sender] class] description], [[(JVChatRoomMember *)[message sender] user] serverAddress], [[(JVChatRoomMember *)[message sender] user] nickname], [[[[message sender] user] class] description]);
-		
-		//TODO: check for buddies, unless this works for them too (doesnt, *.quakenet.org bug)
-		if ([[[(JVChatRoomMember *)[message sender] user] attributes] objectForKey:@"MVChatUserPictureAttribute"] == nil)
-		{
-			//NSLog(@"Avatar Support: -- nil: %@", [[[[(JVChatRoomMember *)[message sender] user] attributes] objectForKey:@"MVChatUserPictureAttribute"] description]);
-			[self addAvatarToUser:[(JVChatRoomMember *)[message sender] user]];
-		}
-		else
-		{
-			//NSLog(@"Avatar Support: -- nicht nil: %@", [[[[(JVChatRoomMember *)[message sender] user] attributes] objectForKey:@"MVChatUserPictureAttribute"] description]);
-			//TODO: remove this
-			[[JVNotificationController defaultController] performNotification:@"JVPluginNotification" withContextInfo:[NSDictionary dictionaryWithObjectsAndKeys:[[[(JVChatRoomMember *)[message sender] user] attributes] objectForKey:@"MVChatUserPictureAttribute"],@"image",@"Avatar Support",@"title",[NSString stringWithFormat:@"%@ already has an Avatar.", [[(JVChatRoomMember *)[message sender] user] nickname]],@"description",nil]];
-		}
+		_writingUser = [(JVChatRoomMember *)[message sender] user];
 	}
 	else
 	{
-		//TODO: this is for direct chats, see comment #1 above
-		//NSLog(@"Avatar Support: -- %@/%@: %@ (class)", [(MVChatUser *)[message sender] serverAddress], [(MVChatUser *)[message sender] nickname], [[[message sender] class] description]);
-		
-		//TODO: check for buddies, unless this works for them too (doesnt)
-		if ([[(MVChatUser *)[message sender] attributes] objectForKey:@"MVChatUserPictureAttribute"] == nil)
-		{
-			//NSLog(@"Avatar Support: -- nil: %@", [[[(MVChatUser *)[message sender] attributes] objectForKey:@"MVChatUserPictureAttribute"] description]);
-			[self addAvatarToUser:(MVChatUser *)[message sender]];
-		}
-		else
-		{
-			//NSLog(@"Avatar Support: --nicht nil: %@", [[[(MVChatUser *)[message sender] attributes] objectForKey:@"MVChatUserPictureAttribute"] description]);
-			//TODO: remove this
-			[[JVNotificationController defaultController] performNotification:@"JVPluginNotification" withContextInfo:[NSDictionary dictionaryWithObjectsAndKeys:[[(MVChatUser *)[message sender] attributes] objectForKey:@"MVChatUserPictureAttribute"],@"image",@"Avatar Support",@"title",[NSString stringWithFormat:@"%@ already has an Avatar.", [(MVChatUser *)[message sender] nickname]],@"description",nil]];
-		}
+		_writingUser = (MVChatUser *)[message sender];
+	}
+	
+	//NSLog(@"Avatar Support: -- %@ (class), user: %@/%@: %@ (class)", [[[message sender] class] description], [_writingUser serverAddress], [_writingUser nickname], [[[[message sender] user] class] description]);
+	
+	//TODO: check for buddies, unless this works for them too (doesnt, *.quakenet.org bug)
+	if ([[_writingUser attributes] objectForKey:@"MVChatUserPictureAttribute"] == nil)
+	{
+		//NSLog(@"Avatar Support: -- nil: %@", [[[_writingUser attributes] objectForKey:@"MVChatUserPictureAttribute"] description]);
+		[self addAvatarToUser:_writingUser];
+	}
+	else
+	{
+		//NSLog(@"Avatar Support: -- nicht nil: %@", [[[_writingUser attributes] objectForKey:@"MVChatUserPictureAttribute"] description]);
+		//TODO: remove this
+		[[JVNotificationController defaultController] performNotification:@"JVPluginNotification" withContextInfo:
+			[NSDictionary dictionaryWithObjectsAndKeys:[[_writingUser attributes] objectForKey:
+				@"MVChatUserPictureAttribute"], @"image",
+				@"Avatar Support", @"title",
+				[NSString stringWithFormat:@"%@ already has an Avatar.", [_writingUser nickname]],@"description",
+				nil]];
 	}
 }
 
@@ -208,13 +190,6 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 
 - (BOOL) processSubcodeRequest:(NSString *)command withArguments:(NSData *)arguments fromUser:(MVChatUser *)chatUser
 {
-	if ([[command uppercaseString] isEqualToString:@"AVATEST"])
-	{
-		//TODO: remove NSLog
-		NSLog(@"Avatar Support: <- Bogus request event for %@.", [chatUser nickname]);
-		[self requestAvatarFromUser:chatUser];
-		return YES;
-	}
 	if ([[command uppercaseString] isEqualToString:AKAvatarSupportCTCPCommand])
 	{
 		//TODO: remove NSLog
@@ -247,20 +222,25 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 			{
 				[self saveAvatar:receivedImage forUser:chatUser];
 				[self addAvatarToUser:chatUser];
-				[[JVNotificationController defaultController] performNotification:@"JVPluginNotification" withContextInfo:[NSDictionary dictionaryWithObjectsAndKeys:[[chatUser attributes] objectForKey:@"MVChatUserPictureAttribute"],@"image",@"Avatar Support",@"title",[NSString stringWithFormat:@"Received Avatar from user %@.", [chatUser nickname]],@"description",nil]];
+				[[JVNotificationController defaultController] performNotification:@"JVPluginNotification" withContextInfo:
+					[NSDictionary dictionaryWithObjectsAndKeys:[[chatUser attributes] objectForKey:
+						@"MVChatUserPictureAttribute"], @"image",
+						@"Avatar Support", @"title",
+						[NSString stringWithFormat:@"Received Avatar from user %@.", [chatUser nickname]], @"description",
+						nil]];
 				return YES;
 			}
 			else
 			{
 //				if (filesizeisokay)
 //				{
-					//NSLog(@"Avatar Support: <- dcc file transfer request for %@ required.", [chatUser nickname]);
+					NSLog(@"Avatar Support: <- dcc file transfer request from %@ (not yet supported).", [chatUser nickname]);
 					//[18:39] <xenon> there is, just dont add it to the MVFileTransferManager
 					//MVFileTransferController
 					//MVFileTransfer
 					//filetransfer <- requestAvatarFromUser:chatUser
 					//filetransferdelegate: [self addAvatarToUser:chatUser];
-					//return YES;
+					return YES;
 //				}
 			}
 //		}
@@ -305,7 +285,12 @@ NSString *cacheDir = @"~/Library/Caches/info.colloquy.avatarSupport/";
 	[chatUser setAttribute:[self avatarForUser:chatUser] forKey:@"MVChatUserPictureAttribute"];
 	
 	//TODO: remove this later, its enough to growl on "received avatar"
-	[[JVNotificationController defaultController] performNotification:@"JVPluginNotification" withContextInfo:[NSDictionary dictionaryWithObjectsAndKeys:[[chatUser attributes] objectForKey:@"MVChatUserPictureAttribute"],@"image",@"Avatar Support",@"title",[NSString stringWithFormat:@"Avatar added for user %@.", [chatUser nickname]],@"description",nil]];
+	[[JVNotificationController defaultController] performNotification:@"JVPluginNotification" withContextInfo:
+		[NSDictionary dictionaryWithObjectsAndKeys:[[chatUser attributes] objectForKey:
+			@"MVChatUserPictureAttribute"], @"image",
+			@"Avatar Support", @"title",
+			[NSString stringWithFormat:@"Avatar added for user %@.", [chatUser nickname]], @"description",
+			nil]];
 	}
 }
 
