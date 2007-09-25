@@ -1598,7 +1598,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 - (void) _didConnect:(NSNotification *) notification {
 	[self addEventMessageToDisplay:NSLocalizedString( @"You reconnected to the server.", "reconnected to server status message" ) withName:@"reconnected" andAttributes:nil];
-	_cantSendMessages = NO;
+	if( [self isMemberOfClass:[JVDirectChatPanel class]] )
+		_cantSendMessages = NO;
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {

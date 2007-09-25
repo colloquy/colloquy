@@ -45,6 +45,7 @@
 		_sortedMembers = [[NSMutableArray allocWithZone:nil] initWithCapacity:100];
 		_preferredTabCompleteNicknames = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
 		_nextMessageAlertMembers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
+		_cantSendMessages = YES;
 		_kickedFromRoom = NO;
 		_keepAfterPart = NO;
 		_banListSynced = NO;
@@ -740,7 +741,6 @@
 @implementation JVChatRoomPanel (JVChatRoomPrivate)
 - (void) _didConnect:(NSNotification *) notification {
 	if( ! _disposed ) [[self target] join];
-	_cantSendMessages = YES;
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
