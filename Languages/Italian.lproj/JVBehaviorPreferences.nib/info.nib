@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>IBDocumentLocation</key>
-	<string>-122 118 356 240 0 0 1440 878 </string>
+	<string>27 206 356 240 0 0 1280 832 </string>
 	<key>IBEditorPositions</key>
 	<dict>
 		<key>9</key>
-		<string>433 404 573 388 0 0 1440 878 </string>
+		<string>357 360 565 411 0 0 1280 832 </string>
 	</dict>
 	<key>IBFramework Version</key>
 	<string>446.1</string>
@@ -64,6 +64,6 @@
 		<integer>9</integer>
 	</array>
 	<key>IBSystem Version</key>
-	<string>8P2137</string>
+	<string>8R218</string>
 </dict>
 </plist>

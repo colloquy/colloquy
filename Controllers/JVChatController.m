@@ -516,7 +516,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message invited to room" ), room, [user nickname]] forKey:@"description"];
 	[[JVNotificationController defaultController] performNotification:@"JVChatRoomInvite" withContextInfo:context];
 
-	if( NSRunInformationalAlertPanel( title, @"%@", NSLocalizedString( @"Join", "join button" ), NSLocalizedString( @"Decline", "decline button" ), nil, message ) == NSOKButton )
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinChatRoomOnInvite"] || NSRunInformationalAlertPanel( title, @"%@", NSLocalizedString( @"Join", "join button" ), NSLocalizedString( @"Decline", "decline button" ), nil, message ) == NSOKButton )
 		[connection joinChatRoomNamed:room];
 }
 
