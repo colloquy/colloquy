@@ -145,10 +145,10 @@
 		[[self connection] sendRawMessageWithFormat:@"MODE %@ -n", [self name]];
 		break;
 	case MVChatRoomPassphraseToJoinMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ -k *", [self name]];
+		[[self connection] sendRawMessageWithFormat:@"MODE %@ -k %@", [self name], ( [self attributeForMode:MVChatRoomPassphraseToJoinMode] != nil ? [self attributeForMode:MVChatRoomPassphraseToJoinMode] : @"*" )];
 		break;
 	case MVChatRoomLimitNumberOfMembersMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ -l *", [self name]];
+		[[self connection] sendRawMessageWithFormat:@"MODE %@ -l", [self name]];
 	default:
 		break;
 	}
