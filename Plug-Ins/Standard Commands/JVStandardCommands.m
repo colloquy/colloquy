@@ -606,7 +606,7 @@
 	JVChatRoomPanel *room = nil;
 
 	while( ( room = [enumerator nextObject] ) ) {
-		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:message sender:[connection localUser]];
+		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:message sender:[[room connection] localUser]];
 		[cmessage setAction:action];
 		[room sendMessage:cmessage];
 		[room echoSentMessageToDisplay:cmessage];
