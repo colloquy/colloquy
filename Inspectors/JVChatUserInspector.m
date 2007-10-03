@@ -169,8 +169,8 @@
 	[realName setObjectValue:( [_user realName] ? [_user realName] : NSLocalizedString( @"n/a", "not applicable or not available" ) )];
 	[realName setToolTip:( [_user realName] ? [_user realName] : NSLocalizedString( @"n/a", "not applicable or not available" ) )];
 
-	[connected setObjectValue:( ! [_user status] == MVChatUserOfflineStatus ? MVReadableTime( [[_user dateConnected] timeIntervalSince1970], YES ) : NSLocalizedString( @"offline", "offline, not connected" ) )];
-	[idle setObjectValue:( ! [_user status] == MVChatUserOfflineStatus ? MVReadableTime( [[NSDate date] timeIntervalSince1970] + [_user idleTime], YES ) : NSLocalizedString( @"n/a", "not applicable or not available" ) )];
+	[connected setObjectValue:( ! ( [_user status] == MVChatUserOfflineStatus ) ? MVReadableTime( [[_user dateConnected] timeIntervalSince1970], YES ) : NSLocalizedString( @"offline", "offline, not connected" ) )];
+	[idle setObjectValue:( ! ( [_user status] == MVChatUserOfflineStatus ) ? MVReadableTime( [[NSDate date] timeIntervalSince1970] + [_user idleTime], YES ) : NSLocalizedString( @"n/a", "not applicable or not available" ) )];
 
 	if( _addressResolved ) [progress stopAnimation:nil];
 }
