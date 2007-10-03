@@ -154,24 +154,23 @@
 	
 	NSData *awayData = [_user awayStatusMessage];
 	NSAttributedString *awayString = [self _convertRawMessage:awayData withBaseFont:nil];
-	if( ! awayString || ! [awayString length] ) [away setObjectValue:NSLocalizedString( @"n/a", "not applicable or not available" )];
-	else [away setObjectValue:awayString];
+	[away setObjectValue:( awayString && [awayString length] ? awayString : (NSAttributedString *)NSLocalizedString( @"n/a", "not applicable or not available" ) )];
 
-	[username setObjectValue:[_user username]];
+	[username setObjectValue:( [_user username] ? [_user username] : NSLocalizedString( @"n/a", "not applicable or not available" ) )];
 
-	[hostname setObjectValue:[_user address]];
-	[hostname setToolTip:[_user address]];
+	[hostname setObjectValue:( [_user address] ? [_user address] : NSLocalizedString( @"n/a", "not applicable or not available" ) )];
+	[hostname setToolTip:( [_user address] ? [_user address] : NSLocalizedString( @"n/a", "not applicable or not available" ) )];
 
 	if( ! _addressResolved ) [NSThread detachNewThreadSelector:@selector( lookupAddress ) toTarget:self withObject:nil];
 
-	[server setObjectValue:[_user serverAddress]];
-	[server setToolTip:[_user serverAddress]];
+	[server setObjectValue:( [_user serverAddress] ? [_user serverAddress] : NSLocalizedString( @"n/a", "not applicable or not available" ) )];
+	[server setToolTip:( [_user serverAddress] ? [_user serverAddress] : NSLocalizedString( @"n/a", "not applicable or not available" ) )];
 
-	[realName setObjectValue:[_user realName]];
-	[realName setToolTip:[_user realName]];
+	[realName setObjectValue:( [_user realName] ? [_user realName] : NSLocalizedString( @"n/a", "not applicable or not available" ) )];
+	[realName setToolTip:( [_user realName] ? [_user realName] : NSLocalizedString( @"n/a", "not applicable or not available" ) )];
 
-	[connected setObjectValue:MVReadableTime( [[_user dateConnected] timeIntervalSince1970], YES )];
-	[idle setObjectValue:MVReadableTime( [[NSDate date] timeIntervalSince1970] + [_user idleTime], YES )];
+	[connected setObjectValue:( ! [_user status] == MVChatUserOfflineStatus ? MVReadableTime( [[_user dateConnected] timeIntervalSince1970], YES ) : NSLocalizedString( @"offline", "offline, not connected" ) )];
+	[idle setObjectValue:( ! [_user status] == MVChatUserOfflineStatus ? MVReadableTime( [[NSDate date] timeIntervalSince1970] + [_user idleTime], YES ) : NSLocalizedString( @"n/a", "not applicable or not available" ) )];
 
 	if( _addressResolved ) [progress stopAnimation:nil];
 }
