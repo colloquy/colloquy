@@ -1525,7 +1525,7 @@ end:
 		NSString *targetName = [parameters objectAtIndex:0];
 		if( ! [targetName length] ) return;
 
-		if( [targetName characterAtIndex:0] == '@' ) {
+		if( [[_serverInformation objectForKey:@"roomMemberPrefixes"] characterIsMember:[targetName characterAtIndex:0]] ) {
 			// This is a special filtered target.
 			// @#room	sends only to the operators on the room
 			// @%#room	sends to the operators and half-operators on the room
@@ -1614,7 +1614,7 @@ end:
 		NSString *targetName = [parameters objectAtIndex:0];
 		if( ! [targetName length] ) return;
 
-		if( [targetName characterAtIndex:0] == '@' ) {
+		if( [[_serverInformation objectForKey:@"roomMemberPrefixes"] characterIsMember:[targetName characterAtIndex:0]] ) {
 			// This is a special filtered target.
 			// @#room	sends only to the operators on the room
 			// @%#room	sends to the operators and half-operators on the room
