@@ -480,10 +480,10 @@
 }
 
 - (BOOL) handleJoinWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
-	NSArray *channels = [arguments componentsSeparatedByString:@","];
+	NSArray *channels = [[arguments stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@","];
 
 	if( [arguments length] && [channels count] == 1 ) {
-		[connection joinChatRoomNamed:arguments];
+		[connection joinChatRoomNamed:[arguments stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
 		return YES;
 	} else if( [arguments length] && [channels count] > 1 ) {
 		NSEnumerator *chanEnum = [channels objectEnumerator];

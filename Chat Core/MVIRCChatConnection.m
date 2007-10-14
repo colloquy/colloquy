@@ -376,6 +376,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	NSString *room = nil;
 
 	while( ( room = [enumerator nextObject] ) ) {
+		room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 		if( [room length] && [room rangeOfString:@" "].location == NSNotFound ) { // join non-password rooms in bulk
 			[roomList addObject:[self properNameForChatRoomNamed:room]];
 		} else if( [room length] && [room rangeOfString:@" "].location != NSNotFound ) { // has a password, join separately
