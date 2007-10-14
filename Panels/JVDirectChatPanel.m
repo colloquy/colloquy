@@ -11,7 +11,7 @@
 #import "JVEmoticonSet.h"
 #import "JVMarkedScroller.h"
 #import "JVNotificationController.h"
-#import "JVSQLChatTranscript.h"
+//#import "JVSQLChatTranscript.h"
 #import "JVSpeechController.h"
 #import "JVSplitView.h"
 #import "JVStyle.h"

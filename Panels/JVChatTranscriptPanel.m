@@ -7,7 +7,7 @@
 #import "JVEmoticonSet.h"
 #import "JVStyleView.h"
 #import "JVChatTranscript.h"
-#import "JVSQLChatTranscript.h"
+//#import "JVSQLChatTranscript.h"
 #import "JVChatMessage.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
@@ -71,12 +71,12 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 			return nil;
 		}
 
-		NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:filename];
-		BOOL sqliteFormat = [[NSData dataWithBytes:"SQLite format 3" length:16] isEqualToData:[handle readDataOfLength:16]];
-		[handle closeFile];
+//		NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:filename];
+//		BOOL sqliteFormat = [[NSData dataWithBytes:"SQLite format 3" length:16] isEqualToData:[handle readDataOfLength:16]];
+//		[handle closeFile];
 
-		if( sqliteFormat ) _transcript = [[JVSQLChatTranscript allocWithZone:[self zone]] initWithContentsOfFile:filename];
-		else _transcript = [[JVChatTranscript allocWithZone:[self zone]] initWithContentsOfFile:filename];
+//		if( sqliteFormat ) _transcript = [[JVSQLChatTranscript allocWithZone:[self zone]] initWithContentsOfFile:filename];
+		_transcript = [[JVChatTranscript allocWithZone:[self zone]] initWithContentsOfFile:filename];
 
 		if( ! _transcript ) {
 			[self release];
@@ -124,7 +124,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	[_styleMenu release];
 	[_emoticonMenu release];
 	[_transcript release];
-	[_sqlTestTranscript release];
+//	[_sqlTestTranscript release];
 	[_searchQuery release];
 	[_searchQueryRegex release];
 
@@ -132,7 +132,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	_styleMenu = nil;
 	_emoticonMenu = nil;
 	_transcript = nil;
-	_sqlTestTranscript = nil;
+//	_sqlTestTranscript = nil;
 	_searchQuery = nil;
 	_searchQueryRegex = nil;
 	_windowController = nil;

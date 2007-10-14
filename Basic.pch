@@ -2,6 +2,10 @@
 #define MAC_OS_X_VERSION_10_5 1050
 #endif
 
+#ifndef NSAppKitVersionNumber10_3
+#define NSAppKitVersionNumber10_3 743
+#endif
+
 #import <AvailabilityMacros.h>
 
 #ifdef __OBJC__

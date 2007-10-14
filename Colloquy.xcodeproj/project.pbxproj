@@ -220,7 +220,6 @@
 		1CBC630C05489484009E59E1 /* JVGeneralPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBC630A05489484009E59E1 /* JVGeneralPreferences.m */; };
 		1CBC63190548975E009E59E1 /* GeneralPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBC63180548975E009E59E1 /* GeneralPreferences.png */; };
 		1CBC634905489BEE009E59E1 /* JVGeneralPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CBC634705489BEE009E59E1 /* JVGeneralPreferences.nib */; };
-		1CC1AE630A2987E20000A797 /* sqlite3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC1AE400A2987230000A797 /* sqlite3.a */; };
 		1CC1B76F0A2D70DF0000A797 /* super-op.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC1B76D0A2D70DF0000A797 /* super-op.png */; };
 		1CC1B77D0A2D70FB0000A797 /* founder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC1B77B0A2D70FB0000A797 /* founder.png */; };
 		1CC5650708F0CFEE00B8E333 /* Colloquy.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C77DF07DBD49F00FB5F83 /* Colloquy.r */; };
@@ -263,7 +262,6 @@
 		1CE95886063F3BF90071C9C3 /* inspector.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CE95885063F3BF90071C9C3 /* inspector.png */; };
 		1CEC004F0A20EF99004C2B86 /* transcriptSchema.sql in Resources */ = {isa = PBXBuildFile; fileRef = 1CEC004D0A20EF95004C2B86 /* transcriptSchema.sql */; };
 		1CEC00540A20F030004C2B86 /* JVSQLChatTranscript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEC00530A20F030004C2B86 /* JVSQLChatTranscript.m */; };
-		1CEC00570A20F05F004C2B86 /* JVSQLChatTranscript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEC00530A20F030004C2B86 /* JVSQLChatTranscript.m */; };
 		1CECE26006A37BEC00350564 /* JVBehaviorPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CECE22F06A37A8300350564 /* JVBehaviorPreferences.nib */; };
 		1CEE3B010578421400AD6DE2 /* statusAvailable.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CEE3AFE0578421400AD6DE2 /* statusAvailable.png */; };
 		1CEE3B020578421400AD6DE2 /* statusAway.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CEE3AFF0578421400AD6DE2 /* statusAway.png */; };
@@ -377,6 +375,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 8D5B49B6048680CD000E48DA;
 			remoteInfo = "Python Support Plugin";
+		};
+		1CCE63750CC1FF8400365094 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1C51B46E052DE0CB00BB459B /* Chat Core (Framework) */;
+			remoteInfo = "Chat Core (Framework)";
 		};
 		1CEEAB15095BD23100166A54 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1121,7 +1126,6 @@
 				1CF5F8D207D537E50019DC13 /* Growl.framework in Frameworks */,
 				1C397391082D4ADA00DCF3CF /* IOKit.framework in Frameworks */,
 				1CEEAB17095BD23500166A54 /* ChatCore.framework in Frameworks */,
-				1CC1AE630A2987E20000A797 /* sqlite3.a in Frameworks */,
 				1C2EDD790A3551B70051E9C2 /* Sparkle.framework in Frameworks */,
 				DDF64DA60BD2B0C3009E8FF6 /* Acid.framework in Frameworks */,
 			);
@@ -1908,6 +1912,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				1CCE63760CC1FF8400365094 /* PBXTargetDependency */,
 			);
 			name = "Standard Commands (Plug-In)";
 			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
@@ -1989,7 +1994,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = YES;
+				BuildIndependentTargetsInParallel = NO;
 			};
 			buildConfigurationList = 1C041A700854E97700A5A5BA /* Build configuration list for PBXProject "Colloquy" */;
 			compatibilityVersion = "Xcode 2.4";
@@ -2494,7 +2499,6 @@
 				1C710A6C09F23AF0007B4515 /* JVSideSplitView.m in Sources */,
 				1C710A6E09F23AF0007B4515 /* JVSideStatusView.m in Sources */,
 				1C710A7009F23AF0007B4515 /* JVSideOutlineView.m in Sources */,
-				1CEC00570A20F05F004C2B86 /* JVSQLChatTranscript.m in Sources */,
 				1C415F270B350CA300239EB3 /* JVToolbarItem.m in Sources */,
 				DDF034100BD529AE0096B109 /* JVDetailCell.m in Sources */,
 			);
@@ -2541,6 +2545,11 @@
 			isa = PBXTargetDependency;
 			target = CBF685140820186F00F498FB /* Colloquy (Metadata Importer) */;
 			targetProxy = 1C7F30000855456D00D41FB0 /* PBXContainerItemProxy */;
+		};
+		1CCE63760CC1FF8400365094 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Chat Core (Framework)";
+			targetProxy = 1CCE63750CC1FF8400365094 /* PBXContainerItemProxy */;
 		};
 		1CEEAB19095BD24100166A54 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3048,12 +3057,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Colloquy.pch;
-				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				HEADER_SEARCH_PATHS = (
+					/usr/include/libxml2,
+					"$(HEADER_SEARCH_PATHS)",
+				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
 					"-lexslt",
+					"-undefined",
+					dynamic_lookup,
 				);
 				PRODUCT_NAME = Colloquy;
 				SECTORDER_FLAGS = (
@@ -3072,12 +3086,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Colloquy.pch;
-				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				HEADER_SEARCH_PATHS = (
+					/usr/include/libxml2,
+					"$(HEADER_SEARCH_PATHS)",
+				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
 					"-lexslt",
+					"-undefined",
+					dynamic_lookup,
 				);
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;
@@ -3090,8 +3109,12 @@
 				GCC_FAST_OBJC_DISPATCH = YES;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Importer/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = Colloquy;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				"SDKROOT[arch=i386]" = /Developer/SDKs/MacOSX10.4u.sdk;
+				"SDKROOT[arch=ppc]" = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = mdimporter;
 			};
 			name = Release;
@@ -3104,6 +3127,9 @@
 				INFOPLIST_FILE = Importer/Info.plist;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = Colloquy;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				"SDKROOT[arch=i386]" = /Developer/SDKs/MacOSX10.4u.sdk;
+				"SDKROOT[arch=ppc]" = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = mdimporter;
 			};
 			name = Development;
@@ -3147,12 +3173,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Colloquy.pch;
-				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				HEADER_SEARCH_PATHS = (
+					/usr/include/libxml2,
+					"$(HEADER_SEARCH_PATHS)",
+				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
 					"-lexslt",
+					"-undefined",
+					dynamic_lookup,
 				);
 				PRODUCT_NAME = Colloquy;
 				SECTORDER_FLAGS = (
@@ -3173,8 +3204,12 @@
 				GCC_FAST_OBJC_DISPATCH = YES;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Importer/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = Colloquy;
+				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
+				"SDKROOT[arch=i386]" = /Developer/SDKs/MacOSX10.4u.sdk;
+				"SDKROOT[arch=ppc]" = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = mdimporter;
 			};
 			name = "Release (Universal)";
@@ -3187,7 +3222,6 @@
 					ppc,
 					i386,
 				);
-				SDKROOT = /Developer/MacOSX10.4u.sdk;
 				SYMROOT = build;
 			};
 			name = "Release (Universal)";

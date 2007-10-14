@@ -1453,7 +1453,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 
 	if( [pool respondsToSelector:@selector( drain )] )
 		[pool drain];
-	[pool release];
+	else [pool release];
 	pool = nil;
 
 	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
@@ -1461,7 +1461,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 		silc_schedule_one( _silcClient -> schedule, -1 );
 		if( [pool respondsToSelector:@selector( drain )] )
 			[pool drain];
-		[pool release];
+		else [pool release];
 	}
 }
 

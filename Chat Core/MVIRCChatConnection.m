@@ -566,7 +566,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	if( [pool respondsToSelector:@selector( drain )] )
 		[pool drain];
-	[pool release];
+	else [pool release];
 	pool = nil;
 
 	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus || [_chatConnection isConnected] ) {
@@ -574,7 +574,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
 		if( [pool respondsToSelector:@selector( drain )] )
 			[pool drain];
-		[pool release];
+		else [pool release];
 	}
 
 	pool = [[NSAutoreleasePool allocWithZone:nil] init];
@@ -587,7 +587,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	if( [pool respondsToSelector:@selector( drain )] )
 		[pool drain];
-	[pool release];
+	else [pool release];
 }
 
 #pragma mark -
@@ -648,10 +648,10 @@ static const NSStringEncoding supportedEncodings[] = {
 		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL );
 
 		NSMutableDictionary *settings = [[NSMutableDictionary allocWithZone:nil] init];
-		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
+		[settings setObject:[NSNumber numberWithBool:YES] forKey:@"kCFStreamSSLAllowsAnyRoot"];
 
-		CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
-		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
+		CFReadStreamSetProperty( [sock getCFReadStream], CFSTR("kCFStreamPropertySSLSettings"), (CFDictionaryRef) settings );
+		CFWriteStreamSetProperty( [sock getCFWriteStream], CFSTR("kCFStreamPropertySSLSettings"), (CFDictionaryRef) settings );
 	}
 
 	return YES;

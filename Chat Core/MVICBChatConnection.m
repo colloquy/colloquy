@@ -410,7 +410,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 	if( [pool respondsToSelector:@selector( drain )] )
 		[pool drain];
-	[pool release];
+	else [pool release];
 	pool = nil;
 
 	while( _status == MVChatConnectionConnectedStatus ||
@@ -422,7 +422,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
             beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
 		if( [pool respondsToSelector:@selector( drain )] )
 			[pool drain];
-		[pool release];
+		else [pool release];
 	}
 
 	pool = [[NSAutoreleasePool alloc] init];
@@ -438,7 +438,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 	if( [pool respondsToSelector:@selector( drain )] )
 		[pool drain];
-	[pool release];
+	else [pool release];
 }
 
 - (void) _connect {

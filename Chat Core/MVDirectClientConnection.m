@@ -350,7 +350,7 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 
 	if( [pool respondsToSelector:@selector( drain )] )
 		[pool drain];
-	[pool release];
+	else [pool release];
 	pool = nil;
 
 	while( ! _done ) {
@@ -367,7 +367,7 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 
 		if( [pool respondsToSelector:@selector( drain )] )
 			[pool drain];
-		[pool release];
+		else [pool release];
 	}
 
 	pool = [[NSAutoreleasePool allocWithZone:nil] init];
@@ -383,6 +383,6 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 
 	if( [pool respondsToSelector:@selector( drain )] )
 		[pool drain];
-	[pool release];
+	else [pool release];
 }
 @end

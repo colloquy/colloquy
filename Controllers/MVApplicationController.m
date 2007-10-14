@@ -303,7 +303,7 @@ static BOOL applicationIsTerminating = NO;
 
 		NSAppleEventManager *sam = [NSAppleEventManager sharedAppleEventManager];
 		NSAppleEventDescriptor *lastEvent = [sam currentAppleEvent];
-		searchString = [[lastEvent descriptorForKeyword:keyAESearchText] stringValue];
+		searchString = [[lastEvent descriptorForKeyword:'stxt'] stringValue];
 
 		JVChatTranscriptPanel *transcript = [[JVChatController defaultController] chatViewControllerForTranscript:filename];
 		if( searchString ) [transcript setSearchQuery:searchString];

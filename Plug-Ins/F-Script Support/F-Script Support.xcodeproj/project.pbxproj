@@ -179,7 +179,6 @@
 			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
 			projectDirPath = "";
 			projectRoot = ../..;
-			shouldCheckCompatibility = 1;
 			targets = (
 				8D5B49AC048680CD000E48DA /* F-Script Support Plugin */,
 			);
@@ -343,7 +342,6 @@
 					ppc,
 					i386,
 				);
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SYMROOT = ../../build;
 			};
 			name = "Release (Universal)";

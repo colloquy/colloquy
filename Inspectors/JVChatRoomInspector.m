@@ -96,9 +96,9 @@
 		else [infoField setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"Parted: %@", "chat room parted date label" ), [[[_room target] dateParted] descriptionWithCalendarFormat:dateFormat timeZone:nil locale:locale]]];
 	} else {
 		NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
-		[formatter setFormatterBehavior:NSDateFormatterBehavior10_4];
-		[formatter setDateStyle:NSDateFormatterShortStyle];
-		[formatter setTimeStyle:NSDateFormatterShortStyle];
+		[formatter setFormatterBehavior:1040];
+		[formatter setDateStyle:kCFDateFormatterShortStyle];
+		[formatter setTimeStyle:kCFDateFormatterShortStyle];
 
 		if( [[_room target] isJoined] )
 			[infoField setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"Joined: %@", "chat room joined date label" ), [formatter stringFromDate:[[_room target] dateJoined]]]];
@@ -278,9 +278,9 @@
 		dateString = [date descriptionWithCalendarFormat:dateFormat timeZone:nil locale:locale];
 	} else {
 		NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
-		[formatter setFormatterBehavior:NSDateFormatterBehavior10_4];
-		[formatter setDateStyle:NSDateFormatterShortStyle];
-		[formatter setTimeStyle:NSDateFormatterShortStyle];
+		[formatter setFormatterBehavior:1040];
+		[formatter setDateStyle:kCFDateFormatterShortStyle];
+		[formatter setTimeStyle:kCFDateFormatterShortStyle];
 		dateString = [formatter stringFromDate:date];
 	}
 
