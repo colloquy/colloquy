@@ -812,7 +812,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 				regex = [AGRegex regexWithPattern:[name substringWithRange:NSMakeRange( 1, [name length] - 2 )] options:AGRegexCaseInsensitive];
 			} else {
 				name = [name stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'"]];
-				NSString *pattern = [NSString stringWithFormat:@"\\b%@\\b", [name stringByEscapingCharactersInSet:escapeSet]];
+				NSString *pattern = [NSString stringWithFormat:@"(?:^|\\s)%@(?:$|\\s)", [name stringByEscapingCharactersInSet:escapeSet]];
 				regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
 			}
 
