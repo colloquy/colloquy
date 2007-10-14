@@ -385,7 +385,7 @@ static NSMenu *favoritesMenu = nil;
 	}
 
 	NSMutableCharacterSet *allowedCharacters = (NSMutableCharacterSet *)[NSMutableCharacterSet alphanumericCharacterSet];
-	[allowedCharacters addCharactersInString:@"`_-|^{}[]"];
+	[allowedCharacters addCharactersInString:@"`_-|^{}[]@"];
 
 	NSCharacterSet *illegalCharacters = [allowedCharacters invertedSet];
 
