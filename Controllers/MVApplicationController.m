@@ -134,6 +134,11 @@ static BOOL applicationIsTerminating = NO;
 #pragma mark -
 
 - (IBAction) checkForUpdate:(id) sender {
+	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) { // test for 10.3
+		NSRunInformationalAlertPanel( @"Panther is no longer supported.", @"You are running the last version of Colloquy that is supported for Panther (10.3.9). Please update to Leopard or Tiger to receive further updates and support for Colloquy.", nil, nil, nil );
+		return;
+	}
+
 	if( ! _updater ) _updater = [[SUUpdater allocWithZone:nil] init];
 	[_updater checkForUpdates:sender];
 }
@@ -394,7 +399,7 @@ static BOOL applicationIsTerminating = NO;
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
 	[MVCrashCatcher check];
 
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"] ) {
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"] && NSAppKitVersionNumber >= NSAppKitVersionNumber10_4 ) {
 		_updater = [[SUUpdater allocWithZone:nil] init];
 		[_updater checkForUpdatesInBackground];
 		[_updater scheduleCheckWithInterval:60. * 60. * 12.]; // check every 12 hours
