@@ -367,7 +367,7 @@
 		NSMutableString *escapedName = [[member nickname] mutableCopy];
 		[escapedName escapeCharactersInSet:escapeSet];
 
-		NSString *pattern = [[NSString alloc] initWithFormat:@"(?:^|\\s)%@(?:$|\\s)", escapedName];
+		NSString *pattern = [[NSString alloc] initWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", escapedName];
 		AGRegex *regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
 
 		[escapedName release];
