@@ -74,7 +74,7 @@ static void _setup_cipher(int encrypt_flag, ESessionCipherAlgo algo,
     unsigned int ivbuf_len;
     unsigned char keybuf[EVP_MAX_MD_SIZE];
     unsigned int keybuf_len;
-    const EVP_CIPHER* cipher_type;
+    const EVP_CIPHER* cipher_type = NULL;
 
     /* Ensure the size of the biggest max digest is bigger
        than the max key length and IV length -- avoid some
@@ -535,7 +535,7 @@ ESessionHandshake esession_handshake_load(ESession es, const char* e_str, ESessi
     int rc;
     ESessionHandshake result;
     EVP_MD_CTX signctx;
-    char* sig;
+    char* sig = NULL;
     unsigned int   sig_len;
    
 
@@ -638,7 +638,7 @@ int esession_handshake_complete(ESession es, const char* f_str,
     BUF_MEM K;
     EVP_MD_CTX verifyctx;
     EVP_PKEY* bobkey;
-    char* sig;
+    char* sig = NULL;
     int   sig_len;
     int   rc;
     Buffer sid;
