@@ -106,10 +106,10 @@
 		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL );
 
 		NSMutableDictionary *settings = [[NSMutableDictionary allocWithZone:nil] init];
-		[settings setObject:[NSNumber numberWithBool:YES] forKey:@"kCFStreamSSLAllowsAnyRoot"];
+		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
 
-		CFReadStreamSetProperty( [sock getCFReadStream], CFSTR("kCFStreamPropertySSLSettings"), (CFDictionaryRef) settings );
-		CFWriteStreamSetProperty( [sock getCFWriteStream], CFSTR("kCFStreamPropertySSLSettings"), (CFDictionaryRef) settings );
+		CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
+		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
 	}
 
 	return YES;
