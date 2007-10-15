@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 44;
+	objectVersion = 42;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -3112,9 +3112,10 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = Colloquy;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
-				"SDKROOT[arch=i386]" = /Developer/SDKs/MacOSX10.4u.sdk;
-				"SDKROOT[arch=ppc]" = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc7400 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc970 = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = mdimporter;
 			};
 			name = Release;
@@ -3127,9 +3128,10 @@
 				INFOPLIST_FILE = Importer/Info.plist;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = Colloquy;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
-				"SDKROOT[arch=i386]" = /Developer/SDKs/MacOSX10.4u.sdk;
-				"SDKROOT[arch=ppc]" = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc7400 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc970 = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = mdimporter;
 			};
 			name = Development;
@@ -3207,9 +3209,10 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = Colloquy;
-				SDKROOT = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
-				"SDKROOT[arch=i386]" = /Developer/SDKs/MacOSX10.4u.sdk;
-				"SDKROOT[arch=ppc]" = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc7400 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc970 = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = mdimporter;
 			};
 			name = "Release (Universal)";
