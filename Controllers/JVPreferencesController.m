@@ -28,8 +28,7 @@
 	[_preferencesPanel setOpaque:NO]; // let us poke transparant holes in the window
 	if( [_preferencesPanel respondsToSelector:@selector( _setContentHasShadow: )] )
 		[_preferencesPanel _setContentHasShadow:NO]; // this is new in Tiger
-	if( [_preferencesPanel respondsToSelector:@selector( setShowsToolbarButton: )] )
-		[_preferencesPanel setShowsToolbarButton:NO];
+	[_preferencesPanel setShowsToolbarButton:NO];
 }
 
 - (void) showPreferencesPanelForOwner:(id) owner {
@@ -37,7 +36,6 @@
 	[_preferencesPanel setOpaque:NO]; // let us poke transparant holes in the window
 	if( [_preferencesPanel respondsToSelector:@selector( _setContentHasShadow: )] )
 		[_preferencesPanel _setContentHasShadow:NO]; // this is new in Tiger
-	if( [_preferencesPanel respondsToSelector:@selector( setShowsToolbarButton: )] )
-		[_preferencesPanel setShowsToolbarButton:NO];
+	[_preferencesPanel setShowsToolbarButton:NO];
 }
 @end

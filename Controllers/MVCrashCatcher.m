@@ -33,10 +33,7 @@
 }
 
 - (void) awakeFromNib {
-	NSString *logContent = nil;
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		logContent = [NSString performSelector:@selector( stringWithContentsOfFile: ) withObject:logPath];
-	else logContent = [NSString stringWithContentsOfFile:logPath encoding:NSUTF8StringEncoding error:NULL];
+	NSString *logContent = [NSString stringWithContentsOfFile:logPath encoding:NSUTF8StringEncoding error:NULL];
 
 	// get only the last crash trace, there is hardly ever more than one since we delete the file. it can still happen
 	logContent = [[logContent componentsSeparatedByString:@"**********"] lastObject];

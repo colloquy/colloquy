@@ -1451,17 +1451,13 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	if( [[NSThread currentThread] respondsToSelector:@selector( setName: )] )
 		[[NSThread currentThread] setName:[[self url] absoluteString]];
 
-	if( [pool respondsToSelector:@selector( drain )] )
-		[pool drain];
-	else [pool release];
+	[pool drain];
 	pool = nil;
 
 	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
 		pool = [[NSAutoreleasePool allocWithZone:nil] init];
 		silc_schedule_one( _silcClient -> schedule, -1 );
-		if( [pool respondsToSelector:@selector( drain )] )
-			[pool drain];
-		else [pool release];
+		[pool drain];
 	}
 }
 

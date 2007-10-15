@@ -464,8 +464,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 		NSSearchField *field = [[[NSSearchField alloc] initWithFrame:NSMakeRect( 0., 0., 150., 22. )] autorelease];
 		[[field cell] setSendsWholeSearchString:NO];
-		if( [[field cell] respondsToSelector:@selector( setSendsSearchStringImmediately: )] )
-			[[field cell] setSendsSearchStringImmediately:NO];
+		[[field cell] setSendsSearchStringImmediately:NO];
 		[[field cell] setPlaceholderString:NSLocalizedString( @"Search Messages", "search field placeholder string" )];
 		[[field cell] setMaximumRecents:10];
 		[field setRecentsAutosaveName:@"message quick search"];
@@ -726,11 +725,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 			} else if( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSAlternateKeyMask ) {
 				[[MVFileTransferController defaultController] downloadFileAtURL:url toLocalFile:nil];
 			} else {
-				if( ( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSCommandKeyMask ) && [[NSWorkspace sharedWorkspace] respondsToSelector:@selector( openURLs:withAppBundleIdentifier:options:additionalEventParamDescriptor:launchIdentifiers: )] ) {
-					[[NSWorkspace sharedWorkspace] openURLs:[NSArray arrayWithObject:url] withAppBundleIdentifier:nil options:NSWorkspaceLaunchWithoutActivation additionalEventParamDescriptor:nil launchIdentifiers:nil];
-				} else {
-					[[NSWorkspace sharedWorkspace] openURL:url];
-				}
+				[[NSWorkspace sharedWorkspace] openURLs:[NSArray arrayWithObject:url] withAppBundleIdentifier:nil options:NSWorkspaceLaunchWithoutActivation additionalEventParamDescriptor:nil launchIdentifiers:nil];
 			}
 		}
 

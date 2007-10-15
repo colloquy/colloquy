@@ -85,25 +85,14 @@
 
 	[nameField setStringValue:[_room title]];
 
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) {
-		[saveTopic setBezelStyle:NSShadowlessSquareBezelStyle];
-		[resetTopic setBezelStyle:NSShadowlessSquareBezelStyle];
+	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+	[formatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+	[formatter setDateStyle:NSDateFormatterShortStyle];
+	[formatter setTimeStyle:NSDateFormatterShortStyle];
 
-		NSString *dateFormat = [[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString];
-		NSDictionary *locale = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
-		if( [[_room target] isJoined] )
-			[infoField setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"Joined: %@", "chat room joined date label" ), [[[_room target] dateJoined] descriptionWithCalendarFormat:dateFormat timeZone:nil locale:locale]]];
-		else [infoField setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"Parted: %@", "chat room parted date label" ), [[[_room target] dateParted] descriptionWithCalendarFormat:dateFormat timeZone:nil locale:locale]]];
-	} else {
-		NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
-		[formatter setFormatterBehavior:1040];
-		[formatter setDateStyle:kCFDateFormatterShortStyle];
-		[formatter setTimeStyle:kCFDateFormatterShortStyle];
-
-		if( [[_room target] isJoined] )
-			[infoField setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"Joined: %@", "chat room joined date label" ), [formatter stringFromDate:[[_room target] dateJoined]]]];
-		else [infoField setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"Parted: %@", "chat room parted date label" ), [formatter stringFromDate:[[_room target] dateParted]]]];
-	}
+	if( [[_room target] isJoined] )
+		[infoField setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"Joined: %@", "chat room joined date label" ), [formatter stringFromDate:[[_room target] dateJoined]]]];
+	else [infoField setObjectValue:[NSString stringWithFormat:NSLocalizedString( @"Parted: %@", "chat room parted date label" ), [formatter stringFromDate:[[_room target] dateParted]]]];
 
 	[encodingSelection setMenu:[_room _encodingMenu]];
 	[styleSelection setMenu:[_room _stylesMenu]];
@@ -259,9 +248,8 @@
 - (id) tableView:(NSTableView *) tableView objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
 	if ( [[column identifier] isEqualToString:@"author"] ) {
 		MVChatUser *user = [_latestBanList objectAtIndex:row];
-		if( [user respondsToSelector:@selector( attributeForKey: )] ) {
+		if( [user respondsToSelector:@selector( attributeForKey: )] )
 			return [user attributeForKey:MVChatUserBanServerAttribute];
-		}
 		return nil;
 	}
 	return [[_latestBanList objectAtIndex:row] description];
@@ -272,17 +260,11 @@
 	NSDate *date = [user attributeForKey:MVChatUserBanDateAttribute];
 	NSString *dateString = nil;
 
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) {
-		NSString *dateFormat = [[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString];
-		NSDictionary *locale = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
-		dateString = [date descriptionWithCalendarFormat:dateFormat timeZone:nil locale:locale];
-	} else {
-		NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
-		[formatter setFormatterBehavior:1040];
-		[formatter setDateStyle:kCFDateFormatterShortStyle];
-		[formatter setTimeStyle:kCFDateFormatterShortStyle];
-		dateString = [formatter stringFromDate:date];
-	}
+	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+	[formatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+	[formatter setDateStyle:NSDateFormatterShortStyle];
+	[formatter setTimeStyle:NSDateFormatterShortStyle];
+	dateString = [formatter stringFromDate:date];
 
 	NSString *server = [user attributeForKey:MVChatUserBanServerAttribute];
 

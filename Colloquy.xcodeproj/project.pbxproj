@@ -3066,8 +3066,6 @@
 					"-lxml2",
 					"-lxslt",
 					"-lexslt",
-					"-undefined",
-					dynamic_lookup,
 				);
 				PRODUCT_NAME = Colloquy;
 				SECTORDER_FLAGS = (
@@ -3095,8 +3093,6 @@
 					"-lxml2",
 					"-lxslt",
 					"-lexslt",
-					"-undefined",
-					dynamic_lookup,
 				);
 				PRODUCT_NAME = Colloquy;
 				WRAPPER_EXTENSION = app;
@@ -3184,8 +3180,6 @@
 					"-lxml2",
 					"-lxslt",
 					"-lexslt",
-					"-undefined",
-					dynamic_lookup,
 				);
 				PRODUCT_NAME = Colloquy;
 				SECTORDER_FLAGS = (

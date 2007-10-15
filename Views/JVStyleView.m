@@ -410,10 +410,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		return;
 	}
 
-	NSString *shell = nil;
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		shell = [NSString performSelector:@selector( stringWithContentsOfFile: ) withObject:[[NSBundle mainBundle] pathForResource:name ofType:@"html"]];
-	else shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
+	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:name ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
 
 	DOMHTMLElement *element = (DOMHTMLElement *)[_mainDocument createElement:@"div"];
 	[element setClassName:@"banner"];
@@ -914,10 +911,7 @@ quickEnd:
 	NSString *variantStyleSheetLocation = [[[self style] variantStyleSheetLocationWithName:[self styleVariant]] absoluteString];
 	if( ! variantStyleSheetLocation ) variantStyleSheetLocation = @"";
 
-	NSString *shell = nil;
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		shell = [NSString performSelector:@selector( stringWithContentsOfFile: ) withObject:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"]];
-	else shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
+	NSString *shell = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"template" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
 
 	NSString *bodyTemplate = [[self style] contentsOfBodyTemplateWithName:[self bodyTemplate]];
 	if( [bodyTemplate length] && [html length] ) {

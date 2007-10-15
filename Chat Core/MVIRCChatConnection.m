@@ -564,17 +564,13 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	[_threadWaitLock unlockWithCondition:1];
 
-	if( [pool respondsToSelector:@selector( drain )] )
-		[pool drain];
-	else [pool release];
+	[pool drain];
 	pool = nil;
 
 	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus || [_chatConnection isConnected] ) {
 		pool = [[NSAutoreleasePool allocWithZone:nil] init];
 		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
-		if( [pool respondsToSelector:@selector( drain )] )
-			[pool drain];
-		else [pool release];
+		[pool drain];
 	}
 
 	pool = [[NSAutoreleasePool allocWithZone:nil] init];
@@ -585,9 +581,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( [NSThread currentThread] == _connectionThread )
 		_connectionThread = nil;
 
-	if( [pool respondsToSelector:@selector( drain )] )
-		[pool drain];
-	else [pool release];
+	[pool drain];
 }
 
 #pragma mark -
@@ -648,10 +642,10 @@ static const NSStringEncoding supportedEncodings[] = {
 		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL );
 
 		NSMutableDictionary *settings = [[NSMutableDictionary allocWithZone:nil] init];
-		[settings setObject:[NSNumber numberWithBool:YES] forKey:@"kCFStreamSSLAllowsAnyRoot"];
+		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
 
-		CFReadStreamSetProperty( [sock getCFReadStream], CFSTR("kCFStreamPropertySSLSettings"), (CFDictionaryRef) settings );
-		CFWriteStreamSetProperty( [sock getCFWriteStream], CFSTR("kCFStreamPropertySSLSettings"), (CFDictionaryRef) settings );
+		CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
+		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
 	}
 
 	return YES;
@@ -2526,9 +2520,7 @@ end:
 				[self _markUserAsOnline:member];
 			}
 
-			if( [pool respondsToSelector:@selector( drain )] )
-				[pool drain];
-			[pool release];
+			[pool drain];
 		}
 	}
 }

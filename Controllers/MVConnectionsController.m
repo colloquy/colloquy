@@ -334,8 +334,7 @@ static NSMenu *favoritesMenu = nil;
 	if( ! [sender state] ) [detailsTabView selectTabViewItemAtIndex:0];
 	[openConnection setFrame:newWindowFrame display:YES animate:YES];
 	if( [sender state] ) [detailsTabView selectTabViewItemAtIndex:1];
-	if( [openConnection respondsToSelector:@selector( recalculateKeyViewLoop )] )
-		[openConnection recalculateKeyViewLoop];
+	[openConnection recalculateKeyViewLoop];
 }
 
 - (IBAction) addRoom:(id) sender {

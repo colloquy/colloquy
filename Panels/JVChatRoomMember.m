@@ -376,8 +376,7 @@
 
 		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Kick From Room..."], "kick from room (customized) contextual menu - admin only" ) action:@selector( customKick: ) keyEquivalent:@""] autorelease];
 		[item setKeyEquivalentModifierMask:NSAlternateKeyMask];
-		if( [item respondsToSelector:@selector( setAlternate: )] )
-			[item setAlternate:YES];
+		[item setAlternate:YES];
 		[item setTarget:self];
 		[menu addItem:item];
 
@@ -388,8 +387,7 @@
 
 			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Ban From Room..."], "ban from room (customized) contextual menu - admin only" ) action:@selector( customBan: ) keyEquivalent:@""] autorelease];
 			[item setKeyEquivalentModifierMask:NSAlternateKeyMask];
-			if( [item respondsToSelector:@selector( setAlternate: )] )
-				[item setAlternate:YES];
+			[item setAlternate:YES];
 			[item setTarget:self];
 			[menu addItem:item];
 
@@ -399,8 +397,7 @@
 
 			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Kick & Ban From Room..."], "kickban from room (customized) contextual menu - admin only" ) action:@selector( customKickban: ) keyEquivalent:@""] autorelease];
 			[item setKeyEquivalentModifierMask:NSAlternateKeyMask];
-			if( [item respondsToSelector:@selector( setAlternate: )] )
-				[item setAlternate:YES];
+			[item setAlternate:YES];
 			[item setTarget:self];
 			[menu addItem:item];
 		}
@@ -592,17 +589,8 @@
 	[firstField setStringValue:@""];
 	[banWindow makeFirstResponder:firstField];
 
-	if( [secondTitle respondsToSelector:@selector(setHidden:)] ) {
-		[secondTitle setHidden:YES];
-		[secondField setHidden:YES];
-	} else {
-		NSRect frame = [secondTitle frame];
-		frame.origin.x = 0. - frame.size.width - 10.;
-		[secondTitle setFrame:frame];
-		frame = [secondField frame];
-		frame.origin.x = 0. - frame.size.width - 10.;
-		[secondField setFrame:frame];
-	}
+	[secondTitle setHidden:YES];
+	[secondField setHidden:YES];
 
 	NSRect frame = [banWindow frame];
 	frame.size.height = ( frame.size.height - [firstField frame].origin.y ) + 60.;
@@ -628,17 +616,8 @@
 
 	[banWindow makeFirstResponder:firstField];
 
-	if( [secondTitle respondsToSelector:@selector( setHidden: )] ) {
-		[secondTitle setHidden:YES];
-		[secondField setHidden:YES];
-	} else {
-		NSRect frame = [secondTitle frame];
-		frame.origin.x = 0. - frame.size.width - 10.;
-		[secondTitle setFrame:frame];
-		frame = [secondField frame];
-		frame.origin.x = 0. - frame.size.width - 10.;
-		[secondField setFrame:frame];
-	}
+	[secondTitle setHidden:YES];
+	[secondField setHidden:YES];
 
 	NSRect frame = [banWindow frame];
 	frame.size.height = ( frame.size.height - [firstField frame].origin.y ) + 60.;
@@ -673,18 +652,8 @@
 
 	[banWindow makeFirstResponder:firstField];
 
-	if( [secondTitle respondsToSelector:@selector( setHidden: )] ) {
-		[secondTitle setHidden:NO];
-		[secondField setHidden:NO];
-	} else {
-		NSRect frame = [secondTitle frame];
-		frame.origin.y = [firstField frame].origin.y - frame.size.height - 8;
-		frame.origin.x = [firstField frame].origin.x;
-		[secondTitle setFrame:frame];
-		frame.size = [secondField frame].size;
-		frame.origin.y = frame.origin.y - frame.size.height - 8;
-		[secondField setFrame:frame];
-	}
+	[secondTitle setHidden:NO];
+	[secondField setHidden:NO];
 
 	NSRect frame = [banWindow frame];
 	frame.size.height = ( frame.size.height - [secondField frame].origin.y ) + 60;

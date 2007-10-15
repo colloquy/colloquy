@@ -493,18 +493,12 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 #pragma mark -
 
 - (NSString *) contentsOfMainStyleSheet {
-	NSString *contents = nil;
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		contents = [NSString performSelector:@selector( stringWithContentsOfURL: ) withObject:[self mainStyleSheetLocation]];
-	else contents = [NSString stringWithContentsOfURL:[self mainStyleSheetLocation] encoding:NSUTF8StringEncoding error:NULL];
+	NSString *contents = [NSString stringWithContentsOfURL:[self mainStyleSheetLocation] encoding:NSUTF8StringEncoding error:NULL];
 	return ( contents ? contents : @"" );
 }
 
 - (NSString *) contentsOfVariantStyleSheetWithName:(NSString *) name {
-	NSString *contents = nil;
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		contents = [NSString performSelector:@selector( stringWithContentsOfURL: ) withObject:[self variantStyleSheetLocationWithName:name]];
-	else contents = [NSString stringWithContentsOfURL:[self variantStyleSheetLocationWithName:name] encoding:NSUTF8StringEncoding error:NULL];
+	NSString *contents = [NSString stringWithContentsOfURL:[self variantStyleSheetLocationWithName:name] encoding:NSUTF8StringEncoding error:NULL];
 	return ( contents ? contents : @"" );
 }
 
@@ -512,10 +506,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	NSURL *url = [self bodyTemplateLocationWithName:name];
 	if( ! url ) return @"";
 
-	NSString *contents = nil;
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		contents = [NSString performSelector:@selector( stringWithContentsOfURL: ) withObject:url];
-	else contents = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
+	NSString *contents = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:NULL];
 
 	NSURL *resources = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
 	return ( contents ? [NSString stringWithFormat:contents, [resources absoluteString], @""] : @"" );

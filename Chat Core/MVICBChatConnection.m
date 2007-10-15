@@ -408,9 +408,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 	[_threadWaitLock unlockWithCondition:1];
 
-	if( [pool respondsToSelector:@selector( drain )] )
-		[pool drain];
-	else [pool release];
+	[pool drain];
 	pool = nil;
 
 	while( _status == MVChatConnectionConnectedStatus ||
@@ -420,9 +418,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 		[[NSRunLoop currentRunLoop]
             runMode:NSDefaultRunLoopMode
             beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
-		if( [pool respondsToSelector:@selector( drain )] )
-			[pool drain];
-		else [pool release];
+		[pool drain];
 	}
 
 	pool = [[NSAutoreleasePool alloc] init];
@@ -436,9 +432,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	if( [NSThread currentThread] == _connectionThread )
 		_connectionThread = nil;
 
-	if( [pool respondsToSelector:@selector( drain )] )
-		[pool drain];
-	else [pool release];
+	[pool drain];
 }
 
 - (void) _connect {

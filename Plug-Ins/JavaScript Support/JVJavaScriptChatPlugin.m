@@ -142,10 +142,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	if( sender == _webview ) {
 		_loading = NO;
 
-		NSString *contents = nil;
-		if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-			contents = [NSString performSelector:@selector( stringWithContentsOfFile: ) withObject:[self scriptFilePath]];
-		else contents = [NSString stringWithContentsOfFile:[self scriptFilePath] encoding:NSUTF8StringEncoding error:NULL];
+		NSString *contents = [NSString stringWithContentsOfFile:[self scriptFilePath] encoding:NSUTF8StringEncoding error:NULL];
 
 		[[sender windowScriptObject] evaluateWebScript:contents];
 

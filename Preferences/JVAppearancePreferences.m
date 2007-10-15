@@ -563,9 +563,7 @@
 - (void) saveStyleOptions {
 	if( _variantLocked ) return;
 
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		((void(*)(id, SEL, id, BOOL))objc_msgSend)( _userStyle, @selector( writeToURL: ), [_style variantStyleSheetLocationWithName:[_style defaultVariantName]], YES );
-	else [_userStyle writeToURL:[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+	[_userStyle writeToURL:[_style variantStyleSheetLocationWithName:[_style defaultVariantName]] atomically:YES encoding:NSUTF8StringEncoding error:NULL];
 
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:[_style defaultVariantName], @"variant", nil];
 	NSNotification *notification = [NSNotification notificationWithName:JVStyleVariantChangedNotification object:_style userInfo:info];
@@ -770,9 +768,7 @@
 
 	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Styles/Variants/%@/%@.css", [_style identifier], name] stringByExpandingTildeInPath];
 
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		((void(*)(id, SEL, id, BOOL))objc_msgSend)( _userStyle, @selector( writeToFile: ), path, YES );
-	else [_userStyle writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+	[_userStyle writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:NULL];
 
 	[_style setDefaultVariantName:name];
 
