@@ -380,7 +380,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 1C51B46E052DE0CB00BB459B /* Chat Core (Framework) */;
+			remoteGlobalIDString = 1C51B46E052DE0CB00BB459B;
 			remoteInfo = "Chat Core (Framework)";
 		};
 		1CEEAB15095BD23100166A54 /* PBXContainerItemProxy */ = {

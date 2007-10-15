@@ -4,6 +4,7 @@ extern NSString *MVChatPluginManagerDidReloadPluginsNotification;
 @interface MVChatPluginManager : NSObject {
 	@private
 	NSMutableArray *_plugins;
+	BOOL _reloadingPlugins;
 }
 + (MVChatPluginManager *) defaultManager;
 + (NSArray *) pluginSearchPaths;

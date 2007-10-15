@@ -10,7 +10,12 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 
 @implementation MVChatPluginManager
 + (MVChatPluginManager *) defaultManager {
-	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self allocWithZone:nil] init] ) );
+	if( ! sharedInstance ) {
+		sharedInstance = [self allocWithZone:nil];
+		sharedInstance = [sharedInstance init];
+	}
+
+	return sharedInstance;
 }
 
 + (NSArray *) pluginSearchPaths {
@@ -33,11 +38,14 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 #pragma mark -
 
 - (id) init {
-	if( ( self = [super init] ) ) {
-		_plugins = [[NSMutableArray allocWithZone:nil] init];
-		[self performSelector:@selector(reloadPlugins) withObject:nil afterDelay:0.];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
-	}
+	if( ! ( self = [super init] ) )
+		return nil;
+
+	_plugins = [[NSMutableArray allocWithZone:nil] init];
+	[self reloadPlugins];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
+
 	return self;
 }
 
@@ -59,6 +67,9 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 #pragma mark -
 
 - (void) reloadPlugins {
+	if( _reloadingPlugins ) return;
+	_reloadingPlugins = YES;
+
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerWillReloadPluginsNotification object:self];
 
 	if( [_plugins count] ) {
@@ -90,6 +101,8 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 	}
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerDidReloadPluginsNotification object:self];
+
+	_reloadingPlugins = NO;
 }
 
 - (void) addPlugin:(id) plugin {
