@@ -685,7 +685,13 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( ! _body ) _body = (DOMHTMLElement *)[[_domDocument body] retain];
 	[old release];
 
-	[self performSelector:@selector( _checkForTransparantStyle ) withObject:nil afterDelay:0.];
+	if( ! _body ) {
+		// try again soon, the DOM is not ready yet
+		[self performSelector:@selector( _contentFrameIsReady ) withObject:nil afterDelay:0.5];
+		return;
+	}
+
+	[self _checkForTransparantStyle];
 
 	[self setPreferencesIdentifier:[[self style] identifier]];
 
