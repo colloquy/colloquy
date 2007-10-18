@@ -19,10 +19,4 @@
 
 #endif
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_4
 #include <sys/xattr.h>
-#endif
-
-// define these here so they weak link for Panther letting the binary be backwards compatible
-extern int fsetxattr(int fd, const char *name, const void *value, size_t size, u_int32_t position, int options) WEAK_IMPORT_ATTRIBUTE;
-extern ssize_t fgetxattr(int fd, const char *name, void *value, size_t size, u_int32_t position, int options) WEAK_IMPORT_ATTRIBUTE;

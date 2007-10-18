@@ -615,7 +615,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		[self _enforceElementLimit];
 		[self _incrementalWriteToLog:root continuation:( parent ? YES : NO )];
 
-		if( _logFile && fsetxattr ) {
+		if( _logFile ) {
 			NSString *lastDateString = [[message date] description];
 			fsetxattr( [_logFile fileDescriptor], "lastMessageDate", [lastDateString UTF8String], [lastDateString length], 0, 0 );
 		}
@@ -1124,7 +1124,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 - (void) _changeFileAttributesAtPath:(NSString *) path {
 	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:path];
 
-	if( _logFile && fsetxattr ) {
+	if( _logFile ) {
 		NSString *beganDateString = [[self dateBegan] description];
 		NSString *lastDateString = [[[self lastMessage] date] description];
 		NSString *target = [[self source] path];
