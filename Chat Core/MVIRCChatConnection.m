@@ -1299,6 +1299,46 @@ end:
 		return [[self _newStringWithBytes:[input bytes] length:[input length]] autorelease];
 	return input;
 }
+
+#pragma mark -
+
+- (MVChatRoomMemberMode) _modeForNicknamePrefixCharacter:(unichar) character {
+	switch( character ) {
+		case '+': return MVChatRoomMemberVoicedMode;
+		case '%': return MVChatRoomMemberHalfOperatorMode;
+		case '@': return MVChatRoomMemberOperatorMode;
+		case '&': return MVChatRoomMemberAdministratorMode;
+		case '!': return MVChatRoomMemberAdministratorMode;
+		case '*': return MVChatRoomMemberFounderMode;
+		case '~': return MVChatRoomMemberFounderMode;
+		case '.': return MVChatRoomMemberFounderMode;
+	}
+
+	return MVChatRoomMemberNoModes;
+}
+
+- (MVChatRoomMemberMode) _stripModePrefixesFromNickname:(NSString **) nicknamePtr {
+	NSString *nickname = *nicknamePtr;
+	MVChatRoomMemberMode modes = MVChatRoomMemberNoModes;
+	NSMutableDictionary *prefixes = [_serverInformation objectForKey:@"roomMemberPrefixTable"];
+
+	unsigned i = 0;
+	unsigned length = [nickname length];
+	for( i = 0; i < length; ++i ) {
+		if( [prefixes count] ) {
+			NSNumber *prefix = [prefixes objectForKey:[NSString stringWithFormat:@"%c", [nickname characterAtIndex:i]]];
+			if( prefix ) modes |= [prefix unsignedLongValue];
+			else break;
+		} else {
+			MVChatRoomMemberMode mode = [self _modeForNicknamePrefixCharacter:[nickname characterAtIndex:i]];
+			if( mode != MVChatRoomMemberNoModes ) modes |= mode;
+			else break;
+		}
+	}
+
+	if( i ) *nicknamePtr = [nickname substringFromIndex:i];
+	return modes;
+}
 @end
 
 #pragma mark -
@@ -1431,19 +1471,7 @@ end:
 					unsigned length = [prefixes length];
 					unsigned i = 0;
 					for( i = 0; i < length; i++ ) {
-						MVChatRoomMemberMode mode = MVChatRoomMemberNoModes;
-						switch( [prefixes characterAtIndex:i] ) {
-							case '+': mode = MVChatRoomMemberVoicedMode; break;
-							case '%': mode = MVChatRoomMemberHalfOperatorMode; break;
-							case '@': mode = MVChatRoomMemberOperatorMode; break;
-							case '&': mode = MVChatRoomMemberAdministratorMode; break;
-							case '!': mode = MVChatRoomMemberAdministratorMode; break;
-							case '*': mode = MVChatRoomMemberFounderMode; break;
-							case '~': mode = MVChatRoomMemberFounderMode; break;
-							case '.': mode = MVChatRoomMemberFounderMode; break;
-							default: break;
-						}
-
+						MVChatRoomMemberMode mode = [self _modeForNicknamePrefixCharacter:[prefixes characterAtIndex:i]];
 						if( mode != MVChatRoomMemberNoModes ) {
 							NSString *key = [[NSString allocWithZone:nil] initWithFormat:@"%c", [prefixes characterAtIndex:i]];
 							[prefixTable setObject:[NSNumber numberWithUnsignedLong:mode] forKey:key];
@@ -2496,23 +2524,7 @@ end:
 			while( ( memberName = [enumerator nextObject] ) ) {
 				if( ! [memberName length] ) break;
 
-				MVChatRoomMemberMode modes = MVChatRoomMemberNoModes;
-				NSMutableDictionary *prefixes = [_serverInformation objectForKey:@"roomMemberPrefixTable"];
-				if( [prefixes count] ) {
-					NSString *key = [[NSString allocWithZone:nil] initWithFormat:@"%c", [memberName characterAtIndex:0]];
-					modes = [[prefixes objectForKey:key] unsignedLongValue];
-					[key release];
-				} else {
-					switch( [memberName characterAtIndex:0] ) {
-						case '+': modes = MVChatRoomMemberVoicedMode; break;
-						case '@': modes = MVChatRoomMemberOperatorMode; break;
-						default: break;
-					}
-				}
-
-				if( modes != MVChatRoomMemberNoModes )
-					memberName = [memberName substringFromIndex:1];
-
+				MVChatRoomMemberMode modes = [self _stripModePrefixesFromNickname:&memberName];
 				MVChatUser *member = [self chatUserWithUniqueIdentifier:memberName];
 				[room _addMemberUser:member];
 				[room _setModes:modes forMemberUser:member];

@@ -1,9 +1,9 @@
 #import "MVChatConnection.h"
 #import "MVChatConnectionPrivate.h"
+#import "MVChatRoom.h"
 
 @class AsyncSocket;
 @class MVChatUser;
-@class MVChatRoom;
 @class MVFileTransfer;
 
 @interface MVIRCChatConnection : MVChatConnection {
@@ -64,6 +64,9 @@
 - (void) _whoisNextScheduledUser;
 
 - (void) _resetSupportedFeatures;
+
+- (MVChatRoomMemberMode) _modeForNicknamePrefixCharacter:(unichar) character;
+- (MVChatRoomMemberMode) _stripModePrefixesFromNickname:(NSString **) nickname;
 
 - (NSString *) _newStringWithBytes:(const char *) bytes length:(unsigned) length;
 - (NSString *) _stringFromPossibleData:(id) input;
