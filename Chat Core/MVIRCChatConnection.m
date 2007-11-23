@@ -1305,12 +1305,17 @@ end:
 - (MVChatRoomMemberMode) _modeForNicknamePrefixCharacter:(unichar) character {
 	switch( character ) {
 		case '+': return MVChatRoomMemberVoicedMode;
+
 		case '%': return MVChatRoomMemberHalfOperatorMode;
+
+		case '-': // This is suppose to be "super op". But just treat it like op. http://colloquy.info/project/ticket/642
 		case '@': return MVChatRoomMemberOperatorMode;
-		case '&': return MVChatRoomMemberAdministratorMode;
+
+		case '&':
 		case '!': return MVChatRoomMemberAdministratorMode;
-		case '*': return MVChatRoomMemberFounderMode;
-		case '~': return MVChatRoomMemberFounderMode;
+
+		case '*':
+		case '~':
 		case '.': return MVChatRoomMemberFounderMode;
 	}
 
