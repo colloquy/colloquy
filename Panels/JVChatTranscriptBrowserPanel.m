@@ -93,31 +93,29 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 				NSString *session = [match groupNamed:@"session"];
 				NSString *path = [[self logsPath] stringByAppendingPathComponent:logPath];
 
-				if( fgetxattr ) {
-					FILE *logsFile = fopen( [path fileSystemRepresentation], "r" );
-					if( logsFile ) {
-						int fd = fileno( logsFile );			
+				FILE *logsFile = fopen( [path fileSystemRepresentation], "r" );
+				if( logsFile ) {
+					int fd = fileno( logsFile );			
 
-						char buffer[1024];
-						ssize_t size = 0;
+					char buffer[1024];
+					ssize_t size = 0;
 
-						if( ( size = fgetxattr( fd, "server", buffer, 1023, 0, 0 ) ) > 0 ) {
-							buffer[size] = 0;
-							server = [NSString stringWithUTF8String:buffer];
-						}
-
-						if( ( size = fgetxattr( fd, "target", buffer, 1023, 0, 0 ) ) > 0 ) {
-							buffer[size] = 0;
-							target = [NSString stringWithUTF8String:buffer];
-						}
-
-						if( ( size = fgetxattr( fd, "dateBegan", buffer, 1023, 0, 0 ) ) > 0 ) {
-							buffer[size] = 0;
-							session = [NSString stringWithUTF8String:buffer];
-						}
-
-						fclose( logsFile );
+					if( ( size = fgetxattr( fd, "server", buffer, 1023, 0, 0 ) ) > 0 ) {
+						buffer[size] = 0;
+						server = [NSString stringWithUTF8String:buffer];
 					}
+
+					if( ( size = fgetxattr( fd, "target", buffer, 1023, 0, 0 ) ) > 0 ) {
+						buffer[size] = 0;
+						target = [NSString stringWithUTF8String:buffer];
+					}
+
+					if( ( size = fgetxattr( fd, "dateBegan", buffer, 1023, 0, 0 ) ) > 0 ) {
+						buffer[size] = 0;
+						session = [NSString stringWithUTF8String:buffer];
+					}
+
+					fclose( logsFile );
 				}
 
 				NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:server, @"server", target, @"target", session, @"session", path, @"path", nil];
