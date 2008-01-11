@@ -624,7 +624,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 			int ircColor = colorRGBToMIRCColor( red * 255, green * 255, blue * 255 );
 
-			snprintf( buffer, 6, "\003%02d", ircColor );
+			snprintf( buffer, 6, "\003%d", ircColor );
 			[ret appendBytes:buffer length:strlen( buffer )];
 
 			if( ! [[backgroundColor colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] && ! [[backgroundColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace] )
@@ -634,7 +634,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				[backgroundColor getRed:&red green:&green blue:&blue alpha:NULL];
 				ircColor = colorRGBToMIRCColor( red * 255, green * 255, blue * 255 );
 
-				snprintf( buffer, 6, ",%02d", ircColor );
+				snprintf( buffer, 6, ",%d", ircColor );
 				[ret appendBytes:buffer length:strlen( buffer )];
 			}
 		}
