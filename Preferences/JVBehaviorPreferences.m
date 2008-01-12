@@ -31,12 +31,6 @@
 	else if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatActionOnEnter"] )
 		[enterKeyAction selectItemAtIndex:[enterKeyAction indexOfItemWithTag:1]];
 	else [enterKeyAction selectItemAtIndex:[enterKeyAction indexOfItemWithTag:2]];
-
-	[sendHistory setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
-	[sendHistoryStepper setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatMaximumHistory"]];
-
-	[messageScrollback setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"]];
-	[messageScrollbackStepper setIntValue:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatScrollbackLimit"]];
 }
 
 #pragma mark -
@@ -65,26 +59,5 @@
 		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatSendOnEnter"];
 		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"MVChatActionOnEnter"];
 	}
-}
-
-- (IBAction) changeSendHistory:(id) sender {
-	int size = [sender intValue];
-	[sendHistory setIntValue:size];
-	[sendHistoryStepper setIntValue:size];
-	[[NSUserDefaults standardUserDefaults] setInteger:size forKey:@"JVChatMaximumHistory"];
-}
-
-- (IBAction) changeMessageScrollback:(id) sender {
-	int size = [sender intValue];
-	[messageScrollback setIntValue:size];
-	[messageScrollbackStepper setIntValue:size];
-	[[NSUserDefaults standardUserDefaults] setInteger:size forKey:@"JVChatScrollbackLimit"];
-}
-
-- (IBAction) changeRejoinDelay:(id) sender {
-	float delay = [sender floatValue];
-	[rejoinDelay setFloatValue:delay];
-	[rejoinDelayStepper setFloatValue:delay];
-	[[NSUserDefaults standardUserDefaults] setFloat:delay forKey:@"JVAutoRejoinRoomsDelay"];
 }
 @end
