@@ -79,7 +79,9 @@
 }
 
 - (void) selectEmoticonsWithIdentifier:(NSString *) identifier {
-	[_style setDefaultEmoticonSet:[JVEmoticonSet emoticonSetWithIdentifier:identifier]];
+	JVEmoticonSet *emoticonSet = [JVEmoticonSet emoticonSetWithIdentifier:identifier];
+	[_style setDefaultEmoticonSet:emoticonSet];
+	[preview setEmoticons:emoticonSet];
 	[self updateEmoticonsMenu];
 }
 
