@@ -252,7 +252,7 @@
 			};
 			name = Development;
 		};
-		1C7F306D0855489300D41FB0 /* Release */ = {
+		1C7F306E0855489300D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
@@ -280,35 +280,6 @@
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Release;
-		};
-		1C7F306E0855489300D41FB0 /* Release (Universal) */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(HOME)/Library/Frameworks\"";
-				GCC_PREFIX_HEADER = ../../Basic.pch;
-				HEADER_SEARCH_PATHS = (
-					../../Additions,
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					../../Controllers,
-					../../Models,
-					../../Panels,
-					../../Views,
-				);
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
-				INFOPLIST_FILE = Info.plist;
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
-				);
-				PRODUCT_NAME = "Python Support";
-				WRAPPER_EXTENSION = plugin;
-			};
-			name = "Release (Universal)";
 		};
 		1C7F30700855489300D41FB0 /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -322,15 +293,7 @@
 			};
 			name = Development;
 		};
-		1C7F30710855489300D41FB0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
-			buildSettings = {
-				SYMROOT = ../../build;
-			};
-			name = Release;
-		};
-		1C7F30720855489300D41FB0 /* Release (Universal) */ = {
+		1C7F30720855489300D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
@@ -340,7 +303,7 @@
 				);
 				SYMROOT = ../../build;
 			};
-			name = "Release (Universal)";
+			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
@@ -349,21 +312,19 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1C7F306C0855489300D41FB0 /* Development */,
-				1C7F306D0855489300D41FB0 /* Release */,
-				1C7F306E0855489300D41FB0 /* Release (Universal) */,
+				1C7F306E0855489300D41FB0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Development;
 		};
 		1C7F306F0855489300D41FB0 /* Build configuration list for PBXProject "Python Support" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1C7F30700855489300D41FB0 /* Development */,
-				1C7F30710855489300D41FB0 /* Release */,
-				1C7F30720855489300D41FB0 /* Release (Universal) */,
+				1C7F30720855489300D41FB0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Development;
 		};
 /* End XCConfigurationList section */
 	};

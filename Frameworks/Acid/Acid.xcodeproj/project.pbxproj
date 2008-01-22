@@ -476,22 +476,6 @@
 			};
 			name = Development;
 		};
-		1DEB91AF08733DA50010E9CD /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				EXPORTED_SYMBOLS_FILE = Acid.exp;
-				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = Acid.pch;
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				PRODUCT_NAME = Acid;
-				SYMROOT = ../../build;
-				WRAPPER_EXTENSION = framework;
-			};
-			name = Release;
-		};
 		1DEB91B208733DA50010E9CD /* Development */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DDF45C0C0BD5CF0E0050911E /* Common Settings.xcconfig */;
@@ -502,15 +486,7 @@
 			};
 			name = Development;
 		};
-		1DEB91B308733DA50010E9CD /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DDF45C0C0BD5CF0E0050911E /* Common Settings.xcconfig */;
-			buildSettings = {
-				SYMROOT = ../../build;
-			};
-			name = Release;
-		};
-		DDF45C080BD5CEF40050911E /* Release (Universal) */ = {
+		DDF45C080BD5CEF40050911E /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DDF45C0C0BD5CF0E0050911E /* Common Settings.xcconfig */;
 			buildSettings = {
@@ -520,9 +496,9 @@
 				);
 				SYMROOT = ../../build;
 			};
-			name = "Release (Universal)";
+			name = Release;
 		};
-		DDF45C090BD5CEF40050911E /* Release (Universal) */ = {
+		DDF45C090BD5CEF40050911E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -536,7 +512,7 @@
 				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = framework;
 			};
-			name = "Release (Universal)";
+			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
@@ -545,21 +521,19 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB91AE08733DA50010E9CD /* Development */,
-				1DEB91AF08733DA50010E9CD /* Release */,
-				DDF45C090BD5CEF40050911E /* Release (Universal) */,
+				DDF45C090BD5CEF40050911E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Development;
 		};
 		1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "Acid" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB91B208733DA50010E9CD /* Development */,
-				1DEB91B308733DA50010E9CD /* Release */,
-				DDF45C080BD5CEF40050911E /* Release (Universal) */,
+				DDF45C080BD5CEF40050911E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Development;
 		};
 /* End XCConfigurationList section */
 	};

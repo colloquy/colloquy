@@ -9,9 +9,6 @@ COMMON_XCODE_OPTIONS = -project Colloquy.xcodeproj -target 'Colloquy (Applicatio
 all release r:
 	xcodebuild $(COMMON_XCODE_OPTIONS) -configuration Release build
 
-universal u:
-	xcodebuild $(COMMON_XCODE_OPTIONS) -configuration 'Release (Universal)' build
-
 development dev d:
 	xcodebuild $(COMMON_XCODE_OPTIONS) -configuration Development build
 

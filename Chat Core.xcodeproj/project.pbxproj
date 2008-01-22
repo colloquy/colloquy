@@ -741,26 +741,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		1C041DDB08553AD200A5A5BA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 2;
-				DYLIB_CURRENT_VERSION = 2;
-				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
-				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = Basic.pch;
-				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0xa10000,
-				);
-				PRODUCT_NAME = ChatCore;
-				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = framework;
-			};
-			name = Release;
-		};
 		1C041DDC08553AD200A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -781,14 +761,6 @@
 			};
 			name = Development;
 		};
-		1C041DDF08553AD200A5A5BA /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
-			buildSettings = {
-				SYMROOT = build;
-			};
-			name = Release;
-		};
 		1C041DE008553AD200A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
@@ -799,7 +771,7 @@
 			};
 			name = Development;
 		};
-		1C7F2DB408553C1900D41FB0 /* Release (Universal) */ = {
+		1C7F2DB408553C1900D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
@@ -817,9 +789,9 @@
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
 			};
-			name = "Release (Universal)";
+			name = Release;
 		};
-		1C7F2DB508553C1900D41FB0 /* Release (Universal) */ = {
+		1C7F2DB508553C1900D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
@@ -829,7 +801,7 @@
 				);
 				SYMROOT = build;
 			};
-			name = "Release (Universal)";
+			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
@@ -837,22 +809,20 @@
 		1C041DDA08553AD200A5A5BA /* Build configuration list for PBXNativeTarget "Chat Core (Framework)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1C041DDB08553AD200A5A5BA /* Release */,
-				1C7F2DB408553C1900D41FB0 /* Release (Universal) */,
+				1C7F2DB408553C1900D41FB0 /* Release */,
 				1C041DDC08553AD200A5A5BA /* Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Development;
 		};
 		1C041DDE08553AD200A5A5BA /* Build configuration list for PBXProject "Chat Core" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1C041DDF08553AD200A5A5BA /* Release */,
-				1C7F2DB508553C1900D41FB0 /* Release (Universal) */,
+				1C7F2DB508553C1900D41FB0 /* Release */,
 				1C041DE008553AD200A5A5BA /* Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Development;
 		};
 /* End XCConfigurationList section */
 	};

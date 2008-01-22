@@ -373,43 +373,6 @@
 			};
 			name = Development;
 		};
-		1C7F30410855482D00D41FB0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(HOME)/Library/Frameworks\"";
-				GCC_FAST_OBJC_DISPATCH = YES;
-				GCC_PREFIX_HEADER = ../../Basic.pch;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
-					HAVE_STRSEP,
-					HAVE_ERRNO_H,
-				);
-				HEADER_SEARCH_PATHS = (
-					../../Additions,
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-					../../Controllers,
-					../../Models,
-					../../Panels,
-					../../Views,
-				);
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_MODE_FLAG = "u+w,go-w,a+rX";
-				INSTALL_PATH = "$(HOME)/Library/Application Support/Colloquy/PlugIns";
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
-				);
-				PRODUCT_NAME = "Web Interface";
-				SYMROOT = ../../build;
-				WRAPPER_EXTENSION = plugin;
-			};
-			name = Release;
-		};
 		1C7F30430855482D00D41FB0 /* Development */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
@@ -421,14 +384,7 @@
 			};
 			name = Development;
 		};
-		1C7F30450855482D00D41FB0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
-			buildSettings = {
-			};
-			name = Release;
-		};
-		1C7F307A085548E700D41FB0 /* Release (Universal) */ = {
+		1C7F307A085548E700D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
@@ -463,9 +419,9 @@
 				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = plugin;
 			};
-			name = "Release (Universal)";
+			name = Release;
 		};
-		1C7F307B085548E700D41FB0 /* Release (Universal) */ = {
+		1C7F307B085548E700D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
@@ -474,7 +430,7 @@
 					i386,
 				);
 			};
-			name = "Release (Universal)";
+			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
@@ -483,21 +439,19 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1C7F303F0855482D00D41FB0 /* Development */,
-				1C7F30410855482D00D41FB0 /* Release */,
-				1C7F307A085548E700D41FB0 /* Release (Universal) */,
+				1C7F307A085548E700D41FB0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Development;
 		};
 		1C7F30420855482D00D41FB0 /* Build configuration list for PBXProject "Web Interface" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1C7F30430855482D00D41FB0 /* Development */,
-				1C7F30450855482D00D41FB0 /* Release */,
-				1C7F307B085548E700D41FB0 /* Release (Universal) */,
+				1C7F307B085548E700D41FB0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Development;
 		};
 /* End XCConfigurationList section */
 	};

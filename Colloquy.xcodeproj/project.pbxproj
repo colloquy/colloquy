@@ -3025,20 +3025,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		1C041A650854E97700A5A5BA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PREFIX_HEADER = Basic.pch;
-				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
-				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
-				);
-				PRODUCT_NAME = "Standard Commands";
-				WRAPPER_EXTENSION = plugin;
-			};
-			name = Release;
-		};
 		1C041A660854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3052,33 +3038,6 @@
 				WRAPPER_EXTENSION = plugin;
 			};
 			name = Development;
-		};
-		1C041A690854E97700A5A5BA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PREFIX_HEADER = Colloquy.pch;
-				HEADER_SEARCH_PATHS = (
-					/usr/include/libxml2,
-					"$(HEADER_SEARCH_PATHS)",
-				);
-				INFOPLIST_FILE = Resources/Info.plist;
-				OTHER_LDFLAGS = (
-					"-lxml2",
-					"-lxslt",
-					"-lexslt",
-				);
-				PRODUCT_NAME = Colloquy;
-				SECTORDER_FLAGS = (
-					"-sectorder",
-					__TEXT,
-					__text,
-					Colloquy.order,
-					"-e",
-					start,
-				);
-				WRAPPER_EXTENSION = app;
-			};
-			name = Release;
 		};
 		1C041A6A0854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -3099,23 +3058,6 @@
 			};
 			name = Development;
 		};
-		1C041A6D0854E97700A5A5BA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_FAST_OBJC_DISPATCH = YES;
-				HEADER_SEARCH_PATHS = /usr/include/libxml2;
-				INFOPLIST_FILE = Importer/Info.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				OTHER_LDFLAGS = "-lxml2";
-				PRODUCT_NAME = Colloquy;
-				SDKROOT_ = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_ppc7400 = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_ppc970 = /Developer/SDKs/MacOSX10.4u.sdk;
-				WRAPPER_EXTENSION = mdimporter;
-			};
-			name = Release;
-		};
 		1C041A6E0854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3132,14 +3074,6 @@
 			};
 			name = Development;
 		};
-		1C041A710854E97700A5A5BA /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
-			buildSettings = {
-				SYMROOT = build;
-			};
-			name = Release;
-		};
 		1C041A720854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
@@ -3153,7 +3087,7 @@
 			};
 			name = Development;
 		};
-		1C041DC90855377900A5A5BA /* Release (Universal) */ = {
+		1C041DC90855377900A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Basic.pch;
@@ -3165,9 +3099,9 @@
 				PRODUCT_NAME = "Standard Commands";
 				WRAPPER_EXTENSION = plugin;
 			};
-			name = "Release (Universal)";
+			name = Release;
 		};
-		1C041DCA0855377900A5A5BA /* Release (Universal) */ = {
+		1C041DCA0855377900A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Colloquy.pch;
@@ -3192,9 +3126,9 @@
 				);
 				WRAPPER_EXTENSION = app;
 			};
-			name = "Release (Universal)";
+			name = Release;
 		};
-		1C041DCB0855377900A5A5BA /* Release (Universal) */ = {
+		1C041DCB0855377900A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_FAST_OBJC_DISPATCH = YES;
@@ -3209,9 +3143,9 @@
 				SDKROOT_ppc970 = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = mdimporter;
 			};
-			name = "Release (Universal)";
+			name = Release;
 		};
-		1C041DCC0855377900A5A5BA /* Release (Universal) */ = {
+		1C041DCC0855377900A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
@@ -3221,9 +3155,9 @@
 				);
 				SYMROOT = build;
 			};
-			name = "Release (Universal)";
+			name = Release;
 		};
-		1C7A60BC09FDE8580029AC64 /* Release */ = {
+		1C7A60BD09FDE8580029AC64 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -3244,28 +3178,6 @@
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
-		};
-		1C7A60BD09FDE8580029AC64 /* Release (Universal) */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
-				);
-				GCC_FAST_OBJC_DISPATCH = YES;
-				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Cocoa,
-					"-framework",
-					SenTestingKit,
-				);
-				PRODUCT_NAME = "Colloquy Tests";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = "Release (Universal)";
 		};
 		1C7A60BE09FDE8580029AC64 /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -3295,52 +3207,47 @@
 		1C041A640854E97700A5A5BA /* Build configuration list for PBXNativeTarget "Standard Commands (Plug-In)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1C041A650854E97700A5A5BA /* Release */,
-				1C041DC90855377900A5A5BA /* Release (Universal) */,
+				1C041DC90855377900A5A5BA /* Release */,
 				1C041A660854E97700A5A5BA /* Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Development;
 		};
 		1C041A680854E97700A5A5BA /* Build configuration list for PBXNativeTarget "Colloquy (Application)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1C041A690854E97700A5A5BA /* Release */,
-				1C041DCA0855377900A5A5BA /* Release (Universal) */,
+				1C041DCA0855377900A5A5BA /* Release */,
 				1C041A6A0854E97700A5A5BA /* Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Development;
 		};
 		1C041A6C0854E97700A5A5BA /* Build configuration list for PBXNativeTarget "Colloquy (Metadata Importer)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1C041A6D0854E97700A5A5BA /* Release */,
-				1C041DCB0855377900A5A5BA /* Release (Universal) */,
+				1C041DCB0855377900A5A5BA /* Release */,
 				1C041A6E0854E97700A5A5BA /* Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Development;
 		};
 		1C041A700854E97700A5A5BA /* Build configuration list for PBXProject "Colloquy" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1C041A710854E97700A5A5BA /* Release */,
-				1C041DCC0855377900A5A5BA /* Release (Universal) */,
+				1C041DCC0855377900A5A5BA /* Release */,
 				1C041A720854E97700A5A5BA /* Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Development;
 		};
 		1C7A60BB09FDE8580029AC64 /* Build configuration list for PBXNativeTarget "Colloquy Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1C7A60BC09FDE8580029AC64 /* Release */,
-				1C7A60BD09FDE8580029AC64 /* Release (Universal) */,
+				1C7A60BD09FDE8580029AC64 /* Release */,
 				1C7A60BE09FDE8580029AC64 /* Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Development;
 		};
 /* End XCConfigurationList section */
 	};

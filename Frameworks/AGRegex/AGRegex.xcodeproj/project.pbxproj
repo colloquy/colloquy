@@ -395,29 +395,6 @@
 			};
 			name = Development;
 		};
-		1C3260060865DDF000357DB1 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				GCC_CW_ASM_SYNTAX = NO;
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				LIBRARY_STYLE = DYNAMIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-fconstant-cfstrings";
-				PREBINDING = YES;
-				SYMROOT = ../../build;
-				UNSTRIPPED_PRODUCT = YES;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
 		1C6A0C320865E09C009EE6D2 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -441,34 +418,6 @@
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Development;
-		};
-		1C6A0C330865E09C009EE6D2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				EXPORTED_SYMBOLS_FILE = AGRegex.exp;
-				FRAMEWORK_VERSION = A;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					SUPPORT_UTF8,
-					SUPPORT_UCP,
-				);
-				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "@executable_path/../Frameworks/";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0x900000,
-				);
-				PRODUCT_NAME = AGRegex;
-				SKIP_INSTALL = YES;
-				STRIP_INSTALLED_PRODUCT = YES;
-				SYMROOT = ../../build;
-				WRAPPER_EXTENSION = framework;
-			};
-			name = Release;
 		};
 		1C6A0C480865E09C009EE6D2 /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -494,28 +443,7 @@
 			};
 			name = Development;
 		};
-		1C6A0C490865E09C009EE6D2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				INFOPLIST_FILE = "Info-RegexTest.plist";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = RegexTest;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				WRAPPER_EXTENSION = app;
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		1C9AED4F086B1909008ED7AD /* Release (Universal) */ = {
+		1C9AED4F086B1909008ED7AD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
@@ -541,9 +469,9 @@
 				SYMROOT = ../../build;
 				WRAPPER_EXTENSION = framework;
 			};
-			name = "Release (Universal)";
+			name = Release;
 		};
-		1C9AED50086B1909008ED7AD /* Release (Universal) */ = {
+		1C9AED50086B1909008ED7AD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
@@ -562,9 +490,9 @@
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = NO;
 			};
-			name = "Release (Universal)";
+			name = Release;
 		};
-		1C9AED51086B1909008ED7AD /* Release (Universal) */ = {
+		1C9AED51086B1909008ED7AD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = (
@@ -590,7 +518,7 @@
 				UNSTRIPPED_PRODUCT = YES;
 				ZERO_LINK = NO;
 			};
-			name = "Release (Universal)";
+			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
@@ -599,8 +527,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1C3260050865DDF000357DB1 /* Development */,
-				1C3260060865DDF000357DB1 /* Release */,
-				1C9AED51086B1909008ED7AD /* Release (Universal) */,
+				1C9AED51086B1909008ED7AD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
@@ -609,8 +536,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1C6A0C320865E09C009EE6D2 /* Development */,
-				1C6A0C330865E09C009EE6D2 /* Release */,
-				1C9AED4F086B1909008ED7AD /* Release (Universal) */,
+				1C9AED4F086B1909008ED7AD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
@@ -619,8 +545,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1C6A0C480865E09C009EE6D2 /* Development */,
-				1C6A0C490865E09C009EE6D2 /* Release */,
-				1C9AED50086B1909008ED7AD /* Release (Universal) */,
+				1C9AED50086B1909008ED7AD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
