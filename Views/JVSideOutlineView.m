@@ -10,13 +10,24 @@ static void gradientInterpolate( void *info, float const *inData, float *outData
 		outData[i] = ( 1. - a ) * dark[i] + a * light[i];
 }
 
+@interface NSOutlineView (NSOutlineViewPrivate)
+- (NSColor *) _highlightColorForCell:(NSCell *) cell;
+- (void) _highlightRow:(int) row clipRect:(NSRect) clip;
+@end
+
 @implementation JVSideOutlineView
 - (NSColor *) _highlightColorForCell:(NSCell *) cell {
+	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4 && [super respondsToSelector:_cmd] )
+		return [super _highlightColorForCell:cell];
+
     // return nil to prevent normal selection drawing
     return nil;
 }
 
 - (void) _highlightRow:(int) row clipRect:(NSRect) clip {
+	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4 && [super respondsToSelector:_cmd] )
+		return [super _highlightRow:row clipRect:clip];
+
 	NSRect highlight = [self rectOfRow:row];
 
 	struct CGFunctionCallbacks callbacks = { 0, gradientInterpolate, NULL };
@@ -41,9 +52,13 @@ static void gradientInterpolate( void *info, float const *inData, float *outData
 }
 
 - (void) drawBackgroundInClipRect:(NSRect) clipRect {
+	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4 && [super respondsToSelector:_cmd] )
+		return [super drawBackgroundInClipRect:clipRect];
+
 	static NSColor *backgroundColor = nil;
 	if( ! backgroundColor )
 		backgroundColor = [[NSColor colorWithCalibratedRed:( 229. / 255. ) green:( 237. / 255. ) blue:( 247. / 255. ) alpha:1.] retain];
+
 	[backgroundColor set];
 	NSRectFill( clipRect );
 }
