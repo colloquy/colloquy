@@ -133,7 +133,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (MVChatConnection *) connection {
 	return _connection;
 }
@@ -141,15 +140,8 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 - (MVChatUserType) type {
 	return _type;
 }
-#endif
 
 #pragma mark -
-
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-@property(readonly, getter=isRemoteUser) BOOL remoteUser;
-@property(readonly, getter=isLocalUser) BOOL localUser;
-@property(readonly, getter=isWildcardUser) BOOL wildcardUser;
-#endif
 
 - (BOOL) isRemoteUser {
 	return ( _type == MVChatRemoteUserType );
@@ -164,11 +156,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 #pragma mark -
-
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-@property(readonly, getter=isIdentified) BOOL identified;
-@property(readonly, getter=isServerOperator) BOOL serverOperator;
-#endif
 
 - (BOOL) isIdentified {
 	return _identified;
@@ -265,7 +252,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (MVChatUserStatus) status {
 	return _status;
 }
@@ -297,7 +283,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 - (NSTimeInterval) lag {
 	return _lag;
 }
-#endif
 
 #pragma mark -
 
@@ -336,7 +321,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (id) uniqueIdentifier {
 	return _uniqueIdentifier;
 }
@@ -348,7 +332,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 - (NSString *) fingerprint {
 	return _fingerprint;
 }
-#endif
 
 #pragma mark -
 
@@ -357,11 +340,9 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	return 0;
 }
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (unsigned long) modes {
 	return _modes;
 }
-#endif
 
 #pragma mark -
 

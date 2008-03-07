@@ -76,29 +76,29 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 }
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-@property(readonly, ivar) MVChatConnection *connection;
+@property(readonly) MVChatConnection *connection;
 
 @property(readonly) NSURL *url;
-@property(readonly, ivar) NSString *name;
+@property(readonly) NSString *name;
 @property(readonly) NSString *displayName;
-@property(readonly, ivar) id uniqueIdentifier;
+@property(readonly) id uniqueIdentifier;
 
-@property(readonly) BOOL joined;
-@property(readonly, ivar) NSDate *dateJoined;
-@property(readonly, ivar) NSDate *dateParted;
+@property(readonly, getter=isJoined) BOOL joined;
+@property(readonly) NSDate *dateJoined;
+@property(readonly) NSDate *dateParted;
 
-@property(ivar) NSStringEncoding encoding;
+@property NSStringEncoding encoding;
 
-@property(readonly, ivar) NSData *topic;
-@property(readonly, ivar) MVChatUser *topicAuthor;
-@property(readonly, ivar) NSDate *dateTopicChanged;
+@property(readonly) NSData *topic;
+@property(readonly) MVChatUser *topicAuthor;
+@property(readonly) NSDate *dateTopicChanged;
 
 @property(readonly) NSSet *supportedAttributes;
 @property(readonly) NSDictionary *attributes;
 
 @property(readonly) unsigned long supportedModes;
 @property(readonly) unsigned long supportedMemberUserModes;
-@property(readonly, ivar) unsigned long modes;
+@property(readonly) unsigned long modes;
 
 @property(readonly) MVChatUser *localMemberUser;
 @property(readonly) NSSet *memberUsers;

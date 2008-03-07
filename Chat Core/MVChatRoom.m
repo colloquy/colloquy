@@ -109,11 +109,9 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (MVChatConnection *) connection {
 	return _connection;
 }
-#endif
 
 #pragma mark -
 
@@ -158,21 +156,17 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return nil;
 }
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSString *) name {
 	return _name;
 }
-#endif
 
 - (NSString *) displayName {
 	return [self name];
 }
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (id) uniqueIdentifier {
 	return _uniqueIdentifier;
 }
-#endif
 
 #pragma mark -
 
@@ -194,15 +188,10 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-@property(readonly, getter=isJoined) BOOL joined;
-#endif
-
 - (BOOL) isJoined {
 	return ( [self dateJoined] && ! [self dateParted] );
 }
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSDate *) dateJoined {
 	return _dateJoined;
 }
@@ -210,11 +199,9 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (NSDate *) dateParted {
 	return _dateParted;
 }
-#endif
 
 #pragma mark -
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSStringEncoding) encoding {
 	return _encoding;
 }
@@ -222,7 +209,6 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (void) setEncoding:(NSStringEncoding) encoding {
 	_encoding = encoding;
 }
-#endif
 
 #pragma mark -
 
@@ -251,17 +237,14 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSData *) topic {
 	return _topic;
 }
-#endif
 
 - (void) setTopic:(MVChatString *) topic {
 // subclass this method, if needed
 }
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (MVChatUser *) topicAuthor {
 	return _topicAuthor;
 }
@@ -269,7 +252,6 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (NSDate *) dateTopicChanged {
 	return _dateTopicChanged;
 }
-#endif
 
 #pragma mark -
 
@@ -330,11 +312,9 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (unsigned long) modes {
 	return _modes;
 }
-#endif
 
 - (id) attributeForMode:(MVChatRoomMode) mode {
 	NSParameterAssert( [self supportedModes] & mode );

@@ -145,40 +145,40 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property NSStringEncoding encoding;
 
-@property(bycopy) NSString *realName;
+@property(copy) NSString *realName;
 
-@property(bycopy) NSString *nickname;
+@property(copy) NSString *nickname;
 @property(readonly) NSString *preferredNickname;
 
-@property(bycopy) NSArray *alternateNicknames;
+@property(copy) NSArray *alternateNicknames;
 @property(readonly) NSString *nextAlternateNickname;
 
-@property(bycopy) NSString *nicknamePassword;
+@property(copy) NSString *nicknamePassword;
 
 @property(readonly) NSString *certificateServiceName;
 @property(readonly) NSString *certificatePassword;
 
-@property(bycopy) NSString *password;
+@property(copy) NSString *password;
 
-@property(bycopy) NSString *username;
+@property(copy) NSString *username;
 
-@property(bycopy) NSString *server;
+@property(copy) NSString *server;
 
 @property unsigned short serverPort;
 
 @property MVChatMessageFormat outgoingChatFormat;
 
-@property(bycopy) NSString *proxyUsername;
+@property(copy) NSString *proxyUsername;
 
-@property(bycopy) NSString *proxyPassword;
+@property(copy) NSString *proxyPassword;
 
-@property BOOL secure;
+@property(getter=isSecure) BOOL secure;
 
-@property(bycopy) NSDictionary *persistentInformation;
+@property(copy) NSDictionary *persistentInformation;
 
 @property MVChatConnectionProxy proxyType;
 
-@property(bycopy) NSString *proxyServer;
+@property(copy) NSString *proxyServer;
 
 @property unsigned short proxyServerPort;
 
@@ -190,10 +190,10 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property(readonly) NSSet *chatUserWatchRules;
 
-@property(bycopy) MVChatString *awayStatusMessage;
+@property(copy) MVChatString *awayStatusMessage;
 
-@property(readonly) BOOL connected;
-@property(readonly) BOOL waitingToReconnect;
+@property(readonly, getter=isConnected) BOOL connected;
+@property(readonly, getter=isWaitingToReconnect) BOOL waitingToReconnect;
 @property(readonly) MVChatConnectionStatus status;
 @property(readonly) unsigned int lag;
 

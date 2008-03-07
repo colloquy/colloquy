@@ -31,23 +31,23 @@ extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 @property(readonly) NSSet *matchedChatUsers;
 
-@property(bycopy) NSString *nickname;
+@property(copy) NSString *nickname;
 @property(readonly) BOOL nicknameIsRegularExpression;
 
-@property(bycopy) NSString *realName;
+@property(copy) NSString *realName;
 @property(readonly) BOOL realNameIsRegularExpression;
 
-@property(bycopy) NSString *username;
+@property(copy) NSString *username;
 @property(readonly) BOOL usernameIsRegularExpression;
 
-@property(bycopy) NSString *address;
+@property(copy) NSString *address;
 @property(readonly) BOOL addressIsRegularExpression;
 
-@property(ivar, bycopy) NSData *publicKey;
+@property(copy) NSData *publicKey;
 
-@property(ivar) BOOL interim;
+@property(getter=isInterim) BOOL interim;
 
-@property(ivar, bycopy) NSArray *applicableServerDomains;
+@property(copy) NSArray *applicableServerDomains;
 
 #else
 

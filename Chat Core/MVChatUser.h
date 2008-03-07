@@ -84,26 +84,25 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 + (id) wildcardUserWithFingerprint:(NSString *) fingerprint;
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-@property(readonly, ivar) MVChatConnection *connection;
-@property(readonly, ivar) MVChatUserType type;
+@property(readonly) MVChatConnection *connection;
+@property(readonly) MVChatUserType type;
 
-@property(readonly) BOOL remoteUser;
-@property(readonly) BOOL localUser;
-@property(readonly) BOOL wildcardUser;
+@property(readonly, getter=isRemoteUser) BOOL remoteUser;
+@property(readonly, getter=isLocalUser) BOOL localUser;
+@property(readonly, getter=isWildcardUser) BOOL wildcardUser;
 
-@property(readonly) BOOL identified;
-@property(readonly) BOOL serverOperator;
-@property(readonly) BOOL watched;
+@property(readonly, getter=isIdentified) BOOL identified;
+@property(readonly, getter=isServerOperator) BOOL serverOperator;
 
-@property(readonly, ivar) MVChatUserStatus status;
-@property(readonly, ivar) NSData *awayStatusMessage;
+@property(readonly) MVChatUserStatus status;
+@property(readonly) NSData *awayStatusMessage;
 
-@property(readonly, ivar) NSDate *dateConnected;
-@property(readonly, ivar) NSDate *dateDisconnected;
-@property(readonly, ivar) NSDate *dateUpdated;
+@property(readonly) NSDate *dateConnected;
+@property(readonly) NSDate *dateDisconnected;
+@property(readonly) NSDate *dateUpdated;
 
-@property(readonly, ivar) NSTimeInterval idleTime;
-@property(readonly, ivar) NSTimeInterval lag;
+@property(readonly) NSTimeInterval idleTime;
+@property(readonly) NSTimeInterval lag;
 
 @property(readonly) NSString *displayName;
 @property(readonly) NSString *nickname;
@@ -112,12 +111,12 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 @property(readonly) NSString *address;
 @property(readonly) NSString *serverAddress;
 
-@property(readonly, ivar) id uniqueIdentifier;
-@property(readonly, ivar) NSData *publicKey;
-@property(readonly, ivar) NSString *fingerprint;
+@property(readonly) id uniqueIdentifier;
+@property(readonly) NSData *publicKey;
+@property(readonly) NSString *fingerprint;
 
 @property(readonly) unsigned long supportedModes;
-@property(readonly, ivar) unsigned long modes;
+@property(readonly) unsigned long modes;
 
 @property(readonly) NSSet *supportedAttributes;
 @property(readonly) NSDictionary *attributes;

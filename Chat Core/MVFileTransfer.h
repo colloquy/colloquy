@@ -46,22 +46,22 @@ typedef enum {
 + (BOOL) isAutoPortMappingEnabled;
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-@property(readonly) BOOL upload;
-@property(readonly) BOOL download;
-@property(readonly) BOOL passive;
-@property(readonly, ivar) MVFileTransferStatus status;
-@property(readonly, ivar) NSError *lastError;
+@property(readonly, getter=isUpload) BOOL upload;
+@property(readonly, getter=isDownload) BOOL download;
+@property(readonly, getter=isPassive) BOOL passive;
+@property(readonly) MVFileTransferStatus status;
+@property(readonly) NSError *lastError;
 
-@property(readonly, ivar) unsigned long long finalSize;
-@property(readonly, ivar) unsigned long long transfered;
+@property(readonly) unsigned long long finalSize;
+@property(readonly) unsigned long long transfered;
 
-@property(readonly, ivar) NSDate *startDate;
-@property(readonly, ivar) unsigned long long startOffset;
+@property(readonly) NSDate *startDate;
+@property(readonly) unsigned long long startOffset;
 
-@property(readonly, ivar) NSHost *host;
-@property(readonly, ivar) unsigned short port;
+@property(readonly) NSHost *host;
+@property(readonly) unsigned short port;
 
-@property(readonly, ivar) MVChatUser *user;
+@property(readonly) MVChatUser *user;
 
 #else
 
@@ -98,7 +98,7 @@ typedef enum {
 + (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive;
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-@property(readonly, ivar) NSString *source;
+@property(readonly) NSString *source;
 #else
 - (NSString *) source;
 #endif
@@ -113,8 +113,8 @@ typedef enum {
 	NSString *_originalFileName;
 }
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-@property(ivar, bycopy) NSString *destination;
-@property(readonly, ivar) NSString *originalFileName;
+@property(copy) NSString *destination;
+@property(readonly) NSString *originalFileName;
 #else
 - (NSString *) destination;
 - (void) setDestination:(NSString *) path;

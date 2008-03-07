@@ -34,6 +34,7 @@
 
 #import "MVICBChatConnection.h"
 #import "MVICBChatUser.h"
+#import "MVChatConnectionPrivate.h"
 #import "MVChatString.h"
 
 @implementation MVICBChatUser
@@ -68,10 +69,13 @@
 
 #pragma mark Message handling
 
-- (void) sendMessage:(MVChatString *) message
-         withEncoding:(NSStringEncoding) encoding
-		 withAttributes:(NSDictionary *) attributes {
-	[(MVICBChatConnection *)_connection ctsCommandPersonal:_nickname withMessage:[message string]];
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
+#if USE(ATTRIBUTED_CHAT_STRING)
+	NSString *messageString = [message string];
+#elif USE(PLAIN_CHAT_STRING)
+	NSString *messageString = message;
+#endif
+	[(MVICBChatConnection *)_connection ctsCommandPersonal:_nickname withMessage:messageString];
 }
 
 @end

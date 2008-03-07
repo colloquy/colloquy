@@ -253,7 +253,6 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	return ( _addressRegex ? YES : NO );
 }
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSData *) publicKey {
 	return _publicKey;
 }
@@ -261,17 +260,11 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 - (void) setPublicKey:(NSData *) publicKey {
 	MVSafeCopyAssign( &_publicKey, publicKey );
 }
-#endif
-
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-@property(ivar, getter=isInterim) BOOL interim;
-#endif
 
 - (BOOL) isInterim {
 	return _interim;
 }
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (void) setInterim:(BOOL) interim {
 	_interim = interim;
 }
@@ -283,5 +276,4 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 - (void) setApplicableServerDomains:(NSArray *) serverDomains {
 	MVSafeCopyAssign( &_applicableServerDomains, serverDomains );
 }
-#endif
 @end

@@ -34,6 +34,7 @@
 
 #import "MVICBChatConnection.h"
 #import "MVICBChatRoom.h"
+#import "MVChatConnectionPrivate.h"
 #import "MVChatString.h"
 
 @implementation MVICBChatRoom
@@ -57,13 +58,22 @@
 
 - (void) setTopic:(MVChatString *) newTopic {
 	NSParameterAssert( newTopic );
-	[(MVICBChatConnection *)_connection ctsCommandTopicSet:[newTopic string]];
+#if USE(ATTRIBUTED_CHAT_STRING)
+	NSString *newTopicString = [newTopic string];
+#elif USE(PLAIN_CHAT_STRING)
+	NSString *newTopicString = newTopic;
+#endif
+	[(MVICBChatConnection *)_connection ctsCommandTopicSet:newTopicString];
 }
 
-- (void) sendMessage:(MVChatString *) message
-         withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
+- (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
+#if USE(ATTRIBUTED_CHAT_STRING)
+	NSString *messageString = [message string];
+#elif USE(PLAIN_CHAT_STRING)
+	NSString *messageString = message;
+#endif
 	if( [_memberUsers count] > 1 )
-		[(MVICBChatConnection *)_connection ctsOpenPacket:[message string]];
+		[(MVICBChatConnection *)_connection ctsOpenPacket:messageString];
 }
 
 @end

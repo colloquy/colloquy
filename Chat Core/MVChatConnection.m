@@ -139,10 +139,12 @@ static const NSStringEncoding supportedEncodings[] = {
 		_supportedFeatures = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 		_localUser = nil;
 
+#if !defined(TARGET_OS_ASPEN) || !TARGET_OS_ASPEN
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemWillSleep: ) name:NSWorkspaceWillSleepNotification object:[NSWorkspace sharedWorkspace]];
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _applicationWillTerminate: ) name:NSWorkspaceWillPowerOffNotification object:[NSWorkspace sharedWorkspace]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
+#endif
 	}
 
 	return self;
@@ -231,7 +233,10 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
+#if !defined(TARGET_OS_ASPEN) || !TARGET_OS_ASPEN
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
+#endif
 
 	[_npassword release];
 	[_roomsCache release];
@@ -500,10 +505,6 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) setSecure:(BOOL) ssl {
 	_secure = ssl;
 }
-
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-@property(getter=isSecure, setter=setSecure:) BOOL secure;
-#endif
 
 - (BOOL) isSecure {
 	return _secure;
@@ -825,10 +826,6 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-@property(readonly, getter=isConnected) BOOL connected;
-#endif
-
 - (BOOL) isConnected {
 	return ( _status == MVChatConnectionConnectedStatus );
 }
@@ -857,10 +854,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_reconnectTimer release];
 	_reconnectTimer = nil;
 }
-
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-@property(readonly, getter=isWaitingToReconnect) BOOL waitingToReconnect;
-#endif
 
 - (BOOL) isWaitingToReconnect {
 	return ( ! [self isConnected] && _reconnectTimer ? YES : NO );

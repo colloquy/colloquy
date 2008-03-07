@@ -21,6 +21,8 @@ static BOOL useSystemThreadPerformSelector() {
 	return useSystemVersion;
 }
 
+#if !defined(TARGET_OS_ASPEN) || !TARGET_OS_ASPEN
+
 #import <pthread.h>
 
 typedef struct InterThreadMessage {
@@ -75,14 +77,20 @@ static void removeMessagePortForThread(NSThread *thread) {
 	pthread_mutex_unlock(&pGate);
 }
 
+#endif
+
 @implementation NSThread (InterThreadMessaging)
 + (void) prepareForInterThreadMessages {
+#if !defined(TARGET_OS_ASPEN) || !TARGET_OS_ASPEN
 	if(useSystemThreadPerformSelector())
 		return;
 	[InterThreadManager class]; // Force the class initialization.
 	createMessagePortForThread([NSThread currentThread], [NSRunLoop currentRunLoop]);
+#endif
 }
 @end
+
+#if !defined(TARGET_OS_ASPEN) || !TARGET_OS_ASPEN
 
 @implementation InterThreadManager
 + (void) initialize {
@@ -113,6 +121,8 @@ static void removeMessagePortForThread(NSThread *thread) {
 }
 @end
 
+#endif
+
 static void performSelector(SEL selector, id receiver, id object, NSThread *thread, BOOL wait) {
 	if( ! thread || [thread isEqual:[NSThread currentThread]] ) {
 		[receiver performSelector:selector withObject:object];
@@ -124,6 +134,7 @@ static void performSelector(SEL selector, id receiver, id object, NSThread *thre
 		return;
 	}
 
+#ifndef TARGET_OS_ASPEN
 	InterThreadMessage *msg = (InterThreadMessage *)malloc(sizeof(struct InterThreadMessage));
 	bzero(msg, sizeof(struct InterThreadMessage));
 
@@ -141,6 +152,7 @@ static void performSelector(SEL selector, id receiver, id object, NSThread *thre
 	[portMessage release];
 	[components release];
 	[data release];
+#endif
 }
 
 @implementation NSObject (InterThreadMessaging)

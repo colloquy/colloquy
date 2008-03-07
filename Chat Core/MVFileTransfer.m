@@ -79,12 +79,6 @@ static BOOL autoPortMapping = YES;
 
 #pragma mark -
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-@property(readonly, getter=isUpload) BOOL upload;
-@property(readonly, getter=isDownload) BOOL download;
-@property(readonly, getter=isPassive) BOOL passive;
-#endif
-
 - (BOOL) isUpload {
 	return NO;
 }
@@ -97,7 +91,6 @@ static BOOL autoPortMapping = YES;
 	return _passive;
 }
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (MVFileTransferStatus) status {
 	return _status;
 }
@@ -141,7 +134,6 @@ static BOOL autoPortMapping = YES;
 - (MVChatUser *) user {
 	return _user;
 }
-#endif
 
 #pragma mark -
 
@@ -225,11 +217,9 @@ static BOOL autoPortMapping = YES;
 
 #pragma mark -
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSString *) source {
 	return _source;
 }
-#endif
 
 #pragma mark -
 
@@ -272,7 +262,6 @@ static BOOL autoPortMapping = YES;
 	MVSafeCopyAssign( &_destination, [path stringByStandardizingPath] );
 }
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED <= MAC_OS_X_VERSION_10_4
 - (NSString *) destination {
 	return _destination;
 }
@@ -282,7 +271,6 @@ static BOOL autoPortMapping = YES;
 - (NSString *) originalFileName {
 	return _originalFileName;
 }
-#endif
 
 #pragma mark -
 

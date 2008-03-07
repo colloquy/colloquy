@@ -142,7 +142,7 @@ static AGRegex *backrefPattern;
 #ifndef SUPPORT_UTF8
 	// check for valid ASCII string
 	if (![str canBeConvertedToEncoding:NSASCIIStringEncoding])
-		[NSException raise:@"%@ is not a valid ASCII string, build with UTF-8 support", str];
+		[NSException raise:NSInvalidArgumentException format:@"%@ is not a valid ASCII string, build with UTF-8 support", str];
 #endif
 	// sanity check range
 	if (range.location + range.length > length)
