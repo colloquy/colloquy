@@ -142,6 +142,8 @@ Colloquy.showColloquiesList = function(event)
 	Colloquy.joinElement.style.display = null;
 	Colloquy.mainTitleElement.style.display = null;
 
+	ChatController.activePanel.setKeyboardVisible(false);
+
 	var animations = [{element: this.backElement, end: {left: document.body.offsetWidth / 4, opacity: 0}},
 		{element: this.joinElement, end: {opacity: 1}}, {element: this.membersElement, end: {opacity: 0}},
 		{element: this.colloquyTitleElement, end: {left: document.body.offsetWidth / 2, opacity: 0}},
@@ -158,7 +160,6 @@ Colloquy.showColloquiesList = function(event)
 		if(!ChatController.activePanel.wasScrolledNearBottom)
 			ChatController.activePanel.lastScrollPosition = ChatController.activePanel.panelTranscriptElement.scrollTop;
 		ChatController.activePanel.panelElement.style.display = null;
-		ChatController.activePanel.setKeyboardVisible(false);
 		ChatController.activePanel.active = false;
 
 		if(ChatController.activePanel.closeAfterAnimate)
@@ -536,7 +537,7 @@ DirectChatPanel.prototype.setKeyboardVisible = function(visible) {
 	this.keyboardVisible = visible;
 
 	if(visible) {
-		this.panelTranscriptElement.style.height = "119px";
+		document.body.addStyleClass("keyboard-visible");
 
 		this.panelInputElement.focus();
 
@@ -544,7 +545,7 @@ DirectChatPanel.prototype.setKeyboardVisible = function(visible) {
 		this.panelInputElement.selectionStart = valueLength;
 		this.panelInputElement.selectionEnd = valueLength;
 	} else {
-		this.panelTranscriptElement.style.height = null;
+		document.body.removeStyleClass("keyboard-visible");
 	}
 
 	this.scrollToBottom();
