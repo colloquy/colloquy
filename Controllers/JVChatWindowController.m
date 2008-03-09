@@ -106,6 +106,7 @@ typedef int NSTableViewSelectionHighlightStyle;
 	[[self window] setDelegate:self];
 
 	[[self window] useOptimizedDrawing:YES];
+	[[self window] setIgnoresMouseEvents:NO];
 	[[self window] setOpaque:NO]; // let us poke transparant holes in the window
 
 	if( [[self window] respondsToSelector:@selector( _setContentHasShadow: )] )
