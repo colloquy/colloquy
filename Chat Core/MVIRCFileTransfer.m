@@ -33,8 +33,8 @@
 		if( ++passiveId > 999 ) passiveId = 1;
 		[ret _setPassiveIdentifier:passiveId];
 
-		if( [ret _fileNameQuoted] ) [user sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" 16843009 0 %llu %luT", fileName, [ret finalSize], passiveId]];
-		else [user sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND %@ 16843009 0 %llu %luT", fileName, [ret finalSize], passiveId]];
+		if( [ret _fileNameQuoted] ) [user sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND \"%@\" 16843009 0 %llu %lu T", fileName, [ret finalSize], passiveId]];
+		else [user sendSubcodeRequest:@"DCC" withArguments:[NSString stringWithFormat:@"SEND %@ 16843009 0 %llu %lu T", fileName, [ret finalSize], passiveId]];
 	} else {
 		[ret _setupAndStart];
 	}
@@ -259,8 +259,8 @@
 
 - (void) reject {
 	if( [self isPassive] ) {
-		if( _fileNameQuoted ) [[self user] sendSubcodeReply:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT SEND \"%@\" 16843009 0 %llu %luT", [self originalFileName], [self finalSize], [self _passiveIdentifier]]];
-		else [[self user] sendSubcodeReply:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT SEND %@ 16843009 0 %llu %luT", [self originalFileName], [self finalSize], [self _passiveIdentifier]]];
+		if( _fileNameQuoted ) [[self user] sendSubcodeReply:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT SEND \"%@\" 16843009 0 %llu %lu T", [self originalFileName], [self finalSize], [self _passiveIdentifier]]];
+		else [[self user] sendSubcodeReply:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT SEND %@ 16843009 0 %llu %lu T", [self originalFileName], [self finalSize], [self _passiveIdentifier]]];
 	} else {
 		NSString *address = [[self host] address];
 		if( ! address ) address = @"16843009";
