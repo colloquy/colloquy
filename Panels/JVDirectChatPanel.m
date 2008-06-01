@@ -1815,25 +1815,24 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 #pragma mark -
 
 @implementation NSApplication (NSApplicationActivePanelScripting)
-- (id) sendMessageScriptCommand:(NSScriptCommand *) command {
+- (void) sendMessageScriptCommand:(NSScriptCommand *) command {
 	// if there is a subject or target parameter, perform the default implementation
 	if( [command subjectSpecifier] || [[command evaluatedArguments] objectForKey:@"target"] ) {
 		[command performDefaultImplementation];
-		return nil;
+		return;
 	}
 
 	// if nothing responds to this command make it perform on the active panel of the front window
 	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
 	id container = [[[NSIndexSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:nil key:@"orderedWindows" index:0] autorelease];
-	if( ! container ) return nil;
+	if( ! container ) return;
 
 	classDescription = [NSClassDescription classDescriptionForClass:[NSWindow class]];
 	id specifier = [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"activeChatViewController"] autorelease];
-	if( ! specifier ) return nil;
+	if( ! specifier ) return;
 
 	[command setSubjectSpecifier:specifier];
 	[command performDefaultImplementation];
-	return nil;
 }
 
 - (id) addEventMessageScriptCommand:(NSScriptCommand *) command {
@@ -1861,7 +1860,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 #pragma mark -
 
 @implementation JVDirectChatPanel (JVDirectChatScripting)
-- (id) sendMessageScriptCommand:(NSScriptCommand *) command {
+- (void) sendMessageScriptCommand:(NSScriptCommand *) command {
 	NSDictionary *args = [command evaluatedArguments];
 	id message = [command evaluatedDirectParameter];
 	id action = [args objectForKey:@"action"];
@@ -1873,7 +1872,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( ! message ) {
 		[command setScriptErrorNumber:-1715]; // errAEParamMissed
 		[command setScriptErrorString:@"The message was missing."];
-		return nil;
+		return;
 	}
 
 	if( ! [message isKindOfClass:[NSString class]] ) {
@@ -1881,14 +1880,14 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		if( ! [message isKindOfClass:[NSString class]] ) {
 			[command setScriptErrorNumber:-1700]; // errAECoercionFail
 			[command setScriptErrorString:@"The message was not a string value and coercion failed."];
-			return nil;
+			return;
 		}
 	}
 
 	if( ! [(NSString *)message length] ) {
 		[command setScriptErrorNumber:-1715]; // errAEParamMissed
 		[command setScriptErrorString:@"The message can't be blank."];
-		return nil;
+		return;
 	}
 
 	if( action && ! [action isKindOfClass:[NSNumber class]] ) {
@@ -1896,7 +1895,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		if( ! [action isKindOfClass:[NSNumber class]] ) {
 			[command setScriptErrorNumber:-1700]; // errAECoercionFail
 			[command setScriptErrorString:@"The action tense parameter was not a boolean value and coercion failed."];
-			return nil;
+			return;
 		}
 	}
 
@@ -1905,7 +1904,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		if( ! [localEcho isKindOfClass:[NSNumber class]] ) {
 			[command setScriptErrorNumber:-1700]; // errAECoercionFail
 			[command setScriptErrorString:@"The local echo parameter was not a boolean value and coercion failed."];
-			return nil;
+			return;
 		}
 	}
 
@@ -1920,7 +1919,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( realLocalEcho ) [self echoSentMessageToDisplay:cmessage];
 
 	[cmessage release];
-	return nil;
+	return;
 }
 
 #pragma mark -
