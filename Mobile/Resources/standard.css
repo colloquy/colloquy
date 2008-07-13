@@ -1,0 +1,69 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-size: 16px;
+	font-family: Helvetica, sans-serif;
+}
+
+.message-wrapper {
+	padding: 3px 8px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	font-weight: 13px;
+}
+
+.event + .message-wrapper {
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.message-wrapper.highlight {
+	background-color: rgb(204, 255, 102);
+	background-image: url(gradientHighlight.png);
+	background-repeat: repeat-x;
+}
+
+.message-wrapper.highlight .sender {
+	text-shadow: white 0 1px 3px;
+}
+
+.message-wrapper.action .sender:before {
+	content: "\2022";
+	margin-left: -5px;
+	font-size: 12px;
+}
+
+.message-wrapper.action .sender:after {
+	content: " ";
+}
+
+.sender {
+	display: inline;
+	color: rgb(255, 128, 0);
+}
+
+.sender.self {
+	color: #a21;
+}
+
+.sender:after {
+	content: ": ";
+	font-weight: bold;
+}
+
+.event {
+	font-size: smaller;
+	color: rgb(66%, 66%, 66%);
+	text-align: center;
+	padding: 2px 8px;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	-khtml-line-break: after-white-space;
+	-khtml-nbsp-mode: space;
+}
+
+.message {
+	display: inline;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	-khtml-line-break: after-white-space;
+	-khtml-nbsp-mode: space;
+}

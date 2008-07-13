@@ -139,7 +139,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		_supportedFeatures = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 		_localUser = nil;
 
-#if !defined(TARGET_OS_ASPEN) || !TARGET_OS_ASPEN
+#if !defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemWillSleep: ) name:NSWorkspaceWillSleepNotification object:[NSWorkspace sharedWorkspace]];
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _applicationWillTerminate: ) name:NSWorkspaceWillPowerOffNotification object:[NSWorkspace sharedWorkspace]];
@@ -234,7 +234,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-#if !defined(TARGET_OS_ASPEN) || !TARGET_OS_ASPEN
+#if !defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 #endif
 

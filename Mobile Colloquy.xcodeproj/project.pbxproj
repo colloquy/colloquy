@@ -1,0 +1,681 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1C0931030D80C6E900A2705D /* CQColloquyApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0931010D80C6E900A2705D /* CQColloquyApplication.m */; };
+		1C09313B0D80C8F600A2705D /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C09313A0D80C8F600A2705D /* Defaults.plist */; };
+		1C0932330D80C9EB00A2705D /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0931F90D80C9EB00A2705D /* AsyncSocket.m */; };
+		1C0932350D80C9EB00A2705D /* InterThreadMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0931FE0D80C9EB00A2705D /* InterThreadMessaging.m */; };
+		1C0932360D80C9EB00A2705D /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932000D80C9EB00A2705D /* MVChatConnection.m */; };
+		1C0932380D80C9EB00A2705D /* MVChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932050D80C9EB00A2705D /* MVChatRoom.m */; };
+		1C0932390D80C9EB00A2705D /* MVChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932090D80C9EB00A2705D /* MVChatUser.m */; };
+		1C09323B0D80C9EB00A2705D /* MVDirectChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09320E0D80C9EB00A2705D /* MVDirectChatConnection.m */; };
+		1C09323C0D80C9EB00A2705D /* MVDirectClientConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932110D80C9EB00A2705D /* MVDirectClientConnection.m */; };
+		1C09323D0D80C9EB00A2705D /* MVFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932130D80C9EB00A2705D /* MVFileTransfer.m */; };
+		1C0932410D80C9EB00A2705D /* MVIRCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09321C0D80C9EB00A2705D /* MVIRCChatConnection.m */; };
+		1C0932420D80C9EB00A2705D /* MVIRCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09321E0D80C9EB00A2705D /* MVIRCChatRoom.m */; };
+		1C0932430D80C9EB00A2705D /* MVIRCChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932200D80C9EB00A2705D /* MVIRCChatUser.m */; };
+		1C0932440D80C9EB00A2705D /* MVIRCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932220D80C9EB00A2705D /* MVIRCFileTransfer.m */; };
+		1C09327C0D80CA4800A2705D /* NSBundleAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932630D80CA4800A2705D /* NSBundleAdditions.m */; };
+		1C09327E0D80CA4800A2705D /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932670D80CA4800A2705D /* NSDataAdditions.m */; };
+		1C0932800D80CA4800A2705D /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09326B0D80CA4800A2705D /* NSMethodSignatureAdditions.m */; };
+		1C0932810D80CA4800A2705D /* NSNotificationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09326D0D80CA4800A2705D /* NSNotificationAdditions.m */; };
+		1C0932820D80CA4800A2705D /* NSNumberAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09326F0D80CA4800A2705D /* NSNumberAdditions.m */; };
+		1C0932830D80CA4800A2705D /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932710D80CA4800A2705D /* NSScannerAdditions.m */; };
+		1C0932850D80CA4800A2705D /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932750D80CA4800A2705D /* NSStringAdditions.m */; };
+		1C0933580D80D16B00A2705D /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C0933570D80D16B00A2705D /* CoreServices.framework */; settings = {ATTRIBUTES = (weak, ); }; };
+		1C09357F0D80DDC500A2705D /* ICBPacket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0931FC0D80C9EB00A2705D /* ICBPacket.m */; };
+		1C0935800D80DDC800A2705D /* MVICBChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932160D80C9EB00A2705D /* MVICBChatConnection.m */; };
+		1C0935810D80DDC900A2705D /* MVICBChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932180D80C9EB00A2705D /* MVICBChatRoom.m */; };
+		1C0935820D80DDCB00A2705D /* MVICBChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09321A0D80C9EB00A2705D /* MVICBChatUser.m */; };
+		1C0935E00D80E19200A2705D /* MVChatUserWatchRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09320C0D80C9EB00A2705D /* MVChatUserWatchRule.m */; };
+		1C0936710D80E32C00A2705D /* AGRegex.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0936500D80E32C00A2705D /* AGRegex.m */; };
+		1C0936870D80E36D00A2705D /* pcre_chartables.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C09367A0D80E36D00A2705D /* pcre_chartables.c */; };
+		1C0936880D80E36D00A2705D /* pcre_compile.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C09367B0D80E36D00A2705D /* pcre_compile.c */; };
+		1C0936890D80E36D00A2705D /* pcre_exec.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C09367C0D80E36D00A2705D /* pcre_exec.c */; };
+		1C09368A0D80E36D00A2705D /* pcre_fullinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C09367D0D80E36D00A2705D /* pcre_fullinfo.c */; };
+		1C09368B0D80E36D00A2705D /* pcre_get.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C09367E0D80E36D00A2705D /* pcre_get.c */; };
+		1C09368C0D80E36D00A2705D /* pcre_globals.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C09367F0D80E36D00A2705D /* pcre_globals.c */; };
+		1C09368D0D80E36D00A2705D /* pcre_info.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C0936800D80E36D00A2705D /* pcre_info.c */; };
+		1C09368E0D80E36D00A2705D /* pcre_ord2utf8.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C0936810D80E36D00A2705D /* pcre_ord2utf8.c */; };
+		1C09368F0D80E36D00A2705D /* pcre_tables.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C0936820D80E36D00A2705D /* pcre_tables.c */; };
+		1C0936900D80E36D00A2705D /* pcre_try_flipped.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C0936830D80E36D00A2705D /* pcre_try_flipped.c */; };
+		1C0936910D80E36D00A2705D /* pcre_ucp_searchfuncs.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C0936840D80E36D00A2705D /* pcre_ucp_searchfuncs.c */; };
+		1C0936920D80E36D00A2705D /* pcre_valid_utf8.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C0936850D80E36D00A2705D /* pcre_valid_utf8.c */; };
+		1C0936930D80E36D00A2705D /* pcre_xclass.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C0936860D80E36D00A2705D /* pcre_xclass.c */; };
+		1C0937330D80E72F00A2705D /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0937320D80E72F00A2705D /* icon.png */; };
+		1C0937820D8116FC00A2705D /* CQChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937800D8116FC00A2705D /* CQChatController.m */; };
+		1C0938950D813A6B00A2705D /* CQDirectChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937EB0D8126D400A2705D /* CQDirectChatController.m */; };
+		1C0938960D813A6C00A2705D /* CQChatRoomController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937ED0D8126D400A2705D /* CQChatRoomController.m */; };
+		1C0EB67A0D8660E900B6F1BC /* errorBadgeDim.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0EB6780D8660E900B6F1BC /* errorBadgeDim.png */; };
+		1C0EB67B0D8660E900B6F1BC /* errorBadgeGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0EB6790D8660E900B6F1BC /* errorBadgeGlow.png */; };
+		1C70E8F30DFED49A000A83A0 /* ConnectionEdit.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C70E8F20DFED49A000A83A0 /* ConnectionEdit.xib */; };
+		1C7EBE6D0E01816C0018B0C8 /* CQPreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7EBE6C0E01816C0018B0C8 /* CQPreferencesTextCell.m */; };
+		1C82C1970D83CF1D009ABD9F /* CQChatTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1950D83CF1D009ABD9F /* CQChatTableCell.m */; };
+		1C82C1A30D83D133009ABD9F /* CQConnectionTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1A20D83D133009ABD9F /* CQConnectionTableCell.m */; };
+		1C82C1AF0D83D30F009ABD9F /* CQConnectionsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1AD0D83D30F009ABD9F /* CQConnectionsController.m */; };
+		1C82C27D0D847EA4009ABD9F /* CQChatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C27C0D847EA4009ABD9F /* CQChatsViewController.m */; };
+		1C82C52A0D850B1B009ABD9F /* CQConnectionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C5290D850B1B009ABD9F /* CQConnectionsViewController.m */; };
+		1C9B15A50D878B6A003794A5 /* CQConnectionEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */; };
+		1CA91CCA0DFC976D002DDBB4 /* Colloquy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */; };
+		1CA91CD30DFC992A002DDBB4 /* ConnectionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CA91CD20DFC992A002DDBB4 /* ConnectionsView.xib */; };
+		1CB318DF0D8644E4006A7513 /* server.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB318DA0D8644E4006A7513 /* server.png */; };
+		1CB318E00D8644E4006A7513 /* connectingBadgeDim.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB318DB0D8644E4006A7513 /* connectingBadgeDim.png */; };
+		1CB318E10D8644E4006A7513 /* connectingBadgeGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB318DC0D8644E4006A7513 /* connectingBadgeGlow.png */; };
+		1CB318E20D8644E4006A7513 /* connectedBadgeGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB318DD0D8644E4006A7513 /* connectedBadgeGlow.png */; };
+		1CB318E30D8644E4006A7513 /* connectedBadgeDim.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB318DE0D8644E4006A7513 /* connectedBadgeDim.png */; };
+		1CB33C9A0D882BB000EC4E38 /* connections.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB33C970D882BB000EC4E38 /* connections.png */; };
+		1CB33C9B0D882BB000EC4E38 /* buddies.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB33C980D882BB000EC4E38 /* buddies.png */; };
+		1CB33C9C0D882BB000EC4E38 /* colloquies.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB33C990D882BB000EC4E38 /* colloquies.png */; };
+		1CD949820D8E18DB00756ACD /* directChatIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD949800D8E18DB00756ACD /* directChatIcon.png */; };
+		1CD949830D8E18DB00756ACD /* roomIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD949810D8E18DB00756ACD /* roomIcon.png */; };
+		1CE3FB120D8A3DC100FB035F /* CQConnectionCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */; };
+		1D3623EC0D0F72F000981E51 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */; };
+		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
+		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1C0931010D80C6E900A2705D /* CQColloquyApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQColloquyApplication.m; sourceTree = "<group>"; };
+		1C0931020D80C6E900A2705D /* CQColloquyApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQColloquyApplication.h; sourceTree = "<group>"; };
+		1C09310A0D80C71800A2705D /* Mobile Colloquy.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Mobile Colloquy.pch"; path = "Mobile/Mobile Colloquy.pch"; sourceTree = "<group>"; };
+		1C09313A0D80C8F600A2705D /* Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults.plist; sourceTree = "<group>"; };
+		1C0931F80D80C9EB00A2705D /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncSocket.h; path = "../Colloquy/Chat Core/AsyncSocket.h"; sourceTree = SOURCE_ROOT; };
+		1C0931F90D80C9EB00A2705D /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AsyncSocket.m; path = "../Colloquy/Chat Core/AsyncSocket.m"; sourceTree = SOURCE_ROOT; };
+		1C0931FA0D80C9EB00A2705D /* ChatCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatCore.h; path = "../Colloquy/Chat Core/ChatCore.h"; sourceTree = SOURCE_ROOT; };
+		1C0931FB0D80C9EB00A2705D /* ICBPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ICBPacket.h; path = "../Colloquy/Chat Core/ICBPacket.h"; sourceTree = SOURCE_ROOT; };
+		1C0931FC0D80C9EB00A2705D /* ICBPacket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ICBPacket.m; path = "../Colloquy/Chat Core/ICBPacket.m"; sourceTree = SOURCE_ROOT; };
+		1C0931FD0D80C9EB00A2705D /* InterThreadMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InterThreadMessaging.h; path = "../Colloquy/Chat Core/InterThreadMessaging.h"; sourceTree = SOURCE_ROOT; };
+		1C0931FE0D80C9EB00A2705D /* InterThreadMessaging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InterThreadMessaging.m; path = "../Colloquy/Chat Core/InterThreadMessaging.m"; sourceTree = SOURCE_ROOT; };
+		1C0931FF0D80C9EB00A2705D /* MVChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatConnection.h; path = "../Colloquy/Chat Core/MVChatConnection.h"; sourceTree = SOURCE_ROOT; };
+		1C0932000D80C9EB00A2705D /* MVChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatConnection.m; path = "../Colloquy/Chat Core/MVChatConnection.m"; sourceTree = SOURCE_ROOT; };
+		1C0932010D80C9EB00A2705D /* MVChatConnectionPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatConnectionPrivate.h; path = "../Colloquy/Chat Core/MVChatConnectionPrivate.h"; sourceTree = SOURCE_ROOT; };
+		1C0932040D80C9EB00A2705D /* MVChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatRoom.h; path = "../Colloquy/Chat Core/MVChatRoom.h"; sourceTree = SOURCE_ROOT; };
+		1C0932050D80C9EB00A2705D /* MVChatRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatRoom.m; path = "../Colloquy/Chat Core/MVChatRoom.m"; sourceTree = SOURCE_ROOT; };
+		1C0932060D80C9EB00A2705D /* MVChatRoomPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatRoomPrivate.h; path = "../Colloquy/Chat Core/MVChatRoomPrivate.h"; sourceTree = SOURCE_ROOT; };
+		1C0932070D80C9EB00A2705D /* MVChatString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatString.h; path = "../Colloquy/Chat Core/MVChatString.h"; sourceTree = SOURCE_ROOT; };
+		1C0932080D80C9EB00A2705D /* MVChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUser.h; path = "../Colloquy/Chat Core/MVChatUser.h"; sourceTree = SOURCE_ROOT; };
+		1C0932090D80C9EB00A2705D /* MVChatUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatUser.m; path = "../Colloquy/Chat Core/MVChatUser.m"; sourceTree = SOURCE_ROOT; };
+		1C09320A0D80C9EB00A2705D /* MVChatUserPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUserPrivate.h; path = "../Colloquy/Chat Core/MVChatUserPrivate.h"; sourceTree = SOURCE_ROOT; };
+		1C09320B0D80C9EB00A2705D /* MVChatUserWatchRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUserWatchRule.h; path = "../Colloquy/Chat Core/MVChatUserWatchRule.h"; sourceTree = SOURCE_ROOT; };
+		1C09320C0D80C9EB00A2705D /* MVChatUserWatchRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatUserWatchRule.m; path = "../Colloquy/Chat Core/MVChatUserWatchRule.m"; sourceTree = SOURCE_ROOT; };
+		1C09320D0D80C9EB00A2705D /* MVDirectChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectChatConnection.h; path = "../Colloquy/Chat Core/MVDirectChatConnection.h"; sourceTree = SOURCE_ROOT; };
+		1C09320E0D80C9EB00A2705D /* MVDirectChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDirectChatConnection.m; path = "../Colloquy/Chat Core/MVDirectChatConnection.m"; sourceTree = SOURCE_ROOT; };
+		1C09320F0D80C9EB00A2705D /* MVDirectChatConnectionPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectChatConnectionPrivate.h; path = "../Colloquy/Chat Core/MVDirectChatConnectionPrivate.h"; sourceTree = SOURCE_ROOT; };
+		1C0932100D80C9EB00A2705D /* MVDirectClientConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectClientConnection.h; path = "../Colloquy/Chat Core/MVDirectClientConnection.h"; sourceTree = SOURCE_ROOT; };
+		1C0932110D80C9EB00A2705D /* MVDirectClientConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDirectClientConnection.m; path = "../Colloquy/Chat Core/MVDirectClientConnection.m"; sourceTree = SOURCE_ROOT; };
+		1C0932120D80C9EB00A2705D /* MVFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVFileTransfer.h; path = "../Colloquy/Chat Core/MVFileTransfer.h"; sourceTree = SOURCE_ROOT; };
+		1C0932130D80C9EB00A2705D /* MVFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVFileTransfer.m; path = "../Colloquy/Chat Core/MVFileTransfer.m"; sourceTree = SOURCE_ROOT; };
+		1C0932140D80C9EB00A2705D /* MVFileTransferPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVFileTransferPrivate.h; path = "../Colloquy/Chat Core/MVFileTransferPrivate.h"; sourceTree = SOURCE_ROOT; };
+		1C0932150D80C9EB00A2705D /* MVICBChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVICBChatConnection.h; path = "../Colloquy/Chat Core/MVICBChatConnection.h"; sourceTree = SOURCE_ROOT; };
+		1C0932160D80C9EB00A2705D /* MVICBChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVICBChatConnection.m; path = "../Colloquy/Chat Core/MVICBChatConnection.m"; sourceTree = SOURCE_ROOT; };
+		1C0932170D80C9EB00A2705D /* MVICBChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVICBChatRoom.h; path = "../Colloquy/Chat Core/MVICBChatRoom.h"; sourceTree = SOURCE_ROOT; };
+		1C0932180D80C9EB00A2705D /* MVICBChatRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVICBChatRoom.m; path = "../Colloquy/Chat Core/MVICBChatRoom.m"; sourceTree = SOURCE_ROOT; };
+		1C0932190D80C9EB00A2705D /* MVICBChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVICBChatUser.h; path = "../Colloquy/Chat Core/MVICBChatUser.h"; sourceTree = SOURCE_ROOT; };
+		1C09321A0D80C9EB00A2705D /* MVICBChatUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVICBChatUser.m; path = "../Colloquy/Chat Core/MVICBChatUser.m"; sourceTree = SOURCE_ROOT; };
+		1C09321B0D80C9EB00A2705D /* MVIRCChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVIRCChatConnection.h; path = "../Colloquy/Chat Core/MVIRCChatConnection.h"; sourceTree = SOURCE_ROOT; };
+		1C09321C0D80C9EB00A2705D /* MVIRCChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVIRCChatConnection.m; path = "../Colloquy/Chat Core/MVIRCChatConnection.m"; sourceTree = SOURCE_ROOT; };
+		1C09321D0D80C9EB00A2705D /* MVIRCChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVIRCChatRoom.h; path = "../Colloquy/Chat Core/MVIRCChatRoom.h"; sourceTree = SOURCE_ROOT; };
+		1C09321E0D80C9EB00A2705D /* MVIRCChatRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVIRCChatRoom.m; path = "../Colloquy/Chat Core/MVIRCChatRoom.m"; sourceTree = SOURCE_ROOT; };
+		1C09321F0D80C9EB00A2705D /* MVIRCChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVIRCChatUser.h; path = "../Colloquy/Chat Core/MVIRCChatUser.h"; sourceTree = SOURCE_ROOT; };
+		1C0932200D80C9EB00A2705D /* MVIRCChatUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVIRCChatUser.m; path = "../Colloquy/Chat Core/MVIRCChatUser.m"; sourceTree = SOURCE_ROOT; };
+		1C0932210D80C9EB00A2705D /* MVIRCFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVIRCFileTransfer.h; path = "../Colloquy/Chat Core/MVIRCFileTransfer.h"; sourceTree = SOURCE_ROOT; };
+		1C0932220D80C9EB00A2705D /* MVIRCFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVIRCFileTransfer.m; path = "../Colloquy/Chat Core/MVIRCFileTransfer.m"; sourceTree = SOURCE_ROOT; };
+		1C0932230D80C9EB00A2705D /* MVIRCNumerics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVIRCNumerics.h; path = "../Colloquy/Chat Core/MVIRCNumerics.h"; sourceTree = SOURCE_ROOT; };
+		1C09325D0D80CA4800A2705D /* MVUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVUtilities.h; path = ../Colloquy/Additions/MVUtilities.h; sourceTree = SOURCE_ROOT; };
+		1C0932620D80CA4800A2705D /* NSBundleAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSBundleAdditions.h; path = ../Colloquy/Additions/NSBundleAdditions.h; sourceTree = SOURCE_ROOT; };
+		1C0932630D80CA4800A2705D /* NSBundleAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSBundleAdditions.m; path = ../Colloquy/Additions/NSBundleAdditions.m; sourceTree = SOURCE_ROOT; };
+		1C0932660D80CA4800A2705D /* NSDataAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDataAdditions.h; path = ../Colloquy/Additions/NSDataAdditions.h; sourceTree = SOURCE_ROOT; };
+		1C0932670D80CA4800A2705D /* NSDataAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDataAdditions.m; path = ../Colloquy/Additions/NSDataAdditions.m; sourceTree = SOURCE_ROOT; };
+		1C09326A0D80CA4800A2705D /* NSMethodSignatureAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSMethodSignatureAdditions.h; path = ../Colloquy/Additions/NSMethodSignatureAdditions.h; sourceTree = SOURCE_ROOT; };
+		1C09326B0D80CA4800A2705D /* NSMethodSignatureAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSMethodSignatureAdditions.m; path = ../Colloquy/Additions/NSMethodSignatureAdditions.m; sourceTree = SOURCE_ROOT; };
+		1C09326C0D80CA4800A2705D /* NSNotificationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSNotificationAdditions.h; path = ../Colloquy/Additions/NSNotificationAdditions.h; sourceTree = SOURCE_ROOT; };
+		1C09326D0D80CA4800A2705D /* NSNotificationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSNotificationAdditions.m; path = ../Colloquy/Additions/NSNotificationAdditions.m; sourceTree = SOURCE_ROOT; };
+		1C09326E0D80CA4800A2705D /* NSNumberAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSNumberAdditions.h; path = ../Colloquy/Additions/NSNumberAdditions.h; sourceTree = SOURCE_ROOT; };
+		1C09326F0D80CA4800A2705D /* NSNumberAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSNumberAdditions.m; path = ../Colloquy/Additions/NSNumberAdditions.m; sourceTree = SOURCE_ROOT; };
+		1C0932700D80CA4800A2705D /* NSScannerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSScannerAdditions.h; path = ../Colloquy/Additions/NSScannerAdditions.h; sourceTree = SOURCE_ROOT; };
+		1C0932710D80CA4800A2705D /* NSScannerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSScannerAdditions.m; path = ../Colloquy/Additions/NSScannerAdditions.m; sourceTree = SOURCE_ROOT; };
+		1C0932740D80CA4800A2705D /* NSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSStringAdditions.h; path = ../Colloquy/Additions/NSStringAdditions.h; sourceTree = SOURCE_ROOT; };
+		1C0932750D80CA4800A2705D /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSStringAdditions.m; path = ../Colloquy/Additions/NSStringAdditions.m; sourceTree = SOURCE_ROOT; };
+		1C0933570D80D16B00A2705D /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = Platforms/AspenSimulator.platform/Developer/SDKs/AspenSimulator1.2.sdk/System/Library/Frameworks/CoreServices.framework; sourceTree = DEVELOPER_DIR; };
+		1C0936500D80E32C00A2705D /* AGRegex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGRegex.m; path = ../Colloquy/Frameworks/AGRegex/AGRegex.m; sourceTree = SOURCE_ROOT; };
+		1C0936510D80E32C00A2705D /* AGRegex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGRegex.h; path = ../Colloquy/Frameworks/AGRegex/AGRegex.h; sourceTree = SOURCE_ROOT; };
+		1C09367A0D80E36D00A2705D /* pcre_chartables.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pcre_chartables.c; sourceTree = "<group>"; };
+		1C09367B0D80E36D00A2705D /* pcre_compile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pcre_compile.c; sourceTree = "<group>"; };
+		1C09367C0D80E36D00A2705D /* pcre_exec.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pcre_exec.c; sourceTree = "<group>"; };
+		1C09367D0D80E36D00A2705D /* pcre_fullinfo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pcre_fullinfo.c; sourceTree = "<group>"; };
+		1C09367E0D80E36D00A2705D /* pcre_get.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pcre_get.c; sourceTree = "<group>"; };
+		1C09367F0D80E36D00A2705D /* pcre_globals.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pcre_globals.c; sourceTree = "<group>"; };
+		1C0936800D80E36D00A2705D /* pcre_info.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pcre_info.c; sourceTree = "<group>"; };
+		1C0936810D80E36D00A2705D /* pcre_ord2utf8.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pcre_ord2utf8.c; sourceTree = "<group>"; };
+		1C0936820D80E36D00A2705D /* pcre_tables.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pcre_tables.c; sourceTree = "<group>"; };
+		1C0936830D80E36D00A2705D /* pcre_try_flipped.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pcre_try_flipped.c; sourceTree = "<group>"; };
+		1C0936840D80E36D00A2705D /* pcre_ucp_searchfuncs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pcre_ucp_searchfuncs.c; sourceTree = "<group>"; };
+		1C0936850D80E36D00A2705D /* pcre_valid_utf8.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pcre_valid_utf8.c; sourceTree = "<group>"; };
+		1C0936860D80E36D00A2705D /* pcre_xclass.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pcre_xclass.c; sourceTree = "<group>"; };
+		1C0936A70D80E3C600A2705D /* pcre.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pcre.h; sourceTree = "<group>"; };
+		1C0937320D80E72F00A2705D /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		1C0937800D8116FC00A2705D /* CQChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatController.m; sourceTree = "<group>"; };
+		1C0937810D8116FC00A2705D /* CQChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatController.h; sourceTree = "<group>"; };
+		1C0937EB0D8126D400A2705D /* CQDirectChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQDirectChatController.m; sourceTree = "<group>"; };
+		1C0937EC0D8126D400A2705D /* CQDirectChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQDirectChatController.h; sourceTree = "<group>"; };
+		1C0937ED0D8126D400A2705D /* CQChatRoomController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatRoomController.m; sourceTree = "<group>"; };
+		1C0937EE0D8126D400A2705D /* CQChatRoomController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatRoomController.h; sourceTree = "<group>"; };
+		1C0EB6780D8660E900B6F1BC /* errorBadgeDim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = errorBadgeDim.png; sourceTree = "<group>"; };
+		1C0EB6790D8660E900B6F1BC /* errorBadgeGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = errorBadgeGlow.png; sourceTree = "<group>"; };
+		1C70E8F20DFED49A000A83A0 /* ConnectionEdit.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConnectionEdit.xib; sourceTree = "<group>"; };
+		1C7EBE6B0E01816C0018B0C8 /* CQPreferencesTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPreferencesTextCell.h; sourceTree = "<group>"; };
+		1C7EBE6C0E01816C0018B0C8 /* CQPreferencesTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesTextCell.m; sourceTree = "<group>"; };
+		1C82C1950D83CF1D009ABD9F /* CQChatTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatTableCell.m; sourceTree = "<group>"; };
+		1C82C1960D83CF1D009ABD9F /* CQChatTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatTableCell.h; sourceTree = "<group>"; };
+		1C82C1A10D83D133009ABD9F /* CQConnectionTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionTableCell.h; sourceTree = "<group>"; };
+		1C82C1A20D83D133009ABD9F /* CQConnectionTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionTableCell.m; sourceTree = "<group>"; };
+		1C82C1AD0D83D30F009ABD9F /* CQConnectionsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionsController.m; sourceTree = "<group>"; };
+		1C82C1AE0D83D30F009ABD9F /* CQConnectionsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionsController.h; sourceTree = "<group>"; };
+		1C82C27B0D847EA4009ABD9F /* CQChatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatsViewController.h; sourceTree = "<group>"; };
+		1C82C27C0D847EA4009ABD9F /* CQChatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatsViewController.m; sourceTree = "<group>"; };
+		1C82C5280D850B1B009ABD9F /* CQConnectionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionsViewController.h; sourceTree = "<group>"; };
+		1C82C5290D850B1B009ABD9F /* CQConnectionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionsViewController.m; sourceTree = "<group>"; };
+		1C9B15A30D878B6A003794A5 /* CQConnectionEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionEditViewController.h; sourceTree = "<group>"; };
+		1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionEditViewController.m; sourceTree = "<group>"; };
+		1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Colloquy.xib; sourceTree = "<group>"; };
+		1CA91CD20DFC992A002DDBB4 /* ConnectionsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConnectionsView.xib; sourceTree = "<group>"; };
+		1CB318DA0D8644E4006A7513 /* server.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = server.png; sourceTree = "<group>"; };
+		1CB318DB0D8644E4006A7513 /* connectingBadgeDim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connectingBadgeDim.png; sourceTree = "<group>"; };
+		1CB318DC0D8644E4006A7513 /* connectingBadgeGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connectingBadgeGlow.png; sourceTree = "<group>"; };
+		1CB318DD0D8644E4006A7513 /* connectedBadgeGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connectedBadgeGlow.png; sourceTree = "<group>"; };
+		1CB318DE0D8644E4006A7513 /* connectedBadgeDim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connectedBadgeDim.png; sourceTree = "<group>"; };
+		1CB33C970D882BB000EC4E38 /* connections.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connections.png; sourceTree = "<group>"; };
+		1CB33C980D882BB000EC4E38 /* buddies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buddies.png; sourceTree = "<group>"; };
+		1CB33C990D882BB000EC4E38 /* colloquies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = colloquies.png; sourceTree = "<group>"; };
+		1CD949800D8E18DB00756ACD /* directChatIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = directChatIcon.png; sourceTree = "<group>"; };
+		1CD949810D8E18DB00756ACD /* roomIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = roomIcon.png; sourceTree = "<group>"; };
+		1CE3FB100D8A3DC100FB035F /* CQConnectionCreationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionCreationViewController.h; sourceTree = "<group>"; };
+		1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionCreationViewController.m; sourceTree = "<group>"; };
+		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		1D6058910D05DD3D006BFB54 /* Colloquy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Mobile/main.m; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D60588F0D05DD3D006BFB54 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
+				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
+				1D3623EC0D0F72F000981E51 /* CoreGraphics.framework in Frameworks */,
+				1C0933580D80D16B00A2705D /* CoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1C0933570D80D16B00A2705D /* CoreServices.framework */,
+				1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */,
+				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
+				1D30AB110D05D00D00671497 /* Foundation.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D6058910D05DD3D006BFB54 /* Colloquy.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1C0931F70D80C9DB00A2705D /* Chat Core */ = {
+			isa = PBXGroup;
+			children = (
+				1C0931FA0D80C9EB00A2705D /* ChatCore.h */,
+				1C0931F90D80C9EB00A2705D /* AsyncSocket.m */,
+				1C0931F80D80C9EB00A2705D /* AsyncSocket.h */,
+				1C0931FC0D80C9EB00A2705D /* ICBPacket.m */,
+				1C0931FB0D80C9EB00A2705D /* ICBPacket.h */,
+				1C0931FE0D80C9EB00A2705D /* InterThreadMessaging.m */,
+				1C0931FD0D80C9EB00A2705D /* InterThreadMessaging.h */,
+				1C0932000D80C9EB00A2705D /* MVChatConnection.m */,
+				1C0931FF0D80C9EB00A2705D /* MVChatConnection.h */,
+				1C0932010D80C9EB00A2705D /* MVChatConnectionPrivate.h */,
+				1C0932050D80C9EB00A2705D /* MVChatRoom.m */,
+				1C0932040D80C9EB00A2705D /* MVChatRoom.h */,
+				1C0932060D80C9EB00A2705D /* MVChatRoomPrivate.h */,
+				1C0932090D80C9EB00A2705D /* MVChatUser.m */,
+				1C0932080D80C9EB00A2705D /* MVChatUser.h */,
+				1C09320A0D80C9EB00A2705D /* MVChatUserPrivate.h */,
+				1C09320C0D80C9EB00A2705D /* MVChatUserWatchRule.m */,
+				1C09320B0D80C9EB00A2705D /* MVChatUserWatchRule.h */,
+				1C09320E0D80C9EB00A2705D /* MVDirectChatConnection.m */,
+				1C09320D0D80C9EB00A2705D /* MVDirectChatConnection.h */,
+				1C09320F0D80C9EB00A2705D /* MVDirectChatConnectionPrivate.h */,
+				1C0932110D80C9EB00A2705D /* MVDirectClientConnection.m */,
+				1C0932100D80C9EB00A2705D /* MVDirectClientConnection.h */,
+				1C0932130D80C9EB00A2705D /* MVFileTransfer.m */,
+				1C0932120D80C9EB00A2705D /* MVFileTransfer.h */,
+				1C0932140D80C9EB00A2705D /* MVFileTransferPrivate.h */,
+				1C0932160D80C9EB00A2705D /* MVICBChatConnection.m */,
+				1C0932150D80C9EB00A2705D /* MVICBChatConnection.h */,
+				1C0932180D80C9EB00A2705D /* MVICBChatRoom.m */,
+				1C0932170D80C9EB00A2705D /* MVICBChatRoom.h */,
+				1C09321A0D80C9EB00A2705D /* MVICBChatUser.m */,
+				1C0932190D80C9EB00A2705D /* MVICBChatUser.h */,
+				1C09321C0D80C9EB00A2705D /* MVIRCChatConnection.m */,
+				1C09321B0D80C9EB00A2705D /* MVIRCChatConnection.h */,
+				1C09321E0D80C9EB00A2705D /* MVIRCChatRoom.m */,
+				1C09321D0D80C9EB00A2705D /* MVIRCChatRoom.h */,
+				1C0932200D80C9EB00A2705D /* MVIRCChatUser.m */,
+				1C09321F0D80C9EB00A2705D /* MVIRCChatUser.h */,
+				1C0932220D80C9EB00A2705D /* MVIRCFileTransfer.m */,
+				1C0932210D80C9EB00A2705D /* MVIRCFileTransfer.h */,
+				1C0932070D80C9EB00A2705D /* MVChatString.h */,
+				1C0932230D80C9EB00A2705D /* MVIRCNumerics.h */,
+			);
+			name = "Chat Core";
+			sourceTree = "<group>";
+		};
+		1C09345E0D80D24100A2705D /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1C0931010D80C6E900A2705D /* CQColloquyApplication.m */,
+				1C0931020D80C6E900A2705D /* CQColloquyApplication.h */,
+				1C82C1AD0D83D30F009ABD9F /* CQConnectionsController.m */,
+				1C82C1AE0D83D30F009ABD9F /* CQConnectionsController.h */,
+				1C82C5290D850B1B009ABD9F /* CQConnectionsViewController.m */,
+				1C82C5280D850B1B009ABD9F /* CQConnectionsViewController.h */,
+				1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */,
+				1C9B15A30D878B6A003794A5 /* CQConnectionEditViewController.h */,
+				1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */,
+				1CE3FB100D8A3DC100FB035F /* CQConnectionCreationViewController.h */,
+				1C0937800D8116FC00A2705D /* CQChatController.m */,
+				1C0937810D8116FC00A2705D /* CQChatController.h */,
+				1C82C27C0D847EA4009ABD9F /* CQChatsViewController.m */,
+				1C82C27B0D847EA4009ABD9F /* CQChatsViewController.h */,
+				1C0937EB0D8126D400A2705D /* CQDirectChatController.m */,
+				1C0937EC0D8126D400A2705D /* CQDirectChatController.h */,
+				1C0937ED0D8126D400A2705D /* CQChatRoomController.m */,
+				1C0937EE0D8126D400A2705D /* CQChatRoomController.h */,
+			);
+			name = Controllers;
+			path = Mobile/Controllers;
+			sourceTree = "<group>";
+		};
+		1C0935FE0D80E30300A2705D /* AGRegex */ = {
+			isa = PBXGroup;
+			children = (
+				1C0936260D80E32C00A2705D /* PCRE */,
+				1C0936500D80E32C00A2705D /* AGRegex.m */,
+				1C0936510D80E32C00A2705D /* AGRegex.h */,
+			);
+			name = AGRegex;
+			sourceTree = "<group>";
+		};
+		1C0936260D80E32C00A2705D /* PCRE */ = {
+			isa = PBXGroup;
+			children = (
+				1C0936A70D80E3C600A2705D /* pcre.h */,
+				1C09367A0D80E36D00A2705D /* pcre_chartables.c */,
+				1C09367B0D80E36D00A2705D /* pcre_compile.c */,
+				1C09367C0D80E36D00A2705D /* pcre_exec.c */,
+				1C09367D0D80E36D00A2705D /* pcre_fullinfo.c */,
+				1C09367E0D80E36D00A2705D /* pcre_get.c */,
+				1C09367F0D80E36D00A2705D /* pcre_globals.c */,
+				1C0936800D80E36D00A2705D /* pcre_info.c */,
+				1C0936810D80E36D00A2705D /* pcre_ord2utf8.c */,
+				1C0936820D80E36D00A2705D /* pcre_tables.c */,
+				1C0936830D80E36D00A2705D /* pcre_try_flipped.c */,
+				1C0936840D80E36D00A2705D /* pcre_ucp_searchfuncs.c */,
+				1C0936850D80E36D00A2705D /* pcre_valid_utf8.c */,
+				1C0936860D80E36D00A2705D /* pcre_xclass.c */,
+			);
+			name = PCRE;
+			path = "../Colloquy/Frameworks/AGRegex/pcre-6.7";
+			sourceTree = SOURCE_ROOT;
+		};
+		1C82C18D0D83CEFE009ABD9F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1C82C1950D83CF1D009ABD9F /* CQChatTableCell.m */,
+				1C82C1960D83CF1D009ABD9F /* CQChatTableCell.h */,
+				1C82C1A20D83D133009ABD9F /* CQConnectionTableCell.m */,
+				1C82C1A10D83D133009ABD9F /* CQConnectionTableCell.h */,
+				1C7EBE6C0E01816C0018B0C8 /* CQPreferencesTextCell.m */,
+				1C7EBE6B0E01816C0018B0C8 /* CQPreferencesTextCell.h */,
+			);
+			name = Views;
+			path = Mobile/Views;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
+			isa = PBXGroup;
+			children = (
+				1C0935FE0D80E30300A2705D /* AGRegex */,
+				1C0931F70D80C9DB00A2705D /* Chat Core */,
+				1C09345E0D80D24100A2705D /* Controllers */,
+				1C82C18D0D83CEFE009ABD9F /* Views */,
+				29B97315FDCFA39411CA2CEA /* Other Sources & Additions */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = CustomTemplate;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources & Additions */ = {
+			isa = PBXGroup;
+			children = (
+				1C09310A0D80C71800A2705D /* Mobile Colloquy.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+				1C0932630D80CA4800A2705D /* NSBundleAdditions.m */,
+				1C0932620D80CA4800A2705D /* NSBundleAdditions.h */,
+				1C0932670D80CA4800A2705D /* NSDataAdditions.m */,
+				1C0932660D80CA4800A2705D /* NSDataAdditions.h */,
+				1C09326B0D80CA4800A2705D /* NSMethodSignatureAdditions.m */,
+				1C09326A0D80CA4800A2705D /* NSMethodSignatureAdditions.h */,
+				1C09326D0D80CA4800A2705D /* NSNotificationAdditions.m */,
+				1C09326C0D80CA4800A2705D /* NSNotificationAdditions.h */,
+				1C09326F0D80CA4800A2705D /* NSNumberAdditions.m */,
+				1C09326E0D80CA4800A2705D /* NSNumberAdditions.h */,
+				1C0932710D80CA4800A2705D /* NSScannerAdditions.m */,
+				1C0932700D80CA4800A2705D /* NSScannerAdditions.h */,
+				1C0932750D80CA4800A2705D /* NSStringAdditions.m */,
+				1C0932740D80CA4800A2705D /* NSStringAdditions.h */,
+				1C09325D0D80CA4800A2705D /* MVUtilities.h */,
+			);
+			name = "Other Sources & Additions";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107310486CEB800E47090 /* Info.plist */,
+				1C09313A0D80C8F600A2705D /* Defaults.plist */,
+				1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */,
+				1CA91CD20DFC992A002DDBB4 /* ConnectionsView.xib */,
+				1C70E8F20DFED49A000A83A0 /* ConnectionEdit.xib */,
+				1C0937320D80E72F00A2705D /* icon.png */,
+				1CB33C970D882BB000EC4E38 /* connections.png */,
+				1CB33C980D882BB000EC4E38 /* buddies.png */,
+				1CB33C990D882BB000EC4E38 /* colloquies.png */,
+				1CB318DA0D8644E4006A7513 /* server.png */,
+				1CD949800D8E18DB00756ACD /* directChatIcon.png */,
+				1CD949810D8E18DB00756ACD /* roomIcon.png */,
+				1C0EB6780D8660E900B6F1BC /* errorBadgeDim.png */,
+				1C0EB6790D8660E900B6F1BC /* errorBadgeGlow.png */,
+				1CB318DB0D8644E4006A7513 /* connectingBadgeDim.png */,
+				1CB318DC0D8644E4006A7513 /* connectingBadgeGlow.png */,
+				1CB318DD0D8644E4006A7513 /* connectedBadgeGlow.png */,
+				1CB318DE0D8644E4006A7513 /* connectedBadgeDim.png */,
+			);
+			name = Resources;
+			path = Mobile/Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D6058900D05DD3D006BFB54 /* Mobile Colloquy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Mobile Colloquy" */;
+			buildPhases = (
+				1D60588D0D05DD3D006BFB54 /* Resources */,
+				1D60588E0D05DD3D006BFB54 /* Sources */,
+				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Mobile Colloquy";
+			productName = "Mobile Colloquy";
+			productReference = 1D6058910D05DD3D006BFB54 /* Colloquy.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Mobile Colloquy" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1D6058900D05DD3D006BFB54 /* Mobile Colloquy */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1D60588D0D05DD3D006BFB54 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C09313B0D80C8F600A2705D /* Defaults.plist in Resources */,
+				1C0937330D80E72F00A2705D /* icon.png in Resources */,
+				1CB318DF0D8644E4006A7513 /* server.png in Resources */,
+				1CB318E00D8644E4006A7513 /* connectingBadgeDim.png in Resources */,
+				1CB318E10D8644E4006A7513 /* connectingBadgeGlow.png in Resources */,
+				1CB318E20D8644E4006A7513 /* connectedBadgeGlow.png in Resources */,
+				1CB318E30D8644E4006A7513 /* connectedBadgeDim.png in Resources */,
+				1C0EB67A0D8660E900B6F1BC /* errorBadgeDim.png in Resources */,
+				1C0EB67B0D8660E900B6F1BC /* errorBadgeGlow.png in Resources */,
+				1CB33C9A0D882BB000EC4E38 /* connections.png in Resources */,
+				1CB33C9B0D882BB000EC4E38 /* buddies.png in Resources */,
+				1CB33C9C0D882BB000EC4E38 /* colloquies.png in Resources */,
+				1CD949820D8E18DB00756ACD /* directChatIcon.png in Resources */,
+				1CD949830D8E18DB00756ACD /* roomIcon.png in Resources */,
+				1CA91CCA0DFC976D002DDBB4 /* Colloquy.xib in Resources */,
+				1CA91CD30DFC992A002DDBB4 /* ConnectionsView.xib in Resources */,
+				1C70E8F30DFED49A000A83A0 /* ConnectionEdit.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D60588E0D05DD3D006BFB54 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
+				1C0931030D80C6E900A2705D /* CQColloquyApplication.m in Sources */,
+				1C0932330D80C9EB00A2705D /* AsyncSocket.m in Sources */,
+				1C0932350D80C9EB00A2705D /* InterThreadMessaging.m in Sources */,
+				1C0932360D80C9EB00A2705D /* MVChatConnection.m in Sources */,
+				1C0932380D80C9EB00A2705D /* MVChatRoom.m in Sources */,
+				1C0932390D80C9EB00A2705D /* MVChatUser.m in Sources */,
+				1C09323B0D80C9EB00A2705D /* MVDirectChatConnection.m in Sources */,
+				1C09323C0D80C9EB00A2705D /* MVDirectClientConnection.m in Sources */,
+				1C09323D0D80C9EB00A2705D /* MVFileTransfer.m in Sources */,
+				1C0932410D80C9EB00A2705D /* MVIRCChatConnection.m in Sources */,
+				1C0932420D80C9EB00A2705D /* MVIRCChatRoom.m in Sources */,
+				1C0932430D80C9EB00A2705D /* MVIRCChatUser.m in Sources */,
+				1C0932440D80C9EB00A2705D /* MVIRCFileTransfer.m in Sources */,
+				1C09327C0D80CA4800A2705D /* NSBundleAdditions.m in Sources */,
+				1C09327E0D80CA4800A2705D /* NSDataAdditions.m in Sources */,
+				1C0932800D80CA4800A2705D /* NSMethodSignatureAdditions.m in Sources */,
+				1C0932810D80CA4800A2705D /* NSNotificationAdditions.m in Sources */,
+				1C0932820D80CA4800A2705D /* NSNumberAdditions.m in Sources */,
+				1C0932830D80CA4800A2705D /* NSScannerAdditions.m in Sources */,
+				1C0932850D80CA4800A2705D /* NSStringAdditions.m in Sources */,
+				1C09357F0D80DDC500A2705D /* ICBPacket.m in Sources */,
+				1C0935800D80DDC800A2705D /* MVICBChatConnection.m in Sources */,
+				1C0935810D80DDC900A2705D /* MVICBChatRoom.m in Sources */,
+				1C0935820D80DDCB00A2705D /* MVICBChatUser.m in Sources */,
+				1C0935E00D80E19200A2705D /* MVChatUserWatchRule.m in Sources */,
+				1C0936710D80E32C00A2705D /* AGRegex.m in Sources */,
+				1C0936870D80E36D00A2705D /* pcre_chartables.c in Sources */,
+				1C0936880D80E36D00A2705D /* pcre_compile.c in Sources */,
+				1C0936890D80E36D00A2705D /* pcre_exec.c in Sources */,
+				1C09368A0D80E36D00A2705D /* pcre_fullinfo.c in Sources */,
+				1C09368B0D80E36D00A2705D /* pcre_get.c in Sources */,
+				1C09368C0D80E36D00A2705D /* pcre_globals.c in Sources */,
+				1C09368D0D80E36D00A2705D /* pcre_info.c in Sources */,
+				1C09368E0D80E36D00A2705D /* pcre_ord2utf8.c in Sources */,
+				1C09368F0D80E36D00A2705D /* pcre_tables.c in Sources */,
+				1C0936900D80E36D00A2705D /* pcre_try_flipped.c in Sources */,
+				1C0936910D80E36D00A2705D /* pcre_ucp_searchfuncs.c in Sources */,
+				1C0936920D80E36D00A2705D /* pcre_valid_utf8.c in Sources */,
+				1C0936930D80E36D00A2705D /* pcre_xclass.c in Sources */,
+				1C0937820D8116FC00A2705D /* CQChatController.m in Sources */,
+				1C0938950D813A6B00A2705D /* CQDirectChatController.m in Sources */,
+				1C0938960D813A6C00A2705D /* CQChatRoomController.m in Sources */,
+				1C82C1970D83CF1D009ABD9F /* CQChatTableCell.m in Sources */,
+				1C82C1A30D83D133009ABD9F /* CQConnectionTableCell.m in Sources */,
+				1C82C1AF0D83D30F009ABD9F /* CQConnectionsController.m in Sources */,
+				1C82C27D0D847EA4009ABD9F /* CQChatsViewController.m in Sources */,
+				1C82C52A0D850B1B009ABD9F /* CQConnectionsViewController.m in Sources */,
+				1C9B15A50D878B6A003794A5 /* CQConnectionEditViewController.m in Sources */,
+				1CE3FB120D8A3DC100FB035F /* CQConnectionCreationViewController.m in Sources */,
+				1C7EBE6D0E01816C0018B0C8 /* CQPreferencesTextCell.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1D6058940D05DD3E006BFB54 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Mobile/Mobile Colloquy.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					USE_PLAIN_CHAT_STRING,
+					"ENABLE_AUTO_PORT_MAPPING=0",
+					"ENABLE_SCRIPTING=0",
+					"ENABLE_PLUGINS=0",
+					"ENABLE_SILC=0",
+					"ENABLE_XMPP=0",
+					SUPPORT_UTF8,
+					SUPPORT_UCP,
+				);
+				HEADER_SEARCH_PATHS = (
+					Mobile,
+					Mobile/Controllers,
+					Mobile/Views,
+					Frameworks,
+				);
+				INFOPLIST_FILE = Mobile/Resources/Info.plist;
+				PRODUCT_NAME = Colloquy;
+			};
+			name = Debug;
+		};
+		1D6058950D05DD3E006BFB54 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Mobile/Mobile Colloquy.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					USE_PLAIN_CHAT_STRING,
+					"ENABLE_AUTO_PORT_MAPPING=0",
+					"ENABLE_SCRIPTING=0",
+					"ENABLE_PLUGINS=0",
+					"ENABLE_SILC=0",
+					"ENABLE_XMPP=0",
+					SUPPORT_UTF8,
+					SUPPORT_UCP,
+				);
+				HEADER_SEARCH_PATHS = (
+					Mobile,
+					Mobile/Controllers,
+					Mobile/Views,
+					Frameworks,
+				);
+				INFOPLIST_FILE = Mobile/Resources/Info.plist;
+				PRODUCT_NAME = Colloquy;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = iphoneos2.0;
+				SYMROOT = build;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = iphoneos2.0;
+				SYMROOT = build;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Mobile Colloquy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D6058940D05DD3E006BFB54 /* Debug */,
+				1D6058950D05DD3E006BFB54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Mobile Colloquy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

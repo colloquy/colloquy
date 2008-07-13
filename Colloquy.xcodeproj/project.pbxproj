@@ -640,7 +640,7 @@
 		1C9982010603EFD6006C6417 /* JVNotificationPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVNotificationPreferences.m; path = Preferences/JVNotificationPreferences.m; sourceTree = "<group>"; };
 		1C9982050603F097006C6417 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVNotificationPreferences.nib; sourceTree = "<group>"; };
 		1C9982AC0604BA1F006C6417 /* sound.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sound.png; path = Resources/sound.png; sourceTree = "<group>"; };
-		1C9982AF0604BEAA006C6417 /* notifications.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = notifications.plist; path = Resources/notifications.plist; sourceTree = "<group>"; };
+		1C9982AF0604BEAA006C6417 /* notifications.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = notifications.plist; path = Resources/notifications.plist; sourceTree = "<group>"; };
 		1C9D85190C9869DD00BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Japanese; path = Languages/Japanese.lproj/Credits.rtf; sourceTree = "<group>"; };
 		1C9D851E0C9869F000BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Languages/Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1C9D85230C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Languages/Japanese.lproj/Colloquy.nib; sourceTree = "<group>"; };
@@ -693,7 +693,7 @@
 		1C9D855A0C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nb; path = Languages/nb.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
 		1C9D855B0C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nb; path = Languages/nb.lproj/MVSoftwareUpdate.nib; sourceTree = "<group>"; };
 		1C9D855C0C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nb; path = Languages/nb.lproj/TSCustomBan.nib; sourceTree = "<group>"; };
-		1CA75A260652537A000141D5 /* styleOptions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = styleOptions.plist; path = Resources/styleOptions.plist; sourceTree = "<group>"; };
+		1CA75A260652537A000141D5 /* styleOptions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = styleOptions.plist; path = Resources/styleOptions.plist; sourceTree = "<group>"; };
 		1CA7CA6305FEC88500887614 /* activity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = activity.png; path = "Resources/Toolbar Icons/activity.png"; sourceTree = "<group>"; };
 		1CA7CA6405FEC88500887614 /* activityNew.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = activityNew.png; path = "Resources/Toolbar Icons/activityNew.png"; sourceTree = "<group>"; };
 		1CA7CA6505FEC88500887614 /* activityNewImportant.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = activityNewImportant.png; path = "Resources/Toolbar Icons/activityNewImportant.png"; sourceTree = "<group>"; };
@@ -1008,7 +1008,7 @@
 		CBF6852E0820190D00F498FB /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = InfoPlist.strings; sourceTree = "<group>"; };
 		CBF685300820190D00F498FB /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = schema.strings; sourceTree = "<group>"; };
 		CBF685310820190D00F498FB /* GetMetadataForFile.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 30; name = GetMetadataForFile.m; path = Importer/GetMetadataForFile.m; sourceTree = "<group>"; };
-		CBF685320820190D00F498FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = Info.plist; path = Importer/Info.plist; sourceTree = "<group>"; };
+		CBF685320820190D00F498FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; name = Info.plist; path = Importer/Info.plist; sourceTree = "<group>"; };
 		CBF685330820190D00F498FB /* main.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; name = main.c; path = Importer/main.c; sourceTree = "<group>"; };
 		CBF685340820190D00F498FB /* schema.xml */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = schema.xml; path = Importer/schema.xml; sourceTree = "<group>"; };
 		CBF687A508202F3F00F498FB /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
@@ -1048,7 +1048,7 @@
 		F592CAC001824AE801EE70DE /* MVTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVTableView.h; path = Views/MVTableView.h; sourceTree = "<group>"; };
 		F599994901890E4601EE70DE /* MVTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVTextView.m; path = Views/MVTextView.m; sourceTree = "<group>"; };
 		F599994A01890E4601EE70DE /* MVTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVTextView.h; path = Views/MVTextView.h; sourceTree = "<group>"; };
-		F5BC17DD019655DC01A35792 /* info.colloquy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = info.colloquy.plist; path = Resources/info.colloquy.plist; sourceTree = "<group>"; };
+		F5BC17DD019655DC01A35792 /* info.colloquy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = info.colloquy.plist; path = Resources/info.colloquy.plist; sourceTree = "<group>"; };
 		F5BC17DF019656E901A35792 /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = info.png; path = Resources/info.png; sourceTree = "<group>"; };
 		F5BEC20D01F1EF1901EE70DE /* admin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = admin.png; path = Resources/admin.png; sourceTree = "<group>"; };
 		F5C3D42303973E7B01000102 /* addWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addWidget.png; sourceTree = "<group>"; };
