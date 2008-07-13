@@ -1,3 +1,4 @@
+#import <ChatCore/MVAvailability.h>
 #import <ChatCore/MVChatString.h>
 
 typedef enum {
@@ -191,6 +192,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 
 #pragma mark -
 
+#if ENABLE(SCRIPTING)
 @interface MVChatUser (MVChatUserScripting)
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 @property(readonly) NSString *scriptUniqueIdentifier;
@@ -200,3 +202,4 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 - (NSScriptObjectSpecifier *) objectSpecifier;
 #endif
 @end
+#endif

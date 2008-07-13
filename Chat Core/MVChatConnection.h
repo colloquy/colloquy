@@ -1,3 +1,4 @@
+#import <ChatCore/MVAvailability.h>
 #import <ChatCore/MVChatString.h>
 
 typedef enum {
@@ -407,6 +408,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
+#if ENABLE(SCRIPTING)
 @interface MVChatConnection (MVChatConnectionScripting)
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 @property(readonly) NSNumber *uniqueIdentifier;
@@ -414,6 +416,7 @@ extern NSString *MVChatConnectionErrorDomain;
 - (NSNumber *) uniqueIdentifier;
 #endif
 @end
+#endif
 
 #pragma mark -
 
