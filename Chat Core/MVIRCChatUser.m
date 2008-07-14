@@ -123,8 +123,12 @@
 		[info release];
 	} else if( [command isCaseInsensitiveEqualToString:@"TIME"] ) {
 		NSString *date = [[NSString allocWithZone:nil] initWithData:arguments encoding:[[self connection] encoding]];
+#ifdef TARGET_OS_EMBEDDED
+		[self setAttribute:date forKey:MVChatUserLocalTimeAttribute];
+#else
 		NSCalendarDate *localThere = [NSCalendarDate dateWithNaturalLanguageString:date];
 		[self setAttribute:localThere forKey:MVChatUserLocalTimeAttribute];
+#endif
 		[date release];
 	}
 }
