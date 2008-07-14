@@ -31,7 +31,7 @@
 	[_inputField release];
 	[_target release];
 //	[_transcriptView release];
-	[_view release];
+//	[_view release];
 	[super dealloc];
 }
 
@@ -203,6 +203,7 @@
 
 #pragma mark -
 
+/*
 - (UIView *) view {
 	if( ! _view ) {
 		CGRect screenRect = [[UIScreen mainScreen] applicationFrame];
@@ -210,7 +211,7 @@
 		_view = [[UIView alloc] initWithFrame:CGRectMake(0., 45., screenRect.size.width, screenRect.size.height - 45.)];
 		[_view setBackgroundColor:[UIColor whiteColor]];
 
-/*
+
 		_inputBarView = [[CQInputBarView alloc] initWithFrame:CGRectMake(0., [_view frame].size.height - 40., [_view frame].size.width, 40.)];
 
 		_inputField = [[CQChatInputField alloc] initWithFrame:CGRectMake(6., 8., screenRect.size.width - 8., 26.)];
@@ -225,11 +226,11 @@
 		[_inputBarView addSubview:_inputField];
 		[_view addSubview:_transcriptView];
 		[_view addSubview:_inputBarView];
-*/
 	}
 
 	return _view;
 }
+*/
 
 - (UIImage *) icon {
 	return [UIImage imageNamed:@"directChatIcon.png"];
