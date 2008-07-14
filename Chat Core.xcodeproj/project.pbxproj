@@ -10,7 +10,7 @@
 		1C0FE8AB0B4F647D00855B9C /* MVDirectClientConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0FE8A90B4F647D00855B9C /* MVDirectClientConnection.m */; };
 		1C11689A0B45F98700F57D2C /* libtransmission.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C1168990B45F98700F57D2C /* libtransmission.a */; };
 		1C11B7A109C27AC800789814 /* BSD License.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1C11B7A009C27AC800789814 /* BSD License.txt */; };
-		1C18955A0E29CC19003CFED0 /* MVAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C1895590E29CC19003CFED0 /* MVAvailability.h */; };
+		1C18955A0E29CC19003CFED0 /* MVAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C1895590E29CC19003CFED0 /* MVAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C3560060B4CCE95008A93FA /* MVUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C3560050B4CCE95008A93FA /* MVUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C3D55BC05A4CBBE00F25F5E /* NSNumberAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3D55BA05A4CBBE00F25F5E /* NSNumberAdditions.m */; };
 		1C3D55C205A4DC1E00F25F5E /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3D55C005A4DC1E00F25F5E /* NSMethodSignatureAdditions.m */; };
