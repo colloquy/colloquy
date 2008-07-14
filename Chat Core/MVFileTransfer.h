@@ -30,7 +30,7 @@ typedef enum {
 	unsigned long long _finalSize;
 	unsigned long long _transfered;
 	NSDate *_startDate;
-	NSHost *_host;
+	NSString *_host;
 	BOOL _passive;
 	unsigned short _port;
 	unsigned long long _startOffset;
@@ -58,7 +58,7 @@ typedef enum {
 @property(readonly) NSDate *startDate;
 @property(readonly) unsigned long long startOffset;
 
-@property(readonly) NSHost *host;
+@property(readonly) NSString *host;
 @property(readonly) unsigned short port;
 
 @property(readonly) MVChatUser *user;
@@ -74,7 +74,7 @@ typedef enum {
 - (NSDate *) startDate;
 - (unsigned long long) startOffset;
 
-- (NSHost *) host;
+- (NSString *) host;
 - (unsigned short) port;
 
 - (MVChatUser *) user;

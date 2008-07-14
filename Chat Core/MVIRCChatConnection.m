@@ -1805,7 +1805,7 @@ end:
 					}
 
 					if( transfer ) {
-						[transfer _setHost:[NSHost hostWithAddress:address]];
+						[transfer _setHost:address];
 						[transfer _setPort:port];
 						[transfer _setupAndStart];
 					}
@@ -1816,7 +1816,7 @@ end:
 						[transfer _setPassiveIdentifier:passiveId];
 						[transfer _setPassive:YES];
 					} else {
-						[transfer _setHost:[NSHost hostWithAddress:address]];
+						[transfer _setHost:address];
 						[transfer _setPort:port];
 					}
 
@@ -1940,7 +1940,7 @@ end:
 						}
 
 						if( directChat ) {
-							[directChat _setHost:[NSHost hostWithAddress:address]];
+							[directChat _setHost:address];
 							[directChat _setPort:port];
 							[directChat initiate];
 						}
@@ -1951,7 +1951,7 @@ end:
 							[directChatConnection _setPassiveIdentifier:passiveId];
 							[directChatConnection _setPassive:YES];
 						} else {
-							[directChatConnection _setHost:[NSHost hostWithAddress:address]];
+							[directChatConnection _setHost:address];
 							[directChatConnection _setPort:port];
 						}
 

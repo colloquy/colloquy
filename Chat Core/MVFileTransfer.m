@@ -121,7 +121,7 @@ static BOOL autoPortMapping = YES;
 
 #pragma mark -
 
-- (NSHost *) host {
+- (NSString *) host {
 	return _host;
 }
 
@@ -166,7 +166,7 @@ static BOOL autoPortMapping = YES;
 	MVSafeRetainAssign( &_startDate, newStartDate );
 }
 
-- (void) _setHost:(NSHost *) newHost {
+- (void) _setHost:(NSString *) newHost {
 	MVSafeRetainAssign( &_host, newHost );
 }
 

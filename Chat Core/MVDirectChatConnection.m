@@ -96,11 +96,11 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 	return _user;
 }
 
-- (NSHost *) host {
+- (NSString *) host {
 	return _host;
 }
 
-- (NSHost *) connectedHost {
+- (NSString *) connectedHost {
 	return _connectedHost;
 }
 
@@ -122,10 +122,10 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 	if( _localRequest ) {
 		if( ! [self isPassive] ) [_directClientConnection acceptConnectionOnFirstPortInRange:[MVFileTransfer fileTransferPortRange]];
-		else [_directClientConnection connectToHost:[[self host] address] onPort:[self port]];
+		else [_directClientConnection connectToHost:[self host] onPort:[self port]];
 	} else {
 		if( [self isPassive] ) [_directClientConnection acceptConnectionOnFirstPortInRange:[MVFileTransfer fileTransferPortRange]];
-		else [_directClientConnection connectToHost:[[self host] address] onPort:[self port]];
+		else [_directClientConnection connectToHost:[self host] onPort:[self port]];
 	}
 }
 
@@ -218,7 +218,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 - (void) directClientConnection:(MVDirectClientConnection *) connection didConnectToHost:(NSString *) host port:(unsigned short) port {
 	[self _setStatus:MVDirectChatConnectionConnectedStatus];
 
-	MVSafeRetainAssign( &_connectedHost, [NSHost hostWithAddress:host] );
+	MVSafeRetainAssign( &_connectedHost, host );
 
 	[self _readNextMessage];
 
@@ -296,7 +296,6 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 		_encoding = NSUTF8StringEncoding;
 		_outgoingChatFormat = MVChatConnectionDefaultMessageFormat;
 		_user = [chatUser retain];
-		_host = [[NSHost currentHost] retain];
 	}
 
 	return self;
@@ -329,7 +328,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionDidDisconnectNotification object:self];
 }
 
-- (void) _setHost:(NSHost *) newHost {
+- (void) _setHost:(NSString *) newHost {
 	MVSafeRetainAssign( &_host, newHost );
 }
 

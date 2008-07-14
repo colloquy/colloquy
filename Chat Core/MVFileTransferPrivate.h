@@ -6,7 +6,7 @@
 - (void) _setTransfered:(unsigned long long) transfered;
 - (void) _setStartOffset:(unsigned long long) startOffset;
 - (void) _setStartDate:(NSDate *) startDate;
-- (void) _setHost:(NSHost *) host;
+- (void) _setHost:(NSString *) host;
 - (void) _setPort:(unsigned short) port;
 - (void) _setPassive:(BOOL) passive;
 - (void) _postError:(NSError *) error;

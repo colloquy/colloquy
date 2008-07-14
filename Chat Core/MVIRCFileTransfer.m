@@ -182,7 +182,7 @@
 	[_directClientConnection setDelegate:self];
 
 	if( ! [self isPassive] ) [_directClientConnection acceptConnectionOnFirstPortInRange:[[self class] fileTransferPortRange]];
-	else [_directClientConnection connectToHost:[[self host] address] onPort:[self port]];
+	else [_directClientConnection connectToHost:[self host] onPort:[self port]];
 }
 
 - (void) _sendNextPacket {
@@ -262,7 +262,7 @@
 		if( _fileNameQuoted ) [[self user] sendSubcodeReply:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT SEND \"%@\" 16843009 0 %llu %lu T", [self originalFileName], [self finalSize], [self _passiveIdentifier]]];
 		else [[self user] sendSubcodeReply:@"DCC" withArguments:[NSString stringWithFormat:@"REJECT SEND %@ 16843009 0 %llu %lu T", [self originalFileName], [self finalSize], [self _passiveIdentifier]]];
 	} else {
-		NSString *address = [[self host] address];
+		NSString *address = [self host];
 		if( ! address ) address = @"16843009";
 		if( address && [address rangeOfString:@"."].location != NSNotFound )
 			address = [NSString stringWithFormat:@"%lu", ntohl( inet_addr( [address UTF8String] ) )];
@@ -393,7 +393,7 @@
 	[_directClientConnection setDelegate:self];
 
 	if( [self isPassive] ) [_directClientConnection acceptConnectionOnFirstPortInRange:[[self class] fileTransferPortRange]];
-	else [_directClientConnection connectToHost:[[self host] address] onPort:[self port]];
+	else [_directClientConnection connectToHost:[self host] onPort:[self port]];
 }
 
 #pragma mark -

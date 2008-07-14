@@ -25,8 +25,8 @@ typedef enum {
 	MVDirectClientConnection *_directClientConnection;
 	MVChatMessageFormat _outgoingChatFormat;
 	NSStringEncoding _encoding;
-	NSHost *_host;
-	NSHost *_connectedHost;
+	NSString *_host;
+	NSString *_connectedHost;
 	BOOL _passive;
 	BOOL _localRequest;
 	unsigned short _port;
@@ -43,8 +43,8 @@ typedef enum {
 - (MVDirectChatConnectionStatus) status;
 
 - (MVChatUser *) user;
-- (NSHost *) host;
-- (NSHost *) connectedHost;
+- (NSString *) host;
+- (NSString *) connectedHost;
 - (unsigned short) port;
 
 - (void) initiate;

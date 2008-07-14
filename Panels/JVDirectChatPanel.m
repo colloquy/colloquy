@@ -394,7 +394,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		return [NSString stringWithFormat:@"%@ (%@)", [_buddy preferredName], [[self user] serverAddress]]; */
 
 	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] ) {
-		NSString *host = [[(MVDirectChatConnection *)[self target] connectedHost] name];
+		NSString *host = [(MVDirectChatConnection *)[self target] connectedHost];
 		if( ! [host length] ) host = [[self user] address];
 		if( [host length] ) return [NSString stringWithFormat:@"%@ (%@)", [self title], host];
 		return [self title];
@@ -412,7 +412,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		if( [(MVDirectChatConnection *)[self target] status] == MVDirectChatConnectionDisconnectedStatus )
 			return NSLocalizedString( @"disconnected", "disconnected information" );
 
-		NSString *host = [[(MVDirectChatConnection *)[self target] connectedHost] name];
+		NSString *host = [(MVDirectChatConnection *)[self target] connectedHost];
 		if( ! [host length] ) host = [[self user] address];
 		return host;
 	}
@@ -436,7 +436,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		else if( [(MVDirectChatConnection *)[self target] status] == MVDirectChatConnectionDisconnectedStatus )
 			info = NSLocalizedString( @"disconnected", "disconnected tooltip" );
 		else {
-			info = [[(MVDirectChatConnection *)[self target] connectedHost] name];
+			info = [(MVDirectChatConnection *)[self target] connectedHost];
 			if( ! [info length] ) info = [[self user] address];
 		}
 
