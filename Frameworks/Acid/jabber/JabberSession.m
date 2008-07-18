@@ -191,10 +191,7 @@ NSString* STREAM_ROOT = @"<stream:stream xmlns='jabber:client' xmlns:stream='htt
     NSMutableArray* queryList = (NSMutableArray*)CFDictionaryGetValue(_observerMap, observer);
 
     if ((query == nil) || (queryList == nil))
-    {
-        NSLog(@"Attempt to register unknown/invalid expression: %@", path);
         return;
-    }
 
     // Remove the query from the observer's query list
     [queryList removeObject:query];
