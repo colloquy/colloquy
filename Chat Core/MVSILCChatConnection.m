@@ -55,7 +55,7 @@ static void silc_channel_get_clients_per_list_callback( SilcClient client, SilcC
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomMemberUsersSyncedNotification object:room userInfo:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomBannedUsersSyncedNotification object:room userInfo:nil];
 
-	[room release];
+	[room release]; // Balance the retain in silc_command_reply (case SILC_COMMAND_JOIN).
 }
 
 static void silc_say( SilcClient client, SilcClientConnection conn, SilcClientMessageType type, char *msg, ... ) {
@@ -628,6 +628,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		/* SilcBuffer channel_pubkeys = */ va_arg( list, SilcBuffer );
 		/* SilcUInt32 user_limit = */ va_arg( list, SilcUInt32 );
 
+		// The room is released in silc_channel_get_clients_per_list_callback.
 		MVSILCChatRoom *room = (MVSILCChatRoom *)[self joinedChatRoomWithChannel:channel];
 		if( ! room ) {
 			room = [[MVSILCChatRoom allocWithZone:nil] initWithChannelEntry:channel andConnection:self];
@@ -727,9 +728,6 @@ static void silc_get_auth_method_callback( SilcClient client, SilcClientConnecti
 	SilcGetAuthMeth completion = SILC_32_TO_PTR( [(NSNumber *)[dict objectForKey:@"completion"] unsignedIntValue] );
 	void *completionContext = SILC_32_TO_PTR( [(NSNumber *)[dict objectForKey:@"context"] unsignedIntValue] );
 
-	[dict release]; // was retained earlier in silc_get_auth_method
-	dict = nil;
-
 	switch( auth_method ) {
 	case SILC_AUTH_NONE:
 		completion( TRUE, auth_method, NULL, 0, completionContext );
@@ -746,9 +744,12 @@ static void silc_get_auth_method_callback( SilcClient client, SilcClientConnecti
 		completion( TRUE, auth_method, NULL, 0, completionContext );
 		break;
 	}
+
+	[dict release]; // Balance the alloc in silc_get_auth_method.
 }
 
 static void silc_get_auth_method( SilcClient client, SilcClientConnection conn, char *hostname, SilcUInt16 port, SilcGetAuthMeth completion, void *context ) {
+	// The dictionary is released in silc_get_auth_method_callback.
 	NSDictionary *dict = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32( completion )], @"completion", [NSNumber numberWithUnsignedInt:SILC_PTR_TO_32( context )], @"context", nil];
 	silc_client_request_authentication_method( client, conn, silc_get_auth_method_callback, dict );
 }
@@ -834,6 +835,8 @@ static void silc_verify_public_key( SilcClient client, SilcClientConnection conn
 	[dict setObject:[NSNumber numberWithUnsignedInt:SILC_PTR_TO_32(conn)] forKey:@"silcConn"];
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedPublicKeyVerificationNotification object:self userInfo:dict];
+
+	[dict release];
 }
 
 static void silc_ask_passphrase( SilcClient client, SilcClientConnection conn, SilcAskPassphrase completion, void *context ) {

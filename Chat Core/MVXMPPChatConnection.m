@@ -387,7 +387,7 @@
 
 	if ([[presence getAttribute:@"type"] isCaseInsensitiveEqualToString:@"error"]) {
 		[self _removeJoinedRoom:room];
-		[room release];
+		[room release]; // balance the alloc or retain in joinChatRoomNamed:
 		// handle error...
 		return;
 	}

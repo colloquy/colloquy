@@ -646,6 +646,8 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
 		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
+
+		[settings release];
 	}
 
 	return YES;
@@ -2042,6 +2044,7 @@ end:
 - (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender forRoom:(MVChatRoom *) room {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
+	// The info dictionary is released in _handleCTCP:.
 	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:4];
 	if( data ) [info setObject:data forKey:@"data"];
 	if( sender ) [info setObject:sender forKey:@"sender"];
@@ -2062,6 +2065,7 @@ end:
 		MVChatRoom *room = [self joinedChatRoomWithName:name];
 
 		if( [sender isLocalUser] ) {
+			// The room is released in _handle366WithParameters.
 			if( ! room ) {
 				room = [[MVIRCChatRoom allocWithZone:nil] initWithName:name andConnection:self];
 				[self _addJoinedRoom:room];

@@ -42,7 +42,7 @@ XMLQName* JABBER_CLIENTCAP_QN;
 @implementation Jabber
 +(void) load
 {
-    [[NSAutoreleasePool alloc] init];
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
     // Setup QNames
     JABBER_IQ_QN = [XMLQName construct:@"iq" withURI:@"jabber:client"];
@@ -61,6 +61,8 @@ XMLQName* JABBER_CLIENTCAP_QN;
     [XMLElementStream registerElementFactory:[JabberPresence class]];
     [XMLElementStream registerElementFactory:[JabberMessage class]];
     [XMLElementStream registerElementFactory:[JabberSubscriptionRequest class]];
+
+	[pool drain];
 }
 
 

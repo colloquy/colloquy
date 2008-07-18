@@ -5,7 +5,7 @@
 + (void) check {
 	if( [[NSBundle bundleWithIdentifier:@"com.unsanity.smartcrashreports"] isLoaded] )
 		return; // user has Unsanity Smart Crash Reports installed, don't use our own reporter
-	[[MVCrashCatcher alloc] init];
+	[[MVCrashCatcher alloc] init]; // Released when the window is closed.
 }
 
 #pragma mark -

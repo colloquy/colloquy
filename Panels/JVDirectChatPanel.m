@@ -230,9 +230,10 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 				[[self transcript] setFilePath:logs];
 				[[self transcript] setSource:source];
-				[source release];
 				[[self transcript] setAutomaticallyWritesChangesToFile:YES];
 			}
+
+			[source release];
 
 			[[self transcript] setElementLimit:0]; // start with zero limit
 
@@ -840,6 +841,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	if( ! [messageString length] && [cmessage ignoreStatus] == JVNotIgnored ) {  // plugins decided to excluded this message, decrease the new message counts
 		_newMessageCount--;
+		[cmessage release];
 		return;
 	}
 
@@ -1382,9 +1384,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[button setMenu:_encodingMenu];
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Text Encoding Options", "encoding menu toolbar item tooltip" )];
-		[toolbarItem setView:button];
 		[toolbarItem setMinSize:NSMakeSize( 60., 24. )];
 		[toolbarItem setMaxSize:NSMakeSize( 60., 32. )];
+
+		[toolbarItem setView:button];
+		[button release];
 
 		NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Encoding", "encoding menu toolbar item" ) action:NULL keyEquivalent:@""] autorelease];
 		[menuItem setImage:[NSImage imageNamed:@"encoding"]];

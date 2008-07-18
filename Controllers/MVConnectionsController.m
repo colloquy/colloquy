@@ -36,7 +36,7 @@ static NSMenu *favoritesMenu = nil;
 
 #pragma mark -
 
-@interface NSDisclosureButtonCell
+@interface NSDisclosureButtonCell : NSCell
 + (id) alloc;
 - (id) initWithCell:(NSCell *) cell;
 @end
@@ -213,8 +213,10 @@ static NSMenu *favoritesMenu = nil;
 	[toolbar setAllowsUserCustomization:YES];
 	[toolbar setAutosavesConfiguration:YES];
 	[[self window] setToolbar:toolbar];
-	
-	[showDetails setCell:[[NSDisclosureButtonCell alloc] initWithCell:[showDetails cell]]];
+
+	NSDisclosureButtonCell *cell = [[NSDisclosureButtonCell alloc] initWithCell:[showDetails cell]];
+	[showDetails setCell:cell];
+	[cell release];
 
 	[self setWindowFrameAutosaveName:@"Connections"];
 	[self _validateToolbar];

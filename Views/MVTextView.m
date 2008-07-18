@@ -36,6 +36,7 @@
 	NSEvent *anEvent = nil;
 
 	if( ! [self isEditable] ) {
+		[newArray release];
 		[super interpretKeyEvents:eventArray];
 		return;
 	}

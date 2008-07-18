@@ -330,8 +330,11 @@ static MVBuddyListController *sharedInstance = nil;
 	[newServers release];
 
 	[buddy addWatchRule:rule];
+	[rule release];
 
 	[self addBuddy:buddy];
+	[buddy release];
+
 	[self save];
 
 	[nickname setObjectValue:@""];

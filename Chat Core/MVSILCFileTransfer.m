@@ -117,6 +117,7 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 			SilcClientFileError error = silc_client_file_send( [[user connection] _silcClient], [[user connection] _silcConn], silc_client_file_monitor, transfer, [result bytes], 0, passive, client, [path fileSystemRepresentation], &sessionid);
 			if( error != SILC_CLIENT_FILE_OK ) {
 				[transfer _silcPostError:error];
+				[transfer release];
 				SilcUnlock( [[user connection] _silcClient] );
 				return nil;
 			}
@@ -127,7 +128,7 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 		SilcUnlock( [[user connection] _silcClient] );
 	} else return nil;
 
-	return transfer;
+	return [transfer autorelease];
 }
 
 #pragma mark -
