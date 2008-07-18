@@ -100,8 +100,10 @@
 		else newTime = [[NSString alloc] initWithFormat:@"%d:%02d", minutes, seconds];
 	}
 
-	if( [_timeLabel.text isEqualToString:newTime] )
+	if( [_timeLabel.text isEqualToString:newTime] ) {
+		[newTime release];
 		return;
+	}
 
 	_timeLabel.text = newTime ? newTime : @"";
 
