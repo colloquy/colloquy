@@ -10,13 +10,14 @@
 - (void) _saveConnectionList;
 @end
 
-static CQConnectionsController *sharedInstance = nil;
-
 @implementation CQConnectionsController
 + (CQConnectionsController *) defaultController {
-	if( ! sharedInstance ) {
-		sharedInstance = [self alloc];
-		sharedInstance = [sharedInstance init];
+	static BOOL creatingSharedInstance = NO;
+	static CQConnectionsController *sharedInstance = nil;
+
+	if( !sharedInstance && !creatingSharedInstance ) {
+		creatingSharedInstance = YES;
+		sharedInstance = [[self alloc] init];
 	}
 
 	return sharedInstance;
@@ -28,9 +29,8 @@ static CQConnectionsController *sharedInstance = nil;
 
 	_connections = [[NSMutableArray alloc] init];
 
-	UITabBarItem *tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Connections", @"Connections tab title") image:[UIImage imageNamed:@"connections.png"] tag:0];
-	self.tabBarItem = tabBarItem;
-	[tabBarItem release];
+	self.title = NSLocalizedString(@"Connections", @"Connections tab title");
+	self.tabBarItem.image = [UIImage imageNamed:@"connections.png"];
 
 	[self _loadConnectionList];
 

@@ -10,11 +10,17 @@
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVDirectChatConnection.h>
 
-static CQChatController *sharedInstance = nil;
-
 @implementation CQChatController
 + (CQChatController *) defaultController {
-	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
+	static BOOL creatingSharedInstance = NO;
+	static CQChatController *sharedInstance = nil;
+
+	if( !sharedInstance && !creatingSharedInstance ) {
+		creatingSharedInstance = YES;
+		sharedInstance = [[self alloc] init];
+	}
+
+	return sharedInstance;
 }
 
 - (id) init {
@@ -24,9 +30,8 @@ static CQChatController *sharedInstance = nil;
 	_chatsViewController = [[CQChatsViewController alloc] init];
 	_chatControllers = [[NSMutableArray alloc] init];
 
-	UITabBarItem *tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Colloquies", @"Colloquies tab title") image:[UIImage imageNamed:@"colloquies.png"] tag:1];
-	self.tabBarItem = tabBarItem;
-	[tabBarItem release];
+	self.title = NSLocalizedString(@"Colloquies", @"Colloquies tab title");
+	self.tabBarItem.image = [UIImage imageNamed:@"colloquies.png"];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_joinedRoom:) name:MVChatRoomJoinedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRoomMessage:) name:MVChatRoomGotMessageNotification object:nil];

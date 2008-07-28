@@ -28,5 +28,7 @@
 	<string>Colloquy</string>
 	<key>UIPrerenderedIcon</key>
 	<true/>
+	<key>UIRequiresPersistentWiFi</key>
+	<true/>
 </dict>
 </plist>

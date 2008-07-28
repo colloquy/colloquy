@@ -12,9 +12,6 @@
 
 	self.title = NSLocalizedString(@"Connections", @"Connections view title");
 
-	for( MVChatConnection *connection in [CQConnectionsController defaultController].connections )
-		[self addConnection:connection];
-
 	return self;
 }
 
@@ -33,6 +30,9 @@
 	[addItem release];
 
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;	
+
+	for( MVChatConnection *connection in [CQConnectionsController defaultController].connections )
+		[self addConnection:connection];
 }
 
 - (void) didReceiveMemoryWarning {
