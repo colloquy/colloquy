@@ -191,7 +191,7 @@
 	CGRect frame = _iconImageView.frame;
 	frame.size = [_iconImageView sizeThatFits:_iconImageView.bounds.size];
 	frame.origin.x = ICON_LEFT_MARGIN;
-	frame.origin.y = (contentRect.size.height / 2.) - (frame.size.height / 2.);
+	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
 	_iconImageView.frame = frame;
 
 	frame = _badgeImageView.frame;
@@ -202,7 +202,7 @@
 
 	frame = _timeLabel.frame;
 	frame.size = [_timeLabel sizeThatFits:_timeLabel.bounds.size];
-	frame.origin.y = (contentRect.size.height / 2.) - (frame.size.height / 2.);
+	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
 
 	if( self.editing )
 		frame.origin.x = self.bounds.size.width - contentRect.origin.x;
@@ -214,14 +214,14 @@
 	frame = _serverLabel.frame;
 	frame.size = [_serverLabel sizeThatFits:_serverLabel.bounds.size];
 	frame.origin.x = CGRectGetMaxX(_iconImageView.frame) + ICON_RIGHT_MARGIN;
-	frame.origin.y = (contentRect.size.height / 2.) - frame.size.height + 3.;
+	frame.origin.y = round((contentRect.size.height / 2.) - frame.size.height + 3.);
 	frame.size.width = _timeLabel.frame.origin.x - frame.origin.x - TEXT_RIGHT_MARGIN;
 	_serverLabel.frame = frame;
 
 	frame = _nicknameLabel.frame;
 	frame.size = [_nicknameLabel sizeThatFits:_nicknameLabel.bounds.size];
 	frame.origin.x = CGRectGetMaxX(_iconImageView.frame) + ICON_RIGHT_MARGIN;
-	frame.origin.y = (contentRect.size.height / 2.);
+	frame.origin.y = round(contentRect.size.height / 2.);
 	frame.size.width = _timeLabel.frame.origin.x - frame.origin.x - TEXT_RIGHT_MARGIN;
 	_nicknameLabel.frame = frame;
 }
