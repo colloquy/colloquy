@@ -282,7 +282,7 @@ number of room members information line */
 "Add To Buddy List" = "Ajouter à la liste des amis";
 
 /* add to favorites contextual menu */
-"Add \"%@ (%@)\" = "Ajouter \"%1$@ (%2$@)\";
+"Add \"%@ (%@)\"" = "Ajouter \"%1$@ (%2$@)\"";
 
 /* add to favorites contextual menu */
 "Add to Favorites" = "Ajouter aux favoris";
@@ -978,7 +978,7 @@ ban hostmask label */
 "You changed this room to prohibit outside messages." = "Vous avez changé ce canal pour interdire les messages extérieurs.";
 
 /* password required room status message */
-"You changed this room to require a password of \"%@\"." = "Vous avez changé ce canal pour demander un mot de passe pour \"%@\";
+"You changed this room to require a password of \"%@\"." = "Vous avez changé ce canal pour demander un mot de passe pour \"%@\"";
 
 /* require op to set topic room status message */
 "You changed this room to require operator status to change the topic." = "Vous avez changé ce canal pour requérir le niveau d'opérateur pour pouvoir changer le sujet.";
