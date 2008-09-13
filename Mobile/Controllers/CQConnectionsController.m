@@ -27,10 +27,13 @@
 	if( ! ( self = [super init] ) )
 		return nil;
 
-	_connections = [[NSMutableArray alloc] init];
-
 	self.title = NSLocalizedString(@"Connections", @"Connections tab title");
 	self.tabBarItem.image = [UIImage imageNamed:@"connections.png"];
+
+	_connections = [[NSMutableArray alloc] init];
+
+	connectionsViewController = [[CQConnectionsViewController alloc] init];
+	[self pushViewController:connectionsViewController animated:NO];
 
 	[self _loadConnectionList];
 
@@ -46,11 +49,13 @@
 
 #pragma mark -
 
-- (void) viewDidLoad {
-	[super viewDidLoad];
-	if( !connectionsViewController )
-		connectionsViewController = [[CQConnectionsViewController alloc] init];
-	[self pushViewController:connectionsViewController animated:NO];
+- (void) didReceiveMemoryWarning {
+	if( !editViewController.view.superview ) {
+		[editViewController release];
+		editViewController = nil;
+	}
+
+	[super didReceiveMemoryWarning];
 }
 
 #pragma mark -

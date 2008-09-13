@@ -67,9 +67,52 @@
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
-	CQPreferencesTextCell *cell = [[CQPreferencesTextCell alloc] init];
-	cell.text = @"Test";
-	cell.label = @"My Label";
-	return [cell autorelease];
+	CQPreferencesTextCell *cell = (CQPreferencesTextCell *)[tableView dequeueReusableCellWithIdentifier:@"CQPreferencesTextCell"];
+	if( ! cell ) cell = [[[CQPreferencesTextCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"CQPreferencesTextCell"] autorelease];
+
+	if( indexPath.section == 0 ) {
+		if ( indexPath.row == 0 ) {
+			cell.label = @"Server";
+			cell.text = @"";
+		} else if( indexPath.row == 1 ) {
+			cell.label = @"Port";
+			cell.text = @"";
+		} else if( indexPath.row == 2 ) {
+			cell.label = @"Use SSL";
+			cell.text = @"";
+		}
+	} else if( indexPath.section == 1 ) {
+		if ( indexPath.row == 0 ) {
+			cell.label = @"Nickname";
+			cell.text = @"";
+		} else if( indexPath.row == 1 ) {
+			cell.label = @"Alternates";
+			cell.text = @"";
+		} else if( indexPath.row == 2 ) {
+			cell.label = @"Real Name";
+			cell.text = @"";
+		}
+	} else if( indexPath.section == 2 ) {
+		if ( indexPath.row == 0 ) {
+			cell.label = @"Username";
+			cell.text = @"";
+		} else if( indexPath.row == 1 ) {
+			cell.label = @"Password";
+			cell.text = @"";
+		} else if( indexPath.row == 2 ) {
+			cell.label = @"Nick Password";
+			cell.text = @"";
+		}
+	} else if( indexPath.section == 3 ) {
+		if ( indexPath.row == 0 ) {
+			cell.label = @"Connect";
+			cell.text = @"";
+		} else if( indexPath.row == 1 ) {
+			cell.label = @"Join Rooms";
+			cell.text = @"";
+		}
+	}
+
+	return cell;
 }
 @end
