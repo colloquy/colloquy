@@ -195,10 +195,10 @@
 
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
-	sheet.title = [NSString stringWithFormat:@"Do you want to connect\nto \"%@\"?", connection.server];
+	sheet.title = [NSString stringWithFormat:NSLocalizedString(@"Do you want to connect\nto \"%@\"?", @"Confirm connect action sheet title"), connection.server];
 
-	[sheet addButtonWithTitle:@"Connect"];
-	[sheet addButtonWithTitle:@"Cancel"];
+	[sheet addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
+	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	sheet.cancelButtonIndex = 1;
 
@@ -211,10 +211,10 @@
 
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
-	sheet.title = [NSString stringWithFormat:@"Do you want to disconnect\nfrom \"%@\"?", connection.server];
+	sheet.title = [NSString stringWithFormat:NSLocalizedString(@"Do you want to disconnect\nfrom \"%@\"?", @"Confirm disconnect action sheet title"), connection.server];
 
-	[sheet addButtonWithTitle:@"Disconnect"];
-	[sheet addButtonWithTitle:@"Cancel"];
+	[sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
+	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	sheet.destructiveButtonIndex = 0;
 	sheet.cancelButtonIndex = 1;

@@ -20,7 +20,7 @@
 
 	[_deleteButton setTitleShadowColor:[UIColor colorWithWhite:0. alpha:(1. / 3.)] forState:UIControlStateNormal];
 
-	[_deleteButton setTitle:@"Delete Connection" forState:UIControlStateNormal];
+	[_deleteButton setTitle:NSLocalizedString(@"Delete", @"Delete button title") forState:UIControlStateNormal];
 
 	UIImage *_deleteButtonImage = [[UIImage imageNamed:@"deleteButtonNormal.png"] stretchableImageWithLeftCapWidth:6. topCapHeight:0.];
 	[_deleteButton setBackgroundImage:_deleteButtonImage forState:UIControlStateNormal];

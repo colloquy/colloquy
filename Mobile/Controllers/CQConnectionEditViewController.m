@@ -120,20 +120,20 @@
 		cell.textField.delegate = self;
 
 		if (indexPath.row == 0) {
-			cell.label = @"Server";
+			cell.label = NSLocalizedString(@"Server", @"Server connection setting label");
 			cell.text = _connection.server;
 			cell.textField.placeholder = @"irc.example.com";
 			cell.textField.keyboardType = UIKeyboardTypeURL;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 		} else if (indexPath.row == 1) {
-			cell.label = @"Nickname";
+			cell.label = NSLocalizedString(@"Nickname", @"Nickname connection setting label");
 			cell.text = _connection.nickname;
 			cell.textField.placeholder = NSUserName();
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 		} else if (indexPath.row == 2) {
-			cell.label = @"Real Name";
+			cell.label = NSLocalizedString(@"Real Name", @"Real Name connection setting label");
 			cell.text = _connection.realName;
 			cell.textField.placeholder = NSFullUserName();
 		}
@@ -143,13 +143,13 @@
 		if (indexPath.row == 0) {
 			CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 
-			cell.label = @"Connect on Launch";
+			cell.label = NSLocalizedString(@"Connect on Launch", @"Connect on Launch connection setting label");
 
 			return cell;
 		} else if (indexPath.row == 1) {
 			CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
-			cell.label = @"Join Rooms";
+			cell.label = NSLocalizedString(@"Join Rooms", @"Join Rooms connection setting label");
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 			return cell;
@@ -157,14 +157,14 @@
 	} else if (indexPath.section == 2 && indexPath.row == 0) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
-		cell.label = @"Advanced";
+		cell.label = NSLocalizedString(@"Advanced", @"Advanced connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		return cell;
 	} else if (indexPath.section == 3 && indexPath.row == 0) {
 		CQPreferencesDeleteCell *cell = [CQPreferencesDeleteCell reusableTableViewCellInTableView:tableView];
 
-		cell.text = @"Delete Connection";
+		cell.text = NSLocalizedString(@"Delete Connection", @"Delete Connection button title");
 
 		return cell;
 	}

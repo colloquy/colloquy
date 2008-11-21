@@ -102,7 +102,7 @@
 		if (indexPath.row == 0) {
 			CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
-			cell.label = @"Server Port";
+			cell.label = NSLocalizedString(@"Server Port", @"Server Port connection setting label");
 			cell.text = @"";
 			cell.textField.placeholder = @"6667";
 			cell.textField.keyboardType = UIKeyboardTypeNumberPad;
@@ -113,7 +113,7 @@
 		} else if (indexPath.row == 1) {
 			CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 
-			cell.label = @"Use SSL";
+			cell.label = NSLocalizedString(@"Use SSL", @"Use SSL connection setting label");
 
 			return cell;
 		}
@@ -121,7 +121,7 @@
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
 		if(indexPath.row == 0) {
-			cell.label = @"Username";
+			cell.label = NSLocalizedString(@"Username", @"Username connection setting label");
 			cell.text = @"";
 
 			UIDevice *device = [UIDevice currentDevice];
@@ -137,18 +137,18 @@
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textField.delegate = self;
 		} else if (indexPath.row == 1) {
-			cell.label = @"Password";
+			cell.label = NSLocalizedString(@"Password", @"Password connection setting label");
 			cell.text = @"";
-			cell.textField.placeholder = @"Optional";
+			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
 			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textField.secureTextEntry = YES;
 			cell.textField.delegate = self;
 		} else if (indexPath.row == 2) {
-			cell.label = @"Nick Pass.";
+			cell.label = NSLocalizedString(@"Nick Pass.", @"Nickname Password connection setting label");
 			cell.text = @"";
-			cell.textField.placeholder = @"Optional";
+			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
 			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -160,7 +160,7 @@
 	} else if (indexPath.section == 2 && indexPath.row == 0) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
-		cell.label = @"Nicknames";
+		cell.label = NSLocalizedString(@"Nicknames", @"Nicknames connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		cell.textField.placeholder = [NSString stringWithFormat:@"%@_, %1$@__, %1$@___", NSUserName()];
 		cell.textField.delegate = self;
@@ -169,7 +169,7 @@
 	} else if (indexPath.section == 3 && indexPath.row == 0) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
-		cell.label = @"Commands";
+		cell.label = NSLocalizedString(@"Commands", @"Commands connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		return cell;
