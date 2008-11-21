@@ -50,9 +50,7 @@
 - (void) takeValuesFromConnection:(MVChatConnection *) connection {
 	self.server = connection.server;
 	self.nickname = connection.nickname;
-
-	NSDictionary *extraInfo = [connection.persistentInformation objectForKey:@"CQConnectionsControllerExtraInfo"];
-	self.connectDate = [extraInfo objectForKey:@"connectDate"];
+	self.connectDate = connection.connectedDate;
 
 	switch( connection.status ) {
 	default:

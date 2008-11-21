@@ -7,7 +7,7 @@
 
 @implementation CQConnectionsViewController
 - (id) init {
-	if( ! ( self = [super initWithNibName:@"ConnectionsView" bundle:nil] ) )
+	if (!(self = [super initWithStyle:UITableViewStylePlain]))
 		return nil;
 
 	self.title = NSLocalizedString(@"Connections", @"Connections view title");
@@ -16,8 +16,7 @@
 }
 
 - (void) dealloc {
-	[connectionsTableView release];
-	[connectionCreationViewController release];
+	[_connectionCreationViewController release];
 	[_connectTimeUpdateTimer release];
 	[super dealloc];
 }
@@ -33,9 +32,9 @@
 }
 
 - (void) didReceiveMemoryWarning {
-	if( !connectionCreationViewController.view.superview ) {
-		[connectionCreationViewController release];
-		connectionCreationViewController = nil;
+	if( !_connectionCreationViewController.view.superview ) {
+		[_connectionCreationViewController release];
+		_connectionCreationViewController = nil;
 	}
 
 	[super didReceiveMemoryWarning];
@@ -44,15 +43,15 @@
 #pragma mark -
 
 - (void) makeNewConnection:(id) sender {
-	if( !connectionCreationViewController )
-		connectionCreationViewController = [[CQConnectionCreationViewController alloc] init];
-	[self presentModalViewController:connectionCreationViewController animated:YES];
+	if( !_connectionCreationViewController )
+		_connectionCreationViewController = [[CQConnectionCreationViewController alloc] init];
+	[self presentModalViewController:_connectionCreationViewController animated:YES];
 }
 
 #pragma mark -
 
 - (void) _updateConnectTimes {
-	NSArray *visibleCells = [connectionsTableView visibleCells];
+	NSArray *visibleCells = [self.tableView visibleCells];
 	for( CQConnectionTableCell *cell in visibleCells )
 		[cell updateConnectTime];
 }
@@ -60,7 +59,7 @@
 - (void) _refreshConnection:(MVChatConnection *) connection {
 	NSUInteger index = [[CQConnectionsController defaultController].connections indexOfObjectIdenticalTo:connection];
 	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-	CQConnectionTableCell *cell = (CQConnectionTableCell *)[connectionsTableView cellForRowAtIndexPath:indexPath];
+	CQConnectionTableCell *cell = (CQConnectionTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
 	[cell takeValuesFromConnection:connection];
 }
 
@@ -81,16 +80,13 @@
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL) animated {
+	[super viewWillAppear:animated];
 	[self _startUpdatingConnectTimes];
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
+	[super viewWillDisappear:animated];
 	[self _stopUpdatingConnectTimes];
-}
-
-- (void) setEditing:(BOOL) editing animated:(BOOL) animated {
-	[super setEditing:editing animated:animated];
-	[connectionsTableView setEditing:editing animated:animated];
 }
 
 #pragma mark -
@@ -114,10 +110,10 @@
 	[self _deregisterNotificationsForConnection:connection];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didChange: ) name:MVChatConnectionNicknameAcceptedNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _willConnect: ) name:MVChatConnectionWillConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didChange: ) name:MVChatConnectionWillConnectNotification object:connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didChange: ) name:MVChatConnectionDidConnectNotification object:connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didChange: ) name:MVChatConnectionDidNotConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didDisconnect: ) name:MVChatConnectionDidDisconnectNotification object:connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didChange: ) name:MVChatConnectionDidDisconnectNotification object:connection];
 
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred : ) name:MVChatConnectionErrorNotification object:connection];
 
@@ -126,72 +122,26 @@
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPublicKeyVerification: ) name:MVChatConnectionNeedPublicKeyVerificationNotification object:connection];
 }
 
-- (void) _willConnect:(NSNotification *) notification {
-	MVChatConnection *connection = notification.object;
-	[self _refreshConnection:connection];
-
-	NSDictionary *extraInfo = [connection.persistentInformation objectForKey:@"CQConnectionsControllerExtraInfo"];
-	NSArray *rooms = [extraInfo objectForKey:@"rooms"];
-	if( [rooms count] )
-		[connection joinChatRoomsNamed:rooms];
-}
-
-- (void) _didConnect:(NSNotification *) notification {
-	MVChatConnection *connection = notification.object;
-	NSMutableDictionary *persistentInformation = [connection.persistentInformation mutableCopy];
-	NSMutableDictionary *extraInfo = [[persistentInformation objectForKey:@"CQConnectionsControllerExtraInfo"] mutableCopy];
-	if( ! extraInfo ) extraInfo = [[NSMutableDictionary alloc] init];
-
-	[extraInfo setObject:[NSDate date] forKey:@"connectDate"];
-
-	[persistentInformation setObject:extraInfo forKey:@"CQConnectionsControllerExtraInfo"];
-	[extraInfo release];
-
-	[connection setPersistentInformation:persistentInformation];
-	[persistentInformation release];
-
-	[self _refreshConnection:connection];
-}
-
 - (void) _didChange:(NSNotification *) notification {
 	[self _refreshConnection:notification.object];
-}
-
-- (void) _didDisconnect:(NSNotification *) notification {
-	MVChatConnection *connection = notification.object;
-	NSMutableDictionary *persistentInformation = [connection.persistentInformation mutableCopy];
-	NSMutableDictionary *extraInfo = [[persistentInformation objectForKey:@"CQConnectionsControllerExtraInfo"] mutableCopy];
-
-	if( extraInfo ) {
-		[extraInfo removeObjectForKey:@"connectDate"];
-
-		[persistentInformation setObject:extraInfo forKey:@"CQConnectionsControllerExtraInfo"];
-		[extraInfo release];
-
-		[connection setPersistentInformation:persistentInformation];
-	}
-
-	[persistentInformation release];
-
-	[self _refreshConnection:connection];
 }
 
 #pragma mark -
 
 - (void) addConnection:(MVChatConnection *) connection {
 	[self _registerNotificationsForConnection:connection];
-	[connectionsTableView reloadData];
+	[self.tableView reloadData];
 }
 
 - (void) removeConnection:(MVChatConnection *) connection {
 	[self _deregisterNotificationsForConnection:connection];
-	[connectionsTableView reloadData];
+	[self.tableView reloadData];
 }
 
 #pragma mark -
 
 - (void) confirmConnect {
-	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:[connectionsTableView indexPathForSelectedRow].row];
+	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:[self.tableView indexPathForSelectedRow].row];
 
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
@@ -207,7 +157,7 @@
 }
 
 - (void) confirmDisconnect {
-	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:[connectionsTableView indexPathForSelectedRow].row];
+	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:[self.tableView indexPathForSelectedRow].row];
 
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
@@ -224,7 +174,7 @@
 }
 
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
-	NSIndexPath *selectedIndexPath = [connectionsTableView indexPathForSelectedRow];
+	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
 
 	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:selectedIndexPath.row];
 	if( connection.status == MVChatConnectionDisconnectedStatus && actionSheet.cancelButtonIndex != buttonIndex )
@@ -232,14 +182,10 @@
 	else if( actionSheet.destructiveButtonIndex == buttonIndex )
 		[connection disconnect];
 
-	[connectionsTableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
+	[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
 }
 
 #pragma mark -
-
-- (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
-	return 1;
-}
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
 	return [CQConnectionsController defaultController].connections.count;
@@ -281,7 +227,7 @@
 	if( editingStyle != UITableViewCellEditingStyleDelete )
 		return;
 	[[CQConnectionsController defaultController] removeConnectionAtIndex:indexPath.row];
-	[connectionsTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
+	[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 }
 
 - (void) tableView:(UITableView *) tableView moveRowAtIndexPath:(NSIndexPath *) fromIndexPath toIndexPath:(NSIndexPath *) toIndexPath {

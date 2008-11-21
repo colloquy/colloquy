@@ -7,7 +7,7 @@
 
 @implementation CQConnectionAdvancedEditController
 - (id) init {
-	if (!(self = [super initWithNibName:@"ConnectionAdvancedEdit" bundle:nil]))
+	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 
 	self.title = NSLocalizedString(@"Advanced", @"Advanced view title");
@@ -16,31 +16,8 @@
 }
 
 - (void) dealloc {
-	[editTableView release];
 	[_connection release];
-	[_currentEditingTextField resignFirstResponder];
 	[super dealloc];
-}
-
-#pragma mark -
-
-- (void) viewDidLoad {
-	[super viewDidLoad];
-
-	editTableView.sectionHeaderHeight = 10.;
-	editTableView.sectionFooterHeight = 10.;
-}
-
-- (void) viewWillAppear:(BOOL) animated {
-	[editTableView deselectRowAtIndexPath:[editTableView indexPathForSelectedRow] animated:NO];
-}
-
-- (void) viewDidAppear:(BOOL)animated {
-	[editTableView flashScrollIndicators];
-}
-
-- (void) viewWillDisappear:(BOOL)animated {
-	[_currentEditingTextField resignFirstResponder];
 }
 
 #pragma mark -
@@ -54,7 +31,7 @@
 	_connection = [connection retain];
 	[old release];
 
-	[editTableView reloadData];
+	[self.tableView reloadData];
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
@@ -107,7 +84,6 @@
 			cell.textField.placeholder = @"6667";
 			cell.textField.keyboardType = UIKeyboardTypeNumberPad;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-			cell.textField.delegate = self;
 
 			return cell;
 		} else if (indexPath.row == 1) {
@@ -135,7 +111,6 @@
 			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-			cell.textField.delegate = self;
 		} else if (indexPath.row == 1) {
 			cell.label = NSLocalizedString(@"Password", @"Password connection setting label");
 			cell.text = @"";
@@ -144,7 +119,6 @@
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textField.secureTextEntry = YES;
-			cell.textField.delegate = self;
 		} else if (indexPath.row == 2) {
 			cell.label = NSLocalizedString(@"Nick Pass.", @"Nickname Password connection setting label");
 			cell.text = @"";
@@ -153,7 +127,6 @@
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textField.secureTextEntry = YES;
-			cell.textField.delegate = self;
 		}
 
 		return cell;
@@ -163,7 +136,6 @@
 		cell.label = NSLocalizedString(@"Nicknames", @"Nicknames connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		cell.textField.placeholder = [NSString stringWithFormat:@"%@_, %1$@__, %1$@___", NSUserName()];
-		cell.textField.delegate = self;
 
 		return cell;
 	} else if (indexPath.section == 3 && indexPath.row == 0) {
@@ -177,21 +149,5 @@
 
 	NSAssert(NO, @"Should not reach this point.");
 	return nil;
-}
-
-- (void) textFieldDidBeginEditing:(UITextField *) textField {
-	id old = _currentEditingTextField;
-	_currentEditingTextField = [textField retain];
-	[old release];
-}
-
-- (BOOL) textFieldShouldReturn:(UITextField *) textField {
-	[textField resignFirstResponder];
-	return YES;
-}
-
-- (void) textFieldDidEndEditing:(UITextField *) textField {
-	[_currentEditingTextField release];
-	_currentEditingTextField = nil;
 }
 @end

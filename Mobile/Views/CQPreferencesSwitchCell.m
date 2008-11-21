@@ -54,6 +54,8 @@
 }
 
 - (void) prepareForReuse {
+	[super prepareForReuse];
+
 	self.label = @"";
 	self.on = NO;
 }

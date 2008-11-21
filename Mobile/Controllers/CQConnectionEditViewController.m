@@ -9,37 +9,14 @@
 
 @implementation CQConnectionEditViewController
 - (id) init {
-	if (!(self = [super initWithNibName:@"ConnectionEdit" bundle:nil]))
+	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 	return self;
 }
 
 - (void) dealloc {
-	[editTableView release];
 	[_connection release];
-	[_currentEditingTextField resignFirstResponder];
 	[super dealloc];
-}
-
-#pragma mark -
-
-- (void) viewDidLoad {
-	[super viewDidLoad];
-
-	editTableView.sectionHeaderHeight = 10.;
-	editTableView.sectionFooterHeight = 10.;
-}
-
-- (void) viewWillAppear:(BOOL) animated {
-	[editTableView deselectRowAtIndexPath:[editTableView indexPathForSelectedRow] animated:NO];
-}
-
-- (void) viewDidAppear:(BOOL)animated {
-	[editTableView flashScrollIndicators];
-}
-
-- (void) viewWillDisappear:(BOOL)animated {
-	[_currentEditingTextField resignFirstResponder];
 }
 
 #pragma mark -
@@ -51,7 +28,7 @@
 		return;
 
 	_newConnection = newConnection;
-	advancedEditViewController.newConnection = newConnection;
+	_advancedEditViewController.newConnection = newConnection;
 
 	if (_newConnection) self.title = NSLocalizedString(@"New Connection", @"New Connection view title");
 	else self.title = _connection.server;
@@ -67,7 +44,7 @@
 	if (!_newConnection)
 		self.title = connection.server;
 
-	[editTableView reloadData];
+	[self.tableView reloadData];
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
@@ -88,13 +65,13 @@
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section == 2 && indexPath.row == 0) {
-		if (!advancedEditViewController) {
-			advancedEditViewController = [[CQConnectionAdvancedEditController alloc] init];
-			advancedEditViewController.navigationItem.prompt = self.navigationItem.prompt;
-			advancedEditViewController.newConnection = self.newConnection;
+		if (!_advancedEditViewController) {
+			_advancedEditViewController = [[CQConnectionAdvancedEditController alloc] init];
+			_advancedEditViewController.navigationItem.prompt = self.navigationItem.prompt;
+			_advancedEditViewController.newConnection = self.newConnection;
 		}
 
-		[self.navigationController pushViewController:advancedEditViewController animated:YES];
+		[self.navigationController pushViewController:_advancedEditViewController animated:YES];
 
 		return indexPath;
 	}
@@ -116,26 +93,28 @@
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section == 0) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
-
-		cell.textField.delegate = self;
+		cell.target = self;
 
 		if (indexPath.row == 0) {
 			cell.label = NSLocalizedString(@"Server", @"Server connection setting label");
-			cell.text = _connection.server;
-			cell.textField.placeholder = @"irc.example.com";
+			cell.text = ([_connection.server isEqualToString:@"<<placeholder>>"] ? @"" : _connection.server);
+			cell.textField.placeholder = (_newConnection ? @"irc.example.com" : @"");
 			cell.textField.keyboardType = UIKeyboardTypeURL;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+			cell.textEditAction = @selector(serverChanged:);
 		} else if (indexPath.row == 1) {
 			cell.label = NSLocalizedString(@"Nickname", @"Nickname connection setting label");
-			cell.text = _connection.nickname;
+			cell.text = ([_connection.nickname isEqualToString:@"<<default>>"] ? @"" : _connection.nickname);
 			cell.textField.placeholder = NSUserName();
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+			cell.textEditAction = @selector(nicknameChanged:);
 		} else if (indexPath.row == 2) {
 			cell.label = NSLocalizedString(@"Real Name", @"Real Name connection setting label");
-			cell.text = _connection.realName;
+			cell.text = ([_connection.realName isEqualToString:@"<<default>>"] ? @"" : _connection.realName);
 			cell.textField.placeholder = NSFullUserName();
+			cell.textEditAction = @selector(realNameChanged:);
 		}
 
 		return cell;
@@ -173,19 +152,32 @@
 	return nil;
 }
 
-- (void) textFieldDidBeginEditing:(UITextField *) textField {
-	id old = _currentEditingTextField;
-	_currentEditingTextField = [textField retain];
-	[old release];
+- (void) serverChanged:(CQPreferencesTextCell *) sender {
+	if ([sender.text length] || _newConnection) {
+		_connection.server = ([sender.text length] ? sender.text : @"<<placeholder>>");
+		if (!_newConnection)
+			self.title = _connection.server;
+	}
+
+	if (self.navigationItem.rightBarButtonItem.tag == UIBarButtonSystemItemSave)
+		self.navigationItem.rightBarButtonItem.enabled = ![_connection.server isEqualToString:@"<<placeholder>>"];
+
+	[self.tableView reloadData];
 }
 
-- (BOOL) textFieldShouldReturn:(UITextField *) textField {
-	[textField resignFirstResponder];
-	return YES;
+- (void) nicknameChanged:(CQPreferencesTextCell *) sender {
+	if ([sender.text length])
+		_connection.nickname = sender.text;
+	else _connection.nickname = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
+
+	[self.tableView reloadData];
 }
 
-- (void) textFieldDidEndEditing:(UITextField *) textField {
-	[_currentEditingTextField release];
-	_currentEditingTextField = nil;
+- (void) realNameChanged:(CQPreferencesTextCell *) sender {
+	if ([sender.text length])
+		_connection.realName = sender.text;
+	else _connection.realName = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
+
+	[self.tableView reloadData];
 }
 @end

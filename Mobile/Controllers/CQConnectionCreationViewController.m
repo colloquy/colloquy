@@ -13,34 +13,40 @@
 }
 
 - (void) dealloc {
-	[editViewController release];
+	[_editViewController release];
 	[super dealloc];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
-	editViewController = [[CQConnectionEditViewController alloc] init];
-	editViewController.newConnection = YES;
+	_editViewController = [[CQConnectionEditViewController alloc] init];
+	_editViewController.newConnection = YES;
 
 	MVChatConnection *connection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
-	editViewController.connection = connection;
+	connection.server = @"<<placeholder>>";
+	connection.nickname = @"<<default>>";
+	connection.realName = @"<<default>>";
+	connection.serverPort = 0;
+
+	_editViewController.connection = connection;
 	[connection release];
 
 	UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector( cancel:)];
-	editViewController.navigationItem.leftBarButtonItem = cancelItem;
+	_editViewController.navigationItem.leftBarButtonItem = cancelItem;
 	[cancelItem release];
 
 	UIBarButtonItem *saveItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector( commit:)];
-	editViewController.navigationItem.rightBarButtonItem = saveItem;
+	_editViewController.navigationItem.rightBarButtonItem = saveItem;
 	[saveItem release];
 
-	editViewController.navigationItem.rightBarButtonItem.enabled = NO;
+	_editViewController.navigationItem.rightBarButtonItem.tag = UIBarButtonSystemItemSave;
+	_editViewController.navigationItem.rightBarButtonItem.enabled = NO;
 
-	[self pushViewController:editViewController animated:NO];
+	[self pushViewController:_editViewController animated:NO];
 }
 
 - (void) viewDidDisappear:(BOOL) animated {
-	[editViewController release];
-	editViewController = nil;
+	[_editViewController release];
+	_editViewController = nil;
 }
 
 - (void) cancel:(id) sender {

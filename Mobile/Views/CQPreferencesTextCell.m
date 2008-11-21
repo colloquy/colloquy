@@ -17,6 +17,7 @@
 	_label.backgroundColor = nil;
 	_label.opaque = NO;
 
+	_textField.delegate = self;
 	_textField.textAlignment = UITextAlignmentLeft;
 	_textField.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
 	_textField.font = [UIFont systemFontOfSize:14.];
@@ -33,6 +34,7 @@
 }
 
 - (void) dealloc {
+	[_textField resignFirstResponder];
 	[_textField release];
 	[_label release];
 	[super dealloc];
@@ -73,14 +75,20 @@
 }
 
 - (void) prepareForReuse {
+	[super prepareForReuse];
+
 	self.label = @"";
 	self.text = @"";
+	self.target = nil;
+	self.textEditAction = NULL;
 	self.accessoryType = UITableViewCellAccessoryNone;
 	self.textField.placeholder = @"";
 	self.textField.secureTextEntry = NO;
 	self.textField.keyboardType = UIKeyboardTypeDefault;
 	self.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
 	self.textField.autocorrectionType = UITextAutocorrectionTypeDefault;
+
+	[self.textField resignFirstResponder];
 }
 
 - (void) layoutSubviews {
@@ -118,5 +126,21 @@
 		frame.size.width = (_textField.frame.origin.x - frame.origin.x - 10.);
 	else frame.size.width = (contentRect.size.width - frame.origin.x - 10.);
 	_label.frame = frame;
+}
+
+@synthesize textEditAction = _textEditAction;
+
+- (BOOL) textFieldShouldBeginEditing:(UITextField *) textField {
+	return self.accessoryType == UITableViewCellAccessoryNone;
+}
+
+- (BOOL) textFieldShouldReturn:(UITextField *) textField {
+	[textField resignFirstResponder];
+	return YES;
+}
+
+- (void) textFieldDidEndEditing:(UITextField *) textField {
+	if (self.textEditAction && (!self.target || [self.target respondsToSelector:self.textEditAction]))
+		[[UIApplication sharedApplication] sendAction:self.textEditAction to:self.target from:self forEvent:nil];
 }
 @end

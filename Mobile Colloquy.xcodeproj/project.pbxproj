@@ -59,8 +59,6 @@
 		1C61FEA10ED24BA40016F968 /* deleteButtonNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C61FE9F0ED24BA40016F968 /* deleteButtonNormal.png */; };
 		1C61FEA20ED24BA40016F968 /* deleteButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C61FEA00ED24BA40016F968 /* deleteButtonPressed.png */; };
 		1C6E3D220ED1CEB6001822BD /* CQConnectionAdvancedEditController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6E3D210ED1CEB6001822BD /* CQConnectionAdvancedEditController.m */; };
-		1C6E3D260ED1CF49001822BD /* ConnectionAdvancedEdit.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C6E3D250ED1CF49001822BD /* ConnectionAdvancedEdit.xib */; };
-		1C70E8F30DFED49A000A83A0 /* ConnectionEdit.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C70E8F20DFED49A000A83A0 /* ConnectionEdit.xib */; };
 		1C7EBE6D0E01816C0018B0C8 /* CQPreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7EBE6C0E01816C0018B0C8 /* CQPreferencesTextCell.m */; };
 		1C82C1970D83CF1D009ABD9F /* CQChatTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1950D83CF1D009ABD9F /* CQChatTableCell.m */; };
 		1C82C1A30D83D133009ABD9F /* CQConnectionTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1A20D83D133009ABD9F /* CQConnectionTableCell.m */; };
@@ -182,8 +180,6 @@
 		1C61FEA00ED24BA40016F968 /* deleteButtonPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deleteButtonPressed.png; sourceTree = "<group>"; };
 		1C6E3D200ED1CEB6001822BD /* CQConnectionAdvancedEditController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionAdvancedEditController.h; sourceTree = "<group>"; };
 		1C6E3D210ED1CEB6001822BD /* CQConnectionAdvancedEditController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionAdvancedEditController.m; sourceTree = "<group>"; };
-		1C6E3D250ED1CF49001822BD /* ConnectionAdvancedEdit.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConnectionAdvancedEdit.xib; sourceTree = "<group>"; };
-		1C70E8F20DFED49A000A83A0 /* ConnectionEdit.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConnectionEdit.xib; sourceTree = "<group>"; };
 		1C7EBE6B0E01816C0018B0C8 /* CQPreferencesTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPreferencesTextCell.h; sourceTree = "<group>"; };
 		1C7EBE6C0E01816C0018B0C8 /* CQPreferencesTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesTextCell.m; sourceTree = "<group>"; };
 		1C82C1950D83CF1D009ABD9F /* CQChatTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatTableCell.m; sourceTree = "<group>"; };
@@ -450,8 +446,6 @@
 				1C09313A0D80C8F600A2705D /* Defaults.plist */,
 				1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */,
 				1CA91CD20DFC992A002DDBB4 /* ConnectionsView.xib */,
-				1C70E8F20DFED49A000A83A0 /* ConnectionEdit.xib */,
-				1C6E3D250ED1CF49001822BD /* ConnectionAdvancedEdit.xib */,
 				1C0937320D80E72F00A2705D /* icon.png */,
 				1CB33C970D882BB000EC4E38 /* connections.png */,
 				1CB33C980D882BB000EC4E38 /* buddies.png */,
@@ -541,8 +535,6 @@
 				1CD949830D8E18DB00756ACD /* roomIcon.png in Resources */,
 				1CA91CCA0DFC976D002DDBB4 /* Colloquy.xib in Resources */,
 				1CA91CD30DFC992A002DDBB4 /* ConnectionsView.xib in Resources */,
-				1C70E8F30DFED49A000A83A0 /* ConnectionEdit.xib in Resources */,
-				1C6E3D260ED1CF49001822BD /* ConnectionAdvancedEdit.xib in Resources */,
 				1C61FEA10ED24BA40016F968 /* deleteButtonNormal.png in Resources */,
 				1C61FEA20ED24BA40016F968 /* deleteButtonPressed.png in Resources */,
 			);

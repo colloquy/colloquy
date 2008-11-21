@@ -13,8 +13,8 @@
 	@private
 	NSMutableArray *_connections;
 
-	IBOutlet CQConnectionsViewController *connectionsViewController;
-	IBOutlet CQConnectionEditViewController *editViewController;
+	CQConnectionsViewController *_connectionsViewController;
+	CQConnectionEditViewController *_editViewController;
 }
 + (CQConnectionsController *) defaultController;
 

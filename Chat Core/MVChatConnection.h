@@ -109,6 +109,8 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSMutableDictionary *_persistentInformation;
 	NSError *_lastError;
 
+	NSDate *_connectedDate;
+
 	MVChatConnectionProxy _proxy;
 	NSString *_proxyServer;
 	NSString *_proxyUsername;
@@ -194,6 +196,7 @@ extern NSString *MVChatConnectionErrorDomain;
 @property(copy) MVChatString *awayStatusMessage;
 
 @property(readonly, getter=isConnected) BOOL connected;
+@property(readonly) NSDate *connectedDate;
 @property(readonly, getter=isWaitingToReconnect) BOOL waitingToReconnect;
 @property(readonly) MVChatConnectionStatus status;
 @property(readonly) unsigned int lag;
@@ -337,6 +340,7 @@ extern NSString *MVChatConnectionErrorDomain;
 - (BOOL) isSecure;
 - (BOOL) isConnected;
 - (BOOL) isWaitingToReconnect;
+- (NSDate *) connectedDate;
 
 #pragma mark -
 

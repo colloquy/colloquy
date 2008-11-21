@@ -826,6 +826,10 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
+- (NSDate *) connectedDate {
+	return _connectedDate;
+}
+
 - (BOOL) isConnected {
 	return ( _status == MVChatConnectionConnectedStatus );
 }
@@ -896,6 +900,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	[[self localUser] _setDateConnected:[NSDate date]];
 	[[self localUser] _setDateDisconnected:nil];
 
+	MVSafeAdoptAssign(&_connectedDate, [[NSDate alloc] init]);
+
 	_status = MVChatConnectionConnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidConnectNotification object:self];
 
@@ -935,6 +941,8 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	[[self localUser] _setStatus:MVChatUserOfflineStatus];
 	[[self localUser] _setDateDisconnected:[NSDate date]];
+
+	MVSafeAdoptAssign(&_connectedDate, nil);
 
 	if( _status != MVChatConnectionSuspendedStatus && _status != MVChatConnectionServerDisconnectedStatus )
 		_status = MVChatConnectionDisconnectedStatus;

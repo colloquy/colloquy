@@ -32,9 +32,6 @@
 
 	_connections = [[NSMutableArray alloc] init];
 
-	connectionsViewController = [[CQConnectionsViewController alloc] init];
-	[self pushViewController:connectionsViewController animated:NO];
-
 	[self _loadConnectionList];
 
 	return self;
@@ -42,17 +39,28 @@
 
 - (void) dealloc {
 	[_connections release];
-	[connectionsViewController release];
-	[editViewController release];
+	[_connectionsViewController release];
+	[_editViewController release];
 	[super dealloc];
 }
 
 #pragma mark -
 
+- (void) viewDidLoad {
+	if (!_connectionsViewController)
+		_connectionsViewController = [[CQConnectionsViewController alloc] init];
+	[self pushViewController:_connectionsViewController animated:NO];
+
+	for (MVChatConnection *connection in _connections)
+		[_connectionsViewController addConnection:connection];
+}
+
+#pragma mark -
+
 - (void) didReceiveMemoryWarning {
-	if( !editViewController.view.superview ) {
-		[editViewController release];
-		editViewController = nil;
+	if( !_editViewController.view.superview ) {
+		[_editViewController release];
+		_editViewController = nil;
 	}
 
 	[super didReceiveMemoryWarning];
@@ -61,246 +69,33 @@
 #pragma mark -
 
 - (void) editConnection:(MVChatConnection *) connection {
-	if( !editViewController )
-		editViewController = [[CQConnectionEditViewController alloc] init];
-	[editViewController setConnection:connection];
-	[self pushViewController:editViewController animated:YES];
+	if( !_editViewController )
+		_editViewController = [[CQConnectionEditViewController alloc] init];
+	[_editViewController setConnection:connection];
+	[self pushViewController:_editViewController animated:YES];
 }
 
 #pragma mark -
 
-/*
-- (void) _createPreferenceCellsIfNeeded {
-	if( _autoConnectCell )
-		return;
-
-	// Create all of our cells for the first time.
-
-	_autoConnectCell = [[UIPreferencesControlTableCell alloc] init];
-	[_autoConnectCell setTitle:@"Connect on Launch"];
-
-	UISwitchControl *switchControl = [[UISwitchControl alloc] initWithFrame:CGRectMake(200., 10., 50., 20.)];
-	[_autoConnectCell setControl:switchControl];
-	[switchControl release];
-
-	_serverCell = [[UIPreferencesTextTableCell alloc] init];
-	[_serverCell setTitle:@"Host Name"];
-	[_serverCell setPlaceHolderValue:@"irc.example.com"];
-	[[_serverCell textField] setAutoCapsType:0]; // no inital caps
-	[[_serverCell textField] setAutoCorrectionType:1]; // no correction
-	[[_serverCell textField] setPreferredKeyboardType:3]; // url keyboard
-
-	_serverPortCell = [[UIPreferencesTextTableCell alloc] init];
-	[_serverPortCell setTitle:@"Port"];
-	[_serverPortCell setPlaceHolderValue:@"6667"];
-	[[_serverPortCell textField] setAutoCorrectionType:1]; // no correction
-	[[_serverPortCell textField] setPreferredKeyboardType:2]; // number keypad
-
-	_sslCell = [[UIPreferencesControlTableCell alloc] init];
-	[_sslCell setTitle:@"Uses SSL"];
-
-	switchControl = [[UISwitchControl alloc] initWithFrame:CGRectMake(200., 10., 50., 20.)];
-	[_sslCell setControl:switchControl];
-	[switchControl release];
-
-	_nicknameCell = [[UIPreferencesTextTableCell alloc] init];
-	[_nicknameCell setTitle:@"Nickname"];
-	[_nicknameCell setPlaceHolderValue:@"Required"];
-	[[_nicknameCell textField] setAutoCapsType:0]; // no inital caps
-
-	_nicknamePasswordCell = [[UIPreferencesTextTableCell alloc] init];
-	[_nicknamePasswordCell setTitle:@"Password"];
-	[_nicknamePasswordCell setPlaceHolderValue:@"Optional"];
-	[[_nicknamePasswordCell textField] setSecureTextEntry:YES];
-	[[_nicknamePasswordCell textField] setSecure:YES];
-
-	_alternateNicknamesCell = [[UIPreferencesTextTableCell alloc] init];
-	[_alternateNicknamesCell setTitle:@"Alternates"];
-	[_alternateNicknamesCell setPlaceHolderValue:@"First Second..."];
-	[[_alternateNicknamesCell textField] setAutoCapsType:0]; // no inital caps
-	[[_alternateNicknamesCell textField] setAutoCorrectionType:1]; // no correction
-
-	_usernameCell = [[UIPreferencesTextTableCell alloc] init];
-	[_usernameCell setTitle:@"User Name"];
-	[_usernameCell setPlaceHolderValue:@"Optional"];
-	[[_usernameCell textField] setAutoCapsType:0]; // no inital caps
-
-	_serverPasswordCell = [[UIPreferencesTextTableCell alloc] init];
-	[_serverPasswordCell setTitle:@"Password"];
-	[_serverPasswordCell setPlaceHolderValue:@"Optional"];
-	[[_serverPasswordCell textField] setSecureTextEntry:YES];
-	[[_serverPasswordCell textField] setSecure:YES];
-
-	_realNameCell = [[UIPreferencesTextTableCell alloc] init];
-	[_realNameCell setTitle:@"Real Name"];
-	[_realNameCell setPlaceHolderValue:@"Optional"];
-
-	_autoRoomsCell = [[UIPreferencesTextTableCell alloc] init];
-	[_autoRoomsCell setTitle:@"Join Rooms"];
-	[_autoRoomsCell setPlaceHolderValue:@"First Second..."];
-	[[_autoRoomsCell textField] setAutoCapsType:0]; // no inital caps
-	[[_autoRoomsCell textField] setAutoCorrectionType:1]; // no correction
+- (void) _deregisterNotificationsForConnection:(MVChatConnection *) connection {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionWillConnectNotification object:connection];
 }
 
-- (void) table:(UITableView *) table disclosureClickedForRow:(int) row {
-	[_editingConnection release];
-	_editingConnection = [[_connections objectAtIndex:row] retain];
+- (void) _registerNotificationsForConnection:(MVChatConnection *) connection {
+	// Remove any previous observers, to prevent registering twice.
+	[self _deregisterNotificationsForConnection:connection];
 
-	UINavigationItem *navigationItem = [[UINavigationItem alloc] initWithTitle:@"Edit"];
-	[_navigationBar pushNavigationItem:navigationItem];
-	[navigationItem release];
-
-	[self _createPreferenceCellsIfNeeded];
-
-	NSDictionary *extraInfo = [[_editingConnection persistentInformation] objectForKey:@"CQConnectionsControllerExtraInfo"];
-
-	NSNumber *automatic = [extraInfo objectForKey:@"automatic"];
-	[(UISwitchControl *)[_autoConnectCell control] setValue:( [automatic boolValue] ? 1. : 0. )];
-
-	[_serverCell setValue:[_editingConnection server]];
-	[_serverPortCell setValue:[NSString stringWithFormat:@"%hu", [_editingConnection serverPort]]];
-	[(UISwitchControl *)[_sslCell control] setValue:( [_editingConnection isSecure] ? 1. : 0. )];
-	[_nicknameCell setValue:[_editingConnection preferredNickname]];
-	[_nicknamePasswordCell setValue:[_editingConnection nicknamePassword]];
-	[_alternateNicknamesCell setValue:[[_editingConnection alternateNicknames] componentsJoinedByString:@" "]];
-	[_usernameCell setValue:[_editingConnection username]];
-	[_serverPasswordCell setValue:[_editingConnection password]];
-	[_realNameCell setValue:[_editingConnection realName]];
-
-	NSArray *autoRooms = [extraInfo objectForKey:@"rooms"];
-	[_autoRoomsCell setValue:[autoRooms componentsJoinedByString:@" "]];
-
-	[_settingsTable setKeyboardVisible:NO animated:NO];
-	[_settingsTable setBottomBufferHeight:5.];
-	[_settingsTable reloadData];
-
-	[_connectionsTable highlightRow:row];
-	[_navigationBar showLeftButton:nil withStyle:0 rightButton:@"Delete" withStyle:1];
-	[_transitionView transition:1 toView:_settingsTable];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:connection];
 }
 
-- (void) navigationBar:(UINavigationBar *) bar poppedItem:(UINavigationItem *) item {
-	[_settingsTable setKeyboardVisible:NO animated:NO];
-	[_settingsTable setBottomBufferHeight:5.];
+- (void) _willConnect:(NSNotification *) notification {
+	MVChatConnection *connection = notification.object;
+	NSDictionary *extraInfo = [connection.persistentInformation objectForKey:@"CQConnectionsControllerExtraInfo"];
 
-	[_connectionsTable selectRow:-1 byExtendingSelection:NO withFade:NO scrollingToVisible:NO];
-	[_navigationBar showLeftButton:[UIImage imageNamed:@"plus.png"] withStyle:0 rightButton:@"Done" withStyle:3];
-	[_transitionView transition:2 toView:_connectionsTable];
-
-	if( _newConnection )
-		_editingConnection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
-
-	if( _editingConnection ) {
-		NSMutableDictionary *persistentInformation = [[_editingConnection persistentInformation] mutableCopy];
-		NSMutableDictionary *extraInfo = [[persistentInformation objectForKey:@"CQConnectionsControllerExtraInfo"] mutableCopy];
-		if( ! extraInfo ) extraInfo = [[NSMutableDictionary alloc] init];
-
-		NSNumber *automatic = [NSNumber numberWithBool:( [(UISwitchControl *)[_autoConnectCell control] value] > 0. )];
-		[extraInfo setObject:automatic forKey:@"automatic"];
-
-		if( [[_serverCell value] length] )
-			[_editingConnection setServer:[_serverCell value]];
-
-		[_editingConnection setServerPort:[[_serverPortCell value] intValue]];
-		[_editingConnection setSecure:( [(UISwitchControl *)[_sslCell control] value] > 0. )];
-
-		if( [[_nicknameCell value] length] )
-			[_editingConnection setNickname:[_nicknameCell value]];
-
-		if( [[_alternateNicknamesCell value] length] )
-			[_editingConnection setAlternateNicknames:[[_alternateNicknamesCell value] componentsSeparatedByString:@" "]];
-		else [_editingConnection setAlternateNicknames:[NSArray array]];
-
-		if( [[_usernameCell value] length] )
-			[_editingConnection setUsername:[_usernameCell value]];
-
-		[_editingConnection setNicknamePassword:[[_nicknamePasswordCell value] length] ? [_nicknamePasswordCell value] : nil];
-		[_editingConnection setPassword:[[_serverPasswordCell value] length] ? [_serverPasswordCell value] : nil];
-		[_editingConnection setRealName:[_realNameCell value] ? [_realNameCell value] : @""];
-
-		if( [[_editingConnection nicknamePassword] length] )
-			[PSKeychainUtilities setPassword:[_editingConnection nicknamePassword] forHost:[_editingConnection server] username:[_editingConnection preferredNickname] port:0 protocol:[_editingConnection urlScheme]];
-		else [PSKeychainUtilities removePasswordForHost:[_editingConnection server] username:[_editingConnection preferredNickname] port:0 protocol:[_editingConnection urlScheme]];
-
-		if( [[_editingConnection password] length] )
-			[PSKeychainUtilities setPassword:[_editingConnection password] forHost:[_editingConnection server] username:[_editingConnection username] port:[_editingConnection serverPort] protocol:[_editingConnection urlScheme]];
-		else [PSKeychainUtilities removePasswordForHost:[_editingConnection server] username:[_editingConnection username] port:[_editingConnection serverPort] protocol:[_editingConnection urlScheme]];
-
-		NSArray *autoRooms = [[_autoRoomsCell value] componentsSeparatedByString:@" "];
-		if( autoRooms ) [extraInfo setValue:autoRooms forKey:@"rooms"];
-		else [extraInfo removeObjectForKey:@"rooms"];
-
-		[persistentInformation setObject:extraInfo forKey:@"CQConnectionsControllerExtraInfo"];
-		[extraInfo release];
-
-		[_editingConnection setPersistentInformation:persistentInformation];
-		[persistentInformation release];
-
-		if( _newConnection && [[_serverCell value] length] && [[_nicknameCell value] length] ) {
-			[self addConnection:_editingConnection];
-		} else {
-			[self _saveConnectionList];
-
-			unsigned index = [_connections indexOfObjectIdenticalTo:_editingConnection];
-			if( index != NSNotFound )
-				[_connectionsTable reloadCellAtRow:index column:0 animated:NO];
-			else [_connectionsTable reloadData];
-		}
-
-		[_editingConnection release];
-		_editingConnection = nil;
-	}
-
-	_newConnection = NO;
+	NSArray *rooms = [extraInfo objectForKey:@"rooms"];
+	if ([rooms count])
+		[connection joinChatRoomsNamed:rooms];
 }
-
-- (UIPreferencesTableCell *) preferencesTable:(UIPreferencesTable *) table cellForRow:(int) row inGroup:(int) group {
-	[self _createPreferenceCellsIfNeeded];
-
-	if( group == 0 ) {
-		switch( row ) {
-			case 0: return _serverCell;
-			case 1: return _serverPortCell;
-			case 2: return _sslCell;
-			default: return nil;
-		}
-	}
-
-	if( group == 1 ) {
-		switch( row ) {
-			case 0: return _realNameCell;
-			case 1: return _nicknameCell;
-			case 2: return _nicknamePasswordCell;
-			case 3: return _alternateNicknamesCell;
-			default: return nil;
-		}
-	}
-
-	if( group == 2 ) {
-		UIPreferencesTableCell *cell = [[UIPreferencesTableCell alloc] init];
-		[cell setTitle:@"The nickname password is used to authenicate with NickServ."];
-		return [cell autorelease];
-	}
-
-	if( group == 3 ) {
-		switch( row ) {
-			case 0: return _usernameCell;
-			case 1: return _serverPasswordCell;
-			default: return nil;
-		}
-	}
-
-	if( group == 4 ) {
-		switch( row ) {
-			case 0: return _autoConnectCell;
-			case 1: return _autoRoomsCell;
-			default: return nil;
-		}
-	}
-
-	return nil;
-}
-*/
 
 #pragma mark -
 
@@ -372,7 +167,7 @@
 
 		[_connections addObject:connection];
 
-		[connectionsViewController addConnection:connection];
+		[self _registerNotificationsForConnection:connection];
 
 		if( [[info objectForKey:@"automatic"] boolValue] )
 			[connection connect];
@@ -473,7 +268,9 @@
 
 	[_connections insertObject:connection atIndex:index];
 
-	[connectionsViewController addConnection:connection];
+	[_connectionsViewController addConnection:connection];
+
+	[self _registerNotificationsForConnection:connection];
 
 	[self _saveConnectionList];
 }
@@ -503,7 +300,9 @@
 
 	[connection disconnectWithReason:nil];
 
-	[connectionsViewController removeConnection:connection];
+	[_connectionsViewController removeConnection:connection];
+
+	[self _deregisterNotificationsForConnection:connection];
 
 	[connection release];
 
@@ -525,13 +324,17 @@
 
 	[oldConnection disconnectWithReason:nil];
 
-	[connectionsViewController removeConnection:oldConnection];
+	[_connectionsViewController removeConnection:oldConnection];
+
+	[self _deregisterNotificationsForConnection:oldConnection];
 
 	[oldConnection release];
 
 	[_connections replaceObjectAtIndex:index withObject:connection];
 
-	[connectionsViewController addConnection:connection];
+	[_connectionsViewController addConnection:connection];
+
+	[self _registerNotificationsForConnection:connection];
 
 	[self _saveConnectionList];
 }

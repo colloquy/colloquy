@@ -1,8 +1,6 @@
 @class MVChatConnection;
 
-@interface CQConnectionAdvancedEditController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate> {
-	IBOutlet UITableView *editTableView;
-	UITextField *_currentEditingTextField;
+@interface CQConnectionAdvancedEditController : UITableViewController {
 	MVChatConnection *_connection;
 	BOOL _newConnection;
 }
