@@ -90,8 +90,7 @@ static MVChatConnection *connectionForSection(NSInteger section) {
 	NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
 	id <CQChatViewController> chatViewController = [controllers objectAtIndex:indexPath.row];
 
-	CQChatTableCell *cell = (CQChatTableCell *)[tableView dequeueReusableCellWithIdentifier:@"CQChatTableCell"];
-	if( ! cell ) cell = [[[CQChatTableCell alloc] init] autorelease];
+	CQChatTableCell *cell = [CQChatTableCell reusableTableViewCellInTableView:tableView];
 
 	[cell takeValuesFromChatViewController:chatViewController];
 

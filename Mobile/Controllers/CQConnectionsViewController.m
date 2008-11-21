@@ -29,7 +29,7 @@
 	self.navigationItem.leftBarButtonItem = addItem;
 	[addItem release];
 
-	self.navigationItem.rightBarButtonItem = self.editButtonItem;	
+	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void) didReceiveMemoryWarning {
@@ -248,8 +248,7 @@
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:indexPath.row];
 
-	CQConnectionTableCell *cell = (CQConnectionTableCell *)[tableView dequeueReusableCellWithIdentifier:@"CQConnectionTableCell"];
-	if( ! cell ) cell = [[[CQConnectionTableCell alloc] initWithFrame:CGRectZero reuseIdentifier:@"CQConnectionTableCell"] autorelease];
+	CQConnectionTableCell *cell = [CQConnectionTableCell reusableTableViewCellInTableView:tableView];
 
 	[cell takeValuesFromConnection:connection];
 

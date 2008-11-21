@@ -12,7 +12,7 @@
 - (void) dealloc {
 	[tabBarController release];
 	[mainWindow release];
-    [super dealloc];
+	[super dealloc];
 }
 
 - (void) applicationDidFinishLaunching:(UIApplication *) application {

@@ -5,7 +5,7 @@
 	if( ! ( self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier] ) )
 		return nil;
 
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = nil;
 	self.opaque = NO;
 
 	_textField = [[UITextField alloc] initWithFrame:CGRectZero];
@@ -14,14 +14,16 @@
 	_label.font = [UIFont boldSystemFontOfSize:18.];
 	_label.textColor = self.textColor;
 	_label.highlightedTextColor = self.selectedTextColor;
-	_label.backgroundColor = [UIColor clearColor];
+	_label.backgroundColor = nil;
 	_label.opaque = NO;
 
 	_textField.textAlignment = UITextAlignmentLeft;
-	_textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+	_textField.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
 	_textField.font = [UIFont systemFontOfSize:14.];
-	_textField.textColor = [UIColor colorWithRed:0.235294117647059 green:0.341176470588235 blue:0.545098039215686 alpha:1.];
-	_textField.backgroundColor = [UIColor clearColor];
+	_textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
+	_textField.enablesReturnKeyAutomatically = NO;
+	_textField.returnKeyType = UIReturnKeyDone;
+	_textField.backgroundColor = nil;
 	_textField.opaque = NO;
 
 	[self.contentView addSubview:_label];
@@ -52,22 +54,8 @@
 
 - (void) setText:(NSString *) text {
 	_textField.text = text;
-}
 
-- (NSString *) placeholder {
-	return _textField.placeholder;
-}
-
-- (void) setPlaceholder:(NSString *) placeholder {
-	_textField.placeholder = placeholder;
-}
-
-- (BOOL) isSecureTextEntry {
-	return _textField.secureTextEntry;
-}
-
-- (void) setSecureTextEntry:(BOOL) flag {
-	_textField.secureTextEntry = flag;
+	[self setNeedsLayout];
 }
 
 - (void) setSelected:(BOOL) selected animated:(BOOL) animated {
@@ -76,26 +64,59 @@
 	_label.highlighted = selected;
 }
 
+- (void) setAccessoryType:(UITableViewCellAccessoryType) type {
+	super.accessoryType = type;
+
+	if (type == UITableViewCellAccessoryDisclosureIndicator)
+		_textField.textAlignment = UITextAlignmentRight;
+	else _textField.textAlignment = UITextAlignmentLeft;
+}
+
 - (void) prepareForReuse {
 	self.label = @"";
 	self.text = @"";
-	self.placeholder = @"";
-	self.secureTextEntry = NO;
+	self.accessoryType = UITableViewCellAccessoryNone;
+	self.textField.placeholder = @"";
+	self.textField.secureTextEntry = NO;
+	self.textField.keyboardType = UIKeyboardTypeDefault;
+	self.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+	self.textField.autocorrectionType = UITextAutocorrectionTypeDefault;
 }
 
 - (void) layoutSubviews {
 	[super layoutSubviews];
 
-	CGRect contentRect = self.contentView.bounds;
-	contentRect.origin.x = 10.;
-	contentRect.size.width = 130.;
+	CGRect contentRect = self.contentView.frame;
 
-	_label.frame = contentRect;
+	NSString *originalText = _textField.text;
+	BOOL showingTextField = NO;
+	if (originalText.length || _textField.placeholder.length) {
+		_textField.hidden = NO;
+		showingTextField = YES;
 
-	contentRect = self.contentView.bounds;
-	contentRect.origin.x = 150.;
-	contentRect.size.width -= 160.;
+		_textField.text = @"Qwerty"; // Temporary text to workaround a bug where sizeThatFits: returns zero height when there is only a placeholder.
 
-	_textField.frame = contentRect;
+		const CGFloat rightMargin = (self.accessoryType == UITableViewCellAccessoryDisclosureIndicator ? 2. : 10.);
+
+		CGRect frame = _textField.frame;
+		frame.size = [_textField sizeThatFits:_textField.bounds.size];
+		frame.origin.x = 120.;
+		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
+		frame.size.width = (contentRect.size.width - frame.origin.x - rightMargin);
+		_textField.frame = frame;
+
+		_textField.text = originalText; // Restore the original text.
+	} else {
+		_textField.hidden = YES;
+	}
+
+	CGRect frame = _label.frame;
+	frame.size = [_label sizeThatFits:_label.bounds.size];
+	frame.origin.x = 10.;
+	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
+	if (showingTextField)
+		frame.size.width = (_textField.frame.origin.x - frame.origin.x - 10.);
+	else frame.size.width = (contentRect.size.width - frame.origin.x - 10.);
+	_label.frame = frame;
 }
 @end

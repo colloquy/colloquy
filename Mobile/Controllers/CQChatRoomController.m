@@ -252,7 +252,7 @@ static int sortMembersByNickname(id user1, id user2, void *context) {
 			[_membersTable reloadCellAtRow:index column:0 animated:YES];
 		else */[_membersTable reloadData];
 	}
-}	
+}
 
 - (void) _membersSynced:(NSNotification *) notification {
 	NSDictionary *userInfo = [notification userInfo];

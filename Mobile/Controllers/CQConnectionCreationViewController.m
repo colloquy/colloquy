@@ -1,10 +1,14 @@
 #import "CQConnectionCreationViewController.h"
+
 #import "CQConnectionEditViewController.h"
+
+#import <ChatCore/MVChatConnection.h>
 
 @implementation CQConnectionCreationViewController
 - (id) init {
-	if( ! ( self = [super init] ) )
+	if (!(self = [super init]))
 		return nil;
+	self.delegate = self;
 	return self;
 }
 
@@ -13,18 +17,19 @@
 	[super dealloc];
 }
 
-- (void) viewDidLoad {
-	[super viewDidLoad];
-
+- (void) viewWillAppear:(BOOL) animated {
 	editViewController = [[CQConnectionEditViewController alloc] init];
-	editViewController.title = NSLocalizedString(@"New Connection", @"New Connection view title");
-	editViewController.navigationItem.prompt = NSLocalizedString(@"Enter the server and your identity information", @"New connection prompt");
+	editViewController.newConnection = YES;
 
-	UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector( cancel: )];
+	MVChatConnection *connection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
+	editViewController.connection = connection;
+	[connection release];
+
+	UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector( cancel:)];
 	editViewController.navigationItem.leftBarButtonItem = cancelItem;
 	[cancelItem release];
 
-	UIBarButtonItem *saveItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector( commit: )];
+	UIBarButtonItem *saveItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector( commit:)];
 	editViewController.navigationItem.rightBarButtonItem = saveItem;
 	[saveItem release];
 
@@ -33,13 +38,9 @@
 	[self pushViewController:editViewController animated:NO];
 }
 
-- (void) didReceiveMemoryWarning {
-	if( ! self.view.superview ) {
-		[editViewController release];
-		editViewController = nil;
-	}
-
-	[super didReceiveMemoryWarning];
+- (void) viewDidDisappear:(BOOL) animated {
+	[editViewController release];
+	editViewController = nil;
 }
 
 - (void) cancel:(id) sender {
@@ -48,5 +49,15 @@
 
 - (void) commit:(id) sender {
 	[self.parentViewController dismissModalViewControllerAnimated:YES];
+}
+
+- (void) navigationController:(UINavigationController *) navigationController willShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
+	// Workaround a bug where viewWillAppear: is not called when this navigation controller is a modal view.
+	[viewController viewWillAppear:animated];
+}
+
+- (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
+	// Workaround a bug where viewDidAppear: is not called when this navigation controller is a modal view.
+	[viewController viewDidAppear:animated];
 }
 @end

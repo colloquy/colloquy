@@ -261,7 +261,7 @@
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL) animated {
-	
+
 }
 
 - (void) viewDidAppear:(BOOL) animated {
@@ -281,7 +281,7 @@
 }
 
 - (void) willClose {
-	
+
 }
 
 #pragma mark -
@@ -327,7 +327,7 @@
 	[messageElement setTextContent:messageString];
 
 	[CPURLifier urlIfyNode:messageElement];
-	
+
 	[messageString release];
 
 	[wrapperElement appendChild:senderElement];

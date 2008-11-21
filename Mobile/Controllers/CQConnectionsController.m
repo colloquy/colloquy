@@ -172,7 +172,7 @@
 
 	[_settingsTable setKeyboardVisible:NO animated:NO];
 	[_settingsTable setBottomBufferHeight:5.];
-	[_settingsTable reloadData];		
+	[_settingsTable reloadData];
 
 	[_connectionsTable highlightRow:row];
 	[_navigationBar showLeftButton:nil withStyle:0 rightButton:@"Delete" withStyle:1];
@@ -298,7 +298,7 @@
 		}
 	}
 
-	return nil;  
+	return nil;
 }
 */
 
@@ -469,7 +469,7 @@
 }
 
 - (void) insertConnection:(MVChatConnection *) connection atIndex:(NSUInteger) index {
-    if( ! connection ) return;
+	if( ! connection ) return;
 
 	[_connections insertObject:connection atIndex:index];
 
@@ -499,7 +499,7 @@
 
 - (void) removeConnectionAtIndex:(NSUInteger) index {
 	MVChatConnection *connection = [[_connections objectAtIndex:index] retain];
-    if( ! connection ) return;
+	if( ! connection ) return;
 
 	[connection disconnectWithReason:nil];
 
@@ -514,14 +514,14 @@
 
 - (void) replaceConnection:(MVChatConnection *) previousConnection withConnection:(MVChatConnection *) newConnection {
 	NSUInteger index = [_connections indexOfObjectIdenticalTo:previousConnection];
-	[self replaceConnectionAtIndex:index withConnection:newConnection];	
+	[self replaceConnectionAtIndex:index withConnection:newConnection];
 }
 
 - (void) replaceConnectionAtIndex:(NSUInteger) index withConnection:(MVChatConnection *) connection {
-    if( ! connection ) return;
+	if( ! connection ) return;
 
 	MVChatConnection *oldConnection = [[_connections objectAtIndex:index] retain];
-    if( ! oldConnection ) return;
+	if( ! oldConnection ) return;
 
 	[oldConnection disconnectWithReason:nil];
 

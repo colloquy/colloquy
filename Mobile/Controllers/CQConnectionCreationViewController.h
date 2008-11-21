@@ -1,7 +1,6 @@
 @class CQConnectionEditViewController;
 
-@interface CQConnectionCreationViewController : UINavigationController {
+@interface CQConnectionCreationViewController : UINavigationController <UINavigationControllerDelegate> {
 	IBOutlet CQConnectionEditViewController *editViewController;
 }
-
 @end
