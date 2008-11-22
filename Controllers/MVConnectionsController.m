@@ -1157,7 +1157,7 @@ static NSMenu *favoritesMenu = nil;
 			if( [object boolValue] )
 				[[_bookmarks objectAtIndex:row] setObject:[NSNumber numberWithBool:NO] forKey:@"temporary"];
 		} else if( [[column identifier] isEqual:@"nickname"] ) {
-			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setNickname:object];
+			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setPreferredNickname:object];
 		} else if( [[column identifier] isEqual:@"address"] ) {
 			[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] setServer:object];
 		} else if( [[column identifier] isEqual:@"port"] ) {
@@ -1663,7 +1663,7 @@ static NSMenu *favoritesMenu = nil;
 		[connection setOutgoingChatFormat:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatFormat"]];
 
 		if( [info objectForKey:@"realName"] ) [connection setRealName:[info objectForKey:@"realName"]];
-		if( [info objectForKey:@"nickname"] ) [connection setNickname:[info objectForKey:@"nickname"]];
+		if( [info objectForKey:@"nickname"] ) [connection setPreferredNickname:[info objectForKey:@"nickname"]];
 		if( [info objectForKey:@"username"] ) [connection setUsername:[info objectForKey:@"username"]];
 		if( [info objectForKey:@"alternateNicknames"] )
 			[connection setAlternateNicknames:[info objectForKey:@"alternateNicknames"]];

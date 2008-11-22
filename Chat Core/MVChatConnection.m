@@ -392,9 +392,14 @@ static const NSStringEncoding supportedEncodings[] = {
 	return nil;
 }
 
+- (void) setPreferredNickname:(NSString *) nickname {
+// subclass this method, if needed
+	[self setNickname:nickname];
+}
+
 - (NSString *) preferredNickname {
 // subclass this method, if needed
-	return nil;
+	return [self nickname];
 }
 
 #pragma mark -

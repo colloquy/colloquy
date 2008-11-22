@@ -159,7 +159,7 @@
 		NSString *password = [[MVKeyChain defaultKeyChain] internetPasswordForServer:[editAddress stringValue] securityDomain:[editAddress stringValue] account:[sender stringValue] path:nil port:0 protocol:MVKeyChainProtocolIRC authenticationType:MVKeyChainAuthenticationTypeDefault];
 		if( password ) [editPassword setObjectValue:password];
 		else [editPassword setObjectValue:@""];
-		[_connection setNickname:[sender stringValue]];
+		[_connection setPreferredNickname:[sender stringValue]];
 	} else if( sender == editAltNicknames ) {
 		[_connection setAlternateNicknames:[[sender stringValue] componentsSeparatedByString:@" "]];
 	} else if( sender == editPassword ) {

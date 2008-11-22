@@ -151,7 +151,7 @@ extern NSString *MVChatConnectionErrorDomain;
 @property(copy) NSString *realName;
 
 @property(copy) NSString *nickname;
-@property(readonly) NSString *preferredNickname;
+@property(copy) NSString *preferredNickname;
 
 @property(copy) NSArray *alternateNicknames;
 @property(readonly) NSString *nextAlternateNickname;
@@ -233,6 +233,8 @@ extern NSString *MVChatConnectionErrorDomain;
 
 - (void) setNickname:(NSString *) nickname;
 - (NSString *) nickname;
+
+- (void) setPreferredNickname:(NSString *) nickname;
 - (NSString *) preferredNickname;
 
 #pragma mark -

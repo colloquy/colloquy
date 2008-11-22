@@ -267,6 +267,15 @@ static const NSStringEncoding supportedEncodings[] = {
 	return _currentNickname;
 }
 
+- (void) setPreferredNickname:(NSString *) newNickname {
+	NSParameterAssert( newNickname != nil );
+	NSParameterAssert( [newNickname length] > 0 );
+
+	MVSafeCopyAssign( &_nickname, newNickname );
+
+	[self setNickname:newNickname];
+}
+
 - (NSString *) preferredNickname {
 	return _nickname;
 }
