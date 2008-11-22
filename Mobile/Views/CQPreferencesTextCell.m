@@ -96,7 +96,7 @@
 
 	CGRect contentRect = self.contentView.frame;
 
-	NSString *originalText = _textField.text;
+	NSString *originalText = [_textField.text retain];
 	BOOL showingTextField = NO;
 	if (originalText.length || _textField.placeholder.length) {
 		_textField.hidden = NO;
@@ -117,6 +117,8 @@
 	} else {
 		_textField.hidden = YES;
 	}
+
+	[originalText release];
 
 	CGRect frame = _label.frame;
 	frame.size = [_label sizeThatFits:_label.bounds.size];
