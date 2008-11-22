@@ -1229,7 +1229,7 @@ end:
 		NSString *nick = [user nickname];
 		NSString *nickLower = [nick lowercaseString];
 
-		if( [nick length] && ! [_lastSentIsonNicknames containsObject:nickLower] ) { 
+		if( [nick length] && ! [_lastSentIsonNicknames containsObject:nickLower] ) {
 			if( ( [nick length] + [request length] ) > JVMaximumISONCommandLength ) {
 				[self sendRawMessage:request];
 				[request release];
@@ -1254,7 +1254,7 @@ end:
 			NSString *nick = [rule nickname];
 			NSString *nickLower = [nick lowercaseString];
 
-			if( [nick length] && ! [rule nicknameIsRegularExpression] && ! [_lastSentIsonNicknames containsObject:nickLower] ) { 
+			if( [nick length] && ! [rule nicknameIsRegularExpression] && ! [_lastSentIsonNicknames containsObject:nickLower] ) {
 				if( ( [nick length] + [request length] ) > JVMaximumISONCommandLength ) {
 					[self sendRawMessage:request];
 					[request release];
@@ -1362,7 +1362,7 @@ end:
 
 	[self _resetSendQueueInterval];
 
-	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];	
+	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
 
 	// Identify if we have a user password
 	if( [[self nicknamePassword] length] )
@@ -1561,7 +1561,7 @@ end:
 			// @#room	sends only to the operators on the room
 			// @%#room	sends to the operators and half-operators on the room
 			// @+#room	sends to the operators and half-operators and voices on the room
-			BOOL subFilter = [targetName length] >= 2 && ( [targetName characterAtIndex:1] == '%' || [targetName characterAtIndex:1] == '+' ); 
+			BOOL subFilter = [targetName length] >= 2 && ( [targetName characterAtIndex:1] == '%' || [targetName characterAtIndex:1] == '+' );
 			targetName = [targetName substringFromIndex:( subFilter ? 2 : 1 )];
 			if( ! [targetName length] ) return;
 		}
@@ -1650,7 +1650,7 @@ end:
 			// @#room	sends only to the operators on the room
 			// @%#room	sends to the operators and half-operators on the room
 			// @+#room	sends to the operators and half-operators and voices on the room
-			BOOL subFilter = [targetName length] >= 2 && ( [targetName characterAtIndex:1] == '%' || [targetName characterAtIndex:1] == '+' ); 
+			BOOL subFilter = [targetName length] >= 2 && ( [targetName characterAtIndex:1] == '%' || [targetName characterAtIndex:1] == '+' );
 			targetName = [targetName substringFromIndex:( subFilter ? 2 : 1 )];
 			if( ! [targetName length] ) return;
 		}
@@ -2419,7 +2419,7 @@ end:
 			[room _updateMemberUser:sender fromOldUniqueIdentifier:oldIdentifier];
 		}
 
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note]; 
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
 		[oldNickname release];
 		[oldIdentifier release];
@@ -2823,11 +2823,11 @@ end:
 	if( [parameters count] >= 2 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[self _markUserAsOffline:user];
-		
+
 		//workaround for a freenode (hyperion) bug where the ircd doesnt reply with 318 (RPL_ENDOFWHOIS) in case of 401 (ERR_NOSUCHNICK): end the whois when receiving 401
 		[user _setDateUpdated:[NSDate date]];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserInformationUpdatedNotification object:user userInfo:nil];
-		
+
 		if( [_pendingWhoisUsers containsObject:user] ) {
 			[_pendingWhoisUsers removeObject:user];
 			[self _whoisNextScheduledUser];

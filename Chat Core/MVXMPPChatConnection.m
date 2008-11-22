@@ -86,7 +86,7 @@
 - (void) connect {
 	if( _status != MVChatConnectionDisconnectedStatus && _status != MVChatConnectionServerDisconnectedStatus && _status != MVChatConnectionSuspendedStatus ) return;
 
-	[self _willConnect];	
+	[self _willConnect];
 
 	JabberID *localId = nil;
 	NSRange atRange = [_username rangeOfString:@"@" options:NSLiteralSearch];

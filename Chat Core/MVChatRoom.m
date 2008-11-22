@@ -297,7 +297,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 		if( attribute ) [_attributes setObject:attribute forKey:key];
 		else [_attributes removeObjectForKey:key];
 	}
-	
+
 	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:key, @"attribute", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomAttributeUpdatedNotification object:self userInfo:info];
 	[info release];
@@ -551,7 +551,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (void) _setModes:(unsigned long) newModes forMemberUser:(MVChatUser *) user {
 	@synchronized( _memberModes ) {
 		[_memberModes setObject:[NSNumber numberWithUnsignedLong:newModes] forKey:[user uniqueIdentifier]];
-	}	
+	}
 }
 
 - (void) _setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user {

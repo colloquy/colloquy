@@ -25,7 +25,7 @@ void tr_setMessageLevel( int level );
 
 void tr_fdInit( void );
 
-typedef struct tr_natpmp_s tr_natpmp_t; 
+typedef struct tr_natpmp_s tr_natpmp_t;
 
 tr_natpmp_t *tr_natpmpInit( void );
 void tr_natpmpStart( tr_natpmp_t * );
@@ -35,7 +35,7 @@ void tr_natpmpForwardPort( tr_natpmp_t *, int port );
 void tr_natpmpPulse( tr_natpmp_t * );
 void tr_natpmpClose( tr_natpmp_t * );
 
-typedef struct tr_upnp_s tr_upnp_t; 
+typedef struct tr_upnp_s tr_upnp_t;
 
 tr_upnp_t *tr_upnpInit( void );
 void tr_upnpStart( tr_upnp_t * );

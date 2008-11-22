@@ -271,7 +271,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (void) sendRawMessage:(id) raw immediately:(BOOL) now {
 	NSParameterAssert( raw );
-	
+
 	// XXX Colloquy assumes in multiple places that sendRawMessage can
 	// take a plain string and send it to the server as a valid message.
 	// This is not the case for ICB, nor it is a proper abstraction
@@ -1086,9 +1086,9 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (void) stcStatusPacketFYI:(NSArray *) fields {
 	NSString *msg = [fields objectAtIndex:1];
-	
+
 	NSRange r;
-	
+
 	if( [msg compare:@"A brick flies off into the ether."] == 0 ) {
 		[[NSNotificationCenter defaultCenter]
 		 postNotificationOnMainThreadWithName:MVChatRoomUserBrickedNotification

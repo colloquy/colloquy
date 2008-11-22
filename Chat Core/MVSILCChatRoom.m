@@ -258,7 +258,7 @@
 								2, modebuf, 4,
 								3, userBuffer -> data, userBuffer -> len);
 	[[self connection] _silcConn] -> cmd_ident++;
-	
+
 	silc_schedule_wakeup( [[self connection] _silcClient] -> schedule );
 
 	silc_buffer_free( roomBuffer );

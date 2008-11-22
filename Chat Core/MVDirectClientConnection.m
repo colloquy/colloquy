@@ -300,7 +300,7 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 			tr_upnpPulse( _upnp );
 			tr_natpmpPulse( _natpmp );
 			status = natTraversalStatus( _upnp, _natpmp );
-		} while( ( status == 1 || status == 3 ) && ABS( [mappingStart timeIntervalSinceNow] ) < 5. ); 
+		} while( ( status == 1 || status == 3 ) && ABS( [mappingStart timeIntervalSinceNow] ) < 5. );
 	}
 #endif
 
@@ -309,7 +309,7 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 }
 
 - (void) _finish {
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _finish ) object:nil];	
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _finish ) object:nil];
 
 #if ENABLE(AUTO_PORT_MAPPING)
 	if( _upnp ) tr_upnpClose( _upnp );

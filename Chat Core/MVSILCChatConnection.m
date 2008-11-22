@@ -197,7 +197,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			NSString *oldNickname = [NSString stringWithUTF8String:oldclient -> nickname];
 			MVChatUser *user = [self _chatUserWithClientEntry:oldclient];
 			if( ! user ) break;
-			
+
 			NSData *oldIdentifier = [user uniqueIdentifier];
 
 			[self _updateKnownUser:user withClientEntry:newclient];
@@ -209,7 +209,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 				if( ! [room isJoined] || ! [room hasUser:user] ) continue;
 				[room _updateMemberUser:user fromOldUniqueIdentifier:oldIdentifier];
 			}
-			
+
 			// only client id changed, don't display nick change to user
 			if ( [oldNickname isEqualToString:[NSString stringWithUTF8String:newclient -> nickname]] )
 				break;
@@ -526,7 +526,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		/* unsigned char *fingerprint = */ va_arg( list, unsigned char * );
 		/* SilcBuffer user_modes = */ va_arg( list, SilcBuffer );
 		/* SilcDList attrs = */ va_arg( list, SilcDList );
-		
+
 		MVSILCChatUser *user = (MVSILCChatUser *)[self _chatUserWithClientEntry:client_entry];
 		[user updateWithClientEntry:client_entry];
 		[user _setIdleTime:idletime];
@@ -564,7 +564,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 	case SILC_COMMAND_NICK: {
 		char *nickname = va_arg( list, char * );
 		/*const SilcClientID *old_client_id =*/ va_arg( list, SilcClientID * );
-		
+
 		NSData *oldIdentifier = [[self localUser] uniqueIdentifier];
 
 		[(MVSILCChatUser *)[self localUser] updateWithClientEntry:conn -> local_entry];
@@ -690,9 +690,9 @@ static void silc_connected( SilcClient client, SilcClientConnection conn, SilcCl
 
 	if( status == SILC_CLIENT_CONN_SUCCESS || status == SILC_CLIENT_CONN_SUCCESS_RESUME ) {
 		[self _initLocalUser];
-		
+
 		SilcUnlock( [self _silcClient] );
-		
+
 		// we need to wait for this to complete, otherwise sendRawMessage will queue the commands again
 		[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:YES];
 
@@ -1251,7 +1251,7 @@ static SilcClientOperations silcClientOps = {
 
 	SilcLock( [self _silcClient] );
 
-	BOOL sent = NO; 
+	BOOL sent = NO;
 	if( [self _silcConn] ) {
 		sent = silc_client_command_call( [self _silcClient], [self _silcConn], [raw UTF8String] );
 		if( sent ) [self _addCommand:raw forNumber:[self _silcConn] -> cmd_ident];

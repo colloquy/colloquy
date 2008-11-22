@@ -24,7 +24,7 @@
 	NSNumber *size = [[[NSFileManager defaultManager] fileAttributesAtPath:[ret source] traverseLink:YES] objectForKey:NSFileSize];
 	[ret _setFinalSize:[size unsignedLongLongValue]];
 
-	NSString *fileName = [[ret source] lastPathComponent];	
+	NSString *fileName = [[ret source] lastPathComponent];
 	[ret _setFileNameQuoted:( [fileName rangeOfString:@" "].location != NSNotFound )];
 
 	[(MVIRCChatConnection *)[user connection] _addDirectClientConnection:ret];

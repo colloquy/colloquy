@@ -119,7 +119,7 @@
 	if( clientID ) {
 		SilcLock( [[self connection] _silcClient] );
 		SilcClientEntry client = silc_client_get_client_by_id( [[self connection] _silcClient], [[self connection] _silcConn], clientID );
-		if( client ) { 
+		if( client ) {
 			silc_client_send_private_message( [[self connection] _silcClient], [[self connection] _silcConn], client, flags, (unsigned char *) msg, strlen( msg ), false );
 			silc_schedule_wakeup( [[self connection] _silcClient] -> schedule );
 		}
