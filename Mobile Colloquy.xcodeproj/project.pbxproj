@@ -67,7 +67,6 @@
 		1C82C52A0D850B1B009ABD9F /* CQConnectionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C5290D850B1B009ABD9F /* CQConnectionsViewController.m */; };
 		1C9B15A50D878B6A003794A5 /* CQConnectionEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */; };
 		1CA91CCA0DFC976D002DDBB4 /* Colloquy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */; };
-		1CA91CD30DFC992A002DDBB4 /* ConnectionsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CA91CD20DFC992A002DDBB4 /* ConnectionsView.xib */; };
 		1CB318DF0D8644E4006A7513 /* server.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB318DA0D8644E4006A7513 /* server.png */; };
 		1CB318E00D8644E4006A7513 /* connectingBadgeDim.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB318DB0D8644E4006A7513 /* connectingBadgeDim.png */; };
 		1CB318E10D8644E4006A7513 /* connectingBadgeGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB318DC0D8644E4006A7513 /* connectingBadgeGlow.png */; };
@@ -195,7 +194,6 @@
 		1C9B15A30D878B6A003794A5 /* CQConnectionEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionEditViewController.h; sourceTree = "<group>"; };
 		1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionEditViewController.m; sourceTree = "<group>"; };
 		1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Colloquy.xib; sourceTree = "<group>"; };
-		1CA91CD20DFC992A002DDBB4 /* ConnectionsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConnectionsView.xib; sourceTree = "<group>"; };
 		1CB318DA0D8644E4006A7513 /* server.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = server.png; sourceTree = "<group>"; };
 		1CB318DB0D8644E4006A7513 /* connectingBadgeDim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connectingBadgeDim.png; sourceTree = "<group>"; };
 		1CB318DC0D8644E4006A7513 /* connectingBadgeGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connectingBadgeGlow.png; sourceTree = "<group>"; };
@@ -445,7 +443,6 @@
 				8D1107310486CEB800E47090 /* Info.plist */,
 				1C09313A0D80C8F600A2705D /* Defaults.plist */,
 				1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */,
-				1CA91CD20DFC992A002DDBB4 /* ConnectionsView.xib */,
 				1C0937320D80E72F00A2705D /* icon.png */,
 				1CB33C970D882BB000EC4E38 /* connections.png */,
 				1CB33C980D882BB000EC4E38 /* buddies.png */,
@@ -534,7 +531,6 @@
 				1CD949820D8E18DB00756ACD /* directChatIcon.png in Resources */,
 				1CD949830D8E18DB00756ACD /* roomIcon.png in Resources */,
 				1CA91CCA0DFC976D002DDBB4 /* Colloquy.xib in Resources */,
-				1CA91CD30DFC992A002DDBB4 /* ConnectionsView.xib in Resources */,
 				1C61FEA10ED24BA40016F968 /* deleteButtonNormal.png in Resources */,
 				1C61FEA20ED24BA40016F968 /* deleteButtonPressed.png in Resources */,
 			);
