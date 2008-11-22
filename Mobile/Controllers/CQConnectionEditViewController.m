@@ -1,6 +1,7 @@
 #import "CQConnectionEditViewController.h"
 
 #import "CQConnectionAdvancedEditController.h"
+#import "CQConnectionsController.h"
 #import "CQPreferencesTextCell.h"
 #import "CQPreferencesDeleteCell.h"
 #import "CQPreferencesSwitchCell.h"
@@ -17,6 +18,13 @@
 - (void) dealloc {
 	[_connection release];
 	[super dealloc];
+}
+
+#pragma mark -
+
+- (void) viewWillAppear:(BOOL) animated {
+	[super viewWillAppear:animated];
+	[self.tableView reloadData];
 }
 
 #pragma mark -
@@ -68,7 +76,8 @@
 		if (!_advancedEditViewController) {
 			_advancedEditViewController = [[CQConnectionAdvancedEditController alloc] init];
 			_advancedEditViewController.navigationItem.prompt = self.navigationItem.prompt;
-			_advancedEditViewController.newConnection = self.newConnection;
+			_advancedEditViewController.newConnection = _newConnection;
+			_advancedEditViewController.connection = _connection;
 		}
 
 		[self.navigationController pushViewController:_advancedEditViewController animated:YES];
@@ -122,7 +131,10 @@
 		if (indexPath.row == 0) {
 			CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 
+			cell.target = self;
+			cell.switchAction = @selector(autoConnectChanged:);
 			cell.label = NSLocalizedString(@"Connect on Launch", @"Connect on Launch connection setting label");
+			cell.on = _connection.automaticallyConnect;
 
 			return cell;
 		} else if (indexPath.row == 1) {
@@ -179,5 +191,9 @@
 	else _connection.realName = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
 
 	[self.tableView reloadData];
+}
+
+- (void) autoConnectChanged:(CQPreferencesSwitchCell *) sender {
+	_connection.automaticallyConnect = sender.on;
 }
 @end

@@ -1,5 +1,6 @@
 #import "CQConnectionCreationViewController.h"
 
+#import "CQConnectionsController.h"
 #import "CQConnectionEditViewController.h"
 
 #import <ChatCore/MVChatConnection.h>
@@ -25,6 +26,8 @@
 	connection.server = @"<<placeholder>>";
 	connection.nickname = @"<<default>>";
 	connection.realName = @"<<default>>";
+	connection.username = @"<<default>>";
+	connection.automaticallyConnect = YES;
 	connection.serverPort = 0;
 
 	_editViewController.connection = connection;
@@ -54,6 +57,32 @@
 }
 
 - (void) commit:(id) sender {
+	MVChatConnection *connection = _editViewController.connection;
+	if ([connection.server isEqualToString:@"<<placeholder>>"]) {
+		[self cancel:sender];
+		return;
+	}
+
+	if ([connection.nickname isEqualToString:@"<<default>>"])
+		connection.nickname = NSUserName();
+
+	if ([connection.realName isEqualToString:@"<<default>>"])
+		connection.realName = NSFullUserName();
+
+	if ([connection.username isEqualToString:@"<<default>>"]) {
+		UIDevice *device = [UIDevice currentDevice];
+		if ([[device model] hasPrefix:@"iPhone"])
+			connection.username = @"iphone";
+		else if ([[device model] hasPrefix:@"iPod"])
+			connection.username = @"ipod";
+		else
+			connection.username = @"user";
+	}
+
+	[[CQConnectionsController defaultController] addConnection:connection];
+
+	[connection connect];
+
 	[self.parentViewController dismissModalViewControllerAnimated:YES];
 }
 

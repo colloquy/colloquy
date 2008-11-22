@@ -7,7 +7,6 @@
 
 @interface CQConnectionsController (CQConnectionsControllerPrivate)
 - (void) _loadConnectionList;
-- (void) _saveConnectionList;
 @end
 
 @implementation CQConnectionsController
@@ -15,7 +14,7 @@
 	static BOOL creatingSharedInstance = NO;
 	static CQConnectionsController *sharedInstance = nil;
 
-	if( !sharedInstance && !creatingSharedInstance ) {
+	if (!sharedInstance && !creatingSharedInstance) {
 		creatingSharedInstance = YES;
 		sharedInstance = [[self alloc] init];
 	}
@@ -24,11 +23,14 @@
 }
 
 - (id) init {
-	if( ! ( self = [super init] ) )
+	if (!(self = [super init]))
 		return nil;
 
 	self.title = NSLocalizedString(@"Connections", @"Connections tab title");
 	self.tabBarItem.image = [UIImage imageNamed:@"connections.png"];
+	self.delegate = self;
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:UIApplicationWillTerminateNotification object:[UIApplication sharedApplication]];
 
 	_connections = [[NSMutableArray alloc] init];
 
@@ -38,6 +40,8 @@
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:[UIApplication sharedApplication]];
+
 	[_connections release];
 	[_connectionsViewController release];
 	[_editViewController release];
@@ -57,8 +61,13 @@
 
 #pragma mark -
 
+- (void) applicationWillTerminate {
+	for (MVChatConnection *connection in _connections)
+		[connection disconnect];
+}
+
 - (void) didReceiveMemoryWarning {
-	if( !_editViewController.view.superview ) {
+	if (!_editViewController.view.superview) {
 		[_editViewController release];
 		_editViewController = nil;
 	}
@@ -69,10 +78,19 @@
 #pragma mark -
 
 - (void) editConnection:(MVChatConnection *) connection {
-	if( !_editViewController )
+	if (!_editViewController)
 		_editViewController = [[CQConnectionEditViewController alloc] init];
 	[_editViewController setConnection:connection];
+
+	_wasEditingConnection = YES;
 	[self pushViewController:_editViewController animated:YES];
+}
+
+- (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
+	if (viewController == _connectionsViewController && _wasEditingConnection) {
+		[self saveConnections];
+		_wasEditingConnection = NO;
+	}
 }
 
 #pragma mark -
@@ -90,123 +108,122 @@
 
 - (void) _willConnect:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
-	NSDictionary *extraInfo = [connection.persistentInformation objectForKey:@"CQConnectionsControllerExtraInfo"];
-
-	NSArray *rooms = [extraInfo objectForKey:@"rooms"];
-	if ([rooms count])
+	NSArray *rooms = connection.automaticJoinedRooms;
+	if (rooms.count)
 		[connection joinChatRoomsNamed:rooms];
 }
 
 #pragma mark -
 
 - (void) _loadConnectionList {
-	if( [_connections count] )
+	if (_connections.count)
 		return; // already loaded connections
 
 	NSArray *list = [[NSUserDefaults standardUserDefaults] arrayForKey:@"MVChatBookmarks"];
-	for( NSMutableDictionary *info in list ) {
+	for (NSMutableDictionary *info in list) {
 		MVChatConnectionType type = MVChatConnectionIRCType;
-		if( [[info objectForKey:@"type"] isEqualToString:@"icb"] )
+		if ([[info objectForKey:@"type"] isEqualToString:@"icb"])
 			type = MVChatConnectionICBType;
-		else if( [[info objectForKey:@"type"] isEqualToString:@"irc"] )
+		else if ([[info objectForKey:@"type"] isEqualToString:@"irc"])
 			type = MVChatConnectionIRCType;
-		else if( [[info objectForKey:@"type"] isEqualToString:@"silc"] )
+		else if ([[info objectForKey:@"type"] isEqualToString:@"silc"])
 			type = MVChatConnectionSILCType;
-		else if( [[info objectForKey:@"type"] isEqualToString:@"xmpp"] )
+		else if ([[info objectForKey:@"type"] isEqualToString:@"xmpp"])
 			type = MVChatConnectionXMPPType;
 
 		MVChatConnection *connection = nil;
-		if( [info objectForKey:@"url"] )
+		if ([info objectForKey:@"url"])
 			connection = [[MVChatConnection alloc] initWithURL:[NSURL URLWithString:[info objectForKey:@"url"]]];
 		else connection = [[MVChatConnection alloc] initWithServer:[info objectForKey:@"server"] type:type port:[[info objectForKey:@"port"] unsignedShortValue] user:[info objectForKey:@"nickname"]];
 
-		if( ! connection ) continue;
+		if (!connection) continue;
 
 		NSMutableDictionary *persistentInformation = [[NSMutableDictionary alloc] init];
-		if( [[info objectForKey:@"persistentInformation"] count] )
-			[persistentInformation addEntriesFromDictionary:[info objectForKey:@"persistentInformation"]];
+		[persistentInformation addEntriesFromDictionary:[info objectForKey:@"persistentInformation"]];
 
-		NSMutableDictionary *extraInfo = [[NSMutableDictionary alloc] init];
-		if( [info objectForKey:@"automatic"] )
-			[extraInfo setObject:[info objectForKey:@"automatic"] forKey:@"automatic"];
-		if( [info objectForKey:@"rooms"] )
-			[extraInfo setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
-		[persistentInformation setObject:extraInfo forKey:@"CQConnectionsControllerExtraInfo"];
-		[extraInfo release];
+		if ([info objectForKey:@"automatic"])
+			[persistentInformation setObject:[info objectForKey:@"automatic"] forKey:@"automatic"];
+		if ([info objectForKey:@"rooms"])
+			[persistentInformation setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
 
-		[connection setPersistentInformation:persistentInformation];
+		connection.persistentInformation = persistentInformation;
+
 		[persistentInformation release];
 
-		[connection setProxyType:[[info objectForKey:@"proxy"] unsignedLongValue]];
-		[connection setSecure:[[info objectForKey:@"secure"] boolValue]];
+		connection.proxyType = [[info objectForKey:@"proxy"] unsignedLongValue];
+		connection.secure = [[info objectForKey:@"secure"] boolValue];
 
-		if( [[info objectForKey:@"encoding"] longValue] )
-			[connection setEncoding:[[info objectForKey:@"encoding"] longValue]];
-		else [connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
+		if ([[info objectForKey:@"encoding"] longValue])
+			connection.encoding = [[info objectForKey:@"encoding"] longValue];
+		else connection.encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 
-		if( [info objectForKey:@"realName"] ) [connection setRealName:[info objectForKey:@"realName"]];
-		if( [info objectForKey:@"nickname"] ) [connection setNickname:[info objectForKey:@"nickname"]];
-		if( [info objectForKey:@"username"] ) [connection setUsername:[info objectForKey:@"username"]];
-		if( [info objectForKey:@"alternateNicknames"] )
-			[connection setAlternateNicknames:[info objectForKey:@"alternateNicknames"]];
+		if ([info objectForKey:@"realName"]) connection.realName = [info objectForKey:@"realName"];
+		if ([info objectForKey:@"nickname"]) connection.nickname = [info objectForKey:@"nickname"];
+		if ([info objectForKey:@"username"]) connection.username = [info objectForKey:@"username"];
+		if ([info objectForKey:@"alternateNicknames"])
+			connection.alternateNicknames = [info objectForKey:@"alternateNicknames"];
 
 /*
 		NSString *password = nil;
-		if( ( password = [info objectForKey:@"nicknamePassword"] ) )
-			[PSKeychainUtilities setPassword:password forHost:[connection server] username:[connection preferredNickname] port:0 protocol:[connection urlScheme]];
+		if ((password = [info objectForKey:@"nicknamePassword"]))
+			[PSKeychainUtilities setPassword:password forHost:connection.server username:connection.preferredNickname port:0 protocol:connection.urlScheme];
 
-		if( ( password = [info objectForKey:@"password"] ) )
-			[PSKeychainUtilities setPassword:password forHost:[connection server] username:[connection username] port:[connection serverPort] protocol:[connection urlScheme]];
+		if ((password = [info objectForKey:@"password"]))
+			[PSKeychainUtilities setPassword:password forHost:connection.server username:connection.username port:connection.serverPort protocol:connection.urlScheme];
 
-		if( ( password = [PSKeychainUtilities passwordForHost:[connection server] username:[connection preferredNickname] port:0 protocol:[connection urlScheme]] ) && [password length] )
-			[connection setNicknamePassword:password];
+		if ((password = [PSKeychainUtilities passwordForHost:connection.server username:connection.preferredNickname port:0 protocol:connection.urlScheme]) && [password length])
+			connection.nicknamePassword = password;
 
-		if( ( password = [PSKeychainUtilities passwordForHost:[connection server] username:[connection username] port:[connection serverPort] protocol:[connection urlScheme]] ) && [password length] )
-			[connection setPassword:password];
+		if ((password = [PSKeychainUtilities passwordForHost:connection.server username:connection.username port:connection.serverPort protocol:connection.urlScheme]) && [password length])
+			connection.password = password;
 */
 
 		[_connections addObject:connection];
 
 		[self _registerNotificationsForConnection:connection];
 
-		if( [[info objectForKey:@"automatic"] boolValue] )
+		if ([[info objectForKey:@"automatic"] boolValue])
 			[connection connect];
 
 		[connection release];
 	}
 }
 
-- (void) _saveConnectionList {
-	if( ! [_connections count] )
+- (void) saveConnections {
+	if (!_connections.count)
 		return; // we have nothing to save
 
-	NSMutableArray *saveList = [[NSMutableArray alloc] initWithCapacity:[_connections count]];
+	NSMutableArray *saveList = [[NSMutableArray alloc] initWithCapacity:_connections.count];
 
-	for( MVChatConnection *connection in _connections ) {
+	for (MVChatConnection *connection in _connections) {
 		NSMutableDictionary *info = [NSMutableDictionary dictionary];
 
-		NSDictionary *extraInfo = [[connection persistentInformation] objectForKey:@"CQConnectionsControllerExtraInfo"];
-		[info addEntriesFromDictionary:extraInfo];
+		NSMutableDictionary *persistentInformation = [connection.persistentInformation mutableCopy];
+		if ([persistentInformation objectForKey:@"automatic"])
+			[info setObject:[persistentInformation objectForKey:@"automatic"] forKey:@"automatic"];
+		if ([persistentInformation objectForKey:@"rooms"])
+			[info setObject:[persistentInformation objectForKey:@"rooms"] forKey:@"rooms"];
 
-		[info setObject:[connection server] forKey:@"server"];
-		[info setObject:[connection urlScheme] forKey:@"type"];
-		[info setObject:[NSNumber numberWithBool:[connection isSecure]] forKey:@"secure"];
-		[info setObject:[NSNumber numberWithLong:[connection proxyType]] forKey:@"proxy"];
-		[info setObject:[NSNumber numberWithLong:[connection encoding]] forKey:@"encoding"];
-		[info setObject:[NSNumber numberWithUnsignedShort:[connection serverPort]] forKey:@"port"];
-		if( [connection realName] ) [info setObject:[connection realName] forKey:@"realName"];
-		if( [connection username] ) [info setObject:[connection username] forKey:@"username"];
-		if( [connection preferredNickname] ) [info setObject:[connection preferredNickname] forKey:@"nickname"];
-		if( [[connection alternateNicknames] count] )
-			[info setObject:[connection alternateNicknames] forKey:@"alternateNicknames"];
+		[persistentInformation removeObjectForKey:@"rooms"];
+		[persistentInformation removeObjectForKey:@"automatic"];
 
-		if( [[connection persistentInformation] count] ) {
-			NSMutableDictionary *persistentInformation = [[connection persistentInformation] mutableCopy];
-			[persistentInformation removeObjectForKey:@"CQConnectionsControllerExtraInfo"];
-			if( [persistentInformation count] )
-				[info setObject:persistentInformation forKey:@"persistentInformation"];
-			[persistentInformation release];
-		}
+		if (persistentInformation.count)
+			[info setObject:persistentInformation forKey:@"persistentInformation"];
+
+		[persistentInformation release];
+
+		[info setObject:connection.server forKey:@"server"];
+		[info setObject:connection.urlScheme forKey:@"type"];
+		[info setObject:[NSNumber numberWithBool:connection.secure] forKey:@"secure"];
+		[info setObject:[NSNumber numberWithLong:connection.proxyType] forKey:@"proxy"];
+		[info setObject:[NSNumber numberWithLong:connection.encoding] forKey:@"encoding"];
+		[info setObject:[NSNumber numberWithUnsignedShort:connection.serverPort] forKey:@"port"];
+		if (connection.realName) [info setObject:connection.realName forKey:@"realName"];
+		if (connection.username) [info setObject:connection.username forKey:@"username"];
+		if (connection.preferredNickname) [info setObject:connection.preferredNickname forKey:@"nickname"];
+
+		if (connection.alternateNicknames.count)
+			[info setObject:connection.alternateNicknames forKey:@"alternateNicknames"];
 
 		[saveList addObject:info];
 	}
@@ -222,10 +239,10 @@
 @synthesize connections = _connections;
 
 - (NSArray *) connectedConnections {
-	NSMutableArray *result = [NSMutableArray arrayWithCapacity:[_connections count]];
+	NSMutableArray *result = [NSMutableArray arrayWithCapacity:_connections.count];
 
-	for( MVChatConnection *connection in _connections )
-		if( [connection isConnected] )
+	for (MVChatConnection *connection in _connections)
+		if (connection.connected)
 			[result addObject:connection];
 
 	return result;
@@ -233,20 +250,20 @@
 
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address {
 	NSArray *connections = [self connectionsForServerAddress:address];
-	if( [connections count] )
+	if (connections.count)
 		return [connections objectAtIndex:0];
 	return nil;
 }
 
 - (NSArray *) connectionsForServerAddress:(NSString *) address {
-	NSMutableArray *result = [NSMutableArray arrayWithCapacity:[_connections count]];
+	NSMutableArray *result = [NSMutableArray arrayWithCapacity:_connections.count];
 
 	address = [address stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@". \t\n"]];
 
-	for( MVChatConnection *connection in _connections ) {
-		NSString *server = [connection server];
-		NSRange range = [server rangeOfString:address options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch ) range:NSMakeRange( 0, [server length] )];
-		if( range.location != NSNotFound && ( range.location == 0 || [server characterAtIndex:( range.location - 1 )] == '.' ) )
+	for (MVChatConnection *connection in _connections) {
+		NSString *server = connection.server;
+		NSRange range = [server rangeOfString:address options:(NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch) range:NSMakeRange(0, [server length])];
+		if (range.location != NSNotFound && (range.location == 0 || [server characterAtIndex:(range.location - 1)] == '.'))
 			[result addObject:connection];
 	}
 
@@ -260,11 +277,11 @@
 #pragma mark -
 
 - (void) addConnection:(MVChatConnection *) connection {
-	[self insertConnection:connection atIndex:[_connections count]];
+	[self insertConnection:connection atIndex:_connections.count];
 }
 
 - (void) insertConnection:(MVChatConnection *) connection atIndex:(NSUInteger) index {
-	if( ! connection ) return;
+	if (!connection) return;
 
 	[_connections insertObject:connection atIndex:index];
 
@@ -272,7 +289,7 @@
 
 	[self _registerNotificationsForConnection:connection];
 
-	[self _saveConnectionList];
+	[self saveConnections];
 }
 
 - (void) moveConnection:(MVChatConnection *) connection toIndex:(NSUInteger) newIndex {
@@ -287,6 +304,8 @@
 	[_connections insertObject:connection atIndex:newIndex];
 
 	[connection release];
+
+	[self saveConnections];
 }
 
 - (void) removeConnection:(MVChatConnection *) connection {
@@ -296,9 +315,9 @@
 
 - (void) removeConnectionAtIndex:(NSUInteger) index {
 	MVChatConnection *connection = [[_connections objectAtIndex:index] retain];
-	if( ! connection ) return;
+	if (!connection) return;
 
-	[connection disconnectWithReason:nil];
+	[connection disconnect];
 
 	[_connectionsViewController removeConnection:connection];
 
@@ -308,7 +327,7 @@
 
 	[_connections removeObjectAtIndex:index];
 
-	[self _saveConnectionList];
+	[self saveConnections];
 }
 
 - (void) replaceConnection:(MVChatConnection *) previousConnection withConnection:(MVChatConnection *) newConnection {
@@ -317,12 +336,12 @@
 }
 
 - (void) replaceConnectionAtIndex:(NSUInteger) index withConnection:(MVChatConnection *) connection {
-	if( ! connection ) return;
+	if (!connection) return;
 
 	MVChatConnection *oldConnection = [[_connections objectAtIndex:index] retain];
-	if( ! oldConnection ) return;
+	if (!oldConnection) return;
 
-	[oldConnection disconnectWithReason:nil];
+	[oldConnection disconnect];
 
 	[_connectionsViewController removeConnection:oldConnection];
 
@@ -336,6 +355,30 @@
 
 	[self _registerNotificationsForConnection:connection];
 
-	[self _saveConnectionList];
+	[self saveConnections];
+}
+@end
+
+@implementation MVChatConnection (CQConnectionsControllerAdditions)
+- (void) setAutomaticJoinedRooms:(NSArray *) rooms {
+	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
+	[persistentInformation setObject:rooms forKey:@"rooms"];
+	self.persistentInformation = persistentInformation;
+	[persistentInformation release];
+}
+
+- (NSArray *) automaticJoinedRooms {
+	return [self.persistentInformation objectForKey:@"rooms"];
+}
+
+- (void) setAutomaticallyConnect:(BOOL) autoConnect {
+	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
+	[persistentInformation setObject:[NSNumber numberWithBool:autoConnect] forKey:@"automatic"];
+	self.persistentInformation = persistentInformation;
+	[persistentInformation release];
+}
+
+- (BOOL) automaticallyConnect {
+	return [[self.persistentInformation objectForKey:@"automatic"] boolValue];
 }
 @end

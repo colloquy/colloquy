@@ -22,6 +22,13 @@
 
 #pragma mark -
 
+- (void) viewWillAppear:(BOOL) animated {
+	[super viewWillAppear:animated];
+	[self.tableView reloadData];
+}
+
+#pragma mark -
+
 @synthesize newConnection = _newConnection;
 
 @synthesize connection = _connection;
@@ -79,9 +86,13 @@
 		if (indexPath.row == 0) {
 			CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
+			unsigned short defaultPort = _connection.secure ? 994 : 6667;
+
+			cell.target = self;
+			cell.textEditAction = @selector(serverPortChanged:);
 			cell.label = NSLocalizedString(@"Server Port", @"Server Port connection setting label");
-			cell.text = @"";
-			cell.textField.placeholder = @"6667";
+			cell.text = (_connection.serverPort == defaultPort ? @"" : [NSString stringWithFormat:@"%hu", _connection.serverPort]);
+			cell.textField.placeholder = [NSString stringWithFormat:@"%hu", defaultPort];
 			cell.textField.keyboardType = UIKeyboardTypeNumberPad;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 
@@ -89,16 +100,21 @@
 		} else if (indexPath.row == 1) {
 			CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 
+			cell.target = self;
+			cell.switchAction = @selector(secureChanged:);
 			cell.label = NSLocalizedString(@"Use SSL", @"Use SSL connection setting label");
+			cell.on = _connection.secure;
 
 			return cell;
 		}
 	} else if (indexPath.section == 1) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
+		cell.target = self;
 
 		if(indexPath.row == 0) {
+			cell.textEditAction = @selector(usernameChanged:);
 			cell.label = NSLocalizedString(@"Username", @"Username connection setting label");
-			cell.text = @"";
+			cell.text = ([_connection.username isEqualToString:@"<<default>>"] ? @"" : _connection.username);
 
 			UIDevice *device = [UIDevice currentDevice];
 			if ([[device model] hasPrefix:@"iPhone"])
@@ -112,16 +128,18 @@
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 		} else if (indexPath.row == 1) {
+			cell.textEditAction = @selector(passwordChanged:);
 			cell.label = NSLocalizedString(@"Password", @"Password connection setting label");
-			cell.text = @"";
+			cell.text = _connection.password;
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
 			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textField.secureTextEntry = YES;
 		} else if (indexPath.row == 2) {
+			cell.textEditAction = @selector(nicknamePasswordChanged:);
 			cell.label = NSLocalizedString(@"Nick Pass.", @"Nickname Password connection setting label");
-			cell.text = @"";
+			cell.text = _connection.nicknamePassword;
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
 			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -133,9 +151,14 @@
 	} else if (indexPath.section == 2 && indexPath.row == 0) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
+		if (_connection.alternateNicknames.count)
+			cell.text = [_connection.alternateNicknames componentsJoinedByString:@", "];
+
+		NSString *nickname = ([_connection.nickname isEqualToString:@"<<default>>"] ? NSUserName() : _connection.nickname);
+		cell.textField.placeholder = [NSString stringWithFormat:@"%@_, %1$@__, %1$@___", nickname];
+
 		cell.label = NSLocalizedString(@"Nicknames", @"Nicknames connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-		cell.textField.placeholder = [NSString stringWithFormat:@"%@_, %1$@__, %1$@___", NSUserName()];
 
 		return cell;
 	} else if (indexPath.section == 3 && indexPath.row == 0) {
@@ -149,5 +172,38 @@
 
 	NSAssert(NO, @"Should not reach this point.");
 	return nil;
+}
+
+- (void) serverPortChanged:(CQPreferencesTextCell *) sender {
+	_connection.serverPort = [sender.text longLongValue];
+
+	[self.tableView reloadData];
+}
+
+- (void) secureChanged:(CQPreferencesSwitchCell *) sender {
+	_connection.secure = sender.on;
+
+	if (_connection.secure && _connection.serverPort == 6667)
+		_connection.serverPort = 994;
+	else if (!_connection.secure && _connection.serverPort == 994)
+		_connection.serverPort = 6667;
+
+	[self.tableView reloadData];
+}
+
+- (void) usernameChanged:(CQPreferencesTextCell *) sender {
+	if ([sender.text length])
+		_connection.username = sender.text;
+	else _connection.username = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
+
+	[self.tableView reloadData];
+}
+
+- (void) passwordChanged:(CQPreferencesTextCell *) sender {
+	_connection.password = sender.text;
+}
+
+- (void) nicknamePasswordChanged:(CQPreferencesTextCell *) sender {
+	_connection.nicknamePassword = sender.text;
 }
 @end

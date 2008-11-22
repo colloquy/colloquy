@@ -1,5 +1,7 @@
 #import "CQColloquyApplication.h"
 
+#import <ChatCore/MVChatConnection.h>
+
 @class CQChatRoomController;
 @class CQConnectionsViewController;
 @class CQConnectionEditViewController;
@@ -9,9 +11,10 @@
 @class MVChatUser;
 @class MVDirectChatConnection;
 
-@interface CQConnectionsController : UINavigationController {
+@interface CQConnectionsController : UINavigationController <UINavigationControllerDelegate> {
 	@private
 	NSMutableArray *_connections;
+	BOOL _wasEditingConnection;
 
 	CQConnectionsViewController *_connectionsViewController;
 	CQConnectionEditViewController *_editViewController;
@@ -20,6 +23,8 @@
 
 @property (nonatomic, readonly) NSArray *connections;
 @property (nonatomic, readonly) NSArray *connectedConnections;
+
+- (void) saveConnections;
 
 - (void) editConnection:(MVChatConnection *) connection;
 
@@ -38,4 +43,9 @@
 
 - (void) replaceConnection:(MVChatConnection *) previousConnection withConnection:(MVChatConnection *) newConnection;
 - (void) replaceConnectionAtIndex:(NSUInteger) index withConnection:(MVChatConnection *) connection;
+@end
+
+@interface MVChatConnection (CQConnectionsControllerAdditions)
+@property (nonatomic, retain) NSArray *automaticJoinedRooms;
+@property (nonatomic) BOOL automaticallyConnect;
 @end

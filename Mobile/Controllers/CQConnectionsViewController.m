@@ -24,7 +24,7 @@
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector( makeNewConnection: )];
+	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(makeNewConnection:)];
 	self.navigationItem.leftBarButtonItem = addItem;
 	[addItem release];
 
@@ -32,7 +32,7 @@
 }
 
 - (void) didReceiveMemoryWarning {
-	if( !_connectionCreationViewController.view.superview ) {
+	if (!_connectionCreationViewController.view.superview) {
 		[_connectionCreationViewController release];
 		_connectionCreationViewController = nil;
 	}
@@ -43,7 +43,7 @@
 #pragma mark -
 
 - (void) makeNewConnection:(id) sender {
-	if( !_connectionCreationViewController )
+	if (!_connectionCreationViewController)
 		_connectionCreationViewController = [[CQConnectionCreationViewController alloc] init];
 	[self presentModalViewController:_connectionCreationViewController animated:YES];
 }
@@ -52,7 +52,7 @@
 
 - (void) _updateConnectTimes {
 	NSArray *visibleCells = [self.tableView visibleCells];
-	for( CQConnectionTableCell *cell in visibleCells )
+	for (CQConnectionTableCell *cell in visibleCells)
 		[cell updateConnectTime];
 }
 
@@ -67,8 +67,8 @@
 
 - (void) _startUpdatingConnectTimes {
 	[self _updateConnectTimes];
-	if( ! _connectTimeUpdateTimer )
-		_connectTimeUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector( _updateConnectTimes ) userInfo:nil repeats:YES] retain];
+	if (!_connectTimeUpdateTimer)
+		_connectTimeUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(_updateConnectTimes) userInfo:nil repeats:YES] retain];
 }
 
 - (void) _stopUpdatingConnectTimes {
@@ -82,6 +82,7 @@
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 	[self _startUpdatingConnectTimes];
+	[self.tableView reloadData];
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
@@ -109,17 +110,17 @@
 	// Remove any previous observers, to prevent registering twice.
 	[self _deregisterNotificationsForConnection:connection];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didChange: ) name:MVChatConnectionNicknameAcceptedNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didChange: ) name:MVChatConnectionWillConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didChange: ) name:MVChatConnectionDidConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didChange: ) name:MVChatConnectionDidNotConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didChange: ) name:MVChatConnectionDidDisconnectNotification object:connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionNicknameAcceptedNotification object:connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionWillConnectNotification object:connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionDidConnectNotification object:connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionDidNotConnectNotification object:connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionDidDisconnectNotification object:connection];
 
-//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred : ) name:MVChatConnectionErrorNotification object:connection];
+//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_errorOccurred :) name:MVChatConnectionErrorNotification object:connection];
 
-//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedNicknamePasswordNotification object:connection];
-//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestCertificatePassword: ) name:MVChatConnectionNeedCertificatePasswordNotification object:connection];
-//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPublicKeyVerification: ) name:MVChatConnectionNeedPublicKeyVerificationNotification object:connection];
+//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_requestPassword:) name:MVChatConnectionNeedNicknamePasswordNotification object:connection];
+//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_requestCertificatePassword:) name:MVChatConnectionNeedCertificatePasswordNotification object:connection];
+//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_requestPublicKeyVerification:) name:MVChatConnectionNeedPublicKeyVerificationNotification object:connection];
 }
 
 - (void) _didChange:(NSNotification *) notification {
@@ -177,9 +178,9 @@
 	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
 
 	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:selectedIndexPath.row];
-	if( connection.status == MVChatConnectionDisconnectedStatus && actionSheet.cancelButtonIndex != buttonIndex )
+	if (connection.status == MVChatConnectionDisconnectedStatus && actionSheet.cancelButtonIndex != buttonIndex)
 		[connection connect];
-	else if( actionSheet.destructiveButtonIndex == buttonIndex )
+	else if (actionSheet.destructiveButtonIndex == buttonIndex)
 		[connection disconnect];
 
 	[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
@@ -202,11 +203,11 @@
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if( ! indexPath )
+	if (!indexPath)
 		return;
 
 	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:indexPath.row];
-	if( connection.status == MVChatConnectionDisconnectedStatus ) [self confirmConnect];
+	if (connection.status == MVChatConnectionDisconnectedStatus) [self confirmConnect];
 	else [self confirmDisconnect];
 }
 
@@ -224,7 +225,7 @@
 }
 
 - (void) tableView:(UITableView *) tableView commitEditingStyle:(UITableViewCellEditingStyle) editingStyle forRowAtIndexPath:(NSIndexPath *) indexPath {
-	if( editingStyle != UITableViewCellEditingStyleDelete )
+	if (editingStyle != UITableViewCellEditingStyleDelete)
 		return;
 	[[CQConnectionsController defaultController] removeConnectionAtIndex:indexPath.row];
 	[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
