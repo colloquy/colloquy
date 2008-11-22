@@ -94,6 +94,8 @@
 
 - (void) _deregisterNotificationsForConnection:(MVChatConnection *) connection {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:connection];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameRejectedNotification object:connection];
+
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionWillConnectNotification object:connection];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidConnectNotification object:connection];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidNotConnectNotification object:connection];
@@ -111,6 +113,8 @@
 	[self _deregisterNotificationsForConnection:connection];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionNicknameAcceptedNotification object:connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionNicknameRejectedNotification object:connection];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionWillConnectNotification object:connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionDidConnectNotification object:connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionDidNotConnectNotification object:connection];
