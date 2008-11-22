@@ -40,7 +40,7 @@ static NSMutableSet *inspectors = nil;
 	panelRect.size.width = 175; panelRect.size.height = 200;
 
 	NSWindow *panel = [[[NSPanel alloc] initWithContentRect:panelRect styleMask:( ( ! locked ? NSUtilityWindowMask : 0 ) | NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask ) backing:NSBackingStoreBuffered defer:YES] autorelease];
-	
+
 	if( locked ) {
 		[(NSPanel *)panel setFloatingPanel:YES];
 		[(NSPanel *)panel setHidesOnDeactivate:YES];

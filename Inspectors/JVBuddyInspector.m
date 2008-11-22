@@ -223,7 +223,7 @@
 }
 
 - (void) controlTextDidChange:(NSNotification *) notification {
-	if( [[identifierNickname stringValue] length] || [[identifierRealName stringValue] length] || 
+	if( [[identifierNickname stringValue] length] || [[identifierRealName stringValue] length] ||
 		[[identifierUsername stringValue] length] || [[identifierHostname stringValue] length] )
 		[identifierOkay setEnabled:YES];
 	else [identifierOkay setEnabled:NO];
@@ -247,7 +247,7 @@
 #pragma mark -
 
 - (IBAction) changeCard:(id) sender {
-	
+
 }
 
 #pragma mark -

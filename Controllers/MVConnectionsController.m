@@ -457,23 +457,23 @@ static NSMenu *favoritesMenu = nil;
 	if( [sender tag] ) {
 		NSSet *users = [[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] chatUsersWithNickname:[userToMessage stringValue]];
 		MVChatUser *user;
-		
+
 		if( [users count] == 0 ) return;
 		else if( [users count] == 1 ) user = [users anyObject];
 		else {
 			[self _validateToolbar];
-		
+
 			_userSelectionPossibleUsers = [[users allObjects] retain];
 			[userSelectionDescription setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Multiple users with the name '%@' have been found.", "multiple user same nickname, user selection description"), [userToMessage stringValue]]];
-			
+
 			[userSelectionTable reloadData];
 			[userSelectionTable selectRow:0 byExtendingSelection:NO];
-			
+
 			[[NSApplication sharedApplication] beginSheet:userSelectionPanel modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 
 			return;
 		}
-		
+
 		[[JVChatController defaultController] chatViewControllerForUser:user ifExists:NO];
 	}
 }
@@ -555,18 +555,18 @@ static NSMenu *favoritesMenu = nil;
 - (IBAction) userSelectionSelected:(id) sender {
 	[userSelectionPanel orderOut:nil];
 	[[NSApplication sharedApplication] endSheet:userSelectionPanel];
-	
+
 	int row = [userSelectionTable selectedRow];
-	
-	if( [sender tag] || row == -1 ) { 
+
+	if( [sender tag] || row == -1 ) {
 		[_userSelectionPossibleUsers release];
 		_userSelectionPossibleUsers = nil;
 		return;
 	}
-	
+
 	[[JVChatController defaultController] chatViewControllerForUser:[_userSelectionPossibleUsers objectAtIndex:row] ifExists:NO];
 	[userSelectionPanel orderOut:nil];
-	
+
 	[_userSelectionPossibleUsers release];
 	_userSelectionPossibleUsers = nil;
 }
@@ -692,7 +692,7 @@ static NSMenu *favoritesMenu = nil;
     if( ! connection ) return;
 
 	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
-	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage]; 
+	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage];
 	[connection disconnectWithReason:quitMessageString];
 	[quitMessageString release];
 
@@ -716,7 +716,7 @@ static NSMenu *favoritesMenu = nil;
 
 	MVChatConnection *oldConnection = [[[_bookmarks objectAtIndex:index] objectForKey:@"connection"] retain];
 	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
-	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage]; 
+	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage];
 	[oldConnection disconnectWithReason:quitMessageString];
 	[quitMessageString release];
 
@@ -1041,7 +1041,7 @@ static NSMenu *favoritesMenu = nil;
 		return [_joinRooms objectAtIndex:row];
 	} else if( view == userSelectionTable ) {
 		MVChatUser *user = [_userSelectionPossibleUsers objectAtIndex:row];
-		
+
 		if( [[column identifier] isEqualToString:@"hostname"] ) {
 			return [user address];
 		} else if( [[column identifier] isEqualToString:@"fingerprint"] ) {
@@ -1486,7 +1486,7 @@ static NSMenu *favoritesMenu = nil;
 	NSDictionary *info = nil;
 
 	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
-	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage]; 
+	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage];
 
 	while( ( info = [enumerator nextObject] ) ) {
 		connection = [info objectForKey:@"connection"];
@@ -1918,7 +1918,7 @@ static NSMenu *favoritesMenu = nil;
 	if( row == -1 ) return;
 
 	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
-	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage]; 
+	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage];
 	[[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] disconnectWithReason:quitMessageString];
 	[quitMessageString release];
 }

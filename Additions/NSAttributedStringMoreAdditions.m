@@ -210,7 +210,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		}
 		break;
 	case 's':
-		if( ! strcmp( (char *) node -> name, "span" ) ) 
+		if( ! strcmp( (char *) node -> name, "span" ) )
 			skipTag = YES;
 		break;
 	}

@@ -151,7 +151,7 @@
 	} else {
 		[class setObjectValue:NSLocalizedString( @"Normal user", "normal user class" )];
 	}
-	
+
 	NSData *awayData = [_user awayStatusMessage];
 	NSAttributedString *awayString = [self _convertRawMessage:awayData withBaseFont:nil];
 	[away setObjectValue:( awayString && [awayString length] ? awayString : (NSAttributedString *)NSLocalizedString( @"n/a", "not applicable or not available" ) )];

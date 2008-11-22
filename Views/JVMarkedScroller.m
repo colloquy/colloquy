@@ -293,10 +293,10 @@ struct _mark {
 			break;
 		}
 	}
-	
+
 	if( foundMark ) {
 		float shift = [self shiftAmountToCenterAlign];
-		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];		
+		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 	}
 
 	_jumpingToMark = NO;

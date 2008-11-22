@@ -51,7 +51,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 		AGRegex *regex = nil;
 		switch( org ) {
 		case 0: // all in the same folder, w/server
-			regex = [[AGRegex alloc] initWithPattern:@"(?P<target>.*) \\((?P<server>.*)\\) ?(?P<session>.*)\\.colloquyTranscript"]; 
+			regex = [[AGRegex alloc] initWithPattern:@"(?P<target>.*) \\((?P<server>.*)\\) ?(?P<session>.*)\\.colloquyTranscript"];
 			break;
 		case 1: // a folder for each server
 			regex = [[AGRegex alloc] initWithPattern:@"(?P<server>.*)/(?P<target>.*) ?(?P<session>.*)\\.colloquyTranscript"];
@@ -95,7 +95,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 
 				FILE *logsFile = fopen( [path fileSystemRepresentation], "r" );
 				if( logsFile ) {
-					int fd = fileno( logsFile );			
+					int fd = fileno( logsFile );
 
 					char buffer[1024];
 					ssize_t size = 0;
@@ -190,7 +190,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 	return [_filteredTranscripts count];
 }
 
-- (id) tableView:(NSTableView *) tableview objectValueForTableColumn:(NSTableColumn *) column row:(int) row {	
+- (id) tableView:(NSTableView *) tableview objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
 	return [[_filteredTranscripts objectAtIndex:row] objectForKey:[column identifier]];
 }
 
@@ -199,7 +199,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 
 	int selectedRow = [tableView selectedRow];
 	NSDictionary *selected = nil;
-	if( selectedRow != -1 ) selected = [_filteredTranscripts objectAtIndex:selectedRow]; 
+	if( selectedRow != -1 ) selected = [_filteredTranscripts objectAtIndex:selectedRow];
 
 	[_filteredTranscripts release];
 	_filteredTranscripts = [sorted retain];
@@ -250,7 +250,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 				[theLog setObject:path forKey:@"path"];
 
 				[tempArray addObject:theLog];
-			}	 
+			}
 
 			[_filteredTranscripts release];
 			_filteredTranscripts = tempArray;

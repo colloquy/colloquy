@@ -119,7 +119,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	if( ! haveServerWindow ) {
 		info = [NSMutableDictionary dictionary];
 		[_windowSets addObject:info];
-		
+
 		[info setObject:@"serverWindow" forKey:@"special"];
 		[info setObject:[NSString locallyUniqueString] forKey:@"identifier"];
 		[info setObject:[NSMutableArray array] forKey:@"rules"];
@@ -255,7 +255,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 		[editRuleButton setEnabled:( _selectedRuleSet != NSNotFound )];
 		[deleteRuleButton setEnabled:( _selectedRuleSet != NSNotFound )];
 	} else if( view == ruleEditTable ) {
-		[ruleEditTable deselectAll:nil];	
+		[ruleEditTable deselectAll:nil];
 	}
 }
 
@@ -400,7 +400,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 - (IBAction) cancelWindowSet:(id) sender {
 	[windowEditPanel orderOut:nil];
-	[[NSApplication sharedApplication] endSheet:windowEditPanel];	
+	[[NSApplication sharedApplication] endSheet:windowEditPanel];
 }
 
 #pragma mark -
@@ -537,7 +537,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 - (IBAction) saveRuleSet:(id) sender {
 	NSMutableDictionary *info = nil;
-	
+
 	if( _makingNewRuleSet ) {
 		info = [NSMutableDictionary dictionary];
 		[[self selectedRules] addObject:info];
@@ -548,7 +548,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	[info setObject:[NSNumber numberWithBool:[ignoreCase state]] forKey:@"ignoreCase"];
 
 	[ruleEditPanel orderOut:nil];
-	[[NSApplication sharedApplication] endSheet:ruleEditPanel];	
+	[[NSApplication sharedApplication] endSheet:ruleEditPanel];
 
 	[rulesTable reloadData];
 	[windowSetsTable reloadData];
@@ -572,7 +572,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	_editingRuleCriterion = nil;
 
 	[ruleEditPanel orderOut:nil];
-	[[NSApplication sharedApplication] endSheet:ruleEditPanel];	
+	[[NSApplication sharedApplication] endSheet:ruleEditPanel];
 }
 
 #pragma mark -

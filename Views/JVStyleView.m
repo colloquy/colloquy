@@ -253,8 +253,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[_styleVariant autorelease];
 	_styleVariant = [variant copyWithZone:[self zone]];
 
-	// add single-quotes so that these are not interpreted as XPath expressions  
-	[_styleParameters setObject:@"'/tmp/'" forKey:@"buddyIconDirectory"];  
+	// add single-quotes so that these are not interpreted as XPath expressions
+	[_styleParameters setObject:@"'/tmp/'" forKey:@"buddyIconDirectory"];
 	[_styleParameters setObject:@"'.tif'" forKey:@"buddyIconExtension"];
 
 	NSString *timeFormatParameter = [NSString stringWithFormat:@"'%@'", [[NSUserDefaults standardUserDefaults] stringForKey:NSTimeFormatString]];
@@ -595,18 +595,18 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 #pragma mark Highlight/Message Jumping
 
-- (JVMarkedScroller *) verticalMarkedScroller { 
+- (JVMarkedScroller *) verticalMarkedScroller {
 	WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
-	NSScrollView *scrollView = [[[contentFrame frameView] documentView] enclosingScrollView]; 
-	JVMarkedScroller *scroller = (JVMarkedScroller *)[scrollView verticalScroller]; 
-	if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) { 
-		[self _setupMarkedScroller]; 
-		scroller = (JVMarkedScroller *)[scrollView verticalScroller]; 
-		if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) 
-			return nil; // not sure, but somthing is wrong 
-	} 
+	NSScrollView *scrollView = [[[contentFrame frameView] documentView] enclosingScrollView];
+	JVMarkedScroller *scroller = (JVMarkedScroller *)[scrollView verticalScroller];
+	if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) {
+		[self _setupMarkedScroller];
+		scroller = (JVMarkedScroller *)[scrollView verticalScroller];
+		if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] )
+			return nil; // not sure, but somthing is wrong
+	}
 
-	return scroller; 
+	return scroller;
 }
 
 - (IBAction) jumpToMark:(id) sender {
@@ -890,26 +890,26 @@ quickEnd:
 		[self setStyleVariant:variant];
 }
 
-- (void) _setupMarkedScroller { 
-	if( ! _mainFrameReady ) { 
-		[self performSelector:_cmd withObject:nil afterDelay:0.5]; 
-		return; 
+- (void) _setupMarkedScroller {
+	if( ! _mainFrameReady ) {
+		[self performSelector:_cmd withObject:nil afterDelay:0.5];
+		return;
 	}
 
 	WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
-	NSScrollView *scrollView = [[[contentFrame frameView] documentView] enclosingScrollView]; 
-	[scrollView setHasHorizontalScroller:NO]; 
-	[scrollView setAllowsHorizontalScrolling:NO]; 
+	NSScrollView *scrollView = [[[contentFrame frameView] documentView] enclosingScrollView];
+	[scrollView setHasHorizontalScroller:NO];
+	[scrollView setAllowsHorizontalScrolling:NO];
 
-	JVMarkedScroller *scroller = (JVMarkedScroller *)[scrollView verticalScroller]; 
-	if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) { 
-		NSRect scrollerFrame = [[scrollView verticalScroller] frame]; 
-		NSScroller *oldScroller = scroller; 
-		scroller = [[[JVMarkedScroller alloc] initWithFrame:scrollerFrame] autorelease]; 
-		[scroller setFloatValue:[oldScroller floatValue] knobProportion:[oldScroller knobProportion]]; 
-		[scrollView setVerticalScroller:scroller]; 
-	} 
-} 
+	JVMarkedScroller *scroller = (JVMarkedScroller *)[scrollView verticalScroller];
+	if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) {
+		NSRect scrollerFrame = [[scrollView verticalScroller] frame];
+		NSScroller *oldScroller = scroller;
+		scroller = [[[JVMarkedScroller alloc] initWithFrame:scrollerFrame] autorelease];
+		[scroller setFloatValue:[oldScroller floatValue] knobProportion:[oldScroller knobProportion]];
+		[scrollView setVerticalScroller:scroller];
+	}
+}
 
 #pragma mark -
 

@@ -254,7 +254,7 @@
 	[item setTarget:self];
 	[menu addItem:item];
 	[item release];
-	
+
 	return [menu autorelease];
 }
 
@@ -279,7 +279,7 @@
 			[menuItem setState:NSOnState];
 		else [menuItem setState:NSOffState];
 	}
-	
+
 	return [super validateMenuItem: menuItem];
 }
 
@@ -1197,7 +1197,7 @@
 	// sort again if needed
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"] )
 		[self resortMembers];
-		
+
 	MVChatUser *user = [[notification userInfo] objectForKey:@"who"];
 	MVChatUser *byUser = [[notification userInfo] objectForKey:@"by"];
 
@@ -1500,7 +1500,7 @@
 
 	id authorArg = ( author ? [author title] : [[[self target] topicAuthor] displayName] );
 	NSArray *args = [NSArray arrayWithObjects:topicString, ( authorArg ? authorArg : [NSNull null] ), [NSNumber numberWithBool:emptyTopic], nil];
-	[[display windowScriptObject] callWebScriptMethod:@"changeTopic" withArguments:args];	
+	[[display windowScriptObject] callWebScriptMethod:@"changeTopic" withArguments:args];
 }
 @end
 

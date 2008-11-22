@@ -8,12 +8,12 @@
 //#define PLUGIN_ID "04A856E0-880E-41BA-ABFA-35F147710AFC"
 
 // The import function to be implemented in GetMetadataForFile.c
-Boolean GetMetadataForFile(void *thisInterface, 
-			   CFMutableDictionaryRef attributes, 
+Boolean GetMetadataForFile(void *thisInterface,
+			   CFMutableDictionaryRef attributes,
 			   CFStringRef contentTypeUTI,
 			   CFStringRef pathToFile);
 
-// The layout for an instance of MetaDataImporterPlugIn 
+// The layout for an instance of MetaDataImporterPlugIn
 typedef struct __MetadataImporterPluginType
 {
 	MDImporterInterfaceStruct *conduitInterface;

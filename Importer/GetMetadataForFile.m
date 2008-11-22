@@ -1,4 +1,4 @@
-#import <CoreServices/CoreServices.h> 
+#import <CoreServices/CoreServices.h>
 #import <Foundation/Foundation.h>
 #import <libxml/tree.h>
 #import <libxml/xmlerror.h>
@@ -94,7 +94,7 @@
 				NSString *coverageWording = [NSString stringWithFormat:@"%@ - %@", [formatter stringFromDate:dateStarted], [formatter stringFromDate:lastDate]];
 				[ret setObject:coverageWording forKey:(NSString *) kMDItemCoverage];
 				[formatter release];
-			}			
+			}
 		}
 	}
 

@@ -915,7 +915,7 @@ finish:
 
 - (void) _startUpdateTimerIfNeeded {
 	if( _updateTimer ) return;
-	_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector( _updateProgress: ) userInfo:nil repeats:YES] retain];	
+	_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector( _updateProgress: ) userInfo:nil repeats:YES] retain];
 }
 
 - (void) _stopUpdateTimerIfFinished {

@@ -38,7 +38,7 @@
 
 - (IBAction) addRuleCriterionRow:(id) sender;
 - (IBAction) removeRuleCriterionRow:(id) sender;
-	
+
 - (IBAction) addRuleSet:(id) sender;
 - (IBAction) editRuleSet:(id) sender;
 - (IBAction) saveRuleSet:(id) sender;

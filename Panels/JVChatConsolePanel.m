@@ -171,7 +171,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[item setTarget:[JVChatController defaultController]];
 		[menu addItem:item];
 	}
-		
+
 	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
 	[item setTarget:self];
 	[menu addItem:item];

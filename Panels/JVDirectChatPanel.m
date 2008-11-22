@@ -261,7 +261,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVDirectChatConnectionDidDisconnectNotification object:[self target]];
 	} else {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatConnectionDidDisconnectNotification object:[self connection]];
 	}
 
 	if( [self preferenceForKey:@"style"] ) {
@@ -466,7 +466,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[item setTarget:self];
 	[menu addItem:item];
 	[item release];
-	
+
 	[menu addItem:[NSMenuItem separatorItem]];
 
 	if( [[[self windowController] allChatViewControllers] count] > 1 ) {
@@ -498,7 +498,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 			[menuItem setState:NSOnState];
 		else [menuItem setState:NSOffState];
 	}
-	
+
 	return YES;
 }
 
@@ -832,7 +832,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 		[names release];
 	}
-	
+
 	[self processIncomingMessage:cmessage];
 
 	if( [[cmessage sender] isKindOfClass:[JVChatRoomMember class]] )
@@ -851,11 +851,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ Mentioned a Highlight Word", "mention bubble title" ), [user displayName]] forKey:@"title"];
 		[context setObject:[messageString string] forKey:@"description"];
 		[context setObject:[NSImage imageNamed:@"activityNewImportant"] forKey:@"image"];
-		[context setObject:self forKey:@"target"]; 
-		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"]; 
+		[context setObject:self forKey:@"target"];
+		[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 		[self performNotification:@"JVChatMentioned" withContextInfo:context];
-	}	
-	
+	}
+
 	if( [cmessage ignoreStatus] != JVNotIgnored ) {
 		NSMutableDictionary *context = [NSMutableDictionary dictionary];
 		[context setObject:( ( [cmessage ignoreStatus] == JVUserIgnored ) ? NSLocalizedString( @"User Ignored", "user ignored bubble title" ) : NSLocalizedString( @"Message Ignored", "message ignored bubble title" ) ) forKey:@"title"];

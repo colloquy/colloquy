@@ -271,7 +271,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 #pragma mark -
 
 - (MVChatUserStatus) status {
-	return [[self activeUser] status];	
+	return [[self activeUser] status];
 }
 
 - (NSData *) awayStatusMessage {
@@ -285,17 +285,17 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 - (NSDate *) dateConnected {
-	return [[self activeUser] dateConnected];	
+	return [[self activeUser] dateConnected];
 }
 
 - (NSDate *) dateDisconnected {
-	return [[self activeUser] dateDisconnected];	
+	return [[self activeUser] dateDisconnected];
 }
 
 #pragma mark -
 
 - (NSTimeInterval) idleTime {
-	return [[self activeUser] idleTime];	
+	return [[self activeUser] idleTime];
 }
 
 #pragma mark -

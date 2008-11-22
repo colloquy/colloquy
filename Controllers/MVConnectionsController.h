@@ -49,7 +49,7 @@
 
 	/* Message User */
 	IBOutlet NSTextField *userToMessage;
-	
+
 	/* User selection dialog */
 	IBOutlet NSTextField *userSelectionDescription;
 	IBOutlet NSTableView *userSelectionTable;

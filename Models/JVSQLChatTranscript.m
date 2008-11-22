@@ -564,8 +564,6 @@ static int _specificElementsInRangeCallback( void *context, int fieldCount, char
 
 - (void) setSource:(NSURL *) source {
 	NSParameterAssert( source != nil );
-
-	
 }
 
 #pragma mark -

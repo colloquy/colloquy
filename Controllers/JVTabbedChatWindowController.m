@@ -390,7 +390,7 @@
 	} else if( ! _forceTabBarVisible ) _forceTabBarVisible = 1;
 	else if( _forceTabBarVisible > 0 ) _forceTabBarVisible = 0;
 
-	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVTabBarAlwaysVisible"] ) 
+	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVTabBarAlwaysVisible"] )
 		[self setPreference:( _forceTabBarVisible == 1 ? [NSNumber numberWithInt:1] : nil ) forKey:@"tab bar visible"];
 	else [self setPreference:[NSNumber numberWithInt:_forceTabBarVisible] forKey:@"tab bar visible"];
 

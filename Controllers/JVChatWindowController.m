@@ -623,7 +623,7 @@ typedef int NSTableViewSelectionHighlightStyle;
 
 	if( [[self activeChatViewController] respondsToSelector:@selector( validateMenuItem: )] )
 		return [(id)[self activeChatViewController] validateMenuItem:menuItem];
-	
+
 	return YES;
 }
 @end
@@ -1086,7 +1086,7 @@ typedef int NSTableViewSelectionHighlightStyle;
 	if( [[self preferenceForKey:@"drawer open"] boolValue] )
 		[self performSelector:@selector( openViewsDrawer: ) withObject:nil afterDelay:0.0];
 
-	_usesSmallIcons = [[self preferenceForKey:@"small drawer icons"] boolValue];	
+	_usesSmallIcons = [[self preferenceForKey:@"small drawer icons"] boolValue];
 }
 
 - (void) _saveWindowFrame {

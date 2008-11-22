@@ -301,7 +301,7 @@
 		[self complete:nil];
 		return YES;
 	}
-	
+
 	[_lastCompletionMatch release];
 	_lastCompletionMatch = nil;
 

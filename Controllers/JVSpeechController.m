@@ -28,7 +28,7 @@
 	_speechQueue = nil;
 	_synthesizers = nil;
 
-	[super dealloc];	
+	[super dealloc];
 }
 
 - (void) startSpeakingString:(NSString *) string usingVoice:(NSString *) voice {
@@ -45,7 +45,7 @@
 	// when you get a channel flood or re-connect to a dircproxy server. Remove the oldest string from
 	// the queue and then insert the new string onto the end.
 	if( [_speechQueue count] > 15 )
-		[_speechQueue removeObjectAtIndex:0];	
+		[_speechQueue removeObjectAtIndex:0];
 
 	[_speechQueue addObject:[NSDictionary dictionaryWithObjectsAndKeys:string, @"text", voice, @"voice", nil]];
 }

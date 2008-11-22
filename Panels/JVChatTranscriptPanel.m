@@ -264,7 +264,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		else [self setSearchQuery:nil];
 	} else {
 		// this is for text mode users, and is what Apple does in Tiger's Mail
-		if( [[[self window] toolbar] displayMode] == NSToolbarDisplayModeLabelOnly ) 
+		if( [[[self window] toolbar] displayMode] == NSToolbarDisplayModeLabelOnly )
 			[[[self window] toolbar] setDisplayMode:NSToolbarDisplayModeIconOnly];
 	}
 }

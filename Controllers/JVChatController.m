@@ -197,7 +197,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			 || [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUseTabbedWindows"] )
 		windowController = [[[JVTabbedChatWindowController alloc] init] autorelease];
 	else windowController = [[[JVChatWindowController alloc] init] autorelease];
-	if( windowController ) 
+	if( windowController )
 		[_chatWindows addObject:windowController];
 	return windowController;
 }
@@ -298,7 +298,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			[self addViewControllerToPreferedWindowController:ret userInitiated:YES];
 		}
 	}
-	
+
 	return ret;
 }
 

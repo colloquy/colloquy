@@ -170,7 +170,7 @@
 	}
 
 	[_latestBanList sortUsingSelector:sortSelector];
-	[banRules reloadData];	
+	[banRules reloadData];
 }
 
 #pragma mark -
