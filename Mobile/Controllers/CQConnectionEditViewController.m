@@ -114,7 +114,7 @@
 			cell.textEditAction = @selector(serverChanged:);
 		} else if (indexPath.row == 1) {
 			cell.label = NSLocalizedString(@"Nickname", @"Nickname connection setting label");
-			cell.text = ([_connection.nickname isEqualToString:@"<<default>>"] ? @"" : _connection.nickname);
+			cell.text = ([_connection.preferredNickname isEqualToString:@"<<default>>"] ? @"" : _connection.preferredNickname);
 			cell.textField.placeholder = NSUserName();
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -179,8 +179,8 @@
 
 - (void) nicknameChanged:(CQPreferencesTextCell *) sender {
 	if ([sender.text length])
-		_connection.nickname = sender.text;
-	else _connection.nickname = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
+		_connection.preferredNickname = sender.text;
+	else _connection.preferredNickname = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
 
 	[self.tableView reloadData];
 }
