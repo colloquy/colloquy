@@ -169,7 +169,9 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	} else if (indexPath.section == 3 && indexPath.row == 0) {
 		CQPreferencesDeleteCell *cell = [CQPreferencesDeleteCell reusableTableViewCellInTableView:tableView];
 
+		cell.target = self;
 		cell.text = NSLocalizedString(@"Delete Connection", @"Delete Connection button title");
+		cell.deleteAction = @selector(deleteConnection);
 
 		return cell;
 	}
@@ -227,5 +229,26 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 - (void) autoConnectChanged:(CQPreferencesSwitchCell *) sender {
 	_connection.automaticallyConnect = sender.on;
+}
+
+- (void) deleteConnection {
+	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	sheet.delegate = self;
+
+	[sheet addButtonWithTitle:NSLocalizedString(@"Delete Connection", @"Delete Connection button title")];
+	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+
+	sheet.destructiveButtonIndex = 0;
+	sheet.cancelButtonIndex = 1;
+
+	[sheet showInView:[CQColloquyApplication sharedApplication].tabBarController.view];
+	[sheet release];
+}
+
+- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+	if (actionSheet.destructiveButtonIndex != buttonIndex)
+		return;
+	[[CQConnectionsController defaultController] removeConnection:_connection];
+	[self.navigationController popViewControllerAnimated:YES];
 }
 @end

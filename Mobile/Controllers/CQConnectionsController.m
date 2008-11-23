@@ -293,7 +293,8 @@
 
 - (void) moveConnection:(MVChatConnection *) connection toIndex:(NSUInteger) newIndex {
 	NSUInteger oldIndex = [_connections indexOfObjectIdenticalTo:connection];
-	[self moveConnectionAtIndex:oldIndex toIndex:newIndex];
+	if (oldIndex != NSNotFound)
+		[self moveConnectionAtIndex:oldIndex toIndex:newIndex];
 }
 
 - (void) moveConnectionAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex {
@@ -309,7 +310,8 @@
 
 - (void) removeConnection:(MVChatConnection *) connection {
 	NSUInteger index = [_connections indexOfObjectIdenticalTo:connection];
-	[self removeConnectionAtIndex:index];
+	if (index != NSNotFound)
+		[self removeConnectionAtIndex:index];
 }
 
 - (void) removeConnectionAtIndex:(NSUInteger) index {
@@ -331,7 +333,8 @@
 
 - (void) replaceConnection:(MVChatConnection *) previousConnection withConnection:(MVChatConnection *) newConnection {
 	NSUInteger index = [_connections indexOfObjectIdenticalTo:previousConnection];
-	[self replaceConnectionAtIndex:index withConnection:newConnection];
+	if (index != NSNotFound)
+		[self replaceConnectionAtIndex:index withConnection:newConnection];
 }
 
 - (void) replaceConnectionAtIndex:(NSUInteger) index withConnection:(MVChatConnection *) connection {

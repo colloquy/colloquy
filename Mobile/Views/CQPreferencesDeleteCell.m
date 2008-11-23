@@ -51,4 +51,15 @@
 - (void) setText:(NSString *) text {
 	[_deleteButton setTitle:text forState:UIControlStateNormal];
 }
+
+- (SEL) deleteAction {
+	NSArray *actions = [_deleteButton actionsForTarget:self.target forControlEvent:UIControlEventTouchUpInside];
+	if (!actions.count) return NULL;
+	return NSSelectorFromString([actions objectAtIndex:0]);
+}
+
+- (void) setDeleteAction:(SEL) action {
+	[_deleteButton removeTarget:self.target action:NULL forControlEvents:UIControlEventTouchUpInside];
+	[_deleteButton addTarget:self.target action:action forControlEvents:UIControlEventTouchUpInside];
+}
 @end

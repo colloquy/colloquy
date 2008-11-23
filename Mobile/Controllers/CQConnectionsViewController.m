@@ -81,8 +81,8 @@
 
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
-	[self _startUpdatingConnectTimes];
 	[self.tableView reloadData];
+	[self _startUpdatingConnectTimes];
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
