@@ -45,7 +45,7 @@
 
 	[_connections release];
 	[_connectionsViewController release];
-	[_editViewController release];
+
 	[super dealloc];
 }
 
@@ -67,24 +67,16 @@
 		[connection disconnect];
 }
 
-- (void) didReceiveMemoryWarning {
-	if (!_editViewController.view.superview) {
-		[_editViewController release];
-		_editViewController = nil;
-	}
-
-	[super didReceiveMemoryWarning];
-}
-
 #pragma mark -
 
 - (void) editConnection:(MVChatConnection *) connection {
-	if (!_editViewController)
-		_editViewController = [[CQConnectionEditViewController alloc] init];
-	[_editViewController setConnection:connection];
+	CQConnectionEditViewController *editViewController = [[CQConnectionEditViewController alloc] init];
+	editViewController.connection = connection;
 
 	_wasEditingConnection = YES;
-	[self pushViewController:_editViewController animated:YES];
+	[self pushViewController:editViewController animated:YES];
+
+	[editViewController release];
 }
 
 - (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {

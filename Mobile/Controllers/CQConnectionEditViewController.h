@@ -1,8 +1,6 @@
 @class MVChatConnection;
-@class CQConnectionAdvancedEditController;
 
 @interface CQConnectionEditViewController : UITableViewController <UIActionSheetDelegate> {
-	CQConnectionAdvancedEditController *_advancedEditViewController;
 	MVChatConnection *_connection;
 	BOOL _newConnection;
 }

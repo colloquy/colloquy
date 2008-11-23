@@ -17,7 +17,6 @@
 	BOOL _wasEditingConnection;
 
 	CQConnectionsViewController *_connectionsViewController;
-	CQConnectionEditViewController *_editViewController;
 }
 + (CQConnectionsController *) defaultController;
 

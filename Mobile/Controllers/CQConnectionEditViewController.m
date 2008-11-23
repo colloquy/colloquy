@@ -61,7 +61,6 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 		return;
 
 	_newConnection = newConnection;
-	_advancedEditViewController.newConnection = newConnection;
 
 	if (_newConnection) self.title = NSLocalizedString(@"New Connection", @"New Connection view title");
 	else self.title = _connection.server;
@@ -99,14 +98,15 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section == 2 && indexPath.row == 0) {
-		if (!_advancedEditViewController)
-			_advancedEditViewController = [[CQConnectionAdvancedEditController alloc] init];
+		CQConnectionAdvancedEditController *advancedEditViewController = [[CQConnectionAdvancedEditController alloc] init];
 
-		_advancedEditViewController.navigationItem.prompt = self.navigationItem.prompt;
-		_advancedEditViewController.newConnection = _newConnection;
-		_advancedEditViewController.connection = _connection;
+		advancedEditViewController.navigationItem.prompt = self.navigationItem.prompt;
+		advancedEditViewController.newConnection = _newConnection;
+		advancedEditViewController.connection = _connection;
 
-		[self.navigationController pushViewController:_advancedEditViewController animated:YES];
+		[self.navigationController pushViewController:advancedEditViewController animated:YES];
+
+		[advancedEditViewController release];
 
 		return indexPath;
 	}

@@ -16,7 +16,6 @@
 }
 
 - (void) dealloc {
-	[_connectionCreationViewController release];
 	[_connectTimeUpdateTimer release];
 	[super dealloc];
 }
@@ -31,21 +30,12 @@
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-- (void) didReceiveMemoryWarning {
-	if (!_connectionCreationViewController.view.superview) {
-		[_connectionCreationViewController release];
-		_connectionCreationViewController = nil;
-	}
-
-	[super didReceiveMemoryWarning];
-}
-
 #pragma mark -
 
 - (void) makeNewConnection:(id) sender {
-	if (!_connectionCreationViewController)
-		_connectionCreationViewController = [[CQConnectionCreationViewController alloc] init];
-	[self presentModalViewController:_connectionCreationViewController animated:YES];
+	CQConnectionCreationViewController *connectionCreationViewController = [[CQConnectionCreationViewController alloc] init];
+	[self presentModalViewController:connectionCreationViewController animated:YES];
+	[connectionCreationViewController release];
 }
 
 #pragma mark -
