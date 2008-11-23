@@ -2,6 +2,7 @@
 #import "CQConnectionsViewController.h"
 #import "CQConnectionEditViewController.h"
 #import "CQChatController.h"
+#import "CQKeychain.h"
 
 #import <ChatCore/MVChatConnection.h>
 
@@ -163,20 +164,18 @@
 		if ([info objectForKey:@"alternateNicknames"])
 			connection.alternateNicknames = [info objectForKey:@"alternateNicknames"];
 
-/*
 		NSString *password = nil;
 		if ((password = [info objectForKey:@"nicknamePassword"]))
-			[PSKeychainUtilities setPassword:password forHost:connection.server username:connection.preferredNickname port:0 protocol:connection.urlScheme];
+			[[CQKeychain standardKeychain] setPassword:password forServer:connection.server account:connection.preferredNickname];
 
 		if ((password = [info objectForKey:@"password"]))
-			[PSKeychainUtilities setPassword:password forHost:connection.server username:connection.username port:connection.serverPort protocol:connection.urlScheme];
+			[[CQKeychain standardKeychain] setPassword:password forServer:connection.server account:nil];
 
-		if ((password = [PSKeychainUtilities passwordForHost:connection.server username:connection.preferredNickname port:0 protocol:connection.urlScheme]) && [password length])
+		if ((password = [[CQKeychain standardKeychain] passwordForServer:connection.server account:connection.preferredNickname]) && [password length])
 			connection.nicknamePassword = password;
 
-		if ((password = [PSKeychainUtilities passwordForHost:connection.server username:connection.username port:connection.serverPort protocol:connection.urlScheme]) && [password length])
+		if ((password = [[CQKeychain standardKeychain] passwordForServer:connection.server account:nil]) && [password length])
 			connection.password = password;
-*/
 
 		[_connections addObject:connection];
 

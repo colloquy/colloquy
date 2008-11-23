@@ -5,8 +5,14 @@
 #import "CQPreferencesTextCell.h"
 #import "CQPreferencesDeleteCell.h"
 #import "CQPreferencesSwitchCell.h"
+#import "CQKeychain.h"
 
 #import <ChatCore/MVChatConnection.h>
+
+static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
+	NSString *preferredNickname = connection.preferredNickname;
+	return ([preferredNickname isEqualToString:@"<<default>>"] ? NSUserName() : preferredNickname);
+}
 
 @implementation CQConnectionEditViewController
 - (id) init {
@@ -165,14 +171,28 @@
 }
 
 - (void) serverChanged:(CQPreferencesTextCell *) sender {
+	BOOL wasPlaceholder = [_connection.server isEqualToString:@"<<placeholder>>"];
+
 	if ([sender.text length] || _newConnection) {
 		_connection.server = ([sender.text length] ? sender.text : @"<<placeholder>>");
 		if (!_newConnection)
 			self.title = _connection.server;
 	}
 
+	BOOL placeholder = [_connection.server isEqualToString:@"<<placeholder>>"];
+	if (wasPlaceholder && !placeholder) {
+		[[CQKeychain standardKeychain] setPassword:_connection.password forServer:_connection.server account:nil];
+		[[CQKeychain standardKeychain] setPassword:_connection.nicknamePassword forServer:_connection.server account:currentPreferredNickname(_connection)];
+	} else if (!placeholder) {
+		_connection.password = [[CQKeychain standardKeychain] passwordForServer:_connection.server account:nil];
+		_connection.nicknamePassword = [[CQKeychain standardKeychain] passwordForServer:_connection.server account:currentPreferredNickname(_connection)];
+	} else {
+		_connection.password = nil;
+		_connection.nicknamePassword = nil;
+	}
+
 	if (self.navigationItem.rightBarButtonItem.tag == UIBarButtonSystemItemSave)
-		self.navigationItem.rightBarButtonItem.enabled = ![_connection.server isEqualToString:@"<<placeholder>>"];
+		self.navigationItem.rightBarButtonItem.enabled = !placeholder;
 
 	[self.tableView reloadData];
 }
@@ -181,6 +201,10 @@
 	if ([sender.text length])
 		_connection.preferredNickname = sender.text;
 	else _connection.preferredNickname = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
+
+	if (![_connection.server isEqualToString:@"<<placeholder>>"])
+		_connection.nicknamePassword = [[CQKeychain standardKeychain] passwordForServer:_connection.server account:currentPreferredNickname(_connection)];
+	else _connection.nicknamePassword = nil;
 
 	[self.tableView reloadData];
 }

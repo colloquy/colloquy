@@ -24,7 +24,7 @@
 
 	MVChatConnection *connection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
 	connection.server = @"<<placeholder>>";
-	connection.nickname = @"<<default>>";
+	connection.preferredNickname = @"<<default>>";
 	connection.realName = @"<<default>>";
 	connection.username = @"<<default>>";
 	connection.automaticallyConnect = YES;
@@ -63,8 +63,8 @@
 		return;
 	}
 
-	if ([connection.nickname isEqualToString:@"<<default>>"])
-		connection.nickname = NSUserName();
+	if ([connection.preferredNickname isEqualToString:@"<<default>>"])
+		connection.preferredNickname = NSUserName();
 
 	if ([connection.realName isEqualToString:@"<<default>>"])
 		connection.realName = NSFullUserName();

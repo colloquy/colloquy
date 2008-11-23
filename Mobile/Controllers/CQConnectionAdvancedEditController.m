@@ -2,8 +2,14 @@
 
 #import "CQPreferencesSwitchCell.h"
 #import "CQPreferencesTextCell.h"
+#import "CQKeychain.h"
 
 #import <ChatCore/MVChatConnection.h>
+
+static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
+	NSString *preferredNickname = connection.preferredNickname;
+	return ([preferredNickname isEqualToString:@"<<default>>"] ? NSUserName() : preferredNickname);
+}
 
 @implementation CQConnectionAdvancedEditController
 - (id) init {
@@ -154,8 +160,7 @@
 		if (_connection.alternateNicknames.count)
 			cell.text = [_connection.alternateNicknames componentsJoinedByString:@", "];
 
-		NSString *nickname = ([_connection.nickname isEqualToString:@"<<default>>"] ? NSUserName() : _connection.nickname);
-		cell.textField.placeholder = [NSString stringWithFormat:@"%@_, %1$@__, %1$@___", nickname];
+		cell.textField.placeholder = [NSString stringWithFormat:@"%@_, %1$@__, %1$@___", currentPreferredNickname(_connection)];
 
 		cell.label = NSLocalizedString(@"Nicknames", @"Nicknames connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -201,9 +206,15 @@
 
 - (void) passwordChanged:(CQPreferencesTextCell *) sender {
 	_connection.password = sender.text;
+
+	if (![_connection.server isEqualToString:@"<<placeholder>>"])
+		[[CQKeychain standardKeychain] setPassword:_connection.password forServer:_connection.server account:nil];
 }
 
 - (void) nicknamePasswordChanged:(CQPreferencesTextCell *) sender {
 	_connection.nicknamePassword = sender.text;
+
+	if (![_connection.server isEqualToString:@"<<placeholder>>"])
+		[[CQKeychain standardKeychain] setPassword:_connection.nicknamePassword forServer:_connection.server account:currentPreferredNickname(_connection)];
 }
 @end
