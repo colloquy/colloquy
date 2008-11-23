@@ -41,6 +41,17 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	[self.tableView reloadData];
 }
 
+- (void) viewWillDisappear:(BOOL) animated {
+	[super viewWillDisappear:animated];
+
+	[self.tableView endEditing:YES];
+
+	// Workaround a bug were the table view is left in a state
+	// were it thinks a keyboard is showing.
+	self.tableView.contentInset = UIEdgeInsetsZero;
+	self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
+}
+
 #pragma mark -
 
 @synthesize newConnection = _newConnection;
@@ -66,6 +77,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	if (!_newConnection)
 		self.title = connection.server;
 
+	[self.tableView setContentOffset:CGPointZero animated:NO];
 	[self.tableView reloadData];
 }
 
@@ -87,12 +99,12 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section == 2 && indexPath.row == 0) {
-		if (!_advancedEditViewController) {
+		if (!_advancedEditViewController)
 			_advancedEditViewController = [[CQConnectionAdvancedEditController alloc] init];
-			_advancedEditViewController.navigationItem.prompt = self.navigationItem.prompt;
-			_advancedEditViewController.newConnection = _newConnection;
-			_advancedEditViewController.connection = _connection;
-		}
+
+		_advancedEditViewController.navigationItem.prompt = self.navigationItem.prompt;
+		_advancedEditViewController.newConnection = _newConnection;
+		_advancedEditViewController.connection = _connection;
 
 		[self.navigationController pushViewController:_advancedEditViewController animated:YES];
 

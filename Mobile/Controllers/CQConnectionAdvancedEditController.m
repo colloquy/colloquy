@@ -41,6 +41,17 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 	[self.tableView reloadData];
 }
 
+- (void) viewWillDisappear:(BOOL) animated {
+	[super viewWillDisappear:animated];
+
+	[self.tableView endEditing:YES];
+
+	// Workaround a bug were the table view is left in a state
+	// were it thinks a keyboard is showing.
+	self.tableView.contentInset = UIEdgeInsetsZero;
+	self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
+}
+
 #pragma mark -
 
 @synthesize newConnection = _newConnection;
@@ -52,6 +63,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 	_connection = [connection retain];
 	[old release];
 
+	[self.tableView setContentOffset:CGPointZero animated:NO];
 	[self.tableView reloadData];
 }
 

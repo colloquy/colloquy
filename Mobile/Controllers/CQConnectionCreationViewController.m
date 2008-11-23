@@ -95,7 +95,9 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 }
 
 - (void) navigationController:(UINavigationController *) navigationController willShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
-	// Workaround a bug where viewWillAppear: is not called when this navigation controller is a modal view.
+	// Workaround a bug where viewWillDisappear: and viewWillAppear: are not called when this navigation controller is a modal view.
+	if (navigationController.topViewController != viewController)
+		[navigationController.topViewController viewWillDisappear:animated];
 	[viewController viewWillAppear:animated];
 }
 

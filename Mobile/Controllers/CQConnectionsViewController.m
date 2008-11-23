@@ -66,7 +66,6 @@
 #pragma mark -
 
 - (void) _startUpdatingConnectTimes {
-	[self _updateConnectTimes];
 	if (!_connectTimeUpdateTimer)
 		_connectTimeUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(_updateConnectTimes) userInfo:nil repeats:YES] retain];
 }
