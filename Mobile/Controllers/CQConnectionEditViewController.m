@@ -9,9 +9,17 @@
 
 #import <ChatCore/MVChatConnection.h>
 
+static inline BOOL isDefaultValue(NSString *string) {
+	return [string isEqualToString:@"<<default>>"];
+}
+
+static inline BOOL isPlaceholderValue(NSString *string) {
+	return [string isEqualToString:@"<<placeholder>>"];
+}
+
 static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	NSString *preferredNickname = connection.preferredNickname;
-	return ([preferredNickname isEqualToString:@"<<default>>"] ? NSUserName() : preferredNickname);
+	return (isDefaultValue(preferredNickname) ? NSUserName() : preferredNickname);
 }
 
 @implementation CQConnectionEditViewController
@@ -112,7 +120,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 		if (indexPath.row == 0) {
 			cell.label = NSLocalizedString(@"Server", @"Server connection setting label");
-			cell.text = ([_connection.server isEqualToString:@"<<placeholder>>"] ? @"" : _connection.server);
+			cell.text = (isPlaceholderValue(_connection.server) ? @"" : _connection.server);
 			cell.textField.placeholder = (_newConnection ? @"irc.example.com" : @"");
 			cell.textField.keyboardType = UIKeyboardTypeURL;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -120,14 +128,14 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 			cell.textEditAction = @selector(serverChanged:);
 		} else if (indexPath.row == 1) {
 			cell.label = NSLocalizedString(@"Nickname", @"Nickname connection setting label");
-			cell.text = ([_connection.preferredNickname isEqualToString:@"<<default>>"] ? @"" : _connection.preferredNickname);
+			cell.text = (isDefaultValue(_connection.preferredNickname) ? @"" : _connection.preferredNickname);
 			cell.textField.placeholder = NSUserName();
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(nicknameChanged:);
 		} else if (indexPath.row == 2) {
 			cell.label = NSLocalizedString(@"Real Name", @"Real Name connection setting label");
-			cell.text = ([_connection.realName isEqualToString:@"<<default>>"] ? @"" : _connection.realName);
+			cell.text = (isDefaultValue(_connection.realName) ? @"" : _connection.realName);
 			cell.textField.placeholder = NSFullUserName();
 			cell.textEditAction = @selector(realNameChanged:);
 		}
@@ -171,7 +179,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 }
 
 - (void) serverChanged:(CQPreferencesTextCell *) sender {
-	BOOL wasPlaceholder = [_connection.server isEqualToString:@"<<placeholder>>"];
+	BOOL wasPlaceholder = isPlaceholderValue(_connection.server);
 
 	if ([sender.text length] || _newConnection) {
 		_connection.server = ([sender.text length] ? sender.text : @"<<placeholder>>");
@@ -179,7 +187,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 			self.title = _connection.server;
 	}
 
-	BOOL placeholder = [_connection.server isEqualToString:@"<<placeholder>>"];
+	BOOL placeholder = isPlaceholderValue(_connection.server);
 	if (wasPlaceholder && !placeholder) {
 		[[CQKeychain standardKeychain] setPassword:_connection.password forServer:_connection.server account:nil];
 		[[CQKeychain standardKeychain] setPassword:_connection.nicknamePassword forServer:_connection.server account:currentPreferredNickname(_connection)];
@@ -202,7 +210,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 		_connection.preferredNickname = sender.text;
 	else _connection.preferredNickname = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
 
-	if (![_connection.server isEqualToString:@"<<placeholder>>"])
+	if (!isPlaceholderValue(_connection.server))
 		_connection.nicknamePassword = [[CQKeychain standardKeychain] passwordForServer:_connection.server account:currentPreferredNickname(_connection)];
 	else _connection.nicknamePassword = nil;
 

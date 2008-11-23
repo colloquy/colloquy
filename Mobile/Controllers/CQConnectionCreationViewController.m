@@ -5,6 +5,14 @@
 
 #import <ChatCore/MVChatConnection.h>
 
+static inline BOOL isDefaultValue(NSString *string) {
+	return [string isEqualToString:@"<<default>>"];
+}
+
+static inline BOOL isPlaceholderValue(NSString *string) {
+	return [string isEqualToString:@"<<placeholder>>"];
+}
+
 @implementation CQConnectionCreationViewController
 - (id) init {
 	if (!(self = [super init]))
@@ -58,18 +66,18 @@
 
 - (void) commit:(id) sender {
 	MVChatConnection *connection = _editViewController.connection;
-	if ([connection.server isEqualToString:@"<<placeholder>>"]) {
+	if (isPlaceholderValue(connection.server)) {
 		[self cancel:sender];
 		return;
 	}
 
-	if ([connection.preferredNickname isEqualToString:@"<<default>>"])
+	if (isDefaultValue(connection.preferredNickname))
 		connection.preferredNickname = NSUserName();
 
-	if ([connection.realName isEqualToString:@"<<default>>"])
+	if (isDefaultValue(connection.realName))
 		connection.realName = NSFullUserName();
 
-	if ([connection.username isEqualToString:@"<<default>>"]) {
+	if (isDefaultValue(connection.username)) {
 		UIDevice *device = [UIDevice currentDevice];
 		if ([[device model] hasPrefix:@"iPhone"])
 			connection.username = @"iphone";

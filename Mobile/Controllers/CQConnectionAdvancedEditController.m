@@ -6,9 +6,17 @@
 
 #import <ChatCore/MVChatConnection.h>
 
-static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
+static inline BOOL isDefaultValue(NSString *string) {
+	return [string isEqualToString:@"<<default>>"];
+}
+
+static inline BOOL isPlaceholderValue(NSString *string) {
+	return [string isEqualToString:@"<<placeholder>>"];
+}
+
+static inline __attribute__((always_inline)) NSString *currentPreferredNickname(MVChatConnection *connection) {
 	NSString *preferredNickname = connection.preferredNickname;
-	return ([preferredNickname isEqualToString:@"<<default>>"] ? NSUserName() : preferredNickname);
+	return (isDefaultValue(preferredNickname) ? NSUserName() : preferredNickname);
 }
 
 @implementation CQConnectionAdvancedEditController
@@ -207,14 +215,14 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 - (void) passwordChanged:(CQPreferencesTextCell *) sender {
 	_connection.password = sender.text;
 
-	if (![_connection.server isEqualToString:@"<<placeholder>>"])
+	if (!isPlaceholderValue(_connection.server))
 		[[CQKeychain standardKeychain] setPassword:_connection.password forServer:_connection.server account:nil];
 }
 
 - (void) nicknamePasswordChanged:(CQPreferencesTextCell *) sender {
 	_connection.nicknamePassword = sender.text;
 
-	if (![_connection.server isEqualToString:@"<<placeholder>>"])
+	if (!isPlaceholderValue(_connection.server))
 		[[CQKeychain standardKeychain] setPassword:_connection.nicknamePassword forServer:_connection.server account:currentPreferredNickname(_connection)];
 }
 @end
