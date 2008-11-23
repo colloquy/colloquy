@@ -181,8 +181,8 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 - (void) serverChanged:(CQPreferencesTextCell *) sender {
 	BOOL wasPlaceholder = isPlaceholderValue(_connection.server);
 
-	if ([sender.text length] || _newConnection) {
-		_connection.server = ([sender.text length] ? sender.text : @"<<placeholder>>");
+	if (sender.text.length || _newConnection) {
+		_connection.server = (sender.text.length ? sender.text : @"<<placeholder>>");
 		if (!_newConnection)
 			self.title = _connection.server;
 	}
@@ -206,7 +206,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 }
 
 - (void) nicknameChanged:(CQPreferencesTextCell *) sender {
-	if ([sender.text length])
+	if (sender.text.length)
 		_connection.preferredNickname = sender.text;
 	else _connection.preferredNickname = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
 
@@ -218,7 +218,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 }
 
 - (void) realNameChanged:(CQPreferencesTextCell *) sender {
-	if ([sender.text length])
+	if (sender.text.length)
 		_connection.realName = sender.text;
 	else _connection.realName = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
 

@@ -172,7 +172,7 @@
 
 /*
 - (BOOL) keyboardInput:(UIFieldEditor *) editor shouldInsertText:(NSString *) text isMarkedText:(BOOL) marked {
-	if( [text length] == 1 && [text characterAtIndex:0] == '\n' ) {
+	if( text.length == 1 && [text characterAtIndex:0] == '\n' ) {
 		[self send:editor];
 		return NO;
 	}
@@ -337,9 +337,9 @@
 
 	[_transcriptView scrollToBottom];
 
-	if( ! [[_tableCell firstChatLineText] length] ) {
+	if( ! [_tableCell firstChatLineText].length ) {
 		[_tableCell setFirstChatLineText:messagePreviewString];
-	} else if( ! [[_tableCell secondChatLineText] length] ) {
+	} else if( ! [_tableCell secondChatLineText].length ) {
 		[_tableCell setSecondChatLineText:messagePreviewString];
 	} else {
 		[_tableCell setFirstChatLineText:[_tableCell secondChatLineText]];

@@ -171,10 +171,10 @@
 		if ((password = [info objectForKey:@"password"]))
 			[[CQKeychain standardKeychain] setPassword:password forServer:connection.server account:nil];
 
-		if ((password = [[CQKeychain standardKeychain] passwordForServer:connection.server account:connection.preferredNickname]) && [password length])
+		if ((password = [[CQKeychain standardKeychain] passwordForServer:connection.server account:connection.preferredNickname]) && password.length)
 			connection.nicknamePassword = password;
 
-		if ((password = [[CQKeychain standardKeychain] passwordForServer:connection.server account:nil]) && [password length])
+		if ((password = [[CQKeychain standardKeychain] passwordForServer:connection.server account:nil]) && password.length)
 			connection.password = password;
 
 		[_connections addObject:connection];
@@ -261,7 +261,7 @@
 
 	for (MVChatConnection *connection in _connections) {
 		NSString *server = connection.server;
-		NSRange range = [server rangeOfString:address options:(NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch) range:NSMakeRange(0, [server length])];
+		NSRange range = [server rangeOfString:address options:(NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch) range:NSMakeRange(0, server.length)];
 		if (range.location != NSNotFound && (range.location == 0 || [server characterAtIndex:(range.location - 1)] == '.'))
 			[result addObject:connection];
 	}

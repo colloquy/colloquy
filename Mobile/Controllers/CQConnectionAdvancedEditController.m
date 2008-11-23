@@ -205,7 +205,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 }
 
 - (void) usernameChanged:(CQPreferencesTextCell *) sender {
-	if ([sender.text length])
+	if (sender.text.length)
 		_connection.username = sender.text;
 	else _connection.username = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
 
