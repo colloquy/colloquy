@@ -2,10 +2,11 @@
 
 #import "CQConnectionAdvancedEditController.h"
 #import "CQConnectionsController.h"
-#import "CQPreferencesTextCell.h"
-#import "CQPreferencesDeleteCell.h"
-#import "CQPreferencesSwitchCell.h"
 #import "CQKeychain.h"
+#import "CQPreferencesDeleteCell.h"
+#import "CQPreferencesListViewController.h"
+#import "CQPreferencesSwitchCell.h"
+#import "CQPreferencesTextCell.h"
 
 #import <ChatCore/MVChatConnection.h>
 
@@ -101,6 +102,28 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	if ((indexPath.section == 1 && indexPath.row == 1) || (indexPath.section == 2 && indexPath.row == 0))
+		return indexPath;
+	return nil;
+}
+
+- (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	if (indexPath.section == 1 && indexPath.row == 1) {
+		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
+
+		listViewController.title = NSLocalizedString(@"Join Rooms", @"Join Rooms view title");
+		listViewController.items = (_newConnection ? [NSArray array] : _connection.automaticJoinedRooms);
+		listViewController.itemImage = [UIImage imageNamed:@"roomIconSmall.png"];
+		listViewController.addItemLabelText = NSLocalizedString(@"Add chat room", @"Add chat room label");
+		listViewController.noItemsLabelText = NSLocalizedString(@"No chat rooms", @"No chat rooms label");
+
+		[self.navigationController pushViewController:listViewController animated:YES];
+
+		[listViewController release];
+
+		return;
+	}
+
 	if (indexPath.section == 2 && indexPath.row == 0) {
 		CQConnectionAdvancedEditController *advancedEditViewController = [[CQConnectionAdvancedEditController alloc] init];
 
@@ -112,13 +135,8 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 		[advancedEditViewController release];
 
-		return indexPath;
+		return;
 	}
-
-	if (indexPath.section == 1 && indexPath.row == 1)
-		return indexPath;
-
-	return nil;
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
@@ -172,6 +190,10 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 			cell.label = NSLocalizedString(@"Join Rooms", @"Join Rooms connection setting label");
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+			if (!_newConnection && _connection.automaticJoinedRooms.count)
+				cell.text = [_connection.automaticJoinedRooms componentsJoinedByString:@", "];
+			else cell.text = NSLocalizedString(@"No Rooms", @"No Rooms label");
 
 			return cell;
 		}

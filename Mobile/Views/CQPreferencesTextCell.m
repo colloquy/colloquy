@@ -64,6 +64,9 @@
 	[super setSelected:selected animated:animated];
 
 	_label.highlighted = selected;
+
+	if (selected) _textField.textColor = [UIColor whiteColor];
+	else _textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 }
 
 - (void) setAccessoryType:(UITableViewCellAccessoryType) type {
@@ -108,8 +111,8 @@
 
 		CGRect frame = _textField.frame;
 		frame.size = [_textField sizeThatFits:_textField.bounds.size];
-		frame.origin.x = 120.;
-		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
+		frame.origin.x = 125.;
+		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.)) - 1.;
 		frame.size.width = (contentRect.size.width - frame.origin.x - rightMargin);
 		_textField.frame = frame;
 

@@ -1,6 +1,7 @@
 #import "CQConnectionAdvancedEditController.h"
 
 #import "CQPreferencesSwitchCell.h"
+#import "CQPreferencesListViewController.h"
 #import "CQPreferencesTextCell.h"
 #import "CQKeychain.h"
 
@@ -104,11 +105,41 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (indexPath.section == 2 && indexPath.row == 0)
-		return indexPath;
-	if (indexPath.section == 3 && indexPath.row == 0)
+	if ((indexPath.section == 2 && indexPath.row == 0) || (indexPath.section == 3 && indexPath.row == 0))
 		return indexPath;
 	return nil;
+}
+
+- (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	if (indexPath.section == 2 && indexPath.row == 0) {
+		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
+
+		listViewController.title = NSLocalizedString(@"Nicknames", @"Nicknames view title");
+		listViewController.items = _connection.alternateNicknames;
+		listViewController.addItemLabelText = NSLocalizedString(@"Add nickname", @"Add nickname label");
+		listViewController.noItemsLabelText = NSLocalizedString(@"No nicknames", @"No nicknames label");
+
+		[self.navigationController pushViewController:listViewController animated:YES];
+
+		[listViewController release];
+
+		return;
+	}
+
+	if (indexPath.section == 3 && indexPath.row == 0) {
+		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
+
+		listViewController.title = NSLocalizedString(@"Commands", @"Commands view title");
+		listViewController.items = (_newConnection ? [NSArray array] : [NSArray array]);
+		listViewController.addItemLabelText = NSLocalizedString(@"Add command", @"Add command label");
+		listViewController.noItemsLabelText = NSLocalizedString(@"No commands", @"No commands label");
+
+		[self.navigationController pushViewController:listViewController animated:YES];
+
+		[listViewController release];
+
+		return;
+	}
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -184,7 +215,9 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 		if (_connection.alternateNicknames.count)
 			cell.text = [_connection.alternateNicknames componentsJoinedByString:@", "];
 
-		cell.textField.placeholder = [NSString stringWithFormat:@"%@_, %1$@__, %1$@___", currentPreferredNickname(_connection)];
+		if (_connection.alternateNicknames.count)
+			cell.text = [_connection.alternateNicknames componentsJoinedByString:@", "];
+		else cell.textField.placeholder = [NSString stringWithFormat:@"%@_, %1$@__, %1$@___", currentPreferredNickname(_connection)];
 
 		cell.label = NSLocalizedString(@"Nicknames", @"Nicknames connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -195,6 +228,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 		cell.label = NSLocalizedString(@"Commands", @"Commands connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		cell.text = NSLocalizedString(@"No Commands", @"No Commands label");
 
 		return cell;
 	}

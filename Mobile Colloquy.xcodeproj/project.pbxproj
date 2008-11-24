@@ -82,6 +82,8 @@
 		1CE3FB120D8A3DC100FB035F /* CQConnectionCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */; };
 		1CF50C150ED8AFBE00CBE5E3 /* CQKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */; };
 		1CF50C870ED8BE1100CBE5E3 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF50C860ED8BE1100CBE5E3 /* Security.framework */; };
+		1CF50EAF0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */; };
+		1CF50F710EDA7BC600CBE5E3 /* roomIconSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF50F700EDA7BC600CBE5E3 /* roomIconSmall.png */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
@@ -215,6 +217,9 @@
 		1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQKeychain.h; sourceTree = "<group>"; };
 		1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQKeychain.m; sourceTree = "<group>"; };
 		1CF50C860ED8BE1100CBE5E3 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPreferencesListViewController.h; sourceTree = "<group>"; };
+		1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesListViewController.m; sourceTree = "<group>"; };
+		1CF50F700EDA7BC600CBE5E3 /* roomIconSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = roomIconSmall.png; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* Colloquy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -332,6 +337,8 @@
 				1C6E3D200ED1CEB6001822BD /* CQConnectionAdvancedEditController.h */,
 				1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */,
 				1CE3FB100D8A3DC100FB035F /* CQConnectionCreationViewController.h */,
+				1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */,
+				1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */,
 				1C0937800D8116FC00A2705D /* CQChatController.m */,
 				1C0937810D8116FC00A2705D /* CQChatController.h */,
 				1C82C27C0D847EA4009ABD9F /* CQChatsViewController.m */,
@@ -459,6 +466,7 @@
 				1CB318DA0D8644E4006A7513 /* server.png */,
 				1CD949800D8E18DB00756ACD /* directChatIcon.png */,
 				1CD949810D8E18DB00756ACD /* roomIcon.png */,
+				1CF50F700EDA7BC600CBE5E3 /* roomIconSmall.png */,
 				1C61FE9F0ED24BA40016F968 /* deleteButtonNormal.png */,
 				1C61FEA00ED24BA40016F968 /* deleteButtonPressed.png */,
 				1C0EB6780D8660E900B6F1BC /* errorBadgeDim.png */,
@@ -542,6 +550,7 @@
 				1CA91CCA0DFC976D002DDBB4 /* Colloquy.xib in Resources */,
 				1C61FEA10ED24BA40016F968 /* deleteButtonNormal.png in Resources */,
 				1C61FEA20ED24BA40016F968 /* deleteButtonPressed.png in Resources */,
+				1CF50F710EDA7BC600CBE5E3 /* roomIconSmall.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -608,6 +617,7 @@
 				1CC575980ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m in Sources */,
 				1CC576D30ED4684700FEC2C1 /* UITableViewCellAdditions.m in Sources */,
 				1CF50C150ED8AFBE00CBE5E3 /* CQKeychain.m in Sources */,
+				1CF50EAF0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
