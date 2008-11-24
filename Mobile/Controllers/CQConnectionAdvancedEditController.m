@@ -19,6 +19,8 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 	return (isDefaultValue(preferredNickname) ? NSUserName() : preferredNickname);
 }
 
+#pragma mark -
+
 @implementation CQConnectionAdvancedEditController
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
@@ -66,6 +68,8 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 	[self.tableView setContentOffset:CGPointZero animated:NO];
 	[self.tableView reloadData];
 }
+
+#pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
 	return 4;
@@ -198,6 +202,8 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 	NSAssert(NO, @"Should not reach this point.");
 	return nil;
 }
+
+#pragma mark -
 
 - (void) serverPortChanged:(CQPreferencesTextCell *) sender {
 	_connection.serverPort = [sender.text longLongValue];

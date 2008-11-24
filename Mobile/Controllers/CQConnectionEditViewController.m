@@ -22,6 +22,8 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	return (isDefaultValue(preferredNickname) ? NSUserName() : preferredNickname);
 }
 
+#pragma mark -
+
 @implementation CQConnectionEditViewController
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
@@ -79,6 +81,8 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	[self.tableView setContentOffset:CGPointZero animated:NO];
 	[self.tableView reloadData];
 }
+
+#pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
 	if (self.newConnection)
@@ -191,6 +195,8 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	NSAssert(NO, @"Should not reach this point.");
 	return nil;
 }
+
+#pragma mark -
 
 - (void) serverChanged:(CQPreferencesTextCell *) sender {
 	BOOL wasPlaceholder = isPlaceholderValue(_connection.server);
