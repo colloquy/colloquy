@@ -72,9 +72,13 @@
 - (void) setAccessoryType:(UITableViewCellAccessoryType) type {
 	super.accessoryType = type;
 
-	if (type == UITableViewCellAccessoryDisclosureIndicator)
+	if (type == UITableViewCellAccessoryDisclosureIndicator) {
 		_textField.textAlignment = UITextAlignmentRight;
-	else _textField.textAlignment = UITextAlignmentLeft;
+		_textField.userInteractionEnabled = NO;
+	} else {
+		_textField.textAlignment = UITextAlignmentLeft;
+		_textField.userInteractionEnabled = YES;
+	}
 }
 
 - (void) prepareForReuse {
