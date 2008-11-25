@@ -112,10 +112,15 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
 
 		listViewController.title = NSLocalizedString(@"Join Rooms", @"Join Rooms view title");
-		listViewController.items = (_newConnection ? [NSArray array] : _connection.automaticJoinedRooms);
+		listViewController.items = _connection.automaticJoinedRooms;
 		listViewController.itemImage = [UIImage imageNamed:@"roomIconSmall.png"];
 		listViewController.addItemLabelText = NSLocalizedString(@"Add chat room", @"Add chat room label");
 		listViewController.noItemsLabelText = NSLocalizedString(@"No chat rooms", @"No chat rooms label");
+		listViewController.editViewTitle = NSLocalizedString(@"Edit Chat Room", @"Edit Chat Room view title");
+		listViewController.editPlaceholder = NSLocalizedString(@"Chat Room", @"Chat Room placeholder");
+
+		listViewController.target = self;
+		listViewController.action = @selector(automaticJoinRoomsChanged:);
 
 		[self.navigationController pushViewController:listViewController animated:YES];
 
@@ -191,7 +196,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 			cell.label = NSLocalizedString(@"Join Rooms", @"Join Rooms connection setting label");
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-			if (!_newConnection && _connection.automaticJoinedRooms.count)
+			if (_connection.automaticJoinedRooms.count)
 				cell.text = [_connection.automaticJoinedRooms componentsJoinedByString:@", "];
 			else cell.text = NSLocalizedString(@"No Rooms", @"No Rooms label");
 
@@ -269,6 +274,10 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 - (void) autoConnectChanged:(CQPreferencesSwitchCell *) sender {
 	_connection.automaticallyConnect = sender.on;
+}
+
+- (void) automaticJoinRoomsChanged:(CQPreferencesListViewController *) sender {
+	_connection.automaticJoinedRooms = sender.items;
 }
 
 - (void) deleteConnection {

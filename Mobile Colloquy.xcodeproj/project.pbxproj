@@ -55,6 +55,7 @@
 		1C0EB67B0D8660E900B6F1BC /* errorBadgeGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0EB6790D8660E900B6F1BC /* errorBadgeGlow.png */; };
 		1C1896110E29CF74003CFED0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */; };
 		1C1896120E29CF75003CFED0 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */; };
+		1C2A046F0EDAFC2D004509AE /* CQPreferencesListEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */; };
 		1C6100D30ED31C8B0016F968 /* CQPreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6100D20ED31C8B0016F968 /* CQPreferencesSwitchCell.m */; };
 		1C61FEA10ED24BA40016F968 /* deleteButtonNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C61FE9F0ED24BA40016F968 /* deleteButtonNormal.png */; };
 		1C61FEA20ED24BA40016F968 /* deleteButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C61FEA00ED24BA40016F968 /* deleteButtonPressed.png */; };
@@ -177,6 +178,8 @@
 		1C0EB6780D8660E900B6F1BC /* errorBadgeDim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = errorBadgeDim.png; sourceTree = "<group>"; };
 		1C0EB6790D8660E900B6F1BC /* errorBadgeGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = errorBadgeGlow.png; sourceTree = "<group>"; };
 		1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		1C2A046D0EDAFC2D004509AE /* CQPreferencesListEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPreferencesListEditViewController.h; sourceTree = "<group>"; };
+		1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesListEditViewController.m; sourceTree = "<group>"; };
 		1C6100D10ED31C8B0016F968 /* CQPreferencesSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPreferencesSwitchCell.h; sourceTree = "<group>"; };
 		1C6100D20ED31C8B0016F968 /* CQPreferencesSwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesSwitchCell.m; sourceTree = "<group>"; };
 		1C61FE9F0ED24BA40016F968 /* deleteButtonNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deleteButtonNormal.png; sourceTree = "<group>"; };
@@ -339,6 +342,8 @@
 				1CE3FB100D8A3DC100FB035F /* CQConnectionCreationViewController.h */,
 				1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */,
 				1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */,
+				1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */,
+				1C2A046D0EDAFC2D004509AE /* CQPreferencesListEditViewController.h */,
 				1C0937800D8116FC00A2705D /* CQChatController.m */,
 				1C0937810D8116FC00A2705D /* CQChatController.h */,
 				1C82C27C0D847EA4009ABD9F /* CQChatsViewController.m */,
@@ -618,6 +623,7 @@
 				1CC576D30ED4684700FEC2C1 /* UITableViewCellAdditions.m in Sources */,
 				1CF50C150ED8AFBE00CBE5E3 /* CQKeychain.m in Sources */,
 				1CF50EAF0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m in Sources */,
+				1C2A046F0EDAFC2D004509AE /* CQPreferencesListEditViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

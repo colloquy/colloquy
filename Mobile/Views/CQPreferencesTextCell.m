@@ -99,6 +99,8 @@
 
 	CGRect contentRect = self.contentView.frame;
 
+	BOOL showingLabel = (_label.text.length > 0);
+
 	NSString *originalText = [_textField.text retain];
 	BOOL showingTextField = NO;
 	if (originalText.length || _textField.placeholder.length) {
@@ -107,11 +109,19 @@
 
 		_textField.text = @"Qwerty"; // Temporary text to workaround a bug where sizeThatFits: returns zero height when there is only a placeholder.
 
-		const CGFloat rightMargin = (self.accessoryType == UITableViewCellAccessoryDisclosureIndicator ? 2. : 10.);
+		if (showingLabel)
+			_textField.font = [UIFont systemFontOfSize:14.];
+		else _textField.font = [UIFont systemFontOfSize:17.];
+
+		CGFloat rightMargin = 10.;
+		if (_textField.clearButtonMode == UITextFieldViewModeAlways)
+			rightMargin = 0.;
+		else if (self.accessoryType == UITableViewCellAccessoryDisclosureIndicator)
+			rightMargin = 2.;
 
 		CGRect frame = _textField.frame;
 		frame.size = [_textField sizeThatFits:_textField.bounds.size];
-		frame.origin.x = 125.;
+		frame.origin.x = (showingLabel ? 125. : 10.);
 		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.)) - 1.;
 		frame.size.width = (contentRect.size.width - frame.origin.x - rightMargin);
 		_textField.frame = frame;
@@ -123,14 +133,20 @@
 
 	[originalText release];
 
-	CGRect frame = _label.frame;
-	frame.size = [_label sizeThatFits:_label.bounds.size];
-	frame.origin.x = 10.;
-	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
-	if (showingTextField)
-		frame.size.width = (_textField.frame.origin.x - frame.origin.x - 10.);
-	else frame.size.width = (contentRect.size.width - frame.origin.x - 10.);
-	_label.frame = frame;
+	if (showingLabel) {
+		_label.hidden = NO;
+
+		CGRect frame = _label.frame;
+		frame.size = [_label sizeThatFits:_label.bounds.size];
+		frame.origin.x = 10.;
+		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
+		if (showingTextField)
+			frame.size.width = (_textField.frame.origin.x - frame.origin.x - 10.);
+		else frame.size.width = (contentRect.size.width - frame.origin.x - 10.);
+		_label.frame = frame;
+	} else {
+		_label.hidden = YES;
+	}
 }
 
 @synthesize textEditAction = _textEditAction;

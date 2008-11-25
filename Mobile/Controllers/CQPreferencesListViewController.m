@@ -1,5 +1,7 @@
 #import "CQPreferencesListViewController.h"
 
+#import "CQPreferencesListEditViewController.h"
+
 @implementation CQPreferencesListViewController
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
@@ -9,6 +11,7 @@
 
 	self.addItemLabelText = NSLocalizedString(@"Add item", @"Add item label");
 	self.noItemsLabelText = NSLocalizedString(@"No items", @"No items label");
+	self.editViewTitle = NSLocalizedString(@"Edit", @"Edit view title");
 
 	return self;
 }
@@ -18,6 +21,9 @@
 	[_itemImage release];
 	[_addItemLabelText release];
 	[_noItemsLabelText release];
+	[_editViewTitle release];
+	[_editPlaceholder release];
+	[_editingView release];
 	[super dealloc];
 }
 
@@ -36,18 +42,33 @@
 	if (!_items.count)
 		self.editing = YES;
 
+	if (_editingView) {
+		if (_editingIndex < _items.count) {
+			if (_editingView.listItemText.length)
+				[_items replaceObjectAtIndex:_editingIndex withObject:_editingView.listItemText];
+			else [_items removeObjectAtIndex:_editingIndex];
+			_pendingChanges = YES;
+		} else if (_editingView.listItemText.length) {
+			[_items insertObject:_editingView.listItemText atIndex:_editingIndex];
+			_pendingChanges = YES;
+		}
+
+		[_editingView release];
+		_editingView = nil;
+	}
+
 	[self.tableView reloadData];
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
-	[self.tableView endEditing:YES];
+	if (_editingView || !_pendingChanges || !_action)
+		return;
 
-	// Workaround a bug were the table view is left in a state
-	// were it thinks a keyboard is showing.
-	self.tableView.contentInset = UIEdgeInsetsZero;
-	self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
+	if (!_target || [_target respondsToSelector:_action])
+		if ([[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil])
+			_pendingChanges = NO;
 }
 
 #pragma mark -
@@ -55,6 +76,14 @@
 @synthesize addItemLabelText = _addItemLabelText;
 
 @synthesize noItemsLabelText = _noItemsLabelText;
+
+@synthesize editViewTitle = _editViewTitle;
+
+@synthesize editPlaceholder = _editPlaceholder;
+
+@synthesize target = _target;
+
+@synthesize action = _action;
 
 @synthesize itemImage = _itemImage;
 
@@ -69,9 +98,27 @@
 @synthesize items = _items;
 
 - (void) setItems:(NSArray *) items {
+	_pendingChanges = NO;
+
 	[_items setArray:items];
 
 	[self.tableView reloadData];
+}
+
+#pragma mark -
+
+- (void) editItemAtIndex:(NSUInteger) index {
+	if (_editingView)
+		return;
+
+	_editingIndex = index;
+	_editingView = [[CQPreferencesListEditViewController alloc] init];
+
+	_editingView.title = _editViewTitle;
+	_editingView.listItemText = (index < _items.count ? [_items objectAtIndex:index] : @"");
+	_editingView.listItemPlaceholder = _editPlaceholder;
+
+	[self.navigationController pushViewController:_editingView animated:YES];
 }
 
 #pragma mark -
@@ -89,6 +136,10 @@
 	} else {
 		[self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.25];
 	}
+
+	if (!editing && _pendingChanges && _action && (!_target || [_target respondsToSelector:_action]))
+		if ([[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil])
+			_pendingChanges = NO;
 }
 
 #pragma mark -
@@ -130,7 +181,9 @@
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	
+	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+	[self editItemAtIndex:indexPath.row];
 }
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -151,9 +204,10 @@
 	if (editingStyle == UITableViewCellEditingStyleDelete) {
 		[_items removeObjectAtIndex:indexPath.row];
 		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
+		_pendingChanges = YES;
 	} else if (editingStyle == UITableViewCellEditingStyleInsert) {
-		
-	}   
+		[self editItemAtIndex:indexPath.row];
+	}
 }
 
 - (BOOL) tableView:(UITableView *) tableView canMoveRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -178,6 +232,7 @@
 	[_items removeObject:item];
 	[_items insertObject:item atIndex:toIndexPath.row];
 	[item release];
+
+	_pendingChanges = YES;
 }
 @end
-

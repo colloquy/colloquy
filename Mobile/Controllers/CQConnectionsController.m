@@ -65,6 +65,8 @@
 - (void) applicationWillTerminate {
 	for (MVChatConnection *connection in _connections)
 		[connection disconnect];
+
+	[self saveConnections];
 }
 
 #pragma mark -
@@ -138,6 +140,8 @@
 			[persistentInformation setObject:[info objectForKey:@"automatic"] forKey:@"automatic"];
 		if ([info objectForKey:@"rooms"])
 			[persistentInformation setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
+		if ([info objectForKey:@"commands"])
+			[persistentInformation setObject:[[info objectForKey:@"commands"] componentsSeparatedByString:@"\n"] forKey:@"commands"];
 
 		connection.persistentInformation = persistentInformation;
 
@@ -194,8 +198,11 @@
 			[info setObject:[persistentInformation objectForKey:@"automatic"] forKey:@"automatic"];
 		if ([persistentInformation objectForKey:@"rooms"])
 			[info setObject:[persistentInformation objectForKey:@"rooms"] forKey:@"rooms"];
+		if ([persistentInformation objectForKey:@"commands"])
+			[info setObject:[[persistentInformation objectForKey:@"commands"] componentsJoinedByString:@"\n"] forKey:@"commands"];
 
 		[persistentInformation removeObjectForKey:@"rooms"];
+		[persistentInformation removeObjectForKey:@"commands"];
 		[persistentInformation removeObjectForKey:@"automatic"];
 
 		if (persistentInformation.count)
@@ -363,6 +370,17 @@
 
 - (NSArray *) automaticJoinedRooms {
 	return [self.persistentInformation objectForKey:@"rooms"];
+}
+
+- (void) setAutomaticCommands:(NSArray *) commands {
+	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
+	[persistentInformation setObject:commands forKey:@"commands"];
+	self.persistentInformation = persistentInformation;
+	[persistentInformation release];
+}
+
+- (NSArray *) automaticCommands {
+	return [self.persistentInformation objectForKey:@"commands"];
 }
 
 - (void) setAutomaticallyConnect:(BOOL) autoConnect {

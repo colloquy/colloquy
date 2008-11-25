@@ -1,5 +1,6 @@
 #import "CQConnectionAdvancedEditController.h"
 
+#import "CQConnectionsController.h"
 #import "CQPreferencesSwitchCell.h"
 #import "CQPreferencesListViewController.h"
 #import "CQPreferencesTextCell.h"
@@ -118,6 +119,11 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 		listViewController.items = _connection.alternateNicknames;
 		listViewController.addItemLabelText = NSLocalizedString(@"Add nickname", @"Add nickname label");
 		listViewController.noItemsLabelText = NSLocalizedString(@"No nicknames", @"No nicknames label");
+		listViewController.editViewTitle = NSLocalizedString(@"Edit Nickname", @"Edit Nickname view title");
+		listViewController.editPlaceholder = NSLocalizedString(@"Nickname", @"Nickname placeholder");
+
+		listViewController.target = self;
+		listViewController.action = @selector(alternateNicknamesChanged:);
 
 		[self.navigationController pushViewController:listViewController animated:YES];
 
@@ -130,9 +136,14 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
 
 		listViewController.title = NSLocalizedString(@"Commands", @"Commands view title");
-		listViewController.items = (_newConnection ? [NSArray array] : [NSArray array]);
+		listViewController.items = _connection.automaticCommands;
 		listViewController.addItemLabelText = NSLocalizedString(@"Add command", @"Add command label");
 		listViewController.noItemsLabelText = NSLocalizedString(@"No commands", @"No commands label");
+		listViewController.editViewTitle = NSLocalizedString(@"Edit Command", @"Edit Command view title");
+		listViewController.editPlaceholder = NSLocalizedString(@"Command", @"Command placeholder");
+
+		listViewController.target = self;
+		listViewController.action = @selector(automaticCommandsChanged:);
 
 		[self.navigationController pushViewController:listViewController animated:YES];
 
@@ -228,7 +239,13 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 		cell.label = NSLocalizedString(@"Commands", @"Commands connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-		cell.text = NSLocalizedString(@"No Commands", @"No Commands label");
+
+		NSArray *commands = _connection.automaticCommands;
+		if (commands.count == 1)
+			cell.text = NSLocalizedString(@"1 Command", @"One Command label");
+		else if (commands.count)
+			cell.text = [NSString stringWithFormat:NSLocalizedString(@"%u Commands", @"Multiple Commands label"), commands.count];
+		else cell.text = NSLocalizedString(@"No Commands", @"No Commands label");
 
 		return cell;
 	}
@@ -276,5 +293,13 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 	if (!isPlaceholderValue(_connection.server))
 		[[CQKeychain standardKeychain] setPassword:_connection.nicknamePassword forServer:_connection.server account:currentPreferredNickname(_connection)];
+}
+
+- (void) alternateNicknamesChanged:(CQPreferencesListViewController *) sender {
+	_connection.alternateNicknames = sender.items;
+}
+
+- (void) automaticCommandsChanged:(CQPreferencesListViewController *) sender {
+	_connection.automaticCommands = sender.items;
 }
 @end
