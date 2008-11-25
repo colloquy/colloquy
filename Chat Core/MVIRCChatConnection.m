@@ -665,7 +665,9 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {
 	MVAssertCorrectThreadRequired( _connectionThread );
-	NSLog(@"connection error: %@", error );
+
+	if( sock != _chatConnection ) return;
+
 	MVSafeRetainAssign( &_lastError, error );
 }
 
@@ -699,7 +701,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _whoisWatchedUsers ) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _checkWatchedUsers ) object:nil];
 
-	if( _status == MVChatConnectionConnectingStatus && _lastError ) {
+	if( _status == MVChatConnectionConnectingStatus ) {
 		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
 	} else {
 		if( _lastError )
