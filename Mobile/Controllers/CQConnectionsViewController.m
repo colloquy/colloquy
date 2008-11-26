@@ -135,11 +135,8 @@
 #pragma mark -
 
 - (void) confirmConnect {
-	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:[self.tableView indexPathForSelectedRow].row];
-
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
-	sheet.title = [NSString stringWithFormat:NSLocalizedString(@"Do you want to connect\nto \"%@\"?", @"Confirm connect action sheet title"), connection.server];
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
 	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
@@ -151,11 +148,8 @@
 }
 
 - (void) confirmDisconnect {
-	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:[self.tableView indexPathForSelectedRow].row];
-
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
-	sheet.title = [NSString stringWithFormat:NSLocalizedString(@"Do you want to disconnect\nfrom \"%@\"?", @"Confirm disconnect action sheet title"), connection.server];
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
 	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
