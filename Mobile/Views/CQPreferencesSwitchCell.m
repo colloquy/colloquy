@@ -5,6 +5,7 @@
 	if( ! ( self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier] ) )
 		return nil;
 
+	self.selectionStyle = UITableViewCellSelectionStyleNone;
 	self.backgroundColor = nil;
 	self.opaque = NO;
 

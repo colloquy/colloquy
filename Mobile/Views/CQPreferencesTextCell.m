@@ -5,6 +5,7 @@
 	if( ! ( self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier] ) )
 		return nil;
 
+	self.selectionStyle = UITableViewCellSelectionStyleNone;
 	self.backgroundColor = nil;
 	self.opaque = NO;
 
@@ -63,6 +64,9 @@
 - (void) setSelected:(BOOL) selected animated:(BOOL) animated {
 	[super setSelected:selected animated:animated];
 
+	if (self.selectionStyle == UITableViewCellSelectionStyleNone)
+		return;
+
 	_label.highlighted = selected;
 
 	if (selected) _textField.textColor = [UIColor whiteColor];
@@ -73,9 +77,11 @@
 	super.accessoryType = type;
 
 	if (type == UITableViewCellAccessoryDisclosureIndicator) {
+		self.selectionStyle = UITableViewCellSelectionStyleBlue;
 		_textField.textAlignment = UITextAlignmentRight;
 		_textField.userInteractionEnabled = NO;
 	} else {
+		self.selectionStyle = UITableViewCellSelectionStyleNone;
 		_textField.textAlignment = UITextAlignmentLeft;
 		_textField.userInteractionEnabled = YES;
 	}

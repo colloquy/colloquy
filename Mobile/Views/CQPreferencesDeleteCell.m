@@ -6,6 +6,8 @@
 	if (!(self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier]))
 		return nil;
 
+	self.selectionStyle = UITableViewCellSelectionStyleNone;
+
 	_deleteButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 
 	_deleteButton.frame = self.contentView.bounds;
