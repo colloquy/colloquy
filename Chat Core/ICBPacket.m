@@ -68,7 +68,7 @@
 
 - (id) initFromRawData:(NSData *) raw {
 	if( ( self = [super init] ) ) {
-		CFIndex length = [raw length];
+		size_t length = [raw length];
 		const char *bytes = (const char *)[raw bytes];
 
 		// Note that 'raw' does not include the length byte.
@@ -90,8 +90,8 @@
 		if( length > 0 ) {
 			const char *data = bytes + 1;
 
-			CFIndex last = 0;
-			for( CFIndex i = 0; i < length; i++ ) {
+			size_t last = 0;
+			for( size_t i = 0; i < length; i++ ) {
 				if( data[i] == '\x01' && last < i ) {
 					NSString *f = [NSString stringWithCString:&data[last]
 											length:i - last];
