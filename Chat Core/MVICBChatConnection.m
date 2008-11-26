@@ -442,6 +442,8 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 	_chatConnection = [[AsyncSocket alloc] initWithDelegate:self];
 
+	[_chatConnection enablePreBuffering];
+
 	if( ! [_chatConnection connectToHost:[self server]
 	                       onPort:[self serverPort]
 						   error:NULL] )

@@ -553,6 +553,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	[old disconnect];
 	[old release];
 
+	[_chatConnection enablePreBuffering];
+
 	if( ! [_chatConnection connectToHost:[self server] onPort:[self serverPort] error:NULL] )
 		[self _didNotConnect];
 	else [self _resetSendQueueInterval];
