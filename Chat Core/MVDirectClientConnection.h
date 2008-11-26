@@ -20,7 +20,7 @@ NSString *MVDCCFriendlyAddress( NSString *address );
 
 - (NSThread *) connectionThread;
 
-- (void) readDataToLength:(CFIndex) length withTimeout:(NSTimeInterval) timeout withTag:(long) tag;
+- (void) readDataToLength:(size_t) length withTimeout:(NSTimeInterval) timeout withTag:(long) tag;
 - (void) readDataToData:(NSData *) data withTimeout:(NSTimeInterval) timeout withTag:(long) tag;
 - (void) readDataWithTimeout:(NSTimeInterval) timeout withTag:(long) tag;
 

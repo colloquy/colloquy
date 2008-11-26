@@ -147,7 +147,7 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 
 #pragma mark -
 
-- (void) readDataToLength:(CFIndex) length withTimeout:(NSTimeInterval) timeout withTag:(long) tag {
+- (void) readDataToLength:(size_t) length withTimeout:(NSTimeInterval) timeout withTag:(long) tag {
 	MVAssertCorrectThreadRequired( _connectionThread );
 	[_connection readDataToLength:length withTimeout:timeout tag:tag];
 }
