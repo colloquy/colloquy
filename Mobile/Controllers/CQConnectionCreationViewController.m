@@ -13,6 +13,8 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 	return [string isEqualToString:@"<<placeholder>>"];
 }
 
+#pragma mark -
+
 @implementation CQConnectionCreationViewController
 - (id) init {
 	if (!(self = [super init]))
@@ -25,6 +27,8 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 	[_editViewController release];
 	[super dealloc];
 }
+
+#pragma mark -
 
 - (void) viewWillAppear:(BOOL) animated {
 	_editViewController = [[CQConnectionEditViewController alloc] init];
@@ -60,6 +64,8 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 	_editViewController = nil;
 }
 
+#pragma mark -
+
 - (void) cancel:(id) sender {
 	[self.parentViewController dismissModalViewControllerAnimated:YES];
 }
@@ -93,6 +99,8 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 
 	[self.parentViewController dismissModalViewControllerAnimated:YES];
 }
+
+#pragma mark -
 
 - (void) navigationController:(UINavigationController *) navigationController willShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
 	// Workaround a bug where viewWillDisappear: and viewWillAppear: are not called when this navigation controller is a modal view.

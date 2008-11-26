@@ -1,4 +1,2 @@
-@interface CQChatListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
-	UITableView *_chatsTableView;
-}
+@interface CQChatListViewController : UITableViewController
 @end

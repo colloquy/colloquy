@@ -10,6 +10,8 @@
 - (void) _loadConnectionList;
 @end
 
+#pragma mark -
+
 @implementation CQConnectionsController
 + (CQConnectionsController *) defaultController {
 	static BOOL creatingSharedInstance = NO;
@@ -52,6 +54,8 @@
 #pragma mark -
 
 - (void) viewDidLoad {
+	[super viewDidLoad];
+
 	if (!_connectionsViewController)
 		_connectionsViewController = [[CQConnectionsViewController alloc] init];
 	[self pushViewController:_connectionsViewController animated:NO];
@@ -365,6 +369,8 @@
 }
 @end
 
+#pragma mark -
+
 @implementation MVChatConnection (CQConnectionsControllerAdditions)
 - (void) setDisplayName:(NSString *) name {
 	NSParameterAssert(name != nil);
@@ -382,6 +388,8 @@
 	return [self.persistentInformation objectForKey:@"description"];
 }
 
+#pragma mark -
+
 - (void) setAutomaticJoinedRooms:(NSArray *) rooms {
 	NSParameterAssert(rooms != nil);
 
@@ -395,6 +403,8 @@
 	return [self.persistentInformation objectForKey:@"rooms"];
 }
 
+#pragma mark -
+
 - (void) setAutomaticCommands:(NSArray *) commands {
 	NSParameterAssert(commands != nil);
 
@@ -407,6 +417,8 @@
 - (NSArray *) automaticCommands {
 	return [self.persistentInformation objectForKey:@"commands"];
 }
+
+#pragma mark -
 
 - (void) setAutomaticallyConnect:(BOOL) autoConnect {
 	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];

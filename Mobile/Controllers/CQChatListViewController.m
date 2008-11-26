@@ -8,7 +8,7 @@
 
 @implementation CQChatListViewController
 - (id) init {
-	if( ! ( self = [super init] ) )
+	if (!(self = [super initWithStyle:UITableViewStylePlain]))
 		return nil;
 
 	self.title = NSLocalizedString(@"Colloquies", @"Colloquies view title");
@@ -17,34 +17,20 @@
 }
 
 - (void) dealloc {
-	[_chatsTableView release];
 	[super dealloc];
 }
 
-- (void) loadView {
-	CGRect screenBounds = [UIScreen mainScreen].bounds;
+#pragma mark -
 
-	UIView *view = [[UIView alloc] initWithFrame:screenBounds];
-	view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-	self.view = view;
-	[view release];
+- (void) viewDidLoad {
+	[super viewDidLoad];
 
-	_chatsTableView = [[UITableView alloc] initWithFrame:screenBounds style:UITableViewStylePlain];
-	_chatsTableView.dataSource = self;
-	_chatsTableView.delegate = self;
-	_chatsTableView.rowHeight = 72.;
-	_chatsTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-
-	[self.view addSubview:_chatsTableView];
+	self.tableView.rowHeight = 72.;
 }
 
-- (void) didReceiveMemoryWarning {
-	if( ! self.view.superview ) {
-		[_chatsTableView release];
-		_chatsTableView = nil;
-	}
-
-	[super didReceiveMemoryWarning];
+- (void) viewWillAppear:(BOOL) animated {
+	[super viewWillAppear:animated];
+	[self.tableView reloadData];
 }
 
 #pragma mark -
@@ -52,10 +38,10 @@
 static MVChatConnection *connectionForSection(NSInteger section) {
 	NSMutableSet *connections = [NSMutableSet set];
 
-	for( CQDirectChatController *controller in [CQChatController defaultController].chatViewControllers ) {
-		if( controller.connection ) {
+	for (CQDirectChatController *controller in [CQChatController defaultController].chatViewControllers) {
+		if (controller.connection) {
 			[connections addObject:controller.connection];
-			if( ( section + 1 ) == connections.count )
+			if ((section + 1) == connections.count)
 				return controller.connection;
 		}
 	}
@@ -63,11 +49,13 @@ static MVChatConnection *connectionForSection(NSInteger section) {
 	return nil;
 }
 
+#pragma mark -
+
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
 	NSMutableSet *connections = [NSMutableSet set];
 
-	for( CQDirectChatController *controller in [CQChatController defaultController].chatViewControllers )
-		if( controller.connection )
+	for (CQDirectChatController *controller in [CQChatController defaultController].chatViewControllers)
+		if (controller.connection)
 			[connections addObject:controller.connection];
 
 	return connections.count ? connections.count : 1;
@@ -75,14 +63,14 @@ static MVChatConnection *connectionForSection(NSInteger section) {
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
 	MVChatConnection *connection = connectionForSection(section);
-	if( connection )
+	if (connection)
 		return [[CQChatController defaultController] chatViewControllersForConnection:connection].count;
 	return 0;
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
 	MVChatConnection *connection = connectionForSection(section);
-	if( connection )
+	if (connection)
 		return connection.displayName;
 	return nil;
 }
