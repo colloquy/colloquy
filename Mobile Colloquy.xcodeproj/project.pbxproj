@@ -64,7 +64,7 @@
 		1C82C1970D83CF1D009ABD9F /* CQChatTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1950D83CF1D009ABD9F /* CQChatTableCell.m */; };
 		1C82C1A30D83D133009ABD9F /* CQConnectionTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1A20D83D133009ABD9F /* CQConnectionTableCell.m */; };
 		1C82C1AF0D83D30F009ABD9F /* CQConnectionsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C1AD0D83D30F009ABD9F /* CQConnectionsController.m */; };
-		1C82C27D0D847EA4009ABD9F /* CQChatsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C27C0D847EA4009ABD9F /* CQChatsViewController.m */; };
+		1C82C27D0D847EA4009ABD9F /* CQChatListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C27C0D847EA4009ABD9F /* CQChatListViewController.m */; };
 		1C82C52A0D850B1B009ABD9F /* CQConnectionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C5290D850B1B009ABD9F /* CQConnectionsViewController.m */; };
 		1C9B15A50D878B6A003794A5 /* CQConnectionEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */; };
 		1CA91CCA0DFC976D002DDBB4 /* Colloquy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */; };
@@ -194,8 +194,8 @@
 		1C82C1A20D83D133009ABD9F /* CQConnectionTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionTableCell.m; sourceTree = "<group>"; };
 		1C82C1AD0D83D30F009ABD9F /* CQConnectionsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionsController.m; sourceTree = "<group>"; };
 		1C82C1AE0D83D30F009ABD9F /* CQConnectionsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionsController.h; sourceTree = "<group>"; };
-		1C82C27B0D847EA4009ABD9F /* CQChatsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatsViewController.h; sourceTree = "<group>"; };
-		1C82C27C0D847EA4009ABD9F /* CQChatsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatsViewController.m; sourceTree = "<group>"; };
+		1C82C27B0D847EA4009ABD9F /* CQChatListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatListViewController.h; sourceTree = "<group>"; };
+		1C82C27C0D847EA4009ABD9F /* CQChatListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatListViewController.m; sourceTree = "<group>"; };
 		1C82C5280D850B1B009ABD9F /* CQConnectionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionsViewController.h; sourceTree = "<group>"; };
 		1C82C5290D850B1B009ABD9F /* CQConnectionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionsViewController.m; sourceTree = "<group>"; };
 		1C9B15A30D878B6A003794A5 /* CQConnectionEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionEditViewController.h; sourceTree = "<group>"; };
@@ -346,8 +346,8 @@
 				1C2A046D0EDAFC2D004509AE /* CQPreferencesListEditViewController.h */,
 				1C0937800D8116FC00A2705D /* CQChatController.m */,
 				1C0937810D8116FC00A2705D /* CQChatController.h */,
-				1C82C27C0D847EA4009ABD9F /* CQChatsViewController.m */,
-				1C82C27B0D847EA4009ABD9F /* CQChatsViewController.h */,
+				1C82C27C0D847EA4009ABD9F /* CQChatListViewController.m */,
+				1C82C27B0D847EA4009ABD9F /* CQChatListViewController.h */,
 				1C0937EB0D8126D400A2705D /* CQDirectChatController.m */,
 				1C0937EC0D8126D400A2705D /* CQDirectChatController.h */,
 				1C0937ED0D8126D400A2705D /* CQChatRoomController.m */,
@@ -612,7 +612,7 @@
 				1C82C1970D83CF1D009ABD9F /* CQChatTableCell.m in Sources */,
 				1C82C1A30D83D133009ABD9F /* CQConnectionTableCell.m in Sources */,
 				1C82C1AF0D83D30F009ABD9F /* CQConnectionsController.m in Sources */,
-				1C82C27D0D847EA4009ABD9F /* CQChatsViewController.m in Sources */,
+				1C82C27D0D847EA4009ABD9F /* CQChatListViewController.m in Sources */,
 				1C82C52A0D850B1B009ABD9F /* CQConnectionsViewController.m in Sources */,
 				1C9B15A50D878B6A003794A5 /* CQConnectionEditViewController.m in Sources */,
 				1CE3FB120D8A3DC100FB035F /* CQConnectionCreationViewController.m in Sources */,

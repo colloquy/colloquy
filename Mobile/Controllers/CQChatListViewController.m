@@ -1,4 +1,4 @@
-#import "CQChatsViewController.h"
+#import "CQChatListViewController.h"
 
 #import "CQChatTableCell.h"
 #import "CQConnectionsController.h"
@@ -6,7 +6,7 @@
 
 #import <ChatCore/MVChatConnection.h>
 
-@implementation CQChatsViewController
+@implementation CQChatListViewController
 - (id) init {
 	if( ! ( self = [super init] ) )
 		return nil;

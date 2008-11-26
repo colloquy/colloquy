@@ -1,7 +1,7 @@
 #import "CQColloquyApplication.h"
 
 @class CQChatRoomController;
-@class CQChatsViewController;
+@class CQChatListViewController;
 @class CQDirectChatController;
 @class MVChatConnection;
 @class MVChatRoom;
@@ -12,7 +12,7 @@
 @interface CQChatController : UINavigationController {
 	@private
 	NSMutableArray *_chatControllers;
-	CQChatsViewController *_chatsViewController;
+	CQChatListViewController *_chatListViewController;
 }
 + (CQChatController *) defaultController;
 

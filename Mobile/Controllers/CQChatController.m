@@ -1,7 +1,7 @@
 #import "CQChatController.h"
 
 #import "CQChatRoomController.h"
-#import "CQChatsViewController.h"
+#import "CQChatListViewController.h"
 #import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
 
@@ -27,7 +27,7 @@
 	if( ! ( self = [super init] ) )
 		return nil;
 
-	_chatsViewController = [[CQChatsViewController alloc] init];
+	_chatListViewController = [[CQChatListViewController alloc] init];
 	_chatControllers = [[NSMutableArray alloc] init];
 
 	self.title = NSLocalizedString(@"Colloquies", @"Colloquies tab title");
@@ -42,7 +42,7 @@
 }
 
 - (void) dealloc {
-	[_chatsViewController release];
+	[_chatListViewController release];
 	[_chatControllers release];
 	[super dealloc];
 }
@@ -51,7 +51,7 @@
 
 - (void) loadView {
 	[super loadView];
-	[self pushViewController:_chatsViewController animated:NO];
+	[self pushViewController:_chatListViewController animated:NO];
 }
 
 #pragma mark -
