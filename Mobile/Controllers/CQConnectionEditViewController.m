@@ -66,7 +66,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	_newConnection = newConnection;
 
 	if (_newConnection) self.title = NSLocalizedString(@"New Connection", @"New Connection view title");
-	else self.title = _connection.server;
+	else self.title = _connection.displayName;
 }
 
 @synthesize connection = _connection;
@@ -77,7 +77,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	[old release];
 
 	if (!_newConnection)
-		self.title = connection.server;
+		self.title = connection.displayName;
 
 	[self.tableView setContentOffset:CGPointZero animated:NO];
 	[self.tableView reloadData];
@@ -87,28 +87,29 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
 	if (self.newConnection)
-		return 3;
-	return 4;
+		return 4;
+	return 5;
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
 	switch(section) {
-		case 0: return 3;
+		case 0: return 2;
 		case 1: return 2;
-		case 2: return 1;
+		case 2: return 2;
 		case 3: return 1;
+		case 4: return 1;
 		default: return 0;
 	}
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if ((indexPath.section == 1 && indexPath.row == 1) || (indexPath.section == 2 && indexPath.row == 0))
+	if ((indexPath.section == 2 && indexPath.row == 1) || (indexPath.section == 3 && indexPath.row == 0))
 		return indexPath;
 	return nil;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (indexPath.section == 1 && indexPath.row == 1) {
+	if (indexPath.section == 2 && indexPath.row == 1) {
 		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
 
 		listViewController.title = NSLocalizedString(@"Join Rooms", @"Join Rooms view title");
@@ -129,7 +130,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 		return;
 	}
 
-	if (indexPath.section == 2 && indexPath.row == 0) {
+	if (indexPath.section == 3 && indexPath.row == 0) {
 		CQConnectionAdvancedEditController *advancedEditViewController = [[CQConnectionAdvancedEditController alloc] init];
 
 		advancedEditViewController.navigationItem.prompt = self.navigationItem.prompt;
@@ -146,8 +147,10 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
 	if (section == 0)
-		return NSLocalizedString(@"IRC Connection Information", @"IRC Connection Information section title");
+		return NSLocalizedString(@"Internat Relay Chat Server", @"Internat Relay Chat Server section title");
 	if (section == 1)
+		return NSLocalizedString(@"Network Identity", @"Network Identity section title");
+	if (section == 2)
 		return NSLocalizedString(@"Automatic Actions", @"Automatic Actions section title");
 	return nil;
 }
@@ -158,7 +161,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 		cell.target = self;
 
 		if (indexPath.row == 0) {
-			cell.label = NSLocalizedString(@"Server", @"Server connection setting label");
+			cell.label = NSLocalizedString(@"Host Name", @"Host Name connection setting label");
 			cell.text = (isPlaceholderValue(_connection.server) ? @"" : _connection.server);
 			cell.textField.placeholder = (_newConnection ? @"irc.example.com" : @"");
 			cell.textField.keyboardType = UIKeyboardTypeURL;
@@ -166,21 +169,35 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(serverChanged:);
 		} else if (indexPath.row == 1) {
+			cell.label = NSLocalizedString(@"Description", @"Description connection setting label");
+			cell.text = (![_connection.displayName isEqualToString:_connection.server] ? _connection.displayName : @"");
+			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
+			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+			cell.textEditAction = @selector(descriptionChanged:);
+		}
+
+		return cell;
+	} else if (indexPath.section == 1) {
+		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
+		cell.target = self;
+
+		if (indexPath.row == 0) {
 			cell.label = NSLocalizedString(@"Nickname", @"Nickname connection setting label");
 			cell.text = (isDefaultValue(_connection.preferredNickname) ? @"" : _connection.preferredNickname);
 			cell.textField.placeholder = NSUserName();
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(nicknameChanged:);
-		} else if (indexPath.row == 2) {
+		} else if (indexPath.row == 1) {
 			cell.label = NSLocalizedString(@"Real Name", @"Real Name connection setting label");
 			cell.text = (isDefaultValue(_connection.realName) ? @"" : _connection.realName);
 			cell.textField.placeholder = NSFullUserName();
+			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
 			cell.textEditAction = @selector(realNameChanged:);
 		}
 
 		return cell;
-	} else if (indexPath.section == 1) {
+	} else if (indexPath.section == 2) {
 		if (indexPath.row == 0) {
 			CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 
@@ -202,14 +219,14 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 			return cell;
 		}
-	} else if (indexPath.section == 2 && indexPath.row == 0) {
+	} else if (indexPath.section == 3 && indexPath.row == 0) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
 		cell.label = NSLocalizedString(@"Advanced", @"Advanced connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		return cell;
-	} else if (indexPath.section == 3 && indexPath.row == 0) {
+	} else if (indexPath.section == 4 && indexPath.row == 0) {
 		CQPreferencesDeleteCell *cell = [CQPreferencesDeleteCell reusableTableViewCellInTableView:tableView];
 
 		cell.target = self;
@@ -231,7 +248,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	if (sender.text.length || _newConnection) {
 		_connection.server = (sender.text.length ? sender.text : @"<<placeholder>>");
 		if (!_newConnection)
-			self.title = _connection.server;
+			self.title = _connection.displayName;
 	}
 
 	BOOL placeholder = isPlaceholderValue(_connection.server);
@@ -270,6 +287,13 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	else _connection.realName = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
 
 	[self.tableView reloadData];
+}
+
+- (void) descriptionChanged:(CQPreferencesTextCell *) sender {
+	_connection.displayName = sender.text;
+
+	if (!_newConnection)
+		self.title = _connection.displayName;
 }
 
 - (void) autoConnectChanged:(CQPreferencesSwitchCell *) sender {

@@ -57,7 +57,7 @@
 #pragma mark -
 
 static NSComparisonResult sortByConnectionAscending(CQDirectChatController *chatController1, CQDirectChatController *chatController2, void *context) {
-	return [chatController1.connection.server caseInsensitiveCompare:chatController2.connection.server];
+	return [chatController1.connection.displayName caseInsensitiveCompare:chatController2.connection.displayName];
 }
 
 - (void) _sortChatControllers {

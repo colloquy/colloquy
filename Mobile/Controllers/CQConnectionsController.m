@@ -140,6 +140,8 @@
 			[persistentInformation setObject:[info objectForKey:@"automatic"] forKey:@"automatic"];
 		if ([info objectForKey:@"rooms"])
 			[persistentInformation setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
+		if ([info objectForKey:@"description"])
+			[persistentInformation setObject:[info objectForKey:@"description"] forKey:@"description"];
 		if ([info objectForKey:@"commands"])
 			[persistentInformation setObject:[[info objectForKey:@"commands"] componentsSeparatedByString:@"\n"] forKey:@"commands"];
 
@@ -198,11 +200,14 @@
 			[info setObject:[persistentInformation objectForKey:@"automatic"] forKey:@"automatic"];
 		if ([persistentInformation objectForKey:@"rooms"])
 			[info setObject:[persistentInformation objectForKey:@"rooms"] forKey:@"rooms"];
+		if ([persistentInformation objectForKey:@"description"])
+			[info setObject:[persistentInformation objectForKey:@"description"] forKey:@"description"];
 		if ([persistentInformation objectForKey:@"commands"])
 			[info setObject:[[persistentInformation objectForKey:@"commands"] componentsJoinedByString:@"\n"] forKey:@"commands"];
 
 		[persistentInformation removeObjectForKey:@"rooms"];
 		[persistentInformation removeObjectForKey:@"commands"];
+		[persistentInformation removeObjectForKey:@"description"];
 		[persistentInformation removeObjectForKey:@"automatic"];
 
 		if (persistentInformation.count)
@@ -361,7 +366,25 @@
 @end
 
 @implementation MVChatConnection (CQConnectionsControllerAdditions)
+- (void) setDisplayName:(NSString *) name {
+	NSParameterAssert(name != nil);
+
+	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
+	[persistentInformation setObject:name forKey:@"description"];
+	self.persistentInformation = persistentInformation;
+	[persistentInformation release];
+}
+
+- (NSString *) displayName {
+	NSString *name = [self.persistentInformation objectForKey:@"description"];
+	if (!name.length)
+		return self.server;
+	return [self.persistentInformation objectForKey:@"description"];
+}
+
 - (void) setAutomaticJoinedRooms:(NSArray *) rooms {
+	NSParameterAssert(rooms != nil);
+
 	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
 	[persistentInformation setObject:rooms forKey:@"rooms"];
 	self.persistentInformation = persistentInformation;
@@ -373,6 +396,8 @@
 }
 
 - (void) setAutomaticCommands:(NSArray *) commands {
+	NSParameterAssert(commands != nil);
+
 	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
 	[persistentInformation setObject:commands forKey:@"commands"];
 	self.persistentInformation = persistentInformation;

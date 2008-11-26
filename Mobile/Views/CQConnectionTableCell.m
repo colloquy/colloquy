@@ -1,5 +1,7 @@
 #import "CQConnectionTableCell.h"
 
+#import "CQConnectionsController.h"
+
 #import <ChatCore/MVChatConnection.h>
 
 @implementation CQConnectionTableCell
@@ -48,7 +50,7 @@
 }
 
 - (void) takeValuesFromConnection:(MVChatConnection *) connection {
-	self.server = connection.server;
+	self.server = connection.displayName;
 	self.nickname = connection.nickname;
 	self.connectDate = connection.connectedDate;
 

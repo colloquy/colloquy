@@ -91,7 +91,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 	switch( section) {
 		case 0: return NSLocalizedString(@"Connection Settings", @"Connection Settings section title");
 		case 1: return NSLocalizedString(@"Authentication", @"Authentication section title");
-		case 2: return NSLocalizedString(@"Alternate Identities", @"Alternate Identities section title");
+		case 2: return NSLocalizedString(@"Alternate Network Identities", @"Alternate Network Identities section title");
 		case 3: return NSLocalizedString(@"Automatic Actions", @"Automatic Actions section title");
 		default: return nil;
 	}

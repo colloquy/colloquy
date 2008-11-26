@@ -45,6 +45,7 @@
 @end
 
 @interface MVChatConnection (CQConnectionsControllerAdditions)
+@property (nonatomic, copy) NSString *displayName;
 @property (nonatomic, copy) NSArray *automaticJoinedRooms;
 @property (nonatomic, copy) NSArray *automaticCommands;
 @property (nonatomic) BOOL automaticallyConnect;

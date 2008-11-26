@@ -1,5 +1,7 @@
 #import "CQChatsViewController.h"
+
 #import "CQChatTableCell.h"
+#import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
 
 #import <ChatCore/MVChatConnection.h>
@@ -81,7 +83,7 @@ static MVChatConnection *connectionForSection(NSInteger section) {
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
 	MVChatConnection *connection = connectionForSection(section);
 	if( connection )
-		return [connection server];
+		return connection.displayName;
 	return nil;
 }
 
