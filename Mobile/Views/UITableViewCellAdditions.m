@@ -2,12 +2,13 @@
 
 @implementation UITableViewCell (UITableViewCellColloquyAdditions)
 + (id) reusableTableViewCellInTableView:(UITableView *) tableView {
-	Class class = [self class];
-	NSString *className = NSStringFromClass([self class]);
+	return [self reusableTableViewCellInTableView:tableView withIdentifier:NSStringFromClass([self class])];
+}
 
-	id cell = [tableView dequeueReusableCellWithIdentifier:className];
++ (id) reusableTableViewCellInTableView:(UITableView *) tableView withIdentifier:(NSString *) identifier {
+	id cell = [tableView dequeueReusableCellWithIdentifier:identifier];
 	if (cell) return cell;
 
-	return [[[class alloc] initWithFrame:CGRectZero reuseIdentifier:className] autorelease];
+	return [[[[self class] alloc] initWithFrame:CGRectZero reuseIdentifier:identifier] autorelease];
 }
 @end

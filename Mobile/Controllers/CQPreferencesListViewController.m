@@ -37,6 +37,9 @@
 }
 
 - (void) viewWillAppear:(BOOL) animated {
+	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+	[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
+
 	[super viewWillAppear:animated];
 
 	if (!_items.count)
@@ -181,8 +184,6 @@
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-
 	[self editItemAtIndex:indexPath.row];
 }
 

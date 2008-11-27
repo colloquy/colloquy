@@ -96,7 +96,6 @@
 	self.textEditAction = NULL;
 	self.accessoryType = UITableViewCellAccessoryNone;
 	self.textField.placeholder = @"";
-	self.textField.secureTextEntry = NO;
 	self.textField.keyboardType = UIKeyboardTypeDefault;
 	self.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
 	self.textField.autocorrectionType = UITextAutocorrectionTypeDefault;

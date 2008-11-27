@@ -180,10 +180,11 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 			return cell;
 		}
 	} else if (indexPath.section == 1) {
-		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
-		cell.target = self;
+		CQPreferencesTextCell *cell = nil;
 
 		if(indexPath.row == 0) {
+			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
+
 			cell.textEditAction = @selector(usernameChanged:);
 			cell.label = NSLocalizedString(@"Username", @"Username connection setting label");
 			cell.text = ([_connection.username isEqualToString:@"<<default>>"] ? @"" : _connection.username);
@@ -200,6 +201,8 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 		} else if (indexPath.row == 1) {
+			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView withIdentifier:@"Secure CQPreferencesTextCell"];
+
 			cell.textEditAction = @selector(passwordChanged:);
 			cell.label = NSLocalizedString(@"Password", @"Password connection setting label");
 			cell.text = _connection.password;
@@ -209,6 +212,8 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textField.secureTextEntry = YES;
 		} else if (indexPath.row == 2) {
+			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView withIdentifier:@"Secure CQPreferencesTextCell"];
+
 			cell.textEditAction = @selector(nicknamePasswordChanged:);
 			cell.label = NSLocalizedString(@"Nick Pass.", @"Nickname Password connection setting label");
 			cell.text = _connection.nicknamePassword;
@@ -218,6 +223,8 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textField.secureTextEntry = YES;
 		}
+
+		cell.target = self;
 
 		return cell;
 	} else if (indexPath.section == 2 && indexPath.row == 0) {
