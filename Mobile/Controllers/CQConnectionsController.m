@@ -146,7 +146,7 @@
 			[persistentInformation setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
 		if ([info objectForKey:@"description"])
 			[persistentInformation setObject:[info objectForKey:@"description"] forKey:@"description"];
-		if ([info objectForKey:@"commands"])
+		if ([info objectForKey:@"commands"] && ((NSString *)[info objectForKey:@"commands"]).length)
 			[persistentInformation setObject:[[info objectForKey:@"commands"] componentsSeparatedByString:@"\n"] forKey:@"commands"];
 
 		connection.persistentInformation = persistentInformation;
