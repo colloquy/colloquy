@@ -41,8 +41,10 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL) animated {
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:2] withAnimation:UITableViewRowAnimationFade];
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:3] withAnimation:UITableViewRowAnimationFade];
+
 	[super viewWillAppear:animated];
-	[self.tableView reloadData];
 }
 
 - (void) viewWillDisappear:(BOOL) animated {

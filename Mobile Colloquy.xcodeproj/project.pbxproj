@@ -85,6 +85,7 @@
 		1CF50C870ED8BE1100CBE5E3 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF50C860ED8BE1100CBE5E3 /* Security.framework */; };
 		1CF50EAF0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */; };
 		1CF50F710EDA7BC600CBE5E3 /* roomIconSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF50F700EDA7BC600CBE5E3 /* roomIconSmall.png */; };
+		1CFF6E820EDF772800D3C557 /* UITableViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
@@ -223,6 +224,8 @@
 		1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPreferencesListViewController.h; sourceTree = "<group>"; };
 		1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesListViewController.m; sourceTree = "<group>"; };
 		1CF50F700EDA7BC600CBE5E3 /* roomIconSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = roomIconSmall.png; sourceTree = "<group>"; };
+		1CFF6E800EDF772800D3C557 /* UITableViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UITableViewAdditions.h; path = Mobile/Views/UITableViewAdditions.h; sourceTree = "<group>"; };
+		1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UITableViewAdditions.m; path = Mobile/Views/UITableViewAdditions.m; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* Colloquy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -435,6 +438,8 @@
 			children = (
 				1C09310A0D80C71800A2705D /* Mobile Colloquy.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
+				1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */,
+				1CFF6E800EDF772800D3C557 /* UITableViewAdditions.h */,
 				1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */,
 				1CC576D10ED4684700FEC2C1 /* UITableViewCellAdditions.h */,
 				1C0932630D80CA4800A2705D /* NSBundleAdditions.m */,
@@ -624,6 +629,7 @@
 				1CF50C150ED8AFBE00CBE5E3 /* CQKeychain.m in Sources */,
 				1CF50EAF0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m in Sources */,
 				1C2A046F0EDAFC2D004509AE /* CQPreferencesListEditViewController.m in Sources */,
+				1CFF6E820EDF772800D3C557 /* UITableViewAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

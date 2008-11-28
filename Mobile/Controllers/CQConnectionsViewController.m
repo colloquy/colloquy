@@ -184,22 +184,17 @@
 
 	CQConnectionTableCell *cell = [CQConnectionTableCell reusableTableViewCellInTableView:tableView];
 
+	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+
 	[cell takeValuesFromConnection:connection];
 
 	return cell;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (!indexPath)
-		return;
-
 	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:indexPath.row];
 	if (connection.status == MVChatConnectionDisconnectedStatus) [self confirmConnect];
 	else [self confirmDisconnect];
-}
-
-- (UITableViewCellAccessoryType) tableView:(UITableView *) tableView accessoryTypeForRowWithIndexPath:(NSIndexPath *) indexPath {
-	return UITableViewCellAccessoryDetailDisclosureButton;
 }
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {

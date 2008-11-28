@@ -37,30 +37,46 @@
 }
 
 - (void) viewWillAppear:(BOOL) animated {
-	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
-	[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
-
-	[super viewWillAppear:animated];
-
-	if (!_items.count)
-		self.editing = YES;
+	UITableView *tableView = self.tableView;
 
 	if (_editingView) {
+		NSIndexPath *changedIndexPath = [NSIndexPath indexPathForRow:_editingIndex inSection:0];
+		NSArray *changedIndexPaths = [NSArray arrayWithObject:changedIndexPath];
+
 		if (_editingIndex < _items.count) {
 			if (_editingView.listItemText.length)
 				[_items replaceObjectAtIndex:_editingIndex withObject:_editingView.listItemText];
 			else [_items removeObjectAtIndex:_editingIndex];
+
 			_pendingChanges = YES;
+
+			[tableView beginUpdates];
+
+			[tableView deleteRowsAtIndexPaths:changedIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+
+			if (_editingView.listItemText.length)
+				[tableView insertRowsAtIndexPaths:changedIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+
+			[tableView endUpdates];
 		} else if (_editingView.listItemText.length) {
+			[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
+
 			[_items insertObject:_editingView.listItemText atIndex:_editingIndex];
 			_pendingChanges = YES;
+
+			[tableView insertRowsAtIndexPaths:changedIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+
+			[tableView selectRowAtIndexPath:changedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 		}
 
 		[_editingView release];
 		_editingView = nil;
 	}
 
-	[self.tableView reloadData];
+	[super viewWillAppear:animated];
+
+	if (!_items.count)
+		self.editing = YES;
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
@@ -188,7 +204,7 @@
 }
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (!self.editing || !indexPath)
+	if (!self.editing)
 		return UITableViewCellEditingStyleNone;
 
 	if (indexPath.row >= _items.count)

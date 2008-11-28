@@ -19,11 +19,14 @@
 
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
+
 	[self.tableView reloadData];
 
 	_viewDisappearing = NO;
 
-	[((CQPreferencesTextCell *)[[self.tableView visibleCells] objectAtIndex:0]).textField becomeFirstResponder];
+	NSIndexPath *firstIndex = [NSIndexPath indexPathForRow:0 inSection:0];
+	CQPreferencesTextCell *cell = (CQPreferencesTextCell *)[self.tableView cellForRowAtIndexPath:firstIndex];
+	[cell.textField becomeFirstResponder];
 }
 
 - (void) viewWillDisappear:(BOOL) animated {

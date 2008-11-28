@@ -69,10 +69,7 @@ static MVChatConnection *connectionForSection(NSInteger section) {
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
-	MVChatConnection *connection = connectionForSection(section);
-	if (connection)
-		return connection.displayName;
-	return nil;
+	return connectionForSection(section).displayName;
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -82,16 +79,22 @@ static MVChatConnection *connectionForSection(NSInteger section) {
 
 	CQChatTableCell *cell = [CQChatTableCell reusableTableViewCellInTableView:tableView];
 
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
 	[cell takeValuesFromChatViewController:chatViewController];
 
 	return cell;
 }
 
-- (UITableViewCellAccessoryType) tableView:(UITableView *) tableView accessoryTypeForRowWithIndexPath:(NSIndexPath *) indexPath {
-	return UITableViewCellAccessoryDisclosureIndicator;
-}
-
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {
 	return UITableViewCellEditingStyleDelete;
+}
+
+- (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	MVChatConnection *connection = connectionForSection(indexPath.section);
+	NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
+	UIViewController *chatViewController = [controllers objectAtIndex:indexPath.row];
+
+	[self.navigationController pushViewController:chatViewController animated:YES];
 }
 @end

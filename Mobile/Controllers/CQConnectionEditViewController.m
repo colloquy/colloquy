@@ -40,8 +40,9 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL) animated {
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:2] withAnimation:UITableViewRowAnimationFade];
+
 	[super viewWillAppear:animated];
-	[self.tableView reloadData];
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
