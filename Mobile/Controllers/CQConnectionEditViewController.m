@@ -7,6 +7,7 @@
 #import "CQPreferencesListViewController.h"
 #import "CQPreferencesSwitchCell.h"
 #import "CQPreferencesTextCell.h"
+#import "CQColloquyApplication.h"
 
 #import <ChatCore/MVChatConnection.h>
 

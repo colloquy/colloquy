@@ -1,5 +1,3 @@
-#import "CQColloquyApplication.h"
-
 #import <ChatCore/MVChatConnection.h>
 
 @class CQChatRoomController;

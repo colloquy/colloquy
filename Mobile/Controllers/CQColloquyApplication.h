@@ -1,5 +1,3 @@
-@protocol CQColloquyTabBarMember;
-
 @interface CQColloquyApplication : UIApplication <UIApplicationDelegate, UITabBarDelegate> {
 	IBOutlet UIWindow *mainWindow;
 	IBOutlet UITabBarController	*tabBarController;

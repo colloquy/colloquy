@@ -1,7 +1,9 @@
-#import "CQConnectionsController.h"
 #import "CQConnectionsViewController.h"
+
+#import "CQConnectionsController.h"
 #import "CQConnectionCreationViewController.h"
 #import "CQConnectionTableCell.h"
+#import "CQColloquyApplication.h"
 
 #import <ChatCore/MVChatConnection.h>
 

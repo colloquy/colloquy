@@ -1,5 +1,3 @@
-#import "CQColloquyApplication.h"
-
 @class CQChatRoomController;
 @class CQChatListViewController;
 @class CQDirectChatController;
