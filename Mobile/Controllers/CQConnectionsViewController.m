@@ -193,8 +193,9 @@
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:indexPath.row];
-	if (connection.status == MVChatConnectionDisconnectedStatus) [self confirmConnect];
-	else [self confirmDisconnect];
+	if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus)
+		[self confirmDisconnect];
+	else [self confirmConnect];
 }
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {
