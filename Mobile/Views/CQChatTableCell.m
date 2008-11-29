@@ -1,32 +1,32 @@
 #import "CQChatTableCell.h"
 #import "CQChatController.h"
 
+@interface UIRemoveControl : UIView
+- (void) setRemoveConfirmationLabel:(NSString *) label;
+@end
+
+#pragma mark -
+
+@interface UITableViewCell (UITableViewCellPrivate)
+- (UIRemoveControl *) _createRemoveControl;
+@end
+
+#pragma mark -
+
 @implementation CQChatTableCell
 - (id) initWithFrame:(CGRect) frame reuseIdentifier:(NSString *) reuseIdentifier {
-	if( ! ( self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier] ) )
+	if (!(self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier]))
 		return nil;
 
 	_iconImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
 	_nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-//	_firstChatLine = [[UILabel alloc] initWithFrame:CGRectZero];
-//	_secondChatLine = [[UILabel alloc] initWithFrame:CGRectZero];
 
 	[self.contentView addSubview:_iconImageView];
 	[self.contentView addSubview:_nameLabel];
-//	[self.contentView addSubview:_firstChatLine];
-//	[self.contentView addSubview:_secondChatLine];
 
 	_nameLabel.font = [UIFont boldSystemFontOfSize:18.];
 	_nameLabel.textColor = self.textColor;
 	_nameLabel.highlightedTextColor = self.selectedTextColor;
-
-//	_firstChatLine.font = [UIFont systemFontOfSize:14.];
-//	_firstChatLine.textColor = [UIColor grayColor];
-//	_firstChatLine.highlightedTextColor = self.selectedTextColor;
-
-//	_secondChatLine.font = [UIFont systemFontOfSize:14.];
-//	_secondChatLine.textColor = [UIColor grayColor];
-//	_secondChatLine.highlightedTextColor = self.selectedTextColor;
 
 	return self;
 }
@@ -34,11 +34,12 @@
 - (void) dealloc {
 	[_iconImageView release];
 	[_nameLabel release];
-//	[_firstChatLine release];
-//	[_secondChatLine release];
+	[_removeLabelText release];
 
 	[super dealloc];
 }
+
+#pragma mark -
 
 - (void) takeValuesFromChatViewController:(id <CQChatViewController>) controller {
 	self.name = controller.title;
@@ -61,44 +62,29 @@
 	_iconImageView.image = icon;
 }
 
-/*
-- (NSString *) firstChatLineText {
-	return _firstChatLine.text;
+@synthesize removeLabelText = _removeLabelText;
+
+#pragma mark -
+
+- (UIRemoveControl *) _createRemoveControl {
+	UIRemoveControl *control = [super _createRemoveControl];
+	if (_removeLabelText.length)
+		[control setRemoveConfirmationLabel:_removeLabelText];
+	return control;
 }
 
-- (void) setFirstChatLineText:(NSString *) text {
-	_firstChatLine.text = text;
-	[self setNeedsLayout];
-}
-
-- (NSString *) secondChatLineText {
-	return _secondChatLine.text;
-}
-
-- (void) setSecondChatLineText:(NSString *) text {
-	_secondChatLine.text = text;
-	[self setNeedsLayout];
-}
-*/
+#pragma mark -
 
 - (void) setSelected:(BOOL) selected animated:(BOOL) animated {
 	[super setSelected:selected animated:animated];
 
 	UIColor *backgroundColor = nil;
-	if( selected || animated ) backgroundColor = nil;
+	if (selected || animated) backgroundColor = nil;
 	else backgroundColor = [UIColor whiteColor];
 
 	_nameLabel.backgroundColor = backgroundColor;
 	_nameLabel.highlighted = selected;
 	_nameLabel.opaque = !selected && !animated;
-
-//	_firstChatLine.backgroundColor = backgroundColor;
-//	_firstChatLine.highlighted = selected;
-//	_firstChatLine.opaque = !selected && !animated;
-
-//	_secondChatLine.backgroundColor = backgroundColor;
-//	_secondChatLine.highlighted = selected;
-//	_secondChatLine.opaque = !selected && !animated;
 }
 
 - (void) layoutSubviews {

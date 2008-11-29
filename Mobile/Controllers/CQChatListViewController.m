@@ -1,5 +1,6 @@
 #import "CQChatListViewController.h"
 
+#import "CQChatRoomController.h"
 #import "CQChatTableCell.h"
 #import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
@@ -96,7 +97,11 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 - (void) addChatViewController:(id <CQChatViewController>) controller {
 	if ([[CQChatController defaultController] chatViewControllersForConnection:controller.connection].count == 1) {
 		NSUInteger sectionIndex = sectionIndexForConnection(controller.connection);
+		[self.tableView beginUpdates];
+		if ([CQChatController defaultController].chatViewControllers.count == 1)
+			[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationTop];
+		[self.tableView endUpdates];
 	} else {
 		NSIndexPath *changedIndexPath = indexPathForChatController(controller);
 		[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
@@ -135,6 +140,11 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
+	if ([chatViewController isMemberOfClass:[CQChatRoomController class]])
+		cell.removeLabelText = NSLocalizedString(@"Leave", @"Leave remove control label");
+	else if ([chatViewController isMemberOfClass:[CQDirectChatController class]])
+		cell.removeLabelText = NSLocalizedString(@"Close", @"Close remove control label");
+
 	[cell takeValuesFromChatViewController:chatViewController];
 
 	return cell;
@@ -142,6 +152,27 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {
 	return UITableViewCellEditingStyleDelete;
+}
+
+- (void) tableView:(UITableView *) tableView commitEditingStyle:(UITableViewCellEditingStyle) editingStyle forRowAtIndexPath:(NSIndexPath *) indexPath {
+	if (editingStyle != UITableViewCellEditingStyleDelete)
+		return;
+
+	MVChatConnection *connection = connectionForSection(indexPath.section);
+	NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
+	id <CQChatViewController> chatViewController = [controllers objectAtIndex:indexPath.row];
+
+	[[CQChatController defaultController] closeViewController:chatViewController];
+
+	if (controllers.count == 1) {
+		[self.tableView beginUpdates];
+		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationRight];
+		if (![CQChatController defaultController].chatViewControllers.count)
+			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+		[self.tableView endUpdates];
+	} else {
+		[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
+	}
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
