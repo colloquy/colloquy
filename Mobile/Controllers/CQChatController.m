@@ -58,14 +58,32 @@
 
 #pragma mark -
 
-static NSComparisonResult sortByConnectionAscending(CQDirectChatController *chatController1, CQDirectChatController *chatController2, void *context) {
-	return [chatController1.connection.displayName caseInsensitiveCompare:chatController2.connection.displayName];
+static NSComparisonResult sortControllersAscending(CQDirectChatController *chatController1, CQDirectChatController *chatController2, void *context) {
+	NSComparisonResult result = [chatController1.connection.displayName caseInsensitiveCompare:chatController2.connection.displayName];
+	if (result != NSOrderedSame)
+		return result;
+
+	result = [chatController1.connection.nickname caseInsensitiveCompare:chatController2.connection.nickname];
+	if (result != NSOrderedSame)
+		return result;
+
+	if (chatController1.connection < chatController2.connection)
+		return NSOrderedAscending;
+	if (chatController1.connection > chatController2.connection)
+		return NSOrderedDescending;
+
+	if ([chatController1 isMemberOfClass:[CQChatRoomController class]] && [chatController2 isMemberOfClass:[CQDirectChatController class]])
+		return NSOrderedAscending;
+	if ([chatController1 isMemberOfClass:[CQDirectChatController class]] && [chatController2 isMemberOfClass:[CQChatRoomController class]])
+		return NSOrderedDescending;
+
+	return [chatController1.title caseInsensitiveCompare:chatController2.title];
 }
 
 #pragma mark -
 
 - (void) _sortChatControllers {
-	[_chatControllers sortUsingFunction:sortByConnectionAscending context:NULL];
+	[_chatControllers sortUsingFunction:sortControllersAscending context:NULL];
 }
 
 - (void) _joinedRoom:(NSNotification *) notification {
@@ -180,6 +198,9 @@ static NSComparisonResult sortByConnectionAscending(CQDirectChatController *chat
 			[controller release];
 
 			[self _sortChatControllers];
+
+			[_chatListViewController addChatViewController:controller];
+
 			return controller;
 		}
 	}
@@ -206,6 +227,9 @@ static NSComparisonResult sortByConnectionAscending(CQDirectChatController *chat
 			[controller release];
 
 			[self _sortChatControllers];
+
+			[_chatListViewController addChatViewController:controller];
+
 			return controller;
 		}
 	}
@@ -228,6 +252,9 @@ static NSComparisonResult sortByConnectionAscending(CQDirectChatController *chat
 			[controller release];
 
 			[self _sortChatControllers];
+
+			[_chatListViewController addChatViewController:controller];
+
 			return controller;
 		}
 	}

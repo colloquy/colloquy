@@ -28,11 +28,6 @@
 	self.tableView.rowHeight = 72.;
 }
 
-- (void) viewWillAppear:(BOOL) animated {
-	[super viewWillAppear:animated];
-	[self.tableView reloadData];
-}
-
 #pragma mark -
 
 static MVChatConnection *connectionForSection(NSInteger section) {
@@ -47,6 +42,65 @@ static MVChatConnection *connectionForSection(NSInteger section) {
 	}
 
 	return nil;
+}
+
+static NSUInteger sectionIndexForConnection(MVChatConnection *connection) {
+	NSArray *controllers = [CQChatController defaultController].chatViewControllers;
+	if (!controllers.count)
+		return NSNotFound;
+
+	MVChatConnection *currentConnection = nil;
+	NSUInteger sectionIndex = 0;
+
+	for (CQDirectChatController *currentController in controllers) {
+		if (currentController.connection != currentConnection) {
+			if (currentConnection) ++sectionIndex;
+			currentConnection = currentController.connection;
+		}
+
+		if (currentController.connection == connection)
+			return sectionIndex;
+	}
+
+	return NSNotFound;
+}
+
+static NSIndexPath *indexPathForChatController(id <CQChatViewController> controller) {
+	NSArray *controllers = [CQChatController defaultController].chatViewControllers;
+	if (!controllers.count)
+		return nil;
+
+	MVChatConnection *connection = controller.connection;
+	MVChatConnection *currentConnection = nil;
+	NSUInteger sectionIndex = 0;
+	NSUInteger rowIndex = 0;
+
+	for (CQDirectChatController *currentController in controllers) {
+		if (currentController.connection != currentConnection) {
+			if (currentConnection) ++sectionIndex;
+			currentConnection = currentController.connection;
+		}
+
+		if (currentController == controller)
+			return [NSIndexPath indexPathForRow:rowIndex inSection:sectionIndex];
+
+		if (currentController.connection == connection && currentController != controller)
+			++rowIndex;
+	}
+
+	return nil;
+}
+
+#pragma mark -
+
+- (void) addChatViewController:(id <CQChatViewController>) controller {
+	if ([[CQChatController defaultController] chatViewControllersForConnection:controller.connection].count == 1) {
+		NSUInteger sectionIndex = sectionIndexForConnection(controller.connection);
+		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationTop];
+	} else {
+		NSIndexPath *changedIndexPath = indexPathForChatController(controller);
+		[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
+	}
 }
 
 #pragma mark -
