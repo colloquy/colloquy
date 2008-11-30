@@ -117,7 +117,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 		if (![self chatViewControllerForUser:user ifExists:YES])
 			hideFromUser = YES;
 
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQChatAlwaysShowNotices"])
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatAlwaysShowNotices"])
 			hideFromUser = NO;
 	}
 

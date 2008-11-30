@@ -106,7 +106,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 }
 
 - (void) _sortMembers {
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSortRoomMembersByStatus"])
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"])
 		[_orderedMembers sortUsingFunction:sortMembersByStatus context:self];
 	else [_orderedMembers sortUsingFunction:sortMembersByNickname context:self];
 }
