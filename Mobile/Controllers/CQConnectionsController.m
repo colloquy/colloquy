@@ -64,6 +64,12 @@
 		[_connectionsViewController addConnection:connection];
 }
 
+- (void) viewWillAppear:(BOOL) animated {
+	[super viewWillAppear:animated];
+
+	[self popToRootViewControllerAnimated:NO];
+}
+
 #pragma mark -
 
 - (void) applicationWillTerminate {
