@@ -3,7 +3,7 @@
 #import "CQChatController.h"
 #import "CQChatInputField.h"
 #import "CQChatTableCell.h"
-#import "CQInputBarView.h"
+#import "CQChatInputBar.h"
 #import "CQStyleView.h"
 
 #import <ChatCore/MVChatConnection.h>
@@ -11,7 +11,7 @@
 
 @implementation CQDirectChatController
 - (id) initWithTarget:(id) target {
-	if (!(self = [super init]))
+	if (!(self = [super initWithNibName:@"ChatView" bundle:nil]))
 		return nil;
 
 	_target = [target retain];
@@ -20,6 +20,8 @@
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[_target release];
 	[super dealloc];
 }
@@ -64,14 +66,103 @@
 
 #pragma mark -
 
+- (void) viewWillAppear:(BOOL) animated {
+	[super viewWillAppear:animated];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+}
+
 - (void) viewDidAppear:(BOOL) animated {
+	[super viewDidAppear:animated];
+
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
 	_active = YES;
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
-	_active = NO;
+	_viewDisappearing = YES;
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+
+	[super viewWillDisappear:animated];
+}
+
+- (void) viewDidDisappear:(BOOL) animated {
+	[super viewDidDisappear:animated];
+
+	[chatInputBar resignFirstResponder];
+
+	_viewDisappearing = NO;
+}
+
+- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
+	return YES;
+}
+
+#pragma mark -
+
+- (BOOL) chatInputBarShouldEndEditing:(CQChatInputBar *) chatInputBar {
+	if (_viewDisappearing)
+		return YES;
+	return NO;
+}
+
+#pragma mark -
+
+- (void) keyboardWillShow:(NSNotification *) notification {
+	CGPoint endCenterPoint = CGPointZero;
+	CGRect keyboardBounds = CGRectZero;
+
+	[[[notification userInfo] objectForKey:UIKeyboardCenterEndUserInfoKey] getValue:&endCenterPoint];
+	[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
+
+	endCenterPoint = [self.view.window convertPoint:endCenterPoint toView:self.view];
+
+	CGFloat keyboardTop = endCenterPoint.y - (keyboardBounds.size.height / 2.);
+
+	[UIView beginAnimations:@"CQDirectChatControllerKeyboardShowing" context:NULL];
+
+	[UIView setAnimationDelay:0.05];
+	[UIView setAnimationDuration:0.25];
+
+	CGRect frame = chatInputBar.frame;
+	frame.origin.y = keyboardTop - frame.size.height;
+	chatInputBar.frame = frame;
+
+	frame = transcriptView.frame;
+	frame.size.height = keyboardTop - chatInputBar.frame.size.height;
+	transcriptView.frame = frame;
+
+	[UIView commitAnimations];
+}
+
+- (void) keyboardWillHide:(NSNotification *) notification {
+	CGPoint endCenterPoint = CGPointZero;
+	CGRect keyboardBounds = CGRectZero;
+
+	[[[notification userInfo] objectForKey:UIKeyboardCenterEndUserInfoKey] getValue:&endCenterPoint];
+	[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
+
+	endCenterPoint = [self.view.window convertPoint:endCenterPoint toView:self.view];
+
+	CGFloat keyboardTop = endCenterPoint.y - (keyboardBounds.size.height / 2.);
+
+	[UIView beginAnimations:@"CQDirectChatControllerKeyboardHiding" context:NULL];
+
+	[UIView setAnimationDuration:0.25];
+
+	CGRect frame = chatInputBar.frame;
+	frame.origin.y = keyboardTop - frame.size.height;
+	chatInputBar.frame = frame;
+
+	frame = transcriptView.frame;
+	frame.size.height = keyboardTop - chatInputBar.frame.size.height;
+	transcriptView.frame = frame;
+
+	[UIView commitAnimations];
 }
 
 #pragma mark -

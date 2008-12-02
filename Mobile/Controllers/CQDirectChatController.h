@@ -1,7 +1,9 @@
 #import "CQChatController.h"
+#import "CQChatInputBar.h"
 
 @class CQChatTableCell;
 @class CQStyleView;
+@class CQChatInputBar;
 @class MVChatUser;
 
 typedef enum _CQChatMessageType {
@@ -9,11 +11,15 @@ typedef enum _CQChatMessageType {
 	CQChatMessageNoticeType = 'nTMt'
 } CQChatMessageType;
 
-@interface CQDirectChatController : UIViewController <CQChatViewController> {
+@interface CQDirectChatController : UIViewController <CQChatViewController, CQChatInputBarDelegate> {
+	IBOutlet CQChatInputBar *chatInputBar;
+	IBOutlet UIWebView *transcriptView;
+
 	id _target;
 	NSUInteger _unreadMessages;
 	NSUInteger _unreadHighlightedMessages;
 	BOOL _active;
+	BOOL _viewDisappearing;
 }
 - (id) initWithTarget:(id) target;
 
