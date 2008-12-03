@@ -56,6 +56,11 @@
 	[self pushViewController:_chatListViewController animated:NO];
 }
 
+- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
+	// This should support UIDeviceOrientationLandscapeLeft too, but convertPoint: returns bad results in that orientation.
+	return (interfaceOrientation == UIDeviceOrientationPortrait || interfaceOrientation == UIDeviceOrientationLandscapeRight);
+}
+
 #pragma mark -
 
 static NSComparisonResult sortControllersAscending(CQDirectChatController *chatController1, CQDirectChatController *chatController2, void *context) {

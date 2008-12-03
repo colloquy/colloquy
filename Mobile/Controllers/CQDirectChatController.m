@@ -98,10 +98,6 @@
 	_viewDisappearing = NO;
 }
 
-- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
-	return YES;
-}
-
 #pragma mark -
 
 - (BOOL) chatInputBarShouldEndEditing:(CQChatInputBar *) chatInputBar {
@@ -121,46 +117,59 @@
 
 	endCenterPoint = [self.view.window convertPoint:endCenterPoint toView:self.view];
 
-	CGFloat keyboardTop = endCenterPoint.y - (keyboardBounds.size.height / 2.);
+	BOOL previouslyShowingKeyboard = (chatInputBar.center.y != (self.view.bounds.size.height - (chatInputBar.bounds.size.height / 2.)));
+	if (!previouslyShowingKeyboard) {
+		[UIView beginAnimations:@"CQDirectChatControllerKeyboardShowing" context:NULL];
 
-	[UIView beginAnimations:@"CQDirectChatControllerKeyboardShowing" context:NULL];
+		[UIView setAnimationDelay:0.05];
+		[UIView setAnimationDuration:0.25];
+	}
 
-	[UIView setAnimationDelay:0.05];
-	[UIView setAnimationDuration:0.25];
+	CGRect bounds = chatInputBar.bounds;
+	CGPoint center = chatInputBar.center;
+	CGFloat keyboardTop = MAX(chatInputBar.bounds.size.height, endCenterPoint.y - (keyboardBounds.size.height / 2.));
+	center.y = keyboardTop - (bounds.size.height / 2.);
+	chatInputBar.center = center;
 
-	CGRect frame = chatInputBar.frame;
-	frame.origin.y = keyboardTop - frame.size.height;
-	chatInputBar.frame = frame;
+	bounds = transcriptView.bounds;
+	bounds.size.height = keyboardTop - chatInputBar.bounds.size.height;
+	transcriptView.bounds = bounds;
 
-	frame = transcriptView.frame;
-	frame.size.height = keyboardTop - chatInputBar.frame.size.height;
-	transcriptView.frame = frame;
+	center = transcriptView.center;
+	center.y = (bounds.size.height / 2.);
+	transcriptView.center = center;
 
-	[UIView commitAnimations];
+	if (!previouslyShowingKeyboard)
+		[UIView commitAnimations];
 }
 
 - (void) keyboardWillHide:(NSNotification *) notification {
+	CGPoint beginCenterPoint = CGPointZero;
 	CGPoint endCenterPoint = CGPointZero;
-	CGRect keyboardBounds = CGRectZero;
 
+	[[[notification userInfo] objectForKey:UIKeyboardCenterBeginUserInfoKey] getValue:&beginCenterPoint];
 	[[[notification userInfo] objectForKey:UIKeyboardCenterEndUserInfoKey] getValue:&endCenterPoint];
-	[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
 
-	endCenterPoint = [self.view.window convertPoint:endCenterPoint toView:self.view];
-
-	CGFloat keyboardTop = endCenterPoint.y - (keyboardBounds.size.height / 2.);
+	if (beginCenterPoint.y == endCenterPoint.y)
+		return;
 
 	[UIView beginAnimations:@"CQDirectChatControllerKeyboardHiding" context:NULL];
 
 	[UIView setAnimationDuration:0.25];
 
-	CGRect frame = chatInputBar.frame;
-	frame.origin.y = keyboardTop - frame.size.height;
-	chatInputBar.frame = frame;
+	CGRect bounds = chatInputBar.bounds;
+	CGPoint center = chatInputBar.center;
+	CGFloat viewHeight = self.view.bounds.size.height;
+	center.y = viewHeight - (bounds.size.height / 2.);
+	chatInputBar.center = center;
 
-	frame = transcriptView.frame;
-	frame.size.height = keyboardTop - chatInputBar.frame.size.height;
-	transcriptView.frame = frame;
+	bounds = transcriptView.bounds;
+	bounds.size.height = viewHeight - chatInputBar.bounds.size.height;
+	transcriptView.bounds = bounds;
+
+	center = transcriptView.center;
+	center.y = (bounds.size.height / 2.);
+	transcriptView.center = center;
 
 	[UIView commitAnimations];
 }

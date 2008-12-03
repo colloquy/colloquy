@@ -70,6 +70,11 @@
 	[self popToRootViewControllerAnimated:NO];
 }
 
+- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
+	// This should support UIDeviceOrientationLandscapeLeft too, but convertPoint: returns bad results in that orientation.
+	return (interfaceOrientation == UIDeviceOrientationPortrait || interfaceOrientation == UIDeviceOrientationLandscapeRight);
+}
+
 #pragma mark -
 
 - (void) applicationWillTerminate {
