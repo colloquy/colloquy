@@ -106,6 +106,15 @@
 	return NO;
 }
 
+- (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text {
+	[_target sendMessage:text withEncoding:NSUTF8StringEncoding asAction:NO];
+
+	NSData *messageData = [text dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+	[self addMessageToDisplay:messageData fromUser:self.connection.localUser asAction:NO withIdentifier:@"" andType:CQChatMessageNormalType];
+
+	return YES;
+}
+
 #pragma mark -
 
 - (void) keyboardWillShow:(NSNotification *) notification {
@@ -172,17 +181,6 @@
 	transcriptView.center = center;
 
 	[UIView commitAnimations];
-}
-
-#pragma mark -
-
-- (BOOL) chatInput:(CQChatInputBar *) chatInputBar sendText:(NSString *) text {
-	[_target sendMessage:text withEncoding:NSUTF8StringEncoding asAction:NO];
-
-	NSData *messageData = [text dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-	[self addMessageToDisplay:messageData fromUser:self.connection.localUser asAction:NO withIdentifier:@"" andType:CQChatMessageNormalType];
-
-	return YES;
 }
 
 #pragma mark -

@@ -95,7 +95,7 @@
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *) textField {
-	if (![delegate respondsToSelector:@selector(chatInput:sendText:)])
+	if (![delegate respondsToSelector:@selector(chatInputBar:sendText:)])
 		return NO;
 
 	// Perform work on a delay so pending auto-corrections can be committed.
@@ -111,7 +111,7 @@
 	[_inputField resignFirstResponder];
 	[_inputField becomeFirstResponder];
 
-	if ([delegate chatInput:self sendText:_inputField.text])
+	if ([delegate chatInputBar:self sendText:_inputField.text])
 		_inputField.text = @"";	
 }
 @end

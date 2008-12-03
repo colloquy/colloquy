@@ -13,5 +13,5 @@
 - (void) chatInputBarDidBeginEditing:(CQChatInputBar *) chatInputBar;
 - (BOOL) chatInputBarShouldEndEditing:(CQChatInputBar *) chatInputBar;
 - (void) chatInputBarDidEndEditing:(CQChatInputBar *) chatInputBar;
-- (BOOL) chatInput:(CQChatInputBar *) chatInputBar sendText:(NSString *) text;
+- (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text;
 @end
