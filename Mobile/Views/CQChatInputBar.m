@@ -93,4 +93,25 @@
 	if ([delegate respondsToSelector:@selector(chatInputBarDidEndEditing:)])
 		[delegate chatInputBarDidEndEditing:self];
 }
+
+- (BOOL) textFieldShouldReturn:(UITextField *) textField {
+	if (![delegate respondsToSelector:@selector(chatInput:sendText:)])
+		return NO;
+
+	// Perform work on a delay so pending auto-corrections can be committed.
+	[self performSelector:@selector(_sendText) withObject:nil afterDelay:0.];
+
+	return YES;
+}
+
+#pragma mark -
+
+- (void) _sendText {
+	// Resign and become first responder to accept any pending auto-correction.
+	[_inputField resignFirstResponder];
+	[_inputField becomeFirstResponder];
+
+	if ([delegate chatInput:self sendText:_inputField.text])
+		_inputField.text = @"";	
+}
 @end

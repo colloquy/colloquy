@@ -1,14 +1,17 @@
 body {
 	margin: 0;
-	padding: 0;
 	font-size: 16px;
 	font-family: Helvetica, sans-serif;
 }
 
 .message-wrapper {
 	padding: 3px 8px;
-	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
 	font-weight: 13px;
+}
+
+.message-wrapper:first-child {
+	border-top: none;
 }
 
 .event + .message-wrapper {
@@ -19,15 +22,20 @@ body {
 	background-color: rgb(204, 255, 102);
 	background-image: url(gradientHighlight.png);
 	background-repeat: repeat-x;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .message-wrapper.highlight .sender {
 	text-shadow: white 0 1px 3px;
 }
 
+.message-wrapper.highlight + .message-wrapper {
+	border-top: none;
+}
+
 .message-wrapper.action .sender:before {
 	content: "\2022";
-	margin-left: -5px;
+	margin-left: -4px;
 	font-size: 12px;
 }
 

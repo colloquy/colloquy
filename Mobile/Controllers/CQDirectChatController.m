@@ -176,14 +176,13 @@
 
 #pragma mark -
 
-- (void) send:(id) sender {
-	NSString *message = @"";
-	[_target sendMessage:message withEncoding:NSUTF8StringEncoding asAction:NO];
+- (BOOL) chatInput:(CQChatInputBar *) chatInputBar sendText:(NSString *) text {
+	[_target sendMessage:text withEncoding:NSUTF8StringEncoding asAction:NO];
 
-	NSData *messageData = [message dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+	NSData *messageData = [text dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
 	[self addMessageToDisplay:messageData fromUser:self.connection.localUser asAction:NO withIdentifier:@"" andType:CQChatMessageNormalType];
 
-	[message release];
+	return YES;
 }
 
 #pragma mark -
@@ -194,5 +193,6 @@
 }
 
 - (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user withAttributes:(NSDictionary *) msgAttributes withIdentifier:(NSString *) identifier andType:(CQChatMessageType) type {
+	[transcriptView addMessageToDisplay:message fromUser:user withAttributes:msgAttributes withIdentifier:identifier andType:type];
 }
 @end

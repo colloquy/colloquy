@@ -68,6 +68,11 @@
 		1C82C52A0D850B1B009ABD9F /* CQConnectionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C5290D850B1B009ABD9F /* CQConnectionsViewController.m */; };
 		1C9B15A50D878B6A003794A5 /* CQConnectionEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */; };
 		1CA91CCA0DFC976D002DDBB4 /* Colloquy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */; };
+		1CAE8BC80EE6111900CE1AF8 /* CQChatTranscriptView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CAE8BC70EE6111900CE1AF8 /* CQChatTranscriptView.m */; };
+		1CAE8BF50EE612DA00CE1AF8 /* base.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8BF20EE612DA00CE1AF8 /* base.html */; };
+		1CAE8BF60EE612DA00CE1AF8 /* standard.css in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8BF30EE612DA00CE1AF8 /* standard.css */; };
+		1CAE8BF70EE612DA00CE1AF8 /* gradientHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8BF40EE612DA00CE1AF8 /* gradientHighlight.png */; };
+		1CAE8C8C0EE61AD000CE1AF8 /* transcript.js in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8C850EE6190A00CE1AF8 /* transcript.js */; };
 		1CB318DF0D8644E4006A7513 /* server.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB318DA0D8644E4006A7513 /* server.png */; };
 		1CB318E00D8644E4006A7513 /* connectingBadgeDim.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB318DB0D8644E4006A7513 /* connectingBadgeDim.png */; };
 		1CB318E10D8644E4006A7513 /* connectingBadgeGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB318DC0D8644E4006A7513 /* connectingBadgeGlow.png */; };
@@ -205,6 +210,12 @@
 		1C9B15A30D878B6A003794A5 /* CQConnectionEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionEditViewController.h; sourceTree = "<group>"; };
 		1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionEditViewController.m; sourceTree = "<group>"; };
 		1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Colloquy.xib; sourceTree = "<group>"; };
+		1CAE8BC60EE6111900CE1AF8 /* CQChatTranscriptView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatTranscriptView.h; sourceTree = "<group>"; };
+		1CAE8BC70EE6111900CE1AF8 /* CQChatTranscriptView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatTranscriptView.m; sourceTree = "<group>"; };
+		1CAE8BF20EE612DA00CE1AF8 /* base.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = base.html; sourceTree = "<group>"; };
+		1CAE8BF30EE612DA00CE1AF8 /* standard.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = standard.css; sourceTree = "<group>"; };
+		1CAE8BF40EE612DA00CE1AF8 /* gradientHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gradientHighlight.png; sourceTree = "<group>"; };
+		1CAE8C850EE6190A00CE1AF8 /* transcript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = transcript.js; sourceTree = "<group>"; };
 		1CB318DA0D8644E4006A7513 /* server.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = server.png; sourceTree = "<group>"; };
 		1CB318DB0D8644E4006A7513 /* connectingBadgeDim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connectingBadgeDim.png; sourceTree = "<group>"; };
 		1CB318DC0D8644E4006A7513 /* connectingBadgeGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connectingBadgeGlow.png; sourceTree = "<group>"; };
@@ -418,6 +429,8 @@
 				1C6100D10ED31C8B0016F968 /* CQPreferencesSwitchCell.h */,
 				1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */,
 				1CC575960ED3A71900FEC2C1 /* CQPreferencesDeleteCell.h */,
+				1CAE8BC70EE6111900CE1AF8 /* CQChatTranscriptView.m */,
+				1CAE8BC60EE6111900CE1AF8 /* CQChatTranscriptView.h */,
 				1CE69FD80EE317F200389442 /* CQChatInputBar.m */,
 				1CE69FD70EE317F200389442 /* CQChatInputBar.h */,
 			);
@@ -496,6 +509,10 @@
 				1CB318DD0D8644E4006A7513 /* connectedBadgeGlow.png */,
 				1CB318DE0D8644E4006A7513 /* connectedBadgeDim.png */,
 				1CE69FEF0EE34C0000389442 /* chatInputBarBackground.png */,
+				1CAE8BF20EE612DA00CE1AF8 /* base.html */,
+				1CAE8BF30EE612DA00CE1AF8 /* standard.css */,
+				1CAE8C850EE6190A00CE1AF8 /* transcript.js */,
+				1CAE8BF40EE612DA00CE1AF8 /* gradientHighlight.png */,
 			);
 			name = Resources;
 			path = Mobile/Resources;
@@ -554,6 +571,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CAE8C8C0EE61AD000CE1AF8 /* transcript.js in Resources */,
 				1C09313B0D80C8F600A2705D /* Defaults.plist in Resources */,
 				1C0937330D80E72F00A2705D /* icon.png in Resources */,
 				1CB318DF0D8644E4006A7513 /* server.png in Resources */,
@@ -574,6 +592,9 @@
 				1CF50F710EDA7BC600CBE5E3 /* roomIconSmall.png in Resources */,
 				1CE69F820EE2F50100389442 /* ChatView.xib in Resources */,
 				1CE69FF00EE34C0000389442 /* chatInputBarBackground.png in Resources */,
+				1CAE8BF50EE612DA00CE1AF8 /* base.html in Resources */,
+				1CAE8BF60EE612DA00CE1AF8 /* standard.css in Resources */,
+				1CAE8BF70EE612DA00CE1AF8 /* gradientHighlight.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -644,6 +665,7 @@
 				1C2A046F0EDAFC2D004509AE /* CQPreferencesListEditViewController.m in Sources */,
 				1CFF6E820EDF772800D3C557 /* UITableViewAdditions.m in Sources */,
 				1CE69FD90EE317F200389442 /* CQChatInputBar.m in Sources */,
+				1CAE8BC80EE6111900CE1AF8 /* CQChatTranscriptView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
