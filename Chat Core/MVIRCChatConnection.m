@@ -23,6 +23,10 @@
 #import "MVChatPluginManager.h"
 #endif
 
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
+#import <CFNetwork/CFNetwork.h>
+#endif
+
 #define JVMinimumSendQueueDelay 0.2
 #define JVMaximumSendQueueDelay 2.0
 #define JVQueueWaitBeforeConnected 120.
