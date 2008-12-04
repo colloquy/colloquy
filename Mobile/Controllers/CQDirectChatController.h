@@ -8,7 +8,7 @@
 @class CQChatTranscriptView;
 @class MVChatUser;
 
-@interface CQDirectChatController : UIViewController <CQChatViewController, CQChatInputBarDelegate> {
+@interface CQDirectChatController : UIViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate> {
 	IBOutlet CQChatInputBar *chatInputBar;
 	IBOutlet CQChatTranscriptView *transcriptView;
 
@@ -16,7 +16,8 @@
 	NSUInteger _unreadMessages;
 	NSUInteger _unreadHighlightedMessages;
 	BOOL _active;
-	BOOL _viewDisappearing;
+	BOOL _allowEditingToEnd;
+	BOOL _didSendRecently;
 }
 - (id) initWithTarget:(id) target;
 

@@ -1,5 +1,16 @@
 #import "CQChatInputBar.h"
 
+@interface UIKeyboardInputManager : NSObject
+@end
+
+@interface UIKeyboardImpl : UIView
++ (UIKeyboardImpl *) activeInstance;
+- (void) takeTextInputTraitsFrom:(id <UITextInputTraits>) object;
+- (NSArray *) candidateList;
+@end
+
+#pragma mark -
+
 @implementation CQChatInputBar
 - (void) _commonInitialization {
 	CGRect frame = self.frame;
@@ -9,9 +20,13 @@
 	_inputField.borderStyle = UITextBorderStyleRoundedRect;
 	_inputField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
 	_inputField.returnKeyType = UIReturnKeySend;
+	_inputField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+	_inputField.enablesReturnKeyAutomatically = YES;
 	_inputField.delegate = self;
 
 	[self addSubview:_inputField];
+
+	_inferAutocapitalizationType = YES;
 }
 
 #pragma mark -
@@ -68,6 +83,16 @@
 	return [_inputField isFirstResponder];
 }
 
+- (UITextAutocapitalizationType) autocapitalizationType {
+	return _inputField.autocapitalizationType;
+}
+
+- (void) setAutocapitalizationType:(UITextAutocapitalizationType) autocapitalizationType {
+	_inputField.autocapitalizationType = autocapitalizationType;
+}
+
+@synthesize inferAutocapitalizationType = _inferAutocapitalizationType;
+
 #pragma mark -
 
 @synthesize delegate;
@@ -98,6 +123,9 @@
 	if (![delegate respondsToSelector:@selector(chatInputBar:sendText:)])
 		return NO;
 
+	if (!_inputField.text.length)
+		return NO;
+
 	// Perform work on a delay so pending auto-corrections can be committed.
 	[self performSelector:@selector(_sendText) withObject:nil afterDelay:0.];
 
@@ -111,7 +139,26 @@
 	[_inputField resignFirstResponder];
 	[_inputField becomeFirstResponder];
 
-	if ([delegate chatInputBar:self sendText:_inputField.text])
-		_inputField.text = @"";	
+	NSString *text = _inputField.text;
+	if (![delegate chatInputBar:self sendText:text])
+		return;
+
+	if (_inferAutocapitalizationType) {
+		NSCharacterSet *uppercaseSet = [NSCharacterSet uppercaseLetterCharacterSet];
+		if ([uppercaseSet characterIsMember:[text characterAtIndex:0]])
+			_inputField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+		else _inputField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+
+		static Class keyboardClass;
+		if (!keyboardClass) keyboardClass = NSClassFromString(@"UIKeyboardImpl");
+
+		if ([keyboardClass respondsToSelector:@selector(activeInstance)]) {
+			UIKeyboardImpl *keyboard = [keyboardClass activeInstance];
+			if ([keyboard respondsToSelector:@selector(takeTextInputTraitsFrom:)])
+				[keyboard takeTextInputTraitsFrom:_inputField];
+		}
+	}
+
+	_inputField.text = @"";
 }
 @end

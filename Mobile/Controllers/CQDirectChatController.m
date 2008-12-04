@@ -82,7 +82,7 @@
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
-	_viewDisappearing = YES;
+	_allowEditingToEnd = YES;
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
@@ -95,24 +95,52 @@
 
 	[chatInputBar resignFirstResponder];
 
-	_viewDisappearing = NO;
+	_allowEditingToEnd = NO;
 }
 
 #pragma mark -
 
+- (void) chatInputBarDidBeginEditing:(CQChatInputBar *) chatInputBar {
+	[transcriptView scrollToBottom];
+}
+
 - (BOOL) chatInputBarShouldEndEditing:(CQChatInputBar *) chatInputBar {
-	if (_viewDisappearing)
+	if (_allowEditingToEnd)
 		return YES;
+
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(checkTranscriptViewForBecomeFirstResponder) object:nil];
+	[self performSelector:@selector(checkTranscriptViewForBecomeFirstResponder) withObject:nil afterDelay:0.4];
+
 	return NO;
 }
 
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text {
+	_didSendRecently = YES;
+
 	[_target sendMessage:text withEncoding:NSUTF8StringEncoding asAction:NO];
 
 	NSData *messageData = [text dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
 	[self addMessageToDisplay:messageData fromUser:self.connection.localUser asAction:NO withIdentifier:@"" andType:CQChatMessageNormalType];
 
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetDidSendRecently) object:nil];
+	[self performSelector:@selector(resetDidSendRecently) withObject:nil afterDelay:0.5];
+
 	return YES;
+}
+
+#pragma mark -
+
+- (void) resetDidSendRecently {
+	_didSendRecently = NO;
+}
+
+- (void) checkTranscriptViewForBecomeFirstResponder {
+	if (_didSendRecently || ![transcriptView canBecomeFirstResponder])
+		return;
+
+	_allowEditingToEnd = YES;
+	[chatInputBar resignFirstResponder];
+	_allowEditingToEnd = NO;
 }
 
 #pragma mark -

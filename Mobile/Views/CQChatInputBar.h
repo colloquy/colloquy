@@ -2,9 +2,13 @@
 
 @interface CQChatInputBar : UIView <UITextFieldDelegate> {
 	UITextField *_inputField;
+	BOOL _inferAutocapitalizationType;
 	IBOutlet id <CQChatInputBarDelegate> delegate;
 }
 @property (nonatomic,assign) id <CQChatInputBarDelegate> delegate;
+
+@property (nonatomic) BOOL inferAutocapitalizationType;
+@property (nonatomic) UITextAutocapitalizationType autocapitalizationType;
 @end
 
 @protocol CQChatInputBarDelegate <NSObject>
