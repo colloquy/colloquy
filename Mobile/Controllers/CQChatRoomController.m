@@ -12,6 +12,10 @@
 	if (!(self = [super initWithTarget:target]))
 		return nil;
 
+	UIBarButtonItem *membersItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showMembers)];
+	self.navigationItem.rightBarButtonItem = membersItem;
+	[membersItem release];
+
 	_orderedMembers = [[NSMutableArray alloc] initWithCapacity:100];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberNicknameChanged:) name:MVChatUserNicknameChangedNotification object:nil];
@@ -65,6 +69,10 @@
 	[_orderedMembers addObjectsFromArray:[self.room.memberUsers allObjects]];
 
 	[self _sortMembers];
+}
+
+- (void) showMembers {
+	
 }
 
 #pragma mark -
