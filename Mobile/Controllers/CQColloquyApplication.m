@@ -23,7 +23,13 @@
 	tabBarController.viewControllers = viewControllers;
 	[viewControllers release];
 
+	tabBarController.selectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQSelectedTabIndex"];
+
 	[mainWindow addSubview:tabBarController.view];
 	[mainWindow makeKeyAndVisible];
+}
+
+- (void) tabBarController:(UITabBarController *) currentTabBarController didSelectViewController:(UIViewController *) viewController {
+	[[NSUserDefaults standardUserDefaults] setInteger:tabBarController.selectedIndex forKey:@"CQSelectedTabIndex"];
 }
 @end

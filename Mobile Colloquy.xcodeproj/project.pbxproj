@@ -84,6 +84,7 @@
 		1CC575980ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */; };
 		1CC576D30ED4684700FEC2C1 /* UITableViewCellAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */; };
 		1CC64A7A0EE90DC000DE91D0 /* members.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64A790EE90DC000DE91D0 /* members.png */; };
+		1CC64A9B0EE9152D00DE91D0 /* default.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64A9A0EE9152D00DE91D0 /* default.png */; };
 		1CD949820D8E18DB00756ACD /* directChatIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD949800D8E18DB00756ACD /* directChatIcon.png */; };
 		1CD949830D8E18DB00756ACD /* roomIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD949810D8E18DB00756ACD /* roomIcon.png */; };
 		1CE3FB120D8A3DC100FB035F /* CQConnectionCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */; };
@@ -230,6 +231,7 @@
 		1CC576D10ED4684700FEC2C1 /* UITableViewCellAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UITableViewCellAdditions.h; path = Mobile/Views/UITableViewCellAdditions.h; sourceTree = "<group>"; };
 		1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UITableViewCellAdditions.m; path = Mobile/Views/UITableViewCellAdditions.m; sourceTree = "<group>"; };
 		1CC64A790EE90DC000DE91D0 /* members.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = members.png; sourceTree = "<group>"; };
+		1CC64A9A0EE9152D00DE91D0 /* default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = default.png; sourceTree = "<group>"; };
 		1CD949800D8E18DB00756ACD /* directChatIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = directChatIcon.png; sourceTree = "<group>"; };
 		1CD949810D8E18DB00756ACD /* roomIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = roomIcon.png; sourceTree = "<group>"; };
 		1CE3FB100D8A3DC100FB035F /* CQConnectionCreationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionCreationViewController.h; sourceTree = "<group>"; };
@@ -512,6 +514,7 @@
 				1CB318DE0D8644E4006A7513 /* connectedBadgeDim.png */,
 				1CE69FEF0EE34C0000389442 /* chatInputBarBackground.png */,
 				1CC64A790EE90DC000DE91D0 /* members.png */,
+				1CC64A9A0EE9152D00DE91D0 /* default.png */,
 				1CAE8BF20EE612DA00CE1AF8 /* base.html */,
 				1CAE8BF30EE612DA00CE1AF8 /* standard.css */,
 				1CAE8C850EE6190A00CE1AF8 /* transcript.js */,
@@ -599,6 +602,7 @@
 				1CAE8BF60EE612DA00CE1AF8 /* standard.css in Resources */,
 				1CAE8BF70EE612DA00CE1AF8 /* gradientHighlight.png in Resources */,
 				1CC64A7A0EE90DC000DE91D0 /* members.png in Resources */,
+				1CC64A9B0EE9152D00DE91D0 /* default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
