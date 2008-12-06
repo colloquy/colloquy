@@ -1,7 +1,6 @@
 #import "CQConnectionsViewController.h"
 
 #import "CQConnectionsController.h"
-#import "CQConnectionCreationViewController.h"
 #import "CQConnectionTableCell.h"
 
 #import <ChatCore/MVChatConnection.h>
@@ -13,7 +12,7 @@
 
 	self.title = NSLocalizedString(@"Connections", @"Connections view title");
 
-	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(makeNewConnection:)];
+	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:[CQConnectionsController defaultController] action:@selector(makeNewConnection)];
 	self.navigationItem.leftBarButtonItem = addItem;
 	[addItem release];
 
@@ -25,14 +24,6 @@
 - (void) dealloc {
 	[_connectTimeUpdateTimer release];
 	[super dealloc];
-}
-
-#pragma mark -
-
-- (void) makeNewConnection:(id) sender {
-	CQConnectionCreationViewController *connectionCreationViewController = [[CQConnectionCreationViewController alloc] init];
-	[self presentModalViewController:connectionCreationViewController animated:YES];
-	[connectionCreationViewController release];
 }
 
 #pragma mark -

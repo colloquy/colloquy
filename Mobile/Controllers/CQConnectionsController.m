@@ -1,6 +1,7 @@
 #import "CQConnectionsController.h"
 #import "CQConnectionsViewController.h"
 #import "CQConnectionEditViewController.h"
+#import "CQConnectionCreationViewController.h"
 #import "CQChatController.h"
 #import "CQKeychain.h"
 
@@ -72,6 +73,16 @@
 	[self popToRootViewControllerAnimated:NO];
 }
 
+- (void) viewDidAppear:(BOOL) animated {
+	[super viewDidAppear:animated];
+
+	static BOOL offeredToCreate;
+	if (!_connections.count && !offeredToCreate) {
+		[self makeNewConnection];
+		offeredToCreate = YES;
+	}
+}
+
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
 	// This should support UIDeviceOrientationLandscapeLeft too, but convertPoint: returns bad results in that orientation.
 	return (interfaceOrientation == UIDeviceOrientationPortrait || interfaceOrientation == UIDeviceOrientationLandscapeRight);
@@ -87,6 +98,12 @@
 }
 
 #pragma mark -
+
+- (void) makeNewConnection {
+	CQConnectionCreationViewController *connectionCreationViewController = [[CQConnectionCreationViewController alloc] init];
+	[self presentModalViewController:connectionCreationViewController animated:YES];
+	[connectionCreationViewController release];
+}
 
 - (void) editConnection:(MVChatConnection *) connection {
 	CQConnectionEditViewController *editViewController = [[CQConnectionEditViewController alloc] init];

@@ -23,6 +23,7 @@
 
 - (void) saveConnections;
 
+- (void) makeNewConnection;
 - (void) editConnection:(MVChatConnection *) connection;
 
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address;
