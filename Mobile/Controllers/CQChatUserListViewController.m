@@ -27,10 +27,6 @@
 
 #pragma mark -
 
-- (void) viewWillAppear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-}
-
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
