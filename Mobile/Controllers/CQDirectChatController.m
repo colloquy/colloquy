@@ -76,6 +76,8 @@
 - (void) viewDidAppear:(BOOL) animated {
 	[super viewDidAppear:animated];
 
+	[transcriptView flashScrollIndicators];
+
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
 	_active = YES;

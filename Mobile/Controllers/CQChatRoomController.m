@@ -1,5 +1,7 @@
 #import "CQChatRoomController.h"
 
+#import "CQChatUserListViewController.h"
+
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
@@ -32,9 +34,21 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[_orderedMembers release];
+	[_currentUserListViewController release];
 
 	[super dealloc];
 }
+
+#pragma mark -
+
+- (void) viewDidAppear:(BOOL) animated {
+	[super viewDidAppear:animated];
+
+	[_currentUserListViewController release];
+	_currentUserListViewController = nil;
+}
+
+#pragma mark -
 
 - (MVChatUser *) user {
 	return nil;
@@ -72,7 +86,19 @@
 }
 
 - (void) showMembers {
-	
+	if (_currentUserListViewController)
+		return;
+
+	if (_membersNeedSorted)
+		[self _sortMembers];
+
+	_currentUserListViewController = [[CQChatUserListViewController alloc] init];
+
+	_currentUserListViewController.title = NSLocalizedString(@"Members", @"Members view title");
+	_currentUserListViewController.users = _orderedMembers;
+	_currentUserListViewController.room = self.room;
+
+	[self.navigationController pushViewController:_currentUserListViewController animated:YES];
 }
 
 #pragma mark -
@@ -117,6 +143,8 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"])
 		[_orderedMembers sortUsingFunction:sortMembersByStatus context:self];
 	else [_orderedMembers sortUsingFunction:sortMembersByNickname context:self];
+
+	_membersNeedSorted = NO;
 }
 
 - (void) _memberNicknameChanged:(NSNotification *) notification {
@@ -128,7 +156,20 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	if (originalIndex == NSNotFound)
 		return;
 
+	if (!_currentUserListViewController) {
+		_membersNeedSorted = YES;
+		return;
+	}
+
 	[self _sortMembers];
+
+	NSUInteger newIndex = [_orderedMembers indexOfObjectIdenticalTo:user];
+	if (newIndex == originalIndex) {
+		[_currentUserListViewController updateUserAtIndex:newIndex];
+		return;
+	}
+
+	[_currentUserListViewController moveUserAtIndex:originalIndex toIndex:newIndex];
 }
 
 - (void) _memberModeChanged:(NSNotification *) notification {
@@ -140,7 +181,20 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	if (originalIndex == NSNotFound)
 		return;
 
+	if (!_currentUserListViewController) {
+		_membersNeedSorted = YES;
+		return;
+	}
+
 	[self _sortMembers];
+
+	NSUInteger newIndex = [_orderedMembers indexOfObjectIdenticalTo:user];
+	if (newIndex == originalIndex) {
+		[_currentUserListViewController updateUserAtIndex:newIndex];
+		return;
+	}
+
+	[_currentUserListViewController moveUserAtIndex:originalIndex toIndex:newIndex];
 }
 
 - (void) _membersSynced:(NSNotification *) notification {
@@ -164,8 +218,19 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 		}
 	}
 
-	if (modifed)
-		[self _sortMembers];
+	if (!modifed)
+		return;
+
+	if (!_currentUserListViewController) {
+		_membersNeedSorted = YES;
+		return;
+	}
+
+	[self _sortMembers];
+
+	// This should add/remove each user individually. But this isn't
+	// common, so we just replace the list.
+	_currentUserListViewController.users = _orderedMembers;
 }
 
 - (void) _memberJoined:(NSNotification *) notification {
@@ -176,7 +241,15 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 
 	[_orderedMembers addObject:user];
 
+	if (!_currentUserListViewController) {
+		_membersNeedSorted = YES;
+		return;
+	}
+
 	[self _sortMembers];
+
+	NSUInteger index = [_orderedMembers indexOfObjectIdenticalTo:user];
+	[_currentUserListViewController insertUser:user atIndex:index];
 }
 
 - (void) _memberParted:(NSNotification *) notification {
@@ -187,6 +260,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 		return;
 
 	[_orderedMembers removeObjectAtIndex:index];
+	[_currentUserListViewController removeUserAtIndex:index];
 }
 
 - (void) _memberKicked:(NSNotification *) notification {
@@ -197,5 +271,6 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 		return;
 
 	[_orderedMembers removeObjectAtIndex:index];
+	[_currentUserListViewController removeUserAtIndex:index];
 }
 @end

@@ -14,22 +14,18 @@
 
 	self.title = NSLocalizedString(@"Connections", @"Connections view title");
 
+	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(makeNewConnection:)];
+	self.navigationItem.leftBarButtonItem = addItem;
+	[addItem release];
+
+	self.navigationItem.rightBarButtonItem = self.editButtonItem;
+
 	return self;
 }
 
 - (void) dealloc {
 	[_connectTimeUpdateTimer release];
 	[super dealloc];
-}
-
-- (void) viewDidLoad {
-	[super viewDidLoad];
-
-	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(makeNewConnection:)];
-	self.navigationItem.leftBarButtonItem = addItem;
-	[addItem release];
-
-	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 #pragma mark -

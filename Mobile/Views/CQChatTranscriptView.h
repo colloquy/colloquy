@@ -15,6 +15,7 @@ typedef enum {
 - (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user withAttributes:(NSDictionary *) msgAttributes withIdentifier:(NSString *) identifier andType:(CQChatMessageType) type;
 
 - (void) scrollToBottom;
+- (void) flashScrollIndicators;
 @end
 
 @protocol CQChatTranscriptViewDelegate

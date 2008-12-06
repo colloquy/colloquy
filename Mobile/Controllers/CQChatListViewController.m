@@ -14,6 +14,12 @@
 
 	self.title = NSLocalizedString(@"Colloquies", @"Colloquies view title");
 
+	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(startNewChat)];
+	self.navigationItem.leftBarButtonItem = addItem;
+	[addItem release];
+
+	self.navigationItem.rightBarButtonItem = self.editButtonItem;
+
 	return self;
 }
 
@@ -90,6 +96,12 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	}
 
 	return nil;
+}
+
+#pragma mark -
+
+- (void) startNewChat {
+	
 }
 
 #pragma mark -

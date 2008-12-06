@@ -13,6 +13,8 @@
 	self.noItemsLabelText = NSLocalizedString(@"No items", @"No items label");
 	self.editViewTitle = NSLocalizedString(@"Edit", @"Edit view title");
 
+	self.navigationItem.rightBarButtonItem = self.editButtonItem;
+
 	return self;
 }
 
@@ -33,7 +35,6 @@
 	[super viewDidLoad];
 
 	self.tableView.allowsSelectionDuringEditing = YES;
-	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void) viewWillAppear:(BOOL) animated {

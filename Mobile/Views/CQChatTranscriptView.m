@@ -7,6 +7,7 @@
 @interface UIScroller : UIView
 @property (nonatomic) BOOL showBackgroundShadow;
 @property (nonatomic) CGPoint offset;
+- (void) displayScrollerIndicators;
 @end
 
 #pragma mark -
@@ -116,6 +117,11 @@
 
 - (void) scrollToBottom {
 	[self stringByEvaluatingJavaScriptFromString:@"scrollToBottom()"];
+}
+
+- (void) flashScrollIndicators {
+	if ([[self _scroller] respondsToSelector:@selector(displayScrollerIndicators)])
+		[[self _scroller] displayScrollerIndicators];
 }
 
 #pragma mark -

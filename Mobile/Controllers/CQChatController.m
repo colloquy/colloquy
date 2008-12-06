@@ -53,6 +53,7 @@
 
 	if (!_chatListViewController)
 		_chatListViewController = [[CQChatListViewController alloc] init];
+
 	[self pushViewController:_chatListViewController animated:NO];
 }
 
