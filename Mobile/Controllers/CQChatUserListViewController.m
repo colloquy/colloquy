@@ -1,6 +1,8 @@
 #import "CQChatUserListViewController.h"
 
 #import "CQSearchCell.h"
+#import "CQChatController.h"
+#import "CQDirectChatController.h"
 #import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatRoom.h>
@@ -297,6 +299,29 @@
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	sheet.delegate = self;
 
+	[sheet addButtonWithTitle:NSLocalizedString(@"Send Message", @"Send Message button title")];
+	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+
+	sheet.cancelButtonIndex = 1;
+
+	[sheet showInView:self.view.window];
+	[sheet release];
+}
+
+- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+
+	[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
+
+	if (buttonIndex == actionSheet.cancelButtonIndex)
+		return;
+
+	MVChatUser *user = [_matchedUsers objectAtIndex:(selectedIndexPath.row - 1)];
+
+	CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
+	[[CQChatController defaultController] showChatController:chatController animated:YES];
 }
 @end

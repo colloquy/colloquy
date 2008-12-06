@@ -31,6 +31,7 @@
 
 	self.title = NSLocalizedString(@"Colloquies", @"Colloquies tab title");
 	self.tabBarItem.image = [UIImage imageNamed:@"colloquies.png"];
+	self.delegate = self;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_joinedRoom:) name:MVChatRoomJoinedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRoomMessage:) name:MVChatRoomGotMessageNotification object:nil];
@@ -43,6 +44,7 @@
 - (void) dealloc {
 	[_chatListViewController release];
 	[_chatControllers release];
+	[_nextController release];
 	[super dealloc];
 }
 
@@ -145,6 +147,40 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 	CQDirectChatController *controller = [self chatViewControllerForDirectChatConnection:connection ifExists:NO];
 	[controller addMessageToDisplay:message fromUser:user withAttributes:notification.userInfo withIdentifier:[notification.userInfo objectForKey:@"identifier"] andType:CQChatMessageNormalType];
+}
+
+#pragma mark -
+
+- (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
+	BOOL delayed = (animated && self.visibleViewController != _chatListViewController);
+	if (delayed) {
+		id old = _nextController;
+		_nextController = [controller retain];
+		[old release];
+	}
+
+	[self popToRootViewControllerAnimated:animated];
+
+	if (!delayed) {
+		[_chatListViewController selectChatViewController:controller animatedSelection:NO animatedScroll:animated];
+		[self pushViewController:(UIViewController *)controller animated:animated];
+	}
+}
+
+- (void) showNextChatController {
+	if (self.visibleViewController != _chatListViewController)
+		return;
+
+	[_chatListViewController selectChatViewController:_nextController animatedSelection:NO animatedScroll:YES];
+	[self pushViewController:(UIViewController *)_nextController animated:YES];
+
+	[_nextController release];
+	_nextController = nil;
+}
+
+- (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
+	if (viewController == _chatListViewController && _nextController)
+		[self performSelector:@selector(showNextChatController) withObject:nil afterDelay:0.33];
 }
 
 #pragma mark -

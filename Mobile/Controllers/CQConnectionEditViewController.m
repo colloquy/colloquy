@@ -7,7 +7,6 @@
 #import "CQPreferencesListViewController.h"
 #import "CQPreferencesSwitchCell.h"
 #import "CQPreferencesTextCell.h"
-#import "CQColloquyApplication.h"
 
 #import <ChatCore/MVChatConnection.h>
 
@@ -316,7 +315,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	sheet.destructiveButtonIndex = 0;
 	sheet.cancelButtonIndex = 1;
 
-	[sheet showInView:[CQColloquyApplication sharedApplication].tabBarController.view];
+	[sheet showInView:self.view.window];
 	[sheet release];
 }
 

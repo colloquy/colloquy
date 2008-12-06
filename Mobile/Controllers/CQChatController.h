@@ -7,14 +7,17 @@
 @class MVDirectChatConnection;
 @protocol CQChatViewController;
 
-@interface CQChatController : UINavigationController {
+@interface CQChatController : UINavigationController <UINavigationControllerDelegate> {
 	@private
 	NSMutableArray *_chatControllers;
 	CQChatListViewController *_chatListViewController;
+	id <CQChatViewController> _nextController; 
 }
 + (CQChatController *) defaultController;
 
 @property (nonatomic, readonly) NSArray *chatViewControllers;
+
+- (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated;
 
 - (NSArray *) chatViewControllersForConnection:(MVChatConnection *) connection;
 - (NSArray *) chatViewControllersOfClass:(Class) class;

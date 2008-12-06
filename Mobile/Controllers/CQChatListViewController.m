@@ -120,6 +120,12 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	}
 }
 
+- (void) selectChatViewController:(id <CQChatViewController>) controller animatedSelection:(BOOL) animatedSelection animatedScroll:(BOOL) animatedScroll {
+	NSIndexPath *indexPath = indexPathForChatController(controller);
+	[self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:animatedScroll];
+	[self.tableView selectRowAtIndexPath:indexPath animated:animatedSelection scrollPosition:UITableViewScrollPositionNone];
+}
+
 #pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
