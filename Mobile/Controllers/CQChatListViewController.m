@@ -14,7 +14,7 @@
 
 	self.title = NSLocalizedString(@"Colloquies", @"Colloquies view title");
 
-	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(startNewChat)];
+	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:[CQChatController defaultController] action:@selector(showNewChatActionSheet)];
 	self.navigationItem.leftBarButtonItem = addItem;
 	[addItem release];
 
@@ -33,6 +33,12 @@
 	[super viewDidLoad];
 
 	self.tableView.rowHeight = 72.;
+}
+
+- (void) viewWillAppear:(BOOL) animated {
+	[super viewWillAppear:animated];
+
+	self.navigationItem.leftBarButtonItem.enabled = ([CQConnectionsController defaultController].connections.count ? YES : NO);
 }
 
 #pragma mark -
@@ -96,12 +102,6 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	}
 
 	return nil;
-}
-
-#pragma mark -
-
-- (void) startNewChat {
-	
 }
 
 #pragma mark -

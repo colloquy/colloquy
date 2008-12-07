@@ -151,6 +151,20 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 #pragma mark -
 
+- (void) showNewChatActionSheet {
+	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	sheet.delegate = self;
+
+	[sheet addButtonWithTitle:NSLocalizedString(@"Join a Chat Room", @"Join a Chat Room button title")];
+	[sheet addButtonWithTitle:NSLocalizedString(@"Message a User", @"Message a User button title")];
+	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+
+	sheet.cancelButtonIndex = 2;
+
+	[sheet showInView:self.view.window];
+	[sheet release];
+}
+
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
 	BOOL delayed = (animated && self.visibleViewController != _chatListViewController);
 	if (delayed) {
