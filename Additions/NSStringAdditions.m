@@ -394,7 +394,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 	// if the message dosen't have any formatting chars just init as a plain string and return quickly
 	if( [message rangeOfCharacterFromSet:formatCharacters].location == NSNotFound ) {
-		self = [self initWithString:message];
+		self = [self initWithString:[message stringByEncodingXMLSpecialCharactersAsEntities]];
 		[message release];
 		return self;
 	}
