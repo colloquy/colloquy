@@ -102,11 +102,11 @@
 #pragma mark -
 
 - (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user withAttributes:(NSDictionary *) msgAttributes withIdentifier:(NSString *) identifier andType:(CQChatMessageType) type {
-	NSString *messageString = [[NSString alloc] initWithData:message encoding:NSUTF8StringEncoding];
+	NSString *messageString = [[NSString alloc] initWithChatData:message encoding:NSUTF8StringEncoding];
 	BOOL action = [[msgAttributes objectForKey:@"action"] boolValue];
 
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"\\'\""];
-	NSString *escapedMessage = [[messageString stringByEncodingXMLSpecialCharactersAsEntities] stringByEscapingCharactersInSet:escapeSet];
+	NSString *escapedMessage = [messageString stringByEscapingCharactersInSet:escapeSet];
 	NSString *escapedNickname = [user.nickname stringByEscapingCharactersInSet:escapeSet];
 	NSString *command = [NSString stringWithFormat:@"appendMessage('%@', '%@', %@, %@, %@)", escapedNickname, escapedMessage, @"false", (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
 
