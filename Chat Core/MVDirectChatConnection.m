@@ -190,7 +190,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:encoding], @"StringEncoding", cformat, @"FormatType", nil];
 	NSData *msg = [message chatFormatWithOptions:options];
-#elif USE(PLAIN_CHAT_STRING)
+#elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 	NSData *msg = [message dataUsingEncoding:encoding allowLossyConversion:YES];
 #endif
 

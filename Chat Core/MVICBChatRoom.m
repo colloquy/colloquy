@@ -60,7 +60,7 @@
 	NSParameterAssert( newTopic );
 #if USE(ATTRIBUTED_CHAT_STRING)
 	NSString *newTopicString = [newTopic string];
-#elif USE(PLAIN_CHAT_STRING)
+#elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 	NSString *newTopicString = newTopic;
 #endif
 	[(MVICBChatConnection *)_connection ctsCommandTopicSet:newTopicString];
@@ -69,7 +69,7 @@
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {
 #if USE(ATTRIBUTED_CHAT_STRING)
 	NSString *messageString = [message string];
-#elif USE(PLAIN_CHAT_STRING)
+#elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 	NSString *messageString = message;
 #endif
 	if( [_memberUsers count] > 1 )

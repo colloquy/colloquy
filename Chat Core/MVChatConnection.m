@@ -1108,7 +1108,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (NSTextStorage *) scriptTypedAwayMessage {
 #if USE(ATTRIBUTED_CHAT_STRING)
 	return [[[NSTextStorage allocWithZone:nil] initWithAttributedString:(NSAttributedString *)_awayMessage] autorelease];
-#elif USE(PLAIN_CHAT_STRING)
+#elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 	return [[[NSTextStorage allocWithZone:nil] initWithString:(NSString *)_awayMessage] autorelease];
 #endif
 }
@@ -1119,7 +1119,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( [message isKindOfClass:[NSTextStorage class]] ) msg = [message string];
 	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:msg baseURL:nil];
 	[self setAwayStatusMessage:attributeMsg];
-#elif USE(PLAIN_CHAT_STRING)
+#elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 	if( [message isKindOfClass:[NSString class]] );
 		[self setAwayStatusMessage:message];
 #endif
@@ -1288,7 +1288,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #if USE(ATTRIBUTED_CHAT_STRING)
 	NSAttributedString *realMessage = [NSAttributedString attributedStringWithHTMLFragment:message baseURL:nil];
-#elif USE(PLAIN_CHAT_STRING)
+#elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 	NSString *realMessage = message;
 #endif
 
@@ -1335,7 +1335,7 @@ static const NSStringEncoding supportedEncodings[] = {
 			NSDictionary *options = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:realEncoding], @"StringEncoding", cformat, @"FormatType", nil];
 			NSData *msgData = [realMessage chatFormatWithOptions:options];
 			[options release];
-#elif USE(PLAIN_CHAT_STRING)
+#elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 			NSData *msgData = [realMessage dataUsingEncoding:realEncoding];
 #endif
 

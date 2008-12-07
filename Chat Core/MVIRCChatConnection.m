@@ -955,7 +955,7 @@ end:
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:enc], @"StringEncoding", cformat, @"FormatType", nil];
 	return [message chatFormatWithOptions:options];
 }
-#elif USE(PLAIN_CHAT_STRING)
+#elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 + (NSData *) _flattenedIRCDataForMessage:(MVChatString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format {
 	return [message dataUsingEncoding:enc allowLossyConversion:YES];
 }

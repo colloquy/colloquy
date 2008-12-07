@@ -1,4 +1,7 @@
 #import "NSStringAdditions.h"
+
+#import "NSScannerAdditions.h"
+
 #include <sys/time.h>
 
 #define is7Bit(ch) (((ch) & 0x80) == 0)
@@ -86,6 +89,59 @@ BOOL isValidUTF8( const char *s, unsigned len ) {
 #undef isUTF8Sextet
 #undef isUTF8LongSextet
 #undef isUTF8Cont
+
+static const int mIRCColors[][3] = {
+	{ 0xff, 0xff, 0xff },  /* 00) white */
+	{ 0x00, 0x00, 0x00 },  /* 01) black */
+	{ 0x00, 0x00, 0x7b },  /* 02) blue */
+	{ 0x00, 0x94, 0x00 },  /* 03) green */
+	{ 0xff, 0x00, 0x00 },  /* 04) red */
+	{ 0x7b, 0x00, 0x00 },  /* 05) brown */
+	{ 0x9c, 0x00, 0x9c },  /* 06) purple */
+	{ 0xff, 0x7b, 0x00 },  /* 07) orange */
+	{ 0xff, 0xff, 0x00 },  /* 08) yellow */
+	{ 0x00, 0xff, 0x00 },  /* 09) bright green */
+	{ 0x00, 0x94, 0x94 },  /* 10) cyan */
+	{ 0x00, 0xff, 0xff },  /* 11) bright cyan */
+	{ 0x00, 0x00, 0xff },  /* 12) bright blue */
+	{ 0xff, 0x00, 0xff },  /* 13) bright purple */
+	{ 0x7b, 0x7b, 0x7b },  /* 14) gray */
+	{ 0xd6, 0xd6, 0xd6 }   /* 15) light gray */
+};
+
+static const int CTCPColors[][3] = {
+	{ 0x00, 0x00, 0x00 },  /* 0) black */
+	{ 0x00, 0x00, 0x7f },  /* 1) blue */
+	{ 0x00, 0x7f, 0x00 },  /* 2) green */
+	{ 0x00, 0x7f, 0x7f },  /* 3) cyan */
+	{ 0x7f, 0x00, 0x00 },  /* 4) red */
+	{ 0x7f, 0x00, 0x7f },  /* 5) purple */
+	{ 0x7f, 0x7f, 0x00 },  /* 6) brown */
+	{ 0xc0, 0xc0, 0xc0 },  /* 7) light gray */
+	{ 0x7f, 0x7f, 0x7f },  /* 8) gray */
+	{ 0x00, 0x00, 0xff },  /* 9) bright blue */
+	{ 0x00, 0xff, 0x00 },  /* A) bright green */
+	{ 0x00, 0xff, 0xff },  /* B) bright cyan */
+	{ 0xff, 0x00, 0x00 },  /* C) bright red */
+	{ 0xff, 0x00, 0xff },  /* D) bright magenta */
+	{ 0xff, 0xff, 0x00 },  /* E) yellow */
+	{ 0xff, 0xff, 0xff }   /* F) white */
+};
+
+static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
+	NSCharacterSet *characterSet = [NSCharacterSet decimalDigitCharacterSet];
+	NSString *chars = nil;
+
+	if( ! [scanner scanCharactersFromSet:characterSet maxLength:2 intoString:&chars] )
+		return NO;
+
+	*number = [chars intValue];
+	return YES;
+}
+
+static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned char blue ) {
+	return [NSString stringWithFormat:@"#%02X%02X%02X", red, green, blue];
+}
 
 @implementation NSString (NSStringAdditions)
 + (NSString *) locallyUniqueString {
@@ -214,6 +270,366 @@ BOOL isValidUTF8( const char *s, unsigned len ) {
 	}
 
 	return NSUTF8StringEncoding; // default encoding
+}
+
+#pragma mark -
+
+- (id) initWithChatData:(NSData *) data encoding:(NSStringEncoding) encoding {
+	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
+
+	// Search for CTCP/2 encoding tags and act on them
+	NSMutableData *newData = [NSMutableData dataWithCapacity:[data length]];
+	NSStringEncoding currentEncoding = encoding;
+
+	const char *bytes = [data bytes];
+	unsigned length = [data length];
+	unsigned i = 0, j = 0, start = 0, end = 0;
+	for( i = 0, start = 0; i < length; i++ ) {
+		if( bytes[i] == '\006' ) {
+			end = i;
+			j = ++i;
+
+			for( ; i < length && bytes[i] != '\006'; i++ );
+			if( i >= length ) break;
+			if( i == j ) continue;
+
+			if( bytes[j++] == 'E' ) {
+				NSString *encodingStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + j ) length:( i - j ) encoding:NSASCIIStringEncoding];
+				NSStringEncoding newEncoding = 0;
+				if( ! [encodingStr length] ) { // if no encoding is declared, go back to user default
+					newEncoding = encoding;
+				} else if( [encodingStr isEqualToString:@"U"] ) {
+					newEncoding = NSUTF8StringEncoding;
+				} else {
+					int enc = [encodingStr intValue];
+					switch( enc ) {
+						case 1:
+							newEncoding = NSISOLatin1StringEncoding;
+							break;
+						case 2:
+							newEncoding = NSISOLatin2StringEncoding;
+							break;
+						case 3:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatin3 );
+							break;
+						case 4:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatin4 );
+							break;
+						case 5:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatinCyrillic );
+							break;
+						case 6:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatinArabic );
+							break;
+						case 7:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatinGreek );
+							break;
+						case 8:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatinHebrew );
+							break;
+						case 9:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatin5 );
+							break;
+						case 10:
+							newEncoding = CFStringConvertEncodingToNSStringEncoding( kCFStringEncodingISOLatin6 );
+							break;
+					}
+				}
+
+				[encodingStr release];
+
+				if( newEncoding && newEncoding != currentEncoding ) {
+					if( ( end - start ) > 0 ) {
+						NSData *subData = nil;
+						if( currentEncoding != NSUTF8StringEncoding ) {
+							NSString *tempStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + start ) length:( end - start ) encoding:currentEncoding];
+							NSData *utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
+							if( utf8Data ) subData = [utf8Data retain];
+							[tempStr release];
+						} else {
+							subData = [[NSData allocWithZone:nil] initWithBytesNoCopy:(void *)( bytes + start ) length:( end - start )];
+						}
+
+						if( subData ) [newData appendData:subData];
+						[subData release];
+					}
+
+					currentEncoding = newEncoding;
+					start = i + 1;
+				}
+			}
+		}
+	}
+
+	if( [newData length] > 0 || currentEncoding != encoding ) {
+		if( start < length ) {
+			NSData *subData = nil;
+			if( currentEncoding != NSUTF8StringEncoding ) {
+				NSString *tempStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + start ) length:( length - start ) encoding:currentEncoding];
+				NSData *utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
+				if( utf8Data ) subData = [utf8Data retain];
+				[tempStr release];
+			} else {
+				subData = [[NSData allocWithZone:nil] initWithBytesNoCopy:(void *)( bytes + start ) length:( length - start )];
+			}
+
+			if( subData ) [newData appendData:subData];
+			[subData release];
+		}
+
+		encoding = NSUTF8StringEncoding;
+		data = newData;
+	}
+
+	if( encoding != NSUTF8StringEncoding && isValidUTF8( [data bytes], [data length] ) )
+		encoding = NSUTF8StringEncoding;
+
+	NSString *message = [[NSString allocWithZone:nil] initWithData:data encoding:encoding];
+	if( ! message ) {
+		[self release];
+		return nil;
+	}
+
+	NSCharacterSet *formatCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\002\003\006\026\037\017"];
+
+	// if the message dosen't have any formatting chars just init as a plain string and return quickly
+	if( [message rangeOfCharacterFromSet:formatCharacters].location == NSNotFound ) {
+		self = [self initWithString:message];
+		[message release];
+		return self;
+	}
+
+	NSMutableString *ret = [NSMutableString string];
+	NSScanner *scanner = [NSScanner scannerWithString:message];
+	[scanner setCharactersToBeSkipped:nil]; // don't skip leading whitespace!
+
+	unsigned boldStack = 0, italicStack = 0, underlineStack = 0, strikeStack = 0, colorStack = 0;
+
+	while( ! [scanner isAtEnd] ) {
+		NSString *cStr = nil;
+		if( [scanner scanCharactersFromSet:formatCharacters maxLength:1 intoString:&cStr] ) {
+			unichar c = [cStr characterAtIndex:0];
+			switch( c ) {
+			case '\017': // reset all
+				if( boldStack )
+					[ret appendString:@"</b>"];
+				if( italicStack )
+					[ret appendString:@"</i>"];
+				if( underlineStack )
+					[ret appendString:@"</u>"];
+				if( strikeStack )
+					[ret appendString:@"</strike>"];
+				for( unsigned i = 0; i < colorStack; ++i )
+					[ret appendString:@"</span>"];
+
+				boldStack = italicStack = underlineStack = strikeStack = colorStack = 0;
+				break;
+			case '\002': // toggle bold
+				boldStack = ! boldStack;
+
+				if( boldStack ) [ret appendString:@"<b>"];
+				else [ret appendString:@"</b>"];
+				break;
+			case '\026': // toggle italic
+				italicStack = ! italicStack;
+
+				if( italicStack ) [ret appendString:@"<i>"];
+				else [ret appendString:@"</i>"];
+				break;
+			case '\037': // toggle underline
+				underlineStack = ! underlineStack;
+
+				if( underlineStack ) [ret appendString:@"<u>"];
+				else [ret appendString:@"</u>"];
+				break;
+			case '\003': // color
+			{
+				unsigned int fcolor = 0;
+				if( scanOneOrTwoDigits( scanner, &fcolor ) ) {
+					fcolor %= 16;
+
+					NSString *foregroundColor = colorForHTML(mIRCColors[fcolor][0], mIRCColors[fcolor][1], mIRCColors[fcolor][2]);
+					[ret appendFormat:@"<span style=\"color: %@;", foregroundColor];
+
+					unsigned int bcolor = 0;
+					if( [scanner scanString:@"," intoString:NULL] && scanOneOrTwoDigits( scanner, &bcolor ) && bcolor != 99 ) {
+						bcolor %= 16;
+
+						NSString *backgroundColor = colorForHTML(mIRCColors[bcolor][0], mIRCColors[bcolor][1], mIRCColors[bcolor][2]);
+						[ret appendFormat:@" background-color: %@;", backgroundColor];
+					}
+
+					[ret appendString:@"\">"];
+
+					++colorStack;
+				} else { // no color, reset both colors
+					for( unsigned i = 0; i < colorStack; ++i )
+						[ret appendString:@"</span>"];
+					colorStack = 0;
+				}
+				break;
+			}
+			case '\006': // ctcp 2 formatting (http://www.lag.net/~robey/ctcp/ctcp2.2.txt)
+				if( ! [scanner isAtEnd] ) {
+					BOOL off = NO;
+
+					unichar formatChar = [message characterAtIndex:[scanner scanLocation]];
+					[scanner setScanLocation:[scanner scanLocation]+1];
+
+					switch( formatChar ) {
+					case 'B': // bold
+						if( [scanner scanString:@"-" intoString:NULL] ) {
+							if( boldStack >= 1 ) boldStack--;
+							off = YES;
+						} else { // on is the default
+							[scanner scanString:@"+" intoString:NULL];
+							boldStack++;
+						}
+
+						if( boldStack == 1 && ! off )
+							[ret appendString:@"<b>"];
+						else if( ! boldStack )
+							[ret appendString:@"</b>"];								
+						break;
+					case 'I': // italic
+						if( [scanner scanString:@"-" intoString:NULL] ) {
+							if( italicStack >= 1 ) italicStack--;
+							off = YES;
+						} else { // on is the default
+							[scanner scanString:@"+" intoString:NULL];
+							italicStack++;
+						}
+
+						if( italicStack == 1 && ! off )
+							[ret appendString:@"<i>"];
+						else if( ! italicStack )
+							[ret appendString:@"</i>"];								
+						break;
+					case 'U': // underline
+						if( [scanner scanString:@"-" intoString:NULL] ) {
+							if( underlineStack >= 1 ) underlineStack--;
+							off = YES;
+						} else { // on is the default
+							[scanner scanString:@"+" intoString:NULL];
+							underlineStack++;
+						}
+
+						if( underlineStack == 1 && ! off )
+							[ret appendString:@"<u>"];
+						else if( ! underlineStack )
+							[ret appendString:@"</u>"];								
+						break;
+					case 'S': // strikethrough
+						if( [scanner scanString:@"-" intoString:NULL] ) {
+							if( strikeStack >= 1 ) strikeStack--;
+							off = YES;
+						} else { // on is the default
+							[scanner scanString:@"+" intoString:NULL];
+							strikeStack++;
+						}
+
+						if( strikeStack == 1 && ! off )
+							[ret appendString:@"<strike>"];
+						else if( ! strikeStack )
+							[ret appendString:@"</strike>"];								
+						break;
+					case 'C': // color
+						if( [message characterAtIndex:[scanner scanLocation]] == '\006' ) { // reset colors
+							for( unsigned i = 0; i < colorStack; ++i )
+								[ret appendString:@"</span>"];
+							colorStack = 0;
+							break;
+						}
+
+						// scan for foreground color
+						NSCharacterSet *hexSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789ABCDEF"];
+						NSString *colorStr = nil;
+						BOOL foundForeground = YES;
+						if( [scanner scanString:@"#" intoString:NULL] ) { // rgb hex color
+							if( [scanner scanCharactersFromSet:hexSet maxLength:6 intoString:&colorStr] ) {
+								[ret appendFormat:@"<span style=\"color: %@;", colorStr];
+							} else foundForeground = NO;
+						} else if( [scanner scanCharactersFromSet:hexSet maxLength:1 intoString:&colorStr] ) { // indexed color
+							unsigned int index = [colorStr characterAtIndex:0];
+							if( index >= 'A' ) index -= ( 'A' - '9' - 1 );
+							index -= '0';
+
+							NSString *foregroundColor = colorForHTML(CTCPColors[index][0], CTCPColors[index][1], CTCPColors[index][2]);
+							[ret appendFormat:@"<span style=\"color: %@;", foregroundColor];
+						} else if( [scanner scanString:@"." intoString:NULL] ) { // reset the foreground color
+							[ret appendString:@"<span style=\"color: initial;"];
+						} else if( [scanner scanString:@"-" intoString:NULL] ) { // skip the foreground color
+							// Do nothing - we're skipping
+							// This is so we can have an else clause that doesn't fire for @"-"
+						} else {
+							// Ok, no foreground color
+							foundForeground = NO;
+						}
+
+						if( foundForeground ) {
+							// scan for background color
+							if( [scanner scanString:@"#" intoString:NULL] ) { // rgb hex color
+								if( [scanner scanCharactersFromSet:hexSet maxLength:6 intoString:&colorStr] )
+									[ret appendFormat:@" background-color: %@;", colorStr];
+							} else if( [scanner scanCharactersFromSet:hexSet maxLength:1 intoString:&colorStr] ) { // indexed color
+								unsigned int index = [colorStr characterAtIndex:0];
+								if( index >= 'A' ) index -= ( 'A' - '9' - 1 );
+								index -= '0';
+
+								NSString *backgroundColor = colorForHTML(CTCPColors[index][0], CTCPColors[index][1], CTCPColors[index][2]);
+								[ret appendFormat:@" background-color: %@;", backgroundColor];
+							} else if( [scanner scanString:@"." intoString:NULL] ) { // reset the background color
+								[ret appendString:@" background-color: initial;"];
+							} else [scanner scanString:@"-" intoString:NULL]; // skip the background color
+
+							[ret appendString:@"\">"];
+
+							++colorStack;
+						} else {
+							// No colors - treat it like ..
+							for( unsigned i = 0; i < colorStack; ++i )
+								[ret appendString:@"</span>"];
+							colorStack = 0;
+						}
+					case 'F': // font size
+					case 'E': // encoding
+						// We actually handle this above, but there could be some encoding tags
+						// left over. For instance, ^FEU^F^FEU^F will leave one of the two tags behind.
+					case 'K': // blinking
+					case 'P': // spacing
+						// not supported yet
+						break;
+					case 'N': // normal (reset)
+						if( boldStack )
+							[ret appendString:@"</b>"];
+						if( italicStack )
+							[ret appendString:@"</i>"];
+						if( underlineStack )
+							[ret appendString:@"</u>"];
+						if( strikeStack )
+							[ret appendString:@"</strike>"];
+						for( unsigned i = 0; i < colorStack; ++i )
+							[ret appendString:@"</span>"];
+
+						boldStack = italicStack = underlineStack = strikeStack = colorStack = 0;
+					}
+
+					[scanner scanUpToString:@"\006" intoString:NULL];
+					[scanner scanString:@"\006" intoString:NULL];
+				}
+			}
+		}
+
+		NSString *text = nil;
+ 		[scanner scanUpToCharactersFromSet:formatCharacters intoString:&text];
+
+		if( [text length] )
+			[ret appendString:[text stringByEncodingXMLSpecialCharactersAsEntities]];
+	}
+
+	[message release];
+
+	return ( self = [self initWithString:ret] );
 }
 
 #pragma mark -

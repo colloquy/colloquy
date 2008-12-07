@@ -6,6 +6,8 @@ BOOL isValidUTF8( const char *s, unsigned len );
 + (unsigned long) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding;
 + (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(unsigned long) encoding;
 
+- (id) initWithChatData:(NSData *) data encoding:(NSStringEncoding) encoding;
+
 - (BOOL) isCaseInsensitiveEqualToString:(NSString *) string;
 - (BOOL) hasCaseInsensitivePrefix:(NSString *) prefix;
 - (BOOL) hasCaseInsensitiveSuffix:(NSString *) suffix;
