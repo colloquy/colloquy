@@ -85,6 +85,15 @@
 		1CC576D30ED4684700FEC2C1 /* UITableViewCellAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */; };
 		1CC64A7A0EE90DC000DE91D0 /* members.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64A790EE90DC000DE91D0 /* members.png */; };
 		1CC64A9B0EE9152D00DE91D0 /* default.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64A9A0EE9152D00DE91D0 /* default.png */; };
+		1CC64B2D0EE97F8B00DE91D0 /* CQChatUserListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC64B2C0EE97F8B00DE91D0 /* CQChatUserListViewController.m */; };
+		1CC64C0A0EE98CC600DE91D0 /* userAdmin.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64C030EE98CC600DE91D0 /* userAdmin.png */; };
+		1CC64C0B0EE98CC600DE91D0 /* userFounder.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64C040EE98CC600DE91D0 /* userFounder.png */; };
+		1CC64C0C0EE98CC600DE91D0 /* userHalfOperator.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64C050EE98CC600DE91D0 /* userHalfOperator.png */; };
+		1CC64C0D0EE98CC600DE91D0 /* userNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64C060EE98CC600DE91D0 /* userNormal.png */; };
+		1CC64C0E0EE98CC600DE91D0 /* userOperator.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64C070EE98CC600DE91D0 /* userOperator.png */; };
+		1CC64C0F0EE98CC600DE91D0 /* userSuperOperator.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64C080EE98CC600DE91D0 /* userSuperOperator.png */; };
+		1CC64C100EE98CC600DE91D0 /* userVoice.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64C090EE98CC600DE91D0 /* userVoice.png */; };
+		1CC64C3D0EE98DBF00DE91D0 /* CQSearchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC64C3C0EE98DBF00DE91D0 /* CQSearchCell.m */; };
 		1CD949820D8E18DB00756ACD /* directChatIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD949800D8E18DB00756ACD /* directChatIcon.png */; };
 		1CD949830D8E18DB00756ACD /* roomIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD949810D8E18DB00756ACD /* roomIcon.png */; };
 		1CE3FB120D8A3DC100FB035F /* CQConnectionCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */; };
@@ -232,6 +241,17 @@
 		1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UITableViewCellAdditions.m; path = Mobile/Views/UITableViewCellAdditions.m; sourceTree = "<group>"; };
 		1CC64A790EE90DC000DE91D0 /* members.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = members.png; sourceTree = "<group>"; };
 		1CC64A9A0EE9152D00DE91D0 /* default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = default.png; sourceTree = "<group>"; };
+		1CC64B2B0EE97F8B00DE91D0 /* CQChatUserListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatUserListViewController.h; sourceTree = "<group>"; };
+		1CC64B2C0EE97F8B00DE91D0 /* CQChatUserListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatUserListViewController.m; sourceTree = "<group>"; };
+		1CC64C030EE98CC600DE91D0 /* userAdmin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userAdmin.png; sourceTree = "<group>"; };
+		1CC64C040EE98CC600DE91D0 /* userFounder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userFounder.png; sourceTree = "<group>"; };
+		1CC64C050EE98CC600DE91D0 /* userHalfOperator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userHalfOperator.png; sourceTree = "<group>"; };
+		1CC64C060EE98CC600DE91D0 /* userNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userNormal.png; sourceTree = "<group>"; };
+		1CC64C070EE98CC600DE91D0 /* userOperator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userOperator.png; sourceTree = "<group>"; };
+		1CC64C080EE98CC600DE91D0 /* userSuperOperator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userSuperOperator.png; sourceTree = "<group>"; };
+		1CC64C090EE98CC600DE91D0 /* userVoice.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userVoice.png; sourceTree = "<group>"; };
+		1CC64C3B0EE98DBF00DE91D0 /* CQSearchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQSearchCell.h; sourceTree = "<group>"; };
+		1CC64C3C0EE98DBF00DE91D0 /* CQSearchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQSearchCell.m; sourceTree = "<group>"; };
 		1CD949800D8E18DB00756ACD /* directChatIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = directChatIcon.png; sourceTree = "<group>"; };
 		1CD949810D8E18DB00756ACD /* roomIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = roomIcon.png; sourceTree = "<group>"; };
 		1CE3FB100D8A3DC100FB035F /* CQConnectionCreationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionCreationViewController.h; sourceTree = "<group>"; };
@@ -377,6 +397,8 @@
 				1C0937EC0D8126D400A2705D /* CQDirectChatController.h */,
 				1C0937ED0D8126D400A2705D /* CQChatRoomController.m */,
 				1C0937EE0D8126D400A2705D /* CQChatRoomController.h */,
+				1CC64B2C0EE97F8B00DE91D0 /* CQChatUserListViewController.m */,
+				1CC64B2B0EE97F8B00DE91D0 /* CQChatUserListViewController.h */,
 				1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */,
 				1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */,
 			);
@@ -433,6 +455,8 @@
 				1C6100D10ED31C8B0016F968 /* CQPreferencesSwitchCell.h */,
 				1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */,
 				1CC575960ED3A71900FEC2C1 /* CQPreferencesDeleteCell.h */,
+				1CC64C3C0EE98DBF00DE91D0 /* CQSearchCell.m */,
+				1CC64C3B0EE98DBF00DE91D0 /* CQSearchCell.h */,
 				1CAE8BC70EE6111900CE1AF8 /* CQChatTranscriptView.m */,
 				1CAE8BC60EE6111900CE1AF8 /* CQChatTranscriptView.h */,
 				1CE69FD80EE317F200389442 /* CQChatInputBar.m */,
@@ -514,6 +538,13 @@
 				1CB318DE0D8644E4006A7513 /* connectedBadgeDim.png */,
 				1CE69FEF0EE34C0000389442 /* chatInputBarBackground.png */,
 				1CC64A790EE90DC000DE91D0 /* members.png */,
+				1CC64C030EE98CC600DE91D0 /* userAdmin.png */,
+				1CC64C040EE98CC600DE91D0 /* userFounder.png */,
+				1CC64C050EE98CC600DE91D0 /* userHalfOperator.png */,
+				1CC64C060EE98CC600DE91D0 /* userNormal.png */,
+				1CC64C070EE98CC600DE91D0 /* userOperator.png */,
+				1CC64C080EE98CC600DE91D0 /* userSuperOperator.png */,
+				1CC64C090EE98CC600DE91D0 /* userVoice.png */,
 				1CC64A9A0EE9152D00DE91D0 /* default.png */,
 				1CAE8BF20EE612DA00CE1AF8 /* base.html */,
 				1CAE8BF30EE612DA00CE1AF8 /* standard.css */,
@@ -603,6 +634,13 @@
 				1CAE8BF70EE612DA00CE1AF8 /* gradientHighlight.png in Resources */,
 				1CC64A7A0EE90DC000DE91D0 /* members.png in Resources */,
 				1CC64A9B0EE9152D00DE91D0 /* default.png in Resources */,
+				1CC64C0A0EE98CC600DE91D0 /* userAdmin.png in Resources */,
+				1CC64C0B0EE98CC600DE91D0 /* userFounder.png in Resources */,
+				1CC64C0C0EE98CC600DE91D0 /* userHalfOperator.png in Resources */,
+				1CC64C0D0EE98CC600DE91D0 /* userNormal.png in Resources */,
+				1CC64C0E0EE98CC600DE91D0 /* userOperator.png in Resources */,
+				1CC64C0F0EE98CC600DE91D0 /* userSuperOperator.png in Resources */,
+				1CC64C100EE98CC600DE91D0 /* userVoice.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -674,6 +712,8 @@
 				1CFF6E820EDF772800D3C557 /* UITableViewAdditions.m in Sources */,
 				1CE69FD90EE317F200389442 /* CQChatInputBar.m in Sources */,
 				1CAE8BC80EE6111900CE1AF8 /* CQChatTranscriptView.m in Sources */,
+				1CC64B2D0EE97F8B00DE91D0 /* CQChatUserListViewController.m in Sources */,
+				1CC64C3D0EE98DBF00DE91D0 /* CQSearchCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
