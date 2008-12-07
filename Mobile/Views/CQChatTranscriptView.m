@@ -28,6 +28,85 @@
 
 #pragma mark -
 
+struct CQEmoticonEmoji {
+	NSString *emoticon;
+	unichar emoji;
+};
+
+static struct CQEmoticonEmoji emoticonEmojiMap[] = {
+	{ @"&lt;3", 0xe022 },
+	{ @"&lt;/3", 0xe023 },
+	{ @"&lt;\3", 0xe023 },
+	{ @":)", 0xe056 },
+	{ @":-)", 0xe056 },
+	{ @"=)", 0xe056 },
+	{ @"=-)", 0xe056 },
+	{ @":D", 0xe057 },
+	{ @":-D", 0xe057 },
+	{ @"=D", 0xe057 },
+	{ @"=-D", 0xe057 },
+	{ @":(", 0xe058 },
+	{ @":-(", 0xe058 },
+	{ @"=(", 0xe058 },
+	{ @"=-(", 0xe058 },
+	{ @":p", 0xe409 },
+	{ @":P", 0xe409 },
+	{ @":-p", 0xe409 },
+	{ @":-P", 0xe409 },
+	{ @"=p", 0xe409 },
+	{ @"=P", 0xe409 },
+	{ @"=-p", 0xe409 },
+	{ @"=-P", 0xe409 },
+	{ @"d:", 0xe409 },
+	{ @"d=", 0xe409 },
+	{ @"d-:", 0xe409 },
+	{ @"d-=", 0xe409 },
+	{ nil, 0 }
+};
+
+static void commonChatReplacment(NSMutableString *string, NSRange *textRange) {
+	for (struct CQEmoticonEmoji *entry = emoticonEmojiMap; entry && entry->emoticon; ++entry) {
+		if ([string rangeOfString:entry->emoticon options:NSLiteralSearch range:*textRange].location == NSNotFound)
+			continue;
+
+		NSString *emojiString = [[NSString alloc] initWithCharacters:&entry->emoji length:1];
+		NSUInteger replacments = [string replaceOccurrencesOfString:entry->emoticon withString:emojiString options:NSLiteralSearch range:*textRange];
+		[emojiString release];
+
+		textRange->length -= (replacments * (entry->emoticon.length - 1));
+	}
+}
+
+static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function)(NSMutableString *, NSRange *)) {
+	if (!function)
+		return html;
+
+	NSMutableString *result = [html mutableCopy];
+
+	NSRange tagEndRange = NSMakeRange(0, 0);
+	while (1) {
+		NSRange tagStartRange = [result rangeOfString:@"<" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(tagEndRange), (result.length - NSMaxRange(tagEndRange)))];
+		if (tagStartRange.location == NSNotFound) {
+			NSRange textRange = NSMakeRange(NSMaxRange(tagEndRange), (result.length - NSMaxRange(tagEndRange)));
+			if (textRange.length)
+				function(result, &textRange);
+			break;
+		}
+
+		NSRange textRange = NSMakeRange(NSMaxRange(tagEndRange), (tagStartRange.location - NSMaxRange(tagEndRange)));
+		if (textRange.length)
+			function(result, &textRange);
+
+		tagEndRange = [result rangeOfString:@">" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(textRange), (result.length - NSMaxRange(textRange)))];
+		if (tagEndRange.location == NSNotFound || NSMaxRange(tagEndRange) == result.length)
+			break;
+	}
+
+	return [result autorelease];
+}
+
+#pragma mark -
+
 @implementation CQChatTranscriptView
 - (id) initWithFrame:(CGRect) frame {
     if (!(self = [super initWithFrame:frame]))
@@ -105,10 +184,12 @@
 
 - (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user withAttributes:(NSDictionary *) msgAttributes withIdentifier:(NSString *) identifier andType:(CQChatMessageType) type {
 	NSString *messageString = [[NSString alloc] initWithChatData:message encoding:NSUTF8StringEncoding];
+	NSString *transformedMessageString = applyFunctionToTextInHTMLString(messageString, commonChatReplacment);
+
 	BOOL action = [[msgAttributes objectForKey:@"action"] boolValue];
 
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"\\'\""];
-	NSString *escapedMessage = [messageString stringByEscapingCharactersInSet:escapeSet];
+	NSString *escapedMessage = [transformedMessageString stringByEscapingCharactersInSet:escapeSet];
 	NSString *escapedNickname = [user.nickname stringByEscapingCharactersInSet:escapeSet];
 	NSString *command = [NSString stringWithFormat:@"appendMessage('%@', '%@', %@, %@, %@)", escapedNickname, escapedMessage, @"false", (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
 
