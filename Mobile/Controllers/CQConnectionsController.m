@@ -78,7 +78,7 @@
 
 	static BOOL offeredToCreate;
 	if (!_connections.count && !offeredToCreate) {
-		[self makeNewConnection];
+		[self showModalNewConnectionView];
 		offeredToCreate = YES;
 	}
 }
@@ -99,7 +99,7 @@
 
 #pragma mark -
 
-- (void) makeNewConnection {
+- (void) showModalNewConnectionView {
 	CQConnectionCreationViewController *connectionCreationViewController = [[CQConnectionCreationViewController alloc] init];
 	[self presentModalViewController:connectionCreationViewController animated:YES];
 	[connectionCreationViewController release];
