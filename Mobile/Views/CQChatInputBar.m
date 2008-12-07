@@ -1,12 +1,8 @@
 #import "CQChatInputBar.h"
 
-@interface UIKeyboardInputManager : NSObject
-@end
-
 @interface UIKeyboardImpl : UIView
 + (UIKeyboardImpl *) activeInstance;
 - (void) takeTextInputTraitsFrom:(id <UITextInputTraits>) object;
-- (NSArray *) candidateList;
 @end
 
 #pragma mark -

@@ -34,8 +34,7 @@
 - (void) dealloc {
 	[_iconImageView release];
 	[_nameLabel release];
-	[_removeLabelText release];
-
+	[_removeConfirmationText release];
 	[super dealloc];
 }
 
@@ -62,14 +61,14 @@
 	_iconImageView.image = icon;
 }
 
-@synthesize removeLabelText = _removeLabelText;
+@synthesize removeConfirmationText = _removeConfirmationText;
 
 #pragma mark -
 
 - (UIRemoveControl *) _createRemoveControl {
 	UIRemoveControl *control = [super _createRemoveControl];
-	if (_removeLabelText.length)
-		[control setRemoveConfirmationLabel:_removeLabelText];
+	if (_removeConfirmationText.length && [control respondsToSelector:@selector(setRemoveConfirmationLabel:)])
+		[control setRemoveConfirmationLabel:_removeConfirmationText];
 	return control;
 }
 

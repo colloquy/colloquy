@@ -60,8 +60,10 @@
 }
 
 - (void) didFinishScrolling {
-	NSString *command = [NSString stringWithFormat:@"updateScrollPosition(%f)", [self _scroller].offset.y];
-	[self stringByEvaluatingJavaScriptFromString:command];
+	if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(offset)]) {
+		NSString *command = [NSString stringWithFormat:@"updateScrollPosition(%f)", [self _scroller].offset.y];
+		[self stringByEvaluatingJavaScriptFromString:command];
+	}
 
 	_scrolling = NO;
 }
@@ -120,7 +122,7 @@
 }
 
 - (void) flashScrollIndicators {
-	if ([[self _scroller] respondsToSelector:@selector(displayScrollerIndicators)])
+	if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(displayScrollerIndicators)])
 		[[self _scroller] displayScrollerIndicators];
 }
 
@@ -130,7 +132,9 @@
 	super.delegate = self;
 
 	[self setBackgroundColor:[UIColor whiteColor]];
-	[[self _scroller] setShowBackgroundShadow:NO];
+
+	if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(setShowBackgroundShadow:)])
+		[self _scroller].showBackgroundShadow = NO;
 
 	[self _reset];
 }

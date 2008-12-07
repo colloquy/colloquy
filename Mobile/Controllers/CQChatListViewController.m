@@ -159,9 +159,9 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 	if ([chatViewController isMemberOfClass:[CQChatRoomController class]])
-		cell.removeLabelText = NSLocalizedString(@"Leave", @"Leave remove control label");
+		cell.removeConfirmationText = NSLocalizedString(@"Leave", @"Leave remove confirmation button title");
 	else if ([chatViewController isMemberOfClass:[CQDirectChatController class]])
-		cell.removeLabelText = NSLocalizedString(@"Close", @"Close remove control label");
+		cell.removeConfirmationText = NSLocalizedString(@"Close", @"Close remove confirmation button title");
 
 	[cell takeValuesFromChatViewController:chatViewController];
 
