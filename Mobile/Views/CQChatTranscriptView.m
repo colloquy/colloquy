@@ -34,9 +34,6 @@ struct CQEmoticonEmoji {
 };
 
 static struct CQEmoticonEmoji emoticonEmojiMap[] = {
-	{ @"&lt;3", 0xe022 },
-	{ @"&lt;/3", 0xe023 },
-	{ @"&lt;\3", 0xe023 },
 	{ @":)", 0xe056 },
 	{ @":-)", 0xe056 },
 	{ @"=)", 0xe056 },
@@ -49,6 +46,12 @@ static struct CQEmoticonEmoji emoticonEmojiMap[] = {
 	{ @":-(", 0xe058 },
 	{ @"=(", 0xe058 },
 	{ @"=-(", 0xe058 },
+	{ @";p", 0xe105 },
+	{ @";-p", 0xe105 },
+	{ @";P", 0xe105 },
+	{ @";-P", 0xe105 },
+	{ @";)", 0xe405 },
+	{ @";-)", 0xe405 },
 	{ @":p", 0xe409 },
 	{ @":P", 0xe409 },
 	{ @":-p", 0xe409 },
@@ -57,23 +60,61 @@ static struct CQEmoticonEmoji emoticonEmojiMap[] = {
 	{ @"=P", 0xe409 },
 	{ @"=-p", 0xe409 },
 	{ @"=-P", 0xe409 },
+	{ @"&lt;3", 0xe022 },
+	{ @"&lt;/3", 0xe023 },
+	{ @"&lt;\3", 0xe023 },
 	{ @"d:", 0xe409 },
 	{ @"d=", 0xe409 },
 	{ @"d-:", 0xe409 },
-	{ @"d-=", 0xe409 },
+	{ @":o", 0xe410 },
+	{ @":O", 0xe410 },
+	{ @":-o", 0xe410 },
+	{ @":-O", 0xe410 },
+	{ @"=o", 0xe410 },
+	{ @"=O", 0xe410 },
+	{ @"=-o", 0xe410 },
+	{ @"=-O", 0xe410 },
+	{ @"o:", 0xe410 },
+	{ @"O:", 0xe410 },
+	{ @"o-:", 0xe410 },
+	{ @"O-:", 0xe410 },
+	{ @"o=", 0xe410 },
+	{ @"O=", 0xe410 },
+	{ @"o-=", 0xe410 },
+	{ @"O-=", 0xe410 },
+	{ @":0", 0xe410 },
+	{ @":-0", 0xe410 },
+	{ @"=0", 0xe410 },
+	{ @"=-0", 0xe410 },
+	{ @"0:", 0xe410 },
+	{ @"0-:", 0xe410 },
+	{ @"0=", 0xe410 },
+	{ @"0-=", 0xe410 },
 	{ nil, 0 }
 };
 
 static void commonChatReplacment(NSMutableString *string, NSRange *textRange) {
-	for (struct CQEmoticonEmoji *entry = emoticonEmojiMap; entry && entry->emoticon; ++entry) {
-		if ([string rangeOfString:entry->emoticon options:NSLiteralSearch range:*textRange].location == NSNotFound)
-			continue;
+	static NSCharacterSet *typicalEmoticonCharacters;
+	if (!typicalEmoticonCharacters)
+		typicalEmoticonCharacters = [[NSCharacterSet characterSetWithCharactersInString:@";:="] retain];
 
-		NSString *emojiString = [[NSString alloc] initWithCharacters:&entry->emoji length:1];
-		NSUInteger replacments = [string replaceOccurrencesOfString:entry->emoticon withString:emojiString options:NSLiteralSearch range:*textRange];
-		[emojiString release];
+	// Do a quick check for typical characters that are in every emoticon in emoticonEmojiMap.
+	// If any of these characters are found, do the full fid and replace loop.
+	if ([string rangeOfCharacterFromSet:typicalEmoticonCharacters].location != NSNotFound) {
+		for (struct CQEmoticonEmoji *entry = emoticonEmojiMap; entry && entry->emoticon; ++entry) {
+			if ([string rangeOfString:entry->emoticon options:NSLiteralSearch range:*textRange].location == NSNotFound)
+				continue;
 
-		textRange->length -= (replacments * (entry->emoticon.length - 1));
+			NSString *emojiString = [[NSString alloc] initWithCharacters:&entry->emoji length:1];
+			NSUInteger replacments = [string replaceOccurrencesOfString:entry->emoticon withString:emojiString options:NSLiteralSearch range:*textRange];
+			[emojiString release];
+
+			textRange->length -= (replacments * (entry->emoticon.length - 1));
+
+			// Check for the typical characters again, if none are found then there are no more emoticons to replace.
+			if ([string rangeOfCharacterFromSet:typicalEmoticonCharacters].location == NSNotFound)
+				break;
+		}
 	}
 }
 
