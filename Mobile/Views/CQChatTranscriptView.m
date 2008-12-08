@@ -2,6 +2,7 @@
 
 #import "NSStringAdditions.h"
 
+#import <AGRegex/AGRegex.h>
 #import <ChatCore/MVChatUser.h>
 
 @interface UIScroller : UIView
@@ -152,15 +153,33 @@ static void commonChatReplacment(NSMutableString *string, NSRange *textRange) {
 	// Do a quick check for typical characters that are in every emoticon in emoticonEmojiMap.
 	// If any of these characters are found, do the full fid and replace loop.
 	if ([string rangeOfCharacterFromSet:typicalEmoticonCharacters].location != NSNotFound) {
+		NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
+
 		for (struct CQEmoticonEmoji *entry = emoticonEmojiMap; entry && entry->emoticon; ++entry) {
 			if ([string rangeOfString:entry->emoticon options:NSLiteralSearch range:*textRange].location == NSNotFound)
 				continue;
 
-			NSString *emojiString = [[NSString alloc] initWithCharacters:&entry->emoji length:1];
-			NSUInteger replacments = [string replaceOccurrencesOfString:entry->emoticon withString:emojiString options:NSLiteralSearch range:*textRange];
-			[emojiString release];
+			NSMutableString *emoticon = [entry->emoticon mutableCopy];
+			[emoticon escapeCharactersInSet:escapedCharacters];
 
-			textRange->length -= (replacments * (entry->emoticon.length - 1));
+			NSString *emojiString = [[NSString alloc] initWithCharacters:&entry->emoji length:1];
+			AGRegex *regex = [[AGRegex alloc] initWithPattern:[NSString stringWithFormat:@"(?<=\\s|^)%@(?=\\s|$)", emoticon]];
+
+			AGRegexMatch *match = [regex findInString:string range:*textRange];
+			while (match) {
+				[string replaceCharactersInRange:match.range withString:emojiString];
+				textRange->length -= (entry->emoticon.length - 1);
+
+				NSRange matchRange = NSMakeRange(match.range.location + 1, (NSMaxRange(*textRange) - match.range.location - 1));
+				if (!matchRange.length)
+					break;
+
+				match = [regex findInString:string range:matchRange];
+			}
+
+			[regex release];
+			[emoticon release];
+			[emojiString release];
 
 			// Check for the typical characters again, if none are found then there are no more emoticons to replace.
 			if ([string rangeOfCharacterFromSet:typicalEmoticonCharacters].location == NSNotFound)
@@ -280,9 +299,9 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 
 	BOOL action = [[msgAttributes objectForKey:@"action"] boolValue];
 
-	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"\\'\""];
-	NSString *escapedMessage = [transformedMessageString stringByEscapingCharactersInSet:escapeSet];
-	NSString *escapedNickname = [user.nickname stringByEscapingCharactersInSet:escapeSet];
+	NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\\'\""];
+	NSString *escapedMessage = [transformedMessageString stringByEscapingCharactersInSet:escapedCharacters];
+	NSString *escapedNickname = [user.nickname stringByEscapingCharactersInSet:escapedCharacters];
 	NSString *command = [NSString stringWithFormat:@"appendMessage('%@', '%@', %@, %@, %@)", escapedNickname, escapedMessage, @"false", (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
 
 	[messageString release];

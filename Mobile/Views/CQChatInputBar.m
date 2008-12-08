@@ -177,7 +177,22 @@ static struct CQEmojiEmoticon emojiEmoticonMap[] = {
 			unichar currentCharacter = [mutableText characterAtIndex:emojiRange.location];
 			for (struct CQEmojiEmoticon *entry = emojiEmoticonMap; entry && entry->emoji; ++entry) {
 				if (entry->emoji == currentCharacter) {
-					[mutableText replaceCharactersInRange:NSMakeRange(emojiRange.location, 1) withString:entry->emoticon];
+					NSString *replacement = nil;
+					if (emojiRange.location == 0 && (emojiRange.location + 1) == mutableText.length)
+						replacement = [entry->emoticon retain];
+					else if (emojiRange.location > 0 && (emojiRange.location + 1) == mutableText.length && [mutableText characterAtIndex:(emojiRange.location - 1)] == ' ')
+						replacement = [entry->emoticon retain];
+					else if ([mutableText characterAtIndex:(emojiRange.location - 1)] == ' ' && [mutableText characterAtIndex:(emojiRange.location + 1)] == ' ')
+						replacement = [entry->emoticon retain];
+					else if (emojiRange.location == 0 || [mutableText characterAtIndex:(emojiRange.location - 1)] == ' ')
+						replacement = [[NSString alloc] initWithFormat:@"%@ ", entry->emoticon];
+					else if ((emojiRange.location + 1) == mutableText.length || [mutableText characterAtIndex:(emojiRange.location + 1)] == ' ')
+						replacement = [[NSString alloc] initWithFormat:@" %@", entry->emoticon];
+					else replacement = [[NSString alloc] initWithFormat:@" %@ ", entry->emoticon];
+
+					[mutableText replaceCharactersInRange:NSMakeRange(emojiRange.location, 1) withString:replacement];
+
+					[replacement release];
 					break;
 				}
 			}
