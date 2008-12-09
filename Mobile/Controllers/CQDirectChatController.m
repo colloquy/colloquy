@@ -247,9 +247,13 @@
 	if (!_recentMessages)
 		_recentMessages = [[NSMutableArray alloc] init];
 
-	[_recentMessages addObject:info];
-	if (_recentMessages.count > 5)
-		[_recentMessages removeObjectAtIndex:0];
+	MVChatUser *user = [info objectForKey:@"user"];
+
+	if (!user.localUser) {
+		[_recentMessages addObject:info];
+		if (_recentMessages.count > 5)
+			[_recentMessages removeObjectAtIndex:0];
+	}
 
 	if (!transcriptView) {
 		if (!_pendingMessages)
