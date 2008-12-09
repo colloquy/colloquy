@@ -714,6 +714,17 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	return [result autorelease];
 }
 
+- (NSString *) stringByStrippingXMLTags {
+	NSCharacterSet *tagCharacters = [NSCharacterSet characterSetWithCharactersInString:@"<>"];
+	NSRange range = [self rangeOfCharacterFromSet:tagCharacters options:NSLiteralSearch];
+	if( range.location == NSNotFound )
+		return self;
+
+	NSMutableString *result = [self mutableCopyWithZone:nil];
+	[result stripXMLTags];
+	return [result autorelease];
+}
+
 #pragma mark -
 
 - (NSString *) stringWithDomainNameSegmentOfAddress {
@@ -806,5 +817,22 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	}
 
 	[illegalSet release];
+}
+
+- (void) stripXMLTags {
+	NSRange searchRange = NSMakeRange(0, self.length);
+	while (1) {
+		NSRange tagStartRange = [self rangeOfString:@"<" options:NSLiteralSearch range:searchRange];
+		if (tagStartRange.location == NSNotFound)
+			break;
+
+		NSRange tagEndRange = [self rangeOfString:@">" options:NSLiteralSearch range:NSMakeRange(tagStartRange.location, (self.length - tagStartRange.location))];
+		if (tagEndRange.location == NSNotFound)
+			break;
+
+		[self deleteCharactersInRange:NSMakeRange(tagStartRange.location, (NSMaxRange(tagEndRange) - tagStartRange.location))];
+
+		searchRange = NSMakeRange(tagStartRange.location, (self.length - tagStartRange.location));
+	}
 }
 @end

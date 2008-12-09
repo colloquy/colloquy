@@ -1,4 +1,3 @@
-@class MVChatUser;
 @protocol CQChatTranscriptViewDelegate;
 
 typedef enum {
@@ -8,11 +7,14 @@ typedef enum {
 
 @interface CQChatTranscriptView : UIWebView <UIWebViewDelegate> {
 	IBOutlet id <CQChatTranscriptViewDelegate> delegate;
+	NSMutableArray *_pendingMessages;
 	BOOL _scrolling;
+	BOOL _loading;
 }
 @property (nonatomic, assign) id <CQChatTranscriptViewDelegate> delegate;
 
-- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user withAttributes:(NSDictionary *) msgAttributes withIdentifier:(NSString *) identifier andType:(CQChatMessageType) type;
+- (void) addMessages:(NSArray *) messages;
+- (void) addMessage:(NSDictionary *) info;
 
 - (void) scrollToBottom;
 - (void) flashScrollIndicators;

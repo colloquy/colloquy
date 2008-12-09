@@ -104,14 +104,12 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 }
 
 - (void) _gotRoomMessage:(NSNotification *) notification {
-	// we do this here to make sure we catch early messages right when we join (this includes dircproxy's dump)
+	// We do this here to make sure we catch early messages right when we join (this includes dircproxy's dump).
 	MVChatRoom *room = notification.object;
 	CQChatRoomController *controller = [self chatViewControllerForRoom:room ifExists:NO];
+	[controller addMessage:notification.userInfo];
 
-	MVChatUser *user = [notification.userInfo objectForKey:@"user"];
-	NSData *message = [notification.userInfo objectForKey:@"message"];
-	CQChatMessageType type = ([[notification.userInfo objectForKey:@"notice"] boolValue] ? CQChatMessageNoticeType : CQChatMessageNormalType);
-	[controller addMessageToDisplay:message fromUser:user withAttributes:notification.userInfo withIdentifier:[notification.userInfo objectForKey:@"identifier"] andType:type];
+	[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
 }
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {
@@ -131,9 +129,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 	if (!hideFromUser) {
 		CQDirectChatController *controller = [self chatViewControllerForUser:user ifExists:NO userInitiated:NO];
-		NSData *message = [notification.userInfo objectForKey:@"message"];
-		CQChatMessageType type = ([[notification.userInfo objectForKey:@"notice"] boolValue] ? CQChatMessageNoticeType : CQChatMessageNormalType);
-		[controller addMessageToDisplay:message fromUser:user withAttributes:notification.userInfo withIdentifier:[notification.userInfo objectForKey:@"identifier"] andType:type];
+		[controller addMessage:notification.userInfo];
 	}
 }
 
@@ -143,10 +139,8 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	if (![[CQConnectionsController defaultController] managesConnection:user.connection])
 		return;
 
-	NSData *message = [notification.userInfo objectForKey:@"message"];
-
 	CQDirectChatController *controller = [self chatViewControllerForDirectChatConnection:connection ifExists:NO];
-	[controller addMessageToDisplay:message fromUser:user withAttributes:notification.userInfo withIdentifier:[notification.userInfo objectForKey:@"identifier"] andType:CQChatMessageNormalType];
+	[controller addMessage:notification.userInfo];
 }
 
 #pragma mark -

@@ -22,6 +22,7 @@ BOOL isValidUTF8( const char *s, unsigned len );
 - (NSString *) stringByDecodingIllegalURLCharacters;
 
 - (NSString *) stringByStrippingIllegalXMLCharacters;
+- (NSString *) stringByStrippingXMLTags;
 
 - (NSString *) stringWithDomainNameSegmentOfAddress;
 @end
@@ -36,4 +37,5 @@ BOOL isValidUTF8( const char *s, unsigned len );
 - (void) decodeIllegalURLCharacters;
 
 - (void) stripIllegalXMLCharacters;
+- (void) stripXMLTags;
 @end

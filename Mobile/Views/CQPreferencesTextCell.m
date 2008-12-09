@@ -67,8 +67,6 @@
 	if (self.selectionStyle == UITableViewCellSelectionStyleNone)
 		return;
 
-	_label.highlighted = selected;
-
 	if (selected) _textField.textColor = [UIColor whiteColor];
 	else _textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 }

@@ -149,26 +149,6 @@
 	[self setNeedsLayout];
 }
 
-- (void) setSelected:(BOOL) selected animated:(BOOL) animated {
-	[super setSelected:selected animated:animated];
-
-	UIColor *backgroundColor = nil;
-	if( selected || animated ) backgroundColor = nil;
-	else backgroundColor = [UIColor whiteColor];
-
-	_serverLabel.backgroundColor = backgroundColor;
-	_serverLabel.highlighted = selected;
-	_serverLabel.opaque = !selected && !animated;
-
-	_nicknameLabel.backgroundColor = backgroundColor;
-	_nicknameLabel.highlighted = selected;
-	_nicknameLabel.opaque = !selected && !animated;
-
-	_timeLabel.backgroundColor = backgroundColor;
-	_timeLabel.highlighted = selected;
-	_timeLabel.opaque = !selected && !animated;
-}
-
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
 	[UIView beginAnimations:@"CQConnectionTableCellEditing" context:NULL];
 

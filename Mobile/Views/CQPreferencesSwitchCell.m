@@ -59,15 +59,6 @@
 	_switchControl.on = on;
 }
 
-- (void) setSelected:(BOOL) selected animated:(BOOL) animated {
-	[super setSelected:selected animated:animated];
-
-	if (self.selectionStyle == UITableViewCellSelectionStyleNone)
-		return;
-
-	_label.highlighted = selected;
-}
-
 - (void) prepareForReuse {
 	[super prepareForReuse];
 

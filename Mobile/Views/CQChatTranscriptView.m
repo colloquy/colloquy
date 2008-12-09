@@ -23,6 +23,7 @@
 #pragma mark -
 
 @interface CQChatTranscriptView (Internal)
+- (void) _addPendingMessagesToDiaply;
 - (void) _commonInitialization;
 - (void) _reset;
 @end
@@ -220,12 +221,12 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 
 @implementation CQChatTranscriptView
 - (id) initWithFrame:(CGRect) frame {
-    if (!(self = [super initWithFrame:frame]))
+	if (!(self = [super initWithFrame:frame]))
 		return nil;
 
 	[self _commonInitialization];
 
-    return self;
+	return self;
 }
 
 - (id) initWithCoder:(NSCoder *) coder {
@@ -238,7 +239,8 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 }
 
 - (void) dealloc {
-    [super dealloc];
+	[_pendingMessages release];
+	[super dealloc];
 }
 
 @synthesize delegate;
@@ -291,13 +293,35 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 	return NO;
 }
 
+- (void) webViewDidFinishLoad:(UIWebView *) webView {
+	_loading = NO;
+
+	[self _addPendingMessagesToDiaply];
+}
+
 #pragma mark -
 
-- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user withAttributes:(NSDictionary *) msgAttributes withIdentifier:(NSString *) identifier andType:(CQChatMessageType) type {
+- (void) addMessages:(NSArray *) messages {
+	if (_pendingMessages) [_pendingMessages addObjectsFromArray:messages];
+	else _pendingMessages = [messages mutableCopy];
+
+	if (!_loading) [self _addPendingMessagesToDiaply];
+}
+
+- (void) addMessage:(NSDictionary *) info {
+	if (_loading) {
+		if (!_pendingMessages)
+			_pendingMessages = [[NSMutableArray alloc] init];
+		[_pendingMessages addObject:info];
+		return;
+	}
+
+	MVChatUser *user = [info objectForKey:@"user"];
+	NSData *message = [info objectForKey:@"message"];
 	NSString *messageString = [[NSString alloc] initWithChatData:message encoding:NSUTF8StringEncoding];
 	NSString *transformedMessageString = applyFunctionToTextInHTMLString(messageString, commonChatReplacment);
 
-	BOOL action = [[msgAttributes objectForKey:@"action"] boolValue];
+	BOOL action = [[info objectForKey:@"action"] boolValue];
 
 	NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\\'\""];
 	NSString *escapedMessage = [transformedMessageString stringByEscapingCharactersInSet:escapedCharacters];
@@ -320,6 +344,13 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 
 #pragma mark -
 
+- (void) _addPendingMessagesToDiaply {
+	for (NSDictionary *info in _pendingMessages)
+		[self addMessage:info];
+	[_pendingMessages release];
+	_pendingMessages = nil;
+}
+
 - (void) _commonInitialization {
 	super.delegate = self;
 
@@ -338,6 +369,7 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 - (void) _reset {
 	[self stopLoading];
 
+	_loading = YES;
 	[self loadHTMLString:[self _contentHTML] baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 }
 @end

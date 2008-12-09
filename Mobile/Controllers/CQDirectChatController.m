@@ -22,6 +22,8 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	[_recentMessages release];
+	[_pendingMessages release];
 	[_target release];
 	[super dealloc];
 }
@@ -65,6 +67,15 @@
 }
 
 #pragma mark -
+
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	[transcriptView addMessages:_pendingMessages];
+
+	[_pendingMessages release];
+	_pendingMessages = nil;
+}
 
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
@@ -122,7 +133,7 @@
 	[_target sendMessage:text withEncoding:NSUTF8StringEncoding asAction:NO];
 
 	NSData *messageData = [text dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-	[self addMessageToDisplay:messageData fromUser:self.connection.localUser asAction:NO withIdentifier:@"" andType:CQChatMessageNormalType];
+	[self addMessage:messageData fromUser:self.connection.localUser asAction:NO withIdentifier:@"" andType:CQChatMessageNormalType];
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetDidSendRecently) object:nil];
 	[self performSelector:@selector(resetDidSendRecently) withObject:nil afterDelay:0.5];
@@ -215,12 +226,38 @@
 
 #pragma mark -
 
-- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier andType:(CQChatMessageType) type;
+@synthesize recentMessages = _recentMessages;
+
+- (void) addMessage:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier andType:(CQChatMessageType) type;
 {
-	[self addMessageToDisplay:message fromUser:user withAttributes:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:action] forKey:@"action"] withIdentifier:identifier andType:type];
+	NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
+
+	if (message) [info setObject:message forKey:@"message"];
+	if (user) [info setObject:user forKey:@"user"];
+	if (identifier) [info setObject:identifier forKey:@"identifier"];
+	[info setObject:[NSNumber numberWithBool:action] forKey:@"action"];
+	[info setObject:[NSNumber numberWithUnsignedLong:type] forKey:@"type"];
+
+	[self addMessage:info];
+
+	[info release];
 }
 
-- (void) addMessageToDisplay:(NSData *) message fromUser:(MVChatUser *) user withAttributes:(NSDictionary *) msgAttributes withIdentifier:(NSString *) identifier andType:(CQChatMessageType) type {
-	[transcriptView addMessageToDisplay:message fromUser:user withAttributes:msgAttributes withIdentifier:identifier andType:type];
+- (void) addMessage:(NSDictionary *) info {
+	if (!_recentMessages)
+		_recentMessages = [[NSMutableArray alloc] init];
+
+	[_recentMessages addObject:info];
+	if (_recentMessages.count > 5)
+		[_recentMessages removeObjectAtIndex:0];
+
+	if (!transcriptView) {
+		if (!_pendingMessages)
+			_pendingMessages = [[NSMutableArray alloc] init];
+		[_pendingMessages addObject:info];
+		return;
+	}
+
+	[transcriptView addMessage:info];
 }
 @end

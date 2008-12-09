@@ -1,6 +1,8 @@
 #import "CQChatTableCell.h"
 #import "CQChatController.h"
 
+#import <ChatCore/MVChatUser.h>
+
 @interface UIRemoveControl : UIView
 - (void) setRemoveConfirmationLabel:(NSString *) label;
 @end
@@ -21,6 +23,8 @@
 	_iconImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
 	_nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 
+	_maximumMessagePreviews = 2;
+
 	[self.contentView addSubview:_iconImageView];
 	[self.contentView addSubview:_nameLabel];
 
@@ -28,12 +32,15 @@
 	_nameLabel.textColor = self.textColor;
 	_nameLabel.highlightedTextColor = self.selectedTextColor;
 
+	_chatPreviewLabels = [[NSMutableArray alloc] init];
+
 	return self;
 }
 
 - (void) dealloc {
 	[_iconImageView release];
 	[_nameLabel release];
+	[_chatPreviewLabels release];
 	[_removeConfirmationText release];
 	[super dealloc];
 }
@@ -44,6 +51,8 @@
 	self.name = controller.title;
 	self.icon = controller.icon;
 }
+
+@synthesize maximumMessagePreviews = _maximumMessagePreviews;
 
 - (NSString *) name {
 	return _nameLabel.text;
@@ -74,24 +83,127 @@
 
 #pragma mark -
 
-- (void) setSelected:(BOOL) selected animated:(BOOL) animated {
-	[super setSelected:selected animated:animated];
+#define LABEL_SPACING 2.
 
-	UIColor *backgroundColor = nil;
-	if (selected || animated) backgroundColor = nil;
-	else backgroundColor = [UIColor whiteColor];
+- (void) addMessagePreview:(NSString *) message fromUser:(MVChatUser *) user asAction:(BOOL) action animated:(BOOL) animated {
+	CGRect nameFrame = _nameLabel.frame;
 
-	_nameLabel.backgroundColor = backgroundColor;
-	_nameLabel.highlighted = selected;
-	_nameLabel.opaque = !selected && !animated;
+	UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+	label.font = [UIFont systemFontOfSize:14.];
+	label.backgroundColor = [UIColor clearColor];
+	label.textColor = [UIColor colorWithWhite:0.4 alpha:1.];
+	label.highlightedTextColor = [UIColor whiteColor];
+	label.alpha = (animated ? 0. : 1.);
+
+	if (action)
+		label.text = [NSString stringWithFormat:@"%C %@ %@", 0x2022, user.displayName, message];
+	else label.text = [NSString stringWithFormat:@"%@: %@", user.displayName, message];
+
+	NSTimeInterval animationDelay = 0.;
+
+	if (_chatPreviewLabels.count == _maximumMessagePreviews) {
+		UILabel *firstLabel = [[_chatPreviewLabels objectAtIndex:0] retain];
+		[_chatPreviewLabels removeObjectAtIndex:0];
+
+		if (animated) {
+			[UIView beginAnimations:nil context:firstLabel];
+			[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+			[UIView setAnimationDuration:0.2];
+			[UIView setAnimationDelegate:self];
+			[UIView setAnimationDidStopSelector:@selector(labelFadeOutAnimationDidStop:finished:context:)];
+
+			firstLabel.alpha = 0.;
+
+			[UIView commitAnimations];
+
+			animationDelay = 0.15;
+		} else {
+			[firstLabel removeFromSuperview];
+		}
+
+		[firstLabel release];
+	}
+
+	CGFloat labelHeights = nameFrame.size.height;
+
+	for (UILabel *label in _chatPreviewLabels)
+		labelHeights += label.frame.size.height - LABEL_SPACING;
+
+	CGRect labelFrame = label.frame;
+	CGSize labelSize = [label sizeThatFits:labelFrame.size];
+
+	labelHeights += labelSize.height;
+
+	if (animated) {
+		[UIView beginAnimations:nil context:NULL];
+		[UIView setAnimationDelay:animationDelay];
+		[UIView setAnimationDuration:0.25];
+	}
+
+	nameFrame.origin.y = round((self.contentView.bounds.size.height / 2.) - (labelHeights / 2.));
+	_nameLabel.frame = nameFrame;
+
+	CGFloat newVerticalOrigin = nameFrame.origin.y + nameFrame.size.height - LABEL_SPACING;
+	for (UILabel *label in _chatPreviewLabels) {
+		CGRect labelFrame = label.frame;
+		labelFrame.origin.y = newVerticalOrigin;
+		label.frame = labelFrame;
+
+		newVerticalOrigin = labelFrame.origin.y + labelFrame.size.height - LABEL_SPACING;
+	}
+
+	if (animated) {
+		[UIView commitAnimations];
+
+		animationDelay += 0.15;
+	}
+
+	labelFrame.origin.x = nameFrame.origin.x;
+	labelFrame.origin.y = newVerticalOrigin;
+	labelFrame.size.width = nameFrame.size.width;
+	labelFrame.size.height = labelSize.height;
+	label.frame = labelFrame;
+
+	[self.contentView addSubview:label];
+	[_chatPreviewLabels addObject:label];
+
+	if (animated) {
+		[UIView beginAnimations:nil context:NULL];
+		[UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+		[UIView setAnimationDuration:0.2];
+		[UIView setAnimationDelay:animationDelay];
+
+		label.alpha = 1.;
+
+		[UIView commitAnimations];
+	}
+}
+
+- (void) labelFadeOutAnimationDidStop:(NSString *) animation finished:(NSNumber *) finished context:(void *) context {
+	UILabel *label = (UILabel *)context;
+	[label removeFromSuperview];
+}
+
+#pragma mark -
+
+- (void) prepareForReuse {
+	[super prepareForReuse];
+
+	for (UILabel *label in _chatPreviewLabels)
+		[label removeFromSuperview];
+
+	[_chatPreviewLabels removeAllObjects];
+
+	self.name = @"";
+	self.icon = nil;
+	self.removeConfirmationText = nil;
 }
 
 - (void) layoutSubviews {
 	[super layoutSubviews];
 
-#define TOP_MARGIN 10.
 #define LEFT_MARGIN 10.
-#define RIGHT_MARGIN 10.
+#define RIGHT_MARGIN 5.
 #define ICON_RIGHT_MARGIN 10.
 
 	CGRect contentRect = self.contentView.bounds;
@@ -99,14 +211,26 @@
 	CGRect frame = _iconImageView.frame;
 	frame.size = [_iconImageView sizeThatFits:_iconImageView.bounds.size];
 	frame.origin.x = contentRect.origin.x + LEFT_MARGIN;
-	frame.origin.y = contentRect.origin.y + TOP_MARGIN;
+	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
 	_iconImageView.frame = frame;
 
 	frame = _nameLabel.frame;
 	frame.size = [_nameLabel sizeThatFits:_nameLabel.bounds.size];
+
+	CGFloat labelHeights = frame.size.height;
+
+	for (UILabel *label in _chatPreviewLabels)
+		labelHeights += label.frame.size.height - LABEL_SPACING;
+
 	frame.origin.x = CGRectGetMaxX(_iconImageView.frame) + ICON_RIGHT_MARGIN;
-	frame.origin.y = contentRect.origin.y + TOP_MARGIN;
-	frame.size.width = contentRect.size.width  - frame.origin.x - RIGHT_MARGIN;
+	frame.origin.y = round((contentRect.size.height / 2.) - (labelHeights / 2.));
+	frame.size.width = contentRect.size.width - frame.origin.x - (!self.showingDeleteConfirmation ? RIGHT_MARGIN : 0.);
 	_nameLabel.frame = frame;
+
+	for (UILabel *label in _chatPreviewLabels) {
+		CGRect labelFrame = label.frame;
+		labelFrame.size.width = frame.size.width;
+		label.frame = labelFrame;
+	}
 }
 @end

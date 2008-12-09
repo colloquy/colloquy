@@ -4,6 +4,7 @@
 #import "CQChatTableCell.h"
 #import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
+#import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
 
@@ -106,6 +107,28 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 #pragma mark -
 
+- (CQChatTableCell *) _chatTableCellForController:(id <CQChatViewController>) controller {
+	NSIndexPath *indexPath = indexPathForChatController(controller);
+	return (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+}
+
+- (void) _addMessagePreview:(NSDictionary *) info toChatTableCell:(CQChatTableCell *) cell animated:(BOOL) animated {
+	MVChatUser *user = [info objectForKey:@"user"];
+	NSData *message = [info objectForKey:@"message"];
+	NSString *messageString = [[NSString alloc] initWithChatData:message encoding:NSUTF8StringEncoding];
+
+	NSString *transformedMessageString = [messageString stringByStrippingXMLTags];
+	transformedMessageString = [transformedMessageString stringByDecodingXMLSpecialCharacterEntities];
+
+	BOOL action = [[info objectForKey:@"action"] boolValue];
+
+	[cell addMessagePreview:transformedMessageString fromUser:user asAction:action animated:animated];
+
+	[messageString release];
+}
+
+#pragma mark -
+
 - (void) addChatViewController:(id <CQChatViewController>) controller {
 	if ([[CQChatController defaultController] chatViewControllersForConnection:controller.connection].count == 1) {
 		NSUInteger sectionIndex = sectionIndexForConnection(controller.connection);
@@ -124,6 +147,11 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	NSIndexPath *indexPath = indexPathForChatController(controller);
 	[self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:animatedScroll];
 	[self.tableView selectRowAtIndexPath:indexPath animated:animatedSelection scrollPosition:UITableViewScrollPositionNone];
+}
+
+- (void) addMessagePreview:(NSDictionary *) info forChatController:(id <CQChatViewController>) controller {
+	CQChatTableCell *cell = [self _chatTableCellForController:controller];
+	[self _addMessagePreview:info toChatTableCell:cell animated:YES];
 }
 
 #pragma mark -
@@ -162,6 +190,16 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		cell.removeConfirmationText = NSLocalizedString(@"Leave", @"Leave remove confirmation button title");
 	else if ([chatViewController isMemberOfClass:[CQDirectChatController class]])
 		cell.removeConfirmationText = NSLocalizedString(@"Close", @"Close remove confirmation button title");
+
+	if ([chatViewController isKindOfClass:[CQDirectChatController class]]) {
+		CQDirectChatController *directChatViewController = (CQDirectChatController *)chatViewController;
+		NSArray *recentMessages = directChatViewController.recentMessages;
+		NSUInteger maximum = MIN(cell.maximumMessagePreviews, recentMessages.count);
+		for (NSUInteger i = (recentMessages.count - maximum); i < recentMessages.count; ++i) {
+			NSDictionary *info = [recentMessages objectAtIndex:i];
+			[self _addMessagePreview:info toChatTableCell:cell animated:NO];
+		}
+	}
 
 	[cell takeValuesFromChatViewController:chatViewController];
 
