@@ -130,6 +130,8 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	if (!hideFromUser) {
 		CQDirectChatController *controller = [self chatViewControllerForUser:user ifExists:NO userInitiated:NO];
 		[controller addMessage:notification.userInfo];
+
+		[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
 	}
 }
 
@@ -141,6 +143,8 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 	CQDirectChatController *controller = [self chatViewControllerForDirectChatConnection:connection ifExists:NO];
 	[controller addMessage:notification.userInfo];
+
+	[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
 }
 
 #pragma mark -
