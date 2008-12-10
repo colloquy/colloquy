@@ -184,6 +184,10 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 	if (navigationType != UIWebViewNavigationTypeLinkClicked)
 		return NO;
 
+	if ([delegate respondsToSelector:@selector(transcriptView:handleOpenURL:)])
+		if ([delegate transcriptView:self handleOpenURL:request.URL])
+			return NO;
+
 	[[UIApplication sharedApplication] openURL:request.URL];
 
 	return NO;

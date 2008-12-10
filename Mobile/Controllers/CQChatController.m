@@ -45,6 +45,8 @@
 	[_chatListViewController release];
 	[_chatControllers release];
 	[_nextController release];
+	[_nextRoomName release];
+	[_nextRoomConnection release];
 	[super dealloc];
 }
 
@@ -163,7 +165,36 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	[sheet release];
 }
 
+- (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) roomName andConnection:(MVChatConnection *) connection {
+	NSParameterAssert(roomName != nil);
+	NSParameterAssert(connection != nil);
+
+	[_nextRoomName release];
+	_nextRoomName = nil;
+
+	[_nextRoomConnection release];
+	_nextRoomConnection = nil;
+
+	MVChatRoom *room = [connection joinedChatRoomWithName:roomName];
+	if (room) {
+		CQChatRoomController *controller = [self chatViewControllerForRoom:room ifExists:YES];
+		if (controller) {
+			[self showChatController:controller animated:YES];
+			return;
+		}
+	}
+
+	_nextRoomName = [roomName copy];
+	_nextRoomConnection = [connection retain];
+}
+
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
+	[_nextRoomName release];
+	_nextRoomName = nil;
+
+	[_nextRoomConnection release];
+	_nextRoomConnection = nil;
+
 	BOOL delayed = (animated && self.visibleViewController != _chatListViewController);
 	if (delayed) {
 		id old = _nextController;
@@ -254,6 +285,9 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 			[self _sortChatControllers];
 
 			[_chatListViewController addChatViewController:controller];
+
+			if (room.connection == _nextRoomConnection && _nextRoomName && [_nextRoomConnection joinedChatRoomWithName:_nextRoomName] == room)
+				[self showChatController:controller animated:YES];
 
 			return controller;
 		}

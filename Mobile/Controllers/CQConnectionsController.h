@@ -23,7 +23,10 @@
 
 - (void) saveConnections;
 
+- (BOOL) handleOpenURL:(NSURL *) url;
+
 - (void) showModalNewConnectionView;
+- (void) showModalNewConnectionViewForURL:(NSURL *) url;
 - (void) editConnection:(MVChatConnection *) connection;
 
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address;

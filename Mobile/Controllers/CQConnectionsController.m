@@ -1,9 +1,13 @@
 #import "CQConnectionsController.h"
-#import "CQConnectionsViewController.h"
-#import "CQConnectionEditViewController.h"
-#import "CQConnectionCreationViewController.h"
+
 #import "CQChatController.h"
+#import "CQChatRoomController.h"
+#import "CQColloquyApplication.h"
+#import "CQConnectionCreationViewController.h"
+#import "CQConnectionEditViewController.h"
+#import "CQConnectionsViewController.h"
 #import "CQKeychain.h"
+#import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
 
@@ -99,8 +103,61 @@
 
 #pragma mark -
 
+- (BOOL) handleOpenURL:(NSURL *) url {
+	if ((![url.scheme isEqualToString:@"irc"] && ![url.scheme isEqualToString:@"ircs"]) || !url.host.length)
+		return NO;
+
+	NSString *target = @"";
+	if (url.fragment.length) target = [@"#" stringByAppendingString:[url.fragment stringByDecodingIllegalURLCharacters]];
+	else if (url.path.length > 1) target = [[url.path substringFromIndex:1] stringByDecodingIllegalURLCharacters];
+
+	NSArray *possibleConnections = [self connectionsForServerAddress:url.host];
+
+	for (MVChatConnection *connection in possibleConnections) {
+		if (url.user.length && (![url.user isEqualToString:connection.preferredNickname] || ![url.user isEqualToString:connection.nickname]))
+			continue;
+		if ([url.port unsignedShortValue] && [url.port unsignedShortValue] != connection.serverPort)
+			continue;
+
+		[connection connect];
+
+		if (target.length) {
+			[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:target andConnection:connection];
+			[connection joinChatRoomNamed:target];
+		} else [CQColloquyApplication sharedApplication].tabBarController.selectedViewController = self;
+
+		return YES;
+	}
+
+	if (url.user.length) {
+		MVChatConnection *connection = [[MVChatConnection alloc] initWithURL:url];
+
+		[self addConnection:connection];
+
+		[connection connect];
+
+		if (target.length) {
+			[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:target andConnection:connection];
+			[connection joinChatRoomNamed:target];
+		} else [CQColloquyApplication sharedApplication].tabBarController.selectedViewController = self;
+
+		[connection release];
+
+		return YES;
+	}
+
+	[self showModalNewConnectionViewForURL:url];
+
+	return YES;
+}
+
 - (void) showModalNewConnectionView {
+	[self showModalNewConnectionViewForURL:nil];
+}
+
+- (void) showModalNewConnectionViewForURL:(NSURL *) url {
 	CQConnectionCreationViewController *connectionCreationViewController = [[CQConnectionCreationViewController alloc] init];
+	connectionCreationViewController.url = url;
 	[self presentModalViewController:connectionCreationViewController animated:YES];
 	[connectionCreationViewController release];
 }

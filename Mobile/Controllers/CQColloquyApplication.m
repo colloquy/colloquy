@@ -4,7 +4,7 @@
 
 @implementation CQColloquyApplication
 + (CQColloquyApplication *) sharedApplication {
-	return (CQColloquyApplication *)[super sharedApplication];
+	return (CQColloquyApplication *)[UIApplication sharedApplication].delegate;
 }
 
 @synthesize tabBarController, mainWindow;
@@ -27,6 +27,10 @@
 
 	[mainWindow addSubview:tabBarController.view];
 	[mainWindow makeKeyAndVisible];
+}
+
+- (BOOL) application:(UIApplication *) application handleOpenURL:(NSURL *) url {
+	return [[CQConnectionsController defaultController] handleOpenURL:url];
 }
 
 - (void) tabBarController:(UITabBarController *) currentTabBarController didSelectViewController:(UIViewController *) viewController {

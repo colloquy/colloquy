@@ -20,6 +20,7 @@ typedef enum {
 - (void) flashScrollIndicators;
 @end
 
-@protocol CQChatTranscriptViewDelegate
+@protocol CQChatTranscriptViewDelegate <NSObject>
 @optional
+- (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url;
 @end

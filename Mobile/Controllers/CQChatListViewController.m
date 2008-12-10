@@ -237,8 +237,8 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	MVChatConnection *connection = connectionForSection(indexPath.section);
 	NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
-	UIViewController *chatViewController = [controllers objectAtIndex:indexPath.row];
+	id <CQChatViewController> chatViewController = [controllers objectAtIndex:indexPath.row];
 
-	[self.navigationController pushViewController:chatViewController animated:YES];
+	[[CQChatController defaultController] showChatController:chatViewController animated:YES];
 }
 @end

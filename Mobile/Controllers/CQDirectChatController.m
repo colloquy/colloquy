@@ -143,6 +143,23 @@
 
 #pragma mark -
 
+- (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url {
+	if ((![url.scheme isEqualToString:@"irc"] && ![url.scheme isEqualToString:@"ircs"]) || url.host.length)
+		return NO;
+
+	NSString *target = @"";
+	if (url.fragment.length) target = [@"#" stringByAppendingString:url.fragment];
+	else if (url.path.length > 1) target = url.path;
+
+	url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", url.scheme, self.connection.server, target]];
+
+	[[UIApplication sharedApplication] openURL:url];
+
+	return YES;
+}
+
+#pragma mark -
+
 - (void) resetDidSendRecently {
 	_didSendRecently = NO;
 }

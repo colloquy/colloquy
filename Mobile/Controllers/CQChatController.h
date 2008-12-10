@@ -11,13 +11,16 @@
 	@private
 	NSMutableArray *_chatControllers;
 	CQChatListViewController *_chatListViewController;
-	id <CQChatViewController> _nextController; 
+	id <CQChatViewController> _nextController;
+	NSString *_nextRoomName;
+	MVChatConnection *_nextRoomConnection;
 }
 + (CQChatController *) defaultController;
 
 @property (nonatomic, readonly) NSArray *chatViewControllers;
 
 - (void) showNewChatActionSheet;
+- (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) room andConnection:(MVChatConnection *) connection;
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated;
 
 - (NSArray *) chatViewControllersForConnection:(MVChatConnection *) connection;
