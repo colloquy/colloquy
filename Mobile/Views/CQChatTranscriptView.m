@@ -30,189 +30,85 @@
 
 #pragma mark -
 
-struct CQEmoticonEmoji {
-	NSString *emoticon;
-	unichar emoji;
-};
+static void commonChatReplacment(NSMutableString *string, NSRangePointer textRange) {
+	[string substituteEmoticonsForEmojiInRange:textRange];
 
-static struct CQEmoticonEmoji emoticonEmojiMap[] = {
-	{ @":)", 0xe056 },
-	{ @":-)", 0xe056 },
-	{ @"=)", 0xe056 },
-	{ @"=-)", 0xe056 },
-	{ @":D", 0xe057 },
-	{ @":-D", 0xe057 },
-	{ @"=D", 0xe057 },
-	{ @"=-D", 0xe057 },
-	{ @":(", 0xe058 },
-	{ @":-(", 0xe058 },
-	{ @"=(", 0xe058 },
-	{ @"=-(", 0xe058 },
-	{ @":[", 0xe414 },
-	{ @":-[", 0xe414 },
-	{ @"=[", 0xe414 },
-	{ @"=-[", 0xe414 },
-	{ @";p", 0xe105 },
-	{ @";-p", 0xe105 },
-	{ @";P", 0xe105 },
-	{ @";-P", 0xe105 },
-	{ @";)", 0xe405 },
-	{ @";-)", 0xe405 },
-	{ @":p", 0xe409 },
-	{ @":P", 0xe409 },
-	{ @":-p", 0xe409 },
-	{ @":-P", 0xe409 },
-	{ @"=p", 0xe409 },
-	{ @"=P", 0xe409 },
-	{ @"=-p", 0xe409 },
-	{ @"=-P", 0xe409 },
-	{ @"^.^", 0xe415 },
-	{ @"^-^", 0xe415 },
-	{ @":*", 0xe417 },
-	{ @":-*", 0xe417 },
-	{ @"=*", 0xe417 },
-	{ @"=-*", 0xe417 },
-	{ @"*:", 0xe417 },
-	{ @"*-:", 0xe417 },
-	{ @"*=", 0xe417 },
-	{ @"*-=", 0xe417 },
-	{ @";*", 0xe418 },
-	{ @";-*", 0xe418 },
-	{ @"*;", 0xe418 },
-	{ @"*-;", 0xe418 },
-	{ @":&apos;(", 0xe401 },
-	{ @"=&apos;(", 0xe401 },
-	{ @")&apos;:", 0xe401 },
-	{ @")&apos;=", 0xe401 },
-	{ @":!", 0xe404 },
-	{ @":-!", 0xe404 },
-	{ @"=!", 0xe404 },
-	{ @"=-!", 0xe404 },
-	{ @"!:", 0xe404 },
-	{ @"!-:", 0xe404 },
-	{ @"!=", 0xe404 },
-	{ @"!-=", 0xe404 },
-	{ @"(&lt;3", 0xe106 },
-	{ @"&lt;3", 0xe022 },
-	{ @"&lt;/3", 0xe023 },
-	{ @"&lt;\3", 0xe023 },
-	{ @":&quot;o", 0xe411 },
-	{ @"=&quot;o", 0xe411 },
-	{ @":&quot;O", 0xe411 },
-	{ @"=&quot;O", 0xe411 },
-	{ @":&apos;D", 0xe412 },
-	{ @"=&apos;D", 0xe412 },
-	{ @"d:", 0xe409 },
-	{ @"d=", 0xe409 },
-	{ @"d-:", 0xe409 },
-	{ @"(:", 0xe056 },
-	{ @"(-:", 0xe056 },
-	{ @"(=", 0xe056 },
-	{ @"(-=", 0xe056 },
-	{ @"):", 0xe058 },
-	{ @")-:", 0xe058 },
-	{ @")=", 0xe058 },
-	{ @")-=", 0xe058 },
-	{ @"]:", 0xe414 },
-	{ @"]-:", 0xe414 },
-	{ @"]=", 0xe414 },
-	{ @"]-=", 0xe414 },
-	{ @":o", 0xe410 },
-	{ @":O", 0xe410 },
-	{ @":-o", 0xe410 },
-	{ @":-O", 0xe410 },
-	{ @"=o", 0xe410 },
-	{ @"=O", 0xe410 },
-	{ @"=-o", 0xe410 },
-	{ @"=-O", 0xe410 },
-	{ @"o:", 0xe410 },
-	{ @"O:", 0xe410 },
-	{ @"o-:", 0xe410 },
-	{ @"O-:", 0xe410 },
-	{ @"o=", 0xe410 },
-	{ @"O=", 0xe410 },
-	{ @"o-=", 0xe410 },
-	{ @"O-=", 0xe410 },
-	{ @":0", 0xe410 },
-	{ @":-0", 0xe410 },
-	{ @"=0", 0xe410 },
-	{ @"=-0", 0xe410 },
-	{ @"0:", 0xe410 },
-	{ @"0-:", 0xe410 },
-	{ @"0=", 0xe410 },
-	{ @"0-=", 0xe410 },
-	{ @"(Y)", 0xe00e },
-	{ @"(N)", 0xe421 },
-	{ nil, 0 }
-};
+	// Catch IRC rooms like "#room" but not HTML colors like "#ab12ef" nor HTML entities like "&#135;" or "&amp;".
+	// Catch well-formed urls like "http://www.apple.com", "www.apple.com" or "irc://irc.javelin.cc".
+	// Catch well-formed email addresses like "user@example.com" or "user@example.co.uk".
+	static AGRegex *urlRegex;
+	if (!urlRegex)
+		urlRegex = [[AGRegex alloc] initWithPattern:@"(?P<room>\\B(?<!&amp;)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&;#]{2,}\\b)|(?P<url>(?:[a-zA-Z][a-zA-Z0-9+.-]{2,}://|www\\.)[\\p{L}\\p{N}$\\-_+*'=\\|/\\\\(){}[\\]%@&#~,:;.!?]{4,}[\\p{L}\\p{N}$\\-_+*=\\|/\\\\({%@&;#~])|(?P<email>[\\p{L}\\p{N}.+\\-_]+@(?:[\\p{L}\\-_]+\\.)+[\\w]{2,})" options:AGRegexCaseInsensitive];
 
-static void commonChatReplacment(NSMutableString *string, NSRange *textRange) {
-	static NSCharacterSet *typicalEmoticonCharacters;
-	if (!typicalEmoticonCharacters)
-		typicalEmoticonCharacters = [[NSCharacterSet characterSetWithCharactersInString:@";:=()^"] retain];
+	AGRegexMatch *match = [urlRegex findInString:string range:*textRange];
+	while (match) {
+		NSString *room = [match groupNamed:@"room"];
+		NSString *url = [match groupNamed:@"url"];
+		NSString *email = [match groupNamed:@"email"];
 
-	// Do a quick check for typical characters that are in every emoticon in emoticonEmojiMap.
-	// If any of these characters are found, do the full fid and replace loop.
-	if ([string rangeOfCharacterFromSet:typicalEmoticonCharacters].location != NSNotFound) {
-		NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
-
-		for (struct CQEmoticonEmoji *entry = emoticonEmojiMap; entry && entry->emoticon; ++entry) {
-			if ([string rangeOfString:entry->emoticon options:NSLiteralSearch range:*textRange].location == NSNotFound)
-				continue;
-
-			NSMutableString *emoticon = [entry->emoticon mutableCopy];
-			[emoticon escapeCharactersInSet:escapedCharacters];
-
-			NSString *emojiString = [[NSString alloc] initWithCharacters:&entry->emoji length:1];
-			AGRegex *regex = [[AGRegex alloc] initWithPattern:[NSString stringWithFormat:@"(?<=\\s|^)%@(?=\\s|$)", emoticon]];
-
-			AGRegexMatch *match = [regex findInString:string range:*textRange];
-			while (match) {
-				[string replaceCharactersInRange:match.range withString:emojiString];
-				textRange->length -= (entry->emoticon.length - 1);
-
-				NSRange matchRange = NSMakeRange(match.range.location + 1, (NSMaxRange(*textRange) - match.range.location - 1));
-				if (!matchRange.length)
-					break;
-
-				match = [regex findInString:string range:matchRange];
-			}
-
-			[regex release];
-			[emoticon release];
-			[emojiString release];
-
-			// Check for the typical characters again, if none are found then there are no more emoticons to replace.
-			if ([string rangeOfCharacterFromSet:typicalEmoticonCharacters].location == NSNotFound)
-				break;
+		NSString *linkHTMLString = nil;
+		if (room.length) {
+			linkHTMLString = [NSString stringWithFormat:@"<a href=\"irc:///%@\">%1$@</a>", room];
+		} else if (url.length) {
+			NSString *fullURL = ([url hasPrefix:@"www."] ? [@"http://" stringByAppendingString:url] : url);
+			linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\">%@</a>", fullURL, url];
+		} else if (email.length) {
+			linkHTMLString = [NSString stringWithFormat:@"<a href=\"mailto:%@\">%1$@</a>", email];
 		}
+
+		if (linkHTMLString) {
+			[string replaceCharactersInRange:match.range withString:linkHTMLString];
+
+			textRange->length += (linkHTMLString.length - match.range.length);
+		}
+
+		NSRange matchRange = NSMakeRange(match.range.location + linkHTMLString.length, (NSMaxRange(*textRange) - match.range.location - linkHTMLString.length));
+		if (!matchRange.length)
+			break;
+
+		match = [urlRegex findInString:string range:matchRange];
 	}
 }
 
-static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function)(NSMutableString *, NSRange *)) {
-	if (!function)
+static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRangePointer range, void (*function)(NSMutableString *, NSRangePointer)) {
+	if (!html || !function || !range)
+		return;
+
+	NSRange tagEndRange = NSMakeRange(range->location, 0);
+	while (1) {
+		NSRange tagStartRange = [html rangeOfString:@"<" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(tagEndRange), (NSMaxRange(*range) - NSMaxRange(tagEndRange)))];
+		if (tagStartRange.location == NSNotFound) {
+			NSUInteger length = (NSMaxRange(*range) - NSMaxRange(tagEndRange));
+			NSRange textRange = NSMakeRange(NSMaxRange(tagEndRange), length);
+			if (length) {
+				function(html, &textRange);
+				range->length += (textRange.length - length);
+			}
+
+			break;
+		}
+
+		NSUInteger length = (tagStartRange.location - NSMaxRange(tagEndRange));
+		NSRange textRange = NSMakeRange(NSMaxRange(tagEndRange), length);
+		if (length) {
+			function(html, &textRange);
+			range->length += (textRange.length - length);
+		}
+
+		tagEndRange = [html rangeOfString:@">" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(textRange), (NSMaxRange(*range) - NSMaxRange(textRange)))];
+		if (tagEndRange.location == NSNotFound || NSMaxRange(tagEndRange) == NSMaxRange(*range))
+			break;
+	}
+}
+
+static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function)(NSMutableString *, NSRangePointer)) {
+	if (!html || !function)
 		return html;
 
 	NSMutableString *result = [html mutableCopy];
 
-	NSRange tagEndRange = NSMakeRange(0, 0);
-	while (1) {
-		NSRange tagStartRange = [result rangeOfString:@"<" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(tagEndRange), (result.length - NSMaxRange(tagEndRange)))];
-		if (tagStartRange.location == NSNotFound) {
-			NSRange textRange = NSMakeRange(NSMaxRange(tagEndRange), (result.length - NSMaxRange(tagEndRange)));
-			if (textRange.length)
-				function(result, &textRange);
-			break;
-		}
-
-		NSRange textRange = NSMakeRange(NSMaxRange(tagEndRange), (tagStartRange.location - NSMaxRange(tagEndRange)));
-		if (textRange.length)
-			function(result, &textRange);
-
-		tagEndRange = [result rangeOfString:@">" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(textRange), (result.length - NSMaxRange(textRange)))];
-		if (tagEndRange.location == NSNotFound || NSMaxRange(tagEndRange) == result.length)
-			break;
-	}
+	NSRange range = NSMakeRange(0, result.length);
+	applyFunctionToTextInMutableHTMLString(result, &range, function);
 
 	return [result autorelease];
 }

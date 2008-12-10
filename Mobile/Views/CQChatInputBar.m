@@ -1,35 +1,6 @@
 #import "CQChatInputBar.h"
 
-struct CQEmojiEmoticon {
-	unichar emoji;
-	NSString *emoticon;
-};
-
-static struct CQEmojiEmoticon emojiEmoticonMap[] = {
-	{ 0xe00e, @"(Y)" },
-	{ 0xe022, @"<3" },
-	{ 0xe023, @"</3" },
-	{ 0xe056, @":)" },
-	{ 0xe057, @":D" },
-	{ 0xe058, @":(" },
-	{ 0xe105, @";P" },
-	{ 0xe106, @"(<3" },
-	{ 0xe11a, @">:)" },
-	{ 0xe401, @":'(" },
-	{ 0xe404, @":-!" },
-	{ 0xe405, @";)" },
-	{ 0xe409, @":P" },
-	{ 0xe410, @":O" },
-	{ 0xe411, @":\"o" },
-	{ 0xe412, @":'D" },
-	{ 0xe414, @":[" },
-	{ 0xe415, @"^-^" },
-	{ 0xe417, @":-*" },
-	{ 0xe418, @";-*" },
-	{ 0xe421, @"(N)" },
-};
-
-#pragma mark -
+#import "NSStringAdditions.h"
 
 @interface UIKeyboardImpl : UIView
 + (UIKeyboardImpl *) activeInstance;
@@ -167,41 +138,7 @@ static struct CQEmojiEmoticon emojiEmoticonMap[] = {
 	[_inputField becomeFirstResponder];
 
 	NSString *text = _inputField.text;
-
-	NSCharacterSet *emojiCharacters = [NSCharacterSet characterSetWithRange:NSMakeRange(0xe001, (0xe53e - 0xe001))];
-	NSRange emojiRange = [text rangeOfCharacterFromSet:emojiCharacters];
-	if (emojiRange.location != NSNotFound) {
-		NSMutableString *mutableText = [text mutableCopy];
-
-		while (emojiRange.location != NSNotFound) {
-			unichar currentCharacter = [mutableText characterAtIndex:emojiRange.location];
-			for (struct CQEmojiEmoticon *entry = emojiEmoticonMap; entry && entry->emoji; ++entry) {
-				if (entry->emoji == currentCharacter) {
-					NSString *replacement = nil;
-					if (emojiRange.location == 0 && (emojiRange.location + 1) == mutableText.length)
-						replacement = [entry->emoticon retain];
-					else if (emojiRange.location > 0 && (emojiRange.location + 1) == mutableText.length && [mutableText characterAtIndex:(emojiRange.location - 1)] == ' ')
-						replacement = [entry->emoticon retain];
-					else if ([mutableText characterAtIndex:(emojiRange.location - 1)] == ' ' && [mutableText characterAtIndex:(emojiRange.location + 1)] == ' ')
-						replacement = [entry->emoticon retain];
-					else if (emojiRange.location == 0 || [mutableText characterAtIndex:(emojiRange.location - 1)] == ' ')
-						replacement = [[NSString alloc] initWithFormat:@"%@ ", entry->emoticon];
-					else if ((emojiRange.location + 1) == mutableText.length || [mutableText characterAtIndex:(emojiRange.location + 1)] == ' ')
-						replacement = [[NSString alloc] initWithFormat:@" %@", entry->emoticon];
-					else replacement = [[NSString alloc] initWithFormat:@" %@ ", entry->emoticon];
-
-					[mutableText replaceCharactersInRange:NSMakeRange(emojiRange.location, 1) withString:replacement];
-
-					[replacement release];
-					break;
-				}
-			}
-
-			emojiRange = [mutableText rangeOfCharacterFromSet:emojiCharacters options:NSLiteralSearch range:NSMakeRange(emojiRange.location + 1, (mutableText.length - emojiRange.location - 1))];
-		}
-
-		text = [mutableText autorelease];
-	}
+	text = [text stringBySubstitutingEmojiForEmoticons];
 
 	if (![delegate chatInputBar:self sendText:text])
 		return;

@@ -2,7 +2,163 @@
 
 #import "NSScannerAdditions.h"
 
-#include <sys/time.h>
+#import <AGRegex/AGRegex.h>
+#import <sys/time.h>
+
+struct EmojiEmoticonPair {
+	const unichar emoji;
+	NSString *emoticon;
+};
+
+static const struct EmojiEmoticonPair emojiToEmoticonList[] = {
+	{ 0xe00e, @"(Y)" },
+	{ 0xe022, @"<3" },
+	{ 0xe023, @"</3" },
+	{ 0xe056, @":)" },
+	{ 0xe057, @":D" },
+	{ 0xe058, @":(" },
+	{ 0xe105, @";P" },
+	{ 0xe106, @"(<3" },
+	{ 0xe11a, @">:)" },
+	{ 0xe401, @":'(" },
+	{ 0xe404, @":-!" },
+	{ 0xe405, @";)" },
+	{ 0xe409, @":P" },
+	{ 0xe410, @":O" },
+	{ 0xe411, @":\"o" },
+	{ 0xe412, @":'D" },
+	{ 0xe414, @":[" },
+	{ 0xe415, @"^-^" },
+	{ 0xe417, @":-*" },
+	{ 0xe418, @";-*" },
+	{ 0xe421, @"(N)" },
+	{ 0, nil }
+};
+
+static const struct EmojiEmoticonPair emoticonToEmojiList[] = {
+	{ 0xe056, @":)" },
+	{ 0xe056, @":-)" },
+	{ 0xe056, @"=)" },
+	{ 0xe056, @"=-)" },
+	{ 0xe057, @":D" },
+	{ 0xe057, @":-D" },
+	{ 0xe057, @"=D" },
+	{ 0xe057, @"=-D" },
+	{ 0xe058, @":(" },
+	{ 0xe058, @":-(" },
+	{ 0xe058, @"=(" },
+	{ 0xe058, @"=-(" },
+	{ 0xe414, @":[" },
+	{ 0xe414, @":-[" },
+	{ 0xe414, @"=[" },
+	{ 0xe414, @"=-[" },
+	{ 0xe105, @";p" },
+	{ 0xe105, @";-p" },
+	{ 0xe105, @";P" },
+	{ 0xe105, @";-P" },
+	{ 0xe405, @";)" },
+	{ 0xe405, @";-)" },
+	{ 0xe409, @":p" },
+	{ 0xe409, @":P" },
+	{ 0xe409, @":-p" },
+	{ 0xe409, @":-P" },
+	{ 0xe409, @"=p" },
+	{ 0xe409, @"=P" },
+	{ 0xe409, @"=-p" },
+	{ 0xe409, @"=-P" },
+	{ 0xe415, @"^.^" },
+	{ 0xe415, @"^-^" },
+	{ 0xe417, @":*" },
+	{ 0xe417, @":-*" },
+	{ 0xe417, @"=*" },
+	{ 0xe417, @"=-*" },
+	{ 0xe417, @"*:" },
+	{ 0xe417, @"*-:" },
+	{ 0xe417, @"*=" },
+	{ 0xe417, @"*-=" },
+	{ 0xe418, @";*" },
+	{ 0xe418, @";-*" },
+	{ 0xe418, @"*;" },
+	{ 0xe418, @"*-;" },
+	{ 0xe401, @":'(" },
+	{ 0xe401, @"='(" },
+	{ 0xe401, @")':" },
+	{ 0xe401, @")'=" },
+	{ 0xe401, @":&apos;(" },
+	{ 0xe401, @"=&apos;(" },
+	{ 0xe401, @")&apos;:" },
+	{ 0xe401, @")&apos;=" },
+	{ 0xe404, @":!" },
+	{ 0xe404, @":-!" },
+	{ 0xe404, @"=!" },
+	{ 0xe404, @"=-!" },
+	{ 0xe404, @"!:" },
+	{ 0xe404, @"!-:" },
+	{ 0xe404, @"!=" },
+	{ 0xe404, @"!-=" },
+	{ 0xe106, @"(<3" },
+	{ 0xe022, @"<3" },
+	{ 0xe023, @"</3" },
+	{ 0xe023, @"<\3" },
+	{ 0xe106, @"(&lt;3" },
+	{ 0xe022, @"&lt;3" },
+	{ 0xe023, @"&lt;/3" },
+	{ 0xe023, @"&lt;\3" },
+	{ 0xe411, @":\"o" },
+	{ 0xe411, @"=\"o" },
+	{ 0xe411, @":\"O" },
+	{ 0xe411, @"=\"O" },
+	{ 0xe411, @":&quot;o" },
+	{ 0xe411, @"=&quot;o" },
+	{ 0xe411, @":&quot;O" },
+	{ 0xe411, @"=&quot;O" },
+	{ 0xe412, @":'D" },
+	{ 0xe412, @"='D" },
+	{ 0xe412, @":&apos;D" },
+	{ 0xe412, @"=&apos;D" },
+	{ 0xe409, @"d:" },
+	{ 0xe409, @"d=" },
+	{ 0xe409, @"d-:" },
+	{ 0xe056, @"(:" },
+	{ 0xe056, @"(-:" },
+	{ 0xe056, @"(=" },
+	{ 0xe056, @"(-=" },
+	{ 0xe058, @"):" },
+	{ 0xe058, @")-:" },
+	{ 0xe058, @")=" },
+	{ 0xe058, @")-=" },
+	{ 0xe414, @"]:" },
+	{ 0xe414, @"]-:" },
+	{ 0xe414, @"]=" },
+	{ 0xe414, @"]-=" },
+	{ 0xe410, @":o" },
+	{ 0xe410, @":O" },
+	{ 0xe410, @":-o" },
+	{ 0xe410, @":-O" },
+	{ 0xe410, @"=o" },
+	{ 0xe410, @"=O" },
+	{ 0xe410, @"=-o" },
+	{ 0xe410, @"=-O" },
+	{ 0xe410, @"o:" },
+	{ 0xe410, @"O:" },
+	{ 0xe410, @"o-:" },
+	{ 0xe410, @"O-:" },
+	{ 0xe410, @"o=" },
+	{ 0xe410, @"O=" },
+	{ 0xe410, @"o-=" },
+	{ 0xe410, @"O-=" },
+	{ 0xe410, @":0" },
+	{ 0xe410, @":-0" },
+	{ 0xe410, @"=0" },
+	{ 0xe410, @"=-0" },
+	{ 0xe410, @"0:" },
+	{ 0xe410, @"0-:" },
+	{ 0xe410, @"0=" },
+	{ 0xe410, @"0-=" },
+	{ 0xe00e, @"(Y)" },
+	{ 0xe421, @"(N)" },
+	{ 0, nil }
+};
 
 #define is7Bit(ch) (((ch) & 0x80) == 0)
 #define isUTF8Tupel(ch) (((ch) & 0xE0) == 0xC0)
@@ -741,6 +897,47 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 	return ret;
 }
+
+#pragma mark -
+
+static NSCharacterSet *emojiCharacters;
+static NSCharacterSet *typicalEmoticonCharacters;
+
+- (BOOL) containsEmojiCharacters {
+	return [self containsEmojiCharactersInRange:NSMakeRange(0, [self length])];
+}
+
+- (BOOL) containsEmojiCharactersInRange:(NSRange) range {
+	return ([self rangeOfEmojiCharactersInRange:range].location != NSNotFound);
+}
+
+- (NSRange) rangeOfEmojiCharactersInRange:(NSRange) range {
+	if (!emojiCharacters)
+		emojiCharacters = [[NSCharacterSet characterSetWithRange:NSMakeRange(0xe001, (0xe53e - 0xe001))] retain];
+	return [self rangeOfCharacterFromSet:emojiCharacters options:NSLiteralSearch range:range];
+}
+
+- (BOOL) containsTypicalEmoticonCharacters {
+	if (!typicalEmoticonCharacters)
+		typicalEmoticonCharacters = [[NSCharacterSet characterSetWithCharactersInString:@";:=()^<"] retain];
+	return ([self rangeOfCharacterFromSet:typicalEmoticonCharacters options:NSLiteralSearch].location != NSNotFound);
+}
+
+- (NSString *) stringBySubstitutingEmojiForEmoticons {
+	if (![self containsEmojiCharacters])
+		return self;
+	NSMutableString *result = [self mutableCopyWithZone:nil];
+	[result substituteEmojiForEmoticons];
+	return [result autorelease];
+}
+
+- (NSString *) stringBySubstitutingEmoticonsForEmoji {
+	if (![self containsTypicalEmoticonCharacters])
+		return self;
+	NSMutableString *result = [self mutableCopyWithZone:nil];
+	[result substituteEmoticonsForEmoji];
+	return [result autorelease];
+}
 @end
 
 #pragma mark -
@@ -820,19 +1017,110 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 }
 
 - (void) stripXMLTags {
-	NSRange searchRange = NSMakeRange(0, self.length);
+	NSRange searchRange = NSMakeRange(0, [self length]);
 	while (1) {
 		NSRange tagStartRange = [self rangeOfString:@"<" options:NSLiteralSearch range:searchRange];
 		if (tagStartRange.location == NSNotFound)
 			break;
 
-		NSRange tagEndRange = [self rangeOfString:@">" options:NSLiteralSearch range:NSMakeRange(tagStartRange.location, (self.length - tagStartRange.location))];
+		NSRange tagEndRange = [self rangeOfString:@">" options:NSLiteralSearch range:NSMakeRange(tagStartRange.location, ([self length] - tagStartRange.location))];
 		if (tagEndRange.location == NSNotFound)
 			break;
 
 		[self deleteCharactersInRange:NSMakeRange(tagStartRange.location, (NSMaxRange(tagEndRange) - tagStartRange.location))];
 
-		searchRange = NSMakeRange(tagStartRange.location, (self.length - tagStartRange.location));
+		searchRange = NSMakeRange(tagStartRange.location, ([self length] - tagStartRange.location));
+	}
+}
+
+#pragma mark -
+
+- (void) substituteEmoticonsForEmoji {
+	NSRange range = NSMakeRange(0, [self length]);
+	[self substituteEmoticonsForEmojiInRange:&range];
+}
+
+- (void) substituteEmoticonsForEmojiInRange:(NSRangePointer) range {
+	if (![self containsTypicalEmoticonCharacters])
+		return;
+
+	NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
+	for (const struct EmojiEmoticonPair *entry = emoticonToEmojiList; entry && entry->emoticon; ++entry) {
+		if ([self rangeOfString:entry->emoticon options:NSLiteralSearch range:*range].location == NSNotFound)
+			continue;
+
+		NSMutableString *emoticon = [entry->emoticon mutableCopy];
+		[emoticon escapeCharactersInSet:escapedCharacters];
+
+		NSString *emojiString = [[NSString alloc] initWithCharacters:&entry->emoji length:1];
+		AGRegex *regex = [[AGRegex alloc] initWithPattern:[NSString stringWithFormat:@"(?<=\\s|^|[\ue001-\ue53e])%@(?=\\s|$|[\ue001-\ue53e])", emoticon]];
+
+		AGRegexMatch *match = [regex findInString:self range:*range];
+		while (match) {
+			[self replaceCharactersInRange:match.range withString:emojiString];
+			range->length -= (entry->emoticon.length - 1);
+
+			NSRange matchRange = NSMakeRange(match.range.location + 1, (NSMaxRange(*range) - match.range.location - 1));
+			if (!matchRange.length)
+				break;
+
+			match = [regex findInString:self range:matchRange];
+		}
+
+		[regex release];
+		[emoticon release];
+		[emojiString release];
+
+		// Check for the typical characters again, if none are found then there are no more emoticons to replace.
+		if ([self rangeOfCharacterFromSet:typicalEmoticonCharacters].location == NSNotFound)
+			break;
+	}
+}
+
+- (void) substituteEmojiForEmoticons {
+	NSRange range = NSMakeRange(0, [self length]);
+	[self substituteEmojiForEmoticonsInRange:&range encodeXMLSpecialCharactersAsEntities:NO];
+}
+
+- (void) substituteEmojiForEmoticonsInRange:(NSRangePointer) range {
+	[self substituteEmojiForEmoticonsInRange:range encodeXMLSpecialCharactersAsEntities:NO];
+}
+
+- (void) substituteEmojiForEmoticonsInRange:(NSRangePointer) range encodeXMLSpecialCharactersAsEntities:(BOOL) encode {
+	NSRange emojiRange = [self rangeOfEmojiCharactersInRange:*range];
+	while (emojiRange.location != NSNotFound) {
+		unichar currentCharacter = [self characterAtIndex:emojiRange.location];
+		for (const struct EmojiEmoticonPair *entry = emojiToEmoticonList; entry && entry->emoji; ++entry) {
+			if (entry->emoji == currentCharacter) {
+				NSString *emoticon = entry->emoticon;
+				if (encode) emoticon = [emoticon stringByEncodingXMLSpecialCharactersAsEntities];
+
+				NSString *replacement = nil;
+				if (emojiRange.location == 0 && (emojiRange.location + 1) == [self length])
+					replacement = [emoticon retain];
+				else if (emojiRange.location > 0 && (emojiRange.location + 1) == [self length] && [self characterAtIndex:(emojiRange.location - 1)] == ' ')
+					replacement = [emoticon retain];
+				else if ([self characterAtIndex:(emojiRange.location - 1)] == ' ' && [self characterAtIndex:(emojiRange.location + 1)] == ' ')
+					replacement = [emoticon retain];
+				else if (emojiRange.location == 0 || [self characterAtIndex:(emojiRange.location - 1)] == ' ')
+					replacement = [[NSString alloc] initWithFormat:@"%@ ", emoticon];
+				else if ((emojiRange.location + 1) == [self length] || [self characterAtIndex:(emojiRange.location + 1)] == ' ')
+					replacement = [[NSString alloc] initWithFormat:@" %@", emoticon];
+				else replacement = [[NSString alloc] initWithFormat:@" %@ ", emoticon];
+
+				[self replaceCharactersInRange:NSMakeRange(emojiRange.location, 1) withString:replacement];
+
+				range->length += ([replacement length] - 1);
+
+				[replacement release];
+				break;
+			}
+		}
+
+		if (emojiRange.location >= NSMaxRange(*range))
+			return;
+
+		emojiRange = [self rangeOfEmojiCharactersInRange:NSMakeRange(emojiRange.location + 1, (NSMaxRange(*range) - emojiRange.location - 1))];
 	}
 }
 @end

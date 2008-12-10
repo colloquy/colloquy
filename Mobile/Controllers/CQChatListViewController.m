@@ -119,6 +119,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 	NSString *transformedMessageString = [messageString stringByStrippingXMLTags];
 	transformedMessageString = [transformedMessageString stringByDecodingXMLSpecialCharacterEntities];
+	transformedMessageString = [transformedMessageString stringBySubstitutingEmoticonsForEmoji];
 
 	BOOL action = [[info objectForKey:@"action"] boolValue];
 
@@ -186,10 +187,12 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-	if ([chatViewController isMemberOfClass:[CQChatRoomController class]])
+	if ([chatViewController isMemberOfClass:[CQChatRoomController class]]) {
 		cell.removeConfirmationText = NSLocalizedString(@"Leave", @"Leave remove confirmation button title");
-	else if ([chatViewController isMemberOfClass:[CQDirectChatController class]])
+	} else if ([chatViewController isMemberOfClass:[CQDirectChatController class]]) {
 		cell.removeConfirmationText = NSLocalizedString(@"Close", @"Close remove confirmation button title");
+		cell.showsUserInMessagePreviews = NO;
+	}
 
 	if ([chatViewController isKindOfClass:[CQDirectChatController class]]) {
 		CQDirectChatController *directChatViewController = (CQDirectChatController *)chatViewController;

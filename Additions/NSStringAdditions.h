@@ -25,6 +25,15 @@ BOOL isValidUTF8( const char *s, unsigned len );
 - (NSString *) stringByStrippingXMLTags;
 
 - (NSString *) stringWithDomainNameSegmentOfAddress;
+
+- (BOOL) containsEmojiCharacters;
+- (BOOL) containsEmojiCharactersInRange:(NSRange) range;
+- (NSRange) rangeOfEmojiCharactersInRange:(NSRange) range;
+
+- (BOOL) containsTypicalEmoticonCharacters;
+
+- (NSString *) stringBySubstitutingEmojiForEmoticons;
+- (NSString *) stringBySubstitutingEmoticonsForEmoji;
 @end
 
 @interface NSMutableString (NSMutableStringAdditions)
@@ -38,4 +47,11 @@ BOOL isValidUTF8( const char *s, unsigned len );
 
 - (void) stripIllegalXMLCharacters;
 - (void) stripXMLTags;
+
+- (void) substituteEmoticonsForEmoji;
+- (void) substituteEmoticonsForEmojiInRange:(NSRangePointer) range;
+
+- (void) substituteEmojiForEmoticons;
+- (void) substituteEmojiForEmoticonsInRange:(NSRangePointer) range;
+- (void) substituteEmojiForEmoticonsInRange:(NSRangePointer) range encodeXMLSpecialCharactersAsEntities:(BOOL) encode;
 @end

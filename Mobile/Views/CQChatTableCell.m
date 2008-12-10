@@ -24,6 +24,7 @@
 	_nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 
 	_maximumMessagePreviews = 2;
+	_showsUserInMessagePreviews = YES;
 
 	[self.contentView addSubview:_iconImageView];
 	[self.contentView addSubview:_nameLabel];
@@ -53,6 +54,7 @@
 }
 
 @synthesize maximumMessagePreviews = _maximumMessagePreviews;
+@synthesize showsUserInMessagePreviews = _showsUserInMessagePreviews;
 
 - (NSString *) name {
 	return _nameLabel.text;
@@ -97,7 +99,9 @@
 
 	if (action)
 		label.text = [NSString stringWithFormat:@"%C %@ %@", 0x2022, user.displayName, message];
-	else label.text = [NSString stringWithFormat:@"%@: %@", user.displayName, message];
+	else if (_showsUserInMessagePreviews)
+		label.text = [NSString stringWithFormat:@"%@: %@", user.displayName, message];
+	else label.text = message;
 
 	NSTimeInterval animationDelay = 0.;
 
@@ -197,6 +201,8 @@
 	self.name = @"";
 	self.icon = nil;
 	self.removeConfirmationText = nil;
+	_showsUserInMessagePreviews = YES;
+	_maximumMessagePreviews = 2;
 }
 
 - (void) layoutSubviews {

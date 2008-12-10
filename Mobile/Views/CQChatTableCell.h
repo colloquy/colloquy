@@ -7,6 +7,7 @@
 	NSString *_removeConfirmationText;
 	NSMutableArray *_chatPreviewLabels;
 	NSUInteger _maximumMessagePreviews;
+	BOOL _showsUserInMessagePreviews;
 }
 - (void) takeValuesFromChatViewController:(id <CQChatViewController>) controller;
 
@@ -15,6 +16,7 @@
 
 @property (nonatomic, copy) NSString *removeConfirmationText;
 @property (nonatomic) NSUInteger maximumMessagePreviews;
+@property (nonatomic) BOOL showsUserInMessagePreviews;
 
 - (void) addMessagePreview:(NSString *) message fromUser:(MVChatUser *) user asAction:(BOOL) action animated:(BOOL) animated;
 @end
