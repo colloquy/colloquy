@@ -233,10 +233,15 @@
 	frame.size.width = contentRect.size.width - frame.origin.x - (!self.showingDeleteConfirmation ? RIGHT_MARGIN : 0.);
 	_nameLabel.frame = frame;
 
+	CGFloat newVerticalOrigin = frame.origin.y + frame.size.height - LABEL_SPACING;
 	for (UILabel *label in _chatPreviewLabels) {
 		CGRect labelFrame = label.frame;
+		labelFrame.origin.x = frame.origin.x;
+		labelFrame.origin.y = newVerticalOrigin;
 		labelFrame.size.width = frame.size.width;
 		label.frame = labelFrame;
+
+		newVerticalOrigin = labelFrame.origin.y + labelFrame.size.height - LABEL_SPACING;
 	}
 }
 @end
