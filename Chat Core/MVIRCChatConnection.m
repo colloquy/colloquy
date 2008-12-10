@@ -1757,7 +1757,7 @@ end:
 			NSString *processor = @"Unknown Architecture";
 #endif
 
-			NSString *reply = [[NSString allocWithZone:nil] initWithFormat:@"%@ %@ (%@) - %@ %@ (%@) - %@", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [clientVersion objectForKey:@"CFBundleVersion"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductUserVisibleVersion"], processor, [clientVersion objectForKey:@"MVChatCoreCTCPVersionReplyInfo"]];
+			NSString *reply = [[NSString allocWithZone:nil] initWithFormat:@"%@ %@ (%@) - %@ %@ (%@) - %@", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [clientVersion objectForKey:@"CFBundleVersion"], [systemVersion objectForKey:@"ProductName"], ([systemVersion objectForKey:@"ProductUserVisibleVersion"] || [systemVersion objectForKey:@"ProductVersion"]), processor, [clientVersion objectForKey:@"MVChatCoreCTCPVersionReplyInfo"]];
 			[sender sendSubcodeReply:command withArguments:reply];
 
 			[reply release];
