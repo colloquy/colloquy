@@ -45,7 +45,8 @@
 			free( chars );
 
 			if( i > 0 ) {
-				*stringValue = [source substringWithRange:NSMakeRange( location, i )];
+				if( stringValue )
+					*stringValue = [source substringWithRange:NSMakeRange( location, i )];
 				[self setScanLocation:( location + i )];
 				return YES;
 			}
