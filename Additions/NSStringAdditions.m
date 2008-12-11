@@ -900,6 +900,39 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
+- (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(unsigned long) limit remainingString:(NSString **) remainder {
+	if( [self rangeOfCharacterFromSet:separator].location == NSNotFound )
+		return [NSArray arrayWithObject:self];
+
+	if( ! limit ) limit = ULONG_MAX;
+
+	NSScanner *scanner = [[NSScanner allocWithZone:nil] initWithString:self];
+	[scanner setCharactersToBeSkipped:nil];
+
+	NSMutableArray *result = [[NSMutableArray allocWithZone:nil] init];
+
+	unsigned long count = 0;
+	NSString *component = @"";
+	while( ! [scanner isAtEnd] ) {
+		[scanner scanUpToCharactersFromSet:separator intoString:&component];
+		[scanner scanCharactersFromSet:separator intoString:NULL];
+
+		[result addObject:component];
+
+		if (++count >= limit)
+			break;
+	}
+
+	if( remainder )
+		*remainder = [self substringFromIndex:[scanner scanLocation]];
+
+	[scanner release];
+
+	return [result autorelease];
+}
+
+#pragma mark -
+
 static NSCharacterSet *emojiCharacters;
 static NSCharacterSet *typicalEmoticonCharacters;
 
