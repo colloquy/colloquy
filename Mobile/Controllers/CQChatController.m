@@ -108,10 +108,15 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 - (void) _gotRoomMessage:(NSNotification *) notification {
 	// We do this here to make sure we catch early messages right when we join (this includes dircproxy's dump).
 	MVChatRoom *room = notification.object;
+	if (![[CQConnectionsController defaultController] managesConnection:room.connection])
+		return;
+
 	CQChatRoomController *controller = [self chatViewControllerForRoom:room ifExists:NO];
 	[controller addMessage:notification.userInfo];
 
-	[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
+	MVChatUser *sender = [notification.userInfo objectForKey:@"user"];
+	if (!sender.localUser)
+		[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
 }
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {
@@ -119,8 +124,11 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	if (![[CQConnectionsController defaultController] managesConnection:user.connection])
 		return;
 
-	BOOL hideFromUser = NO;
+	MVChatUser *sender = user;
+	if ([notification.userInfo objectForKey:@"target"])
+		user = [notification.userInfo objectForKey:@"target"];
 
+	BOOL hideFromUser = NO;
 	if ([[notification.userInfo objectForKey:@"notice"] boolValue]) {
 		if (![self chatViewControllerForUser:user ifExists:YES])
 			hideFromUser = YES;
@@ -133,7 +141,8 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 		CQDirectChatController *controller = [self chatViewControllerForUser:user ifExists:NO userInitiated:NO];
 		[controller addMessage:notification.userInfo];
 
-		[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
+		if (!sender.localUser)
+			[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
 	}
 }
 
