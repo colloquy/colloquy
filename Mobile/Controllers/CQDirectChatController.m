@@ -5,6 +5,7 @@
 #import "CQChatTableCell.h"
 #import "CQChatInputBar.h"
 #import "CQStyleView.h"
+#import "NSScannerAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatUser.h>
@@ -143,7 +144,7 @@
 
 		[scanner scanString:@"/" intoString:nil];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&command];
-		[scanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:NULL];
+		[scanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] maxLength:1 intoString:NULL];
 
 		arguments = [text substringFromIndex:scanner.scanLocation];
 

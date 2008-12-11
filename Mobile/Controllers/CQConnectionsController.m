@@ -7,6 +7,7 @@
 #import "CQConnectionEditViewController.h"
 #import "CQConnectionsViewController.h"
 #import "CQKeychain.h"
+#import "NSScannerAdditions.h"
 #import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
@@ -194,6 +195,24 @@
 
 - (void) _willConnect:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
+
+	for (NSString *fullCommand in connection.automaticCommands) {
+		NSScanner *scanner = [NSScanner scannerWithString:fullCommand];
+		[scanner setCharactersToBeSkipped:nil];
+
+		NSString *command = nil;
+		NSString *arguments = nil;
+
+		[scanner scanString:@"/" intoString:nil];
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&command];
+		[scanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] maxLength:1 intoString:NULL];
+
+		arguments = [fullCommand substringFromIndex:scanner.scanLocation];
+		arguments = [arguments stringByReplacingOccurrencesOfString:@"%@" withString:connection.preferredNickname];
+
+		[connection sendCommand:command withArguments:arguments];
+	}
+
 	NSArray *rooms = connection.automaticJoinedRooms;
 	if (rooms.count)
 		[connection joinChatRoomsNamed:rooms];
