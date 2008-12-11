@@ -44,7 +44,8 @@
 - (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender forRoom:(MVChatRoom *) room;
 
 + (NSData *) _flattenedIRCDataForMessage:(MVChatString *) message withEncoding:(NSStringEncoding) enc andChatFormat:(MVChatMessageFormat) format;
-- (void) _sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) msgEncoding toTarget:(id) target withAttributes:(NSDictionary *) attributes;
+- (void) _sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) msgEncoding toTarget:(id) target withTargetPrefix:(NSString *) targetPrefix withAttributes:(NSDictionary *) attributes localEcho:(BOOL) echo;
+- (void) _sendCommand:(NSString *) command withArguments:(MVChatString *) arguments withEncoding:(NSStringEncoding) encoding toTarget:(id) target;
 
 - (void) _processErrorCode:(int) errorCode withContext:(char *) context;
 
@@ -65,6 +66,7 @@
 
 - (void) _resetSupportedFeatures;
 
+- (NSCharacterSet *) _nicknamePrefixes;
 - (MVChatRoomMemberMode) _modeForNicknamePrefixCharacter:(unichar) character;
 - (MVChatRoomMemberMode) _stripModePrefixesFromNickname:(NSString **) nickname;
 

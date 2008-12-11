@@ -1231,9 +1231,18 @@ static SilcClientOperations silcClientOps = {
 
 #pragma mark -
 
-- (void) sendUserCommand:(NSString *) command withArguments:(NSString *) args {
-	if( args && [args length] > 0 )
-		[self sendRawMessage:[NSString stringWithFormat:@"%@ %@", command, args]];
+- (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments {
+#if USE(ATTRIBUTED_CHAT_STRING)
+	NSString *argumentsString = [arguments string];
+#elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
+	NSString *argumentsString = arguments;
+#endif
+
+	if( [command hasPrefix:@"/"] )
+		command = [command substringFromIndex:1];
+
+	if( argumentsString && [argumentsString length] > 0 )
+		[self sendRawMessage:[NSString stringWithFormat:@"%@ %@", command, argumentsString]];
 	else
 		[self sendRawMessage:command];
 }

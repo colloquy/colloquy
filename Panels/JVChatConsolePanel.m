@@ -359,9 +359,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 
 				if( ! [[results lastObject] boolValue] )
-					[[self connection] sendUserCommand:command withArguments:[arguments string]];
+					[[self connection] sendCommand:command withArguments:arguments];
 			} else {
-				[[self connection] sendUserCommand:[subMsg string] withArguments:nil];
+				[[self connection] sendCommand:[subMsg string] withArguments:nil];
 			}
 		}
 		if( range.length ) range.location++;

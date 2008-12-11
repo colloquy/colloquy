@@ -227,6 +227,17 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 #pragma mark -
 
+- (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments {
+	[self sendCommand:command withArguments:arguments withEncoding:[self encoding]];
+}
+
+- (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments withEncoding:(NSStringEncoding) encoding {
+	// subclass this method, don't call super
+	[self doesNotRecognizeSelector:_cmd];
+}
+
+#pragma mark -
+
 - (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments {
 // subclass this method, if needed
 }

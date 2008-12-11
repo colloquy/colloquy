@@ -363,7 +363,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-- (void) sendUserCommand:(NSString *) command withArguments:(NSString *) args;
+- (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments;
 
 #pragma mark -
 

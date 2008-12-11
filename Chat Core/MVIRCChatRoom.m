@@ -61,7 +61,12 @@
 
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) msgEncoding withAttributes:(NSDictionary *) attributes {
 	NSParameterAssert( message != nil );
-	[[self connection] _sendMessage:message withEncoding:msgEncoding toTarget:self withAttributes:attributes];
+	[[self connection] _sendMessage:message withEncoding:msgEncoding toTarget:self withTargetPrefix:nil withAttributes:attributes localEcho:NO];
+}
+
+- (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments withEncoding:(NSStringEncoding) encoding {
+	NSParameterAssert( command != nil );
+	[[self connection] _sendCommand:command withArguments:arguments withEncoding:encoding toTarget:self];
 }
 
 #pragma mark -

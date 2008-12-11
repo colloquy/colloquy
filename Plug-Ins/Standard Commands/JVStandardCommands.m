@@ -26,6 +26,12 @@
 
 #pragma mark -
 
+@interface MVChatConnection (MVChatConnectionPrivate)
+- (NSCharacterSet *) _nicknamePrefixes;
+@end
+
+#pragma mark -
+
 @implementation JVStandardCommands
 - (id) initWithManager:(MVChatPluginManager *) manager {
 	return ( self = [super init] );
@@ -551,27 +557,33 @@
 	show = ( ! [msg length] ? YES : show );
 	show = ( always ? YES : show );
 
-	NSCharacterSet *chanSet = [connection chatRoomNamePrefixes];
 	JVDirectChatPanel *chatView = nil;
 
 	// this is an IRC specific command for sending to room operators only.
-	if( [connection type] == MVChatConnectionIRCType && [to hasPrefix:@"@"] && [to length] > 1 ) {
-		[connection sendRawMessage:[NSString stringWithFormat:@"PRIVMSG %@ :%@", to, [msg string]]];
+	if( [connection type] == MVChatConnectionIRCType ) {
+		NSScanner *scanner = [NSScanner scannerWithString:to];
+		[scanner setCharactersToBeSkipped:nil];
+		[scanner scanCharactersFromSet:[connection _nicknamePrefixes] intoString:NULL];
 
-		to = [to substringFromIndex:1];
+		if( [scanner scanLocation] ) {
+			NSString *roomTargetName = [to substringFromIndex:[scanner scanLocation]];
+			if( [roomTargetName length] > 1 && [[connection chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] ) {
+				[connection sendRawMessage:[NSString stringWithFormat:@"PRIVMSG %@ :%@", to, [msg string]]];
 
-		MVChatRoom *room = [connection joinedChatRoomWithName:to];
-		if( room ) chatView = [[JVChatController defaultController] chatViewControllerForRoom:room ifExists:YES];
+				MVChatRoom *room = [connection joinedChatRoomWithName:roomTargetName];
+				if( room ) chatView = [[JVChatController defaultController] chatViewControllerForRoom:room ifExists:YES];
 
-		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:msg sender:[connection localUser]];
-		[chatView sendMessage:cmessage];
-		[chatView echoSentMessageToDisplay:cmessage];
+				JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:msg sender:[connection localUser]];
+				[chatView sendMessage:cmessage];
+				[chatView echoSentMessageToDisplay:cmessage];
 
-		return YES;
+				return YES;
+			}
+		}
 	}
 
 	MVChatRoom *room = nil;
-	if( ! [command caseInsensitiveCompare:@"msg"] && ( ! chanSet || [chanSet characterIsMember:[to characterAtIndex:0]] ) ) {
+	if( [command isCaseInsensitiveEqualToString:@"msg"] && [to length] > 1 && [[connection chatRoomNamePrefixes] characterIsMember:[to characterAtIndex:0]] ) {
 		room = [connection joinedChatRoomWithName:to];
 		if( room ) chatView = [[JVChatController defaultController] chatViewControllerForRoom:room ifExists:YES];
 	}

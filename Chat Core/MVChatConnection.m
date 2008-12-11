@@ -586,8 +586,8 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) sendUserCommand:(NSString *) command withArguments:(NSString *) args {
-// subclass this method
+- (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments {
+	// subclass this method, don't call super
 	[self doesNotRecognizeSelector:_cmd];
 }
 

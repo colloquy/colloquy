@@ -1034,7 +1034,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 				arguments = [subMsg attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], range.location - [scanner scanLocation] )];
 
 				if( ! ( handled = [self processUserCommand:command withArguments:arguments] ) && [[self connection] isConnected] )
-					[[self connection] sendUserCommand:command withArguments:[arguments string]];
+					[[self connection] sendCommand:command withArguments:arguments];
 			} else {
 				if( [[subMsg string] hasPrefix:@"//"] ) [subMsg deleteCharactersInRange:NSMakeRange( 0, 1 )];
 				if( [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && ! action ) {

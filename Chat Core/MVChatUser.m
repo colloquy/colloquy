@@ -413,6 +413,15 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	[self doesNotRecognizeSelector:_cmd];
 }
 
+#pragma mark -
+
+- (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments withEncoding:(NSStringEncoding) encoding {
+	// subclass this method, don't call super
+	[self doesNotRecognizeSelector:_cmd];
+}
+
+#pragma mark -
+
 - (MVUploadFileTransfer *) sendFile:(NSString *) path passively:(BOOL) passive {
 	return [MVUploadFileTransfer transferWithSourceFile:path toUser:self passively:passive];
 }

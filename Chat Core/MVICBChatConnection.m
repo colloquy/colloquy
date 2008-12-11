@@ -261,9 +261,15 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	}
 }
 
-- (void) sendUserCommand:(NSString *) command withArguments:(NSString *) args {
+- (void) sendCommand:(NSString *) command withArguments:(MVChatString *) arguments {
+#if USE(ATTRIBUTED_CHAT_STRING)
+	NSString *argumentsString = [arguments string];
+#elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
+	NSString *argumentsString = arguments;
+#endif
+
 	if( [command compare:@"brick" ] == 0 ) {
-		[self ctsCommandPersonal:@"server" withMessage:[NSString stringWithFormat:@"%@ %@", command, args]];
+		[self ctsCommandPersonal:@"server" withMessage:[NSString stringWithFormat:@"%@ %@", command, argumentsString]];
 	} else {
 		// XXX Unknown command.
 	}
