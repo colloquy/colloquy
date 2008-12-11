@@ -130,13 +130,34 @@
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text {
 	_didSendRecently = YES;
 
-	[_target sendMessage:text withEncoding:NSUTF8StringEncoding asAction:NO];
-
-	NSData *messageData = [text dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-	[self addMessage:messageData fromUser:self.connection.localUser asAction:NO withIdentifier:@"" andType:CQChatMessageNormalType];
-
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetDidSendRecently) object:nil];
 	[self performSelector:@selector(resetDidSendRecently) withObject:nil afterDelay:0.5];
+
+	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"]) {
+		// Send as a command.
+		NSScanner *scanner = [NSScanner scannerWithString:text];
+		[scanner setCharactersToBeSkipped:nil];
+
+		NSString *command = nil;
+		NSString *arguments = nil;
+
+		[scanner scanString:@"/" intoString:nil];
+		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&command];
+		[scanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:NULL];
+
+		arguments = [text substringFromIndex:scanner.scanLocation];
+
+		[_target sendCommand:command withArguments:arguments withEncoding:NSUTF8StringEncoding];
+	} else {
+		// Send as a message, strip the first forward slash if it exists.
+		if ([text hasPrefix:@"/"])
+			text = [text substringFromIndex:1];
+
+		[_target sendMessage:text withEncoding:NSUTF8StringEncoding asAction:NO];
+
+		NSData *messageData = [text dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+		[self addMessage:messageData fromUser:self.connection.localUser asAction:NO withIdentifier:@"" andType:CQChatMessageNormalType];
+	}
 
 	return YES;
 }
