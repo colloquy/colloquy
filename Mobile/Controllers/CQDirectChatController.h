@@ -25,7 +25,6 @@
 	BOOL _showingAlert;
 	BOOL _allowEditingToEnd;
 	BOOL _didSendRecently;
-	BOOL _cantSendMessages;
 }
 - (id) initWithTarget:(id) target;
 

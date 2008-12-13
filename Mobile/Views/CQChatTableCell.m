@@ -54,16 +54,7 @@
 - (void) takeValuesFromChatViewController:(id <CQChatViewController>) controller {
 	self.name = controller.title;
 	self.icon = controller.icon;
-
-	BOOL available = controller.connection.connected;
-	if ([controller.target isKindOfClass:[MVChatRoom class]]) {
-		available = (available && ((MVChatRoom *)controller.target).joined);
-	} else if ([controller.target isKindOfClass:[MVChatUser class]]) {
-		MVChatUser *user = (MVChatUser *)controller.target;
-		available = (available && (user.status == MVChatUserAvailableStatus || user.status == MVChatUserAwayStatus));
-	}
-
-	self.available = available;
+	self.available = controller.available;
 }
 
 @synthesize maximumMessagePreviews = _maximumMessagePreviews;

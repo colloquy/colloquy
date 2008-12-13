@@ -40,6 +40,7 @@
 @property (nonatomic, readonly) id target;
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) UIImage *icon;
+@property (nonatomic, readonly) BOOL available;
 @optional
 - (void) close;
 @end

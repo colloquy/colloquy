@@ -24,14 +24,8 @@
 
 	_target = [target retain];
 
-	_cantSendMessages = !self.connection.connected;
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_connectionDidConnect:) name:MVChatConnectionDidConnectNotification object:self.connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_connectionDidDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
-
 	if ([_target isKindOfClass:[MVChatUser class]]) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:_target];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userStatusDidChange:) name:MVChatUserStatusChangedNotification object:_target];
 
 		_watchRule = [[MVChatUserWatchRule alloc] init];
 		_watchRule.nickname = self.user.nickname;
@@ -84,6 +78,11 @@
 	return self.user.connection;
 }
 
+- (BOOL) available {
+	MVChatUserStatus status = self.user.status;
+	return (self.connection.connected && (status == MVChatUserAvailableStatus || status == MVChatUserAwayStatus));
+}
+
 #pragma mark -
 
 - (NSUInteger) unreadMessages {
@@ -123,6 +122,7 @@
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
+	_active = NO;
 	_allowEditingToEnd = YES;
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
@@ -159,7 +159,7 @@
 }
 
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text {
-	if (_cantSendMessages) {
+	if (!self.available) {
 		[self _showCantSendMessagesWarning];
 		return NO;
 	}
@@ -381,20 +381,6 @@
 	[alert show];
 
 	[alert release];
-}
-
-- (void) _connectionDidConnect:(NSNotification *) notification {
-	MVChatUserStatus status = self.user.status;
-	_cantSendMessages = (status != MVChatUserAvailableStatus && status != MVChatUserAwayStatus);
-}
-
-- (void) _connectionDidDisconnect:(NSNotification *) notification {
-	_cantSendMessages = YES;
-}
-
-- (void) _userStatusDidChange:(NSNotification *) notification {
-	MVChatUserStatus status = self.user.status;
-	_cantSendMessages = (!self.connection.connected || (status != MVChatUserAvailableStatus && status != MVChatUserAwayStatus));
 }
 
 - (void) _userNicknameDidChange:(NSNotification *) notification {

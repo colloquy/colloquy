@@ -19,7 +19,6 @@
 	self.navigationItem.rightBarButtonItem = membersItem;
 	[membersItem release];
 
-	_cantSendMessages = (!self.connection || !self.room.joined);
 	_orderedMembers = [[NSMutableArray alloc] initWithCapacity:100];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberNicknameChanged:) name:MVChatUserNicknameChangedNotification object:nil];
@@ -28,9 +27,6 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberJoined:) name:MVChatRoomUserJoinedNotification object:target];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberParted:) name:MVChatRoomUserPartedNotification object:target];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberKicked:) name:MVChatRoomUserKickedNotification object:target];
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_kicked:) name:MVChatRoomKickedNotification object:target];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_partedRoom:) name:MVChatRoomPartedNotification object:target];
 
 	return self;
 }
@@ -75,17 +71,19 @@
 	return self.room.connection;
 }
 
+- (BOOL) available {
+	return (self.connection && self.room.joined);
+}
+
 #pragma mark -
 
 - (void) close {
-	[[self room] part];
+	[self.room part];
 }
 
 #pragma mark -
 
 - (void) joined {
-	_cantSendMessages = NO;
-
 	[_orderedMembers removeAllObjects];
 	[_orderedMembers addObjectsFromArray:[self.room.memberUsers allObjects]];
 
@@ -296,14 +294,6 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 }
 
 #pragma mark -
-
-- (void) _partedRoom:(NSNotification *) notification {
-	_cantSendMessages = YES;
-}
-
-- (void) _kicked:(NSNotification *) notification {
-	_cantSendMessages = YES;
-}
 
 - (void) _showCantSendMessagesWarning {
 	UIAlertView *alert = [[UIAlertView alloc] init];
