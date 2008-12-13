@@ -9,6 +9,13 @@
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatUser.h>
+#import <ChatCore/MVChatUserWatchRule.h>
+
+@interface CQDirectChatController (CQDirectChatControllerPrivate)
+- (void) _showCantSendMessagesWarning;
+@end
+
+#pragma mark -
 
 @implementation CQDirectChatController
 - (id) initWithTarget:(id) target {
@@ -17,15 +24,35 @@
 
 	_target = [target retain];
 
+	_cantSendMessages = !self.connection.connected;
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_connectionDidConnect:) name:MVChatConnectionDidConnectNotification object:self.connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_connectionDidDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
+
+	if ([_target isKindOfClass:[MVChatUser class]]) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:_target];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userStatusDidChange:) name:MVChatUserStatusChangedNotification object:_target];
+
+		_watchRule = [[MVChatUserWatchRule alloc] init];
+		_watchRule.nickname = self.user.nickname;
+
+		[self.connection addChatUserWatchRule:_watchRule];
+	}
+
 	return self;
 }
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	if (_watchRule)
+		[self.connection removeChatUserWatchRule:_watchRule];
+
+	[_watchRule release];
 	[_recentMessages release];
 	[_pendingMessages release];
 	[_target release];
+
 	[super dealloc];
 }
 
@@ -119,6 +146,9 @@
 }
 
 - (BOOL) chatInputBarShouldEndEditing:(CQChatInputBar *) chatInputBar {
+	if (_showingAlert)
+		return NO;
+
 	if (_allowEditingToEnd)
 		return YES;
 
@@ -129,6 +159,11 @@
 }
 
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text {
+	if (_cantSendMessages) {
+		[self _showCantSendMessagesWarning];
+		return NO;
+	}
+
 	_didSendRecently = YES;
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetDidSendRecently) object:nil];
@@ -302,5 +337,74 @@
 	}
 
 	[transcriptView addMessage:info];
+}
+
+#pragma mark -
+
+- (void) willPresentAlertView:(UIAlertView *) alertView {
+	_showingAlert = YES;
+}
+
+- (void) alertView:(UIAlertView *) alertView didDismissWithButtonIndex:(NSInteger) buttonIndex {
+	_showingAlert = NO;
+}
+
+- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+	if (alertView.tag != 1 || buttonIndex != 0)
+		return;
+
+	[self.connection connect];
+}
+
+#pragma mark -
+
+- (void) _showCantSendMessagesWarning {
+	UIAlertView *alert = [[UIAlertView alloc] init];
+	alert.delegate = self;
+	alert.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
+
+	if (!self.connection.connected) {
+		alert.tag = 1;
+		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to user because server is disconnected alert message");
+		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];
+		alert.cancelButtonIndex = 1;
+	} else if (self.user.status != MVChatUserAvailableStatus && self.user.status != MVChatUserAwayStatus) {
+		alert.message = NSLocalizedString(@"The user is not connected.", @"Can't send message to user because they are disconnected alert message");
+		alert.cancelButtonIndex = 0;
+	} else {
+		[alert release];
+		return;
+	}
+
+	[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
+
+	[alert show];
+
+	[alert release];
+}
+
+- (void) _connectionDidConnect:(NSNotification *) notification {
+	MVChatUserStatus status = self.user.status;
+	_cantSendMessages = (status != MVChatUserAvailableStatus && status != MVChatUserAwayStatus);
+}
+
+- (void) _connectionDidDisconnect:(NSNotification *) notification {
+	_cantSendMessages = YES;
+}
+
+- (void) _userStatusDidChange:(NSNotification *) notification {
+	MVChatUserStatus status = self.user.status;
+	_cantSendMessages = (!self.connection.connected || (status != MVChatUserAvailableStatus && status != MVChatUserAwayStatus));
+}
+
+- (void) _userNicknameDidChange:(NSNotification *) notification {
+	if (!_watchRule)
+		return;
+
+	[self.connection removeChatUserWatchRule:_watchRule];
+
+	_watchRule.nickname = self.user.nickname;
+
+	[self.connection addChatUserWatchRule:_watchRule];
 }
 @end

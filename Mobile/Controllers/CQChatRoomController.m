@@ -2,6 +2,7 @@
 
 #import "CQChatUserListViewController.h"
 
+#import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
@@ -18,6 +19,7 @@
 	self.navigationItem.rightBarButtonItem = membersItem;
 	[membersItem release];
 
+	_cantSendMessages = (!self.connection || !self.room.joined);
 	_orderedMembers = [[NSMutableArray alloc] initWithCapacity:100];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberNicknameChanged:) name:MVChatUserNicknameChangedNotification object:nil];
@@ -26,6 +28,9 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberJoined:) name:MVChatRoomUserJoinedNotification object:target];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberParted:) name:MVChatRoomUserPartedNotification object:target];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberKicked:) name:MVChatRoomUserKickedNotification object:target];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_kicked:) name:MVChatRoomKickedNotification object:target];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_partedRoom:) name:MVChatRoomPartedNotification object:target];
 
 	return self;
 }
@@ -79,10 +84,12 @@
 #pragma mark -
 
 - (void) joined {
+	_cantSendMessages = NO;
+
 	[_orderedMembers removeAllObjects];
 	[_orderedMembers addObjectsFromArray:[self.room.memberUsers allObjects]];
 
-	[self _sortMembers];
+	_membersNeedSorted = YES;
 }
 
 - (void) showMembers {
@@ -272,5 +279,60 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 
 	[_orderedMembers removeObjectAtIndex:index];
 	[_currentUserListViewController removeUserAtIndex:index];
+}
+
+#pragma mark -
+
+- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+	if (alertView.tag != 2) {
+		[super alertView:alertView clickedButtonAtIndex:buttonIndex];
+		return;
+	}
+
+	if (buttonIndex != 0)
+		return;
+
+	[self.room join];
+}
+
+#pragma mark -
+
+- (void) _partedRoom:(NSNotification *) notification {
+	_cantSendMessages = YES;
+}
+
+- (void) _kicked:(NSNotification *) notification {
+	_cantSendMessages = YES;
+}
+
+- (void) _showCantSendMessagesWarning {
+	UIAlertView *alert = [[UIAlertView alloc] init];
+	alert.delegate = self;
+	alert.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
+
+	if (!self.connection.connected) {
+		alert.tag = 1;
+		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to room because server is disconnected alert message");
+		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];
+	} else if (!self.room.joined) {
+		alert.tag = 2;
+		alert.message = NSLocalizedString(@"You are not a room member,\nrejoin and try again.", @"Can't send message to room because not a member alert message");
+		[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join alert button title")];
+	} else {
+		[alert release];
+		return;
+	}
+
+	[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
+
+	alert.cancelButtonIndex = 1;
+
+	[alert show];
+
+	[alert release];
+}
+
+- (void) _connectionDidConnect:(NSNotification *) notification {
+	[self.room join];
 }
 @end

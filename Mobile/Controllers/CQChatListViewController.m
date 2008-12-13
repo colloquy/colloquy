@@ -7,6 +7,8 @@
 #import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatRoom.h>
+#import <ChatCore/MVChatUser.h>
 
 @implementation CQChatListViewController
 - (id) init {
@@ -21,10 +23,21 @@
 
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshConnectionChatCells:) name:MVChatConnectionDidConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshConnectionChatCells:) name:MVChatConnectionDidDisconnectNotification object:nil];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshChatCell:) name:MVChatRoomJoinedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshChatCell:) name:MVChatRoomPartedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshChatCell:) name:MVChatRoomKickedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshChatCell:) name:MVChatUserNicknameChangedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshChatCell:) name:MVChatUserStatusChangedNotification object:nil];
+
 	return self;
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[super dealloc];
 }
 
@@ -126,6 +139,35 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	[cell addMessagePreview:transformedMessageString fromUser:user asAction:action animated:animated];
 
 	[messageString release];
+}
+
+- (void) _refreshConnectionChatCells:(NSNotification *) notification {
+	MVChatConnection *connection = notification.object;
+	NSUInteger sectionIndex = sectionIndexForConnection(connection);
+	if (sectionIndex == NSNotFound)
+		return;
+
+	NSUInteger i = 0;
+	for (id <CQChatViewController> controller in [[CQChatController defaultController] chatViewControllersForConnection:connection]) {
+		NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i++ inSection:sectionIndex];
+		CQChatTableCell *cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+		[cell takeValuesFromChatViewController:controller];
+	}
+}
+
+- (void) _refreshChatCell:(NSNotification *) notification {
+	id target = notification.object;
+	id <CQChatViewController> controller = nil;
+	if ([target isKindOfClass:[MVChatRoom class]])
+		controller = [[CQChatController defaultController] chatViewControllerForRoom:target ifExists:YES];
+	else if ([target isKindOfClass:[MVChatUser class]])
+		controller = [[CQChatController defaultController] chatViewControllerForUser:target ifExists:YES];
+
+	if (!controller)
+		return;
+
+	CQChatTableCell *cell = [self _chatTableCellForController:controller];
+	[cell takeValuesFromChatViewController:controller];
 }
 
 #pragma mark -

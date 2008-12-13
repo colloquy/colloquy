@@ -98,9 +98,6 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 - (void) _joinedRoom:(NSNotification *) notification {
 	MVChatRoom *room = notification.object;
-	if (![[CQConnectionsController defaultController] managesConnection:room.connection])
-		return;
-
 	CQChatRoomController *roomController = [self chatViewControllerForRoom:room ifExists:NO];
 	[roomController joined];
 }
@@ -108,8 +105,6 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 - (void) _gotRoomMessage:(NSNotification *) notification {
 	// We do this here to make sure we catch early messages right when we join (this includes dircproxy's dump).
 	MVChatRoom *room = notification.object;
-	if (![[CQConnectionsController defaultController] managesConnection:room.connection])
-		return;
 
 	CQChatRoomController *controller = [self chatViewControllerForRoom:room ifExists:NO];
 	[controller addMessage:notification.userInfo];
@@ -121,10 +116,8 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {
 	MVChatUser *user = notification.object;
-	if (![[CQConnectionsController defaultController] managesConnection:user.connection])
-		return;
-
 	MVChatUser *sender = user;
+
 	if ([notification.userInfo objectForKey:@"target"])
 		user = [notification.userInfo objectForKey:@"target"];
 
@@ -148,9 +141,6 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 - (void) _gotDirectChatMessage:(NSNotification *) notification {
 	MVDirectChatConnection *connection = notification.object;
-	MVChatUser *user = connection.user;
-	if (![[CQConnectionsController defaultController] managesConnection:user.connection])
-		return;
 
 	CQDirectChatController *controller = [self chatViewControllerForDirectChatConnection:connection ifExists:NO];
 	[controller addMessage:notification.userInfo];

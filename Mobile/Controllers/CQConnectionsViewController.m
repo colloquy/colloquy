@@ -18,11 +18,22 @@
 
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionNicknameAcceptedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionNicknameRejectedNotification object:nil];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionWillConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionDidConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionDidNotConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionDidDisconnectNotification object:nil];
+
 	return self;
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[_connectTimeUpdateTimer release];
+
 	[super dealloc];
 }
 
@@ -69,41 +80,6 @@
 
 #pragma mark -
 
-- (void) _deregisterNotificationsForConnection:(MVChatConnection *) connection {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:connection];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameRejectedNotification object:connection];
-
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionWillConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidNotConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidDisconnectNotification object:connection];
-
-//	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionErrorNotification object:connection];
-
-//	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNeedNicknamePasswordNotification object:connection];
-//	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNeedCertificatePasswordNotification object:connection];
-//	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNeedPublicKeyVerificationNotification object:connection];
-}
-
-- (void) _registerNotificationsForConnection:(MVChatConnection *) connection {
-	// Remove any previous observers, to prevent registering twice.
-	[self _deregisterNotificationsForConnection:connection];
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionNicknameAcceptedNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionNicknameRejectedNotification object:connection];
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionWillConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionDidConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionDidNotConnectNotification object:connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionDidDisconnectNotification object:connection];
-
-//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_errorOccurred :) name:MVChatConnectionErrorNotification object:connection];
-
-//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_requestPassword:) name:MVChatConnectionNeedNicknamePasswordNotification object:connection];
-//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_requestCertificatePassword:) name:MVChatConnectionNeedCertificatePasswordNotification object:connection];
-//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_requestPublicKeyVerification:) name:MVChatConnectionNeedPublicKeyVerificationNotification object:connection];
-}
-
 - (void) _didChange:(NSNotification *) notification {
 	[self _refreshConnection:notification.object];
 }
@@ -111,12 +87,10 @@
 #pragma mark -
 
 - (void) addConnection:(MVChatConnection *) connection {
-	[self _registerNotificationsForConnection:connection];
 	[self.tableView reloadData];
 }
 
 - (void) removeConnection:(MVChatConnection *) connection {
-	[self _deregisterNotificationsForConnection:connection];
 	[self.tableView reloadData];
 }
 

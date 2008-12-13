@@ -12,6 +12,8 @@
 
 #import <ChatCore/MVChatConnection.h>
 
+#import <Foundation/NSDebug.h>
+
 @interface CQConnectionsController (CQConnectionsControllerPrivate)
 - (void) _loadConnectionList;
 @end
@@ -39,7 +41,11 @@
 	self.tabBarItem.image = [UIImage imageNamed:@"connections.png"];
 	self.delegate = self;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:UIApplicationWillTerminateNotification object:[UIApplication sharedApplication]];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:nil];
+
+	if (NSDebugEnabled)
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
 
 	_connections = [[NSMutableArray alloc] init];
 
@@ -49,7 +55,7 @@
 }
 
 - (void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:[UIApplication sharedApplication]];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[_connections release];
 	[_connectionsViewController release];
@@ -182,15 +188,12 @@
 
 #pragma mark -
 
-- (void) _deregisterNotificationsForConnection:(MVChatConnection *) connection {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionWillConnectNotification object:connection];
-}
+- (void) _gotRawConnectionMessage:(NSNotification *) notification {
+	MVChatConnection *connection = notification.object;
+	NSString *message = [[notification userInfo] objectForKey:@"message"];
+	BOOL outbound = [[[notification userInfo] objectForKey:@"outbound"] boolValue];
 
-- (void) _registerNotificationsForConnection:(MVChatConnection *) connection {
-	// Remove any previous observers, to prevent registering twice.
-	[self _deregisterNotificationsForConnection:connection];
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:connection];
+	NSLog(@"%@: %@ %@", connection.server, (outbound ? @"<<" : @">>"), message);
 }
 
 - (void) _willConnect:(NSNotification *) notification {
@@ -286,8 +289,6 @@
 			connection.password = password;
 
 		[_connections addObject:connection];
-
-		[self _registerNotificationsForConnection:connection];
 
 		if ([[info objectForKey:@"automatic"] boolValue])
 			[connection connect];
@@ -400,8 +401,6 @@
 
 	[_connectionsViewController addConnection:connection];
 
-	[self _registerNotificationsForConnection:connection];
-
 	[self saveConnections];
 }
 
@@ -436,8 +435,6 @@
 
 	[_connectionsViewController removeConnection:connection];
 
-	[self _deregisterNotificationsForConnection:connection];
-
 	[connection release];
 
 	[_connections removeObjectAtIndex:index];
@@ -461,15 +458,11 @@
 
 	[_connectionsViewController removeConnection:oldConnection];
 
-	[self _deregisterNotificationsForConnection:oldConnection];
-
 	[oldConnection release];
 
 	[_connections replaceObjectAtIndex:index withObject:connection];
 
 	[_connectionsViewController addConnection:connection];
-
-	[self _registerNotificationsForConnection:connection];
 
 	[self saveConnections];
 }

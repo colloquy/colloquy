@@ -1,6 +1,8 @@
 #import "CQChatTableCell.h"
 #import "CQChatController.h"
 
+#import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
 @interface UIRemoveControl : UIView
@@ -25,6 +27,7 @@
 
 	_maximumMessagePreviews = 2;
 	_showsUserInMessagePreviews = YES;
+	_available = YES;
 
 	[self.contentView addSubview:_iconImageView];
 	[self.contentView addSubview:_nameLabel];
@@ -51,6 +54,16 @@
 - (void) takeValuesFromChatViewController:(id <CQChatViewController>) controller {
 	self.name = controller.title;
 	self.icon = controller.icon;
+
+	BOOL available = controller.connection.connected;
+	if ([controller.target isKindOfClass:[MVChatRoom class]]) {
+		available = (available && ((MVChatRoom *)controller.target).joined);
+	} else if ([controller.target isKindOfClass:[MVChatUser class]]) {
+		MVChatUser *user = (MVChatUser *)controller.target;
+		available = (available && (user.status == MVChatUserAvailableStatus || user.status == MVChatUserAwayStatus));
+	}
+
+	self.available = available;
 }
 
 @synthesize maximumMessagePreviews = _maximumMessagePreviews;
@@ -73,6 +86,23 @@
 }
 
 @synthesize removeConfirmationText = _removeConfirmationText;
+
+@synthesize available = _available;
+
+- (void) setAvailable:(BOOL) available {
+	_available = available;
+
+	[UIView beginAnimations:nil context:NULL];
+
+	CGFloat alpha = (available ? 1. : 0.5);
+	_nameLabel.alpha = alpha;
+	_iconImageView.alpha = alpha;
+
+	for (UILabel *label in _chatPreviewLabels)
+		label.alpha = alpha;
+
+	[UIView commitAnimations];
+}
 
 #pragma mark -
 
@@ -200,9 +230,28 @@
 
 	self.name = @"";
 	self.icon = nil;
+	self.available = YES;
 	self.removeConfirmationText = nil;
+
 	_showsUserInMessagePreviews = YES;
 	_maximumMessagePreviews = 2;
+}
+
+- (void) setSelected:(BOOL) selected animated:(BOOL) animated {
+	[super setSelected:selected animated:animated];
+
+	if (animated)
+		[UIView beginAnimations:nil context:NULL];
+
+	CGFloat alpha = (_available || selected ? 1. : 0.5);
+	_nameLabel.alpha = alpha;
+	_iconImageView.alpha = alpha;
+
+	for (UILabel *label in _chatPreviewLabels)
+		label.alpha = alpha;
+
+	if (animated)
+		[UIView commitAnimations];
 }
 
 - (void) layoutSubviews {

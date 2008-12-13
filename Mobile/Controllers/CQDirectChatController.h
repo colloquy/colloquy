@@ -7,8 +7,9 @@
 @class CQChatInputBar;
 @class CQChatTranscriptView;
 @class MVChatUser;
+@class MVChatUserWatchRule;
 
-@interface CQDirectChatController : UIViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate> {
+@interface CQDirectChatController : UIViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, UIAlertViewDelegate> {
 	IBOutlet CQChatInputBar *chatInputBar;
 	IBOutlet CQChatTranscriptView *transcriptView;
 
@@ -16,11 +17,15 @@
 	NSMutableArray *_recentMessages;
 
 	id _target;
+	MVChatUserWatchRule *_watchRule;
+
 	NSUInteger _unreadMessages;
 	NSUInteger _unreadHighlightedMessages;
 	BOOL _active;
+	BOOL _showingAlert;
 	BOOL _allowEditingToEnd;
 	BOOL _didSendRecently;
+	BOOL _cantSendMessages;
 }
 - (id) initWithTarget:(id) target;
 
