@@ -1291,9 +1291,15 @@ end:
 - (void) _scheduleWhoisForUser:(MVChatUser *) user {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
+	// Don't WHOIS server operators, since they can often see the WHOIS request and get annoyed.
+	if( [user isServerOperator] )
+		return;
+
 	if( ! _pendingWhoisUsers )
 		_pendingWhoisUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:50];
+
 	[_pendingWhoisUsers addObject:user];
+
 	if( [_pendingWhoisUsers count] == 1 )
 		[self _whoisNextScheduledUser];
 }
