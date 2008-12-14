@@ -944,7 +944,7 @@ ban hostmask label */
 "You were invited to %@ by %@." = "Sie wurden von %2$@ nach %1$@ eingeladen.";
 
 /* you were invited to join a chat room status message */
-"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?" = "Sie wurden von %2$@ eingeladen, %$1@ zu betreten. Möchten Sie die Einladung annehmen und den Raum betreten?";
+"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?" = "Sie wurden von %2$@ eingeladen, %1$@ zu betreten. Möchten Sie die Einladung annehmen und den Raum betreten?";
 
 /* bubble message member kicked string */
 "You were kicked from %@ by %@." = "Sie wurden von %2$@ aus %1$@ gekickt.";
