@@ -1,5 +1,6 @@
 #import "CQChatTableCell.h"
 #import "CQChatController.h"
+#import "CQUnreadCountView.h"
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
@@ -24,6 +25,7 @@
 
 	_iconImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
 	_nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+	_unreadCountView = [[CQUnreadCountView alloc] initWithFrame:CGRectZero];
 
 	_maximumMessagePreviews = 2;
 	_showsUserInMessagePreviews = YES;
@@ -31,6 +33,7 @@
 
 	[self.contentView addSubview:_iconImageView];
 	[self.contentView addSubview:_nameLabel];
+	[self.contentView addSubview:_unreadCountView];
 
 	_nameLabel.font = [UIFont boldSystemFontOfSize:18.];
 	_nameLabel.textColor = self.textColor;
@@ -43,6 +46,7 @@
 
 - (void) dealloc {
 	[_iconImageView release];
+	[_unreadCountView release];
 	[_nameLabel release];
 	[_chatPreviewLabels release];
 	[_removeConfirmationText release];
@@ -55,6 +59,14 @@
 	self.name = controller.title;
 	self.icon = controller.icon;
 	self.available = controller.available;
+
+	if ([controller respondsToSelector:@selector(unreadCount)])
+		self.unreadCount = controller.unreadCount;
+	else self.unreadCount = 0;
+
+	if ([controller respondsToSelector:@selector(importantUnreadCount)])
+		self.importantUnreadCount = controller.importantUnreadCount;
+	else self.importantUnreadCount = 0;
 }
 
 @synthesize maximumMessagePreviews = _maximumMessagePreviews;
@@ -74,6 +86,24 @@
 
 - (void) setIcon:(UIImage *) icon {
 	_iconImageView.image = icon;
+}
+
+- (NSUInteger) unreadCount {
+	return _unreadCountView.count;
+}
+
+- (void) setUnreadCount:(NSUInteger) messages {
+	_unreadCountView.count = messages;
+	[self setNeedsLayout];
+}
+
+- (NSUInteger) importantUnreadCount {
+	return _unreadCountView.importantCount;
+}
+
+- (void) setImportantUnreadCount:(NSUInteger) messages {
+	_unreadCountView.importantCount = messages;
+	[self setNeedsLayout];
 }
 
 @synthesize removeConfirmationText = _removeConfirmationText;
@@ -109,7 +139,7 @@
 #define LABEL_SPACING 2.
 
 - (void) addMessagePreview:(NSString *) message fromUser:(MVChatUser *) user asAction:(BOOL) action animated:(BOOL) animated {
-	CGRect nameFrame = _nameLabel.frame;
+	[self layoutIfNeeded];
 
 	UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
 	label.font = [UIFont systemFontOfSize:14.];
@@ -149,6 +179,7 @@
 		[firstLabel release];
 	}
 
+	CGRect nameFrame = _nameLabel.frame;
 	CGFloat labelHeights = nameFrame.size.height;
 
 	for (UILabel *label in _chatPreviewLabels)
@@ -157,7 +188,7 @@
 	CGRect labelFrame = label.frame;
 	CGSize labelSize = [label sizeThatFits:labelFrame.size];
 
-	labelHeights += labelSize.height;
+	labelHeights += labelSize.height - LABEL_SPACING;
 
 	if (animated) {
 		[UIView beginAnimations:nil context:NULL];
@@ -249,12 +280,18 @@
 	[super layoutSubviews];
 
 #define LEFT_MARGIN 10.
-#define RIGHT_MARGIN 5.
+#define RIGHT_MARGIN 6.
 #define ICON_RIGHT_MARGIN 10.
 
 	CGRect contentRect = self.contentView.bounds;
 
-	CGRect frame = _iconImageView.frame;
+	CGRect frame = _unreadCountView.frame;
+	frame.size = [_unreadCountView sizeThatFits:_unreadCountView.bounds.size];
+	frame.origin.x = contentRect.size.width - frame.size.width - RIGHT_MARGIN;
+	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
+	_unreadCountView.frame = frame;
+
+	frame = _iconImageView.frame;
 	frame.size = [_iconImageView sizeThatFits:_iconImageView.bounds.size];
 	frame.origin.x = contentRect.origin.x + LEFT_MARGIN;
 	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
@@ -271,6 +308,8 @@
 	frame.origin.x = CGRectGetMaxX(_iconImageView.frame) + ICON_RIGHT_MARGIN;
 	frame.origin.y = round((contentRect.size.height / 2.) - (labelHeights / 2.));
 	frame.size.width = contentRect.size.width - frame.origin.x - (!self.showingDeleteConfirmation ? RIGHT_MARGIN : 0.);
+	if (_unreadCountView.bounds.size.width)
+		frame.size.width -= (contentRect.size.width - CGRectGetMinX(_unreadCountView.frame));
 	_nameLabel.frame = frame;
 
 	CGFloat newVerticalOrigin = frame.origin.y + frame.size.height - LABEL_SPACING;

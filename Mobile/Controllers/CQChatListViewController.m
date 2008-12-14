@@ -43,20 +43,6 @@
 
 #pragma mark -
 
-- (void) viewDidLoad {
-	[super viewDidLoad];
-
-	self.tableView.rowHeight = 72.;
-}
-
-- (void) viewWillAppear:(BOOL) animated {
-	[super viewWillAppear:animated];
-
-	self.navigationItem.leftBarButtonItem.enabled = ([CQConnectionsController defaultController].connections.count ? YES : NO);
-}
-
-#pragma mark -
-
 static MVChatConnection *connectionForSection(NSInteger section) {
 	NSMutableSet *connections = [NSMutableSet set];
 
@@ -116,6 +102,29 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	}
 
 	return nil;
+}
+
+#pragma mark -
+
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	self.tableView.rowHeight = 72.;
+}
+
+- (void) viewWillAppear:(BOOL) animated {
+	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+	if (selectedIndexPath) {
+		MVChatConnection *connection = connectionForSection(selectedIndexPath.section);
+		NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
+		id <CQChatViewController> chatViewController = [controllers objectAtIndex:selectedIndexPath.row];
+		CQChatTableCell *cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:selectedIndexPath];
+		[cell takeValuesFromChatViewController:chatViewController];
+	}
+
+	[super viewWillAppear:animated];
+
+	self.navigationItem.leftBarButtonItem.enabled = ([CQConnectionsController defaultController].connections.count ? YES : NO);
 }
 
 #pragma mark -
@@ -194,6 +203,13 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 - (void) addMessagePreview:(NSDictionary *) info forChatController:(id <CQChatViewController>) controller {
 	CQChatTableCell *cell = [self _chatTableCellForController:controller];
+
+	if ([controller respondsToSelector:@selector(unreadCount)])
+		cell.unreadCount = controller.unreadCount;
+
+	if ([controller respondsToSelector:@selector(importantUnreadCount)])
+		cell.importantUnreadCount = controller.importantUnreadCount;
+
 	[self _addMessagePreview:info toChatTableCell:cell animated:YES];
 }
 

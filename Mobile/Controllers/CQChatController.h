@@ -41,6 +41,10 @@
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) UIImage *icon;
 @property (nonatomic, readonly) BOOL available;
+
 @optional
+@property (nonatomic, readonly) NSUInteger unreadCount;
+@property (nonatomic, readonly) NSUInteger importantUnreadCount;
+
 - (void) close;
 @end

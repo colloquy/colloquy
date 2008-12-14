@@ -85,11 +85,11 @@
 
 #pragma mark -
 
-- (NSUInteger) unreadMessages {
+- (NSUInteger) unreadCount {
 	return _unreadMessages;
 }
 
-- (NSUInteger) unreadHighlightedMessages {
+- (NSUInteger) importantUnreadCount {
 	return _unreadHighlightedMessages;
 }
 
@@ -324,6 +324,9 @@
 	MVChatUser *user = [info objectForKey:@"user"];
 
 	if (!user.localUser) {
+		if (!_active)
+			++_unreadMessages;
+
 		[_recentMessages addObject:info];
 		if (_recentMessages.count > 5)
 			[_recentMessages removeObjectAtIndex:0];

@@ -67,6 +67,7 @@
 		1C82C27D0D847EA4009ABD9F /* CQChatListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C27C0D847EA4009ABD9F /* CQChatListViewController.m */; };
 		1C82C52A0D850B1B009ABD9F /* CQConnectionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C5290D850B1B009ABD9F /* CQConnectionsViewController.m */; };
 		1C9B15A50D878B6A003794A5 /* CQConnectionEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */; };
+		1CA7151A0EF47D6F006225CD /* CQUnreadCountView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA715190EF47D6F006225CD /* CQUnreadCountView.m */; };
 		1CA91CCA0DFC976D002DDBB4 /* Colloquy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */; };
 		1CAE8BC80EE6111900CE1AF8 /* CQChatTranscriptView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CAE8BC70EE6111900CE1AF8 /* CQChatTranscriptView.m */; };
 		1CAE8BF50EE612DA00CE1AF8 /* base.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8BF20EE612DA00CE1AF8 /* base.html */; };
@@ -221,6 +222,8 @@
 		1C82C5290D850B1B009ABD9F /* CQConnectionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionsViewController.m; sourceTree = "<group>"; };
 		1C9B15A30D878B6A003794A5 /* CQConnectionEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionEditViewController.h; sourceTree = "<group>"; };
 		1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionEditViewController.m; sourceTree = "<group>"; };
+		1CA715180EF47D6F006225CD /* CQUnreadCountView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQUnreadCountView.h; sourceTree = "<group>"; };
+		1CA715190EF47D6F006225CD /* CQUnreadCountView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQUnreadCountView.m; sourceTree = "<group>"; };
 		1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Colloquy.xib; sourceTree = "<group>"; };
 		1CAE8BC60EE6111900CE1AF8 /* CQChatTranscriptView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatTranscriptView.h; sourceTree = "<group>"; };
 		1CAE8BC70EE6111900CE1AF8 /* CQChatTranscriptView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatTranscriptView.m; sourceTree = "<group>"; };
@@ -485,6 +488,8 @@
 				1CC64C3B0EE98DBF00DE91D0 /* CQSearchCell.h */,
 				1CAE8BC70EE6111900CE1AF8 /* CQChatTranscriptView.m */,
 				1CAE8BC60EE6111900CE1AF8 /* CQChatTranscriptView.h */,
+				1CA715190EF47D6F006225CD /* CQUnreadCountView.m */,
+				1CA715180EF47D6F006225CD /* CQUnreadCountView.h */,
 				1CE69FD80EE317F200389442 /* CQChatInputBar.m */,
 				1CE69FD70EE317F200389442 /* CQChatInputBar.h */,
 			);
@@ -759,6 +764,7 @@
 				1CAE8BC80EE6111900CE1AF8 /* CQChatTranscriptView.m in Sources */,
 				1CC64B2D0EE97F8B00DE91D0 /* CQChatUserListViewController.m in Sources */,
 				1CC64C3D0EE98DBF00DE91D0 /* CQSearchCell.m in Sources */,
+				1CA7151A0EF47D6F006225CD /* CQUnreadCountView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

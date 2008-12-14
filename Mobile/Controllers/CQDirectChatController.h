@@ -30,9 +30,6 @@
 
 @property (nonatomic, readonly) MVChatUser *user;
 
-@property (nonatomic, readonly) NSUInteger unreadMessages;
-@property (nonatomic, readonly) NSUInteger unreadHighlightedMessages;
-
 @property (nonatomic, readonly) NSArray *recentMessages;
 
 - (void) addMessage:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier andType:(CQChatMessageType) type;
