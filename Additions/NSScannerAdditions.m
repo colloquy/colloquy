@@ -55,4 +55,22 @@
 
 	return NO;
 }
+
+- (BOOL) scanXMLTagIntoString:(NSString **) stringValue {
+	if( ![self scanString:@"<" intoString:NULL] )
+		return NO;
+
+	NSString *tag = nil;
+	BOOL result = [self scanUpToString:@">" intoString:&tag];
+	if( result ) [self scanString:@">" intoString:NULL];
+
+	if( result && stringValue )
+		*stringValue = [NSString stringWithFormat:@"<%@>", tag];
+
+	return result;
+}
+
+- (BOOL) scanUpToXMLTagIntoString:(NSString **) stringValue {
+	return [self scanUpToString:@"<" intoString:stringValue];
+}
 @end

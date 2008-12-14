@@ -210,6 +210,9 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	if ([controller respondsToSelector:@selector(importantUnreadCount)])
 		cell.importantUnreadCount = controller.importantUnreadCount;
 
+	if (cell.importantUnreadCount == cell.unreadCount)
+		cell.unreadCount = 0;
+
 	[self _addMessagePreview:info toChatTableCell:cell animated:YES];
 }
 

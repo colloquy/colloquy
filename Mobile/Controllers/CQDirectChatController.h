@@ -13,7 +13,6 @@
 	IBOutlet CQChatInputBar *chatInputBar;
 	IBOutlet CQChatTranscriptView *transcriptView;
 
-	NSMutableArray *_pendingMessages;
 	NSMutableArray *_recentMessages;
 
 	id _target;

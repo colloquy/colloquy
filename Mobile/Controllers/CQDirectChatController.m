@@ -33,6 +33,9 @@
 		[self.connection addChatUserWatchRule:_watchRule];
 	}
 
+	// Load the view now so it is ready to add messages.
+	self.view;
+
 	return self;
 }
 
@@ -44,7 +47,6 @@
 
 	[_watchRule release];
 	[_recentMessages release];
-	[_pendingMessages release];
 	[_target release];
 
 	[super dealloc];
@@ -94,15 +96,6 @@
 }
 
 #pragma mark -
-
-- (void) viewDidLoad {
-	[super viewDidLoad];
-
-	[transcriptView addMessages:_pendingMessages];
-
-	[_pendingMessages release];
-	_pendingMessages = nil;
-}
 
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
@@ -213,6 +206,15 @@
 	[[UIApplication sharedApplication] openURL:url];
 
 	return YES;
+}
+
+- (NSArray *) highlightWordsForTranscriptView:(CQChatTranscriptView *) transcriptView {
+	return [NSArray arrayWithObject:self.connection.nickname];
+}
+
+- (void) transcriptView:(CQChatTranscriptView *) transcriptView highlightedMessageWithWord:(NSString *) highlightWord {
+	if (!_active)
+		++_unreadHighlightedMessages;
 }
 
 #pragma mark -
@@ -330,13 +332,6 @@
 		[_recentMessages addObject:info];
 		if (_recentMessages.count > 5)
 			[_recentMessages removeObjectAtIndex:0];
-	}
-
-	if (!transcriptView) {
-		if (!_pendingMessages)
-			_pendingMessages = [[NSMutableArray alloc] init];
-		[_pendingMessages addObject:info];
-		return;
 	}
 
 	[transcriptView addMessage:info];

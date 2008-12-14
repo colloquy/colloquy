@@ -23,4 +23,6 @@ typedef enum {
 @protocol CQChatTranscriptViewDelegate <NSObject>
 @optional
 - (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url;
+- (NSArray *) highlightWordsForTranscriptView:(CQChatTranscriptView *) transcriptView;
+- (void) transcriptView:(CQChatTranscriptView *) transcriptView highlightedMessageWithWord:(NSString *) highlightWord;
 @end

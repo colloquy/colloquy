@@ -871,9 +871,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 }
 
 - (NSString *) stringByStrippingXMLTags {
-	NSCharacterSet *tagCharacters = [NSCharacterSet characterSetWithCharactersInString:@"<>"];
-	NSRange range = [self rangeOfCharacterFromSet:tagCharacters options:NSLiteralSearch];
-	if( range.location == NSNotFound )
+	if( [self rangeOfString:@"<"].location == NSNotFound )
 		return self;
 
 	NSMutableString *result = [self mutableCopyWithZone:nil];
@@ -899,6 +897,27 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 }
 
 #pragma mark -
+
+- (NSArray *) componentsSeparatedByXMLTags {
+	if( [self rangeOfString:@"<"].location == NSNotFound )
+		return [NSArray arrayWithObject:self];
+
+	NSScanner *scanner = [[NSScanner allocWithZone:nil] initWithString:self];
+	[scanner setCharactersToBeSkipped:nil];
+
+	NSMutableArray *result = [[NSMutableArray allocWithZone:nil] init];
+
+	NSString *component = @"";
+	while( ! [scanner isAtEnd] ) {
+		if( [scanner scanUpToXMLTagIntoString:&component] )
+			[result addObject:component];
+		[scanner scanXMLTagIntoString:NULL];
+	}
+
+	[scanner release];
+
+	return [result autorelease];
+}
 
 - (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(unsigned long) limit remainingString:(NSString **) remainder {
 	if( [self rangeOfCharacterFromSet:separator].location == NSNotFound )

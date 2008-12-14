@@ -221,12 +221,50 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 	NSString *messageString = [[NSString alloc] initWithChatData:message encoding:NSUTF8StringEncoding];
 	NSString *transformedMessageString = applyFunctionToTextInHTMLString(messageString, commonChatReplacment);
 
+	BOOL highlighted = NO;
+	if ([self.delegate respondsToSelector:@selector(highlightWordsForTranscriptView:)]) {
+		NSArray *highlightWords = [self.delegate highlightWordsForTranscriptView:self];
+		if (highlightWords.count) {
+			NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
+			NSCharacterSet *trimCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\"'"];
+			NSArray *messageStrings = [transformedMessageString componentsSeparatedByXMLTags];
+			NSString *singleMessageString = [messageStrings componentsJoinedByString:@""];
+
+			for (NSString *highlightWord in highlightWords) {
+				if (!highlightWord.length)
+					continue;
+
+				NSString *originalHighlightWord = highlightWord;
+				AGRegex *regex = nil;
+				if( [highlightWord hasPrefix:@"/"] && [highlightWord hasSuffix:@"/"] && highlightWord.length > 1 ) {
+					regex = [[AGRegex alloc] initWithPattern:[highlightWord substringWithRange:NSMakeRange( 1, highlightWord.length - 2 )] options:AGRegexCaseInsensitive];
+				} else {
+					highlightWord = [highlightWord stringByTrimmingCharactersInSet:trimCharacters];
+					highlightWord = [highlightWord stringByEscapingCharactersInSet:escapedCharacters];
+					regex = [[AGRegex alloc] initWithPattern:[NSString stringWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", highlightWord] options:AGRegexCaseInsensitive];
+				}
+
+				if ([regex findInString:singleMessageString]) {
+					highlighted = YES;
+
+					if ([self.delegate respondsToSelector:@selector(transcriptView:highlightedMessageWithWord:)])
+						[self.delegate transcriptView:self highlightedMessageWithWord:originalHighlightWord];
+				}
+
+				[regex release];
+
+				if (highlighted)
+					break;
+			}
+		}
+	}
+
 	BOOL action = [[info objectForKey:@"action"] boolValue];
 
 	NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\\'\""];
 	NSString *escapedMessage = [transformedMessageString stringByEscapingCharactersInSet:escapedCharacters];
 	NSString *escapedNickname = [user.nickname stringByEscapingCharactersInSet:escapedCharacters];
-	NSString *command = [NSString stringWithFormat:@"appendMessage('%@', '%@', %@, %@, %@)", escapedNickname, escapedMessage, @"false", (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
+	NSString *command = [NSString stringWithFormat:@"appendMessage('%@', '%@', %@, %@, %@)", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
 
 	[messageString release];
 

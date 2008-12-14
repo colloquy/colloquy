@@ -67,6 +67,9 @@
 	if ([controller respondsToSelector:@selector(importantUnreadCount)])
 		self.importantUnreadCount = controller.importantUnreadCount;
 	else self.importantUnreadCount = 0;
+
+	if (self.importantUnreadCount == self.unreadCount)
+		self.unreadCount = 0;
 }
 
 @synthesize maximumMessagePreviews = _maximumMessagePreviews;

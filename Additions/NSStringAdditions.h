@@ -26,6 +26,7 @@ BOOL isValidUTF8( const char *s, unsigned len );
 
 - (NSString *) stringWithDomainNameSegmentOfAddress;
 
+- (NSArray *) componentsSeparatedByXMLTags;
 - (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(unsigned long) limit remainingString:(NSString **) remainder;
 
 - (BOOL) containsEmojiCharacters;
