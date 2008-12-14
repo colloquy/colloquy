@@ -12,7 +12,9 @@
 
 #import <ChatCore/MVChatConnection.h>
 
+#if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
 #import <Foundation/NSDebug.h>
+#endif
 
 @interface CQConnectionsController (CQConnectionsControllerPrivate)
 - (void) _loadConnectionList;
@@ -44,8 +46,10 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:nil];
 
+#if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
 	if (NSDebugEnabled)
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
+#endif
 
 	_connections = [[NSMutableArray alloc] init];
 
@@ -188,6 +192,7 @@
 
 #pragma mark -
 
+#if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
 - (void) _gotRawConnectionMessage:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
 	NSString *message = [[notification userInfo] objectForKey:@"message"];
@@ -195,6 +200,7 @@
 
 	NSLog(@"%@: %@ %@", connection.server, (outbound ? @"<<" : @">>"), message);
 }
+#endif
 
 - (void) _willConnect:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
