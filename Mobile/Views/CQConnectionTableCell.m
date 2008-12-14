@@ -150,13 +150,17 @@
 }
 
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
-	[UIView beginAnimations:@"CQConnectionTableCellEditing" context:NULL];
+	if (animated) {
+		[UIView beginAnimations:nil context:NULL];
+		[UIView setAnimationCurve:(editing ? UIViewAnimationCurveEaseIn : UIViewAnimationCurveEaseOut)];
+	}
 
 	[super setEditing:editing animated:animated];
 
 	_timeLabel.alpha = editing ? 0. : 1.;
 
-	[UIView commitAnimations];
+	if (animated)
+		[UIView commitAnimations];
 }
 
 - (void) layoutSubviews {
@@ -184,8 +188,10 @@
 	frame.size = [_timeLabel sizeThatFits:_timeLabel.bounds.size];
 	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
 
-	if( self.editing )
+	if (self.showingDeleteConfirmation || self.showsReorderControl)
 		frame.origin.x = self.bounds.size.width - contentRect.origin.x;
+	else if (self.editing)
+		frame.origin.x = contentRect.size.width - frame.size.width;
 	else
 		frame.origin.x = contentRect.size.width - frame.size.width - TEXT_RIGHT_MARGIN;
 

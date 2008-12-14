@@ -276,6 +276,20 @@
 		[UIView commitAnimations];
 }
 
+- (void) setEditing:(BOOL) editing animated:(BOOL) animated {
+	if (animated) {
+		[UIView beginAnimations:nil context:NULL];
+		[UIView setAnimationCurve:(editing ? UIViewAnimationCurveEaseIn : UIViewAnimationCurveEaseOut)];
+	}
+
+	[super setEditing:editing animated:animated];
+
+	_unreadCountView.alpha = editing ? 0. : 1.;
+
+	if (animated)
+		[UIView commitAnimations];
+}
+
 - (void) layoutSubviews {
 	[super layoutSubviews];
 
@@ -287,8 +301,15 @@
 
 	CGRect frame = _unreadCountView.frame;
 	frame.size = [_unreadCountView sizeThatFits:_unreadCountView.bounds.size];
-	frame.origin.x = contentRect.size.width - frame.size.width - RIGHT_MARGIN;
 	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
+
+	if (self.showingDeleteConfirmation || self.showsReorderControl)
+		frame.origin.x = self.bounds.size.width - contentRect.origin.x;
+	else if (self.editing)
+		frame.origin.x = contentRect.size.width - frame.size.width;
+	else
+		frame.origin.x = contentRect.size.width - frame.size.width - RIGHT_MARGIN;
+
 	_unreadCountView.frame = frame;
 
 	frame = _iconImageView.frame;
@@ -308,7 +329,7 @@
 	frame.origin.x = CGRectGetMaxX(_iconImageView.frame) + ICON_RIGHT_MARGIN;
 	frame.origin.y = round((contentRect.size.height / 2.) - (labelHeights / 2.));
 	frame.size.width = contentRect.size.width - frame.origin.x - (!self.showingDeleteConfirmation ? RIGHT_MARGIN : 0.);
-	if (_unreadCountView.bounds.size.width)
+	if (!self.editing && _unreadCountView.bounds.size.width)
 		frame.size.width -= (contentRect.size.width - CGRectGetMinX(_unreadCountView.frame));
 	_nameLabel.frame = frame;
 

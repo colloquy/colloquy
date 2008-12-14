@@ -243,7 +243,7 @@
 
 	BOOL previouslyShowingKeyboard = (chatInputBar.center.y != (self.view.bounds.size.height - (chatInputBar.bounds.size.height / 2.)));
 	if (!previouslyShowingKeyboard) {
-		[UIView beginAnimations:@"CQDirectChatControllerKeyboardShowing" context:NULL];
+		[UIView beginAnimations:nil context:NULL];
 
 		[UIView setAnimationDelay:0.05];
 		[UIView setAnimationDuration:0.25];
@@ -277,7 +277,7 @@
 	if (beginCenterPoint.y == endCenterPoint.y)
 		return;
 
-	[UIView beginAnimations:@"CQDirectChatControllerKeyboardHiding" context:NULL];
+	[UIView beginAnimations:nil context:NULL];
 
 	[UIView setAnimationDuration:0.25];
 
