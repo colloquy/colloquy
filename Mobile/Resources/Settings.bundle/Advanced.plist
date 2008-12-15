@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Title</key>
+	<string>Advanced</string>
+	<key>StringsTable</key>
+	<string>Advanced</string>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Default Encodings</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Connection</string>
+			<key>Key</key>
+			<string>JVChatEncoding</string>
+			<key>Values</key>
+			<array>
+				<real>4</real>
+				<real>1</real>
+				<real>5</real>
+				<real>2147484163</real>
+				<real>2147484175</real>
+				<real>30</real>
+				<real>12</real>
+				<real>2147484173</real>
+				<real>2147484935</real>
+				<real>9</real>
+				<real>2147484164</real>
+				<real>2147483677</real>
+				<real>15</real>
+				<real>2147486210</real>
+				<real>2147484165</real>
+				<real>2147483655</real>
+				<real>11</real>
+				<real>2147484167</real>
+				<real>2147483654</real>
+				<real>13</real>
+				<real>2147486209</real>
+				<real>21</real>
+				<real>3</real>
+				<real>2147483649</real>
+				<real>8</real>
+				<real>2147485234</real>
+				<real>2147485233</real>
+				<real>2147486000</real>
+				<real>2147483673</real>
+				<real>2147484705</real>
+				<real>2147486211</real>
+				<real>2147486214</real>
+				<real>2147486001</real>
+				<real>2147483650</real>
+				<real>2147484707</real>
+				<real>2147486016</real>
+				<real>2147483651</real>
+				<real>2147484706</real>
+				<real>2147484171</real>
+				<real>2147483669</real>
+				<real>2147484701</real>
+				<real>2147484168</real>
+				<real>2147483653</real>
+				<real>2147484933</real>
+				<real>2147484166</real>
+				<real>2147483652</real>
+				<real>2147484934</real>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Unicode (UTF-8)</string>
+				<string>Western (ASCII)</string>
+				<string>Western (ISO Latin 1)</string>
+				<string>Western (ISO Latin 3)</string>
+				<string>Western (ISO Latin 9)</string>
+				<string>Western (Mac OS Roman)</string>
+				<string>Western (Windows Latin 1)</string>
+				<string>Baltic Rim (ISO Latin 7)</string>
+				<string>Baltic Rim (Windows)</string>
+				<string>European (ISO Latin 2)</string>
+				<string>European (ISO Latin 4)</string>
+				<string>European (Mac OS)</string>
+				<string>European (Windows Latin 2)</string>
+				<string>Cyrillic (KOI8-R)</string>
+				<string>Cyrillic (ISO 8859-5)</string>
+				<string>Cyrillic (Mac OS)</string>
+				<string>Cyrillic (Windows)</string>
+				<string>Greek (ISO 8859-7)</string>
+				<string>Greek (Mac OS)</string>
+				<string>Greek (Windows)</string>
+				<string>Japanese (Shift JIS)</string>
+				<string>Japanese (ISO 2022-JP)</string>
+				<string>Japanese (EUC)</string>
+				<string>Japanese (Mac OS)</string>
+				<string>Japanese (Windows)</string>
+				<string>Chinese (GB 18030)</string>
+				<string>Chinese (GBK)</string>
+				<string>Simplified Chinese (EUC)</string>
+				<string>Simplified Chinese (Mac OS)</string>
+				<string>Simplified Chinese (Windows)</string>
+				<string>Traditional Chinese (Big 5)</string>
+				<string>Traditional Chinese (Big 5 HKSCS)</string>
+				<string>Traditional Chinese (EUC)</string>
+				<string>Traditional Chinese (Mac OS)</string>
+				<string>Traditional Chinese (Windows)</string>
+				<string>Korean (EUC)</string>
+				<string>Korean (Mac OS)</string>
+				<string>Korean (Windows)</string>
+				<string>Thai (ISO 8859-11)</string>
+				<string>Thai (Mac OS)</string>
+				<string>Thai (Windows)</string>
+				<string>Hebrew (ISO 8859-8)</string>
+				<string>Hebrew (Mac OS)</string>
+				<string>Hebrew (Windows)</string>
+				<string>Arabic (ISO 8859-6)</string>
+				<string>Arabic (Mac OS)</string>
+				<string>Arabic (Windows)</string>
+			</array>
+			<key>DefaultValue</key>
+			<integer>5</integer>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Chat Room</string>
+			<key>Key</key>
+			<string>CQChatRoomEncoding</string>
+			<key>Values</key>
+			<array>
+				<real>0</real>
+				<real>4</real>
+				<real>1</real>
+				<real>5</real>
+				<real>2147484163</real>
+				<real>2147484175</real>
+				<real>30</real>
+				<real>12</real>
+				<real>2147484173</real>
+				<real>2147484935</real>
+				<real>9</real>
+				<real>2147484164</real>
+				<real>2147483677</real>
+				<real>15</real>
+				<real>2147486210</real>
+				<real>2147484165</real>
+				<real>2147483655</real>
+				<real>11</real>
+				<real>2147484167</real>
+				<real>2147483654</real>
+				<real>13</real>
+				<real>2147486209</real>
+				<real>21</real>
+				<real>3</real>
+				<real>2147483649</real>
+				<real>8</real>
+				<real>2147485234</real>
+				<real>2147485233</real>
+				<real>2147486000</real>
+				<real>2147483673</real>
+				<real>2147484705</real>
+				<real>2147486211</real>
+				<real>2147486214</real>
+				<real>2147486001</real>
+				<real>2147483650</real>
+				<real>2147484707</real>
+				<real>2147486016</real>
+				<real>2147483651</real>
+				<real>2147484706</real>
+				<real>2147484171</real>
+				<real>2147483669</real>
+				<real>2147484701</real>
+				<real>2147484168</real>
+				<real>2147483653</real>
+				<real>2147484933</real>
+				<real>2147484166</real>
+				<real>2147483652</real>
+				<real>2147484934</real>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Connection</string>
+				<string>Unicode (UTF-8)</string>
+				<string>Western (ASCII)</string>
+				<string>Western (ISO Latin 1)</string>
+				<string>Western (ISO Latin 3)</string>
+				<string>Western (ISO Latin 9)</string>
+				<string>Western (Mac OS Roman)</string>
+				<string>Western (Windows Latin 1)</string>
+				<string>Baltic Rim (ISO Latin 7)</string>
+				<string>Baltic Rim (Windows)</string>
+				<string>European (ISO Latin 2)</string>
+				<string>European (ISO Latin 4)</string>
+				<string>European (Mac OS)</string>
+				<string>European (Windows Latin 2)</string>
+				<string>Cyrillic (KOI8-R)</string>
+				<string>Cyrillic (ISO 8859-5)</string>
+				<string>Cyrillic (Mac OS)</string>
+				<string>Cyrillic (Windows)</string>
+				<string>Greek (ISO 8859-7)</string>
+				<string>Greek (Mac OS)</string>
+				<string>Greek (Windows)</string>
+				<string>Japanese (Shift JIS)</string>
+				<string>Japanese (ISO 2022-JP)</string>
+				<string>Japanese (EUC)</string>
+				<string>Japanese (Mac OS)</string>
+				<string>Japanese (Windows)</string>
+				<string>Chinese (GB 18030)</string>
+				<string>Chinese (GBK)</string>
+				<string>Simplified Chinese (EUC)</string>
+				<string>Simplified Chinese (Mac OS)</string>
+				<string>Simplified Chinese (Windows)</string>
+				<string>Traditional Chinese (Big 5)</string>
+				<string>Traditional Chinese (Big 5 HKSCS)</string>
+				<string>Traditional Chinese (EUC)</string>
+				<string>Traditional Chinese (Mac OS)</string>
+				<string>Traditional Chinese (Windows)</string>
+				<string>Korean (EUC)</string>
+				<string>Korean (Mac OS)</string>
+				<string>Korean (Windows)</string>
+				<string>Thai (ISO 8859-11)</string>
+				<string>Thai (Mac OS)</string>
+				<string>Thai (Windows)</string>
+				<string>Hebrew (ISO 8859-8)</string>
+				<string>Hebrew (Mac OS)</string>
+				<string>Hebrew (Windows)</string>
+				<string>Arabic (ISO 8859-6)</string>
+				<string>Arabic (Mac OS)</string>
+				<string>Arabic (Windows)</string>
+			</array>
+			<key>DefaultValue</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Private Chat</string>
+			<key>Key</key>
+			<string>CQDirectChatEncoding</string>
+			<key>Values</key>
+			<array>
+				<real>0</real>
+				<real>4</real>
+				<real>1</real>
+				<real>5</real>
+				<real>2147484163</real>
+				<real>2147484175</real>
+				<real>30</real>
+				<real>12</real>
+				<real>2147484173</real>
+				<real>2147484935</real>
+				<real>9</real>
+				<real>2147484164</real>
+				<real>2147483677</real>
+				<real>15</real>
+				<real>2147486210</real>
+				<real>2147484165</real>
+				<real>2147483655</real>
+				<real>11</real>
+				<real>2147484167</real>
+				<real>2147483654</real>
+				<real>13</real>
+				<real>2147486209</real>
+				<real>21</real>
+				<real>3</real>
+				<real>2147483649</real>
+				<real>8</real>
+				<real>2147485234</real>
+				<real>2147485233</real>
+				<real>2147486000</real>
+				<real>2147483673</real>
+				<real>2147484705</real>
+				<real>2147486211</real>
+				<real>2147486214</real>
+				<real>2147486001</real>
+				<real>2147483650</real>
+				<real>2147484707</real>
+				<real>2147486016</real>
+				<real>2147483651</real>
+				<real>2147484706</real>
+				<real>2147484171</real>
+				<real>2147483669</real>
+				<real>2147484701</real>
+				<real>2147484168</real>
+				<real>2147483653</real>
+				<real>2147484933</real>
+				<real>2147484166</real>
+				<real>2147483652</real>
+				<real>2147484934</real>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Connection</string>
+				<string>Unicode (UTF-8)</string>
+				<string>Western (ASCII)</string>
+				<string>Western (ISO Latin 1)</string>
+				<string>Western (ISO Latin 3)</string>
+				<string>Western (ISO Latin 9)</string>
+				<string>Western (Mac OS Roman)</string>
+				<string>Western (Windows Latin 1)</string>
+				<string>Baltic Rim (ISO Latin 7)</string>
+				<string>Baltic Rim (Windows)</string>
+				<string>European (ISO Latin 2)</string>
+				<string>European (ISO Latin 4)</string>
+				<string>European (Mac OS)</string>
+				<string>European (Windows Latin 2)</string>
+				<string>Cyrillic (KOI8-R)</string>
+				<string>Cyrillic (ISO 8859-5)</string>
+				<string>Cyrillic (Mac OS)</string>
+				<string>Cyrillic (Windows)</string>
+				<string>Greek (ISO 8859-7)</string>
+				<string>Greek (Mac OS)</string>
+				<string>Greek (Windows)</string>
+				<string>Japanese (Shift JIS)</string>
+				<string>Japanese (ISO 2022-JP)</string>
+				<string>Japanese (EUC)</string>
+				<string>Japanese (Mac OS)</string>
+				<string>Japanese (Windows)</string>
+				<string>Chinese (GB 18030)</string>
+				<string>Chinese (GBK)</string>
+				<string>Simplified Chinese (EUC)</string>
+				<string>Simplified Chinese (Mac OS)</string>
+				<string>Simplified Chinese (Windows)</string>
+				<string>Traditional Chinese (Big 5)</string>
+				<string>Traditional Chinese (Big 5 HKSCS)</string>
+				<string>Traditional Chinese (EUC)</string>
+				<string>Traditional Chinese (Mac OS)</string>
+				<string>Traditional Chinese (Windows)</string>
+				<string>Korean (EUC)</string>
+				<string>Korean (Mac OS)</string>
+				<string>Korean (Windows)</string>
+				<string>Thai (ISO 8859-11)</string>
+				<string>Thai (Mac OS)</string>
+				<string>Thai (Windows)</string>
+				<string>Hebrew (ISO 8859-8)</string>
+				<string>Hebrew (Mac OS)</string>
+				<string>Hebrew (Windows)</string>
+				<string>Arabic (ISO 8859-6)</string>
+				<string>Arabic (Mac OS)</string>
+				<string>Arabic (Windows)</string>
+			</array>
+			<key>DefaultValue</key>
+			<integer>0</integer>
+		</dict>
+	</array>
+</dict>
+</plist>

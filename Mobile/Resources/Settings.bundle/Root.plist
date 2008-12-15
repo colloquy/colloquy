@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Title</key>
+	<string>Colloquy</string>
+	<key>StringsTable</key>
+	<string>Root</string>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Default Identity</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>Nickname</string>
+			<key>Key</key>
+			<string>CQDefaultNickname</string>
+			<key>DefaultValue</key>
+			<string>mobile</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>KeyboardType</key>
+			<string>Alphabet</string>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>Real Name</string>
+			<key>Key</key>
+			<string>CQDefaultRealName</string>
+			<key>DefaultValue</key>
+			<string>Mobile User</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>KeyboardType</key>
+			<string>Alphabet</string>
+			<key>AutocapitalizationType</key>
+			<string>Words</string>
+			<key>AutocorrectionType</key>
+			<string>Default</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Interface</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Sort Users by Status</string>
+			<key>Key</key>
+			<string>JVSortRoomMembersByStatus</string>
+			<key>FalseValue</key>
+			<false/>
+			<key>TrueValue</key>
+			<true/>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Show Join Events</string>
+			<key>Key</key>
+			<string>CQShowJoinEvents</string>
+			<key>FalseValue</key>
+			<false/>
+			<key>TrueValue</key>
+			<true/>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Show Leave Events</string>
+			<key>Key</key>
+			<string>CQShowLeaveEvents</string>
+			<key>FalseValue</key>
+			<false/>
+			<key>TrueValue</key>
+			<true/>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Always Show Notices</string>
+			<key>Key</key>
+			<string>JVChatAlwaysShowNotices</string>
+			<key>FalseValue</key>
+			<false/>
+			<key>TrueValue</key>
+			<true/>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+			<key>Title</key>
+			<string>Advanced</string>
+			<key>File</key>
+			<string>Advanced</string>
+		</dict>
+	</array>
+</dict>
+</plist>
