@@ -16,6 +16,7 @@
 	NSMutableArray *_recentMessages;
 
 	id _target;
+	NSStringEncoding _encoding;
 	MVChatUserWatchRule *_watchRule;
 
 	NSUInteger _unreadMessages;

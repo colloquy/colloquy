@@ -25,6 +25,8 @@
 	_target = [target retain];
 
 	if ([_target isKindOfClass:[MVChatUser class]]) {
+		_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDirectChatEncoding"];
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:_target];
 
 		_watchRule = [[MVChatUserWatchRule alloc] init];
@@ -164,6 +166,8 @@
 
 	_didSendRecently = YES;
 
+	NSStringEncoding encoding = (_encoding ? _encoding : self.connection.encoding);
+
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetDidSendRecently) object:nil];
 	[self performSelector:@selector(resetDidSendRecently) withObject:nil afterDelay:0.5];
 
@@ -181,15 +185,15 @@
 
 		arguments = [text substringFromIndex:scanner.scanLocation];
 
-		[_target sendCommand:command withArguments:arguments withEncoding:NSUTF8StringEncoding];
+		[_target sendCommand:command withArguments:arguments withEncoding:encoding];
 	} else {
 		// Send as a message, strip the first forward slash if it exists.
 		if ([text hasPrefix:@"/"])
 			text = [text substringFromIndex:1];
 
-		[_target sendMessage:text withEncoding:NSUTF8StringEncoding asAction:NO];
+		[_target sendMessage:text withEncoding:encoding asAction:NO];
 
-		NSData *messageData = [text dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+		NSData *messageData = [text dataUsingEncoding:encoding allowLossyConversion:YES];
 		[self addMessage:messageData fromUser:self.connection.localUser asAction:NO withIdentifier:@"" andType:CQChatMessageNormalType];
 	}
 

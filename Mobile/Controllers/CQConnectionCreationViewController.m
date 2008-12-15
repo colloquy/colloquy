@@ -91,20 +91,15 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 	}
 
 	if (isDefaultValue(connection.preferredNickname))
-		connection.preferredNickname = NSUserName();
+		connection.preferredNickname = [MVChatConnection defaultNickname];
 
 	if (isDefaultValue(connection.realName))
-		connection.realName = NSFullUserName();
+		connection.realName = [MVChatConnection defaultRealName];
 
-	if (isDefaultValue(connection.username)) {
-		UIDevice *device = [UIDevice currentDevice];
-		if ([[device model] hasPrefix:@"iPhone"])
-			connection.username = @"iphone";
-		else if ([[device model] hasPrefix:@"iPod"])
-			connection.username = @"ipod";
-		else
-			connection.username = @"user";
-	}
+	if (isDefaultValue(connection.username))
+		connection.username = [MVChatConnection defaultUsername];
+
+	connection.encoding = [MVChatConnection defaultEncoding];
 
 	[[CQConnectionsController defaultController] addConnection:connection];
 

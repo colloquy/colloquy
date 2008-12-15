@@ -20,7 +20,7 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 
 static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	NSString *preferredNickname = connection.preferredNickname;
-	return (isDefaultValue(preferredNickname) ? NSUserName() : preferredNickname);
+	return (isDefaultValue(preferredNickname) ? [MVChatConnection defaultNickname] : preferredNickname);
 }
 
 #pragma mark -
@@ -185,14 +185,14 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 		if (indexPath.row == 0) {
 			cell.label = NSLocalizedString(@"Nickname", @"Nickname connection setting label");
 			cell.text = (isDefaultValue(_connection.preferredNickname) ? @"" : _connection.preferredNickname);
-			cell.textField.placeholder = NSUserName();
+			cell.textField.placeholder = [MVChatConnection defaultNickname];
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(nicknameChanged:);
 		} else if (indexPath.row == 1) {
 			cell.label = NSLocalizedString(@"Real Name", @"Real Name connection setting label");
 			cell.text = (isDefaultValue(_connection.realName) ? @"" : _connection.realName);
-			cell.textField.placeholder = NSFullUserName();
+			cell.textField.placeholder = [MVChatConnection defaultRealName];
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
 			cell.textEditAction = @selector(realNameChanged:);
 		}

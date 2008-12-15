@@ -47,6 +47,11 @@
 @end
 
 @interface MVChatConnection (CQConnectionsControllerAdditions)
++ (NSString *) defaultNickname;
++ (NSString *) defaultUsername;
++ (NSString *) defaultRealName;
++ (NSStringEncoding) defaultEncoding;
+
 @property (nonatomic, copy) NSString *displayName;
 @property (nonatomic, copy) NSArray *automaticJoinedRooms;
 @property (nonatomic, copy) NSArray *automaticCommands;

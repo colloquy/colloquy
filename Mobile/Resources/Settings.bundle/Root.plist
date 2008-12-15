@@ -23,12 +23,6 @@
 			<string>CQDefaultNickname</string>
 			<key>DefaultValue</key>
 			<string>mobile</string>
-			<key>IsSecure</key>
-			<false/>
-			<key>KeyboardType</key>
-			<string>Alphabet</string>
-			<key>AutocapitalizationType</key>
-			<string>None</string>
 			<key>AutocorrectionType</key>
 			<string>No</string>
 		</dict>
@@ -41,14 +35,8 @@
 			<string>CQDefaultRealName</string>
 			<key>DefaultValue</key>
 			<string>Mobile User</string>
-			<key>IsSecure</key>
-			<false/>
-			<key>KeyboardType</key>
-			<string>Alphabet</string>
 			<key>AutocapitalizationType</key>
 			<string>Words</string>
-			<key>AutocorrectionType</key>
-			<string>Default</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -63,10 +51,6 @@
 			<string>Sort Users by Status</string>
 			<key>Key</key>
 			<string>JVSortRoomMembersByStatus</string>
-			<key>FalseValue</key>
-			<false/>
-			<key>TrueValue</key>
-			<true/>
 			<key>DefaultValue</key>
 			<true/>
 		</dict>
@@ -77,10 +61,6 @@
 			<string>Show Join Events</string>
 			<key>Key</key>
 			<string>CQShowJoinEvents</string>
-			<key>FalseValue</key>
-			<false/>
-			<key>TrueValue</key>
-			<true/>
 			<key>DefaultValue</key>
 			<true/>
 		</dict>
@@ -91,24 +71,6 @@
 			<string>Show Leave Events</string>
 			<key>Key</key>
 			<string>CQShowLeaveEvents</string>
-			<key>FalseValue</key>
-			<false/>
-			<key>TrueValue</key>
-			<true/>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Always Show Notices</string>
-			<key>Key</key>
-			<string>JVChatAlwaysShowNotices</string>
-			<key>FalseValue</key>
-			<false/>
-			<key>TrueValue</key>
-			<true/>
 			<key>DefaultValue</key>
 			<true/>
 		</dict>

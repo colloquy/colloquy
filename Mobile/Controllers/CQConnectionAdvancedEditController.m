@@ -18,7 +18,7 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 
 static inline __attribute__((always_inline)) NSString *currentPreferredNickname(MVChatConnection *connection) {
 	NSString *preferredNickname = connection.preferredNickname;
-	return (isDefaultValue(preferredNickname) ? NSUserName() : preferredNickname);
+	return (isDefaultValue(preferredNickname) ? [MVChatConnection defaultNickname] : preferredNickname);
 }
 
 #pragma mark -
@@ -190,15 +190,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 			cell.textEditAction = @selector(usernameChanged:);
 			cell.label = NSLocalizedString(@"Username", @"Username connection setting label");
 			cell.text = ([_connection.username isEqualToString:@"<<default>>"] ? @"" : _connection.username);
-
-			UIDevice *device = [UIDevice currentDevice];
-			if ([[device model] hasPrefix:@"iPhone"])
-				cell.textField.placeholder = @"iphone";
-			else if ([[device model] hasPrefix:@"iPod"])
-				cell.textField.placeholder = @"ipod";
-			else
-				cell.textField.placeholder = @"user";
-
+			cell.textField.placeholder = [MVChatConnection defaultUsername];
 			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;

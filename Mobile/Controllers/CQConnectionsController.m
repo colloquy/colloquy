@@ -271,9 +271,7 @@
 		connection.proxyType = [[info objectForKey:@"proxy"] unsignedLongValue];
 		connection.secure = [[info objectForKey:@"secure"] boolValue];
 
-		if ([[info objectForKey:@"encoding"] longValue])
-			connection.encoding = [[info objectForKey:@"encoding"] longValue];
-		else connection.encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
+		connection.encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 
 		if ([info objectForKey:@"realName"]) connection.realName = [info objectForKey:@"realName"];
 		if ([info objectForKey:@"nickname"]) connection.nickname = [info objectForKey:@"nickname"];
@@ -403,6 +401,11 @@
 - (void) insertConnection:(MVChatConnection *) connection atIndex:(NSUInteger) index {
 	if (!connection) return;
 
+	if (!_connections.count) {
+		[[NSUserDefaults standardUserDefaults] setObject:connection.nickname forKey:@"CQDefaultNickname"];
+		[[NSUserDefaults standardUserDefaults] setObject:connection.realName forKey:@"CQDefaultRealName"];
+	}
+
 	[_connections insertObject:connection atIndex:index];
 
 	[_connectionsViewController addConnection:connection];
@@ -477,6 +480,27 @@
 #pragma mark -
 
 @implementation MVChatConnection (CQConnectionsControllerAdditions)
++ (NSString *) defaultNickname {
+	return [[NSUserDefaults standardUserDefaults] stringForKey:@"CQDefaultNickname"];
+}
+
++ (NSString *) defaultUsername {
+	UIDevice *device = [UIDevice currentDevice];
+	if ([[device model] hasPrefix:@"iPhone"])
+		return @"iphone";
+	if ([[device model] hasPrefix:@"iPod"])
+		return @"ipod";
+	return @"user";
+}
+
++ (NSString *) defaultRealName {
+	return [[NSUserDefaults standardUserDefaults] stringForKey:@"CQDefaultRealName"];
+}
+
++ (NSStringEncoding) defaultEncoding {
+	return [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
+}
+
 - (void) setDisplayName:(NSString *) name {
 	NSParameterAssert(name != nil);
 
