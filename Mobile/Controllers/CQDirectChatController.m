@@ -87,6 +87,10 @@
 	return (self.connection.connected && (status == MVChatUserAvailableStatus || status == MVChatUserAwayStatus));
 }
 
+- (NSStringEncoding) encoding {
+	return (_encoding ? _encoding : self.connection.encoding);
+}
+
 #pragma mark -
 
 - (NSUInteger) unreadCount {
@@ -166,8 +170,6 @@
 
 	_didSendRecently = YES;
 
-	NSStringEncoding encoding = (_encoding ? _encoding : self.connection.encoding);
-
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetDidSendRecently) object:nil];
 	[self performSelector:@selector(resetDidSendRecently) withObject:nil afterDelay:0.5];
 
@@ -185,15 +187,15 @@
 
 		arguments = [text substringFromIndex:scanner.scanLocation];
 
-		[_target sendCommand:command withArguments:arguments withEncoding:encoding];
+		[_target sendCommand:command withArguments:arguments withEncoding:self.encoding];
 	} else {
 		// Send as a message, strip the first forward slash if it exists.
 		if ([text hasPrefix:@"/"])
 			text = [text substringFromIndex:1];
 
-		[_target sendMessage:text withEncoding:encoding asAction:NO];
+		[_target sendMessage:text withEncoding:self.encoding asAction:NO];
 
-		NSData *messageData = [text dataUsingEncoding:encoding allowLossyConversion:YES];
+		NSData *messageData = [text dataUsingEncoding:self.encoding allowLossyConversion:YES];
 		[self addMessage:messageData fromUser:self.connection.localUser asAction:NO withIdentifier:@"" andType:CQChatMessageNormalType];
 	}
 
@@ -215,6 +217,10 @@
 	[[UIApplication sharedApplication] openURL:url];
 
 	return YES;
+}
+
+- (NSStringEncoding) transcriptView:(CQChatTranscriptView *) transcriptView encodingForMessageData:(NSData *) message {
+	return self.encoding;
 }
 
 - (NSArray *) highlightWordsForTranscriptView:(CQChatTranscriptView *) transcriptView {

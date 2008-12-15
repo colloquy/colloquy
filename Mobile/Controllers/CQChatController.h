@@ -41,6 +41,7 @@
 @property (nonatomic, readonly) NSString *title;
 @property (nonatomic, readonly) UIImage *icon;
 @property (nonatomic, readonly) BOOL available;
+@property (nonatomic, readonly) NSStringEncoding encoding;
 
 @optional
 @property (nonatomic, readonly) NSUInteger unreadCount;

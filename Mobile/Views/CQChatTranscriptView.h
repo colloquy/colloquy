@@ -25,4 +25,5 @@ typedef enum {
 - (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url;
 - (NSArray *) highlightWordsForTranscriptView:(CQChatTranscriptView *) transcriptView;
 - (void) transcriptView:(CQChatTranscriptView *) transcriptView highlightedMessageWithWord:(NSString *) highlightWord;
+- (NSStringEncoding) transcriptView:(CQChatTranscriptView *) transcriptView encodingForMessageData:(NSData *) message;
 @end

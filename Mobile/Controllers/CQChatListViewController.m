@@ -134,10 +134,10 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	return (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
 }
 
-- (void) _addMessagePreview:(NSDictionary *) info toChatTableCell:(CQChatTableCell *) cell animated:(BOOL) animated {
+- (void) _addMessagePreview:(NSDictionary *) info withEncoding:(NSStringEncoding) encoding toChatTableCell:(CQChatTableCell *) cell animated:(BOOL) animated {
 	MVChatUser *user = [info objectForKey:@"user"];
 	NSData *message = [info objectForKey:@"message"];
-	NSString *messageString = [[NSString alloc] initWithChatData:message encoding:NSUTF8StringEncoding];
+	NSString *messageString = [[NSString alloc] initWithChatData:message encoding:encoding];
 
 	NSString *transformedMessageString = [messageString stringByStrippingXMLTags];
 	transformedMessageString = [transformedMessageString stringByDecodingXMLSpecialCharacterEntities];
@@ -213,7 +213,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	if (cell.importantUnreadCount == cell.unreadCount)
 		cell.unreadCount = 0;
 
-	[self _addMessagePreview:info toChatTableCell:cell animated:YES];
+	[self _addMessagePreview:info withEncoding:controller.encoding toChatTableCell:cell animated:YES];
 }
 
 #pragma mark -
@@ -261,7 +261,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		NSUInteger maximum = MIN(cell.maximumMessagePreviews, recentMessages.count);
 		for (NSUInteger i = (recentMessages.count - maximum); i < recentMessages.count; ++i) {
 			NSDictionary *info = [recentMessages objectAtIndex:i];
-			[self _addMessagePreview:info toChatTableCell:cell animated:NO];
+			[self _addMessagePreview:info withEncoding:directChatViewController.encoding toChatTableCell:cell animated:NO];
 		}
 	}
 

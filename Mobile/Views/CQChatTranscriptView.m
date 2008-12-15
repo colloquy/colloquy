@@ -218,7 +218,12 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 
 	MVChatUser *user = [info objectForKey:@"user"];
 	NSData *message = [info objectForKey:@"message"];
-	NSString *messageString = [[NSString alloc] initWithChatData:message encoding:NSUTF8StringEncoding];
+
+	NSStringEncoding encoding = NSISOLatin1StringEncoding;
+	if ([self.delegate respondsToSelector:@selector(transcriptView:encodingForMessageData:)])
+		encoding = [self.delegate transcriptView:self encodingForMessageData:message];
+
+	NSString *messageString = [[NSString alloc] initWithChatData:message encoding:encoding];
 	NSString *transformedMessageString = applyFunctionToTextInHTMLString(messageString, commonChatReplacment);
 
 	BOOL highlighted = NO;
