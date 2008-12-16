@@ -14,10 +14,14 @@
 	id <CQChatViewController> _nextController;
 	NSString *_nextRoomName;
 	MVChatConnection *_nextRoomConnection;
+	NSInteger _totalImportantUnreadCount;
+	BOOL _active;
 }
 + (CQChatController *) defaultController;
 
 @property (nonatomic, readonly) NSArray *chatViewControllers;
+
+@property (nonatomic) NSInteger totalImportantUnreadCount;
 
 - (void) showNewChatActionSheet;
 - (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) room andConnection:(MVChatConnection *) connection;

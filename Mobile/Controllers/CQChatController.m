@@ -61,6 +61,20 @@
 	[self pushViewController:_chatListViewController animated:NO];
 }
 
+- (void) viewWillAppear:(BOOL) animated {
+	[super viewWillAppear:animated];
+
+	self.totalImportantUnreadCount = 0;
+
+	_active = YES;
+}
+
+- (void) viewWillDisappear:(BOOL) animated {
+	[super viewWillDisappear:animated];
+
+	_active = NO;
+}
+
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
 	// This should support UIDeviceOrientationLandscapeLeft too, but convertPoint: returns bad results in that orientation.
 	return (interfaceOrientation == UIDeviceOrientationPortrait || interfaceOrientation == UIDeviceOrientationLandscapeRight);
@@ -150,6 +164,29 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 #pragma mark -
 
+- (NSInteger) totalImportantUnreadCount {
+	return _totalImportantUnreadCount;
+}
+
+- (void) setTotalImportantUnreadCount:(NSInteger) count {
+	if (_active && self.visibleViewController == _chatListViewController)
+		return;
+
+	if (count < 0) count = 0;
+
+	_totalImportantUnreadCount = count;
+
+	if (_totalImportantUnreadCount) {
+		_chatListViewController.navigationItem.title = [NSString stringWithFormat:NSLocalizedString(@"%@ (%u)", @"Unread count view title, uses the view's normal title with a number"), self.title, _totalImportantUnreadCount];
+		self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%u", _totalImportantUnreadCount];
+	} else {
+		_chatListViewController.navigationItem.title = self.title;
+		self.tabBarItem.badgeValue = nil;
+	}
+}
+
+#pragma mark -
+
 - (void) showNewChatActionSheet {
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
@@ -218,6 +255,11 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 	[_nextController release];
 	_nextController = nil;
+}
+
+- (void) navigationController:(UINavigationController *) navigationController willShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
+	if (viewController == _chatListViewController)
+		self.totalImportantUnreadCount = 0;
 }
 
 - (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
