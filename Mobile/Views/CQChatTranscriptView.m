@@ -201,6 +201,8 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 
 #pragma mark -
 
+@synthesize stripMessageFormatting = _stripMessageFormatting;
+
 - (void) addMessages:(NSArray *) messages {
 	if (_pendingMessages) [_pendingMessages addObjectsFromArray:messages];
 	else _pendingMessages = [messages mutableCopy];
@@ -223,8 +225,8 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 	if ([self.delegate respondsToSelector:@selector(transcriptView:encodingForMessageData:)])
 		encoding = [self.delegate transcriptView:self encodingForMessageData:message];
 
-	NSString *messageString = [[NSString alloc] initWithChatData:message encoding:encoding];
-	NSString *transformedMessageString = applyFunctionToTextInHTMLString(messageString, commonChatReplacment);
+	NSMutableString *messageString = [[NSMutableString alloc] initWithChatData:message encoding:encoding];
+	if (!messageString) messageString = [[NSMutableString alloc] initWithChatData:message encoding:NSASCIIStringEncoding];
 
 	BOOL highlighted = NO;
 	if ([self.delegate respondsToSelector:@selector(highlightWordsForTranscriptView:)]) {
@@ -232,8 +234,7 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 		if (highlightWords.count) {
 			NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 			NSCharacterSet *trimCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\"'"];
-			NSArray *messageStrings = [transformedMessageString componentsSeparatedByXMLTags];
-			NSString *singleMessageString = [messageStrings componentsJoinedByString:@""];
+			NSString *stylelessMessageString = [messageString stringByStrippingXMLTags];
 
 			for (NSString *highlightWord in highlightWords) {
 				if (!highlightWord.length)
@@ -249,7 +250,7 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 					regex = [[AGRegex alloc] initWithPattern:[NSString stringWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", highlightWord] options:AGRegexCaseInsensitive];
 				}
 
-				if ([regex findInString:singleMessageString]) {
+				if ([regex findInString:stylelessMessageString]) {
 					highlighted = YES;
 
 					if ([self.delegate respondsToSelector:@selector(transcriptView:highlightedMessageWithWord:)])
@@ -265,6 +266,16 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 	}
 
 	BOOL action = [[info objectForKey:@"action"] boolValue];
+
+	NSString *transformedMessageString = nil;
+	if (_stripMessageFormatting) {
+		[messageString stripXMLTags];
+
+		NSRange range = NSMakeRange(0, messageString.length);
+		commonChatReplacment(messageString, &range);
+
+		transformedMessageString = messageString;
+	} else transformedMessageString = applyFunctionToTextInHTMLString(messageString, commonChatReplacment);
 
 	NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\\'\""];
 	NSString *escapedMessage = [transformedMessageString stringByEscapingCharactersInSet:escapedCharacters];

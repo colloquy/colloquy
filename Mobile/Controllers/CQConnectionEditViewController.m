@@ -115,7 +115,8 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 		listViewController.title = NSLocalizedString(@"Join Rooms", @"Join Rooms view title");
 		listViewController.items = _connection.automaticJoinedRooms;
-		listViewController.itemImage = [UIImage imageNamed:@"roomIconSmall.png"];
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"])
+			listViewController.itemImage = [UIImage imageNamed:@"roomIconSmall.png"];
 		listViewController.addItemLabelText = NSLocalizedString(@"Add chat room", @"Add chat room label");
 		listViewController.noItemsLabelText = NSLocalizedString(@"No chat rooms", @"No chat rooms label");
 		listViewController.editViewTitle = NSLocalizedString(@"Edit Chat Room", @"Edit Chat Room view title");

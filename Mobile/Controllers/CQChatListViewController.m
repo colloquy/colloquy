@@ -138,6 +138,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	MVChatUser *user = [info objectForKey:@"user"];
 	NSData *message = [info objectForKey:@"message"];
 	NSString *messageString = [[NSString alloc] initWithChatData:message encoding:encoding];
+	if (!messageString) messageString = [[NSString alloc] initWithChatData:message encoding:NSASCIIStringEncoding];
 
 	NSString *transformedMessageString = [messageString stringByStrippingXMLTags];
 	transformedMessageString = [transformedMessageString stringByDecodingXMLSpecialCharacterEntities];
@@ -245,6 +246,8 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	id <CQChatViewController> chatViewController = [controllers objectAtIndex:indexPath.row];
 
 	CQChatTableCell *cell = [CQChatTableCell reusableTableViewCellInTableView:tableView];
+
+	cell.showsIcon = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"];
 
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 

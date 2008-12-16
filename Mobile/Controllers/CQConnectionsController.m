@@ -45,6 +45,8 @@
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnectOrDidNotConnect:) name:MVChatConnectionDidConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnectOrDidNotConnect:) name:MVChatConnectionDidNotConnectNotification object:nil];
 
 #if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
 	if (NSDebugEnabled)
@@ -107,7 +109,7 @@
 
 - (void) applicationWillTerminate {
 	for (MVChatConnection *connection in _connections)
-		[connection disconnect];
+		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 
 	[self saveConnections];
 }
@@ -205,6 +207,10 @@
 - (void) _willConnect:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
 
+	++_connectingCount;
+
+	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
 	for (NSString *fullCommand in connection.automaticCommands) {
 		NSScanner *scanner = [NSScanner scannerWithString:fullCommand];
 		[scanner setCharactersToBeSkipped:nil];
@@ -225,6 +231,13 @@
 	NSArray *rooms = connection.automaticJoinedRooms;
 	if (rooms.count)
 		[connection joinChatRoomsNamed:rooms];
+}
+
+- (void) _didConnectOrDidNotConnect:(NSNotification *) notification {
+	if (_connectingCount)
+		--_connectingCount;
+	if (!_connectingCount)
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
 #pragma mark -
@@ -440,7 +453,7 @@
 	MVChatConnection *connection = [[_connections objectAtIndex:index] retain];
 	if (!connection) return;
 
-	[connection disconnect];
+	[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 
 	[_connectionsViewController removeConnection:connection];
 
@@ -463,7 +476,7 @@
 	MVChatConnection *oldConnection = [[_connections objectAtIndex:index] retain];
 	if (!oldConnection) return;
 
-	[oldConnection disconnect];
+	[oldConnection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 
 	[_connectionsViewController removeConnection:oldConnection];
 
@@ -495,6 +508,10 @@
 
 + (NSString *) defaultRealName {
 	return [[NSUserDefaults standardUserDefaults] stringForKey:@"CQDefaultRealName"];
+}
+
++ (NSString *) defaultQuitMessage {
+	return [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
 }
 
 + (NSStringEncoding) defaultEncoding {

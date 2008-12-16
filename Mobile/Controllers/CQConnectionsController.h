@@ -13,6 +13,7 @@
 	@private
 	NSMutableArray *_connections;
 	BOOL _wasEditingConnection;
+	NSUInteger _connectingCount;
 
 	CQConnectionsViewController *_connectionsViewController;
 }
@@ -50,6 +51,7 @@
 + (NSString *) defaultNickname;
 + (NSString *) defaultUsername;
 + (NSString *) defaultRealName;
++ (NSString *) defaultQuitMessage;
 + (NSStringEncoding) defaultEncoding;
 
 @property (nonatomic, copy) NSString *displayName;

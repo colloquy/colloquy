@@ -130,7 +130,7 @@
 	if (connection.status == MVChatConnectionDisconnectedStatus && actionSheet.cancelButtonIndex != buttonIndex)
 		[connection connect];
 	else if (actionSheet.destructiveButtonIndex == buttonIndex)
-		[connection disconnect];
+		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 
 	[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
 }

@@ -23,6 +23,7 @@
 @property (nonatomic, copy) NSString *removeConfirmationText;
 @property (nonatomic) NSUInteger maximumMessagePreviews;
 @property (nonatomic) BOOL showsUserInMessagePreviews;
+@property (nonatomic) BOOL showsIcon;
 
 - (void) addMessagePreview:(NSString *) message fromUser:(MVChatUser *) user asAction:(BOOL) action animated:(BOOL) animated;
 @end

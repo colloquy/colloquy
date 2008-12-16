@@ -7,6 +7,8 @@
 #import "CQStyleView.h"
 #import "NSScannerAdditions.h"
 
+#import <AGRegex/AGRegex.h>
+
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatUserWatchRule.h>
@@ -24,10 +26,10 @@
 
 	_target = [target retain];
 
-	if ([_target isKindOfClass:[MVChatUser class]]) {
+	if (self.user) {
 		_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDirectChatEncoding"];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:_target];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:self.user];
 
 		_watchRule = [[MVChatUserWatchRule alloc] init];
 		_watchRule.nickname = self.user.nickname;
@@ -102,6 +104,12 @@
 }
 
 #pragma mark -
+
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	transcriptView.stripMessageFormatting = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"];
+}
 
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
@@ -224,7 +232,30 @@
 }
 
 - (NSArray *) highlightWordsForTranscriptView:(CQChatTranscriptView *) transcriptView {
-	return [NSArray arrayWithObject:self.connection.nickname];
+	static NSMutableArray *mainHighlightWords;
+	if (!mainHighlightWords) {
+		mainHighlightWords = [[NSMutableArray alloc] init];
+
+		NSString *highlightWordsString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQHighlightWords"];
+		if (highlightWordsString.length) {
+			AGRegex *regex = [[AGRegex alloc] initWithPattern:@"(?<=\\s|^)([/\"'].*?[/\"'])(?=\\s|$)"];
+			NSArray *matches = [regex findAllInString:highlightWordsString];
+
+			for (AGRegexMatch *match in [matches objectEnumerator])
+				[mainHighlightWords addObject:[match groupAtIndex:1]];
+
+			highlightWordsString = [regex replaceWithString:@"" inString:highlightWordsString];
+
+			[mainHighlightWords addObjectsFromArray:[highlightWordsString componentsSeparatedByString:@" "]];
+			[mainHighlightWords removeObject:@""];
+
+			[regex release];
+		}
+	}
+
+	NSMutableArray *highlightWords = [mainHighlightWords mutableCopy];
+	[highlightWords insertObject:self.connection.nickname atIndex:0];
+	return [highlightWords autorelease];
 }
 
 - (void) transcriptView:(CQChatTranscriptView *) transcriptView highlightedMessageWithWord:(NSString *) highlightWord {

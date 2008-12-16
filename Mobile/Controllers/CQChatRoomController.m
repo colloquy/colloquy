@@ -68,6 +68,8 @@
 }
 
 - (NSString *) title {
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowFullRoomNames"])
+		return self.room.name;
 	return self.room.displayName;
 }
 

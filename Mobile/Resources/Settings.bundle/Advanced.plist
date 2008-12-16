@@ -12,6 +12,88 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
+			<string>General</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>Highlight Words</string>
+			<key>Key</key>
+			<string>CQHighlightWords</string>
+			<key>DefaultValue</key>
+			<string></string>
+			<key>AutocapitalizationType</key>
+			<string>None</string>
+			<key>AutocorrectionType</key>
+			<string>No</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>Quit Message</string>
+			<key>Key</key>
+			<string>JVQuitMessage</string>
+			<key>DefaultValue</key>
+			<string>Get Colloquy for iPhone! http://linktoapp.com/colloquy</string>
+			<key>AutocapitalizationType</key>
+			<string>Sentences</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Interface</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Always Show Notices</string>
+			<key>Key</key>
+			<string>JVChatAlwaysShowNotices</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Show Room Prefixes</string>
+			<key>Key</key>
+			<string>JVShowFullRoomNames</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Hide Chat Icons</string>
+			<key>Key</key>
+			<string>CQShowsChatIcons</string>
+			<key>TrueValue</key>
+			<false/>
+			<key>FalseValue</key>
+			<true/>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Strip Message Styles</string>
+			<key>Key</key>
+			<string>JVChatStripMessageFormatting</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
 			<string>Default Encodings</string>
 		</dict>
 		<dict>
@@ -347,22 +429,6 @@
 			</array>
 			<key>DefaultValue</key>
 			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>Interface</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Always Show Notices</string>
-			<key>Key</key>
-			<string>JVChatAlwaysShowNotices</string>
-			<key>DefaultValue</key>
-			<false/>
 		</dict>
 	</array>
 </dict>

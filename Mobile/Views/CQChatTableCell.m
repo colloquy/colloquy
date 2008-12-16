@@ -75,6 +75,15 @@
 @synthesize maximumMessagePreviews = _maximumMessagePreviews;
 @synthesize showsUserInMessagePreviews = _showsUserInMessagePreviews;
 
+- (BOOL) showsIcon {
+	return !_iconImageView.hidden;
+}
+
+- (void) setShowsIcon:(BOOL) show {
+	_iconImageView.hidden = !show;
+	[self setNeedsLayout];
+}
+
 - (NSString *) name {
 	return _nameLabel.text;
 }
@@ -297,6 +306,7 @@
 	[super layoutSubviews];
 
 #define LEFT_MARGIN 10.
+#define NO_ICON_LEFT_MARGIN 14.
 #define RIGHT_MARGIN 6.
 #define ICON_RIGHT_MARGIN 10.
 
@@ -315,11 +325,13 @@
 
 	_unreadCountView.frame = frame;
 
-	frame = _iconImageView.frame;
-	frame.size = [_iconImageView sizeThatFits:_iconImageView.bounds.size];
-	frame.origin.x = contentRect.origin.x + LEFT_MARGIN;
-	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
-	_iconImageView.frame = frame;
+	if (!_iconImageView.hidden) {
+		frame = _iconImageView.frame;
+		frame.size = [_iconImageView sizeThatFits:_iconImageView.bounds.size];
+		frame.origin.x = contentRect.origin.x + LEFT_MARGIN;
+		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
+		_iconImageView.frame = frame;
+	}
 
 	frame = _nameLabel.frame;
 	frame.size = [_nameLabel sizeThatFits:_nameLabel.bounds.size];
@@ -329,7 +341,7 @@
 	for (UILabel *label in _chatPreviewLabels)
 		labelHeights += label.frame.size.height - LABEL_SPACING;
 
-	frame.origin.x = CGRectGetMaxX(_iconImageView.frame) + ICON_RIGHT_MARGIN;
+	frame.origin.x = (_iconImageView.hidden ? NO_ICON_LEFT_MARGIN : CGRectGetMaxX(_iconImageView.frame) + ICON_RIGHT_MARGIN);
 	frame.origin.y = round((contentRect.size.height / 2.) - (labelHeights / 2.));
 	frame.size.width = contentRect.size.width - frame.origin.x - (!self.showingDeleteConfirmation ? RIGHT_MARGIN : 0.);
 	if (!self.editing && _unreadCountView.bounds.size.width)
