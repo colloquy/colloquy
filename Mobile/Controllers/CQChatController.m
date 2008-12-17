@@ -164,6 +164,46 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 #pragma mark -
 
+- (NSDictionary *) persistentStateForConnection:(MVChatConnection *) connection {
+	NSArray *controllers = [self chatViewControllersForConnection:connection];
+	if (!controllers.count)
+		return nil;
+
+	NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
+
+	NSMutableArray *rooms = [[NSMutableArray alloc] init];
+	NSMutableArray *users = [[NSMutableArray alloc] init];
+
+	for (CQChatRoomController *controller in controllers) {
+		if ([controller isMemberOfClass:[CQChatRoomController class]])
+			[rooms addObject:controller.room.uniqueIdentifier];
+		else if ([controller isMemberOfClass:[CQDirectChatController class]])
+			[users addObject:controller.user.nickname];
+	}
+
+	if (rooms.count) [state setObject:rooms forKey:@"rooms"];
+	if (users.count) [state setObject:users forKey:@"users"];
+
+	[rooms release];
+	[users release];
+
+	return [state autorelease];
+}
+
+- (void) restorePersistentState:(NSDictionary *) state forConnection:(MVChatConnection *) connection {
+	for (NSString *roomName in [state objectForKey:@"rooms"]) {
+		MVChatRoom *room = [connection chatRoomWithName:roomName];
+		if (room) [self chatViewControllerForRoom:room ifExists:NO];
+	}
+
+	for (NSString *nickname in [state objectForKey:@"users"]) {
+		MVChatUser *user = [[connection chatUsersWithNickname:nickname] anyObject];
+		if (user) [self chatViewControllerForUser:user ifExists:NO];
+	}
+}
+
+#pragma mark -
+
 - (NSInteger) totalImportantUnreadCount {
 	return _totalImportantUnreadCount;
 }

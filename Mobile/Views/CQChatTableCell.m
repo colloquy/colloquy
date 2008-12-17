@@ -27,9 +27,11 @@
 	_nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	_unreadCountView = [[CQUnreadCountView alloc] initWithFrame:CGRectZero];
 
+	_iconImageView.alpha = _nameLabel.alpha = 0.5;
+
 	_maximumMessagePreviews = 2;
 	_showsUserInMessagePreviews = YES;
-	_available = YES;
+	_available = NO;
 
 	[self.contentView addSubview:_iconImageView];
 	[self.contentView addSubview:_nameLabel];

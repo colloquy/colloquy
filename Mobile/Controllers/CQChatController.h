@@ -23,6 +23,9 @@
 
 @property (nonatomic) NSInteger totalImportantUnreadCount;
 
+- (NSDictionary *) persistentStateForConnection:(MVChatConnection *) connection;
+- (void) restorePersistentState:(NSDictionary *) state forConnection:(MVChatConnection *) connection;
+
 - (void) showNewChatActionSheet;
 - (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) room andConnection:(MVChatConnection *) connection;
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated;

@@ -11,6 +11,7 @@
 #import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatRoom.h>
 
 #if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
 #import <Foundation/NSDebug.h>
@@ -108,10 +109,10 @@
 #pragma mark -
 
 - (void) applicationWillTerminate {
+	[self saveConnections];
+
 	for (MVChatConnection *connection in _connections)
 		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
-
-	[self saveConnections];
 }
 
 #pragma mark -
@@ -228,9 +229,24 @@
 		[connection sendCommand:command withArguments:arguments];
 	}
 
-	NSArray *rooms = connection.automaticJoinedRooms;
+	NSMutableArray *rooms = [connection.automaticJoinedRooms mutableCopy];
+
+	NSDictionary *persistentInformation = connection.persistentInformation;
+	NSArray *previousRooms = [persistentInformation objectForKey:@"previousRooms"];
+
+	if (previousRooms.count) {
+		[rooms addObjectsFromArray:previousRooms];
+
+		NSMutableDictionary *persistentInformation = [connection.persistentInformation mutableCopy];
+		[persistentInformation removeObjectForKey:@"previousRooms"];
+		connection.persistentInformation = persistentInformation;
+		[persistentInformation release];
+	}
+
 	if (rooms.count)
 		[connection joinChatRoomsNamed:rooms];
+
+	[rooms release];
 }
 
 - (void) _didConnectOrDidNotConnect:(NSNotification *) notification {
@@ -272,6 +288,8 @@
 			[persistentInformation setObject:[info objectForKey:@"automatic"] forKey:@"automatic"];
 		if ([info objectForKey:@"rooms"])
 			[persistentInformation setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
+		if ([info objectForKey:@"previousRooms"])
+			[persistentInformation setObject:[info objectForKey:@"previousRooms"] forKey:@"previousRooms"];
 		if ([info objectForKey:@"description"])
 			[persistentInformation setObject:[info objectForKey:@"description"] forKey:@"description"];
 		if ([info objectForKey:@"commands"] && ((NSString *)[info objectForKey:@"commands"]).length)
@@ -307,7 +325,10 @@
 
 		[_connections addObject:connection];
 
-		if ([[info objectForKey:@"automatic"] boolValue])
+		if ([info objectForKey:@"chatState"])
+			[[CQChatController defaultController] restorePersistentState:[info objectForKey:@"chatState"] forConnection:connection];
+
+		if ([[info objectForKey:@"automatic"] boolValue] || [[info objectForKey:@"wasConnected"] boolValue])
 			[connection connect];
 
 		[connection release];
@@ -326,22 +347,46 @@
 		NSMutableDictionary *persistentInformation = [connection.persistentInformation mutableCopy];
 		if ([persistentInformation objectForKey:@"automatic"])
 			[info setObject:[persistentInformation objectForKey:@"automatic"] forKey:@"automatic"];
-		if ([persistentInformation objectForKey:@"rooms"])
+		if ([[persistentInformation objectForKey:@"rooms"] count])
 			[info setObject:[persistentInformation objectForKey:@"rooms"] forKey:@"rooms"];
-		if ([persistentInformation objectForKey:@"description"])
+		if ([[persistentInformation objectForKey:@"description"] length])
 			[info setObject:[persistentInformation objectForKey:@"description"] forKey:@"description"];
-		if ([persistentInformation objectForKey:@"commands"])
+		if ([[persistentInformation objectForKey:@"commands"] count])
 			[info setObject:[[persistentInformation objectForKey:@"commands"] componentsJoinedByString:@"\n"] forKey:@"commands"];
 
 		[persistentInformation removeObjectForKey:@"rooms"];
+		[persistentInformation removeObjectForKey:@"previousRooms"];
 		[persistentInformation removeObjectForKey:@"commands"];
 		[persistentInformation removeObjectForKey:@"description"];
 		[persistentInformation removeObjectForKey:@"automatic"];
+
+		NSDictionary *chatState = [[CQChatController defaultController] persistentStateForConnection:connection];
+		if (chatState.count)
+			[info setObject:chatState forKey:@"chatState"];
 
 		if (persistentInformation.count)
 			[info setObject:persistentInformation forKey:@"persistentInformation"];
 
 		[persistentInformation release];
+
+		[info setObject:[NSNumber numberWithBool:connection.connected] forKey:@"wasConnected"];
+
+		NSSet *joinedRooms = connection.joinedChatRooms;
+		if (connection.connected && joinedRooms.count) {
+			NSMutableArray *previousJoinedRooms = [[NSMutableArray alloc] init];
+
+			for (MVChatRoom *room in joinedRooms) {
+				if (room && room.name)
+					[previousJoinedRooms addObject:room.name];
+			}
+
+			[previousJoinedRooms removeObjectsInArray:[info objectForKey:@"rooms"]];
+
+			if (previousJoinedRooms.count)
+				[info setObject:previousJoinedRooms forKey:@"previousRooms"];
+
+			[previousJoinedRooms release];
+		}
 
 		[info setObject:connection.server forKey:@"server"];
 		[info setObject:connection.urlScheme forKey:@"type"];
