@@ -67,16 +67,10 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return self;
 }
 
-- (void) release {
-	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
-		_releasing = YES;
-		[[self connection] _removeJoinedRoom:self];
-	}
-
-	[super release];
-}
-
 - (void) dealloc {
+	[_connection _removeKnownRoom:self];
+	[_connection _removeJoinedRoom:self];
+
 	[_name release];
 	[_uniqueIdentifier release];
 	[_dateJoined release];
@@ -603,10 +597,12 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 - (void) _setDateJoined:(NSDate *) date {
 	MVSafeCopyAssign( &_dateJoined, date );
+	if (date) [_connection _addJoinedRoom:self];
 }
 
 - (void) _setDateParted:(NSDate *) date {
 	MVSafeCopyAssign( &_dateParted, date );
+	if (date) [_connection _removeJoinedRoom:self];
 }
 
 - (void) _setTopic:(NSData *) newTopic {

@@ -8,6 +8,7 @@
 	if( ( self = [self init] ) ) {
 		_connection = roomConnection; // prevent circular retain
 		[self updateWithChannelEntry:channelEntry];
+		[_connection _addKnownRoom:self];
 	}
 
 	return self;
@@ -20,6 +21,8 @@
 
 	SilcLock( [roomConnection _silcClient] );
 
+	[_connection _removeKnownRoom:self];
+
 	[_name release];
 	_name = [[NSString allocWithZone:nil] initWithUTF8String:channelEntry -> channel_name];
 
@@ -29,6 +32,8 @@
 	_uniqueIdentifier = [[NSData allocWithZone:nil] initWithBytes:identifier length:len];
 
 	_channelEntry = channelEntry;
+
+	[_connection _addKnownRoom:self];
 
 	SilcUnlock( [roomConnection _silcClient] );
 }

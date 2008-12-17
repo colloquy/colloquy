@@ -389,16 +389,28 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	while( ( room = [enumerator nextObject] ) ) {
 		room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-		if( [room length] && [room rangeOfString:@" "].location == NSNotFound ) { // join non-password rooms in bulk
-			[roomList addObject:[self properNameForChatRoomNamed:room]];
-		} else if( [room length] && [room rangeOfString:@" "].location != NSNotFound ) { // has a password, join separately
+		room = [self properNameForChatRoomNamed:room];
+
+		if (![room length])
+			continue;
+
+		if( [room rangeOfString:@" "].location == NSNotFound ) { // join non-password rooms in bulk
+			if( ![roomList containsObject:room] )
+				[roomList addObject:room];
+		} else { // has a password, join separately
 			if( [roomList count] ) {
 				// join all requested rooms before this one so we do things in order
 				[self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
 				[roomList removeAllObjects]; // clear list since we joined them
 			}
 
-			[self sendRawMessageWithFormat:@"JOIN %@", [self properNameForChatRoomNamed:room]];
+			[self sendRawMessageWithFormat:@"JOIN %@", room];
+		}
+
+		if( [roomList count] >= 10 ) {
+			// join all requested rooms up to this point so we don't send too long of a list
+			[self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
+			[roomList removeAllObjects]; // clear list since we joined them
 		}
 	}
 
@@ -419,7 +431,22 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
-	return [super joinedChatRoomWithUniqueIdentifier:[name lowercaseString]];
+	return [self joinedChatRoomWithUniqueIdentifier:name];
+}
+
+- (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
+	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
+	identifier = [(NSString *)identifier lowercaseString];
+
+	MVChatRoom *room = [super chatRoomWithUniqueIdentifier:identifier];
+	if (!room) room = [[[MVIRCChatRoom allocWithZone:nil] initWithName:identifier andConnection:self] autorelease];
+	return room;
+}
+
+- (MVChatRoom *) chatRoomWithName:(NSString *) name {
+	MVChatRoom *room = [super chatRoomWithName:[name lowercaseString]];
+	if (!room) room = [[[MVIRCChatRoom allocWithZone:nil] initWithName:[name lowercaseString] andConnection:self] autorelease];
+	return room;
 }
 
 #pragma mark -
@@ -1058,7 +1085,7 @@ end:
 
 		MVChatRoom *room = nil;
 		if( [command isCaseInsensitiveEqualToString:@"msg"] && [roomTargetName length] > 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
-			room = [self joinedChatRoomWithName:roomTargetName];
+			room = [self joinedChatRoomWithUniqueIdentifier:roomTargetName];
 
 		BOOL echo = (isUser || isRoom || [command isCaseInsensitiveEqualToString:@"query"]);
 		if( room ) {
@@ -1721,7 +1748,7 @@ end:
 
 		MVChatRoom *room = nil;
 		if( [roomTargetName length] > 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
-			room = [self joinedChatRoomWithName:roomTargetName];
+			room = [self joinedChatRoomWithUniqueIdentifier:roomTargetName];
 
 		if( ctcp ) {
 			[self _handleCTCP:msgData asRequest:YES fromSender:sender forRoom:room];
@@ -1801,7 +1828,7 @@ end:
 
 		MVChatRoom *room = nil;
 		if( [roomTargetName length] > 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
-			room = [self joinedChatRoomWithName:roomTargetName];
+			room = [self joinedChatRoomWithUniqueIdentifier:roomTargetName];
 
 		if ( ctcp ) {
 			[self _handleCTCP:msgData asRequest:NO fromSender:sender forRoom:room];
@@ -2203,14 +2230,11 @@ end:
 
 	if( [parameters count] >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *name = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
-		MVChatRoom *room = [self joinedChatRoomWithName:name];
+		MVChatRoom *room = [self chatRoomWithName:name];
 
 		if( [sender isLocalUser] ) {
 			// The room is released in _handle366WithParameters.
-			if( ! room ) {
-				room = [[MVIRCChatRoom allocWithZone:nil] initWithName:name andConnection:self];
-				[self _addJoinedRoom:room];
-			} else [room retain];
+			[room retain];
 
 			[room _setDateJoined:[NSDate date]];
 			[room _setDateParted:nil];
@@ -2230,7 +2254,7 @@ end:
 
 	if( [parameters count] >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *roomName = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
-		MVChatRoom *room = [self joinedChatRoomWithName:roomName];
+		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:roomName];
 		if( ! room ) return;
 		if( [sender isLocalUser] ) {
 			[room _setDateParted:[NSDate date]];
@@ -2278,7 +2302,7 @@ end:
 		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
 
 	if( [parameters count] >= 2 && [sender isKindOfClass:[MVChatUser class]] ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:0]];
+		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[parameters objectAtIndex:0]];
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		if( ! room || ! user ) return;
 
@@ -2329,7 +2353,7 @@ end:
 		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
 
 	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:0]];
+		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[parameters objectAtIndex:0]];
 		NSData *topic = [parameters objectAtIndex:1];
 		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
 		[self performSelectorOnMainThread:@selector( _handleTopic: ) withObject:[NSDictionary dictionaryWithObjectsAndKeys:room, @"room", sender, @"author", topic, @"topic", nil] waitUntilDone:NO];
@@ -2481,7 +2505,7 @@ end:
 	if( [parameters count] >= 2 ) {
 		NSString *targetName = [parameters objectAtIndex:0];
 		if( [targetName length] > 1 && [[self chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]] ) {
-			MVChatRoom *room = [self joinedChatRoomWithName:targetName];
+			MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:targetName];
 			[self _parseRoomModes:[parameters subarrayWithRange:NSMakeRange( 1, [parameters count] - 1)] forRoom:room fromSender:sender];
 		} else {
 			// user modes not handled yet
@@ -2493,7 +2517,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 3 ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		[self _parseRoomModes:[parameters subarrayWithRange:NSMakeRange( 2, [parameters count] - 2)] forRoom:room fromSender:nil];
 	}
 }
@@ -2663,7 +2687,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] == 4 ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:2]];
+		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[parameters objectAtIndex:2]];
 		if( room && ! [room _namesSynced] ) {
 			NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
 			NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
@@ -2691,7 +2715,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 2 ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
+		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		if( room && ! [room _namesSynced] ) {
 			[room _setNamesSynced:YES];
 
@@ -2746,7 +2770,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 2 ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
+		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomMemberUsersSyncedNotification object:room];
 	}
 }
@@ -2776,7 +2800,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 3 ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		MVChatUser *user = [MVChatUser wildcardUserFromString:[self _stringFromPossibleData:[parameters objectAtIndex:2]]];
 		if( [parameters count] >= 5 ) {
 			[user setAttribute:[parameters objectAtIndex:3] forKey:MVChatUserBanServerAttribute];
@@ -2798,7 +2822,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 2 ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
+		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[room _setBansSynced:YES];
 		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomBannedUsersSyncedNotification object:room];
 	}
@@ -2811,7 +2835,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] == 3 ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		NSData *topic = [parameters objectAtIndex:2];
 		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
 		[room _setTopic:topic];
@@ -2822,7 +2846,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 4 ) {
-		MVChatRoom *room = [self joinedChatRoomWithName:[parameters objectAtIndex:1]];
+		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		MVChatUser *author = [MVChatUser wildcardUserFromString:[parameters objectAtIndex:2]];
 		[room _setTopicAuthor:author];
 

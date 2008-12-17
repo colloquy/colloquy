@@ -271,8 +271,6 @@
 	[joiningRoom _clearMemberUsers];
 	[joiningRoom _clearBannedUsers];
 
-	[self _addJoinedRoom:joiningRoom];
-
 	// joiningRoom will be released in incomingPresence
 
 	[localUserStringId release];
@@ -386,7 +384,6 @@
 	if( ! room ) return;
 
 	if ([[presence getAttribute:@"type"] isCaseInsensitiveEqualToString:@"error"]) {
-		[self _removeJoinedRoom:room];
 		[room release]; // balance the alloc or retain in joinChatRoomNamed:
 		// handle error...
 		return;

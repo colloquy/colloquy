@@ -47,6 +47,7 @@
 		_connection = connection;
 		_name = name;
 		_uniqueIdentifier = [[name lowercaseString] retain];
+		[_connection _addKnownRoom:self];
 	}
 	return self;
 }

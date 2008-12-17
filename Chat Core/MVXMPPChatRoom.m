@@ -12,6 +12,7 @@
 	if( ( self = [self init] ) ) {
 		_connection = connection; // prevent circular retain
 		MVSafeRetainAssign( &_uniqueIdentifier, identifier );
+		[_connection _addKnownRoom:self];
 	}
 
 	return self;
@@ -48,7 +49,6 @@
 - (void) partWithReason:(MVChatString *) reason {
 	if( ! [self isJoined] ) return;
 	[self _setDateParted:[NSDate date]];
-
 }
 
 #pragma mark -

@@ -97,7 +97,8 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSStringEncoding _encoding;
 
 	NSString *_npassword;
-	NSMutableDictionary *_joinedRooms;
+	NSMutableDictionary *_knownRooms;
+	NSMutableSet *_joinedRooms;
 	MVChatUser *_localUser;
 	NSMutableDictionary *_roomsCache;
 	NSMutableSet *_chatUserWatchRules;
@@ -185,6 +186,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property unsigned short proxyServerPort;
 
+@property(readonly) NSSet *knownChatRooms;
 @property(readonly) NSSet *joinedChatRooms;
 @property(readonly) NSCharacterSet *chatRoomNamePrefixes;
 
@@ -314,6 +316,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
+- (NSSet *) knownChatRooms;
 - (NSSet *) joinedChatRooms;
 - (NSCharacterSet *) chatRoomNamePrefixes;
 
@@ -384,6 +387,11 @@ extern NSString *MVChatConnectionErrorDomain;
 
 - (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier;
 - (MVChatRoom *) joinedChatRoomWithName:(NSString *) room;
+
+#pragma mark -
+
+- (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier;
+- (MVChatRoom *) chatRoomWithName:(NSString *) room;
 
 #pragma mark -
 

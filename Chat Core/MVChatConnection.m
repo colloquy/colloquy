@@ -135,9 +135,14 @@ static const NSStringEncoding supportedEncodings[] = {
 		_proxy = MVChatConnectionNoProxy;
 		_roomsCache = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:500];
 		_persistentInformation = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
-		_joinedRooms = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:10];
 		_supportedFeatures = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 		_localUser = nil;
+
+		CFSetCallBacks setCallbacks = { 0, NULL, NULL, kCFTypeSetCallBacks.copyDescription, kCFTypeSetCallBacks.equal, kCFTypeSetCallBacks.hash };
+		_joinedRooms = (NSMutableSet *)CFSetCreateMutable(NULL, 0, &setCallbacks);
+
+		CFDictionaryValueCallBacks valueCallbacks = { 0, NULL, NULL, kCFTypeDictionaryValueCallBacks.copyDescription, kCFTypeDictionaryValueCallBacks.equal };
+		_knownRooms = (NSMutableDictionary *)CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &valueCallbacks);
 
 #if !defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
@@ -241,6 +246,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_npassword release];
 	[_roomsCache release];
 	[_cachedDate release];
+	[_knownRooms release];
 	[_joinedRooms release];
 	[_chatUserWatchRules release];
 	[_localUser release];
@@ -255,6 +261,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	_npassword = nil;
 	_roomsCache = nil;
 	_cachedDate = nil;
+	_knownRooms = nil;
 	_joinedRooms = nil;
 	_chatUserWatchRules = nil;
 	_localUser = nil;
@@ -709,21 +716,49 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
+- (NSSet *) knownChatRooms {
+	@synchronized( _knownRooms ) {
+		return [NSSet setWithArray:[_knownRooms allValues]];
+	} return nil;
+}
+
 - (NSSet *) joinedChatRooms {
 	@synchronized( _joinedRooms ) {
-		return [NSSet setWithArray:[_joinedRooms allValues]];
+		return [NSSet setWithSet:_joinedRooms];
 	} return nil;
 }
 
 - (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
 	@synchronized( _joinedRooms ) {
-		return [_joinedRooms objectForKey:identifier];
+		MVChatRoom *room = [_knownRooms objectForKey:identifier];
+		return ([room isJoined] ? room : nil);
 	} return nil;
 }
 
 - (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
 	@synchronized( _joinedRooms ) {
 		NSEnumerator *enumerator = [_joinedRooms objectEnumerator];
+		MVChatRoom *room = nil;
+
+		while( ( room = [enumerator nextObject] ) )
+			if( [[room name] isEqualToString:name] )
+				return room;
+	}
+
+	return nil;
+}
+
+#pragma mark -
+
+- (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
+	@synchronized( _knownRooms ) {
+		return [_knownRooms objectForKey:identifier];
+	} return nil;
+}
+
+- (MVChatRoom *) chatRoomWithName:(NSString *) name {
+	@synchronized( _knownRooms ) {
+		NSEnumerator *enumerator = [_knownRooms objectEnumerator];
 		MVChatRoom *room = nil;
 
 		while( ( room = [enumerator nextObject] ) )
@@ -996,15 +1031,27 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
+- (void) _addKnownRoom:(MVChatRoom *) room {
+	@synchronized( _knownRooms ) {
+		[_knownRooms setObject:room forKey:[room uniqueIdentifier]];
+	}
+}
+
+- (void) _removeKnownRoom:(MVChatRoom *) room {
+	@synchronized( _knownRooms ) {
+		[_knownRooms removeObjectForKey:[room uniqueIdentifier]];
+	}
+}
+
 - (void) _addJoinedRoom:(MVChatRoom *) room {
 	@synchronized( _joinedRooms ) {
-		[_joinedRooms setObject:room forKey:[room uniqueIdentifier]];
+		[_joinedRooms addObject:room];
 	}
 }
 
 - (void) _removeJoinedRoom:(MVChatRoom *) room {
 	@synchronized( _joinedRooms ) {
-		[_joinedRooms removeObjectForKey:[room uniqueIdentifier]];
+		[_joinedRooms removeObject:room];
 	}
 }
 

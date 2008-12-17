@@ -632,7 +632,6 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		MVSILCChatRoom *room = (MVSILCChatRoom *)[self joinedChatRoomWithChannel:channel];
 		if( ! room ) {
 			room = [[MVSILCChatRoom allocWithZone:nil] initWithChannelEntry:channel andConnection:self];
-			[self _addJoinedRoom:room];
 		} else {
 			[room retain];
 			[room updateWithChannelEntry:channel];
