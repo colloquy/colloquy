@@ -106,29 +106,6 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 #pragma mark -
 
-- (void) viewDidLoad {
-	[super viewDidLoad];
-
-	self.tableView.rowHeight = 72.;
-}
-
-- (void) viewWillAppear:(BOOL) animated {
-	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
-	if (selectedIndexPath) {
-		MVChatConnection *connection = connectionForSection(selectedIndexPath.section);
-		NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
-		id <CQChatViewController> chatViewController = [controllers objectAtIndex:selectedIndexPath.row];
-		CQChatTableCell *cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:selectedIndexPath];
-		[cell takeValuesFromChatViewController:chatViewController];
-	}
-
-	[super viewWillAppear:animated];
-
-	self.navigationItem.leftBarButtonItem.enabled = ([CQConnectionsController defaultController].connections.count ? YES : NO);
-}
-
-#pragma mark -
-
 - (CQChatTableCell *) _chatTableCellForController:(id <CQChatViewController>) controller {
 	NSIndexPath *indexPath = indexPathForChatController(controller);
 	return (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
@@ -151,6 +128,19 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	[messageString release];
 }
 
+- (void) _refreshChatCell:(CQChatTableCell *) cell withController:(id <CQChatViewController>) chatViewController {
+	[cell takeValuesFromChatViewController:chatViewController];
+
+	if ([chatViewController isMemberOfClass:[CQChatRoomController class]]) {
+		if (chatViewController.available)
+			cell.removeConfirmationText = NSLocalizedString(@"Leave", @"Leave remove confirmation button title");
+		else cell.removeConfirmationText = NSLocalizedString(@"Close", @"Close remove confirmation button title");
+	} else if ([chatViewController isMemberOfClass:[CQDirectChatController class]]) {
+		cell.removeConfirmationText = NSLocalizedString(@"Close", @"Close remove confirmation button title");
+		cell.showsUserInMessagePreviews = NO;
+	}
+}
+
 - (void) _refreshConnectionChatCells:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
 	NSUInteger sectionIndex = sectionIndexForConnection(connection);
@@ -161,7 +151,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	for (id <CQChatViewController> controller in [[CQChatController defaultController] chatViewControllersForConnection:connection]) {
 		NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i++ inSection:sectionIndex];
 		CQChatTableCell *cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-		[cell takeValuesFromChatViewController:controller];
+		[self _refreshChatCell:cell withController:controller];
 	}
 }
 
@@ -177,7 +167,30 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		return;
 
 	CQChatTableCell *cell = [self _chatTableCellForController:controller];
-	[cell takeValuesFromChatViewController:controller];
+	[self _refreshChatCell:cell withController:controller];
+}
+
+#pragma mark -
+
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	self.tableView.rowHeight = 72.;
+}
+
+- (void) viewWillAppear:(BOOL) animated {
+	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+	if (selectedIndexPath) {
+		MVChatConnection *connection = connectionForSection(selectedIndexPath.section);
+		NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
+		id <CQChatViewController> chatViewController = [controllers objectAtIndex:selectedIndexPath.row];
+		CQChatTableCell *cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:selectedIndexPath];
+		[self _refreshChatCell:cell withController:chatViewController];
+	}
+
+	[super viewWillAppear:animated];
+
+	self.navigationItem.leftBarButtonItem.enabled = ([CQConnectionsController defaultController].connections.count ? YES : NO);
 }
 
 #pragma mark -
@@ -251,13 +264,6 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-	if ([chatViewController isMemberOfClass:[CQChatRoomController class]]) {
-		cell.removeConfirmationText = NSLocalizedString(@"Leave", @"Leave remove confirmation button title");
-	} else if ([chatViewController isMemberOfClass:[CQDirectChatController class]]) {
-		cell.removeConfirmationText = NSLocalizedString(@"Close", @"Close remove confirmation button title");
-		cell.showsUserInMessagePreviews = NO;
-	}
-
 	if ([chatViewController isKindOfClass:[CQDirectChatController class]]) {
 		CQDirectChatController *directChatViewController = (CQDirectChatController *)chatViewController;
 		NSArray *recentMessages = directChatViewController.recentMessages;
@@ -268,7 +274,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		}
 	}
 
-	[cell takeValuesFromChatViewController:chatViewController];
+	[self _refreshChatCell:cell withController:chatViewController];
 
 	return cell;
 }
