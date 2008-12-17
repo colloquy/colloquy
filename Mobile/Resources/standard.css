@@ -36,7 +36,6 @@ body {
 	content: "\2022";
 	margin-left: -2px;
 	margin-right: 2px;
-	font-size: 14px;
 }
 
 .message-wrapper.action .sender:after {
@@ -64,14 +63,14 @@ body {
 	padding: 2px 8px;
 	white-space: pre-wrap;
 	word-wrap: break-word;
-	-khtml-line-break: after-white-space;
-	-khtml-nbsp-mode: space;
+	-webkit-line-break: after-white-space;
+	-webkit-nbsp-mode: space;
 }
 
 .message {
 	display: inline;
 	white-space: pre-wrap;
 	word-wrap: break-word;
-	-khtml-line-break: after-white-space;
-	-khtml-nbsp-mode: space;
+	-webkit-line-break: after-white-space;
+	-webkit-nbsp-mode: space;
 }
