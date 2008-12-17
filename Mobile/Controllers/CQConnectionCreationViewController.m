@@ -58,13 +58,13 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 	_editViewController.connection = connection;
 	[connection release];
 
-	UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector( cancel:)];
+	UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
 	_editViewController.navigationItem.leftBarButtonItem = cancelItem;
 	[cancelItem release];
 
-	UIBarButtonItem *saveItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector( commit:)];
-	_editViewController.navigationItem.rightBarButtonItem = saveItem;
-	[saveItem release];
+	UIBarButtonItem *connectItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", @"Connect button title") style:UIBarButtonItemStyleDone target:self action:@selector(commit:)];
+	_editViewController.navigationItem.rightBarButtonItem = connectItem;
+	[connectItem release];
 
 	_editViewController.navigationItem.rightBarButtonItem.tag = UIBarButtonSystemItemSave;
 	_editViewController.navigationItem.rightBarButtonItem.enabled = (_url.host.length ? YES : NO);
