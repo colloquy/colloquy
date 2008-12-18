@@ -27,11 +27,9 @@
 	_nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	_unreadCountView = [[CQUnreadCountView alloc] initWithFrame:CGRectZero];
 
-	_iconImageView.alpha = _nameLabel.alpha = 0.5;
-
 	_maximumMessagePreviews = 2;
 	_showsUserInMessagePreviews = YES;
-	_available = NO;
+	_available = YES;
 
 	[self.contentView addSubview:_iconImageView];
 	[self.contentView addSubview:_nameLabel];
@@ -127,16 +125,12 @@
 - (void) setAvailable:(BOOL) available {
 	_available = available;
 
-	[UIView beginAnimations:nil context:NULL];
-
 	CGFloat alpha = (available ? 1. : 0.5);
 	_nameLabel.alpha = alpha;
 	_iconImageView.alpha = alpha;
 
 	for (UILabel *label in _chatPreviewLabels)
 		label.alpha = alpha;
-
-	[UIView commitAnimations];
 }
 
 #pragma mark -

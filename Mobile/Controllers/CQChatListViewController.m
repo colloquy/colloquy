@@ -128,7 +128,10 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	[messageString release];
 }
 
-- (void) _refreshChatCell:(CQChatTableCell *) cell withController:(id <CQChatViewController>) chatViewController {
+- (void) _refreshChatCell:(CQChatTableCell *) cell withController:(id <CQChatViewController>) chatViewController animated:(BOOL) animated {
+	if (animated)
+		[UIView beginAnimations:nil context:NULL];
+
 	[cell takeValuesFromChatViewController:chatViewController];
 
 	if ([chatViewController isMemberOfClass:[CQChatRoomController class]]) {
@@ -139,6 +142,9 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		cell.removeConfirmationText = NSLocalizedString(@"Close", @"Close remove confirmation button title");
 		cell.showsUserInMessagePreviews = NO;
 	}
+
+	if (animated)
+		[UIView commitAnimations];
 }
 
 - (void) _refreshConnectionChatCells:(NSNotification *) notification {
@@ -151,7 +157,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	for (id <CQChatViewController> controller in [[CQChatController defaultController] chatViewControllersForConnection:connection]) {
 		NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i++ inSection:sectionIndex];
 		CQChatTableCell *cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-		[self _refreshChatCell:cell withController:controller];
+		[self _refreshChatCell:cell withController:controller animated:YES];
 	}
 }
 
@@ -167,7 +173,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		return;
 
 	CQChatTableCell *cell = [self _chatTableCellForController:controller];
-	[self _refreshChatCell:cell withController:controller];
+	[self _refreshChatCell:cell withController:controller animated:YES];
 }
 
 #pragma mark -
@@ -185,7 +191,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
 		id <CQChatViewController> chatViewController = [controllers objectAtIndex:selectedIndexPath.row];
 		CQChatTableCell *cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:selectedIndexPath];
-		[self _refreshChatCell:cell withController:chatViewController];
+		[self _refreshChatCell:cell withController:chatViewController animated:NO];
 	}
 
 	[super viewWillAppear:animated];
@@ -211,6 +217,8 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 - (void) selectChatViewController:(id <CQChatViewController>) controller animatedSelection:(BOOL) animatedSelection animatedScroll:(BOOL) animatedScroll {
 	NSIndexPath *indexPath = indexPathForChatController(controller);
+	if (!self.tableView.numberOfSections)
+		[self.tableView reloadData];
 	[self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:animatedScroll];
 	[self.tableView selectRowAtIndexPath:indexPath animated:animatedSelection scrollPosition:UITableViewScrollPositionNone];
 }
@@ -264,17 +272,24 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
+	[self _refreshChatCell:cell withController:chatViewController animated:NO];
+
 	if ([chatViewController isKindOfClass:[CQDirectChatController class]]) {
 		CQDirectChatController *directChatViewController = (CQDirectChatController *)chatViewController;
 		NSArray *recentMessages = directChatViewController.recentMessages;
-		NSUInteger maximum = MIN(cell.maximumMessagePreviews, recentMessages.count);
-		for (NSUInteger i = (recentMessages.count - maximum); i < recentMessages.count; ++i) {
-			NSDictionary *info = [recentMessages objectAtIndex:i];
-			[self _addMessagePreview:info withEncoding:directChatViewController.encoding toChatTableCell:cell animated:NO];
-		}
-	}
+		NSMutableArray *previewMessages = [[NSMutableArray alloc] initWithCapacity:2];
 
-	[self _refreshChatCell:cell withController:chatViewController];
+		for (NSInteger i = (recentMessages.count - 1); i >= 0 && previewMessages.count < 2; --i) {
+			NSDictionary *message = [recentMessages objectAtIndex:i];
+			MVChatUser *user = [message objectForKey:@"user"];
+			if (!user.localUser) [previewMessages insertObject:message atIndex:0];
+		}
+
+		for (NSDictionary *message in previewMessages)
+			[self _addMessagePreview:message withEncoding:directChatViewController.encoding toChatTableCell:cell animated:NO];
+
+		[previewMessages release];
+	}
 
 	return cell;
 }
