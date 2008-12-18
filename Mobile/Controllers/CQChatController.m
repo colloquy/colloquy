@@ -10,6 +10,12 @@
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVDirectChatConnection.h>
 
+@interface CQChatController (CQChatControllerPrivate)
+- (void) _showNextChatControllerAnimated:(BOOL) animated;
+@end
+
+#pragma mark -
+
 @implementation CQChatController
 + (CQChatController *) defaultController {
 	static BOOL creatingSharedInstance = NO;
@@ -214,7 +220,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 				NSMutableDictionary *newMessage = [[NSMutableDictionary alloc] init];
 
 				MVChatUser *user = [message objectForKey:@"user"];
-				if (user && !user.localUser) [newMessage setObject:user.uniqueIdentifier forKey:@"user"];
+				if (user && !user.localUser) [newMessage setObject:user.nickname forKey:@"user"];
 				else if (user.localUser) [newMessage setObject:[NSNumber numberWithBool:YES] forKey:@"localUser"];
 
 				NSData *messageData = [message objectForKey:@"message"];
@@ -253,8 +259,6 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 }
 
 - (void) restorePersistentState:(NSDictionary *) state forConnection:(MVChatConnection *) connection {
-	id <CQChatViewController> activeChatController = nil;
-
 	for (NSDictionary *info in [state objectForKey:@"openChats"]) {
 		NSString *type = [info objectForKey:@"type"];
 		NSString *name = [info objectForKey:@"name"];
@@ -264,7 +268,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 			MVChatRoom *room = [connection chatRoomWithName:name];
 			if (room) controller = [self chatViewControllerForRoom:room ifExists:NO];
 		} else if ([type isEqualToString:@"user"]) {
-			MVChatUser *user = [[connection chatUsersWithNickname:name] anyObject];
+			MVChatUser *user = [connection chatUserWithUniqueIdentifier:name];
 			if (user) controller = [self chatViewControllerForUser:user ifExists:NO];
 		}
 
