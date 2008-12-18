@@ -123,6 +123,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		_currentNickname = [_nickname retain];
 		_realName = [NSFullUserName() retain];
 		_threadWaitLock = [[NSConditionLock allocWithZone:nil] initWithCondition:0];
+		_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
 		[self _resetSupportedFeatures];
 	}
 
@@ -262,7 +263,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		return;
 
 	if( ! _currentNickname || ! connectiongOrConnected )
-		MVSafeCopyAssign( &_currentNickname, newNickname );
+		[self _setCurrentNickname:newNickname];
 
 	if( connectiongOrConnected )
 		[self sendRawMessageImmediatelyWithFormat:@"NICK %@", newNickname];
@@ -719,7 +720,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		[_sendQueue removeAllObjects];
 	}
 
-	MVSafeCopyAssign( &_currentNickname, _nickname );
+	[self _setCurrentNickname:_nickname];
 
 	MVSafeAdoptAssign( &_lastCommand, nil );
 	MVSafeAdoptAssign( &_queueWait, nil );
@@ -764,8 +765,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( [[self password] length] ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", [self password]];
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self preferredNickname]];
 	[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", ( [[self username] length] ? [self username] : @"anonymous" ), ( [[self realName] length] ? [self realName] : @"anonymous" )];
-
-	MVSafeAdoptAssign( &_localUser, [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self] );
 
 	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:JVPeriodicEventsInterval];
 	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:JVPingServerInterval];
@@ -1190,6 +1189,7 @@ end:
 
 - (void) _setCurrentNickname:(NSString *) currentNickname {
 	MVSafeCopyAssign( &_currentNickname, currentNickname );
+	[_localUser _setUniqueIdentifier:[currentNickname lowercaseString]];
 }
 
 #pragma mark -
@@ -1552,7 +1552,6 @@ end:
 		NSString *nick = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		if( ! [nick isEqualToString:[self nickname]] ) {
 			[self _setCurrentNickname:nick];
-			[[self localUser] _setUniqueIdentifier:[nick lowercaseString]];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
 		}
 	}
@@ -2568,7 +2567,6 @@ end:
 		if( [sender isLocalUser] ) {
 			[self _setCurrentNickname:nick];
 			[sender _setIdentified:NO];
-			[sender _setUniqueIdentifier:[nick lowercaseString]];
 			note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
 		} else {
 			[self _updateKnownUser:sender withNewNickname:nick];

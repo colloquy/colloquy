@@ -997,7 +997,6 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	[_roomsCache removeAllObjects];
 
-	MVSafeAdoptAssign( &_localUser, nil );
 	MVSafeAdoptAssign( &_cachedDate, nil );
 
 	if( wasConnected ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidDisconnectNotification object:self];
