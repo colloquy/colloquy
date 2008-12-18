@@ -265,7 +265,7 @@
 }
 
 - (void) transcriptView:(CQChatTranscriptView *) transcriptView highlightedMessageWithWord:(NSString *) highlightWord {
-	if (!_active) {
+	if (!_active && self.available) {
 		++_unreadHighlightedMessages;
 		++[CQChatController defaultController].totalImportantUnreadCount;
 	}
@@ -379,17 +379,15 @@
 
 	MVChatUser *user = [info objectForKey:@"user"];
 
-	if (!user.localUser) {
-		if (!_active) {
-			++_unreadMessages;
-			if (self.user)
-				++[CQChatController defaultController].totalImportantUnreadCount;
-		}
-
-		[_recentMessages addObject:info];
-		if (_recentMessages.count > 5)
-			[_recentMessages removeObjectAtIndex:0];
+	if (!user.localUser && !_active && self.available) {
+		++_unreadMessages;
+		if (self.user)
+			++[CQChatController defaultController].totalImportantUnreadCount;
 	}
+
+	[_recentMessages addObject:info];
+	if (_recentMessages.count > 10)
+		[_recentMessages removeObjectAtIndex:0];
 
 	[transcriptView addMessage:info];
 }

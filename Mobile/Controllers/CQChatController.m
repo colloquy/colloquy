@@ -59,6 +59,9 @@
 		_chatListViewController = [[CQChatListViewController alloc] init];
 
 	[self pushViewController:_chatListViewController animated:NO];
+
+	if (_nextController)
+		[self _showNextChatControllerAnimated:NO];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -162,6 +165,21 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
 }
 
+- (void) _showNextChatControllerAnimated:(BOOL) animated {
+	if (self.visibleViewController != _chatListViewController)
+		return;
+
+	[_chatListViewController selectChatViewController:_nextController animatedSelection:NO animatedScroll:animated];
+	[self pushViewController:(UIViewController *)_nextController animated:animated];
+
+	[_nextController release];
+	_nextController = nil;
+}
+
+- (void) _showNextChatController {
+	[self _showNextChatControllerAnimated:YES];
+}
+
 #pragma mark -
 
 - (NSDictionary *) persistentStateForConnection:(MVChatConnection *) connection {
@@ -170,35 +188,119 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 		return nil;
 
 	NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
+	NSMutableArray *chats = [[NSMutableArray alloc] init];
 
-	NSMutableArray *rooms = [[NSMutableArray alloc] init];
-	NSMutableArray *users = [[NSMutableArray alloc] init];
+	for (id <CQChatViewController> controller in controllers) {
+		NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
 
-	for (CQChatRoomController *controller in controllers) {
-		if ([controller isMemberOfClass:[CQChatRoomController class]])
-			[rooms addObject:controller.room.uniqueIdentifier];
-		else if ([controller isMemberOfClass:[CQDirectChatController class]])
-			[users addObject:controller.user.nickname];
+		if ((UIViewController *)controller == self.visibleViewController)
+			[info setObject:[NSNumber numberWithBool:YES] forKey:@"active"];
+
+		if ([controller isMemberOfClass:[CQChatRoomController class]]) {
+			CQChatRoomController *roomController = (CQChatRoomController *)controller;
+			[info setObject:@"room" forKey:@"type"];
+			[info setObject:roomController.room.uniqueIdentifier forKey:@"name"];
+		} else if ([controller isMemberOfClass:[CQDirectChatController class]]) {
+			CQDirectChatController *chatController = (CQDirectChatController *)controller;
+			[info setObject:@"user" forKey:@"type"];
+			[info setObject:chatController.user.nickname forKey:@"name"];
+		}
+
+		if ([controller isKindOfClass:[CQDirectChatController class]]) {
+			CQDirectChatController *chatController = (CQDirectChatController *)controller;
+			NSMutableArray *messages = [[NSMutableArray alloc] init];
+
+			for (NSDictionary *message in chatController.recentMessages) {
+				NSMutableDictionary *newMessage = [[NSMutableDictionary alloc] init];
+
+				MVChatUser *user = [message objectForKey:@"user"];
+				if (user && !user.localUser) [newMessage setObject:user.uniqueIdentifier forKey:@"user"];
+				else if (user.localUser) [newMessage setObject:[NSNumber numberWithBool:YES] forKey:@"localUser"];
+
+				NSData *messageData = [message objectForKey:@"message"];
+				if (messageData) [newMessage setObject:messageData forKey:@"message"];
+
+				NSString *identifier = [message objectForKey:@"identifier"];
+				if (identifier) [newMessage setObject:identifier forKey:@"identifier"];
+
+				NSNumber *action = [message objectForKey:@"action"];
+				if (action) [newMessage setObject:action forKey:@"action"];
+
+				NSNumber *notice = [message objectForKey:@"notice"];
+				if (notice) [newMessage setObject:notice forKey:@"notice"];
+
+				[messages addObject:newMessage];
+
+				[newMessage release];
+			}
+
+			if (messages.count)
+				[info setObject:messages forKey:@"messages"];
+
+			[messages release];
+		}
+
+		[chats addObject:info];
+
+		[info release];
 	}
 
-	if (rooms.count) [state setObject:rooms forKey:@"rooms"];
-	if (users.count) [state setObject:users forKey:@"users"];
+	if (chats.count) [state setObject:chats forKey:@"openChats"];
 
-	[rooms release];
-	[users release];
+	[chats release];
 
 	return [state autorelease];
 }
 
 - (void) restorePersistentState:(NSDictionary *) state forConnection:(MVChatConnection *) connection {
-	for (NSString *roomName in [state objectForKey:@"rooms"]) {
-		MVChatRoom *room = [connection chatRoomWithName:roomName];
-		if (room) [self chatViewControllerForRoom:room ifExists:NO];
-	}
+	id <CQChatViewController> activeChatController = nil;
 
-	for (NSString *nickname in [state objectForKey:@"users"]) {
-		MVChatUser *user = [[connection chatUsersWithNickname:nickname] anyObject];
-		if (user) [self chatViewControllerForUser:user ifExists:NO];
+	for (NSDictionary *info in [state objectForKey:@"openChats"]) {
+		NSString *type = [info objectForKey:@"type"];
+		NSString *name = [info objectForKey:@"name"];
+		id <CQChatViewController> controller = nil;
+
+		if ([type isEqualToString:@"room"]) {
+			MVChatRoom *room = [connection chatRoomWithName:name];
+			if (room) controller = [self chatViewControllerForRoom:room ifExists:NO];
+		} else if ([type isEqualToString:@"user"]) {
+			MVChatUser *user = [[connection chatUsersWithNickname:name] anyObject];
+			if (user) controller = [self chatViewControllerForUser:user ifExists:NO];
+		}
+
+		if (!controller || ![controller isKindOfClass:[CQDirectChatController class]])
+			continue;
+
+		CQDirectChatController *chatController = (CQDirectChatController *)controller;
+		for (NSDictionary *message in [info objectForKey:@"messages"]) {
+			NSMutableDictionary *messageCopy = [message mutableCopy];
+
+			MVChatUser *user = nil;
+			NSNumber *localUser = [messageCopy objectForKey:@"localUser"];
+			if ([localUser boolValue]) {
+				user = connection.localUser;
+			} else {
+				NSString *userIdentifier = [messageCopy objectForKey:@"user"];
+				user = [connection chatUserWithUniqueIdentifier:userIdentifier];
+			}
+
+			if (user) {
+				[messageCopy setObject:user forKey:@"user"];
+
+				[chatController addMessage:messageCopy];
+
+				if (!user.localUser)
+					[_chatListViewController addMessagePreview:messageCopy forChatController:chatController];
+			}
+
+			[messageCopy release];
+		}
+
+		if ([[info objectForKey:@"active"] boolValue]) {
+			id old = _nextController;
+			_nextController = [chatController retain];
+			[old release];
+		}
 	}
 }
 
@@ -286,17 +388,6 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	}
 }
 
-- (void) showNextChatController {
-	if (self.visibleViewController != _chatListViewController)
-		return;
-
-	[_chatListViewController selectChatViewController:_nextController animatedSelection:NO animatedScroll:YES];
-	[self pushViewController:(UIViewController *)_nextController animated:YES];
-
-	[_nextController release];
-	_nextController = nil;
-}
-
 - (void) navigationController:(UINavigationController *) navigationController willShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
 	if (viewController == _chatListViewController)
 		self.totalImportantUnreadCount = 0;
@@ -304,7 +395,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 - (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
 	if (viewController == _chatListViewController && _nextController)
-		[self performSelector:@selector(showNextChatController) withObject:nil afterDelay:0.33];
+		[self performSelector:@selector(_showNextChatController) withObject:nil afterDelay:0.33];
 }
 
 #pragma mark -
