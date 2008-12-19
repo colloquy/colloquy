@@ -7,6 +7,7 @@
 #import "JVChatRoomPanel.h"
 #import "JVDirectChatPanel.h"
 #import "NSURLAdditions.h"
+#import "MVChatConnection.h"
 
 static MVConnectionsController *sharedInstance = nil;
 
@@ -1497,6 +1498,53 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _errorOccurred:(NSNotification *) notification {
+	
+	NSString *errorTitle = nil;
+	
+	switch ( [[[notification userInfo] objectForKey:@"error"] code] ) {
+		case MVChatConnectionRoomIsFullError:
+			errorTitle = NSLocalizedString( @"Room is Full", "room is full error title" );
+			break;
+		case MVChatConnectionInviteOnlyRoomError:
+			errorTitle = NSLocalizedString( @"Invite Only Room", "invite only room error title" );
+			break;
+		case MVChatConnectionBannedFromRoomError:
+			errorTitle = NSLocalizedString( @"Banned from Room", "banned from room error title" );
+			break;
+		case MVChatConnectionRoomPasswordIncorrectError:
+			errorTitle = NSLocalizedString( @"Room Password Incorrect", "room password incorrect error title" );
+			break;
+		default:
+			errorTitle = NSLocalizedString( @"An Error Occured", "unknown error title" );
+			break;
+	}
+	
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	[context setObject:errorTitle forKey:@"title"];
+	[context setObject:[[[notification userInfo] objectForKey:@"error"] localizedDescription] forKey:@"description"];
+	[[JVNotificationController defaultController] performNotification:@"JVChatError" withContextInfo:context];
+	
+	NSAlert *chatErrorAlert = [[[NSAlert alloc] init] autorelease];
+	[chatErrorAlert setMessageText:errorTitle];
+	[chatErrorAlert setInformativeText:[[[notification userInfo] objectForKey:@"error"] localizedDescription]];
+	[chatErrorAlert setAlertStyle:NSInformationalAlertStyle];
+	// in case of incorrect password we can simplytry again with the correct one. leopard only for now, because NSAlert's setAccessoryView is 10.5+ only, 10.4 would need a new NIB for this feature:
+	if ( [[[notification userInfo] objectForKey:@"error"] code] == MVChatConnectionRoomPasswordIncorrectError && floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4) {
+		[chatErrorAlert addButtonWithTitle:NSLocalizedString( @"Join", "join button" )];
+		[chatErrorAlert addButtonWithTitle:NSLocalizedString( @"Cancel", "cancel button" )];
+		NSTextField *roomKeyAccessory = [[[NSSecureTextField alloc] initWithFrame:NSMakeRect(0,0,220,22)] autorelease];
+		[[roomKeyAccessory cell] setPlaceholderString:NSLocalizedString( @"Room Key", "room key secure text field placeholder" )];
+		[chatErrorAlert setAccessoryView:roomKeyAccessory];
+		// the roomKeyAccessory should be in the tab chain and probably also the initial first responder, this code is not ready yet though
+		// [chatErrorAlert layout];
+		// [[chatErrorAlert window] setInitialFirstResponder:roomKeyAccessory];
+		if ( [chatErrorAlert runModal] == NSAlertFirstButtonReturn ) {
+			[[notification object] joinChatRoomNamed:[[[[notification userInfo] objectForKey:@"error"] userInfo] objectForKey:@"room"] withPassphrase:[roomKeyAccessory stringValue]];
+		}
+	} else {
+		[chatErrorAlert runModal];
+	}
+	
 /*	MVChatConnection *connection = [notification object];
 	MVChatError error = (MVChatError) [[[notification userInfo] objectForKey:@"error"] intValue];
 	NSLog( @"error: %@ (%d)", [MVChatConnection descriptionForError:error], error );

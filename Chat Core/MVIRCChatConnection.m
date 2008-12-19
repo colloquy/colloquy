@@ -3052,6 +3052,50 @@ end:
 	}
 }
 
+- (void) _handle471WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_CHANNELISFULL
+	MVAssertCorrectThreadRequired( _connectionThread );
+	
+	if( [parameters count] >= 2 ) {
+		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+		
+		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+		[userInfo setObject:self forKey:@"connection"];
+		[userInfo setObject:room forKey:@"room"];
+		[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" is full.", "room is full error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
+		
+		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionRoomIsFullError userInfo:userInfo]];
+	}
+}
+- (void) _handle473WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_INVITEONLYCHAN
+	MVAssertCorrectThreadRequired( _connectionThread );
+	
+	if( [parameters count] >= 2 ) {
+		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+		
+		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+		[userInfo setObject:self forKey:@"connection"];
+		[userInfo setObject:room forKey:@"room"];
+		[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" is invite only.", "invite only room error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
+		
+		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionInviteOnlyRoomError userInfo:userInfo]];
+	}
+}
+
+- (void) _handle474WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BANNEDFROMCHAN
+	MVAssertCorrectThreadRequired( _connectionThread );
+	
+	if( [parameters count] >= 2 ) {
+		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+		
+		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+		[userInfo setObject:self forKey:@"connection"];
+		[userInfo setObject:room forKey:@"room"];
+		[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"You are banned from the room \"%@\" on \"%@\".", "banned from room error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
+		
+		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionBannedFromRoomError userInfo:userInfo]];
+	}
+}
+
 - (void) _handle475WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BADCHANNELKEY
 	MVAssertCorrectThreadRequired( _connectionThread );
 
