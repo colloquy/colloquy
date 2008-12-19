@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>JVChatEncoding</key>
+	<integer>5</integer>
+	<key>CQDirectChatEncoding</key>
+	<integer>0</integer>
+	<key>CQChatRoomEncoding</key>
+	<integer>0</integer>
+	<key>JVSortRoomMembersByStatus</key>
+	<true/>
+	<key>JVShowFullRoomNames</key>
+	<false/>
+	<key>JVChatStripMessageFormatting</key>
+	<false/>
+	<key>CQShowLeaveEvents</key>
+	<true/>
+	<key>CQShowJoinEvents</key>
+	<true/>
+	<key>CQShowsChatIcons</key>
+	<true/>
+	<key>CQHighlightWords</key>
+	<string></string>
+	<key>CQDefaultRealName</key>
+	<string>Mobile User</string>
+	<key>CQDefaultNickname</key>
+	<string>mobile</string>
+	<key>JVQuitMessage</key>
+	<string>Get Colloquy for iPhone! http://linktoapp.com/colloquy</string>
+</dict>
+</plist>
