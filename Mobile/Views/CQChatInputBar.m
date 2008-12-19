@@ -20,6 +20,7 @@
 	_inputField.returnKeyType = UIReturnKeySend;
 	_inputField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
 	_inputField.enablesReturnKeyAutomatically = YES;
+	_inputField.clearButtonMode = UITextFieldViewModeWhileEditing;
 	_inputField.delegate = self;
 
 	[self addSubview:_inputField];
