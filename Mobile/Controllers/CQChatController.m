@@ -153,6 +153,8 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 			hideFromUser = NO;
 	}
 
+	if (user.localUser) hideFromUser = YES;
+
 	if (!hideFromUser) {
 		CQDirectChatController *controller = [self chatViewControllerForUser:user ifExists:NO userInitiated:NO];
 		[controller addMessage:notification.userInfo];
