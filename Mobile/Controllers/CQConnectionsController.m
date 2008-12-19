@@ -46,7 +46,8 @@
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnectOrDidNotConnect:) name:MVChatConnectionDidConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnectOrDidNotConnect:) name:MVChatConnectionDidNotConnectNotification object:nil];
 
 #if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
@@ -210,6 +211,7 @@
 
 	++_connectingCount;
 
+	[UIApplication sharedApplication].idleTimerDisabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIdleTimerDisabled"];
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 
 	for (NSString *fullCommand in connection.automaticCommands) {
@@ -254,6 +256,21 @@
 		--_connectingCount;
 	if (!_connectingCount)
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	if (!_connectedCount && !_connectingCount)
+		[UIApplication sharedApplication].idleTimerDisabled = NO;
+}
+
+- (void) _didConnect:(NSNotification *) notification {
+	++_connectedCount;
+
+	[self _didConnectOrDidNotConnect:notification];
+}
+
+- (void) _didDisconnect:(NSNotification *) notification {
+	if (_connectedCount)
+		--_connectedCount;
+	if (!_connectedCount && !_connectingCount)
+		[UIApplication sharedApplication].idleTimerDisabled = NO;
 }
 
 #pragma mark -

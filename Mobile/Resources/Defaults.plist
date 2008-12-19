@@ -20,6 +20,8 @@
 	<true/>
 	<key>CQShowsChatIcons</key>
 	<true/>
+	<key>CQIdleTimerDisabled</key>
+	<true/>
 	<key>CQHighlightWords</key>
 	<string></string>
 	<key>CQDefaultRealName</key>

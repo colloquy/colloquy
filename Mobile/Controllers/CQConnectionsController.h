@@ -14,6 +14,7 @@
 	NSMutableArray *_connections;
 	BOOL _wasEditingConnection;
 	NSUInteger _connectingCount;
+	NSUInteger _connectedCount;
 
 	CQConnectionsViewController *_connectionsViewController;
 }
