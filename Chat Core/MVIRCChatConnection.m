@@ -24,6 +24,8 @@
 #import "MVChatPluginManager.h"
 #endif
 
+#import <AGRegex/AGRegex.h>
+
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
 #import <CFNetwork/CFNetwork.h>
 #endif
@@ -1724,7 +1726,9 @@ end:
 	// if the sender is a server lets make a user for the server name
 	// this is not ideal but the notifications need user objects
 	if( [sender isKindOfClass:[NSString class]] )
-		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
+		sender = [self chatUserWithUniqueIdentifier:(NSString *)sender];
+	else if( !sender )
+		sender = [self chatUserWithUniqueIdentifier:[self server]];
 
 	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *targetName = [parameters objectAtIndex:0];
@@ -1749,10 +1753,16 @@ end:
 		if( [roomTargetName length] > 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
 			room = [self joinedChatRoomWithUniqueIdentifier:roomTargetName];
 
+		MVChatUser *targetUser = nil;
+		if( !room ) targetUser = [self chatUserWithUniqueIdentifier:targetName];
+
+		id target = room;
+		if( !target ) target = targetUser;
+
 		if( ctcp ) {
 			[self _handleCTCP:msgData asRequest:YES fromSender:sender forRoom:room];
 		} else {
-			NSDictionary *privmsgInfo = [NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", room, @"room", nil];
+			NSDictionary *privmsgInfo = [NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", target, @"target", room, @"room", nil];
 			[self performSelectorOnMainThread:@selector( _handlePrivmsg: ) withObject:privmsgInfo waitUntilDone:NO];
 		}
 	}
@@ -1761,6 +1771,7 @@ end:
 - (void) _handleNotice:(NSDictionary *) noticeInfo {
 	MVAssertMainThreadRequired();
 
+	id target = [noticeInfo objectForKey:@"target"];
 	MVChatRoom *room = [noticeInfo objectForKey:@"room"];
 	MVChatUser *sender = [noticeInfo objectForKey:@"user"];
 	NSMutableData *message = [noticeInfo objectForKey:@"message"];
@@ -1782,10 +1793,12 @@ end:
 	if( room ) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:noticeInfo];
 	} else {
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:noticeInfo];
+		if( target == room || ([target isKindOfClass:[MVChatUser class]] && [target isLocalUser]))
+			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:noticeInfo];
 
 		if( [[sender nickname] isEqualToString:@"NickServ"] ) {
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
+
 			if( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"IDENTIFY"] ) {
 				if( ! [self nicknamePassword] ) {
 					[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
@@ -1797,6 +1810,16 @@ end:
 			}
 
 			[msg release];
+		} else if (![self isConnected]) {
+			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
+
+			AGRegex *regex = [[AGRegex allocWithZone:nil] initWithPattern:@"/QUOTE PASS (\\w+)" options:AGRegexCaseInsensitive];
+			AGRegexMatch *match = [regex findInString:msg];
+
+			if( match ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", [match groupAtIndex:1]];
+
+			[regex release];
+			[msg release];
 		}
 	}
 }
@@ -1807,7 +1830,9 @@ end:
 	// if the sender is a server lets make a user for the server name
 	// this is not ideal but the notifications need user objects
 	if( [sender isKindOfClass:[NSString class]] )
-		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
+		sender = [self chatUserWithUniqueIdentifier:(NSString *)sender];
+	else if( !sender )
+		sender = [self chatUserWithUniqueIdentifier:[self server]];
 
 	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *targetName = [parameters objectAtIndex:0];
@@ -1829,10 +1854,16 @@ end:
 		if( [roomTargetName length] > 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
 			room = [self joinedChatRoomWithUniqueIdentifier:roomTargetName];
 
+		MVChatUser *targetUser = nil;
+		if( !room ) targetUser = [self chatUserWithUniqueIdentifier:targetName];
+
+		id target = room;
+		if( !target ) target = targetUser;
+
 		if ( ctcp ) {
 			[self _handleCTCP:msgData asRequest:NO fromSender:sender forRoom:room];
 		} else {
-			NSDictionary *noticeInfo = [NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", room, @"room", nil];
+			NSDictionary *noticeInfo = [NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", target, @"target", room, @"room", nil];
 			[self performSelectorOnMainThread:@selector( _handleNotice: ) withObject:noticeInfo waitUntilDone:NO];
 		}
 	}
