@@ -235,7 +235,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		} else [self sendRawMessage:@"QUIT" immediately:YES];
 	} else if( _status == MVChatConnectionConnectingStatus ) {
 		if( _connectionThread )
-			[[self _chatConnection] performSelector:@selector( disconnect ) inThread:_connectionThread];
+			[[self _chatConnection] performSelector:@selector( disconnectAfterWriting ) inThread:_connectionThread];
 	}
 }
 
@@ -583,7 +583,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	id old = _chatConnection;
 	_chatConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
 	[old setDelegate:nil];
-	[old disconnect];
+	[old disconnectAfterWriting];
 	[old release];
 
 	[_chatConnection enablePreBuffering];
