@@ -44,8 +44,6 @@
 		[[self connection] sendRawMessageWithComponents:prefix, reasonData, nil];
 		[prefix release];
 	} else [[self connection] sendRawMessageImmediatelyWithFormat:@"PART %@", [self name]];
-
-	[self _setDateParted:[NSDate date]];
 }
 
 #pragma mark -
