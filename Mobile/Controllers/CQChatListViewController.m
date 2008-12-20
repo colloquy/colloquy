@@ -125,7 +125,8 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		transformedMessageString = [transformedMessageString stringByDecodingXMLSpecialCharacterEntities];
 		transformedMessageString = [transformedMessageString stringBySubstitutingEmoticonsForEmoji];
 	} else if ([message isKindOfClass:[NSString class]]) {
-		transformedMessageString = message;
+		transformedMessageString = [message stringByStrippingXMLTags];
+		transformedMessageString = [transformedMessageString stringByDecodingXMLSpecialCharacterEntities];
 	}
 
 	BOOL action = [[info objectForKey:@"action"] boolValue];
