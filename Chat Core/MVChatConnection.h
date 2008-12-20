@@ -103,8 +103,6 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSMutableDictionary *_roomsCache;
 	NSMutableSet *_chatUserWatchRules;
 	NSDate *_cachedDate;
-	NSDate *_lastConnectAttempt;
-	NSTimer *_reconnectTimer;
 	MVChatString *_awayMessage;
 
 	NSMutableDictionary *_persistentInformation;
@@ -120,6 +118,10 @@ extern NSString *MVChatConnectionErrorDomain;
 
 	BOOL _secure;
 	BOOL _roomListDirty;
+
+	NSDate *_lastConnectAttempt;
+	NSTimer *_reconnectTimer;
+	unsigned short _reconnectAttemptCount;
 
 	NSArray *_alternateNicks;
 	unsigned short _nextAltNickIndex;
@@ -199,6 +201,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property(readonly, getter=isConnected) BOOL connected;
 @property(readonly) NSDate *connectedDate;
+@property(readonly) NSDate *nextReconnectAttemptDate;
 @property(readonly, getter=isWaitingToReconnect) BOOL waitingToReconnect;
 @property(readonly) MVChatConnectionStatus status;
 @property(readonly) unsigned int lag;
@@ -346,6 +349,7 @@ extern NSString *MVChatConnectionErrorDomain;
 - (BOOL) isConnected;
 - (BOOL) isWaitingToReconnect;
 - (NSDate *) connectedDate;
+- (NSDate *) nextReconnectAttemptDate;
 
 #pragma mark -
 
@@ -416,7 +420,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-- (void) scheduleReconnectAttemptEvery:(NSTimeInterval) seconds;
+- (void) scheduleReconnectAttempt;
 - (void) cancelPendingReconnectAttempts;
 @end
 

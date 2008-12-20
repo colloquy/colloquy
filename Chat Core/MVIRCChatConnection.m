@@ -636,7 +636,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( _status == MVChatConnectionServerDisconnectedStatus ) {
 		if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
 			[self performSelector:@selector( connect ) withObject:nil afterDelay:5.];
-		[self scheduleReconnectAttemptEvery:30.];
+		[self scheduleReconnectAttempt];
 	}
 
 	[super _didDisconnect];
@@ -1884,15 +1884,16 @@ end:
 	while( line != end && *line != ' ' ) line++;
 
 	NSString *command = [self _newStringWithBytes:current length:(line - current)];
-	NSData *arguments = nil;
+	NSMutableData *arguments = nil;
 	if( line != end ) {
 		line++;
-		arguments = [[NSData allocWithZone:nil] initWithBytes:line length:(end - line)];
+		arguments = [[NSMutableData allocWithZone:nil] initWithBytes:line length:(end - line)];
 	}
 
 	if( [command isCaseInsensitiveEqualToString:@"ACTION"] && arguments ) {
 		// special case ACTION and send it out like a message with the action flag
-		NSDictionary *msgInfo = [NSDictionary dictionaryWithObjectsAndKeys:[arguments mutableCopyWithZone:nil], @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", room, @"room", nil];
+		NSDictionary *msgInfo = [NSDictionary dictionaryWithObjectsAndKeys:arguments, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", room, @"room", nil];
+
 		[self _handlePrivmsg:msgInfo]; // No need to explicitly call this on main thread, as we are already in it.
 
 		[command release];

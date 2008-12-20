@@ -885,18 +885,34 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) scheduleReconnectAttemptEvery:(NSTimeInterval) seconds {
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( connect ) object:nil];
+- (void) attemptReconnect {
+	++_reconnectAttemptCount;
+
 	[_reconnectTimer invalidate];
 	[_reconnectTimer release];
-	_reconnectTimer = [[NSTimer scheduledTimerWithTimeInterval:seconds target:self selector:@selector( connect ) userInfo:nil repeats:YES] retain];
+	_reconnectTimer = [[NSTimer scheduledTimerWithTimeInterval:(30. * (_reconnectAttemptCount + 1)) target:self selector:@selector( attemptReconnect ) userInfo:nil repeats:NO] retain];
+
+	[self connect];
+}
+
+- (void) scheduleReconnectAttempt {
+	if (_reconnectTimer)
+		return;
+	_reconnectTimer = [[NSTimer scheduledTimerWithTimeInterval:30. target:self selector:@selector( attemptReconnect ) userInfo:nil repeats:NO] retain];
 }
 
 - (void) cancelPendingReconnectAttempts {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( connect ) object:nil];
+
+	_reconnectAttemptCount = 0;
+
 	[_reconnectTimer invalidate];
 	[_reconnectTimer release];
 	_reconnectTimer = nil;
+}
+
+- (NSDate *) nextReconnectAttemptDate {
+	return [_reconnectTimer fireDate];
 }
 
 - (BOOL) isWaitingToReconnect {
@@ -958,8 +974,12 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) _didNotConnect {
 	_status = MVChatConnectionDisconnectedStatus;
+
+	if (_reconnectAttemptCount <= 30)
+		[self scheduleReconnectAttempt];
+	else [self cancelPendingReconnectAttempts];
+
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidNotConnectNotification object:self];
-	[self scheduleReconnectAttemptEvery:30.];
 }
 
 - (void) _willDisconnect {
