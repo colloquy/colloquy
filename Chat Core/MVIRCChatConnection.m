@@ -439,17 +439,13 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
-	identifier = [(NSString *)identifier lowercaseString];
-
-	MVChatRoom *room = [super chatRoomWithUniqueIdentifier:identifier];
+	MVChatRoom *room = [super chatRoomWithUniqueIdentifier:[(NSString *)identifier lowercaseString]];
 	if (!room) room = [[[MVIRCChatRoom allocWithZone:nil] initWithName:identifier andConnection:self] autorelease];
 	return room;
 }
 
 - (MVChatRoom *) chatRoomWithName:(NSString *) name {
-	MVChatRoom *room = [super chatRoomWithName:[name lowercaseString]];
-	if (!room) room = [[[MVIRCChatRoom allocWithZone:nil] initWithName:[name lowercaseString] andConnection:self] autorelease];
-	return room;
+	return [self chatRoomWithUniqueIdentifier:name];
 }
 
 #pragma mark -
