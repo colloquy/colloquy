@@ -54,7 +54,17 @@ function animateProperty(animations, duration, callback, complete) {
         callback();
 }
 
-function appendMessage(senderNickname, messageHTML, highlighted, action, self) {
+function appendMessages(messages, former) {
+	var messagesLength = messages.length;
+	for (var i = 0; i < messagesLength; ++i) {
+		var message = messages[i];
+		appendMessage(message.sender, message.message, message.highlighted, message.action, message.self, true);
+	}
+
+	scrollToBottom(true);
+}
+
+function appendMessage(senderNickname, messageHTML, highlighted, action, self, suppressScroll) {
 	var className = "message-wrapper";
 	if (action) className += " action";
 	if (highlighted) className += " highlight";
@@ -82,14 +92,20 @@ function appendMessage(senderNickname, messageHTML, highlighted, action, self) {
 	var messageFragment = range.createContextualFragment(messageHTML);
 	messageElement.appendChild(messageFragment);
 
-	scrollToBottom();
+	if (!suppressScroll)
+		scrollToBottom(true);
 }
 
 function updateScrollPosition(position) {
 	realScrollTop = position;
 }
 
-function scrollToBottom() {
+function scrollToBottom(animated) {
+	if (!animated) {
+		document.body.scrollTop = document.body.scrollHeight;
+		return;
+	}
+
 	var newScrollTop = (document.body.scrollHeight  - window.innerHeight);
 	animateProperty([{target: document.body, start: {scrollTop: realScrollTop}, end: {scrollTop: newScrollTop}}], 250);
 	realScrollTop = newScrollTop;

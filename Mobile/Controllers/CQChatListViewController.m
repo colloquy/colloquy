@@ -113,13 +113,20 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 - (void) _addMessagePreview:(NSDictionary *) info withEncoding:(NSStringEncoding) encoding toChatTableCell:(CQChatTableCell *) cell animated:(BOOL) animated {
 	MVChatUser *user = [info objectForKey:@"user"];
-	NSData *message = [info objectForKey:@"message"];
-	NSString *messageString = [[NSString alloc] initWithChatData:message encoding:encoding];
-	if (!messageString) messageString = [[NSString alloc] initWithChatData:message encoding:NSASCIIStringEncoding];
+	id message = [info objectForKey:@"message"];
 
-	NSString *transformedMessageString = [messageString stringByStrippingXMLTags];
-	transformedMessageString = [transformedMessageString stringByDecodingXMLSpecialCharacterEntities];
-	transformedMessageString = [transformedMessageString stringBySubstitutingEmoticonsForEmoji];
+	NSString *messageString = nil;
+	NSString *transformedMessageString = nil;
+	if ([message isKindOfClass:[NSData class]]) {
+		messageString = [[NSString alloc] initWithChatData:message encoding:encoding];
+		if (!messageString) messageString = [[NSString alloc] initWithChatData:message encoding:NSASCIIStringEncoding];
+
+		transformedMessageString = [messageString stringByStrippingXMLTags];
+		transformedMessageString = [transformedMessageString stringByDecodingXMLSpecialCharacterEntities];
+		transformedMessageString = [transformedMessageString stringBySubstitutingEmoticonsForEmoji];
+	} else if ([message isKindOfClass:[NSString class]]) {
+		transformedMessageString = message;
+	}
 
 	BOOL action = [[info objectForKey:@"action"] boolValue];
 

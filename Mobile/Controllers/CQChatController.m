@@ -274,11 +274,23 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 			if (user) controller = [self chatViewControllerForUser:user ifExists:NO];
 		}
 
+		if ([[info objectForKey:@"active"] boolValue]) {
+			id old = _nextController;
+			_nextController = [controller retain];
+			[old release];
+		}
+
 		if (!controller || ![controller isKindOfClass:[CQDirectChatController class]])
 			continue;
 
 		CQDirectChatController *chatController = (CQDirectChatController *)controller;
+
+		NSMutableArray *formerMessages = [[NSMutableArray alloc] init];
 		for (NSDictionary *message in [info objectForKey:@"messages"]) {
+			id messageString = [message objectForKey:@"message"];
+			if (![messageString isKindOfClass:[NSString class]])
+				continue;
+
 			NSMutableDictionary *messageCopy = [message mutableCopy];
 
 			MVChatUser *user = nil;
@@ -293,7 +305,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 			if (user) {
 				[messageCopy setObject:user forKey:@"user"];
 
-				[chatController addMessage:messageCopy];
+				[formerMessages addObject:messageCopy];
 
 				if (!user.localUser)
 					[_chatListViewController addMessagePreview:messageCopy forChatController:chatController];
@@ -302,11 +314,8 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 			[messageCopy release];
 		}
 
-		if ([[info objectForKey:@"active"] boolValue]) {
-			id old = _nextController;
-			_nextController = [chatController retain];
-			[old release];
-		}
+		[chatController addFormerMessages:formerMessages];
+		[formerMessages release];
 	}
 }
 
