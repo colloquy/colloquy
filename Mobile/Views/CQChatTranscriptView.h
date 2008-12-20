@@ -15,8 +15,8 @@ typedef enum {
 @property (nonatomic, assign) id <CQChatTranscriptViewDelegate> delegate;
 
 - (void) addFormerMessages:(NSArray *) messages;
-- (void) addMessages:(NSArray *) messages;
-- (void) addMessage:(NSDictionary *) message;
+- (void) addMessages:(NSArray *) messages animated:(BOOL) animated;
+- (void) addMessage:(NSDictionary *) message animated:(BOOL) animated;
 
 - (void) scrollToBottomAnimated:(BOOL) animated;
 - (void) flashScrollIndicators;

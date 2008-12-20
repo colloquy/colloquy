@@ -23,7 +23,7 @@
 #pragma mark -
 
 @interface CQChatTranscriptView (Internal)
-- (void) _addMessagesToTranscript:(NSArray *) messages asFormerMessages:(BOOL) former;
+- (void) _addMessagesToTranscript:(NSArray *) messages asFormerMessages:(BOOL) former animated:(BOOL) animated;
 - (void) _commonInitialization;
 - (void) _reset;
 @end
@@ -112,12 +112,12 @@
 - (void) webViewDidFinishLoad:(UIWebView *) webView {
 	_loading = NO;
 
-	[self _addMessagesToTranscript:_pendingFormerMessages asFormerMessages:YES];
+	[self _addMessagesToTranscript:_pendingFormerMessages asFormerMessages:YES animated:NO];
 
 	[_pendingFormerMessages release];
 	_pendingFormerMessages = nil;
 
-	[self _addMessagesToTranscript:_pendingMessages asFormerMessages:NO];
+	[self _addMessagesToTranscript:_pendingMessages asFormerMessages:NO animated:NO];
 
 	[_pendingMessages release];
 	_pendingMessages = nil;
@@ -134,10 +134,10 @@
 		return;
 	}
 
-	[self _addMessagesToTranscript:messages asFormerMessages:YES];
+	[self _addMessagesToTranscript:messages asFormerMessages:YES animated:NO];
 }
 
-- (void) addMessages:(NSArray *) messages {
+- (void) addMessages:(NSArray *) messages animated:(BOOL) animated {
 	NSParameterAssert(messages != nil);
 
 	if (_loading) {
@@ -146,10 +146,10 @@
 		return;
 	}
 
-	[self _addMessagesToTranscript:messages asFormerMessages:NO];
+	[self _addMessagesToTranscript:messages asFormerMessages:NO animated:animated];
 }
 
-- (void) addMessage:(NSDictionary *) message {
+- (void) addMessage:(NSDictionary *) message animated:(BOOL) animated {
 	NSParameterAssert(message != nil);
 
 	if (_loading) {
@@ -159,7 +159,7 @@
 		return;
 	}
 
-	[self _addMessagesToTranscript:[NSArray arrayWithObject:message] asFormerMessages:NO];
+	[self _addMessagesToTranscript:[NSArray arrayWithObject:message] asFormerMessages:NO animated:animated];
 }
 
 - (void) scrollToBottomAnimated:(BOOL) animated {
@@ -173,7 +173,7 @@
 
 #pragma mark -
 
-- (void) _addMessagesToTranscript:(NSArray *) messages asFormerMessages:(BOOL) former {
+- (void) _addMessagesToTranscript:(NSArray *) messages asFormerMessages:(BOOL) former animated:(BOOL) animated {
 	NSMutableString *command = [[NSMutableString alloc] initWithString:@"appendMessages(["];
 
 	for (NSDictionary *message in messages) {
@@ -192,7 +192,7 @@
 		[command appendFormat:@"{sender:'%@',message:'%@',highlighted:%@,action:%@,self:%@},", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
 	}
 
-	[command appendFormat:@"],%@)", (former ? @"true" : @"false")];
+	[command appendFormat:@"],%@,false,%@)", (former ? @"true" : @"false"), (animated ? @"false" : @"true")];
 
 	[self stringByEvaluatingJavaScriptFromString:command];
 

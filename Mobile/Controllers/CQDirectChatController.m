@@ -117,7 +117,7 @@
 	}
 
 	if (_pendingMessages) {
-		[transcriptView addMessages:_pendingMessages];
+		[transcriptView addMessages:_pendingMessages animated:NO];
 
 		[_pendingMessages release];
 		_pendingMessages = nil;
@@ -126,6 +126,13 @@
 
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
+
+	if (_pendingMessages) {
+		[transcriptView addMessages:_pendingMessages animated:NO];
+
+		[_pendingMessages release];
+		_pendingMessages = nil;
+	}
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -276,7 +283,7 @@
 	if (!previouslyShowingKeyboard) {
 		[UIView beginAnimations:nil context:NULL];
 
-		[UIView setAnimationDelay:0.05];
+		[UIView setAnimationDelay:0.1];
 		[UIView setAnimationDuration:0.25];
 	}
 
@@ -349,8 +356,7 @@
 	[transcriptView addFormerMessages:messages];
 }
 
-- (void) addMessage:(NSData *) messageData fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier andType:(CQChatMessageType) type;
-{
+- (void) addMessage:(NSData *) messageData fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier andType:(CQChatMessageType) type {
 	NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
 
 	if (message) [message setObject:messageData forKey:@"message"];
@@ -388,14 +394,14 @@
 	while (_recentMessages.count > 10)
 		[_recentMessages removeObjectAtIndex:0];
 
-	if (!transcriptView) {
+	if (!transcriptView || !_active) {
 		if (!_pendingMessages)
 			_pendingMessages = [[NSMutableArray alloc] init];
 		[_pendingMessages addObject:message];
 		return;
 	}
 
-	[transcriptView addMessage:message];
+	[transcriptView addMessage:message animated:YES];
 }
 
 #pragma mark -

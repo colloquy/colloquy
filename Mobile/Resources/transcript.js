@@ -54,14 +54,15 @@ function animateProperty(animations, duration, callback, complete) {
         callback();
 }
 
-function appendMessages(messages, former) {
+function appendMessages(messages, former, suppressScroll, suppressScrollAnimation) {
 	var messagesLength = messages.length;
 	for (var i = 0; i < messagesLength; ++i) {
 		var message = messages[i];
 		appendMessage(message.sender, message.message, message.highlighted, message.action, message.self, true);
 	}
 
-	scrollToBottom(true);
+	if (!suppressScroll)
+		scrollToBottom((suppressScrollAnimation ? false : true));
 }
 
 function appendMessage(senderNickname, messageHTML, highlighted, action, self, suppressScroll) {
@@ -103,6 +104,7 @@ function updateScrollPosition(position) {
 function scrollToBottom(animated) {
 	if (!animated) {
 		document.body.scrollTop = document.body.scrollHeight;
+		realScrollTop = (document.body.scrollHeight  - window.innerHeight);
 		return;
 	}
 
