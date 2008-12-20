@@ -44,6 +44,12 @@ static NSMenu *favoritesMenu = nil;
 
 #pragma mark -
 
+@interface NSAlert (LeopardOnly)
+- (void) setAccessoryView:(NSView *) view;
+@end
+
+#pragma mark -
+
 @implementation MVConnectionsController
 + (MVConnectionsController *) defaultController {
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );

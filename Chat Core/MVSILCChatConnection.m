@@ -1627,7 +1627,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 			_status = MVChatConnectionServerDisconnectedStatus;
 		if( ABS( [_lastConnectAttempt timeIntervalSinceNow] ) > 300. )
 			[self performSelector:@selector( connect ) withObject:nil afterDelay:5.];
-		[self scheduleReconnectAttemptEvery:30.];
+		[self scheduleReconnectAttempt];
 	}
 
 	[_knownUsers removeAllObjects];
