@@ -6,7 +6,7 @@
 
 @implementation CQConnectionTableCell
 - (id) initWithFrame:(CGRect) frame reuseIdentifier:(NSString *) reuseIdentifier {
-	if( ! ( self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier] ) )
+	if (!(self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier]))
 		return nil;
 
 	_iconImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
@@ -52,15 +52,22 @@
 - (void) takeValuesFromConnection:(MVChatConnection *) connection {
 	self.server = connection.displayName;
 	self.nickname = connection.nickname;
-	self.connectDate = connection.connectedDate;
 
-	switch( connection.status ) {
+	if (connection.waitingToReconnect && connection.status != MVChatConnectionConnectingStatus)
+		self.connectDate = connection.nextReconnectAttemptDate;
+	else self.connectDate = connection.connectedDate;
+
+	switch (connection.status) {
 	default:
 	case MVChatConnectionDisconnectedStatus:
-		self.status = CQConnectionTableCellNotConnectedStatus;
+		if (connection.waitingToReconnect)
+			self.status = CQConnectionTableCellReconnectingStatus;
+		else self.status = CQConnectionTableCellNotConnectedStatus;
 		break;
 	case MVChatConnectionServerDisconnectedStatus:
-		self.status = CQConnectionTableCellServerDisconnectedStatus;
+		if (connection.waitingToReconnect)
+			self.status = CQConnectionTableCellReconnectingStatus;
+		else self.status = CQConnectionTableCellServerDisconnectedStatus;
 		break;
 	case MVChatConnectionConnectingStatus:
 		self.status = CQConnectionTableCellConnectingStatus;
@@ -90,17 +97,18 @@
 - (void) updateConnectTime {
 	NSString *newTime = nil;
 
-	if( _connectDate ) {
-		NSTimeInterval interval = ABS( [_connectDate timeIntervalSinceNow] );
-		unsigned seconds = ((unsigned)interval % 60);
-		unsigned minutes = ((unsigned)(interval / 60) % 60);
-		unsigned hours = (interval / 3600);
+	if (_connectDate) {
+		NSTimeInterval interval = [_connectDate timeIntervalSinceNow];
+		unsigned absoluteInterval = ABS(interval);
+		unsigned seconds = (absoluteInterval % 60);
+		unsigned minutes = ((absoluteInterval / 60) % 60);
+		unsigned hours = (absoluteInterval / 3600);
 
-		if( hours ) newTime = [[NSString alloc] initWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
-		else newTime = [[NSString alloc] initWithFormat:@"%d:%02d", minutes, seconds];
+		if (hours) newTime = [[NSString alloc] initWithFormat:@"%s%d:%02d:%02d", (interval >= 1. ? "-" : ""), hours, minutes, seconds];
+		else newTime = [[NSString alloc] initWithFormat:@"%s%d:%02d", (interval >= 1. ? "-" : ""), minutes, seconds];
 	}
 
-	if( [_timeLabel.text isEqualToString:newTime] ) {
+	if ([_timeLabel.text isEqualToString:newTime]) {
 		[newTime release];
 		return;
 	}
@@ -125,16 +133,17 @@
 @synthesize status = _status;
 
 - (void) setStatus:(CQConnectionTableCellStatus) status {
-	if( _status == status )
+	if (_status == status)
 		return;
 
 	_status = status;
 
-	switch( status ) {
+	switch (status) {
 	default:
 	case CQConnectionTableCellNotConnectedStatus:
 		_badgeImageView.image = nil;
 		break;
+	case CQConnectionTableCellReconnectingStatus:
 	case CQConnectionTableCellServerDisconnectedStatus:
 		_badgeImageView.image = [UIImage imageNamed:@"errorBadgeDim.png"];
 		break;

@@ -3,6 +3,7 @@
 typedef enum {
 	CQConnectionTableCellNotConnectedStatus,
 	CQConnectionTableCellServerDisconnectedStatus,
+	CQConnectionTableCellReconnectingStatus,
 	CQConnectionTableCellConnectingStatus,
 	CQConnectionTableCellConnectedStatus
 } CQConnectionTableCellStatus;
