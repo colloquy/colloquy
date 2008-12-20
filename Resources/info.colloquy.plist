@@ -234,6 +234,13 @@
 		<key>soundPath</key>
 		<string>Beep 1.aiff</string>
 	</dict>
+	<key>JVNotificationSettings JVChatError - 2</key>
+	<dict>
+		<key>showBubble</key>
+		<true/>
+		<key>soundPath</key>
+		<string>/System/Library/Sounds/Basso.aiff</string>
+	</dict>
 	<key>JVOpenSafeFiles</key>
 	<true/>
 	<key>JVRemoveTransferedItems</key>

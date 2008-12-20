@@ -218,6 +218,12 @@
 	</dict>
 	<dict>
 		<key>identifier</key>
+		<string>JVChatError</string>
+		<key>title</key>
+		<string>Chat Error</string>
+	</dict>
+	<dict>
+		<key>identifier</key>
 		<string>JVPluginNotification</string>
 		<key>title</key>
 		<string>Plugin Notification</string>
