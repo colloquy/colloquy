@@ -1,30 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>IBDocumentLocation</key>
-	<string>403 270 356 240 0 0 1280 832 </string>
-	<key>IBEditorPositions</key>
-	<dict>
-		<key>224</key>
-		<string>403 515 218 149 0 0 1280 832 </string>
-		<key>234</key>
-		<string>403 515 307 68 0 0 1280 832 </string>
-		<key>242</key>
-		<string>403 515 106 68 0 0 1280 832 </string>
-		<key>5</key>
-		<string>382 519 445 70 0 0 1280 832 </string>
-		<key>82</key>
-		<string>516 61 134 180 0 0 1280 832 </string>
-	</dict>
 	<key>IBFramework Version</key>
-	<string>446.1</string>
-	<key>IBLockedObjects</key>
-	<array>
-		<integer>12</integer>
-		<integer>5</integer>
-	</array>
+	<string>670</string>
+	<key>IBLastKnownRelativeProjectPath</key>
+	<string>../../Colloquy.xcodeproj</string>
+	<key>IBOldestOS</key>
+	<integer>5</integer>
+	<key>IBOpenObjects</key>
+	<array/>
 	<key>IBSystem Version</key>
-	<string>8R218</string>
+	<string>9F33</string>
+	<key>targetFramework</key>
+	<string>IBCocoaFramework</string>
 </dict>
 </plist>

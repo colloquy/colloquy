@@ -1,39 +1,80 @@
-{
-    IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {
-                changeQuery = id; 
-                noteOtherChanges = id; 
-                selectCriterionKind = id; 
-                selectCriterionOperation = id; 
-            }; 
-            CLASS = JVChatViewCriterionController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                booleanKindButton = NSPopUpButton; 
-                kindMenu = NSMenu; 
-                listKindButton = NSPopUpButton; 
-                listOperationButton = NSPopUpButton; 
-                listQuery = NSPopUpButton; 
-                openMethodsMenu = NSMenu; 
-                serverTypesMenu = NSMenu; 
-                subview = NSView; 
-                tabView = NSTabView; 
-                textKindButton = NSPopUpButton; 
-                textOperationButton = NSPopUpButton; 
-                textQuery = NSTextField; 
-                viewTypesMenu = NSMenu; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {CLASS = NoHitView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
-        {
-            CLASS = RuleCriteriaController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {subview = NSView; tabView = NSTabView; }; 
-            SUPERCLASS = NSObject; 
-        }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeQuery</key>
+				<string>id</string>
+				<key>noteOtherChanges</key>
+				<string>id</string>
+				<key>selectCriterionKind</key>
+				<string>id</string>
+				<key>selectCriterionOperation</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVChatViewCriterionController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>booleanKindButton</key>
+				<string>NSPopUpButton</string>
+				<key>kindMenu</key>
+				<string>NSMenu</string>
+				<key>listKindButton</key>
+				<string>NSPopUpButton</string>
+				<key>listOperationButton</key>
+				<string>NSPopUpButton</string>
+				<key>listQuery</key>
+				<string>NSPopUpButton</string>
+				<key>openMethodsMenu</key>
+				<string>NSMenu</string>
+				<key>serverTypesMenu</key>
+				<string>NSMenu</string>
+				<key>subview</key>
+				<string>NSView</string>
+				<key>tabView</key>
+				<string>NSTabView</string>
+				<key>textKindButton</key>
+				<string>NSPopUpButton</string>
+				<key>textOperationButton</key>
+				<string>NSPopUpButton</string>
+				<key>textQuery</key>
+				<string>NSTextField</string>
+				<key>viewTypesMenu</key>
+				<string>NSMenu</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeBackgroundColor</key>
+				<string>id</string>
+				<key>doubleClicked</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>
