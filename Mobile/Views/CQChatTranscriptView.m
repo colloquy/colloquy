@@ -2,7 +2,6 @@
 
 #import "NSStringAdditions.h"
 
-#import <AGRegex/AGRegex.h>
 #import <ChatCore/MVChatUser.h>
 
 @interface UIScroller : UIView
