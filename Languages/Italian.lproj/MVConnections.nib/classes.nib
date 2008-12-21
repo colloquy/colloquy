@@ -1,68 +1,156 @@
-{
-    IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {
-                addRoom = id; 
-                changeNewConnectionProtocol = id; 
-                connectNewConnection = id; 
-                hideConnectionManager = id; 
-                messageUser = id; 
-                newConnection = id; 
-                openNetworkPreferences = id; 
-                removeRoom = id; 
-                sendCertificatePassword = id; 
-                sendPassword = id; 
-                showConnectionManager = id; 
-                toggleNewConnectionDetails = id; 
-                userSelectionSelected = id; 
-                verifiedPublicKey = id; 
-            }; 
-            CLASS = MVConnectionsController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                authAddress = NSTextField; 
-                authKeychain = NSButton; 
-                authNickname = NSTextField; 
-                authPassword = NSTextField; 
-                certificateAuth = NSPanel; 
-                certificateDescription = NSTextField; 
-                certificateKeychain = NSButton; 
-                certificatePassphrase = NSTextField; 
-                connections = NSTableView; 
-                detailsTabView = NSTabView; 
-                messageUser = NSPanel; 
-                newAddress = NSComboBox; 
-                newJoinRooms = NSTableView; 
-                newNickname = NSTextField; 
-                newPort = NSComboBox; 
-                newProxy = NSPopUpButton; 
-                newRealName = NSTextField; 
-                newRemember = NSButton; 
-                newRemoveRoom = NSButton; 
-                newServerPassword = NSTextField; 
-                newType = NSPopUpButton; 
-                newUsername = NSTextField; 
-                nicknameAuth = NSPanel; 
-                openConnection = NSPanel; 
-                publicKeyAlwaysAccept = NSButton; 
-                publicKeyBabbleprint = NSTextField; 
-                publicKeyDescription = NSTextField; 
-                publicKeyFingerprint = NSTextField; 
-                publicKeyName = NSTextField; 
-                publicKeyNameDescription = NSTextField; 
-                publicKeyVerification = NSPanel; 
-                showDetails = NSButton; 
-                sslConnection = NSButton; 
-                userSelectionDescription = NSTextField; 
-                userSelectionPanel = NSPanel; 
-                userSelectionTable = NSTableView; 
-                userToMessage = NSTextField; 
-            }; 
-            SUPERCLASS = NSWindowController; 
-        }, 
-        {CLASS = MVTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
-        {CLASS = NSObject; LANGUAGE = ObjC; }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeBackgroundColor</key>
+				<string>id</string>
+				<key>doubleClicked</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>addRoom</key>
+				<string>id</string>
+				<key>changeNewConnectionProtocol</key>
+				<string>id</string>
+				<key>connectNewConnection</key>
+				<string>id</string>
+				<key>hideConnectionManager</key>
+				<string>id</string>
+				<key>messageUser</key>
+				<string>id</string>
+				<key>newConnection</key>
+				<string>id</string>
+				<key>openNetworkPreferences</key>
+				<string>id</string>
+				<key>removeRoom</key>
+				<string>id</string>
+				<key>sendCertificatePassword</key>
+				<string>id</string>
+				<key>sendPassword</key>
+				<string>id</string>
+				<key>showConnectionManager</key>
+				<string>id</string>
+				<key>toggleNewConnectionDetails</key>
+				<string>id</string>
+				<key>userSelectionSelected</key>
+				<string>id</string>
+				<key>verifiedPublicKey</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>MVConnectionsController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>authAddress</key>
+				<string>NSTextField</string>
+				<key>authKeychain</key>
+				<string>NSButton</string>
+				<key>authNickname</key>
+				<string>NSTextField</string>
+				<key>authPassword</key>
+				<string>NSTextField</string>
+				<key>certificateAuth</key>
+				<string>NSPanel</string>
+				<key>certificateDescription</key>
+				<string>NSTextField</string>
+				<key>certificateKeychain</key>
+				<string>NSButton</string>
+				<key>certificatePassphrase</key>
+				<string>NSTextField</string>
+				<key>connections</key>
+				<string>NSTableView</string>
+				<key>detailsTabView</key>
+				<string>NSTabView</string>
+				<key>messageUser</key>
+				<string>NSPanel</string>
+				<key>newAddress</key>
+				<string>NSComboBox</string>
+				<key>newJoinRooms</key>
+				<string>NSTableView</string>
+				<key>newNickname</key>
+				<string>NSTextField</string>
+				<key>newPort</key>
+				<string>NSComboBox</string>
+				<key>newProxy</key>
+				<string>NSPopUpButton</string>
+				<key>newRealName</key>
+				<string>NSTextField</string>
+				<key>newRemember</key>
+				<string>NSButton</string>
+				<key>newRemoveRoom</key>
+				<string>NSButton</string>
+				<key>newServerPassword</key>
+				<string>NSTextField</string>
+				<key>newType</key>
+				<string>NSPopUpButton</string>
+				<key>newUsername</key>
+				<string>NSTextField</string>
+				<key>nicknameAuth</key>
+				<string>NSPanel</string>
+				<key>openConnection</key>
+				<string>NSPanel</string>
+				<key>publicKeyAlwaysAccept</key>
+				<string>NSButton</string>
+				<key>publicKeyBabbleprint</key>
+				<string>NSTextField</string>
+				<key>publicKeyDescription</key>
+				<string>NSTextField</string>
+				<key>publicKeyFingerprint</key>
+				<string>NSTextField</string>
+				<key>publicKeyName</key>
+				<string>NSTextField</string>
+				<key>publicKeyNameDescription</key>
+				<string>NSTextField</string>
+				<key>publicKeyVerification</key>
+				<string>NSPanel</string>
+				<key>showDetails</key>
+				<string>NSButton</string>
+				<key>sslConnection</key>
+				<string>NSButton</string>
+				<key>userSelectionDescription</key>
+				<string>NSTextField</string>
+				<key>userSelectionPanel</key>
+				<string>NSPanel</string>
+				<key>userSelectionTable</key>
+				<string>NSTableView</string>
+				<key>userToMessage</key>
+				<string>NSTextField</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSWindowController</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>MVTableView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSTableView</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>

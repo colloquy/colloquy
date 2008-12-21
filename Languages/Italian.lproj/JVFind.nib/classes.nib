@@ -1,23 +1,70 @@
-{
-    IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {addRow = id; findNext = id; findPrevious = id; removeRow = id; }; 
-            CLASS = JVTranscriptFindWindowController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                hiddenResults = NSView; 
-                hiddenResultsCount = NSTextField; 
-                ignoreCase = NSButton; 
-                operation = NSPopUpButton; 
-                resultCount = NSTextField; 
-                resultProgress = NSProgressIndicator; 
-                scrollbackOnly = NSButton; 
-                subviewTableView = NSTableView; 
-            }; 
-            SUPERCLASS = NSWindowController; 
-        }, 
-        {CLASS = NoHitTabView; LANGUAGE = ObjC; SUPERCLASS = NSTabView; }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeBackgroundColor</key>
+				<string>id</string>
+				<key>doubleClicked</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>addRow</key>
+				<string>id</string>
+				<key>findNext</key>
+				<string>id</string>
+				<key>findPrevious</key>
+				<string>id</string>
+				<key>removeRow</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVTranscriptFindWindowController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>hiddenResults</key>
+				<string>NSView</string>
+				<key>hiddenResultsCount</key>
+				<string>NSTextField</string>
+				<key>ignoreCase</key>
+				<string>NSButton</string>
+				<key>operation</key>
+				<string>NSPopUpButton</string>
+				<key>resultCount</key>
+				<string>NSTextField</string>
+				<key>resultProgress</key>
+				<string>NSProgressIndicator</string>
+				<key>scrollbackOnly</key>
+				<string>NSButton</string>
+				<key>subviewTableView</key>
+				<string>NSTableView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSWindowController</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>

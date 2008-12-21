@@ -1,56 +1,118 @@
-{
-    IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {
-                activate = id; 
-                changeEmoticons = id; 
-                changeStyle = id; 
-                changeStyleVariant = id; 
-                close = id; 
-            }; 
-            CLASS = JVChatTranscriptPanel; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {contents = NSView; display = JVStyleView; }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            ACTIONS = {
-                addRow = id; 
-                closeEditSettingsSheet = id; 
-                editSettings = id; 
-                removeRow = id; 
-                saveSettings = id; 
-            }; 
-            CLASS = JVSmartTranscriptPanel; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                ignoreCase = NSButton; 
-                operation = NSPopUpButton; 
-                settingsSheet = NSWindow; 
-                subviewTableView = NSTableView; 
-                titleField = NSTextField; 
-            }; 
-            SUPERCLASS = JVChatTranscriptPanel; 
-        }, 
-        {
-            ACTIONS = {addRow = id; findNext = id; findPrevious = id; removeRow = id; }; 
-            CLASS = JVTranscriptFindWindowController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                hiddenResults = NSView; 
-                hiddenResultsCount = NSTextField; 
-                ignoreCase = NSButton; 
-                operation = NSPopUpButton; 
-                resultCount = NSTextField; 
-                resultProgress = NSProgressIndicator; 
-                scrollbackOnly = NSButton; 
-                subviewTableView = NSTableView; 
-            }; 
-            SUPERCLASS = NSWindowController; 
-        }, 
-        {CLASS = NSObject; LANGUAGE = ObjC; }, 
-        {CLASS = NoHitTabView; LANGUAGE = ObjC; SUPERCLASS = NSTabView; }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>jumpToMark</key>
+				<string>id</string>
+				<key>jumpToNextHighlight</key>
+				<string>id</string>
+				<key>jumpToPreviousHighlight</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVStyleView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>nextTextView</key>
+				<string>NSTextView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>WebView</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeBackgroundColor</key>
+				<string>id</string>
+				<key>doubleClicked</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>activate</key>
+				<string>id</string>
+				<key>changeEmoticons</key>
+				<string>id</string>
+				<key>changeStyle</key>
+				<string>id</string>
+				<key>changeStyleVariant</key>
+				<string>id</string>
+				<key>close</key>
+				<string>id</string>
+				<key>performQuickSearch</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVChatTranscriptPanel</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>contents</key>
+				<string>NSView</string>
+				<key>display</key>
+				<string>JVStyleView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>addRow</key>
+				<string>id</string>
+				<key>closeEditSettingsSheet</key>
+				<string>id</string>
+				<key>editSettings</key>
+				<string>id</string>
+				<key>removeRow</key>
+				<string>id</string>
+				<key>saveSettings</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVSmartTranscriptPanel</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>ignoreCase</key>
+				<string>NSButton</string>
+				<key>operation</key>
+				<string>NSPopUpButton</string>
+				<key>settingsSheet</key>
+				<string>NSWindow</string>
+				<key>subviewTableView</key>
+				<string>NSTableView</string>
+				<key>titleField</key>
+				<string>NSTextField</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>JVChatTranscriptPanel</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>

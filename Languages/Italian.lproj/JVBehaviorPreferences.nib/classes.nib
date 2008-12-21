@@ -1,19 +1,69 @@
-{
-    IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {changeSendOnEnterAction = id; changeSendOnReturnAction = id; }; 
-            CLASS = JVBehaviorPreferences; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {enterKeyAction = NSPopUpButton; returnKeyAction = NSPopUpButton; }; 
-            SUPERCLASS = NSPreferencesModule; 
-        }, 
-        {
-            CLASS = NSPreferencesModule; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {"_preferencesView" = NSBox; preferencesView = NSBox; }; 
-            SUPERCLASS = NSObject; 
-        }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeSendOnEnterAction</key>
+				<string>id</string>
+				<key>changeSendOnReturnAction</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVBehaviorPreferences</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>enterKeyAction</key>
+				<string>NSPopUpButton</string>
+				<key>returnKeyAction</key>
+				<string>NSPopUpButton</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSPreferencesModule</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeBackgroundColor</key>
+				<string>id</string>
+				<key>doubleClicked</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSPreferencesModule</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>_preferencesView</key>
+				<string>NSBox</string>
+				<key>preferencesView</key>
+				<string>NSBox</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>

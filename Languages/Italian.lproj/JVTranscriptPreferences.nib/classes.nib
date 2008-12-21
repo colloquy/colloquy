@@ -1,32 +1,65 @@
-{
-    IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {changeTranscriptFolder = id; }; 
-            CLASS = JVTranscriptPreferences; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {transcriptFolder = NSPopUpButton; }; 
-            SUPERCLASS = NSPreferencesModule; 
-        }, 
-        {
-            ACTIONS = {apply = id; cancel = id; ok = id; selectModule = id; }; 
-            CLASS = NSPreferences; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                applyButton = id; 
-                cancelButton = id; 
-                moduleMatrix = id; 
-                okButton = id; 
-                preferencesPanel = id; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = NSPreferencesModule; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {"_preferencesView" = NSBox; preferencesView = NSBox; }; 
-            SUPERCLASS = NSObject; 
-        }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeBackgroundColor</key>
+				<string>id</string>
+				<key>doubleClicked</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeTranscriptFolder</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVTranscriptPreferences</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>transcriptFolder</key>
+				<string>NSPopUpButton</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSPreferencesModule</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSPreferencesModule</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>_preferencesView</key>
+				<string>NSBox</string>
+				<key>preferencesView</key>
+				<string>NSBox</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>

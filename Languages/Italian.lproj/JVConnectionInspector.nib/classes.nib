@@ -1,66 +1,148 @@
-{
-    IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {
-                addRoom = id; 
-                addRoomToRule = id; 
-                addRule = id; 
-                changeEncoding = id; 
-                changeProxy = id; 
-                configureRule = id; 
-                discardChangesToRule = id; 
-                editText = id; 
-                openNetworkPreferences = id; 
-                removeRoom = id; 
-                removeRoomFromRule = id; 
-                removeRule = id; 
-                saveRule = id; 
-                toggleAutoConnect = id; 
-                toggleSSLConnection = id; 
-                toggleShowConsoleOnConnect = id; 
-            }; 
-            CLASS = JVConnectionInspector; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                addRoomToRule = NSButton; 
-                addRule = NSButton; 
-                connectCommands = NSTextView; 
-                deleteRoomFromRule = NSButton; 
-                deleteRule = NSButton; 
-                editAddress = NSTextField; 
-                editAltNicknames = NSTextField; 
-                editAutomatic = NSButton; 
-                editNickname = NSTextField; 
-                editPassword = NSTextField; 
-                editPort = NSTextField; 
-                editProxy = NSPopUpButton; 
-                editRealName = NSTextField; 
-                editRemoveRoom = NSButton; 
-                editRooms = NSTableView; 
-                editRule = NSButton; 
-                editRuleMessage = NSTextField; 
-                editRuleName = NSTextField; 
-                editRuleRooms = NSTableView; 
-                editRuleSender = NSTextField; 
-                editRules = NSTableView; 
-                editServerPassword = NSTextField; 
-                editShowConsoleOnConnect = NSButton; 
-                editUsername = NSTextField; 
-                encoding = NSPopUpButton; 
-                makeRulePermanent = NSButton; 
-                messageType = NSPopUpButton; 
-                ruleSheet = NSPanel; 
-                ruleUsesMessage = NSButton; 
-                ruleUsesRooms = NSButton; 
-                ruleUsesSender = NSButton; 
-                senderType = NSPopUpButton; 
-                sslConnection = NSButton; 
-                tabView = NSTabView; 
-                view = NSView; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeBackgroundColor</key>
+				<string>id</string>
+				<key>doubleClicked</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>addRoom</key>
+				<string>id</string>
+				<key>addRoomToRule</key>
+				<string>id</string>
+				<key>addRule</key>
+				<string>id</string>
+				<key>changeEncoding</key>
+				<string>id</string>
+				<key>changeProxy</key>
+				<string>id</string>
+				<key>configureRule</key>
+				<string>id</string>
+				<key>discardChangesToRule</key>
+				<string>id</string>
+				<key>editText</key>
+				<string>id</string>
+				<key>openNetworkPreferences</key>
+				<string>id</string>
+				<key>removeRoom</key>
+				<string>id</string>
+				<key>removeRoomFromRule</key>
+				<string>id</string>
+				<key>removeRule</key>
+				<string>id</string>
+				<key>saveRule</key>
+				<string>id</string>
+				<key>toggleAutoConnect</key>
+				<string>id</string>
+				<key>toggleSSLConnection</key>
+				<string>id</string>
+				<key>toggleShowConsoleOnConnect</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVConnectionInspector</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>addRoomToRule</key>
+				<string>NSButton</string>
+				<key>addRule</key>
+				<string>NSButton</string>
+				<key>connectCommands</key>
+				<string>NSTextView</string>
+				<key>deleteRoomFromRule</key>
+				<string>NSButton</string>
+				<key>deleteRule</key>
+				<string>NSButton</string>
+				<key>editAddress</key>
+				<string>NSTextField</string>
+				<key>editAltNicknames</key>
+				<string>NSTextField</string>
+				<key>editAutomatic</key>
+				<string>NSButton</string>
+				<key>editNickname</key>
+				<string>NSTextField</string>
+				<key>editPassword</key>
+				<string>NSTextField</string>
+				<key>editPort</key>
+				<string>NSTextField</string>
+				<key>editProxy</key>
+				<string>NSPopUpButton</string>
+				<key>editRealName</key>
+				<string>NSTextField</string>
+				<key>editRemoveRoom</key>
+				<string>NSButton</string>
+				<key>editRooms</key>
+				<string>NSTableView</string>
+				<key>editRule</key>
+				<string>NSButton</string>
+				<key>editRuleMessage</key>
+				<string>NSTextField</string>
+				<key>editRuleName</key>
+				<string>NSTextField</string>
+				<key>editRuleRooms</key>
+				<string>NSTableView</string>
+				<key>editRuleSender</key>
+				<string>NSTextField</string>
+				<key>editRules</key>
+				<string>NSTableView</string>
+				<key>editServerPassword</key>
+				<string>NSTextField</string>
+				<key>editShowConsoleOnConnect</key>
+				<string>NSButton</string>
+				<key>editUsername</key>
+				<string>NSTextField</string>
+				<key>encoding</key>
+				<string>NSPopUpButton</string>
+				<key>makeRulePermanent</key>
+				<string>NSButton</string>
+				<key>messageType</key>
+				<string>NSPopUpButton</string>
+				<key>ruleSheet</key>
+				<string>NSPanel</string>
+				<key>ruleUsesMessage</key>
+				<string>NSButton</string>
+				<key>ruleUsesRooms</key>
+				<string>NSButton</string>
+				<key>ruleUsesSender</key>
+				<string>NSButton</string>
+				<key>senderType</key>
+				<string>NSPopUpButton</string>
+				<key>sslConnection</key>
+				<string>NSButton</string>
+				<key>tabView</key>
+				<string>NSTabView</string>
+				<key>view</key>
+				<string>NSView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>

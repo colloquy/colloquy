@@ -1,56 +1,144 @@
-{
-    IBClasses = (
-        {CLASS = ASExtendedTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {
-                changeBaseFontSize = id; 
-                changeDefaultChatStyle = id; 
-                changeDefaultEmoticons = id; 
-                changeMinimumFontSize = id; 
-                closeNewVariantSheet = id; 
-                createNewVariant = id; 
-                showOptions = id; 
-            }; 
-            CLASS = JVAppearancePreferences; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                baseFontSize = NSTextField; 
-                baseFontSizeStepper = NSStepper; 
-                emoticons = NSPopUpButton; 
-                minimumFontSize = NSTextField; 
-                minimumFontSizeStepper = NSStepper; 
-                newVariantName = NSTextField; 
-                newVariantPanel = NSPanel; 
-                optionsDrawer = NSDrawer; 
-                optionsTable = NSTableView; 
-                preview = JVStyleView; 
-                standardFont = JVFontPreviewField; 
-                styles = NSPopUpButton; 
-            }; 
-            SUPERCLASS = NSPreferencesModule; 
-        }, 
-        {
-            ACTIONS = {chooseFontWithFontPanel = id; selectFont = id; }; 
-            CLASS = JVFontPreviewField; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = NSTextField; 
-        }, 
-        {CLASS = JVMixedTableColumn; LANGUAGE = ObjC; SUPERCLASS = NSTableColumn; }, 
-        {
-            ACTIONS = {jumpToNextHighlight = id; jumpToPreviousHighlight = id; }; 
-            CLASS = JVStyleView; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {nextTextView = NSTextView; }; 
-            SUPERCLASS = WebView; 
-        }, 
-        {CLASS = NSObject; LANGUAGE = ObjC; }, 
-        {
-            CLASS = NSPreferencesModule; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {"_preferencesView" = NSBox; preferencesView = NSBox; }; 
-            SUPERCLASS = NSObject; 
-        }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>jumpToMark</key>
+				<string>id</string>
+				<key>jumpToNextHighlight</key>
+				<string>id</string>
+				<key>jumpToPreviousHighlight</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVStyleView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>nextTextView</key>
+				<string>NSTextView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>WebView</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeBackgroundColor</key>
+				<string>id</string>
+				<key>doubleClicked</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeBaseFontSize</key>
+				<string>id</string>
+				<key>changeDefaultChatStyle</key>
+				<string>id</string>
+				<key>changeDefaultEmoticons</key>
+				<string>id</string>
+				<key>changeMinimumFontSize</key>
+				<string>id</string>
+				<key>closeNewVariantSheet</key>
+				<string>id</string>
+				<key>createNewVariant</key>
+				<string>id</string>
+				<key>showOptions</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVAppearancePreferences</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>baseFontSize</key>
+				<string>NSTextField</string>
+				<key>baseFontSizeStepper</key>
+				<string>NSStepper</string>
+				<key>emoticons</key>
+				<string>NSPopUpButton</string>
+				<key>minimumFontSize</key>
+				<string>NSTextField</string>
+				<key>minimumFontSizeStepper</key>
+				<string>NSStepper</string>
+				<key>newVariantName</key>
+				<string>NSTextField</string>
+				<key>newVariantPanel</key>
+				<string>NSPanel</string>
+				<key>optionsDrawer</key>
+				<string>NSDrawer</string>
+				<key>optionsTable</key>
+				<string>NSTableView</string>
+				<key>preview</key>
+				<string>JVStyleView</string>
+				<key>standardFont</key>
+				<string>JVFontPreviewField</string>
+				<key>styles</key>
+				<string>NSPopUpButton</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSPreferencesModule</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSPreferencesModule</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>_preferencesView</key>
+				<string>NSBox</string>
+				<key>preferencesView</key>
+				<string>NSBox</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>JVMixedTableColumn</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSTableColumn</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>chooseFontWithFontPanel</key>
+				<string>id</string>
+				<key>selectFont</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVFontPreviewField</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSTextField</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>
