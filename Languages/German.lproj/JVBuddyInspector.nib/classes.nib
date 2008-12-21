@@ -1,51 +1,118 @@
-{
-    IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {
-                addDomain = id; 
-                addIdentifier = id; 
-                changeBuddyIcon = id; 
-                changeCard = id; 
-                changeConnectionState = id; 
-                changeEmail = id; 
-                changeFirstName = id; 
-                changeLastName = id; 
-                changeNickname = id; 
-                changeSpeechVoice = id; 
-                discardIdentifierChanges = id; 
-                editIdentifier = id; 
-                removeDomain = id; 
-                removeIdentifier = id; 
-                saveIdentifierChanges = id; 
-            }; 
-            CLASS = JVBuddyInspector; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                addDomain = NSButton; 
-                addIdentifier = NSButton; 
-                editIdentifier = NSButton; 
-                email = NSTextField; 
-                firstName = NSTextField; 
-                identifierConnections = NSMatrix; 
-                identifierDomainsTable = NSTableView; 
-                identifierEditPanel = NSPanel; 
-                identifierHostname = NSTextField; 
-                identifierNickname = NSTextField; 
-                identifierOkay = NSButton; 
-                identifierRealName = NSTextField; 
-                identifierUsername = NSTextField; 
-                identifiersTable = NSTableView; 
-                lastName = NSTextField; 
-                nickname = NSTextField; 
-                picture = NSImageView; 
-                removeDomain = NSButton; 
-                removeIdentifier = NSButton; 
-                view = NSView; 
-                voices = NSPopUpButton; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeBackgroundColor</key>
+				<string>id</string>
+				<key>doubleClicked</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>addDomain</key>
+				<string>id</string>
+				<key>addIdentifier</key>
+				<string>id</string>
+				<key>changeBuddyIcon</key>
+				<string>id</string>
+				<key>changeCard</key>
+				<string>id</string>
+				<key>changeConnectionState</key>
+				<string>id</string>
+				<key>changeEmail</key>
+				<string>id</string>
+				<key>changeFirstName</key>
+				<string>id</string>
+				<key>changeLastName</key>
+				<string>id</string>
+				<key>changeNickname</key>
+				<string>id</string>
+				<key>changeSpeechVoice</key>
+				<string>id</string>
+				<key>discardIdentifierChanges</key>
+				<string>id</string>
+				<key>editIdentifier</key>
+				<string>id</string>
+				<key>removeDomain</key>
+				<string>id</string>
+				<key>removeIdentifier</key>
+				<string>id</string>
+				<key>saveIdentifierChanges</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVBuddyInspector</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>addDomain</key>
+				<string>NSButton</string>
+				<key>addIdentifier</key>
+				<string>NSButton</string>
+				<key>editIdentifier</key>
+				<string>NSButton</string>
+				<key>email</key>
+				<string>NSTextField</string>
+				<key>firstName</key>
+				<string>NSTextField</string>
+				<key>identifierConnections</key>
+				<string>NSMatrix</string>
+				<key>identifierDomainsTable</key>
+				<string>NSTableView</string>
+				<key>identifierEditPanel</key>
+				<string>NSPanel</string>
+				<key>identifierHostname</key>
+				<string>NSTextField</string>
+				<key>identifierNickname</key>
+				<string>NSTextField</string>
+				<key>identifierOkay</key>
+				<string>NSButton</string>
+				<key>identifierRealName</key>
+				<string>NSTextField</string>
+				<key>identifierUsername</key>
+				<string>NSTextField</string>
+				<key>identifiersTable</key>
+				<string>NSTableView</string>
+				<key>lastName</key>
+				<string>NSTextField</string>
+				<key>nickname</key>
+				<string>NSTextField</string>
+				<key>picture</key>
+				<string>NSImageView</string>
+				<key>removeDomain</key>
+				<string>NSButton</string>
+				<key>removeIdentifier</key>
+				<string>NSButton</string>
+				<key>view</key>
+				<string>NSView</string>
+				<key>voices</key>
+				<string>NSPopUpButton</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>
