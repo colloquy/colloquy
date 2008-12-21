@@ -141,7 +141,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	MVChatUser *user = notification.object;
 	MVChatUser *sender = user;
 
-	if ([notification.userInfo objectForKey:@"target"])
+	if (user.localUser && [notification.userInfo objectForKey:@"target"])
 		user = [notification.userInfo objectForKey:@"target"];
 
 	BOOL hideFromUser = NO;
