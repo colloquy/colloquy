@@ -14,4 +14,5 @@
 - (BOOL) handleMassNickChangeWithName:(NSString *) nickname;
 - (BOOL) handleMassAwayWithMessage:(NSAttributedString *) message;
 - (BOOL) handleIgnoreWithArguments:(NSString *) args inView:(id <JVChatViewController>) view;
+- (BOOL) handleUnignoreWithArguments:(NSString *) args inView:(id <JVChatViewController>) view;
 @end
