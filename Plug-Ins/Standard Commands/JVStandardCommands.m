@@ -354,6 +354,7 @@
 			return YES;
 		}
 	} else if( ! [command caseInsensitiveCompare:@"help"] ) {
+		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://project.colloquy.info/wiki/Documentation/CommandReference"]];
 		return YES;
 	} else if( ! [command caseInsensitiveCompare:@"globops"] && [connection type] == MVChatConnectionIRCType ) {
 		[connection sendRawMessage:[NSString stringWithFormat:@"%@ :%@", command, [arguments string]]];
