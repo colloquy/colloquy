@@ -51,8 +51,10 @@
 @property (nonatomic, readonly) NSStringEncoding encoding;
 
 @optional
+- (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection;
+- (void) close;
+
+@property (nonatomic, readonly) NSDictionary *persistentState;
 @property (nonatomic, readonly) NSUInteger unreadCount;
 @property (nonatomic, readonly) NSUInteger importantUnreadCount;
-
-- (void) close;
 @end

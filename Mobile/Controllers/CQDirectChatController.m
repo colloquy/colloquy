@@ -1,10 +1,11 @@
 #import "CQDirectChatController.h"
 
 #import "CQChatController.h"
+#import "CQChatInputBar.h"
 #import "CQChatInputField.h"
 #import "CQChatTableCell.h"
-#import "CQChatInputBar.h"
 #import "CQStyleView.h"
+#import "NSDictionaryAdditions.h"
 #import "NSScannerAdditions.h"
 #import "NSStringAdditions.h"
 
@@ -38,6 +39,52 @@
 
 		[self.connection addChatUserWatchRule:_watchRule];
 	}
+
+	return self;
+}
+
+- (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
+	if (!_target) {
+		NSString *nickname = [state objectForKey:@"user"];
+		if (!nickname) {
+			[self release];
+			return nil;
+		}
+
+		MVChatUser *user = [connection chatUserWithUniqueIdentifier:nickname];
+		if (!user) {
+			[self release];
+			return nil;
+		}
+
+		if (!(self = [self initWithTarget:user]))
+			return nil;
+	}
+
+	_pendingFormerMessages = [[NSMutableArray alloc] init];
+
+	for (NSDictionary *message in [state objectForKey:@"messages"]) {
+		NSMutableDictionary *messageCopy = [message mutableCopy];
+
+		MVChatUser *user = nil;
+		if ([[messageCopy objectForKey:@"localUser"] boolValue]) {
+			user = connection.localUser;
+			[messageCopy removeObjectForKey:@"localUser"];
+		} else user = [connection chatUserWithUniqueIdentifier:[messageCopy objectForKey:@"user"]];
+
+		if (user) {
+			[messageCopy setObject:user forKey:@"user"];
+
+			[_pendingFormerMessages addObject:messageCopy];
+		}
+
+		[messageCopy release];
+	}
+
+	_recentMessages = [_pendingFormerMessages mutableCopy];
+
+	while (_recentMessages.count > 10)
+		[_recentMessages removeObjectAtIndex:0];
 
 	return self;
 }
@@ -92,6 +139,40 @@
 
 - (NSStringEncoding) encoding {
 	return (_encoding ? _encoding : self.connection.encoding);
+}
+
+- (NSDictionary *) persistentState {
+	NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
+
+	[state setObject:NSStringFromClass([self class]) forKey:@"class"];
+
+	if ([CQChatController defaultController].visibleViewController == self)
+		[state setObject:[NSNumber numberWithBool:YES] forKey:@"active"];
+
+	if (self.user)
+		[state setObject:self.user.nickname forKey:@"user"];
+
+	NSMutableArray *messages = [[NSMutableArray alloc] init];
+
+	for (NSDictionary *message in _recentMessages) {
+		id sameKeys[] = {@"message", @"action", @"notice", @"identifier", @"type", nil};
+		NSMutableDictionary *newMessage = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:message];
+
+		MVChatUser *user = [message objectForKey:@"user"];
+		if (user && !user.localUser) [newMessage setObject:user.nickname forKey:@"user"];
+		else if (user.localUser) [newMessage setObject:[NSNumber numberWithBool:YES] forKey:@"localUser"];
+
+		[messages addObject:newMessage];
+
+		[newMessage release];
+	}
+
+	if (messages.count)
+		[state setObject:messages forKey:@"messages"];
+
+	[messages release];
+
+	return [state autorelease];
 }
 
 #pragma mark -
@@ -230,7 +311,7 @@
 		[_target sendMessage:text withEncoding:self.encoding asAction:NO];
 
 		NSData *messageData = [text dataUsingEncoding:self.encoding allowLossyConversion:YES];
-		[self addMessage:messageData fromUser:self.connection.localUser asAction:NO withIdentifier:@"" andType:CQChatMessageNormalType];
+		[self addMessage:messageData fromUser:self.connection.localUser asAction:NO withIdentifier:[NSString locallyUniqueString] andType:CQChatMessageNormalType];
 	}
 
 	return YES;
@@ -282,9 +363,13 @@
 	BOOL previouslyShowingKeyboard = (chatInputBar.center.y != (self.view.bounds.size.height - (chatInputBar.bounds.size.height / 2.)));
 	if (!previouslyShowingKeyboard) {
 		[UIView beginAnimations:nil context:NULL];
-
-		[UIView setAnimationDelay:0.1];
 		[UIView setAnimationDuration:0.25];
+
+#if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
+		[UIView setAnimationDelay:0.025];
+#else
+		[UIView setAnimationDelay:0.2];
+#endif
 	}
 
 	CGRect bounds = chatInputBar.bounds;
@@ -339,22 +424,6 @@
 #pragma mark -
 
 @synthesize recentMessages = _recentMessages;
-
-- (void) addFormerMessages:(NSArray *) messages {
-	if (_recentMessages) [_recentMessages addObjectsFromArray:messages];
-	else _recentMessages = [messages mutableCopy];
-
-	while (_recentMessages.count > 10)
-		[_recentMessages removeObjectAtIndex:0];
-
-	if (!transcriptView) {
-		if (_pendingFormerMessages) [_pendingFormerMessages addObjectsFromArray:messages];
-		else _pendingFormerMessages = [messages mutableCopy];
-		return;
-	}
-
-	[transcriptView addFormerMessages:messages];
-}
 
 - (void) addMessage:(NSData *) messageData fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier andType:(CQChatMessageType) type {
 	NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
@@ -506,11 +575,6 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 	return [result autorelease];
 }
 
-static inline void copy(NSDictionary *source, NSMutableDictionary *destintion, id key) {
-	id value = [source objectForKey:key];
-	if (value) [destintion setObject:value forKey:key];
-}
-
 #pragma mark -
 
 - (NSDictionary *) _processMessage:(NSDictionary *) message highlightedMessage:(BOOL *) highlighted {
@@ -583,18 +647,13 @@ static inline void copy(NSDictionary *source, NSMutableDictionary *destintion, i
 		transformedMessageString = messageString;
 	} else transformedMessageString = applyFunctionToTextInHTMLString(messageString, commonChatReplacment);
 
-	NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+	id sameKeys[] = {@"user", @"action", @"notice", @"identifier", @"type", nil};
+	NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:message];
 
 	[result setObject:transformedMessageString forKey:@"message"];
 
 	if (*highlighted)
 		[result setObject:[NSNumber numberWithBool:YES] forKey:@"highlighted"];
-
-	copy(message, result, @"user");
-	copy(message, result, @"action");
-	copy(message, result, @"notice");
-	copy(message, result, @"identifier");
-	copy(message, result, @"type");
 
 	[highlightWords release];
 	[messageString release];

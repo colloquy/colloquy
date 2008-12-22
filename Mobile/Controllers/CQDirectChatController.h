@@ -34,8 +34,6 @@
 
 @property (nonatomic, readonly) NSArray *recentMessages;
 
-- (void) addFormerMessages:(NSArray *) messages;
-
 - (void) addMessage:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier andType:(CQChatMessageType) type;
 - (void) addMessage:(NSDictionary *) info;
 @end

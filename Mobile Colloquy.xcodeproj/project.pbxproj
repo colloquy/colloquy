@@ -51,6 +51,7 @@
 		1C0EB67B0D8660E900B6F1BC /* errorBadgeGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0EB6790D8660E900B6F1BC /* errorBadgeGlow.png */; };
 		1C1896110E29CF74003CFED0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */; };
 		1C1896120E29CF75003CFED0 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */; };
+		1C20BE820EFEDF26005AD8A5 /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */; };
 		1C2A046F0EDAFC2D004509AE /* CQPreferencesListEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */; };
 		1C6100D30ED31C8B0016F968 /* CQPreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6100D20ED31C8B0016F968 /* CQPreferencesSwitchCell.m */; };
 		1C61FEA10ED24BA40016F968 /* deleteButtonNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C61FE9F0ED24BA40016F968 /* deleteButtonNormal.png */; };
@@ -189,6 +190,8 @@
 		1C0EB6780D8660E900B6F1BC /* errorBadgeDim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = errorBadgeDim.png; sourceTree = "<group>"; };
 		1C0EB6790D8660E900B6F1BC /* errorBadgeGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = errorBadgeGlow.png; sourceTree = "<group>"; };
 		1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		1C20BE800EFEDF26005AD8A5 /* NSDictionaryAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDictionaryAdditions.h; path = Additions/NSDictionaryAdditions.h; sourceTree = "<group>"; };
+		1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDictionaryAdditions.m; path = Additions/NSDictionaryAdditions.m; sourceTree = "<group>"; };
 		1C2A046D0EDAFC2D004509AE /* CQPreferencesListEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPreferencesListEditViewController.h; sourceTree = "<group>"; };
 		1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesListEditViewController.m; sourceTree = "<group>"; };
 		1C6100D10ED31C8B0016F968 /* CQPreferencesSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPreferencesSwitchCell.h; sourceTree = "<group>"; };
@@ -501,6 +504,8 @@
 				1C0932620D80CA4800A2705D /* NSBundleAdditions.h */,
 				1C0932670D80CA4800A2705D /* NSDataAdditions.m */,
 				1C0932660D80CA4800A2705D /* NSDataAdditions.h */,
+				1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */,
+				1C20BE800EFEDF26005AD8A5 /* NSDictionaryAdditions.h */,
 				1C09326B0D80CA4800A2705D /* NSMethodSignatureAdditions.m */,
 				1C09326A0D80CA4800A2705D /* NSMethodSignatureAdditions.h */,
 				1C09326D0D80CA4800A2705D /* NSNotificationAdditions.m */,
@@ -737,6 +742,7 @@
 				1CC64B2D0EE97F8B00DE91D0 /* CQChatUserListViewController.m in Sources */,
 				1CC64C3D0EE98DBF00DE91D0 /* CQSearchCell.m in Sources */,
 				1CA7151A0EF47D6F006225CD /* CQUnreadCountView.m in Sources */,
+				1C20BE820EFEDF26005AD8A5 /* NSDictionaryAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

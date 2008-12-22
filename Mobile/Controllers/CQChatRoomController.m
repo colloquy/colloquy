@@ -35,6 +35,25 @@
 	return self;
 }
 
+- (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
+	NSString *roomName = [state objectForKey:@"room"];
+	if (!roomName) {
+		[self release];
+		return nil;
+	}
+
+	MVChatRoom *room = [connection chatRoomWithName:roomName];
+	if (!room) {
+		[self release];
+		return nil;
+	}
+
+	if (!(self = [self initWithTarget:room]))
+		return nil;
+
+	return [super initWithPersistentState:state usingConnection:connection];
+}
+
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
@@ -79,6 +98,15 @@
 
 - (BOOL) available {
 	return (self.connection && self.room.joined);
+}
+
+- (NSDictionary *) persistentState {
+	NSMutableDictionary *state = (NSMutableDictionary *)[super persistentState];
+
+	if (self.room)
+		[state setObject:self.room.name forKey:@"room"];
+
+	return state;
 }
 
 #pragma mark -
