@@ -190,11 +190,6 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (JVChatWindowController *) newChatWindowController {
-	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVUseTabbedWindows"] ) {
-		[[NSUserDefaults standardUserDefaults] setInteger:1 forKey:@"JVChatWindowInterface"];
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVUseTabbedWindows"];
-	}
-
 	JVChatWindowController *windowController = nil;
 	if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatWindowInterface"] == 1 )
 		windowController = [[[JVTabbedChatWindowController alloc] init] autorelease];
