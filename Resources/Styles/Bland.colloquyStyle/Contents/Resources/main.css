@@ -30,6 +30,7 @@ i {
 
 .envelope > .member {
 	overflow: hidden;
+	white-space: nowrap;
 	display: block;
 	padding-left: 1ex;
 	width: 14ex;
