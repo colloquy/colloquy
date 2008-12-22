@@ -1,386 +1,707 @@
-{
-    IBClasses =     (
-                {
-            CLASS = AICustomTabsView;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                delegate = id;
-                tabView = NSTabView;
-            };
-            SUPERCLASS = NSView;
-        },
-                {
-            ACTIONS =             {
-                bold = id;
-                clearDisplay = id;
-                closeCurrentPanel = id;
-                copySelectionToFindPboard = id;
-                copyStripped = id;
-                detachCurrentPanel = id;
-                findNext = id;
-                findPrevious = id;
-                getInfo = id;
-                italic = id;
-                joinRoom = id;
-                jumpToMark = id;
-                jumpToNextHighlight = id;
-                jumpToPreviousHighlight = id;
-                markDisplay = id;
-                newConnection = id;
-                orderFrontFindPanel = id;
-                selectNextActivePanel = id;
-                selectNextPanel = id;
-                selectPreviousActivePanel = id;
-                selectPreviousPanel = id;
-                showInspector = id;
-                toggleSmallDrawerIcons = id;
-                toggleTabBarVisible = id;
-                toggleViewsDrawer = id;
-            };
-            CLASS = FirstResponder;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSObject;
-        },
-                {
-            ACTIONS =             {
-                changeConnection = id;
-                close = id;
-                hideRoomBrowser = id;
-                joinRoom = id;
-                showRoomBrowser = id;
-                toggleRoomBrowser = id;
-            };
-            CLASS = JVChatRoomBrowser;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                acceptButton = NSButton;
-                borwserArea = NSTabView;
-                connectionPopup = NSPopUpButton;
-                indexAndFindResults = NSTextField;
-                indexResults = NSTextField;
-                roomField = NSComboBox;
-                roomsTable = NSTableView;
-                searchArea = NSTabView;
-                searchField = NSSearchField;
-                showBroswer = NSButton;
-            };
-            SUPERCLASS = NSWindowController;
-        },
-                {
-            ACTIONS =             {
-                activate = id;
-                changeEmoticons = id;
-                changeStyle = id;
-                changeStyleVariant = id;
-                close = id;
-                performQuickSearch = id;
-            };
-            CLASS = JVChatTranscriptPanel;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                contents = NSView;
-                display = JVStyleView;
-            };
-            SUPERCLASS = NSObject;
-        },
-                {
-            ACTIONS =             {
-                closeCurrentPanel = id;
-                closeViewsDrawer = id;
-                detachCurrentPanel = id;
-                getInfo = id;
-                joinRoom = id;
-                openViewsDrawer = id;
-                selectNextActivePanel = id;
-                selectNextPanel = id;
-                selectPreviousActivePanel = id;
-                selectPreviousPanel = id;
-                toggleViewsDrawer = id;
-            };
-            CLASS = JVChatWindowController;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                chatViewsOutlineView = NSOutlineView;
-                favoritesButton = MVMenuButton;
-                viewActionButton = MVMenuButton;
-                viewsDrawer = NSDrawer;
-            };
-            SUPERCLASS = NSWindowController;
-        },
-                {
-            ACTIONS =             {
-                changeEncoding = id;
-                clear = id;
-                clearDisplay = id;
-                markDisplay = id;
-                send = id;
-            };
-            CLASS = JVDirectChatPanel;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                send = MVTextView;
-            };
-            SUPERCLASS = JVChatTranscriptPanel;
-        },
-                {
-            ACTIONS =             {
-                addRuleCriterionRow = id;
-                addRuleSet = id;
-                addWindowSet = id;
-                cancelRuleSet = id;
-                cancelWindowSet = id;
-                changeShowFullRoomName = id;
-                changeSortByStatus = id;
-                clear = id;
-                editRuleSet = id;
-                editWindowSet = id;
-                removeRuleCriterionRow = id;
-                saveRuleSet = id;
-                saveWindowSet = id;
-            };
-            CLASS = JVInterfacePreferences;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                deleteRuleButton = NSButton;
-                deleteWindowButton = NSButton;
-                drawerSide = NSPopUpButton;
-                editRuleButton = NSButton;
-                editWindowButton = NSButton;
-                ignoreCase = NSButton;
-                interfaceStyle = NSPopUpButton;
-                rememberPanels = NSButton;
-                ruleEditPanel = NSWindow;
-                ruleEditTable = NSTableView;
-                ruleOperation = NSPopUpButton;
-                rulesTable = NSTableView;
-                windowEditPanel = NSPanel;
-                windowEditSaveButton = NSButton;
-                windowSetsTable = NSTableView;
-                windowTitle = NSTextField;
-            };
-            SUPERCLASS = NSPreferencesModule;
-        },
-                {
-            ACTIONS =             {
-                jumpToMark = id;
-                jumpToNextHighlight = id;
-                jumpToPreviousHighlight = id;
-            };
-            CLASS = JVStyleView;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                nextTextView = NSTextView;
-            };
-            SUPERCLASS = WebView;
-        },
-                {
-            ACTIONS =             {
-                toggleTabBarVisible = id;
-            };
-            CLASS = JVTabbedChatWindowController;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                customTabsView = AICustomTabsView;
-                tabView = NSTabView;
-            };
-            SUPERCLASS = JVChatWindowController;
-        },
-                {
-            ACTIONS =             {
-                addRow = id;
-                findNext = id;
-                findPrevious = id;
-                removeRow = id;
-            };
-            CLASS = JVTranscriptFindWindowController;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                hiddenResults = NSView;
-                hiddenResultsCount = NSTextField;
-                ignoreCase = NSButton;
-                operation = NSPopUpButton;
-                resultCount = NSTextField;
-                resultProgress = NSProgressIndicator;
-                scrollbackOnly = NSButton;
-                subviewTableView = NSTableView;
-            };
-            SUPERCLASS = NSWindowController;
-        },
-                {
-            ACTIONS =             {
-                bugReportWebsite = id;
-                checkForUpdate = id;
-                connectToSupportRoom = id;
-                emailDeveloper = id;
-                helpWebsite = id;
-                markAllDisplays = id;
-                productWebsite = id;
-                showBuddyList = id;
-                showConnectionManager = id;
-                showPreferences = id;
-                showTranscriptBrowser = id;
-                showTransferManager = id;
-                terminateWithoutConfirm = id;
-            };
-            CLASS = MVApplicationController;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSObject;
-        },
-                {
-            ACTIONS =             {
-                cancelBuddySelection = id;
-                cancelNewBuddy = id;
-                confirmBuddySelection = id;
-                confirmNewBuddy = id;
-                getInfo = id;
-                hideBuddyList = id;
-                messageSelectedBuddy = id;
-                sendFileToSelectedBuddy = id;
-                showBuddyList = id;
-                showBuddyPickerSheet = id;
-                showNewPersonSheet = id;
-                sortByAvailability = id;
-                sortByFirstName = id;
-                sortByLastName = id;
-                sortByServer = id;
-                toggleShowFullNames = id;
-                toggleShowIcons = id;
-                toggleShowNicknameAndServer = id;
-                toggleShowOfflineBuddies = id;
-            };
-            CLASS = MVBuddyListController;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                actionButton = NSButton;
-                addButton = NSButton;
-                buddies = MVTableView;
-                email = NSTextField;
-                firstName = NSTextField;
-                image = NSImageView;
-                infoButton = NSButton;
-                lastName = NSTextField;
-                newPersonWindow = NSWindow;
-                nickname = NSTextField;
-                pickerView = ABPeoplePickerView;
-                pickerWindow = NSWindow;
-                sendMessageButton = NSButton;
-                servers = NSTableView;
-            };
-            SUPERCLASS = NSWindowController;
-        },
-                {
-            ACTIONS =             {
-                addBuddy = id;
-                getInfo = id;
-                sendFile = id;
-                startChat = id;
-                startDirectChat = id;
-                toggleIgnore = id;
-            };
-            CLASS = MVChatUser;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSObject;
-        },
-                {
-            ACTIONS =             {
-                addRoom = id;
-                changeNewConnectionProtocol = id;
-                connectNewConnection = id;
-                hideConnectionManager = id;
-                messageUser = id;
-                newConnection = id;
-                openNetworkPreferences = id;
-                removeRoom = id;
-                sendCertificatePassword = id;
-                sendPassword = id;
-                showConnectionManager = id;
-                toggleNewConnectionDetails = id;
-                userSelectionSelected = id;
-                verifiedPublicKey = id;
-            };
-            CLASS = MVConnectionsController;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                authAddress = NSTextField;
-                authKeychain = NSButton;
-                authNickname = NSTextField;
-                authPassword = NSTextField;
-                certificateAuth = NSPanel;
-                certificateDescription = NSTextField;
-                certificateKeychain = NSButton;
-                certificatePassphrase = NSTextField;
-                connections = NSTableView;
-                detailsTabView = NSTabView;
-                messageUser = NSPanel;
-                newAddress = NSComboBox;
-                newJoinRooms = NSTableView;
-                newNickname = NSTextField;
-                newPort = NSComboBox;
-                newProxy = NSPopUpButton;
-                newRealName = NSTextField;
-                newRemember = NSButton;
-                newRemoveRoom = NSButton;
-                newServerPassword = NSTextField;
-                newType = NSPopUpButton;
-                newUsername = NSTextField;
-                nicknameAuth = NSPanel;
-                openConnection = NSPanel;
-                publicKeyAlwaysAccept = NSButton;
-                publicKeyBabbleprint = NSTextField;
-                publicKeyDescription = NSTextField;
-                publicKeyFingerprint = NSTextField;
-                publicKeyName = NSTextField;
-                publicKeyNameDescription = NSTextField;
-                publicKeyVerification = NSPanel;
-                showDetails = NSButton;
-                sslConnection = NSButton;
-                userSelectionDescription = NSTextField;
-                userSelectionPanel = NSPanel;
-                userSelectionTable = NSTableView;
-                userToMessage = NSTextField;
-            };
-            SUPERCLASS = NSWindowController;
-        },
-                {
-            CLASS = MVMenuButton;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                menu = id;
-            };
-            SUPERCLASS = NSButton;
-        },
-                {
-            CLASS = MVTableView;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSTableView;
-        },
-                {
-            ACTIONS =             {
-                bold = id;
-                italic = id;
-                reset = id;
-            };
-            CLASS = MVTextView;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSTextView;
-        },
-                {
-            ACTIONS =             {
-                changeBackgroundColor = id;
-                doubleClicked = id;
-            };
-            CLASS = NSObject;
-            LANGUAGE = ObjC;
-        },
-                {
-            CLASS = NSPreferencesModule;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                "_preferencesView" = NSBox;
-                preferencesView = NSBox;
-            };
-            SUPERCLASS = NSObject;
-        }
-    );
-    IBVersion = 1;
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>closeCurrentPanel</key>
+				<string>id</string>
+				<key>closeViewsDrawer</key>
+				<string>id</string>
+				<key>detachCurrentPanel</key>
+				<string>id</string>
+				<key>getInfo</key>
+				<string>id</string>
+				<key>joinRoom</key>
+				<string>id</string>
+				<key>openViewsDrawer</key>
+				<string>id</string>
+				<key>selectNextActivePanel</key>
+				<string>id</string>
+				<key>selectNextPanel</key>
+				<string>id</string>
+				<key>selectPreviousActivePanel</key>
+				<string>id</string>
+				<key>selectPreviousPanel</key>
+				<string>id</string>
+				<key>toggleViewsDrawer</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVChatWindowController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>chatViewsOutlineView</key>
+				<string>NSOutlineView</string>
+				<key>favoritesButton</key>
+				<string>MVMenuButton</string>
+				<key>viewActionButton</key>
+				<string>MVMenuButton</string>
+				<key>viewsDrawer</key>
+				<string>NSDrawer</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSWindowController</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeConnection</key>
+				<string>id</string>
+				<key>close</key>
+				<string>id</string>
+				<key>hideRoomBrowser</key>
+				<string>id</string>
+				<key>joinRoom</key>
+				<string>id</string>
+				<key>showRoomBrowser</key>
+				<string>id</string>
+				<key>toggleRoomBrowser</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVChatRoomBrowser</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>acceptButton</key>
+				<string>NSButton</string>
+				<key>borwserArea</key>
+				<string>NSTabView</string>
+				<key>connectionPopup</key>
+				<string>NSPopUpButton</string>
+				<key>indexAndFindResults</key>
+				<string>NSTextField</string>
+				<key>indexResults</key>
+				<string>NSTextField</string>
+				<key>roomField</key>
+				<string>NSComboBox</string>
+				<key>roomsTable</key>
+				<string>NSTableView</string>
+				<key>searchArea</key>
+				<string>NSTabView</string>
+				<key>searchField</key>
+				<string>NSSearchField</string>
+				<key>showBroswer</key>
+				<string>NSButton</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSWindowController</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>bugReportWebsite</key>
+				<string>id</string>
+				<key>checkForUpdate</key>
+				<string>id</string>
+				<key>connectToSupportRoom</key>
+				<string>id</string>
+				<key>emailDeveloper</key>
+				<string>id</string>
+				<key>helpWebsite</key>
+				<string>id</string>
+				<key>markAllDisplays</key>
+				<string>id</string>
+				<key>productWebsite</key>
+				<string>id</string>
+				<key>showBuddyList</key>
+				<string>id</string>
+				<key>showConnectionManager</key>
+				<string>id</string>
+				<key>showPreferences</key>
+				<string>id</string>
+				<key>showTranscriptBrowser</key>
+				<string>id</string>
+				<key>showTransferManager</key>
+				<string>id</string>
+				<key>terminateWithoutConfirm</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>MVApplicationController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>MVTableView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSTableView</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>bold</key>
+				<string>id</string>
+				<key>italic</key>
+				<string>id</string>
+				<key>reset</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>MVTextView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSTextView</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>MVMenuButton</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>menu</key>
+				<string>id</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSButton</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>toggleTabBarVisible</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVTabbedChatWindowController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>customTabsView</key>
+				<string>AICustomTabsView</string>
+				<key>tabView</key>
+				<string>NSTabView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>JVChatWindowController</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>addBuddy</key>
+				<string>id</string>
+				<key>getInfo</key>
+				<string>id</string>
+				<key>sendFile</key>
+				<string>id</string>
+				<key>startChat</key>
+				<string>id</string>
+				<key>startDirectChat</key>
+				<string>id</string>
+				<key>toggleIgnore</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>MVChatUser</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>bold</key>
+				<string>id</string>
+				<key>clearDisplay</key>
+				<string>id</string>
+				<key>closeCurrentPanel</key>
+				<string>id</string>
+				<key>copySelectionToFindPboard</key>
+				<string>id</string>
+				<key>copyStripped</key>
+				<string>id</string>
+				<key>detachCurrentPanel</key>
+				<string>id</string>
+				<key>findNext</key>
+				<string>id</string>
+				<key>findPrevious</key>
+				<string>id</string>
+				<key>getInfo</key>
+				<string>id</string>
+				<key>italic</key>
+				<string>id</string>
+				<key>joinRoom</key>
+				<string>id</string>
+				<key>jumpToMark</key>
+				<string>id</string>
+				<key>jumpToNextHighlight</key>
+				<string>id</string>
+				<key>jumpToPreviousHighlight</key>
+				<string>id</string>
+				<key>markDisplay</key>
+				<string>id</string>
+				<key>newConnection</key>
+				<string>id</string>
+				<key>orderFrontFindPanel</key>
+				<string>id</string>
+				<key>selectNextActivePanel</key>
+				<string>id</string>
+				<key>selectNextPanel</key>
+				<string>id</string>
+				<key>selectPreviousActivePanel</key>
+				<string>id</string>
+				<key>selectPreviousPanel</key>
+				<string>id</string>
+				<key>showInspector</key>
+				<string>id</string>
+				<key>toggleSmallDrawerIcons</key>
+				<string>id</string>
+				<key>toggleTabBarVisible</key>
+				<string>id</string>
+				<key>toggleViewsDrawer</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>jumpToMark</key>
+				<string>id</string>
+				<key>jumpToNextHighlight</key>
+				<string>id</string>
+				<key>jumpToPreviousHighlight</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVStyleView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>nextTextView</key>
+				<string>NSTextView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>WebView</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeBackgroundColor</key>
+				<string>id</string>
+				<key>doubleClicked</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>AICustomTabsView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>delegate</key>
+				<string>id</string>
+				<key>tabView</key>
+				<string>NSTabView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSView</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>addRow</key>
+				<string>id</string>
+				<key>findNext</key>
+				<string>id</string>
+				<key>findPrevious</key>
+				<string>id</string>
+				<key>removeRow</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVTranscriptFindWindowController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>hiddenResults</key>
+				<string>NSView</string>
+				<key>hiddenResultsCount</key>
+				<string>NSTextField</string>
+				<key>ignoreCase</key>
+				<string>NSButton</string>
+				<key>operation</key>
+				<string>NSPopUpButton</string>
+				<key>resultCount</key>
+				<string>NSTextField</string>
+				<key>resultProgress</key>
+				<string>NSProgressIndicator</string>
+				<key>scrollbackOnly</key>
+				<string>NSButton</string>
+				<key>subviewTableView</key>
+				<string>NSTableView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSWindowController</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>addRuleCriterionRow</key>
+				<string>id</string>
+				<key>addRuleSet</key>
+				<string>id</string>
+				<key>addWindowSet</key>
+				<string>id</string>
+				<key>cancelRuleSet</key>
+				<string>id</string>
+				<key>cancelWindowSet</key>
+				<string>id</string>
+				<key>changeShowFullRoomName</key>
+				<string>id</string>
+				<key>changeSortByStatus</key>
+				<string>id</string>
+				<key>clear</key>
+				<string>id</string>
+				<key>editRuleSet</key>
+				<string>id</string>
+				<key>editWindowSet</key>
+				<string>id</string>
+				<key>removeRuleCriterionRow</key>
+				<string>id</string>
+				<key>saveRuleSet</key>
+				<string>id</string>
+				<key>saveWindowSet</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVInterfacePreferences</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>deleteRuleButton</key>
+				<string>NSButton</string>
+				<key>deleteWindowButton</key>
+				<string>NSButton</string>
+				<key>drawerSide</key>
+				<string>NSPopUpButton</string>
+				<key>editRuleButton</key>
+				<string>NSButton</string>
+				<key>editWindowButton</key>
+				<string>NSButton</string>
+				<key>ignoreCase</key>
+				<string>NSButton</string>
+				<key>interfaceStyle</key>
+				<string>NSPopUpButton</string>
+				<key>rememberPanels</key>
+				<string>NSButton</string>
+				<key>ruleEditPanel</key>
+				<string>NSWindow</string>
+				<key>ruleEditTable</key>
+				<string>NSTableView</string>
+				<key>ruleOperation</key>
+				<string>NSPopUpButton</string>
+				<key>rulesTable</key>
+				<string>NSTableView</string>
+				<key>windowEditPanel</key>
+				<string>NSPanel</string>
+				<key>windowEditSaveButton</key>
+				<string>NSButton</string>
+				<key>windowSetsTable</key>
+				<string>NSTableView</string>
+				<key>windowTitle</key>
+				<string>NSTextField</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSPreferencesModule</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>addRoom</key>
+				<string>id</string>
+				<key>changeNewConnectionProtocol</key>
+				<string>id</string>
+				<key>connectNewConnection</key>
+				<string>id</string>
+				<key>hideConnectionManager</key>
+				<string>id</string>
+				<key>messageUser</key>
+				<string>id</string>
+				<key>newConnection</key>
+				<string>id</string>
+				<key>openNetworkPreferences</key>
+				<string>id</string>
+				<key>removeRoom</key>
+				<string>id</string>
+				<key>sendCertificatePassword</key>
+				<string>id</string>
+				<key>sendPassword</key>
+				<string>id</string>
+				<key>showConnectionManager</key>
+				<string>id</string>
+				<key>toggleNewConnectionDetails</key>
+				<string>id</string>
+				<key>userSelectionSelected</key>
+				<string>id</string>
+				<key>verifiedPublicKey</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>MVConnectionsController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>authAddress</key>
+				<string>NSTextField</string>
+				<key>authKeychain</key>
+				<string>NSButton</string>
+				<key>authNickname</key>
+				<string>NSTextField</string>
+				<key>authPassword</key>
+				<string>NSTextField</string>
+				<key>certificateAuth</key>
+				<string>NSPanel</string>
+				<key>certificateDescription</key>
+				<string>NSTextField</string>
+				<key>certificateKeychain</key>
+				<string>NSButton</string>
+				<key>certificatePassphrase</key>
+				<string>NSTextField</string>
+				<key>connections</key>
+				<string>NSTableView</string>
+				<key>detailsTabView</key>
+				<string>NSTabView</string>
+				<key>messageUser</key>
+				<string>NSPanel</string>
+				<key>newAddress</key>
+				<string>NSComboBox</string>
+				<key>newJoinRooms</key>
+				<string>NSTableView</string>
+				<key>newNickname</key>
+				<string>NSTextField</string>
+				<key>newPort</key>
+				<string>NSComboBox</string>
+				<key>newProxy</key>
+				<string>NSPopUpButton</string>
+				<key>newRealName</key>
+				<string>NSTextField</string>
+				<key>newRemember</key>
+				<string>NSButton</string>
+				<key>newRemoveRoom</key>
+				<string>NSButton</string>
+				<key>newServerPassword</key>
+				<string>NSTextField</string>
+				<key>newType</key>
+				<string>NSPopUpButton</string>
+				<key>newUsername</key>
+				<string>NSTextField</string>
+				<key>nicknameAuth</key>
+				<string>NSPanel</string>
+				<key>openConnection</key>
+				<string>NSPanel</string>
+				<key>publicKeyAlwaysAccept</key>
+				<string>NSButton</string>
+				<key>publicKeyBabbleprint</key>
+				<string>NSTextField</string>
+				<key>publicKeyDescription</key>
+				<string>NSTextField</string>
+				<key>publicKeyFingerprint</key>
+				<string>NSTextField</string>
+				<key>publicKeyName</key>
+				<string>NSTextField</string>
+				<key>publicKeyNameDescription</key>
+				<string>NSTextField</string>
+				<key>publicKeyVerification</key>
+				<string>NSPanel</string>
+				<key>showDetails</key>
+				<string>NSButton</string>
+				<key>sslConnection</key>
+				<string>NSButton</string>
+				<key>userSelectionDescription</key>
+				<string>NSTextField</string>
+				<key>userSelectionPanel</key>
+				<string>NSPanel</string>
+				<key>userSelectionTable</key>
+				<string>NSTableView</string>
+				<key>userToMessage</key>
+				<string>NSTextField</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSWindowController</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>cancelBuddySelection</key>
+				<string>id</string>
+				<key>cancelNewBuddy</key>
+				<string>id</string>
+				<key>confirmBuddySelection</key>
+				<string>id</string>
+				<key>confirmNewBuddy</key>
+				<string>id</string>
+				<key>getInfo</key>
+				<string>id</string>
+				<key>hideBuddyList</key>
+				<string>id</string>
+				<key>messageSelectedBuddy</key>
+				<string>id</string>
+				<key>sendFileToSelectedBuddy</key>
+				<string>id</string>
+				<key>showBuddyList</key>
+				<string>id</string>
+				<key>showBuddyPickerSheet</key>
+				<string>id</string>
+				<key>showNewPersonSheet</key>
+				<string>id</string>
+				<key>sortByAvailability</key>
+				<string>id</string>
+				<key>sortByFirstName</key>
+				<string>id</string>
+				<key>sortByLastName</key>
+				<string>id</string>
+				<key>sortByServer</key>
+				<string>id</string>
+				<key>toggleShowFullNames</key>
+				<string>id</string>
+				<key>toggleShowIcons</key>
+				<string>id</string>
+				<key>toggleShowNicknameAndServer</key>
+				<string>id</string>
+				<key>toggleShowOfflineBuddies</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>MVBuddyListController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>actionButton</key>
+				<string>NSButton</string>
+				<key>addButton</key>
+				<string>NSButton</string>
+				<key>buddies</key>
+				<string>MVTableView</string>
+				<key>email</key>
+				<string>NSTextField</string>
+				<key>firstName</key>
+				<string>NSTextField</string>
+				<key>image</key>
+				<string>NSImageView</string>
+				<key>infoButton</key>
+				<string>NSButton</string>
+				<key>lastName</key>
+				<string>NSTextField</string>
+				<key>newPersonWindow</key>
+				<string>NSWindow</string>
+				<key>nickname</key>
+				<string>NSTextField</string>
+				<key>pickerView</key>
+				<string>ABPeoplePickerView</string>
+				<key>pickerWindow</key>
+				<string>NSWindow</string>
+				<key>sendMessageButton</key>
+				<string>NSButton</string>
+				<key>servers</key>
+				<string>NSTableView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSWindowController</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>activate</key>
+				<string>id</string>
+				<key>changeEmoticons</key>
+				<string>id</string>
+				<key>changeStyle</key>
+				<string>id</string>
+				<key>changeStyleVariant</key>
+				<string>id</string>
+				<key>close</key>
+				<string>id</string>
+				<key>performQuickSearch</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVChatTranscriptPanel</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>contents</key>
+				<string>NSView</string>
+				<key>display</key>
+				<string>JVStyleView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSPreferencesModule</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>_preferencesView</key>
+				<string>NSBox</string>
+				<key>preferencesView</key>
+				<string>NSBox</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeEncoding</key>
+				<string>id</string>
+				<key>clear</key>
+				<string>id</string>
+				<key>clearDisplay</key>
+				<string>id</string>
+				<key>markDisplay</key>
+				<string>id</string>
+				<key>send</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVDirectChatPanel</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>send</key>
+				<string>MVTextView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>JVChatTranscriptPanel</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>

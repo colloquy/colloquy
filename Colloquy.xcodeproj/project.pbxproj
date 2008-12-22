@@ -51,7 +51,6 @@
 		1C2E98C406207AD0000715D8 /* half-op.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C2E98C306207AD0000715D8 /* half-op.png */; };
 		1C2EDD790A3551B70051E9C2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C2EDD660A3551B60051E9C2 /* Sparkle.framework */; };
 		1C2EDDA10A35530F0051E9C2 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C2EDD660A3551B60051E9C2 /* Sparkle.framework */; };
-		1C3972DE082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3972DC082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.m */; };
 		1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C397368082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib */; };
 		1C397391082D4ADA00DCF3CF /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C397390082D4ADA00DCF3CF /* IOKit.framework */; };
 		1C3B290806529E720066197C /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; };
@@ -2491,7 +2490,6 @@
 				1C5EF36C07B45FBF004E66D3 /* JVChatSession.m in Sources */,
 				1C66913A07BFA76D008400F7 /* JVEmoticonSet.m in Sources */,
 				1C70377F07E49F25005CEA40 /* JVSmartTranscriptPanel.m in Sources */,
-				1C3972DE082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.m in Sources */,
 				1C6A40CA083FF6C600572AB6 /* JVInterfacePreferences.m in Sources */,
 				1C6A45210841746500572AB6 /* JVChatViewCriterionController.m in Sources */,
 				1C7780DE08FA1D82006AD8E5 /* JVSpeechController.m in Sources */,

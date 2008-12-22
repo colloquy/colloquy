@@ -7,6 +7,50 @@
 		<dict>
 			<key>ACTIONS</key>
 			<dict>
+				<key>closeCurrentPanel</key>
+				<string>id</string>
+				<key>closeViewsDrawer</key>
+				<string>id</string>
+				<key>detachCurrentPanel</key>
+				<string>id</string>
+				<key>getInfo</key>
+				<string>id</string>
+				<key>joinRoom</key>
+				<string>id</string>
+				<key>openViewsDrawer</key>
+				<string>id</string>
+				<key>selectNextActivePanel</key>
+				<string>id</string>
+				<key>selectNextPanel</key>
+				<string>id</string>
+				<key>selectPreviousActivePanel</key>
+				<string>id</string>
+				<key>selectPreviousPanel</key>
+				<string>id</string>
+				<key>toggleViewsDrawer</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVChatWindowController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>chatViewsOutlineView</key>
+				<string>NSOutlineView</string>
+				<key>favoritesButton</key>
+				<string>MVMenuButton</string>
+				<key>viewActionButton</key>
+				<string>MVMenuButton</string>
+				<key>viewsDrawer</key>
+				<string>NSDrawer</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSWindowController</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
 				<key>changeConnection</key>
 				<string>id</string>
 				<key>close</key>
@@ -88,6 +132,14 @@
 			<string>NSObject</string>
 		</dict>
 		<dict>
+			<key>CLASS</key>
+			<string>MVTableView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSTableView</string>
+		</dict>
+		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>bold</key>
@@ -120,6 +172,26 @@
 		<dict>
 			<key>ACTIONS</key>
 			<dict>
+				<key>toggleTabBarVisible</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVTabbedChatWindowController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>customTabsView</key>
+				<string>AICustomTabsView</string>
+				<key>tabView</key>
+				<string>NSTabView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>JVChatWindowController</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
 				<key>addBuddy</key>
 				<string>id</string>
 				<key>getInfo</key>
@@ -135,6 +207,67 @@
 			</dict>
 			<key>CLASS</key>
 			<string>MVChatUser</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>bold</key>
+				<string>id</string>
+				<key>clearDisplay</key>
+				<string>id</string>
+				<key>closeCurrentPanel</key>
+				<string>id</string>
+				<key>copySelectionToFindPboard</key>
+				<string>id</string>
+				<key>copyStripped</key>
+				<string>id</string>
+				<key>detachCurrentPanel</key>
+				<string>id</string>
+				<key>findNext</key>
+				<string>id</string>
+				<key>findPrevious</key>
+				<string>id</string>
+				<key>getInfo</key>
+				<string>id</string>
+				<key>italic</key>
+				<string>id</string>
+				<key>joinRoom</key>
+				<string>id</string>
+				<key>jumpToMark</key>
+				<string>id</string>
+				<key>jumpToNextHighlight</key>
+				<string>id</string>
+				<key>jumpToPreviousHighlight</key>
+				<string>id</string>
+				<key>markDisplay</key>
+				<string>id</string>
+				<key>newConnection</key>
+				<string>id</string>
+				<key>orderFrontFindPanel</key>
+				<string>id</string>
+				<key>selectNextActivePanel</key>
+				<string>id</string>
+				<key>selectNextPanel</key>
+				<string>id</string>
+				<key>selectPreviousActivePanel</key>
+				<string>id</string>
+				<key>selectPreviousPanel</key>
+				<string>id</string>
+				<key>showInspector</key>
+				<string>id</string>
+				<key>toggleSmallDrawerIcons</key>
+				<string>id</string>
+				<key>toggleTabBarVisible</key>
+				<string>id</string>
+				<key>toggleViewsDrawer</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
 			<key>SUPERCLASS</key>
@@ -189,6 +322,44 @@
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSView</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>addRow</key>
+				<string>id</string>
+				<key>findNext</key>
+				<string>id</string>
+				<key>findPrevious</key>
+				<string>id</string>
+				<key>removeRow</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVTranscriptFindWindowController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>hiddenResults</key>
+				<string>NSView</string>
+				<key>hiddenResultsCount</key>
+				<string>NSTextField</string>
+				<key>ignoreCase</key>
+				<string>NSButton</string>
+				<key>operation</key>
+				<string>NSPopUpButton</string>
+				<key>resultCount</key>
+				<string>NSTextField</string>
+				<key>resultProgress</key>
+				<string>NSProgressIndicator</string>
+				<key>scrollbackOnly</key>
+				<string>NSButton</string>
+				<key>subviewTableView</key>
+				<string>NSTableView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSWindowController</string>
 		</dict>
 		<dict>
 			<key>ACTIONS</key>
@@ -381,222 +552,6 @@
 		<dict>
 			<key>ACTIONS</key>
 			<dict>
-				<key>activate</key>
-				<string>id</string>
-				<key>changeEmoticons</key>
-				<string>id</string>
-				<key>changeStyle</key>
-				<string>id</string>
-				<key>changeStyleVariant</key>
-				<string>id</string>
-				<key>close</key>
-				<string>id</string>
-				<key>performQuickSearch</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>JVChatTranscriptPanel</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>contents</key>
-				<string>NSView</string>
-				<key>display</key>
-				<string>JVStyleView</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>NSPreferencesModule</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>_preferencesView</key>
-				<string>NSBox</string>
-				<key>preferencesView</key>
-				<string>NSBox</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>closeCurrentPanel</key>
-				<string>id</string>
-				<key>closeViewsDrawer</key>
-				<string>id</string>
-				<key>detachCurrentPanel</key>
-				<string>id</string>
-				<key>getInfo</key>
-				<string>id</string>
-				<key>joinRoom</key>
-				<string>id</string>
-				<key>openViewsDrawer</key>
-				<string>id</string>
-				<key>selectNextActivePanel</key>
-				<string>id</string>
-				<key>selectNextPanel</key>
-				<string>id</string>
-				<key>selectPreviousActivePanel</key>
-				<string>id</string>
-				<key>selectPreviousPanel</key>
-				<string>id</string>
-				<key>toggleViewsDrawer</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>JVChatWindowController</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>chatViewsOutlineView</key>
-				<string>NSOutlineView</string>
-				<key>favoritesButton</key>
-				<string>MVMenuButton</string>
-				<key>viewActionButton</key>
-				<string>MVMenuButton</string>
-				<key>viewsDrawer</key>
-				<string>NSDrawer</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSWindowController</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>MVTableView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSTableView</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>toggleTabBarVisible</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>JVTabbedChatWindowController</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>customTabsView</key>
-				<string>AICustomTabsView</string>
-				<key>tabView</key>
-				<string>NSTabView</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>JVChatWindowController</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>bold</key>
-				<string>id</string>
-				<key>clearDisplay</key>
-				<string>id</string>
-				<key>closeCurrentPanel</key>
-				<string>id</string>
-				<key>copySelectionToFindPboard</key>
-				<string>id</string>
-				<key>copyStripped</key>
-				<string>id</string>
-				<key>detachCurrentPanel</key>
-				<string>id</string>
-				<key>findNext</key>
-				<string>id</string>
-				<key>findPrevious</key>
-				<string>id</string>
-				<key>getInfo</key>
-				<string>id</string>
-				<key>italic</key>
-				<string>id</string>
-				<key>joinRoom</key>
-				<string>id</string>
-				<key>jumpToMark</key>
-				<string>id</string>
-				<key>jumpToNextHighlight</key>
-				<string>id</string>
-				<key>jumpToPreviousHighlight</key>
-				<string>id</string>
-				<key>markDisplay</key>
-				<string>id</string>
-				<key>newConnection</key>
-				<string>id</string>
-				<key>orderFrontFindPanel</key>
-				<string>id</string>
-				<key>selectNextActivePanel</key>
-				<string>id</string>
-				<key>selectNextPanel</key>
-				<string>id</string>
-				<key>selectPreviousActivePanel</key>
-				<string>id</string>
-				<key>selectPreviousPanel</key>
-				<string>id</string>
-				<key>showInspector</key>
-				<string>id</string>
-				<key>toggleSmallDrawerIcons</key>
-				<string>id</string>
-				<key>toggleTabBarVisible</key>
-				<string>id</string>
-				<key>toggleViewsDrawer</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>FirstResponder</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>addRow</key>
-				<string>id</string>
-				<key>findNext</key>
-				<string>id</string>
-				<key>findPrevious</key>
-				<string>id</string>
-				<key>removeRow</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>JVTranscriptFindWindowController</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>hiddenResults</key>
-				<string>NSView</string>
-				<key>hiddenResultsCount</key>
-				<string>NSTextField</string>
-				<key>ignoreCase</key>
-				<string>NSButton</string>
-				<key>operation</key>
-				<string>NSPopUpButton</string>
-				<key>resultCount</key>
-				<string>NSTextField</string>
-				<key>resultProgress</key>
-				<string>NSProgressIndicator</string>
-				<key>scrollbackOnly</key>
-				<string>NSButton</string>
-				<key>subviewTableView</key>
-				<string>NSTableView</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSWindowController</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
 				<key>cancelBuddySelection</key>
 				<string>id</string>
 				<key>cancelNewBuddy</key>
@@ -673,6 +628,51 @@
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSWindowController</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>activate</key>
+				<string>id</string>
+				<key>changeEmoticons</key>
+				<string>id</string>
+				<key>changeStyle</key>
+				<string>id</string>
+				<key>changeStyleVariant</key>
+				<string>id</string>
+				<key>close</key>
+				<string>id</string>
+				<key>performQuickSearch</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVChatTranscriptPanel</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>contents</key>
+				<string>NSView</string>
+				<key>display</key>
+				<string>JVStyleView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSPreferencesModule</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>_preferencesView</key>
+				<string>NSBox</string>
+				<key>preferencesView</key>
+				<string>NSBox</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
 		</dict>
 		<dict>
 			<key>ACTIONS</key>

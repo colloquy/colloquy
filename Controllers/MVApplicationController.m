@@ -20,7 +20,7 @@
 #import "NSBundleAdditions.h"
 #import "JVStyle.h"
 #import "JVDirectChatPanel.h"
-#import "JVChatTranscriptBrowserPanel.h"
+//#import "JVChatTranscriptBrowserPanel.h"
 
 #import <Sparkle/SUUpdater.h>
 
@@ -227,7 +227,7 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (IBAction) showTranscriptBrowser:(id) sender {
-	[[JVChatTranscriptBrowserPanel sharedBrowser] showBrowser:self];
+//	[[JVChatTranscriptBrowserPanel sharedBrowser] showBrowser:self];
 }
 
 - (IBAction) showBuddyList:(id) sender {
