@@ -68,6 +68,7 @@ a.member:hover   { text-decoration: underline; }
 
 .envelope > .member {
   overflow: hidden;
+  white-space: nowrap;
   display: block;
   width: 15ex;
   float: left;
