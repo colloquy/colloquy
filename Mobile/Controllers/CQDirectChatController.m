@@ -155,7 +155,7 @@
 	NSMutableArray *messages = [[NSMutableArray alloc] init];
 
 	for (NSDictionary *message in _recentMessages) {
-		id sameKeys[] = {@"message", @"action", @"notice", @"identifier", @"type", nil};
+		id sameKeys[] = {@"message", @"action", @"notice", @"highlighted", @"identifier", @"type", nil};
 		NSMutableDictionary *newMessage = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:message];
 
 		MVChatUser *user = [message objectForKey:@"user"];
