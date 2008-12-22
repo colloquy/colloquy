@@ -1,65 +1,127 @@
-{
-    IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {
-                addRuleCriterionRow = id; 
-                addRuleSet = id; 
-                addWindowSet = id; 
-                cancelRuleSet = id; 
-                cancelWindowSet = id; 
-                changeShowFullRoomName = id; 
-                changeSortByStatus = id; 
-                clear = id; 
-                editRuleSet = id; 
-                editWindowSet = id; 
-                removeRuleCriterionRow = id; 
-                saveRuleSet = id; 
-                saveWindowSet = id; 
-            }; 
-            CLASS = JVInterfacePreferences; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                deleteRuleButton = NSButton; 
-                deleteWindowButton = NSButton; 
-                drawerSide = NSPopUpButton; 
-                editRuleButton = NSButton; 
-                editWindowButton = NSButton; 
-                ignoreCase = NSButton; 
-                interfaceStyle = NSPopUpButton; 
-                rememberPanels = NSButton; 
-                ruleEditPanel = NSWindow; 
-                ruleEditTable = NSTableView; 
-                ruleOperation = NSPopUpButton; 
-                rulesTable = NSTableView; 
-                windowEditPanel = NSPanel; 
-                windowEditSaveButton = NSButton; 
-                windowSetsTable = NSTableView; 
-                windowTitle = NSTextField; 
-            }; 
-            SUPERCLASS = NSPreferencesModule; 
-        }, 
-        {CLASS = MVTableView; LANGUAGE = ObjC; SUPERCLASS = NSTableView; }, 
-        {CLASS = NSObject; LANGUAGE = ObjC; }, 
-        {
-            ACTIONS = {apply = id; cancel = id; ok = id; selectModule = id; }; 
-            CLASS = NSPreferences; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                applyButton = id; 
-                cancelButton = id; 
-                moduleMatrix = id; 
-                okButton = id; 
-                preferencesPanel = id; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = NSPreferencesModule; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {"_preferencesView" = NSBox; preferencesView = NSBox; }; 
-            SUPERCLASS = NSObject; 
-        }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeBackgroundColor</key>
+				<string>id</string>
+				<key>doubleClicked</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>addRuleCriterionRow</key>
+				<string>id</string>
+				<key>addRuleSet</key>
+				<string>id</string>
+				<key>addWindowSet</key>
+				<string>id</string>
+				<key>cancelRuleSet</key>
+				<string>id</string>
+				<key>cancelWindowSet</key>
+				<string>id</string>
+				<key>changeShowFullRoomName</key>
+				<string>id</string>
+				<key>changeSortByStatus</key>
+				<string>id</string>
+				<key>clear</key>
+				<string>id</string>
+				<key>editRuleSet</key>
+				<string>id</string>
+				<key>editWindowSet</key>
+				<string>id</string>
+				<key>removeRuleCriterionRow</key>
+				<string>id</string>
+				<key>saveRuleSet</key>
+				<string>id</string>
+				<key>saveWindowSet</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVInterfacePreferences</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>deleteRuleButton</key>
+				<string>NSButton</string>
+				<key>deleteWindowButton</key>
+				<string>NSButton</string>
+				<key>drawerSide</key>
+				<string>NSPopUpButton</string>
+				<key>editRuleButton</key>
+				<string>NSButton</string>
+				<key>editWindowButton</key>
+				<string>NSButton</string>
+				<key>ignoreCase</key>
+				<string>NSButton</string>
+				<key>interfaceStyle</key>
+				<string>NSPopUpButton</string>
+				<key>rememberPanels</key>
+				<string>NSButton</string>
+				<key>ruleEditPanel</key>
+				<string>NSWindow</string>
+				<key>ruleEditTable</key>
+				<string>NSTableView</string>
+				<key>ruleOperation</key>
+				<string>NSPopUpButton</string>
+				<key>rulesTable</key>
+				<string>NSTableView</string>
+				<key>windowEditPanel</key>
+				<string>NSPanel</string>
+				<key>windowEditSaveButton</key>
+				<string>NSButton</string>
+				<key>windowSetsTable</key>
+				<string>NSTableView</string>
+				<key>windowTitle</key>
+				<string>NSTextField</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSPreferencesModule</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSPreferencesModule</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>_preferencesView</key>
+				<string>NSBox</string>
+				<key>preferencesView</key>
+				<string>NSBox</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>MVTableView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSTableView</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>
