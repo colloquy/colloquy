@@ -780,7 +780,6 @@
 	if( offset < [argsArray count] && [(NSString *)[argsArray objectAtIndex:offset] length] )
 		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
 	
-//	KAIgnoreRule *rule = [KAIgnoreRule ruleForUser:memberString message:messageString inRooms:rooms isPermanent:no friendlyName:nil];
 	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:[view connection]];
 	NSEnumerator *enumerator = [rules objectEnumerator];
 	KAIgnoreRule *rule = nil;
@@ -791,7 +790,6 @@
 		}
 	}
 
-	
 	return YES;
 }
 @end
