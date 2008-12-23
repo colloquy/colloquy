@@ -1,4 +1,4 @@
-@interface CQColloquyApplication : NSObject <UIApplicationDelegate, UITabBarDelegate> {
+@interface CQColloquyApplication : UIApplication <UIApplicationDelegate, UITabBarDelegate> {
 	IBOutlet UIWindow *mainWindow;
 	IBOutlet UITabBarController	*tabBarController;
 }

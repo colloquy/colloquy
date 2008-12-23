@@ -4,7 +4,7 @@
 
 @implementation CQColloquyApplication
 + (CQColloquyApplication *) sharedApplication {
-	return (CQColloquyApplication *)[UIApplication sharedApplication].delegate;
+	return (CQColloquyApplication *)[UIApplication sharedApplication];
 }
 
 @synthesize tabBarController, mainWindow;

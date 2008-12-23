@@ -45,6 +45,7 @@
 	self.delegate = self;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidActivate) name:UIApplicationDidBecomeActiveNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:nil];
@@ -114,6 +115,12 @@
 
 	for (MVChatConnection *connection in _connections)
 		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+}
+
+- (void) applicationDidActivate {
+	for (MVChatConnection *connection in _connections)
+		if (connection.waitingToReconnect || connection.status == MVChatConnectionServerDisconnectedStatus)
+			[connection connect];
 }
 
 #pragma mark -
