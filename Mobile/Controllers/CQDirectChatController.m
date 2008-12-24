@@ -61,7 +61,7 @@
 			return nil;
 	}
 
-	_pendingFormerMessages = [[NSMutableArray alloc] init];
+	_pendingPreviousSessionComponents = [[NSMutableArray alloc] init];
 
 	for (NSDictionary *message in [state objectForKey:@"messages"]) {
 		NSMutableDictionary *messageCopy = [message mutableCopy];
@@ -75,13 +75,13 @@
 		if (user) {
 			[messageCopy setObject:user forKey:@"user"];
 
-			[_pendingFormerMessages addObject:messageCopy];
+			[_pendingPreviousSessionComponents addObject:messageCopy];
 		}
 
 		[messageCopy release];
 	}
 
-	_recentMessages = [_pendingFormerMessages mutableCopy];
+	_recentMessages = [_pendingPreviousSessionComponents mutableCopy];
 
 	while (_recentMessages.count > 10)
 		[_recentMessages removeObjectAtIndex:0];
@@ -97,8 +97,8 @@
 
 	[_watchRule release];
 	[_recentMessages release];
-	[_pendingFormerMessages release];
-	[_pendingMessages release];
+	[_pendingPreviousSessionComponents release];
+	[_pendingComponents release];
 	[_target release];
 
 	[super dealloc];
@@ -190,29 +190,29 @@
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	if (_pendingFormerMessages) {
-		[transcriptView addFormerMessages:_pendingFormerMessages];
+	if (_pendingPreviousSessionComponents) {
+		[transcriptView addPreviousSessionComponents:_pendingPreviousSessionComponents];
 
-		[_pendingFormerMessages release];
-		_pendingFormerMessages = nil;
+		[_pendingPreviousSessionComponents release];
+		_pendingPreviousSessionComponents = nil;
 	}
 
-	if (_pendingMessages) {
-		[transcriptView addMessages:_pendingMessages animated:NO];
+	if (_pendingComponents) {
+		[transcriptView addComponents:_pendingComponents animated:NO];
 
-		[_pendingMessages release];
-		_pendingMessages = nil;
+		[_pendingComponents release];
+		_pendingComponents = nil;
 	}
 }
 
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 
-	if (_pendingMessages) {
-		[transcriptView addMessages:_pendingMessages animated:NO];
+	if (_pendingComponents) {
+		[transcriptView addComponents:_pendingComponents animated:NO];
 
-		[_pendingMessages release];
-		_pendingMessages = nil;
+		[_pendingComponents release];
+		_pendingComponents = nil;
 	}
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -463,13 +463,13 @@
 		[_recentMessages removeObjectAtIndex:0];
 
 	if (!transcriptView || !_active) {
-		if (!_pendingMessages)
-			_pendingMessages = [[NSMutableArray alloc] init];
-		[_pendingMessages addObject:message];
+		if (!_pendingComponents)
+			_pendingComponents = [[NSMutableArray alloc] init];
+		[_pendingComponents addObject:message];
 		return;
 	}
 
-	[transcriptView addMessage:message animated:YES];
+	[transcriptView addComponent:message animated:YES];
 }
 
 #pragma mark -

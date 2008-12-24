@@ -22,7 +22,7 @@
 #pragma mark -
 
 @interface CQChatTranscriptView (Internal)
-- (void) _addMessagesToTranscript:(NSArray *) messages asFormerMessages:(BOOL) former animated:(BOOL) animated;
+- (void) _addComponentsToTranscript:(NSArray *) components fromPreviousSession:(BOOL) previous animated:(BOOL) animated;
 - (void) _commonInitialization;
 - (void) _reset;
 @end
@@ -49,8 +49,8 @@
 }
 
 - (void) dealloc {
-	[_pendingMessages release];
-	[_pendingFormerMessages release];
+	[_pendingComponents release];
+	[_pendingPreviousSessionComponents release];
 	[super dealloc];
 }
 
@@ -111,54 +111,54 @@
 - (void) webViewDidFinishLoad:(UIWebView *) webView {
 	_loading = NO;
 
-	[self _addMessagesToTranscript:_pendingFormerMessages asFormerMessages:YES animated:NO];
+	[self _addComponentsToTranscript:_pendingPreviousSessionComponents fromPreviousSession:YES animated:NO];
 
-	[_pendingFormerMessages release];
-	_pendingFormerMessages = nil;
+	[_pendingPreviousSessionComponents release];
+	_pendingPreviousSessionComponents = nil;
 
-	[self _addMessagesToTranscript:_pendingMessages asFormerMessages:NO animated:NO];
+	[self _addComponentsToTranscript:_pendingComponents fromPreviousSession:NO animated:NO];
 
-	[_pendingMessages release];
-	_pendingMessages = nil;
+	[_pendingComponents release];
+	_pendingComponents = nil;
 }
 
 #pragma mark -
 
-- (void) addFormerMessages:(NSArray *) messages {
-	NSParameterAssert(messages != nil);
+- (void) addPreviousSessionComponents:(NSArray *) components {
+	NSParameterAssert(components != nil);
 
 	if (_loading) {
-		if (_pendingFormerMessages) [_pendingFormerMessages addObjectsFromArray:messages];
-		else _pendingFormerMessages = [messages mutableCopy];
+		if (_pendingPreviousSessionComponents) [_pendingPreviousSessionComponents addObjectsFromArray:components];
+		else _pendingPreviousSessionComponents = [components mutableCopy];
 		return;
 	}
 
-	[self _addMessagesToTranscript:messages asFormerMessages:YES animated:NO];
+	[self _addComponentsToTranscript:components fromPreviousSession:YES animated:NO];
 }
 
-- (void) addMessages:(NSArray *) messages animated:(BOOL) animated {
-	NSParameterAssert(messages != nil);
+- (void) addComponents:(NSArray *) components animated:(BOOL) animated {
+	NSParameterAssert(components != nil);
 
 	if (_loading) {
-		if (_pendingMessages) [_pendingMessages addObjectsFromArray:messages];
-		else _pendingMessages = [messages mutableCopy];
+		if (_pendingComponents) [_pendingComponents addObjectsFromArray:components];
+		else _pendingComponents = [components mutableCopy];
 		return;
 	}
 
-	[self _addMessagesToTranscript:messages asFormerMessages:NO animated:animated];
+	[self _addComponentsToTranscript:components fromPreviousSession:NO animated:animated];
 }
 
-- (void) addMessage:(NSDictionary *) message animated:(BOOL) animated {
-	NSParameterAssert(message != nil);
+- (void) addComponent:(NSDictionary *) component animated:(BOOL) animated {
+	NSParameterAssert(component != nil);
 
 	if (_loading) {
-		if (!_pendingMessages)
-			_pendingMessages = [[NSMutableArray alloc] init];
-		[_pendingMessages addObject:message];
+		if (!_pendingComponents)
+			_pendingComponents = [[NSMutableArray alloc] init];
+		[_pendingComponents addObject:component];
 		return;
 	}
 
-	[self _addMessagesToTranscript:[NSArray arrayWithObject:message] asFormerMessages:NO animated:animated];
+	[self _addComponentsToTranscript:[NSArray arrayWithObject:component] fromPreviousSession:NO animated:animated];
 }
 
 - (void) scrollToBottomAnimated:(BOOL) animated {
@@ -172,26 +172,29 @@
 
 #pragma mark -
 
-- (void) _addMessagesToTranscript:(NSArray *) messages asFormerMessages:(BOOL) former animated:(BOOL) animated {
-	NSMutableString *command = [[NSMutableString alloc] initWithString:@"appendMessages(["];
+- (void) _addComponentsToTranscript:(NSArray *) components fromPreviousSession:(BOOL) previousSession animated:(BOOL) animated {
+	NSMutableString *command = [[NSMutableString alloc] initWithString:@"appendComponents(["];
 
-	for (NSDictionary *message in messages) {
-		MVChatUser *user = [message objectForKey:@"user"];
-		NSString *messageString = [message objectForKey:@"message"];
-		if (!user || !messageString)
-			continue;
+	for (NSDictionary *component in components) {
+		NSString *type = [component objectForKey:@"type"];
+		if ([type isEqualToString:@"message"]) {
+			MVChatUser *user = [component objectForKey:@"user"];
+			NSString *messageString = [component objectForKey:@"message"];
+			if (!user || !messageString)
+				continue;
 
-		BOOL action = [[message objectForKey:@"action"] boolValue];
-		BOOL highlighted = [[message objectForKey:@"highlighted"] boolValue];
+			BOOL action = [[component objectForKey:@"action"] boolValue];
+			BOOL highlighted = [[component objectForKey:@"highlighted"] boolValue];
 
-		NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\\'\""];
-		NSString *escapedMessage = [messageString stringByEscapingCharactersInSet:escapedCharacters];
-		NSString *escapedNickname = [user.nickname stringByEscapingCharactersInSet:escapedCharacters];
+			NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\\'\""];
+			NSString *escapedMessage = [messageString stringByEscapingCharactersInSet:escapedCharacters];
+			NSString *escapedNickname = [user.nickname stringByEscapingCharactersInSet:escapedCharacters];
 
-		[command appendFormat:@"{sender:'%@',message:'%@',highlighted:%@,action:%@,self:%@},", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
+			[command appendFormat:@"{type:'message',sender:'%@',message:'%@',highlighted:%@,action:%@,self:%@},", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
+		}
 	}
 
-	[command appendFormat:@"],%@,false,%@)", (former ? @"true" : @"false"), (animated ? @"false" : @"true")];
+	[command appendFormat:@"],%@,false,%@)", (previousSession ? @"true" : @"false"), (animated ? @"false" : @"true")];
 
 	[self stringByEvaluatingJavaScriptFromString:command];
 

@@ -54,11 +54,12 @@ function animateProperty(animations, duration, callback, complete) {
         callback();
 }
 
-function appendMessages(messages, former, suppressScroll, suppressScrollAnimation) {
-	var messagesLength = messages.length;
-	for (var i = 0; i < messagesLength; ++i) {
-		var message = messages[i];
-		appendMessage(message.sender, message.message, message.highlighted, message.action, message.self, true);
+function appendComponents(components, previousSession, suppressScroll, suppressScrollAnimation) {
+	var componentsLength = components.length;
+	for (var i = 0; i < componentsLength; ++i) {
+		var component = components[i];
+		if (component.type === "message")
+			appendMessage(component.sender, component.message, component.highlighted, component.action, component.self, true);
 	}
 
 	if (!suppressScroll)

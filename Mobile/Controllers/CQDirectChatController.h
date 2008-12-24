@@ -13,8 +13,8 @@
 	IBOutlet CQChatInputBar *chatInputBar;
 	IBOutlet CQChatTranscriptView *transcriptView;
 
-	NSMutableArray *_pendingFormerMessages;
-	NSMutableArray *_pendingMessages;
+	NSMutableArray *_pendingPreviousSessionComponents;
+	NSMutableArray *_pendingComponents;
 	NSMutableArray *_recentMessages;
 
 	id _target;
@@ -35,5 +35,5 @@
 @property (nonatomic, readonly) NSArray *recentMessages;
 
 - (void) addMessage:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier;
-- (void) addMessage:(NSDictionary *) info;
+- (void) addMessage:(NSDictionary *) message;
 @end

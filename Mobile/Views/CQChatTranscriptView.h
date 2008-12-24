@@ -2,16 +2,16 @@
 
 @interface CQChatTranscriptView : UIWebView <UIWebViewDelegate> {
 	IBOutlet id <CQChatTranscriptViewDelegate> delegate;
-	NSMutableArray *_pendingFormerMessages;
-	NSMutableArray *_pendingMessages;
+	NSMutableArray *_pendingPreviousSessionComponents;
+	NSMutableArray *_pendingComponents;
 	BOOL _scrolling;
 	BOOL _loading;
 }
 @property (nonatomic, assign) id <CQChatTranscriptViewDelegate> delegate;
 
-- (void) addFormerMessages:(NSArray *) messages;
-- (void) addMessages:(NSArray *) messages animated:(BOOL) animated;
-- (void) addMessage:(NSDictionary *) message animated:(BOOL) animated;
+- (void) addPreviousSessionComponents:(NSArray *) components;
+- (void) addComponents:(NSArray *) components animated:(BOOL) animated;
+- (void) addComponent:(NSDictionary *) component animated:(BOOL) animated;
 
 - (void) scrollToBottomAnimated:(BOOL) animated;
 - (void) flashScrollIndicators;
