@@ -1,10 +1,5 @@
 @protocol CQChatTranscriptViewDelegate;
 
-typedef enum {
-	CQChatMessageNormalType,
-	CQChatMessageNoticeType
-} CQChatMessageType;
-
 @interface CQChatTranscriptView : UIWebView <UIWebViewDelegate> {
 	IBOutlet id <CQChatTranscriptViewDelegate> delegate;
 	NSMutableArray *_pendingFormerMessages;

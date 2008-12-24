@@ -311,7 +311,7 @@
 		[_target sendMessage:text withEncoding:self.encoding asAction:NO];
 
 		NSData *messageData = [text dataUsingEncoding:self.encoding allowLossyConversion:YES];
-		[self addMessage:messageData fromUser:self.connection.localUser asAction:NO withIdentifier:[NSString locallyUniqueString] andType:CQChatMessageNormalType];
+		[self addMessage:messageData fromUser:self.connection.localUser asAction:NO withIdentifier:[NSString locallyUniqueString]];
 	}
 
 	return YES;
@@ -425,14 +425,13 @@
 
 @synthesize recentMessages = _recentMessages;
 
-- (void) addMessage:(NSData *) messageData fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier andType:(CQChatMessageType) type {
+- (void) addMessage:(NSData *) messageData fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier {
 	NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
 
 	if (message) [message setObject:messageData forKey:@"message"];
 	if (user) [message setObject:user forKey:@"user"];
 	if (identifier) [message setObject:identifier forKey:@"identifier"];
 	[message setObject:[NSNumber numberWithBool:action] forKey:@"action"];
-	[message setObject:[NSNumber numberWithUnsignedLong:type] forKey:@"type"];
 
 	[self addMessage:message];
 
@@ -647,9 +646,10 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 		transformedMessageString = messageString;
 	} else transformedMessageString = applyFunctionToTextInHTMLString(messageString, commonChatReplacment);
 
-	id sameKeys[] = {@"user", @"action", @"notice", @"identifier", @"type", nil};
+	id sameKeys[] = {@"user", @"action", @"notice", @"identifier", nil};
 	NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:message];
 
+	[result setObject:@"message" forKey:@"type"];
 	[result setObject:transformedMessageString forKey:@"message"];
 
 	if (*highlighted)
