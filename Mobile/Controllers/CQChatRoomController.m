@@ -1,6 +1,7 @@
 #import "CQChatRoomController.h"
 
 #import "CQChatUserListViewController.h"
+#import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
@@ -142,6 +143,20 @@
 
 #pragma mark -
 
+- (BOOL) chatInputBar:(CQChatInputBar *) inputBar shouldAutocorrectWordWithPrefix:(NSString *) word {
+	if (![super chatInputBar:inputBar shouldAutocorrectWordWithPrefix:word])
+		return NO;
+
+	for (MVChatUser *member in _orderedMembers) {
+		if ([member.nickname hasCaseInsensitivePrefix:word])
+			return NO;
+	}
+
+	return YES;
+}
+
+#pragma mark -
+
 static NSInteger sortMembersByStatus(MVChatUser *user1, MVChatUser *user2, void *context) {
 	CQChatRoomController *room = (CQChatRoomController *)context;
 
@@ -177,6 +192,8 @@ static NSInteger sortMembersByStatus(MVChatUser *user1, MVChatUser *user2, void 
 static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, void *context) {
 	return [user1.displayName caseInsensitiveCompare:user2.displayName];
 }
+
+#pragma mark -
 
 - (void) _sortMembers {
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"])

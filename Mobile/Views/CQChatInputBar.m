@@ -9,6 +9,12 @@
 
 #pragma mark -
 
+@interface CQChatInputBar (CQChatInputBarPrivate)
+- (void) _updateTextTraits;
+@end
+
+#pragma mark -
+
 @implementation CQChatInputBar
 - (void) _commonInitialization {
 	CGRect frame = self.frame;
@@ -131,7 +137,48 @@
 	return YES;
 }
 
+- (BOOL) textField:(UITextField *) textField shouldChangeCharactersInRange:(NSRange) range replacementString:(NSString *) string {
+	if (![delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)])
+		return YES;
+
+	NSRange wordRange = {0, range.location + string.length};
+	NSString *text = [_inputField.text stringByReplacingCharactersInRange:range withString:string];
+
+	for (NSInteger i = (range.location + string.length - 1); i >= 0; --i) {
+		if ([text characterAtIndex:i] == ' ') {
+			wordRange.location = i + 1;
+			wordRange.length = ((range.location + string.length) - wordRange.location);
+			break;
+		}
+	}
+
+	NSString *word = [text substringWithRange:wordRange];
+
+	UITextAutocorrectionType newAutocorrectionType = _inputField.autocorrectionType;
+	if (![delegate chatInputBar:self shouldAutocorrectWordWithPrefix:word])
+		newAutocorrectionType = UITextAutocorrectionTypeNo;
+	else newAutocorrectionType = UITextAutocorrectionTypeDefault;
+
+	if (newAutocorrectionType != _inputField.autocorrectionType) {
+		_inputField.autocorrectionType = newAutocorrectionType;
+		[self _updateTextTraits];
+	}
+
+	return YES;
+}
+
 #pragma mark -
+
+- (void) _updateTextTraits {
+	static Class keyboardClass;
+	if (!keyboardClass) keyboardClass = NSClassFromString(@"UIKeyboardImpl");
+
+	if ([keyboardClass respondsToSelector:@selector(activeInstance)]) {
+		UIKeyboardImpl *keyboard = [keyboardClass activeInstance];
+		if ([keyboard respondsToSelector:@selector(takeTextInputTraitsFrom:)])
+			[keyboard takeTextInputTraitsFrom:_inputField];
+	}
+}
 
 - (void) _sendText {
 	// Resign and become first responder to accept any pending auto-correction.
@@ -145,18 +192,15 @@
 		return;
 
 	if (_inferAutocapitalizationType) {
-		NSCharacterSet *uppercaseSet = [NSCharacterSet uppercaseLetterCharacterSet];
-		if ([uppercaseSet characterIsMember:[text characterAtIndex:0]])
-			_inputField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-		else _inputField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+		unichar firstCharacter = [text characterAtIndex:0];
+		NSCharacterSet *letterSet = [NSCharacterSet letterCharacterSet];
+		if ([letterSet characterIsMember:firstCharacter]) {
+			NSCharacterSet *uppercaseSet = [NSCharacterSet uppercaseLetterCharacterSet];
+			if ([uppercaseSet characterIsMember:firstCharacter])
+				_inputField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+			else _inputField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 
-		static Class keyboardClass;
-		if (!keyboardClass) keyboardClass = NSClassFromString(@"UIKeyboardImpl");
-
-		if ([keyboardClass respondsToSelector:@selector(activeInstance)]) {
-			UIKeyboardImpl *keyboard = [keyboardClass activeInstance];
-			if ([keyboard respondsToSelector:@selector(takeTextInputTraitsFrom:)])
-				[keyboard takeTextInputTraitsFrom:_inputField];
+			[self _updateTextTraits];
 		}
 	}
 

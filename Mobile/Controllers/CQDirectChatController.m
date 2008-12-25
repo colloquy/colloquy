@@ -277,6 +277,14 @@
 	return NO;
 }
 
+- (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar shouldAutocorrectWordWithPrefix:(NSString *) word {
+	if ([word hasPrefix:@"/"] || [word hasPrefix:@"#"] || [word hasCaseInsensitiveSubstring:@"://"] || [word hasCaseInsensitiveSubstring:@"www."])
+		return NO;
+	if ([self.user.nickname hasCaseInsensitivePrefix:word])
+		return NO;
+	return YES;
+}
+
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text {
 	if (!self.available) {
 		[self _showCantSendMessagesWarning];
