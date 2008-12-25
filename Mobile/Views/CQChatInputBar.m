@@ -137,13 +137,21 @@
 	return YES;
 }
 
+- (BOOL) textFieldShouldClear:(UITextField *) textField {
+	_inputField.autocorrectionType = UITextAutocorrectionTypeDefault;
+
+	[self _updateTextTraits];
+
+	return YES;
+}
+
 - (BOOL) textField:(UITextField *) textField shouldChangeCharactersInRange:(NSRange) range replacementString:(NSString *) string {
 	if (![delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)])
 		return YES;
 
 	NSRange wordRange = {0, range.location + string.length};
 	NSString *text = [_inputField.text stringByReplacingCharactersInRange:range withString:string];
-
+	
 	for (NSInteger i = (range.location + string.length - 1); i >= 0; --i) {
 		if ([text characterAtIndex:i] == ' ') {
 			wordRange.location = i + 1;
@@ -199,11 +207,12 @@
 			if ([uppercaseSet characterIsMember:firstCharacter])
 				_inputField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
 			else _inputField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-
-			[self _updateTextTraits];
 		}
 	}
 
 	_inputField.text = @"";
+	_inputField.autocorrectionType = UITextAutocorrectionTypeDefault;
+
+	[self _updateTextTraits];
 }
 @end
