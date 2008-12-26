@@ -122,8 +122,8 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		if (!messageString) messageString = [[NSString alloc] initWithChatData:message encoding:NSASCIIStringEncoding];
 
 		transformedMessageString = [messageString stringByStrippingXMLTags];
-		transformedMessageString = [transformedMessageString stringByDecodingXMLSpecialCharacterEntities];
 		transformedMessageString = [transformedMessageString stringBySubstitutingEmoticonsForEmoji];
+		transformedMessageString = [transformedMessageString stringByDecodingXMLSpecialCharacterEntities];
 	} else if ([message isKindOfClass:[NSString class]]) {
 		transformedMessageString = [message stringByStrippingXMLTags];
 		transformedMessageString = [transformedMessageString stringByDecodingXMLSpecialCharacterEntities];
