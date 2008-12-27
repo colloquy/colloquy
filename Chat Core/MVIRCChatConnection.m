@@ -1132,7 +1132,6 @@ end:
 
 	if( [command hasPrefix:@"/"] )
 		command = [command substringFromIndex:1];
-	command = [command uppercaseString];
 
 	if( arguments && [arguments length] > 0 ) {
 		NSData *argumentsData = [[self class] _flattenedIRCDataForMessage:arguments withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
