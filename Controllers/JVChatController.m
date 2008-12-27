@@ -572,12 +572,17 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {
-	BOOL hideFromUser = NO;
 	MVChatUser *user = [notification object];
-	NSData *message = [[notification userInfo] objectForKey:@"message"];
 
 	if( ! [[MVConnectionsController defaultController] managesConnection:[user connection]] ) return;
 
+	NSData *message = [[notification userInfo] objectForKey:@"message"];
+	MVChatUser* sender = user;
+
+	if( [user isLocalUser] && [notification.userInfo objectForKey:@"target"] )
+		user = [notification.userInfo objectForKey:@"target"];
+
+	BOOL hideFromUser = NO;
 	if( [[[notification userInfo] objectForKey:@"notice"] boolValue] ) {
 		MVChatConnection *connection = [user connection];
 
@@ -628,7 +633,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	if( ! hideFromUser && ( [self shouldIgnoreUser:user withMessage:nil inView:nil] == JVNotIgnored ) ) {
 		JVDirectChatPanel *controller = [self chatViewControllerForUser:user ifExists:NO userInitiated:NO];
 		JVChatMessageType type = ( [[[notification userInfo] objectForKey:@"notice"] boolValue] ? JVChatMessageNoticeType : JVChatMessageNormalType );
-		[controller addMessageToDisplay:message fromUser:user withAttributes:[notification userInfo] withIdentifier:[[notification userInfo] objectForKey:@"identifier"] andType:type];
+		[controller addMessageToDisplay:message fromUser:sender withAttributes:[notification userInfo] withIdentifier:[[notification userInfo] objectForKey:@"identifier"] andType:type];
 	}
 }
 
