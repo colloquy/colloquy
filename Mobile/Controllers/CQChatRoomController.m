@@ -143,16 +143,19 @@
 
 #pragma mark -
 
-- (BOOL) chatInputBar:(CQChatInputBar *) inputBar shouldAutocorrectWordWithPrefix:(NSString *) word {
-	if (![super chatInputBar:inputBar shouldAutocorrectWordWithPrefix:word])
-		return NO;
+- (NSArray *) chatInputBar:(CQChatInputBar *) inputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
+	NSMutableArray *completions = (NSMutableArray *)[super chatInputBar:inputBar completionsForWordWithPrefix:word inRange:range];
+
+	NSString *nicknameSuffix = (range.location == 0 ? @": " : @" ");
 
 	for (MVChatUser *member in _orderedMembers) {
 		if ([member.nickname hasCaseInsensitivePrefix:word])
-			return NO;
+			[completions addObject:[member.nickname stringByAppendingString:nicknameSuffix]];
+		if (completions.count >= 10)
+			break;
 	}
 
-	return YES;
+	return completions;
 }
 
 #pragma mark -

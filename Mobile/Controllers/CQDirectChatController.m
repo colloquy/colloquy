@@ -280,9 +280,44 @@
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar shouldAutocorrectWordWithPrefix:(NSString *) word {
 	if ([word hasPrefix:@"/"] || [word hasPrefix:@"#"] || [word hasCaseInsensitiveSubstring:@"://"] || [word hasCaseInsensitiveSubstring:@"www."])
 		return NO;
-	if ([self.user.nickname hasCaseInsensitivePrefix:word])
-		return NO;
 	return YES;
+}
+
+- (NSArray *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
+	NSMutableArray *completions = [[NSMutableArray alloc] init];
+
+	NSString *nicknameSuffix = (range.location == 0 ? @": " : @" ");
+
+	if ([self.user.nickname hasCaseInsensitivePrefix:word])
+		[completions addObject:[self.user.nickname stringByAppendingString:nicknameSuffix]];
+	if ([self.connection.nickname hasCaseInsensitivePrefix:word])
+		[completions addObject:[self.connection.nickname stringByAppendingString:nicknameSuffix]];
+
+	if ([word hasPrefix:@"/"]) {
+		static NSArray *commands;
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me ", @"/msg ", @"/nick ", @"/say ", @"/raw ", @"/quote ", @"/join ", nil];
+
+		for (NSString *command in commands) {
+			if ([command hasCaseInsensitivePrefix:word])
+				[completions addObject:command];
+			if (completions.count >= 10)
+				break;
+		}
+	}
+
+	if ([word containsTypicalEmoticonCharacters]) {
+		static NSArray *emoticons;
+		if (!emoticons) emoticons = [[NSArray alloc] initWithObjects:@":) ", @":( ", @":p ", @":P ", @";) ", @":D ", @":o ", @":O ", @"=) ", @"=( ", @"=p ", @"=P ", @"=D ", @"=o ", @"=O ", nil];
+
+		for (NSString *emoticon in emoticons) {
+			if ([emoticon hasPrefix:word])
+				[completions addObject:[emoticon stringBySubstitutingEmoticonsForEmoji]];
+			if (completions.count >= 10)
+				break;
+		}
+	}
+
+	return [completions autorelease];
 }
 
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text {

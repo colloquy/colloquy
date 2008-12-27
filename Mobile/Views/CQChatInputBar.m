@@ -1,5 +1,6 @@
 #import "CQChatInputBar.h"
 
+#import "CQTextCompletionView.h"
 #import "NSStringAdditions.h"
 
 @interface UIKeyboardImpl : UIView
@@ -56,6 +57,8 @@
 
 - (void) dealloc {
 	[_inputField release];
+	[_completionWindow release];
+	[_completionView release];
 	[super dealloc];
 }
 
@@ -97,6 +100,72 @@
 }
 
 @synthesize inferAutocapitalizationType = _inferAutocapitalizationType;
+
+#pragma mark -
+
+- (void) hideCompletions {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
+
+	_completionWindow.hidden = YES;
+
+	[_completionWindow release];
+	_completionWindow = nil;
+
+	[_completionView release];
+	_completionView = nil;
+}
+
+- (void) showCompletions {
+	_completionWindow.hidden = NO;
+}
+
+- (void) showCompletions:(NSArray *) completions forText:(NSString *) text inRange:(NSRange) textRange {
+	if (!_completionWindow) {
+		_completionWindow = [[UIWindow alloc] initWithFrame:CGRectMake(10., 195., 480., 50.)];
+		_completionWindow.windowLevel = (UIWindowLevelAlert - 1.);
+
+		_completionView = [[CQTextCompletionView alloc] initWithFrame:_completionWindow.bounds];
+		_completionView.delegate = self;
+
+		[_completionWindow addSubview:_completionView];
+	}
+
+	CGRect screenFrame = [self.window convertRect:[self convertRect:_inputField.frame toView:self.window] toWindow:nil];
+	NSString *prefixText = [text substringToIndex:textRange.location];
+	CGSize textSize = [prefixText sizeWithFont:_inputField.font];
+	CGRect frame = _completionWindow.frame;
+
+retry:
+	_completionView.completions = completions;
+	[_completionView sizeToFit];
+
+	_completionRange = textRange;
+
+	frame.origin = screenFrame.origin;
+	frame.origin.y -= 33.;
+	frame.origin.x += textSize.width;
+
+	if ((frame.origin.x + _completionView.bounds.size.width) > CGRectGetMaxX(screenFrame))
+		frame.origin.x -= ((frame.origin.x + _completionView.bounds.size.width) - CGRectGetMaxX(screenFrame));
+
+	if (frame.origin.x < screenFrame.origin.x) {
+		if (completions.count > 1) {
+			completions = [completions subarrayWithRange:NSMakeRange(0, (completions.count - 1))];
+			goto retry;
+		} else {
+			[self hideCompletions];
+			return;
+		}
+	}
+
+	_completionWindow.frame = frame;
+
+	if (!_completionWindow.hidden)
+		return;
+
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
+	[self performSelector:@selector(showCompletions) withObject:nil afterDelay:(1. / 3.)];
+}
 
 #pragma mark -
 
@@ -162,8 +231,16 @@
 
 	NSString *word = [text substringWithRange:wordRange];
 
+	NSArray *completions = nil;
+	if (word.length && [delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
+		completions = [delegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
+		if (completions.count)
+			[self showCompletions:completions forText:text inRange:wordRange];
+		 else [self hideCompletions];
+	} else [self hideCompletions];
+
 	UITextAutocorrectionType newAutocorrectionType = _inputField.autocorrectionType;
-	if (![delegate chatInputBar:self shouldAutocorrectWordWithPrefix:word])
+	if (![delegate chatInputBar:self shouldAutocorrectWordWithPrefix:word] || completions.count)
 		newAutocorrectionType = UITextAutocorrectionTypeNo;
 	else newAutocorrectionType = UITextAutocorrectionTypeDefault;
 
@@ -173,6 +250,20 @@
 	}
 
 	return YES;
+}
+
+#pragma mark -
+
+- (void) textCompletionView:(CQTextCompletionView *) textCompletionView didSelectCompletion:(NSString *) completion {
+	[self hideCompletions];
+
+	NSString *text = _inputField.text;
+	text = [text stringByReplacingCharactersInRange:_completionRange withString:completion];
+	_inputField.text = text;
+}
+
+- (void) textCompletionViewDidClose:(CQTextCompletionView *) textCompletionView {
+	[self hideCompletions];
 }
 
 #pragma mark -

@@ -80,6 +80,7 @@
 		1CB33C9A0D882BB000EC4E38 /* connections.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB33C970D882BB000EC4E38 /* connections.png */; };
 		1CB33C9B0D882BB000EC4E38 /* buddies.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB33C980D882BB000EC4E38 /* buddies.png */; };
 		1CB33C9C0D882BB000EC4E38 /* colloquies.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB33C990D882BB000EC4E38 /* colloquies.png */; };
+		1CBCFF2D0F04632900EEBCFB /* CQTextCompletionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBCFF2C0F04632900EEBCFB /* CQTextCompletionView.m */; };
 		1CC575980ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */; };
 		1CC576D30ED4684700FEC2C1 /* UITableViewCellAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */; };
 		1CC64A7A0EE90DC000DE91D0 /* members.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64A790EE90DC000DE91D0 /* members.png */; };
@@ -232,6 +233,8 @@
 		1CB33C970D882BB000EC4E38 /* connections.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connections.png; sourceTree = "<group>"; };
 		1CB33C980D882BB000EC4E38 /* buddies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buddies.png; sourceTree = "<group>"; };
 		1CB33C990D882BB000EC4E38 /* colloquies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = colloquies.png; sourceTree = "<group>"; };
+		1CBCFF2B0F04632900EEBCFB /* CQTextCompletionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQTextCompletionView.h; sourceTree = "<group>"; };
+		1CBCFF2C0F04632900EEBCFB /* CQTextCompletionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQTextCompletionView.m; sourceTree = "<group>"; };
 		1CC575960ED3A71900FEC2C1 /* CQPreferencesDeleteCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPreferencesDeleteCell.h; sourceTree = "<group>"; };
 		1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesDeleteCell.m; sourceTree = "<group>"; };
 		1CC576D10ED4684700FEC2C1 /* UITableViewCellAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UITableViewCellAdditions.h; path = Mobile/Views/UITableViewCellAdditions.h; sourceTree = "<group>"; };
@@ -451,24 +454,26 @@
 		1C82C18D0D83CEFE009ABD9F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				1C82C1950D83CF1D009ABD9F /* CQChatTableCell.m */,
-				1C82C1960D83CF1D009ABD9F /* CQChatTableCell.h */,
-				1C82C1A20D83D133009ABD9F /* CQConnectionTableCell.m */,
-				1C82C1A10D83D133009ABD9F /* CQConnectionTableCell.h */,
-				1C7EBE6C0E01816C0018B0C8 /* CQPreferencesTextCell.m */,
-				1C7EBE6B0E01816C0018B0C8 /* CQPreferencesTextCell.h */,
-				1C6100D20ED31C8B0016F968 /* CQPreferencesSwitchCell.m */,
-				1C6100D10ED31C8B0016F968 /* CQPreferencesSwitchCell.h */,
-				1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */,
-				1CC575960ED3A71900FEC2C1 /* CQPreferencesDeleteCell.h */,
-				1CC64C3C0EE98DBF00DE91D0 /* CQSearchCell.m */,
-				1CC64C3B0EE98DBF00DE91D0 /* CQSearchCell.h */,
-				1CAE8BC70EE6111900CE1AF8 /* CQChatTranscriptView.m */,
-				1CAE8BC60EE6111900CE1AF8 /* CQChatTranscriptView.h */,
-				1CA715190EF47D6F006225CD /* CQUnreadCountView.m */,
-				1CA715180EF47D6F006225CD /* CQUnreadCountView.h */,
 				1CE69FD80EE317F200389442 /* CQChatInputBar.m */,
 				1CE69FD70EE317F200389442 /* CQChatInputBar.h */,
+				1C82C1950D83CF1D009ABD9F /* CQChatTableCell.m */,
+				1C82C1960D83CF1D009ABD9F /* CQChatTableCell.h */,
+				1CAE8BC70EE6111900CE1AF8 /* CQChatTranscriptView.m */,
+				1CAE8BC60EE6111900CE1AF8 /* CQChatTranscriptView.h */,
+				1C82C1A20D83D133009ABD9F /* CQConnectionTableCell.m */,
+				1C82C1A10D83D133009ABD9F /* CQConnectionTableCell.h */,
+				1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */,
+				1CC575960ED3A71900FEC2C1 /* CQPreferencesDeleteCell.h */,
+				1C6100D20ED31C8B0016F968 /* CQPreferencesSwitchCell.m */,
+				1C6100D10ED31C8B0016F968 /* CQPreferencesSwitchCell.h */,
+				1C7EBE6C0E01816C0018B0C8 /* CQPreferencesTextCell.m */,
+				1C7EBE6B0E01816C0018B0C8 /* CQPreferencesTextCell.h */,
+				1CC64C3C0EE98DBF00DE91D0 /* CQSearchCell.m */,
+				1CC64C3B0EE98DBF00DE91D0 /* CQSearchCell.h */,
+				1CBCFF2C0F04632900EEBCFB /* CQTextCompletionView.m */,
+				1CBCFF2B0F04632900EEBCFB /* CQTextCompletionView.h */,
+				1CA715190EF47D6F006225CD /* CQUnreadCountView.m */,
+				1CA715180EF47D6F006225CD /* CQUnreadCountView.h */,
 			);
 			name = Views;
 			path = Mobile/Views;
@@ -743,6 +748,7 @@
 				1CC64C3D0EE98DBF00DE91D0 /* CQSearchCell.m in Sources */,
 				1CA7151A0EF47D6F006225CD /* CQUnreadCountView.m in Sources */,
 				1C20BE820EFEDF26005AD8A5 /* NSDictionaryAdditions.m in Sources */,
+				1CBCFF2D0F04632900EEBCFB /* CQTextCompletionView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

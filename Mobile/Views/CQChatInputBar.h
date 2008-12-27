@@ -1,9 +1,15 @@
-@protocol CQChatInputBarDelegate;
+#import "CQTextCompletionView.h"
 
-@interface CQChatInputBar : UIView <UITextFieldDelegate> {
+@protocol CQChatInputBarDelegate;
+@class CQTextCompletionView;
+
+@interface CQChatInputBar : UIView <UITextFieldDelegate, CQTextCompletionViewDelegate> {
 	UITextField *_inputField;
 	BOOL _inferAutocapitalizationType;
 	IBOutlet id <CQChatInputBarDelegate> delegate;
+	UIWindow *_completionWindow;
+	CQTextCompletionView *_completionView;
+	NSRange _completionRange;
 }
 @property (nonatomic,assign) id <CQChatInputBarDelegate> delegate;
 
@@ -19,4 +25,5 @@
 - (void) chatInputBarDidEndEditing:(CQChatInputBar *) chatInputBar;
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text;
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar shouldAutocorrectWordWithPrefix:(NSString *) word;
+- (NSArray *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range;
 @end
