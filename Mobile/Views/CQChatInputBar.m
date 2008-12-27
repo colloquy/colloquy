@@ -191,6 +191,7 @@ retry:
 - (void) textFieldDidEndEditing:(UITextField *) textField {
 	if ([delegate respondsToSelector:@selector(chatInputBarDidEndEditing:)])
 		[delegate chatInputBarDidEndEditing:self];
+	[self hideCompletions];
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *) textField {
@@ -210,6 +211,7 @@ retry:
 	_inputField.autocorrectionType = UITextAutocorrectionTypeDefault;
 
 	[self _updateTextTraits];
+	[self hideCompletions];
 
 	return YES;
 }
@@ -305,5 +307,6 @@ retry:
 	_inputField.autocorrectionType = UITextAutocorrectionTypeDefault;
 
 	[self _updateTextTraits];
+	[self hideCompletions];
 }
 @end
