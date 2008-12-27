@@ -960,7 +960,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 - (BOOL) containsTypicalEmoticonCharacters {
 	if (!typicalEmoticonCharacters)
-		typicalEmoticonCharacters = [[NSCharacterSet characterSetWithCharactersInString:@";:=()^<"] retain];
+		typicalEmoticonCharacters = [[NSCharacterSet characterSetWithCharactersInString:@";:=()^><"] retain];
 	return ([self rangeOfCharacterFromSet:typicalEmoticonCharacters options:NSLiteralSearch].location != NSNotFound);
 }
 
