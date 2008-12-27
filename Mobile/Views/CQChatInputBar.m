@@ -40,6 +40,8 @@
 	[self addSubview:_inputField];
 
 	_inferAutocapitalizationType = YES;
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideCompletions) name:UIDeviceOrientationDidChangeNotification object:nil]; 
 }
 
 #pragma mark -
@@ -63,9 +65,11 @@
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[_inputField release];
-	[_completionWindow release];
 	[_completionView release];
+
 	[super dealloc];
 }
 
@@ -111,41 +115,45 @@
 #pragma mark -
 
 - (void) hideCompletions {
+	if (!_completionView)
+		return;
+
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
 
-	_completionWindow.hidden = YES;
+	_completionView.hidden = YES;
 
-	[_completionWindow release];
-	_completionWindow = nil;
-
+	[_completionView removeFromSuperview];
 	[_completionView release];
 	_completionView = nil;
 }
 
 - (void) showCompletions {
+	if (!_completionView)
+		return;
+
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 
 	BOOL hasMarkedText = ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]);
-	_completionWindow.hidden = hasMarkedText;
+	_completionView.hidden = hasMarkedText;
+
+	[_completionView.superview bringSubviewToFront:_completionView];
 }
 
 - (void) showCompletions:(NSArray *) completions forText:(NSString *) text inRange:(NSRange) textRange {
-	if (!_completionWindow) {
-		_completionWindow = [[UIWindow alloc] initWithFrame:CGRectMake(10., 195., 480., 50.)];
-		_completionWindow.windowLevel = (UIWindowLevelAlert - 1.);
-
-		_completionView = [[CQTextCompletionView alloc] initWithFrame:_completionWindow.bounds];
+	if (!_completionView) {
+		_completionView = [[CQTextCompletionView alloc] initWithFrame:CGRectMake(0., 0., 480., 46.)];
 		_completionView.delegate = self;
+		_completionView.hidden = YES;
 
-		[_completionWindow addSubview:_completionView];
+		[self.superview addSubview:_completionView];
 	}
 
-	CGRect screenFrame = [self.window convertRect:[self convertRect:_inputField.frame toView:self.window] toWindow:nil];
+	CGRect inputFrame = [self convertRect:_inputField.frame toView:self.superview];
 	NSString *prefixText = [text substringToIndex:textRange.location];
 	CGSize textSize = [prefixText sizeWithFont:_inputField.font];
-	CGRect frame = _completionWindow.frame;
+	CGRect frame = _completionView.frame;
 
 retry:
 	_completionView.completions = completions;
@@ -153,14 +161,14 @@ retry:
 
 	_completionRange = textRange;
 
-	frame.origin = screenFrame.origin;
+	frame.origin = inputFrame.origin;
 	frame.origin.y -= 31.;
 	frame.origin.x += textSize.width + 1.;
 
-	if ((frame.origin.x + _completionView.bounds.size.width) > CGRectGetMaxX(screenFrame))
-		frame.origin.x -= ((frame.origin.x + _completionView.bounds.size.width) - CGRectGetMaxX(screenFrame));
+	if ((frame.origin.x + _completionView.bounds.size.width) > CGRectGetMaxX(inputFrame))
+		frame.origin.x -= ((frame.origin.x + _completionView.bounds.size.width) - CGRectGetMaxX(inputFrame));
 
-	if (frame.origin.x < screenFrame.origin.x) {
+	if (frame.origin.x < inputFrame.origin.x) {
 		if (completions.count > 1) {
 			completions = [completions subarrayWithRange:NSMakeRange(0, (completions.count - 1))];
 			goto retry;
@@ -170,7 +178,7 @@ retry:
 		}
 	}
 
-	_completionWindow.frame = frame;
+	_completionView.frame = frame;
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];

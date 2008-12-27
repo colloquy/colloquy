@@ -7,7 +7,6 @@
 	UITextField *_inputField;
 	BOOL _inferAutocapitalizationType;
 	IBOutlet id <CQChatInputBarDelegate> delegate;
-	UIWindow *_completionWindow;
 	CQTextCompletionView *_completionView;
 	NSRange _completionRange;
 }
