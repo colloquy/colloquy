@@ -53,6 +53,7 @@ BOOL isValidUTF8( const char *s, unsigned len );
 
 - (void) substituteEmoticonsForEmoji;
 - (void) substituteEmoticonsForEmojiInRange:(NSRangePointer) range;
+- (void) substituteEmoticonsForEmojiInRange:(NSRangePointer) range withXMLSpecialCharactersEncodedAsEntities:(BOOL) encoded;
 
 - (void) substituteEmojiForEmoticons;
 - (void) substituteEmojiForEmoticonsInRange:(NSRangePointer) range;

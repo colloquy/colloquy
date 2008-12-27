@@ -538,7 +538,7 @@
 #pragma mark -
 
 static void commonChatReplacment(NSMutableString *string, NSRangePointer textRange) {
-	[string substituteEmoticonsForEmojiInRange:textRange];
+	[string substituteEmoticonsForEmojiInRange:textRange withXMLSpecialCharactersEncodedAsEntities:YES];
 
 	// Catch IRC rooms like "#room" but not HTML colors like "#ab12ef" nor HTML entities like "&#135;" or "&amp;".
 	// Catch well-formed urls like "http://www.apple.com", "www.apple.com" or "irc://irc.javelin.cc".

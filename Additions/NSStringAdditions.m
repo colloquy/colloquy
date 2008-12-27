@@ -59,8 +59,8 @@ static const struct EmojiEmoticonPair emoticonToEmojiList[] = {
 	{ 0xe105, @";-P" },
 	{ 0xe405, @";)" },
 	{ 0xe405, @";-)" },
-	{ 0xe406, @"&gt;&lt;" },
-	{ 0xe406, @"&gt;_&lt;" },
+	{ 0xe406, @"><" },
+	{ 0xe406, @">_<" },
 	{ 0xe409, @":p" },
 	{ 0xe409, @":P" },
 	{ 0xe409, @":-p" },
@@ -87,10 +87,6 @@ static const struct EmojiEmoticonPair emoticonToEmojiList[] = {
 	{ 0xe401, @"='(" },
 	{ 0xe401, @")':" },
 	{ 0xe401, @")'=" },
-	{ 0xe401, @":&apos;(" },
-	{ 0xe401, @"=&apos;(" },
-	{ 0xe401, @")&apos;:" },
-	{ 0xe401, @")&apos;=" },
 	{ 0xe404, @":!" },
 	{ 0xe404, @":-!" },
 	{ 0xe404, @"=!" },
@@ -103,22 +99,12 @@ static const struct EmojiEmoticonPair emoticonToEmojiList[] = {
 	{ 0xe022, @"<3" },
 	{ 0xe023, @"</3" },
 	{ 0xe023, @"<\3" },
-	{ 0xe106, @"(&lt;3" },
-	{ 0xe022, @"&lt;3" },
-	{ 0xe023, @"&lt;/3" },
-	{ 0xe023, @"&lt;\3" },
 	{ 0xe411, @":\"o" },
 	{ 0xe411, @"=\"o" },
 	{ 0xe411, @":\"O" },
 	{ 0xe411, @"=\"O" },
-	{ 0xe411, @":&quot;o" },
-	{ 0xe411, @"=&quot;o" },
-	{ 0xe411, @":&quot;O" },
-	{ 0xe411, @"=&quot;O" },
 	{ 0xe412, @":'D" },
 	{ 0xe412, @"='D" },
-	{ 0xe412, @":&apos;D" },
-	{ 0xe412, @"=&apos;D" },
 	{ 0xe409, @"d:" },
 	{ 0xe409, @"d=" },
 	{ 0xe409, @"d-:" },
@@ -1096,6 +1082,10 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (void) substituteEmoticonsForEmojiInRange:(NSRangePointer) range {
+	[self substituteEmoticonsForEmojiInRange:range withXMLSpecialCharactersEncodedAsEntities:NO];
+}
+
+- (void) substituteEmoticonsForEmojiInRange:(NSRangePointer) range withXMLSpecialCharactersEncodedAsEntities:(BOOL) encoded {
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
 	if ([[[UIDevice currentDevice] systemVersion] floatValue] < 2.2)
 		return;
@@ -1105,10 +1095,11 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 	NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 	for (const struct EmojiEmoticonPair *entry = emoticonToEmojiList; entry && entry->emoticon; ++entry) {
-		if ([self rangeOfString:entry->emoticon options:NSLiteralSearch range:*range].location == NSNotFound)
+		NSString *searchEmoticon = (encoded ? [entry->emoticon stringByEncodingXMLSpecialCharactersAsEntities] : entry->emoticon);
+		if ([self rangeOfString:searchEmoticon options:NSLiteralSearch range:*range].location == NSNotFound)
 			continue;
 
-		NSMutableString *emoticon = [entry->emoticon mutableCopy];
+		NSMutableString *emoticon = [searchEmoticon mutableCopy];
 		[emoticon escapeCharactersInSet:escapedCharacters];
 
 		NSString *emojiString = [[NSString alloc] initWithCharacters:&entry->emoji length:1];
@@ -1117,7 +1108,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 		AGRegexMatch *match = [regex findInString:self range:*range];
 		while (match) {
 			[self replaceCharactersInRange:match.range withString:emojiString];
-			range->length -= (entry->emoticon.length - 1);
+			range->length -= ([emoticon length] - 1);
 
 			NSRange matchRange = NSMakeRange(match.range.location + 1, (NSMaxRange(*range) - match.range.location - 1));
 			if (!matchRange.length)
