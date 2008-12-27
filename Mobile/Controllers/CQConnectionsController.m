@@ -118,9 +118,7 @@
 }
 
 - (void) applicationDidActivate {
-	for (MVChatConnection *connection in _connections)
-		if (connection.waitingToReconnect || connection.status == MVChatConnectionServerDisconnectedStatus)
-			[connection connect];
+	[self performSelector:@selector(_reconnectPending) withObject:nil afterDelay:10.];
 }
 
 #pragma mark -
@@ -278,6 +276,12 @@
 		--_connectedCount;
 	if (!_connectedCount && !_connectingCount)
 		[UIApplication sharedApplication].idleTimerDisabled = NO;
+}
+
+- (void) _reconnectPending {
+	for (MVChatConnection *connection in _connections)
+		if (connection.waitingToReconnect || connection.status == MVChatConnectionServerDisconnectedStatus)
+			[connection connect];
 }
 
 #pragma mark -
