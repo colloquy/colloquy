@@ -11,6 +11,7 @@
 #pragma mark -
 
 @interface UITextField (UITextFieldPrivate)
+@property (nonatomic) NSRange selectionRange;
 - (BOOL) hasMarkedText;
 @end
 
@@ -110,6 +111,7 @@
 #pragma mark -
 
 - (void) hideCompletions {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
 
 	_completionWindow.hidden = YES;
@@ -122,6 +124,9 @@
 }
 
 - (void) showCompletions {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
+
 	BOOL hasMarkedText = ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]);
 	_completionWindow.hidden = hasMarkedText;
 }
@@ -167,11 +172,10 @@ retry:
 
 	_completionWindow.frame = frame;
 
-	if (!_completionWindow.hidden)
-		return;
-
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
-	[self performSelector:@selector(showCompletions) withObject:nil afterDelay:0.2];
+
+	[self performSelector:@selector(showCompletions) withObject:nil afterDelay:0.05];
 }
 
 #pragma mark -
@@ -262,14 +266,26 @@ retry:
 	return YES;
 }
 
+- (void) textFieldEditorDidChangeSelection:(UITextField *) textField {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
+
+	[self performSelector:@selector(hideCompletions) withObject:nil afterDelay:0.1];
+}
+
 #pragma mark -
 
 - (void) textCompletionView:(CQTextCompletionView *) textCompletionView didSelectCompletion:(NSString *) completion {
 	[self hideCompletions];
 
 	NSString *text = _inputField.text;
-	text = [text stringByReplacingCharactersInRange:_completionRange withString:completion];
-	_inputField.text = text;
+
+	if ([completion hasSuffix:@" "] && text.length > (NSMaxRange(_completionRange) + 1) && [text characterAtIndex:NSMaxRange(_completionRange)] == ' ')
+		++_completionRange.length;
+
+	_inputField.text = [text stringByReplacingCharactersInRange:_completionRange withString:completion];
+
+	if ([_inputField respondsToSelector:@selector(setSelectionRange:)])
+		_inputField.selectionRange = NSMakeRange((_completionRange.location + completion.length), 0);
 }
 
 - (void) textCompletionViewDidClose:(CQTextCompletionView *) textCompletionView {
