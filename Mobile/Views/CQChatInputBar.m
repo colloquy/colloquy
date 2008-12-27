@@ -10,6 +10,12 @@
 
 #pragma mark -
 
+@interface UITextField (UITextFieldPrivate)
+- (BOOL) hasMarkedText;
+@end
+
+#pragma mark -
+
 @interface CQChatInputBar (CQChatInputBarPrivate)
 - (void) _updateTextTraits;
 @end
@@ -116,7 +122,8 @@
 }
 
 - (void) showCompletions {
-	_completionWindow.hidden = NO;
+	BOOL hasMarkedText = ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]);
+	_completionWindow.hidden = hasMarkedText;
 }
 
 - (void) showCompletions:(NSArray *) completions forText:(NSString *) text inRange:(NSRange) textRange {
@@ -232,9 +239,10 @@ retry:
 	}
 
 	NSString *word = [text substringWithRange:wordRange];
+	BOOL hasMarkedText = ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]);
 
 	NSArray *completions = nil;
-	if (word.length && [delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
+	if (word.length && !hasMarkedText && [delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
 		completions = [delegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
 		if (completions.count)
 			[self showCompletions:completions forText:text inRange:wordRange];
