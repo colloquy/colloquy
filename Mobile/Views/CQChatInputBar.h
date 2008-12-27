@@ -15,6 +15,8 @@
 
 @property (nonatomic) BOOL inferAutocapitalizationType;
 @property (nonatomic) UITextAutocapitalizationType autocapitalizationType;
+
+- (void) hideCompletions;
 @end
 
 @protocol CQChatInputBarDelegate <NSObject>

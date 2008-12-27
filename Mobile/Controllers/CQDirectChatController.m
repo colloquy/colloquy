@@ -236,6 +236,8 @@
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
+	[chatInputBar hideCompletions];
+
 	_active = NO;
 	_allowEditingToEnd = YES;
 
