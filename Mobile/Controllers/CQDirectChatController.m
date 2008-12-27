@@ -414,7 +414,7 @@
 #if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
 		[UIView setAnimationDelay:0.025];
 #else
-		[UIView setAnimationDelay:0.2];
+		[UIView setAnimationDelay:0.15];
 #endif
 	}
 
