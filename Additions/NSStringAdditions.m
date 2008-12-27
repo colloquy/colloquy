@@ -1096,6 +1096,10 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (void) substituteEmoticonsForEmojiInRange:(NSRangePointer) range {
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
+	if ([[[UIDevice currentDevice] systemVersion] floatValue] < 2.2)
+		return;
+
 	if (![self containsTypicalEmoticonCharacters])
 		return;
 
@@ -1130,6 +1134,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 		if ([self rangeOfCharacterFromSet:typicalEmoticonCharacters].location == NSNotFound)
 			break;
 	}
+#endif
 }
 
 - (void) substituteEmojiForEmoticons {
