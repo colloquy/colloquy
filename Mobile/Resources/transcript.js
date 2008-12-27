@@ -60,6 +60,8 @@ function appendComponents(components, previousSession, suppressScroll, suppressS
 		var component = components[i];
 		if (component.type === "message")
 			appendMessage(component.sender, component.message, component.highlighted, component.action, component.self, true);
+		else if (component.type = "event")
+			appendEventMessage(component.message, component.identifier, true);
 	}
 
 	if (!suppressScroll)
@@ -93,6 +95,25 @@ function appendMessage(senderNickname, messageHTML, highlighted, action, self, s
 
 	var messageFragment = range.createContextualFragment(messageHTML);
 	messageElement.appendChild(messageFragment);
+
+	if (!suppressScroll)
+		scrollToBottom(true);
+}
+
+function appendEventMessage(messageHTML, identifier, suppressScroll) {
+	var className = "event";
+	if (identifier) className += " " + identifier;
+
+	var eventElement = document.createElement("div");
+	eventElement.className = className;
+
+	document.body.appendChild(eventElement);
+
+	var range = document.createRange();
+	range.selectNode(eventElement);
+
+	var messageFragment = range.createContextualFragment(messageHTML);
+	eventElement.appendChild(messageFragment);
 
 	if (!suppressScroll)
 		scrollToBottom(true);

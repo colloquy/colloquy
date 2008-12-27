@@ -17,6 +17,7 @@
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
 - (void) _showCantSendMessagesWarning;
+- (NSString *) _processMessageString:(NSString *) message;
 - (NSDictionary *) _processMessage:(NSDictionary *) message highlightedMessage:(BOOL *) highlighted;
 @end
 
@@ -29,10 +30,14 @@
 
 	_target = [target retain];
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_awayStatusChanged:) name:MVChatConnectionSelfAwayStatusChangedNotification object:self.connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
+
 	if (self.user) {
 		_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDirectChatEncoding"];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:self.user];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:self.connection];
 
 		_watchRule = [[MVChatUserWatchRule alloc] init];
 		_watchRule.nickname = self.user.nickname;
@@ -471,6 +476,27 @@
 
 @synthesize recentMessages = _recentMessages;
 
+- (void) addEventMessage:(NSString *) messageString withIdentifier:(NSString *) identifier {
+	[self addEventMessageAsHTML:[messageString stringByEncodingXMLSpecialCharactersAsEntities] withIdentifier:identifier];
+}
+
+- (void) addEventMessageAsHTML:(NSString *) messageString withIdentifier:(NSString *) identifier {
+	NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
+
+	[message setObject:@"event" forKey:@"type"];
+
+	if (messageString) [message setObject:messageString forKey:@"message"];
+	if (identifier) [message setObject:identifier forKey:@"identifier"];
+
+	if (!transcriptView || !_active) {
+		if (!_pendingComponents)
+			_pendingComponents = [[NSMutableArray alloc] init];
+		[_pendingComponents addObject:message];
+	} else [transcriptView addComponent:message animated:YES];
+
+	[message release];
+}
+
 - (void) addMessage:(NSData *) messageData fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier {
 	NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
 
@@ -622,6 +648,20 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 
 #pragma mark -
 
+- (NSString *) _processMessageString:(NSString *) messageString {
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]) {
+		NSMutableString *mutableMessageString = [messageString mutableCopy];
+		[mutableMessageString stripXMLTags];
+
+		NSRange range = NSMakeRange(0, mutableMessageString.length);
+		commonChatReplacment(mutableMessageString, &range);
+
+		return [mutableMessageString autorelease];
+	}
+
+	return applyFunctionToTextInHTMLString(messageString, commonChatReplacment);
+}
+
 - (NSDictionary *) _processMessage:(NSDictionary *) message highlightedMessage:(BOOL *) highlighted {
 	static NSMutableArray *mainHighlightWords;
 	if (!mainHighlightWords) {
@@ -741,5 +781,22 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 	_watchRule.nickname = self.user.nickname;
 
 	[self.connection addChatUserWatchRule:_watchRule];
+}
+
+- (void) _didConnect:(NSNotification *) notification {
+	[self addEventMessage:NSLocalizedString(@"Connected to the server.", "Connected to server event message") withIdentifier:@"reconnected"];
+}
+
+- (void) _didDisconnect:(NSNotification *) notification {
+	[self addEventMessage:NSLocalizedString(@"Disconnected from the server.", "Disconnect from the server event message") withIdentifier:@"disconnected"];
+}
+
+- (void) _awayStatusChanged:(NSNotification *) notification {
+	if (self.connection.awayStatusMessage.length) {
+		NSString *eventMessageFormat = [NSLocalizedString(@"You have set yourself as away with the message \"%@\".", "Marked as away event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, self.connection.awayStatusMessage] withIdentifier:@"awaySet"];
+	} else {
+		[self addEventMessage:NSLocalizedString(@"You have returned from being away.", "Returned from being away event message") withIdentifier:@"awayRemoved"];
+	}
 }
 @end

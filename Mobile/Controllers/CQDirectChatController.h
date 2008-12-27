@@ -36,4 +36,7 @@
 
 - (void) addMessage:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier;
 - (void) addMessage:(NSDictionary *) message;
+
+- (void) addEventMessage:(NSString *) message withIdentifier:(NSString *) identifier;
+- (void) addEventMessageAsHTML:(NSString *) message withIdentifier:(NSString *) identifier;
 @end

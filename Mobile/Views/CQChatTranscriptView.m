@@ -174,6 +174,7 @@
 
 - (void) _addComponentsToTranscript:(NSArray *) components fromPreviousSession:(BOOL) previousSession animated:(BOOL) animated {
 	NSMutableString *command = [[NSMutableString alloc] initWithString:@"appendComponents(["];
+	NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\\'\""];
 
 	for (NSDictionary *component in components) {
 		NSString *type = [component objectForKey:@"type"];
@@ -186,11 +187,21 @@
 			BOOL action = [[component objectForKey:@"action"] boolValue];
 			BOOL highlighted = [[component objectForKey:@"highlighted"] boolValue];
 
-			NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\\'\""];
 			NSString *escapedMessage = [messageString stringByEscapingCharactersInSet:escapedCharacters];
 			NSString *escapedNickname = [user.nickname stringByEscapingCharactersInSet:escapedCharacters];
 
 			[command appendFormat:@"{type:'message',sender:'%@',message:'%@',highlighted:%@,action:%@,self:%@},", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
+		} else if ([type isEqualToString:@"event"]) {
+			NSLog(@"component %@", component);
+			NSString *messageString = [component objectForKey:@"message"];
+			NSString *identifier = [component objectForKey:@"identifier"];
+			if (!messageString || !identifier)
+				continue;
+
+			NSString *escapedMessage = [messageString stringByEscapingCharactersInSet:escapedCharacters];
+			NSString *escapedIdentifer = [identifier stringByEscapingCharactersInSet:escapedCharacters];
+
+			[command appendFormat:@"{type:'event',message:'%@',identifier:'%@'},", escapedMessage, escapedIdentifer];
 		}
 	}
 

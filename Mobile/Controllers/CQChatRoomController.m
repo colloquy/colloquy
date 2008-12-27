@@ -26,6 +26,8 @@
 
 	self.room.encoding = self.encoding;
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_partedRoom:) name:MVChatRoomPartedNotification object:target];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberNicknameChanged:) name:MVChatUserNicknameChangedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberModeChanged:) name:MVChatRoomUserModeChangedNotification object:target];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_membersSynced:) name:MVChatRoomMemberUsersSyncedNotification object:target];
@@ -51,6 +53,8 @@
 
 	if (!(self = [self initWithTarget:room]))
 		return nil;
+
+	_joinCount = 1;
 
 	return [super initWithPersistentState:state usingConnection:connection];
 }
@@ -121,6 +125,9 @@
 - (void) joined {
 	[_orderedMembers removeAllObjects];
 	[_orderedMembers addObjectsFromArray:[self.room.memberUsers allObjects]];
+
+	if (++_joinCount > 1)
+		[self addEventMessage:NSLocalizedString(@"You joined the room.", "Joined room event message") withIdentifier:@"rejoined"];
 
 	_membersNeedSorted = YES;
 }
@@ -203,6 +210,10 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	else [_orderedMembers sortUsingFunction:sortMembersByNickname context:self];
 
 	_membersNeedSorted = NO;
+}
+
+- (void) _partedRoom:(NSNotification *) notification {
+	[self addEventMessage:NSLocalizedString(@"You left the room.", "Left room event message") withIdentifier:@"parted"];
 }
 
 - (void) _memberNicknameChanged:(NSNotification *) notification {

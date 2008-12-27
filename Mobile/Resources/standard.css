@@ -17,6 +17,10 @@ body {
 	border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.message-wrapper + .event {
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 .message-wrapper.highlight {
 	background-color: rgb(204, 255, 102);
 	background-image: url(gradientHighlight.png);
