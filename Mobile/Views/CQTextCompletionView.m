@@ -1,6 +1,10 @@
 #import "CQTextCompletionView.h"
 
 #define MaximumCompletions 5
+#define CompletionFont [UIFont boldSystemFontOfSize:16.]
+#define CompletionMargin 10.
+#define CompletionBubbleRadius 14.5
+#define CompletionBubbleInset 6.5
 
 @implementation CQTextCompletionView
 - (id) initWithFrame:(CGRect) frame {
@@ -13,21 +17,20 @@
 }
 
 - (void) drawRect:(CGRect) rect {
-	const CGFloat radius = 15.5;
-	CGRect enclosingRect = CGRectMake(6.5, 6.5, 40., radius * 2.);
+	CGRect enclosingRect = CGRectMake(CompletionBubbleInset, CompletionBubbleInset, 40., CompletionBubbleRadius * 2.);
 
 	for (NSUInteger i = 0; i < MaximumCompletions; ++i) {
 		if (!_completionTextSizes[i].width)
 			break;
-		enclosingRect.size.width += (_completionTextSizes[i].width + 20.);
+		enclosingRect.size.width += (_completionTextSizes[i].width + (CompletionMargin * 2.));
 	}
 
-	CGRect pathCornersRect = CGRectInset(enclosingRect, radius, radius);
+	CGRect pathCornersRect = CGRectInset(enclosingRect, CompletionBubbleRadius, CompletionBubbleRadius);
 
 	CGMutablePathRef path = CGPathCreateMutable();
 
 	CGPathMoveToPoint(path, NULL, CGRectGetMinX(enclosingRect), CGRectGetMaxY(enclosingRect));
-	CGPathAddArc(path, NULL, CGRectGetMaxX(pathCornersRect), CGRectGetMaxY(pathCornersRect), radius, M_PI_2, M_PI + M_PI_2, 1);
+	CGPathAddArc(path, NULL, CGRectGetMaxX(pathCornersRect), CGRectGetMaxY(pathCornersRect), CompletionBubbleRadius, M_PI_2, M_PI + M_PI_2, 1);
 	CGPathAddLineToPoint(path, NULL, CGRectGetMinX(enclosingRect), CGRectGetMinY(enclosingRect));
 	CGPathCloseSubpath(path);
 
@@ -48,8 +51,8 @@
 	CGPathRelease(path);
 
 	NSUInteger i = 0;
-	CGFloat offset = 10.;
-	UIFont *font = [UIFont systemFontOfSize:16.];
+	CGFloat offset = CompletionMargin;
+	UIFont *font = CompletionFont;
 
 	for (NSString *completion in _completions) {
 		BOOL selected = (_selectedCompletion == i);
@@ -63,11 +66,11 @@
 			CGContextSetRGBStrokeColor(ctx, (10. / 255.), (55. / 255.), (175. / 255.), 1.);
 			CGContextSetRGBFillColor(ctx, (25. / 255.), (121. / 255.), (227. / 255.), 1.);
 
-			CGContextFillRect(ctx, CGRectMake(enclosingRect.origin.x + offset - 10., enclosingRect.origin.y, textSize.width + 20., enclosingRect.size.height));
-			CGContextStrokeRect(ctx, CGRectMake(enclosingRect.origin.x + offset - 10., enclosingRect.origin.y, textSize.width + 20., enclosingRect.size.height));
+			CGContextFillRect(ctx, CGRectMake(enclosingRect.origin.x + offset - CompletionMargin, enclosingRect.origin.y, textSize.width + (CompletionMargin * 2.), enclosingRect.size.height));
+			CGContextStrokeRect(ctx, CGRectMake(enclosingRect.origin.x + offset - CompletionMargin, enclosingRect.origin.y, textSize.width + (CompletionMargin * 2.), enclosingRect.size.height));
 		} else {
-			CGContextMoveToPoint(ctx, (enclosingRect.origin.x + offset + textSize.width + 10.), enclosingRect.origin.y);
-			CGContextAddLineToPoint(ctx, (enclosingRect.origin.x + offset + textSize.width + 10.), CGRectGetMaxY(enclosingRect));
+			CGContextMoveToPoint(ctx, (enclosingRect.origin.x + offset + textSize.width + CompletionMargin), enclosingRect.origin.y);
+			CGContextAddLineToPoint(ctx, (enclosingRect.origin.x + offset + textSize.width + CompletionMargin), CGRectGetMaxY(enclosingRect));
 
 			CGContextSetRGBStrokeColor(ctx, (181. / 255.), (202. / 255.), 1., 1.);
 
@@ -80,15 +83,15 @@
 		completion = [completion stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 		[completion drawAtPoint:textPoint withFont:font];
 
-		offset += textSize.width + 20.;
+		offset += textSize.width + (CompletionMargin * 2.);
 	}
 
 	if (_selectedCompletion == i) {
 		path = CGPathCreateMutable();
 
-		CGPathMoveToPoint(path, NULL, enclosingRect.origin.x + offset - 10., CGRectGetMaxY(enclosingRect));
-		CGPathAddArc(path, NULL, CGRectGetMaxX(pathCornersRect), CGRectGetMaxY(pathCornersRect), radius, M_PI_2, M_PI + M_PI_2, 1);
-		CGPathAddLineToPoint(path, NULL, enclosingRect.origin.x + offset - 10., CGRectGetMinY(enclosingRect));
+		CGPathMoveToPoint(path, NULL, enclosingRect.origin.x + offset - CompletionMargin, CGRectGetMaxY(enclosingRect));
+		CGPathAddArc(path, NULL, CGRectGetMaxX(pathCornersRect), CGRectGetMaxY(pathCornersRect), CompletionBubbleRadius, M_PI_2, M_PI + M_PI_2, 1);
+		CGPathAddLineToPoint(path, NULL, enclosingRect.origin.x + offset - CompletionMargin, CGRectGetMinY(enclosingRect));
 		CGPathCloseSubpath(path);
 
 		CGContextRef ctx = UIGraphicsGetCurrentContext();
@@ -131,7 +134,7 @@
 @synthesize completions = _completions;
 
 - (void) setCompletions:(NSArray *) completions {
-	UIFont *font = [UIFont systemFontOfSize:16.];
+	UIFont *font = CompletionFont;
 
 	NSMutableSet *existingCompletions = [NSMutableSet set];
 	id objects[MaximumCompletions] = { nil };
@@ -180,12 +183,12 @@
 
 - (NSUInteger) completionIndexForPoint:(CGPoint) location {
 	NSUInteger i = 0;
-	CGFloat width = 10.;
+	CGFloat width = CompletionMargin;
 	for (; i < MaximumCompletions; ++i) {
 		if (!_completionTextSizes[i].width)
 			break;
 
-		width += (_completionTextSizes[i].width + 20.);
+		width += (_completionTextSizes[i].width + (CompletionMargin * 2.));
 		if (location.x < width)
 			return i;
 	}
@@ -197,26 +200,24 @@
 }
 
 - (CGSize) sizeThatFits:(CGSize) size {
-	const CGFloat radius = 15.5;
-	CGRect enclosingRect = CGRectMake(0., 0., 40., radius * 2.);
+	CGRect enclosingRect = CGRectMake(0., 0., 40., CompletionBubbleRadius * 2.);
 
 	for (NSUInteger i = 0; i < MaximumCompletions; ++i) {
 		if (!_completionTextSizes[i].width)
 			break;
-		enclosingRect.size.width += (_completionTextSizes[i].width + 20.);
+		enclosingRect.size.width += (_completionTextSizes[i].width + (CompletionMargin * 2.));
 	}
 
-	return CGRectInset(enclosingRect, -8., -8.).size;
+	return CGRectInset(enclosingRect, -(CompletionBubbleInset + 2.), -(CompletionBubbleInset + 2.)).size;
 }
 
 - (BOOL) pointInside:(CGPoint) point withEvent:(UIEvent *) event {
-	const CGFloat radius = 15.5;
-	CGRect enclosingRect = CGRectMake(6.5, 6.5, 40., radius * 2.);
+	CGRect enclosingRect = CGRectMake(CompletionBubbleInset, CompletionBubbleInset, 40., CompletionBubbleRadius * 2.);
 
 	for (NSUInteger i = 0; i < MaximumCompletions; ++i) {
 		if (!_completionTextSizes[i].width)
 			break;
-		enclosingRect.size.width += (_completionTextSizes[i].width + 20.);
+		enclosingRect.size.width += (_completionTextSizes[i].width + (CompletionMargin * 2.));
 	}
 
 	return CGRectContainsPoint(enclosingRect, point);

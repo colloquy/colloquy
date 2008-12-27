@@ -142,8 +142,8 @@ retry:
 	_completionRange = textRange;
 
 	frame.origin = screenFrame.origin;
-	frame.origin.y -= 33.;
-	frame.origin.x += textSize.width;
+	frame.origin.y -= 31.;
+	frame.origin.x += textSize.width + 1.;
 
 	if ((frame.origin.x + _completionView.bounds.size.width) > CGRectGetMaxX(screenFrame))
 		frame.origin.x -= ((frame.origin.x + _completionView.bounds.size.width) - CGRectGetMaxX(screenFrame));
@@ -164,7 +164,7 @@ retry:
 		return;
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
-	[self performSelector:@selector(showCompletions) withObject:nil afterDelay:(1. / 3.)];
+	[self performSelector:@selector(showCompletions) withObject:nil afterDelay:0.2];
 }
 
 #pragma mark -
