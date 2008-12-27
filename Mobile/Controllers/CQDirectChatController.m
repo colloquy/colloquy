@@ -286,20 +286,21 @@
 - (NSArray *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
 	NSMutableArray *completions = [[NSMutableArray alloc] init];
 
-	NSString *nicknameSuffix = (range.location == 0 ? @": " : @" ");
+	NSString *nickname = (range.location ? self.user.nickname : [self.user.nickname stringByAppendingString:@":"]);
+	if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
+		[completions addObject:[nickname stringByAppendingString:@" "]];
 
-	if ([self.user.nickname hasCaseInsensitivePrefix:word])
-		[completions addObject:[self.user.nickname stringByAppendingString:nicknameSuffix]];
-	if ([self.connection.nickname hasCaseInsensitivePrefix:word])
-		[completions addObject:[self.connection.nickname stringByAppendingString:nicknameSuffix]];
+	nickname = (range.location ? self.connection.nickname : [self.connection.nickname stringByAppendingString:@":"]);
+	if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
+		[completions addObject:[nickname stringByAppendingString:@" "]];
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me ", @"/msg ", @"/nick ", @"/say ", @"/raw ", @"/quote ", @"/join ", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/say", @"/raw", @"/quote", @"/join", nil];
 
 		for (NSString *command in commands) {
-			if ([command hasCaseInsensitivePrefix:word])
-				[completions addObject:command];
+			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
+				[completions addObject:[command stringByAppendingString:@" "]];
 			if (completions.count >= 10)
 				break;
 		}

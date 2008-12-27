@@ -146,11 +146,10 @@
 - (NSArray *) chatInputBar:(CQChatInputBar *) inputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
 	NSMutableArray *completions = (NSMutableArray *)[super chatInputBar:inputBar completionsForWordWithPrefix:word inRange:range];
 
-	NSString *nicknameSuffix = (range.location == 0 ? @": " : @" ");
-
 	for (MVChatUser *member in _orderedMembers) {
-		if ([member.nickname hasCaseInsensitivePrefix:word])
-			[completions addObject:[member.nickname stringByAppendingString:nicknameSuffix]];
+		NSString *nickname = (range.location ? member.nickname : [member.nickname stringByAppendingString:@":"]);
+		if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
+			[completions addObject:[nickname stringByAppendingString:@" "]];
 		if (completions.count >= 10)
 			break;
 	}
