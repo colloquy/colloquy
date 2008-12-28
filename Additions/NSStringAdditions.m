@@ -19,6 +19,7 @@ static const struct EmojiEmoticonPair emojiToEmoticonList[] = {
 	{ 0xe057, @":D" },
 	{ 0xe058, @":(" },
 	{ 0xe059, @">:(" },
+	{ 0xe05a, @"~<:)" },
 	{ 0xe105, @";P" },
 	{ 0xe106, @"(<3" },
 	{ 0xe107, @":O" },
@@ -206,6 +207,7 @@ static const struct EmojiEmoticonPair emoticonToEmojiList[] = {
 	{ 0xe04e, @"(=o" },
 	{ 0xe04e, @"(-=O" },
 	{ 0xe04e, @"(-=o" },
+	{ 0xe05a, @"~<:)" },
 	{ 0, nil }
 };
 

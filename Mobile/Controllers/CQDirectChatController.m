@@ -313,9 +313,9 @@
 		}
 	}
 
-	if (completions.count < 10 && ([word containsTypicalEmoticonCharacters] || [word hasCaseInsensitivePrefix:@"x"] || [word hasCaseInsensitivePrefix:@"o"])) {
+	if (completions.count < 10 && ([word containsTypicalEmoticonCharacters] || [word hasCaseInsensitivePrefix:@"x"] || [word hasCaseInsensitivePrefix:@"o"] || [word hasCaseInsensitivePrefix:@"~"])) {
 		static NSArray *emoticons;
-		if (!emoticons) emoticons = [[NSArray alloc] initWithObjects:@":) ", @":( ", @":P ", @":D ", @":o ", @":O ", @":[ ", @":-* ", @";) ", @";P ", @";-* ", @">< ", @">:( ", @">=( ", @">:) ", @">=) ", @"<3 ", @"</3 ", @"=) ", @"=( ", @"=P ", @"=D ", @"=o ", @"=O ", @"=[ ", @"=-* ", @"x.x ", @"XD ", @"O:) ", @"O=) ", @"^-^ ", @"-_- ", @"-_-' ", nil];
+		if (!emoticons) emoticons = [[NSArray alloc] initWithObjects:@":) ", @":( ", @":P ", @":D ", @":o ", @":O ", @":[ ", @":-* ", @";) ", @";P ", @";-* ", @">< ", @">:( ", @">=( ", @">:) ", @">=) ", @"<3 ", @"</3 ", @"=) ", @"=( ", @"=P ", @"=D ", @"=o ", @"=O ", @"=[ ", @"=-* ", @"x.x ", @"XD ", @"O:) ", @"O=) ", @"^-^ ", @"-_- ", @"-_-' ", @"~<:) ", nil];
 
 		for (NSString *emoticon in emoticons) {
 			if ([emoticon hasCaseInsensitivePrefix:word])
