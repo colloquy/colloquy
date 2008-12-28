@@ -302,7 +302,7 @@
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/say", @"/raw", @"/quote", @"/join", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/umode", @"/globops", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -312,7 +312,7 @@
 		}
 	}
 
-	if ([word containsTypicalEmoticonCharacters] || [word hasCaseInsensitivePrefix:@"x"] || [word hasCaseInsensitivePrefix:@"o"]) {
+	if (completions.count < 10 && [word containsTypicalEmoticonCharacters] || [word hasCaseInsensitivePrefix:@"x"] || [word hasCaseInsensitivePrefix:@"o"]) {
 		static NSArray *emoticons;
 		if (!emoticons) emoticons = [[NSArray alloc] initWithObjects:@":) ", @":( ", @":P ", @":D ", @":o ", @":O ", @":[ ", @":-* ", @";) ", @";P ", @";-* ", @">< ", @">:( ", @">=( ", @">:) ", @">=) ", @"<3 ", @"</3 ", @"=) ", @"=( ", @"=P ", @"=D ", @"=o ", @"=O ", @"=[ ", @"=-* ", @"x.x ", @"XD ", @"O:) ", @"O=) ", @"^-^ ", @"-_- ", @"-_-' ", nil];
 

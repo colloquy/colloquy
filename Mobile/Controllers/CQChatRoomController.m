@@ -171,15 +171,30 @@
 - (NSArray *) chatInputBar:(CQChatInputBar *) inputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
 	NSMutableArray *completions = [[NSMutableArray alloc] init];
 
-	for (MVChatUser *member in _orderedMembers) {
-		NSString *nickname = (range.location ? member.nickname : [member.nickname stringByAppendingString:@":"]);
-		if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
-			[completions addObject:[nickname stringByAppendingString:@" "]];
-		if (completions.count >= 10)
-			break;
+	if ([word hasPrefix:@"/"]) {
+		static NSArray *commands;
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/join", @"/away", @"/topic", @"/kick", @"/ban", @"/kickban", @"/mode", @"/op", @"/voice", @"/halfop", @"/quiet", @"/deop", @"/devoice", @"/dehalfop", @"/dequiet", @"/unban", @"/bankick", @"/cycle", @"/hop", nil];
+
+		for (NSString *command in commands) {
+			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
+				[completions addObject:[command stringByAppendingString:@" "]];
+			if (completions.count >= 10)
+				break;
+		}
 	}
 
-	[completions addObjectsFromArray:[super chatInputBar:inputBar completionsForWordWithPrefix:word inRange:range]];
+	if (completions.count < 10) {
+		for (MVChatUser *member in _orderedMembers) {
+			NSString *nickname = (range.location ? member.nickname : [member.nickname stringByAppendingString:@":"]);
+			if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
+				[completions addObject:[nickname stringByAppendingString:@" "]];
+			if (completions.count >= 10)
+				break;
+		}
+	}
+
+	if (completions.count < 10)
+		[completions addObjectsFromArray:[super chatInputBar:inputBar completionsForWordWithPrefix:word inRange:range]];
 
 	return [completions autorelease];
 }
