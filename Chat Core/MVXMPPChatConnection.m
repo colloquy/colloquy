@@ -173,6 +173,8 @@
 	NSParameterAssert( newServer != nil );
 	NSParameterAssert( [newServer length] > 0 );
 	MVSafeCopyAssign( &_server, newServer );
+
+	[super setServer:newServer];
 }
 
 - (NSString *) server {

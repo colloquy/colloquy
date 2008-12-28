@@ -1,3 +1,5 @@
+#import <SystemConfiguration/SCNetworkReachability.h>
+
 #import <ChatCore/MVAvailability.h>
 #import <ChatCore/MVChatString.h>
 
@@ -107,6 +109,8 @@ extern NSString *MVChatConnectionErrorDomain;
 
 	NSMutableDictionary *_persistentInformation;
 	NSError *_lastError;
+
+	SCNetworkReachabilityRef _reachability;
 
 	NSDate *_connectedDate;
 

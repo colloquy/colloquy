@@ -243,6 +243,11 @@ static const NSStringEncoding supportedEncodings[] = {
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 #endif
 
+	if (_reachability) {
+		SCNetworkReachabilityUnscheduleFromRunLoop(_reachability, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
+		CFRelease(_reachability);
+	}
+
 	[_npassword release];
 	[_roomsCache release];
 	[_cachedDate release];
@@ -477,9 +482,50 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
+static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConnectionFlags flags, void *context ) {
+	MVChatConnection *connection = (MVChatConnection *)context;
+
+	if (NSDebugEnabled)
+		NSLog(@"reachability %@ %c%c%c%c%c%c%c", [connection server], (flags & kSCNetworkFlagsTransientConnection ? 't' : '-'), (flags & kSCNetworkFlagsReachable ? 'r' : '-'), (flags & kSCNetworkFlagsConnectionRequired ? 'c' : '-'), (flags & kSCNetworkFlagsConnectionAutomatic ? 'C' : '-'), (flags & kSCNetworkFlagsInterventionRequired ? 'i' : '-'), (flags & kSCNetworkFlagsIsLocalAddress ? 'l' : '-'), (flags & kSCNetworkFlagsIsDirect ? 'd' : '-') );
+
+	BOOL reachable = ( flags & kSCNetworkFlagsReachable );
+	BOOL connectionRequired = ( flags & kSCNetworkFlagsConnectionRequired );
+
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
+	if( flags & kSCNetworkReachabilityFlagsIsWWAN ) connectionRequired = NO;
+#endif
+
+	if( ! reachable || connectionRequired )
+		return;
+
+	if( ! [connection isWaitingToReconnect] || [connection status] != MVChatConnectionServerDisconnectedStatus )
+		return;
+
+	NSLog(@"connect %@", [connection server]);
+	[connection connect];
+}
+
 - (void) setServer:(NSString *) server {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
+// subclass this method, call super
+
+	if( _reachability ) {
+		SCNetworkReachabilityUnscheduleFromRunLoop( _reachability, CFRunLoopGetMain(), kCFRunLoopDefaultMode );
+		CFRelease( _reachability );
+		_reachability = NULL;
+	}
+
+	if( ! [server length] )
+		return;
+
+	SCNetworkReachabilityContext context = { 0, self, NULL, NULL, NULL };
+	_reachability = SCNetworkReachabilityCreateWithName( NULL, [server UTF8String] );
+	if( ! _reachability )
+		return;
+
+	if( ! SCNetworkReachabilitySetCallback( _reachability, reachabilityCallback, &context ) )
+		return;
+
+	SCNetworkReachabilityScheduleWithRunLoop( _reachability, CFRunLoopGetMain(), kCFRunLoopDefaultMode );
 }
 
 - (NSString *) server {

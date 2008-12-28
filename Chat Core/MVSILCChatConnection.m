@@ -1189,6 +1189,8 @@ static SilcClientOperations silcClientOps = {
 
 - (void) setServer:(NSString *) newServer {
 	MVSafeCopyAssign( &_silcServer, newServer );
+
+	[super setServer:newServer];
 }
 
 - (NSString *) server {

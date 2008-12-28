@@ -192,6 +192,8 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	id old = _server;
 	_server = [newServer copyWithZone:nil];
 	[old release];
+
+	[super setServer:newServer];
 }
 
 - (void) setServerPort:(unsigned short) port {
