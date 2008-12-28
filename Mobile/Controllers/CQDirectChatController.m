@@ -314,10 +314,10 @@
 
 	if ([word containsTypicalEmoticonCharacters]) {
 		static NSArray *emoticons;
-		if (!emoticons) emoticons = [[NSArray alloc] initWithObjects:@":) ", @":( ", @":p ", @":P ", @";) ", @":D ", @":o ", @":O ", @">< ", @"<3 ", @"</3 ", @"=) ", @"=( ", @"=p ", @"=P ", @"=D ", @"=o ", @"=O ", @"x.x", @">:(", @"O:)", nil];
+		if (!emoticons) emoticons = [[NSArray alloc] initWithObjects:@":) ", @":( ", @":P ", @";) ", @";P ", @":D ", @":o ", @":O ", @">< ", @"<3 ", @"</3 ", @"=) ", @"=( ", @"=P ", @"=D ", @"=o ", @"=O ", @"x.x ", @"XD ", @">:( ", @"O:) ", nil];
 
 		for (NSString *emoticon in emoticons) {
-			if ([emoticon hasPrefix:word])
+			if ([emoticon hasCaseInsensitivePrefix:word])
 				[completions addObject:[emoticon stringBySubstitutingEmoticonsForEmoji]];
 			if (completions.count >= 10)
 				break;

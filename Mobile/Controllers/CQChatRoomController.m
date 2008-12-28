@@ -169,7 +169,7 @@
 #pragma mark -
 
 - (NSArray *) chatInputBar:(CQChatInputBar *) inputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
-	NSMutableArray *completions = (NSMutableArray *)[super chatInputBar:inputBar completionsForWordWithPrefix:word inRange:range];
+	NSMutableArray *completions = [[NSMutableArray alloc] init];
 
 	for (MVChatUser *member in _orderedMembers) {
 		NSString *nickname = (range.location ? member.nickname : [member.nickname stringByAppendingString:@":"]);
@@ -179,7 +179,9 @@
 			break;
 	}
 
-	return completions;
+	[completions addObjectsFromArray:[super chatInputBar:inputBar completionsForWordWithPrefix:word inRange:range]];
+
+	return [completions autorelease];
 }
 
 #pragma mark -
