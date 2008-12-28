@@ -13,10 +13,6 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 
-#if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
-#import <Foundation/NSDebug.h>
-#endif
-
 @interface CQConnectionsController (CQConnectionsControllerPrivate)
 - (void) _loadConnectionList;
 @end
@@ -45,16 +41,13 @@
 	self.delegate = self;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidActivate) name:UIApplicationDidBecomeActiveNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnectOrDidNotConnect:) name:MVChatConnectionDidNotConnectNotification object:nil];
 
-#if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
 	if (NSDebugEnabled)
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
-#endif
 
 	_connections = [[NSMutableArray alloc] init];
 
@@ -115,10 +108,6 @@
 
 	for (MVChatConnection *connection in _connections)
 		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
-}
-
-- (void) applicationDidActivate {
-	[self performSelector:@selector(_reconnectPending) withObject:nil afterDelay:10.];
 }
 
 #pragma mark -
@@ -276,12 +265,6 @@
 		--_connectedCount;
 	if (!_connectedCount && !_connectingCount)
 		[UIApplication sharedApplication].idleTimerDisabled = NO;
-}
-
-- (void) _reconnectPending {
-	for (MVChatConnection *connection in _connections)
-		if (connection.waitingToReconnect || connection.status == MVChatConnectionServerDisconnectedStatus)
-			[connection connect];
 }
 
 #pragma mark -

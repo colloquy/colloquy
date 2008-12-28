@@ -1,6 +1,15 @@
 #ifdef __OBJC__
+
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+
 #import "UITableViewAdditions.h"
 #import "UITableViewCellAdditions.h"
+
+#if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
+#import <Foundation/NSDebug.h>
+#else
+#define NSDebugEnabled NO
+#endif
+
 #endif
