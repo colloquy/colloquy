@@ -193,6 +193,13 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 }
 
 - (void) viewWillAppear:(BOOL) animated {
+	if (_needsUpdate) {
+		[self.tableView reloadData];
+		_needsUpdate = NO;
+	}
+
+	_active = YES;
+
 	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
 	if (selectedIndexPath) {
 		MVChatConnection *connection = connectionForSection(selectedIndexPath.section);
@@ -207,9 +214,20 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	self.navigationItem.leftBarButtonItem.enabled = ([CQConnectionsController defaultController].connections.count ? YES : NO);
 }
 
+- (void) viewDidDisappear:(BOOL) animated {
+	[super viewDidDisappear:animated];
+
+	_active = NO;
+}
+
 #pragma mark -
 
 - (void) addChatViewController:(id <CQChatViewController>) controller {
+	if (!_active) {
+		_needsUpdate = YES;
+		return;
+	}
+
 	if ([[CQChatController defaultController] chatViewControllersForConnection:controller.connection].count == 1) {
 		NSUInteger sectionIndex = sectionIndexForConnection(controller.connection);
 		[self.tableView beginUpdates];
@@ -224,9 +242,12 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 }
 
 - (void) selectChatViewController:(id <CQChatViewController>) controller animatedSelection:(BOOL) animatedSelection animatedScroll:(BOOL) animatedScroll {
-	NSIndexPath *indexPath = indexPathForChatController(controller);
-	if (!self.tableView.numberOfSections)
+	if (!self.tableView.numberOfSections || _needsUpdate) {
 		[self.tableView reloadData];
+		_needsUpdate = NO;
+	}
+
+	NSIndexPath *indexPath = indexPathForChatController(controller);
 	[self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:animatedScroll];
 	[self.tableView selectRowAtIndexPath:indexPath animated:animatedSelection scrollPosition:UITableViewScrollPositionNone];
 }
