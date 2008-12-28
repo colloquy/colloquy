@@ -1107,10 +1107,10 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 		AGRegexMatch *match = [regex findInString:self range:*range];
 		while (match) {
-			[self replaceCharactersInRange:match.range withString:emojiString];
-			range->length -= ([emoticon length] - 1);
+			[self replaceCharactersInRange:[match range] withString:emojiString];
+			range->length += (1 - [match range].length);
 
-			NSRange matchRange = NSMakeRange(match.range.location + 1, (NSMaxRange(*range) - match.range.location - 1));
+			NSRange matchRange = NSMakeRange([match range].location + 1, (NSMaxRange(*range) - [match range].location - 1));
 			if (!matchRange.length)
 				break;
 
