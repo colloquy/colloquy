@@ -12,6 +12,7 @@
 #import <AGRegex/AGRegex.h>
 
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatUserWatchRule.h>
 
@@ -312,13 +313,22 @@
 		}
 	}
 
-	if (completions.count < 10 && [word containsTypicalEmoticonCharacters] || [word hasCaseInsensitivePrefix:@"x"] || [word hasCaseInsensitivePrefix:@"o"]) {
+	if (completions.count < 10 && ([word containsTypicalEmoticonCharacters] || [word hasCaseInsensitivePrefix:@"x"] || [word hasCaseInsensitivePrefix:@"o"])) {
 		static NSArray *emoticons;
 		if (!emoticons) emoticons = [[NSArray alloc] initWithObjects:@":) ", @":( ", @":P ", @":D ", @":o ", @":O ", @":[ ", @":-* ", @";) ", @";P ", @";-* ", @">< ", @">:( ", @">=( ", @">:) ", @">=) ", @"<3 ", @"</3 ", @"=) ", @"=( ", @"=P ", @"=D ", @"=o ", @"=O ", @"=[ ", @"=-* ", @"x.x ", @"XD ", @"O:) ", @"O=) ", @"^-^ ", @"-_- ", @"-_-' ", nil];
 
 		for (NSString *emoticon in emoticons) {
 			if ([emoticon hasCaseInsensitivePrefix:word])
 				[completions addObject:[emoticon stringBySubstitutingEmoticonsForEmoji]];
+			if (completions.count >= 10)
+				break;
+		}
+	}
+
+	if (completions.count < 10) {
+		for (MVChatRoom *room in self.connection.knownChatRooms) {
+			if ([room.name hasCaseInsensitivePrefix:word] && ![room.name isCaseInsensitiveEqualToString:word])
+				[completions addObject:[room.name stringByAppendingString:@" "]];
 			if (completions.count >= 10)
 				break;
 		}
