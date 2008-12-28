@@ -17,7 +17,6 @@
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
 - (void) _showCantSendMessagesWarning;
-- (NSString *) _processMessageString:(NSString *) message;
 - (NSDictionary *) _processMessage:(NSDictionary *) message highlightedMessage:(BOOL *) highlighted;
 @end
 
@@ -656,18 +655,19 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 	return [messageString autorelease];
 }
 
-- (NSString *) _processMessageString:(NSString *) messageString {
+- (void) _processMessageString:(NSMutableString *) messageString {
+	if (!messageString.length) return;
+
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]) {
-		NSMutableString *mutableMessageString = [messageString mutableCopy];
-		[mutableMessageString stripXMLTags];
+		[messageString stripXMLTags];
 
-		NSRange range = NSMakeRange(0, mutableMessageString.length);
-		commonChatReplacment(mutableMessageString, &range);
-
-		return [mutableMessageString autorelease];
+		NSRange range = NSMakeRange(0, messageString.length);
+		commonChatReplacment(messageString, &range);
+		return;
 	}
 
-	return applyFunctionToTextInHTMLString(messageString, commonChatReplacment);
+	NSRange range = NSMakeRange(0, messageString.length);
+	applyFunctionToTextInMutableHTMLString(messageString, &range, commonChatReplacment);
 }
 
 - (NSDictionary *) _processMessage:(NSDictionary *) message highlightedMessage:(BOOL *) highlighted {

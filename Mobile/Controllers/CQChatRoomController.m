@@ -9,7 +9,7 @@
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
 - (NSMutableString *) _processMessageData:(NSData *) messageData;
-- (NSString *) _processMessageString:(NSString *) messageString;
+- (void) _processMessageString:(NSMutableString *) messageString;
 - (void) _didDisconnect:(NSNotification *) notification;
 @end
 
@@ -147,6 +147,7 @@
 	_membersNeedSorted = YES;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_nicknameChanged:) name:MVChatConnectionNicknameAcceptedNotification object:self.connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_topicChanged:) name:MVChatRoomTopicChangedNotification object:self.room];
 }
 
 - (void) showMembers {
@@ -241,19 +242,21 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	[super _didDisconnect:notification];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
 }
 
 - (void) _partedRoom:(NSNotification *) notification {
 	[self addEventMessage:NSLocalizedString(@"You left the room.", "Left room event message") withIdentifier:@"parted"];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
 }
 
 - (void) _kicked:(NSNotification *) notification {
 	MVChatUser *user = [[notification userInfo] objectForKey:@"byUser"];
 
-	NSString *reason = [self _processMessageData:[[notification userInfo] objectForKey:@"reason"]];
-	reason = [self _processMessageString:reason];
+	NSMutableString *reason = [self _processMessageData:[[notification userInfo] objectForKey:@"reason"]];
+	[self _processMessageString:reason];
 
 	if (reason.length) {
 		NSString *eventMessageFormat = [NSLocalizedString(@"You were kicked from the room by %@. (%@)", "You were kicked from the room with reason event message") stringByEncodingXMLSpecialCharactersAsEntities];
@@ -261,6 +264,26 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	} else {
 		NSString *eventMessageFormat = [NSLocalizedString(@"You were kicked from the room by %@.", "You were kicked from the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
 		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user]] withIdentifier:@"kicked"];
+	}
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
+}
+
+- (void) _topicChanged:(NSNotification *) notification {
+	NSMutableString *topicString = [self _processMessageData:self.room.topic];
+	[self _processMessageString:topicString];
+
+	MVChatUser *user = self.room.topicAuthor;
+	if (!topicString || !user)
+		return;
+
+	if (user.localUser) {
+		NSString *eventMessageFormat = [NSLocalizedString(@"You changed the topic to \"%@\".", "You changed the room topic event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, topicString] withIdentifier:@"topicChanged"];
+	} else {
+		NSString *eventMessageFormat = [NSLocalizedString(@"%@ changed the topic to \"%@\".", "User changed the room topic event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user], topicString] withIdentifier:@"topicChanged"];
 	}
 }
 
@@ -585,8 +608,8 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLeaveEvents"]) {
-		NSString *reason = [self _processMessageData:[[notification userInfo] objectForKey:@"reason"]];
-		reason = [self _processMessageString:reason];
+		NSMutableString *reason = [self _processMessageData:[[notification userInfo] objectForKey:@"reason"]];
+		[self _processMessageString:reason];
 
 		if (reason.length) {
 			NSString *eventMessageFormat = [NSLocalizedString(@"%@ left the room. (%@)", "User has left the room with reason event message") stringByEncodingXMLSpecialCharactersAsEntities];
@@ -609,8 +632,8 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 	MVChatUser *byUser = [[notification userInfo] objectForKey:@"byUser"];
 
-	NSString *reason = [self _processMessageData:[[notification userInfo] objectForKey:@"reason"]];
-	reason = [self _processMessageString:reason];
+	NSMutableString *reason = [self _processMessageData:[[notification userInfo] objectForKey:@"reason"]];
+	[self _processMessageString:reason];
 
 	if (byUser.localUser) {
 		if (reason.length) {
