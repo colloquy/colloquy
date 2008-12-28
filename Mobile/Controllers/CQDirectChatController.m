@@ -583,10 +583,10 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 			linkHTMLString = [NSString stringWithFormat:@"<a href=\"irc:///%@\">%1$@</a>", room];
 		} else if (url.length) {
 			NSString *fullURL = ([url hasPrefix:@"www."] ? [@"http://" stringByAppendingString:url] : url);
-			url = [url stringByReplacingOccurrencesOfString:@"/" withString:@"/&#8203;"];
-			url = [url stringByReplacingOccurrencesOfString:@"?" withString:@"?&#8203;"];
-			url = [url stringByReplacingOccurrencesOfString:@"=" withString:@"=&#8203;"];
-			url = [url stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&amp;&#8203;"];
+			url = [url stringByReplacingOccurrencesOfString:@"/" withString:@"/\u200b"];
+			url = [url stringByReplacingOccurrencesOfString:@"?" withString:@"?\u200b"];
+			url = [url stringByReplacingOccurrencesOfString:@"=" withString:@"=\u200b"];
+			url = [url stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&amp;\u200b"];
 			linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\">%@</a>", fullURL, url];
 		} else if (email.length) {
 			linkHTMLString = [NSString stringWithFormat:@"<a href=\"mailto:%@\">%1$@</a>", email];
