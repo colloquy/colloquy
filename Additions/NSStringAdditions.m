@@ -968,7 +968,14 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	return [result autorelease];
 }
 
+- (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(unsigned long) limit {
+	return [self componentsSeparatedByCharactersInSet:separator limit:limit remainingString:NULL];
+}
+
 - (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(unsigned long) limit remainingString:(NSString **) remainder {
+	if( ! limit && ! remainder && [self respondsToSelector:@selector(componentsSeparatedByCharactersInSet:)] )
+		return [self componentsSeparatedByCharactersInSet:separator];
+
 	if( [self rangeOfCharacterFromSet:separator].location == NSNotFound )
 		return [NSArray arrayWithObject:self];
 
