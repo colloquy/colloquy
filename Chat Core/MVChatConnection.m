@@ -485,9 +485,6 @@ static const NSStringEncoding supportedEncodings[] = {
 static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConnectionFlags flags, void *context ) {
 	MVChatConnection *connection = (MVChatConnection *)context;
 
-	if (NSDebugEnabled)
-		NSLog(@"reachability %@ %c%c%c%c%c%c%c", [connection server], (flags & kSCNetworkFlagsTransientConnection ? 't' : '-'), (flags & kSCNetworkFlagsReachable ? 'r' : '-'), (flags & kSCNetworkFlagsConnectionRequired ? 'c' : '-'), (flags & kSCNetworkFlagsConnectionAutomatic ? 'C' : '-'), (flags & kSCNetworkFlagsInterventionRequired ? 'i' : '-'), (flags & kSCNetworkFlagsIsLocalAddress ? 'l' : '-'), (flags & kSCNetworkFlagsIsDirect ? 'd' : '-') );
-
 	BOOL reachable = ( flags & kSCNetworkFlagsReachable );
 	BOOL connectionRequired = ( flags & kSCNetworkFlagsConnectionRequired );
 
