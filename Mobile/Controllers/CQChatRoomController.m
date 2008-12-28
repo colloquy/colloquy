@@ -7,9 +7,19 @@
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
+@interface CQDirectChatController (CQDirectChatControllerPrivate)
+- (NSMutableString *) _processMessageData:(NSData *) messageData;
+- (NSString *) _processMessageString:(NSString *) messageString;
+- (void) _didDisconnect:(NSNotification *) notification;
+@end
+
+#pragma mark -
+
 @interface CQChatRoomController (CQChatRoomControllerPrivate)
 - (void) _sortMembers;
 @end
+
+#pragma mark -
 
 @implementation CQChatRoomController
 - (id) initWithTarget:(id) target {
@@ -27,9 +37,13 @@
 	self.room.encoding = self.encoding;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_partedRoom:) name:MVChatRoomPartedNotification object:target];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_kicked:) name:MVChatRoomKickedNotification object:target];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberNicknameChanged:) name:MVChatUserNicknameChangedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberModeChanged:) name:MVChatRoomUserModeChangedNotification object:target];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberBanned:) name:MVChatRoomUserBannedNotification object:target];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberBanRemoved:) name:MVChatRoomUserBanRemovedNotification object:target];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_bannedMembersSynced:) name:MVChatRoomBannedUsersSyncedNotification object:target];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_membersSynced:) name:MVChatRoomMemberUsersSyncedNotification object:target];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberJoined:) name:MVChatRoomUserJoinedNotification object:target];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberParted:) name:MVChatRoomUserPartedNotification object:target];
@@ -129,7 +143,10 @@
 	if (++_joinCount > 1)
 		[self addEventMessage:NSLocalizedString(@"You joined the room.", "Joined room event message") withIdentifier:@"rejoined"];
 
+	_banListSynced = NO;
 	_membersNeedSorted = YES;
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_nicknameChanged:) name:MVChatConnectionNicknameAcceptedNotification object:self.connection];
 }
 
 - (void) showMembers {
@@ -204,6 +221,14 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 
 #pragma mark -
 
+- (NSString *) _markupForUser:(MVChatUser *) user {
+	return [NSString stringWithFormat:@"<span class=\"user\">%@</span>", [user.nickname stringByEncodingXMLSpecialCharactersAsEntities]];
+}
+
+- (NSString *) _markupForMemberUser:(MVChatUser *) user {
+	return [NSString stringWithFormat:@"<span class=\"member user\">%@</span>", [user.nickname stringByEncodingXMLSpecialCharactersAsEntities]];
+}
+
 - (void) _sortMembers {
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"])
 		[_orderedMembers sortUsingFunction:sortMembersByStatus context:self];
@@ -212,8 +237,36 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	_membersNeedSorted = NO;
 }
 
+- (void) _didDisconnect:(NSNotification *) notification {
+	[super _didDisconnect:notification];
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
+}
+
 - (void) _partedRoom:(NSNotification *) notification {
 	[self addEventMessage:NSLocalizedString(@"You left the room.", "Left room event message") withIdentifier:@"parted"];
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
+}
+
+- (void) _kicked:(NSNotification *) notification {
+	MVChatUser *user = [[notification userInfo] objectForKey:@"byUser"];
+
+	NSString *reason = [self _processMessageData:[[notification userInfo] objectForKey:@"reason"]];
+	reason = [self _processMessageString:reason];
+
+	if (reason.length) {
+		NSString *eventMessageFormat = [NSLocalizedString(@"You were kicked from the room by %@. (%@)", "You were kicked from the room with reason event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user], reason] withIdentifier:@"kicked"];
+	} else {
+		NSString *eventMessageFormat = [NSLocalizedString(@"You were kicked from the room by %@.", "You were kicked from the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user]] withIdentifier:@"kicked"];
+	}
+}
+
+- (void) _nicknameChanged:(NSNotification *) notification {
+	NSString *eventMessageFormat = [NSLocalizedString(@"You are now known as %@.", "You changed nicknames event message") stringByEncodingXMLSpecialCharactersAsEntities];
+	[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:self.connection.localUser]] withIdentifier:@"newNickname"];
 }
 
 - (void) _memberNicknameChanged:(NSNotification *) notification {
@@ -221,14 +274,18 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	if (![self.room hasUser:user])
 		return;
 
-	NSUInteger originalIndex = [_orderedMembers indexOfObjectIdenticalTo:user];
-	if (originalIndex == NSNotFound)
-		return;
+	NSString *oldNickname = [[notification userInfo] objectForKey:@"oldNickname"];
+	NSString *eventMessageFormat = [NSLocalizedString(@"%@ is now known as %@.", "User changed nicknames event message") stringByEncodingXMLSpecialCharactersAsEntities];
+	[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [oldNickname stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]] withIdentifier:@"memberNewNickname"];
 
 	if (!_currentUserListViewController) {
 		_membersNeedSorted = YES;
 		return;
 	}
+
+	NSUInteger originalIndex = [_orderedMembers indexOfObjectIdenticalTo:user];
+	if (originalIndex == NSNotFound)
+		return;
 
 	[self _sortMembers];
 
@@ -243,17 +300,183 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 
 - (void) _memberModeChanged:(NSNotification *) notification {
 	MVChatUser *user = [[notification userInfo] objectForKey:@"who"];
+	MVChatUser *byUser = [[notification userInfo] objectForKey:@"by"];
 	if (!user)
 		return;
 
-	NSUInteger originalIndex = [_orderedMembers indexOfObjectIdenticalTo:user];
-	if (originalIndex == NSNotFound)
-		return;
+	NSString *message = nil;
+	NSString *identifier = nil;
+	unsigned long mode = [[[notification userInfo] objectForKey:@"mode"] unsignedLongValue];
+	BOOL enabled = [[[notification userInfo] objectForKey:@"enabled"] boolValue];
+
+	if (mode == MVChatRoomMemberFounderMode && enabled) {
+		identifier = @"memberPromotedToFounder";
+		if (user.localUser && byUser.localUser) {
+			message = [NSLocalizedString(@"You promoted yourself to room founder.", "You gave ourself the room founder mode event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			identifier = @"promotedToFounder";
+		} else if (user.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"You were promoted to room founder by %@.", "You are now a room founder mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:byUser]];
+			identifier = @"promotedToFounder";
+		} else if (byUser.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was promoted to room founder by you.", "You gave user room founder mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+		} else {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was promoted to room founder by %@.", "User is now a room founder mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], [self _markupForMemberUser:byUser]];
+		}
+	} else if (mode == MVChatRoomMemberFounderMode && !enabled) {
+		identifier = @"memberDemotedFromFounder";
+		if (user.localUser && byUser.localUser) {
+			message = [NSLocalizedString(@"You demoted yourself from room founder.", "You removed our room founder mode event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			identifier = @"demotedFromFounder";
+		} else if (user.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"You were demoted from room founder by %@.", "You are no longer a room founder mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:byUser]];
+			identifier = @"demotedFromFounder";
+		} else if (byUser.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was demoted from room founder by you.", "You removed user's room founder mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+		} else {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was demoted from room founder by %@.", "User is no longer a room founder mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], [self _markupForMemberUser:byUser]];
+		}
+	} else if (mode == MVChatRoomMemberAdministratorMode && enabled) {
+		identifier = @"memberPromotedToAdministrator";
+		if (user.localUser && byUser.localUser) {
+			message = [NSLocalizedString(@"You promoted yourself to Administrator.", "You gave ourself the room administrator mode event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			identifier = @"promotedToAdministrator";
+		} else if (user.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"You were promoted to administrator by %@.", "You are now a room administrator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:byUser]];
+			identifier = @"promotedToAdministrator";
+		} else if (byUser.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was promoted to administrator by you.", "You gave user room administrator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+		} else {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was promoted to administrator by %@.", "User is now a room administrator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], [self _markupForMemberUser:byUser]];
+		}
+	} else if (mode == MVChatRoomMemberAdministratorMode && !enabled) {
+		identifier = @"memberDemotedFromAdministrator";
+		if (user.localUser && byUser.localUser) {
+			message = [NSLocalizedString(@"You demoted yourself from administrator.", "You removed our room administrator mode event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			identifier = @"demotedFromAdministrator";
+		} else if (user.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"You were demoted from administrator by %@.", "You are no longer a room administrator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:byUser]];
+			identifier = @"demotedFromAdministrator";
+		} else if (byUser.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was demoted from administrator by you.", "You removed user's room administrator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+		} else {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was demoted from administrator by %@.", "User is no longer a room administrator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], [self _markupForMemberUser:byUser]];
+		}
+	} else if (mode == MVChatRoomMemberOperatorMode && enabled) {
+		identifier = @"memberPromotedToOperator";
+		if (user.localUser && byUser.localUser) {
+			message = [NSLocalizedString(@"You promoted yourself to operator.", "You gave ourself the room operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			identifier = @"promotedToOperator";
+		} else if (user.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"You were promoted to operator by %@.", "You are now a room operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:byUser]];
+			identifier = @"promotedToOperator";
+		} else if (byUser.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was promoted to operator by you.", "You gave user room operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+		} else {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was promoted to operator by %@.", "User is now a room operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], [self _markupForMemberUser:byUser]];
+		}
+	} else if (mode == MVChatRoomMemberOperatorMode && !enabled) {
+		identifier = @"memberDemotedFromOperator";
+		if (user.localUser && byUser.localUser) {
+			message = [NSLocalizedString(@"You demoted yourself from operator.", "You removed our room operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			identifier = @"demotedFromOperator";
+		} else if (user.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"You were demoted from operator by %@.", "You are no longer a room operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:byUser]];
+			identifier = @"demotedFromOperator";
+		} else if (byUser.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was demoted from operator by you.", "You removed user's room operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+		} else {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was demoted from operator by %@.", "User is no longer a room operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], [self _markupForMemberUser:byUser]];
+		}
+	} else if (mode == MVChatRoomMemberHalfOperatorMode && enabled) {
+		identifier = @"memberPromotedToHalfOperator";
+		if (user.localUser && byUser.localUser) {
+			message = [NSLocalizedString(@"You promoted yourself to half-operator.", "You gave ourself the room half-operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			identifier = @"promotedToHalfOperator";
+		} else if (user.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"You were promoted to half-operator by %@.", "You are now a room half-operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:byUser]];
+			identifier = @"promotedToHalfOperator";
+		} else if (byUser.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was promoted to half-operator by you.", "You gave user room half-operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+		} else {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was promoted to half-operator by %@.", "User is now a room half-operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], [self _markupForMemberUser:byUser]];
+		}
+	} else if (mode == MVChatRoomMemberHalfOperatorMode && !enabled) {
+		identifier = @"memberDemotedFromHalfOperator";
+		if (user.localUser && byUser.localUser) {
+			message = [NSLocalizedString(@"You demoted yourself from half-operator.", "You removed our room half-operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			identifier = @"demotedFromHalfOperator";
+		} else if (user.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"You were demoted from half-operator by %@.", "You are no longer a room half-operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:byUser]];
+			identifier = @"demotedFromHalfOperator";
+		} else if (byUser.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was demoted from half-operator by you.", "You removed user's room half-operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+		} else {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was demoted from half-operator by %@.", "User is no longer a room half-operator mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], [self _markupForMemberUser:byUser]];
+		}
+	} else if (mode == MVChatRoomMemberVoicedMode && enabled) {
+		identifier = @"memberVoiced";
+		if (user.localUser && byUser.localUser) {
+			message = [NSLocalizedString(@"You gave yourself voice.", "You gave ourself special voice status to talk in moderated rooms mode event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			identifier = @"voiced";
+		} else if (user.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"You were granted voice by %@.", "You now have special voice status to talk in moderated rooms mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:byUser]];
+			identifier = @"voiced";
+		} else if (byUser.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was granted voice by you.", "You gave user special voice status to talk in moderated rooms mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+		} else {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was granted voice by %@.", "User now has special voice status to talk in moderated rooms mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], [self _markupForMemberUser:byUser]];
+		}
+	} else if (mode == MVChatRoomMemberVoicedMode && !enabled) {
+		identifier = @"memberDevoiced";
+		if (user.localUser && byUser.localUser) {
+			message = [NSLocalizedString(@"You removed voice from yourself.", "You removed our special voice status to talk in moderated rooms mode event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			identifier = @"devoiced";
+		} else if (user.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"You had voice removed by %@.", "You no longer has special voice status and can't talk in moderated rooms mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:byUser]];
+			identifier = @"devoiced";
+		} else if (byUser.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ had voice removed by you.", "You removed user's special voice status and can't talk in moderated rooms mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+		} else {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ had voice removed by %@.", "User no longer has special voice status and can't talk in moderated rooms mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], [self _markupForMemberUser:byUser]];
+		}
+	} else if (mode == MVChatRoomMemberQuietedMode && enabled) {
+		identifier = @"memberQuieted";
+		if (user.localUser && byUser.localUser) {
+			message = [NSLocalizedString(@"You quieted yourself.", "You quieted and can't talk ourself mode event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			identifier = @"quieted";
+		} else if (user.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"You were quieted by %@.", "You are now quieted and can't talk mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:byUser]];
+			identifier = @"quieted";
+		} else if (byUser.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was quieted by you.", "You quieted someone else in the room mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+		} else {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was quieted by %@.", "User was quieted by someone else in the room mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], [self _markupForMemberUser:byUser]];
+		}
+	} else if (mode == MVChatRoomMemberQuietedMode && !enabled) {
+		identifier = @"memberDequieted";
+		if (user.localUser && byUser.localUser) {
+			message = [NSLocalizedString(@"You made yourself no longer quieted.", "You are no longer quieted and can talk ourself mode event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			identifier = @"dequieted";
+		} else if (user.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"You are no longer quieted, thanks to %@.", "You are no longer quieted and can talk mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:byUser]];
+			identifier = @"dequieted";
+		} else if (byUser.localUser) {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ is no longer quieted because of you.", "a user is no longer quieted because of us mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+		} else {
+			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ is no longer quieted because of %@.", "User is no longer quieted because of someone else in the room mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], [self _markupForMemberUser:byUser]];
+		}
+	}
+
+	[self addEventMessageAsHTML:message withIdentifier:identifier];
 
 	if (!_currentUserListViewController) {
 		_membersNeedSorted = YES;
 		return;
 	}
+
+	NSUInteger originalIndex = [_orderedMembers indexOfObjectIdenticalTo:user];
+	if (originalIndex == NSNotFound)
+		return;
 
 	[self _sortMembers];
 
@@ -264,6 +487,38 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	}
 
 	[_currentUserListViewController moveUserAtIndex:originalIndex toIndex:newIndex];
+}
+
+- (void) _memberBanned:(NSNotification *) notification {
+	if (!_banListSynced) return;
+
+	MVChatUser *user = [[notification userInfo] objectForKey:@"byUser"];
+	MVChatUser *bannedUser = [[notification userInfo] objectForKey:@"user"];
+
+	if (user.localUser) {
+		NSString *message = [NSString stringWithFormat:NSLocalizedString(@"You set a ban on %@.", "You set a ban in the room event message"), bannedUser.description];
+		[self addEventMessage:message withIdentifier:@"memberBanned"];
+	} else {
+		NSString *eventMessageFormat = [NSLocalizedString(@"%@ set a ban on %@.", "User set a ban in the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user], [bannedUser.description stringByEncodingXMLSpecialCharactersAsEntities]] withIdentifier:@"memberBanned"];
+	}
+}
+
+- (void) _memberBanRemoved:(NSNotification *) notification {
+	MVChatUser *user = [[notification userInfo] objectForKey:@"byUser"];
+	MVChatUser *bannedUser = [[notification userInfo] objectForKey:@"user"];
+
+	if (user.localUser) {
+		NSString *message = [NSString stringWithFormat:NSLocalizedString(@"You removed the ban on %@.", "You removed a ban in the room event message"), bannedUser.description];
+		[self addEventMessage:message withIdentifier:@"banRemoved"];
+	} else {
+		NSString *eventMessageFormat = [NSLocalizedString(@"%@ removed the ban on %@.", "User removed a ban in the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user], [bannedUser.description stringByEncodingXMLSpecialCharactersAsEntities]] withIdentifier:@"banRemoved"];
+	}
+}
+
+- (void) _bannedMembersSynced:(NSNotification *) notification {
+	_banListSynced = YES;
 }
 
 - (void) _membersSynced:(NSNotification *) notification {
@@ -308,6 +563,11 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	if ([_orderedMembers indexOfObjectIdenticalTo:user] != NSNotFound)
 		return;
 
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowJoinEvents"]) {
+		NSString *eventMessageFormat = [NSLocalizedString(@"%@ joined the room.", "User has join the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user]] withIdentifier:@"memberJoined"];
+	}
+
 	[_orderedMembers addObject:user];
 
 	if (!_currentUserListViewController) {
@@ -324,6 +584,19 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 - (void) _memberParted:(NSNotification *) notification {
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLeaveEvents"]) {
+		NSString *reason = [self _processMessageData:[[notification userInfo] objectForKey:@"reason"]];
+		reason = [self _processMessageString:reason];
+
+		if (reason.length) {
+			NSString *eventMessageFormat = [NSLocalizedString(@"%@ left the room. (%@)", "User has left the room with reason event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForUser:user], reason] withIdentifier:@"memberParted"];
+		} else {
+			NSString *eventMessageFormat = [NSLocalizedString(@"%@ left the room.", "User has left the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForUser:user]] withIdentifier:@"memberParted"];
+		}
+	}
+
 	NSUInteger index = [_orderedMembers indexOfObjectIdenticalTo:user];
 	if (index == NSNotFound)
 		return;
@@ -334,6 +607,28 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 
 - (void) _memberKicked:(NSNotification *) notification {
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
+	MVChatUser *byUser = [[notification userInfo] objectForKey:@"byUser"];
+
+	NSString *reason = [self _processMessageData:[[notification userInfo] objectForKey:@"reason"]];
+	reason = [self _processMessageString:reason];
+
+	if (byUser.localUser) {
+		if (reason.length) {
+			NSString *eventMessageFormat = [NSLocalizedString(@"You kicked %@ from the room. (%@)", "You kicked a user from the room with reason event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForUser:user], reason] withIdentifier:@"memberKicked"];
+		} else {
+			NSString *eventMessageFormat = [NSLocalizedString(@"You kicked %@ from the room.", "You kicked a user from the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForUser:user]] withIdentifier:@"memberKicked"];
+		}
+	} else {
+		if (reason.length) {
+			NSString *eventMessageFormat = [NSLocalizedString(@"%@ was kicked from the room by %@. (%@)", "A user was kicked from the room with reason event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForUser:user], [self _markupForMemberUser:byUser], reason] withIdentifier:@"memberKicked"];
+		} else {
+			NSString *eventMessageFormat = [NSLocalizedString(@"%@ was kicked from the room by %@.", "A user was kicked from the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForUser:user], [self _markupForMemberUser:byUser]] withIdentifier:@"memberKicked"];
+		}
+	}
 
 	NSUInteger index = [_orderedMembers indexOfObjectIdenticalTo:user];
 	if (index == NSNotFound)

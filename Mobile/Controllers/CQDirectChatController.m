@@ -648,6 +648,14 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 
 #pragma mark -
 
+- (NSMutableString *) _processMessageData:(NSData *) messageData {
+	if (!messageData) return nil;
+
+	NSMutableString *messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:self.encoding];
+	if (!messageString) messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:NSASCIIStringEncoding];
+	return [messageString autorelease];
+}
+
 - (NSString *) _processMessageString:(NSString *) messageString {
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]) {
 		NSMutableString *mutableMessageString = [messageString mutableCopy];
@@ -689,9 +697,7 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 
 	*highlighted = NO;
 
-	NSData *messageData = [message objectForKey:@"message"];
-	NSMutableString *messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:self.encoding];
-	if (!messageString) messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:NSASCIIStringEncoding];
+	NSMutableString *messageString = [self _processMessageData:[message objectForKey:@"message"]];
 
 	MVChatUser *user = [message objectForKey:@"user"];
 	if (!user.localUser && highlightWords.count) {
@@ -742,7 +748,6 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 		[result setObject:[NSNumber numberWithBool:YES] forKey:@"highlighted"];
 
 	[highlightWords release];
-	[messageString release];
 
 	return [result autorelease];
 }

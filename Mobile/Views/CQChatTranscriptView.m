@@ -192,7 +192,6 @@
 
 			[command appendFormat:@"{type:'message',sender:'%@',message:'%@',highlighted:%@,action:%@,self:%@},", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
 		} else if ([type isEqualToString:@"event"]) {
-			NSLog(@"component %@", component);
 			NSString *messageString = [component objectForKey:@"message"];
 			NSString *identifier = [component objectForKey:@"identifier"];
 			if (!messageString || !identifier)
