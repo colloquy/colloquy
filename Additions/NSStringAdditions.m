@@ -61,7 +61,10 @@ static const struct EmojiEmoticonPair emoticonToEmojiList[] = {
 	{ 0xe058, @"=-(" },
 	{ 0xe059, @">:(" },
 	{ 0xe11a, @">:)" },
+	{ 0xe059, @">=(" },
+	{ 0xe11a, @">=)" },
 	{ 0xe108, @"-_-'" },
+	{ 0xe403, @"-_-" },
 	{ 0xe409, @":P" },
 	{ 0xe409, @":p" },
 	{ 0xe409, @":-P" },
@@ -70,10 +73,10 @@ static const struct EmojiEmoticonPair emoticonToEmojiList[] = {
 	{ 0xe409, @"=p" },
 	{ 0xe409, @"=-P" },
 	{ 0xe409, @"=-p" },
-	{ 0xe409, @"XP" },
-	{ 0xe409, @"xP" },
 	{ 0xe409, @"XD" },
 	{ 0xe409, @"xD" },
+	{ 0xe409, @"Xd" },
+	{ 0xe409, @"xd" },
 	{ 0xe40d, @"O.O" },
 	{ 0xe40d, @"o.o" },
 	{ 0xe414, @":[" },
@@ -175,6 +178,18 @@ static const struct EmojiEmoticonPair emoticonToEmojiList[] = {
 	{ 0xe00e, @"(y)" },
 	{ 0xe421, @"(N)" },
 	{ 0xe421, @"(n)" },
+	{ 0xe059, @">:-(" },
+	{ 0xe11a, @">:-)" },
+	{ 0xe059, @">=-(" },
+	{ 0xe11a, @">=-)" },
+	{ 0xe11a, @"(:<" },
+	{ 0xe059, @"):<" },
+	{ 0xe11a, @"(-:<" },
+	{ 0xe059, @")-:<" },
+	{ 0xe11a, @"(=<" },
+	{ 0xe059, @")=<" },
+	{ 0xe11a, @"(-=<" },
+	{ 0xe059, @")-=<" },
 	{ 0xe04e, @"O:)" },
 	{ 0xe04e, @"o:)" },
 	{ 0xe04e, @"O:-)" },
@@ -183,6 +198,14 @@ static const struct EmojiEmoticonPair emoticonToEmojiList[] = {
 	{ 0xe04e, @"(:o" },
 	{ 0xe04e, @"(-:O" },
 	{ 0xe04e, @"(-:o" },
+	{ 0xe04e, @"O=)" },
+	{ 0xe04e, @"o=)" },
+	{ 0xe04e, @"O=-)" },
+	{ 0xe04e, @"o=-)" },
+	{ 0xe04e, @"(=O" },
+	{ 0xe04e, @"(=o" },
+	{ 0xe04e, @"(-=O" },
+	{ 0xe04e, @"(-=o" },
 	{ 0, nil }
 };
 
@@ -997,8 +1020,8 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 - (BOOL) containsTypicalEmoticonCharacters {
 	if (!typicalEmoticonCharacters)
-		typicalEmoticonCharacters = [[NSCharacterSet characterSetWithCharactersInString:@";:=()^><_.XxO"] retain];
-	return ([self rangeOfCharacterFromSet:typicalEmoticonCharacters options:NSLiteralSearch].location != NSNotFound);
+		typicalEmoticonCharacters = [[NSCharacterSet characterSetWithCharactersInString:@";:=-()^><_."] retain];
+	return ([self rangeOfCharacterFromSet:typicalEmoticonCharacters options:NSLiteralSearch].location != NSNotFound || [self hasCaseInsensitiveSubstring:@"XD"]);
 }
 
 - (NSString *) stringBySubstitutingEmojiForEmoticons {
