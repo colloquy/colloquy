@@ -1066,6 +1066,11 @@ end:
 
 			[self sendRawMessage:[NSString stringWithFormat:@"INVITE %@ %@", nick, ( [roomName length] ? roomName : [room name] )]];
 			return;
+		} else if( [command isCaseInsensitiveEqualToString:@"topic"] || [command isCaseInsensitiveEqualToString:@"t"] ) {
+			if( [arguments length] ) {
+				[room setTopic:arguments];
+				return;
+			}
 		} else if( [command isCaseInsensitiveEqualToString:@"kick"] ) {
 			NSString *member = nil;
 			[argumentsScanner scanUpToCharactersFromSet:whitespaceCharacters intoString:&member];
