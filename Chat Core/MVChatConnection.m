@@ -936,7 +936,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 	[_reconnectTimer invalidate];
 	[_reconnectTimer release];
-	_reconnectTimer = [[NSTimer scheduledTimerWithTimeInterval:(30. * (_reconnectAttemptCount + 1)) target:self selector:@selector( attemptReconnect ) userInfo:nil repeats:NO] retain];
+	_reconnectTimer = [[NSTimer scheduledTimerWithTimeInterval:(60. * _reconnectAttemptCount) target:self selector:@selector( attemptReconnect ) userInfo:nil repeats:NO] retain];
 
 	[self connect];
 }
