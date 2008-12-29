@@ -14,6 +14,10 @@
 	<false/>
 	<key>JVChatStripMessageFormatting</key>
 	<false/>
+	<key>CQDisableLandscape</key>
+	<false/>
+	<key>CQVibrateOnHighlight</key>
+	<true/>
 	<key>CQShowLeaveEvents</key>
 	<true/>
 	<key>CQShowJoinEvents</key>

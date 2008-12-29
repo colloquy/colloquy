@@ -538,7 +538,7 @@
 			++[CQChatController defaultController].totalImportantUnreadCount;
 	}
 
-	if (highlighted && self.available)
+	if (highlighted && self.available && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"])
 		AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
 	if (!_recentMessages)
