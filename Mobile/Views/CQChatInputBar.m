@@ -32,6 +32,8 @@
 	_inputField.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
 	_inputField.borderStyle = UITextBorderStyleRoundedRect;
 	_inputField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+	_inputField.adjustsFontSizeToFitWidth = YES;
+	_inputField.minimumFontSize = 10.;
 	_inputField.returnKeyType = UIReturnKeySend;
 	_inputField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
 	_inputField.enablesReturnKeyAutomatically = YES;
