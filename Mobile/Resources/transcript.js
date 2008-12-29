@@ -1,74 +1,76 @@
-var realScrollTop = 0;
+var animatingScroll = false;
+var animationInterval = null;
+var startScrollTop = 0;
+var currentScrollTop = 0;
+var targetScrollTop = 0;
+var animationComplete = 0;
 
-function animateProperty(animations, duration, callback, complete) {
-    if (complete === undefined)
-        complete = 0;
-    var slice = (1000 / 30); // 30 frames per second
+function animateScroll(target, duration, callback) {
+	function cubicInOut(t, b, c, d) {
+		if ((t/=d/2) < 1) return c/2*t*t*t + b;
+		return c/2*((t-=2)*t*t + 2) + b;
+	}
 
-    for (var i = 0; i < animations.length; ++i) {
-        var animation = animations[i];
-        var target = null;
-        var start = null;
-        var end = null;
-        for (key in animation) {
-            if (key === "target")
-                target = animation[key];
-            else if (key === "start")
-                start = animation[key];
-            else if (key === "end")
-                end = animation[key];
-        }
+    const slice = (1000 / 30); // 30 frames per second
 
-        if (!target || !end)
-            continue;
+	animationComplete = 0;
+	startScrollTop = currentScrollTop;
+	targetScrollTop = target;
 
-        if (!start) {
-            start = {};
-            for (key in end)
-                start[key] = parseFloat(target[key]);
-            animation.start = start;
-        }
+	if (animatingScroll) return;
 
-        function cubicInOut(t, b, c, d) {
-            if ((t/=d/2) < 1) return c/2*t*t*t + b;
-            return c/2*((t-=2)*t*t + 2) + b;
-        }
+	animatingScroll = true;
 
-        for (key in end) {
-            var startValue = start[key];
-            var currentValue = target[key];
-            var endValue = end[key];
-            if ((complete + slice) < duration) {
-                var delta = (endValue - startValue) / (duration / slice);
-                var newValue = cubicInOut(complete, startValue, endValue - startValue, duration);
-                target[key] = newValue;
-            } else {
-                target[key] = endValue;
-            }
-        }
-    }
+	function step() {
+		animationComplete += slice;
 
-    if (complete < duration)
-        setTimeout(animateProperty, slice, animations, duration, callback, complete + slice);
-    else if (callback)
-        callback();
+		if (animationComplete < duration) {
+			currentScrollTop = cubicInOut(animationComplete, startScrollTop, targetScrollTop - startScrollTop, duration);
+			document.body.scrollTop = currentScrollTop;
+		} else {
+			currentScrollTop = targetScrollTop;
+			document.body.scrollTop = currentScrollTop;
+
+			clearInterval(animationInterval);
+			animationInterval = null;
+
+			animatingScroll = false;
+			if (callback) callback();
+		}
+	}
+
+	step();
+
+	animationInterval = setInterval(step, slice);
+}
+
+function stopScrollAnimation() {
+	clearInterval(animationInterval);
+	animationInterval = null;
+	animatingScroll = false;
 }
 
 function appendComponents(components, previousSession, suppressScroll, suppressScrollAnimation) {
 	var componentsLength = components.length;
+	var alwaysScroll = false;
+	var wasNearBottom = (!suppressScroll && nearBottom());
+
 	for (var i = 0; i < componentsLength; ++i) {
 		var component = components[i];
-		if (component.type === "message")
+		if (component.type === "message") {
+			if (component.self) alwaysScroll = true;
 			appendMessage(component.sender, component.message, component.highlighted, component.action, component.self, true);
-		else if (component.type = "event")
+		} else if (component.type = "event")
 			appendEventMessage(component.message, component.identifier, true);
 	}
 
-	if (!suppressScroll)
-		scrollToBottom((suppressScrollAnimation ? false : true));
+	if (!suppressScroll && (alwaysScroll || wasNearBottom))
+		scrollToBottom(!suppressScrollAnimation);
 }
 
 function appendMessage(senderNickname, messageHTML, highlighted, action, self, suppressScroll) {
+	var wasNearBottom = (!suppressScroll && nearBottom());
+
 	var className = "message-wrapper";
 	if (action) className += " action";
 	if (highlighted) className += " highlight";
@@ -96,11 +98,13 @@ function appendMessage(senderNickname, messageHTML, highlighted, action, self, s
 	var messageFragment = range.createContextualFragment(messageHTML);
 	messageElement.appendChild(messageFragment);
 
-	if (!suppressScroll)
+	if (!suppressScroll && (alwaysScroll || wasNearBottom))
 		scrollToBottom(true);
 }
 
 function appendEventMessage(messageHTML, identifier, suppressScroll) {
+	var wasNearBottom = (!suppressScroll && nearBottom());
+
 	var className = "event";
 	if (identifier) className += " " + identifier;
 
@@ -115,22 +119,53 @@ function appendEventMessage(messageHTML, identifier, suppressScroll) {
 	var messageFragment = range.createContextualFragment(messageHTML);
 	eventElement.appendChild(messageFragment);
 
-	if (!suppressScroll)
-		scrollToBottom(true);
+	if (!suppressScroll && wasNearBottom)
+		scrollToBottom(!suppressScrollAnimation);
+}
+
+function enforceScrollbackLimit() {
+	if (document.body.childNodes.length < 300)
+		return;
+	while (document.body.childNodes.length > 275)
+		document.body.removeChild(document.body.firstChild);
+	scrollToBottom(false, true);
 }
 
 function updateScrollPosition(position) {
-	realScrollTop = position;
+	currentScrollTop = position;
 }
 
-function scrollToBottom(animated) {
+function nearBottom() {
+	return (animatingScroll || currentScrollTop >= (document.body.scrollHeight - window.innerHeight - 30));
+}
+
+function scrollToBottomIfNeeded(animated) {
+	if (nearBottom())
+		scrollToBottom(animated);
+}
+
+function scrollToBottom(animated, suppressEnforceScrollbackLimit) {
 	if (!animated) {
-		document.body.scrollTop = document.body.scrollHeight;
-		realScrollTop = (document.body.scrollHeight  - window.innerHeight);
+		stopScrollAnimation();
+
+		if (!suppressEnforceScrollbackLimit)
+			enforceScrollbackLimit();
+
+		currentScrollTop = (document.body.scrollHeight - window.innerHeight);
+		document.body.scrollTop = currentScrollTop;
 		return;
 	}
 
-	var newScrollTop = (document.body.scrollHeight  - window.innerHeight);
-	animateProperty([{target: document.body, start: {scrollTop: realScrollTop}, end: {scrollTop: newScrollTop}}], 250);
-	realScrollTop = newScrollTop;
+	function tryEnforcingScrollback() {
+		if (!animatingScroll)
+			enforceScrollbackLimit();
+	}
+
+	function animationFinished() {
+		if (!suppressEnforceScrollbackLimit)
+			setTimeout(tryEnforcingScrollback, 500);
+	}
+
+	var newScrollTop = (document.body.scrollHeight - window.innerHeight);
+	animateScroll(newScrollTop, 250, animationFinished);
 }
