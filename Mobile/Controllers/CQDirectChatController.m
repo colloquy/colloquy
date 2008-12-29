@@ -11,6 +11,8 @@
 
 #import <AGRegex/AGRegex.h>
 
+#include <AudioToolbox/AudioToolbox.h>
+
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
@@ -535,6 +537,9 @@
 		if (!self.user)
 			++[CQChatController defaultController].totalImportantUnreadCount;
 	}
+
+	if (highlighted && self.available)
+		AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
 	if (!_recentMessages)
 		_recentMessages = [[NSMutableArray alloc] init];
