@@ -7,6 +7,7 @@
 	NSLineBreakMode _lineBreakMode;
 	unsigned _statusNumber;
 	unsigned _importantStatusNumber;
+	float _leftMargin;
 	BOOL _boldAndWhiteOnHighlight;
 }
 - (void) setStatusImage:(NSImage *) image;
@@ -32,4 +33,7 @@
 
 - (void) setImportantStatusNumber:(unsigned) number;
 - (unsigned) importantStatusNumber;
+
+- (void) setLeftMargin:(float) margin;
+- (float) leftMargin;
 @end

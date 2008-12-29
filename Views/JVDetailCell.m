@@ -7,6 +7,7 @@
 		_statusImage = nil;
 		_mainText = nil;
 		_infoText = nil;
+		_leftMargin = 0.;
 
 		[self setImageAlignment:NSImageAlignLeft];
 		[self setImageScaling:NSScaleProportionally];
@@ -24,6 +25,7 @@
 	cell -> _mainText = [_mainText copyWithZone:zone];
 	cell -> _infoText = [_infoText copyWithZone:zone];
 	cell -> _lineBreakMode = _lineBreakMode;
+	cell -> _leftMargin = _leftMargin;
 	return cell;
 }
 
@@ -117,6 +119,16 @@
 
 #pragma mark -
 
+- (void) setLeftMargin:(float) margin {
+	_leftMargin = margin;
+}
+
+- (float) leftMargin {
+	return _leftMargin;
+}
+
+#pragma mark -
+
 - (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView {
 	float imageWidth = 0.;
 	BOOL highlighted = ( [self isHighlighted] && [[controlView window] firstResponder] == controlView && [[controlView window] isKeyWindow] && [[NSApplication sharedApplication] isActive] );
@@ -166,7 +178,7 @@
 		[self setImage:fadedImage];
 	}
 
-	cellFrame = NSMakeRect( cellFrame.origin.x + 1., cellFrame.origin.y, cellFrame.size.width - 1., cellFrame.size.height );
+	cellFrame = NSMakeRect( cellFrame.origin.x + 1. + _leftMargin, cellFrame.origin.y, cellFrame.size.width - 1. - _leftMargin, cellFrame.size.height );
 	[super drawWithFrame:cellFrame inView:controlView];
 
 	if( ! [self isEnabled] ) {
@@ -302,7 +314,7 @@
 	}
 
 	if( _statusImage && NSHeight( cellFrame ) >= [_statusImage size].height ) {
-		[_statusImage compositeToPoint:NSMakePoint( NSMinX( cellFrame ) + NSWidth( cellFrame ) - statusWidth, NSMaxY( cellFrame ) - ( ( NSHeight( cellFrame ) / 2 ) - ( [_statusImage size].height / 2 ) ) ) operation:NSCompositeSourceAtop fraction:( [self isEnabled] ? 1. : 0.5)];
+		[_statusImage compositeToPoint:NSMakePoint( NSMaxX( cellFrame ) - statusWidth, NSMaxY( cellFrame ) - ( ( NSHeight( cellFrame ) / 2 ) - ( [_statusImage size].height / 2 ) ) ) operation:NSCompositeSourceAtop fraction:( [self isEnabled] ? 1. : 0.5)];
 	}
 }
 

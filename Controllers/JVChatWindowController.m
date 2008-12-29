@@ -12,20 +12,6 @@
 NSString *JVToolbarToggleChatDrawerItemIdentifier = @"JVToolbarToggleChatDrawerItem";
 NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
-#if !defined(MAC_OS_X_VERSION_10_5) || (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5)
-enum {
-	NSTableViewSelectionHighlightStyleRegular = 0,
-	NSTableViewSelectionHighlightStyleSourceList = 1,
-};
-
-typedef int NSTableViewSelectionHighlightStyle;
-
-@interface NSTableView (NewLeopardMethods)
-- (void) setSelectionHighlightStyle:(NSTableViewSelectionHighlightStyle) value;
-- (NSTableViewSelectionHighlightStyle) selectionHighlightStyle;
-@end
-#endif
-
 #pragma mark -
 
 @interface NSToolbar (NSToolbarPrivate)
@@ -87,9 +73,6 @@ typedef int NSTableViewSelectionHighlightStyle;
 	[chatViewsOutlineView setAutoresizesOutlineColumn:YES];
 	[chatViewsOutlineView registerForDraggedTypes:[NSArray arrayWithObjects:JVChatViewPboardType, NSFilenamesPboardType, nil]];
 	[chatViewsOutlineView setMenu:[[[NSMenu allocWithZone:nil] initWithTitle:@""] autorelease]];
-
-	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4 )
-		[chatViewsOutlineView setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleSourceList];
 
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
 

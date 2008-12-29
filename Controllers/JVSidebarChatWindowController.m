@@ -2,6 +2,22 @@
 #import "JVSideSplitView.h"
 #import "JVDetailCell.h"
 
+#if !defined(MAC_OS_X_VERSION_10_5) || (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5)
+enum {
+	NSTableViewSelectionHighlightStyleRegular = 0,
+	NSTableViewSelectionHighlightStyleSourceList = 1,
+};
+
+typedef int NSTableViewSelectionHighlightStyle;
+
+@interface NSTableView (NewLeopardMethods)
+- (void) setSelectionHighlightStyle:(NSTableViewSelectionHighlightStyle) value;
+- (NSTableViewSelectionHighlightStyle) selectionHighlightStyle;
+@end
+#endif
+
+#pragma mark -
+
 @interface JVChatWindowController (JVChatWindowControllerPrivate)
 - (void) _refreshToolbar;
 - (void) _refreshWindowTitle;
@@ -25,6 +41,9 @@
 
 	[chatViewsOutlineView setAllowsEmptySelection:NO];
 
+	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4 )
+		[chatViewsOutlineView setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleSourceList];
+
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSidebarSelectedRowHasBlackText"] )
 		[[[chatViewsOutlineView outlineTableColumn] dataCell] setBoldAndWhiteOnHighlight:YES];
 
@@ -33,7 +52,15 @@
 }
 
 - (float) outlineView:(NSOutlineView *) outlineView heightOfRowByItem:(id) item {
-	return ( [outlineView levelForItem:item] || _usesSmallIcons ? 16. : 34. );
+	return ( [outlineView levelForItem:item] || _usesSmallIcons ? 18. : 34. );
+}
+
+- (void) outlineView:(NSOutlineView *) outlineView willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) tableColumn item:(id) item {
+	[super outlineView:outlineView willDisplayCell:cell forTableColumn:tableColumn item:item];
+
+	if( [outlineView levelForItem:item] )
+		[(JVDetailCell *)cell setLeftMargin:12.];
+	else [(JVDetailCell *)cell setLeftMargin:0.];
 }
 
 - (float) splitView:(NSSplitView *) splitView constrainSplitPosition:(float) proposedPosition ofSubviewAt:(int) index {
