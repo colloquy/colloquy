@@ -4,6 +4,7 @@ var startScrollTop = 0;
 var currentScrollTop = 0;
 var targetScrollTop = 0;
 var animationComplete = 0;
+var autoscrollSuspended = false;
 
 function animateScroll(target, duration, callback) {
 	function cubicInOut(t, b, c, d) {
@@ -51,10 +52,12 @@ function stopScrollAnimation() {
 }
 
 function appendComponents(components, previousSession, suppressScroll, suppressScrollAnimation) {
-	var componentsLength = components.length;
+	if (autoscrollSuspended)
+		suppressScroll = true;
 	var alwaysScroll = false;
 	var wasNearBottom = (!suppressScroll && nearBottom());
 
+	var componentsLength = components.length;
 	for (var i = 0; i < componentsLength; ++i) {
 		var component = components[i];
 		if (component.type === "message") {
@@ -69,6 +72,9 @@ function appendComponents(components, previousSession, suppressScroll, suppressS
 }
 
 function appendMessage(senderNickname, messageHTML, highlighted, action, self, suppressScroll) {
+	if (autoscrollSuspended)
+		suppressScroll = true;
+
 	var wasNearBottom = (!suppressScroll && nearBottom());
 
 	var className = "message-wrapper";
@@ -103,6 +109,9 @@ function appendMessage(senderNickname, messageHTML, highlighted, action, self, s
 }
 
 function appendEventMessage(messageHTML, identifier, suppressScroll) {
+	if (autoscrollSuspended)
+		suppressScroll = true;
+
 	var wasNearBottom = (!suppressScroll && nearBottom());
 
 	var className = "event";
@@ -129,6 +138,14 @@ function enforceScrollbackLimit() {
 	while (document.body.childNodes.length > 275)
 		document.body.removeChild(document.body.firstChild);
 	scrollToBottom(false, true);
+}
+
+function suspendAutoscroll() {
+	autoscrollSuspended = true;
+}
+
+function resumeAutoscroll() {
+	autoscrollSuspended = false;
 }
 
 function updateScrollPosition(position) {

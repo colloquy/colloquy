@@ -68,6 +68,13 @@
 		[self stringByEvaluatingJavaScriptFromString:command];
 	}
 
+	[self stringByEvaluatingJavaScriptFromString:@"resumeAutoscroll()"];
+
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(didFinishScrollingRecently) object:nil];
+	[self performSelector:@selector(didFinishScrollingRecently) withObject:nil afterDelay:0.5];
+}
+
+- (void) didFinishScrollingRecently {
 	_scrolling = NO;
 }
 
@@ -75,19 +82,24 @@
 
 - (void) scrollerWillStartDragging:(UIScroller *) scroller {
 	[super scrollerWillStartDragging:scroller];
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(didFinishScrolling) object:nil];
+
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(didFinishScrollingRecently) object:nil];
+
+	[self stringByEvaluatingJavaScriptFromString:@"suspendAutoscroll()"];
+
 	_scrolling = YES;
 }
 
 - (void) scrollerDidEndDragging:(UIScroller *) scroller willSmoothScroll:(BOOL) smooth {
 	[super scrollerDidEndDragging:scroller willSmoothScroll:smooth];
-	if (!smooth)
-		[self performSelector:@selector(didFinishScrolling) withObject:nil afterDelay:0.5];
+
+	if (!smooth) [self didFinishScrolling];
 }
 
 - (void) scrollerDidEndSmoothScrolling:(UIScroller *) scroller {
 	[super scrollerDidEndSmoothScrolling:scroller];
-	[self performSelector:@selector(didFinishScrolling) withObject:nil afterDelay:0.5];
+
+	[self didFinishScrolling];
 }
 
 #pragma mark -
