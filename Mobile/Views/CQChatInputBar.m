@@ -6,6 +6,7 @@
 @interface UIKeyboardImpl : UIView
 + (UIKeyboardImpl *) activeInstance;
 - (void) takeTextInputTraitsFrom:(id <UITextInputTraits>) object;
+- (void) updateReturnKey:(BOOL) update;
 @end
 
 #pragma mark -
@@ -126,6 +127,10 @@
 	[_completionView removeFromSuperview];
 	[_completionView release];
 	_completionView = nil;
+
+	_inputField.returnKeyType = UIReturnKeySend;
+
+	[self _updateTextTraits];
 }
 
 - (void) showCompletions {
@@ -139,6 +144,11 @@
 	_completionView.hidden = hasMarkedText;
 
 	[_completionView.superview bringSubviewToFront:_completionView];
+
+	if (_completionView.hidden) _inputField.returnKeyType = UIReturnKeySend;
+	else _inputField.returnKeyType = UIReturnKeyDefault;
+
+	[self _updateTextTraits];
 }
 
 - (void) showCompletions:(NSArray *) completions forText:(NSString *) text inRange:(NSRange) textRange {
@@ -180,6 +190,8 @@ retry:
 
 	_completionView.frame = frame;
 
+	_inputField.returnKeyType = UIReturnKeyDefault;
+
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
 
@@ -214,6 +226,17 @@ retry:
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *) textField {
+	if (_completionView && !_completionView.hidden) {
+		[_completionView retain];
+
+		if (_completionView.selectedCompletion != NSNotFound)
+			[self textCompletionView:_completionView didSelectCompletion:[_completionView.completions objectAtIndex:_completionView.selectedCompletion]];
+		else [self hideCompletions];
+
+		[_completionView release];
+		return YES;
+	}
+
 	if (![delegate respondsToSelector:@selector(chatInputBar:sendText:)])
 		return NO;
 
@@ -236,8 +259,15 @@ retry:
 }
 
 - (BOOL) textField:(UITextField *) textField shouldChangeCharactersInRange:(NSRange) range replacementString:(NSString *) string {
-	if (![delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)])
+	if (![delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:)])
 		return YES;
+
+	if (_completionView && !_completionView.hidden && [string isEqualToString:@" "] && !_completionView.closeSelected) {
+		if (_completionView.selectedCompletion != NSNotFound)
+			++_completionView.selectedCompletion;
+		else _completionView.selectedCompletion = 0;
+		return NO;
+	}
 
 	NSRange wordRange = {0, range.location + string.length};
 	NSString *text = [_inputField.text stringByReplacingCharactersInRange:range withString:string];
@@ -262,7 +292,7 @@ retry:
 	} else [self hideCompletions];
 
 	UITextAutocorrectionType newAutocorrectionType = _inputField.autocorrectionType;
-	if (![delegate chatInputBar:self shouldAutocorrectWordWithPrefix:word] || completions.count)
+	if (completions.count || ([delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![delegate chatInputBar:self shouldAutocorrectWordWithPrefix:word]))
 		newAutocorrectionType = UITextAutocorrectionTypeNo;
 	else newAutocorrectionType = UITextAutocorrectionTypeDefault;
 
@@ -310,6 +340,8 @@ retry:
 		UIKeyboardImpl *keyboard = [keyboardClass activeInstance];
 		if ([keyboard respondsToSelector:@selector(takeTextInputTraitsFrom:)])
 			[keyboard takeTextInputTraitsFrom:_inputField];
+		if ([keyboard respondsToSelector:@selector(updateReturnKey:)])
+			[keyboard updateReturnKey:YES];
 	}
 }
 

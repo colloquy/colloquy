@@ -8,6 +8,7 @@
 }
 @property (nonatomic, copy) NSArray *completions;
 @property (nonatomic) NSUInteger selectedCompletion;
+@property (nonatomic, getter=isCloseSelected) BOOL closeSelected;
 
 @property (nonatomic,assign) id <CQTextCompletionViewDelegate> delegate;
 @end

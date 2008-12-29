@@ -165,7 +165,7 @@
 }
 
 - (NSUInteger) selectedCompletion {
-	if (_selectedCompletion >= MaximumCompletions || _selectedCompletion > _completions.count)
+	if (_selectedCompletion >= MaximumCompletions || _selectedCompletion >= _completions.count)
 		return NSNotFound;
 	return _selectedCompletion;
 }
@@ -177,6 +177,16 @@
 	_selectedCompletion = selectedCompletion;
 
 	[self setNeedsDisplay];
+}
+
+- (BOOL) isCloseSelected {
+	return (_selectedCompletion != NSNotFound && (_selectedCompletion >= MaximumCompletions || _selectedCompletion >= _completions.count));
+}
+
+- (void) setCloseSelected:(BOOL) selected {
+	if (!selected)
+		return;
+	self.selectedCompletion = _completions.count;
 }
 
 #pragma mark -
