@@ -52,7 +52,12 @@ typedef int NSTableViewSelectionHighlightStyle;
 }
 
 - (float) outlineView:(NSOutlineView *) outlineView heightOfRowByItem:(id) item {
-	return ( [outlineView levelForItem:item] || _usesSmallIcons ? 18. : 34. );
+	BOOL smallIcons = ([outlineView levelForItem:item] || _usesSmallIcons);
+	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4 && smallIcons )
+		return 18.;
+	if( smallIcons )
+		return 16.;
+	return 34.;
 }
 
 - (void) outlineView:(NSOutlineView *) outlineView willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) tableColumn item:(id) item {
