@@ -62,16 +62,16 @@ function appendComponents(components, previousSession, suppressScroll, suppressS
 		var component = components[i];
 		if (component.type === "message") {
 			if (component.self) alwaysScroll = true;
-			appendMessage(component.sender, component.message, component.highlighted, component.action, component.self, true);
+			appendMessage(component.sender, component.message, component.highlighted, component.action, component.self, true, previousSession);
 		} else if (component.type = "event")
-			appendEventMessage(component.message, component.identifier, true);
+			appendEventMessage(component.message, component.identifier, true, previousSession);
 	}
 
 	if (!suppressScroll && (alwaysScroll || wasNearBottom))
 		scrollToBottom(!suppressScrollAnimation);
 }
 
-function appendMessage(senderNickname, messageHTML, highlighted, action, self, suppressScroll) {
+function appendMessage(senderNickname, messageHTML, highlighted, action, self, suppressScroll, previousSession) {
 	if (autoscrollSuspended)
 		suppressScroll = true;
 
@@ -80,6 +80,7 @@ function appendMessage(senderNickname, messageHTML, highlighted, action, self, s
 	var className = "message-wrapper";
 	if (action) className += " action";
 	if (highlighted) className += " highlight";
+	if (previousSession) className += " previous-session";
 
 	var messageWrapperElement = document.createElement("div");
 	messageWrapperElement.className = className;
@@ -108,7 +109,7 @@ function appendMessage(senderNickname, messageHTML, highlighted, action, self, s
 		scrollToBottom(true);
 }
 
-function appendEventMessage(messageHTML, identifier, suppressScroll) {
+function appendEventMessage(messageHTML, identifier, suppressScroll, previousSession) {
 	if (autoscrollSuspended)
 		suppressScroll = true;
 
@@ -116,6 +117,7 @@ function appendEventMessage(messageHTML, identifier, suppressScroll) {
 
 	var className = "event";
 	if (identifier) className += " " + identifier;
+	if (previousSession) className += " previous-session";
 
 	var eventElement = document.createElement("div");
 	eventElement.className = className;
