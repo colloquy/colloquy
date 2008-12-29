@@ -117,6 +117,10 @@
 
 #pragma mark -
 
+- (BOOL) isShowingCompletions {
+	return (_completionView && !_completionView.hidden);
+}
+
 - (void) hideCompletions {
 	if (!_completionView)
 		return;
@@ -228,7 +232,7 @@ retry:
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *) textField {
-	if (_completionView && !_completionView.hidden) {
+	if (self.showingCompletions) {
 		[_completionView retain];
 
 		if (_completionView.selectedCompletion != NSNotFound)
@@ -264,16 +268,24 @@ retry:
 	if (![delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:)])
 		return YES;
 
-	if (_completionView && !_completionView.hidden && [string isEqualToString:@" "] && !_completionView.closeSelected) {
+	if (self.showingCompletions && [string isEqualToString:@" "] && !_completionView.closeSelected) {
 		if (_completionView.selectedCompletion != NSNotFound)
 			++_completionView.selectedCompletion;
 		else _completionView.selectedCompletion = 0;
 		return NO;
 	}
 
+	NSString *text = _inputField.text;
+	BOOL replaceManually = NO;
+	if (self.showingCompletions && _completionView.selectedCompletion != NSNotFound && !range.length && ![string isEqualToString:@" "]) {
+		replaceManually = YES;
+		text = [_inputField.text stringByReplacingCharactersInRange:NSMakeRange(range.location, 0) withString:@" "];
+		++range.location;
+	}
+
 	NSRange wordRange = {0, range.location + string.length};
-	NSString *text = [_inputField.text stringByReplacingCharactersInRange:range withString:string];
-	
+	text = [text stringByReplacingCharactersInRange:range withString:string];
+
 	for (NSInteger i = (range.location + string.length - 1); i >= 0; --i) {
 		if ([text characterAtIndex:i] == ' ') {
 			wordRange.location = i + 1;
@@ -301,6 +313,13 @@ retry:
 	if (newAutocorrectionType != _inputField.autocorrectionType) {
 		_inputField.autocorrectionType = newAutocorrectionType;
 		[self _updateTextTraits];
+	}
+
+	if (replaceManually) {
+		_inputField.text = text;
+		if ([_inputField respondsToSelector:@selector(setSelectionRange:)])
+			_inputField.selectionRange = NSMakeRange((range.location + string.length), 0);
+		return NO;
 	}
 
 	return YES;

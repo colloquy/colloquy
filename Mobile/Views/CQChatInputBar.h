@@ -10,10 +10,12 @@
 	CQTextCompletionView *_completionView;
 	NSRange _completionRange;
 }
-@property (nonatomic,assign) id <CQChatInputBarDelegate> delegate;
+@property (nonatomic, assign) id <CQChatInputBarDelegate> delegate;
 
 @property (nonatomic) BOOL inferAutocapitalizationType;
 @property (nonatomic) UITextAutocapitalizationType autocapitalizationType;
+
+@property (nonatomic, readonly, getter=isShowingCompletions) BOOL showingCompletions;
 
 - (void) hideCompletions;
 @end
