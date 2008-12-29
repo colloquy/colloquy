@@ -350,6 +350,10 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	return [NSString stringWithFormat:@"#%02X%02X%02X", red, green, blue];
 }
 
+@interface NSString (NewInLeopard)
+- (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) characters;
+@end
+
 @implementation NSString (NSStringAdditions)
 + (NSString *) locallyUniqueString {
 	struct timeval tv;
