@@ -44,7 +44,7 @@
 							<object class="IBUITextField" id="256162249">
 								<reference key="NSNextResponder" ref="484076705"/>
 								<int key="NSvFlags">290</int>
-								<string key="NSFrame">{{37, 7}, {246, 31}}</string>
+								<string key="NSFrame">{{37, 5}, {246, 31}}</string>
 								<reference key="NSSuperview" ref="484076705"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -59,7 +59,6 @@
 									</object>
 								</object>
 								<bool key="IBUIClearsOnBeginEditing">YES</bool>
-								<bool key="IBUIAdjustsFontSizeToFit">YES</bool>
 								<float key="IBUIMinimumFontSize">1.200000e+01</float>
 								<object class="IBUITextInputTraits" key="IBUITextInputTraits">
 									<int key="IBUIAutocorrectionType">1</int>
@@ -105,13 +104,10 @@
 											<int key="NSColorSpace">1</int>
 											<bytes key="NSRGB">MC4xOTYwNzg0MyAwLjMwOTgwMzkzIDAuNTIxNTY4NjYAA</bytes>
 										</object>
-										<object class="NSCustomResource" key="IBUIHighlightedImage" id="310736100">
+										<object class="NSCustomResource" key="IBUINormalImage">
 											<string key="NSClassName">NSImage</string>
 											<string key="NSResourceName">browserBack.png</string>
 										</object>
-										<reference key="IBUIDisabledImage" ref="310736100"/>
-										<reference key="IBUISelectedImage" ref="310736100"/>
-										<reference key="IBUINormalImage" ref="310736100"/>
 									</object>
 								</object>
 								<reference key="IBUITitleView" ref="256162249"/>
@@ -137,13 +133,10 @@
 											<int key="NSColorSpace">1</int>
 											<bytes key="NSRGB">MC4xOTYwNzg0MyAwLjMwOTgwMzkzIDAuNTIxNTY4NjYAA</bytes>
 										</object>
-										<object class="NSCustomResource" key="IBUIHighlightedImage" id="343299147">
+										<object class="NSCustomResource" key="IBUINormalImage">
 											<string key="NSClassName">NSImage</string>
 											<string key="NSResourceName">browserReload.png</string>
 										</object>
-										<reference key="IBUIDisabledImage" ref="343299147"/>
-										<reference key="IBUISelectedImage" ref="343299147"/>
-										<reference key="IBUINormalImage" ref="343299147"/>
 									</object>
 								</object>
 							</object>
@@ -303,15 +296,6 @@
 					<int key="connectionID">71</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">goBack</string>
-						<reference key="source" ref="385586730"/>
-						<reference key="destination" ref="584638243"/>
-						<int key="IBEventType">7</int>
-					</object>
-					<int key="connectionID">72</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="256162249"/>
@@ -326,6 +310,31 @@
 						<reference key="destination" ref="372490531"/>
 					</object>
 					<int key="connectionID">74</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">goBack:</string>
+						<reference key="source" ref="385586730"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">75</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">toolbar</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="395487836"/>
+					</object>
+					<int key="connectionID">76</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">navigationBar</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="484076705"/>
+					</object>
+					<int key="connectionID">77</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -504,7 +513,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">74</int>
+			<int key="maxID">77</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -517,11 +526,13 @@
 						<object class="NSMutableArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>close:</string>
+							<string>goBack:</string>
 							<string>openInSafari:</string>
 							<string>reloadOrStop:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -534,8 +545,10 @@
 							<string>backButton</string>
 							<string>doneButtonItem</string>
 							<string>locationField</string>
+							<string>navigationBar</string>
 							<string>safariButtonItem</string>
 							<string>stopReloadButton</string>
+							<string>toolbar</string>
 							<string>webView</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -543,8 +556,10 @@
 							<string>UIButton</string>
 							<string>UIBarButtonItem</string>
 							<string>UITextField</string>
+							<string>UINavigationBar</string>
 							<string>UIBarButtonItem</string>
 							<string>UIButton</string>
+							<string>UIToolbar</string>
 							<string>UIWebView</string>
 						</object>
 					</object>
