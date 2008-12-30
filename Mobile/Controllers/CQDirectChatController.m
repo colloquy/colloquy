@@ -387,6 +387,10 @@
 		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"])
 			return NO;
 
+		_allowEditingToEnd = YES;
+		[chatInputBar resignFirstResponder];
+		_allowEditingToEnd = NO;
+
 		CQBrowserViewController *browserController = [[CQBrowserViewController alloc] init];
 		[browserController loadURL:url];
 
