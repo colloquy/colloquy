@@ -1,5 +1,7 @@
 #import "CQBrowserViewController.h"
 
+#import "CQColloquyApplication.h"
+
 @implementation CQBrowserViewController
 - (id) init {
 	if (!(self = [super initWithNibName:@"Browser" bundle:nil]))
@@ -94,6 +96,11 @@
 }
 
 - (BOOL) webView:(UIWebView *) sender shouldStartLoadWithRequest:(NSURLRequest *) request navigationType:(UIWebViewNavigationType) navigationType {
+	if ([[CQColloquyApplication sharedApplication] isSpecialApplicationURL:request.URL]) {
+		[[UIApplication sharedApplication] openURL:request.URL];
+		return NO;
+	}
+
 	if (![request.URL.absoluteString isEqualToString:@"about:blank"])
 		locationField.text = request.URL.absoluteString;
 

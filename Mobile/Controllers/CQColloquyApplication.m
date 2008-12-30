@@ -36,17 +36,15 @@
 	return [[CQConnectionsController defaultController] handleOpenURL:url];
 }
 
+- (BOOL) isSpecialApplicationURL:(NSURL *) url {
+	return (url && ([url.host hasCaseInsensitiveSubstring:@"maps.google."] || [url.host hasCaseInsensitiveSubstring:@"youtube."] || [url.host hasCaseInsensitiveSubstring:@"phobos.apple."]));
+}
+
 - (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser {
 	if (!url && !openWithBrowser)
 		return NO;
 
-	if (openWithBrowser && url && ![url.scheme isEqualToString:@"http"] && ![url.scheme isEqualToString:@"https"])
-		openWithBrowser = NO;
-
-	if (openWithBrowser && url && [url.host hasCaseInsensitiveSubstring:@"maps.google."])
-		openWithBrowser = NO;
-
-	if (openWithBrowser && url && [url.host hasCaseInsensitiveSubstring:@"youtube."])
+	if (openWithBrowser && [self isSpecialApplicationURL:url])
 		openWithBrowser = NO;
 
 	if (!openWithBrowser)
