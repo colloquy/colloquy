@@ -1,6 +1,9 @@
 #import "CQColloquyApplication.h"
+
+#import "CQBrowserViewController.h"
 #import "CQConnectionsController.h"
 #import "CQChatController.h"
+#import "NSStringAdditions.h"
 
 @implementation CQColloquyApplication
 + (CQColloquyApplication *) sharedApplication {
@@ -31,6 +34,32 @@
 
 - (BOOL) application:(UIApplication *) application handleOpenURL:(NSURL *) url {
 	return [[CQConnectionsController defaultController] handleOpenURL:url];
+}
+
+- (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser {
+	if (!url && !openWithBrowser)
+		return NO;
+
+	if (openWithBrowser && url && ![url.scheme isEqualToString:@"http"] && ![url.scheme isEqualToString:@"https"])
+		openWithBrowser = NO;
+
+	if (openWithBrowser && url && [url.host hasCaseInsensitiveSubstring:@"maps.google."])
+		openWithBrowser = NO;
+
+	if (openWithBrowser && url && [url.host hasCaseInsensitiveSubstring:@"youtube."])
+		openWithBrowser = NO;
+
+	if (!openWithBrowser)
+		return [self openURL:url];
+
+	CQBrowserViewController *browserController = [[CQBrowserViewController alloc] init];
+	if (url) [browserController loadURL:url];
+
+	[tabBarController presentModalViewController:browserController animated:YES];
+
+	[browserController release];
+
+	return YES;
 }
 
 - (void) tabBarController:(UITabBarController *) currentTabBarController didSelectViewController:(UIViewController *) viewController {

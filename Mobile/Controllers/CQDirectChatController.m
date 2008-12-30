@@ -1,10 +1,10 @@
 #import "CQDirectChatController.h"
 
-#import "CQBrowserViewController.h"
 #import "CQChatController.h"
 #import "CQChatInputBar.h"
 #import "CQChatInputField.h"
 #import "CQChatTableCell.h"
+#import "CQColloquyApplication.h"
 #import "CQStyleView.h"
 #import "NSDictionaryAdditions.h"
 #import "NSScannerAdditions.h"
@@ -12,12 +12,14 @@
 
 #import <AGRegex/AGRegex.h>
 
-#include <AudioToolbox/AudioToolbox.h>
+#import <AudioToolbox/AudioToolbox.h>
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatUserWatchRule.h>
+
+#import <objc/message.h>
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
 - (void) _showCantSendMessagesWarning;
@@ -306,7 +308,7 @@
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/umode", @"/globops", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/umode", @"/globops", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -365,7 +367,14 @@
 
 		arguments = [text substringFromIndex:scanner.scanLocation];
 
-		[_target sendCommand:command withArguments:arguments withEncoding:self.encoding];
+		NSString *commandSelectorString = [NSString stringWithFormat:@"handle%@CommandWithArguments:", [command capitalizedString]];
+		SEL commandSelector = NSSelectorFromString(commandSelectorString);
+
+		BOOL handled = NO;
+		if ([self respondsToSelector:commandSelector])
+			handled = ((BOOL (*)(id, SEL, NSString *))objc_msgSend)(self, commandSelector, arguments);
+
+		if (!handled) [_target sendCommand:command withArguments:arguments withEncoding:self.encoding];
 	} else {
 		// Send as a message, strip the first forward slash if it exists.
 		if ([text hasPrefix:@"/"])
@@ -382,35 +391,75 @@
 
 #pragma mark -
 
-- (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url {
-	if (![url.scheme isEqualToString:@"irc"] && ![url.scheme isEqualToString:@"ircs"]) {
-		BOOL openWithSystem = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"];
+- (BOOL) _openURL:(NSURL *) url preferBuiltInBrowser:(BOOL) preferBrowser {
+	BOOL openWithBrowser = preferBrowser || ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"];
 
-		if (!openWithSystem && ![url.scheme isEqualToString:@"http"] && ![url.scheme isEqualToString:@"https"])
-			openWithSystem = YES;
-
-		if (!openWithSystem && [url.host hasCaseInsensitiveSubstring:@"maps.google."])
-			openWithSystem = YES;
-
-		if (!openWithSystem && [url.host hasCaseInsensitiveSubstring:@"youtube."])
-			openWithSystem = YES;
-
-		if (openWithSystem)
-			return NO;
-
+	if (openWithBrowser) {
 		_allowEditingToEnd = YES;
 		[chatInputBar resignFirstResponder];
 		_allowEditingToEnd = NO;
-
-		CQBrowserViewController *browserController = [[CQBrowserViewController alloc] init];
-		[browserController loadURL:url];
-
-		[self presentModalViewController:browserController animated:YES];
-
-		[browserController release];
-
-		return YES;
 	}
+
+	return [[CQColloquyApplication sharedApplication] openURL:url usingBuiltInBrowser:openWithBrowser];
+}
+
+- (BOOL) _handleURLCommandWithArguments:(NSString *) arguments preferBuiltInBrowser:(BOOL) preferBrowser {
+	NSScanner *scanner = [NSScanner scannerWithString:arguments];
+	NSString *urlString = nil;
+
+	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&urlString];
+
+	if (!preferBrowser && !urlString)
+		return NO;
+
+	NSURL *url = (urlString ? [NSURL URLWithString:urlString] : nil);
+	if (urlString && !url.scheme.length) url = [NSURL URLWithString:[@"http://" stringByAppendingString:urlString]];
+
+	if (!url)
+		return NO;
+
+	[self _openURL:url preferBuiltInBrowser:preferBrowser];
+
+	return YES;
+}
+
+- (BOOL) handleBrowserCommandWithArguments:(NSString *) arguments {
+	return [self _handleURLCommandWithArguments:arguments preferBuiltInBrowser:YES];
+}
+
+- (BOOL) handleUrlCommandWithArguments:(NSString *) arguments {
+	return [self _handleURLCommandWithArguments:arguments preferBuiltInBrowser:NO];
+}
+
+#pragma mark -
+
+- (void) _handleSearchForURL:(NSString *) urlFormatString withQuery:(NSString *) query {
+	NSString *urlString = [NSString stringWithFormat:urlFormatString, [query stringByEncodingIllegalURLCharacters]];
+	NSURL *url = [NSURL URLWithString:urlString];
+
+	[self _openURL:url preferBuiltInBrowser:NO];
+}
+
+- (BOOL) handleGoogleCommandWithArguments:(NSString *) arguments {
+	[self _handleSearchForURL:@"http://www.google.com/m/search?q=%@" withQuery:arguments];
+	return YES;
+}
+
+- (BOOL) handleWikipediaCommandWithArguments:(NSString *) arguments {
+	[self _handleSearchForURL:@"http://www.wikipedia.org/search-redirect.php?search=%@&language=en" withQuery:arguments];
+	return YES;
+}
+
+- (BOOL) handleAmazonCommandWithArguments:(NSString *) arguments {
+	[self _handleSearchForURL:@"http://www.amazon.com/gp/aw/s.html?k=%@" withQuery:arguments];
+	return YES;
+}
+
+#pragma mark -
+
+- (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url {
+	if (![url.scheme isEqualToString:@"irc"] && ![url.scheme isEqualToString:@"ircs"])
+		return [self _openURL:url preferBuiltInBrowser:NO];
 
 	if (!url.host.length) {
 		NSString *target = @"";

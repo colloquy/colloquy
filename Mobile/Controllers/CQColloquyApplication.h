@@ -4,6 +4,8 @@
 }
 + (CQColloquyApplication *) sharedApplication;
 
+- (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser;
+
 @property (nonatomic, readonly) UITabBarController *tabBarController;
 @property (nonatomic, readonly) UIWindow *mainWindow;
 @end
