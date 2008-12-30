@@ -1,22 +1,47 @@
-{
-    IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {
-                clearFinishedTransfers = id; 
-                revealSelectedFile = id; 
-                showTransferManager = id; 
-                stopSelectedTransfer = id; 
-            }; 
-            CLASS = MVFileTransferController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                currentFiles = NSTableView; 
-                progressBar = NSProgressIndicator; 
-                transferStatus = NSTextField; 
-            }; 
-            SUPERCLASS = NSWindowController; 
-        }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>clearFinishedTransfers</key>
+				<string>id</string>
+				<key>revealSelectedFile</key>
+				<string>id</string>
+				<key>showTransferManager</key>
+				<string>id</string>
+				<key>stopSelectedTransfer</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>MVFileTransferController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>currentFiles</key>
+				<string>NSTableView</string>
+				<key>progressBar</key>
+				<string>NSProgressIndicator</string>
+				<key>transferStatus</key>
+				<string>NSTextField</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSWindowController</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>
