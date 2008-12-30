@@ -384,6 +384,9 @@
 
 - (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url {
 	if (![url.scheme isEqualToString:@"irc"] && ![url.scheme isEqualToString:@"ircs"]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"])
+			return NO;
+
 		CQBrowserViewController *browserController = [[CQBrowserViewController alloc] init];
 		[browserController loadURL:url];
 

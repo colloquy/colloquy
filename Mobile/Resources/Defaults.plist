@@ -16,6 +16,8 @@
 	<false/>
 	<key>CQDisableLandscape</key>
 	<false/>
+	<key>CQDisableBuiltInBrowser</key>
+	<false/>
 	<key>CQVibrateOnHighlight</key>
 	<true/>
 	<key>CQShowLeaveEvents</key>
