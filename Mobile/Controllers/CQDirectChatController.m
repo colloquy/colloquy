@@ -1,5 +1,6 @@
 #import "CQDirectChatController.h"
 
+#import "CQBrowserViewController.h"
 #import "CQChatController.h"
 #import "CQChatInputBar.h"
 #import "CQChatInputField.h"
@@ -382,14 +383,24 @@
 #pragma mark -
 
 - (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url {
-	if ((![url.scheme isEqualToString:@"irc"] && ![url.scheme isEqualToString:@"ircs"]) || url.host.length)
-		return NO;
+	if (![url.scheme isEqualToString:@"irc"] && ![url.scheme isEqualToString:@"ircs"]) {
+		CQBrowserViewController *browserController = [[CQBrowserViewController alloc] init];
+		[browserController loadURL:url];
 
-	NSString *target = @"";
-	if (url.fragment.length) target = [@"#" stringByAppendingString:url.fragment];
-	else if (url.path.length > 1) target = url.path;
+		[self presentModalViewController:browserController animated:YES];
 
-	url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", url.scheme, self.connection.server, target]];
+		[browserController release];
+
+		return YES;
+	}
+
+	if (!url.host.length) {
+		NSString *target = @"";
+		if (url.fragment.length) target = [@"#" stringByAppendingString:url.fragment];
+		else if (url.path.length > 1) target = url.path;
+
+		url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", url.scheme, self.connection.server, target]];
+	}
 
 	[[UIApplication sharedApplication] openURL:url];
 
