@@ -384,7 +384,18 @@
 
 - (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url {
 	if (![url.scheme isEqualToString:@"irc"] && ![url.scheme isEqualToString:@"ircs"]) {
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"])
+		BOOL openWithSystem = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"];
+
+		if (!openWithSystem && ![url.scheme isEqualToString:@"http"] && ![url.scheme isEqualToString:@"https"])
+			openWithSystem = YES;
+
+		if (!openWithSystem && [url.host hasCaseInsensitiveSubstring:@"maps.google."])
+			openWithSystem = YES;
+
+		if (!openWithSystem && [url.host hasCaseInsensitiveSubstring:@"youtube."])
+			openWithSystem = YES;
+
+		if (openWithSystem)
 			return NO;
 
 		_allowEditingToEnd = YES;
