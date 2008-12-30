@@ -415,9 +415,6 @@
 	NSURL *url = (urlString ? [NSURL URLWithString:urlString] : nil);
 	if (urlString && !url.scheme.length) url = [NSURL URLWithString:[@"http://" stringByAppendingString:urlString]];
 
-	if (!url)
-		return NO;
-
 	[self _openURL:url preferBuiltInBrowser:preferBrowser];
 
 	return YES;
