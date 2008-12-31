@@ -69,19 +69,27 @@
 
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
+
+	_active = YES;
+
 	[self.tableView reloadData];
+
 	[self _startUpdatingConnectTimes];
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
+
+	_active = NO;
+
 	[self _stopUpdatingConnectTimes];
 }
 
 #pragma mark -
 
 - (void) _didChange:(NSNotification *) notification {
-	[self _refreshConnection:notification.object];
+	if (_active)
+		[self _refreshConnection:notification.object];
 }
 
 #pragma mark -

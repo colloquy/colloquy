@@ -156,6 +156,11 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 }
 
 - (void) _refreshConnectionChatCells:(NSNotification *) notification {
+	if (!_active) {
+		_needsUpdate = YES;
+		return;
+	}
+
 	MVChatConnection *connection = notification.object;
 	NSUInteger sectionIndex = sectionIndexForConnection(connection);
 	if (sectionIndex == NSNotFound)
@@ -170,6 +175,11 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 }
 
 - (void) _refreshChatCell:(NSNotification *) notification {
+	if (!_active) {
+		_needsUpdate = YES;
+		return;
+	}
+
 	id target = notification.object;
 	id <CQChatViewController> controller = nil;
 	if ([target isKindOfClass:[MVChatRoom class]])
