@@ -349,17 +349,17 @@
 }
 
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text {
-	if (!self.available) {
-		[self _showCantSendMessagesWarning];
-		return NO;
-	}
-
 	_didSendRecently = YES;
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetDidSendRecently) object:nil];
 	[self performSelector:@selector(resetDidSendRecently) withObject:nil afterDelay:0.5];
 
 	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"]) {
+		if (!self.connection.connected || (!self.available && ([text hasPrefix:@"/me "] || [text hasPrefix:@"/say "]))) {
+			[self _showCantSendMessagesWarning];
+			return NO;
+		}
+
 		// Send as a command.
 		NSScanner *scanner = [NSScanner scannerWithString:text];
 		[scanner setCharactersToBeSkipped:nil];
@@ -382,6 +382,11 @@
 
 		if (!handled) [_target sendCommand:command withArguments:arguments withEncoding:self.encoding];
 	} else {
+		if (!self.available) {
+			[self _showCantSendMessagesWarning];
+			return NO;
+		}
+
 		// Send as a message, strip the first forward slash if it exists.
 		if ([text hasPrefix:@"/"])
 			text = [text substringFromIndex:1];
