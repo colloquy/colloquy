@@ -45,6 +45,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnectOrDidNotConnect:) name:MVChatConnectionDidNotConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_errorOccurred:) name:MVChatConnectionErrorNotification object:nil];
 
 	if (NSDebugEnabled)
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
@@ -267,6 +268,34 @@
 		--_connectedCount;
 	if (!_connectedCount && !_connectingCount)
 		[UIApplication sharedApplication].idleTimerDisabled = NO;
+}
+
+- (void) _errorOccurred:(NSNotification *) notification {
+	NSError *error = [[notification userInfo] objectForKey:@"error"];
+
+	NSString *errorTitle = nil;
+	switch (error.code) {
+		case MVChatConnectionRoomIsFullError:
+		case MVChatConnectionInviteOnlyRoomError:
+		case MVChatConnectionBannedFromRoomError:
+		case MVChatConnectionRoomPasswordIncorrectError:
+			errorTitle = NSLocalizedString(@"Can't Join Room", @"Can't join room alert title");
+			break;
+	}
+
+	if (!errorTitle) return;
+
+	UIAlertView *alert = [[UIAlertView alloc] init];
+	alert.delegate = self;
+	alert.title = errorTitle;
+	alert.message = error.localizedDescription;
+	alert.cancelButtonIndex = 0;
+
+	[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
+
+	[alert show];
+
+	[alert release];
 }
 
 #pragma mark -
