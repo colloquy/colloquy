@@ -336,9 +336,11 @@ retry:
 - (void) textCompletionView:(CQTextCompletionView *) textCompletionView didSelectCompletion:(NSString *) completion {
 	[self hideCompletions];
 
-	NSString *text = _inputField.text;
+	if (![completion hasSuffix:@" "])
+		completion = [completion stringByAppendingString:@" "];
 
-	if ([completion hasSuffix:@" "] && text.length > (NSMaxRange(_completionRange) + 1) && [text characterAtIndex:NSMaxRange(_completionRange)] == ' ')
+	NSString *text = _inputField.text;
+	if (text.length > (NSMaxRange(_completionRange) + 1) && [text characterAtIndex:NSMaxRange(_completionRange)] == ' ')
 		++_completionRange.length;
 
 	_inputField.text = [text stringByReplacingCharactersInRange:_completionRange withString:completion];

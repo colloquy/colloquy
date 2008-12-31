@@ -558,6 +558,33 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
++ (NSArray *) knownEmoticons {
+	static NSMutableArray *knownEmoticons;
+	if( ! knownEmoticons ) {
+		knownEmoticons = [[NSMutableArray alloc] initWithCapacity:350];
+		for (const struct EmojiEmoticonPair *entry = emoticonToEmojiList; entry && entry->emoticon; ++entry)
+			[knownEmoticons addObject:entry->emoticon];
+	}
+
+	return knownEmoticons;
+}
+
++ (NSArray *) knownEmojiWithEmoticons {
+	static NSMutableArray *knownEmoji;
+	if( ! knownEmoji ) {
+		knownEmoji = [[NSMutableArray alloc] initWithCapacity:50];
+		for (const struct EmojiEmoticonPair *entry = emojiToEmoticonList; entry && entry->emoticon; ++entry) {
+			NSString *emojiString = [[NSString alloc] initWithCharacters:&entry->emoji length:1];
+			[knownEmoji addObject:emojiString];
+			[emojiString release];
+		}
+	}
+
+	return knownEmoji;
+}
+
+#pragma mark -
+
 - (id) initWithChatData:(NSData *) data encoding:(NSStringEncoding) encoding {
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 

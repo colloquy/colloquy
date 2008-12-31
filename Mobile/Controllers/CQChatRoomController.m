@@ -173,11 +173,11 @@
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/join", @"/away", @"/topic", @"/kick", @"/ban", @"/kickban", @"/mode", @"/op", @"/voice", @"/halfop", @"/quiet", @"/deop", @"/devoice", @"/dehalfop", @"/dequiet", @"/unban", @"/bankick", @"/cycle", @"/hop", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/join", @"/away", @"/topic", @"/kick", @"/ban", @"/kickban", @"/part", @"/mode", @"/op", @"/voice", @"/halfop", @"/quiet", @"/deop", @"/devoice", @"/dehalfop", @"/dequiet", @"/unban", @"/bankick", @"/cycle", @"/hop", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
-				[completions addObject:[command stringByAppendingString:@" "]];
+				[completions addObject:command];
 			if (completions.count >= 10)
 				break;
 		}
@@ -187,7 +187,7 @@
 		for (MVChatUser *member in _orderedMembers) {
 			NSString *nickname = (range.location ? member.nickname : [member.nickname stringByAppendingString:@":"]);
 			if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
-				[completions addObject:[nickname stringByAppendingString:@" "]];
+				[completions addObject:nickname];
 			if (completions.count >= 10)
 				break;
 		}

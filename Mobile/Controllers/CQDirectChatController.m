@@ -300,11 +300,11 @@
 
 	NSString *nickname = (range.location ? self.user.nickname : [self.user.nickname stringByAppendingString:@":"]);
 	if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
-		[completions addObject:[nickname stringByAppendingString:@" "]];
+		[completions addObject:nickname];
 
 	nickname = (range.location ? self.connection.nickname : [self.connection.nickname stringByAppendingString:@":"]);
 	if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
-		[completions addObject:[nickname stringByAppendingString:@" "]];
+		[completions addObject:nickname];
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
@@ -312,18 +312,15 @@
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
-				[completions addObject:[command stringByAppendingString:@" "]];
+				[completions addObject:command];
 			if (completions.count >= 10)
 				break;
 		}
 	}
 
 	if (completions.count < 10 && ([word containsTypicalEmoticonCharacters] || [word hasCaseInsensitivePrefix:@"x"] || [word hasCaseInsensitivePrefix:@"o"])) {
-		static NSArray *emoticons;
-		if (!emoticons) emoticons = [[NSArray alloc] initWithObjects:@":) ", @":( ", @":P ", @":D ", @":o ", @":O ", @":[ ", @":-* ", @":| ", @";) ", @";P ", @";-* ", @">< ", @">:( ", @">=( ", @">:) ", @">=) ", @"<3 ", @"</3 ", @"=) ", @"=( ", @"=P ", @"=D ", @"=o ", @"=O ", @"=[ ", @"=-* ", @"x.x ", @"XD ", @"O:) ", @"O=) ", @"^-^ ", @"-_- ", @"-_-' ", @"~<:) ", @"@};- ", @":^) ", @"**== ", nil];
-
-		for (NSString *emoticon in emoticons) {
-			if ([emoticon hasCaseInsensitivePrefix:word])
+		for (NSString *emoticon in [NSString knownEmoticons]) {
+			if ([emoticon hasCaseInsensitivePrefix:word] && ![emoticon isCaseInsensitiveEqualToString:word])
 				[completions addObject:[emoticon stringBySubstitutingEmoticonsForEmoji]];
 			if (completions.count >= 10)
 				break;
@@ -333,7 +330,7 @@
 	if (completions.count < 10) {
 		for (MVChatRoom *room in self.connection.knownChatRooms) {
 			if ([room.name hasCaseInsensitivePrefix:word] && ![room.name isCaseInsensitiveEqualToString:word])
-				[completions addObject:[room.name stringByAppendingString:@" "]];
+				[completions addObject:room.name];
 			if (completions.count >= 10)
 				break;
 		}

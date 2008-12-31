@@ -6,6 +6,9 @@ BOOL isValidUTF8( const char *s, unsigned len );
 + (unsigned long) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding;
 + (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(unsigned long) encoding;
 
++ (NSArray *) knownEmoticons;
++ (NSArray *) knownEmojiWithEmoticons;
+
 - (id) initWithChatData:(NSData *) data encoding:(NSStringEncoding) encoding;
 
 - (BOOL) isCaseInsensitiveEqualToString:(NSString *) string;
