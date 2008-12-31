@@ -683,7 +683,7 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 		if (room.length) {
 			linkHTMLString = [NSString stringWithFormat:@"<a href=\"irc:///%@\">%1$@</a>", room];
 		} else if (url.length) {
-			NSString *fullURL = ([url hasPrefix:@"www."] ? [@"http://" stringByAppendingString:url] : url);
+			NSString *fullURL = ([url hasCaseInsensitivePrefix:@"www."] ? [@"http://" stringByAppendingString:url] : url);
 			url = [url stringByReplacingOccurrencesOfString:@"/" withString:@"/\u200b"];
 			url = [url stringByReplacingOccurrencesOfString:@"?" withString:@"?\u200b"];
 			url = [url stringByReplacingOccurrencesOfString:@"=" withString:@"=\u200b"];

@@ -318,7 +318,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 	while( ( match = [enumerator nextObject] ) ) {
 		NSRange foundRange = [match range];
 		NSString *currentLink = [self attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
-		if( ! currentLink ) [self addAttribute:NSLinkAttributeName value:( [[match group] hasPrefix:@"www."] ? [@"http://" stringByAppendingString:[match group]] : [match group] ) range:foundRange];
+		if( ! currentLink ) [self addAttribute:NSLinkAttributeName value:( [[match group] hasCaseInsensitivePrefix:@"www."] ? [@"http://" stringByAppendingString:[match group]] : [match group] ) range:foundRange];
 	}
 
 	// catch well-formed email addresses like "timothy@hatcher.name" or "timothy@javelin.cc"
