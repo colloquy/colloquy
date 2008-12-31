@@ -182,7 +182,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 			NSString *domain = nil;
 
 			while( ( domain = [domainEnumerator nextObject] ) ) {
-				if( [[connection server] compare:domain options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch )] == NSOrderedSame ) {
+				if( [[[connection server] stringWithDomainNameSegmentOfAddress] isCaseInsensitiveEqualToString:[domain stringWithDomainNameSegmentOfAddress]] ) {
 					[connection addChatUserWatchRule:rule];
 					break;
 				}
