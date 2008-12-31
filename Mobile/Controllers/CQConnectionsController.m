@@ -116,7 +116,7 @@
 #pragma mark -
 
 - (BOOL) handleOpenURL:(NSURL *) url {
-	if ((![url.scheme isEqualToString:@"irc"] && ![url.scheme isEqualToString:@"ircs"]) || !url.host.length)
+	if ((![url.scheme isCaseInsensitiveEqualToString:@"irc"] && ![url.scheme isCaseInsensitiveEqualToString:@"ircs"]) || !url.host.length)
 		return NO;
 
 	NSString *target = @"";

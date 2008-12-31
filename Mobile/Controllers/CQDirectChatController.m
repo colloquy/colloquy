@@ -466,7 +466,7 @@
 #pragma mark -
 
 - (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url {
-	if (![url.scheme isEqualToString:@"irc"] && ![url.scheme isEqualToString:@"ircs"])
+	if (![url.scheme isCaseInsensitiveEqualToString:@"irc"] && ![url.scheme isCaseInsensitiveEqualToString:@"ircs"])
 		return [self _openURL:url preferBuiltInBrowser:NO];
 
 	if (!url.host.length) {

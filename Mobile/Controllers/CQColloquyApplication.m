@@ -50,7 +50,7 @@
 	if (!url && !openWithBrowser)
 		return NO;
 
-	if (openWithBrowser && ![url.scheme isEqualToString:@"http"] && ![url.scheme isEqualToString:@"https"])
+	if (openWithBrowser && ![url.scheme isCaseInsensitiveEqualToString:@"http"] && ![url.scheme isCaseInsensitiveEqualToString:@"https"])
 		openWithBrowser = NO;
 
 	if (openWithBrowser && [self isSpecialApplicationURL:url])
