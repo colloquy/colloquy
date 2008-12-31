@@ -7,7 +7,7 @@ BOOL isValidUTF8( const char *s, unsigned len );
 + (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(unsigned long) encoding;
 
 + (NSArray *) knownEmoticons;
-+ (NSArray *) knownEmojiWithEmoticons;
++ (NSSet *) knownEmojiWithEmoticons;
 
 - (id) initWithChatData:(NSData *) data encoding:(NSStringEncoding) encoding;
 

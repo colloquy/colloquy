@@ -569,10 +569,10 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	return knownEmoticons;
 }
 
-+ (NSArray *) knownEmojiWithEmoticons {
-	static NSMutableArray *knownEmoji;
++ (NSSet *) knownEmojiWithEmoticons {
+	static NSMutableSet *knownEmoji;
 	if( ! knownEmoji ) {
-		knownEmoji = [[NSMutableArray alloc] initWithCapacity:50];
+		knownEmoji = [[NSMutableSet alloc] initWithCapacity:50];
 		for (const struct EmojiEmoticonPair *entry = emojiToEmoticonList; entry && entry->emoticon; ++entry) {
 			NSString *emojiString = [[NSString alloc] initWithCharacters:&entry->emoji length:1];
 			[knownEmoji addObject:emojiString];

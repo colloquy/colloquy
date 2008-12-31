@@ -292,6 +292,15 @@
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar shouldAutocorrectWordWithPrefix:(NSString *) word {
 	if ([word hasPrefix:@"/"] || [word hasPrefix:@"#"] || [word hasCaseInsensitiveSubstring:@"://"] || [word hasCaseInsensitiveSubstring:@"www."])
 		return NO;
+
+	if (word.length > 1 && word.length <= 5) {
+		static NSSet *knownEmoticonsSet;
+		if (!knownEmoticonsSet)
+			knownEmoticonsSet = [[NSSet alloc] initWithArray:[NSString knownEmoticons]];
+		if ([knownEmoticonsSet containsObject:word])
+			return NO;
+	}
+
 	return YES;
 }
 
