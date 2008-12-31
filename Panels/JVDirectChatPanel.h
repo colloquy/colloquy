@@ -4,6 +4,7 @@
 
 @class MVTextView;
 @class MVChatConnection;
+@class MVChatUserWatchRule;
 @class JVMutableChatMessage;
 @class JVBuddy;
 
@@ -28,6 +29,8 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 	NSMutableDictionary *_settings;
 	NSMenu *_spillEncodingMenu;
 	JVMutableChatMessage *_currentMessage;
+
+	MVChatUserWatchRule *_watchRule;
 
 	BOOL _firstMessage;
 	BOOL _isActive;

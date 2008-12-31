@@ -243,6 +243,16 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 				[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _awayStatusChanged: ) name:MVChatConnectionSelfAwayStatusChangedNotification object:[self connection]];
 				[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _errorOccurred: ) name:MVChatConnectionErrorNotification object:[self connection]];
 			}
+
+			if( [target isKindOfClass:[MVChatUser class]] ) {
+				[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:_target];
+				[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userStatusChanged:) name:MVChatUserStatusChangedNotification object:_target];
+
+				_watchRule = [[MVChatUserWatchRule alloc] init];
+				[_watchRule setNickname:[target nickname]];
+
+				[[self connection] addChatUserWatchRule:_watchRule];
+			}
 		}
 
 		_settings = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[[self identifier] stringByAppendingString:@" Settings"]]] retain];
@@ -313,6 +323,9 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	if( _watchRule ) [[self connection] removeChatUserWatchRule:_watchRule];
+	[_watchRule release];
+
 	[_target release];
 	[_sendHistory release];
 	[_waitingAlertNames release];
@@ -381,7 +394,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 - (BOOL) isEnabled {
 	if( [[self target] isKindOfClass:[MVDirectChatConnection class]] )
 		return ( [(MVDirectChatConnection *)[self target] status] == MVDirectChatConnectionConnectedStatus );
-	return [[self connection] isConnected];
+	MVChatUserStatus status = [(MVChatUser *)[self target] status];
+	return ([[self connection] isConnected] && (status == MVChatUserAvailableStatus || status == MVChatUserAwayStatus));
 }
 
 - (NSString *) title {
@@ -1000,7 +1014,16 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	NSRange range;
 
 	// allow commands to be passed to plugins if we arn't connected, allow commands to pass to plugins and server if we are just out of the room
-	if( ( _cantSendMessages || ! [self isEnabled] ) && ( ! [[[send textStorage] string] hasPrefix:@"/"] || [[[send textStorage] string] hasPrefix:@"//"] ) ) return;
+	if( ( _cantSendMessages || ! [self isEnabled] ) && ( ! [[[send textStorage] string] hasPrefix:@"/"] || [[[send textStorage] string] hasPrefix:@"//"] ) ) {
+		if( [[self target] isKindOfClass:[MVChatUser class]] && [[self user] status] == MVChatUserOfflineStatus ) {
+			NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+			[alert setMessageText:[NSString stringWithFormat:NSLocalizedString( @"User \"%@\" is not online", "user not online alert dialog title" ), [[self user] displayName]]];
+			[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"The user \"%@\" is not online and is unavailable until they reconnect.", "user not online alert dialog message" ), [[self user] displayName]]];
+			[alert setAlertStyle:NSInformationalAlertStyle];
+			[alert runModal];
+		}
+		return;
+	}
 
 	_historyIndex = 0;
 	if( ! [[send string] length] ) return;
@@ -1813,6 +1836,25 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	id classDescription = [NSClassDescription classDescriptionForClass:[self class]];
 	id msgSpecifier = [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"currentMessage"] autorelease];
 	[_currentMessage setObjectSpecifier:msgSpecifier];
+}
+
+- (void) _userNicknameDidChange:(NSNotification *) notification {
+	if( ! _watchRule ) return;
+
+	[[self connection] removeChatUserWatchRule:_watchRule];
+
+	[_watchRule setNickname:[_target nickname]];
+
+	[[self connection] addChatUserWatchRule:_watchRule];
+}
+
+- (void) _userStatusChanged:(NSNotification *) notification {
+	if ([_target status] == MVChatUserOfflineStatus)
+		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ disconnected from the server.", "User disconnected event message" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"userDisconnected" andAttributes:nil];
+	else if ([_target status] == MVChatUserAwayStatus)
+		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> is marked as away.", "User marked as away event message" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"userAway" andAttributes:nil];
+	else if ([_target status] == MVChatUserAvailableStatus)
+		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> is now available.", "User available event message" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"userAvailable" andAttributes:nil];
 }
 @end
 
