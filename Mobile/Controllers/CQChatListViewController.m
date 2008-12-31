@@ -21,6 +21,8 @@
 	self.navigationItem.leftBarButtonItem = addItem;
 	[addItem release];
 
+	self.editButtonItem.possibleTitles = [NSSet setWithObjects:NSLocalizedString(@"Manage", @"Manage button title"), NSLocalizedString(@"Done", @"Done button title")];
+	self.editButtonItem.title = NSLocalizedString(@"Manage", @"Manage button title");
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshConnectionChatCells:) name:MVChatConnectionDidConnectNotification object:nil];
@@ -275,6 +277,15 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		cell.unreadCount = 0;
 
 	[self _addMessagePreview:info withEncoding:controller.encoding toChatTableCell:cell animated:YES];
+}
+
+#pragma mark -
+
+- (void) setEditing:(BOOL) editing animated:(BOOL) animated {
+	[super setEditing:editing animated:animated];
+
+	if (!editing)
+		self.editButtonItem.title = NSLocalizedString(@"Manage", @"Manage button title");
 }
 
 #pragma mark -
