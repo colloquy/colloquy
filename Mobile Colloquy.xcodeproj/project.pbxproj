@@ -56,6 +56,7 @@
 		1C124B420F0A0244008F181B /* browserReload.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C124B3F0F0A0244008F181B /* browserReload.png */; };
 		1C124B430F0A0244008F181B /* browserStop.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C124B400F0A0244008F181B /* browserStop.png */; };
 		1C124BE70F0A13ED008F181B /* browserSafari.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C124BE60F0A13ED008F181B /* browserSafari.png */; };
+		1C1253290F0D4FC1008F181B /* standard-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C1253280F0D4FC1008F181B /* standard-dark.css */; };
 		1C1896110E29CF74003CFED0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */; };
 		1C1896120E29CF75003CFED0 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */; };
 		1C20BE820EFEDF26005AD8A5 /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */; };
@@ -204,6 +205,7 @@
 		1C124B3F0F0A0244008F181B /* browserReload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserReload.png; sourceTree = "<group>"; };
 		1C124B400F0A0244008F181B /* browserStop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserStop.png; sourceTree = "<group>"; };
 		1C124BE60F0A13ED008F181B /* browserSafari.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserSafari.png; sourceTree = "<group>"; };
+		1C1253280F0D4FC1008F181B /* standard-dark.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "standard-dark.css"; sourceTree = "<group>"; };
 		1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		1C20BE800EFEDF26005AD8A5 /* NSDictionaryAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDictionaryAdditions.h; path = Additions/NSDictionaryAdditions.h; sourceTree = "<group>"; };
 		1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDictionaryAdditions.m; path = Additions/NSDictionaryAdditions.m; sourceTree = "<group>"; };
@@ -586,6 +588,7 @@
 				1CC64C090EE98CC600DE91D0 /* userVoice.png */,
 				1CAE8BF20EE612DA00CE1AF8 /* base.html */,
 				1CAE8BF30EE612DA00CE1AF8 /* standard.css */,
+				1C1253280F0D4FC1008F181B /* standard-dark.css */,
 				1CAE8C850EE6190A00CE1AF8 /* transcript.js */,
 				1CAE8BF40EE612DA00CE1AF8 /* gradientHighlight.png */,
 			);
@@ -685,6 +688,7 @@
 				1C124B420F0A0244008F181B /* browserReload.png in Resources */,
 				1C124B430F0A0244008F181B /* browserStop.png in Resources */,
 				1C124BE70F0A13ED008F181B /* browserSafari.png in Resources */,
+				1C1253290F0D4FC1008F181B /* standard-dark.css in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

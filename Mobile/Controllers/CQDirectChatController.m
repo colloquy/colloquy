@@ -200,6 +200,8 @@
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
+	transcriptView.styleIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
+
 	if (_pendingPreviousSessionComponents) {
 		[transcriptView addPreviousSessionComponents:_pendingPreviousSessionComponents];
 

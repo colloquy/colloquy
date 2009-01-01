@@ -58,7 +58,7 @@ body {
 }
 
 .sender.self {
-	color: #a21;
+	color: rgb(170, 34, 17);
 }
 
 .sender:after {

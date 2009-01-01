@@ -49,12 +49,34 @@
 }
 
 - (void) dealloc {
+	[_styleIdentifier release];
 	[_pendingComponents release];
 	[_pendingPreviousSessionComponents release];
 	[super dealloc];
 }
 
 @synthesize delegate;
+
+#pragma mark -
+
+@synthesize styleIdentifier = _styleIdentifier;
+
+- (void) setStyleIdentifier:(NSString *) styleIdentifier {
+	if ([_styleIdentifier isEqualToString:styleIdentifier])
+		return;
+
+	id old = _styleIdentifier;
+	_styleIdentifier = [styleIdentifier copy];
+	[old release];
+
+	if ([styleIdentifier isEqualToString:@"standard"])
+		self.backgroundColor = [UIColor whiteColor];
+	else if ([styleIdentifier isEqualToString:@"standard-dark"])
+		self.backgroundColor = [UIColor blackColor];
+	else self.backgroundColor = [UIColor whiteColor];
+
+	[self _reset];
+}
 
 #pragma mark -
 
@@ -226,16 +248,15 @@
 - (void) _commonInitialization {
 	super.delegate = self;
 
-	[self setBackgroundColor:[UIColor whiteColor]];
-
 	if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(setShowBackgroundShadow:)])
 		[self _scroller].showBackgroundShadow = NO;
 
-	[self _reset];
+	self.styleIdentifier = @"standard";
 }
 
 - (NSString *) _contentHTML {
-	return [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
+	NSString *templateString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
+	return [NSString stringWithFormat:templateString, _styleIdentifier];
 }
 
 - (void) _reset {
