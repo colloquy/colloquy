@@ -1,7 +1,8 @@
 #import "CQConnectionsViewController.h"
 
-#import "CQConnectionsController.h"
+#import "CQColloquyApplication.h"
 #import "CQConnectionTableCell.h"
+#import "CQConnectionsController.h"
 
 #import <ChatCore/MVChatConnection.h>
 
@@ -119,7 +120,7 @@
 
 	sheet.cancelButtonIndex = (connection.waitingToReconnect ? 2 : 1);
 
-	[sheet showInView:self.view.window];
+	[sheet showInView:[CQColloquyApplication sharedApplication].tabBarController.view];
 	[sheet release];
 }
 
@@ -134,7 +135,7 @@
 	sheet.destructiveButtonIndex = 0;
 	sheet.cancelButtonIndex = 1;
 
-	[sheet showInView:self.view.window];
+	[sheet showInView:[CQColloquyApplication sharedApplication].tabBarController.view];
 	[sheet release];
 }
 

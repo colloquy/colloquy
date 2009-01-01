@@ -1,5 +1,6 @@
 #import "CQConnectionEditViewController.h"
 
+#import "CQColloquyApplication.h"
 #import "CQConnectionAdvancedEditController.h"
 #import "CQConnectionsController.h"
 #import "CQKeychain.h"
@@ -316,7 +317,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	sheet.destructiveButtonIndex = 0;
 	sheet.cancelButtonIndex = 1;
 
-	[sheet showInView:self.view.window];
+	[sheet showInView:[CQColloquyApplication sharedApplication].tabBarController.view];
 	[sheet release];
 }
 

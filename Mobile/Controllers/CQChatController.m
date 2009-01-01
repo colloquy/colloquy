@@ -1,5 +1,6 @@
 #import "CQChatController.h"
 
+#import "CQColloquyApplication.h"
 #import "CQChatRoomController.h"
 #import "CQChatListViewController.h"
 #import "CQConnectionsController.h"
@@ -326,7 +327,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 	sheet.cancelButtonIndex = 2;
 
-	[sheet showInView:self.view.window];
+	[sheet showInView:[CQColloquyApplication sharedApplication].tabBarController.view];
 	[sheet release];
 }
 

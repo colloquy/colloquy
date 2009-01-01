@@ -1,8 +1,9 @@
 #import "CQChatUserListViewController.h"
 
-#import "CQSearchCell.h"
 #import "CQChatController.h"
+#import "CQColloquyApplication.h"
 #import "CQDirectChatController.h"
+#import "CQSearchCell.h"
 #import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatRoom.h>
@@ -307,7 +308,7 @@
 
 	sheet.cancelButtonIndex = 1;
 
-	[sheet showInView:self.view.window];
+	[sheet showInView:[CQColloquyApplication sharedApplication].tabBarController.view];
 	[sheet release];
 }
 
