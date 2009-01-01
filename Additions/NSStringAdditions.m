@@ -245,7 +245,6 @@ static const struct EmojiEmoticonPair emoticonToEmojiList[] = {
 	{ 0xe401, @")'=" },
 	{ 0xe404, @"!:" },
 	{ 0xe404, @"!-:" },
-	{ 0xe404, @"!=" },
 	{ 0xe404, @"!-=" },
 	{ 0xe40b, @"o:" },
 	{ 0xe107, @"O:" },
