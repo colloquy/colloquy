@@ -202,6 +202,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	[super viewDidLoad];
 
 	self.tableView.rowHeight = 72.;
+	self.tableView.sectionIndexMinimumDisplayRowCount = 7;
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -384,5 +385,14 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	id <CQChatViewController> chatViewController = [controllers objectAtIndex:indexPath.row];
 
 	[[CQChatController defaultController] showChatController:chatViewController animated:YES];
+}
+
+- (NSArray *) sectionIndexTitlesForTableView:(UITableView *) tableView {
+	NSLog(@"sectionIndexTitlesForTableView");
+	return [NSArray arrayWithObjects:@"A", @"B", nil];
+}
+
+- (NSInteger) tableView:(UITableView *) tableView sectionForSectionIndexTitle:(NSString *) title atIndex:(NSInteger) index {
+	return 0;
 }
 @end

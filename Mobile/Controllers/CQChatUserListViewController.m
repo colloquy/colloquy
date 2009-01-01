@@ -3,7 +3,6 @@
 #import "CQChatController.h"
 #import "CQColloquyApplication.h"
 #import "CQDirectChatController.h"
-#import "CQSearchCell.h"
 #import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatRoom.h>
@@ -25,10 +24,26 @@
 	[_matchedUsers release];
 	[_currentSearchString release];
 	[_room release];
+	[_searchBar release];
+
     [super dealloc];
 }
 
 #pragma mark -
+
+- (void) viewDidLoad {
+	_searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
+	_searchBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin);
+	_searchBar.placeholder = NSLocalizedString(@"Search", @"Search placeholder text");
+	_searchBar.tintColor = [UIColor colorWithRed:(190. / 255.) green:(199. / 255.) blue:(205. / 255.) alpha:1.];
+	_searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
+	_searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
+	_searchBar.delegate = self;
+
+	[_searchBar sizeToFit];
+
+	self.tableView.tableHeaderView = _searchBar;
+}
 
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
@@ -94,7 +109,7 @@
 
 		[_matchedUsers insertObject:user atIndex:matchesIndex];
 
-		NSArray *indexPaths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:(matchesIndex + 1) inSection:0]];
+		NSArray *indexPaths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
 		[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 	}
 }
@@ -110,7 +125,7 @@
 	if (matchesIndex != NSNotFound) {
 		[_matchedUsers removeObjectAtIndex:matchesIndex];
 
-		NSArray *indexPaths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:(matchesIndex + 1) inSection:0]];
+		NSArray *indexPaths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
 		[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 	}
 
@@ -118,10 +133,6 @@
 }
 
 #pragma mark -
-
-- (CQSearchCell *) searchCell {
-	return (CQSearchCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-}
 
 - (void) beginUpdates {
 	[self.tableView beginUpdates];
@@ -132,10 +143,10 @@
 }
 
 - (void) insertUser:(MVChatUser *) user atIndex:(NSUInteger) index {
-	BOOL searchCellFocused = [[self searchCell] isFirstResponder];
+	BOOL searchBarFocused = [_searchBar isFirstResponder];
 	[self _insertUser:user atIndex:index withAnimation:UITableViewRowAnimationLeft];
-	if (searchCellFocused)
-		[[self searchCell] becomeFirstResponder];
+	if (searchBarFocused)
+		[_searchBar becomeFirstResponder];
 }
 
 - (void) moveUserAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex {
@@ -144,7 +155,7 @@
 
 	MVChatUser *user = [[_users objectAtIndex:oldIndex] retain];
 
-	BOOL searchCellFocused = [[self searchCell] isFirstResponder];
+	BOOL searchBarFocused = [_searchBar isFirstResponder];
 
 	NSInteger oldMatchesIndex = [self _indexForRemovedMatchUser:user];
 	NSInteger newMatchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:newIndex];
@@ -164,17 +175,17 @@
 
 	[self.tableView endUpdates];
 
-	if (searchCellFocused)
-		[[self searchCell] becomeFirstResponder];
+	if (searchBarFocused)
+		[_searchBar becomeFirstResponder];
 
 	[user release];
 }
 
 - (void) removeUserAtIndex:(NSUInteger) index {
-	BOOL searchCellFocused = [[self searchCell] isFirstResponder];
+	BOOL searchBarFocused = [_searchBar isFirstResponder];
 	[self _removeUserAtIndex:index withAnimation:UITableViewRowAnimationRight];
-	if (searchCellFocused)
-		[[self searchCell] becomeFirstResponder];
+	if (searchBarFocused)
+		[_searchBar becomeFirstResponder];
 }
 
 - (void) updateUserAtIndex:(NSUInteger) index {
@@ -185,16 +196,17 @@
 	if (matchesIndex == NSNotFound)
 		return;
 
-	BOOL searchCellFocused = [[self searchCell] isFirstResponder];
+	BOOL searchBarFocused = [_searchBar isFirstResponder];
 
-	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:(matchesIndex + 1) inSection:0] withAnimation:UITableViewRowAnimationFade];
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:matchesIndex inSection:0] withAnimation:UITableViewRowAnimationFade];
 
-	if (searchCellFocused)
-		[[self searchCell] becomeFirstResponder];
+	if (searchBarFocused)
+		[_searchBar becomeFirstResponder];
 }
 
-- (void) searchUsers:(CQSearchCell *) sender {
-	NSString *searchString = sender.text;
+#pragma mark -
+
+- (void) searchBar:(UISearchBar *) searchBar textDidChange:(NSString *) searchString {
 	if ([searchString isEqualToString:_currentSearchString])
 		return;
 
@@ -219,7 +231,7 @@
 
 	for (MVChatUser *user in previousUsersArray) {
 		if (![addedUsers containsObject:user])
-			[indexPaths addObject:[NSIndexPath indexPathForRow:(index + 1) inSection:0]];
+			[indexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
 		++index;
 	}
 
@@ -231,7 +243,7 @@
 
 	for (MVChatUser *user in _matchedUsers) {
 		if (![previousUsersSet containsObject:user])
-			[indexPaths addObject:[NSIndexPath indexPathForRow:(index + 1) inSection:0]];
+			[indexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
 		++index;
 	}
 
@@ -248,24 +260,24 @@
 	_currentSearchString = [searchString copy];
 	[old release];
 
-	[sender becomeFirstResponder];
+	[_searchBar becomeFirstResponder];
 }
 
 #pragma mark -
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
-	return (_matchedUsers.count + 1);
+	return _matchedUsers.count;
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (indexPath.row == 0) {
-		CQSearchCell *cell = [CQSearchCell reusableTableViewCellInTableView:tableView];
-		cell.target = self;
-		cell.searchAction = @selector(searchUsers:);
-		return cell;
-	}
+//	if (indexPath.row == 0) {
+//		CQSearchCell *cell = [CQSearchCell reusableTableViewCellInTableView:tableView];
+//		cell.target = self;
+//		cell.searchAction = @selector(searchUsers:);
+//		return cell;
+//	}
 
-	MVChatUser *user = [_matchedUsers objectAtIndex:(indexPath.row - 1)];
+	MVChatUser *user = [_matchedUsers objectAtIndex:indexPath.row];
 
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 	cell.text = user.displayName;
@@ -320,7 +332,7 @@
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
-	MVChatUser *user = [_matchedUsers objectAtIndex:(selectedIndexPath.row - 1)];
+	MVChatUser *user = [_matchedUsers objectAtIndex:selectedIndexPath.row];
 
 	CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
 	[[CQChatController defaultController] showChatController:chatController animated:YES];
