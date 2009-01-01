@@ -1,5 +1,6 @@
 @class MVChatUser;
 @class CQUnreadCountView;
+@class UIRemoveControl;
 @protocol CQChatViewController;
 
 @interface CQChatTableCell : UITableViewCell {
@@ -8,6 +9,7 @@
 	CQUnreadCountView *_unreadCountView;
 	NSString *_removeConfirmationText;
 	NSMutableArray *_chatPreviewLabels;
+	UIRemoveControl *_removeControl;
 	NSUInteger _maximumMessagePreviews;
 	BOOL _showsUserInMessagePreviews;
 	BOOL _available;

@@ -48,6 +48,7 @@
 	[_iconImageView release];
 	[_unreadCountView release];
 	[_nameLabel release];
+	[_removeControl release];
 	[_chatPreviewLabels release];
 	[_removeConfirmationText release];
 	[super dealloc];
@@ -120,6 +121,15 @@
 
 @synthesize removeConfirmationText = _removeConfirmationText;
 
+- (void) setRemoveConfirmationText:(NSString *) text {
+	id old = _removeConfirmationText;
+	_removeConfirmationText = [text copy];
+	[old release];
+
+	if (_removeConfirmationText.length && [_removeControl respondsToSelector:@selector(setRemoveConfirmationLabel:)])
+		[_removeControl setRemoveConfirmationLabel:_removeConfirmationText];
+}
+
 @synthesize available = _available;
 
 - (void) setAvailable:(BOOL) available {
@@ -136,10 +146,11 @@
 #pragma mark -
 
 - (UIRemoveControl *) _createRemoveControl {
-	UIRemoveControl *control = [super _createRemoveControl];
-	if (_removeConfirmationText.length && [control respondsToSelector:@selector(setRemoveConfirmationLabel:)])
-		[control setRemoveConfirmationLabel:_removeConfirmationText];
-	return control;
+	[_removeControl release];
+	_removeControl = [[super _createRemoveControl] retain];
+	if (_removeConfirmationText.length && [_removeControl respondsToSelector:@selector(setRemoveConfirmationLabel:)])
+		[_removeControl setRemoveConfirmationLabel:_removeConfirmationText];
+	return _removeControl;
 }
 
 #pragma mark -

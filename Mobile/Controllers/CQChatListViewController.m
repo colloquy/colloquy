@@ -356,6 +356,15 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
 	id <CQChatViewController> chatViewController = [controllers objectAtIndex:indexPath.row];
 
+	if ([chatViewController isKindOfClass:[CQChatRoomController class]]) {
+		CQChatRoomController *chatRoomController = (CQChatRoomController *)chatViewController;
+		if (chatRoomController.available) {
+			[chatRoomController.room part];
+			[self.tableView updateCellAtIndexPath:indexPath withAnimation:UITableViewRowAnimationFade];
+			return;
+		}
+	}
+
 	[[CQChatController defaultController] closeViewController:chatViewController];
 
 	if (controllers.count == 1) {

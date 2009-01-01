@@ -93,6 +93,34 @@
 
 	[_currentUserListViewController release];
 	_currentUserListViewController = nil;
+
+	if (!self.available) {
+		UIAlertView *alert = [[UIAlertView alloc] init];
+		alert.delegate = self;
+
+		if (!self.connection.connected) {
+			alert.tag = 1;
+			alert.title = NSLocalizedString(@"Not Connected", @"Not connected alert title");
+			alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect to join the room.", @"Not connected, connect to rejoin room alert message");
+			[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];
+		} else if (!self.room.joined) {
+			alert.tag = 2;
+			alert.title = NSLocalizedString(@"Not a Room Member", @"Not a room member alert title");
+			alert.message = NSLocalizedString(@"You are not a room member,\ndo you want join the room?", @"Not a member of room alert message");
+			[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join alert button title")];
+		} else {
+			[alert release];
+			return;
+		}
+
+		[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
+
+		alert.cancelButtonIndex = 1;
+
+		[alert show];
+
+		[alert release];
+	}
 }
 
 #pragma mark -
