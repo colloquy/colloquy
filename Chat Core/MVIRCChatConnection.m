@@ -433,7 +433,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
-	return [self joinedChatRoomWithUniqueIdentifier:name];
+	return [self joinedChatRoomWithUniqueIdentifier:[self properNameForChatRoomNamed:name]];
 }
 
 - (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
@@ -444,7 +444,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (MVChatRoom *) chatRoomWithName:(NSString *) name {
-	return [self chatRoomWithUniqueIdentifier:name];
+	return [self chatRoomWithUniqueIdentifier:[self properNameForChatRoomNamed:name]];
 }
 
 #pragma mark -
@@ -1242,19 +1242,12 @@ end:
 		NSString *targetName = nil;
 		MVChatString *msg = nil;
 
-#if USE(ATTRIBUTED_CHAT_STRING)
-		NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
-#elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
-		NSScanner *scanner = [NSScanner scannerWithString:arguments];
-#endif
-
-		[scanner setCharactersToBeSkipped:nil];
-		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&targetName];
-		[scanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] maxLength:1 intoString:NULL];
+		[argumentsScanner scanUpToCharactersFromSet:whitespaceCharacters intoString:&targetName];
+		[argumentsScanner scanCharactersFromSet:whitespaceCharacters maxLength:1 intoString:NULL];
 
 		if( ![targetName length] ) return;
 
-		if( ![scanner isAtEnd] ) {
+		if( ![argumentsScanner isAtEnd] ) {
 #if USE(ATTRIBUTED_CHAT_STRING)
 			msg = [arguments attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], [arguments length] - [scanner scanLocation] )];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
@@ -1267,7 +1260,7 @@ end:
 		NSString *roomTargetName = targetName;
 		NSString *targetPrefix = nil;
 
-		scanner = [NSScanner scannerWithString:targetName];
+		NSScanner *scanner = [NSScanner scannerWithString:targetName];
 		[scanner setCharactersToBeSkipped:nil];
 		[scanner scanCharactersFromSet:[self _nicknamePrefixes] intoString:&targetPrefix];
 
@@ -1292,35 +1285,55 @@ end:
 
 		return;
 	} else if( [command isCaseInsensitiveEqualToString:@"j"] || [command isCaseInsensitiveEqualToString:@"join"] ) {
-#if USE(ATTRIBUTED_CHAT_STRING)
-		NSString *roomsString = [arguments string];
-#elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
-		NSString *roomsString = arguments;
-#endif
-
+		NSString *roomsString = MVChatStringAsString(arguments);
 		NSArray *rooms = [roomsString componentsSeparatedByString:@","];
 		NSEnumerator *enumerator = [rooms objectEnumerator];
-		NSCharacterSet *whitespaceSet = [NSCharacterSet whitespaceCharacterSet];
 		NSString *room = nil;
 
 		rooms = [[NSMutableArray allocWithZone:nil] initWithCapacity:[rooms count]];
 		while( ( room = [enumerator nextObject] ) ) {
-			room = [room stringByTrimmingCharactersInSet:whitespaceSet];
+			room = [room stringByTrimmingCharactersInSet:whitespaceCharacters];
 			if( [room length] )
 				[(NSMutableArray *)rooms addObject:room];
 		}
 
-		[self joinChatRoomsNamed:rooms];
+		if( [rooms count])
+			[self joinChatRoomsNamed:rooms];
+		else if( isRoom )
+			[target join];
 
 		[rooms release];
 
 		return;
-	} else if ([command isCaseInsensitiveEqualToString:@"raw"] || [command isCaseInsensitiveEqualToString:@"quote"]) {
+	} else if( [command isCaseInsensitiveEqualToString:@"part"] || [command isCaseInsensitiveEqualToString:@"leave"] ) {
+		NSString *roomsString = nil;
+		[argumentsScanner scanUpToCharactersFromSet:whitespaceCharacters intoString:&roomsString];
+
+		MVChatString *reason = nil;
+		if( [roomsString length] ) {
+			if( [arguments length] >= [argumentsScanner scanLocation] + 1 )
 #if USE(ATTRIBUTED_CHAT_STRING)
-		[self sendRawMessage:[arguments string] immediately:YES];
+				reason = [arguments attributedSubstringFromRange:NSMakeRange( [argumentsScanner scanLocation] + 1, ( [arguments length] - [argumentsScanner scanLocation] - 1 ) )];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
-		[self sendRawMessage:arguments immediately:YES];
+				reason = [arguments	substringFromIndex:( [argumentsScanner scanLocation] + 1 )];
 #endif
+		}
+
+		NSArray *rooms = [roomsString componentsSeparatedByString:@","];
+		if( ![rooms count] || [roomsString isEqualToString:@"-"] ) {
+			if( isRoom ) [target partWithReason:reason];
+			return;
+		}
+
+		NSEnumerator *enumerator = [rooms objectEnumerator];
+		NSString *roomName = nil;
+
+		while( ( roomName = [enumerator nextObject] ) )
+			[[self joinedChatRoomWithName:roomName] partWithReason:reason];
+
+		return;
+	} else if ([command isCaseInsensitiveEqualToString:@"raw"] || [command isCaseInsensitiveEqualToString:@"quote"]) {
+		[self sendRawMessage:MVChatStringAsString(arguments) immediately:YES];
 		return;
 	} else if ([command isCaseInsensitiveEqualToString:@"quit"] || [command isCaseInsensitiveEqualToString:@"disconnect"]) {
 		[self disconnectWithReason:arguments];
@@ -1332,11 +1345,7 @@ end:
 		[self setAwayStatusMessage:arguments];
 		return;
 	} else if ([command isCaseInsensitiveEqualToString:@"umode"]) {
-#if USE(ATTRIBUTED_CHAT_STRING)
-		[self sendRawMessage:[NSString stringWithFormat:@"MODE %@ %@", [self nickname], [arguments string]]];
-#elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
-		[self sendRawMessage:[NSString stringWithFormat:@"MODE %@ %@", [self nickname], arguments]];
-#endif
+		[self sendRawMessage:[NSString stringWithFormat:@"MODE %@ %@", [self nickname], MVChatStringAsString(arguments)]];
 		return;
 	} else if ([command isCaseInsensitiveEqualToString:@"globops"]) {
 		NSData *argumentsData = [[self class] _flattenedIRCDataForMessage:arguments withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
