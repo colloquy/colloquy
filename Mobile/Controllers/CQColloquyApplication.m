@@ -15,12 +15,17 @@
 - (void) dealloc {
 	[tabBarController release];
 	[mainWindow release];
+	[_launchDate release];
 	[super dealloc];
 }
+
+@synthesize launchDate = _launchDate;
 
 - (void) applicationDidFinishLaunching:(UIApplication *) application {
 	NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+
+	_launchDate = [[NSDate alloc] init];
 
 	NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQConnectionsController defaultController], [CQChatController defaultController], nil];
 	tabBarController.viewControllers = viewControllers;

@@ -2,6 +2,7 @@
 
 #import "CQChatController.h"
 #import "CQChatUserListViewController.h"
+#import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 #import "NSStringAdditions.h"
 
@@ -72,6 +73,9 @@
 	if (!(self = [self initWithTarget:room]))
 		return nil;
 
+	if ([[state objectForKey:@"active"] boolValue])
+		[self performSelector:@selector(_checkMemberStatus) withObject:nil afterDelay:5.];
+
 	_joinCount = 1;
 
 	return [super initWithPersistentState:state usingConnection:connection];
@@ -94,33 +98,8 @@
 	[_currentUserListViewController release];
 	_currentUserListViewController = nil;
 
-	if (!self.available) {
-		UIAlertView *alert = [[UIAlertView alloc] init];
-		alert.delegate = self;
-
-		if (!self.connection.connected) {
-			alert.tag = 1;
-			alert.title = NSLocalizedString(@"Not Connected", @"Not connected alert title");
-			alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect to join the room.", @"Not connected, connect to rejoin room alert message");
-			[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];
-		} else if (!self.room.joined) {
-			alert.tag = 2;
-			alert.title = NSLocalizedString(@"Not a Room Member", @"Not a room member alert title");
-			alert.message = NSLocalizedString(@"You are not a room member,\ndo you want join the room?", @"Not a member of room alert message");
-			[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join alert button title")];
-		} else {
-			[alert release];
-			return;
-		}
-
-		[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
-
-		alert.cancelButtonIndex = 1;
-
-		[alert show];
-
-		[alert release];
-	}
+	if (ABS([[CQColloquyApplication sharedApplication].launchDate timeIntervalSinceNow]) > 15.)
+		[self performSelector:@selector(_checkMemberStatus) withObject:nil afterDelay:0.5];
 }
 
 #pragma mark -
@@ -744,6 +723,37 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 }
 
 #pragma mark -
+
+- (void) _checkMemberStatus {
+	if (!_active || self.available || self.connection.status == MVChatConnectionConnectingStatus)
+		return;
+
+	UIAlertView *alert = [[UIAlertView alloc] init];
+	alert.delegate = self;
+
+	if (!self.connection.connected) {
+		alert.tag = 1;
+		alert.title = NSLocalizedString(@"Not Connected", @"Not connected alert title");
+		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect to join the room.", @"Not connected, connect to rejoin room alert message");
+		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];
+	} else if (!self.room.joined) {
+		alert.tag = 2;
+		alert.title = NSLocalizedString(@"Not a Room Member", @"Not a room member alert title");
+		alert.message = NSLocalizedString(@"You are not a room member,\ndo you want join the room?", @"Not a member of room alert message");
+		[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join alert button title")];
+	} else {
+		[alert release];
+		return;
+	}
+
+	[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
+
+	alert.cancelButtonIndex = 1;
+
+	[alert show];
+
+	[alert release];
+}
 
 - (void) _showCantSendMessagesWarning {
 	UIAlertView *alert = [[UIAlertView alloc] init];
