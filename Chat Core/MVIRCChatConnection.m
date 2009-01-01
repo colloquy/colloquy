@@ -225,9 +225,6 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) disconnectWithReason:(MVChatString *) reason {
 	[self performSelectorOnMainThread:@selector( cancelPendingReconnectAttempts ) withObject:nil waitUntilDone:YES];
 
-	if( _sendQueueProcessing && _connectionThread )
-		[self performSelector:@selector( _stopSendQueue ) withObject:nil inThread:_connectionThread];
-
 	if( _status == MVChatConnectionConnectedStatus ) {
 		if( [reason length] ) {
 			NSData *msg = [[self class] _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
