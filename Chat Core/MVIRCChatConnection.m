@@ -1249,9 +1249,9 @@ end:
 
 		if( ![argumentsScanner isAtEnd] ) {
 #if USE(ATTRIBUTED_CHAT_STRING)
-			msg = [arguments attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], [arguments length] - [scanner scanLocation] )];
+			msg = [arguments attributedSubstringFromRange:NSMakeRange( [argumentsScanner scanLocation], [arguments length] - [argumentsScanner scanLocation] )];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
-			msg = [arguments substringFromIndex:[scanner scanLocation]];
+			msg = [arguments substringFromIndex:[argumentsScanner scanLocation]];
 #endif
 		}
 
