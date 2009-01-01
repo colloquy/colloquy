@@ -386,13 +386,4 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 	[[CQChatController defaultController] showChatController:chatViewController animated:YES];
 }
-
-- (NSArray *) sectionIndexTitlesForTableView:(UITableView *) tableView {
-	NSLog(@"sectionIndexTitlesForTableView");
-	return [NSArray arrayWithObjects:@"A", @"B", nil];
-}
-
-- (NSInteger) tableView:(UITableView *) tableView sectionForSectionIndexTitle:(NSString *) title atIndex:(NSInteger) index {
-	return 0;
-}
 @end

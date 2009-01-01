@@ -100,7 +100,6 @@
 		1CC64C0E0EE98CC600DE91D0 /* userOperator.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64C070EE98CC600DE91D0 /* userOperator.png */; };
 		1CC64C0F0EE98CC600DE91D0 /* userSuperOperator.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64C080EE98CC600DE91D0 /* userSuperOperator.png */; };
 		1CC64C100EE98CC600DE91D0 /* userVoice.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64C090EE98CC600DE91D0 /* userVoice.png */; };
-		1CC64C3D0EE98DBF00DE91D0 /* CQSearchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC64C3C0EE98DBF00DE91D0 /* CQSearchCell.m */; };
 		1CD949820D8E18DB00756ACD /* directChatIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD949800D8E18DB00756ACD /* directChatIcon.png */; };
 		1CD949830D8E18DB00756ACD /* roomIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD949810D8E18DB00756ACD /* roomIcon.png */; };
 		1CE3FB120D8A3DC100FB035F /* CQConnectionCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */; };
@@ -266,8 +265,6 @@
 		1CC64C070EE98CC600DE91D0 /* userOperator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userOperator.png; sourceTree = "<group>"; };
 		1CC64C080EE98CC600DE91D0 /* userSuperOperator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userSuperOperator.png; sourceTree = "<group>"; };
 		1CC64C090EE98CC600DE91D0 /* userVoice.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userVoice.png; sourceTree = "<group>"; };
-		1CC64C3B0EE98DBF00DE91D0 /* CQSearchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQSearchCell.h; sourceTree = "<group>"; };
-		1CC64C3C0EE98DBF00DE91D0 /* CQSearchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQSearchCell.m; sourceTree = "<group>"; };
 		1CD949800D8E18DB00756ACD /* directChatIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = directChatIcon.png; sourceTree = "<group>"; };
 		1CD949810D8E18DB00756ACD /* roomIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = roomIcon.png; sourceTree = "<group>"; };
 		1CE3FB100D8A3DC100FB035F /* CQConnectionCreationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionCreationViewController.h; sourceTree = "<group>"; };
@@ -490,8 +487,6 @@
 				1C6100D10ED31C8B0016F968 /* CQPreferencesSwitchCell.h */,
 				1C7EBE6C0E01816C0018B0C8 /* CQPreferencesTextCell.m */,
 				1C7EBE6B0E01816C0018B0C8 /* CQPreferencesTextCell.h */,
-				1CC64C3C0EE98DBF00DE91D0 /* CQSearchCell.m */,
-				1CC64C3B0EE98DBF00DE91D0 /* CQSearchCell.h */,
 				1CBCFF2C0F04632900EEBCFB /* CQTextCompletionView.m */,
 				1CBCFF2B0F04632900EEBCFB /* CQTextCompletionView.h */,
 				1CA715190EF47D6F006225CD /* CQUnreadCountView.m */,
@@ -776,7 +771,6 @@
 				1CE69FD90EE317F200389442 /* CQChatInputBar.m in Sources */,
 				1CAE8BC80EE6111900CE1AF8 /* CQChatTranscriptView.m in Sources */,
 				1CC64B2D0EE97F8B00DE91D0 /* CQChatUserListViewController.m in Sources */,
-				1CC64C3D0EE98DBF00DE91D0 /* CQSearchCell.m in Sources */,
 				1CA7151A0EF47D6F006225CD /* CQUnreadCountView.m in Sources */,
 				1C20BE820EFEDF26005AD8A5 /* NSDictionaryAdditions.m in Sources */,
 				1CBCFF2D0F04632900EEBCFB /* CQTextCompletionView.m in Sources */,
