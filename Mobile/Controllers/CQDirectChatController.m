@@ -869,7 +869,10 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
 
-	if (!self.connection.connected) {
+	if (self.connection.status == MVChatConnectionConnectingStatus) {
+		alert.message = NSLocalizedString(@"You are currently connecting,\ntry sending again soon.", @"Can't send message to user because server is connecting alert message");
+		alert.cancelButtonIndex = 0;
+	} else if (!self.connection.connected) {
 		alert.tag = 1;
 		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to user because server is disconnected alert message");
 		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];

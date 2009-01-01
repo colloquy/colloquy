@@ -759,8 +759,12 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
+	alert.cancelButtonIndex = 1;
 
-	if (!self.connection.connected) {
+	if (self.connection.status == MVChatConnectionConnectingStatus) {
+		alert.message = NSLocalizedString(@"You are currently connecting,\nyou should join the room shortly.", @"Can't send message to room because server is connecting alert message");
+		alert.cancelButtonIndex = 0;
+	} else if (!self.connection.connected) {
 		alert.tag = 1;
 		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to room because server is disconnected alert message");
 		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];
@@ -774,8 +778,6 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	}
 
 	[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
-
-	alert.cancelButtonIndex = 1;
 
 	[alert show];
 
