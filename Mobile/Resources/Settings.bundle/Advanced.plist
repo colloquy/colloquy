@@ -60,16 +60,6 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Always Show Notices</string>
-			<key>Key</key>
-			<string>JVChatAlwaysShowNotices</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
 			<string>Show Room Prefixes</string>
 			<key>Key</key>
 			<string>JVShowFullRoomNames</string>
@@ -107,6 +97,42 @@
 			<string>Disable Landscape</string>
 			<key>Key</key>
 			<string>CQDisableLandscape</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Behaviour</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Always Show Notices</string>
+			<key>Key</key>
+			<string>JVChatAlwaysShowNotices</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Auto Join on Kick</string>
+			<key>Key</key>
+			<string>JVAutoRejoinRoomsOnKick</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Auto Join on Invite</string>
+			<key>Key</key>
+			<string>JVAutoJoinChatRoomOnInvite</string>
 			<key>DefaultValue</key>
 			<false/>
 		</dict>

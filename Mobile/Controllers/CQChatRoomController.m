@@ -1,7 +1,11 @@
 #import "CQChatRoomController.h"
 
+#import "CQChatController.h"
 #import "CQChatUserListViewController.h"
+#import "CQConnectionsController.h"
 #import "NSStringAdditions.h"
+
+#import <AudioToolbox/AudioToolbox.h>
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
@@ -106,8 +110,6 @@
 }
 
 - (NSString *) title {
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowFullRoomNames"])
-		return self.room.name;
 	return self.room.displayName;
 }
 
@@ -285,6 +287,27 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
+
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoRejoinRoomsOnKick"]) {
+		[self.room performSelector:@selector(join) withObject:nil afterDelay:5.];
+		return;
+	}
+
+	UIAlertView *alert = [[UIAlertView alloc] init];
+	alert.tag = 2;
+	alert.delegate = self;
+	alert.title = NSLocalizedString(@"Kicked from Room", "Kicked from room alert title");
+	alert.message = [NSString stringWithFormat:NSLocalizedString(@"You were kicked from \"%@\" by \"%@\" on \"%@\".", "Kicked from room alert message"), self.room.displayName, user.displayName, self.connection.displayName];
+	alert.cancelButtonIndex = 1;
+
+	[alert addButtonWithTitle:NSLocalizedString(@"Rejoin", @"Rejoin alert button title")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
+
+	AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+
+	[alert show];
+
+	[alert release];
 }
 
 - (void) _topicChanged:(NSNotification *) notification {

@@ -5,6 +5,8 @@
 #import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
 
+#import <AudioToolbox/AudioToolbox.h>
+
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
@@ -43,6 +45,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRoomMessage:) name:MVChatRoomGotMessageNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotPrivateMessage:) name:MVChatConnectionGotPrivateMessageNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotDirectChatMessage:) name:MVDirectChatConnectionGotMessageNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_invitedToRoom:) name:MVChatRoomInvitedNotification object:nil];
 
 	return self;
 }
@@ -173,6 +176,38 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
 }
 
+- (void) _invitedToRoom:(NSNotification *) notification {
+	NSString *roomName = [[notification userInfo] objectForKey:@"room"];
+	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
+	MVChatConnection *connection = [notification object];
+
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinChatRoomOnInvite"]) {
+		[connection joinChatRoomNamed:roomName];
+		return;
+	}
+
+	MVChatRoom *room = [connection chatRoomWithName:roomName];
+
+	// Context is released in alertView:clickedButtonAtIndex:.
+	NSDictionary *context = [[NSDictionary alloc] initWithObjectsAndKeys:@"invite", @"action", room, @"room", nil];
+
+	UIAlertView *alert = [[UIAlertView alloc] init];
+	alert.tag = (NSInteger)context;
+	alert.delegate = self;
+	alert.title = NSLocalizedString(@"Invited to Room", "Invited to room alert title");
+	alert.message = [NSString stringWithFormat:NSLocalizedString(@"You were invited to \"%@\" by \"%@\" on \"%@\".", "Invited to join room alert message"), room.displayName, user.displayName, connection.displayName];
+	alert.cancelButtonIndex = 1;
+
+	[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join alert button title")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
+
+	AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+
+	[alert show];
+
+	[alert release];
+}
+
 - (void) _showNextChatControllerAnimated:(BOOL) animated {
 	if (self.visibleViewController != _chatListViewController)
 		return;
@@ -186,6 +221,21 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 - (void) _showNextChatController {
 	[self _showNextChatControllerAnimated:YES];
+}
+
+#pragma mark -
+
+- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+	NSDictionary *context = (NSDictionary *)alertView.tag;
+
+	if (buttonIndex != 0 || ![[context objectForKey:@"action"] isEqualToString:@"invite"]) {
+		[context release];
+		return;
+	}
+
+	[[context objectForKey:@"room"] join];
+
+	[context release];
 }
 
 #pragma mark -
@@ -465,5 +515,15 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	if ([controller respondsToSelector:@selector(close)])
 		[controller close];
 	[_chatControllers removeObjectIdenticalTo:controller];
+}
+@end
+
+#pragma mark -
+
+@implementation MVChatRoom (CQChatControllerAdditions)
+- (NSString *) displayName {
+	if (self.connection.type == MVChatConnectionIRCType && ![[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowFullRoomNames"])
+		return [self.name substringFromIndex:1];
+	return self.name;
 }
 @end

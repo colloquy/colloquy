@@ -271,6 +271,7 @@
 }
 
 - (void) _errorOccurred:(NSNotification *) notification {
+	MVChatConnection *connection = notification.object;
 	NSError *error = [[notification userInfo] objectForKey:@"error"];
 
 	NSString *errorTitle = nil;
@@ -283,12 +284,34 @@
 			break;
 	}
 
-	if (!errorTitle) return;
+	NSString *roomName = [[error userInfo] objectForKey:@"room"];
+	MVChatRoom *room = (roomName ? [connection chatRoomWithName:roomName] : nil);
+
+	NSString *errorMessage = nil;
+	switch (error.code) {
+		case MVChatConnectionRoomIsFullError:
+			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The room \"%@\" on \"%@\" is full.", "Room is full alert message"), room.displayName, connection.displayName];
+			break;
+		case MVChatConnectionInviteOnlyRoomError:
+			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The room \"%@\" on \"%@\" is invite-only.", "Room is invite-only alert message"), room.displayName, connection.displayName];
+			break;
+		case MVChatConnectionBannedFromRoomError:
+			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"You are banned from \"%@\" on \"%@\".", "Banned from room alert message"), room.displayName, connection.displayName];
+			break;
+		case MVChatConnectionRoomPasswordIncorrectError:
+			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The room \"%@\" on \"%@\" is password protected, and you didn't supply the correct password.", "Room is full alert message"), room.displayName, connection.displayName];
+			break;
+	}
+
+	if (!errorMessage)
+		errorMessage = error.localizedDescription;
+
+	if (!errorTitle || !errorMessage) return;
 
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.delegate = self;
 	alert.title = errorTitle;
-	alert.message = error.localizedDescription;
+	alert.message = errorMessage;
 	alert.cancelButtonIndex = 0;
 
 	[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
@@ -604,6 +627,8 @@
 + (NSStringEncoding) defaultEncoding {
 	return [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 }
+
+#pragma mark -
 
 - (void) setDisplayName:(NSString *) name {
 	NSParameterAssert(name != nil);

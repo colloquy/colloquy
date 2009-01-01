@@ -1,13 +1,14 @@
+#import <ChatCore/MVChatRoom.h>
+
 @class CQChatRoomController;
 @class CQChatListViewController;
 @class CQDirectChatController;
 @class MVChatConnection;
-@class MVChatRoom;
 @class MVChatUser;
 @class MVDirectChatConnection;
 @protocol CQChatViewController;
 
-@interface CQChatController : UINavigationController <UINavigationControllerDelegate, UIActionSheetDelegate> {
+@interface CQChatController : UINavigationController <UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate> {
 	@private
 	NSMutableArray *_chatControllers;
 	CQChatListViewController *_chatListViewController;
@@ -57,4 +58,8 @@
 @property (nonatomic, readonly) NSDictionary *persistentState;
 @property (nonatomic, readonly) NSUInteger unreadCount;
 @property (nonatomic, readonly) NSUInteger importantUnreadCount;
+@end
+
+@interface MVChatRoom (CQChatControllerAdditions)
+@property (nonatomic, readonly) NSString *displayName;
 @end
