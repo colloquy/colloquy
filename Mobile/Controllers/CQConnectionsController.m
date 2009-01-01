@@ -282,6 +282,9 @@
 		case MVChatConnectionRoomPasswordIncorrectError:
 			errorTitle = NSLocalizedString(@"Can't Join Room", @"Can't join room alert title");
 			break;
+		case MVChatConnectionCantSendToRoomError:
+			errorTitle = NSLocalizedString(@"Can't Send Message", @"Can't send message title");
+			break;
 	}
 
 	NSString *roomName = [[error userInfo] objectForKey:@"room"];
@@ -300,6 +303,9 @@
 			break;
 		case MVChatConnectionRoomPasswordIncorrectError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The room \"%@\" on \"%@\" is password protected, and you didn't supply the correct password.", "Room is full alert message"), room.displayName, connection.displayName];
+			break;
+		case MVChatConnectionCantSendToRoomError:
+			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't send messages to \"%@\" due to some room restriction.", "Cant send message alert"), room.displayName];
 			break;
 	}
 
