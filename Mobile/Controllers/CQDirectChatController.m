@@ -422,7 +422,7 @@
 
 	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&urlString];
 
-	if (!preferBrowser && !urlString)
+	if (!preferBrowser && !urlString.length)
 		return NO;
 
 	NSURL *url = (urlString ? [NSURL URLWithString:urlString] : nil);
