@@ -36,8 +36,8 @@
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"])
-		return (interfaceOrientation == UIDeviceOrientationPortrait);
-	return (interfaceOrientation == UIDeviceOrientationPortrait || interfaceOrientation == UIDeviceOrientationLandscapeRight || interfaceOrientation == UIDeviceOrientationLandscapeLeft);
+		return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 - (void) loadURL:(NSURL *) url {
@@ -136,8 +136,6 @@
 	[[[notification userInfo] objectForKey:UIKeyboardCenterEndUserInfoKey] getValue:&endCenterPoint];
 	[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
 
-	endCenterPoint = [self.view.window convertPoint:endCenterPoint toView:self.view];
-
 	[UIView beginAnimations:nil context:NULL];
 	[UIView setAnimationDuration:0.25];
 
@@ -147,11 +145,14 @@
 	[UIView setAnimationDelay:0.15];
 #endif
 
+	BOOL landscape = UIInterfaceOrientationIsLandscape(self.interfaceOrientation);
+	CGFloat windowOffset = (landscape ? [UIApplication sharedApplication].statusBarFrame.size.width : [UIApplication sharedApplication].statusBarFrame.size.height);
+
 	CGRect bounds = webView.bounds;
 	CGPoint center = webView.center;
 	CGFloat keyboardTop = MAX(0., endCenterPoint.y - (keyboardBounds.size.height / 2.));
 
-	bounds.size.height = keyboardTop - navigationBar.bounds.size.height;
+	bounds.size.height = keyboardTop - navigationBar.bounds.size.height - windowOffset;
 	webView.bounds = bounds;
 
 	center.y = navigationBar.bounds.size.height + (bounds.size.height / 2.);

@@ -506,7 +506,7 @@
 	[[[notification userInfo] objectForKey:UIKeyboardCenterEndUserInfoKey] getValue:&endCenterPoint];
 	[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
 
-	endCenterPoint = [self.view.window convertPoint:endCenterPoint toView:self.view];
+	endCenterPoint = [self.parentViewController.view convertPoint:endCenterPoint toView:self.view];
 
 	BOOL previouslyShowingKeyboard = (chatInputBar.center.y != (self.view.bounds.size.height - (chatInputBar.bounds.size.height / 2.)));
 	if (!previouslyShowingKeyboard) {
@@ -520,14 +520,17 @@
 #endif
 	}
 
+	BOOL landscape = UIInterfaceOrientationIsLandscape(self.interfaceOrientation);
+	CGFloat windowOffset = (landscape ? [UIApplication sharedApplication].statusBarFrame.size.width : [UIApplication sharedApplication].statusBarFrame.size.height);
+
 	CGRect bounds = chatInputBar.bounds;
 	CGPoint center = chatInputBar.center;
 	CGFloat keyboardTop = MAX(chatInputBar.bounds.size.height, endCenterPoint.y - (keyboardBounds.size.height / 2.));
-	center.y = keyboardTop - (bounds.size.height / 2.);
+	center.y = keyboardTop - (bounds.size.height / 2.) - windowOffset;
 	chatInputBar.center = center;
 
 	bounds = transcriptView.bounds;
-	bounds.size.height = keyboardTop - chatInputBar.bounds.size.height;
+	bounds.size.height = keyboardTop - chatInputBar.bounds.size.height - windowOffset;
 	transcriptView.bounds = bounds;
 
 	center = transcriptView.center;
@@ -536,6 +539,8 @@
 
 	if (!previouslyShowingKeyboard)
 		[UIView commitAnimations];
+
+	[transcriptView scrollToBottomAnimated:YES];
 }
 
 - (void) keyboardWillHide:(NSNotification *) notification {
