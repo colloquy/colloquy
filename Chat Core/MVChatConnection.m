@@ -498,8 +498,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	if( ! [connection isWaitingToReconnect] || [connection status] != MVChatConnectionServerDisconnectedStatus )
 		return;
 
-	NSLog(@"connect %@", [connection server]);
-	[connection connect];
+	[connection performSelector:@selector(connect) withObject:nil afterDelay:3.];
 }
 
 - (void) setServer:(NSString *) server {
