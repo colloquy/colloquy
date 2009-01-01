@@ -35,6 +35,10 @@
 
 	[mainWindow addSubview:tabBarController.view];
 	[mainWindow makeKeyAndVisible];
+
+	NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+	NSString *version = [NSString stringWithFormat:@"%@ (%@)", [info objectForKey:@"CFBundleShortVersionString"], [info objectForKey:@"CFBundleVersion"]];
+	[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQCurrentVersion"];
 }
 
 - (BOOL) application:(UIApplication *) application handleOpenURL:(NSURL *) url {

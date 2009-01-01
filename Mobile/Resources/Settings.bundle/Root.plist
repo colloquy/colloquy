@@ -122,6 +122,18 @@
 			<key>File</key>
 			<string>Advanced</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+			<key>Title</key>
+			<string>About</string>
+			<key>File</key>
+			<string>About</string>
+		</dict>
 	</array>
 </dict>
 </plist>

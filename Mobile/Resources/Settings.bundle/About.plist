@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Title</key>
+	<string>About</string>
+	<key>StringsTable</key>
+	<string>About</string>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Version</string>
+			<key>Key</key>
+			<string>CQCurrentVersion</string>
+			<key>DefaultValue</key>
+			<string>1.0</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Website</string>
+			<key>Key</key>
+			<string>CQWebsite</string>
+			<key>DefaultValue</key>
+			<string>http://colloquy.info</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Support</string>
+			<key>Key</key>
+			<string>CQSupportEmail</string>
+			<key>DefaultValue</key>
+			<string>support@colloquy.info</string>
+		</dict>
+	</array>
+</dict>
+</plist>
