@@ -1508,6 +1508,9 @@ static NSMenu *favoritesMenu = nil;
 	NSString *errorTitle = nil;
 	
 	switch ( [[[notification userInfo] objectForKey:@"error"] code] ) {
+		case MVChatConnectionCantSendToRoomError:
+			errorTitle = NSLocalizedString( @"Can't Send to Room", "cannot send to room error title" );
+			break;
 		case MVChatConnectionRoomIsFullError:
 			errorTitle = NSLocalizedString( @"Room is Full", "room is full error title" );
 			break;
