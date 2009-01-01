@@ -2,6 +2,7 @@ body {
 	margin: 0;
 	font-size: 14px;
 	font-family: Helvetica, sans-serif;
+	-webkit-text-size-adjust: none;
 }
 
 .message-wrapper {
