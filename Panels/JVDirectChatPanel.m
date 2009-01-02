@@ -1273,7 +1273,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[possibleCompletion addObject:[[self connection] nickname]];
 
 	static NSArray *commands;
-	if (!commands) commands = [[NSArray alloc] initWithObjects:@"me", @"msg", @"nick", @"away", @"say", @"raw", @"quote", @"join", @"quit", @"disconnect", @"query", @"umode", @"google", @"part", nil];
+	if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me ", @"/msg ", @"/nick ", @"/away ", @"/say ", @"/raw ", @"/quote ", @"/join ", @"/quit ", @"/disconnect ", @"/query ", @"/umode ", @"/google ", @"/part ", nil];
 	enumerator = [commands objectEnumerator];
 	
 	while( ( name = [enumerator nextObject] ) )

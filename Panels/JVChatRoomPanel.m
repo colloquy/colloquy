@@ -690,7 +690,7 @@
 				[possibleCompletion addObject:name];
 
 	static NSArray *commands;
-	if (!commands) commands = [[NSArray alloc] initWithObjects:@"topic", @"kick", @"ban", @"kickban", @"op", @"voice", @"halfop", @"quiet", @"deop", @"devoice", @"dehalfop", @"dequiet", @"unban", @"bankick", @"cycle", @"hop", @"me", @"msg", @"nick", @"away", @"say", @"raw", @"quote", @"join", @"quit", @"disconnect", @"query", @"umode", @"globops", @"google", @"part", nil];
+	if (!commands) commands = [[NSArray alloc] initWithObjects:@"/topic ", @"/kick ", @"/ban ", @"/kickban ", @"/op ", @"/voice ", @"/halfop ", @"/quiet ", @"/deop ", @"/devoice ", @"/dehalfop ", @"/dequiet ", @"/unban ", @"/bankick ", @"/cycle ", @"/hop ", @"/me ", @"/msg ", @"/nick ", @"/away ", @"/say ", @"/raw ", @"/quote ", @"/join ", @"/quit ", @"/disconnect ", @"/query ", @"/umode ", @"/globops ", @"/google ", @"/part ", nil];
 	enumerator = [commands objectEnumerator];
 
 	while( ( name = [enumerator nextObject] ) )
