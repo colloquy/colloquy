@@ -5,9 +5,9 @@
 	<key>JVChatEncoding</key>
 	<integer>5</integer>
 	<key>CQDirectChatEncoding</key>
-	<integer>0</integer>
+	<integer>4</integer>
 	<key>CQChatRoomEncoding</key>
-	<integer>0</integer>
+	<integer>4</integer>
 	<key>CQChatTranscriptStyle</key>
 	<string>standard</string>
 	<key>JVSortRoomMembersByStatus</key>
