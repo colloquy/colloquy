@@ -308,18 +308,18 @@
 
 - (NSArray *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
 	NSMutableArray *completions = [[NSMutableArray alloc] init];
-
+	
 	NSString *nickname = (range.location ? self.user.nickname : [self.user.nickname stringByAppendingString:@":"]);
 	if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
 		[completions addObject:nickname];
 
 	nickname = (range.location ? self.connection.nickname : [self.connection.nickname stringByAppendingString:@":"]);
 	if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
-		[completions addObject:nickname];
+		[completions addObject:nickname];	
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/umode", @"/globops", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/umode", @"/globops", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/part", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -328,7 +328,15 @@
 				break;
 		}
 	}
-
+	
+	static NSArray *services;
+	if (!services) services = [[NSArray alloc] initWithObjects:@"NickServ", @"ChanServ", @"MemoServ", nil];
+	
+	for (NSString *service in services) {
+		if ([service hasCaseInsensitivePrefix:word] && ![service isCaseInsensitiveEqualToString:word])
+			[completions addObject:service];
+	}
+	
 	if (completions.count < 10 && ([word containsTypicalEmoticonCharacters] || [word hasCaseInsensitivePrefix:@"x"] || [word hasCaseInsensitivePrefix:@"o"])) {
 		for (NSString *emoticon in [NSString knownEmoticons]) {
 			if ([emoticon hasCaseInsensitivePrefix:word] && ![emoticon isCaseInsensitiveEqualToString:word])
