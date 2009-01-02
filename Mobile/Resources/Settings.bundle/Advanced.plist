@@ -372,7 +372,7 @@
 				<string>Arabic (Windows)</string>
 			</array>
 			<key>DefaultValue</key>
-			<integer>0</integer>
+			<integer>4</integer>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -484,7 +484,7 @@
 				<string>Arabic (Windows)</string>
 			</array>
 			<key>DefaultValue</key>
-			<integer>0</integer>
+			<integer>4</integer>
 		</dict>
 	</array>
 </dict>
