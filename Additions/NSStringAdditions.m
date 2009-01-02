@@ -799,7 +799,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 						if( boldStack == 1 && ! off )
 							[ret appendString:@"<b>"];
 						else if( ! boldStack )
-							[ret appendString:@"</b>"];								
+							[ret appendString:@"</b>"];
 						break;
 					case 'I': // italic
 						if( [scanner scanString:@"-" intoString:NULL] ) {
@@ -813,7 +813,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 						if( italicStack == 1 && ! off )
 							[ret appendString:@"<i>"];
 						else if( ! italicStack )
-							[ret appendString:@"</i>"];								
+							[ret appendString:@"</i>"];
 						break;
 					case 'U': // underline
 						if( [scanner scanString:@"-" intoString:NULL] ) {
@@ -827,7 +827,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 						if( underlineStack == 1 && ! off )
 							[ret appendString:@"<u>"];
 						else if( ! underlineStack )
-							[ret appendString:@"</u>"];								
+							[ret appendString:@"</u>"];
 						break;
 					case 'S': // strikethrough
 						if( [scanner scanString:@"-" intoString:NULL] ) {
@@ -841,7 +841,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 						if( strikeStack == 1 && ! off )
 							[ret appendString:@"<strike>"];
 						else if( ! strikeStack )
-							[ret appendString:@"</strike>"];								
+							[ret appendString:@"</strike>"];
 						break;
 					case 'C': // color
 						if( [message characterAtIndex:[scanner scanLocation]] == '\006' ) { // reset colors
