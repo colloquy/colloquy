@@ -165,6 +165,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 #pragma mark -
 
 - (void) join {
+	if( [self isJoined] ) return;
+
 	NSString *passphrase = nil;
 	if( [self supportedModes] & MVChatRoomPassphraseToJoinMode )
 		passphrase = [self attributeForMode:MVChatRoomPassphraseToJoinMode];

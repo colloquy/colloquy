@@ -393,7 +393,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 		room = [self properNameForChatRoomNamed:room];
 
-		if (![room length])
+		if (![room length] || [self joinedChatRoomWithUniqueIdentifier:room])
 			continue;
 
 		if( [room rangeOfString:@" "].location == NSNotFound ) { // join non-password rooms in bulk
@@ -423,6 +423,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase {
 	NSParameterAssert( room != nil );
 	NSParameterAssert( [room length] > 0 );
+	if( [self joinedChatRoomWithName:room] ) return;
 	if( [passphrase length] ) [self sendRawMessageWithFormat:@"JOIN %@ %@", [self properNameForChatRoomNamed:room], passphrase];
 	else [self sendRawMessageWithFormat:@"JOIN %@", [self properNameForChatRoomNamed:room]];
 }
