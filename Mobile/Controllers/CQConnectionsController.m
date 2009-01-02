@@ -406,9 +406,6 @@
 }
 
 - (void) saveConnections {
-	if (!_connections.count)
-		return; // we have nothing to save
-
 	NSMutableArray *saveList = [[NSMutableArray alloc] initWithCapacity:_connections.count];
 
 	for (MVChatConnection *connection in _connections) {
