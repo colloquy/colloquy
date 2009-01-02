@@ -3290,6 +3290,27 @@ end:
 	}
 }
 
+- (void) _handle438WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NICKTOOFAST_IRCU
+	MVAssertCorrectThreadRequired( _connectionThread );
+	
+	// "<current nickname> <new nickname|channel name> :Cannot change nick"
+	// - Sent to a user who is either (a) changing their nickname to fast or (b) changing their nick in a room where it is prohibited.
+	
+	if( [parameters count] >= 3 ) {
+		NSString *possibleRoom = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+
+		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+		[userInfo setObject:self forKey:@"connection"];
+		if( [self joinedChatRoomWithUniqueIdentifier:possibleRoom] ) {
+			[userInfo setObject:possibleRoom forKey:@"room"];
+			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again.", "cant change nick error" ), possibleRoom, [self server]] forKey:NSLocalizedDescriptionKey];
+		} else [userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"You changed your nickname too fast on \"%@\", please wait and try again.", "cant change nick error" ), [self server]] forKey:NSLocalizedDescriptionKey];
+
+		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeNickError userInfo:userInfo]];
+		
+	}
+}
+
 - (void) _handle471WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_CHANNELISFULL
 	MVAssertCorrectThreadRequired( _connectionThread );
 	

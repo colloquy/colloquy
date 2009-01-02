@@ -44,18 +44,19 @@ typedef enum {
 	MVChatConnectionNoSuchRoomError = -2,
 	MVChatConnectionNoSuchServerError = -3,
 	MVChatConnectionCantSendToRoomError = -4,
-	MVChatConnectionNotInRoomError = -5,
-	MVChatConnectionUserNotInRoomError = -6,
-	MVChatConnectionRoomIsFullError = -7,
-	MVChatConnectionInviteOnlyRoomError = -8,
-	MVChatConnectionRoomPasswordIncorrectError = -9,
-	MVChatConnectionBannedFromRoomError = -10,
-	MVChatConnectionUnknownCommandError = -11,
-	MVChatConnectionErroneusNicknameError = -12,
-	MVChatConnectionBannedFromServerError = -13,
-	MVChatConnectionServerPasswordIncorrectError = -14,
-	MVChatConnectionProtocolError = -15,
-	MVChatConnectionOutOfBricksError = -16
+	MVChatConnectionCantChangeNickError = -5,
+	MVChatConnectionNotInRoomError = -6,
+	MVChatConnectionUserNotInRoomError = -7,
+	MVChatConnectionRoomIsFullError = -8,
+	MVChatConnectionInviteOnlyRoomError = -9,
+	MVChatConnectionRoomPasswordIncorrectError = -10,
+	MVChatConnectionBannedFromRoomError = -11,
+	MVChatConnectionUnknownCommandError = -12,
+	MVChatConnectionErroneusNicknameError = -13,
+	MVChatConnectionBannedFromServerError = -14,
+	MVChatConnectionServerPasswordIncorrectError = -15,
+	MVChatConnectionProtocolError = -16,
+	MVChatConnectionOutOfBricksError = -17
 } MVChatConnectionError;
 
 @class MVChatRoom;
