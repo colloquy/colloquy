@@ -3420,7 +3420,7 @@ end:
 	// - Unreal3.2.7: "<channel> :You need a registered nick to join that channel."
 	// - bahamut-1.8(04)/DALnet: <channel> :You need to identify to a registered nick to join that channel. For help with registering your nickname, type "/msg NickServ@services.dal.net help register" or see http://docs.dal.net/docs/nsemail.html
 
-	if( [parameters count] >= 3 ) {
+	if( [parameters count] >= 3 && ![[self server] hasCaseInsensitiveSubstring:@"freenode"] ) { // ignore on freenode until they stop randomly sending 477s when joining a room
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 		NSString *errorLiteralReason = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 
@@ -3432,7 +3432,7 @@ end:
 			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" does not support modes.", "room does not support modes error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionRoomDoesNotSupportModesError userInfo:userInfo]];
 		} else { // (could be either)
-			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"\"%@\" on \"%@\": %@", "unknown error" ), room, [self server], [self _stringFromPossibleData:[parameters objectAtIndex:2]]] forKey:NSLocalizedDescriptionKey];
+			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" caused an unknown error, please see the server details below.", "room caused unknown error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionUnknownError userInfo:userInfo]];
 		}
 	}
