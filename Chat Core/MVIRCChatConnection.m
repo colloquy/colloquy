@@ -3432,7 +3432,7 @@ end:
 			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" does not support modes.", "room does not support modes error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionRoomDoesNotSupportModesError userInfo:userInfo]];
 		} else { // (could be either)
-			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" caused an unknown error, please see the server details below.", "room caused unknown error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
+			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" encountered an unknown error, see server details for more information.", "room encountered unknown error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionUnknownError userInfo:userInfo]];
 		}
 	}
