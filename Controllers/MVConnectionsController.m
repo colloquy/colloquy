@@ -1529,6 +1529,9 @@ static NSMenu *favoritesMenu = nil;
 		case MVChatConnectionRoomPasswordIncorrectError:
 			errorTitle = NSLocalizedString( @"Room Password Incorrect", "room password incorrect error title" );
 			break;
+		case MVChatConnectionIdentifyToJoinRoomError:
+			errorTitle = NSLocalizedString( @"Identify to Join Room", "identify to join room error title" );
+			break;
 		default:
 			errorTitle = NSLocalizedString( @"An Error Occured", "unknown error title" );
 			break;
@@ -1538,10 +1541,14 @@ static NSMenu *favoritesMenu = nil;
 	[context setObject:errorTitle forKey:@"title"];
 	[context setObject:[[[notification userInfo] objectForKey:@"error"] localizedDescription] forKey:@"description"];
 	[[JVNotificationController defaultController] performNotification:@"JVChatError" withContextInfo:context];
-	
+		
 	NSAlert *chatErrorAlert = [[[NSAlert alloc] init] autorelease];
 	[chatErrorAlert setMessageText:errorTitle];
-	[chatErrorAlert setInformativeText:[[[notification userInfo] objectForKey:@"error"] localizedDescription]];
+	if( [[[[notification userInfo] objectForKey:@"error"] userInfo] objectForKey:@"errorLiteralReason"] ) {
+		[chatErrorAlert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"%@\n\nServer Details:\n%@", "error alert informative text with literal reason"), [[[notification userInfo] objectForKey:@"error"] localizedDescription], [[[[notification userInfo] objectForKey:@"error"] userInfo] objectForKey:@"errorLiteralReason"]]];
+	} else {
+		[chatErrorAlert setInformativeText:[[[notification userInfo] objectForKey:@"error"] localizedDescription]];
+	}
 	[chatErrorAlert setAlertStyle:NSInformationalAlertStyle];
 	// in case of incorrect password we can simplytry again with the correct one. leopard only for now, because NSAlert's setAccessoryView is 10.5+ only, 10.4 would need a new NIB for this feature:
 	if ( [[[notification userInfo] objectForKey:@"error"] code] == MVChatConnectionRoomPasswordIncorrectError && floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4) {

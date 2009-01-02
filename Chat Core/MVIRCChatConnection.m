@@ -3271,6 +3271,12 @@ end:
 	}
 }
 
+/*       _handle403    ERR_NOSUCHCHANNEL
+ "<channel name> :No such channel"
+ 
+ - Used to indicate the given channel name is invalid.
+*/ 
+
 - (void) _handle404WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_CANNOTSENDTOCHAN
 	MVAssertCorrectThreadRequired( _connectionThread );
 	
@@ -3290,6 +3296,13 @@ end:
 	}
 }
 
+/*       _handle405    ERR_TOOMANYCHANNELS
+ "<channel name> :You have joined too many channels"
+ 
+ - Sent to a user when they have joined the maximum
+ number of allowed channels and they try to join
+ another channel.*/
+
 - (void) _handle421WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_UNKNOWNCOMMAND
 	MVAssertCorrectThreadRequired( _connectionThread );
 
@@ -3303,6 +3316,19 @@ end:
 		}
 	}
 }
+
+/*       _handle431    ERR_NONICKNAMEGIVEN
+ ":No nickname given"
+ 
+ - Returned when a nickname parameter expected for a
+ command and isn't found.*/
+
+/*       _handle432    ERR_ERRONEUSNICKNAME
+ "<nick> :Erroneous nickname"
+ 
+ - Returned after receiving a NICK message which contains
+ characters which do not fall in the defined set.  See
+ section 2.3.1 for details on valid nicknames.*/
 
 - (void) _handle438WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NICKTOOFAST_IRCU
 	MVAssertCorrectThreadRequired( _connectionThread );
@@ -3339,6 +3365,7 @@ end:
 		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionRoomIsFullError userInfo:userInfo]];
 	}
 }
+
 - (void) _handle473WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_INVITEONLYCHAN
 	MVAssertCorrectThreadRequired( _connectionThread );
 	
@@ -3371,18 +3398,61 @@ end:
 
 - (void) _handle475WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BADCHANNELKEY
 	MVAssertCorrectThreadRequired( _connectionThread );
-
+	
 	if( [parameters count] >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
-
+		
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 		[userInfo setObject:self forKey:@"connection"];
 		[userInfo setObject:room forKey:@"room"];
 		[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" is password protected.", "room password protected error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
-
+		
 		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionRoomPasswordIncorrectError userInfo:userInfo]];
 	}
 }
+
+- (void) _handle477WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOCHANMODES_RFC2812 or ERR_NEEDREGGEDNICK_BAHAMUT_IRCU_UNREAL
+	MVAssertCorrectThreadRequired( _connectionThread );
+	
+	// I:	rfc 2812: "<channel> :Channel doesn't support modes"
+	// II:	more common non standard room mode +R:
+	// - Unreal3.2.7: "<channel> :You need a registered nick to join that channel."
+	// - bahamut-1.8(04)/DALnet: <channel> :You need to identify to a registered nick to join that channel. For help with registering your nickname, type "/msg NickServ@services.dal.net help register" or see http://docs.dal.net/docs/nsemail.html
+	
+	if( [parameters count] >= 3 ) {
+		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+		NSString *errorLiteralReason = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
+		
+		NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+										 self,					@"connection",
+										 room,					@"room",
+										 @"477",				@"errorCode",
+										 errorLiteralReason,	@"errorLiteralReason", nil];
+		if( [[NSPredicate predicateWithFormat:@"SELF CONTAINS[cd] \"register\""] evaluateWithObject:errorLiteralReason] ) { // (probably II)
+			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"You need to identify with network services to join the room \"%@\" on \"%@\".", "identify to join room error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
+			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionIdentifyToJoinRoomError userInfo:userInfo]];
+		} else if( [[NSPredicate predicateWithFormat:@"SELF CONTAINS[cd] \"modes\""] evaluateWithObject:errorLiteralReason] ) { // (probably I)
+			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" does not support modes.", "room does not support modes error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
+			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionRoomDoesNotSupportModesError userInfo:userInfo]];
+		} else { // (could be either)
+			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"\"%@\" on \"%@\": %@", "unknown error" ), room, [self server], [self _stringFromPossibleData:[parameters objectAtIndex:2]]] forKey:NSLocalizedDescriptionKey];
+			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionUnknownError userInfo:userInfo]];
+		}
+	}
+}
+
+/* for ticket #1303
+- (void) _handleErrorWithParameters:(NSArray *) parameters fromSender:(id) sender { // ERROR message: http://tools.ietf.org/html/rfc2812#section-3.7.4
+	MVAssertCorrectThreadRequired( _connectionThread );
+	
+	NSLog(@"ERROR parameter count: %d.", [parameters count]);
+	
+	if( [parameters count] == 1 ) {
+		NSLog(@"0: %@", [self _stringFromPossibleData:[parameters objectAtIndex:0]]);
+	}
+	
+}
+*/
 
 #pragma mark -
 #pragma mark Watch Replies

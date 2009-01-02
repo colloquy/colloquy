@@ -40,24 +40,27 @@ typedef enum {
 } MVChatMessageFormat;
 
 typedef enum {
-	MVChatConnectionNoSuchUserError = -1,
-	MVChatConnectionNoSuchRoomError = -2,
-	MVChatConnectionNoSuchServerError = -3,
-	MVChatConnectionCantSendToRoomError = -4,
-	MVChatConnectionCantChangeNickError = -5,
-	MVChatConnectionNotInRoomError = -6,
-	MVChatConnectionUserNotInRoomError = -7,
-	MVChatConnectionRoomIsFullError = -8,
-	MVChatConnectionInviteOnlyRoomError = -9,
-	MVChatConnectionRoomPasswordIncorrectError = -10,
-	MVChatConnectionBannedFromRoomError = -11,
-	MVChatConnectionUnknownCommandError = -12,
-	MVChatConnectionErroneusNicknameError = -13,
-	MVChatConnectionBannedFromServerError = -14,
-	MVChatConnectionServerPasswordIncorrectError = -15,
-	MVChatConnectionProtocolError = -16,
-	MVChatConnectionOutOfBricksError = -17,
-	MVChatConnectionCantChangeUsedNickError = -18
+	MVChatConnectionUnknownError = -1,
+	MVChatConnectionNoSuchUserError = -2,
+	MVChatConnectionNoSuchRoomError = -3,
+	MVChatConnectionNoSuchServerError = -4,
+	MVChatConnectionCantSendToRoomError = -5,
+	MVChatConnectionCantChangeNickError = -6,
+	MVChatConnectionNotInRoomError = -7,
+	MVChatConnectionUserNotInRoomError = -8,
+	MVChatConnectionRoomIsFullError = -9,
+	MVChatConnectionInviteOnlyRoomError = -10,
+	MVChatConnectionRoomPasswordIncorrectError = -11,
+	MVChatConnectionBannedFromRoomError = -12,
+	MVChatConnectionUnknownCommandError = -13,
+	MVChatConnectionErroneusNicknameError = -14,
+	MVChatConnectionBannedFromServerError = -15,
+	MVChatConnectionServerPasswordIncorrectError = -16,
+	MVChatConnectionProtocolError = -17,
+	MVChatConnectionOutOfBricksError = -18,
+	MVChatConnectionCantChangeUsedNickError = -19,
+	MVChatConnectionIdentifyToJoinRoomError = -20,
+	MVChatConnectionRoomDoesNotSupportModesError = -21
 } MVChatConnectionError;
 
 @class MVChatRoom;
