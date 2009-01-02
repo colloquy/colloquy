@@ -18,8 +18,8 @@
 	<false/>
 	<key>JVAutoRejoinRoomsOnKick</key>
 	<false/>
-	<key>JVAutoJoinChatRoomOnInvite</key>
-	<false/>
+	<key>CQAutoJoinChatRoomOnInvite</key>
+	<string>Ask</string>
 	<key>CQDisableLandscape</key>
 	<false/>
 	<key>CQDisableBuiltInBrowser</key>
