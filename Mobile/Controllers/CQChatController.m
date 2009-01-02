@@ -181,11 +181,13 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 	MVChatConnection *connection = [notification object];
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinChatRoomOnInvite"]) {
+	if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"CQAutoJoinChatRoomOnInvite"] isEqualToString:@"Auto-Join"]) {
 		[connection joinChatRoomNamed:roomName];
 		return;
-	}
-
+	} else if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"CQAutoJoinChatRoomOnInvite"] isEqualToString:@"Auto-Deny"]) {
+		return;
+	} else {
+	
 	MVChatRoom *room = [connection chatRoomWithName:roomName];
 
 	// Context is released in alertView:clickedButtonAtIndex:.
@@ -206,6 +208,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	[alert show];
 
 	[alert release];
+	}
 }
 
 - (void) _showNextChatControllerAnimated:(BOOL) animated {
