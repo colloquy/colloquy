@@ -3428,10 +3428,10 @@ end:
 										 room,					@"room",
 										 @"477",				@"errorCode",
 										 errorLiteralReason,	@"errorLiteralReason", nil];
-		if( [[NSPredicate predicateWithFormat:@"SELF CONTAINS[cd] \"register\""] evaluateWithObject:errorLiteralReason] ) { // (probably II)
+		if( [errorLiteralReason hasCaseInsensitiveSubstring:@"register"] ) { // (probably II)
 			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"You need to identify with network services to join the room \"%@\" on \"%@\".", "identify to join room error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionIdentifyToJoinRoomError userInfo:userInfo]];
-		} else if( [[NSPredicate predicateWithFormat:@"SELF CONTAINS[cd] \"modes\""] evaluateWithObject:errorLiteralReason] ) { // (probably I)
+		} else if( [errorLiteralReason hasCaseInsensitiveSubstring:@"modes"] ) { // (probably I)
 			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" does not support modes.", "room does not support modes error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionRoomDoesNotSupportModesError userInfo:userInfo]];
 		} else { // (could be either)
