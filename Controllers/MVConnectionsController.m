@@ -1504,7 +1504,6 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _errorOccurred:(NSNotification *) notification {
-
 	NSString *errorTitle = nil;
 
 	switch ( [[[notification userInfo] objectForKey:@"error"] code] ) {
@@ -1536,20 +1535,20 @@ static NSMenu *favoritesMenu = nil;
 			errorTitle = NSLocalizedString( @"An Error Occured", "unknown error title" );
 			break;
 	}
-	
+
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:errorTitle forKey:@"title"];
 	[context setObject:[[[notification userInfo] objectForKey:@"error"] localizedDescription] forKey:@"description"];
 	[[JVNotificationController defaultController] performNotification:@"JVChatError" withContextInfo:context];
-		
+
 	NSAlert *chatErrorAlert = [[[NSAlert alloc] init] autorelease];
 	[chatErrorAlert setMessageText:errorTitle];
-	if( [[[[notification userInfo] objectForKey:@"error"] userInfo] objectForKey:@"errorLiteralReason"] ) {
+	if( [[[[notification userInfo] objectForKey:@"error"] userInfo] objectForKey:@"errorLiteralReason"] )
 		[chatErrorAlert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"%@\n\nServer Details:\n%@", "error alert informative text with literal reason"), [[[notification userInfo] objectForKey:@"error"] localizedDescription], [[[[notification userInfo] objectForKey:@"error"] userInfo] objectForKey:@"errorLiteralReason"]]];
-	} else {
-		[chatErrorAlert setInformativeText:[[[notification userInfo] objectForKey:@"error"] localizedDescription]];
-	}
+	else [chatErrorAlert setInformativeText:[[[notification userInfo] objectForKey:@"error"] localizedDescription]];
+
 	[chatErrorAlert setAlertStyle:NSInformationalAlertStyle];
+
 	// in case of incorrect password we can simplytry again with the correct one. leopard only for now, because NSAlert's setAccessoryView is 10.5+ only, 10.4 would need a new NIB for this feature:
 	if ( [[[notification userInfo] objectForKey:@"error"] code] == MVChatConnectionRoomPasswordIncorrectError && floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4) {
 		[chatErrorAlert addButtonWithTitle:NSLocalizedString( @"Join", "join button" )];
@@ -1566,7 +1565,7 @@ static NSMenu *favoritesMenu = nil;
 	} else {
 		[chatErrorAlert runModal];
 	}
-	
+
 /*	MVChatConnection *connection = [notification object];
 	MVChatError error = (MVChatError) [[[notification userInfo] objectForKey:@"error"] intValue];
 	NSLog( @"error: %@ (%d)", [MVChatConnection descriptionForError:error], error );
