@@ -1263,14 +1263,24 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 }
 
 - (NSArray *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix {
-	NSMutableArray *possibleNicks = [NSMutableArray array];
+	NSEnumerator *enumerator = nil;
+	NSString *name = nil;
+	NSMutableArray *possibleCompletion = [NSMutableArray array];
 
 	if( [[self title] rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
-		[possibleNicks addObject:[self title]];
+		[possibleCompletion addObject:[self title]];
 	if( [[[self connection] nickname] rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
-		[possibleNicks addObject:[[self connection] nickname]];
+		[possibleCompletion addObject:[[self connection] nickname]];
 
-	return possibleNicks;
+	static NSArray *commands;
+	if (!commands) commands = [[NSArray alloc] initWithObjects:@"me", @"msg", @"nick", @"away", @"say", @"raw", @"quote", @"join", @"quit", @"disconnect", @"query", @"umode", @"google", @"part", nil];
+	enumerator = [commands objectEnumerator];
+	
+	while( ( name = [enumerator nextObject] ) )
+		if ([name hasCaseInsensitivePrefix:prefix])
+			[possibleCompletion addObject:name];
+	
+	return possibleCompletion;
 }
 
 - (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(int *) index {

@@ -669,27 +669,35 @@
 
 - (NSArray *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix {
 	NSEnumerator *enumerator = nil;
-	NSMutableArray *possibleNicks = [NSMutableArray array];
+	NSMutableArray *possibleCompletion = [NSMutableArray array];
 	NSString *name = nil;
 
 	if( [prefix isEqualToString:@""] ) {
 		if( [_preferredTabCompleteNicknames count] )
-			[possibleNicks addObject:[_preferredTabCompleteNicknames objectAtIndex:0]];
-		return possibleNicks;
+			[possibleCompletion addObject:[_preferredTabCompleteNicknames objectAtIndex:0]];
+		return possibleCompletion;
 	}
 
 	enumerator = [_preferredTabCompleteNicknames objectEnumerator];
 	while( ( name = [enumerator nextObject] ) )
 		if( [name rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == NSOrderedSame )
-			[possibleNicks addObject:name];
+			[possibleCompletion addObject:name];
 
 	enumerator = [_sortedMembers objectEnumerator];
 	while( ( name = [[enumerator nextObject] nickname] ) )
-		if( ! [possibleNicks containsObject:name]
+		if( ! [possibleCompletion containsObject:name]
 			&& [name rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == NSOrderedSame )
-				[possibleNicks addObject:name];
+				[possibleCompletion addObject:name];
 
-	return possibleNicks;
+	static NSArray *commands;
+	if (!commands) commands = [[NSArray alloc] initWithObjects:@"topic", @"kick", @"ban", @"kickban", @"op", @"voice", @"halfop", @"quiet", @"deop", @"devoice", @"dehalfop", @"dequiet", @"unban", @"bankick", @"cycle", @"hop", @"me", @"msg", @"nick", @"away", @"say", @"raw", @"quote", @"join", @"quit", @"disconnect", @"query", @"umode", @"globops", @"google", @"part", nil];
+	enumerator = [commands objectEnumerator];
+
+	while( ( name = [enumerator nextObject] ) )
+		if ([name hasCaseInsensitivePrefix:prefix])
+			[possibleCompletion addObject:name];
+	
+	return possibleCompletion;
 }
 
 - (void) textView:(NSTextView *) textView selectedCompletion:(NSString *) completion fromPrefix:(NSString *) prefix {
