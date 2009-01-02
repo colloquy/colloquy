@@ -1275,11 +1275,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	static NSArray *commands;
 	if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me ", @"/msg ", @"/nick ", @"/away ", @"/say ", @"/raw ", @"/quote ", @"/join ", @"/quit ", @"/disconnect ", @"/query ", @"/umode ", @"/google ", @"/part ", nil];
 	enumerator = [commands objectEnumerator];
-	
+
 	while( ( name = [enumerator nextObject] ) )
 		if ([name hasCaseInsensitivePrefix:prefix])
 			[possibleCompletion addObject:name];
-	
+
 	return possibleCompletion;
 }
 

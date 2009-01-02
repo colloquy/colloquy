@@ -722,7 +722,7 @@
 	// USAGE: /unignore -[m|n] [nickname|/regex/] ["message"|/regex/|word] [#rooms ...]
 	// m is to specify a message
 	// n is to specify a nickname
-	
+
 	// EXAMPLES:
 	// /unignore - will open a GUI window to add and manage ignores
 	// /unignore Loser23094 - unignore Loser23094 in all rooms
@@ -730,7 +730,7 @@
 	// /unignore -m /is listening .*/ - unignore the message expression "is listening *" from everyone
 	// /unignore -mn /eevyl.*/ /is listening .*/ #adium #colloquy #here
 	// /unignore -n /bunny.*/ - unignore users whose nick starts with bunny in all rooms
-	
+
 	NSArray *argsArray = [args componentsSeparatedByString:@" "];
 	NSString *memberString = nil;
 	NSString *messageString = nil;
@@ -738,48 +738,48 @@
 	BOOL member = YES;
 	BOOL message = NO;
 	unsigned offset = 0;
-	
+
 	if( ! [args length] ) {
 		id info = [JVInspectorController inspectorOfObject:[view connection]];
 		[info show:nil];
 		[(id)[info inspector] performSelector:@selector(selectTabWithIdentifier:) withObject:@"Ignores"];
 		return YES;
 	}
-	
+
 	if( [args hasPrefix:@"-"] ) { // parse commands/flags
 		if( [[argsArray objectAtIndex:0] rangeOfString:@"m"].location != NSNotFound ) {
 			member = NO;
 			message = YES;
 		}
-		
+
 		if( [[argsArray objectAtIndex:0] rangeOfString:@"n"].location != NSNotFound ) member = YES;
-		
+
 		offset++; // lookup next arg.
 	}
-	
+
 	// check for wrong number of arguments
 	if( [argsArray count] < ( offset + ( message ? 1 : 0 ) + ( member ? 1 : 0 ) ) ) return NO;
-	
+
 	if( member ) {
 		memberString = [argsArray objectAtIndex:offset];
 		offset++;
 		args = [[argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )] componentsJoinedByString:@" "];
 		// without that, the / test in message could have matched the / from the nick...
 	}
-	
+
 	if( message ) {
 		if( [args rangeOfString:@"\""].location != NSNotFound ) {
 			messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"\""].location + 1, [args rangeOfString:@"\"" options:NSBackwardsSearch].location - ( [args rangeOfString:@"\""].location + 1 ) )];
 		} else if( [args rangeOfString:@"/"].location != NSNotFound) {
 			messageString = [args substringWithRange:NSMakeRange( [args rangeOfString:@"/"].location, [args rangeOfString:@"/" options:NSBackwardsSearch].location - [args rangeOfString:@"/"].location + 1 )];
 		} else messageString = [argsArray objectAtIndex:offset];
-		
+
 		offset += [[messageString componentsSeparatedByString:@" "] count];
 	}
-	
+
 	if( offset < [argsArray count] && [(NSString *)[argsArray objectAtIndex:offset] length] )
 		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
-	
+
 	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:[view connection]];
 	NSEnumerator *enumerator = [rules objectEnumerator];
 	KAIgnoreRule *rule = nil;
