@@ -56,7 +56,8 @@ typedef enum {
 	MVChatConnectionBannedFromServerError = -14,
 	MVChatConnectionServerPasswordIncorrectError = -15,
 	MVChatConnectionProtocolError = -16,
-	MVChatConnectionOutOfBricksError = -17
+	MVChatConnectionOutOfBricksError = -17,
+	MVChatConnectionCantChangeUsedNickError = -18
 } MVChatConnectionError;
 
 @class MVChatRoom;

@@ -1512,7 +1512,10 @@ static NSMenu *favoritesMenu = nil;
 			errorTitle = NSLocalizedString( @"Can't Send to Room", "cannot send to room error title" );
 			break;
 		case MVChatConnectionCantChangeNickError:
-			errorTitle = NSLocalizedString( @"Can't Change Nick", "cannot send to room error title" );
+			errorTitle = NSLocalizedString( @"Can't Change Nick", "cannot change nickname error title" );
+			break;
+		case MVChatConnectionCantChangeUsedNickError:
+			errorTitle = NSLocalizedString( @"Nickname is Already In Use", "cannot change used nickname error title" );
 			break;
 		case MVChatConnectionRoomIsFullError:
 			errorTitle = NSLocalizedString( @"Room is Full", "room is full error title" );
