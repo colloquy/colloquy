@@ -262,6 +262,8 @@ retry:
 }
 
 - (BOOL) textFieldShouldClear:(UITextField *) textField {
+	_disableCompletionUntilNextWord = NO;
+
 	_inputField.autocorrectionType = (_autocorrect ? UITextAutocorrectionTypeDefault : UITextAutocorrectionTypeNo);
 
 	[self _updateTextTraits];
@@ -280,7 +282,7 @@ retry:
 		if (_completionView.closeSelected) {
 			[self hideCompletions];
 			return NO;
-		} else if (text.length > (range.location - 1) && [text characterAtIndex:(range.location - 1)] == ' ' && !_completionView.closeSelected) {
+		} else if (range.location >= 1 && text.length >= range.location && [text characterAtIndex:(range.location - 1)] == ' ' && !_completionView.closeSelected) {
 			if (_completionView.selectedCompletion != NSNotFound)
 				++_completionView.selectedCompletion;
 			else _completionView.selectedCompletion = 0;
@@ -306,7 +308,7 @@ retry:
 	BOOL hasMarkedText = ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]);
 
 	NSArray *completions = nil;
-	if (_autocomplete && word.length && !hasMarkedText && [delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
+	if (_autocomplete && !_disableCompletionUntilNextWord && word.length && !hasMarkedText && [delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
 		completions = [delegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
 		if (completions.count)
 			[self showCompletions:completions forText:text inRange:wordRange];
@@ -323,6 +325,9 @@ retry:
 			break;
 		}
 	}
+
+	if (!wordRange.length)
+		_disableCompletionUntilNextWord = NO;
 
 	word = [text substringWithRange:wordRange];
 
@@ -354,7 +359,7 @@ retry:
 		completion = [completion stringByAppendingString:@" "];
 
 	NSString *text = _inputField.text;
-	if (text.length > (NSMaxRange(_completionRange) + 1) && [text characterAtIndex:NSMaxRange(_completionRange)] == ' ')
+	if (text.length >= (NSMaxRange(_completionRange) + 1) && [text characterAtIndex:NSMaxRange(_completionRange)] == ' ')
 		++_completionRange.length;
 
 	_inputField.text = [text stringByReplacingCharactersInRange:_completionRange withString:completion];
@@ -365,6 +370,10 @@ retry:
 
 - (void) textCompletionViewDidClose:(CQTextCompletionView *) textCompletionView {
 	[self hideCompletions];
+
+	NSString *text = _inputField.text;
+	if (text.length < NSMaxRange(_completionRange) || [text characterAtIndex:(NSMaxRange(_completionRange) - 1)] != ' ')
+		_disableCompletionUntilNextWord = YES;
 }
 
 #pragma mark -
@@ -403,6 +412,8 @@ retry:
 			else _inputField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 		}
 	}
+
+	_disableCompletionUntilNextWord = NO;
 
 	_inputField.text = @"";
 	_inputField.autocorrectionType = (_autocorrect ? UITextAutocorrectionTypeDefault : UITextAutocorrectionTypeNo);
