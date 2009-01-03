@@ -126,6 +126,8 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 		listViewController.target = self;
 		listViewController.action = @selector(automaticJoinRoomsChanged:);
 
+		[self.view endEditing:YES];
+
 		[self.navigationController pushViewController:listViewController animated:YES];
 
 		[listViewController release];
@@ -139,6 +141,8 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 		advancedEditViewController.navigationItem.prompt = self.navigationItem.prompt;
 		advancedEditViewController.newConnection = _newConnection;
 		advancedEditViewController.connection = _connection;
+
+		[self.view endEditing:YES];
 
 		[self.navigationController pushViewController:advancedEditViewController animated:YES];
 

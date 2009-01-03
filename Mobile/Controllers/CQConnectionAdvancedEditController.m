@@ -127,6 +127,8 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 		listViewController.target = self;
 		listViewController.action = @selector(alternateNicknamesChanged:);
 
+		[self.view endEditing:YES];
+
 		[self.navigationController pushViewController:listViewController animated:YES];
 
 		[listViewController release];
@@ -146,6 +148,8 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 		listViewController.target = self;
 		listViewController.action = @selector(automaticCommandsChanged:);
+
+		[self.view endEditing:YES];
 
 		[self.navigationController pushViewController:listViewController animated:YES];
 

@@ -124,6 +124,8 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 		listViewController.target = self;
 		listViewController.action = @selector(connectionChanged:);
 
+		[self.view endEditing:YES];
+
 		[self.navigationController pushViewController:listViewController animated:YES];
 
 		[listViewController release];
