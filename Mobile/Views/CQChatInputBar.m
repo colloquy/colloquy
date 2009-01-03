@@ -274,33 +274,35 @@ retry:
 	if (![delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:)])
 		return YES;
 
-	if (self.showingCompletions && [string isEqualToString:@" "] && !_completionView.closeSelected) {
-		if (_completionView.selectedCompletion != NSNotFound)
-			++_completionView.selectedCompletion;
-		else _completionView.selectedCompletion = 0;
-		return NO;
-	}
-
 	NSString *text = _inputField.text;
-	BOOL replaceManually = NO;
-	if (self.showingCompletions && _completionView.selectedCompletion != NSNotFound && !range.length && ![string isEqualToString:@" "]) {
-		replaceManually = YES;
-		text = [_inputField.text stringByReplacingCharactersInRange:NSMakeRange(range.location, 0) withString:@" "];
-		++range.location;
+
+	if (self.showingCompletions && [string isEqualToString:@" "]) {
+		if (_completionView.closeSelected) {
+			[self hideCompletions];
+			return NO;
+		} else if (text.length > (range.location - 1) && [text characterAtIndex:(range.location - 1)] == ' ' && !_completionView.closeSelected) {
+			if (_completionView.selectedCompletion != NSNotFound)
+				++_completionView.selectedCompletion;
+			else _completionView.selectedCompletion = 0;
+			return NO;
+		}
 	}
 
 	NSRange wordRange = {0, range.location + string.length};
 	text = [text stringByReplacingCharactersInRange:range withString:string];
 
+	BOOL foundCharacter = NO;
 	for (NSInteger i = (range.location + string.length - 1); i >= 0; --i) {
-		if ([text characterAtIndex:i] == ' ') {
+		if ([text characterAtIndex:i] == ' ' && foundCharacter) {
 			wordRange.location = i + 1;
 			wordRange.length = ((range.location + string.length) - wordRange.location);
 			break;
 		}
+
+		foundCharacter = YES;
 	}
 
-	NSString *word = [text substringWithRange:wordRange];
+	NSString *word = [[text substringWithRange:wordRange] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 	BOOL hasMarkedText = ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]);
 
 	NSArray *completions = nil;
@@ -311,6 +313,19 @@ retry:
 		 else [self hideCompletions];
 	} else [self hideCompletions];
 
+	wordRange.location = 0;
+	wordRange.length = (range.location + string.length);
+
+	for (NSInteger i = (range.location + string.length - 1); i >= 0; --i) {
+		if ([text characterAtIndex:i] == ' ') {
+			wordRange.location = i + 1;
+			wordRange.length = ((range.location + string.length) - wordRange.location);
+			break;
+		}
+	}
+
+	word = [text substringWithRange:wordRange];
+
 	UITextAutocorrectionType newAutocorrectionType = _inputField.autocorrectionType;
 	if (!_autocorrect || completions.count || ([delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![delegate chatInputBar:self shouldAutocorrectWordWithPrefix:word]))
 		newAutocorrectionType = UITextAutocorrectionTypeNo;
@@ -319,13 +334,6 @@ retry:
 	if (newAutocorrectionType != _inputField.autocorrectionType) {
 		_inputField.autocorrectionType = newAutocorrectionType;
 		[self _updateTextTraits];
-	}
-
-	if (replaceManually) {
-		_inputField.text = text;
-		if ([_inputField respondsToSelector:@selector(setSelectionRange:)])
-			_inputField.selectionRange = NSMakeRange((range.location + string.length), 0);
-		return NO;
 	}
 
 	return YES;
