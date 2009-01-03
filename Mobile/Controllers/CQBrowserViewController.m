@@ -89,10 +89,15 @@
 	locationField.text = webView.request.URL.absoluteString;
 }
 
-- (void) updateStopButton {
+- (void) updateLoadingStatus {
 	UIImage *image = nil;
-	if (webView.loading) image = [UIImage imageNamed:@"browserStop.png"];
-	else image = [UIImage imageNamed:@"browserReload.png"];
+	if (webView.loading) {
+		image = [UIImage imageNamed:@"browserStop.png"];
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+	} else {
+		image = [UIImage imageNamed:@"browserReload.png"];
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	}
 
 	[stopReloadButton setImage:image forState:UIControlStateNormal];
 }
@@ -110,23 +115,23 @@
 }
 
 - (void) webViewDidStartLoad:(UIWebView *) sender {
-	[self updateStopButton];
+	[self updateLoadingStatus];
 }
 
 - (void) webViewDidFinishLoad:(UIWebView *) sender {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateLocationField) object:nil];
 	[self performSelector:@selector(updateLocationField) withObject:nil afterDelay:1.];
 
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateStopButton) object:nil];
-	[self performSelector:@selector(updateStopButton) withObject:nil afterDelay:1.];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateLoadingStatus) object:nil];
+	[self performSelector:@selector(updateLoadingStatus) withObject:nil afterDelay:1.];
 }
 
 - (void) webView:(UIWebView *) sender didFailLoadWithError:(NSError *) error {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateLocationField) object:nil];
 	[self performSelector:@selector(updateLocationField) withObject:nil afterDelay:1.];
 
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateStopButton) object:nil];
-	[self performSelector:@selector(updateStopButton) withObject:nil afterDelay:1.];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateLoadingStatus) object:nil];
+	[self performSelector:@selector(updateLoadingStatus) withObject:nil afterDelay:1.];
 }
 
 - (void) keyboardWillShow:(NSNotification *) notification {
