@@ -84,6 +84,8 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 }
 
 - (void) commit:(id) sender {
+	[self.view endEditing:YES];
+
 	MVChatConnection *connection = _editViewController.connection;
 	if (isPlaceholderValue(connection.server)) {
 		[self cancel:sender];

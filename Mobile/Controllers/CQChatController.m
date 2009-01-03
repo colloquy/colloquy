@@ -1,8 +1,9 @@
 #import "CQChatController.h"
 
-#import "CQColloquyApplication.h"
-#import "CQChatRoomController.h"
+#import "CQChatCreationViewController.h"
 #import "CQChatListViewController.h"
+#import "CQChatRoomController.h"
+#import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
 
@@ -212,7 +213,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 }
 
 - (void) _showNextChatControllerAnimated:(BOOL) animated {
-	if (self.visibleViewController != _chatListViewController)
+	if (self.topViewController != _chatListViewController)
 		return;
 
 	[_chatListViewController selectChatViewController:_nextController animatedSelection:NO animatedScroll:animated];
@@ -231,7 +232,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 - (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
 	NSDictionary *context = (NSDictionary *)alertView.tag;
 
-	if (buttonIndex != 0 || ![[context objectForKey:@"action"] isEqualToString:@"invite"]) {
+	if (buttonIndex == alertView.cancelButtonIndex || ![[context objectForKey:@"action"] isEqualToString:@"invite"]) {
 		[context release];
 		return;
 	}
@@ -239,6 +240,19 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	[[context objectForKey:@"room"] join];
 
 	[context release];
+}
+
+- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+	if (actionSheet.tag != 1 || buttonIndex == actionSheet.cancelButtonIndex)
+		return;
+
+	CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
+
+	if (buttonIndex == 0)
+		creationViewController.roomTarget = YES;
+
+	[self presentModalViewController:creationViewController animated:YES];
+	[creationViewController release];
 }
 
 #pragma mark -
@@ -301,7 +315,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 }
 
 - (void) setTotalImportantUnreadCount:(NSInteger) count {
-	if (_active && self.visibleViewController == _chatListViewController)
+	if (_active && self.topViewController == _chatListViewController)
 		return;
 
 	if (count < 0) count = 0;
@@ -322,6 +336,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 - (void) showNewChatActionSheet {
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
+	sheet.tag = 1;
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"Join a Chat Room", @"Join a Chat Room button title")];
 	[sheet addButtonWithTitle:NSLocalizedString(@"Message a User", @"Message a User button title")];
@@ -334,7 +349,6 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 }
 
 - (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) roomName andConnection:(MVChatConnection *) connection {
-	NSParameterAssert(roomName != nil);
 	NSParameterAssert(connection != nil);
 
 	[_nextRoomName release];
@@ -343,7 +357,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	[_nextRoomConnection release];
 	_nextRoomConnection = nil;
 
-	MVChatRoom *room = [connection joinedChatRoomWithName:roomName];
+	MVChatRoom *room = (roomName ? [connection chatRoomWithName:roomName] : nil);
 	if (room) {
 		CQChatRoomController *controller = [self chatViewControllerForRoom:room ifExists:YES];
 		if (controller) {
@@ -363,7 +377,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	[_nextRoomConnection release];
 	_nextRoomConnection = nil;
 
-	BOOL delayed = (animated && self.visibleViewController != _chatListViewController);
+	BOOL delayed = (animated && self.topViewController != _chatListViewController);
 	if (delayed) {
 		id old = _nextController;
 		_nextController = [controller retain];
@@ -448,7 +462,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 			[_chatListViewController addChatViewController:controller];
 
-			if (room.connection == _nextRoomConnection && _nextRoomName && [_nextRoomConnection joinedChatRoomWithName:_nextRoomName] == room)
+			if (room.connection == _nextRoomConnection && (!_nextRoomName || (_nextRoomName && [_nextRoomConnection chatRoomWithName:_nextRoomName] == room)))
 				[self showChatController:controller animated:YES];
 
 			return controller;

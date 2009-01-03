@@ -8,12 +8,14 @@
 		return nil;
 
 	_items = [[NSMutableArray alloc] init];
+	_allowEditing = YES;
+	_selectedItemIndex = NSNotFound;
+
+	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
 	self.addItemLabelText = NSLocalizedString(@"Add item", @"Add item label");
 	self.noItemsLabelText = NSLocalizedString(@"No items", @"No items label");
 	self.editViewTitle = NSLocalizedString(@"Edit", @"Edit view title");
-
-	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
 	return self;
 }
@@ -76,7 +78,7 @@
 
 	[super viewWillAppear:animated];
 
-	if (!_items.count)
+	if (!_items.count && _allowEditing)
 		self.editing = YES;
 }
 
@@ -92,6 +94,26 @@
 }
 
 #pragma mark -
+
+@synthesize allowEditing = _allowEditing;
+
+- (void) setAllowEditing:(BOOL) allowEditing {
+	_allowEditing = allowEditing;
+
+	if (allowEditing) {
+		self.navigationItem.rightBarButtonItem = self.editButtonItem;
+		_selectedItemIndex = NSNotFound;
+	} else {
+		self.navigationItem.rightBarButtonItem = nil;
+		self.editing = NO;
+	}
+}
+
+@synthesize selectedItemIndex = _selectedItemIndex;
+
+- (void) setSelectedItemIndex:(NSUInteger) index {
+	_selectedItemIndex = (_allowEditing ? NSNotFound : index);
+}
 
 @synthesize addItemLabelText = _addItemLabelText;
 
@@ -191,17 +213,36 @@
 		cell.image = nil;
 	}
 
+	if (indexPath.row == _selectedItemIndex)
+		cell.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
+	else cell.textColor = [UIColor blackColor];
+
 	return cell;
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (self.editing)
+	if (self.editing || !_allowEditing)
 		return indexPath;
 	return nil;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	[self editItemAtIndex:indexPath.row];
+	if (_allowEditing) {
+		[self editItemAtIndex:indexPath.row];
+	} else {
+		UITableViewCell *cell = (_selectedItemIndex != NSNotFound ? [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_selectedItemIndex inSection:0]] : nil);
+		cell.accessoryType = UITableViewCellAccessoryNone;
+		cell.textColor = [UIColor blackColor];
+
+		_selectedItemIndex = indexPath.row;
+		_pendingChanges = YES;
+
+		cell = [tableView cellForRowAtIndexPath:indexPath];
+		cell.accessoryType = UITableViewCellAccessoryCheckmark;
+		cell.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
+
+		[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
+	}
 }
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -215,7 +256,7 @@
 }
 
 - (BOOL) tableView:(UITableView *) tableView canEditRowAtIndexPath:(NSIndexPath *) indexPath {
-	return YES;
+	return _allowEditing;
 }
 
 - (void) tableView:(UITableView *) tableView commitEditingStyle:(UITableViewCellEditingStyle) editingStyle forRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -233,7 +274,11 @@
 }
 
 - (UITableViewCellAccessoryType) tableView:(UITableView *) tableView accessoryTypeForRowWithIndexPath:(NSIndexPath *) indexPath {
-	return (self.editing ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone);
+	if (self.editing)
+		return UITableViewCellAccessoryDisclosureIndicator;
+	if (indexPath.row == _selectedItemIndex)
+		return UITableViewCellAccessoryCheckmark;
+	return UITableViewCellAccessoryNone;
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *) sourceIndexPath toProposedIndexPath:(NSIndexPath *) proposedDestinationIndexPath {

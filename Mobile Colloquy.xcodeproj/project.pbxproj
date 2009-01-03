@@ -57,6 +57,8 @@
 		1C124B430F0A0244008F181B /* browserStop.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C124B400F0A0244008F181B /* browserStop.png */; };
 		1C124BE70F0A13ED008F181B /* browserSafari.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C124BE60F0A13ED008F181B /* browserSafari.png */; };
 		1C1253290F0D4FC1008F181B /* standard-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C1253280F0D4FC1008F181B /* standard-dark.css */; };
+		1C1254A40F0D8D7F008F181B /* CQChatCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1254A30F0D8D7F008F181B /* CQChatCreationViewController.m */; };
+		1C1255670F0EAA69008F181B /* CQChatEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1255660F0EAA69008F181B /* CQChatEditViewController.m */; };
 		1C1896110E29CF74003CFED0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */; };
 		1C1896120E29CF75003CFED0 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */; };
 		1C20BE820EFEDF26005AD8A5 /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */; };
@@ -206,6 +208,10 @@
 		1C124B400F0A0244008F181B /* browserStop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserStop.png; sourceTree = "<group>"; };
 		1C124BE60F0A13ED008F181B /* browserSafari.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserSafari.png; sourceTree = "<group>"; };
 		1C1253280F0D4FC1008F181B /* standard-dark.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "standard-dark.css"; sourceTree = "<group>"; };
+		1C1254A20F0D8D7F008F181B /* CQChatCreationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatCreationViewController.h; sourceTree = "<group>"; };
+		1C1254A30F0D8D7F008F181B /* CQChatCreationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatCreationViewController.m; sourceTree = "<group>"; };
+		1C1255650F0EAA69008F181B /* CQChatEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatEditViewController.h; sourceTree = "<group>"; };
+		1C1255660F0EAA69008F181B /* CQChatEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatEditViewController.m; sourceTree = "<group>"; };
 		1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		1C20BE800EFEDF26005AD8A5 /* NSDictionaryAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDictionaryAdditions.h; path = Additions/NSDictionaryAdditions.h; sourceTree = "<group>"; };
 		1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDictionaryAdditions.m; path = Additions/NSDictionaryAdditions.m; sourceTree = "<group>"; };
@@ -394,6 +400,10 @@
 				1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */,
 				1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */,
 				1C2A046D0EDAFC2D004509AE /* CQPreferencesListEditViewController.h */,
+				1C1254A30F0D8D7F008F181B /* CQChatCreationViewController.m */,
+				1C1254A20F0D8D7F008F181B /* CQChatCreationViewController.h */,
+				1C1255660F0EAA69008F181B /* CQChatEditViewController.m */,
+				1C1255650F0EAA69008F181B /* CQChatEditViewController.h */,
 				1C82C27C0D847EA4009ABD9F /* CQChatListViewController.m */,
 				1C82C27B0D847EA4009ABD9F /* CQChatListViewController.h */,
 				1C0937EB0D8126D400A2705D /* CQDirectChatController.m */,
@@ -779,6 +789,8 @@
 				1C20BE820EFEDF26005AD8A5 /* NSDictionaryAdditions.m in Sources */,
 				1CBCFF2D0F04632900EEBCFB /* CQTextCompletionView.m in Sources */,
 				1C124AC20F09F014008F181B /* CQBrowserViewController.m in Sources */,
+				1C1254A40F0D8D7F008F181B /* CQChatCreationViewController.m in Sources */,
+				1C1255670F0EAA69008F181B /* CQChatEditViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

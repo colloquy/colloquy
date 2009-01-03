@@ -12,7 +12,7 @@
 	_textField = [[UITextField alloc] initWithFrame:CGRectZero];
 	_label = [[UILabel alloc] initWithFrame:CGRectZero];
 
-	_label.font = [UIFont boldSystemFontOfSize:18.];
+	_label.font = [UIFont boldSystemFontOfSize:17.];
 	_label.textColor = self.textColor;
 	_label.highlightedTextColor = self.selectedTextColor;
 	_label.backgroundColor = nil;
@@ -159,7 +159,7 @@
 @synthesize textEditAction = _textEditAction;
 
 - (BOOL) textFieldShouldBeginEditing:(UITextField *) textField {
-	return self.accessoryType == UITableViewCellAccessoryNone;
+	return (self.accessoryType == UITableViewCellAccessoryNone || self.accessoryType == UITableViewCellAccessoryDetailDisclosureButton);
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *) textField {
