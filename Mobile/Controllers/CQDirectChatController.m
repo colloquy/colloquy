@@ -202,6 +202,9 @@
 
 	transcriptView.styleIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
 
+	chatInputBar.autocomplete = ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableChatAutocomplete"];
+	chatInputBar.autocorrect = ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableChatAutocorrection"];
+
 	if (_pendingPreviousSessionComponents) {
 		[transcriptView addPreviousSessionComponents:_pendingPreviousSessionComponents];
 

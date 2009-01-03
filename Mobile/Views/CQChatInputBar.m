@@ -43,6 +43,8 @@
 	[self addSubview:_inputField];
 
 	_inferAutocapitalizationType = YES;
+	_autocomplete = YES;
+	_autocorrect = YES;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideCompletions) name:UIDeviceOrientationDidChangeNotification object:nil]; 
 }
@@ -114,6 +116,10 @@
 }
 
 @synthesize inferAutocapitalizationType = _inferAutocapitalizationType;
+
+@synthesize autocomplete = _autocomplete;
+
+@synthesize autocorrect = _autocorrect;
 
 #pragma mark -
 
@@ -256,7 +262,7 @@ retry:
 }
 
 - (BOOL) textFieldShouldClear:(UITextField *) textField {
-	_inputField.autocorrectionType = UITextAutocorrectionTypeDefault;
+	_inputField.autocorrectionType = (_autocorrect ? UITextAutocorrectionTypeDefault : UITextAutocorrectionTypeNo);
 
 	[self _updateTextTraits];
 	[self hideCompletions];
@@ -298,7 +304,7 @@ retry:
 	BOOL hasMarkedText = ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]);
 
 	NSArray *completions = nil;
-	if (word.length && !hasMarkedText && [delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
+	if (_autocomplete && word.length && !hasMarkedText && [delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
 		completions = [delegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
 		if (completions.count)
 			[self showCompletions:completions forText:text inRange:wordRange];
@@ -306,7 +312,7 @@ retry:
 	} else [self hideCompletions];
 
 	UITextAutocorrectionType newAutocorrectionType = _inputField.autocorrectionType;
-	if (completions.count || ([delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![delegate chatInputBar:self shouldAutocorrectWordWithPrefix:word]))
+	if (!_autocorrect || completions.count || ([delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![delegate chatInputBar:self shouldAutocorrectWordWithPrefix:word]))
 		newAutocorrectionType = UITextAutocorrectionTypeNo;
 	else newAutocorrectionType = UITextAutocorrectionTypeDefault;
 
@@ -391,7 +397,7 @@ retry:
 	}
 
 	_inputField.text = @"";
-	_inputField.autocorrectionType = UITextAutocorrectionTypeDefault;
+	_inputField.autocorrectionType = (_autocorrect ? UITextAutocorrectionTypeDefault : UITextAutocorrectionTypeNo);
 
 	[self _updateTextTraits];
 	[self hideCompletions];

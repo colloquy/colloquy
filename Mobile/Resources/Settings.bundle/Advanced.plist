@@ -132,16 +132,6 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Always Show Notices</string>
-			<key>Key</key>
-			<string>JVChatAlwaysShowNotices</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
 			<string>Auto Join on Kick</string>
 			<key>Key</key>
 			<string>JVAutoRejoinRoomsOnKick</string>
@@ -152,9 +142,39 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
+			<string>Always Show Notices</string>
+			<key>Key</key>
+			<string>JVChatAlwaysShowNotices</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
 			<string>Open Links in Safari</string>
 			<key>Key</key>
 			<string>CQDisableBuiltInBrowser</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Disable Completion</string>
+			<key>Key</key>
+			<string>CQDisableChatAutocomplete</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Disable Correction</string>
+			<key>Key</key>
+			<string>CQDisableChatAutocorrection</string>
 			<key>DefaultValue</key>
 			<false/>
 		</dict>

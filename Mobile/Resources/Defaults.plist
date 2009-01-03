@@ -24,6 +24,10 @@
 	<false/>
 	<key>CQDisableBuiltInBrowser</key>
 	<false/>
+	<key>CQDisableChatAutocomplete</key>
+	<false/>
+	<key>CQDisableChatAutocorrection</key>
+	<false/>
 	<key>CQVibrateOnHighlight</key>
 	<true/>
 	<key>CQShowLeaveEvents</key>

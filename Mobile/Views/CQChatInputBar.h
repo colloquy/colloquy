@@ -9,8 +9,13 @@
 	IBOutlet id <CQChatInputBarDelegate> delegate;
 	CQTextCompletionView *_completionView;
 	NSRange _completionRange;
+	BOOL _autocomplete;
+	BOOL _autocorrect;
 }
 @property (nonatomic, assign) id <CQChatInputBarDelegate> delegate;
+
+@property (nonatomic) BOOL autocomplete;
+@property (nonatomic) BOOL autocorrect;
 
 @property (nonatomic) BOOL inferAutocapitalizationType;
 @property (nonatomic) UITextAutocapitalizationType autocapitalizationType;
