@@ -477,7 +477,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	MVChatUser *user = nil;
 	@synchronized( _knownUsers ) {
 		user = [_knownUsers objectForKey:uniqueIdentfier];
-		if( user ) return user;
+		if( user ) return [[user retain] autorelease];
 
 		user = [[MVIRCChatUser allocWithZone:nil] initWithNickname:identifier andConnection:self];
 	}

@@ -372,7 +372,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	@synchronized( _knownUsers ) {
 		user = [_knownUsers objectForKey:uniqueIdentfier];
 		if( user )
-			return user;
+			return [[user retain] autorelease];
 
 		user = [[MVICBChatUser alloc] initWithNickname:identifier
 		                              andConnection:self];

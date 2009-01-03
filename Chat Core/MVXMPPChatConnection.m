@@ -206,7 +206,7 @@
 	MVChatUser *user = nil;
 	@synchronized( _knownUsers ) {
 		user = [_knownUsers objectForKey:[identifier completeID]];
-		if( user ) return user;
+		if( user ) return [[user retain] autorelease];
 
 		user = [[MVXMPPChatUser allocWithZone:nil] initWithJabberID:identifier andConnection:self];
 	}

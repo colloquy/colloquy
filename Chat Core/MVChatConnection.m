@@ -774,7 +774,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
 	@synchronized( _joinedRooms ) {
 		MVChatRoom *room = [_knownRooms objectForKey:identifier];
-		return ([room isJoined] ? room : nil);
+		return ([room isJoined] ? [[room retain] autorelease] : nil);
 	} return nil;
 }
 
@@ -785,7 +785,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 		while( ( room = [enumerator nextObject] ) )
 			if( [[room name] isEqualToString:name] )
-				return room;
+				return [[room retain] autorelease];
 	}
 
 	return nil;
@@ -795,7 +795,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
 	@synchronized( _knownRooms ) {
-		return [_knownRooms objectForKey:identifier];
+		return [[[_knownRooms objectForKey:identifier] retain] autorelease];
 	} return nil;
 }
 
@@ -806,7 +806,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 		while( ( room = [enumerator nextObject] ) )
 			if( [[room name] isEqualToString:name] )
-				return room;
+				return [[room retain] autorelease];
 	}
 
 	return nil;
