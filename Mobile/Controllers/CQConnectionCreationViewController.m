@@ -77,6 +77,12 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 	_editViewController = nil;
 }
 
+- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"])
+		return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
 #pragma mark -
 
 - (void) cancel:(id) sender {

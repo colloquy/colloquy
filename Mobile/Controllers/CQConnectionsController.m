@@ -92,7 +92,7 @@
 
 	static BOOL offeredToCreate;
 	if (!_connections.count && !offeredToCreate) {
-		[self showModalNewConnectionView];
+		[self performSelector:@selector(showModalNewConnectionView) withObject:nil afterDelay:0.];
 		offeredToCreate = YES;
 	}
 }

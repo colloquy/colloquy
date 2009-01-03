@@ -48,6 +48,12 @@
 	_editViewController = nil;
 }
 
+- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"])
+		return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
 #pragma mark -
 
 @synthesize roomTarget = _roomTarget;
