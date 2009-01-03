@@ -354,6 +354,13 @@
 		} else if( ! [[arguments string] caseInsensitiveCompare:@"emoticons"] ) {
 			[JVEmoticonSet scanForEmoticonSets];
 			return YES;
+		} else if( ! [[arguments string] caseInsensitiveCompare:@"all"] ) {
+			[[MVChatPluginManager defaultManager] reloadPlugins];
+			[JVEmoticonSet scanForEmoticonSets];
+			[JVStyle scanForStyles];
+			if( isChatRoom || isDirectChat )
+				[chat _reloadCurrentStyle:nil];
+			return YES;
 		}
 	} else if( ! [command caseInsensitiveCompare:@"help"] ) {
 		[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://project.colloquy.info/wiki/Documentation/CommandReference"]];

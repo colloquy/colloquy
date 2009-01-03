@@ -363,6 +363,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) reloadCurrentStyle {
+	[_style reload];
+
 	_switchingStyles = YES;
 	_requiresFullMessage = YES;
 	_rememberScrollPosition = YES;
