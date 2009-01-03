@@ -315,7 +315,7 @@
 
 	nickname = (range.location ? self.connection.nickname : [self.connection.nickname stringByAppendingString:@":"]);
 	if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
-		[completions addObject:nickname];	
+		[completions addObject:nickname];
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
@@ -328,7 +328,7 @@
 				break;
 		}
 	}
-	
+
 	static NSArray *services;
 	if (!services) services = [[NSArray alloc] initWithObjects:@"NickServ", @"ChanServ", @"MemoServ", nil];
 	

@@ -231,11 +231,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 				[[self transcript] setFilePath:logs];
 				[[self transcript] setSource:source];
 				[[self transcript] setAutomaticallyWritesChangesToFile:YES];
+				[[self transcript] setElementLimit:0]; // start with zero limit
 			}
 
 			[source release];
 
-			[[self transcript] setElementLimit:0]; // start with zero limit
 
 			if( ! [target isKindOfClass:[MVDirectChatConnection class]] ) {
 				[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didConnect: ) name:MVChatConnectionDidConnectNotification object:[self connection]];
