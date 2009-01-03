@@ -342,7 +342,7 @@ retry:
 - (void) textFieldEditorDidChangeSelection:(UITextField *) textField {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 
-	[self performSelector:@selector(hideCompletions) withObject:nil afterDelay:0.1];
+	[self performSelector:@selector(hideCompletions) withObject:nil afterDelay:0.25];
 }
 
 #pragma mark -
