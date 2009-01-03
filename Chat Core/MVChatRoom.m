@@ -83,8 +83,9 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[_bannedUsers release];
 	[_modeAttributes release];
 	[_memberModes release];
+	[_connection release];
 
-	_connection = nil; // connection isn't retained, prevents circular retain
+	_connection = nil;
 	_name = nil;
 	_uniqueIdentifier = nil;
 	_dateJoined = nil;

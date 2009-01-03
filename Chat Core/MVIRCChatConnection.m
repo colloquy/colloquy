@@ -145,7 +145,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_chatConnection setDelegate:nil];
 
 	[_chatConnection release];
-	[_knownUsers release];
 	[_directClientConnections release];
 	[_server release];
 	[_currentNickname release];
@@ -167,7 +166,6 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	_chatConnection = nil;
 	_connectionThread = nil;
-	_knownUsers = nil;
 	_directClientConnections = nil;
 	_server = nil;
 	_currentNickname = nil;
@@ -465,12 +463,6 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (NSSet *) knownChatUsers {
-	@synchronized( _knownUsers ) {
-		return [NSSet setWithArray:[_knownUsers allValues]];
-	} return nil;
-}
-
 - (NSSet *) chatUsersWithNickname:(NSString *) name {
 	return [NSSet setWithObject:[self chatUserWithUniqueIdentifier:name]];
 }
@@ -482,16 +474,12 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( [uniqueIdentfier isEqualToString:[[self localUser] uniqueIdentifier]] )
 		return [self localUser];
 
-	if( ! _knownUsers )
-		_knownUsers = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:200];
-
 	MVChatUser *user = nil;
 	@synchronized( _knownUsers ) {
 		user = [_knownUsers objectForKey:uniqueIdentfier];
 		if( user ) return user;
 
 		user = [[MVIRCChatUser allocWithZone:nil] initWithNickname:identifier andConnection:self];
-		if( user ) [_knownUsers setObject:user forKey:uniqueIdentfier];
 	}
 
 	return [user autorelease];
@@ -1417,19 +1405,6 @@ end:
 
 - (void) _periodicEvents {
 	MVAssertCorrectThreadRequired( _connectionThread );
-
-	@synchronized( _knownUsers ) {
-		NSMutableArray *removeList = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_knownUsers count]];
-		NSEnumerator *keyEnumerator = [_knownUsers keyEnumerator];
-		NSEnumerator *enumerator = [_knownUsers objectEnumerator];
-		id key = nil, object = nil;
-
-		while( ( key = [keyEnumerator nextObject] ) && ( object = [enumerator nextObject] ) )
-			if( [object retainCount] == 1 ) [removeList addObject:key];
-
-		[_knownUsers removeObjectsForKeys:removeList];
-		[removeList release];
-	}
 
 	@synchronized( _joinedRooms ) {
 		NSEnumerator *enumerator = [_joinedRooms objectEnumerator];

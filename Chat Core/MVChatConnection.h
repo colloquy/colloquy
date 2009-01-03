@@ -104,6 +104,7 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSStringEncoding _encoding;
 
 	NSString *_npassword;
+	NSMutableDictionary *_knownUsers;
 	NSMutableDictionary *_knownRooms;
 	NSMutableSet *_joinedRooms;
 	MVChatUser *_localUser;

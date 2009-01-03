@@ -16,6 +16,9 @@
 - (void) _postError:(NSError *) error;
 - (void) _setStatus:(MVChatConnectionStatus) status;
 
+- (void) _addKnownUser:(MVChatUser *) user;
+- (void) _removeKnownUser:(MVChatUser *) user;
+
 - (void) _addKnownRoom:(MVChatRoom *) room;
 - (void) _removeKnownRoom:(MVChatRoom *) room;
 

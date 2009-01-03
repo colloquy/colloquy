@@ -14,7 +14,6 @@
 	NSString *_username;
 	NSString *_nickname;
 	NSString *_password;
-	NSMutableDictionary *_knownUsers;
 }
 + (NSArray *) defaultServerPorts;
 @end

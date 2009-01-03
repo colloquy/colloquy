@@ -25,18 +25,10 @@
 		_type = MVChatRemoteUserType;
 		_connection = userConnection; // prevent circular retain
 		[self updateWithClientEntry:clientEntry];
+		[_connection _addKnownUser:self];
 	}
 
 	return self;
-}
-
-- (void) release {
-	if( ! _releasing && [self isRemoteUser] && ( [self retainCount] - 1 ) == 1 ) {
-		_releasing = YES;
-		[[self connection] _removeKnownUser:self];
-	}
-
-	[super release];
 }
 
 #pragma mark -

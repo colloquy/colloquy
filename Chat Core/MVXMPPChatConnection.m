@@ -53,7 +53,6 @@
 	[_username release];
 	[_nickname release];
 	[_password release];
-	[_knownUsers release];
 
 	_session = nil;
 	_localID = nil;
@@ -61,7 +60,6 @@
 	_username = nil;
 	_nickname = nil;
 	_password = nil;
-	_knownUsers = nil;
 
 	[super dealloc];
 }
@@ -193,12 +191,6 @@
 
 #pragma mark -
 
-- (NSSet *) knownChatUsers {
-	@synchronized( _knownUsers ) {
-		return [NSSet setWithArray:[_knownUsers allValues]];
-	} return nil;
-}
-
 - (NSSet *) chatUsersWithNickname:(NSString *) name {
 	return [NSSet setWithObject:[self chatUserWithUniqueIdentifier:name]];
 }
@@ -211,16 +203,12 @@
 	if( [identifier isEqual:[[self localUser] uniqueIdentifier]] )
 		return [self localUser];
 
-	if( ! _knownUsers )
-		_knownUsers = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:50];
-
 	MVChatUser *user = nil;
 	@synchronized( _knownUsers ) {
 		user = [_knownUsers objectForKey:[identifier completeID]];
 		if( user ) return user;
 
 		user = [[MVXMPPChatUser allocWithZone:nil] initWithJabberID:identifier andConnection:self];
-		if( user ) [_knownUsers setObject:user forKey:[identifier completeID]];
 	}
 
 	return [user autorelease];

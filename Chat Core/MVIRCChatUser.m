@@ -18,10 +18,11 @@
 - (id) initWithNickname:(NSString *) userNickname andConnection:(MVIRCChatConnection *) userConnection {
 	if( ( self = [self init] ) ) {
 		_type = MVChatRemoteUserType;
-		_connection = userConnection; // prevent circular retain
+		_connection = [userConnection retain];
 		MVSafeCopyAssign( &_nickname, userNickname );
 		MVSafeCopyAssign( &_uniqueIdentifier, [userNickname lowercaseString] );
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( ctcpReplyNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
+		[_connection _addKnownUser:self];
 	}
 
 	return self;

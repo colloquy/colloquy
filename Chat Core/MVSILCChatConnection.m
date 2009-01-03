@@ -933,7 +933,6 @@ static SilcClientOperations silcClientOps = {
 		[self setUsername:NSUserName()];
 		[self setRealName:NSFullUserName()];
 
-		_knownUsers = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:200];
 		_queuedCommands = [[NSMutableArray allocWithZone:nil] initWithCapacity:5];
 		_sentCommands = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:2];
 	}
@@ -991,9 +990,6 @@ static SilcClientOperations silcClientOps = {
 
 	[_sentCommands release];
 	_sentCommands = nil;
-
-	[_knownUsers release];
-	_knownUsers = nil;
 
 	[super dealloc];
 }
@@ -1320,10 +1316,6 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 
 #pragma mark -
 
-- (NSSet *) knownChatUsers {
-	return [NSSet setWithArray:[_knownUsers allValues]];
-}
-
 - (NSSet *) chatUsersWithNickname:(NSString *) findNickname {
 	if( ! [self _silcConn] ) return nil;
 
@@ -1378,10 +1370,8 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 			SilcLock( [self _silcClient] );
 			SilcClientEntry client = silc_client_get_client_by_id( [self _silcClient], [self _silcConn], clientID );
 			SilcUnlock( [self _silcClient] );
-			if( client ) {
+			if( client )
 				user = [[MVSILCChatUser allocWithZone:nil] initWithClientEntry:client andConnection:self];
-				if( user ) [_knownUsers setObject:user forKey:data];
-			}
 		}
 	}
 
@@ -1560,14 +1550,6 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 
 #pragma mark -
 
-- (void) _removeKnownUser:(MVChatUser *) user {
-	@synchronized( _knownUsers ) {
-		if( user ) [_knownUsers removeObjectForKey:[user uniqueIdentifier]];
-	}
-}
-
-#pragma mark -
-
 - (void) _setDetachInfo:(NSData *) info {
 	@synchronized( _persistentInformation ) {
 		if( info ) [_persistentInformation setObject:info forKey:@"detachData"];
@@ -1632,7 +1614,6 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 		[self scheduleReconnectAttempt];
 	}
 
-	[_knownUsers removeAllObjects];
 	[_sentCommands removeAllObjects];
 	[_queuedCommands removeAllObjects];
 
@@ -1670,7 +1651,6 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 		if( user ) return user;
 
 		user = [[MVSILCChatUser allocWithZone:nil] initWithClientEntry:clientEntry andConnection:self];
-		if( user ) [_knownUsers setObject:user forKey:uniqueIdentfier];
 	}
 
 	return [user autorelease];

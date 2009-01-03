@@ -368,9 +368,6 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	if( [uniqueIdentfier isEqualToString:[_localUser uniqueIdentifier]] )
 		return [self localUser];
 
-	if( ! _knownUsers )
-		_knownUsers = [[NSMutableDictionary alloc] initWithCapacity:200];
-
 	MVChatUser *user = nil;
 	@synchronized( _knownUsers ) {
 		user = [_knownUsers objectForKey:uniqueIdentfier];
@@ -379,17 +376,9 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 		user = [[MVICBChatUser alloc] initWithNickname:identifier
 		                              andConnection:self];
-		if( user )
-			[_knownUsers setObject:user forKey:uniqueIdentfier];
 	}
 
 	return [user autorelease];
-}
-
-- (NSSet *) knownChatUsers {
-	@synchronized( _knownUsers ) {
-		return [NSSet setWithArray:[_knownUsers allValues]];
-	} return nil;
 }
 
 @end

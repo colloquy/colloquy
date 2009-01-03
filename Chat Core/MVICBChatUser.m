@@ -59,7 +59,9 @@
 		_uniqueIdentifier = [[nickname lowercaseString] retain];
 		_type = MVChatRemoteUserType;
 		_status = MVChatUserAvailableStatus;
+		[_connection _addKnownUser:self];
 	}
+
 	return self;
 }
 

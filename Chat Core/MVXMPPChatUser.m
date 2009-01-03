@@ -11,6 +11,7 @@
 		_type = MVChatRemoteUserType;
 		_connection = userConnection; // prevent circular retain
 		MVSafeRetainAssign( &_uniqueIdentifier, identifier );
+		[_connection _addKnownUser:self];
 	}
 
 	return self;

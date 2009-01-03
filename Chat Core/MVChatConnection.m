@@ -143,6 +143,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		CFDictionaryValueCallBacks valueCallbacks = { 0, NULL, NULL, kCFTypeDictionaryValueCallBacks.copyDescription, kCFTypeDictionaryValueCallBacks.equal };
 		_knownRooms = (NSMutableDictionary *)CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &valueCallbacks);
+		_knownUsers = (NSMutableDictionary *)CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &valueCallbacks);
 
 #if !defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
@@ -824,9 +825,9 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #pragma mark -
 
 - (NSSet *) knownChatUsers {
-	// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
-	return nil;
+	@synchronized( _knownUsers ) {
+		return [NSSet setWithArray:[_knownUsers allValues]];
+	} return nil;
 }
 
 - (NSSet *) chatUsersWithNickname:(NSString *) nickname {
@@ -1092,6 +1093,18 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
+- (void) _addKnownUser:(MVChatUser *) user {
+	@synchronized( _knownUsers ) {
+		if( [user uniqueIdentifier] ) [_knownUsers setObject:user forKey:[user uniqueIdentifier]];
+	}
+}
+
+- (void) _removeKnownUser:(MVChatUser *) user {
+	@synchronized( _knownUsers ) {
+		[_knownUsers removeObjectForKey:[user uniqueIdentifier]];
+	}
+}
+
 - (void) _addKnownRoom:(MVChatRoom *) room {
 	@synchronized( _knownRooms ) {
 		[_knownRooms setObject:room forKey:[room uniqueIdentifier]];
@@ -1246,7 +1259,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #pragma mark -
 
 - (NSArray *) knownChatUsersArray {
-	return [[self knownChatUsers] allObjects];
+	return [_knownUsers allValues];
 }
 
 - (MVChatUser *) valueInKnownChatUsersArrayAtIndex:(unsigned) index {

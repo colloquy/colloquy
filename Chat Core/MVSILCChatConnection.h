@@ -21,7 +21,6 @@
 	NSString *_certificatePassword;
 	BOOL _waitForCertificatePassword;
 
-	NSMutableDictionary *_knownUsers;
 	NSMutableDictionary *_sentCommands;
 	NSMutableArray *_queuedCommands;
 

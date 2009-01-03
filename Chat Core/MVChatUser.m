@@ -103,6 +103,8 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (void) dealloc {
+	[[self connection] _removeKnownUser:self];
+
 	[_uniqueIdentifier release];
 	[_nickname release];
 	[_realName release];
@@ -114,8 +116,9 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	[_dateConnected release];
 	[_dateDisconnected release];
 	[_attributes release];
+	[_connection release];
 
-	_connection = nil; // connection isn't retained, prevents circular retain
+	_connection = nil;
 	_uniqueIdentifier = nil;
 	_nickname = nil;
 	_realName = nil;

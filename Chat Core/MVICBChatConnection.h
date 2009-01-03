@@ -47,7 +47,6 @@
 	NSString *_initialChannel;
 
 	MVICBChatRoom *_room;
-	NSMutableDictionary *_knownUsers;
 
 	AsyncSocket *_chatConnection;
 	NSThread *_connectionThread;
