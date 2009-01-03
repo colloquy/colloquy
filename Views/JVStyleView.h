@@ -30,6 +30,8 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 	BOOL _rememberScrollPosition;
 	unsigned long _lastScrollPosition;
 }
++ (void) emptyCache;
+
 - (void) setTranscript:(JVChatTranscript *) transcript;
 - (JVChatTranscript *) transcript;
 

@@ -407,10 +407,12 @@ static BOOL applicationIsTerminating = NO;
 
 	[[MVColorPanel sharedColorPanel] attachColorList:[[[NSColorList alloc] initWithName:@"Chat" fromFile:[[NSBundle mainBundle] pathForResource:@"Chat" ofType:@"clr"]] autorelease]];
 
-	if( NSClassFromString( @"WebCoreCache" ) )
-		[NSClassFromString( @"WebCoreCache" ) setDisabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"]];
-	else if( NSClassFromString( @"WebCache" ) )
-		[NSClassFromString( @"WebCache" ) setDisabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"]];
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"] ) {
+		Class webCacheClass = NSClassFromString( @"WebCache" );
+		if( ! webCacheClass ) webCacheClass = NSClassFromString( @"WebCoreCache" );\
+
+		[webCacheClass setDisabled:YES];
+	}
 
 	[MVChatPluginManager defaultManager];
 	[MVConnectionsController defaultController];

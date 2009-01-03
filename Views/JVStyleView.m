@@ -11,13 +11,13 @@ NSString *JVStyleViewDidClearNotification = @"JVStyleViewDidClearNotification";
 NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesNotification";
 
 @interface WebCoreCache
-+ (void) empty;
++ (void) setDisabled:(BOOL) disabled;
 @end
 
 #pragma mark -
 
 @interface WebCache
-+ (void) empty;
++ (void) setDisabled:(BOOL) disabled;
 @end
 
 #pragma mark -
@@ -126,6 +126,19 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 @implementation JVStyleView
++ (void) emptyCache {
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"] )
+		return;
+
+	Class webCacheClass = NSClassFromString( @"WebCache" );
+	if( ! webCacheClass ) webCacheClass = NSClassFromString( @"WebCoreCache" );\
+
+	[webCacheClass setDisabled:YES];
+	[webCacheClass setDisabled:NO];
+}
+
+#pragma mark -
+
 - (id) initWithCoder:(NSCoder *) coder {
 	if( ( self = [super initWithCoder:coder] ) ) {
 		_switchingStyles = NO;
@@ -282,10 +295,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	_styleVariant = [variant copyWithZone:[self zone]];
 
 	if( _contentFrameReady ) {
-		if( NSClassFromString( @"WebCoreCache" ) )
-			[NSClassFromString( @"WebCoreCache" ) empty];
-		else if( NSClassFromString( @"WebCache" ) )
-			[NSClassFromString( @"WebCache" ) empty];
+		[[self class] emptyCache];
 
 		NSString *styleSheetLocation = [[[self style] variantStyleSheetLocationWithName:_styleVariant] absoluteString];
 		DOMHTMLLinkElement *element = (DOMHTMLLinkElement *)[_domDocument getElementById:@"variantStyle"];
@@ -332,10 +342,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	_emoticons = [emoticons retain];
 
 	if( _contentFrameReady ) {
-		if( NSClassFromString( @"WebCoreCache" ) )
-			[NSClassFromString( @"WebCoreCache" ) empty];
-		else if( NSClassFromString( @"WebCache" ) )
-			[NSClassFromString( @"WebCache" ) empty];
+		[[self class] emptyCache];
 
 		NSString *styleSheetLocation = [[[self emoticons] styleSheetLocation] absoluteString];
 		DOMHTMLLinkElement *element = (DOMHTMLLinkElement *)[_domDocument getElementById:@"emoticonStyle"];
@@ -369,10 +376,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	_requiresFullMessage = YES;
 	_rememberScrollPosition = YES;
 
-	if( NSClassFromString( @"WebCoreCache" ) )
-		[NSClassFromString( @"WebCoreCache" ) empty];
-	else if( NSClassFromString( @"WebCache" ) )
-		[NSClassFromString( @"WebCache" ) empty];
+	[[self class] emptyCache];
 
 	[self _resetDisplay];
 }
