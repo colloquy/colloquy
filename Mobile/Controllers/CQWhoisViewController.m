@@ -152,13 +152,6 @@
 }
 
 
-- (void)viewDidDisappear:(BOOL)animated;
-{
-	[super viewDidDisappear:animated];
-	self.user = nil;
-}
-
-
 - (void)channels;
 {
 	CQWhoisChannelsViewController *channelsController = [[CQWhoisChannelsViewController alloc] initWithNibName:@"WhoisChannelsView" bundle:nil];

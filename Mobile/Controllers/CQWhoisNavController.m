@@ -35,6 +35,7 @@ static CQWhoisNavController *singleton = nil;
 
 - (IBAction)doneButtonPressed:(UIBarButtonItem*)sender;
 {
+	whoisController.user = nil;
 	[self.parentViewController dismissModalViewControllerAnimated:YES];
 }
 
