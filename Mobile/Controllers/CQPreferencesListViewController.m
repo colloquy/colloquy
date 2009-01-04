@@ -1,5 +1,4 @@
 #import "CQPreferencesListViewController.h"
-
 #import "CQPreferencesListEditViewController.h"
 
 @implementation CQPreferencesListViewController
@@ -62,14 +61,15 @@
 
 			[tableView endUpdates];
 		} else if (_editingView.listItemText.length) {
-			[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
+			if (![_items containsObject:_editingView.listItemText]) {
+				[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
+				[_items insertObject:_editingView.listItemText atIndex:_editingIndex];
+				_pendingChanges = YES;
 
-			[_items insertObject:_editingView.listItemText atIndex:_editingIndex];
-			_pendingChanges = YES;
+				[tableView insertRowsAtIndexPaths:changedIndexPaths withRowAnimation:UITableViewRowAnimationFade];
 
-			[tableView insertRowsAtIndexPaths:changedIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-
-			[tableView selectRowAtIndexPath:changedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+				[tableView selectRowAtIndexPath:changedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+			}
 		}
 
 		[_editingView release];
