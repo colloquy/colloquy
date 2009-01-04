@@ -1496,20 +1496,7 @@
 }
 
 - (void) _didClearDisplay:(NSNotification *) notification {
-	NSAttributedString *topic = [self _convertRawMessage:[[self target] topic]];
-	JVChatRoomMember *author = ( [[self target] topicAuthor] ? [self chatRoomMemberForUser:[[self target] topicAuthor]] : nil );
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
-	NSString *topicString = [topic HTMLFormatWithOptions:options];
-
-	BOOL emptyTopic = NO;
-	if( ! [topic length] ) {
-		topicString = NSLocalizedString( @"(no chat topic is set)", "no chat topic is set message" );
-		emptyTopic = YES;
-	}
-
-	id authorArg = ( author ? [author title] : [[[self target] topicAuthor] displayName] );
-	NSArray *args = [NSArray arrayWithObjects:topicString, ( authorArg ? authorArg : [NSNull null] ), [NSNumber numberWithBool:emptyTopic], nil];
-	[[display windowScriptObject] callWebScriptMethod:@"changeTopic" withArguments:args];
+	[self performSelector:@selector(_topicChanged:) withObject:nil afterDelay:0.3];
 }
 @end
 

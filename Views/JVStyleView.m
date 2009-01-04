@@ -304,7 +304,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 		[self performSelector:@selector( _checkForTransparantStyle ) withObject:nil afterDelay:0.];
 	} else {
-		[self performSelector:_cmd withObject:variant afterDelay:0.5];
+		[self performSelector:_cmd withObject:variant afterDelay:0.25];
 	}
 }
 
@@ -349,7 +349,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		if( ! styleSheetLocation ) [element setHref:@""];
 		else [element setHref:styleSheetLocation];
 	} else {
-		[self performSelector:_cmd withObject:emoticons afterDelay:0.5];
+		[self performSelector:_cmd withObject:emoticons afterDelay:0.25];
 	}
 }
 
@@ -404,7 +404,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 		_requiresFullMessage = YES;
 	} else {
-		[self performSelector:_cmd withObject:nil afterDelay:0.5];
+		[self performSelector:_cmd withObject:nil afterDelay:0.25];
 	}
 }
 
@@ -412,7 +412,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) addBanner:(NSString *) name {
 	if( ! _mainFrameReady ) {
-		[self performSelector:_cmd withObject:name afterDelay:0.];
+		[self performSelector:_cmd withObject:name afterDelay:0.25];
 		return;
 	}
 
@@ -506,7 +506,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) markScrollbarForMessage:(JVChatMessage *) message {
 	if( _switchingStyles || ! _contentFrameReady ) {
-		[self performSelector:_cmd withObject:message afterDelay:0.5];
+		[self performSelector:_cmd withObject:message afterDelay:0.25];
 		return;
 	}
 
@@ -523,7 +523,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) markScrollbarForMessages:(NSArray *) messages {
 	if( _switchingStyles || ! _contentFrameReady ) {
-		[self performSelector:_cmd withObject:messages afterDelay:0.5];
+		[self performSelector:_cmd withObject:messages afterDelay:0.25];
 		return;
 	}
 
@@ -640,7 +640,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) scrollToBottom {
 	if( ! _contentFrameReady ) {
-		[self performSelector:_cmd withObject:nil afterDelay:0.5];
+		[self performSelector:_cmd withObject:nil afterDelay:0.25];
 		return;
 	}
 
@@ -693,7 +693,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	if( ! _body ) {
 		// try again soon, the DOM is not ready yet
-		[self performSelector:@selector( _contentFrameIsReady ) withObject:nil afterDelay:0.5];
+		[self performSelector:@selector( _contentFrameIsReady ) withObject:nil afterDelay:0.25];
 		return;
 	}
 
@@ -898,7 +898,7 @@ quickEnd:
 
 - (void) _setupMarkedScroller {
 	if( ! _mainFrameReady ) {
-		[self performSelector:_cmd withObject:nil afterDelay:0.5];
+		[self performSelector:_cmd withObject:nil afterDelay:0.25];
 		return;
 	}
 
