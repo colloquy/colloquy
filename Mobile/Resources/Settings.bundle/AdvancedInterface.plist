@@ -2,67 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Title</key>
-	<string>Advanced</string>
-	<key>StringsTable</key>
-	<string>Advanced</string>
 	<key>PreferenceSpecifiers</key>
 	<array>
 		<dict>
 			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>General</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-			<key>Title</key>
-			<string>Highlight Words</string>
-			<key>Key</key>
-			<string>CQHighlightWords</string>
-			<key>DefaultValue</key>
-			<string></string>
-			<key>AutocapitalizationType</key>
-			<string>None</string>
-			<key>AutocorrectionType</key>
-			<string>No</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-			<key>Title</key>
-			<string>Quit Message</string>
-			<key>Key</key>
-			<string>JVQuitMessage</string>
-			<key>DefaultValue</key>
-			<string>Get Colloquy for iPhone! http://itunes.com/app/colloquy</string>
-			<key>AutocapitalizationType</key>
-			<string>Sentences</string>
-		</dict>
-		<dict>
-			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Disable Auto Lock</string>
+			<string>Disable Landscape</string>
 			<key>Key</key>
-			<string>CQIdleTimerDisabled</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>Interface</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Show Room Prefixes</string>
-			<key>Key</key>
-			<string>JVShowFullRoomNames</string>
+			<string>CQDisableLandscape</string>
 			<key>DefaultValue</key>
 			<false/>
 		</dict>
@@ -84,97 +32,29 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
+			<string>Show Room Prefixes</string>
+			<key>Key</key>
+			<string>JVShowFullRoomNames</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Sort Users by Status</string>
+			<key>Key</key>
+			<string>JVSortRoomMembersByStatus</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
 			<string>Strip Message Styles</string>
 			<key>Key</key>
 			<string>JVChatStripMessageFormatting</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Disable Landscape</string>
-			<key>Key</key>
-			<string>CQDisableLandscape</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>Behaviour</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSMultiValueSpecifier</string>
-			<key>Key</key>
-			<string>CQAutoJoinChatRoomOnInvite</string>
-			<key>Title</key>
-			<string>Action on Invite</string>
-			<key>Values</key>
-			<array>
-				<string>Auto-Join</string>
-				<string>Ask</string>
-				<string>Auto-Deny</string>
-			</array>
-			<key>Titles</key>
-			<array>
-				<string>Always Accept</string>
-				<string>Prompt</string>
-				<string>Always Deny</string>
-			</array>
-			<key>DefaultValue</key>
-			<string>Ask</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Auto Join on Kick</string>
-			<key>Key</key>
-			<string>JVAutoRejoinRoomsOnKick</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Always Show Notices</string>
-			<key>Key</key>
-			<string>JVChatAlwaysShowNotices</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Open Links in Safari</string>
-			<key>Key</key>
-			<string>CQDisableBuiltInBrowser</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Disable Completion</string>
-			<key>Key</key>
-			<string>CQDisableChatAutocomplete</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Disable Correction</string>
-			<key>Key</key>
-			<string>CQDisableChatAutocorrection</string>
 			<key>DefaultValue</key>
 			<false/>
 		</dict>
