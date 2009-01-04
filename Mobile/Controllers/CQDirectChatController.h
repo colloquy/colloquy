@@ -27,6 +27,7 @@
 	BOOL _showingAlert;
 	BOOL _allowEditingToEnd;
 	BOOL _didSendRecently;
+	BOOL _initialView;
 }
 - (id) initWithTarget:(id) target;
 

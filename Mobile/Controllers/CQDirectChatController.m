@@ -48,6 +48,8 @@
 		_watchRule.nickname = self.user.nickname;
 
 		[self.connection addChatUserWatchRule:_watchRule];
+		
+		_initialView = YES;
 	}
 
 	return self;
@@ -69,6 +71,8 @@
 
 		if (!(self = [self initWithTarget:user]))
 			return nil;
+		
+		_initialView = NO;
 	}
 
 	_pendingPreviousSessionComponents = [[NSMutableArray alloc] init];
@@ -248,6 +252,11 @@
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
 	_active = YES;
+	
+	if(_initialView) {
+		_initialView = NO;
+		[chatInputBar becomeFirstResponder];
+	}
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
