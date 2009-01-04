@@ -9,6 +9,7 @@
 	IBOutlet id <CQChatInputBarDelegate> delegate;
 	CQTextCompletionView *_completionView;
 	NSRange _completionRange;
+	BOOL _completionCapturedKeyboard;
 	BOOL _disableCompletionUntilNextWord;
 	BOOL _autocomplete;
 	BOOL _autocorrect;

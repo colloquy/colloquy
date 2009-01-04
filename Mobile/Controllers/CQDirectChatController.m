@@ -311,14 +311,31 @@
 
 - (NSArray *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
 	NSMutableArray *completions = [[NSMutableArray alloc] init];
-	
-	NSString *nickname = (range.location ? self.user.nickname : [self.user.nickname stringByAppendingString:@":"]);
-	if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
-		[completions addObject:nickname];
 
-	nickname = (range.location ? self.connection.nickname : [self.connection.nickname stringByAppendingString:@":"]);
-	if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
-		[completions addObject:nickname];
+	if (word.length >= 2) {
+		NSString *nickname = (range.location ? self.user.nickname : [self.user.nickname stringByAppendingString:@":"]);
+		if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
+			[completions addObject:nickname];
+
+		nickname = (range.location ? self.connection.nickname : [self.connection.nickname stringByAppendingString:@":"]);
+		if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])
+			[completions addObject:nickname];
+
+		static NSArray *services;
+		if (!services) services = [[NSArray alloc] initWithObjects:@"NickServ", @"ChanServ", @"MemoServ", nil];
+		
+		for (NSString *service in services) {
+			if ([service hasCaseInsensitivePrefix:word] && ![service isCaseInsensitiveEqualToString:word])
+				[completions addObject:service];
+		}
+
+		for (MVChatRoom *room in self.connection.knownChatRooms) {
+			if ([room.name hasCaseInsensitivePrefix:word] && ![room.name isCaseInsensitiveEqualToString:word])
+				[completions addObject:room.name];
+			if (completions.count >= 10)
+				break;
+		}
+	}
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
@@ -331,28 +348,11 @@
 				break;
 		}
 	}
-
-	static NSArray *services;
-	if (!services) services = [[NSArray alloc] initWithObjects:@"NickServ", @"ChanServ", @"MemoServ", nil];
-	
-	for (NSString *service in services) {
-		if ([service hasCaseInsensitivePrefix:word] && ![service isCaseInsensitiveEqualToString:word])
-			[completions addObject:service];
-	}
 	
 	if (completions.count < 10 && ([word containsTypicalEmoticonCharacters] || [word hasCaseInsensitivePrefix:@"x"] || [word hasCaseInsensitivePrefix:@"o"])) {
 		for (NSString *emoticon in [NSString knownEmoticons]) {
 			if ([emoticon hasCaseInsensitivePrefix:word] && ![emoticon isCaseInsensitiveEqualToString:word])
 				[completions addObject:[emoticon stringBySubstitutingEmoticonsForEmoji]];
-			if (completions.count >= 10)
-				break;
-		}
-	}
-
-	if (completions.count < 10) {
-		for (MVChatRoom *room in self.connection.knownChatRooms) {
-			if ([room.name hasCaseInsensitivePrefix:word] && ![room.name isCaseInsensitiveEqualToString:word])
-				[completions addObject:room.name];
 			if (completions.count >= 10)
 				break;
 		}

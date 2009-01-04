@@ -192,7 +192,10 @@
 		}
 	}
 
-	if (completions.count < 10) {
+	if (word.length >= 2 && completions.count < 10) {
+		if (_membersNeedSorted)
+			[self _sortMembers];
+
 		for (MVChatUser *member in _orderedMembers) {
 			NSString *nickname = (range.location ? member.nickname : [member.nickname stringByAppendingString:@":"]);
 			if ([nickname hasCaseInsensitivePrefix:word] && ![nickname isEqualToString:word])

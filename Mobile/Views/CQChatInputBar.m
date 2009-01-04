@@ -3,6 +3,8 @@
 #import "CQTextCompletionView.h"
 #import "NSStringAdditions.h"
 
+#define CompletionsCaptureKeyboardDelay 0.5
+
 @interface UIKeyboardImpl : UIView
 + (UIKeyboardImpl *) activeInstance;
 - (void) takeTextInputTraitsFrom:(id <UITextInputTraits>) object;
@@ -127,12 +129,24 @@
 	return (_completionView && !_completionView.hidden);
 }
 
+- (void) captureKeyboardForCompletions {
+	_completionCapturedKeyboard = YES;
+
+	if (self.showingCompletions) _inputField.returnKeyType = UIReturnKeyDefault;
+	else _inputField.returnKeyType = UIReturnKeySend;
+
+	[self _updateTextTraits];
+}
+
 - (void) hideCompletions {
 	if (!_completionView)
 		return;
 
+	_completionCapturedKeyboard = NO;
+
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(captureKeyboardForCompletions) object:nil];
 
 	_completionView.hidden = YES;
 
@@ -156,11 +170,6 @@
 	_completionView.hidden = hasMarkedText;
 
 	[_completionView.superview bringSubviewToFront:_completionView];
-
-	if (_completionView.hidden) _inputField.returnKeyType = UIReturnKeySend;
-	else _inputField.returnKeyType = UIReturnKeyDefault;
-
-	[self _updateTextTraits];
 }
 
 - (void) showCompletions:(NSArray *) completions forText:(NSString *) text inRange:(NSRange) textRange {
@@ -202,12 +211,16 @@ retry:
 
 	_completionView.frame = frame;
 
-	_inputField.returnKeyType = UIReturnKeyDefault;
+	_inputField.returnKeyType = UIReturnKeySend;
+
+	[self _updateTextTraits];
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(captureKeyboardForCompletions) object:nil];
 
 	[self performSelector:@selector(showCompletions) withObject:nil afterDelay:0.05];
+	[self performSelector:@selector(captureKeyboardForCompletions) withObject:nil afterDelay:CompletionsCaptureKeyboardDelay];
 }
 
 #pragma mark -
@@ -238,7 +251,7 @@ retry:
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *) textField {
-	if (self.showingCompletions) {
+	if (_completionCapturedKeyboard && self.showingCompletions) {
 		[_completionView retain];
 
 		if (_completionView.selectedCompletion != NSNotFound)
@@ -263,6 +276,7 @@ retry:
 
 - (BOOL) textFieldShouldClear:(UITextField *) textField {
 	_disableCompletionUntilNextWord = NO;
+	_completionCapturedKeyboard = NO;
 
 	_inputField.autocorrectionType = (_autocorrect ? UITextAutocorrectionTypeDefault : UITextAutocorrectionTypeNo);
 
@@ -276,47 +290,25 @@ retry:
 	if (![delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:)])
 		return YES;
 
-	NSString *text = _inputField.text;
+	if (_completionCapturedKeyboard && self.showingCompletions && [string isEqualToString:@" "] && !_completionView.closeSelected) {
+		if (_completionView.selectedCompletion != NSNotFound)
+			++_completionView.selectedCompletion;
+		else _completionView.selectedCompletion = 0;
+		return NO;
+	}
 
-	if (self.showingCompletions && [string isEqualToString:@" "]) {
-		if (_completionView.closeSelected) {
-			[self hideCompletions];
-			return NO;
-		} else if (range.location >= 1 && text.length >= range.location && [text characterAtIndex:(range.location - 1)] == ' ' && !_completionView.closeSelected) {
-			if (_completionView.selectedCompletion != NSNotFound)
-				++_completionView.selectedCompletion;
-			else _completionView.selectedCompletion = 0;
-			return NO;
-		}
+	_completionCapturedKeyboard = NO;
+
+	NSString *text = _inputField.text;
+	BOOL replaceManually = NO;
+	if (self.showingCompletions && _completionView.selectedCompletion != NSNotFound && !range.length && ![string isEqualToString:@" "]) {
+		replaceManually = YES;
+		text = [_inputField.text stringByReplacingCharactersInRange:NSMakeRange(range.location, 0) withString:@" "];
+		++range.location;
 	}
 
 	NSRange wordRange = {0, range.location + string.length};
 	text = [text stringByReplacingCharactersInRange:range withString:string];
-
-	BOOL foundCharacter = NO;
-	for (NSInteger i = (range.location + string.length - 1); i >= 0; --i) {
-		if ([text characterAtIndex:i] == ' ' && foundCharacter) {
-			wordRange.location = i + 1;
-			wordRange.length = ((range.location + string.length) - wordRange.location);
-			break;
-		}
-
-		foundCharacter = YES;
-	}
-
-	NSString *word = [[text substringWithRange:wordRange] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-	BOOL hasMarkedText = ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]);
-
-	NSArray *completions = nil;
-	if (_autocomplete && !_disableCompletionUntilNextWord && word.length && !hasMarkedText && [delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
-		completions = [delegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
-		if (completions.count)
-			[self showCompletions:completions forText:text inRange:wordRange];
-		 else [self hideCompletions];
-	} else [self hideCompletions];
-
-	wordRange.location = 0;
-	wordRange.length = (range.location + string.length);
 
 	for (NSInteger i = (range.location + string.length - 1); i >= 0; --i) {
 		if ([text characterAtIndex:i] == ' ') {
@@ -328,6 +320,17 @@ retry:
 
 	if (!wordRange.length)
 		_disableCompletionUntilNextWord = NO;
+
+	NSString *word = [text substringWithRange:wordRange];
+	BOOL hasMarkedText = ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]);
+
+	NSArray *completions = nil;
+	if (_autocomplete && !_disableCompletionUntilNextWord && word.length && !hasMarkedText && [delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
+		completions = [delegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
+		if (completions.count)
+			[self showCompletions:completions forText:text inRange:wordRange];
+		 else [self hideCompletions];
+	} else [self hideCompletions];
 
 	word = [text substringWithRange:wordRange];
 
@@ -341,6 +344,13 @@ retry:
 		[self _updateTextTraits];
 	}
 
+	if (replaceManually) {
+		_inputField.text = text;
+		if ([_inputField respondsToSelector:@selector(setSelectionRange:)])
+			_inputField.selectionRange = NSMakeRange((range.location + string.length), 0);
+		return NO;
+	}
+	
 	return YES;
 }
 
@@ -414,6 +424,7 @@ retry:
 	}
 
 	_disableCompletionUntilNextWord = NO;
+	_completionCapturedKeyboard = NO;
 
 	_inputField.text = @"";
 	_inputField.autocorrectionType = (_autocorrect ? UITextAutocorrectionTypeDefault : UITextAutocorrectionTypeNo);
