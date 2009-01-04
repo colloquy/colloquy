@@ -40,75 +40,15 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSGroupSpecifier</string>
+			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
-			<string>Interface</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSMultiValueSpecifier</string>
-			<key>Title</key>
-			<string>Transcript Style</string>
+			<string>Quit Message</string>
 			<key>Key</key>
-			<string>CQChatTranscriptStyle</string>
-			<key>Values</key>
-			<array>
-				<string>standard</string>
-				<string>standard-dark</string>
-			</array>
-			<key>Titles</key>
-			<array>
-				<string>Standard</string>
-				<string>Standard Dark</string>
-			</array>
+			<string>JVQuitMessage</string>
 			<key>DefaultValue</key>
-			<string>standard</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Sort Users by Status</string>
-			<key>Key</key>
-			<string>JVSortRoomMembersByStatus</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Show Join Events</string>
-			<key>Key</key>
-			<string>CQShowJoinEvents</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Show Leave Events</string>
-			<key>Key</key>
-			<string>CQShowLeaveEvents</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>Alerts</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Vibrate on Highlight</string>
-			<key>Key</key>
-			<string>CQVibrateOnHighlight</string>
-			<key>DefaultValue</key>
-			<true/>
+			<string>Get Colloquy for iPhone! http://itunes.com/app/colloquy</string>
+			<key>AutocapitalizationType</key>
+			<string>Sentences</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -118,9 +58,21 @@
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 			<key>Title</key>
-			<string>Advanced</string>
+			<string>Behavior</string>
 			<key>File</key>
-			<string>Advanced</string>
+			<string>Behavior</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+			<key>Title</key>
+			<string>Interface</string>
+			<key>File</key>
+			<string>Interface</string>
 		</dict>
 		<dict>
 			<key>Type</key>
