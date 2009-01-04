@@ -3,10 +3,12 @@
 #import "CQChatController.h"
 #import "CQColloquyApplication.h"
 #import "CQDirectChatController.h"
+#import "CQWhoisNavController.h"
 #import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
+#import <ChatCore/MVChatConnection.h>
 
 @implementation CQChatUserListViewController
 - (id) init {
@@ -316,9 +318,10 @@
 	sheet.delegate = self;
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"Send Message", @"Send Message button title")];
+	[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
 	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	sheet.cancelButtonIndex = 1;
+	sheet.cancelButtonIndex = 2;
 
 	[sheet showInView:[CQColloquyApplication sharedApplication].tabBarController.view];
 	[sheet release];
@@ -333,8 +336,15 @@
 		return;
 
 	MVChatUser *user = [_matchedUsers objectAtIndex:selectedIndexPath.row];
-
-	CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
-	[[CQChatController defaultController] showChatController:chatController animated:YES];
+	
+	if (buttonIndex == 0) {
+		CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
+		[[CQChatController defaultController] showChatController:chatController animated:YES];
+	}
+	else if (buttonIndex == 1) {
+		CQWhoisNavController *whoisController = [CQWhoisNavController sharedInstance];
+		whoisController.user = user;
+		[self presentModalViewController:whoisController animated:YES];
+	}
 }
 @end

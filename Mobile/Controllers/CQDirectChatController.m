@@ -6,6 +6,7 @@
 #import "CQChatTableCell.h"
 #import "CQColloquyApplication.h"
 #import "CQStyleView.h"
+#import "CQWhoisNavController.h"
 #import "NSDictionaryAdditions.h"
 #import "NSScannerAdditions.h"
 #import "NSStringAdditions.h"
@@ -348,7 +349,7 @@
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/umode", @"/globops", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/part", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/umode", @"/globops", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/part", @"/whois", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -483,6 +484,34 @@
 - (BOOL) handleAmazonCommandWithArguments:(NSString *) arguments {
 	[self _handleSearchForURL:@"http://www.amazon.com/gp/aw/s.html?k=%@" withQuery:arguments];
 	return YES;
+}
+
+#pragma mark -
+
+- (BOOL) handleWhoisCommandWithArguments:(NSString *) arguments {
+	CQWhoisNavController *whoisController = [CQWhoisNavController sharedInstance];
+	if (arguments.length) {
+		NSString *nick = [[arguments componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] objectAtIndex:0];
+		whoisController.user = [[self.connection chatUsersWithNickname:nick] anyObject];
+	} else if (self.user) {
+		whoisController.user = self.user;
+	} else return NO;
+
+	_allowEditingToEnd = YES;
+	[chatInputBar resignFirstResponder];
+	_allowEditingToEnd = NO;
+
+	[self presentModalViewController:whoisController animated:YES];
+
+	return YES;
+}
+
+- (BOOL) handleWiCommandWithArguments:(NSString *) arguments {
+	return [self handleWhoisCommandWithArguments:arguments];
+}
+
+- (BOOL) handleWiiCommandWithArguments:(NSString *) arguments {
+	return [self handleWhoisCommandWithArguments:arguments];
 }
 
 #pragma mark -

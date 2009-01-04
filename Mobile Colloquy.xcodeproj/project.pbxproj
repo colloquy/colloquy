@@ -117,6 +117,12 @@
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		972EE83B0F10406E0068C75E /* CQWhoisViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 972EE83A0F10406E0068C75E /* CQWhoisViewController.m */; };
+		972EE8820F104E010068C75E /* WhoisView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 972EE8810F104E010068C75E /* WhoisView.xib */; };
+		972EEC390F1080600068C75E /* CQWhoisNavController.m in Sources */ = {isa = PBXBuildFile; fileRef = 972EEC380F1080600068C75E /* CQWhoisNavController.m */; };
+		972EEC3B0F1080980068C75E /* WhoisNav.xib in Resources */ = {isa = PBXBuildFile; fileRef = 972EEC3A0F1080980068C75E /* WhoisNav.xib */; };
+		972EECDA0F1089220068C75E /* WhoisChannelsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 972EECD90F1089220068C75E /* WhoisChannelsView.xib */; };
+		972EECE00F1089780068C75E /* CQWhoisChannelsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 972EECDF0F1089780068C75E /* CQWhoisChannelsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -295,6 +301,15 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Mobile/main.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		972EE8390F10406E0068C75E /* CQWhoisViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQWhoisViewController.h; sourceTree = "<group>"; };
+		972EE83A0F10406E0068C75E /* CQWhoisViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQWhoisViewController.m; sourceTree = "<group>"; };
+		972EE8810F104E010068C75E /* WhoisView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WhoisView.xib; sourceTree = "<group>"; };
+		972EEC370F1080600068C75E /* CQWhoisNavController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQWhoisNavController.h; sourceTree = "<group>"; };
+		972EEC380F1080600068C75E /* CQWhoisNavController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQWhoisNavController.m; sourceTree = "<group>"; };
+		972EEC3A0F1080980068C75E /* WhoisNav.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WhoisNav.xib; sourceTree = "<group>"; };
+		972EECD90F1089220068C75E /* WhoisChannelsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WhoisChannelsView.xib; sourceTree = "<group>"; };
+		972EECDE0F1089780068C75E /* CQWhoisChannelsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQWhoisChannelsViewController.h; sourceTree = "<group>"; };
+		972EECDF0F1089780068C75E /* CQWhoisChannelsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQWhoisChannelsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -414,6 +429,12 @@
 				1CC64B2B0EE97F8B00DE91D0 /* CQChatUserListViewController.h */,
 				1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */,
 				1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */,
+				972EE83A0F10406E0068C75E /* CQWhoisViewController.m */,
+				972EE8390F10406E0068C75E /* CQWhoisViewController.h */,
+				972EEC380F1080600068C75E /* CQWhoisNavController.m */,
+				972EEC370F1080600068C75E /* CQWhoisNavController.h */,
+				972EECDF0F1089780068C75E /* CQWhoisChannelsViewController.m */,
+				972EECDE0F1089780068C75E /* CQWhoisChannelsViewController.h */,
 			);
 			name = Controllers;
 			path = Mobile/Controllers;
@@ -566,6 +587,9 @@
 				1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */,
 				1CE69F810EE2F50100389442 /* ChatView.xib */,
 				1C124AD50F09F635008F181B /* Browser.xib */,
+				972EEC3A0F1080980068C75E /* WhoisNav.xib */,
+				972EE8810F104E010068C75E /* WhoisView.xib */,
+				972EECD90F1089220068C75E /* WhoisChannelsView.xib */,
 				1C0937320D80E72F00A2705D /* Icon.png */,
 				1CC64A9A0EE9152D00DE91D0 /* Default.png */,
 				1C124B3E0F0A0244008F181B /* browserBack.png */,
@@ -699,6 +723,9 @@
 				1C124B430F0A0244008F181B /* browserStop.png in Resources */,
 				1C124BE70F0A13ED008F181B /* browserSafari.png in Resources */,
 				1C1253290F0D4FC1008F181B /* standard-dark.css in Resources */,
+				972EE8820F104E010068C75E /* WhoisView.xib in Resources */,
+				972EEC3B0F1080980068C75E /* WhoisNav.xib in Resources */,
+				972EECDA0F1089220068C75E /* WhoisChannelsView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -791,6 +818,9 @@
 				1C124AC20F09F014008F181B /* CQBrowserViewController.m in Sources */,
 				1C1254A40F0D8D7F008F181B /* CQChatCreationViewController.m in Sources */,
 				1C1255670F0EAA69008F181B /* CQChatEditViewController.m in Sources */,
+				972EE83B0F10406E0068C75E /* CQWhoisViewController.m in Sources */,
+				972EEC390F1080600068C75E /* CQWhoisNavController.m in Sources */,
+				972EECE00F1089780068C75E /* CQWhoisChannelsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
