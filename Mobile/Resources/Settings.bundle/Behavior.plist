@@ -22,7 +22,7 @@
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Key</key>
-			<string>CQAutoJoinChatRoomOnInvite</string>
+			<string>CQChatRoomInviteAction</string>
 			<key>Title</key>
 			<string>Action on Invite</string>
 			<key>Values</key>

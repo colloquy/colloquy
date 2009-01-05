@@ -179,16 +179,17 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 - (void) _invitedToRoom:(NSNotification *) notification {
 	NSString *roomName = [[notification userInfo] objectForKey:@"room"];
-	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 	MVChatConnection *connection = [notification object];
 
-	if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"CQAutoJoinChatRoomOnInvite"] isEqualToString:@"Auto-Join"]) {
+	NSString *action = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatRoomInviteAction"];
+	if ([action isEqualToString:@"Auto-Join"]) {
 		[connection joinChatRoomNamed:roomName];
 		return;
-	} else if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"CQAutoJoinChatRoomOnInvite"] isEqualToString:@"Auto-Deny"]) {
+	} else if ([action isEqualToString:@"Auto-Deny"]) {
 		return;
-	} else {
-	
+	}
+
+	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 	MVChatRoom *room = [connection chatRoomWithName:roomName];
 
 	// Context is released in alertView:clickedButtonAtIndex:.
@@ -209,7 +210,6 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	[alert show];
 
 	[alert release];
-	}
 }
 
 - (void) _showNextChatControllerAnimated:(BOOL) animated {
