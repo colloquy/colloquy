@@ -105,7 +105,7 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 		connection.realName = [MVChatConnection defaultRealName];
 
 	if (isDefaultValue(connection.username))
-		connection.username = [MVChatConnection defaultUsername];
+		connection.username = [connection.preferredNickname lowercaseString];
 
 	connection.encoding = [MVChatConnection defaultEncoding];
 

@@ -50,7 +50,6 @@
 
 @interface MVChatConnection (CQConnectionsControllerAdditions)
 + (NSString *) defaultNickname;
-+ (NSString *) defaultUsername;
 + (NSString *) defaultRealName;
 + (NSString *) defaultQuitMessage;
 + (NSStringEncoding) defaultEncoding;

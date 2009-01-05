@@ -606,20 +606,59 @@
 
 @implementation MVChatConnection (CQConnectionsControllerAdditions)
 + (NSString *) defaultNickname {
-	return [[NSUserDefaults standardUserDefaults] stringForKey:@"CQDefaultNickname"];
-}
+	NSString *defaultNickname = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQDefaultNickname"];
+	if (defaultNickname.length)
+		return defaultNickname;
 
-+ (NSString *) defaultUsername {
-	UIDevice *device = [UIDevice currentDevice];
-	if ([[device model] hasPrefix:@"iPhone"])
-		return @"iphone";
-	if ([[device model] hasPrefix:@"iPod"])
-		return @"ipod";
-	return @"user";
+#if TARGET_IPHONE_SIMULATOR
+	return NSUserName();
+#else
+	static NSString *generatedNickname;
+	if (!generatedNickname) {
+		NSArray *components = [[UIDevice currentDevice].name componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+		for (NSString *compontent in components) {
+			if ([compontent isCaseInsensitiveEqualToString:@"iPhone"] || [compontent isCaseInsensitiveEqualToString:@"iPod"])
+				continue;
+			if ([compontent isEqualToString:@"3G"] || [compontent isCaseInsensitiveEqualToString:@"Touch"])
+				continue;
+			if ([compontent hasCaseInsensitiveSuffix:@"'s"])
+				compontent = [compontent substringWithRange:NSMakeRange(0, (compontent.length - 2))];
+			if (!compontent.length)
+				continue;
+			generatedNickname = [compontent copy];
+			break;
+		}
+	}
+
+	if (generatedNickname.length)
+		return generatedNickname;
+
+	return NSLocalizedString(@"ColloquyUser", @"Default nickname");
+#endif
 }
 
 + (NSString *) defaultRealName {
-	return [[NSUserDefaults standardUserDefaults] stringForKey:@"CQDefaultRealName"];
+	NSString *defaultRealName = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQDefaultRealName"];
+	if (defaultRealName.length)
+		return defaultRealName;
+
+#if TARGET_IPHONE_SIMULATOR
+	return NSFullUserName();
+#else
+	static NSString *generatedRealName;
+	if (!generatedRealName) {
+		// This might only work for English users, but it is fine for now.
+		NSString *deviceName = [UIDevice currentDevice].name;
+		NSRange range = [deviceName rangeOfString:@"'s" options:NSLiteralSearch];
+		if (range.location != NSNotFound)
+			generatedRealName = [[deviceName substringToIndex:range.location] copy];
+	}
+
+	if (generatedRealName.length)
+		return generatedRealName;
+#endif
+
+	return NSLocalizedString(@"Colloquy User", @"Default real name");
 }
 
 + (NSString *) defaultQuitMessage {
