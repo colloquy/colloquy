@@ -363,22 +363,9 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
-
-	NSString *uniqueIdentfier = [identifier lowercaseString];
-	if( [uniqueIdentfier isEqualToString:[_localUser uniqueIdentifier]] )
-		return [self localUser];
-
-	MVChatUser *user = nil;
-	@synchronized( _knownUsers ) {
-		user = [_knownUsers objectForKey:uniqueIdentfier];
-		if( user )
-			return [[user retain] autorelease];
-
-		user = [[MVICBChatUser alloc] initWithNickname:identifier
-		                              andConnection:self];
-	}
-
-	return [user autorelease];
+	MVChatUser *user = [super chatUserWithUniqueIdentifier:[identifier lowercaseString]];
+	if( ! user ) user = [[[MVICBChatUser allocWithZone:nil] initWithNickname:identifier andConnection:self] autorelease];
+	return user;
 }
 
 @end

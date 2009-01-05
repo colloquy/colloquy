@@ -143,7 +143,8 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		CFDictionaryValueCallBacks valueCallbacks = { 0, NULL, NULL, kCFTypeDictionaryValueCallBacks.copyDescription, kCFTypeDictionaryValueCallBacks.equal };
 		_knownRooms = (NSMutableDictionary *)CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &valueCallbacks);
-		_knownUsers = (NSMutableDictionary *)CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &valueCallbacks);
+
+		_knownUsers = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:300];
 
 #if !defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
@@ -842,9 +843,12 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 }
 
 - (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
-// subclass this method
-	[self doesNotRecognizeSelector:_cmd];
-	return nil;
+	if( [identifier isEqual:[[self localUser] uniqueIdentifier]] )
+		return [self localUser];
+
+	@synchronized( _knownUsers ) {
+		return [[[_knownUsers objectForKey:identifier] retain] autorelease];
+	} return nil;
 }
 
 - (MVChatUser *) localUser {
@@ -1063,6 +1067,8 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	MVSafeAdoptAssign( &_cachedDate, nil );
 
 	if( wasConnected ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidDisconnectNotification object:self];
+
+	[self _pruneKnownUsers];
 }
 
 - (void) _postError:(NSError *) error {
@@ -1099,9 +1105,18 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	}
 }
 
-- (void) _removeKnownUser:(MVChatUser *) user {
+- (void) _pruneKnownUsers {
 	@synchronized( _knownUsers ) {
-		[_knownUsers removeObjectForKey:[user uniqueIdentifier]];
+		NSMutableArray *removeList = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_knownUsers count]];
+		NSEnumerator *keyEnumerator = [_knownUsers keyEnumerator];
+		NSEnumerator *enumerator = [_knownUsers objectEnumerator];
+		id key = nil, object = nil;
+
+		while( ( key = [keyEnumerator nextObject] ) && ( object = [enumerator nextObject] ) )
+			if( [object retainCount] == 1 ) [removeList addObject:key];
+
+		[_knownUsers removeObjectsForKeys:removeList];
+		[removeList release];
 	}
 }
 

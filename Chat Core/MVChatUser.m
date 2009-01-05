@@ -103,8 +103,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (void) dealloc {
-	[[self connection] _removeKnownUser:self];
-
 	[_uniqueIdentifier release];
 	[_nickname release];
 	[_realName release];

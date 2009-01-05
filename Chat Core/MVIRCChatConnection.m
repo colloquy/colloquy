@@ -437,8 +437,8 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
-	MVChatRoom *room = [super chatRoomWithUniqueIdentifier:[(NSString *)identifier lowercaseString]];
-	if (!room) room = [[[MVIRCChatRoom allocWithZone:nil] initWithName:identifier andConnection:self] autorelease];
+	MVChatRoom *room = [super chatRoomWithUniqueIdentifier:[identifier lowercaseString]];
+	if( ! room ) room = [[[MVIRCChatRoom allocWithZone:nil] initWithName:identifier andConnection:self] autorelease];
 	return room;
 }
 
@@ -469,20 +469,9 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
-
-	NSString *uniqueIdentfier = [identifier lowercaseString];
-	if( [uniqueIdentfier isEqualToString:[[self localUser] uniqueIdentifier]] )
-		return [self localUser];
-
-	MVChatUser *user = nil;
-	@synchronized( _knownUsers ) {
-		user = [_knownUsers objectForKey:uniqueIdentfier];
-		if( user ) return [[user retain] autorelease];
-
-		user = [[MVIRCChatUser allocWithZone:nil] initWithNickname:identifier andConnection:self];
-	}
-
-	return [user autorelease];
+	MVChatUser *user = [super chatUserWithUniqueIdentifier:[identifier lowercaseString]];
+	if( ! user ) user = [[[MVIRCChatUser allocWithZone:nil] initWithNickname:identifier andConnection:self] autorelease];
+	return user;
 }
 
 #pragma mark -
@@ -1406,6 +1395,8 @@ end:
 - (void) _periodicEvents {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
+	[self _pruneKnownUsers];
+
 	@synchronized( _joinedRooms ) {
 		NSEnumerator *enumerator = [_joinedRooms objectEnumerator];
 		MVChatRoom *room = nil;
@@ -1970,8 +1961,9 @@ end:
 		if( ctcp ) {
 			[self _handleCTCP:msgData asRequest:YES fromSender:sender forRoom:room];
 		} else {
-			NSDictionary *privmsgInfo = [NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", target, @"target", room, @"room", nil];
+			NSDictionary *privmsgInfo = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", target, @"target", room, @"room", nil];
 			[self performSelectorOnMainThread:@selector( _handlePrivmsg: ) withObject:privmsgInfo waitUntilDone:NO];
+			[privmsgInfo release];
 		}
 	}
 }
@@ -2071,8 +2063,9 @@ end:
 		if ( ctcp ) {
 			[self _handleCTCP:msgData asRequest:NO fromSender:sender forRoom:room];
 		} else {
-			NSDictionary *noticeInfo = [NSDictionary dictionaryWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", target, @"target", room, @"room", nil];
+			NSDictionary *noticeInfo = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", target, @"target", room, @"room", nil];
 			[self performSelectorOnMainThread:@selector( _handleNotice: ) withObject:noticeInfo waitUntilDone:NO];
+			[noticeInfo release];
 		}
 	}
 }
@@ -2106,7 +2099,6 @@ end:
 
 		[command release];
 		[arguments release];
-		[ctcpInfo release];
 		return;
 	}
 
@@ -2125,7 +2117,6 @@ end:
 	if( [[results lastObject] boolValue] ) {
 		[command release];
 		[arguments release];
-		[ctcpInfo release];
 		return;
 	}
 #endif
@@ -2445,20 +2436,21 @@ end:
 
 	[command release];
 	[arguments release];
-	[ctcpInfo release];
 }
 
 - (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender forRoom:(MVChatRoom *) room {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	// The info dictionary is released in _handleCTCP:.
 	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:4];
+
 	if( data ) [info setObject:data forKey:@"data"];
 	if( sender ) [info setObject:sender forKey:@"sender"];
 	if( room ) [info setObject:room forKey:@"room"];
 	[info setObject:[NSNumber numberWithBool:request] forKey:@"request"];
 
 	[self performSelectorOnMainThread:@selector( _handleCTCP: ) withObject:info waitUntilDone:NO];
+
+	[info release];
 }
 
 #pragma mark -
