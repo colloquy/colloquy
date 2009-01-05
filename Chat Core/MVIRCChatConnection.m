@@ -1029,6 +1029,10 @@ end:
 		MVChatRoom *room = (MVChatRoom *)target;
 		if( [command isCaseInsensitiveEqualToString:@"cycle"] || [command isCaseInsensitiveEqualToString:@"hop"] ) {
 			[room part];
+
+			[room _setDateParted:[NSDate date]];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomPartedNotification object:room];
+
 			[room join];
 			return;
 		} else if( [command isCaseInsensitiveEqualToString:@"invite"] ) {
