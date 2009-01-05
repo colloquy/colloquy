@@ -154,7 +154,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
 	if (section == 0)
-		return NSLocalizedString(@"Internat Relay Chat Server", @"Internat Relay Chat Server section title");
+		return NSLocalizedString(@"Internet Relay Chat Server", @"Internet Relay Chat Server section title");
 	if (section == 1)
 		return NSLocalizedString(@"Network Identity", @"Network Identity section title");
 	if (section == 2)
