@@ -9,10 +9,10 @@
 	IBOutlet UIToolbar *toolbar;
 	NSURL *_urlToLoad;
 }
-
 - (void) loadURL:(NSURL *) url;
-- (void) goBack:(id) sender;
-- (void) reloadOrStop:(id) sender;
-- (void) openInSafari:(id) sender;
-- (void) close:(id) sender;
+
+- (IBAction) goBack:(id) sender;
+- (IBAction) reloadOrStop:(id) sender;
+- (IBAction) openInSafari:(id) sender;
+- (IBAction) close:(id) sender;
 @end

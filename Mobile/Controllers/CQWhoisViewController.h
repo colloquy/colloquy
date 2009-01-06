@@ -1,25 +1,19 @@
-//
 //  CQWhoisViewController.h
 //  Mobile Colloquy
 //
 //  Created by August Joki on 1/3/09.
 //  Copyright 2009 Concinnous Software. All rights reserved.
-//
-
-#import <UIKit/UIKit.h>
 
 @class MVChatUser;
 
-@interface CQWhoisViewController : UIViewController <UITableViewDelegate, UITableViewDataSource> {
+@interface CQWhoisViewController : UITableViewController {
 	MVChatUser *_user;
-	IBOutlet UITableView *tableView;
-	
-	BOOL _addressResolved;
-	NSString *address;
+	NSTimer *_updateTimesTimer;
+	NSTimer *_updateInfoTimer;
+	NSTimeInterval _idleTimeStart;
 }
-
 @property (nonatomic, retain) MVChatUser *user;
 
-- (IBAction)refreshButtonPressed:(UIBarButtonItem*)sender;
-
+- (IBAction) showJoinedRooms:(id) sender;
+- (IBAction) refreshInformation:(id) sender;
 @end

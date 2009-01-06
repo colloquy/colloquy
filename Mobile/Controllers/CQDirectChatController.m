@@ -40,6 +40,10 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
 
 	if (self.user) {
+		UIBarButtonItem *infoItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showUserInformation)];
+		self.navigationItem.rightBarButtonItem = infoItem;
+		[infoItem release];
+
 		_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDirectChatEncoding"];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:self.user];
@@ -198,6 +202,24 @@
 
 - (NSUInteger) importantUnreadCount {
 	return _unreadHighlightedMessages;
+}
+
+#pragma mark -
+
+- (void) showUserInformation {
+	if (!self.user)
+		return;
+
+	CQWhoisNavController *whoisController = [[CQWhoisNavController alloc] init];
+	whoisController.user = self.user;
+
+	_allowEditingToEnd = YES;
+	[chatInputBar resignFirstResponder];
+	_allowEditingToEnd = NO;
+
+	[self presentModalViewController:whoisController animated:YES];
+
+	[whoisController release];
 }
 
 #pragma mark -
@@ -489,19 +511,25 @@
 #pragma mark -
 
 - (BOOL) handleWhoisCommandWithArguments:(NSString *) arguments {
-	CQWhoisNavController *whoisController = [CQWhoisNavController sharedInstance];
+	CQWhoisNavController *whoisController = [[CQWhoisNavController alloc] init];
+
 	if (arguments.length) {
 		NSString *nick = [[arguments componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] objectAtIndex:0];
 		whoisController.user = [[self.connection chatUsersWithNickname:nick] anyObject];
 	} else if (self.user) {
 		whoisController.user = self.user;
-	} else return NO;
+	} else {
+		[whoisController release];
+		return NO;
+	}
 
 	_allowEditingToEnd = YES;
 	[chatInputBar resignFirstResponder];
 	_allowEditingToEnd = NO;
 
 	[self presentModalViewController:whoisController animated:YES];
+
+	[whoisController release];
 
 	return YES;
 }

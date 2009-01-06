@@ -336,15 +336,17 @@
 		return;
 
 	MVChatUser *user = [_matchedUsers objectAtIndex:selectedIndexPath.row];
-	
+
 	if (buttonIndex == 0) {
 		CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
 		[[CQChatController defaultController] showChatController:chatController animated:YES];
-	}
-	else if (buttonIndex == 1) {
-		CQWhoisNavController *whoisController = [CQWhoisNavController sharedInstance];
+	} else if (buttonIndex == 1) {
+		CQWhoisNavController *whoisController = [[CQWhoisNavController alloc] init];
 		whoisController.user = user;
+
 		[self presentModalViewController:whoisController animated:YES];
+
+		[whoisController release];
 	}
 }
 @end

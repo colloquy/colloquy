@@ -74,6 +74,7 @@
 		1C82C27D0D847EA4009ABD9F /* CQChatListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C27C0D847EA4009ABD9F /* CQChatListViewController.m */; };
 		1C82C52A0D850B1B009ABD9F /* CQConnectionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C82C5290D850B1B009ABD9F /* CQConnectionsViewController.m */; };
 		1C9B15A50D878B6A003794A5 /* CQConnectionEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */; };
+		1C9E1A690F12E62600C18B55 /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9E1A680F12E62600C18B55 /* info.png */; };
 		1CA7151A0EF47D6F006225CD /* CQUnreadCountView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA715190EF47D6F006225CD /* CQUnreadCountView.m */; };
 		1CA718AA0EF5F136006225CD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1CA718A90EF5F136006225CD /* Settings.bundle */; };
 		1CA91CCA0DFC976D002DDBB4 /* Colloquy.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */; };
@@ -118,10 +119,7 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		972EE83B0F10406E0068C75E /* CQWhoisViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 972EE83A0F10406E0068C75E /* CQWhoisViewController.m */; };
-		972EE8820F104E010068C75E /* WhoisView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 972EE8810F104E010068C75E /* WhoisView.xib */; };
 		972EEC390F1080600068C75E /* CQWhoisNavController.m in Sources */ = {isa = PBXBuildFile; fileRef = 972EEC380F1080600068C75E /* CQWhoisNavController.m */; };
-		972EEC3B0F1080980068C75E /* WhoisNav.xib in Resources */ = {isa = PBXBuildFile; fileRef = 972EEC3A0F1080980068C75E /* WhoisNav.xib */; };
-		972EECDA0F1089220068C75E /* WhoisChannelsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 972EECD90F1089220068C75E /* WhoisChannelsView.xib */; };
 		972EECE00F1089780068C75E /* CQWhoisChannelsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 972EECDF0F1089780068C75E /* CQWhoisChannelsViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -243,6 +241,7 @@
 		1C82C5290D850B1B009ABD9F /* CQConnectionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionsViewController.m; sourceTree = "<group>"; };
 		1C9B15A30D878B6A003794A5 /* CQConnectionEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionEditViewController.h; sourceTree = "<group>"; };
 		1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionEditViewController.m; sourceTree = "<group>"; };
+		1C9E1A680F12E62600C18B55 /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info.png; sourceTree = "<group>"; };
 		1CA715180EF47D6F006225CD /* CQUnreadCountView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQUnreadCountView.h; sourceTree = "<group>"; };
 		1CA715190EF47D6F006225CD /* CQUnreadCountView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQUnreadCountView.m; sourceTree = "<group>"; };
 		1CA718A90EF5F136006225CD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -303,11 +302,8 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		972EE8390F10406E0068C75E /* CQWhoisViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQWhoisViewController.h; sourceTree = "<group>"; };
 		972EE83A0F10406E0068C75E /* CQWhoisViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQWhoisViewController.m; sourceTree = "<group>"; };
-		972EE8810F104E010068C75E /* WhoisView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WhoisView.xib; sourceTree = "<group>"; };
 		972EEC370F1080600068C75E /* CQWhoisNavController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQWhoisNavController.h; sourceTree = "<group>"; };
 		972EEC380F1080600068C75E /* CQWhoisNavController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQWhoisNavController.m; sourceTree = "<group>"; };
-		972EEC3A0F1080980068C75E /* WhoisNav.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WhoisNav.xib; sourceTree = "<group>"; };
-		972EECD90F1089220068C75E /* WhoisChannelsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WhoisChannelsView.xib; sourceTree = "<group>"; };
 		972EECDE0F1089780068C75E /* CQWhoisChannelsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQWhoisChannelsViewController.h; sourceTree = "<group>"; };
 		972EECDF0F1089780068C75E /* CQWhoisChannelsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQWhoisChannelsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -429,12 +425,12 @@
 				1CC64B2B0EE97F8B00DE91D0 /* CQChatUserListViewController.h */,
 				1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */,
 				1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */,
-				972EE83A0F10406E0068C75E /* CQWhoisViewController.m */,
-				972EE8390F10406E0068C75E /* CQWhoisViewController.h */,
-				972EEC380F1080600068C75E /* CQWhoisNavController.m */,
-				972EEC370F1080600068C75E /* CQWhoisNavController.h */,
 				972EECDF0F1089780068C75E /* CQWhoisChannelsViewController.m */,
 				972EECDE0F1089780068C75E /* CQWhoisChannelsViewController.h */,
+				972EEC380F1080600068C75E /* CQWhoisNavController.m */,
+				972EEC370F1080600068C75E /* CQWhoisNavController.h */,
+				972EE83A0F10406E0068C75E /* CQWhoisViewController.m */,
+				972EE8390F10406E0068C75E /* CQWhoisViewController.h */,
 			);
 			name = Controllers;
 			path = Mobile/Controllers;
@@ -587,9 +583,6 @@
 				1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */,
 				1CE69F810EE2F50100389442 /* ChatView.xib */,
 				1C124AD50F09F635008F181B /* Browser.xib */,
-				972EEC3A0F1080980068C75E /* WhoisNav.xib */,
-				972EE8810F104E010068C75E /* WhoisView.xib */,
-				972EECD90F1089220068C75E /* WhoisChannelsView.xib */,
 				1C0937320D80E72F00A2705D /* Icon.png */,
 				1CC64A9A0EE9152D00DE91D0 /* Default.png */,
 				1C124B3E0F0A0244008F181B /* browserBack.png */,
@@ -601,6 +594,7 @@
 				1CB33C990D882BB000EC4E38 /* colloquies.png */,
 				1CB318DA0D8644E4006A7513 /* server.png */,
 				1CD949800D8E18DB00756ACD /* directChatIcon.png */,
+				1C9E1A680F12E62600C18B55 /* info.png */,
 				1CD949810D8E18DB00756ACD /* roomIcon.png */,
 				1CF50F700EDA7BC600CBE5E3 /* roomIconSmall.png */,
 				1C61FE9F0ED24BA40016F968 /* deleteButtonNormal.png */,
@@ -723,9 +717,7 @@
 				1C124B430F0A0244008F181B /* browserStop.png in Resources */,
 				1C124BE70F0A13ED008F181B /* browserSafari.png in Resources */,
 				1C1253290F0D4FC1008F181B /* standard-dark.css in Resources */,
-				972EE8820F104E010068C75E /* WhoisView.xib in Resources */,
-				972EEC3B0F1080980068C75E /* WhoisNav.xib in Resources */,
-				972EECDA0F1089220068C75E /* WhoisChannelsView.xib in Resources */,
+				1C9E1A690F12E62600C18B55 /* info.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

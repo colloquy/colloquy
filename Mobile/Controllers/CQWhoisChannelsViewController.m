@@ -1,104 +1,80 @@
-//
 //  CQWhoisChannelsViewController.m
 //  Mobile Colloquy
 //
 //  Created by August Joki on 1/3/09.
 //  Copyright 2009 Concinnous Software. All rights reserved.
-//
 
 #import "CQWhoisChannelsViewController.h"
 
+#import "CQChatController.h"
+
 #import <ChatCore/MVChatConnection.h>
 
-
 @implementation CQWhoisChannelsViewController
-
-@synthesize channels = _channels, connection = _connection;
-
-static UIImage *image = nil;
-
-+ (void)initialize;
-{
-    image = [[UIImage imageNamed:@"roomIconSmall.png"] retain];
+- (id) init {
+	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
+		return nil;
+	self.title = NSLocalizedString(@"Rooms", "Rooms view title");
+	return self;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
-{
-	return 1;
+- (void) dealloc {
+	[_connection release];
+	[_rooms release];
+
+	[super dealloc];
 }
 
+#pragma mark -
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
-{
-    return _channels.count;
+- (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
+	return _rooms.count;
 }
 
+- (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
+	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;
-{
-    return NSLocalizedString(@"Rooms", "Rooms whois label");
+	NSString *roomName = [_rooms objectAtIndex:indexPath.row];
+
+	cell.image = [UIImage imageNamed:@"roomIconSmall.png"];
+	cell.text = [_connection chatRoomWithName:roomName].displayName;
+
+	return cell;
 }
 
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
-{
-    return image.size.height + 10.;
+- (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", "Cancel button title") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Join Room", @"Join Room button title") , nil];
+	[sheet showInView:self.view];
+	[sheet release];
 }
 
+#pragma mark -
 
-- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath;
-{
-    static NSString *CellIdentifier = @"WhoisChannelIdentifier";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
-    }
-    
-	cell.image = image;
-    cell.text = [_channels objectAtIndex:indexPath.row];
-    
-    return cell;
+- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+
+	[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
+
+	if (buttonIndex == actionSheet.cancelButtonIndex)
+		return;
+
+	// Pass nil for the room name, so rooms that are forwarded will show.
+	[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:nil andConnection:_connection];
+
+	[_connection joinChatRoomNamed:[_rooms objectAtIndex:selectedIndexPath.row]];
 }
 
+#pragma mark -
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
-{
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", "Cancel button title") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Join Room", @"Join Room button title"), nil];
-    [sheet showInView:self.view];
-    [sheet release];
+@synthesize connection = _connection;
+
+@synthesize rooms = _rooms;
+
+- (void) setRooms:(NSArray *) rooms {
+	id old = _rooms;
+	_rooms = [rooms retain];
+	[old release];
+
+	[self.tableView reloadData];
 }
-
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex;
-{
-    NSIndexPath *indexPath = [tableView indexPathForSelectedRow];
-    if (buttonIndex != actionSheet.cancelButtonIndex) {
-        [_connection joinChatRoomNamed:[_channels objectAtIndex:indexPath.row]];
-    }
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-
-- (void)setChannels:(NSArray *)chans {
-    [chans retain];
-    [_channels release];
-    _channels = chans;
-    
-    [tableView reloadData];
-}
-
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning]; // Releases the view if it doesn't have a superview
-    // Release anything that's not essential, such as cached data
-}
-
-
-- (void)dealloc {
-    [image release];
-	[_channels release];
-    [super dealloc];
-}
-
-
 @end

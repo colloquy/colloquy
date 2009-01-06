@@ -133,7 +133,8 @@
 		[connection connect];
 
 		if (target.length) {
-			[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:target andConnection:connection];
+			// Pass nil for the room name, so rooms that are forwarded will show.
+			[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:nil andConnection:connection];
 			[connection joinChatRoomNamed:target];
 		} else [CQColloquyApplication sharedApplication].tabBarController.selectedViewController = self;
 
@@ -148,7 +149,8 @@
 		[connection connect];
 
 		if (target.length) {
-			[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:target andConnection:connection];
+			// Pass nil for the room name, so rooms that are forwarded will show.
+			[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:nil andConnection:connection];
 			[connection joinChatRoomNamed:target];
 		} else [CQColloquyApplication sharedApplication].tabBarController.selectedViewController = self;
 
