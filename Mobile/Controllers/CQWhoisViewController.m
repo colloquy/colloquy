@@ -12,10 +12,19 @@
 #import <ChatCore/MVChatConnection.h>
 
 static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFormat) {
+	static NSDictionary *singularWords;
+	if (!singularWords)
+		singularWords = [[NSDictionary alloc] initWithObjectsAndKeys:NSLocalizedString(@"second", "Singular second"), [NSNumber numberWithUnsignedInt:1], NSLocalizedString(@"minute", "Singular minute"), [NSNumber numberWithUnsignedInt:60], NSLocalizedString(@"hour", "Singular hour"), [NSNumber numberWithUnsignedInt:3600], NSLocalizedString(@"day", "Singular day"), [NSNumber numberWithUnsignedInt:86400], NSLocalizedString(@"week", "Singular week"), [NSNumber numberWithUnsignedInt:604800], NSLocalizedString(@"month", "Singular month"), [NSNumber numberWithUnsignedInt:2628000], NSLocalizedString(@"year", "Singular year"), [NSNumber numberWithUnsignedInt:31536000], nil];
+
+	static NSDictionary *pluralWords;
+	if (!pluralWords)
+		pluralWords = [[NSDictionary alloc] initWithObjectsAndKeys:NSLocalizedString(@"seconds", "Plural seconds"), [NSNumber numberWithUnsignedInt:1], NSLocalizedString(@"minutes", "Plural minutes"), [NSNumber numberWithUnsignedInt:60], NSLocalizedString(@"hours", "Plural hours"), [NSNumber numberWithUnsignedInt:3600], NSLocalizedString(@"days", "Plural days"), [NSNumber numberWithUnsignedInt:86400], NSLocalizedString(@"weeks", "Plural weeks"), [NSNumber numberWithUnsignedInt:604800], NSLocalizedString(@"months", "Plural months"), [NSNumber numberWithUnsignedInt:2628000], NSLocalizedString(@"years", "Plural years"), [NSNumber numberWithUnsignedInt:31536000], nil];
+
+	static NSArray *breaks;
+	if (!breaks)
+		breaks = [[NSArray alloc] initWithObjects:[NSNumber numberWithUnsignedInt:1], [NSNumber numberWithUnsignedInt:60], [NSNumber numberWithUnsignedInt:3600], [NSNumber numberWithUnsignedInt:86400], [NSNumber numberWithUnsignedInt:604800], [NSNumber numberWithUnsignedInt:2628000], [NSNumber numberWithUnsignedInt:31536000], nil];
+
 	NSTimeInterval seconds = ABS(interval);
-	NSDictionary *singularWords = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"second", "Singular second"), [NSNumber numberWithUnsignedInt:1], NSLocalizedString(@"minute", "Singular minute"), [NSNumber numberWithUnsignedInt:60], NSLocalizedString(@"hour", "Singular hour"), [NSNumber numberWithUnsignedInt:3600], NSLocalizedString(@"day", "Singular day"), [NSNumber numberWithUnsignedInt:86400], NSLocalizedString(@"week", "Singular week"), [NSNumber numberWithUnsignedInt:604800], NSLocalizedString(@"month", "Singular month"), [NSNumber numberWithUnsignedInt:2628000], NSLocalizedString(@"year", "Singular year"), [NSNumber numberWithUnsignedInt:31536000], nil];
-	NSDictionary *pluralWords = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"seconds", "Plural seconds"), [NSNumber numberWithUnsignedInt:1], NSLocalizedString(@"minutes", "Plural minutes"), [NSNumber numberWithUnsignedInt:60], NSLocalizedString(@"hours", "Plural hours"), [NSNumber numberWithUnsignedInt:3600], NSLocalizedString(@"days", "Plural days"), [NSNumber numberWithUnsignedInt:86400], NSLocalizedString(@"weeks", "Plural weeks"), [NSNumber numberWithUnsignedInt:604800], NSLocalizedString(@"months", "Plural months"), [NSNumber numberWithUnsignedInt:2628000], NSLocalizedString(@"years", "Plural years"), [NSNumber numberWithUnsignedInt:31536000], nil];
-	NSArray *breaks = [NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:1], [NSNumber numberWithUnsignedInt:60], [NSNumber numberWithUnsignedInt:3600], [NSNumber numberWithUnsignedInt:86400], [NSNumber numberWithUnsignedInt:604800], [NSNumber numberWithUnsignedInt:2628000], [NSNumber numberWithUnsignedInt:31536000], nil];
 
 	NSUInteger i = 0;
 	while (i < [breaks count] && seconds >= [[breaks objectAtIndex:i] doubleValue]) ++i;
