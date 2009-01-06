@@ -3,6 +3,7 @@
 #import "CQChatController.h"
 #import "CQChatInputBar.h"
 #import "CQChatInputField.h"
+#import "CQChatRoomController.h"
 #import "CQChatTableCell.h"
 #import "CQColloquyApplication.h"
 #import "CQStyleView.h"
@@ -482,6 +483,61 @@
 
 - (BOOL) handleUrlCommandWithArguments:(NSString *) arguments {
 	return [self _handleURLCommandWithArguments:arguments preferBuiltInBrowser:NO];
+}
+
+- (BOOL) handleJoinCommandWithArguments:(NSString *) arguments {
+	NSArray *rooms = [arguments componentsSeparatedByString:@","];
+
+	if (rooms.count == 1 && ((NSString *)[rooms objectAtIndex:0]).length) {
+		MVChatRoom *room = [self.connection chatRoomWithName:[rooms objectAtIndex:0]];
+		if (room) {
+			CQChatRoomController *controller = [[CQChatController defaultController] chatViewControllerForRoom:room ifExists:YES];
+			if (controller) {
+				[[CQChatController defaultController] showChatController:controller animated:YES];
+				return NO;
+			}
+		}
+
+		// Pass nil for the room name, so rooms that are forwarded will show.
+		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:nil andConnection:self.connection];
+	} else if (rooms.count > 1)
+		[[CQChatController defaultController] popToRootViewControllerAnimated:YES];
+
+	// Return NO so the command is handled in ChatCore.
+	return NO;
+}
+
+- (BOOL) handleJCommandWithArguments:(NSString *) arguments {
+	return [self handleJoinCommandWithArguments:arguments];
+}
+
+- (BOOL) handleMsgCommandWithArguments:(NSString *) arguments {
+	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments];
+	[argumentsScanner setCharactersToBeSkipped:nil];
+
+	NSString *targetName = nil;
+	[argumentsScanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&targetName];
+
+	if ([argumentsScanner isAtEnd] || [arguments length] <= [argumentsScanner scanLocation] + 1) {
+		if (targetName.length > 1 && [[self.connection chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]]) {
+			MVChatRoom *room = [self.connection chatRoomWithUniqueIdentifier:targetName];
+			CQChatRoomController *controller = [[CQChatController defaultController] chatViewControllerForRoom:room ifExists:NO];
+			[[CQChatController defaultController] showChatController:controller animated:YES];
+			return YES;
+		} else {
+			MVChatUser *user = [[self.connection chatUsersWithNickname:targetName] anyObject];
+			CQDirectChatController *controller = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
+			[[CQChatController defaultController] showChatController:controller animated:YES];
+			return YES;
+		}
+	}
+
+	// Return NO so the command is handled in ChatCore.
+	return NO;
+}
+
+- (BOOL) handleQueryCommandWithArguments:(NSString *) arguments {
+	return [self handleMsgCommandWithArguments:arguments];
 }
 
 #pragma mark -

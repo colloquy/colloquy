@@ -1251,7 +1251,7 @@ end:
 
 		MVChatRoom *room = nil;
 		if( [command isCaseInsensitiveEqualToString:@"msg"] && [roomTargetName length] > 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
-			room = [self joinedChatRoomWithUniqueIdentifier:roomTargetName];
+			room = [self chatRoomWithUniqueIdentifier:roomTargetName];
 
 		BOOL echo = (isUser || isRoom || [command isCaseInsensitiveEqualToString:@"query"]);
 		if( room ) {
