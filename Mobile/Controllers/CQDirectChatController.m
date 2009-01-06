@@ -303,6 +303,10 @@
 	_allowEditingToEnd = NO;
 }
 
+- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation) fromInterfaceOrientation {
+	[transcriptView scrollToBottomAnimated:NO];
+}
+
 - (void) didReceiveMemoryWarning {
 	// Do nothing for now, since calling super will release the view and
 	// the transcript view with all the chat history.
