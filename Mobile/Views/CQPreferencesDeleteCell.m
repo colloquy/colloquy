@@ -35,6 +35,7 @@
 
 - (void) dealloc {
 	[_deleteButton release];
+
 	[super dealloc];
 }
 

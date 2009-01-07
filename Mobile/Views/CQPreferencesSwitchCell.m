@@ -27,6 +27,7 @@
 - (void) dealloc {
 	[_switchControl release];
 	[_label release];
+
 	[super dealloc];
 }
 

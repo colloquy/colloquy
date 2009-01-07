@@ -95,11 +95,11 @@
 - (void) viewDidAppear:(BOOL) animated {
 	[super viewDidAppear:animated];
 
+	if (!_currentUserListViewController && ABS([[CQColloquyApplication sharedApplication].launchDate timeIntervalSinceNow]) > 15.)
+		[self performSelector:@selector(_checkMemberStatus) withObject:nil afterDelay:0.5];
+
 	[_currentUserListViewController release];
 	_currentUserListViewController = nil;
-
-	if (ABS([[CQColloquyApplication sharedApplication].launchDate timeIntervalSinceNow]) > 15.)
-		[self performSelector:@selector(_checkMemberStatus) withObject:nil afterDelay:0.5];
 }
 
 #pragma mark -
@@ -133,6 +133,8 @@
 
 	if (self.room)
 		[state setObject:self.room.name forKey:@"room"];
+	if (_currentUserListViewController)
+		[state setObject:[NSNumber numberWithBool:YES] forKey:@"active"];
 
 	return state;
 }
@@ -758,11 +760,13 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	[alert release];
 }
 
-- (void) _showCantSendMessagesWarning {
+- (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.delegate = self;
-	alert.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
 	alert.cancelButtonIndex = 1;
+
+	if (command) alert.title = NSLocalizedString(@"Can't Send Command", @"Can't send command alert title");
+	else alert.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
 
 	if (self.connection.status == MVChatConnectionConnectingStatus) {
 		alert.message = NSLocalizedString(@"You are currently connecting,\nyou should join the room shortly.", @"Can't send message to room because server is connecting alert message");

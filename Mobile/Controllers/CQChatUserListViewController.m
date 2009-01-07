@@ -323,7 +323,8 @@
 
 	sheet.cancelButtonIndex = 2;
 
-	[sheet showInView:[CQColloquyApplication sharedApplication].tabBarController.view];
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+
 	[sheet release];
 }
 

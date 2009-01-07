@@ -24,7 +24,7 @@
 #import <objc/message.h>
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
-- (void) _showCantSendMessagesWarning;
+- (void) _showCantSendMessagesWarningForCommand:(BOOL) command;
 - (NSDictionary *) _processMessage:(NSDictionary *) message highlightedMessage:(BOOL *) highlighted;
 @end
 
@@ -54,7 +54,7 @@
 		_watchRule.nickname = self.user.nickname;
 
 		[self.connection addChatUserWatchRule:_watchRule];
-		
+
 		_initialView = YES;
 	}
 
@@ -77,7 +77,7 @@
 
 		if (!(self = [self initWithTarget:user]))
 			return nil;
-		
+
 		_initialView = NO;
 	}
 
@@ -115,6 +115,8 @@
 	if (_watchRule)
 		[self.connection removeChatUserWatchRule:_watchRule];
 
+	[chatInputBar release];
+	[transcriptView release];
 	[_watchRule release];
 	[_recentMessages release];
 	[_pendingPreviousSessionComponents release];
@@ -166,7 +168,7 @@
 
 	[state setObject:NSStringFromClass([self class]) forKey:@"class"];
 
-	if ([CQChatController defaultController].visibleViewController == self)
+	if ([CQChatController defaultController].topViewController == self)
 		[state setObject:[NSNumber numberWithBool:YES] forKey:@"active"];
 
 	if (self.user)
@@ -229,6 +231,7 @@
 	[super viewDidLoad];
 
 	transcriptView.styleIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
+	self.view.backgroundColor = transcriptView.backgroundColor;
 
 	chatInputBar.autocomplete = ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableChatAutocomplete"];
 	chatInputBar.autocorrect = ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableChatAutocorrection"];
@@ -276,7 +279,7 @@
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
 	_active = YES;
-	
+
 	if(_initialView) {
 		_initialView = NO;
 		[chatInputBar becomeFirstResponder];
@@ -360,7 +363,7 @@
 
 		static NSArray *services;
 		if (!services) services = [[NSArray alloc] initWithObjects:@"NickServ", @"ChanServ", @"MemoServ", nil];
-		
+
 		for (NSString *service in services) {
 			if ([service hasCaseInsensitivePrefix:word] && ![service isCaseInsensitiveEqualToString:word])
 				[completions addObject:service];
@@ -385,7 +388,7 @@
 				break;
 		}
 	}
-	
+
 	if (completions.count < 10 && ([word containsTypicalEmoticonCharacters] || [word hasCaseInsensitivePrefix:@"x"] || [word hasCaseInsensitivePrefix:@"o"])) {
 		for (NSString *emoticon in [NSString knownEmoticons]) {
 			if ([emoticon hasCaseInsensitivePrefix:word] && ![emoticon isCaseInsensitiveEqualToString:word])
@@ -405,10 +408,9 @@
 	[self performSelector:@selector(resetDidSendRecently) withObject:nil afterDelay:0.5];
 
 	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"]) {
-		if (!self.connection.connected || (!self.available && ([text hasPrefix:@"/me "] || [text hasPrefix:@"/say "]))) {
-			[self _showCantSendMessagesWarning];
-			return NO;
-		}
+		static NSArray *commandsNotRequiringConnection;
+		if (!commandsNotRequiringConnection)
+			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", nil];
 
 		// Send as a command.
 		NSScanner *scanner = [NSScanner scannerWithString:text];
@@ -419,6 +421,17 @@
 
 		[scanner scanString:@"/" intoString:nil];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&command];
+
+		if (!self.available && ([command isCaseInsensitiveEqualToString:@"me"] || [command isCaseInsensitiveEqualToString:@"msg"] || [command isCaseInsensitiveEqualToString:@"say"])) {
+			[self _showCantSendMessagesWarningForCommand:NO];
+			return NO;
+		}
+
+		if (!self.connection.connected && ![commandsNotRequiringConnection containsObject:[command lowercaseString]]) {
+			[self _showCantSendMessagesWarningForCommand:YES];
+			return NO;
+		}
+
 		[scanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] maxLength:1 intoString:NULL];
 
 		arguments = [text substringFromIndex:scanner.scanLocation];
@@ -433,7 +446,7 @@
 		if (!handled) [_target sendCommand:command withArguments:arguments withEncoding:self.encoding];
 	} else {
 		if (!self.available) {
-			[self _showCantSendMessagesWarning];
+			[self _showCantSendMessagesWarningForCommand:NO];
 			return NO;
 		}
 
@@ -548,82 +561,77 @@
 
 - (id) _findLocaleForQueryWithArguments:(NSString *) arguments {
 	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments];
-	NSCharacterSet *whitespaceCharacters = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-	NSString *languageCode = nil;
-	NSString *query = nil;
-	NSMutableArray *results = [[NSMutableArray alloc] init];
-
 	[argumentsScanner setCharactersToBeSkipped:nil];
-	[argumentsScanner scanUpToCharactersFromSet:whitespaceCharacters intoString:&languageCode];
 
+	NSString *languageCode = nil;
+	[argumentsScanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&languageCode];
+
+	NSMutableArray *results = [[NSMutableArray alloc] init];
 	if (!languageCode.length || languageCode.length != 2) {
 		languageCode = @"en";
 
 		[results addObject:languageCode];
 		[results addObject:arguments];
-		
+
 		return [results autorelease];
 	}
-	[results addObject:languageCode];
-	
-	if (arguments.length >= ([argumentsScanner scanLocation] + 1)) query = [arguments substringWithRange:NSMakeRange([argumentsScanner scanLocation] + 1, ([arguments length] - [argumentsScanner scanLocation] - 1))];
+
+	NSString *query = nil;
+	if (arguments.length >= ([argumentsScanner scanLocation] + 1))
+		query = [arguments substringWithRange:NSMakeRange([argumentsScanner scanLocation] + 1, ([arguments length] - [argumentsScanner scanLocation] - 1))];
 	else query = arguments;
 
+	[results addObject:languageCode];
 	[results addObject:query];
-	
+
 	return [results autorelease];
 }
 
 - (void) _handleSearchForURL:(NSString *) urlFormatString withQuery:(NSString *) query withLocale:(NSString *) languageCode {
 	NSString *urlString = [NSString stringWithFormat:urlFormatString, [query stringByEncodingIllegalURLCharacters], languageCode];
 	NSURL *url = [NSURL URLWithString:urlString];
-	
 	[self _openURL:url preferBuiltInBrowser:NO];
 }
 
 - (BOOL) handleGoogleCommandWithArguments:(NSString *) arguments {
-	NSMutableArray *results = [[NSMutableArray alloc] init];
-	NSString *query;
-	NSString *languageCode;
-	
-	results = [self _findLocaleForQueryWithArguments:arguments];
-	languageCode = [results objectAtIndex:0];
-	query = [results objectAtIndex:1];
-	
+	NSMutableArray *results = [self _findLocaleForQueryWithArguments:arguments];
+	NSString *languageCode = [results objectAtIndex:0];
+	NSString *query = [results objectAtIndex:1];
+
 	[self _handleSearchForURL:@"http://www.google.com/m/search?q=%@&hl=%@" withQuery:query withLocale:languageCode];
+
 	return YES;
 }
 
 - (BOOL) handleWikipediaCommandWithArguments:(NSString *) arguments {
-	NSMutableArray *results = [[NSMutableArray alloc] init];
-	NSString *query;
-	NSString *languageCode;
-	
-	results = [self _findLocaleForQueryWithArguments:arguments];
-	languageCode = [results objectAtIndex:0];
-	query = [results objectAtIndex:1];
-	
+	NSArray *results = [self _findLocaleForQueryWithArguments:arguments];
+	NSString *languageCode = [results objectAtIndex:0];
+	NSString *query = [results objectAtIndex:1];
+
 	[self _handleSearchForURL:@"http://www.wikipedia.org/search-redirect.php?search=%@&language=%@" withQuery:query withLocale:languageCode];
+
 	return YES;
 }
 
 - (BOOL) handleAmazonCommandWithArguments:(NSString *) arguments {
-	NSMutableArray *results = [[NSMutableArray alloc] init];
-	NSString *query;
-	NSString *languageCode;
-	
-	results = [self _findLocaleForQueryWithArguments:arguments];
-	languageCode = [results objectAtIndex:0];
-	query = [results objectAtIndex:1];
-	
-	if ([languageCode isCaseInsensitiveEqualToString:@"uk"]) [self _handleSearchForURL:@"http://www.amazon.co.uk/s/field-keywords=%@" withQuery:query withLocale:languageCode];
-	else if ([languageCode isCaseInsensitiveEqualToString:@"de"]) [self _handleSearchForURL:@"http://www.amazon.de/gp/aw/s.html?k=%@" withQuery:query withLocale:languageCode];
-	else if ([languageCode isCaseInsensitiveEqualToString:@"cn"]) [self _handleSearchForURL:@"http://www.amazon.cn/mn/searchApp?&keywords=%@" withQuery:query withLocale:languageCode];
-	else if ([languageCode isCaseInsensitiveEqualToString:@"jp"]) [self _handleSearchForURL:@"http://www.amazon.co.jp/s/field-keywords=%@" withQuery:query withLocale:languageCode];
-	else if ([languageCode isCaseInsensitiveEqualToString:@"fr"]) [self _handleSearchForURL:@"http://www.amazon.fr/s/field-keywords=%@" withQuery:query withLocale:languageCode];
-	else if ([languageCode isCaseInsensitiveEqualToString:@"ca"]) [self _handleSearchForURL:@"http://www.amazon.ca/s/field-keywords=test" withQuery:query withLocale:languageCode];
-	else [self _handleSearchForURL:@"http://www.amazon.com/mn/searchApp?&keywords=%@" withQuery:query withLocale:languageCode]; //Default to American amazon if theres no matching locale
-	
+	NSArray *results = [self _findLocaleForQueryWithArguments:arguments];
+	NSString *languageCode = [results objectAtIndex:0];
+	NSString *query = [results objectAtIndex:1];
+
+	if ([languageCode isCaseInsensitiveEqualToString:@"uk"])
+		[self _handleSearchForURL:@"http://www.amazon.co.uk/s/field-keywords=%@" withQuery:query withLocale:languageCode];
+	else if ([languageCode isCaseInsensitiveEqualToString:@"de"])
+		[self _handleSearchForURL:@"http://www.amazon.de/gp/aw/s.html?k=%@" withQuery:query withLocale:languageCode];
+	else if ([languageCode isCaseInsensitiveEqualToString:@"cn"])
+		[self _handleSearchForURL:@"http://www.amazon.cn/mn/searchApp?&keywords=%@" withQuery:query withLocale:languageCode];
+	else if ([languageCode isCaseInsensitiveEqualToString:@"jp"])
+		[self _handleSearchForURL:@"http://www.amazon.co.jp/s/field-keywords=%@" withQuery:query withLocale:languageCode];
+	else if ([languageCode isCaseInsensitiveEqualToString:@"fr"])
+		[self _handleSearchForURL:@"http://www.amazon.fr/s/field-keywords=%@" withQuery:query withLocale:languageCode];
+	else if ([languageCode isCaseInsensitiveEqualToString:@"ca"])
+		[self _handleSearchForURL:@"http://www.amazon.ca/s/field-keywords=test" withQuery:query withLocale:languageCode];
+	else [self _handleSearchForURL:@"http://www.amazon.com/mn/searchApp?&keywords=%@" withQuery:query withLocale:languageCode];
+
 	return YES;
 }
 
@@ -712,7 +720,7 @@
 		[UIView setAnimationDuration:0.25];
 
 #if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
-		[UIView setAnimationDelay:0.025];
+		[UIView setAnimationDelay:0.06];
 #else
 		[UIView setAnimationDelay:0.175];
 #endif
@@ -1060,10 +1068,12 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 	return [result autorelease];
 }
 
-- (void) _showCantSendMessagesWarning {
+- (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.delegate = self;
-	alert.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
+
+	if (command) alert.title = NSLocalizedString(@"Can't Send Command", @"Can't send command alert title");
+	else alert.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
 
 	if (self.connection.status == MVChatConnectionConnectingStatus) {
 		alert.message = NSLocalizedString(@"You are currently connecting,\ntry sending again soon.", @"Can't send message to user because server is connecting alert message");

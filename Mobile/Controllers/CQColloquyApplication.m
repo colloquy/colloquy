@@ -5,6 +5,12 @@
 #import "CQChatController.h"
 #import "NSStringAdditions.h"
 
+@interface UITabBarController (UITabBarControllerPrivate)
+@property (nonatomic, readonly) UITabBar *tabBar;
+@end
+
+#pragma mark -
+
 @implementation CQColloquyApplication
 + (CQColloquyApplication *) sharedApplication {
 	return (CQColloquyApplication *)[UIApplication sharedApplication];
@@ -13,9 +19,8 @@
 @synthesize tabBarController, mainWindow;
 
 - (void) dealloc {
-	[tabBarController release];
-	[mainWindow release];
 	[_launchDate release];
+
 	[super dealloc];
 }
 
@@ -43,6 +48,15 @@
 
 - (BOOL) application:(UIApplication *) application handleOpenURL:(NSURL *) url {
 	return [[CQConnectionsController defaultController] handleOpenURL:url];
+}
+
+- (void) showActionSheet:(UIActionSheet *) sheet {
+	UITabBar *tabBar = nil;
+	if ([tabBarController respondsToSelector:@selector(tabBar)])
+		tabBar = tabBarController.tabBar;
+
+	if (tabBar) [sheet showFromTabBar:tabBar];
+	else [sheet showInView:tabBarController.view];
 }
 
 - (BOOL) isSpecialApplicationURL:(NSURL *) url {

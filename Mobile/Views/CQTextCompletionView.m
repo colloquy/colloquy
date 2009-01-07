@@ -124,6 +124,7 @@
 
 - (void) dealloc {
 	[_completions release];
+
 	[super dealloc];
 }
 
@@ -150,7 +151,7 @@
 		[existingCompletions addObject:completion];
 
 		if (++i >= MaximumCompletions) break;
-	}		
+	}
 
 	id old = _completions;
 	_completions = [[NSArray alloc] initWithObjects:objects count:i];

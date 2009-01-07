@@ -52,6 +52,7 @@
 	[_styleIdentifier release];
 	[_pendingComponents release];
 	[_pendingPreviousSessionComponents release];
+
 	[super dealloc];
 }
 

@@ -12,6 +12,7 @@
 - (void) dealloc {
 	[_listItemText release];
 	[_listItemPlaceholder release];
+
 	[super dealloc];
 }
 

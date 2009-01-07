@@ -53,11 +53,14 @@
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[_chatListViewController release];
 	[_chatControllers release];
 	[_nextController release];
 	[_nextRoomName release];
 	[_nextRoomConnection release];
+
 	[super dealloc];
 }
 
@@ -344,7 +347,8 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 	sheet.cancelButtonIndex = 2;
 
-	[sheet showInView:[CQColloquyApplication sharedApplication].tabBarController.view];
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+
 	[sheet release];
 }
 

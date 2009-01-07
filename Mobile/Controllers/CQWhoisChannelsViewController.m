@@ -7,6 +7,7 @@
 #import "CQWhoisChannelsViewController.h"
 
 #import "CQChatController.h"
+#import "CQColloquyApplication.h"
 
 #import <ChatCore/MVChatConnection.h>
 
@@ -43,8 +44,16 @@
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", "Cancel button title") destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Join Room", @"Join Room button title") , nil];
-	[sheet showInView:self.view];
+	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	sheet.delegate = self;
+
+	[sheet addButtonWithTitle:NSLocalizedString(@"Join Room", @"Join Room button title")];
+	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+
+	sheet.cancelButtonIndex = 1;
+
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+
 	[sheet release];
 }
 

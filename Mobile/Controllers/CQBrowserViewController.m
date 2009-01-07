@@ -12,6 +12,13 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	[backButton release];
+	[stopReloadButton release];
+	[doneButtonItem release];
+	[locationField release];
+	[webView release];
+	[navigationBar release];
+	[toolbar release];
 	[_urlToLoad release];
 
 	[super dealloc];
@@ -147,7 +154,7 @@
 	[UIView setAnimationDuration:0.25];
 
 #if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
-	[UIView setAnimationDelay:0.025];
+	[UIView setAnimationDelay:0.06];
 #else
 	[UIView setAnimationDelay:0.175];
 #endif

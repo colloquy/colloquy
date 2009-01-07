@@ -205,7 +205,7 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 	[old release];
 
 	if (!_roomTarget && self.navigationItem.rightBarButtonItem.tag == UIBarButtonSystemItemSave)
-		self.navigationItem.rightBarButtonItem.enabled = (_name.length ? YES : NO);	
+		self.navigationItem.rightBarButtonItem.enabled = (_name.length ? YES : NO);
 }
 
 - (void) passwordChanged:(CQPreferencesTextCell *) sender {

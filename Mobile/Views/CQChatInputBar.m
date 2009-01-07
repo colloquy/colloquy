@@ -48,7 +48,7 @@
 	_autocomplete = YES;
 	_autocorrect = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideCompletions) name:UIDeviceOrientationDidChangeNotification object:nil]; 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideCompletions) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 #pragma mark -
@@ -350,7 +350,7 @@ retry:
 			_inputField.selectionRange = NSMakeRange((range.location + string.length), 0);
 		return NO;
 	}
-	
+
 	return YES;
 }
 

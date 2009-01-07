@@ -28,6 +28,7 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 - (void) dealloc {
 	[_editViewController release];
 	[_url release];
+
 	[super dealloc];
 }
 

@@ -246,6 +246,8 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 	_user = [user retain];
 	[old release];
 
+	_idleTimeStart = ([NSDate timeIntervalSinceReferenceDate] - _user.idleTime);
+
 	[_user refreshInformation];
 
 	if (_user) {

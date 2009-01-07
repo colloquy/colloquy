@@ -35,6 +35,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 - (void) dealloc {
 	[_connection release];
+
 	[super dealloc];
 }
 
@@ -321,7 +322,8 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	sheet.destructiveButtonIndex = 0;
 	sheet.cancelButtonIndex = 1;
 
-	[sheet showInView:[CQColloquyApplication sharedApplication].tabBarController.view];
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+
 	[sheet release];
 }
 

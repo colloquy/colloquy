@@ -35,6 +35,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 - (void) dealloc {
 	[_connection release];
+
 	[super dealloc];
 }
 

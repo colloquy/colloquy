@@ -38,6 +38,7 @@
 	[_textField resignFirstResponder];
 	[_textField release];
 	[_label release];
+
 	[super dealloc];
 }
 

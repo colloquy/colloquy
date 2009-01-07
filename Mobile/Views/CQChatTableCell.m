@@ -51,6 +51,7 @@
 	[_removeControl release];
 	[_chatPreviewLabels release];
 	[_removeConfirmationText release];
+
 	[super dealloc];
 }
 

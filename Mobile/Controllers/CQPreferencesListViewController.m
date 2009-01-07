@@ -27,6 +27,7 @@
 	[_editViewTitle release];
 	[_editPlaceholder release];
 	[_editingView release];
+
 	[super dealloc];
 }
 
