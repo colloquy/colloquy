@@ -54,6 +54,36 @@
 			<key>DefaultValue</key>
 			<true/>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Key</key>
+			<string>CQChatRoomLanguage</string>
+			<key>Title</key>
+			<string>Default Country</string>
+			<key>Values</key>
+			<array>
+				<string>ca</string>
+				<string>cn</string>
+				<string>fr</string>
+				<string>de</string>
+				<string>jp</string>
+				<string>uk</string>
+				<string>en</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Canada</string>
+				<string>China</string>
+				<string>France</string>
+				<string>Germany</string>
+				<string>Japan</string>
+				<string>United Kingdom</string>
+				<string>United States</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>en</string>
+		</dict>
 	</array>
 </dict>
 </plist>
