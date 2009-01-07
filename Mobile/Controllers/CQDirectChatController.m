@@ -546,25 +546,84 @@
 
 #pragma mark -
 
-- (void) _handleSearchForURL:(NSString *) urlFormatString withQuery:(NSString *) query {
-	NSString *urlString = [NSString stringWithFormat:urlFormatString, [query stringByEncodingIllegalURLCharacters]];
-	NSURL *url = [NSURL URLWithString:urlString];
+- (id) _findLocaleForQueryWithArguments:(NSString *) arguments {
+	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments];
+	NSCharacterSet *whitespaceCharacters = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+	NSString *languageCode = nil;
+	NSString *query = nil;
+	NSMutableArray *results = [[NSMutableArray alloc] init];
 
+	[argumentsScanner setCharactersToBeSkipped:nil];
+	[argumentsScanner scanUpToCharactersFromSet:whitespaceCharacters intoString:&languageCode];
+
+	if (!languageCode.length || languageCode.length != 2) {
+		languageCode = @"en";
+
+		[results addObject:languageCode];
+		[results addObject:arguments];
+		
+		return [results autorelease];
+	}
+	[results addObject:languageCode];
+	
+	if (arguments.length >= ([argumentsScanner scanLocation] + 1)) query = [arguments substringWithRange:NSMakeRange([argumentsScanner scanLocation] + 1, ([arguments length] - [argumentsScanner scanLocation] - 1))];
+	else query = arguments;
+
+	[results addObject:query];
+	
+	return [results autorelease];
+}
+
+- (void) _handleSearchForURL:(NSString *) urlFormatString withQuery:(NSString *) query withLocale:(NSString *) languageCode {
+	NSString *urlString = [NSString stringWithFormat:urlFormatString, [query stringByEncodingIllegalURLCharacters], languageCode];
+	NSURL *url = [NSURL URLWithString:urlString];
+	
 	[self _openURL:url preferBuiltInBrowser:NO];
 }
 
 - (BOOL) handleGoogleCommandWithArguments:(NSString *) arguments {
-	[self _handleSearchForURL:@"http://www.google.com/m/search?q=%@" withQuery:arguments];
+	NSMutableArray *results = [[NSMutableArray alloc] init];
+	NSString *query;
+	NSString *languageCode;
+	
+	results = [self _findLocaleForQueryWithArguments:arguments];
+	languageCode = [results objectAtIndex:0];
+	query = [results objectAtIndex:1];
+	
+	[self _handleSearchForURL:@"http://www.google.com/m/search?q=%@&hl=%@" withQuery:query withLocale:languageCode];
 	return YES;
 }
 
 - (BOOL) handleWikipediaCommandWithArguments:(NSString *) arguments {
-	[self _handleSearchForURL:@"http://www.wikipedia.org/search-redirect.php?search=%@&language=en" withQuery:arguments];
+	NSMutableArray *results = [[NSMutableArray alloc] init];
+	NSString *query;
+	NSString *languageCode;
+	
+	results = [self _findLocaleForQueryWithArguments:arguments];
+	languageCode = [results objectAtIndex:0];
+	query = [results objectAtIndex:1];
+	
+	[self _handleSearchForURL:@"http://www.wikipedia.org/search-redirect.php?search=%@&language=%@" withQuery:query withLocale:languageCode];
 	return YES;
 }
 
 - (BOOL) handleAmazonCommandWithArguments:(NSString *) arguments {
-	[self _handleSearchForURL:@"http://www.amazon.com/gp/aw/s.html?k=%@" withQuery:arguments];
+	NSMutableArray *results = [[NSMutableArray alloc] init];
+	NSString *query;
+	NSString *languageCode;
+	
+	results = [self _findLocaleForQueryWithArguments:arguments];
+	languageCode = [results objectAtIndex:0];
+	query = [results objectAtIndex:1];
+	
+	if ([languageCode isCaseInsensitiveEqualToString:@"uk"]) [self _handleSearchForURL:@"http://www.amazon.co.uk/s/field-keywords=%@" withQuery:query withLocale:languageCode];
+	else if ([languageCode isCaseInsensitiveEqualToString:@"de"]) [self _handleSearchForURL:@"http://www.amazon.de/gp/aw/s.html?k=%@" withQuery:query withLocale:languageCode];
+	else if ([languageCode isCaseInsensitiveEqualToString:@"cn"]) [self _handleSearchForURL:@"http://www.amazon.cn/mn/searchApp?&keywords=%@" withQuery:query withLocale:languageCode];
+	else if ([languageCode isCaseInsensitiveEqualToString:@"jp"]) [self _handleSearchForURL:@"http://www.amazon.co.jp/s/field-keywords=%@" withQuery:query withLocale:languageCode];
+	else if ([languageCode isCaseInsensitiveEqualToString:@"fr"]) [self _handleSearchForURL:@"http://www.amazon.fr/s/field-keywords=%@" withQuery:query withLocale:languageCode];
+	else if ([languageCode isCaseInsensitiveEqualToString:@"ca"]) [self _handleSearchForURL:@"http://www.amazon.ca/s/field-keywords=test" withQuery:query withLocale:languageCode];
+	else [self _handleSearchForURL:@"http://www.amazon.com/mn/searchApp?&keywords=%@" withQuery:query withLocale:languageCode]; //Default to American amazon if theres no matching locale
+	
 	return YES;
 }
 
