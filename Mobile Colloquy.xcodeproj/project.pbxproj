@@ -49,6 +49,10 @@
 		1C0938960D813A6C00A2705D /* CQChatRoomController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937ED0D8126D400A2705D /* CQChatRoomController.m */; };
 		1C0EB67A0D8660E900B6F1BC /* errorBadgeDim.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0EB6780D8660E900B6F1BC /* errorBadgeDim.png */; };
 		1C0EB67B0D8660E900B6F1BC /* errorBadgeGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0EB6790D8660E900B6F1BC /* errorBadgeGlow.png */; };
+		1C0F686B0F144DBE002BB855 /* bubbles.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F686A0F144DBE002BB855 /* bubbles.css */; };
+		1C0F68830F1453CF002BB855 /* bubbles.js in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F686C0F1452A7002BB855 /* bubbles.js */; };
+		1C0F69080F1497BF002BB855 /* bubbleRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F69060F1497BF002BB855 /* bubbleRight.png */; };
+		1C0F69090F1497BF002BB855 /* bubbleLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F69070F1497BF002BB855 /* bubbleLeft.png */; };
 		1C124A720F097575008F181B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C124A710F097575008F181B /* AudioToolbox.framework */; };
 		1C124AC20F09F014008F181B /* CQBrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C124AC10F09F014008F181B /* CQBrowserViewController.m */; };
 		1C124AD60F09F635008F181B /* Browser.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C124AD50F09F635008F181B /* Browser.xib */; };
@@ -203,6 +207,10 @@
 		1C0C33990EF0162100062186 /* MVAvailability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVAvailability.h; path = "Chat Core/MVAvailability.h"; sourceTree = "<group>"; };
 		1C0EB6780D8660E900B6F1BC /* errorBadgeDim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = errorBadgeDim.png; sourceTree = "<group>"; };
 		1C0EB6790D8660E900B6F1BC /* errorBadgeGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = errorBadgeGlow.png; sourceTree = "<group>"; };
+		1C0F686A0F144DBE002BB855 /* bubbles.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = bubbles.css; sourceTree = "<group>"; };
+		1C0F686C0F1452A7002BB855 /* bubbles.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = bubbles.js; sourceTree = "<group>"; };
+		1C0F69060F1497BF002BB855 /* bubbleRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubbleRight.png; sourceTree = "<group>"; };
+		1C0F69070F1497BF002BB855 /* bubbleLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubbleLeft.png; sourceTree = "<group>"; };
 		1C124A710F097575008F181B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		1C124AC00F09F014008F181B /* CQBrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQBrowserViewController.h; sourceTree = "<group>"; };
 		1C124AC10F09F014008F181B /* CQBrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQBrowserViewController.m; sourceTree = "<group>"; };
@@ -614,9 +622,13 @@
 				1CC64C070EE98CC600DE91D0 /* userOperator.png */,
 				1CC64C080EE98CC600DE91D0 /* userSuperOperator.png */,
 				1CC64C090EE98CC600DE91D0 /* userVoice.png */,
+				1C0F69060F1497BF002BB855 /* bubbleRight.png */,
+				1C0F69070F1497BF002BB855 /* bubbleLeft.png */,
 				1CAE8BF20EE612DA00CE1AF8 /* base.html */,
 				1CAE8BF30EE612DA00CE1AF8 /* standard.css */,
 				1C1253280F0D4FC1008F181B /* standard-dark.css */,
+				1C0F686A0F144DBE002BB855 /* bubbles.css */,
+				1C0F686C0F1452A7002BB855 /* bubbles.js */,
 				1CAE8C850EE6190A00CE1AF8 /* transcript.js */,
 				1CAE8BF40EE612DA00CE1AF8 /* gradientHighlight.png */,
 			);
@@ -678,6 +690,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C0F68830F1453CF002BB855 /* bubbles.js in Resources */,
 				1CAE8C8C0EE61AD000CE1AF8 /* transcript.js in Resources */,
 				1C09313B0D80C8F600A2705D /* Defaults.plist in Resources */,
 				1C0937330D80E72F00A2705D /* Icon.png in Resources */,
@@ -718,6 +731,9 @@
 				1C124BE70F0A13ED008F181B /* browserSafari.png in Resources */,
 				1C1253290F0D4FC1008F181B /* standard-dark.css in Resources */,
 				1C9E1A690F12E62600C18B55 /* info.png in Resources */,
+				1C0F686B0F144DBE002BB855 /* bubbles.css in Resources */,
+				1C0F69080F1497BF002BB855 /* bubbleRight.png in Resources */,
+				1C0F69090F1497BF002BB855 /* bubbleLeft.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

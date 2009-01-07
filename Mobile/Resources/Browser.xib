@@ -216,14 +216,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">safariButtonItem</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="49252836"/>
-					</object>
-					<int key="connectionID">45</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">locationField</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="256162249"/>
@@ -546,7 +538,6 @@
 							<string>doneButtonItem</string>
 							<string>locationField</string>
 							<string>navigationBar</string>
-							<string>safariButtonItem</string>
 							<string>stopReloadButton</string>
 							<string>toolbar</string>
 							<string>webView</string>
@@ -557,7 +548,6 @@
 							<string>UIBarButtonItem</string>
 							<string>UITextField</string>
 							<string>UINavigationBar</string>
-							<string>UIBarButtonItem</string>
 							<string>UIButton</string>
 							<string>UIToolbar</string>
 							<string>UIWebView</string>

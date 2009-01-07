@@ -35,11 +35,13 @@
 			<array>
 				<string>standard</string>
 				<string>standard-dark</string>
+				<string>bubbles</string>
 			</array>
 			<key>Titles</key>
 			<array>
 				<string>Standard</string>
 				<string>Standard Dark</string>
+				<string>Bubbles</string>
 			</array>
 			<key>DefaultValue</key>
 			<string>standard</string>
