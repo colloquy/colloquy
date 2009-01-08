@@ -1,6 +1,7 @@
 #import "CQBrowserViewController.h"
 
 #import "CQColloquyApplication.h"
+#import "NSStringAdditions.h"
 
 @implementation CQBrowserViewController
 - (id) init {
@@ -95,7 +96,11 @@
 }
 
 - (void) updateLocationField {
-	locationField.text = webView.request.URL.absoluteString;
+	NSString *location = webView.request.URL.absoluteString;
+	if ([location isCaseInsensitiveEqualToString:@"about:blank"])
+		locationField.text = @"";
+	else if (location.length)
+		locationField.text = webView.request.URL.absoluteString;
 }
 
 - (void) updateLoadingStatus {
@@ -117,7 +122,7 @@
 		return NO;
 	}
 
-	if (![request.URL.absoluteString isEqualToString:@"about:blank"])
+	if (![request.URL.absoluteString isCaseInsensitiveEqualToString:@"about:blank"])
 		locationField.text = request.URL.absoluteString;
 
 	return YES;
