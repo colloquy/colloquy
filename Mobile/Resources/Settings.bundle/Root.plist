@@ -58,17 +58,17 @@
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 			<key>Title</key>
-			<string>Behavior</string>
+			<string>Interface</string>
 			<key>File</key>
-			<string>Behavior</string>
+			<string>Interface</string>
 		</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 			<key>Title</key>
-			<string>Interface</string>
+			<string>Behavior</string>
 			<key>File</key>
-			<string>Interface</string>
+			<string>Behavior</string>
 		</dict>
 		<dict>
 			<key>Type</key>
