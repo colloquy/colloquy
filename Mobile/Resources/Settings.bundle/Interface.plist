@@ -38,6 +38,7 @@
 				<string>chromatic</string>
 				<string>chromatic-dark</string>
 				<string>bubbles</string>
+				<string>notes</string>
 			</array>
 			<key>Titles</key>
 			<array>
@@ -46,6 +47,7 @@
 				<string>Chromatic</string>
 				<string>Chromatic Dark</string>
 				<string>Bubbles</string>
+				<string>Notes</string>
 			</array>
 			<key>DefaultValue</key>
 			<string>standard</string>

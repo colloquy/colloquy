@@ -1,0 +1,82 @@
+body {
+	background-color: rgb(253, 251, 138);
+	background-image: url(notesBackground.png);
+/*	background-repeat: repeat-x;*/
+	margin: 0;
+	font-size: 14px;
+	font-family: Marker Felt;
+	-webkit-text-size-adjust: none;
+}
+
+.message-wrapper {
+	padding: 2px 19px;
+	border-bottom: 1px solid rgba(20, 20, 200, 0.1);
+}
+
+.previous-session {
+	opacity: 0.6;
+}
+
+.event + .message-wrapper {
+	border-bottom: 1px solid rgba(20, 20, 200, .1);
+}
+
+.message-wrapper:not(.highlight) + .event {
+	border-bottom: 1px solid rgba(20, 20, 200, .1);
+}
+
+.message-wrapper.highlight {
+	background-color: rgb(253, 253, 222);
+	background-image: url(gradientHighlight.png);
+	background-repeat: repeat-x;
+	border-bottom: 1px solid rgba(20, 20, 200, 0.1);
+}
+
+.message-wrapper.highlight + .message-wrapper {
+	border-bottom: none;
+}
+
+.message-wrapper.action .sender:before {
+	content: "\2022";
+	margin-left: -2px;
+	margin-right: 2px;
+}
+
+.message-wrapper.action .sender:after {
+	content: " ";
+}
+
+.sender {
+	display: inline;
+	color: rgb(179, 146, 74);
+}
+
+.sender.self {
+	color: rgb(108, 79, 15);
+}
+
+.sender:after {
+	content: "; ";
+	font-weight: bold;
+}
+
+.event {
+	background-color: rgb(253, 253, 222);
+	border-bottom: 1px solid rgba(20, 20, 200, .1);
+	font-size: smaller;
+	color: rgb(33%, 33%, 33%);
+	text-align: center;
+	padding: 2px 8px;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	-webkit-line-break: after-white-space;
+	-webkit-nbsp-mode: space;
+}
+
+.message {
+	display: inline;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	-webkit-line-break: after-white-space;
+	-webkit-nbsp-mode: space;
+}
