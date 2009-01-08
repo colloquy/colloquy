@@ -81,6 +81,8 @@
 		_initialView = NO;
 	}
 
+	_active = [[state objectForKey:@"active"] boolValue];
+
 	_pendingPreviousSessionComponents = [[NSMutableArray alloc] init];
 
 	for (NSDictionary *message in [state objectForKey:@"messages"]) {
