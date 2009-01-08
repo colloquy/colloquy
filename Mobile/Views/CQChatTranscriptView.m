@@ -23,6 +23,7 @@
 
 @interface CQChatTranscriptView (Internal)
 - (void) _addComponentsToTranscript:(NSArray *) components fromPreviousSession:(BOOL) previous animated:(BOOL) animated;
+- (NSString *) _contentHTML;
 - (void) _commonInitialization;
 @end
 
