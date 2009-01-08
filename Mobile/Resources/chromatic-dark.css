@@ -26,8 +26,8 @@ a {
 }
 
 .message-wrapper.highlight {
-	background-color: rgb(204, 255, 102);
-	border-top-color: rgba(255, 255, 255, 0.125);
+	background-image: none;
+	background-color: rgb(20, 40, 70);
 	border-bottom-color: rgba(255, 255, 255, 0.125);
 }
 
