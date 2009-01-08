@@ -18,6 +18,7 @@
 
 - (void) scrollToBottomAnimated:(BOOL) animated;
 - (void) flashScrollIndicators;
+- (void) reset;
 @end
 
 @protocol CQChatTranscriptViewDelegate <NSObject>

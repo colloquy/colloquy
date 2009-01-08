@@ -24,7 +24,6 @@
 @interface CQChatTranscriptView (Internal)
 - (void) _addComponentsToTranscript:(NSArray *) components fromPreviousSession:(BOOL) previous animated:(BOOL) animated;
 - (void) _commonInitialization;
-- (void) _reset;
 @end
 
 #pragma mark -
@@ -74,7 +73,7 @@
 		self.backgroundColor = [UIColor blackColor];
 	else self.backgroundColor = [UIColor whiteColor];
 
-	[self _reset];
+	[self reset];
 }
 
 #pragma mark -
@@ -193,6 +192,13 @@
 		[[self _scroller] displayScrollerIndicators];
 }
 
+- (void) reset {
+	[self stopLoading];
+	
+	_loading = YES;
+	[self loadHTMLString:[self _contentHTML] baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+}
+
 #pragma mark -
 
 - (void) _addComponentsToTranscript:(NSArray *) components fromPreviousSession:(BOOL) previousSession animated:(BOOL) animated {
@@ -260,12 +266,5 @@
 
 	[_pendingComponents release];
 	_pendingComponents = nil;
-}
-
-- (void) _reset {
-	[self stopLoading];
-
-	_loading = YES;
-	[self loadHTMLString:[self _contentHTML] baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 }
 @end

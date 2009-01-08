@@ -381,7 +381,7 @@
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/umode", @"/globops", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/part", @"/whois", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/umode", @"/globops", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/part", @"/whois", @"/clear", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -412,7 +412,7 @@
 	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"]) {
 		static NSArray *commandsNotRequiringConnection;
 		if (!commandsNotRequiringConnection)
-			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", nil];
+			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", nil];
 
 		// Send as a command.
 		NSScanner *scanner = [NSScanner scannerWithString:text];
@@ -694,6 +694,19 @@
 
 - (void) resetDidSendRecently {
 	_didSendRecently = NO;
+}
+
+- (void) handleClearCommandWithArguments:(NSString *) arguments {
+	[_pendingComponents release];
+	_pendingComponents = nil;
+	
+	[_pendingPreviousSessionComponents release];
+	_pendingPreviousSessionComponents = nil;
+
+	[_recentMessages release];
+	_recentMessages = nil;
+	
+	[transcriptView reset];
 }
 
 - (void) checkTranscriptViewForBecomeFirstResponder {
