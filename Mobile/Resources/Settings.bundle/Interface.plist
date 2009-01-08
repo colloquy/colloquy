@@ -35,12 +35,16 @@
 			<array>
 				<string>standard</string>
 				<string>standard-dark</string>
+				<string>chromatic</string>
+				<string>chromatic-dark</string>
 				<string>bubbles</string>
 			</array>
 			<key>Titles</key>
 			<array>
 				<string>Standard</string>
 				<string>Standard Dark</string>
+				<string>Chromatic</string>
+				<string>Chromatic Dark</string>
 				<string>Bubbles</string>
 			</array>
 			<key>DefaultValue</key>

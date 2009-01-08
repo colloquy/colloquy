@@ -10,25 +10,25 @@ a {
 }
 
 .message-wrapper {
-	border-top: 1px solid rgba(255, 255, 255, 0.1);
+	border-top-color: rgba(255, 255, 255, 0.1);
 }
 
 .previous-session {
 	background-color: rgb(30, 30, 40);
 }
 
-.event + .message-wrapper {
-	border-top: 1px solid rgba(255, 255, 255, 0.1);
+.message-wrapper:not(.highlight) + .event {
+	border-top-color: rgba(255, 255, 255, 0.1);
 }
 
-.message-wrapper:not(.highlight) + .event {
-	border-top: 1px solid rgba(255, 255, 255, 0.1);
+.message-wrapper.previous-session:last-child {
+	border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
 .message-wrapper.highlight {
 	background-image: none;
 	background-color: rgb(20, 40, 70);
-	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
 .message-wrapper.highlight .sender {

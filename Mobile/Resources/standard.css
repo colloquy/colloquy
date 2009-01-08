@@ -6,7 +6,7 @@ body {
 }
 
 .message-wrapper {
-	padding: 3px 8px;
+	padding: 2px 8px;
 	border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
@@ -15,12 +15,12 @@ body {
 	background-color: rgb(250, 250, 245);
 }
 
-.message-wrapper:first-child {
+.message-wrapper:first-child:not(.previous-session) {
 	border-top: none;
 }
 
-.event + .message-wrapper {
-	border-top: 1px solid rgba(0, 0, 0, 0.1);
+.message-wrapper.previous-session:last-child {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .message-wrapper:not(.highlight) + .event {
@@ -42,13 +42,16 @@ body {
 	border-top: none;
 }
 
-.message-wrapper.action .sender:before {
+.message-wrapper:not(.action) .sender {
+	margin-left: 2px;
+}
+
+.message-wrapper.action .sender::before {
 	content: "\2022";
-	margin-left: -2px;
 	margin-right: 2px;
 }
 
-.message-wrapper.action .sender:after {
+.message-wrapper.action .sender::after {
 	content: " ";
 }
 
@@ -61,7 +64,7 @@ body {
 	color: rgb(170, 34, 17);
 }
 
-.sender:after {
+.sender::after {
 	content: ": ";
 	font-weight: bold;
 }

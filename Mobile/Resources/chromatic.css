@@ -1,0 +1,179 @@
+body {
+	margin: 0;
+	font-size: 14px;
+	font-family: Helvetica, sans-serif;
+	-webkit-text-size-adjust: none;
+}
+
+a {
+	color: hsl(220, 65%, 40%);
+}
+
+.message-wrapper {
+	padding: 3px 8px;
+	border-top: 1px solid rgba(0, 0, 0, 0.075);
+}
+
+.message-wrapper.subsequent:not(.highlight) + .message-wrapper:not(.highlight) {
+	margin-top: -2px;
+	padding-top: 0;
+	border-top: none;
+}
+
+.previous-session {
+	background-color: rgb(250, 250, 245);
+}
+
+.previous-session .message, .previous-session .sender {
+	opacity: 0.7;
+}
+
+.message-wrapper:first-child:not(.previous-session) {
+	border-top: none;
+}
+
+.message-wrapper.previous-session:last-child {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.075);
+}
+
+.message-wrapper:not(.highlight) + .event {
+	border-top: 1px solid rgba(0, 0, 0, 0.075);
+}
+
+.message-wrapper.highlight {
+	background-color: rgb(230, 240, 100);
+	background-image: url(gradientHighlight.png);
+	background-repeat: repeat-x;
+	border-top: 1px solid rgba(0, 0, 0, 0.075);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.075);
+}
+
+.message-wrapper.highlight .sender {
+	text-shadow: white 0 1px 2px;
+}
+
+.message-wrapper.highlight + .message-wrapper {
+	border-top: none;
+}
+
+.message-wrapper:not(.action) .sender {
+	margin-left: 2px;
+}
+
+.message-wrapper.action .sender::before {
+	content: "\2022";
+	margin-right: 2px;
+}
+
+.message-wrapper.action .sender::after {
+	content: " ";
+}
+
+.sender {
+	display: inline;
+	color: hsl(40, 75%, 40%);
+}
+
+.sender.self {
+	color: hsl(220, 15%, 50%);
+}
+
+.sender::after {
+	content: ": ";
+	font-weight: bold;
+}
+
+.sender.user0 {
+	color: hsl(0, 75%, 40%);
+}
+
+.sender.user1 {
+	color: hsl(20, 75%, 40%);
+}
+
+.sender.user2 {
+	color: hsl(40, 75%, 40%);
+}
+
+.sender.user3 {
+	color: hsl(60, 75%, 40%);
+}
+
+.sender.user4 {
+	color: hsl(80, 75%, 40%);
+}
+
+.sender.user5 {
+	color: hsl(100, 75%, 40%);
+}
+
+.sender.user6 {
+	color: hsl(120, 75%, 40%);
+}
+
+.sender.user7 {
+	color: hsl(140, 75%, 40%);
+}
+
+.sender.user8 {
+	color: hsl(160, 75%, 40%);
+}
+
+.sender.user9 {
+	color: hsl(180, 75%, 40%);
+}
+
+.sender.user10 {
+	color: hsl(200, 75%, 40%);
+}
+
+.sender.user11 {
+	color: hsl(220, 75%, 40%);
+}
+
+.sender.user12 {
+	color: hsl(240, 75%, 40%);
+}
+
+.sender.user13 {
+	color: hsl(260, 75%, 40%);
+}
+
+.sender.user14 {
+	color: hsl(280, 75%, 40%);
+}
+
+.sender.user15 {
+	color: hsl(300, 75%, 40%);
+}
+
+.sender.user16 {
+	color: hsl(320, 75%, 40%);
+}
+
+.sender.user17 {
+	color: hsl(340, 75%, 40%);
+}
+
+.subsequent:not(.highlight) .sender {
+	opacity: 0.6;
+}
+
+.event {
+	font-size: smaller;
+	color: rgb(66%, 66%, 66%);
+	text-align: center;
+	padding: 2px 8px;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	-webkit-line-break: after-white-space;
+	-webkit-nbsp-mode: space;
+}
+
+.message {
+	display: inline;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	-webkit-line-break: after-white-space;
+	-webkit-nbsp-mode: space;
+}

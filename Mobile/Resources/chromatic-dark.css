@@ -1,0 +1,120 @@
+@import url(chromatic.css);
+
+body {
+	background-color: black;
+	color: white;
+}
+
+a {
+	color: rgb(139, 189, 223);
+}
+
+.message-wrapper {
+	border-top-color: rgba(255, 255, 255, 0.125);
+}
+
+.previous-session {
+	background-color: rgb(30, 30, 40);
+}
+
+.message-wrapper.previous-session:last-child {
+	border-bottom-color: rgba(255, 255, 255, 0.125);
+}
+
+.message-wrapper:not(.highlight) + .event {
+	border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.message-wrapper.highlight {
+	background-color: rgb(204, 255, 102);
+	border-top-color: rgba(255, 255, 255, 0.125);
+	border-bottom-color: rgba(255, 255, 255, 0.125);
+}
+
+.message-wrapper.highlight .sender {
+	text-shadow: black 0 1px 2px;
+}
+
+.sender {
+	color: hsl(40, 45%, 70%);
+}
+
+.sender.self {
+	color: hsl(220, 15%, 70%);
+}
+
+.sender.user0 {
+	color: hsl(0, 45%, 70%);
+}
+
+.sender.user1 {
+	color: hsl(20, 45%, 70%);
+}
+
+.sender.user2 {
+	color: hsl(40, 45%, 70%);
+}
+
+.sender.user3 {
+	color: hsl(60, 45%, 70%);
+}
+
+.sender.user4 {
+	color: hsl(80, 45%, 70%);
+}
+
+.sender.user5 {
+	color: hsl(100, 45%, 70%);
+}
+
+.sender.user6 {
+	color: hsl(120, 45%, 70%);
+}
+
+.sender.user7 {
+	color: hsl(140, 45%, 70%);
+}
+
+.sender.user8 {
+	color: hsl(160, 45%, 70%);
+}
+
+.sender.user9 {
+	color: hsl(180, 45%, 70%);
+}
+
+.sender.user10 {
+	color: hsl(200, 45%, 70%);
+}
+
+.sender.user11 {
+	color: hsl(220, 45%, 70%);
+}
+
+.sender.user12 {
+	color: hsl(240, 45%, 70%);
+}
+
+.sender.user13 {
+	color: hsl(260, 45%, 70%);
+}
+
+.sender.user14 {
+	color: hsl(280, 45%, 70%);
+}
+
+.sender.user15 {
+	color: hsl(300, 45%, 70%);
+}
+
+.sender.user16 {
+	color: hsl(320, 45%, 70%);
+}
+
+.sender.user17 {
+	color: hsl(340, 45%, 70%);
+}
+
+.event {
+	color: rgb(50%, 50%, 50%);
+}
