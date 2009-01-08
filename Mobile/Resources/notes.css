@@ -1,10 +1,12 @@
 body {
 	background-color: rgb(253, 251, 138);
-	background-image: url(notesBackground.png);
+	background-image: url(gradientHighlight.png), url(notesBackground.png);
+	background-repeat: repeat-x, repeat-y;
 	margin: 0;
 	font-size: 14px;
 	font-family: Marker Felt;
 	-webkit-text-size-adjust: none;
+	border-top: 1px solid rgba(20, 20, 200, 0.1);
 }
 
 .message-wrapper {
@@ -25,9 +27,9 @@ body {
 }
 
 .message-wrapper.highlight {
-	background-image: url(noteEventBackground.png);
+	background-image: url(notesBackground.png);
 	background-color: rgb(253, 253, 222);
-	background-repeat: repeat-x;
+	background-repeat: repeat-y;
 	border-bottom: 1px solid rgba(20, 20, 200, 0.1);
 }
 
@@ -60,7 +62,8 @@ body {
 }
 
 .event {
-	background-image: url(noteEventBackground.png);
+	background-image: url(notesBackground.png);
+	background-repeat: repeat-y;
 	background-color: rgb(253, 253, 222);
 	border-bottom: 1px solid rgba(20, 20, 200, .1);
 	font-size: smaller;

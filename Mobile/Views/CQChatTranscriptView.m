@@ -72,6 +72,8 @@
 
 	if ([styleIdentifier hasSuffix:@"-dark"])
 		self.backgroundColor = [UIColor blackColor];
+	else if ([styleIdentifier isEqualToString:@"notes"])
+		self.backgroundColor = [UIColor colorWithRed:(253. / 255.) green:(251. / 255.) blue:(138. / 255.) alpha:1.];
 	else self.backgroundColor = [UIColor whiteColor];
 
 	[self reset];
