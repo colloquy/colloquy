@@ -70,9 +70,7 @@
 	_styleIdentifier = [styleIdentifier copy];
 	[old release];
 
-	if ([styleIdentifier isEqualToString:@"standard"])
-		self.backgroundColor = [UIColor whiteColor];
-	else if ([styleIdentifier isEqualToString:@"standard-dark"])
+	if ([styleIdentifier hasSuffix:@"-dark"])
 		self.backgroundColor = [UIColor blackColor];
 	else self.backgroundColor = [UIColor whiteColor];
 
@@ -144,17 +142,7 @@
 }
 
 - (void) webViewDidFinishLoad:(UIWebView *) webView {
-	_loading = NO;
-
-	[self _addComponentsToTranscript:_pendingPreviousSessionComponents fromPreviousSession:YES animated:NO];
-
-	[_pendingPreviousSessionComponents release];
-	_pendingPreviousSessionComponents = nil;
-
-	[self _addComponentsToTranscript:_pendingComponents fromPreviousSession:NO animated:NO];
-
-	[_pendingComponents release];
-	_pendingComponents = nil;
+	[self performSelector:@selector(_finishedLoading) withObject:nil afterDelay:0.];
 }
 
 #pragma mark -
@@ -258,6 +246,20 @@
 - (NSString *) _contentHTML {
 	NSString *templateString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
 	return [NSString stringWithFormat:templateString, _styleIdentifier];
+}
+
+- (void) _finishedLoading {
+	_loading = NO;
+
+	[self _addComponentsToTranscript:_pendingPreviousSessionComponents fromPreviousSession:YES animated:NO];
+
+	[_pendingPreviousSessionComponents release];
+	_pendingPreviousSessionComponents = nil;
+
+	[self _addComponentsToTranscript:_pendingComponents fromPreviousSession:NO animated:NO];
+
+	[_pendingComponents release];
+	_pendingComponents = nil;
 }
 
 - (void) _reset {
