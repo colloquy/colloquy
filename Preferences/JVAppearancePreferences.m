@@ -330,7 +330,7 @@
 
 	NSArray *files = [[_style bundle] pathsForResourcesOfType:nil inDirectory:[options objectForKey:@"folder"]];
 	NSEnumerator *enumerator = [files objectEnumerator];
-	NSString *resourcePath = [[[_style bundle] resourcePath] stringByAppendingPathComponent:[options objectForKey:@"folder"]];
+	NSString *resourcePath = [[_style bundle] resourcePath];
 	NSString *path = nil;
 	BOOL matched = NO;
 
@@ -363,7 +363,8 @@
 	if( ! matched && [path length] ) {
 		[menu addItem:[NSMenuItem separatorItem]];
 
-		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+		NSString *fullPath = ( [path isAbsolutePath] ? path : [resourcePath stringByAppendingPathComponent:path] );
+		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:fullPath];
 		NSImageRep *sourceImageRep = [icon bestRepresentationForDevice:nil];
 		NSImage *smallImage = [[[NSImage alloc] initWithSize:NSMakeSize( 12., 12. )] autorelease];
 		[smallImage lockFocus];
@@ -494,12 +495,12 @@
 							[info setObject:[NSNumber numberWithInt:0] forKey:@"value"];
 							[info setObject:[NSNumber numberWithInt:0] forKey:@"default"];
 
-							// Replace %@ with (.*) so we can pull the color value out.
+							// Replace %@ with (.*) so we can pull the path value out.
 							NSString *expression = [regex replaceWithString:@"" inString:v];
 							expression = [expression stringByEscapingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"]];
 							expression = [NSString stringWithFormat:expression, @"(.*)"];
-
-							// Store the color value if we found one.
+							
+							// Store the path value if we found one.
 							regex = [AGRegex regexWithPattern:expression options:AGRegexCaseInsensitive];
 							AGRegexMatch *vmatch = [regex findInString:value];
 							if( [vmatch count] ) {
