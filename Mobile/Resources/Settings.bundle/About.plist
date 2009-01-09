@@ -40,6 +40,16 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string> </string>
+			<key>Key</key>
+			<string>CQIRCChannel</string>
+			<key>DefaultValue</key>
+			<string>irc://irc.freenode.net/mcolloquy</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>Credits</string>
