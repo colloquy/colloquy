@@ -87,6 +87,7 @@
 			<array>
 				<string>standard</string>
 				<string>standard-dark</string>
+				<string>standard-grey-dark</string>
 				<string>chromatic</string>
 				<string>chromatic-dark</string>
 				<string>bubbles</string>
@@ -96,6 +97,7 @@
 			<array>
 				<string>Standard</string>
 				<string>Standard Dark</string>
+				<string>Standard Grey</string>
 				<string>Chromatic</string>
 				<string>Chromatic Dark</string>
 				<string>Bubbles</string>

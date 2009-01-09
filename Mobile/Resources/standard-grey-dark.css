@@ -1,0 +1,48 @@
+@import url(standard.css);
+
+body {
+	background-color: black;
+	color: rgb(230, 230, 230);
+}
+
+a {
+	color: rgb(139, 189, 223);
+}
+
+.message-wrapper {
+	border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.previous-session {
+	background-color: rgb(30, 30, 30);
+}
+
+.message-wrapper:not(.highlight) + .event {
+	border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.message-wrapper.previous-session:last-child {
+	border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.message-wrapper.highlight {
+	background-image: none;
+	background-color: rgb(25, 25, 25);
+	border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.message-wrapper.highlight .sender {
+	text-shadow: black 0 1px 3px;
+}
+
+.sender {
+	color: rgb(100, 100, 100);
+}
+
+.sender.self {
+	color: rgb(150, 150, 150);
+}
+
+.event {
+	color: rgb(50%, 50%, 50%);
+}
