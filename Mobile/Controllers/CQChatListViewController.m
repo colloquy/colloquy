@@ -201,7 +201,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	self.tableView.rowHeight = 72.;
+	self.tableView.rowHeight = 62.;
 }
 
 - (void) viewWillAppear:(BOOL) animated {

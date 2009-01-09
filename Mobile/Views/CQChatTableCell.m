@@ -313,6 +313,7 @@
 - (void) layoutSubviews {
 	[super layoutSubviews];
 
+#define TOP_TEXT_MARGIN -1.
 #define LEFT_MARGIN 10.
 #define NO_ICON_LEFT_MARGIN 14.
 #define RIGHT_MARGIN 6.
@@ -350,7 +351,7 @@
 		labelHeights += label.frame.size.height - LABEL_SPACING;
 
 	frame.origin.x = (_iconImageView.hidden ? NO_ICON_LEFT_MARGIN : CGRectGetMaxX(_iconImageView.frame) + ICON_RIGHT_MARGIN);
-	frame.origin.y = round((contentRect.size.height / 2.) - (labelHeights / 2.));
+	frame.origin.y = round((contentRect.size.height / 2.) - (labelHeights / 2.)) + TOP_TEXT_MARGIN;
 	frame.size.width = contentRect.size.width - frame.origin.x - (!self.showingDeleteConfirmation ? RIGHT_MARGIN : 0.);
 	if (!self.editing && _unreadCountView.bounds.size.width)
 		frame.size.width -= (contentRect.size.width - CGRectGetMinX(_unreadCountView.frame));
