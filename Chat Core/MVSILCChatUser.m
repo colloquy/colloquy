@@ -36,6 +36,8 @@
 - (void) updateWithClientEntry:(SilcClientEntry) clientEntry {
 	SilcLock( [[self connection] _silcClient] );
 
+	[self retain];
+
 	if( _uniqueIdentifier )
 		[_connection _removeKnownUser:self];
 
