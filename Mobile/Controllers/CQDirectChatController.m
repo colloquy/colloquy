@@ -284,7 +284,7 @@
 
 	if(_initialView) {
 		_initialView = NO;
-		[chatInputBar becomeFirstResponder];
+		[chatInputBar performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.5];
 	}
 }
 
