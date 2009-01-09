@@ -6,6 +6,12 @@
 	<array>
 		<dict>
 			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>General</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
 			<string>Always Show Notices</string>
@@ -28,31 +34,21 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Disable Completion</string>
-			<key>Key</key>
-			<string>CQDisableChatAutocomplete</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Disable Correction</string>
-			<key>Key</key>
-			<string>CQDisableChatAutocorrection</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
 			<string>Vibrate on Highlight</string>
 			<key>Key</key>
 			<string>CQVibrateOnHighlight</string>
 			<key>DefaultValue</key>
 			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Open Links in Safari</string>
+			<key>Key</key>
+			<string>CQDisableBuiltInBrowser</string>
+			<key>DefaultValue</key>
+			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -83,6 +79,40 @@
 			</array>
 			<key>DefaultValue</key>
 			<string>en</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Text Input</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Chat Completions</string>
+			<key>Key</key>
+			<string>CQDisableChatAutocomplete</string>
+			<key>TrueValue</key>
+			<false/>
+			<key>FalseValue</key>
+			<true/>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Autocorrection</string>
+			<key>Key</key>
+			<string>CQDisableChatAutocorrection</string>
+			<key>TrueValue</key>
+			<false/>
+			<key>FalseValue</key>
+			<true/>
+			<key>DefaultValue</key>
+			<false/>
 		</dict>
 	</array>
 </dict>

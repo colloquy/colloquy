@@ -38,6 +38,82 @@
 			<key>DefaultValue</key>
 			<string>support@colloquy.info</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Credits</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Kiji Roshi</string>
+			<key>Key</key>
+			<string>CQCreditsDeveloperKiji</string>
+			<key>DefaultValue</key>
+			<string>Programmer</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Zach Drayer</string>
+			<key>Key</key>
+			<string>CQCreditsDeveloperZach</string>
+			<key>DefaultValue</key>
+			<string>Programmer</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>August Joki</string>
+			<key>Key</key>
+			<string>CQCreditsDeveloperAugust</string>
+			<key>DefaultValue</key>
+			<string>Programmer</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Jane Lee</string>
+			<key>Key</key>
+			<string>CQCreditsDeveloperJane</string>
+			<key>DefaultValue</key>
+			<string>Programmer</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Aaron Stepanik</string>
+			<key>Key</key>
+			<string>CQCreditsTesterAaron</string>
+			<key>DefaultValue</key>
+			<string>Beta Tester</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Ben</string>
+			<key>Key</key>
+			<string>CQCreditsTesterBen</string>
+			<key>DefaultValue</key>
+			<string>Beta Tester</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Julian</string>
+			<key>Key</key>
+			<string>CQCreditsTesterJulian</string>
+			<key>DefaultValue</key>
+			<string>Beta Tester</string>
+		</dict>
 	</array>
 </dict>
 </plist>
