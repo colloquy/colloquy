@@ -809,7 +809,7 @@ static void silc_verify_public_key( SilcClient client, SilcClientConnection conn
 		return;
 	}
 
-	NSMutableDictionary *dict = [[NSMutableDictionary allocWithZone:nil] init]; // we release it in the verfied callback
+	NSMutableDictionary *dict = [[NSMutableDictionary allocWithZone:nil] init];
 	[dict setObject:[NSNumber numberWithUnsignedInt:publicKeyType] forKey:@"publicKeyType"];
 	[dict setObject:asciiFingerprint forKey:@"fingerprint"];
 	[dict setObject:asciiBabbleprint forKey:@"babbleprint"];
@@ -1222,8 +1222,6 @@ static SilcClientOperations silcClientOps = {
 		NSString *filename = [self _publicKeyFilename:[[dictionary objectForKey:@"connType"] unsignedIntValue] andPublicKey:(unsigned char *)[pk bytes] withLen:[pk length] usingSilcConn:conn];
 		silc_pkcs_save_public_key_data( [filename fileSystemRepresentation], (unsigned char *)[pk bytes], [pk length], SILC_PKCS_FILE_PEM);
 	}
-
-	[dictionary release];
 }
 
 #pragma mark -

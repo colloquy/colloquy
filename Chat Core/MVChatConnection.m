@@ -1105,6 +1105,12 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	}
 }
 
+- (void) _removeKnownUser:(MVChatUser *) user {
+	@synchronized( _knownRooms ) {
+		if( [user uniqueIdentifier] ) [_knownUsers removeObjectForKey:[user uniqueIdentifier]];
+	}
+}
+
 - (void) _pruneKnownUsers {
 	@synchronized( _knownUsers ) {
 		NSMutableArray *removeList = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_knownUsers count]];
@@ -1122,25 +1128,25 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (void) _addKnownRoom:(MVChatRoom *) room {
 	@synchronized( _knownRooms ) {
-		[_knownRooms setObject:room forKey:[room uniqueIdentifier]];
+		if( [room uniqueIdentifier] ) [_knownRooms setObject:room forKey:[room uniqueIdentifier]];
 	}
 }
 
 - (void) _removeKnownRoom:(MVChatRoom *) room {
 	@synchronized( _knownRooms ) {
-		[_knownRooms removeObjectForKey:[room uniqueIdentifier]];
+		if( [room uniqueIdentifier] ) [_knownRooms removeObjectForKey:[room uniqueIdentifier]];
 	}
 }
 
 - (void) _addJoinedRoom:(MVChatRoom *) room {
 	@synchronized( _joinedRooms ) {
-		[_joinedRooms addObject:room];
+		if( room ) [_joinedRooms addObject:room];
 	}
 }
 
 - (void) _removeJoinedRoom:(MVChatRoom *) room {
 	@synchronized( _joinedRooms ) {
-		[_joinedRooms removeObject:room];
+		if( room ) [_joinedRooms removeObject:room];
 	}
 }
 

@@ -17,6 +17,7 @@
 - (void) _setStatus:(MVChatConnectionStatus) status;
 
 - (void) _addKnownUser:(MVChatUser *) user;
+- (void) _removeKnownUser:(MVChatUser *) user;
 - (void) _pruneKnownUsers;
 
 - (void) _addKnownRoom:(MVChatRoom *) room;

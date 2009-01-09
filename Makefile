@@ -15,6 +15,13 @@ development dev d:
 clean c:
 	xcodebuild -project Colloquy.xcodeproj -alltargets clean
 
-install i:
+clean-all ca:
+	xcodebuild -project Colloquy.xcodeproj -alltargets clean -configuration Release
+	xcodebuild -project Colloquy.xcodeproj -alltargets clean -configuration Development
+
+install i: r
 	-$(RM) -rf $(INSTALL_DIR)/$(PRODUCT_NAME)
 	$(CP) $(BUILD_DIR)/$(PRODUCT_NAME) $(INSTALL_DIR)/$(PRODUCT_NAME)
+
+zip z: ca r
+	ditto -c -k --keepParent --sequesterRsrc $(BUILD_DIR)/$(PRODUCT_NAME) $(BUILD_DIR)/$(PRODUCT_NAME).zip

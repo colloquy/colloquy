@@ -21,7 +21,10 @@
 
 	SilcLock( [roomConnection _silcClient] );
 
-	[_connection _removeKnownRoom:self];
+	[self retain];
+
+	if( _uniqueIdentifier )
+		[_connection _removeKnownRoom:self];
 
 	[_name release];
 	_name = [[NSString allocWithZone:nil] initWithUTF8String:channelEntry -> channel_name];
@@ -34,6 +37,8 @@
 	_channelEntry = channelEntry;
 
 	[_connection _addKnownRoom:self];
+
+	[self release];
 
 	SilcUnlock( [roomConnection _silcClient] );
 }

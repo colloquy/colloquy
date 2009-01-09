@@ -36,6 +36,9 @@
 - (void) updateWithClientEntry:(SilcClientEntry) clientEntry {
 	SilcLock( [[self connection] _silcClient] );
 
+	if( _uniqueIdentifier )
+		[_connection _removeKnownUser:self];
+
 	if( clientEntry -> nickname )
 		[self _setNickname:[NSString stringWithUTF8String:clientEntry -> nickname]];
 
@@ -70,6 +73,10 @@
 	[self _setUniqueIdentifier:[NSData dataWithBytes:identifier length:len]];
 
 	_clientEntry = clientEntry;
+
+	[_connection _addKnownUser:self];
+
+	[self release];
 
 	SilcUnlock( [[self connection] _silcClient] );
 }
