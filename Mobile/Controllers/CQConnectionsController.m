@@ -133,8 +133,7 @@
 		[connection connect];
 
 		if (target.length) {
-			// Pass nil for the room name, so rooms that are forwarded will show.
-			[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:nil andConnection:connection];
+			[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:target andConnection:connection];
 			[connection joinChatRoomNamed:target];
 		} else [CQColloquyApplication sharedApplication].tabBarController.selectedViewController = self;
 
@@ -149,8 +148,7 @@
 		[connection connect];
 
 		if (target.length) {
-			// Pass nil for the room name, so rooms that are forwarded will show.
-			[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:nil andConnection:connection];
+			[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:target andConnection:connection];
 			[connection joinChatRoomNamed:target];
 		} else [CQColloquyApplication sharedApplication].tabBarController.selectedViewController = self;
 
@@ -527,6 +525,15 @@
 	NSMutableArray *result = [NSMutableArray arrayWithCapacity:_connections.count];
 
 	address = [address stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@". \t\n"]];
+
+	for (MVChatConnection *connection in _connections) {
+		if (!connection.connected)
+			continue;
+		NSString *server = connection.server;
+		NSRange range = [server rangeOfString:address options:(NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch) range:NSMakeRange(0, server.length)];
+		if (range.location != NSNotFound && (range.location == 0 || [server characterAtIndex:(range.location - 1)] == '.'))
+			[result addObject:connection];
+	}
 
 	for (MVChatConnection *connection in _connections) {
 		NSString *server = connection.server;

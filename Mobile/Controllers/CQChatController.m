@@ -58,7 +58,6 @@
 	[_chatListViewController release];
 	[_chatControllers release];
 	[_nextController release];
-	[_nextRoomName release];
 	[_nextRoomConnection release];
 
 	[super dealloc];
@@ -246,16 +245,24 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 }
 
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (actionSheet.tag != 1 || buttonIndex == actionSheet.cancelButtonIndex)
+	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
-	CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
+	if (actionSheet.tag == 1) {
+		CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
 
-	if (buttonIndex == 0)
-		creationViewController.roomTarget = YES;
+		if (buttonIndex == 0)
+			creationViewController.roomTarget = YES;
 
-	[self presentModalViewController:creationViewController animated:YES];
-	[creationViewController release];
+		[self presentModalViewController:creationViewController animated:YES];
+		[creationViewController release];
+	} else if (actionSheet.tag == 2) {
+		if (buttonIndex == 0) {
+			[[CQConnectionsController defaultController] showModalNewConnectionView];
+		} else if (buttonIndex == 1) {
+			[self joinSupportRoom];
+		}
+	}
 }
 
 #pragma mark -
@@ -339,13 +346,22 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 - (void) showNewChatActionSheet {
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
-	sheet.tag = 1;
 
-	[sheet addButtonWithTitle:NSLocalizedString(@"Join a Chat Room", @"Join a Chat Room button title")];
-	[sheet addButtonWithTitle:NSLocalizedString(@"Message a User", @"Message a User button title")];
+	if ([CQConnectionsController defaultController].connections.count) {
+		sheet.tag = 1;
+		sheet.cancelButtonIndex = 2;
+
+		[sheet addButtonWithTitle:NSLocalizedString(@"Join a Chat Room", @"Join a Chat Room button title")];
+		[sheet addButtonWithTitle:NSLocalizedString(@"Message a User", @"Message a User button title")];
+	} else {
+		sheet.tag = 2;
+		sheet.cancelButtonIndex = 2;
+
+		[sheet addButtonWithTitle:NSLocalizedString(@"Add New Connection", @"Add New Connection button title")];
+		[sheet addButtonWithTitle:NSLocalizedString(@"Join Support Room", @"Join Support Room button title")];
+	}
+
 	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
-
-	sheet.cancelButtonIndex = 2;
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
 
@@ -354,9 +370,6 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 - (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) roomName andConnection:(MVChatConnection *) connection {
 	NSParameterAssert(connection != nil);
-
-	[_nextRoomName release];
-	_nextRoomName = nil;
 
 	[_nextRoomConnection release];
 	_nextRoomConnection = nil;
@@ -370,14 +383,37 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 		}
 	}
 
-	_nextRoomName = [roomName copy];
 	_nextRoomConnection = [connection retain];
 }
 
-- (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
-	[_nextRoomName release];
-	_nextRoomName = nil;
+- (void) joinSupportRoom {
+	MVChatConnection *connection = [[CQConnectionsController defaultController] connectionForServerAddress:@"freenode.net"];
+	if (!connection) {
+		connection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
+		connection.server = @"irc.freenode.net";
+		connection.preferredNickname = [MVChatConnection defaultNickname];
+		connection.realName = [MVChatConnection defaultRealName];
+		connection.username = [connection.preferredNickname lowercaseString];
+		connection.encoding = [MVChatConnection defaultEncoding];
+		connection.automaticallyConnect = NO;
+		connection.secure = NO;
+		connection.serverPort = 6667;
 
+		[[CQConnectionsController defaultController] addConnection:connection];
+
+		[connection release];
+	}
+
+	[connection connect];
+
+	[self showChatControllerWhenAvailableForRoomNamed:@"#colloquy-mobile" andConnection:connection];
+
+	[connection joinChatRoomNamed:@"#colloquy-mobile"];
+
+	[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = self;
+}
+
+- (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
 	[_nextRoomConnection release];
 	_nextRoomConnection = nil;
 
@@ -466,7 +502,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 			[_chatListViewController addChatViewController:controller];
 
-			if (room.connection == _nextRoomConnection && (!_nextRoomName || (_nextRoomName && [_nextRoomConnection chatRoomWithName:_nextRoomName] == room)))
+			if (room.connection == _nextRoomConnection)
 				[self showChatController:controller animated:YES];
 
 			return controller;

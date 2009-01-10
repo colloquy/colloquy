@@ -87,7 +87,7 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 #pragma mark -
 
 - (void) cancel:(id) sender {
-	[self.parentViewController dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void) commit:(id) sender {
@@ -115,7 +115,7 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 	[connection connect];
 
 	[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = [CQConnectionsController defaultController];
-	[self.parentViewController dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -

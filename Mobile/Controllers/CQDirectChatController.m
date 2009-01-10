@@ -256,6 +256,8 @@
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 
+	_active = YES;
+
 	if (_pendingComponents) {
 		[transcriptView addComponents:_pendingComponents animated:NO];
 
@@ -280,7 +282,6 @@
 
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
-	_active = YES;
 
 	if(_initialView) {
 		_initialView = NO;
@@ -507,19 +508,9 @@
 - (BOOL) handleJoinCommandWithArguments:(NSString *) arguments {
 	NSArray *rooms = [arguments componentsSeparatedByString:@","];
 
-	if (rooms.count == 1 && ((NSString *)[rooms objectAtIndex:0]).length) {
-		MVChatRoom *room = [self.connection chatRoomWithName:[rooms objectAtIndex:0]];
-		if (room) {
-			CQChatRoomController *controller = [[CQChatController defaultController] chatViewControllerForRoom:room ifExists:YES];
-			if (controller) {
-				[[CQChatController defaultController] showChatController:controller animated:YES];
-				return NO;
-			}
-		}
-
-		// Pass nil for the room name, so rooms that are forwarded will show.
-		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:nil andConnection:self.connection];
-	} else if (rooms.count > 1)
+	if (rooms.count == 1 && ((NSString *)[rooms objectAtIndex:0]).length)
+		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:[rooms objectAtIndex:0] andConnection:self.connection];
+	else if (rooms.count > 1)
 		[[CQChatController defaultController] popToRootViewControllerAnimated:YES];
 
 	// Return NO so the command is handled in ChatCore.

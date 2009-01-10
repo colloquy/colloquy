@@ -64,7 +64,7 @@
 #pragma mark -
 
 - (IBAction) close:(id) sender {
-	[self.parentViewController dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -

@@ -222,8 +222,6 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	}
 
 	[super viewWillAppear:animated];
-
-	self.navigationItem.leftBarButtonItem.enabled = ([CQConnectionsController defaultController].connections.count ? YES : NO);
 }
 
 - (void) viewDidDisappear:(BOOL) animated {

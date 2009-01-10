@@ -1,5 +1,7 @@
 #import "CQChatEditViewController.h"
 
+#import "CQChatController.h"
+#import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 #import "CQPreferencesListViewController.h"
 #import "CQPreferencesSwitchCell.h"
@@ -88,7 +90,7 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 #pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
-	return 2;
+	return 3;
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
@@ -130,6 +132,14 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 
 		[listViewController release];
 		[connections release];
+
+		return;
+	}
+
+	if (indexPath.section == 2 && indexPath.row == 0) {
+		[[CQChatController defaultController] joinSupportRoom];
+
+		[self dismissModalViewControllerAnimated:YES];
 
 		return;
 	}
@@ -190,9 +200,19 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 	}
 
 	UITableViewCell *helpCell = [UITableViewCell reusableTableViewCellInTableView:tableView];
+	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0., 10., 320., 20.)];
 
-	helpCell.text = NSLocalizedString(@"Join Colloquy Support Room", @"Join Colloquy Support Room label");
-	helpCell.textAlignment = UITextAlignmentCenter;
+	label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+	label.font = [UIFont boldSystemFontOfSize:15.];
+	label.textColor = [UIColor colorWithRed:(85. / 255.) green:(102. / 255.) blue:(145. / 255.) alpha:1.];
+	label.highlightedTextColor = [UIColor whiteColor];
+
+	[helpCell.contentView addSubview:label];
+
+	label.text = NSLocalizedString(@"Join Colloquy Support Room", @"Join Colloquy Support Room label");
+	label.textAlignment = UITextAlignmentCenter;
+
+	[label release];
 
 	return helpCell;
 }

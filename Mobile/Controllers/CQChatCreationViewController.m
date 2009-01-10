@@ -65,12 +65,12 @@
 #pragma mark -
 
 - (void) cancel:(id) sender {
-	[self.parentViewController dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void) commit:(id) sender {
 	if (_editViewController.selectedConnectionIndex == NSNotFound) {
-		[self.parentViewController dismissModalViewControllerAnimated:YES];
+		[self dismissModalViewControllerAnimated:YES];
 		return;
 	}
 
@@ -83,8 +83,7 @@
 	if (_roomTarget) {
 		NSString *roomName = (_editViewController.name.length ? [connection properNameForChatRoomNamed:_editViewController.name] : @"#help");
 
-		// Pass nil for the room name, so rooms that are forwarded will show.
-		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:nil andConnection:connection];
+		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:connection];
 
 		[connection joinChatRoomNamed:roomName withPassphrase:_editViewController.password];
 	} else if (_editViewController.name.length) {
@@ -94,7 +93,7 @@
 	}
 
 	[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = [CQChatController defaultController];
-	[self.parentViewController dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -

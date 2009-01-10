@@ -67,10 +67,11 @@
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
-	// Pass nil for the room name, so rooms that are forwarded will show.
-	[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:nil andConnection:_connection];
+	NSString *roomName = [_rooms objectAtIndex:selectedIndexPath.row];
 
-	[_connection joinChatRoomNamed:[_rooms objectAtIndex:selectedIndexPath.row]];
+	[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:_connection];
+
+	[_connection joinChatRoomNamed:roomName];
 }
 
 #pragma mark -

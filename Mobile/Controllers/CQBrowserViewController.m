@@ -64,7 +64,7 @@
 }
 
 - (void) close:(id) sender {
-	[self.parentViewController dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 - (void) goBack:(id) sender {
