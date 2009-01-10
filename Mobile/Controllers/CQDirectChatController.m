@@ -633,6 +633,8 @@
 	NSArray *results = [self _findLocaleForQueryWithArguments:arguments];
 	NSString *languageCode = [results objectAtIndex:0];
 	NSString *query = [results objectAtIndex:1];
+	
+	if (languageCode == @"en-gb") languageCode = @"en";
 
 	[self _handleSearchForURL:@"http://www.wikipedia.org/search-redirect.php?search=%@&language=%@" withQuery:query withLocale:languageCode];
 
@@ -644,7 +646,7 @@
 	NSString *languageCode = [results objectAtIndex:0];
 	NSString *query = [results objectAtIndex:1];
 
-	if ([languageCode isCaseInsensitiveEqualToString:@"uk"])
+	if ([languageCode isCaseInsensitiveEqualToString:@"en-gb"])
 		[self _handleSearchForURL:@"http://www.amazon.co.uk/s/field-keywords=%@" withQuery:query withLocale:languageCode];
 	else if ([languageCode isCaseInsensitiveEqualToString:@"de"])
 		[self _handleSearchForURL:@"http://www.amazon.de/gp/aw/s.html?k=%@" withQuery:query withLocale:languageCode];
