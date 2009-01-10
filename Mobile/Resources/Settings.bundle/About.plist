@@ -46,7 +46,7 @@
 			<key>Key</key>
 			<string>CQIRCChannel</string>
 			<key>DefaultValue</key>
-			<string>irc://irc.freenode.net/mcolloquy</string>
+			<string>#colloquy-mobile on Freenode</string>
 		</dict>
 		<dict>
 			<key>Type</key>
