@@ -68,6 +68,12 @@
 
 #pragma mark -
 
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	self.tableView.allowsSelectionDuringEditing = YES;	
+}
+
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 
@@ -184,7 +190,9 @@
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:indexPath.row];
-	if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus)
+	if (self.editing)
+		[[CQConnectionsController defaultController] editConnection:connection];
+	else if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus)
 		[self confirmDisconnect];
 	else [self confirmConnect];
 }
