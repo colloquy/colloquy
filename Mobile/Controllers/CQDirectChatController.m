@@ -594,7 +594,8 @@
 
 	NSMutableArray *results = [[NSMutableArray alloc] init];
 	if (!languageCode.length || languageCode.length != 2) {
-		languageCode = [[NSLocale preferredLanguages] objectAtIndex:0];
+//		if ([arguments 
+		languageCode = [[NSLocale autoupdatingCurrentLocale] localeIdentifier];
 
 		[results addObject:languageCode];
 		[results addObject:arguments];
@@ -634,8 +635,6 @@
 	NSString *languageCode = [results objectAtIndex:0];
 	NSString *query = [results objectAtIndex:1];
 	
-	if (languageCode == @"en-gb") languageCode = @"en";
-
 	[self _handleSearchForURL:@"http://www.wikipedia.org/search-redirect.php?search=%@&language=%@" withQuery:query withLocale:languageCode];
 
 	return YES;
@@ -646,19 +645,19 @@
 	NSString *languageCode = [results objectAtIndex:0];
 	NSString *query = [results objectAtIndex:1];
 
-	if ([languageCode isCaseInsensitiveEqualToString:@"en-gb"])
+	if ([languageCode isCaseInsensitiveEqualToString:@"en_gb"])
 		[self _handleSearchForURL:@"http://www.amazon.co.uk/s/field-keywords=%@" withQuery:query withLocale:languageCode];
 	else if ([languageCode isCaseInsensitiveEqualToString:@"de"])
 		[self _handleSearchForURL:@"http://www.amazon.de/gp/aw/s.html?k=%@" withQuery:query withLocale:languageCode];
 	else if ([languageCode isCaseInsensitiveEqualToString:@"cn"])
 		[self _handleSearchForURL:@"http://www.amazon.cn/mn/searchApp?&keywords=%@" withQuery:query withLocale:languageCode];
-	else if ([languageCode isCaseInsensitiveEqualToString:@"jp"])
+	else if ([languageCode isCaseInsensitiveEqualToString:@"ja_jp"])
 		[self _handleSearchForURL:@"http://www.amazon.co.jp/s/field-keywords=%@" withQuery:query withLocale:languageCode];
 	else if ([languageCode isCaseInsensitiveEqualToString:@"fr"])
 		[self _handleSearchForURL:@"http://www.amazon.fr/s/field-keywords=%@" withQuery:query withLocale:languageCode];
 	else if ([languageCode isCaseInsensitiveEqualToString:@"ca"])
-		[self _handleSearchForURL:@"http://www.amazon.ca/s/field-keywords=test" withQuery:query withLocale:languageCode];
-	else [self _handleSearchForURL:@"http://www.amazon.com/mn/searchApp?&keywords=%@" withQuery:query withLocale:languageCode];
+		[self _handleSearchForURL:@"http://www.amazon.ca/s/field-keywords=%@" withQuery:query withLocale:languageCode];
+	else [self _handleSearchForURL:@"http://www.amazon.com/gp/aw/s.html?k=%@" withQuery:query withLocale:languageCode];
 
 	return YES;
 }
