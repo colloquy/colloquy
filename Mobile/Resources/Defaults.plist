@@ -20,8 +20,6 @@
 	<false/>
 	<key>CQChatRoomInviteAction</key>
 	<string>Ask</string>
-	<key>CQChatRoomLanguage</key>
-	<string>en</string>
 	<key>CQDisableLandscape</key>
 	<false/>
 	<key>CQDisableBuiltInBrowser</key>

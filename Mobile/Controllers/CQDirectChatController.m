@@ -594,7 +594,7 @@
 
 	NSMutableArray *results = [[NSMutableArray alloc] init];
 	if (!languageCode.length || languageCode.length != 2) {
-		languageCode = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatRoomLanguage"];
+		languageCode = [[NSLocale preferredLanguages] objectAtIndex:0];
 
 		[results addObject:languageCode];
 		[results addObject:arguments];
