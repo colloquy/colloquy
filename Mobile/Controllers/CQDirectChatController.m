@@ -559,6 +559,30 @@
 	return [self handleMsgCommandWithArguments:arguments];
 }
 
+- (BOOL) handleClearCommandWithArguments:(NSString *) arguments {
+	[_pendingComponents release];
+	_pendingComponents = nil;
+
+	[_pendingPreviousSessionComponents release];
+	_pendingPreviousSessionComponents = nil;
+
+	[_recentMessages release];
+	_recentMessages = nil;
+
+	if (_unreadHighlightedMessages)
+		[CQChatController defaultController].totalImportantUnreadCount -= _unreadHighlightedMessages;
+
+	if (_unreadMessages && self.user)
+		[CQChatController defaultController].totalImportantUnreadCount -= _unreadMessages;
+
+	_unreadMessages = 0;
+	_unreadHighlightedMessages = 0;
+
+	[transcriptView reset];
+
+	return YES;
+}
+
 #pragma mark -
 
 - (id) _findLocaleForQueryWithArguments:(NSString *) arguments {
@@ -694,19 +718,6 @@
 
 - (void) resetDidSendRecently {
 	_didSendRecently = NO;
-}
-
-- (void) handleClearCommandWithArguments:(NSString *) arguments {
-	[_pendingComponents release];
-	_pendingComponents = nil;
-	
-	[_pendingPreviousSessionComponents release];
-	_pendingPreviousSessionComponents = nil;
-
-	[_recentMessages release];
-	_recentMessages = nil;
-	
-	[transcriptView reset];
 }
 
 - (void) checkTranscriptViewForBecomeFirstResponder {
