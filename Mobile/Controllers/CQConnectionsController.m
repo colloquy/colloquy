@@ -272,7 +272,6 @@
 }
 
 - (void) _errorOccurred:(NSNotification *) notification {
-	MVChatConnection *connection = notification.object;
 	NSError *error = [[notification userInfo] objectForKey:@"error"];
 
 	NSString *errorTitle = nil;
@@ -281,13 +280,24 @@
 		case MVChatConnectionInviteOnlyRoomError:
 		case MVChatConnectionBannedFromRoomError:
 		case MVChatConnectionRoomPasswordIncorrectError:
+		case MVChatConnectionIdentifyToJoinRoomError:
 			errorTitle = NSLocalizedString(@"Can't Join Room", @"Can't join room alert title");
 			break;
 		case MVChatConnectionCantSendToRoomError:
-			errorTitle = NSLocalizedString(@"Can't Send Message", @"Can't send message title");
+			errorTitle = NSLocalizedString(@"Can't Send Message", @"Can't send alert title");
+			break;
+		case MVChatConnectionCantChangeUsedNickError:
+		case MVChatConnectionCantChangeNickError:
+			errorTitle = NSLocalizedString(@"Can't Change Nickname", "Can't change nickname alert title");
+			break;
+		case MVChatConnectionRoomDoesNotSupportModesError:
+			errorTitle = NSLocalizedString(@"Room Modes Unsupported", "Room modes not supported alert title");
 			break;
 	}
 
+	if (!errorTitle) return;
+
+	MVChatConnection *connection = notification.object;
 	NSString *roomName = [[error userInfo] objectForKey:@"room"];
 	MVChatRoom *room = (roomName ? [connection chatRoomWithName:roomName] : nil);
 
@@ -306,14 +316,27 @@
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The room \"%@\" on \"%@\" is password protected, and you didn't supply the correct password.", "Room is full alert message"), room.displayName, connection.displayName];
 			break;
 		case MVChatConnectionCantSendToRoomError:
-			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't send messages to \"%@\" due to some room restriction.", "Cant send message alert"), room.displayName];
+			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't send messages to \"%@\" due to some room restriction.", "Cant send message alert message"), room.displayName];
+			break;
+		case MVChatConnectionRoomDoesNotSupportModesError:
+			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The room \"%@\" on \"%@\" doesn't support modes.", "Room does not support modes alert message"), room.displayName, connection.displayName];
+			break;
+		case MVChatConnectionIdentifyToJoinRoomError:
+			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Identify with network services to join \"%@\" on \"%@\".", "Identify to join room alert message"), room.displayName, connection.displayName];
+			break;
+		case MVChatConnectionCantChangeNickError:
+			if (room) errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't change your nickname while in \"%@\" on \"%@\". Leave the room and try again.", "Can't change nick because of room alert message" ), room.displayName, connection.displayName];
+			else errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't change nicknames too fast on \"%@\", wait and try again.", "Can't change nick too fast alert message"), connection.displayName];
+			break;
+		case MVChatConnectionCantChangeUsedNickError:
+			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The nickname \"%@\" is taken on \"%@\".", "Can't change nickname because it is taken alert message"), [[error userInfo] objectForKey:@"nickname"], connection.displayName];
 			break;
 	}
 
 	if (!errorMessage)
 		errorMessage = error.localizedDescription;
 
-	if (!errorTitle || !errorMessage) return;
+	if (!errorMessage) return;
 
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.delegate = self;
