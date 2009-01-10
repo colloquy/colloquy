@@ -2003,7 +2003,7 @@ end:
 		if( [[sender nickname] isEqualToString:@"NickServ"] ) {
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
 
-			if( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"IDENTIFY"] ) {
+			if( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"ID"] ) {
 				if( ! [self nicknamePassword] ) {
 					[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 				} else [self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", [self nicknamePassword]];
