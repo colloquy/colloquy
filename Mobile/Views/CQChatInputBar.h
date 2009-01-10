@@ -8,6 +8,7 @@
 	BOOL _inferAutocapitalizationType;
 	IBOutlet id <CQChatInputBarDelegate> delegate;
 	CQTextCompletionView *_completionView;
+	NSArray *_completions;
 	NSRange _completionRange;
 	BOOL _completionCapturedKeyboard;
 	BOOL _disableCompletionUntilNextWord;

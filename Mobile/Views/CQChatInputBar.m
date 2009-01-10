@@ -76,6 +76,7 @@
 
 	[_inputField release];
 	[_completionView release];
+	[_completions release];
 
 	[super dealloc];
 }
@@ -139,20 +140,20 @@
 }
 
 - (void) hideCompletions {
-	if (!_completionView)
-		return;
-
 	_completionCapturedKeyboard = NO;
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(captureKeyboardForCompletions) object:nil];
 
-	_completionView.hidden = YES;
+	_completionRange = NSMakeRange(NSNotFound, 0);
 
-	[_completionView removeFromSuperview];
-	[_completionView release];
-	_completionView = nil;
+	id old = _completions;
+	_completions = nil;
+	[old release];
+
+	_completionView.hidden = YES;
+	_completionView.completions = nil;
 
 	_inputField.returnKeyType = UIReturnKeySend;
 
@@ -160,19 +161,20 @@
 }
 
 - (void) showCompletions {
-	if (!_completionView)
-		return;
-
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
 
-	BOOL hasMarkedText = ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]);
-	_completionView.hidden = hasMarkedText;
+	if ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]) {
+		[self hideCompletions];
+		return;
+	}
 
-	[_completionView.superview bringSubviewToFront:_completionView];
-}
+	NSString *text = _inputField.text;
+	if (text.length <= _completionRange.location) {
+		[self hideCompletions];
+		return;
+	}
 
-- (void) showCompletions:(NSArray *) completions forText:(NSString *) text inRange:(NSRange) textRange {
 	if (!_completionView) {
 		_completionView = [[CQTextCompletionView alloc] initWithFrame:CGRectMake(0., 0., 480., 46.)];
 		_completionView.delegate = self;
@@ -181,16 +183,16 @@
 		[self.superview addSubview:_completionView];
 	}
 
-	CGRect inputFrame = [self convertRect:_inputField.frame toView:self.superview];
-	NSString *prefixText = [text substringToIndex:textRange.location];
+	NSArray *completions = _completions;
+	NSString *prefixText = [text substringToIndex:_completionRange.location];
 	CGSize textSize = [prefixText sizeWithFont:_inputField.font];
+
+	CGRect inputFrame = [self convertRect:_inputField.frame toView:self.superview];
 	CGRect frame = _completionView.frame;
 
 retry:
 	_completionView.completions = completions;
 	[_completionView sizeToFit];
-
-	_completionRange = textRange;
 
 	frame.origin = inputFrame.origin;
 	frame.origin.y -= 31.;
@@ -210,6 +212,17 @@ retry:
 	}
 
 	_completionView.frame = frame;
+	_completionView.hidden = NO;
+
+	[_completionView.superview bringSubviewToFront:_completionView];
+}
+
+- (void) showCompletions:(NSArray *) completions forText:(NSString *) text inRange:(NSRange) textRange {
+	_completionRange = textRange;
+
+	id old = _completions;
+	_completions = [completions retain];
+	[old release];
 
 	_inputField.returnKeyType = UIReturnKeySend;
 
@@ -219,7 +232,7 @@ retry:
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(captureKeyboardForCompletions) object:nil];
 
-	[self performSelector:@selector(showCompletions) withObject:nil afterDelay:0.05];
+	[self performSelector:@selector(showCompletions) withObject:nil afterDelay:([self isShowingCompletions] ? 0.05 : 0.1)];
 	[self performSelector:@selector(captureKeyboardForCompletions) withObject:nil afterDelay:CompletionsCaptureKeyboardDelay];
 }
 
@@ -363,8 +376,6 @@ retry:
 #pragma mark -
 
 - (void) textCompletionView:(CQTextCompletionView *) textCompletionView didSelectCompletion:(NSString *) completion {
-	[self hideCompletions];
-
 	if (![completion hasSuffix:@" "])
 		completion = [completion stringByAppendingString:@" "];
 
@@ -376,14 +387,16 @@ retry:
 
 	if ([_inputField respondsToSelector:@selector(setSelectionRange:)])
 		_inputField.selectionRange = NSMakeRange((_completionRange.location + completion.length), 0);
+
+	[self hideCompletions];
 }
 
 - (void) textCompletionViewDidClose:(CQTextCompletionView *) textCompletionView {
-	[self hideCompletions];
-
 	NSString *text = _inputField.text;
 	if (text.length < NSMaxRange(_completionRange) || [text characterAtIndex:(NSMaxRange(_completionRange) - 1)] != ' ')
 		_disableCompletionUntilNextWord = YES;
+
+	[self hideCompletions];
 }
 
 #pragma mark -
