@@ -388,8 +388,11 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 
 - (void) joinSupportRoom {
 	MVChatConnection *connection = [[CQConnectionsController defaultController] connectionForServerAddress:@"freenode.net"];
+	if (!connection) connection = [[CQConnectionsController defaultController] connectionForServerAddress:@"freenode.com"];
+
 	if (!connection) {
 		connection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
+		connection.displayName = @"Freenode";
 		connection.server = @"irc.freenode.net";
 		connection.preferredNickname = [MVChatConnection defaultNickname];
 		connection.realName = [MVChatConnection defaultRealName];
