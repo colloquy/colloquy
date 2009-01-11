@@ -21,7 +21,10 @@
 #pragma mark -
 
 @interface CQChatRoomController (CQChatRoomControllerPrivate)
+- (NSString *) _markupForUser:(MVChatUser *) user;
+- (NSString *) _markupForMemberUser:(MVChatUser *) user;
 - (void) _sortMembers;
+- (void) _displayCurrentTopicOnlyIfSet:(BOOL) onlyIfSet;
 @end
 
 #pragma mark -
@@ -154,6 +157,8 @@
 	if (++_joinCount > 1)
 		[self addEventMessage:NSLocalizedString(@"You joined the room.", "Joined room event message") withIdentifier:@"rejoined"];
 
+	[self _displayCurrentTopicOnlyIfSet:YES];
+
 	_banListSynced = NO;
 	_membersNeedSorted = YES;
 
@@ -175,6 +180,17 @@
 	_currentUserListViewController.room = self.room;
 
 	[self.navigationController pushViewController:_currentUserListViewController animated:YES];
+}
+
+#pragma mark -
+
+- (BOOL) handleTopicCommandWithArguments:(NSString *) arguments {
+	if (![arguments stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
+		[self _displayCurrentTopicOnlyIfSet:NO];
+		return YES;
+	}
+
+	return NO;
 }
 
 #pragma mark -
@@ -259,6 +275,25 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 
 - (NSString *) _markupForMemberUser:(MVChatUser *) user {
 	return [NSString stringWithFormat:@"<span class=\"member user\">%@</span>", [user.nickname stringByEncodingXMLSpecialCharactersAsEntities]];
+}
+
+- (void) _displayCurrentTopicOnlyIfSet:(BOOL) onlyIfSet {
+	NSMutableString *topicString = [self _processMessageData:self.room.topic];
+	[self _processMessageString:topicString];
+
+	MVChatUser *user = self.room.topicAuthor;
+	if (user.localUser && topicString.length) {
+		NSString *eventMessageFormat = [NSLocalizedString(@"Current chat topic is \"%@\", set by you.", "Current topic set by you event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, topicString] withIdentifier:@"topic"];
+	} else if (user && topicString.length) {
+		NSString *eventMessageFormat = [NSLocalizedString(@"Current chat topic is \"%@\", set by %@.", "Current topic event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, topicString, [self _markupForMemberUser:user]] withIdentifier:@"topic"];
+	} else if (topicString.length) {
+		NSString *eventMessageFormat = [NSLocalizedString(@"Current chat topic is \"%@\".", "Current topic with no user event message") stringByEncodingXMLSpecialCharactersAsEntities];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, topicString] withIdentifier:@"topic"];
+	} else if (!onlyIfSet) {
+		[self addEventMessage:NSLocalizedString(@"No chat topic is set.", "No chat topic event message") withIdentifier:@"topic"];
+	}
 }
 
 - (void) _sortMembers {
