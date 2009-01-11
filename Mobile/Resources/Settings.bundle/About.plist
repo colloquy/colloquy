@@ -78,6 +78,16 @@
 			<key>Type</key>
 			<string>PSTitleValueSpecifier</string>
 			<key>Title</key>
+			<string>Alexander Kempgen</string>
+			<key>Key</key>
+			<string>CQCreditsDeveloperAlexander</string>
+			<key>DefaultValue</key>
+			<string>Programmer</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
 			<string>August Joki</string>
 			<key>Key</key>
 			<string>CQCreditsDeveloperAugust</string>
