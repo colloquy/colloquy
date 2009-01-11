@@ -600,7 +600,6 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				1C09313A0D80C8F600A2705D /* Defaults.plist */,
 				1CA718A90EF5F136006225CD /* Settings.bundle */,
@@ -645,6 +644,7 @@
 				1CAE8BF20EE612DA00CE1AF8 /* base.html */,
 				1CAE8BF30EE612DA00CE1AF8 /* standard.css */,
 				1C1253280F0D4FC1008F181B /* standard-dark.css */,
+				89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */,
 				1C0F69440F15033C002BB855 /* chromatic.css */,
 				1C0F694E0F15035D002BB855 /* chromatic-dark.css */,
 				1C0F686A0F144DBE002BB855 /* bubbles.css */,
