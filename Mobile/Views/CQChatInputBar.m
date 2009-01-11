@@ -122,6 +122,8 @@
 
 @synthesize autocomplete = _autocomplete;
 
+@synthesize spaceCyclesCompletions = _spaceCyclesCompletions;
+
 @synthesize autocorrect = _autocorrect;
 
 #pragma mark -
@@ -233,7 +235,9 @@ retry:
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(captureKeyboardForCompletions) object:nil];
 
 	[self performSelector:@selector(showCompletions) withObject:nil afterDelay:([self isShowingCompletions] ? 0.05 : 0.1)];
-	[self performSelector:@selector(captureKeyboardForCompletions) withObject:nil afterDelay:CompletionsCaptureKeyboardDelay];
+
+	if (_spaceCyclesCompletions)
+		[self performSelector:@selector(captureKeyboardForCompletions) withObject:nil afterDelay:CompletionsCaptureKeyboardDelay];
 }
 
 #pragma mark -
@@ -309,7 +313,7 @@ retry:
 	if (![delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:)])
 		return YES;
 
-	if (_completionCapturedKeyboard && self.showingCompletions && [string isEqualToString:@" "] && !_completionView.closeSelected) {
+	if (_spaceCyclesCompletions && _completionCapturedKeyboard && self.showingCompletions && [string isEqualToString:@" "] && !_completionView.closeSelected) {
 		if (_completionView.selectedCompletion != NSNotFound)
 			++_completionView.selectedCompletion;
 		else _completionView.selectedCompletion = 0;
@@ -320,7 +324,7 @@ retry:
 
 	NSString *text = _inputField.text;
 	BOOL replaceManually = NO;
-	if (self.showingCompletions && _completionView.selectedCompletion != NSNotFound && !range.length && ![string isEqualToString:@" "]) {
+	if (_spaceCyclesCompletions && self.showingCompletions && _completionView.selectedCompletion != NSNotFound && !range.length && ![string isEqualToString:@" "]) {
 		replaceManually = YES;
 		text = [_inputField.text stringByReplacingCharactersInRange:NSMakeRange(range.location, 0) withString:@" "];
 		++range.location;

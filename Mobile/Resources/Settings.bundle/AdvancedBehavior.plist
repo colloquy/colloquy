@@ -58,17 +58,25 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
+			<string>PSMultiValueSpecifier</string>
+			<key>Key</key>
+			<string>CQChatAutocompleteBehavior</string>
 			<key>Title</key>
 			<string>Chat Completions</string>
-			<key>Key</key>
-			<string>CQDisableChatAutocomplete</string>
-			<key>TrueValue</key>
-			<false/>
-			<key>FalseValue</key>
-			<true/>
+			<key>Values</key>
+			<array>
+				<string>Disabled</string>
+				<string>Tap</string>
+				<string>Keyboard</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Disabled</string>
+				<string>Tap Selection</string>
+				<string>Keyboard Selection</string>
+			</array>
 			<key>DefaultValue</key>
-			<false/>
+			<string>Tap</string>
 		</dict>
 		<dict>
 			<key>Type</key>

@@ -13,6 +13,7 @@
 	BOOL _completionCapturedKeyboard;
 	BOOL _disableCompletionUntilNextWord;
 	BOOL _autocomplete;
+	BOOL _spaceCyclesCompletions;
 	BOOL _autocorrect;
 	BOOL _autocapitalizeNextLetter;
 	UITextAutocapitalizationType _defaultAutocapitalizationType;
@@ -20,6 +21,7 @@
 @property (nonatomic, assign) id <CQChatInputBarDelegate> delegate;
 
 @property (nonatomic) BOOL autocomplete;
+@property (nonatomic) BOOL spaceCyclesCompletions;
 @property (nonatomic) BOOL autocorrect;
 
 @property (nonatomic) BOOL inferAutocapitalizationType;

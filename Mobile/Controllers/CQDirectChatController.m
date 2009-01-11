@@ -235,7 +235,10 @@
 	transcriptView.styleIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
 	self.view.backgroundColor = transcriptView.backgroundColor;
 
-	chatInputBar.autocomplete = ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableChatAutocomplete"];
+	NSString *completionBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"];
+	chatInputBar.autocomplete = ![completionBehavior isEqualToString:@"Disabled"];
+	chatInputBar.spaceCyclesCompletions = [completionBehavior isEqualToString:@"Keyboard"];
+
 	chatInputBar.autocorrect = ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableChatAutocorrection"];
 
 	if (_pendingPreviousSessionComponents) {
