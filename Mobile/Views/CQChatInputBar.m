@@ -300,6 +300,12 @@ retry:
 }
 
 - (BOOL) textField:(UITextField *) textField shouldChangeCharactersInRange:(NSRange) range replacementString:(NSString *) string {
+	if (range.location == _inputField.text.length && _autocapitalizeNextLetter) {
+		_autocapitalizeNextLetter = NO;
+		_inputField.autocapitalizationType = _defaultAutocapitalizationType;
+		[self _updateTextTraits];
+	}
+	
 	if (![delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:)])
 		return YES;
 
@@ -387,6 +393,14 @@ retry:
 
 	if ([_inputField respondsToSelector:@selector(setSelectionRange:)])
 		_inputField.selectionRange = NSMakeRange((_completionRange.location + completion.length), 0);
+	
+	if (_completionRange.location == 0 && _inputField.autocapitalizationType == UITextAutocapitalizationTypeSentences) {
+		_autocapitalizeNextLetter = YES;
+		_defaultAutocapitalizationType = UITextAutocapitalizationTypeSentences;
+		_inputField.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
+		[self _updateTextTraits];
+	}
+	
 
 	[self hideCompletions];
 }

@@ -14,6 +14,8 @@
 	BOOL _disableCompletionUntilNextWord;
 	BOOL _autocomplete;
 	BOOL _autocorrect;
+	BOOL _autocapitalizeNextLetter;
+	UITextAutocapitalizationType _defaultAutocapitalizationType;
 }
 @property (nonatomic, assign) id <CQChatInputBarDelegate> delegate;
 
