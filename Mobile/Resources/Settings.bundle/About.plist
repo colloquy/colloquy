@@ -26,7 +26,7 @@
 			<key>Key</key>
 			<string>CQWebsite</string>
 			<key>DefaultValue</key>
-			<string>http://colloquy.info</string>
+			<string>http://mobile.colloquy.info</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -36,7 +36,7 @@
 			<key>Key</key>
 			<string>CQSupportEmail</string>
 			<key>DefaultValue</key>
-			<string>support@colloquy.info</string>
+			<string>mobile@colloquy.info</string>
 		</dict>
 		<dict>
 			<key>Type</key>
