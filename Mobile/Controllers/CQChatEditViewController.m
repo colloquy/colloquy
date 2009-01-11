@@ -90,7 +90,7 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 #pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
-	return 3;
+	return (_roomTarget ? 3 : 2);
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
