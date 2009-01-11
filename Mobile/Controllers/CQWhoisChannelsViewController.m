@@ -7,7 +7,6 @@
 #import "CQWhoisChannelsViewController.h"
 
 #import "CQChatController.h"
-#import "CQColloquyApplication.h"
 
 #import <ChatCore/MVChatConnection.h>
 
@@ -52,7 +51,7 @@
 
 	sheet.cancelButtonIndex = 1;
 
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+	[sheet showInView:self.view];
 
 	[sheet release];
 }
