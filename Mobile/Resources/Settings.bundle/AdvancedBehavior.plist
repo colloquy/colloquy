@@ -80,6 +80,26 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Key</key>
+			<string>CQChatAutocapitalizationBehavior</string>
+			<key>Title</key>
+			<string>Autocapitalization</string>
+			<key>Values</key>
+			<array>
+				<string>None</string>
+				<string>Sentences</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>None</string>
+				<string>Sentences</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>Sentences</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
 			<string>Autocorrection</string>

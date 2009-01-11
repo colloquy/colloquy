@@ -44,7 +44,6 @@
 
 	[self addSubview:_inputField];
 
-	_inferAutocapitalizationType = YES;
 	_autocomplete = YES;
 	_autocorrect = YES;
 
@@ -117,8 +116,6 @@
 - (void) setAutocapitalizationType:(UITextAutocapitalizationType) autocapitalizationType {
 	_inputField.autocapitalizationType = autocapitalizationType;
 }
-
-@synthesize inferAutocapitalizationType = _inferAutocapitalizationType;
 
 @synthesize autocomplete = _autocomplete;
 
@@ -442,17 +439,6 @@ retry:
 
 	if (![delegate chatInputBar:self sendText:text])
 		return;
-
-	if (_inferAutocapitalizationType) {
-		unichar firstCharacter = [text characterAtIndex:0];
-		NSCharacterSet *letterSet = [NSCharacterSet letterCharacterSet];
-		if ([letterSet characterIsMember:firstCharacter]) {
-			NSCharacterSet *uppercaseSet = [NSCharacterSet uppercaseLetterCharacterSet];
-			if ([uppercaseSet characterIsMember:firstCharacter])
-				_inputField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-			else _inputField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-		}
-	}
 
 	_disableCompletionUntilNextWord = NO;
 	_completionCapturedKeyboard = NO;

@@ -5,7 +5,6 @@
 
 @interface CQChatInputBar : UIView <UITextFieldDelegate, CQTextCompletionViewDelegate> {
 	UITextField *_inputField;
-	BOOL _inferAutocapitalizationType;
 	IBOutlet id <CQChatInputBarDelegate> delegate;
 	CQTextCompletionView *_completionView;
 	NSArray *_completions;
@@ -24,7 +23,6 @@
 @property (nonatomic) BOOL spaceCyclesCompletions;
 @property (nonatomic) BOOL autocorrect;
 
-@property (nonatomic) BOOL inferAutocapitalizationType;
 @property (nonatomic) UITextAutocapitalizationType autocapitalizationType;
 
 @property (nonatomic, readonly, getter=isShowingCompletions) BOOL showingCompletions;

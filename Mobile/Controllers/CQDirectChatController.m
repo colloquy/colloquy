@@ -241,6 +241,9 @@
 
 	chatInputBar.autocorrect = ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableChatAutocorrection"];
 
+	NSString *capitalizationBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocapitalizationBehavior"];
+	chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
+
 	if (_pendingPreviousSessionComponents) {
 		[transcriptView addPreviousSessionComponents:_pendingPreviousSessionComponents];
 

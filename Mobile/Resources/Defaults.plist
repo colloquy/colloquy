@@ -12,6 +12,8 @@
 	<string>standard</string>
 	<key>CQChatAutocompleteBehavior</key>
 	<string>Tap</string>
+	<key>CQChatAutocapitalizationBehavior</key>
+	<string>Sentences</string>
 	<key>CQChatRoomInviteAction</key>
 	<string>Ask</string>
 	<key>JVSortRoomMembersByStatus</key>
