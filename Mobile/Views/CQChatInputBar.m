@@ -300,7 +300,7 @@ retry:
 }
 
 - (BOOL) textField:(UITextField *) textField shouldChangeCharactersInRange:(NSRange) range replacementString:(NSString *) string {
-	if (range.location == _inputField.text.length && _autocapitalizeNextLetter) {
+	if (_autocapitalizeNextLetter) {
 		_autocapitalizeNextLetter = NO;
 		_inputField.autocapitalizationType = _defaultAutocapitalizationType;
 		[self _updateTextTraits];
