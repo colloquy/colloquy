@@ -261,10 +261,10 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 	BOOL placeholder = isPlaceholderValue(_connection.server);
 	if (wasPlaceholder && !placeholder) {
-		[[CQKeychain standardKeychain] setPassword:_connection.password forServer:_connection.server account:nil];
+		[[CQKeychain standardKeychain] setPassword:_connection.password forServer:_connection.server account:@"<<server password>>"];
 		[[CQKeychain standardKeychain] setPassword:_connection.nicknamePassword forServer:_connection.server account:currentPreferredNickname(_connection)];
 	} else if (!placeholder) {
-		_connection.password = [[CQKeychain standardKeychain] passwordForServer:_connection.server account:nil];
+		_connection.password = [[CQKeychain standardKeychain] passwordForServer:_connection.server account:@"<<server password>>"];
 		_connection.nicknamePassword = [[CQKeychain standardKeychain] passwordForServer:_connection.server account:currentPreferredNickname(_connection)];
 	} else {
 		_connection.password = nil;

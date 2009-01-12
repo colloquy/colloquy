@@ -408,12 +408,12 @@
 			[[CQKeychain standardKeychain] setPassword:password forServer:connection.server account:connection.preferredNickname];
 
 		if ((password = [info objectForKey:@"password"]))
-			[[CQKeychain standardKeychain] setPassword:password forServer:connection.server account:nil];
+			[[CQKeychain standardKeychain] setPassword:password forServer:connection.server account:@"<<server password>>"];
 
 		if ((password = [[CQKeychain standardKeychain] passwordForServer:connection.server account:connection.preferredNickname]) && password.length)
 			connection.nicknamePassword = password;
 
-		if ((password = [[CQKeychain standardKeychain] passwordForServer:connection.server account:nil]) && password.length)
+		if ((password = [[CQKeychain standardKeychain] passwordForServer:connection.server account:@"<<server password>>"]) && password.length)
 			connection.password = password;
 
 		[_connections addObject:connection];

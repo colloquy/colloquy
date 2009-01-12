@@ -291,7 +291,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 	_connection.password = sender.text;
 
 	if (!isPlaceholderValue(_connection.server))
-		[[CQKeychain standardKeychain] setPassword:_connection.password forServer:_connection.server account:nil];
+		[[CQKeychain standardKeychain] setPassword:_connection.password forServer:_connection.server account:@"<<server password>>"];
 }
 
 - (void) nicknamePasswordChanged:(CQPreferencesTextCell *) sender {
