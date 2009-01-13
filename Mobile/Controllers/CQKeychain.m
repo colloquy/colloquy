@@ -26,14 +26,6 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 
 	return query;
 }
-
-static NSMutableDictionary *createSearchDictionary(NSString *server, NSString *account) {
-	NSMutableDictionary *query = createBaseDictionary(server, account);
-
-	[query setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
-
-	return query;
-}
 #endif
 
 - (void) setPassword:(NSString *) password forServer:(NSString *) server account:(NSString *) account {
@@ -45,21 +37,23 @@ static NSMutableDictionary *createSearchDictionary(NSString *server, NSString *a
 		return;
 	}
 
-	NSMutableDictionary *passwordQuery = createSearchDictionary(server, account);
+	NSMutableDictionary *passwordEntry = createBaseDictionary(server, account);
 	NSMutableDictionary *attributesToUpdate = [[NSMutableDictionary alloc] init];
 
 	NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
 	[attributesToUpdate setObject:passwordData forKey:(id)kSecValueData];
 
-	OSStatus status = SecItemUpdate((CFDictionaryRef)passwordQuery, (CFDictionaryRef)attributesToUpdate);
+	OSStatus status = SecItemUpdate((CFDictionaryRef)passwordEntry, (CFDictionaryRef)attributesToUpdate);
 
-	[passwordQuery release];
 	[attributesToUpdate release];
 
-	if (status == noErr)
+	if (status == noErr) {
+		[passwordEntry release];
 		return;
+	}
 
-	NSMutableDictionary *passwordEntry = createBaseDictionary(server, account);
+	SecItemDelete((CFDictionaryRef)passwordEntry);
+
 	[passwordEntry setObject:passwordData forKey:(id)kSecValueData];
 
 	SecItemAdd((CFDictionaryRef)passwordEntry, NULL);
@@ -79,10 +73,11 @@ static NSMutableDictionary *createSearchDictionary(NSString *server, NSString *a
 	NSString *string = nil;
 
 #if !TARGET_IPHONE_SIMULATOR
-	NSMutableDictionary *passwordQuery = createSearchDictionary(server, account);
+	NSMutableDictionary *passwordQuery = createBaseDictionary(server, account);
 	NSData *resultData = nil;
 
 	[passwordQuery setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
+	[passwordQuery setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
 
 	OSStatus status = SecItemCopyMatching((CFDictionaryRef)passwordQuery, (CFTypeRef *)&resultData);
 	if (status == noErr && resultData)
