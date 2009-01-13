@@ -286,9 +286,8 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setNicknamePassword:(NSString *) newPassword {
-	if( ! [[self localUser] isIdentified] && newPassword && [self isConnected] ) {
-		[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@ %@", self.preferredNickname, newPassword];
-	}
+	if( ! [[self localUser] isIdentified] && newPassword && [self isConnected] )
+		[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@", newPassword];
 	[super setNicknamePassword:newPassword];
 }
 
@@ -1737,10 +1736,10 @@ end:
 
 	// Identify if we have a user password
 	if( [[self nicknamePassword] length] ) {
-		if( [self.server hasCaseInsensitiveSubstring:@"quakenet"] ) {
+		if( [[self server] hasCaseInsensitiveSubstring:@"quakenet"] ) {
 			[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG Q@CServe.quakenet.org :AUTH %@ %@", self.preferredNickname, self.nicknamePassword];
 		} else {
-			[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@ %@", self.preferredNickname, self.nicknamePassword];
+			[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@", [self nicknamePassword]];
 		}
 	}
 
@@ -2013,7 +2012,7 @@ end:
 				if( ! [self nicknamePassword] ) {
 					[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 				} else {
-					[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@ %@", self.preferredNickname, self.nicknamePassword];
+					[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@", [self nicknamePassword]];
 				}
 			} else if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ) {
 				[[self localUser] _setIdentified:YES];
