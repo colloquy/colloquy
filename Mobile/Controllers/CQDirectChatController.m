@@ -1063,7 +1063,7 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 
 			[regex release];
 
-			if (highlighted)
+			if (*highlighted)
 				break;
 		}
 	}
