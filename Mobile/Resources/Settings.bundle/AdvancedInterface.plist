@@ -24,40 +24,6 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Hide Chat Icons</string>
-			<key>Key</key>
-			<string>CQShowsChatIcons</string>
-			<key>TrueValue</key>
-			<false/>
-			<key>FalseValue</key>
-			<true/>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Show Room Prefixes</string>
-			<key>Key</key>
-			<string>JVShowFullRoomNames</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Sort Users by Status</string>
-			<key>Key</key>
-			<string>JVSortRoomMembersByStatus</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
 			<string>Strip Message Styles</string>
 			<key>Key</key>
 			<string>JVChatStripMessageFormatting</string>
