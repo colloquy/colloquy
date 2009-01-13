@@ -451,7 +451,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (NSCharacterSet *) chatRoomNamePrefixes {
 	static NSCharacterSet *defaultPrefixes = nil;
 	if( ! _roomPrefixes && ! defaultPrefixes )
-		defaultPrefixes = [[NSCharacterSet characterSetWithCharactersInString:@"#"] retain];
+		defaultPrefixes = [[NSCharacterSet characterSetWithCharactersInString:@"#&+!"] retain];
 	if( ! _roomPrefixes ) return defaultPrefixes;
 	return _roomPrefixes;
 }
