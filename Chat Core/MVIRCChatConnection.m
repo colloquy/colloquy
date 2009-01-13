@@ -985,7 +985,7 @@ end:
 	if( echo ) {
 		MVChatRoom *room = ([target isKindOfClass:[MVChatRoom class]] ? target : nil);
 		NSNumber *action = ([[attributes objectForKey:@"action"] boolValue] ? [attributes objectForKey:@"action"] : [NSNumber numberWithBool:NO]);
-		NSDictionary *privmsgInfo = [NSDictionary dictionaryWithObjectsAndKeys:msg, @"message", [self localUser], @"user", [NSString locallyUniqueString], @"identifier", action, @"action", target, @"target", room, @"room", nil];
+		NSMutableDictionary *privmsgInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:msg, @"message", [self localUser], @"user", [NSString locallyUniqueString], @"identifier", action, @"action", target, @"target", room, @"room", nil];
 		[self performSelector:@selector( _handlePrivmsg: ) withObject:privmsgInfo];
 	}
 
@@ -1900,7 +1900,7 @@ end:
 #pragma mark -
 #pragma mark Incoming Message Replies
 
-- (void) _handlePrivmsg:(NSDictionary *) privmsgInfo {
+- (void) _handlePrivmsg:(NSMutableDictionary *) privmsgInfo {
 	MVAssertMainThreadRequired();
 
 	MVChatRoom *room = [privmsgInfo objectForKey:@"room"];
@@ -1970,14 +1970,14 @@ end:
 		if( ctcp ) {
 			[self _handleCTCP:msgData asRequest:YES fromSender:sender forRoom:room];
 		} else {
-			NSDictionary *privmsgInfo = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", target, @"target", room, @"room", nil];
+			NSMutableDictionary *privmsgInfo = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", target, @"target", room, @"room", nil];
 			[self performSelectorOnMainThread:@selector( _handlePrivmsg: ) withObject:privmsgInfo waitUntilDone:NO];
 			[privmsgInfo release];
 		}
 	}
 }
 
-- (void) _handleNotice:(NSDictionary *) noticeInfo {
+- (void) _handleNotice:(NSMutableDictionary *) noticeInfo {
 	MVAssertMainThreadRequired();
 
 	id target = [noticeInfo objectForKey:@"target"];
@@ -2074,7 +2074,7 @@ end:
 		if ( ctcp ) {
 			[self _handleCTCP:msgData asRequest:NO fromSender:sender forRoom:room];
 		} else {
-			NSDictionary *noticeInfo = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", target, @"target", room, @"room", nil];
+			NSMutableDictionary *noticeInfo = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", target, @"target", room, @"room", nil];
 			[self performSelectorOnMainThread:@selector( _handleNotice: ) withObject:noticeInfo waitUntilDone:NO];
 			[noticeInfo release];
 		}
@@ -2104,7 +2104,7 @@ end:
 
 	if( [command isCaseInsensitiveEqualToString:@"ACTION"] && arguments ) {
 		// special case ACTION and send it out like a message with the action flag
-		NSDictionary *msgInfo = [NSDictionary dictionaryWithObjectsAndKeys:arguments, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", room, @"room", nil];
+		NSMutableDictionary *msgInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:arguments, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", room, @"room", nil];
 
 		[self _handlePrivmsg:msgInfo]; // No need to explicitly call this on main thread, as we are already in it.
 
