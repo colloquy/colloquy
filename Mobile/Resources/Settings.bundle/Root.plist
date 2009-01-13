@@ -46,7 +46,7 @@
 			<key>Key</key>
 			<string>JVQuitMessage</string>
 			<key>DefaultValue</key>
-			<string>Get Colloquy for iPhone! http://itunes.com/app/colloquy</string>
+			<string>Get Colloquy for iPhone! http://mobile.colloquy.info</string>
 			<key>AutocapitalizationType</key>
 			<string>Sentences</string>
 		</dict>
