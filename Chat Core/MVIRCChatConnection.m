@@ -286,8 +286,9 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setNicknamePassword:(NSString *) newPassword {
-	if( ! [[self localUser] isIdentified] && newPassword && [self isConnected] )
-		[self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", newPassword];
+	if( ! [[self localUser] isIdentified] && newPassword && [self isConnected] ) {
+		[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@ %@", self.preferredNickname, newPassword];
+	}
 	[super setNicknamePassword:newPassword];
 }
 
@@ -1735,8 +1736,13 @@ end:
 	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
 
 	// Identify if we have a user password
-	if( [[self nicknamePassword] length] )
-		[self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", [self nicknamePassword]];
+	if( [[self nicknamePassword] length] ) {
+		if( [self.server hasCaseInsensitiveSubstring:@"quakenet"] ) {
+			[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG Q@CServe.quakenet.org :AUTH %@ %@", self.preferredNickname, self.nicknamePassword];
+		} else {
+			[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@ %@", self.preferredNickname, self.nicknamePassword];
+		}
+	}
 
 	// set the current nick name if it is not the same as what re requested (some servers/bouncers will give us a new nickname)
 	if( [parameters count] >= 1 ) {
@@ -2006,7 +2012,9 @@ end:
 			if( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"ID"] ) {
 				if( ! [self nicknamePassword] ) {
 					[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
-				} else [self sendRawMessageImmediatelyWithFormat:@"NickServ IDENTIFY %@", [self nicknamePassword]];
+				} else {
+					[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@ %@", self.preferredNickname, self.nicknamePassword];
+				}
 			} else if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ) {
 				[[self localUser] _setIdentified:YES];
 			} else if( [msg hasCaseInsensitiveSubstring:@"authentication required"] || [msg hasCaseInsensitiveSubstring:@"nickname is owned"] ) {
@@ -3226,6 +3234,13 @@ end:
 			[_pendingWhoisUsers removeObject:user];
 			[self _whoisNextScheduledUser];
 		}
+
+		/* TODO
+		NSString *errorLiteralReason = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
+		NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:self, @"connection", user, @"user", @"401", @"errorCode", errorLiteralReason, @"errorLiteralReason", nil];
+		[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"There is no user called \"%@\" on \"%@\".", "no such user error" ), user, [self server]] forKey:NSLocalizedDescriptionKey];
+		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionNoSuchUserError userInfo:userInfo]];
+		*/
 	}
 }
 
@@ -3241,12 +3256,15 @@ end:
 			[self _whoisNextScheduledUser];
 		}
 	}
+	// TODO MVChatConnectionNoSuchServerError
 }
 
-/*       _handle403    ERR_NOSUCHCHANNEL
+/* TODO      _handle403    ERR_NOSUCHCHANNEL
  "<channel name> :No such channel"
 
  - Used to indicate the given channel name is invalid.
+ 
+ MVChatConnectionNoSuchRoomError
 */
 
 - (void) _handle404WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_CANNOTSENDTOCHAN
@@ -3268,12 +3286,14 @@ end:
 	}
 }
 
-/*       _handle405    ERR_TOOMANYCHANNELS
+/* TODO      _handle405    ERR_TOOMANYCHANNELS
  "<channel name> :You have joined too many channels"
 
  - Sent to a user when they have joined the maximum
  number of allowed channels and they try to join
- another channel.*/
+ another channel.
+ 
+ */
 
 - (void) _handle421WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_UNKNOWNCOMMAND
 	MVAssertCorrectThreadRequired( _connectionThread );
@@ -3287,20 +3307,24 @@ end:
 				[self sendRawMessageWithFormat:@"PRIVMSG NickServ :IDENTIFY %@", [self nicknamePassword]];
 		}
 	}
+	// TODO MVChatConnectionUnknownCommandError
 }
 
-/*       _handle431    ERR_NONICKNAMEGIVEN
+/* TODO      _handle431    ERR_NONICKNAMEGIVEN
  ":No nickname given"
 
  - Returned when a nickname parameter expected for a
  command and isn't found.*/
 
-/*       _handle432    ERR_ERRONEUSNICKNAME
+/* TODO      _handle432    ERR_ERRONEUSNICKNAME
  "<nick> :Erroneous nickname"
 
  - Returned after receiving a NICK message which contains
  characters which do not fall in the defined set.  See
- section 2.3.1 for details on valid nicknames.*/
+ section 2.3.1 for details on valid nicknames.
+ 
+ MVChatConnectionErroneusNicknameError
+ */
 
 - (void) _handle438WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NICKTOOFAST_IRCU
 	MVAssertCorrectThreadRequired( _connectionThread );
