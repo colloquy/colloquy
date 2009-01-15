@@ -71,7 +71,7 @@
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	self.tableView.allowsSelectionDuringEditing = YES;	
+	self.tableView.allowsSelectionDuringEditing = YES;
 }
 
 - (void) viewWillAppear:(BOOL) animated {

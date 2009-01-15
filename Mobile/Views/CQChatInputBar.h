@@ -4,6 +4,7 @@
 @class CQTextCompletionView;
 
 @interface CQChatInputBar : UIView <UITextFieldDelegate, CQTextCompletionViewDelegate> {
+	@protected
 	UITextField *_inputField;
 	IBOutlet id <CQChatInputBarDelegate> delegate;
 	CQTextCompletionView *_completionView;

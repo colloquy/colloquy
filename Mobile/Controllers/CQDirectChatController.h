@@ -10,6 +10,7 @@
 @class MVChatUserWatchRule;
 
 @interface CQDirectChatController : UIViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, UIAlertViewDelegate> {
+	@protected
 	IBOutlet CQChatInputBar *chatInputBar;
 	IBOutlet CQChatTranscriptView *transcriptView;
 

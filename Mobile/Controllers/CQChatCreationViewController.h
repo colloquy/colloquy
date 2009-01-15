@@ -1,6 +1,7 @@
 @class CQChatEditViewController;
 
 @interface CQChatCreationViewController : UINavigationController <UINavigationControllerDelegate> {
+	@protected
 	CQChatEditViewController *_editViewController;
 	BOOL _roomTarget;
 }

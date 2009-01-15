@@ -1,15 +1,21 @@
 @class MVChatUser;
 @class CQUnreadCountView;
-@class UIRemoveControl;
 @protocol CQChatViewController;
 
+#ifdef ENABLE_SECRETS
+@class UIRemoveControl;
+#endif
+
 @interface CQChatTableCell : UITableViewCell {
+	@protected
 	UIImageView *_iconImageView;
 	UILabel *_nameLabel;
 	CQUnreadCountView *_unreadCountView;
 	NSString *_removeConfirmationText;
 	NSMutableArray *_chatPreviewLabels;
+#ifdef ENABLE_SECRETS
 	UIRemoveControl *_removeControl;
+#endif
 	NSUInteger _maximumMessagePreviews;
 	BOOL _showsUserInMessagePreviews;
 	BOOL _available;

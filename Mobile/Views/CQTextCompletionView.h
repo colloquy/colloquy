@@ -1,6 +1,7 @@
 @protocol CQTextCompletionViewDelegate;
 
 @interface CQTextCompletionView : UIView {
+	@protected
 	IBOutlet id <CQTextCompletionViewDelegate> delegate;
 	CGSize _completionTextSizes[5];
 	NSUInteger _selectedCompletion;

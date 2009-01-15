@@ -3,6 +3,7 @@
 @class CQChatUserListViewController;
 
 @interface CQChatRoomController : CQDirectChatController {
+	@protected
 	NSMutableArray *_orderedMembers;
 	BOOL _membersNeedSorted;
 	BOOL _banListSynced;

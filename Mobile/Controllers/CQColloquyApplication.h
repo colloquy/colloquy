@@ -1,4 +1,5 @@
 @interface CQColloquyApplication : UIApplication <UIApplicationDelegate, UITabBarDelegate> {
+	@protected
 	IBOutlet UIWindow *mainWindow;
 	IBOutlet UITabBarController	*tabBarController;
 	NSDate *_launchDate;

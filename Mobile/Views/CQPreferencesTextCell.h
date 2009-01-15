@@ -1,4 +1,5 @@
 @interface CQPreferencesTextCell : UITableViewCell <UITextFieldDelegate> {
+	@protected
 	UILabel *_label;
 	UITextField *_textField;
 	SEL _textEditAction;

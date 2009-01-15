@@ -1,6 +1,7 @@
 @class MVChatConnection;
 
 @interface CQConnectionAdvancedEditController : UITableViewController {
+	@protected
 	MVChatConnection *_connection;
 	BOOL _newConnection;
 }

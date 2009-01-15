@@ -1,4 +1,5 @@
 @interface CQUnreadCountView : UIView {
+	@protected
 	NSUInteger _normalCount;
 	NSUInteger _importantCount;
 	BOOL _highlighted;

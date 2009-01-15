@@ -5,6 +5,7 @@
 
 #define CompletionsCaptureKeyboardDelay 0.5
 
+#ifdef ENABLE_SECRETS
 @interface UIKeyboardImpl : UIView
 + (UIKeyboardImpl *) activeInstance;
 - (void) takeTextInputTraitsFrom:(id <UITextInputTraits>) object;
@@ -17,6 +18,7 @@
 @property (nonatomic) NSRange selectionRange;
 - (BOOL) hasMarkedText;
 @end
+#endif
 
 #pragma mark -
 
@@ -45,7 +47,14 @@
 	[self addSubview:_inputField];
 
 	_autocomplete = YES;
+
+#ifdef ENABLE_SECRETS
+	_inputField.autocorrectionType = UITextAutocorrectionTypeDefault;
 	_autocorrect = YES;
+#else
+	_inputField.autocorrectionType = UITextAutocorrectionTypeNo;
+	_autocorrect = NO;
+#endif
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideCompletions) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
@@ -123,6 +132,13 @@
 
 @synthesize autocorrect = _autocorrect;
 
+#ifdef ENABLE_SECRETS
+- (void) setAutocorrect:(BOOL) autocorrect {
+	// Do nothing, autocorrection can't be enabled if we don't use secrets, since it would
+	// appear over our completion popup and fight with the entered text.
+}
+#endif
+
 #pragma mark -
 
 - (BOOL) isShowingCompletions {
@@ -163,10 +179,12 @@
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
 
+#ifdef ENABLE_SECRETS
 	if ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]) {
 		[self hideCompletions];
 		return;
 	}
+#endif
 
 	NSString *text = _inputField.text;
 	if (text.length <= _completionRange.location) {
@@ -306,7 +324,7 @@ retry:
 		_inputField.autocapitalizationType = _defaultAutocapitalizationType;
 		[self _updateTextTraits];
 	}
-	
+
 	if (![delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:)])
 		return YES;
 
@@ -342,7 +360,11 @@ retry:
 		_disableCompletionUntilNextWord = NO;
 
 	NSString *word = [text substringWithRange:wordRange];
+#ifdef ENABLE_SECRETS
 	BOOL hasMarkedText = ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]);
+#else
+	BOOL hasMarkedText = NO;
+#endif
 
 	NSArray *completions = nil;
 	if (_autocomplete && !_disableCompletionUntilNextWord && word.length && !hasMarkedText && [delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
@@ -366,8 +388,10 @@ retry:
 
 	if (replaceManually) {
 		_inputField.text = text;
+#ifdef ENABLE_SECRETS
 		if ([_inputField respondsToSelector:@selector(setSelectionRange:)])
 			_inputField.selectionRange = NSMakeRange((range.location + string.length), 0);
+#endif
 		return NO;
 	}
 
@@ -392,16 +416,17 @@ retry:
 
 	_inputField.text = [text stringByReplacingCharactersInRange:_completionRange withString:completion];
 
+#ifdef ENABLE_SECRETS
 	if ([_inputField respondsToSelector:@selector(setSelectionRange:)])
 		_inputField.selectionRange = NSMakeRange((_completionRange.location + completion.length), 0);
-	
+#endif
+
 	if (_completionRange.location == 0 && _inputField.autocapitalizationType == UITextAutocapitalizationTypeSentences) {
 		_autocapitalizeNextLetter = YES;
 		_defaultAutocapitalizationType = UITextAutocapitalizationTypeSentences;
 		_inputField.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
 		[self _updateTextTraits];
 	}
-	
 
 	[self hideCompletions];
 }
@@ -417,6 +442,7 @@ retry:
 #pragma mark -
 
 - (void) _updateTextTraits {
+#ifdef ENABLE_SECRETS
 	static Class keyboardClass;
 	if (!keyboardClass) keyboardClass = NSClassFromString(@"UIKeyboardImpl");
 
@@ -427,6 +453,7 @@ retry:
 		if ([keyboard respondsToSelector:@selector(updateReturnKey:)])
 			[keyboard updateReturnKey:YES];
 	}
+#endif
 }
 
 - (void) _sendText {

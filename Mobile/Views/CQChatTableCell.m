@@ -6,6 +6,7 @@
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
+#ifdef ENABLE_SECRETS
 @interface UIRemoveControl : UIView
 - (void) setRemoveConfirmationLabel:(NSString *) label;
 @end
@@ -15,6 +16,7 @@
 @interface UITableViewCell (UITableViewCellPrivate)
 - (UIRemoveControl *) _createRemoveControl;
 @end
+#endif
 
 #pragma mark -
 
@@ -48,7 +50,9 @@
 	[_iconImageView release];
 	[_unreadCountView release];
 	[_nameLabel release];
+#ifdef ENABLE_SECRETS
 	[_removeControl release];
+#endif
 	[_chatPreviewLabels release];
 	[_removeConfirmationText release];
 
@@ -127,8 +131,10 @@
 	_removeConfirmationText = [text copy];
 	[old release];
 
+#ifdef ENABLE_SECRETS
 	if (_removeConfirmationText.length && [_removeControl respondsToSelector:@selector(setRemoveConfirmationLabel:)])
 		[_removeControl setRemoveConfirmationLabel:_removeConfirmationText];
+#endif
 }
 
 @synthesize available = _available;
@@ -146,6 +152,7 @@
 
 #pragma mark -
 
+#ifdef ENABLE_SECRETS
 - (UIRemoveControl *) _createRemoveControl {
 	[_removeControl release];
 	_removeControl = [[super _createRemoveControl] retain];
@@ -153,6 +160,7 @@
 		[_removeControl setRemoveConfirmationLabel:_removeConfirmationText];
 	return _removeControl;
 }
+#endif
 
 #pragma mark -
 

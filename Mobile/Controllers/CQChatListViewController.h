@@ -1,6 +1,7 @@
 @protocol CQChatViewController;
 
 @interface CQChatListViewController : UITableViewController {
+	@protected
 	BOOL _active;
 	BOOL _needsUpdate;
 }

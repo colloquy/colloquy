@@ -9,6 +9,7 @@ typedef enum {
 } CQConnectionTableCellStatus;
 
 @interface CQConnectionTableCell : UITableViewCell {
+	@protected
 	UIImageView *_iconImageView;
 	UIImageView *_badgeImageView;
 	UILabel *_serverLabel;

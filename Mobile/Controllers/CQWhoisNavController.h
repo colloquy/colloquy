@@ -9,6 +9,7 @@
 @class MVChatUser;
 
 @interface CQWhoisNavController : UINavigationController <UINavigationControllerDelegate> {
+	@protected
 	CQWhoisViewController *_whoisViewController;
 	MVChatUser *_user;
 }

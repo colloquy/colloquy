@@ -10,7 +10,7 @@
 @class MVDirectChatConnection;
 
 @interface CQConnectionsController : UINavigationController <UINavigationControllerDelegate> {
-	@private
+	@protected
 	NSMutableArray *_connections;
 	BOOL _wasEditingConnection;
 	NSUInteger _connectingCount;

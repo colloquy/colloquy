@@ -9,7 +9,7 @@
 @protocol CQChatViewController;
 
 @interface CQChatController : UINavigationController <UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate> {
-	@private
+	@protected
 	NSMutableArray *_chatControllers;
 	CQChatListViewController *_chatListViewController;
 	id <CQChatViewController> _nextController;

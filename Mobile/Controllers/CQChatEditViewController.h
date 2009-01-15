@@ -1,4 +1,5 @@
 @interface CQChatEditViewController : UITableViewController {
+	@protected
 	BOOL _roomTarget;
 	NSUInteger _selectedConnectionIndex;
 	NSString *_name;

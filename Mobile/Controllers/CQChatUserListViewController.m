@@ -272,13 +272,6 @@
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
-//	if (indexPath.row == 0) {
-//		CQSearchCell *cell = [CQSearchCell reusableTableViewCellInTableView:tableView];
-//		cell.target = self;
-//		cell.searchAction = @selector(searchUsers:);
-//		return cell;
-//	}
-
 	MVChatUser *user = [_matchedUsers objectAtIndex:indexPath.row];
 
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];

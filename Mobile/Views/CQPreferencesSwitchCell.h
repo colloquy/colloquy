@@ -1,4 +1,5 @@
 @interface CQPreferencesSwitchCell : UITableViewCell {
+	@protected
 	UILabel *_label;
 	UISwitch *_switchControl;
 }

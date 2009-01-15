@@ -1,6 +1,7 @@
 @protocol CQChatTranscriptViewDelegate;
 
 @interface CQChatTranscriptView : UIWebView <UIWebViewDelegate> {
+	@protected
 	IBOutlet id <CQChatTranscriptViewDelegate> delegate;
 	NSMutableArray *_pendingPreviousSessionComponents;
 	NSMutableArray *_pendingComponents;

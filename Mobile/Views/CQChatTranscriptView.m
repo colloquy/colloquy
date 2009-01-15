@@ -4,6 +4,7 @@
 
 #import <ChatCore/MVChatUser.h>
 
+#ifdef ENABLE_SECRETS
 @interface UIScroller : UIView
 @property (nonatomic) BOOL showBackgroundShadow;
 @property (nonatomic) CGPoint offset;
@@ -18,6 +19,7 @@
 - (void) scrollerDidEndSmoothScrolling:(UIScroller *) scroller;
 - (UIScroller *) _scroller;
 @end
+#endif
 
 #pragma mark -
 
@@ -85,6 +87,7 @@
 	return !_scrolling;
 }
 
+#ifdef ENABLE_SECRETS
 - (void) didFinishScrolling {
 	if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(offset)]) {
 		NSString *command = [NSString stringWithFormat:@"updateScrollPosition(%f)", [self _scroller].offset.y];
@@ -124,6 +127,7 @@
 
 	[self didFinishScrolling];
 }
+#endif
 
 #pragma mark -
 
@@ -191,13 +195,15 @@
 }
 
 - (void) flashScrollIndicators {
+#ifdef ENABLE_SECRETS
 	if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(displayScrollerIndicators)])
 		[[self _scroller] displayScrollerIndicators];
+#endif
 }
 
 - (void) reset {
 	[self stopLoading];
-	
+
 	_loading = YES;
 	[self loadHTMLString:[self _contentHTML] baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 }
@@ -246,8 +252,10 @@
 - (void) _commonInitialization {
 	super.delegate = self;
 
+#ifdef ENABLE_SECRETS
 	if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(setShowBackgroundShadow:)])
 		[self _scroller].showBackgroundShadow = NO;
+#endif
 
 	self.styleIdentifier = @"standard";
 }

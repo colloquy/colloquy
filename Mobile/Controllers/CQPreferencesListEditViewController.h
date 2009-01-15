@@ -1,4 +1,5 @@
 @interface CQPreferencesListEditViewController : UITableViewController {
+	@protected
 	NSString *_listItemText;
 	NSString *_listItemPlaceholder;
 	BOOL _viewDisappearing;

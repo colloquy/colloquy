@@ -1,4 +1,5 @@
 @interface CQBrowserViewController : UIViewController <UIWebViewDelegate, UITextFieldDelegate> {
+	@protected
 	IBOutlet UIButton *backButton;
 	IBOutlet UIButton *stopReloadButton;
 	IBOutlet UIBarButtonItem *doneButtonItem;

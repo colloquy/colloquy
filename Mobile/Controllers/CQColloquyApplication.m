@@ -5,9 +5,11 @@
 #import "CQChatController.h"
 #import "NSStringAdditions.h"
 
+#ifdef ENABLE_SECRETS
 @interface UITabBarController (UITabBarControllerPrivate)
 @property (nonatomic, readonly) UITabBar *tabBar;
 @end
+#endif
 
 #pragma mark -
 
@@ -52,8 +54,10 @@
 
 - (void) showActionSheet:(UIActionSheet *) sheet {
 	UITabBar *tabBar = nil;
+#ifdef ENABLE_SECRETS
 	if ([tabBarController respondsToSelector:@selector(tabBar)])
 		tabBar = tabBarController.tabBar;
+#endif
 
 	if (tabBar) [sheet showFromTabBar:tabBar];
 	else [sheet showInView:tabBarController.view];

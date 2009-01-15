@@ -1,6 +1,7 @@
 @class CQPreferencesListEditViewController;
 
 @interface CQPreferencesListViewController : UITableViewController {
+	@protected
 	NSMutableArray *_items;
 	UIImage *_itemImage;
 	NSString *_addItemLabelText;

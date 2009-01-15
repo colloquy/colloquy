@@ -591,7 +591,6 @@
 
 	NSMutableArray *results = [[NSMutableArray alloc] init];
 	if (!languageCode.length || languageCode.length != 2) {
-//		if ([arguments 
 		languageCode = [[NSLocale autoupdatingCurrentLocale] localeIdentifier];
 
 		[results addObject:languageCode];
@@ -631,7 +630,7 @@
 	NSArray *results = [self _findLocaleForQueryWithArguments:arguments];
 	NSString *languageCode = [results objectAtIndex:0];
 	NSString *query = [results objectAtIndex:1];
-	
+
 	[self _handleSearchForURL:@"http://www.wikipedia.org/search-redirect.php?search=%@&language=%@" withQuery:query withLocale:languageCode];
 
 	return YES;

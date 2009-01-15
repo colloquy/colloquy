@@ -2,6 +2,7 @@
 @class MVChatRoom;
 
 @interface CQChatUserListViewController : UITableViewController <UIActionSheetDelegate, UISearchBarDelegate> {
+	@protected
 	NSMutableArray *_users;
 	NSMutableArray *_matchedUsers;
 	NSString *_currentSearchString;
