@@ -286,8 +286,19 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setNicknamePassword:(NSString *) newPassword {
-	if( ! [[self localUser] isIdentified] && [newPassword length] && [self isConnected] )
-		[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@", newPassword];
+	if( ! [[self localUser] isIdentified] && [newPassword length] && [self isConnected] ) {
+		if( [[self server] hasCaseInsensitiveSubstring:@"quakenet"] ) {
+			[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG Q@CServe.quakenet.org :AUTH %@ %@", [self preferredNickname], newPassword];
+		} else if( [[self server] hasCaseInsensitiveSubstring:@"undernet"] ) {
+			[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG X@channels.undernet.org :LOGIN %@ %@", [self preferredNickname], newPassword];
+		} else if( [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) {
+			[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG AuthServ@Services.GameSurge.net :AUTH %@ %@", [self preferredNickname], newPassword];
+		} else if( ![[self nickname] isEqualToString:[self preferredNickname]] ) {
+			[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@ %@", [self preferredNickname], newPassword];
+		} else {
+			[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@", newPassword];
+		}
+	}
 	[super setNicknamePassword:newPassword];
 }
 
@@ -1734,21 +1745,27 @@ end:
 
 	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
 
-	// Identify if we have a user password
-	if( [[self nicknamePassword] length] ) {
-		if( [[self server] hasCaseInsensitiveSubstring:@"quakenet"] ) {
-			[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG Q@CServe.quakenet.org :AUTH %@ %@", [self preferredNickname], [self nicknamePassword]];
-		} else {
-			[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@", [self nicknamePassword]];
-		}
-	}
-
 	// set the current nick name if it is not the same as what re requested (some servers/bouncers will give us a new nickname)
 	if( [parameters count] >= 1 ) {
 		NSString *nick = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		if( ! [nick isEqualToString:[self nickname]] ) {
 			[self _setCurrentNickname:nick];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
+		}
+	}
+
+	// Identify if we have a user password
+	if( [[self nicknamePassword] length] ) {
+		if( [[self server] hasCaseInsensitiveSubstring:@"quakenet"] ) {
+			[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG Q@CServe.quakenet.org :AUTH %@ %@", [self preferredNickname], [self nicknamePassword]];
+		} else if( [[self server] hasCaseInsensitiveSubstring:@"undernet"] ) {
+			[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG X@channels.undernet.org :LOGIN %@ %@", [self preferredNickname], [self nicknamePassword]];
+		} else if( [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) {
+			[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG AuthServ@Services.GameSurge.net :AUTH %@ %@", [self preferredNickname], [self nicknamePassword]];
+		} else if( ![[self nickname] isEqualToString:[self preferredNickname]] ) {
+			[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@ %@", [self preferredNickname], [self nicknamePassword]];
+		} else {
+			[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@", [self nicknamePassword]];
 		}
 	}
 
@@ -2005,7 +2022,7 @@ end:
 		if( target == room || ([target isKindOfClass:[MVChatUser class]] && [target isLocalUser]))
 			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:noticeInfo];
 
-		if( [[sender nickname] isEqualToString:@"NickServ"] ) {
+		if( [[sender nickname] isEqualToString:@"NickServ"] || ( [[sender nickname] isEqualToString:@"Q"] && [[self server] hasCaseInsensitiveSubstring:@"quakenet"] ) || ( [[sender nickname] isEqualToString:@"X"] && [[self server] hasCaseInsensitiveSubstring:@"undernet"] ) || ( [[sender nickname] isEqualToString:@"AuthServ"] && [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) ) {
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
 
 			if( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"ID"] ) {
@@ -2014,7 +2031,7 @@ end:
 				} else {
 					[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@", [self nicknamePassword]];
 				}
-			} else if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ) {
+			} else if( [msg hasCaseInsensitiveSubstring:@"password accepted"] || [msg hasCaseInsensitiveSubstring:@"you are now identified"] || [msg hasCaseInsensitiveSubstring:@"you are now logged in"] || [msg hasCaseInsensitiveSubstring:@"you are already logged in"] || [msg hasCaseInsensitiveSubstring:@"authentication successful"] || [msg hasCaseInsensitiveSubstring:@"i recognize you"] ) {
 				[[self localUser] _setIdentified:YES];
 			} else if( [msg hasCaseInsensitiveSubstring:@"authentication required"] || [msg hasCaseInsensitiveSubstring:@"nickname is owned"] ) {
 				[[self localUser] _setIdentified:NO];
