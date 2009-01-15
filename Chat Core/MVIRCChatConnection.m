@@ -1351,7 +1351,7 @@ end:
 
 	if( arguments && [arguments length] > 0 ) {
 		NSData *argumentsData = [[self class] _flattenedIRCDataForMessage:arguments withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
-		[self sendRawMessageImmediatelyWithComponents:command, @" ", argumentsData, nil];
+		[self sendRawMessageWithComponents:command, @" ", argumentsData, nil];
 	} else [self sendRawMessage:command];
 }
 
