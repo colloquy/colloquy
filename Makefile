@@ -23,5 +23,7 @@ install i: r
 	-$(RM) -rf $(INSTALL_DIR)/$(PRODUCT_NAME)
 	$(CP) $(BUILD_DIR)/$(PRODUCT_NAME) $(INSTALL_DIR)/$(PRODUCT_NAME)
 
-zip z: ca r
+zip z:
+	xcodebuild -project Colloquy.xcodeproj -alltargets clean -configuration Release
+	xcodebuild $(COMMON_XCODE_OPTIONS) -configuration Release build
 	ditto -c -k --keepParent --sequesterRsrc $(BUILD_DIR)/$(PRODUCT_NAME) $(BUILD_DIR)/$(PRODUCT_NAME).zip
