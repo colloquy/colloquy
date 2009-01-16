@@ -547,11 +547,12 @@ static NSMenu *favoritesMenu = nil;
 	[publicKeyVerification orderOut:nil];
 
 	if( [_publicKeyRequestQueue count] ) {
-		NSNotification *note = [_publicKeyRequestQueue anyObject];
+		NSNotification *note = [[_publicKeyRequestQueue anyObject] retain];
 
 		if( note ) {
 			[_publicKeyRequestQueue removeObject:note];
 			[[NSNotificationCenter defaultCenter] postNotification:note];
+			[note release];
 		}
 	}
 }
