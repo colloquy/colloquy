@@ -35,6 +35,7 @@ static void silc_channel_get_clients_per_list_callback( SilcClient client, SilcC
 	for( i = 0; i < clients_count; i++ ) {
 		MVChatUser *member = [self _chatUserWithClientEntry:clients[i]];
 
+		[self _markUserAsOnline:member];
 		[room _addMemberUser:member];
 
 		SilcChannelUser channelUser = silc_client_on_channel( channel, clients[i] );
@@ -86,6 +87,8 @@ static void silc_channel_message( SilcClient client, SilcClientConnection conn, 
 	NSString *mimeType = @"text/plain";
 	NSData *msgData = nil;
 
+	[self _markUserAsOnline:user];
+
 	if( flags & SILC_MESSAGE_FLAG_DATA ) { // MIME object received
 		char type[128], enc[128];
 		unsigned char *data = NULL;
@@ -121,6 +124,8 @@ static void silc_private_message( SilcClient client, SilcClientConnection conn, 
 	MVChatUser *user = [self _chatUserWithClientEntry:sender];
 	NSString *mimeType = @"text/plain";
 	NSData *msgData = nil;
+
+	[self _markUserAsOnline:user];
 
 	if( flags & SILC_MESSAGE_FLAG_DATA ) { // MIME object received
 		char type[128], enc[128];
@@ -178,7 +183,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
 			MVChatRoom *room = nil;
 
-			[member _setDateDisconnected:[NSDate date]];
+			[self _markUserAsOffline:member];
 
 			NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:member, @"user", reasonData, @"reason", nil];
 			while( ( room = [enumerator nextObject] ) ) {
@@ -236,6 +241,8 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 				NSEnumerator *enumerator = [joinedRooms objectEnumerator];
 				MVChatRoom *room = nil;
 
+				[self _markUserAsOffline:member];
+
 				while( ( room = [enumerator nextObject] ) ) {
 					if( ! [room isJoined] || ! [room hasUser:member] ) continue;
 					[room _removeMemberUser:member];
@@ -261,7 +268,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			MVChatRoom *room = [self joinedChatRoomWithChannel:channel];
 			MVChatUser *member = [self _chatUserWithClientEntry:joining_client];
 
-			[member _setDateDisconnected:nil];
+			[self _markUserAsOnline:member];
 			[room _addMemberUser:member];
 
 			SilcChannelUser channelUser = silc_client_on_channel( channel, joining_client );
@@ -454,7 +461,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
 			MVChatRoom *room = nil;
 
-			[member _setDateDisconnected:[NSDate date]];
+			[self _markUserAsOffline:member];
 
 			while( ( room = [enumerator nextObject] ) ) {
 				if( ! [room isJoined] || ! [room hasUser:member] ) continue;
@@ -482,6 +489,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			if( ! channelName ) break;
 
 			MVChatUser *user = [self _chatUserWithClientEntry:inviter];
+			[self _markUserAsOnline:user];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomInvitedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:user, @"user", channelName, @"room", nil]];
 		}	break;
 	}
@@ -530,9 +538,8 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		MVSILCChatUser *user = (MVSILCChatUser *)[self _chatUserWithClientEntry:client_entry];
 		[user updateWithClientEntry:client_entry];
 		[user _setIdleTime:idletime];
-		[user _setDateDisconnected:nil];
 		[user _setDateUpdated:[NSDate date]];
-		[user _setDateConnected:[NSDate date]];
+		[self _markUserAsOnline:user];
 
 		if( channels ) {
 			NSMutableArray *chanArray = [[NSMutableArray allocWithZone:nil] init];
@@ -565,7 +572,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		char *nickname = va_arg( list, char * );
 		/*const SilcClientID *old_client_id =*/ va_arg( list, SilcClientID * );
 
-		NSData *oldIdentifier = [[self localUser] uniqueIdentifier];
+		NSData *oldIdentifier = [[[self localUser] uniqueIdentifier] retain];
 
 		[(MVSILCChatUser *)[self localUser] updateWithClientEntry:conn -> local_entry];
 
@@ -576,6 +583,8 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 			if( ! [room isJoined] || ! [room hasUser:[self localUser]] ) continue;
 			[room _updateMemberUser:[self localUser] fromOldUniqueIdentifier:oldIdentifier];
 		}
+
+		[oldIdentifier release];
 
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithUTF8String:nickname], @"nickname", nil]];
 	}	break;
@@ -1337,6 +1346,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	NSMutableSet *results = [[[NSMutableSet allocWithZone:nil] initWithCapacity:clientsCount] autorelease];
 	for( i = 0; i < clientsCount; i++ ) {
 		MVChatUser *user = [self _chatUserWithClientEntry:clients[i]];
+		[self _markUserAsOnline:user];
 		if( user ) [results addObject:user];
 	}
 
