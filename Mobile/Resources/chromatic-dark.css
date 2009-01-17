@@ -25,6 +25,10 @@ a {
 	border-top: 1px solid rgba(255, 255, 255, 0.125);
 }
 
+.message-wrapper.previous-session:not(.highlight) + .event {
+	border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 .message-wrapper.highlight {
 	background-image: none;
 	background-color: rgb(20, 40, 70);
