@@ -12,7 +12,7 @@
 	_switchControl = [[UISwitch alloc] initWithFrame:CGRectZero];
 	_label = [[UILabel alloc] initWithFrame:CGRectZero];
 
-	_label.font = [UIFont boldSystemFontOfSize:18.];
+	_label.font = [UIFont boldSystemFontOfSize:17.];
 	_label.textColor = self.textColor;
 	_label.highlightedTextColor = self.selectedTextColor;
 	_label.backgroundColor = nil;
