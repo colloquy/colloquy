@@ -205,7 +205,7 @@ static NSComparisonResult sortControllersAscending(CQDirectChatController *chatC
 	alert.cancelButtonIndex = 1;
 
 	[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join alert button title")];
-	[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
 	AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 

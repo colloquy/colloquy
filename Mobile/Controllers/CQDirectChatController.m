@@ -38,6 +38,7 @@
 	_target = [target retain];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_awayStatusChanged:) name:MVChatConnectionSelfAwayStatusChangedNotification object:self.connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:self.connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
 
 	if (self.user) {
@@ -48,7 +49,6 @@
 		_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDirectChatEncoding"];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:self.user];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:self.connection];
 
 		_watchRule = [[MVChatUserWatchRule alloc] init];
 		_watchRule.nickname = self.user.nickname;
@@ -889,7 +889,7 @@
 }
 
 - (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (alertView.tag != 1 || buttonIndex != 0)
+	if (alertView.tag != 1 || buttonIndex == alertView.cancelButtonIndex)
 		return;
 
 	[self.connection connect];
@@ -1114,7 +1114,7 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 		return;
 	}
 
-	[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
 	[alert show];
 

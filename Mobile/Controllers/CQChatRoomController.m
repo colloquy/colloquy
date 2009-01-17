@@ -79,6 +79,7 @@
 	if ([[state objectForKey:@"active"] boolValue])
 		[self performSelector:@selector(_checkMemberStatus) withObject:nil afterDelay:5.];
 
+	_joined = [[state objectForKey:@"joined"] boolValue];
 	_joinCount = 1;
 
 	return [super initWithPersistentState:state usingConnection:connection];
@@ -98,11 +99,17 @@
 - (void) viewDidAppear:(BOOL) animated {
 	[super viewDidAppear:animated];
 
-	if (!_currentUserListViewController && ABS([[CQColloquyApplication sharedApplication].launchDate timeIntervalSinceNow]) > 15.)
-		[self performSelector:@selector(_checkMemberStatus) withObject:nil afterDelay:0.5];
+	NSTimeInterval timeSinceLaunch = ABS([[CQColloquyApplication sharedApplication].launchDate timeIntervalSinceNow]);
+	[self performSelector:@selector(_checkMemberStatus) withObject:nil afterDelay:MAX(0.333, (5. - timeSinceLaunch))];
 
 	[_currentUserListViewController release];
 	_currentUserListViewController = nil;
+}
+
+- (void) viewWillDisappear:(BOOL) animated {
+	[super viewWillDisappear:animated];
+
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_checkMemberStatus) object:nil];
 }
 
 #pragma mark -
@@ -138,6 +145,8 @@
 		[state setObject:self.room.name forKey:@"room"];
 	if (_currentUserListViewController)
 		[state setObject:[NSNumber numberWithBool:YES] forKey:@"active"];
+	if (_joined)
+		[state setObject:[NSNumber numberWithBool:YES] forKey:@"joined"];
 
 	return state;
 }
@@ -159,6 +168,7 @@
 
 	[self _displayCurrentTopicOnlyIfSet:YES];
 
+	_joined = YES;
 	_banListSynced = NO;
 	_membersNeedSorted = YES;
 
@@ -304,6 +314,11 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	_membersNeedSorted = NO;
 }
 
+- (void) _didConnect:(NSNotification *) notification {
+	if (_joined)
+		[self.room join];
+}
+
 - (void) _didDisconnect:(NSNotification *) notification {
 	[super _didDisconnect:notification];
 
@@ -316,6 +331,11 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
+
+	[_orderedMembers removeAllObjects];
+	_membersNeedSorted = NO;
+
+	_joined = NO;
 }
 
 - (void) _kicked:(NSNotification *) notification {
@@ -348,7 +368,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	alert.cancelButtonIndex = 1;
 
 	[alert addButtonWithTitle:NSLocalizedString(@"Rejoin", @"Rejoin alert button title")];
-	[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
 	AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
@@ -751,13 +771,11 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 #pragma mark -
 
 - (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (alertView.tag != 2) {
-		[super alertView:alertView clickedButtonAtIndex:buttonIndex];
+	if ((alertView.tag != 1 && alertView.tag != 2) || buttonIndex == alertView.cancelButtonIndex)
 		return;
-	}
 
-	if (buttonIndex != 0)
-		return;
+	if (alertView.tag == 1)
+		[self.connection connect];
 
 	[self.room join];
 }
@@ -768,25 +786,27 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	if (!_active || self.available || self.connection.status == MVChatConnectionConnectingStatus)
 		return;
 
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_checkMemberStatus) object:nil];
+
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.delegate = self;
 
 	if (!self.connection.connected) {
 		alert.tag = 1;
 		alert.title = NSLocalizedString(@"Not Connected", @"Not connected alert title");
-		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect to join the room.", @"Not connected, connect to rejoin room alert message");
+		alert.message = NSLocalizedString(@"Reconnect to join the room.", @"Not connected, connect to rejoin room alert message");
 		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];
 	} else if (!self.room.joined) {
 		alert.tag = 2;
 		alert.title = NSLocalizedString(@"Not a Room Member", @"Not a room member alert title");
-		alert.message = NSLocalizedString(@"You are not a room member,\ndo you want join the room?", @"Not a member of room alert message");
+		alert.message = NSLocalizedString(@"Do you want to join the room?", @"Not a member of room alert message");
 		[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join alert button title")];
 	} else {
 		[alert release];
 		return;
 	}
 
-	[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
 	alert.cancelButtonIndex = 1;
 
@@ -819,14 +839,10 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 		return;
 	}
 
-	[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
 	[alert show];
 
 	[alert release];
-}
-
-- (void) _connectionDidConnect:(NSNotification *) notification {
-	[self.room join];
 }
 @end

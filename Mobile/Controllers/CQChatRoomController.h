@@ -7,6 +7,7 @@
 	NSMutableArray *_orderedMembers;
 	BOOL _membersNeedSorted;
 	BOOL _banListSynced;
+	BOOL _joined;
 	NSUInteger _joinCount;
 	CQChatUserListViewController *_currentUserListViewController;
 }

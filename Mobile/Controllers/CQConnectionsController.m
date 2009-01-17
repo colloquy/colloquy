@@ -342,7 +342,7 @@
 	alert.message = errorMessage;
 	alert.cancelButtonIndex = 0;
 
-	[alert addButtonWithTitle:NSLocalizedString(@"Close", @"Close alert button title")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
 	[alert show];
 
@@ -421,7 +421,7 @@
 		if ([info objectForKey:@"chatState"])
 			[[CQChatController defaultController] restorePersistentState:[info objectForKey:@"chatState"] forConnection:connection];
 
-		if ([[info objectForKey:@"automatic"] boolValue] || [[info objectForKey:@"wasConnected"] boolValue])
+		if ([[info objectForKey:@"automatic"] boolValue])
 			[connection connect];
 
 		[connection release];

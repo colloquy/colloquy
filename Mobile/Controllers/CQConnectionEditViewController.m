@@ -211,7 +211,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 			cell.target = self;
 			cell.switchAction = @selector(autoConnectChanged:);
-			cell.label = NSLocalizedString(@"Always Connect", @"Always Connect connection setting label");
+			cell.label = NSLocalizedString(@"Connect at Launch", @"Connect at Launch connection setting label");
 			cell.on = _connection.automaticallyConnect;
 
 			return cell;
