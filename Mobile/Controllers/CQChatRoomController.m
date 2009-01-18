@@ -185,7 +185,6 @@
 
 	_currentUserListViewController = [[CQChatUserListViewController alloc] init];
 
-	_currentUserListViewController.title = NSLocalizedString(@"Members", @"Members view title");
 	_currentUserListViewController.users = _orderedMembers;
 	_currentUserListViewController.room = self.room;
 

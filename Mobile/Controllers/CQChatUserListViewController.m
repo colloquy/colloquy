@@ -10,7 +10,17 @@
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatConnection.h>
 
+static NSString *_membersString = nil;
+static NSString *_membersFormat = @"%@ (%d)";
+
 @implementation CQChatUserListViewController
++ (void) initialize {
+    if (self == [CQChatUserListViewController class]) {
+        _membersString = NSLocalizedString(@"Members", @"Members view title");
+    }
+}
+
+
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStylePlain]))
 		return nil;
@@ -65,7 +75,8 @@
 - (void) setUsers:(NSArray *) users {
 	[_users setArray:users];
 	[_matchedUsers setArray:users];
-
+	self.title = [NSString stringWithFormat:_membersFormat, _membersString, users.count];
+	
 	[self.tableView reloadData];
 }
 
@@ -105,6 +116,7 @@
 	NSParameterAssert(index <= _users.count);
 
 	[_users insertObject:user atIndex:index];
+    self.title = [NSString stringWithFormat:_membersFormat, _membersString, _users.count];
 
 	if (!_currentSearchString.length || [user.displayName hasCaseInsensitiveSubstring:_currentSearchString]) {
 		NSInteger matchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:index];
@@ -122,6 +134,7 @@
 	MVChatUser *user = [[_users objectAtIndex:index] retain];
 
 	[_users removeObjectAtIndex:index];
+    self.title = [NSString stringWithFormat:_membersFormat, _membersString, _users.count];
 
 	NSUInteger matchesIndex = [self _indexForRemovedMatchUser:user];
 	if (matchesIndex != NSNotFound) {
@@ -147,6 +160,7 @@
 - (void) insertUser:(MVChatUser *) user atIndex:(NSUInteger) index {
 	BOOL searchBarFocused = [_searchBar isFirstResponder];
 	[self _insertUser:user atIndex:index withAnimation:UITableViewRowAnimationLeft];
+    
 	if (searchBarFocused)
 		[_searchBar becomeFirstResponder];
 }
