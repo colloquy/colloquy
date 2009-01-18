@@ -579,8 +579,8 @@ static NSMenu *smartTranscriptMenu = nil;
 	NSData *message = [[notification userInfo] objectForKey:@"message"];
 	MVChatUser* sender = user;
 
-	if( [user isLocalUser] && [notification.userInfo objectForKey:@"target"] )
-		user = [notification.userInfo objectForKey:@"target"];
+	if( [user isLocalUser] && [[notification userInfo] objectForKey:@"target"] )
+		user = [[notification userInfo] objectForKey:@"target"];
 
 	BOOL hideFromUser = NO;
 	if( [[[notification userInfo] objectForKey:@"notice"] boolValue] ) {
@@ -589,7 +589,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		if( ! [self chatViewControllerForUser:user ifExists:YES] )
 			hideFromUser = YES;
 
-		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatAlwaysShowNotices"] )
+		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatAlwaysShowNotices"] && ![[notification userInfo] objectForKey:@"handled"] )
 			hideFromUser = NO;
 
 		NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
@@ -599,23 +599,42 @@ static NSMenu *smartTranscriptMenu = nil;
 			messageString = [NSAttributedString attributedStringWithChatFormat:message options:options];
 		}
 
-		if( ( [user.nickname isEqualToString:@"NickServ"] && ( [messageString.string hasCaseInsensitiveSubstring:@"password accepted"] || [messageString.string hasCaseInsensitiveSubstring:@"you are now identified"] ) ) || ( [user.nickname isEqualToString:@"Q"] && [messageString.string hasCaseInsensitiveSubstring:@"you are now logged in"] ) ) {
-			NSMutableDictionary *context = [NSMutableDictionary dictionary];
-			[context setObject:NSLocalizedString( @"You Have Been Identified", "identified bubble title" ) forKey:@"title"];
-			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ on %@", "identified bubble message, server message and server name" ), [messageString string], [connection server]] forKey:@"description"];
-			[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
-			[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
-		} else if( [[user nickname] isEqualToString:@"MemoServ"] ) {
-			if( [[messageString string] rangeOfString:@"new memo" options:NSCaseInsensitiveSearch].location != NSNotFound && [[messageString string] rangeOfString:@" no " options:NSCaseInsensitiveSearch].location == NSNotFound ) {
+		if( [[[notification userInfo] objectForKey:@"type"] length] ) {
+			if( [[[notification userInfo] objectForKey:@"type"] isEqualToString:@"identificationAcceptedAndGained"] ) {
+				
 				NSMutableDictionary *context = [NSMutableDictionary dictionary];
-				[context setObject:NSLocalizedString( @"You Have New Memos", "new memos bubble title" ) forKey:@"title"];
-				[context setObject:messageString forKey:@"description"];
-				[context setObject:[NSImage imageNamed:@"Stickies"] forKey:@"image"];
-				[context setObject:self forKey:@"target"];
-				[context setObject:NSStringFromSelector( @selector( _checkMemos: ) ) forKey:@"action"];
-				[context setObject:connection forKey:@"representedObject"];
-				[[JVNotificationController defaultController] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
+				[context setObject:NSLocalizedString( @"You Have Been Identified", "identified bubble title" ) forKey:@"title"];
+				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ on %@", "identified bubble message, server message and server name" ), [messageString string], [connection server]] forKey:@"description"];
+				[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
+				[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
+				
+			} else if( [[[notification userInfo] objectForKey:@"type"] isEqualToString:@"identificationFailed"] ) {
+				
+				NSMutableDictionary *context = [NSMutableDictionary dictionary];
+				[context setObject:NSLocalizedString( @"Identification Failed", "identification failed title" ) forKey:@"title"];
+				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ on %@", "identification failed bubble message, server message and server name" ), [messageString string], [connection server]] forKey:@"description"];
+				[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
+				[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
+				
+			} else if( [[[notification userInfo] objectForKey:@"type"] hasCaseInsensitiveSuffix:@"AndLost"] ) {
+				
+				NSMutableDictionary *context = [NSMutableDictionary dictionary];
+				[context setObject:NSLocalizedString( @"You Are No Longer Identified", "no longer identified bubble title" ) forKey:@"title"];
+				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ on %@", "no longer identified bubble message, server message and server name" ), [messageString string], [connection server]] forKey:@"description"];
+				[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
+				[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
 			}
+		} else if( [[user nickname] isEqualToString:@"MemoServ"] && [[messageString string] rangeOfString:@"new memo" options:NSCaseInsensitiveSearch].location != NSNotFound && [[messageString string] rangeOfString:@" no " options:NSCaseInsensitiveSearch].location == NSNotFound ) {
+
+			NSMutableDictionary *context = [NSMutableDictionary dictionary];
+			[context setObject:NSLocalizedString( @"You Have New Memos", "new memos bubble title" ) forKey:@"title"];
+			[context setObject:messageString forKey:@"description"];
+			[context setObject:[NSImage imageNamed:@"Stickies"] forKey:@"image"];
+			[context setObject:self forKey:@"target"];
+			[context setObject:NSStringFromSelector( @selector( _checkMemos: ) ) forKey:@"action"];
+			[context setObject:connection forKey:@"representedObject"];
+			[[JVNotificationController defaultController] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
+
 		} else {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"Notice from %@", "notice message from user title" ), [user displayName]] forKey:@"title"];

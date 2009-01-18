@@ -54,6 +54,7 @@
 - (void) _removeDirectClientConnection:(id) connection;
 
 - (void) _setCurrentNickname:(NSString *) nickname;
+- (void) _identifyWithServicesUsingNickname:(NSString *) nickname;
 
 - (void) _periodicCleanUp;
 - (void) _startSendQueue;
