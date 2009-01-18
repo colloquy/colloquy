@@ -1261,7 +1261,7 @@ end:
 			roomTargetName = [targetName substringFromIndex:[targetPrefix length]];
 
 		MVChatRoom *room = nil;
-		if( [command isCaseInsensitiveEqualToString:@"msg"] && [roomTargetName length] > 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
+		if( [command isCaseInsensitiveEqualToString:@"msg"] && [roomTargetName length] >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
 			room = [self chatRoomWithUniqueIdentifier:roomTargetName];
 
 		BOOL echo = (isUser || isRoom || [command isCaseInsensitiveEqualToString:@"query"]);
@@ -1975,7 +1975,7 @@ end:
 		[self _markUserAsOnline:sender];
 
 		MVChatRoom *room = nil;
-		if( [roomTargetName length] > 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
+		if( [roomTargetName length] >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
 			room = [self joinedChatRoomWithUniqueIdentifier:roomTargetName];
 
 		MVChatUser *targetUser = nil;
@@ -2079,7 +2079,7 @@ end:
 		BOOL ctcp = ( *bytes == '\001' && [msgData length] > 2 );
 
 		MVChatRoom *room = nil;
-		if( [roomTargetName length] > 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
+		if( [roomTargetName length] >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
 			room = [self joinedChatRoomWithUniqueIdentifier:roomTargetName];
 
 		MVChatUser *targetUser = nil;
@@ -2763,7 +2763,7 @@ end:
 
 	if( [parameters count] >= 2 ) {
 		NSString *targetName = [parameters objectAtIndex:0];
-		if( [targetName length] > 1 && [[self chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]] ) {
+		if( [targetName length] >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]] ) {
 			MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:targetName];
 			[self _parseRoomModes:[parameters subarrayWithRange:NSMakeRange( 1, [parameters count] - 1)] forRoom:room fromSender:sender];
 		} else {
