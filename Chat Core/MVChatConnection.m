@@ -993,6 +993,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 	_nextAltNickIndex = 0;
 	_status = MVChatConnectionConnectingStatus;
+	[[self localUser] _setIdentified:NO];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWillConnectNotification object:self];
 }
 
