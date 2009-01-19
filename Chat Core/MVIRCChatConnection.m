@@ -919,8 +919,8 @@ end:
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
 
 	NSMutableString *stringWithPasswordsHidden = [NSMutableString stringWithString:string];
-	if( [self password] ) [stringWithPasswordsHidden replaceOccurrencesOfString:[self password] withString:@"********" options:NSLiteralSearch range:NSMakeRange(0, [string length])];
-	if( [self nicknamePassword] ) [stringWithPasswordsHidden replaceOccurrencesOfString:[self nicknamePassword] withString:@"********" options:NSLiteralSearch range:NSMakeRange(0, [string length])];
+	if( [self password] ) [stringWithPasswordsHidden replaceOccurrencesOfString:[self password] withString:@"********" options:NSLiteralSearch range:NSMakeRange(0, [stringWithPasswordsHidden length])];
+	if( [self nicknamePassword] ) [stringWithPasswordsHidden replaceOccurrencesOfString:[self nicknamePassword] withString:@"********" options:NSLiteralSearch range:NSMakeRange(0, [stringWithPasswordsHidden length])];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:stringWithPasswordsHidden, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 
 	[string release];
@@ -2874,7 +2874,7 @@ end:
 		NSNotification *note = nil;
 		if( [sender isLocalUser] ) {
 			[self _setCurrentNickname:nick];
-			[sender _setIdentified:NO];
+			[sender _setIdentified:NO]; // TODO this needs to be changed since we now identify for accounts, not nicknames
 			note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
 		} else {
 			[self _updateKnownUser:sender withNewNickname:nick];
