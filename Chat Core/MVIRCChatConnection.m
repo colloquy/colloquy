@@ -918,7 +918,10 @@ end:
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
 
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:string, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
+	NSMutableString *stringWithPasswordsHidden = [NSMutableString stringWithString:string];
+	if( [self password] ) [stringWithPasswordsHidden replaceOccurrencesOfString:[self password] withString:@"********" options:NSLiteralSearch range:NSMakeRange(0, [string length])];
+	if( [self nicknamePassword] ) [stringWithPasswordsHidden replaceOccurrencesOfString:[self nicknamePassword] withString:@"********" options:NSLiteralSearch range:NSMakeRange(0, [string length])];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:stringWithPasswordsHidden, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 
 	[string release];
 	[data release];
