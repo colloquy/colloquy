@@ -49,8 +49,6 @@
 		1C23927306795020000E89A7 /* aquaTabCloseBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C23927206795020000E89A7 /* aquaTabCloseBack.png */; };
 		1C2462A505F9205900505752 /* JVStyleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2462A305F9205900505752 /* JVStyleView.m */; };
 		1C2E98C406207AD0000715D8 /* half-op.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C2E98C306207AD0000715D8 /* half-op.png */; };
-		1C2EDD790A3551B70051E9C2 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C2EDD660A3551B60051E9C2 /* Sparkle.framework */; };
-		1C2EDDA10A35530F0051E9C2 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1C2EDD660A3551B60051E9C2 /* Sparkle.framework */; };
 		1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C397368082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib */; };
 		1C397391082D4ADA00DCF3CF /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C397390082D4ADA00DCF3CF /* IOKit.framework */; };
 		1C3B290806529E720066197C /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; };
@@ -290,6 +288,7 @@
 		1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; };
 		1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; };
 		1CF803F1070C948000C9B54C /* NSURLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */; };
+		89EB91AA0F269BEF0028B3E3 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
 		CB742C020630E08200CF2B0E /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = CB742C000630E08200CF2B0E /* KAIgnoreRule.m */; };
@@ -436,7 +435,6 @@
 				DDF64DA80BD2B0D7009E8FF6 /* Acid.framework in Copy Frameworks */,
 				1C6C75490630AD9500698F55 /* AGRegex.framework in Copy Frameworks */,
 				1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */,
-				1C2EDDA10A35530F0051E9C2 /* Sparkle.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -528,7 +526,6 @@
 		1C2462A305F9205900505752 /* JVStyleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVStyleView.m; path = Views/JVStyleView.m; sourceTree = "<group>"; };
 		1C258E55050B9656000001C8 /* Emoticons */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = Emoticons; path = Resources/Emoticons; sourceTree = SOURCE_ROOT; };
 		1C2E98C306207AD0000715D8 /* half-op.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "half-op.png"; path = "Resources/half-op.png"; sourceTree = "<group>"; };
-		1C2EDD660A3551B60051E9C2 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = SOURCE_ROOT; };
 		1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatPluginManager.h; path = "Chat Core/MVChatPluginManager.h"; sourceTree = "<group>"; };
 		1C3972DB082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatTranscriptBrowserPanel.h; path = Panels/JVChatTranscriptBrowserPanel.h; sourceTree = "<group>"; };
 		1C3972DC082D30D200DCF3CF /* JVChatTranscriptBrowserPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatTranscriptBrowserPanel.m; path = Panels/JVChatTranscriptBrowserPanel.m; sourceTree = "<group>"; };
@@ -857,6 +854,7 @@
 		1CF8030C070C893500C9B54C /* libsilc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilc.framework; path = Frameworks/libsilc.framework; sourceTree = SOURCE_ROOT; };
 		1CF8030D070C893500C9B54C /* libsilcclient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilcclient.framework; path = Frameworks/libsilcclient.framework; sourceTree = SOURCE_ROOT; };
 		1CF9BB9A04FBE96D00A8FE6E /* room.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = room.png; path = Resources/room.png; sourceTree = SOURCE_ROOT; };
+		89EB91A90F269BEF0028B3E3 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Sparkle.framework; sourceTree = "<group>"; };
 		A1429C720901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Languages/Italian.lproj/Colloquy.nib; sourceTree = "<group>"; };
 		A1429C730901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Languages/Italian.lproj/JVAppearancePreferences.nib; sourceTree = "<group>"; };
 		A1429C740901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Languages/Italian.lproj/JVBehaviorPreferences.nib; sourceTree = "<group>"; };
@@ -1125,8 +1123,8 @@
 				1CF5F8D207D537E50019DC13 /* Growl.framework in Frameworks */,
 				1C397391082D4ADA00DCF3CF /* IOKit.framework in Frameworks */,
 				1CEEAB17095BD23500166A54 /* ChatCore.framework in Frameworks */,
-				1C2EDD790A3551B70051E9C2 /* Sparkle.framework in Frameworks */,
 				DDF64DA60BD2B0C3009E8FF6 /* Acid.framework in Frameworks */,
+				89EB91AA0F269BEF0028B3E3 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1186,6 +1184,7 @@
 		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				89EB91A90F269BEF0028B3E3 /* Sparkle.framework */,
 				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
 				1C397390082D4ADA00DCF3CF /* IOKit.framework */,
 				F51F91F103796FCD01A35792 /* Security.framework */,
@@ -1198,7 +1197,6 @@
 				1CF8030C070C893500C9B54C /* libsilc.framework */,
 				1CF8030D070C893500C9B54C /* libsilcclient.framework */,
 				1CF5F8D107D537E50019DC13 /* Growl.framework */,
-				1C2EDD660A3551B60051E9C2 /* Sparkle.framework */,
 				1CC1AE400A2987230000A797 /* sqlite3.a */,
 			);
 			name = "Linked Frameworks";
@@ -3040,6 +3038,11 @@
 		1C041A6A0854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)\"";
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
@@ -3102,6 +3105,11 @@
 		1C041DCA0855377900A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)\"";
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
