@@ -999,15 +999,65 @@ end:
 
 	if( [[attributes objectForKey:@"action"] boolValue] ) {
 		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@%@ :\001ACTION ", targetPrefix, targetName];
-		[self sendRawMessageWithComponents:prefix, msg, @"\001", nil];
+		unsigned bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
+
+		if ( [msg length] > bytesLeft ) [self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
+		else [self sendRawMessageWithComponents:prefix, msg, @"\001", nil];
 		[prefix release];
 	} else {
 		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@%@ :", targetPrefix, targetName];
-		[self sendRawMessageWithComponents:prefix, msg, nil];
+		unsigned bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
+		
+		if ( [msg length] > bytesLeft )	[self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
+		else [self sendRawMessageWithComponents:prefix, msg, nil];
+		
 		[prefix release];
 	}
 
 	[msg release];
+}
+
+- (void) sendBrokenDownMessage:(NSMutableData *) msg withPrefix:(NSString *) prefix withEncoding:(NSStringEncoding) msgEncoding withMaximumBytes:(unsigned) bytesLeft {
+	unsigned bytesRemainingForMessage = bytesLeft;
+	BOOL hasWhitespaceInString = YES;
+	
+	while ( [msg length] ) {
+		NSMutableData *msgCutDown = [[msg subdataWithRange:NSMakeRange( 0, bytesRemainingForMessage )] mutableCopy];
+		
+		for ( ; ! [self validCharacterToSend:(((char *)[msgCutDown bytes]) + bytesRemainingForMessage - 1) whitespaceInString:hasWhitespaceInString] ; bytesRemainingForMessage-- ) {
+			if ( ! [msgCutDown length] ) {
+				hasWhitespaceInString = NO;
+				bytesRemainingForMessage = bytesLeft;
+				msgCutDown = [[msg subdataWithRange:NSMakeRange( 0, bytesRemainingForMessage )] mutableCopy];
+			}
+			else if ( [msg length] < bytesLeft ) break;
+			else [msgCutDown setLength:[msgCutDown length] - 1];
+		}
+		
+		if ( [prefix hasCaseInsensitiveSubstring:@"\001ACTION"]	) [self sendRawMessageWithComponents:prefix, msgCutDown, @"\001", nil];
+		else [self sendRawMessageWithComponents:prefix, msgCutDown, nil];
+		[msg replaceBytesInRange:NSMakeRange(0, bytesRemainingForMessage) withBytes:NULL length:0];
+
+		[msgCutDown release];
+
+		if ( [msg length] >= bytesRemainingForMessage ) bytesRemainingForMessage = bytesLeft;
+		else bytesRemainingForMessage = [msg length];
+	}
+}
+
+- (int) bytesRemainingForMessage:(NSString *) nickname withUsername:(NSString *) username withAddress:(NSString *) address withPrefix:(NSString *) prefix withEncoding:(NSStringEncoding) msgEncoding {
+	return ( sizeof(char) * 512 ) - [nickname lengthOfBytesUsingEncoding:msgEncoding] - [username lengthOfBytesUsingEncoding:msgEncoding] - [address lengthOfBytesUsingEncoding:msgEncoding] - [prefix lengthOfBytesUsingEncoding:msgEncoding];
+}
+
+- (BOOL) validCharacterToSend:(char *) lastCharacter whitespaceInString:(BOOL) hasWhitespaceInString {	
+	NSCharacterSet *whitespaceCharacters = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+	
+	if ( is7Bit(*lastCharacter) || isUTF8Tupel(*lastCharacter) || isUTF8LongTupel(*lastCharacter) || isUTF8Triple(*lastCharacter) || isUTF8Quartet(*lastCharacter) || isUTF8Quintet(*lastCharacter) || isUTF8Sextet(*lastCharacter) || isUTF8Cont(*lastCharacter) ) {
+		if ( hasWhitespaceInString ) {
+			if ( [whitespaceCharacters characterIsMember:*lastCharacter] ) return YES;
+			else return NO;
+		} else return YES;
+	} else return NO;
 }
 
 - (void) _sendCommand:(NSString *) command withArguments:(MVChatString *) arguments withEncoding:(NSStringEncoding) encoding toTarget:(id) target {
