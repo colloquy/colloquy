@@ -235,6 +235,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	[[webView windowScriptObject] setValue:[JVSpeechController sharedSpeechController] forKey:@"SpeechController"];
 	[[webView windowScriptObject] setValue:[JVNotificationController defaultController] forKey:@"NotificationController"];
 	[[webView windowScriptObject] setValue:[MVChatPluginManager defaultManager] forKey:@"ChatPluginManager"];
+	[[webView windowScriptObject] setValue:[NSUserDefaults standardUserDefaults] forKey:@"NSUserDefaults"];
 }
 
 - (void) removeScriptGlobalsForWebView:(WebView *) webView {
@@ -251,6 +252,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	[[webView windowScriptObject] removeWebScriptKey:@"SpeechController"];
 	[[webView windowScriptObject] removeWebScriptKey:@"NotificationController"];
 	[[webView windowScriptObject] removeWebScriptKey:@"ChatPluginManager"];
+	[[webView windowScriptObject] removeWebScriptKey:@"NSUserDefaults"];
 }
 
 #pragma mark -
