@@ -29,6 +29,7 @@
 	BOOL _allowEditingToEnd;
 	BOOL _didSendRecently;
 	BOOL _initialView;
+	BOOL _revealKeyboard;
 }
 - (id) initWithTarget:(id) target;
 

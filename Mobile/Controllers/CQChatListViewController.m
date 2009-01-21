@@ -357,7 +357,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	if ([chatViewController isKindOfClass:[CQChatRoomController class]]) {
 		CQChatRoomController *chatRoomController = (CQChatRoomController *)chatViewController;
 		if (chatRoomController.available) {
-			[chatRoomController.room part];
+			[chatRoomController part];
 			[self.tableView updateCellAtIndexPath:indexPath withAnimation:UITableViewRowAnimationFade];
 			return;
 		}

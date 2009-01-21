@@ -24,6 +24,7 @@
 #import <objc/message.h>
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
+- (void) _updateRightBarButtonItemAnimated:(BOOL) animated;
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command;
 - (NSDictionary *) _processMessage:(NSDictionary *) message highlightedMessage:(BOOL *) highlighted;
 @end
@@ -42,9 +43,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
 
 	if (self.user) {
-		UIBarButtonItem *infoItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showUserInformation)];
-		self.navigationItem.rightBarButtonItem = infoItem;
-		[infoItem release];
+		[self _updateRightBarButtonItemAnimated:NO];
 
 		_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDirectChatEncoding"];
 
@@ -55,7 +54,7 @@
 
 		[self.connection addChatUserWatchRule:_watchRule];
 
-		_initialView = YES;
+		_revealKeyboard = YES;
 	}
 
 	return self;
@@ -78,7 +77,7 @@
 		if (!(self = [self initWithTarget:user]))
 			return nil;
 
-		_initialView = NO;
+		_revealKeyboard = NO;
 	}
 
 	_active = [[state objectForKey:@"active"] boolValue];
@@ -278,7 +277,7 @@
 - (void) viewDidAppear:(BOOL) animated {
 	[super viewDidAppear:animated];
 
-	[transcriptView flashScrollIndicators];
+	[transcriptView performSelector:@selector(flashScrollIndicators) withObject:nil afterDelay:0.1];
 
 	if (_unreadHighlightedMessages)
 		[CQChatController defaultController].totalImportantUnreadCount -= _unreadHighlightedMessages;
@@ -289,8 +288,8 @@
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
 
-	if(_initialView) {
-		_initialView = NO;
+	if (_revealKeyboard) {
+		_revealKeyboard = NO;
 		[chatInputBar performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.5];
 	}
 }
@@ -1049,8 +1048,8 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 				continue;
 
 			AGRegex *regex = nil;
-			if( [highlightWord hasPrefix:@"/"] && [highlightWord hasSuffix:@"/"] && highlightWord.length > 1 ) {
-				regex = [[AGRegex alloc] initWithPattern:[highlightWord substringWithRange:NSMakeRange( 1, highlightWord.length - 2 )] options:AGRegexCaseInsensitive];
+			if ([highlightWord hasPrefix:@"/"] && [highlightWord hasSuffix:@"/"] && highlightWord.length > 1) {
+				regex = [[AGRegex alloc] initWithPattern:[highlightWord substringWithRange:NSMakeRange(1, highlightWord.length - 2)] options:AGRegexCaseInsensitive];
 			} else {
 				highlightWord = [highlightWord stringByTrimmingCharactersInSet:trimCharacters];
 				highlightWord = [highlightWord stringByEscapingCharactersInSet:escapedCharacters];
@@ -1134,10 +1133,14 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 
 - (void) _didConnect:(NSNotification *) notification {
 	[self addEventMessage:NSLocalizedString(@"Connected to the server.", "Connected to server event message") withIdentifier:@"reconnected"];
+
+	[self _updateRightBarButtonItemAnimated:YES];
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
 	[self addEventMessage:NSLocalizedString(@"Disconnected from the server.", "Disconnect from the server event message") withIdentifier:@"disconnected"];
+
+	[self _updateRightBarButtonItemAnimated:YES];
 }
 
 - (void) _awayStatusChanged:(NSNotification *) notification {
@@ -1147,5 +1150,20 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 	} else {
 		[self addEventMessage:NSLocalizedString(@"You have returned from being away.", "Returned from being away event message") withIdentifier:@"awayRemoved"];
 	}
+}
+
+- (void) _updateRightBarButtonItemAnimated:(BOOL) animated {
+	if (!self.user)
+		return;
+
+	UIBarButtonItem *item = nil;
+
+	if (self.connection.connected)
+		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showUserInformation)];
+	else item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", "Connect button title") style:UIBarButtonItemStyleDone target:self.connection action:@selector(connect)];
+
+	[self.navigationItem setRightBarButtonItem:item animated:animated];
+
+	[item release];
 }
 @end

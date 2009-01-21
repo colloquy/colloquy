@@ -21,6 +21,7 @@
 #pragma mark -
 
 @interface CQChatRoomController (CQChatRoomControllerPrivate)
+- (void) _updateRightBarButtonItemAnimated:(BOOL) animated;
 - (NSString *) _markupForUser:(MVChatUser *) user;
 - (NSString *) _markupForMemberUser:(MVChatUser *) user;
 - (void) _sortMembers;
@@ -34,9 +35,7 @@
 	if (!(self = [super initWithTarget:target]))
 		return nil;
 
-	UIBarButtonItem *membersItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showMembers)];
-	self.navigationItem.rightBarButtonItem = membersItem;
-	[membersItem release];
+	[self _updateRightBarButtonItemAnimated:NO];
 
 	_orderedMembers = [[NSMutableArray alloc] initWithCapacity:100];
 
@@ -76,9 +75,6 @@
 	if (!(self = [self initWithTarget:room]))
 		return nil;
 
-	if ([[state objectForKey:@"active"] boolValue])
-		[self performSelector:@selector(_checkMemberStatus) withObject:nil afterDelay:5.];
-
 	_joined = [[state objectForKey:@"joined"] boolValue];
 	_joinCount = 1;
 
@@ -99,17 +95,8 @@
 - (void) viewDidAppear:(BOOL) animated {
 	[super viewDidAppear:animated];
 
-	NSTimeInterval timeSinceLaunch = ABS([[CQColloquyApplication sharedApplication].launchDate timeIntervalSinceNow]);
-	[self performSelector:@selector(_checkMemberStatus) withObject:nil afterDelay:MAX(0.333, (5. - timeSinceLaunch))];
-
 	[_currentUserListViewController release];
 	_currentUserListViewController = nil;
-}
-
-- (void) viewWillDisappear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_checkMemberStatus) object:nil];
 }
 
 #pragma mark -
@@ -135,7 +122,7 @@
 }
 
 - (BOOL) available {
-	return (self.connection && self.room.joined);
+	return (self.connection && self.room.joined && !_parting);
 }
 
 - (NSDictionary *) persistentState {
@@ -153,8 +140,18 @@
 
 #pragma mark -
 
-- (void) close {
+- (void) join {
+	[self.connection connect];
+	[self.room join];
+}
+
+- (void) part {
+	_parting = YES;
 	[self.room part];
+}
+
+- (void) close {
+	[self part];
 }
 
 #pragma mark -
@@ -163,12 +160,15 @@
 	[_orderedMembers removeAllObjects];
 	[_orderedMembers addObjectsFromArray:[self.room.memberUsers allObjects]];
 
+	[self _updateRightBarButtonItemAnimated:YES];
+
 	if (++_joinCount > 1)
 		[self addEventMessage:NSLocalizedString(@"You joined the room.", "Joined room event message") withIdentifier:@"rejoined"];
 
 	[self _displayCurrentTopicOnlyIfSet:YES];
 
 	_joined = YES;
+	_parting = NO;
 	_banListSynced = NO;
 	_membersNeedSorted = YES;
 
@@ -314,15 +314,22 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 }
 
 - (void) _didConnect:(NSNotification *) notification {
+	_parting = NO;
+
 	if (_joined)
 		[self.room join];
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
-	[super _didDisconnect:notification];
+	if (_joined)
+		[super _didDisconnect:notification];
+
+	_parting = NO;
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
+
+	[self _updateRightBarButtonItemAnimated:YES];
 }
 
 - (void) _partedRoom:(NSNotification *) notification {
@@ -331,9 +338,12 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
 
+	[self _updateRightBarButtonItemAnimated:YES];
+
 	[_orderedMembers removeAllObjects];
 	_membersNeedSorted = NO;
 
+	_parting = NO;
 	_joined = NO;
 }
 
@@ -781,37 +791,16 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 
 #pragma mark -
 
-- (void) _checkMemberStatus {
-	if (!_active || self.available || self.connection.status == MVChatConnectionConnectingStatus)
-		return;
+- (void) _updateRightBarButtonItemAnimated:(BOOL) animated {
+	UIBarButtonItem *item = nil;
 
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_checkMemberStatus) object:nil];
+	if (self.available)
+		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showMembers)];
+	else item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Join", "Join button title") style:UIBarButtonItemStyleDone target:self action:@selector(join)];
 
-	UIAlertView *alert = [[UIAlertView alloc] init];
-	alert.delegate = self;
+	[self.navigationItem setRightBarButtonItem:item animated:animated];
 
-	if (!self.connection.connected) {
-		alert.tag = 1;
-		alert.title = NSLocalizedString(@"Not Connected", @"Not connected alert title");
-		alert.message = NSLocalizedString(@"Reconnect to join the room.", @"Not connected, connect to rejoin room alert message");
-		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];
-	} else if (!self.room.joined) {
-		alert.tag = 2;
-		alert.title = NSLocalizedString(@"Not a Room Member", @"Not a room member alert title");
-		alert.message = NSLocalizedString(@"Do you want to join the room?", @"Not a member of room alert message");
-		[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join alert button title")];
-	} else {
-		[alert release];
-		return;
-	}
-
-	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
-
-	alert.cancelButtonIndex = 1;
-
-	[alert show];
-
-	[alert release];
+	[item release];
 }
 
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
