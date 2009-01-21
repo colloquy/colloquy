@@ -407,6 +407,7 @@ retry:
 #pragma mark -
 
 - (void) textCompletionView:(CQTextCompletionView *) textCompletionView didSelectCompletion:(NSString *) completion {
+	BOOL endsInPunctuation = (completion.length && [[NSCharacterSet punctuationCharacterSet] characterIsMember:[completion characterAtIndex:(completion.length - 1)]]);
 	if (![completion hasSuffix:@" "])
 		completion = [completion stringByAppendingString:@" "];
 
@@ -421,7 +422,7 @@ retry:
 		_inputField.selectionRange = NSMakeRange((_completionRange.location + completion.length), 0);
 #endif
 
-	if (_completionRange.location == 0 && _inputField.autocapitalizationType == UITextAutocapitalizationTypeSentences) {
+	if (_completionRange.location == 0 && endsInPunctuation && _inputField.autocapitalizationType == UITextAutocapitalizationTypeSentences) {
 		_autocapitalizeNextLetter = YES;
 		_defaultAutocapitalizationType = UITextAutocapitalizationTypeSentences;
 		_inputField.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
