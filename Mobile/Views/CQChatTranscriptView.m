@@ -148,7 +148,7 @@
 }
 
 - (void) webViewDidFinishLoad:(UIWebView *) webView {
-	[self performSelector:@selector(_finishedLoading) withObject:nil afterDelay:0.];
+	[self performSelector:@selector(_finishedLoading) withObject:nil afterDelay:0.1];
 }
 
 #pragma mark -
