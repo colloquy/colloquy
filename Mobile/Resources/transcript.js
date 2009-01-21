@@ -12,7 +12,7 @@ function animateScroll(target, duration, callback) {
 		return c/2*((t-=2)*t*t + 2) + b;
 	}
 
-    const slice = (1000 / 30); // 30 frames per second
+	const slice = (1000 / 30); // 30 frames per second
 
 	animationComplete = 0;
 	startScrollTop = currentScrollTop;

@@ -10,7 +10,7 @@ body {
 }
 
 .message-wrapper {
-	padding: 1px 30px;
+	padding: 1px 8px 1px 30px;
 	border-bottom: 1px solid rgba(20, 20, 200, 0.1);
 }
 
@@ -66,10 +66,11 @@ body {
 	background-repeat: repeat-y;
 	background-color: rgb(253, 253, 222);
 	border-bottom: 1px solid rgba(20, 20, 200, .1);
+	line-height: 1.1em;
 	font-size: smaller;
 	color: rgb(33%, 33%, 33%);
 	text-align: center;
-	padding: 2px 8px;
+	padding: 3px 8px 3px 30px;
 	white-space: pre-wrap;
 	word-wrap: break-word;
 	-webkit-line-break: after-white-space;

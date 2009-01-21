@@ -71,9 +71,10 @@ body {
 
 .event {
 	font-size: smaller;
+	line-height: 1.1em;
 	color: rgb(66%, 66%, 66%);
 	text-align: center;
-	padding: 2px 8px;
+	padding: 1px 8px 4px;
 	white-space: pre-wrap;
 	word-wrap: break-word;
 	-webkit-line-break: after-white-space;
