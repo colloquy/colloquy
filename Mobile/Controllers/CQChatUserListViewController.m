@@ -10,16 +10,14 @@
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatConnection.h>
 
-static NSString *_membersString = nil;
-static NSString *_membersFormat = @"%@ (%d)";
+static NSString *membersSingleCountFormat;
+static NSString *membersFilteredCountFormat;
 
 @implementation CQChatUserListViewController
 + (void) initialize {
-    if (self == [CQChatUserListViewController class]) {
-        _membersString = NSLocalizedString(@"Members", @"Members view title");
-    }
+	membersSingleCountFormat = [NSLocalizedString(@"Members (%u)", @"Members with single count view title") retain];
+	membersFilteredCountFormat = [NSLocalizedString(@"Members (%u of %u)", @"Members with filtered count view title") retain];
 }
-
 
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStylePlain]))
@@ -38,7 +36,7 @@ static NSString *_membersFormat = @"%@ (%d)";
 	[_room release];
 	[_searchBar release];
 
-    [super dealloc];
+	[super dealloc];
 }
 
 #pragma mark -
@@ -75,8 +73,9 @@ static NSString *_membersFormat = @"%@ (%d)";
 - (void) setUsers:(NSArray *) users {
 	[_users setArray:users];
 	[_matchedUsers setArray:users];
-	self.title = [NSString stringWithFormat:_membersFormat, _membersString, users.count];
-	
+
+	self.title = [NSString stringWithFormat:membersSingleCountFormat, users.count];
+
 	[self.tableView reloadData];
 }
 
@@ -116,7 +115,6 @@ static NSString *_membersFormat = @"%@ (%d)";
 	NSParameterAssert(index <= _users.count);
 
 	[_users insertObject:user atIndex:index];
-    self.title = [NSString stringWithFormat:_membersFormat, _membersString, _users.count];
 
 	if (!_currentSearchString.length || [user.displayName hasCaseInsensitiveSubstring:_currentSearchString]) {
 		NSInteger matchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:index];
@@ -126,6 +124,10 @@ static NSString *_membersFormat = @"%@ (%d)";
 		NSArray *indexPaths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
 		[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 	}
+
+	if (_users.count == _matchedUsers.count)
+		self.title = [NSString stringWithFormat:membersSingleCountFormat, _users.count];
+	else self.title = [NSString stringWithFormat:membersFilteredCountFormat, _matchedUsers.count, _users.count];
 }
 
 - (void) _removeUserAtIndex:(NSUInteger) index withAnimation:(UITableViewRowAnimation) animation {
@@ -134,7 +136,6 @@ static NSString *_membersFormat = @"%@ (%d)";
 	MVChatUser *user = [[_users objectAtIndex:index] retain];
 
 	[_users removeObjectAtIndex:index];
-    self.title = [NSString stringWithFormat:_membersFormat, _membersString, _users.count];
 
 	NSUInteger matchesIndex = [self _indexForRemovedMatchUser:user];
 	if (matchesIndex != NSNotFound) {
@@ -143,6 +144,10 @@ static NSString *_membersFormat = @"%@ (%d)";
 		NSArray *indexPaths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
 		[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 	}
+
+	if (_users.count == _matchedUsers.count)
+		self.title = [NSString stringWithFormat:membersSingleCountFormat, _users.count];
+	else self.title = [NSString stringWithFormat:membersFilteredCountFormat, _matchedUsers.count, _users.count];
 
 	[user release];
 }
@@ -160,7 +165,7 @@ static NSString *_membersFormat = @"%@ (%d)";
 - (void) insertUser:(MVChatUser *) user atIndex:(NSUInteger) index {
 	BOOL searchBarFocused = [_searchBar isFirstResponder];
 	[self _insertUser:user atIndex:index withAnimation:UITableViewRowAnimationLeft];
-    
+
 	if (searchBarFocused)
 		[_searchBar becomeFirstResponder];
 }
@@ -275,6 +280,10 @@ static NSString *_membersFormat = @"%@ (%d)";
 	id old = _currentSearchString;
 	_currentSearchString = [searchString copy];
 	[old release];
+
+	if (_users.count == _matchedUsers.count)
+		self.title = [NSString stringWithFormat:membersSingleCountFormat, _users.count];
+	else self.title = [NSString stringWithFormat:membersFilteredCountFormat, _matchedUsers.count, _users.count];
 
 	[_searchBar becomeFirstResponder];
 }
