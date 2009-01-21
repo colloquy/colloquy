@@ -402,7 +402,7 @@ static BOOL applicationIsTerminating = NO;
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"] && NSAppKitVersionNumber >= NSAppKitVersionNumber10_4 ) {
 		_updater = [[SUUpdater allocWithZone:nil] init];
 		[_updater checkForUpdatesInBackground];
-		[_updater scheduleCheckWithInterval:60. * 60. * 12.]; // check every 12 hours
+		[_updater setUpdateCheckInterval:60. * 60. * 12.]; // check every 12 hours
 	}
 
 	[[MVColorPanel sharedColorPanel] attachColorList:[[[NSColorList alloc] initWithName:@"Chat" fromFile:[[NSBundle mainBundle] pathForResource:@"Chat" ofType:@"clr"]] autorelease]];
