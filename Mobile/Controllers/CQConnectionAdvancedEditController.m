@@ -189,7 +189,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 	} else if (indexPath.section == 1) {
 		CQPreferencesTextCell *cell = nil;
 
-		if(indexPath.row == 0) {
+		if (indexPath.row == 0) {
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
 			cell.textEditAction = @selector(usernameChanged:);

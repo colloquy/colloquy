@@ -403,7 +403,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 @implementation NSString (NSStringAdditions)
 + (NSString *) locallyUniqueString {
 	struct timeval tv;
-    gettimeofday( &tv, NULL );
+	gettimeofday( &tv, NULL );
 
 	unsigned int m = 36; // base (denominator)
 	unsigned int q = [[NSProcessInfo processInfo] processIdentifier] ^ tv.tv_usec; // input (quotient)
