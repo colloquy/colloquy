@@ -1471,6 +1471,16 @@ end:
 
 #pragma mark -
 
+- (void) _markUserAsOffline:(MVChatUser *) user {
+	@synchronized( _alternateNicks ) {
+	if( [[user nickname] isCaseInsensitiveEqualToString:[self preferredNickname]] && ( ( [[self nickname] hasCaseInsensitivePrefix:[self preferredNickname]] && [[self nickname] hasSuffix:@"_"] ) || [_alternateNicks containsObject:[self nickname]] ) ) 
+		[self setNickname:[self preferredNickname]]; // someone was blocking our preferred nickname (probably us from a previous connection), let's use it now
+	}
+	[super _markUserAsOffline:user];
+}
+
+#pragma mark -
+
 - (void) _periodicEvents {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
