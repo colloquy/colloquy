@@ -494,6 +494,9 @@
 	if (!preferBrowser && !urlString.length)
 		return NO;
 
+	if ([arguments isCaseInsensitiveEqualToString:@"last"])
+		urlString = @"about:last";
+
 	NSURL *url = (urlString ? [NSURL URLWithString:urlString] : nil);
 	if (urlString && !url.scheme.length) url = [NSURL URLWithString:[@"http://" stringByAppendingString:urlString]];
 

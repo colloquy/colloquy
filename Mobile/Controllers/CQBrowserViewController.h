@@ -15,6 +15,7 @@
 @property (nonatomic, assign) id <CQBrowserViewControllerDelegate> delegate;
 @property (nonatomic, retain, setter=loadURL:) NSURL *url;
 
+- (void) loadLastURL;
 - (void) loadURL:(NSURL *) url;
 
 - (IBAction) goBack:(id) sender;

@@ -81,17 +81,23 @@
 	if (!url && !openWithBrowser)
 		return NO;
 
-	if (openWithBrowser && url && ![url.scheme isCaseInsensitiveEqualToString:@"http"] && ![url.scheme isCaseInsensitiveEqualToString:@"https"])
+	BOOL loadLastURL = [url.absoluteString isCaseInsensitiveEqualToString:@"about:last"];
+	if (loadLastURL)
+		openWithBrowser = YES;
+
+	if (!loadLastURL && openWithBrowser && url && ![url.scheme isCaseInsensitiveEqualToString:@"http"] && ![url.scheme isCaseInsensitiveEqualToString:@"https"])
 		openWithBrowser = NO;
 
-	if (openWithBrowser && [self isSpecialApplicationURL:url])
+	if (!loadLastURL && openWithBrowser && [self isSpecialApplicationURL:url])
 		openWithBrowser = NO;
 
 	if (!openWithBrowser)
 		return [self openURL:url];
 
 	CQBrowserViewController *browserController = [[CQBrowserViewController alloc] init];
-	if (url) [browserController loadURL:url];
+
+	if (loadLastURL) [browserController loadLastURL];
+	else if (url) [browserController loadURL:url];
 
 	browserController.delegate = delegate;
 	[tabBarController presentModalViewController:browserController animated:YES];

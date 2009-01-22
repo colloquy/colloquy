@@ -3,6 +3,8 @@
 #import "CQColloquyApplication.h"
 #import "NSStringAdditions.h"
 
+static NSURL *lastURL;
+
 @implementation CQBrowserViewController
 - (id) init {
 	if (!(self = [super initWithNibName:@"Browser" bundle:nil]))
@@ -34,7 +36,7 @@
 	locationField.clearsOnBeginEditing = NO;
 	locationField.clearButtonMode = UITextFieldViewModeWhileEditing;
 
-	if (_urlToLoad) {
+	if (_urlToLoad.absoluteString.length) {
 		[self loadURL:_urlToLoad];
 		[_urlToLoad release];
 		_urlToLoad = nil;
@@ -54,6 +56,10 @@
 
 @synthesize delegate = _delegate;
 
+- (void) loadLastURL {
+	self.url = lastURL;
+}
+
 - (void) loadURL:(NSURL *) url {
 	if (!webView) {
 		id old = _urlToLoad;
@@ -70,6 +76,10 @@
 }
 
 - (void) close:(id) sender {
+	id old = lastURL;
+	lastURL = [self.url retain];
+	[old release];
+
 	[self dismissModalViewControllerAnimated:YES];
 }
 
@@ -92,7 +102,7 @@
 
 - (NSURL *) url {
 	NSURL *url = [NSURL URLWithString:locationField.text];
-	if (!url.scheme.length) url = [NSURL URLWithString:[@"http://" stringByAppendingString:locationField.text]];
+	if (!url.scheme.length && locationField.text.length) url = [NSURL URLWithString:[@"http://" stringByAppendingString:locationField.text]];
 	return url;
 }
 
