@@ -1940,7 +1940,7 @@ end:
 
 - (void) _handle433WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NICKNAMEINUSE
 	MVAssertCorrectThreadRequired( _connectionThread );
-
+	
 	if( ! [self isConnected] ) {
 		NSString *nick = [self nextAlternateNickname];
 		if( ! [nick length] && [parameters count] >= 2 ) {
@@ -1954,14 +1954,21 @@ end:
 		// - Sent to a user who is changing their nickname to a nickname someone else is actively using.
 
 		if( [parameters count] >= 2 ) {
-			NSString *usedNickname = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
-
+			NSString *usedNickname = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
+			NSString *newNickname = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+			
 			NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 			[userInfo setObject:self forKey:@"connection"];
-			[userInfo setObject:usedNickname forKey:@"nickname"];
-			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The nickname \"%@\" is already taken on \"%@\".", "cannot change used nickname error" ), usedNickname, [self server]] forKey:NSLocalizedDescriptionKey];
-
-			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeUsedNickError userInfo:userInfo]];
+			[userInfo setObject:usedNickname forKey:@"oldnickname"];
+			[userInfo setObject:newNickname forKey:@"newnickname"];
+			
+			if ( [newNickname isCaseInsensitiveEqualToString:usedNickname] ) {
+				[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Can't change nick from \"%@\" to \"%@\" because it is already taken on \"%@\".", "cannot change used nickname error" ), usedNickname, newNickname, [self server]] forKey:NSLocalizedDescriptionKey];
+				[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeUsedNickError userInfo:userInfo]];
+			} else {
+				[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Your nickname is being changed by services on \"%@\" because it is registered and you did not supply the correct password to identify.", "nickname changed by services error" ), [self server]] forKey:NSLocalizedDescriptionKey]; 
+				[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionNickChangedByServicesError userInfo:userInfo]];
+			}
 		}
 	}
 }

@@ -291,6 +291,9 @@
 		case MVChatConnectionRoomDoesNotSupportModesError:
 			errorTitle = NSLocalizedString(@"Room Modes Unsupported", "Room modes not supported alert title");
 			break;
+		case MVChatConnectionNickChangedByServicesError:
+			errorTitle = NSLocalizedString(@"Nickname Changed", "Nick changed by server alert title");
+			break;
 	}
 
 	if (!errorTitle) return;
@@ -327,7 +330,10 @@
 			else errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't change nicknames too fast on \"%@\", wait and try again.", "Can't change nick too fast alert message"), connection.displayName];
 			break;
 		case MVChatConnectionCantChangeUsedNickError:
-			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The nickname \"%@\" is taken on \"%@\".", "Can't change nickname because it is taken alert message"), [[error userInfo] objectForKey:@"nickname"], connection.displayName];
+			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The nickname \"%@\" is taken on \"%@\".", "Can't change nickname because it is taken alert message"), [[error userInfo] objectForKey:@"newnickname"], connection.displayName];
+			break;
+		case MVChatConnectionNickChangedByServicesError:
+			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Your nickname is being changed on \"%@\" because you didn't identify.", "Username was changed by server alert message"), connection.displayName];
 			break;
 	}
 
