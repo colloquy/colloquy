@@ -1,3 +1,5 @@
+@protocol CQBrowserViewControllerDelegate;
+
 @interface CQColloquyApplication : UIApplication <UIApplicationDelegate, UITabBarDelegate> {
 	@protected
 	IBOutlet UIWindow *mainWindow;
@@ -7,7 +9,9 @@
 + (CQColloquyApplication *) sharedApplication;
 
 - (BOOL) isSpecialApplicationURL:(NSURL *) url;
+
 - (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser;
+- (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser withBrowserDelegate:(id <CQBrowserViewControllerDelegate>) delegate;
 
 - (void) showActionSheet:(UIActionSheet *) sheet;
 

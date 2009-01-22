@@ -30,7 +30,7 @@
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	locationField.font = [UIFont systemFontOfSize:17.];
+	locationField.font = [UIFont systemFontOfSize:15.];
 	locationField.clearsOnBeginEditing = NO;
 	locationField.clearButtonMode = UITextFieldViewModeWhileEditing;
 
@@ -50,6 +50,10 @@
 	return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+#pragma mark -
+
+@synthesize delegate = _delegate;
+
 - (void) loadURL:(NSURL *) url {
 	if (!webView) {
 		id old = _urlToLoad;
@@ -57,6 +61,8 @@
 		[old release];
 		return;
 	}
+
+	if (!url) return;
 
 	locationField.text = url.absoluteString;
 
@@ -81,8 +87,21 @@
 }
 
 - (void) openInSafari:(id) sender {
-	[[UIApplication sharedApplication] openURL:webView.request.URL];
+	[[UIApplication sharedApplication] openURL:self.url];
 }
+
+- (NSURL *) url {
+	NSURL *url = [NSURL URLWithString:locationField.text];
+	if (!url.scheme.length) url = [NSURL URLWithString:[@"http://" stringByAppendingString:locationField.text]];
+	return url;
+}
+
+- (IBAction) sendURL:(id) sender {
+	if ([_delegate respondsToSelector:@selector(browserViewController:sendURL:)])
+		[_delegate browserViewController:self sendURL:self.url];
+}
+
+#pragma mark -
 
 - (BOOL) textFieldShouldReturn:(UITextField *) textField {
 	NSURL *url = [NSURL URLWithString:locationField.text];
@@ -94,6 +113,8 @@
 
 	return YES;
 }
+
+#pragma mark -
 
 - (void) updateLocationField {
 	NSString *location = webView.request.URL.absoluteString;
@@ -115,6 +136,8 @@
 
 	[stopReloadButton setImage:image forState:UIControlStateNormal];
 }
+
+#pragma mark -
 
 - (BOOL) webView:(UIWebView *) sender shouldStartLoadWithRequest:(NSURLRequest *) request navigationType:(UIWebViewNavigationType) navigationType {
 	if ([[CQColloquyApplication sharedApplication] isSpecialApplicationURL:request.URL]) {
@@ -147,6 +170,8 @@
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateLoadingStatus) object:nil];
 	[self performSelector:@selector(updateLoadingStatus) withObject:nil afterDelay:1.];
 }
+
+#pragma mark -
 
 - (void) keyboardWillShow:(NSNotification *) notification {
 	CGPoint endCenterPoint = CGPointZero;

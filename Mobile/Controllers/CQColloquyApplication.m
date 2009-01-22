@@ -74,6 +74,10 @@
 }
 
 - (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser {
+	return [self openURL:url usingBuiltInBrowser:openWithBrowser withBrowserDelegate:nil];
+}
+
+- (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser withBrowserDelegate:(id <CQBrowserViewControllerDelegate>) delegate {
 	if (!url && !openWithBrowser)
 		return NO;
 
@@ -89,6 +93,7 @@
 	CQBrowserViewController *browserController = [[CQBrowserViewController alloc] init];
 	if (url) [browserController loadURL:url];
 
+	browserController.delegate = delegate;
 	[tabBarController presentModalViewController:browserController animated:YES];
 
 	[browserController release];

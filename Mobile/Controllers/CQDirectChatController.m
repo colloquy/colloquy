@@ -482,7 +482,7 @@
 		_allowEditingToEnd = NO;
 	}
 
-	return [[CQColloquyApplication sharedApplication] openURL:url usingBuiltInBrowser:openWithBrowser];
+	return [[CQColloquyApplication sharedApplication] openURL:url usingBuiltInBrowser:openWithBrowser withBrowserDelegate:self];
 }
 
 - (BOOL) _handleURLCommandWithArguments:(NSString *) arguments preferBuiltInBrowser:(BOOL) preferBrowser {
@@ -689,6 +689,17 @@
 
 - (BOOL) handleWiiCommandWithArguments:(NSString *) arguments {
 	return [self handleWhoisCommandWithArguments:arguments];
+}
+
+#pragma mark -
+
+- (void) browserViewController:(CQBrowserViewController *) browserViewController sendURL:(NSURL *) url {
+	NSString *existingText = chatInputBar.textField.text;
+	if (existingText.length)
+		chatInputBar.textField.text = [NSString stringWithFormat:@"%@ %@", existingText, url.absoluteString];
+	else chatInputBar.textField.text = url.absoluteString;
+
+	[browserViewController close:nil];
 }
 
 #pragma mark -

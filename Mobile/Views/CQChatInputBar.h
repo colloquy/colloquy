@@ -24,6 +24,7 @@
 @property (nonatomic) BOOL spaceCyclesCompletions;
 @property (nonatomic) BOOL autocorrect;
 
+@property (nonatomic, readonly) UITextField *textField;
 @property (nonatomic) UITextAutocapitalizationType autocapitalizationType;
 
 @property (nonatomic, readonly, getter=isShowingCompletions) BOOL showingCompletions;

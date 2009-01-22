@@ -141,6 +141,8 @@
 
 #pragma mark -
 
+@synthesize textField = _inputField;
+
 - (BOOL) isShowingCompletions {
 	return (_completionView && !_completionView.hidden);
 }

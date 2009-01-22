@@ -1,3 +1,4 @@
+#import "CQBrowserViewController.h"
 #import "CQChatController.h"
 #import "CQChatInputBar.h"
 #import "CQChatTranscriptView.h"
@@ -9,7 +10,7 @@
 @class MVChatUser;
 @class MVChatUserWatchRule;
 
-@interface CQDirectChatController : UIViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, UIAlertViewDelegate> {
+@interface CQDirectChatController : UIViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQBrowserViewControllerDelegate, UIAlertViewDelegate> {
 	@protected
 	IBOutlet CQChatInputBar *chatInputBar;
 	IBOutlet CQChatTranscriptView *transcriptView;
@@ -28,7 +29,6 @@
 	BOOL _showingAlert;
 	BOOL _allowEditingToEnd;
 	BOOL _didSendRecently;
-	BOOL _initialView;
 	BOOL _revealKeyboard;
 }
 - (id) initWithTarget:(id) target;

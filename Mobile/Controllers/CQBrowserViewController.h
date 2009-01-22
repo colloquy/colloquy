@@ -1,3 +1,5 @@
+@protocol CQBrowserViewControllerDelegate;
+
 @interface CQBrowserViewController : UIViewController <UIWebViewDelegate, UITextFieldDelegate> {
 	@protected
 	IBOutlet UIButton *backButton;
@@ -8,11 +10,21 @@
 	IBOutlet UINavigationBar *navigationBar;
 	IBOutlet UIToolbar *toolbar;
 	NSURL *_urlToLoad;
+	id _delegate;
 }
+@property (nonatomic, assign) id <CQBrowserViewControllerDelegate> delegate;
+@property (nonatomic, retain, setter=loadURL:) NSURL *url;
+
 - (void) loadURL:(NSURL *) url;
 
 - (IBAction) goBack:(id) sender;
 - (IBAction) reloadOrStop:(id) sender;
 - (IBAction) openInSafari:(id) sender;
+- (IBAction) sendURL:(id) sender;
 - (IBAction) close:(id) sender;
+@end
+
+@protocol CQBrowserViewControllerDelegate <NSObject>
+@optional
+- (void) browserViewController:(CQBrowserViewController *) browserViewController sendURL:(NSURL *) url;
 @end
