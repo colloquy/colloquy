@@ -1972,7 +1972,7 @@ end:
 			[userInfo setObject:usedNickname forKey:@"oldnickname"];
 			[userInfo setObject:newNickname forKey:@"newnickname"];
 			
-			if ( [newNickname isCaseInsensitiveEqualToString:usedNickname] ) {
+			if ( ! [newNickname isCaseInsensitiveEqualToString:usedNickname] ) {
 				[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Can't change nick from \"%@\" to \"%@\" because it is already taken on \"%@\".", "cannot change used nickname error" ), usedNickname, newNickname, [self server]] forKey:NSLocalizedDescriptionKey];
 				[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeUsedNickError userInfo:userInfo]];
 			} else {
