@@ -231,6 +231,16 @@ static NSString *membersFilteredCountFormat;
 	if ([searchString isEqualToString:_currentSearchString])
 		return;
 
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(filterUsersWithSearchString:) object:nil];
+
+	if (searchString.length)
+		[self performSelector:@selector(filterUsersWithSearchString:) withObject:searchString afterDelay:(1. / 3.)];
+	else [self filterUsersWithSearchString:searchString];
+}
+
+#pragma mark -
+
+- (void) filterUsersWithSearchString:(NSString *) searchString {
 	NSArray *previousUsersArray = [_matchedUsers copy];
 	NSSet *previousUsersSet = [[NSSet alloc] initWithArray:_matchedUsers];
 	NSMutableSet *addedUsers = [[NSMutableSet alloc] init];

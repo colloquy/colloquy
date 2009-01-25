@@ -15,6 +15,8 @@
 - (void) beginUpdates;
 - (void) endUpdates;
 
+- (void) filterUsersWithSearchString:(NSString *) searchString;
+
 - (void) insertUser:(MVChatUser *) user atIndex:(NSUInteger) index;
 - (void) moveUserAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex;
 - (void) removeUserAtIndex:(NSUInteger) index;
