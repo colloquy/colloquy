@@ -33,6 +33,7 @@ BOOL isValidUTF8( const char *s, unsigned len );
 - (NSString *) stringByDecodingXMLSpecialCharacterEntities;
 
 - (NSString *) stringByEscapingCharactersInSet:(NSCharacterSet *) set;
+- (NSString *) stringByReplacingCharactersInSet:(NSCharacterSet *) set withString:(NSString *) string;
 
 - (NSString *) stringByEncodingIllegalURLCharacters;
 - (NSString *) stringByDecodingIllegalURLCharacters;
@@ -62,6 +63,7 @@ BOOL isValidUTF8( const char *s, unsigned len );
 - (void) decodeXMLSpecialCharacterEntities;
 
 - (void) escapeCharactersInSet:(NSCharacterSet *) set;
+- (void) replaceCharactersInSet:(NSCharacterSet *) set withString:(NSString *) string;
 
 - (void) encodeIllegalURLCharacters;
 - (void) decodeIllegalURLCharacters;

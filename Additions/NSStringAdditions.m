@@ -969,6 +969,16 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	return [result autorelease];
 }
 
+- (NSString *) stringByReplacingCharactersInSet:(NSCharacterSet *) set withString:(NSString *) string {
+	NSRange range = [self rangeOfCharacterFromSet:set];
+	if( range.location == NSNotFound )
+		return self;
+       
+	NSMutableString *result = [self mutableCopyWithZone:nil];
+	[result replaceCharactersInSet:set withString:string];
+	return [result autorelease];
+}
+
 #pragma mark -
 
 - (NSString *) stringByEncodingIllegalURLCharacters {
@@ -1174,6 +1184,19 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	}
 
 	[scanner release];
+}
+
+- (void) replaceCharactersInSet:(NSCharacterSet *) set withString:(NSString *) string {
+	NSRange range = NSMakeRange(0, [self length]);
+	unsigned stringLength = [string length];
+
+	NSRange replaceRange;
+	while( ( replaceRange = [self rangeOfCharacterFromSet:set options:NSLiteralSearch range:range] ).location != NSNotFound ) {
+		[self replaceCharactersInRange:replaceRange withString:string];
+
+		range.location = replaceRange.location + stringLength;
+		range.length = [self length] - replaceRange.location;
+	}
 }
 
 #pragma mark -

@@ -653,6 +653,7 @@
 #else
 	static NSString *generatedNickname;
 	if (!generatedNickname) {
+		NSCharacterSet *badCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"] invertedSet];
 		NSArray *components = [[UIDevice currentDevice].name componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 		for (NSString *compontent in components) {
 			if ([compontent isCaseInsensitiveEqualToString:@"iPhone"] || [compontent isCaseInsensitiveEqualToString:@"iPod"])
@@ -663,7 +664,7 @@
 				compontent = [compontent substringWithRange:NSMakeRange(0, (compontent.length - 2))];
 			if (!compontent.length)
 				continue;
-			generatedNickname = [compontent copy];
+			generatedNickname = [[compontent stringByReplacingCharactersInSet:badCharacters withString:@""] copy];
 			break;
 		}
 	}
@@ -697,6 +698,14 @@
 #endif
 
 	return NSLocalizedString(@"Colloquy User", @"Default real name");
+}
+
++ (NSString *) defaultUsernameWithNickname:(NSString *) nickname {
+	NSCharacterSet *badCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz"] invertedSet];
+	NSString *username = [[nickname lowercaseString] stringByReplacingCharactersInSet:badCharacters withString:@""];
+	if (username.length)
+		return username;
+	return @"mobile";
 }
 
 + (NSString *) defaultQuitMessage {

@@ -195,7 +195,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 			cell.textEditAction = @selector(usernameChanged:);
 			cell.label = NSLocalizedString(@"Username", @"Username connection setting label");
 			cell.text = (isDefaultValue(_connection.username) ? @"" : _connection.username);
-			cell.textField.placeholder = (isDefaultValue(_connection.preferredNickname) ? [[MVChatConnection defaultNickname] lowercaseString] : [_connection.preferredNickname lowercaseString]);
+			cell.textField.placeholder = [MVChatConnection defaultUsernameWithNickname:currentPreferredNickname(_connection)];
 			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
