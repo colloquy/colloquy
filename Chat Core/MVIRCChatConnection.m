@@ -35,13 +35,13 @@
 #define JVQueueWaitBeforeConnected 120.
 #define JVPingServerInterval 120.
 #define JVPeriodicEventsInterval 600.
-#define JVSendQueueDelayIncrement 0.01
+#define JVSendQueueDelayIncrement 0.02
 #define JVWatchedUserWHOISDelay 300.
 #define JVWatchedUserISONDelay 60.
 #define JVMaximumCommandLength 510
 #define JVMaximumISONCommandLength JVMaximumCommandLength
 #define JVMaximumWatchCommandLength JVMaximumCommandLength
-#define JVMaximumMembersForWhoRequest 100
+#define JVMaximumMembersForWhoRequest 50
 #define JVFirstViableTimestamp 631138520
 #define JVFallbackEncoding NSISOLatin1StringEncoding
 
