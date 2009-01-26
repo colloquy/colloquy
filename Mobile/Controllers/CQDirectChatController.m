@@ -855,19 +855,15 @@
 }
 
 - (void) addMessage:(NSDictionary *) message {
-	MVChatUser *user = [message objectForKey:@"user"];
-	if (!user.localUser && !_active && self.available) {
-		++_unreadMessages;
-		if (self.user)
-			++[CQChatController defaultController].totalImportantUnreadCount;
-	}
-
 	BOOL highlighted = NO;
 	message = [self _processMessage:message highlightedMessage:&highlighted];
 
-	if (highlighted && !_active && self.available) {
-		++_unreadHighlightedMessages;
-		if (!self.user)
+	MVChatUser *user = [message objectForKey:@"user"];
+	if (!user.localUser && !_active && self.available) {
+		if (highlighted) ++_unreadHighlightedMessages;
+		else ++_unreadMessages;
+
+		if (self.user || highlighted)
 			++[CQChatController defaultController].totalImportantUnreadCount;
 	}
 
