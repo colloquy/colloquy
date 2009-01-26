@@ -2922,8 +2922,15 @@ end:
 
 	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *roomName = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+
 		[self _markUserAsOnline:sender];
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomInvitedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", roomName, @"room", nil]];
+
+		if( [[sender nickname] isEqualToString:@"ChanServ"] ) {
+			// Auto-accept invites from ChanServ since the user initiated the invite.
+			[self joinChatRoomNamed:roomName];
+		} else {
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomInvitedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", roomName, @"room", nil]];
+		}
 	}
 }
 
