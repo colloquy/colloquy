@@ -387,7 +387,7 @@
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/umode", @"/globops", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/part", @"/whois", @"/clear", @"/notice", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
