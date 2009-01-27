@@ -248,14 +248,19 @@ static NSString *membersFilteredCountFormat;
 	NSSet *previousUsersSet = [[NSSet alloc] initWithArray:_matchedUsers];
 	NSMutableSet *addedUsers = [[NSMutableSet alloc] init];
 
-	[_matchedUsers removeAllObjects];
+	if (searchString.length) {
+		[_matchedUsers removeAllObjects];
 
-	NSArray *searchArray = (_currentSearchString && [searchString hasPrefix:_currentSearchString] ? previousUsersArray : _users);
-	for (MVChatUser *user in searchArray) {
-		if (!searchString.length || [user.displayName hasCaseInsensitiveSubstring:searchString]) {
-			[_matchedUsers addObject:user];
-			[addedUsers addObject:user];
+		NSArray *searchArray = (_currentSearchString && [searchString hasPrefix:_currentSearchString] ? previousUsersArray : _users);
+		for (MVChatUser *user in searchArray) {
+			if ([user.displayName hasCaseInsensitiveSubstring:searchString]) {
+				[_matchedUsers addObject:user];
+				[addedUsers addObject:user];
+			}
 		}
+	} else {
+		[_matchedUsers setArray:_users];
+		[addedUsers addObjectsFromArray:_users];
 	}
 
 	[self.tableView beginUpdates];
