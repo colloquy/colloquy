@@ -188,3 +188,7 @@ function scrollToBottom(animated, suppressEnforceScrollbackLimit) {
 	var newScrollTop = (document.body.scrollHeight - window.innerHeight);
 	animateScroll(newScrollTop, 250, animationFinished);
 }
+
+function isDocumentReady() {
+	return (document.readyState === "complete");
+}

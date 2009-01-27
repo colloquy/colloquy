@@ -148,7 +148,7 @@
 }
 
 - (void) webViewDidFinishLoad:(UIWebView *) webView {
-	[self performSelector:@selector(_finishedLoading) withObject:nil afterDelay:0.1];
+	[self performSelector:@selector(_checkIfLoadingFinished) withObject:nil afterDelay:0.];
 }
 
 #pragma mark -
@@ -265,7 +265,13 @@
 	return [NSString stringWithFormat:templateString, _styleIdentifier];
 }
 
-- (void) _finishedLoading {
+- (void) _checkIfLoadingFinished {
+	NSString *result = [self stringByEvaluatingJavaScriptFromString:@"isDocumentReady()"];
+	if (![result isEqualToString:@"true"]) {
+		[self performSelector:_cmd withObject:nil afterDelay:0.1];
+		return;
+	}
+
 	_loading = NO;
 
 	[self _addComponentsToTranscript:_pendingPreviousSessionComponents fromPreviousSession:YES animated:NO];
