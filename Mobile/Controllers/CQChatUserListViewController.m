@@ -231,14 +231,17 @@ static NSString *membersFilteredCountFormat;
 	if ([searchString isEqualToString:_currentSearchString])
 		return;
 
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(filterUsersWithSearchString:) object:nil];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(filterUsers) object:nil];
 
-	if (searchString.length)
-		[self performSelector:@selector(filterUsersWithSearchString:) withObject:searchString afterDelay:(1. / 3.)];
-	else [self filterUsersWithSearchString:searchString];
+	NSTimeInterval delay = (searchString.length ? (1. / (double)searchString.length) : (1. / 3.));
+	[self performSelector:@selector(filterUsers) withObject:nil afterDelay:delay];
 }
 
 #pragma mark -
+
+- (void) filterUsers {
+	[self filterUsersWithSearchString:_searchBar.text];
+}
 
 - (void) filterUsersWithSearchString:(NSString *) searchString {
 	NSArray *previousUsersArray = [_matchedUsers copy];
