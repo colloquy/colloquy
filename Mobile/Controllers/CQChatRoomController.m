@@ -122,7 +122,7 @@
 }
 
 - (BOOL) available {
-	return (self.connection && self.room.joined && !_parting);
+	return (self.connection.connected && self.room.joined && !_parting);
 }
 
 - (NSDictionary *) persistentState {
