@@ -387,7 +387,7 @@
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois", @"/dcc", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -692,6 +692,20 @@
 
 - (BOOL) handleWiiCommandWithArguments:(NSString *) arguments {
 	return [self handleWhoisCommandWithArguments:arguments];
+}
+
+#pragma mark -
+
+- (BOOL) handleDCCCommandWithArguments:(NSString *) arguments {
+	if (arguments.length == 0) {
+		return NO;
+	}
+	
+	NSString *nick = [[arguments componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] objectAtIndex:0];
+	MVChatUser *user = [[self.connection chatUsersWithNickname:nick] anyObject];
+	[[CQChatController defaultController] showFilePickerWithUser:user];
+	
+	return YES;
 }
 
 #pragma mark -

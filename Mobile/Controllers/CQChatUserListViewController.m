@@ -355,12 +355,13 @@ static NSString *membersFilteredCountFormat;
 	BOOL showOperatorActions = (localUserModes & (MVChatRoomMemberHalfOperatorMode | MVChatRoomMemberOperatorMode | MVChatRoomMemberAdministratorMode | MVChatRoomMemberFounderMode));
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"Send Message", @"Send Message button title")];
+	[sheet addButtonWithTitle:NSLocalizedString(@"Send File", @"Send File button title")];
 	[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
 	if (showOperatorActions)
 		[sheet addButtonWithTitle:NSLocalizedString(@"Operator Actions...", @"Operator Actions button title")];
 	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	sheet.cancelButtonIndex = (showOperatorActions ? 3 : 2);
+	sheet.cancelButtonIndex = (showOperatorActions ? 4 : 3);
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
 
@@ -373,29 +374,31 @@ static NSString *membersFilteredCountFormat;
 
 	if (buttonIndex == actionSheet.cancelButtonIndex) {
 		[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
-
+	
 		[context release]; // Retained earlier
 		return;
 	}
-
+	
 	MVChatUser *user = [_matchedUsers objectAtIndex:selectedIndexPath.row];
-
+	
 	if (!context) {
 		if (buttonIndex == 0) {
 			[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
-
+		
 			CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
 			[[CQChatController defaultController] showChatController:chatController animated:YES];
 		} else if (buttonIndex == 1) {
+			[[CQChatController defaultController] showFilePickerWithUser:user];
+		} else if (buttonIndex == 2) {
 			[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
-
+		
 			CQWhoisNavController *whoisController = [[CQWhoisNavController alloc] init];
 			whoisController.user = user;
 
 			[self presentModalViewController:whoisController animated:YES];
 
 			[whoisController release];
-		} else if (buttonIndex == 2) {
+		} else if (buttonIndex == 3) {
 			NSSet *features = _room.connection.supportedFeatures;
 
 			NSUInteger localUserModes = (_room.connection.localUser ? [_room modesForMemberUser:_room.connection.localUser] : 0);

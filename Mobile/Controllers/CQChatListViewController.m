@@ -4,6 +4,8 @@
 #import "CQChatTableCell.h"
 #import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
+#import "CQFileTransferController.h"
+#import "CQFileTransferTableCell.h"
 #import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
@@ -48,11 +50,14 @@
 static MVChatConnection *connectionForSection(NSInteger section) {
 	NSMutableSet *connections = [NSMutableSet set];
 
-	for (CQDirectChatController *controller in [CQChatController defaultController].chatViewControllers) {
-		if (controller.connection) {
-			[connections addObject:controller.connection];
-			if ((section + 1) == connections.count)
-				return controller.connection;
+	for (id cntlr in [CQChatController defaultController].chatViewControllers) {
+		if ([cntlr conformsToProtocol:@protocol(CQChatViewController)]) {
+			id <CQChatViewController> controller = cntlr;
+			if (controller.connection) {
+				[connections addObject:controller.connection];
+				if ((section + 1) == connections.count)
+					return controller.connection;
+			}
 		}
 	}
 
@@ -67,25 +72,54 @@ static NSUInteger sectionIndexForConnection(MVChatConnection *connection) {
 	MVChatConnection *currentConnection = nil;
 	NSUInteger sectionIndex = 0;
 
-	for (CQDirectChatController *currentController in controllers) {
-		if (currentController.connection != currentConnection) {
-			if (currentConnection) ++sectionIndex;
-			currentConnection = currentController.connection;
+	for (id controller in controllers) {
+		if ([controller isKindOfClass:[CQDirectChatController class]]) {
+			CQDirectChatController *currentController = controller;
+			if (currentController.connection != currentConnection) {
+				if (currentConnection) ++sectionIndex;
+				currentConnection = currentController.connection;
+			}
+			
+			if (currentController.connection == connection)
+				return sectionIndex;
 		}
-
-		if (currentController.connection == connection)
-			return sectionIndex;
 	}
 
 	return NSNotFound;
 }
 
-static NSIndexPath *indexPathForChatController(id <CQChatViewController> controller) {
+static NSUInteger sectionIndexForFileTransfers() {
+	NSArray *controllers = [CQChatController defaultController].chatViewControllers;
+	if (!controllers.count)
+		return NSNotFound;
+	
+	MVChatConnection *currentConnection = nil;
+	NSUInteger sectionIndex = 0;
+	
+	for (id controller in controllers) {
+		if ([controller isKindOfClass:[CQFileTransferController class]]) {
+			return sectionIndex + 1;
+		} else {
+			CQDirectChatController *currentController = controller;
+			if (currentController.connection != currentConnection) {
+				if (currentConnection) ++sectionIndex;
+				currentConnection = currentController.connection;
+			}
+		}
+	}
+	
+	return NSNotFound;
+}
+
+static NSIndexPath *indexPathForChatController(id controller) {
 	NSArray *controllers = [CQChatController defaultController].chatViewControllers;
 	if (!controllers.count)
 		return nil;
-
-	MVChatConnection *connection = controller.connection;
+	
+	MVChatConnection *connection = nil;
+	if ([controller conformsToProtocol:@protocol(CQChatViewController)]) {
+		connection = ((id <CQChatViewController>) controller).connection;
+	}
 	MVChatConnection *currentConnection = nil;
 	NSUInteger sectionIndex = 0;
 	NSUInteger rowIndex = 0;
@@ -157,6 +191,24 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		[UIView commitAnimations];
 }
 
+- (void) _refreshFileTransferCell:(CQFileTransferTableCell *) cell withController:(CQFileTransferController *) controller animated:(BOOL) animated {
+	if (animated) {
+		[UIView beginAnimations:nil context:NULL];
+	}
+	
+	[cell takeValuesFromController:controller];
+	
+	if (controller.transfer.status == MVFileTransferDoneStatus) {
+		cell.removeConfirmationText = NSLocalizedString(@"Close", @"Close remove confirmation button title");
+	} else {
+		cell.removeConfirmationText = NSLocalizedString(@"Stop", @"Stop remove confirmation button title");
+	}
+	
+	if (animated) {
+		[UIView commitAnimations];
+	}
+}
+
 - (void) _refreshConnectionChatCells:(NSNotification *) notification {
 	if (!_active) {
 		_needsUpdate = YES;
@@ -215,10 +267,12 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
 	if (selectedIndexPath) {
 		MVChatConnection *connection = connectionForSection(selectedIndexPath.section);
-		NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
-		id <CQChatViewController> chatViewController = [controllers objectAtIndex:selectedIndexPath.row];
-		CQChatTableCell *cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:selectedIndexPath];
-		[self _refreshChatCell:cell withController:chatViewController animated:NO];
+		if (connection != nil) {
+			NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
+			id <CQChatViewController> chatViewController = [controllers objectAtIndex:selectedIndexPath.row];
+			CQChatTableCell *cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:selectedIndexPath];
+			[self _refreshChatCell:cell withController:chatViewController animated:NO];
+		}
 	}
 
 	[super viewWillAppear:animated];
@@ -232,26 +286,39 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 #pragma mark -
 
-- (void) addChatViewController:(id <CQChatViewController>) controller {
+- (void) addChatViewController:(id) cntlr {
 	if (!_active) {
 		_needsUpdate = YES;
 		return;
 	}
-
-	if ([[CQChatController defaultController] chatViewControllersForConnection:controller.connection].count == 1) {
-		NSUInteger sectionIndex = sectionIndexForConnection(controller.connection);
-		[self.tableView beginUpdates];
-		if ([CQChatController defaultController].chatViewControllers.count == 1)
-			[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationTop];
-		[self.tableView endUpdates];
-	} else {
-		NSIndexPath *changedIndexPath = indexPathForChatController(controller);
-		[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
+	if ([cntlr conformsToProtocol:@protocol(CQChatViewController)]) {
+		id <CQChatViewController> controller = cntlr;
+		if ([[CQChatController defaultController] chatViewControllersForConnection:controller.connection].count == 1) {
+			NSUInteger sectionIndex = sectionIndexForConnection(controller.connection);
+			[self.tableView beginUpdates];
+			if ([CQChatController defaultController].chatViewControllers.count == 1)
+				[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationTop];
+			[self.tableView endUpdates];
+		} else {
+			NSIndexPath *changedIndexPath = indexPathForChatController(controller);
+			[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
+		}
+	} else if ([cntlr isKindOfClass:[CQFileTransferController class]]) {
+		CQFileTransferController *controller = cntlr;
+		if ([[CQChatController defaultController] chatViewControllersOfClass:[CQFileTransferController class]].count == 1) {
+			NSUInteger section = sectionIndexForFileTransfers();
+			[self.tableView beginUpdates];
+			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationTop];
+			[self.tableView endUpdates];
+		} else {
+			NSIndexPath *changedIndexPath = indexPathForChatController(controller);
+			[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
+		}
 	}
 }
 
-- (void) selectChatViewController:(id <CQChatViewController>) controller animatedSelection:(BOOL) animatedSelection animatedScroll:(BOOL) animatedScroll {
+- (void) selectChatViewController:(id) controller animatedSelection:(BOOL) animatedSelection animatedScroll:(BOOL) animatedScroll {
 	if (!self.tableView.numberOfSections || _needsUpdate) {
 		[self.tableView reloadData];
 		_needsUpdate = NO;
@@ -288,55 +355,87 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
 	NSMutableSet *connections = [NSMutableSet set];
 
-	for (CQDirectChatController *controller in [CQChatController defaultController].chatViewControllers)
-		if (controller.connection)
-			[connections addObject:controller.connection];
+	for (id controller in [CQChatController defaultController].chatViewControllers)
+		if ([controller conformsToProtocol:@protocol(CQChatViewController)]) {
+			if (((id <CQChatViewController>) controller).connection)
+				[connections addObject:((id <CQChatViewController>) controller).connection];
+		} else {
+			[connections addObject:[NSNull null]];
+		}
 
 	return connections.count ? connections.count : 1;
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
 	MVChatConnection *connection = connectionForSection(section);
-	if (connection)
+	if (connection) {
 		return [[CQChatController defaultController] chatViewControllersForConnection:connection].count;
-	return 0;
+	} else {
+		return [[CQChatController defaultController] chatViewControllersOfClass:[CQFileTransferController class]].count;
+	}
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
-	return connectionForSection(section).displayName;
+	MVChatConnection *connection = connectionForSection(section);
+	if (connection) {
+		return connection.displayName;
+	}
+	else {
+		if ([[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]].count) {
+			return NSLocalizedString(@"File Transfers", @"File Transfers section title");
+		}
+		else {
+			return @"";
+		}
+	}
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	MVChatConnection *connection = connectionForSection(indexPath.section);
-	NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
-	id <CQChatViewController> chatViewController = [controllers objectAtIndex:indexPath.row];
-
-	CQChatTableCell *cell = [CQChatTableCell reusableTableViewCellInTableView:tableView];
-
-	cell.showsIcon = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"];
-
-	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-
-	[self _refreshChatCell:cell withController:chatViewController animated:NO];
-
-	if ([chatViewController isKindOfClass:[CQDirectChatController class]]) {
-		CQDirectChatController *directChatViewController = (CQDirectChatController *)chatViewController;
-		NSArray *recentMessages = directChatViewController.recentMessages;
-		NSMutableArray *previewMessages = [[NSMutableArray alloc] initWithCapacity:2];
-
-		for (NSInteger i = (recentMessages.count - 1); i >= 0 && previewMessages.count < 2; --i) {
-			NSDictionary *message = [recentMessages objectAtIndex:i];
-			MVChatUser *user = [message objectForKey:@"user"];
-			if (!user.localUser) [previewMessages insertObject:message atIndex:0];
+	if (connection) {
+		NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
+		id <CQChatViewController> chatViewController = [controllers objectAtIndex:indexPath.row];
+		
+		CQChatTableCell *cell = [CQChatTableCell reusableTableViewCellInTableView:tableView];
+		
+		cell.showsIcon = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"];
+		
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		
+		[self _refreshChatCell:cell withController:chatViewController animated:NO];
+		
+		if ([chatViewController isKindOfClass:[CQDirectChatController class]]) {
+			CQDirectChatController *directChatViewController = (CQDirectChatController *)chatViewController;
+			NSArray *recentMessages = directChatViewController.recentMessages;
+			NSMutableArray *previewMessages = [[NSMutableArray alloc] initWithCapacity:2];
+			
+			for (NSInteger i = (recentMessages.count - 1); i >= 0 && previewMessages.count < 2; --i) {
+				NSDictionary *message = [recentMessages objectAtIndex:i];
+				MVChatUser *user = [message objectForKey:@"user"];
+				if (!user.localUser) [previewMessages insertObject:message atIndex:0];
+			}
+			
+			for (NSDictionary *message in previewMessages)
+				[self _addMessagePreview:message withEncoding:directChatViewController.encoding toChatTableCell:cell animated:NO];
+			
+			[previewMessages release];
 		}
-
-		for (NSDictionary *message in previewMessages)
-			[self _addMessagePreview:message withEncoding:directChatViewController.encoding toChatTableCell:cell animated:NO];
-
-		[previewMessages release];
+		
+		return cell;
+	} else {
+		NSArray *controllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
+		CQFileTransferController *controller = [controllers objectAtIndex:indexPath.row];
+		
+		CQFileTransferTableCell *cell = [CQFileTransferTableCell reusableTableViewCellInTableView:tableView];
+		
+		cell.showsIcon = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"];
+		
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		
+		[self _refreshFileTransferCell:cell withController:controller animated:NO];
+		
+		return cell;
 	}
-
-	return cell;
 }
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -348,20 +447,35 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		return;
 
 	MVChatConnection *connection = connectionForSection(indexPath.section);
-	NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
-	id <CQChatViewController> chatViewController = [controllers objectAtIndex:indexPath.row];
-
-	if ([chatViewController isKindOfClass:[CQChatRoomController class]]) {
-		CQChatRoomController *chatRoomController = (CQChatRoomController *)chatViewController;
-		if (chatRoomController.available) {
-			[chatRoomController part];
+	NSArray *controllers;
+	id controller;
+	if (connection) {
+		controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
+		id <CQChatViewController> chatViewController = [controllers objectAtIndex:indexPath.row];
+		controller = chatViewController;
+		
+		if ([chatViewController isKindOfClass:[CQChatRoomController class]]) {
+			CQChatRoomController *chatRoomController = (CQChatRoomController *)chatViewController;
+			if (chatRoomController.available) {
+				[chatRoomController part];
+				[self.tableView updateCellAtIndexPath:indexPath withAnimation:UITableViewRowAnimationFade];
+				return;
+			}
+		}
+	} else {
+		controllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
+		CQFileTransferController *fileTransferController = [controllers objectAtIndex:indexPath.row];
+		controller = fileTransferController;
+		
+		if (fileTransferController.transfer.status != MVFileTransferDoneStatus) {
+			[fileTransferController.transfer cancel];
 			[self.tableView updateCellAtIndexPath:indexPath withAnimation:UITableViewRowAnimationFade];
 			return;
 		}
 	}
-
-	[[CQChatController defaultController] closeViewController:chatViewController];
-
+	
+	[[CQChatController defaultController] closeViewController:controller];
+	
 	if (controllers.count == 1) {
 		[self.tableView beginUpdates];
 		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationRight];
@@ -375,9 +489,11 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	MVChatConnection *connection = connectionForSection(indexPath.section);
-	NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
-	id <CQChatViewController> chatViewController = [controllers objectAtIndex:indexPath.row];
-
-	[[CQChatController defaultController] showChatController:chatViewController animated:YES];
+	if (connection) {
+		NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
+		id <CQChatViewController> chatViewController = [controllers objectAtIndex:indexPath.row];
+		
+		[[CQChatController defaultController] showChatController:chatViewController animated:YES];
+	}
 }
 @end

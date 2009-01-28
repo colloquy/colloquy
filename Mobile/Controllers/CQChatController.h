@@ -3,12 +3,14 @@
 @class CQChatRoomController;
 @class CQChatListViewController;
 @class CQDirectChatController;
+@class CQFileTransferController;
 @class MVChatConnection;
 @class MVChatUser;
 @class MVDirectChatConnection;
+@class MVFileTransfer;
 @protocol CQChatViewController;
 
-@interface CQChatController : UINavigationController <UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate> {
+@interface CQChatController : UINavigationController <UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate> {
 	@protected
 	NSMutableArray *_chatControllers;
 	CQChatListViewController *_chatListViewController;
@@ -16,6 +18,10 @@
 	MVChatConnection *_nextRoomConnection;
 	NSInteger _totalImportantUnreadCount;
 	BOOL _active;
+    
+    BOOL _chatSheet;
+    BOOL _fileSheet;
+    MVChatUser *_fileUser;
 }
 + (CQChatController *) defaultController;
 
@@ -29,6 +35,7 @@
 - (void) showNewChatActionSheet;
 - (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) room andConnection:(MVChatConnection *) connection;
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated;
+- (void) showFilePickerWithUser:(MVChatUser *) user;
 
 - (void) joinSupportRoom;
 
@@ -40,8 +47,9 @@
 - (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists;
 - (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) requested;
 - (CQDirectChatController *) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists;
+- (CQFileTransferController *) chatViewControllerForFileTransfer:(MVFileTransfer *) transfer ifExists:(BOOL) exists;
 
-- (void) closeViewController:(id <CQChatViewController>) controller;
+- (void) closeViewController:(id) controller;
 @end
 
 @protocol CQChatViewController <NSObject>

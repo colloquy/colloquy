@@ -158,6 +158,28 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Key</key>
+			<string>CQFileDownloadAction</string>
+			<key>Title</key>
+			<string>Action on Receive</string>
+			<key>Values</key>
+			<array>
+				<string>Auto-Accept</string>
+				<string>Ask</string>
+				<string>Auto-Deny</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Always Accept</string>
+				<string>Prompt</string>
+				<string>Always Deny</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>Ask</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
 			<string>Auto Join on Kick</string>

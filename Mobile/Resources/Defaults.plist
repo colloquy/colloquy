@@ -16,6 +16,8 @@
 	<string>Sentences</string>
 	<key>CQChatRoomInviteAction</key>
 	<string>Ask</string>
+	<key>CQFileDownloadAction</key>
+	<string>Ask</string>
 	<key>JVSortRoomMembersByStatus</key>
 	<true/>
 	<key>JVShowFullRoomNames</key>

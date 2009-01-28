@@ -129,9 +129,12 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		896E84610F15AB6C00D810FE /* notes.css in Resources */ = {isa = PBXBuildFile; fileRef = 896E84600F15AB6C00D810FE /* notes.css */; };
 		89997FAC0F171EB600CF0AA2 /* standard-grey-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */; };
+		9703B21B0F2C0D0E00E623DF /* CQFileTransferController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */; };
+		9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
 		972EE83B0F10406E0068C75E /* CQWhoisViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 972EE83A0F10406E0068C75E /* CQWhoisViewController.m */; };
 		972EEC390F1080600068C75E /* CQWhoisNavController.m in Sources */ = {isa = PBXBuildFile; fileRef = 972EEC380F1080600068C75E /* CQWhoisNavController.m */; };
 		972EECE00F1089780068C75E /* CQWhoisChannelsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 972EECDF0F1089780068C75E /* CQWhoisChannelsViewController.m */; };
+		97F85EBE0F2713CA008486E1 /* CQFileTransferTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -323,12 +326,18 @@
 		896E84600F15AB6C00D810FE /* notes.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = notes.css; sourceTree = "<group>"; };
 		89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "standard-grey-dark.css"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9703B2190F2C0D0E00E623DF /* CQFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQFileTransferController.h; sourceTree = "<group>"; };
+		9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQFileTransferController.m; sourceTree = "<group>"; };
+		9717342A0F2D1CA100DA9CDB /* UIImageAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImageAdditions.h; sourceTree = "<group>"; };
+		9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageAdditions.m; sourceTree = "<group>"; };
 		972EE8390F10406E0068C75E /* CQWhoisViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQWhoisViewController.h; sourceTree = "<group>"; };
 		972EE83A0F10406E0068C75E /* CQWhoisViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQWhoisViewController.m; sourceTree = "<group>"; };
 		972EEC370F1080600068C75E /* CQWhoisNavController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQWhoisNavController.h; sourceTree = "<group>"; };
 		972EEC380F1080600068C75E /* CQWhoisNavController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQWhoisNavController.m; sourceTree = "<group>"; };
 		972EECDE0F1089780068C75E /* CQWhoisChannelsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQWhoisChannelsViewController.h; sourceTree = "<group>"; };
 		972EECDF0F1089780068C75E /* CQWhoisChannelsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQWhoisChannelsViewController.m; sourceTree = "<group>"; };
+		97F85EBC0F2713CA008486E1 /* CQFileTransferTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQFileTransferTableCell.h; sourceTree = "<group>"; };
+		97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQFileTransferTableCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -464,6 +473,8 @@
 				972EEC370F1080600068C75E /* CQWhoisNavController.h */,
 				972EE83A0F10406E0068C75E /* CQWhoisViewController.m */,
 				972EE8390F10406E0068C75E /* CQWhoisViewController.h */,
+				9703B2190F2C0D0E00E623DF /* CQFileTransferController.h */,
+				9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -561,6 +572,8 @@
 				1CBCFF2B0F04632900EEBCFB /* CQTextCompletionView.h */,
 				1CA715190EF47D6F006225CD /* CQUnreadCountView.m */,
 				1CA715180EF47D6F006225CD /* CQUnreadCountView.h */,
+				97F85EBC0F2713CA008486E1 /* CQFileTransferTableCell.h */,
+				97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -613,6 +626,8 @@
 				1C0932750D80CA4800A2705D /* NSStringAdditions.m */,
 				1C0932740D80CA4800A2705D /* NSStringAdditions.h */,
 				1C09325D0D80CA4800A2705D /* MVUtilities.h */,
+				9717342A0F2D1CA100DA9CDB /* UIImageAdditions.h */,
+				9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -895,6 +910,9 @@
 				972EE83B0F10406E0068C75E /* CQWhoisViewController.m in Sources */,
 				972EEC390F1080600068C75E /* CQWhoisNavController.m in Sources */,
 				972EECE00F1089780068C75E /* CQWhoisChannelsViewController.m in Sources */,
+				97F85EBE0F2713CA008486E1 /* CQFileTransferTableCell.m in Sources */,
+				9703B21B0F2C0D0E00E623DF /* CQFileTransferController.m in Sources */,
+				9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
