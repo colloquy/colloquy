@@ -2088,7 +2088,7 @@ end:
 	if( room ) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:noticeInfo];
 	} else {
-		if( [[sender nickname] isEqualToString:@"NickServ"] ||
+		if( [[sender nickname] isEqualToString:@"NickServ"] || [[sender nickname] isEqualToString:@"ChanServ"] ||
 		   ( [[sender nickname] isEqualToString:@"Q"] && [[self server] hasCaseInsensitiveSubstring:@"quakenet"] ) ||
 		   ( [[sender nickname] isEqualToString:@"X"] && [[self server] hasCaseInsensitiveSubstring:@"undernet"] ) ||
 		   ( [[sender nickname] isEqualToString:@"AuthServ"] && [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) ) {
@@ -2115,7 +2115,7 @@ end:
 
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
-			} else if ( ( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"ID"] ) ||
+			} else if( ( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"ID"] ) ||
 					   [msg hasCaseInsensitiveSubstring:@"identify yourself"] ||
 					   [msg hasCaseInsensitiveSubstring:@"authentication required"] ||
 					   [msg hasCaseInsensitiveSubstring:@"nickname is registered"] ||
@@ -2135,7 +2135,7 @@ end:
 				}
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
-			} else if ( ( [msg hasCaseInsensitiveSubstring:@"invalid"] ||		// NickServ/freenode, X/undernet
+			} else if( ( [msg hasCaseInsensitiveSubstring:@"invalid"] ||		// NickServ/freenode, X/undernet
 						 [msg hasCaseInsensitiveSubstring:@"incorrect"] ) &&	// NickServ/dalnet+foonetic+sorcery+azzurra+webchat+rizon, Q/quakenet, AuthServ/gamesurge
 					   ( [msg hasCaseInsensitiveSubstring:@"password"] || [msg hasCaseInsensitiveSubstring:@"identify"] || [msg hasCaseInsensitiveSubstring:@"identification"] ) ) {
 
@@ -2149,6 +2149,17 @@ end:
 				[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
+			}
+
+			// Catch "[#room] - Welcome to #room!" notices and show them in the room instead
+			AGRegex *regexForRoomInWelcomeToRoomNotice = [[AGRegex allocWithZone:nil] initWithPattern:@"^[\\[\\(](.+?)[\\]\\)]"];
+			AGRegexMatch *matchForRoomInWelcomeToRoomNotice = [regexForRoomInWelcomeToRoomNotice findInString:msg];
+			if( matchForRoomInWelcomeToRoomNotice && [[self chatRoomNamePrefixes] characterIsMember:[[matchForRoomInWelcomeToRoomNotice groupAtIndex:1] characterAtIndex:0]] ) {
+				MVChatRoom *roomInWelcomeToRoomNotice = [self joinedChatRoomWithUniqueIdentifier:[matchForRoomInWelcomeToRoomNotice groupAtIndex:1]];
+				if( roomInWelcomeToRoomNotice ) {
+					[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:roomInWelcomeToRoomNotice userInfo:noticeInfo];
+					[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
+				}
 			}
 			[msg release];
 		} else if (![self isConnected]) {
