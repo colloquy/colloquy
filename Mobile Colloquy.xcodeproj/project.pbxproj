@@ -328,8 +328,8 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9703B2190F2C0D0E00E623DF /* CQFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQFileTransferController.h; sourceTree = "<group>"; };
 		9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQFileTransferController.m; sourceTree = "<group>"; };
-		9717342A0F2D1CA100DA9CDB /* UIImageAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImageAdditions.h; sourceTree = "<group>"; };
-		9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageAdditions.m; sourceTree = "<group>"; };
+		9717342A0F2D1CA100DA9CDB /* UIImageAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIImageAdditions.h; path = Mobile/Additions/UIImageAdditions.h; sourceTree = "<group>"; };
+		9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIImageAdditions.m; path = Mobile/Additions/UIImageAdditions.m; sourceTree = "<group>"; };
 		972EE8390F10406E0068C75E /* CQWhoisViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQWhoisViewController.h; sourceTree = "<group>"; };
 		972EE83A0F10406E0068C75E /* CQWhoisViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQWhoisViewController.m; sourceTree = "<group>"; };
 		972EEC370F1080600068C75E /* CQWhoisNavController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQWhoisNavController.h; sourceTree = "<group>"; };
@@ -465,6 +465,8 @@
 				1C0937EE0D8126D400A2705D /* CQChatRoomController.h */,
 				1CC64B2C0EE97F8B00DE91D0 /* CQChatUserListViewController.m */,
 				1CC64B2B0EE97F8B00DE91D0 /* CQChatUserListViewController.h */,
+				9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */,
+				9703B2190F2C0D0E00E623DF /* CQFileTransferController.h */,
 				1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */,
 				1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */,
 				972EECDF0F1089780068C75E /* CQWhoisChannelsViewController.m */,
@@ -473,8 +475,6 @@
 				972EEC370F1080600068C75E /* CQWhoisNavController.h */,
 				972EE83A0F10406E0068C75E /* CQWhoisViewController.m */,
 				972EE8390F10406E0068C75E /* CQWhoisViewController.h */,
-				9703B2190F2C0D0E00E623DF /* CQFileTransferController.h */,
-				9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -562,6 +562,8 @@
 				1CAE8BC60EE6111900CE1AF8 /* CQChatTranscriptView.h */,
 				1C82C1A20D83D133009ABD9F /* CQConnectionTableCell.m */,
 				1C82C1A10D83D133009ABD9F /* CQConnectionTableCell.h */,
+				97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */,
+				97F85EBC0F2713CA008486E1 /* CQFileTransferTableCell.h */,
 				1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */,
 				1CC575960ED3A71900FEC2C1 /* CQPreferencesDeleteCell.h */,
 				1C6100D20ED31C8B0016F968 /* CQPreferencesSwitchCell.m */,
@@ -572,8 +574,6 @@
 				1CBCFF2B0F04632900EEBCFB /* CQTextCompletionView.h */,
 				1CA715190EF47D6F006225CD /* CQUnreadCountView.m */,
 				1CA715180EF47D6F006225CD /* CQUnreadCountView.h */,
-				97F85EBC0F2713CA008486E1 /* CQFileTransferTableCell.h */,
-				97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -605,6 +605,8 @@
 			children = (
 				1C09310A0D80C71800A2705D /* Mobile Colloquy.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
+				9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */,
+				9717342A0F2D1CA100DA9CDB /* UIImageAdditions.h */,
 				1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */,
 				1CFF6E800EDF772800D3C557 /* UITableViewAdditions.h */,
 				1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */,
@@ -626,8 +628,6 @@
 				1C0932750D80CA4800A2705D /* NSStringAdditions.m */,
 				1C0932740D80CA4800A2705D /* NSStringAdditions.h */,
 				1C09325D0D80CA4800A2705D /* MVUtilities.h */,
-				9717342A0F2D1CA100DA9CDB /* UIImageAdditions.h */,
-				9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
