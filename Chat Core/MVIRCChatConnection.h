@@ -18,6 +18,7 @@
 	NSMutableSet *_directClientConnections;
 	NSMutableDictionary *_serverInformation;
 	NSString *_server;
+	NSString *_realServer;
 	NSString *_currentNickname;
 	NSString *_nickname;
 	NSString *_username;

@@ -147,6 +147,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_chatConnection release];
 	[_directClientConnections release];
 	[_server release];
+	[_realServer release];
 	[_currentNickname release];
 	[_nickname release];
 	[_username release];
@@ -168,6 +169,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	_connectionThread = nil;
 	_directClientConnections = nil;
 	_server = nil;
+	_realServer = nil;
 	_currentNickname = nil;
 	_nickname = nil;
 	_username = nil;
@@ -1819,6 +1821,9 @@ end:
 
 	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
 
+	// set the _realServer because it's different from the server we connected to
+	MVSafeCopyAssign( &_realServer, sender );
+
 	// set the current nick name if it is not the same as what re requested (some servers/bouncers will give us a new nickname)
 	if( [parameters count] >= 1 ) {
 		NSString *nick = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
@@ -2088,7 +2093,18 @@ end:
 	if( room ) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:noticeInfo];
 	} else {
-		if( [[sender nickname] isEqualToString:@"NickServ"] || [[sender nickname] isEqualToString:@"ChanServ"] ||
+		if( [[sender nickname] isCaseInsensitiveEqualToString:_realServer] || [[sender nickname] isCaseInsensitiveEqualToString:[self server]]) {
+			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
+
+			// Catch connect notices by the server and mark them as handled
+			AGRegex *regexForConnectNotice = [[AGRegex allocWithZone:nil] initWithPattern:@"on .+? ca .+?\\(.+?\\) ft .+?\\(.+?\\)|Highest connection count|\\*\\*\\* Your host is|\\*\\*\\* You are exempt from DNS blacklists|\\*\\*\\* Notice -- motd was last changed at|\\*\\*\\* Notice -- Please read the motd if you haven't read it|\\*\\*\\* Notice -- This server runs an open proxy monitor to prevent abuse|\\*\\*\\* Notice -- If you see.*? connections.*? from|\\*\\*\\* Notice -- please disregard them, as they are the .+? in action|\\*\\*\\* Notice -- For more information please visit" options:AGRegexCaseInsensitive];
+			AGRegexMatch *matchForConnectNotice = [regexForConnectNotice findInString:msg];
+			if( matchForConnectNotice ) {
+				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
+			}
+
+			[msg release];
+		} else if( [[sender nickname] isEqualToString:@"NickServ"] || [[sender nickname] isEqualToString:@"ChanServ"] ||
 		   ( [[sender nickname] isEqualToString:@"Q"] && [[self server] hasCaseInsensitiveSubstring:@"quakenet"] ) ||
 		   ( [[sender nickname] isEqualToString:@"X"] && [[self server] hasCaseInsensitiveSubstring:@"undernet"] ) ||
 		   ( [[sender nickname] isEqualToString:@"AuthServ"] && [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) ) {
