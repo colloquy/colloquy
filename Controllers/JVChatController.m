@@ -599,30 +599,32 @@ static NSMenu *smartTranscriptMenu = nil;
 			messageString = [NSAttributedString attributedStringWithChatFormat:message options:options];
 		}
 
-		if( [[[notification userInfo] objectForKey:@"type"] length] ) {
-			if( [[[notification userInfo] objectForKey:@"type"] isEqualToString:@"identificationAcceptedAndGained"] ) {
-				
-				NSMutableDictionary *context = [NSMutableDictionary dictionary];
-				[context setObject:NSLocalizedString( @"You Have Been Identified", "identified bubble title" ) forKey:@"title"];
-				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ on %@", "identified bubble message, server message and server name" ), [messageString string], [connection server]] forKey:@"description"];
-				[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
-				[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
-				
-			} else if( [[[notification userInfo] objectForKey:@"type"] isEqualToString:@"identificationFailed"] ) {
-				
-				NSMutableDictionary *context = [NSMutableDictionary dictionary];
-				[context setObject:NSLocalizedString( @"Identification Failed", "identification failed title" ) forKey:@"title"];
-				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ on %@", "identification failed bubble message, server message and server name" ), [messageString string], [connection server]] forKey:@"description"];
-				[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
-				[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
-				
-			} else if( [[[notification userInfo] objectForKey:@"type"] hasCaseInsensitiveSuffix:@"AndLost"] ) {
-				
-				NSMutableDictionary *context = [NSMutableDictionary dictionary];
-				[context setObject:NSLocalizedString( @"You Are No Longer Identified", "no longer identified bubble title" ) forKey:@"title"];
-				[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ on %@", "no longer identified bubble message, server message and server name" ), [messageString string], [connection server]] forKey:@"description"];
-				[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
-				[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
+		if( [[notification userInfo] objectForKey:@"handled"] ) {
+			if( [[[notification userInfo] objectForKey:@"type"] length] ) {
+				if( [[[notification userInfo] objectForKey:@"type"] isEqualToString:@"identificationAcceptedAndGained"] ) {
+					
+					NSMutableDictionary *context = [NSMutableDictionary dictionary];
+					[context setObject:NSLocalizedString( @"You Have Been Identified", "identified bubble title" ) forKey:@"title"];
+					[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ on %@", "identified bubble message, server message and server name" ), [messageString string], [connection server]] forKey:@"description"];
+					[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
+					[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
+					
+				} else if( [[[notification userInfo] objectForKey:@"type"] isEqualToString:@"identificationFailed"] ) {
+					
+					NSMutableDictionary *context = [NSMutableDictionary dictionary];
+					[context setObject:NSLocalizedString( @"Identification Failed", "identification failed title" ) forKey:@"title"];
+					[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ on %@", "identification failed bubble message, server message and server name" ), [messageString string], [connection server]] forKey:@"description"];
+					[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
+					[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
+					
+				} else if( [[[notification userInfo] objectForKey:@"type"] hasCaseInsensitiveSuffix:@"AndLost"] ) {
+					
+					NSMutableDictionary *context = [NSMutableDictionary dictionary];
+					[context setObject:NSLocalizedString( @"You Are No Longer Identified", "no longer identified bubble title" ) forKey:@"title"];
+					[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ on %@", "no longer identified bubble message, server message and server name" ), [messageString string], [connection server]] forKey:@"description"];
+					[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
+					[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
+				}
 			}
 		} else if( [[user nickname] isEqualToString:@"MemoServ"] && [[messageString string] rangeOfString:@"new memo" options:NSCaseInsensitiveSearch].location != NSNotFound && [[messageString string] rangeOfString:@" no " options:NSCaseInsensitiveSearch].location == NSNotFound ) {
 

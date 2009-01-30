@@ -2132,10 +2132,11 @@ end:
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
 			} else if( ( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"ID"] ) ||
-					   [msg hasCaseInsensitiveSubstring:@"identify yourself"] ||
-					   [msg hasCaseInsensitiveSubstring:@"authentication required"] ||
-					   [msg hasCaseInsensitiveSubstring:@"nickname is registered"] ||
-					   [msg hasCaseInsensitiveSubstring:@"nickname is owned"] ) {
+					  [msg hasCaseInsensitiveSubstring:@"identify yourself"] ||
+					  [msg hasCaseInsensitiveSubstring:@"authentication required"] ||
+					  [msg hasCaseInsensitiveSubstring:@"nickname is registered"] ||
+					  [msg hasCaseInsensitiveSubstring:@"nickname is owned"] ||
+					  [msg hasCaseInsensitiveSubstring:@"nick belongs to another user"] ) {
 
 				if( [[self localUser] isIdentified] ) {
 					[noticeInfo setObject:@"identificationNeededAndLost" forKey:@"type"];
@@ -2165,6 +2166,9 @@ end:
 				[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
+			} else if( [msg isCaseInsensitiveEqualToString:@"Remember: Nobody from CService will ever ask you for your password, do NOT give out your password to anyone claiming to be CService."] ||													// Undernet
+					  [msg isCaseInsensitiveEqualToString:@"REMINDER: Do not share your password with anyone. DALnet staff will not ask for your password unless"] || [msg hasCaseInsensitiveSubstring:@"you are seeking their assistance. See"] ) {	// DALnet
+				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 			}
 
 			// Catch "[#room] - Welcome to #room!" notices and show them in the room instead
