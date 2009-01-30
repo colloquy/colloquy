@@ -2096,12 +2096,19 @@ end:
 		if( [[sender nickname] isCaseInsensitiveEqualToString:_realServer] || [[sender nickname] isCaseInsensitiveEqualToString:[self server]]) {
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
 
+			// Auto reply to servers asking us to send a PASS because they could not detect an identd
+			if (![self isConnected]) {				
+				AGRegex *regex = [[AGRegex allocWithZone:nil] initWithPattern:@"/QUOTE PASS (\\w+)" options:AGRegexCaseInsensitive];
+				AGRegexMatch *match = [regex findInString:msg];
+				if( match ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", [match groupAtIndex:1]];
+				[regex release];
+			}
+
 			// Catch connect notices by the server and mark them as handled
 			AGRegex *regexForConnectNotice = [[AGRegex allocWithZone:nil] initWithPattern:@"on .+? ca .+?\\(.+?\\) ft .+?\\(.+?\\)|Highest connection count|\\*\\*\\* Your host is|\\*\\*\\* You are exempt from DNS blacklists|\\*\\*\\* Notice -- motd was last changed at|\\*\\*\\* Notice -- Please read the motd if you haven't read it|\\*\\*\\* Notice -- This server runs an open proxy monitor to prevent abuse|\\*\\*\\* Notice -- If you see.*? connections.*? from|\\*\\*\\* Notice -- please disregard them, as they are the .+? in action|\\*\\*\\* Notice -- For more information please visit" options:AGRegexCaseInsensitive];
 			AGRegexMatch *matchForConnectNotice = [regexForConnectNotice findInString:msg];
-			if( matchForConnectNotice ) {
-				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
-			}
+			if( matchForConnectNotice ) [noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
+			[regexForConnectNotice release];
 
 			[msg release];
 		} else if( [[sender nickname] isEqualToString:@"NickServ"] || [[sender nickname] isEqualToString:@"ChanServ"] ||
@@ -2128,7 +2135,6 @@ end:
 					[noticeInfo setObject:@"identificationAccepted" forKey:@"type"];
 				}
 				[[self localUser] _setIdentified:YES];
-
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
 			} else if( ( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"ID"] ) ||
@@ -2181,20 +2187,11 @@ end:
 					[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 				}
 			}
-			[msg release];
-		} else if (![self isConnected]) {
-			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
+			[regexForRoomInWelcomeToRoomNotice release];
 
-			AGRegex *regex = [[AGRegex allocWithZone:nil] initWithPattern:@"/QUOTE PASS (\\w+)" options:AGRegexCaseInsensitive];
-			AGRegexMatch *match = [regex findInString:msg];
-
-			if( match ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", [match groupAtIndex:1]];
-
-			[regex release];
 			[msg release];
 		}
-		if( target == room || ( [target isKindOfClass:[MVChatUser class]] && [target isLocalUser] ) )
-			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:noticeInfo];
+		if( target == room || ( [target isKindOfClass:[MVChatUser class]] && [target isLocalUser] ) ) [[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:noticeInfo];
 	}
 }
 
