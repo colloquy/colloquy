@@ -774,7 +774,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	// Parsing as defined in 2.3.1 at http://www.irchelp.org/irchelp/rfc/rfc2812.txt
 
-	if( len <= 2 || len > 512 )
+	if( len <= 2 )
 		goto end; // bad message
 
 #define checkAndMarkIfDone() if( line == end ) done = YES
