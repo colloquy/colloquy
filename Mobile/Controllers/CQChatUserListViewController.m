@@ -445,7 +445,7 @@ static NSString *membersFilteredCountFormat;
 
 			if ((localUserIsOperator || localUserIsAdministrator || localUserIsFounder) && ((localUserIsOperator && !(selectedUserIsAdministrator || selectedUserIsFounder)) || (localUserIsAdministrator && !selectedUserIsFounder) || localUserIsFounder)) {
 				if ([features containsObject:MVChatRoomMemberOperatorFeature]) {
-					if (selectedUserIsOperator) [operatorSheet addButtonWithTitle:NSLocalizedString(@"Deomote from Operator", @"Demote from Operator button title")];
+					if (selectedUserIsOperator) [operatorSheet addButtonWithTitle:NSLocalizedString(@"Demote from Operator", @"Demote from Operator button title")];
 					else [operatorSheet addButtonWithTitle:NSLocalizedString(@"Promote to Operator", @"Promote to Operator button title")];
 
 					[context setObject:[NSNumber numberWithUnsignedInteger:(MVChatRoomMemberOperatorMode | (selectedUserIsOperator ? (1 << 16) : 0))] forKey:[NSNumber numberWithUnsignedInteger:(operatorSheet.numberOfButtons - 1)]];
