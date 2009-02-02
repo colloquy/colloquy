@@ -387,7 +387,7 @@
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois", @"/dcc", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois", @"/dcc", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -418,7 +418,7 @@
 	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"]) {
 		static NSArray *commandsNotRequiringConnection;
 		if (!commandsNotRequiringConnection)
-			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", nil];
+			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", nil];
 
 		// Send as a command.
 		NSScanner *scanner = [NSScanner scannerWithString:text];
@@ -657,6 +657,33 @@
 		[self _handleSearchForURL:@"http://www.amazon.ca/s/field-keywords=%@" withQuery:query withLocale:languageCode];
 	else [self _handleSearchForURL:@"http://www.amazon.com/gp/aw/s.html?k=%@" withQuery:query withLocale:languageCode];
 
+	return YES;
+}
+
+- (BOOL) handleHelpCommandWithArguments:(NSString *) arguments {
+	NSString *urlString = nil;
+
+	if ( [arguments hasCaseInsensitiveSubstring:@"join"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#HowdoIjoinanewchatroommessageauser";
+	else if ( [arguments hasCaseInsensitiveSubstring:@"background"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#CanIrunMobileColloquyinthebackground";
+	else if ( [arguments hasCaseInsensitiveSubstring:@"setting"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#HowdoIchangethedefaultsettings";
+	else if ( [arguments hasCaseInsensitiveSubstring:@"command"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#Whatcommandsaresupported";
+	else if ( [arguments hasCaseInsensitiveSubstring:@"topic"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#HowdoIchangethetopic";
+	else if ( [arguments hasCaseInsensitiveSubstring:@"other"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#HowdoIgethelpforsomethingthatisntlistedhere";
+	else if ( [arguments hasCaseInsensitiveSubstring:@"bug"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#HowdoIreportabug";
+	else if ( [arguments hasCaseInsensitiveSubstring:@"style"] || [arguments hasCaseInsensitiveSubstring:@"theme"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#HowdoIchangethewaymessageslook";
+	else if ( [arguments hasCaseInsensitiveSubstring:@"completion"] || [arguments hasCaseInsensitiveSubstring:@"popup"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#Howdothecompletionpopupswork";	
+	else urlString = @"http://colloquy.info/project/wiki/MobileFAQs";
+
+	NSURL *url = [NSURL URLWithString:urlString];	
+
+	[self _openURL:url preferBuiltInBrowser:NO];
+	
+	return YES;
+}
+
+- (BOOL) handleFaqCommandWithArguments:(NSString *) arguments {
+	[self handleHelpCommandWithArguments:arguments];
+	
 	return YES;
 }
 
