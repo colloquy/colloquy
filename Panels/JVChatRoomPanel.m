@@ -274,10 +274,12 @@
 	if( [menuItem action] == @selector( addToFavorites: ) && [menuItem tag] == 10 )
 		[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Add \"%@ (%@)\"", "add to favorites contextual menu"), _target, [[self connection] server]]];
 	else if( [menuItem action] == @selector( toggleAutoJoin: ) ) {
-		NSMutableArray *rooms = [[MVConnectionsController defaultController] joinRoomsForConnection:[self connection]];
-		if( [rooms containsObject:[_target name]] )
-			[menuItem setState:NSOnState];
-		else [menuItem setState:NSOffState];
+		[menuItem setState:NSOffState];
+		NSEnumerator *enumerator = [[[MVConnectionsController defaultController] joinRoomsForConnection:[self connection]] objectEnumerator];
+		id object = nil;
+		while( (object = [enumerator nextObject]) )
+			if( [_target isEqual:[[self connection] chatRoomWithName:(NSString *)object]] )
+				[menuItem setState:NSOnState];
 	}
 
 	return [super validateMenuItem: menuItem];
@@ -303,10 +305,13 @@
 
 - (IBAction) toggleAutoJoin:(id) sender {
 	NSMutableArray *rooms = [[[MVConnectionsController defaultController] joinRoomsForConnection:[self connection]] mutableCopy];
-
-	if( [rooms containsObject:[_target name]] )
-		[rooms removeObject:[_target name]];
-	else [rooms addObject:[_target name]];
+	if( [(NSMenuItem *)sender state] == NSOnState ) {
+		NSEnumerator *enumerator = [rooms objectEnumerator];
+		id object = nil;
+		while( (object = [enumerator nextObject]) )
+			if( [_target isEqual:[[self connection] chatRoomWithName:(NSString *)object]] )
+				[rooms removeObject:object];
+	} else [rooms addObject:[_target name]];
 
 	[[MVConnectionsController defaultController] setJoinRooms:rooms forConnection:[self connection]];
 
