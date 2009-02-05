@@ -145,9 +145,11 @@
 				reason = [arguments attributedSubstringFromRange:NSMakeRange( [scanner scanLocation] + 1, ( [arguments length] - [scanner scanLocation] - 1 ) )];
 
 			MVChatUser *user = nil;
-			if ( [member hasCaseInsensitiveSubstring:@"!"] || [member hasCaseInsensitiveSubstring:@"@"] )
+			if ( [member hasCaseInsensitiveSubstring:@"!"] || [member hasCaseInsensitiveSubstring:@"@"] ) {
+				if ( ! [member hasCaseInsensitiveSubstring:@"!"] && [member hasCaseInsensitiveSubstring:@"@"] )
+					member = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:member];
 				user = [MVChatUser wildcardUserFromString:member];
-			else user = [[[room target] memberUsersWithNickname:member] anyObject];
+			} else user = [[[room target] memberUsersWithNickname:member] anyObject];
 			
 			if( user ) {
 				[[room target] addBanForUser:user];
@@ -250,9 +252,11 @@
 			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
 					MVChatUser *user = nil;
-					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] )
+					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] ) {
+						if ( ! [arg hasCaseInsensitiveSubstring:@"!"] && [arg hasCaseInsensitiveSubstring:@"@"] )
+							arg = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:arg];
 						user = [MVChatUser wildcardUserFromString:arg];
-					else user = [[[room target] memberUsersWithNickname:arg] anyObject];
+					} else user = [[[room target] memberUsersWithNickname:arg] anyObject];
 
 					if( user ) [[room target] addBanForUser:user];
 				}
@@ -265,9 +269,11 @@
 			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
 					MVChatUser *user = nil;
-					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] )
+					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] ) {
+						if ( ! [arg hasCaseInsensitiveSubstring:@"!"] && [arg hasCaseInsensitiveSubstring:@"@"] )
+							arg = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:arg];
 						user = [MVChatUser wildcardUserFromString:arg];
-					else user = [[[room target] memberUsersWithNickname:arg] anyObject];
+					} else user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					
 					if( user ) [[room target] removeBanForUser:user];
 				}

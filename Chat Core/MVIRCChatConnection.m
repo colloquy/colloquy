@@ -1136,9 +1136,11 @@ end:
 #endif
 
 				MVChatUser *user = nil;
-				if ( [member hasCaseInsensitiveSubstring:@"!"] || [member hasCaseInsensitiveSubstring:@"@"] )
+				if ( [member hasCaseInsensitiveSubstring:@"!"] || [member hasCaseInsensitiveSubstring:@"@"] ) {
+					if ( ! [member hasCaseInsensitiveSubstring:@"!"] && [member hasCaseInsensitiveSubstring:@"@"] )
+						member = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:member];
 					user = [MVChatUser wildcardUserFromString:member];
-				else user = [[room memberUsersWithNickname:member] anyObject];
+				} else user = [[room memberUsersWithNickname:member] anyObject];
 
 				if( user ) {
 					[room addBanForUser:user];
@@ -1257,9 +1259,11 @@ end:
 			while( ( userString = [enumerator nextObject] ) ) {
 				if( [userString length] ) {
 					MVChatUser *user = nil;
-					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] )
+					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] ) {
+						if ( ! [userString hasCaseInsensitiveSubstring:@"!"] && [userString hasCaseInsensitiveSubstring:@"@"] )
+							userString = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:userString];
 						user = [MVChatUser wildcardUserFromString:userString];
-					else user = [[room memberUsersWithNickname:userString] anyObject];
+					} else user = [[room memberUsersWithNickname:userString] anyObject];
 					
 					if( user ) [room addBanForUser:user];
 				}
@@ -1274,9 +1278,11 @@ end:
 			while( ( userString = [enumerator nextObject] ) ) {
 				if( [userString length] ) {
 					MVChatUser *user = nil;
-					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] )
+					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] ) {
+						if ( ! [userString hasCaseInsensitiveSubstring:@"!"] && [userString hasCaseInsensitiveSubstring:@"@"] )
+							userString = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:userString];
 						user = [MVChatUser wildcardUserFromString:userString];
-					else user = [[room memberUsersWithNickname:userString] anyObject];
+					} else user = [[room memberUsersWithNickname:userString] anyObject];
 					
 					if( user ) [room removeBanForUser:user];
 				}
