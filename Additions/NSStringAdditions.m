@@ -936,6 +936,17 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
+- (NSString *) stringByReversingString:(NSString *) normalString {
+	NSMutableString *reversedString = [[NSMutableString alloc] init];
+	
+	for (int index = [normalString length] - 1; index >= 0; index--)
+		[reversedString appendString:[normalString substringWithRange:NSMakeRange(index, 1)]];
+
+	return [reversedString autorelease];
+}
+
+#pragma mark -
+
 - (NSString *) stringByEncodingXMLSpecialCharactersAsEntities {
 	NSCharacterSet *special = [NSCharacterSet characterSetWithCharactersInString:@"&<>\"'"];
 	NSRange range = [self rangeOfCharacterFromSet:special options:NSLiteralSearch];

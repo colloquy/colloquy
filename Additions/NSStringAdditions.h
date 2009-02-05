@@ -41,6 +41,8 @@ BOOL isValidUTF8( const char *s, unsigned len );
 - (NSString *) stringByStrippingIllegalXMLCharacters;
 - (NSString *) stringByStrippingXMLTags;
 
+- (NSString *) stringByReversingString:(NSString *) normalString;
+
 - (NSString *) stringWithDomainNameSegmentOfAddress;
 
 - (NSArray *) componentsSeparatedByXMLTags;

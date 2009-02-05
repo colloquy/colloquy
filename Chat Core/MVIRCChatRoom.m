@@ -2,6 +2,10 @@
 #import "MVIRCChatUser.h"
 #import "MVIRCChatConnection.h"
 
+#import <AGRegex/AGRegex.h> 
+
+#import "NSStringAdditions.h"
+
 @implementation MVIRCChatRoom
 - (id) initWithName:(NSString *) roomName andConnection:(MVIRCChatConnection *) roomConnection {
 	if( ( self = [self init] ) ) {
@@ -250,14 +254,62 @@
 }
 
 - (void) addBanForUser:(MVChatUser *) user {
+	if ( [user isWildcardUser] || ! [user username] || ! [user address] )
+		[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ +b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
+	else {
+		NSString *addressToBan = [self modifyAddressForBan:user];
+
+		[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ +b *!%@@%@", [self name], [user username], addressToBan ];
+	}
 	[super addBanForUser:user];
-	[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ +b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
 }
 
 - (void) removeBanForUser:(MVChatUser *) user {
+	if ( [user isWildcardUser] || ! [user username] || ! [user address] )
+		[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ -b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
+	else {
+		NSString *addressToBan = [self modifyAddressForBan:user];
+		
+		[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ -b *!%@@%@", [self name], [user username], addressToBan ];
+	}
 	[super removeBanForUser:user];
-	[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ -b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
 }
+
+- (NSString *) modifyAddressForBan:(MVChatUser *) user {
+	NSCharacterSet *newSectionOfHostmaskIndicators = [NSCharacterSet characterSetWithCharactersInString:@".:/"];
+	NSString *addressMaskToRemove = nil;
+	NSString *addressMaskToBan = @"*";
+	NSScanner *scanner = [[NSScanner alloc] init];
+	
+	AGRegex *regexForIPv4Addresses = [[AGRegex allocWithZone:nil] initWithPattern:@"\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b"];
+	AGRegex *regexForIPv6Addresses = [[AGRegex allocWithZone:nil] initWithPattern:@"/^\\s*((([0-9A-Fa-f]{1,4}:){7}(([0-9A-Fa-f]{1,4})|:))|(([0-9A-Fa-f]{1,4}:){6}(:|((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})|(:[0-9A-Fa-f]{1,4})))|(([0-9A-Fa-f]{1,4}:){5}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){0,1}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){0,2}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){0,3}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:)(:[0-9A-Fa-f]{1,4}){0,4}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(:(:[0-9A-Fa-f]{1,4}){0,5}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})))(%.+)?\\s*$/"];
+	AGRegexMatch *IPv4Match = [regexForIPv4Addresses findInString:[user address]];
+	AGRegexMatch *IPv6Match = [regexForIPv6Addresses findInString:[user address]];
+
+	[scanner setCharactersToBeSkipped:nil];
+	
+	if ( IPv4Match || IPv6Match ) {
+		NSString *reversedIP = [[user address] stringByReversingString:[user address]];
+		scanner = [NSScanner scannerWithString:reversedIP];
+
+		[scanner scanUpToCharactersFromSet:newSectionOfHostmaskIndicators intoString:&addressMaskToRemove];
+		addressMaskToBan = [[[user address] substringToIndex:([[user address] length] - [addressMaskToRemove length])] stringByAppendingString:@"*"];
+	} else {
+		scanner = [NSScanner scannerWithString:[user address]];
+
+		[scanner scanUpToCharactersFromSet:newSectionOfHostmaskIndicators intoString:&addressMaskToRemove];
+		addressMaskToBan = [addressMaskToBan stringByAppendingString:[[user address] substringFromIndex:[addressMaskToRemove length]]];
+	}
+
+	[regexForIPv4Addresses release];
+	[regexForIPv6Addresses release];
+	[IPv4Match release];
+	[IPv6Match release];
+	
+	if ( ! [scanner isAtEnd] ) return addressMaskToBan;
+	else return [user address];
+}
+
 @end
 
 #pragma mark -

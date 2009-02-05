@@ -144,11 +144,14 @@
 			if( [arguments length] >= [scanner scanLocation] + 1 )
 				reason = [arguments attributedSubstringFromRange:NSMakeRange( [scanner scanLocation] + 1, ( [arguments length] - [scanner scanLocation] - 1 ) )];
 
-			MVChatUser *user = [MVChatUser wildcardUserFromString:member];
+			MVChatUser *user = nil;
+			if ( [member hasSubstring:@"!"] || [member hasCaseInsensitiveSubstring:@"@"] )
+				user = [MVChatUser wildcardUserFromString:member];
+			else user = [[[room target] memberUsersWithNickname:member] anyObject];
+			
 			if( user ) {
 				[[room target] addBanForUser:user];
-				user = [[[room target] memberUsersWithNickname:[user nickname]] anyObject];
-				if( user ) [[room target] kickOutMemberUser:user forReason:reason];
+				[[room target] kickOutMemberUser:user forReason:reason];
 				return YES;
 			}
 			return NO;
@@ -246,7 +249,11 @@
 			NSString *arg = nil;
 			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
-					MVChatUser *user = [MVChatUser wildcardUserFromString:arg];
+					MVChatUser *user = nil;
+					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] )
+						user = [MVChatUser wildcardUserFromString:arg];
+					else user = [[[room target] memberUsersWithNickname:arg] anyObject];
+
 					if( user ) [[room target] addBanForUser:user];
 				}
 			}
@@ -257,7 +264,11 @@
 			NSString *arg = nil;
 			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
-					MVChatUser *user = [MVChatUser wildcardUserFromString:arg];
+					MVChatUser *user = nil;
+					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] )
+						user = [MVChatUser wildcardUserFromString:arg];
+					else user = [[[room target] memberUsersWithNickname:arg] anyObject];
+					
 					if( user ) [[room target] removeBanForUser:user];
 				}
 			}

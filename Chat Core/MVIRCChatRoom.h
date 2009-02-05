@@ -9,6 +9,7 @@
 	BOOL _bansSynced;
 }
 - (id) initWithName:(NSString *) name andConnection:(MVIRCChatConnection *) connection;
+- (NSString *) modifyAddressForBan:(MVChatUser *) user;
 @end
 
 #pragma mark -
