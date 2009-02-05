@@ -145,7 +145,7 @@
 				reason = [arguments attributedSubstringFromRange:NSMakeRange( [scanner scanLocation] + 1, ( [arguments length] - [scanner scanLocation] - 1 ) )];
 
 			MVChatUser *user = nil;
-			if ( [member hasSubstring:@"!"] || [member hasCaseInsensitiveSubstring:@"@"] )
+			if ( [member hasCaseInsensitiveSubstring:@"!"] || [member hasCaseInsensitiveSubstring:@"@"] )
 				user = [MVChatUser wildcardUserFromString:member];
 			else user = [[[room target] memberUsersWithNickname:member] anyObject];
 			
