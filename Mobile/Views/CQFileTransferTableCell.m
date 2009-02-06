@@ -31,38 +31,6 @@
 
 @implementation CQFileTransferTableCell
 
-- (id) initWithFrame:(CGRect) frame reuseIdentifier:(NSString *) reuseIdentifier {
-    if (!(self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier]))
-		return nil;
-	
-	_iconImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-	_progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-	_userLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-	_userLabel.textColor = self.textColor;
-	_userLabel.highlightedTextColor = self.selectedTextColor;
-	_userTitle = [[UILabel alloc] initWithFrame:CGRectZero];
-	_userTitle.font = [UIFont boldSystemFontOfSize:18.];
-	_userTitle.textColor = self.textColor;
-	_userTitle.highlightedTextColor = self.selectedTextColor;
-	_fileLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-	_fileLabel.textColor = self.textColor;
-	_fileLabel.highlightedTextColor = self.selectedTextColor;
-	_fileTitle = [[UILabel alloc] initWithFrame:CGRectZero];
-	_fileTitle.font = [UIFont boldSystemFontOfSize:18.];
-	_fileTitle.textColor = self.textColor;
-	_fileTitle.highlightedTextColor = self.selectedTextColor;
-	
-	[self.contentView addSubview:_iconImageView];
-	[self.contentView addSubview:_progressView];
-	[self.contentView addSubview:_userLabel];
-	[self.contentView addSubview:_userTitle];
-	[self.contentView addSubview:_fileLabel];
-	[self.contentView addSubview:_fileTitle];
-	
-    return self;
-}
-
-
 - (void) dealloc {
 	[_iconImageView release];
 	[_progressView release];
@@ -74,6 +42,7 @@
 	[_removeControl release];
 	[_removeConfirmationText release];
 #endif
+	[_thumb release];
     [super dealloc];
 }
 
@@ -89,7 +58,15 @@
 	}
 	self.progress = (double)controller.transfer.transfered/(double)controller.transfer.finalSize;
 	self.upload = controller.transfer.upload;
+	
+	if (_thumb == nil && controller.thumbnailAvailable) {
+		_thumb = [[controller thumbnailWithSize:CGSizeMake(55., 55.)] retain];
+	}
+	
 	self.status = controller.transfer.status;
+	
+	_controller = controller;
+	controller.cell = self;
 }
 
 
@@ -162,32 +139,53 @@
 }
 
 - (void) setStatus:(MVFileTransferStatus) status {
-	_status = status;
-	if (_status == MVFileTransferNormalStatus) {
-		_userLabel.alpha = _userTitle.alpha = kNormalAlpha;
-		_fileLabel.alpha = _fileTitle.alpha = kNormalAlpha;
-		_iconImageView.alpha = _progressView.alpha = kNormalAlpha;
-		if (_upload) {
-			_iconImageView.image = [UIImage imageNamed:@""];
+	if (_status != status) {
+		[UIView beginAnimations:nil context:NULL];
+		_status = status;
+		if (_status == MVFileTransferNormalStatus) {
+			_userLabel.alpha = _userTitle.alpha = kNormalAlpha;
+			_fileLabel.alpha = _fileTitle.alpha = kNormalAlpha;
+			_iconImageView.alpha = _progressView.alpha = kNormalAlpha;
+			if (_upload) {
+				//_iconImageView.image = [UIImage imageNamed:@"directChatIcon.png"];
+				_iconImageView.image = _thumb;
+			} else {
+				_iconImageView.image = [UIImage imageNamed:@"directChatIcon.png"];
+			}
 		} else {
-			_iconImageView.image = [UIImage imageNamed:@""];
+			_userLabel.alpha = _userTitle.alpha = kOtherAlpha;
+			_fileLabel.alpha = _fileTitle.alpha = kOtherAlpha;
+			_iconImageView.alpha = _progressView.alpha = kOtherAlpha;
+			
+			if (_status == MVFileTransferDoneStatus) {
+				//_iconImageView.image = [UIImage imageNamed:@""];
+				_iconImageView.image = _thumb;
+			} else if (_status == MVFileTransferHoldingStatus) {
+				if (_upload) {
+					_iconImageView.image = _thumb;
+				}
+				else {
+					_iconImageView.image = [UIImage imageNamed:@"directChatIcon.png"];
+				}
+			} else if (_status == MVFileTransferStoppedStatus) {
+				if (_upload) {
+					_iconImageView.image = _thumb;
+				}
+				else {
+					_iconImageView.image = [UIImage imageNamed:@"directChatIcon.png"];
+				}
+			} else if (_status == MVFileTransferErrorStatus) {
+				if (_upload) {
+					_iconImageView.image = _thumb;
+				}
+				else {
+					_iconImageView.image = [UIImage imageNamed:@"directChatIcon.png"];
+				}
+			}
 		}
-	} else {
-		_userLabel.alpha = _userTitle.alpha = kOtherAlpha;
-		_fileLabel.alpha = _fileTitle.alpha = kOtherAlpha;
-		_iconImageView.alpha = _progressView.alpha = kOtherAlpha;
-		
-		if (_status == MVFileTransferDoneStatus) {
-			_iconImageView.image = [UIImage imageNamed:@""];
-		} else if (_status == MVFileTransferHoldingStatus) {
-			_iconImageView.image = [UIImage imageNamed:@""];
-		} else if (_status == MVFileTransferStoppedStatus) {
-			_iconImageView.image = [UIImage imageNamed:@""];
-		} else if (_status == MVFileTransferErrorStatus) {
-			_iconImageView.image = [UIImage imageNamed:@""];
-		}
+		[UIView commitAnimations];
+		[self setNeedsLayout];
 	}
-	[self setNeedsLayout];
 }
 
 #pragma mark -
@@ -207,10 +205,9 @@
 - (void) prepareForReuse {
 	[super prepareForReuse];
 	
-	self.user = @"";
-	self.file = @"";
-	[_iconImageView release];
-	_iconImageView = nil;
+	_iconImageView.image = nil;
+	[_thumb release];
+	_thumb = nil;
 	
 #ifdef ENABLE_SECRETS
 	self.removeConfirmationText = nil;
@@ -224,7 +221,7 @@
 	if (animated)
 		[UIView beginAnimations:nil context:NULL];
 	
-	CGFloat alpha = (_status == MVFileTransferNormalStatus || selected ? kNormalAlpha : kOtherAlpha);
+	CGFloat alpha = (_status == MVFileTransferNormalStatus || selected) ? kNormalAlpha : kOtherAlpha;
 	_userLabel.alpha = _userTitle.alpha = alpha;
 	_fileLabel.alpha = _fileTitle.alpha = alpha;
 	_iconImageView.alpha = _progressView.alpha = alpha;
@@ -249,56 +246,42 @@
 - (void) layoutSubviews {
 	[super layoutSubviews];
 	
-#define TOP_TEXT_MARGIN -1.
-#define LEFT_MARGIN 10.
 #define NO_ICON_LEFT_MARGIN 14.
-#define RIGHT_MARGIN 6.
+#define RIGHT_MARGIN 8.
 #define ICON_RIGHT_MARGIN 10.
-#define LABEL_SPACING_VERTICAL 2.
-#define LABEL_SPACING_HORIZONTAL 5.
+#define LABEL_SPACING 5.
 	
 	CGRect contentRect = self.contentView.bounds;
-	
-	CGRect frame;
-	if (!_iconImageView.hidden) {
-		frame = _iconImageView.frame;
-		frame.size = [_iconImageView sizeThatFits:_iconImageView.bounds.size];
-		frame.origin.x = contentRect.origin.x + LEFT_MARGIN;
-		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
-		_iconImageView.frame = frame;
-	}
-	
-	frame = _userTitle.frame;
-	frame.size = [_userTitle sizeThatFits:_userTitle.bounds.size];
-	
-	CGFloat labelHeights = frame.size.height;
-	labelHeights += 2*(labelHeights - LABEL_SPACING_VERTICAL);
-	
+		
 	CGFloat leftOrigin = (_iconImageView.hidden ? NO_ICON_LEFT_MARGIN : CGRectGetMaxX(_iconImageView.frame) + ICON_RIGHT_MARGIN);
 	
-	frame.origin.x = leftOrigin;
-	frame.origin.y = round((contentRect.size.height / 2.) - (labelHeights / 2.)) + TOP_TEXT_MARGIN;
-	frame.size.width = contentRect.size.width - frame.origin.x - (!self.showingDeleteConfirmation ? RIGHT_MARGIN : 0.);
+	CGRect frame;
+	CGRect fileTitleFrame;
 	
-	frame.size.height = _progressView.frame.size.height;
+	frame = _progressView.frame;
+	frame.origin.x = leftOrigin;
+	frame.size.width = contentRect.size.width - leftOrigin - (!self.showingDeleteConfirmation ? RIGHT_MARGIN : 0.);
 	_progressView.frame = frame;
 	
-	frame.size = _userTitle.frame.size;
-	frame.origin.y = frame.origin.y + frame.size.height - LABEL_SPACING_VERTICAL;
+	[_fileTitle sizeToFit];
+	
+	frame = _fileTitle.frame;
+	frame.origin.x = leftOrigin;
+	_fileTitle.frame = fileTitleFrame = frame;
+	
+	frame = _userTitle.frame;
+	frame.origin.x = fileTitleFrame.origin.x;
+	frame.size.width = fileTitleFrame.size.width;
 	_userTitle.frame = frame;
 	
-	frame.origin.x = leftOrigin + frame.size.width + LABEL_SPACING_HORIZONTAL;
-	frame.size = [_userLabel sizeThatFits:_userLabel.bounds.size];
+	frame = _userLabel.frame;
+	frame.origin.x = fileTitleFrame.origin.x + fileTitleFrame.size.width + LABEL_SPACING;
 	frame.size.width = contentRect.size.width - frame.origin.x - (!self.showingDeleteConfirmation ? RIGHT_MARGIN : 0.);
 	_userLabel.frame = frame;
 	
-	frame.origin.x = leftOrigin;
-	frame.origin.y = frame.origin.y + frame.size.height - LABEL_SPACING_VERTICAL;
-	_fileTitle.frame = frame;
-	
-	frame.origin.x = leftOrigin + frame.size.width + LABEL_SPACING_HORIZONTAL;
-	frame.size = [_fileLabel sizeThatFits:_fileLabel.bounds.size];
-	frame.size.width = contentRect.size.width - frame.origin.x - (!self.showingDeleteConfirmation ? RIGHT_MARGIN : 0.);
+	frame = _fileLabel.frame;
+	frame.origin.x = _userLabel.frame.origin.x;
+	frame.size.width = _userLabel.frame.size.width;
 	_fileLabel.frame = frame;
 }
 

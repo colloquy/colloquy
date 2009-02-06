@@ -723,7 +723,7 @@
 
 #pragma mark -
 
-- (BOOL) handleDCCCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleDccCommandWithArguments:(NSString *) arguments {
 	if (arguments.length == 0) {
 		return NO;
 	}

@@ -134,6 +134,7 @@
 		972EE83B0F10406E0068C75E /* CQWhoisViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 972EE83A0F10406E0068C75E /* CQWhoisViewController.m */; };
 		972EEC390F1080600068C75E /* CQWhoisNavController.m in Sources */ = {isa = PBXBuildFile; fileRef = 972EEC380F1080600068C75E /* CQWhoisNavController.m */; };
 		972EECE00F1089780068C75E /* CQWhoisChannelsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 972EECDF0F1089780068C75E /* CQWhoisChannelsViewController.m */; };
+		9799B3BA0F3C1E0100526B1E /* FileTransferTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9799B3B90F3C1E0100526B1E /* FileTransferTableCell.xib */; };
 		97F85EBE0F2713CA008486E1 /* CQFileTransferTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */; };
 /* End PBXBuildFile section */
 
@@ -336,6 +337,7 @@
 		972EEC380F1080600068C75E /* CQWhoisNavController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQWhoisNavController.m; sourceTree = "<group>"; };
 		972EECDE0F1089780068C75E /* CQWhoisChannelsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQWhoisChannelsViewController.h; sourceTree = "<group>"; };
 		972EECDF0F1089780068C75E /* CQWhoisChannelsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQWhoisChannelsViewController.m; sourceTree = "<group>"; };
+		9799B3B90F3C1E0100526B1E /* FileTransferTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FileTransferTableCell.xib; sourceTree = "<group>"; };
 		97F85EBC0F2713CA008486E1 /* CQFileTransferTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQFileTransferTableCell.h; sourceTree = "<group>"; };
 		97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQFileTransferTableCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -562,8 +564,8 @@
 				1CAE8BC60EE6111900CE1AF8 /* CQChatTranscriptView.h */,
 				1C82C1A20D83D133009ABD9F /* CQConnectionTableCell.m */,
 				1C82C1A10D83D133009ABD9F /* CQConnectionTableCell.h */,
-				97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */,
 				97F85EBC0F2713CA008486E1 /* CQFileTransferTableCell.h */,
+				97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */,
 				1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */,
 				1CC575960ED3A71900FEC2C1 /* CQPreferencesDeleteCell.h */,
 				1C6100D20ED31C8B0016F968 /* CQPreferencesSwitchCell.m */,
@@ -647,6 +649,7 @@
 				1CA91CC90DFC976D002DDBB4 /* Colloquy.xib */,
 				1CE69F810EE2F50100389442 /* ChatView.xib */,
 				1C124AD50F09F635008F181B /* Browser.xib */,
+				9799B3B90F3C1E0100526B1E /* FileTransferTableCell.xib */,
 				1C0937320D80E72F00A2705D /* Icon.png */,
 				1CC64A9A0EE9152D00DE91D0 /* Default.png */,
 				1C840CBD0F1723F4004665DC /* iTunesArtwork */,
@@ -815,6 +818,7 @@
 				896E84610F15AB6C00D810FE /* notes.css in Resources */,
 				1C840BFA0F15BD9A004665DC /* notesBackground.png in Resources */,
 				89997FAC0F171EB600CF0AA2 /* standard-grey-dark.css in Resources */,
+				9799B3BA0F3C1E0100526B1E /* FileTransferTableCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

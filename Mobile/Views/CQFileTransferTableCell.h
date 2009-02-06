@@ -19,18 +19,21 @@
 
 @interface CQFileTransferTableCell : UITableViewCell {
     @protected
-	UIImageView *_iconImageView;
-	UIProgressView *_progressView;
-	UILabel *_userLabel;
-	UILabel *_userTitle;
-	UILabel *_fileLabel;
-	UILabel *_fileTitle;
+	IBOutlet UIImageView *_iconImageView;
+	IBOutlet UIProgressView *_progressView;
+	IBOutlet UILabel *_userLabel;
+	IBOutlet UILabel *_userTitle;
+	IBOutlet UILabel *_fileLabel;
+	IBOutlet UILabel *_fileTitle;
 	BOOL _upload;
 #ifdef ENABLE_SECRETS
 	UIRemoveControl *_removeControl;
 	NSString *_removeConfirmationText;
 #endif
 	MVFileTransferStatus _status;
+	CQFileTransferController *_controller;
+	
+	UIImage *_thumb;
 }
 
 @property (nonatomic) BOOL showsIcon;

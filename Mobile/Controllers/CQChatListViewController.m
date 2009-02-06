@@ -35,6 +35,8 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshChatCell:) name:MVChatRoomKickedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshChatCell:) name:MVChatUserNicknameChangedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshChatCell:) name:MVChatUserStatusChangedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFileTransferCell:) name:MVFileTransferFinishedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFileTransferCell:) name:MVFileTransferErrorOccurredNotification object:nil];
 
 	return self;
 }
@@ -124,17 +126,28 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	NSUInteger sectionIndex = 0;
 	NSUInteger rowIndex = 0;
 
-	for (CQDirectChatController *currentController in controllers) {
-		if (currentController.connection != currentConnection) {
-			if (currentConnection) ++sectionIndex;
-			currentConnection = currentController.connection;
+	for (id cntrl in controllers) {
+		if ([cntrl conformsToProtocol:@protocol(CQChatViewController)]) {
+			id <CQChatViewController> currentController = cntrl;
+			if (currentController.connection != currentConnection) {
+				if (currentConnection) ++sectionIndex;
+				currentConnection = currentController.connection;
+			}
+			
+			if (currentController == controller)
+				return [NSIndexPath indexPathForRow:rowIndex inSection:sectionIndex];
+			
+			if (currentController.connection == connection && currentController != controller)
+				++rowIndex;
 		}
-
-		if (currentController == controller)
-			return [NSIndexPath indexPathForRow:rowIndex inSection:sectionIndex];
-
-		if (currentController.connection == connection && currentController != controller)
-			++rowIndex;
+		else {
+			if (cntrl == controller) {
+				return [NSIndexPath indexPathForRow:rowIndex inSection:sectionIndex+1];
+			}
+			else {
+				++rowIndex;
+			}
+		}
 	}
 
 	return nil;
@@ -145,6 +158,11 @@ static NSIndexPath *indexPathForChatController(id controller) {
 - (CQChatTableCell *) _chatTableCellForController:(id <CQChatViewController>) controller {
 	NSIndexPath *indexPath = indexPathForChatController(controller);
 	return (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+}
+
+- (CQFileTransferTableCell *) _fileTransferCellForController:(CQFileTransferController *) controller {
+	NSIndexPath *indexPath = indexPathForChatController(controller);
+	return (CQFileTransferTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
 }
 
 - (void) _addMessagePreview:(NSDictionary *) info withEncoding:(NSStringEncoding) encoding toChatTableCell:(CQChatTableCell *) cell animated:(BOOL) animated {
@@ -198,7 +216,8 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	
 	[cell takeValuesFromController:controller];
 	
-	if (controller.transfer.status == MVFileTransferDoneStatus) {
+	MVFileTransferStatus status = controller.transfer.status;
+	if (status == MVFileTransferDoneStatus || status == MVFileTransferStoppedStatus) {
 		cell.removeConfirmationText = NSLocalizedString(@"Close", @"Close remove confirmation button title");
 	} else {
 		cell.removeConfirmationText = NSLocalizedString(@"Stop", @"Stop remove confirmation button title");
@@ -246,6 +265,23 @@ static NSIndexPath *indexPathForChatController(id controller) {
 
 	CQChatTableCell *cell = [self _chatTableCellForController:controller];
 	[self _refreshChatCell:cell withController:controller animated:YES];
+}
+
+- (void) _refreshFileTransferCell:(NSNotification *) notification {
+	if (!_active) {
+		_needsUpdate = YES;
+		return;
+	}
+	
+	MVFileTransfer *transfer = notification.object;
+	
+	if (transfer == nil) {
+		return;
+	}
+	
+	CQFileTransferController *controller = [[CQChatController defaultController] chatViewControllerForFileTransfer:transfer ifExists:NO];
+	CQFileTransferTableCell *cell = [self _fileTransferCellForController:controller];
+	[self _refreshFileTransferCell:cell withController:controller animated:YES];
 }
 
 #pragma mark -
@@ -400,8 +436,6 @@ static NSIndexPath *indexPathForChatController(id controller) {
 		
 		cell.showsIcon = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"];
 		
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-		
 		[self _refreshChatCell:cell withController:chatViewController animated:NO];
 		
 		if ([chatViewController isKindOfClass:[CQDirectChatController class]]) {
@@ -426,11 +460,22 @@ static NSIndexPath *indexPathForChatController(id controller) {
 		NSArray *controllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
 		CQFileTransferController *controller = [controllers objectAtIndex:indexPath.row];
 		
-		CQFileTransferTableCell *cell = [CQFileTransferTableCell reusableTableViewCellInTableView:tableView];
+		//CQFileTransferTableCell *cell = [CQFileTransferTableCell reusableTableViewCellInTableView:tableView];
+		CQFileTransferTableCell *cell = (CQFileTransferTableCell *)[tableView dequeueReusableCellWithIdentifier:@"FileTransferTableCell"];
+		if (cell == nil) {
+			NSArray *array = [[NSBundle mainBundle] loadNibNamed:@"FileTransferTableCell" owner:self options:nil];
+			for (id object in array) {
+				if ([object isKindOfClass:[CQFileTransferTableCell class]]) {
+					cell = object;
+					break;
+				}
+			}
+		}
 		
 		cell.showsIcon = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"];
 		
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		//cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		cell.accessoryType = UITableViewCellAccessoryNone;
 		
 		[self _refreshFileTransferCell:cell withController:controller animated:NO];
 		
@@ -467,7 +512,7 @@ static NSIndexPath *indexPathForChatController(id controller) {
 		CQFileTransferController *fileTransferController = [controllers objectAtIndex:indexPath.row];
 		controller = fileTransferController;
 		
-		if (fileTransferController.transfer.status != MVFileTransferDoneStatus) {
+		if (fileTransferController.transfer.status != MVFileTransferDoneStatus && fileTransferController.transfer.status != MVFileTransferStoppedStatus) {
 			[fileTransferController.transfer cancel];
 			[self.tableView updateCellAtIndexPath:indexPath withAnimation:UITableViewRowAnimationFade];
 			return;

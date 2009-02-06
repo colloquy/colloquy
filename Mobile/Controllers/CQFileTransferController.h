@@ -22,7 +22,9 @@
 
 @property (nonatomic, readonly) MVFileTransfer *transfer;
 @property (nonatomic, assign) CQFileTransferTableCell *cell;
+@property (nonatomic, readonly) BOOL thumbnailAvailable;
 
 - (id) initWithTransfer:(MVFileTransfer *) transfer;
+- (UIImage *) thumbnailWithSize:(CGSize) size;
 
 @end

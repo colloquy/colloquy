@@ -32,17 +32,40 @@
 
 - (void) dealloc {
     [_transfer release];
+	if (_timer.isValid) {
+		[_timer invalidate];
+	}
     [super dealloc];
 }
 
 #pragma mark -
 
+- (void) close {
+	if (_timer.isValid) {
+		[_timer invalidate];
+		_timer = nil;
+	}
+	_cell = nil;
+	[_transfer release];
+	_transfer = nil;
+}
+
+#pragma mark -
+
 - (void) _timerFired:(NSTimer *) timer {
-	[_cell takeValuesFromController:self];
+	if (_transfer.status == MVFileTransferDoneStatus || _transfer.status == MVFileTransferStoppedStatus) {
+		[_timer invalidate];
+		_timer = nil;
+	}
+	else {
+		[_cell takeValuesFromController:self];
+	}
 }
 
 - (void) _fileStarted:(NSNotification *)notification {
-	[_cell takeValuesFromController:self];
+	if (_cell && !_timer.isValid) {
+		_timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(_timerFired:) userInfo:nil repeats:YES];
+	}
 }
 
 - (void) _fileFinished:(NSNotification *) notification {
@@ -66,6 +89,9 @@
 	
 	NSFileManager *fm = [NSFileManager defaultManager];
 	[fm removeItemAtPath:path error:NULL];
+	
+	[_timer invalidate];
+	_timer = nil;
 }
 
 - (void) _fileError:(NSNotification *) notification {
@@ -75,6 +101,9 @@
 		NSFileManager *fm = [NSFileManager defaultManager];
 		[fm removeItemAtPath:((MVUploadFileTransfer *)_transfer).source error:NULL];
 	}
+	
+	[_timer invalidate];
+	_timer = nil;
 }
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo;
@@ -85,14 +114,50 @@
 
 #pragma mark -
 
+- (BOOL) thumbnailAvailable {
+	return (_transfer.upload || (_transfer.download && _transfer.status == MVFileTransferDoneStatus));
+}
+
+- (UIImage *) thumbnailWithSize:(CGSize) size {
+	NSString *path;
+	if (_transfer.upload) {
+		path = ((MVUploadFileTransfer *)_transfer).source;
+		if (![UIImage isValidImageFormat:path]) {
+			return nil;
+		}
+	}
+	else {
+		if (_transfer.status == MVFileTransferDoneStatus) {
+			path = ((MVDownloadFileTransfer *)_transfer).destination;
+		}
+		else {
+			return nil;
+		}
+	}
+	
+	UIImage *original = [UIImage imageWithContentsOfFile:path];
+	
+	UIGraphicsBeginImageContext(size);
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	CGContextTranslateCTM(context, 0., size.height);
+	CGContextScaleCTM(context, 1., -1.);
+	CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), original.CGImage);
+	UIImage *thumbnail = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+	return thumbnail;
+}
+
+#pragma mark -
+
 - (void) setCell:(CQFileTransferTableCell *) cell {
 	_cell = cell;
 	
-	if (_cell) {
-		_timer = [NSTimer scheduledTimerWithTimeInterval:5000 target:self selector:@selector(_timerFired:) userInfo:nil repeats:YES];
+	if (_cell && !_timer.isValid && (_transfer.upload || (_transfer.download && _transfer.status == MVFileTransferNormalStatus))) {
+		_timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(_timerFired:) userInfo:nil repeats:YES];
 	}
-	else {
+	else if (_cell == nil) {
 		[_timer invalidate];
+		_timer = nil;
 	}
 }
 
