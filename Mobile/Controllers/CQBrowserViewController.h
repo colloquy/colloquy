@@ -11,6 +11,7 @@
 	IBOutlet UIToolbar *toolbar;
 	NSURL *_urlToLoad;
 	id _delegate;
+	NSURL *_irc;
 }
 @property (nonatomic, assign) id <CQBrowserViewControllerDelegate> delegate;
 @property (nonatomic, retain, setter=loadURL:) NSURL *url;

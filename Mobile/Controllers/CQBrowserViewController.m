@@ -52,6 +52,14 @@ static NSURL *lastURL;
 	return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+- (void) viewDidDisappear:(BOOL) animated {
+	if (_irc != nil) {
+		[[UIApplication sharedApplication] performSelector:@selector(openURL:) withObject:_irc afterDelay:0.0];
+		[_irc release];
+		_irc = nil;
+	}
+}
+
 #pragma mark -
 
 @synthesize delegate = _delegate;
@@ -150,15 +158,40 @@ static NSURL *lastURL;
 #pragma mark -
 
 - (BOOL) webView:(UIWebView *) sender shouldStartLoadWithRequest:(NSURLRequest *) request navigationType:(UIWebViewNavigationType) navigationType {
-	if ([[CQColloquyApplication sharedApplication] isSpecialApplicationURL:request.URL]) {
-		[[UIApplication sharedApplication] openURL:request.URL];
+	
+	static NSMutableArray *schemes = nil;
+	if (schemes == nil) {
+		schemes = [[NSMutableArray alloc] init];
+		NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+		NSArray *array = [info objectForKey:@"CFBundleURLTypes"];
+		if (array != nil) {
+			for (NSDictionary *dict in array) {
+				NSArray *items = [dict objectForKey:@"CFBundleURLSchemes"];
+				if (items != nil) {
+					for (NSString *item in items) {
+						[schemes addObject:[item lowercaseString]];
+					}
+				}
+			}
+		}
+	}
+	
+	if ([schemes containsObject:[request.URL.scheme lowercaseString]]) {
+		_irc = [request.URL retain];
+		[self close:self];
 		return NO;
 	}
-
-	if (![request.URL.absoluteString isCaseInsensitiveEqualToString:@"about:blank"])
-		locationField.text = request.URL.absoluteString;
-
-	return YES;
+	else {
+		if ([[CQColloquyApplication sharedApplication] isSpecialApplicationURL:request.URL]) {
+			[[UIApplication sharedApplication] openURL:request.URL];
+			return NO;
+		}
+		
+		if (![request.URL.absoluteString isCaseInsensitiveEqualToString:@"about:blank"])
+			locationField.text = request.URL.absoluteString;
+		
+		return YES;
+	}
 }
 
 - (void) webViewDidStartLoad:(UIWebView *) sender {
