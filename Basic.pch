@@ -9,6 +9,20 @@
 #import <Cocoa/Cocoa.h>
 #import <Foundation/NSDebug.h>
 
+#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
+#define NSUInteger unsigned int
+#define NSInteger int
+#endif
+
+#ifndef CGFLOAT_DEFINED
+#ifdef __LP64__
+typedef double CGFloat;
+#else
+typedef float CGFloat;
+#endif
+#define CGFLOAT_DEFINED 1
+#endif
+
 CF_EXPORT CFRunLoopRef CFRunLoopGetMain(void);
 
 #endif
