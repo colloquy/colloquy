@@ -66,6 +66,8 @@ NSString *MVChatConnectionWatchedUserOfflineNotification = @"MVChatConnectionWat
 NSString *MVChatConnectionNicknameAcceptedNotification = @"MVChatConnectionNicknameAcceptedNotification";
 NSString *MVChatConnectionNicknameRejectedNotification = @"MVChatConnectionNicknameRejectedNotification";
 
+NSString *MVChatConnectionDidIdentifyWithServicesNotification = @"MVChatConnectionDidIdentifyWithServicesNotification";
+
 NSString *MVChatConnectionSubcodeRequestNotification = @"MVChatConnectionSubcodeRequestNotification";
 NSString *MVChatConnectionSubcodeReplyNotification = @"MVChatConnectionSubcodeReplyNotification";
 

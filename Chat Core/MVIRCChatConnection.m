@@ -1480,7 +1480,8 @@ end:
 		} else if( ![nickname isEqualToString:[self nickname]] ) {
 			[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@ %@", nickname, [self nicknamePassword]];
 		} else {
-			// TODO if ( ![nickname isEqualToString:[self preferredNickname]] && keychain has seperate pass for current nickname) {
+			// TODO v remove, have mac colloquy set the nickname password on "nickname accepted" instead (if there is one for the new nick)
+			// if ( ![nickname isEqualToString:[self preferredNickname]] && keychain has seperate pass for current nickname) {
 			//	[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@", <KEYCHAIN PASSWORD>];
 			// } else {
 			[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@", [self nicknamePassword]];
@@ -2135,26 +2136,18 @@ end:
 		   ( [[sender nickname] isEqualToString:@"AuthServ"] && [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) ) {
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
 
-			if( [msg hasCaseInsensitiveSubstring:@"You have been invited to"] ) {		// ChanServ invite, hide since it's auto accepted
-				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
-			} else if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ||		// Nickserv/*
-					  [msg hasCaseInsensitiveSubstring:@"you are now identified"] ||	// NickServ/freenode
-					  [msg hasCaseInsensitiveSubstring:@"you are now logged in"] ||		// Q/quakenet
-					  [msg hasCaseInsensitiveSubstring:@"you are already logged in"] ||	// NickServ/freenode
-					  [msg hasCaseInsensitiveSubstring:@"authentication successful"] ||	// X/undernet
-					  [msg hasCaseInsensitiveSubstring:@"i recognize you"] ) {			// AuthServ/gamesurge
+			if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ||			// Nickserv/*
+			   [msg hasCaseInsensitiveSubstring:@"you are now identified"] ||		// NickServ/freenode
+			   [msg hasCaseInsensitiveSubstring:@"you are now logged in"] ||		// Q/quakenet
+			   [msg hasCaseInsensitiveSubstring:@"you are already logged in"] ||	// NickServ/freenode
+			   [msg hasCaseInsensitiveSubstring:@"authentication successful"] ||	// X/undernet
+			   [msg hasCaseInsensitiveSubstring:@"i recognize you"] ) {				// AuthServ/gamesurge
 
 				if( ![[self localUser] isIdentified] ) {
-					[noticeInfo setObject:@"identificationAcceptedAndGained" forKey:@"type"];
-					// if( commandsWaitForIdentification )	// would fix #1398.
-					//	[self performCommands];
-					// if( roomsWaitForIdentification )	// would fix #1217.
-					//	[self joinRooms];
-					// TODO ^ replace with real code and put ifs where they are normally run
-				} else {
-					[noticeInfo setObject:@"identificationAccepted" forKey:@"type"];
+					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidIdentifyWithServicesNotification object:self userInfo:noticeInfo];
 				}
 				[[self localUser] _setIdentified:YES];
+
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
 			} else if( ( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"ID"] ) ||
@@ -2164,11 +2157,6 @@ end:
 					  [msg hasCaseInsensitiveSubstring:@"nickname is owned"] ||
 					  [msg hasCaseInsensitiveSubstring:@"nick belongs to another user"] ) {
 
-				if( [[self localUser] isIdentified] ) {
-					[noticeInfo setObject:@"identificationNeededAndLost" forKey:@"type"];
-				} else {
-					[noticeInfo setObject:@"identificationNeeded" forKey:@"type"];
-				}
 				[[self localUser] _setIdentified:NO];
 
 				if( ! [[self nicknamePassword] length] ) {
@@ -2182,18 +2170,14 @@ end:
 						 [msg hasCaseInsensitiveSubstring:@"incorrect"] ) &&	// NickServ/dalnet+foonetic+sorcery+azzurra+webchat+rizon, Q/quakenet, AuthServ/gamesurge
 					   ( [msg hasCaseInsensitiveSubstring:@"password"] || [msg hasCaseInsensitiveSubstring:@"identify"] || [msg hasCaseInsensitiveSubstring:@"identification"] ) ) {
 
-				if( [[self localUser] isIdentified] ) {
-					[noticeInfo setObject:@"identificationFailedAndLost" forKey:@"type"];
-				} else {
-					[noticeInfo setObject:@"identificationFailed" forKey:@"type"];
-				}
 				[[self localUser] _setIdentified:NO];
 
 				[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
 			} else if( [msg isCaseInsensitiveEqualToString:@"Remember: Nobody from CService will ever ask you for your password, do NOT give out your password to anyone claiming to be CService."] ||													// Undernet
-					  [msg isCaseInsensitiveEqualToString:@"REMINDER: Do not share your password with anyone. DALnet staff will not ask for your password unless"] || [msg hasCaseInsensitiveSubstring:@"you are seeking their assistance. See"] ) {	// DALnet
+					  [msg isCaseInsensitiveEqualToString:@"REMINDER: Do not share your password with anyone. DALnet staff will not ask for your password unless"] || [msg hasCaseInsensitiveSubstring:@"you are seeking their assistance. See"] ||		// DALnet
+					  [msg hasCaseInsensitiveSubstring:@"You have been invited to"] ) {	// ChanServ invite, hide since it's auto accepted
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 			}
 

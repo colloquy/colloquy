@@ -92,6 +92,8 @@ extern NSString *MVChatConnectionSelfAwayStatusChangedNotification;
 extern NSString *MVChatConnectionNicknameAcceptedNotification;
 extern NSString *MVChatConnectionNicknameRejectedNotification;
 
+extern NSString *MVChatConnectionDidIdentifyWithServicesNotification;
+
 extern NSString *MVChatConnectionSubcodeRequestNotification;
 extern NSString *MVChatConnectionSubcodeReplyNotification;
 

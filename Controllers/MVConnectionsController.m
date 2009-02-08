@@ -1462,6 +1462,7 @@ static NSMenu *favoritesMenu = nil;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPassword: ) name:MVChatConnectionNeedNicknamePasswordNotification object:connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestCertificatePassword: ) name:MVChatConnectionNeedCertificatePasswordNotification object:connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPublicKeyVerification: ) name:MVChatConnectionNeedPublicKeyVerificationNotification object:connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didIdentify: ) name:MVChatConnectionDidIdentifyWithServicesNotification object:connection];
 }
 
 - (void) _deregisterNotificationsForConnection:(MVChatConnection *) connection {
@@ -1479,6 +1480,7 @@ static NSMenu *favoritesMenu = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNeedNicknamePasswordNotification object:connection];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNeedCertificatePasswordNotification object:connection];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNeedPublicKeyVerificationNotification object:connection];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionDidIdentifyWithServicesNotification object:connection];
 }
 
 - (void) _refresh:(NSNotification *) notification {
@@ -1898,6 +1900,59 @@ static NSMenu *favoritesMenu = nil;
 	[publicKeyVerification orderFront:nil];
 }
 
+- (void) _didIdentify:(NSNotification *) notification {
+	MVChatConnection *connection = [notification object];
+	
+	NSMutableDictionary *context = [NSMutableDictionary dictionary];
+	[context setObject:NSLocalizedString( @"You Have Been Identified", "identified bubble title" ) forKey:@"title"];
+	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has identified you as %@ on %@.", "identified bubble message, server message and server name" ), [[notification userInfo] objectForKey:@"user"], [[notification userInfo] objectForKey:@"target"], [connection server]] forKey:@"description"];
+	[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
+	[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
+
+	NSArray *rooms = [self joinRoomsForConnection:connection];
+	NSString *strcommands = [self connectCommandsForConnection:connection];
+	
+	NSEnumerator *commands = [[strcommands componentsSeparatedByString:@"\n"] objectEnumerator];
+	NSMutableString *command = nil;
+	if( ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ) ) {
+		while( ( command = [commands nextObject] ) ) {
+			command = [[command mutableCopy] autorelease];
+			[command replaceOccurrencesOfString:@"%@" withString:[connection nickname] options:NSLiteralSearch range:NSMakeRange( 0, [command length] )];
+
+			if( [command hasPrefix:@"\\"] ) {
+				command = (NSMutableString *)[command substringFromIndex:1];
+				
+				NSString *arguments = nil;
+				NSRange range = [command rangeOfString:@" "];
+				if( range.location != NSNotFound ) {
+					if( ( range.location + 1 ) < [command length] )
+						arguments = [command substringFromIndex:( range.location + 1 )];
+					command = (NSMutableString *)[command substringToIndex:range.location];
+				}
+				
+				NSAttributedString *args = [[[NSAttributedString alloc] initWithString:arguments] autorelease];
+				id view = nil;
+				
+				NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( MVChatConnection * ), @encode( id ), nil];
+				NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+				
+				[invocation setSelector:@selector( processUserCommand:withArguments:toConnection:inView: )];
+				[invocation setArgument:&command atIndex:2];
+				[invocation setArgument:&args atIndex:3];
+				[invocation setArgument:&connection atIndex:4];
+				[invocation setArgument:&view atIndex:5];
+				
+				NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
+				if( ! [[results lastObject] boolValue] )
+					[connection sendCommand:command withArguments:args];
+			}
+		}
+	}
+	
+	if( [[connection nicknamePassword] length] && [rooms count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
+		[connection joinChatRoomsNamed:rooms];
+}
+
 - (IBAction) _connect:(id) sender {
 	if( [connections selectedRow] == -1 ) return;
 	MVChatConnection *connection = [[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"];
@@ -1949,13 +2004,13 @@ static NSMenu *favoritesMenu = nil;
 				NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 				if( ! [[results lastObject] boolValue] )
 					[connection sendCommand:command withArguments:args];
-			} else if( [command length] ) {
+			} else if( [command length] && ! [command hasPrefix:@"\\"] ) {
 				[connection sendCommand:command withArguments:nil];
 			}
 		}
 	}
 
-	if( [rooms count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
+	if( ! [[connection nicknamePassword] length] && [rooms count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
 		[connection joinChatRoomsNamed:rooms];
 }
 
