@@ -1331,7 +1331,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 					replacement = [emoticon retain];
 				else if (emojiRange.location > 0 && (emojiRange.location + 1) == [self length] && [self characterAtIndex:(emojiRange.location - 1)] == ' ')
 					replacement = [emoticon retain];
-				else if ([self characterAtIndex:(emojiRange.location - 1)] == ' ' || [self characterAtIndex:(emojiRange.location + 1)] == ' ')
+				else if ([self characterAtIndex:(emojiRange.location - 1)] == ' ' || ((emojiRange.location + 1) < [self length] && [self characterAtIndex:(emojiRange.location + 1)] == ' '))
 					replacement = [emoticon retain];
 				else if (emojiRange.location == 0 || [self characterAtIndex:(emojiRange.location - 1)] == ' ')
 					replacement = [[NSString alloc] initWithFormat:@"%@ ", emoticon];
