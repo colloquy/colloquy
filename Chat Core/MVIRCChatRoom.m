@@ -303,8 +303,6 @@
 
 	[regexForIPv4Addresses release];
 	[regexForIPv6Addresses release];
-	[IPv4Match release];
-	[IPv6Match release];
 	
 	if ( ! [scanner isAtEnd] ) return addressMaskToBan;
 	else return [user address];
