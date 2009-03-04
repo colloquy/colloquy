@@ -145,6 +145,27 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 	}
 }
 
+- (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
+	if (indexPath.section == 1 && indexPath.row == 0) {
+		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
+
+		listViewController.title = NSLocalizedString(@"Rooms", @"Rooms view title");
+		listViewController.itemImage = [UIImage imageNamed:@"server.png"];
+		listViewController.allowEditing = NO;
+
+		listViewController.target = self;
+		listViewController.action = @selector(connectionChanged:);
+
+		[self.view endEditing:YES];
+
+		[self.navigationController pushViewController:listViewController animated:YES];
+
+		[listViewController release];
+
+		return;
+	}
+}
+
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
 	if (section == 0)
 		return NSLocalizedString(@"Chat Server", @"Chat Server section title");
@@ -181,6 +202,7 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 			if (_roomTarget) {
 				cell.label = NSLocalizedString(@"Name", @"Name setting label");
 				cell.textField.placeholder = @"#help";
+				cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 			} else {
 				cell.label = NSLocalizedString(@"Nickname", @"Nickname setting label");
 				cell.textField.placeholder = NSLocalizedString(@"Required", @"Required setting placeholder");
