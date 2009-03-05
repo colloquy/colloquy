@@ -342,7 +342,12 @@
 		_ignoreSelectionChanges = YES;
 		[self replaceCharactersInRange:replacementRange withString:name];
 
-		if( suffix && replacementRange.location == 0 ) [self insertText:@": "];
+		if( suffix && replacementRange.location == 0 )	{
+			if( [[NSUserDefaults standardUserDefaults] stringForKey:@"JVTabCompletionString"] )	{
+				[self insertText:[[NSUserDefaults standardUserDefaults] stringForKey:@"JVTabCompletionString"]];
+			}
+			else [self insertText:@": "];
+		}
 		else if( suffix ) [self insertText:@" "];
 		_tabCompletting = NO;
 		_ignoreSelectionChanges = NO;
