@@ -1,0 +1,777 @@
+﻿/* Time with a unit word, appended to a previous larger unit of time */
+" %u %@" = " %1$u %2$@";
+
+/* Unread count view title, uses the view's normal title with a number */
+"%@ (%u)" = "%1$@ (%2$u)";
+
+/* User changed the room topic event message */
+"%@ changed the topic to \"%@\"." = "%1$@ ändert das Thema zu \"%2$@\".";
+
+/* User no longer has special voice status and can't talk in moderated rooms mode event message */
+"%@ had voice removed by %@." = "%1$@ wird von %2$@ die Stimme entzogen.";
+
+/* You removed user's special voice status and can't talk in moderated rooms mode event message */
+"%@ had voice removed by you." = "%@ wird von Ihnen die Stimme entzogen.";
+
+/* User is no longer quieted because of someone else in the room mode event message */
+"%@ is no longer quieted because of %@." = "%1$@ muss dank %2$@ nicht mehr schweigen.";
+
+/* a user is no longer quieted because of us mode event message */
+"%@ is no longer quieted because of you." = "%@ muss dank Ihnen nicht mehr schweigen.";
+
+/* User changed nicknames event message */
+"%@ is now known as %@." = "%1$@ heißt jetzt %2$@.";
+
+/* User has join the room event message */
+"%@ joined the room." = "%@ betritt den Raum.";
+
+/* User has left the room event message */
+"%@ left the room." = "%@ verlässt den Raum.";
+
+/* User has left the room with reason event message */
+"%@ left the room. (%@)" = "%1$@ verlässt den Raum. (%2$@)";
+
+/* User removed a ban in the room event message */
+"%@ removed the ban on %@." = "%1$@ entfernt den Bann von %2$@.";
+
+/* User set a ban in the room event message */
+"%@ set a ban on %@." = "%1$@ setzt einen Bann für %2$@.";
+
+/* File download alert message */
+"%@ wants to send you \"%@\"." = "%1$@ will Ihnen \"%2$@\" schicken.";
+
+/* User is no longer a room administrator mode event message */
+"%@ was demoted from administrator by %@." = "%1$@ wird von %2$@ als Administrator entlassen.";
+
+/* You removed user's room administrator mode event message */
+"%@ was demoted from administrator by you." = "%@ wird von Ihnen als Administrator entlassen.";
+
+/* User is no longer a room half-operator mode event message */
+"%@ was demoted from half-operator by %@." = "%1$@ wird von %2$@ als Halb-Operator entlassen.";
+
+/* You removed user's room half-operator mode event message */
+"%@ was demoted from half-operator by you." = "%@ wird von Ihnen als Halb-Operator entlassen.";
+
+/* User is no longer a room operator mode event message */
+"%@ was demoted from operator by %@." = "%1$@ wird von %2$@ als Operator entlassen.";
+
+/* You removed user's room operator mode event message */
+"%@ was demoted from operator by you." = "%@ wird von Ihnen als Operator entlassen.";
+
+/* User is no longer a room founder mode event message */
+"%@ was demoted from room founder by %@." = "%1$@ wird von %2$@ als Raumgründer entlassen.";
+
+/* You removed user's room founder mode event message */
+"%@ was demoted from room founder by you." = "%@ wird von Ihnen als Raumgründer entlassen.";
+
+/* User now has special voice status to talk in moderated rooms mode event message */
+"%@ was granted voice by %@." = "%1$@ wird von %2$@ eine Stimme gewährt.";
+
+/* You gave user special voice status to talk in moderated rooms mode event message */
+"%@ was granted voice by you." = "%@ wird von Ihnen eine Stimme gewährt.";
+
+/* A user was kicked from the room event message */
+"%@ was kicked from the room by %@." = "%1$@ wird von %2$@ aus dem Raum geworfen.";
+
+/* A user was kicked from the room with reason event message */
+"%@ was kicked from the room by %@. (%@)" = "%1$@ wird von %2$@ aus dem Raum geworfen. (%3$@)";
+
+/* User is now a room administrator mode event message */
+"%@ was promoted to administrator by %@." = "%1$@ wird von %2$@ zum Administrator befördert.";
+
+/* You gave user room administrator mode event message */
+"%@ was promoted to administrator by you." = "%@ wird von Ihnen zum Administrator befördert.";
+
+/* User is now a room half-operator mode event message */
+"%@ was promoted to half-operator by %@." = "%1$@ wird von %2$@ zum Halb-Operator befördert.";
+
+/* You gave user room half-operator mode event message */
+"%@ was promoted to half-operator by you." = "%@ wird von Ihnen zum Halb-Operator befördert.";
+
+/* User is now a room operator mode event message */
+"%@ was promoted to operator by %@." = "%1$@ wird von %2$@ zum Operator befördert.";
+
+/* You gave user room operator mode event message */
+"%@ was promoted to operator by you." = "%@ wird von Ihnen zum Operator befördert.";
+
+/* User is now a room founder mode event message */
+"%@ was promoted to room founder by %@." = "%1$@ wird von %2$@ zum Raumgründer befördert.";
+
+/* You gave user room founder mode event message */
+"%@ was promoted to room founder by you." = "%@ wird von Ihnen zum Raumgründer befördert.";
+
+/* User was quieted by someone else in the room mode event message */
+"%@ was quieted by %@." = "%1$@ wird von %2$@ zum Schweigen gebracht.";
+
+/* You quieted someone else in the room mode event message */
+"%@ was quieted by you." = "%@ wird von Ihnen zum Schweigen gebracht.";
+
+/* Time with a unit word */
+"%u %@" = "%1$u %2$@";
+
+/* Multiple Commands label */
+"%u Commands" = "%u Befehle";
+
+/* User info rooms list separator */
+", " = ", ";
+
+/* One Command label */
+"1 Command" = "1 Befehl";
+
+/* Accept alert button title */
+"Accept" = "Annehmen";
+
+/* Add chat room label */
+"Add chat room" = "Gesprächsraum hinzufügen";
+
+/* Add command label */
+"Add command" = "Befehl hinzufügen";
+
+/* Add item label */
+"Add item" = "Objekt hinzufügen";
+
+/* Add New Connection button title */
+"Add New Connection" = "Neue Verbindung hinzufügen";
+
+/* Add nickname label */
+"Add nickname" = "Spitznamen hinzufügen";
+
+/* Advanced connection setting label
+   Advanced view title */
+"Advanced" = "Fortgeschritten";
+
+/* Alternate Network Identities section title */
+"Alternate Network Identities" = "Alternative Netzwerk-Identitäten";
+
+/* Authentication section title */
+"Authentication" = "Authentifizierung";
+
+/* Automatic Actions section title */
+"Automatic Actions" = "Automatische Aktionen";
+
+/* Away Info user info label */
+"Away Info" = "Abwesenheitsinfo";
+
+/* Ban From Room button title */
+"Ban from Room" = "Vom Raum verbannen";
+
+/* cannot change used nickname error */
+"Can't change nick from \"%@\" to \"%@\" because it is already taken on \"%@\"." = "Kann Spitznamen nicht von \"%1$@\" zu \"%2$@\" ändern, da dieser auf \"%3$@\" bereits verwendet wird.";
+
+/* Can't change nickname alert title */
+"Can't Change Nickname" = "Kann Spitznamen nicht verändern";
+
+/* Can't change nick too fast alert message */
+"Can't change nicknames too fast on \"%@\", wait and try again." = "Kann Spitzname auf \"%@\" nicht verändern – zu schnell. Warten Sie und versuchen Sie es erneut.";
+
+/* Can't change nick because of room alert message */
+"Can't change your nickname while in \"%@\" on \"%@\". Leave the room and try again." = "Kann Ihren Spitznamen nicht ändern solange Sie in \"%1$@\" auf \"%2$@\" sind. Verlassen Sie den Raum und versuchen Sie es erneut.";
+
+/* Can't join room alert title */
+"Can't Join Room" = "Kann Raum nicht betreten";
+
+/* Can't send command alert title */
+"Can't Send Command" = "Kann Befehl nicht senden";
+
+/* Can't send message alert title
+   Can't send alert title */
+"Can't Send Message" = "Kann Nachricht nicht senden";
+
+/* Cant send message alert message */
+"Can't send messages to \"%@\" due to some room restriction." = "Kann auf Grund einer Beschränkung keine Nachrichten an \"%@\" senden.";
+
+/* cant send to room error */
+"Can't send to room \"%@\" on \"%@\"." = "Kann nicht an Raum \"%1$@\" auf \"%2$@\" senden.";
+
+/* Cancel button title */
+"Cancel" = "Abbrechen";
+
+/* Chat button title */
+"Chat" = "Sprechen";
+
+/* Chat Room placeholder */
+"Chat Room" = "Gesprächsraum";
+
+/* Chat Room section title */
+"Chat Room Information" = "Gesprächsraum-Information";
+
+/* Chat Server section title */
+"Chat Server" = "Gesprächs-Server";
+
+/* Choose Contact button title */
+"Choose Contact" = "Kontakt auswählen";
+
+/* Choose Existing Photo button title */
+"Choose Existing Photo" = "Foto auswählen";
+
+/* Class user info label */
+"Class" = "Klasse";
+
+/* Close remove confirmation button title */
+"Close" = "Schließen";
+
+/* Colloquies tab title
+   Colloquies view title */
+"Colloquies" = "Gespräche";
+
+/* Default real name */
+"Colloquy User" = "Colloquy-Benutzer";
+
+/* Default nickname */
+"ColloquyUser" = "ColloquyBenutzer";
+
+/* Command placeholder */
+"Command" = "Befehl";
+
+/* Commands view title
+   Commands connection setting label */
+"Commands" = "Befehle";
+
+/* Connect alert button title
+   Connect button title */
+"Connect" = "Verbinden";
+
+/* Connect at Launch connection setting label */
+"Connect at Launch" = "Beim Start verbinden";
+
+/* Connected user info label */
+"Connected" = "Verbunden";
+
+/* Connected to server event message */
+"Connected to the server." = "Mit dem Server verbunden.";
+
+/* Connection setting label */
+"Connection" = "Verbindung";
+
+/* Connection Settings section title */
+"Connection Settings" = "Verbindungseinstellungen";
+
+/* Connections tab title
+   Connections view title */
+"Connections" = "Verbindungen";
+
+/* Current topic event message */
+"Current chat topic is \"%@\", set by %@." = "Derzeitiges Gesprächsthema ist \"%1$@\", gesetzt von %2$@.";
+
+/* Current topic set by you event message */
+"Current chat topic is \"%@\", set by you." = "Derzeitiges Gesprächsthema ist \"%@\", gesetzt von Ihnen.";
+
+/* Current topic with no user event message */
+"Current chat topic is \"%@\"." = "Derzeitiges Gesprächsthema ist \"%@\".";
+
+/* Singular day */
+"day" = "Tag";
+
+/* Plural days */
+"days" = "Tage";
+
+/* Delete button title */
+"Delete" = "Löschen";
+
+/* Delete Connection button title */
+"Delete Connection" = "Verbindung löschen";
+
+/* Demote from Admin button title */
+"Demote from Admin" = "Als Admin entlassen";
+
+/* Demote from Founder button title */
+"Demote from Founder" = "Als Gründer entlassen";
+
+/* Demote From Half-Operator button title */
+"Demote from Half-Operator" = "Als Halb-Operator entlassen";
+
+/* Demote from Operator button title */
+"Demote from Operator" = "Als Operator entlassen";
+
+/* Deny alert button title */
+"Deny" = "Ablehnen";
+
+/* Description connection setting label */
+"Description" = "Name";
+
+/* Disconnect button title */
+"Disconnect" = "Trennen";
+
+/* Disconnect from the server event message */
+"Disconnected from the server." = "Vom Server getrennt.";
+
+/* Dismiss alert button title */
+"Dismiss" = "Schließen";
+
+/* Done button title */
+"Done" = "Fertig";
+
+/* Edit view title */
+"Edit" = "Bearbeiten";
+
+/* Edit Chat Room view title */
+"Edit Chat Room" = "Gesprächsraum bearbeiten";
+
+/* Edit Command view title */
+"Edit Command" = "Befehl bearbeiten";
+
+/* Edit Nickname view title */
+"Edit Nickname" = "Spitznamen bearbeiten";
+
+/* File Download alert title */
+"File Download" = "Datei empfangen";
+
+/* File Transfers section title */
+"File Transfers" = "Dateiübertragungen";
+
+/* Force Quiet button title */
+"Force Quiet" = "Zum Schweigen bringen";
+
+/* From: label */
+"From:" = "Von:";
+
+/* Grant Voice button title */
+"Grant Voice" = "Stimme gewähren";
+
+/* Host Name connection setting label */
+"Host Name" = "Adresse";
+
+/* Hostname user info label */
+"Hostname" = "Host-Name";
+
+/* Singular hour */
+"hour" = "Stunde";
+
+/* Plural hours */
+"hours" = "Stunden";
+
+/* Identify to join room alert message */
+"Identify with network services to join \"%@\" on \"%@\"." = "Mit Netzwerkdiensten identifizieren um \"%1$@\" auf \"%2$@\" zu betreten.";
+
+/* Idle Time user info label */
+"Idle Time" = "Inaktiv seit";
+
+/* Internet Relay Chat Server section title */
+"Internet Relay Chat Server" = "Internet-Relay-Chat-Server";
+
+/* Invited to room alert title */
+"Invited to Room" = "In Raum eingeladen";
+
+/* Join alert button title
+   Join button title */
+"Join" = "Betreten";
+
+/* Join a Chat Room button title */
+"Join a Chat Room" = "Einen Gesprächsraum betreten";
+
+/* Join Chat Room view title */
+"Join Chat Room" = "Gesprächsraum betreten";
+
+/* Join Colloquy Support Room label */
+"Join Colloquy Support Room" = "Raum für Colloquy-Unterstützung betreten";
+
+/* Join Room button title */
+"Join Room" = "Raum betreten";
+
+/* Join Rooms connection setting label
+   Join Rooms view title */
+"Join Rooms" = "Räume betreten";
+
+/* Join Support Room button title */
+"Join Support Room" = "Raum für Unterstützung betreten";
+
+/* Kick from Room button title */
+"Kick from Room" = "Aus dem Raum werfen";
+
+/* Kicked from room alert title */
+"Kicked from Room" = "Aus dem Raum geworfen";
+
+/* Leave remove confirmation button title */
+"Leave" = "Verlassen";
+
+/* Manage button title */
+"Manage" = "Verwalten";
+
+/* Members with filtered count view title */
+"Members (%u of %u)" = "Mitglieder (%1$u von %2$u)";
+
+/* Members with single count view title */
+"Members (%u)" = "Mitglieder (%u)";
+
+/* Message a User button title */
+"Message a User" = "Einen Benutzer ansprechen";
+
+/* Message User view title */
+"Message User" = "Benutzer ansprechen";
+
+/* Singular minute */
+"minute" = "Minute";
+
+/* Plural minutes */
+"minutes" = "Minuten";
+
+/* Singular month */
+"month" = "Monat";
+
+/* Plural months */
+"months" = "Monate";
+
+/* Not Applicable or Not Available */
+"n/a" = "k.A.";
+
+/* Name setting label */
+"Name" = "Name";
+
+/* Network Identity section title */
+"Network Identity" = "Netzwerk-Identität";
+
+/* New Connection view title */
+"New Connection" = "Neue Verbindung";
+
+/* Nickname Password connection setting label */
+"Nick Pass." = "Spitzn.-Kennw.";
+
+/* Nickname placeholder
+   Nickname setting label
+   Nickname connection setting label */
+"Nickname" = "Spitzname";
+
+/* Nick changed by server alert title */
+"Nickname Changed" = "Spitzname geändert";
+
+/* Nicknames connection setting label
+   Nicknames view title */
+"Nicknames" = "Spitznamen";
+
+/* No chat rooms label */
+"No chat rooms" = "Keine Gesprächsräume";
+
+/* No chat topic event message */
+"No chat topic is set." = "Kein Gesprächsthema gesetzt.";
+
+/* No Commands label */
+"No Commands" = "Keine Befehle";
+
+/* No commands label */
+"No commands" = "Keine Befehle";
+
+/* No items label */
+"No items" = "Keine Objekte";
+
+/* No nicknames label */
+"No nicknames" = "Keine Spitznamen";
+
+/* No Rooms label */
+"No Rooms" = "Keine Räume";
+
+/* None setting label */
+"None" = "Keine";
+
+/* Normal user class */
+"Normal user" = "Normaler Benutzer";
+
+/* Offline label */
+"Offline" = "Getrennt";
+
+/* Operator Actions button title */
+"Operator Actions..." = "Operator-Aktionen…";
+
+/* Optional setting placeholder
+   Optional connection setting placeholder */
+"Optional" = "Optional";
+
+/* Password connection setting label
+   Password setting label */
+"Password" = "Kennwort";
+
+/* Promote to Admin button title */
+"Promote to Admin" = "Zum Admin befördern";
+
+/* Promote to Founder button title */
+"Promote to Founder" = "Zum Gründer befördern";
+
+/* Promote to Half-Operator button title */
+"Promote to Half-Operator" = "Zum Halb-Operator befördern";
+
+/* Promote to Operator button title */
+"Promote to Operator" = "Zum Operator befördern";
+
+/* Real Name user info label
+   Real Name connection setting label */
+"Real Name" = "Echter Name";
+
+/* Receiving: label */
+"Receiving:" = "Empfange:";
+
+/* Registered user class */
+"Registered user" = "Registrierter Benutzer";
+
+/* Rejoin alert button title */
+"Rejoin" = "Erneut Betreten";
+
+/* Rmeove Force Quiet button title */
+"Remove Force Quiet" = "Schweigzwang entfernen";
+
+/* Remove Voice button title */
+"Remove Voice" = "Stimme entziehen";
+
+/* Required setting placeholder */
+"Required" = "Erforderlich";
+
+/* Room modes not supported alert title */
+"Room Modes Unsupported" = "Raum-Modi nicht unterstützt";
+
+/* Rooms view title
+   Rooms user info label */
+"Rooms" = "Räume";
+
+/* Search placeholder text */
+"Search" = "Suchen";
+
+/* Singular second */
+"second" = "Sekunde";
+
+/* Plural seconds */
+"seconds" = "Sekunden";
+
+/* Send File button title */
+"Send File" = "Datei senden";
+
+/* Send Message button title */
+"Send Message" = "Nachricht senden";
+
+/* Sending: label */
+"Sending:" = "Sende:";
+
+/* Server user info label */
+"Server" = "Server";
+
+/* Server operator class */
+"Server operator" = "Server-Operator";
+
+/* Server Port connection setting label */
+"Server Port" = "Server-Port";
+
+/* Stop remove confirmation button title */
+"Stop" = "Stoppen";
+
+/* Stop Connection Timer button title */
+"Stop Connection Timer" = "Verbindungsversuch stoppen";
+
+/* Take Photo button title */
+"Take Photo" = "Foto aufnehmen";
+
+/* user not on the server */
+"The command \"%@\" is not a valid command on the \"%@\" server." = "Der Befehl \"%1$@\" ist nicht zulässig auf dem \"%2$@\"-Server.";
+
+/* Can't change nickname because it is taken alert message */
+"The nickname \"%@\" is taken on \"%@\"." = "Der Spitzname \"%1$@\" ist bereits vergeben auf \"%2$@\".";
+
+/* Authentication section footer title */
+"The nickname password is used to\nauthenicate with services (e.g. NickServ)." = "Mit dem Spitznamen-Kennwort identifiziert\nman sich bei Diensten (z.B. NickServ).";
+
+/* room does not support modes error */
+"The room \"%@\" on \"%@\" does not support modes." = "Der Raum \"%1$@\" auf \"%2$@\" unterstützt keine Modi.";
+
+/* Room does not support modes alert message */
+"The room \"%@\" on \"%@\" doesn't support modes." = "Der Raum \"%1$@\" auf \"%2$@\" unterstützt keine Modi.";
+
+/* room encountered unknown error */
+"The room \"%@\" on \"%@\" encountered an unknown error, see server details for more information." = "Der Raum \"%1$@\" auf \"%2$@\" hatte einen unbekannten Fehler, siehe Server-Details für weitere Informationen.";
+
+/* room is full error
+   Room is full alert message */
+"The room \"%@\" on \"%@\" is full." = "Der Raum \"%1$@\" auf \"%2$@\" ist voll.";
+
+/* invite only room error */
+"The room \"%@\" on \"%@\" is invite only." = "Der Raum \"%1$@\" auf \"%2$@\" ist einladungspflichtig.";
+
+/* Room is invite-only alert message */
+"The room \"%@\" on \"%@\" is invite-only." = "Der Raum \"%1$@\" auf \"%2$@\" ist einladungspflichtig.";
+
+/* Room is full alert message */
+"The room \"%@\" on \"%@\" is password protected, and you didn't supply the correct password." = "Der Raum \"%1$@\" auf \"%2$@\" ist kennwortgeschützt und Sie haben nicht das richtige Kennwort angegeben.";
+
+/* room password protected error */
+"The room \"%@\" on \"%@\" is password protected." = "Der Raum \"%1$@\" auf \"%2$@\" ist kennwortgeschützt.";
+
+/* user not on the server */
+"The user \"%@\" is no longer connected (or never was connected) to the \"%@\" server." = "Der Benutzer \"%1$@\" ist nicht mehr (oder war nie) mit dem \"%2$@\"-Server verbunden.";
+
+/* Can't send message to user because they are disconnected alert message */
+"The user is not connected." = "Der Benutzer ist nicht verbunden.";
+
+/* no such user error */
+"There is no user called \"%@\" on \"%@\"." = "Es gibt keinen Benutzer namens \"%1$@\" auf \"%2$@\".";
+
+/* To: label */
+"To:" = "An:";
+
+/* Use SSL connection setting label */
+"Use SSL" = "SSL benutzen";
+
+/* User Identity section title */
+"User Identity" = "Benutzeridentität";
+
+/* User Information button title */
+"User Information" = "Benutzerinformation";
+
+/* Username connection setting label
+   Username user info label */
+"Username" = "Benutzername";
+
+/* Singular week */
+"week" = "Woche";
+
+/* Plural weeks */
+"weeks" = "Wochen";
+
+/* Singular year */
+"year" = "Jahr";
+
+/* Plural years */
+"years" = "Jahre";
+
+/* Banned from room alert message */
+"You are banned from \"%@\" on \"%@\"." = "Sie sind aus \"%1$@\" auf \"%2$@\" verbannt.";
+
+/* banned from room error */
+"You are banned from the room \"%@\" on \"%@\"." = "Sie sind aus dem Raum \"%1$@\" auf \"%2$@\" verbannt.";
+
+/* Can't send message to user because server is connecting alert message */
+"You are currently connecting,\ntry sending again soon." = "Sie werden gerade verbunden,\nversuchen Sie es in Kürze noch einmal.";
+
+/* Can't send message to room because server is connecting alert message */
+"You are currently connecting,\nyou should join the room shortly." = "Sie werden gerade verbunden,\nder Raum sollte in Kürze betreten werden.";
+
+/* Can't send message to room because server is disconnected alert message
+   Can't send message to user because server is disconnected alert message */
+"You are currently disconnected,\nreconnect and try again." = "Sie sind derzeit getrennt,\nverbinden Sie sich und versuchen Sie es erneut.";
+
+/* You are no longer quieted and can talk mode event message */
+"You are no longer quieted, thanks to %@." = "Sie müssen dank %@ nicht mehr schweigen.";
+
+/* Can't send message to room because not a member alert message */
+"You are not a room member,\nrejoin and try again." = "Sie sind nicht in dem Raum,\nbetreten Sie ihn und versuchen Sie es erneut.";
+
+/* You changed nicknames event message */
+"You are now known as %@." = "Sie heißen jetzt %@.";
+
+/* cant change nick because of chatroom error */
+"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again." = "Sie können Ihren Spitznamen nicht ändern solange Sie in \"%1$@\" auf \"%2$@\" sind. Bitte verlassen Sie den Raum und versuchen Sie es erneut.";
+
+/* You changed the room topic event message */
+"You changed the topic to \"%@\"." = "Sie haben das Thema zu \"%@\" verändert.";
+
+/* cant change nick too fast error */
+"You changed your nickname too fast on \"%@\", please wait and try again." = "Sie haben Ihren Spitznamen auf \"%@\" zu schnell geändert, bitte warten Sie und versuchen Sie es erneut.";
+
+/* You removed our room administrator mode event message */
+"You demoted yourself from administrator." = "Sie werden von sich selbst als Administrator entlassen.";
+
+/* You removed our room half-operator mode event message */
+"You demoted yourself from half-operator." = "Sie werden von sich selbst als Halb-Operator entlassen.";
+
+/* You removed our room operator mode event message */
+"You demoted yourself from operator." = "Sie werden von sich selbst als Operator entlassen.";
+
+/* You removed our room founder mode event message */
+"You demoted yourself from room founder." = "Sie werden von sich selbst als Raumgründer entlassen.";
+
+/* You gave ourself special voice status to talk in moderated rooms mode event message */
+"You gave yourself voice." = "Ihnen wird von sich selbst eine Stimme gewährt.";
+
+/* You no longer has special voice status and can't talk in moderated rooms mode event message */
+"You had voice removed by %@." = "Ihnen wird von %@ die Stimme entzogen.";
+
+/* Returned from being away event message */
+"You have returned from being away." = "Sie kehren zurück nachdem Sie abwesend waren.";
+
+/* Marked as away event message */
+"You have set yourself as away with the message \"%@\"." = "Sie sind jetzt abwesend aus dem Grund \"%@\".";
+
+/* Joined room event message */
+"You joined the room." = "Sie betreten den Raum.";
+
+/* You kicked a user from the room event message */
+"You kicked %@ from the room." = "Sie werfen %@ aus dem Raum.";
+
+/* You kicked a user from the room with reason event message */
+"You kicked %@ from the room. (%@)" = "Sie werfen %1$@ aus dem Raum. (%2$@)";
+
+/* Left room event message */
+"You left the room." = "Sie verlassen den Raum.";
+
+/* You are no longer quieted and can talk ourself mode event message */
+"You made yourself no longer quieted." = "Sie müssen dank Ihnen selbst nicht mehr schweigen.";
+
+/* identify to join room error */
+"You need to identify with network services to join the room \"%@\" on \"%@\"." = "Sie müssen sich bei Netzwerk-Diensten identifizieren um den Raum \"%1$@\" auf \"%2$@\" zu betreten.";
+
+/* You gave ourself the room administrator mode event message */
+"You promoted yourself to Administrator." = "Sie werden von sich selbst zum Administrator befördert.";
+
+/* You gave ourself the room half-operator mode event message */
+"You promoted yourself to half-operator." = "Sie werden von sich selbst zum Halb-Operator befördert.";
+
+/* You gave ourself the room operator mode event message */
+"You promoted yourself to operator." = "Sie werden von sich selbst zum Operator befördert.";
+
+/* You gave ourself the room founder mode event message */
+"You promoted yourself to room founder." = "Sie werden von sich selbst zum Raumgründer befördert.";
+
+/* You quieted and can't talk ourself mode event message */
+"You quieted yourself." = "Sie werden von sich selbst zum Schweigen gebracht.";
+
+/* You removed a ban in the room event message */
+"You removed the ban on %@." = "Sie entfernen den Bann von %@.";
+
+/* You removed our special voice status to talk in moderated rooms mode event message */
+"You removed voice from yourself." = "Ihnen wird von sich selbst die Stimme entzogen.";
+
+/* You set a ban in the room event message */
+"You set a ban on %@." = "Sie setzen einen Bann auf %@.";
+
+/* You are no longer a room administrator mode event message */
+"You were demoted from administrator by %@." = "Sie werden von %@ als Administrator entlassen.";
+
+/* You are no longer a room half-operator mode event message */
+"You were demoted from half-operator by %@." = "Sie werden von %@ als Halb-Operator entlassen.";
+
+/* You are no longer a room operator mode event message */
+"You were demoted from operator by %@." = "Sie werden von %@ als Operator entlassen.";
+
+/* You are no longer a room founder mode event message */
+"You were demoted from room founder by %@." = "Sie werden von %@ als Raumgründer entlassen.";
+
+/* You now have special voice status to talk in moderated rooms mode event message */
+"You were granted voice by %@." = "Ihnen wird von %@ eine Stimme gewährt.";
+
+/* Invited to join room alert message */
+"You were invited to \"%@\" by \"%@\" on \"%@\"." = "Sie werden von \"%2$@\" in \"%1$@\" auf \"%3$@\" eingeladen.";
+
+/* Kicked from room alert message */
+"You were kicked from \"%@\" by \"%@\" on \"%@\"." = "Sie werden von \"%2$@\" aus \"%1$@\" auf \"%3$@\" geworfen.";
+
+/* You were kicked from the room event message */
+"You were kicked from the room by %@." = "Sie werden von %@ aus dem Raum geworfen.";
+
+/* You were kicked from the room with reason event message */
+"You were kicked from the room by %@. (%@)" = "Sie werden von %1$@ aus dem Raum geworfen. (%2$@)";
+
+/* You are now a room administrator mode event message */
+"You were promoted to administrator by %@." = "Sie werden von %@ zum Administrator befördert.";
+
+/* You are now a room half-operator mode event message */
+"You were promoted to half-operator by %@." = "Sie werden von %@ zum Halb-Operator befördert.";
+
+/* You are now a room operator mode event message */
+"You were promoted to operator by %@." = "Sie werden von %@ zum Operator befördert.";
+
+/* You are now a room founder mode event message */
+"You were promoted to room founder by %@." = "Sie werden von %@ zum Raumgründer befördert.";
+
+/* You are now quieted and can't talk mode event message */
+"You were quieted by %@." = "Sie werden von %@ zum Schweigen gebracht.";
+
+/* nickname changed by services error */
+"Your nickname is being changed by services on \"%@\" because it is registered and you did not supply the correct password to identify." = "Ihr Spitzname auf \"%@\" wird von Diensten geändert, da dieser registriert ist und Sie nicht das richtige Kennwort zum identifizieren angegeben haben.";
+
+/* Username was changed by server alert message */
+"Your nickname is being changed on \"%@\" because you didn't identify." = "Ihr Spitzname auf \"%@\" wird geändert, da Sie sich nicht identifiziert haben.";
+
