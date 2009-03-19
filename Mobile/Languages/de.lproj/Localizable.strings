@@ -563,7 +563,7 @@
 "The nickname \"%@\" is taken on \"%@\"." = "Der Spitzname \"%1$@\" ist bereits vergeben auf \"%2$@\".";
 
 /* Authentication section footer title */
-"The nickname password is used to\nauthenicate with services (e.g. NickServ)." = "Mit dem Spitznamen-Kennwort identifiziert\nman sich bei Diensten (z.B. NickServ).";
+"The nickname password is used to\nauthenticate with services (e.g. NickServ)." = "Mit dem Spitznamen-Kennwort identifiziert\nman sich bei Diensten (z.B. NickServ).";
 
 /* room does not support modes error */
 "The room \"%@\" on \"%@\" does not support modes." = "Der Raum \"%1$@\" auf \"%2$@\" unterstützt keine Modi.";
