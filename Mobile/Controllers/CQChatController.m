@@ -345,11 +345,17 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		if (actionSheet.tag == 1) {
 			CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
 			
-			if (buttonIndex == 0)
-				creationViewController.roomTarget = YES;
-			
-			[self presentModalViewController:creationViewController animated:YES];
-			[creationViewController release];
+			if (buttonIndex == 0) {
+				// to be filled in by zach
+			}
+			else {
+				if (buttonIndex == 1) {
+					creationViewController.roomTarget = YES;
+				}
+				
+				[self presentModalViewController:creationViewController animated:YES];
+				[creationViewController release];
+			}
 		} else if (actionSheet.tag == 2) {
 			if (buttonIndex == 0) {
 				[[CQConnectionsController defaultController] showModalNewConnectionView];
@@ -503,8 +509,9 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	if ([CQConnectionsController defaultController].connections.count) {
 		sheet.tag = 1;
-		sheet.cancelButtonIndex = 2;
+		sheet.cancelButtonIndex = 3;
 
+		[sheet addButtonWithTitle:NSLocalizedString(@"Search for a Chat Room", @"Search for a Chat Room button title")];
 		[sheet addButtonWithTitle:NSLocalizedString(@"Join a Chat Room", @"Join a Chat Room button title")];
 		[sheet addButtonWithTitle:NSLocalizedString(@"Message a User", @"Message a User button title")];
 	} else {
