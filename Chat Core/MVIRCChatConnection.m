@@ -920,9 +920,10 @@ end:
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
 
-	NSMutableString *stringWithPasswordsHidden = [NSMutableString stringWithString:string];
-	if( [[self password] length] ) [stringWithPasswordsHidden replaceOccurrencesOfString:[self password] withString:@"********" options:NSLiteralSearch range:NSMakeRange(0, [stringWithPasswordsHidden length])];
-	if( [[self nicknamePassword] length] ) [stringWithPasswordsHidden replaceOccurrencesOfString:[self nicknamePassword] withString:@"********" options:NSLiteralSearch range:NSMakeRange(0, [stringWithPasswordsHidden length])];
+	AGRegex *regex = [[AGRegex allocWithZone:nil] initWithPattern:@"(^PASS (?:[^ ]+:)?|IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" options:AGRegexCaseInsensitive];
+	NSString *stringWithPasswordsHidden = [regex replaceWithString:@"$1********" inString:string];
+	[regex release];
+
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:stringWithPasswordsHidden, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
 
 	[string release];
@@ -2116,7 +2117,7 @@ end:
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
 
 			// Auto reply to servers asking us to send a PASS because they could not detect an identd
-			if (![self isConnected]) {				
+			if (![self isConnected]) {
 				AGRegex *regex = [[AGRegex allocWithZone:nil] initWithPattern:@"/QUOTE PASS (\\w+)" options:AGRegexCaseInsensitive];
 				AGRegexMatch *match = [regex findInString:msg];
 				if( match ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", [match groupAtIndex:1]];
