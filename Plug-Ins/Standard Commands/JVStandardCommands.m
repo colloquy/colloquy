@@ -252,10 +252,10 @@
 			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
 					MVChatUser *user = nil;
-					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] ) {
+					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] || ! [[room target] memberUsersWithNickname:arg] ) {
 						if ( ! [arg hasCaseInsensitiveSubstring:@"!"] && [arg hasCaseInsensitiveSubstring:@"@"] )
 							arg = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:arg];
-						user = [MVChatUser wildcardUserFromString:arg];
+						user = [MVChatUser wildcardUserFromString:arg];						
 					} else user = [[[room target] memberUsersWithNickname:arg] anyObject];
 
 					if( user ) [[room target] addBanForUser:user];
@@ -269,7 +269,7 @@
 			while( ( arg = [e nextObject] ) ) {
 				if( [arg length] ) {
 					MVChatUser *user = nil;
-					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] ) {
+					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] || ! [[room target] memberUsersWithNickname:arg] ) {
 						if ( ! [arg hasCaseInsensitiveSubstring:@"!"] && [arg hasCaseInsensitiveSubstring:@"@"] )
 							arg = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:arg];
 						user = [MVChatUser wildcardUserFromString:arg];
