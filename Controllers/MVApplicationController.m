@@ -36,6 +36,12 @@
 
 #pragma mark -
 
+@interface NSAlert (LeopardOnly)
+- (void) setAccessoryView:(NSView *) view;
+@end
+
+#pragma mark -
+
 NSString *JVChatStyleInstalledNotification = @"JVChatStyleInstalledNotification";
 NSString *JVChatEmoticonSetInstalledNotification = @"JVChatEmoticonSetInstalledNotification";
 NSString *JVMachineBecameIdleNotification = @"JVMachineBecameIdleNotification";
@@ -447,8 +453,24 @@ static BOOL applicationIsTerminating = NO;
 		return NSTerminateNow; // no active connections, we can just quit now
 	if( ! [[[JVChatController defaultController] chatViewControllersKindOfClass:[JVDirectChatPanel class]] count] )
 		return NSTerminateNow; // no active chats, we can just quit now
-	if( NSRunCriticalAlertPanel( NSLocalizedString( @"Are you sure you want to quit?", "are you sure you want to quit title" ), NSLocalizedString( @"Are you sure you want to quit Colloquy and disconnect from all active connections?", "are you sure you want to quit message" ),  NSLocalizedString( @"Quit", "quit button" ),  NSLocalizedString( @"Cancel", "cancel button" ), nil ) == NSCancelButton )
+	NSAlert *confirmQuitAlert = [[[NSAlert alloc] init] autorelease];
+	[confirmQuitAlert setMessageText:NSLocalizedString( @"Are you sure you want to quit?", "are you sure you want to quit title" )];
+	[confirmQuitAlert setInformativeText:NSLocalizedString( @"Are you sure you want to quit Colloquy and disconnect from all active connections?", "are you sure you want to quit message" )];
+	[confirmQuitAlert addButtonWithTitle:NSLocalizedString( @"Quit", "quit button" )];
+	[confirmQuitAlert addButtonWithTitle:NSLocalizedString( @"Cancel", "cancel button" )];
+	[confirmQuitAlert setAlertStyle:NSCriticalAlertStyle];
+	// quit message. leopard only for now, because NSAlert's setAccessoryView is 10.5+ only, 10.4 would need a new NIB for this feature:
+	if ( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4) {
+		NSTextField *quitMessageAccessory = [[[NSTextField alloc] initWithFrame:NSMakeRect(0,0,220,22)] autorelease];
+		[quitMessageAccessory bind:@"value" toObject:[NSUserDefaultsController sharedUserDefaultsController] withKeyPath:@"values.JVQuitMessage" options:nil];
+		[confirmQuitAlert setAccessoryView:quitMessageAccessory];
+		// the roomKeyAccessory should be in the tab chain and probably also the initial first responder, this code is not ready yet though
+		// [confirmQuitAlert layout];
+		// [[confirmQuitAlert window] setInitialFirstResponder:quitMessageAccessory];
+	}
+	if ( [confirmQuitAlert runModal] == NSAlertSecondButtonReturn ) {
 		return NSTerminateCancel;
+	}
 	return NSTerminateNow;
 }
 
