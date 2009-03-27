@@ -1025,6 +1025,31 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		return;
 	}
 
+	// ask if the user really wants to send a message with lots of newlines.
+	if ( [[NSUserDefaults standardUserDefaults] objectForKey:@"JVWarnOnLargeMessages"] ) {
+		int newlineCount = 1;
+		int messageLimit = 3;
+
+		for (unsigned i = 0; i < [[send textStorage] length]; ++i) {
+			unichar currentCharacter = [[[send textStorage] string] characterAtIndex:i];
+
+			if (currentCharacter == '\n' || currentCharacter == '\r' ) newlineCount++;
+		}
+
+		if ( [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVWarnOnLargeMessageLimit"] unsignedIntValue] > 1 ) messageLimit = [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVWarnOnLargeMessageLimit"] unsignedIntValue];
+
+		if ( newlineCount > messageLimit ) {
+			NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+			[alert setMessageText:[NSString stringWithFormat:NSLocalizedString( @"Multiple lines detected", "multiple lines detected alert dialog title")]];
+			[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"You are about to send a message with %d lines. Are you sure you want to do this?", "about to send a %d line message alert dialog message" ), newlineCount]];
+			[alert addButtonWithTitle:[NSString stringWithFormat:NSLocalizedString( @"Send", "Send alert dialog button title" )]];
+			[alert addButtonWithTitle:[NSString stringWithFormat:NSLocalizedString( @"Cancel", "Cancel alert dialog button title" )]];
+			[alert setAlertStyle:NSWarningAlertStyle];
+
+			if ( [alert runModal] == NSAlertSecondButtonReturn ) return;
+		}
+	}
+
 	_historyIndex = 0;
 	if( ! [[send string] length] ) return;
 	if( [_sendHistory count] )
