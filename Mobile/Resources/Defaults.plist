@@ -42,6 +42,8 @@
 	<true/>
 	<key>CQIdleTimerDisabled</key>
 	<true/>
+	<key>CQHistoryOnReconnect</key>
+	<true/>
 	<key>CQHighlightWords</key>
 	<string></string>
 	<key>CQDefaultRealName</key>

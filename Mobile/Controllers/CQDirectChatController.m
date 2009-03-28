@@ -243,11 +243,13 @@
 	NSString *capitalizationBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocapitalizationBehavior"];
 	chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
 
-	if (_pendingPreviousSessionComponents) {
-		[transcriptView addPreviousSessionComponents:_pendingPreviousSessionComponents];
+	if ( [[NSUserDefaults standardUserDefaults] boolForKey:@"CQHistoryOnReconnect"] ) {
+		if (_pendingPreviousSessionComponents) {
+			[transcriptView addPreviousSessionComponents:_pendingPreviousSessionComponents];
 
-		[_pendingPreviousSessionComponents release];
-		_pendingPreviousSessionComponents = nil;
+			[_pendingPreviousSessionComponents release];
+			_pendingPreviousSessionComponents = nil;
+		}
 	}
 
 	if (_pendingComponents) {
