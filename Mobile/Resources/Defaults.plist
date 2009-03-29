@@ -34,6 +34,22 @@
 	<false/>
 	<key>CQVibrateOnHighlight</key>
 	<true/>
+	<key>CQVibrateOnPrivateMessage</key>
+	<true/>
+	<key>CQVibrateOnFileTransfer</key>
+	<true/>
+	<key>CQSoundOnHighlight</key>
+	<true/>
+	<key>CQSoundOnHighlightIdentifier</key>
+	<string>beep1</string>
+	<key>CQSoundOnPrivateMessage</key>
+	<true/>
+	<key>CQSoundOnPrivateMessageIdentifier</key>
+	<string>beep1</string>
+	<key>CQSoundOnFileTransfer</key>
+	<true/>
+	<key>CQSoundOnFileTransferIdentifier</key>
+	<string>beep1</string>
 	<key>CQShowLeaveEvents</key>
 	<true/>
 	<key>CQShowJoinEvents</key>

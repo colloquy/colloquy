@@ -12,6 +12,14 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+			<key>Title</key>
+			<string>Alert</string>
+			<key>File</key>
+			<string>Alert</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
 			<string>Always Show Notices</string>
@@ -27,16 +35,6 @@
 			<string>Disable Auto Lock</string>
 			<key>Key</key>
 			<string>CQIdleTimerDisabled</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Vibrate on Highlight</string>
-			<key>Key</key>
-			<string>CQVibrateOnHighlight</string>
 			<key>DefaultValue</key>
 			<true/>
 		</dict>

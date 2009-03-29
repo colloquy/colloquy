@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Vibration</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Highlight</string>
+			<key>Key</key>
+			<string>CQVibrateOnHighlight</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Private Message</string>
+			<key>Key</key>
+			<string>CQVibrateOnPrivateMessage</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>File Transfer</string>
+			<key>Key</key>
+			<string>CQVibrateOnFileTransfer</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Sounds</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Highlight</string>
+			<key>Key</key>
+			<string>CQSoundOnHighlight</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Highlight Sound</string>
+			<key>Key</key>
+			<string>CQSoundOnHighlightIdentifier</string>
+			<key>Values</key>
+			<array>
+				<string>beep1</string>
+				<string>beep2</string>
+				<string>bell1</string>
+				<string>bell2</string>
+				<string>clap</string>
+				<string>cymbal</string>
+				<string>scratch</string>
+				<string>signal</string>
+				<string>explosion</string>
+				<string>kick</string>
+				<string>laser</string>
+				<string>pop</string>
+				<string>rattle</string>
+				<string>sonar</string>
+				<string>stoof</string>
+				<string>switch</string>
+				<string>whip</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Beep 1</string>
+				<string>Beep 2</string>
+				<string>Bell 1</string>
+				<string>Bell 2</string>
+				<string>Clap</string>
+				<string>Cymbal</string>
+				<string>DJ Scratch</string>
+				<string>Electronic Signal</string>
+				<string>Explosion</string>
+				<string>Kick</string>
+				<string>Laser</string>
+				<string>Pop</string>
+				<string>Rattle</string>
+				<string>Sonar Beep</string>
+				<string>Stoof</string>
+				<string>Switch</string>
+				<string>Whip</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>beep1</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Private Message</string>
+			<key>Key</key>
+			<string>CQSoundOnPrivateMessage</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Private Message Sound</string>
+			<key>Key</key>
+			<string>CQSoundOnPrivateMessageIdentifier</string>
+			<key>Values</key>
+			<array>
+				<string>beep1</string>
+				<string>beep2</string>
+				<string>bell1</string>
+				<string>bell2</string>
+				<string>clap</string>
+				<string>cymbal</string>
+				<string>scratch</string>
+				<string>signal</string>
+				<string>explosion</string>
+				<string>kick</string>
+				<string>laser</string>
+				<string>pop</string>
+				<string>rattle</string>
+				<string>sonar</string>
+				<string>stoof</string>
+				<string>switch</string>
+				<string>whip</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Beep 1</string>
+				<string>Beep 2</string>
+				<string>Bell 1</string>
+				<string>Bell 2</string>
+				<string>Clap</string>
+				<string>Cymbal</string>
+				<string>DJ Scratch</string>
+				<string>Electronic Signal</string>
+				<string>Explosion</string>
+				<string>Kick</string>
+				<string>Laser</string>
+				<string>Pop</string>
+				<string>Rattle</string>
+				<string>Sonar Beep</string>
+				<string>Stoof</string>
+				<string>Switch</string>
+				<string>Whip</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>beep1</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>File Transfer</string>
+			<key>Key</key>
+			<string>CQSoundOnFileTransfer</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>File Transfer Sound</string>
+			<key>Key</key>
+			<string>CQSoundOnFileTransferIdentifier</string>
+			<key>Values</key>
+			<array>
+				<string>beep1</string>
+				<string>beep2</string>
+				<string>bell1</string>
+				<string>bell2</string>
+				<string>clap</string>
+				<string>cymbal</string>
+				<string>scratch</string>
+				<string>signal</string>
+				<string>explosion</string>
+				<string>kick</string>
+				<string>laser</string>
+				<string>pop</string>
+				<string>rattle</string>
+				<string>sonar</string>
+				<string>stoof</string>
+				<string>switch</string>
+				<string>whip</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Beep 1</string>
+				<string>Beep 2</string>
+				<string>Bell 1</string>
+				<string>Bell 2</string>
+				<string>Clap</string>
+				<string>Cymbal</string>
+				<string>DJ Scratch</string>
+				<string>Electronic Signal</string>
+				<string>Explosion</string>
+				<string>Kick</string>
+				<string>Laser</string>
+				<string>Pop</string>
+				<string>Rattle</string>
+				<string>Sonar Beep</string>
+				<string>Stoof</string>
+				<string>Switch</string>
+				<string>Whip</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>beep1</string>
+		</dict>
+	</array>
+</dict>
+</plist>
