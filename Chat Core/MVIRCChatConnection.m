@@ -9,7 +9,6 @@
 #import "AsyncSocket.h"
 #import "InterThreadMessaging.h"
 #import "MVChatuserWatchRule.h"
-#import "NSMethodSignatureAdditions.h"
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
 #import "NSScannerAdditions.h"
@@ -21,6 +20,7 @@
 #endif
 
 #if ENABLE(PLUGINS)
+#import "NSMethodSignatureAdditions.h"
 #import "MVChatPluginManager.h"
 #endif
 
@@ -849,18 +849,20 @@ static const NSStringEncoding supportedEncodings[] = {
 #undef notEndOfLine()
 
 end:
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
+	{
+		NSString *senderString = [self _newStringWithBytes:sender length:senderLength];
+		NSString *commandString = ((command && commandLength) ? [[NSString allocWithZone:nil] initWithBytes:command length:commandLength encoding:NSASCIIStringEncoding] : nil);
 
-	if( command && commandLength ) {
-		NSString *commandString = [[NSString allocWithZone:nil] initWithBytes:command length:commandLength encoding:NSASCIIStringEncoding];
-		NSString *selectorString = [[NSString allocWithZone:nil] initWithFormat:@"_handle%@WithParameters:fromSender:", [commandString capitalizedString]];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", data, @"messageData", (senderString ? senderString : @""), @"sender", (commandString ? commandString : @""), @"command", parameters, @"parameters", [NSNumber numberWithBool:NO], @"outbound", nil]];
+
+		NSString *selectorString = [[NSString allocWithZone:nil] initWithFormat:@"_handle%@WithParameters:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
 		SEL selector = NSSelectorFromString( selectorString );
+
 		[selectorString release];
 		[commandString release];
+		[senderString release];
 
 		if( [self respondsToSelector:selector] ) {
-			NSString *senderString = [self _newStringWithBytes:sender length:senderLength];
-
 			MVChatUser *chatUser = nil;
 			// if user is not null that shows it was a user not a server sender.
 			// the sender was also a user if senderString equals the current local nickname (some bouncers will do this).
@@ -880,7 +882,6 @@ end:
 			}
 
 			[self performSelector:selector withObject:parameters withObject:( chatUser ? (id) chatUser : (id) senderString )];
-			[senderString release];
 		}
 	}
 
@@ -924,7 +925,7 @@ end:
 	NSString *stringWithPasswordsHidden = [regex replaceWithString:@"$1********" inString:string];
 	[regex release];
 
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:stringWithPasswordsHidden, @"message", [NSNumber numberWithBool:YES], @"outbound", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:stringWithPasswordsHidden, @"message", data, @"messageData", [NSNumber numberWithBool:YES], @"outbound", nil]];
 
 	[string release];
 	[data release];
@@ -1508,6 +1509,7 @@ end:
 
 	[self _pruneKnownUsers];
 
+#if !ENABLE(BOUNCER_MODE)
 	@synchronized( _joinedRooms ) {
 		NSEnumerator *enumerator = [_joinedRooms objectEnumerator];
 		MVChatRoom *room = nil;
@@ -1516,6 +1518,7 @@ end:
 			if( [[room memberUsers] count] <= JVMaximumMembersForWhoRequest )
 				[self sendRawMessageWithFormat:@"WHO %@", [room name]];
 	}
+#endif
 
 	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:JVPeriodicEventsInterval];
 }
@@ -3134,9 +3137,11 @@ end:
 
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomJoinedNotification object:room];
 
+#if !ENABLE(BOUNCER_MODE)
 			if( [[room memberUsers] count] <= JVMaximumMembersForWhoRequest )
 				[self sendRawMessageImmediatelyWithFormat:@"WHO %@", [room name]];
 			[self sendRawMessageImmediatelyWithFormat:@"MODE %@ b", [room name]];
+#endif
 
 			[room release]; // balance the alloc or retain from _handleJoinWithParameters
 		}

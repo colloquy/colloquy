@@ -140,15 +140,14 @@ static const NSStringEncoding supportedEncodings[] = {
 		_supportedFeatures = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 		_localUser = nil;
 
-		CFSetCallBacks setCallbacks = { 0, NULL, NULL, kCFTypeSetCallBacks.copyDescription, kCFTypeSetCallBacks.equal, kCFTypeSetCallBacks.hash };
-		_joinedRooms = (NSMutableSet *)CFSetCreateMutable(NULL, 0, &setCallbacks);
+		_joinedRooms = (NSMutableSet *)CFSetCreateMutable(NULL, 0, &kCFTypeSetCallBacks);
 
 		CFDictionaryValueCallBacks valueCallbacks = { 0, NULL, NULL, kCFTypeDictionaryValueCallBacks.copyDescription, kCFTypeDictionaryValueCallBacks.equal };
 		_knownRooms = (NSMutableDictionary *)CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &valueCallbacks);
 
 		_knownUsers = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:300];
 
-#if !defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE
+#if (!defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE) && (!defined(COMMAND_LINE_UTILITY) || !COMMAND_LINE_UTILITY)
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemWillSleep: ) name:NSWorkspaceWillSleepNotification object:[NSWorkspace sharedWorkspace]];
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _applicationWillTerminate: ) name:NSWorkspaceWillPowerOffNotification object:[NSWorkspace sharedWorkspace]];
@@ -243,7 +242,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-#if !defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE
+#if (!defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE) && (!defined(COMMAND_LINE_UTILITY) || !COMMAND_LINE_UTILITY)
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 #endif
 
