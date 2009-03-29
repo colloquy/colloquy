@@ -152,8 +152,21 @@ static char encodingTable[64] = {
 	return ( memcmp( [self bytes], [prefix bytes], length ) == 0 );
 }
 
-- (BOOL) hasPrefixBytes:(void *) prefix length:(unsigned int) length {
+- (BOOL) hasPrefixBytes:(const void *) prefix length:(unsigned int) length {
 	if( ! prefix || ! length || [self length] < length ) return NO;
 	return ( memcmp( [self bytes], prefix, length ) == 0 );
+}
+
+#pragma mark -
+
+- (BOOL) hasSuffix:(NSData *) suffix {
+	unsigned int length = [suffix length];
+	if( ! suffix || ! length || [self length] < length ) return NO;
+	return ( memcmp( ((const char *)[self bytes] + ([self length] - length)), [suffix bytes], length ) == 0 );
+}
+
+- (BOOL) hasSuffixBytes:(const void *) suffix length:(unsigned int) length {
+	if( ! suffix || ! length || [self length] < length ) return NO;
+	return ( memcmp( ((const char *)[self bytes] + ([self length] - length)), suffix, length ) == 0 );
 }
 @end

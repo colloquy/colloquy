@@ -6,5 +6,8 @@
 - (NSString *) base64EncodingWithLineLength:(unsigned int) lineLength;
 
 - (BOOL) hasPrefix:(NSData *) prefix;
-- (BOOL) hasPrefixBytes:(void *) prefix length:(unsigned int) length;
+- (BOOL) hasPrefixBytes:(const void *) prefix length:(unsigned int) length;
+
+- (BOOL) hasSuffix:(NSData *) suffix;
+- (BOOL) hasSuffixBytes:(const void *) suffix length:(unsigned int) length;
 @end
