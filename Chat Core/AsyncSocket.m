@@ -384,6 +384,7 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 	[theReadQueue release];
 	[theWriteQueue release];
 	[theRunLoopModes release];
+	[partialReadBuffer release];
 	[NSObject cancelPreviousPerformRequestsWithTarget:theDelegate selector:@selector(socketDidDisconnect:) object:self];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 	[super dealloc];
