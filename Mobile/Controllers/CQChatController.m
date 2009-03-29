@@ -182,8 +182,14 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		CQDirectChatController *controller = [self chatViewControllerForUser:user ifExists:NO userInitiated:NO];
 		[controller addMessage:notification.userInfo];
 
-		if (!sender.localUser)
+		if (!sender.localUser) {
 			[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
+			if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnPrivateMessage"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+
+			if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSoundOnPrivateMessage"]) {
+				//play a sound
+			}
+		}
 	}
 }
 
@@ -198,7 +204,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 - (void) _gotFileDownloadOffer:(NSNotification *) notification {
 	MVDownloadFileTransfer *transfer = notification.object;
-	
+
 	NSString *action = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQFileDownloadAction"];
 	if ([action isEqualToString:@"Auto-Accept"]) {
 		NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:transfer.originalFileName];
@@ -209,7 +215,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		[transfer reject];
 		return;
 	}
-	
 	
 	NSString *file = transfer.originalFileName;
 	if (![UIImage isValidImageFormat:file]) {
@@ -230,7 +235,12 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[alert addButtonWithTitle:NSLocalizedString(@"Accept", @"Accept alert button title")];
 	[alert addButtonWithTitle:NSLocalizedString(@"Deny", @"Deny alert button title")];
 	
-	AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnFileTransfer"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSoundOnFileTransfer"]) {
+		//play a sound
+	}
+	
 	
 	[alert show];
 	
@@ -284,8 +294,12 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join alert button title")];
 	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
-	AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+	
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSoundOnHighlight"]) {
+		//play a sound
+	}
+	
 	[alert show];
 
 	[alert release];

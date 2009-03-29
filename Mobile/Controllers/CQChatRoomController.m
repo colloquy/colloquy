@@ -379,7 +379,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	[alert addButtonWithTitle:NSLocalizedString(@"Rejoin", @"Rejoin alert button title")];
 	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
-	AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
 	[alert show];
 
