@@ -917,7 +917,14 @@ end:
 	// for the command and its parameters.
 
 	if( [data length] > JVMaximumCommandLength ) [data setLength:JVMaximumCommandLength];
-	[data appendBytes:"\x0D\x0A" length:2];
+
+	if ([data hasSuffixBytes:"\x0D" length:1]) {
+		[data appendBytes:"\x0A" length:1];
+	} else if (![data hasSuffixBytes:"\x0D\x0A" length:2]) {
+		if ([data hasSuffixBytes:"\x0A" length:1])
+			[data replaceBytesInRange:NSMakeRange(([data length] - 1), 1) withBytes:"\x0D\x0A" length:2];
+		else [data appendBytes:"\x0D\x0A" length:2];
+	}
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
 
