@@ -928,7 +928,7 @@ end:
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
 
-	AGRegex *regex = [[AGRegex allocWithZone:nil] initWithPattern:@"(^PASS (?:[^ ]+:)?|IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" options:AGRegexCaseInsensitive];
+	AGRegex *regex = [[AGRegex allocWithZone:nil] initWithPattern:@"(^PASS |IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" options:AGRegexCaseInsensitive];
 	NSString *stringWithPasswordsHidden = [regex replaceWithString:@"$1********" inString:string];
 	[regex release];
 
