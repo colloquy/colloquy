@@ -103,7 +103,6 @@
 			else [[room windowController] expandListItem:room];
 			return YES;
 		} else if( ( ! [command caseInsensitiveCompare:@"cycle"] || ! [command caseInsensitiveCompare:@"hop"] ) && ! [[arguments string] length] ) {
-			[room setKeepAfterPart:YES];
 			[room partChat:nil];
 			[room joinChat:nil];
 			return YES;

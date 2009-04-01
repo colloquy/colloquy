@@ -47,7 +47,6 @@
 		_nextMessageAlertMembers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
 		_cantSendMessages = YES;
 		_kickedFromRoom = NO;
-		_keepAfterPart = NO;
 		_banListSynced = NO;
 		_joinCount = 0;
 
@@ -220,11 +219,6 @@
 	[menu addItem:item];
 	[item release];
 
-	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Auto Join", "auto join contextual menu") action:@selector( toggleAutoJoin: ) keyEquivalent:@""];
-	[item setTarget:self];
-	[menu addItem:item];
-	[item release];
-
 	[menu addItem:[NSMenuItem separatorItem]];
 
 	if( [[[self windowController] allChatViewControllers] count] > 1 ) {
@@ -235,8 +229,20 @@
 		[item release];
 	}
 
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""];
+	[item setTarget:self];
+	[menu addItem:item];
+	[item release];
+
+	[menu addItem:[NSMenuItem separatorItem]];
+
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Auto Join", "auto join contextual menu") action:@selector( toggleAutoJoin: ) keyEquivalent:@""];
+	[item setTarget:self];
+	[menu addItem:item];
+	[item release];
+
 	if( [[self target] isJoined] ) {
-		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Leave Room", "leave room contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Leave Room", "leave room contextual menu item title" ) action:@selector( partChat: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
 		[item release];
@@ -499,16 +505,6 @@
 }
 
 #pragma mark -
-
-- (BOOL) keepAfterPart {
-	return _keepAfterPart;
-}
-
-- (void) setKeepAfterPart:(BOOL) keep {
-	_keepAfterPart = keep;
-}
-
-#pragma mark -
 #pragma mark User List Access
 
 - (NSSet *) chatRoomMembersWithName:(NSString *) name {
@@ -768,7 +764,11 @@
 
 - (void) _partedRoom:(NSNotification *) notification {
 	if( ! [[self connection] isConnected] ) return;
-	if( ! [self keepAfterPart] ) [self close:nil];
+
+	_cantSendMessages = NO;
+
+	NSMutableAttributedString *rstring = [self _convertRawMessage:[[notification userInfo] objectForKey:@"reason"]];
+	[self addEventMessageToDisplay:NSLocalizedString( @"You left the room.", "you parted the room status message" ) withName:@"parted" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( rstring ? (id) rstring : (id) [NSNull null] ), @"reason", nil]];
 }
 
 - (void) _roomModeChanged:(NSNotification *) notification {

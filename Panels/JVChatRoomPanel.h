@@ -9,8 +9,6 @@
 	NSMutableArray *_preferredTabCompleteNicknames;
 	NSMutableSet *_nextMessageAlertMembers;
 	BOOL _kickedFromRoom;
-	BOOL _inRoom;
-	BOOL _keepAfterPart;
 	BOOL _banListSynced;
 	unsigned _joinCount;
 }
@@ -21,9 +19,6 @@
 - (void) partChat:(id) sender;
 
 - (IBAction) addToFavorites:(id) sender;
-
-- (BOOL) keepAfterPart;
-- (void) setKeepAfterPart:(BOOL) keep;
 
 - (NSSet *) chatRoomMembersWithName:(NSString *) name;
 - (JVChatRoomMember *) firstChatRoomMemberWithName:(NSString *) name;
