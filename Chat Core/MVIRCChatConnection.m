@@ -1959,6 +1959,7 @@ end:
 
 					if( [modesTable count] ) [_serverInformation setObject:modesTable forKey:@"roomMemberModeTable"];
 					[_serverInformation setObject:[NSCharacterSet characterSetWithCharactersInString:modes] forKey:@"roomMemberModes"];
+					[modesTable release];
 				}
 
 				NSString *prefixes = [feature substringFromIndex:[scanner scanLocation]];
@@ -1977,6 +1978,7 @@ end:
 
 					if( [prefixTable count] ) [_serverInformation setObject:prefixTable forKey:@"roomMemberPrefixTable"];
 					[_serverInformation setObject:[NSCharacterSet characterSetWithCharactersInString:prefixes] forKey:@"roomMemberPrefixes"];
+					[prefixTable release];
 				}
 			}
 		}
@@ -2080,7 +2082,7 @@ end:
 
 		MVChatRoom *room = nil;
 		if( [roomTargetName length] >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
-			room = [self joinedChatRoomWithUniqueIdentifier:roomTargetName];
+			room = [self chatRoomWithUniqueIdentifier:roomTargetName];
 
 		MVChatUser *targetUser = nil;
 		if( !room ) targetUser = [self chatUserWithUniqueIdentifier:targetName];
@@ -2196,7 +2198,7 @@ end:
 			AGRegex *regexForRoomInWelcomeToRoomNotice = [[AGRegex allocWithZone:nil] initWithPattern:@"^[\\[\\(](.+?)[\\]\\)]"];
 			AGRegexMatch *matchForRoomInWelcomeToRoomNotice = [regexForRoomInWelcomeToRoomNotice findInString:msg];
 			if( matchForRoomInWelcomeToRoomNotice && [[self chatRoomNamePrefixes] characterIsMember:[[matchForRoomInWelcomeToRoomNotice groupAtIndex:1] characterAtIndex:0]] ) {
-				MVChatRoom *roomInWelcomeToRoomNotice = [self joinedChatRoomWithUniqueIdentifier:[matchForRoomInWelcomeToRoomNotice groupAtIndex:1]];
+				MVChatRoom *roomInWelcomeToRoomNotice = [self chatRoomWithUniqueIdentifier:[matchForRoomInWelcomeToRoomNotice groupAtIndex:1]];
 				if( roomInWelcomeToRoomNotice ) {
 					[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:roomInWelcomeToRoomNotice userInfo:noticeInfo];
 					[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
@@ -2238,7 +2240,7 @@ end:
 
 		MVChatRoom *room = nil;
 		if( [roomTargetName length] >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
-			room = [self joinedChatRoomWithUniqueIdentifier:roomTargetName];
+			room = [self chatRoomWithUniqueIdentifier:roomTargetName];
 
 		MVChatUser *targetUser = nil;
 		if( !room ) targetUser = [self chatUserWithUniqueIdentifier:targetName];
@@ -2673,13 +2675,16 @@ end:
 		NSString *roomName = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:roomName];
 		if( ! room ) return;
+
+		[room _removeMemberUser:sender];
+
+		NSData *reason = ( [parameters count] >= 2 ? [parameters objectAtIndex:1] : nil );
+		if( ! [reason isKindOfClass:[NSData class]] ) reason = nil;
+
 		if( [sender isLocalUser] ) {
 			[room _setDateParted:[NSDate date]];
-			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomPartedNotification object:room];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:reason, @"reason", nil]];
 		} else {
-			[room _removeMemberUser:sender];
-			NSData *reason = ( [parameters count] >= 2 ? [parameters objectAtIndex:1] : nil );
-			if( ! [reason isKindOfClass:[NSData class]] ) reason = nil;
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", reason, @"reason", nil]];
 		}
 	}
@@ -2719,7 +2724,7 @@ end:
 		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
 
 	if( [parameters count] >= 2 && [sender isKindOfClass:[MVChatUser class]] ) {
-		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[parameters objectAtIndex:0]];
+		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:0]];
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		if( ! room || ! user ) return;
 
@@ -2770,7 +2775,7 @@ end:
 		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
 
 	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
-		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[parameters objectAtIndex:0]];
+		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:0]];
 		NSData *topic = [parameters objectAtIndex:1];
 		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
 		[self performSelectorOnMainThread:@selector( _handleTopic: ) withObject:[NSDictionary dictionaryWithObjectsAndKeys:room, @"room", sender, @"author", topic, @"topic", nil] waitUntilDone:NO];
@@ -2922,7 +2927,7 @@ end:
 	if( [parameters count] >= 2 ) {
 		NSString *targetName = [parameters objectAtIndex:0];
 		if( [targetName length] >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]] ) {
-			MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:targetName];
+			MVChatRoom *room = [self chatRoomWithUniqueIdentifier:targetName];
 			[self _parseRoomModes:[parameters subarrayWithRange:NSMakeRange( 1, [parameters count] - 1)] forRoom:room fromSender:sender];
 		} else {
 			// user modes not handled yet
@@ -2934,7 +2939,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 3 ) {
-		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		[self _parseRoomModes:[parameters subarrayWithRange:NSMakeRange( 2, [parameters count] - 2)] forRoom:room fromSender:nil];
 	}
 }
@@ -3110,7 +3115,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] == 4 ) {
-		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[parameters objectAtIndex:2]];
+		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:2]];
 		if( room && ! [room _namesSynced] ) {
 			NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
 			NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
@@ -3138,7 +3143,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 2 ) {
-		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
+		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		if( room && ! [room _namesSynced] ) {
 			[room _setNamesSynced:YES];
 
@@ -3195,7 +3200,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 2 ) {
-		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
+		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomMemberUsersSyncedNotification object:room];
 	}
 }
@@ -3225,7 +3230,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 3 ) {
-		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		MVChatUser *user = [MVChatUser wildcardUserFromString:[self _stringFromPossibleData:[parameters objectAtIndex:2]]];
 		if( [parameters count] >= 5 ) {
 			[user setAttribute:[parameters objectAtIndex:3] forKey:MVChatUserBanServerAttribute];
@@ -3247,7 +3252,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 2 ) {
-		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
+		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[room _setBansSynced:YES];
 		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomBannedUsersSyncedNotification object:room];
 	}
@@ -3260,7 +3265,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] == 3 ) {
-		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		NSData *topic = [parameters objectAtIndex:2];
 		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
 		[room _setTopic:topic];
@@ -3271,7 +3276,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 4 ) {
-		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
+		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		MVChatUser *author = [MVChatUser wildcardUserFromString:[parameters objectAtIndex:2]];
 		[room _setTopicAuthor:author];
 
