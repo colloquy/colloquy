@@ -738,6 +738,17 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
+- (void) processIncomingMessage:(id) raw {
+	[self processIncomingMessage:raw fromServer:YES];
+}
+
+- (void) processIncomingMessage:(id) raw fromServer:(BOOL) fromServer {
+	// subclass this method, don't call super
+	[self doesNotRecognizeSelector:_cmd];
+}
+
+#pragma mark -
+
 - (void) joinChatRoomsNamed:(NSArray *) rooms {
 	NSParameterAssert( rooms != nil );
 

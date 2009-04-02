@@ -396,6 +396,11 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
+- (void) processIncomingMessage:(id) raw;
+- (void) processIncomingMessage:(id) raw fromServer:(BOOL) fromServer;
+
+#pragma mark -
+
 - (void) joinChatRoomsNamed:(NSArray *) rooms;
 - (void) joinChatRoomNamed:(NSString *) room;
 - (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase;

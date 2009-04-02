@@ -40,6 +40,7 @@
 @interface MVChatConnection (MVIRCChatConnectionPrivate)
 - (AsyncSocket *) _chatConnection;
 - (void) _readNextMessageFromServer;
+- (void) _processIncomingMessage:(NSData *) data fromServer:(BOOL) fromServer;
 
 - (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender forRoom:(MVChatRoom *) room;
 

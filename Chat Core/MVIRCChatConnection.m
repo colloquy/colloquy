@@ -752,6 +752,28 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) socket:(AsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
+	[self _processIncomingMessage:data fromServer:YES];
+
+	[self _readNextMessageFromServer];
+}
+
+#pragma mark -
+
+- (void) processIncomingMessage:(id) raw fromServer:(BOOL) fromServer {
+	NSParameterAssert([raw isKindOfClass:[NSData class]]);
+	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:raw, @"message", [NSNumber numberWithBool:fromServer], @"fromServer", nil];
+	[self performSelector:@selector(_processIncomingMessageWithInfo:) withObject:info inThread:_connectionThread];
+}
+
+- (void) _processIncomingMessageWithInfo:(NSDictionary *) info {
+	NSData *message	= [info objectForKey:@"message"];
+	NSNumber *fromServer = [info objectForKey:@"fromServer"];
+	[self _processIncomingMessage:message fromServer:[fromServer boolValue]];
+}
+
+- (void) _processIncomingMessage:(NSData *) data fromServer:(BOOL) fromServer {
+	MVAssertCorrectThreadRequired( _connectionThread );
+
 	NSString *rawString = [self _newStringWithBytes:[data bytes] length:[data length]];
 
 	const char *line = (const char *)[data bytes];
@@ -853,7 +875,7 @@ end:
 		NSString *senderString = [self _newStringWithBytes:sender length:senderLength];
 		NSString *commandString = ((command && commandLength) ? [[NSString allocWithZone:nil] initWithBytes:command length:commandLength encoding:NSASCIIStringEncoding] : nil);
 
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", data, @"messageData", (senderString ? senderString : @""), @"sender", (commandString ? commandString : @""), @"command", parameters, @"parameters", [NSNumber numberWithBool:NO], @"outbound", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", data, @"messageData", (senderString ? senderString : @""), @"sender", (commandString ? commandString : @""), @"command", parameters, @"parameters", [NSNumber numberWithBool:NO], @"outbound", [NSNumber numberWithBool:fromServer], @"fromServer", nil]];
 
 		NSString *selectorString = [[NSString allocWithZone:nil] initWithFormat:@"_handle%@WithParameters:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
 		SEL selector = NSSelectorFromString( selectorString );
@@ -887,8 +909,6 @@ end:
 
 	[rawString release];
 	[parameters release];
-
-	[self _readNextMessageFromServer];
 }
 
 #pragma mark -
