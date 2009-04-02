@@ -61,7 +61,8 @@ typedef enum {
 	MVChatConnectionCantChangeUsedNickError = -19,
 	MVChatConnectionIdentifyToJoinRoomError = -20,
 	MVChatConnectionRoomDoesNotSupportModesError = -21,
-	MVChatConnectionNickChangedByServicesError = -22
+	MVChatConnectionNickChangedByServicesError = -22,
+	MVChatConnectionServicesDownError = -23
 } MVChatConnectionError;
 
 @class MVChatRoom;

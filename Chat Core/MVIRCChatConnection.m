@@ -3443,6 +3443,15 @@ end:
 			[self _whoisNextScheduledUser];
 		}
 
+		//workaround for freenode (hyperion) and quakenet which dont send 440 (ERR_SERVICESDOWN) if they are
+		if ( ( [[self server] hasCaseInsensitiveSubstring:@"freenode"] && [[user nickname] isCaseInsensitiveEqualToString:@"NickServ"] ) || ( [[self server] hasCaseInsensitiveSubstring:@"quakenet"] && [[user nickname] isCaseInsensitiveEqualToString:@"Q"] ) ) {
+			NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+			[userInfo setObject:self forKey:@"connection"];
+			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]] forKey:NSLocalizedDescriptionKey];
+
+			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionServicesDownError userInfo:userInfo]];
+		}
+
 		/* TODO
 		NSString *errorLiteralReason = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:self, @"connection", user, @"user", @"401", @"errorCode", errorLiteralReason, @"errorLiteralReason", nil];
@@ -3552,6 +3561,21 @@ end:
 
 		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeNickError userInfo:userInfo]];
 
+	}
+}
+
+- (void) _handle440WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SERVICESDOWN_BAHAMUT_UNREAL
+	MVAssertCorrectThreadRequired( _connectionThread );
+
+	// "NickServ Services are currently down. Please try again later."
+	// - Send to us after trying to identify with NickServ, ui should ask the user wether to go ahead with the autojoin without identification
+
+	if( [parameters count] >= 2 ) {
+		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+		[userInfo setObject:self forKey:@"connection"];
+		[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]] forKey:NSLocalizedDescriptionKey];
+
+		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionServicesDownError userInfo:userInfo]];
 	}
 }
 

@@ -1516,6 +1516,9 @@ static NSMenu *favoritesMenu = nil;
 		case MVChatConnectionCantChangeNickError:
 			errorTitle = NSLocalizedString( @"Can't Change Nick", "cannot change nickname error title" );
 			break;
+		case MVChatConnectionServicesDownError:
+			errorTitle = NSLocalizedString( @"Services Down", "services down error title" );
+			break;
 		case MVChatConnectionCantChangeUsedNickError:
 			errorTitle = NSLocalizedString( @"Nickname is Already In Use", "cannot change used nickname error title" );
 			break;
@@ -1552,8 +1555,16 @@ static NSMenu *favoritesMenu = nil;
 
 	[chatErrorAlert setAlertStyle:NSInformationalAlertStyle];
 
-	// in case of incorrect password we can simplytry again with the correct one. leopard only for now, because NSAlert's setAccessoryView is 10.5+ only, 10.4 would need a new NIB for this feature:
-	if ( [[[notification userInfo] objectForKey:@"error"] code] == MVChatConnectionRoomPasswordIncorrectError && floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4) {
+	if ( [[[notification userInfo] objectForKey:@"error"] code] == MVChatConnectionServicesDownError ) {
+		// ask the user if we want to continue auto joining rooms without identification (== no hostmask cloaking) now that we know services are down
+		// add "Continue Auto Join Sequence without identification?" to InformativeText
+		[chatErrorAlert addButtonWithTitle:NSLocalizedString( @"Join", "join button" )];
+		[chatErrorAlert addButtonWithTitle:NSLocalizedString( @"Cancel", "cancel button" )];
+		if ( [chatErrorAlert runModal] == NSAlertFirstButtonReturn ) {
+			[self _didIdentify:[NSNotification notificationWithName:@"continueConnectWithoutIdentification" object:[notification object]]];
+		}
+	} else if ( [[[notification userInfo] objectForKey:@"error"] code] == MVChatConnectionRoomPasswordIncorrectError && floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4) {
+		// in case of incorrect password we can simplytry again with the correct one. leopard only for now, because NSAlert's setAccessoryView is 10.5+ only, 10.4 would need a new NIB for this feature:
 		[chatErrorAlert addButtonWithTitle:NSLocalizedString( @"Join", "join button" )];
 		[chatErrorAlert addButtonWithTitle:NSLocalizedString( @"Cancel", "cancel button" )];
 		NSTextField *roomKeyAccessory = [[[NSSecureTextField alloc] initWithFrame:NSMakeRect(0,0,220,22)] autorelease];
@@ -1902,16 +1913,18 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) _didIdentify:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
-	
-	NSMutableDictionary *context = [NSMutableDictionary dictionary];
-	[context setObject:NSLocalizedString( @"You Have Been Identified", "identified bubble title" ) forKey:@"title"];
-	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has identified you as %@ on %@.", "identified bubble message, server message and server name" ), [[notification userInfo] objectForKey:@"user"], [[notification userInfo] objectForKey:@"target"], [connection server]] forKey:@"description"];
-	[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
-	[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
+
+	if ( [[notification name] isEqualToString:MVChatConnectionDidIdentifyWithServicesNotification] ) {
+		NSMutableDictionary *context = [NSMutableDictionary dictionary];
+		[context setObject:NSLocalizedString( @"You Have Been Identified", "identified bubble title" ) forKey:@"title"];
+		[context setObject:[NSString stringWithFormat:NSLocalizedString( @"%@ has identified you as %@ on %@.", "identified bubble message, server message and server name" ), [[notification userInfo] objectForKey:@"user"], [[notification userInfo] objectForKey:@"target"], [connection server]] forKey:@"description"];
+		[context setObject:[NSImage imageNamed:@"Keychain"] forKey:@"image"];
+		[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
+	}
 
 	NSArray *rooms = [self joinRoomsForConnection:connection];
 	NSString *strcommands = [self connectCommandsForConnection:connection];
-	
+
 	NSEnumerator *commands = [[strcommands componentsSeparatedByString:@"\n"] objectEnumerator];
 	NSMutableString *command = nil;
 	if( ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ) ) {
@@ -1921,7 +1934,7 @@ static NSMenu *favoritesMenu = nil;
 
 			if( [command hasPrefix:@"\\"] ) {
 				command = (NSMutableString *)[command substringFromIndex:1];
-				
+
 				NSString *arguments = nil;
 				NSRange range = [command rangeOfString:@" "];
 				if( range.location != NSNotFound ) {
@@ -1929,26 +1942,26 @@ static NSMenu *favoritesMenu = nil;
 						arguments = [command substringFromIndex:( range.location + 1 )];
 					command = (NSMutableString *)[command substringToIndex:range.location];
 				}
-				
+
 				NSAttributedString *args = [[[NSAttributedString alloc] initWithString:arguments] autorelease];
 				id view = nil;
-				
+
 				NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSAttributedString * ), @encode( MVChatConnection * ), @encode( id ), nil];
 				NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-				
+
 				[invocation setSelector:@selector( processUserCommand:withArguments:toConnection:inView: )];
 				[invocation setArgument:&command atIndex:2];
 				[invocation setArgument:&args atIndex:3];
 				[invocation setArgument:&connection atIndex:4];
 				[invocation setArgument:&view atIndex:5];
-				
+
 				NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 				if( ! [[results lastObject] boolValue] )
 					[connection sendCommand:command withArguments:args];
 			}
 		}
 	}
-	
+
 	if( [[connection nicknamePassword] length] && [rooms count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
 		[connection joinChatRoomsNamed:rooms];
 }
