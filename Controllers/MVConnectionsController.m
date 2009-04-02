@@ -24,6 +24,7 @@ static NSString *MVConnectionPboardType = @"Colloquy Chat Connection v1.0 pasteb
 static NSMenu *favoritesMenu = nil;
 
 @interface MVConnectionsController (MVConnectionsControllerPrivate)
+- (void) _didIdentify:(NSNotification *) notification;
 - (void) _connect:(id) sender;
 - (void) _refresh:(NSNotification *) notification;
 - (void) _loadInterfaceIfNeeded;
