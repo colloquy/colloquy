@@ -2322,7 +2322,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		1C2EDE8B0A3568EF0051E9C2 /* Update Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
