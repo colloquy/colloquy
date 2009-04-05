@@ -21,11 +21,8 @@
 		1C0932420D80C9EB00A2705D /* MVIRCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09321E0D80C9EB00A2705D /* MVIRCChatRoom.m */; };
 		1C0932430D80C9EB00A2705D /* MVIRCChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932200D80C9EB00A2705D /* MVIRCChatUser.m */; };
 		1C0932440D80C9EB00A2705D /* MVIRCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932220D80C9EB00A2705D /* MVIRCFileTransfer.m */; };
-		1C09327C0D80CA4800A2705D /* NSBundleAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932630D80CA4800A2705D /* NSBundleAdditions.m */; };
 		1C09327E0D80CA4800A2705D /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932670D80CA4800A2705D /* NSDataAdditions.m */; };
-		1C0932800D80CA4800A2705D /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09326B0D80CA4800A2705D /* NSMethodSignatureAdditions.m */; };
 		1C0932810D80CA4800A2705D /* NSNotificationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09326D0D80CA4800A2705D /* NSNotificationAdditions.m */; };
-		1C0932820D80CA4800A2705D /* NSNumberAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09326F0D80CA4800A2705D /* NSNumberAdditions.m */; };
 		1C0932830D80CA4800A2705D /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932710D80CA4800A2705D /* NSScannerAdditions.m */; };
 		1C0932850D80CA4800A2705D /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932750D80CA4800A2705D /* NSStringAdditions.m */; };
 		1C0935E00D80E19200A2705D /* MVChatUserWatchRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09320C0D80C9EB00A2705D /* MVChatUserWatchRule.m */; };
@@ -196,16 +193,10 @@
 		1C0932220D80C9EB00A2705D /* MVIRCFileTransfer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MVIRCFileTransfer.m; path = "Chat Core/MVIRCFileTransfer.m"; sourceTree = "<group>"; };
 		1C0932230D80C9EB00A2705D /* MVIRCNumerics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MVIRCNumerics.h; path = "Chat Core/MVIRCNumerics.h"; sourceTree = "<group>"; };
 		1C09325D0D80CA4800A2705D /* MVUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MVUtilities.h; path = Additions/MVUtilities.h; sourceTree = "<group>"; };
-		1C0932620D80CA4800A2705D /* NSBundleAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSBundleAdditions.h; path = Additions/NSBundleAdditions.h; sourceTree = "<group>"; };
-		1C0932630D80CA4800A2705D /* NSBundleAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NSBundleAdditions.m; path = Additions/NSBundleAdditions.m; sourceTree = "<group>"; };
 		1C0932660D80CA4800A2705D /* NSDataAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSDataAdditions.h; path = Additions/NSDataAdditions.h; sourceTree = "<group>"; };
 		1C0932670D80CA4800A2705D /* NSDataAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NSDataAdditions.m; path = Additions/NSDataAdditions.m; sourceTree = "<group>"; };
-		1C09326A0D80CA4800A2705D /* NSMethodSignatureAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSMethodSignatureAdditions.h; path = Additions/NSMethodSignatureAdditions.h; sourceTree = "<group>"; };
-		1C09326B0D80CA4800A2705D /* NSMethodSignatureAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NSMethodSignatureAdditions.m; path = Additions/NSMethodSignatureAdditions.m; sourceTree = "<group>"; };
 		1C09326C0D80CA4800A2705D /* NSNotificationAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSNotificationAdditions.h; path = Additions/NSNotificationAdditions.h; sourceTree = "<group>"; };
 		1C09326D0D80CA4800A2705D /* NSNotificationAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NSNotificationAdditions.m; path = Additions/NSNotificationAdditions.m; sourceTree = "<group>"; };
-		1C09326E0D80CA4800A2705D /* NSNumberAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSNumberAdditions.h; path = Additions/NSNumberAdditions.h; sourceTree = "<group>"; };
-		1C09326F0D80CA4800A2705D /* NSNumberAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NSNumberAdditions.m; path = Additions/NSNumberAdditions.m; sourceTree = "<group>"; };
 		1C0932700D80CA4800A2705D /* NSScannerAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSScannerAdditions.h; path = Additions/NSScannerAdditions.h; sourceTree = "<group>"; };
 		1C0932710D80CA4800A2705D /* NSScannerAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NSScannerAdditions.m; path = Additions/NSScannerAdditions.m; sourceTree = "<group>"; };
 		1C0932740D80CA4800A2705D /* NSStringAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSStringAdditions.h; path = Additions/NSStringAdditions.h; sourceTree = "<group>"; };
@@ -650,18 +641,12 @@
 				1CFF6E800EDF772800D3C557 /* UITableViewAdditions.h */,
 				1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */,
 				1CC576D10ED4684700FEC2C1 /* UITableViewCellAdditions.h */,
-				1C0932630D80CA4800A2705D /* NSBundleAdditions.m */,
-				1C0932620D80CA4800A2705D /* NSBundleAdditions.h */,
 				1C0932670D80CA4800A2705D /* NSDataAdditions.m */,
 				1C0932660D80CA4800A2705D /* NSDataAdditions.h */,
 				1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */,
 				1C20BE800EFEDF26005AD8A5 /* NSDictionaryAdditions.h */,
-				1C09326B0D80CA4800A2705D /* NSMethodSignatureAdditions.m */,
-				1C09326A0D80CA4800A2705D /* NSMethodSignatureAdditions.h */,
 				1C09326D0D80CA4800A2705D /* NSNotificationAdditions.m */,
 				1C09326C0D80CA4800A2705D /* NSNotificationAdditions.h */,
-				1C09326F0D80CA4800A2705D /* NSNumberAdditions.m */,
-				1C09326E0D80CA4800A2705D /* NSNumberAdditions.h */,
 				1C0932710D80CA4800A2705D /* NSScannerAdditions.m */,
 				1C0932700D80CA4800A2705D /* NSScannerAdditions.h */,
 				1C0932750D80CA4800A2705D /* NSStringAdditions.m */,
@@ -942,11 +927,8 @@
 				1C0932420D80C9EB00A2705D /* MVIRCChatRoom.m in Sources */,
 				1C0932430D80C9EB00A2705D /* MVIRCChatUser.m in Sources */,
 				1C0932440D80C9EB00A2705D /* MVIRCFileTransfer.m in Sources */,
-				1C09327C0D80CA4800A2705D /* NSBundleAdditions.m in Sources */,
 				1C09327E0D80CA4800A2705D /* NSDataAdditions.m in Sources */,
-				1C0932800D80CA4800A2705D /* NSMethodSignatureAdditions.m in Sources */,
 				1C0932810D80CA4800A2705D /* NSNotificationAdditions.m in Sources */,
-				1C0932820D80CA4800A2705D /* NSNumberAdditions.m in Sources */,
 				1C0932830D80CA4800A2705D /* NSScannerAdditions.m in Sources */,
 				1C0932850D80CA4800A2705D /* NSStringAdditions.m in Sources */,
 				1C0935E00D80E19200A2705D /* MVChatUserWatchRule.m in Sources */,
