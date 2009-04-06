@@ -34,8 +34,9 @@
 }
 
 - (NSString *) displayName {
-	if ([[self name] characterAtIndex:1] == '#') return [[self name] substringFromIndex:2];
-	else return [[self name] substringFromIndex:1];
+	if ([[self name] length] > 2 && [[self name] characterAtIndex:1] == '#') return [[self name] substringFromIndex:2];
+	else if ([[self name] length] > 1 && [[self name] characterAtIndex:1] != '#') return [[self name] substringFromIndex:1];
+	else return [self name];
 }
 
 #pragma mark -
