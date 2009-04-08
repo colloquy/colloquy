@@ -374,24 +374,24 @@ static NSString *membersFilteredCountFormat;
 
 	if (buttonIndex == actionSheet.cancelButtonIndex) {
 		[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
-	
+
 		[context release]; // Retained earlier
 		return;
 	}
-	
+
 	MVChatUser *user = [_matchedUsers objectAtIndex:selectedIndexPath.row];
-	
+
 	if (!context) {
 		if (buttonIndex == 0) {
 			[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
-		
+
 			CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
 			[[CQChatController defaultController] showChatController:chatController animated:YES];
 		} else if (buttonIndex == 1) {
 			[[CQChatController defaultController] showFilePickerWithUser:user];
 		} else if (buttonIndex == 2) {
 			[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
-		
+
 			CQWhoisNavController *whoisController = [[CQWhoisNavController alloc] init];
 			whoisController.user = user;
 
@@ -415,7 +415,7 @@ static NSString *membersFilteredCountFormat;
 			BOOL selectedUserIsAdministrator = (selectedUserModes & MVChatRoomMemberAdministratorMode);
 			BOOL selectedUserIsFounder = (selectedUserModes & MVChatRoomMemberFounderMode);
 
-			NSMutableDictionary *context = [[NSMutableDictionary alloc] init]; // Released later in actionSheet:clickedButtonAtIndex: 
+			NSMutableDictionary *context = [[NSMutableDictionary alloc] init]; // Released later in actionSheet:clickedButtonAtIndex:
 
 			UIActionSheet *operatorSheet = [[UIActionSheet alloc] init];
 			operatorSheet.delegate = self;

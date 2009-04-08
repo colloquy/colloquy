@@ -52,7 +52,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotDirectChatMessage:) name:MVDirectChatConnectionGotMessageNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_invitedToRoom:) name:MVChatRoomInvitedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotFileDownloadOffer:) name:MVDownloadFileTransferOfferNotification object:nil];
-	
+
 	return self;
 }
 
@@ -110,21 +110,21 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		NSComparisonResult result = [chatController1.connection.displayName caseInsensitiveCompare:chatController2.connection.displayName];
 		if (result != NSOrderedSame)
 			return result;
-		
+
 		result = [chatController1.connection.nickname caseInsensitiveCompare:chatController2.connection.nickname];
 		if (result != NSOrderedSame)
 			return result;
-		
+
 		if (chatController1.connection < chatController2.connection)
 			return NSOrderedAscending;
 		if (chatController1.connection > chatController2.connection)
 			return NSOrderedDescending;
-		
+
 		if ([chatController1 isMemberOfClass:[CQChatRoomController class]] && [chatController2 isMemberOfClass:[CQDirectChatController class]])
 			return NSOrderedAscending;
 		if ([chatController1 isMemberOfClass:[CQDirectChatController class]] && [chatController2 isMemberOfClass:[CQChatRoomController class]])
 			return NSOrderedDescending;
-		
+
 		return [chatController1.title caseInsensitiveCompare:chatController2.title];
 	}
 	else if ([controller1 isKindOfClass:[CQDirectChatController class]]) {
@@ -215,53 +215,54 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		[transfer reject];
 		return;
 	}
-	
+
 	NSString *file = transfer.originalFileName;
 	if (![UIImage isValidImageFormat:file]) {
 		[transfer.user.connection sendRawMessageWithFormat:@"NOTICE %@ :%@", transfer.user.nickname, @"Mobile Colloquy does not support files of that type."];
 		[transfer reject];
 		return;
 	}
+
 	NSString *user = transfer.user.displayName;
 	NSDictionary *context = [[NSDictionary alloc] initWithObjectsAndKeys:@"download", @"action", transfer, @"transfer", nil];
-	
+
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.tag = (NSInteger)context;
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"File Download", "File Download alert title");
 	alert.message = [NSString stringWithFormat:NSLocalizedString(@"%@ wants to send you \"%@\".", "File download alert message"), user, file];
 	alert.cancelButtonIndex = 1;
-	
+
 	[alert addButtonWithTitle:NSLocalizedString(@"Accept", @"Accept alert button title")];
 	[alert addButtonWithTitle:NSLocalizedString(@"Deny", @"Deny alert button title")];
-	
+
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnFileTransfer"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSoundOnFileTransfer"]) {
 		//play a sound
 	}
-	
-	
+
+
 	[alert show];
-	
+
 	[alert release];
-	
+
 }
 
 /*
 - (void) _fileFinished:(NSNotification *) notification {
 	MVFileTransfer *transfer = notification.object;
-	
+
 	CQFileTransferController *controller = [self chatViewControllerForFileTransfer:transfer ifExists:NO];
-	
+
 	//do stuff
 }
 
 - (void) _fileError:(NSNotification *) notification {
 	MVFileTransfer *transfer = notification.object;
-	
+
 	CQFileTransferController *controller = [self chatViewControllerForFileTransfer:transfer ifExists:NO];
-	
+
 	//do stuff
 }
 */
@@ -295,11 +296,11 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-	
+
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSoundOnHighlight"]) {
 		//play a sound
 	}
-	
+
 	[alert show];
 
 	[alert release];
@@ -330,7 +331,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		if ([action isEqualToString:@"download"]) {
 			[[context objectForKey:@"transfer"] reject];
 		}
-		
+
 		[context release];
 		return;
 	}
@@ -345,20 +346,20 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		[transfer setDestination:filePath renameIfFileExists:YES];
 		[transfer acceptByResumingIfPossible:YES];
 	}
-	
+
 	[context release];
 }
 
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (_chatSheet) {
 		_chatSheet = NO;
-		
+
 		if (buttonIndex == actionSheet.cancelButtonIndex)
 			return;
-		
+
 		if (actionSheet.tag == 1) {
 			CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
-			
+
 			if (buttonIndex == 0) {
 				// to be filled in by zach
 			}
@@ -366,7 +367,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 				if (buttonIndex == 1) {
 					creationViewController.roomTarget = YES;
 				}
-				
+
 				[self presentModalViewController:creationViewController animated:YES];
 				[creationViewController release];
 			}
@@ -379,12 +380,12 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		}
 	} else if (_fileSheet) {
         _fileSheet = NO;
-        
+
         if (buttonIndex == actionSheet.cancelButtonIndex) {
             [_fileUser release];
             return;
         }
-		
+
 		if (buttonIndex == 0) {
             if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
                 UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -398,7 +399,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
                 picker.delegate = self;
                 picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
                 [self presentModalViewController:picker animated:YES];
-                [picker release];                
+                [picker release];
             } else {
                 // contact
             }
@@ -408,10 +409,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
                 picker.delegate = self;
                 picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
                 [self presentModalViewController:picker animated:YES];
-                [picker release];                
+                [picker release];
             } else {
                 // contact
-            }            
+            }
         } else {
             // contact
         }
@@ -557,7 +558,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	_fileSheet = YES;
 	_fileUser = [user retain];
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
-	[sheet release];	
+	[sheet release];
 }
 
 - (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) roomName andConnection:(MVChatConnection *) connection {
@@ -763,25 +764,25 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 - (CQFileTransferController *) chatViewControllerForFileTransfer:(MVFileTransfer *) transfer ifExists:(BOOL) exists {
 	NSParameterAssert(transfer != nil);
-	
+
 	for (id controller in _chatControllers)
 		if ([controller isMemberOfClass:[CQFileTransferController class]] && [((CQFileTransferController *)controller).transfer isEqual:transfer])
 			return controller;
-	
+
 	if (!exists) {
 		CQFileTransferController *controller = [[CQFileTransferController alloc] initWithTransfer:transfer];
 		if (controller) {
 			[_chatControllers addObject:controller];
 			[controller release];
-			
+
 			[self _sortChatControllers];
-			
+
 			[_chatListViewController addChatViewController:controller];
-			
+
 			return controller;
 		}
 	}
-	
+
 	return nil;
 }
 

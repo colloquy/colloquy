@@ -14,7 +14,7 @@ static inline size_t stringByteLength(NSString *string) {
 	return sharedInstance;
 }
 
-#if !TARGET_IPHONE_SIMULATOR
+#if !TARGET_IPHONE_SIMULATOR || __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
 static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *account) {
 	NSCParameterAssert(server);
 
@@ -31,7 +31,7 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 - (void) setPassword:(NSString *) password forServer:(NSString *) server account:(NSString *) account {
 	NSParameterAssert(server);
 
-#if !TARGET_IPHONE_SIMULATOR
+#if !TARGET_IPHONE_SIMULATOR || __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
 	if (!password.length) {
 		[self removePasswordForServer:server account:account];
 		return;
@@ -72,7 +72,7 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 
 	NSString *string = nil;
 
-#if !TARGET_IPHONE_SIMULATOR
+#if !TARGET_IPHONE_SIMULATOR || __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
 	NSMutableDictionary *passwordQuery = createBaseDictionary(server, account);
 	NSData *resultData = nil;
 
@@ -100,7 +100,7 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 - (void) removePasswordForServer:(NSString *) server account:(NSString *) account {
 	NSParameterAssert(server);
 
-#if !TARGET_IPHONE_SIMULATOR
+#if !TARGET_IPHONE_SIMULATOR || __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
 	NSMutableDictionary *passwordQuery = createBaseDictionary(server, account);
 	SecItemDelete((CFDictionaryRef)passwordQuery);
 	[passwordQuery release];

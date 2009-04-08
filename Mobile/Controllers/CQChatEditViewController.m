@@ -238,6 +238,6 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 	_selectedConnectionIndex = sender.selectedItemIndex;
 	lastSelectedConnectionIndex = _selectedConnectionIndex;
 
-	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] withAnimation:UITableViewRowAnimationFade];
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] withAnimation:UITableViewRowAnimationNone];
 }
 @end

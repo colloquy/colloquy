@@ -16,9 +16,8 @@ static NSArray *validExtensions = nil;
 
 + (BOOL)isValidImageFormat:(NSString *)file;
 {
-	if (validExtensions == nil) {
+	if (!validExtensions)
 		validExtensions = [[NSArray alloc] initWithObjects:@"tiff", @"tif", @"jpg", @"jpeg", @"gif", @"png", @"bmp", @"bmpf", @"ico", @"cur", @"xbm", nil];
-	}
 	NSString *extension = [[file pathExtension] lowercaseString];
 	return [validExtensions containsObject:extension];
 }

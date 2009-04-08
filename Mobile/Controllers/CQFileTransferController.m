@@ -20,13 +20,13 @@
 	if (!(self = [self init])) {
 		return nil;
 	}
-	
+
 	_transfer = [transfer retain];
-	
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_fileStarted:) name:MVFileTransferStartedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_fileFinished:) name:MVFileTransferFinishedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_fileError:) name:MVFileTransferErrorOccurredNotification object:nil];
-	
+
 	return self;
 }
 
@@ -70,7 +70,7 @@
 
 - (void) _fileFinished:(NSNotification *) notification {
 	[_cell takeValuesFromController:self];
-	
+
 	NSString *path;
 	if (_transfer.upload) {
 		MVUploadFileTransfer *upload = (MVUploadFileTransfer *) _transfer;
@@ -79,29 +79,29 @@
 	else {
 		MVDownloadFileTransfer *download = (MVDownloadFileTransfer *) _transfer;
 		path = download.destination;
-		
+
 		if ([UIImage isValidImageFormat:path]) {
 			UIImage *img = [UIImage imageWithContentsOfFile:path];
 			UIImageWriteToSavedPhotosAlbum(img, self, @selector(image:didFinishSavingWithError:contextInfo:), path);
 			return;
 		}
 	}
-	
+
 	NSFileManager *fm = [NSFileManager defaultManager];
 	[fm removeItemAtPath:path error:NULL];
-	
+
 	[_timer invalidate];
 	_timer = nil;
 }
 
 - (void) _fileError:(NSNotification *) notification {
 	[_cell takeValuesFromController:self];
-	
+
 	if (_transfer.upload) {
 		NSFileManager *fm = [NSFileManager defaultManager];
 		[fm removeItemAtPath:((MVUploadFileTransfer *)_transfer).source error:NULL];
 	}
-	
+
 	[_timer invalidate];
 	_timer = nil;
 }
@@ -134,9 +134,9 @@
 			return nil;
 		}
 	}
-	
+
 	UIImage *original = [UIImage imageWithContentsOfFile:path];
-	
+
 	UIGraphicsBeginImageContext(size);
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	CGContextTranslateCTM(context, 0., size.height);
@@ -151,11 +151,10 @@
 
 - (void) setCell:(CQFileTransferTableCell *) cell {
 	_cell = cell;
-	
+
 	if (_cell && !_timer.isValid && (_transfer.upload || (_transfer.download && _transfer.status == MVFileTransferNormalStatus))) {
 		_timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(_timerFired:) userInfo:nil repeats:YES];
-	}
-	else if (_cell == nil) {
+	} else if (!_cell) {
 		[_timer invalidate];
 		_timer = nil;
 	}

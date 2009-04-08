@@ -679,19 +679,19 @@
 	else if ( [arguments hasCaseInsensitiveSubstring:@"other"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#HowdoIgethelpforsomethingthatisntlistedhere";
 	else if ( [arguments hasCaseInsensitiveSubstring:@"bug"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#HowdoIreportabug";
 	else if ( [arguments hasCaseInsensitiveSubstring:@"style"] || [arguments hasCaseInsensitiveSubstring:@"theme"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#HowdoIchangethewaymessageslook";
-	else if ( [arguments hasCaseInsensitiveSubstring:@"completion"] || [arguments hasCaseInsensitiveSubstring:@"popup"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#Howdothecompletionpopupswork";	
+	else if ( [arguments hasCaseInsensitiveSubstring:@"completion"] || [arguments hasCaseInsensitiveSubstring:@"popup"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#Howdothecompletionpopupswork";
 	else urlString = @"http://colloquy.info/project/wiki/MobileFAQs";
 
-	NSURL *url = [NSURL URLWithString:urlString];	
+	NSURL *url = [NSURL URLWithString:urlString];
 
 	[self _openURL:url preferBuiltInBrowser:NO];
-	
+
 	return YES;
 }
 
 - (BOOL) handleFaqCommandWithArguments:(NSString *) arguments {
 	[self handleHelpCommandWithArguments:arguments];
-	
+
 	return YES;
 }
 
@@ -699,8 +699,8 @@
 	NSString *urlString = @"http://searchirc.com/search.php?F=partial&I=%@&T=both&N=all&M=min&C=5&PER=20";
 
 	[self _handleSearchForURL:urlString withQuery:arguments];
-	
-	return YES;	
+
+	return YES;
 }
 
 #pragma mark -
@@ -743,11 +743,11 @@
 	if (arguments.length == 0) {
 		return NO;
 	}
-	
+
 	NSString *nick = [[arguments componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] objectAtIndex:0];
 	MVChatUser *user = [[self.connection chatUsersWithNickname:nick] anyObject];
 	[[CQChatController defaultController] showFilePickerWithUser:user];
-	
+
 	return YES;
 }
 
@@ -925,11 +925,11 @@
 	}
 
 	if (highlighted && self.available && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-	
+
 	if (highlighted && self.available && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQSoundOnHighlight"]) {
 		//play a sound
 	}
-	
+
 
 	if (!_recentMessages)
 		_recentMessages = [[NSMutableArray alloc] init];

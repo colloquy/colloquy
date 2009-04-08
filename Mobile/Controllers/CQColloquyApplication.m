@@ -5,7 +5,7 @@
 #import "CQChatController.h"
 #import "NSStringAdditions.h"
 
-#ifdef ENABLE_SECRETS
+#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
 @interface UITabBarController (UITabBarControllerPrivate)
 @property (nonatomic, readonly) UITabBar *tabBar;
 @end
@@ -54,9 +54,12 @@
 
 - (void) showActionSheet:(UIActionSheet *) sheet {
 	UITabBar *tabBar = nil;
-#ifdef ENABLE_SECRETS
+#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
 	if ([tabBarController respondsToSelector:@selector(tabBar)])
 		tabBar = tabBarController.tabBar;
+#endif
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
+	tabBar = tabBarController.tabBar;
 #endif
 
 	if (tabBar) [sheet showFromTabBar:tabBar];

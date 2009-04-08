@@ -53,7 +53,7 @@ static NSURL *lastURL;
 }
 
 - (void) viewDidDisappear:(BOOL) animated {
-	if (_irc != nil) {
+	if (_irc) {
 		[[UIApplication sharedApplication] performSelector:@selector(openURL:) withObject:_irc afterDelay:0.0];
 		[_irc release];
 		_irc = nil;
@@ -158,16 +158,15 @@ static NSURL *lastURL;
 #pragma mark -
 
 - (BOOL) webView:(UIWebView *) sender shouldStartLoadWithRequest:(NSURLRequest *) request navigationType:(UIWebViewNavigationType) navigationType {
-	
 	static NSMutableArray *schemes = nil;
-	if (schemes == nil) {
+	if (!schemes) {
 		schemes = [[NSMutableArray alloc] init];
 		NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
 		NSArray *array = [info objectForKey:@"CFBundleURLTypes"];
-		if (array != nil) {
+		if (array) {
 			for (NSDictionary *dict in array) {
 				NSArray *items = [dict objectForKey:@"CFBundleURLSchemes"];
-				if (items != nil) {
+				if (items) {
 					for (NSString *item in items) {
 						[schemes addObject:[item lowercaseString]];
 					}
@@ -175,21 +174,20 @@ static NSURL *lastURL;
 			}
 		}
 	}
-	
+
 	if ([schemes containsObject:[request.URL.scheme lowercaseString]]) {
 		_irc = [request.URL retain];
 		[self close:self];
 		return NO;
-	}
-	else {
+	} else {
 		if ([[CQColloquyApplication sharedApplication] isSpecialApplicationURL:request.URL]) {
 			[[UIApplication sharedApplication] openURL:request.URL];
 			return NO;
 		}
-		
+
 		if (![request.URL.absoluteString isCaseInsensitiveEqualToString:@"about:blank"])
 			locationField.text = request.URL.absoluteString;
-		
+
 		return YES;
 	}
 }

@@ -6,8 +6,8 @@
 		return nil;
 
 	self.selectionStyle = UITableViewCellSelectionStyleNone;
-	self.backgroundColor = nil;
-	self.opaque = NO;
+	self.backgroundColor = [UIColor whiteColor];
+	self.opaque = YES;
 
 	_textField = [[UITextField alloc] initWithFrame:CGRectZero];
 	_label = [[UILabel alloc] initWithFrame:CGRectZero];

@@ -6,7 +6,7 @@
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
-#ifdef ENABLE_SECRETS
+#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
 @interface UIRemoveControl : UIView
 - (void) setRemoveConfirmationLabel:(NSString *) label;
 @end
@@ -50,11 +50,11 @@
 	[_iconImageView release];
 	[_unreadCountView release];
 	[_nameLabel release];
-#ifdef ENABLE_SECRETS
+#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
 	[_removeControl release];
+	[_removeConfirmationText release];
 #endif
 	[_chatPreviewLabels release];
-	[_removeConfirmationText release];
 
 	[super dealloc];
 }
@@ -121,6 +121,7 @@
 	[self setNeedsLayout];
 }
 
+#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
 @synthesize removeConfirmationText = _removeConfirmationText;
 
 - (void) setRemoveConfirmationText:(NSString *) text {
@@ -128,11 +129,10 @@
 	_removeConfirmationText = [text copy];
 	[old release];
 
-#ifdef ENABLE_SECRETS
 	if (_removeConfirmationText.length && [_removeControl respondsToSelector:@selector(setRemoveConfirmationLabel:)])
 		[_removeControl setRemoveConfirmationLabel:_removeConfirmationText];
-#endif
 }
+#endif
 
 @synthesize available = _available;
 
@@ -149,7 +149,7 @@
 
 #pragma mark -
 
-#ifdef ENABLE_SECRETS
+#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
 - (UIRemoveControl *) _createRemoveControl {
 	[_removeControl release];
 	_removeControl = [[super _createRemoveControl] retain];
@@ -278,7 +278,10 @@
 	self.name = @"";
 	self.icon = nil;
 	self.available = YES;
+
+#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
 	self.removeConfirmationText = nil;
+#endif
 
 	_showsUserInMessagePreviews = YES;
 	_maximumMessagePreviews = 2;

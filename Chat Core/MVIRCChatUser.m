@@ -129,7 +129,7 @@
 		[info release];
 	} else if( [command isCaseInsensitiveEqualToString:@"TIME"] ) {
 		NSString *date = [[NSString allocWithZone:nil] initWithData:arguments encoding:[[self connection] encoding]];
-#if defined(TARGET_OS_EMBEDDED) && TARGET_OS_EMBEDDED
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
 		[self setAttribute:date forKey:MVChatUserLocalTimeAttribute];
 #else
 		NSCalendarDate *localThere = [NSCalendarDate dateWithNaturalLanguageString:date];

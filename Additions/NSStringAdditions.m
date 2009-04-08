@@ -938,7 +938,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 - (NSString *) stringByReversingString:(NSString *) normalString {
 	NSMutableString *reversedString = [[NSMutableString alloc] init];
-	
+
 	for (int index = [normalString length] - 1; index >= 0; index--)
 		[reversedString appendString:[normalString substringWithRange:NSMakeRange(index, 1)]];
 
@@ -984,7 +984,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	NSRange range = [self rangeOfCharacterFromSet:set];
 	if( range.location == NSNotFound )
 		return self;
-       
+
 	NSMutableString *result = [self mutableCopyWithZone:nil];
 	[result replaceCharactersInSet:set withString:string];
 	return [result autorelease];
