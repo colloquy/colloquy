@@ -264,6 +264,8 @@ struct _mark {
 		float shift = [self shiftAmountToCenterAlign];
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 		_jumpingToMark = NO;
+
+		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 	}
 }
 
@@ -274,6 +276,8 @@ struct _mark {
 		float shift = [self shiftAmountToCenterAlign];
 		[[(NSScrollView *)[self superview] documentView] scrollPoint:NSMakePoint( 0., _currentMark - shift )];
 		_jumpingToMark = NO;
+
+		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 	}
 }
 
