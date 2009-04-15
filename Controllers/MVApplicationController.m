@@ -438,6 +438,12 @@ static BOOL applicationIsTerminating = NO;
 	[MVConnectionsController refreshFavoritesMenu];
 }
 
+- (BOOL) applicationShouldHandleReopen:(NSApplication *) application hasVisibleWindows:(BOOL) hasVisibleWindows {
+	if( ! hasVisibleWindows )
+		[self showConnectionManager:nil];
+	return YES;
+}
+
 - (void) applicationWillTerminate:(NSNotification *) notification {
 	applicationIsTerminating = YES;
 
