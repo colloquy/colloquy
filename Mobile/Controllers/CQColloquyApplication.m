@@ -53,13 +53,12 @@
 }
 
 - (void) showActionSheet:(UIActionSheet *) sheet {
-	UITabBar *tabBar = nil;
 #if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
+	UITabBar *tabBar = nil;
 	if ([tabBarController respondsToSelector:@selector(tabBar)])
 		tabBar = tabBarController.tabBar;
-#endif
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
-	tabBar = tabBarController.tabBar;
+#elif __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
+	UITabBar *tabBar = tabBarController.tabBar;
 #endif
 
 	if (tabBar) [sheet showFromTabBar:tabBar];
