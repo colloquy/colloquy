@@ -917,17 +917,14 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	NSMutableData *data = nil;
-	NSString *string = nil;
+	NSString *string = [[self _stringFromPossibleData:raw] retain];
 
 	if( [raw isKindOfClass:[NSMutableData class]] ) {
 		data = [raw retain];
-		string = [[NSString allocWithZone:nil] initWithData:data encoding:[self encoding]];
 	} else if( [raw isKindOfClass:[NSData class]] ) {
 		data = [raw mutableCopyWithZone:nil];
-		string = [[NSString allocWithZone:nil] initWithData:data encoding:[self encoding]];
 	} else if( [raw isKindOfClass:[NSString class]] ) {
 		data = [[raw dataUsingEncoding:[self encoding] allowLossyConversion:YES] mutableCopyWithZone:nil];
-		string = [raw retain];
 	}
 
 	// IRC messages are always lines of characters terminated with a CR-LF
