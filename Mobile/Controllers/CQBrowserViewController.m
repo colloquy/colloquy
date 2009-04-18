@@ -119,6 +119,54 @@ static NSURL *lastURL;
 		[_delegate browserViewController:self sendURL:self.url];
 }
 
+- (IBAction) sendToInstapaper:(id) sender {
+	NSString *url = [self.url absoluteString];
+		
+	if ([url isCaseInsensitiveEqualToString:@"about:blank"]) return;
+	else url = [url stringByEncodingIllegalURLCharacters];
+	
+	UIAlertView *alert = [[UIAlertView alloc] init];
+	alert.delegate = self;
+	alert.cancelButtonIndex = 0;
+
+	NSString *user = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQInstapaperUsername"];
+
+	if (!user) {
+		alert.title = NSLocalizedString(@"No username given", "No username or email address alert title");
+		alert.message = NSLocalizedString(@"You need to enter an Instapaper username or email address before saving links.", "No username or email address alert message");
+	} else {
+		NSString *password = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQInstapaperPassword"];
+		NSString *instapaperURL = [[NSString alloc] initWithFormat:@"https://www.instapaper.com/api/add?username=%@&password=%@&url=%@&auto-title=1", user, password, url];
+
+		NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:instapaperURL] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
+		NSError *error;
+		NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
+		
+		if (!error) {
+			NSString *response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
+			if ([response isEqual:@"201"]) { //Success, posted to instapaper without issues
+				[alert release];
+				return;
+			}
+			else if ([response isEqual:@"403"]) {
+				alert.title = NSLocalizedString(@"Incorrect Account Information", "Incorrect Account Information alert title");
+				alert.message = NSLocalizedString(@"An incorrect username/email or password was given.", "Incorrect username, email or password alert message");
+			} else if ([response isEqual:@"500"]) {
+				alert.title = NSLocalizedString(@"Service Error", "Service error alert title");
+				alert.message = NSLocalizedString(@"The service encountered an error. Please try again later.", "Service error alert message");
+			}
+		}
+		else {
+			alert.title = NSLocalizedString(@"Unable to Submit URL", "Unable to submit URL alert title");
+			alert.message = NSLocalizedString(@"Unable to save URL to Instapaper.", "Unable to submit URL alert message");
+		}
+	}
+	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+	[alert show];
+	[alert release];
+}
+
 #pragma mark -
 
 - (BOOL) textFieldShouldReturn:(UITextField *) textField {

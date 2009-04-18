@@ -143,6 +143,7 @@
 		892FE3A50F7ED20A00BAC171 /* Switch.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE3940F7ED20A00BAC171 /* Switch.aiff */; };
 		892FE3A60F7ED20A00BAC171 /* Whip.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE3950F7ED20A00BAC171 /* Whip.aiff */; };
 		896E84610F15AB6C00D810FE /* notes.css in Resources */ = {isa = PBXBuildFile; fileRef = 896E84600F15AB6C00D810FE /* notes.css */; };
+		897C0D670F99154500F9D8B5 /* browserInstapaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 897C0D660F99154500F9D8B5 /* browserInstapaper.png */; };
 		89997FAC0F171EB600CF0AA2 /* standard-grey-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */; };
 		9703B21B0F2C0D0E00E623DF /* CQFileTransferController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */; };
 		9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
@@ -353,6 +354,7 @@
 		892FE3940F7ED20A00BAC171 /* Switch.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Switch.aiff; sourceTree = "<group>"; };
 		892FE3950F7ED20A00BAC171 /* Whip.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Whip.aiff; sourceTree = "<group>"; };
 		896E84600F15AB6C00D810FE /* notes.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = notes.css; sourceTree = "<group>"; };
+		897C0D660F99154500F9D8B5 /* browserInstapaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserInstapaper.png; sourceTree = "<group>"; };
 		89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "standard-grey-dark.css"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9703B2190F2C0D0E00E623DF /* CQFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQFileTransferController.h; sourceTree = "<group>"; };
@@ -665,6 +667,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				897C0D660F99154500F9D8B5 /* browserInstapaper.png */,
 				892FE3850F7ED20A00BAC171 /* Beep 1.aiff */,
 				892FE3860F7ED20A00BAC171 /* Beep 2.aiff */,
 				892FE3870F7ED20A00BAC171 /* Bell 1.aiff */,
@@ -885,6 +888,7 @@
 				892FE3A40F7ED20A00BAC171 /* Stoof.aiff in Resources */,
 				892FE3A50F7ED20A00BAC171 /* Switch.aiff in Resources */,
 				892FE3A60F7ED20A00BAC171 /* Whip.aiff in Resources */,
+				897C0D670F99154500F9D8B5 /* browserInstapaper.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

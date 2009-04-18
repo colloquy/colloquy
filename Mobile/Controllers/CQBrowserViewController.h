@@ -23,6 +23,7 @@
 - (IBAction) reloadOrStop:(id) sender;
 - (IBAction) openInSafari:(id) sender;
 - (IBAction) sendURL:(id) sender;
+- (IBAction) sendToInstapaper:(id) sender;
 - (IBAction) close:(id) sender;
 @end
 

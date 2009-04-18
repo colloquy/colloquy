@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="78"/>
+			<integer value="88"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -152,15 +152,22 @@
 						<object class="NSMutableArray" key="IBUIItems">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBUIBarButtonItem" id="1035631960">
-								<int key="IBUISystemItemIdentifier">0</int>
 								<reference key="IBUIToolbar" ref="395487836"/>
+								<int key="IBUISystemItemIdentifier">0</int>
 							</object>
 							<object class="IBUIBarButtonItem" id="438461034">
-								<int key="IBUISystemItemIdentifier">5</int>
 								<reference key="IBUIToolbar" ref="395487836"/>
+								<int key="IBUISystemItemIdentifier">5</int>
 							</object>
 							<object class="IBUIBarButtonItem" id="217218423">
+								<reference key="IBUIToolbar" ref="395487836"/>
 								<int key="IBUISystemItemIdentifier">9</int>
+							</object>
+							<object class="IBUIBarButtonItem" id="323549408">
+								<object class="NSCustomResource" key="IBUIImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">browserInstapaper.png</string>
+								</object>
 								<reference key="IBUIToolbar" ref="395487836"/>
 							</object>
 							<object class="IBUIBarButtonItem" id="49252836">
@@ -187,6 +194,7 @@
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
 						<bool key="IBUIScalesPageToFit">YES</bool>
+						<int key="IBUIDataDetectorTypes">1</int>
 						<bool key="IBUIDetectsPhoneNumbers">YES</bool>
 					</object>
 				</object>
@@ -340,6 +348,14 @@
 					</object>
 					<int key="connectionID">80</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">sendToInstapaper:</string>
+						<reference key="source" ref="323549408"/>
+						<reference key="destination" ref="372490531"/>
+					</object>
+					<int key="connectionID">91</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -357,9 +373,9 @@
 						<reference key="object" ref="191373211"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="395487836"/>
 							<reference ref="484076705"/>
 							<reference ref="584638243"/>
+							<reference ref="395487836"/>
 						</object>
 						<reference key="parent" ref="360949347"/>
 					</object>
@@ -383,6 +399,7 @@
 							<reference ref="49252836"/>
 							<reference ref="438461034"/>
 							<reference ref="217218423"/>
+							<reference ref="323549408"/>
 						</object>
 						<reference key="parent" ref="191373211"/>
 					</object>
@@ -464,6 +481,11 @@
 						<reference key="object" ref="217218423"/>
 						<reference key="parent" ref="395487836"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">88</int>
+						<reference key="object" ref="323549408"/>
+						<reference key="parent" ref="395487836"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -485,12 +507,14 @@
 					<string>63.IBPluginDependency</string>
 					<string>7.IBPluginDependency</string>
 					<string>78.IBPluginDependency</string>
+					<string>88.IBPluginDependency</string>
 				</object>
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>CQBrowserViewController</string>
 					<string>UIResponder</string>
-					<string>{{354, 337}, {320, 480}}</string>
+					<string>{{254, 376}, {320, 480}}</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -525,7 +549,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">80</int>
+			<int key="maxID">91</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -541,10 +565,12 @@
 							<string>goBack:</string>
 							<string>openInSafari:</string>
 							<string>reloadOrStop:</string>
+							<string>sendToInstapaper:</string>
 							<string>sendURL:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
