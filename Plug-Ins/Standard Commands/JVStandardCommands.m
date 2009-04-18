@@ -77,7 +77,10 @@
 				return YES;
 			}
 		} else if( ! [command caseInsensitiveCompare:@"whois"] || ! [command caseInsensitiveCompare:@"wi"] || ! [command caseInsensitiveCompare:@"wii"] ) {
-			NSString *nick = [[arguments string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+			NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
+			NSString *nick = nil;
+			[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&nick];
+
 			MVChatUser *user = [[connection chatUsersWithNickname:nick] anyObject];
 			if( ! user ) return NO;
 			[[JVInspectorController inspectorOfObject:user] show:nil];
