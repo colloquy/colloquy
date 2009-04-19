@@ -708,7 +708,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _pingServer ) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _periodicEvents ) object:nil];
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _whoisWatchedUsers ) object:nil];
+//	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _whoisWatchedUsers ) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _checkWatchedUsers ) object:nil];
 
 	if( _status == MVChatConnectionConnectingStatus ) {
@@ -1926,7 +1926,7 @@ end:
 
 			[request release];
 
-			[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
+//			[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
 		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"CHANTYPES="] ) {
 			NSString *types = [feature substringFromIndex:10]; // length of "CHANTYPES="
 			if( [types length] )
@@ -3056,8 +3056,8 @@ end:
 				MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
 				if( ! [[user nickname] isEqualToString:nick] && [[user nickname] isCaseInsensitiveEqualToString:nick] )
 					[user _setNickname:nick]; // nick differed only in case, change to the proper case
-				if( [[user dateUpdated] timeIntervalSinceNow] < -JVWatchedUserWHOISDelay || ! [user dateUpdated] )
-					[self _scheduleWhoisForUser:user];
+//				if( [[user dateUpdated] timeIntervalSinceNow] < -JVWatchedUserWHOISDelay || ! [user dateUpdated] )
+//					[self _scheduleWhoisForUser:user];
 				[self _markUserAsOnline:user];
 				[_lastSentIsonNicknames removeObject:nickLower];
 			}
@@ -3689,8 +3689,8 @@ end:
 
 		[self _markUserAsOnline:user];
 
-		if( [[user dateUpdated] timeIntervalSinceNow] < -JVWatchedUserWHOISDelay || ! [user dateUpdated] )
-			[self _scheduleWhoisForUser:user];
+//		if( [[user dateUpdated] timeIntervalSinceNow] < -JVWatchedUserWHOISDelay || ! [user dateUpdated] )
+//			[self _scheduleWhoisForUser:user];
 	}
 }
 
