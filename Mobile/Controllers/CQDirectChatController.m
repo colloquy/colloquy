@@ -417,7 +417,7 @@
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetDidSendRecently) object:nil];
 	[self performSelector:@selector(resetDidSendRecently) withObject:nil afterDelay:0.5];
 
-	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"]) {
+	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"] && text.length > 1) {
 		static NSArray *commandsNotRequiringConnection;
 		if (!commandsNotRequiringConnection)
 			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", nil];
@@ -431,7 +431,7 @@
 
 		[scanner scanString:@"/" intoString:nil];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&command];
-
+		
 		if (!self.available && ([command isCaseInsensitiveEqualToString:@"me"] || [command isCaseInsensitiveEqualToString:@"msg"] || [command isCaseInsensitiveEqualToString:@"say"])) {
 			[self _showCantSendMessagesWarningForCommand:NO];
 			return NO;
@@ -461,7 +461,7 @@
 		}
 
 		// Send as a message, strip the first forward slash if it exists.
-		if ([text hasPrefix:@"/"])
+		if ([text hasPrefix:@"/"] && text.length > 1)
 			text = [text substringFromIndex:1];
 
 		[_target sendMessage:text withEncoding:self.encoding asAction:NO];
