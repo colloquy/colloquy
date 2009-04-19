@@ -91,14 +91,14 @@
 
 	[roomsTable setDoubleAction:@selector( joinRoom: )];
 
-	[showBroswer setCell:[[[NSDisclosureButtonCell alloc] initWithCell:[showBroswer cell]] autorelease]];
+	[showBrowser setCell:[[[NSDisclosureButtonCell alloc] initWithCell:[showBrowser cell]] autorelease]];
 
 	[searchField setAction:@selector( filterResults: )];
 	[searchField setTarget:self];
 
 	_collapsed = NO;
-	[showBroswer setState:NSOffState];
-	[self toggleRoomBrowser:showBroswer];
+	[showBrowser setState:NSOffState];
+	[self toggleRoomBrowser:showBrowser];
 
 	[self _connectionChange:nil];
 
@@ -154,22 +154,22 @@
 		if( NSRunInformationalAlertPanel( NSLocalizedString( @"Connection is Disconnected", "connection is disconnected dialog title" ), NSLocalizedString( @"Would you like to connect and retrieve the server's chat room listing?", "would you like to connect to get room listing dialog message" ), NSLocalizedString( @"Yes", "yes button" ), NSLocalizedString( @"No", "no button" ), nil ) == NSOKButton ) {
 			[_connection connect];
 		} else {
-			[showBroswer setState:NSOffState];
-			[self toggleRoomBrowser:showBroswer];
+			[showBrowser setState:NSOffState];
+			[self toggleRoomBrowser:showBrowser];
 		}
 	}
 }
 
 - (IBAction) hideRoomBrowser:(id) sender {
 	if( _collapsed ) return;
-	[showBroswer setState:NSOffState];
-	[self toggleRoomBrowser:showBroswer];
+	[showBrowser setState:NSOffState];
+	[self toggleRoomBrowser:showBrowser];
 }
 
 - (IBAction) showRoomBrowser:(id) sender {
 	if( ! _collapsed ) return;
-	[showBroswer setState:NSOnState];
-	[self toggleRoomBrowser:showBroswer];
+	[showBrowser setState:NSOnState];
+	[self toggleRoomBrowser:showBrowser];
 }
 
 - (IBAction) toggleRoomBrowser:(id) sender {
@@ -188,9 +188,9 @@
 	if( ! origWidth ) origWidth = NSWidth( windowFrame );
 
 	static float origOffset = 0.;
-	if( ! origOffset ) origOffset = NSHeight( [borwserArea frame] );
+	if( ! origOffset ) origOffset = NSHeight( [browserArea frame] );
 
-	float offset = NSHeight( [borwserArea frame] );
+	float offset = NSHeight( [browserArea frame] );
 	if( ! offset ) offset = origOffset;
 
 	float width = NSWidth( windowFrame );
@@ -198,7 +198,7 @@
 	[searchArea selectTabViewItemAtIndex:2];
 
 	if( ! [sender state] ) {
-		[borwserArea selectTabViewItemAtIndex:0];
+		[browserArea selectTabViewItemAtIndex:0];
 		[[self window] setShowsResizeIndicator:NO];
 		width = origWidth;
 		_collapsed = YES;
@@ -209,7 +209,7 @@
 
 	if( [sender state] ) {
 		[roomsTable sizeLastColumnToFit];
-		[borwserArea selectTabViewItemAtIndex:1];
+		[browserArea selectTabViewItemAtIndex:1];
 		[searchArea selectTabViewItemAtIndex:1];
 		[[self window] setShowsResizeIndicator:YES];
 		_collapsed = NO;
@@ -257,7 +257,7 @@
 
 	[self _refreshResults:nil];
 
-	[showBroswer setEnabled:( _connection ? YES : NO )];
+	[showBrowser setEnabled:( _connection ? YES : NO )];
 	[roomField setEnabled:( _connection ? YES : NO )];
 }
 
@@ -469,15 +469,15 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 	if( ! _connection && [menu numberOfItems] ) [connectionPopup selectItemAtIndex:-1];
 
 	[connectionPopup setEnabled:( ! ( ! _connection && ! [menu numberOfItems] ) )];
-	[showBroswer setEnabled:( _connection ? YES : NO )];
+	[showBrowser setEnabled:( _connection ? YES : NO )];
 	[roomField setEnabled:( _connection ? YES : NO )];
 
 	if( [connectionPopup indexOfSelectedItem] == -1 || ! [menu numberOfItems] ) {
 		[roomField setObjectValue:@""];
 		[acceptButton setEnabled:NO];
 		if( ! _collapsed ) {
-			[showBroswer setState:NSOffState];
-			[self toggleRoomBrowser:showBroswer];
+			[showBrowser setState:NSOffState];
+			[self toggleRoomBrowser:showBrowser];
 		}
 	}
 }

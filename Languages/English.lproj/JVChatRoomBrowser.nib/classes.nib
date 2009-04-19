@@ -1,30 +1,78 @@
-{
-    IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {changeConnection = id; close = id; joinRoom = id; toggleRoomBrowser = id; }; 
-            CLASS = JVChatRoomBrowser; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                acceptButton = NSButton; 
-                borwserArea = NSTabView; 
-                connectionPopup = NSPopUpButton; 
-                indexAndFindResults = NSTextField; 
-                indexResults = NSTextField; 
-                roomField = NSComboBox; 
-                roomsTable = NSTableView; 
-                searchArea = NSTabView; 
-                searchField = NSTextField; 
-                showBroswer = NSButton; 
-            }; 
-            SUPERCLASS = NSWindowController; 
-        }, 
-        {
-            ACTIONS = {displayMenu = id; }; 
-            CLASS = MVMenuButton; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = NSButton; 
-        }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeConnection</key>
+				<string>id</string>
+				<key>close</key>
+				<string>id</string>
+				<key>hideRoomBrowser</key>
+				<string>id</string>
+				<key>joinRoom</key>
+				<string>id</string>
+				<key>showRoomBrowser</key>
+				<string>id</string>
+				<key>toggleRoomBrowser</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>JVChatRoomBrowser</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>acceptButton</key>
+				<string>NSButton</string>
+				<key>browserArea</key>
+				<string>NSTabView</string>
+				<key>connectionPopup</key>
+				<string>NSPopUpButton</string>
+				<key>indexAndFindResults</key>
+				<string>NSTextField</string>
+				<key>indexResults</key>
+				<string>NSTextField</string>
+				<key>roomField</key>
+				<string>NSComboBox</string>
+				<key>roomsTable</key>
+				<string>NSTableView</string>
+				<key>searchArea</key>
+				<string>NSTabView</string>
+				<key>searchField</key>
+				<string>NSSearchField</string>
+				<key>showBrowser</key>
+				<string>NSButton</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSWindowController</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changeBackgroundColor</key>
+				<string>id</string>
+				<key>doubleClicked</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>

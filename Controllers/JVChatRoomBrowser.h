@@ -2,14 +2,14 @@
 
 @interface JVChatRoomBrowser : NSWindowController {
 	IBOutlet NSTableView *roomsTable;
-	IBOutlet NSTabView *borwserArea;
+	IBOutlet NSTabView *browserArea;
 	IBOutlet NSTabView *searchArea;
 	IBOutlet NSPopUpButton *connectionPopup;
 	IBOutlet NSComboBox *roomField;
 	IBOutlet NSSearchField *searchField;
 	IBOutlet NSTextField *indexResults;
 	IBOutlet NSTextField *indexAndFindResults;
-	IBOutlet NSButton *showBroswer;
+	IBOutlet NSButton *showBrowser;
 	IBOutlet NSButton *acceptButton;
 	BOOL _collapsed;
 	BOOL _ascending;
