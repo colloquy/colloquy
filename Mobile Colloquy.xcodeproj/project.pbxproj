@@ -67,6 +67,23 @@
 		1C1896120E29CF75003CFED0 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */; };
 		1C20BE820EFEDF26005AD8A5 /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */; };
 		1C2A046F0EDAFC2D004509AE /* CQPreferencesListEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */; };
+		1C4CE6360FA03D7800215521 /* Beep 1.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6250FA03D7800215521 /* Beep 1.aiff */; };
+		1C4CE6370FA03D7800215521 /* Beep 2.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6260FA03D7800215521 /* Beep 2.aiff */; };
+		1C4CE6380FA03D7800215521 /* Bell 1.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6270FA03D7800215521 /* Bell 1.aiff */; };
+		1C4CE6390FA03D7800215521 /* Bell 2.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6280FA03D7800215521 /* Bell 2.aiff */; };
+		1C4CE63A0FA03D7800215521 /* Clap.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6290FA03D7800215521 /* Clap.aiff */; };
+		1C4CE63B0FA03D7800215521 /* Cymbal.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE62A0FA03D7800215521 /* Cymbal.aiff */; };
+		1C4CE63C0FA03D7800215521 /* DJ Scratch.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE62B0FA03D7800215521 /* DJ Scratch.aiff */; };
+		1C4CE63D0FA03D7800215521 /* Electronic Signal.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE62C0FA03D7800215521 /* Electronic Signal.aiff */; };
+		1C4CE63E0FA03D7800215521 /* Explosion.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE62D0FA03D7800215521 /* Explosion.aiff */; };
+		1C4CE63F0FA03D7800215521 /* Kick.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE62E0FA03D7800215521 /* Kick.aiff */; };
+		1C4CE6400FA03D7800215521 /* Laser.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE62F0FA03D7800215521 /* Laser.aiff */; };
+		1C4CE6410FA03D7800215521 /* Pop.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6300FA03D7800215521 /* Pop.aiff */; };
+		1C4CE6420FA03D7800215521 /* Rattle.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6310FA03D7800215521 /* Rattle.aiff */; };
+		1C4CE6430FA03D7800215521 /* Sonar Beep.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6320FA03D7800215521 /* Sonar Beep.aiff */; };
+		1C4CE6440FA03D7800215521 /* Stoof.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6330FA03D7800215521 /* Stoof.aiff */; };
+		1C4CE6450FA03D7800215521 /* Switch.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6340FA03D7800215521 /* Switch.aiff */; };
+		1C4CE6460FA03D7800215521 /* Whip.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6350FA03D7800215521 /* Whip.aiff */; };
 		1C6100D30ED31C8B0016F968 /* CQPreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6100D20ED31C8B0016F968 /* CQPreferencesSwitchCell.m */; };
 		1C61FEA10ED24BA40016F968 /* deleteButtonNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C61FE9F0ED24BA40016F968 /* deleteButtonNormal.png */; };
 		1C61FEA20ED24BA40016F968 /* deleteButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C61FEA00ED24BA40016F968 /* deleteButtonPressed.png */; };
@@ -125,23 +142,6 @@
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
-		892FE3960F7ED20A00BAC171 /* Beep 1.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE3850F7ED20A00BAC171 /* Beep 1.aiff */; };
-		892FE3970F7ED20A00BAC171 /* Beep 2.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE3860F7ED20A00BAC171 /* Beep 2.aiff */; };
-		892FE3980F7ED20A00BAC171 /* Bell 1.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE3870F7ED20A00BAC171 /* Bell 1.aiff */; };
-		892FE3990F7ED20A00BAC171 /* Bell 2.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE3880F7ED20A00BAC171 /* Bell 2.aiff */; };
-		892FE39A0F7ED20A00BAC171 /* Clap.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE3890F7ED20A00BAC171 /* Clap.aiff */; };
-		892FE39B0F7ED20A00BAC171 /* Cymbal.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE38A0F7ED20A00BAC171 /* Cymbal.aiff */; };
-		892FE39C0F7ED20A00BAC171 /* DJ Scratch.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE38B0F7ED20A00BAC171 /* DJ Scratch.aiff */; };
-		892FE39D0F7ED20A00BAC171 /* Electronic Signal.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE38C0F7ED20A00BAC171 /* Electronic Signal.aiff */; };
-		892FE39E0F7ED20A00BAC171 /* Explosion.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE38D0F7ED20A00BAC171 /* Explosion.aiff */; };
-		892FE39F0F7ED20A00BAC171 /* Kick.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE38E0F7ED20A00BAC171 /* Kick.aiff */; };
-		892FE3A00F7ED20A00BAC171 /* Laser.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE38F0F7ED20A00BAC171 /* Laser.aiff */; };
-		892FE3A10F7ED20A00BAC171 /* Pop.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE3900F7ED20A00BAC171 /* Pop.aiff */; };
-		892FE3A20F7ED20A00BAC171 /* Rattle.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE3910F7ED20A00BAC171 /* Rattle.aiff */; };
-		892FE3A30F7ED20A00BAC171 /* Sonar Beep.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE3920F7ED20A00BAC171 /* Sonar Beep.aiff */; };
-		892FE3A40F7ED20A00BAC171 /* Stoof.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE3930F7ED20A00BAC171 /* Stoof.aiff */; };
-		892FE3A50F7ED20A00BAC171 /* Switch.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE3940F7ED20A00BAC171 /* Switch.aiff */; };
-		892FE3A60F7ED20A00BAC171 /* Whip.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 892FE3950F7ED20A00BAC171 /* Whip.aiff */; };
 		896E84610F15AB6C00D810FE /* notes.css in Resources */ = {isa = PBXBuildFile; fileRef = 896E84600F15AB6C00D810FE /* notes.css */; };
 		897C0D670F99154500F9D8B5 /* browserInstapaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 897C0D660F99154500F9D8B5 /* browserInstapaper.png */; };
 		89997FAC0F171EB600CF0AA2 /* standard-grey-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */; };
@@ -253,6 +253,23 @@
 		1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NSDictionaryAdditions.m; path = Additions/NSDictionaryAdditions.m; sourceTree = "<group>"; };
 		1C2A046D0EDAFC2D004509AE /* CQPreferencesListEditViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQPreferencesListEditViewController.h; sourceTree = "<group>"; };
 		1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesListEditViewController.m; sourceTree = "<group>"; };
+		1C4CE6250FA03D7800215521 /* Beep 1.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Beep 1.aiff"; sourceTree = "<group>"; };
+		1C4CE6260FA03D7800215521 /* Beep 2.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Beep 2.aiff"; sourceTree = "<group>"; };
+		1C4CE6270FA03D7800215521 /* Bell 1.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Bell 1.aiff"; sourceTree = "<group>"; };
+		1C4CE6280FA03D7800215521 /* Bell 2.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Bell 2.aiff"; sourceTree = "<group>"; };
+		1C4CE6290FA03D7800215521 /* Clap.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Clap.aiff; sourceTree = "<group>"; };
+		1C4CE62A0FA03D7800215521 /* Cymbal.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Cymbal.aiff; sourceTree = "<group>"; };
+		1C4CE62B0FA03D7800215521 /* DJ Scratch.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "DJ Scratch.aiff"; sourceTree = "<group>"; };
+		1C4CE62C0FA03D7800215521 /* Electronic Signal.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Electronic Signal.aiff"; sourceTree = "<group>"; };
+		1C4CE62D0FA03D7800215521 /* Explosion.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Explosion.aiff; sourceTree = "<group>"; };
+		1C4CE62E0FA03D7800215521 /* Kick.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Kick.aiff; sourceTree = "<group>"; };
+		1C4CE62F0FA03D7800215521 /* Laser.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Laser.aiff; sourceTree = "<group>"; };
+		1C4CE6300FA03D7800215521 /* Pop.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Pop.aiff; sourceTree = "<group>"; };
+		1C4CE6310FA03D7800215521 /* Rattle.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Rattle.aiff; sourceTree = "<group>"; };
+		1C4CE6320FA03D7800215521 /* Sonar Beep.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Sonar Beep.aiff"; sourceTree = "<group>"; };
+		1C4CE6330FA03D7800215521 /* Stoof.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Stoof.aiff; sourceTree = "<group>"; };
+		1C4CE6340FA03D7800215521 /* Switch.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Switch.aiff; sourceTree = "<group>"; };
+		1C4CE6350FA03D7800215521 /* Whip.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Whip.aiff; sourceTree = "<group>"; };
 		1C6100D10ED31C8B0016F968 /* CQPreferencesSwitchCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQPreferencesSwitchCell.h; sourceTree = "<group>"; };
 		1C6100D20ED31C8B0016F968 /* CQPreferencesSwitchCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesSwitchCell.m; sourceTree = "<group>"; };
 		1C61FE9F0ED24BA40016F968 /* deleteButtonNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deleteButtonNormal.png; sourceTree = "<group>"; };
@@ -336,23 +353,6 @@
 		1D6058910D05DD3D006BFB54 /* Colloquy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Mobile/main.m; sourceTree = "<group>"; };
-		892FE3850F7ED20A00BAC171 /* Beep 1.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Beep 1.aiff"; sourceTree = "<group>"; };
-		892FE3860F7ED20A00BAC171 /* Beep 2.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Beep 2.aiff"; sourceTree = "<group>"; };
-		892FE3870F7ED20A00BAC171 /* Bell 1.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Bell 1.aiff"; sourceTree = "<group>"; };
-		892FE3880F7ED20A00BAC171 /* Bell 2.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Bell 2.aiff"; sourceTree = "<group>"; };
-		892FE3890F7ED20A00BAC171 /* Clap.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Clap.aiff; sourceTree = "<group>"; };
-		892FE38A0F7ED20A00BAC171 /* Cymbal.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Cymbal.aiff; sourceTree = "<group>"; };
-		892FE38B0F7ED20A00BAC171 /* DJ Scratch.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "DJ Scratch.aiff"; sourceTree = "<group>"; };
-		892FE38C0F7ED20A00BAC171 /* Electronic Signal.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Electronic Signal.aiff"; sourceTree = "<group>"; };
-		892FE38D0F7ED20A00BAC171 /* Explosion.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Explosion.aiff; sourceTree = "<group>"; };
-		892FE38E0F7ED20A00BAC171 /* Kick.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Kick.aiff; sourceTree = "<group>"; };
-		892FE38F0F7ED20A00BAC171 /* Laser.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Laser.aiff; sourceTree = "<group>"; };
-		892FE3900F7ED20A00BAC171 /* Pop.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Pop.aiff; sourceTree = "<group>"; };
-		892FE3910F7ED20A00BAC171 /* Rattle.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Rattle.aiff; sourceTree = "<group>"; };
-		892FE3920F7ED20A00BAC171 /* Sonar Beep.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Sonar Beep.aiff"; sourceTree = "<group>"; };
-		892FE3930F7ED20A00BAC171 /* Stoof.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Stoof.aiff; sourceTree = "<group>"; };
-		892FE3940F7ED20A00BAC171 /* Switch.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Switch.aiff; sourceTree = "<group>"; };
-		892FE3950F7ED20A00BAC171 /* Whip.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = Whip.aiff; sourceTree = "<group>"; };
 		896E84600F15AB6C00D810FE /* notes.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = notes.css; sourceTree = "<group>"; };
 		897C0D660F99154500F9D8B5 /* browserInstapaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserInstapaper.png; sourceTree = "<group>"; };
 		89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "standard-grey-dark.css"; sourceTree = "<group>"; };
@@ -583,6 +583,31 @@
 			name = "Utility Classes";
 			sourceTree = "<group>";
 		};
+		1C4CE6240FA03D7800215521 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				1C4CE6250FA03D7800215521 /* Beep 1.aiff */,
+				1C4CE6260FA03D7800215521 /* Beep 2.aiff */,
+				1C4CE6270FA03D7800215521 /* Bell 1.aiff */,
+				1C4CE6280FA03D7800215521 /* Bell 2.aiff */,
+				1C4CE6290FA03D7800215521 /* Clap.aiff */,
+				1C4CE62A0FA03D7800215521 /* Cymbal.aiff */,
+				1C4CE62B0FA03D7800215521 /* DJ Scratch.aiff */,
+				1C4CE62C0FA03D7800215521 /* Electronic Signal.aiff */,
+				1C4CE62D0FA03D7800215521 /* Explosion.aiff */,
+				1C4CE62E0FA03D7800215521 /* Kick.aiff */,
+				1C4CE62F0FA03D7800215521 /* Laser.aiff */,
+				1C4CE6300FA03D7800215521 /* Pop.aiff */,
+				1C4CE6310FA03D7800215521 /* Rattle.aiff */,
+				1C4CE6320FA03D7800215521 /* Sonar Beep.aiff */,
+				1C4CE6330FA03D7800215521 /* Stoof.aiff */,
+				1C4CE6340FA03D7800215521 /* Switch.aiff */,
+				1C4CE6350FA03D7800215521 /* Whip.aiff */,
+			);
+			name = Sounds;
+			path = Resources/Sounds;
+			sourceTree = SOURCE_ROOT;
+		};
 		1C82C18D0D83CEFE009ABD9F /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -667,24 +692,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				897C0D660F99154500F9D8B5 /* browserInstapaper.png */,
-				892FE3850F7ED20A00BAC171 /* Beep 1.aiff */,
-				892FE3860F7ED20A00BAC171 /* Beep 2.aiff */,
-				892FE3870F7ED20A00BAC171 /* Bell 1.aiff */,
-				892FE3880F7ED20A00BAC171 /* Bell 2.aiff */,
-				892FE3890F7ED20A00BAC171 /* Clap.aiff */,
-				892FE38A0F7ED20A00BAC171 /* Cymbal.aiff */,
-				892FE38B0F7ED20A00BAC171 /* DJ Scratch.aiff */,
-				892FE38C0F7ED20A00BAC171 /* Electronic Signal.aiff */,
-				892FE38D0F7ED20A00BAC171 /* Explosion.aiff */,
-				892FE38E0F7ED20A00BAC171 /* Kick.aiff */,
-				892FE38F0F7ED20A00BAC171 /* Laser.aiff */,
-				892FE3900F7ED20A00BAC171 /* Pop.aiff */,
-				892FE3910F7ED20A00BAC171 /* Rattle.aiff */,
-				892FE3920F7ED20A00BAC171 /* Sonar Beep.aiff */,
-				892FE3930F7ED20A00BAC171 /* Stoof.aiff */,
-				892FE3940F7ED20A00BAC171 /* Switch.aiff */,
-				892FE3950F7ED20A00BAC171 /* Whip.aiff */,
+				1C4CE6240FA03D7800215521 /* Sounds */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				1C09313A0D80C8F600A2705D /* Defaults.plist */,
 				1C8CFE950F60E11900B672F9 /* Localizable.strings */,
@@ -700,6 +708,7 @@
 				1C124B3F0F0A0244008F181B /* browserReload.png */,
 				1C124B400F0A0244008F181B /* browserStop.png */,
 				1C124BE60F0A13ED008F181B /* browserSafari.png */,
+				897C0D660F99154500F9D8B5 /* browserInstapaper.png */,
 				1CB33C970D882BB000EC4E38 /* connections.png */,
 				1CB33C980D882BB000EC4E38 /* buddies.png */,
 				1CB33C990D882BB000EC4E38 /* colloquies.png */,
@@ -871,24 +880,24 @@
 				89997FAC0F171EB600CF0AA2 /* standard-grey-dark.css in Resources */,
 				9799B3BA0F3C1E0100526B1E /* FileTransferTableCell.xib in Resources */,
 				1C8CFE970F60E11900B672F9 /* Localizable.strings in Resources */,
-				892FE3960F7ED20A00BAC171 /* Beep 1.aiff in Resources */,
-				892FE3970F7ED20A00BAC171 /* Beep 2.aiff in Resources */,
-				892FE3980F7ED20A00BAC171 /* Bell 1.aiff in Resources */,
-				892FE3990F7ED20A00BAC171 /* Bell 2.aiff in Resources */,
-				892FE39A0F7ED20A00BAC171 /* Clap.aiff in Resources */,
-				892FE39B0F7ED20A00BAC171 /* Cymbal.aiff in Resources */,
-				892FE39C0F7ED20A00BAC171 /* DJ Scratch.aiff in Resources */,
-				892FE39D0F7ED20A00BAC171 /* Electronic Signal.aiff in Resources */,
-				892FE39E0F7ED20A00BAC171 /* Explosion.aiff in Resources */,
-				892FE39F0F7ED20A00BAC171 /* Kick.aiff in Resources */,
-				892FE3A00F7ED20A00BAC171 /* Laser.aiff in Resources */,
-				892FE3A10F7ED20A00BAC171 /* Pop.aiff in Resources */,
-				892FE3A20F7ED20A00BAC171 /* Rattle.aiff in Resources */,
-				892FE3A30F7ED20A00BAC171 /* Sonar Beep.aiff in Resources */,
-				892FE3A40F7ED20A00BAC171 /* Stoof.aiff in Resources */,
-				892FE3A50F7ED20A00BAC171 /* Switch.aiff in Resources */,
-				892FE3A60F7ED20A00BAC171 /* Whip.aiff in Resources */,
 				897C0D670F99154500F9D8B5 /* browserInstapaper.png in Resources */,
+				1C4CE6360FA03D7800215521 /* Beep 1.aiff in Resources */,
+				1C4CE6370FA03D7800215521 /* Beep 2.aiff in Resources */,
+				1C4CE6380FA03D7800215521 /* Bell 1.aiff in Resources */,
+				1C4CE6390FA03D7800215521 /* Bell 2.aiff in Resources */,
+				1C4CE63A0FA03D7800215521 /* Clap.aiff in Resources */,
+				1C4CE63B0FA03D7800215521 /* Cymbal.aiff in Resources */,
+				1C4CE63C0FA03D7800215521 /* DJ Scratch.aiff in Resources */,
+				1C4CE63D0FA03D7800215521 /* Electronic Signal.aiff in Resources */,
+				1C4CE63E0FA03D7800215521 /* Explosion.aiff in Resources */,
+				1C4CE63F0FA03D7800215521 /* Kick.aiff in Resources */,
+				1C4CE6400FA03D7800215521 /* Laser.aiff in Resources */,
+				1C4CE6410FA03D7800215521 /* Pop.aiff in Resources */,
+				1C4CE6420FA03D7800215521 /* Rattle.aiff in Resources */,
+				1C4CE6430FA03D7800215521 /* Sonar Beep.aiff in Resources */,
+				1C4CE6440FA03D7800215521 /* Stoof.aiff in Resources */,
+				1C4CE6450FA03D7800215521 /* Switch.aiff in Resources */,
+				1C4CE6460FA03D7800215521 /* Whip.aiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
