@@ -23,7 +23,7 @@
 	<key>CFBundleVersion</key>
 	<string>source</string>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
-	<string>http://colloquy.mobi/</string>
+	<string>http://colloquy.mobi</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSMainNibFile</key>
