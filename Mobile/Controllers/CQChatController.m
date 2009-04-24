@@ -174,7 +174,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		if (![self chatViewControllerForUser:user ifExists:YES])
 			hideFromUser = YES;
 
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatAlwaysShowNotices"])
+		if ( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"] == 1 || ( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"] == 0 && ![[notification userInfo] objectForKey:@"handled"] ) )
 			hideFromUser = NO;
 	}
 
