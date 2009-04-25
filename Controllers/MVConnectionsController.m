@@ -1521,7 +1521,7 @@ static NSMenu *favoritesMenu = nil;
 			errorTitle = NSLocalizedString( @"Services Down", "services down error title" );
 			break;
 		case MVChatConnectionCantChangeUsedNickError:
-			errorTitle = NSLocalizedString( @"Nickname is Already In Use", "cannot change used nickname error title" );
+			errorTitle = NSLocalizedString( @"Service will change nickname", "service will change nickname error title" );
 			break;
 		case MVChatConnectionRoomIsFullError:
 			errorTitle = NSLocalizedString( @"Room is Full", "room is full error title" );
