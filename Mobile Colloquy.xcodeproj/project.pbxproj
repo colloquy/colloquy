@@ -134,6 +134,8 @@
 		1CE69F820EE2F50100389442 /* ChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CE69F810EE2F50100389442 /* ChatView.xib */; };
 		1CE69FD90EE317F200389442 /* CQChatInputBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE69FD80EE317F200389442 /* CQChatInputBar.m */; };
 		1CE69FF00EE34C0000389442 /* chatInputBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CE69FEF0EE34C0000389442 /* chatInputBarBackground.png */; };
+		1CE7FF790FA3D003001C7B17 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE7FF770FA3D003001C7B17 /* RegexKitLite.m */; };
+		1CE7FF9E0FA3D064001C7B17 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE7FF9D0FA3D064001C7B17 /* libicucore.dylib */; };
 		1CF50C150ED8AFBE00CBE5E3 /* CQKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */; };
 		1CF50C870ED8BE1100CBE5E3 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF50C860ED8BE1100CBE5E3 /* Security.framework */; };
 		1CF50EAF0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */; };
@@ -341,6 +343,9 @@
 		1CE69FD70EE317F200389442 /* CQChatInputBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatInputBar.h; sourceTree = "<group>"; };
 		1CE69FD80EE317F200389442 /* CQChatInputBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatInputBar.m; sourceTree = "<group>"; };
 		1CE69FEF0EE34C0000389442 /* chatInputBarBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatInputBarBackground.png; sourceTree = "<group>"; };
+		1CE7FF770FA3D003001C7B17 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexKitLite.m; path = "Chat Core/RegexKitLite.m"; sourceTree = "<group>"; };
+		1CE7FF780FA3D003001C7B17 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexKitLite.h; path = "Chat Core/RegexKitLite.h"; sourceTree = "<group>"; };
+		1CE7FF9D0FA3D064001C7B17 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQKeychain.h; sourceTree = "<group>"; };
 		1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQKeychain.m; sourceTree = "<group>"; };
 		1CF50C860ED8BE1100CBE5E3 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -387,6 +392,7 @@
 				1CF50C870ED8BE1100CBE5E3 /* Security.framework in Frameworks */,
 				1CBC07CE0F0741E400EEBCFB /* SystemConfiguration.framework in Frameworks */,
 				1C124A720F097575008F181B /* AudioToolbox.framework in Frameworks */,
+				1CE7FF9E0FA3D064001C7B17 /* libicucore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -403,6 +409,7 @@
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1CF50C860ED8BE1100CBE5E3 /* Security.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
+				1CE7FF9D0FA3D064001C7B17 /* libicucore.dylib */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -584,6 +591,8 @@
 				1C0931F80D80C9EB00A2705D /* AsyncSocket.h */,
 				1C0931FE0D80C9EB00A2705D /* InterThreadMessaging.m */,
 				1C0931FD0D80C9EB00A2705D /* InterThreadMessaging.h */,
+				1CE7FF770FA3D003001C7B17 /* RegexKitLite.m */,
+				1CE7FF780FA3D003001C7B17 /* RegexKitLite.h */,
 			);
 			name = "Utility Classes";
 			sourceTree = "<group>";
@@ -998,6 +1007,7 @@
 				97F85EBE0F2713CA008486E1 /* CQFileTransferTableCell.m in Sources */,
 				9703B21B0F2C0D0E00E623DF /* CQFileTransferController.m in Sources */,
 				9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */,
+				1CE7FF790FA3D003001C7B17 /* RegexKitLite.m in Sources */,
 				89E87C090FA0450800B49230 /* CQSoundController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1036,6 +1046,7 @@
 					"ENABLE_XMPP=0",
 					SUPPORT_UTF8,
 					SUPPORT_UCP,
+					RKL_FAST_MUTABLE_CHECK,
 				);
 				HEADER_SEARCH_PATHS = (
 					Mobile,
@@ -1065,6 +1076,8 @@
 					"ENABLE_XMPP=0",
 					SUPPORT_UTF8,
 					SUPPORT_UCP,
+					RKL_FAST_MUTABLE_CHECK,
+					NS_BLOCK_ASSERTIONS,
 				);
 				HEADER_SEARCH_PATHS = (
 					Mobile,
