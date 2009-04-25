@@ -24,7 +24,7 @@
 #import "MVChatPluginManager.h"
 #endif
 
-#import <AGRegex/AGRegex.h>
+#import "RegexKitLite.h"
 
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
 #import <CFNetwork/CFNetwork.h>
@@ -945,9 +945,7 @@ end:
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
 
-	AGRegex *regex = [[AGRegex allocWithZone:nil] initWithPattern:@"(^PASS |IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" options:AGRegexCaseInsensitive];
-	NSString *stringWithPasswordsHidden = [regex replaceWithString:@"$1********" inString:string];
-	[regex release];
+	NSString *stringWithPasswordsHidden = [string stringByReplacingOccurrencesOfRegex:@"(^PASS |IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:RKLCaseless range:NSMakeRange(0, [string length]) error:NULL];
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:stringWithPasswordsHidden, @"message", data, @"messageData", [NSNumber numberWithBool:YES], @"outbound", nil]];
 
@@ -2147,17 +2145,13 @@ end:
 
 			// Auto reply to servers asking us to send a PASS because they could not detect an identd
 			if (![self isConnected]) {
-				AGRegex *regex = [[AGRegex allocWithZone:nil] initWithPattern:@"/QUOTE PASS (\\w+)" options:AGRegexCaseInsensitive];
-				AGRegexMatch *match = [regex findInString:msg];
-				if( match ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", [match groupAtIndex:1]];
-				[regex release];
+				NSString *matchedPassword = [msg stringByMatching:@"/QUOTE PASS (\\w+)" options:RKLCaseless inRange:NSMakeRange(0, [msg length]) capture:1 error:NULL];
+				if( matchedPassword ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", matchedPassword];
 			}
 
 			// Catch connect notices by the server and mark them as handled
-			AGRegex *regexForConnectNotice = [[AGRegex allocWithZone:nil] initWithPattern:@"on .+? ca .+?\\(.+?\\) ft .+?\\(.+?\\)|Highest connection count|\\*\\*\\* Your host is|\\*\\*\\* You are exempt from DNS blacklists|\\*\\*\\* Notice -- motd was last changed at|\\*\\*\\* Notice -- Please read the motd if you haven't read it|\\*\\*\\* Notice -- This server runs an open proxy monitor to prevent abuse|\\*\\*\\* Notice -- If you see.*? connections.*? from|\\*\\*\\* Notice -- please disregard them, as they are the .+? in action|\\*\\*\\* Notice -- For more information please visit" options:AGRegexCaseInsensitive];
-			AGRegexMatch *matchForConnectNotice = [regexForConnectNotice findInString:msg];
-			if( matchForConnectNotice ) [noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
-			[regexForConnectNotice release];
+			if( [msg isMatchedByRegex:@"on .+? ca .+?\\(.+?\\) ft .+?\\(.+?\\)|Highest connection count|\\*\\*\\* Your host is|\\*\\*\\* You are exempt from DNS blacklists|\\*\\*\\* Notice -- motd was last changed at|\\*\\*\\* Notice -- Please read the motd if you haven't read it|\\*\\*\\* Notice -- This server runs an open proxy monitor to prevent abuse|\\*\\*\\* Notice -- If you see.*? connections.*? from|\\*\\*\\* Notice -- please disregard them, as they are the .+? in action|\\*\\*\\* Notice -- For more information please visit" options:RKLCaseless inRange:NSMakeRange(0, [msg length]) error:NULL] )
+				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
 			[msg release];
 		} else if( [[sender nickname] isEqualToString:@"NickServ"] || [[sender nickname] isEqualToString:@"ChanServ"] ||
@@ -2173,13 +2167,12 @@ end:
 			   [msg hasCaseInsensitiveSubstring:@"authentication successful"] ||	// X/undernet
 			   [msg hasCaseInsensitiveSubstring:@"i recognize you"] ) {				// AuthServ/gamesurge
 
-				if( ![[self localUser] isIdentified] ) {
+				if( ![[self localUser] isIdentified] )
 					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidIdentifyWithServicesNotification object:self userInfo:noticeInfo];
-				}
+
 				[[self localUser] _setIdentified:YES];
 
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
-
 			} else if( ( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"ID"] ) ||
 					  [msg hasCaseInsensitiveSubstring:@"identify yourself"] ||
 					  [msg hasCaseInsensitiveSubstring:@"authentication required"] ||
@@ -2189,13 +2182,11 @@ end:
 
 				[[self localUser] _setIdentified:NO];
 
-				if( ! [[self nicknamePassword] length] ) {
+				if( ! [[self nicknamePassword] length] )
 					[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
-				} else {
-					[self _identifyWithServicesUsingNickname:[self nickname]]; // responding to nickserv -> current nickname
-				}
-				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
+				else [self _identifyWithServicesUsingNickname:[self nickname]]; // responding to nickserv -> current nickname
 
+				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 			} else if( ( [msg hasCaseInsensitiveSubstring:@"invalid"] ||		// NickServ/freenode, X/undernet
 						 [msg hasCaseInsensitiveSubstring:@"incorrect"] ) &&	// NickServ/dalnet+foonetic+sorcery+azzurra+webchat+rizon, Q/quakenet, AuthServ/gamesurge
 					   ( [msg hasCaseInsensitiveSubstring:@"password"] || [msg hasCaseInsensitiveSubstring:@"identify"] || [msg hasCaseInsensitiveSubstring:@"identification"] ) ) {
@@ -2212,20 +2203,20 @@ end:
 			}
 
 			// Catch "[#room] - Welcome to #room!" notices and show them in the room instead
-			AGRegex *regexForRoomInWelcomeToRoomNotice = [[AGRegex allocWithZone:nil] initWithPattern:@"^[\\[\\(](.+?)[\\]\\)]"];
-			AGRegexMatch *matchForRoomInWelcomeToRoomNotice = [regexForRoomInWelcomeToRoomNotice findInString:msg];
-			if( matchForRoomInWelcomeToRoomNotice && [[self chatRoomNamePrefixes] characterIsMember:[[matchForRoomInWelcomeToRoomNotice groupAtIndex:1] characterAtIndex:0]] ) {
-				MVChatRoom *roomInWelcomeToRoomNotice = [self chatRoomWithUniqueIdentifier:[matchForRoomInWelcomeToRoomNotice groupAtIndex:1]];
+			NSString *possibleRoomPrefix = [msg stringByMatching:@"^[\\[\\(](.+?)[\\]\\)]" capture:1];
+			if( possibleRoomPrefix && [[self chatRoomNamePrefixes] characterIsMember:[possibleRoomPrefix characterAtIndex:0]] ) {
+				MVChatRoom *roomInWelcomeToRoomNotice = [self chatRoomWithUniqueIdentifier:possibleRoomPrefix];
 				if( roomInWelcomeToRoomNotice ) {
 					[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:roomInWelcomeToRoomNotice userInfo:noticeInfo];
 					[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 				}
 			}
-			[regexForRoomInWelcomeToRoomNotice release];
 
 			[msg release];
 		}
-		if( target == room || ( [target isKindOfClass:[MVChatUser class]] && [target isLocalUser] ) ) [[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:noticeInfo];
+
+		if( target == room || ( [target isKindOfClass:[MVChatUser class]] && [target isLocalUser] ) )
+			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:noticeInfo];
 	}
 }
 

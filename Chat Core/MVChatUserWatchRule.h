@@ -1,6 +1,5 @@
 @class MVChatUser;
 @class MVChatConnection;
-@class AGRegex;
 
 extern NSString *MVChatUserWatchRuleMatchedNotification;
 extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
@@ -8,15 +7,15 @@ extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
 @interface MVChatUserWatchRule : NSObject <NSCopying> {
 	NSMutableSet *_matchedChatUsers;
 	NSString *_nickname;
-	AGRegex *_nicknameRegex;
 	NSString *_realName;
-	AGRegex *_realNameRegex;
 	NSString *_username;
-	AGRegex *_usernameRegex;
 	NSString *_address;
-	AGRegex *_addressRegex;
 	NSData *_publicKey;
 	NSArray *_applicableServerDomains;
+	BOOL _nicknameIsRegex;
+	BOOL _realNameIsRegex;
+	BOOL _usernameIsRegex;
+	BOOL _addressIsRegex;
 	BOOL _interim;
 }
 - (id) initWithDictionaryRepresentation:(NSDictionary *) dictionary;

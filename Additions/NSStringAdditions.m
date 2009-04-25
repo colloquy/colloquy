@@ -1,8 +1,8 @@
 #import "NSStringAdditions.h"
 
 #import "NSScannerAdditions.h"
+#import "RegexKitLite.h"
 
-#import <AGRegex/AGRegex.h>
 #import <sys/time.h>
 
 struct EmojiEmoticonPair {
@@ -1283,22 +1283,22 @@ static NSCharacterSet *typicalEmoticonCharacters;
 		[emoticon escapeCharactersInSet:escapedCharacters];
 
 		NSString *emojiString = [[NSString alloc] initWithCharacters:&entry->emoji length:1];
-		AGRegex *regex = [[AGRegex alloc] initWithPattern:[NSString stringWithFormat:@"(?<=\\s|^|[\ue001-\ue53e])%@(?=\\s|$|[\ue001-\ue53e])", emoticon]];
+		NSString *searchRegex = [[NSString alloc] initWithFormat:@"(?<=\\s|^|[\ue001-\ue53e])%@(?=\\s|$|[\ue001-\ue53e])", emoticon];
 
-		AGRegexMatch *match = [regex findInString:self range:*range];
-		while (match) {
-			[self replaceCharactersInRange:[match range] withString:emojiString];
-			range->length += (1 - [match range].length);
+		NSRange matchedRange = [self rangeOfRegex:searchRegex inRange:*range];
+		while (matchedRange.location != NSNotFound) {
+			[self replaceCharactersInRange:matchedRange withString:emojiString];
+			range->length += (1 - matchedRange.length);
 
-			NSRange matchRange = NSMakeRange([match range].location + 1, (NSMaxRange(*range) - [match range].location - 1));
+			NSRange matchRange = NSMakeRange(matchedRange.location + 1, (NSMaxRange(*range) - matchedRange.location - 1));
 			if (!matchRange.length)
 				break;
 
-			match = [regex findInString:self range:matchRange];
+			matchedRange = [self rangeOfRegex:searchRegex inRange:matchRange];
 		}
 
-		[regex release];
 		[emoticon release];
+		[searchRegex release];
 		[emojiString release];
 
 		// Check for the typical characters again, if none are found then there are no more emoticons to replace.

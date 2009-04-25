@@ -1,10 +1,10 @@
 #import "MVChatUserWatchRule.h"
+
 #import "MVChatUser.h"
 #import "MVChatUserPrivate.h"
-#import "NSNotificationAdditions.h"
 #import "MVUtilities.h"
-
-#import <AGRegex/AGRegex.h>
+#import "NSNotificationAdditions.h"
+#import "RegexKitLite.h"
 
 NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedNotification";
 NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchRuleRemovedMatchedUserNotification";
@@ -27,25 +27,17 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 - (void) dealloc {
 	[_matchedChatUsers release];
 	[_nickname release];
-	[_nicknameRegex release];
 	[_realName release];
-	[_realNameRegex release];
 	[_username release];
-	[_usernameRegex release];
 	[_address release];
-	[_addressRegex release];
 	[_publicKey release];
 	[_applicableServerDomains release];
 
 	_matchedChatUsers = nil;
 	_nickname = nil;
-	_nicknameRegex = nil;
 	_realName = nil;
-	_realNameRegex = nil;
 	_username = nil;
-	_usernameRegex = nil;
 	_address = nil;
-	_addressRegex = nil;
 	_publicKey = nil;
 	_applicableServerDomains = nil;
 
@@ -54,22 +46,29 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 
 - (id) copyWithZone:(NSZone *) zone {
 	MVChatUserWatchRule *copy = [[MVChatUserWatchRule allocWithZone:zone] init];
-	[self setUsername:[self username]];
-	[self setNickname:[self nickname]];
-	[self setRealName:[self realName]];
-	[self setAddress:[self address]];
-	[self setPublicKey:[self publicKey]];
-	[self setInterim:[self isInterim]];
-	[self setApplicableServerDomains:[self applicableServerDomains]];
+
+	MVSafeCopyAssign( &copy->_username, _username );
+	MVSafeCopyAssign( &copy->_nickname, _nickname );
+	MVSafeCopyAssign( &copy->_realName, _realName );
+	MVSafeCopyAssign( &copy->_address, _address );
+	MVSafeCopyAssign( &copy->_publicKey, _publicKey );
+	MVSafeCopyAssign( &copy->_applicableServerDomains, _applicableServerDomains );
+
+	copy->_interim = _interim;
+	copy->_nicknameIsRegex = _nicknameIsRegex;
+	copy->_usernameIsRegex = _usernameIsRegex;
+	copy->_realNameIsRegex = _realNameIsRegex;
+	copy->_addressIsRegex = _addressIsRegex;
+
 	return copy;
 }
 
 - (NSDictionary *) dictionaryRepresentation {
 	NSMutableDictionary *dictionary = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
-	if( _username ) [dictionary setObject:_username forKey:@"username"];
-	if( _nickname ) [dictionary setObject:_nickname forKey:@"nickname"];
-	if( _realName ) [dictionary setObject:_realName forKey:@"realName"];
-	if( _address ) [dictionary setObject:_address forKey:@"address"];
+	if( _username ) [dictionary setObject:[self username] forKey:@"username"];
+	if( _nickname ) [dictionary setObject:[self nickname] forKey:@"nickname"];
+	if( _realName ) [dictionary setObject:[self realName] forKey:@"realName"];
+	if( _address ) [dictionary setObject:[self address] forKey:@"address"];
 	if( _publicKey ) [dictionary setObject:_publicKey forKey:@"publicKey"];
 	if( _interim ) [dictionary setObject:[NSNumber numberWithBool:_interim] forKey:@"interim"];
 	if( _applicableServerDomains ) [dictionary setObject:_applicableServerDomains forKey:@"applicableServerDomains"];
@@ -85,6 +84,18 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 - (BOOL) isEqualToChatUserWatchRule:(MVChatUserWatchRule *) anotherRule {
 	if( ! anotherRule ) return NO;
 	if( anotherRule == self ) return YES;
+
+	if( [self nicknameIsRegularExpression] != [anotherRule nicknameIsRegularExpression] )
+		return NO;
+
+	if( [self usernameIsRegularExpression] != [anotherRule usernameIsRegularExpression] )
+		return NO;
+
+	if( [self realNameIsRegularExpression] != [anotherRule realNameIsRegularExpression] )
+		return NO;
+
+	if( [self addressIsRegularExpression] != [anotherRule addressIsRegularExpression] )
+		return NO;
 
 	if( ( ! [self nickname] && ! [anotherRule nickname] ) || ! [[self nickname] isEqualToString:[anotherRule nickname]] )
 		return NO;
@@ -116,24 +127,20 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	}
 
 	NSString *string = [user nickname];
-	if( _nicknameRegex && ! string ) return NO;
-	if( _nicknameRegex && ! [_nicknameRegex findInString:string] ) return NO;
-	if( ! _nicknameRegex && _nickname && [_nickname length] && ! [_nickname isEqualToString:string] ) return NO;
+	if( _nicknameIsRegex && _nickname && ! [string isMatchedByRegex:_nickname options:RKLCaseless inRange:NSMakeRange(0, [string length]) error:NULL] ) return NO;
+	if( ! _nicknameIsRegex && _nickname && [_nickname length] && ! [_nickname isEqualToString:string] ) return NO;
 
 	string = [user username];
-	if( _usernameRegex && ! string ) return NO;
-	if( _usernameRegex && ! [_usernameRegex findInString:string] ) return NO;
-	if( ! _usernameRegex && _username && [_username length] && ! [_username isEqualToString:string] ) return NO;
+	if( _usernameIsRegex && _username && ! [string isMatchedByRegex:_username options:RKLCaseless inRange:NSMakeRange(0, [string length]) error:NULL] ) return NO;
+	if( ! _usernameIsRegex && _username && [_username length] && ! [_username isEqualToString:string] ) return NO;
 
 	string = [user address];
-	if( _addressRegex && ! string ) return NO;
-	if( _addressRegex && ! [_addressRegex findInString:string] ) return NO;
-	if( ! _addressRegex && _address && [_address length] && ! [_address isEqualToString:string] ) return NO;
+	if( _addressIsRegex && _address && ! [string isMatchedByRegex:_address options:RKLCaseless inRange:NSMakeRange(0, [string length]) error:NULL] ) return NO;
+	if( ! _addressIsRegex && _address && [_address length] && ! [_address isEqualToString:string] ) return NO;
 
 	string = [user realName];
-	if( _realNameRegex && ! string ) return NO;
-	if( _realNameRegex && ! [_realNameRegex findInString:string] ) return NO;
-	if( ! _realNameRegex && _realName && [_realName length] && ! [_realName isEqualToString:string] ) return NO;
+	if( _realNameIsRegex && _realName && ! [string isMatchedByRegex:_realName options:RKLCaseless inRange:NSMakeRange(0, [string length]) error:NULL] ) return NO;
+	if( ! _realNameIsRegex && _realName && [_realName length] && ! [_realName isEqualToString:string] ) return NO;
 
 	NSData *data = [user publicKey];
 	if( _publicKey && [_publicKey length] && ! [_publicKey isEqualToData:data] ) return NO;
@@ -182,75 +189,71 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 }
 
 - (NSString *) nickname {
-	return _nickname;
+	return (_nicknameIsRegex && _nickname ? [NSString stringWithFormat:@"/%@/", _nickname] : _nickname);
 }
 
 - (void) setNickname:(NSString *) newNickname {
-	MVSafeCopyAssign( &_nickname, newNickname );
+	_nicknameIsRegex = ( [newNickname length] > 2 && [newNickname hasPrefix:@"/"] && [newNickname hasSuffix:@"/"] );
 
-	id old = _nicknameRegex;
-	if( _nickname && ( [_nickname length] > 2 ) && [_nickname hasPrefix:@"/"] && [_nickname hasSuffix:@"/"] )
-		_nicknameRegex = [[AGRegex alloc] initWithPattern:[_nickname substringWithRange:NSMakeRange( 1, [_nickname length] - 2)] options:AGRegexCaseInsensitive];
-	else _nicknameRegex = nil;
-	[old release];
+	if( _nicknameIsRegex )
+		newNickname = [newNickname substringWithRange:NSMakeRange( 1, [newNickname length] - 2)];
+
+	MVSafeCopyAssign( &_nickname, newNickname );
 }
 
 - (BOOL) nicknameIsRegularExpression {
-	return ( _nicknameRegex ? YES : NO );
+	return _nicknameIsRegex;
 }
 
 - (NSString *) realName {
-	return _realName;
+	return (_realNameIsRegex && _realName ? [NSString stringWithFormat:@"/%@/", _realName] : _realName);
 }
 
 - (void) setRealName:(NSString *) newRealName {
-	MVSafeCopyAssign( &_realName, newRealName );
+	_realNameIsRegex = ( [newRealName length] > 2 && [newRealName hasPrefix:@"/"] && [newRealName hasSuffix:@"/"] );
 
-	id old = _realNameRegex;
-	if( _realName && ( [_realName length] > 2 ) && [_realName hasPrefix:@"/"] && [_realName hasSuffix:@"/"] )
-		_realNameRegex = [[AGRegex alloc] initWithPattern:[_realName substringWithRange:NSMakeRange( 1, [_realName length] - 2)] options:AGRegexCaseInsensitive];
-	else _realNameRegex = nil;
-	[old release];
+	if( _realNameIsRegex )
+		newRealName = [newRealName substringWithRange:NSMakeRange( 1, [newRealName length] - 2)];
+
+	MVSafeCopyAssign( &_realName, newRealName );
 }
 
 - (BOOL) realNameIsRegularExpression {
-	return ( _realNameRegex ? YES : NO );
+	return _realNameIsRegex;
 }
 
 - (NSString *) username {
-	return _username;
+	return (_usernameIsRegex && _username ? [NSString stringWithFormat:@"/%@/", _username] : _username);
 }
 
 - (void) setUsername:(NSString *) newUsername {
-	MVSafeCopyAssign( &_username, newUsername );
+	_usernameIsRegex = ( [newUsername length] > 2 && [newUsername hasPrefix:@"/"] && [newUsername hasSuffix:@"/"] );
 
-	id old = _usernameRegex;
-	if( _username && ( [_username length] > 2 ) && [_username hasPrefix:@"/"] && [_username hasSuffix:@"/"] )
-		_usernameRegex = [[AGRegex alloc] initWithPattern:[_username substringWithRange:NSMakeRange( 1, [_username length] - 2)] options:AGRegexCaseInsensitive];
-	else _usernameRegex = nil;
-	[old release];
+	if( _usernameIsRegex )
+		newUsername = [newUsername substringWithRange:NSMakeRange( 1, [newUsername length] - 2)];
+
+	MVSafeCopyAssign( &_username, newUsername );
 }
 
 - (BOOL) usernameIsRegularExpression {
-	return ( _usernameRegex ? YES : NO );
+	return _usernameIsRegex;
 }
 
 - (NSString *) address {
-	return _address;
+	return (_addressIsRegex && _address ? [NSString stringWithFormat:@"/%@/", _address] : _address);
 }
 
 - (void) setAddress:(NSString *) newAddress {
-	MVSafeCopyAssign( &_address, newAddress );
+	_addressIsRegex = ( [newAddress length] > 2 && [newAddress hasPrefix:@"/"] && [newAddress hasSuffix:@"/"] );
 
-	id old = _addressRegex;
-	if( _address && ( [_address length] > 2 ) && [_address hasPrefix:@"/"] && [_address hasSuffix:@"/"] )
-		_addressRegex = [[AGRegex alloc] initWithPattern:[_address substringWithRange:NSMakeRange( 1, [_address length] - 2)] options:AGRegexCaseInsensitive];
-	else _addressRegex = nil;
-	[old release];
+	if( _addressIsRegex )
+		newAddress = [newAddress substringWithRange:NSMakeRange( 1, [newAddress length] - 2)];
+
+	MVSafeCopyAssign( &_address, newAddress );
 }
 
 - (BOOL) addressIsRegularExpression {
-	return ( _addressRegex ? YES : NO );
+	return _addressIsRegex;
 }
 
 - (NSData *) publicKey {

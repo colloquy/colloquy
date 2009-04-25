@@ -37,7 +37,6 @@
 		1C7C776A07DBBA4500FB5F83 /* NSScriptCommandAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7C776807DBBA4500FB5F83 /* NSScriptCommandAdditions.m */; };
 		1C8AAEFE09D69F2700CF29EB /* MVChatUserWatchRule.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C8AAEFC09D69F2700CF29EB /* MVChatUserWatchRule.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C8AAEFF09D69F2700CF29EB /* MVChatUserWatchRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8AAEFD09D69F2700CF29EB /* MVChatUserWatchRule.m */; };
-		1C8AAF2B09D6A0A100CF29EB /* AGRegex.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C8AAF2609D6A0A100CF29EB /* AGRegex.framework */; };
 		1C913FA30704FE7D00CBA5F1 /* MVChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5CC07B06FFCB0B0006C5B1 /* MVChatRoom.m */; };
 		1C91405D07051A9100CBA5F1 /* MVChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5CBF3406FF986E0006C5B1 /* MVChatUser.m */; };
 		1C91405E07051A9200CBA5F1 /* MVChatUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C5CBF3306FF986E0006C5B1 /* MVChatUser.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -49,6 +48,9 @@
 		1C9CF4FE0615091400330D8D /* MVChatPluginManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C9CF4FF0615091500330D8D /* MVChatPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */; };
 		1C9CF5010615091700330D8D /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F52D043001873FC401EE70DE /* MVChatConnection.m */; };
+		1C9FFA140FA193F500748177 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9FFA120FA193F500748177 /* RegexKitLite.m */; };
+		1C9FFA150FA193F500748177 /* RegexKitLite.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C9FFA130FA193F500748177 /* RegexKitLite.h */; };
+		1C9FFB140FA1958300748177 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C9FFB130FA1958300748177 /* libicucore.dylib */; };
 		1CB643D50C84F1EF00B79FB0 /* MVChatString.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CB643D40C84F1EF00B79FB0 /* MVChatString.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1CCA51800598AFBA00F0A4CD /* ChatCore.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1CCA517E0598AFBA00F0A4CD /* ChatCore.scriptSuite */; };
 		1CCA51810598AFBA00F0A4CD /* ChatCore.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 1CCA517F0598AFBA00F0A4CD /* ChatCore.scriptTerminology */; };
@@ -178,7 +180,6 @@
 		1C8AA4B609D60B1100CF29EB /* Chat Core.exp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.exports; path = "Chat Core.exp"; sourceTree = "<group>"; };
 		1C8AAEFC09D69F2700CF29EB /* MVChatUserWatchRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUserWatchRule.h; path = "Chat Core/MVChatUserWatchRule.h"; sourceTree = "<group>"; };
 		1C8AAEFD09D69F2700CF29EB /* MVChatUserWatchRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatUserWatchRule.m; path = "Chat Core/MVChatUserWatchRule.m"; sourceTree = "<group>"; };
-		1C8AAF2609D6A0A100CF29EB /* AGRegex.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AGRegex.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C914B130705BFE100CBA5F1 /* MVIRCChatUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVIRCChatUser.h; path = "Chat Core/MVIRCChatUser.h"; sourceTree = "<group>"; };
 		1C914B140705BFE100CBA5F1 /* MVIRCChatUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVIRCChatUser.m; path = "Chat Core/MVIRCChatUser.m"; sourceTree = "<group>"; };
 		1C914D330706148800CBA5F1 /* MVIRCChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVIRCChatRoom.h; path = "Chat Core/MVIRCChatRoom.h"; sourceTree = "<group>"; };
@@ -189,6 +190,9 @@
 		1C9C13370B50A7AC005F9F28 /* MVDirectChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectChatConnection.h; path = "Chat Core/MVDirectChatConnection.h"; sourceTree = "<group>"; };
 		1C9C13380B50A7AC005F9F28 /* MVDirectChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDirectChatConnection.m; path = "Chat Core/MVDirectChatConnection.m"; sourceTree = "<group>"; };
 		1C9C14170B50B3AB005F9F28 /* MVDirectChatConnectionPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectChatConnectionPrivate.h; path = "Chat Core/MVDirectChatConnectionPrivate.h"; sourceTree = "<group>"; };
+		1C9FFA120FA193F500748177 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexKitLite.m; path = "Chat Core/RegexKitLite.m"; sourceTree = "<group>"; };
+		1C9FFA130FA193F500748177 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexKitLite.h; path = "Chat Core/RegexKitLite.h"; sourceTree = "<group>"; };
+		1C9FFB130FA1958300748177 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
 		1CB643D40C84F1EF00B79FB0 /* MVChatString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatString.h; path = "Chat Core/MVChatString.h"; sourceTree = "<group>"; };
 		1CCA517E0598AFBA00F0A4CD /* ChatCore.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ChatCore.scriptSuite; path = Resources/ChatCore.scriptSuite; sourceTree = "<group>"; };
 		1CCA517F0598AFBA00F0A4CD /* ChatCore.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ChatCore.scriptTerminology; path = Resources/ChatCore.scriptTerminology; sourceTree = "<group>"; };
@@ -248,9 +252,9 @@
 				1C5A233F06FA4FEE00A51F10 /* libsilc.framework in Frameworks */,
 				1C5A234006FA4FEE00A51F10 /* libsilcclient.framework in Frameworks */,
 				1CEEB173095BE3A000166A54 /* CoreServices.framework in Frameworks */,
-				1C8AAF2B09D6A0A100CF29EB /* AGRegex.framework in Frameworks */,
 				1C11689A0B45F98700F57D2C /* libtransmission.a in Frameworks */,
 				DDF64D530BD2A4F6009E8FF6 /* Acid.framework in Frameworks */,
+				1C9FFB140FA1958300748177 /* libicucore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,8 +293,8 @@
 				1C5A233D06FA4FEE00A51F10 /* libsilc.framework */,
 				1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */,
 				DDF64D520BD2A4F6009E8FF6 /* Acid.framework */,
-				1C8AAF2609D6A0A100CF29EB /* AGRegex.framework */,
 				1C1168990B45F98700F57D2C /* libtransmission.a */,
+				1C9FFB130FA1958300748177 /* libicucore.dylib */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -439,6 +443,8 @@
 				1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */,
 				1CEEB164095BE36700166A54 /* AsyncSocket.m */,
 				1CEEB163095BE36700166A54 /* AsyncSocket.h */,
+				1C9FFA120FA193F500748177 /* RegexKitLite.m */,
+				1C9FFA130FA193F500748177 /* RegexKitLite.h */,
 				1CD6290D096118B900BD1DD2 /* InterThreadMessaging.m */,
 				1CD6290C096118B900BD1DD2 /* InterThreadMessaging.h */,
 				1C1168CC0B45FA4700F57D2C /* Transmission.h */,
@@ -554,6 +560,7 @@
 				DD0A302D0BD881680054443A /* MVIRCNumerics.h in Headers */,
 				1CB643D50C84F1EF00B79FB0 /* MVChatString.h in Headers */,
 				1C18955A0E29CC19003CFED0 /* MVAvailability.h in Headers */,
+				1C9FFA150FA193F500748177 /* RegexKitLite.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -726,6 +733,7 @@
 				DDF64CE60BD29E41009E8FF6 /* MVXMPPChatConnection.m in Sources */,
 				DDF64E1A0BD2CABE009E8FF6 /* MVXMPPChatUser.m in Sources */,
 				DD4741310BD35A2E00D93AB9 /* MVXMPPChatRoom.m in Sources */,
+				1C9FFA140FA193F500748177 /* RegexKitLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -753,6 +761,10 @@
 				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Basic.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"${GCC_PREPROCESSOR_DEFINITIONS}",
+					RKL_FAST_MUTABLE_CHECK,
+				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
@@ -783,6 +795,10 @@
 				EXPORTED_SYMBOLS_FILE = "Chat Core.exp";
 				FRAMEWORK_VERSION = A;
 				GCC_PREFIX_HEADER = Basic.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"${GCC_PREPROCESSOR_DEFINITIONS}",
+					RKL_FAST_MUTABLE_CHECK,
+				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = (
@@ -803,6 +819,7 @@
 					ppc,
 					i386,
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = NS_BLOCK_ASSERTIONS;
 				SYMROOT = build;
 			};
 			name = Release;
