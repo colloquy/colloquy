@@ -7,9 +7,8 @@
 #import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
 #import "CQFileTransferController.h"
+#import "CQSoundController.h"
 #import "UIImageAdditions.h"
-
-#import <AudioToolbox/AudioToolbox.h>
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
@@ -187,7 +186,13 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 			if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnPrivateMessage"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
 			if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSoundOnPrivateMessage"]) {
-				//play a sound
+				static CQSoundController *privateMessageSound; 
+
+				if (!privateMessageSound) {
+					NSString *alert = [[NSUserDefaults standardUserDefaults] valueForKey:@"CQSoundOnPrivateMessageIdentifier"];
+					privateMessageSound = [[CQSoundController alloc] initWithContentsOfSoundNamed:alert];
+				}
+				[privateMessageSound playAlert];
 			}
 		}
 	}
@@ -239,9 +244,14 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnFileTransfer"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSoundOnFileTransfer"]) {
-		//play a sound
-	}
+		static CQSoundController *fileTransferSound;
 
+		if (!fileTransferSound) {
+			NSString *alert = [[NSUserDefaults standardUserDefaults] valueForKey:@"CQSoundOnFileTransferIdentifier"];
+			fileTransferSound = [[CQSoundController alloc] initWithContentsOfSoundNamed:alert];
+		}
+		[fileTransferSound playAlert];
+	}
 
 	[alert show];
 
@@ -298,7 +308,13 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSoundOnHighlight"]) {
-		//play a sound
+		static CQSoundController *highlightSound;
+
+		if (!highlightSound) {
+			NSString *alert = [[NSUserDefaults standardUserDefaults] valueForKey:@"CQSoundOnHighlightIdentifier"];
+			highlightSound = [[CQSoundController alloc] initWithContentsOfSoundNamed:alert];
+		}		
+		[highlightSound playAlert];
 	}
 
 	[alert show];

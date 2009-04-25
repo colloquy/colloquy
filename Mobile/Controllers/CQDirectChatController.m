@@ -8,13 +8,12 @@
 #import "CQColloquyApplication.h"
 #import "CQStyleView.h"
 #import "CQWhoisNavController.h"
+#import "CQSoundController.h"
 #import "NSDictionaryAdditions.h"
 #import "NSScannerAdditions.h"
 #import "NSStringAdditions.h"
 
 #import <AGRegex/AGRegex.h>
-
-#import <AudioToolbox/AudioToolbox.h>
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
@@ -927,9 +926,14 @@
 	if (highlighted && self.available && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
 	if (highlighted && self.available && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQSoundOnHighlight"]) {
-		//play a sound
-	}
+		static CQSoundController *highlightSound;
 
+		if (!highlightSound) {
+			NSString *alert = [[NSUserDefaults standardUserDefaults] valueForKey:@"CQSoundOnHighlightIdentifier"];
+			highlightSound = [[CQSoundController alloc] initWithContentsOfSoundNamed:alert];
+		}
+		[highlightSound playAlert];
+	}
 
 	if (!_recentMessages)
 		_recentMessages = [[NSMutableArray alloc] init];

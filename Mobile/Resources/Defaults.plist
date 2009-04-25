@@ -41,15 +41,15 @@
 	<key>CQSoundOnHighlight</key>
 	<true/>
 	<key>CQSoundOnHighlightIdentifier</key>
-	<string>beep1</string>
+	<string>Beep 1</string>
 	<key>CQSoundOnPrivateMessage</key>
 	<true/>
 	<key>CQSoundOnPrivateMessageIdentifier</key>
-	<string>beep1</string>
+	<string>Beep 1</string>
 	<key>CQSoundOnFileTransfer</key>
 	<true/>
 	<key>CQSoundOnFileTransferIdentifier</key>
-	<string>beep1</string>
+	<string>Beep 1</string>
 	<key>CQShowLeaveEvents</key>
 	<true/>
 	<key>CQShowJoinEvents</key>

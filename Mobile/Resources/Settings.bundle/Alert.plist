@@ -65,23 +65,23 @@
 			<string>CQSoundOnHighlightIdentifier</string>
 			<key>Values</key>
 			<array>
-				<string>beep1</string>
-				<string>beep2</string>
-				<string>bell1</string>
-				<string>bell2</string>
-				<string>clap</string>
-				<string>cymbal</string>
-				<string>scratch</string>
-				<string>signal</string>
-				<string>explosion</string>
-				<string>kick</string>
-				<string>laser</string>
-				<string>pop</string>
-				<string>rattle</string>
-				<string>sonar</string>
-				<string>stoof</string>
-				<string>switch</string>
-				<string>whip</string>
+				<string>Beep 1</string>
+				<string>Beep 2</string>
+				<string>Bell 1</string>
+				<string>Bell 2</string>
+				<string>Clap</string>
+				<string>Cymbal</string>
+				<string>DJ Scratch</string>
+				<string>Electronic Signal</string>
+				<string>Explosion</string>
+				<string>Kick</string>
+				<string>Laser</string>
+				<string>Pop</string>
+				<string>Rattle</string>
+				<string>Sonar Beep</string>
+				<string>Stoof</string>
+				<string>Switch</string>
+				<string>Whip</string>
 			</array>
 			<key>Titles</key>
 			<array>
@@ -104,7 +104,7 @@
 				<string>Whip</string>
 			</array>
 			<key>DefaultValue</key>
-			<string>beep1</string>
+			<string>Beep 1</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -131,23 +131,23 @@
 			<string>CQSoundOnPrivateMessageIdentifier</string>
 			<key>Values</key>
 			<array>
-				<string>beep1</string>
-				<string>beep2</string>
-				<string>bell1</string>
-				<string>bell2</string>
-				<string>clap</string>
-				<string>cymbal</string>
-				<string>scratch</string>
-				<string>signal</string>
-				<string>explosion</string>
-				<string>kick</string>
-				<string>laser</string>
-				<string>pop</string>
-				<string>rattle</string>
-				<string>sonar</string>
-				<string>stoof</string>
-				<string>switch</string>
-				<string>whip</string>
+				<string>Beep 1</string>
+				<string>Beep 2</string>
+				<string>Bell 1</string>
+				<string>Bell 2</string>
+				<string>Clap</string>
+				<string>Cymbal</string>
+				<string>DJ Scratch</string>
+				<string>Electronic Signal</string>
+				<string>Explosion</string>
+				<string>Kick</string>
+				<string>Laser</string>
+				<string>Pop</string>
+				<string>Rattle</string>
+				<string>Sonar Beep</string>
+				<string>Stoof</string>
+				<string>Switch</string>
+				<string>Whip</string>
 			</array>
 			<key>Titles</key>
 			<array>
@@ -170,7 +170,7 @@
 				<string>Whip</string>
 			</array>
 			<key>DefaultValue</key>
-			<string>beep1</string>
+			<string>Beep 1</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -197,23 +197,23 @@
 			<string>CQSoundOnFileTransferIdentifier</string>
 			<key>Values</key>
 			<array>
-				<string>beep1</string>
-				<string>beep2</string>
-				<string>bell1</string>
-				<string>bell2</string>
-				<string>clap</string>
-				<string>cymbal</string>
-				<string>scratch</string>
-				<string>signal</string>
-				<string>explosion</string>
-				<string>kick</string>
-				<string>laser</string>
-				<string>pop</string>
-				<string>rattle</string>
-				<string>sonar</string>
-				<string>stoof</string>
-				<string>switch</string>
-				<string>whip</string>
+				<string>Beep 1</string>
+				<string>Beep 2</string>
+				<string>Bell 1</string>
+				<string>Bell 2</string>
+				<string>Clap</string>
+				<string>Cymbal</string>
+				<string>DJ Scratch</string>
+				<string>Electronic Signal</string>
+				<string>Explosion</string>
+				<string>Kick</string>
+				<string>Laser</string>
+				<string>Pop</string>
+				<string>Rattle</string>
+				<string>Sonar Beep</string>
+				<string>Stoof</string>
+				<string>Switch</string>
+				<string>Whip</string>
 			</array>
 			<key>Titles</key>
 			<array>
@@ -236,7 +236,7 @@
 				<string>Whip</string>
 			</array>
 			<key>DefaultValue</key>
-			<string>beep1</string>
+			<string>Beep 1</string>
 		</dict>
 	</array>
 </dict>

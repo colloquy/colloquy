@@ -22,6 +22,7 @@
     BOOL _fileSheet;
     MVChatUser *_fileUser;
 }
+
 + (CQChatController *) defaultController;
 
 @property (nonatomic, readonly) NSArray *chatViewControllers;
