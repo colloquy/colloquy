@@ -333,7 +333,7 @@
 			else errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't change nicknames too fast on \"%@\", wait and try again.", "Can't change nick too fast alert message"), connection.displayName];
 			break;
 		case MVChatConnectionCantChangeUsedNickError:
-			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Services will change your nickname from \"%@\" on \"%@\".", "Services will change your nickname alert message"), [[error userInfo] objectForKey:@"newnickname"], connection.displayName];
+			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Services won't let you change your nickname to \"%@\" on \"%@\".", "Services won't let you change your nickname alert message"), [[error userInfo] objectForKey:@"newnickname"], connection.displayName];
 			break;
 		case MVChatConnectionNickChangedByServicesError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Your nickname is being changed on \"%@\" because you didn't identify.", "Username was changed by server alert message"), connection.displayName];
