@@ -286,7 +286,7 @@
 			errorTitle = NSLocalizedString(@"Can't Send Message", @"Can't send alert title");
 			break;
 		case MVChatConnectionCantChangeUsedNickError:
-			errorTitle = NSLocalizedString(@"Nickname in use", "Nikname in use alert title");
+			errorTitle = NSLocalizedString(@"Nickname in use", "Nickname in use alert title");
 			break;
 		case MVChatConnectionCantChangeNickError:
 			errorTitle = NSLocalizedString(@"Can't Change Nickname", "Can't change nickname alert title");
