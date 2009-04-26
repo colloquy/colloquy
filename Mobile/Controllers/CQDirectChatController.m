@@ -12,8 +12,7 @@
 #import "NSDictionaryAdditions.h"
 #import "NSScannerAdditions.h"
 #import "NSStringAdditions.h"
-
-#import <AGRegex/AGRegex.h>
+#import "RegexKitLite.h"
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
@@ -977,15 +976,14 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 	// Catch IRC rooms like "#room" but not HTML colors like "#ab12ef" nor HTML entities like "&#135;" or "&amp;".
 	// Catch well-formed urls like "http://www.apple.com", "www.apple.com" or "irc://irc.javelin.cc".
 	// Catch well-formed email addresses like "user@example.com" or "user@example.co.uk".
-	static AGRegex *urlRegex;
-	if (!urlRegex)
-		urlRegex = [[AGRegex alloc] initWithPattern:@"(?P<room>\\B(?<!&amp;)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&;#]{2,}\\b)|(?P<url>\\b(?:[a-zA-Z][a-zA-Z0-9+.-]{2,6}:(?://){0,1}|www\\.)[\\p{L}\\p{N}$\\-_+*'=\\|/\\\\)}\\]%@&#~,:;.!?][\\p{L}\\p{N}$\\-_+*'=\\|/\\\\(){}[\\]%@&#~,:;.!?]{3,}[\\p{L}\\p{N}$\\-_+*=\\|/\\\\({%@&#~])|(?P<email>[\\p{L}\\p{N}.+\\-_]+@(?:[\\p{L}\\-_]+\\.)+[\\w]{2,})" options:AGRegexCaseInsensitive];
+	NSString *urlRegex = @"(\\B(?<!&amp;)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&;#]{2,}\\b)|(\\b(?:[a-zA-Z][a-zA-Z0-9+.-]{2,6}:(?://){0,1}|www\\.)[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+[\\p{L}\\p{N}\\p{M}\\p{S}\\p{C}])|([\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+@(?:[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+\\.)+[\\w]{2,})";
 
-	AGRegexMatch *match = [urlRegex findInString:string range:*textRange];
-	while (match) {
-		NSString *room = [match groupNamed:@"room"];
-		NSString *url = [match groupNamed:@"url"];
-		NSString *email = [match groupNamed:@"email"];
+	NSRange matchedRange = [string rangeOfRegex:urlRegex options:RKLCaseless inRange:*textRange capture:0 error:NULL];
+	while (matchedRange.location != NSNotFound) {
+		NSArray *components = [string captureComponentsMatchedByRegex:urlRegex options:RKLCaseless range:matchedRange error:NULL];
+		NSString *room = [components objectAtIndex:1];
+		NSString *url = [components objectAtIndex:2];
+		NSString *email = [components objectAtIndex:3];
 
 		NSString *linkHTMLString = nil;
 		if (room.length) {
@@ -1002,16 +1000,16 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 		}
 
 		if (linkHTMLString) {
-			[string replaceCharactersInRange:match.range withString:linkHTMLString];
+			[string replaceCharactersInRange:matchedRange withString:linkHTMLString];
 
-			textRange->length += (linkHTMLString.length - match.range.length);
+			textRange->length += (linkHTMLString.length - matchedRange.length);
 		}
 
-		NSRange matchRange = NSMakeRange(match.range.location + linkHTMLString.length, (NSMaxRange(*textRange) - match.range.location - linkHTMLString.length));
+		NSRange matchRange = NSMakeRange(matchedRange.location + linkHTMLString.length, (NSMaxRange(*textRange) - matchedRange.location - linkHTMLString.length));
 		if (!matchRange.length)
 			break;
 
-		match = [urlRegex findInString:string range:matchRange];
+		matchedRange = [string rangeOfRegex:urlRegex options:RKLCaseless inRange:matchRange capture:0 error:NULL];
 	}
 }
 
@@ -1090,18 +1088,12 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 
 		NSString *highlightWordsString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQHighlightWords"];
 		if (highlightWordsString.length) {
-			AGRegex *regex = [[AGRegex alloc] initWithPattern:@"(?<=\\s|^)([/\"'].*?[/\"'])(?=\\s|$)"];
-			NSArray *matches = [regex findAllInString:highlightWordsString];
+			[mainHighlightWords addObjectsFromArray:[highlightWordsString componentsMatchedByRegex:@"(?<=\\s|^)([/\"'].*?[/\"'])(?=\\s|$)" capture:1]];
 
-			for (AGRegexMatch *match in [matches objectEnumerator])
-				[mainHighlightWords addObject:[match groupAtIndex:1]];
-
-			highlightWordsString = [regex replaceWithString:@"" inString:highlightWordsString];
+			highlightWordsString = [highlightWordsString stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)([/\"'].*?[/\"'])(?=\\s|$)" withString:@""];
 
 			[mainHighlightWords addObjectsFromArray:[highlightWordsString componentsSeparatedByString:@" "]];
 			[mainHighlightWords removeObject:@""];
-
-			[regex release];
 		}
 	}
 
@@ -1122,19 +1114,17 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 			if (!highlightWord.length)
 				continue;
 
-			AGRegex *regex = nil;
+			NSString *regex = nil;
 			if ([highlightWord hasPrefix:@"/"] && [highlightWord hasSuffix:@"/"] && highlightWord.length > 1) {
-				regex = [[AGRegex alloc] initWithPattern:[highlightWord substringWithRange:NSMakeRange(1, highlightWord.length - 2)] options:AGRegexCaseInsensitive];
+				regex = [highlightWord substringWithRange:NSMakeRange(1, highlightWord.length - 2)];
 			} else {
 				highlightWord = [highlightWord stringByTrimmingCharactersInSet:trimCharacters];
 				highlightWord = [highlightWord stringByEscapingCharactersInSet:escapedCharacters];
-				regex = [[AGRegex alloc] initWithPattern:[NSString stringWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", highlightWord] options:AGRegexCaseInsensitive];
+				regex = [NSString stringWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", highlightWord];
 			}
 
-			if ([regex findInString:stylelessMessageString])
+			if ([stylelessMessageString isMatchedByRegex:regex options:RKLCaseless inRange:NSMakeRange(0, stylelessMessageString.length) error:NULL])
 				*highlighted = YES;
-
-			[regex release];
 
 			if (*highlighted)
 				break;
