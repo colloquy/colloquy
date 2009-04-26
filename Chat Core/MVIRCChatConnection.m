@@ -2150,8 +2150,29 @@ end:
 			}
 
 			// Catch connect notices by the server and mark them as handled
-			if( [msg isMatchedByRegex:@"on .+? ca .+?\\(.+?\\) ft .+?\\(.+?\\)|Highest connection count|\\*\\*\\* Your host is|\\*\\*\\* You are exempt from DNS blacklists|\\*\\*\\* Notice -- motd was last changed at|\\*\\*\\* Notice -- Please read the motd if you haven't read it|\\*\\*\\* Notice -- This server runs an open proxy monitor to prevent abuse|\\*\\*\\* Notice -- If you see.*? connections.*? from|\\*\\*\\* Notice -- please disregard them, as they are the .+? in action|\\*\\*\\* Notice -- For more information please visit" options:RKLCaseless inRange:NSMakeRange(0, [msg length]) error:NULL] )
-				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
+			BOOL handled = NO;
+			if( [msg hasCaseInsensitiveSubstring:@"Highest connection count"] )
+				handled = YES;
+			if( !handled && [msg hasCaseInsensitiveSubstring:@"*** Your host is"] )
+				handled = YES;
+			if( !handled && [msg hasCaseInsensitiveSubstring:@"*** You are exempt from DNS blacklists"] )
+				handled = YES;
+			if( !handled && [msg hasCaseInsensitiveSubstring:@"*** Notice -- motd was last changed at"] )
+				handled = YES;
+			if( !handled && [msg hasCaseInsensitiveSubstring:@"*** Notice -- Please read the motd if you haven't read it"] )
+				handled = YES;
+			if( !handled && [msg hasCaseInsensitiveSubstring:@"*** Notice -- This server runs an open proxy monitor to prevent abuse"] )
+				handled = YES;
+			if( !handled && [msg hasCaseInsensitiveSubstring:@"*** Notice -- For more information please visit"] )
+				handled = YES;
+			if( !handled && [msg isMatchedByRegex:@"\\*\\*\\* Notice -- If you see.*? connections.*? from" options:RKLCaseless inRange:NSMakeRange(0, [msg length]) error:NULL] )
+				handled = YES;
+			if( !handled && [msg isMatchedByRegex:@"\\*\\*\\* Notice -- please disregard them, as they are the .+? in action" options:RKLCaseless inRange:NSMakeRange(0, [msg length]) error:NULL] )
+				handled = YES;
+			if( !handled && [msg isMatchedByRegex:@"on .+? ca .+?\\(.+?\\) ft .+?\\(.+?\\)" options:RKLCaseless inRange:NSMakeRange(0, [msg length]) error:NULL] )
+				handled = YES;
+
+			if( handled ) [noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
 			[msg release];
 		} else if( [[sender nickname] isEqualToString:@"NickServ"] || [[sender nickname] isEqualToString:@"ChanServ"] ||
