@@ -2,15 +2,26 @@
 
 @implementation CQSoundController
 - (id) initWithContentsOfSoundNamed:(NSString *) alert {
-	NSURL *path = [[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:alert ofType:@"aiff"]] absoluteURL];
-	
-	if ( !( self = [self init] ) )
+	if (!alert.length) {
+		[self release];
+		return nil;
+	}
+
+	NSString *pathString = [[NSBundle mainBundle] pathForResource:alert ofType:@"aiff"];
+	if (!pathString) {
+		[self release];
+		return nil;
+	}
+
+	NSURL *path = [[NSURL fileURLWithPath:pathString] absoluteURL];
+
+	if (!(self = [self init]))
 		return nil;
 
-	if ( path ) {
+	if (path) {
 		OSStatus error = AudioServicesCreateSystemSoundID((CFURLRef)path, &_sound);
-		
-		if ( error != kAudioServicesNoError ) {
+
+		if (error != kAudioServicesNoError) {
 			[self release];
 			return nil;
 		}
@@ -18,6 +29,7 @@
 		[self release];
 		return nil;
 	}
+
 	return self;
 }
 

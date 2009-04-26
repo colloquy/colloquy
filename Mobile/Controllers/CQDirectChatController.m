@@ -924,13 +924,14 @@
 
 	if (highlighted && self.available && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
-	if (highlighted && self.available && ![[[NSUserDefaults standardUserDefaults] valueForKey:@"CQSoundOnHighlight"] isEqual:@"None"]) {
+	if (highlighted && self.available && ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"] isEqualToString:@"None"]) {
 		static CQSoundController *highlightSound;
 
 		if (!highlightSound) {
-			NSString *alert = [[NSUserDefaults standardUserDefaults] valueForKey:@"CQSoundOnHighlight"];
+			NSString *alert = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
 			highlightSound = [[CQSoundController alloc] initWithContentsOfSoundNamed:alert];
 		}
+
 		[highlightSound playAlert];
 	}
 
