@@ -39,16 +39,10 @@
 	<key>CQVibrateOnFileTransfer</key>
 	<true/>
 	<key>CQSoundOnHighlight</key>
-	<true/>
-	<key>CQSoundOnHighlightIdentifier</key>
 	<string>Beep 1</string>
 	<key>CQSoundOnPrivateMessage</key>
-	<true/>
-	<key>CQSoundOnPrivateMessageIdentifier</key>
-	<string>Beep 1</string>
+	<string>Stoof</string>
 	<key>CQSoundOnFileTransfer</key>
-	<true/>
-	<key>CQSoundOnFileTransferIdentifier</key>
 	<string>Beep 1</string>
 	<key>CQShowLeaveEvents</key>
 	<true/>

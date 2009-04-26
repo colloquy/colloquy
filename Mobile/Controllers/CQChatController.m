@@ -185,11 +185,11 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 			[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
 			if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnPrivateMessage"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
-			if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSoundOnPrivateMessage"]) {
+			if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"CQSoundOnPrivateMessage"] isEqualToString:@"None"]) {
 				static CQSoundController *privateMessageSound; 
 
 				if (!privateMessageSound) {
-					NSString *alert = [[NSUserDefaults standardUserDefaults] valueForKey:@"CQSoundOnPrivateMessageIdentifier"];
+					NSString *alert = [[NSUserDefaults standardUserDefaults] valueForKey:@"CQSoundOnPrivateMessage"];
 					privateMessageSound = [[CQSoundController alloc] initWithContentsOfSoundNamed:alert];
 				}
 				[privateMessageSound playAlert];
@@ -243,11 +243,11 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnFileTransfer"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSoundOnFileTransfer"]) {
+	if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"CQSoundOnFileTransfer"] isEqualToString:@"None"]) {
 		static CQSoundController *fileTransferSound;
 
 		if (!fileTransferSound) {
-			NSString *alert = [[NSUserDefaults standardUserDefaults] valueForKey:@"CQSoundOnFileTransferIdentifier"];
+			NSString *alert = [[NSUserDefaults standardUserDefaults] valueForKey:@"CQSoundOnFileTransfer"];
 			fileTransferSound = [[CQSoundController alloc] initWithContentsOfSoundNamed:alert];
 		}
 		[fileTransferSound playAlert];
@@ -307,11 +307,11 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSoundOnHighlight"]) {
+	if (![[[NSUserDefaults standardUserDefaults] valueForKey:@"CQSoundOnHighlight"] isEqualToString:@"None"]) {
 		static CQSoundController *highlightSound;
 
 		if (!highlightSound) {
-			NSString *alert = [[NSUserDefaults standardUserDefaults] valueForKey:@"CQSoundOnHighlightIdentifier"];
+			NSString *alert = [[NSUserDefaults standardUserDefaults] valueForKey:@"CQSoundOnHighlight"];
 			highlightSound = [[CQSoundController alloc] initWithContentsOfSoundNamed:alert];
 		}		
 		[highlightSound playAlert];

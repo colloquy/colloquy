@@ -8,13 +8,13 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Vibration</string>
+			<string>Highlight</string>
 		</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Highlight</string>
+			<string>Vibrate</string>
 			<key>Key</key>
 			<string>CQVibrateOnHighlight</string>
 			<key>DefaultValue</key>
@@ -22,9 +22,67 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Sound</string>
+			<key>Key</key>
+			<string>CQSoundOnHighlight</string>
+			<key>Values</key>
+			<array>
+				<string>None</string>
+				<string>Beep 1</string>
+				<string>Beep 2</string>
+				<string>Bell 1</string>
+				<string>Bell 2</string>
+				<string>Clap</string>
+				<string>Cymbal</string>
+				<string>DJ Scratch</string>
+				<string>Electronic Signal</string>
+				<string>Explosion</string>
+				<string>Kick</string>
+				<string>Laser</string>
+				<string>Pop</string>
+				<string>Rattle</string>
+				<string>Sonar Beep</string>
+				<string>Stoof</string>
+				<string>Switch</string>
+				<string>Whip</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>None</string>
+				<string>Beep 1</string>
+				<string>Beep 2</string>
+				<string>Bell 1</string>
+				<string>Bell 2</string>
+				<string>Clap</string>
+				<string>Cymbal</string>
+				<string>DJ Scratch</string>
+				<string>Electronic Signal</string>
+				<string>Explosion</string>
+				<string>Kick</string>
+				<string>Laser</string>
+				<string>Pop</string>
+				<string>Rattle</string>
+				<string>Sonar Beep</string>
+				<string>Stoof</string>
+				<string>Switch</string>
+				<string>Whip</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>Beep 1</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>Private Message</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Vibrate</string>
 			<key>Key</key>
 			<string>CQVibrateOnPrivateMessage</string>
 			<key>DefaultValue</key>
@@ -32,105 +90,14 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>File Transfer</string>
-			<key>Key</key>
-			<string>CQVibrateOnFileTransfer</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>Sounds</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Highlight</string>
-			<key>Key</key>
-			<string>CQSoundOnHighlight</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
-			<string>Highlight Sound</string>
-			<key>Key</key>
-			<string>CQSoundOnHighlightIdentifier</string>
-			<key>Values</key>
-			<array>
-				<string>Beep 1</string>
-				<string>Beep 2</string>
-				<string>Bell 1</string>
-				<string>Bell 2</string>
-				<string>Clap</string>
-				<string>Cymbal</string>
-				<string>DJ Scratch</string>
-				<string>Electronic Signal</string>
-				<string>Explosion</string>
-				<string>Kick</string>
-				<string>Laser</string>
-				<string>Pop</string>
-				<string>Rattle</string>
-				<string>Sonar Beep</string>
-				<string>Stoof</string>
-				<string>Switch</string>
-				<string>Whip</string>
-			</array>
-			<key>Titles</key>
-			<array>
-				<string>Beep 1</string>
-				<string>Beep 2</string>
-				<string>Bell 1</string>
-				<string>Bell 2</string>
-				<string>Clap</string>
-				<string>Cymbal</string>
-				<string>DJ Scratch</string>
-				<string>Electronic Signal</string>
-				<string>Explosion</string>
-				<string>Kick</string>
-				<string>Laser</string>
-				<string>Pop</string>
-				<string>Rattle</string>
-				<string>Sonar Beep</string>
-				<string>Stoof</string>
-				<string>Switch</string>
-				<string>Whip</string>
-			</array>
-			<key>DefaultValue</key>
-			<string>Beep 1</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string></string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Private Message</string>
+			<string>Sound</string>
 			<key>Key</key>
 			<string>CQSoundOnPrivateMessage</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSMultiValueSpecifier</string>
-			<key>Title</key>
-			<string>Private Message Sound</string>
-			<key>Key</key>
-			<string>CQSoundOnPrivateMessageIdentifier</string>
 			<key>Values</key>
 			<array>
+				<string>None</string>
 				<string>Beep 1</string>
 				<string>Beep 2</string>
 				<string>Bell 1</string>
@@ -151,6 +118,7 @@
 			</array>
 			<key>Titles</key>
 			<array>
+				<string>None</string>
 				<string>Beep 1</string>
 				<string>Beep 2</string>
 				<string>Bell 1</string>
@@ -170,73 +138,7 @@
 				<string>Whip</string>
 			</array>
 			<key>DefaultValue</key>
-			<string>Beep 1</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string></string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>File Transfer</string>
-			<key>Key</key>
-			<string>CQSoundOnFileTransfer</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSMultiValueSpecifier</string>
-			<key>Title</key>
-			<string>File Transfer Sound</string>
-			<key>Key</key>
-			<string>CQSoundOnFileTransferIdentifier</string>
-			<key>Values</key>
-			<array>
-				<string>Beep 1</string>
-				<string>Beep 2</string>
-				<string>Bell 1</string>
-				<string>Bell 2</string>
-				<string>Clap</string>
-				<string>Cymbal</string>
-				<string>DJ Scratch</string>
-				<string>Electronic Signal</string>
-				<string>Explosion</string>
-				<string>Kick</string>
-				<string>Laser</string>
-				<string>Pop</string>
-				<string>Rattle</string>
-				<string>Sonar Beep</string>
-				<string>Stoof</string>
-				<string>Switch</string>
-				<string>Whip</string>
-			</array>
-			<key>Titles</key>
-			<array>
-				<string>Beep 1</string>
-				<string>Beep 2</string>
-				<string>Bell 1</string>
-				<string>Bell 2</string>
-				<string>Clap</string>
-				<string>Cymbal</string>
-				<string>DJ Scratch</string>
-				<string>Electronic Signal</string>
-				<string>Explosion</string>
-				<string>Kick</string>
-				<string>Laser</string>
-				<string>Pop</string>
-				<string>Rattle</string>
-				<string>Sonar Beep</string>
-				<string>Stoof</string>
-				<string>Switch</string>
-				<string>Whip</string>
-			</array>
-			<key>DefaultValue</key>
-			<string>Beep 1</string>
+			<string>Stoof</string>
 		</dict>
 	</array>
 </dict>
