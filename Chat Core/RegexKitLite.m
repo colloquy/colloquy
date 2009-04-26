@@ -52,7 +52,12 @@
 #define RKL_STRONG_REF
 #endif // __OBJC_GC__
 
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
+#include <objc/runtime.h>
+#else
 #include <objc/objc-runtime.h>
+#endif
+
 #include <libkern/OSAtomic.h>
 #include <mach-o/loader.h>
 #include <AvailabilityMacros.h>
