@@ -349,9 +349,8 @@
 	alert.delegate = self;
 	alert.title = errorTitle;
 	alert.message = errorMessage;
-	alert.cancelButtonIndex = 0;
 
-	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
 	[alert show];
 

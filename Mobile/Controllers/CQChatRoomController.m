@@ -374,10 +374,9 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"Kicked from Room", "Kicked from room alert title");
 	alert.message = [NSString stringWithFormat:NSLocalizedString(@"You were kicked from \"%@\" by \"%@\" on \"%@\".", "Kicked from room alert message"), self.room.displayName, user.displayName, self.connection.displayName];
-	alert.cancelButtonIndex = 1;
 
 	[alert addButtonWithTitle:NSLocalizedString(@"Rejoin", @"Rejoin alert button title")];
-	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
@@ -806,14 +805,12 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.delegate = self;
-	alert.cancelButtonIndex = 1;
 
 	if (command) alert.title = NSLocalizedString(@"Can't Send Command", @"Can't send command alert title");
 	else alert.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
 
 	if (self.connection.status == MVChatConnectionConnectingStatus) {
 		alert.message = NSLocalizedString(@"You are currently connecting,\nyou should join the room shortly.", @"Can't send message to room because server is connecting alert message");
-		alert.cancelButtonIndex = 0;
 	} else if (!self.connection.connected) {
 		alert.tag = 1;
 		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to room because server is disconnected alert message");
@@ -827,7 +824,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 		return;
 	}
 
-	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
 	[alert show];
 

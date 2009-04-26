@@ -16,6 +16,10 @@
 #import <ChatCore/MVDirectChatConnection.h>
 #import <ChatCore/MVFileTransfer.h>
 
+#define NewChatActionSheetTag 1
+#define NewConnectionActionSheetTag 2
+#define SendFileActionSheetTag 3
+
 @interface CQChatController (CQChatControllerPrivate)
 - (void) _showNextChatControllerAnimated:(BOOL) animated;
 @end
@@ -237,10 +241,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"File Download", "File Download alert title");
 	alert.message = [NSString stringWithFormat:NSLocalizedString(@"%@ wants to send you \"%@\".", "File download alert message"), user, file];
-	alert.cancelButtonIndex = 1;
 
 	[alert addButtonWithTitle:NSLocalizedString(@"Accept", @"Accept alert button title")];
-	[alert addButtonWithTitle:NSLocalizedString(@"Deny", @"Deny alert button title")];
+
+	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Deny", @"Deny alert button title")];
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnFileTransfer"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
@@ -302,10 +306,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"Invited to Room", "Invited to room alert title");
 	alert.message = [NSString stringWithFormat:NSLocalizedString(@"You were invited to \"%@\" by \"%@\" on \"%@\".", "Invited to join room alert message"), room.displayName, user.displayName, connection.displayName];
-	alert.cancelButtonIndex = 1;
 
 	[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join alert button title")];
-	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+
+	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
@@ -370,74 +374,67 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (_chatSheet) {
-		_chatSheet = NO;
+	if (buttonIndex == actionSheet.cancelButtonIndex) {
+		[_fileUser release];
+		_fileUser = nil;
+		return;
+	}
 
-		if (buttonIndex == actionSheet.cancelButtonIndex)
-			return;
+	if (actionSheet.tag == NewChatActionSheetTag) {
+		CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
 
-		if (actionSheet.tag == 1) {
-			CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
+		if (buttonIndex == 0)
+			creationViewController.roomTarget = YES;
 
-			if (buttonIndex == 0) {
-				// to be filled in by zach
-			}
-			else {
-				if (buttonIndex == 1) {
-					creationViewController.roomTarget = YES;
-				}
-
-				[self presentModalViewController:creationViewController animated:YES];
-				[creationViewController release];
-			}
-		} else if (actionSheet.tag == 2) {
-			if (buttonIndex == 0) {
-				[[CQConnectionsController defaultController] showModalNewConnectionView];
-			} else if (buttonIndex == 1) {
-				[self joinSupportRoom];
-			}
+		[self presentModalViewController:creationViewController animated:YES];
+		[creationViewController release];
+	} else if (actionSheet.tag == NewConnectionActionSheetTag) {
+		if (buttonIndex == 0) {
+			[[CQConnectionsController defaultController] showModalNewConnectionView];
+		} else if (buttonIndex == 1) {
+			[self joinSupportRoom];
 		}
-	} else if (_fileSheet) {
-        _fileSheet = NO;
-
-        if (buttonIndex == actionSheet.cancelButtonIndex) {
-            [_fileUser release];
-            return;
-        }
+	} else if (actionSheet.tag == SendFileActionSheetTag) {
+		BOOL sendExistingPhoto = NO;
+		BOOL takeNewPhoto = NO;
+		BOOL sendContact = NO;
 
 		if (buttonIndex == 0) {
             if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-                UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-                picker.delegate = self;
-                picker.allowsImageEditing = YES;
-                picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-                [self presentModalViewController:picker animated:YES];
-                [picker release];
+				takeNewPhoto = YES;
             } else if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
-                UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-                picker.delegate = self;
-                picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-                [self presentModalViewController:picker animated:YES];
-                [picker release];
+				sendExistingPhoto = YES;
             } else {
-                // contact
+                sendContact = YES;
             }
         } else if (buttonIndex == 1) {
             if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
-                UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-                picker.delegate = self;
-                picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-                [self presentModalViewController:picker animated:YES];
-                [picker release];
+				sendExistingPhoto = YES;
             } else {
-                // contact
+                sendContact = YES;
             }
         } else {
-            // contact
+			sendContact = YES;
         }
+
+		if (takeNewPhoto) {
+			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+			picker.delegate = self;
+			picker.allowsImageEditing = YES;
+			picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+			[self presentModalViewController:picker animated:YES];
+			[picker release];
+		} else if (sendExistingPhoto) {
+			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+			picker.delegate = self;
+			picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+			[self presentModalViewController:picker animated:YES];
+			[picker release];
+		} else if (sendContact) {
+			NSAssert(YES, @"Contact sending not implemented.");
+		}
     }
 }
-
 
 - (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo {
     NSData *data = UIImagePNGRepresentation(image);
@@ -542,23 +539,19 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	sheet.delegate = self;
 
 	if ([CQConnectionsController defaultController].connections.count) {
-		sheet.tag = 1;
-		sheet.cancelButtonIndex = 3;
+		sheet.tag = NewChatActionSheetTag;
 
-		[sheet addButtonWithTitle:NSLocalizedString(@"Search for a Chat Room", @"Search for a Chat Room button title")];
 		[sheet addButtonWithTitle:NSLocalizedString(@"Join a Chat Room", @"Join a Chat Room button title")];
 		[sheet addButtonWithTitle:NSLocalizedString(@"Message a User", @"Message a User button title")];
 	} else {
-		sheet.tag = 2;
-		sheet.cancelButtonIndex = 2;
+		sheet.tag = NewConnectionActionSheetTag;
 
 		[sheet addButtonWithTitle:NSLocalizedString(@"Add New Connection", @"Add New Connection button title")];
 		[sheet addButtonWithTitle:NSLocalizedString(@"Join Support Room", @"Join Support Room button title")];
 	}
 
-	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	_chatSheet = YES;
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
 
 	[sheet release];
@@ -567,16 +560,20 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 - (void) showFilePickerWithUser:(MVChatUser *) user {
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
+	sheet.tag = SendFileActionSheetTag;
+
 	if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
 		[sheet addButtonWithTitle:NSLocalizedString(@"Take Photo", @"Take Photo button title")];
 	if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary])
 		[sheet addButtonWithTitle:NSLocalizedString(@"Choose Existing Photo", @"Choose Existing Photo button title")];
-	//[sheet addButtonWithTitle:NSLocalizedString(@"Choose Contact", @"Choose Contact button title")];
-	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
-	sheet.cancelButtonIndex = 3;
-	_fileSheet = YES;
+//	[sheet addButtonWithTitle:NSLocalizedString(@"Choose Contact", @"Choose Contact button title")];
+
+	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+
 	_fileUser = [user retain];
+
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+
 	[sheet release];
 }
 

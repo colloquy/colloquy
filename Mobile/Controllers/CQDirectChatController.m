@@ -1165,21 +1165,18 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 
 	if (self.connection.status == MVChatConnectionConnectingStatus) {
 		alert.message = NSLocalizedString(@"You are currently connecting,\ntry sending again soon.", @"Can't send message to user because server is connecting alert message");
-		alert.cancelButtonIndex = 0;
 	} else if (!self.connection.connected) {
 		alert.tag = 1;
 		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to user because server is disconnected alert message");
 		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];
-		alert.cancelButtonIndex = 1;
 	} else if (self.user.status != MVChatUserAvailableStatus && self.user.status != MVChatUserAwayStatus) {
 		alert.message = NSLocalizedString(@"The user is not connected.", @"Can't send message to user because they are disconnected alert message");
-		alert.cancelButtonIndex = 0;
 	} else {
 		[alert release];
 		return;
 	}
 
-	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
 	[alert show];
 

@@ -127,7 +127,6 @@ static NSURL *lastURL;
 	
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.delegate = self;
-	alert.cancelButtonIndex = 0;
 
 	NSString *user = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQInstapaperUsername"];
 
@@ -148,21 +147,21 @@ static NSURL *lastURL;
 			if ([response isEqual:@"201"]) { //Success, posted to instapaper without issues
 				[alert release];
 				return;
-			}
-			else if ([response isEqual:@"403"]) {
+			} else if ([response isEqual:@"403"]) {
 				alert.title = NSLocalizedString(@"Incorrect Account Information", "Incorrect Account Information alert title");
 				alert.message = NSLocalizedString(@"An incorrect username/email or password was given.", "Incorrect username, email or password alert message");
 			} else if ([response isEqual:@"500"]) {
 				alert.title = NSLocalizedString(@"Service Error", "Service error alert title");
 				alert.message = NSLocalizedString(@"The service encountered an error. Please try again later.", "Service error alert message");
 			}
-		}
-		else {
+		} else {
 			alert.title = NSLocalizedString(@"Unable to Submit URL", "Unable to submit URL alert title");
 			alert.message = NSLocalizedString(@"Unable to save URL to Instapaper.", "Unable to submit URL alert message");
 		}
 	}
-	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+
+	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+
 	[alert show];
 	[alert release];
 }

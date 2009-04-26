@@ -47,9 +47,8 @@
 	sheet.delegate = self;
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"Join Room", @"Join Room button title")];
-	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	sheet.cancelButtonIndex = 1;
+	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[sheet showInView:self.view];
 

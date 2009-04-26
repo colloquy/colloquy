@@ -18,8 +18,6 @@
 	MVChatConnection *_nextRoomConnection;
 	NSInteger _totalImportantUnreadCount;
 	BOOL _active;
-    BOOL _chatSheet;
-    BOOL _fileSheet;
     MVChatUser *_fileUser;
 }
 

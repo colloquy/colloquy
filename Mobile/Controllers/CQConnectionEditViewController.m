@@ -316,11 +316,8 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 
-	[sheet addButtonWithTitle:NSLocalizedString(@"Delete Connection", @"Delete Connection button title")];
-	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
-
-	sheet.destructiveButtonIndex = 0;
-	sheet.cancelButtonIndex = 1;
+	sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Delete Connection", @"Delete Connection button title")];
+	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
 

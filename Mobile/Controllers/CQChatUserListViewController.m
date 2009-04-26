@@ -359,9 +359,8 @@ static NSString *membersFilteredCountFormat;
 	[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
 	if (showOperatorActions)
 		[sheet addButtonWithTitle:NSLocalizedString(@"Operator Actions...", @"Operator Actions button title")];
-	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	sheet.cancelButtonIndex = (showOperatorActions ? 4 : 3);
+	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
 

@@ -122,9 +122,8 @@
 	[sheet addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
 	if (connection.waitingToReconnect)
 		[sheet addButtonWithTitle:NSLocalizedString(@"Stop Connection Timer", @"Stop Connection Timer button title")];
-	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	sheet.cancelButtonIndex = (connection.waitingToReconnect ? 2 : 1);
+	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
 
@@ -136,11 +135,8 @@
 	sheet.delegate = self;
 	sheet.tag = 2;
 
-	[sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
-	[sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
-
-	sheet.destructiveButtonIndex = 0;
-	sheet.cancelButtonIndex = 1;
+	sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
+	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
 
