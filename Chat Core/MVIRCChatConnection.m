@@ -3454,8 +3454,8 @@ end:
 			[self _whoisNextScheduledUser];
 		}
 
-		//workaround for quakenet which doesn't send 440 (ERR_SERVICESDOWN) if they are
-		if ( [[self server] hasCaseInsensitiveSubstring:@"quakenet"] && [[user nickname] isCaseInsensitiveEqualToString:@"Q@CServe.quakenet.org"] ) {
+		//workaround for quakenet and undernet which don't send 440 (ERR_SERVICESDOWN) if they are
+		if ( ( [[self server] hasCaseInsensitiveSubstring:@"quakenet"] && [[user nickname] isCaseInsensitiveEqualToString:@"Q@CServe.quakenet.org"] ) || ( [[self server] hasCaseInsensitiveSubstring:@"undernet"] && [[user nickname] isCaseInsensitiveEqualToString:@"X@channels.undernet.org"] ) ) {
 			NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 			[userInfo setObject:self forKey:@"connection"];
 			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]] forKey:NSLocalizedDescriptionKey];
