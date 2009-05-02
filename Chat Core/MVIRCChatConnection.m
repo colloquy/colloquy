@@ -2181,12 +2181,13 @@ end:
 		   ( [[sender nickname] isEqualToString:@"AuthServ"] && [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) ) {
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
 
-			if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ||			// Nickserv/*
-			   [msg hasCaseInsensitiveSubstring:@"you are now identified"] ||		// NickServ/freenode
-			   [msg hasCaseInsensitiveSubstring:@"you are now logged in"] ||		// Q/quakenet
-			   [msg hasCaseInsensitiveSubstring:@"you are already logged in"] ||	// NickServ/freenode
-			   [msg hasCaseInsensitiveSubstring:@"authentication successful"] ||	// X/undernet
-			   [msg hasCaseInsensitiveSubstring:@"i recognize you"] ) {				// AuthServ/gamesurge
+			if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ||				// Nickserv/*
+			   [msg hasCaseInsensitiveSubstring:@"you are now identified"] ||			// NickServ/freenode
+			   [msg hasCaseInsensitiveSubstring:@"you are already logged in"] ||		// NickServ/freenode
+			   [msg hasCaseInsensitiveSubstring:@"you are now logged in"] ||			// Q/quakenet
+			   [msg hasCaseInsensitiveSubstring:@"authentication successful"] ||		// X/undernet
+			   [msg hasCaseInsensitiveSubstring:@"You are already authenticated"] ||	// X/undernet
+			   [msg hasCaseInsensitiveSubstring:@"i recognize you"] ) {					// AuthServ/gamesurge
 
 				if( ![[self localUser] isIdentified] )
 					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidIdentifyWithServicesNotification object:self userInfo:noticeInfo];
