@@ -290,7 +290,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) setNicknamePassword:(NSString *) newPassword {
 	[super setNicknamePassword:newPassword];
 	if( [self isConnected] )
-		[self _identifyWithServicesUsingNickname:[self preferredNickname]]; // new the password for the preferred nick -> preferred nickname
+		[self _identifyWithServicesUsingNickname:[self preferredNickname]]; // new password for the preferred nick -> preferred nickname
 }
 
 #pragma mark -
@@ -1878,7 +1878,7 @@ end:
 		}
 	}
 
-	// Identify
+	// Identify with services
 	[self _identifyWithServicesUsingNickname:[self preferredNickname]]; // identifying proactively -> preferred nickname
 
 	[self performSelector:@selector( _checkWatchedUsers ) withObject:nil afterDelay:2.];
@@ -2186,7 +2186,6 @@ end:
 			   [msg hasCaseInsensitiveSubstring:@"you are already logged in"] ||		// NickServ/freenode
 			   [msg hasCaseInsensitiveSubstring:@"you are now logged in"] ||			// Q/quakenet
 			   [msg hasCaseInsensitiveSubstring:@"authentication successful"] ||		// X/undernet
-			   [msg hasCaseInsensitiveSubstring:@"You are already authenticated"] ||	// X/undernet
 			   [msg hasCaseInsensitiveSubstring:@"i recognize you"] ) {					// AuthServ/gamesurge
 
 				if( ![[self localUser] isIdentified] )
