@@ -1500,7 +1500,7 @@ end:
 		} else if( [[self server] hasCaseInsensitiveSubstring:@"undernet"] ) {
 			[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG X@channels.undernet.org :LOGIN %@ %@", [self preferredNickname], [self nicknamePassword]];
 		} else if( [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) {
-			[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG AuthServ@Services.GameSurge.net :AUTH %@ %@", [self preferredNickname], [self nicknamePassword]];
+			[self sendRawMessageImmediatelyWithFormat:@"AS AUTH %@ %@", [self preferredNickname], [self nicknamePassword]];
 		} else if( ![nickname isEqualToString:[self nickname]] ) {
 			[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@ %@", nickname, [self nicknamePassword]];
 		} else {
@@ -3454,8 +3454,8 @@ end:
 			[self _whoisNextScheduledUser];
 		}
 
-		//workaround for freenode (hyperion) and quakenet which dont send 440 (ERR_SERVICESDOWN) if they are
-		if ( ( [[self server] hasCaseInsensitiveSubstring:@"freenode"] && [[user nickname] isCaseInsensitiveEqualToString:@"NickServ"] ) || ( [[self server] hasCaseInsensitiveSubstring:@"quakenet"] && [[user nickname] isCaseInsensitiveEqualToString:@"Q"] ) ) {
+		//workaround for quakenet which doesn't send 440 (ERR_SERVICESDOWN) if they are
+		if ( [[self server] hasCaseInsensitiveSubstring:@"quakenet"] && [[user nickname] isCaseInsensitiveEqualToString:@"Q@CServe.quakenet.org"] ) {
 			NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 			[userInfo setObject:self forKey:@"connection"];
 			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]] forKey:NSLocalizedDescriptionKey];
@@ -3523,6 +3523,19 @@ end:
  
  */
 
+- (void) _handle410WithParameters:(NSArray *) parameters fromSender:(id) sender { // "services down" (freenode/hyperion) or "Invalid CAP subcommand" (freenode/ircd-seven, not supported here)
+	MVAssertCorrectThreadRequired( _connectionThread );
+
+	// "No services can currently be detected" (same as 440, which is the "standard" numeric for this error)
+	// - Send to us after trying to identify with /nickserv, ui should ask the user wether to go ahead with the autojoin without identification (= no host/ip cloaks)
+
+	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+	[userInfo setObject:self forKey:@"connection"];
+	[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]] forKey:NSLocalizedDescriptionKey];
+
+	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionServicesDownError userInfo:userInfo]];
+}
+
 - (void) _handle421WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_UNKNOWNCOMMAND
 	MVAssertCorrectThreadRequired( _connectionThread );
 
@@ -3575,19 +3588,17 @@ end:
 	}
 }
 
-- (void) _handle440WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SERVICESDOWN_BAHAMUT_UNREAL
+- (void) _handle440WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SERVICESDOWN_BAHAMUT_UNREAL (also freenode/ircd-seven)
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	// "NickServ Services are currently down. Please try again later."
-	// - Send to us after trying to identify with NickServ, ui should ask the user wether to go ahead with the autojoin without identification
+	// - Send to us after trying to identify with /nickserv, ui should ask the user wether to go ahead with the autojoin without identification (= no host/ip cloaks)
 
-	if( [parameters count] >= 2 ) {
-		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-		[userInfo setObject:self forKey:@"connection"];
-		[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]] forKey:NSLocalizedDescriptionKey];
+	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+	[userInfo setObject:self forKey:@"connection"];
+	[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]] forKey:NSLocalizedDescriptionKey];
 
-		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionServicesDownError userInfo:userInfo]];
-	}
+	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionServicesDownError userInfo:userInfo]];
 }
 
 - (void) _handle471WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_CHANNELISFULL
