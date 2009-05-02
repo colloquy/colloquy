@@ -135,6 +135,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 		_status = MVChatConnectionDisconnectedStatus;
 		_proxy = MVChatConnectionNoProxy;
+		_bouncer = MVChatConnectionNoBouncer;
 		_roomsCache = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:500];
 		_persistentInformation = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
 		_supportedFeatures = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
@@ -615,6 +616,76 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (NSString *) proxyPassword {
 	return _proxyPassword;
+}
+
+#pragma mark -
+
+- (void) setBouncerType:(MVChatConnectionBouncer) newType {
+	_bouncer = newType;
+}
+
+- (MVChatConnectionBouncer) bouncerType {
+	return _bouncer;
+}
+
+#pragma mark -
+
+- (void) setBouncerServer:(NSString *) address {
+	MVSafeCopyAssign( &_bouncerServer, address );
+}
+
+- (NSString *) bouncerServer {
+	return _bouncerServer;
+}
+
+#pragma mark -
+
+- (void) setBouncerServerPort:(unsigned short) port {
+	_bouncerServerPort = port;
+}
+
+- (unsigned short) bouncerServerPort {
+	return _bouncerServerPort;
+}
+
+#pragma mark -
+
+- (void) setBouncerUsername:(NSString *) newUsername {
+	MVSafeCopyAssign( &_bouncerUsername, newUsername );
+}
+
+- (NSString *) bouncerUsername {
+	return _bouncerUsername;
+}
+
+#pragma mark -
+
+- (void) setBouncerPassword:(NSString *) newPassword {
+	MVSafeCopyAssign( &_bouncerPassword, newPassword );
+}
+
+- (NSString *) bouncerPassword {
+	return _bouncerPassword;
+}
+
+#pragma mark -
+
+- (void) setBouncerDeviceIdentifier:(NSString *) newIdentifier {
+	MVSafeCopyAssign( &_bouncerDeviceIdentifier, newIdentifier );
+}
+
+- (NSString *) bouncerDeviceIdentifier {
+	return _bouncerDeviceIdentifier;
+}
+
+#pragma mark -
+
+- (void) setBouncerConnectionIdentifier:(NSString *) newIdentifier {
+	MVSafeCopyAssign( &_bouncerConnectionIdentifier, newIdentifier );
+}
+
+- (NSString *) bouncerConnectionIdentifier {
+	return _bouncerConnectionIdentifier;
 }
 
 #pragma mark -

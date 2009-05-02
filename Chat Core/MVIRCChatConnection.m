@@ -563,7 +563,10 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	[_chatConnection enablePreBuffering];
 
-	if( ! [_chatConnection connectToHost:[self server] onPort:[self serverPort] error:NULL] )
+	NSString *server = (_bouncer != MVChatConnectionNoBouncer && [_bouncerServer length] ? _bouncerServer : _server);
+	unsigned short serverPort = (_bouncer != MVChatConnectionNoBouncer && _bouncerServerPort ? _bouncerServerPort : _serverPort);
+
+	if( ! [_chatConnection connectToHost:server onPort:serverPort error:NULL] )
 		[self _didNotConnect];
 	else [self _resetSendQueueInterval];
 }
@@ -656,7 +659,11 @@ static const NSStringEncoding supportedEncodings[] = {
 		}
 	}
 
-	if( [self isSecure] ) {
+	BOOL secure = _secure;
+	if( _bouncer == MVChatConnectionColloquyBouncer )
+		secure = NO; // This should always be YES in the future when the bouncer supports secure connections.
+
+	if( secure ) {
 		CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL );
 		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL );
 
@@ -739,9 +746,34 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [[self password] length] ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", [self password]];
+	NSString *password = _password;
+	NSString *username = ( [_username length] ? _username : @"anonymous" );
+
+	if( _bouncer == MVChatConnectionGenericBouncer ) {
+		if( _bouncerPassword ) password = _bouncerPassword;
+		if( [_bouncerUsername length] ) username = _bouncerUsername;
+	} else if( _bouncer == MVChatConnectionColloquyBouncer ) {
+		// PASS <account> [ '~' <device-identifier> ] ':' <account-pass> [ ':' <server-pass> ]
+		NSMutableString *mutablePassword = [NSMutableString string];
+		[mutablePassword appendString:( [_bouncerUsername length] ? _bouncerUsername : @"anonymous" )];
+		if( [_bouncerDeviceIdentifier length] ) [mutablePassword appendFormat:@"~%@", _bouncerDeviceIdentifier];
+		[mutablePassword appendFormat:@":%@", ( [_bouncerPassword length] ? _bouncerPassword : @"" )];
+		if( [password length] ) [mutablePassword appendFormat:@":%@", password];
+
+		// USER [ ('irc' | 'ircs') '://' ] <username> '@' <server> [ ':' <server-port> ] [ '~' <connection-identifier> ]
+		NSMutableString *mutableUsername = [NSMutableString string];
+		if( _secure ) [mutableUsername appendString:@"ircs://"];
+		[mutableUsername appendFormat:@"%@@%@", username, _server];
+		if( _serverPort && _serverPort != 6667 ) [mutablePassword appendFormat:@":%u", _serverPort];
+		if( [_bouncerConnectionIdentifier intValue] ) [mutablePassword appendFormat:@"~%u", [_bouncerConnectionIdentifier intValue]];
+
+		password = mutablePassword;
+		username = mutableUsername;
+	}
+
+	if( [password length] ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self preferredNickname]];
-	[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", ( [[self username] length] ? [self username] : @"anonymous" ), ( [[self realName] length] ? [self realName] : @"anonymous" )];
+	[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", username, ( [_realName length] ? _realName : @"Anonymous User" )];
 
 	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:JVPeriodicEventsInterval];
 	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:JVPingServerInterval];

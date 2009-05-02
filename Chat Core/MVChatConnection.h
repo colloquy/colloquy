@@ -28,6 +28,12 @@ typedef enum {
 } MVChatConnectionProxy;
 
 typedef enum {
+	MVChatConnectionNoBouncer = 'nonB',
+	MVChatConnectionGenericBouncer = 'gbnC',
+	MVChatConnectionColloquyBouncer = 'cbnC'
+} MVChatConnectionBouncer;
+
+typedef enum {
 	MVChatConnectionServerPublicKeyType = 'serV',
 	MVChatConnectionClientPublicKeyType = 'clnT'
 } MVChatConnectionPublicKeyType;
@@ -130,6 +136,14 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSString *_proxyPassword;
 	unsigned short _proxyServerPort;
 
+	MVChatConnectionBouncer _bouncer;
+	NSString *_bouncerServer;
+	NSString *_bouncerUsername;
+	NSString *_bouncerPassword;
+	NSString *_bouncerDeviceIdentifier;
+	NSString *_bouncerConnectionIdentifier;
+	unsigned short _bouncerServerPort;
+
 	BOOL _secure;
 	BOOL _roomListDirty;
 
@@ -188,19 +202,23 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property MVChatMessageFormat outgoingChatFormat;
 
-@property(copy) NSString *proxyUsername;
-
-@property(copy) NSString *proxyPassword;
-
 @property(getter=isSecure) BOOL secure;
 
 @property(copy) NSDictionary *persistentInformation;
 
 @property MVChatConnectionProxy proxyType;
-
 @property(copy) NSString *proxyServer;
-
 @property unsigned short proxyServerPort;
+@property(copy) NSString *proxyUsername;
+@property(copy) NSString *proxyPassword;
+
+@property MVChatConnectionBouncer bouncerType;
+@property(copy) NSString *bouncerServer;
+@property unsigned short bouncerServerPort;
+@property(copy) NSString *bouncerUsername;
+@property(copy) NSString *bouncerPassword;
+@property(copy) NSString *bouncerDeviceIdentifier;
+@property(copy) NSString *bouncerConnectionIdentifier;
 
 @property(readonly) NSSet *knownChatRooms;
 @property(readonly) NSSet *joinedChatRooms;
@@ -299,16 +317,6 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-- (void) setProxyUsername:(NSString *) username;
-- (NSString *) proxyUsername;
-
-#pragma mark -
-
-- (void) setProxyPassword:(NSString *) password;
-- (NSString *) proxyPassword;
-
-#pragma mark -
-
 - (void) setSecure:(BOOL) ssl;
 
 #pragma mark -
@@ -330,6 +338,51 @@ extern NSString *MVChatConnectionErrorDomain;
 
 - (void) setProxyServerPort:(unsigned short) port;
 - (unsigned short) proxyServerPort;
+
+#pragma mark -
+
+- (void) setProxyUsername:(NSString *) username;
+- (NSString *) proxyUsername;
+
+#pragma mark -
+
+- (void) setProxyPassword:(NSString *) password;
+- (NSString *) proxyPassword;
+
+#pragma mark -
+
+- (void) setBouncerType:(MVChatConnectionBouncer) type;
+- (MVChatConnectionBouncer) bouncerType;
+
+#pragma mark -
+
+- (void) setBouncerServer:(NSString *) address;
+- (NSString *) bouncerServer;
+
+#pragma mark -
+
+- (void) setBouncerServerPort:(unsigned short) port;
+- (unsigned short) bouncerServerPort;
+
+#pragma mark -
+
+- (void) setBouncerUsername:(NSString *) username;
+- (NSString *) bouncerUsername;
+
+#pragma mark -
+
+- (void) setBouncerPassword:(NSString *) password;
+- (NSString *) bouncerPassword;
+
+#pragma mark -
+
+- (void) setBouncerDeviceIdentifier:(NSString *) identifier;
+- (NSString *) bouncerDeviceIdentifier;
+
+#pragma mark -
+
+- (void) setBouncerConnectionIdentifier:(NSString *) identifier;
+- (NSString *) bouncerConnectionIdentifier;
 
 #pragma mark -
 
