@@ -28,11 +28,15 @@
 
 @synthesize launchDate = _launchDate;
 
-- (void) applicationDidFinishLaunching:(UIApplication *) application {
+- (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
 	NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 
 	_launchDate = [[NSDate alloc] init];
+
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
+	[[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+#endif
 
 	NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQConnectionsController defaultController], [CQChatController defaultController], nil];
 	tabBarController.viewControllers = viewControllers;
@@ -46,6 +50,22 @@
 	NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
 	NSString *version = [NSString stringWithFormat:@"%@ (%@)", [info objectForKey:@"CFBundleShortVersionString"], [info objectForKey:@"CFBundleVersion"]];
 	[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQCurrentVersion"];
+
+	return YES;
+}
+
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
+- (void) applicationDidFinishLaunching:(UIApplication *) application {
+	[self application:self didFinishLaunchingWithOptions:nil];
+}
+#endif
+
+- (void) application:(UIApplication *) application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *) deviceToken {
+	NSLog(@"deviceToken: %@", deviceToken); 
+}
+
+- (void) application:(UIApplication *) application didFailToRegisterForRemoteNotificationsWithError:(NSError *) error {
+	NSLog(@"Error in registration. Error: %@", error); 
 }
 
 - (BOOL) application:(UIApplication *) application handleOpenURL:(NSURL *) url {

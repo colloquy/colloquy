@@ -26,7 +26,7 @@
 			<key>Titles</key>
 			<array>
 				<string>All</string>
-				<string>Real Only</string>
+				<string>Auto</string>
 				<string>None</string>
 			</array>
 			<key>DefaultValue</key>

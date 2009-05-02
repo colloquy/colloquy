@@ -48,6 +48,7 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 	connection.automaticallyConnect = YES;
 	connection.secure = ([_url.scheme isEqualToString:@"ircs"] || [_url.port unsignedShortValue] == 994);
 	connection.serverPort = ([_url.port unsignedShortValue] ? [_url.port unsignedShortValue] : (connection.secure ? 994 : 6667));
+	connection.encoding = [MVChatConnection defaultEncoding];
 
 	NSString *target = nil;
 	if (_url.fragment.length) target = [@"#" stringByAppendingString:[_url.fragment stringByDecodingIllegalURLCharacters]];
@@ -107,8 +108,6 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 
 	if (isDefaultValue(connection.username))
 		connection.username = [MVChatConnection defaultUsernameWithNickname:connection.preferredNickname];
-
-	connection.encoding = [MVChatConnection defaultEncoding];
 
 	[[CQConnectionsController defaultController] addConnection:connection];
 

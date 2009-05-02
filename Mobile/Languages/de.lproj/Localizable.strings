@@ -136,6 +136,9 @@
 /* Add nickname label */
 "Add nickname" = "Spitznamen hinzufügen";
 
+/* Address connection setting label */
+"Address" = "Adresse";
+
 /* Advanced connection setting label
    Advanced view title */
 "Advanced" = "Fortgeschritten";
@@ -327,9 +330,6 @@
 
 /* Grant Voice button title */
 "Grant Voice" = "Stimme gewähren";
-
-/* Host Name connection setting label */
-"Host Name" = "Adresse";
 
 /* Hostname user info label */
 "Hostname" = "Host-Name";

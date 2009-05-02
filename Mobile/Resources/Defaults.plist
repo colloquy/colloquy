@@ -8,6 +8,8 @@
 	<integer>4</integer>
 	<key>CQChatRoomEncoding</key>
 	<integer>4</integer>
+	<key>JVChatAlwaysShowNotices</key>
+	<integer>0</integer>
 	<key>CQChatTranscriptStyle</key>
 	<string>standard</string>
 	<key>CQChatAutocompleteBehavior</key>

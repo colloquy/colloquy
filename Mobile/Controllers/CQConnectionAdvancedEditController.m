@@ -8,6 +8,12 @@
 
 #import <ChatCore/MVChatConnection.h>
 
+#define SettingsTableSection 0
+#define AuthenticationTableSection 1
+#define IdentitiesTableSection 2
+#define AutomaticTableSection 3
+#define EncodingsTableSection 4
+
 static inline BOOL isDefaultValue(NSString *string) {
 	return [string isEqualToString:@"<<default>>"];
 }
@@ -42,8 +48,9 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL) animated {
-	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:2] withAnimation:UITableViewRowAnimationNone];
-	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:3] withAnimation:UITableViewRowAnimationNone];
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:IdentitiesTableSection] withAnimation:UITableViewRowAnimationNone];
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:AutomaticTableSection] withAnimation:UITableViewRowAnimationNone];
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:EncodingsTableSection] withAnimation:UITableViewRowAnimationNone];
 
 	[super viewWillAppear:animated];
 }
@@ -77,25 +84,24 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 #pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
-	return 4;
+	return 5;
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
 	switch( section) {
-		case 0: return 2;
-		case 1: return 3;
-		case 2: return 1;
-		case 3: return 1;
+		case SettingsTableSection: return 2;
+		case AuthenticationTableSection: return 3;
+		case IdentitiesTableSection: return 1;
+		case AutomaticTableSection: return 1;
+		case EncodingsTableSection: return 1;
 		default: return 0;
 	}
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
 	switch( section) {
-		case 0: return NSLocalizedString(@"Connection Settings", @"Connection Settings section title");
-		case 1: return NSLocalizedString(@"Authentication", @"Authentication section title");
-		case 2: return NSLocalizedString(@"Alternate Network Identities", @"Alternate Network Identities section title");
-		case 3: return NSLocalizedString(@"Automatic Actions", @"Automatic Actions section title");
+		case SettingsTableSection: return NSLocalizedString(@"Connection Settings", @"Connection Settings section title");
+		case AuthenticationTableSection: return NSLocalizedString(@"Authentication", @"Authentication section title");
 		default: return nil;
 	}
 
@@ -103,19 +109,27 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
-	if (section == 1)
+	if (section == AuthenticationTableSection)
 		return NSLocalizedString(@"The nickname password is used to\nauthenticate with services (e.g. NickServ).", @"Authentication section footer title");
+	if (section == IdentitiesTableSection)
+		return NSLocalizedString(@"Alternate nicknames are tried in order\nuntil one isn't being used by another user.", @"Alternate Nicknames section footer title");
+	if (section == AutomaticTableSection)
+		return NSLocalizedString(@"The auto commands are sent in order\nwhen connecting to the server.", @"Auto Commands section footer title");
 	return nil;
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if ((indexPath.section == 2 && indexPath.row == 0) || (indexPath.section == 3 && indexPath.row == 0))
+	if (indexPath.section == IdentitiesTableSection && indexPath.row == 0)
+		return indexPath;
+	if (indexPath.section == AutomaticTableSection && indexPath.row == 0)
+		return indexPath;
+	if (indexPath.section == EncodingsTableSection && indexPath.row == 0)
 		return indexPath;
 	return nil;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (indexPath.section == 2 && indexPath.row == 0) {
+	if (indexPath.section == IdentitiesTableSection && indexPath.row == 0) {
 		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
 
 		listViewController.title = NSLocalizedString(@"Nicknames", @"Nicknames view title");
@@ -137,7 +151,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 		return;
 	}
 
-	if (indexPath.section == 3 && indexPath.row == 0) {
+	if (indexPath.section == AutomaticTableSection && indexPath.row == 0) {
 		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
 
 		listViewController.title = NSLocalizedString(@"Commands", @"Commands view title");
@@ -158,10 +172,41 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 		return;
 	}
+
+	if (indexPath.section == EncodingsTableSection) {
+		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
+
+		NSUInteger selectedEncodingIndex = 0;
+		NSMutableArray *encodings = [[NSMutableArray alloc] init];
+		const NSStringEncoding *supportedEncodings = [_connection supportedStringEncodings];
+		for (unsigned i = 0; supportedEncodings[i]; ++i) {
+			NSStringEncoding encoding = supportedEncodings[i];
+			[encodings addObject:[NSString localizedNameOfStringEncoding:encoding]];
+			if (encoding == _connection.encoding)
+				selectedEncodingIndex = i;
+		}
+
+		listViewController.title = NSLocalizedString(@"Encoding", @"Encoding view title");
+		listViewController.allowEditing = NO;
+		listViewController.items = encodings;
+		listViewController.selectedItemIndex = selectedEncodingIndex;
+
+		listViewController.target = self;
+		listViewController.action = @selector(encodingChanged:);
+
+		[self.view endEditing:YES];
+
+		[self.navigationController pushViewController:listViewController animated:YES];
+
+		[listViewController release];
+		[encodings release];
+
+		return;
+	}
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (indexPath.section == 0) {
+	if (indexPath.section == SettingsTableSection) {
 		if (indexPath.row == 0) {
 			CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
@@ -186,7 +231,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 			return cell;
 		}
-	} else if (indexPath.section == 1) {
+	} else if (indexPath.section == AuthenticationTableSection) {
 		CQPreferencesTextCell *cell = nil;
 
 		if (indexPath.row == 0) {
@@ -226,7 +271,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 		cell.target = self;
 
 		return cell;
-	} else if (indexPath.section == 2 && indexPath.row == 0) {
+	} else if (indexPath.section == IdentitiesTableSection && indexPath.row == 0) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
 		if (_connection.alternateNicknames.count)
@@ -234,24 +279,29 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 		if (_connection.alternateNicknames.count)
 			cell.text = [_connection.alternateNicknames componentsJoinedByString:@", "];
-		else cell.textField.placeholder = [NSString stringWithFormat:@"%@_, %1$@__, %1$@___", currentPreferredNickname(_connection)];
+		else cell.textField.placeholder = [NSString stringWithFormat:@"%@_, %1$@__, %1$@___, %1$@____, %1$@_____", currentPreferredNickname(_connection)];
 
-		cell.label = NSLocalizedString(@"Nicknames", @"Nicknames connection setting label");
+		cell.label = NSLocalizedString(@"Alt. Nicknames", @"Alt. Nicknames connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		return cell;
-	} else if (indexPath.section == 3 && indexPath.row == 0) {
+	} else if (indexPath.section == AutomaticTableSection && indexPath.row == 0) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
-		cell.label = NSLocalizedString(@"Commands", @"Commands connection setting label");
+		cell.label = NSLocalizedString(@"Auto Commands", @"Auto Commands connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		NSArray *commands = _connection.automaticCommands;
-		if (commands.count == 1)
-			cell.text = NSLocalizedString(@"1 Command", @"One Command label");
-		else if (commands.count)
-			cell.text = [NSString stringWithFormat:NSLocalizedString(@"%u Commands", @"Multiple Commands label"), commands.count];
-		else cell.text = NSLocalizedString(@"No Commands", @"No Commands label");
+		if (commands.count) cell.text = [NSString stringWithFormat:@"%u", commands.count];
+		else cell.text = NSLocalizedString(@"None", @"None label");
+
+		return cell;
+	} else if (indexPath.section == EncodingsTableSection && indexPath.row == 0) {
+		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
+
+		cell.label = NSLocalizedString(@"Encoding", @"Encoding connection setting label");
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		cell.text = [NSString localizedNameOfStringEncoding:_connection.encoding];
 
 		return cell;
 	}
@@ -307,5 +357,10 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 - (void) automaticCommandsChanged:(CQPreferencesListViewController *) sender {
 	_connection.automaticCommands = sender.items;
+}
+
+- (void) encodingChanged:(CQPreferencesListViewController *) sender {
+	const NSStringEncoding *supportedEncodings = [_connection supportedStringEncodings];
+	_connection.encoding = supportedEncodings[sender.selectedItemIndex];
 }
 @end

@@ -21,7 +21,9 @@
 	_textField.delegate = self;
 	_textField.textAlignment = UITextAlignmentLeft;
 	_textField.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
-	_textField.font = [UIFont systemFontOfSize:14.];
+	_textField.font = [UIFont systemFontOfSize:17.];
+	_textField.adjustsFontSizeToFitWidth = YES;
+	_textField.minimumFontSize = 14.;
 	_textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 	_textField.enablesReturnKeyAutomatically = NO;
 	_textField.returnKeyType = UIReturnKeyDone;
@@ -78,10 +80,12 @@
 	if (type == UITableViewCellAccessoryDisclosureIndicator) {
 		self.selectionStyle = UITableViewCellSelectionStyleBlue;
 		_textField.textAlignment = UITextAlignmentRight;
+		_textField.adjustsFontSizeToFitWidth = NO;
 		_textField.userInteractionEnabled = NO;
 	} else {
 		self.selectionStyle = UITableViewCellSelectionStyleNone;
 		_textField.textAlignment = UITextAlignmentLeft;
+		_textField.adjustsFontSizeToFitWidth = YES;
 		_textField.userInteractionEnabled = YES;
 	}
 }
@@ -106,21 +110,31 @@
 	[super layoutSubviews];
 
 	CGRect contentRect = self.contentView.frame;
+	NSString *originalText = [_textField.text retain];
 
 	BOOL showingLabel = (_label.text.length > 0);
+	BOOL showingTextField = (originalText.length || _textField.placeholder.length);
 
-	NSString *originalText = [_textField.text retain];
-	BOOL showingTextField = NO;
-	if (originalText.length || _textField.placeholder.length) {
+	if (showingLabel) {
+		_label.hidden = NO;
+
+		CGRect frame = _label.frame;
+		frame.size = [_label sizeThatFits:_label.bounds.size];
+		frame.origin.x = 10.;
+		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.)) - 1.;
+		if (!showingTextField)
+			frame.size.width = (contentRect.size.width - frame.origin.x - 10.);
+		_label.frame = frame;
+	} else {
+		_label.hidden = YES;
+	}
+
+	if (showingTextField) {
 		_textField.hidden = NO;
-		showingTextField = YES;
 
 		_textField.text = @"Qwerty"; // Temporary text to workaround a bug where sizeThatFits: returns zero height when there is only a placeholder.
 
-		if (showingLabel)
-			_textField.font = [UIFont systemFontOfSize:14.];
-		else _textField.font = [UIFont systemFontOfSize:17.];
-
+		const CGFloat leftMargin = 10.;
 		CGFloat rightMargin = 10.;
 		if (_textField.clearButtonMode == UITextFieldViewModeAlways)
 			rightMargin = 0.;
@@ -129,7 +143,7 @@
 
 		CGRect frame = _textField.frame;
 		frame.size = [_textField sizeThatFits:_textField.bounds.size];
-		frame.origin.x = (showingLabel ? 125. : 10.);
+		frame.origin.x = (showingLabel ? MAX(CGRectGetMaxX(_label.frame) + leftMargin, 125.) : leftMargin);
 		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.)) - 1.;
 		frame.size.width = (contentRect.size.width - frame.origin.x - rightMargin);
 		_textField.frame = frame;
@@ -140,21 +154,6 @@
 	}
 
 	[originalText release];
-
-	if (showingLabel) {
-		_label.hidden = NO;
-
-		CGRect frame = _label.frame;
-		frame.size = [_label sizeThatFits:_label.bounds.size];
-		frame.origin.x = 10.;
-		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
-		if (showingTextField)
-			frame.size.width = (_textField.frame.origin.x - frame.origin.x - 10.);
-		else frame.size.width = (contentRect.size.width - frame.origin.x - 10.);
-		_label.frame = frame;
-	} else {
-		_label.hidden = YES;
-	}
 }
 
 @synthesize textEditAction = _textEditAction;

@@ -2,6 +2,7 @@
 
 #import "CQColloquyApplication.h"
 #import "CQConnectionAdvancedEditController.h"
+#import "CQConnectionBouncerEditController.h"
 #import "CQConnectionsController.h"
 #import "CQKeychain.h"
 #import "CQPreferencesDeleteCell.h"
@@ -10,6 +11,13 @@
 #import "CQPreferencesTextCell.h"
 
 #import <ChatCore/MVChatConnection.h>
+
+#define ServerTableSection 0
+#define BouncerTableSection 1
+#define IdentityTableSection 2
+#define AutomaticTableSection 3
+#define AdvancedTableSection 4
+#define DeleteTableSection 5
 
 static inline BOOL isDefaultValue(NSString *string) {
 	return [string isEqualToString:@"<<default>>"];
@@ -90,29 +98,49 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
 	if (self.newConnection)
-		return 4;
-	return 5;
+		return 5;
+	return 6;
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
 	switch(section) {
-		case 0: return 2;
-		case 1: return 2;
-		case 2: return 2;
-		case 3: return 1;
-		case 4: return 1;
+		case ServerTableSection: return 2;
+		case BouncerTableSection: return 1;
+		case IdentityTableSection: return 2;
+		case AutomaticTableSection: return 2;
+		case AdvancedTableSection: return 1;
+		case DeleteTableSection: return 1;
 		default: return 0;
 	}
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if ((indexPath.section == 2 && indexPath.row == 1) || (indexPath.section == 3 && indexPath.row == 0))
+	if (indexPath.section == BouncerTableSection && indexPath.row == 0)
+		return indexPath;
+	if (indexPath.section == AutomaticTableSection && indexPath.row == 1)
+		return indexPath;
+	if (indexPath.section == AdvancedTableSection && indexPath.row == 0)
 		return indexPath;
 	return nil;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (indexPath.section == 2 && indexPath.row == 1) {
+	if (indexPath.section == BouncerTableSection && indexPath.row == 0) {
+		CQConnectionBouncerEditController *bouncerEditViewController = [[CQConnectionBouncerEditController alloc] init];
+
+		bouncerEditViewController.navigationItem.prompt = self.navigationItem.prompt;
+		bouncerEditViewController.connection = _connection;
+
+		[self.view endEditing:YES];
+
+		[self.navigationController pushViewController:bouncerEditViewController animated:YES];
+
+		[bouncerEditViewController release];
+
+		return;
+	}
+
+	if (indexPath.section == AutomaticTableSection && indexPath.row == 1) {
 		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
 
 		listViewController.title = NSLocalizedString(@"Join Rooms", @"Join Rooms view title");
@@ -136,7 +164,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 		return;
 	}
 
-	if (indexPath.section == 3 && indexPath.row == 0) {
+	if (indexPath.section == AdvancedTableSection && indexPath.row == 0) {
 		CQConnectionAdvancedEditController *advancedEditViewController = [[CQConnectionAdvancedEditController alloc] init];
 
 		advancedEditViewController.navigationItem.prompt = self.navigationItem.prompt;
@@ -154,22 +182,22 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
-	if (section == 0)
+	if (section == ServerTableSection)
 		return NSLocalizedString(@"Internet Relay Chat Server", @"Internet Relay Chat Server section title");
-	if (section == 1)
+	if (section == IdentityTableSection)
 		return NSLocalizedString(@"Network Identity", @"Network Identity section title");
-	if (section == 2)
+	if (section == AutomaticTableSection)
 		return NSLocalizedString(@"Automatic Actions", @"Automatic Actions section title");
 	return nil;
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (indexPath.section == 0) {
+	if (indexPath.section == ServerTableSection) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 		cell.target = self;
 
 		if (indexPath.row == 0) {
-			cell.label = NSLocalizedString(@"Host Name", @"Host Name connection setting label");
+			cell.label = NSLocalizedString(@"Address", @"Address connection setting label");
 			cell.text = (isPlaceholderValue(_connection.server) ? @"" : _connection.server);
 			cell.textField.placeholder = (_newConnection ? @"irc.example.com" : @"");
 			cell.textField.keyboardType = UIKeyboardTypeURL;
@@ -185,7 +213,20 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 		}
 
 		return cell;
-	} else if (indexPath.section == 1) {
+	} else if (indexPath.section == BouncerTableSection) {
+		if (indexPath.row == 0) {
+			CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
+
+			if ([[UIApplication sharedApplication] respondsToSelector:@selector(enabledRemoteNotificationTypes)])
+				cell.label = NSLocalizedString(@"Colloquy Push Bouncer", @"Colloquy Push Bouncer connection setting label");
+			else cell.label = NSLocalizedString(@"Colloquy Bouncer", @"Colloquy Bouncer connection setting label");
+
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			cell.text = NSLocalizedString(@"None", @"None label");
+
+			return cell;
+		}
+	} else if (indexPath.section == IdentityTableSection) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 		cell.target = self;
 
@@ -205,7 +246,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 		}
 
 		return cell;
-	} else if (indexPath.section == 2) {
+	} else if (indexPath.section == AutomaticTableSection) {
 		if (indexPath.row == 0) {
 			CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 
@@ -227,14 +268,14 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 			return cell;
 		}
-	} else if (indexPath.section == 3 && indexPath.row == 0) {
+	} else if (indexPath.section == AdvancedTableSection && indexPath.row == 0) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
 		cell.label = NSLocalizedString(@"Advanced", @"Advanced connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		return cell;
-	} else if (indexPath.section == 4 && indexPath.row == 0) {
+	} else if (indexPath.section == DeleteTableSection && indexPath.row == 0) {
 		CQPreferencesDeleteCell *cell = [CQPreferencesDeleteCell reusableTableViewCellInTableView:tableView];
 
 		cell.target = self;
