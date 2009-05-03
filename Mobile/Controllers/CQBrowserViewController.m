@@ -135,11 +135,13 @@ static NSURL *lastURL;
 		alert.message = NSLocalizedString(@"You need to enter an Instapaper username or email address before saving links.", "No username or email address alert message");
 	} else {
 		NSString *password = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQInstapaperPassword"];
-		NSString *instapaperURL = [[NSString alloc] initWithFormat:@"https://www.instapaper.com/api/add?username=%@&password=%@&url=%@&auto-title=1", user, password, url];
+		NSString *instapaperURL = [NSString stringWithFormat:@"https://www.instapaper.com/api/add?username=%@&password=%@&url=%@&auto-title=1", user, password, url];
 
 		NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:instapaperURL] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
-		NSError *error;
+		NSError *error = nil;
 		NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
+
+		[request release];
 		
 		if (!error) {
 			NSString *response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -154,6 +156,8 @@ static NSURL *lastURL;
 				alert.title = NSLocalizedString(@"Service Error", "Service error alert title");
 				alert.message = NSLocalizedString(@"The service encountered an error. Please try again later.", "Service error alert message");
 			}
+			
+			[response release];
 		} else {
 			alert.title = NSLocalizedString(@"Unable to Submit URL", "Unable to submit URL alert title");
 			alert.message = NSLocalizedString(@"Unable to save URL to Instapaper.", "Unable to submit URL alert message");

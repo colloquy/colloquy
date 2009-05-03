@@ -756,6 +756,7 @@
 			sentTweet = NO;
 		}
 		[request release];
+		[response release];
 	}
 
 	if ( !sentTweet ) [alert show];
