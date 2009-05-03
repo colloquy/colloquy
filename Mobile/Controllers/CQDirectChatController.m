@@ -387,7 +387,7 @@
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois", @"/dcc", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois", @"/dcc", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/tweet", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -418,7 +418,7 @@
 	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"] && text.length > 1) {
 		static NSArray *commandsNotRequiringConnection;
 		if (!commandsNotRequiringConnection)
-			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", nil];
+			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", @"tweet", nil];
 
 		// Send as a command.
 		NSScanner *scanner = [NSScanner scannerWithString:text];
@@ -698,6 +698,70 @@
 
 	[self _handleSearchForURL:urlString withQuery:arguments];
 
+	return YES;
+}
+
+#pragma mark -
+
+- (BOOL) handleTweetCommandWithArguments:(NSString *) arguments {	
+	NSString *username = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQTwitterUsername"];
+	NSString *password = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQTwitterPassword"];
+	BOOL sentTweet = NO;
+
+	if ( !arguments.length ) return YES;
+
+    UIAlertView *alert = [[UIAlertView alloc] init]; 
+	alert.delegate = self;
+	alert.cancelButtonIndex = 0;
+
+	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+	
+	if ( !username.length ) {
+		alert.title = NSLocalizedString(@"No Username Given", "No username alert title");
+		alert.message = NSLocalizedString(@"You need to enter a Twitter username in the settings.", "No username alert message");
+	}
+
+	if ( !password.length ) {
+		alert.title = NSLocalizedString(@"No Password Given", "No password alert title");
+		alert.message = NSLocalizedString(@"You need to enter a password in the settings.", "No password alert message");
+	}
+
+	if ( arguments.length > 140 ) {
+		alert.title = NSLocalizedString(@"Tweet Too Long", "Tweet too long title");
+		alert.message = [NSString stringWithFormat:NSLocalizedString(@"Your tweet was %d characters over the limit.", "Your tweet was %d characters over the limit alert message"), ([arguments length] - 140)];
+	} else sentTweet = YES;
+
+	if (sentTweet) {		
+		NSString *tweet = [@"source=colloquy&status=" stringByAppendingString:arguments];
+		NSString *twitter = [NSString stringWithFormat:@"https://%@:%@@twitter.com/statuses/update.json", username, password];
+		NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:twitter] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
+
+		[request setHTTPMethod:@"POST"];
+		[request setHTTPBody:[tweet dataUsingEncoding:NSUTF8StringEncoding]];
+
+		NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+		NSString *response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+
+		if ( response.length ) {
+			if ( [response hasCaseInsensitiveSubstring:@"Could not authenticate you"] ) {
+				alert.title = NSLocalizedString(@"Could Not Authenticate", "Could not authenticate title");
+				alert.message = NSLocalizedString(@"Make sure your Twitter username and password are correct.", "Make sure your username and password are correct alert message");
+
+				sentTweet = NO;
+			}
+		} else {
+			alert.title = NSLocalizedString(@"Unable To Send Tweet", "Unable to send tweet title");
+			alert.message = NSLocalizedString(@"Unable to send the tweet to Twitter.", "Unable to submit the tweet to Twitter alert message");
+
+			sentTweet = NO;
+		}
+		[request release];
+	}
+
+	if ( !sentTweet ) [alert show];
+	
+	[alert release];
+	
 	return YES;
 }
 
