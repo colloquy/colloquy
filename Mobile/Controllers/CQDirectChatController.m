@@ -732,7 +732,7 @@
 	} else sentTweet = YES;
 
 	if (sentTweet) {		
-		NSString *tweet = [@"source=colloquy&status=" stringByAppendingString:arguments];
+		NSString *tweet = [@"source=mobilecolloquy&status=" stringByAppendingString:arguments];
 		NSString *twitter = [NSString stringWithFormat:@"https://%@:%@@twitter.com/statuses/update.json", username, password];
 		NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:twitter] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
 
