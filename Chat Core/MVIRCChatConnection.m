@@ -764,8 +764,8 @@ static const NSStringEncoding supportedEncodings[] = {
 		NSMutableString *mutableUsername = [NSMutableString string];
 		if( _secure ) [mutableUsername appendString:@"ircs://"];
 		[mutableUsername appendFormat:@"%@@%@", username, _server];
-		if( _serverPort && _serverPort != 6667 ) [mutablePassword appendFormat:@":%u", _serverPort];
-		if( [_bouncerConnectionIdentifier intValue] ) [mutablePassword appendFormat:@"~%u", [_bouncerConnectionIdentifier intValue]];
+		if( _serverPort && _serverPort != 6667 ) [mutableUsername appendFormat:@":%u", _serverPort];
+		if( [_bouncerConnectionIdentifier intValue] ) [mutableUsername appendFormat:@"~%u", [_bouncerConnectionIdentifier intValue]];
 
 		password = mutablePassword;
 		username = mutableUsername;
@@ -977,7 +977,7 @@ end:
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
 
-	NSString *stringWithPasswordsHidden = [string stringByReplacingOccurrencesOfRegex:@"(^PASS |IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:RKLCaseless range:NSMakeRange(0, [string length]) error:NULL];
+	NSString *stringWithPasswordsHidden = string; //[string stringByReplacingOccurrencesOfRegex:@"(^PASS |IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:RKLCaseless range:NSMakeRange(0, [string length]) error:NULL];
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:stringWithPasswordsHidden, @"message", data, @"messageData", [NSNumber numberWithBool:YES], @"outbound", nil]];
 

@@ -12,6 +12,7 @@
 @interface CQConnectionsController : UINavigationController <UINavigationControllerDelegate> {
 	@protected
 	NSMutableArray *_connections;
+	NSMutableArray *_bouncers;
 	BOOL _wasEditingConnection;
 	NSUInteger _connectingCount;
 	NSUInteger _connectedCount;
@@ -22,6 +23,7 @@
 
 @property (nonatomic, readonly) NSArray *connections;
 @property (nonatomic, readonly) NSArray *connectedConnections;
+@property (nonatomic, readonly) NSArray *bouncers;
 
 - (void) saveConnections;
 
@@ -46,6 +48,12 @@
 
 - (void) replaceConnection:(MVChatConnection *) previousConnection withConnection:(MVChatConnection *) newConnection;
 - (void) replaceConnectionAtIndex:(NSUInteger) index withConnection:(MVChatConnection *) connection;
+
+- (NSDictionary *) bouncerInfoForIdentifier:(NSString *) identifier;
+
+- (void) addBouncerInfo:(NSDictionary *) bouncerInfo;
+- (void) replaceBouncerInfoAtIndex:(NSUInteger) index withBouncerInfo:(NSDictionary *) bouncerInfo;
+- (void) removeBouncerInfoAtIndex:(NSUInteger) index;
 @end
 
 @interface MVChatConnection (CQConnectionsControllerAdditions)
@@ -59,4 +67,5 @@
 @property (nonatomic, copy) NSArray *automaticJoinedRooms;
 @property (nonatomic, copy) NSArray *automaticCommands;
 @property (nonatomic) BOOL automaticallyConnect;
+@property (nonatomic, copy) NSString *bouncerIdentifier;
 @end

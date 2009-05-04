@@ -50,7 +50,11 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL) animated {
-	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:2] withAnimation:UITableViewRowAnimationNone];
+	if (!_connection.bouncerIdentifier.length)
+		_connection.bouncerType = MVChatConnectionNoBouncer;
+
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:BouncerTableSection] withAnimation:UITableViewRowAnimationNone];
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:IdentityTableSection] withAnimation:UITableViewRowAnimationNone];
 
 	[super viewWillAppear:animated];
 }
@@ -196,7 +200,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 		cell.target = self;
 
-		if (indexPath.row == 0) {
+		if (indexPath.row == 1) {
 			cell.label = NSLocalizedString(@"Address", @"Address connection setting label");
 			cell.text = (isPlaceholderValue(_connection.server) ? @"" : _connection.server);
 			cell.textField.placeholder = (_newConnection ? @"irc.example.com" : @"");
@@ -204,7 +208,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(serverChanged:);
-		} else if (indexPath.row == 1) {
+		} else if (indexPath.row == 0) {
 			cell.label = NSLocalizedString(@"Description", @"Description connection setting label");
 			cell.text = (![_connection.displayName isEqualToString:_connection.server] ? _connection.displayName : @"");
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
@@ -213,19 +217,25 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 		}
 
 		return cell;
-	} else if (indexPath.section == BouncerTableSection) {
-		if (indexPath.row == 0) {
-			CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
+	} else if (indexPath.section == BouncerTableSection && indexPath.row == 0) {
+		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
-			if ([[UIApplication sharedApplication] respondsToSelector:@selector(enabledRemoteNotificationTypes)])
-				cell.label = NSLocalizedString(@"Colloquy Push Bouncer", @"Colloquy Push Bouncer connection setting label");
-			else cell.label = NSLocalizedString(@"Colloquy Bouncer", @"Colloquy Bouncer connection setting label");
+		if ([[UIApplication sharedApplication] respondsToSelector:@selector(enabledRemoteNotificationTypes)])
+			cell.label = NSLocalizedString(@"Colloquy Push Bouncer", @"Colloquy Push Bouncer connection setting label");
+		else cell.label = NSLocalizedString(@"Colloquy Bouncer", @"Colloquy Bouncer connection setting label");
 
-			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-			cell.text = NSLocalizedString(@"None", @"None label");
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-			return cell;
-		}
+		if (_connection.bouncerType == MVChatConnectionColloquyBouncer) {
+			NSDictionary *info = [[CQConnectionsController defaultController] bouncerInfoForIdentifier:_connection.bouncerIdentifier];
+			if (info) {
+				NSString *description = [info objectForKey:@"description"];
+				NSString *server = [info objectForKey:@"bouncerServer"];
+				cell.text = (description.length ? description : server);
+			} else cell.text = NSLocalizedString(@"None", @"None label");
+		} else cell.text = NSLocalizedString(@"None", @"None label");
+
+		return cell;
 	} else if (indexPath.section == IdentityTableSection) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 		cell.target = self;
@@ -264,7 +274,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 			if (_connection.automaticJoinedRooms.count)
 				cell.text = [_connection.automaticJoinedRooms componentsJoinedByString:@", "];
-			else cell.text = NSLocalizedString(@"No Rooms", @"No Rooms label");
+			else cell.text = NSLocalizedString(@"None", @"None label");
 
 			return cell;
 		}

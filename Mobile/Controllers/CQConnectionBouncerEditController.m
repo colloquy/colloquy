@@ -1,16 +1,14 @@
 #import "CQConnectionBouncerEditController.h"
 
+#import "CQConnectionBouncerDetailsEditController.h"
 #import "CQConnectionsController.h"
 #import "CQPreferencesSwitchCell.h"
-#import "CQPreferencesListViewController.h"
 #import "CQPreferencesTextCell.h"
-#import "CQKeychain.h"
 
 #import <ChatCore/MVChatConnection.h>
 
 #define EnabledTableSection 0
 #define BouncersTableSection 1
-#define PushTableSection 2
 
 @implementation CQConnectionBouncerEditController
 - (id) init {
@@ -18,6 +16,8 @@
 		return nil;
 
 	self.title = NSLocalizedString(@"Bouncer", @"Bouncer view title");
+
+	_lastSelectedBouncerIndex = NSNotFound;
 
 	return self;
 }
@@ -31,7 +31,7 @@
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL) animated {
-//	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:IdentitiesTableSection] withAnimation:UITableViewRowAnimationNone];
+	[self.tableView reloadData];
 
 	[super viewWillAppear:animated];
 }
@@ -63,14 +63,13 @@
 #pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
-	return 1;
+	return (_connection.bouncerType == MVChatConnectionColloquyBouncer ? 2 : 1);
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
 	switch( section) {
-//		case EnabledTableSection: return 1;
-//		case BouncersTableSection: return 3;
-//		case PushTableSection: return 1;
+		case EnabledTableSection: return 1;
+		case BouncersTableSection: return ([CQConnectionsController defaultController].bouncers.count + 1);
 		default: return 0;
 	}
 }
@@ -78,24 +77,132 @@
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
 	switch( section) {
 		case BouncersTableSection: return NSLocalizedString(@"Choose a Bouncer...", @"Choose a Bouncer section title");
-		case PushTableSection: return NSLocalizedString(@"Push Notifications", @"Push Notifications section title");
 		default: return nil;
 	}
+}
 
+- (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
+	if (section == EnabledTableSection)
+		return NSLocalizedString(@"Using a Colloquy bouncer will keep you\nconnected while Colloquy isn't open.", @"Use Bouncer section footer title");
 	return nil;
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	if (indexPath.section == BouncersTableSection)
+		return indexPath;
 	return nil;
+}
+
+- (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
+	NSParameterAssert(indexPath.section == BouncersTableSection);
+
+	NSArray *bouncers = [CQConnectionsController defaultController].bouncers;
+	NSParameterAssert(indexPath.row < bouncers.count);
+
+	CQConnectionBouncerDetailsEditController *bouncerDetailsController = [[CQConnectionBouncerDetailsEditController alloc] init];
+	bouncerDetailsController.bouncerIndex = indexPath.row;
+	bouncerDetailsController.settings = [bouncers objectAtIndex:indexPath.row];
+	bouncerDetailsController.connection = _connection;
+
+	[self.view endEditing:YES];
+
+	[self.navigationController pushViewController:bouncerDetailsController animated:YES];
+
+	[bouncerDetailsController release];
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	
+	if (indexPath.section == BouncersTableSection) {
+		if (indexPath.row >= [CQConnectionsController defaultController].bouncers.count) {
+			CQConnectionBouncerDetailsEditController *bouncerDetailsController = [[CQConnectionBouncerDetailsEditController alloc] init];
+			bouncerDetailsController.connection = _connection;
+
+			[self.view endEditing:YES];
+
+			[self.navigationController pushViewController:bouncerDetailsController animated:YES];
+
+			[bouncerDetailsController release];
+			return;
+		} else {
+			UITableViewCell *cell = (_lastSelectedBouncerIndex != NSNotFound ? [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_lastSelectedBouncerIndex inSection:BouncersTableSection]] : nil);
+			cell.image = nil;
+			cell.selectedImage = nil;
+			cell.textColor = [UIColor blackColor];
+			cell.indentationLevel = 1;
+
+			_lastSelectedBouncerIndex = indexPath.row;
+			_connection.bouncerIdentifier = [[[CQConnectionsController defaultController].bouncers objectAtIndex:indexPath.row] objectForKey:@"identifier"];
+
+			cell = [tableView cellForRowAtIndexPath:indexPath];
+			cell.image = [UIImage imageNamed:@"tableCellCheck.png"];
+			cell.selectedImage = [UIImage imageNamed:@"tableCellCheckSelected.png"];
+			cell.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
+			cell.indentationLevel = 0;
+
+			[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
+			return;
+		}
+	}
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
+	if (indexPath.section == EnabledTableSection && indexPath.row == 0) {
+		CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
+
+		cell.target = self;
+		cell.switchAction = @selector(bouncerEnabled:);
+		cell.label = NSLocalizedString(@"Colloquy Bouncer", @"Colloquy Bouncer connection setting label");
+		cell.on = (_connection.bouncerType == MVChatConnectionColloquyBouncer);
+
+		return cell;
+	} else if (indexPath.section == BouncersTableSection) {
+		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
+
+		cell.indentationWidth = 11.5;
+		cell.indentationLevel = 1;
+
+		NSArray *bouncers = [CQConnectionsController defaultController].bouncers;
+		if (indexPath.row < bouncers.count) {
+			NSDictionary *bouncer = [bouncers objectAtIndex:indexPath.row];
+			NSString *description = [bouncer objectForKey:@"description"];
+			if (!description.length) description = [bouncer objectForKey:@"bouncerServer"];
+			if (!description.length) description = NSLocalizedString(@"Untitled", @"Untitled label");
+			cell.text = description;
+			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+			if ([_connection.bouncerIdentifier isEqualToString:[bouncer objectForKey:@"identifier"]]) {
+				_lastSelectedBouncerIndex = indexPath.row;
+				cell.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
+				cell.image = [UIImage imageNamed:@"tableCellCheck.png"];
+				cell.selectedImage = [UIImage imageNamed:@"tableCellCheckSelected.png"];
+				cell.indentationLevel = 0;
+			} else {
+				cell.image = nil;
+				cell.selectedImage = nil;
+			}
+		} else {
+			cell.image = nil;
+			cell.selectedImage = nil;
+			cell.textColor = [UIColor blackColor];
+			cell.text = NSLocalizedString(@"Add Bouncer...", @"Add Bouncer connection setting label");
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		}
+
+		return cell;
+	}
 
 	NSAssert(NO, @"Should not reach this point.");
 	return nil;
+}
+
+#pragma mark -
+
+- (void) bouncerEnabled:(CQPreferencesSwitchCell *) sender {
+	_connection.bouncerType = (sender.on ? MVChatConnectionColloquyBouncer : MVChatConnectionNoBouncer);
+
+	if (sender.on) {
+		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:BouncersTableSection] withRowAnimation:UITableViewRowAnimationBottom];
+	} else {
+		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:BouncersTableSection] withRowAnimation:UITableViewRowAnimationTop];
+	}
 }
 @end

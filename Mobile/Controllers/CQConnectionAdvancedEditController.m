@@ -104,17 +104,11 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 		case AuthenticationTableSection: return NSLocalizedString(@"Authentication", @"Authentication section title");
 		default: return nil;
 	}
-
-	return nil;
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
 	if (section == AuthenticationTableSection)
 		return NSLocalizedString(@"The nickname password is used to\nauthenticate with services (e.g. NickServ).", @"Authentication section footer title");
-	if (section == IdentitiesTableSection)
-		return NSLocalizedString(@"Alternate nicknames are tried in order\nuntil one isn't being used by another user.", @"Alternate Nicknames section footer title");
-	if (section == AutomaticTableSection)
-		return NSLocalizedString(@"The auto commands are sent in order\nwhen connecting to the server.", @"Auto Commands section footer title");
 	return nil;
 }
 
