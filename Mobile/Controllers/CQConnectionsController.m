@@ -1,5 +1,6 @@
 #import "CQConnectionsController.h"
 
+#import "CQBouncerSettings.h"
 #import "CQChatController.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
@@ -367,11 +368,14 @@
 		return; // already loaded connections
 
 	NSArray *bouncers = [[NSUserDefaults standardUserDefaults] arrayForKey:@"CQChatBouncers"];
-	if (bouncers.count)
-		[_bouncers setArray:bouncers];
+	for (NSDictionary *info in bouncers) {
+		CQBouncerSettings *settings = [[CQBouncerSettings alloc] initWithDictionaryRepresentation:info];
+		if (settings) [_bouncers addObject:settings];
+		[settings release];
+	}
 
 	NSArray *list = [[NSUserDefaults standardUserDefaults] arrayForKey:@"MVChatBookmarks"];
-	for (NSMutableDictionary *info in list) {
+	for (NSDictionary *info in list) {
 		MVChatConnectionType type = MVChatConnectionIRCType;
 		if ([[info objectForKey:@"type"] isEqualToString:@"icb"])
 			type = MVChatConnectionICBType;
@@ -435,13 +439,13 @@
 		if ((password = [[CQKeychain standardKeychain] passwordForServer:connection.server account:@"<<server password>>"]) && password.length)
 			connection.password = password;
 
-		NSDictionary *bouncerInfo = [self bouncerInfoForIdentifier:connection.bouncerIdentifier];
-		if (bouncerInfo) {
-			connection.bouncerType = MVChatConnectionColloquyBouncer;
-			connection.bouncerServer = [bouncerInfo objectForKey:@"bouncerServer"];
-			connection.bouncerServerPort = [[bouncerInfo objectForKey:@"bouncerServerPort"] unsignedShortValue];
-			connection.bouncerUsername = [bouncerInfo objectForKey:@"bouncerUsername"];
-			connection.bouncerPassword = [[CQKeychain standardKeychain] passwordForServer:connection.bouncerServer account:@"<<bouncer password>>"];
+		CQBouncerSettings *bouncerSettings = [self bouncerSettingsForIdentifier:connection.bouncerIdentifier];
+		if (bouncerSettings) {
+			connection.bouncerType = bouncerSettings.type;
+			connection.bouncerServer = bouncerSettings.server;
+			connection.bouncerServerPort = bouncerSettings.serverPort;
+			connection.bouncerUsername = bouncerSettings.username;
+			connection.bouncerPassword = bouncerSettings.password;
 		}
 
 		[_connections addObject:connection];
@@ -457,8 +461,7 @@
 }
 
 - (void) saveConnections {
-	NSMutableArray *saveList = [[NSMutableArray alloc] initWithCapacity:_connections.count];
-
+	NSMutableArray *connections = [[NSMutableArray alloc] initWithCapacity:_connections.count];
 	for (MVChatConnection *connection in _connections) {
 		NSMutableDictionary *info = [NSMutableDictionary dictionary];
 
@@ -522,14 +525,21 @@
 		if (connection.alternateNicknames.count)
 			[info setObject:connection.alternateNicknames forKey:@"alternateNicknames"];
 
-		[saveList addObject:info];
+		[connections addObject:info];
 	}
 
-	[[NSUserDefaults standardUserDefaults] setObject:_bouncers forKey:@"CQChatBouncers"];
-	[[NSUserDefaults standardUserDefaults] setObject:saveList forKey:@"MVChatBookmarks"];
+	NSMutableArray *bouncers = [[NSMutableArray alloc] initWithCapacity:_bouncers.count];
+	for (CQBouncerSettings *settings in _bouncers) {
+		NSDictionary *info = [settings dictionaryRepresentation];
+		if (info) [bouncers addObject:info];
+	}
+
+	[[NSUserDefaults standardUserDefaults] setObject:bouncers forKey:@"CQChatBouncers"];
+	[[NSUserDefaults standardUserDefaults] setObject:connections forKey:@"MVChatBookmarks"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 
-	[saveList release];
+	[bouncers release];
+	[connections release];
 }
 
 #pragma mark -
@@ -666,28 +676,23 @@
 	[self saveConnections];
 }
 
-- (NSDictionary *) bouncerInfoForIdentifier:(NSString *) identifier {
-	if (!identifier.length)
-		return nil;
-	for (NSDictionary *info in _bouncers)
-		if ([[info objectForKey:@"identifier"] isEqualToString:identifier])
-			return info;
+- (CQBouncerSettings *) bouncerSettingsForIdentifier:(NSString *) identifier {
+	for (CQBouncerSettings *bouncer in _bouncers)
+		if ([bouncer.identifier isEqualToString:identifier])
+			return bouncer;
 	return nil;
 }
 
-- (void) addBouncerInfo:(NSDictionary *) bouncerInfo {
-	NSDictionary *infoCopy = [bouncerInfo copy];
-	[_bouncers addObject:infoCopy];
-	[infoCopy release];
+- (void) addBouncerSettings:(CQBouncerSettings *) bouncer {
+	NSParameterAssert(bouncer != nil);
+	[_bouncers addObject:bouncer];
 }
 
-- (void) replaceBouncerInfoAtIndex:(NSUInteger) index withBouncerInfo:(NSDictionary *) bouncerInfo {
-	NSDictionary *infoCopy = [bouncerInfo copy];
-	[_bouncers replaceObjectAtIndex:index withObject:infoCopy];
-	[infoCopy release];
+- (void) removeBouncerSettings:(CQBouncerSettings *) settings {
+	[self removeBouncerSettingsAtIndex:[_bouncers indexOfObjectIdenticalTo:settings]];
 }
 
-- (void) removeBouncerInfoAtIndex:(NSUInteger) index {
+- (void) removeBouncerSettingsAtIndex:(NSUInteger) index {
 	[_bouncers removeObjectAtIndex:index];
 }
 @end
@@ -831,19 +836,30 @@
 
 #pragma mark -
 
+- (void) setBouncerSettings:(CQBouncerSettings *) settings {
+	self.bouncerIdentifier = settings.identifier;
+}
+
+- (CQBouncerSettings *) bouncerSettings {
+	return [[CQConnectionsController defaultController] bouncerSettingsForIdentifier:self.bouncerIdentifier];
+}
+
+#pragma mark -
+
 - (void) setBouncerIdentifier:(NSString *) identifier {
 	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
 
 	self.bouncerType = MVChatConnectionNoBouncer;
 
 	if (identifier) {
-		NSDictionary *bouncerInfo = [[CQConnectionsController defaultController] bouncerInfoForIdentifier:identifier];
-		if (bouncerInfo) {
-			self.bouncerType = MVChatConnectionColloquyBouncer;
-			self.bouncerServer = [bouncerInfo objectForKey:@"bouncerServer"];
-			self.bouncerServerPort = [[bouncerInfo objectForKey:@"bouncerServerPort"] unsignedShortValue];
-			self.bouncerUsername = [bouncerInfo objectForKey:@"bouncerUsername"];
-			self.bouncerPassword = [[CQKeychain standardKeychain] passwordForServer:self.bouncerServer account:@"<<bouncer password>>"];
+		CQBouncerSettings *bouncerSettings = [[CQConnectionsController defaultController] bouncerSettingsForIdentifier:identifier];
+		if (bouncerSettings) {
+			self.bouncerType = bouncerSettings.type;
+			self.bouncerServer = bouncerSettings.server;
+			self.bouncerServerPort = bouncerSettings.serverPort;
+			self.bouncerUsername = bouncerSettings.username;
+			self.bouncerPassword = bouncerSettings.password;
+
 			[persistentInformation setObject:identifier forKey:@"bouncerIdentifier"];
 		}
 	} else {

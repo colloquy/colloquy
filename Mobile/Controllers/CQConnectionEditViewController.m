@@ -1,5 +1,6 @@
 #import "CQConnectionEditViewController.h"
 
+#import "CQBouncerSettings.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionAdvancedEditController.h"
 #import "CQConnectionBouncerEditController.h"
@@ -50,9 +51,6 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL) animated {
-	if (!_connection.bouncerIdentifier.length)
-		_connection.bouncerType = MVChatConnectionNoBouncer;
-
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:BouncerTableSection] withAnimation:UITableViewRowAnimationNone];
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:IdentityTableSection] withAnimation:UITableViewRowAnimationNone];
 
@@ -226,13 +224,9 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-		if (_connection.bouncerType == MVChatConnectionColloquyBouncer) {
-			NSDictionary *info = [[CQConnectionsController defaultController] bouncerInfoForIdentifier:_connection.bouncerIdentifier];
-			if (info) {
-				NSString *description = [info objectForKey:@"description"];
-				NSString *server = [info objectForKey:@"bouncerServer"];
-				cell.text = (description.length ? description : server);
-			} else cell.text = NSLocalizedString(@"None", @"None label");
+		CQBouncerSettings *settings = _connection.bouncerSettings;
+		if (_connection.bouncerType == MVChatConnectionColloquyBouncer && settings) {
+			cell.text = settings.displayName;
 		} else cell.text = NSLocalizedString(@"None", @"None label");
 
 		return cell;

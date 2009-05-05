@@ -564,7 +564,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_chatConnection enablePreBuffering];
 
 	NSString *server = (_bouncer != MVChatConnectionNoBouncer && [_bouncerServer length] ? _bouncerServer : _server);
-	unsigned short serverPort = (_bouncer != MVChatConnectionNoBouncer && _bouncerServerPort ? _bouncerServerPort : _serverPort);
+	unsigned short serverPort = (_bouncer != MVChatConnectionNoBouncer ? (_bouncerServerPort ? _bouncerServerPort : 6667) : _serverPort);
 
 	if( ! [_chatConnection connectToHost:server onPort:serverPort error:NULL] )
 		[self _didNotConnect];
@@ -977,7 +977,7 @@ end:
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
 
-	NSString *stringWithPasswordsHidden = string; //[string stringByReplacingOccurrencesOfRegex:@"(^PASS |IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:RKLCaseless range:NSMakeRange(0, [string length]) error:NULL];
+	NSString *stringWithPasswordsHidden = [string stringByReplacingOccurrencesOfRegex:@"(^PASS |IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:RKLCaseless range:NSMakeRange(0, [string length]) error:NULL];
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:stringWithPasswordsHidden, @"message", data, @"messageData", [NSNumber numberWithBool:YES], @"outbound", nil]];
 

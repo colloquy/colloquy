@@ -1,8 +1,9 @@
 #import <ChatCore/MVChatConnection.h>
 
+@class CQBouncerSettings;
 @class CQChatRoomController;
-@class CQConnectionsViewController;
 @class CQConnectionEditViewController;
+@class CQConnectionsViewController;
 @class CQDirectChatController;
 @class MVChatConnection;
 @class MVChatRoom;
@@ -49,11 +50,11 @@
 - (void) replaceConnection:(MVChatConnection *) previousConnection withConnection:(MVChatConnection *) newConnection;
 - (void) replaceConnectionAtIndex:(NSUInteger) index withConnection:(MVChatConnection *) connection;
 
-- (NSDictionary *) bouncerInfoForIdentifier:(NSString *) identifier;
+- (CQBouncerSettings *) bouncerSettingsForIdentifier:(NSString *) identifier;
 
-- (void) addBouncerInfo:(NSDictionary *) bouncerInfo;
-- (void) replaceBouncerInfoAtIndex:(NSUInteger) index withBouncerInfo:(NSDictionary *) bouncerInfo;
-- (void) removeBouncerInfoAtIndex:(NSUInteger) index;
+- (void) addBouncerSettings:(CQBouncerSettings *) settings;
+- (void) removeBouncerSettings:(CQBouncerSettings *) settings;
+- (void) removeBouncerSettingsAtIndex:(NSUInteger) index;
 @end
 
 @interface MVChatConnection (CQConnectionsControllerAdditions)
@@ -68,4 +69,5 @@
 @property (nonatomic, copy) NSArray *automaticCommands;
 @property (nonatomic) BOOL automaticallyConnect;
 @property (nonatomic, copy) NSString *bouncerIdentifier;
+@property (nonatomic, copy) CQBouncerSettings *bouncerSettings;
 @end

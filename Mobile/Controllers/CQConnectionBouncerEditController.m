@@ -1,5 +1,6 @@
 #import "CQConnectionBouncerEditController.h"
 
+#import "CQBouncerSettings.h"
 #import "CQConnectionBouncerDetailsEditController.h"
 #import "CQConnectionsController.h"
 #import "CQPreferencesSwitchCell.h"
@@ -56,6 +57,8 @@
 	_connection = [connection retain];
 	[old release];
 
+	_bouncerEnabled = (_connection.bouncerType == MVChatConnectionColloquyBouncer && _connection.bouncerIdentifier.length);
+
 	[self.tableView setContentOffset:CGPointZero animated:NO];
 	[self.tableView reloadData];
 }
@@ -63,7 +66,7 @@
 #pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
-	return (_connection.bouncerType == MVChatConnectionColloquyBouncer ? 2 : 1);
+	return (_bouncerEnabled ? 2 : 1);
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
@@ -100,7 +103,6 @@
 	NSParameterAssert(indexPath.row < bouncers.count);
 
 	CQConnectionBouncerDetailsEditController *bouncerDetailsController = [[CQConnectionBouncerDetailsEditController alloc] init];
-	bouncerDetailsController.bouncerIndex = indexPath.row;
 	bouncerDetailsController.settings = [bouncers objectAtIndex:indexPath.row];
 	bouncerDetailsController.connection = _connection;
 
@@ -130,8 +132,10 @@
 			cell.textColor = [UIColor blackColor];
 			cell.indentationLevel = 1;
 
+			CQBouncerSettings *settings = [[CQConnectionsController defaultController].bouncers objectAtIndex:indexPath.row];
+
 			_lastSelectedBouncerIndex = indexPath.row;
-			_connection.bouncerIdentifier = [[[CQConnectionsController defaultController].bouncers objectAtIndex:indexPath.row] objectForKey:@"identifier"];
+			_connection.bouncerIdentifier = settings.identifier;
 
 			cell = [tableView cellForRowAtIndexPath:indexPath];
 			cell.image = [UIImage imageNamed:@"tableCellCheck.png"];
@@ -152,37 +156,31 @@
 		cell.target = self;
 		cell.switchAction = @selector(bouncerEnabled:);
 		cell.label = NSLocalizedString(@"Colloquy Bouncer", @"Colloquy Bouncer connection setting label");
-		cell.on = (_connection.bouncerType == MVChatConnectionColloquyBouncer);
+		cell.on = _bouncerEnabled;
 
 		return cell;
 	} else if (indexPath.section == BouncersTableSection) {
 		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 
+		cell.image = nil;
+		cell.selectedImage = nil;
+		cell.textColor = [UIColor blackColor];
 		cell.indentationWidth = 11.5;
 		cell.indentationLevel = 1;
 
 		NSArray *bouncers = [CQConnectionsController defaultController].bouncers;
 		if (indexPath.row < bouncers.count) {
-			NSDictionary *bouncer = [bouncers objectAtIndex:indexPath.row];
-			NSString *description = [bouncer objectForKey:@"description"];
-			if (!description.length) description = [bouncer objectForKey:@"bouncerServer"];
-			if (!description.length) description = NSLocalizedString(@"Untitled", @"Untitled label");
-			cell.text = description;
+			CQBouncerSettings *bouncerSettings = [bouncers objectAtIndex:indexPath.row];
+			cell.text = bouncerSettings.displayName;
 			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-			if ([_connection.bouncerIdentifier isEqualToString:[bouncer objectForKey:@"identifier"]]) {
+			if ([_connection.bouncerIdentifier isEqualToString:bouncerSettings.identifier]) {
 				_lastSelectedBouncerIndex = indexPath.row;
 				cell.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 				cell.image = [UIImage imageNamed:@"tableCellCheck.png"];
 				cell.selectedImage = [UIImage imageNamed:@"tableCellCheckSelected.png"];
 				cell.indentationLevel = 0;
-			} else {
-				cell.image = nil;
-				cell.selectedImage = nil;
 			}
 		} else {
-			cell.image = nil;
-			cell.selectedImage = nil;
-			cell.textColor = [UIColor blackColor];
 			cell.text = NSLocalizedString(@"Add Bouncer...", @"Add Bouncer connection setting label");
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		}
@@ -197,7 +195,10 @@
 #pragma mark -
 
 - (void) bouncerEnabled:(CQPreferencesSwitchCell *) sender {
-	_connection.bouncerType = (sender.on ? MVChatConnectionColloquyBouncer : MVChatConnectionNoBouncer);
+	_bouncerEnabled = sender.on;
+
+	if (!_bouncerEnabled)
+		_connection.bouncerType = MVChatConnectionNoBouncer;
 
 	if (sender.on) {
 		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:BouncersTableSection] withRowAnimation:UITableViewRowAnimationBottom];

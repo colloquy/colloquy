@@ -1,8 +1,8 @@
 #import "CQConnectionBouncerDetailsEditController.h"
 
+#import "CQBouncerSettings.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
-#import "CQKeychain.h"
 #import "CQPreferencesDeleteCell.h"
 #import "CQPreferencesSwitchCell.h"
 #import "CQPreferencesTextCell.h"
@@ -18,10 +18,7 @@
 		return nil;
 
 	_newSettings = YES;
-	_bouncerIndex = NSNotFound;
-	_settings = [[NSMutableDictionary alloc] init];
-
-	[_settings setObject:[NSString locallyUniqueString] forKey:@"identifier"];
+	_settings = [[CQBouncerSettings alloc] init];
 
 	self.title = NSLocalizedString(@"New Bouncer", @"New Bouncer view title");
 
@@ -42,21 +39,11 @@
 
 	[self.tableView endEditing:YES];
 
-	BOOL isValid = self.valid;
-
-	NSString *password = [_settings objectForKey:@"bouncerPassword"];
-	[_settings removeObjectForKey:@"bouncerPassword"];
-
-	if (_bouncerIndex != NSNotFound && !_removed) {
-		[[CQConnectionsController defaultController] replaceBouncerInfoAtIndex:_bouncerIndex withBouncerInfo:_settings];
-	} else if (isValid && !_removed) {
-		_bouncerIndex = [CQConnectionsController defaultController].bouncers.count;
-		[[CQConnectionsController defaultController] addBouncerInfo:_settings];
-		_connection.bouncerIdentifier = [_settings objectForKey:@"identifier"];
+	if (_newSettings && _settings.server.length && _settings.username.length && _settings.password.length) {
+		[[CQConnectionsController defaultController] addBouncerSettings:_settings];
+		_connection.bouncerIdentifier = _settings.identifier;
+		_newSettings = NO;
 	}
-
-	if (password)
-		[_settings setObject:password forKey:@"bouncerPassword"];
 
 	// Workaround a bug were the table view is left in a state
 	// were it thinks a keyboard is showing.
@@ -66,35 +53,21 @@
 
 #pragma mark -
 
-@synthesize bouncerIndex = _bouncerIndex;
-
 @synthesize settings = _settings;
 
 @synthesize connection = _connection;
 
-- (void) setSettings:(NSDictionary *) settings {
-	[_settings setDictionary:settings];
+- (void) setSettings:(CQBouncerSettings *) settings {
+	id old = _settings;
+	_settings = [settings retain];
+	[old release];
+
 	_newSettings = NO;
 
-	NSString *description = [_settings objectForKey:@"description"];
-	self.title = (description.length ? description : [_settings objectForKey:@"bouncerServer"]);
-
-	NSString *bouncerServer = [_settings objectForKey:@"bouncerServer"];
-	NSString *bouncerPassword = [[CQKeychain standardKeychain] passwordForServer:bouncerServer account:@"<<bouncer password>>"];
-	if (bouncerPassword) [_settings setObject:bouncerPassword forKey:@"bouncerPassword"];
+	self.title = settings.displayName;
 
 	[self.tableView setContentOffset:CGPointZero animated:NO];
 	[self.tableView reloadData];
-}
-
-- (BOOL) isValid {
-	if (!((NSString *)[_settings objectForKey:@"bouncerServer"]).length)
-		return NO;
-	if (!((NSString *)[_settings objectForKey:@"bouncerUsername"]).length)
-		return NO;
-	if (!((NSString *)[_settings objectForKey:@"bouncerPassword"]).length)
-		return NO;
-	return YES;
 }
 
 #pragma mark -
@@ -133,7 +106,7 @@
 		cell.target = self;
 
 		if (indexPath.row == 0) {
-			NSString *bouncerDescription = [_settings objectForKey:@"description"];
+			NSString *bouncerDescription = _settings.displayName;
 
 			cell.label = NSLocalizedString(@"Description", @"Description connection setting label");
 			cell.text = (bouncerDescription ? bouncerDescription : @"");
@@ -141,7 +114,7 @@
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
 			cell.textEditAction = @selector(descriptionChanged:);
 		} else if (indexPath.row == 1) {
-			NSString *bouncerServer = [_settings objectForKey:@"bouncerServer"];
+			NSString *bouncerServer = _settings.server;
 
 			cell.label = NSLocalizedString(@"Address", @"Address connection setting label");
 			cell.text = (bouncerServer ? bouncerServer : @"");
@@ -152,7 +125,7 @@
 			cell.textEditAction = @selector(serverChanged:);
 		} else if (indexPath.row == 2) {
 			const unsigned short defaultPort = 6667;
-			const unsigned short bouncerPort = [[_settings objectForKey:@"bouncerServerPort"] unsignedShortValue];
+			const unsigned short bouncerPort = _settings.serverPort;
 
 			cell.target = self;
 			cell.textEditAction = @selector(serverPortChanged:);
@@ -168,7 +141,7 @@
 		CQPreferencesTextCell *cell = nil;
 
 		if (indexPath.row == 0) {
-			NSString *bouncerUsername = [_settings objectForKey:@"bouncerUsername"];
+			NSString *bouncerUsername = _settings.username;
 
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
@@ -180,7 +153,7 @@
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 		} else if (indexPath.row == 1) {
-			NSString *bouncerPassword = [_settings objectForKey:@"bouncerPassword"];
+			NSString *bouncerPassword = _settings.password;
 
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView withIdentifier:@"Secure CQPreferencesTextCell"];
 
@@ -216,34 +189,19 @@
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (actionSheet.destructiveButtonIndex != buttonIndex)
 		return;
-	_removed = YES;
-	if ([_connection.bouncerIdentifier isEqualToString:[_settings objectForKey:@"identifier"]])
+	if ([_connection.bouncerIdentifier isEqualToString:_settings.identifier])
 		_connection.bouncerIdentifier = nil;
-	[[CQConnectionsController defaultController] removeBouncerInfoAtIndex:_bouncerIndex];
+	[[CQConnectionsController defaultController] removeBouncerSettings:_settings];
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark -
 
 - (void) serverChanged:(CQPreferencesTextCell *) sender {
-	BOOL wasPlaceholder = !((NSString *)[_settings objectForKey:@"bouncerServer"]).length;
-
 	if (sender.text.length || _newSettings) {
-		[_settings setObject:sender.text forKey:@"bouncerServer"];
-		if (!_newSettings && !((NSString *)[_settings objectForKey:@"description"]).length)
-			self.title = sender.text;
-	}
-
-	NSString *server = [_settings objectForKey:@"bouncerServer"];
-	BOOL isPlaceholder = !server.length;
-	if (wasPlaceholder && !isPlaceholder) {
-		NSString *password = [_settings objectForKey:@"bouncerPassword"];
-		[[CQKeychain standardKeychain] setPassword:password forServer:server account:@"<<bouncer password>>"];
-	} else if (!isPlaceholder) {
-		NSString *password = [[CQKeychain standardKeychain] passwordForServer:server account:@"<<bouncer password>>"];
-		[_settings setObject:(password ? password : @"") forKey:@"bouncerPassword"];
-	} else {
-		[_settings setObject:@"" forKey:@"bouncerPassword"];
+		_settings.server = sender.text;
+		if (!_newSettings)
+			self.title = _settings.displayName;
 	}
 
 	[self.tableView reloadData];
@@ -252,32 +210,28 @@
 - (void) serverPortChanged:(CQPreferencesTextCell *) sender {
 	NSUInteger port = [sender.text integerValue];
 	if (!port) port = 6667;
-	[_settings setObject:[NSNumber numberWithInteger:port] forKey:@"bouncerServerPort"];
+	_settings.serverPort = port;
 }
 
 - (void) descriptionChanged:(CQPreferencesTextCell *) sender {
-	[_settings setObject:sender.text forKey:@"description"];
+	_settings.displayName = sender.text;
 
 	if (!_newSettings)
-		self.title = (sender.text.length ? sender.text : [_settings objectForKey:@"bouncerServer"]);
+		self.title = _settings.displayName;
 }
 
 - (void) usernameChanged:(CQPreferencesTextCell *) sender {
 	if (!sender.text.length && !_newSettings)
 		return;
 
-	[_settings setObject:sender.text forKey:@"bouncerUsername"];
+	_settings.username = sender.text;
 }
 
 - (void) passwordChanged:(CQPreferencesTextCell *) sender {
 	if (!sender.text.length && !_newSettings)
 		return;
 
-	[_settings setObject:sender.text forKey:@"bouncerPassword"];
-
-	NSString *server = [_settings objectForKey:@"bouncerServer"];
-	if (server.length)
-		[[CQKeychain standardKeychain] setPassword:sender.text forServer:server account:@"<<bouncer password>>"];
+	_settings.password = sender.text;
 }
 
 - (void) deleteBouncer {

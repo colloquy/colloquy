@@ -1,15 +1,12 @@
 @class MVChatConnection;
+@class CQBouncerSettings;
 
 @interface CQConnectionBouncerDetailsEditController : UITableViewController <UIActionSheetDelegate> {
 	@protected
 	MVChatConnection *_connection;
-	NSUInteger _bouncerIndex;
-	NSMutableDictionary *_settings;
+	CQBouncerSettings *_settings;
 	BOOL _newSettings;
-	BOOL _removed;
 }
 @property (nonatomic, retain) MVChatConnection *connection;
-@property (nonatomic, assign) NSUInteger bouncerIndex;
-@property (nonatomic, copy) NSDictionary *settings;
-@property (nonatomic, readonly, getter=isValid) BOOL valid;
+@property (nonatomic, copy) CQBouncerSettings *settings;
 @end
