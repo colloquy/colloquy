@@ -52,7 +52,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 - (void) viewWillAppear:(BOOL) animated {
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:BouncerTableSection] withAnimation:UITableViewRowAnimationNone];
-	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:IdentityTableSection] withAnimation:UITableViewRowAnimationNone];
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:AutomaticTableSection] withAnimation:UITableViewRowAnimationNone];
 
 	[super viewWillAppear:animated];
 }
