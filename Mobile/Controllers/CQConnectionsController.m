@@ -47,6 +47,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnectOrDidNotConnect:) name:MVChatConnectionDidNotConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_errorOccurred:) name:MVChatConnectionErrorNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_deviceTokenRecieved:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 
 #if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
@@ -215,6 +216,27 @@
 	[UIApplication sharedApplication].idleTimerDisabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIdleTimerDisabled"];
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 
+	if (connection.bouncerType == MVChatConnectionColloquyBouncer) {
+		connection.bouncerDeviceIdentifier = [UIDevice currentDevice].uniqueIdentifier;
+
+		[connection sendRawMessageWithFormat:@"BOUNCER set encoding %u", connection.encoding];
+
+		NSString *deviceToken = [CQColloquyApplication sharedApplication].deviceToken;
+		if (deviceToken.length)
+			[connection sendRawMessageWithFormat:@"BOUNCER set device-token %@", [CQColloquyApplication sharedApplication].deviceToken];
+
+		if (connection.nicknamePassword.length)
+			[connection sendRawMessageWithFormat:@"BOUNCER set nick-password %@", connection.nicknamePassword];
+
+		if (connection.alternateNicknames.count) {
+			NSString *nicks = [connection.alternateNicknames componentsJoinedByString:@" "];
+			[connection sendRawMessageWithComponents:@"BOUNCER set alt-nicks ", nicks, nil];
+		}
+
+		[connection sendRawMessage:@"BOUNCER autocommands clear"];
+		[connection sendRawMessage:@"BOUNCER autocommands start"];
+	}
+
 	for (NSString *fullCommand in connection.automaticCommands) {
 		NSScanner *scanner = [NSScanner scannerWithString:fullCommand];
 		[scanner setCharactersToBeSkipped:nil];
@@ -249,6 +271,9 @@
 	if (rooms.count)
 		[connection joinChatRoomsNamed:rooms];
 
+	if (connection.bouncerType == MVChatConnectionColloquyBouncer)
+		[connection sendRawMessage:@"BOUNCER autocommands stop"];
+
 	[rooms release];
 }
 
@@ -272,6 +297,16 @@
 		--_connectedCount;
 	if (!_connectedCount && !_connectingCount)
 		[UIApplication sharedApplication].idleTimerDisabled = NO;
+}
+
+- (void) _deviceTokenRecieved:(NSNotification *) notification {
+	NSString *tokenString = [CQColloquyApplication sharedApplication].deviceToken;
+	NSString *command = [NSString stringWithFormat:@"BOUNCER set device-token %@", tokenString];
+	for (MVChatConnection *connection in _connections) {
+		if (connection.bouncerType != MVChatConnectionColloquyBouncer || !connection.connected)
+			continue;
+		[connection sendRawMessage:command immediately:YES]; 
+	}
 }
 
 - (void) _errorOccurred:(NSNotification *) notification {

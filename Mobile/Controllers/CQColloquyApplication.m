@@ -13,6 +13,23 @@
 
 #pragma mark -
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
+typedef enum {
+	UIRemoteNotificationTypeNone = 0,
+	UIRemoteNotificationTypeBadge = 1 << 0,
+	UIRemoteNotificationTypeSound = 1 << 1,
+	UIRemoteNotificationTypeAlert = 1 << 2
+} UIRemoteNotificationType;
+
+@interface UIApplication (UIApplicationNew)
+- (void) registerForRemoteNotificationTypes:(UIRemoteNotificationType) types;
+@end
+#endif
+
+#pragma mark -
+
+NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyApplicationDidRecieveDeviceTokenNotification";
+
 @implementation CQColloquyApplication
 + (CQColloquyApplication *) sharedApplication {
 	return (CQColloquyApplication *)[UIApplication sharedApplication];
@@ -22,11 +39,13 @@
 
 - (void) dealloc {
 	[_launchDate release];
+	[_deviceToken release];
 
 	[super dealloc];
 }
 
 @synthesize launchDate = _launchDate;
+@synthesize deviceToken = _deviceToken;
 
 - (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
 	NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]];
@@ -34,8 +53,9 @@
 
 	_launchDate = [[NSDate alloc] init];
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
-	[[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+#if !TARGET_IPHONE_SIMULATOR
+	if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerForRemoteNotificationTypes:)])
+		[[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 #endif
 
 	NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQConnectionsController defaultController], [CQChatController defaultController], nil];
@@ -61,11 +81,23 @@
 #endif
 
 - (void) application:(UIApplication *) application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *) deviceToken {
-	NSLog(@"deviceToken: %@", deviceToken); 
+	if (!deviceToken.length) {
+		[_deviceToken release];
+		_deviceToken = nil;
+		return;
+	}
+
+	const unsigned long *tokenData = deviceToken.bytes;
+
+	id old = _deviceToken;
+	_deviceToken = [[NSString alloc] initWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x", ntohl(tokenData[0]), ntohl(tokenData[1]), ntohl(tokenData[2]), ntohl(tokenData[3]), ntohl(tokenData[4]), ntohl(tokenData[5]), ntohl(tokenData[6]), ntohl(tokenData[7])];
+	[old release];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQColloquyApplicationDidRecieveDeviceTokenNotification object:self userInfo:[NSDictionary dictionaryWithObject:deviceToken forKey:@"deviceToken"]];
 }
 
 - (void) application:(UIApplication *) application didFailToRegisterForRemoteNotificationsWithError:(NSError *) error {
-	NSLog(@"Error in registration. Error: %@", error); 
+	NSLog(@"Error during remote notification registration. Error: %@", error);
 }
 
 - (BOOL) application:(UIApplication *) application handleOpenURL:(NSURL *) url {
