@@ -2249,6 +2249,7 @@ end:
 			if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ||				// Nickserv/*
 			   [msg hasCaseInsensitiveSubstring:@"you are now identified"] ||			// NickServ/freenode
 			   [msg hasCaseInsensitiveSubstring:@"you are already logged in"] ||		// NickServ/freenode
+			   [msg hasCaseInsensitiveSubstring:@"successfully identified"] ||			// NickServ/oftc
 			   [msg hasCaseInsensitiveSubstring:@"you are now logged in"] ||			// Q/quakenet
 			   [msg hasCaseInsensitiveSubstring:@"authentication successful"] ||		// X/undernet
 			   [msg hasCaseInsensitiveSubstring:@"i recognize you"] ) {					// AuthServ/gamesurge
