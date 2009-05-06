@@ -1565,7 +1565,11 @@ end:
 		} else if( [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) {
 			[self sendRawMessageImmediatelyWithFormat:@"AS AUTH %@ %@", [self preferredNickname], [self nicknamePassword]];
 		} else if( ![nickname isEqualToString:[self nickname]] ) {
-			[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@ %@", nickname, [self nicknamePassword]];
+			if( [[self server] hasCaseInsensitiveSubstring:@"oftc"] ) {
+				[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@ %@", [self nicknamePassword], nickname]; // workaround for irc.oftc.net: their nickserv expects password and nickname in reverse order for some reason
+			} else {
+				[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@ %@", nickname, [self nicknamePassword]];
+			}
 		} else {
 			// TODO v remove, have mac colloquy set the nickname password on "nickname accepted" instead (if there is one for the new nick)
 			// if ( ![nickname isEqualToString:[self preferredNickname]] && keychain has seperate pass for current nickname) {
