@@ -14,6 +14,7 @@
 	NSDate *_queueWait;
 	NSDate *_lastCommand;
 	NSMutableArray *_sendQueue;
+	NSMutableSet *_pendingJoinRoomNames;
 	NSMutableSet *_pendingWhoisUsers;
 	NSMutableSet *_directClientConnections;
 	NSMutableDictionary *_serverInformation;

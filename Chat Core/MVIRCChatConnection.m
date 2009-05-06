@@ -158,6 +158,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_sendQueue release];
 	[_queueWait release];
 	[_lastCommand release];
+	[_pendingJoinRoomNames release];
 	[_pendingWhoisUsers release];
 	[_roomPrefixes release];
 	[_serverInformation release];
@@ -180,6 +181,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	_sendQueue = nil;
 	_queueWait = nil;
 	_lastCommand = nil;
+	_pendingJoinRoomNames = nil;
 	_pendingWhoisUsers = nil;
 	_roomPrefixes = nil;
 	_serverInformation = nil;
@@ -385,20 +387,25 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	if( ! [rooms count] ) return;
 
+	if( !_pendingJoinRoomNames )
+		_pendingJoinRoomNames = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
+
 	NSMutableArray *roomList = [[NSMutableArray allocWithZone:nil] initWithCapacity:[rooms count]];
 	NSEnumerator *enumerator = [rooms objectEnumerator];
 	NSString *room = nil;
 
 	while( ( room = [enumerator nextObject] ) ) {
 		room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-		room = [self properNameForChatRoomNamed:room];
 
-		if (![room length] || [self joinedChatRoomWithUniqueIdentifier:room])
+		if( ![room length] )
 			continue;
 
 		if( [room rangeOfString:@" "].location == NSNotFound ) { // join non-password rooms in bulk
-			if( ![roomList containsObject:room] )
-				[roomList addObject:room];
+			room = [self properNameForChatRoomNamed:room];
+			if( [self joinedChatRoomWithUniqueIdentifier:room] || [_pendingJoinRoomNames containsObject:room] )
+				continue;
+			[roomList addObject:room];
+			[_pendingJoinRoomNames addObject:room];
 		} else { // has a password, join separately
 			if( [roomList count] ) {
 				// join all requested rooms before this one so we do things in order
@@ -406,7 +413,19 @@ static const NSStringEncoding supportedEncodings[] = {
 				[roomList removeAllObjects]; // clear list since we joined them
 			}
 
-			[self sendRawMessageWithFormat:@"JOIN %@", room];
+			NSString *password = nil;
+			NSArray *components = [room componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet] limit:1 remainingString:&password];
+			if( ![components count])
+				continue;
+
+			room = [self properNameForChatRoomNamed:[components objectAtIndex:0]];
+
+			// Remove the room, since this might be a different password than previous attempts.
+			[_pendingJoinRoomNames removeObject:room];
+
+			[self joinChatRoomNamed:room withPassphrase:password];
+
+			continue;
 		}
 
 		if( [roomList count] >= 10 ) {
@@ -417,13 +436,24 @@ static const NSStringEncoding supportedEncodings[] = {
 	}
 
 	if( [roomList count] ) [self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
+
 	[roomList release];
 }
 
 - (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase {
 	NSParameterAssert( room != nil );
 	NSParameterAssert( [room length] > 0 );
-	if( [self joinedChatRoomWithName:room] ) return;
+
+	if( !_pendingJoinRoomNames )
+		_pendingJoinRoomNames = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
+
+	room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+	room = [self properNameForChatRoomNamed:room];
+
+	if( ![room length] || [self joinedChatRoomWithUniqueIdentifier:room] || [_pendingJoinRoomNames containsObject:room] ) return;
+
+	[_pendingJoinRoomNames addObject:room];
+
 	if( [passphrase length] ) [self sendRawMessageWithFormat:@"JOIN %@ %@", [self properNameForChatRoomNamed:room], passphrase];
 	else [self sendRawMessageWithFormat:@"JOIN %@", [self properNameForChatRoomNamed:room]];
 }
@@ -710,6 +740,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	MVSafeAdoptAssign( &_queueWait, nil );
 	MVSafeAdoptAssign( &_lastSentIsonNicknames, nil );
 	MVSafeAdoptAssign( &_pendingWhoisUsers, nil );
+	MVSafeAdoptAssign( &_pendingJoinRoomNames, nil );
 
 	_isonSentCount = 0;
 
@@ -1560,6 +1591,8 @@ end:
 
 - (void) _periodicEvents {
 	MVAssertCorrectThreadRequired( _connectionThread );
+
+	[_pendingJoinRoomNames removeAllObjects];
 
 	[self _pruneKnownUsers];
 
@@ -2718,6 +2751,8 @@ end:
 			// The room is released in _handle366WithParameters.
 			[room retain];
 
+			[_pendingJoinRoomNames removeObject:name];
+
 			[room _setDateJoined:[NSDate date]];
 			[room _setDateParted:nil];
 			[room _clearMemberUsers];
@@ -3654,6 +3689,8 @@ end:
 	if( [parameters count] >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
+		[_pendingJoinRoomNames removeObject:room];
+
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 		[userInfo setObject:self forKey:@"connection"];
 		[userInfo setObject:room forKey:@"room"];
@@ -3669,6 +3706,8 @@ end:
 	if( [parameters count] >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
+		[_pendingJoinRoomNames removeObject:room];
+
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 		[userInfo setObject:self forKey:@"connection"];
 		[userInfo setObject:room forKey:@"room"];
@@ -3683,6 +3722,8 @@ end:
 
 	if( [parameters count] >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+
+		[_pendingJoinRoomNames removeObject:room];
 
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 		[userInfo setObject:self forKey:@"connection"];
@@ -3707,12 +3748,14 @@ end:
 
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:self, @"connection", room, @"room", @"477", @"errorCode", errorLiteralReason, @"errorLiteralReason", nil];
 		if( [errorLiteralReason hasCaseInsensitiveSubstring:@"register"] ) { // (probably II)
+			[_pendingJoinRoomNames removeObject:room];
 			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"You need to identify with network services to join the room \"%@\" on \"%@\".", "identify to join room error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionIdentifyToJoinRoomError userInfo:userInfo]];
 		} else if( [errorLiteralReason hasCaseInsensitiveSubstring:@"modes"] ) { // (probably I)
 			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" does not support modes.", "room does not support modes error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionRoomDoesNotSupportModesError userInfo:userInfo]];
 		} else { // (could be either)
+			[_pendingJoinRoomNames removeObject:room];
 			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" encountered an unknown error, see server details for more information.", "room encountered unknown error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionUnknownError userInfo:userInfo]];
 		}
