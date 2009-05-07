@@ -270,7 +270,7 @@
 		[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ -b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
 	else {
 		NSString *addressToBan = [self modifyAddressForBan:user];
-		
+
 		[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ -b *!%@@%@", [self name], [user username], addressToBan ];
 	}
 	[super removeBanForUser:user];
@@ -299,7 +299,7 @@
 		[scanner scanUpToCharactersFromSet:newSectionOfHostmaskIndicators intoString:&addressMaskToRemove];
 		addressMaskToBan = [addressMaskToBan stringByAppendingString:[[user address] substringFromIndex:[addressMaskToRemove length]]];
 	}
-	
+
 	if ( ! [scanner isAtEnd] ) return addressMaskToBan;
 	else return [user address];
 }

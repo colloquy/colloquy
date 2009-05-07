@@ -291,6 +291,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) setNicknamePassword:(NSString *) newPassword {
 	[super setNicknamePassword:newPassword];
+	_pendingIdentificationAttempt = NO;
 	if( [self isConnected] )
 		[self _identifyWithServicesUsingNickname:[self preferredNickname]]; // new password for the preferred nick -> preferred nickname
 }
@@ -608,6 +609,8 @@ static const NSStringEncoding supportedEncodings[] = {
 	[old release];
 
 	[_chatConnection enablePreBuffering];
+
+	_pendingIdentificationAttempt = NO;
 
 	NSString *server = (_bouncer != MVChatConnectionNoBouncer && [_bouncerServer length] ? _bouncerServer : _server);
 	unsigned short serverPort = (_bouncer != MVChatConnectionNoBouncer ? (_bouncerServerPort ? _bouncerServerPort : 6667) : _serverPort);
@@ -1112,10 +1115,10 @@ end:
 	} else {
 		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@%@ :", targetPrefix, targetName];
 		unsigned bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
-		
+
 		if ( [msg length] > bytesLeft )	[self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
 		else [self sendRawMessageWithComponents:prefix, msg, nil];
-		
+
 		[prefix release];
 	}
 
@@ -1125,10 +1128,10 @@ end:
 - (void) sendBrokenDownMessage:(NSMutableData *) msg withPrefix:(NSString *) prefix withEncoding:(NSStringEncoding) msgEncoding withMaximumBytes:(unsigned) bytesLeft {
 	unsigned bytesRemainingForMessage = bytesLeft;
 	BOOL hasWhitespaceInString = YES;
-	
+
 	while ( [msg length] ) {
 		NSMutableData *msgCutDown = [[msg subdataWithRange:NSMakeRange( 0, bytesRemainingForMessage )] mutableCopy];
-		
+
 		for ( ; ! [self validCharacterToSend:(((char *)[msgCutDown bytes]) + bytesRemainingForMessage - 1) whitespaceInString:hasWhitespaceInString] ; bytesRemainingForMessage-- ) {
 			if ( ! [msgCutDown length] ) {
 				hasWhitespaceInString = NO;
@@ -1138,7 +1141,7 @@ end:
 			else if ( [msg length] < bytesLeft ) break;
 			else [msgCutDown setLength:[msgCutDown length] - 1];
 		}
-		
+
 		if ( [prefix hasCaseInsensitiveSubstring:@"\001ACTION"]	) [self sendRawMessageWithComponents:prefix, msgCutDown, @"\001", nil];
 		else [self sendRawMessageWithComponents:prefix, msgCutDown, nil];
 		[msg replaceBytesInRange:NSMakeRange(0, bytesRemainingForMessage) withBytes:NULL length:0];
@@ -1154,9 +1157,9 @@ end:
 	return ( sizeof(char) * 512 ) - [nickname lengthOfBytesUsingEncoding:msgEncoding] - [username lengthOfBytesUsingEncoding:msgEncoding] - [address lengthOfBytesUsingEncoding:msgEncoding] - [prefix lengthOfBytesUsingEncoding:msgEncoding];
 }
 
-- (BOOL) validCharacterToSend:(char *) lastCharacter whitespaceInString:(BOOL) hasWhitespaceInString {	
+- (BOOL) validCharacterToSend:(char *) lastCharacter whitespaceInString:(BOOL) hasWhitespaceInString {
 	NSCharacterSet *whitespaceCharacters = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-	
+
 	if ( is7Bit(*lastCharacter) || isUTF8Tupel(*lastCharacter) || isUTF8LongTupel(*lastCharacter) || isUTF8Triple(*lastCharacter) || isUTF8Quartet(*lastCharacter) || isUTF8Quintet(*lastCharacter) || isUTF8Sextet(*lastCharacter) || isUTF8Cont(*lastCharacter) ) {
 		if ( hasWhitespaceInString ) {
 			if ( [whitespaceCharacters characterIsMember:*lastCharacter] ) return YES;
@@ -1367,7 +1370,7 @@ end:
 							userString = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:userString];
 						user = [MVChatUser wildcardUserFromString:userString];
 					} else user = [[room memberUsersWithNickname:userString] anyObject];
-					
+
 					if( user ) [room addBanForUser:user];
 				}
 			}
@@ -1386,7 +1389,7 @@ end:
 							userString = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:userString];
 						user = [MVChatUser wildcardUserFromString:userString];
 					} else user = [[room memberUsersWithNickname:userString] anyObject];
-					
+
 					if( user ) [room removeBanForUser:user];
 				}
 			}
@@ -1573,7 +1576,8 @@ end:
 #pragma mark -
 
 - (void) _identifyWithServicesUsingNickname:(NSString *) nickname {
-	if( ! [[self localUser] isIdentified] && [[self nicknamePassword] length] ) {
+	if( !_pendingIdentificationAttempt && ![[self localUser] isIdentified] && [[self nicknamePassword] length] ) {
+		_pendingIdentificationAttempt = YES;
 		if( [[self server] hasCaseInsensitiveSubstring:@"quakenet"] ) {
 			[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG Q@CServe.quakenet.org :AUTH %@ %@", [self preferredNickname], [self nicknamePassword]];
 		} else if( [[self server] hasCaseInsensitiveSubstring:@"undernet"] ) {
@@ -1601,7 +1605,7 @@ end:
 
 - (void) _markUserAsOffline:(MVChatUser *) user {
 	@synchronized( _alternateNicks ) {
-	if( [[user nickname] isCaseInsensitiveEqualToString:[self preferredNickname]] && ( ( [[self nickname] hasCaseInsensitivePrefix:[self preferredNickname]] && [[self nickname] hasSuffix:@"_"] ) || [_alternateNicks containsObject:[self nickname]] ) ) 
+	if( [[user nickname] isCaseInsensitiveEqualToString:[self preferredNickname]] && ( ( [[self nickname] hasCaseInsensitivePrefix:[self preferredNickname]] && [[self nickname] hasSuffix:@"_"] ) || [_alternateNicks containsObject:[self nickname]] ) )
 		[self setNickname:[self preferredNickname]]; // someone was blocking our preferred nickname (probably us from a previous connection), let's use it now
 	}
 	[super _markUserAsOffline:user];
@@ -2087,7 +2091,7 @@ end:
 
 - (void) _handle433WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NICKNAMEINUSE
 	MVAssertCorrectThreadRequired( _connectionThread );
-	
+
 	if( ! [self isConnected] ) {
 		NSString *nick = [self nextAlternateNickname];
 		if( ! [nick length] && [parameters count] >= 2 ) {
@@ -2103,17 +2107,17 @@ end:
 		if( [parameters count] >= 2 ) {
 			NSString *usedNickname = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 			NSString *newNickname = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
-			
+
 			NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 			[userInfo setObject:self forKey:@"connection"];
 			[userInfo setObject:usedNickname forKey:@"oldnickname"];
 			[userInfo setObject:newNickname forKey:@"newnickname"];
-			
+
 			if ( ! [newNickname isCaseInsensitiveEqualToString:usedNickname] ) {
 				[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Can't change nick from \"%@\" to \"%@\" because it is already taken on \"%@\".", "cannot change used nickname error" ), usedNickname, newNickname, [self server]] forKey:NSLocalizedDescriptionKey];
 				[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeUsedNickError userInfo:userInfo]];
 			} else {
-				[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Your nickname is being changed by services on \"%@\" because it is registered and you did not supply the correct password to identify.", "nickname changed by services error" ), [self server]] forKey:NSLocalizedDescriptionKey]; 
+				[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Your nickname is being changed by services on \"%@\" because it is registered and you did not supply the correct password to identify.", "nickname changed by services error" ), [self server]] forKey:NSLocalizedDescriptionKey];
 				[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionNickChangedByServicesError userInfo:userInfo]];
 			}
 		}
@@ -2260,6 +2264,7 @@ end:
 			if( handled ) [noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
 			[msg release];
+
 		} else if( [[sender nickname] isEqualToString:@"NickServ"] || [[sender nickname] isEqualToString:@"ChanServ"] ||
 		   ( [[sender nickname] isEqualToString:@"Q"] && [[self server] hasCaseInsensitiveSubstring:@"quakenet"] ) ||
 		   ( [[sender nickname] isEqualToString:@"X"] && [[self server] hasCaseInsensitiveSubstring:@"undernet"] ) ||
@@ -2274,12 +2279,14 @@ end:
 			   [msg hasCaseInsensitiveSubstring:@"authentication successful"] ||		// X/undernet
 			   [msg hasCaseInsensitiveSubstring:@"i recognize you"] ) {					// AuthServ/gamesurge
 
+				_pendingIdentificationAttempt = NO;
+
 				if( ![[self localUser] isIdentified] )
 					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidIdentifyWithServicesNotification object:self userInfo:noticeInfo];
-
 				[[self localUser] _setIdentified:YES];
 
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
+
 			} else if( ( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"ID"] ) ||
 					  [msg hasCaseInsensitiveSubstring:@"identify yourself"] ||
 					  [msg hasCaseInsensitiveSubstring:@"authenticate yourself"] ||
@@ -2295,20 +2302,26 @@ end:
 				else [self _identifyWithServicesUsingNickname:[self nickname]]; // responding to nickserv -> current nickname
 
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
+
 			} else if( ( [msg hasCaseInsensitiveSubstring:@"invalid"] ||		// NickServ/freenode, X/undernet
 						 [msg hasCaseInsensitiveSubstring:@"incorrect"] ) &&	// NickServ/dalnet+foonetic+sorcery+azzurra+webchat+rizon, Q/quakenet, AuthServ/gamesurge
 					   ( [msg hasCaseInsensitiveSubstring:@"password"] || [msg hasCaseInsensitiveSubstring:@"identify"] || [msg hasCaseInsensitiveSubstring:@"identification"] ) ) {
 
+				_pendingIdentificationAttempt = NO;
+
 				[[self localUser] _setIdentified:NO];
 
 				[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
 			} else if( [msg isCaseInsensitiveEqualToString:@"Remember: Nobody from CService will ever ask you for your password, do NOT give out your password to anyone claiming to be CService."] ||													// Undernet
 					  [msg isCaseInsensitiveEqualToString:@"REMINDER: Do not share your password with anyone. DALnet staff will not ask for your password unless"] || [msg hasCaseInsensitiveSubstring:@"you are seeking their assistance. See"] ||		// DALnet
 					  [msg isCaseInsensitiveEqualToString:@"getting this message because you are not on the access list for the"] || [msg isCaseInsensitiveEqualToString:[NSString stringWithFormat:@"\002%@\002 nickname.", [self nickname]]] ||		// oftc
 					  [msg hasCaseInsensitiveSubstring:@"You have been invited to"] ) {	// ChanServ invite, hide since it's auto accepted
+
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
+
 			}
 
 			// Catch "[#room] - Welcome to #room!" notices and show them in the room instead
@@ -3117,7 +3130,8 @@ end:
 		NSNotification *note = nil;
 		if( [sender isLocalUser] ) {
 			[self _setCurrentNickname:nick];
-			[sender _setIdentified:NO]; // TODO this needs to be changed since we now identify for accounts, not nicknames
+			_pendingIdentificationAttempt = NO; // TODO see below
+			[sender _setIdentified:NO]; // TODO this needs to be changed for quakenet, gamesurge, undernet and other account-based (= not nickname-based) identification services
 			note = [NSNotification notificationWithName:MVChatConnectionNicknameAcceptedNotification object:self userInfo:nil];
 		} else {
 			[self _updateKnownUser:sender withNewNickname:nick];
@@ -3546,6 +3560,8 @@ end:
 
 		//workaround for quakenet and undernet which don't send 440 (ERR_SERVICESDOWN) if they are
 		if ( ( [[self server] hasCaseInsensitiveSubstring:@"quakenet"] && [[user nickname] isCaseInsensitiveEqualToString:@"Q@CServe.quakenet.org"] ) || ( [[self server] hasCaseInsensitiveSubstring:@"undernet"] && [[user nickname] isCaseInsensitiveEqualToString:@"X@channels.undernet.org"] ) ) {
+			_pendingIdentificationAttempt = NO;
+
 			NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 			[userInfo setObject:self forKey:@"connection"];
 			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Services down on \"%@\".", "services down error" ), [self server]] forKey:NSLocalizedDescriptionKey];
@@ -3581,7 +3597,7 @@ end:
  "<channel name> :No such channel"
 
  - Used to indicate the given channel name is invalid.
- 
+
  MVChatConnectionNoSuchRoomError
 */
 
@@ -3610,7 +3626,7 @@ end:
  - Sent to a user when they have joined the maximum
  number of allowed channels and they try to join
  another channel.
- 
+
  */
 
 - (void) _handle410WithParameters:(NSArray *) parameters fromSender:(id) sender { // "services down" (freenode/hyperion) or "Invalid CAP subcommand" (freenode/ircd-seven, not supported here)
@@ -3618,6 +3634,8 @@ end:
 
 	// "No services can currently be detected" (same as 440, which is the "standard" numeric for this error)
 	// - Send to us after trying to identify with /nickserv, ui should ask the user wether to go ahead with the autojoin without identification (= no host/ip cloaks)
+
+	_pendingIdentificationAttempt = NO;
 
 	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 	[userInfo setObject:self forKey:@"connection"];
@@ -3634,6 +3652,7 @@ end:
 		if( [command isCaseInsensitiveEqualToString:@"NickServ"] ) {
 			// the NickServ command isn't supported, this is an older server
 			// lets send a private message to NickServ to identify
+			_pendingIdentificationAttempt = NO;
 			if( [[self nicknamePassword] length] )
 				[self sendRawMessageWithFormat:@"PRIVMSG NickServ :IDENTIFY %@", [self nicknamePassword]];
 		}
@@ -3653,7 +3672,7 @@ end:
  - Returned after receiving a NICK message which contains
  characters which do not fall in the defined set.  See
  section 2.3.1 for details on valid nicknames.
- 
+
  MVChatConnectionErroneusNicknameError
  */
 
@@ -3683,6 +3702,8 @@ end:
 
 	// "NickServ Services are currently down. Please try again later."
 	// - Send to us after trying to identify with /nickserv, ui should ask the user wether to go ahead with the autojoin without identification (= no host/ip cloaks)
+
+	_pendingIdentificationAttempt = NO;
 
 	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 	[userInfo setObject:self forKey:@"connection"];

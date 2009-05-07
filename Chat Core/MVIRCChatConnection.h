@@ -32,6 +32,7 @@
 	unsigned short _isonSentCount;
 	BOOL _watchCommandSupported;
 	BOOL _sendQueueProcessing;
+	BOOL _pendingIdentificationAttempt;
 }
 + (NSArray *) defaultServerPorts;
 @end
