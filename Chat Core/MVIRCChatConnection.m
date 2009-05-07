@@ -420,9 +420,6 @@ static const NSStringEncoding supportedEncodings[] = {
 
 			room = [self properNameForChatRoomNamed:[components objectAtIndex:0]];
 
-			// Remove the room, since this might be a different password than previous attempts.
-			[_pendingJoinRoomNames removeObject:room];
-
 			[self joinChatRoomNamed:room withPassphrase:password];
 
 			continue;
@@ -450,12 +447,31 @@ static const NSStringEncoding supportedEncodings[] = {
 	room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 	room = [self properNameForChatRoomNamed:room];
 
-	if( ![room length] || [self joinedChatRoomWithUniqueIdentifier:room] || [_pendingJoinRoomNames containsObject:room] ) return;
+	if( ![room length] )
+		return;
+
+	MVChatRoom *chatRoom = [self chatRoomWithUniqueIdentifier:room];
+	if( [chatRoom isJoined] )
+		return;
+
+	if( [passphrase length] ) {
+		NSString *previousPassphrase = [chatRoom attributeForMode:MVChatRoomPassphraseToJoinMode];
+		if( ![previousPassphrase isEqualToString:passphrase] )
+			[_pendingJoinRoomNames removeObject:room];
+	}
+
+	if( [_pendingJoinRoomNames containsObject:room] )
+		return;
 
 	[_pendingJoinRoomNames addObject:room];
 
-	if( [passphrase length] ) [self sendRawMessageWithFormat:@"JOIN %@ %@", [self properNameForChatRoomNamed:room], passphrase];
-	else [self sendRawMessageWithFormat:@"JOIN %@", [self properNameForChatRoomNamed:room]];
+	if( [passphrase length] ) {
+		[chatRoom _setMode:MVChatRoomPassphraseToJoinMode withAttribute:passphrase];
+		[self sendRawMessageWithFormat:@"JOIN %@ %@", room, passphrase];
+	} else {
+		[chatRoom _removeMode:MVChatRoomPassphraseToJoinMode];
+		[self sendRawMessageWithFormat:@"JOIN %@", room];
+	}
 }
 
 - (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
@@ -3696,6 +3712,9 @@ end:
 	if( [parameters count] >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
+		MVChatRoom *chatRoom = [self chatRoomWithUniqueIdentifier:room];
+		[chatRoom _setMode:MVChatRoomInviteOnlyMode withAttribute:nil];
+
 		[_pendingJoinRoomNames removeObject:room];
 
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
@@ -3729,6 +3748,9 @@ end:
 
 	if( [parameters count] >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+
+		MVChatRoom *chatRoom = [self chatRoomWithUniqueIdentifier:room];
+		[chatRoom _setMode:MVChatRoomPassphraseToJoinMode withAttribute:nil];
 
 		[_pendingJoinRoomNames removeObject:room];
 

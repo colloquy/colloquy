@@ -493,8 +493,7 @@
 - (void) joinChat:(id) sender {
 	if( ! [[self connection] isConnected] )
 		[[self connection] connect];
-	if( ! [[self target] isJoined] )
-		[[self target] join];
+	[[self target] join];
 }
 
 - (void) partChat:(id) sender {
@@ -750,7 +749,13 @@
 
 @implementation JVChatRoomPanel (JVChatRoomPrivate)
 - (void) _didConnect:(NSNotification *) notification {
-	if( ! _disposed ) [[self target] join];
+	if( _disposed )
+		return;
+
+	if( [[self target] modes] && MVChatRoomInviteOnlyMode )
+		return;
+
+	[[self target] performSelector:@selector(join) withObject:nil afterDelay:0.];
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
