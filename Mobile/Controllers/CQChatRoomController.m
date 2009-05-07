@@ -156,7 +156,7 @@
 
 #pragma mark -
 
-- (void) joined {
+- (void) didJoin {
 	[_orderedMembers removeAllObjects];
 	[_orderedMembers addObjectsFromArray:[self.room.memberUsers allObjects]];
 
@@ -316,8 +316,13 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 - (void) _didConnect:(NSNotification *) notification {
 	_parting = NO;
 
-	if (_joined)
-		[self.room join];
+	if (!_joined)
+		return;
+
+	if (self.room.modes && MVChatRoomInviteOnlyMode)
+		return;
+
+	[self.room performSelector:@selector(join) withObject:nil afterDelay:0.];
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {

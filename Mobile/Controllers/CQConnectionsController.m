@@ -216,6 +216,20 @@
 	[UIApplication sharedApplication].idleTimerDisabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIdleTimerDisabled"];
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 
+	NSMutableArray *rooms = [connection.automaticJoinedRooms mutableCopy];
+
+	NSDictionary *persistentInformation = connection.persistentInformation;
+	NSArray *previousRooms = [persistentInformation objectForKey:@"previousRooms"];
+
+	if (previousRooms.count) {
+		[rooms addObjectsFromArray:previousRooms];
+
+		NSMutableDictionary *persistentInformation = [connection.persistentInformation mutableCopy];
+		[persistentInformation removeObjectForKey:@"previousRooms"];
+		connection.persistentInformation = persistentInformation;
+		[persistentInformation release];
+	}
+
 	if (connection.bouncerType == MVChatConnectionColloquyBouncer) {
 		connection.bouncerDeviceIdentifier = [UIDevice currentDevice].uniqueIdentifier;
 
@@ -233,8 +247,10 @@
 			[connection sendRawMessageWithComponents:@"BOUNCER set alt-nicks ", nicks, nil];
 		}
 
-		[connection sendRawMessage:@"BOUNCER autocommands clear"];
-		[connection sendRawMessage:@"BOUNCER autocommands start"];
+		if (connection.automaticCommands.count && rooms.count) {
+			[connection sendRawMessage:@"BOUNCER autocommands clear"];
+			[connection sendRawMessage:@"BOUNCER autocommands start"];
+		}
 	}
 
 	for (NSString *fullCommand in connection.automaticCommands) {
@@ -254,24 +270,10 @@
 		[connection sendCommand:command withArguments:arguments];
 	}
 
-	NSMutableArray *rooms = [connection.automaticJoinedRooms mutableCopy];
-
-	NSDictionary *persistentInformation = connection.persistentInformation;
-	NSArray *previousRooms = [persistentInformation objectForKey:@"previousRooms"];
-
-	if (previousRooms.count) {
-		[rooms addObjectsFromArray:previousRooms];
-
-		NSMutableDictionary *persistentInformation = [connection.persistentInformation mutableCopy];
-		[persistentInformation removeObjectForKey:@"previousRooms"];
-		connection.persistentInformation = persistentInformation;
-		[persistentInformation release];
-	}
-
 	if (rooms.count)
 		[connection joinChatRoomsNamed:rooms];
 
-	if (connection.bouncerType == MVChatConnectionColloquyBouncer)
+	if (connection.bouncerType == MVChatConnectionColloquyBouncer && connection.automaticCommands.count && rooms.count)
 		[connection sendRawMessage:@"BOUNCER autocommands stop"];
 
 	[rooms release];

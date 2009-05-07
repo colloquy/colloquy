@@ -17,5 +17,5 @@
 - (void) join;
 - (void) part;
 
-- (void) joined;
+- (void) didJoin;
 @end

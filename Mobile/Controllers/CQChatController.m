@@ -150,7 +150,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 - (void) _joinedRoom:(NSNotification *) notification {
 	MVChatRoom *room = notification.object;
 	CQChatRoomController *roomController = [self chatViewControllerForRoom:room ifExists:NO];
-	[roomController joined];
+	[roomController didJoin];
 }
 
 - (void) _gotRoomMessage:(NSNotification *) notification {
