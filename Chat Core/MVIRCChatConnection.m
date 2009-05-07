@@ -1584,6 +1584,8 @@ end:
 			[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG X@channels.undernet.org :LOGIN %@ %@", [self preferredNickname], [self nicknamePassword]];
 		} else if( [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) {
 			[self sendRawMessageImmediatelyWithFormat:@"AS AUTH %@ %@", [self preferredNickname], [self nicknamePassword]];
+		} else if( [[self server] hasCaseInsensitiveSubstring:@"ustream"] ) {
+			[self sendRawMessageImmediatelyWithFormat:@"PASS %@", [self nicknamePassword]];
 		} else if( ![nickname isEqualToString:[self nickname]] ) {
 			if( [[self server] hasCaseInsensitiveSubstring:@"oftc"] ) {
 				[self sendRawMessageImmediatelyWithFormat:@"NICKSERV IDENTIFY %@ %@", [self nicknamePassword], nickname]; // workaround for irc.oftc.net: their nickserv expects password and nickname in reverse order for some reason
@@ -2236,6 +2238,15 @@ end:
 			if (![self isConnected]) {
 				NSString *matchedPassword = [msg stringByMatching:@"/QUOTE PASS (\\w+)" options:RKLCaseless inRange:NSMakeRange(0, [msg length]) capture:1 error:NULL];
 				if( matchedPassword ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", matchedPassword];
+				if( [[self server] hasCaseInsensitiveSubstring:@"ustream"] ) {
+					if( [msg isEqualToString:@"This is a registered nick, either choose another nick or enter the password by doing: /PASS <password>"] ) {
+						if( ! [[self nicknamePassword] length] )
+							[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+						else [self _identifyWithServicesUsingNickname:[self nickname]];
+					} else if( [msg isEqualToString:@"Incorrect password for this account"] ) {
+						[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+					}
+				}
 			}
 
 			// Catch connect notices by the server and mark them as handled
