@@ -537,7 +537,7 @@
 			NSMutableArray *previousJoinedRooms = [[NSMutableArray alloc] init];
 
 			for (MVChatRoom *room in joinedRooms) {
-				if (room && room.name)
+				if (room && room.name && !(room.modes & MVChatRoomInviteOnlyMode))
 					[previousJoinedRooms addObject:room.name];
 			}
 

@@ -354,7 +354,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 }
 
 - (void) encodingChanged:(CQPreferencesListViewController *) sender {
-	const NSStringEncoding *supportedEncodings = [_connection supportedStringEncodings];
-	_connection.encoding = supportedEncodings[sender.selectedItemIndex];
+	NSStringEncoding encoding = [_connection supportedStringEncodings][sender.selectedItemIndex];
+	_connection.encoding = encoding;
 }
 @end

@@ -319,7 +319,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	if (!_joined)
 		return;
 
-	if (self.room.modes && MVChatRoomInviteOnlyMode)
+	if (self.room.modes & MVChatRoomInviteOnlyMode)
 		return;
 
 	[self.room performSelector:@selector(join) withObject:nil afterDelay:0.];
