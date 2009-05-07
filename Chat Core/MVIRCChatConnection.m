@@ -2266,6 +2266,7 @@ end:
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 			} else if( ( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"ID"] ) ||
 					  [msg hasCaseInsensitiveSubstring:@"identify yourself"] ||
+					  [msg hasCaseInsensitiveSubstring:@"authenticate yourself"] ||
 					  [msg hasCaseInsensitiveSubstring:@"authentication required"] ||
 					  [msg hasCaseInsensitiveSubstring:@"nickname is registered"] ||
 					  [msg hasCaseInsensitiveSubstring:@"nickname is owned"] ||
@@ -2289,6 +2290,7 @@ end:
 
 			} else if( [msg isCaseInsensitiveEqualToString:@"Remember: Nobody from CService will ever ask you for your password, do NOT give out your password to anyone claiming to be CService."] ||													// Undernet
 					  [msg isCaseInsensitiveEqualToString:@"REMINDER: Do not share your password with anyone. DALnet staff will not ask for your password unless"] || [msg hasCaseInsensitiveSubstring:@"you are seeking their assistance. See"] ||		// DALnet
+					  [msg isCaseInsensitiveEqualToString:@"getting this message because you are not on the access list for the"] || [msg isCaseInsensitiveEqualToString:[NSString stringWithFormat:@"\002%@\002 nickname.", [self nickname]]] ||		// oftc
 					  [msg hasCaseInsensitiveSubstring:@"You have been invited to"] ) {	// ChanServ invite, hide since it's auto accepted
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 			}
