@@ -186,6 +186,8 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 }
 
 - (void) setServer:(NSString *) newServer {
+	if( [newServer length] >= 6 && [newServer hasPrefix:@"icb://"] )
+		newServer = [newServer substringFromIndex:6];
 	NSParameterAssert( newServer );
 	NSParameterAssert( [newServer length] > 0 );
 

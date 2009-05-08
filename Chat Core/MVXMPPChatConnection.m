@@ -168,6 +168,8 @@
 #pragma mark -
 
 - (void) setServer:(NSString *) newServer {
+	if( [newServer length] >= 7 && [newServer hasPrefix:@"xmpp://"] )
+		newServer = [newServer substringFromIndex:7];
 	NSParameterAssert( newServer != nil );
 	NSParameterAssert( [newServer length] > 0 );
 	MVSafeCopyAssign( &_server, newServer );

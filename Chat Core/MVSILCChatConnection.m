@@ -1193,6 +1193,8 @@ static SilcClientOperations silcClientOps = {
 #pragma mark -
 
 - (void) setServer:(NSString *) newServer {
+	if( [newServer length] >= 7 && [newServer hasPrefix:@"silc://"] )
+		newServer = [newServer substringFromIndex:7];
 	MVSafeCopyAssign( &_silcServer, newServer );
 
 	[super setServer:newServer];
