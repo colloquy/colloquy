@@ -3705,10 +3705,11 @@ end:
 	// - Sent to a user who is either (a) changing their nickname to fast or (b) changing their nick in a room where it is prohibited.
 
 	if( [parameters count] >= 3 ) {
-		NSString *possibleRoom = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
-
-		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:2];
 		[userInfo setObject:self forKey:@"connection"];
+
+		// workaround for freenode/hyperion where 438 means "banned in room, cant change nick"
+		NSString *possibleRoom = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 		if( [self joinedChatRoomWithUniqueIdentifier:possibleRoom] ) {
 			[userInfo setObject:possibleRoom forKey:@"room"];
 			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again.", "cant change nick because of chatroom error" ), possibleRoom, [self server]] forKey:NSLocalizedDescriptionKey];
@@ -3716,6 +3717,7 @@ end:
 
 		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeNickError userInfo:userInfo]];
 
+		[userInfo release];
 	}
 }
 
