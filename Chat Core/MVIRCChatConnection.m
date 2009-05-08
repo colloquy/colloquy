@@ -1969,8 +1969,15 @@ end:
 		}
 	}
 
-	// Identify with services
-	[self _identifyWithServicesUsingNickname:[self preferredNickname]]; // identifying proactively -> preferred nickname
+	if( _pendingIdentificationAttempt && [[self server] hasCaseInsensitiveSubstring:@"ustream"] ) {
+		// workaround for ustream which uses PASS rather than NickServ for nickname identification, so 001 counts as successful identification
+		_pendingIdentificationAttempt = NO;
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidIdentifyWithServicesNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Ustream", @"user", [self nickname], @"target", nil]];
+		[[self localUser] _setIdentified:YES];
+	} else {
+		// Identify with services
+		[self _identifyWithServicesUsingNickname:[self preferredNickname]]; // identifying proactively -> preferred nickname
+	}
 
 	[self performSelector:@selector( _checkWatchedUsers ) withObject:nil afterDelay:2.];
 }
