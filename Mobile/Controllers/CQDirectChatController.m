@@ -732,7 +732,7 @@
 	} else sentTweet = YES;
 
 	if (sentTweet) {		
-		NSString *tweet = [@"source=mobilecolloquy&status=" stringByAppendingString:arguments];
+		NSString *tweet = [@"source=mobilecolloquy&status=" stringByAppendingString:[arguments stringByEncodingIllegalURLCharacters]];
 		NSString *twitter = [NSString stringWithFormat:@"https://%@:%@@twitter.com/statuses/update.json", username, password];
 		NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:twitter] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
 
@@ -741,7 +741,7 @@
 
 		NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
 		NSString *response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-
+		
 		if ( response.length ) {
 			if ( [response hasCaseInsensitiveSubstring:@"Could not authenticate you"] ) {
 				alert.title = NSLocalizedString(@"Could Not Authenticate", "Could not authenticate title");
