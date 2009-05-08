@@ -82,6 +82,8 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	_inputField.delegate = nil;
+
 	[_inputField release];
 	[_completionView release];
 	[_completions release];

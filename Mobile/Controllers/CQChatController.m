@@ -194,7 +194,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 				if (!privateMessageSound) {
 					NSString *alert = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
-					privateMessageSound = [[CQSoundController alloc] initWithContentsOfSoundNamed:alert];
+					privateMessageSound = [[CQSoundController alloc] initWithSoundNamed:alert];
 				}
 
 				[privateMessageSound playAlert];
@@ -253,7 +253,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 		if (!fileTransferSound) {
 			NSString *alert = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnFileTransfer"];
-			fileTransferSound = [[CQSoundController alloc] initWithContentsOfSoundNamed:alert];
+			fileTransferSound = [[CQSoundController alloc] initWithSoundNamed:alert];
 		}
 
 		[fileTransferSound playAlert];
@@ -318,7 +318,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 		if (!highlightSound) {
 			NSString *alert = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
-			highlightSound = [[CQSoundController alloc] initWithContentsOfSoundNamed:alert];
+			highlightSound = [[CQSoundController alloc] initWithSoundNamed:alert];
 		}		
 
 		[highlightSound playAlert];

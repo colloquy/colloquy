@@ -30,6 +30,8 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (void) dealloc {
+	_searchBar.delegate = nil;
+
 	[_users release];
 	[_matchedUsers release];
 	[_currentSearchString release];

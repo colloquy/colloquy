@@ -1,14 +1,14 @@
 #import "CQSoundController.h"
 
 @implementation CQSoundController
-- (id) initWithContentsOfSoundNamed:(NSString *) alert {
-	if (!alert.length) {
+- (id) initWithSoundNamed:(NSString *) soundName {
+	if (!soundName.length) {
 		[self release];
 		return nil;
 	}
 
-	NSString *pathString = [[NSBundle mainBundle] pathForResource:alert ofType:@"aiff"];
-	if (!pathString) {
+	NSString *pathString = [[NSBundle mainBundle] pathForResource:soundName ofType:@"aiff"];
+	if (!pathString.length) {
 		[self release];
 		return nil;
 	}
@@ -20,7 +20,6 @@
 
 	if (path) {
 		OSStatus error = AudioServicesCreateSystemSoundID((CFURLRef)path, &_sound);
-
 		if (error != kAudioServicesNoError) {
 			[self release];
 			return nil;
@@ -35,6 +34,10 @@
 
 - (void) playAlert {
 	AudioServicesPlayAlertSound(_sound);
+}
+
+- (void) playSound {
+	AudioServicesPlaySystemSound(_sound);
 }
 
 - (void) dealloc {

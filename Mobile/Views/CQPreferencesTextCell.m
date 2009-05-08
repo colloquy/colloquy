@@ -38,6 +38,8 @@
 
 - (void) dealloc {
 	[_textField resignFirstResponder];
+	_textField.delegate = nil;
+
 	[_textField release];
 	[_label release];
 

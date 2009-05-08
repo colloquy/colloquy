@@ -994,7 +994,7 @@
 
 		if (!highlightSound) {
 			NSString *alert = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
-			highlightSound = [[CQSoundController alloc] initWithContentsOfSoundNamed:alert];
+			highlightSound = [[CQSoundController alloc] initWithSoundNamed:alert];
 		}
 
 		[highlightSound playAlert];

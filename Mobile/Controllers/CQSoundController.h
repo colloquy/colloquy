@@ -1,11 +1,10 @@
-#import <AudioToolbox/AudioToolbox.h>
+#import <AudioToolbox/AudioServices.h>
 
 @interface CQSoundController : NSObject {
 	SystemSoundID _sound;
 }
-
-- (id) initWithContentsOfSoundNamed:(NSString *)alert;
+- (id) initWithSoundNamed:(NSString *) soundName;
 
 - (void) playAlert;
-
+- (void) playSound;
 @end
