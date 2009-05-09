@@ -141,7 +141,7 @@
 		if (_textField.clearButtonMode == UITextFieldViewModeAlways)
 			rightMargin = 0.;
 		else if (self.accessoryType == UITableViewCellAccessoryDisclosureIndicator)
-			rightMargin = 2.;
+			rightMargin = 4.;
 
 		CGRect frame = _textField.frame;
 		frame.size = [_textField sizeThatFits:_textField.bounds.size];
