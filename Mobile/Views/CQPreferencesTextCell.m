@@ -40,7 +40,7 @@
 	[_textField resignFirstResponder];
 	_textField.delegate = nil;
 
-	[_textField release];
+	[_textField autorelease]; // Use autorelease to prevent a crash.
 	[_label release];
 
 	[super dealloc];
