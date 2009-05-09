@@ -8,18 +8,18 @@
 
 #import "CQFileTransferController.h"
 #import "CQFileTransferTableCell.h"
-#import <ChatCore/MVFileTransfer.h>
 #import "UIImageAdditions.h"
 
+#import <ChatCore/MVFileTransfer.h>
 
 @implementation CQFileTransferController
 
-@synthesize transfer = _transfer, cell = _cell;
+@synthesize transfer = _transfer;
+@synthesize cell = _cell;
 
 - (id) initWithTransfer:(MVFileTransfer *) transfer {
-	if (!(self = [self init])) {
+	if (!(self = [self init]))
 		return nil;
-	}
 
 	_transfer = [transfer retain];
 
@@ -31,21 +31,23 @@
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
     [_transfer release];
-	if (_timer.isValid) {
-		[_timer invalidate];
-	}
+	[_timer release];
+
     [super dealloc];
 }
 
 #pragma mark -
 
 - (void) close {
-	if (_timer.isValid) {
-		[_timer invalidate];
-		_timer = nil;
-	}
+	[_timer invalidate];
+	[_timer release];
+	_timer = nil;
+
 	_cell = nil;
+
 	[_transfer release];
 	_transfer = nil;
 }
@@ -55,17 +57,16 @@
 - (void) _timerFired:(NSTimer *) timer {
 	if (_transfer.status == MVFileTransferDoneStatus || _transfer.status == MVFileTransferStoppedStatus) {
 		[_timer invalidate];
+		[_timer release];
 		_timer = nil;
-	}
-	else {
+	} else {
 		[_cell takeValuesFromController:self];
 	}
 }
 
 - (void) _fileStarted:(NSNotification *)notification {
-	if (_cell && !_timer.isValid) {
-		_timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(_timerFired:) userInfo:nil repeats:YES];
-	}
+	if (_cell && !_timer)
+		_timer = [[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(_timerFired:) userInfo:nil repeats:YES] retain];
 }
 
 - (void) _fileFinished:(NSNotification *) notification {
@@ -73,11 +74,10 @@
 
 	NSString *path;
 	if (_transfer.upload) {
-		MVUploadFileTransfer *upload = (MVUploadFileTransfer *) _transfer;
+		MVUploadFileTransfer *upload = (MVUploadFileTransfer *)_transfer;
 		path = upload.source;
-	}
-	else {
-		MVDownloadFileTransfer *download = (MVDownloadFileTransfer *) _transfer;
+	} else {
+		MVDownloadFileTransfer *download = (MVDownloadFileTransfer *)_transfer;
 		path = download.destination;
 
 		if ([UIImage isValidImageFormat:path]) {
@@ -87,29 +87,26 @@
 		}
 	}
 
-	NSFileManager *fm = [NSFileManager defaultManager];
-	[fm removeItemAtPath:path error:NULL];
+	[[NSFileManager defaultManager] removeItemAtPath:path error:NULL];
 
 	[_timer invalidate];
+	[_timer release];
 	_timer = nil;
 }
 
 - (void) _fileError:(NSNotification *) notification {
 	[_cell takeValuesFromController:self];
 
-	if (_transfer.upload) {
-		NSFileManager *fm = [NSFileManager defaultManager];
-		[fm removeItemAtPath:((MVUploadFileTransfer *)_transfer).source error:NULL];
-	}
+	if (_transfer.upload)
+		[[NSFileManager defaultManager] removeItemAtPath:((MVUploadFileTransfer *)_transfer).source error:NULL];
 
 	[_timer invalidate];
+	[_timer release];
 	_timer = nil;
 }
 
-- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo;
-{
-	NSFileManager *fm = [NSFileManager defaultManager];
-	[fm removeItemAtPath:(NSString *)contextInfo error:NULL];
+- (void) image:(UIImage *) image didFinishSavingWithError:(NSError *) error contextInfo:(void *) contextInfo {
+	[[NSFileManager defaultManager] removeItemAtPath:(NSString *)contextInfo error:NULL];
 }
 
 #pragma mark -
@@ -122,15 +119,12 @@
 	NSString *path;
 	if (_transfer.upload) {
 		path = ((MVUploadFileTransfer *)_transfer).source;
-		if (![UIImage isValidImageFormat:path]) {
+		if (![UIImage isValidImageFormat:path])
 			return nil;
-		}
-	}
-	else {
+	} else {
 		if (_transfer.status == MVFileTransferDoneStatus) {
 			path = ((MVDownloadFileTransfer *)_transfer).destination;
-		}
-		else {
+		} else {
 			return nil;
 		}
 	}
@@ -144,6 +138,7 @@
 	CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), original.CGImage);
 	UIImage *thumbnail = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
+
 	return thumbnail;
 }
 
@@ -153,9 +148,10 @@
 	_cell = cell;
 
 	if (_cell && !_timer.isValid && (_transfer.upload || (_transfer.download && _transfer.status == MVFileTransferNormalStatus))) {
-		_timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(_timerFired:) userInfo:nil repeats:YES];
+		_timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(_timerFired:) userInfo:nil repeats:YES] retain];
 	} else if (!_cell) {
 		[_timer invalidate];
+		[_timer release];
 		_timer = nil;
 	}
 }
