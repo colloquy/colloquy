@@ -88,7 +88,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
-	switch( section) {
+	switch (section) {
 		case SettingsTableSection: return 2;
 		case AuthenticationTableSection: return 3;
 		case IdentitiesTableSection: return 1;
@@ -99,11 +99,17 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
-	switch( section) {
+	switch (section) {
 		case SettingsTableSection: return NSLocalizedString(@"Connection Settings", @"Connection Settings section title");
 		case AuthenticationTableSection: return NSLocalizedString(@"Authentication", @"Authentication section title");
 		default: return nil;
 	}
+}
+
+- (CGFloat) tableView:(UITableView *) tableView heightForFooterInSection:(NSInteger) section {
+	if (section == AuthenticationTableSection)
+		return 55.;
+	return 0.;
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {

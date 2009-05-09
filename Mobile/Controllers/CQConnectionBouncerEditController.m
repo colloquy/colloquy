@@ -84,6 +84,12 @@
 	}
 }
 
+- (CGFloat) tableView:(UITableView *) tableView heightForFooterInSection:(NSInteger) section {
+	if (section == EnabledTableSection)
+		return 55.;
+	return 0.;
+}
+
 - (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
 	if (section == EnabledTableSection)
 		return NSLocalizedString(@"Using a Colloquy bouncer will keep you\nconnected while Colloquy isn't open.", @"Use Bouncer section footer title");
