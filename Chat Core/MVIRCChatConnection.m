@@ -3698,6 +3698,48 @@ end:
  MVChatConnectionErroneusNicknameError
  */
 
+- (void) _handle435WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BANONCHAN Bahamut (also ERR_SERVICECONFUSED on Unreal, not implemented here)
+	MVAssertCorrectThreadRequired( _connectionThread );
+	
+	// "<current nickname> <new nickname> <channel name> :Cannot change nickname while banned on channel"
+	// - Sent to a user who is changing their nick in a room where it is prohibited.
+	
+	if( [parameters count] >= 3 ) {
+		NSString *possibleRoom = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
+		if( [self joinedChatRoomWithUniqueIdentifier:possibleRoom] ) {
+			NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:3];
+			[userInfo setObject:self forKey:@"connection"];
+			[userInfo setObject:possibleRoom forKey:@"room"];
+			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again.", "cant change nick because of chatroom error" ), possibleRoom, [self server]] forKey:NSLocalizedDescriptionKey];		
+
+			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeNickError userInfo:userInfo]];
+
+			[userInfo release];
+		}
+	}
+}
+
+- (void) _handle437WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BANNICKCHANGE Unreal (also ERR_UNAVAILRESOURCE in RFC2812, not implemented here)
+	MVAssertCorrectThreadRequired( _connectionThread );
+	
+	// "<current nickname> <channel name> :Cannot change nickname while banned on channel or channel is moderated"
+	// - Sent to a user who is changing their nick in a room where it is prohibited.
+	
+	if( [parameters count] >= 2 ) {
+		NSString *possibleRoom = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+		if( [self joinedChatRoomWithUniqueIdentifier:possibleRoom] ) {
+			NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:3];
+			[userInfo setObject:self forKey:@"connection"];
+			[userInfo setObject:possibleRoom forKey:@"room"];
+			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again.", "cant change nick because of chatroom error" ), possibleRoom, [self server]] forKey:NSLocalizedDescriptionKey];		
+
+			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeNickError userInfo:userInfo]];
+
+			[userInfo release];
+		}
+	}
+}
+
 - (void) _handle438WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NICKTOOFAST_IRCU
 	MVAssertCorrectThreadRequired( _connectionThread );
 
