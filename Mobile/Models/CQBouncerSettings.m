@@ -115,7 +115,7 @@
 }
 
 - (NSString *) password {
-	if (!_password)
+	if (!_password && _server && _username)
 		_password = [[[CQKeychain standardKeychain] passwordForServer:_server account:_username] copy];
 	return _password;
 }
