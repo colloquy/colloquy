@@ -65,7 +65,7 @@ function appendComponents(components, previousSession, suppressScroll, suppressS
 		if (component.type === "message") {
 			if (component.self) alwaysScroll = true;
 			appendMessage(container, component.sender, component.message, component.highlighted, component.action, component.self, previousSession);
-		} else if (component.type = "event")
+		} else if (component.type === "event")
 			appendEventMessage(container, component.message, component.identifier, previousSession);
 	}
 
