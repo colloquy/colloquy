@@ -25,7 +25,12 @@
 
 #pragma mark -
 
-- (void) viewWillAppear:(BOOL) animated {
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	if (_whoisViewController)
+		return;
+
 	_whoisViewController = [[CQWhoisViewController alloc] init];
 	_whoisViewController.user = _user;
 
@@ -34,11 +39,6 @@
 	[doneItem release];
 
 	[self pushViewController:_whoisViewController animated:NO];
-}
-
-- (void) viewDidDisappear:(BOOL) animated {
-	[_whoisViewController release];
-	_whoisViewController = nil;
 }
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {

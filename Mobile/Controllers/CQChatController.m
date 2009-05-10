@@ -75,10 +75,10 @@
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	if (!_chatListViewController)
+	if (!_chatListViewController) {
 		_chatListViewController = [[CQChatListViewController alloc] init];
-
-	[self pushViewController:_chatListViewController animated:NO];
+		[self pushViewController:_chatListViewController animated:NO];
+	}
 
 	if (_nextController)
 		[self _showNextChatControllerAnimated:NO];

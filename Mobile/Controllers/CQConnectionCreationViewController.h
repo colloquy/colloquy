@@ -1,9 +1,10 @@
 @class CQConnectionEditViewController;
+@class MVChatConnection;
 
 @interface CQConnectionCreationViewController : UINavigationController <UINavigationControllerDelegate> {
 	@protected
+	MVChatConnection *_connection;
 	CQConnectionEditViewController *_editViewController;
-	NSURL *_url;
 }
-@property (nonatomic, retain) NSURL *url;
+@property (nonatomic, copy) NSURL *url;
 @end

@@ -75,12 +75,13 @@
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	if (!_connectionsViewController) {
-		_connectionsViewController = [[CQConnectionsViewController alloc] init];
+	if (_connectionsViewController)
+		return;
 
-		for (MVChatConnection *connection in _connections)
-			[_connectionsViewController addConnection:connection];
-	}
+	_connectionsViewController = [[CQConnectionsViewController alloc] init];
+
+	for (MVChatConnection *connection in _connections)
+		[_connectionsViewController addConnection:connection];
 
 	[self pushViewController:_connectionsViewController animated:NO];
 }

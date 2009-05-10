@@ -24,7 +24,12 @@
 
 #pragma mark -
 
-- (void) viewWillAppear:(BOOL) animated {
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	if (_editViewController)
+		return;
+
 	_editViewController = [[CQChatEditViewController alloc] init];
 	_editViewController.roomTarget = _roomTarget;
 
@@ -43,11 +48,6 @@
 	[self pushViewController:_editViewController animated:NO];
 }
 
-- (void) viewDidDisappear:(BOOL) animated {
-	[_editViewController release];
-	_editViewController = nil;
-}
-
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"])
 		return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -58,8 +58,11 @@
 
 @synthesize roomTarget = _roomTarget;
 
-- (BOOL) isRoomTarget {
-	return _roomTarget;
+- (void) setRoomTarget:(BOOL) roomTarget {
+	_roomTarget = roomTarget;
+
+	_editViewController.roomTarget = _roomTarget;
+	_editViewController.navigationItem.rightBarButtonItem.enabled = (_roomTarget ? YES : NO);
 }
 
 #pragma mark -

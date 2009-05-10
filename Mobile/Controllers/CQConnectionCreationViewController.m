@@ -21,44 +21,62 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 - (id) init {
 	if (!(self = [super init]))
 		return nil;
+
 	self.delegate = self;
+
+	_connection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
+	_connection.server = @"<<placeholder>>";
+	_connection.preferredNickname = @"<<default>>";
+	_connection.realName = @"<<default>>";
+	_connection.username = @"<<default>>";
+	_connection.automaticallyConnect = YES;
+	_connection.secure = NO;
+	_connection.serverPort = 6667;
+	_connection.encoding = [MVChatConnection defaultEncoding];
+
 	return self;
 }
 
 - (void) dealloc {
+	[_connection release];
 	[_editViewController release];
-	[_url release];
 
 	[super dealloc];
 }
 
-@synthesize url = _url;
+- (NSURL *) url {
+	if (isPlaceholderValue(_connection.server))
+		return nil;
+	return _connection.url;
+}
+
+- (void) setUrl:(NSURL *) url {
+	_connection.server = (url.host.length ? url.host : @"<<placeholder>>");
+	_connection.preferredNickname = (url.user.length ? url.user : @"<<default>>");
+	_connection.secure = ([url.scheme isEqualToString:@"ircs"] || [url.port unsignedShortValue] == 994);
+	_connection.serverPort = ([url.port unsignedShortValue] ? [url.port unsignedShortValue] : (_connection.secure ? 994 : 6667));
+
+	NSString *target = nil;
+	if (url.fragment.length) target = [@"#" stringByAppendingString:[url.fragment stringByDecodingIllegalURLCharacters]];
+	else if (url.path.length > 1) target = [[url.path substringFromIndex:1] stringByDecodingIllegalURLCharacters];
+
+	if (target.length)
+		_connection.automaticJoinedRooms = [NSArray arrayWithObject:target];
+
+	_editViewController.navigationItem.rightBarButtonItem.enabled = (url.host.length ? YES : NO);
+}
 
 #pragma mark -
 
-- (void) viewWillAppear:(BOOL) animated {
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	if (_editViewController)
+		return;
+
 	_editViewController = [[CQConnectionEditViewController alloc] init];
 	_editViewController.newConnection = YES;
-
-	MVChatConnection *connection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
-	connection.server = (_url.host.length ? _url.host : @"<<placeholder>>");
-	connection.preferredNickname = (_url.user.length ? _url.user : @"<<default>>");
-	connection.realName = @"<<default>>";
-	connection.username = @"<<default>>";
-	connection.automaticallyConnect = YES;
-	connection.secure = ([_url.scheme isEqualToString:@"ircs"] || [_url.port unsignedShortValue] == 994);
-	connection.serverPort = ([_url.port unsignedShortValue] ? [_url.port unsignedShortValue] : (connection.secure ? 994 : 6667));
-	connection.encoding = [MVChatConnection defaultEncoding];
-
-	NSString *target = nil;
-	if (_url.fragment.length) target = [@"#" stringByAppendingString:[_url.fragment stringByDecodingIllegalURLCharacters]];
-	else if (_url.path.length > 1) target = [[_url.path substringFromIndex:1] stringByDecodingIllegalURLCharacters];
-
-	if (target.length)
-		connection.automaticJoinedRooms = [NSArray arrayWithObject:target];
-
-	_editViewController.connection = connection;
-	[connection release];
+	_editViewController.connection = _connection;
 
 	UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
 	_editViewController.navigationItem.leftBarButtonItem = cancelItem;
@@ -69,14 +87,9 @@ static inline BOOL isPlaceholderValue(NSString *string) {
 	[connectItem release];
 
 	_editViewController.navigationItem.rightBarButtonItem.tag = UIBarButtonSystemItemSave;
-	_editViewController.navigationItem.rightBarButtonItem.enabled = (_url.host.length ? YES : NO);
+	_editViewController.navigationItem.rightBarButtonItem.enabled = (_connection.server.length && !isPlaceholderValue(_connection.server));
 
 	[self pushViewController:_editViewController animated:NO];
-}
-
-- (void) viewDidDisappear:(BOOL) animated {
-	[_editViewController release];
-	_editViewController = nil;
 }
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
