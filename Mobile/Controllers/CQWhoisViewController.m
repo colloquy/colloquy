@@ -164,11 +164,8 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 			cell.label = NSLocalizedString(@"Rooms", "Rooms user info label");
 			NSString *rooms = [[_user attributeForKey:MVChatUserKnownRoomsAttribute] componentsJoinedByString:NSLocalizedString(@", ", "User info rooms list separator")];
 			cell.text = (rooms.length ? rooms : notAvailableString);
-			if (rooms.length) {
+			if (rooms.length)
 				cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-				cell.accessoryAction = @selector(showJoinedRooms:);
-				cell.target = self;
-			}
 		}
 	} else if (section == 3) {
 		if (row == 0) { // Connected
@@ -181,6 +178,11 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 	}
 
 	return cell;
+}
+
+- (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
+	if (indexPath.section == 2 && indexPath.row == 1)
+		[self showJoinedRooms:nil];
 }
 
 #pragma mark -
