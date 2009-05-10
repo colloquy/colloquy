@@ -54,29 +54,29 @@ function stopScrollAnimation() {
 function appendComponents(components, previousSession, suppressScroll, suppressScrollAnimation) {
 	if (autoscrollSuspended)
 		suppressScroll = true;
+
 	var alwaysScroll = false;
 	var wasNearBottom = (!suppressScroll && nearBottom());
-
 	var componentsLength = components.length;
+	var container = (componentsLength > 1 ? document.createDocumentFragment() : document.body);
+
 	for (var i = 0; i < componentsLength; ++i) {
 		var component = components[i];
 		if (component.type === "message") {
 			if (component.self) alwaysScroll = true;
-			appendMessage(component.sender, component.message, component.highlighted, component.action, component.self, true, previousSession);
+			appendMessage(container, component.sender, component.message, component.highlighted, component.action, component.self, previousSession);
 		} else if (component.type = "event")
-			appendEventMessage(component.message, component.identifier, true, previousSession);
+			appendEventMessage(container, component.message, component.identifier, previousSession);
 	}
+
+	if (componentsLength > 1)
+		document.body.appendChild(container);
 
 	if (!suppressScroll && (alwaysScroll || wasNearBottom))
 		scrollToBottom(!suppressScrollAnimation);
 }
 
-function appendMessage(senderNickname, messageHTML, highlighted, action, self, suppressScroll, previousSession) {
-	if (autoscrollSuspended)
-		suppressScroll = true;
-
-	var wasNearBottom = (!suppressScroll && nearBottom());
-
+function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession) {
 	var className = "message-wrapper";
 	if (action) className += " action";
 	if (highlighted) className += " highlight";
@@ -95,43 +95,22 @@ function appendMessage(senderNickname, messageHTML, highlighted, action, self, s
 
 	var messageElement = document.createElement("div");
 	messageElement.className = "message";
+	messageElement.innerHTML = messageHTML;
 	messageWrapperElement.appendChild(messageElement);
 
-	document.body.appendChild(messageWrapperElement);
-
-	var range = document.createRange();
-	range.selectNode(messageElement);
-
-	var messageFragment = range.createContextualFragment(messageHTML);
-	messageElement.appendChild(messageFragment);
-
-	if (!suppressScroll && (alwaysScroll || wasNearBottom))
-		scrollToBottom(true);
+	container.appendChild(messageWrapperElement);
 }
 
-function appendEventMessage(messageHTML, identifier, suppressScroll, previousSession) {
-	if (autoscrollSuspended)
-		suppressScroll = true;
-
-	var wasNearBottom = (!suppressScroll && nearBottom());
-
+function appendEventMessage(container, messageHTML, identifier, previousSession) {
 	var className = "event";
 	if (identifier) className += " " + identifier;
 	if (previousSession) className += " previous-session";
 
 	var eventElement = document.createElement("div");
 	eventElement.className = className;
+	eventElement.innerHTML = messageHTML;
 
-	document.body.appendChild(eventElement);
-
-	var range = document.createRange();
-	range.selectNode(eventElement);
-
-	var messageFragment = range.createContextualFragment(messageHTML);
-	eventElement.appendChild(messageFragment);
-
-	if (!suppressScroll && wasNearBottom)
-		scrollToBottom(!suppressScrollAnimation);
+	container.appendChild(eventElement);
 }
 
 function enforceScrollbackLimit() {
