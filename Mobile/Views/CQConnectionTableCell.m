@@ -177,7 +177,7 @@
 
 #define ICON_LEFT_MARGIN 10.
 #define ICON_RIGHT_MARGIN 10.
-#define TEXT_RIGHT_MARGIN 5.
+#define TEXT_RIGHT_MARGIN 7.
 
 	CGRect contentRect = self.contentView.frame;
 
