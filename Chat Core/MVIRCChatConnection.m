@@ -1193,12 +1193,14 @@ end:
 	if( isRoom ) {
 		MVChatRoom *room = (MVChatRoom *)target;
 		if( [command isCaseInsensitiveEqualToString:@"cycle"] || [command isCaseInsensitiveEqualToString:@"hop"] ) {
+			[room retain];
 			[room part];
 
 			[room _setDateParted:[NSDate date]];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomPartedNotification object:room];
 
 			[room join];
+			[room release];
 			return;
 		} else if( [command isCaseInsensitiveEqualToString:@"invite"] ) {
 			NSString *nick = nil;
@@ -2806,9 +2808,6 @@ end:
 		MVChatRoom *room = [self chatRoomWithName:name];
 
 		if( [sender isLocalUser] ) {
-			// The room is released in _handle366WithParameters.
-			[room retain];
-
 			[_pendingJoinRoomNames removeObject:name];
 
 			[room _setDateJoined:[NSDate date]];
@@ -3311,8 +3310,6 @@ end:
 				[self sendRawMessageImmediatelyWithFormat:@"WHO %@", [room name]];
 			[self sendRawMessageImmediatelyWithFormat:@"MODE %@ b", [room name]];
 #endif
-
-			[room release]; // balance the alloc or retain from _handleJoinWithParameters
 		}
 	}
 }
