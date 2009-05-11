@@ -699,8 +699,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 - (CQChatRoomController *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists {
 	NSParameterAssert(room != nil);
 
-	for (id controller in _chatControllers)
-		if ([controller isMemberOfClass:[CQChatRoomController class]] && [((CQChatRoomController*) controller).target isEqual:room])
+	for (id <CQChatViewController> controller in _chatControllers)
+		if ([controller isMemberOfClass:[CQChatRoomController class]] && controller.target == room)
 			return (CQChatRoomController *)controller;
 
 	CQChatRoomController *controller = nil;
@@ -731,8 +731,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 - (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
 	NSParameterAssert(user != nil);
 
-	for (id controller in _chatControllers)
-		if ([controller isMemberOfClass:[CQDirectChatController class]] && [((CQDirectChatController*) controller).target isEqual:user])
+	for (id <CQChatViewController> controller in _chatControllers)
+		if ([controller isMemberOfClass:[CQDirectChatController class]] && controller.target == user)
 			return (CQDirectChatController *)controller;
 
 	CQDirectChatController *controller = nil;
@@ -756,8 +756,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 - (CQDirectChatController *) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists {
 	NSParameterAssert(connection != nil);
 
-	for (id controller in _chatControllers)
-		if ([controller isMemberOfClass:[CQDirectChatController class]] && [((CQDirectChatController*) controller).target isEqual:connection])
+	for (id <CQChatViewController> controller in _chatControllers)
+		if ([controller isMemberOfClass:[CQDirectChatController class]] && controller.target == connection)
 			return (CQDirectChatController *)controller;
 
 	CQDirectChatController *controller = nil;
@@ -782,7 +782,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	NSParameterAssert(transfer != nil);
 
 	for (id controller in _chatControllers)
-		if ([controller isMemberOfClass:[CQFileTransferController class]] && [((CQFileTransferController *)controller).transfer isEqual:transfer])
+		if ([controller isMemberOfClass:[CQFileTransferController class]] && ((CQFileTransferController *)controller).transfer == transfer)
 			return controller;
 
 	if (!exists) {
