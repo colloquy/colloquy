@@ -1154,9 +1154,9 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 
 		NSString *highlightWordsString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQHighlightWords"];
 		if (highlightWordsString.length) {
-			[mainHighlightWords addObjectsFromArray:[highlightWordsString componentsMatchedByRegex:@"(?<=\\s|^)([/\"'].*?[/\"'])(?=\\s|$)" capture:1]];
+			[mainHighlightWords addObjectsFromArray:[highlightWordsString componentsMatchedByRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" capture:1]];
 
-			highlightWordsString = [highlightWordsString stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)([/\"'].*?[/\"'])(?=\\s|$)" withString:@""];
+			highlightWordsString = [highlightWordsString stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)[/\"'].*?[/\"'](?=\\s|$)" withString:@""];
 
 			[mainHighlightWords addObjectsFromArray:[highlightWordsString componentsSeparatedByString:@" "]];
 			[mainHighlightWords removeObject:@""];
@@ -1173,7 +1173,6 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 	MVChatUser *user = [message objectForKey:@"user"];
 	if (!user.localUser && highlightWords.count) {
 		NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
-		NSCharacterSet *trimCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\"'"];
 		NSString *stylelessMessageString = [messageString stringByStrippingXMLTags];
 
 		for (NSString *highlightWord in highlightWords) {
@@ -1184,7 +1183,6 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 			if ([highlightWord hasPrefix:@"/"] && [highlightWord hasSuffix:@"/"] && highlightWord.length > 1) {
 				regex = [highlightWord substringWithRange:NSMakeRange(1, highlightWord.length - 2)];
 			} else {
-				highlightWord = [highlightWord stringByTrimmingCharactersInSet:trimCharacters];
 				highlightWord = [highlightWord stringByEscapingCharactersInSet:escapedCharacters];
 				regex = [NSString stringWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", highlightWord];
 			}
