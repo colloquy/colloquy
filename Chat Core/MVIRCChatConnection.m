@@ -3887,6 +3887,29 @@ end:
 }
 */
 
+- (void) _handle506WithParameters:(NSArray *) parameters fromSender:(id) sender { // freenode/hyperion: identify with services to talk in this room
+	MVAssertCorrectThreadRequired( _connectionThread );
+
+	// "<channel> Please register with services and use the IDENTIFY command (/msg nickserv help) to speak in this channel"
+	//  freenode/hyperion sends 506 if the user is not identified and tries to talk on a room with mode +R
+
+	if( [parameters count] == 3 ) {
+		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
+		NSString *errorLiteralReason = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
+
+		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:5];
+		[userInfo setObject:self forKey:@"connection"];
+		[userInfo setObject:room forKey:@"room"];
+		[userInfo setObject:@"506" forKey:@"errorCode"];
+		[userInfo setObject:errorLiteralReason forKey:@"errorLiteralReason"];
+		[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Can't send to room \"%@\" on \"%@\".", "cant send to room error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
+
+		[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantSendToRoomError userInfo:userInfo]];
+
+		[userInfo release];
+	}
+}
+
 #pragma mark -
 #pragma mark Watch Replies
 
