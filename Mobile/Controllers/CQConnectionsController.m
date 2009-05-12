@@ -239,14 +239,21 @@
 		NSString *deviceToken = [CQColloquyApplication sharedApplication].deviceToken;
 		if (deviceToken.length)
 			[connection sendRawMessageWithFormat:@"BOUNCER set device-token %@", [CQColloquyApplication sharedApplication].deviceToken];
+		else [connection sendRawMessage:@"BOUNCER set device-token"];
 
 		if (connection.nicknamePassword.length)
 			[connection sendRawMessageWithFormat:@"BOUNCER set nick-password %@", connection.nicknamePassword];
+		else [connection sendRawMessage:@"BOUNCER set nick-password"];
 
 		if (connection.alternateNicknames.count) {
 			NSString *nicks = [connection.alternateNicknames componentsJoinedByString:@" "];
-			[connection sendRawMessageWithComponents:@"BOUNCER set alt-nicks ", nicks, nil];
-		}
+			[connection sendRawMessageWithFormat:@"BOUNCER set alt-nicks %@", nicks];
+		} else [connection sendRawMessage:@"BOUNCER set alt-nicks"];
+
+		NSString *highlightWordsString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQHighlightWords"];
+		if (highlightWordsString.length)
+			[connection sendRawMessageWithFormat:@"BOUNCER set highlight-words :%@", highlightWordsString];
+		else [connection sendRawMessage:@"BOUNCER set highlight-words"];
 
 		[connection sendRawMessage:@"BOUNCER autocommands clear"];
 
