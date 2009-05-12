@@ -37,6 +37,8 @@
 */
 
 #ifdef    __OBJC__
+#import <Foundation/NSArray.h>
+#import <Foundation/NSError.h>
 #import <Foundation/NSObjCRuntime.h>
 #import <Foundation/NSRange.h>
 #import <Foundation/NSString.h>
@@ -130,8 +132,6 @@ typedef uint32_t RKLRegexOptions; // This must be identical to the ICU 'flags' a
 
 #ifdef __OBJC__
 
-@class NSError;
-
 // NSException exception name.
 extern NSString * const RKLICURegexException;
 
@@ -185,7 +185,7 @@ extern NSString * const RKLICURegexRegexOptionsErrorKey;
 - (BOOL)RKL_METHOD_PREPEND(isRegexValid);
 - (BOOL)RKL_METHOD_PREPEND(isRegexValidWithOptions):(RKLRegexOptions)options error:(NSError **)error;
 
-- (void)RKL_METHOD_PREPEND(invalidateCachedRegexState);
+- (void)RKL_METHOD_PREPEND(flushCachedRegexData);
 
 - (NSArray *)RKL_METHOD_PREPEND(componentsMatchedByRegex):(NSString *)regex;
 - (NSArray *)RKL_METHOD_PREPEND(componentsMatchedByRegex):(NSString *)regex capture:(NSInteger)capture;
