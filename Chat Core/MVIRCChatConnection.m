@@ -3855,22 +3855,23 @@ end:
 	// - Unreal3.2.7: "<channel> :You need a registered nick to join that channel."
 	// - bahamut-1.8(04)/DALnet: <channel> :You need to identify to a registered nick to join that channel. For help with registering your nickname, type "/msg NickServ@services.dal.net help register" or see http://docs.dal.net/docs/nsemail.html
 
-	if( [parameters count] >= 3 && ![[self server] hasCaseInsensitiveSubstring:@"freenode"] ) { // ignore on freenode until they stop randomly sending 477s when joining a room
+	if( [parameters count] >= 3 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 		NSString *errorLiteralReason = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:self, @"connection", room, @"room", @"477", @"errorCode", errorLiteralReason, @"errorLiteralReason", nil];
-		if( [errorLiteralReason hasCaseInsensitiveSubstring:@"register"] ) { // (probably II)
+		if( [_pendingJoinRoomNames containsObject:room] ) { // (probably II)
 			[_pendingJoinRoomNames removeObject:room];
 			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"You need to identify with network services to join the room \"%@\" on \"%@\".", "identify to join room error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionIdentifyToJoinRoomError userInfo:userInfo]];
-		} else if( [errorLiteralReason hasCaseInsensitiveSubstring:@"modes"] ) { // (probably I)
-			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" does not support modes.", "room does not support modes error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
-			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionRoomDoesNotSupportModesError userInfo:userInfo]];
-		} else { // (could be either)
-			[_pendingJoinRoomNames removeObject:room];
-			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" encountered an unknown error, see server details for more information.", "room encountered unknown error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
-			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionUnknownError userInfo:userInfo]];
+		} else if( ![[self server] hasCaseInsensitiveSubstring:@"freenode"] ) { // ignore on freenode until they stop randomly sending 477s when joining a room
+			if( [errorLiteralReason hasCaseInsensitiveSubstring:@"modes"] ) { // (probably I)
+				[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" does not support modes.", "room does not support modes error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
+				[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionRoomDoesNotSupportModesError userInfo:userInfo]];
+			} else { // (could be either)
+				[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"The room \"%@\" on \"%@\" encountered an unknown error, see server details for more information.", "room encountered unknown error" ), room, [self server]] forKey:NSLocalizedDescriptionKey];
+				[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionUnknownError userInfo:userInfo]];
+			}
 		}
 	}
 }
