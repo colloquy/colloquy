@@ -248,10 +248,10 @@
 			[connection sendRawMessageWithComponents:@"BOUNCER set alt-nicks ", nicks, nil];
 		}
 
-		if (connection.automaticCommands.count && rooms.count) {
-			[connection sendRawMessage:@"BOUNCER autocommands clear"];
+		[connection sendRawMessage:@"BOUNCER autocommands clear"];
+
+		if (connection.automaticCommands.count && rooms.count)
 			[connection sendRawMessage:@"BOUNCER autocommands start"];
-		}
 	}
 
 	for (NSString *fullCommand in connection.automaticCommands) {
