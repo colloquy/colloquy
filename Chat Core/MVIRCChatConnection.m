@@ -3672,7 +3672,6 @@ end:
 		if( [command isCaseInsensitiveEqualToString:@"NickServ"] ) {
 			// the NickServ command isn't supported, this is an older server
 			// lets send a private message to NickServ to identify
-			_pendingIdentificationAttempt = NO;
 			if( [[self nicknamePassword] length] )
 				[self sendRawMessageWithFormat:@"PRIVMSG NickServ :IDENTIFY %@", [self nicknamePassword]];
 		}
