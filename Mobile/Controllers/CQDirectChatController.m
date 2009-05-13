@@ -742,8 +742,6 @@
 		NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
 		NSString *response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 		
-		NSLog (@"%@", response);
-		
 		if ( response.length ) {
 			if ( [response hasCaseInsensitiveSubstring:@"Could not authenticate you"] ) {
 				alert.title = NSLocalizedString(@"Could Not Authenticate", "Could not authenticate title");
@@ -753,7 +751,7 @@
 			} else if ( [response hasCaseInsensitiveSubstring:@"503 Service Temporarily Unavailable"] ) {
 				alert.title = NSLocalizedString(@"Twitter Unavailable", "Twitter Temporarily Unavailable title");
 				alert.message = NSLocalizedString(@"Unable to send tweet because Twitter is temporarily unavailable.", "Unable to send tweet because Twitter is temporarily unavailable alert message");
-				
+
 				sentTweet = NO;
 			}
 		} else {
