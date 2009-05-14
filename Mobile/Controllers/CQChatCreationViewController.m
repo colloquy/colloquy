@@ -98,18 +98,4 @@
 	[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = [CQChatController defaultController];
 	[self dismissModalViewControllerAnimated:YES];
 }
-
-#pragma mark -
-
-- (void) navigationController:(UINavigationController *) navigationController willShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
-	// Workaround a bug where viewWillDisappear: and viewWillAppear: are not called when this navigation controller is a modal view.
-	if (navigationController.topViewController != viewController)
-		[navigationController.topViewController viewWillDisappear:animated];
-	[viewController viewWillAppear:animated];
-}
-
-- (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
-	// Workaround a bug where viewDidAppear: is not called when this navigation controller is a modal view.
-	[viewController viewDidAppear:animated];
-}
 @end
