@@ -610,7 +610,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			[context setObject:connection forKey:@"representedObject"];
 			[[JVNotificationController defaultController] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
 
-		} else if( ! [[notification userInfo] objectForKey:@"handled"] ) {
+		} else if( ! [[[notification userInfo] objectForKey:@"handled"] boolValue] ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"Notice from %@", "notice message from user title" ), [user displayName]] forKey:@"title"];
 			[context setObject:messageString forKey:@"description"];
