@@ -227,7 +227,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		} else [self sendRawMessage:@"QUIT" immediately:YES];
 	} else if( _status == MVChatConnectionConnectingStatus ) {
 		if( _connectionThread )
-			[[self _chatConnection] performSelector:@selector( disconnect ) inThread:_connectionThread];
+			[[self _chatConnection] performSelector:@selector( disconnect ) inThread:_connectionThread waitUntilDone:NO];
 	}
 }
 
@@ -362,8 +362,9 @@ static const NSStringEncoding supportedEncodings[] = {
 	}
 
 	if( now && _connectionThread ) {
-		[self performSelector:@selector( _writeDataToServer: ) withObject:raw inThread:_connectionThread];
 		MVSafeAdoptAssign( &_lastCommand, [[NSDate allocWithZone:nil] init] );
+
+		[self performSelector:@selector( _writeDataToServer: ) withObject:raw inThread:_connectionThread waitUntilDone:NO];
 	} else {
 		if( ! _sendQueue )
 			_sendQueue = [[NSMutableArray allocWithZone:nil] initWithCapacity:20];
@@ -373,7 +374,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		}
 
 		if( ! _sendQueueProcessing && _connectionThread )
-			[self performSelector:@selector( _startSendQueue ) withObject:nil inThread:_connectionThread];
+			[self performSelector:@selector( _startSendQueue ) withObject:nil inThread:_connectionThread waitUntilDone:NO];
 	}
 }
 
@@ -842,7 +843,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) processIncomingMessage:(id) raw fromServer:(BOOL) fromServer {
 	NSParameterAssert([raw isKindOfClass:[NSData class]]);
 	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:raw, @"message", [NSNumber numberWithBool:fromServer], @"fromServer", nil];
-	[self performSelector:@selector(_processIncomingMessageWithInfo:) withObject:info inThread:_connectionThread];
+	[self performSelector:@selector(_processIncomingMessageWithInfo:) withObject:info inThread:_connectionThread waitUntilDone:NO];
 }
 
 - (void) _processIncomingMessageWithInfo:(NSDictionary *) info {
@@ -1071,6 +1072,7 @@ end:
 #endif
 
 - (void) _sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) msgEncoding toTarget:(id) target withTargetPrefix:(NSString *) targetPrefix withAttributes:(NSDictionary *) attributes localEcho:(BOOL) echo {
+	MVAssertMainThreadRequired();
 	NSParameterAssert( [target isKindOfClass:[MVChatUser class]] || [target isKindOfClass:[MVChatRoom class]] );
 
 	NSMutableData *msg = [[[self class] _flattenedIRCDataForMessage:message withEncoding:msgEncoding andChatFormat:[self outgoingChatFormat]] mutableCopyWithZone:nil];
@@ -1095,7 +1097,11 @@ end:
 		MVChatRoom *room = ([target isKindOfClass:[MVChatRoom class]] ? target : nil);
 		NSNumber *action = ([[attributes objectForKey:@"action"] boolValue] ? [attributes objectForKey:@"action"] : [NSNumber numberWithBool:NO]);
 		NSMutableDictionary *privmsgInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:msg, @"message", [self localUser], @"user", [NSString locallyUniqueString], @"identifier", action, @"action", target, @"target", room, @"room", nil];
+#if ENABLE(PLUGINS)
 		[self performSelector:@selector( _handlePrivmsg: ) withObject:privmsgInfo];
+#else
+		[self performSelector:@selector( _handlePrivmsg: ) withObject:privmsgInfo inThread:_connectionThread waitUntilDone:NO];
+#endif
 	}
 
 	NSString *targetName = [target isKindOfClass:[MVChatRoom class]] ? [target name] : [target nickname];
@@ -1167,6 +1173,8 @@ end:
 }
 
 - (void) _sendCommand:(NSString *) command withArguments:(MVChatString *) arguments withEncoding:(NSStringEncoding) encoding toTarget:(id) target {
+	MVAssertMainThreadRequired();
+
 	BOOL isRoom = [target isKindOfClass:[MVChatRoom class]];
 	BOOL isUser = ([target isKindOfClass:[MVChatUser class]] || [target isKindOfClass:[MVDirectChatConnection class]]);
 
@@ -2137,7 +2145,11 @@ end:
 #pragma mark Incoming Message Replies
 
 - (void) _handlePrivmsg:(NSMutableDictionary *) privmsgInfo {
+#if ENABLE(PLUGINS)
 	MVAssertMainThreadRequired();
+#else
+	MVAssertCorrectThreadRequired( _connectionThread );
+#endif
 
 	MVChatRoom *room = [privmsgInfo objectForKey:@"room"];
 	MVChatUser *sender = [privmsgInfo objectForKey:@"user"];
@@ -2158,9 +2170,9 @@ end:
 	if( ! [message length] ) return;
 
 	if( room ) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:privmsgInfo];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:room userInfo:privmsgInfo];
 	} else {
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:privmsgInfo];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:privmsgInfo];
 	}
 }
 
@@ -2207,14 +2219,22 @@ end:
 			[self _handleCTCP:msgData asRequest:YES fromSender:sender toTarget:target forRoom:room];
 		} else {
 			NSMutableDictionary *privmsgInfo = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", target, @"target", room, @"room", nil];
+#if ENABLE(PLUGINS)
 			[self performSelectorOnMainThread:@selector( _handlePrivmsg: ) withObject:privmsgInfo waitUntilDone:NO];
+#else
+			[self _handlePrivmsg:privmsgInfo];
+#endif
 			[privmsgInfo release];
 		}
 	}
 }
 
 - (void) _handleNotice:(NSMutableDictionary *) noticeInfo {
+#if ENABLE(PLUGINS)
 	MVAssertMainThreadRequired();
+#else
+	MVAssertCorrectThreadRequired( _connectionThread );
+#endif
 
 	id target = [noticeInfo objectForKey:@"target"];
 	MVChatRoom *room = [noticeInfo objectForKey:@"room"];
@@ -2236,7 +2256,7 @@ end:
 	if( ! [message length] ) return;
 
 	if( room ) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:noticeInfo];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:room userInfo:noticeInfo];
 	} else {
 		if( [[sender nickname] isCaseInsensitiveEqualToString:_realServer] || [[sender nickname] isCaseInsensitiveEqualToString:[self server]]) {
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
@@ -2248,10 +2268,10 @@ end:
 				if( [[self server] hasCaseInsensitiveSubstring:@"ustream"] ) {
 					if( [msg isEqualToString:@"This is a registered nick, either choose another nick or enter the password by doing: /PASS <password>"] ) {
 						if( ! [[self nicknamePassword] length] )
-							[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+							[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 						else [self _identifyWithServicesUsingNickname:[self nickname]];
 					} else if( [msg isEqualToString:@"Incorrect password for this account"] ) {
-						[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+						[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 					}
 				}
 			}
@@ -2318,7 +2338,7 @@ end:
 				[[self localUser] _setIdentified:NO];
 
 				if( ! [[self nicknamePassword] length] )
-					[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 				else [self _identifyWithServicesUsingNickname:[self nickname]]; // responding to nickserv -> current nickname
 
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
@@ -2331,7 +2351,7 @@ end:
 
 				[[self localUser] _setIdentified:NO];
 
-				[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+				[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
@@ -2348,7 +2368,7 @@ end:
 			if( possibleRoomPrefix && [[self chatRoomNamePrefixes] characterIsMember:[possibleRoomPrefix characterAtIndex:0]] ) {
 				MVChatRoom *roomInWelcomeToRoomNotice = [self chatRoomWithUniqueIdentifier:possibleRoomPrefix];
 				if( roomInWelcomeToRoomNotice ) {
-					[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:roomInWelcomeToRoomNotice userInfo:noticeInfo];
+					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:roomInWelcomeToRoomNotice userInfo:noticeInfo];
 					[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 				}
 			}
@@ -2357,7 +2377,7 @@ end:
 		}
 
 		if( target == room || ( [target isKindOfClass:[MVChatUser class]] && [target isLocalUser] ) )
-			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:noticeInfo];
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotPrivateMessageNotification object:sender userInfo:noticeInfo];
 	}
 }
 
@@ -2397,18 +2417,26 @@ end:
 		id target = room;
 		if( !target ) target = targetUser;
 
-		if ( ctcp ) {
+		if( ctcp ) {
 			[self _handleCTCP:msgData asRequest:NO fromSender:sender toTarget:target forRoom:room];
 		} else {
 			NSMutableDictionary *noticeInfo = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", target, @"target", room, @"room", nil];
+#if ENABLE(PLUGINS)
 			[self performSelectorOnMainThread:@selector( _handleNotice: ) withObject:noticeInfo waitUntilDone:NO];
+#else
+			[self _handleNotice:noticeInfo];
+#endif
 			[noticeInfo release];
 		}
 	}
 }
 
 - (void) _handleCTCP:(NSDictionary *) ctcpInfo {
+#if ENABLE(PLUGINS)
 	MVAssertMainThreadRequired();
+#else
+	MVAssertCorrectThreadRequired( _connectionThread );
+#endif
 
 	BOOL request = [[ctcpInfo objectForKey:@"request"] boolValue];
 	NSData *data = [ctcpInfo objectForKey:@"data"];
@@ -2433,14 +2461,14 @@ end:
 		// special case ACTION and send it out like a message with the action flag
 		NSMutableDictionary *msgInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:arguments, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"action", target, @"target", room, @"room", nil];
 
-		[self _handlePrivmsg:msgInfo]; // No need to explicitly call this on main thread, as we are already in it.
+		[self _handlePrivmsg:msgInfo]; // No need to explicitly call this on a different thread, as we are already in it.
 
 		[command release];
 		[arguments release];
 		return;
 	}
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:( request ? MVChatConnectionSubcodeRequestNotification : MVChatConnectionSubcodeReplyNotification ) object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:( request ? MVChatConnectionSubcodeRequestNotification : MVChatConnectionSubcodeReplyNotification ) object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:command, @"command", arguments, @"arguments", nil]];
 
 #if ENABLE(PLUGINS)
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( BOOL ), @encode( NSString * ), @encode( NSString * ), @encode( MVChatUser * ), nil];
@@ -2563,9 +2591,10 @@ end:
 					[transfer _setFileNameQuoted:quotedFileName];
 					[transfer _setFinalSize:(unsigned long long)size];
 
-					[[NSNotificationCenter defaultCenter] postNotificationName:MVDownloadFileTransferOfferNotification object:transfer];
-
 					[self _addDirectClientConnection:transfer];
+
+					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDownloadFileTransferOfferNotification object:transfer];
+
 					[transfer release];
 				}
 			} else if( [subCommand isCaseInsensitiveEqualToString:@"ACCEPT"] ) {
@@ -2693,9 +2722,10 @@ end:
 							[directChatConnection _setPort:port];
 						}
 
-						[[NSNotificationCenter defaultCenter] postNotificationName:MVDirectChatConnectionOfferNotification object:directChatConnection userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
-
 						[self _addDirectClientConnection:directChatConnection];
+
+						[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionOfferNotification object:directChatConnection userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", nil]];
+
 						[directChatConnection release];
 					}
 				}
@@ -2703,7 +2733,7 @@ end:
 
 			[msg release];
 		} else if( [command isCaseInsensitiveEqualToString:@"CLIENTINFO"] ) {
-			// make this extnesible later with a plugin registration method
+			// make this extensible later with a plugin registration method
 			[sender sendSubcodeReply:command withArguments:@"VERSION TIME PING DCC CLIENTINFO"];
 		}
 	} else {
@@ -2787,7 +2817,11 @@ end:
 	if( room ) [info setObject:room forKey:@"room"];
 	[info setObject:[NSNumber numberWithBool:request] forKey:@"request"];
 
+#if ENABLE(PLUGINS)
 	[self performSelectorOnMainThread:@selector( _handleCTCP: ) withObject:info waitUntilDone:NO];
+#else
+	[self _handleCTCP:info];
+#endif
 
 	[info release];
 }
@@ -2891,7 +2925,11 @@ end:
 }
 
 - (void) _handleTopic:(NSDictionary *)topicInfo {
+#if ENABLE(PLUGINS)
 	MVAssertMainThreadRequired();
+#else
+	MVAssertCorrectThreadRequired(_connectionThread);
+#endif
 
 	MVChatRoom *room = [topicInfo objectForKey:@"room"];
 	MVChatUser *author = [topicInfo objectForKey:@"author"];
@@ -2911,7 +2949,8 @@ end:
 	[room _setTopic:topic];
 	[room _setTopicAuthor:author];
 	[room _setTopicDate:[NSDate date]];
-	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
+
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
 
 	[topic release];
 }
@@ -2928,7 +2967,13 @@ end:
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:0]];
 		NSData *topic = [parameters objectAtIndex:1];
 		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
-		[self performSelectorOnMainThread:@selector( _handleTopic: ) withObject:[NSDictionary dictionaryWithObjectsAndKeys:room, @"room", sender, @"author", topic, @"topic", nil] waitUntilDone:NO];
+
+		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:room, @"room", sender, @"author", topic, @"topic", nil];
+#if ENABLE(PLUGINS)
+		[self performSelectorOnMainThread:@selector( _handleTopic: ) withObject:info waitUntilDone:NO];
+#else
+		[self _handleTopic:info];
+#endif
 	}
 }
 
