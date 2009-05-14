@@ -124,7 +124,6 @@ static const NSStringEncoding supportedEncodings[] = {
 		_nickname = [_username retain];
 		_currentNickname = [_nickname retain];
 		_realName = [NSFullUserName() retain];
-		_threadWaitLock = [[NSConditionLock allocWithZone:nil] initWithCondition:0];
 		_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
 		[self _resetSupportedFeatures];
 	}
@@ -153,7 +152,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_username release];
 	[_password release];
 	[_realName release];
-	[_threadWaitLock release];
 	[_lastSentIsonNicknames release];
 	[_sendQueue release];
 	[_queueWait release];
@@ -176,7 +174,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	_username = nil;
 	_password = nil;
 	_realName = nil;
-	_threadWaitLock = nil;
 	_lastSentIsonNicknames = nil;
 	_sendQueue = nil;
 	_queueWait = nil;
@@ -211,17 +208,13 @@ static const NSStringEncoding supportedEncodings[] = {
 	MVSafeAdoptAssign( &_lastConnectAttempt, [[NSDate allocWithZone:nil] init] );
 	MVSafeRetainAssign( &_queueWait, [NSDate dateWithTimeIntervalSinceNow:JVQueueWaitBeforeConnected] );
 
-	[self _resetSupportedFeatures];
+	if( [_connectionThread respondsToSelector:@selector( cancel )] )
+		[_connectionThread cancel];
+	_connectionThread = nil;
 
 	[self _willConnect]; // call early so other code has a chance to change our info
 
 	[NSThread detachNewThreadSelector:@selector( _ircRunloop ) toTarget:self withObject:nil];
-
-	[_threadWaitLock lockWhenCondition:1];
-	[_threadWaitLock unlockWithCondition:0];
-
-	if( _connectionThread )
-		[self performSelector:@selector( _connect ) inThread:_connectionThread];
 }
 
 - (void) disconnectWithReason:(MVChatString *) reason {
@@ -368,9 +361,8 @@ static const NSStringEncoding supportedEncodings[] = {
 		if( now ) now = ( ! _lastCommand || [_lastCommand timeIntervalSinceNow] <= -JVMinimumSendQueueDelay );
 	}
 
-	if( now ) {
-		if( _connectionThread )
-			[self performSelector:@selector( _writeDataToServer: ) withObject:raw inThread:_connectionThread];
+	if( now && _connectionThread ) {
+		[self performSelector:@selector( _writeDataToServer: ) withObject:raw inThread:_connectionThread];
 		MVSafeAdoptAssign( &_lastCommand, [[NSDate allocWithZone:nil] init] );
 	} else {
 		if( ! _sendQueue )
@@ -627,17 +619,13 @@ static const NSStringEncoding supportedEncodings[] = {
 - (oneway void) _ircRunloop {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
 
-	[_threadWaitLock lockWhenCondition:0];
-
-	if( [_connectionThread respondsToSelector:@selector( cancel )] )
-		[_connectionThread cancel];
+	[NSThread prepareForInterThreadMessages];
 
 	_connectionThread = [NSThread currentThread];
 	if( [_connectionThread respondsToSelector:@selector( setName: )] )
 		[_connectionThread setName:[[self url] absoluteString]];
-	[NSThread prepareForInterThreadMessages];
 
-	[_threadWaitLock unlockWithCondition:1];
+	[self _connect];
 
 	[pool drain];
 	pool = nil;
@@ -653,13 +641,19 @@ static const NSStringEncoding supportedEncodings[] = {
 	// make sure the connection has sent all the delegate calls it has scheduled
 	[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.]];
 
-	if( [NSThread currentThread] == _connectionThread )
+	if( _connectionThread == [NSThread currentThread] )
 		_connectionThread = nil;
 
 	[pool drain];
 }
 
 #pragma mark -
+
+- (void) _willConnect {
+	[self _resetSupportedFeatures];
+
+	[super _willConnect];
+}
 
 - (void) _didDisconnect {
 	MVAssertMainThreadRequired();

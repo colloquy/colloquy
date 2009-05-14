@@ -27,7 +27,6 @@
 	NSString *_realName;
 	NSMutableSet *_lastSentIsonNicknames;
 	NSCharacterSet *_roomPrefixes;
-	NSConditionLock *_threadWaitLock;
 	unsigned short _serverPort;
 	unsigned short _isonSentCount;
 	BOOL _watchCommandSupported;
