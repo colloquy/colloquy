@@ -238,11 +238,13 @@
 
 		NSString *deviceToken = [CQColloquyApplication sharedApplication].deviceToken;
 		if (deviceToken.length)
-			[connection sendRawMessageWithFormat:@"BOUNCER set device-token %@", [CQColloquyApplication sharedApplication].deviceToken];
+			[connection sendRawMessageWithFormat:@"BOUNCER set device-token :%@", [CQColloquyApplication sharedApplication].deviceToken];
 		else [connection sendRawMessage:@"BOUNCER set device-token"];
 
+		[connection sendRawMessageWithFormat:@"BOUNCER set display-name :%@", connection.displayName];
+
 		if (connection.nicknamePassword.length)
-			[connection sendRawMessageWithFormat:@"BOUNCER set nick-password %@", connection.nicknamePassword];
+			[connection sendRawMessageWithFormat:@"BOUNCER set nick-password :%@", connection.nicknamePassword];
 		else [connection sendRawMessage:@"BOUNCER set nick-password"];
 
 		if (connection.alternateNicknames.count) {
@@ -254,6 +256,16 @@
 		if (highlightWordsString.length)
 			[connection sendRawMessageWithFormat:@"BOUNCER set highlight-words :%@", highlightWordsString];
 		else [connection sendRawMessage:@"BOUNCER set highlight-words"];
+
+		NSString *sound = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
+		if (sound.length && ![sound isEqualToString:@"None"])
+			[connection sendRawMessageWithFormat:@"BOUNCER set highlight-sound :%@.aiff", sound];
+		else [connection sendRawMessage:@"BOUNCER set highlight-sound"];
+
+		sound = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
+		if (sound.length && ![sound isEqualToString:@"None"])
+			[connection sendRawMessageWithFormat:@"BOUNCER set message-sound :%@.aiff", sound];
+		else [connection sendRawMessage:@"BOUNCER set message-sound"];
 
 		[connection sendRawMessage:@"BOUNCER autocommands clear"];
 
@@ -311,11 +323,13 @@
 
 - (void) _deviceTokenRecieved:(NSNotification *) notification {
 	NSString *tokenString = [CQColloquyApplication sharedApplication].deviceToken;
-	NSString *command = [NSString stringWithFormat:@"BOUNCER set device-token %@", tokenString];
+	NSString *command = [NSString stringWithFormat:@"BOUNCER set device-token :%@", tokenString];
 	for (MVChatConnection *connection in _connections) {
-		if (connection.bouncerType != MVChatConnectionColloquyBouncer || !connection.connected)
+		if (connection.bouncerType != MVChatConnectionColloquyBouncer)
 			continue;
-		[connection sendRawMessage:command immediately:YES]; 
+		if (connection.status != MVChatConnectionConnectingStatus && !connection.connected)
+			continue;
+		[connection sendRawMessage:command]; 
 	}
 }
 
@@ -409,8 +423,10 @@
 #pragma mark -
 
 - (void) _loadConnectionList {
-	if (_connections.count)
-		return; // already loaded connections
+	if (_loadedConnections)
+		return;
+
+	_loadedConnections = YES;
 
 	NSArray *bouncers = [[NSUserDefaults standardUserDefaults] arrayForKey:@"CQChatBouncers"];
 	for (NSDictionary *info in bouncers) {
@@ -506,6 +522,9 @@
 }
 
 - (void) saveConnections {
+	if (!_loadedConnections)
+		return;
+
 	NSMutableArray *connections = [[NSMutableArray alloc] initWithCapacity:_connections.count];
 	for (MVChatConnection *connection in _connections) {
 		NSMutableDictionary *info = [NSMutableDictionary dictionary];

@@ -15,6 +15,7 @@
 	NSMutableArray *_connections;
 	NSMutableArray *_bouncers;
 	BOOL _wasEditingConnection;
+	BOOL _loadedConnections;
 	NSUInteger _connectingCount;
 	NSUInteger _connectedCount;
 
