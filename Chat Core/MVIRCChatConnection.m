@@ -2367,7 +2367,8 @@ end:
 
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
-			}
+			} else if ([[sender nickname] isEqualToString:@"ChanServ"] && [msg hasCaseInsensitiveSubstring:@"You're already on"])
+				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
 			// Catch "[#room] - Welcome to #room!" notices and show them in the room instead
 			NSString *possibleRoomPrefix = [msg stringByMatching:@"^[\\[\\(](.+?)[\\]\\)]" capture:1];
