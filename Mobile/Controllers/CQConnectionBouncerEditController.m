@@ -207,6 +207,11 @@
 		_connection.bouncerType = MVChatConnectionNoBouncer;
 
 	if (sender.on) {
+		if (!_connection.bouncerIdentifier.length) {
+			CQBouncerSettings *settings = [[CQConnectionsController defaultController].bouncers lastObject];
+			_connection.bouncerIdentifier = settings.identifier;
+		}
+
 		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:BouncersTableSection] withRowAnimation:UITableViewRowAnimationBottom];
 	} else {
 		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:BouncersTableSection] withRowAnimation:UITableViewRowAnimationTop];
