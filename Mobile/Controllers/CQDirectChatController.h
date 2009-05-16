@@ -3,6 +3,10 @@
 #import "CQChatInputBar.h"
 #import "CQChatTranscriptView.h"
 
+#define ReconnectAlertTag 1
+#define RejoinRoomAlertTag 2
+#define TweetRetryAlertTag 3
+
 @class CQChatTableCell;
 @class CQStyleView;
 @class CQChatInputBar;
@@ -30,6 +34,8 @@
 	BOOL _allowEditingToEnd;
 	BOOL _didSendRecently;
 	BOOL _revealKeyboard;
+	
+	NSString *_tweetRetryArguments;
 }
 - (id) initWithTarget:(id) target;
 

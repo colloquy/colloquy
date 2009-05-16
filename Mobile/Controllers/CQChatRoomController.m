@@ -375,7 +375,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	}
 
 	UIAlertView *alert = [[UIAlertView alloc] init];
-	alert.tag = 2;
+	alert.tag = RejoinRoomAlertTag;
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"Kicked from Room", "Kicked from room alert title");
 	alert.message = [NSString stringWithFormat:NSLocalizedString(@"You were kicked from \"%@\" by \"%@\" on \"%@\".", "Kicked from room alert message"), self.room.displayName, user.displayName, self.connection.displayName];
@@ -783,11 +783,11 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 
 #pragma mark -
 
-- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if ((alertView.tag != 1 && alertView.tag != 2) || buttonIndex == alertView.cancelButtonIndex)
-		return;
+- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {	
+	if ((alertView.tag != ReconnectAlertTag && alertView.tag != RejoinRoomAlertTag) || buttonIndex == alertView.cancelButtonIndex)
+		return [super alertView:alertView clickedButtonAtIndex:buttonIndex];
 
-	if (alertView.tag == 1)
+	if (alertView.tag == ReconnectAlertTag)
 		[self.connection connect];
 
 	[self.room join];
@@ -817,11 +817,11 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	if (self.connection.status == MVChatConnectionConnectingStatus) {
 		alert.message = NSLocalizedString(@"You are currently connecting,\nyou should join the room shortly.", @"Can't send message to room because server is connecting alert message");
 	} else if (!self.connection.connected) {
-		alert.tag = 1;
+		alert.tag = ReconnectAlertTag;
 		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to room because server is disconnected alert message");
 		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];
 	} else if (!self.room.joined) {
-		alert.tag = 2;
+		alert.tag = RejoinRoomAlertTag;
 		alert.message = NSLocalizedString(@"You are not a room member,\nrejoin and try again.", @"Can't send message to room because not a member alert message");
 		[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join alert button title")];
 	} else {

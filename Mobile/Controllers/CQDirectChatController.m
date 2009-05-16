@@ -114,6 +114,8 @@
 	if (_watchRule)
 		[self.connection removeChatUserWatchRule:_watchRule];
 
+	[_tweetRetryArguments release];
+	
 	[chatInputBar release];
 	[transcriptView release];
 	[_watchRule release];
@@ -703,26 +705,28 @@
 
 #pragma mark -
 
-- (BOOL) handleTweetCommandWithArguments:(NSString *) arguments {	
+- (BOOL) handleTweetCommandWithArguments:(NSString *) arguments {
 	NSString *username = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQTwitterUsername"];
 	NSString *password = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQTwitterPassword"];
 	BOOL sentTweet = NO;
+
+	id old = _tweetRetryArguments;
+	_tweetRetryArguments = [arguments copy];
+	[old release];
 
 	if ( !arguments.length ) return YES;
 
     UIAlertView *alert = [[UIAlertView alloc] init]; 
 	alert.delegate = self;
-	alert.cancelButtonIndex = 0;
+	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
-	[alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
-	
 	if ( !username.length ) {
-		alert.title = NSLocalizedString(@"No Username Given", "No username alert title");
+		alert.title = NSLocalizedString(@"No Twitter Username Given", "No username alert title");
 		alert.message = NSLocalizedString(@"You need to enter a Twitter username in the settings.", "No username alert message");
 	}
 
 	if ( !password.length ) {
-		alert.title = NSLocalizedString(@"No Password Given", "No password alert title");
+		alert.title = NSLocalizedString(@"No Twitter Password Given", "No password alert title");
 		alert.message = NSLocalizedString(@"You need to enter a password in the settings.", "No password alert message");
 	}
 
@@ -731,9 +735,9 @@
 		alert.message = [NSString stringWithFormat:NSLocalizedString(@"Your tweet was %d characters over the limit.", "Your tweet was %d characters over the limit alert message"), ([arguments length] - 140)];
 	} else sentTweet = YES;
 
-	if (sentTweet) {		
-		NSString *tweet = [@"source=mobilecolloquy&status=" stringByAppendingString:[arguments stringByEncodingIllegalURLCharacters]];
+	if (sentTweet) {
 		NSString *twitter = [NSString stringWithFormat:@"https://%@:%@@twitter.com/statuses/update.json", username, password];
+		NSString *tweet = [@"source=mobilecolloquy&status=" stringByAppendingString:[_tweetRetryArguments stringByEncodingIllegalURLCharacters]];
 		NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:twitter] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
 
 		[request setHTTPMethod:@"POST"];
@@ -741,25 +745,26 @@
 
 		NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
 		NSString *response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-		
-		if ( response.length ) {
-			if ( [response hasCaseInsensitiveSubstring:@"Could not authenticate you"] ) {
-				alert.title = NSLocalizedString(@"Could Not Authenticate", "Could not authenticate title");
-				alert.message = NSLocalizedString(@"Make sure your Twitter username and password are correct.", "Make sure your username and password are correct alert message");
 
-				sentTweet = NO;
-			} else if ( [response hasCaseInsensitiveSubstring:@"503 Service Temporarily Unavailable"] ) {
+		if ( response.length ) {
+			sentTweet = NO;
+			
+			if ( [response hasCaseInsensitiveSubstring:@"Could not authenticate you"] ) {
+				alert.title = NSLocalizedString(@"Could Not Authenticate with Twitter", "Could not authenticate title");
+				alert.message = NSLocalizedString(@"Make sure your Twitter username and password are correct.", "Make sure your username and password are correct alert message");
+			} else if ( [response hasCaseInsensitiveSubstring:@"503 Service Temporarily Unavailable"] || [response hasCaseInsensitiveSubstring:@"403 Forbidden"] ) {
 				alert.title = NSLocalizedString(@"Twitter Unavailable", "Twitter Temporarily Unavailable title");
 				alert.message = NSLocalizedString(@"Unable to send tweet because Twitter is temporarily unavailable.", "Unable to send tweet because Twitter is temporarily unavailable alert message");
-
-				sentTweet = NO;
-			}
+			} else sentTweet = YES;
 		} else {
 			alert.title = NSLocalizedString(@"Unable To Send Tweet", "Unable to send tweet title");
 			alert.message = NSLocalizedString(@"Unable to send the tweet to Twitter.", "Unable to submit the tweet to Twitter alert message");
 
 			sentTweet = NO;
 		}
+		alert.tag = TweetRetryAlertTag;
+		[alert addButtonWithTitle:NSLocalizedString(@"Retry", @"Retry alert button title")];
+
 		[request release];
 		[response release];
 	}
@@ -767,7 +772,7 @@
 	if ( !sentTweet ) [alert show];
 	
 	[alert release];
-	
+
 	return YES;
 }
 
@@ -1033,10 +1038,14 @@
 }
 
 - (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (alertView.tag != 1 || buttonIndex == alertView.cancelButtonIndex)
+	if ((alertView.tag != ReconnectAlertTag && alertView.tag != TweetRetryAlertTag) || buttonIndex == alertView.cancelButtonIndex)
 		return;
 
-	[self.connection connect];
+	if (alertView.tag == ReconnectAlertTag) 
+		[self.connection connect];
+
+	if (alertView.tag == TweetRetryAlertTag)
+		[self handleTweetCommandWithArguments:_tweetRetryArguments];
 }
 
 #pragma mark -
@@ -1234,7 +1243,7 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 	if (self.connection.status == MVChatConnectionConnectingStatus) {
 		alert.message = NSLocalizedString(@"You are currently connecting,\ntry sending again soon.", @"Can't send message to user because server is connecting alert message");
 	} else if (!self.connection.connected) {
-		alert.tag = 1;
+		alert.tag = ReconnectAlertTag;
 		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to user because server is disconnected alert message");
 		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];
 	} else if (self.user.status != MVChatUserAvailableStatus && self.user.status != MVChatUserAwayStatus) {
