@@ -481,6 +481,9 @@
 			connection.encoding = [[info objectForKey:@"encoding"] unsignedLongValue];
 		else connection.encoding = [MVChatConnection defaultEncoding];
 
+		if (!CFStringIsEncodingAvailable(CFStringConvertNSStringEncodingToEncoding(connection.encoding)))
+			connection.encoding = [MVChatConnection defaultEncoding];
+
 		if ([info objectForKey:@"realName"]) connection.realName = [info objectForKey:@"realName"];
 		if ([info objectForKey:@"nickname"]) connection.nickname = [info objectForKey:@"nickname"];
 		if ([info objectForKey:@"username"]) connection.username = [info objectForKey:@"username"];

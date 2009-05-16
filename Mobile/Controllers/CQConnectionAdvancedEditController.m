@@ -128,6 +128,106 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 	return nil;
 }
 
+static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
+	NSString *result = [NSString localizedNameOfStringEncoding:encoding];
+	if (result.length)
+		return result;
+
+	switch (encoding) {
+	case NSUTF8StringEncoding:
+		return NSLocalizedString(@"Unicode (UTF-8)", "Encoding name");
+	case NSASCIIStringEncoding:
+		return NSLocalizedString(@"Western (ASCII)", "Encoding name");
+	case NSISOLatin1StringEncoding:
+		return NSLocalizedString(@"Western (ISO Latin 1)", "Encoding name");
+	case 0x80000203:
+		return NSLocalizedString(@"Western (ISO Latin 3)", "Encoding name");
+	case 0x8000020f:
+		return NSLocalizedString(@"Western (ISO Latin 9)", "Encoding name");
+	case NSMacOSRomanStringEncoding:
+		return NSLocalizedString(@"Western (Mac OS Roman)", "Encoding name");
+	case NSWindowsCP1252StringEncoding:
+		return NSLocalizedString(@"Western (Windows Latin 1)", "Encoding name");
+	case 0x8000020d:
+		return NSLocalizedString(@"Baltic Rim (ISO Latin 7)", "Encoding name");
+	case 0x80000507:
+		return NSLocalizedString(@"Baltic Rim (Windows)", "Encoding name");
+	case NSISOLatin2StringEncoding:
+		return NSLocalizedString(@"Central European (ISO Latin 2)", "Encoding name");
+	case 0x80000204:
+		return NSLocalizedString(@"Central European (ISO Latin 4)", "Encoding name");
+	case 0x8000001d:
+		return NSLocalizedString(@"Central European (Mac OS)", "Encoding name");
+	case NSWindowsCP1250StringEncoding:
+		return NSLocalizedString(@"Central European (Windows Latin 2)", "Encoding name");
+	case 0x80000a02:
+		return NSLocalizedString(@"Cyrillic (KOI8-R)", "Encoding name");
+	case 0x80000205:
+		return NSLocalizedString(@"Cyrillic (ISO 8859-5)", "Encoding name");
+	case 0x80000007:
+		return NSLocalizedString(@"Cyrillic (Mac OS)", "Encoding name");
+	case NSWindowsCP1251StringEncoding:
+		return NSLocalizedString(@"Cyrillic (Windows)", "Encoding name");
+	case 0x80000207:
+		return NSLocalizedString(@"Greek (ISO 8859-7)", "Encoding name");
+	case 0x80000006:
+		return NSLocalizedString(@"Greek (Mac OS)", "Encoding name");
+	case NSWindowsCP1253StringEncoding:
+		return NSLocalizedString(@"Greek (Windows)", "Encoding name");
+	case 0x80000a01:
+		return NSLocalizedString(@"Japanese (Shift JIS)", "Encoding name");
+	case NSISO2022JPStringEncoding:
+		return NSLocalizedString(@"Japanese (ISO 2022-JP)", "Encoding name");
+	case NSJapaneseEUCStringEncoding:
+		return NSLocalizedString(@"Japanese (EUC)", "Encoding name");
+	case 0x80000001:
+		return NSLocalizedString(@"Japanese (Mac OS)", "Encoding name");
+	case NSShiftJISStringEncoding:
+		return NSLocalizedString(@"Japanese (Windows, DOS)", "Encoding name");
+	case 0x80000632:
+		return NSLocalizedString(@"Chinese (GB 18030)", "Encoding name");
+	case 0x80000930:
+		return NSLocalizedString(@"Simplified Chinese (EUC)", "Encoding name");
+	case 0x80000019:
+		return NSLocalizedString(@"Simplified Chinese (Mac OS)", "Encoding name");
+	case 0x80000421:
+		return NSLocalizedString(@"Simplified Chinese (Windows, DOS)", "Encoding name");
+	case 0x80000a03:
+		return NSLocalizedString(@"Traditional Chinese (Big 5)", "Encoding name");
+	case 0x80000a06:
+		return NSLocalizedString(@"Traditional Chinese (Big 5 HKSCS)", "Encoding name");
+	case 0x80000931:
+		return NSLocalizedString(@"Traditional Chinese (EUC)", "Encoding name");
+	case 0x80000002:
+		return NSLocalizedString(@"Traditional Chinese (Mac OS)", "Encoding name");
+	case 0x80000423:
+		return NSLocalizedString(@"Traditional Chinese (Windows, DOS)", "Encoding name");
+	case 0x80000940:
+		return NSLocalizedString(@"Korean (EUC)", "Encoding name");
+	case 0x80000003:
+		return NSLocalizedString(@"Korean (Mac OS)", "Encoding name");
+	case 0x80000422:
+		return NSLocalizedString(@"Korean (Windows, DOS)", "Encoding name");
+	case 0x8000020b:
+		return NSLocalizedString(@"Thai (ISO 8859-11)", "Encoding name");
+	case 0x80000015:
+		return NSLocalizedString(@"Thai (Mac OS)", "Encoding name");
+	case 0x8000041d:
+		return NSLocalizedString(@"Thai (Windows, DOS)", "Encoding name");
+	case 0x80000208:
+		return NSLocalizedString(@"Hebrew (ISO 8859-8)", "Encoding name");
+	case 0x80000505:
+		return NSLocalizedString(@"Hebrew (Windows)", "Encoding name");
+	case 0x80000206:
+		return NSLocalizedString(@"Arabic (ISO 8859-6)", "Encoding name");
+	case 0x80000506:
+		return NSLocalizedString(@"Arabic (Windows)", "Encoding name");
+	}
+
+	NSCAssert(NO, @"Should not reach this point.");
+	return @"";
+}
+
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section == IdentitiesTableSection && indexPath.row == 0) {
 		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
@@ -181,7 +281,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 		const NSStringEncoding *supportedEncodings = [_connection supportedStringEncodings];
 		for (unsigned i = 0; supportedEncodings[i]; ++i) {
 			NSStringEncoding encoding = supportedEncodings[i];
-			[encodings addObject:[NSString localizedNameOfStringEncoding:encoding]];
+			[encodings addObject:localizedNameOfStringEncoding(encoding)];
 			if (encoding == _connection.encoding)
 				selectedEncodingIndex = i;
 		}
@@ -301,7 +401,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 		cell.label = NSLocalizedString(@"Encoding", @"Encoding connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-		cell.text = [NSString localizedNameOfStringEncoding:_connection.encoding];
+		cell.text = localizedNameOfStringEncoding(_connection.encoding);
 
 		return cell;
 	}

@@ -431,7 +431,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 			[self presentModalViewController:picker animated:YES];
 			[picker release];
 		} else if (sendContact) {
-			NSAssert(YES, @"Contact sending not implemented.");
+			NSAssert(NO, @"Contact sending not implemented.");
 		}
     }
 }

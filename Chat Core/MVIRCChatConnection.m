@@ -80,7 +80,9 @@ static const NSStringEncoding supportedEncodings[] = {
 	NSShiftJISStringEncoding,			// Windows
 	/* Simplified Chinese */
 	(NSStringEncoding) 0x80000632,		// GB 18030
+#if !defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE
 	(NSStringEncoding) 0x80000631,		// GBK
+#endif
 	(NSStringEncoding) 0x80000930,		// EUC
 	(NSStringEncoding) 0x80000019,		// Mac
 	(NSStringEncoding) 0x80000421,		// Windows
@@ -100,11 +102,15 @@ static const NSStringEncoding supportedEncodings[] = {
 	(NSStringEncoding) 0x8000041d,		// Windows
 	/* Hebrew */
 	(NSStringEncoding) 0x80000208,		// ISO-8859-8
+#if !defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE
 	(NSStringEncoding) 0x80000005,		// Mac
+#endif
 	(NSStringEncoding) 0x80000505,		// Windows
 	/* Arabic */
 	(NSStringEncoding) 0x80000206,		// ISO-8859-6
+#if !defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE
 	(NSStringEncoding) 0x80000004,		// Mac
+#endif
 	(NSStringEncoding) 0x80000506,		// Windows
 	0
 };

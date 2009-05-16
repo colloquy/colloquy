@@ -71,7 +71,6 @@
 				<real>2147483649</real>
 				<real>8</real>
 				<real>2147485234</real>
-				<real>2147485233</real>
 				<real>2147486000</real>
 				<real>2147483673</real>
 				<real>2147484705</real>
@@ -87,10 +86,8 @@
 				<real>2147483669</real>
 				<real>2147484701</real>
 				<real>2147484168</real>
-				<real>2147483653</real>
 				<real>2147484933</real>
 				<real>2147484166</real>
-				<real>2147483652</real>
 				<real>2147484934</real>
 			</array>
 			<key>Titles</key>
@@ -121,7 +118,6 @@
 				<string>Japanese (Mac OS)</string>
 				<string>Japanese (Windows)</string>
 				<string>Chinese (GB 18030)</string>
-				<string>Chinese (GBK)</string>
 				<string>Simplified Chinese (EUC)</string>
 				<string>Simplified Chinese (Mac OS)</string>
 				<string>Simplified Chinese (Windows)</string>
@@ -137,10 +133,8 @@
 				<string>Thai (Mac OS)</string>
 				<string>Thai (Windows)</string>
 				<string>Hebrew (ISO 8859-8)</string>
-				<string>Hebrew (Mac OS)</string>
 				<string>Hebrew (Windows)</string>
 				<string>Arabic (ISO 8859-6)</string>
-				<string>Arabic (Mac OS)</string>
 				<string>Arabic (Windows)</string>
 			</array>
 			<key>DefaultValue</key>
