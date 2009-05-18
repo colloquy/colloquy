@@ -19,9 +19,11 @@
 #define NewChatActionSheetTag 1
 #define NewConnectionActionSheetTag 2
 #define SendFileActionSheetTag 3
+#define FileTypeActionSheetTag 4
 
 @interface CQChatController (CQChatControllerPrivate)
 - (void) _showNextChatControllerAnimated:(BOOL) animated;
+- (void) _sendImage;
 @end
 
 #pragma mark -
@@ -433,11 +435,56 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		} else if (sendContact) {
 			NSAssert(NO, @"Contact sending not implemented.");
 		}
-    }
+    } else if (actionSheet.tag == FileTypeActionSheetTag) {
+		if (buttonIndex == 0) {
+			_png = YES;
+		}
+		else {
+			_png = NO;
+		}
+		[self _sendImage];
+	}
 }
 
 - (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo {
-    NSData *data = UIImagePNGRepresentation(image);
+	_transferImage = [image retain];
+	
+	NSString *behavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQFileTransferBehavior"];
+	if ([behavior isEqualToString:@"Ask"]) {
+		UIActionSheet *sheet = [[UIActionSheet alloc] init];
+		sheet.delegate = self;
+		sheet.tag = FileTypeActionSheetTag;
+		[sheet addButtonWithTitle:NSLocalizedString(@"PNG", @"PNG button title")];
+		[sheet addButtonWithTitle:NSLocalizedString(@"JPG", @"JPG button title")];
+		[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+		[sheet release];
+	}
+	else {
+		if ([behavior isEqualToString:@"PNG"]) {
+			_png = YES;
+		}
+		else {
+			_png = NO;
+		}
+		[self _sendImage];
+	}
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void) imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [self dismissModalViewControllerAnimated:YES];
+    [_fileUser release];
+}
+
+- (void)_sendImage {
+	NSData *data;
+	if (_png) {
+		data = UIImagePNGRepresentation(_transferImage);
+	}
+	else {
+		data = UIImageJPEGRepresentation(_transferImage, 0.83333333f);
+	}
+	[_transferImage release];
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 	[formatter setDateFormat:@"yyyy-MM-dd-A"];
     NSString *name = [[formatter stringFromDate:[NSDate date]] stringByAppendingString:@".png"];
@@ -447,13 +494,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
     [data writeToFile:path atomically:NO];
     MVUploadFileTransfer *transfer = [_fileUser sendFile:path passively:YES];
 	[self chatViewControllerForFileTransfer:transfer ifExists:NO];
-    [self dismissModalViewControllerAnimated:YES];
 	[_fileUser release];
-}
-
-- (void) imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [self dismissModalViewControllerAnimated:YES];
-    [_fileUser release];
+	
 }
 
 #pragma mark -

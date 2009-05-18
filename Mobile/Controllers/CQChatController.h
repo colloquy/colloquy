@@ -18,7 +18,9 @@
 	MVChatConnection *_nextRoomConnection;
 	NSInteger _totalImportantUnreadCount;
 	BOOL _active;
-    MVChatUser *_fileUser;
+  MVChatUser *_fileUser;
+  UIImage *_transferImage;
+  BOOL _png;
 }
 
 + (CQChatController *) defaultController;
