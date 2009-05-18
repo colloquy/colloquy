@@ -764,6 +764,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"${GCC_PREPROCESSOR_DEFINITIONS}",
 					RKL_FAST_MUTABLE_CHECK,
+					"RKL_CACHE_SIZE=47",
 				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
@@ -798,6 +799,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"${GCC_PREPROCESSOR_DEFINITIONS}",
 					RKL_FAST_MUTABLE_CHECK,
+					"RKL_CACHE_SIZE=47",
 				);
 				INFOPLIST_FILE = "Resources/Info-ChatCore.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";

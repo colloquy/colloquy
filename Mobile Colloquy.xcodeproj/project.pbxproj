@@ -1010,6 +1010,7 @@
 					"ENABLE_XMPP=0",
 					RKL_FAST_MUTABLE_CHECK,
 					NS_BLOCK_ASSERTIONS,
+					"RKL_CACHE_SIZE=47",
 				);
 				HEADER_SEARCH_PATHS = (
 					Mobile,
@@ -1039,6 +1040,7 @@
 					"ENABLE_ICB=0",
 					"ENABLE_XMPP=0",
 					RKL_FAST_MUTABLE_CHECK,
+					"RKL_CACHE_SIZE=47",
 				);
 				HEADER_SEARCH_PATHS = (
 					Mobile,
@@ -1068,6 +1070,7 @@
 					"ENABLE_XMPP=0",
 					RKL_FAST_MUTABLE_CHECK,
 					NS_BLOCK_ASSERTIONS,
+					"RKL_CACHE_SIZE=47",
 				);
 				HEADER_SEARCH_PATHS = (
 					Mobile,
