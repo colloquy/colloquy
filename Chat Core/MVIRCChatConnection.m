@@ -232,6 +232,7 @@ static const NSStringEncoding supportedEncodings[] = {
 			[self sendRawMessageImmediatelyWithComponents:@"QUIT :", msg, nil];
 		} else [self sendRawMessage:@"QUIT" immediately:YES];
 	} else if( _status == MVChatConnectionConnectingStatus ) {
+		_userDisconnected = YES;
 		if( _connectionThread )
 			[[self _chatConnection] performSelector:@selector( disconnect ) inThread:_connectionThread waitUntilDone:NO];
 	}
@@ -614,12 +615,13 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_chatConnection enablePreBuffering];
 
 	_pendingIdentificationAttempt = NO;
+	_userDisconnected = NO;
 
 	NSString *server = (_bouncer != MVChatConnectionNoBouncer && [_bouncerServer length] ? _bouncerServer : _server);
 	unsigned short serverPort = (_bouncer != MVChatConnectionNoBouncer ? (_bouncerServerPort ? _bouncerServerPort : 6667) : _serverPort);
 
 	if( ! [_chatConnection connectToHost:server onPort:serverPort error:NULL] )
-		[self _didNotConnect];
+		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
 	else [self _resetSendQueueInterval];
 }
 
@@ -778,7 +780,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	} else {
 		if( _lastError )
 			_status = MVChatConnectionServerDisconnectedStatus;
-
 		[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
 	}
 

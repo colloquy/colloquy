@@ -1108,9 +1108,11 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (void) _didNotConnect {
 	_status = MVChatConnectionDisconnectedStatus;
 
-	if (_reconnectAttemptCount <= 30)
+	if (_reconnectAttemptCount <= 30 && !_userDisconnected)
 		[self scheduleReconnectAttempt];
 	else [self cancelPendingReconnectAttempts];
+
+	_userDisconnected = NO;
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidNotConnectNotification object:self];
 }
