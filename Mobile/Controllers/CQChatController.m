@@ -189,7 +189,9 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 		if (!sender.localUser) {
 			[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
-			if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnPrivateMessage"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+
+			if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnPrivateMessage"])
+				AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 
 			if (![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"] isEqualToString:@"None"]) {
 				static CQSoundController *privateMessageSound; 

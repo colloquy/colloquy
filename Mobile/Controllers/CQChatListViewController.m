@@ -169,15 +169,20 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	MVChatUser *user = [info objectForKey:@"user"];
 	id message = [info objectForKey:@"message"];
 
-	NSString *messageString = nil;
+	NSMutableString *messageString = nil;
 	NSString *transformedMessageString = nil;
 	if ([message isKindOfClass:[NSData class]]) {
-		messageString = [[NSString alloc] initWithChatData:message encoding:encoding];
-		if (!messageString) messageString = [[NSString alloc] initWithChatData:message encoding:NSASCIIStringEncoding];
+		messageString = [[NSMutableString alloc] initWithChatData:message encoding:encoding];
+		if (!messageString && encoding != NSISOLatin1StringEncoding)
+			messageString = [[NSMutableString alloc] initWithChatData:message encoding:NSISOLatin1StringEncoding];
+		if (!messageString)
+			messageString = [[NSMutableString alloc] initWithChatData:message encoding:NSASCIIStringEncoding];
 
-		transformedMessageString = [messageString stringByStrippingXMLTags];
-		transformedMessageString = [transformedMessageString stringByDecodingXMLSpecialCharacterEntities];
-		transformedMessageString = [transformedMessageString stringBySubstitutingEmoticonsForEmoji];
+		[messageString stripXMLTags];
+		[messageString decodeXMLSpecialCharacterEntities];
+		[messageString substituteEmoticonsForEmoji];
+
+		transformedMessageString = messageString;
 	} else if ([message isKindOfClass:[NSString class]]) {
 		transformedMessageString = [message stringByStrippingXMLTags];
 		transformedMessageString = [transformedMessageString stringByDecodingXMLSpecialCharacterEntities];

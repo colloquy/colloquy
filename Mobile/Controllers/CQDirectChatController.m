@@ -1124,30 +1124,24 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	}
 }
 
-static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function)(NSMutableString *, NSRangePointer)) {
-	if (!html || !function)
-		return html;
-
-	NSMutableString *result = [html mutableCopy];
-
-	NSRange range = NSMakeRange(0, result.length);
-	applyFunctionToTextInMutableHTMLString(result, &range, function);
-
-	return [result autorelease];
-}
-
 #pragma mark -
 
 - (NSMutableString *) _processMessageData:(NSData *) messageData {
-	if (!messageData) return nil;
+	if (!messageData)
+		return nil;
 
 	NSMutableString *messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:self.encoding];
-	if (!messageString) messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:NSASCIIStringEncoding];
+	if (!messageString && self.encoding != NSISOLatin1StringEncoding)
+		messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:NSISOLatin1StringEncoding];
+	if (!messageString)
+		messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:NSASCIIStringEncoding];
+
 	return [messageString autorelease];
 }
 
 - (void) _processMessageString:(NSMutableString *) messageString {
-	if (!messageString.length) return;
+	if (!messageString.length)
+		return;
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]) {
 		[messageString stripXMLTags];
@@ -1209,21 +1203,13 @@ static NSString *applyFunctionToTextInHTMLString(NSString *html, void (*function
 		}
 	}
 
-	NSString *transformedMessageString = nil;
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]) {
-		[messageString stripXMLTags];
-
-		NSRange range = NSMakeRange(0, messageString.length);
-		commonChatReplacment(messageString, &range);
-
-		transformedMessageString = messageString;
-	} else transformedMessageString = applyFunctionToTextInHTMLString(messageString, commonChatReplacment);
+	[self _processMessageString:messageString];
 
 	id sameKeys[] = {@"user", @"action", @"notice", @"identifier", nil};
 	NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:message];
 
 	[result setObject:@"message" forKey:@"type"];
-	[result setObject:transformedMessageString forKey:@"message"];
+	[result setObject:messageString forKey:@"message"];
 
 	if (*highlighted)
 		[result setObject:[NSNumber numberWithBool:YES] forKey:@"highlighted"];
