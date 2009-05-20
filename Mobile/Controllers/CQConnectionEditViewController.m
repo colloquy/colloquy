@@ -44,6 +44,7 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 - (void) dealloc {
 	[_connection release];
+	[_servers release];
 
 	[super dealloc];
 }
@@ -94,6 +95,48 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 
 	[self.tableView setContentOffset:CGPointZero animated:NO];
 	[self.tableView reloadData];
+}
+
+#pragma mark -
+
+- (void) showDefaultServerList {
+	if (!_servers)
+		_servers = [[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Servers" ofType:@"plist"]] retain];
+
+	CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
+	NSMutableArray *servers = [[NSMutableArray alloc] init];
+	NSUInteger selectedServerIndex = NSNotFound;
+
+	NSUInteger index = 0;
+	for (NSDictionary *serverInfo in _servers) {
+		NSString *name = [serverInfo objectForKey:@"Name"];
+		NSString *address = [serverInfo objectForKey:@"Address"];
+		NSAssert(name.length, @"Server name required.");
+		NSAssert(address.length, @"Server address required.");
+
+		[servers addObject:name];
+
+		if ([address isEqualToString:_connection.server])
+			selectedServerIndex = index;
+
+		++index;
+	}
+
+	listViewController.title = NSLocalizedString(@"Servers", @"Servers view title");
+	listViewController.itemImage = [UIImage imageNamed:@"server.png"];
+	listViewController.allowEditing = NO;
+	listViewController.items = servers;
+	listViewController.selectedItemIndex = selectedServerIndex;
+
+	listViewController.target = self;
+	listViewController.action = @selector(defaultServerPicked:);
+
+	[self.view endEditing:YES];
+
+	[self.navigationController pushViewController:listViewController animated:YES];
+
+	[listViewController release];
+	[servers release];
 }
 
 #pragma mark -
@@ -206,6 +249,8 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(serverChanged:);
+			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+			cell.accessoryAction = @selector(showDefaultServerList);
 		} else if (indexPath.row == 0) {
 			cell.label = NSLocalizedString(@"Description", @"Description connection setting label");
 			cell.text = (![_connection.displayName isEqualToString:_connection.server] ? _connection.displayName : @"");
@@ -293,7 +338,39 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	return nil;
 }
 
+- (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
+	if (indexPath.section == ServerTableSection && indexPath.row == 1)
+		[self showDefaultServerList];
+}
+
 #pragma mark -
+
+- (void) defaultServerPicked:(CQPreferencesListViewController *) sender {
+	if (sender.selectedItemIndex == NSNotFound)
+		return;
+
+	BOOL wasPlaceholder = isPlaceholderValue(_connection.server);
+
+	NSDictionary *serverInfo = [_servers objectAtIndex:sender.selectedItemIndex];
+	_connection.displayName = [serverInfo objectForKey:@"Name"];
+	_connection.server = [serverInfo objectForKey:@"Address"];
+
+	if (!_newConnection)
+		self.title = _connection.displayName;
+
+	if (wasPlaceholder) {
+		[[CQKeychain standardKeychain] setPassword:_connection.password forServer:_connection.server account:@"<<server password>>"];
+		[[CQKeychain standardKeychain] setPassword:_connection.nicknamePassword forServer:_connection.server account:currentPreferredNickname(_connection)];
+	} else {
+		_connection.password = [[CQKeychain standardKeychain] passwordForServer:_connection.server account:@"<<server password>>"];
+		_connection.nicknamePassword = [[CQKeychain standardKeychain] passwordForServer:_connection.server account:currentPreferredNickname(_connection)];
+	}
+
+	if (self.navigationItem.rightBarButtonItem.tag == UIBarButtonSystemItemSave)
+		self.navigationItem.rightBarButtonItem.enabled = YES;
+
+	[self.tableView reloadData];
+}
 
 - (void) serverChanged:(CQPreferencesTextCell *) sender {
 	BOOL wasPlaceholder = isPlaceholderValue(_connection.server);
