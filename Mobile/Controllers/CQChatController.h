@@ -1,4 +1,4 @@
-#import <ChatCore/MVChatRoom.h>
+#import <ChatCore/MVIRCChatRoom.h>
 
 @class CQChatRoomController;
 @class CQChatListViewController;
@@ -69,6 +69,6 @@
 @property (nonatomic, readonly) NSUInteger importantUnreadCount;
 @end
 
-@interface MVChatRoom (CQChatControllerAdditions)
+@interface MVIRCChatRoom (CQChatControllerAdditions)
 @property (nonatomic, readonly) NSString *displayName;
 @end

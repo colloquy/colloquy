@@ -11,7 +11,6 @@
 #import "UIImageAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
-#import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVDirectChatConnection.h>
 #import <ChatCore/MVFileTransfer.h>
@@ -857,7 +856,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 #pragma mark -
 
-@implementation MVChatRoom (CQChatControllerAdditions)
+@implementation MVIRCChatRoom (CQChatControllerAdditions)
 - (NSString *) displayName {
 	if (self.connection.type == MVChatConnectionIRCType && ![[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowFullRoomNames"])
 		return [self.name substringFromIndex:1];
