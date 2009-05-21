@@ -148,6 +148,7 @@ static NSURL *lastURL;
 
 			if ([response isEqual:@"201"]) { //Success, posted to instapaper without issues
 				[alert release];
+				[response release];
 				return;
 			} else if ([response isEqual:@"403"]) {
 				alert.title = NSLocalizedString(@"Incorrect Account Information", "Incorrect Account Information alert title");
