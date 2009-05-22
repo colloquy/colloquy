@@ -344,21 +344,21 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1C0A18110FC676A90022823E /* AGRegex.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 1C6A0C360865E09C009EE6D2 /* AGRegex.framework */;
+			remoteGlobalIDString = 1C6A0C360865E09C009EE6D2;
 			remoteInfo = "AGRegex (Framework)";
 		};
 		1C0A181B0FC676A90022823E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1C0A18110FC676A90022823E /* AGRegex.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 1C6A0C4C0865E09C009EE6D2 /* RegexTest.app */;
+			remoteGlobalIDString = 1C6A0C4C0865E09C009EE6D2;
 			remoteInfo = "RegexTest (Application)";
 		};
 		1C0A18210FC676CB0022823E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1C0A18110FC676A90022823E /* AGRegex.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 1C6A0C250865E09C009EE6D2 /* AGRegex (Framework) */;
+			remoteGlobalIDString = 1C6A0C250865E09C009EE6D2;
 			remoteInfo = "AGRegex (Framework)";
 		};
 		1C0A19A608B0418600324E25 /* PBXContainerItemProxy */ = {
@@ -3097,6 +3097,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Colloquy.pch;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
 					"$(HEADER_SEARCH_PATHS)",
@@ -3155,6 +3156,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PREFIX_HEADER = Colloquy.pch;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
 					"$(HEADER_SEARCH_PATHS)",
