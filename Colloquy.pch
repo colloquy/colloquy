@@ -1,21 +1,15 @@
-#ifndef MAC_OS_X_VERSION_10_5
-#define MAC_OS_X_VERSION_10_5 1050
-#endif
+#import "Basic.pch"
 
 #ifndef NSAppKitVersionNumber10_4
 #define NSAppKitVersionNumber10_4 824
 #endif
 
-#import <AvailabilityMacros.h>
-
 #ifdef __OBJC__
 
-#import <Cocoa/Cocoa.h>
 #import <WebKit/WebKit.h>
 #import <AddressBook/AddressBook.h>
 #import <AGRegex/AGRegex.h>
 #import <ChatCore/ChatCore.h>
-#import <Foundation/NSDebug.h>
 
 #endif
 
