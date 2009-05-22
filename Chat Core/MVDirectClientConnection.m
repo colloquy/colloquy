@@ -38,7 +38,7 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 	if( upnp ) upnpStatus = tr_upnpStatus( upnp );
 	if( natpmp ) natpmpStatus = tr_natpmpStatus( natpmp );
 
-	for( unsigned i = 0; statuses[i] >= 0; i++ )
+	for( NSUInteger i = 0; statuses[i] >= 0; i++ )
 		if( statuses[i] == upnpStatus || statuses[i] == natpmpStatus )
 			return statuses[i];
 
@@ -264,7 +264,7 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 	_acceptConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
 
 	NSRange ports = [portsObject rangeValue];
-	unsigned int port = ports.location;
+	NSUInteger port = ports.location;
 	BOOL success = NO;
 
 	while( ! success ) {

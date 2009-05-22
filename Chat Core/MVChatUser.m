@@ -216,7 +216,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	return YES;
 }
 
-- (unsigned) hash {
+- (NSUInteger) hash {
 	if( _type == MVChatWildcardUserType && ! _hash )
 		_hash = ( _type ^ [[self nickname] hash] ^ [[self username] hash] ^ [[self address] hash] ^ [[self serverAddress] hash] ^ [[self fingerprint] hash] );
 	if( ! _hash ) _hash = ( _type ^ [[self connection] hash] ^ [[self uniqueIdentifier] hash] );
@@ -336,12 +336,12 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 #pragma mark -
 
-- (unsigned long) supportedModes {
+- (NSUInteger) supportedModes {
 // subclass this method, if needed
 	return 0;
 }
 
-- (unsigned long) modes {
+- (NSUInteger) modes {
 	return _modes;
 }
 

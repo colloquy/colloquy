@@ -1,4 +1,4 @@
-BOOL isValidUTF8( const char *s, unsigned len );
+BOOL isValidUTF8( const char *string, NSUInteger length );
 
 #define is7Bit(ch) (((ch) & 0x80) == 0)
 #define isUTF8Tupel(ch) (((ch) & 0xE0) == 0xC0)
@@ -47,8 +47,8 @@ BOOL isValidUTF8( const char *s, unsigned len );
 
 - (NSArray *) componentsSeparatedByXMLTags;
 
-- (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(unsigned long) limit;
-- (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(unsigned long) limit remainingString:(NSString **) remainder;
+- (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(NSUInteger) limit;
+- (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(NSUInteger) limit remainingString:(NSString **) remainder;
 
 - (BOOL) containsEmojiCharacters;
 - (BOOL) containsEmojiCharactersInRange:(NSRange) range;

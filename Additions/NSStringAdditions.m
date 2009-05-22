@@ -283,10 +283,10 @@ static const struct EmojiEmoticonPair emoticonToEmojiList[] = {
 	{ 0, nil }
 };
 
-BOOL isValidUTF8( const char *s, unsigned len ) {
+BOOL isValidUTF8( const char *s, NSUInteger len ) {
 	BOOL only7bit = YES;
 
-	for( unsigned i = 0; i < len; ++i ) {
+	for( NSUInteger i = 0; i < len; ++i ) {
 		const unsigned char ch = s[i];
 
 		if( is7Bit( ch ) )
@@ -343,7 +343,7 @@ BOOL isValidUTF8( const char *s, unsigned len ) {
 	return YES;
 }
 
-static const int mIRCColors[][3] = {
+static const unsigned char mIRCColors[][3] = {
 	{ 0xff, 0xff, 0xff },  /* 00) white */
 	{ 0x00, 0x00, 0x00 },  /* 01) black */
 	{ 0x00, 0x00, 0x7b },  /* 02) blue */
@@ -362,7 +362,7 @@ static const int mIRCColors[][3] = {
 	{ 0xd6, 0xd6, 0xd6 }   /* 15) light gray */
 };
 
-static const int CTCPColors[][3] = {
+static const unsigned char CTCPColors[][3] = {
 	{ 0x00, 0x00, 0x00 },  /* 0) black */
 	{ 0x00, 0x00, 0x7f },  /* 1) blue */
 	{ 0x00, 0x7f, 0x00 },  /* 2) green */
@@ -381,7 +381,7 @@ static const int CTCPColors[][3] = {
 	{ 0xff, 0xff, 0xff }   /* F) white */
 };
 
-static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
+static BOOL scanOneOrTwoDigits( NSScanner *scanner, NSUInteger *number ) {
 	NSCharacterSet *characterSet = [NSCharacterSet decimalDigitCharacterSet];
 	NSString *chars = nil;
 
@@ -405,9 +405,9 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	struct timeval tv;
 	gettimeofday( &tv, NULL );
 
-	unsigned int m = 36; // base (denominator)
-	unsigned int q = [[NSProcessInfo processInfo] processIdentifier] ^ tv.tv_usec; // input (quotient)
-	unsigned int r = 0; // remainder
+	NSUInteger m = 36; // base (denominator)
+	NSUInteger q = [[NSProcessInfo processInfo] processIdentifier] ^ tv.tv_usec; // input (quotient)
+	NSUInteger r = 0; // remainder
 
 	NSMutableString *uniqueId = [[NSMutableString allocWithZone:nil] initWithCapacity:10];
 	[uniqueId appendFormat:@"%c", 'A' + ( random() % 26 )]; // always have a random letter first (more ambiguity)
@@ -566,8 +566,8 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	NSStringEncoding currentEncoding = encoding;
 
 	const char *bytes = [data bytes];
-	unsigned length = [data length];
-	unsigned i = 0, j = 0, start = 0, end = 0;
+	NSUInteger length = [data length];
+	NSUInteger i = 0, j = 0, start = 0, end = 0;
 	for( i = 0, start = 0; i < length; i++ ) {
 		if( bytes[i] == '\006' ) {
 			end = i;
@@ -585,7 +585,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 				} else if( [encodingStr isEqualToString:@"U"] ) {
 					newEncoding = NSUTF8StringEncoding;
 				} else {
-					int enc = [encodingStr intValue];
+					NSUInteger enc = [encodingStr intValue];
 					switch( enc ) {
 						case 1:
 							newEncoding = NSISOLatin1StringEncoding;
@@ -687,7 +687,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	NSScanner *scanner = [NSScanner scannerWithString:message];
 	[scanner setCharactersToBeSkipped:nil]; // don't skip leading whitespace!
 
-	unsigned boldStack = 0, italicStack = 0, underlineStack = 0, strikeStack = 0, colorStack = 0;
+	NSUInteger boldStack = 0, italicStack = 0, underlineStack = 0, strikeStack = 0, colorStack = 0;
 
 	while( ! [scanner isAtEnd] ) {
 		NSString *cStr = nil;
@@ -703,7 +703,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 					[ret appendString:@"</u>"];
 				if( strikeStack )
 					[ret appendString:@"</strike>"];
-				for( unsigned i = 0; i < colorStack; ++i )
+				for( NSUInteger i = 0; i < colorStack; ++i )
 					[ret appendString:@"</span>"];
 
 				boldStack = italicStack = underlineStack = strikeStack = colorStack = 0;
@@ -728,14 +728,14 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 				break;
 			case '\003': // color
 			{
-				unsigned int fcolor = 0;
+				NSUInteger fcolor = 0;
 				if( scanOneOrTwoDigits( scanner, &fcolor ) ) {
 					fcolor %= 16;
 
 					NSString *foregroundColor = colorForHTML(mIRCColors[fcolor][0], mIRCColors[fcolor][1], mIRCColors[fcolor][2]);
 					[ret appendFormat:@"<span style=\"color: %@;", foregroundColor];
 
-					unsigned int bcolor = 0;
+					NSUInteger bcolor = 0;
 					if( [scanner scanString:@"," intoString:NULL] && scanOneOrTwoDigits( scanner, &bcolor ) && bcolor != 99 ) {
 						bcolor %= 16;
 
@@ -747,7 +747,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 					++colorStack;
 				} else { // no color, reset both colors
-					for( unsigned i = 0; i < colorStack; ++i )
+					for( NSUInteger i = 0; i < colorStack; ++i )
 						[ret appendString:@"</span>"];
 					colorStack = 0;
 				}
@@ -819,7 +819,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 						break;
 					case 'C': // color
 						if( [message characterAtIndex:[scanner scanLocation]] == '\006' ) { // reset colors
-							for( unsigned i = 0; i < colorStack; ++i )
+							for( NSUInteger i = 0; i < colorStack; ++i )
 								[ret appendString:@"</span>"];
 							colorStack = 0;
 							break;
@@ -834,7 +834,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 								[ret appendFormat:@"<span style=\"color: %@;", colorStr];
 							} else foundForeground = NO;
 						} else if( [scanner scanCharactersFromSet:hexSet maxLength:1 intoString:&colorStr] ) { // indexed color
-							unsigned int index = [colorStr characterAtIndex:0];
+							NSUInteger index = [colorStr characterAtIndex:0];
 							if( index >= 'A' ) index -= ( 'A' - '9' - 1 );
 							index -= '0';
 
@@ -856,7 +856,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 								if( [scanner scanCharactersFromSet:hexSet maxLength:6 intoString:&colorStr] )
 									[ret appendFormat:@" background-color: %@;", colorStr];
 							} else if( [scanner scanCharactersFromSet:hexSet maxLength:1 intoString:&colorStr] ) { // indexed color
-								unsigned int index = [colorStr characterAtIndex:0];
+								NSUInteger index = [colorStr characterAtIndex:0];
 								if( index >= 'A' ) index -= ( 'A' - '9' - 1 );
 								index -= '0';
 
@@ -871,7 +871,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 							++colorStack;
 						} else {
 							// No colors - treat it like ..
-							for( unsigned i = 0; i < colorStack; ++i )
+							for( NSUInteger i = 0; i < colorStack; ++i )
 								[ret appendString:@"</span>"];
 							colorStack = 0;
 						}
@@ -892,7 +892,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 							[ret appendString:@"</u>"];
 						if( strikeStack )
 							[ret appendString:@"</strike>"];
-						for( unsigned i = 0; i < colorStack; ++i )
+						for( NSUInteger i = 0; i < colorStack; ++i )
 							[ret appendString:@"</span>"];
 
 						boldStack = italicStack = underlineStack = strikeStack = colorStack = 0;
@@ -939,7 +939,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 - (NSString *) stringByReversingString:(NSString *) normalString {
 	NSMutableString *reversedString = [[NSMutableString alloc] init];
 
-	for (int index = [normalString length] - 1; index >= 0; index--)
+	for (NSInteger index = [normalString length] - 1; index >= 0; index--)
 		[reversedString appendString:[normalString substringWithRange:NSMakeRange(index, 1)]];
 
 	return [reversedString autorelease];
@@ -1032,12 +1032,12 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 - (NSString *) stringWithDomainNameSegmentOfAddress {
 	NSString *ret = self;
-	unsigned int ip = 0;
+	unsigned ip = 0;
 	BOOL ipAddress = ( sscanf( [self UTF8String], "%u.%u.%u.%u", &ip, &ip, &ip, &ip ) == 4 );
 
 	if( ! ipAddress ) {
 		NSArray *parts = [self componentsSeparatedByString:@"."];
-		unsigned count = [parts count];
+		NSUInteger count = [parts count];
 		if( count > 2 )
 			ret = [NSString stringWithFormat:@"%@.%@", [parts objectAtIndex:(count - 2)], [parts objectAtIndex:(count - 1)]];
 	}
@@ -1068,11 +1068,11 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	return [result autorelease];
 }
 
-- (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(unsigned long) limit {
+- (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(NSUInteger) limit {
 	return [self componentsSeparatedByCharactersInSet:separator limit:limit remainingString:NULL];
 }
 
-- (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(unsigned long) limit remainingString:(NSString **) remainder {
+- (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(NSUInteger) limit remainingString:(NSString **) remainder {
 	if( ! limit && ! remainder && [self respondsToSelector:@selector(componentsSeparatedByCharactersInSet:)] )
 		return [self componentsSeparatedByCharactersInSet:separator];
 
@@ -1086,7 +1086,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 	NSMutableArray *result = [[NSMutableArray allocWithZone:nil] init];
 
-	unsigned long count = 0;
+	NSUInteger count = 0;
 	NSString *component = @"";
 	while( ! [scanner isAtEnd] ) {
 		[scanner scanUpToCharactersFromSet:separator intoString:&component];
@@ -1185,7 +1185,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 	NSScanner *scanner = [[NSScanner allocWithZone:nil] initWithString:self];
 
-	unsigned offset = 0;
+	NSUInteger offset = 0;
 	while( ! [scanner isAtEnd] ) {
 		[scanner scanUpToCharactersFromSet:set intoString:nil];
 		if( ! [scanner isAtEnd] ) {
@@ -1199,7 +1199,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 - (void) replaceCharactersInSet:(NSCharacterSet *) set withString:(NSString *) string {
 	NSRange range = NSMakeRange(0, [self length]);
-	unsigned stringLength = [string length];
+	NSUInteger stringLength = [string length];
 
 	NSRange replaceRange;
 	while( ( replaceRange = [self rangeOfCharacterFromSet:set options:NSLiteralSearch range:range] ).location != NSNotFound ) {

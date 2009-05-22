@@ -45,11 +45,11 @@
 
 #pragma mark -
 
-- (unsigned long) supportedModes {
+- (NSUInteger) supportedModes {
 	return ( MVChatRoomPrivateMode | MVChatRoomSecretMode | MVChatRoomInviteOnlyMode | MVChatRoomNormalUsersSilencedMode | MVChatRoomOperatorsOnlySetTopicMode | MVChatRoomPassphraseToJoinMode | MVChatRoomLimitNumberOfMembersMode );
 }
 
-- (unsigned long) supportedMemberUserModes {
+- (NSUInteger) supportedMemberUserModes {
 	return ( MVChatRoomMemberFounderMode | MVChatRoomMemberOperatorMode | MVChatRoomMemberQuietedMode );
 }
 
@@ -248,7 +248,7 @@
 
 #pragma mark -
 
-- (void) _silcSetChannelUserMode:(unsigned int) SilcMode forUser:(MVSILCChatUser *) user {
+- (void) _silcSetChannelUserMode:(SilcUInt32) SilcMode forUser:(MVSILCChatUser *) user {
 	SilcBuffer roomBuffer, userBuffer;
 	unsigned char modebuf[4];
 
@@ -275,7 +275,7 @@
 	silc_buffer_free( userBuffer );
 }
 
-- (void) _setChannelUserMode:(unsigned int) SilcMode forUser:(MVChatUser *) user {
+- (void) _setChannelUserMode:(SilcUInt32) SilcMode forUser:(MVChatUser *) user {
 	SilcChannelUser chu;
 	SilcUInt32 mode = 0;
 	MVSILCChatUser *silcUser = (MVSILCChatUser *)user;
@@ -289,7 +289,7 @@
 	[self _silcSetChannelUserMode:mode forUser:silcUser];
 }
 
-- (void) _removeChannelUserMode:(unsigned int)SilcMode forUser:(MVChatUser *) user {
+- (void) _removeChannelUserMode:(SilcUInt32)SilcMode forUser:(MVChatUser *) user {
 	SilcChannelUser chu;
 	SilcUInt32 mode = 0;
 	MVSILCChatUser *silcUser = (MVSILCChatUser *)user;

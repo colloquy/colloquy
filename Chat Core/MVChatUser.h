@@ -74,8 +74,8 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 	MVChatUserStatus _status;
 	NSTimeInterval _idleTime;
 	NSTimeInterval _lag;
-	unsigned long _modes;
-	unsigned int _hash;
+	NSUInteger _modes;
+	NSUInteger _hash;
 	BOOL _identified;
 	BOOL _serverOperator;
 	BOOL _onlineNotificationSent;
@@ -116,8 +116,8 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 @property(readonly) NSData *publicKey;
 @property(readonly) NSString *fingerprint;
 
-@property(readonly) unsigned long supportedModes;
-@property(readonly) unsigned long modes;
+@property(readonly) NSUInteger supportedModes;
+@property(readonly) NSUInteger modes;
 
 @property(readonly) NSSet *supportedAttributes;
 @property(readonly) NSDictionary *attributes;
@@ -148,8 +148,8 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 - (NSData *) publicKey;
 - (NSString *) fingerprint;
 
-- (unsigned long) supportedModes;
-- (unsigned long) modes;
+- (NSUInteger) supportedModes;
+- (NSUInteger) modes;
 
 - (NSSet *) supportedAttributes;
 - (NSDictionary *) attributes;

@@ -30,11 +30,11 @@ typedef enum {
 	BOOL _passive;
 	BOOL _localRequest;
 	unsigned short _port;
-	unsigned int _passiveId;
+	NSUInteger _passiveId;
 	MVChatUser *_user;
 	MVDirectChatConnectionStatus _status;
 	NSError *_lastError;
-	unsigned int _hash;
+	NSUInteger _hash;
 	BOOL _releasing;
 }
 + (id) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive;

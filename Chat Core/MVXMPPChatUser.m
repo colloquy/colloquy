@@ -52,7 +52,7 @@
 
 #pragma mark -
 
-- (unsigned long) supportedModes {
+- (NSUInteger) supportedModes {
 	return MVChatUserNoModes;
 }
 

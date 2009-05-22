@@ -98,7 +98,7 @@
 
 -(BOOL) removeItem: (id) item
 {
-    unsigned index = [_items indexOfObject: item];
+    unsigned long index = [_items indexOfObject: item];
     if (index != NSNotFound)
     {
         [_items removeObjectAtIndex: index];

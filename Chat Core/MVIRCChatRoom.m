@@ -19,12 +19,12 @@
 
 #pragma mark -
 
-- (unsigned long) supportedModes {
+- (NSUInteger) supportedModes {
 	return ( MVChatRoomPrivateMode | MVChatRoomSecretMode | MVChatRoomInviteOnlyMode | MVChatRoomNormalUsersSilencedMode | MVChatRoomOperatorsOnlySetTopicMode | MVChatRoomNoOutsideMessagesMode | MVChatRoomPassphraseToJoinMode | MVChatRoomLimitNumberOfMembersMode );
 }
 
-- (unsigned long) supportedMemberUserModes {
-	unsigned long supported = ( MVChatRoomMemberVoicedMode | MVChatRoomMemberOperatorMode );
+- (NSUInteger) supportedMemberUserModes {
+	NSUInteger supported = ( MVChatRoomMemberVoicedMode | MVChatRoomMemberOperatorMode );
 	supported |= MVChatRoomMemberQuietedMode; // optional later
 	supported |= MVChatRoomMemberHalfOperatorMode; // optional later
 	supported |= MVChatRoomMemberAdministratorMode; // optional later

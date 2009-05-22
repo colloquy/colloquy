@@ -20,8 +20,8 @@
 	} else if( ! strcmp( type, @encode( int ) ) ) {
 		int *val = (int *) bytes;
 		return [NSNumber numberWithInt:*val];
-	} else if( ! strcmp( type, @encode( unsigned int ) ) ) {
-		unsigned int *val = (unsigned int *) bytes;
+	} else if( ! strcmp( type, @encode( unsigned ) ) ) {
+		unsigned *val = (unsigned *) bytes;
 		return [NSNumber numberWithUnsignedInt:*val];
 	} else if( ! strcmp( type, @encode( long ) ) ) {
 		long *val = (long *) bytes;

@@ -71,8 +71,8 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 	NSMutableDictionary *_modeAttributes;
 	NSMutableDictionary *_memberModes;
 	NSStringEncoding _encoding;
-	unsigned long _modes;
-	unsigned int _hash;
+	NSUInteger _modes;
+	NSUInteger _hash;
 	BOOL _releasing;
 }
 
@@ -97,9 +97,9 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 @property(readonly) NSSet *supportedAttributes;
 @property(readonly) NSDictionary *attributes;
 
-@property(readonly) unsigned long supportedModes;
-@property(readonly) unsigned long supportedMemberUserModes;
-@property(readonly) unsigned long modes;
+@property(readonly) NSUInteger supportedModes;
+@property(readonly) NSUInteger supportedMemberUserModes;
+@property(readonly) NSUInteger modes;
 
 @property(readonly) MVChatUser *localMemberUser;
 @property(readonly) NSSet *memberUsers;
@@ -127,9 +127,9 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 - (NSSet *) supportedAttributes;
 - (NSDictionary *) attributes;
 
-- (unsigned long) supportedModes;
-- (unsigned long) supportedMemberUserModes;
-- (unsigned long) modes;
+- (NSUInteger) supportedModes;
+- (NSUInteger) supportedMemberUserModes;
+- (NSUInteger) modes;
 
 - (MVChatUser *) localMemberUser;
 - (NSSet *) memberUsers;
@@ -170,12 +170,12 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 
 - (id) attributeForMode:(MVChatRoomMode) mode;
 
-- (void) setModes:(unsigned long) modes;
+- (void) setModes:(NSUInteger) modes;
 - (void) setMode:(MVChatRoomMode) mode;
 - (void) setMode:(MVChatRoomMode) mode withAttribute:(id) attribute;
 - (void) removeMode:(MVChatRoomMode) mode;
 
-- (NSSet *) memberUsersWithModes:(unsigned long) modes;
+- (NSSet *) memberUsersWithModes:(NSUInteger) modes;
 - (NSSet *) memberUsersWithNickname:(NSString *) nickname;
 - (NSSet *) memberUsersWithFingerprint:(NSString *) fingerprint;
 - (MVChatUser *) memberUserWithUniqueIdentifier:(id) identifier;
@@ -186,9 +186,9 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 - (void) addBanForUser:(MVChatUser *) user;
 - (void) removeBanForUser:(MVChatUser *) user;
 
-- (unsigned long) modesForMemberUser:(MVChatUser *) user;
+- (NSUInteger) modesForMemberUser:(MVChatUser *) user;
 
-- (void) setModes:(unsigned long) modes forMemberUser:(MVChatUser *) user;
+- (void) setModes:(NSUInteger) modes forMemberUser:(MVChatUser *) user;
 - (void) setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user;
 - (void) removeMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user;
 @end

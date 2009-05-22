@@ -8,7 +8,7 @@
 - (void) _removeMemberUser:(MVChatUser *) user;
 - (void) _addBanForUser:(MVChatUser *) user;
 - (void) _removeBanForUser:(MVChatUser *) user;
-- (void) _setModes:(unsigned long) modes forMemberUser:(MVChatUser *) user;
+- (void) _setModes:(NSUInteger) modes forMemberUser:(MVChatUser *) user;
 - (void) _setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user;
 - (void) _removeMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user;
 - (void) _setMode:(MVChatRoomMode) mode withAttribute:(id) attribute;

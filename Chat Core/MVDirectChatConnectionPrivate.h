@@ -11,7 +11,7 @@
 - (void) _setPort:(unsigned short) port;
 - (void) _setPassive:(BOOL) passive;
 - (void) _setLocalRequest:(BOOL) localRequest;
-- (void) _setPassiveIdentifier:(unsigned int) identifier;
-- (unsigned int) _passiveIdentifier;
+- (void) _setPassiveIdentifier:(NSUInteger) identifier;
+- (NSUInteger) _passiveIdentifier;
 - (void) _postError:(NSError *) error;
 @end

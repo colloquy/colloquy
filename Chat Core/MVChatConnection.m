@@ -193,7 +193,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (id) initWithURL:(NSURL *) serverURL {
 	NSParameterAssert( [MVChatConnection supportsURLScheme:[serverURL scheme]] );
 
-	int connectionType = 0;
+	NSUInteger connectionType = 0;
 
 #if ENABLE(ICB)
 	if( [[serverURL scheme] isEqualToString:@"icb"] )
@@ -212,7 +212,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		connectionType = MVChatConnectionXMPPType;
 #endif
 
-	if( ( self = [self initWithServer:[serverURL host] type:connectionType port:( [[serverURL port] unsignedIntValue] % 65536 ) user:[serverURL user]] ) ) {
+	if( ( self = [self initWithServer:[serverURL host] type:connectionType port:( [[serverURL port] unsignedLongValue] % 65536 ) user:[serverURL user]] ) ) {
 		[self setNicknamePassword:[serverURL password]];
 
 		if( [serverURL fragment] && [[serverURL fragment] length] > 0 ) {
@@ -293,7 +293,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	return 0;
 }
 
-- (unsigned) hash {
+- (NSUInteger) hash {
 	if( ! _hash ) _hash = ( [self type] ^ [[self server] hash] ^ [self serverPort] ^ [[self nickname] hash] );
 	return _hash;
 }
@@ -321,7 +321,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (BOOL) supportsStringEncoding:(NSStringEncoding) supportedEncoding {
 	const NSStringEncoding *encodings = [self supportedStringEncodings];
-	unsigned i = 0;
+	NSUInteger i = 0;
 
 	for( i = 0; encodings[i]; i++ )
 		if( encodings[i] == supportedEncoding ) return YES;
@@ -1008,7 +1008,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	return _status;
 }
 
-- (unsigned int) lag {
+- (NSUInteger) lag {
 // subclass this method, if needed
 	return 0;
 }
@@ -1240,8 +1240,8 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
-- (unsigned int) _watchRulesMatchingUser:(MVChatUser *) user {
-	unsigned int count = 0;
+- (NSUInteger) _watchRulesMatchingUser:(MVChatUser *) user {
+	NSUInteger count = 0;
 	@synchronized( _chatUserWatchRules ) {
 		NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
 		MVChatUserWatchRule *rule = nil;
@@ -1292,7 +1292,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #if ENABLE(SCRIPTING)
 @implementation MVChatConnection (MVChatConnectionScripting)
 - (NSNumber *) uniqueIdentifier {
-	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
+	return [NSNumber numberWithUnsignedLong:(intptr_t)self];
 }
 
 #pragma mark -
@@ -1357,11 +1357,11 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
-- (unsigned long) scriptTypedEncoding {
+- (NSUInteger) scriptTypedEncoding {
 	return [NSString scriptTypedEncodingFromStringEncoding:[self encoding]];
 }
 
-- (void) setScriptTypedEncoding:(unsigned long) newEncoding {
+- (void) setScriptTypedEncoding:(NSUInteger) newEncoding {
 	[self setEncoding:[NSString stringEncodingFromScriptTypedEncoding:newEncoding]];
 }
 
@@ -1371,7 +1371,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	return [_knownUsers allValues];
 }
 
-- (MVChatUser *) valueInKnownChatUsersArrayAtIndex:(unsigned) index {
+- (MVChatUser *) valueInKnownChatUsersArrayAtIndex:(NSUInteger) index {
 	return [[self knownChatUsersArray] objectAtIndex:index];
 }
 
@@ -1396,7 +1396,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	return [[self joinedChatRooms] allObjects];
 }
 
-- (MVChatRoom *) valueInJoinedChatRoomsArrayAtIndex:(unsigned) index {
+- (MVChatRoom *) valueInJoinedChatRoomsArrayAtIndex:(NSUInteger) index {
 	return [[self joinedChatRoomsArray] objectAtIndex:index];
 }
 
@@ -1536,7 +1536,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 			continue;
 
 		if( encoding ) {
-			realEncoding = [NSString stringEncodingFromScriptTypedEncoding:[encoding unsignedIntValue]];
+			realEncoding = [NSString stringEncodingFromScriptTypedEncoding:[encoding unsignedLongValue]];
 		} else if( [target isKindOfClass:[MVChatRoom class]] ) {
 			realEncoding = [(MVChatRoom *)target encoding];
 		} else {
@@ -1562,7 +1562,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 					cformat = nil;
 			}
 
-			NSDictionary *options = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:realEncoding], @"StringEncoding", cformat, @"FormatType", nil];
+			NSDictionary *options = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:realEncoding], @"StringEncoding", cformat, @"FormatType", nil];
 			NSData *msgData = [realMessage chatFormatWithOptions:options];
 			[options release];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)

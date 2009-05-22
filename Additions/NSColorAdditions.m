@@ -15,12 +15,12 @@
 	[scanner scanCharactersFromSet:hex intoString:&code];
 
 	if( [code length] == 6 ) { // decode colors like #ffee33
-		unsigned int color = 0;
+		unsigned color = 0;
 		scanner = [NSScanner scannerWithString:code];
 		if( ! [scanner scanHexInt:&color] ) return nil;
 		return [self colorWithCalibratedRed:( ( ( color >> 16 ) & 0xff ) / 255. ) green:( ( ( color >> 8 ) & 0xff ) / 255. ) blue:( ( color & 0xff ) / 255. ) alpha:1.];
 	} else if( [code length] == 3 ) {  // decode short-hand colors like #fe3
-		unsigned int color = 0;
+		unsigned color = 0;
 		scanner = [NSScanner scannerWithString:code];
 		if( ! [scanner scanHexInt:&color] ) return nil;
 		return [self colorWithCalibratedRed:( ( ( ( ( color >> 8 ) & 0xf ) << 4 ) | ( ( color >> 8 ) & 0xf ) ) / 255. ) green:( ( ( ( ( color >> 4 ) & 0xf ) << 4 ) | ( ( color >> 4 ) & 0xf ) ) / 255. ) blue:( ( ( ( color & 0xf ) << 4 ) | ( color & 0xf ) ) / 255. ) alpha:1.];
@@ -138,22 +138,22 @@
 }
 
 - (NSString *) HTMLAttributeValue {
-	float red = 0., green = 0., blue = 0.;
+	CGFloat red = 0., green = 0., blue = 0.;
 	NSColor *color = self;
 	if( ! [[self colorSpaceName] isEqualToString:NSDeviceRGBColorSpace] && ! [[self colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] )
 		color = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
 	[color getRed:&red green:&green blue:&blue alpha:NULL];
-	return [NSString stringWithFormat:@"#%02X%02X%02X", (int)(red * 255), (int)(green * 255), (int)(blue * 255)];
+	return [NSString stringWithFormat:@"#%02X%02X%02X", (red * 255), (green * 255), (blue * 255)];
 }
 
 - (NSString *) CSSAttributeValue {
-	float red = 0., green = 0., blue = 0., alpha = 0.;
+	CGFloat red = 0., green = 0., blue = 0., alpha = 0.;
 	NSColor *color = self;
 	if( ! [[self colorSpaceName] isEqualToString:NSDeviceRGBColorSpace] && ! [[self colorSpaceName] isEqualToString:NSCalibratedRGBColorSpace] )
 		color = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
 	[color getRed:&red green:&green blue:&blue alpha:&alpha];
-	if( alpha < 1. ) return [NSString stringWithFormat:@"rgba( %d, %d, %d, %.3f )", (int)(red * 255), (int)(green * 255), (int)(blue * 255), alpha];
-	return [NSString stringWithFormat:@"#%02X%02X%02X", (int)(red * 255), (int)(green * 255), (int)(blue * 255)];
+	if( alpha < 1. ) return [NSString stringWithFormat:@"rgba( %d, %d, %d, %.3f )", (red * 255), (green * 255), (blue * 255), alpha];
+	return [NSString stringWithFormat:@"#%02X%02X%02X", (red * 255), (green * 255), (blue * 255)];
 }
 
 - (NSAppleEventDescriptor *) scriptingAnyDescriptor {

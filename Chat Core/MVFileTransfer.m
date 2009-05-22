@@ -72,7 +72,7 @@ static BOOL autoPortMapping = YES;
 
 #pragma mark -
 
-- (unsigned) hash {
+- (NSUInteger) hash {
 	if( ! _hash ) _hash = ( [[self user] hash] ^ _port );
 	return _hash;
 }

@@ -68,7 +68,7 @@
 
 - (id) initFromRawData:(NSData *) raw {
 	if( ( self = [super init] ) ) {
-		size_t length = [raw length];
+		NSUInteger length = [raw length];
 		const char *bytes = (const char *)[raw bytes];
 
 		// Note that 'raw' does not include the length byte.
@@ -90,8 +90,8 @@
 		if( length > 0 ) {
 			const char *data = bytes + 1;
 
-			size_t last = 0;
-			for( size_t i = 0; i < length; i++ ) {
+			NSUInteger last = 0;
+			for( NSUInteger i = 0; i < length; i++ ) {
 				if( data[i] == '\x01' && last < i ) {
 					NSString *f = [NSString stringWithCString:&data[last]
 											length:i - last];
@@ -126,7 +126,7 @@
 		s = [s stringByAppendingString:@"no fields"];
 	else {
 		s = [s stringByAppendingString:@"fields: "];
-		for( unsigned int i = 0; i < [_fields count]; i++ ) {
+		for( NSUInteger i = 0; i < [_fields count]; i++ ) {
 			const NSString *f = [_fields objectAtIndex:i];
 			if (i < [_fields count] - 1)
 				s = [s stringByAppendingFormat:@"%@, ", f];
@@ -142,8 +142,8 @@
 	return _fields;
 }
 
-- (unsigned int) length {
-	unsigned int l = 2;
+- (NSUInteger) length {
+	NSUInteger l = 2;
 
 	if( [_fields count] > 0 ) {
 		// Add the separators and null terminator to the packet length.
@@ -160,16 +160,16 @@
 }
 
 - (NSData *) rawData {
-	static const unsigned int maxRawLength = 256;
-	static const unsigned int maxDataLength = 253;
+	static const NSUInteger maxRawLength = 256;
+	static const NSUInteger maxDataLength = 253;
 
 	char raw[maxRawLength];
 	char *data = &raw[2];
-	unsigned int length = 0;
+	NSUInteger length = 0;
 
 	// Fill the packet data.
 	data[0] = '\0';
-	for( unsigned int i = 0; i < [_fields count]; i++) {
+	for( NSUInteger i = 0; i < [_fields count]; i++) {
 		const NSString *f = [_fields objectAtIndex:i];
 
 		length = strlcat(data, [f UTF8String], maxDataLength);

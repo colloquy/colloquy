@@ -484,7 +484,7 @@ typedef enum
     SessionState     _state;
     JabberID*        _jid;
     NSString*        _sid;
-    int              _curr_id;
+    unsigned long    _curr_id;
     id               _authMgr;
     bool             _useSSL;
     bool             _do_auth;

@@ -5,7 +5,7 @@
 #import <CoreFoundation/CFString.h>
 #import <CoreFoundation/CFStringEncodingExt.h>
 
-static const int mIRCColors[][3] = {
+static const char mIRCColors[][3] = {
 	{ 0xff, 0xff, 0xff },  /* 00) white */
 	{ 0x00, 0x00, 0x00 },  /* 01) black */
 	{ 0x00, 0x00, 0x7b },  /* 02) blue */
@@ -24,7 +24,7 @@ static const int mIRCColors[][3] = {
 	{ 0xd6, 0xd6, 0xd6 }   /* 15) light gray */
 };
 
-static const int CTCPColors[][3] = {
+static const char CTCPColors[][3] = {
 	{ 0x00, 0x00, 0x00 },  /* 0) black */
 	{ 0x00, 0x00, 0x7f },  /* 1) blue */
 	{ 0x00, 0x7f, 0x00 },  /* 2) green */
@@ -43,8 +43,8 @@ static const int CTCPColors[][3] = {
 	{ 0xff, 0xff, 0xff }   /* F) white */
 };
 
-static int colorRGBToMIRCColor( unsigned int red, unsigned int green, unsigned int blue ) {
-	int distance = 1000, color = 1, i = 0, o = 0;
+static unsigned short colorRGBToMIRCColor( unsigned char red, unsigned char green, unsigned char blue ) {
+	unsigned short distance = 1000, color = 1, i = 0, o = 0;
 	for( i = 0; i < 16; i++ ) {
 		o = abs( red - mIRCColors[i][0] ) +
 		abs( green - mIRCColors[i][1] ) +
@@ -57,7 +57,7 @@ static int colorRGBToMIRCColor( unsigned int red, unsigned int green, unsigned i
 	return color;
 }
 
-static BOOL scanOneOrTwoDigits( NSScanner *scanner, unsigned int *number ) {
+static BOOL scanOneOrTwoDigits( NSScanner *scanner, NSUInteger *number ) {
 	NSCharacterSet *characterSet = [NSCharacterSet decimalDigitCharacterSet];
 	NSString *chars = nil;
 
@@ -179,13 +179,13 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		}
 
 		if( ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
-			int traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
+			NSFontTraitMask traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
 			if( traits & NSBoldFontMask ) bold = YES;
 			if( traits & NSItalicFontMask) italic = YES;
 			NSNumber *oblique = [dict objectForKey:NSObliquenessAttributeName];
 			if( oblique && [oblique floatValue] > 0. ) italic = YES;
-			if( [[dict objectForKey:NSUnderlineStyleAttributeName] intValue] ) underline = YES;
-			if( [[dict objectForKey:NSStrikethroughStyleAttributeName] intValue] ) strikethrough = YES;
+			if( [[dict objectForKey:NSUnderlineStyleAttributeName] boolValue] ) underline = YES;
+			if( [[dict objectForKey:NSStrikethroughStyleAttributeName] boolValue] ) strikethrough = YES;
 		}
 
 		if( [styleString length] ) [spanString appendFormat:@" style=\"%@\"", styleString];
@@ -230,14 +230,14 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 }
 
 - (id) initWithChatFormat:(NSData *) data options:(NSDictionary *) options {
-	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
+	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedLongValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
 	// Search for CTCP/2 encoding tags and act on them
 	NSMutableData *newData = [NSMutableData dataWithCapacity:[data length]];
 	const char *bytes = [data bytes];
-	unsigned length = [data length];
-	unsigned i = 0, j = 0, start = 0, end = 0;
+	NSUInteger length = [data length];
+	NSUInteger i = 0, j = 0, start = 0, end = 0;
 	NSStringEncoding currentEncoding = encoding;
 	for( i = 0, start = 0; i < length; i++ ) {
 		if( bytes[i] == '\006' ) {
@@ -256,7 +256,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				} else if( [encodingStr isEqualToString:@"U"] ) {
 					newEncoding = NSUTF8StringEncoding;
 				} else {
-					int enc = [encodingStr intValue];
+					NSUInteger enc = [encodingStr intValue];
 					switch( enc ) {
 						case 1:
 							newEncoding = NSISOLatin1StringEncoding;
@@ -402,7 +402,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 				break;
 			case '\003': // color
 			{
-				unsigned int fcolor = 0;
+				NSUInteger fcolor = 0;
 				if( scanOneOrTwoDigits( scanner, &fcolor ) ) {
 					fcolor %= 16;
 
@@ -410,7 +410,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 					if( foregroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] )
 						[attributes setObject:foregroundColor forKey:NSForegroundColorAttributeName];
 
-					unsigned int bcolor = 0;
+					NSUInteger bcolor = 0;
 					if( [scanner scanString:@"," intoString:NULL] && scanOneOrTwoDigits( scanner, &bcolor ) && bcolor != 99 ) {
 						bcolor %= 16;
 						NSColor *backgroundColor = [NSColor colorWithCalibratedRed:( (float) mIRCColors[bcolor][0] / 255. ) green:( (float) mIRCColors[bcolor][1] / 255. ) blue:( (float) mIRCColors[bcolor][2] / 255. ) alpha:1.];
@@ -510,7 +510,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 									[attributes setObject:foregroundColor forKey:NSForegroundColorAttributeName];
 							}
 						} else if( [scanner scanCharactersFromSet:hexSet maxLength:1 intoString:&colorStr] ) { // indexed color
-							unsigned int index = [colorStr characterAtIndex:0];
+							NSUInteger index = [colorStr characterAtIndex:0];
 							if( index >= 'A' ) index -= ( 'A' - '9' - 1 );
 							index -= '0';
 							NSColor *foregroundColor = [NSColor colorWithCalibratedRed:( (float) CTCPColors[index][0] / 255. ) green:( (float) CTCPColors[index][1] / 255. ) blue:( (float) CTCPColors[index][2] / 255. ) alpha:1.];
@@ -535,7 +535,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 										[attributes setObject:backgroundColor forKey:NSBackgroundColorAttributeName];
 								}
 							} else if( [scanner scanCharactersFromSet:hexSet maxLength:1 intoString:&colorStr] ) { // indexed color
-								unsigned int index = [colorStr characterAtIndex:0];
+								NSUInteger index = [colorStr characterAtIndex:0];
 								if( index >= 'A' ) index -= ( 'A' - '9' - 1 );
 								index -= '0';
 								NSColor *backgroundColor = [NSColor colorWithCalibratedRed:( (float) CTCPColors[index][0] / 255. ) green:( (float) CTCPColors[index][1] / 255. ) blue:( (float) CTCPColors[index][2] / 255. ) alpha:1.];
@@ -589,7 +589,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 - (NSData *) _mIRCFormatWithOptions:(NSDictionary *) options {
 	NSRange limitRange, effectiveRange;
 	NSMutableData *ret = [[NSMutableData allocWithZone:nil] initWithCapacity:( [self length] + 20 )];
-	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
+	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedLongValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
 	limitRange = NSMakeRange( 0, [self length] );
@@ -603,7 +603,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		BOOL bold = NO, italic = NO, underline = NO;
 
 		if( ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
-			int traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
+			NSFontTraitMask traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
 			if( traits & NSBoldFontMask ) bold = YES;
 			if( traits & NSItalicFontMask ) italic = YES;
 			NSNumber *oblique = [dict objectForKey:NSObliquenessAttributeName];
@@ -619,10 +619,10 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 		if( foregroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
 			char buffer[6];
-			float red = 0., green = 0., blue = 0.;
+			CGFloat red = 0., green = 0., blue = 0.;
 			[foregroundColor getRed:&red green:&green blue:&blue alpha:NULL];
 
-			int ircColor = colorRGBToMIRCColor( red * 255, green * 255, blue * 255 );
+			unsigned short ircColor = colorRGBToMIRCColor( red * 255, green * 255, blue * 255 );
 
 			snprintf( buffer, 6, "\003%d", ircColor );
 			[ret appendBytes:buffer length:strlen( buffer )];
@@ -670,7 +670,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 - (NSData *) _CTCP2FormatWithOptions:(NSDictionary *) options {
 	NSRange limitRange, effectiveRange;
 	NSMutableData *ret = [[NSMutableData allocWithZone:nil] initWithCapacity:( [self length] + 40 )];
-	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
+	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedLongValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
 	NSCharacterSet *nonASCIISet = [[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 127 )] invertedSet];
@@ -734,7 +734,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			BOOL bold = NO, italic = NO, underline = NO, strikethrough = NO;
 			if( ! [[options objectForKey:@"IgnoreFontTraits"] boolValue] ) {
 				NSFont *currentFont = [dict objectForKey:NSFontAttributeName];
-				int traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
+				NSFontTraitMask traits = [[NSFontManager sharedFontManager] traitsOfFont:currentFont];
 				if( traits & NSBoldFontMask ) bold = YES;
 				if( traits & NSItalicFontMask ) italic = YES;
 				NSNumber *oblique = [dict objectForKey:NSObliquenessAttributeName];
@@ -850,7 +850,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 	// No formatting.
 	NSMutableData *ret = [NSMutableData data];
-	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedIntValue];
+	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedLongValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
 	NSData *data = [[self string] dataUsingEncoding:encoding allowLossyConversion:YES];

@@ -529,7 +529,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
          didReadData:(NSData *) data withTag:(long) tag {
 	if( tag == 0 ) {
 		NSAssert( [data length] == 1, @"read mismatch" );
-		unsigned int len = (unsigned int)
+		NSUInteger len = (NSUInteger)
 			(((const char *)[data bytes])[0]) & 0xFF;
 		if( len == 0 )
 			[_chatConnection readDataToLength:1 withTimeout:-1. tag:0];
@@ -727,8 +727,8 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	static const struct info {
 		char type;
 		NSString *selector;
-		int minfields;
-		int maxfields;
+		NSInteger minfields;
+		NSInteger maxfields;
 	} info[] = {
 		{ 'a',  @"stcLoginPacket:",         0,  0 },
 		{ 'b',  @"stcOpenPacket:",          2,  2 },
@@ -758,7 +758,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	while( i->type != '\0' ) {
 		if( i->type == [packet type] ) {
 			NSArray *fields = [packet fields];
-			int count = (int)[fields count];
+			NSInteger count = [fields count];
 
 			if( count < i->minfields || ( i->maxfields != -1 &&
 										  count > i->maxfields ) ) {
@@ -1215,7 +1215,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 		MVChatUser *sender =
 		    [self chatUserWithUniqueIdentifier:[msg substringToIndex:r.location]];
 		NSString *topic = [msg substringFromIndex:r.location + r.length];
-		unsigned int l = [topic length];
+		NSUInteger l = [topic length];
 		if( l < 2 || ( [topic characterAtIndex:0] != '"' ||
 			           [topic characterAtIndex:l - 1] != '"' ) ) {
 			[self _postProtocolError:@"Received an invalid topic"];

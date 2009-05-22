@@ -12,8 +12,8 @@
 
 - (SilcChannelEntry) _getChannelEntry;
 
-- (void) _setChannelUserMode:(unsigned int)SilcMode forUser:(MVChatUser *) user;
-- (void) _removeChannelUserMode:(unsigned int)SilcMode forUser:(MVChatUser *) user;
+- (void) _setChannelUserMode:(SilcUInt32)SilcMode forUser:(MVChatUser *) user;
+- (void) _removeChannelUserMode:(SilcUInt32)SilcMode forUser:(MVChatUser *) user;
 
 - (void) updateWithChannelEntry:(SilcChannelEntry) channelEntry;
 @end

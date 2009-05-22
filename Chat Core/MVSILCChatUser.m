@@ -91,12 +91,12 @@
 
 #pragma mark -
 
-- (unsigned) hash {
+- (NSUInteger) hash {
 	// this hash assumes the MVSILCChatConnection will return the same instance for equal users
-	return ( _type ^ [[self connection] hash] ^ (unsigned int) self );
+	return ( _type ^ [[self connection] hash] ^ (intptr_t)self );
 }
 
-- (unsigned long) supportedModes {
+- (NSUInteger) supportedModes {
 	return MVChatUserNoModes;
 }
 

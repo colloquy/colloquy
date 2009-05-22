@@ -15,7 +15,7 @@
 
 @implementation MVIRCUploadFileTransfer
 + (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
-	static unsigned passiveId = 0;
+	static NSUInteger passiveId = 0;
 
 	MVIRCUploadFileTransfer *ret = [(MVIRCUploadFileTransfer *)[MVIRCUploadFileTransfer allocWithZone:nil] initWithUser:user];
 	[ret _setSource:path];
@@ -195,17 +195,17 @@
 
 #pragma mark -
 
-- (void) _setPassiveIdentifier:(unsigned int) identifier {
+- (void) _setPassiveIdentifier:(NSUInteger) identifier {
 	_passiveId = identifier;
 }
 
-- (unsigned int) _passiveIdentifier {
+- (NSUInteger) _passiveIdentifier {
 	return _passiveId;
 }
 
 #pragma mark -
 
-- (void) _setFileNameQuoted:(unsigned int) quoted {
+- (void) _setFileNameQuoted:(NSUInteger) quoted {
 	_fileNameQuoted = quoted;
 }
 
@@ -408,17 +408,17 @@
 
 #pragma mark -
 
-- (void) _setPassiveIdentifier:(unsigned int) identifier {
+- (void) _setPassiveIdentifier:(NSUInteger) identifier {
 	_passiveId = identifier;
 }
 
-- (unsigned int) _passiveIdentifier {
+- (NSUInteger) _passiveIdentifier {
 	return _passiveId;
 }
 
 #pragma mark -
 
-- (void) _setFileNameQuoted:(unsigned int) quoted {
+- (void) _setFileNameQuoted:(NSUInteger) quoted {
 	_fileNameQuoted = quoted;
 }
 

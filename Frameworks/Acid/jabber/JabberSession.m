@@ -57,7 +57,7 @@ NSString* STREAM_ROOT = @"<stream:stream xmlns='jabber:client' xmlns:stream='htt
 {
     [super init];
     _ncenter     = [NSNotificationCenter defaultCenter];
-    _curr_id = (int)self;
+    _curr_id = (intptr_t)self;
     _expressions = [[NSMutableDictionary alloc] init];
     _observerMap = CFDictionaryCreateMutable( NULL, 0, NULL, &kCFTypeDictionaryValueCallBacks );
     _authMgr     = [[JabberStdAuthManager alloc] init];
@@ -117,7 +117,7 @@ NSString* STREAM_ROOT = @"<stream:stream xmlns='jabber:client' xmlns:stream='htt
 -(void) addObserver:(id)observer selector:(SEL)method
               xpath:(NSString*)path
 {
-    NSString* eventName = [NSString stringWithFormat:@"%i/packet/%@", _curr_id, path];
+    NSString* eventName = [NSString stringWithFormat:@"%lu/packet/%@", _curr_id, path];
     XPathQuery* query         = [_expressions objectForKey:path];
     NSMutableArray* queryList = [self getQueriesForObserver:observer];
 
@@ -159,21 +159,21 @@ NSString* STREAM_ROOT = @"<stream:stream xmlns='jabber:client' xmlns:stream='htt
                name:(NSString*)eventName
 {
     [_ncenter addObserver:observer selector:method
-              name:[NSString stringWithFormat:@"%i%@", _curr_id, eventName] object:nil];
+              name:[NSString stringWithFormat:@"%lu%@", _curr_id, eventName] object:nil];
 }
 
 -(void) addObserver:(id)observer selector:(SEL)method
                name:(NSString*)eventName object:(id)anObject
 {
     [_ncenter addObserver:observer selector:method
-                     name:[NSString stringWithFormat:@"%i%@", _curr_id, eventName] object:anObject];
+                     name:[NSString stringWithFormat:@"%lu%@", _curr_id, eventName] object:anObject];
 }
 
 
 -(void) removeObserver:(id)observer name:(NSString*)eventName
 {
     // Remove the actual observer from the NC
-    [_ncenter removeObserver:observer name:[NSString stringWithFormat:@"%i%@", _curr_id, eventName] object:nil];
+    [_ncenter removeObserver:observer name:[NSString stringWithFormat:@"%lu%@", _curr_id, eventName] object:nil];
 }
 
 -(void) removeObserver:(id)observer
@@ -211,7 +211,7 @@ NSString* STREAM_ROOT = @"<stream:stream xmlns='jabber:client' xmlns:stream='htt
     }
 
     // Remove the actual observer from the NC
-    [_ncenter removeObserver:observer name:[NSString stringWithFormat:@"%i%@", _curr_id, eventName] object:nil];
+    [_ncenter removeObserver:observer name:[NSString stringWithFormat:@"%lu%@", _curr_id, eventName] object:nil];
 }
 
 -(void) removeObserver:(id)observer xpathFormat:(NSString*)fmt, ...
@@ -240,14 +240,14 @@ NSString* STREAM_ROOT = @"<stream:stream xmlns='jabber:client' xmlns:stream='htt
         if ([curr matches:elem])
         {
             NSString* eventName = [NSString stringWithFormat:@"/packet/%@", [curr path]];
-            [_ncenter postNotificationName:[NSString stringWithFormat:@"%i%@", _curr_id, eventName] object:elem];
+            [_ncenter postNotificationName:[NSString stringWithFormat:@"%lu%@", _curr_id, eventName] object:elem];
         }
     }
 }
 
 -(void) postNotificationName:(NSString*)name object:(NSObject*)obj
 {
-    [_ncenter postNotificationName:[NSString stringWithFormat:@"%i%@", _curr_id, name] object:obj];
+    [_ncenter postNotificationName:[NSString stringWithFormat:@"%lu%@", _curr_id, name] object:obj];
 }
 
 // ------------------------
@@ -334,7 +334,7 @@ NSString* STREAM_ROOT = @"<stream:stream xmlns='jabber:client' xmlns:stream='htt
 {
     if ([elem getAttribute:@"from"] == nil)
         [elem putAttribute:@"from" withValue:[_jid description]];
-    [_ncenter postNotificationName:[NSString stringWithFormat:@"%i%@", _curr_id, JSESSION_PACKET_OUT] object:elem];
+    [_ncenter postNotificationName:[NSString stringWithFormat:@"%lu%@", _curr_id, JSESSION_PACKET_OUT] object:elem];
     [_jsocket sendString:[elem description]];
 }
 

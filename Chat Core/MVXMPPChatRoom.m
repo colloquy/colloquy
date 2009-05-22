@@ -20,11 +20,11 @@
 
 #pragma mark -
 
-- (unsigned long) supportedModes {
+- (NSUInteger) supportedModes {
 	return ( MVChatRoomPrivateMode | MVChatRoomSecretMode | MVChatRoomInviteOnlyMode | MVChatRoomNormalUsersSilencedMode | MVChatRoomOperatorsOnlySetTopicMode | MVChatRoomNoOutsideMessagesMode | MVChatRoomPassphraseToJoinMode | MVChatRoomLimitNumberOfMembersMode );
 }
 
-- (unsigned long) supportedMemberUserModes {
+- (NSUInteger) supportedMemberUserModes {
 	return ( MVChatRoomMemberVoicedMode | MVChatRoomMemberOperatorMode );
 }
 

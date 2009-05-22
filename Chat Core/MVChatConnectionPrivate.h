@@ -26,7 +26,7 @@
 - (void) _addJoinedRoom:(MVChatRoom *) room;
 - (void) _removeJoinedRoom:(MVChatRoom *) room;
 
-- (unsigned int) _watchRulesMatchingUser:(MVChatUser *) user;
+- (NSUInteger) _watchRulesMatchingUser:(MVChatUser *) user;
 - (void) _markUserAsOnline:(MVChatUser *) user;
 - (void) _markUserAsOffline:(MVChatUser *) user;
 @end

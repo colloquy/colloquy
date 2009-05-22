@@ -44,7 +44,7 @@
 
 - (NSString *) description;
 - (NSArray *) fields;
-- (unsigned int) length;
+- (NSUInteger) length;
 - (NSData *) rawData;
 - (char) type;
 

@@ -3,11 +3,11 @@
 - (id) initWithBase64EncodedString:(NSString *) string;
 
 - (NSString *) base64Encoding;
-- (NSString *) base64EncodingWithLineLength:(unsigned int) lineLength;
+- (NSString *) base64EncodingWithLineLength:(NSUInteger) lineLength;
 
 - (BOOL) hasPrefix:(NSData *) prefix;
-- (BOOL) hasPrefixBytes:(const void *) prefix length:(unsigned int) length;
+- (BOOL) hasPrefixBytes:(const void *) prefix length:(NSUInteger) length;
 
 - (BOOL) hasSuffix:(NSData *) suffix;
-- (BOOL) hasSuffixBytes:(const void *) suffix length:(unsigned int) length;
+- (BOOL) hasSuffixBytes:(const void *) suffix length:(NSUInteger) length;
 @end

@@ -37,7 +37,7 @@ typedef enum {
 	MVChatUser *_user;
 	MVFileTransferStatus _status;
 	NSError *_lastError;
-	unsigned int _hash;
+	NSUInteger _hash;
 }
 + (void) setFileTransferPortRange:(NSRange) range;
 + (NSRange) fileTransferPortRange;

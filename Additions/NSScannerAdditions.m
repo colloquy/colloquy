@@ -6,7 +6,7 @@
 @implementation NSScanner (NSScannerAdditions)
 - (BOOL) scanCharacterInto:(unichar *) unicharValue {
 	if( ! [self isAtEnd] ) {
-		unsigned location = [self scanLocation];
+		NSUInteger location = [self scanLocation];
 		*unicharValue = [[self string] characterAtIndex:location];
 		[self setScanLocation:( location + 1 )];
 		return YES;
@@ -15,11 +15,11 @@
 	return NO;
 }
 
-- (BOOL) scanStringLength:(unsigned) maxLength intoString:(NSString **) stringValue {
+- (BOOL) scanStringLength:(NSUInteger) maxLength intoString:(NSString **) stringValue {
 	if( ! [self isAtEnd] ) {
-		unsigned location = [self scanLocation];
+		NSUInteger location = [self scanLocation];
 		NSString *source = [self string];
-		unsigned length = MIN( maxLength, [source length] - location );
+		NSUInteger length = MIN( maxLength, [source length] - location );
 		if( length > 0 ) {
 			*stringValue = [[self string] substringWithRange:NSMakeRange( location, length )];
 			[self setScanLocation:( location + length )];
@@ -30,16 +30,16 @@
 	return NO;
 }
 
-- (BOOL) scanCharactersFromSet:(NSCharacterSet *) scanSet maxLength:(unsigned) maxLength intoString:(NSString **) stringValue {
+- (BOOL) scanCharactersFromSet:(NSCharacterSet *) scanSet maxLength:(NSUInteger) maxLength intoString:(NSString **) stringValue {
 	if( ! [self isAtEnd] ) {
-		unsigned location = [self scanLocation];
+		NSUInteger location = [self scanLocation];
 		NSString *source = [self string];
-		unsigned length = MIN( maxLength, [source length] - location );
+		NSUInteger length = MIN( maxLength, [source length] - location );
 		if( length > 0 ) {
 			unichar *chars = calloc( length, sizeof( unichar ) );
 			[source getCharacters:chars range:NSMakeRange( location, length )];
 
-			unsigned i = 0;
+			NSUInteger i = 0;
 			for( i = 0; i < length && [scanSet characterIsMember:chars[i]]; i++ );
 
 			free( chars );

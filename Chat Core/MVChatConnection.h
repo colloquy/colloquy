@@ -154,7 +154,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 	NSArray *_alternateNicks;
 	unsigned short _nextAltNickIndex;
-	unsigned int _hash;
+	NSUInteger _hash;
 }
 + (BOOL) supportsURLScheme:(NSString *) scheme;
 + (NSArray *) defaultServerPortsForType:(MVChatConnectionType) type;
@@ -237,7 +237,7 @@ extern NSString *MVChatConnectionErrorDomain;
 @property(readonly) NSDate *nextReconnectAttemptDate;
 @property(readonly, getter=isWaitingToReconnect) BOOL waitingToReconnect;
 @property(readonly) MVChatConnectionStatus status;
-@property(readonly) unsigned int lag;
+@property(readonly) NSUInteger lag;
 
 #else
 
@@ -408,7 +408,7 @@ extern NSString *MVChatConnectionErrorDomain;
 #pragma mark -
 
 - (MVChatConnectionStatus) status;
-- (unsigned int) lag;
+- (NSUInteger) lag;
 #endif
 
 #pragma mark -

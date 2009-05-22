@@ -27,7 +27,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 @implementation MVDirectChatConnection
 + (id) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive {
-	static unsigned passiveId = 0;
+	static NSUInteger passiveId = 0;
 
 	MVDirectChatConnection *ret = [(MVDirectChatConnection *)[MVDirectChatConnection allocWithZone:nil] initWithUser:user];
 	[ret _setLocalRequest:YES];
@@ -247,7 +247,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection didReadData:(NSData *) data withTag:(long) tag {
 	const char *bytes = (const char *)[data bytes];
-	unsigned int len = [data length];
+	NSUInteger len = [data length];
 	const char *end = bytes + len - 2; // minus the line endings
 	BOOL ctcp = ( *bytes == '\001' && [data length] > 3 ); // three is the one minimum line ending and two \001 chars
 
@@ -316,7 +316,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 }
 
 - (void) _setStatus:(MVDirectChatConnectionStatus) newStatus {
-	unsigned int oldStatus = _status;
+	NSUInteger oldStatus = _status;
 	_status = newStatus;
 
 	if( oldStatus == newStatus )
@@ -344,11 +344,11 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 	_localRequest = localRequest;
 }
 
-- (void) _setPassiveIdentifier:(unsigned int) identifier {
+- (void) _setPassiveIdentifier:(NSUInteger) identifier {
 	_passiveId = identifier;
 }
 
-- (unsigned int) _passiveIdentifier {
+- (NSUInteger) _passiveIdentifier {
 	return _passiveId;
 }
 

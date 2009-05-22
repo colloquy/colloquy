@@ -3,8 +3,8 @@
 
 @interface NSScanner (NSScannerAdditions)
 - (BOOL) scanCharacterInto:(unichar *) unicharValue;
-- (BOOL) scanStringLength:(unsigned) length intoString:(NSString **) stringValue;
-- (BOOL) scanCharactersFromSet:(NSCharacterSet *) scanSet maxLength:(unsigned) length intoString:(NSString **) stringValue;
+- (BOOL) scanStringLength:(NSUInteger) length intoString:(NSString **) stringValue;
+- (BOOL) scanCharactersFromSet:(NSCharacterSet *) scanSet maxLength:(NSUInteger) length intoString:(NSString **) stringValue;
 
 - (BOOL) scanXMLTagIntoString:(NSString **) stringValue;
 - (BOOL) scanUpToXMLTagIntoString:(NSString **) stringValue;

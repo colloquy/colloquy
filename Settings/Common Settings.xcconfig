@@ -26,6 +26,8 @@ GCC_NO_COMMON_BLOCKS = YES
 GCC_OPTIMIZATION_LEVEL = s
 GCC_PRECOMPILE_PREFIX_HEADER = YES
 GCC_THREADSAFE_STATICS = NO
+GCC_VERSION = 4.0
+GCC_VERSION[arch=x86_64] = 4.2
 GCC_WARN_ABOUT_MISSING_NEWLINE = YES
 GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES
 GCC_WARN_ABOUT_RETURN_TYPE = YES
@@ -57,6 +59,6 @@ SDKROOT_ppc970 = /Developer/SDKs/MacOSX10.4u.sdk
 SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk
 SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.5.sdk
 STRIP_INSTALLED_PRODUCT = NO
-VALID_ARCHS = i386 ppc ppc970 ppc7400
+VALID_ARCHS = x86_64 i386 ppc7400 ppc970 ppc
 WARNING_CFLAGS = -Wall -W -Wcast-align -Wchar-subscripts -Wformat-security -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-format-y2k -Wno-unused-parameter -Wbad-function-cast -Wmissing-declarations -Wnested-externs
 ZERO_LINK = NO

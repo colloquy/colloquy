@@ -865,20 +865,20 @@ static const NSStringEncoding supportedEncodings[] = {
 	NSString *rawString = [self _newStringWithBytes:[data bytes] length:[data length]];
 
 	const char *line = (const char *)[data bytes];
-	unsigned int len = [data length];
+	NSUInteger len = [data length];
 	const char *end = line + len - 2; // minus the line endings
 
 	if( *end != '\x0D' )
 		end = line + len - 1; // this server only uses \x0A for the message line ending, lets work with it
 
 	const char *sender = NULL;
-	unsigned senderLength = 0;
+	NSUInteger senderLength = 0;
 	const char *user = NULL;
-	unsigned userLength = 0;
+	NSUInteger userLength = 0;
 	const char *host = NULL;
-	unsigned hostLength = 0;
+	NSUInteger hostLength = 0;
 	const char *command = NULL;
-	unsigned commandLength = 0;
+	NSUInteger commandLength = 0;
 
 	NSMutableArray *parameters = [[NSMutableArray allocWithZone:nil] initWithCapacity:15];
 
@@ -1118,14 +1118,14 @@ end:
 
 	if( [[attributes objectForKey:@"action"] boolValue] ) {
 		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@%@ :\001ACTION ", targetPrefix, targetName];
-		unsigned bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
+		NSUInteger bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
 
 		if ( [msg length] > bytesLeft ) [self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
 		else [self sendRawMessageWithComponents:prefix, msg, @"\001", nil];
 		[prefix release];
 	} else {
 		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@%@ :", targetPrefix, targetName];
-		unsigned bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
+		NSUInteger bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
 
 		if ( [msg length] > bytesLeft )	[self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
 		else [self sendRawMessageWithComponents:prefix, msg, nil];
@@ -1136,8 +1136,8 @@ end:
 	[msg release];
 }
 
-- (void) sendBrokenDownMessage:(NSMutableData *) msg withPrefix:(NSString *) prefix withEncoding:(NSStringEncoding) msgEncoding withMaximumBytes:(unsigned) bytesLeft {
-	unsigned bytesRemainingForMessage = bytesLeft;
+- (void) sendBrokenDownMessage:(NSMutableData *) msg withPrefix:(NSString *) prefix withEncoding:(NSStringEncoding) msgEncoding withMaximumBytes:(NSUInteger) bytesLeft {
+	NSUInteger bytesRemainingForMessage = bytesLeft;
 	BOOL hasWhitespaceInString = YES;
 
 	while ( [msg length] ) {
@@ -1164,7 +1164,7 @@ end:
 	}
 }
 
-- (int) bytesRemainingForMessage:(NSString *) nickname withUsername:(NSString *) username withAddress:(NSString *) address withPrefix:(NSString *) prefix withEncoding:(NSStringEncoding) msgEncoding {
+- (NSUInteger) bytesRemainingForMessage:(NSString *) nickname withUsername:(NSString *) username withAddress:(NSString *) address withPrefix:(NSString *) prefix withEncoding:(NSStringEncoding) msgEncoding {
 	return ( sizeof(char) * 512 ) - [nickname lengthOfBytesUsingEncoding:msgEncoding] - [username lengthOfBytesUsingEncoding:msgEncoding] - [address lengthOfBytesUsingEncoding:msgEncoding] - [prefix lengthOfBytesUsingEncoding:msgEncoding];
 }
 
@@ -1542,7 +1542,7 @@ end:
 
 #pragma mark -
 
-- (void) _processErrorCode:(int) errorCode withContext:(char *) context {
+- (void) _processErrorCode:(NSUInteger) errorCode withContext:(char *) context {
 	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 	NSError *error = nil;
 
@@ -1880,7 +1880,7 @@ end:
 
 #pragma mark -
 
-- (NSString *) _newStringWithBytes:(const char *) bytes length:(unsigned) length {
+- (NSString *) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length {
 	if( bytes && length ) {
 		NSStringEncoding encoding = [self encoding];
 		if( encoding != NSUTF8StringEncoding && isValidUTF8( bytes, length ) )
@@ -1938,8 +1938,8 @@ end:
 	MVChatRoomMemberMode modes = MVChatRoomMemberNoModes;
 	NSMutableDictionary *prefixes = [_serverInformation objectForKey:@"roomMemberPrefixTable"];
 
-	unsigned i = 0;
-	unsigned length = [nickname length];
+	NSUInteger i = 0;
+	NSUInteger length = [nickname length];
 	for( i = 0; i < length; ++i ) {
 		if( [prefixes count] ) {
 			NSNumber *prefix = [prefixes objectForKey:[NSString stringWithFormat:@"%c", [nickname characterAtIndex:i]]];
@@ -2057,8 +2057,8 @@ end:
 					}
 
 					NSMutableDictionary *modesTable = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:[modes length]];
-					unsigned length = [modes length];
-					unsigned i = 0;
+					NSUInteger length = [modes length];
+					NSUInteger i = 0;
 					for( i = 0; i < length; i++ ) {
 						MVChatRoomMemberMode mode = MVChatRoomMemberNoModes;
 						NSString *modeFeature = nil;
@@ -2093,8 +2093,8 @@ end:
 				NSString *prefixes = [feature substringFromIndex:[scanner scanLocation]];
 				if( [prefixes length] ) {
 					NSMutableDictionary *prefixTable = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:[modes length]];
-					unsigned length = [prefixes length];
-					unsigned i = 0;
+					NSUInteger length = [prefixes length];
+					NSUInteger i = 0;
 					for( i = 0; i < length; i++ ) {
 						MVChatRoomMemberMode mode = [self _modeForNicknamePrefixCharacter:[prefixes characterAtIndex:i]];
 						if( mode != MVChatRoomMemberNoModes ) {
@@ -2553,7 +2553,7 @@ end:
 					passive = YES;
 
 				if( [address rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@".:"]].location == NSNotFound ) {
-					unsigned int ip4 = 0;
+					unsigned ip4 = 0;
 					sscanf( [address UTF8String], "%u", &ip4 );
 					address = [NSString stringWithFormat:@"%lu.%lu.%lu.%lu", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
 				}
@@ -2573,7 +2573,7 @@ end:
 								continue;
 							if( ! [[transfer user] isEqualToChatUser:sender] )
 								continue;
-							if( [transfer _passiveIdentifier] == passiveId )
+							if( [transfer _passiveIdentifier] == (NSUInteger)passiveId )
 								break;
 						}
 					}
@@ -2631,7 +2631,7 @@ end:
 							continue;
 
 						BOOL portMatches = ( ! passive && [transfer port] == port );
-						BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == passiveId );
+						BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == (NSUInteger)passiveId );
 
 						if( portMatches || passiveIdMatches ) {
 							[transfer _setTransfered:(unsigned long long)size];
@@ -2667,7 +2667,7 @@ end:
 							continue;
 
 						BOOL portMatches = ( ! passive && [transfer port] == port );
-						BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == passiveId );
+						BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == (NSUInteger)passiveId );
 
 						if( portMatches || passiveIdMatches ) {
 							[transfer _setTransfered:(unsigned long long)size];
@@ -2690,7 +2690,7 @@ end:
 					passive = YES;
 
 				if( [address rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@".:"]].location == NSNotFound ) {
-					unsigned int ip4 = 0;
+					unsigned ip4 = 0;
 					sscanf( [address UTF8String], "%u", &ip4 );
 					address = [NSString stringWithFormat:@"%lu.%lu.%lu.%lu", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
 				}
@@ -2709,7 +2709,7 @@ end:
 									continue;
 								if( ! [[directChat user] isEqualToChatUser:sender] )
 									continue;
-								if( [directChat _passiveIdentifier] == passiveId )
+								if( [directChat _passiveIdentifier] == (NSUInteger)passiveId )
 									break;
 							}
 						}
@@ -2797,7 +2797,7 @@ end:
 								continue;
 
 							BOOL portMatches = ( portKnown && ! passive && [transfer port] == port );
-							BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == passiveId );
+							BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == (NSUInteger)passiveId );
 
 							if( fileMatches || portMatches || passiveIdMatches )
 								[transfer cancel];
@@ -2991,18 +2991,18 @@ end:
 #define banExcludeMode ( 1 << 29 )
 #define inviteExcludeMode ( 1 << 28 )
 
-	unsigned long oldModes = [room modes];
-	unsigned long argModes = 0;
-	unsigned long value = 0;
+	NSUInteger oldModes = [room modes];
+	NSUInteger argModes = 0;
+	NSUInteger value = 0;
 	NSMutableArray *argsNeeded = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
-	unsigned int i = 0, count = [parameters count];
+	NSUInteger i = 0, count = [parameters count];
 	while( i < count ) {
 		NSString *param = [self _stringFromPossibleData:[parameters objectAtIndex:i++]];
 		if( [param length] ) {
 			char chr = [param characterAtIndex:0];
 			if( chr == '+' || chr == '-' ) {
 				unsigned enabled = YES;
-				unsigned int j = 0, length = [param length];
+				NSUInteger j = 0, length = [param length];
 				while( j < length ) {
 					chr = [param characterAtIndex:j++];
 					switch( chr ) {
@@ -3076,9 +3076,9 @@ end:
 				}
 			} else {
 				if( [argsNeeded count] ) {
-					unsigned long value = [[argsNeeded objectAtIndex:0] unsignedLongValue];
+					NSUInteger value = [[argsNeeded objectAtIndex:0] unsignedLongValue];
 					BOOL enabled = ( ( value & enabledHighBit ) ? YES : NO );
-					unsigned long mode = ( value & ~enabledHighBit );
+					NSUInteger mode = ( value & ~enabledHighBit );
 
 					if( mode == MVChatRoomMemberFounderMode || mode == MVChatRoomMemberAdministratorMode || mode == MVChatRoomMemberOperatorMode || mode == MVChatRoomMemberHalfOperatorMode || mode == MVChatRoomMemberVoicedMode ) {
 						MVChatUser *member = [self chatUserWithUniqueIdentifier:param];
@@ -3115,7 +3115,7 @@ end:
 
 	[argsNeeded release];
 
-	unsigned int changedModes = ( oldModes ^ [room modes] ) | argModes;
+	NSUInteger changedModes = ( oldModes ^ [room modes] ) | argModes;
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", sender, @"by", nil]];
 }
 
@@ -3415,7 +3415,7 @@ end:
 
 	if( [parameters count] == 4 ) {
 		NSString *room = [parameters objectAtIndex:1];
-		unsigned int users = [[parameters objectAtIndex:2] intValue];
+		NSUInteger users = [[parameters objectAtIndex:2] intValue];
 		NSData *topic = [parameters objectAtIndex:3];
 		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
 
