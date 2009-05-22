@@ -12,11 +12,11 @@
 	BOOL _verbose;
 	BOOL _ignorePRIVMSG;
 	BOOL _paused;
-	float _sendHeight;
+	CGFloat _sendHeight;
 	BOOL _scrollerIsAtBottom;
 	BOOL _forceSplitViewPosition;
-	int _historyIndex;
-	unsigned int _lastDisplayTextLength;
+	NSInteger _historyIndex;
+	NSUInteger _lastDisplayTextLength;
 	NSMutableArray *_sendHistory;
 	JVChatWindowController *_windowController;
 	MVChatConnection *_connection;

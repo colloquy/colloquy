@@ -113,10 +113,10 @@
 
 - (void) addConnection:(MVChatConnection *) connection;
 - (void) addConnection:(MVChatConnection *) connection keepBookmark:(BOOL) keep;
-- (void) insertConnection:(MVChatConnection *) connection atIndex:(unsigned) index;
+- (void) insertConnection:(MVChatConnection *) connection atIndex:(NSUInteger) index;
 - (void) removeConnection:(MVChatConnection *) connection;
-- (void) removeConnectionAtIndex:(unsigned) index;
-- (void) replaceConnectionAtIndex:(unsigned) index withConnection:(MVChatConnection *) connection;
+- (void) removeConnectionAtIndex:(NSUInteger) index;
+- (void) replaceConnectionAtIndex:(NSUInteger) index withConnection:(MVChatConnection *) connection;
 
 - (void) handleURL:(NSURL *) url andConnectIfPossible:(BOOL) connect;
 @end

@@ -1,7 +1,7 @@
 #import "KABubbleWindowController.h"
 #import "KABubbleWindowView.h"
 
-static unsigned int bubbleWindowDepth = 0;
+static NSUInteger bubbleWindowDepth = 0;
 
 @implementation KABubbleWindowController
 

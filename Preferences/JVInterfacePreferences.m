@@ -177,12 +177,12 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 #pragma mark -
 
-- (int) numberOfRowsInTableView:(NSTableView *) view {
+- (NSInteger) numberOfRowsInTableView:(NSTableView *) view {
 	if( view == windowSetsTable ) return [_windowSets count];
 	else if( view == rulesTable ) {
 		if( [_windowSets count] < _selectedWindowSet ) return 0;
 		NSDictionary *info = [_windowSets objectAtIndex:_selectedWindowSet];
-		return [[info objectForKey:@"rules"] count];
+		return [(NSArray *)[info objectForKey:@"rules"] count];
 	} else if( view == ruleEditTable ) {
 		return [[self editingCriterion] count];
 	}
@@ -190,7 +190,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	return 0;
 }
 
-- (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
+- (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == windowSetsTable ) {
 		NSDictionary *info = [_windowSets objectAtIndex:row];
 		if( [[info objectForKey:@"special"] isEqualToString:@"currentWindow"] ) return [NSImage imageNamed:@"targetWindow"];
@@ -204,7 +204,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	} else return nil;
 }
 
-- (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(int) row {
+- (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == windowSetsTable ) {
 		NSDictionary *info = [_windowSets objectAtIndex:row];
 		if( [[info objectForKey:@"special"] isEqualToString:@"currentWindow"] )
@@ -215,7 +215,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 			[(JVDetailCell *) cell setMainText:NSLocalizedString( @"Server Window", "server window label, interface preferences" )];
 		else [(JVDetailCell *) cell setMainText:[info objectForKey:@"title"]];
 
-		unsigned int c = [[info objectForKey:@"rules"] count];
+		NSUInteger c = [(NSArray *)[info objectForKey:@"rules"] count];
 		if( c == 0 ) [(JVDetailCell *) cell setInformationText:NSLocalizedString( @"No rules", "no rules info label" )];
 		else if( c == 1 ) [(JVDetailCell *) cell setInformationText:NSLocalizedString( @"1 rule", "one rule info label" )];
 		else [(JVDetailCell *) cell setInformationText:[NSString stringWithFormat:NSLocalizedString( @"%d rules", "number of rules info label" ), c]];
@@ -232,7 +232,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	}
 }
 
-- (NSString *) tableView:(NSTableView *) view toolTipForTableColumn:(NSTableColumn *) column row:(int) row {
+- (NSString *) tableView:(NSTableView *) view toolTipForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == rulesTable ) {
 		NSArray *ruleSets = [self selectedRules];
 		NSDictionary *info = [ruleSets objectAtIndex:row];
@@ -261,7 +261,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 - (BOOL) tableView:(NSTableView *) view writeRows:(NSArray *) rows toPasteboard:(NSPasteboard *) board {
 	if( view == windowSetsTable ) {
-		int row = [[rows lastObject] intValue];
+		NSInteger row = [[rows lastObject] intValue];
 		if( row == -1 ) return NO;
 
 		NSData *data = [NSData dataWithBytes:&row length:sizeof( &row )];
@@ -274,11 +274,11 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	return NO;
 }
 
-- (NSDragOperation) tableView:(NSTableView *) view validateDrop:(id <NSDraggingInfo>) info proposedRow:(int) row proposedDropOperation:(NSTableViewDropOperation) operation {
+- (NSDragOperation) tableView:(NSTableView *) view validateDrop:(id <NSDraggingInfo>) info proposedRow:(NSInteger) row proposedDropOperation:(NSTableViewDropOperation) operation {
 	if( view == windowSetsTable && [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:JVInterfacePreferencesWindowDragPboardType]] ) {
 		if( operation == NSTableViewDropOn && row != -1 ) return NSDragOperationNone;
 
-		int index = -1;
+		NSInteger index = -1;
 		[[[info draggingPasteboard] dataForType:JVInterfacePreferencesWindowDragPboardType] getBytes:&index];
 
 		if( row >= 0 && row != index && ( row - 1 ) != index ) return NSDragOperationEvery;
@@ -290,9 +290,9 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	return NSDragOperationNone;
 }
 
-- (BOOL) tableView:(NSTableView *) view acceptDrop:(id <NSDraggingInfo>) info row:(int) row dropOperation:(NSTableViewDropOperation) operation {
+- (BOOL) tableView:(NSTableView *) view acceptDrop:(id <NSDraggingInfo>) info row:(NSInteger) row dropOperation:(NSTableViewDropOperation) operation {
 	if( view == windowSetsTable && [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:JVInterfacePreferencesWindowDragPboardType]] ) {
-		int index = -1;
+		NSInteger index = -1;
 		[[[info draggingPasteboard] dataForType:JVInterfacePreferencesWindowDragPboardType] getBytes:&index];
 		if( row > index ) row--;
 
@@ -448,13 +448,13 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	[[previousRule lastKeyView] setNextKeyView:ignoreCase];
 }
 
-- (void) insertObject:(id) obj inRuleCriterionAtIndex:(unsigned int) index {
+- (void) insertObject:(id) obj inRuleCriterionAtIndex:(NSUInteger) index {
 	if( index != NSNotFound ) [[self editingCriterion] insertObject:obj atIndex:( index + 1 )];
 	else [[self editingCriterion] addObject:obj];
 	[self reloadRuleEditTableView];
 }
 
-- (void) removeObjectFromRuleCriterionAtIndex:(unsigned int) index {
+- (void) removeObjectFromRuleCriterionAtIndex:(NSUInteger) index {
 	[[self editingCriterion] removeObjectAtIndex:index];
 	[self reloadRuleEditTableView];
 }
@@ -526,7 +526,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 	[ignoreCase setState:[[info objectForKey:@"ignoreCase"] boolValue]];
 
-	int operation = [[info objectForKey:@"operation"] intValue];
+	NSInteger operation = [[info objectForKey:@"operation"] intValue];
 	if( [ruleOperation indexOfItemWithTag:operation] != -1 )
 		[ruleOperation selectItemAtIndex:[ruleOperation indexOfItemWithTag:operation]];
 
@@ -544,7 +544,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	} else info = [[self selectedRules] objectAtIndex:_selectedRuleSet];
 
 	[info setObject:[self editingCriterion] forKey:@"criterion"];
-	[info setObject:[NSNumber numberWithInt:[ruleOperation selectedTag]] forKey:@"operation"];
+	[info setObject:[NSNumber numberWithLong:[ruleOperation selectedTag]] forKey:@"operation"];
 	[info setObject:[NSNumber numberWithBool:[ignoreCase state]] forKey:@"ignoreCase"];
 
 	[ruleEditPanel orderOut:nil];

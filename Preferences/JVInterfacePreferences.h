@@ -22,9 +22,9 @@
 
 	NSMutableArray *_windowSets;
 	NSMutableArray *_editingRuleCriterion;
-	unsigned int _selectedWindowSet;
-	unsigned int _selectedRuleSet;
-	unsigned int _origRuleEditHeight;
+	NSUInteger _selectedWindowSet;
+	NSUInteger _selectedRuleSet;
+	NSUInteger _origRuleEditHeight;
 	BOOL _makingNewWindowSet;
 	BOOL _makingNewRuleSet;
 }

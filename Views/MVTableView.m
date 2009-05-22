@@ -47,7 +47,7 @@
 
 - (NSMenu *) menuForEvent:(NSEvent *) event {
 	NSPoint where;
-	int row = -1, col = -1;
+	NSInteger row = -1, col = -1;
 
 	where = [self convertPoint:[event locationInWindow] fromView:nil];
 	row = [self rowAtPoint:where];
@@ -82,7 +82,7 @@
 	[super keyDown:event];
 }
 
-- (NSRect) rectOfRow:(int) row {
+- (NSRect) rectOfRow:(NSInteger) row {
 	NSRect defaultRect = [super rectOfRow:row];
 	if( delegateRectOfRow )
 		return [_delegate tableView:self rectOfRow:row defaultRect:defaultRect];
@@ -101,9 +101,9 @@
 }
 
 - (void) rebuildTooltipRects {
-	int rows = [self numberOfRows];
-	int columns = [self numberOfColumns];
-	int ri = 0, ci = 0;
+	NSUInteger rows = [self numberOfRows];
+	NSUInteger columns = [self numberOfColumns];
+	NSUInteger ri = 0, ci = 0;
 
 	[self removeAllToolTips];
 
@@ -126,8 +126,8 @@
 }
 
 - (NSString *) view:(NSView *) view stringForToolTip:(NSToolTipTag) tag point:(NSPoint) point userData:(void *) userData {
-	int row = [self rowAtPoint:point];
-    int column = [self columnAtPoint:point];
+	NSInteger row = [self rowAtPoint:point];
+	NSInteger column = [self columnAtPoint:point];
 
 	NSTableColumn *tcolumn = nil;
 	if( column >= 0 ) tcolumn = [_tableColumns objectAtIndex:column];

@@ -40,6 +40,6 @@
 - (void) removeAllShadedAreas;
 
 - (unsigned long long) contentViewLength;
-- (float) scaleToContentView;
-- (float) shiftAmountToCenterAlign;
+- (CGFloat) scaleToContentView;
+- (CGFloat) shiftAmountToCenterAlign;
 @end

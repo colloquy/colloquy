@@ -12,17 +12,17 @@
     NSPanel				*panel;
     BOOL                windowIsVisible;
     NSTimer             *visibilityTimer;
-    float               maxOpacity;
+    CGFloat             maxOpacity;
 }
 
-+ (id)floaterWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask title:(NSString *) title;
-- (id)initWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask title:(NSString *) title;
++ (id)floaterWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask title:(NSString *) title;
+- (id)initWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask title:(NSString *) title;
 - (void)moveFloaterToPoint:(NSPoint)inPoint;
 - (IBAction)close:(id)sender;
 - (void)endFloater;
 - (void)setImage:(NSImage *)inImage;
 - (NSImage *)image;
 - (void)setVisible:(BOOL)inVisible animate:(BOOL)animate;
-- (void)setMaxOpacity:(float)inMaxOpacity;
+- (void)setMaxOpacity:(CGFloat)inMaxOpacity;
 
 @end

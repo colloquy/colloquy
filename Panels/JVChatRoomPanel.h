@@ -10,7 +10,7 @@
 	NSMutableSet *_nextMessageAlertMembers;
 	BOOL _kickedFromRoom;
 	BOOL _banListSynced;
-	unsigned _joinCount;
+	NSUInteger _joinCount;
 }
 - (void) joined;
 - (void) parting;

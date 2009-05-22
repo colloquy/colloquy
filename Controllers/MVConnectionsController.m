@@ -565,7 +565,7 @@ static NSMenu *favoritesMenu = nil;
 	[userSelectionPanel orderOut:nil];
 	[[NSApplication sharedApplication] endSheet:userSelectionPanel];
 
-	int row = [userSelectionTable selectedRow];
+	NSInteger row = [userSelectionTable selectedRow];
 
 	if( [sender tag] || row == -1 ) {
 		[_userSelectionPossibleUsers release];
@@ -669,7 +669,7 @@ static NSMenu *favoritesMenu = nil;
 	[self _registerNotificationsForConnection:connection];
 }
 
-- (void) insertConnection:(MVChatConnection *) connection atIndex:(unsigned) index {
+- (void) insertConnection:(MVChatConnection *) connection atIndex:(NSUInteger) index {
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
 	[info setObject:[NSDate date] forKey:@"created"];
 	[info setObject:connection forKey:@"connection"];
@@ -696,7 +696,7 @@ static NSMenu *favoritesMenu = nil;
 	[self removeConnectionAtIndex:index];
 }
 
-- (void) removeConnectionAtIndex:(unsigned) index {
+- (void) removeConnectionAtIndex:(NSUInteger) index {
 	MVChatConnection *connection = [[[_bookmarks objectAtIndex:index] objectForKey:@"connection"] retain];
     if( ! connection ) return;
 
@@ -718,7 +718,7 @@ static NSMenu *favoritesMenu = nil;
 	[connections noteNumberOfRowsChanged];
 }
 
-- (void) replaceConnectionAtIndex:(unsigned) index withConnection:(MVChatConnection *) connection {
+- (void) replaceConnectionAtIndex:(NSUInteger) index withConnection:(MVChatConnection *) connection {
 	NSMutableDictionary *info = [NSMutableDictionary dictionary];
 	[info setObject:[NSDate date] forKey:@"created"];
 	[info setObject:connection forKey:@"connection"];
@@ -1028,21 +1028,21 @@ static NSMenu *favoritesMenu = nil;
 
 #pragma mark -
 
-- (int) numberOfRowsInTableView:(NSTableView *) view {
+- (NSInteger) numberOfRowsInTableView:(NSTableView *) view {
 	if( view == connections ) return [_bookmarks count];
 	else if( view == newJoinRooms ) return [_joinRooms count];
 	else if( view == userSelectionTable ) return [_userSelectionPossibleUsers count];
 	return 0;
 }
 
-- (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
+- (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == connections ) {
 		if( [[column identifier] isEqualToString:@"auto"] ) {
 			return [[_bookmarks objectAtIndex:row] objectForKey:@"automatic"];
 		} else if( [[column identifier] isEqualToString:@"address"] ) {
 			return [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] server];
 		} else if( [[column identifier] isEqualToString:@"port"] ) {
-			return [NSNumber numberWithUnsignedInt:[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] serverPort]];
+			return [NSNumber numberWithUnsignedShort:[(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] serverPort]];
 		} else if( [[column identifier] isEqualToString:@"nickname"] ) {
 			return [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] nickname];
 		}
@@ -1061,7 +1061,7 @@ static NSMenu *favoritesMenu = nil;
 	return nil;
 }
 
-- (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(int) row {
+- (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == connections ) {
 		if( [[column identifier] isEqual:@"status"] ) {
 			if( [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] isConnected] ) {
@@ -1077,7 +1077,7 @@ static NSMenu *favoritesMenu = nil;
 	}
 }
 
-- (NSMenu *) tableView:(NSTableView *) view menuForTableColumn:(NSTableColumn *) column row:(int) row {
+- (NSMenu *) tableView:(NSTableView *) view menuForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == connections ) {
 		MVChatConnection *connection = [[_bookmarks objectAtIndex:row] objectForKey:@"connection"];
 		BOOL connected = [connection isConnected];
@@ -1159,7 +1159,7 @@ static NSMenu *favoritesMenu = nil;
 	return nil;
 }
 
-- (void) tableView:(NSTableView *) view setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
+- (void) tableView:(NSTableView *) view setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == connections ) {
 		if( [[column identifier] isEqual:@"auto"] ) {
 			[[_bookmarks objectAtIndex:row] setObject:object forKey:@"automatic"];
@@ -1190,7 +1190,7 @@ static NSMenu *favoritesMenu = nil;
 
 - (BOOL) tableView:(NSTableView *) view writeRows:(NSArray *) rows toPasteboard:(NSPasteboard *) board {
 	if( view == connections ) {
-		int row = [[rows lastObject] intValue];
+		NSInteger row = [[rows lastObject] intValue];
 		NSDictionary *info = nil;
 		MVChatConnection *connection = nil;
 		NSString *string = nil;
@@ -1235,10 +1235,10 @@ static NSMenu *favoritesMenu = nil;
 	return YES;
 }
 
-- (NSDragOperation) tableView:(NSTableView *) view validateDrop:(id <NSDraggingInfo>) info proposedRow:(int) row proposedDropOperation:(NSTableViewDropOperation) operation {
+- (NSDragOperation) tableView:(NSTableView *) view validateDrop:(id <NSDraggingInfo>) info proposedRow:(NSInteger) row proposedDropOperation:(NSTableViewDropOperation) operation {
 	if( view == connections ) {
 		NSString *string = nil;
-		int index = -1;
+		NSInteger index = -1;
 
 		if( operation == NSTableViewDropOn && row != -1 ) return NSDragOperationNone;
 
@@ -1268,10 +1268,10 @@ static NSMenu *favoritesMenu = nil;
 	return NSDragOperationNone;
 }
 
-- (BOOL) tableView:(NSTableView *) view acceptDrop:(id <NSDraggingInfo>) info row:(int) row dropOperation:(NSTableViewDropOperation) operation {
+- (BOOL) tableView:(NSTableView *) view acceptDrop:(id <NSDraggingInfo>) info row:(NSInteger) row dropOperation:(NSTableViewDropOperation) operation {
 	if( view == connections ) {
 		if( [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:MVConnectionPboardType]] ) {
-			int index = -1;
+			NSInteger index = -1;
 			[[[info draggingPasteboard] dataForType:MVConnectionPboardType] getBytes:&index];
 			if( row > index ) row--;
 
@@ -1313,7 +1313,7 @@ static NSMenu *favoritesMenu = nil;
 
 #pragma mark -
 
-- (int) numberOfItemsInComboBox:(NSComboBox *) comboBox {
+- (NSInteger) numberOfItemsInComboBox:(NSComboBox *) comboBox {
 	if( comboBox == newAddress ) {
 		return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] count];
 	} else if( comboBox == newPort ) {
@@ -1324,7 +1324,7 @@ static NSMenu *favoritesMenu = nil;
 	return 0;
 }
 
-- (id) comboBox:(NSComboBox *) comboBox objectValueForItemAtIndex:(int) index {
+- (id) comboBox:(NSComboBox *) comboBox objectValueForItemAtIndex:(NSInteger) index {
 	if( comboBox == newAddress ) {
 		return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] objectAtIndex:index];
 	} else if( comboBox == newPort ) {
@@ -1335,7 +1335,7 @@ static NSMenu *favoritesMenu = nil;
 	return nil;
 }
 
-- (unsigned int) comboBox:(NSComboBox *) comboBox indexOfItemWithStringValue:(NSString *) string {
+- (NSUInteger) comboBox:(NSComboBox *) comboBox indexOfItemWithStringValue:(NSString *) string {
 	if( comboBox == newAddress ) {
 		return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] indexOfObject:string];
 	}
@@ -2049,7 +2049,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (IBAction) _disconnect:(id) sender {
-	int row = [connections selectedRow];
+	NSInteger row = [connections selectedRow];
 	if( row == -1 ) return;
 
 	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
@@ -2059,7 +2059,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _delete:(id) sender {
-	int row = [connections selectedRow];
+	NSInteger row = [connections selectedRow];
 	if( row == -1 ) return;
 
 	MVChatConnection *connection = [[_bookmarks objectAtIndex:row] objectForKey:@"connection"];
@@ -2068,7 +2068,7 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) _deleteConnectionSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	if( returnCode != NSCancelButton ) return; // the cancel button because we have them flipped above
-	int row = [connections selectedRow];
+	NSInteger row = [connections selectedRow];
 	if( row == -1 ) return;
 	[connections deselectAll:nil];
 	[self removeConnectionAtIndex:row];
@@ -2080,7 +2080,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (IBAction) _openConsole:(id) sender {
-	int row = [connections selectedRow];
+	NSInteger row = [connections selectedRow];
 	if( row == -1 ) return;
 	[[JVChatController defaultController] chatConsoleForConnection:[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] ifExists:NO];
 }
@@ -2118,7 +2118,7 @@ static NSMenu *favoritesMenu = nil;
 	return [[MVConnectionsController defaultController] connections];
 }
 
-- (MVChatConnection *) valueInChatConnectionsAtIndex:(unsigned) index {
+- (MVChatConnection *) valueInChatConnectionsAtIndex:(NSUInteger) index {
 	return [[self chatConnections] objectAtIndex:index];
 }
 
@@ -2142,15 +2142,15 @@ static NSMenu *favoritesMenu = nil;
 	[[MVConnectionsController defaultController] addConnection:connection];
 }
 
-- (void) insertInChatConnections:(MVChatConnection *) connection atIndex:(unsigned) index {
+- (void) insertInChatConnections:(MVChatConnection *) connection atIndex:(NSUInteger) index {
 	[[MVConnectionsController defaultController] insertConnection:connection atIndex:index];
 }
 
-- (void) removeFromChatConnectionsAtIndex:(unsigned) index {
+- (void) removeFromChatConnectionsAtIndex:(NSUInteger) index {
 	[[MVConnectionsController defaultController] removeConnectionAtIndex:index];
 }
 
-- (void) replaceInChatConnections:(MVChatConnection *) connection atIndex:(unsigned) index {
+- (void) replaceInChatConnections:(MVChatConnection *) connection atIndex:(NSUInteger) index {
 	[[MVConnectionsController defaultController] replaceConnectionAtIndex:index withConnection:connection];
 }
 @end

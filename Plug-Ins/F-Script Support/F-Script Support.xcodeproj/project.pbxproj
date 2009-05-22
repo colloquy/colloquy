@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 45;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -34,7 +34,7 @@
 		1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
 		1CE3FB5407C7DFD50049A366 /* F-ScriptConsole.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = "F-ScriptConsole.nib"; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* F-Script Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "F-Script Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = "<group>"; };
+		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A1F6107B0957E488001B65CD /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -167,7 +167,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1C7F306F0855489300D41FB0 /* Build configuration list for PBXProject "F-Script Support" */;
-			compatibilityVersion = "Xcode 2.4";
+			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -288,11 +288,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				PREBINDING = NO;
 				SYMROOT = ../../build;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
@@ -301,8 +298,9 @@
 			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				ARCHS = (
-					ppc,
+					x86_64,
 					i386,
+					ppc,
 				);
 				SYMROOT = ../../build;
 			};

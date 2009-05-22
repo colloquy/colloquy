@@ -121,14 +121,14 @@
 }
 
 - (IBAction) changeBaseFontSize:(id) sender {
-	int size = [sender intValue];
+	NSInteger size = [sender intValue];
 	[baseFontSize setIntValue:size];
 	[baseFontSizeStepper setIntValue:size];
 	[[preview preferences] setDefaultFontSize:size];
 }
 
 - (IBAction) changeMinimumFontSize:(id) sender {
-	int size = [sender intValue];
+	NSInteger size = [sender intValue];
 	[minimumFontSize setIntValue:size];
 	[minimumFontSizeStepper setIntValue:size];
 	[[preview preferences] setMinimumFontSize:size];
@@ -353,8 +353,8 @@
 
 		NSString *fullPath = ( [[options objectForKey:@"path"] isAbsolutePath] ? [options objectForKey:@"path"] : [resourcePath stringByAppendingPathComponent:[options objectForKey:@"path"]] );
 		if( [path isEqualToString:fullPath] ) {
-			int index = [menu indexOfItemWithRepresentedObject:path];
-			[options setObject:[NSNumber numberWithInt:index] forKey:@"value"];
+			NSInteger index = [menu indexOfItemWithRepresentedObject:path];
+			[options setObject:[NSNumber numberWithLong:index] forKey:@"value"];
 			matched = YES;
 		}
 	}
@@ -378,8 +378,8 @@
 		[menuItem setTag:10];
 		[menu addItem:menuItem];
 
-		int index = [menu indexOfItemWithRepresentedObject:path];
-		[options setObject:[NSNumber numberWithInt:index] forKey:@"value"];
+		NSInteger index = [menu indexOfItemWithRepresentedObject:path];
+		[options setObject:[NSNumber numberWithLong:index] forKey:@"value"];
 	}
 
 	[menu addItem:[NSMenuItem separatorItem]];
@@ -430,7 +430,7 @@
 		[info removeObjectForKey:@"value"]; // Clear any old values, we will get the new value later on.
 
 		// Step through each style choice per option, colors have only one; lists have one style per list item.
-		int count = 0;
+		NSUInteger count = 0;
 		NSString *style = nil;
 		while( ( style = [senumerator nextObject] ) ) {
 			// Parse all the selectors in the style.
@@ -470,8 +470,8 @@
 						// Try to pick which option the list needs to select.
 						if( ! [value isEqualToString:compare] ) { // Didn't match.
 							NSNumber *value = [info objectForKey:@"value"];
-							if( [value intValue] == count ) [info removeObjectForKey:@"value"];
-						} else [info setObject:[NSNumber numberWithInt:count] forKey:@"value"]; // Matched for now.
+							if( [value unsignedLongValue] == count ) [info removeObjectForKey:@"value"];
+						} else [info setObject:[NSNumber numberWithUnsignedLong:count] forKey:@"value"]; // Matched for now.
 					} else if( [[info objectForKey:@"type"] isEqualToString:@"color"] ) {
 						if( value && [v rangeOfString:@"%@"].location != NSNotFound ) {
 							// Strip the "!important" flag to compare correctly.
@@ -492,8 +492,8 @@
 							// Strip the "!important" flag to compare correctly.
 							regex = [AGRegex regexWithPattern:@"\\s*!\\s*important\\s*$" options:AGRegexCaseInsensitive];
 
-							[info setObject:[NSNumber numberWithInt:0] forKey:@"value"];
-							[info setObject:[NSNumber numberWithInt:0] forKey:@"default"];
+							[info setObject:[NSNumber numberWithUnsignedLong:0] forKey:@"value"];
+							[info setObject:[NSNumber numberWithUnsignedLong:0] forKey:@"default"];
 
 							// Replace %@ with (.*) so we can pull the path value out.
 							NSString *expression = [regex replaceWithString:@"" inString:v];
@@ -592,11 +592,11 @@
 
 #pragma mark -
 
-- (int) numberOfRowsInTableView:(NSTableView *) view {
+- (NSInteger) numberOfRowsInTableView:(NSTableView *) view {
 	return [_styleOptions count];
 }
 
-- (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
+- (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( [[column identifier] isEqualToString:@"key"] ) {
 		return NSLocalizedString( [[_styleOptions objectAtIndex:row] objectForKey:@"description"], "description of style options, appearance preferences" );
 	} else if( [[column identifier] isEqualToString:@"value"] ) {
@@ -608,7 +608,7 @@
 	return nil;
 }
 
-- (void) tableView:(NSTableView *) view setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
+- (void) tableView:(NSTableView *) view setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( _variantLocked ) return;
 
 	if( [[column identifier] isEqualToString:@"value"] ) {
@@ -626,7 +626,7 @@
 		} else if( [[info objectForKey:@"type"] isEqualToString:@"file"] ) {
 			if( [object intValue] == -1 ) return;
 
-			NSString *path = [[[info objectForKey:@"cell"] itemAtIndex:[object intValue]] representedObject];
+			NSString *path = [[(NSPopUpButtonCell *)[info objectForKey:@"cell"] itemAtIndex:[object intValue]] representedObject];
 			if( ! path ) return;
 
 			[info setObject:object forKey:@"value"];
@@ -649,7 +649,7 @@
 
 	JVColorWellCell *cell = [notification object];
 	if( ! [[cell representedObject] isKindOfClass:[NSNumber class]] ) return;
-	int row = [[cell representedObject] intValue];
+	NSInteger row = [[cell representedObject] intValue];
 
 	NSMutableDictionary *info = [_styleOptions objectAtIndex:row];
 	[info setObject:[cell color] forKey:@"value"];
@@ -670,7 +670,7 @@
 
 - (IBAction) selectImageFile:(id) sender {
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-	int index = [optionsTable selectedRow];
+	NSInteger index = [optionsTable selectedRow];
 	NSMutableDictionary *info = [_styleOptions objectAtIndex:index];
 
 	[openPanel setAllowsMultipleSelection:NO];
@@ -700,7 +700,7 @@
 	[self buildFileMenuForCell:[options objectForKey:@"cell"] andOptions:options];
 }
 
-- (BOOL) tableView:(NSTableView *) view shouldSelectRow:(int) row {
+- (BOOL) tableView:(NSTableView *) view shouldSelectRow:(NSInteger) row {
 	static NSTimeInterval lastTime = 0;
 	if( _variantLocked && ( [NSDate timeIntervalSinceReferenceDate] - lastTime ) > 1. ) {
 		[self showNewVariantSheet];
@@ -710,14 +710,14 @@
 	return ( ! _variantLocked );
 }
 
-- (id) tableView:(NSTableView *) view dataCellForRow:(int) row tableColumn:(NSTableColumn *) column {
+- (id) tableView:(NSTableView *) view dataCellForRow:(NSInteger) row tableColumn:(NSTableColumn *) column {
 	if( [[column identifier] isEqualToString:@"value"] ) {
 		NSMutableDictionary *options = [_styleOptions objectAtIndex:row];
 		if( [options objectForKey:@"cell"] ) {
 			return [options objectForKey:@"cell"];
 		} else if( [[options objectForKey:@"type"] isEqualToString:@"color"] ) {
 			id cell = [[JVColorWellCell new] autorelease];
-			[cell setRepresentedObject:[NSNumber numberWithInt:row]];
+			[cell setRepresentedObject:[NSNumber numberWithLong:row]];
 			[options setObject:cell forKey:@"cell"];
 			return cell;
 		} else if( [[options objectForKey:@"type"] isEqualToString:@"list"] ) {

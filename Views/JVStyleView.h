@@ -25,10 +25,10 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 	DOMHTMLDocument *_domDocument;
 	DOMHTMLElement *_body;
 	NSString *_bodyTemplate;
-	unsigned long _scrollbackLimit;
+	NSUInteger _scrollbackLimit;
 	BOOL _requiresFullMessage;
 	BOOL _rememberScrollPosition;
-	unsigned long _lastScrollPosition;
+	NSUInteger _lastScrollPosition;
 }
 + (void) emptyCache;
 
@@ -53,8 +53,8 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 - (void) setEmoticons:(JVEmoticonSet *) emoticons;
 - (JVEmoticonSet *) emoticons;
 
-- (void) setScrollbackLimit:(unsigned long) limit;
-- (unsigned long) scrollbackLimit;
+- (void) setScrollbackLimit:(NSUInteger) limit;
+- (NSUInteger) scrollbackLimit;
 
 - (void) reloadCurrentStyle;
 - (void) clear;

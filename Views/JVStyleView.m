@@ -53,16 +53,16 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 @interface DOMHTMLElement (DOMHTMLElementExtras)
-- (unsigned) childElementLength;
-- (DOMNode *) childElementAtIndex:(unsigned) index;
-- (int) integerForDOMProperty:(NSString *) property;
-- (void) setInteger:(int) value forDOMProperty:(NSString *) property;
+- (NSUInteger) childElementLength;
+- (DOMNode *) childElementAtIndex:(NSUInteger) index;
+- (NSInteger) integerForDOMProperty:(NSString *) property;
+- (void) setInteger:(NSInteger) value forDOMProperty:(NSString *) property;
 @end
 
 #pragma mark -
 
 @implementation DOMHTMLElement (DOMHTMLElementExtras)
-- (unsigned) childElementLength {
+- (NSUInteger) childElementLength {
 	unsigned length = 0;
 
 	DOMNode *node = [self firstChild];
@@ -74,7 +74,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	return length;
 }
 
-- (DOMNode *) childElementAtIndex:(unsigned) index {
+- (DOMNode *) childElementAtIndex:(NSUInteger) index {
 	unsigned count = 0;
 	DOMNode *node = [self firstChild];
 	while (node) {
@@ -86,7 +86,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	return nil;
 }
 
-- (int) integerForDOMProperty:(NSString *) property {
+- (NSInteger) integerForDOMProperty:(NSString *) property {
 	SEL selector = NSSelectorFromString( property );
 	if( [self respondsToSelector:selector] )
 		return ((int(*)(id, SEL))objc_msgSend)(self, selector);
@@ -96,12 +96,12 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	return 0;
 }
 
-- (void) setInteger:(int) value forDOMProperty:(NSString *) property {
+- (void) setInteger:(NSInteger) value forDOMProperty:(NSString *) property {
 	SEL selector = NSSelectorFromString( [@"set" stringByAppendingString:[property capitalizedString]] );
 	if( [self respondsToSelector:selector] ) {
 		((void(*)(id, SEL, int))objc_msgSend)(self, selector, value);
 	} else {
-		NSNumber *number = [NSNumber numberWithInt:value];
+		NSNumber *number = [NSNumber numberWithLong:value];
 		[self setValue:number forKey:property];
 	}
 }
@@ -117,9 +117,9 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) _styleError;
 - (NSString *) _contentHTMLWithBody:(NSString *) html;
 - (NSURL *) _baseURL;
-- (unsigned) _visibleMessageCount;
-- (int) _locationOfMessage:(JVChatMessage *) message;
-- (int) _locationOfElementAtIndex:(unsigned) index;
+- (NSUInteger) _visibleMessageCount;
+- (NSUInteger) _locationOfMessage:(JVChatMessage *) message;
+- (NSUInteger) _locationOfElementAtIndex:(NSUInteger) index;
 - (void) _setupMarkedScroller;
 @end
 
@@ -359,11 +359,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
-- (void) setScrollbackLimit:(unsigned long) limit {
+- (void) setScrollbackLimit:(NSUInteger) limit {
 	_scrollbackLimit = limit;
 }
 
-- (unsigned long) scrollbackLimit {
+- (NSUInteger) scrollbackLimit {
 	return _scrollbackLimit;
 }
 
@@ -396,7 +396,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[_body appendChild:elt];
 		[self scrollToBottom];
 
-		int location = [elt integerForDOMProperty:@"offsetTop"];
+		NSInteger location = [elt integerForDOMProperty:@"offsetTop"];
 
 		JVMarkedScroller *scroller = [self verticalMarkedScroller];
 		[scroller removeMarkWithIdentifier:@"mark"];
@@ -510,14 +510,14 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		return;
 	}
 
-	int loc = [self _locationOfMessage:message];
+	NSInteger loc = [self _locationOfMessage:message];
 	if( loc != NSNotFound ) [[self verticalMarkedScroller] addMarkAt:loc];
 }
 
 - (void) markScrollbarForMessage:(JVChatMessage *) message usingMarkIdentifier:(NSString *) identifier andColor:(NSColor *) color {
 	if( _switchingStyles || ! _contentFrameReady ) return; // can't queue, too many args. NSInvocation?
 
-	int loc = [self _locationOfMessage:message];
+	NSInteger loc = [self _locationOfMessage:message];
 	if( loc != NSNotFound ) [[self verticalMarkedScroller] addMarkAt:loc withIdentifier:identifier withColor:color];
 }
 
@@ -532,7 +532,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	JVChatMessage *message = nil;
 
 	while( ( message = [enumerator nextObject] ) ) {
-		int loc = [self _locationOfMessage:message];
+		NSInteger loc = [self _locationOfMessage:message];
 		if( loc != NSNotFound ) [scroller addMarkAt:loc];
 	}
 }
@@ -628,10 +628,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) jumpToMessage:(JVChatMessage *) message {
-	unsigned loc = [self _locationOfMessage:message];
+	NSInteger loc = [self _locationOfMessage:message];
 	if( loc != NSNotFound ) {
 		JVMarkedScroller *scroller = [self verticalMarkedScroller];
-		int shift = [scroller shiftAmountToCenterAlign];
+		float shift = [scroller shiftAmountToCenterAlign];
 		[scroller setLocationOfCurrentMark:loc];
 
 		[[_domDocument body] setInteger:( loc - shift ) forDOMProperty:@"scrollTop"];
@@ -651,11 +651,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (BOOL) scrolledNearBottom {
 	WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
 	DOMHTMLElement *contentFrameElement = [contentFrame frameElement];
-	int frameHeight = [contentFrameElement integerForDOMProperty:@"offsetHeight"];
+	NSInteger frameHeight = [contentFrameElement integerForDOMProperty:@"offsetHeight"];
 
 	DOMHTMLElement *body = [_domDocument body];
-	int scrollHeight = [body integerForDOMProperty:@"scrollHeight"];
-	int scrollTop = [body integerForDOMProperty:@"scrollTop"];
+	NSInteger scrollHeight = [body integerForDOMProperty:@"scrollHeight"];
+	NSInteger scrollTop = [body integerForDOMProperty:@"scrollTop"];
 
 	// check if we are near the bottom 15 pixels of the chat area
 	return ( ( frameHeight + scrollTop ) >= ( scrollHeight - 15 ) );
@@ -835,11 +835,11 @@ quickEnd:
 
 	// enforce the scrollback limit and shift scrollbar marks
 	if( scrollToBottomNeeded && scrollbackLimit > 0 && messageCount > scrollbackLimit ) {
-		unsigned limit = ( messageCount - scrollbackLimit );
-		long shiftAmount = [self _locationOfElementAtIndex:limit];
+		NSUInteger limit = ( messageCount - scrollbackLimit );
+		NSInteger shiftAmount = [self _locationOfElementAtIndex:limit];
 
 		DOMNode *node = [_body firstChild];
-		for( unsigned i = 0; node && i < limit; ) {
+		for( NSUInteger i = 0; node && i < limit; ) {
 			DOMNode *next = [node nextSibling];
 
 			if( [node nodeType] == DOM_ELEMENT_NODE ) {
@@ -850,7 +850,7 @@ quickEnd:
 			node = next;
 		}
 
-		long firstItemShift = [self _locationOfElementAtIndex:0];
+		NSInteger firstItemShift = [self _locationOfElementAtIndex:0];
 		if( firstItemShift != NSNotFound ) shiftAmount -= firstItemShift;
 
 		if( scrollToBottomNeeded && shiftAmount > 0 && shiftAmount != NSNotFound )
@@ -945,7 +945,7 @@ quickEnd:
 
 #pragma mark -
 
-- (int) _locationOfMessageWithIdentifier:(NSString *) identifier {
+- (NSUInteger) _locationOfMessageWithIdentifier:(NSString *) identifier {
 	if( ! _contentFrameReady ) return NSNotFound;
 	if( ! [identifier length] ) return NSNotFound;
 
@@ -953,11 +953,11 @@ quickEnd:
 	return [element integerForDOMProperty:@"offsetTop"];
 }
 
-- (int) _locationOfMessage:(JVChatMessage *) message {
+- (NSUInteger) _locationOfMessage:(JVChatMessage *) message {
 	return [self _locationOfMessageWithIdentifier:[message messageIdentifier]];
 }
 
-- (int) _locationOfElementAtIndex:(unsigned) index {
+- (NSUInteger) _locationOfElementAtIndex:(NSUInteger) index {
 	if( ! _contentFrameReady )
 		return NSNotFound;
 	DOMHTMLElement *element = (DOMHTMLElement *)[_body childElementAtIndex:index];
@@ -966,7 +966,7 @@ quickEnd:
 	return [element integerForDOMProperty:@"offsetTop"];
 }
 
-- (unsigned) _visibleMessageCount {
+- (NSUInteger) _visibleMessageCount {
 	if( ! _contentFrameReady ) return 0;
 	return [_body childElementLength];
 }

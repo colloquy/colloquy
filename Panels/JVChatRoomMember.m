@@ -71,7 +71,7 @@
 - (NSComparisonResult) compareUsingStatus:(JVChatRoomMember *) member {
 	NSComparisonResult retVal = NSOrderedSame;
 
-	unsigned long myStatus = 0;
+	NSUInteger myStatus = 0;
 	if( [self serverOperator] ) myStatus = 6;
 	else if( [self roomFounder] ) myStatus = 5;
 	else if( [self roomAdministrator] ) myStatus = 4;
@@ -79,7 +79,7 @@
 	else if( [self halfOperator] ) myStatus = 2;
 	else if( [self voice] ) myStatus = 1;
 
-	unsigned long yourStatus = 0;
+	NSUInteger yourStatus = 0;
 	if( [member serverOperator] ) yourStatus = 6;
 	else if( [member roomFounder] ) yourStatus = 5;
 	else if( [member roomAdministrator] ) yourStatus = 4;
@@ -263,7 +263,7 @@
 }
 
 - (NSImage *) icon {
-	unsigned long modes = [[_room target] modesForMemberUser:_user];
+	NSUInteger modes = [[_room target] modesForMemberUser:_user];
 	NSString *iconName = @"person";
 
 	if( [_user isServerOperator] ) iconName = @"admin";
@@ -360,7 +360,7 @@
 	while( ( item = [enumerator nextObject] ) )
 		[menu addItem:item];
 
-	unsigned int localUserModes = ( [[self connection] localUser] ? [(MVChatRoom *)[_room target] modesForMemberUser:[[self connection] localUser]] : 0 );
+	NSUInteger localUserModes = ( [[self connection] localUser] ? [(MVChatRoom *)[_room target] modesForMemberUser:[[self connection] localUser]] : 0 );
 	BOOL localUserIsOperator = ( localUserModes & MVChatRoomMemberOperatorMode );
 	BOOL localUserIsHalfOperator = ( localUserModes & MVChatRoomMemberHalfOperatorMode );
 	BOOL localUserIsAdministrator = ( localUserModes & MVChatRoomMemberAdministratorMode );
@@ -505,7 +505,7 @@
 #pragma mark Scripting Support
 
 - (NSNumber *) uniqueIdentifier {
-	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
+	return [NSNumber numberWithUnsignedLong:(intptr_t)self];
 }
 
 - (NSArray *) children {

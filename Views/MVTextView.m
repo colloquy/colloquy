@@ -160,7 +160,7 @@
 
 - (void) resetCursorRects {
 	NSRange limitRange, effectiveRange;
-	unsigned int count = 0, i = 0;
+	NSUInteger count = 0, i = 0;
 	NSRectArray rects = NULL;
 	NSCursor *linkCursor = [[[NSCursor allocWithZone:nil] initWithImage:[NSImage imageNamed:@"MVLinkCursor"] hotSpot:NSMakePoint( 6., 0. )] autorelease];
 

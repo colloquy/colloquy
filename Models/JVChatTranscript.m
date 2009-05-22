@@ -17,13 +17,13 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 - (void) prependChatTranscript:(JVChatTranscript *) transcript;
 
-- (void) insertMessage:(JVChatMessage *) message atIndex:(unsigned) index;
+- (void) insertMessage:(JVChatMessage *) message atIndex:(NSUInteger) index;
 
-- (void) replaceMessageAtIndex:(unsigned) index withMessage:(JVChatMessage *) message;
+- (void) replaceMessageAtIndex:(NSUInteger) index withMessage:(JVChatMessage *) message;
 - (void) replaceMessagesInRange:(NSRange) range withMessages:(NSArray *) messages;
 
 - (void) removeMessage:(JVChatMessage *) message;
-- (void) removeMessageAtIndex:(unsigned) index;
+- (void) removeMessageAtIndex:(NSUInteger) index;
 - (void) removeMessageAtIndexes:(NSIndexSet *) indexes;
 - (void) removeMessagesInRange:(NSRange) range;
 - (void) removeMessagesInArray:(NSArray *) messages;
@@ -197,8 +197,8 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	return YES;
 }
 
-- (unsigned long) elementCount {
-	unsigned long count = 0;
+- (NSUInteger) elementCount {
+	NSUInteger count = 0;
 
 	@synchronized( self ) {
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
@@ -216,8 +216,8 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	return count;
 }
 
-- (unsigned long) sessionCount {
-	unsigned long count = 0;
+- (NSUInteger) sessionCount {
+	NSUInteger count = 0;
 
 	@synchronized( self ) {
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
@@ -230,8 +230,8 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	return count;
 }
 
-- (unsigned long) messageCount {
-	unsigned long count = 0;
+- (NSUInteger) messageCount {
+	NSUInteger count = 0;
 
 	@synchronized( self ) {
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
@@ -249,8 +249,8 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	return count;
 }
 
-- (unsigned long) eventCount {
-	unsigned long count = 0;
+- (NSUInteger) eventCount {
+	NSUInteger count = 0;
 
 	@synchronized( self ) {
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
@@ -265,12 +265,12 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 #pragma mark -
 
-- (void) setElementLimit:(unsigned int) limit {
+- (void) setElementLimit:(NSUInteger) limit {
 	_elementLimit = limit;
 	[self _enforceElementLimit];
 }
 
-- (unsigned int) elementLimit {
+- (NSUInteger) elementLimit {
 	return _elementLimit;
 }
 
@@ -284,7 +284,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	if( ! range.length ) return [NSArray array];
 
 	@synchronized( self ) {
-		unsigned long i = 0;
+		NSUInteger i = 0;
 		NSMutableArray *ret = [[NSMutableArray allocWithZone:nil] initWithCapacity:range.length];
 
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
@@ -326,7 +326,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	} return nil;
 }
 
-- (id) elementAtIndex:(unsigned long) index {
+- (id) elementAtIndex:(NSUInteger) index {
 	return [[self elementsInRange:NSMakeRange( index, 1 )] lastObject];
 }
 
@@ -394,13 +394,13 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		}
 
 		if( [_messages count] < range.location )
-			for( unsigned long i = [_messages count]; i < range.location; i++ )
+			for( NSUInteger i = [_messages count]; i < range.location; i++ )
 				[_messages insertObject:[NSNull null] atIndex:i];
 
 		NSMutableArray *ret = [[NSMutableArray allocWithZone:nil] initWithCapacity:range.length];
 		JVChatMessage *msg = nil;
 
-		unsigned long i = 0;
+		NSUInteger i = 0;
 
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
 		do {
@@ -437,7 +437,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	} return nil;
 }
 
-- (JVChatMessage *) messageAtIndex:(unsigned long) index {
+- (JVChatMessage *) messageAtIndex:(NSUInteger) index {
 	NSRange range = NSMakeRange( index, 1 );
 
 	@synchronized( self ) {
@@ -658,7 +658,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	if( ! range.length ) return [NSArray array];
 
 	@synchronized( self ) {
-		unsigned long i = 0;
+		NSUInteger i = 0;
 		NSMutableArray *ret = [[NSMutableArray allocWithZone:nil] initWithCapacity:range.length];
 
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
@@ -679,7 +679,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	} return nil;
 }
 
-- (JVChatSession *) sessionAtIndex:(unsigned long) index {
+- (JVChatSession *) sessionAtIndex:(NSUInteger) index {
 	return [[self sessionsInRange:NSMakeRange( index, 1 )] lastObject];
 }
 
@@ -723,7 +723,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	if( ! range.length ) return [NSArray array];
 
 	@synchronized( self ) {
-		unsigned long i = 0;
+		NSUInteger i = 0;
 		NSMutableArray *ret = [[NSMutableArray allocWithZone:nil] initWithCapacity:range.length];
 
 		xmlNode *node = xmlDocGetRootElement( _xmlLog ) -> children;
@@ -744,7 +744,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	} return nil;
 }
 
-- (JVChatEvent *) eventAtIndex:(unsigned long) index {
+- (JVChatEvent *) eventAtIndex:(NSUInteger) index {
 	return [[self eventsInRange:NSMakeRange( index, 1 )] lastObject];
 }
 
@@ -967,11 +967,11 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 - (void) _enforceElementLimit {
 	if( ! [self elementLimit] ) return;
 
-	unsigned long limit = [self elementLimit];
-	unsigned long count = [self elementCount];
+	NSUInteger limit = [self elementLimit];
+	NSUInteger count = [self elementCount];
 	if( ! limit || count <= limit ) return;
 
-	unsigned long total = ( count - limit );
+	NSUInteger total = ( count - limit );
 	xmlNode *tmp = NULL;
 
 	@synchronized( self ) {
@@ -1079,8 +1079,8 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 			return;
 		} else [_logFile seekToFileOffset:_previousLogOffset]; // the check was fine, go back
 	} else {
-		unsigned int offset = 6;
-		unsigned int eof = [_logFile seekToEndOfFile];
+		NSUInteger offset = 6;
+		NSUInteger eof = [_logFile seekToEndOfFile];
 		if( eof < 1 ) {
 			[self setAutomaticallyWritesChangesToFile:NO];
 			return;
@@ -1212,14 +1212,14 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 #pragma mark -
 
 - (NSNumber *) uniqueIdentifier {
-	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
+	return [NSNumber numberWithUnsignedLong:(intptr_t)self];
 }
 
 - (JVChatMessage *) valueInMessagesAtIndex:(long long) index {
 	if( index == -1 ) return [self lastMessage];
 
 	if( index < 0 ) {
-		unsigned long count = [self messageCount];
+		NSUInteger count = [self messageCount];
 		if( ABS( index ) > count ) return nil;
 		index = count + index;
 	}
@@ -1239,15 +1239,15 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	[self appendMessage:message];
 }
 
-- (void) insertInMessages:(JVChatMessage *) message atIndex:(unsigned) index {
+- (void) insertInMessages:(JVChatMessage *) message atIndex:(NSUInteger) index {
 	[self scriptErrorCantInsertMessageException];
 }
 
-- (void) removeFromMessagesAtIndex:(unsigned) index {
+- (void) removeFromMessagesAtIndex:(NSUInteger) index {
 	[self scriptErrorCantRemoveMessageException];
 }
 
-- (void) replaceInMessages:(JVChatMessage *) message atIndex:(unsigned) index {
+- (void) replaceInMessages:(JVChatMessage *) message atIndex:(NSUInteger) index {
 	[self scriptErrorCantRemoveMessageException];
 }
 @end

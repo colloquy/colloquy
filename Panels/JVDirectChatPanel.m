@@ -121,8 +121,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 #pragma mark -
 
 @interface JVStyleView (JVStyleViewPrivate)
-- (unsigned long) _visibleMessageCount;
-- (long) _locationOfElementAtIndex:(unsigned long) index;
+- (NSUInteger) _visibleMessageCount;
+- (NSUInteger) _locationOfElementAtIndex:(NSUInteger) index;
 @end
 
 #pragma mark -
@@ -178,7 +178,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
 
-				int org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
+				NSInteger org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
 				if( org == 1 ) {
 					logs = [logs stringByAppendingPathComponent:[[self user] serverAddress]];
 					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
@@ -196,11 +196,10 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 				NSString *logName = nil;
 				NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
 
-				int session = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptSessionHandling"];
-
+				NSInteger session = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptSessionHandling"];
 				if( ! session ) {
 					BOOL nameFound = NO;
-					unsigned int i = 1;
+					NSUInteger i = 1;
 
 					if( org ) logName = [NSString stringWithFormat:@"%@.colloquyTranscript", [self target]];
 					else logName = [NSString stringWithFormat:@"%@ (%@).colloquyTranscript", [self target], [[self user] serverAddress]];
@@ -685,7 +684,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( ! [[self connection] supportedStringEncodings] ) return;
 
 	NSMenuItem *menuItem = nil;
-	unsigned i = 0, count = 0;
+	NSUInteger i = 0, count = 0;
 	BOOL new = NO;
 	if( ! [sender tag] ) {
 		_encoding = (NSStringEncoding) [[self preferenceForKey:@"encoding"] intValue];
@@ -725,7 +724,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	for( i = 1; i < count; i++ ) [_spillEncodingMenu addItem:[[(NSMenuItem *)[_encodingMenu itemAtIndex:i] copy] autorelease]];
 
 	if( _encoding != [[self connection] encoding] ) {
-		[self setPreference:[NSNumber numberWithInt:_encoding] forKey:@"encoding"];
+		[self setPreference:[NSNumber numberWithUnsignedLong:_encoding] forKey:@"encoding"];
 	} else [self setPreference:nil forKey:@"encoding"];
 }
 
@@ -769,11 +768,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	NSFont *baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[[display preferences] standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:[[display preferences] defaultFontSize]];
 	if( ! baseFont ) baseFont = [NSFont userFontOfSize:12.];
 
-	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:_encoding], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:_encoding], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
 	NSTextStorage *messageString = [NSTextStorage attributedStringWithChatFormat:message options:options];
 
 	if( ! messageString ) {
-		[options setObject:[NSNumber numberWithUnsignedInt:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
+		[options setObject:[NSNumber numberWithUnsignedLong:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
 		messageString = [NSMutableAttributedString attributedStringWithChatFormat:message options:options];
 
 		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:baseFont, NSFontAttributeName, nil];
@@ -966,16 +965,16 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		cformat = nil;
 	}
 
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[self encoding]], @"StringEncoding", cformat, @"FormatType", nil];
+	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:[self encoding]], @"StringEncoding", cformat, @"FormatType", nil];
 	NSData *msgData = [[message body] chatFormatWithOptions:options]; // we could save this back to the message object before sending
 	[self addMessageToDisplay:msgData fromUser:[message sender] withAttributes:[message attributes] withIdentifier:[message messageIdentifier] andType:[message type]];
 }
 
-- (unsigned int) newMessagesWaiting {
+- (NSUInteger) newMessagesWaiting {
 	return _newMessageCount;
 }
 
-- (unsigned int) newHighlightMessagesWaiting {
+- (NSUInteger) newHighlightMessagesWaiting {
 	return _newHighlightMessageCount;
 }
 
@@ -1027,10 +1026,10 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	// ask if the user really wants to send a message with lots of newlines.
 	if ( [[NSUserDefaults standardUserDefaults] objectForKey:@"JVWarnOnLargeMessages"] ) {
-		int newlineCount = 1;
-		int messageLimit = 3;
+		NSUInteger newlineCount = 1;
+		NSUInteger messageLimit = 3;
 
-		for (unsigned i = 0; i < [[send textStorage] length]; ++i) {
+		for (NSUInteger i = 0; i < [[send textStorage] length]; ++i) {
 			unichar currentCharacter = [[[send textStorage] string] characterAtIndex:i];
 
 			if (currentCharacter == '\n' || currentCharacter == '\r' ) newlineCount++;
@@ -1223,9 +1222,10 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	_historyIndex++;
 
-	if( _historyIndex >= (int) [_sendHistory count] ) {
-		_historyIndex = [_sendHistory count] - 1;
-		if( (signed) _historyIndex < 0 ) _historyIndex = 0;
+	if( _historyIndex >= (NSInteger) [_sendHistory count] ) {
+		if( [_sendHistory count] >= 1 )
+			_historyIndex = [_sendHistory count] - 1;
+		else _historyIndex = 0;
 		return YES;
 	}
 
@@ -1308,7 +1308,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	return possibleCompletion;
 }
 
-- (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(int *) index {
+- (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(NSInteger *) index {
 	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSString *search = [[[send textStorage] string] substringWithRange:charRange];
 	NSMutableArray *ret = [NSMutableArray array];
@@ -1372,7 +1372,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 #pragma mark -
 #pragma mark SplitView Support
 
-- (float) splitView:(NSSplitView *) splitView constrainSplitPosition:(float) proposedPosition ofSubviewAt:(int) index {
+- (CGFloat) splitView:(NSSplitView *) splitView constrainSplitPosition:(CGFloat) proposedPosition ofSubviewAt:(NSInteger) index {
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
 		return ( NSHeight( [[[splitView subviews] objectAtIndex:index] frame] ) ); // prevents manual resize
 	return proposedPosition;
@@ -1529,7 +1529,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	NSMutableArray *ret = [NSMutableArray array];
 
 	NSMenuItem *item = nil;
-	unsigned i = 0;
+	NSUInteger i = 0;
 	BOOL found = NO;
 
 	for( i = 0; i < [defaultMenuItems count]; i++ ) {
@@ -1618,11 +1618,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( ! baseFont ) baseFont = [[NSFontManager sharedFontManager] fontWithFamily:[[display preferences] standardFontFamily] traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:[[display preferences] defaultFontSize]];
 	if( ! baseFont ) baseFont = [NSFont userFontOfSize:12.];
 
-	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:_encoding], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:_encoding], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
 	NSMutableAttributedString *messageString = [NSMutableAttributedString attributedStringWithChatFormat:message options:options];
 
 	if( ! messageString ) {
-		[options setObject:[NSNumber numberWithUnsignedInt:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
+		[options setObject:[NSNumber numberWithUnsignedLong:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
 		messageString = [NSMutableAttributedString attributedStringWithChatFormat:message options:options];
 	}
 
@@ -1692,15 +1692,15 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You have set yourself away with \"%@\".", "self away status set message" ), msgString] withName:@"awaySet" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:messageString, @"away-message", nil]];
 
-		unsigned long messageCount = [display _visibleMessageCount];
-		long loc = [display _locationOfElementAtIndex:( messageCount - 1 )];
-		if( loc > 0 && loc != NSNotFound ) [[display verticalMarkedScroller] startShadedAreaAt:loc];
+		NSUInteger messageCount = [display _visibleMessageCount];
+		NSUInteger loc = [display _locationOfElementAtIndex:( messageCount - 1 )];
+		if( loc != NSNotFound ) [[display verticalMarkedScroller] startShadedAreaAt:loc];
 	} else {
 		[self addEventMessageToDisplay:NSLocalizedString( @"You have returned from away.", "self away status removed message" ) withName:@"awayRemoved" andAttributes:nil];
 
-		unsigned long messageCount = [display _visibleMessageCount];
-		long loc = [display _locationOfElementAtIndex:( messageCount - 1 )];
-		if( loc > 0 && loc != NSNotFound ) [[display verticalMarkedScroller] stopShadedAreaAt:loc];
+		NSUInteger messageCount = [display _visibleMessageCount];
+		NSUInteger loc = [display _locationOfElementAtIndex:( messageCount - 1 )];
+		if( loc != NSNotFound ) [[display verticalMarkedScroller] stopShadedAreaAt:loc];
 	}
 }
 
@@ -1723,7 +1723,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 				[menu removeItem:menuItem];
 	}
 
-	unsigned int count = 0;
+	NSUInteger count = 0;
 	if( ! [menu indexOfItemWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item label" )] )
 		count++;
 
@@ -1807,7 +1807,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		WebPreferences *preferences = [display preferences];
 		// in some versions of WebKit (v125.9 at least), this is a font name, not a font family, try both
 		NSString *fontFamily = [preferences standardFontFamily];
-		int fontSize = [preferences defaultFontSize];
+		NSInteger fontSize = [preferences defaultFontSize];
 		baseFont = [NSFont fontWithName:fontFamily size:fontSize];
 		if( ! baseFont ) baseFont = [[NSFontManager sharedFontManager] fontWithFamily:fontFamily traits:( NSUnboldFontMask | NSUnitalicFontMask ) weight:5 size:fontSize];
 	}
@@ -1815,7 +1815,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[send setBaseFont:baseFont];
 }
 
-- (void) consumeImageData:(NSData *) data forTag:(int) tag {
+- (void) consumeImageData:(NSData *) data forTag:(NSInteger) tag {
 	[_personImageData autorelease];
 	_personImageData = [data retain];
 	_loadingPersonImage = NO;
@@ -1884,11 +1884,11 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 }
 
 - (void) _userStatusChanged:(NSNotification *) notification {
-	if ([_target status] == MVChatUserOfflineStatus)
+	if ([(MVChatUser *)_target status] == MVChatUserOfflineStatus)
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ disconnected from the server.", "User disconnected event message" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"userDisconnected" andAttributes:nil];
-	else if ([_target status] == MVChatUserAwayStatus)
+	else if ([(MVChatUser *)_target status] == MVChatUserAwayStatus)
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> is marked as away.", "User marked as away event message" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"userAway" andAttributes:nil];
-	else if ([_target status] == MVChatUserAvailableStatus)
+	else if ([(MVChatUser *)_target status] == MVChatUserAvailableStatus)
 		[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> is now available.", "User available event message" ), [[[self user] displayName] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"userAvailable" andAttributes:nil];
 }
 @end

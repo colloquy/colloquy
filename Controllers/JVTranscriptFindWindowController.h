@@ -13,7 +13,7 @@
 	IBOutlet NSTextField *hiddenResultsCount;
 	NSMutableArray *_rules;
 	NSMutableArray *_results;
-	unsigned int _lastMessageIndex;
+	NSUInteger _lastMessageIndex;
 	BOOL _findPasteboardNeedsUpdated;
 }
 + (JVTranscriptFindWindowController *) sharedController;

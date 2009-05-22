@@ -104,8 +104,8 @@
 	return empty;
 }
 
-- (unsigned long) elementCount {
-	unsigned long count = 0;
+- (NSUInteger) elementCount {
+	NSUInteger count = 0;
 	char **tables = NULL;
 	int rows = 0, cols = 0;
 
@@ -129,8 +129,8 @@
 	return count;
 }
 
-- (unsigned long) sessionCount {
-	unsigned long count = 0;
+- (NSUInteger) sessionCount {
+	NSUInteger count = 0;
 	char **tables = NULL;
 	int rows = 0, cols = 0;
 
@@ -144,8 +144,8 @@
 	return count;
 }
 
-- (unsigned long) messageCount {
-	unsigned long count = 0;
+- (NSUInteger) messageCount {
+	NSUInteger count = 0;
 	char **tables = NULL;
 	int rows = 0, cols = 0;
 
@@ -159,8 +159,8 @@
 	return count;
 }
 
-- (unsigned long) eventCount {
-	unsigned long count = 0;
+- (NSUInteger) eventCount {
+	NSUInteger count = 0;
 	char **tables = NULL;
 	int rows = 0, cols = 0;
 
@@ -272,7 +272,7 @@ static int _specificElementsInRangeCallback( void *context, int fieldCount, char
 	return [results autorelease];
 }
 
-- (JVChatMessage *) messageAtIndex:(unsigned long) index {
+- (JVChatMessage *) messageAtIndex:(NSUInteger) index {
 	NSMutableArray *results = [[NSMutableArray alloc] initWithCapacity:1];
 	Class class = [JVChatMessage class];
 	struct _specificElementsInRangeCallbackData data = { self, results, class };

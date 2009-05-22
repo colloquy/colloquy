@@ -114,7 +114,7 @@
 }
 
 - (IBAction) editIdentifier:(id) sender {
-	int index = [identifiersTable selectedRow];
+	NSInteger index = [identifiersTable selectedRow];
 	if( index == -1 ) return;
 
 	[_currentRule release];
@@ -160,7 +160,7 @@
 }
 
 - (IBAction) removeIdentifier:(id) sender {
-	int index = [identifiersTable selectedRow];
+	NSInteger index = [identifiersTable selectedRow];
 	if( index == -1 ) return;
 
 	MVChatUserWatchRule *rule = [[_buddy watchRules] objectAtIndex:index];
@@ -287,7 +287,7 @@
 
 #pragma mark -
 
-- (int) numberOfRowsInTableView:(NSTableView *) tableView {
+- (NSInteger) numberOfRowsInTableView:(NSTableView *) tableView {
 	if( [tableView isEqual:identifiersTable] )
 		return [[_buddy watchRules] count];
 	if( [tableView isEqual:identifierDomainsTable] )
@@ -295,11 +295,11 @@
 	return 0;
 }
 
-- (id) tableView:(NSTableView *) tableView objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
+- (id) tableView:(NSTableView *) tableView objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( [tableView isEqual:identifiersTable] ) {
 		NSMutableString *description = [NSMutableString string];
 		MVChatUserWatchRule *rule = [[_buddy watchRules] objectAtIndex:row];
-		unsigned count = 0;
+		NSUInteger count = 0;
 
 		NSString *string = [rule nickname];
 		if( [string length] ) {
@@ -344,7 +344,7 @@
 	return nil;
 }
 
-- (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
+- (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( [tableView isEqual:identifierDomainsTable] )
 		[_editDomains replaceObjectAtIndex:row withObject:object];
 }

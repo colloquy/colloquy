@@ -89,13 +89,13 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	return _rules;
 }
 
-- (void) insertObject:(id) obj inCriterionControllersAtIndex:(unsigned int) index {
+- (void) insertObject:(id) obj inCriterionControllersAtIndex:(NSUInteger) index {
 	if( index != NSNotFound ) [[self criterionControllers] insertObject:obj atIndex:( index + 1 )];
 	else [[self criterionControllers] addObject:obj];
 	[self reloadTableView];
 }
 
-- (void) removeObjectFromCriterionControllersAtIndex:(unsigned int) index {
+- (void) removeObjectFromCriterionControllersAtIndex:(NSUInteger) index {
 	[[self criterionControllers] removeObjectAtIndex:index];
 	[self reloadTableView];
 }
@@ -212,7 +212,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	NSRange range;
 
 	if( ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] ) {
-		unsigned int index = [allMessages indexOfObjectIdenticalTo:[[self results] lastObject]];
+		NSUInteger index = [allMessages indexOfObjectIdenticalTo:[[self results] lastObject]];
 		if( index != NSNotFound ) {
 			range = NSMakeRange( index + 1, [allMessages count] - ( index + 1 ) );
 		} else goto end;
@@ -237,9 +237,9 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	[resultProgress setDoubleValue:0.];
 	[resultProgress displayIfNeeded];
 
-	unsigned int hiddenMsgs = 0;
-	unsigned int i = 0;
-	unsigned int totalMsgs = [rangeMsgs count];
+	NSUInteger hiddenMsgs = 0;
+	NSUInteger i = 0;
+	NSUInteger totalMsgs = [rangeMsgs count];
 	BOOL andOperation = ( [operation selectedTag] == 2 );
 	BOOL ignore = ( [ignoreCase state] == NSOnState );
 
@@ -318,7 +318,7 @@ end:
 	NSRange range;
 
 	if( ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] && [[self results] count] ) {
-		unsigned int index = [allMessages indexOfObjectIdenticalTo:[[self results] objectAtIndex:0]];
+		NSUInteger index = [allMessages indexOfObjectIdenticalTo:[[self results] objectAtIndex:0]];
 		if( index != NSNotFound && index > 1 ) {
 			range = NSMakeRange( 0, index );
 		} else goto end;
@@ -343,9 +343,9 @@ end:
 	[resultProgress setDoubleValue:0.];
 	[resultProgress displayIfNeeded];
 
-	unsigned int hiddenMsgs = 0;
-	unsigned int i = 0;
-	unsigned int totalMsgs = [rangeMsgs count];
+	NSUInteger hiddenMsgs = 0;
+	NSUInteger i = 0;
+	NSUInteger totalMsgs = [rangeMsgs count];
 	BOOL andOperation = ( [operation selectedTag] == 2 );
 	BOOL ignore = ( [ignoreCase state] == NSOnState );
 
@@ -420,7 +420,7 @@ end:
 
 #pragma mark -
 
-- (int) numberOfRowsInTableView:(NSTableView *) tableView {
+- (NSInteger) numberOfRowsInTableView:(NSTableView *) tableView {
 	return [[self criterionControllers] count];
 }
 
@@ -428,7 +428,7 @@ end:
 	[subviewTableView deselectAll:nil];
 }
 
-- (void) tableView:(NSTableView *) tableView willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) tableColumn row:(int) row {
+- (void) tableView:(NSTableView *) tableView willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) tableColumn row:(NSInteger) row {
 	if( [[tableColumn identifier] isEqualToString:@"criteria"] ) {
 		[(JVViewCell *)cell setView:[(JVTranscriptCriterionController *)[[self criterionControllers] objectAtIndex:row] view]];
 	} else if( [[tableColumn identifier] isEqualToString:@"remove"] ) {

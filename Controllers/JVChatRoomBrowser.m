@@ -277,15 +277,15 @@
 
 #pragma mark -
 
-- (int) numberOfItemsInComboBox:(NSComboBox *) comboBox {
+- (NSInteger) numberOfItemsInComboBox:(NSComboBox *) comboBox {
 	return [_roomOrder count];
 }
 
-- (id) comboBox:(NSComboBox *) comboBox objectValueForItemAtIndex:(int) index {
+- (id) comboBox:(NSComboBox *) comboBox objectValueForItemAtIndex:(NSInteger) index {
 	return [_roomOrder objectAtIndex:index];
 }
 
-- (unsigned int) comboBox:(NSComboBox *) comboBox indexOfItemWithStringValue:(NSString *) string {
+- (NSUInteger) comboBox:(NSComboBox *) comboBox indexOfItemWithStringValue:(NSString *) string {
 	return [_roomOrder indexOfObject:string];
 }
 
@@ -301,7 +301,7 @@
 	[acceptButton setEnabled:( [roomField indexOfSelectedItem] != -1 || [[roomField stringValue] length] )];
 
 	if( ! _collapsed && roomsTable != [[roomsTable window] firstResponder] ) {
-		int index = [roomField indexOfSelectedItem];
+		NSInteger index = [roomField indexOfSelectedItem];
 		if( index != -1 ) {
 			[roomsTable selectRow:index byExtendingSelection:NO];
 			[roomsTable scrollRowToVisible:index];
@@ -313,7 +313,7 @@
 	[acceptButton setEnabled:( [[roomField stringValue] length] )];
 
 	if( ! _collapsed && roomsTable != [[roomsTable window] firstResponder] ) {
-		int index = [roomField indexOfSelectedItem];
+		NSInteger index = [roomField indexOfSelectedItem];
 		if( index != -1 ) {
 			[roomsTable selectRow:index byExtendingSelection:NO];
 			[roomsTable scrollRowToVisible:index];
@@ -323,7 +323,7 @@
 
 - (void) controlTextDidEndEditing:(NSNotification *) notification {
 	if( ! _collapsed && roomsTable != [[roomsTable window] firstResponder] ) {
-		int index = [roomField indexOfSelectedItem];
+		NSInteger index = [roomField indexOfSelectedItem];
 		if( index != -1 ) {
 			[roomsTable selectRow:index byExtendingSelection:NO];
 			[roomsTable scrollRowToVisible:index];
@@ -333,11 +333,11 @@
 
 #pragma mark -
 
-- (int) numberOfRowsInTableView:(NSTableView *) view {
+- (NSInteger) numberOfRowsInTableView:(NSTableView *) view {
 	return [_roomOrder count];
 }
 
-- (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
+- (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( [[column identifier] isEqualToString:@"room"] ) {
 		return [_roomOrder objectAtIndex:row];
 	} else if( [[column identifier] isEqualToString:@"topic"] ) {
@@ -346,9 +346,9 @@
 
 		if( ! t ) {
 			NSData *topic = [info objectForKey:@"topic"];
-			NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[_connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
+			NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:[_connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
 			if( ! ( t = [NSAttributedString attributedStringWithChatFormat:topic options:options] ) ) {
-				[options setObject:[NSNumber numberWithUnsignedInt:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
+				[options setObject:[NSNumber numberWithUnsignedLong:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
 				t = [NSAttributedString attributedStringWithChatFormat:topic options:options];
 			}
 
@@ -382,7 +382,7 @@
 	[_sortColumn autorelease];
 	_sortColumn = [[column identifier] copy];
 
-	int index = [roomsTable selectedRow];
+	NSInteger index = [roomsTable selectedRow];
 	NSString *selectedRoom = ( index != -1 && [_roomOrder count] ? [[_roomOrder objectAtIndex:index] copy] : nil );
 	[roomsTable deselectAll:nil];
 
@@ -495,7 +495,7 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 }
 
 - (void) _refreshResults:(id) sender {
-	int index = [roomsTable selectedRow];
+	NSInteger index = [roomsTable selectedRow];
 	NSString *selectedRoom = ( index != -1 && [_roomOrder count] ? [[_roomOrder objectAtIndex:index] copy] : nil );
 
 	if( _collapsed || ! [_currentFilter length] ) {
@@ -510,7 +510,7 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 
 	[_roomOrder removeAllObjects]; // this is far more efficient than doing a containsObject: and a removeObject: during the while
 
-	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[_connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:[_connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
 
 	while( ( room = [enumerator nextObject] ) && ( info = [venumerator nextObject] ) ) {
 		if( [room rangeOfString:_currentFilter options:NSCaseInsensitiveSearch].location != NSNotFound ) {
@@ -522,9 +522,9 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 
 		if( ! t ) {
 			NSData *topic = [info objectForKey:@"topic"];
-			[options setObject:[NSNumber numberWithUnsignedInt:[_connection encoding]] forKey:@"StringEncoding"];
+			[options setObject:[NSNumber numberWithUnsignedLong:[_connection encoding]] forKey:@"StringEncoding"];
 			if( ! ( t = [NSAttributedString attributedStringWithChatFormat:topic options:options] ) ) {
-				[options setObject:[NSNumber numberWithUnsignedInt:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
+				[options setObject:[NSNumber numberWithUnsignedLong:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
 				t = [NSAttributedString attributedStringWithChatFormat:topic options:options];
 			}
 

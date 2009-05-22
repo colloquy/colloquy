@@ -57,7 +57,7 @@
 
 #pragma mark -
 
-- (void) insertChatViewController:(id <JVChatViewController>) controller atIndex:(unsigned int) index {
+- (void) insertChatViewController:(id <JVChatViewController>) controller atIndex:(NSUInteger) index {
 	NSParameterAssert( controller != nil );
 	NSAssert1( ! [_views containsObject:controller], @"%@ already added.", controller );
 	NSAssert( index <= [_views count], @"Index is beyond bounds." );
@@ -74,7 +74,7 @@
 #pragma mark -
 
 - (void) removeChatViewController:(id <JVChatViewController>) controller {
-	unsigned int index = [_views indexOfObjectIdenticalTo:controller];
+	NSUInteger index = [_views indexOfObjectIdenticalTo:controller];
 	[_tabItems removeObjectAtIndex:index];
 	[tabView removeTabViewItem:[tabView tabViewItemAtIndex:index]];
 	[super removeChatViewController:controller];
@@ -89,7 +89,7 @@
 
 #pragma mark -
 
-- (void) replaceChatViewControllerAtIndex:(unsigned int) index withController:(id <JVChatViewController>) controller {
+- (void) replaceChatViewControllerAtIndex:(NSUInteger) index withController:(id <JVChatViewController>) controller {
 	NSParameterAssert( controller != nil );
 	NSAssert1( ! [_views containsObject:controller], @"%@ is already a member of this window controller.", controller );
 	NSAssert( index <= [_views count], @"Index is beyond bounds." );
@@ -109,7 +109,7 @@
 - (void) showChatViewController:(id <JVChatViewController>) controller {
 	NSAssert1( [_views containsObject:controller], @"%@ is not a member of this window controller.", controller );
 
-	unsigned int index = [_views indexOfObjectIdenticalTo:controller];
+	NSUInteger index = [_views indexOfObjectIdenticalTo:controller];
 	[tabView selectTabViewItemAtIndex:index];
 
 	// [self _refreshWindow] is called in the customTabView:didSelectTabViewItem:
@@ -132,7 +132,7 @@
 			[self _refreshSelectionMenu];
 
 		if( selectItem ) {
-			int selectedRow = [chatViewsOutlineView rowForItem:selectItem];
+			NSInteger selectedRow = [chatViewsOutlineView rowForItem:selectItem];
 			[chatViewsOutlineView selectRow:selectedRow byExtendingSelection:NO];
 		}
 	}
@@ -339,13 +339,13 @@
 
 #pragma mark -
 
-- (int) outlineView:(NSOutlineView *) outlineView numberOfChildrenOfItem:(id) item {
+- (NSInteger) outlineView:(NSOutlineView *) outlineView numberOfChildrenOfItem:(id) item {
 	if( item && [item respondsToSelector:@selector( numberOfChildren )] ) return [item numberOfChildren];
 	else if( [_activeViewController respondsToSelector:@selector( numberOfChildren )] ) return [(id)_activeViewController numberOfChildren];
 	else return 0;
 }
 
-- (id) outlineView:(NSOutlineView *) outlineView child:(int) index ofItem:(id) item {
+- (id) outlineView:(NSOutlineView *) outlineView child:(NSInteger) index ofItem:(id) item {
 	if( item ) {
 		if( [item respondsToSelector:@selector( childAtIndex: )] )
 			return [item childAtIndex:index];
@@ -391,8 +391,8 @@
 	else if( _forceTabBarVisible > 0 ) _forceTabBarVisible = 0;
 
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVTabBarAlwaysVisible"] )
-		[self setPreference:( _forceTabBarVisible == 1 ? [NSNumber numberWithInt:1] : nil ) forKey:@"tab bar visible"];
-	else [self setPreference:[NSNumber numberWithInt:_forceTabBarVisible] forKey:@"tab bar visible"];
+		[self setPreference:( _forceTabBarVisible == 1 ? [NSNumber numberWithUnsignedLong:1] : nil ) forKey:@"tab bar visible"];
+	else [self setPreference:[NSNumber numberWithLong:_forceTabBarVisible] forKey:@"tab bar visible"];
 
 	[self updateTabBarVisibilityAndAnimate:NO];
 }
@@ -443,7 +443,7 @@
 	unichar right = NSRightArrowFunctionKey;
 
 	NSMenu *windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
-	int index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousPanel: )];
+	NSInteger index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousPanel: )];
 	id item = [windowMenu itemAtIndex:index];
 	[item setKeyEquivalent:[NSString stringWithCharacters:&left length:1]];
 
@@ -470,7 +470,7 @@
 	unichar down = NSDownArrowFunctionKey;
 
 	NSMenu *windowMenu = [[[[NSApplication sharedApplication] mainMenu] itemWithTag:5] submenu];
-	int index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousPanel: )];
+	NSInteger index = [windowMenu indexOfItemWithTarget:nil andAction:@selector( selectPreviousPanel: )];
 	id item = [windowMenu itemAtIndex:index];
 	[item setKeyEquivalent:[NSString stringWithCharacters:&up length:1]];
 
@@ -506,14 +506,14 @@
 // Resize the tab bar towards it's desired height
 - (BOOL) _resizeTabBarAbsolute:(BOOL) absolute {
 	NSSize tabSize = [customTabsView frame].size;
-	double destHeight = 0.;
+	CGFloat destHeight = 0.;
 	NSRect newFrame = NSZeroRect;
 
 	// determine the desired height
 	destHeight = ( _tabIsShowing ? _tabHeight : 0. );
 
 	// move the tab view's height towards this desired height
-	int distance = ( destHeight - tabSize.height ) * 0.6;
+	NSInteger distance = ( destHeight - tabSize.height ) * 0.6;
 	if( absolute || ( distance > -1 && distance < 1 ) ) distance = destHeight - tabSize.height;
 
 	tabSize.height += distance;

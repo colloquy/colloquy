@@ -262,18 +262,18 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (IBAction) selectPreviousPanel:(id) sender {
-	int currentIndex = [_views indexOfObject:_activeViewController];
-	int index = 0;
+	NSInteger currentIndex = [_views indexOfObject:_activeViewController];
+	NSUInteger index = 0;
 
-	if( currentIndex - 1 >= 0 ) index = ( currentIndex - 1 );
+	if( ( currentIndex - 1 ) >= 0 ) index = ( currentIndex - 1 );
 	else index = ( [_views count] - 1 );
 
 	[self showChatViewController:[_views objectAtIndex:index]];
 }
 
 - (IBAction) selectPreviousActivePanel:(id) sender {
-	int currentIndex = [_views indexOfObject:_activeViewController];
-	int index = currentIndex;
+	NSUInteger currentIndex = [_views indexOfObject:_activeViewController];
+	NSUInteger index = currentIndex;
 	BOOL done = NO;
 
 	do {
@@ -335,7 +335,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self insertChatViewController:controller atIndex:[_views count]];
 }
 
-- (void) insertChatViewController:(id <JVChatViewController>) controller atIndex:(unsigned int) index {
+- (void) insertChatViewController:(id <JVChatViewController>) controller atIndex:(NSUInteger) index {
 	NSParameterAssert( controller != nil );
 	NSAssert1( ! [_views containsObject:controller], @"%@ already added.", controller );
 	NSAssert( index <= [_views count], @"Index is beyond bounds." );
@@ -388,7 +388,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[self close];
 }
 
-- (void) removeChatViewControllerAtIndex:(unsigned int) index {
+- (void) removeChatViewControllerAtIndex:(NSUInteger) index {
 	NSAssert( index <= [_views count], @"Index is beyond bounds." );
 	[self removeChatViewController:[_views objectAtIndex:index]];
 }
@@ -423,7 +423,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self replaceChatViewControllerAtIndex:[_views indexOfObjectIdenticalTo:controller] withController:newController];
 }
 
-- (void) replaceChatViewControllerAtIndex:(unsigned int) index withController:(id <JVChatViewController>) controller {
+- (void) replaceChatViewControllerAtIndex:(NSUInteger) index withController:(id <JVChatViewController>) controller {
 	NSParameterAssert( controller != nil );
 	NSAssert1( ! [_views containsObject:controller], @"%@ is already a member of this window controller.", controller );
 	NSAssert( index <= [_views count], @"Index is beyond bounds." );
@@ -504,7 +504,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (IBAction) openViewsDrawer:(id) sender {
-	int side = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatWindowDrawerSide"];
+	NSInteger side = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatWindowDrawerSide"];
 	if( side == -1 ) [viewsDrawer openOnEdge:NSMinXEdge];
 	else if( side == 1 ) [viewsDrawer openOnEdge:NSMaxXEdge];
 	else [viewsDrawer open];
@@ -535,10 +535,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	if( [self isMemberOfClass:[JVChatWindowController class]] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVKeepActiveDrawerPanelsVisible"] && [item isKindOfClass:[JVDirectChatPanel class]] && [(id)item newMessagesWaiting] ) {
 		NSRange visibleRows = [chatViewsOutlineView rowsInRect:[chatViewsOutlineView visibleRect]];
-		int row = [chatViewsOutlineView rowForItem:item];
+		NSInteger row = [chatViewsOutlineView rowForItem:item];
 
 		if( ! NSLocationInRange( row, visibleRows ) && row > 0 ) {
-			int index = [_views indexOfObjectIdenticalTo:item];
+			NSInteger index = [_views indexOfObjectIdenticalTo:item];
 
 			row = ( index > row ? NSMaxRange( visibleRows ) : visibleRows.location + 1 );
 			id <JVChatListItem> rowItem = [chatViewsOutlineView itemAtRow:row];
@@ -562,7 +562,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[self _refreshSelectionMenu];
 
 	if( selectItem ) {
-		int selectedRow = [chatViewsOutlineView rowForItem:selectItem];
+		NSInteger selectedRow = [chatViewsOutlineView rowForItem:selectItem];
 		[chatViewsOutlineView selectRow:selectedRow byExtendingSelection:NO];
 	}
 }
@@ -764,7 +764,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	return nil;
 }
 
-- (int) outlineView:(NSOutlineView *) outlineView numberOfChildrenOfItem:(id) item {
+- (NSInteger) outlineView:(NSOutlineView *) outlineView numberOfChildrenOfItem:(id) item {
 	if( item && [item respondsToSelector:@selector( numberOfChildren )] ) return [item numberOfChildren];
 	else return [_views count];
 }
@@ -773,7 +773,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	return ( [item respondsToSelector:@selector( numberOfChildren )] && [item numberOfChildren] ? YES : NO );
 }
 
-- (id) outlineView:(NSOutlineView *) outlineView child:(int) index ofItem:(id) item {
+- (id) outlineView:(NSOutlineView *) outlineView child:(NSInteger) index ofItem:(id) item {
 	if( item ) {
 		if( [item respondsToSelector:@selector( childAtIndex: )] )
 			return [item childAtIndex:index];
@@ -834,7 +834,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	return YES;
 }
 
-- (NSDragOperation) outlineView:(NSOutlineView *) outlineView validateDrop:(id <NSDraggingInfo>) info proposedItem:(id) item proposedChildIndex:(int) index {
+- (NSDragOperation) outlineView:(NSOutlineView *) outlineView validateDrop:(id <NSDraggingInfo>) info proposedItem:(id) item proposedChildIndex:(NSInteger) index {
 	if( [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]] ) {
 		if( [item respondsToSelector:@selector( acceptsDraggedFileOfType: )] ) {
 			NSArray *files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
@@ -853,7 +853,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	} else return NSDragOperationNone;
 }
 
-- (BOOL) outlineView:(NSOutlineView *) outlineView acceptDrop:(id <NSDraggingInfo>) info item:(id) item childIndex:(int) index {
+- (BOOL) outlineView:(NSOutlineView *) outlineView acceptDrop:(id <NSDraggingInfo>) info item:(id) item childIndex:(NSInteger) index {
 	NSPasteboard *board = [info draggingPasteboard];
 	if( [board availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]] ) {
 		NSArray *files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
@@ -1057,7 +1057,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[chatViewsOutlineView sizeLastColumnToFit];
 
 	if( selectItem ) {
-		int selectedRow = [chatViewsOutlineView rowForItem:selectItem];
+		NSInteger selectedRow = [chatViewsOutlineView rowForItem:selectItem];
 		[chatViewsOutlineView selectRow:selectedRow byExtendingSelection:NO];
 	}
 }
@@ -1112,7 +1112,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	return [(JVChatWindowController *)[self windowController] allChatViewControllers];
 }
 
-- (id <JVChatViewController>) valueInChatViewsAtIndex:(unsigned) index {
+- (id <JVChatViewController>) valueInChatViewsAtIndex:(NSUInteger) index {
 	return [[self chatViews] objectAtIndex:index];
 }
 
@@ -1153,12 +1153,12 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[[self windowController] insertChatViewController:view atIndex:index];
 }
 
-- (void) removeFromViewsAtIndex:(unsigned) index {
+- (void) removeFromViewsAtIndex:(NSUInteger) index {
 	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
 	[[self windowController] removeChatViewControllerAtIndex:index];
 }
 
-- (void) replaceInChatViews:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) replaceInChatViews:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	if( ! [[self windowController] isKindOfClass:[JVChatWindowController class]] ) return;
 	[[self windowController] replaceChatViewControllerAtIndex:index withController:view];
 }
@@ -1177,7 +1177,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	return ret;
 }
 
-- (id <JVChatViewController>) valueInChatViewsAtIndex:(unsigned) index withClass:(Class) class {
+- (id <JVChatViewController>) valueInChatViewsAtIndex:(NSUInteger) index withClass:(Class) class {
 	return [[self chatViewsWithClass:class] objectAtIndex:index];
 }
 
@@ -1197,26 +1197,26 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) addInChatViews:(id <JVChatViewController>) view withClass:(Class) class {
-	unsigned int index = [[self chatViews] indexOfObject:[[self chatViewsWithClass:class] lastObject]];
+	NSUInteger index = [[self chatViews] indexOfObject:[[self chatViewsWithClass:class] lastObject]];
 	[self insertInChatViews:view atIndex:( index + 1 )];
 }
 
-- (void) insertInChatViews:(id <JVChatViewController>) view atIndex:(unsigned) index withClass:(Class) class {
+- (void) insertInChatViews:(id <JVChatViewController>) view atIndex:(NSUInteger) index withClass:(Class) class {
 	if( index == [[self chatViewsWithClass:class] count] ) {
 		[self addInChatViews:view withClass:class];
 	} else {
-		unsigned int indx = [[self chatViews] indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
+		NSUInteger indx = [[self chatViews] indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
 		[self insertInChatViews:view atIndex:indx];
 	}
 }
 
-- (void) removeFromChatViewsAtIndex:(unsigned) index withClass:(Class) class {
-	unsigned int indx = [[self chatViews] indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
+- (void) removeFromChatViewsAtIndex:(NSUInteger) index withClass:(Class) class {
+	NSUInteger indx = [[self chatViews] indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
 	[self removeFromViewsAtIndex:indx];
 }
 
-- (void) replaceInChatViews:(id <JVChatViewController>) view atIndex:(unsigned) index withClass:(Class) class {
-	unsigned int indx = [[self chatViews] indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
+- (void) replaceInChatViews:(id <JVChatViewController>) view atIndex:(NSUInteger) index withClass:(Class) class {
+	NSUInteger indx = [[self chatViews] indexOfObject:[[self chatViewsWithClass:class] objectAtIndex:index]];
 	[self replaceInChatViews:view atIndex:indx];
 }
 
@@ -1226,7 +1226,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	return [self chatViewsWithClass:[JVChatRoomPanel class]];
 }
 
-- (id <JVChatViewController>) valueInChatRoomsAtIndex:(unsigned) index {
+- (id <JVChatViewController>) valueInChatRoomsAtIndex:(NSUInteger) index {
 	return [self valueInChatViewsAtIndex:index withClass:[JVChatRoomPanel class]];
 }
 
@@ -1246,15 +1246,15 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self addInChatViews:view withClass:[JVChatRoomPanel class]];
 }
 
-- (void) insertInChatRooms:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) insertInChatRooms:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self insertInChatViews:view atIndex:index withClass:[JVChatRoomPanel class]];
 }
 
-- (void) removeFromChatRoomsAtIndex:(unsigned) index {
+- (void) removeFromChatRoomsAtIndex:(NSUInteger) index {
 	[self removeFromChatViewsAtIndex:index withClass:[JVChatRoomPanel class]];
 }
 
-- (void) replaceInChatRooms:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) replaceInChatRooms:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self replaceInChatViews:view atIndex:index withClass:[JVChatRoomPanel class]];
 }
 
@@ -1264,7 +1264,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	return [self chatViewsWithClass:[JVDirectChatPanel class]];
 }
 
-- (id <JVChatViewController>) valueInDirectChatsAtIndex:(unsigned) index {
+- (id <JVChatViewController>) valueInDirectChatsAtIndex:(NSUInteger) index {
 	return [self valueInChatViewsAtIndex:index withClass:[JVDirectChatPanel class]];
 }
 
@@ -1284,15 +1284,15 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self addInChatViews:view withClass:[JVDirectChatPanel class]];
 }
 
-- (void) insertInDirectChats:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) insertInDirectChats:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self insertInChatViews:view atIndex:index withClass:[JVDirectChatPanel class]];
 }
 
-- (void) removeFromDirectChatsAtIndex:(unsigned) index {
+- (void) removeFromDirectChatsAtIndex:(NSUInteger) index {
 	[self removeFromChatViewsAtIndex:index withClass:[JVDirectChatPanel class]];
 }
 
-- (void) replaceInDirectChats:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) replaceInDirectChats:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self replaceInChatViews:view atIndex:index withClass:[JVDirectChatPanel class]];
 }
 
@@ -1302,7 +1302,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	return [self chatViewsWithClass:[JVChatTranscriptPanel class]];
 }
 
-- (id <JVChatViewController>) valueInChatTranscriptsAtIndex:(unsigned) index {
+- (id <JVChatViewController>) valueInChatTranscriptsAtIndex:(NSUInteger) index {
 	return [self valueInChatViewsAtIndex:index withClass:[JVChatTranscriptPanel class]];
 }
 
@@ -1322,15 +1322,15 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self addInChatViews:view withClass:[JVChatTranscriptPanel class]];
 }
 
-- (void) insertInChatTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) insertInChatTranscripts:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self insertInChatViews:view atIndex:index withClass:[JVChatTranscriptPanel class]];
 }
 
-- (void) removeFromChatTranscriptsAtIndex:(unsigned) index {
+- (void) removeFromChatTranscriptsAtIndex:(NSUInteger) index {
 	[self removeFromChatViewsAtIndex:index withClass:[JVChatTranscriptPanel class]];
 }
 
-- (void) replaceInChatTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) replaceInChatTranscripts:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self replaceInChatViews:view atIndex:index withClass:[JVChatTranscriptPanel class]];
 }
 
@@ -1340,7 +1340,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	return [self chatViewsWithClass:[JVSmartTranscriptPanel class]];
 }
 
-- (id <JVChatViewController>) valueInSmartTranscriptsAtIndex:(unsigned) index {
+- (id <JVChatViewController>) valueInSmartTranscriptsAtIndex:(NSUInteger) index {
 	return [self valueInChatViewsAtIndex:index withClass:[JVSmartTranscriptPanel class]];
 }
 
@@ -1360,15 +1360,15 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self addInChatViews:view withClass:[JVSmartTranscriptPanel class]];
 }
 
-- (void) insertInSmartTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) insertInSmartTranscripts:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self insertInChatViews:view atIndex:index withClass:[JVSmartTranscriptPanel class]];
 }
 
-- (void) removeFromSmartTranscriptsAtIndex:(unsigned) index {
+- (void) removeFromSmartTranscriptsAtIndex:(NSUInteger) index {
 	[self removeFromChatViewsAtIndex:index withClass:[JVSmartTranscriptPanel class]];
 }
 
-- (void) replaceInSmartTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) replaceInSmartTranscripts:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self replaceInChatViews:view atIndex:index withClass:[JVSmartTranscriptPanel class]];
 }
 
@@ -1378,7 +1378,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	return [self chatViewsWithClass:[JVChatConsolePanel class]];
 }
 
-- (id <JVChatViewController>) valueInChatConsolesAtIndex:(unsigned) index {
+- (id <JVChatViewController>) valueInChatConsolesAtIndex:(NSUInteger) index {
 	return [self valueInChatViewsAtIndex:index withClass:[JVChatConsolePanel class]];
 }
 
@@ -1398,15 +1398,15 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self addInChatViews:view withClass:[JVChatConsolePanel class]];
 }
 
-- (void) insertInChatConsoles:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) insertInChatConsoles:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self insertInChatViews:view atIndex:index withClass:[JVChatConsolePanel class]];
 }
 
-- (void) removeFromChatConsolesAtIndex:(unsigned) index {
+- (void) removeFromChatConsolesAtIndex:(NSUInteger) index {
 	[self removeFromChatViewsAtIndex:index withClass:[JVChatConsolePanel class]];
 }
 
-- (void) replaceInChatConsoles:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) replaceInChatConsoles:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self replaceInChatViews:view atIndex:index withClass:[JVChatConsolePanel class]];
 }
 
@@ -1427,8 +1427,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		if( ! [chatViews count] ) [NSArray array];
 
 		if( ( ! startSpec || [startKey isEqualToString:@"chatViews"] || [startKey isEqualToString:@"chatRooms"] || [startKey isEqualToString:@"directChats"] || [startKey isEqualToString:@"chatConsoles"] || [startKey isEqualToString:@"chatTranscripts"] ) && ( ! endSpec || [endKey isEqualToString:@"chatViews"] || [endKey isEqualToString:@"chatRooms"] || [endKey isEqualToString:@"directChats"] || [endKey isEqualToString:@"chatConsoles"] || [endKey isEqualToString:@"chatTranscripts"] ) ) {
-			unsigned startIndex = 0;
-			unsigned endIndex = 0;
+			NSUInteger startIndex = 0;
+			NSUInteger endIndex = 0;
 
 			// The strategy here is going to be to find the index of the start and stop object in the full graphics array, regardless of what its key is.  Then we can find what we're looking for in that range of the graphics key (weeding out objects we don't want, if necessary).
 			// First find the index of the first start object in the graphics array
@@ -1468,17 +1468,17 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 			NSMutableArray *result = [NSMutableArray array];
 			BOOL keyIsGeneric = [key isEqualToString:@"chatViews"];
 			NSArray *rangeKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
-			unsigned curKeyIndex = 0;
+			NSUInteger curKeyIndex = 0;
 			id obj = nil;
 
-			for( unsigned i = startIndex; i <= endIndex; i++ ) {
+			for( NSUInteger i = startIndex; i <= endIndex; i++ ) {
 				if( keyIsGeneric ) {
-					[result addObject:[NSNumber numberWithInt:i]];
+					[result addObject:[NSNumber numberWithUnsignedLong:i]];
 				} else {
 					obj = [chatViews objectAtIndex:i];
 					curKeyIndex = [rangeKeyObjects indexOfObjectIdenticalTo:obj];
 					if( curKeyIndex != NSNotFound )
-						[result addObject:[NSNumber numberWithInt:curKeyIndex]];
+						[result addObject:[NSNumber numberWithUnsignedLong:curKeyIndex]];
 				}
 			}
 
@@ -1503,7 +1503,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		if( ! [chatViews count] ) return [NSArray array];
 
 		if( [baseKey isEqualToString:@"chatViews"] || [baseKey isEqualToString:@"chatRooms"] || [baseKey isEqualToString:@"directChats"] || [baseKey isEqualToString:@"chatConsoles"] || [baseKey isEqualToString:@"chatTranscripts"] ) {
-			unsigned baseIndex = 0;
+			NSUInteger baseIndex = 0;
 
 			// The strategy here is going to be to find the index of the base object in the full graphics array, regardless of what its key is.  Then we can find what we're looking for before or after it.
 			// First find the index of the first or last base object in the master array
@@ -1529,7 +1529,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 			NSMutableArray *result = [NSMutableArray array];
 			BOOL keyIsGeneric = [key isEqualToString:@"chatViews"];
 			NSArray *relKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
-			unsigned curKeyIndex = 0, viewCount = [chatViews count];
+			NSUInteger curKeyIndex = 0, viewCount = [chatViews count];
 			id obj = nil;
 
 			if( relPos == NSRelativeBefore ) baseIndex--;
@@ -1537,13 +1537,13 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 			while( baseIndex < viewCount ) {
 				if( keyIsGeneric ) {
-					[result addObject:[NSNumber numberWithInt:baseIndex]];
+					[result addObject:[NSNumber numberWithUnsignedLong:baseIndex]];
 					break;
 				} else {
 					obj = [chatViews objectAtIndex:baseIndex];
 					curKeyIndex = [relKeyObjects indexOfObjectIdenticalTo:obj];
 					if( curKeyIndex != NSNotFound ) {
-						[result addObject:[NSNumber numberWithInt:curKeyIndex]];
+						[result addObject:[NSNumber numberWithUnsignedLong:curKeyIndex]];
 						break;
 					}
 				}

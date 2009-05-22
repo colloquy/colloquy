@@ -224,7 +224,7 @@
 
 #pragma mark -
 
-- (unsigned) consecutiveOffset {
+- (NSUInteger) consecutiveOffset {
 	[self load];
 	return _consecutiveOffset;
 }
@@ -353,7 +353,7 @@
 }
 
 - (NSString *) debugDescription {
-	return [NSString stringWithFormat:@"<%@ 0x%x [%@]: (%@) %@>", NSStringFromClass( [self class] ), (unsigned long) self, _messageIdentifier, [self senderNickname], [self body]];
+	return [NSString stringWithFormat:@"<%@ %p [%@]: (%@) %@>", NSStringFromClass( [self class] ), self, _messageIdentifier, [self senderNickname], [self body]];
 }
 
 #pragma mark -

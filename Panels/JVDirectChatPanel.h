@@ -34,12 +34,12 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 
 	BOOL _firstMessage;
 	BOOL _isActive;
-	unsigned int _newMessageCount;
-	unsigned int _newHighlightMessageCount;
+	NSUInteger _newMessageCount;
+	NSUInteger _newHighlightMessageCount;
 	BOOL _cantSendMessages;
 
-	int _historyIndex;
-	float _sendHeight;
+	NSInteger _historyIndex;
+	CGFloat _sendHeight;
 	BOOL _scrollerIsAtBottom;
 	BOOL _forceSplitViewPosition;
 
@@ -68,8 +68,8 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context;
 
-- (unsigned int) newMessagesWaiting;
-- (unsigned int) newHighlightMessagesWaiting;
+- (NSUInteger) newMessagesWaiting;
+- (NSUInteger) newHighlightMessagesWaiting;
 
 - (IBAction) send:(id) sender;
 - (void) sendMessage:(JVMutableChatMessage *) message;

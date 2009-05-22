@@ -5,9 +5,9 @@
 	NSString *_mainText;
 	NSString *_infoText;
 	NSLineBreakMode _lineBreakMode;
-	unsigned _statusNumber;
-	unsigned _importantStatusNumber;
-	float _leftMargin;
+	NSUInteger _statusNumber;
+	NSUInteger _importantStatusNumber;
+	CGFloat _leftMargin;
 	BOOL _boldAndWhiteOnHighlight;
 }
 - (void) setStatusImage:(NSImage *) image;
@@ -28,12 +28,12 @@
 - (void) setBoldAndWhiteOnHighlight:(BOOL) boldAndWhite;
 - (BOOL) boldAndWhiteOnHighlight;
 
-- (void) setStatusNumber:(unsigned) number;
-- (unsigned) statusNumber;
+- (void) setStatusNumber:(NSUInteger) number;
+- (NSUInteger) statusNumber;
 
-- (void) setImportantStatusNumber:(unsigned) number;
-- (unsigned) importantStatusNumber;
+- (void) setImportantStatusNumber:(NSUInteger) number;
+- (NSUInteger) importantStatusNumber;
 
-- (void) setLeftMargin:(float) margin;
-- (float) leftMargin;
+- (void) setLeftMargin:(CGFloat) margin;
+- (CGFloat) leftMargin;
 @end

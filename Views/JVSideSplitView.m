@@ -7,7 +7,7 @@
 	return self;
 }
 
-- (float) dividerThickness {
+- (CGFloat) dividerThickness {
 	return 1.0;
 }
 

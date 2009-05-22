@@ -221,7 +221,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	NSMutableString *strMsg = [[message mutableCopy] autorelease];
 	NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
 	NSMutableParagraphStyle *para = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-	unsigned int numeric = 0;
+	NSUInteger numeric = 0;
 
 	if( [[self connection] type] == MVChatConnectionIRCType ) {
 		if( ! [strMsg length] || ( _ignorePRIVMSG && [strMsg rangeOfString:@"PRIVMSG"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location == NSNotFound ) )
@@ -238,7 +238,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		if( ! outbound && ! _verbose ) {
 			NSMutableArray *parts = [[[strMsg componentsSeparatedByString:@" "] mutableCopy] autorelease];
 			NSString *tempStr = nil;
-			unsigned i = 0, c = 0;
+			NSUInteger i = 0, c = 0;
 
 			if( [parts count] >= 3 && [[parts objectAtIndex:2] isEqualToString:[[self connection] nickname]] )
 				[parts removeObjectAtIndex:2];
@@ -304,7 +304,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 }
 
 - (void) layoutManager:(NSLayoutManager *) layoutManager didCompleteLayoutForTextContainer:(NSTextContainer *) textContainer atEnd:(BOOL) atEnd {
-	unsigned int length = [[display string] length];
+	NSUInteger length = [[display string] length];
 	if( _scrollerIsAtBottom && atEnd && length != _lastDisplayTextLength )
 		[self performScrollToBottom];
 	_lastDisplayTextLength = length;
@@ -389,7 +389,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 	_historyIndex++;
 
-	if( _historyIndex >= (int) [_sendHistory count] ) {
+	if( _historyIndex >= (NSInteger) [_sendHistory count] ) {
 		if( [_sendHistory count] >= 1 )
 			_historyIndex = [_sendHistory count] - 1;
 		else _historyIndex = 0;
@@ -496,7 +496,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark Scripting Support
 
 - (NSNumber *) uniqueIdentifier {
-	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
+	return [NSNumber numberWithUnsignedLong:(intptr_t)self];
 }
 
 - (NSWindow *) window {
@@ -586,7 +586,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 #pragma mark SplitView Support
 
-- (float) splitView:(NSSplitView *) splitView constrainSplitPosition:(float) proposedPosition ofSubviewAt:(int) index {
+- (CGFloat) splitView:(NSSplitView *) splitView constrainSplitPosition:(CGFloat) proposedPosition ofSubviewAt:(NSInteger) index {
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
 		return ( NSHeight( [[[splitView subviews] objectAtIndex:index] frame] ) ); // prevents manual resize
 	return proposedPosition;

@@ -10,11 +10,11 @@
 	NSMutableArray *_editingRules;
 	NSMutableArray *_rules;
 	NSString *_title;
-	unsigned int _operation;
+	NSUInteger _operation;
 	BOOL _ignoreCase;
 	BOOL _isActive;
-	unsigned long _newMessages;
-	unsigned int _origSheetHeight;
+	NSUInteger _newMessages;
+	NSUInteger _origSheetHeight;
 }
 - (id) initWithSettings:(NSDictionary *) settings;
 
@@ -22,7 +22,7 @@
 
 - (NSMutableArray *) rules;
 
-- (unsigned int) newMessagesWaiting;
+- (NSUInteger) newMessagesWaiting;
 - (void) matchMessage:(JVChatMessage *) message fromView:(id <JVChatViewController>) view;
 
 - (IBAction) editSettings:(id) sender;

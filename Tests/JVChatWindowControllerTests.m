@@ -8,7 +8,7 @@
 
 @interface JVTestChatViewController : NSObject <JVChatViewController> {
 	JVChatWindowController *_windowController;
-	unsigned _newMessages;
+	NSUInteger _newMessages;
 }
 @end
 
@@ -57,11 +57,11 @@
 	return @"Test";
 }
 
-- (unsigned) newMessagesWaiting {
+- (NSUInteger) newMessagesWaiting {
 	return _newMessages;
 }
 
-- (void) setNewMessagesWaiting:(unsigned) new {
+- (void) setNewMessagesWaiting:(NSUInteger) new {
 	_newMessages = new;
 }
 @end

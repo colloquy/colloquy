@@ -137,7 +137,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	[[self controlView] setNeedsDisplay:YES];
 }
 
-- (void) setState:(int) value {
+- (void) setState:(NSInteger) value {
 // do nothing, we handle this internally
 }
 

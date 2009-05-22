@@ -8,7 +8,7 @@ enum {
 	NSTableViewSelectionHighlightStyleSourceList = 1,
 };
 
-typedef int NSTableViewSelectionHighlightStyle;
+typedef NSUInteger NSTableViewSelectionHighlightStyle;
 
 @interface NSTableView (NewLeopardMethods)
 - (void) setSelectionHighlightStyle:(NSTableViewSelectionHighlightStyle) value;
@@ -51,7 +51,7 @@ typedef int NSTableViewSelectionHighlightStyle;
 	[splitView setPositionUsingName:@"JVSidebarSplitViewPosition"];
 }
 
-- (float) outlineView:(NSOutlineView *) outlineView heightOfRowByItem:(id) item {
+- (CGFloat) outlineView:(NSOutlineView *) outlineView heightOfRowByItem:(id) item {
 	BOOL smallIcons = ([outlineView levelForItem:item] || _usesSmallIcons);
 	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4 && smallIcons )
 		return 18.;
@@ -68,7 +68,7 @@ typedef int NSTableViewSelectionHighlightStyle;
 	else [(JVDetailCell *)cell setLeftMargin:0.];
 }
 
-- (float) splitView:(NSSplitView *) splitView constrainSplitPosition:(float) proposedPosition ofSubviewAt:(int) index {
+- (CGFloat) splitView:(NSSplitView *) splitView constrainSplitPosition:(CGFloat) proposedPosition ofSubviewAt:(NSInteger) index {
 	// don't do anything here
 	return proposedPosition;
 }
@@ -83,13 +83,13 @@ typedef int NSTableViewSelectionHighlightStyle;
 	_forceSplitViewPosition = NO;
 }
 
-- (float) splitView:(NSSplitView *) splitView constrainMinCoordinate:(float) proposedMin ofSubviewAt:(int) offset {
+- (CGFloat) splitView:(NSSplitView *) splitView constrainMinCoordinate:(CGFloat) proposedMin ofSubviewAt:(NSInteger) offset {
 //	if( ! [[[chatViewsOutlineView enclosingScrollView] verticalScroller] isHidden] )
 //		return 55. + NSWidth( [[[chatViewsOutlineView enclosingScrollView] verticalScroller] frame] );
 	return 100.;
 }
 
-- (float) splitView:(NSSplitView *) splitView constrainMaxCoordinate:(float) proposedMax ofSubviewAt:(int) offset {
+- (CGFloat) splitView:(NSSplitView *) splitView constrainMaxCoordinate:(CGFloat) proposedMax ofSubviewAt:(NSInteger) offset {
 	return 300.;
 }
 

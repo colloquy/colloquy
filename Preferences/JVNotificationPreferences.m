@@ -135,7 +135,7 @@
 		enumerator = [[fm directoryContentsAtPath:aPath] objectEnumerator];
 		NSEnumerator *oldEnum = nil;
 		NSString *oldPath = nil;
-		int indentationLevel = 0;
+		NSInteger indentationLevel = 0;
 		while( ( sound = [enumerator nextObject] ) || oldEnum ) {
 			if( ! sound && oldEnum ) {
 				enumerator = oldEnum;
@@ -176,7 +176,7 @@
 }
 
 - (void) selectSoundWithPath:(NSString *) path {
-	int index = [sounds indexOfItemWithRepresentedObject:path];
+	NSInteger index = [sounds indexOfItemWithRepresentedObject:path];
 	if( index != -1 ) [sounds selectItemAtIndex:index];
 	else [sounds selectItemAtIndex:0];
 }

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 45;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -165,7 +165,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1C7F306F0855489300D41FB0 /* Build configuration list for PBXProject "Python Support" */;
-			compatibilityVersion = "Xcode 2.4";
+			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -279,11 +279,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				PREBINDING = NO;
 				SYMROOT = ../../build;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
@@ -292,8 +289,9 @@
 			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				ARCHS = (
-					ppc,
+					x86_64,
 					i386,
+					ppc,
 				);
 				SYMROOT = ../../build;
 			};

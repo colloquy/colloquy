@@ -41,7 +41,7 @@ static  NSImage			*tabDivider = nil;
 
 //Dragging
 - (NSArray *)acceptableDragTypes;
-- (NSPoint)_dropPointForTabOfWidth:(int)dragTabWidth hoveredAtScreenPoint:(NSPoint)inPoint dropIndex:(int *)outIndex;
+- (NSPoint)_dropPointForTabOfWidth:(int)dragTabWidth hoveredAtScreenPoint:(NSPoint)inPoint dropIndex:(NSInteger *)outIndex;
 - (BOOL)allowsTabRearranging;
 
 //Tab Data Access (Guarded)
@@ -488,14 +488,14 @@ static  NSImage			*tabDivider = nil;
 			origin = NSMakePoint(xLocation, 0 );
 			if(!absolute){
 				if(origin.x > [tabCell frame].origin.x){
-					int distance = (origin.x - [tabCell frame].origin.x) * (( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) ? CUSTOM_TABS_SLOW_STEP : CUSTOM_TABS_STEP);
+					NSInteger distance = (origin.x - [tabCell frame].origin.x) * (( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) ? CUSTOM_TABS_SLOW_STEP : CUSTOM_TABS_STEP);
 					if(distance < 1) distance = 1;
 
 					origin.x = [tabCell frame].origin.x + distance;
 
 					if(finished) finished = NO;
 				}else if(origin.x < [tabCell frame].origin.x){
-					int distance = ([tabCell frame].origin.x - origin.x) * (( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) ? CUSTOM_TABS_SLOW_STEP : CUSTOM_TABS_STEP);
+					NSInteger distance = ([tabCell frame].origin.x - origin.x) * (( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) ? CUSTOM_TABS_SLOW_STEP : CUSTOM_TABS_STEP);
 					if(distance < 1) distance = 1;
 
 					origin.x = [tabCell frame].origin.x - distance;
@@ -726,7 +726,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 	NSPasteboard	*pboard = [sender draggingPasteboard];
     NSString        *type = [pboard availableTypeFromArray:[NSArray arrayWithObject:TAB_CELL_IDENTIFIER]];
     BOOL            success = NO;
-	int				dropIndex;
+	NSInteger		dropIndex;
 	AICustomTabCell	*tabCell;
 
 	//Perform the drag
@@ -775,7 +775,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 }
 
 //Called continuously as the drag is over our tab bar
-- (unsigned int)draggingUpdated:(id <NSDraggingInfo>)sender
+- (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender
 {
     NSPoint			location = [self convertPoint:[sender draggingLocation] fromView:nil];
     NSPasteboard 	*pboard = [sender draggingPasteboard];
@@ -784,7 +784,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 
     if(type && [type isEqualToString:TAB_CELL_IDENTIFIER]){ //Dragging a tab
 		int			draggedCellWidth = [[AICustomTabDragging sharedInstance] sizeOfDraggedCell].width;
-		int			dropIndex;
+		NSInteger	dropIndex;
 
 		//Snap the hovered tab to it's drop location, and slide our tabs out of the way to make room
 		[[AICustomTabDragging sharedInstance] setDestinationHoverPoint:[self _dropPointForTabOfWidth:draggedCellWidth
@@ -829,7 +829,7 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 //Determines the correct drop index for a hovered tab, and returns the desired screen location and index for it
 //We ignore frame origins in here, since they are being slid all around and relying on them will cause jiggyness.
 //Instead, we step through each cell and use only it's width.
-- (NSPoint)_dropPointForTabOfWidth:(int)dragTabWidth hoveredAtScreenPoint:(NSPoint)inPoint dropIndex:(int *)outIndex
+- (NSPoint)_dropPointForTabOfWidth:(int)dragTabWidth hoveredAtScreenPoint:(NSPoint)inPoint dropIndex:(NSInteger *)outIndex
 {
 	if(allowsTabRearranging){
 		NSEnumerator 	*enumerator;

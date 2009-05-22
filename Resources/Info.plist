@@ -105,6 +105,17 @@
 	</array>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.4</string>
+	<key>LSArchitecturePriority</key>
+	<array>
+		<string>x86_64</string>
+		<string>i386</string>
+		<string>ppc</string>
+	</array>
+	<key>LSMinimumSystemVersionByArchitecture</key>
+	<dict>
+		<key>x86_64</key>
+		<string>10.6</string>
+	</dict>
 	<key>CFBundleVersion</key>
 	<string>source</string>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>

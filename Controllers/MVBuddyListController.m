@@ -261,7 +261,7 @@ static MVBuddyListController *sharedInstance = nil;
 			[lastName setObjectValue:[person valueForProperty:kABLastNameProperty]];
 
 			ABMultiValue *value = [person valueForProperty:kABEmailProperty];
-			unsigned index = [value indexForIdentifier:[value primaryIdentifier]];
+			NSUInteger index = [value indexForIdentifier:[value primaryIdentifier]];
 			if( index != NSNotFound ) [email setObjectValue:[value valueAtIndex:index]];
 
 			[image setImage:[[[NSImage alloc] initWithData:[person imageData]] autorelease]];
@@ -557,7 +557,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[self save];
 }
 
-- (int) numberOfRowsInTableView:(NSTableView *) view {
+- (NSInteger) numberOfRowsInTableView:(NSTableView *) view {
 	if( view == servers )
 		return [[[MVConnectionsController defaultController] connections] count];
 
@@ -567,7 +567,7 @@ static MVBuddyListController *sharedInstance = nil;
 	return 0;
 }
 
-- (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
+- (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == servers ) {
 		MVChatConnection *connection = [[[MVConnectionsController defaultController] connections] objectAtIndex:row];
 		if( [[column identifier] isEqualToString:@"domain"] )
@@ -595,7 +595,7 @@ static MVBuddyListController *sharedInstance = nil;
 	return nil;
 }
 
-- (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(int) row {
+- (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == servers ) {
 		MVChatConnection *connection = [[[MVConnectionsController defaultController] connections] objectAtIndex:row];
 		if( [[column identifier] isEqualToString:@"check"] )
@@ -673,7 +673,7 @@ static MVBuddyListController *sharedInstance = nil;
 	}
 }
 
-- (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) tableColumn row:(int) row {
+- (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) tableColumn row:(NSInteger) row {
 	if( tableView == servers ) {
 		if( [[tableColumn identifier] isEqualToString:@"check"] ) {
 			if( [object isKindOfClass:[NSNumber class]] ) {
@@ -756,7 +756,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[[JVInspectorController sharedInspector] inspectObject:[self objectToInspect]];
 }
 
-- (NSDragOperation) tableView:(NSTableView *) tableView validateDrop:(id <NSDraggingInfo>) info proposedRow:(int) row proposedDropOperation:(NSTableViewDropOperation) operation {
+- (NSDragOperation) tableView:(NSTableView *) tableView validateDrop:(id <NSDraggingInfo>) info proposedRow:(NSInteger) row proposedDropOperation:(NSTableViewDropOperation) operation {
 	if( tableView != buddies ) return NSDragOperationNone;
 
 	if( operation == NSTableViewDropOn && row != -1 )
@@ -764,7 +764,7 @@ static MVBuddyListController *sharedInstance = nil;
 	return NSDragOperationNone;
 }
 
-- (BOOL) tableView:(NSTableView *) tableView acceptDrop:(id <NSDraggingInfo>) info row:(int) row dropOperation:(NSTableViewDropOperation) operation {
+- (BOOL) tableView:(NSTableView *) tableView acceptDrop:(id <NSDraggingInfo>) info row:(NSInteger) row dropOperation:(NSTableViewDropOperation) operation {
 	if( tableView != buddies ) return NO;
 
 	NSPasteboard *board = [info draggingPasteboard];
@@ -797,7 +797,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (NSRect) tableView:(MVTableView *) tableView rectOfRow:(int) row defaultRect:(NSRect) defaultRect {
 	if( _animating ) {
-		int oldPosition = [[_oldPositions objectAtIndex:row] intValue];
+		NSInteger oldPosition = [[_oldPositions objectAtIndex:row] intValue];
 		NSRect oldR = [tableView originalRectOfRow:oldPosition];
 		NSRect newR = [tableView originalRectOfRow:row];
 
@@ -907,7 +907,7 @@ static MVBuddyListController *sharedInstance = nil;
 	id object = nil;
 
 	while( ( object = [enumerator nextObject] ) )
-		[_oldPositions addObject:[NSNumber numberWithInt:[oldOrder indexOfObject:object]]];
+		[_oldPositions addObject:[NSNumber numberWithUnsignedLong:[oldOrder indexOfObject:object]]];
 
 	visibleRows = [buddies rowsInRect:[buddies visibleRect]];
 	_viewingTop = NSMaxRange( visibleRows ) < 0.6 * [_buddyOrder count];
@@ -997,7 +997,7 @@ static MVBuddyListController *sharedInstance = nil;
 		value = [person valueForProperty:@"IRCNickname"];
 		unsigned count = [value count];
 
-		for( unsigned i = 0; i < count; i++ ) {
+		for( NSUInteger i = 0; i < count; i++ ) {
 			NSString *nick = [value valueAtIndex:i];
 			NSString *server = [[value labelAtIndex:i] stringWithDomainNameSegmentOfAddress];
 			if( ! [nick length] || ! [server length] )
@@ -1097,7 +1097,7 @@ static MVBuddyListController *sharedInstance = nil;
 #pragma mark -
 
 @implementation MVBuddyListController (MVBuddyListControllerScripting)
-- (MVChatConnection *) valueInBuddiesAtIndex:(unsigned) index {
+- (MVChatConnection *) valueInBuddiesAtIndex:(NSUInteger) index {
 	return [_buddyOrder objectAtIndex:index];
 }
 
@@ -1109,11 +1109,11 @@ static MVBuddyListController *sharedInstance = nil;
 	[NSException raise:NSOperationNotSupportedForKeyException format:@"Can't insert a buddy."];
 }
 
-- (void) insertInBuddies:(JVBuddy *) buddy atIndex:(unsigned) index {
+- (void) insertInBuddies:(JVBuddy *) buddy atIndex:(NSUInteger) index {
 	[NSException raise:NSOperationNotSupportedForKeyException format:@"Can't insert a buddy."];
 }
 
-- (void) removeFromBuddiesAtIndex:(unsigned) index {
+- (void) removeFromBuddiesAtIndex:(NSUInteger) index {
 	JVBuddy *buddy = [[_buddyOrder objectAtIndex:index] retain];
 	[_buddyList removeObject:buddy];
 	[_onlineBuddies removeObject:buddy];
@@ -1123,7 +1123,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[self save];
 }
 
-- (void) replaceInBuddies:(JVBuddy *) buddy atIndex:(unsigned) index {
+- (void) replaceInBuddies:(JVBuddy *) buddy atIndex:(NSUInteger) index {
 	[NSException raise:NSOperationNotSupportedForKeyException format:@"Can't replace a buddy."];
 }
 

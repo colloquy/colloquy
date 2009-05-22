@@ -72,7 +72,11 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	static BOOL tooLate = NO;
 	if( ! tooLate ) {
 		Method method = class_getClassMethod( [NSObject class], @selector( isSelectorExcludedFromWebScript: ) );
+#if OBJC_API_VERSION > 0
+		if( method ) method_setImplementation(method, (IMP) replacementIsSelectorExcludedFromWebScript);
+#else
 		if( method ) method -> method_imp = (IMP) replacementIsSelectorExcludedFromWebScript;
+#endif
 		tooLate = YES;
 	}
 }

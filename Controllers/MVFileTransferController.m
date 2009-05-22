@@ -22,12 +22,12 @@ NSString *MVPrettyFileSize( unsigned long long size ) {
 
 NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	NSTimeInterval secs = [[NSDate date] timeIntervalSince1970] - date;
-	unsigned int i = 0, stop = 0;
-	NSDictionary *desc = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString( @"second", "singular second" ), [NSNumber numberWithUnsignedInt:1], NSLocalizedString( @"minute", "singular minute" ), [NSNumber numberWithUnsignedInt:60], NSLocalizedString( @"hour", "singular hour" ), [NSNumber numberWithUnsignedInt:3600], NSLocalizedString( @"day", "singular day" ), [NSNumber numberWithUnsignedInt:86400], NSLocalizedString( @"week", "singular week" ), [NSNumber numberWithUnsignedInt:604800], NSLocalizedString( @"month", "singular month" ), [NSNumber numberWithUnsignedInt:2628000], NSLocalizedString( @"year", "singular year" ), [NSNumber numberWithUnsignedInt:31536000], nil];
-	NSDictionary *plural = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString( @"seconds", "plural seconds" ), [NSNumber numberWithUnsignedInt:1], NSLocalizedString( @"minutes", "plural minutes" ), [NSNumber numberWithUnsignedInt:60], NSLocalizedString( @"hours", "plural hours" ), [NSNumber numberWithUnsignedInt:3600], NSLocalizedString( @"days", "plural days" ), [NSNumber numberWithUnsignedInt:86400], NSLocalizedString( @"weeks", "plural weeks" ), [NSNumber numberWithUnsignedInt:604800], NSLocalizedString( @"months", "plural months" ), [NSNumber numberWithUnsignedInt:2628000], NSLocalizedString( @"years", "plural years" ), [NSNumber numberWithUnsignedInt:31536000], nil];
+	NSUInteger i = 0, stop = 0;
+	NSDictionary *desc = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString( @"second", "singular second" ), [NSNumber numberWithUnsignedLong:1], NSLocalizedString( @"minute", "singular minute" ), [NSNumber numberWithUnsignedLong:60], NSLocalizedString( @"hour", "singular hour" ), [NSNumber numberWithUnsignedLong:3600], NSLocalizedString( @"day", "singular day" ), [NSNumber numberWithUnsignedLong:86400], NSLocalizedString( @"week", "singular week" ), [NSNumber numberWithUnsignedLong:604800], NSLocalizedString( @"month", "singular month" ), [NSNumber numberWithUnsignedLong:2628000], NSLocalizedString( @"year", "singular year" ), [NSNumber numberWithUnsignedLong:31536000], nil];
+	NSDictionary *plural = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString( @"seconds", "plural seconds" ), [NSNumber numberWithUnsignedLong:1], NSLocalizedString( @"minutes", "plural minutes" ), [NSNumber numberWithUnsignedLong:60], NSLocalizedString( @"hours", "plural hours" ), [NSNumber numberWithUnsignedLong:3600], NSLocalizedString( @"days", "plural days" ), [NSNumber numberWithUnsignedLong:86400], NSLocalizedString( @"weeks", "plural weeks" ), [NSNumber numberWithUnsignedLong:604800], NSLocalizedString( @"months", "plural months" ), [NSNumber numberWithUnsignedLong:2628000], NSLocalizedString( @"years", "plural years" ), [NSNumber numberWithUnsignedLong:31536000], nil];
 	NSDictionary *use = nil;
 	NSMutableArray *breaks = nil;
-	unsigned int val = 0.;
+	NSUInteger val = 0.;
 	NSString *retval = nil;
 
 	if( secs < 0 ) secs *= -1;
@@ -39,13 +39,13 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	if( i > 0 ) i--;
 	stop = [[breaks objectAtIndex:i] unsignedIntValue];
 
-	val = (unsigned int) ( secs / (float) stop );
+	val = (NSUInteger) ( secs / (float) stop );
 	use = ( val > 1 ? plural : desc );
-	retval = [NSString stringWithFormat:@"%u %@", val, [use objectForKey:[NSNumber numberWithUnsignedInt:stop]]];
+	retval = [NSString stringWithFormat:@"%u %@", val, [use objectForKey:[NSNumber numberWithUnsignedLong:stop]]];
 	if( longFormat && i > 0 ) {
-		unsigned int rest = (unsigned int) ( (unsigned int) secs % stop );
+		NSUInteger rest = (NSUInteger) ( (NSUInteger) secs % stop );
 		stop = [[breaks objectAtIndex:--i] unsignedIntValue];
-		rest = (unsigned int) ( rest / (float) stop );
+		rest = (NSUInteger) ( rest / (float) stop );
 		if( rest > 0 ) {
 			use = ( rest > 1 ? plural : desc );
 			retval = [retval stringByAppendingFormat:@" %u %@", rest, [use objectForKey:[breaks objectAtIndex:i]]];
@@ -62,7 +62,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 - (void) _incomingFileSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
 - (void) _incomingFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
 - (void) _downloadFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
-- (NSMutableDictionary *) _infoForTransferAtIndex:(unsigned int) index;
+- (NSMutableDictionary *) _infoForTransferAtIndex:(NSUInteger) index;
 - (void) _startUpdateTimerIfNeeded;
 - (void) _stopUpdateTimerIfFinished;
 @end
@@ -76,9 +76,9 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	ICFileSpec folder;
 	long length = kICFileSpecHeaderSize;
 	FSRef ref;
-	char path[1024];
+	char path[PATH_MAX];
 
-	memset( path, 0, 1024 );
+	memset( path, 0, PATH_MAX );
 
 	if( ( err = ICStart( &inst, 'coRC' ) ) != noErr )
 		goto finish;
@@ -86,16 +86,26 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	ICGetPref( inst, kICDownloadFolder, NULL, &folder, &length );
 	ICStop( inst );
 
-	if( ( err = FSpMakeFSRef( &folder.fss, &ref ) ) != noErr )
-		goto finish;
+	Boolean wasChanged = NO;
+	AliasHandle aliasHandle = NULL;
+	err = PtrToHand(&folder.alias, (Handle *)&aliasHandle, ( length - kICFileSpecHeaderSize ));
 
-	if( ( err = FSRefMakePath( &ref, (unsigned char *)path, 1024 ) ) != noErr )
+	if( ( err = FSResolveAlias( NULL, aliasHandle, &ref, &wasChanged ) ) != noErr || !wasChanged ) {
+#ifndef __LP64__
+		if( ( err = FSpMakeFSRef( &folder.fss, &ref ) ) != noErr )
+			goto finish;
+		else
+#endif
+			goto finish;
+	}
+
+	if( ( err = FSRefMakePath( &ref, (unsigned char *)path, PATH_MAX ) ) != noErr )
 		goto finish;
 
 finish:
 
 	if( ! strlen( path ) )
-		return [@"~/Desktop" stringByExpandingTildeInPath];
+		return [@"~/Downloads" stringByExpandingTildeInPath];
 
 	return [NSString stringWithUTF8String:path];
 }
@@ -106,7 +116,7 @@ finish:
 	ICFileSpec *dir = NULL;
 	FSRef ref;
 	AliasHandle alias;
-	unsigned long length = 0;
+	NSUInteger length = 0;
 
 	if( ( err = FSPathMakeRef( (unsigned char *)[path UTF8String], &ref, NULL ) ) != noErr )
 		return;
@@ -305,12 +315,12 @@ finish:
 }
 
 - (IBAction) clearFinishedTransfers:(id) sender {
-	unsigned i = 0;
+	NSUInteger i = 0;
 	NSDictionary *info = nil;
 	if( [currentFiles selectedRow] == -1 ) {
 		for( i = 0; i < [_transferStorage count]; ) {
 			info = [self _infoForTransferAtIndex:i];
-			unsigned int status = [[info objectForKey:@"status"] unsignedIntValue];
+			NSUInteger status = [[info objectForKey:@"status"] unsignedIntValue];
 			if( status == MVFileTransferDoneStatus || status == MVFileTransferErrorStatus || status == MVFileTransferStoppedStatus ) {
 				[_calculationItems removeObject:info];
 				[_transferStorage removeObject:info];
@@ -318,7 +328,7 @@ finish:
 		}
 	} else if( [currentFiles numberOfSelectedRows] == 1 ) {
 		info = [self _infoForTransferAtIndex:[currentFiles selectedRow]];
-		unsigned int status = [[info objectForKey:@"status"] unsignedIntValue];
+		NSUInteger status = [[info objectForKey:@"status"] unsignedIntValue];
 		if( status == MVFileTransferDoneStatus || status == MVFileTransferErrorStatus || status == MVFileTransferStoppedStatus ) {
 			[_calculationItems removeObject:info];
 			[_transferStorage removeObject:info];
@@ -348,7 +358,7 @@ finish:
 	[[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType,nil] owner:self];
 
 	while( ( row = [enumerator nextObject] ) ) {
-		unsigned i = [row unsignedIntValue];
+		NSUInteger i = [row unsignedIntValue];
 		[array addObject:[[self _infoForTransferAtIndex:i] objectForKey:@"path"]];
 		[string appendString:[[[self _infoForTransferAtIndex:i] objectForKey:@"path"] lastPathComponent]];
 		if( ! [[[enumerator allObjects] lastObject] isEqual:row] ) [string appendString:@"\n"];
@@ -363,11 +373,11 @@ finish:
 
 @implementation MVFileTransferController (MVFileTransferControllerDelegate)
 #pragma mark Table View Support
-- (int) numberOfRowsInTableView:(NSTableView *) view {
+- (NSInteger) numberOfRowsInTableView:(NSTableView *) view {
 	return [_transferStorage count];
 }
 
-- (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
+- (id) tableView:(NSTableView *) view objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( [[column identifier] isEqual:@"file"] ) {
 		NSString *path = [[self _infoForTransferAtIndex:row] objectForKey:@"path"];
 		NSImage *fileIcon = [[NSWorkspace sharedWorkspace] iconForFileType:[path pathExtension]];
@@ -384,7 +394,7 @@ finish:
 	return nil;
 }
 
-- (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(int) row {
+- (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( [[column identifier] isEqual:@"file"] ) {
 		NSString *path = [[self _infoForTransferAtIndex:row] objectForKey:@"path"];
 		[cell setMainText:[[NSFileManager defaultManager] displayNameAtPath:path]];
@@ -550,7 +560,7 @@ finish:
 	return [self window];
 }
 
-- (void) download:(NSURLDownload *) download didReceiveDataOfLength:(unsigned) length {
+- (void) download:(NSURLDownload *) download didReceiveDataOfLength:(NSUInteger) length {
 	NSEnumerator *enumerator = nil;
 	NSMutableDictionary *info = nil;
 
@@ -721,7 +731,7 @@ finish:
 		NSNumber *size = [[[NSFileManager defaultManager] fileAttributesAtPath:filename traverseLink:YES] objectForKey:NSFileSize];
 		BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filename];
 		BOOL resumePossible = ( fileExists && [size unsignedLongLongValue] < [transfer finalSize] ? YES : NO );
-		int result = NSOKButton;
+		NSInteger result = NSOKButton;
 
 		if( resumePossible ) {
 			if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVFileExists"] == 1 ) result = NSOKButton; // auto resume
@@ -901,7 +911,7 @@ finish:
 	[progressBar setNeedsDisplay:YES];
 }
 
-- (NSMutableDictionary *) _infoForTransferAtIndex:(unsigned int) index {
+- (NSMutableDictionary *) _infoForTransferAtIndex:(NSUInteger) index {
 	NSMutableDictionary *info = [_transferStorage objectAtIndex:index];
 
 	if( [[info objectForKey:@"controller"] isKindOfClass:[MVFileTransfer class]] ) {

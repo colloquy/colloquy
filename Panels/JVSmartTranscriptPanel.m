@@ -225,13 +225,13 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	[subviewTableView reloadData];
 }
 
-- (void) insertObject:(id) obj inCriterionControllersAtIndex:(unsigned int) index {
+- (void) insertObject:(id) obj inCriterionControllersAtIndex:(NSUInteger) index {
 	if( index != NSNotFound ) [[self editingRules] insertObject:obj atIndex:( index + 1 )];
 	else [[self editingRules] addObject:obj];
 	[self reloadTableView];
 }
 
-- (void) removeObjectFromCriterionControllersAtIndex:(unsigned int) index {
+- (void) removeObjectFromCriterionControllersAtIndex:(NSUInteger) index {
 	[[self editingRules] removeObjectAtIndex:index];
 	[self reloadTableView];
 }
@@ -292,7 +292,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 #pragma mark -
 
-- (unsigned int) newMessagesWaiting {
+- (NSUInteger) newMessagesWaiting {
 	return _newMessages;
 }
 
@@ -386,7 +386,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 #pragma mark -
 
-- (int) numberOfRowsInTableView:(NSTableView *) tableView {
+- (NSInteger) numberOfRowsInTableView:(NSTableView *) tableView {
 	return [[self editingRules] count];
 }
 
@@ -394,7 +394,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	[subviewTableView deselectAll:nil];
 }
 
-- (void) tableView:(NSTableView *) tableView willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) tableColumn row:(int) row {
+- (void) tableView:(NSTableView *) tableView willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) tableColumn row:(NSInteger) row {
 	if( [[tableColumn identifier] isEqualToString:@"criteria"] ) {
 		[(JVViewCell *)cell setView:[(JVTranscriptCriterionController *)[[self editingRules] objectAtIndex:row] view]];
 	} else if( [[tableColumn identifier] isEqualToString:@"remove"] ) {

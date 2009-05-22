@@ -14,7 +14,7 @@
 	IBOutlet NSWindow *window;
 	IBOutlet NSTextField *statusText;
 
-	int _selectedTag;
+	NSInteger _selectedTag;
 
 	BOOL _shouldIndex;
 

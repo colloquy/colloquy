@@ -9,8 +9,8 @@
     BOOL _supressHiding;
     BOOL _tabIsShowing;
     BOOL _autoHideTabBar;
-	int _forceTabBarVisible; // -1 = Doesn't matter, 0 = NO, 1 = YES;
-    float _tabHeight;
+	NSInteger _forceTabBarVisible; // -1 = Doesn't matter, 0 = NO, 1 = YES;
+    CGFloat _tabHeight;
 }
 - (IBAction) toggleTabBarVisible:(id) sender;
 - (void) updateTabBarVisibilityAndAnimate:(BOOL) animate;

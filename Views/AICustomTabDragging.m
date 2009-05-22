@@ -102,8 +102,8 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	}
 
 	//Adjust the drag offset so the cursor is atleast always touching the tab drag image
-	int width = [inTabCell frame].size.width;
-	int height = [inTabCell frame].size.height;
+	CGFloat width = [inTabCell frame].size.width;
+	CGFloat height = [inTabCell frame].size.height;
 
 	dragOffset = NSMakeSize([inTabCell frame].origin.x - clickLocation.x, [inTabCell frame].origin.y - clickLocation.y);
 	if(dragOffset.width > width) dragOffset.width = width;
@@ -219,7 +219,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 }
 
 //Prevent dragging of tabs to another application
-- (unsigned int)draggingSourceOperationMaskForLocal:(BOOL)isLocal
+- (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL)isLocal
 {
     return(isLocal ? NSDragOperationEvery : NSDragOperationNone);
 }

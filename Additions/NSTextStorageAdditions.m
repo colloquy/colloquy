@@ -26,7 +26,7 @@
 
 - (BOOL) boldState {
 	NSFont *font = [self attribute:NSFontAttributeName atIndex:0 effectiveRange:NULL];
-	int traits = [[NSFontManager sharedFontManager] traitsOfFont:font];
+	NSFontTraitMask traits = [[NSFontManager sharedFontManager] traitsOfFont:font];
 	return ( traits & NSBoldFontMask );
 }
 
@@ -39,7 +39,7 @@
 
 - (BOOL) italicState {
 	NSFont *font = [self attribute:NSFontAttributeName atIndex:0 effectiveRange:NULL];
-	int traits = [[NSFontManager sharedFontManager] traitsOfFont:font];
+	NSFontTraitMask traits = [[NSFontManager sharedFontManager] traitsOfFont:font];
 	return ( traits & NSItalicFontMask );
 }
 

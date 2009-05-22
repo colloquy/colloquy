@@ -104,7 +104,7 @@
 	} else if( [self format] == JVTranscriptListCriterionFormat ) {
 		[listKindButton selectItemAtIndex:[listKindButton indexOfItemWithTag:[self kind]]];
 		[listOperationButton selectItemAtIndex:[listOperationButton indexOfItemWithTag:[self operation]]];
-		int index = [listQuery indexOfItemWithRepresentedObject:[self query]];
+		NSInteger index = [listQuery indexOfItemWithRepresentedObject:[self query]];
 		if( index == -1 && [[self query] isKindOfClass:[NSNumber class]] )
 			index = [listQuery indexOfItemWithTag:[(NSNumber *)[self query] intValue]];
 		[listQuery selectItemAtIndex:index];
@@ -227,7 +227,7 @@
 	} else if( [self format] == JVTranscriptListCriterionFormat ) {
 		NSMenuItem *mitem = [listQuery selectedItem];
 		if( [mitem representedObject] ) [self setQuery:[mitem representedObject]];
-		else [self setQuery:[NSNumber numberWithInt:[mitem tag]]];
+		else [self setQuery:[NSNumber numberWithLong:[mitem tag]]];
 	}
 }
 
@@ -262,7 +262,7 @@
 			if( result ) match = YES;
 			if( oper == JVTranscriptTextDoesNotMatchCriterionOperation ) match = ! match;
 		} else if( oper >= 3 && oper <= 6 ) {
-			unsigned int options = ( ignoreCase ? NSCaseInsensitiveSearch : 0 );
+			NSUInteger options = ( ignoreCase ? NSCaseInsensitiveSearch : 0 );
 			if( oper == JVTranscriptTextBeginsWithCriterionOperation ) options = NSAnchoredSearch;
 			else if( oper == JVTranscriptTextEndsWithCriterionOperation ) options = ( NSAnchoredSearch | NSBackwardsSearch );
 			NSRange range = [value rangeOfString:[self query] options:options];
@@ -361,7 +361,7 @@
 	} else if( [self format] == JVTranscriptDateCriterionFormat ) {
 		[dateQuery setObjectValue:query];
 	} else if( [self format] == JVTranscriptListCriterionFormat ) {
-		int index = [listQuery indexOfItemWithRepresentedObject:query];
+		NSInteger index = [listQuery indexOfItemWithRepresentedObject:query];
 		if( index == -1 && [query isKindOfClass:[NSNumber class]] )
 			index = [listQuery indexOfItemWithTag:[(NSNumber *)query intValue]];
 		[listQuery selectItemAtIndex:index];

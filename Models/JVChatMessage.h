@@ -26,7 +26,7 @@ typedef enum _JVChatMessageType {
 	NSURL *_source;
 	JVIgnoreMatchResult _ignoreStatus;
 	JVChatMessageType _type;
-	unsigned _consecutiveOffset;
+	NSUInteger _consecutiveOffset;
 	BOOL _senderIsLocalUser;
 	BOOL _action;
 	BOOL _highlighted;
@@ -39,7 +39,7 @@ typedef enum _JVChatMessageType {
 
 - (NSDate *) date;
 
-- (unsigned) consecutiveOffset;
+- (NSUInteger) consecutiveOffset;
 
 - (NSString *) senderName;
 - (NSString *) senderIdentifier;

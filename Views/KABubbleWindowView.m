@@ -1,10 +1,10 @@
 #import "KABubbleWindowView.h"
 
-static void KABubbleShadeInterpolate( void *info, float const *inData, float *outData ) {
+static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat *outData ) {
 	static float dark[4] = { .69412, .83147, .96078, .95 };
 	static float light[4] = { .93725, .96863, .99216, .95 };
 	float a = inData[0];
-	int i = 0;
+	NSUInteger i = 0;
 
 	for( i = 0; i < 4; i++ )
 		outData[i] = ( 1. - a ) * dark[i] + a * light[i];

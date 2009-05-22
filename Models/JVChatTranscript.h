@@ -19,7 +19,7 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 	BOOL _autoWriteChanges;
 	BOOL _requiresNewEnvelope;
 	unsigned long long _previousLogOffset;
-	unsigned long _elementLimit;
+	NSUInteger _elementLimit;
 }
 + (id) chatTranscript;
 + (id) chatTranscriptWithChatTranscript:(JVChatTranscript *) transcript;
@@ -36,17 +36,17 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 - (/* xmlDoc */ void *) document;
 
 - (BOOL) isEmpty;
-- (unsigned long) elementCount;
-- (unsigned long) sessionCount;
-- (unsigned long) messageCount;
-- (unsigned long) eventCount;
+- (NSUInteger) elementCount;
+- (NSUInteger) sessionCount;
+- (NSUInteger) messageCount;
+- (NSUInteger) eventCount;
 
-- (void) setElementLimit:(unsigned int) limit;
-- (unsigned int) elementLimit;
+- (void) setElementLimit:(NSUInteger) limit;
+- (NSUInteger) elementLimit;
 
 - (NSArray *) elements;
 - (NSArray *) elementsInRange:(NSRange) range;
-- (id) elementAtIndex:(unsigned long) index;
+- (id) elementAtIndex:(NSUInteger) index;
 - (id) lastElement;
 
 - (NSArray *) appendElements:(NSArray *) elements;
@@ -54,7 +54,7 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 
 - (NSArray *) messages;
 - (NSArray *) messagesInRange:(NSRange) range;
-- (JVChatMessage *) messageAtIndex:(unsigned long) index;
+- (JVChatMessage *) messageAtIndex:(NSUInteger) index;
 - (JVChatMessage *) messageWithIdentifier:(NSString *) identifier;
 - (JVChatMessage *) lastMessage;
 
@@ -67,7 +67,7 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 
 - (NSArray *) sessions;
 - (NSArray *) sessionsInRange:(NSRange) range;
-- (JVChatSession *) sessionAtIndex:(unsigned long) index;
+- (JVChatSession *) sessionAtIndex:(NSUInteger) index;
 - (JVChatSession *) lastSession;
 
 - (JVChatSession *) startNewSession;
@@ -75,7 +75,7 @@ extern NSString *JVChatTranscriptUpdatedNotification;
 
 - (NSArray *) events;
 - (NSArray *) eventsInRange:(NSRange) range;
-- (JVChatEvent *) eventAtIndex:(unsigned long) index;
+- (JVChatEvent *) eventAtIndex:(NSUInteger) index;
 - (JVChatEvent *) lastEvent;
 
 - (BOOL) containsEventWithIdentifier:(NSString *) identifier;

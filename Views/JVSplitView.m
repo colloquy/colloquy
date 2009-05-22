@@ -69,7 +69,7 @@
 		[super resetCursorRects];
 }
 
-- (float) dividerThickness {
+- (CGFloat) dividerThickness {
 	if( ! [self isVertical] ) return 10.;
 	return [super dividerThickness];
 }

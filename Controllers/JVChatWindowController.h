@@ -33,14 +33,14 @@ extern NSString *JVChatViewPboardType;
 - (void) showChatViewController:(id <JVChatViewController>) controller;
 
 - (void) addChatViewController:(id <JVChatViewController>) controller;
-- (void) insertChatViewController:(id <JVChatViewController>) controller atIndex:(unsigned int) index;
+- (void) insertChatViewController:(id <JVChatViewController>) controller atIndex:(NSUInteger) index;
 
 - (void) removeChatViewController:(id <JVChatViewController>) controller;
-- (void) removeChatViewControllerAtIndex:(unsigned int) index;
+- (void) removeChatViewControllerAtIndex:(NSUInteger) index;
 - (void) removeAllChatViewControllers;
 
 - (void) replaceChatViewController:(id <JVChatViewController>) controller withController:(id <JVChatViewController>) newController;
-- (void) replaceChatViewControllerAtIndex:(unsigned int) index withController:(id <JVChatViewController>) controller;
+- (void) replaceChatViewControllerAtIndex:(NSUInteger) index withController:(id <JVChatViewController>) controller;
 
 - (NSArray *) chatViewControllersForConnection:(MVChatConnection *) connection;
 - (NSArray *) chatViewControllersWithControllerClass:(Class) class;
@@ -128,8 +128,8 @@ extern NSString *JVChatViewPboardType;
 - (NSString *) toolTip;
 - (NSImage *) statusImage;
 
-- (int) numberOfChildren;
-- (id) childAtIndex:(int) index;
+- (NSUInteger) numberOfChildren;
+- (id) childAtIndex:(NSUInteger) index;
 @end
 
 @interface NSObject (MVChatPluginToolbarSupport)

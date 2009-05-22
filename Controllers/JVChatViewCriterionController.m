@@ -84,7 +84,7 @@
 
 		[listKindButton selectItemAtIndex:[listKindButton indexOfItemWithTag:[self kind]]];
 		[listOperationButton selectItemAtIndex:[listOperationButton indexOfItemWithTag:[self operation]]];
-		int index = [listQuery indexOfItemWithRepresentedObject:[self query]];
+		NSInteger index = [listQuery indexOfItemWithRepresentedObject:[self query]];
 		if( index == -1 && [[self query] isKindOfClass:[NSNumber class]] )
 			index = [listQuery indexOfItemWithTag:[(NSNumber *)[self query] intValue]];
 		[listQuery selectItemAtIndex:index];
@@ -187,7 +187,7 @@
 	if( [self format] == JVChatViewTextCriterionFormat ) {
 		[textQuery setObjectValue:query];
 	} else if( [self format] == JVChatViewListCriterionFormat ) {
-		int index = [listQuery indexOfItemWithRepresentedObject:query];
+		NSInteger index = [listQuery indexOfItemWithRepresentedObject:query];
 		if( index == -1 && [query isKindOfClass:[NSNumber class]] )
 			index = [listQuery indexOfItemWithTag:[(NSNumber *)query intValue]];
 		[listQuery selectItemAtIndex:index];
@@ -221,7 +221,7 @@
 	} else if( [self format] == JVChatViewListCriterionFormat ) {
 		NSMenuItem *mitem = [listQuery selectedItem];
 		if( [mitem representedObject] ) [self setQuery:[mitem representedObject]];
-		else [self setQuery:[NSNumber numberWithInt:[mitem tag]]];
+		else [self setQuery:[NSNumber numberWithLong:[mitem tag]]];
 	}
 }
 
@@ -255,7 +255,7 @@
 			if( result ) match = YES;
 			if( oper == JVChatViewTextDoesNotMatchCriterionOperation ) match = ! match;
 		} else if( oper >= 3 && oper <= 6 ) {
-			unsigned int options = ( ignoreCase ? NSCaseInsensitiveSearch : 0 );
+			NSUInteger options = ( ignoreCase ? NSCaseInsensitiveSearch : 0 );
 			if( oper == JVChatViewTextBeginsWithCriterionOperation ) options = NSAnchoredSearch;
 			else if( oper == JVChatViewTextEndsWithCriterionOperation ) options = ( NSAnchoredSearch | NSBackwardsSearch );
 			NSRange range = [value rangeOfString:[self query] options:options];

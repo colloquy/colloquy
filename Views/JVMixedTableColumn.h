@@ -1,5 +1,5 @@
 @interface JVMixedTableColumn : NSTableColumn {
-	unsigned int delegateDataCellForRow:1;
+	NSUInteger delegateDataCellForRow:1;
 }
 - (id) dataCellForRow:(int) row;
 @end

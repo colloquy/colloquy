@@ -56,21 +56,21 @@
 
 #pragma mark -
 
-- (void) setStatusNumber:(unsigned) number {
+- (void) setStatusNumber:(NSUInteger) number {
 	_statusNumber = number;
 }
 
-- (unsigned) statusNumber {
+- (NSUInteger) statusNumber {
 	return _statusNumber;
 }
 
 #pragma mark -
 
-- (void) setImportantStatusNumber:(unsigned) number {
+- (void) setImportantStatusNumber:(NSUInteger) number {
 	_importantStatusNumber = number;
 }
 
-- (unsigned) importantStatusNumber {
+- (NSUInteger) importantStatusNumber {
 	return _importantStatusNumber;
 }
 
@@ -119,11 +119,11 @@
 
 #pragma mark -
 
-- (void) setLeftMargin:(float) margin {
+- (void) setLeftMargin:(CGFloat) margin {
 	_leftMargin = margin;
 }
 
-- (float) leftMargin {
+- (CGFloat) leftMargin {
 	return _leftMargin;
 }
 

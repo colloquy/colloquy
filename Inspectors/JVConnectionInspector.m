@@ -122,7 +122,7 @@
 - (void) buildEncodingMenu {
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *menuItem = nil;
-	unsigned int i = 0;
+	NSUInteger i = 0;
 	NSStringEncoding defaultEncoding = [_connection encoding];
 	if( ! encoding ) defaultEncoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
 
@@ -178,7 +178,7 @@
 	} else if( sender == editUsername ) {
 		[_connection setUsername:[sender stringValue]];
 	} else if( sender == editPort ) {
-		[_connection setServerPort:( (unsigned int)[sender intValue] % 65536 )];
+		[_connection setServerPort:( (unsigned)[sender intValue] % 65536 )];
 	}
 }
 
@@ -342,14 +342,14 @@
 
 #pragma mark -
 
-- (int) numberOfRowsInTableView:(NSTableView *) tableView {
+- (NSInteger) numberOfRowsInTableView:(NSTableView *) tableView {
 	if( tableView == editRooms ) return [_editingRooms count];
 	else if( tableView == editRules ) return [_ignoreRules count];
 	else if( tableView == editRuleRooms ) return [_editingRuleRooms count];
 	else return 0;
 }
 
-- (id) tableView:(NSTableView *) tableView objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
+- (id) tableView:(NSTableView *) tableView objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( tableView == editRooms ) return [_editingRooms objectAtIndex:row];
 	else if( tableView == editRules ) {
 		KAIgnoreRule *rule = [_ignoreRules objectAtIndex:row];
@@ -365,7 +365,7 @@
 	else return nil;
 }
 
-- (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
+- (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( tableView == editRooms ) [_editingRooms replaceObjectAtIndex:row withObject:object];
 	else if( tableView == editRuleRooms ) [_editingRuleRooms replaceObjectAtIndex:row withObject:object];
 }
@@ -383,15 +383,15 @@
 
 #pragma mark -
 
-- (int) numberOfItemsInComboBox:(NSComboBox *) comboBox {
+- (NSInteger) numberOfItemsInComboBox:(NSComboBox *) comboBox {
 	return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] count];
 }
 
-- (id) comboBox:(NSComboBox *) comboBox objectValueForItemAtIndex:(int) index {
+- (id) comboBox:(NSComboBox *) comboBox objectValueForItemAtIndex:(NSInteger) index {
 	return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] objectAtIndex:index];
 }
 
-- (unsigned int) comboBox:(NSComboBox *) comboBox indexOfItemWithStringValue:(NSString *) string {
+- (NSUInteger) comboBox:(NSComboBox *) comboBox indexOfItemWithStringValue:(NSString *) string {
 	return [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] indexOfObject:string];
 }
 

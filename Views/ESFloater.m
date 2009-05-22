@@ -14,20 +14,20 @@
 #define WINDOW_FADE_SNAP                        0.05 //How close to min/max we must get before fade is finished
 
 @interface ESFloater (PRIVATE)
-- (id)initWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask;
-- (void)_setWindowOpacity:(float)opacity;
+- (id)initWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask;
+- (void)_setWindowOpacity:(CGFloat)opacity;
 @end
 
 @implementation ESFloater
 
 //
-+ (id)floaterWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask title:(NSString *) title
++ (id)floaterWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask title:(NSString *) title
 {
     return([[self alloc] initWithImage:inImage styleMask:styleMask title:title]);
 }
 
 //
-- (id)initWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask title:(NSString *) title
+- (id)initWithImage:(NSImage *)inImage styleMask:(NSUInteger)styleMask title:(NSString *) title
 {
     NSRect  frame;
 
@@ -97,7 +97,7 @@
 }
 
 //
-- (void)setMaxOpacity:(float)inMaxOpacity
+- (void)setMaxOpacity:(CGFloat)inMaxOpacity
 {
     maxOpacity = inMaxOpacity;
     if(windowIsVisible) [self _setWindowOpacity:maxOpacity];
@@ -140,7 +140,7 @@
     }
 }
 
-- (void)_setWindowOpacity:(float)opacity
+- (void)_setWindowOpacity:(CGFloat)opacity
 {
     [panel setAlphaValue:opacity];
     [panel setOpaque:(opacity == 1.0)];

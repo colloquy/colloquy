@@ -123,7 +123,7 @@ static NSString *parseCSSStyleAttribute( const char *style, NSMutableDictionary 
 			}
 		} else if( [prop isEqualToString:@"text-decoration"] ) {
 			if( [attr rangeOfString:@"underline"].location != NSNotFound ) {
-				[currentAttributes setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
+				[currentAttributes setObject:[NSNumber numberWithUnsignedLong:1] forKey:NSUnderlineStyleAttributeName];
 				handled = YES;
 			} else {
 				[currentAttributes removeObjectForKey:NSUnderlineStyleAttributeName];
@@ -159,7 +159,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		break;
 	case 'u':
 		if( ! strcmp( (char *) node -> name, "u" ) ) {
-			[newAttributes setObject:[NSNumber numberWithInt:1] forKey:NSUnderlineStyleAttributeName];
+			[newAttributes setObject:[NSNumber numberWithUnsignedLong:1] forKey:NSUnderlineStyleAttributeName];
 			skipTag = YES;
 		}
 		break;

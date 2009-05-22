@@ -149,7 +149,7 @@ struct _mark {
 		[self drawKnob];
 }
 
-- (void) setFloatValue:(float) position knobProportion:(float) percent {
+- (void) setFloatValue:(float) position knobProportion:(CGFloat) percent {
 	if( ! _jumpingToMark ) _currentMark = NSNotFound;
 	if( ( [self floatValue] != position || [self knobProportion] != percent ) && ( [_marks count] || [_shades count] ) )
 		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
@@ -445,7 +445,7 @@ struct _mark {
 	while( ( obj = [enumerator nextObject] ) ) {
 		struct _mark mark;
 		[obj getValue:&mark];
-		if( NSLocationInRange( (unsigned int)mark.location, range ) )
+		if( NSLocationInRange( mark.location, range ) )
 			[_marks removeObject:obj];
 	}
 
@@ -498,12 +498,12 @@ struct _mark {
 	else return ( NSHeight( [self frame] ) / [self knobProportion] );
 }
 
-- (float) scaleToContentView {
+- (CGFloat) scaleToContentView {
 	if( sFlags.isHoriz ) return NSWidth( [self rectForPart:NSScrollerKnobSlot] ) / NSWidth( [[(NSScrollView *)[self superview] contentView] documentRect] );
 	else return NSHeight( [self rectForPart:NSScrollerKnobSlot] ) / NSHeight( [[(NSScrollView *)[self superview] contentView] documentRect] );
 }
 
-- (float) shiftAmountToCenterAlign {
+- (CGFloat) shiftAmountToCenterAlign {
 	float scale = [self scaleToContentView];
 	if( sFlags.isHoriz ) return ( ( NSWidth( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;
 	else return ( ( NSHeight( [self rectForPart:NSScrollerKnobSlot] ) * [self knobProportion] ) / 2. ) / scale;

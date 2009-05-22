@@ -31,7 +31,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 }
 
 - (void) updateStatus {
-	unsigned int c = 0;
+	NSUInteger c = 0;
 	@synchronized( _dirtyLogs ) {
 		c = [_dirtyLogs count];
 	}
@@ -46,7 +46,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 - (id) init {
 	if( ! sharedBrowser && ( self = [super init] ) ) {
 		NSMutableDictionary *tempDictionary = [NSMutableDictionary dictionary];
-		int org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
+		NSInteger org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
 
 		AGRegex *regex = nil;
 		switch( org ) {
@@ -197,7 +197,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 - (void) tableView:(NSTableView *) tableview sortDescriptorsDidChange:(NSArray *) oldDescriptors {
 	NSArray *sorted = [_filteredTranscripts sortedArrayUsingDescriptors:[tableView sortDescriptors]];
 
-	int selectedRow = [tableView selectedRow];
+	NSInteger selectedRow = [tableView selectedRow];
 	NSDictionary *selected = nil;
 	if( selectedRow != -1 ) selected = [_filteredTranscripts objectAtIndex:selectedRow];
 
@@ -238,8 +238,8 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 			CFRange resultRange = CFRangeMake( 0, resultCount );
 
 			SKSearchResultsGetInfoInRange( results, resultRange, outDocumentsArray, NULL, outScoresArray );
-			int i = 0;
 
+			NSUInteger i = 0;
 			for( i = 0; i < resultCount; i++ ) {
 				CFURLRef url = SKDocumentCopyURL( outDocumentsArray[i] );
 				NSString *path = [(NSURL*)url path];
@@ -268,7 +268,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 	_selectedTag = [sender tag];
 
 	NSMenu *template = [[[searchField cell] searchMenuTemplate] copy];
-	for( int i = 0; i < 4; i++ )
+	for( NSUInteger i = 0; i < 4; i++ )
 		[[template itemWithTag:i] setState:( i == _selectedTag ? NSOnState : NSOffState )];
 	[[searchField cell] setSearchMenuTemplate:template];
 	[template release];
@@ -279,7 +279,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 #pragma mark -
 
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
-	int selectedRow = [tableView selectedRow];
+	NSInteger selectedRow = [tableView selectedRow];
 	if( selectedRow != -1 ) {
 		[_transcript release];
 		_transcript = [[JVChatTranscript alloc] initWithContentsOfFile:[[_filteredTranscripts objectAtIndex:selectedRow] objectForKey:@"path"]];

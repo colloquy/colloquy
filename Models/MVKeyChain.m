@@ -28,7 +28,7 @@ static MVKeyChain *sharedInstance = nil;
 
 - (NSString *) genericPasswordForService:(NSString *) service account:(NSString *) account {
 	OSStatus ret = 0;
-	unsigned long len = 0;
+	UInt32 len = 0;
 	void *p = NULL;
 	NSString *string = nil;
 
@@ -63,7 +63,7 @@ static MVKeyChain *sharedInstance = nil;
 
 - (NSString *) internetPasswordForServer:(NSString *) server securityDomain:(NSString *) domain account:(NSString *) account path:(NSString *) path port:(unsigned short) port protocol:(MVKeyChainProtocol) protocol authenticationType:(MVKeyChainAuthenticationType) authType {
 	OSStatus ret = 0;
-	unsigned long len = 0;
+	UInt32 len = 0;
 	void *p = NULL;
 	NSString *string = nil;
 

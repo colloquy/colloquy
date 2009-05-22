@@ -103,7 +103,7 @@ static NSSize		rightCapSize;
 //Return the desired size of this tab
 - (NSSize)size
 {
-	int width = leftCapSize.width + [[self attributedLabel] size].width + rightCapSize.width +
+	CGFloat width = leftCapSize.width + [[self attributedLabel] size].width + rightCapSize.width +
 	(TAB_CLOSE_LEFTPAD + [[tabViewItem icon] size].width + TAB_CLOSE_RIGHTPAD) + TAB_RIGHT_PAD;
 
     return( NSMakeSize((width > TAB_MIN_WIDTH ? width : TAB_MIN_WIDTH), leftCapSize.height) );
@@ -138,7 +138,7 @@ static NSSize		rightCapSize;
 {
 	NSSize	iconSize = [[tabViewItem icon] size];
 	NSSize	closeSize = [tabCloseFront size];
-    int 	centerY = (frame.size.height - [tabCloseFront size].height) / 2.0;
+    CGFloat centerY = (frame.size.height - [tabCloseFront size].height) / 2.0;
 
     return(NSMakeRect(frame.origin.x + leftCapSize.width + TAB_CLOSE_LEFTPAD + ((iconSize.width - closeSize.width) / 2.0),
 					  frame.origin.y + centerY + TAB_CLOSE_Y_OFFSET + 1,

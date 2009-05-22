@@ -479,7 +479,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 #pragma mark Comparisons
 
 - (NSComparisonResult) availabilityCompare:(JVBuddy *) buddy {
-	unsigned int b1 = 0, b2 = 0;
+	NSUInteger b1 = 0, b2 = 0;
 
 	if( [self status] == MVChatUserAwayStatus ) b1 = 2;
 	else if( [self status] == MVChatUserAvailableStatus ) {

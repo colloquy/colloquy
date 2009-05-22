@@ -165,7 +165,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			windowController = [self newChatWindowController];
 		} else if( [[windowSet objectForKey:@"special"] isEqualToString:@"serverWindow"] ) {
 			windowController = [self chatWindowControllerWithIdentifier:[[controller connection] server]];
-		} else if( [[windowSet objectForKey:@"identifier"] length] ) {
+		} else if( [(NSString *)[windowSet objectForKey:@"identifier"] length] ) {
 			windowController = [self chatWindowControllerWithIdentifier:[windowSet objectForKey:@"identifier"]];
 		}
 	}
@@ -592,10 +592,10 @@ static NSMenu *smartTranscriptMenu = nil;
 		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatAlwaysShowNotices"] && ![[notification userInfo] objectForKey:@"handled"] )
 			hideFromUser = NO;
 
-		NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
+		NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:[connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
 		NSAttributedString *messageString = [NSAttributedString attributedStringWithChatFormat:message options:options];
 		if( ! messageString ) {
-			[options setObject:[NSNumber numberWithUnsignedInt:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
+			[options setObject:[NSNumber numberWithUnsignedLong:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
 			messageString = [NSAttributedString attributedStringWithChatFormat:message options:options];
 		}
 
@@ -803,7 +803,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	return [[[JVChatController defaultController] allChatViewControllers] allObjects];
 }
 
-- (id <JVChatViewController>) valueInChatViewsAtIndex:(unsigned) index {
+- (id <JVChatViewController>) valueInChatViewsAtIndex:(NSUInteger) index {
 	return [[self chatViews] objectAtIndex:index];
 }
 
@@ -837,16 +837,16 @@ static NSMenu *smartTranscriptMenu = nil;
 	[self scriptErrorChantAddToChatViews];
 }
 
-- (void) insertInChatViews:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) insertInChatViews:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self scriptErrorChantAddToChatViews];
 }
 
-- (void) removeFromChatViewsAtIndex:(unsigned) index {
+- (void) removeFromChatViewsAtIndex:(NSUInteger) index {
 	id <JVChatViewController> view = [[self chatViews] objectAtIndex:index];
 	if( view ) [[JVChatController defaultController] disposeViewController:view];
 }
 
-- (void) replaceInChatViews:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) replaceInChatViews:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self scriptErrorChantAddToChatViews];
 }
 
@@ -856,7 +856,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	return [[[JVChatController defaultController] chatViewControllersOfClass:class] allObjects];
 }
 
-- (id <JVChatViewController>) valueInChatViewsAtIndex:(unsigned) index withClass:(Class) class {
+- (id <JVChatViewController>) valueInChatViewsAtIndex:(NSUInteger) index withClass:(Class) class {
 	return [[self chatViewsWithClass:class] objectAtIndex:index];
 }
 
@@ -875,7 +875,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	return nil;
 }
 
-- (void) removeFromChatViewsAtIndex:(unsigned) index withClass:(Class) class {
+- (void) removeFromChatViewsAtIndex:(NSUInteger) index withClass:(Class) class {
 	id <JVChatViewController> view = [[self chatViewsWithClass:class] objectAtIndex:index];
 	if( view ) [[JVChatController defaultController] disposeViewController:view];
 }
@@ -886,7 +886,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	return [self chatViewsWithClass:[JVChatRoomPanel class]];
 }
 
-- (id <JVChatViewController>) valueInChatRoomsAtIndex:(unsigned) index {
+- (id <JVChatViewController>) valueInChatRoomsAtIndex:(NSUInteger) index {
 	return [self valueInChatViewsAtIndex:index withClass:[JVChatRoomPanel class]];
 }
 
@@ -906,15 +906,15 @@ static NSMenu *smartTranscriptMenu = nil;
 	[self scriptErrorChantAddToChatViews];
 }
 
-- (void) insertInChatRooms:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) insertInChatRooms:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self scriptErrorChantAddToChatViews];
 }
 
-- (void) removeFromChatRoomsAtIndex:(unsigned) index {
+- (void) removeFromChatRoomsAtIndex:(NSUInteger) index {
 	[self removeFromChatViewsAtIndex:index withClass:[JVChatRoomPanel class]];
 }
 
-- (void) replaceInChatRooms:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) replaceInChatRooms:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self scriptErrorChantAddToChatViews];
 }
 
@@ -924,7 +924,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	return [self chatViewsWithClass:[JVDirectChatPanel class]];
 }
 
-- (id <JVChatViewController>) valueInDirectChatsAtIndex:(unsigned) index {
+- (id <JVChatViewController>) valueInDirectChatsAtIndex:(NSUInteger) index {
 	return [self valueInChatViewsAtIndex:index withClass:[JVDirectChatPanel class]];
 }
 
@@ -944,15 +944,15 @@ static NSMenu *smartTranscriptMenu = nil;
 	[self scriptErrorChantAddToChatViews];
 }
 
-- (void) insertInDirectChats:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) insertInDirectChats:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self scriptErrorChantAddToChatViews];
 }
 
-- (void) removeFromDirectChatsAtIndex:(unsigned) index {
+- (void) removeFromDirectChatsAtIndex:(NSUInteger) index {
 	[self removeFromChatViewsAtIndex:index withClass:[JVDirectChatPanel class]];
 }
 
-- (void) replaceInDirectChats:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) replaceInDirectChats:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self scriptErrorChantAddToChatViews];
 }
 
@@ -962,7 +962,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	return [self chatViewsWithClass:[JVChatTranscriptPanel class]];
 }
 
-- (id <JVChatViewController>) valueInChatTranscriptsAtIndex:(unsigned) index {
+- (id <JVChatViewController>) valueInChatTranscriptsAtIndex:(NSUInteger) index {
 	return [self valueInChatViewsAtIndex:index withClass:[JVChatTranscriptPanel class]];
 }
 
@@ -982,15 +982,15 @@ static NSMenu *smartTranscriptMenu = nil;
 	[self scriptErrorChantAddToChatViews];
 }
 
-- (void) insertInChatTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) insertInChatTranscripts:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self scriptErrorChantAddToChatViews];
 }
 
-- (void) removeFromChatTranscriptsAtIndex:(unsigned) index {
+- (void) removeFromChatTranscriptsAtIndex:(NSUInteger) index {
 	[self removeFromChatViewsAtIndex:index withClass:[JVChatTranscriptPanel class]];
 }
 
-- (void) replaceInChatTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) replaceInChatTranscripts:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self scriptErrorChantAddToChatViews];
 }
 
@@ -1001,7 +1001,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	return [self chatViewsWithClass:[JVSmartTranscriptPanel class]];
 }
 
-- (id <JVChatViewController>) valueInSmartTranscriptsAtIndex:(unsigned) index {
+- (id <JVChatViewController>) valueInSmartTranscriptsAtIndex:(NSUInteger) index {
 	return [self valueInChatViewsAtIndex:index withClass:[JVSmartTranscriptPanel class]];
 }
 
@@ -1021,15 +1021,15 @@ static NSMenu *smartTranscriptMenu = nil;
 	[self scriptErrorChantAddToChatViews];
 }
 
-- (void) insertInSmartTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) insertInSmartTranscripts:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self scriptErrorChantAddToChatViews];
 }
 
-- (void) removeFromSmartTranscriptsAtIndex:(unsigned) index {
+- (void) removeFromSmartTranscriptsAtIndex:(NSUInteger) index {
 	[self removeFromChatViewsAtIndex:index withClass:[JVSmartTranscriptPanel class]];
 }
 
-- (void) replaceInSmartTranscripts:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) replaceInSmartTranscripts:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self scriptErrorChantAddToChatViews];
 }
 
@@ -1039,7 +1039,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	return [self chatViewsWithClass:[JVChatConsolePanel class]];
 }
 
-- (id <JVChatViewController>) valueInChatConsolesAtIndex:(unsigned) index {
+- (id <JVChatViewController>) valueInChatConsolesAtIndex:(NSUInteger) index {
 	return [self valueInChatViewsAtIndex:index withClass:[JVChatConsolePanel class]];
 }
 
@@ -1059,15 +1059,15 @@ static NSMenu *smartTranscriptMenu = nil;
 	[self scriptErrorChantAddToChatViews];
 }
 
-- (void) insertInChatConsoles:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) insertInChatConsoles:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self scriptErrorChantAddToChatViews];
 }
 
-- (void) removeFromChatConsolesAtIndex:(unsigned) index {
+- (void) removeFromChatConsolesAtIndex:(NSUInteger) index {
 	[self removeFromChatViewsAtIndex:index withClass:[JVChatConsolePanel class]];
 }
 
-- (void) replaceInChatConsoles:(id <JVChatViewController>) view atIndex:(unsigned) index {
+- (void) replaceInChatConsoles:(id <JVChatViewController>) view atIndex:(NSUInteger) index {
 	[self scriptErrorChantAddToChatViews];
 }
 
@@ -1088,8 +1088,8 @@ static NSMenu *smartTranscriptMenu = nil;
 		if( ! [chatViews count] ) [NSArray array];
 
 		if( ( ! startSpec || [startKey isEqualToString:@"chatViews"] || [startKey isEqualToString:@"chatRooms"] || [startKey isEqualToString:@"directChats"] || [startKey isEqualToString:@"chatConsoles"] || [startKey isEqualToString:@"chatTranscripts"] ) && ( ! endSpec || [endKey isEqualToString:@"chatViews"] || [endKey isEqualToString:@"chatRooms"] || [endKey isEqualToString:@"directChats"] || [endKey isEqualToString:@"chatConsoles"] || [endKey isEqualToString:@"chatTranscripts"] ) ) {
-			unsigned startIndex = 0;
-			unsigned endIndex = 0;
+			NSUInteger startIndex = 0;
+			NSUInteger endIndex = 0;
 
 			// The strategy here is going to be to find the index of the start and stop object in the full chat views array, regardless of what its key is.  Then we can find what we're looking for in that range of the chat views key (weeding out objects we don't want, if necessary).
 			// First find the index of the first start object in the chat views array
@@ -1129,17 +1129,17 @@ static NSMenu *smartTranscriptMenu = nil;
 			NSMutableArray *result = [NSMutableArray array];
 			BOOL keyIsGeneric = [key isEqualToString:@"chatViews"];
 			NSArray *rangeKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
-			unsigned curKeyIndex = 0;
+			NSUInteger curKeyIndex = 0;
 			id obj = nil;
 
-			for( unsigned i = startIndex; i <= endIndex; i++ ) {
+			for( NSUInteger i = startIndex; i <= endIndex; i++ ) {
 				if( keyIsGeneric ) {
-					[result addObject:[NSNumber numberWithInt:i]];
+					[result addObject:[NSNumber numberWithUnsignedLong:i]];
 				} else {
 					obj = [chatViews objectAtIndex:i];
 					curKeyIndex = [rangeKeyObjects indexOfObjectIdenticalTo:obj];
 					if( curKeyIndex != NSNotFound )
-						[result addObject:[NSNumber numberWithInt:curKeyIndex]];
+						[result addObject:[NSNumber numberWithUnsignedLong:curKeyIndex]];
 				}
 			}
 
@@ -1164,7 +1164,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		if( ! [chatViews count] ) return [NSArray array];
 
 		if( [baseKey isEqualToString:@"chatViews"] || [baseKey isEqualToString:@"chatRooms"] || [baseKey isEqualToString:@"directChats"] || [baseKey isEqualToString:@"chatConsoles"] || [baseKey isEqualToString:@"chatTranscripts"] ) {
-			unsigned baseIndex = 0;
+			NSUInteger baseIndex = 0;
 
 			// The strategy here is going to be to find the index of the base object in the full chat views array, regardless of what its key is.  Then we can find what we're looking for before or after it.
 			// First find the index of the first or last base object in the master array
@@ -1172,7 +1172,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 			id baseObject = [baseSpec objectsByEvaluatingWithContainers:self];
 			if( [baseObject isKindOfClass:[NSArray class]] ) {
-				int baseCount = [(NSArray *)baseObject count];
+				NSUInteger baseCount = [(NSArray *)baseObject count];
 				if( baseCount ) {
 					if( relPos == NSRelativeBefore ) baseObject = [baseObject objectAtIndex:0];
 					else baseObject = [baseObject objectAtIndex:( baseCount - 1 )];
@@ -1190,7 +1190,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			NSMutableArray *result = [NSMutableArray array];
 			BOOL keyIsGeneric = [key isEqualToString:@"chatViews"];
 			NSArray *relKeyObjects = ( keyIsGeneric ? nil : [self valueForKey:key] );
-			unsigned curKeyIndex = 0, viewCount = [chatViews count];
+			NSUInteger curKeyIndex = 0, viewCount = [chatViews count];
 			id obj = nil;
 
 			if( relPos == NSRelativeBefore ) baseIndex--;
@@ -1198,13 +1198,13 @@ static NSMenu *smartTranscriptMenu = nil;
 
 			while( baseIndex < viewCount ) {
 				if( keyIsGeneric ) {
-					[result addObject:[NSNumber numberWithInt:baseIndex]];
+					[result addObject:[NSNumber numberWithUnsignedLong:baseIndex]];
 					break;
 				} else {
 					obj = [chatViews objectAtIndex:baseIndex];
 					curKeyIndex = [relKeyObjects indexOfObjectIdenticalTo:obj];
 					if( curKeyIndex != NSNotFound ) {
-						[result addObject:[NSNumber numberWithInt:curKeyIndex]];
+						[result addObject:[NSNumber numberWithUnsignedLong:curKeyIndex]];
 						break;
 					}
 				}

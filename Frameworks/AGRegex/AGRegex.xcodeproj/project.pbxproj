@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 45;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -55,9 +55,9 @@
 
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		1C6A0C350865E09C009EE6D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Info.plist; sourceTree = "<group>"; };
+		1C6A0C350865E09C009EE6D2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1C6A0C360865E09C009EE6D2 /* AGRegex.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AGRegex.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1C6A0C4B0865E09C009EE6D2 /* Info-RegexTest.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Info-RegexTest.plist"; sourceTree = "<group>"; };
+		1C6A0C4B0865E09C009EE6D2 /* Info-RegexTest.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-RegexTest.plist"; sourceTree = "<group>"; };
 		1C6A0C4C0865E09C009EE6D2 /* RegexTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RegexTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CC620170B06DA6D00587C97 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		1CC6201F0B06DA6D00587C97 /* dftables.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dftables.c; sourceTree = "<group>"; };
@@ -296,7 +296,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1C3260040865DDF000357DB1 /* Build configuration list for PBXProject "AGRegex" */;
-			compatibilityVersion = "Xcode 2.4";
+			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 1;
 			mainGroup = 0867D691FE84028FC02AAC07 /* AGRegex */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -386,7 +386,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				LIBRARY_STYLE = DYNAMIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				"MACOSX_DEPLOYMENT_TARGET[arch=ppc64]" = 10.5;
+				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
 				OTHER_CFLAGS = "-fconstant-cfstrings";
 				PREBINDING = YES;
 				SYMROOT = ../../build;
@@ -496,8 +498,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = (
-					ppc,
+					x86_64,
 					i386,
+					ppc,
 				);
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = YES;
@@ -510,10 +513,14 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				LIBRARY_STYLE = DYNAMIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				"MACOSX_DEPLOYMENT_TARGET[arch=ppc64]" = 10.5;
+				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
 				OTHER_CFLAGS = "-fconstant-cfstrings";
 				PREBINDING = YES;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = macosx10.4;
+				"SDKROOT[arch=ppc64]" = macosx10.5;
+				"SDKROOT[arch=x86_64]" = macosx10.5;
 				SYMROOT = ../../build;
 				UNSTRIPPED_PRODUCT = YES;
 				ZERO_LINK = NO;

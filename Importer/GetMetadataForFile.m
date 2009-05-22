@@ -34,12 +34,12 @@
 	NSMutableSet *participants;
 	NSCharacterSet *lineBreaks;
 }
-- (id) initWithCapacity:(unsigned) capacity;
+- (id) initWithCapacity:(NSUInteger) capacity;
 - (NSDictionary *) metadataAttributes;
 @end
 
 @implementation JVChatTranscriptMetadataExtractor
-- (id) initWithCapacity:(unsigned) capacity {
+- (id) initWithCapacity:(NSUInteger) capacity {
 	if( ( self = [super init] ) ) {
 		content = [[NSMutableString alloc] initWithCapacity:capacity];
 		participants = [[NSMutableSet alloc] initWithCapacity:400];
@@ -83,7 +83,7 @@
 			if( dateStarted ) {
 				// Set Duration
 				NSTimeInterval logDuration = [lastDate timeIntervalSinceDate:dateStarted];
-				[ret setObject:[NSNumber numberWithInt:logDuration] forKey:(NSString *) kMDItemDurationSeconds];
+				[ret setObject:[NSNumber numberWithDouble:logDuration] forKey:(NSString *) kMDItemDurationSeconds];
 
 				// Set Coverage
 				NSDateFormatter *formatter = [[NSDateFormatter alloc] init];

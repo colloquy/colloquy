@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 45;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -27,7 +27,7 @@
 		1CE3FB5407C7DFD50049A366 /* AppleScriptPanel.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = AppleScriptPanel.nib; sourceTree = "<group>"; };
 		1CF7A61407CD661200965F52 /* compile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compile.png; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* AppleScript Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AppleScript Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Info.plist; sourceTree = "<group>"; };
+		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,7 +155,7 @@
 		089C1669FE841209C02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 1C7F30420855482D00D41FB0 /* Build configuration list for PBXProject "AppleScript Support" */;
-			compatibilityVersion = "Xcode 2.4";
+			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 1;
 			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
 			projectDirPath = "";
@@ -211,11 +211,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				PREBINDING = NO;
 				SYMROOT = ../../build;
-				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
@@ -252,8 +249,9 @@
 			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				ARCHS = (
-					ppc,
+					x86_64,
 					i386,
+					ppc,
 				);
 				SYMROOT = ../../build;
 			};

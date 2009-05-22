@@ -2029,7 +2029,7 @@
 				BuildIndependentTargetsInParallel = NO;
 			};
 			buildConfigurationList = 1C041A700854E97700A5A5BA /* Build configuration list for PBXProject "Colloquy" */;
-			compatibilityVersion = "Xcode 2.4";
+			compatibilityVersion = "Xcode 3.1";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -3115,15 +3115,11 @@
 		1C041A6E0854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_FAST_OBJC_DISPATCH = YES;
+				GCC_PREFIX_HEADER = Basic.pch;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Importer/Info.plist;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = Colloquy;
-				SDKROOT_ = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_ppc7400 = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_ppc970 = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = mdimporter;
 			};
 			name = Development;
@@ -3185,16 +3181,11 @@
 		1C041DCB0855377900A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_FAST_OBJC_DISPATCH = YES;
+				GCC_PREFIX_HEADER = Basic.pch;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = Importer/Info.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = Colloquy;
-				SDKROOT_ = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_ppc7400 = /Developer/SDKs/MacOSX10.4u.sdk;
-				SDKROOT_ppc970 = /Developer/SDKs/MacOSX10.4u.sdk;
 				WRAPPER_EXTENSION = mdimporter;
 			};
 			name = Release;

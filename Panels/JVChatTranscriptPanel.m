@@ -306,7 +306,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #pragma mark Scripting Support
 
 - (NSNumber *) uniqueIdentifier {
-	return [NSNumber numberWithUnsignedInt:(unsigned long) self];
+	return [NSNumber numberWithUnsignedLong:(intptr_t)self];
 }
 
 - (BOOL) isEnabled {
@@ -595,7 +595,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
 	NSMutableArray *ret = [[defaultMenuItems mutableCopy] autorelease];
 	NSMenuItem *item = nil;
-	unsigned i = 0;
+	NSUInteger i = 0;
 	BOOL found = NO;
 
 	for( i = 0; i < [ret count]; i++ ) {
@@ -675,7 +675,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	return ret;
 }
 
-- (unsigned) webView:(WebView *) webView dragSourceActionMaskForPoint:(NSPoint) point {
+- (NSUInteger) webView:(WebView *) webView dragSourceActionMaskForPoint:(NSPoint) point {
 	return UINT_MAX; // WebDragSourceActionAny
 }
 

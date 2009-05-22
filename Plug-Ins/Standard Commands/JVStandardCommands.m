@@ -693,7 +693,7 @@
 	BOOL permanent = NO;
 	BOOL member = YES;
 	BOOL message = NO;
-	unsigned offset = 0;
+	NSUInteger offset = 0;
 
 	if( ! [args length] ) {
 		id info = [JVInspectorController inspectorOfObject:[view connection]];
@@ -763,7 +763,7 @@
 	NSArray *rooms = nil;
 	BOOL member = YES;
 	BOOL message = NO;
-	unsigned offset = 0;
+	NSUInteger offset = 0;
 
 	if( ! [args length] ) {
 		id info = [JVInspectorController inspectorOfObject:[view connection]];

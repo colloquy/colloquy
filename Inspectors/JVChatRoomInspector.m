@@ -161,7 +161,7 @@
 	_latestBanList = [[[[_room target] bannedUsers] allObjects] mutableCopy];
 
 	SEL sortSelector = NULL;
-	int sortKey = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatRoomInspectorBanListSort"];
+	NSInteger sortKey = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatRoomInspectorBanListSort"];
 	switch( sortKey ) {
 		default:
 		case 1: sortSelector = @selector( compareByNickname: ); break;
@@ -183,7 +183,7 @@
 	[self _reloadTopic];
 }
 
-- (BOOL) textView:(NSTextView *) textView clickedOnLink:(id) link atIndex:(unsigned) charIndex {
+- (BOOL) textView:(NSTextView *) textView clickedOnLink:(id) link atIndex:(NSUInteger) charIndex {
 	// do nothing, ignore clicked links
 	return YES;
 }
@@ -214,16 +214,16 @@
 
 	[banRules deselectAll:nil];
 
-	unsigned int count = [selection count];
-	unsigned int buffer[count];
+	NSUInteger count = [selection count];
+	NSUInteger buffer[count];
 	count = [selection getIndexes:buffer maxCount:count inIndexRange:NULL];
 	if( ! count ) return;
 
-	unsigned int i = count;
+	NSUInteger i = count;
 
 	do {
 		if( i >= 1 ) i--;
-		unsigned int index = buffer[i];
+		NSUInteger index = buffer[i];
 		if( index >= [_latestBanList count] ) continue;
 		MVChatUser *ban = [_latestBanList objectAtIndex:index];
 		[[_room target] removeBanForUser:ban];
@@ -234,18 +234,18 @@
 }
 
 - (IBAction) editBanRule:(id) sender {
-	int row = [banRules selectedRow];
+	NSInteger row = [banRules selectedRow];
 	if( row == -1 || [banRules numberOfSelectedRows] > 1 ) return;
 	[banRules editColumn:0 row:row withEvent:nil select:YES];
 }
 
 #pragma mark -
 
-- (int) numberOfRowsInTableView:(NSTableView *) tableView {
+- (NSInteger) numberOfRowsInTableView:(NSTableView *) tableView {
 	return [_latestBanList count];
 }
 
-- (id) tableView:(NSTableView *) tableView objectValueForTableColumn:(NSTableColumn *) column row:(int) row {
+- (id) tableView:(NSTableView *) tableView objectValueForTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if ( [[column identifier] isEqualToString:@"author"] ) {
 		MVChatUser *user = [_latestBanList objectAtIndex:row];
 		if( [user respondsToSelector:@selector( attributeForKey: )] )
@@ -255,7 +255,7 @@
 	return [[_latestBanList objectAtIndex:row] description];
 }
 
-- (NSString *) tableView:(NSTableView *) tableView toolTipForCell:(NSCell *) cell rect:(NSRectPointer) rect tableColumn:(NSTableColumn *) column row:(int) row mouseLocation:(NSPoint) mouseLocation {
+- (NSString *) tableView:(NSTableView *) tableView toolTipForCell:(NSCell *) cell rect:(NSRectPointer) rect tableColumn:(NSTableColumn *) column row:(NSInteger) row mouseLocation:(NSPoint) mouseLocation {
 	MVChatUser *user = [_latestBanList objectAtIndex:row];
 	NSDate *date = [user attributeForKey:MVChatUserBanDateAttribute];
 	NSString *dateString = nil;
@@ -271,7 +271,7 @@
 	return [NSString stringWithFormat:@"%@ (%@)", dateString, server];
 }
 
-- (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(int) row {
+- (void) tableView:(NSTableView *) tableView setObjectValue:(id) object forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	MVChatUser *newBan = [MVChatUser wildcardUserFromString:object];
 	id ban = [_latestBanList objectAtIndex:row];
 	if( [ban isEqual:newBan] ) return;
@@ -279,7 +279,7 @@
 	if( [ban isKindOfClass:[MVChatUser class]] )
 		[[_room target] removeBanForUser:ban];
 
-	if( newBan && [object length] ) {
+	if( newBan && [(NSString *)object length] ) {
 		[[_room target] addBanForUser:newBan];
 		[_latestBanList replaceObjectAtIndex:row withObject:newBan];
 	} else [_latestBanList removeObjectAtIndex:row];
@@ -288,7 +288,7 @@
 }
 
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
-	unsigned int localUserModes = ( [[_room connection] localUser] ? [(MVChatRoom *)[_room target] modesForMemberUser:[[_room connection] localUser]] : 0 );
+	NSUInteger localUserModes = ( [[_room connection] localUser] ? [(MVChatRoom *)[_room target] modesForMemberUser:[[_room connection] localUser]] : 0 );
 	BOOL canEdit = ( localUserModes & MVChatRoomMemberOperatorMode );
 	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberHalfOperatorMode );
 	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberAdministratorMode );
@@ -310,11 +310,11 @@
 
 - (void) _reloadTopic {
 	NSFont *baseFont = [NSFont userFontOfSize:12.];
-	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:[_room encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
+	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:[_room encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", baseFont, @"BaseFont", nil];
 	NSAttributedString *messageString = [NSAttributedString attributedStringWithChatFormat:[(MVChatRoom *)[_room target] topic] options:options];
 
 	if( ! messageString ) {
-		[options setObject:[NSNumber numberWithUnsignedInt:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
+		[options setObject:[NSNumber numberWithUnsignedLong:NSISOLatin1StringEncoding] forKey:@"StringEncoding"];
 		messageString = [NSAttributedString attributedStringWithChatFormat:[(MVChatRoom *)[_room target] topic] options:options];
 	}
 
@@ -324,7 +324,7 @@
 - (void) _refreshEditStatus:(NSNotification *) notification {
 	if( notification && ! [[[notification userInfo] objectForKey:@"who"] isLocalUser] ) return;
 
-	unsigned int localUserModes = ( [[_room connection] localUser] ? [(MVChatRoom *)[_room target] modesForMemberUser:[[_room connection] localUser]] : 0 );
+	NSUInteger localUserModes = ( [[_room connection] localUser] ? [(MVChatRoom *)[_room target] modesForMemberUser:[[_room connection] localUser]] : 0 );
 	BOOL canEdit = ( localUserModes & MVChatRoomMemberOperatorMode );
 	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberHalfOperatorMode );
 	if( ! canEdit ) canEdit = ( localUserModes & MVChatRoomMemberAdministratorMode );
@@ -357,9 +357,9 @@
 }
 
 - (void) _roomModeChanged:(NSNotification *) notification {
-	unsigned int changedModes = ( notification ? [[[notification userInfo] objectForKey:@"changedModes"] unsignedIntValue] : [(MVChatRoom *)[_room target] modes] );
-	unsigned int newModes = [(MVChatRoom *)[_room target] modes];
-	unsigned int localUserModes = ( [[_room connection] localUser] ? [(MVChatRoom *)[_room target] modesForMemberUser:[[_room connection] localUser]] : 0 );
+	NSUInteger changedModes = ( notification ? [[[notification userInfo] objectForKey:@"changedModes"] unsignedIntValue] : [(MVChatRoom *)[_room target] modes] );
+	NSUInteger newModes = [(MVChatRoom *)[_room target] modes];
+	NSUInteger localUserModes = ( [[_room connection] localUser] ? [(MVChatRoom *)[_room target] modesForMemberUser:[[_room connection] localUser]] : 0 );
 
 	if( changedModes & MVChatRoomPrivateMode )
 		[privateRoom setState:( newModes & MVChatRoomPrivateMode ? NSOnState : NSOffState )];

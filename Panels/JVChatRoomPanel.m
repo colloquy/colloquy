@@ -191,11 +191,11 @@
 
 #pragma mark -
 
-- (int) numberOfChildren {
+- (NSUInteger) numberOfChildren {
 	return [_sortedMembers count];
 }
 
-- (id) childAtIndex:(int) index {
+- (id) childAtIndex:(NSUInteger) index {
 	return [_sortedMembers objectAtIndex:index];
 }
 
@@ -706,14 +706,14 @@
 	[_preferredTabCompleteNicknames insertObject:completion atIndex:0];
 }
 
-- (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(int *) index {
+- (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(NSInteger *) index {
 	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSString *search = [[[send textStorage] string] substringWithRange:charRange];
 	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
 	NSMutableArray *ret = [NSMutableArray array];
 	NSString *name = nil;
 	NSString *suffix = ( ! ( [event modifierFlags] & NSAlternateKeyMask ) ? ( charRange.location == 0 ? @": " : @" " ) : @"" );
-	unsigned int length = [search length];
+	NSUInteger length = [search length];
 
 	while( length && ( name = [[enumerator nextObject] nickname] ) )
 		if( length <= [name length] && [search caseInsensitiveCompare:[name substringToIndex:length]] == NSOrderedSame )
@@ -785,8 +785,8 @@
 
 	JVChatRoomMember *mbr = [self chatRoomMemberForUser:user];
 
-	unsigned int changedModes = [[[notification userInfo] objectForKey:@"changedModes"] unsignedIntValue];
-	unsigned int newModes = [[self target] modes];
+	NSUInteger changedModes = [[[notification userInfo] objectForKey:@"changedModes"] unsignedIntValue];
+	NSUInteger newModes = [[self target] modes];
 
 	while( changedModes ) {
 		NSString *message = nil;
@@ -960,7 +960,7 @@
 
 	NSString *oldNickname = [[notification userInfo] objectForKey:@"oldNickname"];
 
-	unsigned int index = [_preferredTabCompleteNicknames indexOfObject:oldNickname];
+	NSUInteger index = [_preferredTabCompleteNicknames indexOfObject:oldNickname];
 	if( index != NSNotFound ) [_preferredTabCompleteNicknames replaceObjectAtIndex:index withObject:[member nickname]];
 
 	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"%@ is now known as <span class=\"member\">%@</span>.", "user has changed nicknames" ), [oldNickname stringByEncodingXMLSpecialCharactersAsEntities], [[member nickname] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"memberNewNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:oldNickname, @"old", member, @"who", nil]];
@@ -1230,7 +1230,7 @@
 	NSString *title = nil;
 	NSString *description = nil;
 	NSString *notificationKey = nil;
-	unsigned long mode = [[[notification userInfo] objectForKey:@"mode"] unsignedLongValue];
+	NSUInteger mode = [[[notification userInfo] objectForKey:@"mode"] unsignedLongValue];
 	BOOL enabled = [[[notification userInfo] objectForKey:@"enabled"] boolValue];
 
 	if( mode == MVChatRoomMemberFounderMode && enabled ) {
