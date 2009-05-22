@@ -340,6 +340,27 @@
 			remoteGlobalIDString = 1C51B4BB052DE14B00BB459B;
 			remoteInfo = "Standard Commands (Plug-In)";
 		};
+		1C0A18190FC676A90022823E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C0A18110FC676A90022823E /* AGRegex.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C6A0C360865E09C009EE6D2 /* AGRegex.framework */;
+			remoteInfo = "AGRegex (Framework)";
+		};
+		1C0A181B0FC676A90022823E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C0A18110FC676A90022823E /* AGRegex.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C6A0C4C0865E09C009EE6D2 /* RegexTest.app */;
+			remoteInfo = "RegexTest (Application)";
+		};
+		1C0A18210FC676CB0022823E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C0A18110FC676A90022823E /* AGRegex.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1C6A0C250865E09C009EE6D2 /* AGRegex (Framework) */;
+			remoteInfo = "AGRegex (Framework)";
+		};
 		1C0A19A608B0418600324E25 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1C0A19A208B0418600324E25 /* Python Support.xcodeproj */;
@@ -489,6 +510,7 @@
 		1C0730E30677A63B008D8AD9 /* NSImageAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSImageAdditions.m; path = Additions/NSImageAdditions.m; sourceTree = "<group>"; };
 		1C088A0E04FCFEE700A8FE6E /* JVChatRoomMember.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatRoomMember.h; path = Panels/JVChatRoomMember.h; sourceTree = "<group>"; };
 		1C088A0F04FCFEE700A8FE6E /* JVChatRoomMember.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatRoomMember.m; path = Panels/JVChatRoomMember.m; sourceTree = "<group>"; };
+		1C0A18110FC676A90022823E /* AGRegex.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AGRegex.xcodeproj; path = Frameworks/AGRegex/AGRegex.xcodeproj; sourceTree = "<group>"; };
 		1C0A19A208B0418600324E25 /* Python Support.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Python Support.xcodeproj"; path = "Plug-Ins/Python Support/Python Support.xcodeproj"; sourceTree = "<group>"; };
 		1C0A4C990799BDAF0093B702 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVFind.nib; sourceTree = "<group>"; };
 		1C0A4C9B0799BDB00093B702 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVTranscriptCriterion.nib; sourceTree = "<group>"; };
@@ -1145,6 +1167,7 @@
 		089C166AFE841209C02AAC07 /* Massinova Menu Extra */ = {
 			isa = PBXGroup;
 			children = (
+				1C0A18110FC676A90022823E /* AGRegex.xcodeproj */,
 				0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */,
 				F50B0A9F0170C89301A84BDE /* Sources & Headers */,
 				F50B0AA00170C89301A84BDE /* Other Sources & Additions */,
@@ -1220,6 +1243,15 @@
 				1C04394607CAFC7D00304949 /* AppleScript Support.xcodeproj */,
 			);
 			name = "AppleScript Support";
+			sourceTree = "<group>";
+		};
+		1C0A18120FC676A90022823E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1C0A181A0FC676A90022823E /* AGRegex.framework */,
+				1C0A181C0FC676A90022823E /* RegexTest.app */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		1C0A199A08B0416C00324E25 /* Python Support */ = {
@@ -1958,6 +1990,7 @@
 			);
 			dependencies = (
 				1CEEAB19095BD24100166A54 /* PBXTargetDependency */,
+				1C0A18220FC676CB0022823E /* PBXTargetDependency */,
 				1C7F30010855456D00D41FB0 /* PBXTargetDependency */,
 				1C09DFF7052DFF6600D748CF /* PBXTargetDependency */,
 				0A6571A908687EF9001FF007 /* PBXTargetDependency */,
@@ -2022,6 +2055,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 1C0A18120FC676A90022823E /* Products */;
+					ProjectRef = 1C0A18110FC676A90022823E /* AGRegex.xcodeproj */;
+				},
+				{
 					ProductGroup = 0A7F240B08556A9B00FA3D9B /* Products */;
 					ProjectRef = 1C04394607CAFC7D00304949 /* AppleScript Support.xcodeproj */;
 				},
@@ -2069,6 +2106,20 @@
 			fileType = wrapper.cfbundle;
 			path = "F-Script Support.plugin";
 			remoteRef = 0A7F243008556AC100FA3D9B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C0A181A0FC676A90022823E /* AGRegex.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AGRegex.framework;
+			remoteRef = 1C0A18190FC676A90022823E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1C0A181C0FC676A90022823E /* RegexTest.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = RegexTest.app;
+			remoteRef = 1C0A181B0FC676A90022823E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		1C0A19A708B0418600324E25 /* Python Support.plugin */ = {
@@ -2528,6 +2579,11 @@
 			isa = PBXTargetDependency;
 			target = 1C51B4BB052DE14B00BB459B /* Standard Commands (Plug-In) */;
 			targetProxy = 1C09DFF6052DFF6600D748CF /* PBXContainerItemProxy */;
+		};
+		1C0A18220FC676CB0022823E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "AGRegex (Framework)";
+			targetProxy = 1C0A18210FC676CB0022823E /* PBXContainerItemProxy */;
 		};
 		1C0A19AF08B041A800324E25 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
