@@ -375,6 +375,7 @@
 		1C3260050865DDF000357DB1 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_CW_ASM_SYNTAX = NO;
@@ -392,6 +393,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				"MACOSX_DEPLOYMENT_TARGET[arch=ppc64]" = 10.5;
 				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.5;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-fconstant-cfstrings";
 				PREBINDING = YES;
 				SDKROOT = macosx10.4;
@@ -399,6 +401,7 @@
 				"SDKROOT[arch=x86_64]" = macosx10.5;
 				SYMROOT = ../../build;
 				UNSTRIPPED_PRODUCT = YES;
+				VALID_ARCHS = "x86_64 i386 ppc ppc7400 ppc970";
 				ZERO_LINK = NO;
 			};
 			name = Development;
@@ -503,11 +506,7 @@
 		1C9AED51086B1909008ED7AD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					x86_64,
-					i386,
-					ppc,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				GCC_CW_ASM_SYNTAX = NO;
@@ -532,6 +531,7 @@
 				"SDKROOT[arch=x86_64]" = macosx10.5;
 				SYMROOT = ../../build;
 				UNSTRIPPED_PRODUCT = YES;
+				VALID_ARCHS = "x86_64 i386 ppc ppc7400 ppc970";
 				ZERO_LINK = NO;
 			};
 			name = Release;

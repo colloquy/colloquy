@@ -3130,6 +3130,7 @@
 					DEBUG,
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				SYMROOT = build;
 			};
 			name = Development;
@@ -3192,11 +3193,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					x86_64,
-					i386,
-					ppc,
-				);
 				SYMROOT = build;
 			};
 			name = Release;

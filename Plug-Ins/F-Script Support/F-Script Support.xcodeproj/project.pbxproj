@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0A61C80407E05F7200C326B4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0A61C80307E05F7200C326B4 /* Localizable.strings */; };
-		1C4FD32A07C6B9F5000EA451 /* FScript.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C4FD32907C6B9F5000EA451 /* FScript.framework */; };
+		1C4FD32A07C6B9F5000EA451 /* FScript.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C4FD32907C6B9F5000EA451 /* FScript.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1C4FD36807C6BC25000EA451 /* JVFScriptPluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FD36607C6BC25000EA451 /* JVFScriptPluginLoader.m */; };
 		1C4FD3CF07C6BF1B000EA451 /* JVFScriptConsolePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FD3CD07C6BF1B000EA451 /* JVFScriptConsolePanel.m */; };
 		1C919D9E07C6DC2800079B67 /* console.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C919D9D07C6DC2800079B67 /* console.png */; };
@@ -227,27 +227,18 @@
 		1C7F306C0855489300D41FB0 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(HOME)/Library/Frameworks\"";
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					../../Additions,
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"\"../../Chat Core\"",
 					../../Controllers,
 					../../Models,
 					../../Panels,
 				);
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
-				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
-					"-weak_framework",
-					FScript,
 				);
 				PRODUCT_NAME = "F-Script Support";
 				WRAPPER_EXTENSION = plugin;
@@ -257,27 +248,18 @@
 		1C7F306E0855489300D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(HOME)/Library/Frameworks\"";
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					../../Additions,
-					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"\"../../Chat Core\"",
 					../../Controllers,
 					../../Models,
 					../../Panels,
 				);
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "../../Chat\\ Core";
 				INFOPLIST_FILE = Info.plist;
-				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = (
 					"-undefined",
 					dynamic_lookup,
-					"-weak_framework",
-					FScript,
 				);
 				PRODUCT_NAME = "F-Script Support";
 				WRAPPER_EXTENSION = plugin;
@@ -297,11 +279,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					x86_64,
-					i386,
-					ppc,
-				);
+				ONLY_ACTIVE_ARCH = YES;
 				SYMROOT = ../../build;
 			};
 			name = Release;

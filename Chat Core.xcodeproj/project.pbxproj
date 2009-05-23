@@ -728,6 +728,7 @@
 			buildSettings = {
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				ONLY_ACTIVE_ARCH = YES;
 				SYMROOT = build;
 			};
 			name = Development;
@@ -761,11 +762,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C9AE8E0086A5218008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					x86_64,
-					i386,
-					ppc,
-				);
 				GCC_PREPROCESSOR_DEFINITIONS = NS_BLOCK_ASSERTIONS;
 				SYMROOT = build;
 			};
