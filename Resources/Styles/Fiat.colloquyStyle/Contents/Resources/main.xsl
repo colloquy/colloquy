@@ -18,6 +18,8 @@
 	</xsl:template>
 
 	<xsl:template match="message" mode="consecutive">
+		<xsl:param name="fromEnvelope" select="'no'" />
+
 		<xsl:choose>
 			<xsl:when test="not( $consecutiveMessage = 'yes' ) and $fromEnvelope = 'no' and count( ../message[not( @ignored = 'yes' )] ) = 1 and not( @ignored = 'yes' )">
 				<xsl:apply-templates select=".." />
