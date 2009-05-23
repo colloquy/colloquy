@@ -1594,7 +1594,7 @@ end:
 	if( !_pendingIdentificationAttempt && ![[self localUser] isIdentified] && [[self nicknamePassword] length] ) {
 		_pendingIdentificationAttempt = YES;
 		if( [[self server] hasCaseInsensitiveSubstring:@"quakenet"] ) {
-			[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG Q@CServe.quakenet.org :AUTH %@ %@", [self preferredNickname], [self nicknamePassword]];
+			[self sendRawMessageImmediatelyWithFormat:@"AUTH %@ %@", [self preferredNickname], [self nicknamePassword]];
 		} else if( [[self server] hasCaseInsensitiveSubstring:@"undernet"] ) {
 			[self sendRawMessageImmediatelyWithFormat:@"PRIVMSG X@channels.undernet.org :LOGIN %@ %@", [self preferredNickname], [self nicknamePassword]];
 		} else if( [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) {
