@@ -50,7 +50,6 @@
 		1C2462A505F9205900505752 /* JVStyleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2462A305F9205900505752 /* JVStyleView.m */; };
 		1C2E98C406207AD0000715D8 /* half-op.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C2E98C306207AD0000715D8 /* half-op.png */; };
 		1C39736A082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C397368082D3ED000DCF3CF /* JVChatTranscriptBrowserPanel.nib */; };
-		1C397391082D4ADA00DCF3CF /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C397390082D4ADA00DCF3CF /* IOKit.framework */; };
 		1C3B290806529E720066197C /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3B290706529E720066197C /* ChatCore.framework */; };
 		1C415F270B350CA300239EB3 /* JVToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C415F250B350CA300239EB3 /* JVToolbarItem.m */; };
 		1C45BFA5086F4BD80079E014 /* newWindow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C45BFA4086F4BD80079E014 /* newWindow.png */; };
@@ -103,7 +102,6 @@
 		1C8444A30F26C7D600701E36 /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; };
 		1C8BDCF4054345160035B84A /* JVChatUserInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8BDCF2054345160035B84A /* JVChatUserInspector.m */; };
 		1C8BDD2205436A030035B84A /* JVChatMemberInspector.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C8BDD2005436A020035B84A /* JVChatMemberInspector.nib */; };
-		1C8D2E72065D0BB600AC28C5 /* Message.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F555208B01F0DE0601EE70DE /* Message.framework */; };
 		1C9014C107A2D798002942A7 /* MVChatUserAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9014BF07A2D798002942A7 /* MVChatUserAdditions.m */; };
 		1C94370B0639F86700618CD9 /* JVMarkedScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9437090639F86700618CD9 /* JVMarkedScroller.m */; };
 		1C96E93306AAD81B0013B0A9 /* JVTranscriptPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C96E93106AAD81B0013B0A9 /* JVTranscriptPreferences.nib */; };
@@ -248,6 +246,7 @@
 		1CDEE47A0583DC58000B9075 /* JVBuddyInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDEE4780583DC58000B9075 /* JVBuddyInspector.m */; };
 		1CDEE48D0583E268000B9075 /* JVBuddyInspector.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEE48B0583E268000B9075 /* JVBuddyInspector.nib */; };
 		1CDEE8C505878D30000B9075 /* InterfacePreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CDEE8260586C723000B9075 /* InterfacePreferences.png */; };
+		1CE009840FC7B16700F5AB04 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C397390082D4ADA00DCF3CF /* IOKit.framework */; };
 		1CE6916808B183C2006D9CA0 /* Styles in Resources */ = {isa = PBXBuildFile; fileRef = 1C3C116205029E03000001C8 /* Styles */; };
 		1CE6916908B183C2006D9CA0 /* ChatCore.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 1C1D19F205992D80000BB31A /* ChatCore.scriptTerminology */; };
 		1CE6916A08B183C3006D9CA0 /* ChatCore.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1C1D19F105992D80000BB31A /* ChatCore.scriptSuite */; };
@@ -280,7 +279,7 @@
 		1CF4D30307E5497400DB421A /* smartTranscriptTabActivity.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF4D30207E5497400DB421A /* smartTranscriptTabActivity.png */; };
 		1CF4D38907E54C0C00DB421A /* smartTranscript.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF4D38807E54C0C00DB421A /* smartTranscript.png */; };
 		1CF4D76607E6AD4400DB421A /* smartTranscriptSettings.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF4D76507E6AD4400DB421A /* smartTranscriptSettings.png */; };
-		1CF5F8D207D537E50019DC13 /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF5F8D107D537E50019DC13 /* Growl.framework */; };
+		1CF5F8D207D537E50019DC13 /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF5F8D107D537E50019DC13 /* Growl.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1CF5F8DD07D537F70019DC13 /* Growl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF5F8D107D537E50019DC13 /* Growl.framework */; };
 		1CF627CB07558F79005DFCFA /* fileSend.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF627CA07558F79005DFCFA /* fileSend.png */; };
 		1CF79CBF07AC77E600696918 /* JVChatTranscript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF79CBD07AC77E600696918 /* JVChatTranscript.m */; };
@@ -1058,7 +1057,6 @@
 		F551EE4A0209FB3301EE70DE /* MVKeyChain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVKeyChain.h; path = Models/MVKeyChain.h; sourceTree = "<group>"; };
 		F555208701F0DC2B01EE70DE /* MVCrashCatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVCrashCatcher.m; path = Controllers/MVCrashCatcher.m; sourceTree = "<group>"; };
 		F555208801F0DC2B01EE70DE /* MVCrashCatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVCrashCatcher.h; path = Controllers/MVCrashCatcher.h; sourceTree = "<group>"; };
-		F555208B01F0DE0601EE70DE /* Message.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Message.framework; path = /System/Library/Frameworks/Message.framework; sourceTree = "<absolute>"; };
 		F56539F301C5A91401A35792 /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stop.png; path = Resources/stop.png; sourceTree = "<group>"; };
 		F56539F501C5B6C301A35792 /* clear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = clear.png; path = Resources/clear.png; sourceTree = "<group>"; };
 		F56539F601C5B6C301A35792 /* reveal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = reveal.png; path = Resources/reveal.png; sourceTree = "<group>"; };
@@ -1141,14 +1139,13 @@
 				1CD0201F05758F26000F93B4 /* AddressBook.framework in Frameworks */,
 				1C6C75460630AD5300698F55 /* AGRegex.framework in Frameworks */,
 				1C3B290806529E720066197C /* ChatCore.framework in Frameworks */,
-				1C8D2E72065D0BB600AC28C5 /* Message.framework in Frameworks */,
 				1CF8030E070C893500C9B54C /* libsilc.framework in Frameworks */,
 				1CF8030F070C893500C9B54C /* libsilcclient.framework in Frameworks */,
 				1CF5F8D207D537E50019DC13 /* Growl.framework in Frameworks */,
-				1C397391082D4ADA00DCF3CF /* IOKit.framework in Frameworks */,
 				1CEEAB17095BD23500166A54 /* ChatCore.framework in Frameworks */,
 				DDF64DA60BD2B0C3009E8FF6 /* Acid.framework in Frameworks */,
 				89EB91AA0F269BEF0028B3E3 /* Sparkle.framework in Frameworks */,
+				1CE009840FC7B16700F5AB04 /* IOKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1213,7 +1210,6 @@
 				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
 				1C397390082D4ADA00DCF3CF /* IOKit.framework */,
 				F51F91F103796FCD01A35792 /* Security.framework */,
-				F555208B01F0DE0601EE70DE /* Message.framework */,
 				1C3C112E050265AE000001C8 /* WebKit.framework */,
 				F5FB4CE60393C15601000102 /* AddressBook.framework */,
 				DDF64DA50BD2B0C3009E8FF6 /* Acid.framework */,
