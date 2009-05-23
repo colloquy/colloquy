@@ -3,6 +3,7 @@ extern NSString *JVChatEmoticonSetInstalledNotification;
 extern NSString *JVMachineBecameIdleNotification;
 extern NSString *JVMachineStoppedIdlingNotification;
 
+@class JVPreferencesController;
 @class SUUpdater;
 
 @interface MVApplicationController : NSObject {
@@ -39,4 +40,5 @@ extern NSString *JVMachineStoppedIdlingNotification;
 
 @interface NSObject (MVChatPluginContextualMenuSupport)
 - (NSArray *) contextualMenuItemsForObject:(id) object inView:(id <JVChatViewController>) view;
+- (void) setupPreferencesWithController:(JVPreferencesController *) controller;
 @end
