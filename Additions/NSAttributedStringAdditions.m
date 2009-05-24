@@ -5,7 +5,7 @@
 #import <CoreFoundation/CFString.h>
 #import <CoreFoundation/CFStringEncodingExt.h>
 
-static const char mIRCColors[][3] = {
+static const unsigned char mIRCColors[][3] = {
 	{ 0xff, 0xff, 0xff },  /* 00) white */
 	{ 0x00, 0x00, 0x00 },  /* 01) black */
 	{ 0x00, 0x00, 0x7b },  /* 02) blue */
@@ -24,7 +24,7 @@ static const char mIRCColors[][3] = {
 	{ 0xd6, 0xd6, 0xd6 }   /* 15) light gray */
 };
 
-static const char CTCPColors[][3] = {
+static const unsigned char CTCPColors[][3] = {
 	{ 0x00, 0x00, 0x00 },  /* 0) black */
 	{ 0x00, 0x00, 0x7f },  /* 1) blue */
 	{ 0x00, 0x7f, 0x00 },  /* 2) green */
@@ -44,16 +44,17 @@ static const char CTCPColors[][3] = {
 };
 
 static unsigned short colorRGBToMIRCColor( unsigned char red, unsigned char green, unsigned char blue ) {
-	unsigned short distance = 1000, color = 1, i = 0, o = 0;
-	for( i = 0; i < 16; i++ ) {
-		o = abs( red - mIRCColors[i][0] ) +
-		abs( green - mIRCColors[i][1] ) +
-		abs( blue - mIRCColors[i][2] );
+	unsigned short color = 1;
+	NSUInteger distance = NSUIntegerMax;
+
+	for( unsigned short i = 0; i < 16; ++i ) {
+		NSUInteger o = abs( red - mIRCColors[i][0] ) + abs( green - mIRCColors[i][1] ) + abs( blue - mIRCColors[i][2] );
 		if( o < distance ) {
 			color = i;
 			distance = o;
 		}
 	}
+
 	return color;
 }
 
