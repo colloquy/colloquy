@@ -71,7 +71,7 @@
 
 @implementation NSAppleScript (NSAppleScriptAdditions)
 - (NSNumber *) scriptIdentifier {
-	return [NSNumber numberWithUnsignedLong:_compiledScriptID];
+	return [self valueForKey:@"_compiledScriptID"];
 }
 @end
 

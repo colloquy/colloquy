@@ -21,7 +21,8 @@ static NSString *JVToolbarCompileItemIdentifier = @"JVToolbarCompileItem";
 @implementation NSAppleScript (NSAppleScriptSaveAdditions)
 - (BOOL) saveToFile:(NSString *) path {
 	AEDesc desc = { typeNull, NULL };
-	OSAError result = OSAStore( [NSAppleScript _defaultScriptingComponent], _compiledScriptID, typeOSAGenericStorage, kOSAModeNull, &desc );
+	NSNumber *compiledScriptIdentifer = [self valueForKey:@"_compiledScriptID"];
+	OSAError result = OSAStore( [NSAppleScript _defaultScriptingComponent], [compiledScriptIdentifer unsignedIntValue], typeOSAGenericStorage, kOSAModeNull, &desc );
 
 	if( result == noErr ) {
 		NSMutableData *data = [NSMutableData dataWithLength:(unsigned int)AEGetDescDataSize( &desc )];
