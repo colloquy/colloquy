@@ -333,6 +333,7 @@
 	// compile list of possible completions
 	NSArray *possibleNicks = [[self delegate] textView:self stringCompletionsForPrefix:partialCompletion];
 	NSString *name = nil;
+	NSString *tabCompletion = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVTabCompletionString"];
 
 	// insert word or suggestion
 	if( [possibleNicks count] == 1 && ( curPos.location == [[self string] length] || [illegalCharacters characterIsMember:[[self string] characterAtIndex:curPos.location]] ) ) {
@@ -343,9 +344,7 @@
 		[self replaceCharactersInRange:replacementRange withString:name];
 
 		if( suffix && replacementRange.location == 0 )	{
-			if( [[NSUserDefaults standardUserDefaults] stringForKey:@"JVTabCompletionString"] )	{
-				[self insertText:[[NSUserDefaults standardUserDefaults] stringForKey:@"JVTabCompletionString"]];
-			}
+			if( [tabCompletion length] ) [self insertText:tabCompletion];
 			else [self insertText:@": "];
 		}
 		else if( suffix ) [self insertText:@" "];
@@ -388,8 +387,11 @@
 		[_lastCompletionMatch release];
 		_lastCompletionMatch = [name copyWithZone:nil];
 
-		if( suffix && wordRange.location == 0 ) name = [name stringByAppendingString:@": "];
-		else if( suffix ) name = [name stringByAppendingString:@" "];
+		if ( suffix && wordRange.location == 0 )	{
+			if ( [tabCompletion length] ) name = [name stringByAppendingString:tabCompletion];
+			else name = [name stringByAppendingString:@": "];
+		}
+		else if ( suffix ) name = [name stringByAppendingString:@" "];
 
 		_ignoreSelectionChanges = YES;
 		[self replaceCharactersInRange:wordRange withString:( full ? name : _lastCompletionMatch )];
