@@ -401,8 +401,12 @@
 
 	if (completions.count < 10 && ([word containsTypicalEmoticonCharacters] || [word hasCaseInsensitivePrefix:@"x"] || [word hasCaseInsensitivePrefix:@"o"])) {
 		for (NSString *emoticon in [NSString knownEmoticons]) {
-			if ([emoticon hasCaseInsensitivePrefix:word] && ![emoticon isCaseInsensitiveEqualToString:word])
-				[completions addObject:[emoticon stringBySubstitutingEmoticonsForEmoji]];
+			if ([emoticon hasCaseInsensitivePrefix:word] && ![emoticon isCaseInsensitiveEqualToString:word])	{
+				if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"])
+					[completions addObject:[emoticon stringBySubstitutingEmoticonsForEmoji]];
+				else [completions addObject:emoticon];
+			}
+
 			if (completions.count >= 10)
 				break;
 		}
@@ -1051,7 +1055,8 @@
 #pragma mark -
 
 static void commonChatReplacment(NSMutableString *string, NSRangePointer textRange) {
-	[string substituteEmoticonsForEmojiInRange:textRange withXMLSpecialCharactersEncodedAsEntities:YES];
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"])
+		[string substituteEmoticonsForEmojiInRange:textRange withXMLSpecialCharactersEncodedAsEntities:YES];
 
 	// Catch IRC rooms like "#room" but not HTML colors like "#ab12ef" nor HTML entities like "&#135;" or "&amp;".
 	// Catch well-formed urls like "http://www.apple.com", "www.apple.com" or "irc://irc.javelin.cc".

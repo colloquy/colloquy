@@ -180,7 +180,9 @@ static NSIndexPath *indexPathForChatController(id controller) {
 
 		[messageString stripXMLTags];
 		[messageString decodeXMLSpecialCharacterEntities];
-		[messageString substituteEmoticonsForEmoji];
+		
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"])
+			[messageString substituteEmoticonsForEmoji];
 
 		transformedMessageString = messageString;
 	} else if ([message isKindOfClass:[NSString class]]) {
