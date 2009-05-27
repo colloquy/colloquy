@@ -66,21 +66,37 @@
 	<integer>300</integer>
 	<key>JVChatServers</key>
 	<array>
-		<string>irc.freenode.net</string>
-		<string>irc.macnn.com</string>
-		<string>irc.macgeneration.com</string>
+		<string>irc.abjects.net</string>
+		<string>irc.allnetwork.org</string>
+		<string>irc.dal.net</string>
+		<string>irc.darksin.net</string>
 		<string>irc.efnet.net</string>
+		<string>irc.esper.net</string>
+		<string>irc.foonetic.net</string>
+		<string>irc.freenode.net</string>
+		<string>irc.galaxynet.org</string>
+		<string>irc.gamesurge.net</string>
+		<string>irc.icq.com</string>
+		<string>irc.za.ircnet.net</string>
 		<string>irc.us.ircnet.net</string>
 		<string>irc.fr.ircnet.net</string>
-		<string>irc.za.ircnet.net</string>
-		<string>us.undernet.org</string>
-		<string>eu.undernet.org</string>
+		<string>irc.irchighway.net</string>
+		<string>irc.link-net.org</string>
+		<string>irc.macnn.com</string>
+		<string>irc.macgeneration.com</string>
+		<string>irc.oftc.net</string>
+		<string>irc.ogamenet.net</string>
 		<string>irc.quakenet.org</string>
 		<string>uk.quakenet.org</string>
-		<string>irc.icq.com</string>
-		<string>irc.galaxynet.org</string>
-		<string>irc.esper.net</string>
-		<string>irc.mozilla.org</string>
+		<string>irc.rizon.net</string>
+		<string>irc.skyrock.com</string>
+		<string>irc.synirc.net</string>
+		<string>irc.swiftirc.net</string>
+		<string>eu.undernet.org</string>
+		<string>us.undernet.org</string>
+		<string>chat1.ustream.tv</string>
+		<string>irc.webchat.org</string>
+		<string>irc.wyldryde.org</string>
 	</array>
 	<key>JVNotificationSettings JVChatAdditionalMessages</key>
 	<dict>
