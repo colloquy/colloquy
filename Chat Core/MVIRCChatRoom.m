@@ -255,7 +255,12 @@
 }
 
 - (void) addBanForUser:(MVChatUser *) user {
-	if ( [user isWildcardUser] || ! [user username] || ! [user address] )
+	if ([[user nickname] hasCaseInsensitiveSubstring:@"$"] || [[user nickname] hasCaseInsensitiveSubstring:@":"] || [[user nickname] hasCaseInsensitiveSubstring:@"~"]) { // extended bans on ircd-seven, inspircd and unrealircd
+		if ([[user nickname] hasCaseInsensitiveSubstring:@"~q"] || [[user nickname] hasCaseInsensitiveSubstring:@"~n"]) // These two extended bans on unreal-style ircds take full hostmasks as their arguments
+			[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ +b %@", [self name], [user displayName]];
+		else
+			[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ +b %@", [self name], [user nickname]];
+	} else if ( [user isWildcardUser] || ! [user username] || ! [user address] )
 		[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ +b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
 	else {
 		NSString *addressToBan = [self modifyAddressForBan:user];
@@ -266,7 +271,12 @@
 }
 
 - (void) removeBanForUser:(MVChatUser *) user {
-	if ( [user isWildcardUser] || ! [user username] || ! [user address] )
+	if ([[user nickname] hasCaseInsensitiveSubstring:@"$"] || [[user nickname] hasCaseInsensitiveSubstring:@":"] || [[user nickname] hasCaseInsensitiveSubstring:@"~"]) { // extended bans on ircd-seven, inspircd and unrealircd
+		if ([[user nickname] hasCaseInsensitiveSubstring:@"~q"] || [[user nickname] hasCaseInsensitiveSubstring:@"~n"]) // These two extended bans on unreal-style ircds take full hostmasks as their arguments
+			[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ -b %@", [self name], [user displayName]];
+		else
+			[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ -b %@", [self name], [user nickname]];
+	} else if ( [user isWildcardUser] || ! [user username] || ! [user address] )
 		[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ -b %@!%@@%@", [self name], ( [user nickname] ? [user nickname] : @"*" ), ( [user username] ? [user username] : @"*" ), ( [user address] ? [user address] : @"*" )];
 	else {
 		NSString *addressToBan = [self modifyAddressForBan:user];

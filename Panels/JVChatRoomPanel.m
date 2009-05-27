@@ -1187,10 +1187,20 @@
 	MVChatUser *ban = [[notification userInfo] objectForKey:@"user"];
 
 	NSString *message = nil;
+	NSString *banned = nil;
+
+	if ([[ban nickname] hasCaseInsensitiveSubstring:@"$"] || [[ban nickname] hasCaseInsensitiveSubstring:@":"] || [[ban nickname] hasCaseInsensitiveSubstring:@"~"]) { // extended bans on ircd-seven, inspircd and unrealircd
+		if ([[ban nickname] hasCaseInsensitiveSubstring:@"~q"] || [[ban nickname] hasCaseInsensitiveSubstring:@"~n"]) {
+			banned = [ban displayName]; // These two extended bans on unreal-style ircds take full hostmasks as their arguments
+		} else {
+			banned = [ban nickname];
+		}
+	}
+
 	if( [byMbr isLocalUser] ) {
-		message = [NSString stringWithFormat:NSLocalizedString( @"You set a ban on %@.", "you set a ban chat room status message" ), [[ban description] stringByEncodingXMLSpecialCharactersAsEntities]];
+		message = [NSString stringWithFormat:NSLocalizedString( @"You set a ban on %@.", "you set a ban chat room status message" ), (banned ? banned : [[ban description] stringByEncodingXMLSpecialCharactersAsEntities])];
 	} else {
-		message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> set a ban on %@.", "user set a ban chat room status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[ban description] stringByEncodingXMLSpecialCharactersAsEntities]];
+		message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> set a ban on %@.", "user set a ban chat room status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), (banned ? banned : [[ban description] stringByEncodingXMLSpecialCharactersAsEntities])];
 	}
 
 	[self addEventMessageToDisplay:message withName:@"memberBanned" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[ban description], @"ban", byMbr, @"by", nil]];
@@ -1203,10 +1213,20 @@
 	MVChatUser *ban = [[notification userInfo] objectForKey:@"user"];
 
 	NSString *message = nil;
+	NSString *banned = nil;
+
+	if ([[ban nickname] hasCaseInsensitiveSubstring:@"$"] || [[ban nickname] hasCaseInsensitiveSubstring:@":"] || [[ban nickname] hasCaseInsensitiveSubstring:@"~"]) { // extended bans on ircd-seven, inspircd and unrealircd
+		if ([[ban nickname] hasCaseInsensitiveSubstring:@"~q"] || [[ban nickname] hasCaseInsensitiveSubstring:@"~n"]) {
+			banned = [ban displayName]; // These two extended bans on unreal-style ircds take full hostmasks as their arguments
+		} else {
+			banned = [ban nickname];
+		}
+	}
+
 	if( [byMbr isLocalUser] ) {
-		message = [NSString stringWithFormat:NSLocalizedString( @"You removed the ban on %@.", "you removed a ban chat room status message" ), [[ban description] stringByEncodingXMLSpecialCharactersAsEntities]];
+		message = [NSString stringWithFormat:NSLocalizedString( @"You removed the ban on %@.", "you removed a ban chat room status message" ), (banned ? banned : [[ban description] stringByEncodingXMLSpecialCharactersAsEntities])];
 	} else {
-		message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> removed the ban on %@.", "user removed a ban chat room status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), [[ban description] stringByEncodingXMLSpecialCharactersAsEntities]];
+		message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> removed the ban on %@.", "user removed a ban chat room status message" ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), (banned ? banned : [[ban description] stringByEncodingXMLSpecialCharactersAsEntities])];
 	}
 
 	[self addEventMessageToDisplay:message withName:@"banRemoved" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[ban description], @"ban", byMbr, @"by", nil]];
