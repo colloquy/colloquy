@@ -1590,6 +1590,13 @@ end:
 
 #pragma mark -
 
+- (void) _handleConnect {
+	MVAssertCorrectThreadRequired( _connectionThread );
+	MVSafeRetainAssign( &_queueWait, [NSDate dateWithTimeIntervalSinceNow:0.5] );
+	[self _resetSendQueueInterval];
+	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];			
+}
+
 - (void) _identifyWithServicesUsingNickname:(NSString *) nickname {
 	if( !_pendingIdentificationAttempt && ![[self localUser] isIdentified] && [[self nicknamePassword] length] ) {
 		_pendingIdentificationAttempt = YES;
@@ -1966,11 +1973,7 @@ end:
 - (void) _handle001WithParameters:(NSArray *) parameters fromSender:(id) sender {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	MVSafeRetainAssign( &_queueWait, [NSDate dateWithTimeIntervalSinceNow:0.5] );
-
-	[self _resetSendQueueInterval];
-
-	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
+	[self performSelector:@selector( _handleConnect ) withObject:nil inThread:_connectionThread waitUntilDone:NO];
 
 	// set the _realServer because it's different from the server we connected to
 	MVSafeCopyAssign( &_realServer, sender );
@@ -2308,6 +2311,15 @@ end:
 
 			if( handled ) [noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
+			[msg release];
+
+		} else if( ![self isConnected] && [[sender nickname] isCaseInsensitiveEqualToString:@"Welcome"] ) {
+			// Workaround for psybnc bouncers which are configured to combine multiple networks in one bouncer connection. These bouncers don't send a 001 command on connect…
+			// Catch ":Welcome!psyBNC@lam3rz.de NOTICE * :psyBNC2.3.2-7" on these connections instead:
+			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
+			if( [msg hasCaseInsensitiveSubstring:@"psyBNC"] ) {
+				[self performSelector:@selector( _handleConnect ) withObject:nil inThread:_connectionThread waitUntilDone:NO];
+			}
 			[msg release];
 
 		} else if( [[sender nickname] isEqualToString:@"NickServ"] || [[sender nickname] isEqualToString:@"ChanServ"] ||
