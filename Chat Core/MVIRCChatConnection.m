@@ -677,8 +677,8 @@ static const NSStringEncoding supportedEncodings[] = {
 		[self scheduleReconnectAttempt];
 	}
 
-	_failedNickname = nil;
 	[_failedNickname release];
+	_failedNickname = nil;
 	_failedNicknameCount = 1;
 	_nicknameShortened = NO;
 	
@@ -2138,7 +2138,7 @@ end:
 
 				_nicknameShortened = YES;
 
-				if (_failedNicknameCount < 9 ) _failedNicknameCount++;
+				if ( _failedNicknameCount < 9 ) _failedNicknameCount++;
 				else _failedNicknameCount = 1;
 			} else nick = [lastNickTried stringByAppendingString:@"_"];
 		}
@@ -2333,7 +2333,7 @@ end:
 			[msg release];
 
 		} else if( ![self isConnected] && [[sender nickname] isCaseInsensitiveEqualToString:@"Welcome"] ) {
-			// Workaround for psybnc bouncers which are configured to combine multiple networks in one bouncer connection. These bouncers don't send a 001 command on connect…
+			// Workaround for psybnc bouncers which are configured to combine multiple networks in one bouncer connection. These bouncers don't send a 001 command on connect...
 			// Catch ":Welcome!psyBNC@lam3rz.de NOTICE * :psyBNC2.3.2-7" on these connections instead:
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
 			if( [msg hasCaseInsensitiveSubstring:@"psyBNC"] ) {
