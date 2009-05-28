@@ -2287,7 +2287,7 @@ end:
 	if( room ) {
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:room userInfo:noticeInfo];
 	} else {
-		if( [[sender nickname] isCaseInsensitiveEqualToString:_realServer] || [[sender nickname] isCaseInsensitiveEqualToString:[self server]]) {
+		if( [[sender nickname] isCaseInsensitiveEqualToString:[self server]] || ( _realServer && [[sender nickname] isCaseInsensitiveEqualToString:_realServer] ) || [[sender nickname] isCaseInsensitiveEqualToString:@"irc.umich.edu"] ) {
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
 
 			// Auto reply to servers asking us to send a PASS because they could not detect an identd
@@ -2321,6 +2321,8 @@ end:
 				handled = YES;
 			if( !handled && [msg hasCaseInsensitiveSubstring:@"*** Notice -- For more information please visit"] )
 				handled = YES;
+			if( !handled && [msg isEqualToString:@"To complete your connection to this server, type \"/QUOTE PONG :cookie\", where cookie is the following ascii."] )
+				handled = YES;
 			if( !handled && [msg isMatchedByRegex:@"\\*\\*\\* Notice -- If you see.*? connections.*? from" options:RKLCaseless inRange:NSMakeRange(0, [msg length]) error:NULL] )
 				handled = YES;
 			if( !handled && [msg isMatchedByRegex:@"\\*\\*\\* Notice -- please disregard them, as they are the .+? in action" options:RKLCaseless inRange:NSMakeRange(0, [msg length]) error:NULL] )
@@ -2336,9 +2338,8 @@ end:
 			// Workaround for psybnc bouncers which are configured to combine multiple networks in one bouncer connection. These bouncers don't send a 001 command on connect...
 			// Catch ":Welcome!psyBNC@lam3rz.de NOTICE * :psyBNC2.3.2-7" on these connections instead:
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
-			if( [msg hasCaseInsensitiveSubstring:@"psyBNC"] ) {
+			if( [msg hasCaseInsensitiveSubstring:@"psyBNC"] )
 				[self performSelector:@selector( _handleConnect ) withObject:nil inThread:_connectionThread waitUntilDone:NO];
-			}
 			[msg release];
 
 		} else if( [[sender nickname] isEqualToString:@"NickServ"] || [[sender nickname] isEqualToString:@"ChanServ"] ||
@@ -4012,5 +4013,70 @@ end:
 
 	if( [parameters count] >= 4 )
 		[self _handle604WithParameters:parameters fromSender:sender]; // do everything we do above
+}
+
+#pragma mark -
+#pragma mark Watch Replies
+
+- (void) _handle998WithParameters:(NSArray *) parameters fromSender:(id) sender { // undefined code, irc.umich.edu (efnet) uses this to show a captcha to users without identd (= us) which we have to reply to
+	MVAssertCorrectThreadRequired( _connectionThread );
+
+	if( ![self isConnected] && [parameters count] == 2 ) {
+		if( !_umichNoIdentdCaptcha ) _umichNoIdentdCaptcha = [[NSMutableArray alloc] init];
+
+		[_umichNoIdentdCaptcha addObject:[[self _stringFromPossibleData:[parameters objectAtIndex:1]] mutableCopy]];
+
+		if( [_umichNoIdentdCaptcha count] == 7 ) {			
+			NSDictionary *captchaAlphabet = [NSDictionary dictionaryWithObjectsAndKeys:
+										  @"A", @"     /     /_    / /   / _   / /_   \\ \\_    \\ _     \\ \\     \\_      \\ ",
+										  @"B", @" ||||| _    _ _ | |_ ______ _ ) )_  \\ < /   | |  ",
+										  @"C", @"  |||   /   \\ _ |||_ __  __ __  __ __  __ __  __  |   | ",
+										  @"D", @" ||||| _    _ _ |||_ __  __ __  __ _ |||_  \\   /   |||  ",
+										  @"E", @" ||||| _    _ _ | |_ ______ ______ __ |__ __  __  |   | ",
+										  @"F", @" ||||| _    _ _ | || ____   ____   __ |   __      |     ",
+										  @"G", @"  |||   /   \\ _ |||_ __  __ __ |__ ____|_ ___  _  | ||| ",
+										  @"H", @" ||||| _    _  || ||   __     __    || || _    _  ||||| ",
+										  @"I", @" |   | __  __ _ |||_ _    _ _ |||_ __  __  |   | ",
+										  @"J", @"    |     _ \\     |_     __     __  ||||_ _    /  ||||  ",
+										  @"K", @" ||||| _    _  |' .|  / < \\ _ / \\_ _/   \\ ",
+										  @"L", @" ||||| _    _  ||||_     __     __     __     __      | ",
+										  @"M", @" ||||| _    _ _ \\|||  \\ \\    / /   _ /||| _    _  ||||| ",
+										  @"N", @" ||||| _    _  \\ .||   \\ \\   ||` \\ _    _  ||||| ",
+										  @"O", @"  |||   /   \\ _ |||_ __  __ __  __ _ |||_  \\   /   |||  ",
+										  @"P", @" ||||| _    _ _ | || ____   ____   _ )_    \\ /     |    ",
+										  @"Q", @"  |||   /   \\ _ |||_ __  __ __  __ _ |||\\  \\   _   |||\\ ",
+										  @"R", @" ||||| _    _ _ | || ____   ___ \\  _ )  \\  \\ /\\_   |  \\ ",
+										  @"S", @"  |  |  / \\__ _ (___ ______ ______ ___ )_ __ \\ /  |  |  ",
+										  @"T", @" |     __     __     _ |||| _    _ _ |||| __     __      |     ",
+										  @"U", @" ||||  _    \\  ||||_     __     __  ||||_ _    /  ||||  ",
+										  @"V", @"_\\     _ \\     \\ \\     \\ \\     \\ \\    / /   / /   / /   _ /    _/     ",
+										  @"W", @"_\\     _ \\     \\ \\     \\ \\     \\ \\    / /   / /    \\ \\     \\ \\    / /   / /   / /   _ /    _/     ",
+										  @"X", @"_\\   / _ \\ /_  \\ > /   V .   / < \\ _ / \\_ _/   \\ ",
+										  @"Y", @"_\\     _ \\     \\ \\     \\ ||   _  _   / ||  / /   _ /    _/     ",
+										  @"Z", @" |   / __  /_ __ / _ __/ /_ _  /__ _ / __ _/   | ",
+			nil];
+
+			NSMutableString *testString = [NSMutableString string];
+			NSMutableString *captchaReply = [NSMutableString string];
+			BOOL empty = NO;
+			while( !empty ) {
+				NSMutableString *row = nil;
+				NSEnumerator *enumerator = [_umichNoIdentdCaptcha objectEnumerator];
+				while( ( row = [enumerator nextObject] ) ) {
+					[testString appendString:[row substringToIndex:1]];
+					[row deleteCharactersInRange:NSMakeRange(0, 1)];
+					if( ![row length] ) empty = YES;
+				}
+				if( [captchaAlphabet objectForKey:testString] ) {
+					[captchaReply appendString:[captchaAlphabet objectForKey:testString]];
+					testString = [NSMutableString string];
+				}
+			}
+			[self sendRawMessageImmediatelyWithFormat:@"PONG :%@", captchaReply];
+
+			[_umichNoIdentdCaptcha release];
+			_umichNoIdentdCaptcha = nil;
+		}
+	}
 }
 @end

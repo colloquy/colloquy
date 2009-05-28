@@ -32,6 +32,7 @@
 	BOOL _watchCommandSupported;
 	BOOL _sendQueueProcessing;
 	BOOL _pendingIdentificationAttempt;
+	NSMutableArray *_umichNoIdentdCaptcha;
 	NSString *_failedNickname;
 	NSInteger _failedNicknameCount;
 	BOOL _nicknameShortened;
