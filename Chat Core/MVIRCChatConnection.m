@@ -617,6 +617,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	_pendingIdentificationAttempt = NO;
 	_userDisconnected = NO;
 
+	_failedNickname = nil;
+	_failedNicknameCount = 1;
+	_nicknameShortened = NO;
+	
 	NSString *server = (_bouncer != MVChatConnectionNoBouncer && [_bouncerServer length] ? _bouncerServer : _server);
 	unsigned short serverPort = (_bouncer != MVChatConnectionNoBouncer ? (_bouncerServerPort ? _bouncerServerPort : 6667) : _serverPort);
 
@@ -673,6 +677,11 @@ static const NSStringEncoding supportedEncodings[] = {
 		[self scheduleReconnectAttempt];
 	}
 
+	_failedNickname = nil;
+	[_failedNickname release];
+	_failedNicknameCount = 1;
+	_nicknameShortened = NO;
+	
 	[super _didDisconnect];
 }
 
@@ -2123,8 +2132,18 @@ end:
 		NSString *nick = [self nextAlternateNickname];
 		if( ! [nick length] && [parameters count] >= 2 ) {
 			NSString *lastNickTried = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
-			nick = [lastNickTried stringByAppendingString:@"_"];
+
+			if( ( _failedNickname && [_failedNickname isCaseInsensitiveEqualToString:lastNickTried] ) || _nicknameShortened) {
+				nick = [NSString stringWithFormat:@"%@-%d", [lastNickTried substringToIndex:([lastNickTried length] - 2)], _failedNicknameCount];
+
+				_nicknameShortened = YES;
+
+				if (_failedNicknameCount < 9 ) _failedNicknameCount++;
+				else _failedNicknameCount = 1;
+			} else nick = [lastNickTried stringByAppendingString:@"_"];
 		}
+ 
+		if ( ! _failedNickname ) _failedNickname = [[self _stringFromPossibleData:[parameters objectAtIndex:1]] copy];
 
 		if( [nick length] ) [self setNickname:nick];
 	} else {

@@ -32,6 +32,9 @@
 	BOOL _watchCommandSupported;
 	BOOL _sendQueueProcessing;
 	BOOL _pendingIdentificationAttempt;
+	NSString *_failedNickname;
+	NSInteger _failedNicknameCount;
+	BOOL _nicknameShortened;
 }
 + (NSArray *) defaultServerPorts;
 @end
