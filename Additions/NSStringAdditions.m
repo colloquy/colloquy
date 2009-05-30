@@ -308,7 +308,7 @@ BOOL isValidUTF8( const char *s, NSUInteger len ) {
 				return NO;
 			if( isUTF8LongTriple( ch, s[i + 1] ) ) // not minimally encoded
 				return NO;
-			if( ! isUTF8Cont( s[i + 2] ) )
+			if( ! isUTF8Cont( s[i + 1] ) || ! isUTF8Cont( s[i + 2] ) )
 				return NO;
 			i += 2;
 		} else if( isUTF8Quartet( ch ) ) {
@@ -316,7 +316,7 @@ BOOL isValidUTF8( const char *s, NSUInteger len ) {
 				return NO;
 			if( isUTF8LongQuartet( ch, s[i + 1] ) ) // not minimally encoded
 				return NO;
-			if( ! isUTF8Cont( s[i + 2] ) || ! isUTF8Cont( s[i + 3] ) )
+			if( ! isUTF8Cont( s[i + 1] ) || ! isUTF8Cont( s[i + 2] ) || ! isUTF8Cont( s[i + 3] ) )
 				return NO;
 			i += 3;
 		} else if( isUTF8Quintet( ch ) ) {
@@ -324,7 +324,7 @@ BOOL isValidUTF8( const char *s, NSUInteger len ) {
 				return NO;
 			if( isUTF8LongQuintet( ch, s[i + 1] ) ) // not minimally encoded
 				return NO;
-			if( ! isUTF8Cont( s[i + 2] ) || ! isUTF8Cont( s[i + 3] ) || ! isUTF8Cont( s[i + 4] ) )
+			if( ! isUTF8Cont( s[i + 1] ) || ! isUTF8Cont( s[i + 2] ) || ! isUTF8Cont( s[i + 3] ) || ! isUTF8Cont( s[i + 4] ) )
 				return NO;
 			i += 4;
 		} else if( isUTF8Sextet( ch ) ) {
@@ -332,7 +332,7 @@ BOOL isValidUTF8( const char *s, NSUInteger len ) {
 				return NO;
 			if( isUTF8LongSextet( ch, s[i + 1] ) ) // not minimally encoded
 				return NO;
-			if( ! isUTF8Cont( s[i + 2] ) || ! isUTF8Cont( s[i + 3] ) || ! isUTF8Cont( s[i + 4] ) || ! isUTF8Cont( s[i + 5] ) )
+			if( ! isUTF8Cont( s[i + 1] ) || ! isUTF8Cont( s[i + 2] ) || ! isUTF8Cont( s[i + 3] ) || ! isUTF8Cont( s[i + 4] ) || ! isUTF8Cont( s[i + 5] ) )
 				return NO;
 			i += 5;
 		} else return NO;
