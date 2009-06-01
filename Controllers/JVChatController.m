@@ -584,14 +584,11 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	BOOL hideFromUser = NO;
 	if( [[[notification userInfo] objectForKey:@"notice"] boolValue] ) {
-		MVChatConnection *connection = [user connection];
 
-		if( ! [self chatViewControllerForUser:user ifExists:YES] )
+		if( ! [self chatViewControllerForUser:user ifExists:YES] && ( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"] == -1 || ( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"] == 0 && [[notification userInfo] objectForKey:@"handled"] ) ) )
 			hideFromUser = YES;
 
-		if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatAlwaysShowNotices"] && ![[notification userInfo] objectForKey:@"handled"] )
-			hideFromUser = NO;
-
+		MVChatConnection *connection = [user connection];
 		NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:[connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
 		NSAttributedString *messageString = [NSAttributedString attributedStringWithChatFormat:message options:options];
 		if( ! messageString ) {
