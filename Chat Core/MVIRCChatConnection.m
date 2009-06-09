@@ -1269,7 +1269,7 @@ end:
 				MVChatUser *user = nil;
 				if ( [member hasCaseInsensitiveSubstring:@"!"] || [member hasCaseInsensitiveSubstring:@"@"] ) {
 					if ( ! [member hasCaseInsensitiveSubstring:@"!"] && [member hasCaseInsensitiveSubstring:@"@"] )
-						member = [NSString stringByAppendingFormat:@"*!*%@", member];
+						member = [member stringByAppendingFormat:@"*!*%@", member];
 					user = [MVChatUser wildcardUserFromString:member];
 				} else user = [[room memberUsersWithNickname:member] anyObject];
 
@@ -1392,7 +1392,7 @@ end:
 					MVChatUser *user = nil;
 					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] ) {
 						if ( ! [userString hasCaseInsensitiveSubstring:@"!"] && [userString hasCaseInsensitiveSubstring:@"@"] )
-							userString = [NSString stringByAppendingFormat:@"*!*%@", userString];
+							userString = [userString stringByAppendingFormat:@"*!*%@", userString];
 						user = [MVChatUser wildcardUserFromString:userString];
 					} else user = [[room memberUsersWithNickname:userString] anyObject];
 
@@ -1411,7 +1411,7 @@ end:
 					MVChatUser *user = nil;
 					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] ) {
 						if ( ! [userString hasCaseInsensitiveSubstring:@"!"] && [userString hasCaseInsensitiveSubstring:@"@"] )
-							userString = [NSString stringByAppendingFormat:@"*!*%@", userString];
+							userString = [userString stringByAppendingFormat:@"*!*%@", userString];
 						user = [MVChatUser wildcardUserFromString:userString];
 					} else user = [[room memberUsersWithNickname:userString] anyObject];
 
