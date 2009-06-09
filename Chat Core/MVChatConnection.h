@@ -433,7 +433,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-- (BOOL) setCertificatePassword:(NSString *) password;
+- (BOOL) authenticateCertificateWithPassword:(NSString *) password;
 - (void) publicKeyVerified:(NSDictionary *) dictionary andAccepted:(BOOL) accepted andAlwaysAccept:(BOOL) alwaysAccept;
 
 #pragma mark -

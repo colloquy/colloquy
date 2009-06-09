@@ -1559,7 +1559,7 @@
 
 - (void) setScriptTypedTopic:(NSString *) topic {
 	NSAttributedString *attributeMsg = [NSAttributedString attributedStringWithHTMLFragment:topic baseURL:nil];
-	[[self target] setTopic:attributeMsg];
+	[[self target] changeTopic:attributeMsg];
 }
 @end
 

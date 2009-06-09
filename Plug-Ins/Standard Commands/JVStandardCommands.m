@@ -97,7 +97,7 @@
 				[[[room display] windowScriptObject] callWebScriptMethod:@"toggleTopic" withArguments:nil];
 				return YES;
 			} else if( [arguments length] ) {
-				[[room target] setTopic:arguments];
+				[[room target] changeTopic:arguments];
 				return YES;
 			} else return NO;
 		} else if( ! [command caseInsensitiveCompare:@"names"] && ! [[arguments string] length] ) {

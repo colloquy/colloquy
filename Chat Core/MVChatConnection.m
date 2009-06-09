@@ -452,7 +452,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	return nil;
 }
 
-- (BOOL) setCertificatePassword:(NSString *) password {
+- (BOOL) authenticateCertificateWithPassword:(NSString *) password {
 // subclass this method. if needed
 	return NO;
 }

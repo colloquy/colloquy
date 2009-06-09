@@ -57,7 +57,7 @@
 - (void) partWithReason:(MVChatString *) reason {
 }
 
-- (void) setTopic:(MVChatString *) newTopic {
+- (void) changeTopic:(MVChatString *) newTopic {
 	NSParameterAssert( newTopic );
 #if USE(ATTRIBUTED_CHAT_STRING)
 	NSString *newTopicString = [newTopic string];

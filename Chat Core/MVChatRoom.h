@@ -149,7 +149,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 
 - (void) partWithReason:(MVChatString *) reason;
 
-- (void) setTopic:(MVChatString *) topic;
+- (void) changeTopic:(MVChatString *) topic;
 
 - (void) sendMessage:(MVChatString *) message asAction:(BOOL) action;
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding asAction:(BOOL) action;

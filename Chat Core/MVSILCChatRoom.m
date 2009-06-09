@@ -68,7 +68,7 @@
 
 #pragma mark -
 
-- (void) setTopic:(MVChatString *) newTopic {
+- (void) changeTopic:(MVChatString *) newTopic {
 	NSParameterAssert( newTopic != nil );
 	const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:newTopic andChatFormat:[[self connection] outgoingChatFormat]];
 	[[self connection] sendRawMessageWithFormat:@"TOPIC %@ %s", [self name], msg];

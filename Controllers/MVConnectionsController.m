@@ -517,7 +517,7 @@ static NSMenu *favoritesMenu = nil;
 	_certificateConnection = nil;
 
 	if( [sender tag] ) {
-		[ourConnection setCertificatePassword:[certificatePassphrase stringValue]];
+		[ourConnection authenticateCertificateWithPassword:[certificatePassphrase stringValue]];
 
 		if( [certificateKeychain state] == NSOnState ) {
 			[[MVKeyChain defaultKeyChain] setGenericPassword:[certificatePassphrase stringValue] forService:[ourConnection certificateServiceName] account:@"Colloquy"];
@@ -1861,8 +1861,8 @@ static NSMenu *favoritesMenu = nil;
 
 	NSString *pass = [[MVKeyChain defaultKeyChain] genericPasswordForService:[connection certificateServiceName] account:@"Colloquy"];
 	if( [pass length] ) {
-		// if setCertificatePassword returns no, its the wrong password.
-		if( [connection setCertificatePassword:pass] ) return;
+		// if authenticateCertificateWithPassword returns NO, its the wrong password.
+		if( [connection authenticateCertificateWithPassword:pass] ) return;
 	}
 
 	if( [certificateAuth isVisible] ) {

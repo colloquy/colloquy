@@ -249,7 +249,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return _topic;
 }
 
-- (void) setTopic:(MVChatString *) topic {
+- (void) changeTopic:(MVChatString *) topic {
 // subclass this method, if needed
 }
 

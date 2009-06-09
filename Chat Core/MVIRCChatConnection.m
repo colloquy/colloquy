@@ -963,9 +963,9 @@ static const NSStringEncoding supportedEncodings[] = {
 		}
 	}
 
-#undef checkAndMarkIfDone()
-#undef consumeWhitespace()
-#undef notEndOfLine()
+#undef checkAndMarkIfDone
+#undef consumeWhitespace
+#undef notEndOfLine
 
 end:
 	{
@@ -1232,7 +1232,7 @@ end:
 			return;
 		} else if( [command isCaseInsensitiveEqualToString:@"topic"] || [command isCaseInsensitiveEqualToString:@"t"] ) {
 			if( [arguments length] ) {
-				[room setTopic:arguments];
+				[room changeTopic:arguments];
 				return;
 			}
 		} else if( [command isCaseInsensitiveEqualToString:@"kick"] ) {

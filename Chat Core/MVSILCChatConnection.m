@@ -1145,7 +1145,7 @@ static SilcClientOperations silcClientOps = {
 	return @"SILC Keypair";
 }
 
-- (BOOL) setCertificatePassword:(NSString *) newPassword {
+- (BOOL) authenticateCertificateWithPassword:(NSString *) newPassword {
 	[_certificatePassword release];
 	_certificatePassword = [newPassword copyWithZone:nil];
 

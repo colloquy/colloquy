@@ -53,7 +53,7 @@
 
 #pragma mark -
 
-- (void) setTopic:(MVChatString *) newTopic {
+- (void) changeTopic:(MVChatString *) newTopic {
 	NSParameterAssert( newTopic != nil );
 
 }

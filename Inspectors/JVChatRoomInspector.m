@@ -176,7 +176,7 @@
 #pragma mark -
 
 - (IBAction) saveTopic:(id) sender {
-	[(MVChatRoom *)[_room target] setTopic:[topic textStorage]];
+	[(MVChatRoom *)[_room target] changeTopic:[topic textStorage]];
 }
 
 - (IBAction) resetTopic:(id) sender {

@@ -53,7 +53,7 @@
 
 #pragma mark -
 
-- (void) setTopic:(MVChatString *) newTopic {
+- (void) changeTopic:(MVChatString *) newTopic {
 	NSParameterAssert( newTopic != nil );
 	NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:newTopic withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
 	NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"TOPIC %@ :", [self name]];
