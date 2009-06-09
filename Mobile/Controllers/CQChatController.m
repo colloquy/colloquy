@@ -478,25 +478,26 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 - (void)_sendImage {
-	NSData *data;
-	if (_png) {
-		data = UIImagePNGRepresentation(_transferImage);
-	}
-	else {
-		data = UIImageJPEGRepresentation(_transferImage, 0.83333333f);
-	}
+	NSData *data = nil;
+	if (_png) data = UIImagePNGRepresentation(_transferImage);
+	else data = UIImageJPEGRepresentation(_transferImage, 0.83333333f);
+
 	[_transferImage release];
+
 	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 	[formatter setDateFormat:@"yyyy-MM-dd-A"];
-    NSString *name = [[formatter stringFromDate:[NSDate date]] stringByAppendingString:@".png"];
+
+	NSString *name = [[formatter stringFromDate:[NSDate date]] stringByAppendingString:@".png"];
 	[formatter release];
+
 	name = [name stringByReplacingOccurrencesOfString:@" " withString:@"_"];
-    NSString *path = [[NSTemporaryDirectory() stringByAppendingPathComponent:name] retain];
-    [data writeToFile:path atomically:NO];
-    MVUploadFileTransfer *transfer = [_fileUser sendFile:path passively:YES];
+
+	NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:name];
+	[data writeToFile:path atomically:NO];
+
+	MVUploadFileTransfer *transfer = [_fileUser sendFile:path passively:YES];
 	[self chatViewControllerForFileTransfer:transfer ifExists:NO];
 	[_fileUser release];
-	
 }
 
 #pragma mark -

@@ -258,6 +258,8 @@
 
 		[UIView commitAnimations];
 	}
+
+	[label release];
 }
 
 - (void) labelFadeOutAnimationDidStop:(NSString *) animation finished:(NSNumber *) finished context:(void *) context {

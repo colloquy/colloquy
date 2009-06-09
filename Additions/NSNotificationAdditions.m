@@ -29,13 +29,14 @@
 - (void) postNotificationOnMainThreadWithName:(NSString *) name object:(id) object userInfo:(NSDictionary *) userInfo waitUntilDone:(BOOL) wait {
 	if( pthread_main_np() ) return [self postNotificationName:name object:object userInfo:userInfo];
 
-	// The info dictionary is released in _postNotificationName.
 	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:3];
 	if( name ) [info setObject:name forKey:@"name"];
 	if( object ) [info setObject:object forKey:@"object"];
 	if( userInfo ) [info setObject:userInfo forKey:@"userInfo"];
 
 	[[self class] performSelectorOnMainThread:@selector( _postNotificationName: ) withObject:info waitUntilDone:wait];
+
+	[info release];
 }
 
 + (void) _postNotificationName:(NSDictionary *) info {
@@ -44,7 +45,5 @@
 	NSDictionary *userInfo = [info objectForKey:@"userInfo"];
 
 	[[self defaultCenter] postNotificationName:name object:object userInfo:userInfo];
-
-	[info release]; // Balance the alloc in postNotificationOnMainThreadWithName.
 }
 @end

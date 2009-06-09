@@ -290,28 +290,30 @@
 	NSCharacterSet *newSectionOfHostmaskIndicators = [NSCharacterSet characterSetWithCharactersInString:@".:/"];
 	NSString *addressMaskToRemove = nil;
 	NSString *addressMaskToBan = @"*";
-	NSScanner *scanner = [[NSScanner alloc] init];
+	NSScanner *scanner = nil;
 
 	NSString *regexForIPv4Addresses = @"\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b";
 	NSString *regexForIPv6Addresses = @"/^\\s*((([0-9A-Fa-f]{1,4}:){7}(([0-9A-Fa-f]{1,4})|:))|(([0-9A-Fa-f]{1,4}:){6}(:|((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})|(:[0-9A-Fa-f]{1,4})))|(([0-9A-Fa-f]{1,4}:){5}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){0,1}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){0,2}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){0,3}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:)(:[0-9A-Fa-f]{1,4}){0,4}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(:(:[0-9A-Fa-f]{1,4}){0,5}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})))(%.+)?\\s*$/";
 
-	[scanner setCharactersToBeSkipped:nil];
-
 	if ( [[user address] isMatchedByRegex:regexForIPv4Addresses] || [[user address] isMatchedByRegex:regexForIPv6Addresses] ) {
 		NSString *reversedIP = [[user address] stringByReversingString:[user address]];
+
 		scanner = [NSScanner scannerWithString:reversedIP];
+		[scanner setCharactersToBeSkipped:nil];
 
 		[scanner scanUpToCharactersFromSet:newSectionOfHostmaskIndicators intoString:&addressMaskToRemove];
 		addressMaskToBan = [[[user address] substringToIndex:([[user address] length] - [addressMaskToRemove length])] stringByAppendingString:@"*"];
 	} else {
 		scanner = [NSScanner scannerWithString:[user address]];
+		[scanner setCharactersToBeSkipped:nil];
 
 		[scanner scanUpToCharactersFromSet:newSectionOfHostmaskIndicators intoString:&addressMaskToRemove];
 		addressMaskToBan = [addressMaskToBan stringByAppendingString:[[user address] substringFromIndex:[addressMaskToRemove length]]];
 	}
 
-	if ( ! [scanner isAtEnd] ) return addressMaskToBan;
-	else return [user address];
+	if ( ! [scanner isAtEnd] )
+		return addressMaskToBan;
+	return [user address];
 }
 
 @end

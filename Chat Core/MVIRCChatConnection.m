@@ -1156,6 +1156,7 @@ end:
 			if ( ! [msgCutDown length] ) {
 				hasWhitespaceInString = NO;
 				bytesRemainingForMessage = bytesLeft;
+				[msgCutDown release];
 				msgCutDown = [[msg subdataWithRange:NSMakeRange( 0, bytesRemainingForMessage )] mutableCopy];
 			}
 			else if ( [msg length] < bytesLeft ) break;
@@ -1268,7 +1269,7 @@ end:
 				MVChatUser *user = nil;
 				if ( [member hasCaseInsensitiveSubstring:@"!"] || [member hasCaseInsensitiveSubstring:@"@"] ) {
 					if ( ! [member hasCaseInsensitiveSubstring:@"!"] && [member hasCaseInsensitiveSubstring:@"@"] )
-						member = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:member];
+						member = [NSString stringByAppendingFormat:@"*!*%@", member];
 					user = [MVChatUser wildcardUserFromString:member];
 				} else user = [[room memberUsersWithNickname:member] anyObject];
 
@@ -1391,7 +1392,7 @@ end:
 					MVChatUser *user = nil;
 					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] ) {
 						if ( ! [userString hasCaseInsensitiveSubstring:@"!"] && [userString hasCaseInsensitiveSubstring:@"@"] )
-							userString = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:userString];
+							userString = [NSString stringByAppendingFormat:@"*!*%@", userString];
 						user = [MVChatUser wildcardUserFromString:userString];
 					} else user = [[room memberUsersWithNickname:userString] anyObject];
 
@@ -1410,7 +1411,7 @@ end:
 					MVChatUser *user = nil;
 					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] ) {
 						if ( ! [userString hasCaseInsensitiveSubstring:@"!"] && [userString hasCaseInsensitiveSubstring:@"@"] )
-							userString = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:userString];
+							userString = [NSString stringByAppendingFormat:@"*!*%@", userString];
 						user = [MVChatUser wildcardUserFromString:userString];
 					} else user = [[room memberUsersWithNickname:userString] anyObject];
 

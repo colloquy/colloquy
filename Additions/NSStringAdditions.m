@@ -913,7 +913,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 	[message release];
 
-	return ( self = [self initWithString:ret] );
+	return [self initWithString:ret];
 }
 
 #pragma mark -
