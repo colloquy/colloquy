@@ -12,23 +12,22 @@
 
 	NSArray *indexPaths = [NSArray arrayWithObject:indexPath];
 
-	if ([self respondsToSelector:@selector(reloadRowsAtIndexPaths:withRowAnimation:)]) {
-		[self reloadRowsAtIndexPaths:indexPaths withRowAnimation:animation];
-		return;
-	}
-
 	NSIndexPath *selectedIndexPath = [self indexPathForSelectedRow];
 	BOOL selected = (selectedIndexPath && indexPath.section == selectedIndexPath.section && indexPath.row == selectedIndexPath.row);
 
 	if (selected)
 		[self deselectRowAtIndexPath:indexPath animated:NO];
 
-	[self beginUpdates];
+	if ([self respondsToSelector:@selector(reloadRowsAtIndexPaths:withRowAnimation:)]) {
+		[self reloadRowsAtIndexPaths:indexPaths withRowAnimation:animation];
+	} else {
+		[self beginUpdates];
 
-	[self deleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
-	[self insertRowsAtIndexPaths:indexPaths withRowAnimation:animation];
+		[self deleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
+		[self insertRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 
-	[self endUpdates];
+		[self endUpdates];
+	}
 
 	if (selected)
 		[self selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
