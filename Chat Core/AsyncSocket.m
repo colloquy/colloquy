@@ -37,15 +37,17 @@ static NSString *getaddrinfoLock = @"lock";
 
 enum AsyncSocketFlags
 {
-	kEnablePreBuffering      = 1 << 0,  // If set, pre-buffering is enabled
-	kDidPassConnectMethod    = 1 << 1,  // If set, disconnection results in delegate call
-	kDidCompleteOpenForRead  = 1 << 2,  // If set, open callback has been called for read stream
-	kDidCompleteOpenForWrite = 1 << 3,  // If set, open callback has been called for write stream
-	kStartingTLS             = 1 << 4,  // If set, we're waiting for TLS negotiation to complete
-	kForbidReadsWrites       = 1 << 5,  // If set, no new reads or writes are allowed
-	kDisconnectAfterReads    = 1 << 6,  // If set, disconnect after no more reads are queued
-	kDisconnectAfterWrites   = 1 << 7,  // If set, disconnect after no more writes are queued
-	kClosingWithError        = 1 << 8,  // If set, the socket is being closed due to an error
+	kEnablePreBuffering      = 1 <<  0,  // If set, pre-buffering is enabled
+	kDidPassConnectMethod    = 1 <<  1,  // If set, disconnection results in delegate call
+	kDidCompleteOpenForRead  = 1 <<  2,  // If set, open callback has been called for read stream
+	kDidCompleteOpenForWrite = 1 <<  3,  // If set, open callback has been called for write stream
+	kStartingTLS             = 1 <<  4,  // If set, we're waiting for TLS negotiation to complete
+	kForbidReadsWrites       = 1 <<  5,  // If set, no new reads or writes are allowed
+	kDisconnectAfterReads    = 1 <<  6,  // If set, disconnect after no more reads are queued
+	kDisconnectAfterWrites   = 1 <<  7,  // If set, disconnect after no more writes are queued
+	kClosingWithError        = 1 <<  8,  // If set, the socket is being closed due to an error
+	kDequeueReadScheduled    = 1 <<  9,  // If set, a maybeDequeueRead operation is already scheduled
+	kDequeueWriteScheduled   = 1 << 10,  // If set, a maybeDequeueWrite operation is already scheduled
 };
 
 @interface AsyncSocket (Private)
@@ -55,89 +57,89 @@ enum AsyncSocketFlags
 - (void)endConnectTimeout;
 
 // Socket Implementation
-- (CFSocketRef) newAcceptSocketForAddress:(NSData *)addr error:(NSError **)errPtr;
-- (BOOL) createSocketForAddress:(NSData *)remoteAddr error:(NSError **)errPtr;
-- (BOOL) attachSocketsToRunLoop:(NSRunLoop *)runLoop error:(NSError **)errPtr;
-- (BOOL) configureSocketAndReturnError:(NSError **)errPtr;
-- (BOOL) connectSocketToAddress:(NSData *)remoteAddr error:(NSError **)errPtr;
-- (void) doAcceptWithSocket:(CFSocketNativeHandle)newSocket;
-- (void) doSocketOpen:(CFSocketRef)sock withCFSocketError:(CFSocketError)err;
+- (CFSocketRef)newAcceptSocketForAddress:(NSData *)addr error:(NSError **)errPtr;
+- (BOOL)createSocketForAddress:(NSData *)remoteAddr error:(NSError **)errPtr;
+- (BOOL)attachSocketsToRunLoop:(NSRunLoop *)runLoop error:(NSError **)errPtr;
+- (BOOL)configureSocketAndReturnError:(NSError **)errPtr;
+- (BOOL)connectSocketToAddress:(NSData *)remoteAddr error:(NSError **)errPtr;
+- (void)doAcceptWithSocket:(CFSocketNativeHandle)newSocket;
+- (void)doSocketOpen:(CFSocketRef)sock withCFSocketError:(CFSocketError)err;
 
 // Stream Implementation
-- (BOOL) createStreamsFromNative:(CFSocketNativeHandle)native error:(NSError **)errPtr;
-- (BOOL) createStreamsToHost:(NSString *)hostname onPort:(UInt16)port error:(NSError **)errPtr;
-- (BOOL) attachStreamsToRunLoop:(NSRunLoop *)runLoop error:(NSError **)errPtr;
-- (BOOL) configureStreamsAndReturnError:(NSError **)errPtr;
-- (BOOL) openStreamsAndReturnError:(NSError **)errPtr;
-- (void) doStreamOpen;
-- (BOOL) setSocketFromStreamsAndReturnError:(NSError **)errPtr;
+- (BOOL)createStreamsFromNative:(CFSocketNativeHandle)native error:(NSError **)errPtr;
+- (BOOL)createStreamsToHost:(NSString *)hostname onPort:(UInt16)port error:(NSError **)errPtr;
+- (BOOL)attachStreamsToRunLoop:(NSRunLoop *)runLoop error:(NSError **)errPtr;
+- (BOOL)configureStreamsAndReturnError:(NSError **)errPtr;
+- (BOOL)openStreamsAndReturnError:(NSError **)errPtr;
+- (void)doStreamOpen;
+- (BOOL)setSocketFromStreamsAndReturnError:(NSError **)errPtr;
 
 // Disconnect Implementation
-- (void) closeWithError:(NSError *)err;
-- (void) recoverUnreadData;
-- (void) emptyQueues;
-- (void) close;
+- (void)closeWithError:(NSError *)err;
+- (void)recoverUnreadData;
+- (void)emptyQueues;
+- (void)close;
 
 // Errors
-- (NSError *) getErrnoError;
-- (NSError *) getAbortError;
-- (NSError *) getStreamError;
-- (NSError *) getSocketError;
-- (NSError *) getConnectTimeoutError;
-- (NSError *) getReadMaxedOutError;
-- (NSError *) getReadTimeoutError;
-- (NSError *) getWriteTimeoutError;
-- (NSError *) errorFromCFStreamError:(CFStreamError)err;
+- (NSError *)getErrnoError;
+- (NSError *)getAbortError;
+- (NSError *)getStreamError;
+- (NSError *)getSocketError;
+- (NSError *)getConnectTimeoutError;
+- (NSError *)getReadMaxedOutError;
+- (NSError *)getReadTimeoutError;
+- (NSError *)getWriteTimeoutError;
+- (NSError *)errorFromCFStreamError:(CFStreamError)err;
 
 // Diagnostics
-- (BOOL) isSocketConnected;
-- (BOOL) areStreamsConnected;
-- (NSString *) connectedHost: (CFSocketRef)socket;
-- (UInt16) connectedPort: (CFSocketRef)socket;
-- (NSString *) localHost: (CFSocketRef)socket;
-- (UInt16) localPort: (CFSocketRef)socket;
-- (NSString *) addressHost: (CFDataRef)cfaddr;
-- (UInt16) addressPort: (CFDataRef)cfaddr;
+- (BOOL)isSocketConnected;
+- (BOOL)areStreamsConnected;
+- (NSString *)connectedHost:(CFSocketRef)socket;
+- (UInt16)connectedPort:(CFSocketRef)socket;
+- (NSString *)localHost:(CFSocketRef)socket;
+- (UInt16)localPort:(CFSocketRef)socket;
+- (NSString *)addressHost:(CFDataRef)cfaddr;
+- (UInt16)addressPort:(CFDataRef)cfaddr;
 
 // Reading
-- (void) doBytesAvailable;
-- (void) completeCurrentRead;
-- (void) endCurrentRead;
-- (void) scheduleDequeueRead;
-- (void) maybeDequeueRead;
-- (void) doReadTimeout:(NSTimer *)timer;
+- (void)doBytesAvailable;
+- (void)completeCurrentRead;
+- (void)endCurrentRead;
+- (void)scheduleDequeueRead;
+- (void)maybeDequeueRead;
+- (void)doReadTimeout:(NSTimer *)timer;
 
 // Writing
-- (void) doSendBytes;
-- (void) completeCurrentWrite;
-- (void) endCurrentWrite;
-- (void) scheduleDequeueWrite;
-- (void) maybeDequeueWrite;
-- (void) maybeScheduleDisconnect;
-- (void) doWriteTimeout:(NSTimer *)timer;
+- (void)doSendBytes;
+- (void)completeCurrentWrite;
+- (void)endCurrentWrite;
+- (void)scheduleDequeueWrite;
+- (void)maybeDequeueWrite;
+- (void)maybeScheduleDisconnect;
+- (void)doWriteTimeout:(NSTimer *)timer;
 
 // Run Loop
-- (void) runLoopAddSource:(CFRunLoopSourceRef)source;
-- (void) runLoopRemoveSource:(CFRunLoopSourceRef)source;
-- (void) runLoopAddTimer:(NSTimer *)timer;
-- (void) runLoopRemoveTimer:(NSTimer *)timer;
-- (void) runLoopUnscheduleReadStream;
-- (void) runLoopUnscheduleWriteStream;
+- (void)runLoopAddSource:(CFRunLoopSourceRef)source;
+- (void)runLoopRemoveSource:(CFRunLoopSourceRef)source;
+- (void)runLoopAddTimer:(NSTimer *)timer;
+- (void)runLoopRemoveTimer:(NSTimer *)timer;
+- (void)runLoopUnscheduleReadStream;
+- (void)runLoopUnscheduleWriteStream;
 
 // Security
 - (void)maybeStartTLS;
 - (void)onTLSStarted:(BOOL)flag;
 
 // Callbacks
-- (void) doCFCallback:(CFSocketCallBackType)type forSocket:(CFSocketRef)sock withAddress:(NSData *)address withData:(const void *)pData;
-- (void) doCFReadStreamCallback:(CFStreamEventType)type forStream:(CFReadStreamRef)stream;
-- (void) doCFWriteStreamCallback:(CFStreamEventType)type forStream:(CFWriteStreamRef)stream;
+- (void)doCFCallback:(CFSocketCallBackType)type forSocket:(CFSocketRef)sock withAddress:(NSData *)address withData:(const void *)pData;
+- (void)doCFReadStreamCallback:(CFStreamEventType)type forStream:(CFReadStreamRef)stream;
+- (void)doCFWriteStreamCallback:(CFStreamEventType)type forStream:(CFWriteStreamRef)stream;
 
 @end
 
-static void MyCFSocketCallback (CFSocketRef, CFSocketCallBackType, CFDataRef, const void *, void *);
-static void MyCFReadStreamCallback (CFReadStreamRef stream, CFStreamEventType type, void *pInfo);
-static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType type, void *pInfo);
+static void MyCFSocketCallback(CFSocketRef, CFSocketCallBackType, CFDataRef, const void *, void *);
+static void MyCFReadStreamCallback(CFReadStreamRef stream, CFStreamEventType type, void *pInfo);
+static void MyCFWriteStreamCallback(CFWriteStreamRef stream, CFStreamEventType type, void *pInfo);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
@@ -398,7 +400,7 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 {
 	if((self = [super init]))
 	{
-		theFlags = DEFAULT_PREBUFFERING ? kEnablePreBuffering : 0x00;
+		theFlags = DEFAULT_PREBUFFERING ? kEnablePreBuffering : 0;
 		theDelegate = delegate;
 		theUserData = userData;
 		
@@ -444,7 +446,6 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 	[theWriteQueue release];
 	[theRunLoopModes release];
 	[partialReadBuffer release];
-	[NSObject cancelPreviousPerformRequestsWithTarget:theDelegate selector:@selector(socketDidDisconnect:) object:self];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 	[super dealloc];
 }
@@ -627,6 +628,8 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 	}
 	
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
+	theFlags &= ~kDequeueReadScheduled;
+	theFlags &= ~kDequeueWriteScheduled;
 	
 	if(theReadStream && theWriteStream)
     {
@@ -690,6 +693,8 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 	}
 	
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
+	theFlags &= ~kDequeueReadScheduled;
+	theFlags &= ~kDequeueWriteScheduled;
 	
 	if(theReadStream && theWriteStream)
     {
@@ -924,7 +929,7 @@ static void MyCFWriteStreamCallback (CFWriteStreamRef stream, CFStreamEventType 
 	theFlags |= kDidPassConnectMethod;
 	return YES;
 	
-Failed:;
+Failed:
 	if(errPtr) *errPtr = [self getSocketError];
 	if(theSocket4 != NULL)
 	{
@@ -974,24 +979,19 @@ Failed:;
 		[NSException raise:AsyncSocketException format:message];
 	}
 	
-	BOOL pass = YES;
+	if(![self createStreamsToHost:hostname onPort:port error:errPtr]) goto Failed;
+	if(![self attachStreamsToRunLoop:nil error:errPtr])               goto Failed;
+	if(![self configureStreamsAndReturnError:errPtr])                 goto Failed;
+	if(![self openStreamsAndReturnError:errPtr])                      goto Failed;
 	
-	if(pass && ![self createStreamsToHost:hostname onPort:port error:errPtr]) pass = NO;
-	if(pass && ![self attachStreamsToRunLoop:nil error:errPtr])               pass = NO;
-	if(pass && ![self configureStreamsAndReturnError:errPtr])                 pass = NO;
-	if(pass && ![self openStreamsAndReturnError:errPtr])                      pass = NO;
+	[self startConnectTimeout:timeout];
+	theFlags |= kDidPassConnectMethod;
 	
-	if(pass)
-	{
-		[self startConnectTimeout:timeout];
-		theFlags |= kDidPassConnectMethod;
-	}
-	else
-	{
-		[self close];
-	}
+	return YES;
 	
-	return pass;
+Failed:
+	[self close];
+	return NO;
 }
 
 - (BOOL)connectToAddress:(NSData *)remoteAddr error:(NSError **)errPtr
@@ -1027,24 +1027,19 @@ Failed:;
 		[NSException raise:AsyncSocketException format:message];
 	}
 	
-	BOOL pass = YES;
+	if(![self createSocketForAddress:remoteAddr error:errPtr])   goto Failed;
+	if(![self attachSocketsToRunLoop:nil error:errPtr])          goto Failed;
+	if(![self configureSocketAndReturnError:errPtr])             goto Failed;
+	if(![self connectSocketToAddress:remoteAddr error:errPtr])   goto Failed;
 	
-	if(pass && ![self createSocketForAddress:remoteAddr error:errPtr])   pass = NO;
-	if(pass && ![self attachSocketsToRunLoop:nil error:errPtr])          pass = NO;
-	if(pass && ![self configureSocketAndReturnError:errPtr])             pass = NO;
-	if(pass && ![self connectSocketToAddress:remoteAddr error:errPtr])   pass = NO;
+	[self startConnectTimeout:timeout];
+	theFlags |= kDidPassConnectMethod;
 	
-	if(pass)
-	{
-		[self startConnectTimeout:timeout];
-		theFlags |= kDidPassConnectMethod;
-	}
-	else
-	{
-		[self close];
-	}
+	return YES;
 	
-	return pass;
+Failed:
+	[self close];
+	return NO;
 }
 
 - (void)startConnectTimeout:(NSTimeInterval)timeout
@@ -1571,10 +1566,15 @@ Failed:;
 {
 	if (theCurrentRead != nil)	[self endCurrentRead];
 	if (theCurrentWrite != nil)	[self endCurrentWrite];
+	
 	[theReadQueue removeAllObjects];
 	[theWriteQueue removeAllObjects];
+	
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(maybeDequeueRead) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(maybeDequeueWrite) object:nil];
+	
+	theFlags &= ~kDequeueReadScheduled;
+	theFlags &= ~kDequeueWriteScheduled;
 }
 
 /**
@@ -1641,20 +1641,21 @@ Failed:;
 	
 	// If the client has passed the connect/accept method, then the connection has at least begun.
 	// Notify delegate that it is now ending.
-	if (theFlags & kDidPassConnectMethod)
-	{
-		// Delay notification to give dev freedom to release without returning here and core-dumping.
-		if ([theDelegate respondsToSelector: @selector(socketDidDisconnect:)])
-		{
-			[theDelegate performSelector:@selector(socketDidDisconnect:)
-							  withObject:self
-							  afterDelay:0
-								 inModes:theRunLoopModes];
-		}
-	}
+	BOOL shouldCallDelegate = (theFlags & kDidPassConnectMethod);
 	
 	// Clear all flags (except the pre-buffering flag, which should remain as is)
 	theFlags &= kEnablePreBuffering;
+	
+	if (shouldCallDelegate)
+	{
+		if ([theDelegate respondsToSelector: @selector(socketDidDisconnect:)])
+		{
+			[theDelegate socketDidDisconnect:self];
+		}
+	}
+	
+	// Do not access any instance variables after calling onSocketDidDisconnect.
+	// This gives the delegate freedom to release us without returning here and crashing.
 }
 
 /**
@@ -1806,7 +1807,7 @@ Failed:;
 	return [NSError errorWithDomain:AsyncSocketErrorDomain code:AsyncSocketCFSocketError userInfo:info];
 }
 
-- (NSError *) getStreamError
+- (NSError *)getStreamError
 {
 	CFStreamError err;
 	if (theReadStream != NULL)
@@ -2312,7 +2313,11 @@ Failed:;
 **/
 - (void)scheduleDequeueRead
 {
-	[self performSelector:@selector(maybeDequeueRead) withObject:nil afterDelay:0 inModes:theRunLoopModes];
+	if((theFlags & kDequeueReadScheduled) == 0)
+	{
+		theFlags |= kDequeueReadScheduled;
+		[self performSelector:@selector(maybeDequeueRead) withObject:nil afterDelay:0 inModes:theRunLoopModes];
+	}
 }
 
 /**
@@ -2322,6 +2327,9 @@ Failed:;
 **/
 - (void)maybeDequeueRead
 {
+	// Unset the flag indicating a call to this method is scheduled
+	theFlags &= ~kDequeueReadScheduled;
+	
 	// If we're not currently processing a read AND we have an available read stream
 	if((theCurrentRead == nil) && (theReadStream != NULL))
 	{
@@ -2593,18 +2601,38 @@ Failed:;
 
 - (void)doReadTimeout:(NSTimer *)timer
 {
-	if (theCurrentRead != nil)
+	NSTimeInterval timeoutExtension = 0.0;
+	
+	if([theDelegate respondsToSelector:@selector(socket:shouldTimeoutReadWithTag:elapsed:bytesDone:)])
+	{
+		timeoutExtension = [theDelegate socket:self shouldTimeoutReadWithTag:theCurrentRead->tag
+		                                                               elapsed:theCurrentRead->timeout
+		                                                             bytesDone:theCurrentRead->bytesDone];
+	}
+	
+	if(timeoutExtension > 0.0)
+	{
+		theCurrentRead->timeout += timeoutExtension;
+		
+		theReadTimer = [NSTimer timerWithTimeInterval:timeoutExtension
+											   target:self 
+											 selector:@selector(doReadTimeout:)
+											 userInfo:nil
+											  repeats:NO];
+		[self runLoopAddTimer:theReadTimer];
+	}
+	else
 	{
 		[self endCurrentRead];
+		[self closeWithError:[self getReadTimeoutError]];
 	}
-	[self closeWithError:[self getReadTimeoutError]];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Writing
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)writeData:(NSData *)data withTimeout:(NSTimeInterval)timeout tag:(long)tag;
+- (void)writeData:(NSData *)data withTimeout:(NSTimeInterval)timeout tag:(long)tag
 {
 	if (data == nil || [data length] == 0) return;
 	if (theFlags & kForbidReadsWrites) return;
@@ -2619,12 +2647,19 @@ Failed:;
 
 - (void)scheduleDequeueWrite
 {
-	[self performSelector:@selector(maybeDequeueWrite) withObject:nil afterDelay:0 inModes:theRunLoopModes];
+	if((theFlags & kDequeueWriteScheduled) == 0)
+	{
+		theFlags |= kDequeueWriteScheduled;
+		[self performSelector:@selector(maybeDequeueWrite) withObject:nil afterDelay:0 inModes:theRunLoopModes];
+	}
 }
 
 // Start a new write.
 - (void)maybeDequeueWrite
 {
+	// Unset the flag indicating a call to this method is scheduled
+	theFlags &= ~kDequeueWriteScheduled;
+	
 	// If we're not currently processing a write AND we have an available write stream
 	if((theCurrentWrite == nil) && (theWriteStream != NULL))
 	{
@@ -2643,7 +2678,7 @@ Failed:;
 			else
 			{
 				// Start time-out timer
-				if (theCurrentWrite->timeout >= 0.0)
+				if(theCurrentWrite->timeout >= 0.0)
 				{
 					theWriteTimer = [NSTimer timerWithTimeInterval:theCurrentWrite->timeout
 															target:self
@@ -2676,10 +2711,10 @@ Failed:;
 
 - (void)doSendBytes
 {
-	if (theCurrentWrite != nil && theWriteStream != NULL)
+	if((theCurrentWrite != nil) && (theWriteStream != NULL))
 	{
 		BOOL done = NO, error = NO;
-		while (!done && !error && CFWriteStreamCanAcceptBytes (theWriteStream))
+		while (!done && !error && CFWriteStreamCanAcceptBytes(theWriteStream))
 		{
 			// Figure out what to write.
 			size_t bytesRemaining = [theCurrentWrite->buffer length] - theCurrentWrite->bytesDone;
@@ -2709,7 +2744,7 @@ Failed:;
 
 		if(error)
 		{
-			CFStreamError err = CFWriteStreamGetError (theWriteStream);
+			CFStreamError err = CFWriteStreamGetError(theWriteStream);
 			[self closeWithError:[self errorFromCFStreamError:err]];
 			return;
 		}
@@ -2743,11 +2778,31 @@ Failed:;
 
 - (void)doWriteTimeout:(NSTimer *)timer
 {
-	if(theCurrentWrite != nil)
+	NSTimeInterval timeoutExtension = 0.0;
+	
+	if([theDelegate respondsToSelector:@selector(socket:shouldTimeoutWriteWithTag:elapsed:bytesDone:)])
+	{
+		timeoutExtension = [theDelegate socket:self shouldTimeoutWriteWithTag:theCurrentWrite->tag
+		                                                                elapsed:theCurrentWrite->timeout
+		                                                              bytesDone:theCurrentWrite->bytesDone];
+	}
+	
+	if(timeoutExtension > 0.0)
+	{
+		theCurrentWrite->timeout += timeoutExtension;
+		
+		theWriteTimer = [NSTimer timerWithTimeInterval:timeoutExtension
+		                                        target:self 
+		                                      selector:@selector(doWriteTimeout:)
+		                                      userInfo:nil
+		                                       repeats:NO];
+		[self runLoopAddTimer:theWriteTimer];
+	}
+	else
 	{
 		[self endCurrentWrite];
+		[self closeWithError:[self getWriteTimeoutError]];
 	}
-	[self closeWithError:[self getWriteTimeoutError]];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
