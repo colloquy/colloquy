@@ -714,6 +714,8 @@
 	NSString *password = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQTwitterPassword"];
 	BOOL sentTweet = NO;
 
+	[CQColloquyApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
 	id old = _tweetRetryArguments;
 	_tweetRetryArguments = [arguments copy];
 	[old release];
@@ -774,9 +776,11 @@
 	}
 
 	if ( !sentTweet ) [alert show];
-	
-	[alert release];
 
+	[CQColloquyApplication sharedApplication].networkActivityIndicatorVisible = NO;
+
+	[alert release];
+	
 	return YES;
 }
 
