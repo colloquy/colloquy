@@ -121,9 +121,11 @@ static NSURL *lastURL;
 
 - (IBAction) sendToInstapaper:(id) sender {
 	NSString *url = [self.url absoluteString];
-		
+	
 	if ([url isCaseInsensitiveEqualToString:@"about:blank"]) return;
 	else url = [url stringByEncodingIllegalURLCharacters];
+	
+	BOOL posted = NO;
 	
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.delegate = self;
@@ -137,20 +139,21 @@ static NSURL *lastURL;
 		NSString *password = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQInstapaperPassword"];
 		NSString *instapaperURL = [NSString stringWithFormat:@"https://www.instapaper.com/api/add?username=%@&password=%@&url=%@&auto-title=1", user, password, url];
 
+		[CQColloquyApplication sharedApplication].networkActivityIndicatorVisible = YES;
+		
 		NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:instapaperURL] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
 		NSError *error = nil;
 		NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
 
 		[request release];
-		
+
+		[CQColloquyApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
 		if (!error) {
 			NSString *response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
-			if ([response isEqual:@"201"]) { //Success, posted to instapaper without issues
-				[alert release];
-				[response release];
-				return;
-			} else if ([response isEqual:@"403"]) {
+			if ([response isEqual:@"201"]) posted = YES; // Success, posted to instapaper without issues
+			else if ([response isEqual:@"403"]) {
 				alert.title = NSLocalizedString(@"Incorrect Account Information", "Incorrect Account Information alert title");
 				alert.message = NSLocalizedString(@"An incorrect username/email or password was given.", "Incorrect username, email or password alert message");
 			} else if ([response isEqual:@"500"]) {
@@ -165,9 +168,12 @@ static NSURL *lastURL;
 		}
 	}
 
-	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+	if (!posted) {
+		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
-	[alert show];
+		[alert show];
+	}
+	
 	[alert release];
 }
 
