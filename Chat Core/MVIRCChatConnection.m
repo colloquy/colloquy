@@ -2536,7 +2536,7 @@ end:
 
 #if __ppc__
 			NSString *processor = @"PowerPC";
-#elif __i386__
+#elif __i386__ || __x86_64__
 			NSString *processor = @"Intel";
 #elif __arm__
 			NSString *processor = @"ARM";
