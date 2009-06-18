@@ -5,19 +5,15 @@ function senderHash(nickname) {
 	return result;
 }
 
-function appendMessage(senderNickname, messageHTML, highlighted, action, self, suppressScroll, previousSession) {
-	if (autoscrollSuspended)
-		suppressScroll = true;
-
-	var wasNearBottom = (!suppressScroll && nearBottom());
-
+function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession) {
 	var className = "message-wrapper";
 	if (action) className += " action";
 	if (highlighted) className += " highlight";
 	if (previousSession) className += " previous-session";
 
-	if (document.body.lastChild.senderNickname === senderNickname && document.body.lastChild.previousSession == previousSession)
-		document.body.lastChild.className += " subsequent";
+	var parent = (container.lastChild ? container : document.body);
+	if (parent.lastChild && parent.lastChild.senderNickname === senderNickname && parent.lastChild.previousSession == previousSession)
+		parent.lastChild.className += " subsequent";
 
 	var messageWrapperElement = document.createElement("div");
 	messageWrapperElement.className = className;
@@ -35,16 +31,8 @@ function appendMessage(senderNickname, messageHTML, highlighted, action, self, s
 
 	var messageElement = document.createElement("div");
 	messageElement.className = "message";
+	messageElement.innerHTML = messageHTML;
 	messageWrapperElement.appendChild(messageElement);
 
-	document.body.appendChild(messageWrapperElement);
-
-	var range = document.createRange();
-	range.selectNode(messageElement);
-
-	var messageFragment = range.createContextualFragment(messageHTML);
-	messageElement.appendChild(messageFragment);
-
-	if (!suppressScroll && (alwaysScroll || wasNearBottom))
-		scrollToBottom(true);
+	container.appendChild(messageWrapperElement);
 }
