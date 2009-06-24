@@ -263,16 +263,23 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	} else if (indexPath.section == BouncerTableSection && indexPath.row == 0) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
-		if ([[UIApplication sharedApplication] respondsToSelector:@selector(enabledRemoteNotificationTypes)])
-			cell.label = NSLocalizedString(@"Colloquy Push Bouncer", @"Colloquy Push Bouncer connection setting label");
+		BOOL pushAvailable = [[UIApplication sharedApplication] respondsToSelector:@selector(enabledRemoteNotificationTypes)];
+		if (pushAvailable)
+			cell.label = NSLocalizedString(@"Push & Bouncer", @"Push and Bouncer connection setting label");
 		else cell.label = NSLocalizedString(@"Colloquy Bouncer", @"Colloquy Bouncer connection setting label");
 
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		CQBouncerSettings *settings = _connection.bouncerSettings;
-		if (_connection.bouncerType == MVChatConnectionColloquyBouncer && settings) {
+		if ((pushAvailable && _connection.pushNotifications) && (_connection.bouncerType == MVChatConnectionColloquyBouncer && settings))
+			cell.text = NSLocalizedString(@"On", @"On label");
+		else if (pushAvailable && _connection.pushNotifications)
+			cell.text = NSLocalizedString(@"Push Only", @"Push Only label");
+		else if (!pushAvailable && _connection.bouncerType == MVChatConnectionColloquyBouncer && settings)
 			cell.text = settings.displayName;
-		} else cell.text = NSLocalizedString(@"None", @"None label");
+		else if (_connection.bouncerType == MVChatConnectionColloquyBouncer && settings)
+			cell.text = NSLocalizedString(@"Bouncer Only", @"Bouncer Only label");
+		else cell.text = NSLocalizedString(@"Off", @"Off label");
 
 		return cell;
 	} else if (indexPath.section == IdentityTableSection) {

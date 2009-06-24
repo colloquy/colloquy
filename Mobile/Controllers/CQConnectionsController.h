@@ -69,6 +69,7 @@
 @property (nonatomic, copy) NSArray *automaticJoinedRooms;
 @property (nonatomic, copy) NSArray *automaticCommands;
 @property (nonatomic) BOOL automaticallyConnect;
+@property (nonatomic) BOOL pushNotifications;
 @property (nonatomic, copy) NSString *bouncerIdentifier;
 @property (nonatomic, copy) CQBouncerSettings *bouncerSettings;
 @end

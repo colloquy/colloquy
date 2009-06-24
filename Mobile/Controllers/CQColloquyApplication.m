@@ -89,7 +89,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		return;
 	}
 
-	const unsigned int *tokenData = deviceToken.bytes;
+	const unsigned *tokenData = deviceToken.bytes;
 	NSString *deviceTokenString = [NSString stringWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x", ntohl(tokenData[0]), ntohl(tokenData[1]), ntohl(tokenData[2]), ntohl(tokenData[3]), ntohl(tokenData[4]), ntohl(tokenData[5]), ntohl(tokenData[6]), ntohl(tokenData[7])];
 
 	if ([_deviceToken isEqualToString:deviceTokenString] || !deviceTokenString)

@@ -1,5 +1,6 @@
 #import "CQConnectionBouncerEditController.h"
 
+#import "CQColloquyApplication.h"
 #import "CQBouncerSettings.h"
 #import "CQConnectionBouncerDetailsEditController.h"
 #import "CQConnectionsController.h"
@@ -8,17 +9,33 @@
 
 #import <ChatCore/MVChatConnection.h>
 
-#define EnabledTableSection 0
-#define BouncersTableSection 1
+static unsigned short PushEnabledTableSection = 0;
+static unsigned short BouncerEnabledTableSection = 0;
+static unsigned short BouncersTableSection = 0;
+
+static BOOL pushAvailable = NO;
 
 @implementation CQConnectionBouncerEditController
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 
-	self.title = NSLocalizedString(@"Bouncer", @"Bouncer view title");
+	pushAvailable = [[UIApplication sharedApplication] respondsToSelector:@selector(enabledRemoteNotificationTypes)];
+
+	if (pushAvailable)
+		self.title = NSLocalizedString(@"Push & Bouncer", @"Push and Bouncer view title");
+	else self.title = NSLocalizedString(@"Bouncer", @"Bouncer view title");
 
 	_lastSelectedBouncerIndex = NSNotFound;
+
+	if (pushAvailable) {
+		PushEnabledTableSection = 0;
+		BouncerEnabledTableSection = 1;
+		BouncersTableSection = 2;
+	} else {
+		BouncerEnabledTableSection = 0;
+		BouncersTableSection = 1;
+	}
 
 	return self;
 }
@@ -66,32 +83,39 @@
 #pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
+	if (pushAvailable)
+		return (_bouncerEnabled ? 3 : 2);
 	return (_bouncerEnabled ? 2 : 1);
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
-	switch( section) {
-		case EnabledTableSection: return 1;
-		case BouncersTableSection: return ([CQConnectionsController defaultController].bouncers.count + 1);
-		default: return 0;
-	}
+	if (pushAvailable && section == PushEnabledTableSection)
+		return 1;
+	if (section == BouncerEnabledTableSection)
+		return 1;
+	if (section == BouncersTableSection)
+		return ([CQConnectionsController defaultController].bouncers.count + 1);
+	return 0;
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
-	switch( section) {
-		case BouncersTableSection: return NSLocalizedString(@"Choose a Bouncer...", @"Choose a Bouncer section title");
-		default: return nil;
-	}
+	if (section == BouncersTableSection)
+		return NSLocalizedString(@"Choose a Bouncer...", @"Choose a Bouncer section title");
+	return nil;
 }
 
 - (CGFloat) tableView:(UITableView *) tableView heightForFooterInSection:(NSInteger) section {
-	if (section == EnabledTableSection)
+	if (section == PushEnabledTableSection)
+		return 90.;
+	if (section == BouncerEnabledTableSection)
 		return 55.;
 	return 0.;
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
-	if (section == EnabledTableSection)
+	if (pushAvailable && section == PushEnabledTableSection)
+		return NSLocalizedString(@"Private messages and highlighted room messages will be pushed while Colloquy\nisn't open. Push notifications require\nconnecting to a push aware bouncer.", @"Push Notification section footer title");
+	if (section == BouncerEnabledTableSection)
 		return NSLocalizedString(@"Using a Colloquy bouncer will keep you\nconnected while Colloquy isn't open.", @"Use Bouncer section footer title");
 	return nil;
 }
@@ -156,7 +180,16 @@
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (indexPath.section == EnabledTableSection && indexPath.row == 0) {
+	if (pushAvailable && indexPath.section == PushEnabledTableSection && indexPath.row == 0) {
+		CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
+
+		cell.target = self;
+		cell.switchAction = @selector(pushEnabled:);
+		cell.label = NSLocalizedString(@"Push Notifications", @"Push Notifications connection setting label");
+		cell.on = _connection.pushNotifications;
+
+		return cell;
+	} else if (indexPath.section == BouncerEnabledTableSection && indexPath.row == 0) {
 		CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 
 		cell.target = self;
@@ -200,6 +233,10 @@
 
 #pragma mark -
 
+- (void) pushEnabled:(CQPreferencesSwitchCell *) sender {
+	_connection.pushNotifications = sender.on;
+}
+
 - (void) bouncerEnabled:(CQPreferencesSwitchCell *) sender {
 	_bouncerEnabled = sender.on;
 
@@ -207,10 +244,14 @@
 		_connection.bouncerType = MVChatConnectionNoBouncer;
 
 	if (sender.on) {
-		if (!_connection.bouncerIdentifier.length) {
-			CQBouncerSettings *settings = [[CQConnectionsController defaultController].bouncers lastObject];
-			_connection.bouncerIdentifier = settings.identifier;
+		CQBouncerSettings *settings = _connection.bouncerSettings;
+
+		if (!settings) {
+			settings = [[CQConnectionsController defaultController].bouncers lastObject];
+			_connection.bouncerSettings = settings;
 		}
+
+		_connection.bouncerType = settings.type;
 
 		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:BouncersTableSection] withRowAnimation:UITableViewRowAnimationBottom];
 	} else {

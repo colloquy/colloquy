@@ -231,15 +231,28 @@
 		[persistentInformation release];
 	}
 
+	if (connection.pushNotifications) {
+		NSString *deviceToken = [CQColloquyApplication sharedApplication].deviceToken;
+		if (deviceToken.length)
+			[connection sendRawMessageWithFormat:@"PUSH device-token :%@", deviceToken];
+
+		NSString *highlightWordsString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQHighlightWords"];
+		if (highlightWordsString.length)
+			[connection sendRawMessageWithFormat:@"PUSH highlight-words :%@", highlightWordsString];
+
+		NSString *sound = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
+		if (sound.length && ![sound isEqualToString:@"None"])
+			[connection sendRawMessageWithFormat:@"PUSH highlight-sound :%@.aiff", sound];
+
+		sound = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
+		if (sound.length && ![sound isEqualToString:@"None"])
+			[connection sendRawMessageWithFormat:@"PUSH message-sound :%@.aiff", sound];
+	} else [connection sendRawMessage:@"PUSH device-token clear"];
+
 	if (connection.bouncerType == MVChatConnectionColloquyBouncer) {
 		connection.bouncerDeviceIdentifier = [UIDevice currentDevice].uniqueIdentifier;
 
 		[connection sendRawMessageWithFormat:@"BOUNCER set encoding %u", connection.encoding];
-
-		NSString *deviceToken = [CQColloquyApplication sharedApplication].deviceToken;
-		if (deviceToken.length)
-			[connection sendRawMessageWithFormat:@"BOUNCER set device-token :%@", [CQColloquyApplication sharedApplication].deviceToken];
-		else [connection sendRawMessage:@"BOUNCER set device-token"];
 
 		[connection sendRawMessageWithFormat:@"BOUNCER set display-name :%@", connection.displayName];
 
@@ -251,21 +264,6 @@
 			NSString *nicks = [connection.alternateNicknames componentsJoinedByString:@" "];
 			[connection sendRawMessageWithFormat:@"BOUNCER set alt-nicks %@", nicks];
 		} else [connection sendRawMessage:@"BOUNCER set alt-nicks"];
-
-		NSString *highlightWordsString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQHighlightWords"];
-		if (highlightWordsString.length)
-			[connection sendRawMessageWithFormat:@"BOUNCER set highlight-words :%@", highlightWordsString];
-		else [connection sendRawMessage:@"BOUNCER set highlight-words"];
-
-		NSString *sound = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
-		if (sound.length && ![sound isEqualToString:@"None"])
-			[connection sendRawMessageWithFormat:@"BOUNCER set highlight-sound :%@.aiff", sound];
-		else [connection sendRawMessage:@"BOUNCER set highlight-sound"];
-
-		sound = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
-		if (sound.length && ![sound isEqualToString:@"None"])
-			[connection sendRawMessageWithFormat:@"BOUNCER set message-sound :%@.aiff", sound];
-		else [connection sendRawMessage:@"BOUNCER set message-sound"];
 
 		[connection sendRawMessage:@"BOUNCER autocommands clear"];
 
@@ -323,11 +321,9 @@
 
 - (void) _deviceTokenRecieved:(NSNotification *) notification {
 	NSString *tokenString = [CQColloquyApplication sharedApplication].deviceToken;
-	NSString *command = [NSString stringWithFormat:@"BOUNCER set device-token :%@", tokenString];
+	NSString *command = [NSString stringWithFormat:@"PUSH device-token :%@", tokenString];
 	for (MVChatConnection *connection in _connections) {
-		if (connection.bouncerType != MVChatConnectionColloquyBouncer)
-			continue;
-		if (connection.status != MVChatConnectionConnectingStatus && !connection.connected)
+		if (!connection.pushNotifications || !connection.connected)
 			continue;
 		[connection sendRawMessage:command]; 
 	}
@@ -459,6 +455,8 @@
 
 		if ([info objectForKey:@"automatic"])
 			[persistentInformation setObject:[info objectForKey:@"automatic"] forKey:@"automatic"];
+		if ([info objectForKey:@"push"])
+			[persistentInformation setObject:[info objectForKey:@"push"] forKey:@"push"];
 		if ([info objectForKey:@"rooms"])
 			[persistentInformation setObject:[info objectForKey:@"rooms"] forKey:@"rooms"];
 		if ([info objectForKey:@"previousRooms"])
@@ -535,6 +533,8 @@
 		NSMutableDictionary *persistentInformation = [connection.persistentInformation mutableCopy];
 		if ([persistentInformation objectForKey:@"automatic"])
 			[info setObject:[persistentInformation objectForKey:@"automatic"] forKey:@"automatic"];
+		if ([persistentInformation objectForKey:@"push"])
+			[info setObject:[persistentInformation objectForKey:@"push"] forKey:@"push"];
 		if ([[persistentInformation objectForKey:@"rooms"] count])
 			[info setObject:[persistentInformation objectForKey:@"rooms"] forKey:@"rooms"];
 		if ([[persistentInformation objectForKey:@"description"] length])
@@ -544,11 +544,12 @@
 		if ([persistentInformation objectForKey:@"bouncerIdentifier"])
 			[info setObject:[persistentInformation objectForKey:@"bouncerIdentifier"] forKey:@"bouncer"];
 
+		[persistentInformation removeObjectForKey:@"automatic"];
+		[persistentInformation removeObjectForKey:@"push"];
 		[persistentInformation removeObjectForKey:@"rooms"];
 		[persistentInformation removeObjectForKey:@"previousRooms"];
-		[persistentInformation removeObjectForKey:@"commands"];
 		[persistentInformation removeObjectForKey:@"description"];
-		[persistentInformation removeObjectForKey:@"automatic"];
+		[persistentInformation removeObjectForKey:@"commands"];
 		[persistentInformation removeObjectForKey:@"bouncerIdentifier"];
 
 		NSDictionary *chatState = [[CQChatController defaultController] persistentStateForConnection:connection];
@@ -845,6 +846,9 @@
 - (void) setDisplayName:(NSString *) name {
 	NSParameterAssert(name != nil);
 
+	if ([name isEqualToString:self.displayName])
+		return;
+
 	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
 	[persistentInformation setObject:name forKey:@"description"];
 	self.persistentInformation = persistentInformation;
@@ -891,6 +895,9 @@
 #pragma mark -
 
 - (void) setAutomaticallyConnect:(BOOL) autoConnect {
+	if (autoConnect == self.automaticallyConnect)
+		return;
+
 	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
 	[persistentInformation setObject:[NSNumber numberWithBool:autoConnect] forKey:@"automatic"];
 	self.persistentInformation = persistentInformation;
@@ -903,7 +910,34 @@
 
 #pragma mark -
 
+- (void) setPushNotifications:(BOOL) push {
+	if (push == self.pushNotifications)
+		return;
+
+	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
+	[persistentInformation setObject:[NSNumber numberWithBool:push] forKey:@"push"];
+	self.persistentInformation = persistentInformation;
+	[persistentInformation release];
+
+	if (!self.connected && self.status != MVChatConnectionConnectingStatus)
+		return;
+
+	if (push) {
+		NSString *deviceToken = [CQColloquyApplication sharedApplication].deviceToken;
+		if (deviceToken.length)
+			[self sendRawMessageWithFormat:@"PUSH device-token :%@", deviceToken];
+	} else [self sendRawMessage:@"PUSH device-token clear"];
+}
+
+- (BOOL) pushNotifications {
+	return [[self.persistentInformation objectForKey:@"push"] boolValue];
+}
+
+#pragma mark -
+
 - (void) setBouncerSettings:(CQBouncerSettings *) settings {
+	if (settings.identifier == self.bouncerIdentifier)
+		return;
 	self.bouncerIdentifier = settings.identifier;
 }
 
