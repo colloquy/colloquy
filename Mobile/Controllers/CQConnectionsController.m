@@ -236,6 +236,8 @@
 		if (deviceToken.length)
 			[connection sendRawMessageWithFormat:@"PUSH device-token :%@", deviceToken];
 
+		[connection sendRawMessageWithFormat:@"PUSH display-name :%@", connection.displayName];
+
 		NSString *highlightWordsString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQHighlightWords"];
 		if (highlightWordsString.length)
 			[connection sendRawMessageWithFormat:@"PUSH highlight-words :%@", highlightWordsString];
@@ -253,8 +255,6 @@
 		connection.bouncerDeviceIdentifier = [UIDevice currentDevice].uniqueIdentifier;
 
 		[connection sendRawMessageWithFormat:@"BOUNCER set encoding %u", connection.encoding];
-
-		[connection sendRawMessageWithFormat:@"BOUNCER set display-name :%@", connection.displayName];
 
 		if (connection.nicknamePassword.length)
 			[connection sendRawMessageWithFormat:@"BOUNCER set nick-password :%@", connection.nicknamePassword];
