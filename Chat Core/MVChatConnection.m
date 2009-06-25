@@ -704,7 +704,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (id) persistentInformationObjectForKey:(id) key {
 	@synchronized( _persistentInformation ) {
 		return [_persistentInformation objectForKey:key];
-	}
+	} return nil;
 }
 
 - (void) removePersistentInformationObjectForKey:(id) key {
