@@ -701,6 +701,24 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	return [NSDictionary dictionaryWithDictionary:_persistentInformation];
 }
 
+- (id) persistentInformationObjectForKey:(id) key {
+	@synchronized( _persistentInformation ) {
+		return [_persistentInformation objectForKey:key];
+	}
+}
+
+- (void) removePersistentInformationObjectForKey:(id) key {
+	@synchronized( _persistentInformation ) {
+		[_persistentInformation removeObjectForKey:key];
+	}
+}
+
+- (void) setPersistentInformationObject:(id) object forKey:(id) key {
+	@synchronized( _persistentInformation ) {
+		[_persistentInformation setObject:object forKey:key];
+	}
+}
+
 #pragma mark -
 
 - (void) publicKeyVerified:(NSDictionary *) dictionary andAccepted:(BOOL) accepted andAlwaysAccept:(BOOL) alwaysAccept {

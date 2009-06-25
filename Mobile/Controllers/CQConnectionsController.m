@@ -219,16 +219,10 @@
 
 	NSMutableArray *rooms = [connection.automaticJoinedRooms mutableCopy];
 
-	NSDictionary *persistentInformation = connection.persistentInformation;
-	NSArray *previousRooms = [persistentInformation objectForKey:@"previousRooms"];
-
+	NSArray *previousRooms = [connection persistentInformationObjectForKey:@"previousRooms"];
 	if (previousRooms.count) {
 		[rooms addObjectsFromArray:previousRooms];
-
-		NSMutableDictionary *persistentInformation = [connection.persistentInformation mutableCopy];
-		[persistentInformation removeObjectForKey:@"previousRooms"];
-		connection.persistentInformation = persistentInformation;
-		[persistentInformation release];
+		[connection removePersistentInformationObjectForKey:@"previousRooms"];
 	}
 
 	[connection sendPushNotificationCommands];
@@ -831,17 +825,14 @@
 	if ([name isEqualToString:self.displayName])
 		return;
 
-	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
-	[persistentInformation setObject:name forKey:@"description"];
-	self.persistentInformation = persistentInformation;
-	[persistentInformation release];
+	[self setPersistentInformationObject:name forKey:@"description"];
 }
 
 - (NSString *) displayName {
-	NSString *name = [self.persistentInformation objectForKey:@"description"];
+	NSString *name = [self persistentInformationObjectForKey:@"description"];
 	if (!name.length)
 		return self.server;
-	return [self.persistentInformation objectForKey:@"description"];
+	return name;
 }
 
 #pragma mark -
@@ -849,14 +840,11 @@
 - (void) setAutomaticJoinedRooms:(NSArray *) rooms {
 	NSParameterAssert(rooms != nil);
 
-	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
-	[persistentInformation setObject:rooms forKey:@"rooms"];
-	self.persistentInformation = persistentInformation;
-	[persistentInformation release];
+	[self setPersistentInformationObject:rooms forKey:@"rooms"];
 }
 
 - (NSArray *) automaticJoinedRooms {
-	return [self.persistentInformation objectForKey:@"rooms"];
+	return [self persistentInformationObjectForKey:@"rooms"];
 }
 
 #pragma mark -
@@ -864,14 +852,11 @@
 - (void) setAutomaticCommands:(NSArray *) commands {
 	NSParameterAssert(commands != nil);
 
-	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
-	[persistentInformation setObject:commands forKey:@"commands"];
-	self.persistentInformation = persistentInformation;
-	[persistentInformation release];
+	[self setPersistentInformationObject:commands forKey:@"commands"];
 }
 
 - (NSArray *) automaticCommands {
-	return [self.persistentInformation objectForKey:@"commands"];
+	return [self persistentInformationObjectForKey:@"commands"];
 }
 
 #pragma mark -
@@ -880,14 +865,11 @@
 	if (autoConnect == self.automaticallyConnect)
 		return;
 
-	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
-	[persistentInformation setObject:[NSNumber numberWithBool:autoConnect] forKey:@"automatic"];
-	self.persistentInformation = persistentInformation;
-	[persistentInformation release];
+	[self setPersistentInformationObject:[NSNumber numberWithBool:autoConnect] forKey:@"automatic"];
 }
 
 - (BOOL) automaticallyConnect {
-	return [[self.persistentInformation objectForKey:@"automatic"] boolValue];
+	return [[self persistentInformationObjectForKey:@"automatic"] boolValue];
 }
 
 #pragma mark -
@@ -896,10 +878,7 @@
 	if (push == self.pushNotifications)
 		return;
 
-	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
-	[persistentInformation setObject:[NSNumber numberWithBool:push] forKey:@"push"];
-	self.persistentInformation = persistentInformation;
-	[persistentInformation release];
+	[self setPersistentInformationObject:[NSNumber numberWithBool:push] forKey:@"push"];
 
 	if (!self.connected && self.status != MVChatConnectionConnectingStatus)
 		return;
@@ -908,7 +887,7 @@
 }
 
 - (BOOL) pushNotifications {
-	return [[self.persistentInformation objectForKey:@"push"] boolValue];
+	return [[self persistentInformationObjectForKey:@"push"] boolValue];
 }
 
 #pragma mark -
@@ -926,8 +905,6 @@
 #pragma mark -
 
 - (void) setBouncerIdentifier:(NSString *) identifier {
-	NSMutableDictionary *persistentInformation = [self.persistentInformation mutableCopy];
-
 	self.bouncerType = MVChatConnectionNoBouncer;
 
 	if (identifier) {
@@ -939,18 +916,15 @@
 			self.bouncerUsername = bouncerSettings.username;
 			self.bouncerPassword = bouncerSettings.password;
 
-			[persistentInformation setObject:identifier forKey:@"bouncerIdentifier"];
+			[self setPersistentInformationObject:identifier forKey:@"bouncerIdentifier"];
 		}
 	} else {
-		[persistentInformation removeObjectForKey:@"bouncerIdentifier"];
+		[self removePersistentInformationObjectForKey:@"bouncerIdentifier"];
 	}
-
-	self.persistentInformation = persistentInformation;
-	[persistentInformation release];
 }
 
 - (NSString *) bouncerIdentifier {
-	return [self.persistentInformation objectForKey:@"bouncerIdentifier"];
+	return [self persistentInformationObjectForKey:@"bouncerIdentifier"];
 }
 
 #pragma mark -

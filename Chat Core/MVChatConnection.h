@@ -413,6 +413,12 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
+- (id) persistentInformationObjectForKey:(id) key;
+- (void) removePersistentInformationObjectForKey:(id) key;
+- (void) setPersistentInformationObject:(id) object forKey:(id) key;
+
+#pragma mark -
+
 - (BOOL) isSecure;
 - (BOOL) isConnected;
 - (BOOL) isWaitingToReconnect;
