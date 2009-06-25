@@ -231,25 +231,7 @@
 		[persistentInformation release];
 	}
 
-	if (connection.pushNotifications) {
-		NSString *deviceToken = [CQColloquyApplication sharedApplication].deviceToken;
-		if (deviceToken.length)
-			[connection sendRawMessageWithFormat:@"PUSH device-token :%@", deviceToken];
-
-		[connection sendRawMessageWithFormat:@"PUSH display-name :%@", connection.displayName];
-
-		NSString *highlightWordsString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQHighlightWords"];
-		if (highlightWordsString.length)
-			[connection sendRawMessageWithFormat:@"PUSH highlight-words :%@", highlightWordsString];
-
-		NSString *sound = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
-		if (sound.length && ![sound isEqualToString:@"None"])
-			[connection sendRawMessageWithFormat:@"PUSH highlight-sound :%@.aiff", sound];
-
-		sound = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
-		if (sound.length && ![sound isEqualToString:@"None"])
-			[connection sendRawMessageWithFormat:@"PUSH message-sound :%@.aiff", sound];
-	} else [connection sendRawMessage:@"PUSH device-token clear"];
+	[connection sendPushNotificationCommands];
 
 	if (connection.bouncerType == MVChatConnectionColloquyBouncer) {
 		connection.bouncerDeviceIdentifier = [UIDevice currentDevice].uniqueIdentifier;
@@ -922,11 +904,7 @@
 	if (!self.connected && self.status != MVChatConnectionConnectingStatus)
 		return;
 
-	if (push) {
-		NSString *deviceToken = [CQColloquyApplication sharedApplication].deviceToken;
-		if (deviceToken.length)
-			[self sendRawMessageWithFormat:@"PUSH device-token :%@", deviceToken];
-	} else [self sendRawMessage:@"PUSH device-token clear"];
+	[self sendPushNotificationCommands];
 }
 
 - (BOOL) pushNotifications {
@@ -973,5 +951,30 @@
 
 - (NSString *) bouncerIdentifier {
 	return [self.persistentInformation objectForKey:@"bouncerIdentifier"];
+}
+
+#pragma mark -
+
+- (void) sendPushNotificationCommands {
+	if (self.pushNotifications) {
+		NSString *deviceToken = [CQColloquyApplication sharedApplication].deviceToken;
+		if (deviceToken.length)
+			[self sendRawMessageWithFormat:@"PUSH device-token :%@", deviceToken];
+
+		[self sendRawMessageWithFormat:@"PUSH display-name :%@", self.displayName];
+
+		NSString *highlightWordsString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQHighlightWords"];
+		[self sendRawMessageWithFormat:@"PUSH highlight-words :%@", highlightWordsString];
+
+		NSString *sound = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
+		if (sound.length && ![sound isEqualToString:@"None"])
+			[self sendRawMessageWithFormat:@"PUSH highlight-sound :%@.aiff", sound];
+		else [self sendRawMessageWithFormat:@"PUSH highlight-sound none"];
+
+		sound = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
+		if (sound.length && ![sound isEqualToString:@"None"])
+			[self sendRawMessageWithFormat:@"PUSH message-sound :%@.aiff", sound];
+		else [self sendRawMessageWithFormat:@"PUSH message-sound none"];
+	} else [self sendRawMessage:@"PUSH device-token clear"];
 }
 @end

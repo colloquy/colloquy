@@ -72,4 +72,6 @@
 @property (nonatomic) BOOL pushNotifications;
 @property (nonatomic, copy) NSString *bouncerIdentifier;
 @property (nonatomic, copy) CQBouncerSettings *bouncerSettings;
+
+- (void) sendPushNotificationCommands;
 @end
