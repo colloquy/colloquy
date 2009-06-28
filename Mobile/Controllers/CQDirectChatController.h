@@ -34,6 +34,7 @@
 	BOOL _allowEditingToEnd;
 	BOOL _didSendRecently;
 	BOOL _revealKeyboard;
+	BOOL _showingKeyboard;
 	
 	NSString *_tweetRetryArguments;
 }

@@ -879,80 +879,74 @@
 
 #pragma mark -
 
-- (void) keyboardWillShow:(NSNotification *) notification {
-	CGPoint endCenterPoint = CGPointZero;
+- (void) keyboardWillShow:(NSNotification *) notification {	
+	if (_showingKeyboard)
+		return;
+
 	CGRect keyboardBounds = CGRectZero;
 
-	[[[notification userInfo] objectForKey:UIKeyboardCenterEndUserInfoKey] getValue:&endCenterPoint];
 	[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
 
-	endCenterPoint = [self.parentViewController.view convertPoint:endCenterPoint toView:self.view];
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationDuration:0.3];
 
-	BOOL previouslyShowingKeyboard = (chatInputBar.center.y != (self.view.bounds.size.height - (chatInputBar.bounds.size.height / 2.)));
-	if (!previouslyShowingKeyboard) {
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:0.25];
+	CGFloat shift = keyboardBounds.size.height - 50; // Height of the tab bar
 
-#if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
-		[UIView setAnimationDelay:0.06];
-#else
-		[UIView setAnimationDelay:0.175];
-#endif
-	}
+	// Slide input bar
+	CGRect frame = chatInputBar.frame;
+	frame.origin.y -= shift;
+	chatInputBar.frame = frame;
 
-	BOOL landscape = UIInterfaceOrientationIsLandscape(self.interfaceOrientation);
-	CGFloat windowOffset = (landscape ? [UIApplication sharedApplication].statusBarFrame.size.width : [UIApplication sharedApplication].statusBarFrame.size.height);
+	// Change height of transcript view
+	frame = transcriptView.frame;
+	frame.size.height -= shift;
+	transcriptView.frame = frame;
 
-	CGRect bounds = chatInputBar.bounds;
-	CGPoint center = chatInputBar.center;
-	CGFloat keyboardTop = MAX(chatInputBar.bounds.size.height, endCenterPoint.y - (keyboardBounds.size.height / 2.));
-	center.y = keyboardTop - (bounds.size.height / 2.) - windowOffset;
-	chatInputBar.center = center;
-
-	bounds = transcriptView.bounds;
-	bounds.size.height = keyboardTop - chatInputBar.bounds.size.height - windowOffset;
-	transcriptView.bounds = bounds;
-
-	center = transcriptView.center;
-	center.y = (bounds.size.height / 2.);
-	transcriptView.center = center;
-
-	if (!previouslyShowingKeyboard)
-		[UIView commitAnimations];
+	[UIView commitAnimations];
 
 	[transcriptView scrollToBottomAnimated:YES];
+
+	_showingKeyboard = YES;
 }
 
 - (void) keyboardWillHide:(NSNotification *) notification {
+	if (!_showingKeyboard)
+		return;
+
 	CGPoint beginCenterPoint = CGPointZero;
 	CGPoint endCenterPoint = CGPointZero;
 
 	[[[notification userInfo] objectForKey:UIKeyboardCenterBeginUserInfoKey] getValue:&beginCenterPoint];
 	[[[notification userInfo] objectForKey:UIKeyboardCenterEndUserInfoKey] getValue:&endCenterPoint];
 
+	// Keyboard is sliding horizontal, so don't change.
 	if (beginCenterPoint.y == endCenterPoint.y)
 		return;
 
+	CGRect keyboardBounds = CGRectZero;
+	[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
+
 	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationDuration:0.3];
 
-	[UIView setAnimationDuration:0.25];
+	CGFloat shift = keyboardBounds.size.height - 50; // Height of the tab bar
 
-	CGRect bounds = chatInputBar.bounds;
-	CGPoint center = chatInputBar.center;
-	CGFloat viewHeight = self.view.bounds.size.height;
-	center.y = viewHeight - (bounds.size.height / 2.);
-	chatInputBar.center = center;
+	// Slide input bar
+	CGRect frame = chatInputBar.frame;
+	frame.origin.y += shift;
+	chatInputBar.frame = frame;
 
-	bounds = transcriptView.bounds;
-	bounds.size.height = viewHeight - chatInputBar.bounds.size.height;
-	transcriptView.bounds = bounds;
-
-	center = transcriptView.center;
-	center.y = (bounds.size.height / 2.);
-	transcriptView.center = center;
+	// Change height of transcript view
+	frame = transcriptView.frame;
+	frame.size.height += shift;
+	transcriptView.frame = frame;
 
 	[UIView commitAnimations];
-}
+
+	[transcriptView scrollToBottomAnimated:YES];
+
+	_showingKeyboard = NO;
+}     
 
 #pragma mark -
 
