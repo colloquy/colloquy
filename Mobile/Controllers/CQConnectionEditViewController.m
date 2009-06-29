@@ -3,7 +3,7 @@
 #import "CQBouncerSettings.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionAdvancedEditController.h"
-#import "CQConnectionBouncerEditController.h"
+#import "CQConnectionPushEditController.h"
 #import "CQConnectionsController.h"
 #import "CQKeychain.h"
 #import "CQPreferencesDeleteCell.h"
@@ -13,12 +13,14 @@
 
 #import <ChatCore/MVChatConnection.h>
 
-#define ServerTableSection 0
-#define BouncerTableSection 1
-#define IdentityTableSection 2
-#define AutomaticTableSection 3
-#define AdvancedTableSection 4
-#define DeleteTableSection 5
+static unsigned short ServerTableSection = 0;
+static unsigned short PushTableSection = 1;
+static unsigned short IdentityTableSection = 2;
+static unsigned short AutomaticTableSection = 3;
+static unsigned short AdvancedTableSection = 4;
+static unsigned short DeleteTableSection = 5;
+
+static BOOL pushAvailable = NO;
 
 static inline BOOL isDefaultValue(NSString *string) {
 	return [string isEqualToString:@"<<default>>"];
@@ -39,6 +41,18 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
+
+#if !TARGET_IPHONE_SIMULATOR
+	pushAvailable = [[UIApplication sharedApplication] respondsToSelector:@selector(enabledRemoteNotificationTypes)];
+#endif
+
+	if (!pushAvailable) {
+		IdentityTableSection = 1;
+		AutomaticTableSection = 2;
+		AdvancedTableSection = 3;
+		DeleteTableSection = 4;
+	}
+
 	return self;
 }
 
@@ -52,7 +66,8 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL) animated {
-	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:BouncerTableSection] withAnimation:UITableViewRowAnimationNone];
+	if (pushAvailable)
+		[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:PushTableSection] withAnimation:UITableViewRowAnimationNone];
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:AutomaticTableSection] withAnimation:UITableViewRowAnimationNone];
 
 	[super viewWillAppear:animated];
@@ -148,19 +163,23 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
-	switch(section) {
-		case ServerTableSection: return 2;
-		case BouncerTableSection: return 1;
-		case IdentityTableSection: return 2;
-		case AutomaticTableSection: return 2;
-		case AdvancedTableSection: return 1;
-		case DeleteTableSection: return 1;
-		default: return 0;
-	}
+	if (section == ServerTableSection)
+		return 2;
+	if (pushAvailable && section == PushTableSection)
+		return 1;
+	if (section == IdentityTableSection)
+		return 2;
+	if (section == AutomaticTableSection)
+		return 2;
+	if (section == AdvancedTableSection)
+		return 1;
+	if (section == DeleteTableSection)
+		return 1;
+	return 0;
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (indexPath.section == BouncerTableSection && indexPath.row == 0)
+	if (pushAvailable && indexPath.section == PushTableSection && indexPath.row == 0)
 		return indexPath;
 	if (indexPath.section == AutomaticTableSection && indexPath.row == 1)
 		return indexPath;
@@ -170,8 +189,8 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (indexPath.section == BouncerTableSection && indexPath.row == 0) {
-		CQConnectionBouncerEditController *bouncerEditViewController = [[CQConnectionBouncerEditController alloc] init];
+	if (pushAvailable && indexPath.section == PushTableSection && indexPath.row == 0) {
+		CQConnectionPushEditController *bouncerEditViewController = [[CQConnectionPushEditController alloc] init];
 
 		bouncerEditViewController.navigationItem.prompt = self.navigationItem.prompt;
 		bouncerEditViewController.connection = _connection;
@@ -260,25 +279,15 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 		}
 
 		return cell;
-	} else if (indexPath.section == BouncerTableSection && indexPath.row == 0) {
+	} else if (pushAvailable && indexPath.section == PushTableSection && indexPath.row == 0) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
-		BOOL pushAvailable = [[UIApplication sharedApplication] respondsToSelector:@selector(enabledRemoteNotificationTypes)];
-		if (pushAvailable)
-			cell.label = NSLocalizedString(@"Push & Bouncer", @"Push and Bouncer connection setting label");
-		else cell.label = NSLocalizedString(@"Colloquy Bouncer", @"Colloquy Bouncer connection setting label");
-
+		cell.label = NSLocalizedString(@"Push Notifications", @"Push Notifications connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		CQBouncerSettings *settings = _connection.bouncerSettings;
-		if ((pushAvailable && _connection.pushNotifications) && (_connection.bouncerType == MVChatConnectionColloquyBouncer && settings))
+		if (_connection.pushNotifications)
 			cell.text = NSLocalizedString(@"On", @"On label");
-		else if (pushAvailable && _connection.pushNotifications)
-			cell.text = NSLocalizedString(@"Push Only", @"Push Only label");
-		else if (!pushAvailable && _connection.bouncerType == MVChatConnectionColloquyBouncer && settings)
-			cell.text = settings.displayName;
-		else if (_connection.bouncerType == MVChatConnectionColloquyBouncer && settings)
-			cell.text = NSLocalizedString(@"Bouncer Only", @"Bouncer Only label");
 		else cell.text = NSLocalizedString(@"Off", @"Off label");
 
 		return cell;

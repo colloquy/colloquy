@@ -73,8 +73,7 @@
 		1C6100D30ED31C8B0016F968 /* CQPreferencesSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6100D20ED31C8B0016F968 /* CQPreferencesSwitchCell.m */; };
 		1C61FEA10ED24BA40016F968 /* deleteButtonNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C61FE9F0ED24BA40016F968 /* deleteButtonNormal.png */; };
 		1C61FEA20ED24BA40016F968 /* deleteButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C61FEA00ED24BA40016F968 /* deleteButtonPressed.png */; };
-		1C633C9C0FABD06C00BB5866 /* CQConnectionBouncerEditController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C633C9B0FABD06C00BB5866 /* CQConnectionBouncerEditController.m */; };
-		1C633DD00FAD425F00BB5866 /* CQConnectionBouncerDetailsEditController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C633DCF0FAD425F00BB5866 /* CQConnectionBouncerDetailsEditController.m */; };
+		1C633C9C0FABD06C00BB5866 /* CQConnectionPushEditController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C633C9B0FABD06C00BB5866 /* CQConnectionPushEditController.m */; };
 		1C633FB80FAE528100BB5866 /* tableCellCheck.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C633FB70FAE528100BB5866 /* tableCellCheck.png */; };
 		1C633FC20FAE56A600BB5866 /* tableCellCheckSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C633FC10FAE56A600BB5866 /* tableCellCheckSelected.png */; };
 		1C6341640FAF30B600BB5866 /* CQBouncerSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6341630FAF30B600BB5866 /* CQBouncerSettings.m */; };
@@ -253,10 +252,8 @@
 		1C6100D20ED31C8B0016F968 /* CQPreferencesSwitchCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesSwitchCell.m; sourceTree = "<group>"; };
 		1C61FE9F0ED24BA40016F968 /* deleteButtonNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deleteButtonNormal.png; sourceTree = "<group>"; };
 		1C61FEA00ED24BA40016F968 /* deleteButtonPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = deleteButtonPressed.png; sourceTree = "<group>"; };
-		1C633C9A0FABD06C00BB5866 /* CQConnectionBouncerEditController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionBouncerEditController.h; sourceTree = "<group>"; };
-		1C633C9B0FABD06C00BB5866 /* CQConnectionBouncerEditController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionBouncerEditController.m; sourceTree = "<group>"; };
-		1C633DCE0FAD425F00BB5866 /* CQConnectionBouncerDetailsEditController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionBouncerDetailsEditController.h; sourceTree = "<group>"; };
-		1C633DCF0FAD425F00BB5866 /* CQConnectionBouncerDetailsEditController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionBouncerDetailsEditController.m; sourceTree = "<group>"; };
+		1C633C9A0FABD06C00BB5866 /* CQConnectionPushEditController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionPushEditController.h; sourceTree = "<group>"; };
+		1C633C9B0FABD06C00BB5866 /* CQConnectionPushEditController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionPushEditController.m; sourceTree = "<group>"; };
 		1C633FB70FAE528100BB5866 /* tableCellCheck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tableCellCheck.png; sourceTree = "<group>"; };
 		1C633FC10FAE56A600BB5866 /* tableCellCheckSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tableCellCheckSelected.png; sourceTree = "<group>"; };
 		1C6341620FAF30B600BB5866 /* CQBouncerSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQBouncerSettings.h; sourceTree = "<group>"; };
@@ -475,10 +472,8 @@
 				1C9B15A30D878B6A003794A5 /* CQConnectionEditViewController.h */,
 				1C6E3D210ED1CEB6001822BD /* CQConnectionAdvancedEditController.m */,
 				1C6E3D200ED1CEB6001822BD /* CQConnectionAdvancedEditController.h */,
-				1C633C9B0FABD06C00BB5866 /* CQConnectionBouncerEditController.m */,
-				1C633C9A0FABD06C00BB5866 /* CQConnectionBouncerEditController.h */,
-				1C633DCF0FAD425F00BB5866 /* CQConnectionBouncerDetailsEditController.m */,
-				1C633DCE0FAD425F00BB5866 /* CQConnectionBouncerDetailsEditController.h */,
+				1C633C9B0FABD06C00BB5866 /* CQConnectionPushEditController.m */,
+				1C633C9A0FABD06C00BB5866 /* CQConnectionPushEditController.h */,
 				1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */,
 				1CE3FB100D8A3DC100FB035F /* CQConnectionCreationViewController.h */,
 				1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */,
@@ -964,8 +959,7 @@
 				9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */,
 				1CE7FF790FA3D003001C7B17 /* RegexKitLite.m in Sources */,
 				89E87C090FA0450800B49230 /* CQSoundController.m in Sources */,
-				1C633C9C0FABD06C00BB5866 /* CQConnectionBouncerEditController.m in Sources */,
-				1C633DD00FAD425F00BB5866 /* CQConnectionBouncerDetailsEditController.m in Sources */,
+				1C633C9C0FABD06C00BB5866 /* CQConnectionPushEditController.m in Sources */,
 				1C6341640FAF30B600BB5866 /* CQBouncerSettings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

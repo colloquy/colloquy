@@ -1,10 +1,8 @@
 @class MVChatConnection;
 
-@interface CQConnectionBouncerEditController : UITableViewController {
+@interface CQConnectionPushEditController : UITableViewController {
 	@protected
 	MVChatConnection *_connection;
-	NSUInteger _lastSelectedBouncerIndex;
-	BOOL _bouncerEnabled;
 }
 @property (nonatomic, retain) MVChatConnection *connection;
 @end
