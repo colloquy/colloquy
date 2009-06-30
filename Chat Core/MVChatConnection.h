@@ -113,6 +113,8 @@ extern NSString *MVChatConnectionErrorDomain;
 	MVChatMessageFormat _outgoingChatFormat;
 	NSStringEncoding _encoding;
 
+	NSString *_uniqueIdentifier;
+
 	NSString *_npassword;
 	NSMutableDictionary *_knownUsers;
 	NSMutableDictionary *_knownRooms;
@@ -169,6 +171,8 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 @property(readonly) MVChatConnectionType type;
+
+@property(copy) NSString *uniqueIdentifier;
 
 @property(readonly) NSSet *supportedFeatures;
 @property(readonly) const NSStringEncoding *supportedStringEncodings;
@@ -242,6 +246,11 @@ extern NSString *MVChatConnectionErrorDomain;
 #else
 
 - (MVChatConnectionType) type;
+
+#pragma mark -
+
+- (NSString *) uniqueIdentifier;
+- (void) setUniqueIdentifier:(NSString *) uniqueIdentifier;
 
 #pragma mark -
 
@@ -508,9 +517,9 @@ extern NSString *MVChatConnectionErrorDomain;
 #if ENABLE(SCRIPTING)
 @interface MVChatConnection (MVChatConnectionScripting)
 #if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
-@property(readonly) NSNumber *uniqueIdentifier;
+@property(readonly) NSNumber *scriptUniqueIdentifier;
 #else
-- (NSNumber *) uniqueIdentifier;
+- (NSNumber *) scriptUniqueIdentifier;
 #endif
 @end
 #endif

@@ -86,7 +86,7 @@
 					<key>Type</key>
 					<string>NSNumber&lt;ChatCore.ConnectionStatus&gt;</string>
 				</dict>
-				<key>uniqueIdentifier</key>
+				<key>scriptUniqueIdentifier</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>ID  </string>

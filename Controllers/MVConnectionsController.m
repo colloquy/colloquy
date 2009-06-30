@@ -1658,6 +1658,7 @@ static NSMenu *favoritesMenu = nil;
 			[data setObject:[NSNumber numberWithBool:[connection isSecure]] forKey:@"secure"];
 			[data setObject:[NSNumber numberWithLong:[connection proxyType]] forKey:@"proxy"];
 			[data setObject:[NSNumber numberWithLong:[connection encoding]] forKey:@"encoding"];
+			[data setObject:[connection uniqueIdentifier] forKey:@"uniqueIdentifier"];
 			[data setObject:[connection server] forKey:@"server"];
 			[data setObject:[NSNumber numberWithUnsignedShort:[connection serverPort]] forKey:@"port"];
 			if( [connection preferredNickname] )
@@ -1736,6 +1737,8 @@ static NSMenu *favoritesMenu = nil;
 		}
 
 		if( ! connection ) continue;
+
+		if ([info objectForKey:@"uniqueIdentifier"]) [connection setUniqueIdentifier:[info objectForKey:@"uniqueIdentifier"]];
 
 		[connection setPersistentInformation:[info objectForKey:@"persistentInformation"]];
 
@@ -2101,7 +2104,7 @@ static NSMenu *favoritesMenu = nil;
 - (NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
 	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
-	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatConnections" uniqueID:[self uniqueIdentifier]] autorelease];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatConnections" uniqueID:[self scriptUniqueIdentifier]] autorelease];
 }
 @end
 
@@ -2127,7 +2130,7 @@ static NSMenu *favoritesMenu = nil;
 	MVChatConnection *connection = nil;
 
 	while( ( connection = [enumerator nextObject] ) ) {
-		if( [[connection uniqueIdentifier] isEqual:identifier] )
+		if( [[connection scriptUniqueIdentifier] isEqual:identifier] )
 			return connection;
 	}
 

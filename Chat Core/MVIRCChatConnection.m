@@ -166,6 +166,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_pendingWhoisUsers release];
 	[_roomPrefixes release];
 	[_serverInformation release];
+	[_uniqueIdentifier release];
 
 	if( [_connectionThread respondsToSelector:@selector( cancel )] )
 		[_connectionThread cancel];
@@ -188,6 +189,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	_pendingWhoisUsers = nil;
 	_roomPrefixes = nil;
 	_serverInformation = nil;
+	_uniqueIdentifier = nil;
 
 	[super dealloc];
 }
@@ -820,20 +822,26 @@ static const NSStringEncoding supportedEncodings[] = {
 	} else if( _bouncer == MVChatConnectionColloquyBouncer ) {
 		// PASS <account> [ '~' <device-identifier> ] ':' <account-pass> [ ':' <server-pass> ]
 		NSMutableString *mutablePassword = [NSMutableString string];
+
 		[mutablePassword appendString:( [_bouncerUsername length] ? _bouncerUsername : @"anonymous" )];
 		if( [_bouncerDeviceIdentifier length] ) [mutablePassword appendFormat:@"~%@", _bouncerDeviceIdentifier];
 		[mutablePassword appendFormat:@":%@", ( [_bouncerPassword length] ? _bouncerPassword : @"" )];
 		if( [password length] ) [mutablePassword appendFormat:@":%@", password];
 
-		// USER [ ('irc' | 'ircs') '://' ] <username> '@' <server> [ ':' <server-port> ] [ '~' <connection-identifier> ]
-		NSMutableString *mutableUsername = [NSMutableString string];
-		if( _secure ) [mutableUsername appendString:@"ircs://"];
-		[mutableUsername appendFormat:@"%@@%@", username, _server];
-		if( _serverPort && _serverPort != 6667 ) [mutableUsername appendFormat:@":%u", _serverPort];
-		if( [_bouncerConnectionIdentifier intValue] ) [mutableUsername appendFormat:@"~%u", [_bouncerConnectionIdentifier intValue]];
-
 		password = mutablePassword;
-		username = mutableUsername;
+
+		// USER <connection-identifier> | ([ ('irc' | 'ircs') '://' ] <username> '@' <server> [ ':' <server-port> ])
+		if( [_bouncerConnectionIdentifier length] ) {
+			username = _bouncerConnectionIdentifier;
+		} else {
+			NSMutableString *mutableUsername = [NSMutableString string];
+
+			if( _secure ) [mutableUsername appendString:@"ircs://"];
+			[mutableUsername appendFormat:@"%@@%@", username, _server];
+			if( _serverPort && _serverPort != 6667 ) [mutableUsername appendFormat:@":%u", _serverPort];
+
+			username = mutableUsername;
+		}
 	}
 
 	if( [password length] ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", password];

@@ -78,7 +78,7 @@
 					<key>Name</key>
 					<string>status</string>
 				</dict>
-				<key>uniqueIdentifier</key>
+				<key>scriptUniqueIdentifier</key>
 				<dict>
 					<key>Description</key>
 					<string>The unique identifier of the connection.</string>

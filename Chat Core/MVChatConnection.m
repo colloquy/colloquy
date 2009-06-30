@@ -187,6 +187,8 @@ static const NSStringEncoding supportedEncodings[] = {
 		self = nil;
 	}
 
+	[self setUniqueIdentifier:[NSString locallyUniqueString]];
+
 	return self;
 }
 
@@ -296,6 +298,18 @@ static const NSStringEncoding supportedEncodings[] = {
 - (NSUInteger) hash {
 	if( ! _hash ) _hash = ( [self type] ^ [[self server] hash] ^ [self serverPort] ^ [[self nickname] hash] );
 	return _hash;
+}
+
+#pragma mark -
+
+- (NSString *) uniqueIdentifier {
+	return _uniqueIdentifier;
+}
+
+- (void) setUniqueIdentifier:(NSString *) uniqueIdentifier {
+	NSParameterAssert( uniqueIdentifier != nil );
+	NSParameterAssert( [uniqueIdentifier length] > 0 );
+	MVSafeCopyAssign(&_uniqueIdentifier, uniqueIdentifier);
 }
 
 #pragma mark -
@@ -1309,7 +1323,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #if ENABLE(SCRIPTING)
 @implementation MVChatConnection (MVChatConnectionScripting)
-- (NSNumber *) uniqueIdentifier {
+- (NSNumber *) scriptUniqueIdentifier {
 	return [NSNumber numberWithUnsignedLong:(intptr_t)self];
 }
 
@@ -1318,7 +1332,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (id) valueForUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The connection id %@ doesn't have the \"%@\" property.", [self uniqueIdentifier], key]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The connection id %@ doesn't have the \"%@\" property.", [self scriptUniqueIdentifier], key]];
 		return nil;
 	}
 
@@ -1328,7 +1342,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (void) setValue:(id) value forUndefinedKey:(NSString *) key {
 	if( [NSScriptCommand currentCommand] ) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of connection id %@ is read only.", key, [self uniqueIdentifier]]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The \"%@\" property of connection id %@ is read only.", key, [self scriptUniqueIdentifier]]];
 		return;
 	}
 
