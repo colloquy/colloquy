@@ -941,7 +941,7 @@
 		if (deviceName.length)
 			[self sendRawMessageWithFormat:@"PUSH device-name :%@", deviceName];
 
-		[self sendRawMessageWithFormat:@"PUSH display-name :%@", self.displayName];
+		[self sendRawMessageWithFormat:@"PUSH connection-name :%@", self.displayName];
 
 		NSString *highlightWordsString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQHighlightWords"];
 		[self sendRawMessageWithFormat:@"PUSH highlight-words :%@", highlightWordsString];
