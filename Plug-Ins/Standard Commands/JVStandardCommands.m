@@ -135,7 +135,7 @@
 			MVChatUser *user = [[[room target] memberUsersWithNickname:member] anyObject];
 			if( user ) [[room target] kickOutMemberUser:user forReason:reason];
 			return YES;
-		} else if( ! [command caseInsensitiveCompare:@"kickban"] || ! [command caseInsensitiveCompare:@"bankick"] ) {
+		} else if( ! [command caseInsensitiveCompare:@"kickban"] || ! [command caseInsensitiveCompare:@"bankick"] || ! [command caseInsensitiveCompare:@"bk"] || ! [command caseInsensitiveCompare:@"kb"] ) {
 			NSString *member = nil;
 			NSScanner *scanner = [NSScanner scannerWithString:[arguments string]];
 
