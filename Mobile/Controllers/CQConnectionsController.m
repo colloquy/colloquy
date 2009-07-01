@@ -930,10 +930,12 @@
 #pragma mark -
 
 - (void) sendPushNotificationCommands {
+	NSString *deviceToken = [CQColloquyApplication sharedApplication].deviceToken;
+	if (!deviceToken.length)
+		return;
+
 	if (self.pushNotifications) {
-		NSString *deviceToken = [CQColloquyApplication sharedApplication].deviceToken;
-		if (deviceToken.length)
-			[self sendRawMessageWithFormat:@"PUSH device-token :%@", deviceToken];
+		[self sendRawMessageWithFormat:@"PUSH add-device :%@", deviceToken];
 
 		NSString *deviceName = [UIDevice currentDevice].name;
 		if (deviceName.length)
@@ -954,10 +956,9 @@
 			[self sendRawMessageWithFormat:@"PUSH message-sound :%@.aiff", sound];
 		else [self sendRawMessageWithFormat:@"PUSH message-sound none"];
 
-		[self sendRawMessage:@"PUSH done"];
+		[self sendRawMessage:@"PUSH end-device"];
 	} else {
-		[self sendRawMessage:@"PUSH device-token clear"];
-		[self sendRawMessage:@"PUSH done"];
+		[self sendRawMessageWithFormat:@"PUSH remove-device :%@", deviceToken];
 	}
 }
 @end
