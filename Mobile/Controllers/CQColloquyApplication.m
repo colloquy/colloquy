@@ -4,6 +4,7 @@
 #import "CQConnectionsController.h"
 #import "CQChatController.h"
 #import "NSStringAdditions.h"
+#import "RegexKitLite.h"
 
 #if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
 @interface UITabBarController (UITabBarControllerPrivate)
@@ -46,6 +47,25 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 @synthesize launchDate = _launchDate;
 @synthesize deviceToken = _deviceToken;
+
+- (NSArray *) highlightWords {
+	static NSMutableArray *highlightWords;
+	if (!highlightWords) {
+		highlightWords = [[NSMutableArray alloc] init];
+
+		NSString *highlightWordsString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQHighlightWords"];
+		if (highlightWordsString.length) {
+			[highlightWords addObjectsFromArray:[highlightWordsString componentsMatchedByRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" capture:1]];
+
+			highlightWordsString = [highlightWordsString stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)[/\"'].*?[/\"'](?=\\s|$)" withString:@""];
+
+			[highlightWords addObjectsFromArray:[highlightWordsString componentsSeparatedByString:@" "]];
+			[highlightWords removeObject:@""];
+		}
+	}
+
+	return highlightWords;
+}
 
 - (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
 	NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]];

@@ -22,4 +22,5 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 @property (nonatomic, readonly) UITabBarController *tabBarController;
 @property (nonatomic, readonly) UIWindow *mainWindow;
 @property (nonatomic, readonly) NSString *deviceToken;
+@property (nonatomic, readonly) NSArray *highlightWords;
 @end

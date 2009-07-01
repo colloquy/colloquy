@@ -943,8 +943,9 @@
 
 		[self sendRawMessageWithFormat:@"PUSH connection-name :%@", self.displayName];
 
-		NSString *highlightWordsString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQHighlightWords"];
-		[self sendRawMessageWithFormat:@"PUSH highlight-words :%@", highlightWordsString];
+		NSArray *highlightWords = [CQColloquyApplication sharedApplication].highlightWords;
+		for (NSString *highlightWord in highlightWords)
+			[self sendRawMessageWithFormat:@"PUSH highlight-word :%@", highlightWord];
 
 		NSString *sound = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
 		if (sound.length && ![sound isEqualToString:@"None"])

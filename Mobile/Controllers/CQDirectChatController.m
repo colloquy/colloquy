@@ -1159,22 +1159,7 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 }
 
 - (NSDictionary *) _processMessage:(NSDictionary *) message highlightedMessage:(BOOL *) highlighted {
-	static NSMutableArray *mainHighlightWords;
-	if (!mainHighlightWords) {
-		mainHighlightWords = [[NSMutableArray alloc] init];
-
-		NSString *highlightWordsString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQHighlightWords"];
-		if (highlightWordsString.length) {
-			[mainHighlightWords addObjectsFromArray:[highlightWordsString componentsMatchedByRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" capture:1]];
-
-			highlightWordsString = [highlightWordsString stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)[/\"'].*?[/\"'](?=\\s|$)" withString:@""];
-
-			[mainHighlightWords addObjectsFromArray:[highlightWordsString componentsSeparatedByString:@" "]];
-			[mainHighlightWords removeObject:@""];
-		}
-	}
-
-	NSMutableArray *highlightWords = [mainHighlightWords mutableCopy];
+	NSMutableArray *highlightWords = [[CQColloquyApplication sharedApplication].highlightWords mutableCopy];
 	[highlightWords insertObject:self.connection.nickname atIndex:0];
 
 	*highlighted = NO;
