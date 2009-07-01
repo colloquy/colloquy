@@ -935,6 +935,10 @@
 		if (deviceToken.length)
 			[self sendRawMessageWithFormat:@"PUSH device-token :%@", deviceToken];
 
+		NSString *deviceName = [UIDevice currentDevice].name;
+		if (deviceName.length)
+			[self sendRawMessageWithFormat:@"PUSH device-name :%@", deviceName];
+
 		[self sendRawMessageWithFormat:@"PUSH display-name :%@", self.displayName];
 
 		NSString *highlightWordsString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQHighlightWords"];
