@@ -953,6 +953,11 @@
 		if (sound.length && ![sound isEqualToString:@"None"])
 			[self sendRawMessageWithFormat:@"PUSH message-sound :%@.aiff", sound];
 		else [self sendRawMessageWithFormat:@"PUSH message-sound none"];
-	} else [self sendRawMessage:@"PUSH device-token clear"];
+
+		[self sendRawMessage:@"PUSH done"];
+	} else {
+		[self sendRawMessage:@"PUSH device-token clear"];
+		[self sendRawMessage:@"PUSH done"];
+	}
 }
 @end
