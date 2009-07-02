@@ -1,6 +1,7 @@
 #import "CQConnectionsViewController.h"
 
 #import "CQColloquyApplication.h"
+#import "CQBouncerSettings.h"
 #import "CQConnectionTableCell.h"
 #import "CQConnectionsController.h"
 
@@ -43,12 +44,14 @@
 - (void) _updateConnectTimes {
 	NSArray *visibleCells = [self.tableView visibleCells];
 	for (CQConnectionTableCell *cell in visibleCells)
-		[cell updateConnectTime];
+		if ([cell isKindOfClass:[CQConnectionTableCell class]])
+			[cell updateConnectTime];
 }
 
 - (void) _refreshConnection:(MVChatConnection *) connection {
-	NSUInteger index = [[CQConnectionsController defaultController].connections indexOfObjectIdenticalTo:connection];
-	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+	NSIndexPath *indexPath = [self indexPathForConnection:connection];
+	if (!indexPath)
+		return;
 	CQConnectionTableCell *cell = (CQConnectionTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
 	[cell takeValuesFromConnection:connection];
 }
@@ -111,9 +114,50 @@
 
 #pragma mark -
 
+- (void) addConnection:(MVChatConnection *) connection forBouncerIdentifier:(NSString *) identifier {
+	[self.tableView reloadData];
+}
+
+- (void) removeConnection:(MVChatConnection *) connection forBouncerIdentifier:(NSString *) identifier {
+	[self.tableView reloadData];
+}
+
+#pragma mark -
+
+- (NSIndexPath *) indexPathForConnection:(MVChatConnection *) connection {
+	NSUInteger index = [[CQConnectionsController defaultController].connections indexOfObjectIdenticalTo:connection];
+	if (index != NSNotFound)
+		return [NSIndexPath indexPathForRow:index inSection:0];
+
+	if (connection.bouncerIdentifier.length) {
+		CQBouncerSettings *settings = [[CQConnectionsController defaultController] bouncerSettingsForIdentifier:connection.bouncerIdentifier];
+		NSUInteger bouncerSection = [[CQConnectionsController defaultController].bouncers indexOfObjectIdenticalTo:settings];
+		if (bouncerSection != NSNotFound) {
+			NSArray *connections = [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:connection.bouncerIdentifier];
+			index = [connections indexOfObjectIdenticalTo:connection];
+			if (index != NSNotFound)
+				return [NSIndexPath indexPathForRow:index inSection:(bouncerSection + 1)];
+		}
+	}
+
+	return nil;
+}
+
+- (MVChatConnection *) connectionAtIndexPath:(NSIndexPath *) indexPath {
+	if (indexPath.section == 0)
+		return [[CQConnectionsController defaultController].connections objectAtIndex:indexPath.row];
+
+	NSArray *bouncers = [CQConnectionsController defaultController].bouncers;
+	CQBouncerSettings *settings = [bouncers objectAtIndex:(indexPath.section - 1)];
+	NSArray *connections = [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:settings.identifier];
+	return [connections objectAtIndex:indexPath.row];
+}
+
+#pragma mark -
+
 - (void) confirmConnect {
 	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
-	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:selectedIndexPath.row];
+	MVChatConnection *connection = [self connectionAtIndexPath:selectedIndexPath];
 
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
@@ -151,7 +195,7 @@
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
-	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:selectedIndexPath.row];
+	MVChatConnection *connection = [self connectionAtIndexPath:selectedIndexPath];
 
 	if (actionSheet.tag == 1) {
 		if (buttonIndex == 1 && connection.waitingToReconnect)
@@ -168,16 +212,38 @@
 
 #pragma mark -
 
+- (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
+	return [CQConnectionsController defaultController].bouncers.count + 1;
+}
+
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
-	return [CQConnectionsController defaultController].connections.count;
+	if (section == 0)
+		return [CQConnectionsController defaultController].connections.count;
+
+	NSArray *bouncers = [CQConnectionsController defaultController].bouncers;
+	CQBouncerSettings *settings = [bouncers objectAtIndex:(section - 1)];
+	return [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:settings.identifier].count;
+}
+
+- (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
+	if (section == 0 && [CQConnectionsController defaultController].connections.count && [CQConnectionsController defaultController].bouncers.count)
+		return NSLocalizedString(@"Direct Connections", @"Direct Connections section title");
+	if (section == 0)
+		return nil;
+
+	NSArray *bouncers = [CQConnectionsController defaultController].bouncers;
+	CQBouncerSettings *settings = [bouncers objectAtIndex:(section - 1)];
+	return settings.displayName;
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
-	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:indexPath.row];
+	MVChatConnection *connection = [self connectionAtIndexPath:indexPath];
 
 	CQConnectionTableCell *cell = [CQConnectionTableCell reusableTableViewCellInTableView:tableView];
 
-	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+	if (indexPath.section == 0)
+		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+	else cell.accessoryType = UITableViewCellAccessoryNone;
 
 	[cell takeValuesFromConnection:connection];
 
@@ -185,7 +251,7 @@
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:indexPath.row];
+	MVChatConnection *connection = [self connectionAtIndexPath:indexPath];
 	if (self.editing)
 		[[CQConnectionsController defaultController] editConnection:connection];
 	else if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus)
@@ -199,14 +265,19 @@
 
 - (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
 	CQConnectionsController *connectionsController = [CQConnectionsController defaultController];
-	[connectionsController editConnection:[connectionsController.connections objectAtIndex:indexPath.row]];
+	[connectionsController editConnection:[self connectionAtIndexPath:indexPath]];
 }
 
 - (void) tableView:(UITableView *) tableView commitEditingStyle:(UITableViewCellEditingStyle) editingStyle forRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (editingStyle != UITableViewCellEditingStyleDelete)
 		return;
+
 	[[CQConnectionsController defaultController] removeConnectionAtIndex:indexPath.row];
 	[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
+}
+
+- (BOOL) tableView:(UITableView *) tableView canMoveRowAtIndexPath:(NSIndexPath *) indexPath {
+	return (indexPath.section == 0);
 }
 
 - (void) tableView:(UITableView *) tableView moveRowAtIndexPath:(NSIndexPath *) fromIndexPath toIndexPath:(NSIndexPath *) toIndexPath {

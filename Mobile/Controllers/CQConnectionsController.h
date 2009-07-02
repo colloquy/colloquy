@@ -1,5 +1,7 @@
 #import <ChatCore/MVChatConnection.h>
 
+#import "CQBouncerConnection.h"
+
 @class CQBouncerSettings;
 @class CQChatRoomController;
 @class CQConnectionEditViewController;
@@ -10,10 +12,12 @@
 @class MVChatUser;
 @class MVDirectChatConnection;
 
-@interface CQConnectionsController : UINavigationController <UINavigationControllerDelegate> {
+@interface CQConnectionsController : UINavigationController <UINavigationControllerDelegate, CQBouncerConnectionDelegate> {
 	@protected
 	NSMutableArray *_connections;
 	NSMutableArray *_bouncers;
+	NSMutableSet *_bouncerConnections;
+	NSMutableDictionary *_bouncerChatConnections;
 	BOOL _wasEditingConnection;
 	BOOL _loadedConnections;
 	NSUInteger _connectingCount;
@@ -52,6 +56,7 @@
 - (void) replaceConnectionAtIndex:(NSUInteger) index withConnection:(MVChatConnection *) connection;
 
 - (CQBouncerSettings *) bouncerSettingsForIdentifier:(NSString *) identifier;
+- (NSArray *) bouncerChatConnectionsForIdentifier:(NSString *) identifier;
 
 - (void) addBouncerSettings:(CQBouncerSettings *) settings;
 - (void) removeBouncerSettings:(CQBouncerSettings *) settings;

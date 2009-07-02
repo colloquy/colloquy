@@ -7,4 +7,10 @@
 }
 - (void) addConnection:(MVChatConnection *) connection;
 - (void) removeConnection:(MVChatConnection *) connection;
+
+- (void) addConnection:(MVChatConnection *) connection forBouncerIdentifier:(NSString *) identifier;
+- (void) removeConnection:(MVChatConnection *) connection forBouncerIdentifier:(NSString *) identifier;
+
+- (NSIndexPath *) indexPathForConnection:(MVChatConnection *) connection;
+- (MVChatConnection *) connectionAtIndexPath:(NSIndexPath *) indexPath;
 @end

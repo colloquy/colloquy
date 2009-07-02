@@ -1,6 +1,7 @@
 #import "CQConnectionsController.h"
 
 #import "CQBouncerSettings.h"
+#import "CQBouncerConnection.h"
 #import "CQChatController.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
@@ -53,8 +54,10 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
 #endif
 
-	_bouncers = [[NSMutableArray alloc] init];
-	_connections = [[NSMutableArray alloc] init];
+	_bouncers = [[NSMutableArray alloc] initWithCapacity:2];
+	_connections = [[NSMutableArray alloc] initWithCapacity:5];
+	_bouncerConnections = [[NSMutableSet alloc] initWithCapacity:2];
+	_bouncerChatConnections = [[NSMutableDictionary alloc] initWithCapacity:2];
 
 	[self _loadConnectionList];
 
@@ -65,6 +68,8 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[_connections release];
+	[_bouncerConnections release];
+	[_bouncerChatConnections release];
 	[_connectionsViewController release];
 
 	[super dealloc];
@@ -193,6 +198,54 @@
 		[self saveConnections];
 		_wasEditingConnection = NO;
 	}
+}
+
+#pragma mark -
+
+- (void) bouncerConnection:(CQBouncerConnection *) connection didRecieveConnectionInfo:(NSDictionary *) info {
+	NSMutableArray *connections = [_bouncerChatConnections objectForKey:connection.settings.identifier];
+	if (!connections) {
+		connections = [[NSMutableArray alloc] initWithCapacity:5];
+		[_bouncerChatConnections setObject:connections forKey:connection.settings.identifier];
+		[connections release];
+	}
+
+	NSString *connectionIdentifier = [info objectForKey:@"connectionIdentifier"];
+	if (!connectionIdentifier.length)
+		return;
+
+	MVChatConnection *chatConnection = nil;
+	for (MVChatConnection *currentChatConnection in connections) {
+		if ([currentChatConnection.bouncerConnectionIdentifier isEqualToString:connectionIdentifier]) {
+			chatConnection = currentChatConnection;
+			break;
+		}
+	}
+
+	if (!chatConnection) {
+		chatConnection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
+		chatConnection.bouncerConnectionIdentifier = connectionIdentifier;
+
+		[connections addObject:chatConnection];
+
+		[_connectionsViewController addConnection:chatConnection forBouncerIdentifier:connection.settings.identifier];
+	}
+
+	chatConnection.bouncerSettings = connection.settings;
+
+	chatConnection.server = [info objectForKey:@"serverAddress"];
+	chatConnection.serverPort = [[info objectForKey:@"serverPort"] unsignedShortValue];
+	chatConnection.preferredNickname = [info objectForKey:@"nickname"];
+	chatConnection.nicknamePassword = [info objectForKey:@"nicknamePassword"];
+	chatConnection.username = [info objectForKey:@"username"];
+	chatConnection.password = [info objectForKey:@"password"];
+	chatConnection.secure = [[info objectForKey:@"secure"] boolValue];
+	chatConnection.alternateNicknames = [info objectForKey:@"alternateNicknames"];
+	chatConnection.encoding = [[info objectForKey:@"encoding"] unsignedIntegerValue];
+}
+
+- (void) bouncerConnectionDidFinishConnectionList:(CQBouncerConnection *) connection {
+	
 }
 
 #pragma mark -
@@ -404,6 +457,9 @@
 	for (NSDictionary *info in bouncers) {
 		CQBouncerSettings *settings = [[CQBouncerSettings alloc] initWithDictionaryRepresentation:info];
 		if (settings) [_bouncers addObject:settings];
+		CQBouncerConnection *connection = [[CQBouncerConnection alloc] initWithBouncerSettings:settings];
+		connection.delegate = self;
+		[connection connect];
 		[settings release];
 	}
 
@@ -491,9 +547,28 @@
 		if ([info objectForKey:@"chatState"])
 			[[CQChatController defaultController] restorePersistentState:[info objectForKey:@"chatState"] forConnection:connection];
 
-		if ([[info objectForKey:@"automatic"] boolValue])
-			[connection connect];
+		[connection release];
+	}
 
+	[self performSelector:@selector(_connectAutomaticConnections) withObject:nil afterDelay:2.];
+
+	if (_bouncers.count)
+		[self performSelector:@selector(_refreshBouncerConnectionLists) withObject:nil afterDelay:2.];
+}
+
+- (void) _connectAutomaticConnections {
+	for (MVChatConnection *connection in _connections)
+		if (connection.automaticallyConnect)
+			[connection connect];
+}
+
+- (void) _refreshBouncerConnectionLists {
+	[_bouncerConnections removeAllObjects];
+
+	for (CQBouncerSettings *settings in _bouncers) {
+		CQBouncerConnection *connection = [[CQBouncerConnection alloc] initWithBouncerSettings:settings];
+		[_bouncerConnections addObject:connection];
+		[connection connect];
 		[connection release];
 	}
 }
@@ -720,11 +795,17 @@
 	[self saveConnections];
 }
 
+#pragma mark -
+
 - (CQBouncerSettings *) bouncerSettingsForIdentifier:(NSString *) identifier {
 	for (CQBouncerSettings *bouncer in _bouncers)
 		if ([bouncer.identifier isEqualToString:identifier])
 			return bouncer;
 	return nil;
+}
+
+- (NSArray *) bouncerChatConnectionsForIdentifier:(NSString *) identifier {
+	return [_bouncerChatConnections objectForKey:identifier];
 }
 
 - (void) addBouncerSettings:(CQBouncerSettings *) bouncer {
