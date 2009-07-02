@@ -14,7 +14,8 @@
 
 @interface CQConnectionsController : UINavigationController <UINavigationControllerDelegate, CQBouncerConnectionDelegate> {
 	@protected
-	NSMutableArray *_connections;
+	NSMutableSet *_connections;
+	NSMutableArray *_directConnections;
 	NSMutableArray *_bouncers;
 	NSMutableSet *_bouncerConnections;
 	NSMutableDictionary *_bouncerChatConnections;
@@ -27,8 +28,10 @@
 }
 + (CQConnectionsController *) defaultController;
 
-@property (nonatomic, readonly) NSArray *connections;
-@property (nonatomic, readonly) NSArray *connectedConnections;
+@property (nonatomic, readonly) NSSet *connections;
+@property (nonatomic, readonly) NSSet *connectedConnections;
+
+@property (nonatomic, readonly) NSArray *directConnections;
 @property (nonatomic, readonly) NSArray *bouncers;
 
 - (void) saveConnections;

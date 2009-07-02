@@ -125,7 +125,7 @@
 #pragma mark -
 
 - (NSIndexPath *) indexPathForConnection:(MVChatConnection *) connection {
-	NSUInteger index = [[CQConnectionsController defaultController].connections indexOfObjectIdenticalTo:connection];
+	NSUInteger index = [[CQConnectionsController defaultController].directConnections indexOfObjectIdenticalTo:connection];
 	if (index != NSNotFound)
 		return [NSIndexPath indexPathForRow:index inSection:0];
 
@@ -145,7 +145,7 @@
 
 - (MVChatConnection *) connectionAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section == 0)
-		return [[CQConnectionsController defaultController].connections objectAtIndex:indexPath.row];
+		return [[CQConnectionsController defaultController].directConnections objectAtIndex:indexPath.row];
 
 	NSArray *bouncers = [CQConnectionsController defaultController].bouncers;
 	CQBouncerSettings *settings = [bouncers objectAtIndex:(indexPath.section - 1)];
@@ -218,7 +218,7 @@
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
 	if (section == 0)
-		return [CQConnectionsController defaultController].connections.count;
+		return [CQConnectionsController defaultController].directConnections.count;
 
 	NSArray *bouncers = [CQConnectionsController defaultController].bouncers;
 	CQBouncerSettings *settings = [bouncers objectAtIndex:(section - 1)];
@@ -226,7 +226,7 @@
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
-	if (section == 0 && [CQConnectionsController defaultController].connections.count && [CQConnectionsController defaultController].bouncers.count)
+	if (section == 0 && [CQConnectionsController defaultController].directConnections.count && [CQConnectionsController defaultController].bouncers.count)
 		return NSLocalizedString(@"Direct Connections", @"Direct Connections section title");
 	if (section == 0)
 		return nil;

@@ -11,7 +11,7 @@
 }
 - (id) initWithDictionaryRepresentation:(NSDictionary *) info;
 
-- (NSDictionary *) dictionaryRepresentation;
+- (NSMutableDictionary *) dictionaryRepresentation;
 
 @property (nonatomic, readonly) NSString *identifier;
 

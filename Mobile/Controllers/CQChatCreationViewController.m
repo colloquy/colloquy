@@ -4,9 +4,10 @@
 #import "CQChatEditViewController.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
-#import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
 #import "NSStringAdditions.h"
+
+#import <ChatCore/MVChatConnection.h>
 
 @implementation CQChatCreationViewController
 - (id) init {
@@ -72,14 +73,13 @@
 }
 
 - (void) commit:(id) sender {
-	if (_editViewController.selectedConnectionIndex == NSNotFound) {
+	MVChatConnection *connection = _editViewController.selectedConnection;
+	if (!connection) {
 		[self dismissModalViewControllerAnimated:YES];
 		return;
 	}
 
 	[self.view endEditing:YES];
-
-	MVChatConnection *connection = [[CQConnectionsController defaultController].connections objectAtIndex:_editViewController.selectedConnectionIndex];
 
 	[connection connect];
 

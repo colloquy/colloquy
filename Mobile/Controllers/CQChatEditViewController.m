@@ -13,13 +13,14 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
-	_selectedConnectionIndex = NSNotFound;
 	return self;
 }
 
 - (void) dealloc {
 	[_name release];
 	[_password release];
+	[_sortedConnections release];
+	[_selectedConnection release];
 
 	[super dealloc];
 }
@@ -32,7 +33,7 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 	return _roomTarget;
 }
 
-@synthesize selectedConnectionIndex = _selectedConnectionIndex;
+@synthesize selectedConnection = _selectedConnection;
 
 @synthesize name = _name;
 
@@ -47,32 +48,34 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 	else self.title = NSLocalizedString(@"Message User", @"Message User view title");
 }
 
+static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void *context) {
+	return [a.displayName compare:b.displayName];
+}
+
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 
-	if (_selectedConnectionIndex == NSNotFound) {
-		NSArray *connections = [CQConnectionsController defaultController].connections;
+	if (!_sortedConnections) {
+		_sortedConnections = [[[CQConnectionsController defaultController].connections allObjects] mutableCopy];
+		[_sortedConnections sortUsingFunction:sortConnections context:NULL];
+	}
+
+	if (!_selectedConnection) {
 		if (lastSelectedConnectionIndex == NSNotFound) {
-			NSUInteger i = 0;
-			for (MVChatConnection *connection in [CQConnectionsController defaultController].connections) {
-				if (_selectedConnectionIndex == NSNotFound && connection.connected) {
-					_selectedConnectionIndex = i;
+			for (MVChatConnection *connection in _sortedConnections) {
+				if (connection.connected) {
+					_selectedConnection = [connection retain];
 					break;
 				}
-
-				++i;
 			}
 
-			if (_selectedConnectionIndex == NSNotFound)
-				_selectedConnectionIndex = 0;
+			if (!_selectedConnection && _sortedConnections.count)
+				_selectedConnection = [_sortedConnections objectAtIndex:0];
 		} else {
-			_selectedConnectionIndex = lastSelectedConnectionIndex;
+			if (lastSelectedConnectionIndex >= _sortedConnections.count && _sortedConnections.count)
+				_selectedConnection = [_sortedConnections lastObject];
+			else _selectedConnection = [_sortedConnections objectAtIndex:lastSelectedConnectionIndex];
 		}
-
-		if (!connections.count)
-			_selectedConnectionIndex = NSNotFound;
-		if (_selectedConnectionIndex >= connections.count && connections.count)
-			_selectedConnectionIndex = (connections.count - 1);
 	}
 }
 
@@ -113,15 +116,16 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 	if (indexPath.section == 0 && indexPath.row == 0) {
 		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
 
-		NSMutableArray *connections = [[NSMutableArray alloc] init];
-		for (MVChatConnection *connection in [CQConnectionsController defaultController].connections)
-			[connections addObject:connection.displayName];
+		NSUInteger selectedConnectionIndex = [_sortedConnections indexOfObjectIdenticalTo:_selectedConnection];
+		NSMutableArray *connectionTitles = [[NSMutableArray alloc] init];
+		for (MVChatConnection *connection in _sortedConnections)
+			[connectionTitles addObject:connection.displayName];
 
 		listViewController.title = NSLocalizedString(@"Connections", @"Connections view title");
 		listViewController.itemImage = [UIImage imageNamed:@"server.png"];
 		listViewController.allowEditing = NO;
-		listViewController.items = connections;
-		listViewController.selectedItemIndex = _selectedConnectionIndex;
+		listViewController.items = connectionTitles;
+		listViewController.selectedItemIndex = selectedConnectionIndex;
 
 		listViewController.target = self;
 		listViewController.action = @selector(connectionChanged:);
@@ -131,7 +135,7 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 		[self.navigationController pushViewController:listViewController animated:YES];
 
 		[listViewController release];
-		[connections release];
+		[connectionTitles release];
 
 		return;
 	}
@@ -161,14 +165,10 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 		cell.target = self;
 
 		if (indexPath.section == 0 && indexPath.row == 0) {
-			MVChatConnection *connection = nil;
-			if (_selectedConnectionIndex != NSNotFound)
-				connection = [[CQConnectionsController defaultController].connections objectAtIndex:_selectedConnectionIndex];
-
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 			cell.label = NSLocalizedString(@"Connection", @"Connection setting label");
 			cell.textField.secureTextEntry = NO;
-			if (connection) cell.text = connection.displayName;
+			if (_selectedConnection) cell.text = _selectedConnection.displayName;
 			else cell.text = NSLocalizedString(@"None", @"None setting label");
 		} else if (indexPath.section == 1 && indexPath.row == 0) {
 			cell.text = _name;
@@ -235,8 +235,11 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 }
 
 - (void) connectionChanged:(CQPreferencesListViewController *) sender {
-	_selectedConnectionIndex = sender.selectedItemIndex;
-	lastSelectedConnectionIndex = _selectedConnectionIndex;
+	id old = _selectedConnection;
+	_selectedConnection = (sender.selectedItemIndex != NSNotFound ? [_sortedConnections objectAtIndex:sender.selectedItemIndex] : nil);
+	[old release];
+
+	lastSelectedConnectionIndex = sender.selectedItemIndex;
 
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] withAnimation:UITableViewRowAnimationNone];
 }

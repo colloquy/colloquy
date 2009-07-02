@@ -55,7 +55,7 @@
 	[super dealloc];
 }
 
-- (NSDictionary *) dictionaryRepresentation {
+- (NSMutableDictionary *) dictionaryRepresentation {
 	NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
 
 	[result setObject:_identifier forKey:@"identifier"];
