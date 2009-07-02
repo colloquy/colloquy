@@ -6,7 +6,7 @@
 #import "NSStringAdditions.h"
 #import "MVUtilities.h"
 
-#import <objc/objc-runtime.h>
+#include <objc/message.h>
 
 @interface CQBouncerConnection (CQBouncerConnectionPrivate)
 - (void) _readNextMessage;
