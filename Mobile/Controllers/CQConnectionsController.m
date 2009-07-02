@@ -472,6 +472,8 @@
 	if (!connection)
 		return nil;
 
+	if ([info objectForKey:@"uniqueIdentifier"]) connection.uniqueIdentifier = [info objectForKey:@"uniqueIdentifier"];
+
 	NSMutableDictionary *persistentInformation = [[NSMutableDictionary alloc] init];
 	[persistentInformation addEntriesFromDictionary:[info objectForKey:@"persistentInformation"]];
 
@@ -588,6 +590,7 @@
 		[previousJoinedRooms release];
 	}
 
+	[info setObject:connection.uniqueIdentifier forKey:@"uniqueIdentifier"];
 	[info setObject:connection.server forKey:@"server"];
 	[info setObject:connection.urlScheme forKey:@"type"];
 	[info setObject:[NSNumber numberWithBool:connection.secure] forKey:@"secure"];
