@@ -1057,7 +1057,7 @@
 		return;
 
 	if (self.pushNotifications) {
-		[self sendRawMessageWithFormat:@"PUSH add-device %@ :%@", [UIDevice currentDevice].name, deviceToken];
+		[self sendRawMessageWithFormat:@"PUSH add-device %@ :%@", deviceToken, [UIDevice currentDevice].name];
 
 		[self sendRawMessage:@"PUSH service colloquy.mobi 7906"];
 
