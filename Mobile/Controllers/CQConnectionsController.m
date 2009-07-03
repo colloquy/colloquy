@@ -1057,13 +1057,11 @@
 		return;
 
 	if (self.pushNotifications) {
-		[self sendRawMessageWithFormat:@"PUSH add-device :%@", deviceToken];
+		[self sendRawMessageWithFormat:@"PUSH add-device %@ :%@", [UIDevice currentDevice].name, deviceToken];
 
-		NSString *deviceName = [UIDevice currentDevice].name;
-		if (deviceName.length)
-			[self sendRawMessageWithFormat:@"PUSH device-name :%@", deviceName];
+		[self sendRawMessage:@"PUSH service colloquy.mobi 7906"];
 
-		[self sendRawMessageWithFormat:@"PUSH connection-name :%@", self.displayName];
+		[self sendRawMessageWithFormat:@"PUSH connection %@ :%@", self.uniqueIdentifier, self.displayName];
 
 		NSArray *highlightWords = [CQColloquyApplication sharedApplication].highlightWords;
 		for (NSString *highlightWord in highlightWords)
