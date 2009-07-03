@@ -517,6 +517,8 @@
 	if ([info objectForKey:@"nicknamePassword"]) connection.nicknamePassword = [info objectForKey:@"nicknamePassword"];
 	if ([info objectForKey:@"password"]) connection.password = [info objectForKey:@"password"];
 
+	if ([info objectForKey:@"bouncerConnectionIdentifier"]) connection.bouncerConnectionIdentifier = [info objectForKey:@"bouncerConnectionIdentifier"];
+
 	CQBouncerSettings *bouncerSettings = [self bouncerSettingsForIdentifier:connection.bouncerIdentifier];
 	if (bouncerSettings) {
 		connection.bouncerType = bouncerSettings.type;
@@ -592,6 +594,7 @@
 	if (connection.realName) [info setObject:connection.realName forKey:@"realName"];
 	if (connection.username) [info setObject:connection.username forKey:@"username"];
 	if (connection.preferredNickname) [info setObject:connection.preferredNickname forKey:@"nickname"];
+	if (connection.bouncerConnectionIdentifier) [info setObject:connection.bouncerConnectionIdentifier forKey:@"bouncerConnectionIdentifier"];
 
 	if (connection.alternateNicknames.count)
 		[info setObject:connection.alternateNicknames forKey:@"alternateNicknames"];
@@ -617,11 +620,30 @@
 		if (!settings.password.length)
 			settings.password = [[CQKeychain standardKeychain] passwordForServer:settings.server account:settings.username];
 
+		NSMutableArray *bouncerChatConnections = [[NSMutableArray alloc] initWithCapacity:10];
+		[_bouncerChatConnections setObject:bouncerChatConnections forKey:settings.identifier];
+
+		NSArray *connections = [info objectForKey:@"connections"];
+		for (NSDictionary *info in connections) {
+			MVChatConnection *connection = [self _chatConnectionWithDictionaryRepresentation:info];
+			if (!connection)
+				continue;
+
+			[bouncerChatConnections addObject:connection];
+			[_connections addObject:connection];
+
+			if ([info objectForKey:@"chatState"])
+				[[CQChatController defaultController] restorePersistentState:[info objectForKey:@"chatState"] forConnection:connection];
+
+			[connection release];
+		}
+
+		[bouncerChatConnections release];
 		[settings release];
 	}
 
-	NSArray *list = [[NSUserDefaults standardUserDefaults] arrayForKey:@"MVChatBookmarks"];
-	for (NSDictionary *info in list) {
+	NSArray *connections = [[NSUserDefaults standardUserDefaults] arrayForKey:@"MVChatBookmarks"];
+	for (NSDictionary *info in connections) {
 		MVChatConnection *connection = [self _chatConnectionWithDictionaryRepresentation:info];
 		if (!connection)
 			continue;
@@ -635,10 +657,10 @@
 		[connection release];
 	}
 
-	[self performSelector:@selector(_connectAutomaticConnections) withObject:nil afterDelay:2.];
+	[self performSelector:@selector(_connectAutomaticConnections) withObject:nil afterDelay:0.5];
 
 	if (_bouncers.count)
-		[self performSelector:@selector(_refreshBouncerConnectionLists) withObject:nil afterDelay:2.];
+		[self performSelector:@selector(_refreshBouncerConnectionLists) withObject:nil afterDelay:1.];
 }
 
 - (void) _connectAutomaticConnections {
