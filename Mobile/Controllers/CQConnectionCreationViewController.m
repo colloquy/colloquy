@@ -7,11 +7,11 @@
 
 #import <ChatCore/MVChatConnection.h>
 
-static inline BOOL isDefaultValue(NSString *string) {
+static inline __attribute__((always_inline)) BOOL isDefaultValue(NSString *string) {
 	return [string isEqualToString:@"<<default>>"];
 }
 
-static inline BOOL isPlaceholderValue(NSString *string) {
+static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *string) {
 	return [string isEqualToString:@"<<placeholder>>"];
 }
 

@@ -81,5 +81,8 @@
 @property (nonatomic, copy) NSString *bouncerIdentifier;
 @property (nonatomic, copy) CQBouncerSettings *bouncerSettings;
 
+- (void) savePasswordsToKeychain;
+- (void) loadPasswordsFromKeychain;
+
 - (void) sendPushNotificationCommands;
 @end

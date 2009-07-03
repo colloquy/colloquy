@@ -2,7 +2,7 @@
 
 #import <Security/Security.h>
 
-static inline size_t stringByteLength(NSString *string) {
+static inline __attribute__((always_inline)) size_t stringByteLength(NSString *string) {
 	const char * const utf8String = [string UTF8String];
 	return (utf8String ? strlen(utf8String) : 0);
 }

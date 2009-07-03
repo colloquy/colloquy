@@ -512,18 +512,10 @@
 	if ([info objectForKey:@"alternateNicknames"])
 		connection.alternateNicknames = [info objectForKey:@"alternateNicknames"];
 
-	NSString *password = nil;
-	if ((password = [info objectForKey:@"nicknamePassword"]))
-		[[CQKeychain standardKeychain] setPassword:password forServer:connection.server account:connection.preferredNickname];
+	[connection loadPasswordsFromKeychain];
 
-	if ((password = [info objectForKey:@"password"]))
-		[[CQKeychain standardKeychain] setPassword:password forServer:connection.server account:@"<<server password>>"];
-
-	if ((password = [[CQKeychain standardKeychain] passwordForServer:connection.server account:connection.preferredNickname]) && password.length)
-		connection.nicknamePassword = password;
-
-	if ((password = [[CQKeychain standardKeychain] passwordForServer:connection.server account:@"<<server password>>"]) && password.length)
-		connection.password = password;
+	if ([info objectForKey:@"nicknamePassword"]) connection.nicknamePassword = [info objectForKey:@"nicknamePassword"];
+	if ([info objectForKey:@"password"]) connection.password = [info objectForKey:@"password"];
 
 	CQBouncerSettings *bouncerSettings = [self bouncerSettingsForIdentifier:connection.bouncerIdentifier];
 	if (bouncerSettings) {
@@ -616,7 +608,15 @@
 	NSArray *bouncers = [[NSUserDefaults standardUserDefaults] arrayForKey:@"CQChatBouncers"];
 	for (NSDictionary *info in bouncers) {
 		CQBouncerSettings *settings = [[CQBouncerSettings alloc] initWithDictionaryRepresentation:info];
-		if (settings) [_bouncers addObject:settings];
+		if (!settings)
+			continue;
+
+		[_bouncers addObject:settings];
+
+		// TEMP: read the bouncer password from the old account scheme using in the first beta.
+		if (!settings.password.length)
+			settings.password = [[CQKeychain standardKeychain] passwordForServer:settings.server account:settings.username];
+
 		[settings release];
 	}
 
@@ -667,8 +667,12 @@
 
 	NSMutableArray *connections = [[NSMutableArray alloc] initWithCapacity:_directConnections.count];
 	for (MVChatConnection *connection in _directConnections) {
-		NSMutableDictionary *info = [self _dictionaryRepresentationForConnection:connection];
-		if (info) [connections addObject:info];
+		NSMutableDictionary *connectionInfo = [self _dictionaryRepresentationForConnection:connection];
+		if (!connectionInfo)
+			continue;
+
+		[connections addObject:connectionInfo];
+		[connection savePasswordsToKeychain];
 	}
 
 	NSMutableArray *bouncers = [[NSMutableArray alloc] initWithCapacity:_bouncers.count];
@@ -680,10 +684,15 @@
 		NSMutableArray *bouncerConnections = [[NSMutableArray alloc] initWithCapacity:10];
 		for (MVChatConnection *connection in [self bouncerChatConnectionsForIdentifier:settings.identifier]) {
 			NSMutableDictionary *connectionInfo = [self _dictionaryRepresentationForConnection:connection];
-			if (connectionInfo) [bouncerConnections addObject:connectionInfo];
+			if (!connectionInfo)
+				continue;
+
+			[bouncerConnections addObject:connectionInfo];
+			[connection savePasswordsToKeychain];
 		}
 
-		if (bouncerConnections.count) [info setObject:bouncerConnections forKey:@"connections"];
+		if (bouncerConnections.count)
+			[info setObject:bouncerConnections forKey:@"connections"];
 		[bouncerConnections release];
 
 		[bouncers addObject:info];
@@ -1047,6 +1056,36 @@
 
 - (NSString *) bouncerIdentifier {
 	return [self persistentInformationObjectForKey:@"bouncerIdentifier"];
+}
+
+#pragma mark -
+
+- (void) savePasswordsToKeychain {
+	// Remove old passwords using the previous account naming scheme.
+	[[CQKeychain standardKeychain] removePasswordForServer:self.server account:self.preferredNickname];
+	[[CQKeychain standardKeychain] removePasswordForServer:self.server account:@"<<server password>>"];
+
+	// Store passwords using the new account naming scheme.
+	[[CQKeychain standardKeychain] setPassword:self.nicknamePassword forServer:self.uniqueIdentifier account:[NSString stringWithFormat:@"Nickname %@", self.preferredNickname]];
+	[[CQKeychain standardKeychain] setPassword:self.password forServer:self.uniqueIdentifier account:@"Server"];
+}
+
+- (void) loadPasswordsFromKeychain {
+	NSString *password = nil;
+
+	// Try reading passwords using the old account naming scheme.
+	if ((password = [[CQKeychain standardKeychain] passwordForServer:self.server account:self.preferredNickname]) && password.length)
+		self.nicknamePassword = password;
+
+	if ((password = [[CQKeychain standardKeychain] passwordForServer:self.server account:@"<<server password>>"]) && password.length)
+		self.password = password;
+
+	// Try reading password using the name account naming scheme.
+	if ((password = [[CQKeychain standardKeychain] passwordForServer:self.uniqueIdentifier account:[NSString stringWithFormat:@"Nickname %@", self.preferredNickname]]) && password.length)
+		self.nicknamePassword = password;
+
+	if ((password = [[CQKeychain standardKeychain] passwordForServer:self.uniqueIdentifier account:@"Server"]) && password.length)
+		self.password = password;
 }
 
 #pragma mark -

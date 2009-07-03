@@ -4,7 +4,6 @@
 #import "CQPreferencesSwitchCell.h"
 #import "CQPreferencesListViewController.h"
 #import "CQPreferencesTextCell.h"
-#import "CQKeychain.h"
 
 #import <ChatCore/MVChatConnection.h>
 
@@ -14,11 +13,11 @@
 #define AutomaticTableSection 3
 #define EncodingsTableSection 4
 
-static inline BOOL isDefaultValue(NSString *string) {
+static inline __attribute__((always_inline)) BOOL isDefaultValue(NSString *string) {
 	return [string isEqualToString:@"<<default>>"];
 }
 
-static inline BOOL isPlaceholderValue(NSString *string) {
+static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *string) {
 	return [string isEqualToString:@"<<placeholder>>"];
 }
 
@@ -439,16 +438,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 
 - (void) passwordChanged:(CQPreferencesTextCell *) sender {
 	_connection.password = sender.text;
-
-	if (!isPlaceholderValue(_connection.server))
-		[[CQKeychain standardKeychain] setPassword:_connection.password forServer:_connection.server account:@"<<server password>>"];
 }
 
 - (void) nicknamePasswordChanged:(CQPreferencesTextCell *) sender {
 	_connection.nicknamePassword = sender.text;
-
-	if (!isPlaceholderValue(_connection.server))
-		[[CQKeychain standardKeychain] setPassword:_connection.nicknamePassword forServer:_connection.server account:currentPreferredNickname(_connection)];
 }
 
 - (void) alternateNicknamesChanged:(CQPreferencesListViewController *) sender {

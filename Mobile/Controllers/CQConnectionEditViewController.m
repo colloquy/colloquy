@@ -5,7 +5,6 @@
 #import "CQConnectionAdvancedEditController.h"
 #import "CQConnectionPushEditController.h"
 #import "CQConnectionsController.h"
-#import "CQKeychain.h"
 #import "CQPreferencesDeleteCell.h"
 #import "CQPreferencesListViewController.h"
 #import "CQPreferencesSwitchCell.h"
@@ -22,17 +21,12 @@ static unsigned short DeleteTableSection = 5;
 
 static BOOL pushAvailable = NO;
 
-static inline BOOL isDefaultValue(NSString *string) {
+static inline __attribute__((always_inline)) BOOL isDefaultValue(NSString *string) {
 	return [string isEqualToString:@"<<default>>"];
 }
 
-static inline BOOL isPlaceholderValue(NSString *string) {
+static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *string) {
 	return [string isEqualToString:@"<<placeholder>>"];
-}
-
-static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
-	NSString *preferredNickname = connection.preferredNickname;
-	return (isDefaultValue(preferredNickname) ? [MVChatConnection defaultNickname] : preferredNickname);
 }
 
 #pragma mark -
@@ -365,22 +359,12 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	if (sender.selectedItemIndex == NSNotFound)
 		return;
 
-	BOOL wasPlaceholder = isPlaceholderValue(_connection.server);
-
 	NSDictionary *serverInfo = [_servers objectAtIndex:sender.selectedItemIndex];
 	_connection.displayName = [serverInfo objectForKey:@"Name"];
 	_connection.server = [serverInfo objectForKey:@"Address"];
 
 	if (!_newConnection)
 		self.title = _connection.displayName;
-
-	if (wasPlaceholder) {
-		[[CQKeychain standardKeychain] setPassword:_connection.password forServer:_connection.server account:@"<<server password>>"];
-		[[CQKeychain standardKeychain] setPassword:_connection.nicknamePassword forServer:_connection.server account:currentPreferredNickname(_connection)];
-	} else {
-		_connection.password = [[CQKeychain standardKeychain] passwordForServer:_connection.server account:@"<<server password>>"];
-		_connection.nicknamePassword = [[CQKeychain standardKeychain] passwordForServer:_connection.server account:currentPreferredNickname(_connection)];
-	}
 
 	if (self.navigationItem.rightBarButtonItem.tag == UIBarButtonSystemItemSave)
 		self.navigationItem.rightBarButtonItem.enabled = YES;
@@ -389,28 +373,14 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 }
 
 - (void) serverChanged:(CQPreferencesTextCell *) sender {
-	BOOL wasPlaceholder = isPlaceholderValue(_connection.server);
-
 	if (sender.text.length || _newConnection) {
 		_connection.server = (sender.text.length ? sender.text : @"<<placeholder>>");
 		if (!_newConnection)
 			self.title = _connection.displayName;
 	}
 
-	BOOL placeholder = isPlaceholderValue(_connection.server);
-	if (wasPlaceholder && !placeholder) {
-		[[CQKeychain standardKeychain] setPassword:_connection.password forServer:_connection.server account:@"<<server password>>"];
-		[[CQKeychain standardKeychain] setPassword:_connection.nicknamePassword forServer:_connection.server account:currentPreferredNickname(_connection)];
-	} else if (!placeholder) {
-		_connection.password = [[CQKeychain standardKeychain] passwordForServer:_connection.server account:@"<<server password>>"];
-		_connection.nicknamePassword = [[CQKeychain standardKeychain] passwordForServer:_connection.server account:currentPreferredNickname(_connection)];
-	} else {
-		_connection.password = nil;
-		_connection.nicknamePassword = nil;
-	}
-
 	if (self.navigationItem.rightBarButtonItem.tag == UIBarButtonSystemItemSave)
-		self.navigationItem.rightBarButtonItem.enabled = !placeholder;
+		self.navigationItem.rightBarButtonItem.enabled = !isPlaceholderValue(_connection.server);
 
 	[self.tableView reloadData];
 }
@@ -419,10 +389,6 @@ static inline NSString *currentPreferredNickname(MVChatConnection *connection) {
 	if (sender.text.length)
 		_connection.preferredNickname = sender.text;
 	else _connection.preferredNickname = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
-
-	if (!isPlaceholderValue(_connection.server))
-		_connection.nicknamePassword = [[CQKeychain standardKeychain] passwordForServer:_connection.server account:currentPreferredNickname(_connection)];
-	else _connection.nicknamePassword = nil;
 
 	[self.tableView reloadData];
 }

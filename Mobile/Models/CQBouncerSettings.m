@@ -96,27 +96,9 @@
 	_type = type;
 }
 
-- (void) setServer:(NSString *) server {
-	id old = _server;
-	_server = [server copy];
-	[old release];
-
-	// Set the password again, so it it stored in the keychain for the new server.
-	if (_password) self.password = _password;
-}
-
-- (void) setUsername:(NSString *) username {
-	id old = _username;
-	_username = [username copy];
-	[old release];
-
-	// Set the password again, so it it stored in the keychain for the new username.
-	if (_password) self.password = _password;
-}
-
 - (NSString *) password {
 	if (!_password && _server && _username)
-		_password = [[[CQKeychain standardKeychain] passwordForServer:_server account:_username] copy];
+		_password = [[[CQKeychain standardKeychain] passwordForServer:_identifier account:@"Bouncer"] copy];
 	return _password;
 }
 
@@ -130,6 +112,6 @@
 	if (!_server.length || !_username.length)
 		return;
 
-	[[CQKeychain standardKeychain] setPassword:password forServer:_server account:_username];
+	[[CQKeychain standardKeychain] setPassword:password forServer:_identifier account:@"Bouncer"];
 }
 @end
