@@ -56,8 +56,15 @@
 - (void) setHighlighted:(BOOL) highlighted {
 	[super setHighlighted:highlighted];
 
-	_backgroundImageView.alpha = (highlighted ? 1. : 0.9);
-	_backgroundImageView.image = (highlighted ? _backgroundHighlightedImage : _backgroundImage);
+	_backgroundImageView.alpha = (highlighted || self.selected ? 1. : 0.9);
+	_backgroundImageView.image = (highlighted || self.selected ? _backgroundHighlightedImage : _backgroundImage);
+}
+
+- (void) setSelected:(BOOL) selected {
+	[super setSelected:selected];
+
+	_backgroundImageView.alpha = (selected || self.highlighted ? 1. : 0.9);
+	_backgroundImageView.image = (selected || self.highlighted ? _backgroundHighlightedImage : _backgroundImage);
 }
 
 #pragma mark -

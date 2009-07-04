@@ -220,6 +220,8 @@
 - (void) tableSectionHeaderSelected:(CQBouncerSectionHeader *) header {
 	CQBouncerSettings *settings = [[CQConnectionsController defaultController].bouncers objectAtIndex:(header.section - 1)];
 	[[CQConnectionsController defaultController] editBouncer:settings];
+
+	header.selected = YES;
 }
 
 #pragma mark -
