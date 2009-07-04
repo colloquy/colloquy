@@ -12,7 +12,7 @@
 @class MVChatUser;
 @class MVDirectChatConnection;
 
-@interface CQConnectionsController : UINavigationController <UINavigationControllerDelegate, CQBouncerConnectionDelegate> {
+@interface CQConnectionsController : UINavigationController <UINavigationControllerDelegate, UIActionSheetDelegate, CQBouncerConnectionDelegate> {
 	@protected
 	NSMutableSet *_connections;
 	NSMutableArray *_directConnections;
@@ -38,8 +38,11 @@
 
 - (BOOL) handleOpenURL:(NSURL *) url;
 
+- (void) showCreationOptionSheet;
+- (void) showModalNewBouncerView;
 - (void) showModalNewConnectionView;
 - (void) showModalNewConnectionViewForURL:(NSURL *) url;
+
 - (void) editConnection:(MVChatConnection *) connection;
 
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address;

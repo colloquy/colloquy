@@ -14,6 +14,7 @@
 
 	NSIndexPath *selectedIndexPath = [self indexPathForSelectedRow];
 	BOOL selected = (selectedIndexPath && indexPath.section == selectedIndexPath.section && indexPath.row == selectedIndexPath.row);
+	CGPoint contentOffset = self.contentOffset;
 
 	if (selected)
 		[self deselectRowAtIndexPath:indexPath animated:NO];
@@ -28,6 +29,8 @@
 
 		[self endUpdates];
 	}
+
+	[self setContentOffset:contentOffset animated:NO];
 
 	if (selected)
 		[self selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];

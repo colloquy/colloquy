@@ -14,7 +14,7 @@
 
 	self.title = NSLocalizedString(@"Connections", @"Connections view title");
 
-	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:[CQConnectionsController defaultController] action:@selector(showModalNewConnectionView)];
+	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:[CQConnectionsController defaultController] action:@selector(showCreationOptionSheet)];
 	self.navigationItem.leftBarButtonItem = addItem;
 	[addItem release];
 
@@ -186,6 +186,8 @@
 
 	[sheet release];
 }
+
+#pragma mark -
 
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];

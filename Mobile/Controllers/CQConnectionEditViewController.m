@@ -1,6 +1,5 @@
 #import "CQConnectionEditViewController.h"
 
-#import "CQBouncerSettings.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionAdvancedEditController.h"
 #import "CQConnectionPushEditController.h"
@@ -184,16 +183,16 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (pushAvailable && indexPath.section == PushTableSection && indexPath.row == 0) {
-		CQConnectionPushEditController *bouncerEditViewController = [[CQConnectionPushEditController alloc] init];
+		CQConnectionPushEditController *pushEditViewController = [[CQConnectionPushEditController alloc] init];
 
-		bouncerEditViewController.navigationItem.prompt = self.navigationItem.prompt;
-		bouncerEditViewController.connection = _connection;
+		pushEditViewController.navigationItem.prompt = self.navigationItem.prompt;
+		pushEditViewController.connection = _connection;
 
 		[self.view endEditing:YES];
 
-		[self.navigationController pushViewController:bouncerEditViewController animated:YES];
+		[self.navigationController pushViewController:pushEditViewController animated:YES];
 
-		[bouncerEditViewController release];
+		[pushEditViewController release];
 
 		return;
 	}
@@ -283,7 +282,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		cell.label = NSLocalizedString(@"Push Notifications", @"Push Notifications connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-		CQBouncerSettings *settings = _connection.bouncerSettings;
 		if (_connection.pushNotifications)
 			cell.text = NSLocalizedString(@"On", @"On label");
 		else cell.text = NSLocalizedString(@"Off", @"Off label");

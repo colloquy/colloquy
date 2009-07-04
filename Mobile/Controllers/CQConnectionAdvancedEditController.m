@@ -107,7 +107,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 - (CGFloat) tableView:(UITableView *) tableView heightForFooterInSection:(NSInteger) section {
 	if (section == AuthenticationTableSection)
-		return 55.;
+		return 50.;
 	return 0.;
 }
 
@@ -425,7 +425,9 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 #pragma mark -
 
 - (void) serverPortChanged:(CQPreferencesTextCell *) sender {
-	_connection.serverPort = [sender.text longLongValue];
+	NSUInteger newPort = [sender.text integerValue];
+	if (newPort)
+		_connection.serverPort = (newPort % 65536);
 
 	[self.tableView reloadData];
 }

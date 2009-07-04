@@ -49,6 +49,8 @@
 		1C1253290F0D4FC1008F181B /* standard-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C1253280F0D4FC1008F181B /* standard-dark.css */; };
 		1C1254A40F0D8D7F008F181B /* CQChatCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1254A30F0D8D7F008F181B /* CQChatCreationViewController.m */; };
 		1C1255670F0EAA69008F181B /* CQChatEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1255660F0EAA69008F181B /* CQChatEditViewController.m */; };
+		1C16F77F0FFF049F008D7BB3 /* CQBouncerCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C16F77C0FFF049F008D7BB3 /* CQBouncerCreationViewController.m */; };
+		1C16F79B0FFF0789008D7BB3 /* CQBouncerEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C16F77E0FFF049F008D7BB3 /* CQBouncerEditViewController.m */; };
 		1C1896110E29CF74003CFED0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */; };
 		1C1896120E29CF75003CFED0 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */; };
 		1C20BE820EFEDF26005AD8A5 /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */; };
@@ -150,8 +152,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1C0931010D80C6E900A2705D /* CQColloquyApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQColloquyApplication.m; sourceTree = "<group>"; };
-		1C0931020D80C6E900A2705D /* CQColloquyApplication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQColloquyApplication.h; sourceTree = "<group>"; };
+		1C0931010D80C6E900A2705D /* CQColloquyApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQColloquyApplication.m; path = Mobile/Controllers/CQColloquyApplication.m; sourceTree = "<group>"; };
+		1C0931020D80C6E900A2705D /* CQColloquyApplication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQColloquyApplication.h; path = Mobile/Controllers/CQColloquyApplication.h; sourceTree = "<group>"; };
 		1C09310A0D80C71800A2705D /* Mobile Colloquy.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Mobile Colloquy.pch"; path = "Mobile/Mobile Colloquy.pch"; sourceTree = "<group>"; };
 		1C09313A0D80C8F600A2705D /* Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Defaults.plist; sourceTree = "<group>"; };
 		1C0931F80D80C9EB00A2705D /* AsyncSocket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AsyncSocket.h; path = "Chat Core/AsyncSocket.h"; sourceTree = "<group>"; };
@@ -227,11 +229,15 @@
 		1C1254A30F0D8D7F008F181B /* CQChatCreationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatCreationViewController.m; sourceTree = "<group>"; };
 		1C1255650F0EAA69008F181B /* CQChatEditViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatEditViewController.h; sourceTree = "<group>"; };
 		1C1255660F0EAA69008F181B /* CQChatEditViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatEditViewController.m; sourceTree = "<group>"; };
+		1C16F77B0FFF049F008D7BB3 /* CQBouncerCreationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQBouncerCreationViewController.h; sourceTree = "<group>"; };
+		1C16F77C0FFF049F008D7BB3 /* CQBouncerCreationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQBouncerCreationViewController.m; sourceTree = "<group>"; };
+		1C16F77D0FFF049F008D7BB3 /* CQBouncerEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQBouncerEditViewController.h; sourceTree = "<group>"; };
+		1C16F77E0FFF049F008D7BB3 /* CQBouncerEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQBouncerEditViewController.m; sourceTree = "<group>"; };
 		1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		1C20BE800EFEDF26005AD8A5 /* NSDictionaryAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSDictionaryAdditions.h; path = Additions/NSDictionaryAdditions.h; sourceTree = "<group>"; };
 		1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NSDictionaryAdditions.m; path = Additions/NSDictionaryAdditions.m; sourceTree = "<group>"; };
-		1C2A046D0EDAFC2D004509AE /* CQPreferencesListEditViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQPreferencesListEditViewController.h; sourceTree = "<group>"; };
-		1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesListEditViewController.m; sourceTree = "<group>"; };
+		1C2A046D0EDAFC2D004509AE /* CQPreferencesListEditViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListEditViewController.h; path = Mobile/Controllers/CQPreferencesListEditViewController.h; sourceTree = "<group>"; };
+		1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListEditViewController.m; path = Mobile/Controllers/CQPreferencesListEditViewController.m; sourceTree = "<group>"; };
 		1C4CE6250FA03D7800215521 /* Beep 1.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Beep 1.aiff"; sourceTree = "<group>"; };
 		1C4CE6260FA03D7800215521 /* Beep 2.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Beep 2.aiff"; sourceTree = "<group>"; };
 		1C4CE6270FA03D7800215521 /* Bell 1.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Bell 1.aiff"; sourceTree = "<group>"; };
@@ -331,11 +337,11 @@
 		1CE7FF770FA3D003001C7B17 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexKitLite.m; path = "Chat Core/RegexKitLite.m"; sourceTree = "<group>"; };
 		1CE7FF780FA3D003001C7B17 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexKitLite.h; path = "Chat Core/RegexKitLite.h"; sourceTree = "<group>"; };
 		1CE7FF9D0FA3D064001C7B17 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
-		1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQKeychain.h; sourceTree = "<group>"; };
-		1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQKeychain.m; sourceTree = "<group>"; };
+		1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQKeychain.h; path = Mobile/Controllers/CQKeychain.h; sourceTree = "<group>"; };
+		1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQKeychain.m; path = Mobile/Controllers/CQKeychain.m; sourceTree = "<group>"; };
 		1CF50C860ED8BE1100CBE5E3 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQPreferencesListViewController.h; sourceTree = "<group>"; };
-		1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesListViewController.m; sourceTree = "<group>"; };
+		1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListViewController.h; path = Mobile/Controllers/CQPreferencesListViewController.h; sourceTree = "<group>"; };
+		1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListViewController.m; path = Mobile/Controllers/CQPreferencesListViewController.m; sourceTree = "<group>"; };
 		1CF50F700EDA7BC600CBE5E3 /* roomIconSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = roomIconSmall.png; sourceTree = "<group>"; };
 		1CFF6E800EDF772800D3C557 /* UITableViewAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UITableViewAdditions.h; path = Mobile/Views/UITableViewAdditions.h; sourceTree = "<group>"; };
 		1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UITableViewAdditions.m; path = Mobile/Views/UITableViewAdditions.m; sourceTree = "<group>"; };
@@ -348,8 +354,8 @@
 		896E84600F15AB6C00D810FE /* notes.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = notes.css; sourceTree = "<group>"; };
 		897C0D660F99154500F9D8B5 /* browserInstapaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserInstapaper.png; sourceTree = "<group>"; };
 		89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "standard-grey-dark.css"; sourceTree = "<group>"; };
-		89E87C070FA0450800B49230 /* CQSoundController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQSoundController.h; sourceTree = "<group>"; };
-		89E87C080FA0450800B49230 /* CQSoundController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQSoundController.m; sourceTree = "<group>"; };
+		89E87C070FA0450800B49230 /* CQSoundController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQSoundController.h; path = Mobile/Controllers/CQSoundController.h; sourceTree = "<group>"; };
+		89E87C080FA0450800B49230 /* CQSoundController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQSoundController.m; path = Mobile/Controllers/CQSoundController.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9703B2190F2C0D0E00E623DF /* CQFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQFileTransferController.h; sourceTree = "<group>"; };
 		9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQFileTransferController.m; sourceTree = "<group>"; };
@@ -461,52 +467,10 @@
 		1C09345E0D80D24100A2705D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				1C124AC10F09F014008F181B /* CQBrowserViewController.m */,
-				1C124AC00F09F014008F181B /* CQBrowserViewController.h */,
-				1C0931010D80C6E900A2705D /* CQColloquyApplication.m */,
-				1C0931020D80C6E900A2705D /* CQColloquyApplication.h */,
-				1C0937800D8116FC00A2705D /* CQChatController.m */,
-				1C0937810D8116FC00A2705D /* CQChatController.h */,
-				1C82C1AD0D83D30F009ABD9F /* CQConnectionsController.m */,
-				1C82C1AE0D83D30F009ABD9F /* CQConnectionsController.h */,
-				1C82C5290D850B1B009ABD9F /* CQConnectionsViewController.m */,
-				1C82C5280D850B1B009ABD9F /* CQConnectionsViewController.h */,
-				1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */,
-				1C9B15A30D878B6A003794A5 /* CQConnectionEditViewController.h */,
-				1C6E3D210ED1CEB6001822BD /* CQConnectionAdvancedEditController.m */,
-				1C6E3D200ED1CEB6001822BD /* CQConnectionAdvancedEditController.h */,
-				1C633C9B0FABD06C00BB5866 /* CQConnectionPushEditController.m */,
-				1C633C9A0FABD06C00BB5866 /* CQConnectionPushEditController.h */,
-				1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */,
-				1CE3FB100D8A3DC100FB035F /* CQConnectionCreationViewController.h */,
-				1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */,
-				1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */,
-				1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */,
-				1C2A046D0EDAFC2D004509AE /* CQPreferencesListEditViewController.h */,
-				1C1254A30F0D8D7F008F181B /* CQChatCreationViewController.m */,
-				1C1254A20F0D8D7F008F181B /* CQChatCreationViewController.h */,
-				1C1255660F0EAA69008F181B /* CQChatEditViewController.m */,
-				1C1255650F0EAA69008F181B /* CQChatEditViewController.h */,
-				1C82C27C0D847EA4009ABD9F /* CQChatListViewController.m */,
-				1C82C27B0D847EA4009ABD9F /* CQChatListViewController.h */,
-				1C0937EB0D8126D400A2705D /* CQDirectChatController.m */,
-				1C0937EC0D8126D400A2705D /* CQDirectChatController.h */,
-				1C0937ED0D8126D400A2705D /* CQChatRoomController.m */,
-				1C0937EE0D8126D400A2705D /* CQChatRoomController.h */,
-				1CC64B2C0EE97F8B00DE91D0 /* CQChatUserListViewController.m */,
-				1CC64B2B0EE97F8B00DE91D0 /* CQChatUserListViewController.h */,
-				9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */,
-				9703B2190F2C0D0E00E623DF /* CQFileTransferController.h */,
-				1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */,
-				1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */,
-				972EECDF0F1089780068C75E /* CQWhoisChannelsViewController.m */,
-				972EECDE0F1089780068C75E /* CQWhoisChannelsViewController.h */,
-				972EEC380F1080600068C75E /* CQWhoisNavController.m */,
-				972EEC370F1080600068C75E /* CQWhoisNavController.h */,
-				972EE83A0F10406E0068C75E /* CQWhoisViewController.m */,
-				972EE8390F10406E0068C75E /* CQWhoisViewController.h */,
-				89E87C080FA0450800B49230 /* CQSoundController.m */,
-				89E87C070FA0450800B49230 /* CQSoundController.h */,
+				1C16F74A0FFF02D7008D7BB3 /* General */,
+				1C16F7440FFF0274008D7BB3 /* Browser */,
+				1C16F7410FFF0269008D7BB3 /* Connections */,
+				1C16F7470FFF0290008D7BB3 /* Colloquies */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -545,6 +509,85 @@
 				1CE7FF780FA3D003001C7B17 /* RegexKitLite.h */,
 			);
 			name = "Utility Classes";
+			sourceTree = "<group>";
+		};
+		1C16F7410FFF0269008D7BB3 /* Connections */ = {
+			isa = PBXGroup;
+			children = (
+				1C82C1AD0D83D30F009ABD9F /* CQConnectionsController.m */,
+				1C82C1AE0D83D30F009ABD9F /* CQConnectionsController.h */,
+				1C82C5290D850B1B009ABD9F /* CQConnectionsViewController.m */,
+				1C82C5280D850B1B009ABD9F /* CQConnectionsViewController.h */,
+				1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */,
+				1CE3FB100D8A3DC100FB035F /* CQConnectionCreationViewController.h */,
+				1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */,
+				1C9B15A30D878B6A003794A5 /* CQConnectionEditViewController.h */,
+				1C633C9B0FABD06C00BB5866 /* CQConnectionPushEditController.m */,
+				1C633C9A0FABD06C00BB5866 /* CQConnectionPushEditController.h */,
+				1C6E3D210ED1CEB6001822BD /* CQConnectionAdvancedEditController.m */,
+				1C6E3D200ED1CEB6001822BD /* CQConnectionAdvancedEditController.h */,
+				1C16F77C0FFF049F008D7BB3 /* CQBouncerCreationViewController.m */,
+				1C16F77B0FFF049F008D7BB3 /* CQBouncerCreationViewController.h */,
+				1C16F77E0FFF049F008D7BB3 /* CQBouncerEditViewController.m */,
+				1C16F77D0FFF049F008D7BB3 /* CQBouncerEditViewController.h */,
+			);
+			name = Connections;
+			sourceTree = "<group>";
+		};
+		1C16F7440FFF0274008D7BB3 /* Browser */ = {
+			isa = PBXGroup;
+			children = (
+				1C124AC10F09F014008F181B /* CQBrowserViewController.m */,
+				1C124AC00F09F014008F181B /* CQBrowserViewController.h */,
+			);
+			name = Browser;
+			sourceTree = "<group>";
+		};
+		1C16F7470FFF0290008D7BB3 /* Colloquies */ = {
+			isa = PBXGroup;
+			children = (
+				1C0937800D8116FC00A2705D /* CQChatController.m */,
+				1C0937810D8116FC00A2705D /* CQChatController.h */,
+				1C82C27C0D847EA4009ABD9F /* CQChatListViewController.m */,
+				1C82C27B0D847EA4009ABD9F /* CQChatListViewController.h */,
+				1C1254A30F0D8D7F008F181B /* CQChatCreationViewController.m */,
+				1C1254A20F0D8D7F008F181B /* CQChatCreationViewController.h */,
+				1C1255660F0EAA69008F181B /* CQChatEditViewController.m */,
+				1C1255650F0EAA69008F181B /* CQChatEditViewController.h */,
+				1C0937EB0D8126D400A2705D /* CQDirectChatController.m */,
+				1C0937EC0D8126D400A2705D /* CQDirectChatController.h */,
+				1C0937ED0D8126D400A2705D /* CQChatRoomController.m */,
+				1C0937EE0D8126D400A2705D /* CQChatRoomController.h */,
+				1CC64B2C0EE97F8B00DE91D0 /* CQChatUserListViewController.m */,
+				1CC64B2B0EE97F8B00DE91D0 /* CQChatUserListViewController.h */,
+				9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */,
+				9703B2190F2C0D0E00E623DF /* CQFileTransferController.h */,
+				972EECDF0F1089780068C75E /* CQWhoisChannelsViewController.m */,
+				972EECDE0F1089780068C75E /* CQWhoisChannelsViewController.h */,
+				972EEC380F1080600068C75E /* CQWhoisNavController.m */,
+				972EEC370F1080600068C75E /* CQWhoisNavController.h */,
+				972EE83A0F10406E0068C75E /* CQWhoisViewController.m */,
+				972EE8390F10406E0068C75E /* CQWhoisViewController.h */,
+			);
+			name = Colloquies;
+			sourceTree = "<group>";
+		};
+		1C16F74A0FFF02D7008D7BB3 /* General */ = {
+			isa = PBXGroup;
+			children = (
+				1C0931010D80C6E900A2705D /* CQColloquyApplication.m */,
+				1C0931020D80C6E900A2705D /* CQColloquyApplication.h */,
+				1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */,
+				1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */,
+				1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */,
+				1C2A046D0EDAFC2D004509AE /* CQPreferencesListEditViewController.h */,
+				1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */,
+				1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */,
+				89E87C080FA0450800B49230 /* CQSoundController.m */,
+				89E87C070FA0450800B49230 /* CQSoundController.h */,
+			);
+			name = General;
+			path = ../..;
 			sourceTree = "<group>";
 		};
 		1C4CE6240FA03D7800215521 /* Sounds */ = {
@@ -967,6 +1010,8 @@
 				1C633C9C0FABD06C00BB5866 /* CQConnectionPushEditController.m in Sources */,
 				1C6341640FAF30B600BB5866 /* CQBouncerSettings.m in Sources */,
 				1C9B60EA0FFAE4C400B7BAC0 /* CQBouncerConnection.m in Sources */,
+				1C16F77F0FFF049F008D7BB3 /* CQBouncerCreationViewController.m in Sources */,
+				1C16F79B0FFF0789008D7BB3 /* CQBouncerEditViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

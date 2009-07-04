@@ -23,7 +23,7 @@
 	self.navigationItem.leftBarButtonItem = addItem;
 	[addItem release];
 
-	self.editButtonItem.possibleTitles = [NSSet setWithObjects:NSLocalizedString(@"Manage", @"Manage button title"), NSLocalizedString(@"Done", @"Done button title")];
+	self.editButtonItem.possibleTitles = [NSSet setWithObjects:NSLocalizedString(@"Manage", @"Manage button title"), NSLocalizedString(@"Done", @"Done button title"), nil];
 	self.editButtonItem.title = NSLocalizedString(@"Manage", @"Manage button title");
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 

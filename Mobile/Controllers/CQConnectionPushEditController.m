@@ -67,13 +67,13 @@
 
 - (CGFloat) tableView:(UITableView *) tableView heightForFooterInSection:(NSInteger) section {
 	if (section == PushEnabledTableSection)
-		return 90.;
+		return 100.;
 	return 0.;
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
 	if (section == PushEnabledTableSection)
-		return NSLocalizedString(@"Private messages and highlighted room messages will be pushed while Colloquy\nisn't open. Push notifications require\nconnecting to a push aware bouncer.", @"Push Notification section footer title");
+		return NSLocalizedString(@"Private messages and highlighted\nroom messages are pushed.\n\nPush notifications require connecting\nto a push aware bouncer.", @"Push Notification section footer title");
 	return nil;
 }
 

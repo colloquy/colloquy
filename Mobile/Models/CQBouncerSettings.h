@@ -7,6 +7,7 @@
 	NSString *_username;
 	NSString *_password;
 	unsigned short _serverPort;
+	BOOL _pushNotifications;
 	MVChatConnectionBouncer _type;
 }
 - (id) initWithDictionaryRepresentation:(NSDictionary *) info;
@@ -24,4 +25,6 @@
 
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *password;
+
+@property (nonatomic, assign) BOOL pushNotifications;
 @end

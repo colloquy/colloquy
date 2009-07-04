@@ -2,6 +2,7 @@
 
 #import "CQBouncerSettings.h"
 #import "CQBouncerConnection.h"
+#import "CQBouncerCreationViewController.h"
 #import "CQChatController.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
@@ -104,7 +105,7 @@
 
 	static BOOL offeredToCreate;
 	if (!_connections.count && !offeredToCreate) {
-		[self performSelector:@selector(showModalNewConnectionView) withObject:nil afterDelay:0.];
+		[self performSelector:@selector(showCreationOptionSheet) withObject:nil afterDelay:0.];
 		offeredToCreate = YES;
 	}
 }
@@ -174,6 +175,29 @@
 	return YES;
 }
 
+#pragma mark -
+
+- (void) showCreationOptionSheet {
+	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	sheet.delegate = self;
+	sheet.tag = 1;
+
+	[sheet addButtonWithTitle:NSLocalizedString(@"IRC Connection", @"IRC Connection button title")];
+	[sheet addButtonWithTitle:NSLocalizedString(@"Colloquy Bouncer", @"Colloquy Bouncer button title")];
+
+	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+
+	[sheet release];	
+}
+
+- (void) showModalNewBouncerView {
+	CQBouncerCreationViewController *bouncerCreationViewController = [[CQBouncerCreationViewController alloc] init];
+	[self presentModalViewController:bouncerCreationViewController animated:YES];
+	[bouncerCreationViewController release];
+}
+
 - (void) showModalNewConnectionView {
 	[self showModalNewConnectionViewForURL:nil];
 }
@@ -185,6 +209,8 @@
 	[connectionCreationViewController release];
 }
 
+#pragma mark -
+
 - (void) editConnection:(MVChatConnection *) connection {
 	CQConnectionEditViewController *editViewController = [[CQConnectionEditViewController alloc] init];
 	editViewController.connection = connection;
@@ -195,11 +221,25 @@
 	[editViewController release];
 }
 
+#pragma mark -
+
 - (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
 	if (viewController == _connectionsViewController && _wasEditingConnection) {
 		[self saveConnections];
 		_wasEditingConnection = NO;
 	}
+}
+
+#pragma mark -
+
+- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+	if (buttonIndex == actionSheet.cancelButtonIndex)
+		return;
+
+	if (buttonIndex == 0)
+		[self showModalNewConnectionView];
+	else if (buttonIndex == 1)
+		[self showModalNewBouncerView];
 }
 
 #pragma mark -
@@ -733,6 +773,8 @@
 @synthesize connections = _connections;
 @synthesize directConnections = _directConnections;
 @synthesize bouncers = _bouncers;
+
+#pragma mark -
 
 - (NSSet *) connectedConnections {
 	NSMutableSet *result = [[NSMutableSet alloc] initWithCapacity:_connections.count];

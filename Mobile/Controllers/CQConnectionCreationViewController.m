@@ -107,24 +107,23 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 - (void) commit:(id) sender {
 	[self.view endEditing:YES];
 
-	MVChatConnection *connection = _editViewController.connection;
-	if (isPlaceholderValue(connection.server)) {
+	if (isPlaceholderValue(_connection.server)) {
 		[self cancel:sender];
 		return;
 	}
 
-	if (isDefaultValue(connection.preferredNickname))
-		connection.preferredNickname = [MVChatConnection defaultNickname];
+	if (isDefaultValue(_connection.preferredNickname))
+		_connection.preferredNickname = [MVChatConnection defaultNickname];
 
-	if (isDefaultValue(connection.realName))
-		connection.realName = [MVChatConnection defaultRealName];
+	if (isDefaultValue(_connection.realName))
+		_connection.realName = [MVChatConnection defaultRealName];
 
-	if (isDefaultValue(connection.username))
-		connection.username = [MVChatConnection defaultUsernameWithNickname:connection.preferredNickname];
+	if (isDefaultValue(_connection.username))
+		_connection.username = [MVChatConnection defaultUsernameWithNickname:_connection.preferredNickname];
 
-	[[CQConnectionsController defaultController] addConnection:connection];
+	[[CQConnectionsController defaultController] addConnection:_connection];
 
-	[connection connect];
+	[_connection connect];
 
 	[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = [CQConnectionsController defaultController];
 	[self dismissModalViewControllerAnimated:YES];
