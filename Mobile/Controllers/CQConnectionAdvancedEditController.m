@@ -316,8 +316,12 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.label = NSLocalizedString(@"Server Port", @"Server Port connection setting label");
 			cell.text = (_connection.serverPort == defaultPort ? @"" : [NSString stringWithFormat:@"%hu", _connection.serverPort]);
 			cell.textField.placeholder = [NSString stringWithFormat:@"%hu", defaultPort];
-			cell.textField.keyboardType = UIKeyboardTypeNumberPad;
-			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+			if (_connection.directConnection) {
+				cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+			} else {
+				cell.editable = NO;
+			}
 
 			return cell;
 		} else if (indexPath.row == 1) {
@@ -327,6 +331,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.switchAction = @selector(secureChanged:);
 			cell.label = NSLocalizedString(@"Use SSL", @"Use SSL connection setting label");
 			cell.on = _connection.secure;
+			cell.switchControl.enabled = _connection.directConnection;
 
 			return cell;
 		}
@@ -340,9 +345,13 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.label = NSLocalizedString(@"Username", @"Username connection setting label");
 			cell.text = (isDefaultValue(_connection.username) ? @"" : _connection.username);
 			cell.textField.placeholder = [MVChatConnection defaultUsernameWithNickname:currentPreferredNickname(_connection)];
-			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
-			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+			if (_connection.directConnection) {
+				cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
+				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+			} else {
+				cell.editable = NO;
+			}
 		} else if (indexPath.row == 1) {
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView withIdentifier:@"Secure CQPreferencesTextCell"];
 
@@ -350,10 +359,14 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.label = NSLocalizedString(@"Password", @"Password connection setting label");
 			cell.text = _connection.password;
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
-			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
-			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textField.secureTextEntry = YES;
+			if (_connection.directConnection) {
+				cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
+				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+			} else {
+				cell.editable = NO;
+			}
 		} else if (indexPath.row == 2) {
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView withIdentifier:@"Secure CQPreferencesTextCell"];
 
@@ -361,10 +374,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.label = NSLocalizedString(@"Nick Pass.", @"Nickname Password connection setting label");
 			cell.text = _connection.nicknamePassword;
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
+			cell.textField.secureTextEntry = YES;
 			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-			cell.textField.secureTextEntry = YES;
 		}
 
 		cell.target = self;

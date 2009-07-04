@@ -151,9 +151,9 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 #pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
-	if (self.newConnection)
-		return 5;
-	return 6;
+	if (self.newConnection || !_connection.directConnection)
+		return (pushAvailable ? 5 : 4);
+	return (pushAvailable ? 6 : 5);
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
@@ -258,12 +258,16 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			cell.label = NSLocalizedString(@"Address", @"Address connection setting label");
 			cell.text = (isPlaceholderValue(_connection.server) ? @"" : _connection.server);
 			cell.textField.placeholder = (_newConnection ? @"irc.example.com" : @"");
-			cell.textField.keyboardType = UIKeyboardTypeURL;
-			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-			cell.textEditAction = @selector(serverChanged:);
-			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-			cell.accessoryAction = @selector(showDefaultServerList);
+			if (_connection.directConnection) {
+				cell.textField.keyboardType = UIKeyboardTypeURL;
+				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+				cell.textEditAction = @selector(serverChanged:);
+				cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+				cell.accessoryAction = @selector(showDefaultServerList);
+			} else {
+				cell.editable = NO;
+			}
 		} else if (indexPath.row == 0) {
 			cell.label = NSLocalizedString(@"Description", @"Description connection setting label");
 			cell.text = (![_connection.displayName isEqualToString:_connection.server] ? _connection.displayName : @"");
@@ -300,8 +304,12 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			cell.label = NSLocalizedString(@"Real Name", @"Real Name connection setting label");
 			cell.text = (isDefaultValue(_connection.realName) ? @"" : _connection.realName);
 			cell.textField.placeholder = [MVChatConnection defaultRealName];
-			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
-			cell.textEditAction = @selector(realNameChanged:);
+			if (_connection.directConnection) {
+				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+				cell.textEditAction = @selector(realNameChanged:);
+			} else {
+				cell.editable = NO;
+			}
 		}
 
 		return cell;

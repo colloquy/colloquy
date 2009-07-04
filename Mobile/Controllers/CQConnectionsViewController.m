@@ -241,9 +241,7 @@
 
 	CQConnectionTableCell *cell = [CQConnectionTableCell reusableTableViewCellInTableView:tableView];
 
-	if (indexPath.section == 0)
-		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-	else cell.accessoryType = UITableViewCellAccessoryNone;
+	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
 	[cell takeValuesFromConnection:connection];
 
@@ -260,7 +258,7 @@
 }
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {
-	return UITableViewCellEditingStyleDelete;
+	return (indexPath.section == 0 ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone);
 }
 
 - (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {

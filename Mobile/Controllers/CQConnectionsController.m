@@ -1045,6 +1045,12 @@
 
 #pragma mark -
 
+- (BOOL) isDirectConnection {
+	return (self.bouncerType == MVChatConnectionNoBouncer);
+}
+
+#pragma mark -
+
 - (void) setBouncerSettings:(CQBouncerSettings *) settings {
 	if (settings.identifier == self.bouncerIdentifier)
 		return;
