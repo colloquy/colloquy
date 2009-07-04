@@ -30,7 +30,7 @@
 	_textField.backgroundColor = nil;
 	_textField.opaque = NO;
 
-	_editable = YES;
+	_enabled = YES;
 
 	[self.contentView addSubview:_label];
 	[self.contentView addSubview:_textField];
@@ -75,7 +75,7 @@
 		return;
 
 	if (selected) _textField.textColor = [UIColor whiteColor];
-	else if (!_editable) _textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:0.5];
+	else if (!_enabled) _textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:0.5];
 	else _textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 }
 
@@ -98,7 +98,7 @@
 - (void) prepareForReuse {
 	[super prepareForReuse];
 
-	_editable = YES;
+	_enabled = YES;
 
 	self.label = @"";
 	self.text = @"";
@@ -110,6 +110,7 @@
 	self.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
 	self.textField.autocorrectionType = UITextAutocorrectionTypeDefault;
 	self.textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
+	self.textField.enabled = YES;
 
 	[self.textField resignFirstResponder];
 }
@@ -164,19 +165,21 @@
 	[originalText release];
 }
 
-@synthesize editable = _editable;
+@synthesize enabled = _enabled;
 
-- (void) setEditable:(BOOL) editable {
-	_editable = editable;
+- (void) setEnabled:(BOOL) enabled {
+	self.textField.enabled = enabled;
 
-	if (_editable) _textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
+	_enabled = enabled;
+
+	if (_enabled) _textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 	else _textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:0.5];
 }
 
 @synthesize textEditAction = _textEditAction;
 
 - (BOOL) textFieldShouldBeginEditing:(UITextField *) textField {
-	return _editable && (self.accessoryType == UITableViewCellAccessoryNone || self.accessoryType == UITableViewCellAccessoryDetailDisclosureButton);
+	return _enabled && (self.accessoryType == UITableViewCellAccessoryNone || self.accessoryType == UITableViewCellAccessoryDetailDisclosureButton);
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *) textField {

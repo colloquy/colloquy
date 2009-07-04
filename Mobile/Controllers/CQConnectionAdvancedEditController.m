@@ -320,7 +320,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 				cell.textField.keyboardType = UIKeyboardTypeNumberPad;
 				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			} else {
-				cell.editable = NO;
+				cell.enabled = NO;
 			}
 
 			return cell;
@@ -350,7 +350,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			} else {
-				cell.editable = NO;
+				cell.enabled = NO;
 			}
 		} else if (indexPath.row == 1) {
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView withIdentifier:@"Secure CQPreferencesTextCell"];
@@ -365,7 +365,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			} else {
-				cell.editable = NO;
+				cell.enabled = NO;
 			}
 		} else if (indexPath.row == 2) {
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView withIdentifier:@"Secure CQPreferencesTextCell"];

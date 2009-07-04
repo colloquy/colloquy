@@ -266,7 +266,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 				cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 				cell.accessoryAction = @selector(showDefaultServerList);
 			} else {
-				cell.editable = NO;
+				cell.enabled = NO;
 			}
 		} else if (indexPath.row == 0) {
 			cell.label = NSLocalizedString(@"Description", @"Description connection setting label");
@@ -308,7 +308,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
 				cell.textEditAction = @selector(realNameChanged:);
 			} else {
-				cell.editable = NO;
+				cell.enabled = NO;
 			}
 		}
 

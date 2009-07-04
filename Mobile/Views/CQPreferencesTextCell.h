@@ -2,14 +2,14 @@
 	@protected
 	UILabel *_label;
 	UITextField *_textField;
-	BOOL _editable;
+	BOOL _enabled;
 	SEL _textEditAction;
 }
 @property (nonatomic, copy) NSString *label;
 
 @property (nonatomic, readonly) UITextField *textField;
 
-@property (nonatomic, assign) BOOL editable;
+@property (nonatomic, assign, getter = isEnabled) BOOL enabled;
 
 @property (nonatomic) SEL textEditAction;
 @end
