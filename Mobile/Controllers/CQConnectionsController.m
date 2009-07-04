@@ -3,6 +3,7 @@
 #import "CQBouncerSettings.h"
 #import "CQBouncerConnection.h"
 #import "CQBouncerCreationViewController.h"
+#import "CQBouncerEditViewController.h"
 #import "CQChatController.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
@@ -215,7 +216,17 @@
 	CQConnectionEditViewController *editViewController = [[CQConnectionEditViewController alloc] init];
 	editViewController.connection = connection;
 
-	_wasEditingConnection = YES;
+	_wasEditing = YES;
+	[self pushViewController:editViewController animated:YES];
+
+	[editViewController release];
+}
+
+- (void) editBouncer:(CQBouncerSettings *) settings {
+	CQBouncerEditViewController *editViewController = [[CQBouncerEditViewController alloc] init];
+	editViewController.settings = settings;
+
+	_wasEditing = YES;
 	[self pushViewController:editViewController animated:YES];
 
 	[editViewController release];
@@ -224,9 +235,9 @@
 #pragma mark -
 
 - (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
-	if (viewController == _connectionsViewController && _wasEditingConnection) {
+	if (viewController == _connectionsViewController && _wasEditing) {
 		[self saveConnections];
-		_wasEditingConnection = NO;
+		_wasEditing = NO;
 	}
 }
 

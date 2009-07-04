@@ -19,7 +19,7 @@
 	NSMutableArray *_bouncers;
 	NSMutableSet *_bouncerConnections;
 	NSMutableDictionary *_bouncerChatConnections;
-	BOOL _wasEditingConnection;
+	BOOL _wasEditing;
 	BOOL _loadedConnections;
 	NSUInteger _connectingCount;
 	NSUInteger _connectedCount;
@@ -44,6 +44,7 @@
 - (void) showModalNewConnectionViewForURL:(NSURL *) url;
 
 - (void) editConnection:(MVChatConnection *) connection;
+- (void) editBouncer:(CQBouncerSettings *) settings;
 
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address;
 - (NSArray *) connectionsForServerAddress:(NSString *) address;

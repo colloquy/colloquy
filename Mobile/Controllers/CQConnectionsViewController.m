@@ -1,11 +1,14 @@
 #import "CQConnectionsViewController.h"
 
 #import "CQColloquyApplication.h"
+#import "CQBouncerSectionHeader.h"
 #import "CQBouncerSettings.h"
 #import "CQConnectionTableCell.h"
 #import "CQConnectionsController.h"
 
 #import <ChatCore/MVChatConnection.h>
+
+#pragma mark -
 
 @implementation CQConnectionsViewController
 - (id) init {
@@ -214,6 +217,13 @@
 
 #pragma mark -
 
+- (void) tableSectionHeaderSelected:(CQBouncerSectionHeader *) header {
+	CQBouncerSettings *settings = [[CQConnectionsController defaultController].bouncers objectAtIndex:(header.section - 1)];
+	[[CQConnectionsController defaultController] editBouncer:settings];
+}
+
+#pragma mark -
+
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
 	return [CQConnectionsController defaultController].bouncers.count + 1;
 }
@@ -248,6 +258,23 @@
 	[cell takeValuesFromConnection:connection];
 
 	return cell;
+}
+
+- (CGFloat) tableView:(UITableView *) tableView heightForHeaderInSection:(NSInteger) section {
+	return (section == 0 ? 22. : 23.);
+}
+
+- (UIView *) tableView:(UITableView *) tableView viewForHeaderInSection:(NSInteger) section {
+	if (section == 0)
+		return nil;
+
+	CQBouncerSectionHeader *view = [[CQBouncerSectionHeader alloc] initWithFrame:CGRectZero];
+	view.textLabel.text = [self tableView:tableView titleForHeaderInSection:section];
+	view.section = section;
+
+	[view addTarget:self action:@selector(tableSectionHeaderSelected:) forControlEvents:UIControlEventTouchUpInside];
+
+	return [view autorelease];
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
