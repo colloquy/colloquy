@@ -326,7 +326,7 @@
 #define TOP_TEXT_MARGIN -1.
 #define LEFT_MARGIN 10.
 #define NO_ICON_LEFT_MARGIN 14.
-#define RIGHT_MARGIN 6.
+#define RIGHT_MARGIN 10.
 #define ICON_RIGHT_MARGIN 10.
 
 	CGRect contentRect = self.contentView.bounds;
