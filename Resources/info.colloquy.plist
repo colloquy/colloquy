@@ -63,7 +63,7 @@
 	<key>MVChatNaturalActions</key>
 	<false/>
 	<key>JVIdleTime</key>
-	<integer>300</integer>
+	<integer>30</integer>
 	<key>JVChatServers</key>
 	<array>
 		<string>irc.abjects.net</string>

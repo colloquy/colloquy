@@ -113,11 +113,11 @@ static BOOL applicationIsTerminating = NO;
 			_isIdle = NO;
 			[[NSNotificationCenter defaultCenter] postNotificationName:JVMachineStoppedIdlingNotification object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithDouble:idle] forKey:@"idleTime"]];
 
-			// reschedule the timer, to check for idle every 30 seconds
+			// reschedule the timer, to check for idle every 10 seconds
 			[_idleCheck invalidate];
-			[_idleCheck autorelease];
+			[_idleCheck release];
 
-			_idleCheck = [[NSTimer scheduledTimerWithTimeInterval:30. target:self selector:@selector( checkIdle: ) userInfo:nil repeats:YES] retain];
+			_idleCheck = [[NSTimer scheduledTimerWithTimeInterval:10. target:self selector:@selector( checkIdle: ) userInfo:nil repeats:YES] retain];
 		}
 	} else {
 		if( idle > [[NSUserDefaults standardUserDefaults] integerForKey:@"JVIdleTime"] ) {
@@ -126,11 +126,11 @@ static BOOL applicationIsTerminating = NO;
 			_isIdle = YES;
 			[[NSNotificationCenter defaultCenter] postNotificationName:JVMachineBecameIdleNotification object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithDouble:idle] forKey:@"idleTime"]];
 
-			// reschedule the timer, we will check every second to catch the user's return quickly
+			// reschedule the timer, we will check every 2 seconds to catch the user's return quickly
 			[_idleCheck invalidate];
-			[_idleCheck autorelease];
+			[_idleCheck release];
 
-			_idleCheck = [[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector( checkIdle: ) userInfo:nil repeats:YES] retain];
+			_idleCheck = [[NSTimer scheduledTimerWithTimeInterval:2. target:self selector:@selector( checkIdle: ) userInfo:nil repeats:YES] retain];
 		}
 	}
 
