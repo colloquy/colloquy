@@ -20,8 +20,6 @@
 
 	_backgroundHighlightedImage = [image retain];
 
-	_backgroundImageView.highlightedImage = image;
-
 	_textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	_textLabel.font = [UIFont boldSystemFontOfSize:18.];
 	_textLabel.textColor = [UIColor whiteColor];
