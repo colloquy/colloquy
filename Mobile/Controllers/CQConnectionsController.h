@@ -46,6 +46,7 @@
 - (void) editConnection:(MVChatConnection *) connection;
 - (void) editBouncer:(CQBouncerSettings *) settings;
 
+- (MVChatConnection *) connectionForUniqueIdentifier:(NSString *) identifier;
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address;
 - (NSArray *) connectionsForServerAddress:(NSString *) address;
 - (BOOL) managesConnection:(MVChatConnection *) connection;

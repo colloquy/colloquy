@@ -18,11 +18,10 @@
 	MVChatConnection *_nextRoomConnection;
 	NSInteger _totalImportantUnreadCount;
 	BOOL _active;
-  MVChatUser *_fileUser;
-  UIImage *_transferImage;
-  BOOL _png;
+	MVChatUser *_fileUser;
+	UIImage *_transferImage;
+	BOOL _png;
 }
-
 + (CQChatController *) defaultController;
 
 @property (nonatomic, readonly) NSArray *chatViewControllers;
@@ -34,6 +33,7 @@
 
 - (void) showNewChatActionSheet;
 - (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) room andConnection:(MVChatConnection *) connection;
+- (void) showChatControllerForUserNicknamed:(NSString *) nickname andConnection:(MVChatConnection *) connection;
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated;
 - (void) showFilePickerWithUser:(MVChatUser *) user;
 

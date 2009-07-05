@@ -627,7 +627,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[_nextRoomConnection release];
 	_nextRoomConnection = nil;
 
-	MVChatRoom *room = (roomName ? [connection chatRoomWithName:roomName] : nil);
+	MVChatRoom *room = (roomName.length ? [connection chatRoomWithName:roomName] : nil);
 	if (room) {
 		CQChatRoomController *controller = [self chatViewControllerForRoom:room ifExists:YES];
 		if (controller) {
@@ -637,6 +637,21 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	}
 
 	_nextRoomConnection = [connection retain];
+}
+
+- (void) showChatControllerForUserNicknamed:(NSString *) nickname andConnection:(MVChatConnection *) connection {
+	[_nextRoomConnection release];
+	_nextRoomConnection = nil;
+
+	MVChatUser *user = (nickname.length ? [[connection chatUsersWithNickname:nickname] anyObject] : nil);
+	if (!user)
+		return;
+
+	CQDirectChatController *controller = [self chatViewControllerForUser:user ifExists:NO];
+	if (!controller)
+		return;
+
+	[self showChatController:controller animated:YES];
 }
 
 - (void) joinSupportRoom {

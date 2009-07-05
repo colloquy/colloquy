@@ -815,6 +815,13 @@
 	return [result autorelease];
 }
 
+- (MVChatConnection *) connectionForUniqueIdentifier:(NSString *) identifier {
+	for (MVChatConnection *connection in _connections)
+		if ([connection.uniqueIdentifier isEqualToString:identifier])
+			return connection;
+	return nil;
+}
+
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address {
 	NSArray *connections = [self connectionsForServerAddress:address];
 	if (connections.count)

@@ -98,6 +98,32 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	NSString *version = [NSString stringWithFormat:@"%@ (%@)", [info objectForKey:@"CFBundleShortVersionString"], [info objectForKey:@"CFBundleVersion"]];
 	[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQCurrentVersion"];
 
+	if ([launchOptions objectForKey:@"c"] || [launchOptions objectForKey:@"s"]) {
+		NSString *connectionServer = [launchOptions objectForKey:@"s"];
+		NSString *connectionIdentifier = [launchOptions objectForKey:@"c"];
+		NSString *roomName = [launchOptions objectForKey:@"r"];
+		NSString *senderNickname = [launchOptions objectForKey:@"n"];
+
+		MVChatConnection *connection = nil;
+		
+		if (connectionIdentifier.length)
+			connection = [[CQConnectionsController defaultController] connectionForUniqueIdentifier:connectionIdentifier];
+		if (!connection && connectionServer.length)
+			connection = [[CQConnectionsController defaultController] connectionForServerAddress:connectionServer];
+
+		if (connection) {
+			if (roomName.length) {
+				[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:connection];
+
+				tabBarController.selectedViewController = [CQChatController defaultController];
+			} else if (senderNickname.length) {
+				[[CQChatController defaultController] showChatControllerForUserNicknamed:senderNickname andConnection:connection];
+
+				tabBarController.selectedViewController = [CQChatController defaultController];
+			}
+		}
+	}
+
 	return YES;
 }
 
