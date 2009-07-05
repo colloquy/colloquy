@@ -25,6 +25,8 @@ typedef enum {
 @interface UIApplication (UIApplicationNew)
 - (void) registerForRemoteNotificationTypes:(UIRemoteNotificationType) types;
 @end
+
+#define UIApplicationLaunchOptionsRemoteNotificationKey @"UIApplicationLaunchOptionsRemoteNotificationKey"
 #endif
 
 #pragma mark -
@@ -98,20 +100,23 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	NSString *version = [NSString stringWithFormat:@"%@ (%@)", [info objectForKey:@"CFBundleShortVersionString"], [info objectForKey:@"CFBundleVersion"]];
 	[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQCurrentVersion"];
 
-	if ([launchOptions objectForKey:@"c"] || [launchOptions objectForKey:@"s"]) {
-		NSString *connectionServer = [launchOptions objectForKey:@"s"];
-		NSString *connectionIdentifier = [launchOptions objectForKey:@"c"];
-		NSString *roomName = [launchOptions objectForKey:@"r"];
-		NSString *senderNickname = [launchOptions objectForKey:@"n"];
+	NSDictionary *pushInfo = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+	NSString *connectionServer = [pushInfo objectForKey:@"s"];
+	NSString *connectionIdentifier = [pushInfo objectForKey:@"c"];
+	if (connectionServer.length || connectionIdentifier.length) {
+		NSString *roomName = [pushInfo objectForKey:@"r"];
+		NSString *senderNickname = [pushInfo objectForKey:@"n"];
 
 		MVChatConnection *connection = nil;
-		
+
 		if (connectionIdentifier.length)
 			connection = [[CQConnectionsController defaultController] connectionForUniqueIdentifier:connectionIdentifier];
 		if (!connection && connectionServer.length)
 			connection = [[CQConnectionsController defaultController] connectionForServerAddress:connectionServer];
 
 		if (connection) {
+			[connection connect];
+
 			if (roomName.length) {
 				[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:connection];
 
