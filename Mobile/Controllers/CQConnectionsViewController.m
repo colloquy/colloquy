@@ -305,11 +305,31 @@
 	[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
 }
 
-- (BOOL) tableView:(UITableView *) tableView canMoveRowAtIndexPath:(NSIndexPath *) indexPath {
-	return (indexPath.section == 0);
+- (NSIndexPath *) tableView:(UITableView *) tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *) sourceIndexPath toProposedIndexPath:(NSIndexPath *) proposedDestinationIndexPath {
+	if (sourceIndexPath.section == proposedDestinationIndexPath.section)
+		return proposedDestinationIndexPath;
+
+	if (proposedDestinationIndexPath.section < sourceIndexPath.section)
+		return [NSIndexPath indexPathForRow:0 inSection:sourceIndexPath.section];
+
+	NSUInteger rows = [self tableView:tableView numberOfRowsInSection:sourceIndexPath.section];
+	return [NSIndexPath indexPathForRow:(rows - 1) inSection:sourceIndexPath.section];
 }
 
 - (void) tableView:(UITableView *) tableView moveRowAtIndexPath:(NSIndexPath *) fromIndexPath toIndexPath:(NSIndexPath *) toIndexPath {
-	[[CQConnectionsController defaultController] moveConnectionAtIndex:fromIndexPath.row toIndex:toIndexPath.row];
+	if (fromIndexPath.section != toIndexPath.section) {
+		NSAssert(NO, @"Should not reach this point.");
+		return;
+	}
+
+	if (fromIndexPath.section == 0) {
+		[[CQConnectionsController defaultController] moveConnectionAtIndex:fromIndexPath.row toIndex:toIndexPath.row];
+		return;
+	}
+
+	NSArray *bouncers = [CQConnectionsController defaultController].bouncers;
+	CQBouncerSettings *settings = [bouncers objectAtIndex:(fromIndexPath.section - 1)];
+
+	[[CQConnectionsController defaultController] moveConnectionAtIndex:fromIndexPath.row toIndex:toIndexPath.row forBouncerIdentifier:settings.identifier];
 }
 @end

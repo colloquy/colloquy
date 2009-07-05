@@ -854,12 +854,6 @@
 	[self saveConnections];
 }
 
-- (void) moveConnection:(MVChatConnection *) connection toIndex:(NSUInteger) newIndex {
-	NSUInteger oldIndex = [_directConnections indexOfObjectIdenticalTo:connection];
-	if (oldIndex != NSNotFound)
-		[self moveConnectionAtIndex:oldIndex toIndex:newIndex];
-}
-
 - (void) moveConnectionAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex {
 	MVChatConnection *connection = [[_directConnections objectAtIndex:oldIndex] retain];
 
@@ -916,6 +910,20 @@
 	[_connectionsViewController addConnection:connection];
 
 	[oldConnection release];
+
+	[self saveConnections];
+}
+
+#pragma mark -
+
+- (void) moveConnectionAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex forBouncerIdentifier:(NSString *) identifier {
+	NSMutableArray *connections = [_bouncerChatConnections objectForKey:identifier];
+	MVChatConnection *connection = [[connections objectAtIndex:oldIndex] retain];
+
+	[connections removeObjectAtIndex:oldIndex];
+	[connections insertObject:connection atIndex:newIndex];
+
+	[connection release];
 
 	[self saveConnections];
 }

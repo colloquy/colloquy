@@ -53,7 +53,6 @@
 - (void) addConnection:(MVChatConnection *) connection;
 - (void) insertConnection:(MVChatConnection *) connection atIndex:(NSUInteger) index;
 
-- (void) moveConnection:(MVChatConnection *) connection toIndex:(NSUInteger) newIndex;
 - (void) moveConnectionAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex;
 
 - (void) removeConnection:(MVChatConnection *) connection;
@@ -61,6 +60,8 @@
 
 - (void) replaceConnection:(MVChatConnection *) previousConnection withConnection:(MVChatConnection *) newConnection;
 - (void) replaceConnectionAtIndex:(NSUInteger) index withConnection:(MVChatConnection *) connection;
+
+- (void) moveConnectionAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex forBouncerIdentifier:(NSString *) identifier;
 
 - (CQBouncerSettings *) bouncerSettingsForIdentifier:(NSString *) identifier;
 - (NSArray *) bouncerChatConnectionsForIdentifier:(NSString *) identifier;
