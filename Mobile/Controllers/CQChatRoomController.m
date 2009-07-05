@@ -7,8 +7,6 @@
 #import "CQSoundController.h"
 #import "NSStringAdditions.h"
 
-#import <AudioToolbox/AudioToolbox.h>
-
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
