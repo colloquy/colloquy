@@ -721,17 +721,11 @@
 }
 
 - (void) _refreshBouncerConnectionLists {
+	[_bouncerConnections makeObjectsPerformSelector:@selector(disconnect)];
 	[_bouncerConnections removeAllObjects];
 
-	for (CQBouncerSettings *settings in _bouncers) {
-		CQBouncerConnection *connection = [[CQBouncerConnection alloc] initWithBouncerSettings:settings];
-		[_bouncerConnections addObject:connection];
-
-		connection.delegate = self;
-		[connection connect];
-
-		[connection release];
-	}
+	for (CQBouncerSettings *settings in _bouncers)
+		[self refreshBouncerConnectionsWithBouncerSettings:settings];
 }
 
 - (void) saveConnections {
@@ -941,9 +935,24 @@
 	return [_bouncerChatConnections objectForKey:identifier];
 }
 
+#pragma mark -
+
+- (void) refreshBouncerConnectionsWithBouncerSettings:(CQBouncerSettings *) settings {
+	CQBouncerConnection *connection = [[CQBouncerConnection alloc] initWithBouncerSettings:settings];
+	[_bouncerConnections addObject:connection];
+
+	connection.delegate = self;
+	[connection connect];
+
+	[connection release];
+}
+
+#pragma mark -
+
 - (void) addBouncerSettings:(CQBouncerSettings *) bouncer {
 	NSParameterAssert(bouncer != nil);
 	[_bouncers addObject:bouncer];
+	[self refreshBouncerConnectionsWithBouncerSettings:bouncer];
 }
 
 - (void) removeBouncerSettings:(CQBouncerSettings *) settings {

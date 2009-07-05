@@ -66,6 +66,8 @@
 - (CQBouncerSettings *) bouncerSettingsForIdentifier:(NSString *) identifier;
 - (NSArray *) bouncerChatConnectionsForIdentifier:(NSString *) identifier;
 
+- (void) refreshBouncerConnectionsWithBouncerSettings:(CQBouncerSettings *) settings;
+
 - (void) addBouncerSettings:(CQBouncerSettings *) settings;
 - (void) removeBouncerSettings:(CQBouncerSettings *) settings;
 - (void) removeBouncerSettingsAtIndex:(NSUInteger) index;
