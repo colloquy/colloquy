@@ -127,6 +127,12 @@
 
 #pragma mark -
 
+- (void) updateConnection:(MVChatConnection *) connection {
+	[self _refreshConnection:connection];
+}
+
+#pragma mark -
+
 - (NSIndexPath *) indexPathForConnection:(MVChatConnection *) connection {
 	NSUInteger index = [[CQConnectionsController defaultController].directConnections indexOfObjectIdenticalTo:connection];
 	if (index != NSNotFound)

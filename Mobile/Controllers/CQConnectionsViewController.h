@@ -11,6 +11,8 @@
 - (void) addConnection:(MVChatConnection *) connection forBouncerIdentifier:(NSString *) identifier;
 - (void) removeConnection:(MVChatConnection *) connection forBouncerIdentifier:(NSString *) identifier;
 
+- (void) updateConnection:(MVChatConnection *) connection;
+
 - (NSIndexPath *) indexPathForConnection:(MVChatConnection *) connection;
 - (MVChatConnection *) connectionAtIndexPath:(NSIndexPath *) indexPath;
 @end

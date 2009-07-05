@@ -36,8 +36,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	return (CQColloquyApplication *)[UIApplication sharedApplication];
 }
 
-@synthesize tabBarController, mainWindow;
-
 - (void) dealloc {
 	[_launchDate release];
 	[_deviceToken release];
@@ -45,8 +43,13 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[super dealloc];
 }
 
+#pragma mark -
+
+@synthesize tabBarController, mainWindow;
 @synthesize launchDate = _launchDate;
 @synthesize deviceToken = _deviceToken;
+
+#pragma mark -
 
 - (NSArray *) highlightWords {
 	static NSMutableArray *highlightWords;

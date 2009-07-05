@@ -259,6 +259,10 @@ static BOOL pushAvailable = NO;
 
 - (void) pushEnabled:(CQPreferencesSwitchCell *) sender {
 	_settings.pushNotifications = sender.on;
+
+	NSArray *connections = [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:_settings.identifier];
+	for (MVChatConnection *connection in connections)
+		[connection sendPushNotificationCommands]; 
 }
 
 - (void) deleteBouncer {

@@ -275,9 +275,12 @@
 		}
 	}
 
+	BOOL newConnection = NO;
 	if (!chatConnection) {
 		chatConnection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
 		chatConnection.bouncerConnectionIdentifier = connectionIdentifier;
+
+		newConnection = YES;
 
 		[connections addObject:chatConnection];
 		[_connections addObject:chatConnection];
@@ -296,6 +299,10 @@
 	chatConnection.secure = [[info objectForKey:@"secure"] boolValue];
 	chatConnection.alternateNicknames = [info objectForKey:@"alternateNicknames"];
 	chatConnection.encoding = [[info objectForKey:@"encoding"] unsignedIntegerValue];
+
+	chatConnection.pushNotifications = YES;
+
+	[_connectionsViewController updateConnection:chatConnection];
 }
 
 - (void) bouncerConnectionDidFinishConnectionList:(CQBouncerConnection *) connection {
@@ -328,12 +335,23 @@
 	[UIApplication sharedApplication].idleTimerDisabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIdleTimerDisabled"];
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 
+	[connection removePersistentInformationObjectForKey:@"pushState"];
+
 	NSMutableArray *rooms = [connection.automaticJoinedRooms mutableCopy];
 
 	NSArray *previousRooms = [connection persistentInformationObjectForKey:@"previousRooms"];
 	if (previousRooms.count) {
 		[rooms addObjectsFromArray:previousRooms];
 		[connection removePersistentInformationObjectForKey:@"previousRooms"];
+	}
+
+	CQBouncerSettings *bouncerSettings = connection.bouncerSettings;
+	if (bouncerSettings) {
+		connection.bouncerType = bouncerSettings.type;
+		connection.bouncerServer = bouncerSettings.server;
+		connection.bouncerServerPort = bouncerSettings.serverPort;
+		connection.bouncerUsername = bouncerSettings.username;
+		connection.bouncerPassword = bouncerSettings.password;
 	}
 
 	[connection sendPushNotificationCommands];
@@ -407,11 +425,8 @@
 }
 
 - (void) _deviceTokenRecieved:(NSNotification *) notification {
-	for (MVChatConnection *connection in _connections) {
-		if (!connection.pushNotifications || !connection.connected)
-			continue;
+	for (MVChatConnection *connection in _connections)
 		[connection sendPushNotificationCommands]; 
-	}
 }
 
 - (void) _errorOccurred:(NSNotification *) notification {
@@ -601,6 +616,7 @@
 
 	[persistentInformation removeObjectForKey:@"automatic"];
 	[persistentInformation removeObjectForKey:@"push"];
+	[persistentInformation removeObjectForKey:@"pushState"];
 	[persistentInformation removeObjectForKey:@"rooms"];
 	[persistentInformation removeObjectForKey:@"previousRooms"];
 	[persistentInformation removeObjectForKey:@"description"];
@@ -699,6 +715,12 @@
 		if (!connection)
 			continue;
 
+		// TEMP: skip any direct connections that have bouncer identifiers.
+		if (connection.bouncerIdentifier.length) {
+			[connection release];
+			continue;
+		}
+
 		[_directConnections addObject:connection];
 		[_connections addObject:connection];
 
@@ -727,6 +749,8 @@
 	for (CQBouncerSettings *settings in _bouncers)
 		[self refreshBouncerConnectionsWithBouncerSettings:settings];
 }
+
+#pragma mark -
 
 - (void) saveConnections {
 	if (!_loadedConnections)
@@ -1103,9 +1127,6 @@
 
 	[self setPersistentInformationObject:[NSNumber numberWithBool:push] forKey:@"push"];
 
-	if (!self.connected && self.status != MVChatConnectionConnectingStatus)
-		return;
-
 	[self sendPushNotificationCommands];
 }
 
@@ -1122,8 +1143,6 @@
 #pragma mark -
 
 - (void) setBouncerSettings:(CQBouncerSettings *) settings {
-	if (settings.identifier == self.bouncerIdentifier)
-		return;
 	self.bouncerIdentifier = settings.identifier;
 }
 
@@ -1134,22 +1153,12 @@
 #pragma mark -
 
 - (void) setBouncerIdentifier:(NSString *) identifier {
-	self.bouncerType = MVChatConnectionNoBouncer;
+	if ([identifier isEqualToString:self.bouncerIdentifier])
+		return;
 
-	if (identifier) {
-		CQBouncerSettings *bouncerSettings = [[CQConnectionsController defaultController] bouncerSettingsForIdentifier:identifier];
-		if (bouncerSettings) {
-			self.bouncerType = bouncerSettings.type;
-			self.bouncerServer = bouncerSettings.server;
-			self.bouncerServerPort = bouncerSettings.serverPort;
-			self.bouncerUsername = bouncerSettings.username;
-			self.bouncerPassword = bouncerSettings.password;
-
-			[self setPersistentInformationObject:identifier forKey:@"bouncerIdentifier"];
-		}
-	} else {
-		[self removePersistentInformationObjectForKey:@"bouncerIdentifier"];
-	}
+	if (identifier.length)
+		[self setPersistentInformationObject:identifier forKey:@"bouncerIdentifier"];
+	else [self removePersistentInformationObjectForKey:@"bouncerIdentifier"];
 }
 
 - (NSString *) bouncerIdentifier {
@@ -1189,11 +1198,19 @@
 #pragma mark -
 
 - (void) sendPushNotificationCommands {
+	if (!self.connected && self.status != MVChatConnectionConnectingStatus)
+		return;
+
 	NSString *deviceToken = [CQColloquyApplication sharedApplication].deviceToken;
 	if (!deviceToken.length)
 		return;
 
-	if (self.pushNotifications) {
+	NSNumber *currentState = [self persistentInformationObjectForKey:@"pushState"];
+
+	CQBouncerSettings *settings = self.bouncerSettings;
+	if ((!settings || settings.pushNotifications) && self.pushNotifications && (!currentState || ![currentState boolValue])) {
+		[self setPersistentInformationObject:[NSNumber numberWithBool:YES] forKey:@"pushState"];
+
 		[self sendRawMessageWithFormat:@"PUSH add-device %@ :%@", deviceToken, [UIDevice currentDevice].name];
 
 		[self sendRawMessage:@"PUSH service colloquy.mobi 7906"];
@@ -1215,7 +1232,9 @@
 		else [self sendRawMessageWithFormat:@"PUSH message-sound none"];
 
 		[self sendRawMessage:@"PUSH end-device"];
-	} else {
+	} else if ((!currentState || [currentState boolValue])) {
+		[self setPersistentInformationObject:[NSNumber numberWithBool:NO] forKey:@"pushState"];
+
 		[self sendRawMessageWithFormat:@"PUSH remove-device :%@", deviceToken];
 	}
 }
