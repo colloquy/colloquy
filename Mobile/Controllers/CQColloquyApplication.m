@@ -70,6 +70,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	return highlightWords;
 }
 
+#pragma mark -
+
 - (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
 	NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
@@ -96,9 +98,15 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	NSString *version = [NSString stringWithFormat:@"%@ (%@)", [info objectForKey:@"CFBundleShortVersionString"], [info objectForKey:@"CFBundleVersion"]];
 	[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQCurrentVersion"];
 
-	self.applicationIconBadgeNumber = 0;
-
 	return YES;
+}
+
+- (void) application:(UIApplication *) application didReceiveRemoteNotification:(NSDictionary *) userInfo {
+	NSDictionary *apsInfo = [userInfo objectForKey:@"aps"];
+	if (!apsInfo.count)
+		return;
+
+	self.applicationIconBadgeNumber = [[apsInfo objectForKey:@"badge"] integerValue];
 }
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
@@ -137,6 +145,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	return [[CQConnectionsController defaultController] handleOpenURL:url];
 }
 
+#pragma mark -
+
 - (void) showActionSheet:(UIActionSheet *) sheet {
 #if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
 	UITabBar *tabBar = nil;
@@ -149,6 +159,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if (tabBar) [sheet showFromTabBar:tabBar];
 	else [sheet showInView:tabBarController.view];
 }
+
+#pragma mark -
 
 - (BOOL) isSpecialApplicationURL:(NSURL *) url {
 	return (url && ([url.host hasCaseInsensitiveSubstring:@"maps.google."] || [url.host hasCaseInsensitiveSubstring:@"youtube."] || [url.host hasCaseInsensitiveSubstring:@"phobos.apple."]));
@@ -193,6 +205,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	return YES;
 }
+
+#pragma mark -
 
 - (void) tabBarController:(UITabBarController *) currentTabBarController didSelectViewController:(UIViewController *) viewController {
 	[[NSUserDefaults standardUserDefaults] setInteger:tabBarController.selectedIndex forKey:@"CQSelectedTabIndex"];
