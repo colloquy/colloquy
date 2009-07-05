@@ -190,7 +190,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 			[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
 
 			if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnPrivateMessage"])
-				AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+				[CQSoundController vibrate];
 
 			if (![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"] isEqualToString:@"None"]) {
 				static CQSoundController *privateMessageSound; 
@@ -249,7 +249,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Deny", @"Deny alert button title")];
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnFileTransfer"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnFileTransfer"])
+		[CQSoundController vibrate];
 
 	if (![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnFileTransfer"] isEqualToString:@"None"]) {
 		static CQSoundController *fileTransferSound;
@@ -314,7 +315,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"])
+		[CQSoundController vibrate];
 
 	if (![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"] isEqualToString:@"None"]) {
 		static CQSoundController *highlightSound;

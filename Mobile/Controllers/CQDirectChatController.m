@@ -999,7 +999,8 @@
 			++[CQChatController defaultController].totalImportantUnreadCount;
 	}
 
-	if (highlighted && self.available && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+	if (highlighted && self.available && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"])
+		[CQSoundController vibrate];
 
 	if (highlighted && self.available && ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"] isEqualToString:@"None"]) {
 		static CQSoundController *highlightSound;

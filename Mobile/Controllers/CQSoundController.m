@@ -1,6 +1,18 @@
 #import "CQSoundController.h"
 
 @implementation CQSoundController
++ (void) vibrate {
+	static NSTimeInterval previousVibrateTime = 0.;
+
+	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
+	if ((currentTime - previousVibrateTime) < 2.)
+		return;
+
+	previousVibrateTime = currentTime;
+
+	AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+}
+
 - (id) initWithSoundNamed:(NSString *) soundName {
 	if (!soundName.length) {
 		[self release];
@@ -29,10 +41,18 @@
 		return nil;
 	}
 
+	_previousAlertTime = 0.;
+
 	return self;
 }
 
 - (void) playAlert {
+	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
+	if ((currentTime - _previousAlertTime) < 2.)
+		return;
+
+	_previousAlertTime = currentTime;
+
 	AudioServicesPlayAlertSound(_sound);
 }
 

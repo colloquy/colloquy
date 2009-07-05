@@ -4,6 +4,7 @@
 #import "CQChatUserListViewController.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
+#import "CQSoundController.h"
 #import "NSStringAdditions.h"
 
 #import <AudioToolbox/AudioToolbox.h>
@@ -383,7 +384,8 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	[alert addButtonWithTitle:NSLocalizedString(@"Rejoin", @"Rejoin alert button title")];
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"]) AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"])
+		[CQSoundController vibrate];
 
 	[alert show];
 
