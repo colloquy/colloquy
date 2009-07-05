@@ -243,6 +243,11 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (void) dealloc {
+	if (_deallocing)
+		return;
+
+	_deallocing = YES;
+
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 #if (!defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE) && (!defined(COMMAND_LINE_UTILITY) || !COMMAND_LINE_UTILITY)
