@@ -395,7 +395,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		[creationViewController release];
 	} else if (actionSheet.tag == NewConnectionActionSheetTag) {
 		if (buttonIndex == 0) {
-			[[CQConnectionsController defaultController] showModalNewConnectionView];
+			[[CQConnectionsController defaultController] showCreationActionSheet];
 		} else if (buttonIndex == 1) {
 			[self joinSupportRoom];
 		}

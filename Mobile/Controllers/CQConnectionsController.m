@@ -105,8 +105,8 @@
 	[super viewDidAppear:animated];
 
 	static BOOL offeredToCreate;
-	if (!_connections.count && !offeredToCreate) {
-		[self performSelector:@selector(showCreationOptionSheet) withObject:nil afterDelay:0.];
+	if (!_connections.count && !_bouncers.count && !offeredToCreate) {
+		[self performSelector:@selector(showCreationActionSheet) withObject:nil afterDelay:0.];
 		offeredToCreate = YES;
 	}
 }
@@ -178,7 +178,7 @@
 
 #pragma mark -
 
-- (void) showCreationOptionSheet {
+- (void) showCreationActionSheet {
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.tag = 1;
