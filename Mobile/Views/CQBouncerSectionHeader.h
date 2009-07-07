@@ -8,6 +8,6 @@
 }
 
 @property (nonatomic, readonly) UILabel *textLabel;
-@property (nonatomic, assign) NSUInteger section;
+@property (nonatomic) NSUInteger section;
 
 @end

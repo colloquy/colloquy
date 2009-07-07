@@ -30,7 +30,7 @@
 - (void) connect;
 - (void) disconnect;
 
-@property (assign, nonatomic) id <CQBouncerConnectionDelegate> delegate;
+@property (nonatomic, assign) id <CQBouncerConnectionDelegate> delegate;
 @end
 
 @protocol CQBouncerConnectionDelegate <NSObject>

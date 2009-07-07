@@ -11,7 +11,7 @@
 @property (nonatomic) NSUInteger selectedCompletion;
 @property (nonatomic, getter=isCloseSelected) BOOL closeSelected;
 
-@property (nonatomic,assign) id <CQTextCompletionViewDelegate> delegate;
+@property (nonatomic, assign) id <CQTextCompletionViewDelegate> delegate;
 @end
 
 @protocol CQTextCompletionViewDelegate <NSObject>

@@ -12,7 +12,7 @@
 @class MVChatUser;
 @class MVDirectChatConnection;
 
-@interface CQConnectionsController : UINavigationController <UINavigationControllerDelegate, UIActionSheetDelegate, CQBouncerConnectionDelegate> {
+@interface CQConnectionsController : UINavigationController <UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CQBouncerConnectionDelegate> {
 	@protected
 	NSMutableSet *_connections;
 	NSMutableArray *_directConnections;
@@ -87,11 +87,14 @@
 @property (nonatomic) BOOL automaticallyConnect;
 @property (nonatomic) BOOL pushNotifications;
 @property (nonatomic, readonly, getter = isDirectConnection) BOOL directConnection;
+@property (nonatomic, getter = isTemporaryDirectConnection) BOOL temporaryDirectConnection;
 @property (nonatomic, copy) NSString *bouncerIdentifier;
 @property (nonatomic, copy) CQBouncerSettings *bouncerSettings;
 
 - (void) savePasswordsToKeychain;
 - (void) loadPasswordsFromKeychain;
+
+- (void) connectDirectly;
 
 - (void) sendPushNotificationCommands;
 @end

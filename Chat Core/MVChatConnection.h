@@ -241,6 +241,7 @@ extern NSString *MVChatConnectionErrorDomain;
 @property(readonly) NSDate *connectedDate;
 @property(readonly) NSDate *nextReconnectAttemptDate;
 @property(readonly, getter=isWaitingToReconnect) BOOL waitingToReconnect;
+@property(readonly) unsigned short reconnectAttemptCount;
 @property(readonly) MVChatConnectionStatus status;
 @property(readonly) NSUInteger lag;
 
@@ -432,6 +433,7 @@ extern NSString *MVChatConnectionErrorDomain;
 - (BOOL) isSecure;
 - (BOOL) isConnected;
 - (BOOL) isWaitingToReconnect;
+- (unsigned short) reconnectAttemptCount;
 - (NSDate *) connectedDate;
 - (NSDate *) nextReconnectAttemptDate;
 

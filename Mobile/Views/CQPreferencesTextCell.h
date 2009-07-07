@@ -9,7 +9,7 @@
 
 @property (nonatomic, readonly) UITextField *textField;
 
-@property (nonatomic, assign, getter = isEnabled) BOOL enabled;
+@property (nonatomic, getter = isEnabled) BOOL enabled;
 
 @property (nonatomic) SEL textEditAction;
 @end

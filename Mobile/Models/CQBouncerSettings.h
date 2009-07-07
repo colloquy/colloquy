@@ -16,15 +16,15 @@
 
 @property (nonatomic, readonly) NSString *identifier;
 
-@property (nonatomic, assign) MVChatConnectionBouncer type;
+@property (nonatomic) MVChatConnectionBouncer type;
 
 @property (nonatomic, copy) NSString *displayName;
 
 @property (nonatomic, copy) NSString *server;
-@property (nonatomic, assign) unsigned short serverPort;
+@property (nonatomic) unsigned short serverPort;
 
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *password;
 
-@property (nonatomic, assign) BOOL pushNotifications;
+@property (nonatomic) BOOL pushNotifications;
 @end

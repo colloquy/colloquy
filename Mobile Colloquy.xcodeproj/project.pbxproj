@@ -113,6 +113,8 @@
 		1CB33C9C0D882BB000EC4E38 /* colloquies.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB33C990D882BB000EC4E38 /* colloquies.png */; };
 		1CBC07CE0F0741E400EEBCFB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CBC07CD0F0741E400EEBCFB /* SystemConfiguration.framework */; };
 		1CBCFF2D0F04632900EEBCFB /* CQTextCompletionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBCFF2C0F04632900EEBCFB /* CQTextCompletionView.m */; };
+		1CBEA7351002CC5C00546847 /* CQAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBEA7341002CC5C00546847 /* CQAlertView.m */; };
+		1CBEA7C7100318EF00546847 /* bouncer.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CBEA7C6100318EF00546847 /* bouncer.png */; };
 		1CC575980ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */; };
 		1CC576D30ED4684700FEC2C1 /* UITableViewCellAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */; };
 		1CC64A7A0EE90DC000DE91D0 /* members.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CC64A790EE90DC000DE91D0 /* members.png */; };
@@ -320,6 +322,9 @@
 		1CBC07CD0F0741E400EEBCFB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		1CBCFF2B0F04632900EEBCFB /* CQTextCompletionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQTextCompletionView.h; sourceTree = "<group>"; };
 		1CBCFF2C0F04632900EEBCFB /* CQTextCompletionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQTextCompletionView.m; sourceTree = "<group>"; };
+		1CBEA7331002CC5C00546847 /* CQAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQAlertView.h; sourceTree = "<group>"; };
+		1CBEA7341002CC5C00546847 /* CQAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQAlertView.m; sourceTree = "<group>"; };
+		1CBEA7C6100318EF00546847 /* bouncer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bouncer.png; sourceTree = "<group>"; };
 		1CC575960ED3A71900FEC2C1 /* CQPreferencesDeleteCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQPreferencesDeleteCell.h; sourceTree = "<group>"; };
 		1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesDeleteCell.m; sourceTree = "<group>"; };
 		1CC576D10ED4684700FEC2C1 /* UITableViewCellAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UITableViewCellAdditions.h; path = Mobile/Views/UITableViewCellAdditions.h; sourceTree = "<group>"; };
@@ -639,6 +644,8 @@
 		1C82C18D0D83CEFE009ABD9F /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				1CBEA7341002CC5C00546847 /* CQAlertView.m */,
+				1CBEA7331002CC5C00546847 /* CQAlertView.h */,
 				1C9C34830FFFE51F00F79731 /* CQBouncerSectionHeader.m */,
 				1C9C34820FFFE51F00F79731 /* CQBouncerSectionHeader.h */,
 				1CE69FD80EE317F200389442 /* CQChatInputBar.m */,
@@ -746,6 +753,7 @@
 				1CB33C970D882BB000EC4E38 /* connections.png */,
 				1CB33C980D882BB000EC4E38 /* buddies.png */,
 				1CB33C990D882BB000EC4E38 /* colloquies.png */,
+				1CBEA7C6100318EF00546847 /* bouncer.png */,
 				1CB318DA0D8644E4006A7513 /* server.png */,
 				1CD949800D8E18DB00756ACD /* directChatIcon.png */,
 				1C9E1A680F12E62600C18B55 /* info.png */,
@@ -941,6 +949,7 @@
 				1C9C34430FFF319C00F79731 /* sectionHeader.png in Resources */,
 				1C9C34F70FFFEFE500F79731 /* disclosureArrow.png in Resources */,
 				1C9C351C0FFFF2C500F79731 /* sectionHeaderHighlighted.png in Resources */,
+				1CBEA7C7100318EF00546847 /* bouncer.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1030,6 +1039,7 @@
 				1C16F77F0FFF049F008D7BB3 /* CQBouncerCreationViewController.m in Sources */,
 				1C16F79B0FFF0789008D7BB3 /* CQBouncerEditViewController.m in Sources */,
 				1C9C34840FFFE51F00F79731 /* CQBouncerSectionHeader.m in Sources */,
+				1CBEA7351002CC5C00546847 /* CQAlertView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

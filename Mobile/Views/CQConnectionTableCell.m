@@ -76,6 +76,10 @@
 		self.status = CQConnectionTableCellConnectedStatus;
 		break;
 	}
+
+	if (connection.bouncerType == MVChatConnectionColloquyBouncer)
+		_iconImageView.image = [UIImage imageNamed:@"bouncer.png"];
+	else _iconImageView.image = [UIImage imageNamed:@"server.png"];
 }
 
 - (NSString *) server {

@@ -5,11 +5,10 @@
 	NSTimer *_connectTimeUpdateTimer;
 	BOOL _active;
 }
-- (void) addConnection:(MVChatConnection *) connection;
-- (void) removeConnection:(MVChatConnection *) connection;
+- (void) update;
 
-- (void) addConnection:(MVChatConnection *) connection forBouncerIdentifier:(NSString *) identifier;
-- (void) removeConnection:(MVChatConnection *) connection forBouncerIdentifier:(NSString *) identifier;
+- (void) connectionAdded:(MVChatConnection *) connection;
+- (void) connectionRemovedAtIndexPath:(NSIndexPath *) indexPath;
 
 - (void) updateConnection:(MVChatConnection *) connection;
 

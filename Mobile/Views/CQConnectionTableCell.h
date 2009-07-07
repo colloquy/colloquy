@@ -24,5 +24,5 @@ typedef enum {
 @property (nonatomic, copy) NSString *server;
 @property (nonatomic, copy) NSString *nickname;
 @property (nonatomic, retain) NSDate *connectDate;
-@property (nonatomic, assign) CQConnectionTableCellStatus status;
+@property (nonatomic) CQConnectionTableCellStatus status;
 @end

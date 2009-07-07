@@ -107,22 +107,27 @@
 
 #pragma mark -
 
-- (void) addConnection:(MVChatConnection *) connection {
-	[self.tableView reloadData];
-}
-
-- (void) removeConnection:(MVChatConnection *) connection {
+- (void) update {
 	[self.tableView reloadData];
 }
 
 #pragma mark -
 
-- (void) addConnection:(MVChatConnection *) connection forBouncerIdentifier:(NSString *) identifier {
-	[self.tableView reloadData];
+- (void) connectionAdded:(MVChatConnection *) connection {
+	NSIndexPath *indexPath = [self indexPathForConnection:connection];
+	NSAssert(indexPath != nil, @"Index path should not be nil.");
+	if (!indexPath)
+		return;
+
+	[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
 }
 
-- (void) removeConnection:(MVChatConnection *) connection forBouncerIdentifier:(NSString *) identifier {
-	[self.tableView reloadData];
+- (void) connectionRemovedAtIndexPath:(NSIndexPath *) indexPath {
+	NSParameterAssert(indexPath != nil);
+	if (!indexPath)
+		return;
+
+	[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 #pragma mark -
@@ -173,6 +178,10 @@
 	sheet.tag = 1;
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
+
+	if (!connection.directConnection)
+		[sheet addButtonWithTitle:NSLocalizedString(@"Connect Directly", @"Connect Directly button title")];
+
 	if (connection.waitingToReconnect)
 		[sheet addButtonWithTitle:NSLocalizedString(@"Stop Connection Timer", @"Stop Connection Timer button title")];
 
@@ -209,10 +218,12 @@
 	MVChatConnection *connection = [self connectionAtIndexPath:selectedIndexPath];
 
 	if (actionSheet.tag == 1) {
-		if (buttonIndex == 1 && connection.waitingToReconnect)
-			[connection cancelPendingReconnectAttempts];
-		else if (!connection.connected)
+		if (buttonIndex == 0)
 			[connection connect];
+		else if (buttonIndex == 1 && !connection.directConnection)
+			[connection connectDirectly];
+		else if (connection.waitingToReconnect)
+			[connection cancelPendingReconnectAttempts];
 	} else if (actionSheet.tag == 2) {
 		if (buttonIndex == actionSheet.destructiveButtonIndex)
 			[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];

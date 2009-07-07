@@ -1085,6 +1085,10 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (BOOL) isWaitingToReconnect {
 	return ( ! [self isConnected] && _reconnectTimer ? YES : NO );
 }
+
+- (unsigned short) reconnectAttemptCount {
+	return _reconnectAttemptCount;
+}
 @end
 
 #pragma mark -

@@ -1,5 +1,6 @@
 #import "CQConnectionsController.h"
 
+#import "CQAlertView.h"
 #import "CQBouncerSettings.h"
 #import "CQBouncerConnection.h"
 #import "CQBouncerCreationViewController.h"
@@ -22,6 +23,8 @@
 @end
 
 #pragma mark -
+
+#define CannotConnectToBouncerConnectionTag 1
 
 @implementation CQConnectionsController
 + (CQConnectionsController *) defaultController {
@@ -48,7 +51,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnectOrDidNotConnect:) name:MVChatConnectionDidNotConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didNotConnect:) name:MVChatConnectionDidNotConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_errorOccurred:) name:MVChatConnectionErrorNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_deviceTokenRecieved:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 
@@ -88,9 +91,6 @@
 		return;
 
 	_connectionsViewController = [[CQConnectionsViewController alloc] init];
-
-	for (MVChatConnection *connection in _directConnections)
-		[_connectionsViewController addConnection:connection];
 
 	[self pushViewController:_connectionsViewController animated:NO];
 }
@@ -255,6 +255,18 @@
 
 #pragma mark -
 
+- (void) alertView:(CQAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+	if (buttonIndex == alertView.cancelButtonIndex)
+		return;
+
+	if (alertView.tag == CannotConnectToBouncerConnectionTag) {
+		MVChatConnection *connection = alertView.userInfo;
+		[connection connectDirectly];
+	}
+}
+
+#pragma mark -
+
 - (void) bouncerConnection:(CQBouncerConnection *) connection didRecieveConnectionInfo:(NSDictionary *) info {
 	NSMutableArray *connections = [_bouncerChatConnections objectForKey:connection.settings.identifier];
 	if (!connections) {
@@ -284,8 +296,6 @@
 
 		[connections addObject:chatConnection];
 		[_connections addObject:chatConnection];
-
-		[_connectionsViewController addConnection:chatConnection forBouncerIdentifier:connection.settings.identifier];
 	}
 
 	chatConnection.bouncerSettings = connection.settings;
@@ -302,7 +312,7 @@
 
 	chatConnection.pushNotifications = YES;
 
-	[_connectionsViewController updateConnection:chatConnection];
+	[_connectionsViewController connectionAdded:chatConnection];
 }
 
 - (void) bouncerConnectionDidFinishConnectionList:(CQBouncerConnection *) connection {
@@ -345,13 +355,17 @@
 		[connection removePersistentInformationObjectForKey:@"previousRooms"];
 	}
 
-	CQBouncerSettings *bouncerSettings = connection.bouncerSettings;
-	if (bouncerSettings) {
-		connection.bouncerType = bouncerSettings.type;
-		connection.bouncerServer = bouncerSettings.server;
-		connection.bouncerServerPort = bouncerSettings.serverPort;
-		connection.bouncerUsername = bouncerSettings.username;
-		connection.bouncerPassword = bouncerSettings.password;
+	if (connection.temporaryDirectConnection) {
+		connection.bouncerType = MVChatConnectionNoBouncer;
+	} else {
+		CQBouncerSettings *bouncerSettings = connection.bouncerSettings;
+		if (bouncerSettings) {
+			connection.bouncerType = bouncerSettings.type;
+			connection.bouncerServer = bouncerSettings.server;
+			connection.bouncerServerPort = bouncerSettings.serverPort;
+			connection.bouncerUsername = bouncerSettings.username;
+			connection.bouncerPassword = bouncerSettings.password;
+		}
 	}
 
 	[connection sendPushNotificationCommands];
@@ -411,6 +425,36 @@
 		[UIApplication sharedApplication].idleTimerDisabled = NO;
 }
 
+- (void) _didNotConnect:(NSNotification *) notification {
+	[self _didConnectOrDidNotConnect:notification];
+
+	MVChatConnection *connection = notification.object;
+
+	if (connection.temporaryDirectConnection) {
+		connection.temporaryDirectConnection = NO;
+		connection.bouncerType = MVChatConnectionColloquyBouncer;
+		return;
+	}
+
+	if (connection.directConnection || connection.reconnectAttemptCount > 0)
+		return;
+
+	CQAlertView *alert = [[CQAlertView alloc] init];
+	alert.tag = CannotConnectToBouncerConnectionTag;
+	alert.userInfo = connection;
+	alert.delegate = self;
+	alert.title = NSLocalizedString(@"Can't Connect to Bouncer", @"Can't Connect to Bouncer alert title");
+	alert.message = [NSString stringWithFormat:NSLocalizedString(@"Couldn't connect to \"%@\" via \"%@\". Would you like to connect directly?", @"Connect directly alert message"), connection.displayName, connection.bouncerSettings.displayName];
+
+	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+
+	[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];
+
+	[alert show];
+
+	[alert release];
+}
+
 - (void) _didConnect:(NSNotification *) notification {
 	++_connectedCount;
 
@@ -422,6 +466,12 @@
 		--_connectedCount;
 	if (!_connectedCount && !_connectingCount)
 		[UIApplication sharedApplication].idleTimerDisabled = NO;
+
+	MVChatConnection *connection = notification.object;
+	if (connection.temporaryDirectConnection) {
+		connection.temporaryDirectConnection = NO;
+		connection.bouncerType = MVChatConnectionColloquyBouncer;
+	}
 }
 
 - (void) _deviceTokenRecieved:(NSNotification *) notification {
@@ -617,6 +667,7 @@
 	[persistentInformation removeObjectForKey:@"automatic"];
 	[persistentInformation removeObjectForKey:@"push"];
 	[persistentInformation removeObjectForKey:@"pushState"];
+	[persistentInformation removeObjectForKey:@"direct"];
 	[persistentInformation removeObjectForKey:@"rooms"];
 	[persistentInformation removeObjectForKey:@"previousRooms"];
 	[persistentInformation removeObjectForKey:@"description"];
@@ -874,8 +925,6 @@
 	[_directConnections insertObject:connection atIndex:index];
 	[_connections addObject:connection];
 
-	[_connectionsViewController addConnection:connection];
-
 	[self saveConnections];
 }
 
@@ -900,9 +949,9 @@
 	MVChatConnection *connection = [[_directConnections objectAtIndex:index] retain];
 	if (!connection) return;
 
-	[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+	connection.temporaryDirectConnection = NO;
 
-	[_connectionsViewController removeConnection:connection];
+	[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 
 	[_directConnections removeObjectAtIndex:index];
 	[_connections removeObject:connection];
@@ -926,13 +975,9 @@
 
 	[oldConnection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 
-	[_connectionsViewController removeConnection:oldConnection];
-
 	[_directConnections replaceObjectAtIndex:index withObject:connection];
 	[_connections removeObject:oldConnection];
 	[_connections addObject:connection];
-
-	[_connectionsViewController addConnection:connection];
 
 	[oldConnection release];
 
@@ -1134,6 +1179,7 @@
 
 	[self setPersistentInformationObject:[NSNumber numberWithBool:push] forKey:@"push"];
 
+	
 	[self sendPushNotificationCommands];
 }
 
@@ -1142,6 +1188,17 @@
 }
 
 #pragma mark -
+
+- (BOOL) isTemporaryDirectConnection {
+	return [[self persistentInformationObjectForKey:@"direct"] boolValue];
+}
+
+- (void) setTemporaryDirectConnection:(BOOL) direct {
+	if (direct == self.temporaryDirectConnection)
+		return;
+
+	[self setPersistentInformationObject:[NSNumber numberWithBool:direct] forKey:@"direct"];
+}
 
 - (BOOL) isDirectConnection {
 	return (self.bouncerType == MVChatConnectionNoBouncer);
@@ -1200,6 +1257,14 @@
 
 	if ((password = [[CQKeychain standardKeychain] passwordForServer:self.uniqueIdentifier account:@"Server"]) && password.length)
 		self.password = password;
+}
+
+#pragma mark -
+
+- (void) connectDirectly {
+	if (self.bouncerType == MVChatConnectionColloquyBouncer)
+		self.temporaryDirectConnection = YES;
+	[self connect];
 }
 
 #pragma mark -
