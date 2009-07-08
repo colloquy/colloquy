@@ -6,31 +6,6 @@
 #import "NSStringAdditions.h"
 #import "RegexKitLite.h"
 
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-@interface UITabBarController (UITabBarControllerPrivate)
-@property (nonatomic, readonly) UITabBar *tabBar;
-@end
-#endif
-
-#pragma mark -
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-typedef enum {
-	UIRemoteNotificationTypeNone = 0,
-	UIRemoteNotificationTypeBadge = 1 << 0,
-	UIRemoteNotificationTypeSound = 1 << 1,
-	UIRemoteNotificationTypeAlert = 1 << 2
-} UIRemoteNotificationType;
-
-@interface UIApplication (UIApplicationNew)
-- (void) registerForRemoteNotificationTypes:(UIRemoteNotificationType) types;
-@end
-
-#define UIApplicationLaunchOptionsRemoteNotificationKey @"UIApplicationLaunchOptionsRemoteNotificationKey"
-#endif
-
-#pragma mark -
-
 NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyApplicationDidRecieveDeviceTokenNotification";
 
 @implementation CQColloquyApplication
@@ -179,14 +154,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #pragma mark -
 
 - (void) showActionSheet:(UIActionSheet *) sheet {
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-	UITabBar *tabBar = nil;
-	if ([tabBarController respondsToSelector:@selector(tabBar)])
-		tabBar = tabBarController.tabBar;
-#elif __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
 	UITabBar *tabBar = tabBarController.tabBar;
-#endif
-
 	if (tabBar) [sheet showFromTabBar:tabBar];
 	else [sheet showInView:tabBarController.view];
 }

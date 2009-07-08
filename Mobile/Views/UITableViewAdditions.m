@@ -1,11 +1,5 @@
 #import "UITableViewAdditions.h"
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-@interface UITableView (UITableViewNew)
-- (void) reloadRowsAtIndexPaths:(NSArray *)indexPaths withRowAnimation:(UITableViewRowAnimation) animation;
-@end
-#endif
-
 @implementation UITableView (UITableViewColloquyAdditions)
 - (void) updateCellAtIndexPath:(NSIndexPath *) indexPath withAnimation:(UITableViewRowAnimation) animation {
 	NSParameterAssert(indexPath != nil);

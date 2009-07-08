@@ -3,10 +3,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#ifndef __IPHONE_3_0
-#define __IPHONE_3_0 30000
-#endif
-
 #import "UITableViewAdditions.h"
 #import "UITableViewCellAdditions.h"
 

@@ -179,7 +179,7 @@
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
 
-	if (!connection.directConnection)
+	if (connection.temporaryDirectConnection || !connection.directConnection)
 		[sheet addButtonWithTitle:NSLocalizedString(@"Connect Directly", @"Connect Directly button title")];
 
 	if (connection.waitingToReconnect)
@@ -218,12 +218,13 @@
 	MVChatConnection *connection = [self connectionAtIndexPath:selectedIndexPath];
 
 	if (actionSheet.tag == 1) {
-		if (buttonIndex == 0)
+		[connection cancelPendingReconnectAttempts];
+
+		if (buttonIndex == 0) {
+			connection.temporaryDirectConnection = NO;
 			[connection connect];
-		else if (buttonIndex == 1 && !connection.directConnection)
+		} else if (buttonIndex == 1 && (connection.temporaryDirectConnection || !connection.directConnection))
 			[connection connectDirectly];
-		else if (connection.waitingToReconnect)
-			[connection cancelPendingReconnectAttempts];
 	} else if (actionSheet.tag == 2) {
 		if (buttonIndex == actionSheet.destructiveButtonIndex)
 			[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];

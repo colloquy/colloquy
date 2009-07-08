@@ -11,7 +11,8 @@
 static unsigned short ServerTableSection = 0;
 static unsigned short AuthenticationTableSection = 1;
 static unsigned short PushTableSection = 2;
-static unsigned short DeleteTableSection = 3;
+static unsigned short UpdateTableSection = 3;
+static unsigned short DeleteTableSection = 4;
 
 static BOOL pushAvailable = NO;
 
@@ -26,8 +27,10 @@ static BOOL pushAvailable = NO;
 	pushAvailable = [[UIApplication sharedApplication] respondsToSelector:@selector(enabledRemoteNotificationTypes)];
 #endif
 
-	if (!pushAvailable)
-		DeleteTableSection = 2;
+	if (!pushAvailable) {
+		UpdateTableSection = 2;
+		DeleteTableSection = 3;
+	}
 
 	return self;
 }
@@ -84,7 +87,7 @@ static BOOL pushAvailable = NO;
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
 	if (_newBouncer)
 		return (pushAvailable ? 3 : 2);
-	return (pushAvailable ? 4 : 3);
+	return (pushAvailable ? 5 : 4);
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
@@ -94,13 +97,24 @@ static BOOL pushAvailable = NO;
 		return 2;
 	if (pushAvailable && section == PushTableSection)
 		return 1;
+	if (section == UpdateTableSection)
+		return 1;
 	if (section == DeleteTableSection)
 		return 1;
 	return 0;
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	if (indexPath.section == UpdateTableSection && indexPath.row == 0)
+		return indexPath;
 	return nil;
+}
+
+- (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	if (indexPath.section == UpdateTableSection && indexPath.row == 0) {
+		[[CQConnectionsController defaultController] refreshBouncerConnectionsWithBouncerSettings:_settings];
+		[self.navigationController popViewControllerAnimated:YES];
+	}
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
@@ -189,6 +203,23 @@ static BOOL pushAvailable = NO;
 		cell.switchAction = @selector(pushEnabled:);
 		cell.label = NSLocalizedString(@"Push Notifications", @"Push Notifications connection setting label");
 		cell.on = _settings.pushNotifications;
+
+		return cell;
+	} else if (indexPath.section == UpdateTableSection && indexPath.row == 0) {
+		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
+		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0., 10., 320., 20.)];
+
+		label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		label.font = [UIFont boldSystemFontOfSize:15.];
+		label.textColor = [UIColor colorWithRed:(85. / 255.) green:(102. / 255.) blue:(145. / 255.) alpha:1.];
+		label.highlightedTextColor = [UIColor whiteColor];
+
+		[cell.contentView addSubview:label];
+
+		label.text = NSLocalizedString(@"Update Connection List", @"Update Connection List button label");
+		label.textAlignment = UITextAlignmentCenter;
+
+		[label release];
 
 		return cell;
 	} else if (indexPath.section == DeleteTableSection && indexPath.row == 0) {

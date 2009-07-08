@@ -19,6 +19,9 @@
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatUserWatchRule.h>
 
+#import <MediaPlayer/MPMusicPlayerController.h>
+#import <MediaPlayer/MPMediaItem.h>
+
 #import <objc/message.h>
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
@@ -389,7 +392,7 @@
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois", @"/dcc", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/tweet", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois", @"/dcc", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/tweet", @"/ipod", @"/itunes", @"/music", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -586,6 +589,48 @@
 	[transcriptView reset];
 
 	return YES;
+}
+
+- (BOOL) handleMusicCommandWithArguments:(NSString *) arguments {
+	if (!NSClassFromString(@"MPMusicPlayerController") || !NSClassFromString(@"MPMediaItem"))
+		return NO;
+
+	MPMusicPlayerController *musicController = [MPMusicPlayerController iPodMusicPlayer];
+	MPMediaItem *nowPlayingItem = musicController.nowPlayingItem;
+
+	NSString *message = nil;
+	if (nowPlayingItem && musicController.playbackState == MPMusicPlaybackStatePlaying) {
+		NSString *title = [nowPlayingItem valueForProperty:MPMediaItemPropertyTitle];
+		NSString *artist = [nowPlayingItem valueForProperty:MPMediaItemPropertyArtist];
+		NSString *album = [nowPlayingItem valueForProperty:MPMediaItemPropertyAlbumTitle];
+
+		if (title.length && artist.length && album.length)
+			message = [NSString stringWithFormat:NSLocalizedString(@"is listening to %@ by %@ from %@.", @"Listening to music by an artist from an album"), title, artist, album];
+		else if (title.length && artist.length)
+			message = [NSString stringWithFormat:NSLocalizedString(@"is listening to %@ by %@.", @"Listening to music by an artist"), title, artist];
+		else if (title.length && album.length)
+			message = [NSString stringWithFormat:NSLocalizedString(@"is listening to %@ from %@.", @"Listening to music from an album"), title, album];
+		else if (title.length)
+			message = [NSString stringWithFormat:NSLocalizedString(@"is listening to %@.", @"Listening to music"), title];
+		else message = NSLocalizedString(@"is listening to an untitled song.", @"Listening to untitled music");
+	} else {
+		message = NSLocalizedString(@"is not currently listening to music.", @"Not listening to music message");
+	}
+
+	[_target sendMessage:message withEncoding:self.encoding asAction:YES];
+
+	NSData *messageData = [message dataUsingEncoding:self.encoding allowLossyConversion:YES];
+	[self addMessage:messageData fromUser:self.connection.localUser asAction:YES withIdentifier:[NSString locallyUniqueString]];
+
+	return YES;
+}
+
+- (BOOL) handleIpodCommandWithArguments:(NSString *) arguments {
+	return [self handleMusicCommandWithArguments:arguments];
+}
+
+- (BOOL) handleItunesCommandWithArguments:(NSString *) arguments {
+	return [self handleMusicCommandWithArguments:arguments];
 }
 
 #pragma mark -
