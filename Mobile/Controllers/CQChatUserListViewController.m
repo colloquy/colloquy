@@ -1,5 +1,6 @@
 #import "CQChatUserListViewController.h"
 
+#import "CQActionSheet.h"
 #import "CQChatController.h"
 #import "CQColloquyApplication.h"
 #import "CQDirectChatController.h"
@@ -12,6 +13,9 @@
 
 static NSString *membersSingleCountFormat;
 static NSString *membersFilteredCountFormat;
+
+#define UserActionSheetTag 1
+#define OperatorActionSheetTag 2
 
 @implementation CQChatUserListViewController
 + (void) initialize {
@@ -351,6 +355,7 @@ static NSString *membersFilteredCountFormat;
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	sheet.tag = UserActionSheetTag;
 	sheet.delegate = self;
 
 	NSUInteger localUserModes = (_room.connection.localUser ? [_room modesForMemberUser:_room.connection.localUser] : 0);
@@ -369,20 +374,19 @@ static NSString *membersFilteredCountFormat;
 	[sheet release];
 }
 
+#pragma mark -
+
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
-	NSDictionary *context = (NSDictionary *)actionSheet.tag;
 
 	if (buttonIndex == actionSheet.cancelButtonIndex) {
 		[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
-
-		[context release]; // Retained earlier
 		return;
 	}
 
 	MVChatUser *user = [_matchedUsers objectAtIndex:selectedIndexPath.row];
 
-	if (!context) {
+	if (actionSheet.tag == UserActionSheetTag) {
 		if (buttonIndex == 0) {
 			[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
 
@@ -416,11 +420,12 @@ static NSString *membersFilteredCountFormat;
 			BOOL selectedUserIsAdministrator = (selectedUserModes & MVChatRoomMemberAdministratorMode);
 			BOOL selectedUserIsFounder = (selectedUserModes & MVChatRoomMemberFounderMode);
 
-			NSMutableDictionary *context = [[NSMutableDictionary alloc] init]; // Released later in actionSheet:clickedButtonAtIndex:
+			NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 
-			UIActionSheet *operatorSheet = [[UIActionSheet alloc] init];
+			CQActionSheet *operatorSheet = [[UIActionSheet alloc] init];
+			operatorSheet.tag = OperatorActionSheetTag;
 			operatorSheet.delegate = self;
-			operatorSheet.tag = (NSUInteger)context;
+			operatorSheet.userInfo = context;
 
 			if (localUserIsHalfOperator || localUserIsOperator || localUserIsAdministrator || localUserIsFounder) {
 				[operatorSheet addButtonWithTitle:NSLocalizedString(@"Kick from Room", @"Kick from Room button title")];
@@ -481,11 +486,12 @@ static NSString *membersFilteredCountFormat;
 			[[CQColloquyApplication sharedApplication] showActionSheet:operatorSheet];
 
 			[operatorSheet release];
+			[context release];
 		}
-	} else {
+	} else if (actionSheet.tag == OperatorActionSheetTag) {
 		[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
 
-		id action = [context objectForKey:[NSNumber numberWithUnsignedInteger:buttonIndex]];
+		id action = [((CQActionSheet *)actionSheet).userInfo objectForKey:[NSNumber numberWithUnsignedInteger:buttonIndex]];
 
 		if ([action isKindOfClass:[NSNumber class]]) {
 			MVChatRoomMemberMode mode = ([action unsignedIntegerValue] & 0x7FFF);
@@ -499,8 +505,6 @@ static NSString *membersFilteredCountFormat;
 		} else if ([action isEqual:@"kick"]) {
 			[_room kickOutMemberUser:user forReason:nil];
 		}
-
-		[context release]; // Retained earlier
 	}
 }
 @end

@@ -49,7 +49,7 @@
 
 #pragma mark -
 
-static MVChatConnection *connectionForSection(NSInteger section) {
+static MVChatConnection *connectionForSection(NSUInteger section) {
 	NSMutableSet *connections = [NSMutableSet set];
 
 	for (id cntlr in [CQChatController defaultController].chatViewControllers) {

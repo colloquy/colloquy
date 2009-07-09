@@ -380,10 +380,9 @@ retry:
 
 	word = [text substringWithRange:wordRange];
 
-	UITextAutocorrectionType newAutocorrectionType = _inputField.autocorrectionType;
+	UITextAutocorrectionType newAutocorrectionType = UITextAutocorrectionTypeDefault;
 	if (!_autocorrect || completions.count || ([delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![delegate chatInputBar:self shouldAutocorrectWordWithPrefix:word]))
 		newAutocorrectionType = UITextAutocorrectionTypeNo;
-	else newAutocorrectionType = UITextAutocorrectionTypeDefault;
 
 	if (newAutocorrectionType != _inputField.autocorrectionType) {
 		_inputField.autocorrectionType = newAutocorrectionType;

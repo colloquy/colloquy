@@ -1,5 +1,6 @@
 #import "CQChatController.h"
 
+#import "CQAlertView.h"
 #import "CQChatCreationViewController.h"
 #import "CQChatListViewController.h"
 #import "CQChatRoomController.h"
@@ -14,6 +15,9 @@
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVDirectChatConnection.h>
 #import <ChatCore/MVFileTransfer.h>
+
+#define ChatRoomInviteAlertTag 1
+#define FileDownloadAlertTag 2
 
 #define NewChatActionSheetTag 1
 #define NewConnectionActionSheetTag 2
@@ -237,10 +241,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	}
 
 	NSString *user = transfer.user.displayName;
-	NSDictionary *context = [[NSDictionary alloc] initWithObjectsAndKeys:@"download", @"action", transfer, @"transfer", nil];
 
-	UIAlertView *alert = [[UIAlertView alloc] init];
-	alert.tag = (NSInteger)context;
+	CQAlertView *alert = [[UIAlertView alloc] init];
+	alert.tag = FileDownloadAlertTag;
+	alert.userInfo = transfer;
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"File Download", "File Download alert title");
 	alert.message = [NSString stringWithFormat:NSLocalizedString(@"%@ wants to send you \"%@\".", "File download alert message"), user, file];
@@ -302,11 +306,9 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 	MVChatRoom *room = [connection chatRoomWithName:roomName];
 
-	// Context is released in alertView:clickedButtonAtIndex:.
-	NSDictionary *context = [[NSDictionary alloc] initWithObjectsAndKeys:@"invite", @"action", room, @"room", nil];
-
-	UIAlertView *alert = [[UIAlertView alloc] init];
-	alert.tag = (NSInteger)context;
+	CQAlertView *alert = [[UIAlertView alloc] init];
+	alert.tag = ChatRoomInviteAlertTag;
+	alert.userInfo = room;
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"Invited to Room", "Invited to room alert title");
 	alert.message = [NSString stringWithFormat:NSLocalizedString(@"You were invited to \"%@\" by \"%@\" on \"%@\".", "Invited to join room alert message"), room.displayName, user.displayName, connection.displayName];
@@ -352,31 +354,26 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 #pragma mark -
 
 - (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	NSDictionary *context = (NSDictionary *)alertView.tag;
+	id userInfo = ((CQAlertView *)alertView).userInfo;
 
 	if (buttonIndex == alertView.cancelButtonIndex) {
-		NSString *action = [context objectForKey:@"action"];
-		if ([action isEqualToString:@"download"]) {
-			[[context objectForKey:@"transfer"] reject];
-		}
-
-		[context release];
+		if (alertView.tag == FileDownloadAlertTag)
+			[(MVDownloadFileTransfer *)userInfo reject];
 		return;
 	}
 
-	NSString *action = [context objectForKey:@"action"];
-	if ([action isEqualToString:@"invite"]) {
-		[[context objectForKey:@"room"] join];
-	} else if ([action isEqualToString:@"download"]) {
-		MVDownloadFileTransfer *transfer = [context objectForKey:@"transfer"];
+	if (alertView.tag == ChatRoomInviteAlertTag) {
+		[(MVChatRoom *)userInfo join];
+	} else if (alertView.tag == FileDownloadAlertTag) {
+		MVDownloadFileTransfer *transfer = userInfo;
 		NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:transfer.originalFileName];
 		[self chatViewControllerForFileTransfer:transfer ifExists:NO];
 		[transfer setDestination:filePath renameIfFileExists:YES];
 		[transfer acceptByResumingIfPossible:YES];
 	}
-
-	[context release];
 }
+
+#pragma mark -
 
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.cancelButtonIndex) {
@@ -449,6 +446,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	}
 }
 
+#pragma mark -
+
 - (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo {
 	_transferImage = [image retain];
 	
@@ -479,7 +478,9 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
     [_fileUser release];
 }
 
-- (void)_sendImage {
+#pragma mark -
+
+- (void) _sendImage {
 	NSData *data = nil;
 	if (_png) data = UIImagePNGRepresentation(_transferImage);
 	else data = UIImageJPEGRepresentation(_transferImage, 0.83333333f);

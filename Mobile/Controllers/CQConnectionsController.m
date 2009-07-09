@@ -296,6 +296,8 @@
 
 		[connections addObject:chatConnection];
 		[_connections addObject:chatConnection];
+
+		[chatConnection release];
 	}
 
 	chatConnection.bouncerSettings = connection.settings;
@@ -747,8 +749,6 @@
 
 			if ([info objectForKey:@"chatState"])
 				[[CQChatController defaultController] restorePersistentState:[info objectForKey:@"chatState"] forConnection:connection];
-
-			[connection release];
 		}
 
 		[bouncerChatConnections release];
@@ -762,18 +762,14 @@
 			continue;
 
 		// TEMP: skip any direct connections that have bouncer identifiers.
-		if (connection.bouncerIdentifier.length) {
-			[connection release];
+		if (connection.bouncerIdentifier.length)
 			continue;
-		}
 
 		[_directConnections addObject:connection];
 		[_connections addObject:connection];
 
 		if ([info objectForKey:@"chatState"])
 			[[CQChatController defaultController] restorePersistentState:[info objectForKey:@"chatState"] forConnection:connection];
-
-		[connection release];
 	}
 
 	[self performSelector:@selector(_connectAutomaticConnections) withObject:nil afterDelay:0.5];
