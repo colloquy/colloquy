@@ -31,6 +31,7 @@
 		1C0938950D813A6B00A2705D /* CQDirectChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937EB0D8126D400A2705D /* CQDirectChatController.m */; };
 		1C0938960D813A6C00A2705D /* CQChatRoomController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937ED0D8126D400A2705D /* CQChatRoomController.m */; };
 		1C0DBC7F100569E7003BEEF3 /* CQActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0DBC7E100569E7003BEEF3 /* CQActionSheet.m */; };
+		1C0DBCA91005A57A003BEEF3 /* CQProcessChatMessageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0DBCA81005A57A003BEEF3 /* CQProcessChatMessageOperation.m */; };
 		1C0EB67A0D8660E900B6F1BC /* errorBadgeDim.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0EB6780D8660E900B6F1BC /* errorBadgeDim.png */; };
 		1C0EB67B0D8660E900B6F1BC /* errorBadgeGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0EB6790D8660E900B6F1BC /* errorBadgeGlow.png */; };
 		1C0F686B0F144DBE002BB855 /* bubbles.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F686A0F144DBE002BB855 /* bubbles.css */; };
@@ -217,6 +218,8 @@
 		1C0C33990EF0162100062186 /* MVAvailability.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MVAvailability.h; path = "Chat Core/MVAvailability.h"; sourceTree = "<group>"; };
 		1C0DBC7D100569E7003BEEF3 /* CQActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQActionSheet.h; sourceTree = "<group>"; };
 		1C0DBC7E100569E7003BEEF3 /* CQActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQActionSheet.m; sourceTree = "<group>"; };
+		1C0DBCA71005A57A003BEEF3 /* CQProcessChatMessageOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQProcessChatMessageOperation.h; sourceTree = "<group>"; };
+		1C0DBCA81005A57A003BEEF3 /* CQProcessChatMessageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQProcessChatMessageOperation.m; sourceTree = "<group>"; };
 		1C0EB6780D8660E900B6F1BC /* errorBadgeDim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = errorBadgeDim.png; sourceTree = "<group>"; };
 		1C0EB6790D8660E900B6F1BC /* errorBadgeGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = errorBadgeGlow.png; sourceTree = "<group>"; };
 		1C0F686A0F144DBE002BB855 /* bubbles.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = bubbles.css; sourceTree = "<group>"; };
@@ -532,6 +535,16 @@
 			name = "Utility Classes";
 			sourceTree = "<group>";
 		};
+		1C0DBCA41005A538003BEEF3 /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				1C0DBCA81005A57A003BEEF3 /* CQProcessChatMessageOperation.m */,
+				1C0DBCA71005A57A003BEEF3 /* CQProcessChatMessageOperation.h */,
+			);
+			name = Operations;
+			path = Mobile/Operations;
+			sourceTree = "<group>";
+		};
 		1C16F7410FFF0269008D7BB3 /* Connections */ = {
 			isa = PBXGroup;
 			children = (
@@ -694,6 +707,7 @@
 				1C0931F70D80C9DB00A2705D /* Chat Core */,
 				1C09345E0D80D24100A2705D /* Controllers */,
 				1C63415F0FAF307B00BB5866 /* Models */,
+				1C0DBCA41005A538003BEEF3 /* Operations */,
 				1C82C18D0D83CEFE009ABD9F /* Views */,
 				29B97315FDCFA39411CA2CEA /* Other Sources & Additions */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -1050,6 +1064,7 @@
 				1C9C34840FFFE51F00F79731 /* CQBouncerSectionHeader.m in Sources */,
 				1CBEA7351002CC5C00546847 /* CQAlertView.m in Sources */,
 				1C0DBC7F100569E7003BEEF3 /* CQActionSheet.m in Sources */,
+				1C0DBCA91005A57A003BEEF3 /* CQProcessChatMessageOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

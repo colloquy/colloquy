@@ -6,6 +6,7 @@
 #import "CQChatRoomController.h"
 #import "CQChatTableCell.h"
 #import "CQColloquyApplication.h"
+#import "CQProcessChatMessageOperation.h"
 #import "CQStyleView.h"
 #import "CQWhoisNavController.h"
 #import "CQSoundController.h"
@@ -25,10 +26,15 @@
 #import <objc/message.h>
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
+- (void) _addPendingComponent:(id) component;
+- (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _updateRightBarButtonItemAnimated:(BOOL) animated;
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command;
-- (NSDictionary *) _processMessage:(NSDictionary *) message highlightedMessage:(BOOL *) highlighted;
 @end
+
+#pragma mark -
+
+static NSOperationQueue *chatMessageProcessingQueue;
 
 #pragma mark -
 
@@ -255,11 +261,10 @@
 		}
 	}
 
-	if (_pendingComponents) {
+	if (_pendingComponents.count) {
 		[transcriptView addComponents:_pendingComponents animated:NO];
 
-		[_pendingComponents release];
-		_pendingComponents = nil;
+		[_pendingComponents removeAllObjects];
 	}
 }
 
@@ -268,11 +273,10 @@
 
 	_active = YES;
 
-	if (_pendingComponents) {
+	if (_pendingComponents.count) {
 		[transcriptView addComponents:_pendingComponents animated:NO];
 
-		[_pendingComponents release];
-		_pendingComponents = nil;
+		[_pendingComponents removeAllObjects];
 	}
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -568,8 +572,7 @@
 }
 
 - (BOOL) handleClearCommandWithArguments:(NSString *) arguments {
-	[_pendingComponents release];
-	_pendingComponents = nil;
+	[_pendingComponents removeAllObjects];
 
 	[_pendingPreviousSessionComponents release];
 	_pendingPreviousSessionComponents = nil;
@@ -1009,11 +1012,7 @@
 	if (messageString) [message setObject:messageString forKey:@"message"];
 	if (identifier) [message setObject:identifier forKey:@"identifier"];
 
-	if (!transcriptView || !_active) {
-		if (!_pendingComponents)
-			_pendingComponents = [[NSMutableArray alloc] init];
-		[_pendingComponents addObject:message];
-	} else [transcriptView addComponent:message animated:YES];
+	[self _addPendingComponent:message];
 
 	[message release];
 }
@@ -1032,47 +1031,23 @@
 }
 
 - (void) addMessage:(NSDictionary *) message {
-	BOOL highlighted = NO;
-	message = [self _processMessage:message highlightedMessage:&highlighted];
+	NSParameterAssert(message != nil);
 
-	MVChatUser *user = [message objectForKey:@"user"];
-	if (!user.localUser && !_active && self.available) {
-		if (highlighted) ++_unreadHighlightedMessages;
-		else ++_unreadMessages;
-
-		if (self.user || highlighted)
-			++[CQChatController defaultController].totalImportantUnreadCount;
+	if (!chatMessageProcessingQueue) {
+		chatMessageProcessingQueue = [[NSOperationQueue alloc] init];
+		chatMessageProcessingQueue.maxConcurrentOperationCount = 1;
 	}
 
-	if (highlighted && self.available && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"])
-		[CQSoundController vibrate];
+	CQProcessChatMessageOperation *operation = [[CQProcessChatMessageOperation alloc] initWithMessageInfo:message];
+	operation.highlightNickname = self.connection.nickname;
+	operation.encoding = self.encoding;
 
-	if (highlighted && self.available && ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"] isEqualToString:@"None"]) {
-		static CQSoundController *highlightSound;
+	operation.target = self;
+	operation.action = @selector(_messageProcessed:);
 
-		if (!highlightSound) {
-			NSString *alert = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
-			highlightSound = [[CQSoundController alloc] initWithSoundNamed:alert];
-		}
+	[chatMessageProcessingQueue addOperation:operation];
 
-		[highlightSound playAlert];
-	}
-
-	if (!_recentMessages)
-		_recentMessages = [[NSMutableArray alloc] init];
-	[_recentMessages addObject:message];
-
-	while (_recentMessages.count > 10)
-		[_recentMessages removeObjectAtIndex:0];
-
-	if (!transcriptView || !_active) {
-		if (!_pendingComponents)
-			_pendingComponents = [[NSMutableArray alloc] init];
-		[_pendingComponents addObject:message];
-		return;
-	}
-
-	[transcriptView addComponent:message animated:YES];
+	[operation release];
 }
 
 #pragma mark -
@@ -1097,161 +1072,6 @@
 }
 
 #pragma mark -
-
-static void commonChatReplacment(NSMutableString *string, NSRangePointer textRange) {
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"])
-		[string substituteEmoticonsForEmojiInRange:textRange withXMLSpecialCharactersEncodedAsEntities:YES];
-
-	// Catch IRC rooms like "#room" but not HTML colors like "#ab12ef" nor HTML entities like "&#135;" or "&amp;".
-	// Catch well-formed urls like "http://www.apple.com", "www.apple.com" or "irc://irc.javelin.cc".
-	// Catch well-formed email addresses like "user@example.com" or "user@example.co.uk".
-	NSString *urlRegex = @"(\\B(?<!&amp;)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&;#]{2,}\\b)|(\\b(?:[a-zA-Z][a-zA-Z0-9+.-]{2,6}:(?://){0,1}|www\\.)[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+[\\p{L}\\p{N}\\p{M}\\p{S}\\p{C}])|([\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+@(?:[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+\\.)+[\\w]{2,})";
-
-	NSRange matchedRange = [string rangeOfRegex:urlRegex options:RKLCaseless inRange:*textRange capture:0 error:NULL];
-	while (matchedRange.location != NSNotFound) {
-		NSArray *components = [string captureComponentsMatchedByRegex:urlRegex options:RKLCaseless range:matchedRange error:NULL];
-		NSString *room = [components objectAtIndex:1];
-		NSString *url = [components objectAtIndex:2];
-		NSString *email = [components objectAtIndex:3];
-
-		NSString *linkHTMLString = nil;
-		if (room.length) {
-			linkHTMLString = [NSString stringWithFormat:@"<a href=\"irc:///%@\">%1$@</a>", room];
-		} else if (url.length) {
-			NSString *fullURL = ([url hasCaseInsensitivePrefix:@"www."] ? [@"http://" stringByAppendingString:url] : url);
-			url = [url stringByReplacingOccurrencesOfString:@"/" withString:@"/\u200b"];
-			url = [url stringByReplacingOccurrencesOfString:@"?" withString:@"?\u200b"];
-			url = [url stringByReplacingOccurrencesOfString:@"=" withString:@"=\u200b"];
-			url = [url stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&amp;\u200b"];
-			linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\">%@</a>", fullURL, url];
-		} else if (email.length) {
-			linkHTMLString = [NSString stringWithFormat:@"<a href=\"mailto:%@\">%1$@</a>", email];
-		}
-
-		if (linkHTMLString) {
-			[string replaceCharactersInRange:matchedRange withString:linkHTMLString];
-
-			textRange->length += (linkHTMLString.length - matchedRange.length);
-		}
-
-		NSRange matchRange = NSMakeRange(matchedRange.location + linkHTMLString.length, (NSMaxRange(*textRange) - matchedRange.location - linkHTMLString.length));
-		if (!matchRange.length)
-			break;
-
-		matchedRange = [string rangeOfRegex:urlRegex options:RKLCaseless inRange:matchRange capture:0 error:NULL];
-	}
-}
-
-static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRangePointer range, void (*function)(NSMutableString *, NSRangePointer)) {
-	if (!html || !function || !range)
-		return;
-
-	NSRange tagEndRange = NSMakeRange(range->location, 0);
-	while (1) {
-		NSRange tagStartRange = [html rangeOfString:@"<" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(tagEndRange), (NSMaxRange(*range) - NSMaxRange(tagEndRange)))];
-		if (tagStartRange.location == NSNotFound) {
-			NSUInteger length = (NSMaxRange(*range) - NSMaxRange(tagEndRange));
-			NSRange textRange = NSMakeRange(NSMaxRange(tagEndRange), length);
-			if (length) {
-				function(html, &textRange);
-				range->length += (textRange.length - length);
-			}
-
-			break;
-		}
-
-		NSUInteger length = (tagStartRange.location - NSMaxRange(tagEndRange));
-		NSRange textRange = NSMakeRange(NSMaxRange(tagEndRange), length);
-		if (length) {
-			function(html, &textRange);
-			range->length += (textRange.length - length);
-		}
-
-		tagEndRange = [html rangeOfString:@">" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(textRange), (NSMaxRange(*range) - NSMaxRange(textRange)))];
-		if (tagEndRange.location == NSNotFound || NSMaxRange(tagEndRange) == NSMaxRange(*range))
-			break;
-	}
-}
-
-#pragma mark -
-
-- (NSMutableString *) _processMessageData:(NSData *) messageData {
-	if (!messageData)
-		return nil;
-
-	NSMutableString *messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:self.encoding];
-	if (!messageString && self.encoding != NSISOLatin1StringEncoding)
-		messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:NSISOLatin1StringEncoding];
-	if (!messageString)
-		messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:NSASCIIStringEncoding];
-
-	return [messageString autorelease];
-}
-
-- (void) _processMessageString:(NSMutableString *) messageString {
-	if (!messageString.length)
-		return;
-
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]) {
-		[messageString stripXMLTags];
-
-		NSRange range = NSMakeRange(0, messageString.length);
-		commonChatReplacment(messageString, &range);
-		return;
-	}
-
-	NSRange range = NSMakeRange(0, messageString.length);
-	applyFunctionToTextInMutableHTMLString(messageString, &range, commonChatReplacment);
-}
-
-- (NSDictionary *) _processMessage:(NSDictionary *) message highlightedMessage:(BOOL *) highlighted {
-	NSMutableArray *highlightWords = [[CQColloquyApplication sharedApplication].highlightWords mutableCopy];
-	[highlightWords insertObject:self.connection.nickname atIndex:0];
-
-	*highlighted = NO;
-
-	NSMutableString *messageString = [self _processMessageData:[message objectForKey:@"message"]];
-
-	MVChatUser *user = [message objectForKey:@"user"];
-	if (!user.localUser && highlightWords.count) {
-		NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
-		NSString *stylelessMessageString = [messageString stringByStrippingXMLTags];
-
-		for (NSString *highlightWord in highlightWords) {
-			if (!highlightWord.length)
-				continue;
-
-			NSString *regex = nil;
-			if ([highlightWord hasPrefix:@"/"] && [highlightWord hasSuffix:@"/"] && highlightWord.length > 1) {
-				regex = [highlightWord substringWithRange:NSMakeRange(1, highlightWord.length - 2)];
-			} else {
-				highlightWord = [highlightWord stringByEscapingCharactersInSet:escapedCharacters];
-				regex = [NSString stringWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", highlightWord];
-			}
-
-			if ([stylelessMessageString isMatchedByRegex:regex options:RKLCaseless inRange:NSMakeRange(0, stylelessMessageString.length) error:NULL])
-				*highlighted = YES;
-
-			if (*highlighted)
-				break;
-		}
-	}
-
-	[self _processMessageString:messageString];
-
-	id sameKeys[] = {@"user", @"action", @"notice", @"identifier", nil};
-	NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:message];
-
-	[result setObject:@"message" forKey:@"type"];
-	[result setObject:messageString forKey:@"message"];
-
-	if (*highlighted)
-		[result setObject:[NSNumber numberWithBool:YES] forKey:@"highlighted"];
-
-	[highlightWords release];
-
-	return [result autorelease];
-}
 
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
 	UIAlertView *alert = [[UIAlertView alloc] init];
@@ -1325,5 +1145,90 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	[self.navigationItem setRightBarButtonItem:item animated:animated];
 
 	[item release];
+}
+
+- (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo {
+	if (!messageData) {
+		if (target && action)
+			[target performSelectorOnMainThread:action withObject:nil waitUntilDone:NO];
+		return;
+	}
+
+	if (!chatMessageProcessingQueue) {
+		chatMessageProcessingQueue = [[NSOperationQueue alloc] init];
+		chatMessageProcessingQueue.maxConcurrentOperationCount = 1;
+	}
+
+	CQProcessChatMessageOperation *operation = [[CQProcessChatMessageOperation alloc] initWithMessageData:messageData];
+	operation.encoding = self.encoding;
+
+	operation.target = target;
+	operation.action = action;
+	operation.userInfo = userInfo;
+
+	[chatMessageProcessingQueue addOperation:operation];
+
+	[operation release];
+}
+
+- (void) _addPendingComponent:(id) component {
+	if (!_pendingComponents)
+		_pendingComponents = [[NSMutableArray alloc] init];
+
+	BOOL hadPendingComponents = _pendingComponents.count;
+
+	[_pendingComponents addObject:component];
+
+	while (_pendingComponents.count > 300)
+		[_pendingComponents removeObjectAtIndex:0];
+
+	if (!transcriptView || !_active)
+		return;
+
+	if (!hadPendingComponents)
+		[self performSelector:@selector(_addPendingComponents) withObject:nil afterDelay:0.1];
+}
+
+- (void) _addPendingComponents {
+	[transcriptView addComponents:_pendingComponents animated:YES];
+
+	[_pendingComponents removeAllObjects];
+}
+
+- (void) _messageProcessed:(CQProcessChatMessageOperation *) operation {
+	NSMutableDictionary *message = operation.processedMessageInfo;
+	BOOL highlighted = [[message objectForKey:@"highlighted"] boolValue];
+
+	MVChatUser *user = [message objectForKey:@"user"];
+	if (!user.localUser && !_active && self.available) {
+		if (highlighted) ++_unreadHighlightedMessages;
+		else ++_unreadMessages;
+
+		if (self.user || highlighted)
+			++[CQChatController defaultController].totalImportantUnreadCount;
+	}
+
+	if (highlighted && self.available && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"])
+		[CQSoundController vibrate];
+
+	if (highlighted && self.available && ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"] isEqualToString:@"None"]) {
+		static CQSoundController *highlightSound;
+
+		if (!highlightSound) {
+			NSString *alert = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
+			highlightSound = [[CQSoundController alloc] initWithSoundNamed:alert];
+		}
+
+		[highlightSound playAlert];
+	}
+
+	if (!_recentMessages)
+		_recentMessages = [[NSMutableArray alloc] init];
+	[_recentMessages addObject:message];
+
+	while (_recentMessages.count > 10)
+		[_recentMessages removeObjectAtIndex:0];
+
+	[self _addPendingComponent:message];
 }
 @end
