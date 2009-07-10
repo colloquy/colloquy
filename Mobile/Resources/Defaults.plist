@@ -53,7 +53,7 @@
 	<key>CQShowsChatIcons</key>
 	<true/>
 	<key>CQIdleTimerDisabled</key>
-	<true/>
+	<false/>
 	<key>CQHistoryOnReconnect</key>
 	<true/>
 	<key>CQGraphicalEmoticons</key>

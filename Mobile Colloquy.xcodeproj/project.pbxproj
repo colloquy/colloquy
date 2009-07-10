@@ -32,6 +32,7 @@
 		1C0938960D813A6C00A2705D /* CQChatRoomController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937ED0D8126D400A2705D /* CQChatRoomController.m */; };
 		1C0DBC7F100569E7003BEEF3 /* CQActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0DBC7E100569E7003BEEF3 /* CQActionSheet.m */; };
 		1C0DBCA91005A57A003BEEF3 /* CQProcessChatMessageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0DBCA81005A57A003BEEF3 /* CQProcessChatMessageOperation.m */; };
+		1C0DC0621006F9BB003BEEF3 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C0DC0611006F9BB003BEEF3 /* IOKit.framework */; };
 		1C0EB67A0D8660E900B6F1BC /* errorBadgeDim.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0EB6780D8660E900B6F1BC /* errorBadgeDim.png */; };
 		1C0EB67B0D8660E900B6F1BC /* errorBadgeGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0EB6790D8660E900B6F1BC /* errorBadgeGlow.png */; };
 		1C0F686B0F144DBE002BB855 /* bubbles.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F686A0F144DBE002BB855 /* bubbles.css */; };
@@ -220,6 +221,7 @@
 		1C0DBC7E100569E7003BEEF3 /* CQActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQActionSheet.m; sourceTree = "<group>"; };
 		1C0DBCA71005A57A003BEEF3 /* CQProcessChatMessageOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQProcessChatMessageOperation.h; sourceTree = "<group>"; };
 		1C0DBCA81005A57A003BEEF3 /* CQProcessChatMessageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQProcessChatMessageOperation.m; sourceTree = "<group>"; };
+		1C0DC0611006F9BB003BEEF3 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		1C0EB6780D8660E900B6F1BC /* errorBadgeDim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = errorBadgeDim.png; sourceTree = "<group>"; };
 		1C0EB6790D8660E900B6F1BC /* errorBadgeGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = errorBadgeGlow.png; sourceTree = "<group>"; };
 		1C0F686A0F144DBE002BB855 /* bubbles.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = bubbles.css; sourceTree = "<group>"; };
@@ -408,6 +410,7 @@
 				1C124A720F097575008F181B /* AudioToolbox.framework in Frameworks */,
 				1CE7FF9E0FA3D064001C7B17 /* libicucore.dylib in Frameworks */,
 				1CD84C2B10040AB300E56A7E /* MediaPlayer.framework in Frameworks */,
+				1C0DC0621006F9BB003BEEF3 /* IOKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,6 +421,7 @@
 			isa = PBXGroup;
 			children = (
 				1C124A710F097575008F181B /* AudioToolbox.framework */,
+				1C0DC0611006F9BB003BEEF3 /* IOKit.framework */,
 				1CD84C2A10040AB300E56A7E /* MediaPlayer.framework */,
 				1CBC07CD0F0741E400EEBCFB /* SystemConfiguration.framework */,
 				1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */,

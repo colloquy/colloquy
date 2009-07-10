@@ -18,9 +18,22 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 
+#import <IOKit/pwr_mgt/IOPMLib.h>
+#import <IOKit/IOMessage.h>
+
+static io_connect_t rootPowerDomainPort;
+
 @interface CQConnectionsController (CQConnectionsControllerPrivate)
 - (void) _loadConnectionList;
+- (void) _powerStateMessageReceived:(natural_t) messageType withArgument:(long) messageArgument;
 @end
+
+#pragma mark -
+
+static void powerStateChange(void *context, io_service_t service, natural_t messageType, void *messageArgument) {       
+	CQConnectionsController *self = context;
+	[self _powerStateMessageReceived:messageType withArgument:(long)messageArgument];
+}
 
 #pragma mark -
 
@@ -58,6 +71,12 @@
 #if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
 #endif
+
+	io_object_t powerNotifier = 0;
+	IONotificationPortRef notificationPort = NULL;
+	rootPowerDomainPort = IORegisterForSystemPower(self, &notificationPort, powerStateChange, &powerNotifier);
+
+	CFRunLoopAddSource(CFRunLoopGetCurrent(), IONotificationPortGetRunLoopSource(notificationPort), kCFRunLoopCommonModes);
 
 	_connections = [[NSMutableSet alloc] initWithCapacity:10];
 	_bouncers = [[NSMutableArray alloc] initWithCapacity:2];
@@ -792,6 +811,22 @@
 		[self refreshBouncerConnectionsWithBouncerSettings:settings];
 }
 
+- (void) _powerStateMessageReceived:(natural_t) messageType withArgument:(long) messageArgument {
+	switch (messageType) {
+	case kIOMessageSystemWillSleep:
+		// System will go to sleep, we can't prevent it.
+		for (MVChatConnection *connection in _connections)
+			[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+		break;
+	case kIOMessageCanSystemSleep:
+		// System wants to go to sleep, but we can cancel it if we have connected connections.
+		if (_connectedCount || _connectingCount)
+			IOCancelPowerChange(rootPowerDomainPort, messageArgument);
+		else IOAllowPowerChange(rootPowerDomainPort, messageArgument);
+		break;
+	}
+}
+
 #pragma mark -
 
 - (void) saveConnections {
@@ -1047,7 +1082,7 @@
 		for (NSString *compontent in components) {
 			if ([compontent isCaseInsensitiveEqualToString:@"iPhone"] || [compontent isCaseInsensitiveEqualToString:@"iPod"])
 				continue;
-			if ([compontent isEqualToString:@"3G"] || [compontent isCaseInsensitiveEqualToString:@"Touch"])
+			if ([compontent isEqualToString:@"3G"] || [compontent isEqualToString:@"3GS"] || [compontent isEqualToString:@"S"] || [compontent isCaseInsensitiveEqualToString:@"Touch"])
 				continue;
 			if ([compontent hasCaseInsensitiveSuffix:@"'s"])
 				compontent = [compontent substringWithRange:NSMakeRange(0, (compontent.length - 2))];
