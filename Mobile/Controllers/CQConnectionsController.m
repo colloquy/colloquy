@@ -18,10 +18,19 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 
-#import <IOKit/pwr_mgt/IOPMLib.h>
-#import <IOKit/IOMessage.h>
+#if defined(ENABLE_SECRETS)
+typedef void (*IOServiceInterestCallback)(void *context, mach_port_t service, uint32_t messageType, void *messageArgument);
 
-static io_connect_t rootPowerDomainPort;
+mach_port_t IORegisterForSystemPower(void *context, void *notificationPort, IOServiceInterestCallback callback, mach_port_t *notifier);
+CFRunLoopSourceRef IONotificationPortGetRunLoopSource(void *notify);
+int IOAllowPowerChange(mach_port_t kernelPort, long notification);
+int IOCancelPowerChange(mach_port_t kernelPort, long notification);
+
+#define kIOMessageSystemWillSleep 0xe0000280
+#define kIOMessageCanSystemSleep 0xe0000270
+
+static mach_port_t rootPowerDomainPort;
+#endif
 
 @interface CQConnectionsController (CQConnectionsControllerPrivate)
 - (void) _loadConnectionList;
@@ -30,7 +39,7 @@ static io_connect_t rootPowerDomainPort;
 
 #pragma mark -
 
-static void powerStateChange(void *context, io_service_t service, natural_t messageType, void *messageArgument) {       
+static void powerStateChange(void *context, mach_port_t service, natural_t messageType, void *messageArgument) {       
 	CQConnectionsController *self = context;
 	[self _powerStateMessageReceived:messageType withArgument:(long)messageArgument];
 }
@@ -72,11 +81,13 @@ static void powerStateChange(void *context, io_service_t service, natural_t mess
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
 #endif
 
-	io_object_t powerNotifier = 0;
-	IONotificationPortRef notificationPort = NULL;
+#if defined(ENABLE_SECRETS)
+	mach_port_t powerNotifier = 0;
+	void *notificationPort = NULL;
 	rootPowerDomainPort = IORegisterForSystemPower(self, &notificationPort, powerStateChange, &powerNotifier);
 
 	CFRunLoopAddSource(CFRunLoopGetCurrent(), IONotificationPortGetRunLoopSource(notificationPort), kCFRunLoopCommonModes);
+#endif
 
 	_connections = [[NSMutableSet alloc] initWithCapacity:10];
 	_bouncers = [[NSMutableArray alloc] initWithCapacity:2];
@@ -811,6 +822,7 @@ static void powerStateChange(void *context, io_service_t service, natural_t mess
 		[self refreshBouncerConnectionsWithBouncerSettings:settings];
 }
 
+#if defined(ENABLE_SECRETS)
 - (void) _powerStateMessageReceived:(natural_t) messageType withArgument:(long) messageArgument {
 	switch (messageType) {
 	case kIOMessageSystemWillSleep:
@@ -826,6 +838,7 @@ static void powerStateChange(void *context, io_service_t service, natural_t mess
 		break;
 	}
 }
+#endif
 
 #pragma mark -
 
