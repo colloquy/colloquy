@@ -1,6 +1,6 @@
 @protocol CQBrowserViewControllerDelegate;
 
-@interface CQBrowserViewController : UIViewController <UIWebViewDelegate, UITextFieldDelegate> {
+@interface CQBrowserViewController : UIViewController <UIWebViewDelegate, UIAlertViewDelegate, UITextFieldDelegate> {
 	@protected
 	IBOutlet UIButton *backButton;
 	IBOutlet UIButton *stopReloadButton;

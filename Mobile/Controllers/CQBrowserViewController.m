@@ -3,6 +3,8 @@
 #import "CQColloquyApplication.h"
 #import "NSStringAdditions.h"
 
+#define InstapaperSettingsAlertTag 1
+
 static NSURL *lastURL;
 
 @implementation CQBrowserViewController
@@ -64,6 +66,8 @@ static NSURL *lastURL;
 
 @synthesize delegate = _delegate;
 
+#pragma mark -
+
 - (void) loadLastURL {
 	self.url = lastURL;
 }
@@ -120,60 +124,82 @@ static NSURL *lastURL;
 }
 
 - (IBAction) sendToInstapaper:(id) sender {
-	NSString *url = [self.url absoluteString];
-	
-	if ([url isCaseInsensitiveEqualToString:@"about:blank"]) return;
-	else url = [url stringByEncodingIllegalURLCharacters];
-	
-	BOOL posted = NO;
-	
+	NSString *url = locationField.text;
+	if (!url.length)
+		return;
+
+	BOOL success = YES;
+	BOOL showSettings = NO;
+
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.delegate = self;
 
-	NSString *user = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQInstapaperUsername"];
+	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
-	if (!user) {
-		alert.title = NSLocalizedString(@"No username given", "No username or email address alert title");
-		alert.message = NSLocalizedString(@"You need to enter an Instapaper username or email address before saving links.", "No username or email address alert message");
-	} else {
-		NSString *password = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQInstapaperPassword"];
-		NSString *instapaperURL = [NSString stringWithFormat:@"https://www.instapaper.com/api/add?username=%@&password=%@&url=%@&auto-title=1", user, password, url];
+	NSString *username = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQInstapaperUsername"];
+	if (!username.length) {
+		alert.title = NSLocalizedString(@"No Instapaper Username", "No Instapaper username alert title");
+		alert.message = NSLocalizedString(@"You need to enter an Instapaper username in Colloquy's Settings.", "No Instapaper username alert message");
+		showSettings = YES;
+		success = NO;
+	}
+
+	NSString *password = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQInstapaperPassword"];
+	if (success && !password.length) {
+		alert.title = NSLocalizedString(@"No Instapaper Password", "No Instapaper password alert title");
+		alert.message = NSLocalizedString(@"You need to enter an Instapaper password in Colloquy's Settings.", "No Instapaper password alert message");
+		showSettings = YES;
+		success = NO;
+	}
+
+	if (success) {
+		url = [url stringByEncodingIllegalURLCharacters];
+		username = [username stringByEncodingIllegalURLCharacters];
+		password = [password stringByEncodingIllegalURLCharacters];
+
+		NSString *instapaperURL = [NSString stringWithFormat:@"https://www.instapaper.com/api/add?username=%@&password=%@&url=%@&auto-title=1", username, password, url];
+
+		success = NO;
 
 		[CQColloquyApplication sharedApplication].networkActivityIndicatorVisible = YES;
-		
-		NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:instapaperURL] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.0];
+
 		NSError *error = nil;
-		NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:&error];
+		NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:instapaperURL] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.];
+		NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:&error];
 
 		[request release];
 
-		[CQColloquyApplication sharedApplication].networkActivityIndicatorVisible = YES;
+		[CQColloquyApplication sharedApplication].networkActivityIndicatorVisible = NO;
 
 		if (!error) {
 			NSString *response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
-			if ([response isEqual:@"201"]) posted = YES; // Success, posted to instapaper without issues
-			else if ([response isEqual:@"403"]) {
-				alert.title = NSLocalizedString(@"Incorrect Account Information", "Incorrect Account Information alert title");
-				alert.message = NSLocalizedString(@"An incorrect username/email or password was given.", "Incorrect username, email or password alert message");
-			} else if ([response isEqual:@"500"]) {
-				alert.title = NSLocalizedString(@"Service Error", "Service error alert title");
-				alert.message = NSLocalizedString(@"The service encountered an error. Please try again later.", "Service error alert message");
+			if ([response isEqualToString:@"201"]) {
+				success = YES;
+			} else if ([response isEqualToString:@"403"]) {
+				alert.title = NSLocalizedString(@"Couldn't Authenticate with Instapaper", "Could not authenticate title");
+				alert.message = NSLocalizedString(@"Make sure your Instapaper username and password are correct.", "Make sure your Instapaper username and password are correct alert message");
+				showSettings = YES;
+			} else if ([response isEqualToString:@"500"]) {
+				alert.title = NSLocalizedString(@"Instapaper Unavailable", "Twitter Temporarily Unavailable title");
+				alert.message = NSLocalizedString(@"Unable to send the URL because Instapaper is temporarily unavailable.", "Unable to send URL because Instapaper is temporarily unavailable alert message");
 			}
-			
+
 			[response release];
 		} else {
-			alert.title = NSLocalizedString(@"Unable to Submit URL", "Unable to submit URL alert title");
-			alert.message = NSLocalizedString(@"Unable to save URL to Instapaper.", "Unable to submit URL alert message");
+			alert.title = NSLocalizedString(@"Unable To Send URL", "Unable to send URL alert title");
+			alert.message = NSLocalizedString(@"Unable to send the URL to Instapaper.", "Unable to send the URL to Instapaper alert message");
 		}
 	}
 
-	if (!posted) {
-		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
-
-		[alert show];
+	if (showSettings) {
+		alert.tag = InstapaperSettingsAlertTag;
+		[alert addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings alert button title")];
 	}
-	
+
+	if (!success)
+		[alert show];
+
 	[alert release];
 }
 
@@ -211,6 +237,16 @@ static NSURL *lastURL;
 	}
 
 	[stopReloadButton setImage:image forState:UIControlStateNormal];
+}
+
+#pragma mark -
+
+- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+	if (buttonIndex == alertView.cancelButtonIndex)
+		return;
+
+	if (alertView.tag == InstapaperSettingsAlertTag)
+		[[CQColloquyApplication sharedApplication] launchSettings];
 }
 
 #pragma mark -

@@ -8,8 +8,11 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 	IBOutlet UITabBarController	*tabBarController;
 	NSDate *_launchDate;
 	NSString *_deviceToken;
+	NSUInteger _networkIndicatorStack;
 }
 + (CQColloquyApplication *) sharedApplication;
+
+- (void) launchSettings;
 
 - (BOOL) isSpecialApplicationURL:(NSURL *) url;
 

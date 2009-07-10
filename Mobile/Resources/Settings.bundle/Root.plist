@@ -216,9 +216,9 @@
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 			<key>Title</key>
-			<string>Extras</string>
+			<string>Accounts</string>
 			<key>File</key>
-			<string>Extras</string>
+			<string>Accounts</string>
 		</dict>
 		<dict>
 			<key>Type</key>

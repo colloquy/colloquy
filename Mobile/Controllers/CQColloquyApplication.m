@@ -6,6 +6,12 @@
 #import "NSStringAdditions.h"
 #import "RegexKitLite.h"
 
+#if ENABLE(SECRETS)
+@interface UIApplication (UIApplicationPrivate)
+- (BOOL) launchApplicationWithIdentifier:(NSString *) bundleIdentifier suspended:(BOOL) suspended;
+@end
+#endif
+
 NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyApplicationDidRecieveDeviceTokenNotification";
 
 @implementation CQColloquyApplication
@@ -157,6 +163,30 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	UITabBar *tabBar = tabBarController.tabBar;
 	if (tabBar) [sheet showFromTabBar:tabBar];
 	else [sheet showInView:tabBarController.view];
+}
+
+#pragma mark -
+
+- (void) setNetworkActivityIndicatorVisible:(BOOL) visible {
+	if (visible) {
+		++_networkIndicatorStack;
+		super.networkActivityIndicatorVisible = YES;
+	} else {
+		if (_networkIndicatorStack)
+			--_networkIndicatorStack;
+		if (!_networkIndicatorStack)
+			super.networkActivityIndicatorVisible = NO;
+	}
+}
+
+#pragma mark -
+
+- (void) launchSettings {
+#if ENABLE(SECRETS)
+	if (![self respondsToSelector:@selector(launchApplicationWithIdentifier:suspended:)])
+		return;
+	[self launchApplicationWithIdentifier:@"com.apple.Preferences" suspended:NO];
+#endif
 }
 
 #pragma mark -

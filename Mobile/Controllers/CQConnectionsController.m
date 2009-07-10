@@ -446,10 +446,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) _didConnectOrDidNotConnect:(NSNotification *) notification {
-	if (_connectingCount)
-		--_connectingCount;
-	if (!_connectingCount)
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+
 	if (!_connectedCount && !_connectingCount)
 		[UIApplication sharedApplication].idleTimerDisabled = NO;
 }
