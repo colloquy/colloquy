@@ -96,9 +96,6 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	for (NSDictionary *message in [state objectForKey:@"messages"]) {
 		NSMutableDictionary *messageCopy = [message mutableCopy];
 
-		if ([[message objectForKey:@"message"] isEqual:[message objectForKey:@"messagePlain"]])
-			[messageCopy removeObjectForKey:@"messagePlain"];
-
 		MVChatUser *user = nil;
 		if ([[messageCopy objectForKey:@"localUser"] boolValue]) {
 			user = connection.localUser;
@@ -194,6 +191,9 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	for (NSDictionary *message in _recentMessages) {
 		id sameKeys[] = {@"message", @"messagePlain", @"action", @"notice", @"highlighted", @"identifier", @"type", nil};
 		NSMutableDictionary *newMessage = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:message];
+
+		if ([[newMessage objectForKey:@"message"] isEqual:[newMessage objectForKey:@"messagePlain"]])
+			[newMessage removeObjectForKey:@"messagePlain"];
 
 		MVChatUser *user = [message objectForKey:@"user"];
 		if (user && !user.localUser) [newMessage setObject:user.nickname forKey:@"user"];
