@@ -164,10 +164,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	CQChatRoomController *controller = [self chatViewControllerForRoom:room ifExists:NO];
 	[controller addMessage:notification.userInfo];
-
-	MVChatUser *sender = [notification.userInfo objectForKey:@"user"];
-	if (!sender.localUser)
-		[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
 }
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {
@@ -187,26 +183,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	}
 
 	if (!hideFromUser) {
-		CQDirectChatController *controller = [self chatViewControllerForUser:user ifExists:NO userInitiated:NO];
+		CQDirectChatController *controller = [self chatViewControllerForUser:sender ifExists:NO userInitiated:NO];
 		[controller addMessage:notification.userInfo];
-
-		if (!sender.localUser) {
-			[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
-
-			if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnPrivateMessage"])
-				[CQSoundController vibrate];
-
-			if (![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"] isEqualToString:@"None"]) {
-				static CQSoundController *privateMessageSound; 
-
-				if (!privateMessageSound) {
-					NSString *alert = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
-					privateMessageSound = [[CQSoundController alloc] initWithSoundNamed:alert];
-				}
-
-				[privateMessageSound playAlert];
-			}
-		}
 	}
 }
 
@@ -215,8 +193,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	CQDirectChatController *controller = [self chatViewControllerForDirectChatConnection:connection ifExists:NO];
 	[controller addMessage:notification.userInfo];
-
-	[_chatListViewController addMessagePreview:notification.userInfo forChatController:controller];
 }
 
 - (void) _gotFileDownloadOffer:(NSNotification *) notification {

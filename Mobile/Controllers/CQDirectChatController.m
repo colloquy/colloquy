@@ -25,6 +25,8 @@
 
 #import <objc/message.h>
 
+NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewControllerRecentMessagesUpdated";
+
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
 - (void) _addPendingComponent:(id) component;
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
@@ -93,6 +95,9 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	for (NSDictionary *message in [state objectForKey:@"messages"]) {
 		NSMutableDictionary *messageCopy = [message mutableCopy];
+
+		if ([[message objectForKey:@"message"] isEqual:[message objectForKey:@"messagePlain"]])
+			[messageCopy removeObjectForKey:@"messagePlain"];
 
 		MVChatUser *user = nil;
 		if ([[messageCopy objectForKey:@"localUser"] boolValue]) {
@@ -187,7 +192,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	NSMutableArray *messages = [[NSMutableArray alloc] init];
 
 	for (NSDictionary *message in _recentMessages) {
-		id sameKeys[] = {@"message", @"action", @"notice", @"highlighted", @"identifier", @"type", nil};
+		id sameKeys[] = {@"message", @"messagePlain", @"action", @"notice", @"highlighted", @"identifier", @"type", nil};
 		NSMutableDictionary *newMessage = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:message];
 
 		MVChatUser *user = [message objectForKey:@"user"];
@@ -1208,18 +1213,53 @@ static NSOperationQueue *chatMessageProcessingQueue;
 			++[CQChatController defaultController].totalImportantUnreadCount;
 	}
 
-	if (highlighted && self.available && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"])
-		[CQSoundController vibrate];
+	static BOOL vibrateOnHighlight;
+	static BOOL soundOnHighlight;
+	static BOOL vibrateOnPrivateMessage;
+	static BOOL soundOnPrivateMessage;
 
-	if (highlighted && self.available && ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"] isEqualToString:@"None"]) {
-		static CQSoundController *highlightSound;
+	static BOOL firstTime = YES;
+	if (firstTime) {
+		firstTime = NO;
 
-		if (!highlightSound) {
-			NSString *alert = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
-			highlightSound = [[CQSoundController alloc] initWithSoundNamed:alert];
+		vibrateOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"];
+		soundOnHighlight = ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"] isEqualToString:@"None"];
+		vibrateOnPrivateMessage = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnPrivateMessage"];
+		soundOnPrivateMessage = ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"] isEqualToString:@"None"];
+	}
+
+	BOOL directChat = [self isMemberOfClass:[CQDirectChatController class]];
+
+	if (!user.localUser && directChat) {
+		if (vibrateOnPrivateMessage)
+			[CQSoundController vibrate];
+
+		if (soundOnPrivateMessage) {
+			static CQSoundController *privateMessageSound; 
+
+			if (!privateMessageSound) {
+				NSString *alert = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
+				privateMessageSound = [[CQSoundController alloc] initWithSoundNamed:alert];
+			}
+
+			[privateMessageSound playAlert];
 		}
+	}
 
-		[highlightSound playAlert];
+	if (highlighted && self.available) {
+		if (vibrateOnHighlight)
+			[CQSoundController vibrate];
+
+		if (soundOnHighlight && (!directChat || (directChat && !soundOnPrivateMessage))) {
+			static CQSoundController *highlightSound;
+
+			if (!highlightSound) {
+				NSString *alert = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
+				highlightSound = [[CQSoundController alloc] initWithSoundNamed:alert];
+			}
+
+			[highlightSound playAlert];
+		}
 	}
 
 	if (!_recentMessages)
@@ -1230,5 +1270,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		[_recentMessages removeObjectAtIndex:0];
 
 	[self _addPendingComponent:message];
+
+	if (!user.localUser)
+		[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
 }
 @end

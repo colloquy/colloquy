@@ -14,6 +14,8 @@
 @class MVChatUser;
 @class MVChatUserWatchRule;
 
+extern NSString *CQChatViewControllerRecentMessagesUpdatedNotification;
+
 @interface CQDirectChatController : UIViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQBrowserViewControllerDelegate, UIAlertViewDelegate> {
 	@protected
 	IBOutlet CQChatInputBar *chatInputBar;

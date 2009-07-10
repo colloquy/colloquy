@@ -14,7 +14,8 @@
 @property NSStringEncoding encoding;
 
 @property (readonly) NSMutableDictionary *processedMessageInfo;
-@property (readonly) NSMutableString *processedMessageHTML;
+@property (readonly) NSString *processedMessageAsHTML;
+@property (readonly) NSString *processedMessageAsPlainText;
 
 @property (retain) id target;
 @property SEL action;

@@ -84,6 +84,7 @@
 
 - (void) setShowsIcon:(BOOL) show {
 	_iconImageView.hidden = !show;
+
 	[self setNeedsLayout];
 }
 
@@ -109,6 +110,7 @@
 
 - (void) setUnreadCount:(NSUInteger) messages {
 	_unreadCountView.count = messages;
+
 	[self setNeedsLayout];
 }
 
@@ -118,6 +120,7 @@
 
 - (void) setImportantUnreadCount:(NSUInteger) messages {
 	_unreadCountView.importantCount = messages;
+
 	[self setNeedsLayout];
 }
 
@@ -164,24 +167,34 @@
 #define LABEL_SPACING 2.
 
 - (void) addMessagePreview:(NSString *) message fromUser:(MVChatUser *) user asAction:(BOOL) action animated:(BOOL) animated {
-	[self layoutIfNeeded];
-
-	UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
-	label.font = [UIFont systemFontOfSize:14.];
-	label.backgroundColor = [UIColor clearColor];
-	label.textColor = [UIColor colorWithWhite:0.4 alpha:1.];
-	label.highlightedTextColor = [UIColor whiteColor];
-	label.alpha = (animated ? 0. : 1.);
-
+	NSString *labelText = nil;
 	if (action)
-		label.text = [NSString stringWithFormat:@"%C %@ %@", 0x2022, user.displayName, message];
+		labelText = [NSString stringWithFormat:@"%C %@ %@", 0x2022, user.displayName, message];
 	else if (_showsUserInMessagePreviews)
-		label.text = [NSString stringWithFormat:@"%@: %@", user.displayName, message];
-	else label.text = message;
+		labelText = [NSString stringWithFormat:@"%@: %@", user.displayName, message];
+	else labelText = message;
+
+	if (_animating) {
+		for (NSUInteger i = 0; i < _chatPreviewLabels.count; ++i) {
+			if (i == 0)
+				continue;
+			UILabel *currentLabel = [_chatPreviewLabels objectAtIndex:i];
+			UILabel *previousLabel = [_chatPreviewLabels objectAtIndex:(i - 1)];
+			previousLabel.text = currentLabel.text;
+
+			if (i == (_chatPreviewLabels.count - 1))
+				currentLabel.text = labelText;
+		}
+
+		return;
+	}
+
+	if (animated)
+		_animating = YES;
 
 	NSTimeInterval animationDelay = 0.;
 
-	if (_chatPreviewLabels.count == _maximumMessagePreviews) {
+	if (_chatPreviewLabels.count >= _maximumMessagePreviews) {
 		UILabel *firstLabel = [[_chatPreviewLabels objectAtIndex:0] retain];
 		[_chatPreviewLabels removeObjectAtIndex:0];
 
@@ -204,57 +217,30 @@
 		[firstLabel release];
 	}
 
-	CGRect nameFrame = _nameLabel.frame;
-	CGFloat labelHeights = nameFrame.size.height;
-
-	for (UILabel *label in _chatPreviewLabels)
-		labelHeights += label.frame.size.height - LABEL_SPACING;
-
-	CGRect labelFrame = label.frame;
-	CGSize labelSize = [label sizeThatFits:labelFrame.size];
-
-	labelHeights += labelSize.height - LABEL_SPACING;
-
-	if (animated) {
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDelay:animationDelay];
-		[UIView setAnimationDuration:0.25];
-	}
-
-	nameFrame.origin.y = round((self.contentView.bounds.size.height / 2.) - (labelHeights / 2.));
-	_nameLabel.frame = nameFrame;
-
-	CGFloat newVerticalOrigin = nameFrame.origin.y + nameFrame.size.height - LABEL_SPACING;
-	for (UILabel *label in _chatPreviewLabels) {
-		CGRect labelFrame = label.frame;
-		labelFrame.origin.y = newVerticalOrigin;
-		label.frame = labelFrame;
-
-		newVerticalOrigin = labelFrame.origin.y + labelFrame.size.height - LABEL_SPACING;
-	}
-
-	if (animated) {
-		[UIView commitAnimations];
-
-		animationDelay += 0.15;
-	}
-
-	labelFrame.origin.x = nameFrame.origin.x;
-	labelFrame.origin.y = newVerticalOrigin;
-	labelFrame.size.width = nameFrame.size.width;
-	labelFrame.size.height = labelSize.height;
-	label.frame = labelFrame;
+	UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+	label.font = [UIFont systemFontOfSize:14.];
+	label.backgroundColor = [UIColor clearColor];
+	label.textColor = [UIColor colorWithWhite:0.4 alpha:1.];
+	label.highlightedTextColor = [UIColor whiteColor];
+	label.alpha = (animated ? 0. : (_available ? 1. : 0.5));
+	label.text = labelText;
 
 	[self.contentView addSubview:label];
 	[_chatPreviewLabels addObject:label];
 
+	[self layoutSubviewsWithAnimation:animated withDelay:animationDelay];
+
 	if (animated) {
+		animationDelay += 0.15;
+
 		[UIView beginAnimations:nil context:NULL];
 		[UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
 		[UIView setAnimationDuration:0.2];
 		[UIView setAnimationDelay:animationDelay];
+		[UIView setAnimationDelegate:self];
+		[UIView setAnimationDidStopSelector:@selector(labelFadeInAnimationDidStop:finished:context:)];
 
-		label.alpha = 1.;
+		label.alpha = (_available ? 1. : 0.5);
 
 		[UIView commitAnimations];
 	}
@@ -265,6 +251,12 @@
 - (void) labelFadeOutAnimationDidStop:(NSString *) animation finished:(NSNumber *) finished context:(void *) context {
 	UILabel *label = (UILabel *)context;
 	[label removeFromSuperview];
+}
+
+- (void) labelFadeInAnimationDidStop:(NSString *) animation finished:(NSNumber *) finished context:(void *) context {
+	_animating = NO;
+
+	[self setNeedsLayout];
 }
 
 #pragma mark -
@@ -320,7 +312,7 @@
 		[UIView commitAnimations];
 }
 
-- (void) layoutSubviews {
+- (void) layoutSubviewsWithAnimation:(BOOL) animated withDelay:(NSTimeInterval) animationDelay {
 	[super layoutSubviews];
 
 #define TOP_TEXT_MARGIN -1.
@@ -352,30 +344,65 @@
 		_iconImageView.frame = frame;
 	}
 
+	if (!animated && _animating)
+		return;
+
 	frame = _nameLabel.frame;
 	frame.size = [_nameLabel sizeThatFits:_nameLabel.bounds.size];
 
 	CGFloat labelHeights = frame.size.height;
 
-	for (UILabel *label in _chatPreviewLabels)
-		labelHeights += label.frame.size.height - LABEL_SPACING;
+	for (UILabel *label in _chatPreviewLabels) {
+		CGFloat height = label.frame.size.height;
+		if (!height) {
+			CGRect bounds = label.bounds;
+			bounds.size = [label sizeThatFits:bounds.size];
+			label.bounds = bounds;
+
+			height = bounds.size.height;
+		}
+
+		labelHeights += height - LABEL_SPACING;
+	}
 
 	frame.origin.x = (_iconImageView.hidden ? NO_ICON_LEFT_MARGIN : CGRectGetMaxX(_iconImageView.frame) + ICON_RIGHT_MARGIN);
 	frame.origin.y = round((contentRect.size.height / 2.) - (labelHeights / 2.)) + TOP_TEXT_MARGIN;
 	frame.size.width = contentRect.size.width - frame.origin.x - (!self.showingDeleteConfirmation ? RIGHT_MARGIN : 0.);
 	if (!self.editing && _unreadCountView.bounds.size.width)
 		frame.size.width -= (contentRect.size.width - CGRectGetMinX(_unreadCountView.frame));
+
+	if (animated) {
+		[UIView beginAnimations:nil context:NULL];
+		[UIView setAnimationDelay:animationDelay];
+		[UIView setAnimationDuration:0.25];
+	}
+
 	_nameLabel.frame = frame;
 
 	CGFloat newVerticalOrigin = frame.origin.y + frame.size.height - LABEL_SPACING;
 	for (UILabel *label in _chatPreviewLabels) {
 		CGRect labelFrame = label.frame;
+
+		BOOL disableAnimation = !labelFrame.origin.x;
+		if (disableAnimation)
+			[UIView setAnimationsEnabled:NO];
+
 		labelFrame.origin.x = frame.origin.x;
 		labelFrame.origin.y = newVerticalOrigin;
 		labelFrame.size.width = frame.size.width;
 		label.frame = labelFrame;
 
+		if (disableAnimation)
+			[UIView setAnimationsEnabled:YES];
+
 		newVerticalOrigin = labelFrame.origin.y + labelFrame.size.height - LABEL_SPACING;
 	}
+
+	if (animated)
+		[UIView commitAnimations];
+}
+
+- (void) layoutSubviews {
+	[self layoutSubviewsWithAnimation:NO withDelay:0.];
 }
 @end

@@ -291,7 +291,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 }
 
 - (void) _displayProcessedTopic:(CQProcessChatMessageOperation *) operation {
-	NSMutableString *topicString = operation.processedMessageHTML;
+	NSString *topicString = operation.processedMessageAsHTML;
 	BOOL onlyIfSet = [[operation.userInfo objectForKey:@"onlyIfSet"] boolValue];
 
 	MVChatUser *user = [operation.userInfo objectForKey:@"author"];
@@ -357,7 +357,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 }
 
 - (void) _displayProcessedKickReason:(CQProcessChatMessageOperation *) operation {
-	NSMutableString *reason = operation.processedMessageHTML;
+	NSString *reason = operation.processedMessageAsHTML;
 	MVChatUser *user = [operation.userInfo objectForKey:@"byUser"];
 
 	if (reason.length) {
@@ -401,7 +401,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 }
 
 - (void) _displayTopicChange:(CQProcessChatMessageOperation *) operation {
-	NSMutableString *topicString = operation.processedMessageHTML;
+	NSString *topicString = operation.processedMessageAsHTML;
 	MVChatUser *user = [operation.userInfo objectForKey:@"author"];
 
 	if (!topicString.length || !user)
@@ -739,7 +739,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 }
 
 - (void) _displayProcessedMemberPartReason:(CQProcessChatMessageOperation *) operation {
-	NSMutableString *reason = operation.processedMessageHTML;
+	NSString *reason = operation.processedMessageAsHTML;
 	MVChatUser *user = [operation.userInfo objectForKey:@"user"];
 
 	if (reason.length) {
@@ -768,7 +768,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 }
 
 - (void) _displayProcessedMemberKickReason:(CQProcessChatMessageOperation *) operation {
-	NSMutableString *reason = operation.processedMessageHTML;
+	NSString *reason = operation.processedMessageAsHTML;
 	MVChatUser *user = [operation.userInfo objectForKey:@"user"];
 	MVChatUser *byUser = [operation.userInfo objectForKey:@"byUser"];
 

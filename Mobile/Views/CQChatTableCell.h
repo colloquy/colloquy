@@ -19,6 +19,7 @@
 	NSUInteger _maximumMessagePreviews;
 	BOOL _showsUserInMessagePreviews;
 	BOOL _available;
+	BOOL _animating;
 }
 - (void) takeValuesFromChatViewController:(id <CQChatViewController>) controller;
 
@@ -37,4 +38,6 @@
 @property (nonatomic) BOOL showsIcon;
 
 - (void) addMessagePreview:(NSString *) message fromUser:(MVChatUser *) user asAction:(BOOL) action animated:(BOOL) animated;
+
+- (void) layoutSubviewsWithAnimation:(BOOL) animated withDelay:(NSTimeInterval) animationDelay;
 @end

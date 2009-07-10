@@ -38,6 +38,8 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFileTransferCell:) name:MVFileTransferFinishedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFileTransferCell:) name:MVFileTransferErrorOccurredNotification object:nil];
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_updateMessagePreview:) name:CQChatViewControllerRecentMessagesUpdatedNotification object:nil];
+
 	return self;
 }
 
@@ -167,34 +169,34 @@ static NSIndexPath *indexPathForChatController(id controller) {
 
 - (void) _addMessagePreview:(NSDictionary *) info withEncoding:(NSStringEncoding) encoding toChatTableCell:(CQChatTableCell *) cell animated:(BOOL) animated {
 	MVChatUser *user = [info objectForKey:@"user"];
-	id message = [info objectForKey:@"message"];
-
-	NSMutableString *messageString = nil;
-	NSString *transformedMessageString = nil;
-	if ([message isKindOfClass:[NSData class]]) {
-		messageString = [[NSMutableString alloc] initWithChatData:message encoding:encoding];
-		if (!messageString && encoding != NSISOLatin1StringEncoding)
-			messageString = [[NSMutableString alloc] initWithChatData:message encoding:NSISOLatin1StringEncoding];
-		if (!messageString)
-			messageString = [[NSMutableString alloc] initWithChatData:message encoding:NSASCIIStringEncoding];
-
-		[messageString stripXMLTags];
-		[messageString decodeXMLSpecialCharacterEntities];
-		
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"])
-			[messageString substituteEmoticonsForEmoji];
-
-		transformedMessageString = messageString;
-	} else if ([message isKindOfClass:[NSString class]]) {
-		transformedMessageString = [message stringByStrippingXMLTags];
-		transformedMessageString = [transformedMessageString stringByDecodingXMLSpecialCharacterEntities];
-	}
-
+	NSString *message = [info objectForKey:@"messagePlain"];
 	BOOL action = [[info objectForKey:@"action"] boolValue];
 
-	[cell addMessagePreview:transformedMessageString fromUser:user asAction:action animated:animated];
+	if (!message) {
+		message = [info objectForKey:@"message"];
+		message = [message stringByStrippingXMLTags];
+		message = [message stringByDecodingXMLSpecialCharacterEntities];
+	}
 
-	[messageString release];
+	if (!message || !user)
+		return;
+
+	[cell addMessagePreview:message fromUser:user asAction:action animated:animated];
+}
+
+- (void) _updateMessagePreview:(NSNotification *) notification {
+	if (!_active) {
+		_needsUpdate = YES;
+		return;
+	}
+
+	CQDirectChatController *chatController = notification.object;
+	CQChatTableCell *cell = [self _chatTableCellForController:chatController];
+
+	cell.unreadCount = chatController.unreadCount;
+	cell.importantUnreadCount = chatController.importantUnreadCount;
+
+	[self _addMessagePreview:chatController.recentMessages.lastObject withEncoding:chatController.encoding toChatTableCell:cell animated:YES];
 }
 
 - (void) _refreshChatCell:(CQChatTableCell *) cell withController:(id <CQChatViewController>) chatViewController animated:(BOOL) animated {
@@ -369,18 +371,6 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	NSIndexPath *indexPath = indexPathForChatController(controller);
 	[self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:animatedScroll];
 	[self.tableView selectRowAtIndexPath:indexPath animated:animatedSelection scrollPosition:UITableViewScrollPositionNone];
-}
-
-- (void) addMessagePreview:(NSDictionary *) info forChatController:(id <CQChatViewController>) controller {
-	CQChatTableCell *cell = [self _chatTableCellForController:controller];
-
-	if ([controller respondsToSelector:@selector(unreadCount)])
-		cell.unreadCount = controller.unreadCount;
-
-	if ([controller respondsToSelector:@selector(importantUnreadCount)])
-		cell.importantUnreadCount = controller.importantUnreadCount;
-
-	[self _addMessagePreview:info withEncoding:controller.encoding toChatTableCell:cell animated:YES];
 }
 
 #pragma mark -

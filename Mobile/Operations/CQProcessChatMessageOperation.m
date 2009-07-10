@@ -47,8 +47,12 @@
 
 #pragma mark -
 
-- (NSMutableString *) processedMessageHTML {
+- (NSString *) processedMessageAsHTML {
 	return [_processedMessage objectForKey:@"message"];
+}
+
+- (NSString *) processedMessageAsPlainText {
+	return [_processedMessage objectForKey:@"messagePlain"];
 }
 
 #pragma mark -
@@ -207,6 +211,11 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 
 	[_processedMessage setObject:@"message" forKey:@"type"];
 	[_processedMessage setObject:messageString forKey:@"message"];
+
+	NSString *plainMessage = [messageString stringByStrippingXMLTags];
+	plainMessage = [plainMessage stringByDecodingXMLSpecialCharacterEntities];
+
+	[_processedMessage setObject:plainMessage forKey:@"messagePlain"];
 
 	if (highlighted)
 		[_processedMessage setObject:[NSNumber numberWithBool:YES] forKey:@"highlighted"];
