@@ -111,7 +111,9 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		[messageCopy release];
 	}
 
-	_recentMessages = [_pendingPreviousSessionComponents mutableCopy];
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQHistoryOnReconnect"])
+		_recentMessages = [_pendingPreviousSessionComponents mutableCopy];
+	else _recentMessages = [[NSMutableArray alloc] init];
 
 	while (_recentMessages.count > 10)
 		[_recentMessages removeObjectAtIndex:0];
@@ -257,13 +259,12 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	NSString *capitalizationBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocapitalizationBehavior"];
 	chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
 
-	if ( [[NSUserDefaults standardUserDefaults] boolForKey:@"CQHistoryOnReconnect"] ) {
-		if (_pendingPreviousSessionComponents) {
+	if (_pendingPreviousSessionComponents) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQHistoryOnReconnect"])
 			[transcriptView addPreviousSessionComponents:_pendingPreviousSessionComponents];
 
-			[_pendingPreviousSessionComponents release];
-			_pendingPreviousSessionComponents = nil;
-		}
+		[_pendingPreviousSessionComponents release];
+		_pendingPreviousSessionComponents = nil;
 	}
 
 	if (_pendingComponents.count) {
