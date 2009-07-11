@@ -12,6 +12,7 @@
 	@protected
 	CQWhoisViewController *_whoisViewController;
 	MVChatUser *_user;
+	UIStatusBarStyle _previousStatusBarStyle;
 }
 @property (nonatomic, retain) MVChatUser *user;
 

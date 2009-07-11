@@ -51,6 +51,14 @@
 	[self pushViewController:_editViewController animated:NO];
 }
 
+- (void) viewWillAppear:(BOOL) animated {
+	[super viewWillAppear:animated];
+
+	_previousStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
+
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+}
+
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"])
 		return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -60,6 +68,7 @@
 #pragma mark -
 
 - (void) cancel:(id) sender {
+	[[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle animated:YES];
 	[self dismissModalViewControllerAnimated:YES];
 }
 
@@ -69,6 +78,7 @@
 	[[CQConnectionsController defaultController] addBouncerSettings:_settings];
 
 	[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = [CQConnectionsController defaultController];
+	[[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle animated:YES];
 	[self dismissModalViewControllerAnimated:YES];
 }
 @end

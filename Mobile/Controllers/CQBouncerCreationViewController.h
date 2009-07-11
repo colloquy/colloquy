@@ -5,5 +5,6 @@
 	@protected
 	CQBouncerSettings *_settings;
 	CQBouncerEditViewController *_editViewController;
+	UIStatusBarStyle _previousStatusBarStyle;
 }
 @end

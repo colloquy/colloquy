@@ -92,6 +92,14 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	[self pushViewController:_editViewController animated:NO];
 }
 
+- (void) viewWillAppear:(BOOL) animated {
+	[super viewWillAppear:animated];
+
+	_previousStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
+
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+}
+
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"])
 		return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -101,6 +109,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 #pragma mark -
 
 - (void) cancel:(id) sender {
+	[[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle animated:YES];
 	[self dismissModalViewControllerAnimated:YES];
 }
 
@@ -126,6 +135,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	[_connection connect];
 
 	[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = [CQConnectionsController defaultController];
+	[[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle animated:YES];
 	[self dismissModalViewControllerAnimated:YES];
 }
 @end
