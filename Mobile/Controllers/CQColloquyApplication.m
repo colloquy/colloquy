@@ -110,6 +110,11 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		}
 	}
 
+	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
+
+	if ([style hasSuffix:@"-dark"] || [style isEqualToString:@"notes"])
+		[[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+
 	return YES;
 }
 
@@ -240,4 +245,17 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) tabBarController:(UITabBarController *) currentTabBarController didSelectViewController:(UIViewController *) viewController {
 	[[NSUserDefaults standardUserDefaults] setInteger:tabBarController.selectedIndex forKey:@"CQSelectedTabIndex"];
 }
+
+#pragma mark -
+
+- (UIColor *) tintColor {
+	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
+
+	if ([style hasSuffix:@"-dark"])
+		return [UIColor blackColor];
+	if ([style isEqualToString:@"notes"])
+		return [UIColor colorWithHue:.052 saturation:.39 brightness:.29 alpha:.75];
+	return nil;
+}
+
 @end

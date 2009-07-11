@@ -34,6 +34,8 @@ static NSURL *lastURL;
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
+	navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
+
 	locationField.font = [UIFont systemFontOfSize:15.];
 	locationField.clearsOnBeginEditing = NO;
 	locationField.clearButtonMode = UITextFieldViewModeWhileEditing;
