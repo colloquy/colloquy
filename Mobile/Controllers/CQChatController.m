@@ -539,14 +539,12 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 - (void) setTotalImportantUnreadCount:(NSInteger) count {
-	if (_active && self.topViewController == _chatListViewController)
-		return;
-
-	if (count < 0) count = 0;
+	if (count < 0)
+		count = 0;
 
 	_totalImportantUnreadCount = count;
 
-	if (_totalImportantUnreadCount) {
+	if ((!_active || self.topViewController != _chatListViewController) && _totalImportantUnreadCount) {
 		_chatListViewController.navigationItem.title = [NSString stringWithFormat:NSLocalizedString(@"%@ (%u)", @"Unread count view title, uses the view's normal title with a number"), self.title, _totalImportantUnreadCount];
 		self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%u", _totalImportantUnreadCount];
 	} else {
