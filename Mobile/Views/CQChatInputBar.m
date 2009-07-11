@@ -172,6 +172,7 @@
 #ifdef ENABLE_SECRETS
 	if (!color)
 		color = [UIColor lightGrayColor];
+	_inputField.keyboardAppearance = ([color isEqual:[UIColor blackColor]] ? UIKeyboardAppearanceAlert : UIKeyboardAppearanceDefault);
 	self.backgroundColor = color;
 	((UISearchBarBackground *)_backgroundView).tintColor = color;
 #endif
