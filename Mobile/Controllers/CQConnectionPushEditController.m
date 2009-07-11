@@ -23,25 +23,6 @@
 
 #pragma mark -
 
-- (void) viewWillAppear:(BOOL) animated {
-	[self.tableView reloadData];
-
-	[super viewWillAppear:animated];
-}
-
-- (void) viewWillDisappear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-
-	[self.tableView endEditing:YES];
-
-	// Workaround a bug were the table view is left in a state
-	// were it thinks a keyboard is showing.
-	self.tableView.contentInset = UIEdgeInsetsZero;
-	self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
-}
-
-#pragma mark -
-
 @synthesize connection = _connection;
 
 - (void) setConnection:(MVChatConnection *) connection {

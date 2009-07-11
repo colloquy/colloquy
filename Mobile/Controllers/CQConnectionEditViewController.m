@@ -375,7 +375,8 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	if (self.navigationItem.rightBarButtonItem.tag == UIBarButtonSystemItemSave)
 		self.navigationItem.rightBarButtonItem.enabled = YES;
 
-	[self.tableView reloadData];
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:ServerTableSection] withAnimation:UITableViewRowAnimationNone];
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:ServerTableSection] withAnimation:UITableViewRowAnimationNone];
 }
 
 - (void) serverChanged:(CQPreferencesTextCell *) sender {
@@ -385,10 +386,10 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			self.title = _connection.displayName;
 	}
 
+	sender.text = (isPlaceholderValue(_connection.server) ? @"" : _connection.server);
+
 	if (self.navigationItem.rightBarButtonItem.tag == UIBarButtonSystemItemSave)
 		self.navigationItem.rightBarButtonItem.enabled = !isPlaceholderValue(_connection.server);
-
-	[self.tableView reloadData];
 }
 
 - (void) nicknameChanged:(CQPreferencesTextCell *) sender {
@@ -396,7 +397,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		_connection.preferredNickname = sender.text;
 	else _connection.preferredNickname = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
 
-	[self.tableView reloadData];
+	sender.text = (isDefaultValue(_connection.preferredNickname) ? @"" : _connection.preferredNickname);
 }
 
 - (void) realNameChanged:(CQPreferencesTextCell *) sender {
@@ -404,7 +405,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		_connection.realName = sender.text;
 	else _connection.realName = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
 
-	[self.tableView reloadData];
+	sender.text = (isDefaultValue(_connection.realName) ? @"" : _connection.realName);
 }
 
 - (void) descriptionChanged:(CQPreferencesTextCell *) sender {

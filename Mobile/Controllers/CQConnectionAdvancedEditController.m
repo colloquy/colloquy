@@ -309,7 +309,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		if (indexPath.row == 0) {
 			CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
-			unsigned short defaultPort = _connection.secure ? 994 : 6667;
+			unsigned short defaultPort = (_connection.secure ? 994 : 6667);
 
 			cell.target = self;
 			cell.textEditAction = @selector(serverPortChanged:);
@@ -429,7 +429,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 	if (newPort)
 		_connection.serverPort = (newPort % 65536);
 
-	[self.tableView reloadData];
+	unsigned short defaultPort = (_connection.secure ? 994 : 6667);
+	sender.text = (_connection.serverPort == defaultPort ? @"" : [NSString stringWithFormat:@"%hu", _connection.serverPort]);
 }
 
 - (void) secureChanged:(CQPreferencesSwitchCell *) sender {
@@ -440,7 +441,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 	else if (!_connection.secure && _connection.serverPort == 994)
 		_connection.serverPort = 6667;
 
-	[self.tableView reloadData];
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:SettingsTableSection] withAnimation:UITableViewRowAnimationNone];
 }
 
 - (void) usernameChanged:(CQPreferencesTextCell *) sender {
@@ -448,7 +449,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		_connection.username = sender.text;
 	else _connection.username = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
 
-	[self.tableView reloadData];
+	sender.text = (isDefaultValue(_connection.username) ? @"" : _connection.username);
 }
 
 - (void) passwordChanged:(CQPreferencesTextCell *) sender {

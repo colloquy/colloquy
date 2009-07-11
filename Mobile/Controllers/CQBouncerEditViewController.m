@@ -252,7 +252,7 @@ static BOOL pushAvailable = NO;
 
 	[self updateConnectButton];
 
-	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:ServerTableSection] withAnimation:UITableViewRowAnimationNone];
+	sender.text = (_settings.server ? _settings.server : @"");
 }
 
 - (void) serverPortChanged:(CQPreferencesTextCell *) sender {
@@ -260,7 +260,8 @@ static BOOL pushAvailable = NO;
 	if (newPort)
 		_settings.serverPort = (newPort % 65536);
 
-	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:ServerTableSection] withAnimation:UITableViewRowAnimationNone];
+	const unsigned short defaultPort = 6667;
+	sender.text = (_settings.serverPort == defaultPort ? @"" : [NSString stringWithFormat:@"%hu", _settings.serverPort]);
 }
 
 - (void) descriptionChanged:(CQPreferencesTextCell *) sender {
@@ -276,7 +277,7 @@ static BOOL pushAvailable = NO;
 
 	[self updateConnectButton];
 
-	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:AuthenticationTableSection] withAnimation:UITableViewRowAnimationNone];
+	sender.text = (_settings.username ? _settings.username : @"");
 }
 
 - (void) passwordChanged:(CQPreferencesTextCell *) sender {
@@ -285,7 +286,7 @@ static BOOL pushAvailable = NO;
 
 	[self updateConnectButton];
 
-	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:AuthenticationTableSection] withAnimation:UITableViewRowAnimationNone];
+	sender.text = (_settings.password ? _settings.password : @"");
 }
 
 - (void) pushEnabled:(CQPreferencesSwitchCell *) sender {
