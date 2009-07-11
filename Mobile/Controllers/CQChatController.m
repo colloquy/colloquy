@@ -54,7 +54,7 @@
 	self.tabBarItem.image = [UIImage imageNamed:@"colloquies.png"];
 	self.delegate = self;
 
-	navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
+	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_joinedRoom:) name:MVChatRoomJoinedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRoomMessage:) name:MVChatRoomGotMessageNotification object:nil];

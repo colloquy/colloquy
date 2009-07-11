@@ -70,7 +70,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	self.tabBarItem.image = [UIImage imageNamed:@"connections.png"];
 	self.delegate = self;
 
-	navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
+	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:nil];
