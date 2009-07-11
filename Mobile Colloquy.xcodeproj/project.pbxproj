@@ -136,7 +136,6 @@
 		1CE3FB120D8A3DC100FB035F /* CQConnectionCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */; };
 		1CE69F820EE2F50100389442 /* ChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CE69F810EE2F50100389442 /* ChatView.xib */; };
 		1CE69FD90EE317F200389442 /* CQChatInputBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE69FD80EE317F200389442 /* CQChatInputBar.m */; };
-		1CE69FF00EE34C0000389442 /* chatInputBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CE69FEF0EE34C0000389442 /* chatInputBarBackground.png */; };
 		1CE7FF790FA3D003001C7B17 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE7FF770FA3D003001C7B17 /* RegexKitLite.m */; };
 		1CE7FF9E0FA3D064001C7B17 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE7FF9D0FA3D064001C7B17 /* libicucore.dylib */; };
 		1CF50C150ED8AFBE00CBE5E3 /* CQKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */; };
@@ -357,7 +356,6 @@
 		1CE69F810EE2F50100389442 /* ChatView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatView.xib; sourceTree = "<group>"; };
 		1CE69FD70EE317F200389442 /* CQChatInputBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatInputBar.h; sourceTree = "<group>"; };
 		1CE69FD80EE317F200389442 /* CQChatInputBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatInputBar.m; sourceTree = "<group>"; };
-		1CE69FEF0EE34C0000389442 /* chatInputBarBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatInputBarBackground.png; sourceTree = "<group>"; };
 		1CE7FF770FA3D003001C7B17 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexKitLite.m; path = "Chat Core/RegexKitLite.m"; sourceTree = "<group>"; };
 		1CE7FF780FA3D003001C7B17 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexKitLite.h; path = "Chat Core/RegexKitLite.h"; sourceTree = "<group>"; };
 		1CE7FF9D0FA3D064001C7B17 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
@@ -797,7 +795,6 @@
 				1CB318DC0D8644E4006A7513 /* connectingBadgeGlow.png */,
 				1CB318DD0D8644E4006A7513 /* connectedBadgeGlow.png */,
 				1CB318DE0D8644E4006A7513 /* connectedBadgeDim.png */,
-				1CE69FEF0EE34C0000389442 /* chatInputBarBackground.png */,
 				1CC64A790EE90DC000DE91D0 /* members.png */,
 				1CC64C030EE98CC600DE91D0 /* userAdmin.png */,
 				1CC64C040EE98CC600DE91D0 /* userFounder.png */,
@@ -921,7 +918,6 @@
 				1C61FEA20ED24BA40016F968 /* deleteButtonPressed.png in Resources */,
 				1CF50F710EDA7BC600CBE5E3 /* roomIconSmall.png in Resources */,
 				1CE69F820EE2F50100389442 /* ChatView.xib in Resources */,
-				1CE69FF00EE34C0000389442 /* chatInputBarBackground.png in Resources */,
 				1CAE8BF50EE612DA00CE1AF8 /* base.html in Resources */,
 				1CAE8BF60EE612DA00CE1AF8 /* standard.css in Resources */,
 				1CAE8BF70EE612DA00CE1AF8 /* gradientHighlight.png in Resources */,
