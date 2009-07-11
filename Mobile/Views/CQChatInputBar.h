@@ -5,6 +5,9 @@
 
 @interface CQChatInputBar : UIView <UITextFieldDelegate, CQTextCompletionViewDelegate> {
 	@protected
+#ifdef ENABLE_SECRETS
+	UIView *_backgroundView;
+#endif
 	UITextField *_inputField;
 	IBOutlet id <CQChatInputBarDelegate> delegate;
 	CQTextCompletionView *_completionView;
@@ -19,6 +22,8 @@
 	UITextAutocapitalizationType _defaultAutocapitalizationType;
 }
 @property (nonatomic, assign) id <CQChatInputBarDelegate> delegate;
+
+@property (nonatomic, retain) UIColor *tintColor;
 
 @property (nonatomic) BOOL autocomplete;
 @property (nonatomic) BOOL spaceCyclesCompletions;

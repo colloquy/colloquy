@@ -18,6 +18,10 @@
 @property (nonatomic) NSRange selectionRange;
 - (BOOL) hasMarkedText;
 @end
+
+@interface UISearchBarBackground : UIView
+@property (nonatomic, retain) UIColor *tintColor;
+@end
 #endif
 
 #pragma mark -
@@ -30,7 +34,23 @@
 
 @implementation CQChatInputBar
 - (void) _commonInitialization {
-	CGRect frame = self.frame;
+	CGRect frame = self.bounds;
+
+	CGRect backgroundFrame = frame;
+	backgroundFrame.size.height -= 1.;
+	backgroundFrame.origin.y += 1.;
+
+#ifdef ENABLE_SECRETS
+	if (NSClassFromString(@"UISearchBarBackground")) {
+		UISearchBarBackground *backgroundView = [[UISearchBarBackground alloc] initWithFrame:backgroundFrame];
+		backgroundView.tintColor = [UIColor lightGrayColor];
+		self.backgroundColor = [UIColor lightGrayColor];
+
+		[self addSubview:backgroundView];
+
+		_backgroundView = backgroundView;
+	}
+#endif
 
 	_inputField = [[UITextField alloc] initWithFrame:CGRectMake(6., 6., frame.size.width - 12., frame.size.height - 14.)];
 	_inputField.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
@@ -88,12 +108,18 @@
 	[_completionView release];
 	[_completions release];
 
+#ifdef ENABLE_SECRETS
+	[_backgroundView release];
+#endif
+
 	[super dealloc];
 }
 
 #pragma mark -
 
 - (void) drawRect:(CGRect) rect {
+	if (_backgroundView)
+		return;
 	static UIImage *backgroundImage;
 	if (!backgroundImage)
 		backgroundImage = [[[UIImage imageNamed:@"chatInputBarBackground.png"] stretchableImageWithLeftCapWidth:0. topCapHeight:2.] retain];
@@ -133,6 +159,23 @@
 @synthesize spaceCyclesCompletions = _spaceCyclesCompletions;
 
 @synthesize autocorrect = _autocorrect;
+
+- (UIColor *) tintColor {
+#ifdef ENABLE_SECRETS
+	return ((UISearchBarBackground *)_backgroundView).tintColor;
+#else
+	return nil;
+#endif
+}
+
+- (void) setTintColor:(UIColor *) color {
+#ifdef ENABLE_SECRETS
+	if (!color)
+		color = [UIColor lightGrayColor];
+	self.backgroundColor = color;
+	((UISearchBarBackground *)_backgroundView).tintColor = color;
+#endif
+}
 
 #ifdef ENABLE_SECRETS
 - (void) setAutocorrect:(BOOL) autocorrect {
