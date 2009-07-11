@@ -606,6 +606,18 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	MPMusicPlayerController *musicController = [MPMusicPlayerController iPodMusicPlayer];
 	MPMediaItem *nowPlayingItem = musicController.nowPlayingItem;
 
+	if ([arguments isCaseInsensitiveEqualToString:@"next"] || [arguments isCaseInsensitiveEqualToString:@"skip"] || [arguments isCaseInsensitiveEqualToString:@"forward"]) 
+		[musicController skipToNextItem];
+	else if ([arguments isCaseInsensitiveEqualToString:@"previous"] || [arguments isCaseInsensitiveEqualToString:@"back"]) 
+		[musicController skipToPreviousItem];
+	else if ([arguments isCaseInsensitiveEqualToString:@"stop"] || [arguments isCaseInsensitiveEqualToString:@"pause"])
+		[musicController stop];
+	else if ([arguments isCaseInsensitiveEqualToString:@"play"] || [arguments isCaseInsensitiveEqualToString:@"resume"])
+		[musicController play];
+
+	if (arguments.length)
+		return YES;
+
 	NSString *message = nil;
 	if (nowPlayingItem && musicController.playbackState == MPMusicPlaybackStatePlaying) {
 		NSString *title = [nowPlayingItem valueForProperty:MPMediaItemPropertyTitle];
