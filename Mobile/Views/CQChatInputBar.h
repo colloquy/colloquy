@@ -5,9 +5,7 @@
 
 @interface CQChatInputBar : UIView <UITextFieldDelegate, CQTextCompletionViewDelegate> {
 	@protected
-#ifdef ENABLE_SECRETS
-	UIView *_backgroundView;
-#endif
+	UIToolbar *_backgroundView;
 	UITextField *_inputField;
 	IBOutlet id <CQChatInputBarDelegate> delegate;
 	CQTextCompletionView *_completionView;

@@ -18,10 +18,6 @@
 @property (nonatomic) NSRange selectionRange;
 - (BOOL) hasMarkedText;
 @end
-
-@interface UISearchBarBackground : UIView
-@property (nonatomic, retain) UIColor *tintColor;
-@end
 #endif
 
 #pragma mark -
@@ -36,23 +32,13 @@
 - (void) _commonInitialization {
 	CGRect frame = self.bounds;
 
-	CGRect backgroundFrame = frame;
-	backgroundFrame.size.height -= 1.;
-	backgroundFrame.origin.y += 1.;
+	_backgroundView = [[UIToolbar alloc] initWithFrame:frame];
+	_backgroundView.userInteractionEnabled = NO;
+	_backgroundView.tintColor = [UIColor lightGrayColor];
 
-#ifdef ENABLE_SECRETS
-	if (NSClassFromString(@"UISearchBarBackground")) {
-		UISearchBarBackground *backgroundView = [[UISearchBarBackground alloc] initWithFrame:backgroundFrame];
-		backgroundView.tintColor = [UIColor lightGrayColor];
-		self.backgroundColor = [UIColor lightGrayColor];
+	[self addSubview:_backgroundView];
 
-		[self addSubview:backgroundView];
-
-		_backgroundView = backgroundView;
-	}
-#endif
-
-	_inputField = [[UITextField alloc] initWithFrame:CGRectMake(6., 6., frame.size.width - 12., frame.size.height - 14.)];
+	_inputField = [[UITextField alloc] initWithFrame:CGRectMake(6., 7., frame.size.width - 12., frame.size.height - 14.)];
 	_inputField.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
 	_inputField.borderStyle = UITextBorderStyleRoundedRect;
 	_inputField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
@@ -107,24 +93,12 @@
 	[_inputField release];
 	[_completionView release];
 	[_completions release];
-
-#ifdef ENABLE_SECRETS
 	[_backgroundView release];
-#endif
 
 	[super dealloc];
 }
 
 #pragma mark -
-
-- (void) drawRect:(CGRect) rect {
-	if (_backgroundView)
-		return;
-	static UIImage *backgroundImage;
-	if (!backgroundImage)
-		backgroundImage = [[[UIImage imageNamed:@"chatInputBarBackground.png"] stretchableImageWithLeftCapWidth:0. topCapHeight:2.] retain];
-	[backgroundImage drawInRect:self.bounds];
-}
 
 - (BOOL) canBecomeFirstResponder {
 	return [_inputField canBecomeFirstResponder];
@@ -161,21 +135,14 @@
 @synthesize autocorrect = _autocorrect;
 
 - (UIColor *) tintColor {
-#ifdef ENABLE_SECRETS
-	return ((UISearchBarBackground *)_backgroundView).tintColor;
-#else
-	return nil;
-#endif
+	return _backgroundView.tintColor;
 }
 
 - (void) setTintColor:(UIColor *) color {
-#ifdef ENABLE_SECRETS
 	if (!color)
 		color = [UIColor lightGrayColor];
 	_inputField.keyboardAppearance = ([color isEqual:[UIColor blackColor]] ? UIKeyboardAppearanceAlert : UIKeyboardAppearanceDefault);
-	self.backgroundColor = color;
-	((UISearchBarBackground *)_backgroundView).tintColor = color;
-#endif
+	_backgroundView.tintColor = color;
 }
 
 #ifdef ENABLE_SECRETS
