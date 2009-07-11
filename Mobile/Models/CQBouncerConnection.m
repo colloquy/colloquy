@@ -37,12 +37,15 @@
 	[_nickname release];
 	[_nicknamePassword release];
 	[_alternateNicknames release];
+	[_error release];
+	[_userInfo release];
 
 	[super dealloc];
 }
 
 @synthesize settings = _settings;
 @synthesize delegate = _delegate;
+@synthesize userInfo = _userInfo;
 
 - (void) sendRawMessage:(id) raw {
 	NSParameterAssert(raw != nil);
@@ -100,6 +103,9 @@
 }
 
 - (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16)port {
+	[_error release];
+	_error = nil;
+
 	if ([_delegate respondsToSelector:@selector(bouncerConnectionDidConnect:)])
 		[_delegate bouncerConnectionDidConnect:self];
 
@@ -117,12 +123,17 @@
 	[self _readNextMessage];
 }
 
+- (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {
+	[_error release];
+	_error = [error retain];
+}
+
 - (void) socketDidDisconnect:(AsyncSocket *) sock {
 	[_socket release];
 	_socket = nil;
 
-	if ([_delegate respondsToSelector:@selector(bouncerConnectionDidDisconnect:)])
-		[_delegate bouncerConnectionDidDisconnect:self];
+	if ([_delegate respondsToSelector:@selector(bouncerConnectionDidDisconnect:withError:)])
+		[_delegate bouncerConnectionDidDisconnect:self withError:_error];
 }
 
 - (void) socket:(AsyncSocket *) sock didWriteDataWithTag:(long) tag {

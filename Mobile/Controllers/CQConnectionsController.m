@@ -47,6 +47,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 #pragma mark -
 
 #define CannotConnectToBouncerConnectionTag 1
+#define CannotConnectToBouncerTag 2
 
 @implementation CQConnectionsController
 + (CQConnectionsController *) defaultController {
@@ -292,6 +293,14 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if (alertView.tag == CannotConnectToBouncerConnectionTag) {
 		MVChatConnection *connection = ((CQAlertView *)alertView).userInfo;
 		[connection connectDirectly];
+		return;
+	}
+
+	if (alertView.tag == CannotConnectToBouncerTag) {
+		CQBouncerSettings *settings = ((CQAlertView *)alertView).userInfo;
+		[self editBouncer:settings];
+
+		[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = [CQConnectionsController defaultController];
 	}
 }
 
@@ -349,7 +358,27 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	else [_connectionsViewController updateConnection:chatConnection];
 }
 
-- (void) bouncerConnectionDidDisconnect:(CQBouncerConnection *) connection {
+- (void) bouncerConnectionDidDisconnect:(CQBouncerConnection *) connection withError:(NSError *) error {
+	NSMutableArray *connections = [_bouncerChatConnections objectForKey:connection.settings.identifier];
+
+	if (error && (!connections.count || [connection.userInfo isEqual:@"manual-refresh"])) {
+		CQAlertView *alert = [[CQAlertView alloc] init];
+
+		alert.tag = CannotConnectToBouncerTag;
+		alert.userInfo = connection.settings;
+		alert.delegate = self;
+		alert.title = NSLocalizedString(@"Can't Connect to Bouncer", @"Can't Connect to Bouncer alert title");
+		alert.message = [NSString stringWithFormat:NSLocalizedString(@"Can't connect to the bouncer \"%@\". Check the bouncer settings and try again.", @"Can't connect to bouncer alert message"), connection.settings.displayName];
+
+		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+
+		[alert addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings alert button title")];
+
+		[alert show];
+
+		[alert release];
+	}
+
 	[_bouncerConnections removeObject:connection];
 }
 
@@ -816,8 +845,16 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[_bouncerConnections makeObjectsPerformSelector:@selector(disconnect)];
 	[_bouncerConnections removeAllObjects];
 
-	for (CQBouncerSettings *settings in _bouncers)
-		[self refreshBouncerConnectionsWithBouncerSettings:settings];
+	for (CQBouncerSettings *settings in _bouncers) {
+		CQBouncerConnection *connection = [[CQBouncerConnection alloc] initWithBouncerSettings:settings];
+		connection.delegate = self;
+
+		[_bouncerConnections addObject:connection];
+
+		[connection connect];
+
+		[connection release];
+	}
 }
 
 #if defined(ENABLE_SECRETS)
@@ -1050,9 +1087,11 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 - (void) refreshBouncerConnectionsWithBouncerSettings:(CQBouncerSettings *) settings {
 	CQBouncerConnection *connection = [[CQBouncerConnection alloc] initWithBouncerSettings:settings];
+	connection.delegate = self;
+	connection.userInfo = @"manual-refresh";
+
 	[_bouncerConnections addObject:connection];
 
-	connection.delegate = self;
 	[connection connect];
 
 	[connection release];
