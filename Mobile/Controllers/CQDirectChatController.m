@@ -91,32 +91,34 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	_active = [[state objectForKey:@"active"] boolValue];
 
-	_pendingPreviousSessionComponents = [[NSMutableArray alloc] init];
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQHistoryOnReconnect"]) {
+		_pendingPreviousSessionComponents = [[NSMutableArray alloc] init];
 
-	for (NSDictionary *message in [state objectForKey:@"messages"]) {
-		NSMutableDictionary *messageCopy = [message mutableCopy];
+		for (NSDictionary *message in [state objectForKey:@"messages"]) {
+			NSMutableDictionary *messageCopy = [message mutableCopy];
 
-		MVChatUser *user = nil;
-		if ([[messageCopy objectForKey:@"localUser"] boolValue]) {
-			user = connection.localUser;
-			[messageCopy removeObjectForKey:@"localUser"];
-		} else user = [connection chatUserWithUniqueIdentifier:[messageCopy objectForKey:@"user"]];
+			MVChatUser *user = nil;
+			if ([[messageCopy objectForKey:@"localUser"] boolValue]) {
+				user = connection.localUser;
+				[messageCopy removeObjectForKey:@"localUser"];
+			} else user = [connection chatUserWithUniqueIdentifier:[messageCopy objectForKey:@"user"]];
 
-		if (user) {
-			[messageCopy setObject:user forKey:@"user"];
+			if (user) {
+				[messageCopy setObject:user forKey:@"user"];
 
-			[_pendingPreviousSessionComponents addObject:messageCopy];
+				[_pendingPreviousSessionComponents addObject:messageCopy];
+			}
+
+			[messageCopy release];
 		}
 
-		[messageCopy release];
-	}
-
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQHistoryOnReconnect"])
 		_recentMessages = [_pendingPreviousSessionComponents mutableCopy];
-	else _recentMessages = [[NSMutableArray alloc] init];
 
-	while (_recentMessages.count > 10)
-		[_recentMessages removeObjectAtIndex:0];
+		while (_recentMessages.count > 10)
+			[_recentMessages removeObjectAtIndex:0];
+	} else {
+		_recentMessages = [[NSMutableArray alloc] init];
+	}
 
 	return self;
 }
@@ -259,9 +261,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	NSString *capitalizationBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocapitalizationBehavior"];
 	chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
 
-	if (_pendingPreviousSessionComponents) {
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQHistoryOnReconnect"])
-			[transcriptView addPreviousSessionComponents:_pendingPreviousSessionComponents];
+	if (_pendingPreviousSessionComponents.count) {
+		[transcriptView addPreviousSessionComponents:_pendingPreviousSessionComponents];
 
 		[_pendingPreviousSessionComponents release];
 		_pendingPreviousSessionComponents = nil;
