@@ -35,6 +35,7 @@ static NSURL *lastURL;
 	[super viewDidLoad];
 
 	navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
+	toolbar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
 	locationField.font = [UIFont systemFontOfSize:15.];
 	locationField.clearsOnBeginEditing = NO;
