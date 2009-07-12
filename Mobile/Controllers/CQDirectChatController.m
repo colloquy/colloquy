@@ -970,11 +970,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 #pragma mark -
 
 - (void) keyboardWillShow:(NSNotification *) notification {	
-	if (_showingKeyboard)
-		return;
-
 	CGRect keyboardBounds = CGRectZero;
-
 	[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
 
 	[UIView beginAnimations:nil context:NULL];
@@ -982,15 +978,9 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	CGFloat shift = keyboardBounds.size.height - 50; // Height of the tab bar
 
-	// Slide input bar
-	CGRect frame = chatInputBar.frame;
-	frame.origin.y -= shift;
-	chatInputBar.frame = frame;
-
-	// Change height of transcript view
-	frame = transcriptView.frame;
-	frame.size.height -= shift;
-	transcriptView.frame = frame;
+	CGRect frame = containerView.frame;
+	frame.size.height = (self.view.bounds.size.height - shift);
+	containerView.frame = frame;
 
 	[UIView commitAnimations];
 
@@ -1013,23 +1003,10 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if (beginCenterPoint.y == endCenterPoint.y)
 		return;
 
-	CGRect keyboardBounds = CGRectZero;
-	[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
-
 	[UIView beginAnimations:nil context:NULL];
 	[UIView setAnimationDuration:0.3];
 
-	CGFloat shift = keyboardBounds.size.height - 50; // Height of the tab bar
-
-	// Slide input bar
-	CGRect frame = chatInputBar.frame;
-	frame.origin.y += shift;
-	chatInputBar.frame = frame;
-
-	// Change height of transcript view
-	frame = transcriptView.frame;
-	frame.size.height += shift;
-	transcriptView.frame = frame;
+	containerView.frame = self.view.bounds;
 
 	[UIView commitAnimations];
 

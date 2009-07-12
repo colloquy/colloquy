@@ -21,6 +21,7 @@ extern NSString *CQChatViewControllerRecentMessagesUpdatedNotification;
 	@protected
 	IBOutlet CQChatInputBar *chatInputBar;
 	IBOutlet CQChatTranscriptView *transcriptView;
+	IBOutlet UIView *containerView;
 
 	NSMutableArray *_pendingPreviousSessionComponents;
 	NSMutableArray *_pendingComponents;
