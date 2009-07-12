@@ -6,6 +6,7 @@
 #import "CQChatRoomController.h"
 #import "CQChatTableCell.h"
 #import "CQColloquyApplication.h"
+#import "CQConnectionsController.h"
 #import "CQProcessChatMessageOperation.h"
 #import "CQStyleView.h"
 #import "CQWhoisNavController.h"
@@ -405,7 +406,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois", @"/dcc", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/tweet", @"/ipod", @"/itunes", @"/music", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois", @"/dcc", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/tweet", @"/ipod", @"/itunes", @"/music", @"/squit", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -655,6 +656,15 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 - (BOOL) handleItunesCommandWithArguments:(NSString *) arguments {
 	return [self handleMusicCommandWithArguments:arguments];
+}
+
+- (BOOL) handleSquitCommandWithArguments:(NSString *) arguments {
+	if (self.connection.directConnection)
+		return NO;
+
+	[self.connection sendRawMessageImmediatelyWithComponents:@"SQUIT :", arguments, nil];
+
+	return YES;
 }
 
 #pragma mark -

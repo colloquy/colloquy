@@ -193,11 +193,20 @@
 }
 
 - (void) confirmDisconnect {
+	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+	MVChatConnection *connection = [self connectionAtIndexPath:selectedIndexPath];
+
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.tag = 2;
 
-	sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
+	if (connection.directConnection) {
+		sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
+	} else {
+		[sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
+		sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Fully Disconnect", @"Fully Disconnect button title")];
+	}
+
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
@@ -226,8 +235,13 @@
 		} else if (buttonIndex == 1 && (connection.temporaryDirectConnection || !connection.directConnection))
 			[connection connectDirectly];
 	} else if (actionSheet.tag == 2) {
-		if (buttonIndex == actionSheet.destructiveButtonIndex)
+		if (buttonIndex == actionSheet.destructiveButtonIndex) {
+			if (connection.directConnection)
+				[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+			else [connection sendRawMessageImmediatelyWithComponents:@"SQUIT :", [MVChatConnection defaultQuitMessage], nil];
+		} else {
 			[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+		}
 	}
 
 	[self _refreshConnection:connection];

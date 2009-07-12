@@ -2927,7 +2927,11 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( [parameters count] >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
-		if( [sender isLocalUser] ) return;
+		if( [sender isLocalUser] ) {
+			_userDisconnected = YES;
+			[[self _chatConnection] disconnect];
+			return;
+		}
 
 		[self _markUserAsOffline:sender];
 		[_pendingWhoisUsers removeObject:sender];
