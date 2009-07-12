@@ -170,7 +170,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 - (void) _gotPrivateMessage:(NSNotification *) notification {
 	MVChatUser *user = notification.object;
-	MVChatUser *sender = user;
 
 	if (user.localUser && [notification.userInfo objectForKey:@"target"])
 		user = [notification.userInfo objectForKey:@"target"];
