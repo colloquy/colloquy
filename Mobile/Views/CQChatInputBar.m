@@ -35,6 +35,7 @@
 	_backgroundView = [[UIToolbar alloc] initWithFrame:frame];
 	_backgroundView.userInteractionEnabled = NO;
 	_backgroundView.tintColor = [UIColor lightGrayColor];
+	_backgroundView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
 
 	[self addSubview:_backgroundView];
 
