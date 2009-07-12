@@ -51,7 +51,7 @@ static NSString *membersFilteredCountFormat;
 	_searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
 	_searchBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin);
 	_searchBar.placeholder = NSLocalizedString(@"Search", @"Search placeholder text");
-	_searchBar.tintColor = [UIColor colorWithRed:(190. / 255.) green:(199. / 255.) blue:(205. / 255.) alpha:1.];
+	_searchBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 	_searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	_searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
 	_searchBar.delegate = self;
