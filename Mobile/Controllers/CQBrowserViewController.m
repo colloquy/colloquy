@@ -91,6 +91,9 @@ static NSURL *lastURL;
 }
 
 - (void) close:(id) sender {
+	if (webView.loading)
+		[webView stopLoading];
+
 	id old = lastURL;
 	lastURL = [self.url retain];
 	[old release];
@@ -148,12 +151,6 @@ static NSURL *lastURL;
 	}
 
 	NSString *password = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQInstapaperPassword"];
-	if (success && !password.length) {
-		alert.title = NSLocalizedString(@"No Instapaper Password", "No Instapaper password alert title");
-		alert.message = NSLocalizedString(@"You need to enter an Instapaper password in Colloquy's Settings.", "No Instapaper password alert message");
-		showSettings = YES;
-		success = NO;
-	}
 
 	if (success) {
 		url = [url stringByEncodingIllegalURLCharacters];
