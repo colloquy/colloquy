@@ -341,7 +341,13 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[chatConnection release];
 	}
 
-	chatConnection.bouncerSettings = connection.settings;
+	chatConnection.bouncerIdentifier = connection.settings.identifier;
+
+	chatConnection.bouncerType = connection.settings.type;
+	chatConnection.bouncerServer = connection.settings.server;
+	chatConnection.bouncerServerPort = connection.settings.serverPort;
+	chatConnection.bouncerUsername = connection.settings.username;
+	chatConnection.bouncerPassword = connection.settings.password;
 
 	chatConnection.server = [info objectForKey:@"serverAddress"];
 	chatConnection.serverPort = [[info objectForKey:@"serverPort"] unsignedShortValue];
