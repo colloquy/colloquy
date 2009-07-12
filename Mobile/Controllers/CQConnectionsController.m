@@ -352,9 +352,11 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	chatConnection.server = [info objectForKey:@"serverAddress"];
 	chatConnection.serverPort = [[info objectForKey:@"serverPort"] unsignedShortValue];
 	chatConnection.preferredNickname = [info objectForKey:@"nickname"];
-	chatConnection.nicknamePassword = [info objectForKey:@"nicknamePassword"];
+	if ([[info objectForKey:@"nicknamePassword"] length])
+		chatConnection.nicknamePassword = [info objectForKey:@"nicknamePassword"];
 	chatConnection.username = [info objectForKey:@"username"];
-	chatConnection.password = [info objectForKey:@"password"];
+	if ([[info objectForKey:@"password"] length])
+		chatConnection.password = [info objectForKey:@"password"];
 	chatConnection.secure = [[info objectForKey:@"secure"] boolValue];
 	chatConnection.alternateNicknames = [info objectForKey:@"alternateNicknames"];
 	chatConnection.encoding = [[info objectForKey:@"encoding"] unsignedIntegerValue];
