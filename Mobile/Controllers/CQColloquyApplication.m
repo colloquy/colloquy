@@ -254,7 +254,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if ([style hasSuffix:@"-dark"])
 		return [UIColor blackColor];
 	if ([style isEqualToString:@"notes"])
-		return [UIColor colorWithHue:.052 saturation:.39 brightness:.29 alpha:.75];
+		return [UIColor colorWithRed:.224 green:.082 blue:.0 alpha:1];;
 	return nil;
 }
 

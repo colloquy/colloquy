@@ -49,11 +49,11 @@ body {
 
 .sender {
 	display: inline;
-	color: rgb(179, 146, 74);
+	color: #61150f;
 }
 
 .sender.self {
-	color: rgb(108, 79, 15);
+	color: #972913;
 }
 
 .sender:after {
@@ -64,7 +64,7 @@ body {
 .event {
 	background-image: url(notesBackground.png);
 	background-repeat: repeat-y;
-	background-color: rgb(253, 253, 222);
+	background-color: #fcf8b3;
 	border-bottom: 1px solid rgba(20, 20, 200, .1);
 	line-height: 1.1em;
 	font-size: smaller;
