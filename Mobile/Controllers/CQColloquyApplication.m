@@ -53,6 +53,24 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	return highlightWords;
 }
 
+- (void) performDeferredLaunchWork {
+	NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+	NSString *version = [NSString stringWithFormat:@"%@ (%@)", [info objectForKey:@"CFBundleShortVersionString"], [info objectForKey:@"CFBundleVersion"]];
+	[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQCurrentVersion"];
+
+#ifdef ENABLE_SECRETS
+	NSString *preferencesPath = [@"~/../../Library/Preferences/com.apple.Preferences.plist" stringByStandardizingPath];
+	NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:preferencesPath];
+
+	if (preferences && ![[preferences objectForKey:@"KeyboardEmojiEverywhere"] boolValue]) {
+		[preferences setValue:[NSNumber numberWithBool:YES] forKey:@"KeyboardEmojiEverywhere"];
+		[preferences writeToFile:preferencesPath atomically:YES];
+	}
+
+	[preferences release];
+#endif
+}
+
 #pragma mark -
 
 - (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
@@ -76,10 +94,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	[mainWindow addSubview:tabBarController.view];
 	[mainWindow makeKeyAndVisible];
-
-	NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-	NSString *version = [NSString stringWithFormat:@"%@ (%@)", [info objectForKey:@"CFBundleShortVersionString"], [info objectForKey:@"CFBundleVersion"]];
-	[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQCurrentVersion"];
 
 	NSDictionary *pushInfo = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
 	NSString *connectionServer = [pushInfo objectForKey:@"s"];
@@ -114,6 +128,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	if ([style hasSuffix:@"-dark"] || [style isEqualToString:@"notes"])
 		[[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+
+	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];
 
 	return YES;
 }
