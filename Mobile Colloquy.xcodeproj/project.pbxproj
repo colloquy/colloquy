@@ -147,6 +147,8 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		8900D7340FBFB2D900DE3E3B /* Servers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8900D7330FBFB2D900DE3E3B /* Servers.plist */; };
+		891210FE100E935E00AFCFF3 /* libMMTrackingDevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 891210FB100E935E00AFCFF3 /* libMMTrackingDevice.a */; };
+		891210FF100E935E00AFCFF3 /* libMMTrackingSimulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 891210FC100E935E00AFCFF3 /* libMMTrackingSimulator.a */; };
 		896E84610F15AB6C00D810FE /* notes.css in Resources */ = {isa = PBXBuildFile; fileRef = 896E84600F15AB6C00D810FE /* notes.css */; };
 		897C0D670F99154500F9D8B5 /* browserInstapaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 897C0D660F99154500F9D8B5 /* browserInstapaper.png */; };
 		89997FAC0F171EB600CF0AA2 /* standard-grey-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */; };
@@ -373,6 +375,9 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Mobile/main.m; sourceTree = "<group>"; };
 		8900D7330FBFB2D900DE3E3B /* Servers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Servers.plist; sourceTree = "<group>"; };
+		891210FB100E935E00AFCFF3 /* libMMTrackingDevice.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMMTrackingDevice.a; path = Mobile/Frameworks/libMMTrackingDevice.a; sourceTree = SOURCE_ROOT; };
+		891210FC100E935E00AFCFF3 /* libMMTrackingSimulator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMMTrackingSimulator.a; path = Mobile/Frameworks/libMMTrackingSimulator.a; sourceTree = SOURCE_ROOT; };
+		891210FD100E935E00AFCFF3 /* MMTrackingMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMTrackingMgr.h; path = Mobile/Frameworks/MMTrackingMgr.h; sourceTree = SOURCE_ROOT; };
 		896E84600F15AB6C00D810FE /* notes.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = notes.css; sourceTree = "<group>"; };
 		897C0D660F99154500F9D8B5 /* browserInstapaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserInstapaper.png; sourceTree = "<group>"; };
 		89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "standard-grey-dark.css"; sourceTree = "<group>"; };
@@ -409,6 +414,8 @@
 				1CE7FF9E0FA3D064001C7B17 /* libicucore.dylib in Frameworks */,
 				1CD84C2B10040AB300E56A7E /* MediaPlayer.framework in Frameworks */,
 				1C0DC0F7100717F6003BEEF3 /* IOKit.framework in Frameworks */,
+				891210FE100E935E00AFCFF3 /* libMMTrackingDevice.a in Frameworks */,
+				891210FF100E935E00AFCFF3 /* libMMTrackingSimulator.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -435,6 +442,9 @@
 		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				891210FB100E935E00AFCFF3 /* libMMTrackingDevice.a */,
+				891210FC100E935E00AFCFF3 /* libMMTrackingSimulator.a */,
+				891210FD100E935E00AFCFF3 /* MMTrackingMgr.h */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -1138,6 +1148,10 @@
 				);
 				HEADER_SEARCH_PATHS = Mobile;
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Mobile/Frameworks\"",
+				);
 				PRODUCT_NAME = Colloquy;
 			};
 			name = Distribution;
@@ -1160,6 +1174,10 @@
 				);
 				HEADER_SEARCH_PATHS = Mobile;
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Mobile/Frameworks\"",
+				);
 				PRODUCT_NAME = Colloquy;
 			};
 			name = Debug;
@@ -1183,6 +1201,10 @@
 				);
 				HEADER_SEARCH_PATHS = Mobile;
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Mobile/Frameworks\"",
+				);
 				PRODUCT_NAME = Colloquy;
 			};
 			name = Release;

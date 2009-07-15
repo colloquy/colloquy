@@ -18,6 +18,14 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 
+/*
+ * The Colloquy Project has received permission from Medialets to include their 
+ * Medialytics library in Mobile Colloquy and in our public subversion repository.
+ * 
+ * Please sign up for your own account at Medialytics.com if you wish to use analytics.
+ */
+#import "MMTrackingMgr.h"
+
 #if defined(ENABLE_SECRETS)
 typedef void (*IOServiceInterestCallback)(void *context, mach_port_t service, uint32_t messageType, void *messageArgument);
 
@@ -155,8 +163,30 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 - (void) applicationWillTerminate {
 	[self saveConnections];
 
-	for (MVChatConnection *connection in _connections)
+	NSUInteger roomCount = 0;
+	NSUInteger pushConnectionCount = 0;
+
+	for (MVChatConnection *connection in _connections) {
+		if (connection.pushNotifications) pushConnectionCount++;
+		
+		roomCount += connection.knownChatRooms.count;
+
 		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+	}
+
+#if defined(TARGET_IPHONE_SIMULATOR) && !TARGET_IPHONE_SIMULATOR
+	if (![[[[NSBundle mainBundle] infoDictionary] objectForKey:@"MMAppID"] isCaseInsensitiveEqualToString:@"not available"]) {
+		NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d", roomCount], @"Rooms", nil];
+		[[MMTrackingMgr sharedInstance] trackEvent:@"Rooms" withUserDict:dictionary];
+		
+		dictionary = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d", _connections.count], @"Connections", nil];
+		[[MMTrackingMgr sharedInstance] trackEvent:@"Connections" withUserDict:dictionary];
+		
+		dictionary = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d", pushConnectionCount], @"Connections with Push", nil];
+		[[MMTrackingMgr sharedInstance] trackEvent:@"Connections with Push" withUserDict:dictionary];
+	}
+#endif
+	
 }
 
 #pragma mark -

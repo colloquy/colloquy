@@ -6,6 +6,14 @@
 #import "NSStringAdditions.h"
 #import "RegexKitLite.h"
 
+/*
+ * The Colloquy Project has received permission from Medialets to include their 
+ * Medialytics library in Mobile Colloquy and in our public subversion repository.
+ * 
+ * Please sign up for your own account at Medialytics.com if you wish to use analytics.
+ */
+#import "MMTrackingMgr.h"
+
 #if ENABLE(SECRETS)
 @interface UIApplication (UIApplicationPrivate)
 - (BOOL) launchApplicationWithIdentifier:(NSString *) bundleIdentifier suspended:(BOOL) suspended;
@@ -31,6 +39,27 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 @synthesize tabBarController, mainWindow;
 @synthesize launchDate = _launchDate;
 @synthesize deviceToken = _deviceToken;
+
+#pragma mark -
+
+#if defined(TARGET_IPHONE_SIMULATOR) && !TARGET_IPHONE_SIMULATOR
++ (void) initialize {
+	if (![[[[NSBundle mainBundle] infoDictionary] objectForKey:@"MMAppID"] isCaseInsensitiveEqualToString:@"not available"]) {
+		[[MMTrackingMgr sharedInstance] startDefaultTrackingWithoutLocation];
+		
+		NSString *information = (([[[NSBundle mainBundle] infoDictionary] objectForKey:@"SignerIdentity"] != nil) ? @"cracked" : @"legit");
+		NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:information, @"Type of Install", nil];
+		[[MMTrackingMgr sharedInstance] trackEvent:@"Type of Install" withUserDict:dictionary];
+		
+		dictionary = [NSDictionary dictionaryWithObjectsAndKeys:[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"], @"Style Used", nil];
+		[[MMTrackingMgr sharedInstance] trackEvent:@"Style Used" withUserDict:dictionary];
+		
+		information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"] ? @"emoji" : @"plain text");
+		dictionary = [NSDictionary dictionaryWithObjectsAndKeys:information, @"Emoticons Style", nil];
+		[[MMTrackingMgr sharedInstance] trackEvent:@"Emoticons Style" withUserDict:dictionary];
+	}
+}
+#endif
 
 #pragma mark -
 
