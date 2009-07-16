@@ -936,7 +936,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
-- (NSString *) stringByReversingString:(NSString *) normalString {
++ (NSString *) stringByReversingString:(NSString *) normalString {
 	NSMutableString *reversedString = [[NSMutableString alloc] init];
 
 	for (NSInteger index = [normalString length] - 1; index >= 0; index--)

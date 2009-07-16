@@ -41,7 +41,7 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 - (NSString *) stringByStrippingIllegalXMLCharacters;
 - (NSString *) stringByStrippingXMLTags;
 
-- (NSString *) stringByReversingString:(NSString *) normalString;
++ (NSString *) stringByReversingString:(NSString *) normalString;
 
 - (NSString *) stringWithDomainNameSegmentOfAddress;
 
