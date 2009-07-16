@@ -151,6 +151,8 @@
 		891210FF100E935E00AFCFF3 /* libMMTrackingSimulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 891210FC100E935E00AFCFF3 /* libMMTrackingSimulator.a */; };
 		896E84610F15AB6C00D810FE /* notes.css in Resources */ = {isa = PBXBuildFile; fileRef = 896E84600F15AB6C00D810FE /* notes.css */; };
 		897C0D670F99154500F9D8B5 /* browserInstapaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 897C0D660F99154500F9D8B5 /* browserInstapaper.png */; };
+		898CBE52100EB01F002DCC35 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 898CBE51100EB01F002DCC35 /* CoreLocation.framework */; };
+		898CBE60100EB04A002DCC35 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 898CBE5F100EB04A002DCC35 /* libsqlite3.dylib */; };
 		89997FAC0F171EB600CF0AA2 /* standard-grey-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */; };
 		89E87C090FA0450800B49230 /* CQSoundController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E87C080FA0450800B49230 /* CQSoundController.m */; };
 		9703B21B0F2C0D0E00E623DF /* CQFileTransferController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */; };
@@ -380,6 +382,8 @@
 		891210FD100E935E00AFCFF3 /* MMTrackingMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMTrackingMgr.h; path = Mobile/Frameworks/MMTrackingMgr.h; sourceTree = SOURCE_ROOT; };
 		896E84600F15AB6C00D810FE /* notes.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = notes.css; sourceTree = "<group>"; };
 		897C0D660F99154500F9D8B5 /* browserInstapaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserInstapaper.png; sourceTree = "<group>"; };
+		898CBE51100EB01F002DCC35 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = ../../../../System/Library/Frameworks/CoreLocation.framework; sourceTree = SOURCE_ROOT; };
+		898CBE5F100EB04A002DCC35 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = /usr/lib/libsqlite3.dylib; sourceTree = "<absolute>"; };
 		89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "standard-grey-dark.css"; sourceTree = "<group>"; };
 		89E87C070FA0450800B49230 /* CQSoundController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQSoundController.h; path = Mobile/Controllers/CQSoundController.h; sourceTree = "<group>"; };
 		89E87C080FA0450800B49230 /* CQSoundController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQSoundController.m; path = Mobile/Controllers/CQSoundController.m; sourceTree = "<group>"; };
@@ -416,6 +420,8 @@
 				1C0DC0F7100717F6003BEEF3 /* IOKit.framework in Frameworks */,
 				891210FE100E935E00AFCFF3 /* libMMTrackingDevice.a in Frameworks */,
 				891210FF100E935E00AFCFF3 /* libMMTrackingSimulator.a in Frameworks */,
+				898CBE52100EB01F002DCC35 /* CoreLocation.framework in Frameworks */,
+				898CBE60100EB04A002DCC35 /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -435,6 +441,8 @@
 				1CF50C860ED8BE1100CBE5E3 /* Security.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				1CE7FF9D0FA3D064001C7B17 /* libicucore.dylib */,
+				898CBE51100EB01F002DCC35 /* CoreLocation.framework */,
+				898CBE5F100EB04A002DCC35 /* libsqlite3.dylib */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
