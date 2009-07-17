@@ -265,7 +265,7 @@
 	else {
 		NSString *addressToBan = [self modifyAddressForBan:user];
 
-		[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ +b *!%@@%@", [self name], [user username], addressToBan ];
+		[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ +b *!*%@*@%@", [self name], [user username], addressToBan ];
 	}
 	[super addBanForUser:user];
 }
@@ -281,7 +281,7 @@
 	else {
 		NSString *addressToBan = [self modifyAddressForBan:user];
 
-		[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ -b *!%@@%@", [self name], [user username], addressToBan ];
+		[[self connection] sendRawMessageImmediatelyWithFormat:@"MODE %@ -b *!*%@*@%@", [self name], [user username], addressToBan ];
 	}
 	[super removeBanForUser:user];
 }
@@ -298,7 +298,7 @@
 
 	if ( [addressMask hasCaseInsensitiveSuffix:@"IP"] ) {
 		addressMaskToBan = [[addressMask substringToIndex:[addressMask length] - 2] stringByAppendingString:@"*"];
-	} else if ( [[user address] isMatchedByRegex:regexForIPv4Addresses] || [[user address] isMatchedByRegex:regexForIPv6Addresses] ) {
+	} else if ( [addressMask isMatchedByRegex:regexForIPv4Addresses] || [addressMask isMatchedByRegex:regexForIPv6Addresses] ) {
 		NSString *reversedIP = [NSString stringByReversingString:addressMask];
 		scanner = [NSScanner scannerWithString:reversedIP];
 
@@ -312,12 +312,12 @@
 		[scanner setCharactersToBeSkipped:nil];
 		[scanner scanUpToCharactersFromSet:newSectionOfHostmaskCharacterSet intoString:&addressMaskToRemove];
 
-		addressMaskToBan = [addressMaskToBan stringByAppendingString:[[user address] substringFromIndex:[addressMaskToRemove length]]];
+		addressMaskToBan = [addressMaskToBan stringByAppendingString:[addressMask substringFromIndex:[addressMaskToRemove length]]];
 	}
 
 	if ( ! [scanner isAtEnd] )
 		return addressMaskToBan;
-	return [user address];
+	return addressMask;
 }
 
 @end
