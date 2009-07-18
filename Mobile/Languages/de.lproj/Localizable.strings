@@ -290,7 +290,7 @@
 "Deny" = "Ablehnen";
 
 /* Description connection setting label */
-"Description" = "Name";
+"Description" = "Beschreibung";
 
 /* Disconnect button title */
 "Disconnect" = "Trennen";
