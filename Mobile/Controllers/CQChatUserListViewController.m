@@ -51,14 +51,11 @@ static NSString *membersFilteredCountFormat;
 	_searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
 	_searchBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin);
 	_searchBar.placeholder = NSLocalizedString(@"Search", @"Search placeholder text");
+	_searchBar.tintColor = [UIColor colorWithRed:(190. / 255.) green:(199. / 255.) blue:(205. / 255.) alpha:1.]; 
 	_searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	_searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
 	_searchBar.delegate = self;
 
-	if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"] hasSuffix:@"-dark"]) _searchBar.tintColor = [UIColor darkGrayColor];
-	else if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"] isEqualToString:@"notes"]) _searchBar.tintColor = [UIColor brownColor];
-	else _searchBar.tintColor = [UIColor lightGrayColor];
-	
 	[_searchBar sizeToFit];
 
 	self.tableView.tableHeaderView = _searchBar;
