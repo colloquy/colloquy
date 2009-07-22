@@ -39,6 +39,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 @synthesize tabBarController, mainWindow;
 @synthesize launchDate = _launchDate;
 @synthesize deviceToken = _deviceToken;
+@synthesize showingTabBar = _showingTabBar;
 
 #pragma mark -
 
@@ -159,6 +160,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		[[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 
 	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];
+
+	self.showingTabBar = YES;
 
 	return YES;
 }
@@ -303,4 +306,31 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	return nil;
 }
 
+#pragma mark -
+
+- (void) hideTabBar {
+#ifdef ENABLE_SECRETS
+	if (self.showingTabBar) {
+		if ([[CQColloquyApplication sharedApplication].tabBarController respondsToSelector:@selector(hideBarWithTransition:)]) 
+			[[CQColloquyApplication sharedApplication].tabBarController hideBarWithTransition:1];
+		else if ([[CQColloquyApplication sharedApplication].tabBarController respondsToSelector:@selector(hideTabBarWithTransition:)])
+			[[CQColloquyApplication sharedApplication].tabBarController hideTabBarWithTransition:1];
+		
+		self.showingTabBar = NO;		
+	}
+#endif	
+}
+
+- (void) showTabBar {
+#ifdef ENABLE_SECRETS
+	if (!self.showingTabBar) {
+		if ([[CQColloquyApplication sharedApplication].tabBarController respondsToSelector:@selector(showBarWithTransition:)])
+			[[CQColloquyApplication sharedApplication].tabBarController showBarWithTransition:1];
+		else if ([[CQColloquyApplication sharedApplication].tabBarController respondsToSelector:@selector(showTabBarWithTransition:)])
+			[[CQColloquyApplication sharedApplication].tabBarController showTabBarWithTransition:1];
+		
+		self.showingTabBar = YES;
+	}
+#endif	
+}
 @end

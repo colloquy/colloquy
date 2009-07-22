@@ -53,4 +53,6 @@ extern NSString *CQChatViewControllerRecentMessagesUpdatedNotification;
 
 - (void) addEventMessage:(NSString *) message withIdentifier:(NSString *) identifier;
 - (void) addEventMessageAsHTML:(NSString *) message withIdentifier:(NSString *) identifier;
+
+- (void) moveInputField;
 @end

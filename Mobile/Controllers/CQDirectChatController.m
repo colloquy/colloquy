@@ -291,6 +291,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+
+	if (UIInterfaceOrientationIsLandscape(fromInterfaceOrientation)) [[CQColloquyApplication sharedApplication] hideTabBar];
 }
 
 - (void) viewDidAppear:(BOOL) animated {
@@ -323,6 +325,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 
 	[super viewWillDisappear:animated];
+
+	[[CQColloquyApplication sharedApplication] showTabBar];
 }
 
 - (void) viewDidDisappear:(BOOL) animated {
@@ -334,6 +338,11 @@ static NSOperationQueue *chatMessageProcessingQueue;
 }
 
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation) fromInterfaceOrientation {
+	if (UIInterfaceOrientationIsLandscape(fromInterfaceOrientation)) [[CQColloquyApplication sharedApplication] showTabBar];
+	else [[CQColloquyApplication sharedApplication] hideTabBar];
+
+	if ([chatInputBar isFirstResponder]) [self moveInputField];
+
 	[transcriptView scrollToBottomAnimated:NO];
 }
 
@@ -803,7 +812,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	BOOL showSettings = NO;
 	BOOL allowRetry = YES;
 
-    UIAlertView *alert = [[UIAlertView alloc] init]; 
+    UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.delegate = self;
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
@@ -979,20 +988,25 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 #pragma mark -
 
-- (void) keyboardWillShow:(NSNotification *) notification {	
-	CGRect keyboardBounds = CGRectZero;
-	[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
+- (void) moveInputField {
+	// If [UIKeyboard defaultSizeForOrientation:] is ever documented, use that instead of hardcoding values
+	CGRect keyboardBounds = UIInterfaceOrientationIsLandscape(self.interfaceOrientation) ? CGRectMake(0, 0, 320, 216) : CGRectMake(0, 0, 480, 162);
 
 	[UIView beginAnimations:nil context:NULL];
 	[UIView setAnimationDuration:0.3];
+	[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
 
-	CGFloat shift = keyboardBounds.size.height - 50; // Height of the tab bar
+	CGFloat shift = ([CQColloquyApplication sharedApplication].showingTabBar && !UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) ? keyboardBounds.size.height + 5 : keyboardBounds.size.height - 55; // Tab bar height
 
 	CGRect frame = containerView.frame;
 	frame.size.height = (self.view.bounds.size.height - shift);
 	containerView.frame = frame;
 
 	[UIView commitAnimations];
+}
+
+- (void) keyboardWillShow:(NSNotification *) notification {
+	[self moveInputField];
 
 	[transcriptView scrollToBottomAnimated:YES];
 
@@ -1023,7 +1037,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	[transcriptView scrollToBottomAnimated:YES];
 
 	_showingKeyboard = NO;
-}     
+}
 
 #pragma mark -
 
@@ -1262,7 +1276,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 			[CQSoundController vibrate];
 
 		if (soundOnPrivateMessage) {
-			static CQSoundController *privateMessageSound; 
+			static CQSoundController *privateMessageSound;
 
 			if (!privateMessageSound) {
 				NSString *alert = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
