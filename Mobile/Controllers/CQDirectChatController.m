@@ -292,7 +292,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
-	if (UIInterfaceOrientationIsLandscape(fromInterfaceOrientation)) [[CQColloquyApplication sharedApplication] hideTabBar];
+	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) [[CQColloquyApplication sharedApplication] hideTabBar];
 }
 
 - (void) viewDidAppear:(BOOL) animated {
