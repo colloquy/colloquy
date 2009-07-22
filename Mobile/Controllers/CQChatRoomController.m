@@ -98,6 +98,13 @@
 	_currentUserListViewController = nil;
 }
 
+- (void) viewWillDisappear:(BOOL) animated {
+	[super viewWillDisappear:animated];
+
+	if (!_currentUserListViewController)
+		[[CQColloquyApplication sharedApplication] showTabBarWithTransition:YES];
+}
+
 #pragma mark -
 
 - (MVChatUser *) user {

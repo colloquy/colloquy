@@ -328,7 +328,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	[super viewWillDisappear:animated];
 
-	[[CQColloquyApplication sharedApplication] showTabBarWithTransition:YES];
+	if ([self isMemberOfClass:[CQDirectChatController class]])
+		[[CQColloquyApplication sharedApplication] showTabBarWithTransition:YES];
 }
 
 - (void) viewDidDisappear:(BOOL) animated {
