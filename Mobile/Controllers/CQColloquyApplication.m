@@ -18,6 +18,18 @@
 @interface UIApplication (UIApplicationPrivate)
 - (BOOL) launchApplicationWithIdentifier:(NSString *) bundleIdentifier suspended:(BOOL) suspended;
 @end
+
+typedef enum {
+    UITabBarTransitionNone,
+    UITabBarTransitionSlide
+} UITabBarTransition;
+
+@interface UITabBarController (UITabBarControllerPrivate)
+- (void) hideBarWithTransition:(UITabBarTransition) transition;
+- (void) hideTabBarWithTransition:(UITabBarTransition) transition;
+- (void) showBarWithTransition:(UITabBarTransition) transition;
+- (void) showTabBarWithTransition:(UITabBarTransition) transition;
+@end
 #endif
 
 NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyApplicationDidRecieveDeviceTokenNotification";
@@ -111,6 +123,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	_deviceToken = [[[NSUserDefaults standardUserDefaults] stringForKey:@"CQPushDeviceToken"] retain];
 
+	_showingTabBar = YES;
+
 #if !TARGET_IPHONE_SIMULATOR
 	if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerForRemoteNotificationTypes:)])
 		[[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
@@ -160,8 +174,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		[[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 
 	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];
-
-	self.showingTabBar = YES;
 
 	return YES;
 }
@@ -302,35 +314,37 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if ([style hasSuffix:@"-dark"])
 		return [UIColor blackColor];
 	if ([style isEqualToString:@"notes"])
-		return [UIColor colorWithRed:.224 green:.082 blue:.0 alpha:1];;
+		return [UIColor colorWithRed:0.224 green:0.082 blue:0. alpha:1.];
 	return nil;
 }
 
 #pragma mark -
 
-- (void) hideTabBar {
+- (void) hideTabBarWithTransition:(BOOL) transition {
 #ifdef ENABLE_SECRETS
-	if (self.showingTabBar) {
-		if ([[CQColloquyApplication sharedApplication].tabBarController respondsToSelector:@selector(hideBarWithTransition:)]) 
-			[[CQColloquyApplication sharedApplication].tabBarController hideBarWithTransition:1];
-		else if ([[CQColloquyApplication sharedApplication].tabBarController respondsToSelector:@selector(hideTabBarWithTransition:)])
-			[[CQColloquyApplication sharedApplication].tabBarController hideTabBarWithTransition:1];
-		
-		self.showingTabBar = NO;		
-	}
+	if (!_showingTabBar)
+		return;
+
+	if ([tabBarController respondsToSelector:@selector(hideBarWithTransition:)]) 
+		[tabBarController hideBarWithTransition:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
+	else if ([tabBarController respondsToSelector:@selector(hideTabBarWithTransition:)])
+		[tabBarController hideTabBarWithTransition:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
+
+	_showingTabBar = NO;		
 #endif	
 }
 
-- (void) showTabBar {
+- (void) showTabBarWithTransition:(BOOL) transition {
 #ifdef ENABLE_SECRETS
-	if (!self.showingTabBar) {
-		if ([[CQColloquyApplication sharedApplication].tabBarController respondsToSelector:@selector(showBarWithTransition:)])
-			[[CQColloquyApplication sharedApplication].tabBarController showBarWithTransition:1];
-		else if ([[CQColloquyApplication sharedApplication].tabBarController respondsToSelector:@selector(showTabBarWithTransition:)])
-			[[CQColloquyApplication sharedApplication].tabBarController showTabBarWithTransition:1];
-		
-		self.showingTabBar = YES;
-	}
+	if (_showingTabBar)
+		return;
+
+	if ([tabBarController respondsToSelector:@selector(showBarWithTransition:)])
+		[tabBarController showBarWithTransition:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
+	else if ([tabBarController respondsToSelector:@selector(showTabBarWithTransition:)])
+		[tabBarController showTabBarWithTransition:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
+
+	_showingTabBar = YES;
 #endif	
 }
 @end

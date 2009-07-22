@@ -22,8 +22,8 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
 - (void) showActionSheet:(UIActionSheet *) sheet;
 
-- (void) hideTabBar;
-- (void) showTabBar;
+- (void) hideTabBarWithTransition:(BOOL) transition;
+- (void) showTabBarWithTransition:(BOOL) transition;
 
 @property (nonatomic, readonly) NSDate *launchDate;
 @property (nonatomic, readonly) UITabBarController *tabBarController;

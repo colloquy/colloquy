@@ -33,6 +33,7 @@ NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewCo
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _updateRightBarButtonItemAnimated:(BOOL) animated;
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command;
+- (void) _moveInputFieldForOrientation:(UIInterfaceOrientation) interfaceOrientation;
 @end
 
 #pragma mark -
@@ -292,7 +293,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
-	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) [[CQColloquyApplication sharedApplication] hideTabBar];
+	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+		[[CQColloquyApplication sharedApplication] hideTabBarWithTransition:YES];
 }
 
 - (void) viewDidAppear:(BOOL) animated {
@@ -326,7 +328,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	[super viewWillDisappear:animated];
 
-	[[CQColloquyApplication sharedApplication] showTabBar];
+	[[CQColloquyApplication sharedApplication] showTabBarWithTransition:YES];
 }
 
 - (void) viewDidDisappear:(BOOL) animated {
@@ -337,11 +339,13 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	_allowEditingToEnd = NO;
 }
 
-- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation) fromInterfaceOrientation {
-	if (UIInterfaceOrientationIsLandscape(fromInterfaceOrientation)) [[CQColloquyApplication sharedApplication] showTabBar];
-	else [[CQColloquyApplication sharedApplication] hideTabBar];
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
+	if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
+		[[CQColloquyApplication sharedApplication] hideTabBarWithTransition:NO];
+	else [[CQColloquyApplication sharedApplication] showTabBarWithTransition:NO];
 
-	if ([chatInputBar isFirstResponder]) [self moveInputField];
+	if ([chatInputBar isFirstResponder])
+		[self _moveInputFieldForOrientation:toInterfaceOrientation];
 
 	[transcriptView scrollToBottomAnimated:NO];
 }
@@ -988,25 +992,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 #pragma mark -
 
-- (void) moveInputField {
-	// If [UIKeyboard defaultSizeForOrientation:] is ever documented, use that instead of hardcoding values
-	CGRect keyboardBounds = UIInterfaceOrientationIsLandscape(self.interfaceOrientation) ? CGRectMake(0, 0, 320, 216) : CGRectMake(0, 0, 480, 162);
-
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:0.3];
-	[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-
-	CGFloat shift = ([CQColloquyApplication sharedApplication].showingTabBar && !UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) ? keyboardBounds.size.height + 5 : keyboardBounds.size.height - 55; // Tab bar height
-
-	CGRect frame = containerView.frame;
-	frame.size.height = (self.view.bounds.size.height - shift);
-	containerView.frame = frame;
-
-	[UIView commitAnimations];
-}
-
 - (void) keyboardWillShow:(NSNotification *) notification {
-	[self moveInputField];
+	[self _moveInputFieldForOrientation:self.interfaceOrientation];
 
 	[transcriptView scrollToBottomAnimated:YES];
 
@@ -1118,6 +1105,25 @@ static NSOperationQueue *chatMessageProcessingQueue;
 }
 
 #pragma mark -
+
+- (void) _moveInputFieldForOrientation:(UIInterfaceOrientation) interfaceOrientation {
+	BOOL landscape = UIInterfaceOrientationIsLandscape(interfaceOrientation);
+
+	// If [UIKeyboard defaultSizeForOrientation:] is ever documented, use that instead of hardcoding values.
+	CGRect keyboardBounds = (landscape ? CGRectMake(0, 0, 320, 216) : CGRectMake(0, 0, 480, 162));
+
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationDuration:0.3];
+	[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+
+	CGFloat shift = ([CQColloquyApplication sharedApplication].showingTabBar && !landscape ? keyboardBounds.size.height + 5 : keyboardBounds.size.height - 55); // Tab bar height
+
+	CGRect frame = containerView.frame;
+	frame.size.height = (self.view.bounds.size.height - shift);
+	containerView.frame = frame;
+
+	[UIView commitAnimations];
+}
 
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
 	UIAlertView *alert = [[UIAlertView alloc] init];
