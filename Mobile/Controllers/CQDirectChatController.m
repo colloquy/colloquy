@@ -346,7 +346,9 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	if ([chatInputBar isFirstResponder])
 		[self _moveInputFieldForOrientation:toInterfaceOrientation];
+}
 
+- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation) fromInterfaceOrientation {
 	[transcriptView scrollToBottomAnimated:NO];
 }
 
