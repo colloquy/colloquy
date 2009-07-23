@@ -156,7 +156,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (NSString *) displayName {
-	return [self name];
+	return [_connection displayNameForChatRoomNamed:[self name]];
 }
 
 - (id) uniqueIdentifier {

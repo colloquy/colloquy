@@ -53,10 +53,6 @@
 	return ( MVChatRoomMemberFounderMode | MVChatRoomMemberOperatorMode | MVChatRoomMemberQuietedMode );
 }
 
-- (NSString *) displayName {
-	return [self name];
-}
-
 #pragma mark -
 
 - (void) partWithReason:(MVChatString *) reason {

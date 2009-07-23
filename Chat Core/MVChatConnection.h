@@ -491,6 +491,7 @@ extern NSString *MVChatConnectionErrorDomain;
 #pragma mark -
 
 - (NSString *) properNameForChatRoomNamed:(NSString *) room;
+- (NSString *) displayNameForChatRoomNamed:(NSString *) room;
 
 #pragma mark -
 

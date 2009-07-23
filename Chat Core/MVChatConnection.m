@@ -136,7 +136,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		_status = MVChatConnectionDisconnectedStatus;
 		_proxy = MVChatConnectionNoProxy;
 		_bouncer = MVChatConnectionNoBouncer;
-		_roomsCache = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:500];
+		_roomsCache = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5000];
 		_persistentInformation = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
 		_supportedFeatures = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 		_localUser = nil;
@@ -943,6 +943,10 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	return room;
 }
 
+- (NSString *) displayNameForChatRoomNamed:(NSString *) room {
+	return room;
+}
+
 #pragma mark -
 
 - (NSSet *) knownChatUsers {
@@ -1218,7 +1222,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	if( _roomListDirty ) return; // already queued to send notification
 	_roomListDirty = YES;
 
-	[self performSelector:@selector( _sendRoomListUpdatedNotification ) withObject:nil afterDelay:( 1. / 3. )];
+	[self performSelector:@selector( _sendRoomListUpdatedNotification ) withObject:nil afterDelay:( 1. / 2. )];
 }
 
 - (void) _sendRoomListUpdatedNotification {

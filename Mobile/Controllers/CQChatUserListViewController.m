@@ -160,14 +160,6 @@ static NSString *membersFilteredCountFormat;
 
 #pragma mark -
 
-- (void) beginUpdates {
-	[self.tableView beginUpdates];
-}
-
-- (void) endUpdates {
-	[self.tableView endUpdates];
-}
-
 - (void) insertUser:(MVChatUser *) user atIndex:(NSUInteger) index {
 	BOOL searchBarFocused = [_searchBar isFirstResponder];
 	[self _insertUser:user atIndex:index withAnimation:UITableViewRowAnimationLeft];

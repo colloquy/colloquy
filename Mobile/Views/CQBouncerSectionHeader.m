@@ -27,8 +27,6 @@
 	_textLabel.shadowOffset = CGSizeMake(0., 1.);
 	_textLabel.shadowColor = [UIColor colorWithWhite:0. alpha:0.5];
 
-	_textLabel.text = @"Direct Connections";
-
 	image = [UIImage imageNamed:@"disclosureArrow.png"];
 	_disclosureImageView = [[UIImageView alloc] initWithImage:image];
 

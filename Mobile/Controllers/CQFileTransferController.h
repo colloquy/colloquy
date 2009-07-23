@@ -6,12 +6,8 @@
 //  Copyright 2009 Concinnous Software. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "CQChatController.h"
-
 @class MVFileTransfer;
 @class CQFileTransferTableCell;
-
 
 @interface CQFileTransferController : UIViewController {
     @protected

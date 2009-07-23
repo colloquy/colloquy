@@ -40,10 +40,6 @@
 	return [_uniqueIdentifier username];
 }
 
-- (NSString *) displayName {
-	return [self name];
-}
-
 #pragma mark -
 
 - (void) partWithReason:(MVChatString *) reason {

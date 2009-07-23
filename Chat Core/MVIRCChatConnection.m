@@ -516,6 +516,14 @@ static const NSStringEncoding supportedEncodings[] = {
 	return ( [[self chatRoomNamePrefixes] characterIsMember:[room characterAtIndex:0]] ? room : [@"#" stringByAppendingString:room] );
 }
 
+- (NSString *) displayNameForChatRoomNamed:(NSString *) room {
+	if ([room length] > 2 && [room characterAtIndex:1] == '#')
+		return [room substringFromIndex:2];
+	if ([room length] > 1 && [room characterAtIndex:1] != '#')
+		return [room substringFromIndex:1];
+	return room;
+}
+
 #pragma mark -
 
 - (NSSet *) chatUsersWithNickname:(NSString *) name {

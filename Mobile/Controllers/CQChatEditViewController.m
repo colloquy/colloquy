@@ -1,6 +1,7 @@
 #import "CQChatEditViewController.h"
 
 #import "CQChatController.h"
+#import "CQChatRoomListViewController.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 #import "CQPreferencesListViewController.h"
@@ -159,6 +160,22 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 	return nil;
 }
 
+- (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
+	if (_roomTarget && indexPath.section == 1 && indexPath.row == 0) {
+		CQChatRoomListViewController *listViewController = [[CQChatRoomListViewController alloc] init];
+
+		listViewController.connection = _selectedConnection;
+
+		[self.view endEditing:YES];
+
+		[self.navigationController pushViewController:listViewController animated:YES];
+
+		[listViewController release];
+
+		return;
+	}
+}
+
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section <= 1) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
@@ -181,6 +198,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 			if (_roomTarget) {
 				cell.label = NSLocalizedString(@"Name", @"Name setting label");
 				cell.textField.placeholder = @"#help";
+				cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 			} else {
 				cell.label = NSLocalizedString(@"Nickname", @"Nickname setting label");
 				cell.textField.placeholder = NSLocalizedString(@"Required", @"Required setting placeholder");

@@ -1,5 +1,3 @@
-#import <UIKit/UIKit.h>
-
 @class MVChatUser;
 @class MVChatRoom;
 
@@ -13,9 +11,6 @@
 }
 @property (nonatomic, copy) NSArray *users;
 @property (nonatomic, retain) MVChatRoom *room;
-
-- (void) beginUpdates;
-- (void) endUpdates;
 
 - (void) filterUsersWithSearchString:(NSString *) searchString;
 

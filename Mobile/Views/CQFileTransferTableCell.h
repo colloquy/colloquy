@@ -6,7 +6,6 @@
 //  Copyright 2009 Concinnous Software. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import <ChatCore/MVFileTransfer.h>
 
 @class MVChatUser;
