@@ -1266,11 +1266,6 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (void) substituteEmoticonsForEmojiInRange:(NSRangePointer) range withXMLSpecialCharactersEncodedAsEntities:(BOOL) encoded {
-#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
-	if ([[[UIDevice currentDevice] systemVersion] floatValue] < 2.2)
-		return;
-#endif
-
 	if (![self containsTypicalEmoticonCharacters])
 		return;
 
