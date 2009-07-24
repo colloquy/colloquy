@@ -121,6 +121,7 @@ extern NSString *MVChatConnectionErrorDomain;
 	NSMutableSet *_joinedRooms;
 	MVChatUser *_localUser;
 	NSMutableDictionary *_roomsCache;
+	NSMutableSet *_pendingRoomChanges;
 	NSMutableSet *_chatUserWatchRules;
 	NSDate *_cachedDate;
 	MVChatString *_awayMessage;

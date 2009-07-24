@@ -852,8 +852,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 @implementation MVIRCChatRoom (CQChatControllerAdditions)
 - (NSString *) displayName {
-	if (self.connection.type == MVChatConnectionIRCType && ![[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowFullRoomNames"])
-		return [self.name substringFromIndex:1];
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowFullRoomNames"])
+		return [self.connection displayNameForChatRoomNamed:self.name];
 	return self.name;
 }
 @end

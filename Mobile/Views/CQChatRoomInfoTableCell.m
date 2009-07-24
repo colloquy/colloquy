@@ -24,9 +24,10 @@
 	_nameLabel.font = [UIFont boldSystemFontOfSize:18.];
 	_nameLabel.textColor = self.textColor;
 	_nameLabel.highlightedTextColor = self.selectedTextColor;
+	_nameLabel.backgroundColor = [UIColor clearColor];
 
 	_topicLabel.font = [UIFont systemFontOfSize:14.];
-	_topicLabel.textColor = self.textColor;
+	_topicLabel.textColor = [UIColor colorWithWhite:0.4 alpha:1.];
 	_topicLabel.highlightedTextColor = self.selectedTextColor;
 
 	_memberCountLabel.font = [UIFont systemFontOfSize:14.];
@@ -72,6 +73,8 @@
 
 - (void) setMemberCount:(NSUInteger) memberCount {
 	_memberCountLabel.text = [NSString stringWithFormat:@"%lu", memberCount];
+	_memberCountLabel.hidden = (memberCount ? NO : YES);
+	_memberIconImageView.hidden = (memberCount ? NO : YES);
 
 	[self setNeedsLayout];
 }
