@@ -22,6 +22,7 @@ static NSOperationQueue *topicProcessingQueue;
 	_rooms = [[NSMutableArray alloc] init];
 	_matchedRooms = [_rooms retain];
 	_processedRooms = [[NSMutableSet alloc] init];
+	_showingUpdateRow = YES;
 
 	[self _updateTitle];
 
@@ -91,6 +92,8 @@ static NSOperationQueue *topicProcessingQueue;
 	old = _matchedRooms;
 	_matchedRooms = [_rooms retain];
 	[old release];
+
+	_showingUpdateRow = !_matchedRooms.count;
 
 	[self _sortRooms];
 
@@ -193,10 +196,24 @@ static NSOperationQueue *topicProcessingQueue;
 #pragma mark -
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
-	return _matchedRooms.count;
+	return (_showingUpdateRow ? 1 : _matchedRooms.count);
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
+	if (_showingUpdateRow) {
+		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:@"Updating"];
+		cell.text = NSLocalizedString(@"Updating Room List...", @"Updating room list label");
+
+		UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+		[spinner startAnimating];
+
+		cell.accessoryView = spinner;
+
+		[spinner release];
+
+		return cell;
+	}
+
 	NSString *room = [_matchedRooms objectAtIndex:indexPath.row];
 	NSMutableDictionary *info = [_connection.chatRoomListResults objectForKey:room];
 
@@ -268,6 +285,14 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 	if (!_processedRooms.count)
 		return;
 
+	BOOL animatedInsert = (_processedRooms.count < 40);
+
+	BOOL wasShowingUpdateRow = _showingUpdateRow;
+	_showingUpdateRow = NO;
+
+	if (wasShowingUpdateRow && animatedInsert)
+		[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+
 	[_rooms addObjectsFromArray:[_processedRooms allObjects]];
 
 	[self _sortRooms];
@@ -285,7 +310,7 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 		[_matchedRooms sortUsingFunction:sortUsingMemberCount context:_connection.chatRoomListResults];
 	}
 
-	if (_processedRooms.count < 40) {
+	if (animatedInsert) {
 		NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:_processedRooms.count];
 
 		NSUInteger index = 0;

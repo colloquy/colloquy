@@ -9,6 +9,7 @@
 	NSString *_currentSearchString;
 	UISearchBar *_searchBar;
 	BOOL _updatePending;
+	BOOL _showingUpdateRow;
 }
 @property (nonatomic, retain) MVChatConnection *connection;
 
