@@ -117,8 +117,6 @@ static NSOperationQueue *topicProcessingQueue;
 
 - (void) filterRoomsWithSearchString:(NSString *) searchString {
 	NSArray *previousRoomsArray = [_matchedRooms retain];
-	NSSet *previousRoomsSet = [[NSSet alloc] initWithArray:previousRoomsArray];
-	NSMutableSet *addedRooms = [[NSMutableSet alloc] init];
 
 	if (searchString.length) {
 		id old = _matchedRooms;
@@ -130,32 +128,33 @@ static NSOperationQueue *topicProcessingQueue;
 			if (![room hasCaseInsensitiveSubstring:searchString])
 				continue;
 			[_matchedRooms addObject:room];
-			[addedRooms addObject:room];
 		}
 	} else {
 		id old = _matchedRooms;
 		_matchedRooms = [_rooms retain];
 		[old release];
-
-		[addedRooms addObjectsFromArray:_rooms];
 	}
 
 	if (ABS((NSInteger)(previousRoomsArray.count - _matchedRooms.count)) < 40) {
+		NSSet *matchedRoomsSet = [[NSSet alloc] initWithArray:_matchedRooms];
+		NSSet *previousRoomsSet = [[NSSet alloc] initWithArray:previousRoomsArray];
+
 		[self.tableView beginUpdates];
 
 		NSUInteger index = 0;
 		NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
 
 		for (NSString *room in previousRoomsArray) {
-			if (![addedRooms containsObject:room])
+			if (![matchedRoomsSet containsObject:room])
 				[indexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
 			++index;
 		}
 
 		[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
-		[indexPaths release];
 
 		index = 0;
+
+		[indexPaths release];
 		indexPaths = [[NSMutableArray alloc] init];
 
 		for (NSString *room in _matchedRooms) {
@@ -165,22 +164,23 @@ static NSOperationQueue *topicProcessingQueue;
 		}
 
 		[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
-		[indexPaths release];
 
 		[self.tableView endUpdates];
+
+		[indexPaths release];
+		[previousRoomsSet release];
+		[matchedRoomsSet release];
 	} else {
 		[self.tableView reloadData];
 	}
-
-	[addedRooms release];
-	[previousRoomsSet release];
-	[previousRoomsArray release];
 
 	id old = _currentSearchString;
 	_currentSearchString = [searchString copy];
 	[old release];
 
 	[_searchBar becomeFirstResponder];
+
+	[previousRoomsArray release];
 }
 
 #pragma mark -
