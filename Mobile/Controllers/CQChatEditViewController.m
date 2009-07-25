@@ -164,7 +164,6 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 	if (_roomTarget && indexPath.section == 1 && indexPath.row == 0) {
 		CQChatRoomListViewController *listViewController = [[CQChatRoomListViewController alloc] init];
 
-		listViewController.title = _selectedConnection.displayName;
 		listViewController.connection = _selectedConnection;
 
 		[self.view endEditing:YES];

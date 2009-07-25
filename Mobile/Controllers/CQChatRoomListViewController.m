@@ -11,6 +11,7 @@ static NSOperationQueue *topicProcessingQueue;
 @interface CQChatRoomListViewController (CQChatRoomListViewControllerPrivate)
 - (void) _processTopicData:(NSData *) topicData room:(NSString *) room;
 - (void) _sortRooms;
+- (void) _updateTitle;
 @end
 
 @implementation CQChatRoomListViewController
@@ -21,6 +22,8 @@ static NSOperationQueue *topicProcessingQueue;
 	_rooms = [[NSMutableArray alloc] init];
 	_matchedRooms = [_rooms retain];
 	_processedRooms = [[NSMutableSet alloc] init];
+
+	[self _updateTitle];
 
 	return self;
 }
@@ -95,6 +98,8 @@ static NSOperationQueue *topicProcessingQueue;
 
 	[_currentSearchString release];
 	_currentSearchString = nil;
+
+	[self _updateTitle];
 }
 
 #pragma mark -
@@ -178,6 +183,8 @@ static NSOperationQueue *topicProcessingQueue;
 	_currentSearchString = [searchString copy];
 	[old release];
 
+	[self _updateTitle];
+
 	[_searchBar becomeFirstResponder];
 
 	[previousRoomsArray release];
@@ -245,6 +252,18 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 	_updatePending = YES;
 }
 
+- (void) _updateTitle {
+	static NSNumberFormatter *numberFormatter;
+	if (!numberFormatter) {
+		numberFormatter = [[NSNumberFormatter alloc] init];
+        numberFormatter.numberStyle = NSNumberFormatterDecimalStyle;
+		numberFormatter.positiveFormat = NSLocalizedString(@"#,##0", @"Plain large number format string");
+	}
+
+	NSString *formattedCount = [numberFormatter stringFromNumber:[NSNumber numberWithInteger:_matchedRooms.count]];
+	self.title = [NSString stringWithFormat:NSLocalizedString(@"Rooms (%@)", @"Rooms list view title with count"), formattedCount];
+}
+
 - (void) _updateRooms {
 	if (!_processedRooms.count)
 		return;
@@ -282,6 +301,8 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 	} else {
 		[self.tableView reloadData];
 	}
+
+	[self _updateTitle];
 
 	[_processedRooms removeAllObjects];
 
