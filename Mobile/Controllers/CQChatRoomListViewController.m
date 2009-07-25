@@ -2,6 +2,7 @@
 
 #import "CQChatRoomInfoTableCell.h"
 #import "CQProcessChatMessageOperation.h"
+#import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
 
@@ -17,7 +18,8 @@ static NSOperationQueue *topicProcessingQueue;
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 
-	_matchedRooms = [[NSMutableArray alloc] init];
+	_rooms = [[NSMutableArray alloc] init];
+	_matchedRooms = [_rooms retain];
 	_processedRooms = [[NSMutableSet alloc] init];
 
 	return self;
@@ -27,6 +29,7 @@ static NSOperationQueue *topicProcessingQueue;
 	_searchBar.delegate = nil;
 
 	[_connection release];
+	[_rooms release];
 	[_matchedRooms release];
 	[_processedRooms release];
 	[_currentSearchString release];
@@ -78,11 +81,20 @@ static NSOperationQueue *topicProcessingQueue;
 	[connection connect];
 	[connection fetchChatRoomList];
 
-	[_matchedRooms setArray:[_connection.chatRoomListResults allKeys]];
+	_updatePending = NO;
+	[_processedRooms removeAllObjects];
+	[_rooms setArray:[_connection.chatRoomListResults allKeys]];
+
+	old = _matchedRooms;
+	_matchedRooms = [_rooms retain];
+	[old release];
 
 	[self _sortRooms];
 
 	[self.tableView reloadData];
+
+	[_currentSearchString release];
+	_currentSearchString = nil;
 }
 
 #pragma mark -
@@ -104,7 +116,71 @@ static NSOperationQueue *topicProcessingQueue;
 }
 
 - (void) filterRoomsWithSearchString:(NSString *) searchString {
-	
+	NSArray *previousRoomsArray = [_matchedRooms retain];
+	NSSet *previousRoomsSet = [[NSSet alloc] initWithArray:previousRoomsArray];
+	NSMutableSet *addedRooms = [[NSMutableSet alloc] init];
+
+	if (searchString.length) {
+		id old = _matchedRooms;
+		_matchedRooms = [[NSMutableArray alloc] init];
+		[old release];
+
+		NSArray *searchArray = (_currentSearchString && [searchString hasPrefix:_currentSearchString] ? previousRoomsArray : _rooms);
+		for (NSString *room in searchArray) {
+			if (![room hasCaseInsensitiveSubstring:searchString])
+				continue;
+			[_matchedRooms addObject:room];
+			[addedRooms addObject:room];
+		}
+	} else {
+		id old = _matchedRooms;
+		_matchedRooms = [_rooms retain];
+		[old release];
+
+		[addedRooms addObjectsFromArray:_rooms];
+	}
+
+	if (ABS((NSInteger)(previousRoomsArray.count - _matchedRooms.count)) < 40) {
+		[self.tableView beginUpdates];
+
+		NSUInteger index = 0;
+		NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+
+		for (NSString *room in previousRoomsArray) {
+			if (![addedRooms containsObject:room])
+				[indexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
+			++index;
+		}
+
+		[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+		[indexPaths release];
+
+		index = 0;
+		indexPaths = [[NSMutableArray alloc] init];
+
+		for (NSString *room in _matchedRooms) {
+			if (![previousRoomsSet containsObject:room])
+				[indexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
+			++index;
+		}
+
+		[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+		[indexPaths release];
+
+		[self.tableView endUpdates];
+	} else {
+		[self.tableView reloadData];
+	}
+
+	[addedRooms release];
+	[previousRoomsSet release];
+	[previousRoomsArray release];
+
+	id old = _currentSearchString;
+	_currentSearchString = [searchString copy];
+	[old release];
+
+	[_searchBar becomeFirstResponder];
 }
 
 #pragma mark -
@@ -141,13 +217,6 @@ static NSOperationQueue *topicProcessingQueue;
 
 #pragma mark -
 
-static NSComparisonResult sortUsingDisplayName(id one, id two, void *context) {
-	NSDictionary *rooms = context;
-	NSDictionary *oneInfo = [rooms objectForKey:one];
-	NSDictionary *twoInfo = [rooms objectForKey:two];
-	return [[oneInfo objectForKey:@"roomDisplayString"] caseInsensitiveCompare:[twoInfo objectForKey:@"roomDisplayString"]];
-}
-
 static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 	NSDictionary *rooms = context;
 	NSDictionary *oneInfo = [rooms objectForKey:one];
@@ -164,7 +233,7 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 }
 
 - (void) _sortRooms {
-	[_matchedRooms sortUsingFunction:sortUsingDisplayName context:_connection.chatRoomListResults];
+	[_rooms sortUsingFunction:sortUsingMemberCount context:_connection.chatRoomListResults];
 }
 
 - (void) _updateRoomsSoon {
@@ -177,13 +246,27 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 }
 
 - (void) _updateRooms {
-	BOOL empty = !_matchedRooms.count;
+	if (!_processedRooms.count)
+		return;
 
-	[_matchedRooms addObjectsFromArray:[_processedRooms allObjects]];
+	[_rooms addObjectsFromArray:[_processedRooms allObjects]];
 
 	[self _sortRooms];
 
-	if (!empty || _processedRooms.count < 20) {
+	if (_matchedRooms != _rooms) {
+		if (_currentSearchString.length) {
+			for (NSString *room in _processedRooms) {
+				if ([room hasCaseInsensitiveSubstring:_currentSearchString])
+					[_matchedRooms addObject:room];
+			}
+		} else {
+			[_matchedRooms addObjectsFromArray:[_processedRooms allObjects]];
+		}
+
+		[_matchedRooms sortUsingFunction:sortUsingMemberCount context:_connection.chatRoomListResults];
+	}
+
+	if (_processedRooms.count < 40) {
 		NSMutableArray *indexPaths = [[NSMutableArray alloc] initWithCapacity:_processedRooms.count];
 
 		NSUInteger index = 0;
@@ -216,8 +299,9 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 			[info setObject:[_connection displayNameForChatRoomNamed:room] forKey:@"roomDisplayString"];
 
 		[_processedRooms addObject:room];
-		[self _updateRoomsSoon];
 	}
+
+	[self _updateRoomsSoon];
 }
 
 - (void) _topicProcessed:(CQProcessChatMessageOperation *) operation {

@@ -3,6 +3,7 @@
 @interface CQChatRoomListViewController : UITableViewController <UISearchBarDelegate> {
 	@protected
 	MVChatConnection *_connection;
+	NSMutableArray *_rooms;
 	NSMutableArray *_matchedRooms;
 	NSMutableSet *_processedRooms;
 	NSString *_currentSearchString;
