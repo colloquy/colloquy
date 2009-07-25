@@ -226,6 +226,9 @@ static NSOperationQueue *topicProcessingQueue;
 		firstTime = NO;
 	}
 
+	if (showFullName && ![info objectForKey:@"roomDisplayString"])
+		[info setObject:[_connection displayNameForChatRoomNamed:room] forKey:@"roomDisplayString"];
+
 	cell.name = (showFullName ? room : [info objectForKey:@"roomDisplayString"]);
 	cell.memberCount = [[info objectForKey:@"users"] unsignedIntegerValue];
 
@@ -270,6 +273,11 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 }
 
 - (void) _updateTitle {
+	if (!_rooms.count || _showingUpdateRow) {
+		self.title = NSLocalizedString(@"Rooms", @"Rooms list view title");
+		return;
+	}
+
 	static NSNumberFormatter *numberFormatter;
 	if (!numberFormatter) {
 		numberFormatter = [[NSNumberFormatter alloc] init];
