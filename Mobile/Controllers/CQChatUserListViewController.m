@@ -242,56 +242,63 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (void) filterUsersWithSearchString:(NSString *) searchString {
-	NSArray *previousUsersArray = [_matchedUsers copy];
-	NSSet *previousUsersSet = [[NSSet alloc] initWithArray:_matchedUsers];
-	NSMutableSet *addedUsers = [[NSMutableSet alloc] init];
+	NSArray *previousUsersArray = [_matchedUsers retain];
 
 	if (searchString.length) {
-		[_matchedUsers removeAllObjects];
+		id old = _matchedUsers;
+		_matchedUsers = [[NSMutableArray alloc] init];
+		[old release];
 
 		NSArray *searchArray = (_currentSearchString && [searchString hasPrefix:_currentSearchString] ? previousUsersArray : _users);
 		for (MVChatUser *user in searchArray) {
-			if ([user.displayName hasCaseInsensitiveSubstring:searchString]) {
-				[_matchedUsers addObject:user];
-				[addedUsers addObject:user];
-			}
+			if (![user.displayName hasCaseInsensitiveSubstring:searchString])
+				continue;
+			[_matchedUsers addObject:user];
 		}
 	} else {
-		[_matchedUsers setArray:_users];
-		[addedUsers addObjectsFromArray:_users];
+		id old = _matchedUsers;
+		_matchedUsers = [_users mutableCopy];
+		[old release];
 	}
 
-	[self.tableView beginUpdates];
+	if (ABS((NSInteger)(previousUsersArray.count - _matchedUsers.count)) < 40) {
+		NSSet *matchedUsersSet = [[NSSet alloc] initWithArray:_matchedUsers];
+		NSSet *previousUsersSet = [[NSSet alloc] initWithArray:previousUsersArray];
 
-	NSUInteger index = 0;
-	NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+		[self.tableView beginUpdates];
 
-	for (MVChatUser *user in previousUsersArray) {
-		if (![addedUsers containsObject:user])
-			[indexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
-		++index;
+		NSUInteger index = 0;
+		NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+
+		for (MVChatUser *user in previousUsersArray) {
+			if (![matchedUsersSet containsObject:user])
+				[indexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
+			++index;
+		}
+
+		[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+
+		index = 0;
+
+		[indexPaths release];
+		indexPaths = [[NSMutableArray alloc] init];
+
+		for (MVChatUser *user in _matchedUsers) {
+			if (![previousUsersSet containsObject:user])
+				[indexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
+			++index;
+		}
+
+		[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+
+		[self.tableView endUpdates];
+
+		[indexPaths release];
+		[previousUsersSet release];
+		[matchedUsersSet release];
+	} else {
+		[self.tableView reloadData];
 	}
-
-	[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
-	[indexPaths release];
-
-	index = 0;
-	indexPaths = [[NSMutableArray alloc] init];
-
-	for (MVChatUser *user in _matchedUsers) {
-		if (![previousUsersSet containsObject:user])
-			[indexPaths addObject:[NSIndexPath indexPathForRow:index inSection:0]];
-		++index;
-	}
-
-	[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
-	[indexPaths release];
-
-	[self.tableView endUpdates];
-
-	[addedUsers release];
-	[previousUsersSet release];
-	[previousUsersArray release];
 
 	id old = _currentSearchString;
 	_currentSearchString = [searchString copy];
@@ -302,6 +309,8 @@ static NSString *membersFilteredCountFormat;
 	else self.title = [NSString stringWithFormat:membersFilteredCountFormat, _matchedUsers.count, _users.count];
 
 	[_searchBar becomeFirstResponder];
+
+	[previousUsersArray release];
 }
 
 #pragma mark -
