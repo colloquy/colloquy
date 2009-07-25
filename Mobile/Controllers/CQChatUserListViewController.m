@@ -122,7 +122,7 @@ static NSString *membersFilteredCountFormat;
 
 	[_users insertObject:user atIndex:index];
 
-	if (!_currentSearchString.length || [user.displayName hasCaseInsensitiveSubstring:_currentSearchString]) {
+	if (!_currentSearchString.length || [user.nickname hasCaseInsensitiveSubstring:_currentSearchString]) {
 		NSInteger matchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:index];
 
 		[_matchedUsers insertObject:user atIndex:matchesIndex];
@@ -251,7 +251,7 @@ static NSString *membersFilteredCountFormat;
 
 		NSArray *searchArray = (_currentSearchString && [searchString hasPrefix:_currentSearchString] ? previousUsersArray : _users);
 		for (MVChatUser *user in searchArray) {
-			if (![user.displayName hasCaseInsensitiveSubstring:searchString])
+			if (![user.nickname hasCaseInsensitiveSubstring:searchString])
 				continue;
 			[_matchedUsers addObject:user];
 		}
@@ -323,7 +323,7 @@ static NSString *membersFilteredCountFormat;
 	MVChatUser *user = [_matchedUsers objectAtIndex:indexPath.row];
 
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
-	cell.text = user.displayName;
+	cell.text = user.nickname;
 
 	if (_room) {
 		unsigned long modes = [_room modesForMemberUser:user];
