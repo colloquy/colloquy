@@ -290,18 +290,21 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 
 - (void) _roomListUpdated:(NSNotification *) notification {
 	NSSet *roomsAdded = [notification.userInfo objectForKey:@"added"];
-
 	for (NSString *room in roomsAdded) {
 		NSMutableDictionary *info = [_connection.chatRoomListResults objectForKey:room];
-
-		NSString *roomDisplayString = [info objectForKey:@"roomDisplayString"];
-		if (!roomDisplayString)
-			[info setObject:[_connection displayNameForChatRoomNamed:room] forKey:@"roomDisplayString"];
+		[info setObject:[_connection displayNameForChatRoomNamed:room] forKey:@"roomDisplayString"];
 
 		[_processedRooms addObject:room];
 	}
 
-	[self _updateRoomsSoon];
+	NSSet *roomsUpdated = [notification.userInfo objectForKey:@"updated"];
+	for (NSString *room in roomsUpdated) {
+		NSMutableDictionary *info = [_connection.chatRoomListResults objectForKey:room];
+		[info setObject:[_connection displayNameForChatRoomNamed:room] forKey:@"roomDisplayString"];
+	}
+
+	if (_processedRooms.count)
+		[self _updateRoomsSoon];
 }
 
 - (void) _topicProcessed:(CQProcessChatMessageOperation *) operation {

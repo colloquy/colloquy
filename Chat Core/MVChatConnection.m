@@ -137,7 +137,8 @@ static const NSStringEncoding supportedEncodings[] = {
 		_proxy = MVChatConnectionNoProxy;
 		_bouncer = MVChatConnectionNoBouncer;
 		_roomsCache = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5000];
-		_pendingRoomChanges = [[NSMutableSet allocWithZone:nil] initWithCapacity:100];
+		_pendingRoomAdditions = [[NSMutableSet allocWithZone:nil] initWithCapacity:100];
+		_pendingRoomUpdates = [[NSMutableSet allocWithZone:nil] initWithCapacity:100];
 		_persistentInformation = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
 		_supportedFeatures = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 		_localUser = nil;
@@ -262,7 +263,8 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	[_npassword release];
 	[_roomsCache release];
-	[_pendingRoomChanges release];
+	[_pendingRoomAdditions release];
+	[_pendingRoomUpdates release];
 	[_cachedDate release];
 	[_knownRooms release];
 	[_joinedRooms release];
@@ -278,7 +280,8 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	_npassword = nil;
 	_roomsCache = nil;
-	_pendingRoomChanges = nil;
+	_pendingRoomAdditions = nil;
+	_pendingRoomUpdates = nil;
 	_cachedDate = nil;
 	_knownRooms = nil;
 	_joinedRooms = nil;
@@ -1216,8 +1219,10 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (void) _addRoomToCache:(NSMutableDictionary *) info {
 	NSString *room = [info objectForKey:@"room"];
+	if (![_roomsCache objectForKey:room])
+		[_pendingRoomAdditions addObject:room];
+	else [_pendingRoomUpdates addObject:room];
 	[_roomsCache setObject:info forKey:room];
-	[_pendingRoomChanges addObject:room];
 	[info removeObjectForKey:@"room"];
 
 	if( _roomListDirty ) return; // already queued to send notification
@@ -1228,8 +1233,9 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (void) _sendRoomListUpdatedNotification {
 	_roomListDirty = NO;
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionChatRoomListUpdatedNotification object:self userInfo:[NSDictionary dictionaryWithObject:[NSSet setWithSet:_pendingRoomChanges] forKey:@"added"]];
-	[_pendingRoomChanges removeAllObjects];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionChatRoomListUpdatedNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSSet setWithSet:_pendingRoomAdditions], @"added", [NSSet setWithSet:_pendingRoomUpdates], @"updated", nil]];
+	[_pendingRoomAdditions removeAllObjects];
+	[_pendingRoomUpdates removeAllObjects];
 }
 
 #pragma mark -
