@@ -227,6 +227,7 @@ static NSOperationQueue *topicProcessingQueue;
 	if (_showingUpdateRow) {
 		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:@"Updating"];
 		cell.text = NSLocalizedString(@"Updating Chat Room List...", @"Updating chat room list label");
+		tableView.allowsSelection = NO;
 
 		UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 		[spinner startAnimating];
@@ -242,6 +243,7 @@ static NSOperationQueue *topicProcessingQueue;
 	NSMutableDictionary *info = [_connection.chatRoomListResults objectForKey:room];
 
 	CQChatRoomInfoTableCell *cell = [CQChatRoomInfoTableCell reusableTableViewCellInTableView:tableView];
+	tableView.allowsSelection = YES;
 
 	if ([room isEqualToString:_selectedRoom])
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
@@ -271,9 +273,10 @@ static NSOperationQueue *topicProcessingQueue;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if ( [_searchBar isFirstResponder] ) [_searchBar resignFirstResponder];
+	if ([_searchBar isFirstResponder]) [_searchBar resignFirstResponder];
 
 	UITableViewCell *selectedCell = [self.tableView cellForRowAtIndexPath:indexPath];
+
 	for (UITableViewCell *cell in self.tableView.visibleCells) {
 		if (selectedCell == cell)
 			cell.accessoryType = UITableViewCellAccessoryCheckmark;
