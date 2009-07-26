@@ -226,7 +226,7 @@ static NSOperationQueue *topicProcessingQueue;
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (_showingUpdateRow) {
 		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:@"Updating"];
-		cell.text = NSLocalizedString(@"Updating Room List...", @"Updating room list label");
+		cell.text = NSLocalizedString(@"Updating Chat Room List...", @"Updating chat room list label");
 
 		UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 		[spinner startAnimating];
