@@ -271,6 +271,8 @@ static NSOperationQueue *topicProcessingQueue;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	if ( [_searchBar isFirstResponder] ) [_searchBar resignFirstResponder];
+
 	UITableViewCell *selectedCell = [self.tableView cellForRowAtIndexPath:indexPath];
 	for (UITableViewCell *cell in self.tableView.visibleCells) {
 		if (selectedCell == cell)
