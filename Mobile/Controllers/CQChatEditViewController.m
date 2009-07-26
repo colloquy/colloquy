@@ -171,6 +171,8 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 		listViewController.target = self;
 		listViewController.action = @selector(roomChanged:);
 
+		listViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+
 		[self.navigationController pushViewController:listViewController animated:YES];
 
 		[listViewController release];

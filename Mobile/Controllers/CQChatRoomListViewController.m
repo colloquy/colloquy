@@ -251,7 +251,7 @@ static NSOperationQueue *topicProcessingQueue;
 		firstTime = NO;
 	}
 
-	if (showFullName && ![info objectForKey:@"roomDisplayString"])
+	if (![info objectForKey:@"roomDisplayString"])
 		[info setObject:[_connection displayNameForChatRoomNamed:room] forKey:@"roomDisplayString"];
 
 	cell.name = (showFullName ? room : [info objectForKey:@"roomDisplayString"]);
