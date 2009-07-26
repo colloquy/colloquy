@@ -38,6 +38,7 @@ static NSOperationQueue *topicProcessingQueue;
 	[_processedRooms release];
 	[_currentSearchString release];
 	[_searchBar release];
+	[_selectedRoom release];
 
 	[super dealloc];
 }
@@ -71,6 +72,10 @@ static NSOperationQueue *topicProcessingQueue;
 
 #pragma mark -
 
+@synthesize target = _target;
+
+@synthesize action = _action;
+
 @synthesize connection = _connection;
 
 - (void) setConnection:(MVChatConnection *) connection {
@@ -103,6 +108,22 @@ static NSOperationQueue *topicProcessingQueue;
 	_currentSearchString = nil;
 
 	[self _updateTitle];
+}
+
+@synthesize selectedRoom = _selectedRoom;
+
+- (void) setSelectedRoom:(NSString *) room {
+	id old = _selectedRoom;
+	_selectedRoom = [[_connection properNameForChatRoomNamed:room] copy];
+	[old release];
+
+	for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
+		NSString *rowRoom = [_matchedRooms objectAtIndex:indexPath.row];
+		CQChatRoomInfoTableCell *cell = (CQChatRoomInfoTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+		if ([rowRoom isEqualToString:room])
+			cell.accessoryType = UITableViewCellAccessoryCheckmark;
+		else cell.accessoryType = UITableViewCellAccessoryNone;
+	}
 }
 
 #pragma mark -
@@ -219,6 +240,10 @@ static NSOperationQueue *topicProcessingQueue;
 
 	CQChatRoomInfoTableCell *cell = [CQChatRoomInfoTableCell reusableTableViewCellInTableView:tableView];
 
+	if ([room isEqualToString:_selectedRoom])
+		cell.accessoryType = UITableViewCellAccessoryCheckmark;
+	else cell.accessoryType = UITableViewCellAccessoryNone;
+
 	static BOOL firstTime = YES;
 	static BOOL showFullName;
 	if (firstTime) {
@@ -240,6 +265,24 @@ static NSOperationQueue *topicProcessingQueue;
 	cell.topic = topicDisplayString;
 
 	return cell;
+}
+
+- (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	UITableViewCell *selectedCell = [self.tableView cellForRowAtIndexPath:indexPath];
+	for (UITableViewCell *cell in self.tableView.visibleCells) {
+		if (selectedCell == cell)
+			cell.accessoryType = UITableViewCellAccessoryCheckmark;
+		else cell.accessoryType = UITableViewCellAccessoryNone;
+	}
+
+	id old = _selectedRoom;
+	_selectedRoom = [[_matchedRooms objectAtIndex:indexPath.row] copy];
+	[old release];
+
+	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
+
+	if (!_target || [_target respondsToSelector:_action])
+		[[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil];
 }
 
 #pragma mark -

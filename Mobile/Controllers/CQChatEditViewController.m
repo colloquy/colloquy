@@ -164,9 +164,12 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 	if (_roomTarget && indexPath.section == 1 && indexPath.row == 0) {
 		CQChatRoomListViewController *listViewController = [[CQChatRoomListViewController alloc] init];
 
-		listViewController.connection = _selectedConnection;
-
 		[self.view endEditing:YES];
+
+		listViewController.connection = _selectedConnection;
+		listViewController.selectedRoom = (_name.length ? _name : @"#help");
+		listViewController.target = self;
+		listViewController.action = @selector(roomChanged:);
 
 		[self.navigationController pushViewController:listViewController animated:YES];
 
@@ -260,5 +263,13 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 	lastSelectedConnectionIndex = sender.selectedItemIndex;
 
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] withAnimation:UITableViewRowAnimationNone];
+}
+
+- (void) roomChanged:(CQChatRoomListViewController *) sender {
+	id old = _name;
+	_name = [sender.selectedRoom copy];
+	[old release];
+
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] withAnimation:UITableViewRowAnimationNone];
 }
 @end

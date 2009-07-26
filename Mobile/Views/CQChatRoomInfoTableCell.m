@@ -10,7 +10,9 @@
 	_nameLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	_topicLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	_memberCountLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+	_checkmarkImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
 
+	[self.contentView addSubview:_checkmarkImageView];
 	[self.contentView addSubview:_iconImageView];
 	[self.contentView addSubview:_memberIconImageView];
 	[self.contentView addSubview:_memberCountLabel];
@@ -20,6 +22,10 @@
 	_iconImageView.image = [UIImage imageNamed:@"roomIconSmall.png"];
 	_memberIconImageView.image = [UIImage imageNamed:@"personBlueSmall.png"];
 	_memberIconImageView.highlightedImage = [UIImage imageNamed:@"personWhiteSmall.png"];
+	_checkmarkImageView.image = [UIImage imageNamed:@"tableCellCheck.png"];
+	_checkmarkImageView.highlightedImage = [UIImage imageNamed:@"tableCellCheckSelected.png"];
+
+	_checkmarkImageView.hidden = YES;
 
 	_nameLabel.font = [UIFont boldSystemFontOfSize:18.];
 	_nameLabel.textColor = self.textColor;
@@ -43,6 +49,7 @@
 	[_nameLabel release];
 	[_topicLabel release];
 	[_memberCountLabel release];
+	[_checkmarkImageView release];
 
 	[super dealloc];
 }
@@ -87,6 +94,15 @@
 	self.name = @"";
 	self.topic = @"";
 	self.memberCount = 0;
+	self.accessoryType = UITableViewCellAccessoryNone;
+}
+
+- (void) setAccessoryType:(UITableViewCellAccessoryType) type {
+	if (type == UITableViewCellAccessoryCheckmark)
+		_checkmarkImageView.hidden = NO;
+	else _checkmarkImageView.hidden = YES;
+
+	super.accessoryType = (type == UITableViewCellAccessoryCheckmark ? UITableViewCellAccessoryNone : type);
 }
 
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
@@ -107,14 +123,21 @@
 - (void) layoutSubviews {
 	[super layoutSubviews];
 
-#define ICON_LEFT_MARGIN 10.
+#define CHECK_LEFT_MARGIN 10.
+#define ICON_LEFT_MARGIN 30.
 #define ICON_RIGHT_MARGIN 10.
 #define MEMBER_ICON_LEFT_MARGIN 3.
 #define TEXT_RIGHT_MARGIN 7.
 
 	CGRect contentRect = self.contentView.frame;
 
-	CGRect frame = _iconImageView.frame;
+	CGRect frame = _checkmarkImageView.frame;
+	frame.size = [_checkmarkImageView sizeThatFits:_checkmarkImageView.bounds.size];
+	frame.origin.x = CHECK_LEFT_MARGIN;
+	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
+	_checkmarkImageView.frame = frame;
+
+	frame = _iconImageView.frame;
 	frame.size = [_iconImageView sizeThatFits:_iconImageView.bounds.size];
 	frame.origin.x = ICON_LEFT_MARGIN;
 	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
