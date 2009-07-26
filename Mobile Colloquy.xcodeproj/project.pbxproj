@@ -151,8 +151,6 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		8900D7340FBFB2D900DE3E3B /* Servers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8900D7330FBFB2D900DE3E3B /* Servers.plist */; };
-		891210FE100E935E00AFCFF3 /* libMMTrackingDevice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 891210FB100E935E00AFCFF3 /* libMMTrackingDevice.a */; };
-		891210FF100E935E00AFCFF3 /* libMMTrackingSimulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 891210FC100E935E00AFCFF3 /* libMMTrackingSimulator.a */; };
 		896E84610F15AB6C00D810FE /* notes.css in Resources */ = {isa = PBXBuildFile; fileRef = 896E84600F15AB6C00D810FE /* notes.css */; };
 		897C0D670F99154500F9D8B5 /* browserInstapaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 897C0D660F99154500F9D8B5 /* browserInstapaper.png */; };
 		898CBE52100EB01F002DCC35 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 898CBE51100EB01F002DCC35 /* CoreLocation.framework */; };
@@ -428,8 +426,6 @@
 				1CE7FF9E0FA3D064001C7B17 /* libicucore.dylib in Frameworks */,
 				1CD84C2B10040AB300E56A7E /* MediaPlayer.framework in Frameworks */,
 				1C0DC0F7100717F6003BEEF3 /* IOKit.framework in Frameworks */,
-				891210FE100E935E00AFCFF3 /* libMMTrackingDevice.a in Frameworks */,
-				891210FF100E935E00AFCFF3 /* libMMTrackingSimulator.a in Frameworks */,
 				898CBE52100EB01F002DCC35 /* CoreLocation.framework in Frameworks */,
 				898CBE60100EB04A002DCC35 /* libsqlite3.dylib in Frameworks */,
 			);
@@ -450,8 +446,8 @@
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1CF50C860ED8BE1100CBE5E3 /* Security.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
-				1CE7FF9D0FA3D064001C7B17 /* libicucore.dylib */,
 				898CBE51100EB01F002DCC35 /* CoreLocation.framework */,
+				1CE7FF9D0FA3D064001C7B17 /* libicucore.dylib */,
 				898CBE5F100EB04A002DCC35 /* libsqlite3.dylib */,
 			);
 			name = "Linked Frameworks";
@@ -1177,9 +1173,11 @@
 				HEADER_SEARCH_PATHS = Mobile;
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
 				LIBRARY_SEARCH_PATHS = (
+					Mobile/Frameworks,
 					"$(inherited)",
-					"\"$(SRCROOT)/Mobile/Frameworks\"",
 				);
+				"OTHER_LDFLAGS[sdk=iphoneos*][arch=*]" = "-lMMTrackingDevice";
+				"OTHER_LDFLAGS[sdk=iphonesimulator*][arch=*]" = "-lMMTrackingSimulator";
 				PRODUCT_NAME = Colloquy;
 			};
 			name = Distribution;
@@ -1203,9 +1201,11 @@
 				HEADER_SEARCH_PATHS = Mobile;
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
 				LIBRARY_SEARCH_PATHS = (
+					Mobile/Frameworks,
 					"$(inherited)",
-					"\"$(SRCROOT)/Mobile/Frameworks\"",
 				);
+				"OTHER_LDFLAGS[sdk=iphoneos*][arch=*]" = "-lMMTrackingDevice";
+				"OTHER_LDFLAGS[sdk=iphonesimulator*][arch=*]" = "-lMMTrackingSimulator";
 				PRODUCT_NAME = Colloquy;
 			};
 			name = Debug;
@@ -1230,9 +1230,11 @@
 				HEADER_SEARCH_PATHS = Mobile;
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
 				LIBRARY_SEARCH_PATHS = (
+					Mobile/Frameworks,
 					"$(inherited)",
-					"\"$(SRCROOT)/Mobile/Frameworks\"",
 				);
+				"OTHER_LDFLAGS[sdk=iphoneos*][arch=*]" = "-lMMTrackingDevice";
+				"OTHER_LDFLAGS[sdk=iphonesimulator*][arch=*]" = "-lMMTrackingSimulator";
 				PRODUCT_NAME = Colloquy;
 			};
 			name = Release;
