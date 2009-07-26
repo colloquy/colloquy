@@ -19,6 +19,8 @@
 
 - (void) dealloc {
 	[_editViewController release];
+	[_selectedConnection release];
+	[_searchString release];
 
 	[super dealloc];
 }
@@ -33,6 +35,7 @@
 
 	_editViewController = [[CQChatEditViewController alloc] init];
 	_editViewController.roomTarget = _roomTarget;
+	_editViewController.selectedConnection = _selectedConnection;
 
 	UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
 	_editViewController.navigationItem.leftBarButtonItem = cancelItem;
@@ -47,6 +50,15 @@
 	_editViewController.navigationItem.rightBarButtonItem.enabled = (_roomTarget ? YES : NO);
 
 	[self pushViewController:_editViewController animated:NO];
+
+	if (_showListOnLoad) {
+		[_editViewController showRoomListFilteredWithSearchString:_searchString];
+
+		[_searchString release];
+		_searchString = nil;
+
+		_showListOnLoad = NO;
+	}
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -74,7 +86,30 @@
 	_editViewController.navigationItem.rightBarButtonItem.enabled = (_roomTarget ? YES : NO);
 }
 
+@synthesize selectedConnection = _selectedConnection;
+
+- (void) setSelectedConnection:(MVChatConnection *) connection {
+	id old = _selectedConnection;
+	_selectedConnection = [connection retain];
+	[old release];
+
+	_editViewController.selectedConnection = connection;
+}
+
 #pragma mark -
+
+- (void) showRoomListFilteredWithSearchString:(NSString *) searchString {
+	if (!_editViewController) {
+		id old = _searchString;
+		_searchString = [searchString copy];
+		[old release];
+
+		_showListOnLoad = YES;
+		return;
+	}
+
+	[_editViewController showRoomListFilteredWithSearchString:searchString];
+}
 
 - (void) cancel:(id) sender {
 	[[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle animated:YES];

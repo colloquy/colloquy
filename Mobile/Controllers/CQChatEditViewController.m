@@ -30,11 +30,15 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 
 @synthesize roomTarget = _roomTarget;
 
-- (BOOL) isRoomTarget {
-	return _roomTarget;
-}
-
 @synthesize selectedConnection = _selectedConnection;
+
+- (void) setSelectedConnection:(MVChatConnection *) connection {
+	id old = _selectedConnection;
+	_selectedConnection = [connection retain];
+	[old release];
+
+	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] withAnimation:UITableViewRowAnimationNone];
+}
 
 @synthesize name = _name;
 
@@ -162,21 +166,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 
 - (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
 	if (_roomTarget && indexPath.section == 1 && indexPath.row == 0) {
-		CQChatRoomListViewController *listViewController = [[CQChatRoomListViewController alloc] init];
-
-		[self.view endEditing:YES];
-
-		listViewController.connection = _selectedConnection;
-		listViewController.selectedRoom = (_name.length ? _name : @"#help");
-		listViewController.target = self;
-		listViewController.action = @selector(roomChanged:);
-
-		listViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
-
-		[self.navigationController pushViewController:listViewController animated:YES];
-
-		[listViewController release];
-
+		[self showRoomListFilteredWithSearchString:nil];
 		return;
 	}
 }
@@ -238,6 +228,28 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 	[label release];
 
 	return helpCell;
+}
+
+#pragma mark -
+
+- (void) showRoomListFilteredWithSearchString:(NSString *) searchString {
+	CQChatRoomListViewController *listViewController = [[CQChatRoomListViewController alloc] init];
+
+	[self.view endEditing:YES];
+
+	listViewController.connection = _selectedConnection;
+	listViewController.selectedRoom = (_name.length ? _name : @"#help");
+	listViewController.target = self;
+	listViewController.action = @selector(roomChanged:);
+
+	if (searchString.length)
+		[listViewController filterRoomsWithSearchString:searchString];
+
+	listViewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+
+	[self.navigationController pushViewController:listViewController animated:YES];
+
+	[listViewController release];
 }
 
 #pragma mark -

@@ -1,6 +1,7 @@
 #import "CQDirectChatController.h"
 
 #import "CQChatController.h"
+#import "CQChatCreationViewController.h"
 #import "CQChatInputBar.h"
 #import "CQChatInputField.h"
 #import "CQChatRoomController.h"
@@ -8,9 +9,9 @@
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 #import "CQProcessChatMessageOperation.h"
+#import "CQSoundController.h"
 #import "CQStyleView.h"
 #import "CQWhoisNavController.h"
-#import "CQSoundController.h"
 #import "NSDictionaryAdditions.h"
 #import "NSScannerAdditions.h"
 #import "NSStringAdditions.h"
@@ -422,7 +423,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois", @"/dcc", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/tweet", @"/ipod", @"/itunes", @"/music", @"/squit", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/list", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois", @"/dcc", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/tweet", @"/ipod", @"/itunes", @"/music", @"/squit", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -457,7 +458,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"] && text.length > 1) {
 		static NSArray *commandsNotRequiringConnection;
 		if (!commandsNotRequiringConnection)
-			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", @"tweet", nil];
+			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", @"tweet", @"list", @"join", nil];
 
 		// Send as a command.
 		NSScanner *scanner = [NSScanner scannerWithString:text];
@@ -553,8 +554,25 @@ static NSOperationQueue *chatMessageProcessingQueue;
 }
 
 - (BOOL) handleJoinCommandWithArguments:(NSString *) arguments {
-	NSArray *rooms = [arguments componentsSeparatedByString:@","];
+	if (![arguments stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
+		CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
+		creationViewController.roomTarget = YES;
+		creationViewController.selectedConnection = self.connection;
 
+		_allowEditingToEnd = YES;
+		[chatInputBar resignFirstResponder];
+		_allowEditingToEnd = NO;
+
+		[self presentModalViewController:creationViewController animated:YES];
+
+		[creationViewController release];	
+
+		return YES;
+	}
+
+	[self.connection connect];
+
+	NSArray *rooms = [arguments componentsSeparatedByString:@","];
 	if (rooms.count == 1 && ((NSString *)[rooms objectAtIndex:0]).length)
 		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:[rooms objectAtIndex:0] andConnection:self.connection];
 	else if (rooms.count > 1)
@@ -679,6 +697,24 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		return NO;
 
 	[self.connection sendRawMessageImmediatelyWithComponents:@"SQUIT :", arguments, nil];
+
+	return YES;
+}
+
+- (BOOL) handleListCommandWithArguments:(NSString *) arguments {
+	CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
+	creationViewController.roomTarget = YES;
+	creationViewController.selectedConnection = self.connection;
+
+	[creationViewController showRoomListFilteredWithSearchString:arguments];
+
+	_allowEditingToEnd = YES;
+	[chatInputBar resignFirstResponder];
+	_allowEditingToEnd = NO;
+
+	[self presentModalViewController:creationViewController animated:YES];
+
+	[creationViewController release];
 
 	return YES;
 }

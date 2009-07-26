@@ -39,7 +39,7 @@ extern NSString *CQChatViewControllerRecentMessagesUpdatedNotification;
 	BOOL _didSendRecently;
 	BOOL _revealKeyboard;
 	BOOL _showingKeyboard;
-	
+
 	NSString *_tweetRetryArguments;
 }
 - (id) initWithTarget:(id) target;

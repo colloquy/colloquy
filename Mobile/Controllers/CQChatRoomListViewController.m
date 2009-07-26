@@ -53,6 +53,7 @@ static NSOperationQueue *topicProcessingQueue;
 	_searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	_searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
 	_searchBar.delegate = self;
+	_searchBar.text = _currentSearchString;
 
 	[_searchBar sizeToFit];
 
@@ -104,8 +105,8 @@ static NSOperationQueue *topicProcessingQueue;
 
 	[self.tableView reloadData];
 
-	[_currentSearchString release];
-	_currentSearchString = nil;
+	if (_currentSearchString.length)
+		[self filterRoomsWithSearchString:_currentSearchString];
 
 	[self _updateTitle];
 }
@@ -145,6 +146,8 @@ static NSOperationQueue *topicProcessingQueue;
 }
 
 - (void) filterRoomsWithSearchString:(NSString *) searchString {
+	_searchBar.text = searchString;
+
 	NSArray *previousRoomsArray = [_matchedRooms retain];
 
 	if (searchString.length) {
