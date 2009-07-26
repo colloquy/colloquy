@@ -273,6 +273,7 @@ static NSOperationQueue *topicProcessingQueue;
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (_showingUpdateRow) return nil;
+	return indexPath;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
