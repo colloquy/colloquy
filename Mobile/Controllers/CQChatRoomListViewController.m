@@ -3,6 +3,7 @@
 #import "CQChatRoomInfoTableCell.h"
 #import "CQProcessChatMessageOperation.h"
 #import "NSStringAdditions.h"
+#import "RegexKitLite.h"
 
 #import <ChatCore/MVChatConnection.h>
 
@@ -424,8 +425,12 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 	NSMutableDictionary *info = [_connection.chatRoomListResults objectForKey:room];
 
 	NSString *topicString = operation.processedMessageAsPlainText;
-	if (topicString.length)
-		[info setObject:topicString forKey:@"topicDisplayString"];
+
+	// Remove the modes that some servers prepend to the topic. Maybe use this info to show custom icons for locked rooms?
+	if (topicString.length >= 5)
+		topicString = [topicString stringByReplacingOccurrencesOfRegex:@"^\\[\\+[a-zA-Z]+\\] " withString:@""];
+
+	[info setObject:topicString forKey:@"topicDisplayString"];
 
 	for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
 		NSString *rowRoom = [_matchedRooms objectAtIndex:indexPath.row];
