@@ -13,6 +13,7 @@ static NSOperationQueue *topicProcessingQueue;
 - (void) _processTopicData:(NSData *) topicData room:(NSString *) room;
 - (void) _sortRooms;
 - (void) _updateTitle;
+- (void) _updateVisibleTopics;
 @end
 
 @implementation CQChatRoomListViewController
@@ -265,18 +266,20 @@ static NSOperationQueue *topicProcessingQueue;
 	cell.name = (showFullName ? room : roomDisplayName);
 	cell.memberCount = [[info objectForKey:@"users"] unsignedIntegerValue];
 
-	NSData *topicData = [info objectForKey:@"topic"];
 	NSString *topicDisplayString = [info objectForKey:@"topicDisplayString"];
-	if (!topicDisplayString && topicData.length)
+	if (!topicDisplayString && !self.tableView.dragging && !self.tableView.decelerating) {
+		NSData *topicData = [info objectForKey:@"topic"];
 		[self _processTopicData:topicData room:room];
+	}
 
 	cell.topic = topicDisplayString;
 
 	return cell;
 }
 
-- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if (_showingUpdateRow) return nil;
+- (NSIndexPath *) tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	if (_showingUpdateRow)
+		return nil;
 	return indexPath;
 }
 
@@ -299,6 +302,17 @@ static NSOperationQueue *topicProcessingQueue;
 
 	if (!_target || [_target respondsToSelector:_action])
 		[[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil];
+}
+
+#pragma mark -
+
+- (void) scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL) decelerate {
+	if (!decelerate)
+		[self _updateVisibleTopics];
+}
+
+- (void) scrollViewDidEndDecelerating:(UIScrollView *) scrollView {
+	[self _updateVisibleTopics];
 }
 
 #pragma mark -
@@ -346,6 +360,25 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 
 	NSString *formattedCount = [numberFormatter stringFromNumber:[NSNumber numberWithInteger:_matchedRooms.count]];
 	self.title = [NSString stringWithFormat:NSLocalizedString(@"Rooms (%@)", @"Rooms list view title with count"), formattedCount];
+}
+
+- (void) _updateVisibleTopics {
+	NSDictionary *chatRoomListResults = _connection.chatRoomListResults;
+	for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
+		NSString *room = [_matchedRooms objectAtIndex:indexPath.row];
+		NSMutableDictionary *info = [chatRoomListResults objectForKey:room];
+
+		NSString *topicDisplayString = [info objectForKey:@"topicDisplayString"];
+		if (!topicDisplayString) {
+			NSData *topicData = [info objectForKey:@"topic"];
+			[self _processTopicData:topicData room:room];
+			continue;
+		}
+
+		CQChatRoomInfoTableCell *cell = (CQChatRoomInfoTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+		if (!cell.topic.length)
+			cell.topic = topicDisplayString;
+	}
 }
 
 - (void) _updateRooms {
@@ -402,9 +435,10 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 }
 
 - (void) _roomListUpdated:(NSNotification *) notification {
+	NSDictionary *chatRoomListResults = _connection.chatRoomListResults;
 	NSSet *roomsAdded = [notification.userInfo objectForKey:@"added"];
 	for (NSString *room in roomsAdded) {
-		NSMutableDictionary *info = [_connection.chatRoomListResults objectForKey:room];
+		NSMutableDictionary *info = [chatRoomListResults objectForKey:room];
 		[info setObject:[_connection displayNameForChatRoomNamed:room] forKey:@"roomDisplayString"];
 
 		[_processedRooms addObject:room];
@@ -412,7 +446,7 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 
 	NSSet *roomsUpdated = [notification.userInfo objectForKey:@"updated"];
 	for (NSString *room in roomsUpdated) {
-		NSMutableDictionary *info = [_connection.chatRoomListResults objectForKey:room];
+		NSMutableDictionary *info = [chatRoomListResults objectForKey:room];
 		[info setObject:[_connection displayNameForChatRoomNamed:room] forKey:@"roomDisplayString"];
 	}
 
@@ -432,6 +466,9 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 
 	[info setObject:topicString forKey:@"topicDisplayString"];
 
+	if (self.tableView.dragging || self.tableView.decelerating)
+		return;
+
 	for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
 		NSString *rowRoom = [_matchedRooms objectAtIndex:indexPath.row];
 		if (![rowRoom isEqualToString:room])
@@ -443,7 +480,7 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 }
 
 - (void) _processTopicData:(NSData *) topicData room:(NSString *) room {
-	if (!topicData || !room.length)
+	if (!topicData.length || !room.length)
 		return;
 
 	if (!topicProcessingQueue) {
