@@ -1099,6 +1099,14 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (unsigned short) reconnectAttemptCount {
 	return _reconnectAttemptCount;
 }
+
+- (void) purgeCaches {
+	id old = _cachedDate;
+	_cachedDate = nil;
+	[old release];
+
+	[_roomsCache removeAllObjects];
+}
 @end
 
 #pragma mark -

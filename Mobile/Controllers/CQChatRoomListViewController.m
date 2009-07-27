@@ -255,10 +255,13 @@ static NSOperationQueue *topicProcessingQueue;
 		firstTime = NO;
 	}
 
-	if (![info objectForKey:@"roomDisplayString"])
-		[info setObject:[_connection displayNameForChatRoomNamed:room] forKey:@"roomDisplayString"];
+	NSString *roomDisplayName = [info objectForKey:@"roomDisplayString"];
+	if (![info objectForKey:@"roomDisplayString"]) {
+		roomDisplayName = [_connection displayNameForChatRoomNamed:room];
+		[info setObject:roomDisplayName forKey:@"roomDisplayString"];
+	}
 
-	cell.name = (showFullName ? room : [info objectForKey:@"roomDisplayString"]);
+	cell.name = (showFullName ? room : roomDisplayName);
 	cell.memberCount = [[info objectForKey:@"users"] unsignedIntegerValue];
 
 	NSData *topicData = [info objectForKey:@"topic"];

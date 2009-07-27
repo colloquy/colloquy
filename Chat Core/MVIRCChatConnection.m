@@ -604,6 +604,14 @@ static const NSStringEncoding supportedEncodings[] = {
 		[[self localUser] _setStatus:MVChatUserAvailableStatus];
 	}
 }
+
+#pragma mark -
+
+- (void) purgeCaches {
+	[super purgeCaches];
+
+	[self _pruneKnownUsers];
+}
 @end
 
 #pragma mark -

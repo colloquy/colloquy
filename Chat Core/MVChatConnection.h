@@ -516,6 +516,10 @@ extern NSString *MVChatConnectionErrorDomain;
 
 - (void) scheduleReconnectAttempt;
 - (void) cancelPendingReconnectAttempts;
+
+#pragma mark -
+
+- (void) purgeCaches;
 @end
 
 #pragma mark -

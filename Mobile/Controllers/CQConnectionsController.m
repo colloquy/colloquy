@@ -158,6 +158,13 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+- (void) didReceiveMemoryWarning {
+	[super didReceiveMemoryWarning];
+
+	for (MVChatConnection *connection in _connections)
+		[connection purgeCaches];
+}
+
 #pragma mark -
 
 - (void) applicationWillTerminate {
