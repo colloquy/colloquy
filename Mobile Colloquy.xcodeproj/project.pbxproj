@@ -111,6 +111,7 @@
 		1CAE8BF60EE612DA00CE1AF8 /* standard.css in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8BF30EE612DA00CE1AF8 /* standard.css */; };
 		1CAE8BF70EE612DA00CE1AF8 /* gradientHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8BF40EE612DA00CE1AF8 /* gradientHighlight.png */; };
 		1CAE8C8C0EE61AD000CE1AF8 /* transcript.js in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8C850EE6190A00CE1AF8 /* transcript.js */; };
+		1CB24E03101EBE4800217B50 /* verbs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1CB24E02101EBE4800217B50 /* verbs.plist */; };
 		1CB318DF0D8644E4006A7513 /* server.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB318DA0D8644E4006A7513 /* server.png */; };
 		1CB318E00D8644E4006A7513 /* connectingBadgeDim.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB318DB0D8644E4006A7513 /* connectingBadgeDim.png */; };
 		1CB318E10D8644E4006A7513 /* connectingBadgeGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB318DC0D8644E4006A7513 /* connectingBadgeGlow.png */; };
@@ -331,6 +332,7 @@
 		1CAE8BF30EE612DA00CE1AF8 /* standard.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = standard.css; sourceTree = "<group>"; };
 		1CAE8BF40EE612DA00CE1AF8 /* gradientHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gradientHighlight.png; sourceTree = "<group>"; };
 		1CAE8C850EE6190A00CE1AF8 /* transcript.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = transcript.js; sourceTree = "<group>"; };
+		1CB24E02101EBE4800217B50 /* verbs.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = verbs.plist; path = Resources/verbs.plist; sourceTree = SOURCE_ROOT; };
 		1CB318DA0D8644E4006A7513 /* server.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = server.png; sourceTree = "<group>"; };
 		1CB318DB0D8644E4006A7513 /* connectingBadgeDim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connectingBadgeDim.png; sourceTree = "<group>"; };
 		1CB318DC0D8644E4006A7513 /* connectingBadgeGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = connectingBadgeGlow.png; sourceTree = "<group>"; };
@@ -783,6 +785,7 @@
 			isa = PBXGroup;
 			children = (
 				8900D7330FBFB2D900DE3E3B /* Servers.plist */,
+				1CB24E02101EBE4800217B50 /* verbs.plist */,
 				1C4CE6240FA03D7800215521 /* Sounds */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				1C95B41C0FEC9BD900DAE9DF /* Entitlements.plist */,
@@ -1005,6 +1008,7 @@
 				1CBEA7C7100318EF00546847 /* bouncer.png in Resources */,
 				1C34A67010183ED900BAA714 /* personBlueSmall.png in Resources */,
 				1C34A6861018411B00BAA714 /* personWhiteSmall.png in Resources */,
+				1CB24E03101EBE4800217B50 /* verbs.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

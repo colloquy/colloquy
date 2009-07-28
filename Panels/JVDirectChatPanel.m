@@ -1090,14 +1090,16 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 						actionVerbs = [[NSSet allocWithZone:nil] initWithArray:verbs];
 					}
 
-					NSMutableCharacterSet *characters = [[NSCharacterSet whitespaceAndNewlineCharacterSet] mutableCopy];
-					[characters formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
+					NSScanner *scanner = [[NSScanner alloc] initWithString:[subMsg string]];
+					[scanner setCharactersToBeSkipped:nil];
 
-					NSString *word = [subMsg string];
-					NSRange range = [[subMsg string] rangeOfCharacterFromSet:characters];
-					if( range.location != NSNotFound ) word = [word substringToIndex:range.location];
-					if( [actionVerbs containsObject:word] ) action = YES;
-					[characters release];
+					NSString *word = nil;
+					[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&word];
+
+					if ([actionVerbs containsObject:word])
+						action = YES;
+
+					[scanner release];
 				}
 
 				if( [subMsg length] ) {

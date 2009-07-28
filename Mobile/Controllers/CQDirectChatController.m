@@ -502,10 +502,32 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		if ([text hasPrefix:@"/"] && text.length > 1)
 			text = [text substringFromIndex:1];
 
+		BOOL action = NO;
+
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"] && !action) {
+			static NSSet *actionVerbs;
+			if (!actionVerbs) {
+				NSArray *verbs = [[NSArray alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]];
+				actionVerbs = [[NSSet alloc] initWithArray:verbs];
+				[verbs release];
+			}
+
+			NSScanner *scanner = [[NSScanner alloc] initWithString:text];
+			scanner.charactersToBeSkipped = nil;
+
+			NSString *word = nil;
+			[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&word];
+
+			if ([actionVerbs containsObject:word])
+				action = YES;
+
+			[scanner release];
+		}
+
 		[_target sendMessage:text withEncoding:self.encoding asAction:NO];
 
 		NSData *messageData = [text dataUsingEncoding:self.encoding allowLossyConversion:YES];
-		[self addMessage:messageData fromUser:self.connection.localUser asAction:NO withIdentifier:[NSString locallyUniqueString]];
+		[self addMessage:messageData fromUser:self.connection.localUser asAction:action withIdentifier:[NSString locallyUniqueString]];
 	}
 
 	return YES;
