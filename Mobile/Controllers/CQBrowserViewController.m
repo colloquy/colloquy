@@ -3,8 +3,6 @@
 #import "CQColloquyApplication.h"
 #import "NSStringAdditions.h"
 
-#define InstapaperSettingsAlertTag 1
-
 static NSURL *lastURL;
 
 @implementation CQBrowserViewController
@@ -135,7 +133,6 @@ static NSURL *lastURL;
 		return;
 
 	BOOL success = YES;
-	BOOL showSettings = NO;
 
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.delegate = self;
@@ -146,7 +143,6 @@ static NSURL *lastURL;
 	if (!username.length) {
 		alert.title = NSLocalizedString(@"No Instapaper Username", "No Instapaper username alert title");
 		alert.message = NSLocalizedString(@"You need to enter an Instapaper username in Colloquy's Settings.", "No Instapaper username alert message");
-		showSettings = YES;
 		success = NO;
 	}
 
@@ -179,7 +175,6 @@ static NSURL *lastURL;
 			} else if ([response isEqualToString:@"403"]) {
 				alert.title = NSLocalizedString(@"Couldn't Authenticate with Instapaper", "Could not authenticate title");
 				alert.message = NSLocalizedString(@"Make sure your Instapaper username and password are correct.", "Make sure your Instapaper username and password are correct alert message");
-				showSettings = YES;
 			} else if ([response isEqualToString:@"500"]) {
 				alert.title = NSLocalizedString(@"Instapaper Unavailable", "Twitter Temporarily Unavailable title");
 				alert.message = NSLocalizedString(@"Unable to send the URL because Instapaper is temporarily unavailable.", "Unable to send URL because Instapaper is temporarily unavailable alert message");
@@ -190,11 +185,6 @@ static NSURL *lastURL;
 			alert.title = NSLocalizedString(@"Unable To Send URL", "Unable to send URL alert title");
 			alert.message = NSLocalizedString(@"Unable to send the URL to Instapaper.", "Unable to send the URL to Instapaper alert message");
 		}
-	}
-
-	if (showSettings) {
-		alert.tag = InstapaperSettingsAlertTag;
-		[alert addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings alert button title")];
 	}
 
 	if (!success)
@@ -237,16 +227,6 @@ static NSURL *lastURL;
 	}
 
 	[stopReloadButton setImage:image forState:UIControlStateNormal];
-}
-
-#pragma mark -
-
-- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (buttonIndex == alertView.cancelButtonIndex)
-		return;
-
-	if (alertView.tag == InstapaperSettingsAlertTag)
-		[[CQColloquyApplication sharedApplication] launchSettings];
 }
 
 #pragma mark -

@@ -15,10 +15,6 @@
 #import "MMTrackingMgr.h"
 
 #if ENABLE(SECRETS)
-@interface UIApplication (UIApplicationPrivate)
-- (BOOL) launchApplicationWithIdentifier:(NSString *) bundleIdentifier suspended:(BOOL) suspended;
-@end
-
 typedef enum {
     UITabBarTransitionNone,
     UITabBarTransitionSlide
@@ -242,16 +238,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		if (!_networkIndicatorStack)
 			super.networkActivityIndicatorVisible = NO;
 	}
-}
-
-#pragma mark -
-
-- (void) launchSettings {
-#if ENABLE(SECRETS)
-	if (![self respondsToSelector:@selector(launchApplicationWithIdentifier:suspended:)])
-		return;
-	[self launchApplicationWithIdentifier:@"com.apple.Preferences" suspended:NO];
-#endif
 }
 
 #pragma mark -

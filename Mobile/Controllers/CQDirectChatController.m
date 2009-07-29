@@ -874,7 +874,6 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		return YES;
 
 	BOOL success = YES;
-	BOOL showSettings = NO;
 	BOOL allowRetry = YES;
 
     UIAlertView *alert = [[UIAlertView alloc] init];
@@ -885,14 +884,12 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if (!username.length) {
 		alert.title = NSLocalizedString(@"No Twitter Username", "No Twitter username alert title");
 		alert.message = NSLocalizedString(@"You need to enter a Twitter username in Colloquy's Settings.", "No Twitter username alert message");
-		showSettings = YES;
 		success = NO;
 	}
 
 	if (success && !password.length) {
 		alert.title = NSLocalizedString(@"No Twitter Password", "No Twitter password alert title");
 		alert.message = NSLocalizedString(@"You need to enter a Twitter password in Colloquy's Settings.", "No Twitter password alert message");
-		showSettings = YES;
 		success = NO;
 	}
 
@@ -924,7 +921,6 @@ static NSOperationQueue *chatMessageProcessingQueue;
 			if ([response hasCaseInsensitiveSubstring:@"Could not authenticate you"]) {
 				alert.title = NSLocalizedString(@"Couldn't Authenticate with Twitter", "Could not authenticate title");
 				alert.message = NSLocalizedString(@"Make sure your Twitter username and password are correct.", "Make sure your Twitter username and password are correct alert message");
-				showSettings = YES;
 			} else if ([response hasCaseInsensitiveSubstring:@"503 Service Temporarily Unavailable"] || [response hasCaseInsensitiveSubstring:@"403 Forbidden"]) {
 				alert.title = NSLocalizedString(@"Twitter Unavailable", "Twitter Temporarily Unavailable title");
 				alert.message = NSLocalizedString(@"Unable to send tweet because Twitter is temporarily unavailable.", "Unable to send tweet because Twitter is temporarily unavailable alert message");
@@ -934,18 +930,13 @@ static NSOperationQueue *chatMessageProcessingQueue;
 			alert.message = NSLocalizedString(@"Unable to send the tweet to Twitter.", "Unable to submit the tweet to Twitter alert message");
 		}
 
-		if (allowRetry && !showSettings) {
+		if (allowRetry) {
 			alert.tag = TweetRetryAlertTag;
 			[alert addButtonWithTitle:NSLocalizedString(@"Retry", @"Retry alert button title")];
 		}
 
 		[request release];
 		[response release];
-	}
-
-	if (showSettings) {
-		alert.tag = TweetSettingsAlertTag;
-		[alert addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings alert button title")];
 	}
 
 	if (success) {
@@ -1160,9 +1151,6 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	if (alertView.tag == TweetRetryAlertTag)
 		[self performSelector:@selector(handleTweetCommandWithArguments:) withObject:_tweetRetryArguments afterDelay:0.];
-
-	if (alertView.tag == TweetSettingsAlertTag)
-		[[CQColloquyApplication sharedApplication] launchSettings];
 }
 
 #pragma mark -
