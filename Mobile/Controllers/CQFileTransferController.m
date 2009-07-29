@@ -1,10 +1,5 @@
-//
-//  CQFileTransferController.m
-//  Mobile Colloquy
-//
 //  Created by August Joki on 1/19/09.
 //  Copyright 2009 Concinnous Software. All rights reserved.
-//
 
 #import "CQFileTransferController.h"
 #import "CQFileTransferTableCell.h"
@@ -65,8 +60,9 @@
 }
 
 - (void) _fileStarted:(NSNotification *)notification {
-	if (_cell && !_timer)
-		_timer = [[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(_timerFired:) userInfo:nil repeats:YES] retain];
+	if (!_cell || _timer)
+		return;
+	_timer = [[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(_timerFired:) userInfo:nil repeats:YES] retain];
 }
 
 - (void) _fileFinished:(NSNotification *) notification {
@@ -82,7 +78,7 @@
 
 		if ([UIImage isValidImageFormat:path]) {
 			UIImage *img = [UIImage imageWithContentsOfFile:path];
-			UIImageWriteToSavedPhotosAlbum(img, self, @selector(image:didFinishSavingWithError:contextInfo:), path);
+			UIImageWriteToSavedPhotosAlbum(img, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
 			return;
 		}
 	}
@@ -106,7 +102,8 @@
 }
 
 - (void) image:(UIImage *) image didFinishSavingWithError:(NSError *) error contextInfo:(void *) contextInfo {
-	[[NSFileManager defaultManager] removeItemAtPath:(NSString *)contextInfo error:NULL];
+	MVDownloadFileTransfer *download = (MVDownloadFileTransfer *)_transfer;
+	[[NSFileManager defaultManager] removeItemAtPath:download.destination error:NULL];
 }
 
 #pragma mark -
@@ -116,18 +113,16 @@
 }
 
 - (UIImage *) thumbnailWithSize:(CGSize) size {
-	NSString *path;
+	NSString *path = nil;
 	if (_transfer.upload) {
 		path = ((MVUploadFileTransfer *)_transfer).source;
-		if (![UIImage isValidImageFormat:path])
-			return nil;
 	} else {
-		if (_transfer.status == MVFileTransferDoneStatus) {
+		if (_transfer.status == MVFileTransferDoneStatus)
 			path = ((MVDownloadFileTransfer *)_transfer).destination;
-		} else {
-			return nil;
-		}
 	}
+
+	if (![UIImage isValidImageFormat:path])
+		return nil;
 
 	UIImage *original = [UIImage imageWithContentsOfFile:path];
 
@@ -147,13 +142,12 @@
 - (void) setCell:(CQFileTransferTableCell *) cell {
 	_cell = cell;
 
-	if (_cell && !_timer.isValid && (_transfer.upload || (_transfer.download && _transfer.status == MVFileTransferNormalStatus))) {
+	if (_cell && !_timer && (_transfer.upload || (_transfer.download && _transfer.status == MVFileTransferNormalStatus))) {
 		_timer = [[NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(_timerFired:) userInfo:nil repeats:YES] retain];
-	} else if (!_cell) {
+	} else {
 		[_timer invalidate];
 		[_timer release];
 		_timer = nil;
 	}
 }
-
 @end

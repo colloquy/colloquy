@@ -1,10 +1,5 @@
-//
-//  CQFileTransferTableCell.h
-//  Mobile Colloquy
-//
 //  Created by August Joki on 1/21/09.
 //  Copyright 2009 Concinnous Software. All rights reserved.
-//
 
 #import <ChatCore/MVFileTransfer.h>
 

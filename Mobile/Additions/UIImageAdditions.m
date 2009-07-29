@@ -1,10 +1,5 @@
-//
-//  UIImageAdditions.m
-//  Mobile Colloquy
-//
 //  Created by August Joki on 1/25/09.
 //  Copyright 2009 Concinnous Software. All rights reserved.
-//
 
 #import "UIImageAdditions.h"
 #import <Foundation/Foundation.h>
