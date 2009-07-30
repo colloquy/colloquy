@@ -1,6 +1,7 @@
 #import "CQConnectionsController.h"
 
 #import "CQAlertView.h"
+#import "CQAnalyticsController.h"
 #import "CQBouncerSettings.h"
 #import "CQBouncerConnection.h"
 #import "CQBouncerCreationViewController.h"
@@ -17,14 +18,6 @@
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
-
-/*
- * The Colloquy Project has received permission from Medialets to include their 
- * Medialytics library in Mobile Colloquy and in our public subversion repository.
- * 
- * Please sign up for your own account at Medialytics.com if you wish to use analytics.
- */
-#import "MMTrackingMgr.h"
 
 #if defined(ENABLE_SECRETS)
 typedef void (*IOServiceInterestCallback)(void *context, mach_port_t service, uint32_t messageType, void *messageArgument);
@@ -170,30 +163,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 - (void) applicationWillTerminate {
 	[self saveConnections];
 
-	NSUInteger roomCount = 0;
-	NSUInteger pushConnectionCount = 0;
-
-	for (MVChatConnection *connection in _connections) {
-		if (connection.pushNotifications) pushConnectionCount++;
-		
-		roomCount += connection.knownChatRooms.count;
-
+	for (MVChatConnection *connection in _connections)
 		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
-	}
-
-#if defined(TARGET_IPHONE_SIMULATOR) && !TARGET_IPHONE_SIMULATOR
-	if (![[[[NSBundle mainBundle] infoDictionary] objectForKey:@"MMAppID"] isCaseInsensitiveEqualToString:@"not available"]) {
-		NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d", roomCount], @"Rooms", nil];
-		[[MMTrackingMgr sharedInstance] trackEvent:@"Rooms" withUserDict:dictionary];
-		
-		dictionary = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d", _connections.count], @"Connections", nil];
-		[[MMTrackingMgr sharedInstance] trackEvent:@"Connections" withUserDict:dictionary];
-		
-		dictionary = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d", pushConnectionCount], @"Connections with Push", nil];
-		[[MMTrackingMgr sharedInstance] trackEvent:@"Connections with Push" withUserDict:dictionary];
-	}
-#endif
-	
 }
 
 #pragma mark -
@@ -746,6 +717,15 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if (connection.temporaryDirectConnection)
 		connection.bouncerType = MVChatConnectionNoBouncer;
 
+#if !TARGET_IPHONE_SIMULATOR
+	static BOOL registeredForPush;
+	if (!registeredForPush && (!bouncerSettings || bouncerSettings.pushNotifications) && connection.pushNotifications) {
+		if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerForRemoteNotificationTypes:)])
+			[[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+		registeredForPush = YES;
+	}
+#endif
+
 	return [connection autorelease];
 }
 
@@ -928,11 +908,19 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if (!_loadedConnections)
 		return;
 
+	NSUInteger pushConnectionCount = 0;
+	NSUInteger roomCount = 0;
+
 	NSMutableArray *connections = [[NSMutableArray alloc] initWithCapacity:_directConnections.count];
 	for (MVChatConnection *connection in _directConnections) {
 		NSMutableDictionary *connectionInfo = [self _dictionaryRepresentationForConnection:connection];
 		if (!connectionInfo)
 			continue;
+
+		if (connection.pushNotifications)
+			++pushConnectionCount;
+
+		roomCount += connection.knownChatRooms.count;
 
 		[connections addObject:connectionInfo];
 		[connection savePasswordsToKeychain];
@@ -950,6 +938,11 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 			if (!connectionInfo)
 				continue;
 
+			if (connection.pushNotifications)
+				++pushConnectionCount;
+
+			roomCount += connection.knownChatRooms.count;
+
 			[bouncerConnections addObject:connectionInfo];
 			[connection savePasswordsToKeychain];
 		}
@@ -964,6 +957,11 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[[NSUserDefaults standardUserDefaults] setObject:bouncers forKey:@"CQChatBouncers"];
 	[[NSUserDefaults standardUserDefaults] setObject:connections forKey:@"MVChatBookmarks"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
+
+	[[CQAnalyticsController defaultController] setObject:[NSNumber numberWithUnsignedInteger:roomCount] forKey:@"total-rooms"];
+	[[CQAnalyticsController defaultController] setObject:[NSNumber numberWithUnsignedInteger:pushConnectionCount] forKey:@"total-push-connections"];
+	[[CQAnalyticsController defaultController] setObject:[NSNumber numberWithUnsignedInteger:_connections.count] forKey:@"total-connections"];
+	[[CQAnalyticsController defaultController] setObject:[NSNumber numberWithUnsignedInteger:_bouncers.count] forKey:@"total-bouncers"];
 
 	[bouncers release];
 	[connections release];
@@ -1299,7 +1297,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		return;
 
 	[self setPersistentInformationObject:[NSNumber numberWithBool:push] forKey:@"push"];
-
 	
 	[self sendPushNotificationCommands];
 }

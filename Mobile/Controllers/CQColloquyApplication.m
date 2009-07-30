@@ -1,18 +1,11 @@
 #import "CQColloquyApplication.h"
 
+#import "CQAnalyticsController.h"
 #import "CQBrowserViewController.h"
 #import "CQConnectionsController.h"
 #import "CQChatController.h"
 #import "NSStringAdditions.h"
 #import "RegexKitLite.h"
-
-/*
- * The Colloquy Project has received permission from Medialets to include their 
- * Medialytics library in Mobile Colloquy and in our public subversion repository.
- * 
- * Please sign up for your own account at Medialytics.com if you wish to use analytics.
- */
-#import "MMTrackingMgr.h"
 
 #if ENABLE(SECRETS)
 typedef enum {
@@ -51,27 +44,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #pragma mark -
 
-#if defined(TARGET_IPHONE_SIMULATOR) && !TARGET_IPHONE_SIMULATOR
-+ (void) initialize {
-	if (![[[[NSBundle mainBundle] infoDictionary] objectForKey:@"MMAppID"] isCaseInsensitiveEqualToString:@"not available"]) {
-		[[MMTrackingMgr sharedInstance] startDefaultTrackingWithoutLocation];
-		
-		NSString *information = (([[[NSBundle mainBundle] infoDictionary] objectForKey:@"SignerIdentity"] != nil) ? @"cracked" : @"legit");
-		NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:information, @"Type of Install", nil];
-		[[MMTrackingMgr sharedInstance] trackEvent:@"Type of Install" withUserDict:dictionary];
-		
-		dictionary = [NSDictionary dictionaryWithObjectsAndKeys:[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"], @"Style Used", nil];
-		[[MMTrackingMgr sharedInstance] trackEvent:@"Style Used" withUserDict:dictionary];
-		
-		information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"] ? @"emoji" : @"plain text");
-		dictionary = [NSDictionary dictionaryWithObjectsAndKeys:information, @"Emoticons Style", nil];
-		[[MMTrackingMgr sharedInstance] trackEvent:@"Emoticons Style" withUserDict:dictionary];
-	}
-}
-#endif
-
-#pragma mark -
-
 - (NSArray *) highlightWords {
 	static NSMutableArray *highlightWords;
 	if (!highlightWords) {
@@ -107,6 +79,30 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	[preferences release];
 #endif
+
+#if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
+	NSString *information = @"simulator";
+#else
+	NSString *information = ([[[NSBundle mainBundle] infoDictionary] objectForKey:@"SignerIdentity"] ? @"cracked" : @"purchased");	
+#endif
+
+	[[CQAnalyticsController defaultController] setObject:information forKey:@"install-type"];
+	[[CQAnalyticsController defaultController] setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"] lowercaseString] forKey:@"transcript-style"];
+
+	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"] ? @"emoji" : @"text");
+	[[CQAnalyticsController defaultController] setObject:information forKey:@"emoticon-style"];
+
+	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"] ? @"disabled" : @"enabled");
+	[[CQAnalyticsController defaultController] setObject:information forKey:@"landscape"];
+
+	[[CQAnalyticsController defaultController] setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"] lowercaseString] forKey:@"autocomplete-behavior"];
+
+	NSInteger showNotices = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"];
+	information = (!showNotices ? @"auto" : (showNotices == 1 ? @"all" : @"none"));
+	[[CQAnalyticsController defaultController] setObject:information forKey:@"notices-behavior"];
+
+	information = ([[[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"] hasCaseInsensitiveSubstring:@"Colloquy for iPhone"] ? @"default" : @"custom");
+	[[CQAnalyticsController defaultController] setObject:information forKey:@"quit-message"];
 }
 
 #pragma mark -
@@ -116,15 +112,12 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 
 	_launchDate = [[NSDate alloc] init];
-
 	_deviceToken = [[[NSUserDefaults standardUserDefaults] stringForKey:@"CQPushDeviceToken"] retain];
-
 	_showingTabBar = YES;
 
-#if !TARGET_IPHONE_SIMULATOR
-	if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerForRemoteNotificationTypes:)])
-		[[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-#endif
+	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
+	if ([style hasSuffix:@"-dark"] || [style isEqualToString:@"notes"])
+		[[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 
 	NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQConnectionsController defaultController], [CQChatController defaultController], nil];
 	tabBarController.viewControllers = viewControllers;
@@ -163,11 +156,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 			}
 		}
 	}
-
-	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
-
-	if ([style hasSuffix:@"-dark"] || [style isEqualToString:@"notes"])
-		[[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 
 	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];
 
