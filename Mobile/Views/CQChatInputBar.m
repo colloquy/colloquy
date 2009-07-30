@@ -265,7 +265,7 @@ retry:
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(captureKeyboardForCompletions) object:nil];
 
-	[self performSelector:@selector(showCompletions) withObject:nil afterDelay:([self isShowingCompletions] ? 0.05 : 0.1)];
+	[self performSelector:@selector(showCompletions) withObject:nil afterDelay:([self isShowingCompletions] ? 0.05 : 0.15)];
 
 	if (_spaceCyclesCompletions)
 		[self performSelector:@selector(captureKeyboardForCompletions) withObject:nil afterDelay:CompletionsCaptureKeyboardDelay];
@@ -416,7 +416,7 @@ retry:
 - (void) textFieldEditorDidChangeSelection:(UITextField *) textField {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 
-	[self performSelector:@selector(hideCompletions) withObject:nil afterDelay:(1. / 3.)];
+	[self performSelector:@selector(hideCompletions) withObject:nil afterDelay:0.5];
 }
 
 #pragma mark -
