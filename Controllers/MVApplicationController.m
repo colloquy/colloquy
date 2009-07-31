@@ -19,6 +19,7 @@
 #import "JVChatRoomBrowser.h"
 #import "NSBundleAdditions.h"
 #import "JVStyle.h"
+#import "JVChatRoomPanel.h"
 #import "JVDirectChatPanel.h"
 //#import "JVChatTranscriptBrowserPanel.h"
 
@@ -38,6 +39,18 @@
 
 @interface NSAlert (LeopardOnly)
 - (void) setAccessoryView:(NSView *) view;
+@end
+
+@interface NSDockTile : NSObject
+@end
+
+@interface NSApplication (LeopardOnly)
+- (NSDockTile *) dockTile;
+@end
+
+@interface NSDockTile (LeopardOnly)
+- (void) setBadgeLabel:(NSString *) string;
+- (void) display;
 @end
 
 #pragma mark -
@@ -537,5 +550,35 @@ static BOOL applicationIsTerminating = NO;
 		return NO;
 	}
 	return YES;
+}
+
+#pragma mark -
+
+- (void) updateDockTile {
+	if ( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4 ) {
+		if ( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowDockBadge"] ) {
+			unsigned int totalHighlightCount = 0;
+			
+			NSEnumerator *chatRoomEnumerator = [[[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] objectEnumerator];
+			JVChatRoomPanel *room = nil;
+			
+			while( ( room = [chatRoomEnumerator nextObject] ) ) {
+				totalHighlightCount += [room newHighlightMessagesWaiting];
+			}
+			
+			NSEnumerator *directChatEnumerator = [[[JVChatController defaultController] chatViewControllersOfClass:[JVDirectChatPanel class]] objectEnumerator];
+			JVChatRoomPanel *directChat = nil;
+			
+			while( ( directChat = [directChatEnumerator nextObject] ) ) {
+				totalHighlightCount += [directChat newMessagesWaiting];
+			}
+			
+			[[NSApp dockTile] setBadgeLabel:( totalHighlightCount == 0 ? nil : [NSString stringWithFormat:@"%u", totalHighlightCount] )];
+			[[NSApp dockTile] display];
+		} else {
+			[[NSApp dockTile] setBadgeLabel:nil];
+			[[NSApp dockTile] display];
+		}
+	}
 }
 @end

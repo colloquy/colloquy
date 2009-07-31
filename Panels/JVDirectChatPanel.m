@@ -27,6 +27,7 @@
 #import "NSAttributedStringMoreAdditions.h"
 #import "NSBundleAdditions.h"
 #import "NSURLAdditions.h"
+#import "MVApplicationController.h"
 
 static NSSet *actionVerbs = nil;
 
@@ -135,6 +136,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		_firstMessage = YES;
 		_newMessageCount = 0;
 		_newHighlightMessageCount = 0;
+		[[NSApp delegate] updateDockTile];
 		_cantSendMessages = NO;
 		_isActive = NO;
 		_forceSplitViewPosition = YES;
@@ -526,6 +528,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( _isActive && [[[self view] window] isKeyWindow] ) {
 		_newMessageCount = 0;
 		_newHighlightMessageCount = 0;
+		[[NSApp delegate] updateDockTile];
 		return nil;
 	}
 
@@ -548,6 +551,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 - (void) didUnselect {
 	_newMessageCount = 0;
 	_newHighlightMessageCount = 0;
+	[[NSApp delegate] updateDockTile];
 	_isActive = NO;
 	[super didUnselect];
 }
@@ -555,6 +559,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 - (void) willSelect {
 	_newMessageCount = 0;
 	_newHighlightMessageCount = 0;
+	[[NSApp delegate] updateDockTile];
 }
 
 - (void) didSelect {
@@ -564,6 +569,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	_newMessageCount = 0;
 	_newHighlightMessageCount = 0;
+	[[NSApp delegate] updateDockTile];
 	_isActive = YES;
 
 	[super didSelect];
@@ -913,6 +919,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	if( ! [[[_windowController window] representedFilename] length] )
 		[self _refreshWindowFileProxy];
+	
+	[[NSApp delegate] updateDockTile];
 }
 
 - (void) processIncomingMessage:(JVMutableChatMessage *) message {

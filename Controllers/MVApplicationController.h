@@ -34,6 +34,8 @@ extern NSString *JVMachineStoppedIdlingNotification;
 - (NSTimeInterval) idleTime;
 
 - (IBAction) terminateWithoutConfirm:(id) sender;
+
+- (void) updateDockTile;
 @end
 
 @protocol JVChatViewController;

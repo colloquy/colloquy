@@ -12,6 +12,7 @@
 #import "NSURLAdditions.h"
 #import "NSAttributedStringMoreAdditions.h"
 #import "MVChatUserAdditions.h"
+#import "MVApplicationController.h"
 
 @interface JVChatRoomPanel (JVChatRoomPrivate)
 - (void) _topicChanged:(id) sender;
@@ -176,6 +177,7 @@
 		if( _isActive && [[[self view] window] isKeyWindow] ) {
 			_newMessageCount = 0;
 			_newHighlightMessageCount = 0;
+			[[NSApp delegate] updateDockTile];
 			return nil;
 		}
 
