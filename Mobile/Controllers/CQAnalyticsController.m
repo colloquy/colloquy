@@ -1,5 +1,9 @@
 #import "CQAnalyticsController.h"
 
+#import "NSStringAdditions.h"
+
+static NSString *analyticsURL = @"http://colloquy.mobi/analytics.php";
+
 @implementation CQAnalyticsController
 + (CQAnalyticsController *) defaultController {
 	static BOOL creatingSharedInstance = NO;
@@ -45,19 +49,62 @@
 }
 
 - (void) setObject:(id) object forKey:(NSString *) key {
-	if (object) [_data setObject:object forKey:key];
-	else [_data removeObjectForKey:key];
+	if (object) {
+		[_data setObject:object forKey:key];
+		[self synchronizeSoon];
+	} else [_data removeObjectForKey:key];
 }
 
 #pragma mark -
+
+- (NSData *) _requestBody {
+	NSMutableString *resultString = [[NSMutableString alloc] initWithCapacity:1024];
+
+	for (NSString *key in _data) {
+		NSString *value = [[_data objectForKey:key] description];
+
+		key = [key stringByEncodingIllegalURLCharacters];
+		value = [value stringByEncodingIllegalURLCharacters];
+
+		if (resultString.length)
+			[resultString appendString:@"&"];
+		[resultString appendFormat:@"%@=%@", key, value];
+	}
+
+	NSData *resultData = [resultString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:NO];
+	[resultString release];
+
+	return resultData;
+}
+
+- (NSMutableURLRequest *) _urlRequest {
+	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:analyticsURL]];
+
+	[request setHTTPBody:[self _requestBody]];
+	[request setCachePolicy:NSURLRequestReloadIgnoringCacheData];
+	[request setTimeoutInterval:30.];
+
+	return request;
+}
+
+#pragma mark -
+
+- (void) synchronizeSoon {
+	if (_pendingSynchronize)
+		return;
+	[self performSelector:@selector(synchronize) withObject:nil afterDelay:30.];
+}
 
 - (void) synchronize {
 	if (!_data.count)
 		return;
 
+	_pendingSynchronize = NO;
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
+
 	[_data setObject:[[UIDevice currentDevice] uniqueIdentifier] forKey:@"device-identifier"];
 
-	NSLog(@"sync %@", [_data description]);
+	[NSURLConnection connectionWithRequest:[self _urlRequest] delegate:nil];
 
 	[_data removeAllObjects];
 }
@@ -66,9 +113,15 @@
 	if (!_data.count)
 		return;
 
+	_pendingSynchronize = NO;
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
+
 	[_data setObject:[[UIDevice currentDevice] uniqueIdentifier] forKey:@"device-identifier"];
 
-	NSLog(@"sync %@", [_data description]);
+	NSMutableURLRequest *request = [self _urlRequest];
+	[request setTimeoutInterval:10.];
+
+	[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL];
 
 	[_data removeAllObjects];
 }

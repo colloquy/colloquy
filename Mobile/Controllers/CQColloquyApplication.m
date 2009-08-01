@@ -64,8 +64,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) performDeferredLaunchWork {
-	NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-	NSString *version = [NSString stringWithFormat:@"%@ (%@)", [info objectForKey:@"CFBundleShortVersionString"], [info objectForKey:@"CFBundleVersion"]];
+	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+	NSString *version = [NSString stringWithFormat:@"%@ (%@)", [infoDictionary objectForKey:@"CFBundleShortVersionString"], [infoDictionary objectForKey:@"CFBundleVersion"]];
 	[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQCurrentVersion"];
 
 #ifdef ENABLE_SECRETS
@@ -80,10 +80,19 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[preferences release];
 #endif
 
+	NSString *information = [infoDictionary objectForKey:@"CFBundleName"];
+	[[CQAnalyticsController defaultController] setObject:information forKey:@"application-name"];
+
+	information = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+	[[CQAnalyticsController defaultController] setObject:information forKey:@"application-version"];
+
+	information = [infoDictionary objectForKey:@"CFBundleVersion"];
+	[[CQAnalyticsController defaultController] setObject:information forKey:@"application-build-version"];
+
 #if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
-	NSString *information = @"simulator";
+	information = @"simulator";
 #else
-	NSString *information = ([[[NSBundle mainBundle] infoDictionary] objectForKey:@"SignerIdentity"] ? @"cracked" : @"purchased");	
+	information = ([infoDictionary objectForKey:@"SignerIdentity"] ? @"cracked" : @"purchased");	
 #endif
 
 	[[CQAnalyticsController defaultController] setObject:information forKey:@"install-type"];
@@ -94,6 +103,12 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"] ? @"disabled" : @"enabled");
 	[[CQAnalyticsController defaultController] setObject:information forKey:@"landscape"];
+
+	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"] ? @"disabled" : @"enabled");
+	[[CQAnalyticsController defaultController] setObject:information forKey:@"browser"];
+
+	if (_deviceToken.length)
+		[[CQAnalyticsController defaultController] setObject:_deviceToken forKey:@"device-push-token"];
 
 	[[CQAnalyticsController defaultController] setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"] lowercaseString] forKey:@"autocomplete-behavior"];
 
@@ -178,6 +193,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 - (void) application:(UIApplication *) application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *) deviceToken {
 	if (!deviceToken.length) {
+		[[CQAnalyticsController defaultController] setObject:nil forKey:@"device-push-token"];
+
 		[_deviceToken release];
 		_deviceToken = nil;
 		return;
@@ -189,6 +206,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if ([_deviceToken isEqualToString:deviceTokenString] || !deviceTokenString)
 		return;
 
+	[[CQAnalyticsController defaultController] setObject:deviceTokenString forKey:@"device-push-token"];
 	[[NSUserDefaults standardUserDefaults] setObject:deviceTokenString forKey:@"CQPushDeviceToken"];
 
 	id old = _deviceToken;
@@ -204,6 +222,11 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 - (BOOL) application:(UIApplication *) application handleOpenURL:(NSURL *) url {
 	return [[CQConnectionsController defaultController] handleOpenURL:url];
+}
+
+- (void) applicationWillTerminate:(UIApplication *)application {
+	NSTimeInterval runTime = ABS([_launchDate timeIntervalSinceNow]);
+	[[CQAnalyticsController defaultController] setObject:[NSNumber numberWithDouble:runTime] forKey:@"run-time"];
 }
 
 #pragma mark -
