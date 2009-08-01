@@ -80,6 +80,7 @@ static NSString *analyticsURL = @"http://colloquy.mobi/analytics.php";
 - (NSMutableURLRequest *) _urlRequest {
 	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:analyticsURL]];
 
+	[request setHTTPMethod:@"POST"];
 	[request setHTTPBody:[self _requestBody]];
 	[request setCachePolicy:NSURLRequestReloadIgnoringCacheData];
 	[request setTimeoutInterval:30.];
@@ -92,7 +93,7 @@ static NSString *analyticsURL = @"http://colloquy.mobi/analytics.php";
 - (void) synchronizeSoon {
 	if (_pendingSynchronize)
 		return;
-	[self performSelector:@selector(synchronize) withObject:nil afterDelay:30.];
+	[self performSelector:@selector(synchronize) withObject:nil afterDelay:10.];
 }
 
 - (void) synchronize {
