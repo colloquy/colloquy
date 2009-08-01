@@ -30,10 +30,8 @@ static NSURL *lastURL;
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL)animated {
-	backButton.isAccessibilityElement = YES;
-	backButton.accessibilityLabel = @"Back";
+	backButton.accessibilityLabel = NSLocalizedString (@"Back", @"Voiceover back label");
 
-	stopReloadButton.isAccessibilityElement = YES;
 }
 
 - (void) viewDidLoad {
@@ -114,15 +112,9 @@ static NSURL *lastURL;
 }
 
 - (void) reloadOrStop:(id) sender {
-	if (webView.loading) {
-		stopReloadButton.accessibilityLabel = @"Stop";
-
+	if (webView.loading)
 		[webView stopLoading];
-	} else {
-		[webView reload];
-
-		stopReloadButton.accessibilityLabel = @"Reload";
-	}
+	else [webView reload];
 }
 
 - (void) openInSafari:(id) sender {
@@ -234,9 +226,11 @@ static NSURL *lastURL;
 	if (webView.loading) {
 		image = [UIImage imageNamed:@"browserStop.png"];
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+		stopReloadButton.accessibilityLabel = NSLocalizedString (@"Stop", @"Voiceover stop label");
 	} else {
 		image = [UIImage imageNamed:@"browserReload.png"];
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+		stopReloadButton.accessibilityLabel = NSLocalizedString (@"Reload", @"voiceover reload label");
 	}
 
 	[stopReloadButton setImage:image forState:UIControlStateNormal];

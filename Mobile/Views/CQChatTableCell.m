@@ -40,9 +40,9 @@
 	_nameLabel.font = [UIFont boldSystemFontOfSize:18.];
 	_nameLabel.textColor = self.textColor;
 	_nameLabel.highlightedTextColor = self.selectedTextColor;
-	
+
 	_chatPreviewLabels = [[NSMutableArray alloc] init];
-	
+
 	return self;
 }
 

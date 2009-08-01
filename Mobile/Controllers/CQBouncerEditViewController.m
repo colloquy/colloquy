@@ -147,11 +147,11 @@ static BOOL pushAvailable = NO;
 
 			if (![_settings.displayName isEqualToString:_settings.server]) {
 				cell.text = @"";
-				cell.accessibilityLabel = @"Bouncer Server Description.";
-				cell.accessibilityHint = @"Optional.";
+				cell.accessibilityLabel = NSLocalizedString (@"Bouncer Server Description.", @"Voiceover bouncer server description label");
+				cell.accessibilityHint = NSLocalizedString (@"Optional.", @"Voiceover optional label");
 			} else {
 				cell.text = _settings.displayName;
-				cell.accessibilityLabel = [NSString stringWithFormat:@"Bouncer server %@: %@", cell.label, cell.text];
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString (@"Bouncer server %@: %@", @"Voiceover bouncer server %@: %@ label"), cell.label, cell.text];
 			}
 
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
@@ -163,11 +163,11 @@ static BOOL pushAvailable = NO;
 
 			if (_settings.server) {
 				cell.text = _settings.server;
-				cell.accessibilityLabel = [NSString stringWithFormat:@"Bouncer server address: %@.", cell.text];
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString (@"Bouncer server address: %@.", @"Voiceover bouncer server address: %@ label"), cell.text];
 			} else {
 				cell.text = @"";
-				cell.accessibilityLabel = @"Bouncer server address.";
-				cell.accessibilityHint = @"Required.";
+				cell.accessibilityLabel = NSLocalizedString (@"Bouncer server address.", @"Voiceover bouncer server address label");
+				cell.accessibilityHint = NSLocalizedString (@"Required.", @"Voiceover required hint");
 			}
 
 			cell.accessibilityLabel = [NSString stringWithFormat:@"%@: %@", cell.label, cell.text];
@@ -186,7 +186,7 @@ static BOOL pushAvailable = NO;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(serverPortChanged:);
 
-			cell.accessibilityLabel = [NSString stringWithFormat:@"Bouncer %@: %hu.", cell.label, _settings.serverPort];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString (@"Bouncer %@: %hu.", @"Voiceover Bouncer %@: %hu"), cell.label, _settings.serverPort];
 		}
 
 		return cell;
@@ -199,11 +199,11 @@ static BOOL pushAvailable = NO;
 			cell.label = NSLocalizedString(@"Account", @"Account connection setting label");
 			if (_settings.username) {
 				cell.text = _settings.username;
-				cell.accessibilityLabel = [NSString stringWithFormat:@"Bouncer Account: %@.", cell.text];
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString (@"Bouncer Account: %@.", @"Voiceover bouncer account: %@ label"), cell.text];
 			} else {
 				cell.text = @"";
-				cell.accessibilityLabel = @"Bouncer Account.";
-				cell.accessibilityHint = @"Required.";
+				cell.accessibilityLabel = NSLocalizedString (@"Bouncer Account.", @"Voiceover bouncer account label");
+				cell.accessibilityHint = NSLocalizedString (@"Required.", @"Voiceover required label");
 			}
 
 			cell.text = (_settings.username ? _settings.username : @"");
@@ -222,8 +222,8 @@ static BOOL pushAvailable = NO;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(passwordChanged:);
-			cell.accessibilityLabel = @"Bouncer server password.";
-			cell.accessibilityHint = @"Required";
+			cell.accessibilityLabel = NSLocalizedString (@"Bouncer server password.", @"Voiceover bouncer server password label");
+			cell.accessibilityHint = NSLocalizedString (@"Required", @"Voiceover required label");
 		}
 
 		cell.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
@@ -237,8 +237,8 @@ static BOOL pushAvailable = NO;
 		cell.switchAction = @selector(pushEnabled:);
 		cell.label = NSLocalizedString(@"Push Notifications", @"Push Notifications connection setting label");
 
-		if (_settings.pushNotifications) cell.accessibilityLabel = @"Push notifications enabled.";
-		else cell.accessibilityLabel = @"Push notifications disabled.";
+		if (_settings.pushNotifications) cell.accessibilityLabel = NSLocalizedString (@"Push notifications enabled.", @"Voiceover push notifications disabled");
+		else cell.accessibilityLabel = NSLocalizedString (@"Push notifications disabled.", @"Voiceover push notification disabled");
 
 		cell.on = _settings.pushNotifications;
 

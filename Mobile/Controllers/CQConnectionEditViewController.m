@@ -326,7 +326,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			cell.label = NSLocalizedString(@"Connect at Launch", @"Connect at Launch connection setting label");
 			cell.on = _connection.automaticallyConnect;
 
-			cell.accessibilityLabel = _connection.automaticallyConnect ? cell.label : [NSString stringWithFormat:@"Don't %@.", cell.label];
+			cell.accessibilityLabel = _connection.automaticallyConnect ? cell.label : [NSString stringWithFormat:NSLocalizedString(@"Don't %@.", @"Voiceover don't %@ label"), cell.label];
 
 			return cell;
 		} else if (indexPath.row == 1) {
@@ -337,10 +337,10 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 			if (_connection.automaticJoinedRooms.count) {
 				cell.text = [_connection.automaticJoinedRooms componentsJoinedByString:@", "];
-				cell.accessibilityLabel = [NSString stringWithFormat:@"Join %@ automatically.", cell.text];
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Join %@ automatically.", @"Voiceover join %@ automatically"), cell.text];
 			} else {
 				cell.text = NSLocalizedString(@"None", @"None label");
-				cell.accessibilityLabel = [NSString stringWithFormat:@"Join rooms automatically."];
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Join rooms automatically.", @"Voiceover join rooms automatically label")];
 			}
 
 			cell.accessibilityLabel = cell.text;

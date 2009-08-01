@@ -62,8 +62,7 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (void) viewWillAppear:(BOOL)animated {
-	_searchBar.isAccessibilityElement = YES;
-	_searchBar.accessibilityLabel = @"Search Members";
+	_searchBar.accessibilityLabel = NSLocalizedString(@"Search Members", @"Voiceover search members label");
 }
 
 - (void) viewWillDisappear:(BOOL) animated {

@@ -831,10 +831,10 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	
 	if (isConnected) {
 		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showMembers)];
-		item.accessibilityLabel = @"Members List";
+		item.accessibilityLabel = NSLocalizedString(@"Members List", @"Voiceover members list label");
 	} else {
 		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Join", "Join button title") style:UIBarButtonItemStyleDone target:self action:@selector(join)];	
-		item.accessibilityLabel = @"Join Room";
+		item.accessibilityLabel = NSLocalizedString(@"Join Room", @"Voiceover join room label");
 	}
 	
 	[self.navigationItem setRightBarButtonItem:item animated:animated];

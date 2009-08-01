@@ -185,7 +185,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 				cell.accessibilityLabel = [@"Join room on " stringByAppendingString:cell.text];
 			} else {
 				cell.text = NSLocalizedString(@"None", @"None setting label");
-				cell.accessibilityLabel = @"No connections available";
+				cell.accessibilityLabel = NSLocalizedString(@"No connections available", @"Voiceover no connections available label");
 			}
 		} else if (indexPath.section == 1 && indexPath.row == 0) {
 			cell.text = _name;
@@ -204,8 +204,8 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 			} else {
 				cell.label = NSLocalizedString(@"Nickname", @"Nickname setting label");
 				cell.textField.placeholder = NSLocalizedString(@"Required", @"Required setting placeholder");
-				cell.accessibilityLabel = @"User to message";
-				cell.accessibilityHint = @"Required";
+				cell.accessibilityLabel = NSLocalizedString(@"User to message", @"Voiceover user to message label");
+				cell.accessibilityHint = NSLocalizedString(@"Required", @"Voiceover required hint");
 			}
 		} else if (_roomTarget && indexPath.section == 1 && indexPath.row == 1) {
 			cell.text = _password;
@@ -216,8 +216,8 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 			cell.textField.secureTextEntry = YES;
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional setting placeholder");
 			cell.textEditAction = @selector(passwordChanged:);
-			cell.accessibilityLabel = @"Room password";
-			cell.accessibilityHint = @"Optional";
+			cell.accessibilityLabel = NSLocalizedString(@"Room password", @"Voiceover room password label");
+			cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional hint");
 		}
 
 		return cell;

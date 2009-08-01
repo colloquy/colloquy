@@ -79,7 +79,6 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 }
 
 - (void) viewWillAppear:(BOOL)animated {
-	self.navigationItem.rightBarButtonItem.isAccessibilityElement = YES;
 	self.navigationItem.rightBarButtonItem.accessibilityLabel = @"Refresh Information";
 }
 

@@ -73,6 +73,9 @@
 }
 
 - (void) setOn:(BOOL) on {
+	if (on) _switchControl.accessibilityLabel = NSLocalizedString (@"On", @"Voiceover On switch");
+	else _switchControl.accessibilityLabel = NSLocalizedString (@"Off", @"Voiceover Off switch");
+	
 	_switchControl.on = on;
 }
 

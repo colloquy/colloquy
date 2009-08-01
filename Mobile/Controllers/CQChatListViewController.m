@@ -300,10 +300,8 @@ static NSIndexPath *indexPathForChatController(id controller) {
 		}
 	}
 
-	self.navigationItem.leftBarButtonItem.isAccessibilityElement = YES;
-	self.navigationItem.leftBarButtonItem.accessibilityLabel = @"New chat room.";
-	self.navigationItem.rightBarButtonItem.isAccessibilityElement = YES;
-	self.navigationItem.rightBarButtonItem.accessibilityLabel = @"Manage chat rooms.";
+	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"New chat room.", @"Voiceover new chat room label");
+	self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"Manage chat rooms.", @"Voiceover manage chat rooms label");
 
 	[super viewWillAppear:animated];
 }

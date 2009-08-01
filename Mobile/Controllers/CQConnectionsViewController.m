@@ -83,10 +83,8 @@
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 
-	self.navigationItem.leftBarButtonItem.isAccessibilityElement = YES;
-	self.navigationItem.leftBarButtonItem.accessibilityLabel = @"Add Connection.";
-	self.navigationItem.rightBarButtonItem.isAccessibilityElement = YES;
-	self.navigationItem.rightBarButtonItem.accessibilityLabel = @"Edit Connections.";
+	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"Add Connection.", @"Voiceover add connection label");
+	self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"Edit Connections.", @"Voiceover edit connections label");
 
 	_active = YES;
 
