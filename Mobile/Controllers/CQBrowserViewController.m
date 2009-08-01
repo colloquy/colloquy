@@ -29,6 +29,13 @@ static NSURL *lastURL;
 
 #pragma mark -
 
+- (void) viewWillAppear:(BOOL)animated {
+	backButton.isAccessibilityElement = YES;
+	backButton.accessibilityLabel = @"Back";
+
+	stopReloadButton.isAccessibilityElement = YES;
+}
+
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
@@ -107,9 +114,15 @@ static NSURL *lastURL;
 }
 
 - (void) reloadOrStop:(id) sender {
-	if (webView.loading)
+	if (webView.loading) {
+		stopReloadButton.accessibilityLabel = @"Stop";
+
 		[webView stopLoading];
-	else [webView reload];
+	} else {
+		[webView reload];
+
+		stopReloadButton.accessibilityLabel = @"Reload";
+	}
 }
 
 - (void) openInSafari:(id) sender {

@@ -275,6 +275,8 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			cell.textEditAction = @selector(descriptionChanged:);
 		}
 
+		cell.accessibilityLabel = [NSString stringWithFormat: @"%@: %@", cell.label, cell.text];
+		
 		return cell;
 	} else if (pushAvailable && indexPath.section == PushTableSection && indexPath.row == 0) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
@@ -285,6 +287,8 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		if (_connection.pushNotifications)
 			cell.text = NSLocalizedString(@"On", @"On label");
 		else cell.text = NSLocalizedString(@"Off", @"Off label");
+
+		cell.accessibilityLabel = [NSString stringWithFormat:@"%@: %@", cell.label, cell.text];
 
 		return cell;
 	} else if (indexPath.section == IdentityTableSection) {
@@ -310,6 +314,8 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			}
 		}
 
+		cell.accessibilityLabel = [NSString stringWithFormat:@"%@: %@", cell.label, cell.text];
+
 		return cell;
 	} else if (indexPath.section == AutomaticTableSection) {
 		if (indexPath.row == 0) {
@@ -320,6 +326,8 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			cell.label = NSLocalizedString(@"Connect at Launch", @"Connect at Launch connection setting label");
 			cell.on = _connection.automaticallyConnect;
 
+			cell.accessibilityLabel = _connection.automaticallyConnect ? cell.label : [NSString stringWithFormat:@"Don't %@.", cell.label];
+
 			return cell;
 		} else if (indexPath.row == 1) {
 			CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
@@ -327,9 +335,15 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			cell.label = NSLocalizedString(@"Join Rooms", @"Join Rooms connection setting label");
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-			if (_connection.automaticJoinedRooms.count)
+			if (_connection.automaticJoinedRooms.count) {
 				cell.text = [_connection.automaticJoinedRooms componentsJoinedByString:@", "];
-			else cell.text = NSLocalizedString(@"None", @"None label");
+				cell.accessibilityLabel = [NSString stringWithFormat:@"Join %@ automatically.", cell.text];
+			} else {
+				cell.text = NSLocalizedString(@"None", @"None label");
+				cell.accessibilityLabel = [NSString stringWithFormat:@"Join rooms automatically."];
+			}
+
+			cell.accessibilityLabel = cell.text;
 
 			return cell;
 		}

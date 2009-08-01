@@ -180,8 +180,13 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 			cell.label = NSLocalizedString(@"Connection", @"Connection setting label");
 			cell.textField.secureTextEntry = NO;
-			if (_selectedConnection) cell.text = _selectedConnection.displayName;
-			else cell.text = NSLocalizedString(@"None", @"None setting label");
+			if (_selectedConnection) {
+				cell.text = _selectedConnection.displayName;
+				cell.accessibilityLabel = [@"Join room on " stringByAppendingString:cell.text];
+			} else {
+				cell.text = NSLocalizedString(@"None", @"None setting label");
+				cell.accessibilityLabel = @"No connections available";
+			}
 		} else if (indexPath.section == 1 && indexPath.row == 0) {
 			cell.text = _name;
 			cell.textEditAction = @selector(nameChanged:);
@@ -194,9 +199,13 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 				cell.label = NSLocalizedString(@"Name", @"Name setting label");
 				cell.textField.placeholder = @"#help";
 				cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+				cell.accessibilityLabel = @"Room to join";
+				cell.accessibilityHint = @"help is default";
 			} else {
 				cell.label = NSLocalizedString(@"Nickname", @"Nickname setting label");
 				cell.textField.placeholder = NSLocalizedString(@"Required", @"Required setting placeholder");
+				cell.accessibilityLabel = @"User to message";
+				cell.accessibilityHint = @"Required";
 			}
 		} else if (_roomTarget && indexPath.section == 1 && indexPath.row == 1) {
 			cell.text = _password;
@@ -207,6 +216,8 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 			cell.textField.secureTextEntry = YES;
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional setting placeholder");
 			cell.textEditAction = @selector(passwordChanged:);
+			cell.accessibilityLabel = @"Room password";
+			cell.accessibilityHint = @"Optional";
 		}
 
 		return cell;

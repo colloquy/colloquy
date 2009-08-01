@@ -35,6 +35,7 @@
 
 	cell.image = [UIImage imageNamed:@"roomIconSmall.png"];
 	cell.text = [_connection chatRoomWithName:roomName].displayName;
+	cell.accessibilityLabel = [NSString stringWithFormat:@"Join %@", cell.text];
 
 	return cell;
 }

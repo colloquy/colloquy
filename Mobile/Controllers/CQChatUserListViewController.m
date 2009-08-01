@@ -61,6 +61,11 @@ static NSString *membersFilteredCountFormat;
 	self.tableView.tableHeaderView = _searchBar;
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+	_searchBar.isAccessibilityElement = YES;
+	_searchBar.accessibilityLabel = @"Search Members";
+}
+
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 

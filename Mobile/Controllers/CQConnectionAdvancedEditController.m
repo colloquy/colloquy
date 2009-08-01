@@ -323,6 +323,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 				cell.enabled = NO;
 			}
 
+			cell.accessibilityLabel = [NSString stringWithFormat:@"%@: %d", cell.label, _connection.serverPort];
+
 			return cell;
 		} else if (indexPath.row == 1) {
 			CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
@@ -333,6 +335,9 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.on = _connection.secure;
 			cell.switchControl.enabled = _connection.directConnection;
 
+			if (_connection.secure) cell.accessibilityLabel = cell.label;
+			else cell.accessibilityLabel = [NSString stringWithFormat:@"Don't %@", cell.label];
+			
 			return cell;
 		}
 	} else if (indexPath.section == AuthenticationTableSection) {
@@ -349,6 +354,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 				cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+
+				cell.accessibilityLabel = isDefaultValue(_connection.username) ? [NSString stringWithFormat:@"Optional %@", cell.label] : [NSString stringWithFormat:@"%@: %@", cell.label, cell.text];
 			} else {
 				cell.enabled = NO;
 			}
@@ -364,6 +371,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 				cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+
+				cell.accessibilityLabel = @"Connection password";
 			} else {
 				cell.enabled = NO;
 			}
@@ -378,7 +387,9 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-		}
+
+			cell.accessibilityLabel = @"Nickname password";
+ 		}
 
 		cell.target = self;
 
@@ -396,6 +407,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		cell.label = NSLocalizedString(@"Alt. Nicknames", @"Alt. Nicknames connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
+		cell.accessibilityLabel = @"Alternate Nicknames";
+
 		return cell;
 	} else if (indexPath.section == AutomaticTableSection && indexPath.row == 0) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
@@ -404,8 +417,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		NSArray *commands = _connection.automaticCommands;
-		if (commands.count) cell.text = [NSString stringWithFormat:@"%u", commands.count];
-		else cell.text = NSLocalizedString(@"None", @"None label");
+		if (commands.count) cell.text = [NSString stringWithFormat:@"%u automatic commands.", commands.count];
+		else cell.text = NSLocalizedString(@"Automatic Commands.", @"None label");
+
+		cell.accessibilityLabel = commands.count ? [NSString stringWithFormat :@"%u automatic commands", commands.count] : @"No automatic commands";
 
 		return cell;
 	} else if (indexPath.section == EncodingsTableSection && indexPath.row == 0) {
@@ -414,6 +429,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		cell.label = NSLocalizedString(@"Encoding", @"Encoding connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		cell.text = localizedNameOfStringEncoding(_connection.encoding);
+
+		cell.accessibilityLabel = [NSString stringWithFormat:@"%@ is %@", cell.label, cell.text];
 
 		return cell;
 	}

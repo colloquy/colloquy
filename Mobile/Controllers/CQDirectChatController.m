@@ -283,6 +283,10 @@ static NSOperationQueue *chatMessageProcessingQueue;
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 
+	chatInputBar.isAccessibilityElement = YES;
+	chatInputBar.accessibilityLabel = @"Enter chat message.";
+	chatInputBar.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
+
 	_active = YES;
 
 	if (_pendingComponents.count) {
@@ -1239,11 +1243,16 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	UIBarButtonItem *item = nil;
 
-	if (self.connection.connected)
+	if (self.connection.connected) {
 		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showUserInformation)];
-	else item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", "Connect button title") style:UIBarButtonItemStyleDone target:self.connection action:@selector(connect)];
+		item.accessibilityLabel = @"User Information";
+	} else {
+		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", "Connect button title") style:UIBarButtonItemStyleDone target:self.connection action:@selector(connect)];	
+		item.accessibilityLabel = @"Connect to Server";
+	} 
 
 	[self.navigationItem setRightBarButtonItem:item animated:animated];
+	self.navigationItem.rightBarButtonItem.isAccessibilityElement = YES;
 
 	[item release];
 }

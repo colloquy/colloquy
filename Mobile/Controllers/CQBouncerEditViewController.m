@@ -144,13 +144,33 @@ static BOOL pushAvailable = NO;
 
 		if (indexPath.row == 0) {
 			cell.label = NSLocalizedString(@"Description", @"Description connection setting label");
-			cell.text = (![_settings.displayName isEqualToString:_settings.server] ? _settings.displayName : @"");
+
+			if (![_settings.displayName isEqualToString:_settings.server]) {
+				cell.text = @"";
+				cell.accessibilityLabel = @"Bouncer Server Description.";
+				cell.accessibilityHint = @"Optional.";
+			} else {
+				cell.text = _settings.displayName;
+				cell.accessibilityLabel = [NSString stringWithFormat:@"Bouncer server %@: %@", cell.label, cell.text];
+			}
+
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
 			cell.textEditAction = @selector(descriptionChanged:);
+
 		} else if (indexPath.row == 1) {
 			cell.label = NSLocalizedString(@"Address", @"Address connection setting label");
-			cell.text = (_settings.server ? _settings.server : @"");
+
+			if (_settings.server) {
+				cell.text = _settings.server;
+				cell.accessibilityLabel = [NSString stringWithFormat:@"Bouncer server address: %@.", cell.text];
+			} else {
+				cell.text = @"";
+				cell.accessibilityLabel = @"Bouncer server address.";
+				cell.accessibilityHint = @"Required.";
+			}
+
+			cell.accessibilityLabel = [NSString stringWithFormat:@"%@: %@", cell.label, cell.text];
 			cell.textField.placeholder = NSLocalizedString(@"Required", @"Required connection setting placeholder");
 			cell.textField.keyboardType = UIKeyboardTypeURL;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -165,6 +185,8 @@ static BOOL pushAvailable = NO;
 			cell.textField.keyboardType = UIKeyboardTypeNumberPad;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(serverPortChanged:);
+
+			cell.accessibilityLabel = [NSString stringWithFormat:@"Bouncer %@: %hu.", cell.label, _settings.serverPort];
 		}
 
 		return cell;
@@ -175,6 +197,15 @@ static BOOL pushAvailable = NO;
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
 			cell.label = NSLocalizedString(@"Account", @"Account connection setting label");
+			if (_settings.username) {
+				cell.text = _settings.username;
+				cell.accessibilityLabel = [NSString stringWithFormat:@"Bouncer Account: %@.", cell.text];
+			} else {
+				cell.text = @"";
+				cell.accessibilityLabel = @"Bouncer Account.";
+				cell.accessibilityHint = @"Required.";
+			}
+
 			cell.text = (_settings.username ? _settings.username : @"");
 			cell.textField.placeholder = NSLocalizedString(@"Required", @"Required connection setting placeholder");
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -191,8 +222,11 @@ static BOOL pushAvailable = NO;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(passwordChanged:);
+			cell.accessibilityLabel = @"Bouncer server password.";
+			cell.accessibilityHint = @"Required";
 		}
 
+		cell.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
 		cell.target = self;
 
 		return cell;
@@ -202,6 +236,10 @@ static BOOL pushAvailable = NO;
 		cell.target = self;
 		cell.switchAction = @selector(pushEnabled:);
 		cell.label = NSLocalizedString(@"Push Notifications", @"Push Notifications connection setting label");
+
+		if (_settings.pushNotifications) cell.accessibilityLabel = @"Push notifications enabled.";
+		else cell.accessibilityLabel = @"Push notifications disabled.";
+
 		cell.on = _settings.pushNotifications;
 
 		return cell;

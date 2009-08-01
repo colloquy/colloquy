@@ -827,11 +827,16 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 
 - (void) _updateRightBarButtonItemAnimated:(BOOL) animated {
 	UIBarButtonItem *item = nil;
-
-	if (self.available)
+	BOOL isConnected = self.connection.connected;
+	
+	if (isConnected) {
 		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showMembers)];
-	else item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Join", "Join button title") style:UIBarButtonItemStyleDone target:self action:@selector(join)];
-
+		item.accessibilityLabel = @"Members List";
+	} else {
+		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Join", "Join button title") style:UIBarButtonItemStyleDone target:self action:@selector(join)];	
+		item.accessibilityLabel = @"Join Room";
+	}
+	
 	[self.navigationItem setRightBarButtonItem:item animated:animated];
 
 	[item release];

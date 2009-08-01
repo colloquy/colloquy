@@ -83,6 +83,11 @@
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 
+	self.navigationItem.leftBarButtonItem.isAccessibilityElement = YES;
+	self.navigationItem.leftBarButtonItem.accessibilityLabel = @"Add Connection.";
+	self.navigationItem.rightBarButtonItem.isAccessibilityElement = YES;
+	self.navigationItem.rightBarButtonItem.accessibilityLabel = @"Edit Connections.";
+
 	_active = YES;
 
 	[self.tableView reloadData];
@@ -290,6 +295,8 @@
 	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
 	[cell takeValuesFromConnection:connection];
+	cell.accessibilityLabel = cell.server;
+	cell.accessibilityTraits = UIAccessibilityTraitStaticText;
 
 	return cell;
 }

@@ -78,6 +78,11 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 	_updateInfoTimer = [[NSTimer scheduledTimerWithTimeInterval:20. target:self selector:@selector(_updateInfo) userInfo:nil repeats:YES] retain];
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+	self.navigationItem.rightBarButtonItem.isAccessibilityElement = YES;
+	self.navigationItem.rightBarButtonItem.accessibilityLabel = @"Refresh Information";
+}
+
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
@@ -161,8 +166,10 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 			cell.label = NSLocalizedString(@"Rooms", "Rooms user info label");
 			NSString *rooms = [[_user attributeForKey:MVChatUserKnownRoomsAttribute] componentsJoinedByString:NSLocalizedString(@", ", "User info rooms list separator")];
 			cell.text = (rooms.length ? rooms : notAvailableString);
-			if (rooms.length)
+			if (rooms.length) {
 				cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+//				cell.accessoryType.accessibilityLabel = @"Rooms list";
+			}
 		}
 	} else if (section == 3) {
 		if (row == 0) { // Connected
@@ -172,7 +179,10 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 			cell.label = NSLocalizedString(@"Idle Time", "Idle Time user info label");
 			cell.text = (_user.status != MVChatUserOfflineStatus ? humanReadableTimeInterval([NSDate timeIntervalSinceReferenceDate] - _idleTimeStart, YES) : NSLocalizedString(@"Offline", "Offline label"));
 		}
+		cell.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
 	}
+	
+	cell.accessibilityLabel = [NSString stringWithFormat:@"%@: %@", cell.label, cell.text];
 
 	return cell;
 }

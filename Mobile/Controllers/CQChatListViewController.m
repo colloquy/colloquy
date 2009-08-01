@@ -300,6 +300,11 @@ static NSIndexPath *indexPathForChatController(id controller) {
 		}
 	}
 
+	self.navigationItem.leftBarButtonItem.isAccessibilityElement = YES;
+	self.navigationItem.leftBarButtonItem.accessibilityLabel = @"New chat room.";
+	self.navigationItem.rightBarButtonItem.isAccessibilityElement = YES;
+	self.navigationItem.rightBarButtonItem.accessibilityLabel = @"Manage chat rooms.";
+
 	[super viewWillAppear:animated];
 }
 
@@ -428,6 +433,9 @@ static NSIndexPath *indexPathForChatController(id controller) {
 				[self _addMessagePreview:message withEncoding:directChatViewController.encoding toChatTableCell:cell animated:NO];
 
 			[previewMessages release];
+
+			cell.accessibilityLabel = cell.name;			
+			cell.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
 		}
 
 		return cell;
