@@ -490,6 +490,7 @@ static BOOL applicationIsTerminating = NO;
 	[confirmQuitAlert addButtonWithTitle:NSLocalizedString( @"Quit", "quit button" )];
 	[confirmQuitAlert addButtonWithTitle:NSLocalizedString( @"Cancel", "cancel button" )];
 	[confirmQuitAlert setAlertStyle:NSCriticalAlertStyle];
+	/* no quit message field in the quit dialog until someone makes it prettier (for example label it). Ticket #1557.
 	// quit message. leopard only for now, because NSAlert's setAccessoryView is 10.5+ only, 10.4 would need a new NIB for this feature:
 	if ( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4) {
 		NSTextField *quitMessageAccessory = [[[NSTextField alloc] initWithFrame:NSMakeRect(0,0,220,22)] autorelease];
@@ -499,6 +500,7 @@ static BOOL applicationIsTerminating = NO;
 		// [confirmQuitAlert layout];
 		// [[confirmQuitAlert window] setInitialFirstResponder:quitMessageAccessory];
 	}
+	*/
 	if ( [confirmQuitAlert runModal] == NSAlertSecondButtonReturn ) {
 		return NSTerminateCancel;
 	}
