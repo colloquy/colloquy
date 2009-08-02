@@ -153,8 +153,14 @@ static AGRegex *backrefPattern;
 	// allocate match vector
 	NSAssert1(matchv = malloc(sizeof(int) * groupCount * 3), @"couldn't allocate match vector for %d items", groupCount * 3);
 	// convert character range to byte range
-	range.length = strlen([[str substringWithRange:range] UTF8String]);
-	range.location = strlen([[str substringToIndex:range.location] UTF8String]);
+	const char *rangeString = [[str substringWithRange:range] UTF8String];
+	const char *prefixString = [[str substringToIndex:range.location] UTF8String];
+	if (!rangeString || !prefixString) {
+		free(matchv);
+		return nil;
+	}
+	range.length = strlen(rangeString);
+	range.location = strlen(prefixString);
 	// try match
 	if ((error = pcre_exec(regex, extra, [str UTF8String], range.location + range.length, range.location, options, matchv, groupCount * 3)) == PCRE_ERROR_NOMATCH) {
 		free(matchv);

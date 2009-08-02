@@ -145,6 +145,17 @@
 
 - (void *) node {
 	if( ! _node ) {
+		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
+		NSString *htmlMessage = ( [self body] ? [[self body] HTMLFormatWithOptions:options] : @"" );
+		const char *msgStr = [[NSString stringWithFormat:@"<message>%@</message>", [htmlMessage stringByStrippingIllegalXMLCharacters]] UTF8String];
+
+		if( !msgStr) {
+			NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses", nil];
+			NSTextStorage *messageString = [[[NSTextStorage alloc] initWithString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" ) attributes:attributes] autorelease];
+			htmlMessage = ( messageString ? [messageString HTMLFormatWithOptions:options] : @"" );
+			msgStr = [[NSString stringWithFormat:@"<message>%@</message>", [htmlMessage stringByStrippingIllegalXMLCharacters]] UTF8String];
+		}
+
 		if( _doc ) xmlFreeDoc( _doc );
 		_doc = xmlNewDoc( (xmlChar *) "1.0" );
 
@@ -184,9 +195,6 @@
 				xmlSetProp( child, (xmlChar *) "buddy", (xmlChar *) [[self senderBuddyIdentifier] UTF8String] );
 		}
 
-		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
-		NSString *htmlMessage = ( [self body] ? [[self body] HTMLFormatWithOptions:options] : @"" );
-		const char *msgStr = [[NSString stringWithFormat:@"<message>%@</message>", [htmlMessage stringByStrippingIllegalXMLCharacters]] UTF8String];
 		xmlDocPtr msgDoc = xmlParseMemory( msgStr, strlen( msgStr ) );
 		if( ! msgDoc ) return NULL; // somthing bad with the message contents
 

@@ -743,6 +743,10 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	NSParameterAssert( name != nil );
 	NSParameterAssert( [name length] );
 
+	// The message needs to be able to convert to UTF8, otherwise we can't display it.
+	if( ! [message UTF8String] )
+		return;
+
 	JVMutableChatEvent *event = [JVMutableChatEvent chatEventWithName:name andMessage:message];
 	[event setAttributes:attributes];
 
@@ -787,7 +791,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[messageString appendAttributedString:error];
 	}
 
-	if( ! [messageString length] ) {
+	// The message needs to be able to convert to UTF8, otherwise we can't display it.
+	if( ! [messageString length] || ! [[messageString string] UTF8String] ) {
 		NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:baseFont, NSFontAttributeName, [NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses", nil];
 		messageString = [[[NSTextStorage alloc] initWithString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" ) attributes:attributes] autorelease];
 	}
@@ -799,6 +804,9 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[cmessage setType:type];
 
 	messageString = [cmessage body]; // just incase
+
+	if( !cmessage || !messageString)
+		return;
 
 	[self _setCurrentMessage:cmessage];
 
