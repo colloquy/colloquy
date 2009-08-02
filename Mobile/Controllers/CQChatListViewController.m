@@ -1,7 +1,6 @@
 #import "CQChatListViewController.h"
 
 #import "CQChatRoomController.h"
-#import "CQChatTableCell.h"
 #import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
 #import "CQFileTransferController.h"
@@ -256,6 +255,7 @@ static NSIndexPath *indexPathForChatController(id controller) {
 
 	CQChatTableCell *cell = [self _chatTableCellForController:controller];
 	[self _refreshChatCell:cell withController:controller animated:YES];
+	[self updateAccessibilityLabelForChatCell:cell];
 }
 
 - (void) _refreshFileTransferCell:(NSNotification *) notification {
@@ -272,6 +272,17 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	CQFileTransferTableCell *cell = [self _fileTransferCellForController:controller];
 	[self _refreshFileTransferCell:cell withController:controller animated:YES];
 }
+
+- (void) updateAccessibilityLabelForChatCell:(CQChatTableCell *) cell {
+	if (cell.importantUnreadCount && cell.importantUnreadCount == cell.unreadCount)
+		cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%d highlights in %@", @"Voiceover %d highlights in %@ label"), cell.importantUnreadCount, cell.name];
+	else if (cell.importantUnreadCount)
+		cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%d highlights and %d unread messages in %@", @"Voiceover %d highlights and %d unread messages in %@ label") , cell.importantUnreadCount, cell.unreadCount, cell.name];
+	else if (cell.unreadCount)
+		cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%d unread messages in %@", @"Voiceover %d unread messages in %@ label"), cell.unreadCount, cell.name];
+	else cell.accessibilityLabel = cell.name;
+}
+
 
 #pragma mark -
 
@@ -435,7 +446,9 @@ static NSIndexPath *indexPathForChatController(id controller) {
 			cell.accessibilityLabel = cell.name;			
 			cell.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
 		}
-
+		
+		[self updateAccessibilityLabelForChatCell:cell];
+		
 		return cell;
 	}
 
