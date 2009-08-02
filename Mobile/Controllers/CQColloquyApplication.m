@@ -107,12 +107,12 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"] ? @"disabled" : @"enabled");
 	[[CQAnalyticsController defaultController] setObject:information forKey:@"browser"];
 
-	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQTwitterUsername"] ? @"no" : @"yes");
+	information = ([[NSUserDefaults standardUserDefaults] stringForKey:@"CQTwitterUsername"].length ? @"yes" : @"no");
 	[[CQAnalyticsController defaultController] setObject:information forKey:@"twitter-setup"];
-	
-	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQInstapaperUsername"] ? @"no" : @"yes");
+
+	information = ([[NSUserDefaults standardUserDefaults] stringForKey:@"CQInstapaperUsername"].length ? @"yes" : @"no");
 	[[CQAnalyticsController defaultController] setObject:information forKey:@"instapaper-setup"];
-	
+
 	if (_deviceToken.length)
 		[[CQAnalyticsController defaultController] setObject:_deviceToken forKey:@"device-push-token"];
 
