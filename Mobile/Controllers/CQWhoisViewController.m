@@ -133,11 +133,23 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 	if (section == 0) {
 		if (row == 0) { // Real Name
 			cell.label = NSLocalizedString(@"Real Name", "Real Name user info label");
-			cell.text = (_user.realName.length ? _user.realName : notAvailableString);
+			if (_user.realName.length) {
+				cell.text = _user.realName;
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Real Name: %@", @"Voiceover real name: %@ label"), _user.realName];
+			} else {
+				cell.text = notAvailableString;
+				cell.accessibilityLabel = NSLocalizedString(@"Real name not available.", @"Voiceover real name not available label");
+			}
 		} else if (row == 1) { // Away Info
 			cell.label = NSLocalizedString(@"Away Info", "Away Info user info label");
 			NSString *value = [[NSString alloc] initWithData:_user.awayStatusMessage encoding:_user.connection.encoding];
-			cell.text = (value.length ? value : notAvailableString);
+			if (value.length) {
+				cell.text = value;
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Away information: %@", @"Voiceover away information: %@ label"), value];
+			} else {
+				cell.text = notAvailableString;
+				cell.accessibilityLabel = NSLocalizedString(@"Away information not available", @"Voiceover away information not available");
+			}
 			[value release];
 		}
 	} else if (section == 1) {
@@ -150,38 +162,73 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 				value = NSLocalizedString(@"Server operator", "Server operator class");
 			else value = NSLocalizedString(@"Normal user", "Normal user class");
 			cell.text = value;
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Class: %@", @"Voiceover class: %@ label"), cell.text];
 		} else if (row == 1) { // Username
 			cell.label = NSLocalizedString(@"Username", "Username user info label");
+			if (_user.username.length) {
+				cell.text = _user.username;
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Username: %@", @"Voiceover username: %@ label"), _user.username];
+			} else {
+				cell.text = notAvailableString;
+				cell.accessibilityLabel = NSLocalizedString(@"Username not available", @"Voiceover username not available label");
+			}
+
 			cell.text = (_user.username.length ? _user.username : notAvailableString);
 		} else if (row == 2) { // Hostname
 			cell.label = NSLocalizedString(@"Hostname", "Hostname user info label");
-			cell.text = (_user.address.length ? _user.address : notAvailableString);
+			if (_user.address.length) {
+				cell.text = _user.address;
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Hostname: %@", @"Voiceover hostname: %@ label"), _user.address];
+			} else {
+				cell.text = notAvailableString;
+				cell.accessibilityLabel = NSLocalizedString(@"Hostname not available", @"Voiceover hostname not available label");
+			}
 		}
 	} else if (section == 2) {
 		if (row == 0) { // Server
 			cell.label = NSLocalizedString(@"Server", "Server user info label");
-			cell.text = (_user.serverAddress) ? _user.serverAddress : notAvailableString;
+			if (_user.serverAddress.length) {
+				cell.text = _user.serverAddress;
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Server: %@", @"Voiceover server: %@ label"), _user.serverAddress];
+			} else {
+				cell.text = notAvailableString;
+				cell.accessibilityLabel = NSLocalizedString(@"Server not available", @"Voiceover server not available label");
+			}
 		} else if (row == 1) { // Rooms
 			cell.label = NSLocalizedString(@"Rooms", "Rooms user info label");
 			NSString *rooms = [[_user attributeForKey:MVChatUserKnownRoomsAttribute] componentsJoinedByString:NSLocalizedString(@", ", "User info rooms list separator")];
-			cell.text = (rooms.length ? rooms : notAvailableString);
 			if (rooms.length) {
+				cell.text = rooms;
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Rooms: %@", @"Voiceover rooms: %@ label"), rooms];
 				cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-//				cell.accessoryType.accessibilityLabel = @"Rooms list";
+			} else {
+				cell.text = notAvailableString;
+				cell.accessibilityLabel = NSLocalizedString(@"Rooms not available", @"Voiceover rooms not available label");
 			}
 		}
 	} else if (section == 3) {
 		if (row == 0) { // Connected
 			cell.label = NSLocalizedString(@"Connected", "Connected user info label");
-			cell.text = (_user.status != MVChatUserOfflineStatus && _user.dateConnected ? humanReadableTimeInterval([_user.dateConnected timeIntervalSinceNow], YES) : NSLocalizedString(@"Offline", "Offline label"));
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Connected: %@", @"Voiceover Connected: %@ label"), cell.text];
+			if (_user.status != MVChatUserOfflineStatus && _user.dateConnected) {
+				cell.text = humanReadableTimeInterval([_user.dateConnected timeIntervalSinceNow], YES);
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Connected: %@", @"Voiceover Connected: %@ label"), cell.text];
+				cell.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
+			} else {
+				cell.text = NSLocalizedString(@"Offline", "Offline label");
+				cell.accessibilityLabel = NSLocalizedString(@"User offline", @"Voiceover user offline label");
+			}
 		} else if (row == 1) { // Idle Time
 			cell.label = NSLocalizedString(@"Idle Time", "Idle Time user info label");
-			cell.text = (_user.status != MVChatUserOfflineStatus ? humanReadableTimeInterval([NSDate timeIntervalSinceReferenceDate] - _idleTimeStart, YES) : NSLocalizedString(@"Offline", "Offline label"));
+			if (_user.status != MVChatUserOfflineStatus) {
+				cell.text = humanReadableTimeInterval([NSDate timeIntervalSinceReferenceDate] - _idleTimeStart, YES);
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Connected: %@", @"Voiceover Connected: %@ label"), cell.text];
+				cell.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
+			} else {
+				cell.text = NSLocalizedString(@"Offline", "Offline label");
+				cell.accessibilityLabel = NSLocalizedString(@"User offline", @"Voiceover user offline label");
+			}
 		}
-		cell.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
 	}
-	
 
 	return cell;
 }
