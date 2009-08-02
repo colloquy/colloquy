@@ -3,6 +3,12 @@
 #import "CQColloquyApplication.h"
 #import "NSStringAdditions.h"
 
+#define DoneButtonItem 1 // This isn't used, just here for record, since the tag exists.
+#define BlankSpaceItem 2 // This isn't used, just here for record, since the tag exists.
+#define SendLinkToChatToolbarItem 3
+#define SaveSiteToInstapaperItem 4
+#define OpenSiteInSafariItem 5
+
 static NSURL *lastURL;
 
 @implementation CQBrowserViewController
@@ -30,8 +36,16 @@ static NSURL *lastURL;
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL)animated {
-	backButton.accessibilityLabel = NSLocalizedString (@"Back", @"Voiceover back label");
+	backButton.accessibilityLabel = NSLocalizedString(@"Back", @"Voiceover back label");
 
+	for (UIBarButtonItem *item in toolbar.items) {
+		if (item.tag == SendLinkToChatToolbarItem)
+			item.accessibilityLabel = NSLocalizedString(@"Send link to chat.", @"Voiceover send link to active chat label");
+		if (item.tag == SaveSiteToInstapaperItem)
+			item.accessibilityLabel = NSLocalizedString(@"Save to Instapaper.", @"Voiceover save to instapaper label");
+		if (item.tag == OpenSiteInSafariItem)
+			item.accessibilityLabel = NSLocalizedString(@"Open in Safari.", @"Voiceover open in safari label");
+	}
 }
 
 - (void) viewDidLoad {
@@ -128,6 +142,9 @@ static NSURL *lastURL;
 }
 
 - (IBAction) sendURL:(id) sender {
+	if (!locationField.text.length)
+		return;
+
 	if ([_delegate respondsToSelector:@selector(browserViewController:sendURL:)])
 		[_delegate browserViewController:self sendURL:self.url];
 }

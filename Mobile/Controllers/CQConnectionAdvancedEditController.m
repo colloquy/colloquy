@@ -354,8 +354,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 				cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-
-				cell.accessibilityLabel = isDefaultValue(_connection.username) ? [NSString stringWithFormat:NSLocalizedString(@"Optional %@", @"Voiceover optional %@ label"), cell.label] : [NSString stringWithFormat:@"%@: %@", cell.label, cell.text];
+				cell.accessibilityLabel = isDefaultValue(_connection.username) ? [NSString stringWithFormat:NSLocalizedString(@"Optional username", @"Voiceover optional username label"), cell.label] : [NSString stringWithFormat:NSLocalizedString(@"Username: %@", @"Voiceover username: %@ label"), cell.text];
 			} else {
 				cell.enabled = NO;
 			}
@@ -371,7 +370,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 				cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-
 				cell.accessibilityLabel = NSLocalizedString(@"Connection password", @"Voiceover connection password label");
 			} else {
 				cell.enabled = NO;
@@ -387,7 +385,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-
 			cell.accessibilityLabel = NSLocalizedString(@"Nickname password", @"Voiceover nickname password label");
  		}
 
@@ -406,7 +403,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 
 		cell.label = NSLocalizedString(@"Alt. Nicknames", @"Alt. Nicknames connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-
 		cell.accessibilityLabel = NSLocalizedString(@"Alternate Nicknames", @"Voiceover alternate nicknames label");
 
 		return cell;

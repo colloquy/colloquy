@@ -174,6 +174,7 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 		if (row == 0) { // Connected
 			cell.label = NSLocalizedString(@"Connected", "Connected user info label");
 			cell.text = (_user.status != MVChatUserOfflineStatus && _user.dateConnected ? humanReadableTimeInterval([_user.dateConnected timeIntervalSinceNow], YES) : NSLocalizedString(@"Offline", "Offline label"));
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Connected: %@", @"Voiceover Connected: %@ label"), cell.text];
 		} else if (row == 1) { // Idle Time
 			cell.label = NSLocalizedString(@"Idle Time", "Idle Time user info label");
 			cell.text = (_user.status != MVChatUserOfflineStatus ? humanReadableTimeInterval([NSDate timeIntervalSinceReferenceDate] - _idleTimeStart, YES) : NSLocalizedString(@"Offline", "Offline label"));
@@ -181,7 +182,6 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 		cell.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
 	}
 	
-	cell.accessibilityLabel = [NSString stringWithFormat:@"%@: %@", cell.label, cell.text];
 
 	return cell;
 }

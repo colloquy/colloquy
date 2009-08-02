@@ -264,6 +264,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 				cell.textEditAction = @selector(serverChanged:);
 				cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 				cell.accessoryAction = @selector(showDefaultServerList);
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Address: %@", @"Voiceover Address: %@ label"), cell.text];
 			} else {
 				cell.enabled = NO;
 			}
@@ -273,9 +274,8 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
 			cell.textEditAction = @selector(descriptionChanged:);
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Description: %@", @"Voiceover description: %@"), cell.text];
 		}
-
-		cell.accessibilityLabel = [NSString stringWithFormat: @"%@: %@", cell.label, cell.text];
 		
 		return cell;
 	} else if (pushAvailable && indexPath.section == PushTableSection && indexPath.row == 0) {
@@ -288,7 +288,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			cell.text = NSLocalizedString(@"On", @"On label");
 		else cell.text = NSLocalizedString(@"Off", @"Off label");
 
-		cell.accessibilityLabel = [NSString stringWithFormat:@"%@: %@", cell.label, cell.text];
+		cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Push Notifications: %@.", @"Voiceover push notifications %@"), cell.text];
 
 		return cell;
 	} else if (indexPath.section == IdentityTableSection) {
@@ -302,6 +302,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(nicknameChanged:);
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Nickname: %@", @"Voiceover nickname: %@ label"), cell.text];
 		} else if (indexPath.row == 1) {
 			cell.label = NSLocalizedString(@"Real Name", @"Real Name connection setting label");
 			cell.text = (isDefaultValue(_connection.realName) ? @"" : _connection.realName);
@@ -312,9 +313,9 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			} else {
 				cell.enabled = NO;
 			}
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Real Name: %@", @"Voiceover real name: %@ label"), cell.text];
 		}
 
-		cell.accessibilityLabel = [NSString stringWithFormat:@"%@: %@", cell.label, cell.text];
 
 		return cell;
 	} else if (indexPath.section == AutomaticTableSection) {

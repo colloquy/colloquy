@@ -182,7 +182,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 			cell.textField.secureTextEntry = NO;
 			if (_selectedConnection) {
 				cell.text = _selectedConnection.displayName;
-				cell.accessibilityLabel = [@"Join room on " stringByAppendingString:cell.text];
+				cell.accessibilityLabel = [@"Join room on %@" stringByAppendingString:cell.text];
 			} else {
 				cell.text = NSLocalizedString(@"None", @"None setting label");
 				cell.accessibilityLabel = NSLocalizedString(@"No connections available", @"Voiceover no connections available label");

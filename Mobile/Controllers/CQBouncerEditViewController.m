@@ -151,7 +151,7 @@ static BOOL pushAvailable = NO;
 				cell.accessibilityHint = NSLocalizedString (@"Optional.", @"Voiceover optional label");
 			} else {
 				cell.text = _settings.displayName;
-				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString (@"Bouncer server %@: %@", @"Voiceover bouncer server %@: %@ label"), cell.label, cell.text];
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString (@"Bouncer server description: %@", @"Voiceover bouncer server description: %@ label"), cell.text];
 			}
 
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
@@ -161,7 +161,7 @@ static BOOL pushAvailable = NO;
 		} else if (indexPath.row == 1) {
 			cell.label = NSLocalizedString(@"Address", @"Address connection setting label");
 
-			if (_settings.server) {
+			if (_settings.server.length) {
 				cell.text = _settings.server;
 				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString (@"Bouncer server address: %@.", @"Voiceover bouncer server address: %@ label"), cell.text];
 			} else {
@@ -170,7 +170,6 @@ static BOOL pushAvailable = NO;
 				cell.accessibilityHint = NSLocalizedString (@"Required.", @"Voiceover required hint");
 			}
 
-			cell.accessibilityLabel = [NSString stringWithFormat:@"%@: %@", cell.label, cell.text];
 			cell.textField.placeholder = NSLocalizedString(@"Required", @"Required connection setting placeholder");
 			cell.textField.keyboardType = UIKeyboardTypeURL;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -186,7 +185,7 @@ static BOOL pushAvailable = NO;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(serverPortChanged:);
 
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString (@"Bouncer %@: %hu.", @"Voiceover Bouncer %@: %hu"), cell.label, _settings.serverPort];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString (@"Bouncer Port %hu.", @"Voiceover Bouncer Port: %hu"), _settings.serverPort];
 		}
 
 		return cell;
@@ -290,7 +289,7 @@ static BOOL pushAvailable = NO;
 
 	[self updateConnectButton];
 
-	sender.text = (_settings.server ? _settings.server : @"");
+	sender.text = (_settings.server.length ? _settings.server : @"");
 }
 
 - (void) serverPortChanged:(CQPreferencesTextCell *) sender {
