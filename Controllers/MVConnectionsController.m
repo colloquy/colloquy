@@ -446,10 +446,14 @@ static NSMenu *favoritesMenu = nil;
 	[connection setRealName:[newRealName stringValue]];
 	if( [_joinRooms count] ) [connection joinChatRoomsNamed:_joinRooms];
 
+	if( [[newNickname stringValue] length] ) [connection setNickname:[newNickname stringValue]];
+	if( [[newAddress stringValue] length] ) [connection setServer:[newAddress stringValue]];
+	if( [newPort intValue] ) [connection setServerPort:[newPort intValue]];
+
 	[self addConnection:connection keepBookmark:(BOOL)[newRemember state]];
 	[self setJoinRooms:_joinRooms forConnection:connection];
 
-	[connection connectToServer:[newAddress stringValue] onPort:[newPort intValue] asUser:[newNickname stringValue]];
+	[connection connect];
 
 	[[self window] makeKeyAndOrderFront:nil];
 }
