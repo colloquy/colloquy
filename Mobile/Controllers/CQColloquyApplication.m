@@ -92,10 +92,23 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
 	information = @"simulator";
 #else
-	information = ([infoDictionary objectForKey:@"SignerIdentity"] ? @"cracked" : @"purchased");	
+	if ([infoDictionary objectForKey:@"SignerIdentity"]) {
+		information = @"cracked";
+	} else {
+		NSString *type = [infoDictionary objectForKey:@"CQBuildType"];
+		BOOL officialBundleIdentifier = [[infoDictionary objectForKey:@"CFBundleIdentifier"] isEqualToString:@"info.colloquy.mobile"];
+		if ([type isEqualToString:@"personal"] || !officialBundleIdentifier)
+			information = @"personal";
+		else if ([type isEqualToString:@"beta"] && officialBundleIdentifier)
+			information = @"beta";
+		else if ([type isEqualToString:@"official"] && officialBundleIdentifier)
+			information = @"official";
+		else information = @"unknown";
+	}
 #endif
 
 	[[CQAnalyticsController defaultController] setObject:information forKey:@"install-type"];
+
 	[[CQAnalyticsController defaultController] setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"] lowercaseString] forKey:@"transcript-style"];
 
 	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"] ? @"emoji" : @"text");

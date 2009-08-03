@@ -24,6 +24,8 @@
 	<string>1.1</string>
 	<key>CFBundleVersion</key>
 	<string>source</string>
+	<key>CQBuildType</key>
+	<string>personal</string>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
 	<string>http://colloquy.mobi</string>
 	<key>NSMainNibFile</key>
