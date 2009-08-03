@@ -101,9 +101,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 			information = @"personal";
 		else if ([type isEqualToString:@"beta"] && officialBundleIdentifier)
 			information = @"beta";
-		else if ([type isEqualToString:@"official"] && officialBundleIdentifier)
+		else if ([type isEqualToString:@"official"] || officialBundleIdentifier)
 			information = @"official";
-		else information = @"unknown";
 	}
 #endif
 
