@@ -2390,7 +2390,7 @@ end:
 
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
-			} else if( ( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@"ID"] ) ||
+			} else if( ( [msg hasCaseInsensitiveSubstring:@"NickServ"] && [msg hasCaseInsensitiveSubstring:@" ID"] ) ||
 					  [msg hasCaseInsensitiveSubstring:@"identify yourself"] ||
 					  [msg hasCaseInsensitiveSubstring:@"authenticate yourself"] ||
 					  [msg hasCaseInsensitiveSubstring:@"authentication required"] ||
