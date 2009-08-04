@@ -2,8 +2,9 @@
 
 #import "CQAnalyticsController.h"
 #import "CQBrowserViewController.h"
-#import "CQConnectionsController.h"
 #import "CQChatController.h"
+#import "CQConnectionsController.h"
+#import "CQWelcomeNavigationController.h"
 #import "NSStringAdditions.h"
 #import "RegexKitLite.h"
 
@@ -188,6 +189,12 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 				tabBarController.selectedViewController = [CQChatController defaultController];
 			}
 		}
+	}
+
+	if (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count) {
+		CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
+		[tabBarController presentModalViewController:welcomeController animated:NO];
+		[welcomeController release];
 	}
 
 	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];

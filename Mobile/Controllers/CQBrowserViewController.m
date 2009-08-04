@@ -243,11 +243,11 @@ static NSURL *lastURL;
 	if (webView.loading) {
 		image = [UIImage imageNamed:@"browserStop.png"];
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-		stopReloadButton.accessibilityLabel = NSLocalizedString (@"Stop", @"Voiceover stop label");
+		stopReloadButton.accessibilityLabel = NSLocalizedString(@"Stop", @"Voiceover stop label");
 	} else {
 		image = [UIImage imageNamed:@"browserReload.png"];
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-		stopReloadButton.accessibilityLabel = NSLocalizedString (@"Reload", @"voiceover reload label");
+		stopReloadButton.accessibilityLabel = NSLocalizedString(@"Reload", @"voiceover reload label");
 	}
 
 	[stopReloadButton setImage:image forState:UIControlStateNormal];

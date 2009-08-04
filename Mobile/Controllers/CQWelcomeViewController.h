@@ -1,0 +1,2 @@
+@interface CQWelcomeViewController : UITableViewController
+@end

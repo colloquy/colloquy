@@ -135,16 +135,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[self popToRootViewControllerAnimated:NO];
 }
 
-- (void) viewDidAppear:(BOOL) animated {
-	[super viewDidAppear:animated];
-
-	static BOOL offeredToCreate;
-	if (!_connections.count && !_bouncers.count && !offeredToCreate) {
-		[self performSelector:@selector(showCreationActionSheet) withObject:nil afterDelay:0.];
-		offeredToCreate = YES;
-	}
-}
-
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"])
 		return (interfaceOrientation == UIInterfaceOrientationPortrait);

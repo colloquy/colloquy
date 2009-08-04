@@ -103,6 +103,10 @@
 		1C9C34F70FFFEFE500F79731 /* disclosureArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9C34F60FFFEFE500F79731 /* disclosureArrow.png */; };
 		1C9C351C0FFFF2C500F79731 /* sectionHeaderHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9C351B0FFFF2C500F79731 /* sectionHeaderHighlighted.png */; };
 		1C9E1A690F12E62600C18B55 /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9E1A680F12E62600C18B55 /* info.png */; };
+		1CA3DC5310279661008B1AD2 /* CQWelcomeNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA3DC5210279661008B1AD2 /* CQWelcomeNavigationController.m */; };
+		1CA3DC581027984A008B1AD2 /* CQWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */; };
+		1CA3DCEA1027AEFF008B1AD2 /* help.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA3DCE81027AEFF008B1AD2 /* help.png */; };
+		1CA3DCEB1027AEFF008B1AD2 /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA3DCE91027AEFF008B1AD2 /* play.png */; };
 		1CA6EBFF1020924C00310D59 /* CQAnalyticsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA6EBFE1020924C00310D59 /* CQAnalyticsController.m */; };
 		1CA7151A0EF47D6F006225CD /* CQUnreadCountView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA715190EF47D6F006225CD /* CQUnreadCountView.m */; };
 		1CA718AA0EF5F136006225CD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1CA718A90EF5F136006225CD /* Settings.bundle */; };
@@ -321,6 +325,12 @@
 		1C9C34F60FFFEFE500F79731 /* disclosureArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = disclosureArrow.png; sourceTree = "<group>"; };
 		1C9C351B0FFFF2C500F79731 /* sectionHeaderHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sectionHeaderHighlighted.png; sourceTree = "<group>"; };
 		1C9E1A680F12E62600C18B55 /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info.png; sourceTree = "<group>"; };
+		1CA3DC5110279661008B1AD2 /* CQWelcomeNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQWelcomeNavigationController.h; path = Mobile/Controllers/CQWelcomeNavigationController.h; sourceTree = "<group>"; };
+		1CA3DC5210279661008B1AD2 /* CQWelcomeNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQWelcomeNavigationController.m; path = Mobile/Controllers/CQWelcomeNavigationController.m; sourceTree = "<group>"; };
+		1CA3DC561027984A008B1AD2 /* CQWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQWelcomeViewController.h; path = Mobile/Controllers/CQWelcomeViewController.h; sourceTree = "<group>"; };
+		1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQWelcomeViewController.m; path = Mobile/Controllers/CQWelcomeViewController.m; sourceTree = "<group>"; };
+		1CA3DCE81027AEFF008B1AD2 /* help.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = help.png; sourceTree = "<group>"; };
+		1CA3DCE91027AEFF008B1AD2 /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
 		1CA6EBFD1020924C00310D59 /* CQAnalyticsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQAnalyticsController.h; path = Mobile/Controllers/CQAnalyticsController.h; sourceTree = "<group>"; };
 		1CA6EBFE1020924C00310D59 /* CQAnalyticsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQAnalyticsController.m; path = Mobile/Controllers/CQAnalyticsController.m; sourceTree = "<group>"; };
 		1CA715180EF47D6F006225CD /* CQUnreadCountView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQUnreadCountView.h; sourceTree = "<group>"; };
@@ -616,6 +626,10 @@
 				1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */,
 				89E87C080FA0450800B49230 /* CQSoundController.m */,
 				89E87C070FA0450800B49230 /* CQSoundController.h */,
+				1CA3DC5210279661008B1AD2 /* CQWelcomeNavigationController.m */,
+				1CA3DC5110279661008B1AD2 /* CQWelcomeNavigationController.h */,
+				1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */,
+				1CA3DC561027984A008B1AD2 /* CQWelcomeViewController.h */,
 			);
 			name = General;
 			path = ../..;
@@ -780,6 +794,8 @@
 				1CB318DA0D8644E4006A7513 /* server.png */,
 				1CD949800D8E18DB00756ACD /* directChatIcon.png */,
 				1C9E1A680F12E62600C18B55 /* info.png */,
+				1CA3DCE81027AEFF008B1AD2 /* help.png */,
+				1CA3DCE91027AEFF008B1AD2 /* play.png */,
 				1C34A66F10183ED900BAA714 /* personBlueSmall.png */,
 				1C34A6851018411B00BAA714 /* personWhiteSmall.png */,
 				1C9C34F60FFFEFE500F79731 /* disclosureArrow.png */,
@@ -984,6 +1000,8 @@
 				1C34A67010183ED900BAA714 /* personBlueSmall.png in Resources */,
 				1C34A6861018411B00BAA714 /* personWhiteSmall.png in Resources */,
 				1CB24E03101EBE4800217B50 /* verbs.plist in Resources */,
+				1CA3DCEA1027AEFF008B1AD2 /* help.png in Resources */,
+				1CA3DCEB1027AEFF008B1AD2 /* play.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1079,6 +1097,8 @@
 				1C34A4981016C73800BAA714 /* CQChatRoomInfoTableCell.m in Sources */,
 				1C34A4A71016CC2500BAA714 /* CQChatRoomListViewController.m in Sources */,
 				1CA6EBFF1020924C00310D59 /* CQAnalyticsController.m in Sources */,
+				1CA3DC5310279661008B1AD2 /* CQWelcomeNavigationController.m in Sources */,
+				1CA3DC581027984A008B1AD2 /* CQWelcomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
