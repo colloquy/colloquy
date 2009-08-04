@@ -120,7 +120,7 @@ static NSString *analyticsURL = @"http://colloquy.mobi/analytics.php";
 	[_data setObject:[[UIDevice currentDevice] uniqueIdentifier] forKey:@"device-identifier"];
 
 	NSMutableURLRequest *request = [self _urlRequest];
-	[request setTimeoutInterval:10.];
+	[request setTimeoutInterval:15.];
 
 	[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL];
 
