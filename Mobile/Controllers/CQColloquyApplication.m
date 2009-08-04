@@ -126,6 +126,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	information = ([[NSUserDefaults standardUserDefaults] stringForKey:@"CQInstapaperUsername"].length ? @"yes" : @"no");
 	[[CQAnalyticsController defaultController] setObject:information forKey:@"instapaper-setup"];
 
+	information = [[NSLocale autoupdatingCurrentLocale] localeIdentifier];
+	[[CQAnalyticsController defaultController] setObject:information forKey:@"CQUserLocale"];
+	
 	if (_deviceToken.length)
 		[[CQAnalyticsController defaultController] setObject:_deviceToken forKey:@"device-push-token"];
 
