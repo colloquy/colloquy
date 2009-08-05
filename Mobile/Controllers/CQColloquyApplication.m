@@ -45,6 +45,23 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #pragma mark -
 
+- (NSSet *) handledURLSchemes {
+	static NSMutableSet *schemes;
+	if (!schemes) {
+		schemes = [[NSMutableSet alloc] init];
+
+		NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
+		NSArray *urlTypes = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleURLTypes"];
+		for (NSDictionary *type in urlTypes) {
+			NSArray *schemesForType = [type objectForKey:@"CFBundleURLSchemes"];
+			for (NSString *scheme in schemesForType)
+				[schemes addObject:[scheme lowercaseString]];
+		}
+	}
+
+	return schemes;
+}
+
 - (NSArray *) highlightWords {
 	static NSMutableArray *highlightWords;
 	if (!highlightWords) {
@@ -194,11 +211,11 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		}
 	}
 
-	if (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count) {
+//	if (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count) {
 		CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
-		[tabBarController presentModalViewController:welcomeController animated:NO];
+		[tabBarController presentModalViewController:welcomeController animated:YES];
 		[welcomeController release];
-	}
+//	}
 
 	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];
 

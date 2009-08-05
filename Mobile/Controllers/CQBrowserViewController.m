@@ -29,6 +29,7 @@ static NSURL *lastURL;
 	[navigationBar release];
 	[toolbar release];
 	[_urlToLoad release];
+	[_urlToHandle release];
 
 	[super dealloc];
 }
@@ -75,11 +76,15 @@ static NSURL *lastURL;
 }
 
 - (void) viewDidDisappear:(BOOL) animated {
-	if (_irc) {
-		[[UIApplication sharedApplication] performSelector:@selector(openURL:) withObject:_irc afterDelay:0.0];
-		[_irc release];
-		_irc = nil;
-	}
+	[super viewDidDisappear:animated];
+
+	if (!_urlToHandle)
+		return;
+
+	[[UIApplication sharedApplication] performSelector:@selector(openURL:) withObject:_urlToHandle afterDelay:0.];
+
+	[_urlToHandle release];
+	_urlToHandle = nil;
 }
 
 #pragma mark -
@@ -256,38 +261,26 @@ static NSURL *lastURL;
 #pragma mark -
 
 - (BOOL) webView:(UIWebView *) sender shouldStartLoadWithRequest:(NSURLRequest *) request navigationType:(UIWebViewNavigationType) navigationType {
-	static NSMutableArray *schemes = nil;
-	if (!schemes) {
-		schemes = [[NSMutableArray alloc] init];
-		NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
-		NSArray *array = [info objectForKey:@"CFBundleURLTypes"];
-		if (array) {
-			for (NSDictionary *dict in array) {
-				NSArray *items = [dict objectForKey:@"CFBundleURLSchemes"];
-				if (items) {
-					for (NSString *item in items) {
-						[schemes addObject:[item lowercaseString]];
-					}
-				}
-			}
-		}
-	}
+	if ([[CQColloquyApplication sharedApplication] isSpecialApplicationURL:request.URL]) {
+		[[UIApplication sharedApplication] openURL:request.URL];
 
-	if ([schemes containsObject:[request.URL.scheme lowercaseString]]) {
-		_irc = [request.URL retain];
-		[self close:self];
 		return NO;
-	} else {
-		if ([[CQColloquyApplication sharedApplication] isSpecialApplicationURL:request.URL]) {
-			[[UIApplication sharedApplication] openURL:request.URL];
-			return NO;
-		}
-
-		if (![request.URL.absoluteString isCaseInsensitiveEqualToString:@"about:blank"])
-			locationField.text = request.URL.absoluteString;
-
-		return YES;
 	}
+
+	if ([[CQColloquyApplication sharedApplication].handledURLSchemes containsObject:[request.URL.scheme lowercaseString]]) {
+		id old = _urlToHandle;
+		_urlToHandle = [request.URL retain];
+		[old release];
+
+		[self close:self];
+
+		return NO;
+	}
+
+	if (![request.URL.absoluteString isCaseInsensitiveEqualToString:@"about:blank"])
+		locationField.text = request.URL.absoluteString;
+
+	return YES;
 }
 
 - (void) webViewDidStartLoad:(UIWebView *) sender {

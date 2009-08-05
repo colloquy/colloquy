@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>Title</key>
+		<string>What is IRC?</string>
+		<key>Content</key>
+		<string>IRC is a…</string>
+	</dict>
+	<string>Space</string>
+	<dict>
+		<key>Title</key>
+		<string>Direct IRC Connections</string>
+		<key>Content</key>
+		<string>…</string>
+		<key>SectionHeader</key>
+		<string>Getting Connected &amp; Setup</string>
+	</dict>
+	<dict>
+		<key>Title</key>
+		<string>Colloquy Bouncers</string>
+		<key>Content</key>
+		<string>…</string>
+	</dict>
+	<dict>
+		<key>Title</key>
+		<string>Finding Places to Talk</string>
+		<key>Content</key>
+		<string>…</string>
+	</dict>
+	<dict>
+		<key>Title</key>
+		<string>Push Notifications</string>
+		<key>Content</key>
+		<string>…</string>
+	</dict>
+	<dict>
+		<key>Title</key>
+		<string>Application Settings</string>
+		<key>Content</key>
+		<string>…</string>
+	</dict>
+	<string>Space</string>
+	<dict>
+		<key>Title</key>
+		<string>Connecting to Servers</string>
+		<key>Content</key>
+		<string>…</string>
+		<key>SectionHeader</key>
+		<string>Troubleshooting</string>
+	</dict>
+	<dict>
+		<key>Title</key>
+		<string>Joining Chat Rooms</string>
+		<key>Content</key>
+		<string>…</string>
+	</dict>
+	<dict>
+		<key>Title</key>
+		<string>Push Notifications</string>
+		<key>Content</key>
+		<string>…</string>
+	</dict>
+	<string>Space</string>
+	<dict>
+		<key>Title</key>
+		<string>Supported Commands</string>
+		<key>Content</key>
+		<string>…</string>
+		<key>SectionHeader</key>
+		<string>Reference</string>
+	</dict>
+	<dict>
+		<key>Title</key>
+		<string>Emoticon List</string>
+		<key>Content</key>
+		<string>…</string>
+	</dict>
+	<dict>
+		<key>Title</key>
+		<string>Transcript Styles</string>
+		<key>Content</key>
+		<string>…</string>
+	</dict>
+	<dict>
+		<key>Title</key>
+		<string>Setting Guide</string>
+		<key>Content</key>
+		<string>…</string>
+	</dict>
+</array>
+</plist>
