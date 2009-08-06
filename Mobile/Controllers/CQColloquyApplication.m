@@ -210,11 +210,15 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		}
 	}
 
-//	if (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count) {
+	NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+	BOOL showWelcomeScreen = ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastBuildWelcomeScreenAppeared"] isEqualToString:version];
+	if (showWelcomeScreen || (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count)) {
 		CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
 		[tabBarController presentModalViewController:welcomeController animated:YES];
 		[welcomeController release];
-//	}
+
+		[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQLastBuildWelcomeScreenAppeared"];
+	}
 
 	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];
 
