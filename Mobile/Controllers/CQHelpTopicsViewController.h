@@ -1,11 +1,12 @@
-extern NSString *CQHelpTopicsURLString;
+@class MPMoviePlayerController;
 
 @interface CQHelpTopicsViewController : UITableViewController {
+	MPMoviePlayerController *_moviePlayer;
 	NSMutableArray *_helpSections;
 	NSMutableData *_helpData;
 	BOOL _loading;
 }
-- (id) initWithHelpContent:(NSArray *) help;
+- (id) init;
 
 - (void) loadHelpContent;
 - (void) loadDefaultHelpContent;

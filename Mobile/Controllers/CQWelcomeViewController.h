@@ -1,5 +1,6 @@
+@class CQHelpTopicsViewController;
+
 @interface CQWelcomeViewController : UITableViewController {
-	NSArray *_help;
-	NSMutableData *_helpData;
+	CQHelpTopicsViewController *_helpTopicsController;
 }
 @end

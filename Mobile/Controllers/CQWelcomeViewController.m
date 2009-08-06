@@ -5,8 +5,7 @@
 #import "UITableViewAdditions.h"
 
 #define NewConnectionsTableSection 0
-#define ScreencastTableSection 1
-#define HelpTableSection 2
+#define HelpTableSection 1
 
 @implementation CQWelcomeViewController
 - (id) init {
@@ -19,44 +18,15 @@
 	self.navigationItem.backBarButtonItem = backButton;
 	[backButton release];
 
-	_helpData = [[NSMutableData alloc] initWithCapacity:4096];
-
-	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:CQHelpTopicsURLString] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15.];
-	[NSURLConnection connectionWithRequest:request delegate:self];
+	_helpTopicsController = [[CQHelpTopicsViewController alloc] init];
 
 	return self;
 }
 
 - (void) dealloc {
-	[_help release];
-	[_helpData release];
+	[_helpTopicsController release];
 
 	[super dealloc];
-}
-
-#pragma mark -
-
-- (void) connection:(NSURLConnection *) connection didReceiveData:(NSData *) data {
-	[_helpData appendData:data];
-}
-
-- (void) connectionDidFinishLoading:(NSURLConnection *) connection {
-	if (!_help && _helpData)
-		_help = [[NSPropertyListSerialization propertyListFromData:_helpData mutabilityOption:NSPropertyListImmutable format:NULL errorDescription:NULL] retain];
-
-	if (!_help)
-		_help = [[NSArray alloc] init];
-
-	[_helpData release];
-	_helpData = nil;
-}
-
-- (void) connection:(NSURLConnection *) connection didFailWithError:(NSError *) error {
-	if (!_help)
-		_help = [[NSArray alloc] init];
-
-	[_helpData release];
-	_helpData = nil;
 }
 
 #pragma mark -
@@ -68,8 +38,6 @@
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
 	if (section == NewConnectionsTableSection)
 		return 2;
-	if (section == ScreencastTableSection)
-		return 1;
 	if (section == HelpTableSection)
 		return 1;
 	return 0;
@@ -102,10 +70,6 @@
 	} else if (indexPath.section == NewConnectionsTableSection && indexPath.row == 1) {
 		cell.text = NSLocalizedString(@"Add a Colloquy Bouncer...", @"Add a Colloquy bouncer button label");
 		cell.image = [UIImage imageNamed:@"bouncer.png"];
-	} else if (indexPath.section == ScreencastTableSection && indexPath.row == 0) {
-		cell.text = NSLocalizedString(@"Colloquy Screencasts", @"Screencasts button label");
-		cell.image = [UIImage imageNamed:@"play.png"];
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	} else if (indexPath.section == HelpTableSection && indexPath.row == 0) {
 		cell.text = NSLocalizedString(@"Help & Troubleshooting", @"Help button label");
 		cell.image = [UIImage imageNamed:@"help.png"];
@@ -125,12 +89,8 @@
 
 		[[CQConnectionsController defaultController] performSelector:@selector(showModalNewBouncerView) withObject:nil afterDelay:0.5];
 	} else if (indexPath.section == HelpTableSection && indexPath.row == 0) {
-		CQHelpTopicsViewController *helpTopicsController = [[CQHelpTopicsViewController alloc] initWithHelpContent:_help];
-		helpTopicsController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
-
-		[self.navigationController pushViewController:helpTopicsController animated:YES];
-
-		[helpTopicsController release];
+		_helpTopicsController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+		[self.navigationController pushViewController:_helpTopicsController animated:YES];
 	}
 }
 @end

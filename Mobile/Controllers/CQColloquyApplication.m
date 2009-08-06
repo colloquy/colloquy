@@ -50,7 +50,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if (!schemes) {
 		schemes = [[NSMutableSet alloc] init];
 
-		NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
 		NSArray *urlTypes = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleURLTypes"];
 		for (NSDictionary *type in urlTypes) {
 			NSArray *schemesForType = [type objectForKey:@"CFBundleURLSchemes"];

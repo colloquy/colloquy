@@ -2,7 +2,9 @@
 
 #import "CQHelpTopicViewController.h"
 
-NSString *CQHelpTopicsURLString = @"http://colloquy.mobi/help.plist";
+#import <MediaPlayer/MPMoviePlayerController.h>
+
+static NSString *CQHelpTopicsURLString = @"http://colloquy.mobi/help.plist";
 
 @interface CQHelpTopicsViewController (CQHelpTopicsViewControllerPrivate)
 - (void) _generateSectionsFromHelpContent:(NSArray *) help;
@@ -11,24 +13,23 @@ NSString *CQHelpTopicsURLString = @"http://colloquy.mobi/help.plist";
 #pragma mark -
 
 @implementation CQHelpTopicsViewController
-- (id) initWithHelpContent:(NSArray *) help {
+- (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 
 	self.title = NSLocalizedString(@"Help", @"Help view title");
 
-	if (help) {
-		if (help.count)
-			[self _generateSectionsFromHelpContent:help];
-		else [self loadDefaultHelpContent];
-	} else [self loadHelpContent];
+	[self loadHelpContent];
 
 	return self;
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[_helpSections release];
 	[_helpData release];
+	[_moviePlayer release];
 
 	[super dealloc];
 }
@@ -137,7 +138,15 @@ NSString *CQHelpTopicsURLString = @"http://colloquy.mobi/help.plist";
 	NSDictionary *info = [sectionItems objectAtIndex:indexPath.row];
 
 	cell.text = [info objectForKey:@"Title"];
-	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+	if ([info objectForKey:@"Content"]) {
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		cell.accessoryView = nil;
+	} else if ([info objectForKey:@"Screencast"]) {
+		UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screencast.png"] highlightedImage:[UIImage imageNamed:@"screencastSelected.png"]];
+		cell.accessoryView = imageView;
+		[imageView release];
+	}
 
     return cell;
 }
@@ -155,21 +164,51 @@ NSString *CQHelpTopicsURLString = @"http://colloquy.mobi/help.plist";
 	NSArray *sectionItems = [_helpSections objectAtIndex:indexPath.section];
 	NSDictionary *info = [sectionItems objectAtIndex:indexPath.row];
 
-	NSString *content = [info objectForKey:@"Content"];
-	if (!content.length) {
+	if ([info objectForKey:@"Content"]) {
+		CQHelpTopicViewController *helpTopicController = [[CQHelpTopicViewController alloc] initWithHTMLContent:[info objectForKey:@"Content"]];
+		helpTopicController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+
+		[self.navigationController pushViewController:helpTopicController animated:YES];
+
+		[helpTopicController release];
+	} else if ([info objectForKey:@"Screencast"]) {
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];
+
+		[_moviePlayer release];
+		_moviePlayer = nil;
+
+		@try {
+			_moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:[info objectForKey:@"Screencast"]]];
+			_moviePlayer.movieControlMode = MPMovieControlModeDefault;
+			_moviePlayer.scalingMode = MPMovieScalingModeAspectFit;
+
+			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_screencastDidFinishPlaying) name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];
+
+			[_moviePlayer play];
+		} @catch (NSException *exception) {
+			[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
+
+			[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];
+
+			[_moviePlayer release];
+			_moviePlayer = nil;
+		}
+	} else {
 		[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
-		return;
 	}
-
-	CQHelpTopicViewController *helpTopicController = [[CQHelpTopicViewController alloc] initWithHTMLContent:content];
-	helpTopicController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
-
-	[self.navigationController pushViewController:helpTopicController animated:YES];
-
-	[helpTopicController release];
 }
 
 #pragma mark -
+
+- (void) _screencastDidFinishPlaying {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];
+
+	[_moviePlayer stop];
+	[_moviePlayer release];
+	_moviePlayer = nil;
+
+	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+}
 
 - (void) _generateSectionsFromHelpContent:(NSArray *) help {
 	id old = _helpSections;
