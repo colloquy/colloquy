@@ -1,11 +1,13 @@
 #import "CQWelcomeViewController.h"
 
 #import "CQConnectionsController.h"
+#import "CQHelpTopicViewController.h"
 #import "CQHelpTopicsViewController.h"
 #import "UITableViewAdditions.h"
 
 #define NewConnectionsTableSection 0
-#define HelpTableSection 1
+#define WhatsNewTableSection 1
+#define HelpTableSection 2
 
 @implementation CQWelcomeViewController
 - (id) init {
@@ -38,6 +40,8 @@
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
 	if (section == NewConnectionsTableSection)
 		return 2;
+	if (section == WhatsNewTableSection)
+		return 1;
 	if (section == HelpTableSection)
 		return 1;
 	return 0;
@@ -70,6 +74,10 @@
 	} else if (indexPath.section == NewConnectionsTableSection && indexPath.row == 1) {
 		cell.text = NSLocalizedString(@"Add a Colloquy Bouncer...", @"Add a Colloquy bouncer button label");
 		cell.image = [UIImage imageNamed:@"bouncer.png"];
+	} else if (indexPath.section == WhatsNewTableSection && indexPath.row == 0) {
+		cell.text = NSLocalizedString(@"What's New in Colloquy", @"What's New in Colloquy button label");
+		cell.image = [UIImage imageNamed:@"new.png"];
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	} else if (indexPath.section == HelpTableSection && indexPath.row == 0) {
 		cell.text = NSLocalizedString(@"Help & Troubleshooting", @"Help button label");
 		cell.image = [UIImage imageNamed:@"help.png"];
@@ -88,6 +96,17 @@
 		[self dismissModalViewControllerAnimated:YES];
 
 		[[CQConnectionsController defaultController] performSelector:@selector(showModalNewBouncerView) withObject:nil afterDelay:0.5];
+	} else if (indexPath.section == WhatsNewTableSection && indexPath.row == 0) {
+		NSString *whatsNewContentPath = [[NSBundle mainBundle] pathForResource:@"whats-new" ofType:@"html"];
+		NSString *whatsNewContent = [[NSString alloc] initWithContentsOfFile:whatsNewContentPath encoding:NSUTF8StringEncoding error:NULL];
+
+		CQHelpTopicViewController *whatsNewController = [[CQHelpTopicViewController alloc] initWithHTMLContent:whatsNewContent];
+		whatsNewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+
+		[self.navigationController pushViewController:whatsNewController animated:YES];
+
+		[whatsNewController release];
+		[whatsNewContent release];
 	} else if (indexPath.section == HelpTableSection && indexPath.row == 0) {
 		_helpTopicsController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
 		[self.navigationController pushViewController:_helpTopicsController animated:YES];
