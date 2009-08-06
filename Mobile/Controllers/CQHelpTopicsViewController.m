@@ -1,5 +1,6 @@
 #import "CQHelpTopicsViewController.h"
 
+#import "CQColloquyApplication.h"
 #import "CQHelpTopicViewController.h"
 
 #import <MediaPlayer/MPMoviePlayerController.h>
@@ -146,6 +147,14 @@ static NSString *CQHelpTopicsURLString = @"http://colloquy.mobi/help.plist";
 		UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screencast.png"] highlightedImage:[UIImage imageNamed:@"screencastSelected.png"]];
 		cell.accessoryView = imageView;
 		[imageView release];
+	} else if ([info objectForKey:@"Link"]) {
+		UIImageView *imageView = nil;
+		NSURL *url = [NSURL URLWithString:[info objectForKey:@"Link"]];
+		if ([[CQColloquyApplication sharedApplication].handledURLSchemes containsObject:[url.scheme lowercaseString]])
+			imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatBubble.png"] highlightedImage:[UIImage imageNamed:@"chatBubbleSelected.png"]];		
+		else imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"web.png"] highlightedImage:[UIImage imageNamed:@"webSelected.png"]];		
+		cell.accessoryView = imageView;
+		[imageView release];
 	}
 
     return cell;
@@ -192,6 +201,20 @@ static NSString *CQHelpTopicsURLString = @"http://colloquy.mobi/help.plist";
 
 			[_moviePlayer release];
 			_moviePlayer = nil;
+		}
+	} else if ([info objectForKey:@"Link"]) {
+		NSURL *url = [NSURL URLWithString:[info objectForKey:@"Link"]];
+
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"] && url) {
+			[[UIApplication sharedApplication] openURL:url];
+		} else if (url) {
+			[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
+
+			[self dismissModalViewControllerAnimated:YES];
+
+			[[UIApplication sharedApplication] performSelector:@selector(openURL:) withObject:url afterDelay:0.5];			
+		} else {
+			[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 		}
 	} else {
 		[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];

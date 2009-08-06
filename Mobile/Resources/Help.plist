@@ -89,5 +89,26 @@
 		<key>Content</key>
 		<string>…</string>
 	</dict>
+	<string>Space</string>
+	<dict>
+		<key>SectionHeader</key>
+		<string>Other Help Resources</string>
+		<key>Title</key>
+		<string>Colloquy Web Site</string>
+		<key>Link</key>
+		<string>http://colloquy.mobi</string>
+	</dict>
+	<dict>
+		<key>Title</key>
+		<string>Colloquy FAQs</string>
+		<key>Link</key>
+		<string>http://colloquy.info/project/wiki/MobileFAQs</string>
+	</dict>
+	<dict>
+		<key>Title</key>
+		<string>Colloquy Support Room</string>
+		<key>Link</key>
+		<string>irc://irc.freenode.net/colloquy-mobile</string>
+	</dict>
 </array>
 </plist>
