@@ -26,7 +26,9 @@
 
 @interface CQChatController (CQChatControllerPrivate)
 - (void) _showNextChatControllerAnimated:(BOOL) animated;
+#if ENABLE(FILE_TRANSFERS)
 - (void) _sendImage;
+#endif
 @end
 
 #pragma mark -
@@ -61,7 +63,10 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotPrivateMessage:) name:MVChatConnectionGotPrivateMessageNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotDirectChatMessage:) name:MVDirectChatConnectionGotMessageNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_invitedToRoom:) name:MVChatRoomInvitedNotification object:nil];
+
+#if ENABLE(FILE_TRANSFERS)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotFileDownloadOffer:) name:MVDownloadFileTransferOfferNotification object:nil];
+#endif
 
 	return self;
 }
@@ -73,6 +78,11 @@
 	[_chatControllers release];
 	[_nextController release];
 	[_nextRoomConnection release];
+
+#if ENABLE(FILE_TRANSFERS)
+	[_transferImage release];
+	[_fileUser release];
+#endif
 
 	[super dealloc];
 }
@@ -196,6 +206,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[controller addMessage:notification.userInfo];
 }
 
+#if ENABLE(FILE_TRANSFERS)
 - (void) _gotFileDownloadOffer:(NSNotification *) notification {
 	MVDownloadFileTransfer *transfer = notification.object;
 
@@ -247,26 +258,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[alert show];
 
 	[alert release];
-
 }
-
-/*
-- (void) _fileFinished:(NSNotification *) notification {
-	MVFileTransfer *transfer = notification.object;
-
-	CQFileTransferController *controller = [self chatViewControllerForFileTransfer:transfer ifExists:NO];
-
-	//do stuff
-}
-
-- (void) _fileError:(NSNotification *) notification {
-	MVFileTransfer *transfer = notification.object;
-
-	CQFileTransferController *controller = [self chatViewControllerForFileTransfer:transfer ifExists:NO];
-
-	//do stuff
-}
-*/
+#endif
 
 - (void) _invitedToRoom:(NSNotification *) notification {
 	NSString *roomName = [[notification userInfo] objectForKey:@"room"];
@@ -334,19 +327,23 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	id userInfo = ((CQAlertView *)alertView).userInfo;
 
 	if (buttonIndex == alertView.cancelButtonIndex) {
+#if ENABLE(FILE_TRANSFERS)
 		if (alertView.tag == FileDownloadAlertTag)
 			[(MVDownloadFileTransfer *)userInfo reject];
+#endif
 		return;
 	}
 
 	if (alertView.tag == ChatRoomInviteAlertTag) {
 		[(MVChatRoom *)userInfo join];
+#if ENABLE(FILE_TRANSFERS)
 	} else if (alertView.tag == FileDownloadAlertTag) {
 		MVDownloadFileTransfer *transfer = userInfo;
 		NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:transfer.originalFileName];
 		[self chatViewControllerForFileTransfer:transfer ifExists:NO];
 		[transfer setDestination:filePath renameIfFileExists:YES];
 		[transfer acceptByResumingIfPossible:YES];
+#endif
 	}
 }
 
@@ -354,8 +351,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.cancelButtonIndex) {
+#if ENABLE(FILE_TRANSFERS)
 		[_fileUser release];
 		_fileUser = nil;
+#endif
 		return;
 	}
 
@@ -373,6 +372,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		} else if (buttonIndex == 1) {
 			[self joinSupportRoom];
 		}
+#if ENABLE(FILE_TRANSFERS)
 	} else if (actionSheet.tag == SendFileActionSheetTag) {
 		BOOL sendExistingPhoto = NO;
 		BOOL takeNewPhoto = NO;
@@ -413,19 +413,17 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 			NSAssert(NO, @"Contact sending not implemented.");
 		}
     } else if (actionSheet.tag == FileTypeActionSheetTag) {
-		if (buttonIndex == 0) {
-			_png = YES;
-		}
-		else {
-			_png = NO;
-		}
+		_png = (buttonIndex == 0);
+
 		[self _sendImage];
+#endif
 	}
 }
 
 #pragma mark -
 
-- (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo {
+#if ENABLE(FILE_TRANSFERS)
+- (void) imagePickerController:(UIImagePickerController *) picker didFinishPickingImage:(UIImage *) image editingInfo:(NSDictionary *) editingInfo {
 	_transferImage = [image retain];
 	
 	NSString *behavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQFileTransferBehavior"];
@@ -437,20 +435,16 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		[sheet addButtonWithTitle:NSLocalizedString(@"JPG", @"JPG button title")];
 		[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
 		[sheet release];
-	}
-	else {
-		if ([behavior isEqualToString:@"PNG"]) {
-			_png = YES;
-		}
-		else {
-			_png = NO;
-		}
+	} else {
+		_png = [behavior isEqualToString:@"PNG"];
+
 		[self _sendImage];
 	}
+
     [self dismissModalViewControllerAnimated:YES];
 }
 
-- (void) imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+- (void) imagePickerControllerDidCancel:(UIImagePickerController *) picker {
     [self dismissModalViewControllerAnimated:YES];
     [_fileUser release];
 }
@@ -479,6 +473,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[self chatViewControllerForFileTransfer:transfer ifExists:NO];
 	[_fileUser release];
 }
+#endif
 
 #pragma mark -
 
@@ -580,6 +575,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 - (void) showFilePickerWithUser:(MVChatUser *) user {
+#if ENABLE(FILE_TRANSFERS)
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.tag = SendFileActionSheetTag;
@@ -597,6 +593,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
 
 	[sheet release];
+#endif
 }
 
 - (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) roomName andConnection:(MVChatConnection *) connection {
@@ -815,6 +812,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return nil;
 }
 
+#if ENABLE(FILE_TRANSFERS)
 - (CQFileTransferController *) chatViewControllerForFileTransfer:(MVFileTransfer *) transfer ifExists:(BOOL) exists {
 	NSParameterAssert(transfer != nil);
 
@@ -838,6 +836,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	return nil;
 }
+#endif
 
 #pragma mark -
 

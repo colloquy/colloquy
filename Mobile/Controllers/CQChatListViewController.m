@@ -34,8 +34,11 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshChatCell:) name:MVChatRoomKickedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshChatCell:) name:MVChatUserNicknameChangedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshChatCell:) name:MVChatUserStatusChangedNotification object:nil];
+
+#if ENABLE(FILE_TRANSFERS)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFileTransferCell:) name:MVFileTransferFinishedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFileTransferCell:) name:MVFileTransferErrorOccurredNotification object:nil];
+#endif
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_updateMessagePreview:) name:CQChatViewControllerRecentMessagesUpdatedNotification object:nil];
 
@@ -143,10 +146,12 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	return (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
 }
 
+#if ENABLE(FILE_TRANSFERS)
 - (CQFileTransferTableCell *) _fileTransferCellForController:(CQFileTransferController *) controller {
 	NSIndexPath *indexPath = indexPathForChatController(controller);
 	return (CQFileTransferTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
 }
+#endif
 
 - (void) _addMessagePreview:(NSDictionary *) info withEncoding:(NSStringEncoding) encoding toChatTableCell:(CQChatTableCell *) cell animated:(BOOL) animated {
 	MVChatUser *user = [info objectForKey:@"user"];
@@ -201,6 +206,7 @@ static NSIndexPath *indexPathForChatController(id controller) {
 		[UIView commitAnimations];
 }
 
+#if ENABLE(FILE_TRANSFERS)
 - (void) _refreshFileTransferCell:(CQFileTransferTableCell *) cell withController:(CQFileTransferController *) controller animated:(BOOL) animated {
 	if (animated)
 		[UIView beginAnimations:nil context:NULL];
@@ -217,6 +223,7 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	if (animated)
 		[UIView commitAnimations];
 }
+#endif
 
 - (void) _refreshConnectionChatCells:(NSNotification *) notification {
 	if (!_active) {
@@ -258,6 +265,7 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	[self updateAccessibilityLabelForChatCell:cell];
 }
 
+#if ENABLE(FILE_TRANSFERS)
 - (void) _refreshFileTransferCell:(NSNotification *) notification {
 	if (!_active) {
 		_needsUpdate = YES;
@@ -272,6 +280,7 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	CQFileTransferTableCell *cell = [self _fileTransferCellForController:controller];
 	[self _refreshFileTransferCell:cell withController:controller animated:YES];
 }
+#endif
 
 - (void) updateAccessibilityLabelForChatCell:(CQChatTableCell *) cell {
 	if (cell.importantUnreadCount && cell.importantUnreadCount == cell.unreadCount)
@@ -334,8 +343,10 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	NSArray *controllers = nil;
 	if ([controller conformsToProtocol:@protocol(CQChatViewController)])
 		controllers = [[CQChatController defaultController] chatViewControllersForConnection:((id <CQChatViewController>)controller).connection];
+#if ENABLE(FILE_TRANSFERS)
 	else if ([controller isKindOfClass:[CQFileTransferController class]])
 		controllers = [[CQChatController defaultController] chatViewControllersOfClass:[CQFileTransferController class]];
+#endif
 	else {
 		NSAssert(NO, @"Should not reach this point.");
 		return;
@@ -401,7 +412,11 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	MVChatConnection *connection = connectionForSection(section);
 	if (connection)
 		return [[CQChatController defaultController] chatViewControllersForConnection:connection].count;
+#if ENABLE(FILE_TRANSFERS)
 	return [[CQChatController defaultController] chatViewControllersOfClass:[CQFileTransferController class]].count;
+#else
+	return 0;
+#endif
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
@@ -409,8 +424,10 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	if (connection)
 		return connection.displayName;
 
+#if ENABLE(FILE_TRANSFERS)
 	if ([[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]].count)
 		return NSLocalizedString(@"File Transfers", @"File Transfers section title");
+#endif
 
 	return nil;
 }
@@ -452,6 +469,7 @@ static NSIndexPath *indexPathForChatController(id controller) {
 		return cell;
 	}
 
+#if ENABLE(FILE_TRANSFERS)
 	NSArray *controllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
 	CQFileTransferController *controller = [controllers objectAtIndex:indexPath.row];
 
@@ -471,6 +489,9 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	[self _refreshFileTransferCell:cell withController:controller animated:NO];
 
 	return cell;
+#else
+	return nil;
+#endif
 }
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -488,6 +509,7 @@ static NSIndexPath *indexPathForChatController(id controller) {
 		return NSLocalizedString(@"Close", @"Close remove confirmation button title");
 	}
 
+#if ENABLE(FILE_TRANSFERS)
 	NSArray *controllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
 	CQFileTransferController *controller = [controllers objectAtIndex:indexPath.row];
 
@@ -495,6 +517,9 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	if (status == MVFileTransferDoneStatus || status == MVFileTransferStoppedStatus)
 		return NSLocalizedString(@"Close", @"Close remove confirmation button title");
 	return NSLocalizedString(@"Stop", @"Stop remove confirmation button title");
+#else
+	return nil;
+#endif
 }
 
 - (void) tableView:(UITableView *) tableView commitEditingStyle:(UITableViewCellEditingStyle) editingStyle forRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -518,6 +543,7 @@ static NSIndexPath *indexPathForChatController(id controller) {
 				return;
 			}
 		}
+#if ENABLE(FILE_TRANSFERS)
 	} else {
 		controllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
 		CQFileTransferController *fileTransferController = [controllers objectAtIndex:indexPath.row];
@@ -528,6 +554,7 @@ static NSIndexPath *indexPathForChatController(id controller) {
 			[self.tableView updateCellAtIndexPath:indexPath withAnimation:UITableViewRowAnimationFade];
 			return;
 		}
+#endif
 	}
 
 	[[CQChatController defaultController] closeViewController:controller];

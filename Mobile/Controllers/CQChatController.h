@@ -18,9 +18,11 @@
 	MVChatConnection *_nextRoomConnection;
 	NSInteger _totalImportantUnreadCount;
 	BOOL _active;
+#if ENABLE(FILE_TRANSFERS)
 	MVChatUser *_fileUser;
 	UIImage *_transferImage;
 	BOOL _png;
+#endif
 }
 + (CQChatController *) defaultController;
 
@@ -47,7 +49,10 @@
 - (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists;
 - (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) requested;
 - (CQDirectChatController *) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists;
+
+#if ENABLE(FILE_TRANSFERS)
 - (CQFileTransferController *) chatViewControllerForFileTransfer:(MVFileTransfer *) transfer ifExists:(BOOL) exists;
+#endif
 
 - (void) closeViewController:(id) controller;
 @end

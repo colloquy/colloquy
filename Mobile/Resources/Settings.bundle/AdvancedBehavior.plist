@@ -128,34 +128,6 @@
 			<key>DefaultValue</key>
 			<true/>
 		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>File Transfer</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSMultiValueSpecifier</string>
-			<key>Key</key>
-			<string>CQFileTransferBehavior</string>
-			<key>Title</key>
-			<string>Image Type</string>
-			<key>Values</key>
-			<array>
-				<string>PNG</string>
-				<string>JPG</string>
-				<string>Ask</string>
-			</array>
-			<key>Titles</key>
-			<array>
-				<string>PNG (better quality, larger size)</string>
-				<string>JPG (lower quality, smaller size)</string>
-				<string>Always Ask File Type</string>
-			</array>
-			<key>DefaultValue</key>
-			<string>PNG</string>
-		</dict>
 	</array>
 </dict>
 </plist>

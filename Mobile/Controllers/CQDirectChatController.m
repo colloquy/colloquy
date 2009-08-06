@@ -425,7 +425,11 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/list", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois", @"/dcc", @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/tweet", @"/ipod", @"/itunes", @"/music", @"/squit", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/list", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois",
+#if ENABLE(FILE_TRANSFERS)
+								   @"/dcc",
+#endif
+								   @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/tweet", @"/ipod", @"/itunes", @"/music", @"/squit", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -972,12 +976,10 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	return [self handleWhoisCommandWithArguments:arguments];
 }
 
-#pragma mark -
-
+#if ENABLE(FILE_TRANSFERS)
 - (BOOL) handleDccCommandWithArguments:(NSString *) arguments {
-	if (arguments.length == 0) {
+	if (!arguments.length)
 		return NO;
-	}
 
 	NSString *nick = [[arguments componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] objectAtIndex:0];
 	MVChatUser *user = [[self.connection chatUsersWithNickname:nick] anyObject];
@@ -985,6 +987,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	return YES;
 }
+#endif
 
 #pragma mark -
 

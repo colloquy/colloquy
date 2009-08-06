@@ -17,6 +17,18 @@ static NSString *membersFilteredCountFormat;
 #define UserActionSheetTag 1
 #define OperatorActionSheetTag 2
 
+#define SendMessageButtonIndex 0
+
+#if ENABLE(FILE_TRANSFERS)
+#define SendFileButtonIndex 1
+#define ShowInfoButtonIndex 2
+#define OperatorActionsButtonIndex 3
+#else
+#define SendFileButtonIndex NSNotFound
+#define ShowInfoButtonIndex 1
+#define OperatorActionsButtonIndex 2
+#endif
+
 @implementation CQChatUserListViewController
 + (void) initialize {
 	membersSingleCountFormat = [NSLocalizedString(@"Members (%u)", @"Members with single count view title") retain];
@@ -367,8 +379,13 @@ static NSString *membersFilteredCountFormat;
 	BOOL showOperatorActions = (localUserModes & (MVChatRoomMemberHalfOperatorMode | MVChatRoomMemberOperatorMode | MVChatRoomMemberAdministratorMode | MVChatRoomMemberFounderMode));
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"Send Message", @"Send Message button title")];
+
+#if ENABLE(FILE_TRANSFERS)
 	[sheet addButtonWithTitle:NSLocalizedString(@"Send File", @"Send File button title")];
+#endif
+
 	[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
+
 	if (showOperatorActions)
 		[sheet addButtonWithTitle:NSLocalizedString(@"Operator Actions...", @"Operator Actions button title")];
 
@@ -392,14 +409,16 @@ static NSString *membersFilteredCountFormat;
 	MVChatUser *user = [_matchedUsers objectAtIndex:selectedIndexPath.row];
 
 	if (actionSheet.tag == UserActionSheetTag) {
-		if (buttonIndex == 0) {
+		if (buttonIndex == SendMessageButtonIndex) {
 			[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
 
 			CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
 			[[CQChatController defaultController] showChatController:chatController animated:YES];
-		} else if (buttonIndex == 1) {
+#if ENABLE(FILE_TRANSFERS)
+		} else if (buttonIndex == SendFileButtonIndex) {
 			[[CQChatController defaultController] showFilePickerWithUser:user];
-		} else if (buttonIndex == 2) {
+#endif
+		} else if (buttonIndex == ShowInfoButtonIndex) {
 			[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
 
 			CQWhoisNavController *whoisController = [[CQWhoisNavController alloc] init];
@@ -408,7 +427,7 @@ static NSString *membersFilteredCountFormat;
 			[self presentModalViewController:whoisController animated:YES];
 
 			[whoisController release];
-		} else if (buttonIndex == 3) {
+		} else if (buttonIndex == OperatorActionsButtonIndex) {
 			NSSet *features = _room.connection.supportedFeatures;
 
 			NSUInteger localUserModes = (_room.connection.localUser ? [_room modesForMemberUser:_room.connection.localUser] : 0);
@@ -427,7 +446,7 @@ static NSString *membersFilteredCountFormat;
 
 			NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 
-			CQActionSheet *operatorSheet = [[UIActionSheet alloc] init];
+			CQActionSheet *operatorSheet = [[CQActionSheet alloc] init];
 			operatorSheet.tag = OperatorActionSheetTag;
 			operatorSheet.delegate = self;
 			operatorSheet.userInfo = context;
