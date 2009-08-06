@@ -219,7 +219,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	NSString *user = transfer.user.displayName;
 
-	CQAlertView *alert = [[UIAlertView alloc] init];
+	CQAlertView *alert = [[CQAlertView alloc] init];
 	alert.tag = FileDownloadAlertTag;
 	alert.userInfo = transfer;
 	alert.delegate = self;
