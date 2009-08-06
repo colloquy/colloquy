@@ -49,6 +49,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 #define CannotConnectToBouncerConnectionTag 1
 #define CannotConnectToBouncerTag 2
+#define HelpAlertTag 3
 
 @implementation CQConnectionsController
 + (CQConnectionsController *) defaultController {
@@ -302,6 +303,14 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 		[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = [CQConnectionsController defaultController];
 	}
+
+	if (alertView.tag == HelpAlertTag) {
+		if ([self modalViewController]) {
+			[self dismissModalViewControllerAnimated:YES];
+
+			[[CQColloquyApplication sharedApplication] performSelector:@selector(showHelp) withObject:nil afterDelay:0.5];
+		} else [[CQColloquyApplication sharedApplication] showHelp];
+	}
 }
 
 #pragma mark -
@@ -500,14 +509,20 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	CQAlertView *alert = [[CQAlertView alloc] init];
 
 	if (connection.directConnection) {
+		alert.tag = HelpAlertTag;
+		alert.delegate = self;
+
 		alert.title = NSLocalizedString(@"Can't Connect to Server", @"Can't Connect to Server alert title");
 		alert.message = [NSString stringWithFormat:NSLocalizedString(@"Can't connect to the server \"%@\".", @"Cannot connect alert message"), connection.displayName];
 
 		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+
+		[alert addButtonWithTitle:NSLocalizedString(@"Help", @"Help alert button title")];
 	} else {
 		alert.tag = CannotConnectToBouncerConnectionTag;
 		alert.userInfo = connection;
 		alert.delegate = self;
+
 		alert.title = NSLocalizedString(@"Can't Connect to Bouncer", @"Can't Connect to Bouncer alert title");
 		alert.message = [NSString stringWithFormat:NSLocalizedString(@"Can't connect to the server \"%@\" via \"%@\". Would you like to connect directly?", @"Connect directly alert message"), connection.displayName, connection.bouncerSettings.displayName];
 
@@ -615,11 +630,14 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if (!errorMessage) return;
 
 	UIAlertView *alert = [[UIAlertView alloc] init];
+	alert.tag = HelpAlertTag;
 	alert.delegate = self;
 	alert.title = errorTitle;
 	alert.message = errorMessage;
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+
+	[alert addButtonWithTitle:NSLocalizedString(@"Help", @"Help alert button title")];
 
 	[alert show];
 

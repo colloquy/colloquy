@@ -13,6 +13,8 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 }
 + (CQColloquyApplication *) sharedApplication;
 
+- (void) showHelp;
+
 - (BOOL) isSpecialApplicationURL:(NSURL *) url;
 
 - (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser;

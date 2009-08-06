@@ -301,6 +301,15 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #pragma mark -
 
+- (void) showHelp {
+	CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
+	welcomeController.shouldShowOnlyHelpTopics = YES;
+
+	[tabBarController presentModalViewController:welcomeController animated:YES];
+
+	[welcomeController release];
+}
+
 - (BOOL) isSpecialApplicationURL:(NSURL *) url {
 	return (url && ([url.host hasCaseInsensitiveSubstring:@"maps.google."] || [url.host hasCaseInsensitiveSubstring:@"youtube."] || [url.host hasCaseInsensitiveSubstring:@"phobos.apple."]));
 }

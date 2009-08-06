@@ -1,9 +1,8 @@
-@class CQWelcomeViewController;
-
 @interface CQWelcomeNavigationController : UINavigationController <UINavigationControllerDelegate> {
 	@protected
-	CQWelcomeViewController *_welcomeViewController;
+	UIViewController *_rootViewController;
 	UIStatusBarStyle _previousStatusBarStyle;
+	BOOL _shouldShowOnlyHelpTopics;
 }
-
+@property (nonatomic) BOOL shouldShowOnlyHelpTopics;
 @end

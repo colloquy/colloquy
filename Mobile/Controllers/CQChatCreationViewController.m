@@ -66,7 +66,13 @@
 
 	_previousStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
 
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:animated];
+}
+
+- (void) viewWillDisappear:(BOOL) animated {
+	[super viewWillDisappear:animated];
+
+	[[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle animated:animated];
 }
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
@@ -112,7 +118,6 @@
 }
 
 - (void) cancel:(id) sender {
-	[[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle animated:YES];
 	[self dismissModalViewControllerAnimated:YES];
 }
 
@@ -140,7 +145,7 @@
 	}
 
 	[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = [CQChatController defaultController];
-	[[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle animated:YES];
+
 	[self dismissModalViewControllerAnimated:YES];
 }
 @end

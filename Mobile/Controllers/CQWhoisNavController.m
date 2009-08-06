@@ -43,7 +43,13 @@
 
 	_previousStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
 
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:animated];
+}
+
+- (void) viewWillDisappear:(BOOL) animated {
+	[super viewWillDisappear:animated];
+
+	[[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle animated:animated];
 }
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
@@ -55,7 +61,6 @@
 #pragma mark -
 
 - (IBAction) close:(id) sender {
-	[[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle animated:YES];
 	[self dismissModalViewControllerAnimated:YES];
 }
 

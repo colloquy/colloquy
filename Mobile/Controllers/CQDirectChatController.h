@@ -6,7 +6,7 @@
 #define ReconnectAlertTag 1
 #define RejoinRoomAlertTag 2
 #define TweetRetryAlertTag 3
-#define TweetSettingsAlertTag 4
+#define TweetHelpAlertTag 4
 
 @class CQChatTableCell;
 @class CQStyleView;

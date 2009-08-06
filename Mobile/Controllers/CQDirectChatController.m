@@ -35,6 +35,7 @@ NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewCo
 - (void) _updateRightBarButtonItemAnimated:(BOOL) animated;
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command;
 - (void) _moveInputFieldForOrientation:(UIInterfaceOrientation) interfaceOrientation;
+- (void) _forceRegsignKeyboard;
 @end
 
 #pragma mark -
@@ -238,9 +239,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	CQWhoisNavController *whoisController = [[CQWhoisNavController alloc] init];
 	whoisController.user = self.user;
 
-	_allowEditingToEnd = YES;
-	[chatInputBar resignFirstResponder];
-	_allowEditingToEnd = NO;
+	[self _forceRegsignKeyboard];
 
 	[self presentModalViewController:whoisController animated:YES];
 
@@ -541,11 +540,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 - (BOOL) _openURL:(NSURL *) url preferBuiltInBrowser:(BOOL) preferBrowser {
 	BOOL openWithBrowser = preferBrowser || ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"];
 
-	if (openWithBrowser) {
-		_allowEditingToEnd = YES;
-		[chatInputBar resignFirstResponder];
-		_allowEditingToEnd = NO;
-	}
+	if (openWithBrowser)
+		[self _forceRegsignKeyboard];
 
 	return [[CQColloquyApplication sharedApplication] openURL:url usingBuiltInBrowser:openWithBrowser withBrowserDelegate:self];
 }
@@ -584,9 +580,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		creationViewController.roomTarget = YES;
 		creationViewController.selectedConnection = self.connection;
 
-		_allowEditingToEnd = YES;
-		[chatInputBar resignFirstResponder];
-		_allowEditingToEnd = NO;
+		[self _forceRegsignKeyboard];
 
 		[self presentModalViewController:creationViewController animated:YES];
 
@@ -733,9 +727,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	[creationViewController showRoomListFilteredWithSearchString:arguments];
 
-	_allowEditingToEnd = YES;
-	[chatInputBar resignFirstResponder];
-	_allowEditingToEnd = NO;
+	[self _forceRegsignKeyboard];
 
 	[self presentModalViewController:creationViewController animated:YES];
 
@@ -829,22 +821,9 @@ static NSOperationQueue *chatMessageProcessingQueue;
 }
 
 - (BOOL) handleHelpCommandWithArguments:(NSString *) arguments {
-	NSString *urlString = nil;
+	[self _forceRegsignKeyboard];
 
-	if ( [arguments hasCaseInsensitiveSubstring:@"join"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#HowdoIjoinanewchatroommessageauser";
-	else if ( [arguments hasCaseInsensitiveSubstring:@"background"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#CanIrunMobileColloquyinthebackground";
-	else if ( [arguments hasCaseInsensitiveSubstring:@"setting"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#HowdoIchangethedefaultsettings";
-	else if ( [arguments hasCaseInsensitiveSubstring:@"command"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#Whatcommandsaresupported";
-	else if ( [arguments hasCaseInsensitiveSubstring:@"topic"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#HowdoIchangethetopic";
-	else if ( [arguments hasCaseInsensitiveSubstring:@"other"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#HowdoIgethelpforsomethingthatisntlistedhere";
-	else if ( [arguments hasCaseInsensitiveSubstring:@"bug"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#HowdoIreportabug";
-	else if ( [arguments hasCaseInsensitiveSubstring:@"style"] || [arguments hasCaseInsensitiveSubstring:@"theme"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#HowdoIchangethewaymessageslook";
-	else if ( [arguments hasCaseInsensitiveSubstring:@"completion"] || [arguments hasCaseInsensitiveSubstring:@"popup"] ) urlString = @"http://colloquy.info/project/wiki/MobileFAQs#Howdothecompletionpopupswork";
-	else urlString = @"http://colloquy.info/project/wiki/MobileFAQs";
-
-	NSURL *url = [NSURL URLWithString:urlString];
-
-	[self _openURL:url preferBuiltInBrowser:NO];
+	[[CQColloquyApplication sharedApplication] showHelp];
 
 	return YES;
 }
@@ -877,6 +856,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		return YES;
 
 	BOOL success = YES;
+	BOOL showHelp = NO;
 	BOOL allowRetry = YES;
 
     UIAlertView *alert = [[UIAlertView alloc] init];
@@ -888,12 +868,14 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		alert.title = NSLocalizedString(@"No Twitter Username", "No Twitter username alert title");
 		alert.message = NSLocalizedString(@"You need to enter a Twitter username in Colloquy's Settings.", "No Twitter username alert message");
 		success = NO;
+		showHelp = YES;
 	}
 
 	if (success && !password.length) {
 		alert.title = NSLocalizedString(@"No Twitter Password", "No Twitter password alert title");
 		alert.message = NSLocalizedString(@"You need to enter a Twitter password in Colloquy's Settings.", "No Twitter password alert message");
 		success = NO;
+		showHelp = YES;
 	}
 
 	if (success && arguments.length > 140) {
@@ -924,6 +906,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 			if ([response hasCaseInsensitiveSubstring:@"Could not authenticate you"]) {
 				alert.title = NSLocalizedString(@"Couldn't Authenticate with Twitter", "Could not authenticate title");
 				alert.message = NSLocalizedString(@"Make sure your Twitter username and password are correct.", "Make sure your Twitter username and password are correct alert message");
+				showHelp = YES;
 			} else if ([response hasCaseInsensitiveSubstring:@"503 Service Temporarily Unavailable"] || [response hasCaseInsensitiveSubstring:@"403 Forbidden"]) {
 				alert.title = NSLocalizedString(@"Twitter Unavailable", "Twitter Temporarily Unavailable title");
 				alert.message = NSLocalizedString(@"Unable to send tweet because Twitter is temporarily unavailable.", "Unable to send tweet because Twitter is temporarily unavailable alert message");
@@ -940,6 +923,11 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 		[request release];
 		[response release];
+	}
+
+	if (showHelp) {
+		alert.tag = TweetHelpAlertTag;
+		[alert addButtonWithTitle:NSLocalizedString(@"Help", @"Help alert button title")];
 	}
 
 	if (success) {
@@ -967,9 +955,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		return NO;
 	}
 
-	_allowEditingToEnd = YES;
-	[chatInputBar resignFirstResponder];
-	_allowEditingToEnd = NO;
+	[self _forceRegsignKeyboard];
 
 	[self presentModalViewController:whoisController animated:YES];
 
@@ -1040,9 +1026,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if (_didSendRecently || ![transcriptView canBecomeFirstResponder])
 		return;
 
-	_allowEditingToEnd = YES;
-	[chatInputBar resignFirstResponder];
-	_allowEditingToEnd = NO;
+	[self _forceRegsignKeyboard];
 }
 
 #pragma mark -
@@ -1154,9 +1138,21 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	if (alertView.tag == TweetRetryAlertTag)
 		[self performSelector:@selector(handleTweetCommandWithArguments:) withObject:_tweetRetryArguments afterDelay:0.];
+
+	if (alertView.tag == TweetHelpAlertTag) {
+		[self _forceRegsignKeyboard];
+
+		[[CQColloquyApplication sharedApplication] showHelp];
+	}
 }
 
 #pragma mark -
+
+- (void) _forceRegsignKeyboard {
+	_allowEditingToEnd = YES;
+	[chatInputBar resignFirstResponder];
+	_allowEditingToEnd = NO;
+}
 
 - (void) _moveInputFieldForOrientation:(UIInterfaceOrientation) interfaceOrientation {
 	BOOL landscape = UIInterfaceOrientationIsLandscape(interfaceOrientation);
