@@ -171,7 +171,6 @@ static BOOL pushAvailable = NO;
 			} else {
 				cell.text = @"";
 				cell.accessibilityLabel = NSLocalizedString(@"Bouncer server address.", @"Voiceover bouncer server address label");
-				cell.accessibilityHint = NSLocalizedString(@"Required.", @"Voiceover required hint");
 			}
 
 			cell.textField.placeholder = NSLocalizedString(@"Required", @"Required connection setting placeholder");

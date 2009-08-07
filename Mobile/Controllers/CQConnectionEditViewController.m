@@ -275,6 +275,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
 			cell.textEditAction = @selector(descriptionChanged:);
 			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Description: %@", @"Voiceover description: %@"), cell.text];
+			cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
 		}
 		
 		return cell;
@@ -302,7 +303,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(nicknameChanged:);
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Nickname: %@", @"Voiceover nickname: %@ label"), cell.text];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Nickname: %@", @"Voiceover nickname: %@ label"), (cell.text.length) ? cell.text : [MVChatConnection defaultNickname]];
 		} else if (indexPath.row == 1) {
 			cell.label = NSLocalizedString(@"Real Name", @"Real Name connection setting label");
 			cell.text = (isDefaultValue(_connection.realName) ? @"" : _connection.realName);
@@ -313,7 +314,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			} else {
 				cell.enabled = NO;
 			}
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Real Name: %@", @"Voiceover real name: %@ label"), cell.text];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Real Name: %@", @"Voiceover real name: %@ label"), (cell.text.length) ? cell.text : [MVChatConnection defaultRealName]];
 		}
 
 
@@ -327,8 +328,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			cell.label = NSLocalizedString(@"Connect at Launch", @"Connect at Launch connection setting label");
 			cell.on = _connection.automaticallyConnect;
 
-			cell.accessibilityLabel = _connection.automaticallyConnect ? cell.label : [NSString stringWithFormat:NSLocalizedString(@"Don't %@.", @"Voiceover don't %@ label"), cell.label];
-
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Connect on lanuch: %@", @"Voiceover connect on launch %@ label"), (_connection.automaticallyConnect) ? @"yes" : @"no"];
 			return cell;
 		} else if (indexPath.row == 1) {
 			CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];

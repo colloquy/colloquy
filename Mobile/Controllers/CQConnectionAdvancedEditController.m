@@ -336,7 +336,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.switchControl.enabled = _connection.directConnection;
 
 			if (_connection.secure) cell.accessibilityLabel = cell.label;
-			else cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Don't %@", @"Voiceover don't %@ label"), cell.label];
+			else cell.accessibilityLabel = NSLocalizedString(@"Don't use SSL", @"Voiceover don't use SSL label");
 			
 			return cell;
 		}
@@ -354,7 +354,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 				cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-				cell.accessibilityLabel = isDefaultValue(_connection.username) ? [NSString stringWithFormat:NSLocalizedString(@"Optional username", @"Voiceover optional username label"), cell.label] : [NSString stringWithFormat:NSLocalizedString(@"Username: %@", @"Voiceover username: %@ label"), cell.text];
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Username: %@", @"Voiceover username: %@ label"), cell.text.length ? cell.text : [MVChatConnection defaultUsernameWithNickname:currentPreferredNickname(_connection)]];
 			} else {
 				cell.enabled = NO;
 			}
@@ -371,6 +371,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 				cell.accessibilityLabel = NSLocalizedString(@"Connection password", @"Voiceover connection password label");
+				cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
 			} else {
 				cell.enabled = NO;
 			}
@@ -386,6 +387,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.accessibilityLabel = NSLocalizedString(@"Nickname password", @"Voiceover nickname password label");
+			cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
  		}
 
 		cell.target = self;
