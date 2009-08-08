@@ -102,6 +102,7 @@
 
 		CQHelpTopicViewController *whatsNewController = [[CQHelpTopicViewController alloc] initWithHTMLContent:whatsNewContent];
 		whatsNewController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+		whatsNewController.title = NSLocalizedString(@"What's New", @"What's New view title");
 
 		[self.navigationController pushViewController:whatsNewController animated:YES];
 

@@ -176,6 +176,7 @@ static NSString *CQHelpTopicsURLString = @"http://colloquy.mobi/help.plist";
 	if ([info objectForKey:@"Content"]) {
 		CQHelpTopicViewController *helpTopicController = [[CQHelpTopicViewController alloc] initWithHTMLContent:[info objectForKey:@"Content"]];
 		helpTopicController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
+		helpTopicController.title = [info objectForKey:@"Title"];
 
 		[self.navigationController pushViewController:helpTopicController animated:YES];
 

@@ -11,6 +11,7 @@
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
 #import "CQStyleView.h"
+#import "CQWelcomeNavigationController.h"
 #import "CQWhoisNavController.h"
 #import "NSDictionaryAdditions.h"
 #import "NSScannerAdditions.h"
@@ -429,7 +430,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 #if ENABLE(FILE_TRANSFERS)
 								   @"/dcc",
 #endif
-								   @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/tweet", @"/ipod", @"/itunes", @"/music", @"/squit", nil];
+								   @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/tweet", @"/ipod", @"/itunes", @"/music", @"/squit", @"/welcome", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -464,7 +465,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"] && text.length > 1) {
 		static NSArray *commandsNotRequiringConnection;
 		if (!commandsNotRequiringConnection)
-			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", @"tweet", @"list", @"join", nil];
+			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", @"tweet", @"list", @"join", @"welcome", nil];
 
 		// Send as a command.
 		NSScanner *scanner = [NSScanner scannerWithString:text];
@@ -834,6 +835,18 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 - (BOOL) handleFaqCommandWithArguments:(NSString *) arguments {
 	[self handleHelpCommandWithArguments:arguments];
+
+	return YES;
+}
+
+- (BOOL) handleWelcomeCommandWithArguments:(NSString *) arguments {
+	[self _forceRegsignKeyboard];
+
+	CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
+
+	[self presentModalViewController:welcomeController animated:YES];
+
+	[welcomeController release];
 
 	return YES;
 }
