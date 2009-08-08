@@ -76,12 +76,6 @@
 	</dict>
 	<dict>
 		<key>Name</key>
-		<string>LinkNet</string>
-		<key>Address</key>
-		<string>irc.link-net.org</string>
-	</dict>
-	<dict>
-		<key>Name</key>
 		<string>MacNN</string>
 		<key>Address</key>
 		<string>irc.macnn.com</string>
