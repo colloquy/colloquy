@@ -149,14 +149,10 @@ static BOOL pushAvailable = NO;
 		if (indexPath.row == 0) {
 			cell.label = NSLocalizedString(@"Description", @"Description connection setting label");
 
-			if (![_settings.displayName isEqualToString:_settings.server]) {
-				cell.text = @"";
-				cell.accessibilityLabel = NSLocalizedString(@"Bouncer Server Description.", @"Voiceover bouncer server description label");
-				cell.accessibilityHint = NSLocalizedString(@"Optional.", @"Voiceover optional label");
-			} else {
-				cell.text = _settings.displayName;
-				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Bouncer server description: %@", @"Voiceover bouncer server description: %@ label"), cell.text];
-			}
+			cell.text = ([_settings.displayName isEqualToString:_settings.server] ? @"" : _settings.displayName);
+
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Description: %@", @"Voiceover description label"), cell.text];
+			cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
 
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
@@ -165,13 +161,10 @@ static BOOL pushAvailable = NO;
 		} else if (indexPath.row == 1) {
 			cell.label = NSLocalizedString(@"Address", @"Address connection setting label");
 
-			if (_settings.server.length) {
-				cell.text = _settings.server;
-				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Bouncer server address: %@.", @"Voiceover bouncer server address: %@ label"), cell.text];
-			} else {
-				cell.text = @"";
-				cell.accessibilityLabel = NSLocalizedString(@"Bouncer server address.", @"Voiceover bouncer server address label");
-			}
+			cell.text = (_settings.server ? _settings.server : @"");
+
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Address: %@", @"Voiceover address label"), cell.text];
+			cell.accessibilityHint = NSLocalizedString(@"Required", @"Voiceover required label");
 
 			cell.textField.placeholder = NSLocalizedString(@"Required", @"Required connection setting placeholder");
 			cell.textField.keyboardType = UIKeyboardTypeURL;
@@ -188,7 +181,7 @@ static BOOL pushAvailable = NO;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(serverPortChanged:);
 
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Bouncer Port %hu.", @"Voiceover Bouncer Port: %hu"), _settings.serverPort];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Port: %hu", @"Voiceover port label"), _settings.serverPort];
 		}
 
 		return cell;
@@ -199,14 +192,10 @@ static BOOL pushAvailable = NO;
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
 			cell.label = NSLocalizedString(@"Account", @"Account connection setting label");
-			if (_settings.username) {
-				cell.text = _settings.username;
-				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Bouncer Account: %@.", @"Voiceover bouncer account: %@ label"), cell.text];
-			} else {
-				cell.text = @"";
-				cell.accessibilityLabel = NSLocalizedString(@"Bouncer Account.", @"Voiceover bouncer account label");
-				cell.accessibilityHint = NSLocalizedString(@"Required.", @"Voiceover required label");
-			}
+			cell.text = (_settings.username ? _settings.username : @"");
+
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Account: %@", @"Voiceover account label"), cell.text];
+			cell.accessibilityHint = NSLocalizedString(@"Required", @"Voiceover required label");
 
 			cell.text = (_settings.username ? _settings.username : @"");
 			cell.textField.placeholder = NSLocalizedString(@"Required", @"Required connection setting placeholder");
@@ -224,11 +213,11 @@ static BOOL pushAvailable = NO;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(passwordChanged:);
-			cell.accessibilityLabel = NSLocalizedString(@"Bouncer server password.", @"Voiceover bouncer server password label");
+
+			cell.accessibilityLabel = NSLocalizedString(@"Password", @"Voiceover password label");
 			cell.accessibilityHint = NSLocalizedString(@"Required", @"Voiceover required label");
 		}
 
-		cell.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
 		cell.target = self;
 
 		return cell;
@@ -239,8 +228,9 @@ static BOOL pushAvailable = NO;
 		cell.switchAction = @selector(pushEnabled:);
 		cell.label = NSLocalizedString(@"Push Notifications", @"Push Notifications connection setting label");
 
-		if (_settings.pushNotifications) cell.accessibilityLabel = NSLocalizedString(@"Push notifications enabled.", @"Voiceover push notifications disabled");
-		else cell.accessibilityLabel = NSLocalizedString(@"Push notifications disabled.", @"Voiceover push notification disabled");
+		if (_settings.pushNotifications)
+			cell.accessibilityLabel = NSLocalizedString(@"Push Notifications: On", @"Voiceover push notifications on label");
+		else cell.accessibilityLabel = NSLocalizedString(@"Push Notifications: Off", @"Voiceover push notification off label");
 
 		cell.on = _settings.pushNotifications;
 

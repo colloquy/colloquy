@@ -61,20 +61,6 @@
 
 #pragma mark -
 
-- (void) setIsAccessibilityElement:(BOOL) isElement {
-	[super setIsAccessibilityElement:isElement];
-}
-
-- (void) setAccessibilityLabel:(NSString *) label {
-	[super setAccessibilityLabel:label];
-}
-
-- (void) setAccessibilityTraits:(UIAccessibilityTraits) traits {
-	[super setAccessibilityTraits:[super accessibilityTraits] | traits];
-}
-
-#pragma mark -
-
 - (void) takeValuesFromChatViewController:(id <CQChatViewController>) controller {
 	self.name = controller.title;
 	self.icon = controller.icon;
@@ -87,6 +73,14 @@
 	if ([controller respondsToSelector:@selector(importantUnreadCount)])
 		self.importantUnreadCount = controller.importantUnreadCount;
 	else self.importantUnreadCount = 0;
+
+	if (self.importantUnreadCount && !self.unreadCount)
+		self.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%@: %u highlighted messages.", @"Voiceover highlights in chat label"), self.name, self.importantUnreadCount];
+	else if (self.importantUnreadCount && self.unreadCount)
+		self.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%@: %u highlighted and %u unread messages.", @"Voiceover highlights and unread messages in chat label"), self.name, self.importantUnreadCount, self.unreadCount];
+	else if (self.unreadCount)
+		self.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%@: %u unread messages.", @"Voiceover unread messages in chat label"), self.name, self.unreadCount];
+	else self.accessibilityLabel = self.name;
 }
 
 @synthesize maximumMessagePreviews = _maximumMessagePreviews;

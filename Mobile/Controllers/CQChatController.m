@@ -283,7 +283,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	alert.title = NSLocalizedString(@"Invited to Room", "Invited to room alert title");
 	alert.message = [NSString stringWithFormat:NSLocalizedString(@"You were invited to \"%@\" by \"%@\" on \"%@\".", "Invited to join room alert message"), room.displayName, user.displayName, connection.displayName];
 
-	[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join alert button title")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join button title")];
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 

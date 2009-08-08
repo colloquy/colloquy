@@ -884,7 +884,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	if (success && arguments.length > 140) {
 		alert.title = NSLocalizedString(@"Tweet Too Long", "Tweet too long title");
-		alert.message = [NSString stringWithFormat:NSLocalizedString(@"Your tweet was %d characters over the limit.", "Your tweet was %d characters over the limit alert message"), (arguments.length - 140)];
+		alert.message = [NSString stringWithFormat:NSLocalizedString(@"Your tweet was %u characters over the limit.", "Your tweet was %u characters over the limit alert message"), (arguments.length - 140)];
 		allowRetry = NO;
 		success = NO;
 	}
@@ -931,7 +931,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	if (showHelp) {
 		alert.tag = TweetHelpAlertTag;
-		[alert addButtonWithTitle:NSLocalizedString(@"Help", @"Help alert button title")];
+		[alert addButtonWithTitle:NSLocalizedString(@"Help", @"Help button title")];
 	}
 
 	if (success) {
@@ -1188,7 +1188,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	} else if (!self.connection.connected) {
 		alert.tag = ReconnectAlertTag;
 		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to user because server is disconnected alert message");
-		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];
+		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
 	} else if (self.user.status != MVChatUserAvailableStatus && self.user.status != MVChatUserAwayStatus) {
 		alert.message = NSLocalizedString(@"The user is not connected.", @"Can't send message to user because they are disconnected alert message");
 	} else {
@@ -1247,7 +1247,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	} else {
 		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", "Connect button title") style:UIBarButtonItemStyleDone target:self.connection action:@selector(connect)];	
 		item.accessibilityLabel = NSLocalizedString(@"Connect to Server", @"Voiceover connect to server label");
-	} 
+	}
 
 	[self.navigationItem setRightBarButtonItem:item animated:animated];
 

@@ -33,20 +33,6 @@
 
 #pragma mark -
 
-- (void) setIsAccessibilityElement:(BOOL) isElement {
-	[super setIsAccessibilityElement:isElement];
-}
-
-- (void) setAccessibilityLabel:(NSString *) label {
-	[super setAccessibilityLabel:label];
-}
-
-- (void) setAccessibilityTraits:(UIAccessibilityTraits) traits {
-	[super setAccessibilityTraits:[super accessibilityTraits] | traits];
-}
-
-#pragma mark -
-
 @synthesize switchControl = _switchControl;
 
 - (SEL) switchAction {
@@ -73,9 +59,6 @@
 }
 
 - (void) setOn:(BOOL) on {
-	if (on) _switchControl.accessibilityLabel = NSLocalizedString(@"On", @"Voiceover On switch");
-	else _switchControl.accessibilityLabel = NSLocalizedString(@"Off", @"Voiceover Off switch");
-	
 	_switchControl.on = on;
 }
 

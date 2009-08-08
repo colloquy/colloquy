@@ -836,7 +836,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Join", "Join button title") style:UIBarButtonItemStyleDone target:self action:@selector(join)];	
 		item.accessibilityLabel = NSLocalizedString(@"Join Room", @"Voiceover join room label");
 	}
-	
+
 	[self.navigationItem setRightBarButtonItem:item animated:animated];
 
 	[item release];
@@ -854,11 +854,11 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	} else if (!self.connection.connected) {
 		alert.tag = ReconnectAlertTag;
 		alert.message = NSLocalizedString(@"You are currently disconnected,\nreconnect and try again.", @"Can't send message to room because server is disconnected alert message");
-		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];
+		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
 	} else if (!self.room.joined) {
 		alert.tag = RejoinRoomAlertTag;
 		alert.message = NSLocalizedString(@"You are not a room member,\nrejoin and try again.", @"Can't send message to room because not a member alert message");
-		[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join alert button title")];
+		[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join button title")];
 	} else {
 		[alert release];
 		return;

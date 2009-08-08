@@ -101,21 +101,6 @@
 
 #pragma mark -
 
-- (void) setIsAccessibilityElement:(BOOL)isElement {
-	[super setIsAccessibilityElement:isElement];
-}
-
-- (void) setAccessibilityLabel:(NSString *)label {
-	[super setAccessibilityLabel:label];
-}
-
-- (void) setAccessibilityTraits:(UIAccessibilityTraits)traits {
-	[super setAccessibilityTraits:[super accessibilityTraits] | traits];
-}
-
-
-#pragma mark -
-
 - (BOOL) canBecomeFirstResponder {
 	return [_inputField canBecomeFirstResponder];
 }

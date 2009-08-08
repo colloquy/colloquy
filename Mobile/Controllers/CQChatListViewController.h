@@ -9,5 +9,4 @@
 }
 - (void) addChatViewController:(id) controller;
 - (void) selectChatViewController:(id) controller animatedSelection:(BOOL) animatedSelection animatedScroll:(BOOL) animatedScroll;
-- (void) updateAccessibilityLabelForChatCell:(CQChatTableCell *) cell;
 @end

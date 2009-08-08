@@ -37,7 +37,16 @@ static NSURL *lastURL;
 
 #pragma mark -
 
-- (void) viewWillAppear:(BOOL)animated {
+- (void) viewDidLoad {
+	[super viewDidLoad];
+
+	navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
+	toolbar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
+
+	locationField.font = [UIFont systemFontOfSize:15.];
+	locationField.clearsOnBeginEditing = NO;
+	locationField.clearButtonMode = UITextFieldViewModeWhileEditing;
+
 	backButton.accessibilityLabel = NSLocalizedString(@"Back", @"Voiceover back label");
 
 	for (UIBarButtonItem *item in toolbar.items) {
@@ -48,17 +57,6 @@ static NSURL *lastURL;
 		if (item.tag == OpenSiteInSafariItem)
 			item.accessibilityLabel = NSLocalizedString(@"Open in Safari.", @"Voiceover open in safari label");
 	}
-}
-
-- (void) viewDidLoad {
-	[super viewDidLoad];
-
-	navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
-	toolbar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
-
-	locationField.font = [UIFont systemFontOfSize:15.];
-	locationField.clearsOnBeginEditing = NO;
-	locationField.clearButtonMode = UITextFieldViewModeWhileEditing;
 
 	if (_urlToLoad.absoluteString.length) {
 		[self loadURL:_urlToLoad];
@@ -220,7 +218,7 @@ static NSURL *lastURL;
 
 	if (showHelp) {
 		alert.tag = InstapaperHelpAlertTag;
-		[alert addButtonWithTitle:NSLocalizedString(@"Help", @"Help alert button title")];
+		[alert addButtonWithTitle:NSLocalizedString(@"Help", @"Help button title")];
 	}
 
 	if (!success)
@@ -256,11 +254,15 @@ static NSURL *lastURL;
 	UIImage *image = nil;
 	if (webView.loading) {
 		image = [UIImage imageNamed:@"browserStop.png"];
+
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
 		stopReloadButton.accessibilityLabel = NSLocalizedString(@"Stop", @"Voiceover stop label");
 	} else {
 		image = [UIImage imageNamed:@"browserReload.png"];
+
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+
 		stopReloadButton.accessibilityLabel = NSLocalizedString(@"Reload", @"voiceover reload label");
 	}
 

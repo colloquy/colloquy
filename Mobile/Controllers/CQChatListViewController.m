@@ -21,6 +21,9 @@
 	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:[CQChatController defaultController] action:@selector(showNewChatActionSheet)];
 	self.navigationItem.leftBarButtonItem = addItem;
 	[addItem release];
+	
+	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"New chat.", @"Voiceover new chat label");
+	self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"Manage chats.", @"Voiceover manage chats label");
 
 	self.editButtonItem.possibleTitles = [NSSet setWithObjects:NSLocalizedString(@"Manage", @"Manage button title"), NSLocalizedString(@"Done", @"Done button title"), nil];
 	self.editButtonItem.title = NSLocalizedString(@"Manage", @"Manage button title");
@@ -262,7 +265,6 @@ static NSIndexPath *indexPathForChatController(id controller) {
 
 	CQChatTableCell *cell = [self _chatTableCellForController:controller];
 	[self _refreshChatCell:cell withController:controller animated:YES];
-	[self updateAccessibilityLabelForChatCell:cell];
 }
 
 #if ENABLE(FILE_TRANSFERS)
@@ -281,17 +283,6 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	[self _refreshFileTransferCell:cell withController:controller animated:YES];
 }
 #endif
-
-- (void) updateAccessibilityLabelForChatCell:(CQChatTableCell *) cell {
-	if (cell.importantUnreadCount && cell.importantUnreadCount == cell.unreadCount)
-		cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%d highlights in %@", @"Voiceover %d highlights in %@ label"), cell.importantUnreadCount, cell.name];
-	else if (cell.importantUnreadCount)
-		cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%d highlights and %d unread messages in %@", @"Voiceover %d highlights and %d unread messages in %@ label") , cell.importantUnreadCount, cell.unreadCount, cell.name];
-	else if (cell.unreadCount)
-		cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%d unread messages in %@", @"Voiceover %d unread messages in %@ label"), cell.unreadCount, cell.name];
-	else cell.accessibilityLabel = cell.name;
-}
-
 
 #pragma mark -
 
@@ -319,9 +310,6 @@ static NSIndexPath *indexPathForChatController(id controller) {
 			[self _refreshChatCell:cell withController:chatViewController animated:NO];
 		}
 	}
-
-	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"New chat room.", @"Voiceover new chat room label");
-	self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"Manage chat rooms.", @"Voiceover manage chat rooms label");
 
 	[super viewWillAppear:animated];
 }
@@ -459,13 +447,8 @@ static NSIndexPath *indexPathForChatController(id controller) {
 				[self _addMessagePreview:message withEncoding:directChatViewController.encoding toChatTableCell:cell animated:NO];
 
 			[previewMessages release];
-
-			cell.accessibilityLabel = cell.name;			
-			cell.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
 		}
-		
-		[self updateAccessibilityLabelForChatCell:cell];
-		
+
 		return cell;
 	}
 

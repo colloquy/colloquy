@@ -23,6 +23,9 @@
 
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
+	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"Add connection.", @"Voiceover add connection label");
+	self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"Edit connections.", @"Voiceover edit connections label");
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionNicknameAcceptedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionNicknameRejectedNotification object:nil];
 
@@ -82,9 +85,6 @@
 
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
-
-	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"Add Connection.", @"Voiceover add connection label");
-	self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"Edit Connections.", @"Voiceover edit connections label");
 
 	_active = YES;
 
@@ -293,8 +293,6 @@
 	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
 	[cell takeValuesFromConnection:connection];
-	cell.accessibilityLabel = cell.server;
-	cell.accessibilityTraits = UIAccessibilityTraitStaticText;
 
 	return cell;
 }

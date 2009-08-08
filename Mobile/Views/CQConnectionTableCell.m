@@ -51,20 +51,6 @@
 
 #pragma mark -
 
-- (void) setIsAccessibilityElement:(BOOL) isElement {
-	[super setIsAccessibilityElement:isElement];
-}
-
-- (void) setAccessibilityLabel:(NSString *) label {
-	[super setAccessibilityLabel:label];
-}
-
-- (void) setAccessibilityTraits:(UIAccessibilityTraits) traits {
-	[super setAccessibilityTraits:[super accessibilityTraits] | traits];
-}
-
-#pragma mark -
-
 - (void) takeValuesFromConnection:(MVChatConnection *) connection {
 	self.server = connection.displayName;
 	self.nickname = connection.nickname;
@@ -104,6 +90,8 @@
 
 - (void) setServer:(NSString *) server {
 	_serverLabel.text = server;
+
+	self.accessibilityLabel = server;
 }
 
 - (NSString *) nickname {
@@ -124,8 +112,13 @@
 		unsigned minutes = ((absoluteInterval / 60) % 60);
 		unsigned hours = (absoluteInterval / 3600);
 
-		if (hours) newTime = [[NSString alloc] initWithFormat:@"%s%d:%02d:%02d", (interval >= 1. ? "-" : ""), hours, minutes, seconds];
-		else newTime = [[NSString alloc] initWithFormat:@"%s%d:%02d", (interval >= 1. ? "-" : ""), minutes, seconds];
+		if (interval >= 1.) {
+			if (hours) newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"-%u:%02u:%02u", @"Countdown time format with hours, minutes and seconds"), hours, minutes, seconds];
+			else newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"-%u:%02u", @"Countdown time format with minutes and seconds"), minutes, seconds];
+		} else {
+			if (hours) newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"%u:%02u:%02u", @"Countup time format with hours, minutes and seconds"), hours, minutes, seconds];
+			else newTime = [[NSString alloc] initWithFormat:NSLocalizedString(@"%u:%02u", @"Countup time format with minutes and seconds"), minutes, seconds];
+		}
 	}
 
 	if ([_timeLabel.text isEqualToString:newTime]) {

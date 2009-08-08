@@ -517,7 +517,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
-		[alert addButtonWithTitle:NSLocalizedString(@"Help", @"Help alert button title")];
+		[alert addButtonWithTitle:NSLocalizedString(@"Help", @"Help button title")];
 	} else {
 		alert.tag = CannotConnectToBouncerConnectionTag;
 		alert.userInfo = connection;
@@ -528,7 +528,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
-		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect alert button title")];
+		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
 	}
 
 	[alert show];
@@ -567,7 +567,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 			errorTitle = NSLocalizedString(@"Can't Join Room", @"Can't join room alert title");
 			break;
 		case MVChatConnectionCantSendToRoomError:
-			errorTitle = NSLocalizedString(@"Can't Send Message", @"Can't send alert title");
+			errorTitle = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
 			break;
 		case MVChatConnectionCantChangeUsedNickError:
 			errorTitle = NSLocalizedString(@"Nickname in use", "Nickname in use alert title");
@@ -637,7 +637,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
-	[alert addButtonWithTitle:NSLocalizedString(@"Help", @"Help alert button title")];
+	[alert addButtonWithTitle:NSLocalizedString(@"Help", @"Help button title")];
 
 	[alert show];
 

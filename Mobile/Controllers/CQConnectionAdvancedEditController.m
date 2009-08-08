@@ -323,7 +323,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 				cell.enabled = NO;
 			}
 
-			cell.accessibilityLabel = [NSString stringWithFormat:@"%@: %d", cell.label, _connection.serverPort];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Server Port: %hu", @"Voiceover server port label"), _connection.serverPort];
 
 			return cell;
 		} else if (indexPath.row == 1) {
@@ -335,9 +335,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.on = _connection.secure;
 			cell.switchControl.enabled = _connection.directConnection;
 
-			if (_connection.secure) cell.accessibilityLabel = cell.label;
-			else cell.accessibilityLabel = NSLocalizedString(@"Don't use SSL", @"Voiceover don't use SSL label");
-			
+			if (_connection.secure)
+				cell.accessibilityLabel = NSLocalizedString(@"Use SSL: On", @"Voiceover use SSL on label");
+			else cell.accessibilityLabel = NSLocalizedString(@"Use SSL: Off", @"Voiceover use SSL off label");
+
 			return cell;
 		}
 	} else if (indexPath.section == AuthenticationTableSection) {
@@ -354,10 +355,11 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 				cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Username: %@", @"Voiceover username: %@ label"), cell.text.length ? cell.text : [MVChatConnection defaultUsernameWithNickname:currentPreferredNickname(_connection)]];
 			} else {
 				cell.enabled = NO;
 			}
+
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Username: %@", @"Voiceover username label"), (cell.text.length ? cell.text : cell.textField.placeholder)];
 		} else if (indexPath.row == 1) {
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView withIdentifier:@"Secure CQPreferencesTextCell"];
 
@@ -370,11 +372,13 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 				cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-				cell.accessibilityLabel = NSLocalizedString(@"Connection password", @"Voiceover connection password label");
 				cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
 			} else {
 				cell.enabled = NO;
 			}
+
+			cell.accessibilityLabel = NSLocalizedString(@"Connection password.", @"Voiceover connection password label");
+			cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
 		} else if (indexPath.row == 2) {
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView withIdentifier:@"Secure CQPreferencesTextCell"];
 
@@ -386,9 +390,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-			cell.accessibilityLabel = NSLocalizedString(@"Nickname password", @"Voiceover nickname password label");
-			cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
- 		}
+
+			cell.accessibilityLabel = NSLocalizedString(@"Nickname password.", @"Voiceover nickname password label");
+ 			cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
+		}
 
 		cell.target = self;
 
@@ -405,7 +410,9 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 
 		cell.label = NSLocalizedString(@"Alt. Nicknames", @"Alt. Nicknames connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-		cell.accessibilityLabel = NSLocalizedString(@"Alternate Nicknames", @"Voiceover alternate nicknames label");
+
+		cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Alternate Nicknames: %@", @"Voiceover alternate nicknames label"), (cell.text.length ? cell.text : cell.textField.placeholder)];
+		cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
 
 		return cell;
 	} else if (indexPath.section == AutomaticTableSection && indexPath.row == 0) {
@@ -415,10 +422,12 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		NSArray *commands = _connection.automaticCommands;
-		if (commands.count) cell.text = [NSString stringWithFormat:NSLocalizedString(@"%u automatic commands.", @"%u automatic commands"), commands.count];
-		else cell.text = NSLocalizedString(@"Automatic Commands.", @"None label");
+		if (commands.count) cell.text = [NSString stringWithFormat:@"%u", commands.count];
+		else cell.text = NSLocalizedString(@"None", @"None label");
 
-		cell.accessibilityLabel = commands.count ? [NSString stringWithFormat:NSLocalizedString(@"%u automatic commands", @"Voiceover %u automatic commands label"), commands.count] : NSLocalizedString(@"No automatic commands", @"Voiceover no automatic commands label");
+		if (commands.count)
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Automatic Commands: %u commands", @"Voiceover automatic commands label"), commands.count];
+		else cell.accessibilityLabel = NSLocalizedString(@"Automatic Commands: None", @"Voiceover automatic commands none label");
 
 		return cell;
 	} else if (indexPath.section == EncodingsTableSection && indexPath.row == 0) {
@@ -428,7 +437,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		cell.text = localizedNameOfStringEncoding(_connection.encoding);
 
-		cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"%@ is %@", @"Voiceover %@ is %@ label"), cell.label, cell.text];
+		cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Encoding: %@", @"Voiceover encoding label"), cell.text];
 
 		return cell;
 	}
