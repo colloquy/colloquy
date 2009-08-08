@@ -5,7 +5,7 @@
 
 #import <MediaPlayer/MPMoviePlayerController.h>
 
-static NSString *CQHelpTopicsURLString = @"http://colloquy.mobi/help.plist";
+static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?locale=%@";
 
 @interface CQHelpTopicsViewController (CQHelpTopicsViewControllerPrivate)
 - (void) _generateSectionsFromHelpContent:(NSArray *) help;
@@ -47,7 +47,8 @@ static NSString *CQHelpTopicsURLString = @"http://colloquy.mobi/help.plist";
 	_helpData = [[NSMutableData alloc] initWithCapacity:4096];
 	[old release];
 
-	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:CQHelpTopicsURLString] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15.];
+	NSString *urlString = [NSString stringWithFormat:CQHelpTopicsURLFormatString, [[NSLocale autoupdatingCurrentLocale] localeIdentifier]];
+	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15.];
 	[NSURLConnection connectionWithRequest:request delegate:self];
 }
 
