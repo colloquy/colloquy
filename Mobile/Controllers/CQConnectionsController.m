@@ -502,8 +502,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[self _didConnectOrDidNotConnect:notification];
 
 	MVChatConnection *connection = notification.object;
+	BOOL userDisconnected = [[notification.userInfo objectForKey:@"userDisconnected"] boolValue];
 
-	if (connection.reconnectAttemptCount > 0)
+	if (connection.reconnectAttemptCount > 0 || userDisconnected)
 		return;
 
 	CQAlertView *alert = [[CQAlertView alloc] init];

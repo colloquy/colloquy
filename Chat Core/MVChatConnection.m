@@ -1171,9 +1171,9 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 		[self scheduleReconnectAttempt];
 	else [self cancelPendingReconnectAttempts];
 
-	_userDisconnected = NO;
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidNotConnectNotification object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:_userDisconnected] forKey:@"userDisconnected"]];
 
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidNotConnectNotification object:self];
+	_userDisconnected = NO;
 }
 
 - (void) _willDisconnect {
