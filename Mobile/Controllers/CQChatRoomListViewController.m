@@ -365,6 +365,9 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 - (void) _updateVisibleTopics {
 	NSDictionary *chatRoomListResults = _connection.chatRoomListResults;
 	for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
+		if (indexPath.row >= _matchedRooms.count)
+			continue;
+
 		NSString *room = [_matchedRooms objectAtIndex:indexPath.row];
 		NSMutableDictionary *info = [chatRoomListResults objectForKey:room];
 
@@ -470,9 +473,13 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 		return;
 
 	for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
+		if (indexPath.row >= _matchedRooms.count)
+			continue;
+
 		NSString *rowRoom = [_matchedRooms objectAtIndex:indexPath.row];
 		if (![rowRoom isEqualToString:room])
 			continue;
+
 		CQChatRoomInfoTableCell *cell = (CQChatRoomInfoTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
 		cell.topic = topicString;
 		break;
