@@ -8,6 +8,9 @@
 
 #import <ChatCore/MVChatConnection.h>
 
+#define ConnectSheetTag 1
+#define DisconnectSheetTag 2
+
 #pragma mark -
 
 @implementation CQConnectionsViewController
@@ -178,7 +181,7 @@
 
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
-	sheet.tag = 1;
+	sheet.tag = ConnectSheetTag;
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
 
@@ -201,7 +204,7 @@
 
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
-	sheet.tag = 2;
+	sheet.tag = DisconnectSheetTag;
 
 	if (connection.directConnection) {
 		sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
@@ -229,7 +232,7 @@
 
 	MVChatConnection *connection = [self connectionAtIndexPath:selectedIndexPath];
 
-	if (actionSheet.tag == 1) {
+	if (actionSheet.tag == ConnectSheetTag) {
 		[connection cancelPendingReconnectAttempts];
 
 		if (buttonIndex == 0) {
@@ -237,7 +240,7 @@
 			[connection connect];
 		} else if (buttonIndex == 1 && (connection.temporaryDirectConnection || !connection.directConnection))
 			[connection connectDirectly];
-	} else if (actionSheet.tag == 2) {
+	} else if (actionSheet.tag == DisconnectSheetTag) {
 		if (buttonIndex == actionSheet.destructiveButtonIndex) {
 			if (connection.directConnection)
 				[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];

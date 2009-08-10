@@ -176,7 +176,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		if ([url.port unsignedShortValue] && [url.port unsignedShortValue] != connection.serverPort)
 			continue;
 
-		[connection connect];
+		[connection connectAppropriately];
 
 		if (target.length) {
 			[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:target andConnection:connection];
@@ -440,7 +440,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		connection.bouncerPassword = bouncerSettings.password;
 	}
 
-	if (connection.temporaryDirectConnection)
+	if (connection.temporaryDirectConnection && ![[connection persistentInformationObjectForKey:@"tryBouncerFirst"] boolValue])
 		connection.bouncerType = MVChatConnectionNoBouncer;
 
 	[connection sendPushNotificationCommands];
@@ -503,6 +503,14 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	MVChatConnection *connection = notification.object;
 	BOOL userDisconnected = [[notification.userInfo objectForKey:@"userDisconnected"] boolValue];
+	BOOL tryBouncerFirst = [[connection persistentInformationObjectForKey:@"tryBouncerFirst"] boolValue];
+
+	[connection removePersistentInformationObjectForKey:@"tryBouncerFirst"];
+
+	if (!userDisconnected && tryBouncerFirst) {
+		[connection connect];
+		return;
+	}
 
 	if (connection.reconnectAttemptCount > 0 || userDisconnected)
 		return;
@@ -541,6 +549,12 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	++_connectedCount;
 
 	[self _didConnectOrDidNotConnect:notification];
+
+	MVChatConnection *connection = notification.object;
+	[connection removePersistentInformationObjectForKey:@"tryBouncerFirst"];
+
+	if (!connection.directConnection)
+		connection.temporaryDirectConnection = NO;
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
@@ -874,7 +888,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 - (void) _connectAutomaticConnections {
 	for (MVChatConnection *connection in _connections)
 		if (connection.automaticallyConnect)
-			[connection connect];
+			[connection connectAppropriately];
 }
 
 - (void) _refreshBouncerConnectionLists {
@@ -1388,8 +1402,15 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 #pragma mark -
 
+- (void) connectAppropriately {
+	[self setPersistentInformationObject:[NSNumber numberWithBool:YES] forKey:@"tryBouncerFirst"];
+
+	[self connect];
+}
+
 - (void) connectDirectly {
 	self.temporaryDirectConnection = YES;
+
 	[self connect];
 }
 

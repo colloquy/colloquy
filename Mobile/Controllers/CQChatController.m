@@ -650,7 +650,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		[connection release];
 	}
 
-	[connection connect];
+	[connection connectAppropriately];
 
 	[self showChatControllerWhenAvailableForRoomNamed:@"#colloquy-mobile" andConnection:connection];
 

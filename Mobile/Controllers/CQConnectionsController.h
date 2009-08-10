@@ -95,6 +95,7 @@
 - (void) loadPasswordsFromKeychain;
 
 - (void) connectDirectly;
+- (void) connectAppropriately;
 
 - (void) sendPushNotificationCommands;
 @end

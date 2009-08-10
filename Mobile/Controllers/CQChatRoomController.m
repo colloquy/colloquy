@@ -147,7 +147,7 @@
 #pragma mark -
 
 - (void) join {
-	[self.connection connect];
+	[self.connection connectAppropriately];
 	[self.room join];
 }
 
@@ -818,7 +818,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 		return [super alertView:alertView clickedButtonAtIndex:buttonIndex];
 
 	if (alertView.tag == ReconnectAlertTag)
-		[self.connection connect];
+		[self.connection connectAppropriately];
 
 	[self.room join];
 }

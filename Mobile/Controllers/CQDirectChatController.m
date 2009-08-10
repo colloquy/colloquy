@@ -594,7 +594,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		return YES;
 	}
 
-	[self.connection connect];
+	[self.connection connectAppropriately];
 
 	NSArray *rooms = [arguments componentsSeparatedByString:@","];
 	if (rooms.count == 1 && ((NSString *)[rooms objectAtIndex:0]).length)
@@ -1150,7 +1150,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		return;
 
 	if (alertView.tag == ReconnectAlertTag) 
-		[self.connection connect];
+		[self.connection connectAppropriately];
 
 	if (alertView.tag == TweetRetryAlertTag)
 		[self performSelector:@selector(handleTweetCommandWithArguments:) withObject:_tweetRetryArguments afterDelay:0.];

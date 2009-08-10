@@ -196,7 +196,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 			connection = [[CQConnectionsController defaultController] connectionForServerAddress:connectionServer];
 
 		if (connection) {
-			[connection connect];
+			[connection connectAppropriately];
 
 			if (roomName.length) {
 				[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:connection];

@@ -1,6 +1,7 @@
 #import "CQChatCreationViewController.h"
 
 #import "CQChatController.h"
+#import "CQConnectionsController.h"
 #import "CQChatEditViewController.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
@@ -130,7 +131,7 @@
 
 	[self.view endEditing:YES];
 
-	[connection connect];
+	[connection connectAppropriately];
 
 	if (_roomTarget) {
 		NSString *roomName = (_editViewController.name.length ? [connection properNameForChatRoomNamed:_editViewController.name] : @"#help");
