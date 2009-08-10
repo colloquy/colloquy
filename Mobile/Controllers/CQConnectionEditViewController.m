@@ -70,11 +70,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	[super viewWillDisappear:animated];
 
 	[self.tableView endEditing:YES];
-
-	// Workaround a bug were the table view is left in a state
-	// were it thinks a keyboard is showing.
-	self.tableView.contentInset = UIEdgeInsetsZero;
-	self.tableView.scrollIndicatorInsets = UIEdgeInsetsZero;
 }
 
 #pragma mark -

@@ -121,10 +121,9 @@
 	[super layoutSubviews];
 
 	CGRect contentRect = self.contentView.frame;
-	NSString *originalText = [_textField.text retain];
 
 	BOOL showingLabel = (_label.text.length > 0);
-	BOOL showingTextField = (originalText.length || _textField.placeholder.length);
+	BOOL showingTextField = (_textField.text.length || _textField.placeholder.length);
 
 	if (showingLabel) {
 		_label.hidden = NO;
@@ -143,8 +142,6 @@
 	if (showingTextField) {
 		_textField.hidden = NO;
 
-		_textField.text = @"Qwerty"; // Temporary text to workaround a bug where sizeThatFits: returns zero height when there is only a placeholder.
-
 		const CGFloat leftMargin = 10.;
 		CGFloat rightMargin = 10.;
 		if (_textField.clearButtonMode == UITextFieldViewModeAlways)
@@ -158,13 +155,9 @@
 		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.)) - 1.;
 		frame.size.width = (contentRect.size.width - frame.origin.x - rightMargin);
 		_textField.frame = frame;
-
-		_textField.text = originalText; // Restore the original text.
 	} else {
 		_textField.hidden = YES;
 	}
-
-	[originalText release];
 }
 
 @synthesize enabled = _enabled;

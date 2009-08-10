@@ -173,9 +173,6 @@
 		NSArray *indexPaths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:_items.count inSection:0]];
 		if (editing) [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
 		else [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
-
-		// Workaround a display bug where the cell separator isn't drawn for the new row.
-		if (editing) [self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.25];
 	} else {
 		[self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.25];
 	}
