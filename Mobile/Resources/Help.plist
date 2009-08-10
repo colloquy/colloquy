@@ -1,139 +1,66 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<array>
-	<dict>
-		<key>Title</key>
-		<string>What is IRC?</string>
-		<key>Content</key>
-		<string>&lt;p&gt;IRC stands for Internet Relay Chat and was created in 1988. IRC is a way for people to talk to each other online. It allows for group conferencing with many users, as well as private messaging between two users. There are over a thousand IRC networks to chat on, with hundreds of thousands of channels covering thousands of chat topics.&lt;/p&gt;</string>
-	</dict>
-	<string>Space</string>
-	<dict>
-		<key>Title</key>
-		<string>Direct IRC Connections</string>
-		<key>Content</key>
-		<string>&lt;p&gt;With Colloquy, a Direct IRC Connection is a connection between your mobile device and the chat server that you are connected to. The alternative to a direct IRC connection is to use a bouncer.&lt;/p&gt;</string>
-		<key>SectionHeader</key>
-		<string>Getting Connected &amp; Setup</string>
-	</dict>
-	<dict>
-		<key>Title</key>
-		<string>Colloquy Bouncers</string>
-		<key>Content</key>
-		<string>&lt;p&gt;In IRC terms, a bouncer is a piece of software that sits between you and the IRC server that you are connected to. This allows you to do a number of things, including connecting to the same room from multiple locations and stay connected to IRC when Colloquy has been closed.&lt;/p&gt;
-&lt;p&gt;Due to the usefulness IRC bouncers, we have created a plugin for Desktop Colloquy that turns it into a bouncer. In addition to being a normal bouncer, the Colloquy bouncer also generates Push Notifications that are sent to your device and syncs connections over from your desktop running Colloquy to the mobile version of Colloquy on your iPhone or iPod touch.&lt;/p&gt;
-&lt;p&gt;There are two parts to setting up Colloquy&apos;s bouncer; setting Desktop Colloquy up and setting Mobile Colloquy up:&lt;/p&gt;
-&lt;p&gt;Part one: On the Desktop, the first thing you&apos;ll need to do is to the latest version of Colloquy. This will have the bouncer plugin built. After that, open Colloquy&apos;s preferences and go over to the Bouncer tab. Fill out the appropriate fields as necessary and write the values down if you need to. Although Colloquy will attempt to forward ports automatically with your router, however this may not work. You can check to make sure the port is forwarded at http://www.canyouseeme.org/. If the port is not forwarded, you can consult http://portforward.com for details on how to forward ports in your router.&lt;/p&gt;
-&lt;p&gt;Part two: On Mobile Colloquy, go to the Connections tab and hit the + button in the top left corner and select &quot;Colloquy Bouncer&quot; from the menu. Fill out the fields as necessary. The &quot;Address&quot; should have the IP address of the computer running Desktop Colloquy. You can find this out by visiting http://colloquy.info/ip.php on your desktop. Hit &quot;Connect&quot; in the top left corner once the fields are filled out, and if all went well, your iPhone or iPod touch will connect to your desktop and set everything else up for you.&lt;/p&gt;
-&lt;p&gt;Notes: If you could not connect the two devices, it means there is something interfering with the communication. Check to make sure your firewall isn&apos;t blocking incoming or outgoing traffic from Colloquy and that the port is open.&lt;/p&gt;
-</string>
-	</dict>
-	<dict>
-		<key>Title</key>
-		<string>Finding Places to Talk</string>
-		<key>Content</key>
-		<string>&lt;p&gt;There are over a thousand networks and hundreds of thousands of chat rooms on IRC. Colloquy conveniently provides a list of around 25 of networks that you can join and chat. You can find this list by hitting the + button on the Connections tab, creating an IRC Connection and hitting the blue button in the Address field.&lt;/p&gt;
-&lt;p&gt;Once you picked a network to talk on (All the networks great, if you can&apos;t decide, pick one at random. You can always go back and create another connection!), you need to find a chat room to talk on. Colloquy also provides a built in way of doing this. Under the Colloquies tab, hit the + button and selecting &quot;Join a Chat Room&quot;. Then hit the blue button in the Name field. If you have a specific topic you want to discuss, you can search for it. Otherwise, scroll down until you find a room to chat in, and have fun!&lt;/p&gt;
-&lt;p&gt;If you would like to search for additional network to chat on, you can find a list at http://netsplit.de/ and additional chat rooms can be found by searching on http://searchirc.com/. When in a chat room, you can also &quot;/search word (or phrase)&quot; and it will automatically open up searchirc.com with a search for your word or phrase.&lt;/p&gt;</string>
-	</dict>
-	<dict>
-		<key>Title</key>
-		<string>Push Notifications</string>
-		<key>Content</key>
-		<string>&lt;p&gt;Push Notifications are a big part of the iPhone OS now. Colloquy is the first IRC client on the iPhone that supports Push Notifications! Due to how IRC works, Colloquy is a bit untraditional in how it has to generate Push Notifications. Instead of us running a server on our own, you have to run a bouncer that will create Push Notifications. To date, there are three ways of creating creating Push Notifications:&lt;/p&gt;
-&lt;ol type=1&gt;
-	&lt;li&gt;Using the Colloquy bouncer, as detailed in the &quot;Colloquy Bouncer&quot; section. This method will only work on Mac OS X Leopard or above.&lt;/li&gt;
-	&lt;li&gt;Using ZNC (http://znc.in) with the Colloquy Push plugin. This will work on Mac OS X, Linux and Windows.&lt;/li&gt;
-	&lt;li&gt;Using a script for Irssi, that can be found at: (insert link for irssi plugin). This should also work on Mac OS X, Linux and Windows.&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;Scripts and plugins for additional clients are planned - or may already exist - but are not ready when Colloquy was submitted to the App Store. You can check for more scripts at http://colloquy.info/project/wiki/PushNotifications.&lt;/p&gt;
-</string>
-	</dict>
-	<dict>
-		<key>Title</key>
-		<string>Application Settings</string>
-		<key>Content</key>
-		<string>&lt;p&gt;Colloquy has a very large number of settings that you can use to customize how you interact with the application. Settings for Colloquy can be found in Settings.app, under Colloquy. Some examples of settings that Colloquy has are Styles to change how chat looks, different sounds on different kinds of alerts and the option to disable history on reconnect.&lt;/p&gt;</string>
-	</dict>
-	<string>Space</string>
-	<dict>
-		<key>Title</key>
-		<string>Connecting to Servers</string>
-		<key>Content</key>
-		<string>&lt;p&gt;If you already know what server you want to go to, Colloquy makes it very easy to connect! Just tap the + button on the Connections tab, select &quot;IRC Connection&quot; and enter the server address. You can tell Colloquy to always automatically join rooms by adding them to the Join Rooms list or to automatically connect to the network when Colloquy is opened. Under Advanced, you can do things like change the server port, toggle SSL status, and enter a password for your nickname or for the server as necessary.&lt;/p&gt;</string>
-		<key>SectionHeader</key>
-		<string>Troubleshooting</string>
-	</dict>
-	<dict>
-		<key>Title</key>
-		<string>Joining Chat Rooms</string>
-		<key>Content</key>
-		<string>&lt;p&gt;There are a number of ways to join chat rooms in Colloquy! The first way is to add the room to the &quot;Join Rooms&quot; list when creating the connection. The second way to join a chat room is to tap the + button in the Colloquies tab, select &quot;Join a Chat Room&quot;, to enter the room name and hit Join. If the room has a channel password, you can enter it here. You can also type &quot;/join #room&quot; or tap on a room name in chat to join the room. &lt;/p&gt;</string>
-	</dict>
-	<string>Space</string>
-	<dict>
-		<key>Title</key>
-		<string>Supported Commands</string>
-		<key>Content</key>
-		<string>&lt;p&gt;
-&lt;ul&gt;
-	A complete list of commands that Colloquy supports is:
-	&lt;li&gt;&lt;strong&gt;/amazon item - &lt;/strong&gt;This will search  for Amazon. Locations are limited to Great Britain, Germany, China, Japan, France, Canada and United States.&lt;/li&gt;
-	&lt;li&gt;&lt;strong&gt;/browser [last] [site] - &lt;/strong&gt;Without any arguments, this will open up Colloquy&apos;s built in web browser. Typing &quot;/browser last&quot; will open the last website that you visited in Colloquy&apos;s browser. &quot;/browser http://colloquy.mobi&quot; will open up the browser to the website specified, in this case, Mobile Colloquy&apos;s website.&lt;/li&gt;
-	&lt;li&gt;&lt;strong&gt;/clear - &lt;/strong&gt;This will remove all chat on screen.&lt;/li&gt;
-	&lt;li&gt;&lt;strong&gt;/faq - &lt;/strong&gt;See /help.&lt;/li&gt;
-	&lt;li&gt;&lt;strong&gt;/google [locale] search - &lt;/strong&gt;Opens up a search with Google for your search terms. It will default to searching in whatever language your device is set to, however you can specify a custom language if you like.&lt;/li&gt; 
-	&lt;li&gt;&lt;strong&gt;/help - &lt;/strong&gt;This will bring up the welcome screen so you can reference the built in help guides and watch the screencasts again as necessary.&lt;/li&gt;
-	&lt;li&gt;&lt;strong&gt;/ipod - &lt;/strong&gt;See /music
-	&lt;li&gt;&lt;strong&gt;/itunes - &lt;/strong&gt;See /music
-	&lt;li&gt;&lt;strong&gt;/list - &lt;/strong&gt;this will open up a list of all the chat rooms on the server you are currently connected to.&lt;/li&gt;
-	&lt;li&gt;&lt;strong&gt;/msg user - &lt;/strong&gt;This will open a private message with the user specified.&lt;/li&gt;
-	&lt;li&gt;&lt;strong&gt;/music [next, previous, stop, play] - &lt;/strong&gt;Without any arguments, this will output the song that you are currently listening to, to the chat room you are in.&lt;/li&gt; With one of the optional arguments, you can control your music from within Colloquy.&lt;/li&gt;
-	&lt;li&gt;&lt;strong&gt;/join #room - &lt;/strong&gt;This will join you to the room specified.&lt;/li&gt;
-	&lt;li&gt;&lt;strong&gt;/url - &lt;/strong&gt;See /browser.&lt;/li&gt;
-	&lt;li&gt;&lt;strong&gt;/query - &lt;/strong&gt;See /msg.&lt;/li&gt;
-	&lt;li&gt;&lt;strong&gt;/search search - &lt;/strong&gt;This will search on http://searchirc.com for a chat room that matches your string
-	&lt;li&gt;&lt;strong&gt;/tweet message to tweet - &lt;/strong&gt;This will post a message to Twitter for you! Note: You have to enter your Twitter username and password in the settings for this to work.&lt;/li&gt;
-	&lt;li&gt;&lt;strong&gt;/whois username - &lt;/strong&gt;This will display information about the specified user if they are connected to the same network that you are on.&lt;/li&gt;
-	&lt;li&gt;&lt;strong&gt;/wikipedia [locale] search - &lt;/strong&gt;Same as /google, only for wikipedia.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/p&gt;</string>
-		<key>SectionHeader</key>
-		<string>Reference</string>
-	</dict>
-	<dict>
-		<key>Title</key>
-		<string>Emoticon List</string>
-		<key>Content</key>
-		<string>…</string>
-	</dict>
-	<dict>
-		<key>Title</key>
-		<string>Transcript Styles</string>
-		<key>Content</key>
-		<string>…</string>
-	</dict>
-	<string>Space</string>
-	<dict>
-		<key>SectionHeader</key>
-		<string>Other Help Resources</string>
-		<key>Title</key>
-		<string>Colloquy Web Site</string>
-		<key>Link</key>
-		<string>http://colloquy.mobi</string>
-	</dict>
-	<dict>
-		<key>Title</key>
-		<string>Colloquy FAQs</string>
-		<key>Link</key>
-		<string>http://colloquy.info/project/wiki/MobileFAQs</string>
-	</dict>
-	<dict>
-		<key>Title</key>
-		<string>Colloquy Support Room</string>
-		<key>Link</key>
-		<string>irc://irc.freenode.net/colloquy-mobile</string>
-	</dict>
-</array>
-</plist>
+(
+	{
+		Title = "What is IRC?";
+		Content = "<p>IRC stands for Internet Relay Chat and was created in 1988. IRC is a way for people to talk to each other online. It allows for group conferencing with many users, as well as private messaging between two users. There are over a thousand IRC networks to chat on, with hundreds of thousands of channels covering thousands of chat topics.</p>";
+	},
+	Space,
+	{
+		Title = "Direct IRC Connections";
+		Content = "<p>With Colloquy, a direct IRC connection is a communication channel between your mobile device and the chat server that you are connected to. The alternative to a direct IRC connection is to use a bouncer.</p>";
+		SectionHeader = "Getting Connected & Setup";
+	},
+	{
+		Title = "Colloquy Bouncers";
+		Content = "<p>In IRC terms, a bouncer is a piece of software that sits between you and the IRC server that you are connected to. This allows you to do a number of things, including connecting to the same room from multiple locations and stay connected to IRC when Colloquy has been closed.</p>\n<p>Due to the usefulness IRC bouncers, we have built a bouncer into Colloquy for Mac OS X. In addition to being a normal bouncer, the Colloquy bouncer also generates Push Notifications that are sent to your device and syncs connections over from your Mac to the mobile version of Colloquy on your device.</p>\n<p>There are two parts to setting up Colloquy’s bouncer; setting up Colloquy on you Mac and setting up Colloquy on your device:</p>\n<ol><li>On your Mac, the first thing you’ll need to do is install the latest version of Colloquy that has the bouncer built-in. After that, open Colloquy’s preferences and open the Bouncer panel. Fill out the appropriate fields as necessary and write the values down if you need to. Although Colloquy will attempt to forward ports automatically with your router, this sometimes might not work. You can check to make sure the port is forwarded at <u>CanYouSeeMe.org</u>. If the port is not forwarded, you can consult <u>PortForward.com</u> for details on how to forward ports in your router.</li>\n<li>On your device, open Colloquy and go to the Connections tab and tap the “+” button in the top-left corner and select “Colloquy Bouncer” from the menu. Fill out the fields as necessary. The “Address” should have the IP address or host-name of your Mac running Colloquy. You can find this out by visiting <u>colloquy.info/&#8203;ip.php</u> on your Mac. Tap “Connect” in the top-right corner once the fields are filled out, and if all went well, your device will connect to your Mac and download a list of IRC connections.</p>\n<p><em>Note: If you could not connect, it means there is something preventing the connection. Check to make sure your firewall isn’t blocking incoming or outgoing traffic from Colloquy and that the port is open.</em></p>";
+	},
+	{
+		Title = "Finding Places to Talk";
+		Content = "<p>There are over a thousand networks and hundreds of thousands of chat rooms on IRC. Colloquy conveniently provides a list of around 25 top networks that you can join and chat on. You can find this list by tapping the “+” button on the Connections tab, creating an IRC Connection and tapping the blue-arrow button in the “Address” field.</p>\n<p>Once you picked a network to talk on — if you can't decide, pick one at random — tap “Connect” in the top-right corner. Now you need to find a room to talk in, so go to the Colloquies tab, tap the “+” button and select “Join a Chat Room”. Then tap the blue-arrow button in the “Name” field. If you have a specific topic you want to find, you can search for it. Otherwise, scroll down until you find a room to chat that interests you — and have fun!</p>\n<p>If you would like to search for other networks to chat on, you can find a list at <u>NetSplit.de</u> and other chat rooms can be found by searching on <u>SearchIRC.com</u>. When in a chat room, you can also type “/search phrase” and it will automatically open up <u>SearchIRC.com</u> with a search for your word or phrase.</p>";
+	},
+	{
+		Title = "Push Notifications";
+		Content = "<p>Push Notifications are a big part of the iPhone OS. Colloquy is the first IRC client on iPhone OS that supports Push Notifications! Due to how IRC works, Colloquy is a bit untraditional in how it has to generate Push Notifications. Instead of working directly with existing IRC server, you have to run a bouncer that will push notifications to your device. There are three ways to get push notifications:</p>\n<ol>\n\t<li>Using the Colloquy Bouncer, as detailed in the “Colloquy Bouncer” section. This method will only work on Mac OS X Leopard or above.</li>\n\t<li>Using the ZNC bouncer with the Colloquy Push plugin. This will work on Mac OS X, Linux and Windows.</li>\n\t<li>Using a script for Irssi, that  will be released soon. This also works on Mac OS X, Linux and Windows.</li>\n</ol>\n<p>Scripts and plugins for additional clients are planned. You can check for more scripts on the Colloquy website.</p>\n";
+	},
+	{
+		Title = "Application Settings";
+		Content = "<p>Colloquy has a large number of settings that you can use to customize how you interact with the application. Settings for Colloquy can be found in Settings on your device’s home screen, under Colloquy.</p>";
+	},
+	Space,
+	{
+		Title = "Connecting to Servers";
+		Content = "<p>If you already know what server you want to use, Colloquy makes it very easy to connect! Just tap the “+” button on the Connections tab, select “IRC Connection” and enter the server address. You can tell Colloquy to automatically join rooms by adding them to the “Join Rooms” list or to always connect to the network when Colloquy is opened. Under “Advanced”, you can change things like the server port, specify SSL, and enter a password for your nickname or for the server.</p>";
+		SectionHeader = Troubleshooting;
+	},
+	{
+		Title = "Joining Chat Rooms";
+		Content = "<p>There are a number of ways to join chat rooms in Colloquy! The first way is to type the room names into the “Join Rooms” list when creating the connection. The second way to join a chat room is to tap the “+” button in the Colloquies tab, select “Join a Chat Room” and enter the room name and tap “Join”. If the room has password, you can enter it there. You can also type “/join #room” or tap on a room name in a chat to join the room. </p>";
+	},
+	Space,
+	{
+		Title = "Supported Commands";
+		Content = "<ul>\n\t<li><strong>/amazon <em>[locale] search</em> - </strong>This will search for the item on Amazon. It will default to searching in whatever locale your device is set to, however you can specify a custom locale if you like. Locales are limited to Great Britain, Germany, China, Japan, France, Canada and United States.</li>\n\t<li><strong>/browser <em>[last] [site]</em> - </strong>Without any arguments, this will open up Colloquy’s built in web browser. Typing “/browser last” will open the last website that you visited in Colloquy’s browser. Typing “/browser http://colloquy.mobi” will open up the browser to the website specified, in this case, Colloquy’s website.</li>\n\t<li><strong>/clear - </strong>This will remove all chat on screen.</li>\n\t<li><strong>/google <em>[locale] search</em> - </strong>Opens up a search with Google for your search terms. It will default to searching in whatever language your device is set to, however you can specify a custom language if you like.</li> \n\t<li><strong>/help - </strong>This will bring up the help screen you using now.</li>\n\t<li><strong>/list <em>[search]</em> - </strong>Open up a list of all the chat rooms on the server you are currently connected to.</li>\n\t<li><strong>/msg <em>user</em> - </strong>This will open a private message with the user specified.</li>\n\t<li><strong>/music <em>[next | previous | stop | play]</em> - </strong>Without any arguments, this will send the current song title, artist and album to the chat.</li> With one of the optional arguments, you can control your music from within Colloquy.</li>\n\t<li><strong>/join <em>#room</em> - </strong>This will join you to the room specified.</li>\n\t<li><strong>/search <em>query</em> - </strong>This will search on <u>SearchIRC.com</u> for a chat room that matches your string.\n\t<li><strong>/tweet <em>message</em> - </strong>This will post a message to Twitter for you! <em>Note: You have to enter your Twitter username and password in Settings.</em></li>\n\t<li><strong>/whois <em>user</em> - </strong>This will display information about the specified user.</li>\n\t<li><strong>/wikipedia <em>[locale] search</em> - </strong>Same as /google, only for Wikipedia.</li>\n</ul>";
+		SectionHeader = Reference;
+	},
+	{
+		Title = "Emoticon List";
+		Content = "<div style=\"-webkit-column-count: 3; -webkit-column-gap: 1.5em; -webkit-column-rule: 1px solid grey; font-size: 18px\">\n\Ue00e&nbsp;&nbsp;<kbd>(Y)</kbd><br>\n\Ue421&nbsp;&nbsp;<kbd>(N)</kbd><br>\n\Ue022&nbsp;&nbsp;<kbd>&lt;3</kbd><br>\n\Ue023&nbsp;&nbsp;<kbd>&lt;/3</kbd><br>\n\Ue032&nbsp;&nbsp;<kbd>@};-</kbd><br>\n\Ue048&nbsp;&nbsp;<kbd>:^)</kbd><br>\n\Ue04e&nbsp;&nbsp;<kbd>O:)</kbd><br>\n\Ue056&nbsp;&nbsp;<kbd>:)</kbd><br>\n\Ue057&nbsp;&nbsp;<kbd>:D</kbd><br>\n\Ue058&nbsp;&nbsp;<kbd>:(</kbd><br>\n\Ue059&nbsp;&nbsp;<kbd>&gt;:(</kbd><br>\n\Ue105&nbsp;&nbsp;<kbd>;P</kbd><br>\n\Ue106&nbsp;&nbsp;<kbd>(&lt;3</kbd><br>\n\Ue107&nbsp;&nbsp;<kbd>:O</kbd><br>\n\Ue108&nbsp;&nbsp;<kbd>-_-'</kbd><br>\n\Ue11a&nbsp;&nbsp;<kbd>&gt;:)</kbd><br>\n\Ue401&nbsp;&nbsp;<kbd>:'(</kbd><br>\n\Ue402&nbsp;&nbsp;<kbd>:j</kbd><br>\n\Ue403&nbsp;&nbsp;<kbd>:|</kbd><br>\n\Ue404&nbsp;&nbsp;<kbd>:-!</kbd><br>\n\Ue405&nbsp;&nbsp;<kbd>;)</kbd><br>\n\Ue406&nbsp;&nbsp;<kbd>&gt;&lt;</kbd><br>\n\Ue407&nbsp;&nbsp;<kbd>:X</kbd><br>\n\Ue408&nbsp;&nbsp;<kbd>;'(</kbd><br>\n\Ue409&nbsp;&nbsp;<kbd>:P</kbd><br>\n\Ue40a&nbsp;&nbsp;<kbd>:-&gt;</kbd><br>\n\Ue40b&nbsp;&nbsp;<kbd>:o</kbd><br>\n\Ue40c&nbsp;&nbsp;<kbd>:-&amp;</kbd><br>\n\Ue40d&nbsp;&nbsp;<kbd>O.O</kbd><br>\n\Ue40e&nbsp;&nbsp;<kbd>:/</kbd><br>\n\Ue40f&nbsp;&nbsp;<kbd>:'o</kbd><br>\n\Ue410&nbsp;&nbsp;<kbd>x_x</kbd><br>\n\Ue411&nbsp;&nbsp;<kbd>:\"o</kbd><br>\n\Ue412&nbsp;&nbsp;<kbd>:'D</kbd><br>\n\Ue413&nbsp;&nbsp;<kbd>;(</kbd><br>\n\Ue414&nbsp;&nbsp;<kbd>:[</kbd><br>\n\Ue415&nbsp;&nbsp;<kbd>^-^</kbd><br>\n\Ue416&nbsp;&nbsp;<kbd>}:(</kbd><br>\n\Ue417&nbsp;&nbsp;<kbd>:-*</kbd><br>\n\Ue418&nbsp;&nbsp;<kbd>;-*</kbd><br>\n\Ue445&nbsp;&nbsp;<kbd>(~~)</kbd><br>\n\Ue50c&nbsp;&nbsp;<kbd>**==</kbd>\n</div>";
+	},
+	{
+		Title = "Transcript Styles";
+		Content = "<center>\n<style>body { background-color: black; color: white } img { margin-top: 0.25em; width: 300px; height: 431px; border: 1px solid rgb(50, 50, 50) }</style>\nStandard<br><img src=\"http://colloquy.mobi/screenshots/styles/Standard.png\"><br><br>\nStandard Dark<br><img src=\"http://colloquy.mobi/screenshots/styles/StandardDark.png\"><br><br>\nStandard Grey<br><img src=\"http://colloquy.mobi/screenshots/styles/StandardGrey.png\"><br><br>\nChromatic<br><img src=\"http://colloquy.mobi/screenshots/styles/Chromatic.png\"><br><br>\nChromatic Dark<br><img src=\"http://colloquy.mobi/screenshots/styles/ChromaticDark.png\"><br><br>\nBubbles<br><img src=\"http://colloquy.mobi/screenshots/styles/Bubbles.png\"><br><br>\nNotes<br><img src=\"http://colloquy.mobi/screenshots/styles/Notes.png\">\n</center>";
+	},
+	Space,
+	{
+		SectionHeader = "Other Help Resources";
+		Title = "Colloquy Web Site";
+		Link = "http://colloquy.mobi";
+	},
+	{
+		Title = "Colloquy FAQs";
+		Link = "http://colloquy.info/project/wiki/MobileFAQs";
+	},
+	{
+		Title = "Colloquy Support Room";
+		Link = "irc://irc.freenode.net/colloquy-mobile";
+	},
+)

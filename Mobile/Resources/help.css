@@ -1,3 +1,42 @@
 body {
 	font-family: Helvetica, sans-serif;
+	font-size: 15px;
+}
+
+h1:first-of-type, p:first-of-type {
+	margin-top: 0;
+}
+
+h1 {
+	margin-bottom: 2px;
+	padding-bottom: 0;
+	font-size: 18px;
+}
+
+ul {
+	margin-top: 0;
+	padding-top: 0;
+	margin-left: 0;
+	padding-left: 1.5em;
+	list-style: square;
+}
+
+ol {
+	padding-left: 1.75em;
+}
+
+ul, ol {
+	margin-right: 0.5em;
+}
+
+li {
+	margin-bottom: 6px;
+}
+
+body > p {
+	text-indent: 1em;
+}
+
+body > p:first-of-type {
+	text-indent: 0;
 }
