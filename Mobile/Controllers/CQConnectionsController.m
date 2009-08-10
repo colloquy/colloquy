@@ -338,7 +338,17 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	BOOL newConnection = NO;
 	if (!chatConnection) {
 		chatConnection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
+
+		chatConnection.bouncerIdentifier = connection.settings.identifier;
 		chatConnection.bouncerConnectionIdentifier = connectionIdentifier;
+
+		chatConnection.bouncerType = connection.settings.type;
+		chatConnection.bouncerServer = connection.settings.server;
+		chatConnection.bouncerServerPort = connection.settings.serverPort;
+		chatConnection.bouncerUsername = connection.settings.username;
+		chatConnection.bouncerPassword = connection.settings.password;
+
+		chatConnection.pushNotifications = YES;
 
 		newConnection = YES;
 
@@ -348,13 +358,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[chatConnection release];
 	}
 
-	chatConnection.bouncerIdentifier = connection.settings.identifier;
-
-	chatConnection.bouncerType = connection.settings.type;
-	chatConnection.bouncerServer = connection.settings.server;
-	chatConnection.bouncerServerPort = connection.settings.serverPort;
-	chatConnection.bouncerUsername = connection.settings.username;
-	chatConnection.bouncerPassword = connection.settings.password;
+	[chatConnection setPersistentInformationObject:[NSNumber numberWithBool:YES] forKey:@"stillExistsOnBouncer"];
 
 	chatConnection.server = [info objectForKey:@"serverAddress"];
 	chatConnection.serverPort = [[info objectForKey:@"serverPort"] unsignedShortValue];
@@ -368,11 +372,34 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	chatConnection.alternateNicknames = [info objectForKey:@"alternateNicknames"];
 	chatConnection.encoding = [[info objectForKey:@"encoding"] unsignedIntegerValue];
 
-	chatConnection.pushNotifications = YES;
-
 	if (newConnection)
 		[_connectionsViewController connectionAdded:chatConnection];
 	else [_connectionsViewController updateConnection:chatConnection];
+}
+
+- (void) bouncerConnectionDidFinishConnectionList:(CQBouncerConnection *) connection {
+	NSMutableArray *connections = [_bouncerChatConnections objectForKey:connection.settings.identifier];
+	if (!connections.count)
+		return;
+
+	NSMutableArray *deletedConnections = [[NSMutableArray alloc] init];
+
+	for (MVChatConnection *chatConnection in connections) {
+		if (![[chatConnection persistentInformationObjectForKey:@"stillExistsOnBouncer"] boolValue])
+			[deletedConnections addObject:chatConnection];
+		[chatConnection removePersistentInformationObjectForKey:@"stillExistsOnBouncer"];
+	}
+
+	for (MVChatConnection *chatConnection in deletedConnections) {
+		NSIndexPath *indexPath = [_connectionsViewController indexPathForConnection:chatConnection];
+
+		[connections removeObjectIdenticalTo:chatConnection];
+
+		if (indexPath)
+			[_connectionsViewController connectionRemovedAtIndexPath:indexPath];
+	}
+
+	[deletedConnections release];
 }
 
 - (void) bouncerConnectionDidDisconnect:(CQBouncerConnection *) connection withError:(NSError *) error {
@@ -961,7 +988,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 			if (!connectionInfo)
 				continue;
 
-			if (connection.pushNotifications)
+			if (settings.pushNotifications && connection.pushNotifications)
 				++pushConnectionCount;
 
 			roomCount += connection.knownChatRooms.count;
