@@ -48,6 +48,8 @@ static NSOperationQueue *topicProcessingQueue;
 #pragma mark -
 
 - (void) viewDidLoad {
+	[super viewDidLoad];
+
 	_searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
 	_searchBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin);
 	_searchBar.placeholder = NSLocalizedString(@"Search", @"Search placeholder text");
