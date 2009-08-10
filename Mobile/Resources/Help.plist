@@ -53,7 +53,7 @@
 	{
 		SectionHeader = "Other Help Resources";
 		Title = "Colloquy Web Site";
-		Link = "http://colloquy.mobi";
+		Link = "http://colloquy.mobi?no-redirect";
 	},
 	{
 		Title = "Colloquy FAQs";

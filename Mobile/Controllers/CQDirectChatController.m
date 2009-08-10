@@ -543,7 +543,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 #pragma mark -
 
 - (BOOL) _openURL:(NSURL *) url preferBuiltInBrowser:(BOOL) preferBrowser {
-	BOOL openWithBrowser = preferBrowser || ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"];
+	BOOL openWithBrowser = (preferBrowser || ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"]);
 
 	if (openWithBrowser)
 		[self _forceRegsignKeyboard];

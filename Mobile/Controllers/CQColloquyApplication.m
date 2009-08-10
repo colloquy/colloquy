@@ -272,7 +272,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	return [[CQConnectionsController defaultController] handleOpenURL:url];
 }
 
-- (void) applicationWillTerminate:(UIApplication *)application {
+- (void) applicationWillTerminate:(UIApplication *) application {
 	NSTimeInterval runTime = ABS([_launchDate timeIntervalSinceNow]);
 	[[CQAnalyticsController defaultController] setObject:[NSNumber numberWithDouble:runTime] forKey:@"run-time"];
 }
@@ -315,9 +315,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (BOOL) openURL:(NSURL *) url {
-	if ([[CQConnectionsController defaultController] handleOpenURL:url])
-		return YES;
-	return [super openURL:url];
+	return [self openURL:url usingBuiltInBrowser:![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"]];
 }
 
 - (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser {
@@ -325,8 +323,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser withBrowserDelegate:(id <CQBrowserViewControllerDelegate>) delegate {
-	if (!url && !openWithBrowser)
-		return NO;
+	if ([[CQConnectionsController defaultController] handleOpenURL:url])
+		return YES;
 
 	BOOL loadLastURL = [url.absoluteString isCaseInsensitiveEqualToString:@"about:last"];
 	if (loadLastURL)
@@ -339,7 +337,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		openWithBrowser = NO;
 
 	if (!openWithBrowser)
-		return [self openURL:url];
+		return [super openURL:url];
 
 	CQBrowserViewController *browserController = [[CQBrowserViewController alloc] init];
 

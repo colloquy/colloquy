@@ -136,7 +136,7 @@ static NSURL *lastURL;
 }
 
 - (void) openInSafari:(id) sender {
-	[[UIApplication sharedApplication] openURL:self.url];
+	[[CQColloquyApplication sharedApplication] openURL:self.url usingBuiltInBrowser:NO];
 }
 
 - (NSURL *) url {
@@ -287,7 +287,6 @@ static NSURL *lastURL;
 - (BOOL) webView:(UIWebView *) sender shouldStartLoadWithRequest:(NSURLRequest *) request navigationType:(UIWebViewNavigationType) navigationType {
 	if ([[CQColloquyApplication sharedApplication] isSpecialApplicationURL:request.URL]) {
 		[[UIApplication sharedApplication] openURL:request.URL];
-
 		return NO;
 	}
 
