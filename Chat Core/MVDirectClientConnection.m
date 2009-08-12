@@ -5,7 +5,10 @@
 #import "MVChatConnectionPrivate.h"
 #import "MVFileTransfer.h"
 #import "MVUtilities.h"
-#import "Transmission.h"
+
+#if ENABLE(AUTO_PORT_MAPPING)
+#import <TCMPortMapper/TCMPortMapper.h>
+#endif
 
 #import <arpa/inet.h>
 
@@ -20,59 +23,35 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	return address;
 }
 
-#if ENABLE(AUTO_PORT_MAPPING)
-static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
-	int statuses[] = {
-		TR_NAT_TRAVERSAL_MAPPED,
-		TR_NAT_TRAVERSAL_MAPPING,
-		TR_NAT_TRAVERSAL_UNMAPPING,
-		TR_NAT_TRAVERSAL_ERROR,
-		TR_NAT_TRAVERSAL_NOTFOUND,
-		TR_NAT_TRAVERSAL_DISABLED,
-		-1
-	};
-
-	int upnpStatus = TR_NAT_TRAVERSAL_DISABLED;
-	int natpmpStatus = TR_NAT_TRAVERSAL_DISABLED;
-
-	if( upnp ) upnpStatus = tr_upnpStatus( upnp );
-	if( natpmp ) natpmpStatus = tr_natpmpStatus( natpmp );
-
-	for( NSUInteger i = 0; statuses[i] >= 0; i++ )
-		if( statuses[i] == upnpStatus || statuses[i] == natpmpStatus )
-			return statuses[i];
-
-	return TR_NAT_TRAVERSAL_ERROR;
-}
-#endif
-
 #pragma mark -
 
 @interface MVDirectClientConnection (MVDirectClientConnectionPrivate)
 - (void) _setupThread;
+- (void) _sendDelegateAcceptingConnections;
 @end
 
 #pragma mark -
 
 @implementation MVDirectClientConnection
 - (void) finalize {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	_done = YES;
 
 	[_acceptConnection disconnect];
 	[_connection disconnect];
 
 #if ENABLE(AUTO_PORT_MAPPING)
-	if( _upnp ) tr_upnpClose( _upnp );
-	_upnp = NULL;
-
-	if( _natpmp ) tr_natpmpClose( _natpmp );
-	_natpmp = NULL;
+	if (_portMapping)
+		[[TCMPortMapper sharedInstance] removePortMapping:_portMapping];
 #endif
 
 	[super finalize];
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	_done = YES;
 
 	[_acceptConnection disconnect];
@@ -89,11 +68,11 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 	_threadWaitLock = nil;
 
 #if ENABLE(AUTO_PORT_MAPPING)
-	if( _upnp ) tr_upnpClose( _upnp );
-	_upnp = NULL;
+	if (_portMapping)
+		[[TCMPortMapper sharedInstance] removePortMapping:_portMapping];
 
-	if( _natpmp ) tr_natpmpClose( _natpmp );
-	_natpmp = NULL;
+	[_portMapping release];
+	_portMapping = nil;
 #endif
 
 	_connectionThread = nil;
@@ -280,43 +259,53 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 		}
 	}
 
+	if( success )
+		_port = port;
+	else _port = 0;
+
 #if ENABLE(AUTO_PORT_MAPPING)
 	if( success && [MVFileTransfer isAutoPortMappingEnabled] ) {
-		tr_msgInit();
-		tr_fdInit();
+		if (_portMapping) {
+			[[TCMPortMapper sharedInstance] removePortMapping:_portMapping];
 
-		_upnp = tr_upnpInit();
-		tr_upnpStart( _upnp );
-		tr_upnpForwardPort( _upnp, port );
+			[[NSNotificationCenter defaultCenter] removeObserver:self name:TCMPortMappingDidChangeMappingStatusNotification object:_portMapping];
 
-		_natpmp = tr_natpmpInit();
-		tr_natpmpStart( _natpmp );
-		tr_natpmpForwardPort( _natpmp, port );
+			[_portMapping release];
+			_portMapping = nil;
+		}
 
-		NSDate *mappingStart = [NSDate date];
-		int status = 0;
+		_portMapping = [[TCMPortMapping alloc] initWithLocalPort:port desiredExternalPort:port transportProtocol:TCMPortMappingTransportProtocolTCP userInfo:nil];
 
-		do {
-			tr_upnpPulse( _upnp );
-			tr_natpmpPulse( _natpmp );
-			status = natTraversalStatus( _upnp, _natpmp );
-		} while( ( status == 1 || status == 3 ) && ABS( [mappingStart timeIntervalSinceNow] ) < 5. );
-	}
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_portMappingStatusChanged:) name:TCMPortMappingDidChangeMappingStatusNotification object:_portMapping];
+
+		[[TCMPortMapper sharedInstance] addPortMapping:_portMapping];
+	} else
 #endif
+	if( success )
+		[self _sendDelegateAcceptingConnections];
+}
 
-	if( success && [_delegate respondsToSelector:@selector( directClientConnection:acceptingConnectionsToHost:port: )] )
-		[_delegate directClientConnection:self acceptingConnectionsToHost:[_acceptConnection localHost] port:port];
+- (void) _sendDelegateAcceptingConnections {
+	if( [_delegate respondsToSelector:@selector( directClientConnection:acceptingConnectionsToHost:port: )] )
+		[_delegate directClientConnection:self acceptingConnectionsToHost:[_acceptConnection localHost] port:_port];
+}
+
+- (void) _portMappingStatusChanged:(NSNotification *) notification {
+	[self _sendDelegateAcceptingConnections];
 }
 
 - (void) _finish {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _finish ) object:nil];
 
 #if ENABLE(AUTO_PORT_MAPPING)
-	if( _upnp ) tr_upnpClose( _upnp );
-	_upnp = NULL;
+	if (_portMapping) {
+		[[TCMPortMapper sharedInstance] removePortMapping:_portMapping];
 
-	if( _natpmp ) tr_natpmpClose( _natpmp );
-	_natpmp = NULL;
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:TCMPortMappingDidChangeMappingStatusNotification object:_portMapping];
+
+		[_portMapping release];
+		_portMapping = nil;
+	}
 #endif
 
 	id old = _acceptConnection;
@@ -352,11 +341,6 @@ static int natTraversalStatus( tr_upnp_t *upnp, tr_natpmp_t *natpmp ) {
 	pool = nil;
 
 	while( ! _done ) {
-#if ENABLE(AUTO_PORT_MAPPING)
-		if( _upnp ) tr_upnpPulse( _upnp );
-		if( _natpmp ) tr_natpmpPulse( _natpmp );
-#endif
-
 		pool = [[NSAutoreleasePool allocWithZone:nil] init];
 
 		NSDate *timeout = [[NSDate allocWithZone:nil] initWithTimeIntervalSinceNow:5.];

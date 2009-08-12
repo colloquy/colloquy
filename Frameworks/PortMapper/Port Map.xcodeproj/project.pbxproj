@@ -1,0 +1,420 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 44;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		318011AC0D4DEE9500BE3B28 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
+		3180159D0D4E1B9200BE3B28 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3180154D0D4E08D900BE3B28 /* SystemConfiguration.framework */; };
+		F2301B5B0D685C2700728699 /* igd_desc_parse.c in Sources */ = {isa = PBXBuildFile; fileRef = F2301B040D685C1B00728699 /* igd_desc_parse.c */; };
+		F2301B5C0D685C2A00728699 /* minisoap.c in Sources */ = {isa = PBXBuildFile; fileRef = F2301B0E0D685C1B00728699 /* minisoap.c */; };
+		F2301B5D0D685C3300728699 /* minissdpc.c in Sources */ = {isa = PBXBuildFile; fileRef = F2301B110D685C1B00728699 /* minissdpc.c */; };
+		F2301B5F0D685C3B00728699 /* miniupnpc.c in Sources */ = {isa = PBXBuildFile; fileRef = F2301B140D685C1B00728699 /* miniupnpc.c */; };
+		F2301B600D685C3F00728699 /* miniwget.c in Sources */ = {isa = PBXBuildFile; fileRef = F2301B180D685C1B00728699 /* miniwget.c */; };
+		F2301B610D685C4200728699 /* minixml.c in Sources */ = {isa = PBXBuildFile; fileRef = F2301B1B0D685C1B00728699 /* minixml.c */; };
+		F2301B630D685C4B00728699 /* upnpcommands.c in Sources */ = {isa = PBXBuildFile; fileRef = F2301B2A0D685C1B00728699 /* upnpcommands.c */; };
+		F2301B640D685C4F00728699 /* upnperrors.c in Sources */ = {isa = PBXBuildFile; fileRef = F2301B2D0D685C1B00728699 /* upnperrors.c */; };
+		F2301B650D685C5300728699 /* upnpreplyparse.c in Sources */ = {isa = PBXBuildFile; fileRef = F2301B300D685C1B00728699 /* upnpreplyparse.c */; };
+		F29472930ED3091500DEBA97 /* getgateway.c in Sources */ = {isa = PBXBuildFile; fileRef = F29472890ED3091000DEBA97 /* getgateway.c */; };
+		F29472940ED3091800DEBA97 /* natpmp.c in Sources */ = {isa = PBXBuildFile; fileRef = F294728D0ED3091000DEBA97 /* natpmp.c */; };
+		F2C65C2D0D50B2D800820CAE /* IXSCNotificationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F2C65BE70D50B17B00820CAE /* IXSCNotificationManager.h */; };
+		F2C65C2E0D50B2D900820CAE /* IXSCNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F2C65BE60D50B17B00820CAE /* IXSCNotificationManager.m */; };
+		F2C65C2F0D50B2E000820CAE /* TCMNATPMPPortMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F2C65BE30D50B17B00820CAE /* TCMNATPMPPortMapper.m */; };
+		F2C65C310D50B2E400820CAE /* TCMPortMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = F2C65BE10D50B17B00820CAE /* TCMPortMapper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F2C65C320D50B2E500820CAE /* TCMPortMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F2C65BE00D50B17B00820CAE /* TCMPortMapper.m */; };
+		F2C65C330D50B2E900820CAE /* TCMUPNPPortMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F2C65BDE0D50B17B00820CAE /* TCMUPNPPortMapper.m */; };
+		F2C65C360D50B2F800820CAE /* NSNotificationCenterThreadingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = F2C65BE50D50B17B00820CAE /* NSNotificationCenterThreadingAdditions.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1C386E321032434B00660864 /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Common Settings.xcconfig"; sourceTree = "<group>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		3180119F0D4DEC8400BE3B28 /* TCMPortMapper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TCMPortMapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3180154D0D4E08D900BE3B28 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
+		F2301B010D685C1B00728699 /* bsdqueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bsdqueue.h; sourceTree = "<group>"; };
+		F2301B030D685C1B00728699 /* declspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = declspec.h; sourceTree = "<group>"; };
+		F2301B040D685C1B00728699 /* igd_desc_parse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = igd_desc_parse.c; sourceTree = "<group>"; };
+		F2301B050D685C1B00728699 /* igd_desc_parse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = igd_desc_parse.h; sourceTree = "<group>"; };
+		F2301B0E0D685C1B00728699 /* minisoap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minisoap.c; sourceTree = "<group>"; };
+		F2301B0F0D685C1B00728699 /* minisoap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minisoap.h; sourceTree = "<group>"; };
+		F2301B110D685C1B00728699 /* minissdpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minissdpc.c; sourceTree = "<group>"; };
+		F2301B120D685C1B00728699 /* minissdpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minissdpc.h; sourceTree = "<group>"; };
+		F2301B140D685C1B00728699 /* miniupnpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniupnpc.c; sourceTree = "<group>"; };
+		F2301B150D685C1B00728699 /* miniupnpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniupnpc.h; sourceTree = "<group>"; };
+		F2301B170D685C1B00728699 /* miniupnpcmodule.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniupnpcmodule.c; sourceTree = "<group>"; };
+		F2301B180D685C1B00728699 /* miniwget.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniwget.c; sourceTree = "<group>"; };
+		F2301B190D685C1B00728699 /* miniwget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniwget.h; sourceTree = "<group>"; };
+		F2301B1B0D685C1B00728699 /* minixml.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minixml.c; sourceTree = "<group>"; };
+		F2301B1C0D685C1B00728699 /* minixml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minixml.h; sourceTree = "<group>"; };
+		F2301B2A0D685C1B00728699 /* upnpcommands.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = upnpcommands.c; sourceTree = "<group>"; };
+		F2301B2B0D685C1B00728699 /* upnpcommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = upnpcommands.h; sourceTree = "<group>"; };
+		F2301B2D0D685C1B00728699 /* upnperrors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = upnperrors.c; sourceTree = "<group>"; };
+		F2301B2E0D685C1B00728699 /* upnperrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = upnperrors.h; sourceTree = "<group>"; };
+		F2301B300D685C1B00728699 /* upnpreplyparse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = upnpreplyparse.c; sourceTree = "<group>"; };
+		F2301B310D685C1B00728699 /* upnpreplyparse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = upnpreplyparse.h; sourceTree = "<group>"; };
+		F29472880ED3091000DEBA97 /* declspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = declspec.h; sourceTree = "<group>"; };
+		F29472890ED3091000DEBA97 /* getgateway.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = getgateway.c; sourceTree = "<group>"; };
+		F294728A0ED3091000DEBA97 /* getgateway.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = getgateway.h; sourceTree = "<group>"; };
+		F294728D0ED3091000DEBA97 /* natpmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = natpmp.c; sourceTree = "<group>"; };
+		F294728F0ED3091000DEBA97 /* natpmp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = natpmp.h; sourceTree = "<group>"; };
+		F2C65BDE0D50B17B00820CAE /* TCMUPNPPortMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCMUPNPPortMapper.m; path = framework/TCMUPNPPortMapper.m; sourceTree = "<group>"; };
+		F2C65BDF0D50B17B00820CAE /* TCMUPNPPortMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCMUPNPPortMapper.h; path = framework/TCMUPNPPortMapper.h; sourceTree = "<group>"; };
+		F2C65BE00D50B17B00820CAE /* TCMPortMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCMPortMapper.m; path = framework/TCMPortMapper.m; sourceTree = "<group>"; };
+		F2C65BE10D50B17B00820CAE /* TCMPortMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCMPortMapper.h; path = framework/TCMPortMapper.h; sourceTree = "<group>"; };
+		F2C65BE20D50B17B00820CAE /* TCMPortMapper-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "TCMPortMapper-Info.plist"; path = "framework/TCMPortMapper-Info.plist"; sourceTree = "<group>"; };
+		F2C65BE30D50B17B00820CAE /* TCMNATPMPPortMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCMNATPMPPortMapper.m; path = framework/TCMNATPMPPortMapper.m; sourceTree = "<group>"; };
+		F2C65BE40D50B17B00820CAE /* TCMNATPMPPortMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCMNATPMPPortMapper.h; path = framework/TCMNATPMPPortMapper.h; sourceTree = "<group>"; };
+		F2C65BE50D50B17B00820CAE /* NSNotificationCenterThreadingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSNotificationCenterThreadingAdditions.m; path = framework/NSNotificationCenterThreadingAdditions.m; sourceTree = "<group>"; };
+		F2C65BE60D50B17B00820CAE /* IXSCNotificationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IXSCNotificationManager.m; path = framework/IXSCNotificationManager.m; sourceTree = "<group>"; };
+		F2C65BE70D50B17B00820CAE /* IXSCNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IXSCNotificationManager.h; path = framework/IXSCNotificationManager.h; sourceTree = "<group>"; };
+		F2C65BE80D50B17B00820CAE /* NSNotificationCenterThreadingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSNotificationCenterThreadingAdditions.h; path = framework/NSNotificationCenterThreadingAdditions.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3180119D0D4DEC8400BE3B28 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				318011AC0D4DEE9500BE3B28 /* Foundation.framework in Frameworks */,
+				3180159D0D4E1B9200BE3B28 /* SystemConfiguration.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3180119F0D4DEC8400BE3B28 /* TCMPortMapper.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1C386E301032431E00660864 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				F2C65BE70D50B17B00820CAE /* IXSCNotificationManager.h */,
+				F2C65BE60D50B17B00820CAE /* IXSCNotificationManager.m */,
+				F2C65BE80D50B17B00820CAE /* NSNotificationCenterThreadingAdditions.h */,
+				F2C65BE50D50B17B00820CAE /* NSNotificationCenterThreadingAdditions.m */,
+			);
+			name = Other;
+			sourceTree = "<group>";
+		};
+		1C386E311032434B00660864 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				1C386E321032434B00660864 /* Common Settings.xcconfig */,
+			);
+			name = Settings;
+			path = ../../Settings;
+			sourceTree = SOURCE_ROOT;
+		};
+		29B97314FDCFA39411CA2CEA /* PortMapper */ = {
+			isa = PBXGroup;
+			children = (
+				F29472850ED3091000DEBA97 /* libnatpmp */,
+				F2301B000D685C1B00728699 /* miniupnpc */,
+				1C386E301032431E00660864 /* Other */,
+				F2C65BE40D50B17B00820CAE /* TCMNATPMPPortMapper.h */,
+				F2C65BE30D50B17B00820CAE /* TCMNATPMPPortMapper.m */,
+				F2C65BE10D50B17B00820CAE /* TCMPortMapper.h */,
+				F2C65BE00D50B17B00820CAE /* TCMPortMapper.m */,
+				F2C65BDF0D50B17B00820CAE /* TCMUPNPPortMapper.h */,
+				F2C65BDE0D50B17B00820CAE /* TCMUPNPPortMapper.m */,
+				F2C65C2C0D50B2B700820CAE /* Resources */,
+				1C386E311032434B00660864 /* Settings */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = PortMapper;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3180154D0D4E08D900BE3B28 /* SystemConfiguration.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F2301B000D685C1B00728699 /* miniupnpc */ = {
+			isa = PBXGroup;
+			children = (
+				F2301B010D685C1B00728699 /* bsdqueue.h */,
+				F2301B030D685C1B00728699 /* declspec.h */,
+				F2301B040D685C1B00728699 /* igd_desc_parse.c */,
+				F2301B050D685C1B00728699 /* igd_desc_parse.h */,
+				F2301B0E0D685C1B00728699 /* minisoap.c */,
+				F2301B0F0D685C1B00728699 /* minisoap.h */,
+				F2301B110D685C1B00728699 /* minissdpc.c */,
+				F2301B120D685C1B00728699 /* minissdpc.h */,
+				F2301B140D685C1B00728699 /* miniupnpc.c */,
+				F2301B150D685C1B00728699 /* miniupnpc.h */,
+				F2301B170D685C1B00728699 /* miniupnpcmodule.c */,
+				F2301B180D685C1B00728699 /* miniwget.c */,
+				F2301B190D685C1B00728699 /* miniwget.h */,
+				F2301B1B0D685C1B00728699 /* minixml.c */,
+				F2301B1C0D685C1B00728699 /* minixml.h */,
+				F2301B2A0D685C1B00728699 /* upnpcommands.c */,
+				F2301B2B0D685C1B00728699 /* upnpcommands.h */,
+				F2301B2D0D685C1B00728699 /* upnperrors.c */,
+				F2301B2E0D685C1B00728699 /* upnperrors.h */,
+				F2301B300D685C1B00728699 /* upnpreplyparse.c */,
+				F2301B310D685C1B00728699 /* upnpreplyparse.h */,
+			);
+			name = miniupnpc;
+			path = framework/miniupnpc;
+			sourceTree = "<group>";
+		};
+		F29472850ED3091000DEBA97 /* libnatpmp */ = {
+			isa = PBXGroup;
+			children = (
+				F29472880ED3091000DEBA97 /* declspec.h */,
+				F29472890ED3091000DEBA97 /* getgateway.c */,
+				F294728A0ED3091000DEBA97 /* getgateway.h */,
+				F294728D0ED3091000DEBA97 /* natpmp.c */,
+				F294728F0ED3091000DEBA97 /* natpmp.h */,
+			);
+			name = libnatpmp;
+			path = framework/libnatpmp;
+			sourceTree = "<group>";
+		};
+		F2C65C2C0D50B2B700820CAE /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F2C65BE20D50B17B00820CAE /* TCMPortMapper-Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		3180119A0D4DEC8400BE3B28 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F2C65C2D0D50B2D800820CAE /* IXSCNotificationManager.h in Headers */,
+				F2C65C310D50B2E400820CAE /* TCMPortMapper.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		3180119E0D4DEC8400BE3B28 /* TCMPortMapper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 318011A30D4DEC8500BE3B28 /* Build configuration list for PBXNativeTarget "TCMPortMapper" */;
+			buildPhases = (
+				3180119A0D4DEC8400BE3B28 /* Headers */,
+				3180119B0D4DEC8400BE3B28 /* Resources */,
+				3180119C0D4DEC8400BE3B28 /* Sources */,
+				3180119D0D4DEC8400BE3B28 /* Frameworks */,
+				F24602C10DB4AB3E00C509E9 /* Versioning */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TCMPortMapper;
+			productName = TCMPortMapper;
+			productReference = 3180119F0D4DEC8400BE3B28 /* TCMPortMapper.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Port Map" */;
+			compatibilityVersion = "Xcode 3.0";
+			hasScannedForEncodings = 1;
+			mainGroup = 29B97314FDCFA39411CA2CEA /* PortMapper */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3180119E0D4DEC8400BE3B28 /* TCMPortMapper */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3180119B0D4DEC8400BE3B28 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F24602C10DB4AB3E00C509E9 /* Versioning */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = Versioning;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = "/usr/bin/perl -w";
+			shellScript = "# Xcode auto-versioning script for Subversion\n# by Axel Andersson, modified by Daniel Jalkut to add\n# \"--revision HEAD\" to the svn info line, which allows\n# the latest revision to always be used.\n        \nuse strict;\n        \ndie \"$0: Must be run from Xcode\" unless $ENV{\"BUILT_PRODUCTS_DIR\"};\n        \n# Get the current subversion revision number and use it to set the CFBundleVersion value\nmy $REV = `export PATH=\\$PATH:/usr/local/bin;/usr/bin/env svnversion -n ./`;\nmy $INFO = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{WRAPPER_NAME}/Resources/Info.plist\";\n        \nmy $version = $REV;\n$version =~ s/([\\d]*:)(\\d+[M|S]*).*/$2/;\ndie \"$0: No Subversion revision found\" unless $version;\n        \nopen(FH, \"$INFO\") or die \"$0: $INFO: $!\";\nmy $info = join(\"\", <FH>);\nclose(FH);\n        \n$info =~ s/([\\t ]+<key>BuildRevision<\\/key>\\n[\\t ]+<string>).*?(<\\/string>)/$1$version$2/;\n        \nopen(FH, \">$INFO\") or die \"$0: $INFO: $!\";\nprint FH $info;\nclose(FH);\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3180119C0D4DEC8400BE3B28 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F2C65C2E0D50B2D900820CAE /* IXSCNotificationManager.m in Sources */,
+				F2C65C2F0D50B2E000820CAE /* TCMNATPMPPortMapper.m in Sources */,
+				F2C65C320D50B2E500820CAE /* TCMPortMapper.m in Sources */,
+				F2C65C330D50B2E900820CAE /* TCMUPNPPortMapper.m in Sources */,
+				F2C65C360D50B2F800820CAE /* NSNotificationCenterThreadingAdditions.m in Sources */,
+				F2301B5B0D685C2700728699 /* igd_desc_parse.c in Sources */,
+				F2301B5C0D685C2A00728699 /* minisoap.c in Sources */,
+				F2301B5D0D685C3300728699 /* minissdpc.c in Sources */,
+				F2301B5F0D685C3B00728699 /* miniupnpc.c in Sources */,
+				F2301B600D685C3F00728699 /* miniwget.c in Sources */,
+				F2301B610D685C4200728699 /* minixml.c in Sources */,
+				F2301B630D685C4B00728699 /* upnpcommands.c in Sources */,
+				F2301B640D685C4F00728699 /* upnperrors.c in Sources */,
+				F2301B650D685C5300728699 /* upnpreplyparse.c in Sources */,
+				F29472930ED3091500DEBA97 /* getgateway.c in Sources */,
+				F29472940ED3091800DEBA97 /* natpmp.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		318011A10D4DEC8500BE3B28 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = framework/TCMPortMapper_Prefix.pch;
+				HEADER_SEARCH_PATHS = framework;
+				INFOPLIST_FILE = "framework/TCMPortMapper-Info.plist";
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+					"-lssl",
+					"-lcrypto",
+				);
+				PRODUCT_NAME = TCMPortMapper;
+				USER_HEADER_SEARCH_PATHS = framework;
+			};
+			name = Development;
+		};
+		318011A20D4DEC8500BE3B28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = framework/TCMPortMapper_Prefix.pch;
+				HEADER_SEARCH_PATHS = framework;
+				INFOPLIST_FILE = "framework/TCMPortMapper-Info.plist";
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+					"-lssl",
+					"-lcrypto",
+				);
+				PRODUCT_NAME = TCMPortMapper;
+				USER_HEADER_SEARCH_PATHS = framework;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Development */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C386E321032434B00660864 /* Common Settings.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_SIGN_COMPARE = NO;
+				SYMROOT = ../../build;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wcast-align",
+					"-Wchar-subscripts",
+					"-Wformat-security",
+					"-Wmissing-format-attribute",
+					"-Wpointer-arith",
+					"-Wwrite-strings",
+					"-Wno-format-y2k",
+					"-Wno-unused-parameter",
+					"-Wbad-function-cast",
+				);
+			};
+			name = Development;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C386E321032434B00660864 /* Common Settings.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					NS_BLOCK_ASSERTIONS,
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				GCC_WARN_SIGN_COMPARE = NO;
+				SYMROOT = ../../build;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wcast-align",
+					"-Wchar-subscripts",
+					"-Wformat-security",
+					"-Wmissing-format-attribute",
+					"-Wpointer-arith",
+					"-Wwrite-strings",
+					"-Wno-format-y2k",
+					"-Wno-unused-parameter",
+					"-Wbad-function-cast",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		318011A30D4DEC8500BE3B28 /* Build configuration list for PBXNativeTarget "TCMPortMapper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				318011A10D4DEC8500BE3B28 /* Development */,
+				318011A20D4DEC8500BE3B28 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Port Map" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Development */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

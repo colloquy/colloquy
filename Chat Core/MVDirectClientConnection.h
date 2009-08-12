@@ -1,4 +1,5 @@
 @class AsyncSocket;
+@class TCMPortMapping;
 
 NSString *MVDCCFriendlyAddress( NSString *address );
 
@@ -7,10 +8,10 @@ NSString *MVDCCFriendlyAddress( NSString *address );
 	id _delegate;
 	AsyncSocket *_connection;
 	AsyncSocket *_acceptConnection;
-	void *_natpmp;
-	void *_upnp;
+	TCMPortMapping *_portMapping;
 	NSThread *_connectionThread;
 	NSConditionLock *_threadWaitLock;
+	unsigned short _port;
 	BOOL _done;
 }
 - (void) connectToHost:(NSString *) host onPort:(unsigned short) port;

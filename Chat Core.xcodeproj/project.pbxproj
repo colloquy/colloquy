@@ -12,6 +12,7 @@
 		1C11B7A109C27AC800789814 /* BSD License.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1C11B7A009C27AC800789814 /* BSD License.txt */; };
 		1C18955A0E29CC19003CFED0 /* MVAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C1895590E29CC19003CFED0 /* MVAvailability.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C3560060B4CCE95008A93FA /* MVUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C3560050B4CCE95008A93FA /* MVUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1C386E8E103246B500660864 /* TCMPortMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C386E8D103246B500660864 /* TCMPortMapper.framework */; };
 		1C3D55BC05A4CBBE00F25F5E /* NSNumberAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3D55BA05A4CBBE00F25F5E /* NSNumberAdditions.m */; };
 		1C3D55C205A4DC1E00F25F5E /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3D55C005A4DC1E00F25F5E /* NSMethodSignatureAdditions.m */; };
 		1C51B483052DE0CB00BB459B /* NSAttributedStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = F5E98622018B412B01EE70DE /* NSAttributedStringAdditions.m */; };
@@ -102,6 +103,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1C386E801032464A00660864 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C386E7C1032464A00660864 /* Port Map.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3180119F0D4DEC8400BE3B28 /* TCMPortMapper.framework */;
+			remoteInfo = TCMPortMapper;
+		};
+		1C386E861032466B00660864 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1C386E7C1032464A00660864 /* Port Map.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 3180119E0D4DEC8400BE3B28 /* TCMPortMapper */;
+			remoteInfo = TCMPortMapper;
+		};
 		DDBB43A60BD5DF9400EC6E55 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DDBB43A20BD5DF9400EC6E55 /* Acid.xcodeproj */;
@@ -131,6 +146,8 @@
 		1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatPluginManager.h; path = "Chat Core/MVChatPluginManager.h"; sourceTree = "<group>"; };
 		1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatPluginManager.m; path = "Chat Core/MVChatPluginManager.m"; sourceTree = "<group>"; };
 		1C3560050B4CCE95008A93FA /* MVUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVUtilities.h; path = Additions/MVUtilities.h; sourceTree = "<group>"; };
+		1C386E7C1032464A00660864 /* Port Map.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Port Map.xcodeproj"; path = "Frameworks/PortMapper/Port Map.xcodeproj"; sourceTree = "<group>"; };
+		1C386E8D103246B500660864 /* TCMPortMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TCMPortMapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C3D55B905A4CBBE00F25F5E /* NSNumberAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSNumberAdditions.h; path = Additions/NSNumberAdditions.h; sourceTree = "<group>"; };
 		1C3D55BA05A4CBBE00F25F5E /* NSNumberAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSNumberAdditions.m; path = Additions/NSNumberAdditions.m; sourceTree = "<group>"; };
 		1C3D55BF05A4DC1E00F25F5E /* NSMethodSignatureAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSMethodSignatureAdditions.h; path = Additions/NSMethodSignatureAdditions.h; sourceTree = "<group>"; };
@@ -233,6 +250,7 @@
 				1C11689A0B45F98700F57D2C /* libtransmission.a in Frameworks */,
 				DDF64D530BD2A4F6009E8FF6 /* Acid.framework in Frameworks */,
 				1C9FFB140FA1958300748177 /* libicucore.dylib in Frameworks */,
+				1C386E8E103246B500660864 /* TCMPortMapper.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,6 +260,7 @@
 		089C166AFE841209C02AAC07 /* Massinova Menu Extra */ = {
 			isa = PBXGroup;
 			children = (
+				1C386E7C1032464A00660864 /* Port Map.xcodeproj */,
 				F50B0A9F0170C89301A84BDE /* Sources & Headers */,
 				F50B0AA00170C89301A84BDE /* Other Sources & Additions */,
 				F50B0AA10170C89301A84BDE /* Resources */,
@@ -270,6 +289,7 @@
 				1C5A233D06FA4FEE00A51F10 /* libsilc.framework */,
 				1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */,
 				DDF64D520BD2A4F6009E8FF6 /* Acid.framework */,
+				1C386E8D103246B500660864 /* TCMPortMapper.framework */,
 				1C1168990B45F98700F57D2C /* libtransmission.a */,
 				1C9FFB130FA1958300748177 /* libicucore.dylib */,
 			);
@@ -283,6 +303,14 @@
 				089C167FFE841241C02AAC07 /* AppKit.framework */,
 			);
 			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		1C386E7D1032464A00660864 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1C386E811032464A00660864 /* TCMPortMapper.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		1C5CBF2D06FF92C90006C5B1 /* IRC Support */ = {
@@ -549,6 +577,7 @@
 			);
 			dependencies = (
 				DDBB43B90BD5DFB000EC6E55 /* PBXTargetDependency */,
+				1C386E871032466B00660864 /* PBXTargetDependency */,
 			);
 			name = "Chat Core (Framework)";
 			productInstallPath = "@executable_path/../Frameworks";
@@ -591,6 +620,10 @@
 					ProductGroup = DDBB43A30BD5DF9400EC6E55 /* Products */;
 					ProjectRef = DDBB43A20BD5DF9400EC6E55 /* Acid.xcodeproj */;
 				},
+				{
+					ProductGroup = 1C386E7D1032464A00660864 /* Products */;
+					ProjectRef = 1C386E7C1032464A00660864 /* Port Map.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -600,6 +633,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		1C386E811032464A00660864 /* TCMPortMapper.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = TCMPortMapper.framework;
+			remoteRef = 1C386E801032464A00660864 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		DDBB43A70BD5DF9400EC6E55 /* Acid.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -689,6 +729,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1C386E871032466B00660864 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TCMPortMapper;
+			targetProxy = 1C386E861032466B00660864 /* PBXContainerItemProxy */;
+		};
 		DDBB43B90BD5DFB000EC6E55 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Acid;
