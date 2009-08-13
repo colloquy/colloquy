@@ -1041,20 +1041,19 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	}
 
 	// ask if the user really wants to send a message with lots of newlines.
-	if ( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVWarnOnLargeMessages"] ) {
-		NSUInteger newlineCount = 1;
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVWarnOnLargeMessages"] ) {
+		NSUInteger newlineCount = 0;
 		NSUInteger messageLimit = 5;
+		
+		NSArray *lines = [[[send textStorage] string] componentsSeparatedByString:@"\n"];		
+		NSEnumerator *enumerator = [lines objectEnumerator];
+		NSString *line = nil;
 
-		for (NSUInteger i = 0; i < [[send textStorage] length]; ++i) {
-			if (i == 0) continue;
-
-			unichar currentCharacter = [[[send textStorage] string] characterAtIndex:i];
-			unichar previousCharacter = [[[send textStorage] string] characterAtIndex:(i - 1)];
-			
-			if ((currentCharacter == '\n' || currentCharacter == '\r') && (previousCharacter != '\n' && previousCharacter != '\r') ) newlineCount++;
-		}
-
-		if ( [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVWarnOnLargeMessageLimit"] unsignedIntValue] > 1 ) messageLimit = [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVWarnOnLargeMessageLimit"] unsignedIntValue];
+		while( ( line = [enumerator nextObject] ) )
+			if( [line length] ) newlineCount++;
+		
+		if ( [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVWarnOnLargeMessageLimit"] unsignedIntValue] > 1 )
+			messageLimit = [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVWarnOnLargeMessageLimit"] unsignedIntValue];
 
 		if ( newlineCount > messageLimit ) {
 			NSAlert *alert = [[[NSAlert alloc] init] autorelease];
