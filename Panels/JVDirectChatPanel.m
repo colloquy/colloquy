@@ -1041,14 +1041,17 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	}
 
 	// ask if the user really wants to send a message with lots of newlines.
-	if ( [[NSUserDefaults standardUserDefaults] objectForKey:@"JVWarnOnLargeMessages"] ) {
+	if ( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVWarnOnLargeMessages"] ) {
 		NSUInteger newlineCount = 1;
-		NSUInteger messageLimit = 3;
+		NSUInteger messageLimit = 5;
 
 		for (NSUInteger i = 0; i < [[send textStorage] length]; ++i) {
-			unichar currentCharacter = [[[send textStorage] string] characterAtIndex:i];
+			if (i == 0) continue;
 
-			if (currentCharacter == '\n' || currentCharacter == '\r' ) newlineCount++;
+			unichar currentCharacter = [[[send textStorage] string] characterAtIndex:i];
+			unichar previousCharacter = [[[send textStorage] string] characterAtIndex:(i - 1)];
+			
+			if ((currentCharacter == '\n' || currentCharacter == '\r') && (previousCharacter != '\n' && previousCharacter != '\r') ) newlineCount++;
 		}
 
 		if ( [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVWarnOnLargeMessageLimit"] unsignedIntValue] > 1 ) messageLimit = [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVWarnOnLargeMessageLimit"] unsignedIntValue];
