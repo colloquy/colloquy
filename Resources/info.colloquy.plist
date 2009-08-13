@@ -4,6 +4,8 @@
 <dict>
 	<key>JVWarnOnLargeMessages</key>
 	<true/>
+	<key>JVSendDoubleSlashes</key>
+	<false/>
 	<key>JVChatWindowInterface</key>
 	<integer>2</integer>
 	<key>JVChatTranscriptFolder</key>
