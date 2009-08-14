@@ -85,6 +85,19 @@
 			if( ! user ) return NO;
 			[[JVInspectorController inspectorOfObject:user] show:nil];
 			return YES;
+		} else if( ! [command caseInsensitiveCompare:@"anick"] ) {
+			NSString *newNickname = [arguments string];
+			
+			if ( ![newNickname length] ) return NO;
+			
+			NSArray *openedConnections = [[MVConnectionsController defaultController] connectedConnections];
+			NSEnumerator *enumerator = [openedConnections objectEnumerator];
+			MVChatConnection *connection = nil;
+
+			while ( ( connection = [enumerator nextObject] ) )
+				[connection setNickname:newNickname];
+
+			return YES;
 		}
 	}
 
