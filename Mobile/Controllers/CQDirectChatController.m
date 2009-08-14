@@ -1141,6 +1141,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	NSTimeInterval timestampInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQTimestampInterval"];
 	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
 
+	if (!timestampInterval) return;
+	
 	if (!_lastTimestampTime)
 		_lastTimestampTime = currentTime;
 
