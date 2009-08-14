@@ -41,6 +41,7 @@ extern NSString *CQChatViewControllerRecentMessagesUpdatedNotification;
 	BOOL _showingKeyboard;
 
 	NSString *_tweetRetryArguments;
+	NSTimeInterval _lastTimestampTime;
 }
 - (id) initWithTarget:(id) target;
 

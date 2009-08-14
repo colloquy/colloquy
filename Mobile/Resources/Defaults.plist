@@ -66,6 +66,8 @@
 	<string></string>
 	<key>CQDefaultNickname</key>
 	<string></string>
+	<key>CQTimestampInterval</key>
+	<integer>180</integer>
 	<key>JVQuitMessage</key>
 	<string>Colloquy for iPhone - http://colloquy.mobi</string>
 </dict>

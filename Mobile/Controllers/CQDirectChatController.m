@@ -1137,6 +1137,30 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 #pragma mark -
 
+- (void) _insertTimestamp {
+	NSTimeInterval timestampInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQTimestampInterval"];
+	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
+
+	if (!_lastTimestampTime)
+		_lastTimestampTime = currentTime;
+
+	if ((currentTime - _lastTimestampTime) < timestampInterval)
+		return;
+
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	dateFormatter.dateStyle = NSDateFormatterNoStyle;
+	dateFormatter.timeStyle = NSDateFormatterShortStyle;
+	NSString *timestamp = [[dateFormatter stringFromDate:[NSDate date]] stringByEncodingXMLSpecialCharactersAsEntities];
+
+	[self addEventMessageAsHTML:timestamp withIdentifier:@"timestamp"];
+
+	[dateFormatter release];
+
+	_lastTimestampTime = currentTime;
+}
+
+#pragma mark -
+
 - (void) willPresentAlertView:(UIAlertView *) alertView {
 	_showingAlert = YES;
 }
@@ -1383,6 +1407,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	while (_recentMessages.count > 10)
 		[_recentMessages removeObjectAtIndex:0];
+
+	[self _insertTimestamp];
 
 	[self _addPendingComponent:message];
 

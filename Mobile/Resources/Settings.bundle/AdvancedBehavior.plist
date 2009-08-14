@@ -64,6 +64,38 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Key</key>
+			<string>CQTimestampInterval</string>
+			<key>Title</key>
+			<string>Timestamps</string>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>60</integer>
+				<integer>120</integer>
+				<integer>180</integer>
+				<integer>240</integer>
+				<integer>300</integer>
+				<integer>600</integer>
+				<integer>900</integer>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Never</string>
+				<string>Every Minute</string>
+				<string>Every 2 Minutes</string>
+				<string>Every 3 Minutes</string>
+				<string>Every 4 Minutes</string>
+				<string>Every 5 Minutes</string>
+				<string>Every 10 Minutes</string>
+				<string>Every 15 Minutes</string>
+			</array>
+			<key>DefaultValue</key>
+			<integer>180</integer>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>Text Input</string>
