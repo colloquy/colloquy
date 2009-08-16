@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C3870FF10330D9E00660864 /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3870FE10330D9E00660864 /* libcrypto.dylib */; };
+		1C38711210330E2700660864 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C38711110330E2700660864 /* AppKit.framework */; };
 		318011AC0D4DEE9500BE3B28 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
 		3180159D0D4E1B9200BE3B28 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3180154D0D4E08D900BE3B28 /* SystemConfiguration.framework */; };
 		F2301B5B0D685C2700728699 /* igd_desc_parse.c in Sources */ = {isa = PBXBuildFile; fileRef = F2301B040D685C1B00728699 /* igd_desc_parse.c */; };
@@ -31,6 +33,8 @@
 
 /* Begin PBXFileReference section */
 		1C386E321032434B00660864 /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Common Settings.xcconfig"; sourceTree = "<group>"; };
+		1C3870FE10330D9E00660864 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = usr/lib/libcrypto.dylib; sourceTree = SDKROOT; };
+		1C38711110330E2700660864 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		3180119F0D4DEC8400BE3B28 /* TCMPortMapper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TCMPortMapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3180154D0D4E08D900BE3B28 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
@@ -44,7 +48,6 @@
 		F2301B120D685C1B00728699 /* minissdpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minissdpc.h; sourceTree = "<group>"; };
 		F2301B140D685C1B00728699 /* miniupnpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniupnpc.c; sourceTree = "<group>"; };
 		F2301B150D685C1B00728699 /* miniupnpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniupnpc.h; sourceTree = "<group>"; };
-		F2301B170D685C1B00728699 /* miniupnpcmodule.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniupnpcmodule.c; sourceTree = "<group>"; };
 		F2301B180D685C1B00728699 /* miniwget.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniwget.c; sourceTree = "<group>"; };
 		F2301B190D685C1B00728699 /* miniwget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniwget.h; sourceTree = "<group>"; };
 		F2301B1B0D685C1B00728699 /* minixml.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minixml.c; sourceTree = "<group>"; };
@@ -80,6 +83,8 @@
 			files = (
 				318011AC0D4DEE9500BE3B28 /* Foundation.framework in Frameworks */,
 				3180159D0D4E1B9200BE3B28 /* SystemConfiguration.framework in Frameworks */,
+				1C3870FF10330D9E00660864 /* libcrypto.dylib in Frameworks */,
+				1C38711210330E2700660864 /* AppKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -137,8 +142,10 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3180154D0D4E08D900BE3B28 /* SystemConfiguration.framework */,
+				1C38711110330E2700660864 /* AppKit.framework */,
 				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+				3180154D0D4E08D900BE3B28 /* SystemConfiguration.framework */,
+				1C3870FE10330D9E00660864 /* libcrypto.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -156,7 +163,6 @@
 				F2301B120D685C1B00728699 /* minissdpc.h */,
 				F2301B140D685C1B00728699 /* miniupnpc.c */,
 				F2301B150D685C1B00728699 /* miniupnpc.h */,
-				F2301B170D685C1B00728699 /* miniupnpcmodule.c */,
 				F2301B180D685C1B00728699 /* miniwget.c */,
 				F2301B190D685C1B00728699 /* miniwget.h */,
 				F2301B1B0D685C1B00728699 /* minixml.c */,
@@ -308,14 +314,6 @@
 				HEADER_SEARCH_PATHS = framework;
 				INFOPLIST_FILE = "framework/TCMPortMapper-Info.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
-					"-lssl",
-					"-lcrypto",
-				);
 				PRODUCT_NAME = TCMPortMapper;
 				USER_HEADER_SEARCH_PATHS = framework;
 			};
@@ -331,14 +329,6 @@
 				HEADER_SEARCH_PATHS = framework;
 				INFOPLIST_FILE = "framework/TCMPortMapper-Info.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
-					"-lssl",
-					"-lcrypto",
-				);
 				PRODUCT_NAME = TCMPortMapper;
 				USER_HEADER_SEARCH_PATHS = framework;
 			};

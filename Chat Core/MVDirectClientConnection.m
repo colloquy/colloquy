@@ -42,8 +42,11 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	[_connection disconnect];
 
 #if ENABLE(AUTO_PORT_MAPPING)
-	if (_portMapping)
+	if (_portMapping) {
 		[[TCMPortMapper sharedInstance] removePortMapping:_portMapping];
+		if (![[[TCMPortMapper sharedInstance] portMappings] count])
+			[[TCMPortMapper sharedInstance] stop];
+	}
 #endif
 
 	[super finalize];
@@ -68,8 +71,11 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	_threadWaitLock = nil;
 
 #if ENABLE(AUTO_PORT_MAPPING)
-	if (_portMapping)
+	if (_portMapping) {
 		[[TCMPortMapper sharedInstance] removePortMapping:_portMapping];
+		if (![[[TCMPortMapper sharedInstance] portMappings] count])
+			[[TCMPortMapper sharedInstance] stop];
+	}
 
 	[_portMapping release];
 	_portMapping = nil;
@@ -267,6 +273,8 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	if( success && [MVFileTransfer isAutoPortMappingEnabled] ) {
 		if (_portMapping) {
 			[[TCMPortMapper sharedInstance] removePortMapping:_portMapping];
+			if (![[[TCMPortMapper sharedInstance] portMappings] count])
+				[[TCMPortMapper sharedInstance] stop];
 
 			[[NSNotificationCenter defaultCenter] removeObserver:self name:TCMPortMappingDidChangeMappingStatusNotification object:_portMapping];
 
@@ -279,6 +287,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_portMappingStatusChanged:) name:TCMPortMappingDidChangeMappingStatusNotification object:_portMapping];
 
 		[[TCMPortMapper sharedInstance] addPortMapping:_portMapping];
+		[[TCMPortMapper sharedInstance] start];
 	} else
 #endif
 	if( success )
@@ -300,6 +309,8 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 #if ENABLE(AUTO_PORT_MAPPING)
 	if (_portMapping) {
 		[[TCMPortMapper sharedInstance] removePortMapping:_portMapping];
+		if (![[[TCMPortMapper sharedInstance] portMappings] count])
+			[[TCMPortMapper sharedInstance] stop];
 
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:TCMPortMappingDidChangeMappingStatusNotification object:_portMapping];
 

@@ -107,14 +107,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 1C386E7C1032464A00660864 /* Port Map.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 3180119F0D4DEC8400BE3B28 /* TCMPortMapper.framework */;
+			remoteGlobalIDString = 3180119F0D4DEC8400BE3B28;
 			remoteInfo = TCMPortMapper;
 		};
 		1C386E861032466B00660864 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1C386E7C1032464A00660864 /* Port Map.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 3180119E0D4DEC8400BE3B28 /* TCMPortMapper */;
+			remoteGlobalIDString = 3180119E0D4DEC8400BE3B28;
 			remoteInfo = TCMPortMapper;
 		};
 		DDBB43A60BD5DF9400EC6E55 /* PBXContainerItemProxy */ = {
