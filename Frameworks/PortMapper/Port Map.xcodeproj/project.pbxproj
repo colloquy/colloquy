@@ -310,7 +310,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = framework/TCMPortMapper_Prefix.pch;
+				GCC_PREFIX_HEADER = framework/TCMPortMapper_prefix.pch;
 				HEADER_SEARCH_PATHS = framework;
 				INFOPLIST_FILE = "framework/TCMPortMapper-Info.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
@@ -325,7 +325,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
-				GCC_PREFIX_HEADER = framework/TCMPortMapper_Prefix.pch;
+				GCC_PREFIX_HEADER = framework/TCMPortMapper_prefix.pch;
 				HEADER_SEARCH_PATHS = framework;
 				INFOPLIST_FILE = "framework/TCMPortMapper-Info.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
