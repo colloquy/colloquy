@@ -13,6 +13,7 @@ extern NSString *JVMachineStoppedIdlingNotification;
 	NSTimeInterval _lastIdle;
 	BOOL _isIdle;
 	BOOL _terminateWithoutConfirm;
+	NSMutableArray *_previouslyConnectedConnections;
 }
 - (IBAction) checkForUpdate:(id) sender;
 - (IBAction) helpWebsite:(id) sender;

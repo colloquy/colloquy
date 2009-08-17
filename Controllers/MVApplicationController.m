@@ -411,6 +411,52 @@ static BOOL applicationIsTerminating = NO;
 
 #pragma mark -
 
+- (void) receiveSleepNotification:(NSNotification *) notification {
+	_previouslyConnectedConnections = [[NSMutableArray alloc] init];
+	
+	NSAttributedString *quitString = [[NSAttributedString alloc] initWithString:[[NSUserDefaults standardUserDefaults] stringForKey:@"JVSleepMessage"]];
+	NSArray *openedConnections = [[MVConnectionsController defaultController] connectedConnections];
+	NSEnumerator *enumerator = [openedConnections objectEnumerator];
+	MVChatConnection *connection = nil;
+	
+	while ( ( connection = [enumerator nextObject] ) ) {
+		NSMutableDictionary *connectionInformation = [[NSMutableDictionary alloc] init];
+		
+		[connection disconnectWithReason:quitString];
+		[connectionInformation setObject:connection forKey:@"connection"];
+		
+		if ( [[connection awayStatusMessage] length] )
+			[connectionInformation setObject:[connection awayStatusMessage] forKey:@"away"];
+		else [connectionInformation setObject:@"" forKey:@"away"];
+		
+		[_previouslyConnectedConnections addObject:connectionInformation];
+		
+		[connectionInformation release];
+	}
+
+	[quitString release];
+}
+
+- (void) receiveWakeNotification:(NSNotification *) notification {
+	[self performSelector:@selector( _receiveWakeNotification: ) withObject:notification afterDelay:5.];
+}
+
+- (void) _receiveWakeNotification:(NSNotification *) notification {
+	NSEnumerator *enumerator = [_previouslyConnectedConnections objectEnumerator];
+	NSDictionary *connectionInformation = nil;
+	
+	while ( ( connectionInformation = [enumerator nextObject] ) ) {
+		MVChatConnection *connection = [connectionInformation objectForKey:@"connection"];
+		[connection connect];
+		
+		if ([(MVChatString *) [connectionInformation objectForKey:@"away"] length]) 
+			[connection setAwayStatusMessage:[connectionInformation objectForKey:@"away"]];
+	}
+	
+	[_previouslyConnectedConnections release];
+	_previouslyConnectedConnections = nil;
+}
+
 - (IBAction) terminateWithoutConfirm:(id) sender {
 	_terminateWithoutConfirm = YES;
 	[[NSApplication sharedApplication] terminate:sender];
@@ -455,6 +501,8 @@ static BOOL applicationIsTerminating = NO;
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:30] setSubmenu:[JVChatController smartTranscriptMenu]];
 
 	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( terminateWithoutConfirm: ) name:NSWorkspaceWillPowerOffNotification object:[NSWorkspace sharedWorkspace]];
+	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( receiveSleepNotification: ) name:NSWorkspaceWillSleepNotification object:[NSWorkspace sharedWorkspace]];
+	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( receiveWakeNotification: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
 
 	[self performSelector:@selector( setupFolders ) withObject:nil afterDelay:5.]; // do this later to speed up launch
 }
