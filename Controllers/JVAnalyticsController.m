@@ -42,13 +42,19 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 	return @"";
 }
 
-static long long hardwareInfoAsNumber(const char *keyPath) {
+static int hardwareInfoAsNumber(const char *keyPath) {
+	int result = 0;
+	size_t size = sizeof(result);
+	if (sysctlbyname(keyPath, &result, &size, NULL, 0) == 0)
+		return result;
+	return 0;
+}
+
+static long long hardwareInfoAsLargeNumber(const char *keyPath) {
 	long long result = 0;
 	size_t size = sizeof(result);
-	if (sysctlbyname(keyPath, &result, &size, NULL, 0) == 0) {
+	if (sysctlbyname(keyPath, &result, &size, NULL, 0) == 0)
 		return result;
-	}
-
 	return 0;
 }
 
@@ -142,10 +148,20 @@ static void generateUniqueMachineIdentifier() {
 	_data = [[NSMutableDictionary alloc] initWithCapacity:10];
 
 	[_data setObject:hardwareInfoAsString("hw.model") forKey:@"machine-model"];
-	[_data setObject:hardwareInfoAsString("hw.machine") forKey:@"machine-class"];
-	[_data setObject:[NSNumber numberWithLongLong:hardwareInfoAsNumber("hw.ncpu")] forKey:@"machine-cpu-count"];
-	[_data setObject:[NSNumber numberWithLongLong:hardwareInfoAsNumber("hw.cpufrequency") / 1000000] forKey:@"machine-cpu-frequency"];
-	[_data setObject:[NSNumber numberWithUnsignedLongLong:hardwareInfoAsNumber("hw.memsize") / 1024 / 1024] forKey:@"machine-memory"];
+
+#if __ppc__
+	[_data setObject:@"ppc" forKey:@"machine-class"];
+#elif __i386__ || __x86_64__
+	[_data setObject:@"i386" forKey:@"machine-class"];
+#elif __arm__
+	[_data setObject:@"arm" forKey:@"machine-class"];
+#else
+	[_data setObject:@"unknown" forKey:@"machine-class"];
+#endif
+
+	[_data setObject:[NSNumber numberWithUnsignedInt:hardwareInfoAsNumber("hw.ncpu")] forKey:@"machine-cpu-count"];
+	[_data setObject:[NSNumber numberWithUnsignedInt:hardwareInfoAsLargeNumber("hw.cpufrequency") / 1000000] forKey:@"machine-cpu-frequency"];
+	[_data setObject:[NSNumber numberWithUnsignedLongLong:hardwareInfoAsLargeNumber("hw.memsize") / 1024 / 1024] forKey:@"machine-memory"];
 	[_data setObject:(hardwareInfoAsNumber("hw.cpu64bit_capable") ? @"yes" : @"no") forKey:@"machine-cpu-64bit"];
 	[_data setObject:[systemVersion objectForKey:@"ProductName"] forKey:@"machine-system-name"];
 	[_data setObject:[systemVersion objectForKey:@"ProductVersion"] forKey:@"machine-system-version"];
