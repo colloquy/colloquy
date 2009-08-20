@@ -21,6 +21,7 @@
 #import "JVStyle.h"
 #import "JVChatRoomPanel.h"
 #import "JVDirectChatPanel.h"
+#import "JVAnalyticsController.h"
 //#import "JVChatTranscriptBrowserPanel.h"
 
 #import <Sparkle/SUUpdater.h>
@@ -89,6 +90,8 @@ static BOOL applicationIsTerminating = NO;
 		IOObjectRelease( _hidEntry );
 		_hidEntry = 0;
 	}
+
+	[_launchDate release];
 
 	[super dealloc];
 }
@@ -474,6 +477,8 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
+	_launchDate = [[NSDate alloc] init];
+
 	[MVCrashCatcher check];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"] && NSAppKitVersionNumber >= NSAppKitVersionNumber10_4 ) {
@@ -505,6 +510,29 @@ static BOOL applicationIsTerminating = NO;
 	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( receiveWakeNotification: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
 
 	[self performSelector:@selector( setupFolders ) withObject:nil afterDelay:5.]; // do this later to speed up launch
+
+	JVAnalyticsController *analyticsController = [JVAnalyticsController defaultController];
+	if (analyticsController) {
+		NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+
+		NSString *information = [infoDictionary objectForKey:@"CFBundleName"];
+		[[JVAnalyticsController defaultController] setObject:information forKey:@"application-name"];
+
+		information = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+		[[JVAnalyticsController defaultController] setObject:information forKey:@"application-version"];
+
+		information = [infoDictionary objectForKey:@"CFBundleVersion"];
+		[[JVAnalyticsController defaultController] setObject:information forKey:@"application-build-version"];
+
+		[[JVAnalyticsController defaultController] setObject:[[NSLocale currentLocale] localeIdentifier] forKey:@"locale"];
+
+		NSInteger showNotices = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"];
+		information = (!showNotices ? @"auto" : (showNotices == 1 ? @"all" : @"none"));
+		[[JVAnalyticsController defaultController] setObject:information forKey:@"notices-behavior"];
+
+		information = ([[[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"] hasCaseInsensitiveSubstring:@"Get Colloquy"] ? @"default" : @"custom");
+		[[JVAnalyticsController defaultController] setObject:information forKey:@"quit-message"];
+	}
 }
 
 - (void) applicationWillBecomeActive:(NSNotification *) notification {
@@ -524,6 +552,9 @@ static BOOL applicationIsTerminating = NO;
 
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	[[NSURLCache sharedURLCache] removeAllCachedResponses];
+
+	NSTimeInterval runTime = ABS([_launchDate timeIntervalSinceNow]);
+	[[JVAnalyticsController defaultController] setObject:[NSNumber numberWithDouble:runTime] forKey:@"run-time"];
 }
 
 - (NSApplicationTerminateReply) applicationShouldTerminate:(NSApplication *) sender {

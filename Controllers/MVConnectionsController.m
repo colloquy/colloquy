@@ -1,6 +1,7 @@
 #import "MVConnectionsController.h"
 #import "JVConnectionInspector.h"
 #import "JVNotificationController.h"
+#import "JVAnalyticsController.h"
 #import "JVChatController.h"
 #import "JVChatRoomBrowser.h"
 #import "MVKeyChain.h"
@@ -1647,6 +1648,7 @@ static NSMenu *favoritesMenu = nil;
 - (void) _saveBookmarkList {
 	if( ! _bookmarks ) return; // _loadBookmarkList hasn't fired yet, we have nothing to save
 
+	NSUInteger roomCount = 0;
 	NSMutableArray *saveList = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
 	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
 	id info = nil;
@@ -1694,12 +1696,20 @@ static NSMenu *favoritesMenu = nil;
 
 			if( [permIgnores count] ) [data setObject:permIgnores forKey:@"ignores"];
 
+			roomCount += [[connection knownChatRooms] count];
+
 			[saveList addObject:data];
 		}
 	}
 
 	[[NSUserDefaults standardUserDefaults] setObject:saveList forKey:@"MVChatBookmarks"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
+
+	JVAnalyticsController *analyticsController = [JVAnalyticsController defaultController];
+	if (analyticsController) {
+		[analyticsController setObject:[NSNumber numberWithUnsignedLong:roomCount] forKey:@"total-rooms"];
+		[analyticsController setObject:[NSNumber numberWithUnsignedLong:[saveList count]] forKey:@"total-connections"];
+	}
 
 	[self _validateToolbar];
 }
