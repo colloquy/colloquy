@@ -585,7 +585,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	BOOL hideFromUser = NO;
 	if( [[[notification userInfo] objectForKey:@"notice"] boolValue] ) {
 
-		if( ! [self chatViewControllerForUser:user ifExists:YES] && ( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"] == -1 || ( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"] == 0 && [[notification userInfo] objectForKey:@"handled"] ) ) )
+		if( ! [self chatViewControllerForUser:user ifExists:YES] && ( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"] == 0 || ( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"] == 2 && [[notification userInfo] objectForKey:@"handled"] ) ) )
 			hideFromUser = YES;
 
 		MVChatConnection *connection = [user connection];
@@ -607,7 +607,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			[context setObject:connection forKey:@"representedObject"];
 			[[JVNotificationController defaultController] performNotification:@"JVNewMemosFromServer" withContextInfo:context];
 
-		} else if( ! [[[notification userInfo] objectForKey:@"handled"] boolValue] ) {
+		} else {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
 			[context setObject:[NSString stringWithFormat:NSLocalizedString( @"Notice from %@", "notice message from user title" ), [user displayName]] forKey:@"title"];
 			[context setObject:messageString forKey:@"description"];

@@ -527,7 +527,7 @@ static BOOL applicationIsTerminating = NO;
 		[[JVAnalyticsController defaultController] setObject:[[NSLocale currentLocale] localeIdentifier] forKey:@"locale"];
 
 		NSInteger showNotices = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"];
-		information = (!showNotices ? @"auto" : (showNotices == 1 ? @"all" : @"none"));
+		information = (!showNotices ? @"none" : (showNotices == 1 ? @"all" : @"auto"));
 		[[JVAnalyticsController defaultController] setObject:information forKey:@"notices-behavior"];
 
 		information = ([[[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"] hasCaseInsensitiveSubstring:@"Get Colloquy"] ? @"default" : @"custom");
