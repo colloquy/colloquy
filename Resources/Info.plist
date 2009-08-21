@@ -219,5 +219,7 @@
 	<false/>
 	<key>SUAllowsAutomaticUpdates</key>
 	<true/>
+	<key>SUPublicDSAKeyFile</key>
+	<string>SparkleUpdatePublicDSAKey.pem</string>
 </dict>
 </plist>

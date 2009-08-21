@@ -62,6 +62,7 @@
 		1C5EF35B07B45C1F004E66D3 /* JVChatEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5EF35907B45C1F004E66D3 /* JVChatEvent.m */; };
 		1C5EF36C07B45FBF004E66D3 /* JVChatSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5EF36A07B45FBF004E66D3 /* JVChatSession.m */; };
 		1C6266D4103CC9A900A6B346 /* JVAnalyticsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6266D3103CC9A900A6B346 /* JVAnalyticsController.m */; };
+		1C6268E5103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem in Resources */ = {isa = PBXBuildFile; fileRef = 1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */; };
 		1C66913A07BFA76D008400F7 /* JVEmoticonSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C66913807BFA76D008400F7 /* JVEmoticonSet.m */; };
 		1C6A112B06BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A112906BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m */; };
 		1C6A40CA083FF6C600572AB6 /* JVInterfacePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A40C8083FF6C600572AB6 /* JVInterfacePreferences.m */; };
@@ -588,6 +589,7 @@
 		1C6075E005138ED600A8FE6E /* colloquy-alpha.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "colloquy-alpha.png"; path = "Resources/colloquy-alpha.png"; sourceTree = SOURCE_ROOT; };
 		1C6266D2103CC9A900A6B346 /* JVAnalyticsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVAnalyticsController.h; path = Controllers/JVAnalyticsController.h; sourceTree = "<group>"; };
 		1C6266D3103CC9A900A6B346 /* JVAnalyticsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVAnalyticsController.m; path = Controllers/JVAnalyticsController.m; sourceTree = "<group>"; };
+		1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SparkleUpdatePublicDSAKey.pem; path = Resources/SparkleUpdatePublicDSAKey.pem; sourceTree = "<group>"; };
 		1C6690D107BFA037008400F7 /* NSScannerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSScannerAdditions.h; path = Additions/NSScannerAdditions.h; sourceTree = "<group>"; };
 		1C66913707BFA76D008400F7 /* JVEmoticonSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVEmoticonSet.h; path = Models/JVEmoticonSet.h; sourceTree = "<group>"; };
 		1C66913807BFA76D008400F7 /* JVEmoticonSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVEmoticonSet.m; path = Models/JVEmoticonSet.m; sourceTree = "<group>"; };
@@ -1712,6 +1714,7 @@
 				1C51B89D052DF91E00BB459B /* Info.plist */,
 				1C51B48A052DE0CB00BB459B /* Info-ChatCore.plist */,
 				1C51B4CC052DE14B00BB459B /* Info-StandardCommands.plist */,
+				1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */,
 				F5DD34730382E5E501000102 /* Colloquy.icns */,
 				1C5959010507803F000001C8 /* Generic.icns */,
 				F52BA284037C13C201A35792 /* GPL.txt */,
@@ -2350,6 +2353,7 @@
 				1CEC004F0A20EF99004C2B86 /* transcriptSchema.sql in Resources */,
 				1CC1B76F0A2D70DF0000A797 /* super-op.png in Resources */,
 				1CC1B77D0A2D70FB0000A797 /* founder.png in Resources */,
+				1C6268E5103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
