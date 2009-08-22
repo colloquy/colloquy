@@ -18,4 +18,6 @@
 - (void) moveUserAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex;
 - (void) removeUserAtIndex:(NSUInteger) index;
 - (void) updateUserAtIndex:(NSUInteger) index;
+
+- (void) whoisUser:(MVChatUser *) user;
 @end

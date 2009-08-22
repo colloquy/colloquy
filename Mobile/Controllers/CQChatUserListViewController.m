@@ -354,6 +354,8 @@ static NSString *membersFilteredCountFormat;
 	} else {
 		cell.image = [UIImage imageNamed:@"userNormal.png"];
 	}
+	
+	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
 	return cell;
 }
@@ -390,6 +392,10 @@ static NSString *membersFilteredCountFormat;
 	[sheet release];
 }
 
+- (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
+	[self whoisUser:[_matchedUsers objectAtIndex:indexPath.row]];
+}
+
 #pragma mark -
 
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
@@ -415,12 +421,7 @@ static NSString *membersFilteredCountFormat;
 		} else if (buttonIndex == ShowInfoButtonIndex) {
 			[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
 
-			CQWhoisNavController *whoisController = [[CQWhoisNavController alloc] init];
-			whoisController.user = user;
-
-			[self presentModalViewController:whoisController animated:YES];
-
-			[whoisController release];
+			[self whoisUser:user];
 		} else if (buttonIndex == OperatorActionsButtonIndex) {
 			NSSet *features = _room.connection.supportedFeatures;
 
@@ -525,4 +526,16 @@ static NSString *membersFilteredCountFormat;
 		}
 	}
 }
+
+#pragma mark -
+
+- (void) whoisUser:(MVChatUser *) user {
+	CQWhoisNavController *whoisController = [[CQWhoisNavController alloc] init];
+	whoisController.user = user;
+	
+	[self presentModalViewController:whoisController animated:YES];
+	
+	[whoisController release];	
+}
+
 @end
