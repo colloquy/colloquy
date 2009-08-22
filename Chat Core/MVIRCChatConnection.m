@@ -295,7 +295,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[super setNicknamePassword:newPassword];
 	_pendingIdentificationAttempt = NO;
 	if( [self isConnected] )
-		[self _identifyWithServicesUsingNickname:[self preferredNickname]]; // new password for the preferred nick -> preferred nickname
+		[self _identifyWithServicesUsingNickname:[self nickname]]; // new password for the current nick -> current nickname
 }
 
 #pragma mark -
