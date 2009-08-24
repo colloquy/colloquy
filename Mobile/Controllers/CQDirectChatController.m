@@ -26,6 +26,8 @@
 #import <MediaPlayer/MPMusicPlayerController.h>
 #import <MediaPlayer/MPMediaItem.h>
 
+#import <MessageUI/MFMailComposeViewController.h>
+
 #import <objc/message.h>
 
 NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewControllerRecentMessagesUpdated";
@@ -465,7 +467,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"] && text.length > 1) {
 		static NSArray *commandsNotRequiringConnection;
 		if (!commandsNotRequiringConnection)
-			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", @"tweet", @"list", @"join", @"welcome", nil];
+			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", @"tweet", @"list", @"join", @"welcome", @"token", nil];
 
 		// Send as a command.
 		NSScanner *scanner = [NSScanner scannerWithString:text];
@@ -997,6 +999,17 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	NSString *nick = [[arguments componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] objectAtIndex:0];
 	MVChatUser *user = [[self.connection chatUsersWithNickname:nick] anyObject];
 	[[CQChatController defaultController] showFilePickerWithUser:user];
+
+	return YES;
+}
+#endif
+
+#pragma mark -
+
+#if !TARGET_IPHONE_SIMULATOR
+- (BOOL) handleTokenCommandWithArguments:(NSString *) arguments {
+	[self addEventMessageAsHTML:NSLocalizedString(@"Your device token is only shown locally and is:", @"Your device token is only shown locally and is:") withIdentifier:@"token"];
+	[self addEventMessageAsHTML:[CQColloquyApplication sharedApplication].deviceToken withIdentifier:@"token"];
 
 	return YES;
 }
