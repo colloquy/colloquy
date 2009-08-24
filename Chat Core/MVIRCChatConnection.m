@@ -2419,6 +2419,16 @@ end:
 
 				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
 
+			} else if( [msg isCaseInsensitiveEqualToString:@"Syntax: \002IDENTIFY \037password\037\002"] ) {
+
+				_pendingIdentificationAttempt = NO;
+
+				[[self localUser] _setIdentified:NO];
+
+				[self _identifyWithServicesUsingNickname:[self nickname]]; // responding nickserv error about the "nickserv identify <nick> <pass>" syntax -> current nickname
+
+				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
+
 			} else if( [msg isCaseInsensitiveEqualToString:@"Remember: Nobody from CService will ever ask you for your password, do NOT give out your password to anyone claiming to be CService."] ||													// Undernet
 					  [msg isCaseInsensitiveEqualToString:@"REMINDER: Do not share your password with anyone. DALnet staff will not ask for your password unless"] || [msg hasCaseInsensitiveSubstring:@"you are seeking their assistance. See"] ||		// DALnet
 					  [msg hasCaseInsensitiveSubstring:@"You have been invited to"] ) {	// ChanServ invite, hide since it's auto accepted
