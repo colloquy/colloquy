@@ -41,7 +41,7 @@
 		return nil;
 	}
 
-	_previousAlertTime = 0.;
+	_previousPlayTime = 0.;
 
 	return self;
 }
