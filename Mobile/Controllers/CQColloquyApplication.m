@@ -379,8 +379,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	if ([tabBarController respondsToSelector:@selector(hideBarWithTransition:)]) 
 		[tabBarController hideBarWithTransition:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
-	else if ([tabBarController respondsToSelector:@selector(hideTabBarWithTransition:)])
-		[tabBarController hideTabBarWithTransition:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
 
 	_showingTabBar = NO;		
 #endif	
@@ -393,8 +391,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	if ([tabBarController respondsToSelector:@selector(showBarWithTransition:)])
 		[tabBarController showBarWithTransition:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
-	else if ([tabBarController respondsToSelector:@selector(showTabBarWithTransition:)])
-		[tabBarController showTabBarWithTransition:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
 
 	_showingTabBar = YES;
 #endif	

@@ -770,8 +770,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 #if !TARGET_IPHONE_SIMULATOR
 	static BOOL registeredForPush;
 	if (!registeredForPush && (!bouncerSettings || bouncerSettings.pushNotifications) && connection.pushNotifications) {
-		if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerForRemoteNotificationTypes:)])
-			[[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+		[[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 		registeredForPush = YES;
 	}
 #endif

@@ -26,8 +26,6 @@
 #import <MediaPlayer/MPMusicPlayerController.h>
 #import <MediaPlayer/MPMediaItem.h>
 
-#import <MessageUI/MFMailComposeViewController.h>
-
 #import <objc/message.h>
 
 NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewControllerRecentMessagesUpdated";
@@ -57,6 +55,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_awayStatusChanged:) name:MVChatConnectionSelfAwayStatusChangedNotification object:self.connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:self.connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTokenCommandWithArguments:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 
 	if (self.user) {
 		[self _updateRightBarButtonItemAnimated:NO];
@@ -1008,6 +1007,12 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 #if !TARGET_IPHONE_SIMULATOR
 - (BOOL) handleTokenCommandWithArguments:(NSString *) arguments {
+	if (![[CQColloquyApplication sharedApplication].deviceToken length]) {
+		[[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+
+		return YES;
+	}
+	
 	[self addEventMessageAsHTML:NSLocalizedString(@"Your device token is only shown locally and is:", @"Your device token is only shown locally and is:") withIdentifier:@"token"];
 	[self addEventMessageAsHTML:[CQColloquyApplication sharedApplication].deviceToken withIdentifier:@"token"];
 
