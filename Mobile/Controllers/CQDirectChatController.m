@@ -1007,7 +1007,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 #if !TARGET_IPHONE_SIMULATOR
 - (BOOL) handleTokenCommandWithArguments:(NSString *) arguments {
-	if (![[CQColloquyApplication sharedApplication].deviceToken length]) {
+	if (![CQColloquyApplication sharedApplication].deviceToken.length) {
 		[[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 
 		return YES;
@@ -1401,7 +1401,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 				privateMessageSound = [[CQSoundController alloc] initWithSoundNamed:alert];
 			}
 
-			[privateMessageSound playAlert];
+			[privateMessageSound playSound];
 		}
 	}
 
@@ -1417,7 +1417,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 				highlightSound = [[CQSoundController alloc] initWithSoundNamed:alert];
 			}
 
-			[highlightSound playAlert];
+			[highlightSound playSound];
 		}
 	}
 

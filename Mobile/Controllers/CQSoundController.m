@@ -46,17 +46,13 @@
 	return self;
 }
 
-- (void) playAlert {
+- (void) playSound {
 	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
-	if ((currentTime - _previousAlertTime) < 2.)
+	if ((currentTime - _previousPlayTime) < 2.)
 		return;
 
-	_previousAlertTime = currentTime;
+	_previousPlayTime = currentTime;
 
-	AudioServicesPlayAlertSound(_sound);
-}
-
-- (void) playSound {
 	AudioServicesPlaySystemSound(_sound);
 }
 

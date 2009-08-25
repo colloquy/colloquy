@@ -252,7 +252,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 			fileTransferSound = [[CQSoundController alloc] initWithSoundNamed:alert];
 		}
 
-		[fileTransferSound playAlert];
+		[fileTransferSound playSound];
 	}
 
 	[alert show];
@@ -298,7 +298,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 			highlightSound = [[CQSoundController alloc] initWithSoundNamed:alert];
 		}		
 
-		[highlightSound playAlert];
+		[highlightSound playSound];
 	}
 
 	[alert show];
