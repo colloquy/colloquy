@@ -3893,6 +3893,18 @@ end:
 	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionServicesDownError userInfo:userInfo]];
 }
 
+- (void) _handle462WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_ALREADYREGISTERED (RFC1459)
+
+	if ( [[self server] hasCaseInsensitiveSubstring:@"ustream"] ) { // workaround for people that have their ustream pw in the server pass AND the nick pass field: use 462 as sign that identification took place
+		_pendingIdentificationAttempt = NO;
+
+		if( ![[self localUser] isIdentified] )
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidIdentifyWithServicesNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Ustream", @"user", [self nickname], @"target", nil]];
+		[[self localUser] _setIdentified:YES];
+	}
+
+}
+
 - (void) _handle471WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_CHANNELISFULL
 	MVAssertCorrectThreadRequired( _connectionThread );
 
