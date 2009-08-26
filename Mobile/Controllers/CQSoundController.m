@@ -1,4 +1,5 @@
 #import "CQSoundController.h"
+#import "NSStringAdditions.h"
 
 @implementation CQSoundController
 + (void) vibrate {
@@ -52,8 +53,10 @@
 		return;
 
 	_previousPlayTime = currentTime;
-
-	AudioServicesPlaySystemSound(_sound);
+	
+	if ([[UIDevice currentDevice].model hasCaseInsensitiveSubstring:@"touch"])
+		AudioServicesPlayAlertSound(_sound);
+	else AudioServicesPlaySystemSound(_sound);
 }
 
 - (void) dealloc {
