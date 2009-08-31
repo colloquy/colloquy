@@ -27,9 +27,10 @@ static JVNotificationController *sharedInstance = nil;
 	if( ( self = [super init] ) ) {
 		_bubbles = [[NSMutableDictionary dictionary] retain];
 		_sounds = [[NSMutableDictionary alloc] init];
-		if( GrowlApplicationBridge && [GrowlApplicationBridge isGrowlInstalled] && ! [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] ) {
-			[GrowlApplicationBridge setGrowlDelegate:self];
-		}
+
+		_useGrowl = ( GrowlApplicationBridge && [GrowlApplicationBridge isGrowlInstalled] && ! [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] );
+
+		if( _useGrowl ) [GrowlApplicationBridge setGrowlDelegate:self];
 	}
 
 	return self;
@@ -102,7 +103,7 @@ static JVNotificationController *sharedInstance = nil;
 
 	if( ! icon ) icon = [[NSApplication sharedApplication] applicationIconImage];
 
-	if( GrowlApplicationBridge && [GrowlApplicationBridge isGrowlInstalled] && ! [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] ) {
+	if( _useGrowl ) {
 		NSString *desc = description;
 		if( [desc isKindOfClass:[NSAttributedString class]] ) desc = [description string];
 		NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
