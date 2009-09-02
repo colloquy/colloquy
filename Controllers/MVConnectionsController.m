@@ -1980,7 +1980,7 @@ static NSMenu *favoritesMenu = nil;
 		}
 	}
 
-	if( [[connection nicknamePassword] length] && [rooms count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
+	if( ( [[connection nicknamePassword] length] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinWaitsForIdentification"] ) && [rooms count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
 		[connection joinChatRoomsNamed:rooms];
 }
 
@@ -2041,7 +2041,7 @@ static NSMenu *favoritesMenu = nil;
 		}
 	}
 
-	if( ! [[connection nicknamePassword] length] && [rooms count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
+	if( !( [[connection nicknamePassword] length] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinWaitsForIdentification"] ) && [rooms count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
 		[connection joinChatRoomsNamed:rooms];
 }
 
