@@ -1993,6 +1993,7 @@
 				1CB2CD88052DDC560094AAA4 /* Copy Plugins */,
 				1C7F300D085545E600D41FB0 /* Copy Spotlight Importer */,
 				1C91DEAC06972EC0007C1638 /* Remove Headers */,
+				1C51B53B104E160600791856 /* Copy Bouncer Plugin */,
 				1CB5A8F10BAB7E3700C1BDE2 /* Strip Localizations */,
 				1C2EDE8B0A3568EF0051E9C2 /* Update Build Number */,
 			);
@@ -2395,6 +2396,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = "/usr/bin/perl -w";
 			shellScript = "# Xcode auto-versioning script for Subversion\n# by Axel Andersson, modified by Daniel Jalkut and Timothy Hatcher\n\nuse strict;\n\n# Get the current subversion revision number and use it to set the CFBundleVersion value\nmy $infoFile = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{INFOPLIST_PATH}\";\nmy $version = undef;\n$version = `/usr/bin/svnversion -n .` if -e \"/usr/bin/svnversion\";\n$version = `/usr/local/bin/svnversion -n .` if -e \"/usr/local/bin/svnversion\";\n$version = `/opt/local/bin/svnversion -n .` if -e \"/opt/local/bin/svnversion\";\n\n# Match the last group of digits:\n($version =~ m/(\\d+)[MS]*$/) && ($version = $1);\n\nif( $version ) {\n\topen( FH, \"$infoFile\" ) or die \"$0: $infoFile: $!\";\n\tmy $content = join( \"\", <FH> );\n\tclose( FH );\n\n\t$content =~ s/(\\s+<key>CFBundleVersion<\\/key>\\s+<string>).*?(<\\/string>)/$1$version$2/;\n\n\topen( FH, \">$infoFile\" ) or die \"$0: $infoFile: $!\";\n\tprint FH $content;\n\tclose( FH );\n}\n";
+			showEnvVarsInLog = 0;
+		};
+		1C51B53B104E160600791856 /* Copy Bouncer Plugin */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(TARGET_BUILD_DIR)/Bouncer.plugin",
+			);
+			name = "Copy Bouncer Plugin";
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(PLUGINS_FOLDER_PATH)/Bouncer.plugin",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -d \"$TARGET_BUILD_DIR/Bouncer.plugin\" ]; then\n\tditto \"$TARGET_BUILD_DIR/Bouncer.plugin\" \"$TARGET_BUILD_DIR/$PLUGINS_FOLDER_PATH/Bouncer.plugin\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		1C7A60B509FDE8560029AC64 /* Run Tests */ = {
