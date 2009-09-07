@@ -532,7 +532,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 			[scanner release];
 		}
 
-		[_target sendMessage:text withEncoding:self.encoding asAction:NO];
+		[_target sendMessage:text withEncoding:self.encoding asAction:action];
 
 		NSData *messageData = [text dataUsingEncoding:self.encoding allowLossyConversion:YES];
 		[self addMessage:messageData fromUser:self.connection.localUser asAction:action withIdentifier:[NSString locallyUniqueString]];
