@@ -466,7 +466,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"] && text.length > 1) {
 		static NSArray *commandsNotRequiringConnection;
 		if (!commandsNotRequiringConnection)
-			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", @"tweet", @"list", @"join", @"welcome", @"token", nil];
+			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", @"tweet", @"list", @"join", @"welcome", @"token", @"resetbadge", nil];
 
 		// Send as a command.
 		NSScanner *scanner = [NSScanner scannerWithString:text];
@@ -1019,6 +1019,10 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	return YES;
 }
 #endif
+
+- (void) handleResetbadgeCommandWithArguments:(NSString *) arguments {
+	[CQColloquyApplication sharedApplication].applicationIconBadgeNumber = 0;
+}
 
 #pragma mark -
 
