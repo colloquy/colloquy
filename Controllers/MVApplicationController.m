@@ -24,6 +24,8 @@
 #import "JVAnalyticsController.h"
 //#import "JVChatTranscriptBrowserPanel.h"
 
+#import "PFMoveApplicationController.h"
+
 #import <Sparkle/SUUpdater.h>
 
 @interface WebCoreCache
@@ -466,6 +468,8 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (void) applicationWillFinishLaunching:(NSNotification *) notification {
+	PFMoveToApplicationsFolderIfNecessary();
+	
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
 #ifdef DEBUG
