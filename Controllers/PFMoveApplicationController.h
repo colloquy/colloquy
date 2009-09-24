@@ -6,4 +6,4 @@
 //
 //  The contents of this file are dedicated to the public domain.
 
-extern void PFMoveToApplicationsFolderIfNecessary();
+extern void PFMoveToApplicationsFolderIfNecessary(void);

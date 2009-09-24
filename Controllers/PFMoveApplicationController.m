@@ -8,10 +8,23 @@
 
 #import "PFMoveApplicationController.h"
 
+@interface NSAlert (NSAlertLeopard)
+- (void) setShowsSuppressionButton:(BOOL) flag;
+- (NSButton *) suppressionButton;
+@end
+
+@interface NSFileManager (NSFileManagerLeopard)
+- (BOOL) copyItemAtPath:(NSString *) src toPath:(NSString *) dest error:(NSError **) error;
+@end
+
 static NSString *AlertSuppressKey = @"moveToApplicationsFolderAlertSuppress";
 
-void PFMoveToApplicationsFolderIfNecessary()
+void PFMoveToApplicationsFolderIfNecessary(void)
 {
+	// Don't run on Tiger.
+	if (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_4)
+		return;
+
 	// Skip if user supressed the alert before
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:AlertSuppressKey]) return;
 	
@@ -23,7 +36,9 @@ void PFMoveToApplicationsFolderIfNecessary()
 	
 	// If the application is already in some Applications directory, skip.
 	// Also, skip if running from a build/ directory.
-	for (NSString *appDirPath in allApplicationsDirectories) {
+	NSEnumerator *enumerator = [allApplicationsDirectories objectEnumerator];
+	NSString *appDirPath = nil;
+	while ((appDirPath = [enumerator nextObject])) {
 		if ([path hasPrefix:appDirPath]) return;
 		if ([path hasCaseInsensitiveSubstring:@"build"]) return;
 	}
