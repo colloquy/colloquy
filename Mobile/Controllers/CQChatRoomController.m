@@ -729,7 +729,13 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowJoinEvents"]) {
 		NSString *eventMessageFormat = [NSLocalizedString(@"%@ joined the room.", "User has join the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user]] withIdentifier:@"memberJoined"];
+		NSString *userInformation = nil;
+		
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnJoin"])
+			userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForMemberUser:user], [user realName], [user address]];
+		else userInformation = [self _markupForMemberUser:user];
+
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:@"memberJoined"];
 	}
 
 	[_orderedMembers addObject:user];
@@ -748,13 +754,18 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 - (void) _displayProcessedMemberPartReason:(CQProcessChatMessageOperation *) operation {
 	NSString *reason = operation.processedMessageAsHTML;
 	MVChatUser *user = [operation.userInfo objectForKey:@"user"];
+	NSString *userInformation = nil;
+	
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnPart"])
+		userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForMemberUser:user], [user realName], [user address]];
+	else userInformation = [self _markupForMemberUser:user];
 
 	if (reason.length) {
 		NSString *eventMessageFormat = [NSLocalizedString(@"%@ left the room. (%@)", "User has left the room with reason event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForUser:user], reason] withIdentifier:@"memberParted"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation, reason] withIdentifier:@"memberParted"];
 	} else {
 		NSString *eventMessageFormat = [NSLocalizedString(@"%@ left the room.", "User has left the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForUser:user]] withIdentifier:@"memberParted"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:@"memberParted"];
 	}
 }
 
