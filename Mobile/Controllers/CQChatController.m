@@ -276,7 +276,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 	MVChatRoom *room = [connection chatRoomWithName:roomName];
 
-	CQAlertView *alert = [[UIAlertView alloc] init];
+	CQAlertView *alert = [[CQAlertView alloc] init];
 	alert.tag = ChatRoomInviteAlertTag;
 	alert.userInfo = room;
 	alert.delegate = self;
