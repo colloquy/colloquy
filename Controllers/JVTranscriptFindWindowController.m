@@ -25,40 +25,40 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 		_results = nil;
 		_lastMessageIndex = 0;
 		_findPasteboardNeedsUpdated = NO;
-		
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( applicationDidActivate: ) name:NSApplicationDidBecomeActiveNotification object:[NSApplication sharedApplication]];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( applicationWillDeactivate: ) name:NSApplicationWillResignActiveNotification object:[NSApplication sharedApplication]];
 	}
-	
+
 	return self;
 }
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
-	
+
 	[subviewTableView setDataSource:nil];
 	[subviewTableView setDelegate:nil];
-	
+
 	[_rules release];
 	[_results release];
-	
+
 	_rules = nil;
 	_results = nil;
-	
+
 	[super dealloc];
 }
 
 - (void) windowDidLoad {
 	[resultProgress setUsesThreadedAnimation:YES];
-	
+
 	[subviewTableView setDataSource:self];
 	[subviewTableView setDelegate:self];
 	[subviewTableView setRefusesFirstResponder:YES];
-	
+
 	NSTableColumn *column = [subviewTableView tableColumnWithIdentifier:@"criteria"];
 	[column setDataCell:[[JVViewCell new] autorelease]];
-	
+
 	[self addRow:nil];
 	[self performSelector:@selector( loadFindStringFromPasteboard )];
 }
@@ -117,59 +117,59 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	NSEnumerator *rules = [[self criterionControllers] objectEnumerator];
 	JVTranscriptCriterionController *previousRule = [rules nextObject];
 	JVTranscriptCriterionController *rule = nil;
-	
+
 	[operation setNextKeyView:[previousRule firstKeyView]];
-	
+
 	while( ( rule = [rules nextObject] ) ) {
 		[[previousRule lastKeyView] setNextKeyView:[rule firstKeyView]];
 		previousRule = rule;
 	}
-	
+
 	[[previousRule lastKeyView] setNextKeyView:scrollbackOnly];
 }
 
 - (IBAction) addRow:(id) sender {
 	JVTranscriptCriterionController *criterion = [JVTranscriptCriterionController controller];
 	[self insertObject:criterion inCriterionControllersAtIndex:[[subviewTableView selectedRowIndexes] lastIndex]];
-	
+
 	if( sender ) {
 		NSRect frame = [[self window] frame];
 		frame.origin.y -= 30;
 		frame.size.height += 30;
 		[[self window] setFrame:frame display:YES animate:YES];
-		
+
 		frame.size.width = 520;
 		[[self window] setMinSize:frame.size];
-		
+
 		frame.size.width = 800;
 		[[self window] setMaxSize:frame.size];
 	}
-	
+
 	[[self results] removeAllObjects];
 	_lastMessageIndex = 0;
-	
+
 	[self updateKeyViewLoop];
 }
 
 - (IBAction) removeRow:(id) sender {
 	[self removeObjectFromCriterionControllersAtIndex:[[subviewTableView selectedRowIndexes] lastIndex]];
-	
+
 	if( sender ) {
 		NSRect frame = [[self window] frame];
 		frame.origin.y += 30;
 		frame.size.height -= 30;
 		[[self window] setFrame:frame display:YES animate:YES];
-		
+
 		frame.size.width = 520;
 		[[self window] setMinSize:frame.size];
-		
+
 		frame.size.width = 800;
 		[[self window] setMaxSize:frame.size];
 	}
-	
+
 	[[self results] removeAllObjects];
 	_lastMessageIndex = 0;
-	
+
 	[self updateKeyViewLoop];
 }
 
@@ -187,30 +187,30 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	JVChatTranscriptPanel *panel = [self focusedChatTranscriptPanel];
 	JVChatTranscript *transcript = [panel transcript];
 	if( ! transcript ) return;
-	
+
 	JVChatMessage *foundMessage = nil;
 	NSEnumerator *enumerator = [[self results] objectEnumerator];
-	
+
 	while( ( foundMessage = [enumerator nextObject] ) )
 		[[panel display] clearHighlightForMessage:foundMessage];
-	
+
 	foundMessage = nil;
-	
+
 	if( _lastMessageIndex < ( [[self results] count] - 1 ) && ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] ) {
 		_lastMessageIndex++;
 		foundMessage = [[self results] objectAtIndex:_lastMessageIndex];
 		goto end;
 	}
-	
+
 	[resultCount setObjectValue:@""];
 	[resultProgress setHidden:NO];
 	[resultProgress setIndeterminate:YES];
 	[resultProgress startAnimation:nil];
 	[resultProgress displayIfNeeded];
-	
+
 	NSArray *allMessages = [transcript messages];
 	NSRange range;
-	
+
 	if( ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] ) {
 		NSUInteger index = [allMessages indexOfObjectIdenticalTo:[[self results] lastObject]];
 		if( index != NSNotFound ) {
@@ -221,32 +221,32 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 		[[self results] removeAllObjects];
 		_lastMessageIndex = 0;
 	}
-	
+
 	if( ! range.length ) goto end;
 	if( ! range.location || [scrollbackOnly state] == NSOnState )
 		[hiddenResults setHidden:YES];
-	
+
 	_findPasteboardNeedsUpdated = YES;
-	
+
 	NSArray *rangeMsgs = [transcript messagesInRange:range];
 	NSEnumerator *messages = [rangeMsgs objectEnumerator];
 	JVChatMessage *message = nil;
-	
+
 	[resultProgress stopAnimation:nil];
 	[resultProgress setIndeterminate:NO];
 	[resultProgress setDoubleValue:0.];
 	[resultProgress displayIfNeeded];
-	
+
 	NSUInteger hiddenMsgs = 0;
 	NSUInteger i = 0;
 	NSUInteger totalMsgs = [rangeMsgs count];
 	BOOL andOperation = ( [operation selectedTag] == 2 );
 	BOOL ignore = ( [ignoreCase state] == NSOnState );
-	
+
 	while( ( message = [messages nextObject] ) ) {
 		BOOL scrollback = YES; // [transcript messageIsInScrollback:message];
 		if( ! scrollback && [scrollbackOnly state] == NSOnState ) continue;
-		
+
 		BOOL match = ( andOperation ? YES : NO );
 		NSEnumerator *rules = [[self criterionControllers] objectEnumerator];
 		JVTranscriptCriterionController *rule = nil;
@@ -256,7 +256,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 			if( ! localMatch && andOperation ) break; // fails, this wont match with all rules
 			else if( localMatch && ! andOperation ) break; // passes one, this is enough to match under "any rules"
 		}
-		
+
 		if( match ) {
 			if( scrollback ) {
 				foundMessage = message;
@@ -270,20 +270,20 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 				[hiddenResults displayIfNeeded];
 			}
 		}
-		
+
 		if( ! ( i++ % 25 ) ) {
 			[resultProgress setDoubleValue:( ( (double) i / (double) totalMsgs ) * 100. )];
 			[resultProgress displayIfNeeded];
 		}
 	}
-	
+
 end:
-	
+
 	if( foundMessage ) {
 		[[panel display] highlightMessage:foundMessage];
 		[panel jumpToMessage:foundMessage];
 	} else NSBeep();
-	
+
 	[resultProgress setDoubleValue:[resultProgress maxValue]];
 	[resultProgress displayIfNeeded];
 	[self performSelector:@selector( hideProgress ) withObject:nil afterDelay:0.125];
@@ -293,30 +293,30 @@ end:
 	JVChatTranscriptPanel *panel = [self focusedChatTranscriptPanel];
 	JVChatTranscript *transcript = [panel transcript];
 	if( ! transcript ) return;
-	
+
 	JVChatMessage *foundMessage = nil;
 	NSEnumerator *enumerator = [[self results] objectEnumerator];
-	
+
 	while( ( foundMessage = [enumerator nextObject] ) )
 		[[panel display] clearHighlightForMessage:foundMessage];
-	
+
 	foundMessage = nil;
-	
+
 	if( [[self results] count] && _lastMessageIndex > 0 && ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] ) {
 		_lastMessageIndex--;
 		foundMessage = [[self results] objectAtIndex:_lastMessageIndex];
 		goto end;
 	}
-	
+
 	[resultCount setObjectValue:@""];
 	[resultProgress setHidden:NO];
 	[resultProgress setIndeterminate:YES];
 	[resultProgress startAnimation:nil];
 	[resultProgress displayIfNeeded];
-	
+
 	NSArray *allMessages = [transcript messages];
 	NSRange range;
-	
+
 	if( ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] && [[self results] count] ) {
 		NSUInteger index = [allMessages indexOfObjectIdenticalTo:[[self results] objectAtIndex:0]];
 		if( index != NSNotFound && index > 1 ) {
@@ -327,32 +327,32 @@ end:
 		[[self results] removeAllObjects];
 		_lastMessageIndex = 0;
 	}
-	
+
 	if( ! range.length ) goto end;
 	if( [scrollbackOnly state] == NSOnState )
 		[hiddenResults setHidden:YES];
-	
+
 	_findPasteboardNeedsUpdated = YES;
-	
+
 	NSArray *rangeMsgs = [transcript messagesInRange:range];
 	NSEnumerator *messages = [rangeMsgs reverseObjectEnumerator];
 	JVChatMessage *message = nil;
-	
+
 	[resultProgress stopAnimation:nil];
 	[resultProgress setIndeterminate:NO];
 	[resultProgress setDoubleValue:0.];
 	[resultProgress displayIfNeeded];
-	
+
 	NSUInteger hiddenMsgs = 0;
 	NSUInteger i = 0;
 	NSUInteger totalMsgs = [rangeMsgs count];
 	BOOL andOperation = ( [operation selectedTag] == 2 );
 	BOOL ignore = ( [ignoreCase state] == NSOnState );
-	
+
 	while( ( message = [messages nextObject] ) ) {
 		BOOL scrollback = YES; // [transcript messageIsInScrollback:message];
 		if( ! scrollback && [scrollbackOnly state] == NSOnState ) continue;
-		
+
 		BOOL match = ( andOperation ? YES : NO );
 		NSEnumerator *rules = [[self criterionControllers] objectEnumerator];
 		JVTranscriptCriterionController *rule = nil;
@@ -362,7 +362,7 @@ end:
 			if( ! localMatch && andOperation ) break; // fails, this wont match with all rules
 			else if( localMatch && ! andOperation ) break; // passes one, this is enough to match under "any rules"
 		}
-		
+
 		if( match ) {
 			if( scrollback ) {
 				foundMessage = message;
@@ -375,20 +375,20 @@ end:
 				[hiddenResults displayIfNeeded];
 			}
 		}
-		
+
 		if( ! ( i++ % 25 ) ) {
 			[resultProgress setDoubleValue:( ( (double) i / (double) totalMsgs ) * 100. )];
 			[resultProgress displayIfNeeded];
 		}
 	}
-	
+
 end:
-	
+
 	if( foundMessage ) {
 		[[panel display] highlightMessage:foundMessage];
 		[panel jumpToMessage:foundMessage];
 	} else NSBeep();
-	
+
 	[resultProgress setDoubleValue:[resultProgress maxValue]];
 	[resultProgress displayIfNeeded];
 	[self performSelector:@selector( hideProgress ) withObject:nil afterDelay:0.125];
@@ -397,12 +397,12 @@ end:
 - (IBAction) findAll:(id) sender {
 	JVChatTranscript *transcript = [[self focusedChatTranscriptPanel] transcript];
 	if( ! transcript ) return;
-	
+
 	_findPasteboardNeedsUpdated = YES;
-	
+
 	NSEnumerator *messages = [[transcript messages] objectEnumerator];
 	JVChatMessage *message = nil;
-	
+
 	BOOL andOperation = ( [operation selectedTag] == 2 );
 	BOOL ignore = ( [ignoreCase state] == NSOnState );
 	while( ( message = [messages nextObject] ) ) {
@@ -444,7 +444,7 @@ end:
 
 - (void) loadFindStringFromPasteboard {
 	_findPasteboardNeedsUpdated = NO;
-	
+
 	NSPasteboard *pasteboard = [NSPasteboard pasteboardWithName:NSFindPboard];
 	if( [[pasteboard types] containsObject:NSStringPboardType] ) {
 		NSString *string = [pasteboard stringForType:NSStringPboardType];
@@ -463,7 +463,7 @@ end:
 
 - (void) loadFindStringToPasteboard {
 	_findPasteboardNeedsUpdated = NO;
-	
+
 	NSString *findString = nil;
 	NSEnumerator *rules = [[self criterionControllers] objectEnumerator];
 	JVTranscriptCriterionController *rule = nil;
@@ -473,9 +473,9 @@ end:
 			break;
 		}
 	}
-	
+
 	if( ! findString || ! [findString isKindOfClass:[NSString class]] ) return;
-	
+
 	NSPasteboard *pasteboard = [NSPasteboard pasteboardWithName:NSFindPboard];
 	[pasteboard declareTypes:[NSArray arrayWithObject:NSStringPboardType] owner:nil];
 	[pasteboard setString:findString forType:NSStringPboardType];
@@ -497,10 +497,10 @@ end:
 	JVChatTranscriptPanel *panel = [self focusedChatTranscriptPanel];
 	NSEnumerator *enumerator = [[self results] objectEnumerator];
 	JVChatMessage *foundMessage = nil;
-	
+
 	while( ( foundMessage = [enumerator nextObject] ) )
 		[[panel display] clearHighlightForMessage:foundMessage];
-	
+
 	[_results removeAllObjects];
 }
 @end
