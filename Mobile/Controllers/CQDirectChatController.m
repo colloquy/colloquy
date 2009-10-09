@@ -1160,7 +1160,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 #pragma mark -
 
 - (void) _insertTimestamp {
-	NSTimeInterval timestampInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQTimestampInterval"];
+	static NSTimeInterval timestampInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQTimestampInterval"];
 	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
 
 	if (!timestampInterval) return;
