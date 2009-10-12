@@ -73,6 +73,9 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 		NSString *url = [components objectAtIndex:2];
 		NSString *email = [components objectAtIndex:3];
 
+//		if (![[CQColloquyApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]])
+//			break;
+
 		NSString *linkHTMLString = nil;
 		if (room.length) {
 			linkHTMLString = [NSString stringWithFormat:@"<a href=\"irc:///%@\">%1$@</a>", room];
