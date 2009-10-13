@@ -73,24 +73,23 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 		NSString *url = [components objectAtIndex:2];
 		NSString *email = [components objectAtIndex:3];
 
-//		if (![[CQColloquyApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]])
-//			break;
-
 		NSString *linkHTMLString = nil;
 		if (room.length) {
 			linkHTMLString = [NSString stringWithFormat:@"<a href=\"irc:///%@\">%1$@</a>", room];
 		} else if (url.length) {
-			NSString *fullURL = ([url hasCaseInsensitivePrefix:@"www."] ? [@"http://" stringByAppendingString:url] : url);
-			url = [url stringByReplacingOccurrencesOfString:@"/" withString:@"/\u200b"];
-			url = [url stringByReplacingOccurrencesOfString:@"?" withString:@"?\u200b"];
-			url = [url stringByReplacingOccurrencesOfString:@"=" withString:@"=\u200b"];
-			url = [url stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&amp;\u200b"];
-			linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\">%@</a>", fullURL, url];
+			if ([[CQColloquyApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]]) {
+				NSString *fullURL = ([url hasCaseInsensitivePrefix:@"www."] ? [@"http://" stringByAppendingString:url] : url);
+				url = [url stringByReplacingOccurrencesOfString:@"/" withString:@"/\u200b"];
+				url = [url stringByReplacingOccurrencesOfString:@"?" withString:@"?\u200b"];
+				url = [url stringByReplacingOccurrencesOfString:@"=" withString:@"=\u200b"];
+				url = [url stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&amp;\u200b"];
+				linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\">%@</a>", fullURL, url];
+			} else linkHTMLString = url;
 		} else if (email.length) {
 			linkHTMLString = [NSString stringWithFormat:@"<a href=\"mailto:%@\">%1$@</a>", email];
 		}
 
-		if (linkHTMLString) {
+		if (linkHTMLString || (url && linkHTMLString.length != url.length)) {
 			[string replaceCharactersInRange:matchedRange withString:linkHTMLString];
 
 			textRange->length += (linkHTMLString.length - matchedRange.length);
