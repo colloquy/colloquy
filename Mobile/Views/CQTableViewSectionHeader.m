@@ -1,6 +1,6 @@
-#import "CQBouncerSectionHeader.h"
+#import "CQTableViewSectionHeader.h"
 
-@implementation CQBouncerSectionHeader
+@implementation CQTableViewSectionHeader
 - (id) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
 		return nil;
@@ -90,6 +90,7 @@
 
 #pragma mark -
 
+@synthesize disclosureImageView = _disclosureImageView;
 @synthesize textLabel = _textLabel;
 @synthesize section = _section;
 @end

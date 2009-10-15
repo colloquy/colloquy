@@ -1,4 +1,4 @@
-@interface CQBouncerSectionHeader : UIControl {
+@interface CQTableViewSectionHeader : UIControl {
 	UIImageView *_backgroundImageView;
 	UIImageView *_disclosureImageView;
 	UIImage *_backgroundImage;
@@ -9,5 +9,5 @@
 
 @property (nonatomic, readonly) UILabel *textLabel;
 @property (nonatomic) NSUInteger section;
-
+@property (nonatomic, readonly) UIImageView *disclosureImageView;
 @end

@@ -101,7 +101,6 @@
 		1C9B15A50D878B6A003794A5 /* CQConnectionEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B15A40D878B6A003794A5 /* CQConnectionEditViewController.m */; };
 		1C9B60EA0FFAE4C400B7BAC0 /* CQBouncerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9B60E90FFAE4C400B7BAC0 /* CQBouncerConnection.m */; };
 		1C9C34430FFF319C00F79731 /* sectionHeader.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9C34420FFF319C00F79731 /* sectionHeader.png */; };
-		1C9C34840FFFE51F00F79731 /* CQBouncerSectionHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9C34830FFFE51F00F79731 /* CQBouncerSectionHeader.m */; };
 		1C9C34F70FFFEFE500F79731 /* disclosureArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9C34F60FFFEFE500F79731 /* disclosureArrow.png */; };
 		1C9C351C0FFFF2C500F79731 /* sectionHeaderHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9C351B0FFFF2C500F79731 /* sectionHeaderHighlighted.png */; };
 		1C9E1A690F12E62600C18B55 /* info.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9E1A680F12E62600C18B55 /* info.png */; };
@@ -169,6 +168,7 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		8900D7340FBFB2D900DE3E3B /* Servers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8900D7330FBFB2D900DE3E3B /* Servers.plist */; };
+		8957DEE11086BA3700F21648 /* CQTableViewSectionHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 8957DEE01086BA3700F21648 /* CQTableViewSectionHeader.m */; };
 		896E84610F15AB6C00D810FE /* notes.css in Resources */ = {isa = PBXBuildFile; fileRef = 896E84600F15AB6C00D810FE /* notes.css */; };
 		897C0D670F99154500F9D8B5 /* browserInstapaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 897C0D660F99154500F9D8B5 /* browserInstapaper.png */; };
 		89997FAC0F171EB600CF0AA2 /* standard-grey-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */; };
@@ -331,8 +331,6 @@
 		1C9B60E80FFAE4C400B7BAC0 /* CQBouncerConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQBouncerConnection.h; sourceTree = "<group>"; };
 		1C9B60E90FFAE4C400B7BAC0 /* CQBouncerConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQBouncerConnection.m; sourceTree = "<group>"; };
 		1C9C34420FFF319C00F79731 /* sectionHeader.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sectionHeader.png; sourceTree = "<group>"; };
-		1C9C34820FFFE51F00F79731 /* CQBouncerSectionHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQBouncerSectionHeader.h; sourceTree = "<group>"; };
-		1C9C34830FFFE51F00F79731 /* CQBouncerSectionHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQBouncerSectionHeader.m; sourceTree = "<group>"; };
 		1C9C34F60FFFEFE500F79731 /* disclosureArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = disclosureArrow.png; sourceTree = "<group>"; };
 		1C9C351B0FFFF2C500F79731 /* sectionHeaderHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sectionHeaderHighlighted.png; sourceTree = "<group>"; };
 		1C9E1A680F12E62600C18B55 /* info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info.png; sourceTree = "<group>"; };
@@ -421,6 +419,8 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Mobile/main.m; sourceTree = "<group>"; };
 		8900D7330FBFB2D900DE3E3B /* Servers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Servers.plist; sourceTree = "<group>"; };
+		8957DEDF1086BA3700F21648 /* CQTableViewSectionHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQTableViewSectionHeader.h; sourceTree = "<group>"; };
+		8957DEE01086BA3700F21648 /* CQTableViewSectionHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQTableViewSectionHeader.m; sourceTree = "<group>"; };
 		896E84600F15AB6C00D810FE /* notes.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = notes.css; sourceTree = "<group>"; };
 		897C0D660F99154500F9D8B5 /* browserInstapaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserInstapaper.png; sourceTree = "<group>"; };
 		89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "standard-grey-dark.css"; sourceTree = "<group>"; };
@@ -706,8 +706,6 @@
 				1C0DBC7D100569E7003BEEF3 /* CQActionSheet.h */,
 				1CBEA7341002CC5C00546847 /* CQAlertView.m */,
 				1CBEA7331002CC5C00546847 /* CQAlertView.h */,
-				1C9C34830FFFE51F00F79731 /* CQBouncerSectionHeader.m */,
-				1C9C34820FFFE51F00F79731 /* CQBouncerSectionHeader.h */,
 				1CE69FD80EE317F200389442 /* CQChatInputBar.m */,
 				1CE69FD70EE317F200389442 /* CQChatInputBar.h */,
 				1C82C1950D83CF1D009ABD9F /* CQChatTableCell.m */,
@@ -726,6 +724,8 @@
 				1C6100D10ED31C8B0016F968 /* CQPreferencesSwitchCell.h */,
 				1C7EBE6C0E01816C0018B0C8 /* CQPreferencesTextCell.m */,
 				1C7EBE6B0E01816C0018B0C8 /* CQPreferencesTextCell.h */,
+				8957DEE01086BA3700F21648 /* CQTableViewSectionHeader.m */,
+				8957DEDF1086BA3700F21648 /* CQTableViewSectionHeader.h */,
 				1CBCFF2C0F04632900EEBCFB /* CQTextCompletionView.m */,
 				1CBCFF2B0F04632900EEBCFB /* CQTextCompletionView.h */,
 				1CA715190EF47D6F006225CD /* CQUnreadCountView.m */,
@@ -1134,7 +1134,6 @@
 				1C9B60EA0FFAE4C400B7BAC0 /* CQBouncerConnection.m in Sources */,
 				1C16F77F0FFF049F008D7BB3 /* CQBouncerCreationViewController.m in Sources */,
 				1C16F79B0FFF0789008D7BB3 /* CQBouncerEditViewController.m in Sources */,
-				1C9C34840FFFE51F00F79731 /* CQBouncerSectionHeader.m in Sources */,
 				1CBEA7351002CC5C00546847 /* CQAlertView.m in Sources */,
 				1C0DBC7F100569E7003BEEF3 /* CQActionSheet.m in Sources */,
 				1C0DBCA91005A57A003BEEF3 /* CQProcessChatMessageOperation.m in Sources */,
@@ -1145,6 +1144,7 @@
 				1CA3DC581027984A008B1AD2 /* CQWelcomeViewController.m in Sources */,
 				1CA3DD5510287BF3008B1AD2 /* CQHelpTopicsViewController.m in Sources */,
 				1CA3DEBC10290B0F008B1AD2 /* CQHelpTopicViewController.m in Sources */,
+				8957DEE11086BA3700F21648 /* CQTableViewSectionHeader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

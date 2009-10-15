@@ -1,5 +1,8 @@
 #import "CQChatListViewController.h"
 
+#import "CQColloquyApplication.h"
+#import "CQTableViewSectionHeader.h"
+#import "CQActionSheet.h"
 #import "CQChatRoomController.h"
 #import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
@@ -374,6 +377,65 @@ static NSIndexPath *indexPathForChatController(id controller) {
 
 #pragma mark -
 
+- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+	if (buttonIndex == actionSheet.cancelButtonIndex)
+		return;
+
+	NSInteger section = [[(CQActionSheet *) actionSheet userInfo] intValue];
+	MVChatConnection *connection = connectionForSection(section);
+	NSMutableArray *viewsToClose = [[NSMutableArray alloc] init];
+	NSIndexPath *indexPath = nil;
+
+	if (buttonIndex == 0 && [[CQChatController defaultController] connectionHasAChatRoom:connection]) {
+		for (id <CQChatViewController> chatViewController in [[CQChatController defaultController] chatViewControllersForConnection:connection]) {
+			if ([chatViewController.target isKindOfClass:[MVChatUser class]])
+				continue;
+
+			indexPath = indexPathForChatController(chatViewController);
+			[viewsToClose addObject:indexPath];
+			[[CQChatController defaultController] closeViewController:chatViewController];
+		}
+	} else {
+		for (id <CQChatViewController> chatViewController in [[CQChatController defaultController] chatViewControllersForConnection:connection]) {
+			if ([chatViewController.target isKindOfClass:[MVChatRoom class]])
+				continue;
+
+			indexPath = indexPathForChatController(chatViewController);
+			[viewsToClose addObject:indexPath];
+			[[CQChatController defaultController] closeViewController:chatViewController];
+		}
+	}
+
+	[self.tableView deleteRowsAtIndexPaths:viewsToClose withRowAnimation:UITableViewRowAnimationRight];
+
+	[viewsToClose release];
+}
+
+#pragma mark -
+
+- (void) tableSectionHeaderSelected:(CQTableViewSectionHeader *) header {
+	header.selected = YES;
+
+	CQActionSheet *sheet = [[CQActionSheet alloc] init];
+	sheet.delegate = self;
+	sheet.userInfo = [NSNumber numberWithInt:header.section];
+
+	if ([[CQChatController defaultController] connectionHasAChatRoom:connectionForSection(header.section)])
+		[sheet addButtonWithTitle:NSLocalizedString(@"Close All Chat Rooms", @"Close all rooms button title")];
+
+	if ([[CQChatController defaultController] connectionHasAPrivateChat:connectionForSection(header.section)])	
+		[sheet addButtonWithTitle:NSLocalizedString(@"Close All Private Chats", @"Close all private chats button title")];
+
+	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+	[sheet release];
+
+	header.selected = NO;
+}
+
+#pragma mark -
+
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
 	NSArray *controllers = [CQChatController defaultController].chatViewControllers;
 	if (!controllers.count)
@@ -551,6 +613,21 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	} else {
 		[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationRight];
 	}
+}
+
+- (CGFloat) tableView:(UITableView *) tableView heightForHeaderInSection:(NSInteger) section {
+	return 23.;
+}
+
+- (UIView *) tableView:(UITableView *) tableView viewForHeaderInSection:(NSInteger) section {
+	CQTableViewSectionHeader *view = [[CQTableViewSectionHeader alloc] initWithFrame:CGRectZero];
+	view.textLabel.text = [self tableView:tableView titleForHeaderInSection:section];
+	view.section = section;
+	view.disclosureImageView.alpha = 0.;
+	
+	[view addTarget:self action:@selector(tableSectionHeaderSelected:) forControlEvents:UIControlEventTouchUpInside];
+	
+	return [view autorelease];
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {

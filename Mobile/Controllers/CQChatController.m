@@ -840,6 +840,22 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 #pragma mark -
 
+- (BOOL) connectionHasAChatRoom:(MVChatConnection *) connection {
+	for (id <CQChatViewController> chatViewController in [self chatViewControllersForConnection:connection])
+		if ([chatViewController.target isKindOfClass:[MVChatRoom class]])
+			return YES;
+	return NO;
+}
+
+- (BOOL) connectionHasAPrivateChat:(MVChatConnection *) connection {
+	for (id <CQChatViewController> chatViewController in [self chatViewControllersForConnection:connection])
+		if ([chatViewController.target isKindOfClass:[MVChatUser class]])
+			return YES;
+	return NO;
+}
+
+#pragma mark -
+
 - (void) closeViewController:(id) controller {
 	if ([controller respondsToSelector:@selector(close)])
 		[controller close];

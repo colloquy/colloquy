@@ -50,6 +50,9 @@
 - (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) requested;
 - (CQDirectChatController *) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists;
 
+- (BOOL) connectionHasAChatRoom:(MVChatConnection *) connection;
+- (BOOL) connectionHasAPrivateChat:(MVChatConnection *) connection;
+
 #if ENABLE(FILE_TRANSFERS)
 - (CQFileTransferController *) chatViewControllerForFileTransfer:(MVFileTransfer *) transfer ifExists:(BOOL) exists;
 #endif

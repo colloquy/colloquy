@@ -1,7 +1,7 @@
 #import "CQConnectionsViewController.h"
 
 #import "CQColloquyApplication.h"
-#import "CQBouncerSectionHeader.h"
+#import "CQTableViewSectionHeader.h"
 #import "CQBouncerSettings.h"
 #import "CQConnectionTableCell.h"
 #import "CQConnectionsController.h"
@@ -255,7 +255,7 @@
 
 #pragma mark -
 
-- (void) tableSectionHeaderSelected:(CQBouncerSectionHeader *) header {
+- (void) tableSectionHeaderSelected:(CQTableViewSectionHeader *) header {
 	CQBouncerSettings *settings = [[CQConnectionsController defaultController].bouncers objectAtIndex:(header.section - 1)];
 	[[CQConnectionsController defaultController] editBouncer:settings];
 
@@ -308,7 +308,7 @@
 	if (section == 0)
 		return nil;
 
-	CQBouncerSectionHeader *view = [[CQBouncerSectionHeader alloc] initWithFrame:CGRectZero];
+	CQTableViewSectionHeader *view = [[CQTableViewSectionHeader alloc] initWithFrame:CGRectZero];
 	view.textLabel.text = [self tableView:tableView titleForHeaderInSection:section];
 	view.section = section;
 
