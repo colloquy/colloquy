@@ -414,24 +414,25 @@ static NSIndexPath *indexPathForChatController(id controller) {
 #pragma mark -
 
 - (void) tableSectionHeaderSelected:(CQTableViewSectionHeader *) header {
-	header.selected = YES;
+	NSInteger section = header.section;
+
+	if (!connectionForSection(section))
+		return;
 
 	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.userInfo = [NSNumber numberWithInt:header.section];
 
-	if ([[CQChatController defaultController] connectionHasAChatRoom:connectionForSection(header.section)])
+	if ([[CQChatController defaultController] connectionHasAChatRoom:connectionForSection(section)])
 		[sheet addButtonWithTitle:NSLocalizedString(@"Close All Chat Rooms", @"Close all rooms button title")];
 
-	if ([[CQChatController defaultController] connectionHasAPrivateChat:connectionForSection(header.section)])	
+	if ([[CQChatController defaultController] connectionHasAPrivateChat:connectionForSection(section)])	
 		[sheet addButtonWithTitle:NSLocalizedString(@"Close All Private Chats", @"Close all private chats button title")];
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
 	[sheet release];
-
-	header.selected = NO;
 }
 
 #pragma mark -
