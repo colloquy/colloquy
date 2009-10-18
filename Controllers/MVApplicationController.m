@@ -545,7 +545,7 @@ static BOOL applicationIsTerminating = NO;
 
 - (BOOL) applicationShouldHandleReopen:(NSApplication *) application hasVisibleWindows:(BOOL) hasVisibleWindows {
 	if( ! hasVisibleWindows )
-		[self showConnectionManager:nil];
+		[[MVConnectionsController defaultController] showConnectionManager:nil];
 	return YES;
 }
 
