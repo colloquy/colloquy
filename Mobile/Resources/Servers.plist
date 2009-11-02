@@ -58,6 +58,12 @@
 	</dict>
 	<dict>
 		<key>Name</key>
+		<string>GeekShed</string>
+		<key>Address</key>
+		<string>irc.geekshed.net</string>
+	</dict>
+	<dict>
+		<key>Name</key>
 		<string>IRCnet</string>
 		<key>Address</key>
 		<string>irc.ircnet.com</string>
@@ -145,12 +151,6 @@
 		<string>WebChat</string>
 		<key>Address</key>
 		<string>irc.webchat.org</string>
-	</dict>
-	<dict>
-		<key>Name</key>
-		<string>WyldRyde</string>
-		<key>Address</key>
-		<string>irc.wyldryde.org</string>
 	</dict>
 </array>
 </plist>
