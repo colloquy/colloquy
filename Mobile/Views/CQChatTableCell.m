@@ -6,18 +6,6 @@
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-@interface UIRemoveControl : UIView
-- (void) setRemoveConfirmationLabel:(NSString *) label;
-@end
-
-#pragma mark -
-
-@interface UITableViewCell (UITableViewCellPrivate)
-- (UIRemoveControl *) _createRemoveControl;
-@end
-#endif
-
 #pragma mark -
 
 @implementation CQChatTableCell
@@ -50,10 +38,6 @@
 	[_iconImageView release];
 	[_unreadCountView release];
 	[_nameLabel release];
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-	[_removeControl release];
-	[_removeConfirmationText release];
-#endif
 	[_chatPreviewLabels release];
 
 	[super dealloc];
@@ -132,19 +116,6 @@
 	[self setNeedsLayout];
 }
 
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-@synthesize removeConfirmationText = _removeConfirmationText;
-
-- (void) setRemoveConfirmationText:(NSString *) text {
-	id old = _removeConfirmationText;
-	_removeConfirmationText = [text copy];
-	[old release];
-
-	if (_removeConfirmationText.length && [_removeControl respondsToSelector:@selector(setRemoveConfirmationLabel:)])
-		[_removeControl setRemoveConfirmationLabel:_removeConfirmationText];
-}
-#endif
-
 @synthesize available = _available;
 
 - (void) setAvailable:(BOOL) available {
@@ -157,18 +128,6 @@
 	for (UILabel *label in _chatPreviewLabels)
 		label.alpha = alpha;
 }
-
-#pragma mark -
-
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-- (UIRemoveControl *) _createRemoveControl {
-	[_removeControl release];
-	_removeControl = [[super _createRemoveControl] retain];
-	if (_removeConfirmationText.length && [_removeControl respondsToSelector:@selector(setRemoveConfirmationLabel:)])
-		[_removeControl setRemoveConfirmationLabel:_removeConfirmationText];
-	return _removeControl;
-}
-#endif
 
 #pragma mark -
 
@@ -280,10 +239,6 @@
 	self.name = @"";
 	self.icon = nil;
 	self.available = YES;
-
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-	self.removeConfirmationText = nil;
-#endif
 
 	_showsUserInMessagePreviews = YES;
 	_maximumMessagePreviews = 2;

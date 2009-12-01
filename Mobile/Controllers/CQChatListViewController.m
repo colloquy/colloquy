@@ -200,14 +200,6 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	if ([chatViewController isMemberOfClass:[CQDirectChatController class]])
 		cell.showsUserInMessagePreviews = NO;
 
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-	if ([chatViewController isMemberOfClass:[CQChatRoomController class]]) {
-		if (chatViewController.available)
-			cell.removeConfirmationText = NSLocalizedString(@"Leave", @"Leave remove confirmation button title");
-		else cell.removeConfirmationText = NSLocalizedString(@"Close", @"Close remove confirmation button title");
-	} else cell.removeConfirmationText = NSLocalizedString(@"Close", @"Close remove confirmation button title");
-#endif
-
 	if (animated)
 		[UIView commitAnimations];
 }
@@ -218,13 +210,6 @@ static NSIndexPath *indexPathForChatController(id controller) {
 		[UIView beginAnimations:nil context:NULL];
 
 	[cell takeValuesFromController:controller];
-
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-	MVFileTransferStatus status = controller.transfer.status;
-	if (status == MVFileTransferDoneStatus || status == MVFileTransferStoppedStatus)
-		cell.removeConfirmationText = NSLocalizedString(@"Close", @"Close remove confirmation button title");
-	else cell.removeConfirmationText = NSLocalizedString(@"Stop", @"Stop remove confirmation button title");
-#endif
 
 	if (animated)
 		[UIView commitAnimations];

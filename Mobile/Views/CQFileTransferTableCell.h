@@ -6,10 +6,6 @@
 @class MVChatUser;
 @class CQFileTransferController;
 
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-@class UIRemoveControl;
-#endif
-
 @interface CQFileTransferTableCell : UITableViewCell {
     @protected
 	IBOutlet UIImageView *_iconImageView;
@@ -18,10 +14,6 @@
 	IBOutlet UILabel *_userTitle;
 	IBOutlet UILabel *_fileLabel;
 	IBOutlet UILabel *_fileTitle;
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-	UIRemoveControl *_removeControl;
-	NSString *_removeConfirmationText;
-#endif
 	MVFileTransferStatus _status;
 	CQFileTransferController *_controller;
 	UIImage *_thumb;
@@ -34,10 +26,6 @@
 @property (nonatomic, copy) NSString *file;
 @property (nonatomic) float progress;
 @property (nonatomic) MVFileTransferStatus status;
-
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-@property (nonatomic, copy) NSString *removeConfirmationText;
-#endif
 
 - (void) takeValuesFromController:(CQFileTransferController *) controller;
 

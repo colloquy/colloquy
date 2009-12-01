@@ -233,12 +233,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	self.applicationIconBadgeNumber = [[apsInfo objectForKey:@"badge"] integerValue];
 }
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-- (void) applicationDidFinishLaunching:(UIApplication *) application {
-	[self application:self didFinishLaunchingWithOptions:nil];
-}
-#endif
-
 - (void) application:(UIApplication *) application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *) deviceToken {
 	if (!deviceToken.length) {
 		[[CQAnalyticsController defaultController] setObject:nil forKey:@"device-push-token"];

@@ -10,18 +10,6 @@
 #define kNormalAlpha 1.
 #define kOtherAlpha 0.5
 
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-@interface UIRemoveControl : UIView
-- (void) setRemoveConfirmationLabel:(NSString *) label;
-@end
-
-#pragma mark -
-
-@interface UITableViewCell (UITableViewCellPrivate)
-- (UIRemoveControl *) _createRemoveControl;
-@end
-#endif
-
 #pragma mark -
 
 @implementation CQFileTransferTableCell
@@ -33,10 +21,6 @@
 	[_userTitle release];
 	[_fileLabel release];
 	[_fileTitle release];
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-	[_removeControl release];
-	[_removeConfirmationText release];
-#endif
 	[_thumb release];
 
     [super dealloc];
@@ -108,19 +92,6 @@
 	[self setNeedsLayout];
 }
 
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-@synthesize removeConfirmationText = _removeConfirmationText;
-
-- (void) setRemoveConfirmationText:(NSString *) text {
-	id old = _removeConfirmationText;
-	_removeConfirmationText = [text copy];
-	[old release];
-
-	if (_removeConfirmationText.length && [_removeControl respondsToSelector:@selector(setRemoveConfirmationLabel:)])
-		[_removeControl setRemoveConfirmationLabel:_removeConfirmationText];
-}
-#endif
-
 - (float) progress {
 	return _progressView.progress;
 }
@@ -185,28 +156,12 @@
 
 #pragma mark -
 
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-- (UIRemoveControl *) _createRemoveControl {
-	[_removeControl release];
-	_removeControl = [[super _createRemoveControl] retain];
-	if (_removeConfirmationText.length && [_removeControl respondsToSelector:@selector(setRemoveConfirmationLabel:)])
-		[_removeControl setRemoveConfirmationLabel:_removeConfirmationText];
-	return _removeControl;
-}
-#endif
-
-#pragma mark -
-
 - (void) prepareForReuse {
 	[super prepareForReuse];
 
 	_iconImageView.image = nil;
 	[_thumb release];
 	_thumb = nil;
-
-#if defined(ENABLE_SECRETS) && __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_3_0
-	self.removeConfirmationText = nil;
-#endif
 }
 
 - (void) setSelected:(BOOL) selected animated:(BOOL) animated {
