@@ -85,7 +85,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	NSString *version = [NSString stringWithFormat:@"%@ (%@)", [infoDictionary objectForKey:@"CFBundleShortVersionString"], [infoDictionary objectForKey:@"CFBundleVersion"]];
 	[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQCurrentVersion"];
 
-#ifdef ENABLE_SECRETS
 	NSString *preferencesPath = [@"~/../../Library/Preferences/com.apple.Preferences.plist" stringByStandardizingPath];
 	NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:preferencesPath];
 
@@ -95,7 +94,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	}
 
 	[preferences release];
-#endif
 
 	NSString *information = [infoDictionary objectForKey:@"CFBundleName"];
 	[[CQAnalyticsController defaultController] setObject:information forKey:@"application-name"];
