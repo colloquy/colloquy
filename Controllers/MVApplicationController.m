@@ -515,6 +515,16 @@ static BOOL applicationIsTerminating = NO;
 
 	[self performSelector:@selector( setupFolders ) withObject:nil afterDelay:5.]; // do this later to speed up launch
 
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVAskedToAllowAnalytics"]) {
+		NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Allow analytics to be sent?", @"Allow analytics to be sent? message text.") defaultButton:NSLocalizedString(@"Send", @"Send button title") alternateButton:NSLocalizedString(@"Don't send", @"Don't send button title") otherButton:nil informativeTextWithFormat:NSLocalizedString(@"To help us know what to improve on, Colloquy can send back information about your current configuration. The data sent back will not contain will not contain any identifiable information. ", @"To help us know what to improve on, Voltage can send back information about your current configuration. The data sent back will not contain will not contain any identifiable information message text")];
+		alert.alertStyle = NSInformationalAlertStyle;
+
+		if ([alert runModal])
+			[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVAllowAnalytics"];
+
+		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVAskedToAllowAnalytics"];
+	}
+	
 	JVAnalyticsController *analyticsController = [JVAnalyticsController defaultController];
 	if (analyticsController) {
 		NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
