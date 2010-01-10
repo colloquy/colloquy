@@ -39,6 +39,7 @@ extern NSString *CQChatViewControllerRecentMessagesUpdatedNotification;
 	BOOL _didSendRecently;
 	BOOL _revealKeyboard;
 	BOOL _showingKeyboard;
+	BOOL _showDeviceTokenWhenRegistered;
 
 	NSString *_tweetRetryArguments;
 	NSTimeInterval _lastTimestampTime;

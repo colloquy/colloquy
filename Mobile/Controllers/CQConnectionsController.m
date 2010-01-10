@@ -767,13 +767,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if (connection.temporaryDirectConnection)
 		connection.bouncerType = MVChatConnectionNoBouncer;
 
-#if !TARGET_IPHONE_SIMULATOR
-	static BOOL registeredForPush;
-	if (!registeredForPush && (!bouncerSettings || bouncerSettings.pushNotifications) && connection.pushNotifications) {
-		[[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-		registeredForPush = YES;
-	}
-#endif
+	if ((!bouncerSettings || bouncerSettings.pushNotifications) && connection.pushNotifications)
+		[[CQColloquyApplication sharedApplication] registerForRemoteNotifications];
 
 	return [connection autorelease];
 }

@@ -25,6 +25,8 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 - (void) hideTabBarWithTransition:(BOOL) transition;
 - (void) showTabBarWithTransition:(BOOL) transition;
 
+- (void) registerForRemoteNotifications;
+
 @property (nonatomic, readonly) NSSet *handledURLSchemes;
 @property (nonatomic, readonly) NSDate *launchDate;
 @property (nonatomic, readonly) UITabBarController *tabBarController;

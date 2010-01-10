@@ -387,4 +387,16 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	_showingTabBar = YES;
 #endif	
 }
+
+#pragma mark -
+
+- (void) registerForRemoteNotifications {
+#if !TARGET_IPHONE_SIMULATOR
+	static BOOL registeredForPush;
+	if (!registeredForPush) {
+		[self registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+		registeredForPush = YES;
+	}
+#endif
+}
 @end

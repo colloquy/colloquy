@@ -55,7 +55,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_awayStatusChanged:) name:MVChatConnectionSelfAwayStatusChangedNotification object:self.connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:self.connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTokenCommandWithArguments:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didRecieveDeviceToken:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 
 	if (self.user) {
 		[self _updateRightBarButtonItemAnimated:NO];
@@ -1005,20 +1005,22 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 #pragma mark -
 
-#if !TARGET_IPHONE_SIMULATOR
 - (BOOL) handleTokenCommandWithArguments:(NSString *) arguments {
+#if !TARGET_IPHONE_SIMULATOR
 	if (![CQColloquyApplication sharedApplication].deviceToken.length) {
-		[[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-
+		_showDeviceTokenWhenRegistered = YES;
+		[[CQColloquyApplication sharedApplication] registerForRemoteNotifications];
 		return YES;
 	}
-	
+
 	[self addEventMessageAsHTML:NSLocalizedString(@"Your device token is only shown locally and is:", @"Your device token is only shown locally and is:") withIdentifier:@"token"];
 	[self addEventMessageAsHTML:[CQColloquyApplication sharedApplication].deviceToken withIdentifier:@"token"];
+#else
+	[self addEventMessageAsHTML:@"Push notifications not supported in the simulator." withIdentifier:@"token"];
+#endif
 
 	return YES;
 }
-#endif
 
 - (void) handleResetbadgeCommandWithArguments:(NSString *) arguments {
 	[CQColloquyApplication sharedApplication].applicationIconBadgeNumber = 0;
@@ -1285,6 +1287,11 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	[self addEventMessage:NSLocalizedString(@"Disconnected from the server.", "Disconnect from the server event message") withIdentifier:@"disconnected"];
 
 	[self _updateRightBarButtonItemAnimated:YES];
+}
+
+- (void) _didRecieveDeviceToken:(NSNotification *) notification {
+	if (_showDeviceTokenWhenRegistered)
+		[self handleTokenCommandWithArguments:nil];
 }
 
 - (void) _awayStatusChanged:(NSNotification *) notification {
