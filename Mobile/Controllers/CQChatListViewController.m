@@ -376,7 +376,9 @@ static NSIndexPath *indexPathForChatController(id controller) {
 		classToClose = [MVChatRoom class];
 	else classToClose = [MVChatUser class];
 
-	for (id <CQChatViewController> chatViewController in [[CQChatController defaultController] chatViewControllersForConnection:connection]) {
+	NSArray *viewControllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
+
+	for (id <CQChatViewController> chatViewController in viewControllers) {
 		if (![chatViewController.target isKindOfClass:classToClose])
 			continue;
 
@@ -391,7 +393,9 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	for (id <CQChatViewController> chatViewController in viewsToClose)
 		[[CQChatController defaultController] closeViewController:chatViewController];
 
-	[self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:UITableViewRowAnimationTop];
+	if (viewControllers.count == viewsToClose.count)
+		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationTop];
+	else [self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:UITableViewRowAnimationTop];
 
 	[rowsToDelete release];
 	[viewsToClose release];
