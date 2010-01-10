@@ -732,7 +732,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 		NSString *userInformation = nil;
 		
 		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnJoin"])
-			userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForMemberUser:user], [user realName], [user address]];
+			userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForMemberUser:user], [user username], [user address]];
 		else userInformation = [self _markupForMemberUser:user];
 
 		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:@"memberJoined"];
@@ -757,7 +757,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	NSString *userInformation = nil;
 	
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnPart"])
-		userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForMemberUser:user], [user realName], [user address]];
+		userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForMemberUser:user], [user username], [user address]];
 	else userInformation = [self _markupForMemberUser:user];
 
 	if (reason.length) {
