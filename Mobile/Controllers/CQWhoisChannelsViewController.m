@@ -4,6 +4,7 @@
 #import "CQWhoisChannelsViewController.h"
 
 #import "CQChatController.h"
+#import "CQColloquyApplication.h"
 
 #import <ChatCore/MVChatConnection.h>
 
@@ -48,7 +49,7 @@
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	[sheet showInView:self.view];
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
 
 	[sheet release];
 }
