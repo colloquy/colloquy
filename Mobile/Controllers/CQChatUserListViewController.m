@@ -5,6 +5,7 @@
 #import "CQColloquyApplication.h"
 #import "CQDirectChatController.h"
 #import "CQWhoisNavController.h"
+#import "CQWhoisViewController.h"
 #import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatRoom.h>
@@ -21,12 +22,10 @@ static NSString *membersFilteredCountFormat;
 
 #if ENABLE(FILE_TRANSFERS)
 #define SendFileButtonIndex 1
-#define ShowInfoButtonIndex 2
-#define OperatorActionsButtonIndex 3
+#define OperatorActionsButtonIndex 2
 #else
 #define SendFileButtonIndex NSNotFound
-#define ShowInfoButtonIndex 1
-#define OperatorActionsButtonIndex 2
+#define OperatorActionsButtonIndex 1
 #endif
 
 @implementation CQChatUserListViewController
@@ -380,8 +379,6 @@ static NSString *membersFilteredCountFormat;
 	[sheet addButtonWithTitle:NSLocalizedString(@"Send File", @"Send File button title")];
 #endif
 
-	[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
-
 	if (showOperatorActions)
 		[sheet addButtonWithTitle:NSLocalizedString(@"Operator Actions...", @"Operator Actions button title")];
 
@@ -393,7 +390,12 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
-	[self whoisUser:[_matchedUsers objectAtIndex:indexPath.row]];
+	CQWhoisViewController *whoisViewController = [[CQWhoisViewController alloc] init];
+	whoisViewController.user = [_matchedUsers objectAtIndex:indexPath.row];
+
+	[self.navigationController pushViewController:whoisViewController animated:YES];
+
+	[whoisViewController release];
 }
 
 #pragma mark -
@@ -418,10 +420,6 @@ static NSString *membersFilteredCountFormat;
 		} else if (buttonIndex == SendFileButtonIndex) {
 			[[CQChatController defaultController] showFilePickerWithUser:user];
 #endif
-		} else if (buttonIndex == ShowInfoButtonIndex) {
-			[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
-
-			[self whoisUser:user];
 		} else if (buttonIndex == OperatorActionsButtonIndex) {
 			NSSet *features = _room.connection.supportedFeatures;
 
@@ -526,16 +524,4 @@ static NSString *membersFilteredCountFormat;
 		}
 	}
 }
-
-#pragma mark -
-
-- (void) whoisUser:(MVChatUser *) user {
-	CQWhoisNavController *whoisController = [[CQWhoisNavController alloc] init];
-	whoisController.user = user;
-	
-	[self presentModalViewController:whoisController animated:YES];
-	
-	[whoisController release];	
-}
-
 @end
