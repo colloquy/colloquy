@@ -368,31 +368,32 @@ static NSIndexPath *indexPathForChatController(id controller) {
 
 	NSInteger section = [[(CQActionSheet *) actionSheet userInfo] intValue];
 	MVChatConnection *connection = connectionForSection(section);
+	NSMutableArray *rowsToDelete = [[NSMutableArray alloc] init];
 	NSMutableArray *viewsToClose = [[NSMutableArray alloc] init];
-	NSIndexPath *indexPath = nil;
+	Class classToClose = Nil;
 
-	if (buttonIndex == 0 && [[CQChatController defaultController] connectionHasAChatRoom:connection]) {
-		for (id <CQChatViewController> chatViewController in [[CQChatController defaultController] chatViewControllersForConnection:connection]) {
-			if ([chatViewController.target isKindOfClass:[MVChatUser class]])
-				continue;
+	if (buttonIndex == 0 && [[CQChatController defaultController] connectionHasAChatRoom:connection])
+		classToClose = [MVChatRoom class];
+	else classToClose = [MVChatUser class];
 
-			indexPath = indexPathForChatController(chatViewController);
-			[viewsToClose addObject:indexPath];
-			[[CQChatController defaultController] closeViewController:chatViewController];
-		}
-	} else {
-		for (id <CQChatViewController> chatViewController in [[CQChatController defaultController] chatViewControllersForConnection:connection]) {
-			if ([chatViewController.target isKindOfClass:[MVChatRoom class]])
-				continue;
+	for (id <CQChatViewController> chatViewController in [[CQChatController defaultController] chatViewControllersForConnection:connection]) {
+		if (![chatViewController.target isKindOfClass:classToClose])
+			continue;
 
-			indexPath = indexPathForChatController(chatViewController);
-			[viewsToClose addObject:indexPath];
-			[[CQChatController defaultController] closeViewController:chatViewController];
-		}
+		NSIndexPath *indexPath = indexPathForChatController(chatViewController);
+		if (!indexPath)
+			continue;
+
+		[rowsToDelete addObject:indexPath];
+		[viewsToClose addObject:chatViewController];
 	}
 
-	[self.tableView deleteRowsAtIndexPaths:viewsToClose withRowAnimation:UITableViewRowAnimationRight];
+	for (id <CQChatViewController> chatViewController in viewsToClose)
+		[[CQChatController defaultController] closeViewController:chatViewController];
 
+	[self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:UITableViewRowAnimationTop];
+
+	[rowsToDelete release];
 	[viewsToClose release];
 }
 
