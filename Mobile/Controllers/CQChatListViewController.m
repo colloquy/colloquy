@@ -610,10 +610,10 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	CQTableViewSectionHeader *view = [[CQTableViewSectionHeader alloc] initWithFrame:CGRectZero];
 	view.textLabel.text = [self tableView:tableView titleForHeaderInSection:section];
 	view.section = section;
-	view.disclosureImageView.alpha = 0.;
-	
+	view.disclosureImageView.hidden = YES;
+
 	[view addTarget:self action:@selector(tableSectionHeaderSelected:) forControlEvents:UIControlEventTouchUpInside];
-	
+
 	return [view autorelease];
 }
 
