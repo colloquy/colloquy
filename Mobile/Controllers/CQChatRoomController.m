@@ -757,8 +757,8 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	NSString *userInformation = nil;
 	
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnPart"])
-		userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForMemberUser:user], [user username], [user address]];
-	else userInformation = [self _markupForMemberUser:user];
+		userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForUser:user], [user username], [user address]];
+	else userInformation = [self _markupForUser:user];
 
 	if (reason.length) {
 		NSString *eventMessageFormat = [NSLocalizedString(@"%@ left the room. (%@)", "User has left the room with reason event message") stringByEncodingXMLSpecialCharactersAsEntities];
