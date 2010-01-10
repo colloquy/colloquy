@@ -100,24 +100,14 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
-	NSInteger rows = 0;
 	switch (section) {
-		case 0:
-			rows = 2;
-			break;
-		case 1:
-			rows = 3;
-			break;
-		case 2:
-			rows = 2;
-			break;
-		case 3:
-			rows = 2;
-			break;
-		default:
-			break;
+		case 0: return 2;
+		case 1: return 3;
+		case 2: return 2;
+		case 3: return 2;
 	}
-	return rows;
+
+	return 0;
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
