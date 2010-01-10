@@ -18,6 +18,14 @@
 	_label.backgroundColor = nil;
 	_label.opaque = NO;
 
+	_label.text = @"Qwerty"; // Measurment text only.
+
+	CGRect subviewFrame = _label.frame;
+	subviewFrame.size = [_label sizeThatFits:_label.bounds.size];
+	_label.frame = subviewFrame;
+
+	_label.text = @"";
+
 	_textField.delegate = self;
 	_textField.textAlignment = UITextAlignmentLeft;
 	_textField.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
@@ -29,6 +37,14 @@
 	_textField.returnKeyType = UIReturnKeyDone;
 	_textField.backgroundColor = nil;
 	_textField.opaque = NO;
+
+	_textField.text = @"Qwerty"; // Measurment text only.
+
+	subviewFrame = _textField.frame;
+	subviewFrame.size = [_textField sizeThatFits:_textField.bounds.size];
+	_textField.frame = subviewFrame;
+
+	_textField.text = @"";
 
 	_enabled = YES;
 
@@ -129,11 +145,12 @@
 		_label.hidden = NO;
 
 		CGRect frame = _label.frame;
-		frame.size = [_label sizeThatFits:_label.bounds.size];
+		NSAssert(frame.size.height > 0., @"A height is assumed to be set in initWithFrame:.");
 		frame.origin.x = 10.;
 		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.)) - 1.;
 		if (!showingTextField)
 			frame.size.width = (contentRect.size.width - frame.origin.x - 10.);
+		else frame.size.width = [_label sizeThatFits:_label.bounds.size].width;
 		_label.frame = frame;
 	} else {
 		_label.hidden = YES;
@@ -150,7 +167,7 @@
 			rightMargin = 4.;
 
 		CGRect frame = _textField.frame;
-		frame.size = [_textField sizeThatFits:_textField.bounds.size];
+		NSAssert(frame.size.height > 0., @"A height is assumed to be set in initWithFrame:.");
 		frame.origin.x = (showingLabel ? MAX(CGRectGetMaxX(_label.frame) + leftMargin, 125.) : leftMargin);
 		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.)) - 1.;
 		frame.size.width = (contentRect.size.width - frame.origin.x - rightMargin);
