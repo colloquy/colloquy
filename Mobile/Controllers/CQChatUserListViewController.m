@@ -73,6 +73,10 @@ static NSString *membersFilteredCountFormat;
 	[_searchBar sizeToFit];
 
 	self.tableView.tableHeaderView = _searchBar;
+
+	UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Members", @"Members back button label") style:UIBarButtonItemStylePlain target:nil action:nil];
+	self.navigationItem.backBarButtonItem = backButton;
+	[backButton release];
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
