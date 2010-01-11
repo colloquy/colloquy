@@ -611,6 +611,9 @@ static NSIndexPath *indexPathForChatController(id controller) {
 }
 
 - (UIView *) tableView:(UITableView *) tableView viewForHeaderInSection:(NSInteger) section {
+	if (![CQChatController defaultController].chatViewControllers.count)
+		return nil;
+
 	CQTableViewSectionHeader *view = [[CQTableViewSectionHeader alloc] initWithFrame:CGRectZero];
 	view.textLabel.text = [self tableView:tableView titleForHeaderInSection:section];
 	view.section = section;
