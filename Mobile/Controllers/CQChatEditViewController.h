@@ -1,6 +1,8 @@
+#import "CQPreferencesTableViewController.h"
+
 @class MVChatConnection;
 
-@interface CQChatEditViewController : UITableViewController {
+@interface CQChatEditViewController : CQPreferencesTableViewController {
 	@protected
 	BOOL _roomTarget;
 	NSMutableArray *_sortedConnections;

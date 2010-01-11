@@ -59,8 +59,6 @@
 #pragma mark -
 
 - (void) close:(id) sender {
-	[self.view endEditing:YES];
-
 	if (!_shouldShowOnlyHelpTopics)
 		[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = [CQConnectionsController defaultController];
 

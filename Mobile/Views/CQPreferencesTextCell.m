@@ -1,6 +1,12 @@
 #import "CQPreferencesTextCell.h"
 
+static CQPreferencesTextCell *currentEditingCell;
+
 @implementation CQPreferencesTextCell
++ (CQPreferencesTextCell *) currentEditingCell {
+	return currentEditingCell;
+}
+
 - (id) initWithFrame:(CGRect) frame reuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier]))
 		return nil;
@@ -199,8 +205,20 @@
 	return YES;
 }
 
+- (void) textFieldDidBeginEditing:(UITextField *) textField {
+	id old = currentEditingCell;
+	currentEditingCell = [self retain];
+	[old release];
+}
+
 - (void) textFieldDidEndEditing:(UITextField *) textField {
 	if (self.textEditAction && (!self.target || [self.target respondsToSelector:self.textEditAction]))
 		[[UIApplication sharedApplication] sendAction:self.textEditAction to:self.target from:self forEvent:nil];
+
+	if (currentEditingCell == self) {
+		id old = currentEditingCell;
+		currentEditingCell = nil;
+		[old release];
+	}
 }
 @end

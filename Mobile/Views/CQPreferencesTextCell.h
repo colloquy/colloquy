@@ -5,6 +5,8 @@
 	BOOL _enabled;
 	SEL _textEditAction;
 }
++ (CQPreferencesTextCell *) currentEditingCell;
+
 @property (nonatomic, copy) NSString *label;
 
 @property (nonatomic, readonly) UITextField *textField;

@@ -54,12 +54,6 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 	[super viewWillAppear:animated];
 }
 
-- (void) viewWillDisappear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-
-	[self.tableView endEditing:YES];
-}
-
 #pragma mark -
 
 @synthesize newConnection = _newConnection;
@@ -236,7 +230,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		listViewController.target = self;
 		listViewController.action = @selector(alternateNicknamesChanged:);
 
-		[self.view endEditing:YES];
+		[self endEditing];
 
 		[self.navigationController pushViewController:listViewController animated:YES];
 
@@ -258,7 +252,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		listViewController.target = self;
 		listViewController.action = @selector(automaticCommandsChanged:);
 
-		[self.view endEditing:YES];
+		[self endEditing];
 
 		[self.navigationController pushViewController:listViewController animated:YES];
 
@@ -288,7 +282,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		listViewController.target = self;
 		listViewController.action = @selector(encodingChanged:);
 
-		[self.view endEditing:YES];
+		[self endEditing];
 
 		[self.navigationController pushViewController:listViewController animated:YES];
 

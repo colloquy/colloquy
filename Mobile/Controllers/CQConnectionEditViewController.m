@@ -69,7 +69,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
-	[self.tableView endEditing:YES];
+	[self endEditing];
 }
 
 #pragma mark -
@@ -134,7 +134,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	listViewController.target = self;
 	listViewController.action = @selector(defaultServerPicked:);
 
-	[self.view endEditing:YES];
+	[self endEditing];
 
 	[self.navigationController pushViewController:listViewController animated:YES];
 
@@ -183,7 +183,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		pushEditViewController.navigationItem.prompt = self.navigationItem.prompt;
 		pushEditViewController.connection = _connection;
 
-		[self.view endEditing:YES];
+		[self endEditing];
 
 		[self.navigationController pushViewController:pushEditViewController animated:YES];
 
@@ -207,7 +207,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		listViewController.target = self;
 		listViewController.action = @selector(automaticJoinRoomsChanged:);
 
-		[self.view endEditing:YES];
+		[self endEditing];
 
 		[self.navigationController pushViewController:listViewController animated:YES];
 
@@ -223,7 +223,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		advancedEditViewController.newConnection = _newConnection;
 		advancedEditViewController.connection = _connection;
 
-		[self.view endEditing:YES];
+		[self endEditing];
 
 		[self.navigationController pushViewController:advancedEditViewController animated:YES];
 

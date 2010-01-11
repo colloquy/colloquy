@@ -1,6 +1,8 @@
+#import "CQPreferencesTableViewController.h"
+
 @class CQBouncerSettings;
 
-@interface CQBouncerEditViewController : UITableViewController <UIActionSheetDelegate> {
+@interface CQBouncerEditViewController : CQPreferencesTableViewController <UIActionSheetDelegate> {
 	@protected
 	CQBouncerSettings *_settings;
 	BOOL _newBouncer;

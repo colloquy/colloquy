@@ -84,12 +84,6 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 	}
 }
 
-- (void) viewWillDisappear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-
-	[self.tableView endEditing:YES];
-}
-
 #pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
@@ -130,7 +124,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 		listViewController.target = self;
 		listViewController.action = @selector(connectionChanged:);
 
-		[self.view endEditing:YES];
+		[self endEditing];
 
 		[self.navigationController pushViewController:listViewController animated:YES];
 
@@ -240,7 +234,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 - (void) showRoomListFilteredWithSearchString:(NSString *) searchString {
 	CQChatRoomListViewController *listViewController = [[CQChatRoomListViewController alloc] init];
 
-	[self.view endEditing:YES];
+	[self endEditing];
 
 	listViewController.connection = _selectedConnection;
 	listViewController.selectedRoom = (_name.length ? _name : @"#help");

@@ -64,12 +64,6 @@ static NSOperationQueue *topicProcessingQueue;
 	self.tableView.tableHeaderView = _searchBar;
 }
 
-- (void) viewWillDisappear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-
-	[self.tableView endEditing:YES];
-}
-
 #pragma mark -
 
 @synthesize target = _target;

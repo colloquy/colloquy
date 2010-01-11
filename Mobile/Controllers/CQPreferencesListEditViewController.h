@@ -1,4 +1,6 @@
-@interface CQPreferencesListEditViewController : UITableViewController {
+#import "CQPreferencesTableViewController.h"
+
+@interface CQPreferencesListEditViewController : CQPreferencesTableViewController {
 	@protected
 	NSString *_listItemText;
 	NSString *_listItemPlaceholder;

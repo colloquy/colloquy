@@ -78,7 +78,7 @@
 }
 
 - (void) commit:(id) sender {
-	[self.view endEditing:YES];
+	[_editViewController endEditing];
 
 	[[CQConnectionsController defaultController] addBouncerSettings:_settings];
 

@@ -119,7 +119,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 }
 
 - (void) commit:(id) sender {
-	[self.view endEditing:YES];
+	[_editViewController endEditing];
 
 	if (isPlaceholderValue(_connection.server)) {
 		[self cancel:sender];

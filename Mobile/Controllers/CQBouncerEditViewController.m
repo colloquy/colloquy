@@ -43,14 +43,6 @@ static BOOL pushAvailable = NO;
 
 #pragma mark -
 
-- (void) viewWillDisappear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-
-	[self.tableView endEditing:YES];
-}
-
-#pragma mark -
-
 @synthesize newBouncer = _newBouncer;
 
 - (void) setNewBouncer:(BOOL) newBouncer {

@@ -79,12 +79,6 @@ static NSString *membersFilteredCountFormat;
 	[backButton release];
 }
 
-- (void) viewWillDisappear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-
-	[self.tableView endEditing:YES];
-}
-
 #pragma mark -
 
 @synthesize users = _users;
@@ -364,7 +358,7 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	[self.tableView endEditing:YES];
+	[self endEditing];
 
 	return indexPath;
 }

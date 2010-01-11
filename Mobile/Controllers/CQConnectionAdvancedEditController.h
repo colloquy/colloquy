@@ -1,6 +1,8 @@
+#import "CQPreferencesTableViewController.h"
+
 @class MVChatConnection;
 
-@interface CQConnectionAdvancedEditController : UITableViewController {
+@interface CQConnectionAdvancedEditController : CQPreferencesTableViewController {
 	@protected
 	MVChatConnection *_connection;
 	BOOL _newConnection;

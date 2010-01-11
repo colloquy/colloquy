@@ -1,7 +1,9 @@
+#import "CQPreferencesTableViewController.h"
+
 @class MVChatUser;
 @class MVChatRoom;
 
-@interface CQChatUserListViewController : UITableViewController <UIActionSheetDelegate, UISearchBarDelegate> {
+@interface CQChatUserListViewController : CQPreferencesTableViewController <UIActionSheetDelegate, UISearchBarDelegate> {
 	@protected
 	NSMutableArray *_users;
 	NSMutableArray *_matchedUsers;

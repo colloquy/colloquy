@@ -1,6 +1,8 @@
+#import "CQPreferencesTableViewController.h"
+
 @class MVChatConnection;
 
-@interface CQConnectionEditViewController : UITableViewController <UIActionSheetDelegate> {
+@interface CQConnectionEditViewController : CQPreferencesTableViewController <UIActionSheetDelegate> {
 	@protected
 	MVChatConnection *_connection;
 	NSArray *_servers;

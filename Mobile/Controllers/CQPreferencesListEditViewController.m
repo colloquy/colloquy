@@ -34,8 +34,6 @@
 	_viewDisappearing = YES;
 
 	[super viewWillDisappear:animated];
-
-	[self.tableView endEditing:YES];
 }
 
 #pragma mark -

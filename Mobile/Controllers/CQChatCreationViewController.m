@@ -129,7 +129,7 @@
 		return;
 	}
 
-	[self.view endEditing:YES];
+	[_editViewController endEditing];
 
 	[connection connectAppropriately];
 
