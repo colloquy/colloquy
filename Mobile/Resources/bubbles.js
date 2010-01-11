@@ -4,7 +4,7 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 	if (highlighted) className += " highlight";
 	if (previousSession) className += " previous-session";
 	if (self) className += " self";
-	if (action) messageHTML = "\u2022 " + senderNickname + " " + messageHTML;
+	if (action) messageHTML = "\u2022\u2008" + senderNickname + " " + messageHTML;
 
 	var messageWrapperElement = document.createElement("div");
 	messageWrapperElement.className = className;

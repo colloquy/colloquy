@@ -42,17 +42,8 @@ body {
 	border-top: none;
 }
 
-.message-wrapper:not(.action) .sender {
-	margin-left: 2px;
-}
-
-.message-wrapper.action .sender::before {
-	content: "\2022";
-	margin-right: 2px;
-}
-
-.message-wrapper.action .sender::after {
-	content: " ";
+.message-wrapper.action .sender {
+	margin-left: -6px;
 }
 
 .sender {
@@ -62,11 +53,6 @@ body {
 
 .sender.self {
 	color: rgb(170, 34, 17);
-}
-
-.sender::after {
-	content: ": ";
-	font-weight: bold;
 }
 
 .event {

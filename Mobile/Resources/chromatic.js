@@ -26,7 +26,7 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 
 	var senderElement = document.createElement("div");
 	senderElement.className = className;
-	senderElement.textContent = senderNickname;
+	senderElement.textContent = senderText(senderNickname, highlighted, action, self);
 	messageWrapperElement.appendChild(senderElement);
 
 	var messageElement = document.createElement("div");

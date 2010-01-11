@@ -76,6 +76,10 @@ function appendComponents(components, previousSession, suppressScroll, suppressS
 		scrollToBottom(!suppressScrollAnimation);
 }
 
+function senderText(senderNickname, highlighted, action, self) {
+	return (action ? "\u2022\u2008" : "" ) + senderNickname + (action ? " " : ": ");
+}
+
 function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession) {
 	var className = "message-wrapper";
 	if (action) className += " action";
@@ -90,7 +94,7 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 
 	var senderElement = document.createElement("div");
 	senderElement.className = className;
-	senderElement.textContent = senderNickname;
+	senderElement.textContent = senderText(senderNickname, highlighted, action, self);
 	messageWrapperElement.appendChild(senderElement);
 
 	var messageElement = document.createElement("div");

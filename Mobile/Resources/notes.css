@@ -37,16 +37,6 @@ body {
 	border-bottom: none;
 }
 
-.message-wrapper.action .sender:before {
-	content: "\2022";
-	margin-left: -2px;
-	margin-right: 2px;
-}
-
-.message-wrapper.action .sender:after {
-	content: " ";
-}
-
 .sender {
 	display: inline;
 	color: #61150f;
@@ -54,11 +44,6 @@ body {
 
 .sender.self {
 	color: #972913;
-}
-
-.sender:after {
-	content: "; ";
-	font-weight: bold;
 }
 
 .event {
