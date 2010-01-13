@@ -249,44 +249,44 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		cell.target = self;
 
 		if (indexPath.row == 1) {
-			cell.label = NSLocalizedString(@"Address", @"Address connection setting label");
-			cell.text = (isPlaceholderValue(_connection.server) ? @"" : _connection.server);
+			cell.textLabel.text = NSLocalizedString(@"Address", @"Address connection setting label");
+			cell.textField.text = (isPlaceholderValue(_connection.server) ? @"" : _connection.server);
 			cell.textField.placeholder = (_newConnection ? @"irc.example.com" : @"");
+
 			if (_connection.directConnection) {
 				cell.textField.keyboardType = UIKeyboardTypeURL;
 				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 				cell.textEditAction = @selector(serverChanged:);
 				cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-				cell.accessoryAction = @selector(showDefaultServerList);
 			} else {
 				cell.enabled = NO;
 			}
 
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Address: %@", @"Voiceover address label"), cell.text];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Address: %@", @"Voiceover address label"), cell.textField.text];
 			cell.accessibilityHint = NSLocalizedString(@"Required", @"Voiceover required label");
 		} else if (indexPath.row == 0) {
-			cell.label = NSLocalizedString(@"Description", @"Description connection setting label");
-			cell.text = (![_connection.displayName isEqualToString:_connection.server] ? _connection.displayName : @"");
+			cell.textLabel.text = NSLocalizedString(@"Description", @"Description connection setting label");
+			cell.textField.text = (![_connection.displayName isEqualToString:_connection.server] ? _connection.displayName : @"");
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
 			cell.textEditAction = @selector(descriptionChanged:);
 
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Description: %@", @"Voiceover description label"), cell.text];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Description: %@", @"Voiceover description label"), cell.textField.text];
 			cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
 			cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
 		}
 		
 		return cell;
 	} else if (pushAvailable && indexPath.section == PushTableSection && indexPath.row == 0) {
-		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
+		UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue1 inTableView:tableView];
 
-		cell.label = NSLocalizedString(@"Push Notifications", @"Push Notifications connection setting label");
+		cell.textLabel.text = NSLocalizedString(@"Push Notifications", @"Push Notifications connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		if (_connection.pushNotifications)
-			cell.text = NSLocalizedString(@"On", @"On label");
-		else cell.text = NSLocalizedString(@"Off", @"Off label");
+			cell.detailTextLabel.text = NSLocalizedString(@"On", @"On label");
+		else cell.detailTextLabel.text = NSLocalizedString(@"Off", @"Off label");
 
 		if (_connection.pushNotifications)
 			cell.accessibilityLabel = NSLocalizedString(@"Push Notifications: On", @"Voiceover push notifications on label");
@@ -298,17 +298,17 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		cell.target = self;
 
 		if (indexPath.row == 0) {
-			cell.label = NSLocalizedString(@"Nickname", @"Nickname connection setting label");
-			cell.text = (isDefaultValue(_connection.preferredNickname) ? @"" : _connection.preferredNickname);
+			cell.textLabel.text = NSLocalizedString(@"Nickname", @"Nickname connection setting label");
+			cell.textField.text = (isDefaultValue(_connection.preferredNickname) ? @"" : _connection.preferredNickname);
 			cell.textField.placeholder = [MVChatConnection defaultNickname];
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textEditAction = @selector(nicknameChanged:);
 
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Nickname: %@", @"Voiceover nickname label"), (cell.text.length ? cell.text : cell.textField.placeholder)];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Nickname: %@", @"Voiceover nickname label"), (cell.textField.text.length ? cell.textField.text : cell.textField.placeholder)];
 		} else if (indexPath.row == 1) {
-			cell.label = NSLocalizedString(@"Real Name", @"Real Name connection setting label");
-			cell.text = (isDefaultValue(_connection.realName) ? @"" : _connection.realName);
+			cell.textLabel.text = NSLocalizedString(@"Real Name", @"Real Name connection setting label");
+			cell.textField.text = (isDefaultValue(_connection.realName) ? @"" : _connection.realName);
 			cell.textField.placeholder = [MVChatConnection defaultRealName];
 
 			if (_connection.directConnection) {
@@ -318,7 +318,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 				cell.enabled = NO;
 			}
 
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Real Name: %@", @"Voiceover real name label"), (cell.text.length ? cell.text : cell.textField.placeholder)];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Real Name: %@", @"Voiceover real name label"), (cell.textField.text.length ? cell.textField.text : cell.textField.placeholder)];
 		}
 
 		return cell;
@@ -328,7 +328,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 			cell.target = self;
 			cell.switchAction = @selector(autoConnectChanged:);
-			cell.label = NSLocalizedString(@"Connect at Launch", @"Connect at Launch connection setting label");
+			cell.textLabel.text = NSLocalizedString(@"Connect at Launch", @"Connect at Launch connection setting label");
 			cell.on = _connection.automaticallyConnect;
 
 			if (_connection.automaticallyConnect)
@@ -337,25 +337,25 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 			return cell;
 		} else if (indexPath.row == 1) {
-			CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
+			UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue1 inTableView:tableView];
 
-			cell.label = NSLocalizedString(@"Join Rooms", @"Join Rooms connection setting label");
+			cell.textLabel.text = NSLocalizedString(@"Join Rooms", @"Join Rooms connection setting label");
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 			if (_connection.automaticJoinedRooms.count) {
-				cell.text = [_connection.automaticJoinedRooms componentsJoinedByString:@", "];
+				cell.detailTextLabel.text = [_connection.automaticJoinedRooms componentsJoinedByString:@", "];
 			} else {
-				cell.text = NSLocalizedString(@"None", @"None label");
+				cell.detailTextLabel.text = NSLocalizedString(@"None", @"None label");
 			}
 
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Join Rooms: %@", @"Voiceover join rooms label"), cell.text];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Join Rooms: %@", @"Voiceover join rooms label"), cell.detailTextLabel.text];
 
 			return cell;
 		}
 	} else if (indexPath.section == AdvancedTableSection && indexPath.row == 0) {
-		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
+		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 
-		cell.label = NSLocalizedString(@"Advanced", @"Advanced connection setting label");
+		cell.textLabel.text = NSLocalizedString(@"Advanced", @"Advanced connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		return cell;
@@ -363,8 +363,9 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		CQPreferencesDeleteCell *cell = [CQPreferencesDeleteCell reusableTableViewCellInTableView:tableView];
 
 		cell.target = self;
-		cell.text = NSLocalizedString(@"Delete Connection", @"Delete Connection button title");
 		cell.deleteAction = @selector(deleteConnection);
+
+		[cell.deleteButton setTitle:NSLocalizedString(@"Delete Connection", @"Delete Connection button title") forState:UIControlStateNormal];
 
 		return cell;
 	}
@@ -399,36 +400,36 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 }
 
 - (void) serverChanged:(CQPreferencesTextCell *) sender {
-	if (sender.text.length || _newConnection) {
-		_connection.server = (sender.text.length ? sender.text : @"<<placeholder>>");
+	if (sender.textField.text.length || _newConnection) {
+		_connection.server = (sender.textField.text.length ? sender.textField.text : @"<<placeholder>>");
 		if (!_newConnection)
 			self.title = _connection.displayName;
 	}
 
-	sender.text = (isPlaceholderValue(_connection.server) ? @"" : _connection.server);
+	sender.textField.text = (isPlaceholderValue(_connection.server) ? @"" : _connection.server);
 
 	if (self.navigationItem.rightBarButtonItem.tag == UIBarButtonSystemItemSave)
 		self.navigationItem.rightBarButtonItem.enabled = !isPlaceholderValue(_connection.server);
 }
 
 - (void) nicknameChanged:(CQPreferencesTextCell *) sender {
-	if (sender.text.length)
-		_connection.preferredNickname = sender.text;
+	if (sender.textField.text.length)
+		_connection.preferredNickname = sender.textField.text;
 	else _connection.preferredNickname = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
 
-	sender.text = (isDefaultValue(_connection.preferredNickname) ? @"" : _connection.preferredNickname);
+	sender.textField.text = (isDefaultValue(_connection.preferredNickname) ? @"" : _connection.preferredNickname);
 }
 
 - (void) realNameChanged:(CQPreferencesTextCell *) sender {
-	if (sender.text.length)
-		_connection.realName = sender.text;
+	if (sender.textField.text.length)
+		_connection.realName = sender.textField.text;
 	else _connection.realName = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
 
-	sender.text = (isDefaultValue(_connection.realName) ? @"" : _connection.realName);
+	sender.textField.text = (isDefaultValue(_connection.realName) ? @"" : _connection.realName);
 }
 
 - (void) descriptionChanged:(CQPreferencesTextCell *) sender {
-	_connection.displayName = sender.text;
+	_connection.displayName = sender.textField.text;
 
 	if (!_newConnection)
 		self.title = _connection.displayName;

@@ -69,18 +69,18 @@
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 
 	if (indexPath.section == NewConnectionsTableSection && indexPath.row == 0) {
-		cell.text = NSLocalizedString(@"Add an IRC Connection...", @"Add a IRC connection button label");
-		cell.image = [UIImage imageNamed:@"server.png"];
+		cell.textLabel.text = NSLocalizedString(@"Add an IRC Connection...", @"Add a IRC connection button label");
+		cell.imageView.image = [UIImage imageNamed:@"server.png"];
 	} else if (indexPath.section == NewConnectionsTableSection && indexPath.row == 1) {
-		cell.text = NSLocalizedString(@"Add a Colloquy Bouncer...", @"Add a Colloquy bouncer button label");
-		cell.image = [UIImage imageNamed:@"bouncer.png"];
+		cell.textLabel.text = NSLocalizedString(@"Add a Colloquy Bouncer...", @"Add a Colloquy bouncer button label");
+		cell.imageView.image = [UIImage imageNamed:@"bouncer.png"];
 	} else if (indexPath.section == WhatsNewTableSection && indexPath.row == 0) {
-		cell.text = NSLocalizedString(@"What's New in Colloquy", @"What's New in Colloquy button label");
-		cell.image = [UIImage imageNamed:@"new.png"];
+		cell.textLabel.text = NSLocalizedString(@"What's New in Colloquy", @"What's New in Colloquy button label");
+		cell.imageView.image = [UIImage imageNamed:@"new.png"];
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	} else if (indexPath.section == HelpTableSection && indexPath.row == 0) {
-		cell.text = NSLocalizedString(@"Help & Troubleshooting", @"Help button label");
-		cell.image = [UIImage imageNamed:@"help.png"];
+		cell.textLabel.text = NSLocalizedString(@"Help & Troubleshooting", @"Help button label");
+		cell.imageView.image = [UIImage imageNamed:@"help.png"];
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
 

@@ -134,11 +134,11 @@ static BOOL pushAvailable = NO;
 		cell.target = self;
 
 		if (indexPath.row == 0) {
-			cell.label = NSLocalizedString(@"Description", @"Description connection setting label");
+			cell.textLabel.text = NSLocalizedString(@"Description", @"Description connection setting label");
 
-			cell.text = ([_settings.displayName isEqualToString:_settings.server] ? @"" : _settings.displayName);
+			cell.textField.text = ([_settings.displayName isEqualToString:_settings.server] ? @"" : _settings.displayName);
 
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Description: %@", @"Voiceover description label"), cell.text];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Description: %@", @"Voiceover description label"), cell.textField.text];
 			cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
 
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
@@ -146,11 +146,11 @@ static BOOL pushAvailable = NO;
 			cell.textEditAction = @selector(descriptionChanged:);
 
 		} else if (indexPath.row == 1) {
-			cell.label = NSLocalizedString(@"Address", @"Address connection setting label");
+			cell.textLabel.text = NSLocalizedString(@"Address", @"Address connection setting label");
 
-			cell.text = (_settings.server ? _settings.server : @"");
+			cell.textField.text = (_settings.server ? _settings.server : @"");
 
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Address: %@", @"Voiceover address label"), cell.text];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Address: %@", @"Voiceover address label"), cell.textField.text];
 			cell.accessibilityHint = NSLocalizedString(@"Required", @"Voiceover required label");
 
 			cell.textField.placeholder = NSLocalizedString(@"Required", @"Required connection setting placeholder");
@@ -161,8 +161,8 @@ static BOOL pushAvailable = NO;
 		} else if (indexPath.row == 2) {
 			const unsigned short defaultPort = 6667;
 
-			cell.label = NSLocalizedString(@"Port", @"Bouncer Port setting label");
-			cell.text = (_settings.serverPort == defaultPort ? @"" : [NSString stringWithFormat:@"%hu", _settings.serverPort]);
+			cell.textLabel.text = NSLocalizedString(@"Port", @"Bouncer Port setting label");
+			cell.textField.text = (_settings.serverPort == defaultPort ? @"" : [NSString stringWithFormat:@"%hu", _settings.serverPort]);
 			cell.textField.placeholder = [NSString stringWithFormat:@"%hu", defaultPort];
 			cell.textField.keyboardType = UIKeyboardTypeNumberPad;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -178,13 +178,13 @@ static BOOL pushAvailable = NO;
 		if (indexPath.row == 0) {
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
-			cell.label = NSLocalizedString(@"Account", @"Account connection setting label");
-			cell.text = (_settings.username ? _settings.username : @"");
+			cell.textLabel.text = NSLocalizedString(@"Account", @"Account connection setting label");
+			cell.textField.text = (_settings.username ? _settings.username : @"");
 
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Account: %@", @"Voiceover account label"), cell.text];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Account: %@", @"Voiceover account label"), cell.textField.text];
 			cell.accessibilityHint = NSLocalizedString(@"Required", @"Voiceover required label");
 
-			cell.text = (_settings.username ? _settings.username : @"");
+			cell.textField.text = (_settings.username ? _settings.username : @"");
 			cell.textField.placeholder = NSLocalizedString(@"Required", @"Required connection setting placeholder");
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -192,8 +192,8 @@ static BOOL pushAvailable = NO;
 		} else if (indexPath.row == 1) {
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView withIdentifier:@"Secure CQPreferencesTextCell"];
 
-			cell.label = NSLocalizedString(@"Password", @"Password connection setting label");
-			cell.text = (_settings.password ? _settings.password : @"");
+			cell.textLabel.text = NSLocalizedString(@"Password", @"Password connection setting label");
+			cell.textField.text = (_settings.password ? _settings.password : @"");
 			cell.textField.placeholder = NSLocalizedString(@"Required", @"Required connection setting placeholder");
 			cell.textField.secureTextEntry = YES;
 			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
@@ -213,7 +213,7 @@ static BOOL pushAvailable = NO;
 
 		cell.target = self;
 		cell.switchAction = @selector(pushEnabled:);
-		cell.label = NSLocalizedString(@"Push Notifications", @"Push Notifications connection setting label");
+		cell.textLabel.text = NSLocalizedString(@"Push Notifications", @"Push Notifications connection setting label");
 
 		if (_settings.pushNotifications)
 			cell.accessibilityLabel = NSLocalizedString(@"Push Notifications: On", @"Voiceover push notifications on label");
@@ -243,8 +243,9 @@ static BOOL pushAvailable = NO;
 		CQPreferencesDeleteCell *cell = [CQPreferencesDeleteCell reusableTableViewCellInTableView:tableView];
 
 		cell.target = self;
-		cell.text = NSLocalizedString(@"Delete Bouncer", @"Delete Bouncer button title");
 		cell.deleteAction = @selector(deleteBouncer);
+
+		[cell.deleteButton setTitle:NSLocalizedString(@"Delete Bouncer", @"Delete Bouncer button title") forState:UIControlStateNormal];
 
 		return cell;
 	}
@@ -261,49 +262,49 @@ static BOOL pushAvailable = NO;
 }
 
 - (void) serverChanged:(CQPreferencesTextCell *) sender {
-	if (sender.text.length || _newBouncer) {
-		_settings.server = sender.text;
+	if (sender.textField.text.length || _newBouncer) {
+		_settings.server = sender.textField.text;
 		if (!_newBouncer)
 			self.title = _settings.displayName;
 	}
 
 	[self updateConnectButton];
 
-	sender.text = (_settings.server.length ? _settings.server : @"");
+	sender.textField.text = (_settings.server.length ? _settings.server : @"");
 }
 
 - (void) serverPortChanged:(CQPreferencesTextCell *) sender {
-	NSUInteger newPort = [sender.text integerValue];
+	NSUInteger newPort = [sender.textField.text integerValue];
 	if (newPort)
 		_settings.serverPort = (newPort % 65536);
 
 	const unsigned short defaultPort = 6667;
-	sender.text = (_settings.serverPort == defaultPort ? @"" : [NSString stringWithFormat:@"%hu", _settings.serverPort]);
+	sender.textField.text = (_settings.serverPort == defaultPort ? @"" : [NSString stringWithFormat:@"%hu", _settings.serverPort]);
 }
 
 - (void) descriptionChanged:(CQPreferencesTextCell *) sender {
-	_settings.displayName = sender.text;
+	_settings.displayName = sender.textField.text;
 
 	if (!_newBouncer)
 		self.title = _settings.displayName;
 }
 
 - (void) accountChanged:(CQPreferencesTextCell *) sender {
-	if (sender.text.length || _newBouncer)
-		_settings.username = sender.text;
+	if (sender.textField.text.length || _newBouncer)
+		_settings.username = sender.textField.text;
 
 	[self updateConnectButton];
 
-	sender.text = (_settings.username ? _settings.username : @"");
+	sender.textField.text = (_settings.username ? _settings.username : @"");
 }
 
 - (void) passwordChanged:(CQPreferencesTextCell *) sender {
-	if (sender.text.length || _newBouncer)
-		_settings.password = sender.text;
+	if (sender.textField.text.length || _newBouncer)
+		_settings.password = sender.textField.text;
 
 	[self updateConnectButton];
 
-	sender.text = (_settings.password ? _settings.password : @"");
+	sender.textField.text = (_settings.password ? _settings.password : @"");
 }
 
 - (void) pushEnabled:(CQPreferencesSwitchCell *) sender {

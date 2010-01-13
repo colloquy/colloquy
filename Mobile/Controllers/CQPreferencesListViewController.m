@@ -195,25 +195,23 @@
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 
-	cell.hidesAccessoryWhenEditing = NO;
-
 	if (indexPath.row < _items.count) {
-		cell.textColor = [UIColor blackColor];
-		cell.text = [_items objectAtIndex:indexPath.row];
-		cell.image = _itemImage;
+		cell.textLabel.textColor = [UIColor blackColor];
+		cell.textLabel.text = [_items objectAtIndex:indexPath.row];
+		cell.imageView.image = _itemImage;
 	} else if (self.editing) {
-		cell.textColor = [UIColor blackColor];
-		cell.text = _addItemLabelText;
-		cell.image = nil;
+		cell.textLabel.textColor = [UIColor blackColor];
+		cell.textLabel.text = _addItemLabelText;
+		cell.imageView.image = nil;
 	} else {
-		cell.textColor = [UIColor lightGrayColor];
-		cell.text = _noItemsLabelText;
-		cell.image = nil;
+		cell.textLabel.textColor = [UIColor lightGrayColor];
+		cell.textLabel.text = _noItemsLabelText;
+		cell.imageView.image = nil;
 	}
 
 	if (indexPath.row == _selectedItemIndex)
-		cell.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
-	else cell.textColor = [UIColor blackColor];
+		cell.textLabel.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
+	else cell.textLabel.textColor = [UIColor blackColor];
 
 	return cell;
 }
@@ -230,14 +228,14 @@
 	} else {
 		UITableViewCell *cell = (_selectedItemIndex != NSNotFound ? [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_selectedItemIndex inSection:0]] : nil);
 		cell.accessoryType = UITableViewCellAccessoryNone;
-		cell.textColor = [UIColor blackColor];
+		cell.textLabel.textColor = [UIColor blackColor];
 
 		_selectedItemIndex = indexPath.row;
 		_pendingChanges = YES;
 
 		cell = [tableView cellForRowAtIndexPath:indexPath];
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
-		cell.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
+		cell.textLabel.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 
 		[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 	}

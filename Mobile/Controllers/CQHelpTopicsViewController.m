@@ -121,7 +121,8 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (!_helpSections.count) {
 		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:@"Updating"];
-		cell.text = NSLocalizedString(@"Updating Help Topics...", @"Updating help topics label");
+
+		cell.textLabel.text = NSLocalizedString(@"Updating Help Topics...", @"Updating help topics label");
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
 		UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -139,7 +140,7 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 	NSArray *sectionItems = [_helpSections objectAtIndex:indexPath.section];
 	NSDictionary *info = [sectionItems objectAtIndex:indexPath.row];
 
-	cell.text = [info objectForKey:@"Title"];
+	cell.textLabel.text = [info objectForKey:@"Title"];
 
 	if ([info objectForKey:@"Content"]) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

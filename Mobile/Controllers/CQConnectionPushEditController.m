@@ -64,7 +64,7 @@
 
 		cell.target = self;
 		cell.switchAction = @selector(pushEnabled:);
-		cell.label = NSLocalizedString(@"Push Notifications", @"Push Notifications connection setting label");
+		cell.textLabel.text = NSLocalizedString(@"Push Notifications", @"Push Notifications connection setting label");
 		cell.on = _connection.pushNotifications;
 
 		return cell;

@@ -330,26 +330,26 @@ static NSString *membersFilteredCountFormat;
 	MVChatUser *user = [_matchedUsers objectAtIndex:indexPath.row];
 
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
-	cell.text = user.nickname;
+	cell.textLabel.text = user.nickname;
 
 	if (_room) {
 		unsigned long modes = [_room modesForMemberUser:user];
 
 		if (user.serverOperator)
-			cell.image = [UIImage imageNamed:@"userSuperOperator.png"];
+			cell.imageView.image = [UIImage imageNamed:@"userSuperOperator.png"];
 		else if (modes & MVChatRoomMemberFounderMode)
-			cell.image = [UIImage imageNamed:@"userFounder.png"];
+			cell.imageView.image = [UIImage imageNamed:@"userFounder.png"];
 		else if (modes & MVChatRoomMemberAdministratorMode)
-			cell.image = [UIImage imageNamed:@"userAdmin.png"];
+			cell.imageView.image = [UIImage imageNamed:@"userAdmin.png"];
 		else if (modes & MVChatRoomMemberOperatorMode)
-			cell.image = [UIImage imageNamed:@"userOperator.png"];
+			cell.imageView.image = [UIImage imageNamed:@"userOperator.png"];
 		else if (modes & MVChatRoomMemberHalfOperatorMode)
-			cell.image = [UIImage imageNamed:@"userHalfOperator.png"];
+			cell.imageView.image = [UIImage imageNamed:@"userHalfOperator.png"];
 		else if (modes & MVChatRoomMemberVoicedMode)
-			cell.image = [UIImage imageNamed:@"userVoice.png"];
-		else cell.image = [UIImage imageNamed:@"userNormal.png"];
+			cell.imageView.image = [UIImage imageNamed:@"userVoice.png"];
+		else cell.imageView.image = [UIImage imageNamed:@"userNormal.png"];
 	} else {
-		cell.image = [UIImage imageNamed:@"userNormal.png"];
+		cell.imageView.image = [UIImage imageNamed:@"userNormal.png"];
 	}
 	
 	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;

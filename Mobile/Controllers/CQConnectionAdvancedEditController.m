@@ -302,9 +302,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 
 			cell.target = self;
 			cell.textEditAction = @selector(serverPortChanged:);
-			cell.label = NSLocalizedString(@"Server Port", @"Server Port connection setting label");
-			cell.text = (_connection.serverPort == defaultPort ? @"" : [NSString stringWithFormat:@"%hu", _connection.serverPort]);
+			cell.textLabel.text = NSLocalizedString(@"Server Port", @"Server Port connection setting label");
+			cell.textField.text = (_connection.serverPort == defaultPort ? @"" : [NSString stringWithFormat:@"%hu", _connection.serverPort]);
 			cell.textField.placeholder = [NSString stringWithFormat:@"%hu", defaultPort];
+
 			if (_connection.directConnection) {
 				cell.textField.keyboardType = UIKeyboardTypeNumberPad;
 				cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -320,7 +321,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 
 			cell.target = self;
 			cell.switchAction = @selector(secureChanged:);
-			cell.label = NSLocalizedString(@"Use SSL", @"Use SSL connection setting label");
+			cell.textLabel.text = NSLocalizedString(@"Use SSL", @"Use SSL connection setting label");
 			cell.on = _connection.secure;
 			cell.switchControl.enabled = _connection.directConnection;
 
@@ -337,9 +338,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
 			cell.textEditAction = @selector(usernameChanged:);
-			cell.label = NSLocalizedString(@"Username", @"Username connection setting label");
-			cell.text = (isDefaultValue(_connection.username) ? @"" : _connection.username);
+			cell.textLabel.text = NSLocalizedString(@"Username", @"Username connection setting label");
+			cell.textField.text = (isDefaultValue(_connection.username) ? @"" : _connection.username);
 			cell.textField.placeholder = [MVChatConnection defaultUsernameWithNickname:currentPreferredNickname(_connection)];
+
 			if (_connection.directConnection) {
 				cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -348,15 +350,16 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 				cell.enabled = NO;
 			}
 
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Username: %@", @"Voiceover username label"), (cell.text.length ? cell.text : cell.textField.placeholder)];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Username: %@", @"Voiceover username label"), (cell.textField.text.length ? cell.textField.text : cell.textField.placeholder)];
 		} else if (indexPath.row == 1) {
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView withIdentifier:@"Secure CQPreferencesTextCell"];
 
 			cell.textEditAction = @selector(passwordChanged:);
-			cell.label = NSLocalizedString(@"Password", @"Password connection setting label");
-			cell.text = _connection.password;
+			cell.textLabel.text = NSLocalizedString(@"Password", @"Password connection setting label");
+			cell.textField.text = _connection.password;
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
 			cell.textField.secureTextEntry = YES;
+
 			if (_connection.directConnection) {
 				cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
 				cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -372,8 +375,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView withIdentifier:@"Secure CQPreferencesTextCell"];
 
 			cell.textEditAction = @selector(nicknamePasswordChanged:);
-			cell.label = NSLocalizedString(@"Nick Pass.", @"Nickname Password connection setting label");
-			cell.text = _connection.nicknamePassword;
+			cell.textLabel.text = NSLocalizedString(@"Nick Pass.", @"Nickname Password connection setting label");
+			cell.textField.text = _connection.nicknamePassword;
 			cell.textField.placeholder = NSLocalizedString(@"Optional", @"Optional connection setting placeholder");
 			cell.textField.secureTextEntry = YES;
 			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
@@ -388,31 +391,32 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 
 		return cell;
 	} else if (indexPath.section == IdentitiesTableSection && indexPath.row == 0) {
-		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
+		UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue1 inTableView:tableView];
 
-		if (_connection.alternateNicknames.count)
-			cell.text = [_connection.alternateNicknames componentsJoinedByString:@", "];
-
-		if (_connection.alternateNicknames.count)
-			cell.text = [_connection.alternateNicknames componentsJoinedByString:@", "];
-		else cell.textField.placeholder = [NSString stringWithFormat:@"%@_, %1$@__, %1$@___, %1$@____, %1$@_____", currentPreferredNickname(_connection)];
-
-		cell.label = NSLocalizedString(@"Alt. Nicknames", @"Alt. Nicknames connection setting label");
+		cell.textLabel.text = NSLocalizedString(@"Alt. Nicknames", @"Alt. Nicknames connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-		cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Alternate Nicknames: %@", @"Voiceover alternate nicknames label"), (cell.text.length ? cell.text : cell.textField.placeholder)];
+		if (_connection.alternateNicknames.count) {
+			cell.detailTextLabel.text = [NSString stringWithFormat:@"%u", _connection.alternateNicknames.count];
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Alternate Nicknames: %u nicknames", @"Voiceover alternate nicknames count label"), _connection.alternateNicknames.count];
+		} else {
+			cell.detailTextLabel.text = NSLocalizedString(@"None", @"None label");
+			cell.accessibilityLabel = NSLocalizedString(@"Alternate Nicknames: None", @"Voiceover Alternate Nicknames none label");
+		}
+
+		cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Alternate Nicknames: %@", @"Voiceover alternate nicknames label"), cell.detailTextLabel.text];
 		cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
 
 		return cell;
 	} else if (indexPath.section == AutomaticTableSection && indexPath.row == 0) {
-		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
+		UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue1 inTableView:tableView];
 
-		cell.label = NSLocalizedString(@"Auto Commands", @"Auto Commands connection setting label");
+		cell.textLabel.text = NSLocalizedString(@"Auto Commands", @"Auto Commands connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		NSArray *commands = _connection.automaticCommands;
-		if (commands.count) cell.text = [NSString stringWithFormat:@"%u", commands.count];
-		else cell.text = NSLocalizedString(@"None", @"None label");
+		if (commands.count) cell.detailTextLabel.text = [NSString stringWithFormat:@"%u", commands.count];
+		else cell.detailTextLabel.text = NSLocalizedString(@"None", @"None label");
 
 		if (commands.count)
 			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Automatic Commands: %u commands", @"Voiceover automatic commands label"), commands.count];
@@ -420,13 +424,13 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 
 		return cell;
 	} else if (indexPath.section == EncodingsTableSection && indexPath.row == 0) {
-		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
+		UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue1 inTableView:tableView];
 
-		cell.label = NSLocalizedString(@"Encoding", @"Encoding connection setting label");
+		cell.textLabel.text = NSLocalizedString(@"Encoding", @"Encoding connection setting label");
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-		cell.text = localizedNameOfStringEncoding(_connection.encoding);
+		cell.detailTextLabel.text = localizedNameOfStringEncoding(_connection.encoding);
 
-		cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Encoding: %@", @"Voiceover encoding label"), cell.text];
+		cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Encoding: %@", @"Voiceover encoding label"), cell.detailTextLabel.text];
 
 		return cell;
 	}
@@ -438,12 +442,12 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 #pragma mark -
 
 - (void) serverPortChanged:(CQPreferencesTextCell *) sender {
-	NSUInteger newPort = [sender.text integerValue];
+	NSUInteger newPort = [sender.textField.text integerValue];
 	if (newPort)
 		_connection.serverPort = (newPort % 65536);
 
 	unsigned short defaultPort = (_connection.secure ? 994 : 6667);
-	sender.text = (_connection.serverPort == defaultPort ? @"" : [NSString stringWithFormat:@"%hu", _connection.serverPort]);
+	sender.textField.text = (_connection.serverPort == defaultPort ? @"" : [NSString stringWithFormat:@"%hu", _connection.serverPort]);
 }
 
 - (void) secureChanged:(CQPreferencesSwitchCell *) sender {
@@ -458,19 +462,19 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 }
 
 - (void) usernameChanged:(CQPreferencesTextCell *) sender {
-	if (sender.text.length)
-		_connection.username = sender.text;
+	if (sender.textField.text.length)
+		_connection.username = sender.textField.text;
 	else _connection.username = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
 
-	sender.text = (isDefaultValue(_connection.username) ? @"" : _connection.username);
+	sender.textField.text = (isDefaultValue(_connection.username) ? @"" : _connection.username);
 }
 
 - (void) passwordChanged:(CQPreferencesTextCell *) sender {
-	_connection.password = sender.text;
+	_connection.password = sender.textField.text;
 }
 
 - (void) nicknamePasswordChanged:(CQPreferencesTextCell *) sender {
-	_connection.nicknamePassword = sender.text;
+	_connection.nicknamePassword = sender.textField.text;
 }
 
 - (void) alternateNicknamesChanged:(CQPreferencesListViewController *) sender {

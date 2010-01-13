@@ -7,30 +7,13 @@ static CQPreferencesTextCell *currentEditingCell;
 	return currentEditingCell;
 }
 
-- (id) initWithFrame:(CGRect) frame reuseIdentifier:(NSString *) reuseIdentifier {
-	if (!(self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier]))
+- (id) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
+	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
 
 	self.selectionStyle = UITableViewCellSelectionStyleNone;
-	self.backgroundColor = [UIColor whiteColor];
-	self.opaque = YES;
 
 	_textField = [[UITextField alloc] initWithFrame:CGRectZero];
-	_label = [[UILabel alloc] initWithFrame:CGRectZero];
-
-	_label.font = [UIFont boldSystemFontOfSize:17.];
-	_label.textColor = self.textColor;
-	_label.highlightedTextColor = self.selectedTextColor;
-	_label.backgroundColor = nil;
-	_label.opaque = NO;
-
-	_label.text = @"Qwerty"; // Measurment text only.
-
-	CGRect subviewFrame = _label.frame;
-	subviewFrame.size = [_label sizeThatFits:_label.bounds.size];
-	_label.frame = subviewFrame;
-
-	_label.text = @"";
 
 	_textField.delegate = self;
 	_textField.textAlignment = UITextAlignmentLeft;
@@ -41,20 +24,13 @@ static CQPreferencesTextCell *currentEditingCell;
 	_textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 	_textField.enablesReturnKeyAutomatically = NO;
 	_textField.returnKeyType = UIReturnKeyDone;
-	_textField.backgroundColor = nil;
-	_textField.opaque = NO;
 
-	_textField.text = @"Qwerty"; // Measurment text only.
-
-	subviewFrame = _textField.frame;
-	subviewFrame.size = [_textField sizeThatFits:_textField.bounds.size];
+	CGRect subviewFrame = _textField.frame;
+	subviewFrame.size.height = [_textField sizeThatFits:_textField.bounds.size].height;
 	_textField.frame = subviewFrame;
-
-	_textField.text = @"";
 
 	_enabled = YES;
 
-	[self.contentView addSubview:_label];
 	[self.contentView addSubview:_textField];
 
 	return self;
@@ -65,7 +41,6 @@ static CQPreferencesTextCell *currentEditingCell;
 	_textField.delegate = nil;
 
 	[_textField autorelease]; // Use autorelease to prevent a crash.
-	[_label release];
 
 	[super dealloc];
 }
@@ -73,24 +48,6 @@ static CQPreferencesTextCell *currentEditingCell;
 #pragma mark -
 
 @synthesize textField = _textField;
-
-- (NSString *) label {
-	return _label.text;
-}
-
-- (void) setLabel:(NSString *) labelText {
-	_label.text = labelText;
-}
-
-- (NSString *) text {
-	return _textField.text;
-}
-
-- (void) setText:(NSString *) text {
-	_textField.text = text;
-
-	[self setNeedsLayout];
-}
 
 - (void) setSelected:(BOOL) selected animated:(BOOL) animated {
 	[super setSelected:selected animated:animated];
@@ -103,40 +60,27 @@ static CQPreferencesTextCell *currentEditingCell;
 	else _textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 }
 
-- (void) setAccessoryType:(UITableViewCellAccessoryType) type {
-	super.accessoryType = type;
-
-	if (type == UITableViewCellAccessoryDisclosureIndicator) {
-		self.selectionStyle = UITableViewCellSelectionStyleBlue;
-		_textField.textAlignment = UITextAlignmentRight;
-		_textField.adjustsFontSizeToFitWidth = NO;
-		_textField.userInteractionEnabled = NO;
-	} else {
-		self.selectionStyle = UITableViewCellSelectionStyleNone;
-		_textField.textAlignment = UITextAlignmentLeft;
-		_textField.adjustsFontSizeToFitWidth = YES;
-		_textField.userInteractionEnabled = YES;
-	}
-}
-
 - (void) prepareForReuse {
 	[super prepareForReuse];
 
 	_enabled = YES;
+	_textEditAction = NULL;
 
-	self.label = @"";
-	self.text = @"";
+	_textField.text = @"";
+	_textField.placeholder = @"";
+	_textField.keyboardType = UIKeyboardTypeDefault;
+	_textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+	_textField.autocorrectionType = UITextAutocorrectionTypeDefault;
+	_textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
+	_textField.clearButtonMode = UITextFieldViewModeNever;
+	_textField.enabled = YES;
+
+	[_textField endEditing:YES];
+	[_textField resignFirstResponder];
+
+	self.textLabel.text = @"";
 	self.target = nil;
-	self.textEditAction = NULL;
 	self.accessoryType = UITableViewCellAccessoryNone;
-	self.textField.placeholder = @"";
-	self.textField.keyboardType = UIKeyboardTypeDefault;
-	self.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-	self.textField.autocorrectionType = UITextAutocorrectionTypeDefault;
-	self.textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
-	self.textField.enabled = YES;
-
-	[self.textField resignFirstResponder];
 }
 
 - (void) layoutSubviews {
@@ -144,22 +88,21 @@ static CQPreferencesTextCell *currentEditingCell;
 
 	CGRect contentRect = self.contentView.frame;
 
-	BOOL showingLabel = (_label.text.length > 0);
+	UILabel *label = self.textLabel;
+
+	BOOL showingLabel = (label.text.length > 0);
 	BOOL showingTextField = (_textField.text.length || _textField.placeholder.length);
 
 	if (showingLabel) {
-		_label.hidden = NO;
+		label.hidden = NO;
 
-		CGRect frame = _label.frame;
-		NSAssert(frame.size.height > 0., @"A height is assumed to be set in initWithFrame:.");
-		frame.origin.x = 10.;
-		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.)) - 1.;
+		CGRect frame = label.frame;
 		if (!showingTextField)
 			frame.size.width = (contentRect.size.width - frame.origin.x - 10.);
-		else frame.size.width = [_label sizeThatFits:_label.bounds.size].width;
-		_label.frame = frame;
+		else frame.size.width = [label sizeThatFits:label.bounds.size].width;
+		label.frame = frame;
 	} else {
-		_label.hidden = YES;
+		label.hidden = YES;
 	}
 
 	if (showingTextField) {
@@ -174,8 +117,8 @@ static CQPreferencesTextCell *currentEditingCell;
 
 		CGRect frame = _textField.frame;
 		NSAssert(frame.size.height > 0., @"A height is assumed to be set in initWithFrame:.");
-		frame.origin.x = (showingLabel ? MAX(CGRectGetMaxX(_label.frame) + leftMargin, 125.) : leftMargin);
-		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.)) - 1.;
+		frame.origin.x = (showingLabel ? MAX(CGRectGetMaxX(label.frame) + leftMargin, 125.) : leftMargin);
+		frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
 		frame.size.width = (contentRect.size.width - frame.origin.x - rightMargin);
 		_textField.frame = frame;
 	} else {
@@ -186,7 +129,7 @@ static CQPreferencesTextCell *currentEditingCell;
 @synthesize enabled = _enabled;
 
 - (void) setEnabled:(BOOL) enabled {
-	self.textField.enabled = enabled;
+	_textField.enabled = enabled;
 
 	_enabled = enabled;
 
@@ -197,7 +140,7 @@ static CQPreferencesTextCell *currentEditingCell;
 @synthesize textEditAction = _textEditAction;
 
 - (BOOL) textFieldShouldBeginEditing:(UITextField *) textField {
-	return _enabled && (self.accessoryType == UITableViewCellAccessoryNone || self.accessoryType == UITableViewCellAccessoryDetailDisclosureButton);
+	return _enabled;
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *) textField {

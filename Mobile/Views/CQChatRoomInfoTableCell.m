@@ -1,8 +1,8 @@
 #import "CQChatRoomInfoTableCell.h"
 
 @implementation CQChatRoomInfoTableCell
-- (id) initWithFrame:(CGRect) frame reuseIdentifier:(NSString *) reuseIdentifier {
-	if (!(self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier]))
+- (id) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
+	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
 
 	_iconImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
@@ -28,17 +28,17 @@
 	_checkmarkImageView.hidden = YES;
 
 	_nameLabel.font = [UIFont boldSystemFontOfSize:18.];
-	_nameLabel.textColor = self.textColor;
-	_nameLabel.highlightedTextColor = self.selectedTextColor;
+	_nameLabel.textColor = self.textLabel.textColor;
+	_nameLabel.highlightedTextColor = self.textLabel.highlightedTextColor;
 	_nameLabel.backgroundColor = [UIColor clearColor];
 
 	_topicLabel.font = [UIFont systemFontOfSize:14.];
 	_topicLabel.textColor = [UIColor colorWithWhite:0.4 alpha:1.];
-	_topicLabel.highlightedTextColor = self.selectedTextColor;
+	_topicLabel.highlightedTextColor = self.textLabel.highlightedTextColor;
 
 	_memberCountLabel.font = [UIFont systemFontOfSize:14.];
 	_memberCountLabel.textColor = [UIColor colorWithRed:0.19607843 green:0.29803922 blue:0.84313725 alpha:1.];
-	_memberCountLabel.highlightedTextColor = self.selectedTextColor;
+	_memberCountLabel.highlightedTextColor = self.textLabel.highlightedTextColor;
 
 	return self;
 }

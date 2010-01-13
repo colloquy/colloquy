@@ -2,8 +2,8 @@
 
 @implementation CQPreferencesDeleteCell
 
-- (id) initWithFrame:(CGRect) frame reuseIdentifier:(NSString *) reuseIdentifier {
-	if (!(self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier]))
+- (id) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
+	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
 
 	self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -17,8 +17,8 @@
 
 	_deleteButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
 	_deleteButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-	_deleteButton.font = [UIFont boldSystemFontOfSize:20.];
-	_deleteButton.titleShadowOffset = CGSizeMake(0., -1.);
+	_deleteButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.];
+	_deleteButton.titleLabel.shadowOffset = CGSizeMake(0., -1.);
 
 	[_deleteButton setTitleShadowColor:[UIColor colorWithWhite:0. alpha:(1. / 3.)] forState:UIControlStateNormal];
 
@@ -47,13 +47,7 @@
 	return nil;
 }
 
-- (NSString *) text {
-	return [_deleteButton titleForState:UIControlStateNormal];
-}
-
-- (void) setText:(NSString *) text {
-	[_deleteButton setTitle:text forState:UIControlStateNormal];
-}
+@synthesize deleteButton = _deleteButton;
 
 - (SEL) deleteAction {
 	NSArray *actions = [_deleteButton actionsForTarget:self.target forControlEvent:UIControlEventTouchUpInside];

@@ -34,9 +34,9 @@
 
 	NSString *roomName = [_rooms objectAtIndex:indexPath.row];
 
-	cell.image = [UIImage imageNamed:@"roomIconSmall.png"];
-	cell.text = [_connection chatRoomWithName:roomName].displayName;
-	cell.accessibilityLabel = cell.text;
+	cell.imageView.image = [UIImage imageNamed:@"roomIconSmall.png"];
+	cell.textLabel.text = [_connection chatRoomWithName:roomName].displayName;
+	cell.accessibilityLabel = cell.textLabel.text;
 
 	return cell;
 }

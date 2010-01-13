@@ -9,8 +9,8 @@
 #pragma mark -
 
 @implementation CQChatTableCell
-- (id) initWithFrame:(CGRect) frame reuseIdentifier:(NSString *) reuseIdentifier {
-	if (!(self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier]))
+- (id) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
+	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
 
 	_iconImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
@@ -26,8 +26,8 @@
 	[self.contentView addSubview:_unreadCountView];
 
 	_nameLabel.font = [UIFont boldSystemFontOfSize:18.];
-	_nameLabel.textColor = self.textColor;
-	_nameLabel.highlightedTextColor = self.selectedTextColor;
+	_nameLabel.textColor = self.textLabel.textColor;
+	_nameLabel.highlightedTextColor = self.textLabel.highlightedTextColor;
 
 	_chatPreviewLabels = [[NSMutableArray alloc] init];
 

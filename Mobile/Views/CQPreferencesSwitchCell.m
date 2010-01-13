@@ -1,24 +1,14 @@
 #import "CQPreferencesSwitchCell.h"
 
 @implementation CQPreferencesSwitchCell
-- (id) initWithFrame:(CGRect) frame reuseIdentifier:(NSString *) reuseIdentifier {
-	if (!(self = [super initWithFrame:frame reuseIdentifier:reuseIdentifier]))
+- (id) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
+	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
 
 	self.selectionStyle = UITableViewCellSelectionStyleNone;
-	self.backgroundColor = [UIColor whiteColor];
-	self.opaque = YES;
 
 	_switchControl = [[UISwitch alloc] initWithFrame:CGRectZero];
-	_label = [[UILabel alloc] initWithFrame:CGRectZero];
 
-	_label.font = [UIFont boldSystemFontOfSize:17.];
-	_label.textColor = self.textColor;
-	_label.highlightedTextColor = self.selectedTextColor;
-	_label.backgroundColor = nil;
-	_label.opaque = NO;
-
-	[self.contentView addSubview:_label];
 	[self.contentView addSubview:_switchControl];
 
 	return self;
@@ -26,7 +16,6 @@
 
 - (void) dealloc {
 	[_switchControl release];
-	[_label release];
 
 	[super dealloc];
 }
@@ -46,14 +35,6 @@
 	[_switchControl addTarget:self.target action:action forControlEvents:UIControlEventValueChanged];
 }
 
-- (NSString *) label {
-	return _label.text;
-}
-
-- (void) setLabel:(NSString *) labelText {
-	_label.text = labelText;
-}
-
 - (BOOL) isOn {
 	return _switchControl.on;
 }
@@ -65,7 +46,7 @@
 - (void) prepareForReuse {
 	[super prepareForReuse];
 
-	self.label = @"";
+	self.textLabel.text = @"";
 	self.on = NO;
 }
 
@@ -75,12 +56,11 @@
 	CGSize switchSize = _switchControl.frame.size;
 	CGRect contentRect = self.contentView.frame;
 
-	CGRect frame = _label.frame;
-	frame.size = [_label sizeThatFits:_label.bounds.size];
-	frame.origin.x = 10.;
-	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
+	UILabel *label = self.textLabel;
+
+	CGRect frame = label.frame;
 	frame.size.width = contentRect.size.width - switchSize.width - 30.;
-	_label.frame = frame;
+	label.frame = frame;
 
 	frame = _switchControl.frame;
 	frame.origin.y = round((contentRect.size.height / 2.) - (switchSize.height / 2.));

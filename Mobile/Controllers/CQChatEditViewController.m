@@ -162,18 +162,23 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section <= 1) {
+		if (indexPath.section == 0 && indexPath.row == 0) {
+			UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue1 inTableView:tableView];
+
+			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			cell.textLabel.text = NSLocalizedString(@"Connection", @"Connection setting label");
+			cell.detailTextLabel.text = (_selectedConnection ? _selectedConnection.displayName : NSLocalizedString(@"None", @"None label"));
+
+			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Connection: %@", @"Voiceover connection label"), cell.detailTextLabel.text];
+
+			return cell;
+		}
+
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 		cell.target = self;
 
-		if (indexPath.section == 0 && indexPath.row == 0) {
-			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-			cell.label = NSLocalizedString(@"Connection", @"Connection setting label");
-			cell.textField.secureTextEntry = NO;
-			cell.text = (_selectedConnection ? _selectedConnection.displayName : NSLocalizedString(@"None", @"None label"));
-
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Connection: %@", @"Voiceover connection label"), cell.text];
-		} else if (indexPath.section == 1 && indexPath.row == 0) {
-			cell.text = _name;
+		if (indexPath.section == 1 && indexPath.row == 0) {
+			cell.textField.text = _name;
 			cell.textEditAction = @selector(nameChanged:);
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -181,22 +186,22 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 			cell.textField.secureTextEntry = NO;
 
 			if (_roomTarget) {
-				cell.label = NSLocalizedString(@"Name", @"Name setting label");
+				cell.textLabel.text = NSLocalizedString(@"Name", @"Name setting label");
 				cell.textField.placeholder = @"#help";
 				cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
 				cell.accessibilityLabel = NSLocalizedString(@"Room to join.", @"Voiceover room to join label.");
 				cell.accessibilityHint = NSLocalizedString(@"The #help room is joined by default.", @"Voiceover help is default room label");
 			} else {
-				cell.label = NSLocalizedString(@"Nickname", @"Nickname setting label");
+				cell.textLabel.text = NSLocalizedString(@"Nickname", @"Nickname setting label");
 				cell.textField.placeholder = NSLocalizedString(@"Required", @"Required setting placeholder");
 
 				cell.accessibilityLabel = NSLocalizedString(@"User to message.", @"Voiceover user to message label");
 				cell.accessibilityHint = NSLocalizedString(@"Required", @"Voiceover required label");
 			}
 		} else if (_roomTarget && indexPath.section == 1 && indexPath.row == 1) {
-			cell.text = _password;
-			cell.label = NSLocalizedString(@"Password", @"Password setting label");
+			cell.textField.text = _password;
+			cell.textLabel.text = NSLocalizedString(@"Password", @"Password setting label");
 			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 			cell.textField.keyboardType = UIKeyboardTypeASCIICapable;
@@ -255,7 +260,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 
 - (void) nameChanged:(CQPreferencesTextCell *) sender {
 	id old = _name;
-	_name = [sender.text copy];
+	_name = [sender.textField.text copy];
 	[old release];
 
 	if (!_roomTarget && self.navigationItem.rightBarButtonItem.tag == UIBarButtonSystemItemSave)
@@ -264,7 +269,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 
 - (void) passwordChanged:(CQPreferencesTextCell *) sender {
 	id old = _password;
-	_password = [sender.text copy];
+	_password = [sender.textField.text copy];
 	[old release];
 }
 

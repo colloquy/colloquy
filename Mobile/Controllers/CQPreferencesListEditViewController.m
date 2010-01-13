@@ -67,7 +67,7 @@
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
-	cell.text = _listItemText;
+	cell.textField.text = _listItemText;
 	cell.textField.placeholder = _listItemPlaceholder;
 	cell.textField.clearButtonMode = UITextFieldViewModeAlways;
 	cell.textField.returnKeyType = UIReturnKeyDefault;
@@ -87,7 +87,7 @@
 #pragma mark -
 
 - (void) listItemChanged:(CQPreferencesTextCell *) sender {
-	self.listItemText = sender.text;
+	self.listItemText = sender.textField.text;
 
 	if (_viewDisappearing)
 		return;
