@@ -2,7 +2,7 @@
  * Chat Core
  * ICB Protocol Support
  *
- * Copyright (c) 2006, 2007 Julio M. Merino Vidal <jmmv@NetBSD.org>
+ * Copyright (c) 2006, 2007, 2010 Julio M. Merino Vidal <jmmv@NetBSD.org>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -564,36 +564,36 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 - (void) _joinChatRoomNamed:(NSString *) name
 		 withPassphrase:(NSString *) passphrase
 		 alreadyJoined:(BOOL) joined {
-	if( [name compare:[_room name]] != 0 ) {
-		MVICBChatRoom *oldroom = _room;
-
-		_room = (MVICBChatRoom *)[self chatRoomWithUniqueIdentifier:name];
-		[_room _addMemberUser:_localUser];
-		if( !joined )
+	if( [name compare:[_room name] options:NSCaseInsensitiveSearch] != 0 ) {
+		if( ! joined ) {
 			[self ctsCommandGroup:[name retain]];
 
-		[_room _setDateJoined:[NSDate date]];
-		[_room _setDateParted:nil];
-		[_room _clearMemberUsers];
-		[_room _clearBannedUsers];
+			if( [name compare:@"ICB" options:NSCaseInsensitiveSearch] != 0 ) {
+				[[NSNotificationCenter defaultCenter]
+				 postNotificationOnMainThreadWithName:MVChatRoomPartedNotification
+				 object:_room];
+				[_room release];
+				_room = nil;
+			}
+		} else {
+			_room = (MVICBChatRoom *)[self chatRoomWithUniqueIdentifier:name];
+			[_room _addMemberUser:_localUser];
 
-		// Update the initial channel to point to the joined room so that
-		// a reconnect after a disconnection works fine and rejoins us to
-		// the (only) room that we left.
-		MVSafeCopyAssign( &_initialChannel, name );
+			[_room _setDateJoined:[NSDate date]];
+			[_room _setDateParted:nil];
+			[_room _clearMemberUsers];
+			[_room _clearBannedUsers];
 
-		[[NSNotificationCenter defaultCenter]
-		 postNotificationOnMainThreadWithName:MVChatRoomJoinedNotification
-		 object:_room];
-
-		[self ctsCommandTopic];
-		[self ctsCommandWho:name];
-
-		if( !joined && [name compare:@"ICB"] != 0 ) {
+			// Update the initial channel to point to the joined room so that
+			// a reconnect after a disconnection works fine and rejoins us to
+			// the (only) room that we left.
+			MVSafeCopyAssign( &_initialChannel, name );
 			[[NSNotificationCenter defaultCenter]
-			 postNotificationOnMainThreadWithName:MVChatRoomPartedNotification
-		     object:oldroom];
-			 [oldroom release];
+			 postNotificationOnMainThreadWithName:MVChatRoomJoinedNotification
+			 object:_room];
+
+			[self ctsCommandTopic];
+			[self ctsCommandWho:name];
 		}
 	}
 }
