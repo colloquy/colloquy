@@ -18,9 +18,7 @@ typedef enum {
 
 @interface UITabBarController (UITabBarControllerPrivate)
 - (void) hideBarWithTransition:(UITabBarTransition) transition;
-- (void) hideTabBarWithTransition:(UITabBarTransition) transition;
 - (void) showBarWithTransition:(UITabBarTransition) transition;
-- (void) showTabBarWithTransition:(UITabBarTransition) transition;
 @end
 #endif
 
