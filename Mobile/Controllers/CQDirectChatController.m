@@ -1243,6 +1243,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.delegate = self;
 
+	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+
 	if (command) alert.title = NSLocalizedString(@"Can't Send Command", @"Can't send command alert title");
 	else alert.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
 
@@ -1259,10 +1261,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		return;
 	}
 
-	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
-
 	[alert show];
-
 	[alert release];
 }
 

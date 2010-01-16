@@ -306,20 +306,48 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (BOOL) isSpecialApplicationURL:(NSURL *) url {
+#if !TARGET_IPHONE_SIMULATOR
 	return (url && ([url.host hasCaseInsensitiveSubstring:@"maps.google."] || [url.host hasCaseInsensitiveSubstring:@"youtube."] || [url.host hasCaseInsensitiveSubstring:@"phobos.apple."]));
+#else
+	return NO;
+#endif
+}
+
+- (NSString *) applicationNameForURL:(NSURL *) url {
+	if (!url)
+		return nil;
+#if !TARGET_IPHONE_SIMULATOR
+	if ([url.host hasCaseInsensitiveSubstring:@"maps.google."])
+		return NSLocalizedString(@"Maps", @"Maps application name");
+	if ([url.host hasCaseInsensitiveSubstring:@"youtube."])
+		return NSLocalizedString(@"YouTube", @"YouTube application name");
+	if ([url.host hasCaseInsensitiveSubstring:@"phobos.apple."])
+		return NSLocalizedString(@"iTunes", @"iTunes application name");
+#endif
+	if ([url.scheme isCaseInsensitiveEqualToString:@"http"] || [url.scheme isCaseInsensitiveEqualToString:@"https"])
+		return NSLocalizedString(@"Safari", @"Safari application name");
+	return nil;
 }
 
 - (BOOL) openURL:(NSURL *) url {
-	return [self openURL:url usingBuiltInBrowser:![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"]];
+	BOOL openWithBrowser = ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"];
+	return [self openURL:url usingBuiltInBrowser:openWithBrowser withBrowserDelegate:nil promptForExternal:openWithBrowser];
 }
 
 - (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser {
-	return [self openURL:url usingBuiltInBrowser:openWithBrowser withBrowserDelegate:nil];
+	return [self openURL:url usingBuiltInBrowser:openWithBrowser withBrowserDelegate:nil promptForExternal:openWithBrowser];
 }
 
 - (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser withBrowserDelegate:(id <CQBrowserViewControllerDelegate>) delegate {
+	return [self openURL:url usingBuiltInBrowser:openWithBrowser withBrowserDelegate:delegate promptForExternal:openWithBrowser];
+}
+
+- (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser withBrowserDelegate:(id <CQBrowserViewControllerDelegate>) delegate promptForExternal:(BOOL) prompt {
 	if ([[CQConnectionsController defaultController] handleOpenURL:url])
 		return YES;
+
+	if (![self canOpenURL:url])
+		return NO;
 
 	BOOL loadLastURL = [url.absoluteString isCaseInsensitiveEqualToString:@"about:last"];
 	if (loadLastURL)
@@ -332,16 +360,26 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		openWithBrowser = NO;
 
 	if (!openWithBrowser) {
+		if (!prompt)
+			return [super openURL:url];
+
 		CQAlertView *alert = [[CQAlertView alloc] init];
+
 		alert.tag = BrowserAlertTag;
-		alert.title = NSLocalizedString(@"Open Link?", @"Open Link? alert title");
-		alert.message = [NSString stringWithFormat:NSLocalizedString(@"Opening the following URL will close Colloquy: %@", @"Opening the following URL will close Colloquy: %@ alert message"), url];
+
+		NSString *applicationName = [self applicationNameForURL:url];
+		if (applicationName)
+			alert.title = [NSString stringWithFormat:NSLocalizedString(@"Open Link in %@?", @"Open link in app alert title"), applicationName];
+		else alert.title = NSLocalizedString(@"Open Link?", @"Open link alert title");
+
+		alert.message = NSLocalizedString(@"Opening this link will close Colloquy.", @"Opening link alert message");
 		alert.userInfo = url;
 		alert.delegate = self;
 
-		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel alert button title")];
+		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
-		[alert addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button title")];
+		[alert addButtonWithTitle:NSLocalizedString(@"Open", @"Open button title")];
+
 		[alert show];
 		[alert release];
 
@@ -364,9 +402,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #pragma mark -
 
 - (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (alertView.tag == BrowserAlertTag)
-		if (alertView.cancelButtonIndex != buttonIndex)
-			[super openURL:((CQAlertView *)alertView).userInfo];
+	if (alertView.tag != BrowserAlertTag || alertView.cancelButtonIndex == buttonIndex)
+		return;
+	[super openURL:((CQAlertView *)alertView).userInfo];
 }
 
 #pragma mark -

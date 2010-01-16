@@ -136,7 +136,7 @@ static NSURL *lastURL;
 }
 
 - (void) openInSafari:(id) sender {
-	[[CQColloquyApplication sharedApplication] openURL:self.url usingBuiltInBrowser:NO];
+	[[CQColloquyApplication sharedApplication] openURL:self.url usingBuiltInBrowser:NO withBrowserDelegate:nil promptForExternal:YES];
 }
 
 - (NSURL *) url {

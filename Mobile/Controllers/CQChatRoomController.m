@@ -396,14 +396,14 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	alert.title = NSLocalizedString(@"Kicked from Room", "Kicked from room alert title");
 	alert.message = [NSString stringWithFormat:NSLocalizedString(@"You were kicked from \"%@\" by \"%@\" on \"%@\".", "Kicked from room alert message"), self.room.displayName, user.displayName, self.connection.displayName];
 
-	[alert addButtonWithTitle:NSLocalizedString(@"Rejoin", @"Rejoin alert button title")];
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+
+	[alert addButtonWithTitle:NSLocalizedString(@"Rejoin", @"Rejoin alert button title")];
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"])
 		[CQSoundController vibrate];
 
 	[alert show];
-
 	[alert release];
 }
 
@@ -857,6 +857,8 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.delegate = self;
 
+	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+
 	if (command) alert.title = NSLocalizedString(@"Can't Send Command", @"Can't send command alert title");
 	else alert.title = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
 
@@ -875,10 +877,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 		return;
 	}
 
-	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
-
 	[alert show];
-
 	[alert release];
 }
 @end
