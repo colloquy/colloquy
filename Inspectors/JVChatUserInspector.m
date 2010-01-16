@@ -2,6 +2,7 @@
 #import "JVChatRoomPanel.h"
 #import "JVBuddy.h"
 #import "MVFileTransferController.h"
+#import "NSDateAdditions.h"
 
 @implementation JVDirectChatPanel (JVDirectChatPanelInspection)
 - (id <JVInspector>) inspector {
@@ -213,8 +214,8 @@
 	NSTimeInterval diff = ABS( [_localTimeUpdated timeIntervalSinceNow] );
 
 	NSCalendarDate *adjusted = [[NSCalendarDate alloc] initWithTimeInterval:diff sinceDate:current];
-	NSString *format = [[NSUserDefaults standardUserDefaults] objectForKey:NSShortTimeDateFormatString];
-	NSCalendarDate *formatedDate = [adjusted dateWithCalendarFormat:format timeZone:[current timeZone]];
+	NSCalendarDate *calendarDate = [adjusted dateWithCalendarFormat:format timeZone:[current timeZone]];
+	NSString *formatedDate = [NSDate formattedShortDateAndTimeStringForDate:calendarDate];
 	[adjusted release];
 
 	[localTime setObjectValue:formatedDate];

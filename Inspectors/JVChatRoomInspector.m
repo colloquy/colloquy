@@ -203,7 +203,7 @@
 - (IBAction) newBanRule:(id) sender {
 	[_latestBanList addObject:@""];
 	[banRules noteNumberOfRowsChanged];
-	[banRules selectRow:( [_latestBanList count] - 1 ) byExtendingSelection:NO];
+	[banRules selectRowIndexes:[NSIndexSet indexSetWithIndex:( [_latestBanList count] - 1 )] byExtendingSelection:NO];
 	[banRules editColumn:0 row:( [_latestBanList count] - 1 ) withEvent:nil select:NO];
 }
 

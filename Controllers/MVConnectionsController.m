@@ -351,7 +351,7 @@ static NSMenu *favoritesMenu = nil;
 - (IBAction) addRoom:(id) sender {
 	[_joinRooms addObject:@""];
 	[newJoinRooms noteNumberOfRowsChanged];
-	[newJoinRooms selectRow:( [_joinRooms count] - 1 ) byExtendingSelection:NO];
+	[newJoinRooms selectRowIndexes:[NSIndexSet indexSetWithIndex:( [_joinRooms count] - 1 )] byExtendingSelection:NO];
 	[newJoinRooms editColumn:0 row:( [_joinRooms count] - 1 ) withEvent:nil select:NO];
 }
 
@@ -423,7 +423,7 @@ static NSMenu *favoritesMenu = nil;
 				NSRunCriticalAlertPanel( NSLocalizedString( @"Already connected", "already connected dialog title" ), NSLocalizedString( @"The chat server with the nickname you specified is already connected to from this computer. Use another nickname if you desire multiple connections.", "chat already connected message" ), nil, nil, nil );
 				[openConnection makeFirstResponder:newNickname];
 			} else {
-				[connections selectRow:[_bookmarks indexOfObject:info] byExtendingSelection:NO];
+				[connections selectRowIndexes:[NSIndexSet indexSetWithIndex:[_bookmarks indexOfObject:info]] byExtendingSelection:NO];
 				[self _connect:nil];
 				[[self window] makeKeyAndOrderFront:nil];
 				[openConnection orderOut:nil];
@@ -480,7 +480,7 @@ static NSMenu *favoritesMenu = nil;
 			[userSelectionDescription setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Multiple users with the name '%@' have been found.", "multiple user same nickname, user selection description"), [userToMessage stringValue]]];
 
 			[userSelectionTable reloadData];
-			[userSelectionTable selectRow:0 byExtendingSelection:NO];
+			[userSelectionTable selectRowIndexes:[NSIndexSet indexSetWithIndex:0] byExtendingSelection:NO];
 
 			[[NSApplication sharedApplication] beginSheet:userSelectionPanel modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 
@@ -778,7 +778,7 @@ static NSMenu *favoritesMenu = nil;
 				if( ! [connection isConnected] && connect )
 					[connection connect];
 
-				[connections selectRow:[_bookmarks indexOfObject:info] byExtendingSelection:NO];
+				[connections selectRowIndexes:[NSIndexSet indexSetWithIndex:[_bookmarks indexOfObject:info]] byExtendingSelection:NO];
 
 				handled = YES;
 				break;

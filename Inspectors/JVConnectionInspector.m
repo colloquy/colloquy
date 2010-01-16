@@ -206,14 +206,14 @@
 - (IBAction) addRoom:(id) sender {
 	[_editingRooms addObject:@""];
 	[editRooms noteNumberOfRowsChanged];
-	[editRooms selectRow:([_editingRooms count] - 1) byExtendingSelection:NO];
+	[editRooms selectRowIndexes:[NSIndexSet indexSetWithIndex:([_editingRooms count] - 1)] byExtendingSelection:NO];
 	[editRooms editColumn:0 row:([_editingRooms count] - 1) withEvent:nil select:NO];
 }
 
 - (IBAction) addRoomToRule:(id) sender {
 	[_editingRuleRooms addObject:@""];
 	[editRuleRooms noteNumberOfRowsChanged];
-	[editRuleRooms selectRow:([_editingRuleRooms count] - 1) byExtendingSelection:NO];
+	[editRuleRooms selectRowIndexes:[NSIndexSet indexSetWithIndex:([_editingRuleRooms count] - 1)] byExtendingSelection:NO];
 	[editRuleRooms editColumn:0 row:([_editingRuleRooms count] - 1) withEvent:nil select:NO];
 }
 

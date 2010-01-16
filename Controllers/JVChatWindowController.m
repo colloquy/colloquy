@@ -214,7 +214,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) showChatViewController:(id <JVChatViewController>) controller {
 	NSAssert1( [_views containsObject:controller], @"%@ is not a member of this window controller.", controller );
 
-	[chatViewsOutlineView selectRow:[chatViewsOutlineView rowForItem:controller] byExtendingSelection:NO];
+	[chatViewsOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:[chatViewsOutlineView rowForItem:controller]] byExtendingSelection:NO];
 	[chatViewsOutlineView scrollRowToVisible:[chatViewsOutlineView rowForItem:controller]];
 
 	[self _refreshList];
@@ -561,10 +561,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( item == selectItem )
 		[self _refreshSelectionMenu];
 
-	if( selectItem ) {
-		NSInteger selectedRow = [chatViewsOutlineView rowForItem:selectItem];
-		[chatViewsOutlineView selectRow:selectedRow byExtendingSelection:NO];
-	}
+	if( selectItem )
+		[chatViewsOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:[chatViewsOutlineView rowForItem:selectItem]] byExtendingSelection:NO];
 }
 
 - (BOOL) isListItemExpanded:(id <JVChatListItem>) item {
@@ -806,7 +804,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldCollapseItem:(id) item {
 	if( [self selectedListItem] != [self activeChatViewController] )
-		[outlineView selectRow:[outlineView rowForItem:[self activeChatViewController]] byExtendingSelection:NO];
+		[outlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:[outlineView rowForItem:[self activeChatViewController]]] byExtendingSelection:NO];
 	return YES;
 }
 
@@ -1056,10 +1054,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[chatViewsOutlineView reloadData];
 	[chatViewsOutlineView sizeLastColumnToFit];
 
-	if( selectItem ) {
-		NSInteger selectedRow = [chatViewsOutlineView rowForItem:selectItem];
-		[chatViewsOutlineView selectRow:selectedRow byExtendingSelection:NO];
-	}
+	if( selectItem )
+		[chatViewsOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:[chatViewsOutlineView rowForItem:selectItem]] byExtendingSelection:NO];
 }
 
 - (void) _refreshPreferences {

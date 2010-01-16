@@ -131,10 +131,8 @@
 		if( item == selectItem )
 			[self _refreshSelectionMenu];
 
-		if( selectItem ) {
-			NSInteger selectedRow = [chatViewsOutlineView rowForItem:selectItem];
-			[chatViewsOutlineView selectRow:selectedRow byExtendingSelection:NO];
-		}
+		if( selectItem )
+			[chatViewsOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:[chatViewsOutlineView rowForItem:selectItem]] byExtendingSelection:NO];
 	}
 }
 

@@ -234,7 +234,7 @@
 - (IBAction) addDomain:(id) sender {
 	[_editDomains addObject:@""];
 	[identifierDomainsTable noteNumberOfRowsChanged];
-	[identifierDomainsTable selectRow:( [_editDomains count] - 1 ) byExtendingSelection:NO];
+	[identifierDomainsTable selectRowIndexes:[NSIndexSet indexSetWithIndex:( [_editDomains count] - 1 )] byExtendingSelection:NO];
 	[identifierDomainsTable editColumn:0 row:( [_editDomains count] - 1 ) withEvent:nil select:NO];
 }
 

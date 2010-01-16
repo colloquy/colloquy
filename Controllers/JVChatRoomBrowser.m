@@ -303,7 +303,7 @@
 	if( ! _collapsed && roomsTable != [[roomsTable window] firstResponder] ) {
 		NSInteger index = [roomField indexOfSelectedItem];
 		if( index != -1 ) {
-			[roomsTable selectRow:index byExtendingSelection:NO];
+			[roomsTable selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
 			[roomsTable scrollRowToVisible:index];
 		} else [roomsTable deselectAll:nil];
 	}
@@ -315,7 +315,7 @@
 	if( ! _collapsed && roomsTable != [[roomsTable window] firstResponder] ) {
 		NSInteger index = [roomField indexOfSelectedItem];
 		if( index != -1 ) {
-			[roomsTable selectRow:index byExtendingSelection:NO];
+			[roomsTable selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
 			[roomsTable scrollRowToVisible:index];
 		} else [roomsTable deselectAll:nil];
 	}
@@ -325,7 +325,7 @@
 	if( ! _collapsed && roomsTable != [[roomsTable window] firstResponder] ) {
 		NSInteger index = [roomField indexOfSelectedItem];
 		if( index != -1 ) {
-			[roomsTable selectRow:index byExtendingSelection:NO];
+			[roomsTable selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
 			[roomsTable scrollRowToVisible:index];
 		} else [roomsTable deselectAll:nil];
 	}
@@ -394,7 +394,7 @@
 	[selectedRoom release];
 
 	if( index != NSNotFound ) {
-		[roomsTable selectRow:index byExtendingSelection:NO];
+		[roomsTable selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
 		[roomsTable scrollRowToVisible:index];
 	}
 }
@@ -558,7 +558,7 @@ refresh:
 	[selectedRoom release];
 
 	if( index != NSNotFound ) {
-		[roomsTable selectRow:index byExtendingSelection:NO];
+		[roomsTable selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
 		[roomsTable scrollRowToVisible:index];
 	}
 

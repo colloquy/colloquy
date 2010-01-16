@@ -28,6 +28,7 @@
 #import "NSBundleAdditions.h"
 #import "NSURLAdditions.h"
 #import "MVApplicationController.h"
+#import "NSDateAdditions.h"
 
 static NSSet *actionVerbs = nil;
 
@@ -196,7 +197,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 				}
 
 				NSString *logName = nil;
-				NSString *dateString = [[NSCalendarDate date] descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
+				NSString *dateString = [NSDate formattedShortDateStringForDate:[NSDate date]];
 
 				NSInteger session = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptSessionHandling"];
 				if( ! session ) {

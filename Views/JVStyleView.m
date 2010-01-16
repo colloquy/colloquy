@@ -4,6 +4,7 @@
 #import "JVChatMessage.h"
 #import "JVStyle.h"
 #import "JVEmoticonSet.h"
+#import "NSDateAdditions.h"
 
 #import <objc/objc-runtime.h>
 
@@ -270,7 +271,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[_styleParameters setObject:@"'/tmp/'" forKey:@"buddyIconDirectory"];
 	[_styleParameters setObject:@"'.tif'" forKey:@"buddyIconExtension"];
 
-	NSString *timeFormatParameter = [NSString stringWithFormat:@"'%@'", [[NSUserDefaults standardUserDefaults] stringForKey:NSTimeFormatString]];
+	NSString *timeFormatParameter = [NSString stringWithFormat:@"'%@'", [NSDate formattedShortTimeString]];
 	[_styleParameters setObject:timeFormatParameter forKey:@"timeFormat"];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];

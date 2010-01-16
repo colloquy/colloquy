@@ -894,7 +894,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 	if( selectedObject ) {
 		[buddies deselectAll:nil];
-		[buddies selectRow:[_buddyOrder indexOfObjectIdenticalTo:selectedObject] byExtendingSelection:NO];
+		[buddies selectRowIndexes:[NSIndexSet indexSetWithIndex:[_buddyOrder indexOfObjectIdenticalTo:selectedObject]] byExtendingSelection:NO];
 		[buddies setNeedsDisplay:NO];
 	}
 

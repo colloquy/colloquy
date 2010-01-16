@@ -59,8 +59,8 @@
 
 		if( _tvFlags.delegateShouldSelectRow ) {
 			if( [_delegate tableView:self shouldSelectRow:row] )
-				[self selectRow:row byExtendingSelection:NO];
-		} else [self selectRow:row byExtendingSelection:NO];
+				[self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+		} else [self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
 
 		if( dataSourceMenuForTableColumn )
 			return [_dataSource tableView:self menuForTableColumn:column row:row];

@@ -17,6 +17,7 @@
 #import "JVMarkedScroller.h"
 #import "NSBundleAdditions.h"
 #import "NSURLAdditions.h"
+#import "NSDateAdditions.h"
 
 NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
 NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
@@ -182,12 +183,11 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 - (NSString *) windowTitle {
 	NSCalendarDate *date = [[self transcript] dateBegan];
-	return [NSString stringWithFormat:NSLocalizedString( @"%@ - %@ Transcript", "chat transcript/log - window title" ), [self title], ( date ? [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]] : @"" )];
+	return [NSString stringWithFormat:NSLocalizedString( @"%@ - %@ Transcript", "chat transcript/log - window title" ), [self title], ( date ? [NSDate formattedShortDateStringForDate:[NSDate date]] : @"" )];
 }
 
 - (NSString *) information {
-	NSCalendarDate *date = [[self transcript] dateBegan];
-	return [date descriptionWithCalendarFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString]];
+	return [NSDate formattedShortDateStringForDate:[NSDate date]];
 }
 
 - (NSString *) toolTip {
