@@ -323,6 +323,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		return NSLocalizedString(@"YouTube", @"YouTube application name");
 	if ([url.host hasCaseInsensitiveSubstring:@"phobos.apple."])
 		return NSLocalizedString(@"iTunes", @"iTunes application name");
+	if ([url.scheme isCaseInsensitiveEqualToString:@"mailto"])
+		return NSLocalizedString(@"Mail", @"Mail application name");
 #endif
 	if ([url.scheme isCaseInsensitiveEqualToString:@"http"] || [url.scheme isCaseInsensitiveEqualToString:@"https"])
 		return NSLocalizedString(@"Safari", @"Safari application name");
