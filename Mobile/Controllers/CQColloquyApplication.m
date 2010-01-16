@@ -8,6 +8,8 @@
 #import "NSStringAdditions.h"
 #import "RegexKitLite.h"
 
+#import "CQAlertView.h"
+
 #if ENABLE(SECRETS)
 typedef enum {
     UITabBarTransitionNone,
@@ -23,6 +25,8 @@ typedef enum {
 #endif
 
 NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyApplicationDidRecieveDeviceTokenNotification";
+
+#define BrowserAlertTag 1
 
 @implementation CQColloquyApplication
 + (CQColloquyApplication *) sharedApplication {
@@ -329,8 +333,22 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if (!loadLastURL && openWithBrowser && [self isSpecialApplicationURL:url])
 		openWithBrowser = NO;
 
-	if (!openWithBrowser)
-		return [super openURL:url];
+	if (!openWithBrowser) {
+		CQAlertView *alert = [[CQAlertView alloc] init];
+		alert.tag = BrowserAlertTag;
+		alert.title = NSLocalizedString(@"Open Link?", @"Open Link? alert title");
+		alert.message = [NSString stringWithFormat:NSLocalizedString(@"Opening the following URL will close Colloquy: %@", @"Opening the following URL will close Colloquy: %@ alert message"), url];
+		alert.userInfo = url;
+		alert.delegate = self;
+
+		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel alert button title")];
+
+		[alert addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button title")];
+		[alert show];
+		[alert release];
+
+		return YES;
+	}
 
 	CQBrowserViewController *browserController = [[CQBrowserViewController alloc] init];
 
@@ -343,6 +361,15 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[browserController release];
 
 	return YES;
+}
+
+#pragma mark -
+
+- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+	NSLog(@"cancelButtonIndex: %d, buttonIndex: %d", alertView.cancelButtonIndex, buttonIndex);
+	if (alertView.tag == BrowserAlertTag)
+		if (alertView.cancelButtonIndex != buttonIndex)
+			[super openURL:((CQAlertView *)alertView).userInfo];
 }
 
 #pragma mark -

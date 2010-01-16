@@ -2,7 +2,7 @@
 
 extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
-@interface CQColloquyApplication : UIApplication <UIApplicationDelegate, UITabBarDelegate> {
+@interface CQColloquyApplication : UIApplication <UIApplicationDelegate, UITabBarDelegate, UIAlertViewDelegate> {
 	@protected
 	IBOutlet UIWindow *mainWindow;
 	IBOutlet UITabBarController	*tabBarController;
