@@ -366,7 +366,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #pragma mark -
 
 - (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	NSLog(@"cancelButtonIndex: %d, buttonIndex: %d", alertView.cancelButtonIndex, buttonIndex);
 	if (alertView.tag == BrowserAlertTag)
 		if (alertView.cancelButtonIndex != buttonIndex)
 			[super openURL:((CQAlertView *)alertView).userInfo];
