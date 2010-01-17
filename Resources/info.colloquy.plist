@@ -351,6 +351,8 @@
 	<false/>
 	<key>JVAutoRejoinRoomsDelay</key>
 	<real>3</real>
+	<key>JVAutoAwayOnIdle</key>
+	<true/>
 	<key>WebKitThrottleWindowDisplay</key>
 	<true/>
 	<key>WebKitEnableDeferredUpdates</key>
