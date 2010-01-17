@@ -21,6 +21,7 @@
 @end
 
 @interface NSObject (MVTableViewDelegate)
+- (void) clear:(id) sender;
 - (NSRect) tableView:(MVTableView *) tableView rectOfRow:(int) row defaultRect:(NSRect) defaultRect;
 - (NSRange) tableView:(MVTableView *) tableView rowsInRect:(NSRect) rect defaultRange:(NSRange) defaultRange;
 @end

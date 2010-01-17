@@ -39,6 +39,18 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
+@interface DOMNode (DOMNodeLeopard)
+- (DOMNode *) insertBefore:(DOMNode *) newChild refChild:(DOMNode *) refChild;
+@end
+
+#pragma mark -
+
+@interface DOMElement (DOMElementLeopard)
+- (void) setAttribute:(NSString *) name value:(NSString *) value;
+@end
+
+#pragma mark -
+
 @interface DOMHTMLElement (DOMHTMLElementLeopard)
 - (int) offsetTop;
 - (int) offsetHeight;
@@ -393,7 +405,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		DOMHTMLElement *elt = (DOMHTMLElement *)[_domDocument getElementById:@"mark"];
 		if( elt ) [[elt parentNode] removeChild:elt];
 		elt = (DOMHTMLElement *)[_domDocument createElement:@"hr"];
-		[elt setAttribute:@"id" :@"mark"];
+		[elt setAttribute:@"id" value:@"mark"];
 		[_body appendChild:elt];
 		[self scrollToBottom];
 
@@ -423,7 +435,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[element setClassName:@"banner"];
 	if( [shell length] ) [element setInnerHTML:shell];
 
-	[[_mainDocument body] insertBefore:element :[[_mainDocument body] firstChild]];
+	[[_mainDocument body] insertBefore:element refChild:[[_mainDocument body] firstChild]];
 }
 
 #pragma mark -
@@ -880,7 +892,7 @@ quickEnd:
 	DOMNode *firstMessage = [_body firstChild];
 
 	while( [element hasChildNodes] ) { // append all children
-		if( firstMessage ) [_body insertBefore:[element firstChild] :firstMessage];
+		if( firstMessage ) [_body insertBefore:[element firstChild] refChild:firstMessage];
 		else [_body appendChild:[element firstChild]];
 	}
 

@@ -169,7 +169,7 @@ static NSMutableArray* G_FACTORY;
 {
     if (prefix == NULL)
     {
-        NSString* uristr = [NSString stringWithCString:uri];
+        NSString* uristr = [NSString stringWithUTF8String:uri];
         [_default_uri_stack addObject:uristr];
     }
 }

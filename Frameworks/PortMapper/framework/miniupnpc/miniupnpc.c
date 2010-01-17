@@ -559,11 +559,11 @@ void GetUPNPUrls(struct UPNPUrls * urls, struct IGDdatas * data,
 	url_cpy_or_cat(urls->controlURL_CIF, data->controlurl_CIF, n3);
 
 #ifdef DEBUG
-	printf("urls->ipcondescURL='%s' %d n1=%d\n", urls->ipcondescURL,
+	printf("urls->ipcondescURL='%s' %lu n1=%d\n", urls->ipcondescURL,
 	       strlen(urls->ipcondescURL), n1);
-	printf("urls->controlURL='%s' %d n2=%d\n", urls->controlURL,
+	printf("urls->controlURL='%s' %lu n2=%d\n", urls->controlURL,
 	       strlen(urls->controlURL), n2);
-	printf("urls->controlURL_CIF='%s' %d n3=%d\n", urls->controlURL_CIF,
+	printf("urls->controlURL_CIF='%s' %lu n3=%d\n", urls->controlURL_CIF,
 	       strlen(urls->controlURL_CIF), n3);
 #endif
 }

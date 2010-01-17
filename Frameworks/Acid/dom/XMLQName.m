@@ -157,7 +157,7 @@ XMLQNameManager* QNManager;
 
 -(XMLQName*) lookup:(const char*)expatname
 {
-    NSString* key = [NSString stringWithCString: expatname];
+    NSString* key = [NSString stringWithUTF8String: expatname];
     XMLQName* result = [_uri_map objectForKey:key];
     if (result == nil)
     {
@@ -181,7 +181,7 @@ XMLQNameManager* QNManager;
 {
     if (strchr(expatname, '|') == NULL)
     {
-        return [self lookup:[NSString stringWithCString:expatname] withURI:uri];
+        return [self lookup:[NSString stringWithUTF8String:expatname] withURI:uri];
     }
     else
     {

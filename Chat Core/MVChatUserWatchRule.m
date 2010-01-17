@@ -121,25 +121,27 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	if( ! _matchedChatUsers )
 		_matchedChatUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 
+	NSRange maxRange = NSMakeRange(0, NSUIntegerMax);
+
 	@synchronized( _matchedChatUsers ) {
 		if( [_matchedChatUsers containsObject:user] )
 			return YES;
 	}
 
 	NSString *string = [user nickname];
-	if( _nicknameIsRegex && _nickname && ! [string isMatchedByRegex:_nickname options:RKLCaseless inRange:NSMakeRange(0, [string length]) error:NULL] ) return NO;
+	if( _nicknameIsRegex && _nickname && ! [string isMatchedByRegex:_nickname options:RKLCaseless inRange:maxRange error:NULL] ) return NO;
 	if( ! _nicknameIsRegex && _nickname && [_nickname length] && ! [_nickname isEqualToString:string] ) return NO;
 
 	string = [user username];
-	if( _usernameIsRegex && _username && ! [string isMatchedByRegex:_username options:RKLCaseless inRange:NSMakeRange(0, [string length]) error:NULL] ) return NO;
+	if( _usernameIsRegex && _username && ! [string isMatchedByRegex:_username options:RKLCaseless inRange:maxRange error:NULL] ) return NO;
 	if( ! _usernameIsRegex && _username && [_username length] && ! [_username isEqualToString:string] ) return NO;
 
 	string = [user address];
-	if( _addressIsRegex && _address && ! [string isMatchedByRegex:_address options:RKLCaseless inRange:NSMakeRange(0, [string length]) error:NULL] ) return NO;
+	if( _addressIsRegex && _address && ! [string isMatchedByRegex:_address options:RKLCaseless inRange:maxRange error:NULL] ) return NO;
 	if( ! _addressIsRegex && _address && [_address length] && ! [_address isEqualToString:string] ) return NO;
 
 	string = [user realName];
-	if( _realNameIsRegex && _realName && ! [string isMatchedByRegex:_realName options:RKLCaseless inRange:NSMakeRange(0, [string length]) error:NULL] ) return NO;
+	if( _realNameIsRegex && _realName && ! [string isMatchedByRegex:_realName options:RKLCaseless inRange:maxRange error:NULL] ) return NO;
 	if( ! _realNameIsRegex && _realName && [_realName length] && ! [_realName isEqualToString:string] ) return NO;
 
 	NSData *data = [user publicKey];

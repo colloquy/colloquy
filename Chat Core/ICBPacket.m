@@ -93,9 +93,11 @@
 			NSUInteger last = 0;
 			for( NSUInteger i = 0; i < length; i++ ) {
 				if( data[i] == '\x01' && last < i ) {
-					NSString *f = [NSString stringWithCString:&data[last]
-											length:i - last];
+					NSString *f = [[NSString alloc] initWithBytes:&data[last]
+											length:i - last
+											encoding:NSISOLatin1StringEncoding];
 					[_fields addObject:f];
+					[f release];
 					last = i + 1;
 				} else if( data[i] == '\x01' ) {
 					NSAssert( last == i, @"invalid invariant" );
@@ -103,9 +105,11 @@
 				}
 			}
 
-			NSString *f = [NSString stringWithCString:&data[last]
-			                        length:length - last];
+			NSString *f = [[NSString alloc] initWithBytes:&data[last]
+									length:length - last
+									encoding:NSISOLatin1StringEncoding];
 			[_fields addObject:f];
+			[f release];
 		}
 	}
 	return self;
