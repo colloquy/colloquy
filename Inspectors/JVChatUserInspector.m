@@ -210,13 +210,9 @@
 }
 
 - (void) updateLocalTime {
-	NSCalendarDate *current = [_user attributeForKey:MVChatUserLocalTimeAttribute];
-	NSTimeInterval diff = ABS( [_localTimeUpdated timeIntervalSinceNow] );
-
-	NSCalendarDate *adjusted = [[NSCalendarDate alloc] initWithTimeInterval:diff sinceDate:current];
-	NSCalendarDate *calendarDate = [adjusted dateWithCalendarFormat:format timeZone:[current timeZone]];
-	NSString *formatedDate = [NSDate formattedShortDateAndTimeStringForDate:calendarDate];
-	[adjusted release];
+	NSTimeInterval now = ABS( [_localTimeUpdated timeIntervalSinceNow] );
+	NSDate *adjustedDate = [[NSDate alloc] initWithTimeIntervalSinceNow:now];
+	NSString *formatedDate = [NSDate formattedShortDateAndTimeStringForDate:adjustedDate];
 
 	[localTime setObjectValue:formatedDate];
 	[localTime setToolTip:[formatedDate description]];

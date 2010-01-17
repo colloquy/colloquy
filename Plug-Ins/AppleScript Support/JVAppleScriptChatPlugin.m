@@ -573,12 +573,12 @@
 	[self callScriptHandler:'mScX' withArguments:args forSelector:_cmd];
 }
 
-- (void) joinedRoom:(JVChatRoomPanel *) room; {
+- (void) joinedRoom:(JVChatRoomPanel *) room {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", nil];
 	[self callScriptHandler:'jRmX' withArguments:args forSelector:_cmd];
 }
 
-- (void) partingFromRoom:(JVChatRoomPanel *) room; {
+- (void) partingFromRoom:(JVChatRoomPanel *) room {
 	NSDictionary *args = [NSDictionary dictionaryWithObjectsAndKeys:room, @"----", nil];
 	[self callScriptHandler:'pRmX' withArguments:args forSelector:_cmd];
 }

@@ -271,7 +271,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[_styleParameters setObject:@"'/tmp/'" forKey:@"buddyIconDirectory"];
 	[_styleParameters setObject:@"'.tif'" forKey:@"buddyIconExtension"];
 
-	NSString *timeFormatParameter = [NSString stringWithFormat:@"'%@'", [NSDate formattedShortTimeString]];
+	NSString *timeFormatParameter = [NSString stringWithFormat:@"'%@'", [NSDate formattedShortTimeStringForDate:[NSDate date]]];
 	[_styleParameters setObject:timeFormatParameter forKey:@"timeFormat"];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];

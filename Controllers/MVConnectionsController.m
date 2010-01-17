@@ -1,3 +1,4 @@
+#import "MVApplicationController.h"
 #import "MVConnectionsController.h"
 #import "JVConnectionInspector.h"
 #import "JVNotificationController.h"
@@ -2069,7 +2070,7 @@ static NSMenu *favoritesMenu = nil;
 
 - (NSString *) _idleMessageString {
 	NSString *awayString = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVIdleMessage"];
-	return [awayString length] ? awayString : NSLocalizedString(@"Currently away from the computer", @"Currently away from the computer idle message")];
+	return [awayString length] ? awayString : NSLocalizedString(@"Currently away from the computer", @"Currently away from the computer idle message");
 }
 
 - (void) _machineDidBecomeIdle:(NSNotification *) notification {

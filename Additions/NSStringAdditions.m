@@ -430,7 +430,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 	baseConvert;
 
-	#undef baseConvert;
+	#undef baseConvert
 
 	return [uniqueId autorelease];
 }
