@@ -1469,6 +1469,8 @@ static NSMenu *favoritesMenu = nil;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestCertificatePassword: ) name:MVChatConnectionNeedCertificatePasswordNotification object:connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _requestPublicKeyVerification: ) name:MVChatConnectionNeedPublicKeyVerificationNotification object:connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didIdentify: ) name:MVChatConnectionDidIdentifyWithServicesNotification object:connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _machineDidBecomeIdle: ) name:JVMachineBecameIdleNotification object:connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _machineDidStopIdling: ) name:JVMachineStoppedIdlingNotification object:connection];
 }
 
 - (void) _deregisterNotificationsForConnection:(MVChatConnection *) connection {
@@ -2063,6 +2065,43 @@ static NSMenu *favoritesMenu = nil;
 		[context setObject:[NSImage imageNamed:@"disconnect"] forKey:@"image"];
 		[[JVNotificationController defaultController] performNotification:@"JVChatDisconnected" withContextInfo:context];
 	}
+}
+
+- (NSString *) _idleMessageString {
+	NSString *awayString = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVIdleMessage"];
+	return [awayString length] ? awayString : NSLocalizedString(@"Currently away from the computer", @"Currently away from the computer idle message")];
+}
+
+- (void) _machineDidBecomeIdle:(NSNotification *) notification {
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoAwayOnIdle"])
+		return;
+
+	MVChatConnection *connection = [notification object];
+	if ( [connection status] != MVChatConnectionConnectedStatus)
+		return;
+
+	if ([[connection awayStatusMessage] length])
+		return;
+
+	MVChatString *awayMessage = [[MVChatString alloc] initWithString:[self _idleMessageString]];
+	[connection setAwayStatusMessage:awayMessage];
+	[awayMessage release];
+}
+
+	 
+ - (void) _machineDidStopIdling:(NSNotification *) notification {
+	 if (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoAwayOnIdle"])
+		 return;
+
+	 MVChatConnection *connection = [notification object];
+	 if ( [connection status] != MVChatConnectionConnectedStatus)
+		 return;
+
+	 NSString *awayMessageString = [[connection awayStatusMessage] string];
+
+	 // If we set the connection idle automatically, we should unset away when we're no longer idle. Otherwise, leave it alone
+	 if ([awayMessageString isEqualToString:[self _idleMessageString]])
+		 [connection setAwayStatusMessage:nil];
 }
 
 - (IBAction) _disconnect:(id) sender {
