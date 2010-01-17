@@ -213,6 +213,7 @@
 	NSTimeInterval now = ABS( [_localTimeUpdated timeIntervalSinceNow] );
 	NSDate *adjustedDate = [[NSDate alloc] initWithTimeIntervalSinceNow:now];
 	NSString *formatedDate = [NSDate formattedShortDateAndTimeStringForDate:adjustedDate];
+	[adjustedDate release];
 
 	[localTime setObjectValue:formatedDate];
 	[localTime setToolTip:[formatedDate description]];
