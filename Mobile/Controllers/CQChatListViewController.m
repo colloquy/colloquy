@@ -393,9 +393,13 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	for (id <CQChatViewController> chatViewController in viewsToClose)
 		[[CQChatController defaultController] closeViewController:chatViewController];
 
-	if (viewControllers.count == viewsToClose.count)
+	if (viewControllers.count == viewsToClose.count) {
+		[self.tableView beginUpdates];
 		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationTop];
-	else [self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:UITableViewRowAnimationTop];
+		if (![CQChatController defaultController].chatViewControllers.count)
+			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+		[self.tableView endUpdates];
+	} else [self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:UITableViewRowAnimationTop];
 
 	[rowsToDelete release];
 	[viewsToClose release];
