@@ -368,11 +368,22 @@ static NSIndexPath *indexPathForChatController(id controller) {
 
 	NSInteger section = [[(CQActionSheet *) actionSheet userInfo] intValue];
 	MVChatConnection *connection = connectionForSection(section);
+
+	if (buttonIndex == 0) {
+		if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus) {
+			[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+		} else {
+			[connection cancelPendingReconnectAttempts];
+			[connection connect];
+		}
+		return;
+	}
+
 	NSMutableArray *rowsToDelete = [[NSMutableArray alloc] init];
 	NSMutableArray *viewsToClose = [[NSMutableArray alloc] init];
 	Class classToClose = Nil;
 
-	if (buttonIndex == 0 && [[CQChatController defaultController] connectionHasAChatRoom:connection])
+	if (buttonIndex == 1 && [[CQChatController defaultController] connectionHasAChatRoom:connection])
 		classToClose = [MVChatRoom class];
 	else classToClose = [MVChatUser class];
 
@@ -410,12 +421,18 @@ static NSIndexPath *indexPathForChatController(id controller) {
 - (void) tableSectionHeaderSelected:(CQTableViewSectionHeader *) header {
 	NSInteger section = header.section;
 
-	if (!connectionForSection(section))
+	MVChatConnection *connection = connectionForSection(section);
+	if (!connection)
 		return;
 
 	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.userInfo = [NSNumber numberWithInt:header.section];
+
+	if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus)
+		sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
+	else
+		[sheet addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
 
 	if ([[CQChatController defaultController] connectionHasAChatRoom:connectionForSection(section)])
 		[sheet addButtonWithTitle:NSLocalizedString(@"Close All Chat Rooms", @"Close all rooms button title")];
