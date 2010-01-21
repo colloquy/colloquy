@@ -220,9 +220,8 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	id view = nil;
 	NSEnumerator *enumerator = [[controller allChatViewControllers] objectEnumerator];
-	while( ( view = [enumerator nextObject] ) ) {
+	while( ( view = [enumerator nextObject] ) )
 		[self disposeViewController:view];
-	}
 
 	[_chatWindows removeObject:controller];
 }

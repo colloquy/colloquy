@@ -622,8 +622,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) windowWillClose:(NSNotification *) notification {
     if( ! [[[[[NSApplication sharedApplication] keyWindow] windowController] className] isEqual:[self className]] )
 		[self _resignMenuCommands];
-    if( [[self window] isVisible] )
-		[self close];
 }
 
 - (BOOL) windowShouldClose:(id) sender {
