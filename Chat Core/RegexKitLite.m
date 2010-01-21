@@ -148,7 +148,7 @@
 // We need to safely unlock before throwing any of these exceptions.
 // @try {} @finally {} significantly slows things down so it's not used.
 
-#define RKLCAssertDictionary(d, ...) rkl_makeAssertDictionary(__PRETTY_FUNCTION__, __FILE__, __LINE__, (d), ##__VA_ARGS__)
+#define RKLCAssertDictionary(d, ...) rkl_makeAssertDictionary(__PRETTY_FUNCTION__, "RegexKitLite.m", __LINE__, (d), ##__VA_ARGS__)
 #define RKLCDelayedHardAssert(c, e, g) do { id *_e=(e); int _c=(c); if(RKL_EXPECTED(_e == NULL, 0L) || RKL_EXPECTED(*_e != NULL, 0L)) { goto g; } if(RKL_EXPECTED(!_c, 0L)) { *_e = RKLCAssertDictionary(@"Invalid parameter not satisfying: %s", #c); goto g; } } while(0)
 
 #ifdef    NS_BLOCK_ASSERTIONS
