@@ -3,6 +3,8 @@
 #import "NSStringAdditions.h"
 
 static NSString *analyticsURL = @"http://colloquy.mobi/analytics.php";
+static NSString *deviceIdentifier;
+static NSString *applicationName;
 
 @implementation CQAnalyticsController
 + (CQAnalyticsController *) defaultController {
@@ -23,11 +25,24 @@ static NSString *analyticsURL = @"http://colloquy.mobi/analytics.php";
 	if (!(self = [super init]))
 		return nil;
 
+	if (!analyticsURL) {
+		[self release];
+		return nil;
+	}
+
 	_data = [[NSMutableDictionary alloc] initWithCapacity:10];
 
 	[_data setObject:[[UIDevice currentDevice] model] forKey:@"device-model"];
 	[_data setObject:[[UIDevice currentDevice] systemName] forKey:@"device-system-name"];
 	[_data setObject:[[UIDevice currentDevice] systemVersion] forKey:@"device-system-version"];
+
+	if (!applicationName)
+		applicationName = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"] copy];
+
+	if (!deviceIdentifier)
+		deviceIdentifier = [[[UIDevice currentDevice] uniqueIdentifier] copy];
+
+	NSAssert([applicationName isEqualToString:@"Colloquy"], @"If you are not Colloquy, you need to change analyticsURL to a new URL or nil. Thanks!");
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
 
@@ -103,7 +118,8 @@ static NSString *analyticsURL = @"http://colloquy.mobi/analytics.php";
 	_pendingSynchronize = NO;
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
 
-	[_data setObject:[[UIDevice currentDevice] uniqueIdentifier] forKey:@"device-identifier"];
+	[_data setObject:deviceIdentifier forKey:@"device-identifier"];
+	[_data setObject:applicationName forKey:@"application-name"];
 
 	[NSURLConnection connectionWithRequest:[self _urlRequest] delegate:nil];
 
@@ -117,7 +133,8 @@ static NSString *analyticsURL = @"http://colloquy.mobi/analytics.php";
 	_pendingSynchronize = NO;
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
 
-	[_data setObject:[[UIDevice currentDevice] uniqueIdentifier] forKey:@"device-identifier"];
+	[_data setObject:deviceIdentifier forKey:@"device-identifier"];
+	[_data setObject:applicationName forKey:@"application-name"];
 
 	NSMutableURLRequest *request = [self _urlRequest];
 	[request setTimeoutInterval:15.];

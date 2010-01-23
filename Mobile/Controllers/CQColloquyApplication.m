@@ -97,10 +97,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	[preferences release];
 
-	NSString *information = [infoDictionary objectForKey:@"CFBundleName"];
-	[[CQAnalyticsController defaultController] setObject:information forKey:@"application-name"];
-
-	information = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+	NSString *information = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 	[[CQAnalyticsController defaultController] setObject:information forKey:@"application-version"];
 
 	information = [infoDictionary objectForKey:@"CFBundleVersion"];
