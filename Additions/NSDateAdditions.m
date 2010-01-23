@@ -6,7 +6,7 @@
 	[dateFormatter setDateStyle:dateStyle];
 	[dateFormatter setTimeStyle:timeStyle];
 
-	NSString *formattedDate = [dateFormatter stringFromDatedate];
+	NSString *formattedDate = [dateFormatter stringFromDate:date];
 	[dateFormatter release];
 
 	return formattedDate;
