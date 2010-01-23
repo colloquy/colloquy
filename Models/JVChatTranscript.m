@@ -1220,7 +1220,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 	if( index < 0 ) {
 		NSUInteger count = [self messageCount];
-		if( ABS( index ) > count ) return nil;
+		if( (NSUInteger)ABS( index ) > count ) return nil;
 		index = count + index;
 	}
 

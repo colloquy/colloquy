@@ -1,7 +1,7 @@
 #import "JVMarkedScroller.h"
 
 struct _mark {
-	long long location;
+	unsigned long long location;
 	NSString *identifier;
 	NSColor *color;
 };
@@ -48,8 +48,8 @@ struct _mark {
 	NSNumber *stopNum = nil;
 
 	while( ( startNum = [enumerator nextObject] ) && ( stopNum = [enumerator nextObject] ) ) {
-		long long start = [startNum unsignedLongLongValue];
-		long long stop = [stopNum unsignedLongLongValue];
+		unsigned long long start = [startNum unsignedLongLongValue];
+		unsigned long long stop = [stopNum unsignedLongLongValue];
 
 		NSRect rect = NSZeroRect;
 		if( sFlags.isHoriz ) rect = NSMakeRect( start, 0., ( stop - start ), width );
@@ -63,8 +63,8 @@ struct _mark {
 
 	if( ( [_shades count] % 2 ) == 1 ) {
 		NSRect rect = NSZeroRect;
-		long long start = [[_shades lastObject] unsignedLongLongValue];
-		long long stop = [self contentViewLength];
+		unsigned long long start = [[_shades lastObject] unsignedLongLongValue];
+		unsigned long long stop = [self contentViewLength];
 
 		if( sFlags.isHoriz ) rect = NSMakeRect( start, 0., ( stop - start ), width );
 		else rect = NSMakeRect( 0., start, width, ( stop - start ) );
@@ -87,14 +87,14 @@ struct _mark {
 	enumerator = [_marks objectEnumerator];
 	NSValue *currentMark = nil;
 
-	long long currentPosition = ( _currentMark != NSNotFound ? _currentMark : [self floatValue] * [self contentViewLength] );
+	unsigned long long currentPosition = ( _currentMark != NSNotFound ? _currentMark : [self floatValue] * [self contentViewLength] );
 	BOOL foundNext = NO, foundPrevious = NO;
 	NSRect knobRect = [self rectForPart:NSScrollerKnob];
 
 	while( ( currentMark = [enumerator nextObject] ) ) {
 		struct _mark mark;
 		[currentMark getValue:&mark];
-		long long value = mark.location;
+		unsigned long long value = mark.location;
 
 		if( value < currentPosition && ( ! foundPrevious || value > _nearestPreviousMark ) ) {
 			_nearestPreviousMark = value;
@@ -201,13 +201,13 @@ struct _mark {
 	NSEnumerator *enumerator = [_marks objectEnumerator];
 	NSValue *currentMark = nil;
 
-	long long currentPosition = ( _currentMark != NSNotFound ? _currentMark : [self floatValue] * [self contentViewLength] );
+	unsigned long long currentPosition = ( _currentMark != NSNotFound ? _currentMark : [self floatValue] * [self contentViewLength] );
 	BOOL foundNext = NO, foundPrevious = NO;
 
 	while( ( currentMark = [enumerator nextObject] ) ) {
 		struct _mark mark;
 		[currentMark getValue:&mark];
-		long long value = mark.location;
+		unsigned long long value = mark.location;
 
 		if( value < currentPosition && ( ! foundPrevious || value > _nearestPreviousMark ) ) {
 			_nearestPreviousMark = value;
@@ -244,14 +244,14 @@ struct _mark {
 
 #pragma mark -
 
-- (void) setLocationOfCurrentMark:(long long) location {
+- (void) setLocationOfCurrentMark:(unsigned long long) location {
 	if( _currentMark != location ) {
 		_currentMark = location;
 		[self updateNextAndPreviousMarks];
 	}
 }
 
-- (long long) locationOfCurrentMark {
+- (unsigned long long) locationOfCurrentMark {
 	return _currentMark;
 }
 
@@ -313,20 +313,20 @@ struct _mark {
 	NSMutableSet *shiftedMarks = [NSMutableSet set];
 	NSValue *location = nil;
 
-	if( ! ( negative && _nearestPreviousMark < ABS( displacement ) ) ) _nearestPreviousMark += displacement;
+	if( ! ( negative && _nearestPreviousMark < (unsigned long long)ABS( displacement ) ) ) _nearestPreviousMark += displacement;
 	else _nearestPreviousMark = NSNotFound;
 
-	if( ! ( negative && _nearestNextMark < ABS( displacement ) ) ) _nearestNextMark += displacement;
+	if( ! ( negative && _nearestNextMark < (unsigned long long)ABS( displacement ) ) ) _nearestNextMark += displacement;
 	else _nearestNextMark = NSNotFound;
 
-	if( ! ( negative && _currentMark < ABS( displacement ) ) ) _currentMark += displacement;
+	if( ! ( negative && _currentMark < (unsigned long long)ABS( displacement ) ) ) _currentMark += displacement;
 	else _currentMark = NSNotFound;
 
 	NSEnumerator *enumerator = [_marks objectEnumerator];
 	while( ( location = [enumerator nextObject] ) ) {
 		struct _mark mark;
 		[location getValue:&mark];
-		if( ! ( negative && mark.location < ABS( displacement ) ) ) {
+		if( ! ( negative && mark.location < (unsigned long long)ABS( displacement ) ) ) {
 			mark.location += displacement;
 			[shiftedMarks addObject:[NSValue value:&mark withObjCType:@encode( struct _mark )]];
 		}
@@ -340,15 +340,15 @@ struct _mark {
 
 	enumerator = [_shades objectEnumerator];
 	while( ( start = [enumerator nextObject] ) && ( ( stop = [enumerator nextObject] ) || YES ) ) {
-		long long shiftedStart = [start unsignedLongLongValue];
+		unsigned long long shiftedStart = [start unsignedLongLongValue];
 
 		if( stop ) {
-			long long shiftedStop = [stop unsignedLongLongValue];
-			if( ! ( negative && shiftedStart < ABS( displacement ) ) && ! ( negative && shiftedStop < ABS( displacement ) ) ) {
+			unsigned long long shiftedStop = [stop unsignedLongLongValue];
+			if( ! ( negative && shiftedStart < (unsigned long long)ABS( displacement ) ) && ! ( negative && shiftedStop < (unsigned long long)ABS( displacement ) ) ) {
 				[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStart + displacement )]];
 				[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStop + displacement )]];
 			}
-		} else if( ! ( negative && shiftedStart < ABS( displacement ) ) ) {
+		} else if( ! ( negative && shiftedStart < (unsigned long long)ABS( displacement ) ) ) {
 			[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStart + displacement )]];
 		}
 	}
@@ -360,37 +360,37 @@ struct _mark {
 
 #pragma mark -
 
-- (void) addMarkAt:(long long) location {
+- (void) addMarkAt:(unsigned long long) location {
 	[self addMarkAt:location withIdentifier:nil withColor:nil];
 }
 
-- (void) addMarkAt:(long long) location withIdentifier:(NSString *) identifier {
+- (void) addMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier {
 	[self addMarkAt:location withIdentifier:identifier withColor:nil];
 }
 
-- (void) addMarkAt:(long long) location withColor:(NSColor *) color {
+- (void) addMarkAt:(unsigned long long) location withColor:(NSColor *) color {
 	[self addMarkAt:location withIdentifier:nil withColor:color];
 }
 
-- (void) addMarkAt:(long long) location withIdentifier:(NSString *) identifier withColor:(NSColor *) color {
+- (void) addMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier withColor:(NSColor *) color {
 	struct _mark mark = {location, identifier, color};
 	[_marks addObject:[NSValue value:&mark withObjCType:@encode( struct _mark )]];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
-- (void) removeMarkAt:(long long) location {
+- (void) removeMarkAt:(unsigned long long) location {
 	[self removeMarkAt:location withIdentifier:nil withColor:nil];
 }
 
-- (void) removeMarkAt:(long long) location withIdentifier:(NSString *) identifier {
+- (void) removeMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier {
 	[self removeMarkAt:location withIdentifier:identifier withColor:nil];
 }
 
-- (void) removeMarkAt:(long long) location withColor:(NSColor *) color {
+- (void) removeMarkAt:(unsigned long long) location withColor:(NSColor *) color {
 	[self removeMarkAt:location withIdentifier:nil withColor:color];
 }
 
-- (void) removeMarkAt:(long long) location withIdentifier:(NSString *) identifier withColor:(NSColor *) color {
+- (void) removeMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier withColor:(NSColor *) color {
 	struct _mark mark = {location, identifier, color};
 	[_marks removeObject:[NSValue value:&mark withObjCType:@encode( struct _mark )]];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
@@ -410,7 +410,7 @@ struct _mark {
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
-- (void) removeMarksGreaterThan:(long long) location {
+- (void) removeMarksGreaterThan:(unsigned long long) location {
 	NSEnumerator *enumerator = [[[_marks copy] autorelease] objectEnumerator];
 	NSValue *obj = nil;
 
@@ -424,7 +424,7 @@ struct _mark {
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
-- (void) removeMarksLessThan:(long long) location {
+- (void) removeMarksLessThan:(unsigned long long) location {
 	NSEnumerator *enumerator = [[[_marks copy] autorelease] objectEnumerator];
 	NSValue *obj = nil;
 
@@ -470,14 +470,14 @@ struct _mark {
 
 #pragma mark -
 
-- (void) startShadedAreaAt:(long long) location {
+- (void) startShadedAreaAt:(unsigned long long) location {
 	if( ! [_shades count] || ! ( [_shades count] % 2 ) ) {
 		[_shades addObject:[NSNumber numberWithUnsignedLongLong:location]];
 		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 	}
 }
 
-- (void) stopShadedAreaAt:(long long) location {
+- (void) stopShadedAreaAt:(unsigned long long) location {
 	if( [_shades count] && ( [_shades count] % 2 ) == 1 ) {
 		[_shades addObject:[NSNumber numberWithUnsignedLongLong:location]];
 		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
@@ -493,7 +493,7 @@ struct _mark {
 
 #pragma mark -
 
-- (long long) contentViewLength {
+- (unsigned long long) contentViewLength {
 	if( sFlags.isHoriz ) return ( NSWidth( [self frame] ) / [self knobProportion] );
 	else return ( NSHeight( [self frame] ) / [self knobProportion] );
 }
