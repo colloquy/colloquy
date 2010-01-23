@@ -312,22 +312,23 @@ struct _mark {
 	BOOL negative = ( displacement >= 0 ? NO : YES );
 	NSMutableSet *shiftedMarks = [NSMutableSet set];
 	NSValue *location = nil;
+	unsigned long long unsignedDisplacement = (unsigned long long)ABS( displacement );
 
-	if( ! ( negative && _nearestPreviousMark < (unsigned long long)ABS( displacement ) ) ) _nearestPreviousMark += displacement;
+	if( ! ( negative && _nearestPreviousMark < unsignedDisplacement ) ) _nearestPreviousMark += unsignedDisplacement;
 	else _nearestPreviousMark = NSNotFound;
 
-	if( ! ( negative && _nearestNextMark < (unsigned long long)ABS( displacement ) ) ) _nearestNextMark += displacement;
+	if( ! ( negative && _nearestNextMark < unsignedDisplacement ) ) _nearestNextMark += unsignedDisplacement;
 	else _nearestNextMark = NSNotFound;
 
-	if( ! ( negative && _currentMark < (unsigned long long)ABS( displacement ) ) ) _currentMark += displacement;
+	if( ! ( negative && _currentMark < unsignedDisplacement ) ) _currentMark += unsignedDisplacement;
 	else _currentMark = NSNotFound;
 
 	NSEnumerator *enumerator = [_marks objectEnumerator];
 	while( ( location = [enumerator nextObject] ) ) {
 		struct _mark mark;
 		[location getValue:&mark];
-		if( ! ( negative && mark.location < (unsigned long long)ABS( displacement ) ) ) {
-			mark.location += displacement;
+		if( ! ( negative && mark.location < unsignedDisplacement ) ) {
+			mark.location += unsignedDisplacement;
 			[shiftedMarks addObject:[NSValue value:&mark withObjCType:@encode( struct _mark )]];
 		}
 	}
@@ -344,12 +345,12 @@ struct _mark {
 
 		if( stop ) {
 			unsigned long long shiftedStop = [stop unsignedLongLongValue];
-			if( ! ( negative && shiftedStart < (unsigned long long)ABS( displacement ) ) && ! ( negative && shiftedStop < (unsigned long long)ABS( displacement ) ) ) {
-				[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStart + displacement )]];
-				[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStop + displacement )]];
+			if( ! ( negative && shiftedStart < unsignedDisplacement ) && ! ( negative && shiftedStop < unsignedDisplacement ) ) {
+				[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStart + unsignedDisplacement )]];
+				[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStop + unsignedDisplacement )]];
 			}
-		} else if( ! ( negative && shiftedStart < (unsigned long long)ABS( displacement ) ) ) {
-			[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStart + displacement )]];
+		} else if( ! ( negative && shiftedStart < unsignedDisplacement ) ) {
+			[shiftedShades addObject:[NSNumber numberWithUnsignedLongLong:( shiftedStart + unsignedDisplacement )]];
 		}
 	}
 
