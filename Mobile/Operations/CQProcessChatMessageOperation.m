@@ -7,7 +7,29 @@
 
 #import <ChatCore/MVChatUser.h>
 
+static BOOL graphicalEmoticons;
+static BOOL stripMessageFormatting;
+
 @implementation CQProcessChatMessageOperation
++ (void) initialize {
+	static BOOL userDefaultsInitialized;
+	
+	if (userDefaultsInitialized)
+		return;
+	
+	[[NSNotificationCenter defaultCenter] addObserver:[CQProcessChatMessageOperation class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	
+	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
+	stripMessageFormatting = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"];
+	
+	userDefaultsInitialized = YES;
+}
+
++ (void) updateUserDefaults {
+	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
+	stripMessageFormatting = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"];
+}
+
 - (id) initWithMessageData:(NSData *) messageData {
 	NSParameterAssert(messageData != nil);
 
@@ -58,14 +80,6 @@
 #pragma mark -
 
 static void commonChatReplacment(NSMutableString *string, NSRangePointer textRange) {
-	static BOOL setGraphicalEmoticons;
-	static BOOL graphicalEmoticons;
-
-	if (!setGraphicalEmoticons) {
-		graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
-		setGraphicalEmoticons = YES;
-	}
-
 	if (graphicalEmoticons)
 		[string substituteEmoticonsForEmojiInRange:textRange withXMLSpecialCharactersEncodedAsEntities:YES];
 
@@ -162,14 +176,6 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 - (void) _processMessageString:(NSMutableString *) messageString {
 	if (!messageString.length)
 		return;
-
-	static BOOL setStripMessageFormatting;
-	static BOOL stripMessageFormatting;
-
-	if (!setStripMessageFormatting) {
-		stripMessageFormatting = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"];
-		setStripMessageFormatting = YES;
-	}
 
 	NSRange range;
 	if (stripMessageFormatting) {
