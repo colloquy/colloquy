@@ -24,6 +24,15 @@
 #define SendFileActionSheetTag 3
 #define FileTypeActionSheetTag 4
 
+static NSInteger alwaysShowNotices;
+#if ENABLE(FILE_TRANSFERS)
+static BOOL vibrateOnFileTransfer;
+static NSString *soundOnFileTransfer;
+#endif
+static NSString *chatRoomInviteAction;
+static BOOL vibrateOnHighlight;
+static NSString *soundOnHighlight;
+
 @interface CQChatController (CQChatControllerPrivate)
 - (void) _showNextChatControllerAnimated:(BOOL) animated;
 #if ENABLE(FILE_TRANSFERS)
@@ -34,6 +43,35 @@
 #pragma mark -
 
 @implementation CQChatController
++ (void) initialize {
+	static BOOL userDefaultsInitialized;
+
+	if (userDefaultsInitialized)
+		return;
+
+	[[NSNotificationCenter defaultCenter] addObserver:[CQChatController class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+
+	alwaysShowNotices = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"];
+#if ENABLE(FILE_TRANSFERS)
+	vibrateOnFileTransfer = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnFileTransfer"];
+	soundOnFileTransfer = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnFileTransfer"];
+#endif
+	chatRoomInviteAction = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatRoomInviteAction"];
+	vibrateOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"];
+	soundOnHighlight = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
+}
+
++ (void) updateUserDefaults {
+	alwaysShowNotices = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"];
+#if ENABLE(FILE_TRANSFERS)
+	vibrateOnFileTransfer = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnFileTransfer"];
+	soundOnFileTransfer = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnFileTransfer"];
+#endif
+	chatRoomInviteAction = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatRoomInviteAction"];
+	vibrateOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"];
+	soundOnHighlight = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
+}
+
 + (CQChatController *) defaultController {
 	static BOOL creatingSharedInstance = NO;
 	static CQChatController *sharedInstance = nil;
@@ -189,7 +227,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		if (![self chatViewControllerForUser:user ifExists:YES])
 			hideFromUser = YES;
 
-		if ( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"] == 1 || ( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"] == 0 && ![[notification userInfo] objectForKey:@"handled"] ) )
+		if ( alwaysShowNotices == 1 || ( alwaysShowNotices == 0 && ![[notification userInfo] objectForKey:@"handled"] ) )
 			hideFromUser = NO;
 	}
 
@@ -241,10 +279,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Deny", @"Deny alert button title")];
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnFileTransfer"])
+	if (vibrateOnFileTransfer)
 		[CQSoundController vibrate];
 
-	if (![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnFileTransfer"] isEqualToString:@"None"]) {
+	if (![soundOnFileTransfer isEqualToString:@"None"]) {
 		static CQSoundController *fileTransferSound;
 
 		if (!fileTransferSound) {
@@ -265,11 +303,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	NSString *roomName = [[notification userInfo] objectForKey:@"room"];
 	MVChatConnection *connection = [notification object];
 
-	NSString *action = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatRoomInviteAction"];
-	if ([action isEqualToString:@"Auto-Join"]) {
+	if ([chatRoomInviteAction isEqualToString:@"Auto-Join"]) {
 		[connection joinChatRoomNamed:roomName];
 		return;
-	} else if ([action isEqualToString:@"Auto-Deny"]) {
+	} else if ([chatRoomInviteAction isEqualToString:@"Auto-Deny"]) {
 		return;
 	}
 
@@ -287,16 +324,14 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join button title")];
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"])
+	if (vibrateOnHighlight)
 		[CQSoundController vibrate];
 
-	if (![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"] isEqualToString:@"None"]) {
+	if (![soundOnHighlight isEqualToString:@"None"]) {
 		static CQSoundController *highlightSound;
 
-		if (!highlightSound) {
-			NSString *alert = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
-			highlightSound = [[CQSoundController alloc] initWithSoundNamed:alert];
-		}		
+		if (!highlightSound)
+			highlightSound = [[CQSoundController alloc] initWithSoundNamed:soundOnHighlight];
 
 		[highlightSound playSound];
 	}
@@ -425,9 +460,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 #if ENABLE(FILE_TRANSFERS)
 - (void) imagePickerController:(UIImagePickerController *) picker didFinishPickingImage:(UIImage *) image editingInfo:(NSDictionary *) editingInfo {
 	_transferImage = [image retain];
-	
-	NSString *behavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQFileTransferBehavior"];
-	if ([behavior isEqualToString:@"Ask"]) {
+
+	if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"CQFileTransferBehavior"] isEqualToString:@"Ask"]) {
 		UIActionSheet *sheet = [[UIActionSheet alloc] init];
 		sheet.delegate = self;
 		sheet.tag = FileTypeActionSheetTag;

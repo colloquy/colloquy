@@ -12,9 +12,15 @@
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
+static BOOL showJoinEvents;
+static BOOL showHostmasksOnJoin;
+static BOOL showHostmasksOnPart;
+static BOOL showLeaveEvents;
+
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _didDisconnect:(NSNotification *) notification;
+- (void) userDefaultsChanged;
 @end
 
 #pragma mark -
@@ -30,6 +36,29 @@
 #pragma mark -
 
 @implementation CQChatRoomController
++ (void) initialize {
+	static BOOL userDefaultsInitialized;
+
+	if (userDefaultsInitialized)
+		return;
+
+	userDefaultsInitialized = YES;
+
+	[[NSNotificationCenter defaultCenter] addObserver:[CQChatRoomController class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+
+	showJoinEvents = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowJoinEvents"];
+	showHostmasksOnJoin = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnJoin"];
+	showHostmasksOnPart = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnPart"];
+	showLeaveEvents = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLeaveEvents"];
+}
+
+- (void) userDefaultsChanged {
+	showJoinEvents = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowJoinEvents"];
+	showHostmasksOnJoin = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnJoin"];
+	showHostmasksOnPart = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnPart"];
+	showLeaveEvents = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLeaveEvents"];
+}
+
 - (id) initWithTarget:(id) target {
 	if (!(self = [super initWithTarget:target]))
 		return nil;
@@ -727,11 +756,11 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	if ([_orderedMembers indexOfObjectIdenticalTo:user] != NSNotFound)
 		return;
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowJoinEvents"]) {
+	if (showJoinEvents) {
 		NSString *eventMessageFormat = [NSLocalizedString(@"%@ joined the room.", "User has join the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
 		NSString *userInformation = nil;
 		
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnJoin"])
+		if (showHostmasksOnJoin)
 			userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForMemberUser:user], user.username, user.address];
 		else userInformation = [self _markupForMemberUser:user];
 
@@ -756,7 +785,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	MVChatUser *user = [operation.userInfo objectForKey:@"user"];
 	NSString *userInformation = nil;
 	
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnPart"])
+	if (showHostmasksOnPart)
 		userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForUser:user], user.username, user.address];
 	else userInformation = [self _markupForUser:user];
 
@@ -772,7 +801,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 - (void) _memberParted:(NSNotification *) notification {
 	MVChatUser *user = [notification.userInfo objectForKey:@"user"];
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLeaveEvents"]) {
+	if (showLeaveEvents) {
 		NSData *reasonData = [notification.userInfo objectForKey:@"reason"];
 		[self _processMessageData:reasonData target:self action:@selector(_displayProcessedMemberPartReason:) userInfo:notification.userInfo];
 	}

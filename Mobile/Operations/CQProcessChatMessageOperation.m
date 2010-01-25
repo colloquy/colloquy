@@ -13,15 +13,15 @@ static BOOL stripMessageFormatting;
 @implementation CQProcessChatMessageOperation
 + (void) initialize {
 	static BOOL userDefaultsInitialized;
-	
+
 	if (userDefaultsInitialized)
 		return;
-	
+
 	[[NSNotificationCenter defaultCenter] addObserver:[CQProcessChatMessageOperation class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
-	
+
 	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
 	stripMessageFormatting = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"];
-	
+
 	userDefaultsInitialized = YES;
 }
 

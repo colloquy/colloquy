@@ -14,7 +14,26 @@
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
+static BOOL showsChatIcons;
+
 @implementation CQChatListViewController
++ (void) initialize {
+	static BOOL userDefaultsInitialized;
+
+	if (userDefaultsInitialized)
+		return;
+
+	userDefaultsInitialized = YES;
+
+	[[NSNotificationCenter defaultCenter] addObserver:[CQChatListViewController class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+
+	showsChatIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"];
+}
+
++ (void) userDefaultsChanged {
+	showsChatIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"];
+}
+
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStylePlain]))
 		return nil;
@@ -502,7 +521,7 @@ static NSIndexPath *indexPathForChatController(id controller) {
 
 		CQChatTableCell *cell = [CQChatTableCell reusableTableViewCellInTableView:tableView];
 
-		cell.showsIcon = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"];
+		cell.showsIcon = showsChatIcons;
 
 		[self _refreshChatCell:cell withController:chatViewController animated:NO];
 
@@ -541,7 +560,7 @@ static NSIndexPath *indexPathForChatController(id controller) {
 		}
 	}
 
-	cell.showsIcon = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"];
+	cell.showsIcon = showsChatIcons;
 
 	[self _refreshFileTransferCell:cell withController:controller animated:NO];
 

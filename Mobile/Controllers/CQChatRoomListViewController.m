@@ -8,6 +8,7 @@
 #import <ChatCore/MVChatConnection.h>
 
 static NSOperationQueue *topicProcessingQueue;
+static BOOL showFullRoomNames;
 
 @interface CQChatRoomListViewController (CQChatRoomListViewControllerPrivate)
 - (void) _processTopicData:(NSData *) topicData room:(NSString *) room;
@@ -17,6 +18,23 @@ static NSOperationQueue *topicProcessingQueue;
 @end
 
 @implementation CQChatRoomListViewController
++ (void) initialize {
+	static BOOL userDefaultsInitialized;
+
+	if (userDefaultsInitialized)
+		return;
+
+	userDefaultsInitialized = YES;
+
+	[[NSNotificationCenter defaultCenter] addObserver:[CQChatRoomInfoTableCell class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+
+	showFullRoomNames = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowFullRoomNames"];
+}
+
+- (void) userDefaultsChanged {
+	showFullRoomNames = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowFullRoomNames"];
+}
+
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -242,20 +260,13 @@ static NSOperationQueue *topicProcessingQueue;
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
 	else cell.accessoryType = UITableViewCellAccessoryNone;
 
-	static BOOL firstTime = YES;
-	static BOOL showFullName;
-	if (firstTime) {
-		showFullName = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowFullRoomNames"];
-		firstTime = NO;
-	}
-
 	NSString *roomDisplayName = [info objectForKey:@"roomDisplayString"];
 	if (![info objectForKey:@"roomDisplayString"]) {
 		roomDisplayName = [_connection displayNameForChatRoomNamed:room];
 		[info setObject:roomDisplayName forKey:@"roomDisplayString"];
 	}
 
-	cell.name = (showFullName ? room : roomDisplayName);
+	cell.name = (showFullRoomNames ? room : roomDisplayName);
 	cell.memberCount = [[info objectForKey:@"users"] unsignedIntegerValue];
 
 	NSString *topicDisplayString = [info objectForKey:@"topicDisplayString"];
