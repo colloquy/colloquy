@@ -1208,6 +1208,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 #pragma mark -
 
 - (void) _insertTimestamp {
+	if (!timestampInterval) return;
+
 	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
 
 	if (!_lastTimestampTime)
