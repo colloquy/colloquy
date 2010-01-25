@@ -17,6 +17,10 @@
 static BOOL showsChatIcons;
 
 @implementation CQChatListViewController
++ (void) userDefaultsChanged {
+	showsChatIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"];
+}
+
 + (void) initialize {
 	static BOOL userDefaultsInitialized;
 
@@ -27,11 +31,7 @@ static BOOL showsChatIcons;
 
 	[[NSNotificationCenter defaultCenter] addObserver:[CQChatListViewController class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 
-	showsChatIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"];
-}
-
-+ (void) userDefaultsChanged {
-	showsChatIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"];
+	[CQChatListViewController updateUserDefaults];
 }
 
 - (id) init {

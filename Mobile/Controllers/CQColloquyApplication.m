@@ -27,18 +27,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #define BrowserAlertTag 1
 
 @implementation CQColloquyApplication
-+ (void) initialize {
-	static BOOL userDefaultsInitialized;
-
-	if (userDefaultsInitialized)
-		return;
-
-	userDefaultsInitialized = YES;
-
-	[[NSNotificationCenter defaultCenter] addObserver:[CQColloquyApplication class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
-}
-
-- (void) updateAnalytics {
++ (void) updateAnalytics {
 	[[CQAnalyticsController defaultController] setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"] lowercaseString] forKey:@"transcript-style"];
 
 	NSString *information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"] ? @"emoji" : @"text");
@@ -72,11 +61,23 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[[CQAnalyticsController defaultController] setObject:information forKey:@"quit-message"];
 }
 
-- (void) userDefaultsChanged {
++ (void) userDefaultsChanged {
 	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
 	if ([style hasSuffix:@"-dark"] || [style isEqualToString:@"notes"])
 		[self setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 
+}
+
++ (void) initialize {
+	static BOOL userDefaultsInitialized;
+
+	if (userDefaultsInitialized)
+		return;
+
+	userDefaultsInitialized = YES;
+
+	[[NSNotificationCenter defaultCenter] addObserver:[CQColloquyApplication class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:[CQColloquyApplication class] selector:@selector(updateAnalytics) name:NSUserDefaultsDidChangeNotification object:nil];
 }
 
 + (CQColloquyApplication *) sharedApplication {

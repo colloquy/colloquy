@@ -55,13 +55,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 #pragma mark -
 
 @implementation CQDirectChatController
-+ (void) initialize {
-	static BOOL userDefaultsInitialized;
-	if (userDefaultsInitialized)
-		return;
-	userDefaultsInitialized = YES;
-	[[NSNotificationCenter defaultCenter] addObserver:[CQDirectChatController class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
-
++ (void) userDefaultsChanged {
 	timestampInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQTimestampInterval"];
 	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
 	naturalChatActions = [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"];
@@ -79,20 +73,14 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	else highlightSound = [[CQSoundController alloc] initWithSoundNamed:soundOnHighlight];
 }
 
-+ (void) userDefaultsChanged {
-	timestampInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQTimestampInterval"];
-	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
-	naturalChatActions = [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"];
-	soundOnHighlight = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
-	soundOnPrivateMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
-	vibrateOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"];
-	vibrateOnPrivateMessage = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnPrivateMessage"];
-	if ([soundOnPrivateMessage isEqualToString:@"None"])
-		privateMessageSound = nil;
-	else privateMessageSound = [[CQSoundController alloc] initWithSoundNamed:soundOnPrivateMessage];
-	if ([soundOnHighlight isEqualToString:@"None"])
-		highlightSound = nil;
-	else highlightSound = [[CQSoundController alloc] initWithSoundNamed:soundOnHighlight];
++ (void) initialize {
+	static BOOL userDefaultsInitialized;
+	if (userDefaultsInitialized)
+		return;
+	userDefaultsInitialized = YES;
+	[[NSNotificationCenter defaultCenter] addObserver:[CQDirectChatController class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+
+	[CQDirectChatController userDefaultsChanged];
 }
 
 - (id) initWithTarget:(id) target {
@@ -525,7 +513,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 		[scanner scanString:@"/" intoString:nil];
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&command];
-			if (!self.available && ([command isCaseInsensitiveEqualToString:@"me"] || [command isCaseInsensitiveEqualToString:@"msg"] || [command isCaseInsensitiveEqualToString:@"say"])) {
+		if (!self.available && ([command isCaseInsensitiveEqualToString:@"me"] || [command isCaseInsensitiveEqualToString:@"msg"] || [command isCaseInsensitiveEqualToString:@"say"])) {
 			[self _showCantSendMessagesWarningForCommand:NO];
 			return NO;
 		}

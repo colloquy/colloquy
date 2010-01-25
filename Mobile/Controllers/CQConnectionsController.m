@@ -52,6 +52,10 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 #define HelpAlertTag 3
 
 @implementation CQConnectionsController
++ (void) userDefaultsChanged {
+	[UIApplication sharedApplication].idleTimerDisabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIdleTimerDisabled"];
+}
+
 + (void) initialize {
 	static BOOL userDefaultsInitialized;
 
@@ -61,10 +65,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	userDefaultsInitialized = YES;
 
 	[[NSNotificationCenter defaultCenter] addObserver:[CQConnectionsController class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
-}
 
-+ (void) userDefaultsChanged {
-	[UIApplication sharedApplication].idleTimerDisabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIdleTimerDisabled"];
+	[CQConnectionsController userDefaultsChanged];
 }
 
 + (CQConnectionsController *) defaultController {

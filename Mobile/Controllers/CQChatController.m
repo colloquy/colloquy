@@ -43,14 +43,7 @@ static NSString *soundOnHighlight;
 #pragma mark -
 
 @implementation CQChatController
-+ (void) initialize {
-	static BOOL userDefaultsInitialized;
-
-	if (userDefaultsInitialized)
-		return;
-
-	[[NSNotificationCenter defaultCenter] addObserver:[CQChatController class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
-
++ (void) userDefaultsChanged {
 	alwaysShowNotices = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"];
 #if ENABLE(FILE_TRANSFERS)
 	vibrateOnFileTransfer = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnFileTransfer"];
@@ -61,15 +54,15 @@ static NSString *soundOnHighlight;
 	soundOnHighlight = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
 }
 
-+ (void) updateUserDefaults {
-	alwaysShowNotices = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"];
-#if ENABLE(FILE_TRANSFERS)
-	vibrateOnFileTransfer = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnFileTransfer"];
-	soundOnFileTransfer = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnFileTransfer"];
-#endif
-	chatRoomInviteAction = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatRoomInviteAction"];
-	vibrateOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"];
-	soundOnHighlight = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
++ (void) initialize {
+	static BOOL userDefaultsInitialized;
+
+	if (userDefaultsInitialized)
+		return;
+
+	[[NSNotificationCenter defaultCenter] addObserver:[CQChatController class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+
+	[CQChatController userDefaultsChanged];
 }
 
 + (CQChatController *) defaultController {

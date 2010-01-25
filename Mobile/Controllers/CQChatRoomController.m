@@ -36,6 +36,13 @@ static BOOL showLeaveEvents;
 #pragma mark -
 
 @implementation CQChatRoomController
++ (void) userDefaultsChanged {
+	showJoinEvents = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowJoinEvents"];
+	showHostmasksOnJoin = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnJoin"];
+	showHostmasksOnPart = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnPart"];
+	showLeaveEvents = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLeaveEvents"];
+}
+
 + (void) initialize {
 	static BOOL userDefaultsInitialized;
 
@@ -46,17 +53,7 @@ static BOOL showLeaveEvents;
 
 	[[NSNotificationCenter defaultCenter] addObserver:[CQChatRoomController class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 
-	showJoinEvents = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowJoinEvents"];
-	showHostmasksOnJoin = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnJoin"];
-	showHostmasksOnPart = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnPart"];
-	showLeaveEvents = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLeaveEvents"];
-}
-
-- (void) userDefaultsChanged {
-	showJoinEvents = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowJoinEvents"];
-	showHostmasksOnJoin = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnJoin"];
-	showHostmasksOnPart = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnPart"];
-	showLeaveEvents = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLeaveEvents"];
+	[CQChatRoomController userDefaultsChanged];
 }
 
 - (id) initWithTarget:(id) target {
