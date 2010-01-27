@@ -29,9 +29,9 @@ static BOOL showsChatIcons;
 
 	userDefaultsInitialized = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:[CQChatListViewController class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 
-	[CQChatListViewController userDefaultsChanged];
+	[self userDefaultsChanged];
 }
 
 - (id) init {

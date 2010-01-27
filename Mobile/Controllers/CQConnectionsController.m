@@ -64,9 +64,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	userDefaultsInitialized = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:[CQConnectionsController class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 
-	[CQConnectionsController userDefaultsChanged];
+	[self userDefaultsChanged];
 }
 
 + (CQConnectionsController *) defaultController {

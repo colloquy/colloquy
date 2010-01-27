@@ -31,8 +31,6 @@
 NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewControllerRecentMessagesUpdated";
 static CQSoundController *privateMessageSound;
 static CQSoundController *highlightSound;
-static NSString *soundOnHighlight;
-static NSString *soundOnPrivateMessage;
 static NSTimeInterval timestampInterval;
 static BOOL graphicalEmoticons;
 static BOOL naturalChatActions;
@@ -59,28 +57,33 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	timestampInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQTimestampInterval"];
 	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
 	naturalChatActions = [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"];
-	soundOnHighlight = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
-	soundOnPrivateMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
 	vibrateOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"];
 	vibrateOnPrivateMessage = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnPrivateMessage"];
 
-	if ([soundOnPrivateMessage isEqualToString:@"None"])
-		privateMessageSound = nil;
-	else privateMessageSound = [[CQSoundController alloc] initWithSoundNamed:soundOnPrivateMessage];
+	NSString *soundName = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
 
-	if ([soundOnHighlight isEqualToString:@"None"])
-		highlightSound = nil;
-	else highlightSound = [[CQSoundController alloc] initWithSoundNamed:soundOnHighlight];
+	id old = privateMessageSound;
+	privateMessageSound = ([soundName isEqualToString:@"None"] ? nil : [[CQSoundController alloc] initWithSoundNamed:soundName]);
+	[old release];
+
+	soundName = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
+
+	old = highlightSound;
+	highlightSound = ([soundName isEqualToString:@"None"] ? nil : [[CQSoundController alloc] initWithSoundNamed:soundName]);
+	[old release];
 }
 
 + (void) initialize {
 	static BOOL userDefaultsInitialized;
+
 	if (userDefaultsInitialized)
 		return;
-	userDefaultsInitialized = YES;
-	[[NSNotificationCenter defaultCenter] addObserver:[CQDirectChatController class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 
-	[CQDirectChatController userDefaultsChanged];
+	userDefaultsInitialized = YES;
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+
+	[self userDefaultsChanged];
 }
 
 - (id) initWithTarget:(id) target {
@@ -1428,7 +1431,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		if (vibrateOnHighlight)
 			[CQSoundController vibrate];
 
-		if (highlightSound && (!directChat || (directChat && !soundOnPrivateMessage)))
+		if (highlightSound && (!directChat || (directChat && !privateMessageSound)))
 			[highlightSound playSound];
 	}
 

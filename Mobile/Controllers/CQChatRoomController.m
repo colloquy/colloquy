@@ -51,9 +51,9 @@ static BOOL showLeaveEvents;
 
 	userDefaultsInitialized = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:[CQChatRoomController class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 
-	[CQChatRoomController userDefaultsChanged];
+	[self userDefaultsChanged];
 }
 
 - (id) initWithTarget:(id) target {

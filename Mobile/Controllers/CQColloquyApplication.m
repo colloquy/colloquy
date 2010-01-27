@@ -27,57 +27,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #define BrowserAlertTag 1
 
 @implementation CQColloquyApplication
-- (void) updateAnalytics {
-	[[CQAnalyticsController defaultController] setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"] lowercaseString] forKey:@"transcript-style"];
-
-	NSString *information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"] ? @"emoji" : @"text");
-	[[CQAnalyticsController defaultController] setObject:information forKey:@"emoticon-style"];
-
-	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"] ? @"disabled" : @"enabled");
-	[[CQAnalyticsController defaultController] setObject:information forKey:@"landscape"];
-
-	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"] ? @"disabled" : @"enabled");
-	[[CQAnalyticsController defaultController] setObject:information forKey:@"browser"];
-
-	information = ([[NSUserDefaults standardUserDefaults] stringForKey:@"CQTwitterUsername"].length ? @"yes" : @"no");
-	[[CQAnalyticsController defaultController] setObject:information forKey:@"twitter-setup"];
-
-	information = ([[NSUserDefaults standardUserDefaults] stringForKey:@"CQInstapaperUsername"].length ? @"yes" : @"no");
-	[[CQAnalyticsController defaultController] setObject:information forKey:@"instapaper-setup"];
-
-	information = [[NSLocale autoupdatingCurrentLocale] localeIdentifier];
-	[[CQAnalyticsController defaultController] setObject:information forKey:@"locale"];
-
-	if (_deviceToken.length)
-		[[CQAnalyticsController defaultController] setObject:_deviceToken forKey:@"device-push-token"];
-
-	[[CQAnalyticsController defaultController] setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"] lowercaseString] forKey:@"autocomplete-behavior"];
-
-	NSInteger showNotices = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"];
-	information = (!showNotices ? @"auto" : (showNotices == 1 ? @"all" : @"none"));
-	[[CQAnalyticsController defaultController] setObject:information forKey:@"notices-behavior"];
-
-	information = ([[[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"] hasCaseInsensitiveSubstring:@"Colloquy for iPhone"] ? @"default" : @"custom");
-	[[CQAnalyticsController defaultController] setObject:information forKey:@"quit-message"];
-}
-
-- (void) userDefaultsChanged {
-	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
-	if ([style hasSuffix:@"-dark"] || [style isEqualToString:@"notes"])
-		[[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
-
-}
-
-+ (void) initialize {
-	static BOOL userDefaultsInitialized;
-
-	if (userDefaultsInitialized)
-		return;
-
-	userDefaultsInitialized = YES;
-
-}
-
 + (CQColloquyApplication *) sharedApplication {
 	return (CQColloquyApplication *)[UIApplication sharedApplication];
 }
@@ -133,6 +82,49 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	return highlightWords;
 }
 
+- (void) updateAnalytics {
+	CQAnalyticsController *analyticsController = [CQAnalyticsController defaultController];
+
+	[analyticsController setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"] lowercaseString] forKey:@"transcript-style"];
+
+	NSString *information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"] ? @"emoji" : @"text");
+	[analyticsController setObject:information forKey:@"emoticon-style"];
+
+	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"] ? @"disabled" : @"enabled");
+	[analyticsController setObject:information forKey:@"landscape"];
+
+	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"] ? @"disabled" : @"enabled");
+	[analyticsController setObject:information forKey:@"browser"];
+
+	information = ([[NSUserDefaults standardUserDefaults] stringForKey:@"CQTwitterUsername"].length ? @"yes" : @"no");
+	[analyticsController setObject:information forKey:@"twitter-setup"];
+
+	information = ([[NSUserDefaults standardUserDefaults] stringForKey:@"CQInstapaperUsername"].length ? @"yes" : @"no");
+	[analyticsController setObject:information forKey:@"instapaper-setup"];
+
+	information = [[NSLocale autoupdatingCurrentLocale] localeIdentifier];
+	[analyticsController setObject:information forKey:@"locale"];
+
+	if (_deviceToken.length)
+		[analyticsController setObject:_deviceToken forKey:@"device-push-token"];
+
+	[analyticsController setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"] lowercaseString] forKey:@"autocomplete-behavior"];
+
+	NSInteger showNotices = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"];
+	information = (!showNotices ? @"auto" : (showNotices == 1 ? @"all" : @"none"));
+	[analyticsController setObject:information forKey:@"notices-behavior"];
+
+	information = ([[[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"] hasCaseInsensitiveSubstring:@"Colloquy for iPhone"] ? @"default" : @"custom");
+	[analyticsController setObject:information forKey:@"quit-message"];
+}
+
+- (void) userDefaultsChanged {
+	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
+	if ([style hasSuffix:@"-dark"] || [style isEqualToString:@"notes"])
+		[[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	else [[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+}
+
 - (void) performDeferredLaunchWork {
 	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
 	NSString *version = [NSString stringWithFormat:@"%@ (%@)", [infoDictionary objectForKey:@"CFBundleShortVersionString"], [infoDictionary objectForKey:@"CFBundleVersion"]];
@@ -148,11 +140,13 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	[preferences release];
 
+	CQAnalyticsController *analyticsController = [CQAnalyticsController defaultController];
+
 	NSString *information = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-	[[CQAnalyticsController defaultController] setObject:information forKey:@"application-version"];
+	[analyticsController setObject:information forKey:@"application-version"];
 
 	information = [infoDictionary objectForKey:@"CFBundleVersion"];
-	[[CQAnalyticsController defaultController] setObject:information forKey:@"application-build-version"];
+	[analyticsController setObject:information forKey:@"application-build-version"];
 
 #if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
 	information = @"simulator";
@@ -171,19 +165,20 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	}
 #endif
 
-	[[CQAnalyticsController defaultController] setObject:information forKey:@"install-type"];
+	[analyticsController setObject:information forKey:@"install-type"];
 
 	information = [[NSLocale autoupdatingCurrentLocale] localeIdentifier];
-	[[CQAnalyticsController defaultController] setObject:information forKey:@"locale"];
-	if (_deviceToken.length)
-		[[CQAnalyticsController defaultController] setObject:_deviceToken forKey:@"device-push-token"];
+	[analyticsController setObject:information forKey:@"locale"];
 
-	[[CQAnalyticsController defaultController] setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"] lowercaseString] forKey:@"autocomplete-behavior"];
+	if (_deviceToken.length)
+		[analyticsController setObject:_deviceToken forKey:@"device-push-token"];
+
+	[analyticsController setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"] lowercaseString] forKey:@"autocomplete-behavior"];
 
 	[self updateAnalytics];
 
-	[[NSNotificationCenter defaultCenter] addObserver:[CQColloquyApplication class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:[CQColloquyApplication class] selector:@selector(updateAnalytics) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateAnalytics) name:NSUserDefaultsDidChangeNotification object:nil];
 }
 
 #pragma mark -
@@ -264,6 +259,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) application:(UIApplication *) application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *) deviceToken {
 	if (!deviceToken.length) {
 		[[CQAnalyticsController defaultController] setObject:nil forKey:@"device-push-token"];
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"CQPushDeviceToken"];
 
 		[_deviceToken release];
 		_deviceToken = nil;

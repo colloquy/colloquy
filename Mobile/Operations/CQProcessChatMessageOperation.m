@@ -11,23 +11,22 @@ static BOOL graphicalEmoticons;
 static BOOL stripMessageFormatting;
 
 @implementation CQProcessChatMessageOperation
++ (void) userDefaultsChanged {
+	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
+	stripMessageFormatting = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"];
+}
+
 + (void) initialize {
 	static BOOL userDefaultsInitialized;
 
 	if (userDefaultsInitialized)
 		return;
 
-	[[NSNotificationCenter defaultCenter] addObserver:[CQProcessChatMessageOperation class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
-
-	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
-	stripMessageFormatting = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"];
-
 	userDefaultsInitialized = YES;
-}
 
-+ (void) updateUserDefaults {
-	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
-	stripMessageFormatting = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+
+	[self userDefaultsChanged];
 }
 
 - (id) initWithMessageData:(NSData *) messageData {
