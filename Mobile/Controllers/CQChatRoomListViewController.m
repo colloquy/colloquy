@@ -307,6 +307,28 @@ static BOOL showFullRoomNames;
 		[[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil];
 }
 
+#if ENABLE(SECRETS)
+- (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {
+	return !_showingUpdateRow;
+}
+
+- (BOOL) tableView:(UITableView *) tableView canPerformAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+	return (!_showingUpdateRow && action == @selector(copy:));
+}
+
+- (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+	if (_showingUpdateRow || action != @selector(copy:))
+		return;
+
+	CQChatRoomInfoTableCell *selectedCell = (CQChatRoomInfoTableCell *)[tableView cellForRowAtIndexPath:indexPath];
+	if (!selectedCell)
+		return;
+
+	NSString *selectedRoom = [_matchedRooms objectAtIndex:indexPath.row];
+	[UIPasteboard generalPasteboard].string = selectedRoom;
+}
+#endif
+
 #pragma mark -
 
 - (void) scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL) decelerate {

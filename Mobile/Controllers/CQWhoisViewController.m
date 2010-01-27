@@ -263,7 +263,7 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 	if (action != @selector(copy:))
 		return;
 
-	UITableViewCell *selectedCell = [self.tableView cellForRowAtIndexPath:indexPath];
+	UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
 	if (!selectedCell)
 		return;
 
@@ -271,7 +271,7 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 #endif
 
