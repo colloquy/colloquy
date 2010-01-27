@@ -338,7 +338,7 @@ static NSURL *lastURL;
 	[UIView beginAnimations:nil context:NULL];
 	[UIView setAnimationDuration:0.25];
 
-#if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
+#if TARGET_IPHONE_SIMULATOR
 	[UIView setAnimationDelay:0.06];
 #else
 	[UIView setAnimationDelay:0.175];

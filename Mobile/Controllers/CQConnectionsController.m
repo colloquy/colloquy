@@ -19,7 +19,7 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 
-#if defined(ENABLE_SECRETS)
+#if ENABLE(SECRETS)
 typedef void (*IOServiceInterestCallback)(void *context, mach_port_t service, uint32_t messageType, void *messageArgument);
 
 mach_port_t IORegisterForSystemPower(void *context, void *notificationPort, IOServiceInterestCallback callback, mach_port_t *notifier);
@@ -99,11 +99,11 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_errorOccurred:) name:MVChatConnectionErrorNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_deviceTokenRecieved:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 
-#if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
+#if TARGET_IPHONE_SIMULATOR
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
 #endif
 
-#if defined(ENABLE_SECRETS)
+#if ENABLE(SECRETS)
 	mach_port_t powerNotifier = 0;
 	void *notificationPort = NULL;
 	rootPowerDomainPort = IORegisterForSystemPower(self, &notificationPort, powerStateChange, &powerNotifier);
@@ -445,7 +445,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 #pragma mark -
 
-#if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
+#if TARGET_IPHONE_SIMULATOR
 - (void) _gotRawConnectionMessage:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
 	NSString *message = [[notification userInfo] objectForKey:@"message"];
@@ -945,7 +945,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	}
 }
 
-#if defined(ENABLE_SECRETS)
+#if ENABLE(SECRETS)
 - (void) _powerStateMessageReceived:(natural_t) messageType withArgument:(long) messageArgument {
 	switch (messageType) {
 	case kIOMessageSystemWillSleep:

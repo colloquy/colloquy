@@ -5,7 +5,7 @@
 
 #define CompletionsCaptureKeyboardDelay 0.5
 
-#ifdef ENABLE_SECRETS
+#if ENABLE(SECRETS)
 @interface UIKeyboardImpl : UIView
 + (UIKeyboardImpl *) activeInstance;
 - (void) takeTextInputTraitsFrom:(id <UITextInputTraits>) object;
@@ -55,7 +55,7 @@
 
 	_autocomplete = YES;
 
-#ifdef ENABLE_SECRETS
+#if ENABLE(SECRETS)
 	_inputField.autocorrectionType = UITextAutocorrectionTypeDefault;
 	_autocorrect = YES;
 #else
@@ -151,7 +151,7 @@
 	_backgroundView.tintColor = color;
 }
 
-#ifdef ENABLE_SECRETS
+#if ENABLE(SECRETS)
 - (void) setAutocorrect:(BOOL) autocorrect {
 	// Do nothing, autocorrection can't be enabled if we don't use secrets, since it would
 	// appear over our completion popup and fight with the entered text.
@@ -200,7 +200,7 @@
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
 
-#ifdef ENABLE_SECRETS
+#if ENABLE(SECRETS)
 	if ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]) {
 		[self hideCompletions];
 		return;
@@ -381,7 +381,7 @@ retry:
 		_disableCompletionUntilNextWord = NO;
 
 	NSString *word = [text substringWithRange:wordRange];
-#ifdef ENABLE_SECRETS
+#if ENABLE(SECRETS)
 	BOOL hasMarkedText = ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]);
 #else
 	BOOL hasMarkedText = NO;
@@ -408,7 +408,7 @@ retry:
 
 	if (replaceManually) {
 		_inputField.text = text;
-#ifdef ENABLE_SECRETS
+#if ENABLE(SECRETS)
 		if ([_inputField respondsToSelector:@selector(setSelectionRange:)])
 			_inputField.selectionRange = NSMakeRange((range.location + string.length), 0);
 #endif
@@ -437,7 +437,7 @@ retry:
 
 	_inputField.text = [text stringByReplacingCharactersInRange:_completionRange withString:completion];
 
-#ifdef ENABLE_SECRETS
+#if ENABLE(SECRETS)
 	if ([_inputField respondsToSelector:@selector(setSelectionRange:)])
 		_inputField.selectionRange = NSMakeRange((_completionRange.location + completion.length), 0);
 #endif
@@ -463,7 +463,7 @@ retry:
 #pragma mark -
 
 - (void) _updateTextTraits {
-#ifdef ENABLE_SECRETS
+#if ENABLE(SECRETS)
 	static Class keyboardClass;
 	if (!keyboardClass) keyboardClass = NSClassFromString(@"UIKeyboardImpl");
 

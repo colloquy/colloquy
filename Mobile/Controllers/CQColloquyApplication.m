@@ -148,7 +148,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	information = [infoDictionary objectForKey:@"CFBundleVersion"];
 	[analyticsController setObject:information forKey:@"application-build-version"];
 
-#if defined(TARGET_IPHONE_SIMULATOR) && TARGET_IPHONE_SIMULATOR
+#if TARGET_IPHONE_SIMULATOR
 	information = @"simulator";
 #else
 	if ([infoDictionary objectForKey:@"SignerIdentity"]) {
@@ -454,7 +454,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #pragma mark -
 
 - (void) hideTabBarWithTransition:(BOOL) transition {
-#ifdef ENABLE_SECRETS
+#if ENABLE(SECRETS)
 	if (!_showingTabBar)
 		return;
 
@@ -466,7 +466,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) showTabBarWithTransition:(BOOL) transition {
-#ifdef ENABLE_SECRETS
+#if ENABLE(SECRETS)
 	if (_showingTabBar)
 		return;
 
