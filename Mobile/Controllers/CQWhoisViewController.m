@@ -260,6 +260,9 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 }
 
 - (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+	if (action != @selector(copy:))
+		return;
+
 	UITableViewCell *selectedCell = [self.tableView cellForRowAtIndexPath:indexPath];
 	if (!selectedCell)
 		return;
