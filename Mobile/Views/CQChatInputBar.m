@@ -23,6 +23,8 @@
 #pragma mark -
 
 @interface CQChatInputBar (CQChatInputBarPrivate)
+- (void) _moveCaretToOffset:(NSUInteger) offset;
+- (BOOL) _hasMarkedText;
 - (void) _updateTextTraits;
 @end
 
@@ -200,12 +202,10 @@
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideCompletions) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(showCompletions) object:nil];
 
-#if ENABLE(SECRETS)
-	if ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]) {
+	if ([self _hasMarkedText]) {
 		[self hideCompletions];
 		return;
 	}
-#endif
 
 	NSString *text = _inputField.text;
 	if (text.length <= _completionRange.location) {
@@ -381,14 +381,8 @@ retry:
 		_disableCompletionUntilNextWord = NO;
 
 	NSString *word = [text substringWithRange:wordRange];
-#if ENABLE(SECRETS)
-	BOOL hasMarkedText = ([_inputField respondsToSelector:@selector(hasMarkedText)] && [_inputField hasMarkedText]);
-#else
-	BOOL hasMarkedText = NO;
-#endif
-
 	NSArray *completions = nil;
-	if (_autocomplete && !_disableCompletionUntilNextWord && word.length && !hasMarkedText && [delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
+	if (_autocomplete && !_disableCompletionUntilNextWord && word.length && ![self _hasMarkedText] && [delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
 		completions = [delegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
 		if (completions.count)
 			[self showCompletions:completions forText:text inRange:wordRange];
@@ -408,10 +402,7 @@ retry:
 
 	if (replaceManually) {
 		_inputField.text = text;
-#if ENABLE(SECRETS)
-		if ([_inputField respondsToSelector:@selector(setSelectionRange:)])
-			_inputField.selectionRange = NSMakeRange((range.location + string.length), 0);
-#endif
+		[self _moveCaretToOffset:(range.location + string.length)];
 		return NO;
 	}
 
@@ -436,11 +427,7 @@ retry:
 		++_completionRange.length;
 
 	_inputField.text = [text stringByReplacingCharactersInRange:_completionRange withString:completion];
-
-#if ENABLE(SECRETS)
-	if ([_inputField respondsToSelector:@selector(setSelectionRange:)])
-		_inputField.selectionRange = NSMakeRange((_completionRange.location + completion.length), 0);
-#endif
+	[self _moveCaretToOffset:(_completionRange.location + completion.length)];
 
 	if (_completionRange.location == 0 && endsInPunctuation && _inputField.autocapitalizationType == UITextAutocapitalizationTypeSentences) {
 		_autocapitalizeNextLetter = YES;
@@ -461,6 +448,21 @@ retry:
 }
 
 #pragma mark -
+
+- (void) _moveCaretToOffset:(NSUInteger) offset {
+#if ENABLE(SECRETS)
+	if ([_inputField respondsToSelector:@selector(setSelectionRange:)])
+		_inputField.selectionRange = NSMakeRange(offset, 0);
+#endif
+}
+
+- (BOOL) _hasMarkedText {
+#if ENABLE(SECRETS)
+	if ([_inputField respondsToSelector:@selector(hasMarkedText)])
+		return [_inputField hasMarkedText];
+#endif
+	return NO;
+}
 
 - (void) _updateTextTraits {
 #if ENABLE(SECRETS)
