@@ -113,7 +113,9 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue2 inTableView:tableView];
 	cell.accessoryType = UITableViewCellAccessoryNone;
+#if !ENABLE(SECRETS)
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
+#endif
 
 	NSInteger section = indexPath.section;
 	NSInteger row = indexPath.row;
@@ -247,6 +249,28 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 	if (indexPath.section == 2 && indexPath.row == 1)
 		[self showJoinedRooms:nil];
 }
+
+#if ENABLE(SECRETS)
+- (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {
+	return YES;
+}
+
+- (BOOL) tableView:(UITableView *) tableView canPerformAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+	return (action == @selector(copy:));
+}
+
+- (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+	UITableViewCell *selectedCell = [self.tableView cellForRowAtIndexPath:indexPath];
+	if (!selectedCell)
+		return;
+
+	[UIPasteboard generalPasteboard].string = selectedCell.detailTextLabel.text;
+}
+
+- (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	[self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+#endif
 
 #pragma mark -
 
