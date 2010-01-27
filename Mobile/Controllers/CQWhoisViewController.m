@@ -111,8 +111,9 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
-	UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue1 inTableView:tableView];
+	UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue2 inTableView:tableView];
 	cell.accessoryType = UITableViewCellAccessoryNone;
+	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
 	NSInteger section = indexPath.section;
 	NSInteger row = indexPath.row;
@@ -121,7 +122,7 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 
 	if (section == 0) {
 		if (row == 0) { // Real Name
-			cell.textLabel.text = NSLocalizedString(@"Real Name", "Real Name user info label");
+			cell.textLabel.text = [NSLocalizedString(@"real name", "Real Name user info label") lowercaseString];
 			if (_user.realName.length) {
 				cell.detailTextLabel.text = _user.realName;
 				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Real Name: %@", @"Voiceover real name label"), _user.realName];
@@ -130,7 +131,7 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 				cell.accessibilityLabel = NSLocalizedString(@"Real name not available.", @"Voiceover real name not available label");
 			}
 		} else if (row == 1) { // Away Info
-			cell.textLabel.text = NSLocalizedString(@"Away Info", "Away Info user info label");
+			cell.textLabel.text = NSLocalizedString(@"away info", "Away Info user info label");
 
 			NSString *value = [[NSString alloc] initWithData:_user.awayStatusMessage encoding:_user.connection.encoding];
 			if (value.length) {
@@ -145,20 +146,20 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 		}
 	} else if (section == 1) {
 		 if (row == 0) { // Class
-			cell.textLabel.text = NSLocalizedString(@"Class", "Class user info label");
+			cell.textLabel.text = NSLocalizedString(@"class", "Class user info label");
 
 			NSString *value = nil;
 			if (_user.identified)
-				value = NSLocalizedString(@"Registered user", "Registered user class");
+				value = NSLocalizedString(@"Registered User", "Registered user class");
 			else if (_user.serverOperator)
-				value = NSLocalizedString(@"Server operator", "Server operator class");
-			else value = NSLocalizedString(@"Normal user", "Normal user class");
+				value = NSLocalizedString(@"Server Operator", "Server operator class");
+			else value = NSLocalizedString(@"Normal User", "Normal user class");
 
 			cell.detailTextLabel.text = value;
 
 			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Class: %@", @"Voiceover class label"), value];
 		} else if (row == 1) { // Username
-			cell.textLabel.text = NSLocalizedString(@"Username", "Username user info label");
+			cell.textLabel.text = NSLocalizedString(@"username", "Username user info label");
 
 			if (_user.username.length) {
 				cell.detailTextLabel.text = _user.username;
@@ -170,7 +171,7 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 
 			cell.detailTextLabel.text = (_user.username.length ? _user.username : notAvailableString);
 		} else if (row == 2) { // Hostname
-			cell.textLabel.text = NSLocalizedString(@"Hostname", "Hostname user info label");
+			cell.textLabel.text = NSLocalizedString(@"hostname", "Hostname user info label");
 
 			if (_user.address.length) {
 				cell.detailTextLabel.text = _user.address;
@@ -182,7 +183,7 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 		}
 	} else if (section == 2) {
 		if (row == 0) { // Server
-			cell.textLabel.text = NSLocalizedString(@"Server", "Server user info label");
+			cell.textLabel.text = NSLocalizedString(@"server", "Server user info label");
 
 			if (_user.serverAddress.length) {
 				cell.detailTextLabel.text = _user.serverAddress;
@@ -192,13 +193,14 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 				cell.accessibilityLabel = NSLocalizedString(@"Server not available.", @"Voiceover server not available label");
 			}
 		} else if (row == 1) { // Rooms
-			cell.textLabel.text = NSLocalizedString(@"Rooms", "Rooms user info label");
+			cell.textLabel.text = NSLocalizedString(@"rooms", "Rooms user info label");
 
 			NSArray *rooms = [_user attributeForKey:MVChatUserKnownRoomsAttribute];
 			if (rooms) {
 				if (rooms.count) {
-					cell.detailTextLabel.text = [NSString stringWithFormat:@"%u", rooms.count];
-					cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Rooms: %u rooms", @"Voiceover rooms count label"), rooms.count];
+					NSString *roomsString = [rooms componentsJoinedByString:NSLocalizedString(@", ", "User info rooms list separator")];
+					cell.detailTextLabel.text = roomsString;
+					cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Rooms: %@", @"Voiceover rooms label"), roomsString];
 				} else {
 					cell.detailTextLabel.text = NSLocalizedString(@"None", @"None label");
 					cell.accessibilityLabel = NSLocalizedString(@"Rooms: None", @"Voiceover rooms none label");
@@ -212,7 +214,7 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 		}
 	} else if (section == 3) {
 		if (row == 0) { // Connected
-			cell.textLabel.text = NSLocalizedString(@"Connected", "Connected user info label");
+			cell.textLabel.text = NSLocalizedString(@"connected", "Connected user info label");
 
 			if (_user.status != MVChatUserOfflineStatus && _user.dateConnected) {
 				cell.detailTextLabel.text = humanReadableTimeInterval([_user.dateConnected timeIntervalSinceNow], YES);
@@ -224,7 +226,7 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 
 			cell.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
 		} else if (row == 1) { // Idle Time
-			cell.textLabel.text = NSLocalizedString(@"Idle Time", "Idle Time user info label");
+			cell.textLabel.text = NSLocalizedString(@"idle time", "Idle Time user info label");
 
 			if (_user.status != MVChatUserOfflineStatus) {
 				cell.detailTextLabel.text = humanReadableTimeInterval([NSDate timeIntervalSinceReferenceDate] - _idleTimeStart, YES);
