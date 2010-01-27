@@ -121,6 +121,11 @@
 	return [_inputField isFirstResponder];
 }
 
+- (BOOL) canPerformAction:(SEL) action withSender:(id) sender {
+	[self hideCompletions];
+	return NO;
+}
+
 - (UITextAutocapitalizationType) autocapitalizationType {
 	return _inputField.autocapitalizationType;
 }
