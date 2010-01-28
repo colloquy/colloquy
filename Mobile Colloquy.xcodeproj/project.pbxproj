@@ -1230,10 +1230,6 @@
 				"GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS[sdk=iphonesimulator*][arch=*]" = NO;
 				HEADER_SEARCH_PATHS = Mobile;
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				LIBRARY_SEARCH_PATHS = (
-					Mobile/Frameworks,
-					"$(inherited)",
-				);
 				PRODUCT_NAME = Colloquy;
 			};
 			name = Distribution;
@@ -1257,10 +1253,6 @@
 				"GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS[sdk=iphonesimulator*][arch=*]" = NO;
 				HEADER_SEARCH_PATHS = Mobile;
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				LIBRARY_SEARCH_PATHS = (
-					Mobile/Frameworks,
-					"$(inherited)",
-				);
 				PRODUCT_NAME = Colloquy;
 			};
 			name = Debug;
@@ -1285,10 +1277,6 @@
 				"GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS[sdk=iphonesimulator*][arch=*]" = NO;
 				HEADER_SEARCH_PATHS = Mobile;
 				INFOPLIST_FILE = Mobile/Resources/Info.plist;
-				LIBRARY_SEARCH_PATHS = (
-					Mobile/Frameworks,
-					"$(inherited)",
-				);
 				PRODUCT_NAME = Colloquy;
 			};
 			name = Release;

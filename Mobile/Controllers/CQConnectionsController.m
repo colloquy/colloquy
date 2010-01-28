@@ -35,15 +35,19 @@ static mach_port_t rootPowerDomainPort;
 
 @interface CQConnectionsController (CQConnectionsControllerPrivate)
 - (void) _loadConnectionList;
+#if ENABLE(SECRETS)
 - (void) _powerStateMessageReceived:(natural_t) messageType withArgument:(long) messageArgument;
+#endif
 @end
 
 #pragma mark -
 
+#if ENABLE(SECRETS)
 static void powerStateChange(void *context, mach_port_t service, natural_t messageType, void *messageArgument) {       
 	CQConnectionsController *self = context;
 	[self _powerStateMessageReceived:messageType withArgument:(long)messageArgument];
 }
+#endif
 
 #pragma mark -
 
