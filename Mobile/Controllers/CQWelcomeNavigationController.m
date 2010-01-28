@@ -1,7 +1,6 @@
 #import "CQWelcomeNavigationController.h"
 
 #import "CQColloquyApplication.h"
-#import "CQConnectionsController.h"
 #import "CQHelpTopicsViewController.h"
 #import "CQWelcomeViewController.h"
 
@@ -60,7 +59,7 @@
 
 - (void) close:(id) sender {
 	if (!_shouldShowOnlyHelpTopics)
-		[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = [CQConnectionsController defaultController];
+		[[CQColloquyApplication sharedApplication] showConnections];
 
 	[self dismissModalViewControllerAnimated:YES];
 }

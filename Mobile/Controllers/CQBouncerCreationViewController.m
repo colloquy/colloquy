@@ -81,7 +81,7 @@
 
 	[[CQConnectionsController defaultController] addBouncerSettings:_settings];
 
-	[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = [CQConnectionsController defaultController];
+	[[CQColloquyApplication sharedApplication] showConnections];
 
 	[self dismissModalViewControllerAnimated:YES];
 }

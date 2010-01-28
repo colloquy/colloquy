@@ -200,7 +200,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		if (target.length) {
 			[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:target andConnection:connection];
 			[connection joinChatRoomNamed:target];
-		} else [CQColloquyApplication sharedApplication].tabBarController.selectedViewController = self;
+		} else [[CQColloquyApplication sharedApplication] showConnections];
 
 		return YES;
 	}
@@ -215,7 +215,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		if (target.length) {
 			[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:target andConnection:connection];
 			[connection joinChatRoomNamed:target];
-		} else [CQColloquyApplication sharedApplication].tabBarController.selectedViewController = self;
+		} else [[CQColloquyApplication sharedApplication] showConnections];
 
 		[connection release];
 
@@ -320,7 +320,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		CQBouncerSettings *settings = ((CQAlertView *)alertView).userInfo;
 		[self editBouncer:settings];
 
-		[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = [CQConnectionsController defaultController];
+		[[CQColloquyApplication sharedApplication] showConnections];
 	}
 
 	if (alertView.tag == HelpAlertTag) {

@@ -685,7 +685,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	[connection joinChatRoomNamed:@"#colloquy-mobile"];
 
-	[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = self;
+	[[CQColloquyApplication sharedApplication] showColloquies];
 }
 
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {

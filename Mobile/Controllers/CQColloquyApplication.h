@@ -2,10 +2,10 @@
 
 extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
-@interface CQColloquyApplication : UIApplication <UIApplicationDelegate, UITabBarDelegate, UIAlertViewDelegate> {
+@interface CQColloquyApplication : UIApplication <UIApplicationDelegate, UITabBarControllerDelegate, UIAlertViewDelegate> {
 	@protected
-	IBOutlet UIWindow *mainWindow;
-	IBOutlet UITabBarController	*tabBarController;
+	UIWindow *_mainWindow;
+	UITabBarController *_tabBarController;
 	NSDate *_launchDate;
 	NSString *_deviceToken;
 	NSUInteger _networkIndicatorStack;
@@ -14,6 +14,8 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 + (CQColloquyApplication *) sharedApplication;
 
 - (void) showHelp;
+- (void) showConnections;
+- (void) showColloquies;
 
 - (BOOL) isSpecialApplicationURL:(NSURL *) url;
 - (NSString *) applicationNameForURL:(NSURL *) url;
@@ -31,8 +33,6 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
 @property (nonatomic, readonly) NSSet *handledURLSchemes;
 @property (nonatomic, readonly) NSDate *launchDate;
-@property (nonatomic, readonly) UITabBarController *tabBarController;
-@property (nonatomic, readonly) UIWindow *mainWindow;
 @property (nonatomic, readonly) NSString *deviceToken;
 @property (nonatomic, readonly) NSArray *highlightWords;
 @property (nonatomic, readonly) UIColor *tintColor;

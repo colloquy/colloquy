@@ -30,8 +30,6 @@
 	<string>personal</string>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
 	<string>http://colloquy.mobi</string>
-	<key>NSMainNibFile</key>
-	<string>Colloquy</string>
 	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UIRequiresPersistentWiFi</key>

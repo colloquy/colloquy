@@ -31,6 +31,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) dealloc {
+	[_mainWindow release];
+	[_tabBarController release];
 	[_launchDate release];
 	[_deviceToken release];
 
@@ -39,7 +41,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #pragma mark -
 
-@synthesize tabBarController, mainWindow;
 @synthesize launchDate = _launchDate;
 @synthesize deviceToken = _deviceToken;
 @synthesize showingTabBar = _showingTabBar;
@@ -192,11 +193,16 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	[self userDefaultsChanged];
 
+	_mainWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+
+	_tabBarController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
+	_tabBarController.delegate = self;
+
 	NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQConnectionsController defaultController], [CQChatController defaultController], nil];
-	tabBarController.viewControllers = viewControllers;
+	_tabBarController.viewControllers = viewControllers;
 	[viewControllers release];
 
-	tabBarController.selectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQSelectedTabIndex"];
+	_tabBarController.selectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQSelectedTabIndex"];
 
 	if ([[UIMenuController sharedMenuController] respondsToSelector:@selector(setMenuItems:)]) {
 		UIMenuItem *joinItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Join", @"Join menu item title") action:@selector(join:)];
@@ -212,8 +218,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		[disconnectItem release];
 	}
 
-	[mainWindow addSubview:tabBarController.view];
-	[mainWindow makeKeyAndVisible];
+	[_mainWindow addSubview:_tabBarController.view];
+	[_mainWindow makeKeyAndVisible];
 
 	NSDictionary *pushInfo = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
 	NSString *connectionServer = [pushInfo objectForKey:@"s"];
@@ -235,11 +241,11 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 			if (roomName.length) {
 				[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:connection];
 
-				tabBarController.selectedViewController = [CQChatController defaultController];
+				[self showColloquies];
 			} else if (senderNickname.length) {
 				[[CQChatController defaultController] showChatControllerForUserNicknamed:senderNickname andConnection:connection];
 
-				tabBarController.selectedViewController = [CQChatController defaultController];
+				[self showColloquies];
 			}
 		}
 	}
@@ -248,7 +254,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	BOOL showWelcomeScreen = ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastBuildWelcomeScreenAppeared"] isEqualToString:version];
 	if (showWelcomeScreen || (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count)) {
 		CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
-		[tabBarController presentModalViewController:welcomeController animated:YES];
+		[_tabBarController presentModalViewController:welcomeController animated:YES];
 		[welcomeController release];
 
 		[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQLastBuildWelcomeScreenAppeared"];
@@ -309,10 +315,10 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #pragma mark -
 
 - (void) showActionSheet:(UIActionSheet *) sheet {
-	UITabBar *tabBar = tabBarController.tabBar;
-	if (tabBar && !tabBarController.modalViewController)
+	UITabBar *tabBar = _tabBarController.tabBar;
+	if (tabBar && !_tabBarController.modalViewController)
 		[sheet showFromTabBar:tabBar];
-	else [sheet showInView:mainWindow];
+	else [sheet showInView:_mainWindow];
 }
 
 #pragma mark -
@@ -335,10 +341,20 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
 	welcomeController.shouldShowOnlyHelpTopics = YES;
 
-	[tabBarController presentModalViewController:welcomeController animated:YES];
+	[_tabBarController presentModalViewController:welcomeController animated:YES];
 
 	[welcomeController release];
 }
+
+- (void) showConnections {
+	_tabBarController.selectedViewController = [CQConnectionsController defaultController];
+}
+
+- (void) showColloquies {
+	_tabBarController.selectedViewController = [CQChatController defaultController];
+}
+
+#pragma mark -
 
 - (BOOL) isSpecialApplicationURL:(NSURL *) url {
 #if !TARGET_IPHONE_SIMULATOR
@@ -429,7 +445,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	else if (url) [browserController loadURL:url];
 
 	browserController.delegate = delegate;
-	[tabBarController presentModalViewController:browserController animated:YES];
+	[_tabBarController presentModalViewController:browserController animated:YES];
 
 	[browserController release];
 
@@ -447,7 +463,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #pragma mark -
 
 - (void) tabBarController:(UITabBarController *) currentTabBarController didSelectViewController:(UIViewController *) viewController {
-	[[NSUserDefaults standardUserDefaults] setInteger:tabBarController.selectedIndex forKey:@"CQSelectedTabIndex"];
+	[[NSUserDefaults standardUserDefaults] setInteger:_tabBarController.selectedIndex forKey:@"CQSelectedTabIndex"];
 }
 
 #pragma mark -
@@ -469,8 +485,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if (!_showingTabBar)
 		return;
 
-	if ([tabBarController respondsToSelector:@selector(hideBarWithTransition:)]) 
-		[tabBarController hideBarWithTransition:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
+	if ([_tabBarController respondsToSelector:@selector(hideBarWithTransition:)]) 
+		[_tabBarController hideBarWithTransition:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
 
 	_showingTabBar = NO;	
 #endif
@@ -481,8 +497,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if (_showingTabBar)
 		return;
 
-	if ([tabBarController respondsToSelector:@selector(showBarWithTransition:)])
-		[tabBarController showBarWithTransition:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
+	if ([_tabBarController respondsToSelector:@selector(showBarWithTransition:)])
+		[_tabBarController showBarWithTransition:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
 
 	_showingTabBar = YES;
 #endif

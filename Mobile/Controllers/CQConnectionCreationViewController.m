@@ -138,7 +138,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 	[_connection connect];
 
-	[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = [CQConnectionsController defaultController];
+	[[CQColloquyApplication sharedApplication] showConnections];
 
 	[self dismissModalViewControllerAnimated:YES];
 }

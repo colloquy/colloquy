@@ -144,7 +144,7 @@
 		[[CQChatController defaultController] showChatController:chatController animated:NO];
 	}
 
-	[CQColloquyApplication sharedApplication].tabBarController.selectedViewController = [CQChatController defaultController];
+	[[CQColloquyApplication sharedApplication] showColloquies];
 
 	[self dismissModalViewControllerAnimated:YES];
 }
