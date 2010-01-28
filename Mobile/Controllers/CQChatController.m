@@ -163,9 +163,7 @@ static CQSoundController *fileTransferSound;
 }
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"])
-		return (interfaceOrientation == UIInterfaceOrientationPortrait);
-	return YES;
+	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
 }
 
 #pragma mark -

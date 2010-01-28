@@ -106,9 +106,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 }
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"])
-		return (interfaceOrientation == UIInterfaceOrientationPortrait);
-	return YES;
+	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
 }
 
 #pragma mark -
