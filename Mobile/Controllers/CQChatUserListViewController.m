@@ -396,6 +396,23 @@ static NSString *membersFilteredCountFormat;
 	[whoisViewController release];
 }
 
+- (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {
+	return YES;
+}
+
+- (BOOL) tableView:(UITableView *) tableView canPerformAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+	return (action == @selector(copy:));
+}
+
+- (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+	MVChatUser *user = [_matchedUsers objectAtIndex:indexPath.row];
+	if (!user)
+		return;
+
+	if (action == @selector(copy:))
+		[UIPasteboard generalPasteboard].string = user.nickname;
+}
+
 #pragma mark -
 
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {

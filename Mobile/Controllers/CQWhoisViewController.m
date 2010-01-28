@@ -250,7 +250,6 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 		[self showJoinedRooms:nil];
 }
 
-#if ENABLE(SECRETS)
 - (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {
 	return YES;
 }
@@ -273,7 +272,6 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-#endif
 
 #pragma mark -
 

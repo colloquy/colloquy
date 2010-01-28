@@ -54,6 +54,25 @@
 	[sheet release];
 }
 
+- (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {
+	return YES;
+}
+
+- (BOOL) tableView:(UITableView *) tableView canPerformAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+	return (action == @selector(copy:) || action == @selector(join:));
+}
+
+- (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
+	NSString *roomName = [_rooms objectAtIndex:indexPath.row];
+
+	if (action == @selector(copy:)) {
+		[UIPasteboard generalPasteboard].string = roomName;
+	} else if (action == @selector(join:)) {
+		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:_connection];
+		[_connection joinChatRoomNamed:roomName];
+	}
+}
+
 #pragma mark -
 
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {

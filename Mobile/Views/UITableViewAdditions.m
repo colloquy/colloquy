@@ -29,4 +29,16 @@
 	if (selected)
 		[self selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 }
+
+- (void) performAction:(SEL) action forCell:(UITableViewCell *) cell sender:(id) sender {
+	id delegate = self.delegate;
+	if (![delegate respondsToSelector:@selector(tableView:performAction:forRowAtIndexPath:withSender:)])
+		return;
+
+	NSIndexPath *indexPath = [self indexPathForCell:cell];
+	if (!indexPath)
+		return;
+
+	[delegate tableView:self performAction:action forRowAtIndexPath:indexPath withSender:sender];
+}
 @end

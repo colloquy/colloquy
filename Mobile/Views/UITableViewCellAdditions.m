@@ -40,4 +40,31 @@
 
 	return [[[[self class] alloc] initWithStyle:style reuseIdentifier:identifier] autorelease];
 }
+
+- (void) performAction:(SEL) action sender:(id) sender {
+	UITableView *tableView = (UITableView *)self.superview;
+	if (![tableView isKindOfClass:[UITableView class]])
+		return;
+
+	[tableView performAction:action forCell:self sender:sender];
+}
+
+#pragma mark -
+
+- (void) join:(id) sender {
+	[self performAction:_cmd sender:sender];
+}
+
+- (void) leave:(id) sender {
+	[self performAction:_cmd sender:sender];
+}
+
+- (void) connect:(id) sender {
+	[self performAction:_cmd sender:sender];
+}
+
+- (void) disconnect:(id) sender {
+	[self performAction:_cmd sender:sender];
+}
+
 @end

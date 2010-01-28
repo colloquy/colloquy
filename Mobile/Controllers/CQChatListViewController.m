@@ -675,19 +675,39 @@ static NSIndexPath *indexPathForChatController(id controller) {
 	[[CQChatController defaultController] showChatController:chatViewController animated:YES];
 }
 
-#if ENABLE(SECRETS)
 - (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {
 	return YES;
 }
 
 - (BOOL) tableView:(UITableView *) tableView canPerformAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
-	return (action == @selector(copy:));
+	if (action == @selector(copy:))
+		return YES;
+
+	if (action == @selector(join:) || action == @selector(leave:)) {
+		MVChatConnection *connection = connectionForSection(indexPath.section);
+		if (!connection)
+			return NO;
+
+		NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
+		id <CQChatViewController> chatViewController = [controllers objectAtIndex:indexPath.row];
+		if (![chatViewController isMemberOfClass:[CQChatRoomController class]])
+			return NO;
+
+		CQChatRoomController *chatRoomViewController = (CQChatRoomController *)chatViewController;
+
+		if (action == @selector(join:) && chatRoomViewController.room.joined)
+			return NO;
+
+		if (action == @selector(leave:) && !chatRoomViewController.room.joined)
+			return NO;
+
+		return YES;
+	}
+
+	return NO;
 }
 
 - (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
-	if (action != @selector(copy:))
-		return;
-
 	MVChatConnection *connection = connectionForSection(indexPath.section);
 	if (!connection)
 		return;
@@ -697,11 +717,16 @@ static NSIndexPath *indexPathForChatController(id controller) {
 
 	if ([chatViewController isMemberOfClass:[CQDirectChatController class]]) {
 		CQDirectChatController *directChatViewController = (CQDirectChatController *)chatViewController;
-		[UIPasteboard generalPasteboard].string = directChatViewController.user.nickname;
+		if (action == @selector(copy:))
+			[UIPasteboard generalPasteboard].string = directChatViewController.user.nickname;
 	} else if ([chatViewController isMemberOfClass:[CQChatRoomController class]]) {
 		CQChatRoomController *chatRoomViewController = (CQChatRoomController *)chatViewController;
-		[UIPasteboard generalPasteboard].string = chatRoomViewController.room.name;
+		if (action == @selector(copy:))
+			[UIPasteboard generalPasteboard].string = chatRoomViewController.room.name;
+		else if (action == @selector(join:))
+			[chatRoomViewController join];
+		else if (action == @selector(leave:))
+			[chatRoomViewController part];
 	}
 }
-#endif
 @end

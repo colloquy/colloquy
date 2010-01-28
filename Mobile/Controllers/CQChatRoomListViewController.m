@@ -307,7 +307,6 @@ static BOOL showFullRoomNames;
 		[[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil];
 }
 
-#if ENABLE(SECRETS)
 - (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {
 	return !_showingUpdateRow;
 }
@@ -317,17 +316,16 @@ static BOOL showFullRoomNames;
 }
 
 - (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
-	if (_showingUpdateRow || action != @selector(copy:))
-		return;
-
-	CQChatRoomInfoTableCell *selectedCell = (CQChatRoomInfoTableCell *)[tableView cellForRowAtIndexPath:indexPath];
-	if (!selectedCell)
+	if (_showingUpdateRow)
 		return;
 
 	NSString *selectedRoom = [_matchedRooms objectAtIndex:indexPath.row];
-	[UIPasteboard generalPasteboard].string = selectedRoom;
+	if (!selectedRoom)
+		return;
+
+	if (action == @selector(copy:))
+		[UIPasteboard generalPasteboard].string = selectedRoom;
 }
-#endif
 
 #pragma mark -
 
