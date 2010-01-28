@@ -1204,6 +1204,7 @@
 				SDKROOT = iphoneos3.0;
 				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = build;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv7 armv6";
 			};
 			name = Distribution;
@@ -1323,6 +1324,7 @@
 				SDKROOT = iphoneos3.0;
 				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = build;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv7 armv6";
 			};
 			name = Debug;
@@ -1358,6 +1360,7 @@
 				SDKROOT = iphoneos3.0;
 				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = build;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv7 armv6";
 			};
 			name = Release;
