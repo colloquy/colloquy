@@ -6,7 +6,6 @@
 #import "CQDirectChatController.h"
 #import "CQWhoisNavController.h"
 #import "CQWhoisViewController.h"
-#import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>

@@ -1,7 +1,5 @@
 #import "CQAnalyticsController.h"
 
-#import "NSStringAdditions.h"
-
 static NSString *analyticsURL = @"http://colloquy.mobi/analytics.php";
 static NSString *deviceIdentifier;
 static NSString *applicationName;

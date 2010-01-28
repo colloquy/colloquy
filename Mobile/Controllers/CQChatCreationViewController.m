@@ -6,7 +6,6 @@
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
 #import "CQDirectChatController.h"
-#import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
 

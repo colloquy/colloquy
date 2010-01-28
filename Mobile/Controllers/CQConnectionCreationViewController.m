@@ -3,7 +3,6 @@
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 #import "CQConnectionEditViewController.h"
-#import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
 

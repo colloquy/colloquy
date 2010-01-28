@@ -13,8 +13,6 @@
 #import "CQConnectionEditViewController.h"
 #import "CQConnectionsViewController.h"
 #import "CQKeychain.h"
-#import "NSScannerAdditions.h"
-#import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>

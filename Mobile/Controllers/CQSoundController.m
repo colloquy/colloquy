@@ -1,5 +1,4 @@
 #import "CQSoundController.h"
-#import "NSStringAdditions.h"
 
 @implementation CQSoundController
 + (void) vibrate {

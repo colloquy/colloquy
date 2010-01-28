@@ -3,7 +3,6 @@
 #import "CQConnectionsController.h"
 #import "CQHelpTopicViewController.h"
 #import "CQHelpTopicsViewController.h"
-#import "UITableViewAdditions.h"
 
 #define NewConnectionsTableSection 0
 #define WhatsNewTableSection 1

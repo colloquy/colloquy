@@ -9,7 +9,6 @@
 #import "CQDirectChatController.h"
 #import "CQFileTransferController.h"
 #import "CQSoundController.h"
-#import "UIImageAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatUser.h>

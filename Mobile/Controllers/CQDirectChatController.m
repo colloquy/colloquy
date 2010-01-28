@@ -13,9 +13,6 @@
 #import "CQStyleView.h"
 #import "CQWelcomeNavigationController.h"
 #import "CQWhoisNavController.h"
-#import "NSDictionaryAdditions.h"
-#import "NSScannerAdditions.h"
-#import "NSStringAdditions.h"
 #import "RegexKitLite.h"
 
 #import <ChatCore/MVChatConnection.h>

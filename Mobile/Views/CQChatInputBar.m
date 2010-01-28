@@ -1,7 +1,6 @@
 #import "CQChatInputBar.h"
 
 #import "CQTextCompletionView.h"
-#import "NSStringAdditions.h"
 
 #define CompletionsCaptureKeyboardDelay 0.5
 

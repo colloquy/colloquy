@@ -1,8 +1,6 @@
 #import "CQProcessChatMessageOperation.h"
 
 #import "CQColloquyApplication.h"
-#import "NSDictionaryAdditions.h"
-#import "NSStringAdditions.h"
 #import "RegexKitLite.h"
 
 #import <ChatCore/MVChatUser.h>

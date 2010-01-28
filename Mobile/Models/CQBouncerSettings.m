@@ -1,7 +1,6 @@
 #import "CQBouncerSettings.h"
 
 #import "CQKeychain.h"
-#import "NSStringAdditions.h"
 
 @implementation CQBouncerSettings
 - (id) init {

@@ -1,7 +1,6 @@
 #import "CQHelpTopicViewController.h"
 
 #import "CQColloquyApplication.h"
-#import "NSStringAdditions.h"
 
 @implementation CQHelpTopicViewController
 - (id) initWithHTMLContent:(NSString *) content {

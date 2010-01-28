@@ -2,9 +2,6 @@
 
 #import "AsyncSocket.h"
 #import "CQBouncerSettings.h"
-#import "NSDataAdditions.h"
-#import "NSStringAdditions.h"
-#import "MVUtilities.h"
 
 #import <objc/message.h>
 

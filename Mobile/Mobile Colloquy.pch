@@ -5,7 +5,16 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import "NSDataAdditions.h"
+#import "NSDictionaryAdditions.h"
+#import "NSScannerAdditions.h"
+#import "NSStringAdditions.h"
+
+#import "UIDeviceAdditions.h"
+#import "UIImageAdditions.h"
 #import "UITableViewAdditions.h"
 #import "UITableViewCellAdditions.h"
+
+#import "MVUtilities.h"
 
 #endif

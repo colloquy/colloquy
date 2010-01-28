@@ -4,7 +4,6 @@
 #import "CQBouncerSettings.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
-#import "NSStringAdditions.h"
 
 @implementation CQBouncerCreationViewController
 - (id) init {

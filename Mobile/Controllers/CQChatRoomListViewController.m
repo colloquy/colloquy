@@ -2,7 +2,6 @@
 
 #import "CQChatRoomInfoTableCell.h"
 #import "CQProcessChatMessageOperation.h"
-#import "NSStringAdditions.h"
 #import "RegexKitLite.h"
 
 #import <ChatCore/MVChatConnection.h>

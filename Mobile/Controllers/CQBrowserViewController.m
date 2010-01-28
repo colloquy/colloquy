@@ -1,7 +1,6 @@
 #import "CQBrowserViewController.h"
 
 #import "CQColloquyApplication.h"
-#import "NSStringAdditions.h"
 
 #define DoneButtonItem 1 // This isn't used, just here for record, since the tag exists.
 #define BlankSpaceItem 2 // This isn't used, just here for record, since the tag exists.

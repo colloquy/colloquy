@@ -5,7 +5,6 @@
 #import "CQChatController.h"
 #import "CQConnectionsController.h"
 #import "CQWelcomeNavigationController.h"
-#import "NSStringAdditions.h"
 #import "RegexKitLite.h"
 
 #import "CQAlertView.h"

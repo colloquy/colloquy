@@ -1,7 +1,5 @@
 #import "CQChatTranscriptView.h"
 
-#import "NSStringAdditions.h"
-
 #import <ChatCore/MVChatUser.h>
 
 #if ENABLE(SECRETS)

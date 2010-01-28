@@ -3,7 +3,6 @@
 
 #import "CQFileTransferController.h"
 #import "CQFileTransferTableCell.h"
-#import "UIImageAdditions.h"
 
 #import <ChatCore/MVFileTransfer.h>
 

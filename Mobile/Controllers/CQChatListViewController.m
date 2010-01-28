@@ -8,7 +8,6 @@
 #import "CQDirectChatController.h"
 #import "CQFileTransferController.h"
 #import "CQFileTransferTableCell.h"
-#import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
