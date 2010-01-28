@@ -8,6 +8,7 @@
 #if ENABLE(SECRETS)
 @interface UIKeyboardImpl : UIView
 + (UIKeyboardImpl *) activeInstance;
+- (void) takeTextInputTraitsFromDelegate;
 - (void) takeTextInputTraitsFrom:(id <UITextInputTraits>) object;
 - (void) updateReturnKey:(BOOL) update;
 @end
@@ -451,6 +452,7 @@ retry:
 
 - (void) _moveCaretToOffset:(NSUInteger) offset {
 #if ENABLE(SECRETS)
+	NSAssert([_inputField respondsToSelector:@selector(hasMarkedText)], @"UITextField does not respond to setSelectionRange:.");
 	if ([_inputField respondsToSelector:@selector(setSelectionRange:)])
 		_inputField.selectionRange = NSMakeRange(offset, 0);
 #endif
@@ -458,6 +460,7 @@ retry:
 
 - (BOOL) _hasMarkedText {
 #if ENABLE(SECRETS)
+	NSAssert([_inputField respondsToSelector:@selector(hasMarkedText)], @"UITextField does not respond to hasMarkedText.");
 	if ([_inputField respondsToSelector:@selector(hasMarkedText)])
 		return [_inputField hasMarkedText];
 #endif
@@ -469,10 +472,17 @@ retry:
 	static Class keyboardClass;
 	if (!keyboardClass) keyboardClass = NSClassFromString(@"UIKeyboardImpl");
 
+	NSAssert(keyboardClass, @"UIKeyboardImpl class does not exist.");
+
+	NSAssert([keyboardClass respondsToSelector:@selector(activeInstance)], @"UIKeyboardImpl class does not respond to activeInstance.");
 	if ([keyboardClass respondsToSelector:@selector(activeInstance)]) {
 		UIKeyboardImpl *keyboard = [keyboardClass activeInstance];
-		if ([keyboard respondsToSelector:@selector(takeTextInputTraitsFrom:)])
+		NSAssert([keyboard respondsToSelector:@selector(takeTextInputTraitsFromDelegate)] || [keyboard respondsToSelector:@selector(takeTextInputTraitsFrom:)], @"UIKeyboardImpl does not respond to takeTextInputTraitsFromDelegate or takeTextInputTraitsFrom:.");
+		if ([keyboard respondsToSelector:@selector(takeTextInputTraitsFromDelegate)])
+			[keyboard takeTextInputTraitsFromDelegate];
+		else if ([keyboard respondsToSelector:@selector(takeTextInputTraitsFrom:)])
 			[keyboard takeTextInputTraitsFrom:_inputField];
+		NSAssert([keyboard respondsToSelector:@selector(updateReturnKey:)], @"UIKeyboardImpl does not respond to updateReturnKey:.");
 		if ([keyboard respondsToSelector:@selector(updateReturnKey:)])
 			[keyboard updateReturnKey:YES];
 	}
