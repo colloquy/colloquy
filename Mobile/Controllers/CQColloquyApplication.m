@@ -190,9 +190,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	_deviceToken = [[[NSUserDefaults standardUserDefaults] stringForKey:@"CQPushDeviceToken"] retain];
 	_showingTabBar = YES;
 
-	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
-	if ([style hasSuffix:@"-dark"] || [style isEqualToString:@"notes"])
-		[self setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+	[self userDefaultsChanged];
 
 	NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQConnectionsController defaultController], [CQChatController defaultController], nil];
 	tabBarController.viewControllers = viewControllers;
