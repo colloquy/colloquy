@@ -158,7 +158,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"])
 		return (interfaceOrientation == UIInterfaceOrientationPortrait);
-	return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || interfaceOrientation == UIInterfaceOrientationPortrait);
+	return YES;
 }
 
 - (void) didReceiveMemoryWarning {

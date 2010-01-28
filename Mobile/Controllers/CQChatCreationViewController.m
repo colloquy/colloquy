@@ -78,7 +78,7 @@
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"])
 		return (interfaceOrientation == UIInterfaceOrientationPortrait);
-	return (UIInterfaceOrientationIsLandscape(interfaceOrientation) || interfaceOrientation == UIInterfaceOrientationPortrait);
+	return YES;
 }
 
 #pragma mark -
