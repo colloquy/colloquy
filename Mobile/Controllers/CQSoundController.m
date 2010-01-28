@@ -53,7 +53,7 @@
 
 	_previousPlayTime = currentTime;
 	
-	if ([[UIDevice currentDevice].model hasCaseInsensitiveSubstring:@"touch"])
+	if ([[UIDevice currentDevice] isPodModel])
 		AudioServicesPlayAlertSound(_sound);
 	else AudioServicesPlaySystemSound(_sound);
 }
