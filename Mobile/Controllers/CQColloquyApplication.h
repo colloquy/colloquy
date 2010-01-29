@@ -14,6 +14,7 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 + (CQColloquyApplication *) sharedApplication;
 
 - (void) showHelp;
+- (void) showWelcome;
 - (void) showConnections;
 - (void) showColloquies;
 

@@ -208,9 +208,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	BOOL showWelcomeScreen = ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastBuildWelcomeScreenAppeared"] isEqualToString:version];
 	if (showWelcomeScreen || (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count)) {
-		CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
-		[_mainViewController presentModalViewController:welcomeController animated:YES];
-		[welcomeController release];
+		[self showWelcome];
 
 		[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQLastBuildWelcomeScreenAppeared"];
 	}
@@ -378,6 +376,14 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) showHelp {
 	CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
 	welcomeController.shouldShowOnlyHelpTopics = YES;
+
+	[_mainViewController presentModalViewController:welcomeController animated:YES];
+
+	[welcomeController release];
+}
+
+- (void) showWelcome {
+	CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
 
 	[_mainViewController presentModalViewController:welcomeController animated:YES];
 

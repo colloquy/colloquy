@@ -11,7 +11,6 @@
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
 #import "CQStyleView.h"
-#import "CQWelcomeNavigationController.h"
 #import "CQWhoisNavController.h"
 #import "RegexKitLite.h"
 
@@ -877,11 +876,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 - (BOOL) handleWelcomeCommandWithArguments:(NSString *) arguments {
 	[self _forceRegsignKeyboard];
 
-	CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
-
-	[self presentModalViewController:welcomeController animated:YES];
-
-	[welcomeController release];
+	[[CQColloquyApplication sharedApplication] showWelcome];
 
 	return YES;
 }
