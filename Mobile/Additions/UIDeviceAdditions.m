@@ -10,6 +10,10 @@
 		return @"iPad Simulator";
 	return @"iPhone Simulator";
 }
+
+- (NSString *) localizedModel {
+	return self.model;
+}
 #endif
 
 - (BOOL) isPhoneModel {
