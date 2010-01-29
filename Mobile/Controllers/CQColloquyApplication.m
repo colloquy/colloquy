@@ -354,7 +354,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	UITabBar *tabBar = tabBarController.tabBar;
 	if (tabBar && !tabBarController.modalViewController)
 		[sheet showFromTabBar:tabBar];
-	else [sheet showInView:_mainWindow];
+	else [sheet showInView:_mainViewController.view];
 }
 
 #pragma mark -
