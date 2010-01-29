@@ -354,9 +354,17 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) showActionSheet:(UIActionSheet *) sheet forSender:(id) sender animated:(BOOL) animated {
-	if (sender && [[UIDevice currentDevice] isPadModel] && [sender isKindOfClass:[UIBarButtonItem class]]) {
-		[sheet showFromBarButtonItem:sender animated:animated];
-		return;
+	if (sender && [[UIDevice currentDevice] isPadModel]) {
+		if ([sender isKindOfClass:[UIBarButtonItem class]]) {
+			[sheet showFromBarButtonItem:sender animated:animated];
+			return;
+		}
+
+		if ([sender isKindOfClass:[UIView class]]) {
+			UIView *view = sender;
+			[sheet showFromRect:view.bounds inView:view animated:animated];
+			return;
+		}
 	}
 
 	UITabBarController *tabBarController = self.tabBarController;

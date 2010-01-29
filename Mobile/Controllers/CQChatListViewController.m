@@ -460,7 +460,8 @@ static NSIndexPath *indexPathForChatController(id controller) {
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:header animated:YES];
+
 	[sheet release];
 }
 

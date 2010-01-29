@@ -363,7 +363,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		CQPreferencesDeleteCell *cell = [CQPreferencesDeleteCell reusableTableViewCellInTableView:tableView];
 
 		cell.target = self;
-		cell.deleteAction = @selector(deleteConnection);
+		cell.deleteAction = @selector(deleteConnection:);
 
 		[cell.deleteButton setTitle:NSLocalizedString(@"Delete Connection", @"Delete Connection button title") forState:UIControlStateNormal];
 
@@ -443,14 +443,14 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	_connection.automaticJoinedRooms = sender.items;
 }
 
-- (void) deleteConnection {
+- (void) deleteConnection:(id) sender {
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 
 	sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Delete Connection", @"Delete Connection button title")];
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
 
 	[sheet release];
 }

@@ -41,6 +41,8 @@
 	return [[[[self class] alloc] initWithStyle:style reuseIdentifier:identifier] autorelease];
 }
 
+#pragma mark -
+
 - (void) performAction:(SEL) action sender:(id) sender {
 	UITableView *tableView = (UITableView *)self.superview;
 	if (![tableView isKindOfClass:[UITableView class]])

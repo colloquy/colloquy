@@ -175,7 +175,7 @@
 
 #pragma mark -
 
-- (void) confirmConnect {
+- (void) confirmConnect:(id) sender {
 	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
 	MVChatConnection *connection = [self connectionAtIndexPath:selectedIndexPath];
 
@@ -193,12 +193,12 @@
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
 
 	[sheet release];
 }
 
-- (void) confirmDisconnect {
+- (void) confirmDisconnect:(id) sender {
 	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
 	MVChatConnection *connection = [self connectionAtIndexPath:selectedIndexPath];
 
@@ -215,7 +215,7 @@
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
 
 	[sheet release];
 }
@@ -322,8 +322,8 @@
 	if (self.editing)
 		[[CQConnectionsController defaultController] editConnection:connection];
 	else if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus)
-		[self confirmDisconnect];
-	else [self confirmConnect];
+		[self confirmDisconnect:[tableView cellForRowAtIndexPath:indexPath]];
+	else [self confirmConnect:[tableView cellForRowAtIndexPath:indexPath]];
 }
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {

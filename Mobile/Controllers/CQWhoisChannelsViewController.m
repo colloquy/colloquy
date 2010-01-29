@@ -49,7 +49,7 @@
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:[tableView cellForRowAtIndexPath:indexPath] animated:YES];
 
 	[sheet release];
 }

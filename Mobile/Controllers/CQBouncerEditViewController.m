@@ -243,7 +243,7 @@ static BOOL pushAvailable = NO;
 		CQPreferencesDeleteCell *cell = [CQPreferencesDeleteCell reusableTableViewCellInTableView:tableView];
 
 		cell.target = self;
-		cell.deleteAction = @selector(deleteBouncer);
+		cell.deleteAction = @selector(deleteBouncer:);
 
 		[cell.deleteButton setTitle:NSLocalizedString(@"Delete Bouncer", @"Delete Bouncer button title") forState:UIControlStateNormal];
 
@@ -315,14 +315,14 @@ static BOOL pushAvailable = NO;
 		[connection sendPushNotificationCommands]; 
 }
 
-- (void) deleteBouncer {
+- (void) deleteBouncer:(id) sender {
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 
 	sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Delete Bouncer", @"Delete Bouncer button title")];
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
 
 	[sheet release];
 }
