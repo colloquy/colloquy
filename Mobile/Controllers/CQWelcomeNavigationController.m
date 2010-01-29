@@ -55,6 +55,10 @@
 	[[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle animated:animated];
 }
 
+- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
+}
+
 #pragma mark -
 
 - (void) close:(id) sender {

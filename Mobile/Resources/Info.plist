@@ -23,7 +23,7 @@
 	<key>CFBundleSignature</key>
 	<string>coRC</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1.1</string>
+	<string>1.1.2</string>
 	<key>CFBundleVersion</key>
 	<string>source</string>
 	<key>CQBuildType</key>
@@ -34,6 +34,13 @@
 	<true/>
 	<key>UIRequiresPersistentWiFi</key>
 	<true/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
