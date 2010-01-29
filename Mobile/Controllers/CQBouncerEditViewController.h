@@ -2,7 +2,7 @@
 
 @class CQBouncerSettings;
 
-@interface CQBouncerEditViewController : CQPreferencesTableViewController <UIActionSheetDelegate> {
+@interface CQBouncerEditViewController : CQPreferencesTableViewController <UIActionSheetDelegate, UIAlertViewDelegate> {
 	@protected
 	CQBouncerSettings *_settings;
 	BOOL _newBouncer;

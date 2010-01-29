@@ -316,6 +316,21 @@ static BOOL pushAvailable = NO;
 }
 
 - (void) deleteBouncer:(id) sender {
+	if ([[UIDevice currentDevice] isPadModel]) {
+		UIAlertView *alert = [[UIAlertView alloc] init];
+		alert.delegate = self;
+
+		alert.title = NSLocalizedString(@"Delete Bouncer", @"Delete Bouncer alert title");
+
+		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+		[alert addButtonWithTitle:NSLocalizedString(@"Delete", @"Delete alert button title")];
+
+		[alert show];
+		[alert release];
+
+		return;
+	}
+
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 
@@ -327,8 +342,19 @@ static BOOL pushAvailable = NO;
 	[sheet release];
 }
 
+#pragma mark -
+
+- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+	if (buttonIndex == alertView.cancelButtonIndex)
+		return;
+	[[CQConnectionsController defaultController] removeBouncerSettings:_settings];
+	[self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark -
+
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (actionSheet.destructiveButtonIndex != buttonIndex)
+	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 	[[CQConnectionsController defaultController] removeBouncerSettings:_settings];
 	[self.navigationController popViewControllerAnimated:YES];

@@ -2,7 +2,7 @@
 
 @class MVChatConnection;
 
-@interface CQConnectionEditViewController : CQPreferencesTableViewController <UIActionSheetDelegate> {
+@interface CQConnectionEditViewController : CQPreferencesTableViewController <UIActionSheetDelegate, UIAlertViewDelegate> {
 	@protected
 	MVChatConnection *_connection;
 	NSArray *_servers;

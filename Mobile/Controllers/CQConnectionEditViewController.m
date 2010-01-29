@@ -444,6 +444,21 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 }
 
 - (void) deleteConnection:(id) sender {
+	if ([[UIDevice currentDevice] isPadModel]) {
+		UIAlertView *alert = [[UIAlertView alloc] init];
+		alert.delegate = self;
+
+		alert.title = NSLocalizedString(@"Delete Connection", @"Delete Connection alert title");
+
+		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+		[alert addButtonWithTitle:NSLocalizedString(@"Delete", @"Delete alert button title")];
+
+		[alert show];
+		[alert release];
+
+		return;
+	}
+
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 
@@ -455,8 +470,19 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	[sheet release];
 }
 
+#pragma mark -
+
+- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+	if (buttonIndex == alertView.cancelButtonIndex)
+		return;
+	[[CQConnectionsController defaultController] removeConnection:_connection];
+	[self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark -
+
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (actionSheet.destructiveButtonIndex != buttonIndex)
+	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 	[[CQConnectionsController defaultController] removeConnection:_connection];
 	[self.navigationController popViewControllerAnimated:YES];
