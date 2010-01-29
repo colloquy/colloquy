@@ -11,6 +11,9 @@
 
 	self.delegate = self;
 
+	if ([self respondsToSelector:@selector(setModalPresentationStyle:)])
+		self.modalPresentationStyle = UIModalPresentationFormSheet;
+
 	return self;
 }
 

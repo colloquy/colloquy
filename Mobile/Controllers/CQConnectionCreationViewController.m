@@ -23,6 +23,9 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 	self.delegate = self;
 
+	if ([self respondsToSelector:@selector(setModalPresentationStyle:)])
+		self.modalPresentationStyle = UIModalPresentationFormSheet;
+
 	_connection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
 	_connection.server = @"<<placeholder>>";
 	_connection.preferredNickname = @"<<default>>";

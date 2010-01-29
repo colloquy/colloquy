@@ -12,6 +12,9 @@
 
 	self.delegate = self;
 
+	if ([self respondsToSelector:@selector(setModalPresentationStyle:)])
+		self.modalPresentationStyle = UIModalPresentationFormSheet;
+
 	_settings = [[CQBouncerSettings alloc] init];
 
 	return self;

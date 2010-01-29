@@ -141,8 +141,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 - (void) performDeferredLaunchWork {
 	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-	NSString *version = [NSString stringWithFormat:@"%@ (%@)", [infoDictionary objectForKey:@"CFBundleShortVersionString"], [infoDictionary objectForKey:@"CFBundleVersion"]];
-	[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQCurrentVersion"];
+	NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+	NSString *displayVersion = [NSString stringWithFormat:@"%@ (%@)", version, [infoDictionary objectForKey:@"CFBundleVersion"]];
+	[[NSUserDefaults standardUserDefaults] setObject:displayVersion forKey:@"CQCurrentVersion"];
 
 	NSString *preferencesPath = [@"~/../../Library/Preferences/com.apple.Preferences.plist" stringByStandardizingPath];
 	NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:preferencesPath];
@@ -204,6 +205,15 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateAnalytics) name:NSUserDefaultsDidChangeNotification object:nil];
+
+	BOOL showWelcomeScreen = ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastBuildWelcomeScreenAppeared"] isEqualToString:version];
+	if (showWelcomeScreen || (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count)) {
+		CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
+		[_mainViewController presentModalViewController:welcomeController animated:YES];
+		[welcomeController release];
+
+		[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQLastBuildWelcomeScreenAppeared"];
+	}
 }
 
 #pragma mark -
@@ -285,16 +295,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 				[self showColloquies];
 			}
 		}
-	}
-
-	NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-	BOOL showWelcomeScreen = ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastBuildWelcomeScreenAppeared"] isEqualToString:version];
-	if (showWelcomeScreen || (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count)) {
-		CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
-		[_mainViewController presentModalViewController:welcomeController animated:YES];
-		[welcomeController release];
-
-		[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQLastBuildWelcomeScreenAppeared"];
 	}
 
 	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];
