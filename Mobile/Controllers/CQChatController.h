@@ -33,7 +33,7 @@
 - (NSDictionary *) persistentStateForConnection:(MVChatConnection *) connection;
 - (void) restorePersistentState:(NSDictionary *) state forConnection:(MVChatConnection *) connection;
 
-- (void) showNewChatActionSheet;
+- (void) showNewChatActionSheet:(id) sender;
 - (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) room andConnection:(MVChatConnection *) connection;
 - (void) showChatControllerForUserNicknamed:(NSString *) nickname andConnection:(MVChatConnection *) connection;
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated;

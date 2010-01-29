@@ -227,7 +227,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 #pragma mark -
 
-- (void) showCreationActionSheet {
+- (void) showCreationActionSheet:(id) sender {
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.tag = 1;
@@ -237,7 +237,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
 
 	[sheet release];	
 }

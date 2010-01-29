@@ -39,7 +39,7 @@ static BOOL showsChatIcons;
 
 	self.title = NSLocalizedString(@"Colloquies", @"Colloquies view title");
 
-	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:[CQChatController defaultController] action:@selector(showNewChatActionSheet)];
+	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:[CQChatController defaultController] action:@selector(showNewChatActionSheet:)];
 	self.navigationItem.leftBarButtonItem = addItem;
 	[addItem release];
 	

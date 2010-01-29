@@ -20,7 +20,7 @@
 
 	self.title = NSLocalizedString(@"Connections", @"Connections view title");
 
-	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:[CQConnectionsController defaultController] action:@selector(showCreationActionSheet)];
+	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:[CQConnectionsController defaultController] action:@selector(showCreationActionSheet:)];
 	self.navigationItem.leftBarButtonItem = addItem;
 	[addItem release];
 

@@ -38,7 +38,7 @@
 
 - (BOOL) handleOpenURL:(NSURL *) url;
 
-- (void) showCreationActionSheet;
+- (void) showCreationActionSheet:(id) sender;
 - (void) showModalNewBouncerView;
 - (void) showModalNewConnectionView;
 - (void) showModalNewConnectionViewForURL:(NSURL *) url;

@@ -1,5 +1,6 @@
 #import "CQChatController.h"
 
+#import "CQActionSheet.h"
 #import "CQAlertView.h"
 #import "CQChatCreationViewController.h"
 #import "CQChatListViewController.h"
@@ -396,7 +397,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		[creationViewController release];
 	} else if (actionSheet.tag == NewConnectionActionSheetTag) {
 		if (buttonIndex == 0) {
-			[[CQConnectionsController defaultController] showCreationActionSheet];
+			[[CQConnectionsController defaultController] showCreationActionSheet:((CQActionSheet *)actionSheet).userInfo];
 		} else if (buttonIndex == 1) {
 			[self joinSupportRoom];
 		}
@@ -578,9 +579,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 #pragma mark -
 
-- (void) showNewChatActionSheet {
-	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+- (void) showNewChatActionSheet:(id) sender {
+	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
+	sheet.userInfo = sender;
 
 	if ([CQConnectionsController defaultController].connections.count) {
 		sheet.tag = NewChatActionSheetTag;
@@ -596,7 +598,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
 
 	[sheet release];
 }
