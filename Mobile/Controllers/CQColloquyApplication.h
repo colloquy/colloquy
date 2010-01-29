@@ -5,7 +5,7 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 @interface CQColloquyApplication : UIApplication <UIApplicationDelegate, UITabBarControllerDelegate, UIAlertViewDelegate> {
 	@protected
 	UIWindow *_mainWindow;
-	UITabBarController *_tabBarController;
+	UIViewController *_mainViewController;
 	NSDate *_launchDate;
 	NSString *_deviceToken;
 	NSUInteger _networkIndicatorStack;
