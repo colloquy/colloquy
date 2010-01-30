@@ -1,13 +1,13 @@
 #import "CQChatListViewController.h"
 
-#import "CQColloquyApplication.h"
-#import "CQTableViewSectionHeader.h"
 #import "CQActionSheet.h"
 #import "CQChatRoomController.h"
+#import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
 #import "CQFileTransferController.h"
 #import "CQFileTransferTableCell.h"
+#import "CQTableViewSectionHeader.h"
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
@@ -49,6 +49,8 @@ static BOOL showsChatIcons;
 	self.editButtonItem.possibleTitles = [NSSet setWithObjects:NSLocalizedString(@"Manage", @"Manage button title"), NSLocalizedString(@"Done", @"Done button title"), nil];
 	self.editButtonItem.title = NSLocalizedString(@"Manage", @"Manage button title");
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_addedChatViewController:) name:CQChatControllerAddedChatViewControllerNotification object:nil];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshConnectionChatCells:) name:MVChatConnectionDidConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshConnectionChatCells:) name:MVChatConnectionDidDisconnectNotification object:nil];
@@ -192,6 +194,11 @@ static NSIndexPath *indexPathForChatController(id controller) {
 		return;
 
 	[cell addMessagePreview:message fromUser:user asAction:action animated:animated];
+}
+
+- (void) _addedChatViewController:(NSNotification *) notification {
+	id <CQChatViewController> controller = [notification.userInfo objectForKey:@"controller"];
+	[self addChatViewController:controller];
 }
 
 - (void) _updateMessagePreview:(NSNotification *) notification {

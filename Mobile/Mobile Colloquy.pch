@@ -12,6 +12,7 @@
 
 #import "UIDeviceAdditions.h"
 #import "UIImageAdditions.h"
+#import "UINavigationControllerAdditions.h"
 #import "UITableViewAdditions.h"
 #import "UITableViewCellAdditions.h"
 

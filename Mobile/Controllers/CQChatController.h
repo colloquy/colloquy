@@ -1,7 +1,8 @@
 #import <ChatCore/MVIRCChatRoom.h>
 
-@class CQChatRoomController;
 @class CQChatListViewController;
+@class CQChatNavigationController;
+@class CQChatRoomController;
 @class CQDirectChatController;
 @class CQFileTransferController;
 @class MVChatConnection;
@@ -10,14 +11,16 @@
 @class MVFileTransfer;
 @protocol CQChatViewController;
 
-@interface CQChatController : UINavigationController <UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate> {
+extern NSString *CQChatControllerAddedChatViewControllerNotification;
+extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
+
+@interface CQChatController : NSObject <UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
 	@protected
 	NSMutableArray *_chatControllers;
-	CQChatListViewController *_chatListViewController;
+	CQChatNavigationController *_chatNavigationController;
 	id <CQChatViewController> _nextController;
 	MVChatConnection *_nextRoomConnection;
 	NSInteger _totalImportantUnreadCount;
-	BOOL _active;
 #if ENABLE(FILE_TRANSFERS)
 	MVChatUser *_fileUser;
 	UIImage *_transferImage;
@@ -25,6 +28,8 @@
 #endif
 }
 + (CQChatController *) defaultController;
+
+@property (nonatomic, readonly) CQChatNavigationController *chatNavigationController;
 
 @property (nonatomic, readonly) NSArray *chatViewControllers;
 
@@ -34,10 +39,15 @@
 - (void) restorePersistentState:(NSDictionary *) state forConnection:(MVChatConnection *) connection;
 
 - (void) showNewChatActionSheet:(id) sender;
+
 - (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) room andConnection:(MVChatConnection *) connection;
 - (void) showChatControllerForUserNicknamed:(NSString *) nickname andConnection:(MVChatConnection *) connection;
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated;
+- (void) showPendingChatControllerAnimated:(BOOL) animated;
+
+#if ENABLE(FILE_TRANSFERS)
 - (void) showFilePickerWithUser:(MVChatUser *) user;
+#endif
 
 - (void) joinSupportRoom;
 

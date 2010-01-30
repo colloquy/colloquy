@@ -4,6 +4,7 @@
 #import "CQAlertView.h"
 #import "CQChatCreationViewController.h"
 #import "CQChatListViewController.h"
+#import "CQChatNavigationController.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
@@ -15,6 +16,9 @@
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVDirectChatConnection.h>
 #import <ChatCore/MVFileTransfer.h>
+
+NSString *CQChatControllerAddedChatViewControllerNotification = @"CQChatControllerAddedChatViewControllerNotification";
+NSString *CQChatControllerChangedTotalImportantUnreadCountNotification = @"CQChatControllerChangedTotalImportantUnreadCountNotification";
 
 #define ChatRoomInviteAlertTag 1
 #define FileDownloadAlertTag 2
@@ -94,17 +98,16 @@ static CQSoundController *fileTransferSound;
 	return sharedInstance;
 }
 
+#pragma mark -
+
 - (id) init {
 	if (!(self = [super init]))
 		return nil;
 
+	_chatNavigationController = [[CQChatNavigationController alloc] init];
+	_chatNavigationController.delegate = self;
+
 	_chatControllers = [[NSMutableArray alloc] init];
-
-	self.title = NSLocalizedString(@"Colloquies", @"Colloquies tab title");
-	self.tabBarItem.image = [UIImage imageNamed:@"colloquies.png"];
-	self.delegate = self;
-
-	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_joinedRoom:) name:MVChatRoomJoinedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRoomMessage:) name:MVChatRoomGotMessageNotification object:nil];
@@ -122,7 +125,6 @@ static CQSoundController *fileTransferSound;
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[_chatListViewController release];
 	[_chatControllers release];
 	[_nextController release];
 	[_nextRoomConnection release];
@@ -137,40 +139,10 @@ static CQSoundController *fileTransferSound;
 
 #pragma mark -
 
-- (void) viewDidLoad {
-	[super viewDidLoad];
-
-	if (!_chatListViewController) {
-		_chatListViewController = [[CQChatListViewController alloc] init];
-		[self pushViewController:_chatListViewController animated:NO];
-	}
-
-	if (_nextController)
-		[self _showNextChatControllerAnimated:NO];
-}
-
-- (void) viewWillAppear:(BOOL) animated {
-	[super viewWillAppear:animated];
-
-	self.totalImportantUnreadCount = 0;
-
-	_active = YES;
-}
-
-- (void) viewWillDisappear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-
-	_active = NO;
-}
-
-- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
-	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
-}
-
-#pragma mark -
-
 static NSComparisonResult sortControllersAscending(id controller1, id controller2, void *context) {
+#if ENABLE(FILE_TRANSFERS)
 	if ([controller1 isKindOfClass:[CQDirectChatController class]] && [controller2 isKindOfClass:[CQDirectChatController class]]) {
+#endif
 		CQDirectChatController *chatController1 = controller1;
 		CQDirectChatController *chatController2 = controller2;
 		NSComparisonResult result = [chatController1.connection.displayName caseInsensitiveCompare:chatController2.connection.displayName];
@@ -192,22 +164,32 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 			return NSOrderedDescending;
 
 		return [chatController1.title caseInsensitiveCompare:chatController2.title];
+#if ENABLE(FILE_TRANSFERS)
 	}
-	else if ([controller1 isKindOfClass:[CQDirectChatController class]]) {
+	
+	if ([controller1 isKindOfClass:[CQDirectChatController class]])
 		return NSOrderedAscending;
-	}
-	else if ([controller2 isKindOfClass:[CQDirectChatController class]]) {
+
+	if ([controller2 isKindOfClass:[CQDirectChatController class]])
 		return NSOrderedDescending;
-	}
-	else {
-		return NSOrderedSame;
-	}
+
+	return NSOrderedSame;
+#endif
 }
 
 #pragma mark -
 
 - (void) _sortChatControllers {
 	[_chatControllers sortUsingFunction:sortControllersAscending context:NULL];
+}
+
+- (void) _addViewController:(id <CQChatViewController>) controller {
+	[_chatControllers addObject:controller];
+
+	[self _sortChatControllers];
+
+	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObject:controller forKey:@"controller"];
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerAddedChatViewControllerNotification object:self userInfo:notificationInfo];
 }
 
 - (void) _joinedRoom:(NSNotification *) notification {
@@ -297,6 +279,29 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	[alert release];
 }
+
+- (void) _sendImage {
+	NSData *data = nil;
+	if (_png) data = UIImagePNGRepresentation(_transferImage);
+	else data = UIImageJPEGRepresentation(_transferImage, 0.83333333f);
+
+	[_transferImage release];
+
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	[formatter setDateFormat:@"yyyy-MM-dd-A"];
+
+	NSString *name = [[formatter stringFromDate:[NSDate date]] stringByAppendingString:@".png"];
+	[formatter release];
+
+	name = [name stringByReplacingOccurrencesOfString:@" " withString:@"_"];
+
+	NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:name];
+	[data writeToFile:path atomically:NO];
+
+	MVUploadFileTransfer *transfer = [_fileUser sendFile:path passively:YES];
+	[self chatViewControllerForFileTransfer:transfer ifExists:NO];
+	[_fileUser release];
+}
 #endif
 
 - (void) _invitedToRoom:(NSNotification *) notification {
@@ -336,11 +341,13 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 - (void) _showNextChatControllerAnimated:(BOOL) animated {
-	if (self.topViewController != _chatListViewController)
+	if (!_nextController)
 		return;
 
-	[_chatListViewController selectChatViewController:_nextController animatedSelection:NO animatedScroll:animated];
-	[self pushViewController:(UIViewController *)_nextController animated:animated];
+	if (_chatNavigationController.topViewController != _chatNavigationController.rootViewController)
+		return;
+
+	[_chatNavigationController pushViewController:(UIViewController *)_nextController animated:animated];
 
 	[_nextController release];
 	_nextController = nil;
@@ -451,6 +458,18 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 #pragma mark -
 
+- (void) navigationController:(UINavigationController *) navigationController willShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
+	if (viewController == [navigationController.viewControllers objectAtIndex:0])
+		self.totalImportantUnreadCount = 0;
+}
+
+- (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
+	if (viewController == [navigationController.viewControllers objectAtIndex:0] && _nextController)
+		[self performSelector:@selector(_showNextChatController) withObject:nil afterDelay:0.33];
+}
+
+#pragma mark -
+
 #if ENABLE(FILE_TRANSFERS)
 - (void) imagePickerController:(UIImagePickerController *) picker didFinishPickingImage:(UIImage *) image editingInfo:(NSDictionary *) editingInfo {
 	_transferImage = [image retain];
@@ -476,32 +495,21 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
     [self dismissModalViewControllerAnimated:YES];
     [_fileUser release];
 }
+#endif
 
 #pragma mark -
 
-- (void) _sendImage {
-	NSData *data = nil;
-	if (_png) data = UIImagePNGRepresentation(_transferImage);
-	else data = UIImageJPEGRepresentation(_transferImage, 0.83333333f);
+@synthesize chatNavigationController = _chatNavigationController;
+@synthesize totalImportantUnreadCount = _totalImportantUnreadCount;
 
-	[_transferImage release];
+- (void) setTotalImportantUnreadCount:(NSInteger) count {
+	if (count < 0)
+		count = 0;
 
-	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-	[formatter setDateFormat:@"yyyy-MM-dd-A"];
+	_totalImportantUnreadCount = count;
 
-	NSString *name = [[formatter stringFromDate:[NSDate date]] stringByAppendingString:@".png"];
-	[formatter release];
-
-	name = [name stringByReplacingOccurrencesOfString:@" " withString:@"_"];
-
-	NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:name];
-	[data writeToFile:path atomically:NO];
-
-	MVUploadFileTransfer *transfer = [_fileUser sendFile:path passively:YES];
-	[self chatViewControllerForFileTransfer:transfer ifExists:NO];
-	[_fileUser release];
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerChangedTotalImportantUnreadCountNotification object:self];
 }
-#endif
 
 #pragma mark -
 
@@ -558,27 +566,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 #pragma mark -
 
-- (NSInteger) totalImportantUnreadCount {
-	return _totalImportantUnreadCount;
-}
-
-- (void) setTotalImportantUnreadCount:(NSInteger) count {
-	if (count < 0)
-		count = 0;
-
-	_totalImportantUnreadCount = count;
-
-	if ((!_active || self.topViewController != _chatListViewController) && _totalImportantUnreadCount) {
-		_chatListViewController.navigationItem.title = [NSString stringWithFormat:NSLocalizedString(@"%@ (%u)", @"Unread count view title, uses the view's normal title with a number"), self.title, _totalImportantUnreadCount];
-		self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%u", _totalImportantUnreadCount];
-	} else {
-		_chatListViewController.navigationItem.title = self.title;
-		self.tabBarItem.badgeValue = nil;
-	}
-}
-
-#pragma mark -
-
 - (void) showNewChatActionSheet:(id) sender {
 	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
@@ -603,27 +590,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[sheet release];
 }
 
-- (void) showFilePickerWithUser:(MVChatUser *) user {
-#if ENABLE(FILE_TRANSFERS)
-	UIActionSheet *sheet = [[UIActionSheet alloc] init];
-	sheet.delegate = self;
-	sheet.tag = SendFileActionSheetTag;
-
-	if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
-		[sheet addButtonWithTitle:NSLocalizedString(@"Take Photo", @"Take Photo button title")];
-	if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary])
-		[sheet addButtonWithTitle:NSLocalizedString(@"Choose Existing Photo", @"Choose Existing Photo button title")];
-//	[sheet addButtonWithTitle:NSLocalizedString(@"Choose Contact", @"Choose Contact button title")];
-
-	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
-
-	_fileUser = [user retain];
-
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
-
-	[sheet release];
-#endif
-}
+#pragma mark -
 
 - (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) roomName andConnection:(MVChatConnection *) connection {
 	NSParameterAssert(connection != nil);
@@ -658,6 +625,53 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[self showChatController:controller animated:YES];
 }
 
+- (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
+	[_nextRoomConnection release];
+	_nextRoomConnection = nil;
+
+	BOOL delayed = (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController);
+	if (delayed) {
+		id old = _nextController;
+		_nextController = [controller retain];
+		[old release];
+	}
+
+	[_chatNavigationController popToRootViewControllerAnimated:animated];
+
+	if (!delayed)
+		[_chatNavigationController pushViewController:(UIViewController *)controller animated:animated];
+}
+
+- (void) showPendingChatControllerAnimated:(BOOL) animated {
+	[self _showNextChatControllerAnimated:animated];
+}
+
+#pragma mark -
+
+#if ENABLE(FILE_TRANSFERS)
+- (void) showFilePickerWithUser:(MVChatUser *) user {
+	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	sheet.delegate = self;
+	sheet.tag = SendFileActionSheetTag;
+
+	if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+		[sheet addButtonWithTitle:NSLocalizedString(@"Take Photo", @"Take Photo button title")];
+	if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary])
+		[sheet addButtonWithTitle:NSLocalizedString(@"Choose Existing Photo", @"Choose Existing Photo button title")];
+//	[sheet addButtonWithTitle:NSLocalizedString(@"Choose Contact", @"Choose Contact button title")];
+
+	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+
+	_fileUser = [user retain];
+
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet];
+
+	[sheet release];
+}
+#endif
+
+#pragma mark -
+
 - (void) joinSupportRoom {
 	MVChatConnection *connection = [[CQConnectionsController defaultController] connectionForServerAddress:@"freenode.net"];
 	if (!connection) connection = [[CQConnectionsController defaultController] connectionForServerAddress:@"freenode.com"];
@@ -686,35 +700,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[connection joinChatRoomNamed:@"#colloquy-mobile"];
 
 	[[CQColloquyApplication sharedApplication] showColloquies:nil];
-}
-
-- (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
-	[_nextRoomConnection release];
-	_nextRoomConnection = nil;
-
-	BOOL delayed = (animated && self.topViewController != _chatListViewController);
-	if (delayed) {
-		id old = _nextController;
-		_nextController = [controller retain];
-		[old release];
-	}
-
-	[self popToRootViewControllerAnimated:animated];
-
-	if (!delayed) {
-		[_chatListViewController selectChatViewController:controller animatedSelection:NO animatedScroll:animated];
-		[self pushViewController:(UIViewController *)controller animated:animated];
-	}
-}
-
-- (void) navigationController:(UINavigationController *) navigationController willShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
-	if (viewController == _chatListViewController)
-		self.totalImportantUnreadCount = 0;
-}
-
-- (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
-	if (viewController == _chatListViewController && _nextController)
-		[self performSelector:@selector(_showNextChatController) withObject:nil afterDelay:0.33];
 }
 
 #pragma mark -
@@ -770,17 +755,12 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	if (!exists) {
 		if ((controller = [[CQChatRoomController alloc] initWithTarget:room])) {
-			[_chatControllers addObject:controller];
-			[controller release];
-
-			[self _sortChatControllers];
-
-			[_chatListViewController addChatViewController:controller];
+			[self _addViewController:controller];
 
 			if (room.connection == _nextRoomConnection)
 				[self showChatController:controller animated:YES];
 
-			return controller;
+			return [controller autorelease];
 		}
 	}
 
@@ -802,14 +782,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	if (!exists) {
 		if ((controller = [[CQDirectChatController alloc] initWithTarget:user])) {
-			[_chatControllers addObject:controller];
-			[controller release];
-
-			[self _sortChatControllers];
-
-			[_chatListViewController addChatViewController:controller];
-
-			return controller;
+			[self _addViewController:controller];
+			return [controller autorelease];
 		}
 	}
 
@@ -827,14 +801,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	if (!exists) {
 		if ((controller = [[CQDirectChatController alloc] initWithTarget:connection])) {
-			[_chatControllers addObject:controller];
-			[controller release];
-
-			[self _sortChatControllers];
-
-			[_chatListViewController addChatViewController:controller];
-
-			return controller;
+			[self _addViewController:controller];
+			return [controller autorelease];
 		}
 	}
 
@@ -853,13 +821,12 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		CQFileTransferController *controller = [[CQFileTransferController alloc] initWithTransfer:transfer];
 		if (controller) {
 			[_chatControllers addObject:controller];
-			[controller release];
 
 			[self _sortChatControllers];
 
 			[_chatListViewController addChatViewController:controller];
 
-			return controller;
+			return [controller autorelease];
 		}
 	}
 

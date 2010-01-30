@@ -166,6 +166,8 @@
 		1CF50C870ED8BE1100CBE5E3 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF50C860ED8BE1100CBE5E3 /* Security.framework */; };
 		1CF50EAF0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */; };
 		1CF50F710EDA7BC600CBE5E3 /* roomIconSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CF50F700EDA7BC600CBE5E3 /* roomIconSmall.png */; };
+		1CFCB94F1114DD9600EA5F10 /* CQChatNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCB94E1114DD9600EA5F10 /* CQChatNavigationController.m */; };
+		1CFCB9BA1114EED200EA5F10 /* UINavigationControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCB9B91114EED200EA5F10 /* UINavigationControllerAdditions.m */; };
 		1CFF6E820EDF772800D3C557 /* UITableViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -420,6 +422,10 @@
 		1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListViewController.h; path = Mobile/Controllers/CQPreferencesListViewController.h; sourceTree = "<group>"; };
 		1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListViewController.m; path = Mobile/Controllers/CQPreferencesListViewController.m; sourceTree = "<group>"; };
 		1CF50F700EDA7BC600CBE5E3 /* roomIconSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = roomIconSmall.png; sourceTree = "<group>"; };
+		1CFCB94D1114DD9600EA5F10 /* CQChatNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatNavigationController.h; sourceTree = "<group>"; };
+		1CFCB94E1114DD9600EA5F10 /* CQChatNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatNavigationController.m; sourceTree = "<group>"; };
+		1CFCB9B81114EED200EA5F10 /* UINavigationControllerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UINavigationControllerAdditions.h; path = Mobile/Additions/UINavigationControllerAdditions.h; sourceTree = "<group>"; };
+		1CFCB9B91114EED200EA5F10 /* UINavigationControllerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UINavigationControllerAdditions.m; path = Mobile/Additions/UINavigationControllerAdditions.m; sourceTree = "<group>"; };
 		1CFF6E800EDF772800D3C557 /* UITableViewAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UITableViewAdditions.h; path = Mobile/Views/UITableViewAdditions.h; sourceTree = "<group>"; };
 		1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UITableViewAdditions.m; path = Mobile/Views/UITableViewAdditions.m; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -619,6 +625,8 @@
 			children = (
 				1C0937800D8116FC00A2705D /* CQChatController.m */,
 				1C0937810D8116FC00A2705D /* CQChatController.h */,
+				1CFCB94E1114DD9600EA5F10 /* CQChatNavigationController.m */,
+				1CFCB94D1114DD9600EA5F10 /* CQChatNavigationController.h */,
 				1C82C27C0D847EA4009ABD9F /* CQChatListViewController.m */,
 				1C82C27B0D847EA4009ABD9F /* CQChatListViewController.h */,
 				1C1254A30F0D8D7F008F181B /* CQChatCreationViewController.m */,
@@ -783,6 +791,8 @@
 				1CFF6E800EDF772800D3C557 /* UITableViewAdditions.h */,
 				1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */,
 				1CC576D10ED4684700FEC2C1 /* UITableViewCellAdditions.h */,
+				1CFCB9B91114EED200EA5F10 /* UINavigationControllerAdditions.m */,
+				1CFCB9B81114EED200EA5F10 /* UINavigationControllerAdditions.h */,
 				1C0932670D80CA4800A2705D /* NSDataAdditions.m */,
 				1C0932660D80CA4800A2705D /* NSDataAdditions.h */,
 				1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */,
@@ -1163,6 +1173,8 @@
 				1C6D464C10FAEA1A00BE77ED /* CQPreferencesTableViewController.m in Sources */,
 				1C3CD7961112357100FE29AA /* UIDeviceAdditions.m in Sources */,
 				1C3CDB651113D2E000FE29AA /* CQConnectionsNavigationController.m in Sources */,
+				1CFCB94F1114DD9600EA5F10 /* CQChatNavigationController.m in Sources */,
+				1CFCB9BA1114EED200EA5F10 /* UINavigationControllerAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

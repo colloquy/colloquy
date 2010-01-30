@@ -225,7 +225,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	[state setObject:NSStringFromClass([self class]) forKey:@"class"];
 
-	if ([CQChatController defaultController].topViewController == self)
+	if (_active)
 		[state setObject:[NSNumber numberWithBool:YES] forKey:@"active"];
 
 	if (self.user)
@@ -634,7 +634,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if (rooms.count == 1 && ((NSString *)[rooms objectAtIndex:0]).length)
 		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:[rooms objectAtIndex:0] andConnection:self.connection];
 	else if (rooms.count > 1)
-		[[CQChatController defaultController] popToRootViewControllerAnimated:YES];
+		[[CQColloquyApplication sharedApplication] showColloquies:nil];
 
 	// Return NO so the command is handled in ChatCore.
 	return NO;

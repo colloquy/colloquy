@@ -1,5 +1,4 @@
 @protocol CQBrowserViewControllerDelegate;
-@class CQConnectionsNavigationController;
 
 extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
@@ -7,7 +6,6 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 	@protected
 	UIWindow *_mainWindow;
 	UIViewController *_mainViewController;
-	CQConnectionsNavigationController *_connectionsNavigationController;
 	NSDate *_launchDate;
 	NSString *_deviceToken;
 	NSUInteger _networkIndicatorStack;
@@ -19,8 +17,6 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 - (void) showWelcome:(id) sender;
 - (void) showConnections:(id) sender;
 - (void) showColloquies:(id) sender;
-
-@property (nonatomic, readonly) CQConnectionsNavigationController *connectionsNavigationController;
 
 - (BOOL) isSpecialApplicationURL:(NSURL *) url;
 - (NSString *) applicationNameForURL:(NSURL *) url;

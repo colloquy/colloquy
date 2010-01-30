@@ -91,6 +91,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	return sharedInstance;
 }
 
+#pragma mark -
+
 - (id) init {
 	if (!(self = [super init]))
 		return nil;
@@ -116,6 +118,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	CFRunLoopAddSource(CFRunLoopGetCurrent(), IONotificationPortGetRunLoopSource(notificationPort), kCFRunLoopCommonModes);
 #endif
 
+	_connectionsNavigationController = [[CQConnectionsNavigationController alloc] init];
+
 	_connections = [[NSMutableSet alloc] initWithCapacity:10];
 	_bouncers = [[NSMutableArray alloc] initWithCapacity:2];
 	_directConnections = [[NSMutableArray alloc] initWithCapacity:5];
@@ -130,6 +134,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	[_connectionsNavigationController release];
 	[_connections release];
 	[_directConnections release];
 	[_bouncerConnections release];
@@ -248,7 +253,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	if (alertView.tag == CannotConnectToBouncerTag) {
 		CQBouncerSettings *settings = ((CQAlertView *)alertView).userInfo;
-		[[CQColloquyApplication sharedApplication].connectionsNavigationController editBouncer:settings];
+		[_connectionsNavigationController editBouncer:settings];
 		[[CQColloquyApplication sharedApplication] showConnections:nil];
 	}
 
@@ -968,6 +973,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 #pragma mark -
 
+@synthesize connectionsNavigationController = _connectionsNavigationController;
 @synthesize connections = _connections;
 @synthesize directConnections = _directConnections;
 @synthesize bouncers = _bouncers;

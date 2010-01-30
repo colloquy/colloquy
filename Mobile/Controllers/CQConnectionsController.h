@@ -5,6 +5,7 @@
 @class CQBouncerSettings;
 @class CQChatRoomController;
 @class CQConnectionEditViewController;
+@class CQConnectionsNavigationController;
 @class CQConnectionsViewController;
 @class CQDirectChatController;
 @class MVChatConnection;
@@ -21,6 +22,7 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 
 @interface CQConnectionsController : NSObject <UIActionSheetDelegate, UIAlertViewDelegate, CQBouncerConnectionDelegate> {
 	@protected
+	CQConnectionsNavigationController *_connectionsNavigationController;
 	NSMutableSet *_connections;
 	NSMutableArray *_directConnections;
 	NSMutableArray *_bouncers;
@@ -31,6 +33,8 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 	NSUInteger _connectedCount;
 }
 + (CQConnectionsController *) defaultController;
+
+@property (nonatomic, readonly) CQConnectionsNavigationController *connectionsNavigationController;
 
 @property (nonatomic, readonly) NSSet *connections;
 @property (nonatomic, readonly) NSSet *connectedConnections;
