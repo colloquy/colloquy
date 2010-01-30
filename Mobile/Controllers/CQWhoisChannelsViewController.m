@@ -12,7 +12,9 @@
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
+
 	self.title = NSLocalizedString(@"Rooms", "Rooms view title");
+
 	return self;
 }
 
@@ -68,6 +70,8 @@
 	if (action == @selector(copy:)) {
 		[UIPasteboard generalPasteboard].string = roomName;
 	} else if (action == @selector(join:)) {
+		[self dismissModalViewControllerAnimated:YES];
+
 		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:_connection];
 		[_connection joinChatRoomNamed:roomName];
 	}
@@ -83,10 +87,10 @@
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
+	[self dismissModalViewControllerAnimated:YES];
+
 	NSString *roomName = [_rooms objectAtIndex:selectedIndexPath.row];
-
 	[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:_connection];
-
 	[_connection joinChatRoomNamed:roomName];
 }
 

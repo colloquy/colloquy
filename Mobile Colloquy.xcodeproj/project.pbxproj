@@ -63,6 +63,7 @@
 		1C34A67010183ED900BAA714 /* personBlueSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C34A66F10183ED900BAA714 /* personBlueSmall.png */; };
 		1C34A6861018411B00BAA714 /* personWhiteSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C34A6851018411B00BAA714 /* personWhiteSmall.png */; };
 		1C3CD7961112357100FE29AA /* UIDeviceAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3CD7951112357100FE29AA /* UIDeviceAdditions.m */; };
+		1C3CDB651113D2E000FE29AA /* CQConnectionsNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3CDB641113D2E000FE29AA /* CQConnectionsNavigationController.m */; };
 		1C4CE6360FA03D7800215521 /* Beep 1.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6250FA03D7800215521 /* Beep 1.aiff */; };
 		1C4CE6370FA03D7800215521 /* Beep 2.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6260FA03D7800215521 /* Beep 2.aiff */; };
 		1C4CE6380FA03D7800215521 /* Bell 1.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6270FA03D7800215521 /* Bell 1.aiff */; };
@@ -281,6 +282,8 @@
 		1C34A6851018411B00BAA714 /* personWhiteSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = personWhiteSmall.png; sourceTree = "<group>"; };
 		1C3CD7941112357100FE29AA /* UIDeviceAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIDeviceAdditions.h; path = Mobile/Additions/UIDeviceAdditions.h; sourceTree = "<group>"; };
 		1C3CD7951112357100FE29AA /* UIDeviceAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIDeviceAdditions.m; path = Mobile/Additions/UIDeviceAdditions.m; sourceTree = "<group>"; };
+		1C3CDB631113D2E000FE29AA /* CQConnectionsNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionsNavigationController.h; sourceTree = "<group>"; };
+		1C3CDB641113D2E000FE29AA /* CQConnectionsNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQConnectionsNavigationController.m; sourceTree = "<group>"; };
 		1C4CE6250FA03D7800215521 /* Beep 1.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Beep 1.aiff"; sourceTree = "<group>"; };
 		1C4CE6260FA03D7800215521 /* Beep 2.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Beep 2.aiff"; sourceTree = "<group>"; };
 		1C4CE6270FA03D7800215521 /* Bell 1.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "Bell 1.aiff"; sourceTree = "<group>"; };
@@ -582,6 +585,8 @@
 			children = (
 				1C82C1AD0D83D30F009ABD9F /* CQConnectionsController.m */,
 				1C82C1AE0D83D30F009ABD9F /* CQConnectionsController.h */,
+				1C3CDB641113D2E000FE29AA /* CQConnectionsNavigationController.m */,
+				1C3CDB631113D2E000FE29AA /* CQConnectionsNavigationController.h */,
 				1C82C5290D850B1B009ABD9F /* CQConnectionsViewController.m */,
 				1C82C5280D850B1B009ABD9F /* CQConnectionsViewController.h */,
 				1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */,
@@ -1157,6 +1162,7 @@
 				8957DEE11086BA3700F21648 /* CQTableViewSectionHeader.m in Sources */,
 				1C6D464C10FAEA1A00BE77ED /* CQPreferencesTableViewController.m in Sources */,
 				1C3CD7961112357100FE29AA /* UIDeviceAdditions.m in Sources */,
+				1C3CDB651113D2E000FE29AA /* CQConnectionsNavigationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

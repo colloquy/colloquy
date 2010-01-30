@@ -88,13 +88,9 @@
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section == NewConnectionsTableSection && indexPath.row == 0) {
-		[self dismissModalViewControllerAnimated:YES];
-
-		[[CQConnectionsController defaultController] performSelector:@selector(showModalNewConnectionView) withObject:nil afterDelay:0.5];
+		[[CQConnectionsController defaultController] showConnectionCreationView:nil];
 	} else if (indexPath.section == NewConnectionsTableSection && indexPath.row == 1) {
-		[self dismissModalViewControllerAnimated:YES];
-
-		[[CQConnectionsController defaultController] performSelector:@selector(showModalNewBouncerView) withObject:nil afterDelay:0.5];
+		[[CQConnectionsController defaultController] showBouncerCreationView:nil];
 	} else if (indexPath.section == WhatsNewTableSection && indexPath.row == 0) {
 		NSString *whatsNewContentPath = [[NSBundle mainBundle] pathForResource:@"whats-new" ofType:@"html"];
 		NSString *whatsNewContent = [[NSString alloc] initWithContentsOfFile:whatsNewContentPath encoding:NSUTF8StringEncoding error:NULL];

@@ -12,19 +12,23 @@
 @class MVChatUser;
 @class MVDirectChatConnection;
 
-@interface CQConnectionsController : UINavigationController <UINavigationControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate, CQBouncerConnectionDelegate> {
+extern NSString *CQConnectionsControllerAddedConnectionNotification;
+extern NSString *CQConnectionsControllerChangedConnectionNotification;
+extern NSString *CQConnectionsControllerRemovedConnectionNotification;
+extern NSString *CQConnectionsControllerMovedConnectionNotification;
+extern NSString *CQConnectionsControllerAddedBouncerSettingsNotification;
+extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
+
+@interface CQConnectionsController : NSObject <UIActionSheetDelegate, UIAlertViewDelegate, CQBouncerConnectionDelegate> {
 	@protected
 	NSMutableSet *_connections;
 	NSMutableArray *_directConnections;
 	NSMutableArray *_bouncers;
 	NSMutableSet *_bouncerConnections;
 	NSMutableDictionary *_bouncerChatConnections;
-	BOOL _wasEditing;
 	BOOL _loadedConnections;
 	NSUInteger _connectingCount;
 	NSUInteger _connectedCount;
-
-	CQConnectionsViewController *_connectionsViewController;
 }
 + (CQConnectionsController *) defaultController;
 
@@ -38,13 +42,10 @@
 
 - (BOOL) handleOpenURL:(NSURL *) url;
 
-- (void) showCreationActionSheet:(id) sender;
-- (void) showModalNewBouncerView;
-- (void) showModalNewConnectionView;
-- (void) showModalNewConnectionViewForURL:(NSURL *) url;
-
-- (void) editConnection:(MVChatConnection *) connection;
-- (void) editBouncer:(CQBouncerSettings *) settings;
+- (void) showNewConnectionPrompt:(id) sender;
+- (void) showBouncerCreationView:(id) sender;
+- (void) showConnectionCreationView:(id) sender;
+- (void) showConnectionCreationViewForURL:(NSURL *) url;
 
 - (MVChatConnection *) connectionForUniqueIdentifier:(NSString *) identifier;
 - (MVChatConnection *) connectionForServerAddress:(NSString *) address;
@@ -58,9 +59,6 @@
 
 - (void) removeConnection:(MVChatConnection *) connection;
 - (void) removeConnectionAtIndex:(NSUInteger) index;
-
-- (void) replaceConnection:(MVChatConnection *) previousConnection withConnection:(MVChatConnection *) newConnection;
-- (void) replaceConnectionAtIndex:(NSUInteger) index withConnection:(MVChatConnection *) connection;
 
 - (void) moveConnectionAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex forBouncerIdentifier:(NSString *) identifier;
 

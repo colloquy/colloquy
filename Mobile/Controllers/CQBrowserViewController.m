@@ -275,7 +275,7 @@ static NSURL *lastURL;
 	if (alertView.tag == InstapaperHelpAlertTag) {
 		[self close:nil];
 
-		[[CQColloquyApplication sharedApplication] performSelector:@selector(showHelp) withObject:nil afterDelay:0.5];
+		[[CQColloquyApplication sharedApplication] showHelp:nil];
 	}
 }
 

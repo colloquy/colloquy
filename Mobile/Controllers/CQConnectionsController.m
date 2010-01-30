@@ -9,6 +9,7 @@
 #import "CQChatController.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
+#import "CQConnectionsNavigationController.h"
 #import "CQConnectionCreationViewController.h"
 #import "CQConnectionEditViewController.h"
 #import "CQConnectionsViewController.h"
@@ -16,6 +17,13 @@
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
+
+NSString *CQConnectionsControllerAddedConnectionNotification = @"CQConnectionsControllerAddedConnectionNotification";
+NSString *CQConnectionsControllerChangedConnectionNotification = @"CQConnectionsControllerChangedConnectionNotification";
+NSString *CQConnectionsControllerRemovedConnectionNotification = @"CQConnectionsControllerRemovedConnectionNotification";
+NSString *CQConnectionsControllerMovedConnectionNotification = @"CQConnectionsControllerMovedConnectionNotification";
+NSString *CQConnectionsControllerAddedBouncerSettingsNotification = @"CQConnectionsControllerAddedBouncerSettingsNotification";
+NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnectionsControllerRemovedBouncerSettingsNotification";
 
 #if ENABLE(SECRETS)
 typedef void (*IOServiceInterestCallback)(void *context, mach_port_t service, uint32_t messageType, void *messageArgument);
@@ -87,13 +95,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if (!(self = [super init]))
 		return nil;
 
-	self.title = NSLocalizedString(@"Connections", @"Connections tab title");
-	self.tabBarItem.image = [UIImage imageNamed:@"connections.png"];
-	self.delegate = self;
-
-	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidReceiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:nil];
@@ -131,48 +134,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[_directConnections release];
 	[_bouncerConnections release];
 	[_bouncerChatConnections release];
-	[_connectionsViewController release];
 
 	[super dealloc];
-}
-
-#pragma mark -
-
-- (void) viewDidLoad {
-	[super viewDidLoad];
-
-	if (_connectionsViewController)
-		return;
-
-	_connectionsViewController = [[CQConnectionsViewController alloc] init];
-
-	[self pushViewController:_connectionsViewController animated:NO];
-}
-
-- (void) viewWillAppear:(BOOL) animated {
-	[super viewWillAppear:animated];
-
-	[self popToRootViewControllerAnimated:NO];
-}
-
-- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
-	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
-}
-
-- (void) didReceiveMemoryWarning {
-	[super didReceiveMemoryWarning];
-
-	for (MVChatConnection *connection in _connections)
-		[connection purgeCaches];
-}
-
-#pragma mark -
-
-- (void) applicationWillTerminate {
-	[self saveConnections];
-
-	for (MVChatConnection *connection in _connections)
-		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 }
 
 #pragma mark -
@@ -198,7 +161,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		if (target.length) {
 			[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:target andConnection:connection];
 			[connection joinChatRoomNamed:target];
-		} else [[CQColloquyApplication sharedApplication] showConnections];
+		} else [[CQColloquyApplication sharedApplication] showConnections:nil];
 
 		return YES;
 	}
@@ -213,21 +176,21 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		if (target.length) {
 			[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:target andConnection:connection];
 			[connection joinChatRoomNamed:target];
-		} else [[CQColloquyApplication sharedApplication] showConnections];
+		} else [[CQColloquyApplication sharedApplication] showConnections:nil];
 
 		[connection release];
 
 		return YES;
 	}
 
-	[self showModalNewConnectionViewForURL:url];
+	[self showConnectionCreationViewForURL:url];
 
 	return YES;
 }
 
 #pragma mark -
 
-- (void) showCreationActionSheet:(id) sender {
+- (void) showNewConnectionPrompt:(id) sender {
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.tag = 1;
@@ -242,52 +205,21 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[sheet release];	
 }
 
-- (void) showModalNewBouncerView {
+- (void) showBouncerCreationView:(id) sender {
 	CQBouncerCreationViewController *bouncerCreationViewController = [[CQBouncerCreationViewController alloc] init];
-	[self presentModalViewController:bouncerCreationViewController animated:YES];
+	[[CQColloquyApplication sharedApplication] presentModalViewController:bouncerCreationViewController animated:YES];
 	[bouncerCreationViewController release];
 }
 
-- (void) showModalNewConnectionView {
-	[self showModalNewConnectionViewForURL:nil];
+- (void) showConnectionCreationView:(id) sender {
+	[self showConnectionCreationViewForURL:nil];
 }
 
-- (void) showModalNewConnectionViewForURL:(NSURL *) url {
+- (void) showConnectionCreationViewForURL:(NSURL *) url {
 	CQConnectionCreationViewController *connectionCreationViewController = [[CQConnectionCreationViewController alloc] init];
 	connectionCreationViewController.url = url;
-	[self presentModalViewController:connectionCreationViewController animated:YES];
+	[[CQColloquyApplication sharedApplication] presentModalViewController:connectionCreationViewController animated:YES];
 	[connectionCreationViewController release];
-}
-
-#pragma mark -
-
-- (void) editConnection:(MVChatConnection *) connection {
-	CQConnectionEditViewController *editViewController = [[CQConnectionEditViewController alloc] init];
-	editViewController.connection = connection;
-
-	_wasEditing = YES;
-	[self pushViewController:editViewController animated:YES];
-
-	[editViewController release];
-}
-
-- (void) editBouncer:(CQBouncerSettings *) settings {
-	CQBouncerEditViewController *editViewController = [[CQBouncerEditViewController alloc] init];
-	editViewController.settings = settings;
-
-	_wasEditing = YES;
-	[self pushViewController:editViewController animated:YES];
-
-	[editViewController release];
-}
-
-#pragma mark -
-
-- (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
-	if (viewController == _connectionsViewController && _wasEditing) {
-		[self saveConnections];
-		_wasEditing = NO;
-	}
 }
 
 #pragma mark -
@@ -297,9 +229,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		return;
 
 	if (buttonIndex == 0)
-		[self showModalNewConnectionView];
+		[self showConnectionCreationView:nil];
 	else if (buttonIndex == 1)
-		[self showModalNewBouncerView];
+		[self showBouncerCreationView:nil];
 }
 
 #pragma mark -
@@ -316,18 +248,12 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	if (alertView.tag == CannotConnectToBouncerTag) {
 		CQBouncerSettings *settings = ((CQAlertView *)alertView).userInfo;
-		[self editBouncer:settings];
-
-		[[CQColloquyApplication sharedApplication] showConnections];
+		[[CQColloquyApplication sharedApplication].connectionsNavigationController editBouncer:settings];
+		[[CQColloquyApplication sharedApplication] showConnections:nil];
 	}
 
-	if (alertView.tag == HelpAlertTag) {
-		if ([self modalViewController]) {
-			[self dismissModalViewControllerAnimated:YES];
-
-			[[CQColloquyApplication sharedApplication] performSelector:@selector(showHelp) withObject:nil afterDelay:0.5];
-		} else [[CQColloquyApplication sharedApplication] showHelp];
-	}
+	if (alertView.tag == HelpAlertTag)
+		[[CQColloquyApplication sharedApplication] showHelp:nil];
 }
 
 #pragma mark -
@@ -389,9 +315,10 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	chatConnection.alternateNicknames = [info objectForKey:@"alternateNicknames"];
 	chatConnection.encoding = [[info objectForKey:@"encoding"] unsignedIntegerValue];
 
+	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObject:chatConnection forKey:@"connection"];
 	if (newConnection)
-		[_connectionsViewController connectionAdded:chatConnection];
-	else [_connectionsViewController updateConnection:chatConnection];
+		[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerAddedConnectionNotification object:self userInfo:notificationInfo];
+	else [[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerChangedConnectionNotification object:self userInfo:notificationInfo];
 }
 
 - (void) bouncerConnectionDidFinishConnectionList:(CQBouncerConnection *) connection {
@@ -408,12 +335,11 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	}
 
 	for (MVChatConnection *chatConnection in deletedConnections) {
-		NSIndexPath *indexPath = [_connectionsViewController indexPathForConnection:chatConnection];
+		NSUInteger index = [connections indexOfObjectIdenticalTo:chatConnection];
+		[connections removeObjectAtIndex:index];
 
-		[connections removeObjectIdenticalTo:chatConnection];
-
-		if (indexPath)
-			[_connectionsViewController connectionRemovedAtIndexPath:indexPath];
+		NSDictionary *notificationInfo = [NSDictionary dictionaryWithObjectsAndKeys:chatConnection, @"connection", [NSNumber numberWithUnsignedInteger:index], @"index", nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerRemovedConnectionNotification object:self userInfo:notificationInfo];
 	}
 
 	[deletedConnections release];
@@ -444,6 +370,18 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 #pragma mark -
+
+- (void) _applicationDidReceiveMemoryWarning {
+	for (MVChatConnection *connection in _connections)
+		[connection purgeCaches];
+}
+
+- (void) _applicationWillTerminate {
+	[self saveConnections];
+
+	for (MVChatConnection *connection in _connections)
+		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+}
 
 #if TARGET_IPHONE_SIMULATOR
 - (void) _gotRawConnectionMessage:(NSNotification *) notification {
@@ -1105,6 +1043,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[_directConnections insertObject:connection atIndex:index];
 	[_connections addObject:connection];
 
+	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObject:connection forKey:@"connection"];
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerAddedConnectionNotification object:self userInfo:notificationInfo];
+
 	[self saveConnections];
 }
 
@@ -1113,6 +1054,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	[_directConnections removeObjectAtIndex:oldIndex];
 	[_directConnections insertObject:connection atIndex:newIndex];
+
+	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"connection", [NSNumber numberWithUnsignedInteger:newIndex], @"index", [NSNumber numberWithUnsignedInteger:oldIndex], @"oldIndex", nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerMovedConnectionNotification object:self userInfo:notificationInfo];
 
 	[connection release];
 
@@ -1134,30 +1078,10 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[_directConnections removeObjectAtIndex:index];
 	[_connections removeObject:connection];
 
+	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"connection", [NSNumber numberWithUnsignedInteger:index], @"index", nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerRemovedConnectionNotification object:self userInfo:notificationInfo];
+
 	[connection release];
-
-	[self saveConnections];
-}
-
-- (void) replaceConnection:(MVChatConnection *) previousConnection withConnection:(MVChatConnection *) newConnection {
-	NSUInteger index = [_directConnections indexOfObjectIdenticalTo:previousConnection];
-	if (index != NSNotFound)
-		[self replaceConnectionAtIndex:index withConnection:newConnection];
-}
-
-- (void) replaceConnectionAtIndex:(NSUInteger) index withConnection:(MVChatConnection *) connection {
-	if (!connection) return;
-
-	MVChatConnection *oldConnection = [[_directConnections objectAtIndex:index] retain];
-	if (!oldConnection) return;
-
-	[oldConnection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
-
-	[_directConnections replaceObjectAtIndex:index withObject:connection];
-	[_connections removeObject:oldConnection];
-	[_connections addObject:connection];
-
-	[oldConnection release];
 
 	[self saveConnections];
 }
@@ -1170,6 +1094,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	[connections removeObjectAtIndex:oldIndex];
 	[connections insertObject:connection atIndex:newIndex];
+
+	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"connection", [NSNumber numberWithUnsignedInteger:newIndex], @"index", nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerMovedConnectionNotification object:self userInfo:notificationInfo];
 
 	[connection release];
 
@@ -1207,7 +1134,12 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 - (void) addBouncerSettings:(CQBouncerSettings *) bouncer {
 	NSParameterAssert(bouncer != nil);
+
 	[_bouncers addObject:bouncer];
+
+	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObject:bouncer forKey:@"bouncerSettings"];
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerAddedBouncerSettingsNotification object:self userInfo:notificationInfo];
+
 	[self refreshBouncerConnectionsWithBouncerSettings:bouncer];
 }
 
@@ -1216,7 +1148,26 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) removeBouncerSettingsAtIndex:(NSUInteger) index {
+	CQBouncerSettings *bouncer = [[_bouncers objectAtIndex:index] retain];
+
+	NSArray *connections = [[self bouncerChatConnectionsForIdentifier:bouncer.identifier] retain];
+	for (MVChatConnection *connection in connections)
+		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+
 	[_bouncers removeObjectAtIndex:index];
+	[_bouncerChatConnections removeObjectForKey:bouncer.identifier];
+
+	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObjectsAndKeys:bouncer, @"bouncerSettings", [NSNumber numberWithUnsignedInteger:index], @"index", nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerRemovedBouncerSettingsNotification object:self userInfo:notificationInfo];
+
+	for (NSInteger i = (connections.count - 1); i >= 0; --i) {
+		MVChatConnection *connection = [connections objectAtIndex:i];
+		NSDictionary *notificationInfo = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"connection", [NSNumber numberWithUnsignedInteger:i], @"index", nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerRemovedConnectionNotification object:self userInfo:notificationInfo];
+	}
+
+	[bouncer release];
+	[connections release];
 }
 @end
 

@@ -393,11 +393,11 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		if (buttonIndex == 0)
 			creationViewController.roomTarget = YES;
 
-		[self presentModalViewController:creationViewController animated:YES];
+		[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
 		[creationViewController release];
 	} else if (actionSheet.tag == NewConnectionActionSheetTag) {
 		if (buttonIndex == 0) {
-			[[CQConnectionsController defaultController] showCreationActionSheet:((CQActionSheet *)actionSheet).userInfo];
+			[[CQConnectionsController defaultController] showNewConnectionPrompt:((CQActionSheet *)actionSheet).userInfo];
 		} else if (buttonIndex == 1) {
 			[self joinSupportRoom];
 		}
@@ -430,13 +430,13 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 			picker.delegate = self;
 			picker.allowsImageEditing = YES;
 			picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-			[self presentModalViewController:picker animated:YES];
+			[[CQColloquyApplication sharedApplication] presentModalViewController:picker animated:YES];
 			[picker release];
 		} else if (sendExistingPhoto) {
 			UIImagePickerController *picker = [[UIImagePickerController alloc] init];
 			picker.delegate = self;
 			picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-			[self presentModalViewController:picker animated:YES];
+			[[CQColloquyApplication sharedApplication] presentModalViewController:picker animated:YES];
 			[picker release];
 		} else if (sendContact) {
 			NSAssert(NO, @"Contact sending not implemented.");
@@ -685,7 +685,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	[connection joinChatRoomNamed:@"#colloquy-mobile"];
 
-	[[CQColloquyApplication sharedApplication] showColloquies];
+	[[CQColloquyApplication sharedApplication] showColloquies:nil];
 }
 
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {

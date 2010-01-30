@@ -82,7 +82,7 @@
 
 	[[CQConnectionsController defaultController] addBouncerSettings:_settings];
 
-	[[CQColloquyApplication sharedApplication] showConnections];
+	[[CQColloquyApplication sharedApplication] showConnections:nil];
 
 	[self dismissModalViewControllerAnimated:YES];
 }

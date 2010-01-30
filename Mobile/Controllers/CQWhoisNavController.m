@@ -9,7 +9,12 @@
 - (id) init {
 	if (!(self = [super init]))
 		return nil;
+
 	self.delegate = self;
+
+	if ([self respondsToSelector:@selector(setModalPresentationStyle:)])
+		self.modalPresentationStyle = UIModalPresentationFormSheet;
+
 	return self;
 }
 

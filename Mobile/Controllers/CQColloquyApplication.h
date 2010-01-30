@@ -1,4 +1,5 @@
 @protocol CQBrowserViewControllerDelegate;
+@class CQConnectionsNavigationController;
 
 extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
@@ -6,6 +7,7 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 	@protected
 	UIWindow *_mainWindow;
 	UIViewController *_mainViewController;
+	CQConnectionsNavigationController *_connectionsNavigationController;
 	NSDate *_launchDate;
 	NSString *_deviceToken;
 	NSUInteger _networkIndicatorStack;
@@ -13,10 +15,12 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 }
 + (CQColloquyApplication *) sharedApplication;
 
-- (void) showHelp;
-- (void) showWelcome;
-- (void) showConnections;
-- (void) showColloquies;
+- (void) showHelp:(id) sender;
+- (void) showWelcome:(id) sender;
+- (void) showConnections:(id) sender;
+- (void) showColloquies:(id) sender;
+
+@property (nonatomic, readonly) CQConnectionsNavigationController *connectionsNavigationController;
 
 - (BOOL) isSpecialApplicationURL:(NSURL *) url;
 - (NSString *) applicationNameForURL:(NSURL *) url;
@@ -27,6 +31,12 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
 - (void) showActionSheet:(UIActionSheet *) sheet;
 - (void) showActionSheet:(UIActionSheet *) sheet forSender:(id) sender animated:(BOOL) animated;
+
+@property (nonatomic, readonly) UIViewController *modalViewController;
+
+- (void) presentModalViewController:(UIViewController *) modalViewController animated:(BOOL) animated;
+- (void) presentModalViewController:(UIViewController *) modalViewController animated:(BOOL) animated singly:(BOOL) singly;
+- (void) dismissModalViewControllerAnimated:(BOOL) animated;
 
 - (void) hideTabBarWithTransition:(BOOL) transition;
 - (void) showTabBarWithTransition:(BOOL) transition;

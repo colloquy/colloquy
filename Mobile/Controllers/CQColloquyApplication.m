@@ -4,6 +4,7 @@
 #import "CQBrowserViewController.h"
 #import "CQChatController.h"
 #import "CQConnectionsController.h"
+#import "CQConnectionsNavigationController.h"
 #import "CQWelcomeNavigationController.h"
 #import "RegexKitLite.h"
 
@@ -33,6 +34,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) dealloc {
 	[_mainWindow release];
 	[_mainViewController release];
+	[_connectionsNavigationController release];
 	[_launchDate release];
 	[_deviceToken release];
 
@@ -208,7 +210,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	BOOL showWelcomeScreen = ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastBuildWelcomeScreenAppeared"] isEqualToString:version];
 	if (showWelcomeScreen || (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count)) {
-		[self showWelcome];
+		[self showWelcome:nil];
 
 		[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQLastBuildWelcomeScreenAppeared"];
 	}
@@ -240,12 +242,15 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		[disconnectItem release];
 	}
 
+	[CQConnectionsController defaultController];
+
 	_mainWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+	_connectionsNavigationController = [[CQConnectionsNavigationController alloc] init];
 
 	if ([[UIDevice currentDevice] isPadModel]) {
 		UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
 
-		NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQConnectionsController defaultController], [CQChatController defaultController], nil];
+		NSArray *viewControllers = [[NSArray alloc] initWithObjects:_connectionsNavigationController, [CQChatController defaultController], nil];
 		splitViewController.viewControllers = viewControllers;
 		[viewControllers release];
 
@@ -254,7 +259,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		UITabBarController *tabBarController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
 		tabBarController.delegate = self;
 
-		NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQConnectionsController defaultController], [CQChatController defaultController], nil];
+		NSArray *viewControllers = [[NSArray alloc] initWithObjects:_connectionsNavigationController, [CQChatController defaultController], nil];
 		tabBarController.viewControllers = viewControllers;
 		[viewControllers release];
 
@@ -286,11 +291,11 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 			if (roomName.length) {
 				[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:connection];
 
-				[self showColloquies];
+				[self showColloquies:nil];
 			} else if (senderNickname.length) {
 				[[CQChatController defaultController] showChatControllerForUserNicknamed:senderNickname andConnection:connection];
 
-				[self showColloquies];
+				[self showColloquies:nil];
 			}
 		}
 	}
@@ -376,6 +381,41 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #pragma mark -
 
+- (UIViewController *) modalViewController {
+	return _mainViewController.modalViewController;
+}
+
+- (void) presentModalViewController:(UIViewController *) modalViewController animated:(BOOL) animated {
+	[self presentModalViewController:modalViewController animated:animated singly:YES];
+}
+
+- (void) _presentModalViewControllerWithInfo:(NSDictionary *) info {
+	UIViewController *modalViewController = [info objectForKey:@"modalViewController"];
+	BOOL animated = [[info objectForKey:@"animated"] boolValue];
+
+	[self presentModalViewController:modalViewController animated:animated singly:YES];
+}
+
+- (void) presentModalViewController:(UIViewController *) modalViewController animated:(BOOL) animated singly:(BOOL) singly {
+	if (singly && self.modalViewController) {
+		[self dismissModalViewControllerAnimated:animated];
+		if (animated) {
+			NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:modalViewController, @"modalViewController", [NSNumber numberWithBool:animated], @"animated", nil];
+			[self performSelector:@selector(_presentModalViewControllerWithInfo:) withObject:info afterDelay:0.5];
+			[info release];
+			return;
+		}
+	}
+
+	[_mainViewController presentModalViewController:modalViewController animated:animated];
+}
+
+- (void) dismissModalViewControllerAnimated:(BOOL) animated {
+	[_mainViewController dismissModalViewControllerAnimated:animated];
+}
+
+#pragma mark -
+
 - (void) setNetworkActivityIndicatorVisible:(BOOL) visible {
 	if (visible) {
 		++_networkIndicatorStack;
@@ -390,36 +430,40 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #pragma mark -
 
-- (void) showHelp {
+- (void) showHelp:(id) sender {
 	CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
 	welcomeController.shouldShowOnlyHelpTopics = YES;
 
-	[_mainViewController presentModalViewController:welcomeController animated:YES];
+	[self presentModalViewController:welcomeController animated:YES];
 
 	[welcomeController release];
 }
 
-- (void) showWelcome {
+- (void) showWelcome:(id) sender {
 	CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
 
-	[_mainViewController presentModalViewController:welcomeController animated:YES];
+	[self presentModalViewController:welcomeController animated:YES];
 
 	[welcomeController release];
 }
 
-- (void) showConnections {
+- (void) showConnections:(id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
 	} else {
-		self.tabBarController.selectedViewController = [CQConnectionsController defaultController];
+		self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:0];
 	}
 }
 
-- (void) showColloquies {
+- (void) showColloquies:(id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
 	} else {
-		self.tabBarController.selectedViewController = [CQChatController defaultController];
+		self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:1];
 	}
 }
+
+#pragma mark -
+
+@synthesize connectionsNavigationController = _connectionsNavigationController;
 
 #pragma mark -
 

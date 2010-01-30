@@ -147,7 +147,7 @@
 		[[CQChatController defaultController] showChatController:chatController animated:NO];
 	}
 
-	[[CQColloquyApplication sharedApplication] showColloquies];
+	[[CQColloquyApplication sharedApplication] showColloquies:nil];
 
 	[self dismissModalViewControllerAnimated:YES];
 }

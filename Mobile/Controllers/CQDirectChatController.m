@@ -278,7 +278,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	[self _forceRegsignKeyboard];
 
-	[self presentModalViewController:whoisController animated:YES];
+	[[CQColloquyApplication sharedApplication] presentModalViewController:whoisController animated:YES];
 
 	[whoisController release];
 }
@@ -622,7 +622,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 		[self _forceRegsignKeyboard];
 
-		[self presentModalViewController:creationViewController animated:YES];
+		[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
 
 		[creationViewController release];
 		return YES;
@@ -768,7 +768,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	[self _forceRegsignKeyboard];
 
-	[self presentModalViewController:creationViewController animated:YES];
+	[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
 
 	[creationViewController release];
 
@@ -862,7 +862,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 - (BOOL) handleHelpCommandWithArguments:(NSString *) arguments {
 	[self _forceRegsignKeyboard];
 
-	[[CQColloquyApplication sharedApplication] showHelp];
+	[[CQColloquyApplication sharedApplication] showHelp:nil];
 
 	return YES;
 }
@@ -876,7 +876,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 - (BOOL) handleWelcomeCommandWithArguments:(NSString *) arguments {
 	[self _forceRegsignKeyboard];
 
-	[[CQColloquyApplication sharedApplication] showWelcome];
+	[[CQColloquyApplication sharedApplication] showWelcome:nil];
 
 	return YES;
 }
@@ -1004,7 +1004,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	[self _forceRegsignKeyboard];
 
-	[self presentModalViewController:whoisController animated:YES];
+	[[CQColloquyApplication sharedApplication] presentModalViewController:whoisController animated:YES];
 
 	[whoisController release];
 
@@ -1236,7 +1236,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if (alertView.tag == TweetHelpAlertTag) {
 		[self _forceRegsignKeyboard];
 
-		[[CQColloquyApplication sharedApplication] showHelp];
+		[[CQColloquyApplication sharedApplication] showHelp:nil];
 	}
 }
 
