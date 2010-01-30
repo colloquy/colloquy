@@ -386,8 +386,8 @@
 		1CBEA7C6100318EF00546847 /* bouncer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bouncer.png; sourceTree = "<group>"; };
 		1CC575960ED3A71900FEC2C1 /* CQPreferencesDeleteCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQPreferencesDeleteCell.h; sourceTree = "<group>"; };
 		1CC575970ED3A71900FEC2C1 /* CQPreferencesDeleteCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesDeleteCell.m; sourceTree = "<group>"; };
-		1CC576D10ED4684700FEC2C1 /* UITableViewCellAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UITableViewCellAdditions.h; path = Mobile/Views/UITableViewCellAdditions.h; sourceTree = "<group>"; };
-		1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UITableViewCellAdditions.m; path = Mobile/Views/UITableViewCellAdditions.m; sourceTree = "<group>"; };
+		1CC576D10ED4684700FEC2C1 /* UITableViewCellAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UITableViewCellAdditions.h; path = Mobile/Additions/UITableViewCellAdditions.h; sourceTree = "<group>"; };
+		1CC576D20ED4684700FEC2C1 /* UITableViewCellAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UITableViewCellAdditions.m; path = Mobile/Additions/UITableViewCellAdditions.m; sourceTree = "<group>"; };
 		1CC64A790EE90DC000DE91D0 /* members.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = members.png; sourceTree = "<group>"; };
 		1CC64A9A0EE9152D00DE91D0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		1CC64B2B0EE97F8B00DE91D0 /* CQChatUserListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatUserListViewController.h; sourceTree = "<group>"; };
@@ -426,8 +426,8 @@
 		1CFCB94E1114DD9600EA5F10 /* CQChatNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatNavigationController.m; sourceTree = "<group>"; };
 		1CFCB9B81114EED200EA5F10 /* UINavigationControllerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UINavigationControllerAdditions.h; path = Mobile/Additions/UINavigationControllerAdditions.h; sourceTree = "<group>"; };
 		1CFCB9B91114EED200EA5F10 /* UINavigationControllerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UINavigationControllerAdditions.m; path = Mobile/Additions/UINavigationControllerAdditions.m; sourceTree = "<group>"; };
-		1CFF6E800EDF772800D3C557 /* UITableViewAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UITableViewAdditions.h; path = Mobile/Views/UITableViewAdditions.h; sourceTree = "<group>"; };
-		1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UITableViewAdditions.m; path = Mobile/Views/UITableViewAdditions.m; sourceTree = "<group>"; };
+		1CFF6E800EDF772800D3C557 /* UITableViewAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UITableViewAdditions.h; path = Mobile/Additions/UITableViewAdditions.h; sourceTree = "<group>"; };
+		1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UITableViewAdditions.m; path = Mobile/Additions/UITableViewAdditions.m; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* Colloquy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
