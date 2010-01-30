@@ -450,7 +450,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) showConnections:(id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
 	} else {
-		self.tabBarController.selectedViewController = [self.tabBarController.viewControllers objectAtIndex:0];
+		self.tabBarController.selectedViewController = _connectionsNavigationController;
 	}
 }
 
