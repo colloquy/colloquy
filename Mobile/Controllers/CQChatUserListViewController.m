@@ -4,8 +4,8 @@
 #import "CQChatController.h"
 #import "CQColloquyApplication.h"
 #import "CQDirectChatController.h"
-#import "CQWhoisNavController.h"
-#import "CQWhoisViewController.h"
+#import "CQUserInfoController.h"
+#import "CQUserInfoViewController.h"
 
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
@@ -388,12 +388,12 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
-	CQWhoisViewController *whoisViewController = [[CQWhoisViewController alloc] init];
-	whoisViewController.user = [_matchedUsers objectAtIndex:indexPath.row];
+	CQUserInfoViewController *userInfoViewController = [[CQUserInfoViewController alloc] init];
+	userInfoViewController.user = [_matchedUsers objectAtIndex:indexPath.row];
 
-	[self.navigationController pushViewController:whoisViewController animated:YES];
+	[self.navigationController pushViewController:userInfoViewController animated:YES];
 
-	[whoisViewController release];
+	[userInfoViewController release];
 }
 
 - (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {

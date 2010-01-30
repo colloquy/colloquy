@@ -1,14 +1,14 @@
 //  Created by August Joki on 1/3/09.
 //  Copyright 2009 Concinnous Software. All rights reserved.
 
-#import "CQWhoisChannelsViewController.h"
+#import "CQUserInfoRoomListViewController.h"
 
 #import "CQChatController.h"
 #import "CQColloquyApplication.h"
 
 #import <ChatCore/MVChatConnection.h>
 
-@implementation CQWhoisChannelsViewController
+@implementation CQUserInfoRoomListViewController
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;

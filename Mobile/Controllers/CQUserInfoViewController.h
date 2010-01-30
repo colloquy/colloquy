@@ -3,7 +3,7 @@
 
 @class MVChatUser;
 
-@interface CQWhoisViewController : UITableViewController {
+@interface CQUserInfoViewController : UITableViewController {
 	@protected
 	MVChatUser *_user;
 	NSTimer *_updateTimesTimer;

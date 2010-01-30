@@ -3,7 +3,7 @@
 
 @class MVChatConnection;
 
-@interface CQWhoisChannelsViewController : UITableViewController <UIActionSheetDelegate> {
+@interface CQUserInfoRoomListViewController : UITableViewController <UIActionSheetDelegate> {
 	@protected
 	NSArray *_rooms;
 	MVChatConnection *_connection;

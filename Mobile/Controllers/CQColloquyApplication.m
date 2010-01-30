@@ -7,7 +7,7 @@
 #import "CQChatNavigationController.h"
 #import "CQConnectionsController.h"
 #import "CQConnectionsNavigationController.h"
-#import "CQWelcomeNavigationController.h"
+#import "CQWelcomeController.h"
 #import "RegexKitLite.h"
 
 #if ENABLE(SECRETS)
@@ -430,7 +430,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #pragma mark -
 
 - (void) showHelp:(id) sender {
-	CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
+	CQWelcomeController *welcomeController = [[CQWelcomeController alloc] init];
 	welcomeController.shouldShowOnlyHelpTopics = YES;
 
 	[self presentModalViewController:welcomeController animated:YES];
@@ -439,7 +439,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) showWelcome:(id) sender {
-	CQWelcomeNavigationController *welcomeController = [[CQWelcomeNavigationController alloc] init];
+	CQWelcomeController *welcomeController = [[CQWelcomeController alloc] init];
 
 	[self presentModalViewController:welcomeController animated:YES];
 

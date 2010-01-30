@@ -11,7 +11,7 @@
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
 #import "CQStyleView.h"
-#import "CQWhoisNavController.h"
+#import "CQUserInfoController.h"
 #import "RegexKitLite.h"
 
 #import <ChatCore/MVChatConnection.h>
@@ -273,14 +273,14 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if (!self.user)
 		return;
 
-	CQWhoisNavController *whoisController = [[CQWhoisNavController alloc] init];
-	whoisController.user = self.user;
+	CQUserInfoController *userInfoController = [[CQUserInfoController alloc] init];
+	userInfoController.user = self.user;
 
 	[self _forceRegsignKeyboard];
 
-	[[CQColloquyApplication sharedApplication] presentModalViewController:whoisController animated:YES];
+	[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
 
-	[whoisController release];
+	[userInfoController release];
 }
 
 #pragma mark -
@@ -990,23 +990,23 @@ static NSOperationQueue *chatMessageProcessingQueue;
 #pragma mark -
 
 - (BOOL) handleWhoisCommandWithArguments:(NSString *) arguments {
-	CQWhoisNavController *whoisController = [[CQWhoisNavController alloc] init];
+	CQUserInfoController *userInfoController = [[CQUserInfoController alloc] init];
 
 	if (arguments.length) {
 		NSString *nick = [[arguments componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] objectAtIndex:0];
-		whoisController.user = [[self.connection chatUsersWithNickname:nick] anyObject];
+		userInfoController.user = [[self.connection chatUsersWithNickname:nick] anyObject];
 	} else if (self.user) {
-		whoisController.user = self.user;
+		userInfoController.user = self.user;
 	} else {
-		[whoisController release];
+		[userInfoController release];
 		return NO;
 	}
 
 	[self _forceRegsignKeyboard];
 
-	[[CQColloquyApplication sharedApplication] presentModalViewController:whoisController animated:YES];
+	[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
 
-	[whoisController release];
+	[userInfoController release];
 
 	return YES;
 }

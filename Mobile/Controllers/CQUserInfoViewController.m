@@ -1,9 +1,9 @@
 //  Created by August Joki on 1/3/09.
 //  Copyright 2009 Concinnous Software. All rights reserved.
 
-#import "CQWhoisViewController.h"
+#import "CQUserInfoViewController.h"
 #import "CQPreferencesTextCell.h"
-#import "CQWhoisChannelsViewController.h"
+#import "CQUserInfoRoomListViewController.h"
 
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatConnection.h>
@@ -47,7 +47,7 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 
 #pragma mark -
 
-@implementation CQWhoisViewController
+@implementation CQUserInfoViewController
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
@@ -276,7 +276,7 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 #pragma mark -
 
 - (IBAction) showJoinedRooms:(id) sender {
-	CQWhoisChannelsViewController *roomsController = [[CQWhoisChannelsViewController alloc] init];
+	CQUserInfoRoomListViewController *roomsController = [[CQUserInfoRoomListViewController alloc] init];
 	roomsController.rooms = [_user attributeForKey:MVChatUserKnownRoomsAttribute];
 	roomsController.connection = _user.connection;
 

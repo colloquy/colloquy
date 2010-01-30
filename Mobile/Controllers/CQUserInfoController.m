@@ -1,10 +1,11 @@
-#import "CQWelcomeNavigationController.h"
+//  Created by August Joki on 1/3/09.
+//  Copyright 2009 Concinnous Software. All rights reserved.
 
-#import "CQColloquyApplication.h"
-#import "CQHelpTopicsViewController.h"
-#import "CQWelcomeViewController.h"
+#import "CQUserInfoController.h"
 
-@implementation CQWelcomeNavigationController
+#import "CQUserInfoViewController.h"
+
+@implementation CQUserInfoController
 - (id) init {
 	if (!(self = [super init]))
 		return nil;
@@ -18,30 +19,28 @@
 }
 
 - (void) dealloc {
-	[_rootViewController release];
+	[_userInfoViewController release];
+	[_user release];
 
 	[super dealloc];
 }
 
 #pragma mark -
 
-@synthesize shouldShowOnlyHelpTopics = _shouldShowOnlyHelpTopics;
-
-#pragma mark -
-
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	if (_shouldShowOnlyHelpTopics && !_rootViewController)
-		_rootViewController = [[CQHelpTopicsViewController alloc] init];
-	else if (!_rootViewController)
-		_rootViewController = [[CQWelcomeViewController alloc] init];
+	if (_userInfoViewController)
+		return;
+
+	_userInfoViewController = [[CQUserInfoViewController alloc] init];
+	_userInfoViewController.user = _user;
 
 	UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(close:)];
-	_rootViewController.navigationItem.rightBarButtonItem = doneItem;
+	_userInfoViewController.navigationItem.leftBarButtonItem = doneItem;
 	[doneItem release];
 
-	[self pushViewController:_rootViewController animated:NO];
+	[self pushViewController:_userInfoViewController animated:NO];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -58,16 +57,25 @@
 	[[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle animated:animated];
 }
 
-- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
 	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
 }
 
 #pragma mark -
 
-- (void) close:(id) sender {
-	if (!_shouldShowOnlyHelpTopics)
-		[[CQColloquyApplication sharedApplication] showConnections:nil];
-
+- (IBAction) close:(id) sender {
 	[self dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark -
+
+@synthesize user = _user;
+
+- (void) setUser:(MVChatUser *) user {
+	id old = _user;
+	_user = [user retain];
+	[old release];
+
+	_userInfoViewController.user = user;
 }
 @end
