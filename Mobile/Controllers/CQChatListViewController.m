@@ -654,7 +654,7 @@ static NSIndexPath *indexPathForChatController(id controller) {
 }
 
 - (CGFloat) tableView:(UITableView *) tableView heightForHeaderInSection:(NSInteger) section {
-	return 23.;
+	return 22.;
 }
 
 - (UIView *) tableView:(UITableView *) tableView viewForHeaderInSection:(NSInteger) section {

@@ -8,7 +8,7 @@
 	_backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
 
 	UIImage *image = [UIImage imageNamed:@"sectionHeader.png"];
-	image = [image stretchableImageWithLeftCapWidth:0. topCapHeight:2.];
+	image = [image stretchableImageWithLeftCapWidth:0. topCapHeight:0.];
 
 	_backgroundImage = [image retain];
 
@@ -16,7 +16,7 @@
 	_backgroundImageView.image = image;
 
 	image = [UIImage imageNamed:@"sectionHeaderHighlighted.png"];
-	image = [image stretchableImageWithLeftCapWidth:0. topCapHeight:2.];
+	image = [image stretchableImageWithLeftCapWidth:0. topCapHeight:0.];
 
 	_backgroundHighlightedImage = [image retain];
 
@@ -45,6 +45,19 @@
 	[_backgroundHighlightedImage release];
 
 	[super dealloc];
+}
+
+#pragma mark -
+
+- (void) setFrame:(CGRect) frame {
+	_frame = frame;
+	frame.origin.y -= 1.;
+	frame.size.height += 1.;
+	super.frame = frame;
+}
+
+- (CGRect) frame {
+	return _frame;
 }
 
 #pragma mark -

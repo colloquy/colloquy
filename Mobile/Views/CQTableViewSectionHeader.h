@@ -5,6 +5,7 @@
 	UIImage *_backgroundHighlightedImage;
 	UILabel *_textLabel;
 	NSUInteger _section;
+	CGRect _frame;
 }
 
 @property (nonatomic, readonly) UILabel *textLabel;
