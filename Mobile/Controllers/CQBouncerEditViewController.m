@@ -223,7 +223,7 @@ static BOOL pushAvailable = NO;
 
 		return cell;
 	} else if (indexPath.section == UpdateTableSection && indexPath.row == 0) {
-		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
+		UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
 		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0., 10., 320., 20.)];
 
 		label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -238,7 +238,7 @@ static BOOL pushAvailable = NO;
 
 		[label release];
 
-		return cell;
+		return [cell autorelease];
 	} else if (indexPath.section == DeleteTableSection && indexPath.row == 0) {
 		CQPreferencesDeleteCell *cell = [CQPreferencesDeleteCell reusableTableViewCellInTableView:tableView];
 

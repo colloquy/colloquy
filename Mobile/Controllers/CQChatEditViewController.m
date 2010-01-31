@@ -81,6 +81,8 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 				_selectedConnection = [_sortedConnections lastObject];
 			else _selectedConnection = [_sortedConnections objectAtIndex:lastSelectedConnectionIndex];
 		}
+
+		[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] withAnimation:UITableViewRowAnimationNone];
 	}
 }
 
@@ -216,7 +218,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 		return cell;
 	}
 
-	UITableViewCell *helpCell = [UITableViewCell reusableTableViewCellInTableView:tableView];
+	UITableViewCell *helpCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
 	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0., 10., 320., 20.)];
 
 	label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -231,7 +233,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 
 	[label release];
 
-	return helpCell;
+	return [helpCell autorelease];
 }
 
 #pragma mark -
