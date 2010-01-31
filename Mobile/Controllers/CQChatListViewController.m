@@ -388,11 +388,14 @@ static NSIndexPath *indexPathForChatController(id controller) {
 #pragma mark -
 
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+	CQTableViewSectionHeader *header = ((CQActionSheet *)actionSheet).userInfo;
+
+	header.selected = NO;
+
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
-	NSInteger section = [[(CQActionSheet *) actionSheet userInfo] intValue];
-	MVChatConnection *connection = connectionForSection(section);
+	MVChatConnection *connection = connectionForSection(header.section);
 
 	if (buttonIndex == 0) {
 		if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus) {
@@ -431,7 +434,7 @@ static NSIndexPath *indexPathForChatController(id controller) {
 
 	if (viewControllers.count == viewsToClose.count) {
 		[self.tableView beginUpdates];
-		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationTop];
+		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:header.section] withRowAnimation:UITableViewRowAnimationTop];
 		if (![CQChatController defaultController].chatViewControllers.count)
 			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 		[self.tableView endUpdates];
@@ -444,15 +447,17 @@ static NSIndexPath *indexPathForChatController(id controller) {
 #pragma mark -
 
 - (void) tableSectionHeaderSelected:(CQTableViewSectionHeader *) header {
-	NSInteger section = header.section;
+	NSUInteger section = header.section;
 
 	MVChatConnection *connection = connectionForSection(section);
 	if (!connection)
 		return;
 
+	header.selected = YES;
+
 	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.delegate = self;
-	sheet.userInfo = [NSNumber numberWithInt:header.section];
+	sheet.userInfo = header;
 
 	if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus)
 		sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
