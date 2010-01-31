@@ -831,22 +831,27 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	NSString *reason = operation.processedMessageAsHTML;
 	MVChatUser *user = [operation.userInfo objectForKey:@"user"];
 	MVChatUser *byUser = [operation.userInfo objectForKey:@"byUser"];
+	NSString *userInformation = nil;
+
+	if (showHostmasksOnPart)
+		userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForUser:user], user.username, user.address];
+	else userInformation = [self _markupForUser:user];
 
 	if (byUser.localUser) {
 		if (reason.length) {
 			NSString *eventMessageFormat = [NSLocalizedString(@"You kicked %@ from the room. (%@)", "You kicked a user from the room with reason event message") stringByEncodingXMLSpecialCharactersAsEntities];
-			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForUser:user], reason] withIdentifier:@"memberKicked"];
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation, reason] withIdentifier:@"memberKicked"];
 		} else {
 			NSString *eventMessageFormat = [NSLocalizedString(@"You kicked %@ from the room.", "You kicked a user from the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
-			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForUser:user]] withIdentifier:@"memberKicked"];
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:@"memberKicked"];
 		}
 	} else {
 		if (reason.length) {
 			NSString *eventMessageFormat = [NSLocalizedString(@"%@ was kicked from the room by %@. (%@)", "A user was kicked from the room with reason event message") stringByEncodingXMLSpecialCharactersAsEntities];
-			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForUser:user], [self _markupForMemberUser:byUser], reason] withIdentifier:@"memberKicked"];
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation, [self _markupForMemberUser:byUser], reason] withIdentifier:@"memberKicked"];
 		} else {
 			NSString *eventMessageFormat = [NSLocalizedString(@"%@ was kicked from the room by %@.", "A user was kicked from the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
-			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForUser:user], [self _markupForMemberUser:byUser]] withIdentifier:@"memberKicked"];
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation, [self _markupForMemberUser:byUser]] withIdentifier:@"memberKicked"];
 		}
 	}
 }
