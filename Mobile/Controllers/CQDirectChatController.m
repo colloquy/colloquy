@@ -1349,9 +1349,16 @@ static NSOperationQueue *chatMessageProcessingQueue;
 }
 
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo {
+	CQProcessChatMessageOperation *operation = [[CQProcessChatMessageOperation alloc] initWithMessageData:messageData];
+	operation.encoding = self.encoding;
+	operation.target = target;
+	operation.action = action;
+	operation.userInfo = userInfo;
+
 	if (!messageData) {
 		if (target && action)
-			[target performSelectorOnMainThread:action withObject:nil waitUntilDone:NO];
+			[target performSelectorOnMainThread:action withObject:operation waitUntilDone:NO];
+		[operation release];
 		return;
 	}
 
@@ -1359,13 +1366,6 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		chatMessageProcessingQueue = [[NSOperationQueue alloc] init];
 		chatMessageProcessingQueue.maxConcurrentOperationCount = 1;
 	}
-
-	CQProcessChatMessageOperation *operation = [[CQProcessChatMessageOperation alloc] initWithMessageData:messageData];
-	operation.encoding = self.encoding;
-
-	operation.target = target;
-	operation.action = action;
-	operation.userInfo = userInfo;
 
 	[chatMessageProcessingQueue addOperation:operation];
 

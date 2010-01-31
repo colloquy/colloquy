@@ -28,9 +28,9 @@ static BOOL stripMessageFormatting;
 }
 
 - (id) initWithMessageData:(NSData *) messageData {
-	NSParameterAssert(messageData != nil);
-
-	return [self initWithMessageInfo:[NSDictionary dictionaryWithObject:messageData forKey:@"message"]];
+	if (messageData)
+		return [self initWithMessageInfo:[NSDictionary dictionaryWithObject:messageData forKey:@"message"]];
+	return [self initWithMessageInfo:[NSDictionary dictionary]];
 }
 
 - (id) initWithMessageInfo:(NSDictionary *) messageInfo {
