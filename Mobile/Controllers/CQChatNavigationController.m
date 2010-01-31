@@ -11,6 +11,7 @@
 
 	self.title = NSLocalizedString(@"Colloquies", @"Colloquies tab title");
 	self.tabBarItem.image = [UIImage imageNamed:@"colloquies.png"];
+	self.delegate = self;
 
 	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
@@ -67,6 +68,22 @@
 }
 
 #pragma mark -
+
+- (void) navigationController:(UINavigationController *) navigationController willShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
+	if (viewController == self.rootViewController)
+		[CQChatController defaultController].totalImportantUnreadCount = 0;
+}
+
+- (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
+	if (viewController == self.rootViewController && [[CQChatController defaultController] hasPendingChatController])
+		[self performSelector:@selector(_showNextChatController) withObject:nil afterDelay:0.33];
+}
+
+#pragma mark -
+
+- (void) _showNextChatController {
+	[[CQChatController defaultController] showPendingChatControllerAnimated:YES];
+}
 
 - (void) _unreadCountChanged {
 	NSInteger totalImportantUnreadCount = [CQChatController defaultController].totalImportantUnreadCount;

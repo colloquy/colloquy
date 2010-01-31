@@ -5,6 +5,7 @@
 @interface CQChatRoomController : CQDirectChatController {
 	@protected
 	NSMutableArray *_orderedMembers;
+	BOOL _showingMembersInNavigationController;
 	BOOL _membersNeedSorted;
 	BOOL _banListSynced;
 	BOOL _joined;
@@ -18,4 +19,6 @@
 - (void) part;
 
 - (void) didJoin;
+
+@property (nonatomic, readonly) UIViewController *detailViewController;
 @end

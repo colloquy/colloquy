@@ -36,14 +36,11 @@ static CQSoundController *highlightSound;
 #if ENABLE(FILE_TRANSFERS)
 static BOOL vibrateOnFileTransfer;
 static CQSoundController *fileTransferSound;
-#endif
 
 @interface CQChatController (CQChatControllerPrivate)
-- (void) _showNextChatControllerAnimated:(BOOL) animated;
-#if ENABLE(FILE_TRANSFERS)
 - (void) _sendImage;
-#endif
 @end
+#endif
 
 #pragma mark -
 
@@ -105,7 +102,6 @@ static CQSoundController *fileTransferSound;
 		return nil;
 
 	_chatNavigationController = [[CQChatNavigationController alloc] init];
-	_chatNavigationController.delegate = self;
 
 	_chatControllers = [[NSMutableArray alloc] init];
 
@@ -340,23 +336,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[alert release];
 }
 
-- (void) _showNextChatControllerAnimated:(BOOL) animated {
-	if (!_nextController)
-		return;
-
-	if (_chatNavigationController.topViewController != _chatNavigationController.rootViewController)
-		return;
-
-	[_chatNavigationController pushViewController:(UIViewController *)_nextController animated:animated];
-
-	[_nextController release];
-	_nextController = nil;
-}
-
-- (void) _showNextChatController {
-	[self _showNextChatControllerAnimated:YES];
-}
-
 #pragma mark -
 
 - (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
@@ -454,18 +433,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		[self _sendImage];
 #endif
 	}
-}
-
-#pragma mark -
-
-- (void) navigationController:(UINavigationController *) navigationController willShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
-	if (viewController == [navigationController.viewControllers objectAtIndex:0])
-		self.totalImportantUnreadCount = 0;
-}
-
-- (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
-	if (viewController == [navigationController.viewControllers objectAtIndex:0] && _nextController)
-		[self performSelector:@selector(_showNextChatController) withObject:nil afterDelay:0.33];
 }
 
 #pragma mark -
@@ -629,21 +596,31 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[_nextRoomConnection release];
 	_nextRoomConnection = nil;
 
-	BOOL delayed = (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController);
-	if (delayed) {
-		id old = _nextController;
-		_nextController = [controller retain];
-		[old release];
+	if ([[UIDevice currentDevice] isPadModel]) {
+		
+	} else {
+		if (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController) {
+			id old = _nextController;
+			_nextController = [controller retain];
+			[old release];
+
+			[_chatNavigationController popToRootViewControllerAnimated:animated];
+		} else {
+			[_chatNavigationController pushViewController:(UIViewController *)controller animated:animated];
+
+			[_nextController release];
+			_nextController = nil;
+		}
 	}
-
-	[_chatNavigationController popToRootViewControllerAnimated:animated];
-
-	if (!delayed)
-		[_chatNavigationController pushViewController:(UIViewController *)controller animated:animated];
 }
 
 - (void) showPendingChatControllerAnimated:(BOOL) animated {
-	[self _showNextChatControllerAnimated:animated];
+	if (_nextController)
+		[self showChatController:_nextController animated:animated];
+}
+
+- (BOOL) hasPendingChatController {
+	return !!_nextController;
 }
 
 #pragma mark -

@@ -14,7 +14,7 @@
 extern NSString *CQChatControllerAddedChatViewControllerNotification;
 extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 
-@interface CQChatController : NSObject <UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
+@interface CQChatController : NSObject <UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate> {
 	@protected
 	NSMutableArray *_chatControllers;
 	CQChatNavigationController *_chatNavigationController;
@@ -43,7 +43,9 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 - (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) room andConnection:(MVChatConnection *) connection;
 - (void) showChatControllerForUserNicknamed:(NSString *) nickname andConnection:(MVChatConnection *) connection;
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated;
+
 - (void) showPendingChatControllerAnimated:(BOOL) animated;
+- (BOOL) hasPendingChatController;
 
 #if ENABLE(FILE_TRANSFERS)
 - (void) showFilePickerWithUser:(MVChatUser *) user;
@@ -85,6 +87,11 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 @property (nonatomic, readonly) NSDictionary *persistentState;
 @property (nonatomic, readonly) NSUInteger unreadCount;
 @property (nonatomic, readonly) NSUInteger importantUnreadCount;
+
+@property (nonatomic, readonly) UIViewController *detailViewController;
+
+- (void) detailViewWillShow:(BOOL) animated;
+- (void) detailViewDidHide:(BOOL) animated;
 @end
 
 @interface MVIRCChatRoom (CQChatControllerAdditions)

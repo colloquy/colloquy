@@ -119,8 +119,11 @@ static BOOL showLeaveEvents;
 - (void) viewDidAppear:(BOOL) animated {
 	[super viewDidAppear:animated];
 
-	[_currentUserListViewController release];
-	_currentUserListViewController = nil;
+	if (_showingMembersInNavigationController) {
+		_showingMembersInNavigationController = NO;
+		[_currentUserListViewController release];
+		_currentUserListViewController = nil;
+	}
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
@@ -208,18 +211,32 @@ static BOOL showLeaveEvents;
 }
 
 - (void) showMembers {
-	if (_currentUserListViewController)
+	if (!self.navigationController || _showingMembersInNavigationController)
 		return;
 
-	if (_membersNeedSorted)
-		[self _sortMembers];
+	_showingMembersInNavigationController = YES;
+	[self.navigationController pushViewController:self.detailViewController animated:YES];
+}
 
-	_currentUserListViewController = [[CQChatUserListViewController alloc] init];
+#pragma mark -
 
-	_currentUserListViewController.users = _orderedMembers;
-	_currentUserListViewController.room = self.room;
+- (UIViewController *) detailViewController {
+	if (!_currentUserListViewController) {
+		if (_membersNeedSorted)
+			[self _sortMembers];
 
-	[self.navigationController pushViewController:_currentUserListViewController animated:YES];
+		_currentUserListViewController = [[CQChatUserListViewController alloc] init];
+		_currentUserListViewController.users = _orderedMembers;
+		_currentUserListViewController.room = self.room;
+	}
+
+	return _currentUserListViewController;
+}
+
+- (void) detailViewDidHide:(BOOL) animated {
+	id old = _currentUserListViewController;
+	_currentUserListViewController = nil;
+	[old release];
 }
 
 #pragma mark -
