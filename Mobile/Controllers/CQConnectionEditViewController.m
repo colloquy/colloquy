@@ -18,7 +18,11 @@ static unsigned short AutomaticTableSection = 3;
 static unsigned short AdvancedTableSection = 4;
 static unsigned short DeleteTableSection = 5;
 
+#if TARGET_IPHONE_SIMULATOR
 static BOOL pushAvailable = NO;
+#else
+static BOOL pushAvailable = YES;
+#endif
 
 static inline __attribute__((always_inline)) BOOL isDefaultValue(NSString *string) {
 	return [string isEqualToString:@"<<default>>"];
@@ -34,10 +38,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
-
-#if !TARGET_IPHONE_SIMULATOR
-	pushAvailable = [[UIApplication sharedApplication] respondsToSelector:@selector(enabledRemoteNotificationTypes)];
-#endif
 
 	if (!pushAvailable) {
 		IdentityTableSection = 1;

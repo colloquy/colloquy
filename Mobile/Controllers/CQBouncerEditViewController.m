@@ -14,7 +14,11 @@ static unsigned short PushTableSection = 2;
 static unsigned short UpdateTableSection = 3;
 static unsigned short DeleteTableSection = 4;
 
+#if TARGET_IPHONE_SIMULATOR
 static BOOL pushAvailable = NO;
+#else
+static BOOL pushAvailable = YES;
+#endif
 
 #pragma mark -
 
@@ -22,10 +26,6 @@ static BOOL pushAvailable = NO;
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
-
-#if !TARGET_IPHONE_SIMULATOR
-	pushAvailable = [[UIApplication sharedApplication] respondsToSelector:@selector(enabledRemoteNotificationTypes)];
-#endif
 
 	if (!pushAvailable) {
 		UpdateTableSection = 2;
