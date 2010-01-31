@@ -249,7 +249,12 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if ([[UIDevice currentDevice] isPadModel]) {
 		UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
 
-		NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQConnectionsController defaultController].connectionsNavigationController, [CQChatController defaultController].chatNavigationController, nil];
+		UIViewController *dummyViewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
+		UIView *dummyView = [[UIView alloc] initWithFrame:CGRectZero];
+		dummyViewController.view = dummyView;
+		[dummyView release];
+
+		NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQChatController defaultController].chatNavigationController, dummyViewController, nil];
 		splitViewController.viewControllers = viewControllers;
 		[viewControllers release];
 
