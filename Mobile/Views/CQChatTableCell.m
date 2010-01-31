@@ -242,13 +242,36 @@
 	_maximumMessagePreviews = 2;
 }
 
-- (void) setSelected:(BOOL) selected animated:(BOOL) animated {
-	[super setSelected:selected animated:animated];
+- (void) setHighlighted:(BOOL) highlighted animated:(BOOL) animated {
+	[super setHighlighted:highlighted animated:animated];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		return;
 
 	if (animated)
 		[UIView beginAnimations:nil context:NULL];
 
-	CGFloat alpha = (_available || selected ? 1. : 0.5);
+	CGFloat alpha = (_available || highlighted || self.selected ? 1. : 0.5);
+	_nameLabel.alpha = alpha;
+	_iconImageView.alpha = alpha;
+
+	for (UILabel *label in _chatPreviewLabels)
+		label.alpha = alpha;
+
+	if (animated)
+		[UIView commitAnimations];
+}
+
+- (void) setSelected:(BOOL) selected animated:(BOOL) animated {
+	[super setSelected:selected animated:animated];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		return;
+
+	if (animated)
+		[UIView beginAnimations:nil context:NULL];
+
+	CGFloat alpha = (_available || selected || self.highlighted ? 1. : 0.5);
 	_nameLabel.alpha = alpha;
 	_iconImageView.alpha = alpha;
 
