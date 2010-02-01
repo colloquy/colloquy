@@ -34,6 +34,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) dealloc {
 	[_mainWindow release];
 	[_mainViewController release];
+	[_connectionsPopoverController release];
 	[_launchDate release];
 	[_deviceToken release];
 
@@ -234,10 +235,27 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	if ([[UIDevice currentDevice] isPadModel]) {
 		UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
+		splitViewController.delegate = self;
 
 		UIViewController *dummyViewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
 		UIView *dummyView = [[UIView alloc] initWithFrame:CGRectZero];
 		dummyViewController.view = dummyView;
+
+		dummyView.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
+		dummyView.clipsToBounds = YES;
+
+		_toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
+		[_toolbar sizeToFit];
+		[dummyView addSubview:_toolbar];
+
+		UIBarButtonItem *connections = [[UIBarButtonItem alloc] initWithTitle:@"Connections" style:UIBarButtonItemStyleBordered target:self action:@selector(showConnections:)];
+		_toolbar.items = [NSArray arrayWithObject:connections];
+		[connections release];
+
+		_toolbar.layer.shadowOpacity = 0.8;
+		_toolbar.layer.shadowRadius = 8.;
+		_toolbar.layer.shadowOffset = CGSizeMake(0., 0.);
+
 		[dummyView release];
 
 		NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQChatController defaultController].chatNavigationController, dummyViewController, nil];
@@ -344,6 +362,28 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #pragma mark -
 
+- (void) splitViewController:(UISplitViewController *) splitViewController willHideViewController:(UIViewController *) viewController withBarButtonItem:(UIBarButtonItem *) barButtonItem forPopoverController:(UIPopoverController *) popoverController {
+	NSMutableArray *items = [_toolbar.items mutableCopy];
+
+	[items insertObject:barButtonItem atIndex:0];
+
+	[_toolbar setItems:items animated:YES];
+
+	[items release];
+}
+
+- (void) splitViewController:(UISplitViewController *) splitViewController willShowViewController:(UIViewController *) viewController invalidatingBarButtonItem:(UIBarButtonItem *) barButtonItem {
+	NSMutableArray *items = [_toolbar.items mutableCopy];
+
+	[items removeObjectIdenticalTo:barButtonItem];
+
+	[_toolbar setItems:items animated:YES];
+
+	[items release];
+}
+
+#pragma mark -
+
 - (void) showActionSheet:(UIActionSheet *) sheet {
 	[self showActionSheet:sheet forSender:nil animated:YES];
 }
@@ -439,6 +479,10 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 - (void) showConnections:(id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
+		if (!_connectionsPopoverController)
+			_connectionsPopoverController = [[UIPopoverController alloc] initWithContentViewController:[CQConnectionsController defaultController].connectionsNavigationController];
+		if (!_connectionsPopoverController.popoverVisible)
+			[_connectionsPopoverController presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
 	} else {
 		[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
 		self.tabBarController.selectedViewController = [CQConnectionsController defaultController].connectionsNavigationController;

@@ -3,6 +3,7 @@
 #define ENABLE(FEATURE) (defined(ENABLE_##FEATURE) && ENABLE_##FEATURE)
 
 #import <Foundation/Foundation.h>
+#import <QuartzCore/QuartzCore.h>
 #import <UIKit/UIKit.h>
 
 #import "NSDataAdditions.h"

@@ -2,10 +2,12 @@
 
 extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
-@interface CQColloquyApplication : UIApplication <UIApplicationDelegate, UITabBarControllerDelegate, UIAlertViewDelegate> {
+@interface CQColloquyApplication : UIApplication <UIApplicationDelegate, UITabBarControllerDelegate, UISplitViewControllerDelegate, UIAlertViewDelegate> {
 	@protected
 	UIWindow *_mainWindow;
 	UIViewController *_mainViewController;
+	UIPopoverController *_connectionsPopoverController;
+	UIToolbar *_toolbar;
 	NSDate *_launchDate;
 	NSString *_deviceToken;
 	NSUInteger _networkIndicatorStack;
