@@ -21,6 +21,8 @@
 }
 
 - (void) dealloc {
+	self.delegate = nil;
+
 	[_connectionsViewController release];
 
 	[super dealloc];

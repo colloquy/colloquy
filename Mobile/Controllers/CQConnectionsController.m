@@ -371,6 +371,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[alert release];
 	}
 
+	connection.delegate = nil;
+
 	[_bouncerConnections removeObject:connection];
 }
 

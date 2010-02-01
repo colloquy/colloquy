@@ -50,6 +50,9 @@ static BOOL showFullRoomNames;
 }
 
 - (void) dealloc {
+	self.tableView.dataSource = nil;
+	self.tableView.delegate = nil;
+
 	_searchBar.delegate = nil;
 
 	[_connection release];

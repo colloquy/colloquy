@@ -21,6 +21,8 @@
 }
 
 - (void) dealloc {
+	self.delegate = nil;
+
 	[_settings release];
 	[_editViewController release];
 

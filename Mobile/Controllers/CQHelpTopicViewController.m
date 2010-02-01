@@ -20,6 +20,8 @@
 }
 
 - (void) dealloc {
+	_webView.delegate = nil;
+
 	[_webView release];
 	[_urlToHandle release];
 

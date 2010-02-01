@@ -40,6 +40,8 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 }
 
 - (void) dealloc {
+	self.delegate = nil;
+
 	[_connection release];
 	[_editViewController release];
 

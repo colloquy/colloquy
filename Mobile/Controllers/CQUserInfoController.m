@@ -19,6 +19,8 @@
 }
 
 - (void) dealloc {
+	self.delegate = nil;
+
 	[_userInfoViewController release];
 	[_user release];
 

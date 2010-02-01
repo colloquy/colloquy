@@ -18,6 +18,8 @@
 }
 
 - (void) dealloc {
+	self.delegate = nil;
+
 	[_rootViewController release];
 
 	[super dealloc];

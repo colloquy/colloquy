@@ -92,6 +92,7 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	_inputField.delegate = nil;
+	_completionView.delegate = nil;
 
 	[_inputField release];
 	[_completionView release];

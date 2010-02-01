@@ -23,6 +23,8 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	self.delegate = nil;
+
 	[_chatListViewController release];
 
 	[super dealloc];

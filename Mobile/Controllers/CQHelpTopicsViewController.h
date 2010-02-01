@@ -6,8 +6,6 @@
 	NSMutableData *_helpData;
 	BOOL _loading;
 }
-- (id) init;
-
 - (void) loadHelpContent;
 - (void) loadDefaultHelpContent;
 @end

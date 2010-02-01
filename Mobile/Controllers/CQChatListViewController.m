@@ -74,6 +74,9 @@ static BOOL showsChatIcons;
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	self.tableView.dataSource = nil;
+	self.tableView.delegate = nil;
+
 	[_longPressGestureRecognizer release];
 	[_currentChatViewActionSheet release];
 	[_highlightedTableViewCell release];

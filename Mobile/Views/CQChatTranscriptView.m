@@ -49,6 +49,8 @@
 }
 
 - (void) dealloc {
+	super.delegate = nil;
+
 	[_styleIdentifier release];
 	[_pendingComponents release];
 	[_pendingPreviousSessionComponents release];
@@ -56,10 +58,9 @@
 	[super dealloc];
 }
 
-@synthesize delegate;
-
 #pragma mark -
 
+@synthesize delegate;
 @synthesize styleIdentifier = _styleIdentifier;
 
 - (void) setStyleIdentifier:(NSString *) styleIdentifier {
