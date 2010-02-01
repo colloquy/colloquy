@@ -492,25 +492,7 @@
 }
 
 - (BOOL) tableView:(UITableView *) tableView canPerformAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
-	if (action == @selector(copy:))
-		return YES;
-
-	if (action == @selector(connect:) || action == @selector(disconnect:)) {
-		MVChatConnection *connection = [self connectionAtIndexPath:indexPath];
-		if (!connection)
-			return NO;
-
-		BOOL connected = (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus);
-		if (action == @selector(connect:) && connected)
-			return NO;
-
-		if (action == @selector(disconnect:) && !connected)
-			return NO;
-
-		return YES;
-	}
-
-	return NO;
+	return (action == @selector(copy:));
 }
 
 - (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
@@ -520,9 +502,5 @@
 
 	if (action == @selector(copy:))
 		[UIPasteboard generalPasteboard].URL = connection.url;
-	else if (action == @selector(connect:))
-		[connection connect];
-	else if (action == @selector(disconnect:))
-		[connection disconnect];
 }
 @end

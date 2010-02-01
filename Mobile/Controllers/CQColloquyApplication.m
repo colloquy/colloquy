@@ -227,20 +227,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	[self userDefaultsChanged];
 
-	if ([[UIMenuController sharedMenuController] respondsToSelector:@selector(setMenuItems:)]) {
-		UIMenuItem *joinItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Join", @"Join menu item title") action:@selector(join:)];
-		UIMenuItem *leaveItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Leave", @"Leave menu item title") action:@selector(leave:)];
-		UIMenuItem *connectItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Connect", @"Connect menu item title") action:@selector(connect:)];
-		UIMenuItem *disconnectItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect menu item title") action:@selector(disconnect:)];
-
-		[UIMenuController sharedMenuController].menuItems = [NSArray arrayWithObjects:joinItem, leaveItem, connectItem, disconnectItem, nil];
-
-		[joinItem release];
-		[leaveItem release];
-		[connectItem release];
-		[disconnectItem release];
-	}
-
 	[CQConnectionsController defaultController];
 	[CQChatController defaultController];
 

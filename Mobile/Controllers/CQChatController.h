@@ -12,6 +12,7 @@
 @protocol CQChatViewController;
 
 extern NSString *CQChatControllerAddedChatViewControllerNotification;
+extern NSString *CQChatControllerRemovedChatViewControllerNotification;
 extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 
 @interface CQChatController : NSObject <UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate> {
@@ -62,8 +63,8 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 - (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) requested;
 - (CQDirectChatController *) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists;
 
-- (BOOL) connectionHasAChatRoom:(MVChatConnection *) connection;
-- (BOOL) connectionHasAPrivateChat:(MVChatConnection *) connection;
+- (BOOL) connectionHasAnyChatRooms:(MVChatConnection *) connection;
+- (BOOL) connectionHasAnyPrivateChats:(MVChatConnection *) connection;
 
 #if ENABLE(FILE_TRANSFERS)
 - (CQFileTransferController *) chatViewControllerForFileTransfer:(MVFileTransfer *) transfer ifExists:(BOOL) exists;
@@ -92,6 +93,8 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 
 - (void) detailViewWillShow:(BOOL) animated;
 - (void) detailViewDidHide:(BOOL) animated;
+
+@property (nonatomic, readonly) UIActionSheet *actionSheet;
 @end
 
 @interface MVIRCChatRoom (CQChatControllerAdditions)

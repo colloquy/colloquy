@@ -1,6 +1,7 @@
 #import "CQChatRoomListViewController.h"
 
 #import "CQChatRoomInfoTableCell.h"
+#import "CQConnectionsController.h"
 #import "CQProcessChatMessageOperation.h"
 #import "RegexKitLite.h"
 
@@ -98,7 +99,7 @@ static BOOL showFullRoomNames;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_roomListUpdated:) name:MVChatConnectionChatRoomListUpdatedNotification object:connection];
 
-	[connection connect];
+	[connection connectAppropriately];
 	[connection fetchChatRoomList];
 
 	_updatePending = NO;

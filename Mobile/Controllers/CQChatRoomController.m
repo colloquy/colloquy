@@ -241,6 +241,21 @@ static BOOL showLeaveEvents;
 
 #pragma mark -
 
+- (UIActionSheet *) actionSheet {
+	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	sheet.delegate = self;
+
+	if (self.available)
+		sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Leave Chat Room", @"Leave Chat Room button title")];
+	else [sheet addButtonWithTitle:NSLocalizedString(@"Join Chat Room", @"Join Chat Room button title")];
+
+	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+
+	return [sheet autorelease];
+}
+
+#pragma mark -
+
 - (BOOL) handleTopicCommandWithArguments:(NSString *) arguments {
 	if (![arguments stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
 		[self _displayCurrentTopicOnlyIfSet:NO];
@@ -879,6 +894,19 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 		[self.connection connectAppropriately];
 
 	[self.room join];
+}
+
+#pragma mark -
+
+- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+	if (buttonIndex == actionSheet.cancelButtonIndex)
+		return;
+
+	if (buttonIndex == 0) {
+		if (buttonIndex == actionSheet.destructiveButtonIndex)
+			[self part];
+		else [self join];
+	}
 }
 
 #pragma mark -

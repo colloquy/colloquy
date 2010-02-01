@@ -259,6 +259,19 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 #pragma mark -
 
+- (UIActionSheet *) actionSheet {
+	UIActionSheet *sheet = [[UIActionSheet alloc] init];
+	sheet.delegate = self;
+
+	[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
+
+	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+
+	return [sheet autorelease];
+}
+
+#pragma mark -
+
 - (NSUInteger) unreadCount {
 	return _unreadMessages;
 }
@@ -1238,6 +1251,16 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 		[[CQColloquyApplication sharedApplication] showHelp:nil];
 	}
+}
+
+#pragma mark -
+
+- (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
+	if (buttonIndex == actionSheet.cancelButtonIndex)
+		return;
+
+	if (buttonIndex == 0)
+		[self showUserInformation];
 }
 
 #pragma mark -

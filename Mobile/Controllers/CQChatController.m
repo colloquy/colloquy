@@ -18,6 +18,7 @@
 #import <ChatCore/MVFileTransfer.h>
 
 NSString *CQChatControllerAddedChatViewControllerNotification = @"CQChatControllerAddedChatViewControllerNotification";
+NSString *CQChatControllerRemovedChatViewControllerNotification = @"CQChatControllerRemovedChatViewControllerNotification";
 NSString *CQChatControllerChangedTotalImportantUnreadCountNotification = @"CQChatControllerChangedTotalImportantUnreadCountNotification";
 
 #define ChatRoomInviteAlertTag 1
@@ -162,7 +163,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		return [chatController1.title caseInsensitiveCompare:chatController2.title];
 #if ENABLE(FILE_TRANSFERS)
 	}
-	
+
 	if ([controller1 isKindOfClass:[CQDirectChatController class]])
 		return NSOrderedAscending;
 
@@ -813,14 +814,14 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 #pragma mark -
 
-- (BOOL) connectionHasAChatRoom:(MVChatConnection *) connection {
+- (BOOL) connectionHasAnyChatRooms:(MVChatConnection *) connection {
 	for (id <CQChatViewController> chatViewController in [self chatViewControllersForConnection:connection])
 		if ([chatViewController.target isKindOfClass:[MVChatRoom class]])
 			return YES;
 	return NO;
 }
 
-- (BOOL) connectionHasAPrivateChat:(MVChatConnection *) connection {
+- (BOOL) connectionHasAnyPrivateChats:(MVChatConnection *) connection {
 	for (id <CQChatViewController> chatViewController in [self chatViewControllersForConnection:connection])
 		if ([chatViewController.target isKindOfClass:[MVChatUser class]])
 			return YES;
@@ -832,7 +833,15 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 - (void) closeViewController:(id) controller {
 	if ([controller respondsToSelector:@selector(close)])
 		[controller close];
+
+	[controller retain];
+
 	[_chatControllers removeObjectIdenticalTo:controller];
+
+	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObject:controller forKey:@"controller"];
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerRemovedChatViewControllerNotification object:self userInfo:notificationInfo];
+
+	[controller release];
 }
 @end
 
