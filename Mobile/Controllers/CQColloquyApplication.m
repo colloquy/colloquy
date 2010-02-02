@@ -346,7 +346,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;
 	NSMutableArray *items = [chatPresentationController.standardToolbarItems mutableCopy];
 
-	[items insertObject:barButtonItem atIndex:0];
+	[items insertObject:barButtonItem atIndex:1];
 
 	[chatPresentationController setStandardToolbarItems:items animated:NO];
 
@@ -471,7 +471,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		if (!_connectionsPopoverController)
 			_connectionsPopoverController = [[UIPopoverController alloc] initWithContentViewController:[CQConnectionsController defaultController].connectionsNavigationController];
 		if (!_connectionsPopoverController.popoverVisible)
-			[_connectionsPopoverController presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+			[_connectionsPopoverController presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 	} else {
 		[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
 		self.tabBarController.selectedViewController = [CQConnectionsController defaultController].connectionsNavigationController;

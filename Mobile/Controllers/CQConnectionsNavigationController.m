@@ -47,6 +47,10 @@
 	[self popToRootViewControllerAnimated:NO];
 }
 
+- (CGSize) contentSizeForViewInPopoverView {
+	return CGSizeMake(320., 700.);
+}
+
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
 	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
 }
