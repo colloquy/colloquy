@@ -171,6 +171,7 @@
 		1CFCBA2B1114F9FE00EA5F10 /* CQUserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCBA281114F9FE00EA5F10 /* CQUserInfoViewController.m */; };
 		1CFCBA301114FAFA00EA5F10 /* CQUserInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCBA2F1114FAFA00EA5F10 /* CQUserInfoController.m */; };
 		1CFCBA351114FB2500EA5F10 /* CQWelcomeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCBA341114FB2500EA5F10 /* CQWelcomeController.m */; };
+		1CFCC0C511172B2A00EA5F10 /* CQChatPresentationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFCC0C411172B2A00EA5F10 /* CQChatPresentationController.m */; };
 		1CFF6E820EDF772800D3C557 /* UITableViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -432,6 +433,8 @@
 		1CFCBA2F1114FAFA00EA5F10 /* CQUserInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQUserInfoController.m; sourceTree = "<group>"; };
 		1CFCBA331114FB2500EA5F10 /* CQWelcomeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQWelcomeController.h; path = Mobile/Controllers/CQWelcomeController.h; sourceTree = "<group>"; };
 		1CFCBA341114FB2500EA5F10 /* CQWelcomeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQWelcomeController.m; path = Mobile/Controllers/CQWelcomeController.m; sourceTree = "<group>"; };
+		1CFCC0C311172B2A00EA5F10 /* CQChatPresentationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatPresentationController.h; sourceTree = "<group>"; };
+		1CFCC0C411172B2A00EA5F10 /* CQChatPresentationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatPresentationController.m; sourceTree = "<group>"; };
 		1CFF6E800EDF772800D3C557 /* UITableViewAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UITableViewAdditions.h; path = Mobile/Additions/UITableViewAdditions.h; sourceTree = "<group>"; };
 		1CFF6E810EDF772800D3C557 /* UITableViewAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UITableViewAdditions.m; path = Mobile/Additions/UITableViewAdditions.m; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -625,6 +628,8 @@
 			children = (
 				1C0937800D8116FC00A2705D /* CQChatController.m */,
 				1C0937810D8116FC00A2705D /* CQChatController.h */,
+				1CFCC0C411172B2A00EA5F10 /* CQChatPresentationController.m */,
+				1CFCC0C311172B2A00EA5F10 /* CQChatPresentationController.h */,
 				1CFCB94E1114DD9600EA5F10 /* CQChatNavigationController.m */,
 				1CFCB94D1114DD9600EA5F10 /* CQChatNavigationController.h */,
 				1C82C27C0D847EA4009ABD9F /* CQChatListViewController.m */,
@@ -1175,6 +1180,7 @@
 				1CFCBA2B1114F9FE00EA5F10 /* CQUserInfoViewController.m in Sources */,
 				1CFCBA301114FAFA00EA5F10 /* CQUserInfoController.m in Sources */,
 				1CFCBA351114FB2500EA5F10 /* CQWelcomeController.m in Sources */,
+				1CFCC0C511172B2A00EA5F10 /* CQChatPresentationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

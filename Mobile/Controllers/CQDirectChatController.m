@@ -24,7 +24,9 @@
 
 #import <objc/message.h>
 
-NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewControllerRecentMessagesUpdated";
+NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewControllerRecentMessagesUpdatedNotification";
+NSString *CQChatViewControllerUnreadMessagesUpdatedNotification = @"CQChatViewControllerUnreadMessagesUpdatedNotification";
+
 static CQSoundController *privateMessageSound;
 static CQSoundController *highlightSound;
 static NSTimeInterval timestampInterval;
@@ -312,6 +314,9 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	chatInputBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
+	chatInputBar.accessibilityLabel = NSLocalizedString(@"Enter chat message.", @"Voiceover enter chat message label");
+	chatInputBar.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
+
 	NSString *capitalizationBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocapitalizationBehavior"];
 	chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
 
@@ -331,9 +336,6 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
-
-	chatInputBar.accessibilityLabel = NSLocalizedString(@"Enter chat message.", @"Voiceover enter chat message label");
-	chatInputBar.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
 
 	_active = YES;
 
@@ -363,6 +365,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 
 	if (_revealKeyboard) {
 		_revealKeyboard = NO;
@@ -703,6 +707,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	_unreadMessages = 0;
 	_unreadHighlightedMessages = 0;
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 
 	[transcriptView reset];
 
@@ -1427,6 +1433,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if (!user.localUser && !_active && self.available) {
 		if (highlighted) ++_unreadHighlightedMessages;
 		else ++_unreadMessages;
+
+		[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 
 		if (self.user || highlighted)
 			++[CQChatController defaultController].totalImportantUnreadCount;

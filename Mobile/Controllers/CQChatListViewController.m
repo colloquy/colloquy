@@ -68,6 +68,9 @@ static BOOL showsChatIcons;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_updateMessagePreview:) name:CQChatViewControllerRecentMessagesUpdatedNotification object:nil];
 
+	if ([[UIDevice currentDevice] isPadModel])
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_updateUnreadMessages:) name:CQChatViewControllerUnreadMessagesUpdatedNotification object:nil];
+
 	return self;
 }
 
@@ -260,6 +263,19 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	[self _addMessagePreview:chatController.recentMessages.lastObject withEncoding:chatController.encoding toChatTableCell:cell animated:YES];
 }
 
+- (void) _updateUnreadMessages:(NSNotification *) notification {
+	if (!_active) {
+		_needsUpdate = YES;
+		return;
+	}
+
+	CQDirectChatController *chatController = notification.object;
+	CQChatTableCell *cell = [self _chatTableCellForController:chatController];
+
+	cell.unreadCount = chatController.unreadCount;
+	cell.importantUnreadCount = chatController.importantUnreadCount;
+}
+
 - (void) _refreshChatCell:(CQChatTableCell *) cell withController:(id <CQChatViewController>) chatViewController animated:(BOOL) animated {
 	if (!cell || !chatViewController)
 		return;
@@ -350,6 +366,8 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	UITableViewCell *selectedCell = [self.tableView cellForRowAtIndexPath:selectedIndexPath];
 
 	selectedCell.selected = NO;
+	selectedCell.highlighted = NO;
+
 	cell.highlighted = YES;
 
 	[_highlightedTableViewCell release];
@@ -411,6 +429,9 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	[self _refreshChatCell:cell withController:chatViewController animated:NO];
 
 	[super viewWillAppear:animated];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 }
 
 - (void) viewDidDisappear:(BOOL) animated {

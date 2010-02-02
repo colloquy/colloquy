@@ -5,6 +5,7 @@
 #import "CQBrowserViewController.h"
 #import "CQChatController.h"
 #import "CQChatNavigationController.h"
+#import "CQChatPresentationController.h"
 #import "CQConnectionsController.h"
 #import "CQConnectionsNavigationController.h"
 #import "CQWelcomeController.h"
@@ -237,28 +238,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
 		splitViewController.delegate = self;
 
-		UIViewController *dummyViewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
-		UIView *dummyView = [[UIView alloc] initWithFrame:CGRectZero];
-		dummyViewController.view = dummyView;
-
-		dummyView.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
-		dummyView.clipsToBounds = YES;
-
-		_toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
-		[_toolbar sizeToFit];
-		[dummyView addSubview:_toolbar];
-
-		UIBarButtonItem *connections = [[UIBarButtonItem alloc] initWithTitle:@"Connections" style:UIBarButtonItemStyleBordered target:self action:@selector(showConnections:)];
-		_toolbar.items = [NSArray arrayWithObject:connections];
-		[connections release];
-
-		_toolbar.layer.shadowOpacity = 0.8;
-		_toolbar.layer.shadowRadius = 8.;
-		_toolbar.layer.shadowOffset = CGSizeMake(0., 0.);
-
-		[dummyView release];
-
-		NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQChatController defaultController].chatNavigationController, dummyViewController, nil];
+		NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQChatController defaultController].chatNavigationController, [CQChatController defaultController].chatPresentationController, nil];
 		splitViewController.viewControllers = viewControllers;
 		[viewControllers release];
 
@@ -363,21 +343,23 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #pragma mark -
 
 - (void) splitViewController:(UISplitViewController *) splitViewController willHideViewController:(UIViewController *) viewController withBarButtonItem:(UIBarButtonItem *) barButtonItem forPopoverController:(UIPopoverController *) popoverController {
-	NSMutableArray *items = [_toolbar.items mutableCopy];
+	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;
+	NSMutableArray *items = [chatPresentationController.standardToolbarItems mutableCopy];
 
 	[items insertObject:barButtonItem atIndex:0];
 
-	[_toolbar setItems:items animated:YES];
+	[chatPresentationController setStandardToolbarItems:items animated:NO];
 
 	[items release];
 }
 
 - (void) splitViewController:(UISplitViewController *) splitViewController willShowViewController:(UIViewController *) viewController invalidatingBarButtonItem:(UIBarButtonItem *) barButtonItem {
-	NSMutableArray *items = [_toolbar.items mutableCopy];
+	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;
+	NSMutableArray *items = [chatPresentationController.standardToolbarItems mutableCopy];
 
 	[items removeObjectIdenticalTo:barButtonItem];
 
-	[_toolbar setItems:items animated:YES];
+	[chatPresentationController setStandardToolbarItems:items animated:NO];
 
 	[items release];
 }
@@ -402,11 +384,18 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		}
 	}
 
-	UITabBarController *tabBarController = self.tabBarController;
-	UITabBar *tabBar = tabBarController.tabBar;
-	if (tabBar && !tabBarController.modalViewController)
+	UITabBar *tabBar = self.tabBarController.tabBar;
+	if (tabBar && !self.modalViewController) {
 		[sheet showFromTabBar:tabBar];
-	else [sheet showInView:_mainViewController.view];
+		return;
+	}
+
+	if ([sender isKindOfClass:[UIView class]]) {
+		[sheet showInView:sender];
+		return;
+	}
+
+	[sheet showInView:_mainViewController.view];
 }
 
 #pragma mark -

@@ -5,6 +5,7 @@
 #import "CQChatCreationViewController.h"
 #import "CQChatListViewController.h"
 #import "CQChatNavigationController.h"
+#import "CQChatPresentationController.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
@@ -104,6 +105,9 @@ static CQSoundController *fileTransferSound;
 
 	_chatNavigationController = [[CQChatNavigationController alloc] init];
 
+	if ([[UIDevice currentDevice] isPadModel])
+		_chatPresentationController = [[CQChatPresentationController alloc] init];
+
 	_chatControllers = [[NSMutableArray alloc] init];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_joinedRoom:) name:MVChatRoomJoinedNotification object:nil];
@@ -122,6 +126,8 @@ static CQSoundController *fileTransferSound;
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
+	[_chatNavigationController release];
+	[_chatPresentationController release];
 	[_chatControllers release];
 	[_nextController release];
 	[_nextRoomConnection release];
@@ -468,6 +474,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 #pragma mark -
 
 @synthesize chatNavigationController = _chatNavigationController;
+@synthesize chatPresentationController = _chatPresentationController;
 @synthesize totalImportantUnreadCount = _totalImportantUnreadCount;
 
 - (void) setTotalImportantUnreadCount:(NSInteger) count {
@@ -598,7 +605,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	_nextRoomConnection = nil;
 
 	if ([[UIDevice currentDevice] isPadModel]) {
-		
+		_chatPresentationController.topChatViewController = controller;
 	} else {
 		if (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController) {
 			id old = _nextController;

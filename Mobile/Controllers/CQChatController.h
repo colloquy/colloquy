@@ -2,6 +2,7 @@
 
 @class CQChatListViewController;
 @class CQChatNavigationController;
+@class CQChatPresentationController;
 @class CQChatRoomController;
 @class CQDirectChatController;
 @class CQFileTransferController;
@@ -19,6 +20,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 	@protected
 	NSMutableArray *_chatControllers;
 	CQChatNavigationController *_chatNavigationController;
+	CQChatPresentationController *_chatPresentationController;
 	id <CQChatViewController> _nextController;
 	MVChatConnection *_nextRoomConnection;
 	NSInteger _totalImportantUnreadCount;
@@ -31,6 +33,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 + (CQChatController *) defaultController;
 
 @property (nonatomic, readonly) CQChatNavigationController *chatNavigationController;
+@property (nonatomic, readonly) CQChatPresentationController *chatPresentationController;
 
 @property (nonatomic, readonly) NSArray *chatViewControllers;
 
