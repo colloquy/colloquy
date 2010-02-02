@@ -154,7 +154,9 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 			cell.textLabel.text = NSLocalizedString(@"class", "Class user info label");
 
 			NSString *value = nil;
-			if (_user.identified)
+			if (_user.status == MVChatUserOfflineStatus)
+				value = notAvailableString;
+			else if (_user.identified)
 				value = NSLocalizedString(@"Registered User", "Registered user class");
 			else if (_user.serverOperator)
 				value = NSLocalizedString(@"Server Operator", "Server operator class");
@@ -233,7 +235,7 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 		} else if (row == 1) { // Idle Time
 			cell.textLabel.text = NSLocalizedString(@"idle time", "Idle Time user info label");
 
-			if (_user.status != MVChatUserOfflineStatus) {
+			if (_user.status != MVChatUserOfflineStatus && _user.dateConnected) {
 				cell.detailTextLabel.text = humanReadableTimeInterval([NSDate timeIntervalSinceReferenceDate] - _idleTimeStart, YES);
 				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Connected: %@", @"Voiceover Connected label"), cell.detailTextLabel.text];
 			} else {
@@ -312,16 +314,18 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 }
 
 - (void) _updateTimes {
+	BOOL online = (_user.status != MVChatUserOfflineStatus && _user.dateConnected);
+
 	// Connected time
 	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:3];
 	UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-	if (cell) cell.detailTextLabel.text = (_user.status != MVChatUserOfflineStatus && _user.dateConnected ? humanReadableTimeInterval([_user.dateConnected timeIntervalSinceNow], YES) : NSLocalizedString(@"Offline", "Offline label"));
+	if (cell) cell.detailTextLabel.text = (online ? humanReadableTimeInterval([_user.dateConnected timeIntervalSinceNow], YES) : NSLocalizedString(@"Offline", "Offline label"));
 	[cell layoutSubviews];
 
 	// Idle time
 	indexPath = [NSIndexPath indexPathForRow:1 inSection:3];
 	cell = [self.tableView cellForRowAtIndexPath:indexPath];
-	if (cell) cell.detailTextLabel.text = (_user.status != MVChatUserOfflineStatus ? humanReadableTimeInterval([NSDate timeIntervalSinceReferenceDate] - _idleTimeStart, YES) : NSLocalizedString(@"Offline", "Offline label"));
+	if (cell) cell.detailTextLabel.text = (online ? humanReadableTimeInterval([NSDate timeIntervalSinceReferenceDate] - _idleTimeStart, YES) : NSLocalizedString(@"Offline", "Offline label"));
 	[cell layoutSubviews];
 }
 
