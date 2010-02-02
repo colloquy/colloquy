@@ -477,14 +477,16 @@ retry:
 	NSAssert([keyboardClass respondsToSelector:@selector(activeInstance)], @"UIKeyboardImpl class does not respond to activeInstance.");
 	if ([keyboardClass respondsToSelector:@selector(activeInstance)]) {
 		UIKeyboardImpl *keyboard = [keyboardClass activeInstance];
-		NSAssert([keyboard respondsToSelector:@selector(takeTextInputTraitsFromDelegate)] || [keyboard respondsToSelector:@selector(takeTextInputTraitsFrom:)], @"UIKeyboardImpl does not respond to takeTextInputTraitsFromDelegate or takeTextInputTraitsFrom:.");
-		if ([keyboard respondsToSelector:@selector(takeTextInputTraitsFromDelegate)])
-			[keyboard takeTextInputTraitsFromDelegate];
-		else if ([keyboard respondsToSelector:@selector(takeTextInputTraitsFrom:)])
-			[keyboard takeTextInputTraitsFrom:_inputField];
-		NSAssert([keyboard respondsToSelector:@selector(updateReturnKey:)], @"UIKeyboardImpl does not respond to updateReturnKey:.");
-		if ([keyboard respondsToSelector:@selector(updateReturnKey:)])
-			[keyboard updateReturnKey:YES];
+		if (keyboard) {
+			NSAssert([keyboard respondsToSelector:@selector(takeTextInputTraitsFromDelegate)] || [keyboard respondsToSelector:@selector(takeTextInputTraitsFrom:)], @"UIKeyboardImpl does not respond to takeTextInputTraitsFromDelegate or takeTextInputTraitsFrom:.");
+			if ([keyboard respondsToSelector:@selector(takeTextInputTraitsFromDelegate)])
+				[keyboard takeTextInputTraitsFromDelegate];
+			else if ([keyboard respondsToSelector:@selector(takeTextInputTraitsFrom:)])
+				[keyboard takeTextInputTraitsFrom:_inputField];
+			NSAssert([keyboard respondsToSelector:@selector(updateReturnKey:)], @"UIKeyboardImpl does not respond to updateReturnKey:.");
+			if ([keyboard respondsToSelector:@selector(updateReturnKey:)])
+				[keyboard updateReturnKey:YES];
+		}
 	}
 #endif
 }
