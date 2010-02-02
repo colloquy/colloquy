@@ -11,11 +11,18 @@
 
 #pragma mark -
 
+@interface UIScrollView (Private)
+@property (nonatomic) BOOL showBackgroundShadow;
+@end
+
+#pragma mark -
+
 @interface UIWebView (UIWebViewPrivate)
 - (void) scrollerWillStartDragging:(UIScroller *) scroller;
 - (void) scrollerDidEndDragging:(UIScroller *) scroller willSmoothScroll:(BOOL) smooth;
 - (void) scrollerDidEndSmoothScrolling:(UIScroller *) scroller;
 - (UIScroller *) _scroller;
+- (UIScrollView *) _scrollView;
 @end
 #endif
 
@@ -86,12 +93,25 @@
 	return !_scrolling;
 }
 
-#if ENABLE(SECRETS)
+- (void) willStartScrolling {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(didFinishScrollingRecently) object:nil];
+
+	[self stringByEvaluatingJavaScriptFromString:@"suspendAutoscroll()"];
+
+	_scrolling = YES;
+}
+
 - (void) didFinishScrolling {
-	if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(offset)]) {
-		NSString *command = [NSString stringWithFormat:@"updateScrollPosition(%f)", [self _scroller].offset.y];
-		[self stringByEvaluatingJavaScriptFromString:command];
-	}
+#if ENABLE(SECRETS)
+	CGPoint offset = CGPointZero;
+	if ([self respondsToSelector:@selector(_scrollView)])
+		offset = [self _scrollView].contentOffset;
+	else if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(offset)])
+		offset = [self _scroller].offset;
+
+	NSString *command = [NSString stringWithFormat:@"updateScrollPosition(%f)", offset.y];
+	[self stringByEvaluatingJavaScriptFromString:command];
+#endif
 
 	[self stringByEvaluatingJavaScriptFromString:@"resumeAutoscroll()"];
 
@@ -105,14 +125,11 @@
 
 #pragma mark -
 
+#if ENABLE(SECRETS)
 - (void) scrollerWillStartDragging:(UIScroller *) scroller {
 	[super scrollerWillStartDragging:scroller];
 
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(didFinishScrollingRecently) object:nil];
-
-	[self stringByEvaluatingJavaScriptFromString:@"suspendAutoscroll()"];
-
-	_scrolling = YES;
+	[self willStartScrolling];
 }
 
 - (void) scrollerDidEndDragging:(UIScroller *) scroller willSmoothScroll:(BOOL) smooth {
@@ -123,6 +140,24 @@
 
 - (void) scrollerDidEndSmoothScrolling:(UIScroller *) scroller {
 	[super scrollerDidEndSmoothScrolling:scroller];
+
+	[self didFinishScrolling];
+}
+
+- (void) scrollViewWillBeginDragging:(UIScrollView *) scrollView {
+	[super scrollViewWillBeginDragging:scrollView];
+
+	[self willStartScrolling];
+}
+
+- (void) scrollViewDidEndDragging:(UIScrollView *) scrollView willDecelerate:(BOOL) decelerate {
+	[super scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+
+	if (!decelerate) [self didFinishScrolling];
+}
+
+- (void) scrollViewDidEndDecelerating:(UIScrollView *) scrollView {
+	[super scrollViewDidEndDecelerating:scrollView];
 
 	[self didFinishScrolling];
 }
@@ -195,7 +230,9 @@
 
 - (void) flashScrollIndicators {
 #if ENABLE(SECRETS)
-	if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(displayScrollerIndicators)])
+	if ([self respondsToSelector:@selector(_scrollView)])
+		[[self _scrollView] flashScrollIndicators];
+	else if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(displayScrollerIndicators)])
 		[[self _scroller] displayScrollerIndicators];
 #endif
 }
@@ -252,7 +289,9 @@
 	super.delegate = self;
 
 #if ENABLE(SECRETS)
-	if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(setShowBackgroundShadow:)])
+	if ([self respondsToSelector:@selector(_scrollView)] && [[self _scrollView] respondsToSelector:@selector(setShowBackgroundShadow:)])
+		[self _scrollView].showBackgroundShadow = NO;
+	else if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(setShowBackgroundShadow:)])
 		[self _scroller].showBackgroundShadow = NO;
 #endif
 
