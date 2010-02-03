@@ -58,6 +58,7 @@
 - (void) dealloc {
 	super.delegate = nil;
 
+	[_blockerView release];
 	[_styleIdentifier release];
 	[_pendingComponents release];
 	[_pendingPreviousSessionComponents release];
@@ -83,6 +84,8 @@
 	else if ([styleIdentifier isEqualToString:@"notes"])
 		self.backgroundColor = [UIColor colorWithRed:(253. / 255.) green:(251. / 255.) blue:(138. / 255.) alpha:1.];
 	else self.backgroundColor = [UIColor whiteColor];
+
+	_blockerView.backgroundColor = self.backgroundColor;
 
 	[self reset];
 }
@@ -240,6 +243,8 @@
 - (void) reset {
 	[self stopLoading];
 
+	_blockerView.hidden = NO;
+
 	_loading = YES;
 	[self loadHTMLString:[self _contentHTML] baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 }
@@ -295,6 +300,10 @@
 		[self _scroller].showBackgroundShadow = NO;
 #endif
 
+	_blockerView = [[UIView alloc] initWithFrame:self.bounds];
+	_blockerView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+	[self addSubview:_blockerView];
+
 	self.styleIdentifier = @"standard";
 }
 
@@ -306,7 +315,7 @@
 - (void) _checkIfLoadingFinished {
 	NSString *result = [self stringByEvaluatingJavaScriptFromString:@"isDocumentReady()"];
 	if (![result isEqualToString:@"true"]) {
-		[self performSelector:_cmd withObject:nil afterDelay:0.1];
+		[self performSelector:_cmd withObject:nil afterDelay:0.05];
 		return;
 	}
 
@@ -321,5 +330,11 @@
 
 	[_pendingComponents release];
 	_pendingComponents = nil;
+
+	[self performSelector:@selector(_unhideBlockerView) withObject:nil afterDelay:0.05];
+}
+
+- (void) _unhideBlockerView {
+	_blockerView.hidden = YES;
 }
 @end

@@ -3,6 +3,7 @@
 @interface CQChatTranscriptView : UIWebView <UIWebViewDelegate> {
 	@protected
 	IBOutlet id <CQChatTranscriptViewDelegate> delegate;
+	UIView *_blockerView;
 	NSMutableArray *_pendingPreviousSessionComponents;
 	NSMutableArray *_pendingComponents;
 	NSString *_styleIdentifier;
