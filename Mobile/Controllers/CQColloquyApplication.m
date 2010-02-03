@@ -601,8 +601,10 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #pragma mark -
 
 - (UIColor *) tintColor {
-	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
+	if ([[UIDevice currentDevice] isPadModel])
+		return nil;
 
+	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
 	if ([style hasSuffix:@"-dark"])
 		return [UIColor blackColor];
 	if ([style isEqualToString:@"notes"])
