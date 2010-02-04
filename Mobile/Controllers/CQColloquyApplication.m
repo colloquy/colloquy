@@ -400,6 +400,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #pragma mark -
 
+@synthesize mainViewController = _mainViewController;
+
 - (UIViewController *) modalViewController {
 	return _mainViewController.modalViewController;
 }

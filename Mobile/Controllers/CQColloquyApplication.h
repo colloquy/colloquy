@@ -30,6 +30,7 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 - (void) showActionSheet:(UIActionSheet *) sheet;
 - (void) showActionSheet:(UIActionSheet *) sheet forSender:(id) sender animated:(BOOL) animated;
 
+@property (nonatomic, readonly) UIViewController *mainViewController;
 @property (nonatomic, readonly) UIViewController *modalViewController;
 
 - (void) presentModalViewController:(UIViewController *) modalViewController animated:(BOOL) animated;

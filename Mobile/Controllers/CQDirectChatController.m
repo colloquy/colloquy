@@ -40,7 +40,6 @@ static BOOL vibrateOnPrivateMessage;
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _updateRightBarButtonItemAnimated:(BOOL) animated;
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command;
-- (void) _moveInputFieldForOrientation:(UIInterfaceOrientation) interfaceOrientation;
 - (void) _forceRegsignKeyboard;
 @end
 
@@ -401,9 +400,6 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
 		[[CQColloquyApplication sharedApplication] hideTabBarWithTransition:NO];
 	else [[CQColloquyApplication sharedApplication] showTabBarWithTransition:NO];
-
-	if ([chatInputBar isFirstResponder])
-		[self _moveInputFieldForOrientation:toInterfaceOrientation];
 }
 
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation) fromInterfaceOrientation {
@@ -1120,7 +1116,50 @@ static NSOperationQueue *chatMessageProcessingQueue;
 #pragma mark -
 
 - (void) keyboardWillShow:(NSNotification *) notification {
-	[self _moveInputFieldForOrientation:self.interfaceOrientation];
+	CGRect keyboardBounds = CGRectZero;
+	CGPoint keyboardCenter = CGPointZero;
+
+	[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
+	[[[notification userInfo] objectForKey:UIKeyboardCenterEndUserInfoKey] getValue:&keyboardCenter];
+
+	CGRect keyboardRect = keyboardBounds;
+	keyboardRect.origin.x = (keyboardCenter.x - (keyboardBounds.size.width / 2.));
+	keyboardRect.origin.y = (keyboardCenter.y - (keyboardBounds.size.height / 2.));
+
+	UIViewController *mainViewController = [CQColloquyApplication sharedApplication].mainViewController;
+	UIView *mainView = mainViewController.view;
+	keyboardRect = [self.view convertRect:keyboardRect fromView:mainView];
+
+	CGRect mainViewFrame = mainView.frame;
+	CGRect windowFrame = mainView.window.frame;
+
+	switch (mainViewController.interfaceOrientation) {
+		case UIInterfaceOrientationPortrait:
+			keyboardRect.origin.y -= mainViewFrame.origin.y;
+			break;
+		case UIInterfaceOrientationPortraitUpsideDown:
+			keyboardRect.origin.y -= (windowFrame.size.height - mainViewFrame.size.height);
+			break;
+		case UIInterfaceOrientationLandscapeRight:
+			keyboardRect.origin.y -= (windowFrame.size.width - mainViewFrame.size.width);
+			break;
+		case UIInterfaceOrientationLandscapeLeft:
+			keyboardRect.origin.y -= mainViewFrame.origin.x;
+			break;
+	}
+
+	NSTimeInterval animationDuration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	NSUInteger animationCurve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationDuration:animationDuration];
+	[UIView setAnimationCurve:animationCurve];
+
+	CGRect frame = containerView.frame;
+	frame.size.height = keyboardRect.origin.y;
+	containerView.frame = frame;
+
+	[UIView commitAnimations];
 
 	[transcriptView scrollToBottomAnimated:YES];
 
@@ -1141,8 +1180,12 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if (beginCenterPoint.y == endCenterPoint.y)
 		return;
 
+	NSTimeInterval animationDuration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	NSUInteger animationCurve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+
 	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:0.3];
+	[UIView setAnimationDuration:animationDuration];
+	[UIView setAnimationCurve:animationCurve];
 
 	containerView.frame = self.view.bounds;
 
@@ -1275,25 +1318,6 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	_allowEditingToEnd = YES;
 	[chatInputBar resignFirstResponder];
 	_allowEditingToEnd = NO;
-}
-
-- (void) _moveInputFieldForOrientation:(UIInterfaceOrientation) interfaceOrientation {
-	BOOL landscape = UIInterfaceOrientationIsLandscape(interfaceOrientation);
-
-	// If [UIKeyboard defaultSizeForOrientation:] is ever documented, use that instead of hardcoding values.
-	CGRect keyboardBounds = (landscape ? CGRectMake(0, 0, 320, 216) : CGRectMake(0, 0, 480, 162));
-
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:0.3];
-	[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-
-	CGFloat shift = ([CQColloquyApplication sharedApplication].showingTabBar && !landscape ? keyboardBounds.size.height + 5 : keyboardBounds.size.height - 55); // Tab bar height
-
-	CGRect frame = containerView.frame;
-	frame.size.height = (self.view.bounds.size.height - shift);
-	containerView.frame = frame;
-
-	[UIView commitAnimations];
 }
 
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
