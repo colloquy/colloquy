@@ -1192,8 +1192,6 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	if (alertView.tag == ReconnectAlertTag) 
 		[self.connection connectAppropriately];
-
-		[[CQColloquyApplication sharedApplication] showHelp:nil];
 }
 
 #pragma mark -
