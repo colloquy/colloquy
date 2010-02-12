@@ -172,7 +172,6 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if (_watchRule)
 		[self.connection removeChatUserWatchRule:_watchRule];
 
-	[_tweetRetryArguments release];
 	[chatInputBar release];
 	[transcriptView release];
 	[_watchRule release];
@@ -479,7 +478,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 #if ENABLE(FILE_TRANSFERS)
 								   @"/dcc",
 #endif
-								   @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/tweet", @"/ipod", @"/music", @"/squit", @"/welcome", nil];
+								   @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/ipod", @"/music", @"/squit", @"/welcome", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -514,7 +513,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"] && text.length > 1) {
 		static NSArray *commandsNotRequiringConnection;
 		if (!commandsNotRequiringConnection)
-			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", @"tweet", @"list", @"join", @"welcome", @"token", @"resetbadge", nil];
+			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", @"list", @"join", @"welcome", @"token", @"resetbadge", nil];
 
 		// Send as a command.
 		NSScanner *scanner = [NSScanner scannerWithString:text];
@@ -906,104 +905,6 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 #pragma mark -
 
-- (BOOL) handleTweetCommandWithArguments:(NSString *) arguments {
-	NSString *username = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQTwitterUsername"];
-	NSString *password = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQTwitterPassword"];
-
-	id old = _tweetRetryArguments;
-	_tweetRetryArguments = [arguments copy];
-	[old release];
-
-	if (!arguments.length)
-		return YES;
-
-	BOOL success = YES;
-	BOOL showHelp = NO;
-	BOOL allowRetry = YES;
-
-    UIAlertView *alert = [[UIAlertView alloc] init];
-	alert.delegate = self;
-
-	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
-
-	if (!username.length) {
-		alert.title = NSLocalizedString(@"No Twitter Username", "No Twitter username alert title");
-		alert.message = NSLocalizedString(@"You need to enter a Twitter username in Colloquy's Settings.", "No Twitter username alert message");
-		success = NO;
-		showHelp = YES;
-	}
-
-	if (success && !password.length) {
-		alert.title = NSLocalizedString(@"No Twitter Password", "No Twitter password alert title");
-		alert.message = NSLocalizedString(@"You need to enter a Twitter password in Colloquy's Settings.", "No Twitter password alert message");
-		success = NO;
-		showHelp = YES;
-	}
-
-	if (success && arguments.length > 140) {
-		alert.title = NSLocalizedString(@"Tweet Too Long", "Tweet too long title");
-		alert.message = [NSString stringWithFormat:NSLocalizedString(@"Your tweet was %u characters over the limit.", "Your tweet was %u characters over the limit alert message"), (arguments.length - 140)];
-		allowRetry = NO;
-		success = NO;
-	}
-
-	if (success) {
-		NSString *twitterURL = [NSString stringWithFormat:@"https://%@:%@@twitter.com/statuses/update.json", username, password];
-		NSString *tweet = [@"source=mobilecolloquy&status=" stringByAppendingString:[_tweetRetryArguments stringByEncodingIllegalURLCharacters]];
-		NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:twitterURL] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.];
-
-		[request setHTTPMethod:@"POST"];
-		[request setHTTPBody:[tweet dataUsingEncoding:NSUTF8StringEncoding]];
-
-		success = NO;
-
-		[CQColloquyApplication sharedApplication].networkActivityIndicatorVisible = YES;
-
-		NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL];
-		NSString *response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-
-		[CQColloquyApplication sharedApplication].networkActivityIndicatorVisible = NO;
-
-		if (response.length) {
-			if ([response hasCaseInsensitiveSubstring:@"Could not authenticate you"]) {
-				alert.title = NSLocalizedString(@"Couldn't Authenticate with Twitter", "Could not authenticate title");
-				alert.message = NSLocalizedString(@"Make sure your Twitter username and password are correct.", "Make sure your Twitter username and password are correct alert message");
-				showHelp = YES;
-			} else if ([response hasCaseInsensitiveSubstring:@"503 Service Temporarily Unavailable"] || [response hasCaseInsensitiveSubstring:@"403 Forbidden"]) {
-				alert.title = NSLocalizedString(@"Twitter Unavailable", "Twitter Temporarily Unavailable title");
-				alert.message = NSLocalizedString(@"Unable to send tweet because Twitter is temporarily unavailable.", "Unable to send tweet because Twitter is temporarily unavailable alert message");
-			} else success = YES;
-		} else {
-			alert.title = NSLocalizedString(@"Unable To Send Tweet", "Unable to send tweet alert title");
-			alert.message = NSLocalizedString(@"Unable to send the tweet to Twitter.", "Unable to submit the tweet to Twitter alert message");
-		}
-
-		if (allowRetry) {
-			alert.tag = TweetRetryAlertTag;
-			[alert addButtonWithTitle:NSLocalizedString(@"Retry", @"Retry alert button title")];
-		}
-
-		[request release];
-		[response release];
-	}
-
-	if (showHelp) {
-		alert.tag = TweetHelpAlertTag;
-		[alert addButtonWithTitle:NSLocalizedString(@"Help", @"Help button title")];
-	}
-
-	if (success) {
-		[_tweetRetryArguments release];
-		_tweetRetryArguments = nil;
-	} else [alert show];
-
-	[alert release];
-
-	return YES;
-}
-
-#pragma mark -
-
 - (BOOL) handleWhoisCommandWithArguments:(NSString *) arguments {
 	CQUserInfoController *userInfoController = [[CQUserInfoController alloc] init];
 
@@ -1292,14 +1193,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if (alertView.tag == ReconnectAlertTag) 
 		[self.connection connectAppropriately];
 
-	if (alertView.tag == TweetRetryAlertTag)
-		[self performSelector:@selector(handleTweetCommandWithArguments:) withObject:_tweetRetryArguments afterDelay:0.];
-
-	if (alertView.tag == TweetHelpAlertTag) {
-		[self _forceRegsignKeyboard];
-
 		[[CQColloquyApplication sharedApplication] showHelp:nil];
-	}
 }
 
 #pragma mark -

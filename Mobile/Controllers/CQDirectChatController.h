@@ -5,8 +5,6 @@
 
 #define ReconnectAlertTag 1
 #define RejoinRoomAlertTag 2
-#define TweetRetryAlertTag 3
-#define TweetHelpAlertTag 4
 
 @class CQChatTableCell;
 @class CQStyleView;
@@ -42,7 +40,6 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 	BOOL _showingKeyboard;
 	BOOL _showDeviceTokenWhenRegistered;
 
-	NSString *_tweetRetryArguments;
 	NSTimeInterval _lastTimestampTime;
 }
 - (id) initWithTarget:(id) target;
