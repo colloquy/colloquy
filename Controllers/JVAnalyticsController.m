@@ -64,20 +64,20 @@ static kern_return_t findEthernetInterfaces(io_iterator_t *matchingServices) {
 	CFMutableDictionaryRef matchingDict = IOServiceMatching(kIOEthernetInterfaceClass);
 	if (!matchingDict)
 		return KERN_FAILURE;
-	
+
 	CFMutableDictionaryRef propertyMatchDict = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
 	if (!propertyMatchDict)
 		return KERN_FAILURE;
 
-	CFDictionarySetValue(propertyMatchDict, CFSTR(kIOPrimaryInterface), kCFBooleanTrue); 
+	CFDictionarySetValue(propertyMatchDict, CFSTR(kIOPrimaryInterface), kCFBooleanTrue);
 	CFDictionarySetValue(matchingDict, CFSTR(kIOPropertyMatchKey), propertyMatchDict);
 
 	CFRelease(propertyMatchDict);
 	propertyMatchDict = NULL;
 
-	return IOServiceGetMatchingServices(kIOMasterPortDefault, matchingDict, matchingServices);    
+	return IOServiceGetMatchingServices(kIOMasterPortDefault, matchingDict, matchingServices);
 }
-	
+
 static kern_return_t getMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress, UInt8 bufferSize) {
 	io_object_t intfService;
 	io_object_t controllerService;
@@ -85,7 +85,7 @@ static kern_return_t getMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 
 	if (bufferSize < kIOEthernetAddressSize)
 		return KERN_FAILURE;
-	
+
 	bzero(MACAddress, bufferSize);
 
 	while ((intfService = IOIteratorNext(intfIterator))) {

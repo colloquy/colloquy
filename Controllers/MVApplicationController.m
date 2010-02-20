@@ -210,7 +210,7 @@ static BOOL applicationIsTerminating = NO;
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( id ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-	
+
 	[invocation setSelector:@selector( setupPreferencesWithController: )];
 	[invocation setArgument:&controller atIndex:2];
 
@@ -418,24 +418,24 @@ static BOOL applicationIsTerminating = NO;
 
 - (void) receiveSleepNotification:(NSNotification *) notification {
 	_previouslyConnectedConnections = [[NSMutableArray alloc] init];
-	
+
 	NSAttributedString *quitString = [[NSAttributedString alloc] initWithString:[[NSUserDefaults standardUserDefaults] stringForKey:@"JVSleepMessage"]];
 	NSArray *openedConnections = [[MVConnectionsController defaultController] connectedConnections];
 	NSEnumerator *enumerator = [openedConnections objectEnumerator];
 	MVChatConnection *connection = nil;
-	
+
 	while ( ( connection = [enumerator nextObject] ) ) {
 		NSMutableDictionary *connectionInformation = [[NSMutableDictionary alloc] init];
-		
+
 		[connection disconnectWithReason:quitString];
 		[connectionInformation setObject:connection forKey:@"connection"];
-		
+
 		if ( [[connection awayStatusMessage] length] )
 			[connectionInformation setObject:[connection awayStatusMessage] forKey:@"away"];
 		else [connectionInformation setObject:@"" forKey:@"away"];
-		
+
 		[_previouslyConnectedConnections addObject:connectionInformation];
-		
+
 		[connectionInformation release];
 	}
 
@@ -449,15 +449,15 @@ static BOOL applicationIsTerminating = NO;
 - (void) _receiveWakeNotification:(NSNotification *) notification {
 	NSEnumerator *enumerator = [_previouslyConnectedConnections objectEnumerator];
 	NSDictionary *connectionInformation = nil;
-	
+
 	while ( ( connectionInformation = [enumerator nextObject] ) ) {
 		MVChatConnection *connection = [connectionInformation objectForKey:@"connection"];
 		[connection connect];
-		
-		if ([(MVChatString *) [connectionInformation objectForKey:@"away"] length]) 
+
+		if ([(MVChatString *) [connectionInformation objectForKey:@"away"] length])
 			[connection setAwayStatusMessage:[connectionInformation objectForKey:@"away"]];
 	}
-	
+
 	[_previouslyConnectedConnections release];
 	_previouslyConnectedConnections = nil;
 }
@@ -469,7 +469,7 @@ static BOOL applicationIsTerminating = NO;
 
 - (void) applicationWillFinishLaunching:(NSNotification *) notification {
 	PFMoveToApplicationsFolderIfNecessary();
-	
+
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector( handleURLEvent:withReplyEvent: ) forEventClass:kInternetEventClass andEventID:kAEGetURL];
 #ifdef DEBUG
@@ -524,7 +524,7 @@ static BOOL applicationIsTerminating = NO;
 
 		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVAskedToAllowAnalytics"];
 	}
-	
+
 	JVAnalyticsController *analyticsController = [JVAnalyticsController defaultController];
 	if (analyticsController) {
 		NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
@@ -655,21 +655,21 @@ static BOOL applicationIsTerminating = NO;
 	if ( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4 ) {
 		if ( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowDockBadge"] ) {
 			unsigned int totalHighlightCount = 0;
-			
+
 			NSEnumerator *chatRoomEnumerator = [[[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] objectEnumerator];
 			JVChatRoomPanel *room = nil;
-			
+
 			while( ( room = [chatRoomEnumerator nextObject] ) ) {
 				totalHighlightCount += [room newHighlightMessagesWaiting];
 			}
-			
+
 			NSEnumerator *directChatEnumerator = [[[JVChatController defaultController] chatViewControllersOfClass:[JVDirectChatPanel class]] objectEnumerator];
 			JVChatRoomPanel *directChat = nil;
-			
+
 			while( ( directChat = [directChatEnumerator nextObject] ) ) {
 				totalHighlightCount += [directChat newMessagesWaiting];
 			}
-			
+
 			[[NSApp dockTile] setBadgeLabel:( totalHighlightCount == 0 ? nil : [NSString stringWithFormat:@"%u", totalHighlightCount] )];
 			[[NSApp dockTile] display];
 		} else {

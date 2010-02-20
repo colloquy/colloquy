@@ -750,15 +750,6 @@
 #pragma mark -
 
 @implementation JVChatRoomPanel (JVChatRoomPrivate)
-- (void) _didConnect:(NSNotification *) notification {
-	if( _disposed )
-		return;
-
-	if( [[self target] modes] & MVChatRoomInviteOnlyMode )
-		return;
-
-	[[self target] performSelector:@selector(join) withObject:nil afterDelay:0.];
-}
 
 - (void) _didDisconnect:(NSNotification *) notification {
 	_kickedFromRoom = NO;

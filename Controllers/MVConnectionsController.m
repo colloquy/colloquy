@@ -6,8 +6,8 @@
 #import "JVChatController.h"
 #import "JVChatRoomBrowser.h"
 #import "MVKeyChain.h"
-#import "JVChatRoomPanel.h"
-#import "JVDirectChatPanel.h"
+//#import "JVChatRoomPanel.h"
+//#import "JVDirectChatPanel.h"
 #import "NSURLAdditions.h"
 #import "MVChatConnection.h"
 
@@ -1943,7 +1943,6 @@ static NSMenu *favoritesMenu = nil;
 		[[JVNotificationController defaultController] performNotification:@"JVNickNameIdentifiedWithServer" withContextInfo:context];
 	}
 
-	NSArray *rooms = [self joinRoomsForConnection:connection];
 	NSString *strcommands = [self connectCommandsForConnection:connection];
 
 	NSEnumerator *commands = [[strcommands componentsSeparatedByString:@"\n"] objectEnumerator];
@@ -1983,8 +1982,30 @@ static NSMenu *favoritesMenu = nil;
 		}
 	}
 
-	if( ( [[connection nicknamePassword] length] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinWaitsForIdentification"] ) && [rooms count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
-		[connection joinChatRoomsNamed:rooms];
+	if( [[connection nicknamePassword] length] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinWaitsForIdentification"] ) {
+		NSMutableArray *roomIdentifiers = [[self joinRoomsForConnection:connection] mutableCopy];
+
+		for (id viewController in [[JVChatController defaultController] chatViewControllersWithConnection:connection]) {
+			if ( [viewController isMemberOfClass:NSClassFromString(@"JVChatRoomPanel")] ) {
+				MVChatRoom *openRoom = (MVChatRoom *)[(JVChatRoomPanel *)viewController target];
+				NSString *openRoomIdentifier = [openRoom uniqueIdentifier];
+				if ( !( [openRoom modes] & MVChatRoomInviteOnlyMode ) ) {
+					if ( ( [openRoom modes] & MVChatRoomPassphraseToJoinMode ) ) {
+						[roomIdentifiers removeObject:openRoomIdentifier];
+						NSString *openRoomIdentifierWithPassphrase = [[openRoomIdentifier stringByAppendingString:@" "] stringByAppendingString:[openRoom attributeForMode:MVChatRoomPassphraseToJoinMode]];
+						if ( ![roomIdentifiers containsObject:openRoomIdentifierWithPassphrase] )
+							[roomIdentifiers addObject:openRoomIdentifierWithPassphrase];
+					} else if ( ![roomIdentifiers containsObject:openRoomIdentifier] )
+						[roomIdentifiers addObject:openRoomIdentifier];
+				}
+			}
+		}
+
+		if ( [roomIdentifiers count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
+			[connection joinChatRoomsNamed:roomIdentifiers];
+
+		[roomIdentifiers release];
+	}
 }
 
 - (IBAction) _connect:(id) sender {
@@ -2001,7 +2022,6 @@ static NSMenu *favoritesMenu = nil;
 	if( [self showConsoleOnConnectForConnection:connection] )
 		[[JVChatController defaultController] chatConsoleForConnection:connection ifExists:NO];
 
-	NSArray *rooms = [self joinRoomsForConnection:connection];
 	NSString *strcommands = [self connectCommandsForConnection:connection];
 
 	NSEnumerator *commands = [[strcommands componentsSeparatedByString:@"\n"] objectEnumerator];
@@ -2044,8 +2064,30 @@ static NSMenu *favoritesMenu = nil;
 		}
 	}
 
-	if( !( [[connection nicknamePassword] length] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinWaitsForIdentification"] ) && [rooms count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
-		[connection joinChatRoomsNamed:rooms];
+	if( ![[connection nicknamePassword] length] || ( [[connection nicknamePassword] length] && ![[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinWaitsForIdentification"] ) ) {
+		NSMutableArray *roomIdentifiers = [[self joinRoomsForConnection:connection] mutableCopy];
+		
+		for (id viewController in [[JVChatController defaultController] chatViewControllersWithConnection:connection]) {
+			if ( [viewController isMemberOfClass:NSClassFromString(@"JVChatRoomPanel")] ) {
+				MVChatRoom *openRoom = (MVChatRoom *)[(JVChatRoomPanel *)viewController target];
+				NSString *openRoomIdentifier = [openRoom uniqueIdentifier];
+				if ( !( [openRoom modes] & MVChatRoomInviteOnlyMode ) ) {
+					if ( ( [openRoom modes] & MVChatRoomPassphraseToJoinMode ) ) {
+						[roomIdentifiers removeObject:openRoomIdentifier];
+						NSString *openRoomIdentifierWithPassphrase = [[openRoomIdentifier stringByAppendingString:@" "] stringByAppendingString:[openRoom attributeForMode:MVChatRoomPassphraseToJoinMode]];
+						if ( ![roomIdentifiers containsObject:openRoomIdentifierWithPassphrase] )
+							[roomIdentifiers addObject:openRoomIdentifierWithPassphrase];
+					} else if ( ![roomIdentifiers containsObject:openRoomIdentifier] )
+						[roomIdentifiers addObject:openRoomIdentifier];
+				}
+			}
+		}
+		
+		if ( [roomIdentifiers count] && ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) )
+			[connection joinChatRoomsNamed:roomIdentifiers];
+		
+		[roomIdentifiers release];
+	}
 }
 
 - (void) _didConnect:(NSNotification *) notification {
@@ -2089,7 +2131,7 @@ static NSMenu *favoritesMenu = nil;
 	[awayMessage release];
 }
 
-	 
+
  - (void) _machineDidStopIdling:(NSNotification *) notification {
 	 if (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoAwayOnIdle"])
 		 return;

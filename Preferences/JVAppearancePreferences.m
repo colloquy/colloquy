@@ -499,7 +499,7 @@
 							NSString *expression = [regex replaceWithString:@"" inString:v];
 							expression = [expression stringByEscapingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"]];
 							expression = [NSString stringWithFormat:expression, @"(.*)"];
-							
+
 							// Store the path value if we found one.
 							regex = [AGRegex regexWithPattern:expression options:AGRegexCaseInsensitive];
 							AGRegexMatch *vmatch = [regex findInString:value];

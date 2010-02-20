@@ -85,7 +85,7 @@
 			if( ! user ) return NO;
 			[[JVInspectorController inspectorOfObject:user] show:nil];
 			return YES;
-		} 
+		}
 	}
 
 	if( isChatRoom ) {
@@ -152,7 +152,7 @@
 					member = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:member];
 				user = [MVChatUser wildcardUserFromString:member];
 			} else user = [[[room target] memberUsersWithNickname:member] anyObject];
-			
+
 			if( user ) {
 				[[room target] addBanForUser:user];
 				[[room target] kickOutMemberUser:user forReason:reason];
@@ -257,7 +257,7 @@
 					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] || ! [[room target] memberUsersWithNickname:arg] ) {
 						if ( ! [arg hasCaseInsensitiveSubstring:@"!"] && [arg hasCaseInsensitiveSubstring:@"@"] )
 							arg = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:arg];
-						user = [MVChatUser wildcardUserFromString:arg];						
+						user = [MVChatUser wildcardUserFromString:arg];
 					} else user = [[[room target] memberUsersWithNickname:arg] anyObject];
 
 					if( user ) [[room target] addBanForUser:user];
@@ -276,7 +276,7 @@
 							arg = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:arg];
 						user = [MVChatUser wildcardUserFromString:arg];
 					} else user = [[[room target] memberUsersWithNickname:arg] anyObject];
-					
+
 					if( user ) [[room target] removeBanForUser:user];
 				}
 			}

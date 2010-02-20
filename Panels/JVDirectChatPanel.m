@@ -928,7 +928,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	if( ! [[[_windowController window] representedFilename] length] )
 		[self _refreshWindowFileProxy];
-	
+
 	[[NSApp delegate] updateDockTile];
 }
 
@@ -1045,14 +1045,14 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVWarnOnLargeMessages"] ) {
 		NSUInteger newlineCount = 0;
 		NSUInteger messageLimit = 5;
-		
-		NSArray *lines = [[[send textStorage] string] componentsSeparatedByString:@"\n"];		
+
+		NSArray *lines = [[[send textStorage] string] componentsSeparatedByString:@"\n"];
 		NSEnumerator *enumerator = [lines objectEnumerator];
 		NSString *line = nil;
 
 		while( ( line = [enumerator nextObject] ) )
 			if( [line length] ) newlineCount++;
-		
+
 		if ( [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVWarnOnLargeMessageLimit"] unsignedIntValue] > 1 )
 			messageLimit = [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVWarnOnLargeMessageLimit"] unsignedIntValue];
 
