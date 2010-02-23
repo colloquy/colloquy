@@ -92,7 +92,7 @@
 - (void) refreshInformation {
 	if( _hasPendingRefreshInformationRequest ) return;
 	_hasPendingRefreshInformationRequest = YES;
-	[[self connection] sendRawMessageWithFormat:@"WHOIS * %@", [self nickname]]; // whois also supports multiple nicknames, should be used where possible
+	[[self connection] sendRawMessageWithFormat:@"WHOIS %@ %1$@", [self nickname]];
 }
 
 - (void) _setDateUpdated:(NSDate *) date {
