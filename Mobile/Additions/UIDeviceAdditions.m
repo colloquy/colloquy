@@ -23,7 +23,10 @@
 	if (cached)
 		return result;
 
-	result = [self.model hasCaseInsensitiveSubstring:@"Phone"];
+	if ([self respondsToSelector:@selector(userInterfaceIdiom)])
+		result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPhone) && [self.model hasCaseInsensitiveSubstring:@"Phone"];
+	else result = [self.model hasCaseInsensitiveSubstring:@"Phone"];
+
 	cached = YES;
 
 	return result;
@@ -36,7 +39,10 @@
 	if (cached)
 		return result;
 
-	result = [self.model hasCaseInsensitiveSubstring:@"Pod"];
+	if ([self respondsToSelector:@selector(userInterfaceIdiom)])
+		result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPhone) && [self.model hasCaseInsensitiveSubstring:@"Pod"];
+	else result = [self.model hasCaseInsensitiveSubstring:@"Pod"];
+
 	cached = YES;
 
 	return result;
@@ -49,7 +55,9 @@
 	if (cached)
 		return result;
 
-	result = [self.model hasCaseInsensitiveSubstring:@"Pad"];
+	if ([self respondsToSelector:@selector(userInterfaceIdiom)])
+		result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPad);
+
 	cached = YES;
 
 	return result;
