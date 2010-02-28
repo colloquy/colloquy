@@ -33,8 +33,8 @@
 	view.clipsToBounds = YES;
 
 	_toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
-	_toolbar.layer.shadowOpacity = 0.8;
-	_toolbar.layer.shadowRadius = 8.;
+	_toolbar.layer.shadowOpacity = 1.;
+	_toolbar.layer.shadowRadius = 3.;
 	_toolbar.layer.shadowOffset = CGSizeMake(0., 0.);
 	_toolbar.items = _standardToolbarItems;
 
