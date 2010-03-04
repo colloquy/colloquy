@@ -849,6 +849,9 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerRemovedChatViewControllerNotification object:self userInfo:notificationInfo];
 
 	[controller release];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[self showChatController:[_chatControllers lastObject] animated:YES];
 }
 @end
 
