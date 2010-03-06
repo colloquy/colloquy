@@ -242,6 +242,15 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		splitViewController.viewControllers = viewControllers;
 		[viewControllers release];
 
+		NSString *serverAddress = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSelectedControllerServer"];
+		if (serverAddress.length) {
+			MVChatConnection *connection = [[CQConnectionsController defaultController] connectionForServerAddress:serverAddress];
+			NSString *selectedRoom = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSelectedControllerRoom"];
+			if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSelectedRoom"])
+				[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:selectedRoom andConnection:connection];
+			else [[CQChatController defaultController] showChatControllerForUserNicknamed:selectedRoom andConnection:connection];
+		}
+
 		_mainViewController = splitViewController;
 	} else {
 		UITabBarController *tabBarController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];

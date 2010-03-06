@@ -605,6 +605,9 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	_nextRoomConnection = nil;
 
 	if ([[UIDevice currentDevice] isPadModel]) {
+		[[NSUserDefaults standardUserDefaults] setObject:controller.title forKey:@"CQSelectedControllerRoom"];
+		[[NSUserDefaults standardUserDefaults] setObject:[controller.connection server] forKey:@"CQSelectedControllerServer"];
+		[[NSUserDefaults standardUserDefaults] setBool:[controller.target isKindOfClass:[MVChatRoom class]] forKey:@"CQSelectedRoom"];
 		_chatPresentationController.topChatViewController = controller;
 	} else {
 		if (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController) {
