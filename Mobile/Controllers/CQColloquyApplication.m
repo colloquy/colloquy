@@ -246,6 +246,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		if (serverAddress.length) {
 			MVChatConnection *connection = [[CQConnectionsController defaultController] connectionForServerAddress:serverAddress];
 			NSString *selectedRoom = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSelectedControllerRoom"];
+
 			if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSelectedRoom"])
 				[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:selectedRoom andConnection:connection];
 			else [[CQChatController defaultController] showChatControllerForUserNicknamed:selectedRoom andConnection:connection];

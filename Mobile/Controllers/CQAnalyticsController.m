@@ -91,7 +91,7 @@ static NSString *applicationName;
 }
 
 - (NSMutableURLRequest *) _urlRequest {
-	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:analyticsURL]];
+	NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:analyticsURL]] autorelease];
 
 	[request setHTTPMethod:@"POST"];
 	[request setHTTPBody:[self _requestBody]];
