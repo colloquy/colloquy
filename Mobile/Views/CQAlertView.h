@@ -1,4 +1,4 @@
-@interface CQAlertView : UIAlertView <UITextFieldDelegate> {
+@interface CQAlertView : UIAlertView {
 	id _userInfo;
 
 	BOOL _showingKeyboard;

@@ -675,7 +675,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	NSString *buttonTitle = nil;
 	if (tag) {
-		[alert addTextFieldWithPlaceholder:placeholder tag:tag];
+		[alert addTextFieldWithPlaceholder:placeholder tag:tag secureTextEntry:YES];
 
 		buttonTitle = (tag == ChannelKeyTextFieldTag) ? NSLocalizedString(@"Join", @"Join button title") : NSLocalizedString(@"Connect", @"Connect button title");
 	} else buttonTitle = NSLocalizedString(@"Help", @"Help button title");

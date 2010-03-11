@@ -77,9 +77,6 @@
 #pragma mark -
 
 - (void) addTextField:(UITextField *) textField {
-	if (!textField.delegate)
-		textField.delegate = self;
-
 	[_inputFields addObject:textField];
 }
 
