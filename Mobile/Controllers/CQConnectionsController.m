@@ -61,6 +61,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 #define CannotConnectToBouncerTag 2
 #define HelpAlertTag 3
 
+#define ChannelKeyTextFieldTag 4
+#define NickservPasswordTextFieldTag 5
+
 @implementation CQConnectionsController
 + (void) userDefaultsChanged {
 	[UIApplication sharedApplication].idleTimerDisabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIdleTimerDisabled"];
@@ -259,6 +262,28 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	if (alertView.tag == HelpAlertTag)
 		[[CQColloquyApplication sharedApplication] showHelp:nil];
+
+	NSArray *inputFields = ((CQAlertView *)alertView).inputFields;
+	if (!inputFields.count)
+		return;
+
+	NSString *response = ((UITextField *)[inputFields objectAtIndex:0]).text;
+	if (!response.length)
+		return;
+
+	NSNotification *notification = ((CQAlertView *)alertView).userInfo;
+	MVChatConnection *connection = notification.object;
+
+	if (alertView.tag == ChannelKeyTextFieldTag) {
+		NSError *error = [[notification userInfo] objectForKey:@"error"];
+		NSString *room = [[error userInfo] objectForKey:@"room"];
+		NSString *roomAndKey = [[NSString alloc] initWithFormat:@"%@ %@", room, response];
+
+		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:room andConnection:connection];
+		[connection joinChatRoomNamed:roomAndKey];
+
+		[roomAndKey release];
+	}
 }
 
 #pragma mark -
@@ -594,6 +619,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	MVChatRoom *room = (roomName ? [connection chatRoomWithName:roomName] : nil);
 
 	NSString *errorMessage = nil;
+	NSString *placeholder = nil;
+	NSUInteger tag = 0;
 	switch (error.code) {
 		case MVChatConnectionRoomIsFullError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The room \"%@\" on \"%@\" is full.", "Room is full alert message"), room.displayName, connection.displayName];
@@ -606,6 +633,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 			break;
 		case MVChatConnectionRoomPasswordIncorrectError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The room \"%@\" on \"%@\" is password protected, and you didn't supply the correct password.", "Room is full alert message"), room.displayName, connection.displayName];
+			placeholder = NSLocalizedString(@"Channel Key", @"Channel Key textfield placeholder");
+			tag = ChannelKeyTextFieldTag;
 			break;
 		case MVChatConnectionCantSendToRoomError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't send messages to \"%@\" due to some room restriction.", "Cant send message alert message"), room.displayName];
@@ -615,6 +644,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 			break;
 		case MVChatConnectionIdentifyToJoinRoomError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Identify with network services to join \"%@\" on \"%@\".", "Identify to join room alert message"), room.displayName, connection.displayName];
+			placeholder = NSLocalizedString(@"NickServ Password", @"NickServ Password textfield placeholder");
+			tag = NickservPasswordTextFieldTag;
 			break;
 		case MVChatConnectionCantChangeNickError:
 			if (room) errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't change your nickname while in \"%@\" on \"%@\". Leave the room and try again.", "Can't change nick because of room alert message" ), room.displayName, connection.displayName];
@@ -633,15 +664,23 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	if (!errorMessage) return;
 
-	UIAlertView *alert = [[UIAlertView alloc] init];
-	alert.tag = HelpAlertTag;
+	CQAlertView *alert = [[CQAlertView alloc] init];
+	alert.tag = tag ? tag : HelpAlertTag;
 	alert.delegate = self;
 	alert.title = errorTitle;
 	alert.message = errorMessage;
+	alert.userInfo = notification;
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
-	[alert addButtonWithTitle:NSLocalizedString(@"Help", @"Help button title")];
+	NSString *buttonTitle = nil;
+	if (tag) {
+		[alert addTextFieldWithPlaceholder:placeholder tag:tag];
+
+		buttonTitle = (tag == ChannelKeyTextFieldTag) ? NSLocalizedString(@"Join", @"Join button title") : NSLocalizedString(@"Connect", @"Connect button title");
+	} else buttonTitle = NSLocalizedString(@"Help", @"Help button title");
+
+	[alert addButtonWithTitle:buttonTitle];
 
 	[alert show];
 
