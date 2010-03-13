@@ -15,8 +15,8 @@
 	_inputFields = [[NSMutableArray alloc] initWithCapacity:2];
 
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardWillHideNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositionAlertView) name:UIDeviceOrientationDidChangeNotification object:nil];
 
 	return self;
@@ -125,12 +125,12 @@
 	[UIView commitAnimations];
 }
 
-- (void) keyboardDidShow:(NSNotification *) notification {
+- (void) keyboardWillShow:(NSNotification *) notification {
 	_showingKeyboard = YES;
 	[self repositionAlertView];
 }
 
-- (void) keyboardDidHide:(NSNotification *) notification {
+- (void) keyboardWillHide:(NSNotification *) notification {
 	_showingKeyboard = NO;
 	[self repositionAlertView];
 }
