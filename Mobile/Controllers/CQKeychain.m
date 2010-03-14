@@ -28,16 +28,16 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 }
 #endif
 
-- (void) setPassword:(NSString *) password forServer:(NSString *) server account:(NSString *) account {
+- (void) setPassword:(NSString *) password forArea:(NSString *) area account:(NSString *) account {
 	NSParameterAssert(server);
 
 #if !TARGET_IPHONE_SIMULATOR || __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
 	if (!password.length) {
-		[self removePasswordForServer:server account:account];
+		[self removePasswordForArea:area account:account];
 		return;
 	}
 
-	NSMutableDictionary *passwordEntry = createBaseDictionary(server, account);
+	NSMutableDictionary *passwordEntry = createBaseDictionary(area, account);
 	NSMutableDictionary *attributesToUpdate = [[NSMutableDictionary alloc] init];
 
 	NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
@@ -67,13 +67,13 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 #endif
 }
 
-- (NSString *) passwordForServer:(NSString *) server account:(NSString *) account {
+- (NSString *) passwordForArea:(NSString *) area account:(NSString *) account {
 	NSParameterAssert(server);
 
 	NSString *string = nil;
 
 #if !TARGET_IPHONE_SIMULATOR || __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
-	NSMutableDictionary *passwordQuery = createBaseDictionary(server, account);
+	NSMutableDictionary *passwordQuery = createBaseDictionary(area, account);
 	NSData *resultData = nil;
 
 	[passwordQuery setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
@@ -97,11 +97,11 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	return [string autorelease];
 }
 
-- (void) removePasswordForServer:(NSString *) server account:(NSString *) account {
+- (void) removePasswordForArea:(NSString *) area account:(NSString *) account {
 	NSParameterAssert(server);
 
 #if !TARGET_IPHONE_SIMULATOR || __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
-	NSMutableDictionary *passwordQuery = createBaseDictionary(server, account);
+	NSMutableDictionary *passwordQuery = createBaseDictionary(area, account);
 	SecItemDelete((CFDictionaryRef)passwordQuery);
 	[passwordQuery release];
 #else

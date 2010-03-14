@@ -106,7 +106,7 @@
 
 - (NSString *) password {
 	if (!_password && _server && _username)
-		_password = [[[CQKeychain standardKeychain] passwordForServer:_identifier account:@"Bouncer"] copy];
+		_password = [[[CQKeychain standardKeychain] passwordForArea:_identifier account:@"Bouncer"] copy];
 	return _password;
 }
 
@@ -120,6 +120,6 @@
 	if (!_server.length || !_username.length)
 		return;
 
-	[[CQKeychain standardKeychain] setPassword:password forServer:_identifier account:@"Bouncer"];
+	[[CQKeychain standardKeychain] setPassword:password forArea:_identifier account:@"Bouncer"];
 }
 @end
