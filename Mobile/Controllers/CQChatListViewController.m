@@ -97,14 +97,12 @@ static MVChatConnection *connectionForSection(NSUInteger section) {
 	MVChatConnection *currentConnection = nil;
 	NSUInteger sectionIndex = 0;
 
-#if ENABLE(FILE_TRANSFERS)
-	for (id controller in controllers) {
-		if (![controller conformsToProtocol:@protocol(CQChatViewController)])
-			continue;
-		id <CQChatViewController> chatViewController = controller;
-#else
 	for (id <CQChatViewController> chatViewController in controllers) {
+#if ENABLE(FILE_TRANSFERS)
+		if (![chatViewController conformsToProtocol:@protocol(CQChatViewController)])
+			continue;
 #endif
+
 		if (chatViewController.connection != currentConnection) {
 			if (currentConnection) ++sectionIndex;
 			currentConnection = chatViewController.connection;
@@ -125,14 +123,12 @@ static NSUInteger sectionIndexForConnection(MVChatConnection *connection) {
 	MVChatConnection *currentConnection = nil;
 	NSUInteger sectionIndex = 0;
 
-#if ENABLE(FILE_TRANSFERS)
-	for (id controller in controllers) {
-		if (![controller conformsToProtocol:@protocol(CQChatViewController)])
-			continue;
-		id <CQChatViewController> chatViewController = controller;
-#else
 	for (id <CQChatViewController> chatViewController in controllers) {
+#if ENABLE(FILE_TRANSFERS)
+		if (![chatViewController conformsToProtocol:@protocol(CQChatViewController)])
+			continue;
 #endif
+
 		if (chatViewController.connection != currentConnection) {
 			if (currentConnection) ++sectionIndex;
 			currentConnection = chatViewController.connection;
@@ -145,11 +141,7 @@ static NSUInteger sectionIndexForConnection(MVChatConnection *connection) {
 	return NSNotFound;
 }
 
-#if ENABLE(FILE_TRANSFERS)
-static id chatControllerForIndexPath(NSIndexPath *indexPath) {
-#else
 static id <CQChatViewController> chatControllerForIndexPath(NSIndexPath *indexPath) {
-#endif
 	MVChatConnection *connection = connectionForSection(indexPath.section);
 	if (connection) {
 		NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
@@ -164,11 +156,7 @@ static id <CQChatViewController> chatControllerForIndexPath(NSIndexPath *indexPa
 #endif
 }
 
-#if ENABLE(FILE_TRANSFERS)
-static NSIndexPath *indexPathForChatController(id controller) {
-#else
 static NSIndexPath *indexPathForChatController(id <CQChatViewController> controller) {
-#endif
 	NSArray *controllers = [CQChatController defaultController].chatViewControllers;
 	if (!controllers.count)
 		return nil;
@@ -183,12 +171,9 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	NSUInteger sectionIndex = 0;
 	NSUInteger rowIndex = 0;
 
-#if ENABLE(FILE_TRANSFERS)
-	for (id currentController in controllers) {
-		if ([currentController conformsToProtocol:@protocol(CQChatViewController)]) {
-			id <CQChatViewController> chatViewController = currentController;
-#else
 	for (id <CQChatViewController> chatViewController in controllers) {
+#if ENABLE(FILE_TRANSFERS)
+		if ([chatViewController conformsToProtocol:@protocol(CQChatViewController)]) {
 #endif
 			if (chatViewController.connection != currentConnection) {
 				if (currentConnection) ++sectionIndex;
@@ -202,7 +187,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 				++rowIndex;
 #if ENABLE(FILE_TRANSFERS)
 		} else {
-			if (currentController == controller)
+			if (chatViewController == controller)
 				return [NSIndexPath indexPathForRow:rowIndex inSection:sectionIndex + 1];
 			++rowIndex;
 		}
@@ -456,10 +441,6 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 #if ENABLE(FILE_TRANSFERS)
 	else if ([controller isKindOfClass:[CQFileTransferController class]])
 		controllers = [[CQChatController defaultController] chatViewControllersOfClass:[CQFileTransferController class]];
-	else {
-		NSAssert(NO, @"Should not reach this point.");
-		return;
-	}
 #endif
 
 	NSIndexPath *changedIndexPath = indexPathForChatController(controller);
@@ -614,13 +595,12 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	MVChatConnection *currentConnection = nil;
 	NSUInteger sectionCount = 0;
 
-#if ENABLE(FILE_TRANSFERS)
-	for (id currentController in controllers) {
-		if ([currentController conformsToProtocol:@protocol(CQChatViewController)]) {
-			id <CQChatViewController> chatViewController = currentController;
-#else
 	for (id <CQChatViewController> chatViewController in controllers) {
+#if ENABLE(FILE_TRANSFERS)
+		if (![chatViewController conformsToProtocol:@protocol(CQChatViewController)])
+			continue;
 #endif
+
 		if (chatViewController.connection != currentConnection) {
 			++sectionCount;
 			currentConnection = chatViewController.connection;
@@ -645,12 +625,10 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	MVChatConnection *connection = connectionForSection(section);
 	if (connection)
 		return connection.displayName;
-
 #if ENABLE(FILE_TRANSFERS)
 	if ([[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]].count)
 		return NSLocalizedString(@"File Transfers", @"File Transfers section title");
 #endif
-
 	return nil;
 }
 

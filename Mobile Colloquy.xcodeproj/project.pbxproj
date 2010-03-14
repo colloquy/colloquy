@@ -94,6 +94,8 @@
 		1C6F689A113AEB6800514C0C /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6F6881113AE6E600514C0C /* Icon-72.png */; };
 		1C6F68AA113AF10E00514C0C /* Default-Landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6F68A8113AF10E00514C0C /* Default-Landscape.png */; };
 		1C6F68AB113AF10E00514C0C /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6F68A9113AF10E00514C0C /* Default-Portrait.png */; };
+		1C6F6930113C180000514C0C /* CQFileTransferController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */; };
+		1C6F6931113C181600514C0C /* CQFileTransferTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */; };
 		1C79735B1029D0EF00649250 /* screencast.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7973591029D0EF00649250 /* screencast.png */; };
 		1C79735C1029D0EF00649250 /* screencastSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C79735A1029D0EF00649250 /* screencastSelected.png */; };
 		1C7EBE6D0E01816C0018B0C8 /* CQPreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7EBE6C0E01816C0018B0C8 /* CQPreferencesTextCell.m */; };
@@ -1198,6 +1200,8 @@
 				1CFCBA301114FAFA00EA5F10 /* CQUserInfoController.m in Sources */,
 				1CFCBA351114FB2500EA5F10 /* CQWelcomeController.m in Sources */,
 				1CFCC0C511172B2A00EA5F10 /* CQChatPresentationController.m in Sources */,
+				1C6F6930113C180000514C0C /* CQFileTransferController.m in Sources */,
+				1C6F6931113C181600514C0C /* CQFileTransferTableCell.m in Sources */,
 				92A24DA7114C918300897373 /* CQPreferencesListChannelEditViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

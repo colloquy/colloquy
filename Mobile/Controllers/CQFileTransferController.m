@@ -1,6 +1,8 @@
 //  Created by August Joki on 1/19/09.
 //  Copyright 2009 Concinnous Software. All rights reserved.
 
+#if ENABLE(FILE_TRANSFERS)
+
 #import "CQFileTransferController.h"
 #import "CQFileTransferTableCell.h"
 
@@ -150,3 +152,5 @@
 	}
 }
 @end
+
+#endif

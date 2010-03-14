@@ -5,12 +5,15 @@
 @class CQChatPresentationController;
 @class CQChatRoomController;
 @class CQDirectChatController;
-@class CQFileTransferController;
 @class MVChatConnection;
 @class MVChatUser;
 @class MVDirectChatConnection;
-@class MVFileTransfer;
 @protocol CQChatViewController;
+
+#if ENABLE(FILE_TRANSFERS)
+@class CQFileTransferController;
+@class MVFileTransfer;
+#endif
 
 extern NSString *CQChatControllerAddedChatViewControllerNotification;
 extern NSString *CQChatControllerRemovedChatViewControllerNotification;

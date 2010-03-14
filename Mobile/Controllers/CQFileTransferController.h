@@ -1,6 +1,8 @@
 //  Created by August Joki on 1/19/09.
 //  Copyright 2009 Concinnous Software. All rights reserved.
 
+#if ENABLE(FILE_TRANSFERS)
+
 @class MVFileTransfer;
 @class CQFileTransferTableCell;
 
@@ -17,3 +19,5 @@
 - (id) initWithTransfer:(MVFileTransfer *) transfer;
 - (UIImage *) thumbnailWithSize:(CGSize) size;
 @end
+
+#endif

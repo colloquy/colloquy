@@ -23,12 +23,18 @@ NSString *CQChatControllerRemovedChatViewControllerNotification = @"CQChatContro
 NSString *CQChatControllerChangedTotalImportantUnreadCountNotification = @"CQChatControllerChangedTotalImportantUnreadCountNotification";
 
 #define ChatRoomInviteAlertTag 1
+
+#if ENABLE(FILE_TRANSFERS)
 #define FileDownloadAlertTag 2
+#endif
 
 #define NewChatActionSheetTag 1
 #define NewConnectionActionSheetTag 2
+
+#if ENABLE(FILE_TRANSFERS)
 #define SendFileActionSheetTag 3
 #define FileTypeActionSheetTag 4
+#endif
 
 static NSInteger alwaysShowNotices;
 static NSString *chatRoomInviteAction;
@@ -38,10 +44,6 @@ static CQSoundController *highlightSound;
 #if ENABLE(FILE_TRANSFERS)
 static BOOL vibrateOnFileTransfer;
 static CQSoundController *fileTransferSound;
-
-@interface CQChatController (CQChatControllerPrivate)
-- (void) _sendImage;
-@end
 #endif
 
 #pragma mark -
@@ -448,7 +450,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 - (void) imagePickerController:(UIImagePickerController *) picker didFinishPickingImage:(UIImage *) image editingInfo:(NSDictionary *) editingInfo {
 	_transferImage = [image retain];
 
-	if ([[[NSUserDefaults standardUserDefaults] stringForKey:@"CQFileTransferBehavior"] isEqualToString:@"Ask"]) {
+	NSString *behavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQFileTransferBehavior"];
+	if ([behavior isEqualToString:@"Ask"]) {
 		UIActionSheet *sheet = [[UIActionSheet alloc] init];
 		sheet.delegate = self;
 		sheet.tag = FileTypeActionSheetTag;
@@ -462,11 +465,11 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		[self _sendImage];
 	}
 
-    [self dismissModalViewControllerAnimated:YES];
+    [[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
 
 - (void) imagePickerControllerDidCancel:(UIImagePickerController *) picker {
-    [self dismissModalViewControllerAnimated:YES];
+    [[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
     [_fileUser release];
 }
 #endif
@@ -808,12 +811,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if (!exists) {
 		CQFileTransferController *controller = [[CQFileTransferController alloc] initWithTransfer:transfer];
 		if (controller) {
-			[_chatControllers addObject:controller];
-
-			[self _sortChatControllers];
-
-			[_chatListViewController addChatViewController:controller];
-
+			[self _addViewController:controller];
 			return [controller autorelease];
 		}
 	}

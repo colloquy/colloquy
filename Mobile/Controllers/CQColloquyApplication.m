@@ -89,7 +89,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		if (highlightWordsString.length) {
 			[highlightWords addObjectsFromArray:[highlightWordsString componentsMatchedByRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" capture:1]];
 
-			highlightWordsString = [highlightWordsString stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)[/\"'].*?[/\"'](?=\\s|$)" withString:@""];
+			highlightWordsString = [highlightWordsString stringByReplacingOccurrencesOfRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" withString:@""];
 
 			[highlightWords addObjectsFromArray:[highlightWordsString componentsSeparatedByString:@" "]];
 			[highlightWords removeObject:@""];
@@ -356,7 +356,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;
 	NSMutableArray *items = [chatPresentationController.standardToolbarItems mutableCopy];
 
-	[items insertObject:barButtonItem atIndex:1];
+	[items insertObject:barButtonItem atIndex:0];
 
 	[chatPresentationController setStandardToolbarItems:items animated:NO];
 
