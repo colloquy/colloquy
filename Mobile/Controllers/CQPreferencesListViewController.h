@@ -10,7 +10,8 @@
 	NSString *_editPlaceholder;
 	NSUInteger _editingIndex;
 	NSUInteger _selectedItemIndex;
-	CQPreferencesListEditViewController *_editingView;
+	CQPreferencesListEditViewController *_editingViewController;
+	CQPreferencesListEditViewController *_customEditingViewController;
 	id _target;
 	SEL _action;
 	BOOL _pendingChanges;
@@ -24,6 +25,7 @@
 @property (nonatomic, copy) NSString *noItemsLabelText;
 @property (nonatomic, copy) NSString *editViewTitle;
 @property (nonatomic, copy) NSString *editPlaceholder;
+@property (nonatomic, retain) CQPreferencesListEditViewController *customEditingViewController;
 
 @property (nonatomic, assign) id target;
 @property (nonatomic) SEL action;

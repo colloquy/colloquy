@@ -1,5 +1,6 @@
 #import "CQPreferencesListViewController.h"
 #import "CQPreferencesListEditViewController.h"
+#import "CQPreferencesListChannelEditViewController.h"
 
 @implementation CQPreferencesListViewController
 - (id) init {
@@ -29,7 +30,8 @@
 	[_noItemsLabelText release];
 	[_editViewTitle release];
 	[_editPlaceholder release];
-	[_editingView release];
+	[_editingViewController release];
+	[_customEditingViewController release];
 
 	[super dealloc];
 }
@@ -45,29 +47,22 @@
 - (void) viewWillAppear:(BOOL) animated {
 	UITableView *tableView = self.tableView;
 
-	if (_editingView) {
+	if (_editingViewController) {
 		NSIndexPath *changedIndexPath = [NSIndexPath indexPathForRow:_editingIndex inSection:0];
 		NSArray *changedIndexPaths = [NSArray arrayWithObject:changedIndexPath];
 
 		if (_editingIndex < _items.count) {
-			if (_editingView.listItemText.length)
-				[_items replaceObjectAtIndex:_editingIndex withObject:_editingView.listItemText];
+			if (_editingViewController.listItemText.length)
+				[_items replaceObjectAtIndex:_editingIndex withObject:_editingViewController.listItemText];
 			else [_items removeObjectAtIndex:_editingIndex];
 
 			_pendingChanges = YES;
 
-			[tableView beginUpdates];
-
-			[tableView deleteRowsAtIndexPaths:changedIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-
-			if (_editingView.listItemText.length)
-				[tableView insertRowsAtIndexPaths:changedIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-
-			[tableView endUpdates];
-		} else if (_editingView.listItemText.length) {
-			if (![_items containsObject:_editingView.listItemText]) {
+			[tableView updateCellAtIndexPath:changedIndexPath withAnimation:UITableViewRowAnimationFade];
+		} else if (_editingViewController.listItemText.length) {
+			if (![_items containsObject:_editingViewController.listItemText]) {
 				[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
-				[_items insertObject:_editingView.listItemText atIndex:_editingIndex];
+				[_items insertObject:_editingViewController.listItemText atIndex:_editingIndex];
 				_pendingChanges = YES;
 
 				[tableView insertRowsAtIndexPaths:changedIndexPaths withRowAnimation:UITableViewRowAnimationFade];
@@ -76,8 +71,8 @@
 			}
 		}
 
-		[_editingView release];
-		_editingView = nil;
+		[_editingViewController release];
+		_editingViewController = nil;
 	}
 
 	[super viewWillAppear:animated];
@@ -89,7 +84,7 @@
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
-	if (_editingView || !_pendingChanges || !_action)
+	if (_editingViewController || !_pendingChanges || !_action)
 		return;
 
 	if (!_target || [_target respondsToSelector:_action])
@@ -151,20 +146,22 @@
 	[self.tableView reloadData];
 }
 
+@synthesize customEditingViewController = _customEditingViewController;
+
 #pragma mark -
 
 - (void) editItemAtIndex:(NSUInteger) index {
-	if (_editingView)
-		return;
+	if (_customEditingViewController)
+		_editingViewController = [_customEditingViewController retain];
+	else _editingViewController = [[CQPreferencesListEditViewController alloc] init];
 
 	_editingIndex = index;
-	_editingView = [[CQPreferencesListEditViewController alloc] init];
 
-	_editingView.title = _editViewTitle;
-	_editingView.listItemText = (index < _items.count ? [_items objectAtIndex:index] : @"");
-	_editingView.listItemPlaceholder = _editPlaceholder;
+	_editingViewController.title = _editViewTitle;
+	_editingViewController.listItemText = (index < _items.count ? [_items objectAtIndex:index] : @"");
+	_editingViewController.listItemPlaceholder = _editPlaceholder;
 
-	[self.navigationController pushViewController:_editingView animated:YES];
+	[self.navigationController pushViewController:_editingViewController animated:YES];
 }
 
 #pragma mark -

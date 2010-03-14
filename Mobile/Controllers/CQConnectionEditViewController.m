@@ -4,6 +4,7 @@
 #import "CQConnectionAdvancedEditController.h"
 #import "CQConnectionPushEditController.h"
 #import "CQConnectionsController.h"
+#import "CQPreferencesListChannelEditViewController.h"
 #import "CQPreferencesDeleteCell.h"
 #import "CQPreferencesListViewController.h"
 #import "CQPreferencesSwitchCell.h"
@@ -204,6 +205,10 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		listViewController.editViewTitle = NSLocalizedString(@"Edit Chat Room", @"Edit Chat Room view title");
 		listViewController.editPlaceholder = NSLocalizedString(@"Chat Room", @"Chat Room placeholder");
 
+		CQPreferencesListChannelEditViewController *editingViewController = [[CQPreferencesListChannelEditViewController alloc] init];
+		editingViewController.connection = _connection;
+		listViewController.customEditingViewController = editingViewController;
+
 		listViewController.target = self;
 		listViewController.action = @selector(automaticJoinRoomsChanged:);
 
@@ -211,6 +216,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 		[self.navigationController pushViewController:listViewController animated:YES];
 
+		[editingViewController release];
 		[listViewController release];
 
 		return;
