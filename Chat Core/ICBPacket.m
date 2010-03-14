@@ -139,7 +139,7 @@
 		}
 	}
 
-	return [s autorelease];
+	return s;
 }
 
 - (NSArray *) fields {
@@ -188,7 +188,7 @@
 	raw[1] = _type;
 
 	NSAssert( [self length] == length + 3, @"Length mismatch" );
-	return [[NSData dataWithBytes:raw length:length + 3] autorelease];
+	return [NSData dataWithBytes:raw length:length + 3];
 }
 
 - (char) type {

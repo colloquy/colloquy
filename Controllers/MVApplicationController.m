@@ -372,6 +372,8 @@ static BOOL applicationIsTerminating = NO;
 				[[JVAppearancePreferences sharedInstance] selectStyleWithIdentifier:[style identifier]];
 			}
 
+			[style release];
+
 			return YES;
 		} else {
 			NSRunCriticalAlertPanel( NSLocalizedString( @"Style Installation Error", "error installing style title" ), NSLocalizedString( @"The style could not be installed, please make sure you have permission to install this item.", "style install error message" ), nil, nil, nil );

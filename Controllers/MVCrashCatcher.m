@@ -23,6 +23,9 @@
 }
 
 - (void) dealloc {
+	[urlConnection release];
+	urlConnection = nil;
+
 	[window close];
 	window = nil;
 
@@ -51,12 +54,10 @@
 
 - (void) connectionDidFinishLoading:(NSURLConnection *) connection {
 	[[NSFileManager defaultManager] removeFileAtPath:logPath handler:nil];
-	[connection release];
 	[self autorelease];
 }
 
 - (void) connection:(NSURLConnection *) connection didFailWithError:(NSError *) error {
-    [connection release];
 	[self autorelease];
 }
 
@@ -96,7 +97,7 @@
 	[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
 	[request setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES]];
 
-	[[NSURLConnection connectionWithRequest:request delegate:self] retain];
+	urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 
 	[[NSApplication sharedApplication] stopModal];
 	[window orderOut:nil];

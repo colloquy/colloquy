@@ -262,7 +262,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 #pragma mark -
 
 - (id) allocInstance:(NSString *) class {
-	return [[NSClassFromString(class) allocWithZone:nil] autorelease];
+	return [[NSClassFromString(class) allocWithZone:nil] autorelease]; // Clang warning can be ignored, it is caused by the improper but necessary use of "alloc" in the name
 }
 
 #pragma mark -

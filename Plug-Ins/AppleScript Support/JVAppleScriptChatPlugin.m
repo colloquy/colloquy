@@ -109,7 +109,7 @@
 		return nil;
 	}
 
-	return ( self = [self initWithScript:script atPath:path withManager:manager] );
+	return [self initWithScript:script atPath:path withManager:manager];
 }
 
 - (void) release {

@@ -27,7 +27,7 @@ typedef NSUInteger NSTableViewSelectionHighlightStyle;
 
 @implementation JVSidebarChatWindowController
 - (id) init {
-	return ( self = [self initWithWindowNibName:@"JVSidebarChatWindow"] );
+	return [self initWithWindowNibName:@"JVSidebarChatWindow"];
 }
 
 - (id) initWithWindowNibName:(NSString *) windowNibName {

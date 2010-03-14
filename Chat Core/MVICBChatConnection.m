@@ -322,8 +322,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 	MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:identifier];
 	if( !room ) {
-		room = [[MVICBChatRoom alloc] initWithName:identifier
-									  andConnection:self];
+		room = [[[MVICBChatRoom alloc] initWithName:identifier andConnection:self] autorelease];
 	}
 
 	return room;
@@ -488,9 +487,8 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	 postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification
 	 object:self
 	 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-	                        [[packet description] retain], @"message",
-							[NSNumber numberWithBool:YES], @"outbound",
-							nil]];
+               [packet description],            @"message",
+               [NSNumber numberWithBool:YES],   @"outbound", nil]];
 }
 
 - (void) _writeDataToServer:(id) raw {
@@ -750,9 +748,8 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	 postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification
 	 object:self
 	 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-	                        [[packet description] retain], @"message",
-							[NSNumber numberWithBool:NO], @"outbound",
-							nil]];
+               [packet description],            @"message",
+               [NSNumber numberWithBool:NO],    @"outbound", nil]];
 
 	const struct info *i = &info[0];
 	while( i->type != '\0' ) {
@@ -822,9 +819,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 		[[NSNotificationCenter defaultCenter]
 		 postNotificationOnMainThreadWithName:MVChatConnectionGotInformationalMessageNotification
 		 object:self
-		 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-	                            [message retain], @"message",
-								nil]];
+		 userInfo:[NSDictionary dictionaryWithObject:message forKey:@"message"]];
 	}
 }
 
@@ -903,9 +898,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	[[NSNotificationCenter defaultCenter]
 	 postNotificationOnMainThreadWithName:MVChatConnectionGotImportantMessageNotification
 	 object:self
-	 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-                            [message retain], @"message",
-							nil]];
+	 userInfo:[NSDictionary dictionaryWithObject:message forKey:@"message"]];
 }
 
 - (void) stcLoginPacket:(NSArray *) fields {

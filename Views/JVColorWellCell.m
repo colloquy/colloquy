@@ -38,7 +38,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 #pragma mark -
 
 - (id) initTextCell:(NSString *) string {
-	return ( self = [self initImageCell:nil] );
+	return [self initImageCell:nil];
 }
 
 - (id) initImageCell:(NSImage *) image {

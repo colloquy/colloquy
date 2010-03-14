@@ -147,9 +147,9 @@ static NSMutableSet *inspectors = nil;
 			[inspectors release];
 			inspectors = nil;
 		}
-
-		[self autorelease];
 	}
+	
+	[self autorelease];
 
 	return should;
 }

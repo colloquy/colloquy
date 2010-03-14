@@ -48,7 +48,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 @implementation JVChatWindowController
 - (id) init {
-	return ( self = [self initWithWindowNibName:@"JVChatWindow"] );
+	return [self initWithWindowNibName:@"JVChatWindow"];
 }
 
 - (id) initWithWindowNibName:(NSString *) windowNibName {

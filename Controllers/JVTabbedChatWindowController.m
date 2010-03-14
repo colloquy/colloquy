@@ -26,7 +26,7 @@
 
 @implementation JVTabbedChatWindowController
 - (id) init {
-	return ( self = [self initWithWindowNibName:@"JVTabbedChatWindow"] );
+	return [self initWithWindowNibName:@"JVTabbedChatWindow"];
 }
 
 - (id) initWithWindowNibName:(NSString *) windowNibName {
@@ -243,7 +243,7 @@
 	if( oldWindowController != newWindowController ) {
 		if( ! newWindowController ) { // need to make a new window
 			NSRect newFrame;
-			newWindowController = [[JVChatController defaultController] newChatWindowController];
+			newWindowController = [[JVChatController defaultController] createChatWindowController];
 			newFrame.origin = screenPoint;
 			newFrame.size = [[oldWindowController window] frame].size;
 

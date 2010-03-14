@@ -162,7 +162,7 @@ static NSMenu *smartTranscriptMenu = nil;
 				if( [[windowController window] isMainWindow] ) break;
 			if( ! windowController ) windowController = [_chatWindows anyObject];
 		} else if( [[windowSet objectForKey:@"special"] isEqualToString:@"newWindow"] ) {
-			windowController = [self newChatWindowController];
+			windowController = [self createChatWindowController];
 		} else if( [[windowSet objectForKey:@"special"] isEqualToString:@"serverWindow"] ) {
 			windowController = [self chatWindowControllerWithIdentifier:[[controller connection] server]];
 		} else if( [(NSString *)[windowSet objectForKey:@"identifier"] length] ) {
@@ -170,7 +170,7 @@ static NSMenu *smartTranscriptMenu = nil;
 		}
 	}
 
-	if( ! windowController ) windowController = [self newChatWindowController];
+	if( ! windowController ) windowController = [self createChatWindowController];
 
 	if( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ) initiated = NO;
 	if( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSShiftKeyMask ) initiated = NO;
@@ -189,7 +189,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	return [NSSet setWithSet:_chatWindows];
 }
 
-- (JVChatWindowController *) newChatWindowController {
+- (JVChatWindowController *) createChatWindowController {
 	JVChatWindowController *windowController = nil;
 	if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatWindowInterface"] == 1 )
 		windowController = [[[JVTabbedChatWindowController alloc] init] autorelease];
@@ -208,7 +208,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			break;
 
 	if( ! windowController ) {
-		windowController = [self newChatWindowController];
+		windowController = [self createChatWindowController];
 		[windowController setIdentifier:identifier];
 	}
 
@@ -359,7 +359,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 #pragma mark -
 
-- (JVSmartTranscriptPanel *) newSmartTranscript {
+- (JVSmartTranscriptPanel *) createSmartTranscript {
 	JVSmartTranscriptPanel *ret = nil;
 	if( ( ret = [[[JVSmartTranscriptPanel alloc] initWithSettings:nil] autorelease] ) ) {
 		[_chatControllers addObject:ret];
@@ -442,7 +442,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	[controller retain];
 
-	JVChatWindowController *windowController = [self newChatWindowController];
+	JVChatWindowController *windowController = [self createChatWindowController];
 	[[controller windowController] removeChatViewController:controller];
 
 	[[windowController window] setFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
@@ -668,7 +668,7 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (IBAction) _newSmartTranscript:(id) sender {
-	[[JVChatController defaultController] newSmartTranscript];
+	[[JVChatController defaultController] createSmartTranscript];
 }
 
 - (void) _reloadPreferedWindowRuleSets {

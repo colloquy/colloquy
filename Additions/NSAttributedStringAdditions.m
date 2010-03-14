@@ -355,7 +355,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 	// if the message dosen't have any formatting chars just init as a plain string and return quickly
 	if( [message rangeOfCharacterFromSet:formatCharacters].location == NSNotFound )
-		return ( self = [self initWithString:message attributes:attributes] );
+		return [self initWithString:message attributes:attributes];
 
 	NSMutableAttributedString *ret = [[[NSMutableAttributedString allocWithZone:nil] init] autorelease];
 	NSScanner *scanner = [NSScanner scannerWithString:message];
@@ -584,7 +584,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		}
 	}
 
-	return ( self = [self initWithAttributedString:ret] );
+	return [self initWithAttributedString:ret];
 }
 
 - (NSData *) _mIRCFormatWithOptions:(NSDictionary *) options {

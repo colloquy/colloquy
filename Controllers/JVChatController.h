@@ -26,7 +26,7 @@
 - (void) addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller userInitiated:(BOOL) initiated;
 
 - (NSSet *) allChatWindowControllers;
-- (JVChatWindowController *) newChatWindowController;
+- (JVChatWindowController *) createChatWindowController;
 - (JVChatWindowController *) chatWindowControllerWithIdentifier:(NSString *) identifier;
 - (void) disposeChatWindowController:(JVChatWindowController *) controller;
 
@@ -43,7 +43,7 @@
 - (JVChatTranscriptPanel *) chatViewControllerForTranscript:(NSString *) filename;
 - (JVChatConsolePanel *) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 
-- (JVSmartTranscriptPanel *) newSmartTranscript;
+- (JVSmartTranscriptPanel *) createSmartTranscript;
 - (NSSet *) smartTranscripts;
 - (void) saveSmartTranscripts;
 - (void) disposeSmartTranscript:(JVSmartTranscriptPanel *) panel;

@@ -835,7 +835,6 @@ static MVBuddyListController *sharedInstance = nil;
 		start = nil;
 
 		[timer invalidate];
-		[timer release];
 
 		_animationPosition = 0.;
 		_animating = NO;
@@ -912,7 +911,7 @@ static MVBuddyListController *sharedInstance = nil;
 	visibleRows = [buddies rowsInRect:[buddies visibleRect]];
 	_viewingTop = NSMaxRange( visibleRows ) < 0.6 * [_buddyOrder count];
 
-	[[NSTimer scheduledTimerWithTimeInterval:( 1. / 240. ) target:self selector:@selector( _animateStep: ) userInfo:nil repeats:YES] retain];
+	[NSTimer scheduledTimerWithTimeInterval:( 1. / 240. ) target:self selector:@selector( _animateStep: ) userInfo:nil repeats:YES];
 
 	[oldOrder release];
 }

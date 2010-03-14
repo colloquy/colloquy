@@ -143,7 +143,7 @@ static void generateUniqueMachineIdentifier() {
 	generateUniqueMachineIdentifier();
 
 	NSDictionary *systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/ServerVersion.plist"];
-	if (![systemVersion count]) systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+	if ( !systemVersion ) systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
 
 	_data = [[NSMutableDictionary alloc] initWithCapacity:10];
 
@@ -165,6 +165,8 @@ static void generateUniqueMachineIdentifier() {
 	[_data setObject:(hardwareInfoAsNumber("hw.cpu64bit_capable") ? @"yes" : @"no") forKey:@"machine-cpu-64bit"];
 	[_data setObject:[systemVersion objectForKey:@"ProductName"] forKey:@"machine-system-name"];
 	[_data setObject:[systemVersion objectForKey:@"ProductVersion"] forKey:@"machine-system-version"];
+
+	[systemVersion release];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:NSApplicationWillTerminateNotification object:nil];
 
@@ -225,7 +227,7 @@ static void generateUniqueMachineIdentifier() {
 	[request setCachePolicy:NSURLRequestReloadIgnoringCacheData];
 	[request setTimeoutInterval:30.];
 
-	return request;
+	return [request autorelease];
 }
 
 #pragma mark -

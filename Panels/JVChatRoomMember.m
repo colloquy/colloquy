@@ -47,7 +47,7 @@
 }
 
 - (id) initLocalMemberWithRoom:(JVChatRoomPanel *) room {
-	return ( self = [self initWithRoom:room andUser:[[room connection] localUser]] );
+	return [self initWithRoom:room andUser:[[room connection] localUser]];
 }
 
 - (void) dealloc {

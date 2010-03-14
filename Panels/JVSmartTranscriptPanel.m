@@ -49,7 +49,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 		[settings setObject:[coder decodeObjectForKey:@"title"] forKey:@"title"];
 		[settings setObject:[NSNumber numberWithBool:[coder decodeBoolForKey:@"ignoreCase"]] forKey:@"ignoreCase"];
 		[settings setObject:[NSNumber numberWithInt:[coder decodeIntForKey:@"operation"]] forKey:@"operation"];
-		return ( self = [self initWithSettings:settings] );
+		return [self initWithSettings:settings];
 	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 	return nil;
 }

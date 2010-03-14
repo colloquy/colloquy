@@ -2565,7 +2565,7 @@ end:
 	if( request ) {
 		if( [command isCaseInsensitiveEqualToString:@"VERSION"] ) {
 			NSDictionary *systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/ServerVersion.plist"];
-			if( ! [systemVersion count] ) systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+			if( !systemVersion ) systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
 			NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
 
 #if __ppc__
@@ -4075,7 +4075,9 @@ end:
 	if( ![self isConnected] && [parameters count] == 2 ) {
 		if( !_umichNoIdentdCaptcha ) _umichNoIdentdCaptcha = [[NSMutableArray alloc] init];
 
-		[_umichNoIdentdCaptcha addObject:[[self _stringFromPossibleData:[parameters objectAtIndex:1]] mutableCopy]];
+		NSMutableString *parameterString = [[self _stringFromPossibleData:[parameters objectAtIndex:1]] mutableCopy];
+		[_umichNoIdentdCaptcha addObject:parameterString];
+		[parameterString release];
 
 		if( [_umichNoIdentdCaptcha count] == 7 ) {
 			NSDictionary *captchaAlphabet = [NSDictionary dictionaryWithObjectsAndKeys:

@@ -804,10 +804,15 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[cmessage setAction:[[msgAttributes objectForKey:@"action"] boolValue]];
 	[cmessage setType:type];
 
+	if ( !cmessage )
+		return;
+
 	messageString = [cmessage body]; // just incase
 
-	if( !cmessage || !messageString)
+	if( !messageString) {
+		[cmessage release];
 		return;
+	}
 
 	[self _setCurrentMessage:cmessage];
 
@@ -915,7 +920,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		if( [voiceIdentifier length] ) {
 			NSString *text = [cmessage bodyAsPlainText];
 			if( [cmessage isAction] ) text = [NSString stringWithFormat:@"%@ %@", [[cmessage sender] displayName], text];
-			[[JVSpeechController sharedSpeechController] startSpeakingString:[cmessage bodyAsPlainText] usingVoice:voiceIdentifier];
+			[[JVSpeechController sharedSpeechController] startSpeakingString:text usingVoice:voiceIdentifier];
 		}
 	}
 
@@ -1087,7 +1092,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 		if( ( [subMsg length] >= 1 && range.length ) || ( [subMsg length] && ! range.length ) ) {
 			if( [[subMsg string] hasPrefix:@"/"] && ! [[subMsg string] hasPrefix:@"//"] ) {
-				BOOL handled = NO;
 				NSScanner *scanner = [NSScanner scannerWithString:[subMsg string]];
 				NSString *command = nil;
 				NSAttributedString *arguments = nil;
@@ -1099,7 +1103,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 				arguments = [subMsg attributedSubstringFromRange:NSMakeRange( [scanner scanLocation], range.location - [scanner scanLocation] )];
 
-				if( ! ( handled = [self processUserCommand:command withArguments:arguments] ) && [[self connection] isConnected] )
+				if( ![self processUserCommand:command withArguments:arguments] && [[self connection] isConnected] )
 					[[self connection] sendCommand:command withArguments:arguments];
 			} else {
 				if( [[subMsg string] hasPrefix:@"//"] && ![[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendDoubleSlashes"] ) [subMsg deleteCharactersInRange:NSMakeRange( 0, 1 )];
@@ -1759,7 +1763,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( ! [menuItems count] ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"No Selectable Emoticons", "no selectable emoticons menu item title" ) action:NULL keyEquivalent:@""] autorelease];
 		[menuItem setEnabled:NO];
-		[menu insertItem:menuItem atIndex:count++];
+		[menu insertItem:menuItem atIndex:count];
 	}
 
 	if( new ) {

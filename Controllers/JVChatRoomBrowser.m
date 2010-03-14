@@ -193,7 +193,7 @@
 	float offset = NSHeight( [browserArea frame] );
 	if( ! offset ) offset = origOffset;
 
-	float width = NSWidth( windowFrame );
+	float width = 500.;
 
 	[searchArea selectTabViewItemAtIndex:2];
 
@@ -202,7 +202,7 @@
 		[[self window] setShowsResizeIndicator:NO];
 		width = origWidth;
 		_collapsed = YES;
-	} else width = 500.;
+	}
 
 	NSRect newWindowFrame = NSMakeRect( ( NSMinX( windowFrame ) + ( ( NSWidth( windowFrame ) - width ) / 2. ) ), NSMinY( windowFrame ) + ( [sender state] ? offset * -1 : offset ), width, ( [sender state] ? NSHeight( windowFrame ) + offset : NSHeight( windowFrame ) - offset ) );
 	[[self window] setFrame:newWindowFrame display:YES animate:YES];

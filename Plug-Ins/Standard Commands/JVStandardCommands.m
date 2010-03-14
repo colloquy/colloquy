@@ -34,7 +34,7 @@
 
 @implementation JVStandardCommands
 - (id) initWithManager:(MVChatPluginManager *) manager {
-	return ( self = [super init] );
+	return [super init];
 }
 
 #pragma mark -
@@ -149,7 +149,7 @@
 			MVChatUser *user = nil;
 			if ( [member hasCaseInsensitiveSubstring:@"!"] || [member hasCaseInsensitiveSubstring:@"@"] ) {
 				if ( ! [member hasCaseInsensitiveSubstring:@"!"] && [member hasCaseInsensitiveSubstring:@"@"] )
-					member = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:member];
+					member = [@"*!*" stringByAppendingString:member];
 				user = [MVChatUser wildcardUserFromString:member];
 			} else user = [[[room target] memberUsersWithNickname:member] anyObject];
 
@@ -256,7 +256,7 @@
 					MVChatUser *user = nil;
 					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] || ! [[room target] memberUsersWithNickname:arg] ) {
 						if ( ! [arg hasCaseInsensitiveSubstring:@"!"] && [arg hasCaseInsensitiveSubstring:@"@"] )
-							arg = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:arg];
+							arg = [@"*!*" stringByAppendingString:arg];
 						user = [MVChatUser wildcardUserFromString:arg];
 					} else user = [[[room target] memberUsersWithNickname:arg] anyObject];
 
@@ -273,9 +273,10 @@
 					MVChatUser *user = nil;
 					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] || ! [[room target] memberUsersWithNickname:arg] ) {
 						if ( ! [arg hasCaseInsensitiveSubstring:@"!"] && [arg hasCaseInsensitiveSubstring:@"@"] )
-							arg = [[[NSString alloc] initWithString:@"*!*"] stringByAppendingString:arg];
+							arg = [@"*!*" stringByAppendingString:arg];
 						user = [MVChatUser wildcardUserFromString:arg];
-					} else user = [[[room target] memberUsersWithNickname:arg] anyObject];
+					} else
+						user = [[[room target] memberUsersWithNickname:arg] anyObject];
 
 					if( user ) [[room target] removeBanForUser:user];
 				}

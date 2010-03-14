@@ -57,7 +57,7 @@ static NSUInteger bubbleWindowDepth = 0;
 	_action = NULL;
 	_animationTimer = nil;
 
-	return ( self = [super initWithWindow:panel] );
+	return [super initWithWindow:panel];
 }
 
 - (void) dealloc {
