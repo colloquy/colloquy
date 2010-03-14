@@ -28,16 +28,16 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 }
 #endif
 
-- (void) setPassword:(NSString *) password forArea:(NSString *) area account:(NSString *) account {
+- (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *) area {
 	NSParameterAssert(server);
 
 #if !TARGET_IPHONE_SIMULATOR || __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
 	if (!password.length) {
-		[self removePasswordForArea:area account:account];
+		[self removePasswordForServer:server area:area];
 		return;
 	}
 
-	NSMutableDictionary *passwordEntry = createBaseDictionary(area, account);
+	NSMutableDictionary *passwordEntry = createBaseDictionary(server, area);
 	NSMutableDictionary *attributesToUpdate = [[NSMutableDictionary alloc] init];
 
 	NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
@@ -63,17 +63,17 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	[self removePasswordForServer:server account:account];
 
 	if (password.length)
-		SecKeychainAddInternetPassword(NULL, stringByteLength(server), [server UTF8String], 0, NULL, stringByteLength(account), [account UTF8String], 0, NULL, 0, 0, 0, stringByteLength(password), (void *) [password UTF8String], NULL);
+		SecKeychainAddInternetPassword(NULL, stringByteLength(server), [server UTF8String], 0, NULL, stringByteLength(area), [area UTF8String], 0, NULL, 0, 0, 0, stringByteLength(password), (void *) [password UTF8String], NULL);
 #endif
 }
 
-- (NSString *) passwordForArea:(NSString *) area account:(NSString *) account {
+- (NSString *) passwordForServer:(NSString *) server area:(NSString *) area {
 	NSParameterAssert(server);
 
 	NSString *string = nil;
 
 #if !TARGET_IPHONE_SIMULATOR || __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
-	NSMutableDictionary *passwordQuery = createBaseDictionary(area, account);
+	NSMutableDictionary *passwordQuery = createBaseDictionary(server, area);
 	NSData *resultData = nil;
 
 	[passwordQuery setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
@@ -88,7 +88,7 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	unsigned long passwordLength = 0;
 	void *password = NULL;
 
-	OSStatus status = SecKeychainFindInternetPassword(NULL, stringByteLength(server), [server UTF8String], 0, NULL, stringByteLength(account), [account UTF8String], 0, NULL, 0, 0, 0, &passwordLength, &password, NULL);
+	OSStatus status = SecKeychainFindInternetPassword(NULL, stringByteLength(server), [server UTF8String], 0, NULL, stringByteLength(area), [area UTF8String], 0, NULL, 0, 0, 0, &passwordLength, &password, NULL);
 	if (status == noErr)
 		string = [[NSString allocWithZone:nil] initWithBytes:(const void *)password length:passwordLength encoding:NSUTF8StringEncoding];
 	SecKeychainItemFreeContent(NULL, password);
@@ -97,16 +97,16 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	return [string autorelease];
 }
 
-- (void) removePasswordForArea:(NSString *) area account:(NSString *) account {
+- (void) removePasswordForServer:(NSString *) server area:(NSString *) area {
 	NSParameterAssert(server);
 
 #if !TARGET_IPHONE_SIMULATOR || __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_3_0
-	NSMutableDictionary *passwordQuery = createBaseDictionary(area, account);
+	NSMutableDictionary *passwordQuery = createBaseDictionary(server, area);
 	SecItemDelete((CFDictionaryRef)passwordQuery);
 	[passwordQuery release];
 #else
 	SecKeychainItemRef keychainItem = NULL;
-	OSStatus status = SecKeychainFindInternetPassword(NULL, stringByteLength(server), [server UTF8String], 0, NULL, stringByteLength(account), [account UTF8String], 0, NULL, 0, 0, 0, NULL, NULL, &keychainItem);
+	OSStatus status = SecKeychainFindInternetPassword(NULL, stringByteLength(server), [server UTF8String], 0, NULL, stringByteLength(area), [area UTF8String], 0, NULL, 0, 0, 0, NULL, NULL, &keychainItem);
 	if (status == noErr)
 		SecKeychainItemDelete(keychainItem);
 #endif

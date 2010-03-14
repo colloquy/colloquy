@@ -1,7 +1,7 @@
 @interface CQKeychain : NSObject
 + (CQKeychain *) standardKeychain;
 
-- (void) setPassword:(NSString *) password forArea:(NSString *) area account:(NSString *) account;
-- (NSString *) passwordForArea:(NSString *) area account:(NSString *) account;
-- (void) removePasswordForArea:(NSString *) area account:(NSString *) account;
+- (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *) area;
+- (NSString *) passwordForServer:(NSString *) server area:(NSString *) area;
+- (void) removePasswordForServer:(NSString *) server area:(NSString *) area;
 @end

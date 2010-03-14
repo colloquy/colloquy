@@ -281,7 +281,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:room andConnection:connection];
 		[connection joinChatRoomNamed:room withPassphrase:response];
 
-		[[CQKeychain standardKeychain] setPassword:response forArea:room account:connection.server];
+		[[CQKeychain standardKeychain] setPassword:response forServer:connection.server area:room];
 	}
 }
 
@@ -501,7 +501,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		NSString *room = nil;
 		for (NSUInteger i = 0; i < roomCount; i++) {
 			room = [rooms objectAtIndex:i];
-			key = [[CQKeychain standardKeychain] passwordForArea:room account:connection.server];
+			key = [[CQKeychain standardKeychain] passwordForServer:room area:connection.server];
 
 			if (key.length) {
 				room = [NSString stringWithFormat:@"%@ %@", room, key];
@@ -876,7 +876,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 		// TEMP: read the bouncer password from the old account scheme using in the first beta.
 		if (!settings.password.length)
-			settings.password = [[CQKeychain standardKeychain] passwordForArea:settings.server account:settings.username];
+			settings.password = [[CQKeychain standardKeychain] passwordForServer:settings.server area:settings.username];
 
 		NSMutableArray *bouncerChatConnections = [[NSMutableArray alloc] initWithCapacity:10];
 		[_bouncerChatConnections setObject:bouncerChatConnections forKey:settings.identifier];
@@ -1424,29 +1424,29 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 - (void) savePasswordsToKeychain {
 	// Remove old passwords using the previous account naming scheme.
-	[[CQKeychain standardKeychain] removePasswordForArea:self.server account:self.preferredNickname];
-	[[CQKeychain standardKeychain] removePasswordForArea:self.server account:@"<<server password>>"];
+	[[CQKeychain standardKeychain] removePasswordForServer:self.server area:self.preferredNickname];
+	[[CQKeychain standardKeychain] removePasswordForServer:self.server area:@"<<server password>>"];
 
 	// Store passwords using the new account naming scheme.
-	[[CQKeychain standardKeychain] setPassword:self.nicknamePassword forArea:self.uniqueIdentifier account:[NSString stringWithFormat:@"Nickname %@", self.preferredNickname]];
-	[[CQKeychain standardKeychain] setPassword:self.password forArea:self.uniqueIdentifier account:@"Server"];
+	[[CQKeychain standardKeychain] setPassword:self.nicknamePassword forServer:self.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", self.preferredNickname]];
+	[[CQKeychain standardKeychain] setPassword:self.password forServer:self.uniqueIdentifier area:@"Server"];
 }
 
 - (void) loadPasswordsFromKeychain {
 	NSString *password = nil;
 
 	// Try reading passwords using the old account naming scheme.
-	if ((password = [[CQKeychain standardKeychain] passwordForArea:self.server account:self.preferredNickname]) && password.length)
+	if ((password = [[CQKeychain standardKeychain] passwordForServer:self.server area:self.preferredNickname]) && password.length)
 		self.nicknamePassword = password;
 
-	if ((password = [[CQKeychain standardKeychain] passwordForArea:self.server account:@"<<server password>>"]) && password.length)
+	if ((password = [[CQKeychain standardKeychain] passwordForServer:self.server area:@"<<server password>>"]) && password.length)
 		self.password = password;
 
 	// Try reading password using the name account naming scheme.
-	if ((password = [[CQKeychain standardKeychain] passwordForArea:self.uniqueIdentifier account:[NSString stringWithFormat:@"Nickname %@", self.preferredNickname]]) && password.length)
+	if ((password = [[CQKeychain standardKeychain] passwordForServer:self.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", self.preferredNickname]]) && password.length)
 		self.nicknamePassword = password;
 
-	if ((password = [[CQKeychain standardKeychain] passwordForArea:self.uniqueIdentifier account:@"Server"]) && password.length)
+	if ((password = [[CQKeychain standardKeychain] passwordForServer:self.uniqueIdentifier area:@"Server"]) && password.length)
 		self.password = password;
 }
 

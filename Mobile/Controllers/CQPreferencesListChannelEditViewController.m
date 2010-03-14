@@ -37,7 +37,7 @@
 	if (!room.length)
 		return nil;
 
-	return [[CQKeychain standardKeychain] passwordForArea:room account:_connection.uniqueIdentifier];
+	return [[CQKeychain standardKeychain] passwordForServer:_connection.uniqueIdentifier area:room];
 }
 
 #pragma mark -
@@ -55,8 +55,8 @@
 			return;
 
 		if (password.length)
-			[[CQKeychain standardKeychain] setPassword:password forArea:room account:_connection.uniqueIdentifier];
-		else [[CQKeychain standardKeychain] removePasswordForArea:room account:_connection.uniqueIdentifier];
+			[[CQKeychain standardKeychain] setPassword:password forServer:room area:_connection.uniqueIdentifier];
+		else [[CQKeychain standardKeychain] removePasswordForServer:_connection.uniqueIdentifier area:room];
 		break;
 	default:
 		[super listItemChanged:sender];
