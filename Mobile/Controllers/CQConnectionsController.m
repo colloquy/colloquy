@@ -277,12 +277,11 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if (alertView.tag == ChannelKeyTextFieldTag) {
 		NSError *error = [[notification userInfo] objectForKey:@"error"];
 		NSString *room = [[error userInfo] objectForKey:@"room"];
-		NSString *roomAndKey = [[NSString alloc] initWithFormat:@"%@ %@", room, response];
 
 		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:room andConnection:connection];
-		[connection joinChatRoomNamed:roomAndKey];
+		[connection joinChatRoomNamed:room withPassphrase:response];
 
-		[roomAndKey release];
+		[[CQKeychain standardKeychain] setPassword:response forArea:room account:connection.server];
 	}
 }
 
@@ -496,8 +495,23 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[connection sendCommand:command withArguments:arguments];
 	}
 
-	if (rooms.count)
+	NSUInteger roomCount = rooms.count;
+	if (roomCount) {
+		NSString *key = nil;
+		NSString *room = nil;
+		for (NSUInteger i = 0; i < roomCount; i++) {
+			room = [rooms objectAtIndex:i];
+			key = [[CQKeychain standardKeychain] passwordForArea:room account:connection.server];
+
+			if (key.length) {
+				room = [NSString stringWithFormat:@"%@ %@", room, key];
+
+				[rooms replaceObjectAtIndex:i withObject:room];
+			}
+		}
+
 		[connection joinChatRoomsNamed:rooms];
+	}
 
 	if (connection.bouncerType == MVChatConnectionColloquyBouncer && connection.automaticCommands.count && rooms.count)
 		[connection sendRawMessage:@"BOUNCER autocommands stop"];
