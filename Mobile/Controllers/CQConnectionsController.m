@@ -281,7 +281,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:room andConnection:connection];
 		[connection joinChatRoomNamed:room withPassphrase:response];
 
-		[[CQKeychain standardKeychain] setPassword:response forServer:connection.server area:room];
+		[[CQKeychain standardKeychain] setPassword:response forServer:connection.uniqueIdentifier area:room];
 	}
 }
 
@@ -501,7 +501,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		NSString *room = nil;
 		for (NSUInteger i = 0; i < roomCount; i++) {
 			room = [rooms objectAtIndex:i];
-			key = [[CQKeychain standardKeychain] passwordForServer:room area:connection.server];
+			key = [[CQKeychain standardKeychain] passwordForServer:room area:connection.uniqueIdentifier];
 
 			if (key.length) {
 				room = [NSString stringWithFormat:@"%@ %@", room, key];
