@@ -501,11 +501,10 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		NSString *room = nil;
 		for (NSUInteger i = 0; i < roomCount; i++) {
 			room = [rooms objectAtIndex:i];
-			key = [[CQKeychain standardKeychain] passwordForServer:room area:connection.uniqueIdentifier];
+			key = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:room];
 
 			if (key.length) {
 				room = [NSString stringWithFormat:@"%@ %@", room, key];
-
 				[rooms replaceObjectAtIndex:i withObject:room];
 			}
 		}

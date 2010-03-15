@@ -55,7 +55,7 @@
 			return;
 
 		if (password.length)
-			[[CQKeychain standardKeychain] setPassword:password forServer:room area:_connection.uniqueIdentifier];
+			[[CQKeychain standardKeychain] setPassword:password forServer:_connection.uniqueIdentifier area:room];
 		else [[CQKeychain standardKeychain] removePasswordForServer:_connection.uniqueIdentifier area:room];
 		break;
 	default:
