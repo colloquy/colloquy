@@ -4,6 +4,7 @@
 #import "CQAnalyticsController.h"
 #import "CQBrowserViewController.h"
 #import "CQChatController.h"
+#import "CQChatCreationViewController.h"
 #import "CQChatNavigationController.h"
 #import "CQChatPresentationController.h"
 #import "CQConnectionsController.h"
@@ -139,6 +140,14 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	else [[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 }
 
+- (BOOL) shouldShowWelcomeScreen {
+	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+	NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+	BOOL showWelcomeScreen = ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastBuildWelcomeScreenAppeared"] isEqualToString:version];
+
+	return (showWelcomeScreen || (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count));
+}
+
 - (void) performDeferredLaunchWork {
 	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
 	NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
@@ -206,8 +215,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateAnalytics) name:NSUserDefaultsDidChangeNotification object:nil];
 
-	BOOL showWelcomeScreen = ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastBuildWelcomeScreenAppeared"] isEqualToString:version];
-	if (showWelcomeScreen || (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count)) {
+	if ([self shouldShowWelcomeScreen]) {
 		[self showWelcome:nil];
 
 		[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQLastBuildWelcomeScreenAppeared"];
@@ -247,6 +255,17 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 			if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSelectedRoom"])
 				[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:selectedRoom andConnection:connection];
 			else [[CQChatController defaultController] showChatControllerForUserNicknamed:selectedRoom andConnection:connection];
+		} else {
+			if ([CQConnectionsController defaultController].connections.count) {
+				 CQChatCreationViewController *creationViewController = [[[CQChatCreationViewController alloc] init] autorelease];
+
+				creationViewController.roomTarget = YES;
+				
+				[self performSelector:@selector(presentModalViewController:) withObject:creationViewController afterDelay:1.5];
+			} else
+				// Don't show the welcome screen twice
+				if (![self shouldShowWelcomeScreen])
+					[self performSelector:@selector(showWelcome:) withObject:nil afterDelay:1.5];
 		}
 
 		_mainViewController = splitViewController;
@@ -413,6 +432,10 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	return _mainViewController.modalViewController;
 }
 
+- (void) presentModalViewController:(UIViewController *) modalViewController {
+	[self presentModalViewController:modalViewController animated:YES singly:YES];
+}
+
 - (void) presentModalViewController:(UIViewController *) modalViewController animated:(BOOL) animated {
 	[self presentModalViewController:modalViewController animated:animated singly:YES];
 }
@@ -469,6 +492,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 - (void) showWelcome:(id) sender {
 	CQWelcomeController *welcomeController = [[CQWelcomeController alloc] init];
+	welcomeController.shouldShowConnections = NO;
 
 	[self presentModalViewController:welcomeController animated:YES];
 

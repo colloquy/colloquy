@@ -14,6 +14,8 @@
 	if ([self respondsToSelector:@selector(setModalPresentationStyle:)])
 		self.modalPresentationStyle = UIModalPresentationFormSheet;
 
+	_shouldShowConnections = YES;
+
 	return self;
 }
 
@@ -28,6 +30,7 @@
 #pragma mark -
 
 @synthesize shouldShowOnlyHelpTopics = _shouldShowOnlyHelpTopics;
+@synthesize shouldShowConnections = _shouldShowConnections;
 
 #pragma mark -
 
@@ -67,7 +70,7 @@
 #pragma mark -
 
 - (void) close:(id) sender {
-	if (!_shouldShowOnlyHelpTopics)
+	if (!_shouldShowOnlyHelpTopics && _shouldShowConnections)
 		[[CQColloquyApplication sharedApplication] showConnections:nil];
 
 	[self dismissModalViewControllerAnimated:YES];
