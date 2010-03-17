@@ -113,9 +113,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"] ? @"disabled" : @"enabled");
 	[analyticsController setObject:information forKey:@"browser"];
 
-	information = ([[NSUserDefaults standardUserDefaults] stringForKey:@"CQTwitterUsername"].length ? @"yes" : @"no");
-	[analyticsController setObject:information forKey:@"twitter-setup"];
-
 	information = ([[NSUserDefaults standardUserDefaults] stringForKey:@"CQInstapaperUsername"].length ? @"yes" : @"no");
 	[analyticsController setObject:information forKey:@"instapaper-setup"];
 

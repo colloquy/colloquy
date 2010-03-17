@@ -202,7 +202,7 @@ static NSURL *lastURL;
 				alert.message = NSLocalizedString(@"Make sure your Instapaper username and password are correct.", "Make sure your Instapaper username and password are correct alert message");
 				showHelp = YES;
 			} else if ([response isEqualToString:@"500"]) {
-				alert.title = NSLocalizedString(@"Instapaper Unavailable", "Twitter Temporarily Unavailable title");
+				alert.title = NSLocalizedString(@"Instapaper Unavailable", "Instapaper Temporarily Unavailable title");
 				alert.message = NSLocalizedString(@"Unable to send the URL because Instapaper is temporarily unavailable.", "Unable to send URL because Instapaper is temporarily unavailable alert message");
 			}
 
