@@ -132,9 +132,11 @@ static BOOL showFullRoomNames;
 	_selectedRoom = [[_connection properNameForChatRoomNamed:room] copy];
 	[old release];
 
+	NSString *rowRoom = nil;
+	CQChatRoomInfoTableCell *cell = nil;
 	for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
-		NSString *rowRoom = [_matchedRooms objectAtIndex:indexPath.row];
-		CQChatRoomInfoTableCell *cell = (CQChatRoomInfoTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+		rowRoom = [_matchedRooms objectAtIndex:indexPath.row];
+		cell = (CQChatRoomInfoTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
 		if ([rowRoom isEqualToString:room])
 			cell.accessoryType = UITableViewCellAccessoryCheckmark;
 		else cell.accessoryType = UITableViewCellAccessoryNone;
@@ -390,21 +392,26 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 
 - (void) _updateVisibleTopics {
 	NSDictionary *chatRoomListResults = _connection.chatRoomListResults;
+	NSString *room = nil;
+	NSMutableDictionary *info = nil;
+	NSString *topicDisplayString = nil;
+	NSData *topicData = nil;
+	CQChatRoomInfoTableCell *cell;
 	for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
 		if (indexPath.row >= _matchedRooms.count)
 			continue;
 
-		NSString *room = [_matchedRooms objectAtIndex:indexPath.row];
-		NSMutableDictionary *info = [chatRoomListResults objectForKey:room];
+		room = [_matchedRooms objectAtIndex:indexPath.row];
+		info = [chatRoomListResults objectForKey:room];
 
-		NSString *topicDisplayString = [info objectForKey:@"topicDisplayString"];
+		topicDisplayString = [info objectForKey:@"topicDisplayString"];
 		if (!topicDisplayString) {
-			NSData *topicData = [info objectForKey:@"topic"];
+			topicData = [info objectForKey:@"topic"];
 			[self _processTopicData:topicData room:room];
 			continue;
 		}
 
-		CQChatRoomInfoTableCell *cell = (CQChatRoomInfoTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+		cell = (CQChatRoomInfoTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
 		if (!cell.topic.length)
 			cell.topic = topicDisplayString;
 	}
@@ -466,8 +473,9 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 - (void) _roomListUpdated:(NSNotification *) notification {
 	NSDictionary *chatRoomListResults = _connection.chatRoomListResults;
 	NSSet *roomsAdded = [notification.userInfo objectForKey:@"added"];
+	NSMutableDictionary *info = nil;
 	for (NSString *room in roomsAdded) {
-		NSMutableDictionary *info = [chatRoomListResults objectForKey:room];
+		info = [chatRoomListResults objectForKey:room];
 		[info setObject:[_connection displayNameForChatRoomNamed:room] forKey:@"roomDisplayString"];
 
 		[_processedRooms addObject:room];
@@ -475,7 +483,7 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 
 	NSSet *roomsUpdated = [notification.userInfo objectForKey:@"updated"];
 	for (NSString *room in roomsUpdated) {
-		NSMutableDictionary *info = [chatRoomListResults objectForKey:room];
+		info = [chatRoomListResults objectForKey:room];
 		[info setObject:[_connection displayNameForChatRoomNamed:room] forKey:@"roomDisplayString"];
 	}
 
@@ -498,15 +506,17 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 	if (self.tableView.dragging || self.tableView.decelerating)
 		return;
 
+	NSString *rowRoom = nil;
+	CQChatRoomInfoTableCell *cell = nil;
 	for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
 		if (indexPath.row >= _matchedRooms.count)
 			continue;
 
-		NSString *rowRoom = [_matchedRooms objectAtIndex:indexPath.row];
+		rowRoom = [_matchedRooms objectAtIndex:indexPath.row];
 		if (![rowRoom isEqualToString:room])
 			continue;
 
-		CQChatRoomInfoTableCell *cell = (CQChatRoomInfoTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+		cell = (CQChatRoomInfoTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
 		cell.topic = topicString;
 		break;
 	}

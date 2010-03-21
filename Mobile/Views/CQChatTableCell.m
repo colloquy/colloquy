@@ -140,11 +140,13 @@
 	else labelText = message;
 
 	if (_animating) {
+		UILabel *currentLabel = nil;
+		UILabel *previousLabel = nil;
 		for (NSUInteger i = 0; i < _chatPreviewLabels.count; ++i) {
 			if (i == 0)
 				continue;
-			UILabel *currentLabel = [_chatPreviewLabels objectAtIndex:i];
-			UILabel *previousLabel = [_chatPreviewLabels objectAtIndex:(i - 1)];
+			currentLabel = [_chatPreviewLabels objectAtIndex:i];
+			previousLabel = [_chatPreviewLabels objectAtIndex:(i - 1)];
 			previousLabel.text = currentLabel.text;
 
 			if (i == (_chatPreviewLabels.count - 1))
@@ -335,11 +337,12 @@
 	frame.size = [_nameLabel sizeThatFits:_nameLabel.bounds.size];
 
 	CGFloat labelHeights = frame.size.height;
-
+	CGFloat height = 0.;
+	CGRect bounds = {{0, 0}, {0, 0}};
 	for (UILabel *label in _chatPreviewLabels) {
-		CGFloat height = label.frame.size.height;
+		height = label.frame.size.height;
 		if (!height) {
-			CGRect bounds = label.bounds;
+			bounds = label.bounds;
 			bounds.size = [label sizeThatFits:bounds.size];
 			label.bounds = bounds;
 

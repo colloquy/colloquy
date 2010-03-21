@@ -112,9 +112,11 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	NSUInteger selectedServerIndex = NSNotFound;
 
 	NSUInteger index = 0;
+	NSString *name = nil;
+	NSString *address = nil;
 	for (NSDictionary *serverInfo in _servers) {
-		NSString *name = [serverInfo objectForKey:@"Name"];
-		NSString *address = [serverInfo objectForKey:@"Address"];
+		name = [serverInfo objectForKey:@"Name"];
+		address = [serverInfo objectForKey:@"Address"];
 		NSAssert(name.length, @"Server name required.");
 		NSAssert(address.length, @"Server address required.");
 
@@ -406,9 +408,10 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 }
 
 - (void) serverChanged:(CQPreferencesTextCell *) sender {
-	if (sender.textField.text.length || _newConnection) {
+	if (_newConnection) {
 		_connection.server = (sender.textField.text.length ? sender.textField.text : @"<<placeholder>>");
-		if (!_newConnection)
+
+		if (sender.textField.text.length)
 			self.title = _connection.displayName;
 	}
 

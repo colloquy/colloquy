@@ -301,9 +301,11 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		return;
 
 	NSUInteger i = 0;
+	NSIndexPath *indexPath = nil;
+	CQChatTableCell *cell = nil;
 	for (id <CQChatViewController> controller in [[CQChatController defaultController] chatViewControllersForConnection:connection]) {
-		NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i++ inSection:sectionIndex];
-		CQChatTableCell *cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+		indexPath = [NSIndexPath indexPathForRow:i++ inSection:sectionIndex];
+		cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
 		[self _refreshChatCell:cell withController:controller animated:YES];
 	}
 }
@@ -524,12 +526,12 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	else classToClose = [MVChatUser class];
 
 	NSArray *viewControllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
-
+	NSIndexPath *indexPath = nil;
 	for (id <CQChatViewController> chatViewController in viewControllers) {
 		if (![chatViewController.target isKindOfClass:classToClose])
 			continue;
 
-		NSIndexPath *indexPath = indexPathForChatController(chatViewController);
+		indexPath = indexPathForChatController(chatViewController);
 		if (!indexPath)
 			continue;
 
@@ -646,9 +648,11 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 			NSArray *recentMessages = directChatViewController.recentMessages;
 			NSMutableArray *previewMessages = [[NSMutableArray alloc] initWithCapacity:2];
 
+			NSDictionary *message = nil;
+			MVChatUser *user = nil;
 			for (NSInteger i = (recentMessages.count - 1); i >= 0 && previewMessages.count < 2; --i) {
-				NSDictionary *message = [recentMessages objectAtIndex:i];
-				MVChatUser *user = [message objectForKey:@"user"];
+				message = [recentMessages objectAtIndex:i];
+				user = [message objectForKey:@"user"];
 				if (!user.localUser) [previewMessages insertObject:message atIndex:0];
 			}
 

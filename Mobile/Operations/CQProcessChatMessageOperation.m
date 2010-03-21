@@ -86,18 +86,25 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 	static NSString *urlRegex = @"(\\B(?<!&amp;)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&;#]{2,}\\b)|(?i)\\b((?:[a-z][\\w-]+:(?:/{0,3}|[a-z0-9%]|\\+)|www\\d?[.])(?:[^\\s()<>]+|\\([^\\s()<>]+\\))+(?:\\([^\\s()<>]+\\)|[^`!()\\[\\]{};:'\\\".,<>?«»“”‘’\\s]))|([\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+@(?:[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+\\.)+[\\w]{2,})";
 
 	NSRange matchedRange = [string rangeOfRegex:urlRegex options:RKLCaseless inRange:*textRange capture:0 error:NULL];
+	NSArray *components = nil;
+	NSString *room = nil;
+	NSString *url = nil;
+	NSString *email = nil;
+	NSString *linkHTMLString = nil;
+	NSString *fullURL = nil;
+	NSRange matchRange = {0, 0};
 	while (matchedRange.location != NSNotFound) {
-		NSArray *components = [string captureComponentsMatchedByRegex:urlRegex options:RKLCaseless range:matchedRange error:NULL];
-		NSString *room = [components objectAtIndex:1];
-		NSString *url = [components objectAtIndex:2];
-		NSString *email = [components objectAtIndex:3];
+		components = [string captureComponentsMatchedByRegex:urlRegex options:RKLCaseless range:matchedRange error:NULL];
+		room = [components objectAtIndex:1];
+		url = [components objectAtIndex:2];
+		email = [components objectAtIndex:3];
 
-		NSString *linkHTMLString = nil;
+		linkHTMLString = nil;
 		if (room.length) {
 			linkHTMLString = [NSString stringWithFormat:@"<a href=\"irc:///%@\">%1$@</a>", room];
 		} else if (url.length) {
 			if ([[CQColloquyApplication sharedApplication] canOpenURL:[NSURL URLWithString:url]]) {
-				NSString *fullURL = ([url hasCaseInsensitivePrefix:@"www."] ? [@"http://" stringByAppendingString:url] : url);
+				fullURL = ([url hasCaseInsensitivePrefix:@"www."] ? [@"http://" stringByAppendingString:url] : url);
 				url = [url stringByReplacingOccurrencesOfString:@"/" withString:@"/\u200b"];
 				url = [url stringByReplacingOccurrencesOfString:@"?" withString:@"?\u200b"];
 				url = [url stringByReplacingOccurrencesOfString:@"=" withString:@"=\u200b"];
@@ -114,7 +121,7 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 			textRange->length += (linkHTMLString.length - matchedRange.length);
 		}
 
-		NSRange matchRange = NSMakeRange(matchedRange.location + linkHTMLString.length, (NSMaxRange(*textRange) - matchedRange.location - linkHTMLString.length));
+		matchRange = NSMakeRange(matchedRange.location + linkHTMLString.length, (NSMaxRange(*textRange) - matchedRange.location - linkHTMLString.length));
 		if (!matchRange.length)
 			break;
 
@@ -127,14 +134,17 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 		return;
 
 	NSRange tagEndRange = NSMakeRange(range->location, 0);
+	NSRange tagStartRange = {0, 0};
+	NSUInteger length = 0;
+	NSRange textRange = {0, 0};
 	while (1) {
-		NSRange tagStartRange = [html rangeOfString:@"<" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(tagEndRange), (NSMaxRange(*range) - NSMaxRange(tagEndRange)))];
+		tagStartRange = [html rangeOfString:@"<" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(tagEndRange), (NSMaxRange(*range) - NSMaxRange(tagEndRange)))];
 		if (tagStartRange.location == NSNotFound) {
-			NSUInteger length = (NSMaxRange(*range) - NSMaxRange(tagEndRange));
+			length = (NSMaxRange(*range) - NSMaxRange(tagEndRange));
 			if (!length)
 				break;
 
-			NSRange textRange = NSMakeRange(NSMaxRange(tagEndRange), length);
+			textRange = NSMakeRange(NSMaxRange(tagEndRange), length);
 
 			function(html, &textRange);
 			range->length += (textRange.length - length);
@@ -142,8 +152,8 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 			break;
 		}
 
-		NSUInteger length = (tagStartRange.location - NSMaxRange(tagEndRange));
-		NSRange textRange = NSMakeRange(NSMaxRange(tagEndRange), length);
+		length = (tagStartRange.location - NSMaxRange(tagEndRange));
+		textRange = NSMakeRange(NSMaxRange(tagEndRange), length);
 		if (length) {
 			function(html, &textRange);
 			range->length += (textRange.length - length);
@@ -174,7 +184,7 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	if (!messageString.length)
 		return;
 
-	NSRange range;
+	NSRange range = {0, 0};;
 	if (stripMessageFormatting) {
 		[messageString stripXMLTags];
 
@@ -208,11 +218,11 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 		NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 		NSString *stylelessMessageString = [messageString stringByStrippingXMLTags];
 
+		NSString *regex = nil;
 		for (NSString *highlightWord in highlightWords) {
 			if (!highlightWord.length)
 				continue;
 
-			NSString *regex = nil;
 			if ([highlightWord hasPrefix:@"/"] && [highlightWord hasSuffix:@"/"] && highlightWord.length > 1) {
 				regex = [highlightWord substringWithRange:NSMakeRange(1, highlightWord.length - 2)];
 			} else {

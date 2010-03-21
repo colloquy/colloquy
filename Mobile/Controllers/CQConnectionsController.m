@@ -258,10 +258,13 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		CQBouncerSettings *settings = ((CQAlertView *)alertView).userInfo;
 		[_connectionsNavigationController editBouncer:settings];
 		[[CQColloquyApplication sharedApplication] showConnections:nil];
+		return;
 	}
 
-	if (alertView.tag == HelpAlertTag)
+	if (alertView.tag == HelpAlertTag) {
 		[[CQColloquyApplication sharedApplication] showHelp:nil];
+		return;
+	}
 
 	NSArray *inputFields = ((CQAlertView *)alertView).inputFields;
 	if (!inputFields.count)
@@ -478,14 +481,17 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 			[connection sendRawMessage:@"BOUNCER autocommands start"];
 	}
 
+	NSString *command = nil;
+	NSString *arguments = nil;
+	NSScanner *scanner = nil;
 	for (NSString *fullCommand in connection.automaticCommands) {
-		NSScanner *scanner = [NSScanner scannerWithString:fullCommand];
+		scanner = [NSScanner scannerWithString:fullCommand];
 		[scanner setCharactersToBeSkipped:nil];
 
-		NSString *command = nil;
-		NSString *arguments = nil;
+		command = nil;
+		arguments = nil;
 
-		[scanner scanString:@"/" intoString:nil];
+		scanner.scanLocation = 1;
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&command];
 		[scanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] maxLength:1 intoString:NULL];
 
@@ -866,8 +872,12 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	_loadedConnections = YES;
 
 	NSArray *bouncers = [[NSUserDefaults standardUserDefaults] arrayForKey:@"CQChatBouncers"];
+	CQBouncerSettings *settings = nil;
+	NSArray *connections = nil;
+	MVChatConnection *connection = nil;
+	NSMutableArray *bouncerChatConnections = [[NSMutableArray alloc] initWithCapacity:10];
 	for (NSDictionary *info in bouncers) {
-		CQBouncerSettings *settings = [[CQBouncerSettings alloc] initWithDictionaryRepresentation:info];
+		settings = [[CQBouncerSettings alloc] initWithDictionaryRepresentation:info];
 		if (!settings)
 			continue;
 
@@ -877,12 +887,12 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		if (!settings.password.length)
 			settings.password = [[CQKeychain standardKeychain] passwordForServer:settings.server area:settings.username];
 
-		NSMutableArray *bouncerChatConnections = [[NSMutableArray alloc] initWithCapacity:10];
+		[bouncerChatConnections removeAllObjects];
 		[_bouncerChatConnections setObject:bouncerChatConnections forKey:settings.identifier];
 
-		NSArray *connections = [info objectForKey:@"connections"];
+		connections = [info objectForKey:@"connections"];
 		for (NSDictionary *info in connections) {
-			MVChatConnection *connection = [self _chatConnectionWithDictionaryRepresentation:info];
+			connection = [self _chatConnectionWithDictionaryRepresentation:info];
 			if (!connection)
 				continue;
 
@@ -892,14 +902,14 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 			if ([info objectForKey:@"chatState"])
 				[[CQChatController defaultController] restorePersistentState:[info objectForKey:@"chatState"] forConnection:connection];
 		}
-
-		[bouncerChatConnections release];
-		[settings release];
 	}
 
-	NSArray *connections = [[NSUserDefaults standardUserDefaults] arrayForKey:@"MVChatBookmarks"];
+	[bouncerChatConnections release];
+	[settings release];
+
+	connections = [[NSUserDefaults standardUserDefaults] arrayForKey:@"MVChatBookmarks"];
 	for (NSDictionary *info in connections) {
-		MVChatConnection *connection = [self _chatConnectionWithDictionaryRepresentation:info];
+		connection = [self _chatConnectionWithDictionaryRepresentation:info];
 		if (!connection)
 			continue;
 
@@ -930,8 +940,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[_bouncerConnections makeObjectsPerformSelector:@selector(disconnect)];
 	[_bouncerConnections removeAllObjects];
 
+	CQBouncerConnection *connection = nil;
 	for (CQBouncerSettings *settings in _bouncers) {
-		CQBouncerConnection *connection = [[CQBouncerConnection alloc] initWithBouncerSettings:settings];
+		connection = [[CQBouncerConnection alloc] initWithBouncerSettings:settings];
 		connection.delegate = self;
 
 		[_bouncerConnections addObject:connection];
@@ -970,8 +981,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	NSUInteger roomCount = 0;
 
 	NSMutableArray *connections = [[NSMutableArray alloc] initWithCapacity:_directConnections.count];
+	NSMutableDictionary *connectionInfo = nil;
 	for (MVChatConnection *connection in _directConnections) {
-		NSMutableDictionary *connectionInfo = [self _dictionaryRepresentationForConnection:connection];
+		connectionInfo = [self _dictionaryRepresentationForConnection:connection];
 		if (!connectionInfo)
 			continue;
 
@@ -985,14 +997,16 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	}
 
 	NSMutableArray *bouncers = [[NSMutableArray alloc] initWithCapacity:_bouncers.count];
+	NSMutableDictionary *info = nil;
+	NSMutableArray *bouncerConnections = [[NSMutableArray alloc] initWithCapacity:10];
 	for (CQBouncerSettings *settings in _bouncers) {
-		NSMutableDictionary *info = [settings dictionaryRepresentation];
+		info = [settings dictionaryRepresentation];
 		if (!info)
 			continue;
 
-		NSMutableArray *bouncerConnections = [[NSMutableArray alloc] initWithCapacity:10];
+		[bouncerConnections removeAllObjects];
 		for (MVChatConnection *connection in [self bouncerChatConnectionsForIdentifier:settings.identifier]) {
-			NSMutableDictionary *connectionInfo = [self _dictionaryRepresentationForConnection:connection];
+			connectionInfo = [self _dictionaryRepresentationForConnection:connection];
 			if (!connectionInfo)
 				continue;
 
@@ -1063,18 +1077,20 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	address = [address stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@". \t\n"]];
 
+	NSString *server = nil;
+	NSRange range = {0, 0};
 	for (MVChatConnection *connection in _connections) {
 		if (!connection.connected)
 			continue;
-		NSString *server = connection.server;
-		NSRange range = [server rangeOfString:address options:(NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch) range:NSMakeRange(0, server.length)];
+		server = connection.server;
+		range = [server rangeOfString:address options:(NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch) range:NSMakeRange(0, server.length)];
 		if (range.location != NSNotFound && (range.location == 0 || [server characterAtIndex:(range.location - 1)] == '.'))
 			[result addObject:connection];
 	}
 
 	for (MVChatConnection *connection in _connections) {
-		NSString *server = connection.server;
-		NSRange range = [server rangeOfString:address options:(NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch) range:NSMakeRange(0, server.length)];
+		server = connection.server;
+		range = [server rangeOfString:address options:(NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch) range:NSMakeRange(0, server.length)];
 		if (range.location != NSNotFound && (range.location == 0 || [server characterAtIndex:(range.location - 1)] == '.'))
 			[result addObject:connection];
 	}
@@ -1220,9 +1236,10 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObjectsAndKeys:bouncer, @"bouncerSettings", [NSNumber numberWithUnsignedInteger:index], @"index", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerRemovedBouncerSettingsNotification object:self userInfo:notificationInfo];
 
+	MVChatConnection *connection = nil;
 	for (NSInteger i = (connections.count - 1); i >= 0; --i) {
-		MVChatConnection *connection = [connections objectAtIndex:i];
-		NSDictionary *notificationInfo = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"connection", [NSNumber numberWithUnsignedInteger:i], @"index", nil];
+		connection = [connections objectAtIndex:i];
+		notificationInfo = [NSDictionary dictionaryWithObjectsAndKeys:connection, @"connection", [NSNumber numberWithUnsignedInteger:i], @"index", nil];
 		[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerRemovedConnectionNotification object:self userInfo:notificationInfo];
 	}
 

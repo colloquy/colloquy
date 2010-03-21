@@ -185,10 +185,10 @@
 #pragma mark -
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
-	if (!self.editing && !_items.count)
-		return 1;
 	if (self.editing)
 		return (_items.count + 1);
+	if (!_items.count)
+		return 1;
 	return _items.count;
 }
 

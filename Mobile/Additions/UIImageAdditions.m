@@ -5,12 +5,13 @@
 #import <Foundation/Foundation.h>
 
 
-static NSArray *validExtensions = nil;
 
 @implementation UIImage (UIImageAdditions)
 
 + (BOOL)isValidImageFormat:(NSString *)file;
 {
+	static NSArray *validExtensions = nil;
+
 	if (!validExtensions)
 		validExtensions = [[NSArray alloc] initWithObjects:@"tiff", @"tif", @"jpg", @"jpeg", @"gif", @"png", @"bmp", @"bmpf", @"ico", @"cur", @"xbm", nil];
 	NSString *extension = [[file pathExtension] lowercaseString];

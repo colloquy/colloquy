@@ -70,12 +70,14 @@
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 
-	if (indexPath.section == NewConnectionsTableSection && indexPath.row == 0) {
-		cell.textLabel.text = NSLocalizedString(@"Add an IRC Connection...", @"Add a IRC connection button label");
-		cell.imageView.image = [UIImage imageNamed:@"server.png"];
-	} else if (indexPath.section == NewConnectionsTableSection && indexPath.row == 1) {
-		cell.textLabel.text = NSLocalizedString(@"Add a Colloquy Bouncer...", @"Add a Colloquy bouncer button label");
-		cell.imageView.image = [UIImage imageNamed:@"bouncer.png"];
+	if (indexPath.section == NewConnectionsTableSection) {
+		if (indexPath.row == 0) {
+			cell.textLabel.text = NSLocalizedString(@"Add an IRC Connection...", @"Add a IRC connection button label");
+			cell.imageView.image = [UIImage imageNamed:@"server.png"];
+		} else if (indexPath.row == 1) {
+			cell.textLabel.text = NSLocalizedString(@"Add a Colloquy Bouncer...", @"Add a Colloquy bouncer button label");
+			cell.imageView.image = [UIImage imageNamed:@"bouncer.png"];
+		}
 	} else if (indexPath.section == WhatsNewTableSection && indexPath.row == 0) {
 		cell.textLabel.text = NSLocalizedString(@"What's New in Colloquy", @"What's New in Colloquy button label");
 		cell.imageView.image = [UIImage imageNamed:@"new.png"];
@@ -90,10 +92,11 @@
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (indexPath.section == NewConnectionsTableSection && indexPath.row == 0) {
-		[[CQConnectionsController defaultController] showConnectionCreationView:nil];
-	} else if (indexPath.section == NewConnectionsTableSection && indexPath.row == 1) {
-		[[CQConnectionsController defaultController] showBouncerCreationView:nil];
+	if (indexPath.section == NewConnectionsTableSection) {
+		if (indexPath.row == 0)
+			[[CQConnectionsController defaultController] showConnectionCreationView:nil];
+		else if (indexPath.row == 1)
+			[[CQConnectionsController defaultController] showBouncerCreationView:nil];
 	} else if (indexPath.section == WhatsNewTableSection && indexPath.row == 0) {
 		NSString *whatsNewContentPath = [[NSBundle mainBundle] pathForResource:@"whats-new" ofType:@"html"];
 		NSString *whatsNewContent = [[NSString alloc] initWithContentsOfFile:whatsNewContentPath encoding:NSUTF8StringEncoding error:NULL];

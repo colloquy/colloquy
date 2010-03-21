@@ -426,7 +426,6 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	baseConvert;
 
 	q = ( tv.tv_sec - 1104555600 ); // subtract 35 years, we only care about post Jan 1 2005
-	r = 0;
 
 	baseConvert;
 
@@ -571,6 +570,12 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	const char *bytes = [data bytes];
 	NSUInteger length = [data length];
 	NSUInteger i = 0, j = 0, start = 0, end = 0;
+	NSString *encodingStr = nil;
+	NSStringEncoding newEncoding = 0;
+	NSUInteger enc = 0;
+	NSData *subData = nil;
+	NSString *tempStr = nil;
+	NSData *utf8Data = nil;
 	for( i = 0, start = 0; i < length; i++ ) {
 		if( bytes[i] == '\006' ) {
 			end = i;
@@ -581,14 +586,13 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 			if( i == j ) continue;
 
 			if( bytes[j++] == 'E' ) {
-				NSString *encodingStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + j ) length:( i - j ) encoding:NSASCIIStringEncoding];
-				NSStringEncoding newEncoding = 0;
+				encodingStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + j ) length:( i - j ) encoding:NSASCIIStringEncoding];
 				if( ! [encodingStr length] ) { // if no encoding is declared, go back to user default
 					newEncoding = encoding;
 				} else if( [encodingStr isEqualToString:@"U"] ) {
 					newEncoding = NSUTF8StringEncoding;
 				} else {
-					NSUInteger enc = [encodingStr intValue];
+					enc = [encodingStr intValue];
 					switch( enc ) {
 						case 1:
 							newEncoding = NSISOLatin1StringEncoding;
@@ -627,10 +631,9 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 				if( newEncoding && newEncoding != currentEncoding ) {
 					if( ( end - start ) > 0 ) {
-						NSData *subData = nil;
 						if( currentEncoding != NSUTF8StringEncoding ) {
-							NSString *tempStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + start ) length:( end - start ) encoding:currentEncoding];
-							NSData *utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
+							tempStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + start ) length:( end - start ) encoding:currentEncoding];
+							utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
 							if( utf8Data ) subData = [utf8Data retain];
 							[tempStr release];
 						} else {
@@ -650,10 +653,10 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 	if( [newData length] > 0 || currentEncoding != encoding ) {
 		if( start < length ) {
-			NSData *subData = nil;
+			subData = nil;
 			if( currentEncoding != NSUTF8StringEncoding ) {
-				NSString *tempStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + start ) length:( length - start ) encoding:currentEncoding];
-				NSData *utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
+				tempStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + start ) length:( length - start ) encoding:currentEncoding];
+				utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
 				if( utf8Data ) subData = [utf8Data retain];
 				[tempStr release];
 			} else {
@@ -692,10 +695,21 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 	NSUInteger boldStack = 0, italicStack = 0, underlineStack = 0, strikeStack = 0, colorStack = 0;
 
+	NSString *cStr = nil;
+	unichar c = '\0';
+	NSUInteger fcolor = 0;
+	NSString *foregroundColor = nil;
+	NSUInteger bcolor = 0;
+	NSString *backgroundColor = nil;
+	unichar formatChar = '\0';
+	NSCharacterSet *hexSet = nil;
+	NSString *colorStr = nil;
+	BOOL foundForeground = YES;
+	NSUInteger index = 0;
+	NSString *text = nil;
 	while( ! [scanner isAtEnd] ) {
-		NSString *cStr = nil;
 		if( [scanner scanCharactersFromSet:formatCharacters maxLength:1 intoString:&cStr] ) {
-			unichar c = [cStr characterAtIndex:0];
+			c = [cStr characterAtIndex:0];
 			switch( c ) {
 			case '\017': // reset all
 				if( boldStack )
@@ -731,18 +745,16 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 				break;
 			case '\003': // color
 			{
-				NSUInteger fcolor = 0;
 				if( scanOneOrTwoDigits( scanner, &fcolor ) ) {
 					fcolor %= 16;
 
-					NSString *foregroundColor = colorForHTML(mIRCColors[fcolor][0], mIRCColors[fcolor][1], mIRCColors[fcolor][2]);
+					foregroundColor = colorForHTML(mIRCColors[fcolor][0], mIRCColors[fcolor][1], mIRCColors[fcolor][2]);
 					[ret appendFormat:@"<span style=\"color: %@;", foregroundColor];
 
-					NSUInteger bcolor = 0;
 					if( [scanner scanString:@"," intoString:NULL] && scanOneOrTwoDigits( scanner, &bcolor ) && bcolor != 99 ) {
 						bcolor %= 16;
 
-						NSString *backgroundColor = colorForHTML(mIRCColors[bcolor][0], mIRCColors[bcolor][1], mIRCColors[bcolor][2]);
+						backgroundColor = colorForHTML(mIRCColors[bcolor][0], mIRCColors[bcolor][1], mIRCColors[bcolor][2]);
 						[ret appendFormat:@" background-color: %@;", backgroundColor];
 					}
 
@@ -760,7 +772,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 				if( ! [scanner isAtEnd] ) {
 					BOOL off = NO;
 
-					unichar formatChar = [message characterAtIndex:[scanner scanLocation]];
+					formatChar = [message characterAtIndex:[scanner scanLocation]];
 					[scanner setScanLocation:[scanner scanLocation]+1];
 
 					switch( formatChar ) {
@@ -829,19 +841,17 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 						}
 
 						// scan for foreground color
-						NSCharacterSet *hexSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789ABCDEF"];
-						NSString *colorStr = nil;
-						BOOL foundForeground = YES;
+						hexSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789ABCDEF"];
 						if( [scanner scanString:@"#" intoString:NULL] ) { // rgb hex color
 							if( [scanner scanCharactersFromSet:hexSet maxLength:6 intoString:&colorStr] ) {
 								[ret appendFormat:@"<span style=\"color: %@;", colorStr];
 							} else foundForeground = NO;
 						} else if( [scanner scanCharactersFromSet:hexSet maxLength:1 intoString:&colorStr] ) { // indexed color
-							NSUInteger index = [colorStr characterAtIndex:0];
+							index = [colorStr characterAtIndex:0];
 							if( index >= 'A' ) index -= ( 'A' - '9' - 1 );
 							index -= '0';
 
-							NSString *foregroundColor = colorForHTML(CTCPColors[index][0], CTCPColors[index][1], CTCPColors[index][2]);
+							foregroundColor = colorForHTML(CTCPColors[index][0], CTCPColors[index][1], CTCPColors[index][2]);
 							[ret appendFormat:@"<span style=\"color: %@;", foregroundColor];
 						} else if( [scanner scanString:@"." intoString:NULL] ) { // reset the foreground color
 							[ret appendString:@"<span style=\"color: initial;"];
@@ -859,11 +869,11 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 								if( [scanner scanCharactersFromSet:hexSet maxLength:6 intoString:&colorStr] )
 									[ret appendFormat:@" background-color: %@;", colorStr];
 							} else if( [scanner scanCharactersFromSet:hexSet maxLength:1 intoString:&colorStr] ) { // indexed color
-								NSUInteger index = [colorStr characterAtIndex:0];
+								index = [colorStr characterAtIndex:0];
 								if( index >= 'A' ) index -= ( 'A' - '9' - 1 );
 								index -= '0';
 
-								NSString *backgroundColor = colorForHTML(CTCPColors[index][0], CTCPColors[index][1], CTCPColors[index][2]);
+								backgroundColor = colorForHTML(CTCPColors[index][0], CTCPColors[index][1], CTCPColors[index][2]);
 								[ret appendFormat:@" background-color: %@;", backgroundColor];
 							} else if( [scanner scanString:@"." intoString:NULL] ) { // reset the background color
 								[ret appendString:@" background-color: initial;"];
@@ -907,7 +917,6 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 			}
 		}
 
-		NSString *text = nil;
  		[scanner scanUpToCharactersFromSet:formatCharacters intoString:&text];
 
 		if( [text length] )
@@ -939,13 +948,24 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
-+ (NSString *) stringByReversingString:(NSString *) normalString {
-	NSMutableString *reversedString = [[NSMutableString alloc] init];
++ (NSString *) stringByReversingString:(NSString *) initialString {
 
-	for (NSInteger index = [normalString length] - 1; index >= 0; index--)
-		[reversedString appendString:[normalString substringWithRange:NSMakeRange(index, 1)]];
+	NSUInteger length = [initialString length];
+	char string[length];
 
-	return [reversedString autorelease];
+	[initialString getCString:string maxLength:length encoding:NSUTF8StringEncoding];
+
+	NSUInteger position = 0;
+	NSUInteger halfLength = (length >> 1);
+	char temp = '\0';
+	for (NSUInteger i = 0; i <= halfLength; i++) {
+		temp = string[i];
+		position = length - i;
+		string[i] = string[position];
+		string[position] = temp;
+	}
+
+	return [[[NSString alloc] initWithCString:string encoding:NSUTF8StringEncoding] autorelease];
 }
 
 #pragma mark -

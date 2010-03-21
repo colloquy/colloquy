@@ -532,17 +532,19 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (NSString *) applicationNameForURL:(NSURL *) url {
 	if (!url)
 		return nil;
+	NSString *scheme = url.scheme;
 #if !TARGET_IPHONE_SIMULATOR
-	if ([url.host hasCaseInsensitiveSubstring:@"maps.google."])
+	NSString *host = url.host;
+	if ([host hasCaseInsensitiveSubstring:@"maps.google."])
 		return NSLocalizedString(@"Maps", @"Maps application name");
-	if ([url.host hasCaseInsensitiveSubstring:@"youtube."])
+	if ([host hasCaseInsensitiveSubstring:@"youtube."])
 		return NSLocalizedString(@"YouTube", @"YouTube application name");
-	if ([url.host hasCaseInsensitiveSubstring:@"phobos.apple."])
+	if ([host hasCaseInsensitiveSubstring:@"phobos.apple."])
 		return NSLocalizedString(@"iTunes", @"iTunes application name");
-	if ([url.scheme isCaseInsensitiveEqualToString:@"mailto"])
+	if ([scheme isCaseInsensitiveEqualToString:@"mailto"])
 		return NSLocalizedString(@"Mail", @"Mail application name");
 #endif
-	if ([url.scheme isCaseInsensitiveEqualToString:@"http"] || [url.scheme isCaseInsensitiveEqualToString:@"https"])
+	if ([scheme isCaseInsensitiveEqualToString:@"http"] || [scheme isCaseInsensitiveEqualToString:@"https"])
 		return NSLocalizedString(@"Safari", @"Safari application name");
 	return nil;
 }

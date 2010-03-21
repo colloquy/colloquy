@@ -137,10 +137,11 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQHistoryOnReconnect"]) {
 		_pendingPreviousSessionComponents = [[NSMutableArray alloc] init];
 
+		NSMutableDictionary *messageCopy = nil;
+		MVChatUser *user = nil;
 		for (NSDictionary *message in [state objectForKey:@"messages"]) {
-			NSMutableDictionary *messageCopy = [message mutableCopy];
+			messageCopy = [message mutableCopy];
 
-			MVChatUser *user = nil;
 			if ([[messageCopy objectForKey:@"localUser"] boolValue]) {
 				user = connection.localUser;
 				[messageCopy removeObjectForKey:@"localUser"];
@@ -152,16 +153,14 @@ static NSOperationQueue *chatMessageProcessingQueue;
 				[_pendingPreviousSessionComponents addObject:messageCopy];
 			}
 
-			[messageCopy release];
 		}
+		[messageCopy release];
 
 		_recentMessages = [_pendingPreviousSessionComponents mutableCopy];
 
 		while (_recentMessages.count > 10)
 			[_recentMessages removeObjectAtIndex:0];
-	} else {
-		_recentMessages = [[NSMutableArray alloc] init];
-	}
+	} else _recentMessages = [[NSMutableArray alloc] init];
 
 	return self;
 }
@@ -233,14 +232,16 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	NSMutableArray *messages = [[NSMutableArray alloc] init];
 
+	NSMutableDictionary *newMessage = nil;
+	MVChatUser *user = nil;
 	for (NSDictionary *message in _recentMessages) {
 		id sameKeys[] = {@"message", @"messagePlain", @"action", @"notice", @"highlighted", @"identifier", @"type", nil};
-		NSMutableDictionary *newMessage = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:message];
+		newMessage = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:message];
 
 		if ([[newMessage objectForKey:@"message"] isEqual:[newMessage objectForKey:@"messagePlain"]])
 			[newMessage removeObjectForKey:@"messagePlain"];
 
-		MVChatUser *user = [message objectForKey:@"user"];
+		user = [message objectForKey:@"user"];
 		if (user && !user.localUser) [newMessage setObject:user.nickname forKey:@"user"];
 		else if (user.localUser) [newMessage setObject:[NSNumber numberWithBool:YES] forKey:@"localUser"];
 
@@ -522,7 +523,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		NSString *command = nil;
 		NSString *arguments = nil;
 
-		[scanner scanString:@"/" intoString:nil];
+		scanner.scanLocation = 1;
 		[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&command];
 		if (!self.available && ([command isCaseInsensitiveEqualToString:@"me"] || [command isCaseInsensitiveEqualToString:@"msg"] || [command isCaseInsensitiveEqualToString:@"say"])) {
 			[self _showCantSendMessagesWarningForCommand:NO];
@@ -809,8 +810,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	}
 
 	NSString *query = nil;
-	if (arguments.length >= ([argumentsScanner scanLocation] + 1))
-		query = [arguments substringWithRange:NSMakeRange([argumentsScanner scanLocation] + 1, ([arguments length] - [argumentsScanner scanLocation] - 1))];
+	if (arguments.length >= (argumentsScanner.scanLocation + 1))
+		query = [arguments substringWithRange:NSMakeRange(argumentsScanner.scanLocation + 1, (arguments.length - argumentsScanner.scanLocation - 1))];
 	else query = arguments;
 
 	[results addObject:languageCode];
