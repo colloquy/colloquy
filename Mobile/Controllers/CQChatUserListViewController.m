@@ -105,9 +105,8 @@ static NSString *membersFilteredCountFormat;
 
 - (NSUInteger) _indexForInsertedMatchUser:(MVChatUser *) user withOriginalIndex:(NSUInteger) index {
 	NSInteger matchesIndex = NSNotFound;
-	MVChatUser *currentUser = nil;
 	for (NSInteger i = (index - 1); i >= 0; --i) {
-		currentUser = [_users objectAtIndex:i];
+		MVChatUser *currentUser = [_users objectAtIndex:i];
 		matchesIndex = [_matchedUsers indexOfObjectIdenticalTo:currentUser];
 		if (matchesIndex != NSNotFound)
 			break;

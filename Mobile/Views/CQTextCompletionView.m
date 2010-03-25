@@ -56,14 +56,11 @@
 	CGFloat offset = CompletionMargin;
 	UIFont *font = CompletionFont;
 
-	CGSize textSize = {0, 0};
-	BOOL selected = NO;
-	CGPoint textPoint = {0, 0};
 	for (NSString *completion in _completions) {
-		selected = (_selectedCompletion == i);
-		textSize = _completionTextSizes[i++];
+		BOOL selected = (_selectedCompletion == i);
+		CGSize textSize = _completionTextSizes[i++];
 
-		textPoint = CGPointZero;
+		CGPoint textPoint = CGPointZero;
 		textPoint.x = round(enclosingRect.origin.x + offset);
 		textPoint.y = round(enclosingRect.origin.y + (enclosingRect.size.height / 2.) - (textSize.height / 2.));
 
@@ -119,8 +116,8 @@
 
 	font = [UIFont systemFontOfSize:18.];
 
-	textSize = [@"\u00d7" sizeWithFont:font];
-	textPoint = CGPointZero;
+	CGSize textSize = [@"\u00d7" sizeWithFont:font];
+	CGPoint textPoint = CGPointZero;
 	textPoint.x = round(enclosingRect.origin.x + offset + 2.);
 	textPoint.y = round(enclosingRect.origin.y + (enclosingRect.size.height / 2.) - (textSize.height / 2.) - 1.);
 

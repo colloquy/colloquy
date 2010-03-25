@@ -267,9 +267,8 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		NSUInteger selectedEncodingIndex = 0;
 		NSMutableArray *encodings = [[NSMutableArray alloc] init];
 		const NSStringEncoding *supportedEncodings = [_connection supportedStringEncodings];
-		NSStringEncoding encoding = 0;
 		for (unsigned i = 0; supportedEncodings[i]; ++i) {
-			encoding = supportedEncodings[i];
+			NSStringEncoding encoding = supportedEncodings[i];
 			[encodings addObject:localizedNameOfStringEncoding(encoding)];
 			if (encoding == _connection.encoding)
 				selectedEncodingIndex = i;

@@ -255,37 +255,31 @@
 	NSMutableString *command = [[NSMutableString alloc] initWithString:@"appendComponents(["];
 	NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\\'\""];
 
-	NSString *type = nil;
-	MVChatUser *user = nil;
-	NSString *messageString = nil;
-	BOOL action = NO;
-	BOOL highlighted = NO;
-	NSString *escapedMessage = nil;
-	NSString *escapedNickname = nil;
-	NSString *identifier = nil;
-	NSString *escapedIdentifer = nil;
 	for (NSDictionary *component in components) {
-		type = [component objectForKey:@"type"];
-		messageString = [component objectForKey:@"message"];
-		escapedMessage = [messageString stringByEscapingCharactersInSet:escapedCharacters];
+		NSString *type = [component objectForKey:@"type"];
+		NSString *messageString = [component objectForKey:@"message"];
+		if (!messageString)
+			continue;
+
+		NSString *escapedMessage = [messageString stringByEscapingCharactersInSet:escapedCharacters];
 
 		if ([type isEqualToString:@"message"]) {
-			user = [component objectForKey:@"user"];
-			if (!user || !messageString)
+			MVChatUser *user = [component objectForKey:@"user"];
+			if (!user)
 				continue;
 
-			action = [[component objectForKey:@"action"] boolValue];
-			highlighted = [[component objectForKey:@"highlighted"] boolValue];
+			BOOL action = [[component objectForKey:@"action"] boolValue];
+			BOOL highlighted = [[component objectForKey:@"highlighted"] boolValue];
 
-			escapedNickname = [user.nickname stringByEscapingCharactersInSet:escapedCharacters];
+			NSString *escapedNickname = [user.nickname stringByEscapingCharactersInSet:escapedCharacters];
 
 			[command appendFormat:@"{type:'message',sender:'%@',message:'%@',highlighted:%@,action:%@,self:%@},", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
 		} else if ([type isEqualToString:@"event"]) {
-			identifier = [component objectForKey:@"identifier"];
-			if (!messageString || !identifier)
+			NSString *identifier = [component objectForKey:@"identifier"];
+			if (!identifier)
 				continue;
 
-			escapedIdentifer = [identifier stringByEscapingCharactersInSet:escapedCharacters];
+			NSString *escapedIdentifer = [identifier stringByEscapingCharactersInSet:escapedCharacters];
 
 			[command appendFormat:@"{type:'event',message:'%@',identifier:'%@'},", escapedMessage, escapedIdentifer];
 		}

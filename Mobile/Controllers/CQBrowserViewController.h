@@ -12,7 +12,6 @@
 	NSURL *_urlToLoad;
 	id _delegate;
 	NSURL *_urlToHandle;
-	NSString *_instapaperURL;
 }
 @property (nonatomic, assign) id <CQBrowserViewControllerDelegate> delegate;
 @property (nonatomic, retain, setter=loadURL:) NSURL *url;

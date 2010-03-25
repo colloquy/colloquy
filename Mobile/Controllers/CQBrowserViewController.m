@@ -35,7 +35,6 @@ static NSURL *lastURL;
 	[toolbar release];
 	[_urlToLoad release];
 	[_urlToHandle release];
-	[_instapaperURL release];
 
 	[super dealloc];
 }
@@ -187,15 +186,13 @@ static NSURL *lastURL;
 		username = [username stringByEncodingIllegalURLCharacters];
 		password = [password stringByEncodingIllegalURLCharacters];
 
-		if (!_instapaperURL.length)
-			_instapaperURL = [[NSString alloc] initWithFormat:@"https://www.instapaper.com/api/add?username=%@&password=%@&url=%@&auto-title=1", username, password, url];
-
 		success = NO;
 
 		[CQColloquyApplication sharedApplication].networkActivityIndicatorVisible = YES;
 
 		NSError *error = nil;
-		NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:_instapaperURL] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.];
+		NSString *instapaperURL = [NSString stringWithFormat:@"https://www.instapaper.com/api/add?username=%@&password=%@&url=%@&auto-title=1", username, password, url];
+		NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:instapaperURL] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.];
 		NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:&error];
 
 		[request release];
@@ -207,7 +204,6 @@ static NSURL *lastURL;
 
 			if ([response isEqualToString:@"201"]) {
 				success = YES;
-				[_instapaperURL release];
 			} else if ([response isEqualToString:@"403"]) {
 				alert.title = NSLocalizedString(@"Couldn't Authenticate with Instapaper", "Could not authenticate title");
 				alert.message = NSLocalizedString(@"Make sure your Instapaper username and password are correct.", "Make sure your Instapaper username and password are correct alert message");
@@ -288,10 +284,8 @@ static NSURL *lastURL;
 #pragma mark -
 
 - (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	if (buttonIndex == alertView.cancelButtonIndex) {
-		[_instapaperURL release];
+	if (buttonIndex == alertView.cancelButtonIndex)
 		return;
-	}
 
 	if (alertView.tag == InstapaperAlertTag) {
 		NSArray *inputFields = ((CQAlertView *)alertView).inputFields;

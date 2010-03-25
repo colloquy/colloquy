@@ -498,12 +498,12 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
 	NSMutableArray *controllerStates = [[NSMutableArray alloc] init];
-	NSDictionary *controllerState = nil;
+
 	for (id <CQChatViewController> controller in controllers) {
 		if (![controller respondsToSelector:@selector(persistentState)])
 			continue;
 
-		controllerState = controller.persistentState;
+		NSDictionary *controllerState = controller.persistentState;
 		if (!controllerState.count || ![controllerState objectForKey:@"class"])
 			continue;
 
@@ -519,11 +519,9 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 - (void) restorePersistentState:(NSDictionary *) state forConnection:(MVChatConnection *) connection {
-	NSString *className = nil;
-	Class class = NULL;
 	for (NSDictionary *controllerState in [state objectForKey:@"chatControllers"]) {
-		className = [controllerState objectForKey:@"class"];
-		class = NSClassFromString(className);
+		NSString *className = [controllerState objectForKey:@"class"];
+		Class class = NSClassFromString(className);
 		if (!class)
 			continue;
 
