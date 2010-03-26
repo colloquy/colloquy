@@ -30,12 +30,9 @@
 #import <CFNetwork/CFNetwork.h>
 #endif
 
-#define JVMinimumSendQueueDelay 0.3
-#define JVMaximumSendQueueDelay 2.0
 #define JVQueueWaitBeforeConnected 120.
 #define JVPingServerInterval 120.
 #define JVPeriodicEventsInterval 600.
-#define JVSendQueueDelayIncrement 0.11
 #define JVWatchedUserWHOISDelay 300.
 #define JVWatchedUserISONDelay 60.
 #define JVMaximumCommandLength 510
@@ -357,6 +354,32 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
+- (BOOL) recentlyConnected {
+	static BOOL recentlyConnected = NO;
+
+	if (recentlyConnected)
+		return YES;
+
+	if (([NSDate timeIntervalSinceReferenceDate] - [_connectedDate timeIntervalSinceReferenceDate]) > 10)
+		recentlyConnected = YES;
+
+	return recentlyConnected;
+}
+
+- (CGFloat) minimumSendQueueDelay {
+	return [self recentlyConnected] ? .5 : .25;
+}
+
+- (CGFloat) maximumSendQueueDelay {
+	return [self recentlyConnected] ? 1.5 : 2.;
+}
+
+- (CGFloat) sendQueueDelayIncrement {
+	return [self recentlyConnected] ? .25 : .1;
+}
+
+#pragma mark -
+
 - (void) sendRawMessage:(id) raw immediately:(BOOL) now {
 	NSParameterAssert( raw != nil );
 	NSParameterAssert( [raw isKindOfClass:[NSData class]] || [raw isKindOfClass:[NSString class]] );
@@ -367,7 +390,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		}
 
 		if( now ) now = ( ! _queueWait || [_queueWait timeIntervalSinceNow] <= 0. );
-		if( now ) now = ( ! _lastCommand || [_lastCommand timeIntervalSinceNow] <= -JVMinimumSendQueueDelay );
+		if( now ) now = ( ! _lastCommand || [_lastCommand timeIntervalSinceNow] <= (-[self minimumSendQueueDelay]) );
 	}
 
 	if( now && _connectionThread ) {
@@ -1706,7 +1729,7 @@ end:
 
 	if( _queueWait && [_queueWait timeIntervalSinceNow] > 0. )
 		[self performSelector:@selector( _sendQueue ) withObject:nil afterDelay:[_queueWait timeIntervalSinceNow]];
-	else [self performSelector:@selector( _sendQueue ) withObject:nil afterDelay:JVMinimumSendQueueDelay];
+	else [self performSelector:@selector( _sendQueue ) withObject:nil afterDelay:[self minimumSendQueueDelay]];
 }
 
 - (void) _stopSendQueue {
@@ -1747,7 +1770,7 @@ end:
 		[_sendQueue removeObjectAtIndex:0];
 
 		if( [_sendQueue count] )
-			[self performSelector:@selector( _sendQueue ) withObject:nil afterDelay:MIN( JVMinimumSendQueueDelay + ( [_sendQueue count] * JVSendQueueDelayIncrement ), JVMaximumSendQueueDelay )];
+			[self performSelector:@selector( _sendQueue ) withObject:nil afterDelay:MIN( [self minimumSendQueueDelay] + ( [_sendQueue count] * [self sendQueueDelayIncrement] ), [self maximumSendQueueDelay] )];
 		else _sendQueueProcessing = NO;
 	}
 
