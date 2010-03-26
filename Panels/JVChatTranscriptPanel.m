@@ -609,6 +609,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		}
 
 		switch( [item tag] ) {
+		case WebMenuItemTagSearchWeb:
 		case WebMenuItemTagOpenLinkInNewWindow:
 		case WebMenuItemTagOpenImageInNewWindow:
 		case WebMenuItemTagOpenFrameInNewWindow:
