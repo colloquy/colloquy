@@ -36,6 +36,7 @@
 	NSString *_failedNickname;
 	NSInteger _failedNicknameCount;
 	BOOL _nicknameShortened;
+	BOOL _recentlyConnected;
 }
 + (NSArray *) defaultServerPorts;
 @end
