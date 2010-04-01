@@ -447,7 +447,7 @@
 			[connection setNickname:newNickname];
 		return YES;
 	} else if ( ! [command caseInsensitiveCompare:@"google"] || ! [command caseInsensitiveCompare:@"search"] ) {
-		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.google.com/m/search?q=%@", [[arguments string] stringByEncodingIllegalURLCharacters]]];
+		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://www.google.com/search?q=%@", [[arguments string] stringByEncodingIllegalURLCharacters]]];
 		NSWorkspaceLaunchOptions options = (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVURLOpensInBackground"]) ? NSWorkspaceLaunchDefault : NSWorkspaceLaunchWithoutActivation;
 
 		[[NSWorkspace sharedWorkspace] openURLs:[NSArray arrayWithObject:url] withAppBundleIdentifier:nil options:options additionalEventParamDescriptor:nil launchIdentifiers:nil];
