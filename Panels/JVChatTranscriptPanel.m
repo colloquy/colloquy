@@ -601,15 +601,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	for( i = 0; i < [ret count]; i++ ) {
 		item = [ret objectAtIndex:i];
 
-		// remove the Google item since we have a script for this
-		if( [item action] == @selector( _searchWithGoogleFromMenu: ) ) {
-			[ret removeObjectAtIndex:i];
-			i--;
-			continue;
-		}
-
 		switch( [item tag] ) {
-		case WebMenuItemTagSearchWeb:
 		case WebMenuItemTagOpenLinkInNewWindow:
 		case WebMenuItemTagOpenImageInNewWindow:
 		case WebMenuItemTagOpenFrameInNewWindow:

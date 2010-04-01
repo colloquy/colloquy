@@ -119,7 +119,6 @@
 		1C9982B00604BEAA006C6417 /* notifications.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C9982AF0604BEAA006C6417 /* notifications.plist */; };
 		1C9982B90604D94C006C6417 /* JVNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA7D0F106015DBA00887614 /* JVNotificationController.m */; };
 		1C9D83DA0C98670000BB6C58 /* iTunes.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1C8CE1EB05A921A00020D841 /* iTunes.scpt */; };
-		1C9D83DD0C98670200BB6C58 /* Google.scpt in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1CD4C098078249C10003620F /* Google.scpt */; };
 		1CA75A270652537A000141D5 /* styleOptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1CA75A260652537A000141D5 /* styleOptions.plist */; };
 		1CA7CA6605FEC88500887614 /* activity.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA7CA6305FEC88500887614 /* activity.png */; };
 		1CA7CA6805FEC88600887614 /* activityNewImportant.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA7CA6505FEC88500887614 /* activityNewImportant.png */; };
@@ -480,7 +479,6 @@
 				0A6571BD0868800D001FF007 /* F-Script Support.plugin in Copy Plugins */,
 				1C0A19B008B041C200324E25 /* Python Support.plugin in Copy Plugins */,
 				1C9D83DA0C98670000BB6C58 /* iTunes.scpt in Copy Plugins */,
-				1C9D83DD0C98670200BB6C58 /* Google.scpt in Copy Plugins */,
 			);
 			name = "Copy Plugins";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -831,7 +829,6 @@
 		1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSURLAdditions.m; path = Additions/NSURLAdditions.m; sourceTree = "<group>"; };
 		1CD4BD9B05AA773800F72EE6 /* favorites.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = favorites.png; path = Resources/favorites.png; sourceTree = SOURCE_ROOT; };
 		1CD4BD9C05AA773800F72EE6 /* favoritesPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = favoritesPressed.png; path = Resources/favoritesPressed.png; sourceTree = SOURCE_ROOT; };
-		1CD4C098078249C10003620F /* Google.scpt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.scpt; name = Google.scpt; path = "Plug-Ins/Google/Google.scpt"; sourceTree = "<group>"; };
 		1CD6C413051DFA1C00A8FE10 /* JVChatTranscriptPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatTranscriptPanel.h; path = Panels/JVChatTranscriptPanel.h; sourceTree = "<group>"; };
 		1CD6C414051DFA1D00A8FE10 /* JVChatTranscriptPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatTranscriptPanel.m; path = Panels/JVChatTranscriptPanel.m; sourceTree = "<group>"; };
 		1CD6C417051E0B3000A8FE10 /* JVChatTranscript.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVChatTranscript.nib; path = Resources/JVChatTranscript.nib; sourceTree = SOURCE_ROOT; };
@@ -1489,7 +1486,6 @@
 				1C0A199A08B0416C00324E25 /* Python Support */,
 				1CE87EC308B6E98400538B50 /* Ruby Support */,
 				1CA56CCD042A713E00000102 /* iTunes */,
-				1CD4C093078249A50003620F /* Google */,
 			);
 			name = "Plug–Ins";
 			sourceTree = "<group>";
@@ -1501,14 +1497,6 @@
 				1C3B4D560427BD5200000102 /* JVStandardCommands.h */,
 			);
 			name = "Standard Commands";
-			sourceTree = "<group>";
-		};
-		1CD4C093078249A50003620F /* Google */ = {
-			isa = PBXGroup;
-			children = (
-				1CD4C098078249C10003620F /* Google.scpt */,
-			);
-			name = Google;
 			sourceTree = "<group>";
 		};
 		1CE3F7BC07C7B60A0049A366 /* F-Script Support */ = {

@@ -10,6 +10,8 @@
 	<true/>
 	<key>JVSendDoubleSlashes</key>
 	<false/>
+	<key>JVURLOpensInBackground</key>
+	<false/>
 	<key>JVChatWindowInterface</key>
 	<integer>2</integer>
 	<key>JVChatTranscriptFolder</key>
