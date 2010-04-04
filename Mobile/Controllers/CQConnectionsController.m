@@ -102,6 +102,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationDidReceiveMemoryWarning) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_applicationWillResignActive) name:UIApplicationWillResignActiveNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:nil];
@@ -409,6 +410,10 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 - (void) _applicationDidReceiveMemoryWarning {
 	for (MVChatConnection *connection in _connections)
 		[connection purgeCaches];
+}
+
+- (void) _applicationWillResignActive {
+	[self saveConnections];
 }
 
 - (void) _applicationWillTerminate {

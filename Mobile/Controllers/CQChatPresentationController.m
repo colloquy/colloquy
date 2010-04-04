@@ -78,6 +78,9 @@
 @synthesize topChatViewController = _topChatViewController;
 
 - (void) setTopChatViewController:(id <CQChatViewController>) chatViewController {
+	if (chatViewController == _topChatViewController)
+		return;
+
 	UIViewController <CQChatViewController> *old = _topChatViewController;
 
 	if (old) {
@@ -88,6 +91,9 @@
 
 	_topChatViewController = [chatViewController retain];
 	[old release];
+
+	if (!_topChatViewController)
+		return;
 
 	UIView *view = _topChatViewController.view;
 

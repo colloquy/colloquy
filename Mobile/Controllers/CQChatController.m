@@ -476,6 +476,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 #pragma mark -
 
+@synthesize visibleChatController = _visibleChatController;
 @synthesize chatNavigationController = _chatNavigationController;
 @synthesize chatPresentationController = _chatPresentationController;
 @synthesize totalImportantUnreadCount = _totalImportantUnreadCount;
@@ -607,11 +608,13 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[_nextRoomConnection release];
 	_nextRoomConnection = nil;
 
+	id old = _visibleChatController;
+	_visibleChatController = [controller retain];
+	[old release];
+
 	if ([[UIDevice currentDevice] isPadModel]) {
-		[[NSUserDefaults standardUserDefaults] setObject:controller.title forKey:@"CQSelectedControllerRoom"];
-		[[NSUserDefaults standardUserDefaults] setObject:[controller.connection server] forKey:@"CQSelectedControllerServer"];
-		[[NSUserDefaults standardUserDefaults] setBool:[controller.target isKindOfClass:[MVChatRoom class]] forKey:@"CQSelectedRoom"];
 		_chatPresentationController.topChatViewController = controller;
+		[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
 	} else {
 		if (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController) {
 			id old = _nextController;
@@ -849,10 +852,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObject:controller forKey:@"controller"];
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerRemovedChatViewControllerNotification object:self userInfo:notificationInfo];
 
-	[controller release];
+	if (_visibleChatController == controller)
+		[self showChatController:nil animated:YES];
 
-	if ([[UIDevice currentDevice] isPadModel])
-		[self showChatController:[_chatControllers lastObject] animated:YES];
+	[controller release];
 }
 @end
 

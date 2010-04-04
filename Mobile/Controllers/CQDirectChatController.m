@@ -225,7 +225,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 	[state setObject:NSStringFromClass([self class]) forKey:@"class"];
 
-	if (_active)
+	if ([CQChatController defaultController].visibleChatController == self)
 		[state setObject:[NSNumber numberWithBool:YES] forKey:@"active"];
 
 	if (self.user)
@@ -373,6 +373,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
+	[super viewWillDisappear:animated];
+
 	[chatInputBar hideCompletions];
 
 	_active = NO;

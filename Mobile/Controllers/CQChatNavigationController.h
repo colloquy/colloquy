@@ -7,4 +7,5 @@
 	CQChatListViewController *_chatListViewController;
 	BOOL _active;
 }
+- (void) selectChatViewController:(id) controller animatedSelection:(BOOL) animatedSelection animatedScroll:(BOOL) animatedScroll;
 @end

@@ -247,32 +247,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		splitViewController.viewControllers = viewControllers;
 		[viewControllers release];
 
-		NSString *serverAddress = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSelectedControllerServer"];
-		if (serverAddress.length) {
-			MVChatConnection *connection = [[CQConnectionsController defaultController] connectionForServerAddress:serverAddress];
-			if (connection) {
-				NSString *selectedRoom = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSelectedControllerRoom"];
-				
-				if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQSelectedRoom"])
-					[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:selectedRoom andConnection:connection];
-				else [[CQChatController defaultController] showChatControllerForUserNicknamed:selectedRoom andConnection:connection];
-			} else { // The connection was deleted, but the room was never closed. Select the first contorller, since the old one doesn't exist anymore
-				id controller = [[CQChatController defaultController].chatViewControllers objectAtIndex:0];
-				[[CQChatController defaultController] showChatController:controller animated:YES];
-			}
-		} else {
-			if ([CQConnectionsController defaultController].connections.count) {
-				 CQChatCreationViewController *creationViewController = [[[CQChatCreationViewController alloc] init] autorelease];
-
-				creationViewController.roomTarget = YES;
-				
-				[self performSelector:@selector(presentModalViewController:) withObject:creationViewController afterDelay:1.5];
-			} else
-				// Don't show the welcome screen twice
-				if (![self shouldShowWelcomeScreen])
-					[self performSelector:@selector(showWelcome:) withObject:nil afterDelay:1.5];
-		}
-
 		_mainViewController = splitViewController;
 	} else {
 		UITabBarController *tabBarController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];

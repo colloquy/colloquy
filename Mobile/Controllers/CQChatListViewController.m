@@ -142,6 +142,9 @@ static NSUInteger sectionIndexForConnection(MVChatConnection *connection) {
 }
 
 static id <CQChatViewController> chatControllerForIndexPath(NSIndexPath *indexPath) {
+	if (!indexPath)
+		return nil;
+
 	MVChatConnection *connection = connectionForSection(indexPath.section);
 	if (connection) {
 		NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
@@ -157,6 +160,9 @@ static id <CQChatViewController> chatControllerForIndexPath(NSIndexPath *indexPa
 }
 
 static NSIndexPath *indexPathForChatController(id <CQChatViewController> controller) {
+	if (!controller)
+		return nil;
+
 	NSArray *controllers = [CQChatController defaultController].chatViewControllers;
 	if (!controllers.count)
 		return nil;

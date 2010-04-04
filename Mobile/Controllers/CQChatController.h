@@ -25,6 +25,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 	CQChatNavigationController *_chatNavigationController;
 	CQChatPresentationController *_chatPresentationController;
 	id <CQChatViewController> _nextController;
+	id <CQChatViewController> _visibleChatController;
 	MVChatConnection *_nextRoomConnection;
 	NSInteger _totalImportantUnreadCount;
 #if ENABLE(FILE_TRANSFERS)
@@ -35,6 +36,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 }
 + (CQChatController *) defaultController;
 
+@property (nonatomic, readonly) id <CQChatViewController> visibleChatController;
 @property (nonatomic, readonly) CQChatNavigationController *chatNavigationController;
 @property (nonatomic, readonly) CQChatPresentationController *chatPresentationController;
 

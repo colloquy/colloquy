@@ -81,8 +81,16 @@
 }
 
 - (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
+	if ([[UIDevice currentDevice] isPadModel])
+		return;
 	if (viewController == self.rootViewController && [[CQChatController defaultController] hasPendingChatController])
 		[self performSelector:@selector(_showNextChatController) withObject:nil afterDelay:0.33];
+}
+
+#pragma mark -
+
+- (void) selectChatViewController:(id) controller animatedSelection:(BOOL) animatedSelection animatedScroll:(BOOL) animatedScroll {
+	[_chatListViewController selectChatViewController:controller animatedSelection:animatedSelection animatedScroll:animatedScroll];
 }
 
 #pragma mark -
