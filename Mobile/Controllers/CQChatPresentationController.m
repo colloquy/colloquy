@@ -9,23 +9,10 @@
 		return nil;
 
 	UIBarButtonItem *connectionsButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connections", @"Connections button title") style:UIBarButtonItemStyleBordered target:[CQColloquyApplication sharedApplication] action:@selector(showConnections:)];
-	UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-	titleLabel.backgroundColor = [UIColor clearColor];
-	titleLabel.textColor = [UIColor colorWithRed:(113 / 255) green:(120 / 255) blue:(128 / 255) alpha:.5];
-	titleLabel.font = [UIFont boldSystemFontOfSize:20.];
 
-	UIBarButtonItem *titleButton = [[UIBarButtonItem alloc] initWithCustomView:titleLabel];
-	UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-	UIBarButtonItem *membersButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStyleBordered target:nil action:nil];
-	membersButton.accessibilityLabel = NSLocalizedString(@"Members List", @"Voiceover members list label");
-
-	_standardToolbarItems = [[NSArray alloc] initWithObjects:connectionsButton, flexibleSpace, titleButton, flexibleSpace, membersButton, nil];
+	_standardToolbarItems = [[NSArray alloc] initWithObjects:connectionsButton, nil];
 
 	[connectionsButton release];
-	[titleLabel release];
-	[titleButton release];
-	[flexibleSpace release];
-	[membersButton release];
 
 	return self;
 }
@@ -77,6 +64,7 @@
 
 #pragma mark -
 
+@synthesize currentViewToolbarItems = _currentViewToolbarItems;
 @synthesize standardToolbarItems = _standardToolbarItems;
 
 - (void) setStandardToolbarItems:(NSArray *) items {
@@ -100,16 +88,16 @@
 	if (chatViewController == _topChatViewController)
 		return;
 
-	UIViewController <CQChatViewController> *old = _topChatViewController;
+	UIViewController <CQChatViewController> *oldViewController = _topChatViewController;
 
-	if (old) {
-		[old viewWillDisappear:NO];
-		[old.view removeFromSuperview];
-		[old viewDidDisappear:NO];
+	if (oldViewController) {
+		[oldViewController viewWillDisappear:NO];
+		[oldViewController.view removeFromSuperview];
+		[oldViewController viewDidDisappear:NO];
 	}
 
 	_topChatViewController = [chatViewController retain];
-	[old release];
+	[oldViewController release];
 
 	if (!_topChatViewController)
 		return;
@@ -122,10 +110,11 @@
 	frame.size.width = [UIScreen mainScreen].applicationFrame.size.width;
 	view.frame = frame;
 
-	((UILabel *)((UIBarButtonItem *)[_standardToolbarItems objectAtIndex:(_standardToolbarItems.count - 3)]).customView).text = chatViewController.title;
-	[((UIBarButtonItem *)[_standardToolbarItems objectAtIndex:(_standardToolbarItems.count - 3)]).customView sizeToFit];
+	id oldToolbarItems = _currentViewToolbarItems;
+	_currentViewToolbarItems = [chatViewController.currentViewToolbarItems retain];
+	[oldToolbarItems release];
 
-	[_toolbar sizeToFit];
+	[self setStandardToolbarItems:_standardToolbarItems animated:YES];
 
 	[_topChatViewController viewWillAppear:NO];
 	[self.view insertSubview:view aboveSubview:_toolbar];

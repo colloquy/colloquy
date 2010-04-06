@@ -88,6 +88,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 @property (nonatomic, readonly) UIImage *icon;
 @property (nonatomic, readonly) BOOL available;
 @property (nonatomic, readonly) NSStringEncoding encoding;
+@property (nonatomic, readonly) NSArray *currentViewToolbarItems;
 
 @optional
 - (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection;

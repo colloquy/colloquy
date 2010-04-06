@@ -257,6 +257,41 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	return [state autorelease];
 }
 
+- (NSArray *) currentViewToolbarItems {
+	UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+	titleLabel.backgroundColor = [UIColor clearColor];
+	titleLabel.textColor = [UIColor colorWithRed:(113 / 255) green:(120 / 255) blue:(128 / 255) alpha:.5];
+	titleLabel.font = [UIFont boldSystemFontOfSize:20.];
+	titleLabel.text = [NSString stringWithFormat:@"%@ (%@)", self.user.displayName.length ? self.user.displayName : nil, self.connection.displayName];
+
+	[titleLabel sizeToFit];
+
+	UIBarButtonItem *titleButton = [[UIBarButtonItem alloc] initWithCustomView:titleLabel];
+	titleButton.tag = ToolbarTitleButtonTag;
+
+	UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+	UIBarButtonItem *lastButton = nil;
+
+	if (self.connection.connected) {
+		lastButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showUserInformation)];
+		lastButton.accessibilityLabel = NSLocalizedString(@"User Information", @"Voiceover user information label");
+	} else {
+		lastButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", "Connect button title") style:UIBarButtonItemStyleDone target:self.connection action:@selector(connect)];
+		lastButton.accessibilityLabel = NSLocalizedString(@"Connect to Server", @"Voiceover connect to server label");
+	}
+
+	lastButton.tag = ToolbarLastButtonTag;
+
+	NSArray *currentViewToolbarItems = [NSArray arrayWithObjects:flexibleSpace, titleButton, flexibleSpace, lastButton, nil];
+
+	[titleLabel release];
+	[titleButton release];
+	[flexibleSpace release];
+	[lastButton release];
+
+	return currentViewToolbarItems;
+}
+
 #pragma mark -
 
 - (UIActionSheet *) actionSheet {
@@ -1288,7 +1323,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showUserInformation)];
 		item.accessibilityLabel = NSLocalizedString(@"User Information", @"Voiceover user information label");
 	} else {
-		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", "Connect button title") style:UIBarButtonItemStyleDone target:self.connection action:@selector(connect)];		item.accessibilityLabel = NSLocalizedString(@"Connect to Server", @"Voiceover connect to server label");
+		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", "Connect button title") style:UIBarButtonItemStyleDone target:self.connection action:@selector(connect)];
+		item.accessibilityLabel = NSLocalizedString(@"Connect to Server", @"Voiceover connect to server label");
 	}
 
 	[self.navigationItem setRightBarButtonItem:item animated:animated];

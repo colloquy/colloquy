@@ -12,6 +12,7 @@
 	BOOL _parting;
 	NSUInteger _joinCount;
 	CQChatUserListViewController *_currentUserListViewController;
+	UIPopoverController *_currentUserListPopoverController;
 }
 - (MVChatRoom *) room;
 

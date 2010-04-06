@@ -10,4 +10,5 @@
 - (void) setStandardToolbarItems:(NSArray *) items animated:(BOOL) animated;
 
 @property (nonatomic, retain) id <CQChatViewController> topChatViewController;
+@property (nonatomic, readonly) NSArray *currentViewToolbarItems;
 @end

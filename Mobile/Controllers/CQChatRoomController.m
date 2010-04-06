@@ -4,6 +4,7 @@
 #import "CQChatUserListViewController.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
+#import "CQChatPresentationController.h"
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
 
@@ -172,6 +173,25 @@ static BOOL showLeaveEvents;
 	return state;
 }
 
+- (NSArray *) currentViewToolbarItems {
+	NSMutableArray *currentViewToolbarItems = [NSMutableArray arrayWithArray:[super currentViewToolbarItems]];
+
+	for (UIBarButtonItem *toolbarItem in currentViewToolbarItems) {
+		if (toolbarItem.tag == ToolbarTitleButtonTag) {
+			UILabel *titleLabel = (UILabel *)toolbarItem.customView;
+			titleLabel.text = [NSString stringWithFormat:@"%@ (%@)", self.room.displayName, self.connection.displayName];
+			[titleLabel sizeToFit];
+
+			toolbarItem.customView = titleLabel;
+		} else if (toolbarItem.tag == ToolbarLastButtonTag && self.connection.connected) {
+			toolbarItem.image = [UIImage imageNamed:@"members.png"];
+			toolbarItem.action = @selector(showMembers);
+		}
+	}
+
+	return currentViewToolbarItems;
+}
+
 #pragma mark -
 
 - (void) join {
@@ -211,11 +231,20 @@ static BOOL showLeaveEvents;
 }
 
 - (void) showMembers {
-	if (!self.navigationController || _showingMembersInNavigationController)
-		return;
+	if ([[UIDevice currentDevice] isPadModel]) {
+		if (!_currentUserListPopoverController)
+			_currentUserListPopoverController = [[UIPopoverController alloc] initWithContentViewController:self.detailViewController];
+		if (!_currentUserListPopoverController.popoverVisible) {
+			UIBarButtonItem *membersButton = [((CQChatPresentationController *)[CQChatController defaultController].chatPresentationController).currentViewToolbarItems lastObject];
+			[_currentUserListPopoverController presentPopoverFromBarButtonItem:membersButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+		}
+	} else {
+		if (!self.navigationController || _showingMembersInNavigationController)
+			return;
 
-	_showingMembersInNavigationController = YES;
-	[self.navigationController pushViewController:self.detailViewController animated:YES];
+		_showingMembersInNavigationController = YES;
+		[self.navigationController pushViewController:self.detailViewController animated:YES];
+	}
 }
 
 #pragma mark -

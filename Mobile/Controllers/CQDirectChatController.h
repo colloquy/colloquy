@@ -6,6 +6,9 @@
 #define ReconnectAlertTag 1
 #define RejoinRoomAlertTag 2
 
+#define ToolbarTitleButtonTag 1
+#define ToolbarLastButtonTag 2
+
 @class CQChatTableCell;
 @class CQStyleView;
 @class CQChatInputBar;
