@@ -249,6 +249,13 @@ static BOOL showLeaveEvents;
 
 #pragma mark -
 
+- (void) hideCurrentUserListPopoverController {
+	if (_currentUserListPopoverController.popoverVisible)
+		[_currentUserListPopoverController dismissPopoverAnimated:YES];
+}
+
+#pragma mark -
+
 - (UIViewController *) detailViewController {
 	if (!_currentUserListViewController) {
 		if (_membersNeedSorted)

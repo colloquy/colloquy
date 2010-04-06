@@ -3,7 +3,7 @@
 #import "CQActionSheet.h"
 #import "CQChatController.h"
 #import "CQColloquyApplication.h"
-#import "CQDirectChatController.h"
+#import "CQChatRoomController.h"
 #import "CQUserInfoController.h"
 #import "CQUserInfoViewController.h"
 
@@ -444,6 +444,13 @@ static NSString *membersFilteredCountFormat;
 
 	if (actionSheet.tag == UserActionSheetTag) {
 		if (buttonIndex == SendMessageButtonIndex) {
+			if ([[UIDevice currentDevice] isPadModel]) {
+				id <CQChatViewController> controller = [[CQChatController defaultController] chatViewControllerForRoom:_room ifExists:YES];
+
+				if (controller)
+					[(CQChatRoomController *)controller hideCurrentUserListPopoverController];
+			}
+
 			[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
 
 			CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];

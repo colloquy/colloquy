@@ -22,4 +22,6 @@
 - (void) didJoin;
 
 @property (nonatomic, readonly) UIViewController *detailViewController;
+
+- (void) hideCurrentUserListPopoverController;
 @end
