@@ -471,7 +471,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 - (void) showWelcome:(id) sender {
 	CQWelcomeController *welcomeController = [[CQWelcomeController alloc] init];
-	welcomeController.shouldShowConnections = NO;
 
 	[self presentModalViewController:welcomeController animated:YES];
 
@@ -494,6 +493,10 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 - (void) showColloquies:(id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
+		if (UIInterfaceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
+			UIBarButtonItem *connectionsButton = [[CQChatController defaultController].chatPresentationController.standardToolbarItems objectAtIndex:0];
+			[connectionsButton.target performSelector:connectionsButton.action withObject:nil];
+		}
 	} else {
 		self.tabBarController.selectedViewController = [CQChatController defaultController].chatNavigationController;
 		[[CQChatController defaultController].chatNavigationController popToRootViewControllerAnimated:YES];
