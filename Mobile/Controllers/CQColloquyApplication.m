@@ -482,8 +482,10 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if ([[UIDevice currentDevice] isPadModel]) {
 		if (!_connectionsPopoverController)
 			_connectionsPopoverController = [[UIPopoverController alloc] initWithContentViewController:[CQConnectionsController defaultController].connectionsNavigationController];
-		if (!_connectionsPopoverController.popoverVisible)
-			[_connectionsPopoverController presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+		if (!_connectionsPopoverController.popoverVisible) {
+			UIBarButtonItem *connectionsButton = [[CQChatController defaultController].chatPresentationController.standardToolbarItems lastObject];
+			[_connectionsPopoverController presentPopoverFromBarButtonItem:connectionsButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+		}
 	} else {
 		[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
 		self.tabBarController.selectedViewController = [CQConnectionsController defaultController].connectionsNavigationController;
