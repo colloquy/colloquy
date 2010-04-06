@@ -68,7 +68,7 @@
 
 - (void) close:(id) sender {
 	if (!_shouldShowOnlyHelpTopics)
-		[[CQColloquyApplication sharedApplication] showColloquies:nil];
+		[[CQColloquyApplication sharedApplication] showConnections:nil];
 
 	[self dismissModalViewControllerAnimated:YES];
 }

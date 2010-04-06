@@ -141,7 +141,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 	[_connection connect];
 
-	[[CQColloquyApplication sharedApplication] showConnections:nil];
+	[[CQColloquyApplication sharedApplication] showColloquies:nil];
 
 	[self dismissModalViewControllerAnimated:YES];
 }
