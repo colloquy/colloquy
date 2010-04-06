@@ -18,13 +18,12 @@ static NSString *membersFilteredCountFormat;
 #define OperatorActionSheetTag 2
 
 #define SendMessageButtonIndex 0
+#define UserInfoButtonIndex 1
 
 #if ENABLE(FILE_TRANSFERS)
-#define SendFileButtonIndex 1
-#define OperatorActionsButtonIndex 2
+#define FileTransfersEnabled 1
 #else
-#define SendFileButtonIndex NSNotFound
-#define OperatorActionsButtonIndex 1
+#define FileTransfersEnabled 0
 #endif
 
 @implementation CQChatUserListViewController
@@ -53,6 +52,20 @@ static NSString *membersFilteredCountFormat;
 	[_searchBar release];
 
 	[super dealloc];
+}
+
+#pragma mark -
+
+- (NSInteger) sendFileButtonIndex {
+	if ([[UIDevice currentDevice] isPadModel])
+		return FileTransfersEnabled ? 3 : 2;
+	else return FileTransfersEnabled ? 2 : NSNotFound;
+}
+
+- (NSInteger) operatorActionsButtonIndex {
+	if ([[UIDevice currentDevice] isPadModel])
+		return FileTransfersEnabled ? 3 : 2;
+	else return FileTransfersEnabled ? 2 : 1;
 }
 
 #pragma mark -
@@ -350,8 +363,9 @@ static NSString *membersFilteredCountFormat;
 	} else {
 		cell.imageView.image = [UIImage imageNamed:@"userNormal.png"];
 	}
-	
-	cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+
+	if (![[UIDevice currentDevice] isPadModel])
+		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
 	return cell;
 }
@@ -372,6 +386,9 @@ static NSString *membersFilteredCountFormat;
 	BOOL showOperatorActions = (localUserModes & (MVChatRoomMemberHalfOperatorMode | MVChatRoomMemberOperatorMode | MVChatRoomMemberAdministratorMode | MVChatRoomMemberFounderMode));
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"Send Message", @"Send Message button title")];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
 
 #if ENABLE(FILE_TRANSFERS)
 	[sheet addButtonWithTitle:NSLocalizedString(@"Send File", @"Send File button title")];
@@ -431,11 +448,18 @@ static NSString *membersFilteredCountFormat;
 
 			CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
 			[[CQChatController defaultController] showChatController:chatController animated:YES];
+		} else if (buttonIndex == UserInfoButtonIndex) {
+			CQUserInfoController *userInfoController = [[CQUserInfoController alloc] init];
+			userInfoController.user = user;
+
+			[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
+
+			[userInfoController release];
 #if ENABLE(FILE_TRANSFERS)
 		} else if (buttonIndex == SendFileButtonIndex) {
 			[[CQChatController defaultController] showFilePickerWithUser:user];
 #endif
-		} else if (buttonIndex == OperatorActionsButtonIndex) {
+		} else if (buttonIndex == [self operatorActionsButtonIndex]) {
 			NSSet *features = _room.connection.supportedFeatures;
 
 			NSUInteger localUserModes = (_room.connection.localUser ? [_room modesForMemberUser:_room.connection.localUser] : 0);
@@ -520,7 +544,7 @@ static NSString *membersFilteredCountFormat;
 			[operatorSheet release];
 			[context release];
 		}
-	} else if (actionSheet.tag == OperatorActionSheetTag) {
+	} else if (actionSheet.tag == [self operatorActionsButtonIndex]) {
 		[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
 
 		id action = [((CQActionSheet *)actionSheet).userInfo objectForKey:[NSNumber numberWithUnsignedInteger:buttonIndex]];
