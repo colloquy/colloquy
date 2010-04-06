@@ -179,7 +179,7 @@ static BOOL showLeaveEvents;
 	for (UIBarButtonItem *toolbarItem in currentViewToolbarItems) {
 		if (toolbarItem.tag == ToolbarTitleButtonTag) {
 			UILabel *titleLabel = (UILabel *)toolbarItem.customView;
-			titleLabel.text = [NSString stringWithFormat:@"%@ (%@)", self.room.displayName, self.connection.displayName];
+			titleLabel.text = self.room.displayName;
 			[titleLabel sizeToFit];
 
 			toolbarItem.customView = titleLabel;

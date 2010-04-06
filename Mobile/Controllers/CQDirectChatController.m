@@ -262,7 +262,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	titleLabel.backgroundColor = [UIColor clearColor];
 	titleLabel.textColor = [UIColor colorWithRed:(113 / 255) green:(120 / 255) blue:(128 / 255) alpha:.5];
 	titleLabel.font = [UIFont boldSystemFontOfSize:20.];
-	titleLabel.text = [NSString stringWithFormat:@"%@ (%@)", self.user.displayName.length ? self.user.displayName : nil, self.connection.displayName];
+	titleLabel.text = self.user.displayName.length ? self.user.displayName : nil;
 
 	[titleLabel sizeToFit];
 
@@ -273,7 +273,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	UIBarButtonItem *lastButton = nil;
 
 	if (self.connection.connected) {
-		lastButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showUserInformation)];
+		lastButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserInformation)];
 		lastButton.accessibilityLabel = NSLocalizedString(@"User Information", @"Voiceover user information label");
 	} else {
 		lastButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", "Connect button title") style:UIBarButtonItemStyleDone target:self.connection action:@selector(connect)];
