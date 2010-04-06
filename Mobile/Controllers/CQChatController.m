@@ -107,8 +107,12 @@ static CQSoundController *fileTransferSound;
 
 	_chatNavigationController = [[CQChatNavigationController alloc] init];
 
-	if ([[UIDevice currentDevice] isPadModel])
+	if ([[UIDevice currentDevice] isPadModel]) {
 		_chatPresentationController = [[CQChatPresentationController alloc] init];
+
+		[[NSNotificationCenter defaultCenter] addObserver:_chatPresentationController selector:@selector(reloadToolbar) name:MVChatConnectionDidConnectNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:_chatPresentationController selector:@selector(reloadToolbar) name:MVChatConnectionDidDisconnectNotification object:nil];
+	}
 
 	_chatControllers = [[NSMutableArray alloc] init];
 
@@ -127,6 +131,7 @@ static CQSoundController *fileTransferSound;
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:_chatPresentationController];
 
 	[_chatNavigationController release];
 	[_chatPresentationController release];

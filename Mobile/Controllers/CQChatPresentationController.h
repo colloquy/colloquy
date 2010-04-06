@@ -11,4 +11,6 @@
 
 @property (nonatomic, retain) id <CQChatViewController> topChatViewController;
 @property (nonatomic, readonly) NSArray *currentViewToolbarItems;
+
+- (void) reloadToolbar;
 @end

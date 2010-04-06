@@ -84,6 +84,14 @@
 
 @synthesize topChatViewController = _topChatViewController;
 
+- (void) reloadToolbar {
+	id oldToolbarItems = _currentViewToolbarItems;
+	_currentViewToolbarItems = [_topChatViewController.currentViewToolbarItems retain];
+	[oldToolbarItems release];
+
+	[self setStandardToolbarItems:_standardToolbarItems animated:YES];	
+}
+
 - (void) setTopChatViewController:(id <CQChatViewController>) chatViewController {
 	if (chatViewController == _topChatViewController)
 		return;
@@ -110,11 +118,7 @@
 	frame.size.width = [UIScreen mainScreen].applicationFrame.size.width;
 	view.frame = frame;
 
-	id oldToolbarItems = _currentViewToolbarItems;
-	_currentViewToolbarItems = [chatViewController.currentViewToolbarItems retain];
-	[oldToolbarItems release];
-
-	[self setStandardToolbarItems:_standardToolbarItems animated:YES];
+	[self reloadToolbar];
 
 	[_topChatViewController viewWillAppear:NO];
 	[self.view insertSubview:view aboveSubview:_toolbar];
