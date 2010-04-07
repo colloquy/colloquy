@@ -7,6 +7,7 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 	UIWindow *_mainWindow;
 	UIViewController *_mainViewController;
 	UIPopoverController *_connectionsPopoverController;
+	UIPopoverController *_colloquiesPopoverController;
 	UIToolbar *_toolbar;
 	NSDate *_launchDate;
 	NSString *_deviceToken;

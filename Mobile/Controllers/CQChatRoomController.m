@@ -237,7 +237,7 @@ static BOOL showLeaveEvents;
 		if (!_currentUserListPopoverController.popoverVisible) {
 			UIBarButtonItem *membersButton = [((CQChatPresentationController *)[CQChatController defaultController].chatPresentationController).currentViewToolbarItems lastObject];
 			[_currentUserListPopoverController presentPopoverFromBarButtonItem:membersButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-		}
+		} else [self hideCurrentUserListPopoverController];
 	} else {
 		if (!self.navigationController || _showingMembersInNavigationController)
 			return;
