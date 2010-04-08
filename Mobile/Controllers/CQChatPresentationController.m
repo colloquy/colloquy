@@ -15,7 +15,6 @@
 - (void) dealloc {
 	[_toolbar release];
 	[_standardToolbarItems release];
-	[_currentViewToolbarItems release];
 
     [super dealloc];
 }
@@ -23,7 +22,7 @@
 #pragma mark -
 
 - (void) loadView {
-	UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
+	UIView *view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	self.view = view;
 
 	view.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
@@ -34,6 +33,7 @@
 	_toolbar.layer.shadowRadius = 3.;
 	_toolbar.layer.shadowOffset = CGSizeMake(0., 0.);
 	_toolbar.items = _standardToolbarItems;
+	_toolbar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin);
 
 	[_toolbar sizeToFit];
 
@@ -53,13 +53,47 @@
 	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
 }
 
-- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-	[_toolbar performSelector:@selector(sizeToFit) withObject:nil afterDelay:.08];
+#pragma mark -
+
+- (void) updateToolbarAnimated:(BOOL) animated {
+	NSMutableArray *allItems = [_standardToolbarItems mutableCopy];
+
+	UIBarButtonItem *leftBarButtonItem = _topChatViewController.navigationItem.leftBarButtonItem;
+	if (leftBarButtonItem)
+		[allItems addObject:leftBarButtonItem];
+
+	NSString *title = _topChatViewController.navigationItem.title;
+	if (title.length) {
+		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+		titleLabel.backgroundColor = [UIColor clearColor];
+		titleLabel.textColor = [UIColor colorWithRed:(113 / 255) green:(120 / 255) blue:(128 / 255) alpha:.5];
+		titleLabel.font = [UIFont boldSystemFontOfSize:20.];
+		titleLabel.text = _topChatViewController.navigationItem.title;
+
+		[titleLabel sizeToFit];
+
+		UIBarButtonItem *titleItem = [[UIBarButtonItem alloc] initWithCustomView:titleLabel];
+		UIBarButtonItem *flexibleSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+
+		[allItems addObject:flexibleSpaceItem];
+		[allItems addObject:titleItem];
+		[allItems addObject:flexibleSpaceItem];
+
+		[titleItem release];
+		[flexibleSpaceItem release];
+	}
+
+	[allItems addObjectsFromArray:_topChatViewController.toolbarItems];
+
+	UIBarButtonItem *rightBarButtonItem = _topChatViewController.navigationItem.rightBarButtonItem;
+	if (rightBarButtonItem)
+		[allItems addObject:rightBarButtonItem];
+
+	[_toolbar setItems:allItems animated:animated];
 }
 
 #pragma mark -
 
-@synthesize currentViewToolbarItems = _currentViewToolbarItems;
 @synthesize standardToolbarItems = _standardToolbarItems;
 
 - (void) setStandardToolbarItems:(NSArray *) items {
@@ -73,21 +107,12 @@
 	_standardToolbarItems = [items copy];
 	[old release];
 
-	NSArray *allItems = [_standardToolbarItems arrayByAddingObjectsFromArray:_currentViewToolbarItems];
-	[_toolbar setItems:allItems animated:animated];
+	[self updateToolbarAnimated:animated];
 }
 
 #pragma mark -
 
 @synthesize topChatViewController = _topChatViewController;
-
-- (void) reloadToolbar {
-	id oldToolbarItems = _currentViewToolbarItems;
-	_currentViewToolbarItems = [_topChatViewController.currentViewToolbarItems retain];
-	[oldToolbarItems release];
-
-	[self setStandardToolbarItems:_standardToolbarItems animated:YES];	
-}
 
 - (void) setTopChatViewController:(id <CQChatViewController>) chatViewController {
 	if (chatViewController == _topChatViewController)
@@ -114,10 +139,9 @@
 	CGRect frame = self.view.bounds;
 	frame.origin.y += _toolbar.frame.size.height;
 	frame.size.height -= _toolbar.frame.size.height;
-	frame.size.width = [UIScreen mainScreen].applicationFrame.size.width;
 	view.frame = frame;
 
-	[self reloadToolbar];
+	[self updateToolbarAnimated:NO];
 
 	[_topChatViewController viewWillAppear:NO];
 	[self.view insertSubview:view aboveSubview:_toolbar];

@@ -1,10 +1,10 @@
 #import "CQChatRoomController.h"
 
 #import "CQChatController.h"
+#import "CQChatPresentationController.h"
 #import "CQChatUserListViewController.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
-#import "CQChatPresentationController.h"
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
 
@@ -172,25 +172,6 @@ static BOOL showLeaveEvents;
 	return state;
 }
 
-- (NSArray *) currentViewToolbarItems {
-	NSMutableArray *currentViewToolbarItems = [NSMutableArray arrayWithArray:[super currentViewToolbarItems]];
-
-	for (UIBarButtonItem *toolbarItem in currentViewToolbarItems) {
-		if (toolbarItem.tag == ToolbarTitleButtonTag) {
-			UILabel *titleLabel = (UILabel *)toolbarItem.customView;
-			titleLabel.text = self.room.displayName;
-			[titleLabel sizeToFit];
-
-			toolbarItem.customView = titleLabel;
-		} else if (toolbarItem.tag == ToolbarLastButtonTag && self.connection.connected) {
-			toolbarItem.image = [UIImage imageNamed:@"members.png"];
-			toolbarItem.action = @selector(showMembers);
-		}
-	}
-
-	return currentViewToolbarItems;
-}
-
 #pragma mark -
 
 - (void) join {
@@ -248,8 +229,7 @@ static BOOL showLeaveEvents;
 		if (!_currentUserListPopoverController.popoverVisible) {
 			[[CQColloquyApplication sharedApplication] dismissPopoversAnimated:NO];
 
-			UIBarButtonItem *membersButton = [((CQChatPresentationController *)[CQChatController defaultController].chatPresentationController).currentViewToolbarItems lastObject];
-			[_currentUserListPopoverController presentPopoverFromBarButtonItem:membersButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+			[_currentUserListPopoverController presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 		} else [_currentUserListPopoverController dismissPopoverAnimated:YES];
 	} else {
 		if (!self.navigationController || _showingMembersInNavigationController)
@@ -948,9 +928,10 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 - (void) _updateRightBarButtonItemAnimated:(BOOL) animated {
 	UIBarButtonItem *item = nil;
 	BOOL isConnected = self.connection.connected;
-	
+
 	if (isConnected) {
-		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showMembers)];
+		UIBarButtonItemStyle style = ([[UIDevice currentDevice] isPadModel] ? UIBarButtonItemStylePlain : UIBarButtonItemStyleBordered);
+		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:style target:self action:@selector(showMembers)];
 		item.accessibilityLabel = NSLocalizedString(@"Members List", @"Voiceover members list label");
 	} else {
 		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Join", "Join button title") style:UIBarButtonItemStyleDone target:self action:@selector(join)];	
@@ -958,6 +939,9 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	}
 
 	[self.navigationItem setRightBarButtonItem:item animated:animated];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[[CQChatController defaultController].chatPresentationController updateToolbarAnimated:YES];
 
 	[item release];
 }
