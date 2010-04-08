@@ -36,6 +36,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) dealloc {
 	[_mainWindow release];
 	[_mainViewController release];
+	[_colloquiesPopoverController release];
 	[_connectionsPopoverController release];
 	[_launchDate release];
 	[_deviceToken release];
@@ -350,7 +351,15 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) splitViewController:(UISplitViewController *) splitViewController willHideViewController:(UIViewController *) viewController withBarButtonItem:(UIBarButtonItem *) barButtonItem forPopoverController:(UIPopoverController *) popoverController {
 	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;
 	NSMutableArray *items = [chatPresentationController.standardToolbarItems mutableCopy];
-	_colloquiesPopoverController = popoverController;
+
+	if (viewController == [CQChatController defaultController].chatNavigationController) {
+		id old = _colloquiesPopoverController;
+		_colloquiesPopoverController = [popoverController retain];
+		[old release];
+
+		[barButtonItem setAction:@selector(showColloquies:)];
+		[barButtonItem setTarget:self];
+	}
 
 	[items insertObject:barButtonItem atIndex:0];
 
@@ -363,23 +372,16 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;
 	NSMutableArray *items = [chatPresentationController.standardToolbarItems mutableCopy];
 
+	if (viewController == [CQChatController defaultController].chatNavigationController) {
+		[_colloquiesPopoverController release];
+		_colloquiesPopoverController = nil;
+	}
+
 	[items removeObjectIdenticalTo:barButtonItem];
 
 	[chatPresentationController setStandardToolbarItems:items animated:NO];
 
 	[items release];
-}
-
-- (void)splitViewController:(UISplitViewController *) splitViewController popoverController:(UIPopoverController *) popoverController willPresentViewController:(UIViewController *) viewController {
-	static BOOL changedAction = NO;
-
-	if (!changedAction && UIInterfaceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
-		UIBarButtonItem *connectionsButton = [[CQChatController defaultController].chatPresentationController.standardToolbarItems objectAtIndex:0];
-		connectionsButton.target = self;
-		connectionsButton.action = @selector(showColloquies:);
-
-		changedAction = YES;
-	}
 }
 
 #pragma mark -
@@ -490,26 +492,16 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[welcomeController release];
 }
 
-- (void) hideConnections:(id) sender {
-	if (_connectionsPopoverController.popoverVisible)
-		[_connectionsPopoverController dismissPopoverAnimated:YES];
-}
-
-- (void) hideColloquies:(id) sender {
-	if (_colloquiesPopoverController.popoverVisible)
-		[_colloquiesPopoverController dismissPopoverAnimated:YES];
-}
-
 - (void) showConnections:(id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
 		if (!_connectionsPopoverController)
 			_connectionsPopoverController = [[UIPopoverController alloc] initWithContentViewController:[CQConnectionsController defaultController].connectionsNavigationController];
 		if (!_connectionsPopoverController.popoverVisible) {
+			[self dismissPopoversAnimated:NO];
+
 			UIBarButtonItem *connectionsButton = [[CQChatController defaultController].chatPresentationController.standardToolbarItems lastObject];
 			[_connectionsPopoverController presentPopoverFromBarButtonItem:connectionsButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-
-			[self hideColloquies:nil];
-		} else [self hideConnections:nil];
+		} else [_connectionsPopoverController dismissPopoverAnimated:YES];
 	} else {
 		[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
 		self.tabBarController.selectedViewController = [CQConnectionsController defaultController].connectionsNavigationController;
@@ -520,16 +512,25 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if ([[UIDevice currentDevice] isPadModel]) {
 		if (UIInterfaceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
 			if (!_colloquiesPopoverController.popoverVisible) {
+				[self dismissPopoversAnimated:NO];
+
 				UIBarButtonItem *connectionsButton = [[CQChatController defaultController].chatPresentationController.standardToolbarItems objectAtIndex:0];
 				[_colloquiesPopoverController presentPopoverFromBarButtonItem:connectionsButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-
-				[self hideConnections:nil];
-			} else [self hideColloquies:nil];
+			} else [_colloquiesPopoverController dismissPopoverAnimated:YES];
 		}
 	} else {
 		self.tabBarController.selectedViewController = [CQChatController defaultController].chatNavigationController;
 		[[CQChatController defaultController].chatNavigationController popToRootViewControllerAnimated:YES];
 	}
+}
+
+- (void) dismissPopoversAnimated:(BOOL) animated {
+	[_colloquiesPopoverController dismissPopoverAnimated:animated];
+	[_connectionsPopoverController dismissPopoverAnimated:animated];
+
+	id <CQChatViewController> controller = [CQChatController defaultController].visibleChatController;
+	if ([controller respondsToSelector:@selector(dismissPopoversAnimated:)])
+		[controller dismissPopoversAnimated:animated];
 }
 
 #pragma mark -

@@ -94,14 +94,11 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 - (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection;
 - (void) close;
 
+- (void) dismissPopoversAnimated:(BOOL) animated;
+
 @property (nonatomic, readonly) NSDictionary *persistentState;
 @property (nonatomic, readonly) NSUInteger unreadCount;
 @property (nonatomic, readonly) NSUInteger importantUnreadCount;
-
-@property (nonatomic, readonly) UIViewController *detailViewController;
-
-- (void) detailViewWillShow:(BOOL) animated;
-- (void) detailViewDidHide:(BOOL) animated;
 
 @property (nonatomic, readonly) UIActionSheet *actionSheet;
 @end

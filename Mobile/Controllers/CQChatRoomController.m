@@ -110,6 +110,7 @@ static BOOL showLeaveEvents;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[_orderedMembers release];
+	[_currentUserListPopoverController release];
 	[_currentUserListViewController release];
 
 	[super dealloc];
@@ -130,7 +131,7 @@ static BOOL showLeaveEvents;
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
-	if (!_currentUserListViewController)
+	if (!_showingMembersInNavigationController)
 		[[CQColloquyApplication sharedApplication] showTabBarWithTransition:YES];
 }
 
@@ -165,8 +166,6 @@ static BOOL showLeaveEvents;
 
 	if (self.room)
 		[state setObject:self.room.name forKey:@"room"];
-	if (_currentUserListViewController)
-		[state setObject:[NSNumber numberWithBool:YES] forKey:@"active"];
 	if (_joined)
 		[state setObject:[NSNumber numberWithBool:YES] forKey:@"joined"];
 
@@ -231,32 +230,6 @@ static BOOL showLeaveEvents;
 }
 
 - (void) showMembers {
-	if ([[UIDevice currentDevice] isPadModel]) {
-		if (!_currentUserListPopoverController)
-			_currentUserListPopoverController = [[UIPopoverController alloc] initWithContentViewController:self.detailViewController];
-		if (!_currentUserListPopoverController.popoverVisible) {
-			UIBarButtonItem *membersButton = [((CQChatPresentationController *)[CQChatController defaultController].chatPresentationController).currentViewToolbarItems lastObject];
-			[_currentUserListPopoverController presentPopoverFromBarButtonItem:membersButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-		} else [self hideCurrentUserListPopoverController];
-	} else {
-		if (!self.navigationController || _showingMembersInNavigationController)
-			return;
-
-		_showingMembersInNavigationController = YES;
-		[self.navigationController pushViewController:self.detailViewController animated:YES];
-	}
-}
-
-#pragma mark -
-
-- (void) hideCurrentUserListPopoverController {
-	if (_currentUserListPopoverController.popoverVisible)
-		[_currentUserListPopoverController dismissPopoverAnimated:YES];
-}
-
-#pragma mark -
-
-- (UIViewController *) detailViewController {
 	if (!_currentUserListViewController) {
 		if (_membersNeedSorted)
 			[self _sortMembers];
@@ -266,13 +239,31 @@ static BOOL showLeaveEvents;
 		_currentUserListViewController.room = self.room;
 	}
 
-	return _currentUserListViewController;
+	if ([[UIDevice currentDevice] isPadModel]) {
+		if (!_currentUserListPopoverController) {
+			_currentUserListPopoverController = [[UIPopoverController alloc] initWithContentViewController:_currentUserListViewController];
+			_currentUserListPopoverController.delegate = self;
+		}
+
+		if (!_currentUserListPopoverController.popoverVisible) {
+			[[CQColloquyApplication sharedApplication] dismissPopoversAnimated:NO];
+
+			UIBarButtonItem *membersButton = [((CQChatPresentationController *)[CQChatController defaultController].chatPresentationController).currentViewToolbarItems lastObject];
+			[_currentUserListPopoverController presentPopoverFromBarButtonItem:membersButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+		} else [_currentUserListPopoverController dismissPopoverAnimated:YES];
+	} else {
+		if (!self.navigationController || _showingMembersInNavigationController)
+			return;
+
+		_showingMembersInNavigationController = YES;
+		[self.navigationController pushViewController:_currentUserListViewController animated:YES];
+	}
 }
 
-- (void) detailViewDidHide:(BOOL) animated {
-	id old = _currentUserListViewController;
-	_currentUserListViewController = nil;
-	[old release];
+#pragma mark -
+
+- (void) dismissPopoversAnimated:(BOOL) animated {
+	[_currentUserListPopoverController dismissPopoverAnimated:animated];
 }
 
 #pragma mark -
@@ -299,6 +290,13 @@ static BOOL showLeaveEvents;
 	}
 
 	return NO;
+}
+
+- (void) popoverControllerDidDismissPopover:(UIPopoverController *) popoverController {
+	if (popoverController == _currentUserListPopoverController) {
+		[_currentUserListViewController release];
+		_currentUserListViewController = nil;
+	}
 }
 
 #pragma mark -

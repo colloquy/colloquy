@@ -21,6 +21,8 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 - (void) showConnections:(id) sender;
 - (void) showColloquies:(id) sender;
 
+- (void) dismissPopoversAnimated:(BOOL) animated;
+
 - (BOOL) isSpecialApplicationURL:(NSURL *) url;
 - (NSString *) applicationNameForURL:(NSURL *) url;
 

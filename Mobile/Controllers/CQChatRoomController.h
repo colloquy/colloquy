@@ -2,7 +2,7 @@
 
 @class CQChatUserListViewController;
 
-@interface CQChatRoomController : CQDirectChatController {
+@interface CQChatRoomController : CQDirectChatController <UIPopoverControllerDelegate> {
 	@protected
 	NSMutableArray *_orderedMembers;
 	BOOL _showingMembersInNavigationController;
@@ -20,8 +20,4 @@
 - (void) part;
 
 - (void) didJoin;
-
-@property (nonatomic, readonly) UIViewController *detailViewController;
-
-- (void) hideCurrentUserListPopoverController;
 @end

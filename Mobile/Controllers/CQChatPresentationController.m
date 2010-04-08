@@ -100,6 +100,8 @@
 
 	if (oldViewController) {
 		[oldViewController viewWillDisappear:NO];
+		if ([oldViewController respondsToSelector:@selector(dismissPopoversAnimated:)])
+			[oldViewController dismissPopoversAnimated:NO];
 		[oldViewController.view removeFromSuperview];
 		[oldViewController viewDidDisappear:NO];
 	}
