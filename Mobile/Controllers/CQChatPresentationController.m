@@ -1,6 +1,5 @@
 #import "CQChatPresentationController.h"
 
-#import "CQColloquyApplication.h"
 #import "CQChatController.h"
 
 @implementation CQChatPresentationController
@@ -8,11 +7,7 @@
 	if (!(self = [super init]))
 		return nil;
 
-	UIBarButtonItem *connectionsButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connections", @"Connections button title") style:UIBarButtonItemStyleBordered target:[CQColloquyApplication sharedApplication] action:@selector(showConnections:)];
-
-	_standardToolbarItems = [[NSArray alloc] initWithObjects:connectionsButton, nil];
-
-	[connectionsButton release];
+	_standardToolbarItems = [[NSArray alloc] init];
 
 	return self;
 }
@@ -72,6 +67,8 @@
 }
 
 - (void) setStandardToolbarItems:(NSArray *) items animated:(BOOL) animated {
+	NSParameterAssert(items);
+
 	id old = _standardToolbarItems;
 	_standardToolbarItems = [items copy];
 	[old release];
