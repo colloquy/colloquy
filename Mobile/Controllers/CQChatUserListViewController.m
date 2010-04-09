@@ -7,6 +7,8 @@
 #import "CQUserInfoController.h"
 #import "CQUserInfoViewController.h"
 
+#import "UIViewControllerAdditions.h"
+
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatConnection.h>
@@ -89,6 +91,9 @@ static NSString *membersFilteredCountFormat;
 	UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Members", @"Members back button label") style:UIBarButtonItemStylePlain target:nil action:nil];
 	self.navigationItem.backBarButtonItem = backButton;
 	[backButton release];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 #pragma mark -
@@ -185,6 +190,8 @@ static NSString *membersFilteredCountFormat;
 
 	if (searchBarFocused)
 		[_searchBar becomeFirstResponder];
+	if ([[UIDevice currentDevice] isPadModel]) 
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 - (void) moveUserAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex {
@@ -224,6 +231,9 @@ static NSString *membersFilteredCountFormat;
 	[self _removeUserAtIndex:index withAnimation:UITableViewRowAnimationRight];
 	if (searchBarFocused)
 		[_searchBar becomeFirstResponder];
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
+
 }
 
 - (void) updateUserAtIndex:(NSUInteger) index {
@@ -330,6 +340,14 @@ static NSString *membersFilteredCountFormat;
 	[_searchBar becomeFirstResponder];
 
 	[previousUsersArray release];
+}
+
+#pragma mark -
+
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
+	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+
+	[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 #pragma mark -

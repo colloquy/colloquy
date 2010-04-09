@@ -9,6 +9,8 @@
 #import "CQFileTransferTableCell.h"
 #import "CQTableViewSectionHeader.h"
 
+#import "UIViewControllerAdditions.h"
+
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
@@ -395,6 +397,9 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
+
 	self.tableView.rowHeight = 62.;
 
 	if ([self.tableView respondsToSelector:@selector(addGestureRecognizer:)] && !_longPressGestureRecognizer) {
@@ -431,6 +436,13 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	_active = NO;
 }
 
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
+	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
+}
+
 #pragma mark -
 
 - (void) chatViewControllerAdded:(id) controller {
@@ -457,6 +469,9 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:changedIndexPath.section] withRowAnimation:UITableViewRowAnimationTop];
 		[self.tableView endUpdates];
 	} else [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 - (void) selectChatViewController:(id) controller animatedSelection:(BOOL) animatedSelection animatedScroll:(BOOL) animatedScroll {

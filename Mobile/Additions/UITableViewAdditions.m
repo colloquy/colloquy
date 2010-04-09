@@ -41,4 +41,13 @@
 
 	[delegate tableView:self performAction:action forRowAtIndexPath:indexPath withSender:sender];
 }
+
+- (NSUInteger) numberOfRows {
+	NSUInteger numberOfRows = 0;
+
+	for (NSInteger section = 0; section < [self numberOfSections]; section++)
+		numberOfRows += [self numberOfRowsInSection:section];
+
+	return numberOfRows;
+}
 @end

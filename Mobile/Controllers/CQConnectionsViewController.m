@@ -7,6 +7,8 @@
 #import "CQConnectionsController.h"
 #import "CQConnectionsNavigationController.h"
 
+#import "UIViewControllerAdditions.h"
+
 #import <ChatCore/MVChatConnection.h>
 
 #define ConnectSheetTag 1
@@ -96,6 +98,9 @@
 	[super viewDidLoad];
 
 	self.tableView.allowsSelectionDuringEditing = YES;
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -114,6 +119,13 @@
 	_active = NO;
 
 	[self _stopUpdatingConnectTimes];
+}
+
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
+	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 #pragma mark -
@@ -195,6 +207,9 @@
 		return;
 
 	[self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 - (void) connectionRemovedAtIndexPath:(NSIndexPath *) indexPath {
@@ -203,6 +218,9 @@
 		return;
 
 	[self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationTop];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 - (void) connectionMovedFromIndexPath:(NSIndexPath *) oldIndexPath toIndexPath:(NSIndexPath *) newIndexPath {
