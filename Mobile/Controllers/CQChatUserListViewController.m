@@ -347,7 +347,8 @@ static NSString *membersFilteredCountFormat;
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
 	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 
-	[self resizeForViewInPopoverUsingTableView:self.tableView];
+	if ([[UIDevice currentDevice] isPadModel])
+		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
 
 #pragma mark -
