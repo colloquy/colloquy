@@ -1,11 +1,8 @@
 #import "CQAlertView.h"
 
 #define TextFieldHorizontalMargin 20
-#define TextFieldWidth 244
 #define TextFieldHeight 25
 #define TextFieldHeightWithSeparator 35
-
-#define AlertViewVerticalMovement 150
 
 @implementation CQAlertView
 - (id) init {
@@ -39,6 +36,10 @@
 
 #pragma mark -
 
+- (CGFloat) alertViewVerticalOffset {
+	return ([[UIDevice currentDevice] isPadModel]) ? 150 : 5;
+}
+
 - (void) layoutSubviews {
 	CGFloat yConstant = 0.;
 	CGRect rect = self.bounds;
@@ -56,9 +57,10 @@
 	}
 
 	// Make sure we finished calculating the title + message label heights (yConstant) before moving the buttons down
+	CGFloat verticalButtonOffset = (TextFieldHeightWithSeparator * inputFieldCount);
 	for (UIView *button in buttons) {
 		rect = button.frame;
-		button.frame = CGRectMake(rect.origin.x, rect.origin.y + (TextFieldHeightWithSeparator * inputFieldCount), rect.size.width, rect.size.height);
+		button.frame = CGRectMake(rect.origin.x, rect.origin.y + verticalButtonOffset, rect.size.width, rect.size.height);
 	}
 
 	[super layoutSubviews];
@@ -66,9 +68,10 @@
 	[buttons release];
 
 	UITextField *field = nil;
+	CGFloat textFieldWidth = self.bounds.size.width - (TextFieldHorizontalMargin * 2);
 	for (NSUInteger i = 0; i < _inputFields.count; i++) {
 		field = [_inputFields objectAtIndex:i];
-		field.frame = CGRectMake(TextFieldHorizontalMargin, yConstant + ((i + 1) * TextFieldHeightWithSeparator), TextFieldWidth, TextFieldHeight);
+		field.frame = CGRectMake(TextFieldHorizontalMargin, yConstant + ((i + 1) * TextFieldHeightWithSeparator), textFieldWidth, TextFieldHeight);
 
 		[self addSubview:field];
 	}
@@ -104,9 +107,9 @@
 	CGRect frame = self.frame;
 	CGSize screen = [UIScreen mainScreen].bounds.size;
 
-	if (UIInterfaceOrientationIsLandscape([UIDevice currentDevice].orientation)) {
+	if (UIInterfaceOrientationIsLandscape([UIDevice currentDevice].orientation) || ![[UIDevice currentDevice] isPadModel]) {
 		if (_showingKeyboard) {
-			frame = CGRectMake(frame.origin.x, ((screen.height / 2) - frame.size.height) - AlertViewVerticalMovement, frame.size.width, frame.size.height);
+			frame = CGRectMake(frame.origin.x, ((screen.height / 2) - frame.size.height) - [self alertViewVerticalOffset], frame.size.width, frame.size.height);
 			[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
 		} else {
 			frame = CGRectMake(frame.origin.x, ((screen.height / 2) - frame.size.height), frame.size.width, frame.size.height);
