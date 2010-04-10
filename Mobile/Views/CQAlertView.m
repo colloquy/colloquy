@@ -102,19 +102,17 @@
 
 - (void) repositionAlertView {
 	CGRect frame = self.frame;
+	CGSize screen = [UIScreen mainScreen].bounds.size;
 
 	if (UIInterfaceOrientationIsLandscape([UIDevice currentDevice].orientation)) {
 		if (_showingKeyboard) {
-			frame = CGRectMake(frame.origin.x, frame.origin.y - AlertViewVerticalMovement, frame.size.width, frame.size.height);
+			frame = CGRectMake(frame.origin.x, ((screen.height / 2) - frame.size.height) - AlertViewVerticalMovement, frame.size.width, frame.size.height);
 			[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
 		} else {
-			frame = CGRectMake(frame.origin.x, frame.origin.y + AlertViewVerticalMovement, frame.size.width, frame.size.height);
+			frame = CGRectMake(frame.origin.x, ((screen.height / 2) - frame.size.height), frame.size.width, frame.size.height);
 			[UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
 		}
-	} else {
-		CGSize screen = [UIScreen mainScreen].bounds.size;
-		frame = CGRectMake((screen.width / 2) - (frame.size.width / 2), (screen.height / 2) - (frame.size.height / 2), frame.size.width, frame.size.height);
-	}
+	} else frame = CGRectMake((screen.width / 2) - (frame.size.width / 2), (screen.height / 2) - (frame.size.height / 2), frame.size.width, frame.size.height);
 
 	[UIView beginAnimations:nil context:NULL];
 	[UIView setAnimationDuration:.25];
@@ -138,12 +136,12 @@
 #pragma mark -
 
 - (void) show {
+	[super show];
+
 	if (_inputFields.count) {
-		[[_inputFields lastObject] performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:.1];
+		[[_inputFields lastObject] becomeFirstResponder];
 		_showingKeyboard = YES;
 	}
-
-	[super show];
 
 	[self repositionAlertView];
 }
