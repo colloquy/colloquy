@@ -79,6 +79,7 @@
 		[allItems addObject:titleItem];
 		[allItems addObject:flexibleSpaceItem];
 
+		[titleLabel release];
 		[titleItem release];
 		[flexibleSpaceItem release];
 	}
@@ -90,6 +91,8 @@
 		[allItems addObject:rightBarButtonItem];
 
 	[_toolbar setItems:allItems animated:animated];
+
+	[allItems release];
 }
 
 #pragma mark -
