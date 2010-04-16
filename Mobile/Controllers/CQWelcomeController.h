@@ -1,7 +1,7 @@
-@interface CQWelcomeController : UINavigationController <UINavigationControllerDelegate> {
+#import "CQModalNavigationController.h"
+
+@interface CQWelcomeController : CQModalNavigationController {
 	@protected
-	UIViewController *_rootViewController;
-	UIStatusBarStyle _previousStatusBarStyle;
 	BOOL _shouldShowOnlyHelpTopics;
 }
 @property (nonatomic) BOOL shouldShowOnlyHelpTopics;
