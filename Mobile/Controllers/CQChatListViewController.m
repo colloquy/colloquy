@@ -406,7 +406,8 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		_longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_tableWasLongPressed:)];
 		_longPressGestureRecognizer.cancelsTouchesInView = NO;
 		_longPressGestureRecognizer.delaysTouchesBegan = YES;
-		_longPressGestureRecognizer.minimumPressDuration = 0.5;
+		if ([self.tableView respondsToSelector:@selector(setMinimumPressDuration:)])
+			_longPressGestureRecognizer.minimumPressDuration = 0.5;
 		[self.tableView addGestureRecognizer:_longPressGestureRecognizer];
 	}
 }
