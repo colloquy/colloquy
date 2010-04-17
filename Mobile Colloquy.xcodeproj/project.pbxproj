@@ -187,8 +187,14 @@
 		897C0D670F99154500F9D8B5 /* browserInstapaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 897C0D660F99154500F9D8B5 /* browserInstapaper.png */; };
 		89997FAC0F171EB600CF0AA2 /* standard-grey-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */; };
 		89E87C090FA0450800B49230 /* CQSoundController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E87C080FA0450800B49230 /* CQSoundController.m */; };
+		924B823A116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 924B8239116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m */; };
+		924B8240116FEB520007F1F8 /* CQAwayStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 924B823F116FEB520007F1F8 /* CQAwayStatusViewController.m */; };
+		925C594C1177CB63001995E0 /* CQModalNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C594B1177CB63001995E0 /* CQModalNavigationController.m */; };
+		925C59591177D84C001995E0 /* CQAwayStatusController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C59581177D84C001995E0 /* CQAwayStatusController.m */; };
 		92A24DA7114C918300897373 /* CQPreferencesListChannelEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */; };
 		92D30F2C116D2B020060EE33 /* UIViewControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */; };
+		92F3BE5011716FE700A4F554 /* CQPreferencesTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F3BE4F11716FE700A4F554 /* CQPreferencesTextViewCell.m */; };
+		92F3BF80117186AF00A4F554 /* CQTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F3BF7F117186AF00A4F554 /* CQTextView.m */; };
 		9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
 /* End PBXBuildFile section */
 
@@ -461,10 +467,22 @@
 		89E87C070FA0450800B49230 /* CQSoundController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQSoundController.h; path = Mobile/Controllers/CQSoundController.h; sourceTree = "<group>"; };
 		89E87C080FA0450800B49230 /* CQSoundController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQSoundController.m; path = Mobile/Controllers/CQSoundController.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		924B8238116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesTextEditViewController.h; path = Mobile/Controllers/CQPreferencesTextEditViewController.h; sourceTree = "<group>"; };
+		924B8239116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesTextEditViewController.m; path = Mobile/Controllers/CQPreferencesTextEditViewController.m; sourceTree = "<group>"; };
+		924B823E116FEB520007F1F8 /* CQAwayStatusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQAwayStatusViewController.h; sourceTree = "<group>"; };
+		924B823F116FEB520007F1F8 /* CQAwayStatusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQAwayStatusViewController.m; sourceTree = "<group>"; };
+		925C594A1177CB63001995E0 /* CQModalNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQModalNavigationController.h; path = Mobile/Controllers/CQModalNavigationController.h; sourceTree = "<group>"; };
+		925C594B1177CB63001995E0 /* CQModalNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQModalNavigationController.m; path = Mobile/Controllers/CQModalNavigationController.m; sourceTree = "<group>"; };
+		925C59571177D84C001995E0 /* CQAwayStatusController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQAwayStatusController.h; sourceTree = "<group>"; };
+		925C59581177D84C001995E0 /* CQAwayStatusController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQAwayStatusController.m; sourceTree = "<group>"; };
 		92A24DA5114C918300897373 /* CQPreferencesListChannelEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListChannelEditViewController.h; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.h; sourceTree = "<group>"; };
 		92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListChannelEditViewController.m; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.m; sourceTree = "<group>"; };
 		92D30F2A116D2B020060EE33 /* UIViewControllerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIViewControllerAdditions.h; path = Mobile/Additions/UIViewControllerAdditions.h; sourceTree = "<group>"; };
 		92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIViewControllerAdditions.m; path = Mobile/Additions/UIViewControllerAdditions.m; sourceTree = "<group>"; };
+		92F3BE4E11716FE700A4F554 /* CQPreferencesTextViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPreferencesTextViewCell.h; sourceTree = "<group>"; };
+		92F3BE4F11716FE700A4F554 /* CQPreferencesTextViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesTextViewCell.m; sourceTree = "<group>"; };
+		92F3BF7E117186AF00A4F554 /* CQTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQTextView.h; sourceTree = "<group>"; };
+		92F3BF7F117186AF00A4F554 /* CQTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQTextView.m; sourceTree = "<group>"; };
 		9703B2190F2C0D0E00E623DF /* CQFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQFileTransferController.h; sourceTree = "<group>"; };
 		9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQFileTransferController.m; sourceTree = "<group>"; };
 		9717342A0F2D1CA100DA9CDB /* UIImageAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIImageAdditions.h; path = Mobile/Additions/UIImageAdditions.h; sourceTree = "<group>"; };
@@ -624,6 +642,10 @@
 				1C16F77B0FFF049F008D7BB3 /* CQBouncerCreationViewController.h */,
 				1C16F77E0FFF049F008D7BB3 /* CQBouncerEditViewController.m */,
 				1C16F77D0FFF049F008D7BB3 /* CQBouncerEditViewController.h */,
+				925C59581177D84C001995E0 /* CQAwayStatusController.m */,
+				925C59571177D84C001995E0 /* CQAwayStatusController.h */,
+				924B823F116FEB520007F1F8 /* CQAwayStatusViewController.m */,
+				924B823E116FEB520007F1F8 /* CQAwayStatusViewController.h */,
 			);
 			name = Connections;
 			sourceTree = "<group>";
@@ -681,6 +703,8 @@
 				1C0931020D80C6E900A2705D /* CQColloquyApplication.h */,
 				1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */,
 				1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */,
+				925C594B1177CB63001995E0 /* CQModalNavigationController.m */,
+				925C594A1177CB63001995E0 /* CQModalNavigationController.h */,
 				92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */,
 				92A24DA5114C918300897373 /* CQPreferencesListChannelEditViewController.h */,
 				1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */,
@@ -689,6 +713,8 @@
 				1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */,
 				1C6D464B10FAEA1A00BE77ED /* CQPreferencesTableViewController.m */,
 				1C6D464A10FAEA1A00BE77ED /* CQPreferencesTableViewController.h */,
+				924B8239116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m */,
+				924B8238116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.h */,
 				89E87C080FA0450800B49230 /* CQSoundController.m */,
 				89E87C070FA0450800B49230 /* CQSoundController.h */,
 				1CFCBA341114FB2500EA5F10 /* CQWelcomeController.m */,
@@ -766,10 +792,14 @@
 				1C6100D10ED31C8B0016F968 /* CQPreferencesSwitchCell.h */,
 				1C7EBE6C0E01816C0018B0C8 /* CQPreferencesTextCell.m */,
 				1C7EBE6B0E01816C0018B0C8 /* CQPreferencesTextCell.h */,
+				92F3BE4F11716FE700A4F554 /* CQPreferencesTextViewCell.m */,
+				92F3BE4E11716FE700A4F554 /* CQPreferencesTextViewCell.h */,
 				8957DEE01086BA3700F21648 /* CQTableViewSectionHeader.m */,
 				8957DEDF1086BA3700F21648 /* CQTableViewSectionHeader.h */,
 				1CBCFF2C0F04632900EEBCFB /* CQTextCompletionView.m */,
 				1CBCFF2B0F04632900EEBCFB /* CQTextCompletionView.h */,
+				92F3BF7F117186AF00A4F554 /* CQTextView.m */,
+				92F3BF7E117186AF00A4F554 /* CQTextView.h */,
 				1CA715190EF47D6F006225CD /* CQUnreadCountView.m */,
 				1CA715180EF47D6F006225CD /* CQUnreadCountView.h */,
 			);
@@ -1209,6 +1239,12 @@
 				1C6F6931113C181600514C0C /* CQFileTransferTableCell.m in Sources */,
 				92A24DA7114C918300897373 /* CQPreferencesListChannelEditViewController.m in Sources */,
 				92D30F2C116D2B020060EE33 /* UIViewControllerAdditions.m in Sources */,
+				924B823A116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m in Sources */,
+				924B8240116FEB520007F1F8 /* CQAwayStatusViewController.m in Sources */,
+				92F3BE5011716FE700A4F554 /* CQPreferencesTextViewCell.m in Sources */,
+				92F3BF80117186AF00A4F554 /* CQTextView.m in Sources */,
+				925C594C1177CB63001995E0 /* CQModalNavigationController.m in Sources */,
+				925C59591177D84C001995E0 /* CQAwayStatusController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
