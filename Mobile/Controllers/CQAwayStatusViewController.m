@@ -111,11 +111,11 @@
 	for (NSString *awayStatus in sender.items) {
 		awayStatus = [awayStatus stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 
-		if (awayStatus.length && ([awayStatuses indexOfObjectIdenticalTo:awayStatus] == NSNotFound))
+		if (awayStatus.length && ![awayStatuses containsObject:awayStatus])
 			[awayStatuses addObject:awayStatus];
 	}
 
-	self.items = awayStatuses;
+	_items = awayStatuses;
 
 	[[NSUserDefaults standardUserDefaults] setObject:_items forKey:@"CQAwayStatuses"];
 
