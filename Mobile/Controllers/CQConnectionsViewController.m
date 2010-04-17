@@ -2,6 +2,7 @@
 
 #import "CQColloquyApplication.h"
 #import "CQTableViewSectionHeader.h"
+#import "CQAwayStatusController.h"
 #import "CQBouncerSettings.h"
 #import "CQConnectionTableCell.h"
 #import "CQConnectionsController.h"
@@ -344,6 +345,10 @@
 		sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Fully Disconnect", @"Fully Disconnect button title")];
 	}
 
+	if (connection.awayStatusMessage)
+		[sheet addButtonWithTitle:NSLocalizedString(@"Remove Away Status", "Remove Away Status button title")];
+	else [sheet addButtonWithTitle:NSLocalizedString(@"Set Away Status…", "Set Away Status… button title")];
+
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
@@ -376,6 +381,18 @@
 			if (connection.directConnection)
 				[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 			else [connection sendRawMessageImmediatelyWithComponents:@"SQUIT :", [MVChatConnection defaultQuitMessage], nil];
+		} else if (buttonIndex == 1) {
+			if (connection.awayStatusMessage)
+				connection.awayStatusMessage = nil;
+			else {
+				CQAwayStatusController *awayStatusController = [[CQAwayStatusController alloc] init]; 
+
+				[[CQColloquyApplication sharedApplication] presentModalViewController:awayStatusController animated:YES];
+
+				awayStatusController.userInfo = connection;
+
+				[awayStatusController release];
+			}
 		} else {
 			[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 		}
