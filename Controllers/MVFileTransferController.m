@@ -796,12 +796,14 @@ finish:
 
 - (void) _openFile:(id) sender {
 	NSDictionary *info = nil;
-	NSEnumerator *enumerator = [currentFiles selectedRowEnumerator]; // Deprecated in Mac OS 10.3.  You should use selectedRowIndexes instead.
-	id item = nil;
+	NSIndexSet *selectedRowIndexSet = [currentFiles selectedRowIndexes];
+	NSUInteger currentIndex = [selectedRowIndexSet firstIndex];
 
-	while( ( item = [enumerator nextObject] ) ) {
+	while (currentIndex != NSNotFound) {
 		info = [self _infoForTransferAtIndex:[currentFiles selectedRow]];
 		[[NSWorkspace sharedWorkspace] openFile:[info objectForKey:@"path"]];
+
+		currentIndex = [selectedRowIndexSet indexGreaterThanIndex:currentIndex];
 	}
 }
 
