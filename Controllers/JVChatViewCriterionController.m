@@ -246,6 +246,7 @@
 		NSString *value = nil;
 		if( [self kind] == JVChatViewTitleCriterionKind ) value = [chatView title];
 		else if( [self kind] == JVChatViewConnectionAddressCriterionKind ) value = [[chatView connection] server];
+		else return NO;
 
 		BOOL match = NO;
 		JVChatViewCriterionOperation oper = [self operation];

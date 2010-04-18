@@ -174,7 +174,7 @@
 		[fadedImage lockFocus];
 		[[self image] dissolveToPoint:NSMakePoint( 0., 0. ) fraction:0.5];
 		[fadedImage unlockFocus];
-		curImage = [[self image] retain];
+		curImage = [[self image] retain]; // curImage is autoreleased 9 lines down, analyzer is just confused by the ifs
 		[self setImage:fadedImage];
 	}
 

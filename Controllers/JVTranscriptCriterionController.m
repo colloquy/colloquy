@@ -253,6 +253,7 @@
 		else if( [self kind] == JVTranscriptMessageBodyCriterionKind ) value = [message bodyAsPlainText];
 		else if( [self kind] == JVTranscriptSourceNameCriterionKind ) value = [chatView title];
 		else if( [self kind] == JVTranscriptSourceServerAddressCriterionKind ) value = [[chatView connection] server];
+		else return NO;
 
 		BOOL match = NO;
 		JVTranscriptCriterionOperation oper = [self operation];
