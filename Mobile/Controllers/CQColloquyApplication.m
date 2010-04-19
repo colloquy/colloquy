@@ -359,6 +359,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;
 	NSMutableArray *items = [chatPresentationController.standardToolbarItems mutableCopy];
 
+	if ([items objectAtIndex:0] == barButtonItem)
+		return;
+
 	if (viewController == [CQChatController defaultController].chatNavigationController) {
 		id old = _colloquiesPopoverController;
 		_colloquiesPopoverController = [popoverController retain];
