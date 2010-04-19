@@ -8,7 +8,7 @@
 @implementation CQPreferencesTextViewCell
 @synthesize textView = _textView;
 
-- (id) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *)reuseIdentifier {
+- (id) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
 

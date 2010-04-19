@@ -20,13 +20,13 @@
 	if (!(self = [super init]))
 		return nil;
 
-	_items = [[[NSUserDefaults standardUserDefaults] arrayForKey:@"CQAwayStatuses"] mutableCopy];
-	_addItemLabelText = NSLocalizedString(@"New away status", @"New away status label");
-	_noItemsLabelText = NSLocalizedString(@"No away statuses", @"No away statuses label");
-	_editViewTitle = NSLocalizedString(@"Add status", @"Add status label");
-	_editPlaceholder = [[NSString alloc] initWithFormat:NSLocalizedString(@"Away from my %@", @"Away from my %@ label"), [UIDevice currentDevice].model];;
-
 	self.title = NSLocalizedString(@"Create Away Status…", @"Create Away Status title");
+	self.items = [[[NSUserDefaults standardUserDefaults] arrayForKey:@"CQAwayStatuses"] mutableCopy];
+	self.addItemLabelText = NSLocalizedString(@"New away status", @"New away status label");
+	self.noItemsLabelText = NSLocalizedString(@"No away statuses", @"No away statuses label");
+	self.editViewTitle = NSLocalizedString(@"Add status", @"Add status label");
+	self.editPlaceholder = [[NSString alloc] initWithFormat:NSLocalizedString(@"Away from my %@", @"Away from my %@ label"), [UIDevice currentDevice].model];;
+
 	self.target = self;
 	self.action = @selector(updateAwayStatuses:);
 
@@ -55,6 +55,7 @@
 		_customEditingViewController = [editingViewController retain];
 		[old release];
 
+//		[self.tableView endEditing];
 		[self editItemAtIndex:indexPath.row];
 
 		[editingViewController release];
