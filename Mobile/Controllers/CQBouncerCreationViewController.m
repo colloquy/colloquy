@@ -76,7 +76,7 @@
 #pragma mark -
 
 - (void) cancel:(id) sender {
-	[self dismissModalViewControllerAnimated:YES];
+	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
 
 - (void) commit:(id) sender {
@@ -86,6 +86,6 @@
 
 	[[CQColloquyApplication sharedApplication] showConnections:nil];
 
-	[self dismissModalViewControllerAnimated:YES];
+	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
 @end

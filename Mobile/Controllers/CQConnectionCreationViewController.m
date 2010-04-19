@@ -117,7 +117,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 #pragma mark -
 
 - (void) cancel:(id) sender {
-	[self dismissModalViewControllerAnimated:YES];
+	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
 
 - (void) commit:(id) sender {
@@ -143,6 +143,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 	[[CQColloquyApplication sharedApplication] showColloquies:nil];
 
-	[self dismissModalViewControllerAnimated:YES];
+	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
 @end
