@@ -45,6 +45,10 @@
 	return 1;
 }
 
+- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	return indexPath;
+}
+
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (tableView.editing || indexPath.row > _items.count) {
 		CQPreferencesTextEditViewController *editingViewController = [[CQPreferencesTextEditViewController alloc] init];
@@ -55,7 +59,6 @@
 		_customEditingViewController = [editingViewController retain];
 		[old release];
 
-//		[self.tableView endEditing];
 		[self editItemAtIndex:indexPath.row];
 
 		[editingViewController release];
