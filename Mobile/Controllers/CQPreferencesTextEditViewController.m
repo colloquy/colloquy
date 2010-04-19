@@ -14,7 +14,6 @@
 @synthesize delegate = _delegate;
 @synthesize listItemText = _listItemText;
 @synthesize listItemPlaceholder = _listItemPlaceholder;
-@synthesize assignedPlaceholder = _assignedPlaceholder;
 @synthesize charactersRemainingBeforeDisplay = _charactersRemainingBeforeDisplay;
 
 - (id) init {
@@ -34,8 +33,6 @@
 	// red: 76 / 255, green: 86 / 255, blue: 108 / 255
 	_footerLabel.textColor = [UIColor colorWithRed:0.298039215686275 green:0.337254901960784 blue:0.423529411764706 alpha:1.];
 
-	_charactersRemainingBeforeDisplay = NSIntegerMin;
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateFooterView) name:UITextViewTextDidChangeNotification object:nil];
 
 	return self;
@@ -48,11 +45,17 @@
 
 	[_listItemText release];
 	[_listItemPlaceholder release];
-	[_assignedPlaceholder release];
 
 	[_footerLabel release];
 
 	[super dealloc];
+}
+
+#pragma mark -
+
+- (NSString *) listItemText {
+	CQPreferencesTextViewCell *cell = (CQPreferencesTextViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+	return cell.textView.text;
 }
 
 #pragma mark -

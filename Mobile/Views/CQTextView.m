@@ -29,7 +29,7 @@
 #pragma mark -
 
 - (UIColor *) textColor {
-	return [self.text isEqualToString:_placeholder] ? _placeholderTextColor : _textColor;
+	return self.isPlaceholderText ? _placeholderTextColor : _textColor;
 }
 
 - (void) updateTextColor {
@@ -66,16 +66,26 @@
 	[self updateTextColor];
 }
 
+- (NSString *) text {
+	if (self.isPlaceholderText)
+		return @"";
+	return [super text];
+}
+
 @synthesize placeholder = _placeholder;
 
 - (void) setPlaceholder:(NSString *) placeholder {
 	id old = _placeholder;
 	_placeholder = [placeholder copy];
 
-	if (!self.text.length && _placeholder.length)
+	if (![super text].length && _placeholder.length)
 		self.text = _placeholder;
 
 	[old release];
+}
+
+- (BOOL) isPlaceholderText {
+	return [[super text] isEqualToString:_placeholder];
 }
 
 #pragma mark -
@@ -84,14 +94,14 @@
 	if (![super becomeFirstResponder])
 		return NO;
 
-	if ([self.text isEqualToString:_placeholder])
+	if (self.isPlaceholderText)
 		[super setText:@""];
 
 	return YES;
 }
 
 - (BOOL) canPerformAction:(SEL) action withSender:(id) sender {
-	if ([self.text isEqualToString:_placeholder])
+	if (self.isPlaceholderText)
 		return NO;
 	return [super canPerformAction:action withSender:sender];
 }
@@ -100,7 +110,7 @@
 	NSString *text = self.text;
 
 	if (text.length) {
-		if (![text hasPrefix:_placeholder] && [text hasSuffix:_placeholder])
+		if ([text hasSuffix:_placeholder])
 			self.text = [text substringWithRange:NSMakeRange(0, text.length - _placeholder.length)];
 	} else {
 		self.placeholder = _placeholder;

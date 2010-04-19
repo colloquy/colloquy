@@ -45,15 +45,10 @@
 	return 1;
 }
 
-- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	return indexPath;
-}
-
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (tableView.editing || indexPath.row > _items.count) {
 		CQPreferencesTextEditViewController *editingViewController = [[CQPreferencesTextEditViewController alloc] init];
 		editingViewController.delegate = self;
-		editingViewController.assignedPlaceholder = _editPlaceholder;
 		editingViewController.charactersRemainingBeforeDisplay = 25;
 
 		id old = _customEditingViewController;
@@ -64,12 +59,8 @@
 
 		[editingViewController release];
 	} else {
-		if (!_items.count) {
-			[self setEditing:YES animated:YES];
-			[self tableView:tableView didSelectRowAtIndexPath:indexPath];
-
+		if (!_items.count)
 			return;
-		}
 
 		_connection.awayStatusMessage = [_items objectAtIndex:indexPath.row];
 
@@ -88,13 +79,13 @@
 #pragma mark -
 
 - (NSString *) stringForFooterWithTextView:(CQTextView *) textView {
-	if ([textView.text isEqualToString:textView.placeholder])
+	if (textView.isPlaceholderText)
 		return nil;
 	return [NSLocalizedString(@"characters remaining", @"characters remaining tableview footer") autorelease];
 }
 
 - (NSInteger) integerForCountdownInFooterWithTextView:(CQTextView *) textView {
-	if ([textView.text isEqualToString:textView.placeholder])
+	if (textView.isPlaceholderText)
 		return 0;
 
 	NSString *prefix = [NSString stringWithFormat:@"AWAY %@", textView.text];
@@ -105,8 +96,7 @@
 #pragma mark -
 
 - (void) updateAwayStatuses:(CQPreferencesListViewController *) sender {
-	NSInteger count = sender.items.count;
-	NSMutableArray *awayStatuses = [[NSMutableArray alloc] initWithCapacity:count];
+	NSMutableArray *awayStatuses = [[NSMutableArray alloc] initWithCapacity:sender.items.count];
 
 	for (NSString *awayStatus in sender.items) {
 		awayStatus = [awayStatus stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -115,9 +105,7 @@
 			[awayStatuses addObject:awayStatus];
 	}
 
-	_items = awayStatuses;
-
-	[[NSUserDefaults standardUserDefaults] setObject:_items forKey:@"CQAwayStatuses"];
+	[[NSUserDefaults standardUserDefaults] setObject:awayStatuses forKey:@"CQAwayStatuses"];
 
 	[awayStatuses release];
 }

@@ -14,7 +14,6 @@
 
 	NSString *_listItemText;
 	NSString *_listItemPlaceholder;
-	NSString *_assignedPlaceholder;
 
 	NSInteger _charactersRemainingBeforeDisplay;
 
@@ -23,6 +22,5 @@
 @property (nonatomic, retain) id <CQPreferencesTextEditViewDelegate> delegate;
 @property (nonatomic, copy) NSString *listItemText;
 @property (nonatomic, copy) NSString *listItemPlaceholder;
-@property (nonatomic, copy) NSString *assignedPlaceholder;
 @property (nonatomic) NSInteger charactersRemainingBeforeDisplay;
 @end

@@ -6,5 +6,6 @@
 	UIColor *_placeholderTextColor;
 }
 @property (nonatomic, copy) NSString *placeholder;
+@property (nonatomic, readonly) BOOL isPlaceholderText;
 @property (nonatomic, retain) UIColor *placeholderTextColor;
 @end
