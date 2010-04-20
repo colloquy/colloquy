@@ -72,13 +72,23 @@
 
 		[titleLabel sizeToFit];
 
+		UIBarButtonItem *leftSpaceItem = [[UIBarButtonItem alloc] init];
+		leftSpaceItem.enabled = NO;
+
+		CGFloat offset = (_toolbar.frame.size.width / 2) + (titleLabel.frame.size.width / 2);
+		if (UIInterfaceOrientationIsPortrait([UIDevice currentDevice].orientation))
+			offset = ([UIScreen mainScreen].bounds.size.height / 2) + (titleLabel.frame.size.width / 2) - offset;
+		else offset = ([UIScreen mainScreen].bounds.size.height / 2) + (titleLabel.frame.size.width / 2) - offset;
+		leftSpaceItem.width = offset + (offset / 4); // looks off centered to the screen as well as centered to the toolbar. So move it over a bit
+
 		UIBarButtonItem *titleItem = [[UIBarButtonItem alloc] initWithCustomView:titleLabel];
 		UIBarButtonItem *flexibleSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 
-		[allItems addObject:flexibleSpaceItem];
+		[allItems addObject:leftSpaceItem];
 		[allItems addObject:titleItem];
 		[allItems addObject:flexibleSpaceItem];
 
+		[leftSpaceItem release];
 		[titleLabel release];
 		[titleItem release];
 		[flexibleSpaceItem release];
