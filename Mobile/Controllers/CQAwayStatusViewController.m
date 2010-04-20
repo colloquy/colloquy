@@ -85,7 +85,7 @@
 - (NSString *) stringForFooterWithTextView:(CQTextView *) textView {
 	if (textView.isPlaceholderText)
 		return nil;
-	return [NSLocalizedString(@"characters remaining", @"characters remaining tableview footer") autorelease];
+	return NSLocalizedString(@"characters remaining", @"characters remaining tableview footer");
 }
 
 - (NSInteger) integerForCountdownInFooterWithTextView:(CQTextView *) textView {
