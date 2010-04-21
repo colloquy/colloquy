@@ -64,7 +64,7 @@
 	_urlToHandle = [request.URL retain];
 	[old release];
 
-	[self dismissModalViewControllerAnimated:YES];
+	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 
 	return NO;
 }

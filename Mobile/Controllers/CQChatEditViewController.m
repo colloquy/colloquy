@@ -139,7 +139,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 	if (indexPath.section == 2 && indexPath.row == 0) {
 		[[CQChatController defaultController] joinSupportRoom];
 
-		[self dismissModalViewControllerAnimated:YES];
+		[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 
 		return;
 	}

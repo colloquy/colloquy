@@ -5,6 +5,8 @@
 
 #import "CQUserInfoViewController.h"
 
+#import "CQColloquyApplication.h"
+
 @implementation CQUserInfoController
 - (id) init {
 	if (!(self = [super init]))
@@ -66,7 +68,7 @@
 #pragma mark -
 
 - (IBAction) close:(id) sender {
-	[self dismissModalViewControllerAnimated:YES];
+	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -

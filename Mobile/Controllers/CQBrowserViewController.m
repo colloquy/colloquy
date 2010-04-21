@@ -121,7 +121,7 @@ static NSURL *lastURL;
 	lastURL = [self.url retain];
 	[old release];
 
-	[self dismissModalViewControllerAnimated:YES];
+	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
 
 - (void) goBack:(id) sender {

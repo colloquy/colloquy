@@ -121,13 +121,13 @@
 }
 
 - (void) cancel:(id) sender {
-	[self dismissModalViewControllerAnimated:YES];
+	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
 
 - (void) commit:(id) sender {
 	MVChatConnection *connection = _editViewController.selectedConnection;
 	if (!connection) {
-		[self dismissModalViewControllerAnimated:YES];
+		[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 		return;
 	}
 
@@ -149,6 +149,6 @@
 
 	[[CQColloquyApplication sharedApplication] showColloquies:nil];
 
-	[self dismissModalViewControllerAnimated:YES];
+	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
 @end

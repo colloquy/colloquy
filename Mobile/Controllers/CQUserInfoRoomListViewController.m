@@ -84,7 +84,7 @@
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
-	[self dismissModalViewControllerAnimated:YES];
+	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 
 	NSString *roomName = [_rooms objectAtIndex:selectedIndexPath.row];
 	[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:_connection];

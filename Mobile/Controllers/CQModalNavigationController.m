@@ -1,5 +1,7 @@
 #import "CQModalNavigationController.h"
 
+#import "CQColloquyApplication.h"
+
 @implementation CQModalNavigationController
 @synthesize userInfo = _userInfo;
 
@@ -52,6 +54,6 @@
 #pragma mark -
 
 - (void) close:(id) sender {
-	[self dismissModalViewControllerAnimated:YES];
+	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
 @end
