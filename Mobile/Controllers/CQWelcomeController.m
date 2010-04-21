@@ -13,6 +13,10 @@
 	else if (!_rootViewController)
 		_rootViewController = [[CQWelcomeViewController alloc] init];
 
+	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(close:)];
+	_rootViewController.navigationItem.leftBarButtonItem = doneButton;
+	[doneButton release];
+
 	[super viewDidLoad];
 }
 
