@@ -616,6 +616,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if ([[UIDevice currentDevice] isPadModel]) {
 		_chatPresentationController.topChatViewController = controller;
 		[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
+		if (!controller)
+			[_chatPresentationController updateToolbarAnimated:YES];
 	} else {
 		if (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController) {
 			id old = _nextController;
@@ -848,13 +850,22 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	[controller retain];
 
+	NSUInteger controllerIndex = [_chatControllers indexOfObject:controller];
+
 	[_chatControllers removeObjectIdenticalTo:controller];
 
 	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObject:controller forKey:@"controller"];
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerRemovedChatViewControllerNotification object:self userInfo:notificationInfo];
 
-	if (_visibleChatController == controller)
-		[self showChatController:nil animated:YES];
+	if (_visibleChatController == controller) {
+		if (!_chatControllers.count)
+			[self showChatController:nil animated:YES];
+		else {
+			if (!controllerIndex)
+				controllerIndex = 1;
+			[self showChatController:[_chatControllers objectAtIndex:(controllerIndex - 1)] animated:YES];
+		}
+	}
 
 	[controller release];
 }
