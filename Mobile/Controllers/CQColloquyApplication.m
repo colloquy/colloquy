@@ -539,7 +539,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 - (void) showColloquies:(id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
-		if (UIInterfaceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
+		if (!UIInterfaceOrientationIsLandscape([UIDevice currentDevice].orientation)) {
 			if (!_colloquiesPopoverController.popoverVisible) {
 				[self dismissPopoversAnimated:NO];
 				[_colloquiesPopoverController presentPopoverFromBarButtonItem:_colloquiesBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
