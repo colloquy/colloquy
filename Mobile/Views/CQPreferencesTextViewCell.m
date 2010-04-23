@@ -71,10 +71,13 @@
 
 - (CGFloat) height {
 	CGSize size = [UIScreen mainScreen].bounds.size;
+	BOOL landscapeOrientation = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation);
 
 	if ([[UIDevice currentDevice] isPadModel])
-		return (MIN(size.height, size.width) / 2);
-	if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation))
+		if (landscapeOrientation)
+			return MIN(size.height, size.width) / 3;
+		return MIN(size.height, size.width) / 2;
+	if (!landscapeOrientation)
 		return (MAX(size.height, size.width) / 3);
 	return floor((MIN(size.height, size.width) / 4));
 }
