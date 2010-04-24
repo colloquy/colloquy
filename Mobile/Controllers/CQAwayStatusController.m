@@ -2,11 +2,21 @@
 #import "CQAwayStatusViewController.h"
 
 @implementation CQAwayStatusController
-- (void) viewDidLoad {
-	_rootViewController = [[CQAwayStatusViewController alloc] init];
+- (void) dealloc {
+	[_connection release];
 
-	if (_userInfo)
-		((CQAwayStatusViewController *)_rootViewController).connection = _userInfo;
+	[super dealloc];
+}
+
+#pragma mark -
+
+- (void) viewDidLoad {
+	if (!_rootViewController) {
+		CQAwayStatusViewController *viewController = [[CQAwayStatusViewController alloc] init];
+		viewController.connection = _connection;
+
+		_rootViewController = viewController;
+	}
 
 	UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(close:)];
 	_rootViewController.navigationItem.leftBarButtonItem = cancelItem;
@@ -17,18 +27,15 @@
 
 #pragma mark -
 
-- (void) setUserInfo:(id) userInfo {
-	id old = _userInfo;
-	_userInfo = [userInfo retain];
-	[old release];
-
-	if (_rootViewController)
-		((CQAwayStatusViewController *)_rootViewController).connection = _userInfo;
+- (MVChatConnection *) connection {
+	return _connection;
 }
 
-#pragma mark -
+- (void) setConnection:(MVChatConnection *) connection {
+	id old = _connection;
+	_connection = [connection retain];
+	[old release];
 
-- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
+	((CQAwayStatusViewController *)_rootViewController).connection = connection;
 }
 @end

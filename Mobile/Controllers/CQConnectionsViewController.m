@@ -386,10 +386,9 @@
 				connection.awayStatusMessage = nil;
 			else {
 				CQAwayStatusController *awayStatusController = [[CQAwayStatusController alloc] init]; 
+				awayStatusController.connection = connection;
 
 				[[CQColloquyApplication sharedApplication] presentModalViewController:awayStatusController animated:YES];
-
-				awayStatusController.userInfo = connection;
 
 				[awayStatusController release];
 			}

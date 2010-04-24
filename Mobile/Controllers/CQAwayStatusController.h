@@ -1,4 +1,10 @@
 #import "CQModalNavigationController.h"
 
-@interface CQAwayStatusController : CQModalNavigationController
+@class MVChatConnection;
+
+@interface CQAwayStatusController : CQModalNavigationController {
+@protected
+	MVChatConnection *_connection;
+}
+@property (nonatomic, retain) MVChatConnection *connection;
 @end
