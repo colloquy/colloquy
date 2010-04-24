@@ -5,6 +5,10 @@
 
 #import "UIDeviceAdditions.h"
 
+@interface CQPreferencesTextViewCell (Private)
+@property (nonatomic, readonly) CGFloat height;
+@end
+
 @implementation CQPreferencesTextViewCell
 @synthesize textView = _textView;
 
@@ -69,28 +73,40 @@
 
 #pragma mark -
 
-- (CGFloat) height {
++ (CGFloat) height {
 	CGSize size = [UIScreen mainScreen].bounds.size;
 	BOOL landscapeOrientation = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation);
 
-	if ([[UIDevice currentDevice] isPadModel])
+	if ([[UIDevice currentDevice] isPadModel]) {
 		if (landscapeOrientation)
-			return MIN(size.height, size.width) / 3;
-		return MIN(size.height, size.width) / 2;
-	if (!landscapeOrientation)
-		return (MAX(size.height, size.width) / 3);
-	return floor((MIN(size.height, size.width) / 4));
+			return (CGFloat)MIN(size.height, size.width) / 3;
+		return (CGFloat)MIN(size.height, size.width) / 2;
+	} else {
+		if (landscapeOrientation)
+			return floor(((CGFloat)MIN(size.height, size.width) / 4));
+		return ((CGFloat)MAX(size.height, size.width) / 3);
+	}
 }
+
+- (CGFloat) height {
+	return [CQPreferencesTextViewCell height];
+}
+
+#pragma mark -
 
 - (void) layoutSubviews {
 	[super layoutSubviews];
+
+	CGFloat height = self.height;
+	if (height == _textView.frame.size.height && _textView.frame.size.width == self.contentView.frame.size.width)
+		return;
 
 	[UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
 	[UIView beginAnimations:nil context:NULL];
 	[UIView setAnimationDuration:.25];
 	[UIView setAnimationBeginsFromCurrentState:YES];
 
-	_textView.frame = CGRectMake(0, 0, self.contentView.frame.size.width, self.height);
+	_textView.frame = CGRectMake(0, 0, self.contentView.frame.size.width, height);
 
 	[UIView commitAnimations];
 }

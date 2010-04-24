@@ -4,6 +4,6 @@
 @protected
 	CQTextView *_textView;
 }
-@property (nonatomic, readonly) CGFloat height;
 @property (nonatomic, retain) CQTextView *textView;
++ (CGFloat) height;
 @end

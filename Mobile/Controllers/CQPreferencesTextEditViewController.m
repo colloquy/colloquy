@@ -156,22 +156,19 @@
 
 #pragma mark -
 
+- (CGFloat) tableView:(UITableView *) tableView heightForRowAtIndexPath:(NSIndexPath *) indexPath {
+	return [CQPreferencesTextViewCell height];
+}
+
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	CQPreferencesTextViewCell *cell = [CQPreferencesTextViewCell reusableTableViewCellInTableView:self.tableView];
 	cell.textView.text = _listItemText;
 	cell.textView.placeholder = _listItemPlaceholder;
 
-	tableView.rowHeight = cell.height;
-
 	return cell;
 }
 
-- (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation) fromInterfaceOrientation {
-	CQPreferencesTextViewCell *cell = (CQPreferencesTextViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-	[cell layoutSubviews];
-
-	self.tableView.rowHeight = cell.height;
-
-	[self.tableView setNeedsDisplay];
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+	[self.tableView reloadData];
 }
 @end
