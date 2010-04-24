@@ -53,6 +53,14 @@
 
 #pragma mark -
 
+- (BOOL) navigationBar:(UINavigationBar *) navigationBar shouldPopItem:(UINavigationItem *) item {
+	// This is a workaround for an iPad bug where the navigation controller pops the view but not the
+	// navigation item. For some reason the UINavigationController returns NO here when in landscape.
+	return YES;
+}
+
+#pragma mark -
+
 - (void) close:(id) sender {
 	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
