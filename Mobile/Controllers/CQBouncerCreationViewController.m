@@ -10,21 +10,13 @@
 	if (!(self = [super init]))
 		return nil;
 
-	self.delegate = self;
-
-	if ([self respondsToSelector:@selector(setModalPresentationStyle:)])
-		self.modalPresentationStyle = UIModalPresentationFormSheet;
-
 	_settings = [[CQBouncerSettings alloc] init];
 
 	return self;
 }
 
 - (void) dealloc {
-	self.delegate = nil;
-
 	[_settings release];
-	[_editViewController release];
 
 	[super dealloc];
 }
@@ -32,55 +24,28 @@
 #pragma mark -
 
 - (void) viewDidLoad {
-	[super viewDidLoad];
+	if (!_rootViewController) {
+		CQBouncerEditViewController *editViewController = [[CQBouncerEditViewController alloc] init];
+		editViewController.newBouncer = YES;
+		editViewController.settings = _settings;
 
-	if (_editViewController)
-		return;
-
-	_editViewController = [[CQBouncerEditViewController alloc] init];
-	_editViewController.newBouncer = YES;
-	_editViewController.settings = _settings;
-
-	UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
-	_editViewController.navigationItem.leftBarButtonItem = cancelItem;
-	[cancelItem release];
+		_rootViewController = editViewController;
+	}
 
 	UIBarButtonItem *connectItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", @"Connect button title") style:UIBarButtonItemStyleDone target:self action:@selector(commit:)];
-	_editViewController.navigationItem.rightBarButtonItem = connectItem;
+	_rootViewController.navigationItem.rightBarButtonItem = connectItem;
 	[connectItem release];
 
-	_editViewController.navigationItem.rightBarButtonItem.tag = UIBarButtonSystemItemSave;
-	_editViewController.navigationItem.rightBarButtonItem.enabled = NO;
+	_rootViewController.navigationItem.rightBarButtonItem.tag = UIBarButtonSystemItemSave;
+	_rootViewController.navigationItem.rightBarButtonItem.enabled = NO;
 
-	[self pushViewController:_editViewController animated:NO];
-}
-
-- (void) viewWillAppear:(BOOL) animated {
-	[super viewWillAppear:animated];
-
-	_previousStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
-
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:animated];
-}
-
-- (void) viewWillDisappear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-
-	[[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle animated:animated];
-}
-
-- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
-	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
+	[super viewDidLoad];
 }
 
 #pragma mark -
 
-- (void) cancel:(id) sender {
-	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
-}
-
 - (void) commit:(id) sender {
-	[_editViewController endEditing];
+	[(CQBouncerEditViewController *)_rootViewController endEditing];
 
 	[[CQConnectionsController defaultController] addBouncerSettings:_settings];
 

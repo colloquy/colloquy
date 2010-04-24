@@ -21,11 +21,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	if (!(self = [super init]))
 		return nil;
 
-	self.delegate = self;
-
-	if ([self respondsToSelector:@selector(setModalPresentationStyle:)])
-		self.modalPresentationStyle = UIModalPresentationFormSheet;
-
 	_connection = [[MVChatConnection alloc] initWithType:MVChatConnectionIRCType];
 	_connection.server = @"<<placeholder>>";
 	_connection.preferredNickname = @"<<default>>";
@@ -40,10 +35,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 }
 
 - (void) dealloc {
-	self.delegate = nil;
-
 	[_connection release];
-	[_editViewController release];
 
 	[super dealloc];
 }
@@ -67,64 +59,36 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	if (target.length)
 		_connection.automaticJoinedRooms = [NSArray arrayWithObject:target];
 
-	_editViewController.navigationItem.rightBarButtonItem.enabled = (url.host.length ? YES : NO);
+	_rootViewController.navigationItem.rightBarButtonItem.enabled = (url.host.length ? YES : NO);
 }
 
 #pragma mark -
 
 - (void) viewDidLoad {
-	[super viewDidLoad];
+	if (!_rootViewController) {
+		CQConnectionEditViewController *editViewController = [[CQConnectionEditViewController alloc] init];
+		editViewController.newConnection = YES;
+		editViewController.connection = _connection;
 
-	if (_editViewController)
-		return;
-
-	_editViewController = [[CQConnectionEditViewController alloc] init];
-	_editViewController.newConnection = YES;
-	_editViewController.connection = _connection;
-
-	UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
-	_editViewController.navigationItem.leftBarButtonItem = cancelItem;
-	[cancelItem release];
+		_rootViewController = editViewController;
+	}
 
 	UIBarButtonItem *connectItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", @"Connect button title") style:UIBarButtonItemStyleDone target:self action:@selector(commit:)];
-	_editViewController.navigationItem.rightBarButtonItem = connectItem;
+	_rootViewController.navigationItem.rightBarButtonItem = connectItem;
 	[connectItem release];
 
-	_editViewController.navigationItem.rightBarButtonItem.tag = UIBarButtonSystemItemSave;
-	_editViewController.navigationItem.rightBarButtonItem.enabled = (_connection.server.length && !isPlaceholderValue(_connection.server));
+	_rootViewController.navigationItem.rightBarButtonItem.tag = UIBarButtonSystemItemSave;
+	_rootViewController.navigationItem.rightBarButtonItem.enabled = (_connection.server.length && !isPlaceholderValue(_connection.server));
 
-	[self pushViewController:_editViewController animated:NO];
-}
-
-- (void) viewWillAppear:(BOOL) animated {
-	[super viewWillAppear:animated];
-
-	_previousStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
-
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:animated];
-}
-
-- (void) viewWillDisappear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-
-	[[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle animated:animated];
-}
-
-- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
-	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
+	[super viewDidLoad];
 }
 
 #pragma mark -
-
-- (void) cancel:(id) sender {
-	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
-}
-
 - (void) commit:(id) sender {
-	[_editViewController endEditing];
+	[(CQConnectionEditViewController *)_rootViewController endEditing];
 
 	if (isPlaceholderValue(_connection.server)) {
-		[self cancel:sender];
+		[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 		return;
 	}
 

@@ -1,11 +1,10 @@
-@class CQConnectionEditViewController;
+#import "CQModalNavigationController.h"
+
 @class MVChatConnection;
 
-@interface CQConnectionCreationViewController : UINavigationController <UINavigationControllerDelegate> {
+@interface CQConnectionCreationViewController : CQModalNavigationController <UINavigationControllerDelegate> {
 	@protected
 	MVChatConnection *_connection;
-	CQConnectionEditViewController *_editViewController;
-	UIStatusBarStyle _previousStatusBarStyle;
 }
 @property (nonatomic, copy) NSURL *url;
 @end

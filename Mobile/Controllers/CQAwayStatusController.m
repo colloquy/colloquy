@@ -18,10 +18,6 @@
 		_rootViewController = viewController;
 	}
 
-	UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(close:)];
-	_rootViewController.navigationItem.leftBarButtonItem = cancelItem;
-	[cancelItem release];
-
 	[super viewDidLoad];
 }
 

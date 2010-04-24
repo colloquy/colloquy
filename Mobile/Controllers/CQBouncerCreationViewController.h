@@ -1,10 +1,9 @@
-@class CQBouncerEditViewController;
+#import "CQModalNavigationController.h"
+
 @class CQBouncerSettings;
 
-@interface CQBouncerCreationViewController : UINavigationController <UINavigationControllerDelegate> {
+@interface CQBouncerCreationViewController : CQModalNavigationController <UINavigationControllerDelegate> {
 	@protected
 	CQBouncerSettings *_settings;
-	CQBouncerEditViewController *_editViewController;
-	UIStatusBarStyle _previousStatusBarStyle;
 }
 @end

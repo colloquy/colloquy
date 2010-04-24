@@ -1,14 +1,13 @@
-@class CQChatEditViewController;
+#import "CQModalNavigationController.h"
+
 @class MVChatConnection;
 
-@interface CQChatCreationViewController : UINavigationController <UINavigationControllerDelegate> {
+@interface CQChatCreationViewController : CQModalNavigationController <UINavigationControllerDelegate> {
 	@protected
-	CQChatEditViewController *_editViewController;
 	BOOL _roomTarget;
 	MVChatConnection *_selectedConnection;
 	NSString *_name;
 	NSString *_password;
-	UIStatusBarStyle _previousStatusBarStyle;
 	BOOL _showListOnLoad;
 	NSString *_searchString;
 }

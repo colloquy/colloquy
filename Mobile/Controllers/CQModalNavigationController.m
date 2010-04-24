@@ -3,8 +3,6 @@
 #import "CQColloquyApplication.h"
 
 @implementation CQModalNavigationController
-@synthesize userInfo = _userInfo;
-
 - (id) init {
 	if (!(self = [super init]))
 		return nil;
@@ -29,6 +27,10 @@
 
 - (void) viewDidLoad {
 	[super viewDidLoad];
+
+	UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(close:)];
+	_rootViewController.navigationItem.leftBarButtonItem = cancelItem;
+	[cancelItem release];
 
 	[self pushViewController:_rootViewController animated:NO];
 }
