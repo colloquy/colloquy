@@ -421,7 +421,8 @@ static BOOL applicationIsTerminating = NO;
 - (void) receiveSleepNotification:(NSNotification *) notification {
 	_previouslyConnectedConnections = [[NSMutableArray alloc] init];
 
-	NSAttributedString *quitString = [[NSAttributedString alloc] initWithString:[[NSUserDefaults standardUserDefaults] stringForKey:@"JVSleepMessage"]];
+	NSString *quitString = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVSleepMessage"];
+	NSAttributedString *quitAttributedString = ( quitString ? [[NSAttributedString alloc] initWithString:quitString] : nil );
 	NSArray *openedConnections = [[MVConnectionsController defaultController] connectedConnections];
 	NSEnumerator *enumerator = [openedConnections objectEnumerator];
 	MVChatConnection *connection = nil;
@@ -429,7 +430,7 @@ static BOOL applicationIsTerminating = NO;
 	while ( ( connection = [enumerator nextObject] ) ) {
 		NSMutableDictionary *connectionInformation = [[NSMutableDictionary alloc] init];
 
-		[connection disconnectWithReason:quitString];
+		[connection disconnectWithReason:quitAttributedString];
 		[connectionInformation setObject:connection forKey:@"connection"];
 
 		if ( [[connection awayStatusMessage] length] )
@@ -440,8 +441,8 @@ static BOOL applicationIsTerminating = NO;
 
 		[connectionInformation release];
 	}
-
-	[quitString release];
+	
+	[quitAttributedString release];
 }
 
 - (void) receiveWakeNotification:(NSNotification *) notification {

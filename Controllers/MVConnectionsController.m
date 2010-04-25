@@ -707,9 +707,12 @@ static NSMenu *favoritesMenu = nil;
     if( ! connection ) return;
 
 	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
-	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage];
-	[connection disconnectWithReason:quitMessageString];
-	[quitMessageString release];
+	if ( [quitMessage length] ) {
+		NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage];
+		[connection disconnectWithReason:quitMessageString];
+		[quitMessageString release];
+	} else
+		[connection disconnect];
 
 	[self _deregisterNotificationsForConnection:connection];
 
@@ -730,10 +733,14 @@ static NSMenu *favoritesMenu = nil;
 	[info setObject:connection forKey:@"connection"];
 
 	MVChatConnection *oldConnection = [[[_bookmarks objectAtIndex:index] objectForKey:@"connection"] retain];
+
 	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
-	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage];
-	[oldConnection disconnectWithReason:quitMessageString];
-	[quitMessageString release];
+	if ( [quitMessage length] ) {
+		NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage];
+		[oldConnection disconnectWithReason:quitMessageString];
+		[quitMessageString release];
+	} else
+		[oldConnection disconnect];
 
 	[self _deregisterNotificationsForConnection:oldConnection];
 
@@ -1500,19 +1507,15 @@ static NSMenu *favoritesMenu = nil;
 - (void) _applicationQuitting:(NSNotification *) notification {
 	[self _saveBookmarkList];
 
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	MVChatConnection *connection = nil;
-	NSDictionary *info = nil;
+	NSArray *bookmarkedConnections = [_bookmarks valueForKey:@"connection"];
 
 	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
-	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage];
-
-	while( ( info = [enumerator nextObject] ) ) {
-		connection = [info objectForKey:@"connection"];
-		[connection disconnectWithReason:quitMessageString];
-	}
-
-	[quitMessageString release];
+	if ( [quitMessage length] ) {
+		NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage];
+		[bookmarkedConnections makeObjectsPerformSelector:@selector(disconnectWithReason:) withObject:quitMessageString];
+		[quitMessageString release];
+	} else
+		[bookmarkedConnections makeObjectsPerformSelector:@selector(disconnect)];
 }
 
 - (void) _errorOccurred:(NSNotification *) notification {
@@ -2134,11 +2137,16 @@ static NSMenu *favoritesMenu = nil;
 - (IBAction) _disconnect:(id) sender {
 	NSInteger row = [connections selectedRow];
 	if( row == -1 ) return;
+	
+	MVChatConnection *selectedBookmarkedConnection = [[_bookmarks objectAtIndex:row] objectForKey:@"connection"];
 
 	NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
-	NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage];
-	[[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] disconnectWithReason:quitMessageString];
-	[quitMessageString release];
+	if ( [quitMessage length] ) {
+		NSAttributedString *quitMessageString = [[NSAttributedString alloc] initWithString:quitMessage];
+		[selectedBookmarkedConnection disconnectWithReason:quitMessageString];
+		[quitMessageString release];
+	} else
+		[selectedBookmarkedConnection disconnect];
 }
 
 - (void) _delete:(id) sender {
