@@ -24,7 +24,9 @@
 
 	[super viewDidLoad];
 
-	_rootViewController.navigationItem.leftBarButtonItem = nil;
+	UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(close:)];
+	_rootViewController.navigationItem.leftBarButtonItem = doneItem;
+	[doneItem release];
 }
 
 #pragma mark -
