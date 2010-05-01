@@ -171,8 +171,8 @@ static NSURL *lastURL;
 		alert.message = NSLocalizedString(@"You need to enter an Instapaper username in Colloquy's Settings.", "No Instapaper username alert message");
 
 		success = NO;
-		showRetry = YES;
-		showUsernameAndPasswordTextFields = YES;
+		showRetry = NO;
+		showUsernameAndPasswordTextFields = NO;
 	}
 
 	NSString *password = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQInstapaperPassword"];

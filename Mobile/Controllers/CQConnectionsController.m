@@ -656,7 +656,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		case MVChatConnectionRoomPasswordIncorrectError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The room \"%@\" on \"%@\" is password protected, and you didn't supply the correct password.", "Room is full alert message"), room.displayName, connection.displayName];
 			placeholder = NSLocalizedString(@"Channel Key", @"Channel Key textfield placeholder");
-			tag = ChannelKeyTextFieldTag;
+//			tag = ChannelKeyTextFieldTag;
 			break;
 		case MVChatConnectionCantSendToRoomError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't send messages to \"%@\" due to some room restriction.", "Cant send message alert message"), room.displayName];
@@ -667,7 +667,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		case MVChatConnectionIdentifyToJoinRoomError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Identify with network services to join \"%@\" on \"%@\".", "Identify to join room alert message"), room.displayName, connection.displayName];
 			placeholder = NSLocalizedString(@"NickServ Password", @"NickServ Password textfield placeholder");
-			tag = NickservPasswordTextFieldTag;
+//			tag = NickservPasswordTextFieldTag;
 			break;
 		case MVChatConnectionCantChangeNickError:
 			if (room) errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't change your nickname while in \"%@\" on \"%@\". Leave the room and try again.", "Can't change nick because of room alert message" ), room.displayName, connection.displayName];
