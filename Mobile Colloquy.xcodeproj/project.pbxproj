@@ -161,6 +161,8 @@
 		1CD84C2B10040AB300E56A7E /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CD84C2A10040AB300E56A7E /* MediaPlayer.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1CD949820D8E18DB00756ACD /* directChatIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD949800D8E18DB00756ACD /* directChatIcon.png */; };
 		1CD949830D8E18DB00756ACD /* roomIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD949810D8E18DB00756ACD /* roomIcon.png */; };
+		1CDDE9AB118C8DB300C83EBE /* CQViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9AA118C8DB300C83EBE /* CQViewController.m */; };
+		1CDDE9C5118C8EB700C83EBE /* CQTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9C4118C8EB700C83EBE /* CQTableViewController.m */; };
 		1CE3FB120D8A3DC100FB035F /* CQConnectionCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */; };
 		1CE69F820EE2F50100389442 /* ChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CE69F810EE2F50100389442 /* ChatView.xib */; };
 		1CE69FD90EE317F200389442 /* CQChatInputBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE69FD80EE317F200389442 /* CQChatInputBar.m */; };
@@ -423,6 +425,10 @@
 		1CD84C2A10040AB300E56A7E /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		1CD949800D8E18DB00756ACD /* directChatIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = directChatIcon.png; sourceTree = "<group>"; };
 		1CD949810D8E18DB00756ACD /* roomIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = roomIcon.png; sourceTree = "<group>"; };
+		1CDDE9A9118C8DB300C83EBE /* CQViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQViewController.h; path = Mobile/Controllers/CQViewController.h; sourceTree = "<group>"; };
+		1CDDE9AA118C8DB300C83EBE /* CQViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQViewController.m; path = Mobile/Controllers/CQViewController.m; sourceTree = "<group>"; };
+		1CDDE9C3118C8EB700C83EBE /* CQTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQTableViewController.h; path = Mobile/Controllers/CQTableViewController.h; sourceTree = "<group>"; };
+		1CDDE9C4118C8EB700C83EBE /* CQTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQTableViewController.m; path = Mobile/Controllers/CQTableViewController.m; sourceTree = "<group>"; };
 		1CE3FB100D8A3DC100FB035F /* CQConnectionCreationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQConnectionCreationViewController.h; sourceTree = "<group>"; };
 		1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQConnectionCreationViewController.m; sourceTree = "<group>"; };
 		1CE69F810EE2F50100389442 /* ChatView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatView.xib; sourceTree = "<group>"; };
@@ -701,6 +707,10 @@
 				1CA6EBFD1020924C00310D59 /* CQAnalyticsController.h */,
 				1C0931010D80C6E900A2705D /* CQColloquyApplication.m */,
 				1C0931020D80C6E900A2705D /* CQColloquyApplication.h */,
+				1CA3DD5410287BF3008B1AD2 /* CQHelpTopicsViewController.m */,
+				1CA3DD5310287BF3008B1AD2 /* CQHelpTopicsViewController.h */,
+				1CA3DEBB10290B0F008B1AD2 /* CQHelpTopicViewController.m */,
+				1CA3DEBA10290B0E008B1AD2 /* CQHelpTopicViewController.h */,
 				1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */,
 				1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */,
 				925C594B1177CB63001995E0 /* CQModalNavigationController.m */,
@@ -717,14 +727,14 @@
 				924B8238116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.h */,
 				89E87C080FA0450800B49230 /* CQSoundController.m */,
 				89E87C070FA0450800B49230 /* CQSoundController.h */,
+				1CDDE9C4118C8EB700C83EBE /* CQTableViewController.m */,
+				1CDDE9C3118C8EB700C83EBE /* CQTableViewController.h */,
+				1CDDE9AA118C8DB300C83EBE /* CQViewController.m */,
+				1CDDE9A9118C8DB300C83EBE /* CQViewController.h */,
 				1CFCBA341114FB2500EA5F10 /* CQWelcomeController.m */,
 				1CFCBA331114FB2500EA5F10 /* CQWelcomeController.h */,
 				1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */,
 				1CA3DC561027984A008B1AD2 /* CQWelcomeViewController.h */,
-				1CA3DD5410287BF3008B1AD2 /* CQHelpTopicsViewController.m */,
-				1CA3DD5310287BF3008B1AD2 /* CQHelpTopicsViewController.h */,
-				1CA3DEBB10290B0F008B1AD2 /* CQHelpTopicViewController.m */,
-				1CA3DEBA10290B0E008B1AD2 /* CQHelpTopicViewController.h */,
 			);
 			name = General;
 			path = ../..;
@@ -1245,6 +1255,8 @@
 				92F3BF80117186AF00A4F554 /* CQTextView.m in Sources */,
 				925C594C1177CB63001995E0 /* CQModalNavigationController.m in Sources */,
 				925C59591177D84C001995E0 /* CQAwayStatusController.m in Sources */,
+				1CDDE9AB118C8DB300C83EBE /* CQViewController.m in Sources */,
+				1CDDE9C5118C8EB700C83EBE /* CQTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

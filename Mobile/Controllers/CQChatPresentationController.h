@@ -1,6 +1,8 @@
+#import "CQViewController.h"
+
 @protocol CQChatViewController;
 
-@interface CQChatPresentationController : UIViewController {
+@interface CQChatPresentationController : CQViewController {
 	UIToolbar *_toolbar;
 	NSArray *_standardToolbarItems;
 	UIViewController <CQChatViewController> *_topChatViewController;

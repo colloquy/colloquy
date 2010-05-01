@@ -1,4 +1,6 @@
-@interface CQHelpTopicViewController : UIViewController <UIWebViewDelegate> {
+#import "CQViewController.h"
+
+@interface CQHelpTopicViewController : CQViewController <UIWebViewDelegate> {
 	UIWebView *_webView;
 	NSURL *_urlToHandle;
 }

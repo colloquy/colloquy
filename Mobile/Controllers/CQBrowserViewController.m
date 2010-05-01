@@ -72,10 +72,6 @@ static NSURL *lastURL;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
-- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
-}
-
 - (void) viewDidDisappear:(BOOL) animated {
 	[super viewDidDisappear:animated];
 

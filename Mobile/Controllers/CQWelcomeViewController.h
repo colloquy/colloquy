@@ -1,6 +1,8 @@
+#import "CQTableViewController.h"
+
 @class CQHelpTopicsViewController;
 
-@interface CQWelcomeViewController : UITableViewController {
+@interface CQWelcomeViewController : CQTableViewController {
 	CQHelpTopicsViewController *_helpTopicsController;
 }
 @end

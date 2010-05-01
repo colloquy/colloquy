@@ -1,3 +1,5 @@
-@interface CQPreferencesTableViewController : UITableViewController
+#import "CQTableViewController.h"
+
+@interface CQPreferencesTableViewController : CQTableViewController
 - (void) endEditing;
 @end

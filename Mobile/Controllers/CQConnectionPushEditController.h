@@ -1,6 +1,8 @@
+#import "CQTableViewController.h"
+
 @class MVChatConnection;
 
-@interface CQConnectionPushEditController : UITableViewController {
+@interface CQConnectionPushEditController : CQTableViewController {
 	@protected
 	MVChatConnection *_connection;
 }

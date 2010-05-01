@@ -1,6 +1,8 @@
+#import "CQTableViewController.h"
+
 @class CQPreferencesListEditViewController;
 
-@interface CQPreferencesListViewController : UITableViewController {
+@interface CQPreferencesListViewController : CQTableViewController {
 	@protected
 	NSMutableArray *_items;
 	UIImage *_itemImage;

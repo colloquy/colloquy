@@ -1,8 +1,9 @@
 #import "CQChatTableCell.h"
+#import "CQTableViewController.h"
 
 @protocol CQChatViewController;
 
-@interface CQChatListViewController : UITableViewController <UIActionSheetDelegate> {
+@interface CQChatListViewController : CQTableViewController <UIActionSheetDelegate> {
 	@protected
 	UILongPressGestureRecognizer *_longPressGestureRecognizer;
 	UIActionSheet *_currentChatViewActionSheet;

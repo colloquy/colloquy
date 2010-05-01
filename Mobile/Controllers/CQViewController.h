@@ -1,0 +1,2 @@
+@interface CQViewController : UIViewController
+@end

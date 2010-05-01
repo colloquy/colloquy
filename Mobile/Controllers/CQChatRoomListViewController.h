@@ -1,6 +1,8 @@
+#import "CQTableViewController.h"
+
 @class MVChatConnection;
 
-@interface CQChatRoomListViewController : UITableViewController <UISearchBarDelegate> {
+@interface CQChatRoomListViewController : CQTableViewController <UISearchBarDelegate> {
 	@protected
 	MVChatConnection *_connection;
 	NSMutableArray *_rooms;

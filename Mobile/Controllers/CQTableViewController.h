@@ -1,0 +1,2 @@
+@interface CQTableViewController : UITableViewController
+@end

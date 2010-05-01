@@ -1,8 +1,10 @@
+#import "CQTableViewController.h"
+
 @class MVChatConnection;
 @class CQBouncerSettings;
 @class CQConnectionsNavigationController;
 
-@interface CQConnectionsViewController : UITableViewController <UIActionSheetDelegate> {
+@interface CQConnectionsViewController : CQTableViewController <UIActionSheetDelegate> {
 	@protected
 	NSTimer *_connectTimeUpdateTimer;
 	BOOL _active;

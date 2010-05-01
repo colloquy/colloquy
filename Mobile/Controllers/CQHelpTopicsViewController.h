@@ -1,6 +1,8 @@
+#import "CQTableViewController.h"
+
 @class MPMoviePlayerController;
 
-@interface CQHelpTopicsViewController : UITableViewController {
+@interface CQHelpTopicsViewController : CQTableViewController {
 	MPMoviePlayerController *_moviePlayer;
 	NSMutableArray *_helpSections;
 	NSMutableData *_helpData;
