@@ -12,6 +12,7 @@
 	_inputFields = [[NSMutableArray alloc] initWithCapacity:2];
 
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(repositionAlertView) name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -36,11 +37,12 @@
 
 #pragma mark -
 
-- (CGFloat) alertViewVerticalOffset {
-	return ([[UIDevice currentDevice] isPadModel]) ? 150 : 5;
-}
-
 - (void) layoutSubviews {
+	if (!_inputFields.count) {
+		[super layoutSubviews];
+		return;
+	}
+
 	CGFloat yConstant = 0.;
 	CGRect rect = self.bounds;
 	NSUInteger inputFieldCount = _inputFields.count;
@@ -104,15 +106,20 @@
 #pragma mark -
 
 - (void) repositionAlertView {
-	if (!UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) && [[UIDevice currentDevice] isPadModel])
+	if (!_inputFields.count)
 		return;
+
+	if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) && [[UIDevice currentDevice] isPadModel])
+		return;
+
+	CGFloat alertViewVerticalOffset = ([[UIDevice currentDevice] isPadModel] ? 150. : 5.);
 
 	CGRect frame = self.frame;
 	if (_showingKeyboard) {
-		frame = CGRectMake(frame.origin.x, frame.origin.y - [self alertViewVerticalOffset], frame.size.width, frame.size.height);
+		frame = CGRectMake(frame.origin.x, frame.origin.y - alertViewVerticalOffset, frame.size.width, frame.size.height);
 		[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
 	} else {
-		frame = CGRectMake(frame.origin.x, frame.origin.y + [self alertViewVerticalOffset], frame.size.width, frame.size.height);
+		frame = CGRectMake(frame.origin.x, frame.origin.y + alertViewVerticalOffset, frame.size.width, frame.size.height);
 		[UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
 	}
 
@@ -141,10 +148,10 @@
 	[super show];
 
 	if (_inputFields.count) {
-		[[_inputFields objectAtIndex:0] performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:.51];
 		_showingKeyboard = YES;
-	}
 
-	[self performSelector:@selector(repositionAlertView) withObject:nil afterDelay:.5];
+		[self performSelector:@selector(repositionAlertView) withObject:nil afterDelay:.5];
+		[[_inputFields objectAtIndex:0] performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:.51];
+	}
 }
 @end
