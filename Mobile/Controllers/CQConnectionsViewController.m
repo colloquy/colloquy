@@ -524,6 +524,7 @@
 	_ignoreNotifications = NO;
 }
 
+#if ENABLE(SECRETS)
 - (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {
 	return YES;
 }
@@ -540,4 +541,5 @@
 	if (action == @selector(copy:))
 		[UIPasteboard generalPasteboard].URL = connection.url;
 }
+#endif
 @end

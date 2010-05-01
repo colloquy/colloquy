@@ -52,5 +52,4 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 @property (nonatomic, readonly) NSString *deviceToken;
 @property (nonatomic, readonly) NSArray *highlightWords;
 @property (nonatomic, readonly) UIColor *tintColor;
-@property (nonatomic) BOOL showingTabBar;
 @end

@@ -2,10 +2,14 @@
 
 #define ENABLE(FEATURE) (defined(ENABLE_##FEATURE) && ENABLE_##FEATURE)
 
+#define LIKELY(x) __builtin_expect((x), 1)
+#define UNLIKELY(x) __builtin_expect((x), 0)
+
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
 #import <UIKit/UIKit.h>
 
+#import "NSObjectAdditions.h"
 #import "NSDataAdditions.h"
 #import "NSDictionaryAdditions.h"
 #import "NSScannerAdditions.h"

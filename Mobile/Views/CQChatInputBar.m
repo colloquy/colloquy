@@ -452,19 +452,16 @@ retry:
 
 - (void) _moveCaretToOffset:(NSUInteger) offset {
 #if ENABLE(SECRETS)
-	NSAssert([_inputField respondsToSelector:@selector(hasMarkedText)], @"UITextField does not respond to setSelectionRange:.");
-	if ([_inputField respondsToSelector:@selector(setSelectionRange:)])
-		_inputField.selectionRange = NSMakeRange(offset, 0);
+	[_inputField performPrivateSelector:@"setSelectionRange:" withRange:NSMakeRange(offset, 0)];
 #endif
 }
 
 - (BOOL) _hasMarkedText {
 #if ENABLE(SECRETS)
-	NSAssert([_inputField respondsToSelector:@selector(hasMarkedText)], @"UITextField does not respond to hasMarkedText.");
-	if ([_inputField respondsToSelector:@selector(hasMarkedText)])
-		return [_inputField hasMarkedText];
-#endif
+	return [_inputField performPrivateSelectorReturningBoolean:@"hasMarkedText"];
+#else
 	return NO;
+#endif
 }
 
 - (void) _updateTextTraits {
@@ -474,20 +471,25 @@ retry:
 
 	NSAssert(keyboardClass, @"UIKeyboardImpl class does not exist.");
 
-	NSAssert([keyboardClass respondsToSelector:@selector(activeInstance)], @"UIKeyboardImpl class does not respond to activeInstance.");
-	if ([keyboardClass respondsToSelector:@selector(activeInstance)]) {
-		UIKeyboardImpl *keyboard = [keyboardClass activeInstance];
-		if (keyboard) {
-			NSAssert([keyboard respondsToSelector:@selector(takeTextInputTraitsFromDelegate)] || [keyboard respondsToSelector:@selector(takeTextInputTraitsFrom:)], @"UIKeyboardImpl does not respond to takeTextInputTraitsFromDelegate or takeTextInputTraitsFrom:.");
-			if ([keyboard respondsToSelector:@selector(takeTextInputTraitsFromDelegate)])
-				[keyboard takeTextInputTraitsFromDelegate];
-			else if ([keyboard respondsToSelector:@selector(takeTextInputTraitsFrom:)])
-				[keyboard takeTextInputTraitsFrom:_inputField];
-			NSAssert([keyboard respondsToSelector:@selector(updateReturnKey:)], @"UIKeyboardImpl does not respond to updateReturnKey:.");
-			if ([keyboard respondsToSelector:@selector(updateReturnKey:)])
-				[keyboard updateReturnKey:YES];
-		}
-	}
+	UIKeyboardImpl *keyboard = [keyboardClass performPrivateSelector:@"activeInstance"];
+	if (!keyboard)
+		return;
+
+	static SEL takeTextInputTraitsFromDelegateSelector;
+	if (!takeTextInputTraitsFromDelegateSelector)
+		takeTextInputTraitsFromDelegateSelector = NSSelectorFromString(@"takeTextInputTraitsFromDelegate");
+
+	static SEL takeTextInputTraitsFromSelector;
+	if (!takeTextInputTraitsFromSelector)
+		takeTextInputTraitsFromSelector = NSSelectorFromString(@"takeTextInputTraitsFrom:");
+
+	NSAssert([keyboard respondsToSelector:takeTextInputTraitsFromDelegateSelector] || [keyboard respondsToSelector:takeTextInputTraitsFromSelector], @"UIKeyboardImpl does not respond to takeTextInputTraitsFromDelegate or takeTextInputTraitsFrom:.");
+	if ([keyboard respondsToSelector:takeTextInputTraitsFromDelegateSelector])
+		[keyboard performSelector:takeTextInputTraitsFromDelegateSelector];
+	else if ([keyboard respondsToSelector:takeTextInputTraitsFromSelector])
+		[keyboard performSelector:takeTextInputTraitsFromSelector withObject:_inputField];
+
+	[keyboard performPrivateSelector:@"updateReturnKey:" withBoolean:YES];
 #endif
 }
 

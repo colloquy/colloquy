@@ -59,6 +59,7 @@
 	[sheet release];
 }
 
+#if ENABLE(SECRETS)
 - (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {
 	return YES;
 }
@@ -73,6 +74,7 @@
 	if (action == @selector(copy:))
 		[UIPasteboard generalPasteboard].string = roomName;
 }
+#endif
 
 #pragma mark -
 

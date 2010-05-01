@@ -163,6 +163,7 @@
 		1CD949830D8E18DB00756ACD /* roomIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD949810D8E18DB00756ACD /* roomIcon.png */; };
 		1CDDE9AB118C8DB300C83EBE /* CQViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9AA118C8DB300C83EBE /* CQViewController.m */; };
 		1CDDE9C5118C8EB700C83EBE /* CQTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9C4118C8EB700C83EBE /* CQTableViewController.m */; };
+		1CDDE9F6118CD2B800C83EBE /* NSObjectAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9F5118CD2B800C83EBE /* NSObjectAdditions.m */; };
 		1CE3FB120D8A3DC100FB035F /* CQConnectionCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */; };
 		1CE69F820EE2F50100389442 /* ChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CE69F810EE2F50100389442 /* ChatView.xib */; };
 		1CE69FD90EE317F200389442 /* CQChatInputBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE69FD80EE317F200389442 /* CQChatInputBar.m */; };
@@ -429,6 +430,8 @@
 		1CDDE9AA118C8DB300C83EBE /* CQViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQViewController.m; path = Mobile/Controllers/CQViewController.m; sourceTree = "<group>"; };
 		1CDDE9C3118C8EB700C83EBE /* CQTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQTableViewController.h; path = Mobile/Controllers/CQTableViewController.h; sourceTree = "<group>"; };
 		1CDDE9C4118C8EB700C83EBE /* CQTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQTableViewController.m; path = Mobile/Controllers/CQTableViewController.m; sourceTree = "<group>"; };
+		1CDDE9F4118CD2B800C83EBE /* NSObjectAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSObjectAdditions.h; path = Additions/NSObjectAdditions.h; sourceTree = "<group>"; };
+		1CDDE9F5118CD2B800C83EBE /* NSObjectAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSObjectAdditions.m; path = Additions/NSObjectAdditions.m; sourceTree = "<group>"; };
 		1CE3FB100D8A3DC100FB035F /* CQConnectionCreationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQConnectionCreationViewController.h; sourceTree = "<group>"; };
 		1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQConnectionCreationViewController.m; sourceTree = "<group>"; };
 		1CE69F810EE2F50100389442 /* ChatView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatView.xib; sourceTree = "<group>"; };
@@ -862,6 +865,8 @@
 				1C20BE800EFEDF26005AD8A5 /* NSDictionaryAdditions.h */,
 				1C09326D0D80CA4800A2705D /* NSNotificationAdditions.m */,
 				1C09326C0D80CA4800A2705D /* NSNotificationAdditions.h */,
+				1CDDE9F5118CD2B800C83EBE /* NSObjectAdditions.m */,
+				1CDDE9F4118CD2B800C83EBE /* NSObjectAdditions.h */,
 				1C0932710D80CA4800A2705D /* NSScannerAdditions.m */,
 				1C0932700D80CA4800A2705D /* NSScannerAdditions.h */,
 				1C0932750D80CA4800A2705D /* NSStringAdditions.m */,
@@ -1257,6 +1262,7 @@
 				925C59591177D84C001995E0 /* CQAwayStatusController.m in Sources */,
 				1CDDE9AB118C8DB300C83EBE /* CQViewController.m in Sources */,
 				1CDDE9C5118C8EB700C83EBE /* CQTableViewController.m in Sources */,
+				1CDDE9F6118CD2B800C83EBE /* NSObjectAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

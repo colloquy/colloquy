@@ -107,10 +107,13 @@
 - (void) didFinishScrolling {
 #if ENABLE(SECRETS)
 	CGPoint offset = CGPointZero;
-	if ([self respondsToSelector:@selector(_scrollView)])
-		offset = [self _scrollView].contentOffset;
-	else if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(offset)])
-		offset = [self _scroller].offset;
+	UIScrollView *scrollView = [self performPrivateSelector:@"_scrollView"];
+	if (scrollView) {
+		offset = scrollView.contentOffset;
+	} else {
+		id scroller = [self performPrivateSelector:@"_scroller"];
+		offset = [scroller performPrivateSelectorReturningPoint:@"offset"];
+	}
 
 	NSString *command = [NSString stringWithFormat:@"updateScrollPosition(%f)", offset.y];
 	[self stringByEvaluatingJavaScriptFromString:command];
@@ -233,10 +236,13 @@
 
 - (void) flashScrollIndicators {
 #if ENABLE(SECRETS)
-	if ([self respondsToSelector:@selector(_scrollView)])
-		[[self _scrollView] flashScrollIndicators];
-	else if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(displayScrollerIndicators)])
-		[[self _scroller] displayScrollerIndicators];
+	UIScrollView *scrollView = [self performPrivateSelector:@"_scrollView"];
+	if (scrollView) {
+		[scrollView flashScrollIndicators];
+	} else {
+		id scroller = [self performPrivateSelector:@"_scroller"];
+		[scroller performPrivateSelector:@"displayScrollerIndicators"];
+	}
 #endif
 }
 
@@ -296,10 +302,10 @@
 	super.delegate = self;
 
 #if ENABLE(SECRETS)
-	if ([self respondsToSelector:@selector(_scrollView)] && [[self _scrollView] respondsToSelector:@selector(setShowBackgroundShadow:)])
-		[self _scrollView].showBackgroundShadow = NO;
-	else if ([self respondsToSelector:@selector(_scroller)] && [[self _scroller] respondsToSelector:@selector(setShowBackgroundShadow:)])
-		[self _scroller].showBackgroundShadow = NO;
+	UIScrollView *scrollView = [self performPrivateSelector:@"_scrollView"];
+	if (!scrollView)
+		scrollView = [self performPrivateSelector:@"_scroller"];
+	[scrollView performPrivateSelector:@"setShowBackgroundShadow:" withBoolean:NO];
 #endif
 
 	_blockerView = [[UIView alloc] initWithFrame:self.bounds];
