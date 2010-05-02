@@ -21,6 +21,18 @@
 #import "UITableViewAdditions.h"
 #import "UITableViewCellAdditions.h"
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED <= __IPHONE_3_1
+@class UILongPressGestureRecognizer;
+@class UIPopoverController;
+@class UISplitViewController;
+
+@protocol UIPopoverControllerDelegate
+@end
+
+@protocol UISplitViewControllerDelegate
+@end
+#endif
+
 #endif
 
 #import "MVUtilities.h"

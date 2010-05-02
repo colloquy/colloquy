@@ -10,6 +10,10 @@
 
 @implementation UIViewController (UIViewControllerAdditions)
 - (void) resizeForViewInPopoverUsingTableView:(UITableView *) tableView {
+#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
+	if (![self respondsToSelector:@selector(setContentSizeForViewInPopover:)])
+		return;
+
 	NSUInteger numberOfRows = [tableView numberOfRows];
 	NSUInteger numberOfSections = [tableView numberOfSections];
 
@@ -30,5 +34,6 @@
 	} else height = MinimumPopoverHeight;
 
 	self.contentSizeForViewInPopover = CGSizeMake(TableViewCellWidth, height);
+#endif
 }
 @end

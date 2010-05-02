@@ -9,8 +9,10 @@
 
 	self.delegate = self;
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
 	if ([self respondsToSelector:@selector(setModalPresentationStyle:)])
 		self.modalPresentationStyle = UIModalPresentationFormSheet;
+#endif
 
 	return self;
 }
