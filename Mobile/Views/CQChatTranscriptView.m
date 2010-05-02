@@ -28,6 +28,13 @@
 
 #pragma mark -
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED <= __IPHONE_3_1
+@interface UIWebView (UIWebViewScrollViewDelegate) <UIScrollViewDelegate>
+@end
+#endif
+
+#pragma mark -
+
 @interface CQChatTranscriptView (Internal)
 - (void) _addComponentsToTranscript:(NSArray *) components fromPreviousSession:(BOOL) previous animated:(BOOL) animated;
 - (NSString *) _contentHTML;
@@ -149,6 +156,7 @@
 
 	[self didFinishScrolling];
 }
+#endif
 
 - (void) scrollViewWillBeginDragging:(UIScrollView *) scrollView {
 	[super scrollViewWillBeginDragging:scrollView];
@@ -167,7 +175,6 @@
 
 	[self didFinishScrolling];
 }
-#endif
 
 #pragma mark -
 
