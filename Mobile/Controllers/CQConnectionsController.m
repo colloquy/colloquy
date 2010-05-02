@@ -49,6 +49,8 @@ static void* framework##Framework(void) \
 }
 
 #define WEAK_FUNCTION(framework, functionName, resultType, parameterDeclarations, parameterNames, defaultValue) \
+resultType functionName parameterDeclarations; \
+\
 resultType functionName parameterDeclarations \
 { \
 	static resultType (*functionPointer) parameterDeclarations; \
@@ -65,11 +67,6 @@ resultType functionName parameterDeclarations \
 #define kIOMessageCanSystemSleep 0xe0000270
 
 typedef void (*IOServiceInterestCallback)(void *context, mach_port_t service, uint32_t messageType, void *messageArgument);
-
-mach_port_t IORegisterForSystemPower(void *context, void *notificationPort, IOServiceInterestCallback callback, mach_port_t *notifier);
-CFRunLoopSourceRef IONotificationPortGetRunLoopSource(void *notify);
-int IOAllowPowerChange(mach_port_t kernelPort, long notification);
-int IOCancelPowerChange(mach_port_t kernelPort, long notification);
 
 WEAK_FRAMEWORK(IOKit);
 WEAK_FUNCTION(IOKit, IORegisterForSystemPower, mach_port_t, (void *context, void *notificationPort, IOServiceInterestCallback callback, mach_port_t *notifier), (context, notificationPort, callback, notifier), 0);
