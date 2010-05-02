@@ -1,9 +1,9 @@
-#ifdef __OBJC__
-
 #define ENABLE(FEATURE) (defined(ENABLE_##FEATURE) && ENABLE_##FEATURE)
 
 #define LIKELY(x) __builtin_expect((x), 1)
 #define UNLIKELY(x) __builtin_expect((x), 0)
+
+#ifdef __OBJC__
 
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
@@ -21,6 +21,6 @@
 #import "UITableViewAdditions.h"
 #import "UITableViewCellAdditions.h"
 
-#import "MVUtilities.h"
-
 #endif
+
+#import "MVUtilities.h"
