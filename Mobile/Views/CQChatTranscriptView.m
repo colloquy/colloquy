@@ -22,7 +22,9 @@
 - (void) scrollerDidEndDragging:(UIScroller *) scroller willSmoothScroll:(BOOL) smooth;
 - (void) scrollerDidEndSmoothScrolling:(UIScroller *) scroller;
 - (UIScroller *) _scroller;
+#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
 - (UIScrollView *) _scrollView;
+#endif
 @end
 #endif
 
@@ -114,10 +116,13 @@
 - (void) didFinishScrolling {
 #if ENABLE(SECRETS)
 	CGPoint offset = CGPointZero;
+#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
 	UIScrollView *scrollView = [self performPrivateSelector:@"_scrollView"];
 	if (scrollView) {
 		offset = scrollView.contentOffset;
-	} else {
+	} else
+#endif
+	{
 		id scroller = [self performPrivateSelector:@"_scroller"];
 		offset = [scroller performPrivateSelectorReturningPoint:@"offset"];
 	}
@@ -243,10 +248,13 @@
 
 - (void) flashScrollIndicators {
 #if ENABLE(SECRETS)
+#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
 	UIScrollView *scrollView = [self performPrivateSelector:@"_scrollView"];
 	if (scrollView) {
 		[scrollView flashScrollIndicators];
-	} else {
+	} else
+#endif
+	{
 		id scroller = [self performPrivateSelector:@"_scroller"];
 		[scroller performPrivateSelector:@"displayScrollerIndicators"];
 	}
@@ -309,8 +317,12 @@
 	super.delegate = self;
 
 #if ENABLE(SECRETS)
+#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
 	UIScrollView *scrollView = [self performPrivateSelector:@"_scrollView"];
 	if (!scrollView)
+#else
+	id
+#endif
 		scrollView = [self performPrivateSelector:@"_scroller"];
 	[scrollView performPrivateSelector:@"setShowBackgroundShadow:" withBoolean:NO];
 #endif
