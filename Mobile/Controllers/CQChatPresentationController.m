@@ -25,13 +25,13 @@
 	UIView *view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	self.view = view;
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	view.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
 #endif
 	view.clipsToBounds = YES;
 
 	_toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
-#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	_toolbar.layer.shadowOpacity = 1.;
 	_toolbar.layer.shadowRadius = 3.;
 	_toolbar.layer.shadowOffset = CGSizeMake(0., 0.);

@@ -337,7 +337,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 }
 
 - (void) _tableWasLongPressed:(UILongPressGestureRecognizer *) gestureReconizer {
-#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	if (gestureReconizer.state != UIGestureRecognizerStateBegan)
 		return;
 
@@ -405,7 +405,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	self.tableView.rowHeight = 62.;
 
 	if ([self.tableView respondsToSelector:@selector(addGestureRecognizer:)] && !_longPressGestureRecognizer) {
-#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 		_longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_tableWasLongPressed:)];
 		_longPressGestureRecognizer.cancelsTouchesInView = NO;
 		_longPressGestureRecognizer.delaysTouchesBegan = YES;

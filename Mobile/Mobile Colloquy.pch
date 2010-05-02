@@ -5,9 +5,25 @@
 
 #ifdef __OBJC__
 
+#if !defined(__IPHONE_3_2)
+#define __IPHONE_3_2 30200
+#endif
+
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
 #import <UIKit/UIKit.h>
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED <= __IPHONE_3_1
+@class UILongPressGestureRecognizer;
+@class UIPopoverController;
+@class UISplitViewController;
+
+@protocol UIPopoverControllerDelegate
+@end
+
+@protocol UISplitViewControllerDelegate
+@end
+#endif
 
 #import "NSObjectAdditions.h"
 #import "NSDataAdditions.h"
@@ -20,18 +36,6 @@
 #import "UINavigationControllerAdditions.h"
 #import "UITableViewAdditions.h"
 #import "UITableViewCellAdditions.h"
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED <= __IPHONE_3_1
-@class UILongPressGestureRecognizer;
-@class UIPopoverController;
-@class UISplitViewController;
-
-@protocol UIPopoverControllerDelegate
-@end
-
-@protocol UISplitViewControllerDelegate
-@end
-#endif
 
 #endif
 

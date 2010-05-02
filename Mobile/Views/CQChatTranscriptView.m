@@ -22,7 +22,7 @@
 - (void) scrollerDidEndDragging:(UIScroller *) scroller willSmoothScroll:(BOOL) smooth;
 - (void) scrollerDidEndSmoothScrolling:(UIScroller *) scroller;
 - (UIScroller *) _scroller;
-#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 - (UIScrollView *) _scrollView;
 #endif
 @end
@@ -30,7 +30,7 @@
 
 #pragma mark -
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED <= __IPHONE_3_1
+#if __IPHONE_OS_VERSION_MAX_ALLOWED <= __IPHONE_3_1
 @interface UIWebView (UIWebViewScrollViewDelegate) <UIScrollViewDelegate>
 @end
 #endif
@@ -116,7 +116,7 @@
 - (void) didFinishScrolling {
 #if ENABLE(SECRETS)
 	CGPoint offset = CGPointZero;
-#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	UIScrollView *scrollView = [self performPrivateSelector:@"_scrollView"];
 	if (scrollView) {
 		offset = scrollView.contentOffset;
@@ -248,7 +248,7 @@
 
 - (void) flashScrollIndicators {
 #if ENABLE(SECRETS)
-#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	UIScrollView *scrollView = [self performPrivateSelector:@"_scrollView"];
 	if (scrollView) {
 		[scrollView flashScrollIndicators];
@@ -317,7 +317,7 @@
 	super.delegate = self;
 
 #if ENABLE(SECRETS)
-#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	UIScrollView *scrollView = [self performPrivateSelector:@"_scrollView"];
 	if (!scrollView)
 #else

@@ -23,7 +23,7 @@
 	if (cached)
 		return result;
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	if ([self respondsToSelector:@selector(userInterfaceIdiom)])
 		result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPhone) && [self.model hasCaseInsensitiveSubstring:@"Phone"];
 	else
@@ -42,7 +42,7 @@
 	if (cached)
 		return result;
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	if ([self respondsToSelector:@selector(userInterfaceIdiom)])
 		result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPhone) && [self.model hasCaseInsensitiveSubstring:@"Pod"];
 	else
@@ -61,7 +61,7 @@
 	if (cached)
 		return result;
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED > __IPHONE_3_1
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	if ([self respondsToSelector:@selector(userInterfaceIdiom)])
 		result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPad);
 #endif
