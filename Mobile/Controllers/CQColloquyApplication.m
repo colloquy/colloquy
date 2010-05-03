@@ -12,8 +12,6 @@
 #import "CQWelcomeController.h"
 #import "RegexKitLite.h"
 
-#import "NSUserDefaultsAdditions.h"
-
 #if ENABLE(SECRETS)
 typedef enum {
     UITabBarTransitionNone,
@@ -146,39 +144,42 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	else [[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 }
 
-- (BOOL) shouldShowWelcomeScreen {
+- (BOOL) firstLaunchOfVersion {
 	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
 	NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-	BOOL showWelcomeScreen = ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastBuildWelcomeScreenAppeared"] isEqualToString:version];
+	return ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastBuildWelcomeScreenAppeared"] isEqualToString:version];
 
-	return (showWelcomeScreen || (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count));
+	return showWelcomeScreen;
 }
 
 - (void) performDeferredLaunchWork {
 	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-	NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-	NSString *displayVersion = [NSString stringWithFormat:@"%@ (%@)", version, [infoDictionary objectForKey:@"CFBundleVersion"]];
-	[[NSUserDefaults standardUserDefaults] setObject:displayVersion forKey:@"CQCurrentVersion"];
 
-	NSString *preferencesPath = [@"~/../../Library/Preferences/com.apple.Preferences.plist" stringByStandardizingPath];
-	NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:preferencesPath];
+	if ([self firstLaunchOfVersion]) {
+		NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+		NSString *displayVersion = [NSString stringWithFormat:@"%@ (%@)", version, [infoDictionary objectForKey:@"CFBundleVersion"]];
+		[[NSUserDefaults standardUserDefaults] setObject:displayVersion forKey:@"CQCurrentVersion"];
 
-	if (preferences && ![[preferences objectForKey:@"KeyboardEmojiEverywhere"] boolValue]) {
-		[preferences setValue:[NSNumber numberWithBool:YES] forKey:@"KeyboardEmojiEverywhere"];
-		[preferences writeToFile:preferencesPath atomically:YES];
-	}
+		NSString *preferencesPath = [@"~/../../Library/Preferences/com.apple.Preferences.plist" stringByStandardizingPath];
+		NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:preferencesPath];
 
-	[preferences release];
-
-	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVSetUpDefaultQuitMessage"]) {
-		NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
-		BOOL hasOldDefault = [quitMessage hasCaseInsensitiveSubstring:@"Colloquy for iPhone"];
-		if (!quitMessage.length || hasOldDefault) {
-			quitMessage = [NSString stringWithFormat:NSLocalizedString(@"Colloquy for %@ - http://colloquy.mobi", @"Quit message, with the device name inserted"), [UIDevice currentDevice].localizedModel];
-			[[NSUserDefaults standardUserDefaults] setObject:quitMessage forKey:@"JVQuitMessage"];
+		if (preferences && ![[preferences objectForKey:@"KeyboardEmojiEverywhere"] boolValue]) {
+			[preferences setValue:[NSNumber numberWithBool:YES] forKey:@"KeyboardEmojiEverywhere"];
+			[preferences writeToFile:preferencesPath atomically:YES];
 		}
 
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVSetUpDefaultQuitMessage"];
+		[preferences release];
+
+		if (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVSetUpDefaultQuitMessage"]) {
+			NSString *quitMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
+			BOOL hasOldDefault = [quitMessage hasCaseInsensitiveSubstring:@"Colloquy for iPhone"];
+			if (!quitMessage.length || hasOldDefault) {
+				quitMessage = [NSString stringWithFormat:NSLocalizedString(@"Colloquy for %@ - http://colloquy.mobi", @"Quit message, with the device name inserted"), [UIDevice currentDevice].localizedModel];
+				[[NSUserDefaults standardUserDefaults] setObject:quitMessage forKey:@"JVQuitMessage"];
+			}
+
+			[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVSetUpDefaultQuitMessage"];
+		}
 	}
 
 	CQAnalyticsController *analyticsController = [CQAnalyticsController defaultController];
@@ -221,7 +222,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateAnalytics) name:NSUserDefaultsDidChangeNotification object:nil];
 
-	if ([self shouldShowWelcomeScreen]) {
+	if ([self firstLaunchOfVersion] || (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count)) {
 		[self showWelcome:nil];
 
 		[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQLastBuildWelcomeScreenAppeared"];
