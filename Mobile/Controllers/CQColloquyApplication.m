@@ -181,26 +181,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVSetUpDefaultQuitMessage"];
 	}
 
-	BOOL removePreferences = 
-#if TARGET_IPHONE_SIMULATOR
-	YES;
-#else
-	![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastBuildWelcomeScreenAppeared"] isEqualToString:version];
-#endif
-
-	if (removePreferences) {
-		BOOL isPadModel = [[UIDevice currentDevice] isPadModel];
-		if (isPadModel || [[UIDevice currentDevice] isPodModel]) {
-			if (isPadModel) {
-				[[NSUserDefaults standardUserDefaults] removeKey:@"CQDisableLandscape" fromSettingsPlist:@"AdvancedInterface"];
-				// [[NSUserDefaults standardUserDefaults] removeKey:@"CQTimestampInterval" fromSettingsPlist:@"AdvancedBehavior"];
-			}
-
-			[[NSUserDefaults standardUserDefaults] removeKey:@"CQVibrateOnHighlight" fromSettingsPlist:@"Alert"];
-			[[NSUserDefaults standardUserDefaults] removeKey:@"CQVibrateOnPrivateMessage" fromSettingsPlist:@"Alert"];
-		}
-	}
-
 	CQAnalyticsController *analyticsController = [CQAnalyticsController defaultController];
 
 	NSString *information = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
