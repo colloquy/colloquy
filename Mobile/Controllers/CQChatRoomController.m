@@ -276,6 +276,11 @@ static BOOL showLeaveEvents;
 	return NO;
 }
 
+- (BOOL) handleNamesCommandWithArguments:(NSString *) arguments {
+	[self showMembers];
+	return YES;
+}
+
 - (void) popoverControllerDidDismissPopover:(UIPopoverController *) popoverController {
 	if (popoverController == _currentUserListPopoverController) {
 		[_currentUserListViewController release];
