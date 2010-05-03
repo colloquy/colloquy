@@ -4,13 +4,13 @@
 - (BOOL) removeKey:(NSString *) key fromSettingsPlist:(NSString *) plist {
 	NSString *plistPath = [NSString stringWithFormat:@"%@/Settings.bundle/%@.plist", [[NSBundle mainBundle] bundlePath], plist];
 	NSMutableDictionary *plistDictionary = [NSMutableDictionary dictionaryWithContentsOfFile:plistPath];
-	NSMutableArray *preferencesArray = [plistDictionary objectForKey:@"PreferencesSpecifier"];
+	NSMutableArray *preferencesArray = [plistDictionary objectForKey:@"PreferenceSpecifiers"];
 
 	for (NSUInteger i = 0; i < preferencesArray.count; i++) {
 		NSDictionary *preference = [preferencesArray objectAtIndex:i];
-		if ([[preference objectForKey:@"key"] isEqualToString:key]) {
+		if ([[preference objectForKey:@"Key"] isEqualToString:key]) {
 			[preferencesArray removeObjectAtIndex:i];
-			[plistDictionary setObject:preferencesArray forKey:@"PreferencesSpecifier"];
+			[plistDictionary setObject:preferencesArray forKey:@"PreferenceSpecifiers"];
 
 			return [plistDictionary writeToFile:plistPath atomically:NO];
 		}

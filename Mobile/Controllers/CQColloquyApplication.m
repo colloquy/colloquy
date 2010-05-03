@@ -181,10 +181,17 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVSetUpDefaultQuitMessage"];
 	}
 
-	if (![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastBuildWelcomeScreenAppeared"] isEqualToString:version]) {
-		BOOL isPodModel = [[UIDevice currentDevice] isPadModel];
-		if (isPodModel || [[UIDevice currentDevice] isPodModel]) {
-			if (isPodModel) {
+	BOOL removePreferences = 
+#if TARGET_IPHONE_SIMULATOR
+	YES;
+#else
+	![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastBuildWelcomeScreenAppeared"] isEqualToString:version];
+#endif
+
+	if (removePreferences) {
+		BOOL isPadModel = [[UIDevice currentDevice] isPadModel];
+		if (isPadModel || [[UIDevice currentDevice] isPodModel]) {
+			if (isPadModel) {
 				[[NSUserDefaults standardUserDefaults] removeKey:@"CQDisableLandscape" fromSettingsPlist:@"AdvancedInterface"];
 				// [[NSUserDefaults standardUserDefaults] removeKey:@"CQTimestampInterval" fromSettingsPlist:@"AdvancedBehavior"];
 			}
