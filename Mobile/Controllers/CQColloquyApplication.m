@@ -12,6 +12,8 @@
 #import "CQWelcomeController.h"
 #import "RegexKitLite.h"
 
+#import "NSUserDefaultsAdditions.h"
+
 #if ENABLE(SECRETS)
 typedef enum {
     UITabBarTransitionNone,
@@ -177,6 +179,19 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		}
 
 		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVSetUpDefaultQuitMessage"];
+	}
+
+	if (![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastBuildWelcomeScreenAppeared"] isEqualToString:version]) {
+		BOOL isPodModel = [[UIDevice currentDevice] isPadModel];
+		if (isPodModel || [[UIDevice currentDevice] isPodModel]) {
+			if (isPodModel) {
+				[[NSUserDefaults standardUserDefaults] removeKey:@"CQDisableLandscape" fromSettingsPlist:@"AdvancedInterface"];
+				// [[NSUserDefaults standardUserDefaults] removeKey:@"CQTimestampInterval" fromSettingsPlist:@"AdvancedBehavior"];
+			}
+
+			[[NSUserDefaults standardUserDefaults] removeKey:@"CQVibrateOnHighlight" fromSettingsPlist:@"Alert"];
+			[[NSUserDefaults standardUserDefaults] removeKey:@"CQVibrateOnPrivateMessage" fromSettingsPlist:@"Alert"];
+		}
 	}
 
 	CQAnalyticsController *analyticsController = [CQAnalyticsController defaultController];
