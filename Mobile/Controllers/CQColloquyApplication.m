@@ -144,17 +144,11 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	else [[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 }
 
-- (BOOL) firstLaunchOfVersion {
-	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-	NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-	return ![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastBuildWelcomeScreenAppeared"] isEqualToString:version];
-}
-
 - (void) performDeferredLaunchWork {
 	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+	NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 
-	if ([self firstLaunchOfVersion]) {
-		NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+	if (![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastVersionUsed"] isEqualToString:version]) {
 		NSString *displayVersion = [NSString stringWithFormat:@"%@ (%@)", version, [infoDictionary objectForKey:@"CFBundleVersion"]];
 		[[NSUserDefaults standardUserDefaults] setObject:displayVersion forKey:@"CQCurrentVersion"];
 
@@ -179,11 +173,10 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 			[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVSetUpDefaultQuitMessage"];
 		}
 
-		if (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count) {
+		if (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count)
 			[self showWelcome:nil];
-			
-			[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQLastBuildWelcomeScreenAppeared"];
-		}
+
+		[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQLastVersionUsed"];
 	}
 
 	CQAnalyticsController *analyticsController = [CQAnalyticsController defaultController];
