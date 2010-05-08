@@ -142,11 +142,13 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 #endif
 
 #if ENABLE(SECRETS)
-	mach_port_t powerNotifier = 0;
-	void *notificationPort = NULL;
-	rootPowerDomainPort = IORegisterForSystemPower(self, &notificationPort, powerStateChange, &powerNotifier);
+	if ([[UIDevice currentDevice].systemVersion doubleValue] < 3.2) {
+		mach_port_t powerNotifier = 0;
+		void *notificationPort = NULL;
+		rootPowerDomainPort = IORegisterForSystemPower(self, &notificationPort, powerStateChange, &powerNotifier);
 
-	CFRunLoopAddSource(CFRunLoopGetCurrent(), IONotificationPortGetRunLoopSource(notificationPort), kCFRunLoopCommonModes);
+		CFRunLoopAddSource(CFRunLoopGetCurrent(), IONotificationPortGetRunLoopSource(notificationPort), kCFRunLoopCommonModes);
+	}
 #endif
 
 	_connectionsNavigationController = [[CQConnectionsNavigationController alloc] init];
@@ -980,6 +982,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 #if ENABLE(SECRETS)
 - (void) _powerStateMessageReceived:(natural_t) messageType withArgument:(long) messageArgument {
+	if ([[UIDevice currentDevice].systemVersion doubleValue] >= 3.2)
+		return;
+
 	switch (messageType) {
 	case kIOMessageSystemWillSleep:
 		// System will go to sleep, we can't prevent it.
