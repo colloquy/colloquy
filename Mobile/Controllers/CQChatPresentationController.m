@@ -70,32 +70,26 @@
 	if (title.length) {
 		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 		titleLabel.backgroundColor = [UIColor clearColor];
-		titleLabel.textColor = [UIColor colorWithRed:(113 / 255) green:(120 / 255) blue:(128 / 255) alpha:.5];
+		titleLabel.textColor = [UIColor colorWithRed:(113. / 255.) green:(120. / 255.) blue:(128. / 255.) alpha:1.];
 		titleLabel.font = [UIFont boldSystemFontOfSize:20.];
-		titleLabel.text = _topChatViewController.navigationItem.title;
+		titleLabel.text = title;
+		titleLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+		titleLabel.shadowOffset = CGSizeMake(0., 1.);
 
 		[titleLabel sizeToFit];
 
-		UIBarButtonItem *leftSpaceItem = [[UIBarButtonItem alloc] init];
-		leftSpaceItem.enabled = NO;
-
-		CGFloat offset = (_toolbar.frame.size.width / 2) + (titleLabel.frame.size.width / 2);
-		if (UIInterfaceOrientationIsPortrait([UIDevice currentDevice].orientation))
-			offset = ([UIScreen mainScreen].bounds.size.height / 2) + (titleLabel.frame.size.width / 2) - offset;
-		else offset = ([UIScreen mainScreen].bounds.size.height / 2) + (titleLabel.frame.size.width / 2) - offset;
-		leftSpaceItem.width = offset + (offset / 4); // looks off centered to the screen as well as centered to the toolbar. So move it over a bit
-
+		UIBarButtonItem *leftSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 		UIBarButtonItem *titleItem = [[UIBarButtonItem alloc] initWithCustomView:titleLabel];
-		UIBarButtonItem *flexibleSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+		UIBarButtonItem *rightSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 
 		[allItems addObject:leftSpaceItem];
 		[allItems addObject:titleItem];
-		[allItems addObject:flexibleSpaceItem];
+		[allItems addObject:rightSpaceItem];
 
 		[leftSpaceItem release];
-		[titleLabel release];
 		[titleItem release];
-		[flexibleSpaceItem release];
+		[rightSpaceItem release];
+		[titleLabel release];
 	}
 
 	[allItems addObjectsFromArray:_topChatViewController.toolbarItems];
@@ -152,6 +146,8 @@
 
 	[oldViewController release];
 
+	[self updateToolbarAnimated:NO];
+
 	if (!_topChatViewController)
 		return;
 
@@ -159,8 +155,6 @@
 	frame.origin.y += _toolbar.frame.size.height;
 	frame.size.height -= _toolbar.frame.size.height;
 	view.frame = frame;
-
-	[self updateToolbarAnimated:NO];
 
 	[self.view insertSubview:view aboveSubview:_toolbar];
 	[_topChatViewController viewDidAppear:NO];

@@ -616,8 +616,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if ([[UIDevice currentDevice] isPadModel]) {
 		_chatPresentationController.topChatViewController = controller;
 		[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
-		if (!controller)
-			[_chatPresentationController updateToolbarAnimated:YES];
 	} else {
 		if (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController) {
 			id old = _nextController;
