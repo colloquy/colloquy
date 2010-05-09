@@ -87,7 +87,6 @@
 		[titleLabel sizeToFit];
 
 		UIBarButtonItem *leftSpaceItem = nil;
-
 		if (UIDeviceOrientationIsPortrait(interfaceOrientation) && [[[NSLocale currentLocale] localeIdentifier] hasCaseInsensitivePrefix:@"en"]) {
 			leftSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
 
