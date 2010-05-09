@@ -399,13 +399,17 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+
 	CQActionSheet *sheet = [[CQActionSheet alloc] init];
 	sheet.tag = UserActionSheetTag;
 	sheet.delegate = self;
-	sheet.userInfo = [tableView cellForRowAtIndexPath:indexPath];
+	sheet.userInfo = cell;
 
 	NSUInteger localUserModes = (_room.connection.localUser ? [_room modesForMemberUser:_room.connection.localUser] : 0);
 	BOOL showOperatorActions = (localUserModes & (MVChatRoomMemberHalfOperatorMode | MVChatRoomMemberOperatorMode | MVChatRoomMemberAdministratorMode | MVChatRoomMemberFounderMode));
+
+	sheet.title = cell.textLabel.text;
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"Send Message", @"Send Message button title")];
 
@@ -474,6 +478,7 @@ static NSString *membersFilteredCountFormat;
 			CQUserInfoController *userInfoController = [[CQUserInfoController alloc] init];
 			userInfoController.user = user;
 
+			[[CQColloquyApplication sharedApplication] dismissPopoversAnimated:YES];
 			[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
 
 			[userInfoController release];
@@ -504,6 +509,8 @@ static NSString *membersFilteredCountFormat;
 			operatorSheet.tag = OperatorActionSheetTag;
 			operatorSheet.delegate = self;
 			operatorSheet.userInfo = context;
+
+			operatorSheet.title = actionSheet.title;
 
 			if (localUserIsHalfOperator || localUserIsOperator || localUserIsAdministrator || localUserIsFounder) {
 				[operatorSheet addButtonWithTitle:NSLocalizedString(@"Kick from Room", @"Kick from Room button title")];
