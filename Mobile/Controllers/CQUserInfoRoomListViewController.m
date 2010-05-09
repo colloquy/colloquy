@@ -50,6 +50,9 @@
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 
+	if (![[UIDevice currentDevice] isPadModel])
+		sheet.title = [_rooms objectAtIndex:indexPath.row];
+
 	[sheet addButtonWithTitle:NSLocalizedString(@"Join Room", @"Join Room button title")];
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];

@@ -581,6 +581,9 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	sheet.delegate = self;
 	sheet.userInfo = header;
 
+	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+		sheet.title = connection.displayName;
+
 	if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus)
 		sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
 	else

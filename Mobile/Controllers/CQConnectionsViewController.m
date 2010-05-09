@@ -315,6 +315,8 @@
 	sheet.delegate = self;
 	sheet.tag = ConnectSheetTag;
 
+	sheet.title = connection.displayName;
+
 	[sheet addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
 
 	if (connection.temporaryDirectConnection || !connection.directConnection)
@@ -337,6 +339,8 @@
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 	sheet.tag = DisconnectSheetTag;
+
+	sheet.title = connection.displayName;
 
 	if (connection.directConnection) {
 		sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];

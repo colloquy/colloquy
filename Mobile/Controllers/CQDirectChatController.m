@@ -269,6 +269,9 @@ static BOOL harwareKeyboard;
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 
+	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+		sheet.title = self.user.displayName;
+
 	[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];

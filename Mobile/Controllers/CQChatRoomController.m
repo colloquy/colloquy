@@ -256,6 +256,9 @@ static BOOL showLeaveEvents;
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
 
+	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+		sheet.title = self.room.displayName;
+
 	if (self.available)
 		sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Leave Chat Room", @"Leave Chat Room button title")];
 	else [sheet addButtonWithTitle:NSLocalizedString(@"Join Chat Room", @"Join Chat Room button title")];
