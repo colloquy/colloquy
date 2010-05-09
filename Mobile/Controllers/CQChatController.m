@@ -848,21 +848,18 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	[controller retain];
 
-	NSUInteger controllerIndex = [_chatControllers indexOfObject:controller];
-
-	[_chatControllers removeObjectIdenticalTo:controller];
+	NSUInteger controllerIndex = [_chatControllers indexOfObjectIdenticalTo:controller];
+	[_chatControllers removeObjectAtIndex:controllerIndex];
 
 	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObject:controller forKey:@"controller"];
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerRemovedChatViewControllerNotification object:self userInfo:notificationInfo];
 
-	if (_visibleChatController == controller) {
-		if (!_chatControllers.count)
-			[self showChatController:nil animated:YES];
-		else {
+	if ([[UIDevice currentDevice] isPadModel] && _visibleChatController == controller) {
+		if (_chatControllers.count) {
 			if (!controllerIndex)
 				controllerIndex = 1;
 			[self showChatController:[_chatControllers objectAtIndex:(controllerIndex - 1)] animated:YES];
-		}
+		} else [self showChatController:nil animated:YES];
 	}
 
 	[controller release];
