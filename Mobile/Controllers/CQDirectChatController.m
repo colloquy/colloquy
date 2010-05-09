@@ -46,6 +46,7 @@ static BOOL vibrateOnPrivateMessage;
 #pragma mark -
 
 static NSOperationQueue *chatMessageProcessingQueue;
+static BOOL harwareKeyboard;
 
 #pragma mark -
 
@@ -353,7 +354,7 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 	}
 
-	if (_showingKeyboard)
+	if (_showingKeyboard || harwareKeyboard)
 		[chatInputBar becomeFirstResponder];
 
 	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
@@ -384,6 +385,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
+
+	harwareKeyboard = (!_showingKeyboard && [chatInputBar isFirstResponder]);
 
 	[chatInputBar hideCompletions];
 
