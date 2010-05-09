@@ -82,6 +82,7 @@ static BOOL showsChatIcons;
 	self.tableView.dataSource = nil;
 	self.tableView.delegate = nil;
 
+	[_previousSelectedChatViewController release];
 	[_longPressGestureRecognizer release];
 	[_currentChatViewActionSheet release];
 	[_highlightedTableViewCell release];
@@ -799,6 +800,22 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	[view addTarget:self action:@selector(tableSectionHeaderSelected:) forControlEvents:UIControlEventTouchUpInside];
 
 	return [view autorelease];
+}
+
+- (void) tableView:(UITableView *) tableView willBeginEditingRowAtIndexPath:(NSIndexPath *) indexPath {
+	if ([[UIDevice currentDevice] isPadModel])
+		_previousSelectedChatViewController = [chatControllerForIndexPath([self.tableView indexPathForSelectedRow]) retain];
+}
+
+- (void) tableView:(UITableView *) tableView didEndEditingRowAtIndexPath:(NSIndexPath *) indexPath {
+	if ([[UIDevice currentDevice] isPadModel] && _previousSelectedChatViewController) {
+		NSIndexPath *indexPath = indexPathForChatController(_previousSelectedChatViewController);
+		if (indexPath)
+			[self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+
+		[_previousSelectedChatViewController release];
+		_previousSelectedChatViewController = nil;
+	}
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {

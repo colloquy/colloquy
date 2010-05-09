@@ -842,6 +842,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 #pragma mark -
 
+- (void) _showChatControllerUnanimated:(id) controller {
+	[self showChatController:controller animated:NO];
+}
+
 - (void) closeViewController:(id) controller {
 	if ([controller respondsToSelector:@selector(close)])
 		[controller close];
@@ -858,7 +862,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		if (_chatControllers.count) {
 			if (!controllerIndex)
 				controllerIndex = 1;
-			[self showChatController:[_chatControllers objectAtIndex:(controllerIndex - 1)] animated:YES];
+			[self performSelector:@selector(_showChatControllerUnanimated:) withObject:[_chatControllers objectAtIndex:(controllerIndex - 1)] afterDelay:0.];
 		} else [self showChatController:nil animated:YES];
 	}
 

@@ -9,6 +9,7 @@
 	UIActionSheet *_currentChatViewActionSheet;
 	id <UIActionSheetDelegate> _currentChatViewActionSheetDelegate;
 	UITableViewCell *_highlightedTableViewCell;
+	id <CQChatViewController> _previousSelectedChatViewController;
 	BOOL _active;
 	BOOL _needsUpdate;
 }
