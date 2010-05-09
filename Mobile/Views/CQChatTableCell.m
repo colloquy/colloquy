@@ -262,6 +262,10 @@
 		[UIView commitAnimations];
 }
 
+- (void) _delayedDeselect {
+	// Do nothing. This just messes up the selection if super handles it.
+}
+
 - (void) setSelected:(BOOL) selected animated:(BOOL) animated {
 	[super setSelected:selected animated:animated];
 
