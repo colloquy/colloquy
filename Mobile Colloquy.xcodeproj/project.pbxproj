@@ -122,6 +122,8 @@
 		1CA6EBFF1020924C00310D59 /* CQAnalyticsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA6EBFE1020924C00310D59 /* CQAnalyticsController.m */; };
 		1CA7151A0EF47D6F006225CD /* CQUnreadCountView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA715190EF47D6F006225CD /* CQUnreadCountView.m */; };
 		1CA718AA0EF5F136006225CD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1CA718A90EF5F136006225CD /* Settings.bundle */; };
+		1CA9DF9D1196699D008149F9 /* info-large.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA9DF9C1196699D008149F9 /* info-large.png */; };
+		1CA9DFC211967186008149F9 /* members-large.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA9DFC111967186008149F9 /* members-large.png */; };
 		1CAE8BC80EE6111900CE1AF8 /* CQChatTranscriptView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CAE8BC70EE6111900CE1AF8 /* CQChatTranscriptView.m */; };
 		1CAE8BF50EE612DA00CE1AF8 /* base.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8BF20EE612DA00CE1AF8 /* base.html */; };
 		1CAE8BF60EE612DA00CE1AF8 /* standard.css in Resources */ = {isa = PBXBuildFile; fileRef = 1CAE8BF30EE612DA00CE1AF8 /* standard.css */; };
@@ -379,6 +381,8 @@
 		1CA715180EF47D6F006225CD /* CQUnreadCountView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQUnreadCountView.h; sourceTree = "<group>"; };
 		1CA715190EF47D6F006225CD /* CQUnreadCountView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQUnreadCountView.m; sourceTree = "<group>"; };
 		1CA718A90EF5F136006225CD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		1CA9DF9C1196699D008149F9 /* info-large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info-large.png"; sourceTree = "<group>"; };
+		1CA9DFC111967186008149F9 /* members-large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "members-large.png"; sourceTree = "<group>"; };
 		1CAE8BC60EE6111900CE1AF8 /* CQChatTranscriptView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatTranscriptView.h; sourceTree = "<group>"; };
 		1CAE8BC70EE6111900CE1AF8 /* CQChatTranscriptView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatTranscriptView.m; sourceTree = "<group>"; };
 		1CAE8BF20EE612DA00CE1AF8 /* base.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = base.html; sourceTree = "<group>"; };
@@ -914,6 +918,7 @@
 				1CB318DA0D8644E4006A7513 /* server.png */,
 				1CD949800D8E18DB00756ACD /* directChatIcon.png */,
 				1C9E1A680F12E62600C18B55 /* info.png */,
+				1CA9DF9C1196699D008149F9 /* info-large.png */,
 				1CA3DCE81027AEFF008B1AD2 /* help.png */,
 				1C34A66F10183ED900BAA714 /* personBlueSmall.png */,
 				1C34A6851018411B00BAA714 /* personWhiteSmall.png */,
@@ -931,6 +936,7 @@
 				1CB318DD0D8644E4006A7513 /* connectedBadgeGlow.png */,
 				1CB318DE0D8644E4006A7513 /* connectedBadgeDim.png */,
 				1CC64A790EE90DC000DE91D0 /* members.png */,
+				1CA9DFC111967186008149F9 /* members-large.png */,
 				1CC64C030EE98CC600DE91D0 /* userAdmin.png */,
 				1CC64C040EE98CC600DE91D0 /* userFounder.png */,
 				1CC64C050EE98CC600DE91D0 /* userHalfOperator.png */,
@@ -1143,6 +1149,8 @@
 				1C6F689A113AEB6800514C0C /* Icon-72.png in Resources */,
 				1C6F68AA113AF10E00514C0C /* Default-Landscape.png in Resources */,
 				1C6F68AB113AF10E00514C0C /* Default-Portrait.png in Resources */,
+				1CA9DF9D1196699D008149F9 /* info-large.png in Resources */,
+				1CA9DFC211967186008149F9 /* members-large.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

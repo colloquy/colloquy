@@ -1308,8 +1308,9 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	UIBarButtonItem *item = nil;
 
 	if (self.connection.connected) {
-		UIBarButtonItemStyle style = ([[UIDevice currentDevice] isPadModel] ? UIBarButtonItemStylePlain : UIBarButtonItemStyleBordered);
-		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:style target:self action:@selector(showUserInformation)];
+		BOOL isPadModel = [[UIDevice currentDevice] isPadModel];
+		UIBarButtonItemStyle style = (isPadModel ? UIBarButtonItemStylePlain : UIBarButtonItemStyleBordered);
+		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:isPadModel ? @"info-large.png" : @"info.png"] style:style target:self action:@selector(showUserInformation)];
 		item.accessibilityLabel = NSLocalizedString(@"User Information", @"Voiceover user information label");
 	} else {
 		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", "Connect button title") style:UIBarButtonItemStyleDone target:self.connection action:@selector(connect)];

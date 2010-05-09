@@ -939,8 +939,9 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	BOOL isConnected = self.connection.connected;
 
 	if (isConnected) {
-		UIBarButtonItemStyle style = ([[UIDevice currentDevice] isPadModel] ? UIBarButtonItemStylePlain : UIBarButtonItemStyleBordered);
-		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:style target:self action:@selector(showMembers)];
+		BOOL isPadModel = [[UIDevice currentDevice] isPadModel];
+		UIBarButtonItemStyle style = (isPadModel ? UIBarButtonItemStylePlain : UIBarButtonItemStyleBordered);
+		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:isPadModel ? @"members-large.png" : @"members.png"] style:style target:self action:@selector(showMembers)];
 		item.accessibilityLabel = NSLocalizedString(@"Members List", @"Voiceover members list label");
 	} else {
 		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Join", "Join button title") style:UIBarButtonItemStyleDone target:self action:@selector(join)];	
