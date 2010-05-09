@@ -11,7 +11,6 @@
 #import "CQConnectionsController.h"
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
-#import "CQStyleView.h"
 #import "CQUserInfoController.h"
 #import "RegexKitLite.h"
 
@@ -94,6 +93,11 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:self.connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didRecieveDeviceToken:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
+
+	if ([[UIDevice currentDevice] isPadModel]) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+	}
 
 	if (self.user) {
 		[self _updateRightBarButtonItemAnimated:NO];
@@ -344,8 +348,13 @@ static NSOperationQueue *chatMessageProcessingQueue;
 		[_pendingComponents removeAllObjects];
 	}
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+	if (![[UIDevice currentDevice] isPadModel]) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+	}
+
+	if (_showingKeyboard)
+		[chatInputBar becomeFirstResponder];
 
 	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
 		[[CQColloquyApplication sharedApplication] hideTabBarWithTransition:YES];
@@ -381,8 +390,10 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	_active = NO;
 	_allowEditingToEnd = YES;
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+	if (![[UIDevice currentDevice] isPadModel]) {
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+	}
 
 	[super viewWillDisappear:animated];
 
@@ -393,7 +404,8 @@ static NSOperationQueue *chatMessageProcessingQueue;
 - (void) viewDidDisappear:(BOOL) animated {
 	[super viewDidDisappear:animated];
 
-	[chatInputBar resignFirstResponder];
+	if (![[UIDevice currentDevice] isPadModel])
+		[chatInputBar resignFirstResponder];
 
 	_allowEditingToEnd = NO;
 }
@@ -414,10 +426,6 @@ static NSOperationQueue *chatMessageProcessingQueue;
 }
 
 #pragma mark -
-
-- (void) chatInputBarDidBeginEditing:(CQChatInputBar *) chatInputBar {
-	[transcriptView scrollToBottomAnimated:NO];
-}
 
 - (BOOL) chatInputBarShouldEndEditing:(CQChatInputBar *) chatInputBar {
 	if (_showingAlert)
@@ -1022,14 +1030,25 @@ static NSOperationQueue *chatMessageProcessingQueue;
 
 - (void) keyboardWillShow:(NSNotification *) notification {
 	CGRect keyboardBounds = CGRectZero;
-	CGPoint keyboardCenter = CGPointZero;
+	CGPoint beginCenterPoint = CGPointZero;
+	CGPoint endCenterPoint = CGPointZero;
 
 	[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
-	[[[notification userInfo] objectForKey:UIKeyboardCenterEndUserInfoKey] getValue:&keyboardCenter];
+	[[[notification userInfo] objectForKey:UIKeyboardCenterBeginUserInfoKey] getValue:&beginCenterPoint];
+	[[[notification userInfo] objectForKey:UIKeyboardCenterEndUserInfoKey] getValue:&endCenterPoint];
+
+	// Keyboard is sliding horizontal, so don't change.
+	if (beginCenterPoint.y == endCenterPoint.y)
+		return;
+
+	_showingKeyboard = YES;
+
+	if (![self isViewLoaded])
+		return;
 
 	CGRect keyboardRect = keyboardBounds;
-	keyboardRect.origin.x = (keyboardCenter.x - (keyboardBounds.size.width / 2.));
-	keyboardRect.origin.y = (keyboardCenter.y - (keyboardBounds.size.height / 2.));
+	keyboardRect.origin.x = (endCenterPoint.x - (keyboardBounds.size.width / 2.));
+	keyboardRect.origin.y = (endCenterPoint.y - (keyboardBounds.size.height / 2.));
 
 	UIViewController *mainViewController = [CQColloquyApplication sharedApplication].mainViewController;
 	UIView *mainView = mainViewController.view;
@@ -1056,25 +1075,24 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	NSTimeInterval animationDuration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:animationDuration];
-	[UIView setAnimationCurve:animationCurve];
+	if (_active) {
+		[UIView beginAnimations:nil context:NULL];
+		[UIView setAnimationDuration:animationDuration];
+		[UIView setAnimationCurve:animationCurve];
+	}
 
 	CGRect frame = containerView.frame;
 	frame.size.height = keyboardRect.origin.y;
 	containerView.frame = frame;
 
-	[UIView commitAnimations];
+	if (_active)
+		[UIView commitAnimations];
 
-	[transcriptView scrollToBottomAnimated:YES];
-
-	_showingKeyboard = YES;
+	if (_active)
+		[transcriptView scrollToBottomAnimated:YES];
 }
 
 - (void) keyboardWillHide:(NSNotification *) notification {
-	if (!_showingKeyboard)
-		return;
-
 	CGPoint beginCenterPoint = CGPointZero;
 	CGPoint endCenterPoint = CGPointZero;
 
@@ -1085,20 +1103,24 @@ static NSOperationQueue *chatMessageProcessingQueue;
 	if (beginCenterPoint.y == endCenterPoint.y)
 		return;
 
+	_showingKeyboard = NO;
+
+	if (![self isViewLoaded])
+		return;
+
 	NSTimeInterval animationDuration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:animationDuration];
-	[UIView setAnimationCurve:animationCurve];
+	if (_active) {
+		[UIView beginAnimations:nil context:NULL];
+		[UIView setAnimationDuration:animationDuration];
+		[UIView setAnimationCurve:animationCurve];
+	}
 
 	containerView.frame = self.view.bounds;
 
-	[UIView commitAnimations];
-
-	[transcriptView scrollToBottomAnimated:YES];
-
-	_showingKeyboard = NO;
+	if (_active)
+		[UIView commitAnimations];
 }
 
 #pragma mark -

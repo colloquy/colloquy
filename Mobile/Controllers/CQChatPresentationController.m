@@ -137,21 +137,23 @@
 
 	UIViewController <CQChatViewController> *oldViewController = _topChatViewController;
 
-	if (oldViewController) {
-		[oldViewController viewWillDisappear:NO];
-		if ([oldViewController respondsToSelector:@selector(dismissPopoversAnimated:)])
-			[oldViewController dismissPopoversAnimated:NO];
-		[oldViewController.view removeFromSuperview];
-		[oldViewController viewDidDisappear:NO];
-	}
+	[oldViewController viewWillDisappear:NO];
 
 	_topChatViewController = [chatViewController retain];
+
+	UIView *view = _topChatViewController.view;
+
+	[_topChatViewController viewWillAppear:NO];
+
+	if ([oldViewController respondsToSelector:@selector(dismissPopoversAnimated:)])
+		[oldViewController dismissPopoversAnimated:NO];
+	[oldViewController.view removeFromSuperview];
+	[oldViewController viewDidDisappear:NO];
+
 	[oldViewController release];
 
 	if (!_topChatViewController)
 		return;
-
-	UIView *view = _topChatViewController.view;
 
 	CGRect frame = self.view.bounds;
 	frame.origin.y += _toolbar.frame.size.height;
@@ -160,7 +162,6 @@
 
 	[self updateToolbarAnimated:NO];
 
-	[_topChatViewController viewWillAppear:NO];
 	[self.view insertSubview:view aboveSubview:_toolbar];
 	[_topChatViewController viewDidAppear:NO];
 }

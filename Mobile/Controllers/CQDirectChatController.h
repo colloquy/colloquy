@@ -11,7 +11,6 @@
 #define ToolbarLastButtonTag 2
 
 @class CQChatTableCell;
-@class CQStyleView;
 @class CQChatInputBar;
 @class CQChatTranscriptView;
 @class MVChatUser;
