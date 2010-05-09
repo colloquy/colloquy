@@ -53,6 +53,10 @@
 	_toolbar = nil;
 }
 
+- (void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation duration:(NSTimeInterval) duration {
+    [self updateToolbarForInterfaceOrientation:interfaceOrientation animated:NO];
+}
+
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
 	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
 }
@@ -60,6 +64,10 @@
 #pragma mark -
 
 - (void) updateToolbarAnimated:(BOOL) animated {
+	[self updateToolbarForInterfaceOrientation:[UIApplication sharedApplication].statusBarOrientation animated:animated];
+}
+
+- (void) updateToolbarForInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation animated:(BOOL) animated {
 	NSMutableArray *allItems = [_standardToolbarItems mutableCopy];
 
 	UIBarButtonItem *leftBarButtonItem = _topChatViewController.navigationItem.leftBarButtonItem;
@@ -78,7 +86,16 @@
 
 		[titleLabel sizeToFit];
 
-		UIBarButtonItem *leftSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+		UIBarButtonItem *leftSpaceItem = nil;
+
+		if (UIDeviceOrientationIsPortrait(interfaceOrientation) && [[[NSLocale currentLocale] localeIdentifier] hasCaseInsensitivePrefix:@"en"]) {
+			leftSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+
+			// This calculation makes a big assumption about the width of the right side buttons.
+			// So this is only correct for English, and needs updated if the right buttons change in width.
+			leftSpaceItem.width = 182. - (titleLabel.frame.size.width / 2.);
+		} else leftSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+
 		UIBarButtonItem *titleItem = [[UIBarButtonItem alloc] initWithCustomView:titleLabel];
 		UIBarButtonItem *rightSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 

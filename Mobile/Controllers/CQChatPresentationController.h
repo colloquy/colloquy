@@ -13,4 +13,5 @@
 @property (nonatomic, retain) id <CQChatViewController> topChatViewController;
 
 - (void) updateToolbarAnimated:(BOOL) animated;
+- (void) updateToolbarForInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation animated:(BOOL) animated;
 @end
