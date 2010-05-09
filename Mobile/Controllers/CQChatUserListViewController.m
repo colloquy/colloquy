@@ -190,6 +190,7 @@ static NSString *membersFilteredCountFormat;
 
 	if (searchBarFocused)
 		[_searchBar becomeFirstResponder];
+
 	if ([[UIDevice currentDevice] isPadModel]) 
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
 }
@@ -229,8 +230,10 @@ static NSString *membersFilteredCountFormat;
 - (void) removeUserAtIndex:(NSUInteger) index {
 	BOOL searchBarFocused = [_searchBar isFirstResponder];
 	[self _removeUserAtIndex:index withAnimation:UITableViewRowAnimationRight];
+
 	if (searchBarFocused)
 		[_searchBar becomeFirstResponder];
+
 	if ([[UIDevice currentDevice] isPadModel])
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
 
