@@ -85,7 +85,6 @@ static BOOL showsChatIcons;
 	[_previousSelectedChatViewController release];
 	[_longPressGestureRecognizer release];
 	[_currentChatViewActionSheet release];
-	[_highlightedTableViewCell release];
 
 	[super dealloc];
 }
@@ -357,17 +356,6 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	if (![chatViewController respondsToSelector:@selector(actionSheet)])
 		return;
 
-	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
-	UITableViewCell *selectedCell = [self.tableView cellForRowAtIndexPath:selectedIndexPath];
-
-	selectedCell.selected = NO;
-	selectedCell.highlighted = NO;
-
-	cell.highlighted = YES;
-
-	[_highlightedTableViewCell release];
-	_highlightedTableViewCell = [cell retain];
-
 	[_currentChatViewActionSheet release];
 	_currentChatViewActionSheet = [[chatViewController actionSheet] retain];
 
@@ -400,8 +388,10 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	if ([[UIDevice currentDevice] isPadModel])
+	if ([[UIDevice currentDevice] isPadModel]) {
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
+		self.tableView.allowsSelectionDuringEditing = YES;
+	}
 
 	self.tableView.rowHeight = 62.;
 
@@ -494,7 +484,12 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 #pragma mark -
 
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
+	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+
 	[super setEditing:editing animated:animated];
+
+	if ([[UIDevice currentDevice] isPadModel])
+		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 
 	if (!editing)
 		self.editButtonItem.title = NSLocalizedString(@"Manage", @"Manage button title");
@@ -504,14 +499,6 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (actionSheet == _currentChatViewActionSheet) {
-		NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
-		UITableViewCell *selectedCell = [self.tableView cellForRowAtIndexPath:selectedIndexPath];
-		selectedCell.selected = YES;
-
-		_highlightedTableViewCell.highlighted = NO;
-		[_highlightedTableViewCell release];
-		_highlightedTableViewCell = nil;
-
 		if ([_currentChatViewActionSheetDelegate respondsToSelector:@selector(actionSheet:clickedButtonAtIndex:)])
 			[_currentChatViewActionSheetDelegate actionSheet:actionSheet clickedButtonAtIndex:buttonIndex];
 
