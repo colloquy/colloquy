@@ -172,7 +172,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 			[self performSelector:@selector( ctsCommandName: )
 			      withObject:newNickname inThread:_connectionThread];
 		else
-			MVSafeCopyAssign( &_nickname, newNickname );
+			MVSafeCopyAssign( _nickname, newNickname );
 	}
 }
 
@@ -353,7 +353,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	if( _loggedIn )
 		[self _joinChatRoomNamed:name withPassphrase:passphrase alreadyJoined:NO];
 	else
-		MVSafeCopyAssign( &_initialChannel, name );
+		MVSafeCopyAssign( _initialChannel, name );
 }
 
 #pragma mark Users handling
@@ -585,7 +585,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 			// Update the initial channel to point to the joined room so that
 			// a reconnect after a disconnection works fine and rejoins us to
 			// the (only) room that we left.
-			MVSafeCopyAssign( &_initialChannel, name );
+			MVSafeCopyAssign( _initialChannel, name );
 			[[NSNotificationCenter defaultCenter]
 			 postNotificationOnMainThreadWithName:MVChatRoomJoinedNotification
 			 object:_room];
@@ -1132,7 +1132,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 		MVChatUser *who = [self chatUserWithUniqueIdentifier:oldnick];
 		if( [who isLocalUser] ) {
-			MVSafeCopyAssign( &_nickname, newnick );
+			MVSafeCopyAssign( _nickname, newnick );
 			[who _setUniqueIdentifier:[newnick lowercaseString]];
 
 			[[NSNotificationCenter defaultCenter]

@@ -1195,7 +1195,7 @@ static SilcClientOperations silcClientOps = {
 - (void) setServer:(NSString *) newServer {
 	if( [newServer length] >= 7 && [newServer hasPrefix:@"silc://"] )
 		newServer = [newServer substringFromIndex:7];
-	MVSafeCopyAssign( &_silcServer, newServer );
+	MVSafeCopyAssign( _silcServer, newServer );
 
 	[super setServer:newServer];
 }
@@ -1481,7 +1481,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 #pragma mark -
 
 - (void) _initLocalUser {
-	MVSafeAdoptAssign( &_localUser, [[MVSILCChatUser allocWithZone:nil] initLocalUserWithConnection:self] );
+	MVSafeAdoptAssign( _localUser, [[MVSILCChatUser allocWithZone:nil] initLocalUserWithConnection:self] );
 }
 
 #pragma mark -

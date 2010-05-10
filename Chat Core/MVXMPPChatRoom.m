@@ -11,7 +11,7 @@
 - (id) initWithJabberID:(JabberID *) identifier andConnection:(MVXMPPChatConnection *) connection {
 	if( ( self = [self init] ) ) {
 		_connection = connection; // prevent circular retain
-		MVSafeRetainAssign( &_uniqueIdentifier, identifier );
+		MVSafeRetainAssign( _uniqueIdentifier, identifier );
 		[_connection _addKnownRoom:self];
 	}
 
@@ -121,6 +121,6 @@
 
 @implementation MVXMPPChatRoom (MVXMPPChatRoomPrivate)
 - (void) _setLocalMemberUser:(MVChatUser *) user {
-	MVSafeRetainAssign( &_localMemberUser, user );
+	MVSafeRetainAssign( _localMemberUser, user );
 }
 @end

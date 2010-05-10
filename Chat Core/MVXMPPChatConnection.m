@@ -95,8 +95,8 @@
 	MVChatUser *localUser = [[MVXMPPChatUser allocWithZone:nil] initWithJabberID:localId andConnection:self];
 	[localUser _setType:MVChatLocalUserType];
 
-	MVSafeAdoptAssign( &_localID, localId );
-	MVSafeAdoptAssign( &_localUser, localUser );
+	MVSafeAdoptAssign( _localID, localId );
+	MVSafeAdoptAssign( _localUser, localUser );
 
 	[_session setUseSSL:_secure];
 	[_session startSession:_localID onPort:_serverPort withServer:_server];
@@ -122,7 +122,7 @@
 - (void) setNickname:(NSString *) newNickname {
 	NSParameterAssert( newNickname != nil );
 	NSParameterAssert( [newNickname length] > 0 );
-	MVSafeCopyAssign( &_nickname, newNickname );
+	MVSafeCopyAssign( _nickname, newNickname );
 }
 
 - (NSString *) nickname {
@@ -146,7 +146,7 @@
 #pragma mark -
 
 - (void) setPassword:(NSString *) newPassword {
-	MVSafeCopyAssign( &_password, newPassword );
+	MVSafeCopyAssign( _password, newPassword );
 }
 
 - (NSString *) password {
@@ -158,7 +158,7 @@
 - (void) setUsername:(NSString *) newUsername {
 	NSParameterAssert( newUsername != nil );
 	NSParameterAssert( [newUsername length] > 0 );
-	MVSafeCopyAssign( &_username, newUsername );
+	MVSafeCopyAssign( _username, newUsername );
 }
 
 - (NSString *) username {
@@ -172,7 +172,7 @@
 		newServer = [newServer substringFromIndex:7];
 	NSParameterAssert( newServer != nil );
 	NSParameterAssert( [newServer length] > 0 );
-	MVSafeCopyAssign( &_server, newServer );
+	MVSafeCopyAssign( _server, newServer );
 
 	[super setServer:newServer];
 }
