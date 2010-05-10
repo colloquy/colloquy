@@ -7,7 +7,7 @@
 	id old = (var); \
 	id new = (newExpression); \
 	(var) = new; \
-	if (old != new) \
+	if (old && old != new) \
 		[old release]; \
 }
 
@@ -17,7 +17,8 @@
 	id new = (newExpression); \
 	if (old != new) { \
 		(var) = [new retain]; \
-		[old release]; \
+		if (old) \
+			[old release]; \
 	} \
 }
 
@@ -27,7 +28,8 @@
 	id new = (newExpression); \
 	if (old != new) { \
 		(var) = [new copyWithZone:nil]; \
-		[old release]; \
+		if (old) \
+			[old release]; \
 	} \
 }
 
