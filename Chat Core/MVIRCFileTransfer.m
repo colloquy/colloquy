@@ -173,12 +173,12 @@
 	BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:[self source] isDirectory:&directory];
 	if( directory || ! fileExists ) return;
 
-	MVSafeRetainAssign( &_fileHandle, [NSFileHandle fileHandleForReadingAtPath:[self source]] );
+	MVSafeRetainAssign( _fileHandle, [NSFileHandle fileHandleForReadingAtPath:[self source]] );
 	if( ! _fileHandle ) return;
 
 	[_fileHandle seekToFileOffset:[self startOffset]];
 
-	MVSafeAdoptAssign( &_directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
+	MVSafeAdoptAssign( _directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
 	[_directClientConnection setDelegate:self];
 
 	if( ! [self isPassive] ) [_directClientConnection acceptConnectionOnFirstPortInRange:[[self class] fileTransferPortRange]];
@@ -384,12 +384,12 @@
 	fileExists = [[NSFileManager defaultManager] isWritableFileAtPath:[self destination]];
 	if( ! fileExists ) return;
 
-	MVSafeRetainAssign( &_fileHandle, [NSFileHandle fileHandleForWritingAtPath:[self destination]] );
+	MVSafeRetainAssign( _fileHandle, [NSFileHandle fileHandleForWritingAtPath:[self destination]] );
 	if( ! _fileHandle ) return;
 
 	[_fileHandle truncateFileAtOffset:[self startOffset]];
 
-	MVSafeAdoptAssign( &_directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
+	MVSafeAdoptAssign( _directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
 	[_directClientConnection setDelegate:self];
 
 	if( [self isPassive] ) [_directClientConnection acceptConnectionOnFirstPortInRange:[[self class] fileTransferPortRange]];

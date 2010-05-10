@@ -163,11 +163,11 @@ static BOOL autoPortMapping = YES;
 }
 
 - (void) _setStartDate:(NSDate *) newStartDate {
-	MVSafeRetainAssign( &_startDate, newStartDate );
+	MVSafeRetainAssign( _startDate, newStartDate );
 }
 
 - (void) _setHost:(NSString *) newHost {
-	MVSafeRetainAssign( &_host, newHost );
+	MVSafeRetainAssign( _host, newHost );
 }
 
 - (void) _setPort:(unsigned short) newPort {
@@ -181,7 +181,7 @@ static BOOL autoPortMapping = YES;
 - (void) _postError:(NSError *) error {
 	[self _setStatus:MVFileTransferErrorStatus];
 
-	MVSafeRetainAssign( &_lastError, error );
+	MVSafeRetainAssign( _lastError, error );
 
 	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:error, @"error", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferErrorOccurredNotification object:self userInfo:info];
@@ -232,7 +232,7 @@ static BOOL autoPortMapping = YES;
 
 @implementation MVUploadFileTransfer (MVUploadFileTransferPrivate)
 - (void) _setSource:(NSString *) newSource {
-	MVSafeCopyAssign( &_source, [newSource stringByStandardizingPath] );
+	MVSafeCopyAssign( _source, [newSource stringByStandardizingPath] );
 }
 @end
 
@@ -253,13 +253,13 @@ static BOOL autoPortMapping = YES;
 
 - (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) rename {
 	// subclass if needed, call super
-	MVSafeCopyAssign( &_destination, [path stringByStandardizingPath] );
+	MVSafeCopyAssign( _destination, [path stringByStandardizingPath] );
 	_rename = rename;
 }
 
 - (void) setDestination:(NSString *) path {
 	// subclass if needed, call super
-	MVSafeCopyAssign( &_destination, [path stringByStandardizingPath] );
+	MVSafeCopyAssign( _destination, [path stringByStandardizingPath] );
 }
 
 - (NSString *) destination {
@@ -301,6 +301,6 @@ static BOOL autoPortMapping = YES;
 
 @implementation MVDownloadFileTransfer (MVDownloadFileTransferPrivate)
 - (void) _setOriginalFileName:(NSString *) newOriginalFileName {
-	MVSafeCopyAssign( &_originalFileName, newOriginalFileName );
+	MVSafeCopyAssign( _originalFileName, newOriginalFileName );
 }
 @end

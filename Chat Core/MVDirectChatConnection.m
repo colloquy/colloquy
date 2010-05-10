@@ -117,7 +117,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 - (void) initiate {
 	if( [_directClientConnection connectionThread] ) return;
 
-	MVSafeAdoptAssign( &_directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
+	MVSafeAdoptAssign( _directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
 	[_directClientConnection setDelegate:self];
 
 	if( _localRequest ) {
@@ -218,7 +218,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 - (void) directClientConnection:(MVDirectClientConnection *) connection didConnectToHost:(NSString *) host port:(unsigned short) port {
 	[self _setStatus:MVDirectChatConnectionConnectedStatus];
 
-	MVSafeRetainAssign( &_connectedHost, host );
+	MVSafeRetainAssign( _connectedHost, host );
 
 	[self _readNextMessage];
 
@@ -329,7 +329,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 }
 
 - (void) _setHost:(NSString *) newHost {
-	MVSafeRetainAssign( &_host, newHost );
+	MVSafeRetainAssign( _host, newHost );
 }
 
 - (void) _setPort:(unsigned short) newPort {
@@ -355,7 +355,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 - (void) _postError:(NSError *) error {
 	[self _setStatus:MVDirectChatConnectionErrorStatus];
 
-	MVSafeRetainAssign( &_lastError, error );
+	MVSafeRetainAssign( _lastError, error );
 
 	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:error, @"error", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionErrorOccurredNotification object:self userInfo:info];

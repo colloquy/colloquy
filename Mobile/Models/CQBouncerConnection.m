@@ -257,8 +257,8 @@ end:
 
 	[self _resetState];
 
-	MVSafeRetainAssign(&_connectionIdentifier, [parameters objectAtIndex:0]);
-	MVSafeRetainAssign(&_serverAddress, [parameters objectAtIndex:1]);
+	MVSafeRetainAssign( _connectionIdentifier, [parameters objectAtIndex:0] );
+	MVSafeRetainAssign( _serverAddress, [parameters objectAtIndex:1] );
 	_serverPort = ([[parameters objectAtIndex:2] integerValue] % 65536);
 	_secure = (parameters.count > 3 ? [[parameters objectAtIndex:3] isCaseInsensitiveEqualToString:@"SSL"] : NO);
 }
@@ -269,8 +269,8 @@ end:
 		return;
 	}
 
-	MVSafeRetainAssign(&_username, [parameters objectAtIndex:0]);
-	MVSafeRetainAssign(&_realName, [parameters objectAtIndex:1]);
+	MVSafeRetainAssign( _username, [parameters objectAtIndex:0] );
+	MVSafeRetainAssign( _realName, [parameters objectAtIndex:1] );
 }
 
 - (void) _handle803WithParameters:(NSArray *) parameters {
@@ -279,7 +279,7 @@ end:
 		return;
 	}
 
-	MVSafeRetainAssign(&_password, [parameters objectAtIndex:0]);
+	MVSafeRetainAssign( _password, [parameters objectAtIndex:0] );
 }
 
 - (void) _handle804WithParameters:(NSArray *) parameters {
@@ -288,8 +288,8 @@ end:
 		return;
 	}
 
-	MVSafeRetainAssign(&_nickname, [parameters objectAtIndex:0]);
-	MVSafeRetainAssign(&_nicknamePassword, (parameters.count > 1 ? [parameters objectAtIndex:1] : nil));
+	MVSafeRetainAssign( _nickname, [parameters objectAtIndex:0] );
+	MVSafeRetainAssign( _nicknamePassword, (parameters.count > 1 ? [parameters objectAtIndex:1] : nil) );
 }
 
 - (void) _handle805WithParameters:(NSArray *) parameters {
@@ -298,7 +298,7 @@ end:
 		return;
 	}
 
-	MVSafeRetainAssign(&_alternateNicknames, parameters);
+	MVSafeRetainAssign( _alternateNicknames, parameters );
 }
 
 - (void) _handle806WithParameters:(NSArray *) parameters {

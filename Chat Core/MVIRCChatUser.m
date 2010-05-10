@@ -9,7 +9,7 @@
 - (id) initLocalUserWithConnection:(MVIRCChatConnection *) userConnection {
 	if( ( self = [self initWithNickname:nil andConnection:userConnection] ) ) {
 		_type = MVChatLocalUserType;
-		MVSafeCopyAssign( &_uniqueIdentifier, [[self nickname] lowercaseString] );
+		MVSafeCopyAssign( _uniqueIdentifier, [[self nickname] lowercaseString] );
 	}
 
 	return self;
@@ -19,8 +19,8 @@
 	if( ( self = [self init] ) ) {
 		_type = MVChatRemoteUserType;
 		_connection = [userConnection retain];
-		MVSafeCopyAssign( &_nickname, userNickname );
-		MVSafeCopyAssign( &_uniqueIdentifier, [userNickname lowercaseString] );
+		MVSafeCopyAssign( _nickname, userNickname );
+		MVSafeCopyAssign( _uniqueIdentifier, [userNickname lowercaseString] );
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( ctcpReplyNotification: ) name:MVChatConnectionSubcodeReplyNotification object:self];
 		[_connection _addKnownUser:self];
 	}

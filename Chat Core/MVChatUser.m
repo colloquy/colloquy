@@ -452,35 +452,35 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (void) _setUniqueIdentifier:(id) identifier {
-	MVSafeAdoptAssign( &_uniqueIdentifier, ( [identifier conformsToProtocol:@protocol( NSCopying )] ? [identifier copyWithZone:nil] : [identifier retain] ) );
+	MVSafeAdoptAssign( _uniqueIdentifier, ( [identifier conformsToProtocol:@protocol( NSCopying )] ? [identifier copyWithZone:nil] : [identifier retain] ) );
 }
 
 - (void) _setNickname:(NSString *) name {
-	MVSafeCopyAssign( &_nickname, name );
+	MVSafeCopyAssign( _nickname, name );
 }
 
 - (void) _setRealName:(NSString *) name {
-	MVSafeCopyAssign( &_realName, name );
+	MVSafeCopyAssign( _realName, name );
 }
 
 - (void) _setUsername:(NSString *) name {
-	MVSafeCopyAssign( &_username, name );
+	MVSafeCopyAssign( _username, name );
 }
 
 - (void) _setAddress:(NSString *) newAddress {
-	MVSafeCopyAssign( &_address, newAddress );
+	MVSafeCopyAssign( _address, newAddress );
 }
 
 - (void) _setServerAddress:(NSString *) newServerAddress {
-	MVSafeCopyAssign( &_serverAddress, newServerAddress );
+	MVSafeCopyAssign( _serverAddress, newServerAddress );
 }
 
 - (void) _setPublicKey:(NSData *) key {
-	MVSafeCopyAssign( &_publicKey, key );
+	MVSafeCopyAssign( _publicKey, key );
 }
 
 - (void) _setFingerprint:(NSString *) newFingerprint {
-	MVSafeCopyAssign( &_fingerprint, newFingerprint );
+	MVSafeCopyAssign( _fingerprint, newFingerprint );
 }
 
 - (void) _setServerOperator:(BOOL) isServerOperator {
@@ -503,19 +503,19 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (void) _setDateConnected:(NSDate *) date {
-	MVSafeCopyAssign( &_dateConnected, date );
+	MVSafeCopyAssign( _dateConnected, date );
 }
 
 - (void) _setDateDisconnected:(NSDate *) date {
-	MVSafeCopyAssign( &_dateDisconnected, date );
+	MVSafeCopyAssign( _dateDisconnected, date );
 }
 
 - (void) _setDateUpdated:(NSDate *) date {
-	MVSafeCopyAssign( &_dateUpdated, date );
+	MVSafeCopyAssign( _dateUpdated, date );
 }
 
 - (void) _setAwayStatusMessage:(NSData *) newAwayStatusMessage {
-	MVSafeCopyAssign( &_awayStatusMessage, newAwayStatusMessage );
+	MVSafeCopyAssign( _awayStatusMessage, newAwayStatusMessage );
 }
 
 - (BOOL) _onlineNotificationSent {

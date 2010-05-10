@@ -210,8 +210,8 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) connect {
 	if( _status != MVChatConnectionDisconnectedStatus && _status != MVChatConnectionServerDisconnectedStatus && _status != MVChatConnectionSuspendedStatus ) return;
 
-	MVSafeAdoptAssign( &_lastConnectAttempt, [[NSDate allocWithZone:nil] init] );
-	MVSafeRetainAssign( &_queueWait, [NSDate dateWithTimeIntervalSinceNow:JVQueueWaitBeforeConnected] );
+	MVSafeAdoptAssign( _lastConnectAttempt, [[NSDate allocWithZone:nil] init] );
+	MVSafeRetainAssign( _queueWait, [NSDate dateWithTimeIntervalSinceNow:JVQueueWaitBeforeConnected] );
 
 	if( [_connectionThread respondsToSelector:@selector( cancel )] )
 		[_connectionThread cancel];
@@ -241,7 +241,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) setRealName:(NSString *) name {
 	NSParameterAssert( name != nil );
-	MVSafeCopyAssign( &_realName, name );
+	MVSafeCopyAssign( _realName, name );
 }
 
 - (NSString *) realName {
@@ -257,7 +257,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	BOOL connectiongOrConnected = ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus );
 
 	if( ! _nickname || ! connectiongOrConnected )
-		MVSafeCopyAssign( &_nickname, newNickname );
+		MVSafeCopyAssign( _nickname, newNickname );
 
 	if( [newNickname isEqualToString:_currentNickname] )
 		return;
@@ -277,7 +277,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	NSParameterAssert( newNickname != nil );
 	NSParameterAssert( [newNickname length] > 0 );
 
-	MVSafeCopyAssign( &_nickname, newNickname );
+	MVSafeCopyAssign( _nickname, newNickname );
 
 	[self setNickname:newNickname];
 }
@@ -298,7 +298,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setPassword:(NSString *) newPassword {
-	MVSafeCopyAssign( &_password, newPassword );
+	MVSafeCopyAssign( _password, newPassword );
 }
 
 - (NSString *) password {
@@ -310,7 +310,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) setUsername:(NSString *) newUsername {
 	NSParameterAssert( newUsername != nil );
 	NSParameterAssert( [newUsername length] > 0 );
-	MVSafeCopyAssign( &_username, newUsername );
+	MVSafeCopyAssign( _username, newUsername );
 }
 
 - (NSString *) username {
@@ -326,7 +326,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		newServer = [newServer substringFromIndex:7];
 	NSParameterAssert( newServer != nil );
 	NSParameterAssert( [newServer length] > 0 );
-	MVSafeCopyAssign( &_server, newServer );
+	MVSafeCopyAssign( _server, newServer );
 
 	[super setServer:newServer];
 }
@@ -392,7 +392,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	}
 
 	if( now && _connectionThread ) {
-		MVSafeAdoptAssign( &_lastCommand, [[NSDate allocWithZone:nil] init] );
+		MVSafeAdoptAssign( _lastCommand, [[NSDate allocWithZone:nil] init] );
 
 		[self performSelector:@selector( _writeDataToServer: ) withObject:raw inThread:_connectionThread waitUntilDone:NO];
 	} else {
@@ -596,7 +596,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) fetchChatRoomList {
 	if( ! _cachedDate || ABS( [_cachedDate timeIntervalSinceNow] ) > 300. ) {
 		[self sendRawMessage:@"LIST"];
-		MVSafeAdoptAssign( &_cachedDate, [[NSDate allocWithZone:nil] init] );
+		MVSafeAdoptAssign( _cachedDate, [[NSDate allocWithZone:nil] init] );
 	}
 }
 
@@ -609,7 +609,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) setAwayStatusMessage:(MVChatString *) message {
 	if( [message length] ) {
-		MVSafeCopyAssign( &_awayMessage, message );
+		MVSafeCopyAssign( _awayMessage, message );
 
 		NSData *msg = [[self class] _flattenedIRCDataForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 		[self sendRawMessageImmediatelyWithComponents:@"AWAY :", msg, nil];
@@ -617,7 +617,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		[[self localUser] _setAwayStatusMessage:msg];
 		[[self localUser] _setStatus:MVChatUserAwayStatus];
 	} else {
-		MVSafeAdoptAssign( &_awayMessage, nil );
+		MVSafeAdoptAssign( _awayMessage, nil );
 
 		[self sendRawMessage:@"AWAY" immediately:YES];
 
@@ -789,7 +789,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	if( sock != _chatConnection ) return;
 
-	MVSafeRetainAssign( &_lastError, error );
+	MVSafeRetainAssign( _lastError, error );
 }
 
 - (void) socketDidDisconnect:(AsyncSocket *) sock {
@@ -810,11 +810,11 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	[self _setCurrentNickname:_nickname];
 
-	MVSafeAdoptAssign( &_lastCommand, nil );
-	MVSafeAdoptAssign( &_queueWait, nil );
-	MVSafeAdoptAssign( &_lastSentIsonNicknames, nil );
-	MVSafeAdoptAssign( &_pendingWhoisUsers, nil );
-	MVSafeAdoptAssign( &_pendingJoinRoomNames, nil );
+	MVSafeAdoptAssign( _lastCommand, nil );
+	MVSafeAdoptAssign( _queueWait, nil );
+	MVSafeAdoptAssign( _lastSentIsonNicknames, nil );
+	MVSafeAdoptAssign( _pendingWhoisUsers, nil );
+	MVSafeAdoptAssign( _pendingJoinRoomNames, nil );
 
 	_isonSentCount = 0;
 
@@ -1639,7 +1639,7 @@ end:
 }
 
 - (void) _setCurrentNickname:(NSString *) currentNickname {
-	MVSafeCopyAssign( &_currentNickname, currentNickname );
+	MVSafeCopyAssign( _currentNickname, currentNickname );
 	[_localUser _setUniqueIdentifier:[currentNickname lowercaseString]];
 }
 
@@ -1647,7 +1647,7 @@ end:
 
 - (void) _handleConnect {
 	MVAssertCorrectThreadRequired( _connectionThread );
-	MVSafeRetainAssign( &_queueWait, [NSDate dateWithTimeIntervalSinceNow:0.5] );
+	MVSafeRetainAssign( _queueWait, [NSDate dateWithTimeIntervalSinceNow:0.5] );
 	[self _resetSendQueueInterval];
 	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
 }
@@ -1775,7 +1775,7 @@ end:
 	[self _writeDataToServer:data];
 	[data release];
 
-	MVSafeAdoptAssign( &_lastCommand, [[NSDate allocWithZone:nil] init] );
+	MVSafeAdoptAssign( _lastCommand, [[NSDate allocWithZone:nil] init] );
 }
 
 #pragma mark -
@@ -2031,7 +2031,7 @@ end:
 	[self performSelector:@selector( _handleConnect ) withObject:nil inThread:_connectionThread waitUntilDone:NO];
 
 	// set the _realServer because it's different from the server we connected to
-	MVSafeCopyAssign( &_realServer, sender );
+	MVSafeCopyAssign( _realServer, sender );
 
 	// set the current nick name if it is not the same as what re requested (some servers/bouncers will give us a new nickname)
 	if( [parameters count] >= 1 ) {
@@ -2099,7 +2099,7 @@ end:
 		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"CHANTYPES="] ) {
 			NSString *types = [feature substringFromIndex:10]; // length of "CHANTYPES="
 			if( [types length] )
-				MVSafeRetainAssign( &_roomPrefixes, [NSCharacterSet characterSetWithCharactersInString:types] );
+				MVSafeRetainAssign( _roomPrefixes, [NSCharacterSet characterSetWithCharactersInString:types] );
 		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"PREFIX="] ) {
 			NSScanner *scanner = [NSScanner scannerWithString:feature];
 			[scanner setScanLocation:7]; // length of "PREFIX="

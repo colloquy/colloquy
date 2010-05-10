@@ -599,25 +599,25 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (void) _setDateJoined:(NSDate *) date {
-	MVSafeCopyAssign( &_dateJoined, date );
+	MVSafeCopyAssign( _dateJoined, date );
 	if (date) [_connection _addJoinedRoom:self];
 }
 
 - (void) _setDateParted:(NSDate *) date {
-	MVSafeCopyAssign( &_dateParted, date );
+	MVSafeCopyAssign( _dateParted, date );
 	if (date) [_connection _removeJoinedRoom:self];
 }
 
 - (void) _setTopic:(NSData *) newTopic {
-	MVSafeCopyAssign( &_topic, newTopic );
+	MVSafeCopyAssign( _topic, newTopic );
 }
 
 - (void) _setTopicAuthor:(MVChatUser *) author {
-	MVSafeRetainAssign( &_topicAuthor, author );
+	MVSafeRetainAssign( _topicAuthor, author );
 }
 
 - (void) _setTopicDate:(NSDate *) date {
-	MVSafeCopyAssign( &_dateTopicChanged, date );
+	MVSafeCopyAssign( _dateTopicChanged, date );
 }
 
 - (void) _updateMemberUser:(MVChatUser *) user fromOldUniqueIdentifier:(id) identifier {

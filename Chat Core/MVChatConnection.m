@@ -319,7 +319,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) setUniqueIdentifier:(NSString *) uniqueIdentifier {
 	NSParameterAssert( uniqueIdentifier != nil );
 	NSParameterAssert( [uniqueIdentifier length] > 0 );
-	MVSafeCopyAssign(&_uniqueIdentifier, uniqueIdentifier);
+	MVSafeCopyAssign( _uniqueIdentifier, uniqueIdentifier );
 }
 
 #pragma mark -
@@ -445,7 +445,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setAlternateNicknames:(NSArray *) nicknames {
-	MVSafeCopyAssign( &_alternateNicks, nicknames );
+	MVSafeCopyAssign( _alternateNicks, nicknames );
 	_nextAltNickIndex = 0;
 }
 
@@ -462,7 +462,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setNicknamePassword:(NSString *) newPassword {
-	MVSafeCopyAssign( &_npassword, newPassword );
+	MVSafeCopyAssign( _npassword, newPassword );
 }
 
 - (NSString *) nicknamePassword {
@@ -605,7 +605,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #pragma mark -
 
 - (void) setProxyServer:(NSString *) address {
-	MVSafeCopyAssign( &_proxyServer, address );
+	MVSafeCopyAssign( _proxyServer, address );
 }
 
 - (NSString *) proxyServer {
@@ -625,7 +625,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #pragma mark -
 
 - (void) setProxyUsername:(NSString *) newUsername {
-	MVSafeCopyAssign( &_proxyUsername, newUsername );
+	MVSafeCopyAssign( _proxyUsername, newUsername );
 }
 
 - (NSString *) proxyUsername {
@@ -635,7 +635,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #pragma mark -
 
 - (void) setProxyPassword:(NSString *) newPassword {
-	MVSafeCopyAssign( &_proxyPassword, newPassword );
+	MVSafeCopyAssign( _proxyPassword, newPassword );
 }
 
 - (NSString *) proxyPassword {
@@ -655,7 +655,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #pragma mark -
 
 - (void) setBouncerServer:(NSString *) address {
-	MVSafeCopyAssign( &_bouncerServer, address );
+	MVSafeCopyAssign( _bouncerServer, address );
 }
 
 - (NSString *) bouncerServer {
@@ -675,7 +675,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #pragma mark -
 
 - (void) setBouncerUsername:(NSString *) newUsername {
-	MVSafeCopyAssign( &_bouncerUsername, newUsername );
+	MVSafeCopyAssign( _bouncerUsername, newUsername );
 }
 
 - (NSString *) bouncerUsername {
@@ -685,7 +685,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #pragma mark -
 
 - (void) setBouncerPassword:(NSString *) newPassword {
-	MVSafeCopyAssign( &_bouncerPassword, newPassword );
+	MVSafeCopyAssign( _bouncerPassword, newPassword );
 }
 
 - (NSString *) bouncerPassword {
@@ -695,7 +695,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #pragma mark -
 
 - (void) setBouncerDeviceIdentifier:(NSString *) newIdentifier {
-	MVSafeCopyAssign( &_bouncerDeviceIdentifier, newIdentifier );
+	MVSafeCopyAssign( _bouncerDeviceIdentifier, newIdentifier );
 }
 
 - (NSString *) bouncerDeviceIdentifier {
@@ -705,7 +705,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #pragma mark -
 
 - (void) setBouncerConnectionIdentifier:(NSString *) newIdentifier {
-	MVSafeCopyAssign( &_bouncerConnectionIdentifier, newIdentifier );
+	MVSafeCopyAssign( _bouncerConnectionIdentifier, newIdentifier );
 }
 
 - (NSString *) bouncerConnectionIdentifier {
@@ -1130,7 +1130,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #pragma mark -
 
 - (void) _willConnect {
-	MVSafeAdoptAssign( &_lastError, nil );
+	MVSafeAdoptAssign( _lastError, nil );
 
 	_nextAltNickIndex = 0;
 	_status = MVChatConnectionConnectingStatus;
@@ -1147,7 +1147,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	[[self localUser] _setDateConnected:[NSDate date]];
 	[[self localUser] _setDateDisconnected:nil];
 
-	MVSafeAdoptAssign(&_connectedDate, [[NSDate alloc] init]);
+	MVSafeAdoptAssign(_connectedDate, [[NSDate alloc] init]);
 
 	_status = MVChatConnectionConnectedStatus;
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidConnectNotification object:self];
@@ -1195,7 +1195,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	[[self localUser] _setStatus:MVChatUserOfflineStatus];
 	[[self localUser] _setDateDisconnected:[NSDate date]];
 
-	MVSafeAdoptAssign(&_connectedDate, nil);
+	MVSafeAdoptAssign(_connectedDate, nil);
 
 	if( _status != MVChatConnectionSuspendedStatus && _status != MVChatConnectionServerDisconnectedStatus )
 		_status = MVChatConnectionDisconnectedStatus;
@@ -1214,7 +1214,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 }
 
 - (void) _postError:(NSError *) error {
-	MVSafeCopyAssign( &_lastError, error );
+	MVSafeCopyAssign( _lastError, error );
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionErrorNotification object:self userInfo:[NSDictionary dictionaryWithObject:_lastError forKey:@"error"]];
 }
 

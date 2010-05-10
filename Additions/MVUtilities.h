@@ -2,33 +2,37 @@
 
 #define MVInline static __inline__ __attribute__((always_inline))
 
-MVInline void MVSafeAdoptAssign( id *var, id newValue ) {
-	if( *var == newValue )
-		return;
-	id old = *var;
-	*var = newValue;
-	[old release];
+#define MVSafeAdoptAssign(var, newExpression) \
+{ \
+	id old = (var); \
+	id new = (newExpression); \
+	(var) = new; \
+	if (old != new) \
+		[old release]; \
 }
 
-MVInline void MVSafeRetainAssign( id *var, id newValue ) {
-	if( *var == newValue )
-		return;
-	id old = *var;
-	*var = [newValue retain];
-	[old release];
+#define MVSafeRetainAssign(var, newExpression) \
+{ \
+	id old = (var); \
+	id new = (newExpression); \
+	if (old != new) { \
+		(var) = [new retain]; \
+		[old release]; \
+	} \
 }
 
-MVInline void MVSafeCopyAssign( id *var, id newValue ) {
-	if( *var == newValue )
-		return;
-	id old = *var;
-	*var = [newValue copyWithZone:nil];
-	[old release];
+#define MVSafeCopyAssign(var, newExpression) \
+{ \
+	id old = (var); \
+	id new = (newExpression); \
+	if (old != new) { \
+		(var) = [new copyWithZone:nil]; \
+		[old release]; \
+	} \
 }
 
-MVInline id MVSafeReturn( id var ) {
-	return [[var retain] autorelease];
-}
+#define MVSafeReturn(var) \
+	[[var retain] autorelease];
 
 #define MVAssertMainThreadRequired() \
 	NSAssert1( pthread_main_np(), @"Method needs to run on the main thread, not %@.", [NSThread currentThread] )
