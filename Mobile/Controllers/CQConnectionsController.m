@@ -92,23 +92,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 #define NickservPasswordTextFieldTag 5
 
 @implementation CQConnectionsController
-+ (void) userDefaultsChanged {
-	[UIApplication sharedApplication].idleTimerDisabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIdleTimerDisabled"];
-}
-
-+ (void) initialize {
-	static BOOL userDefaultsInitialized;
-
-	if (userDefaultsInitialized)
-		return;
-
-	userDefaultsInitialized = YES;
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
-
-	[self userDefaultsChanged];
-}
-
 + (CQConnectionsController *) defaultController {
 	static BOOL creatingSharedInstance = NO;
 	static CQConnectionsController *sharedInstance = nil;
@@ -136,6 +119,10 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didNotConnect:) name:MVChatConnectionDidNotConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_errorOccurred:) name:MVChatConnectionErrorNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_deviceTokenRecieved:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batteryStateChanged) name:UIDeviceBatteryStateDidChangeNotification object:nil];
+
+	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
 
 #if TARGET_IPHONE_SIMULATOR
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
@@ -464,12 +451,18 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 #endif
 
+- (BOOL) _shouldDisableIdleTimer {
+	if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateCharging)
+		return YES;
+	return ((_connectedCount || _connectingCount) && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIdleTimerDisabled"]);
+}
+
 - (void) _willConnect:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
 
 	++_connectingCount;
 
-	[UIApplication sharedApplication].idleTimerDisabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIdleTimerDisabled"];
+	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 
 	[connection removePersistentInformationObjectForKey:@"pushState"];
@@ -559,8 +552,10 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 - (void) _didConnectOrDidNotConnect:(NSNotification *) notification {
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 
-	if (!_connectedCount && !_connectingCount)
-		[UIApplication sharedApplication].idleTimerDisabled = NO;
+	if (_connectedCount)
+		--_connectingCount;
+
+	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 }
 
 - (void) _didNotConnect:(NSNotification *) notification {
@@ -625,8 +620,16 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 - (void) _didDisconnect:(NSNotification *) notification {
 	if (_connectedCount)
 		--_connectedCount;
-	if (!_connectedCount && !_connectingCount)
-		[UIApplication sharedApplication].idleTimerDisabled = NO;
+
+	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
+}
+
+- (void) _userDefaultsChanged {
+	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
+}
+
+- (void) _batteryStateChanged {
+	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 }
 
 - (void) _deviceTokenRecieved:(NSNotification *) notification {
