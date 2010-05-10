@@ -116,19 +116,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	[_attributes release];
 	[_connection release];
 
-	_connection = nil;
-	_uniqueIdentifier = nil;
-	_nickname = nil;
-	_realName = nil;
-	_username = nil;
-	_address = nil;
-	_serverAddress = nil;
-	_publicKey = nil;
-	_fingerprint = nil;
-	_dateConnected = nil;
-	_dateDisconnected = nil;
-	_attributes = nil;
-
 	[super dealloc];
 }
 

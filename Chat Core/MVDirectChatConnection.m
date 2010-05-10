@@ -67,12 +67,6 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 	[_user release];
 	[_lastError release];
 
-	_directClientConnection = nil;
-	_host = nil;
-	_connectedHost = nil;
-	_user = nil;
-	_lastError = nil;
-
 	[super dealloc];
 }
 

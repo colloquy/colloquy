@@ -989,16 +989,9 @@ static SilcClientOperations silcClientOps = {
 	_silcClient = NULL;
 
 	[_silcPassword release];
-	_silcPassword = nil;
-
 	[_silcServer release];
-	_silcServer = nil;
-
 	[_queuedCommands release];
-	_queuedCommands = nil;
-
 	[_sentCommands release];
-	_sentCommands = nil;
 
 	[super dealloc];
 }

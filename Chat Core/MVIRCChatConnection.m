@@ -164,29 +164,11 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_roomPrefixes release];
 	[_serverInformation release];
 	[_uniqueIdentifier release];
+	[_umichNoIdentdCaptcha release];
+	[_failedNickname release];
 
 	if( [_connectionThread respondsToSelector:@selector( cancel )] )
 		[_connectionThread cancel];
-
-	_chatConnection = nil;
-	_connectionThread = nil;
-	_directClientConnections = nil;
-	_server = nil;
-	_realServer = nil;
-	_currentNickname = nil;
-	_nickname = nil;
-	_username = nil;
-	_password = nil;
-	_realName = nil;
-	_lastSentIsonNicknames = nil;
-	_sendQueue = nil;
-	_queueWait = nil;
-	_lastCommand = nil;
-	_pendingJoinRoomNames = nil;
-	_pendingWhoisUsers = nil;
-	_roomPrefixes = nil;
-	_serverInformation = nil;
-	_uniqueIdentifier = nil;
 
 	[super dealloc];
 }

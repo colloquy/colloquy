@@ -62,11 +62,6 @@ static BOOL autoPortMapping = YES;
 	[_user release];
 	[_lastError release];
 
-	_startDate = nil;
-	_host = nil;
-	_user = nil;
-	_lastError = nil;
-
 	[super dealloc];
 }
 
@@ -211,7 +206,7 @@ static BOOL autoPortMapping = YES;
 
 - (void) dealloc {
 	[_source release];
-	_source = nil;
+
 	[super dealloc];
 }
 
@@ -242,9 +237,6 @@ static BOOL autoPortMapping = YES;
 - (void) dealloc {
 	[_destination release];
 	[_originalFileName release];
-
-	_destination = nil;
-	_originalFileName = nil;
 
 	[super dealloc];
 }

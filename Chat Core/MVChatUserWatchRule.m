@@ -33,14 +33,6 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	[_publicKey release];
 	[_applicableServerDomains release];
 
-	_matchedChatUsers = nil;
-	_nickname = nil;
-	_realName = nil;
-	_username = nil;
-	_address = nil;
-	_publicKey = nil;
-	_applicableServerDomains = nil;
-
 	[super dealloc];
 }
 

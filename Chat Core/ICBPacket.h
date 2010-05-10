@@ -40,7 +40,6 @@
 
 - (id) initWithPacketType:(char) type;
 - (id) initFromRawData:(NSData *) raw;
-- (void) dealloc;
 
 - (NSString *) description;
 - (NSArray *) fields;

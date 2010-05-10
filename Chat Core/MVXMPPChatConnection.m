@@ -54,13 +54,6 @@
 	[_nickname release];
 	[_password release];
 
-	_session = nil;
-	_localID = nil;
-	_server = nil;
-	_username = nil;
-	_nickname = nil;
-	_password = nil;
-
 	[super dealloc];
 }
 

@@ -59,7 +59,6 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 	if( self == sharedInstance ) sharedInstance = nil;
 
 	[_plugins release];
-	_plugins = nil;
 
 	[super dealloc];
 }

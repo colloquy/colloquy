@@ -117,6 +117,7 @@
 
 - (void) dealloc {
 	[_fields release];
+
 	[super dealloc];
 }
 

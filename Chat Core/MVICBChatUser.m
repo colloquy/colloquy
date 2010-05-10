@@ -65,10 +65,6 @@
 	return self;
 }
 
-- (void) dealloc {
-	[super dealloc];
-}
-
 #pragma mark Message handling
 
 - (void) sendMessage:(MVChatString *) message withEncoding:(NSStringEncoding) encoding withAttributes:(NSDictionary *) attributes {

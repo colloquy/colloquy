@@ -85,20 +85,6 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[_memberModes release];
 	[_connection release];
 
-	_connection = nil;
-	_name = nil;
-	_uniqueIdentifier = nil;
-	_dateJoined = nil;
-	_dateParted = nil;
-	_topic = nil;
-	_topicAuthor = nil;
-	_dateTopicChanged = nil;
-	_attributes = nil;
-	_memberUsers = nil;
-	_bannedUsers = nil;
-	_modeAttributes = nil;
-	_memberModes = nil;
-
 	[super dealloc];
 }
 

@@ -58,10 +58,8 @@
 	[_directClientConnection setDelegate:nil];
 	[_directClientConnection release];
 
-	id old = _fileHandle;
-	_fileHandle = nil;
-	[old closeFile];
-	[old release];
+	[_fileHandle closeFile];
+	[_fileHandle release];
 
 	[super dealloc];
 }
@@ -238,11 +236,9 @@
 	[_directClientConnection setDelegate:nil];
 	[_directClientConnection release];
 
-	id old = _fileHandle;
-	_fileHandle = nil;
-	[old synchronizeFile];
-	[old closeFile];
-	[old release];
+	[_fileHandle synchronizeFile];
+	[_fileHandle closeFile];
+	[_fileHandle release];
 
 	[super dealloc];
 }

@@ -277,23 +277,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_proxyPassword release];
 	[_supportedFeatures release];
 
-	_npassword = nil;
-	_roomsCache = nil;
-	_pendingRoomAdditions = nil;
-	_pendingRoomUpdates = nil;
-	_cachedDate = nil;
-	_knownRooms = nil;
-	_joinedRooms = nil;
-	_chatUserWatchRules = nil;
-	_localUser = nil;
-	_lastConnectAttempt = nil;
-	_awayMessage = nil;
-	_persistentInformation = nil;
-	_proxyServer = nil;
-	_proxyUsername = nil;
-	_proxyPassword = nil;
-	_supportedFeatures = nil;
-
 	[super dealloc];
 }
 

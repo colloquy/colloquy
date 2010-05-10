@@ -60,15 +60,12 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	[_acceptConnection disconnect];
 	[_acceptConnection setDelegate:nil];
 	[_acceptConnection release];
-	_acceptConnection = nil;
 
 	[_connection disconnect];
 	[_connection setDelegate:nil];
 	[_connection release];
-	_connection = nil;
 
 	[_threadWaitLock release];
-	_threadWaitLock = nil;
 
 #if ENABLE(AUTO_PORT_MAPPING)
 	if (_portMapping) {
@@ -78,11 +75,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	}
 
 	[_portMapping release];
-	_portMapping = nil;
 #endif
-
-	_connectionThread = nil;
-	_delegate = nil;
 
 	[super dealloc];
 }
