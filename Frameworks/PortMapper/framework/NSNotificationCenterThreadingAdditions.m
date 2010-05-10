@@ -13,7 +13,6 @@
     [[self defaultCenter] postNotificationName:name 
                                         object:object 
                                       userInfo:nil];
-    [anInfoDictionary release];
 }
 
 
@@ -34,5 +33,6 @@
     [[self class] performSelectorOnMainThread:@selector(_postNotificationViaDictionary:)
                                    withObject:info 
                                 waitUntilDone:NO];
+	[info release];
 }
 @end
