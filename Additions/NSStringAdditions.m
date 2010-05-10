@@ -426,7 +426,6 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	baseConvert;
 
 	q = ( tv.tv_sec - 1104555600 ); // subtract 35 years, we only care about post Jan 1 2005
-	r = 0;
 
 	baseConvert;
 

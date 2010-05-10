@@ -9,7 +9,6 @@
 @interface MVIRCChatConnection : MVChatConnection {
 @private
 	AsyncSocket *_chatConnection;
-	NSTimer *_periodicCleanUpTimer;
 	NSThread *_connectionThread;
 	NSDate *_queueWait;
 	NSDate *_lastCommand;
