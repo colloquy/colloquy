@@ -57,10 +57,6 @@
 	_active = NO;
 }
 
-- (CGSize) contentSizeForViewInPopoverView {
-	return CGSizeMake(320., 700.);
-}
-
 #pragma mark -
 
 - (void) pushViewController:(UIViewController *) controller animated:(BOOL) animated {

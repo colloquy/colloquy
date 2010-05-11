@@ -814,5 +814,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		return;
 
 	[[CQChatController defaultController] showChatController:chatViewController animated:YES];
+
+	[[CQColloquyApplication sharedApplication] dismissPopoversAnimated:YES];
 }
 @end

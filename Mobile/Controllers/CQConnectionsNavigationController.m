@@ -47,10 +47,6 @@
 	[self popToRootViewControllerAnimated:NO];
 }
 
-- (CGSize) contentSizeForViewInPopoverView {
-	return CGSizeMake(320., 700.);
-}
-
 #pragma mark -
 
 - (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
