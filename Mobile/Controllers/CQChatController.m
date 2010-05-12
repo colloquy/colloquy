@@ -606,6 +606,9 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
+	if (_visibleChatController == controller)
+		return;
+
 	[_nextRoomConnection release];
 	_nextRoomConnection = nil;
 

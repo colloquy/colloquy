@@ -458,6 +458,11 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 #endif
 
 	NSIndexPath *changedIndexPath = indexPathForChatController(controller);
+	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+
+	if (selectedIndexPath && changedIndexPath.section == selectedIndexPath.section)
+		[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
+
 	if (controllers.count == 1) {
 		[self.tableView beginUpdates];
 		if ([CQChatController defaultController].chatViewControllers.count == 1)
@@ -465,6 +470,12 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:changedIndexPath.section] withRowAnimation:UITableViewRowAnimationTop];
 		[self.tableView endUpdates];
 	} else [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
+
+	if (selectedIndexPath && changedIndexPath.section == selectedIndexPath.section) {
+		if (changedIndexPath.row <= selectedIndexPath.row)
+			selectedIndexPath = [NSIndexPath indexPathForRow:selectedIndexPath.row + 1 inSection:selectedIndexPath.section];
+		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+	}
 
 	if ([[UIDevice currentDevice] isPadModel])
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
