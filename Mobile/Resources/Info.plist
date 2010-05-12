@@ -9,7 +9,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>LSMinimumSystemVersion</key>
-	<string>3.0</string>
+	<string>3.1</string>
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleExecutable</key>
@@ -53,5 +53,12 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleIconFiles</key>
+	<array>
+		<string>Icon-72.png</string>
+		<string>Icon-57.png</string>
+	</array>
+	<key>CFBundleIconFile</key>
+	<string>Icon-57.png</string>
 </dict>
 </plist>

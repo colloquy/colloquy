@@ -26,7 +26,7 @@
 		1C0932830D80CA4800A2705D /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932710D80CA4800A2705D /* NSScannerAdditions.m */; };
 		1C0932850D80CA4800A2705D /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932750D80CA4800A2705D /* NSStringAdditions.m */; };
 		1C0935E00D80E19200A2705D /* MVChatUserWatchRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09320C0D80C9EB00A2705D /* MVChatUserWatchRule.m */; };
-		1C0937330D80E72F00A2705D /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0937320D80E72F00A2705D /* Icon.png */; };
+		1C0937330D80E72F00A2705D /* Icon-57.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0937320D80E72F00A2705D /* Icon-57.png */; };
 		1C0937820D8116FC00A2705D /* CQChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937800D8116FC00A2705D /* CQChatController.m */; };
 		1C0938950D813A6B00A2705D /* CQDirectChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937EB0D8126D400A2705D /* CQDirectChatController.m */; };
 		1C0938960D813A6C00A2705D /* CQChatRoomController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937ED0D8126D400A2705D /* CQChatRoomController.m */; };
@@ -250,7 +250,7 @@
 		1C0932710D80CA4800A2705D /* NSScannerAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NSScannerAdditions.m; path = Additions/NSScannerAdditions.m; sourceTree = "<group>"; };
 		1C0932740D80CA4800A2705D /* NSStringAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = NSStringAdditions.h; path = Additions/NSStringAdditions.h; sourceTree = "<group>"; };
 		1C0932750D80CA4800A2705D /* NSStringAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = NSStringAdditions.m; path = Additions/NSStringAdditions.m; sourceTree = "<group>"; };
-		1C0937320D80E72F00A2705D /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		1C0937320D80E72F00A2705D /* Icon-57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-57.png"; sourceTree = "<group>"; };
 		1C0937800D8116FC00A2705D /* CQChatController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatController.m; sourceTree = "<group>"; };
 		1C0937810D8116FC00A2705D /* CQChatController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatController.h; sourceTree = "<group>"; };
 		1C0937EB0D8126D400A2705D /* CQDirectChatController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQDirectChatController.m; sourceTree = "<group>"; };
@@ -898,7 +898,7 @@
 				1CE69F810EE2F50100389442 /* ChatView.xib */,
 				1C124AD50F09F635008F181B /* Browser.xib */,
 				9799B3B90F3C1E0100526B1E /* FileTransferTableCell.xib */,
-				1C0937320D80E72F00A2705D /* Icon.png */,
+				1C0937320D80E72F00A2705D /* Icon-57.png */,
 				1C6F6881113AE6E600514C0C /* Icon-72.png */,
 				1CC64A9A0EE9152D00DE91D0 /* Default.png */,
 				1C6F68A8113AF10E00514C0C /* Default-Landscape.png */,
@@ -1061,7 +1061,7 @@
 				1C0F68830F1453CF002BB855 /* bubbles.js in Resources */,
 				1CAE8C8C0EE61AD000CE1AF8 /* transcript.js in Resources */,
 				1C09313B0D80C8F600A2705D /* Defaults.plist in Resources */,
-				1C0937330D80E72F00A2705D /* Icon.png in Resources */,
+				1C0937330D80E72F00A2705D /* Icon-57.png in Resources */,
 				1CB318DF0D8644E4006A7513 /* server.png in Resources */,
 				1CB318E00D8644E4006A7513 /* connectingBadgeDim.png in Resources */,
 				1CB318E10D8644E4006A7513 /* connectingBadgeGlow.png in Resources */,
@@ -1317,6 +1317,7 @@
 				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = build;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "armv7 armv6";
 			};
 			name = Distribution;
