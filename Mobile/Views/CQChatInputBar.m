@@ -227,12 +227,12 @@
 	CGSize textSize = [prefixText sizeWithFont:_inputField.font];
 
 	CGRect inputFrame = [self convertRect:_inputField.frame toView:self.superview];
-	CGRect frame = _completionView.frame;
 
 retry:
 	_completionView.completions = completions;
 	[_completionView sizeToFit];
 
+	CGRect frame = _completionView.frame;
 	frame.origin = inputFrame.origin;
 	frame.origin.y -= 31.;
 	frame.origin.x += textSize.width + 1.;

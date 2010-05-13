@@ -12,6 +12,7 @@
 		return nil;
 	self.opaque = NO;
 	self.exclusiveTouch = YES;
+	self.contentMode = UIViewContentModeRedraw;
 	_selectedCompletion = NSNotFound;
 	return self;
 }
