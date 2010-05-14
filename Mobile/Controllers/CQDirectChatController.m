@@ -1056,7 +1056,7 @@ static BOOL hardwareKeyboard;
 
 	_showingKeyboard = YES;
 
-	if (![self isViewLoaded])
+	if (![self isViewLoaded] || !self.view.window)
 		return;
 
 	NSValue *keyboardRectValue = [[notification userInfo] objectForKey:@"UIKeyboardFrameEndUserInfoKey"];
@@ -1131,7 +1131,7 @@ static BOOL hardwareKeyboard;
 
 	_showingKeyboard = NO;
 
-	if (![self isViewLoaded])
+	if (![self isViewLoaded] || !self.view.window)
 		return;
 
 	NSTimeInterval animationDuration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
