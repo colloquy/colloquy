@@ -385,7 +385,9 @@
 			if (connection.directConnection)
 				[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 			else [connection sendRawMessageImmediatelyWithComponents:@"SQUIT :", [MVChatConnection defaultQuitMessage], nil];
-		} else if (buttonIndex == 1) {
+		} else if (!connection.directConnection && buttonIndex == 0) {
+			[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+		} else {
 			if (connection.awayStatusMessage)
 				connection.awayStatusMessage = nil;
 			else {
@@ -396,8 +398,6 @@
 
 				[awayStatusController release];
 			}
-		} else {
-			[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 		}
 	}
 
