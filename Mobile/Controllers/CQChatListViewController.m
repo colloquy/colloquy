@@ -423,7 +423,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	[super viewWillAppear:animated];
 
 	if ([[UIDevice currentDevice] isPadModel])
-		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionMiddle];
 }
 
 - (void) viewDidDisappear:(BOOL) animated {
