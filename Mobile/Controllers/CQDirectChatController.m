@@ -1070,7 +1070,7 @@ static BOOL hardwareKeyboard;
 		CGRect keyboardBounds = CGRectZero;
 		[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
 
-		CGRect keyboardRect = keyboardBounds;
+		keyboardRect = keyboardBounds;
 		keyboardRect.origin.x = (endCenterPoint.x - (keyboardBounds.size.width / 2.));
 		keyboardRect.origin.y = (endCenterPoint.y - (keyboardBounds.size.height / 2.));
 
