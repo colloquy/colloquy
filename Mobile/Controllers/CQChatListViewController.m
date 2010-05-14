@@ -70,8 +70,10 @@ static BOOL showsChatIcons;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_updateMessagePreview:) name:CQChatViewControllerRecentMessagesUpdatedNotification object:nil];
 
-	if ([[UIDevice currentDevice] isPadModel])
+	if ([[UIDevice currentDevice] isPadModel]) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_updateUnreadMessages:) name:CQChatViewControllerUnreadMessagesUpdatedNotification object:nil];
+	}
 
 	return self;
 }
@@ -334,6 +336,17 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 	CQChatTableCell *cell = [self _chatTableCellForController:controller];
 	[self _refreshChatCell:cell withController:controller animated:YES];
+}
+
+- (void) _scrollToRevealSeclectedRow {
+	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+	if (selectedIndexPath)
+		[self.tableView scrollToRowAtIndexPath:selectedIndexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
+}
+
+- (void) _keyboardWillShow:(NSNotification *) notification {
+	if (UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation))
+		[self performSelector:@selector(_scrollToRevealSeclectedRow) withObject:nil afterDelay:0.];
 }
 
 - (void) _tableWasLongPressed:(UILongPressGestureRecognizer *) gestureReconizer {
