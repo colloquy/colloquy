@@ -408,17 +408,21 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 }
 
 - (void) viewWillAppear:(BOOL) animated {
+	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+
 	if (_needsUpdate) {
 		[self.tableView reloadData];
 		_needsUpdate = NO;
+
+		if (selectedIndexPath)
+			[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+	} else {
+		id <CQChatViewController> chatViewController = chatControllerForIndexPath(selectedIndexPath);
+		CQChatTableCell *cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:selectedIndexPath];
+		[self _refreshChatCell:cell withController:chatViewController animated:NO];	
 	}
 
 	_active = YES;
-
-	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
-	id <CQChatViewController> chatViewController = chatControllerForIndexPath(selectedIndexPath);
-	CQChatTableCell *cell = (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:selectedIndexPath];
-	[self _refreshChatCell:cell withController:chatViewController animated:NO];
 
 	[super viewWillAppear:animated];
 
