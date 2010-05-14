@@ -47,6 +47,7 @@ static BOOL vibrateOnPrivateMessage;
 
 static NSOperationQueue *chatMessageProcessingQueue;
 static BOOL hardwareKeyboard;
+static BOOL showingKeyboard;
 
 #pragma mark -
 
@@ -82,6 +83,19 @@ static BOOL hardwareKeyboard;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 
 	[self userDefaultsChanged];
+
+	if ([[UIDevice currentDevice] isPadModel]) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide) name:UIKeyboardWillHideNotification object:nil];
+	}
+}
+
++ (void) keyboardWillShow {
+	showingKeyboard = YES;
+}
+
++ (void) keyboardWillHide {
+	showingKeyboard = NO;
 }
 
 - (id) initWithTarget:(id) target {
@@ -98,6 +112,8 @@ static BOOL hardwareKeyboard;
 	if ([[UIDevice currentDevice] isPadModel]) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+
+		_showingKeyboard = showingKeyboard;
 	}
 
 	if (self.user) {
