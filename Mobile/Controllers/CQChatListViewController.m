@@ -440,9 +440,21 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	[super viewWillAppear:animated];
 
 	if ([[UIDevice currentDevice] isPadModel]) {
+		if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
+			_previousContentInset = self.tableView.contentInset;
+			self.tableView.contentInset = UIEdgeInsetsZero;
+		}
+
 		[self.tableView scrollToRowAtIndexPath:selectedIndexPath atScrollPosition:UITableViewScrollPositionNone animated:NO];
 		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 	}
+}
+
+- (void) viewWillDisappear:(BOOL) animated {
+	[super viewWillDisappear:animated];
+
+	if ([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation))
+		self.tableView.contentInset = _previousContentInset;
 }
 
 - (void) viewDidDisappear:(BOOL) animated {
