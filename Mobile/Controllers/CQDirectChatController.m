@@ -922,7 +922,7 @@ static BOOL hardwareKeyboard;
 }
 
 - (BOOL) handleTweetCommandWithArguments:(NSString *) arguments {
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"/tweet removed", @"/tweet removed alert title") message:NSLocalizedString(@"/tweet was removed due to Twitter's deprecation and future removal of Basic Auth. Sorry for any inconvenience.", @"/tweet was removed due to Twitter's deprecation and future removal of Basic Auth. Sorry for any inconvenience. message") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK button title") otherButtonTitles:nil];
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Tweet Support Removed", @"Twitter removed alert title") message:NSLocalizedString(@"Support was removed due to Twitter removing basic authentication support. Sorry for any inconvenience.", @"Twitter support was removed message") delegate:nil cancelButtonTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") otherButtonTitles:nil];
 
 	[alert show];
 	[alert release];
