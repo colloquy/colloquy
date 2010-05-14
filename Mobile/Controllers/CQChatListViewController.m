@@ -388,12 +388,12 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
+	self.tableView.rowHeight = 62.;
+
 	if ([[UIDevice currentDevice] isPadModel]) {
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
 		self.tableView.allowsSelectionDuringEditing = YES;
 	}
-
-	self.tableView.rowHeight = 62.;
 
 	if ([self.tableView respondsToSelector:@selector(addGestureRecognizer:)] && !_longPressGestureRecognizer) {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
