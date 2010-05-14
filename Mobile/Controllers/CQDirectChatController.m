@@ -1035,11 +1035,9 @@ static BOOL hardwareKeyboard;
 #pragma mark -
 
 - (void) keyboardWillShow:(NSNotification *) notification {
-	CGRect keyboardBounds = CGRectZero;
 	CGPoint beginCenterPoint = CGPointZero;
 	CGPoint endCenterPoint = CGPointZero;
 
-	[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
 	[[[notification userInfo] objectForKey:UIKeyboardCenterBeginUserInfoKey] getValue:&beginCenterPoint];
 	[[[notification userInfo] objectForKey:UIKeyboardCenterEndUserInfoKey] getValue:&endCenterPoint];
 
@@ -1052,30 +1050,43 @@ static BOOL hardwareKeyboard;
 	if (![self isViewLoaded])
 		return;
 
-	CGRect keyboardRect = keyboardBounds;
-	keyboardRect.origin.x = (endCenterPoint.x - (keyboardBounds.size.width / 2.));
-	keyboardRect.origin.y = (endCenterPoint.y - (keyboardBounds.size.height / 2.));
+	NSValue *keyboardRectValue = [[notification userInfo] objectForKey:@"UIKeyboardFrameEndUserInfoKey"];
+	CGRect keyboardRect = CGRectZero;
 
-	UIViewController *mainViewController = [CQColloquyApplication sharedApplication].mainViewController;
-	UIView *mainView = mainViewController.view;
-	keyboardRect = [self.view convertRect:keyboardRect fromView:mainView];
+	if (keyboardRectValue) {
+		[keyboardRectValue getValue:&keyboardRect];
 
-	CGRect mainViewFrame = mainView.frame;
-	CGRect windowFrame = mainView.window.frame;
+		keyboardRect = [self.view convertRect:[self.view.window convertRect:keyboardRect fromWindow:nil] fromView:nil];
+	} else {
+		CGRect keyboardBounds = CGRectZero;
+		[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
 
-	switch (mainViewController.interfaceOrientation) {
-		case UIInterfaceOrientationPortrait:
-			keyboardRect.origin.y -= mainViewFrame.origin.y;
-			break;
-		case UIInterfaceOrientationPortraitUpsideDown:
-			keyboardRect.origin.y -= (windowFrame.size.height - mainViewFrame.size.height);
-			break;
-		case UIInterfaceOrientationLandscapeRight:
-			keyboardRect.origin.y -= (windowFrame.size.width - mainViewFrame.size.width);
-			break;
-		case UIInterfaceOrientationLandscapeLeft:
-			keyboardRect.origin.y -= mainViewFrame.origin.x;
-			break;
+		CGRect keyboardRect = keyboardBounds;
+		keyboardRect.origin.x = (endCenterPoint.x - (keyboardBounds.size.width / 2.));
+		keyboardRect.origin.y = (endCenterPoint.y - (keyboardBounds.size.height / 2.));
+
+		UIViewController *mainViewController = [CQColloquyApplication sharedApplication].mainViewController;
+		UIView *mainView = mainViewController.view;
+
+		keyboardRect = [self.view convertRect:keyboardRect fromView:mainView];
+
+		CGRect mainViewFrame = mainView.frame;
+		CGRect windowFrame = mainView.window.frame;
+
+		switch (mainViewController.interfaceOrientation) {
+			case UIInterfaceOrientationPortrait:
+				keyboardRect.origin.y -= mainViewFrame.origin.y;
+				break;
+			case UIInterfaceOrientationPortraitUpsideDown:
+				keyboardRect.origin.y -= (windowFrame.size.height - mainViewFrame.size.height);
+				break;
+			case UIInterfaceOrientationLandscapeRight:
+				keyboardRect.origin.y -= (windowFrame.size.width - mainViewFrame.size.width);
+				break;
+			case UIInterfaceOrientationLandscapeLeft:
+				keyboardRect.origin.y -= mainViewFrame.origin.x;
+				break;
+		}
 	}
 
 	NSTimeInterval animationDuration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
