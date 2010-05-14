@@ -849,6 +849,12 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[self showChatController:controller animated:NO];
 }
 
+- (void) visibleChatControllerWasHidden {
+	id old = _visibleChatController;
+	_visibleChatController = nil;
+	[old release];
+}
+
 - (void) closeViewController:(id) controller {
 	if ([controller respondsToSelector:@selector(close)])
 		[controller close];

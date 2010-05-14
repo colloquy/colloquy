@@ -75,8 +75,13 @@
 - (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
 	if ([[UIDevice currentDevice] isPadModel])
 		return;
-	if (viewController == self.rootViewController && [[CQChatController defaultController] hasPendingChatController])
-		[self performSelector:@selector(_showNextChatController) withObject:nil afterDelay:0.33];
+
+	if (viewController == self.rootViewController) {
+		[[CQChatController defaultController] visibleChatControllerWasHidden];
+
+		if ([[CQChatController defaultController] hasPendingChatController])
+			[self performSelector:@selector(_showNextChatController) withObject:nil afterDelay:0.33];
+	}
 }
 
 #pragma mark -

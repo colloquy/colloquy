@@ -78,6 +78,8 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 - (CQFileTransferController *) chatViewControllerForFileTransfer:(MVFileTransfer *) transfer ifExists:(BOOL) exists;
 #endif
 
+- (void) visibleChatControllerWasHidden;
+
 - (void) closeViewController:(id) controller;
 @end
 
