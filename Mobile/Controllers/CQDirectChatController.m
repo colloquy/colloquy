@@ -530,7 +530,7 @@ static BOOL hardwareKeyboard;
 	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"] && text.length > 1) {
 		static NSArray *commandsNotRequiringConnection;
 		if (!commandsNotRequiringConnection)
-			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", @"list", @"join", @"welcome", @"token", @"resetbadge", nil];
+			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", @"list", @"join", @"welcome", @"token", @"resetbadge", @"tweet", nil];
 
 		// Send as a command.
 		NSScanner *scanner = [NSScanner scannerWithString:text];
@@ -917,6 +917,15 @@ static BOOL hardwareKeyboard;
 	NSString *urlString = @"http://searchirc.com/search.php?F=partial&I=%@&T=both&N=all&M=min&C=5&PER=20";
 
 	[self _handleSearchForURL:urlString withQuery:arguments];
+
+	return YES;
+}
+
+- (BOOL) handleTweetCommandWithArguments:(NSString *) arguments {
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"/tweet removed", @"/tweet removed alert title") message:NSLocalizedString(@"/tweet was removed due to Twitter's deprecation and future removal of Basic Auth. Sorry for any inconvenience.", @"/tweet was removed due to Twitter's deprecation and future removal of Basic Auth. Sorry for any inconvenience. message") delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", @"OK button title") otherButtonTitles:nil];
+
+	[alert show];
+	[alert release];
 
 	return YES;
 }
