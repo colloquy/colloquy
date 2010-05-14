@@ -985,9 +985,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 #if ENABLE(SECRETS)
 - (void) _powerStateMessageReceived:(natural_t) messageType withArgument:(long) messageArgument {
-	if ([[UIDevice currentDevice].systemVersion doubleValue] >= 3.2)
-		return;
-
 	switch (messageType) {
 	case kIOMessageSystemWillSleep:
 		// System will go to sleep, we can't prevent it.
