@@ -388,9 +388,9 @@
 		} else if (!connection.directConnection && buttonIndex == 0) {
 			[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 		} else {
-			if (connection.awayStatusMessage)
+			if (connection.awayStatusMessage) {
 				connection.awayStatusMessage = nil;
-			else {
+			} else {
 				CQAwayStatusController *awayStatusController = [[CQAwayStatusController alloc] init]; 
 				awayStatusController.connection = connection;
 
