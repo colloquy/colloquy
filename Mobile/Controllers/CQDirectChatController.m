@@ -504,7 +504,7 @@ static BOOL showingKeyboard;
 #if ENABLE(FILE_TRANSFERS)
 								   @"/dcc",
 #endif
-								   @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/ipod", @"/music", @"/squit", @"/welcome", nil];
+								   @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/ipod", @"/music", @"/squit", @"/welcome", @"/sysinfo", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -935,6 +935,21 @@ static BOOL showingKeyboard;
 
 	[alert show];
 	[alert release];
+
+	return YES;
+}
+
+- (BOOL) handleSysinfoCommandWithArguments:(NSString *) arguments {
+	NSString *battery = nil;
+	if ([UIDevice currentDevice].batteryState == UIDeviceBatteryStateUnknown)
+		battery = @"";
+	else battery = [NSString stringWithFormat:NSLocalizedString(@" with %f battery life remaining", @" with %f battery life remaining"), [UIDevice currentDevice].batteryLevel];
+	NSString *message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iPhone OS %@%@. ", @"is running Mobile Colloquy %@ in %@ mode on an %@ running iPhone OS %@%@. "), [[NSUserDefaults standardUserDefaults] stringForKey:@"CQCurrentVersion"], UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? NSLocalizedString(@"landscape", @"landscape orientation") : NSLocalizedString(@"portrait", @"portrait orientation"), [UIDevice currentDevice].localizedModel, [UIDevice currentDevice].systemVersion, battery];
+
+	[_target sendMessage:message withEncoding:self.encoding asAction:YES];
+
+	NSData *messageData = [message dataUsingEncoding:self.encoding allowLossyConversion:YES];
+	[self addMessage:messageData fromUser:self.connection.localUser asAction:YES withIdentifier:[NSString locallyUniqueString]];
 
 	return YES;
 }
