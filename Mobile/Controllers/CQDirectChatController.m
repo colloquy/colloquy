@@ -1361,7 +1361,7 @@ static BOOL showingKeyboard;
 
 	[self.navigationItem setRightBarButtonItem:item animated:animated];
 
-	if ([[UIDevice currentDevice] isPadModel])
+	if (_active && [[UIDevice currentDevice] isPadModel])
 		[[CQChatController defaultController].chatPresentationController updateToolbarAnimated:YES];
 
 	[item release];

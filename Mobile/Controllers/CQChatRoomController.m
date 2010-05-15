@@ -939,9 +939,8 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 
 - (void) _updateRightBarButtonItemAnimated:(BOOL) animated {
 	UIBarButtonItem *item = nil;
-	BOOL isConnected = self.connection.connected;
 
-	if (isConnected) {
+	if (self.available) {
 		BOOL isPadModel = [[UIDevice currentDevice] isPadModel];
 		UIBarButtonItemStyle style = (isPadModel ? UIBarButtonItemStylePlain : UIBarButtonItemStyleBordered);
 		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:isPadModel ? @"members-large.png" : @"members.png"] style:style target:self action:@selector(showMembers)];
@@ -953,7 +952,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 
 	[self.navigationItem setRightBarButtonItem:item animated:animated];
 
-	if ([[UIDevice currentDevice] isPadModel])
+	if (_active && [[UIDevice currentDevice] isPadModel])
 		[[CQChatController defaultController].chatPresentationController updateToolbarAnimated:YES];
 
 	[item release];
