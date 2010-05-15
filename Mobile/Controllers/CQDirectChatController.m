@@ -374,7 +374,7 @@ static BOOL showingKeyboard;
 
 	_active = YES;
 
-	[self _addPendingComponentsAnimated:NO];
+	[self _addPendingComponentsAnimated:YES];
 
 	[transcriptView performSelector:@selector(flashScrollIndicators) withObject:nil afterDelay:0.1];
 
