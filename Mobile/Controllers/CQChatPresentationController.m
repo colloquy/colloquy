@@ -154,7 +154,14 @@
 
 	UIView *view = _topChatViewController.view;
 
-	[_topChatViewController viewWillAppear:NO];
+	if (_topChatViewController) {
+		CGRect frame = self.view.bounds;
+		frame.origin.y += _toolbar.frame.size.height;
+		frame.size.height -= _toolbar.frame.size.height;
+		view.frame = frame;
+
+		[_topChatViewController viewWillAppear:NO];
+	}
 
 	if ([oldViewController respondsToSelector:@selector(dismissPopoversAnimated:)])
 		[oldViewController dismissPopoversAnimated:NO];
@@ -167,11 +174,6 @@
 
 	if (!_topChatViewController)
 		return;
-
-	CGRect frame = self.view.bounds;
-	frame.origin.y += _toolbar.frame.size.height;
-	frame.size.height -= _toolbar.frame.size.height;
-	view.frame = frame;
 
 	[self.view insertSubview:view aboveSubview:_toolbar];
 	[_topChatViewController viewDidAppear:NO];

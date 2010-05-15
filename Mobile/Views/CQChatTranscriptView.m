@@ -273,6 +273,9 @@
 #pragma mark -
 
 - (void) _addComponentsToTranscript:(NSArray *) components fromPreviousSession:(BOOL) previousSession animated:(BOOL) animated {
+	if (!components.count)
+		return;
+
 	NSMutableString *command = [[NSMutableString alloc] initWithString:@"appendComponents(["];
 	NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\\'\""];
 

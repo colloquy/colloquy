@@ -37,6 +37,7 @@ static BOOL vibrateOnPrivateMessage;
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
 - (void) _addPendingComponent:(id) component;
+- (void) _addPendingComponentsAnimated:(BOOL) animated;
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _updateRightBarButtonItemAnimated:(BOOL) animated;
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command;
@@ -342,6 +343,10 @@ static BOOL showingKeyboard;
 
 	NSString *capitalizationBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocapitalizationBehavior"];
 	chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
+}
+
+- (void) viewWillAppear:(BOOL) animated {
+	[super viewWillAppear:animated];
 
 	if (_pendingPreviousSessionComponents.count) {
 		[transcriptView addPreviousSessionComponents:_pendingPreviousSessionComponents];
@@ -350,23 +355,7 @@ static BOOL showingKeyboard;
 		_pendingPreviousSessionComponents = nil;
 	}
 
-	if (_pendingComponents.count) {
-		[transcriptView addComponents:_pendingComponents animated:NO];
-
-		[_pendingComponents removeAllObjects];
-	}
-}
-
-- (void) viewWillAppear:(BOOL) animated {
-	[super viewWillAppear:animated];
-
-	_active = YES;
-
-	if (_pendingComponents.count) {
-		[transcriptView addComponents:_pendingComponents animated:NO];
-
-		[_pendingComponents removeAllObjects];
-	}
+	[self _addPendingComponentsAnimated:NO];
 
 	if (![[UIDevice currentDevice] isPadModel]) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -382,6 +371,10 @@ static BOOL showingKeyboard;
 
 - (void) viewDidAppear:(BOOL) animated {
 	[super viewDidAppear:animated];
+
+	_active = YES;
+
+	[self _addPendingComponentsAnimated:NO];
 
 	[transcriptView performSelector:@selector(flashScrollIndicators) withObject:nil afterDelay:0.1];
 
@@ -1130,8 +1123,7 @@ static BOOL showingKeyboard;
 	if (_active)
 		[UIView commitAnimations];
 
-	if (_active)
-		[transcriptView scrollToBottomAnimated:YES];
+	[transcriptView scrollToBottomAnimated:_active];
 }
 
 - (void) keyboardWillHide:(NSNotification *) notification {
@@ -1410,7 +1402,14 @@ static BOOL showingKeyboard;
 }
 
 - (void) _addPendingComponents {
-	[transcriptView addComponents:_pendingComponents animated:YES];
+	[self _addPendingComponentsAnimated:YES];
+}
+
+- (void) _addPendingComponentsAnimated:(BOOL) animated {
+	if (!_pendingComponents.count)
+		return;
+
+	[transcriptView addComponents:_pendingComponents animated:animated];
 
 	[_pendingComponents removeAllObjects];
 }
