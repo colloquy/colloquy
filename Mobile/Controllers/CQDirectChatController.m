@@ -940,10 +940,13 @@ static BOOL showingKeyboard;
 }
 
 - (BOOL) handleSysinfoCommandWithArguments:(NSString *) arguments {
+	NSString *version = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQCurrentVersion"];
+	NSString *orientation = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? NSLocalizedString(@"landscape", @"landscape orientation") : NSLocalizedString(@"portrait", @"portrait orientation");
+
 	NSString *message = nil;
 	if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateUnplugged)
-		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iPhone OS %@ with %.0f%% battery life remaining. ", @"System info message with battery level"), [[NSUserDefaults standardUserDefaults] stringForKey:@"CQCurrentVersion"], UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? NSLocalizedString(@"landscape", @"landscape orientation") : NSLocalizedString(@"portrait", @"portrait orientation"), [UIDevice currentDevice].localizedModel, [UIDevice currentDevice].systemVersion, [UIDevice currentDevice].batteryLevel * 100.];
-	else message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iPhone OS %@. ", @"System info message"), [[NSUserDefaults standardUserDefaults] stringForKey:@"CQCurrentVersion"], UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? NSLocalizedString(@"landscape", @"landscape orientation") : NSLocalizedString(@"portrait", @"portrait orientation"), [UIDevice currentDevice].localizedModel, [UIDevice currentDevice].systemVersion];
+		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iPhone OS %@ with %.0f%% battery life remaining. ", @"System info message with battery level"), version, orientation, [UIDevice currentDevice].localizedModel, [UIDevice currentDevice].systemVersion, [UIDevice currentDevice].batteryLevel * 100.];
+	else message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iPhone OS %@. ", @"System info message"), version, orientation, [UIDevice currentDevice].localizedModel, [UIDevice currentDevice].systemVersion];
 
 	[_target sendMessage:message withEncoding:self.encoding asAction:YES];
 
