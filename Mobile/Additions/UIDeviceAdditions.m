@@ -6,9 +6,7 @@
 #if TARGET_IPHONE_SIMULATOR
 - (NSString *) model {
 	// This is needed becuase the real UIDevice.model always returns iPhone Simulator, even for the iPad.
-	if ([UIScreen mainScreen].bounds.size.width >= 768 || [UIScreen mainScreen].bounds.size.height >= 1024)
-		return @"iPad Simulator";
-	return @"iPhone Simulator";
+	return [self isPadModel] ? @"iPad Simulator" : @"iPhone Simulator";
 }
 
 - (NSString *) localizedModel {

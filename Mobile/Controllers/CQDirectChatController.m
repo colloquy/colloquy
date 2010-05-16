@@ -940,11 +940,10 @@ static BOOL showingKeyboard;
 }
 
 - (BOOL) handleSysinfoCommandWithArguments:(NSString *) arguments {
-	NSString *battery = nil;
-	if ([UIDevice currentDevice].batteryState == UIDeviceBatteryStateUnknown)
-		battery = @"";
-	else battery = [NSString stringWithFormat:NSLocalizedString(@" with %f battery life remaining", @" with %f battery life remaining"), [UIDevice currentDevice].batteryLevel];
-	NSString *message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iPhone OS %@%@. ", @"is running Mobile Colloquy %@ in %@ mode on an %@ running iPhone OS %@%@. "), [[NSUserDefaults standardUserDefaults] stringForKey:@"CQCurrentVersion"], UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? NSLocalizedString(@"landscape", @"landscape orientation") : NSLocalizedString(@"portrait", @"portrait orientation"), [UIDevice currentDevice].localizedModel, [UIDevice currentDevice].systemVersion, battery];
+	NSString *message = nil;
+	if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateUnplugged)
+		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iPhone OS %@ with %.0f%% battery life remaining. ", @"System info message with battery level"), [[NSUserDefaults standardUserDefaults] stringForKey:@"CQCurrentVersion"], UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? NSLocalizedString(@"landscape", @"landscape orientation") : NSLocalizedString(@"portrait", @"portrait orientation"), [UIDevice currentDevice].localizedModel, [UIDevice currentDevice].systemVersion, [UIDevice currentDevice].batteryLevel * 100.];
+	else message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iPhone OS %@. ", @"System info message"), [[NSUserDefaults standardUserDefaults] stringForKey:@"CQCurrentVersion"], UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? NSLocalizedString(@"landscape", @"landscape orientation") : NSLocalizedString(@"portrait", @"portrait orientation"), [UIDevice currentDevice].localizedModel, [UIDevice currentDevice].systemVersion];
 
 	[_target sendMessage:message withEncoding:self.encoding asAction:YES];
 
