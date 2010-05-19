@@ -110,8 +110,7 @@ static NSURL *lastURL;
 }
 
 - (void) close:(id) sender {
-	if (webView.loading)
-		[webView stopLoading];
+	[webView stopLoading];
 
 	id old = lastURL;
 	lastURL = [self.url retain];
