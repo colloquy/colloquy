@@ -20,7 +20,6 @@ static NSString *membersFilteredCountFormat;
 #define OperatorActionSheetTag 2
 
 #define SendMessageButtonIndex 0
-#define UserInfoButtonIndex 1
 
 #if ENABLE(FILE_TRANSFERS)
 #define FileTransfersEnabled 1
@@ -61,13 +60,19 @@ static NSString *membersFilteredCountFormat;
 - (NSInteger) sendFileButtonIndex {
 	if ([[UIDevice currentDevice] isPadModel])
 		return FileTransfersEnabled ? 3 : 2;
-	else return FileTransfersEnabled ? 2 : NSNotFound;
+	return FileTransfersEnabled ? 2 : NSNotFound;
 }
 
 - (NSInteger) operatorActionsButtonIndex {
 	if ([[UIDevice currentDevice] isPadModel])
 		return FileTransfersEnabled ? 3 : 2;
-	else return FileTransfersEnabled ? 2 : 1;
+	return FileTransfersEnabled ? 2 : 1;
+}
+
+- (NSInteger) userInfoButtonIndex {
+	if ([[UIDevice currentDevice] isPadModel])
+		return 1;
+	return NSNotFound;
 }
 
 #pragma mark -
@@ -474,7 +479,7 @@ static NSString *membersFilteredCountFormat;
 
 			CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
 			[[CQChatController defaultController] showChatController:chatController animated:YES];
-		} else if (buttonIndex == UserInfoButtonIndex) {
+		} else if (buttonIndex == [self userInfoButtonIndex]) {
 			CQUserInfoController *userInfoController = [[CQUserInfoController alloc] init];
 			userInfoController.user = user;
 
@@ -573,7 +578,7 @@ static NSString *membersFilteredCountFormat;
 			[operatorSheet release];
 			[context release];
 		}
-	} else if (actionSheet.tag == [self operatorActionsButtonIndex]) {
+	} else if (actionSheet.tag == OperatorActionSheetTag) {
 		[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
 
 		id action = [((CQActionSheet *)actionSheet).userInfo objectForKey:[NSNumber numberWithUnsignedInteger:buttonIndex]];
