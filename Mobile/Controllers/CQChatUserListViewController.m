@@ -57,22 +57,20 @@ static NSString *membersFilteredCountFormat;
 
 #pragma mark -
 
-- (NSInteger) sendFileButtonIndex {
+- (NSUInteger) userInfoButtonIndex {
+	return [[UIDevice currentDevice] isPadModel] ? 1 : NSNotFound;
+}
+
+- (NSUInteger) sendFileButtonIndex {
 	if ([[UIDevice currentDevice] isPadModel])
 		return FileTransfersEnabled ? 3 : 2;
 	return FileTransfersEnabled ? 2 : NSNotFound;
 }
 
-- (NSInteger) operatorActionsButtonIndex {
+- (NSUInteger) operatorActionsButtonIndex {
 	if ([[UIDevice currentDevice] isPadModel])
 		return FileTransfersEnabled ? 3 : 2;
 	return FileTransfersEnabled ? 2 : 1;
-}
-
-- (NSInteger) userInfoButtonIndex {
-	if ([[UIDevice currentDevice] isPadModel])
-		return 1;
-	return NSNotFound;
 }
 
 #pragma mark -
@@ -488,7 +486,7 @@ static NSString *membersFilteredCountFormat;
 
 			[userInfoController release];
 #if ENABLE(FILE_TRANSFERS)
-		} else if (buttonIndex == SendFileButtonIndex) {
+		} else if (buttonIndex == [self sendFileButtonIndex]) {
 			[[CQChatController defaultController] showFilePickerWithUser:user];
 #endif
 		} else if (buttonIndex == [self operatorActionsButtonIndex]) {
