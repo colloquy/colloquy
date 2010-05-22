@@ -9,7 +9,7 @@
 //#import "JVChatRoomPanel.h"
 //#import "JVDirectChatPanel.h"
 #import "NSURLAdditions.h"
-#import "MVChatConnection.h"
+#import <ChatCore/MVChatConnection.h>
 
 static MVConnectionsController *sharedInstance = nil;
 
