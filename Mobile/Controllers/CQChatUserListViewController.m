@@ -57,17 +57,17 @@ static NSString *membersFilteredCountFormat;
 
 #pragma mark -
 
-- (NSUInteger) userInfoButtonIndex {
+- (NSInteger) userInfoButtonIndex {
 	return [[UIDevice currentDevice] isPadModel] ? 1 : NSNotFound;
 }
 
-- (NSUInteger) sendFileButtonIndex {
+- (NSInteger) sendFileButtonIndex {
 	if ([[UIDevice currentDevice] isPadModel])
 		return FileTransfersEnabled ? 3 : 2;
 	return FileTransfersEnabled ? 2 : NSNotFound;
 }
 
-- (NSUInteger) operatorActionsButtonIndex {
+- (NSInteger) operatorActionsButtonIndex {
 	if ([[UIDevice currentDevice] isPadModel])
 		return FileTransfersEnabled ? 3 : 2;
 	return FileTransfersEnabled ? 2 : 1;
