@@ -42,6 +42,7 @@ static BOOL vibrateOnPrivateMessage;
 - (void) _updateRightBarButtonItemAnimated:(BOOL) animated;
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command;
 - (void) _forceRegsignKeyboard;
+- (void) _userDefaultsChanged;
 @end
 
 #pragma mark -
@@ -109,6 +110,8 @@ static BOOL showingKeyboard;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:self.connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didRecieveDeviceToken:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 
 	if ([[UIDevice currentDevice] isPadModel]) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -327,22 +330,10 @@ static BOOL showingKeyboard;
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	transcriptView.styleIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
-	self.view.backgroundColor = transcriptView.backgroundColor;
-
-	NSString *completionBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"];
-	chatInputBar.autocomplete = ![completionBehavior isEqualToString:@"Disabled"];
-	chatInputBar.spaceCyclesCompletions = [completionBehavior isEqualToString:@"Keyboard"];
-
-	chatInputBar.autocorrect = ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableChatAutocorrection"];
-
-	chatInputBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
-
 	chatInputBar.accessibilityLabel = NSLocalizedString(@"Enter chat message.", @"Voiceover enter chat message label");
 	chatInputBar.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
 
-	NSString *capitalizationBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocapitalizationBehavior"];
-	chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
+	[self _userDefaultsChanged];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -1313,6 +1304,25 @@ static BOOL showingKeyboard;
 
 	[alert show];
 	[alert release];
+}
+
+- (void) _userDefaultsChanged {
+	if (self.user)
+		_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDirectChatEncoding"];
+
+	transcriptView.styleIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
+	self.view.backgroundColor = transcriptView.backgroundColor;
+
+	NSString *completionBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"];
+	chatInputBar.autocomplete = ![completionBehavior isEqualToString:@"Disabled"];
+	chatInputBar.spaceCyclesCompletions = [completionBehavior isEqualToString:@"Keyboard"];
+
+	chatInputBar.autocorrect = ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableChatAutocorrection"];
+
+	chatInputBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
+
+	NSString *capitalizationBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocapitalizationBehavior"];
+	chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
 }
 
 - (void) _userNicknameDidChange:(NSNotification *) notification {

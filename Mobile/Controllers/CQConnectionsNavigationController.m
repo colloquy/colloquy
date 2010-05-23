@@ -17,10 +17,14 @@
 
 	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+
 	return self;
 }
 
 - (void) dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	self.delegate = nil;
 
 	[_connectionsViewController release];
@@ -76,5 +80,11 @@
 	[self pushViewController:editViewController animated:YES];
 
 	[editViewController release];
+}
+
+#pragma mark -
+
+- (void) _userDefaultsChanged {
+	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 }
 @end

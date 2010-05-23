@@ -20,6 +20,9 @@ static NSURL *lastURL;
 - (id) init {
 	if (!(self = [super initWithNibName:@"Browser" bundle:nil]))
 		return nil;
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+
 	return self;
 }
 
@@ -402,5 +405,12 @@ static NSURL *lastURL;
 	webView.center = center;
 
 	[UIView commitAnimations];
+}
+
+#pragma mark -
+
+- (void) _userDefaultsChanged {
+	navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
+	toolbar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 }
 @end

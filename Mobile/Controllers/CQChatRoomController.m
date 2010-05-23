@@ -20,7 +20,7 @@ static BOOL showLeaveEvents;
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _didDisconnect:(NSNotification *) notification;
-- (void) userDefaultsChanged;
+- (void) _userDefaultsChanged;
 @end
 
 #pragma mark -
@@ -908,6 +908,14 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 
 	[_orderedMembers removeObjectAtIndex:index];
 	[_currentUserListViewController removeUserAtIndex:index];
+}
+
+- (void) _userDefaultsChanged {
+	[super _userDefaultsChanged];
+
+	_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQChatRoomEncoding"];
+
+	self.room.encoding = self.encoding;
 }
 
 #pragma mark -

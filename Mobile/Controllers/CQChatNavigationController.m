@@ -16,6 +16,7 @@
 	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_unreadCountChanged) name:CQChatControllerChangedTotalImportantUnreadCountNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 
 	return self;
 }
@@ -105,5 +106,9 @@
 		_chatListViewController.navigationItem.title = self.title;
 		self.tabBarItem.badgeValue = nil;
 	}
+}
+
+- (void) _userDefaultsChanged {
+	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 }
 @end
