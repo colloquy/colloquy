@@ -454,6 +454,11 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 - (void) _backgroundTaskEnding {
+	[self saveConnections];
+
+	for (MVChatConnection *connection in _connections)
+		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+
 	[[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
 	_backgroundTask = UIBackgroundTaskInvalid;
 }
