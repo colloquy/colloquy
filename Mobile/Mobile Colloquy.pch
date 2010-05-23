@@ -9,6 +9,10 @@
 #define __IPHONE_3_2 30200
 #endif
 
+#if !defined(__IPHONE_4_0)
+#define __IPHONE_4_0 40000
+#endif
+
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
 #import <UIKit/UIKit.h>

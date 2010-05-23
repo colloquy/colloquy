@@ -439,6 +439,26 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 }
 
+- (void) _possiblyEndBackgroundTask {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if (![[UIApplication sharedApplication] respondsToSelector:@selector(endBackgroundTask:)])
+		return;
+
+	if (_connectedCount || _connectingCount || _backgroundTask == UIBackgroundTaskInvalid)
+		return;
+
+	[[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
+	_backgroundTask = UIBackgroundTaskInvalid;
+#endif
+}
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+- (void) _backgroundTaskEnding {
+	[[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
+	_backgroundTask = UIBackgroundTaskInvalid;
+}
+#endif
+
 #if TARGET_IPHONE_SIMULATOR
 - (void) _gotRawConnectionMessage:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
@@ -464,6 +484,13 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIApplication sharedApplication] respondsToSelector:@selector(beginBackgroundTaskWithExpirationHandler:)]) {
+		if (_backgroundTask == UIBackgroundTaskInvalid)
+			_backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{ [self _backgroundTaskEnding]; }];
+	}
+#endif
 
 	[connection removePersistentInformationObjectForKey:@"pushState"];
 
@@ -554,12 +581,14 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	if (_connectedCount)
 		--_connectingCount;
-
-	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 }
 
 - (void) _didNotConnect:(NSNotification *) notification {
 	[self _didConnectOrDidNotConnect:notification];
+
+	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
+
+	[self _possiblyEndBackgroundTask];
 
 	MVChatConnection *connection = notification.object;
 	BOOL userDisconnected = [[notification.userInfo objectForKey:@"userDisconnected"] boolValue];
@@ -622,6 +651,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		--_connectedCount;
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
+
+	[self _possiblyEndBackgroundTask];
 }
 
 - (void) _userDefaultsChanged {

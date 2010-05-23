@@ -31,6 +31,9 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 	BOOL _loadedConnections;
 	NSUInteger _connectingCount;
 	NSUInteger _connectedCount;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	UIBackgroundTaskIdentifier _backgroundTask;
+#endif
 }
 + (CQConnectionsController *) defaultController;
 
