@@ -430,6 +430,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 - (void) _applicationWillResignActive {
 	[self saveConnections];
+
+	for (MVChatConnection *connection in _connections)
+		[connection purgeCaches];
 }
 
 - (void) _applicationWillTerminate {
