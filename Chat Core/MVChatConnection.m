@@ -143,7 +143,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		_supportedFeatures = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 		_localUser = nil;
 
-		_joinedRooms = (NSMutableSet *)CFSetCreateMutable(NULL, 0, &kCFTypeSetCallBacks);
+		_joinedRooms = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 
 		CFDictionaryValueCallBacks valueCallbacks = { 0, NULL, NULL, kCFTypeDictionaryValueCallBacks.copyDescription, kCFTypeDictionaryValueCallBacks.equal };
 		_knownRooms = (NSMutableDictionary *)CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &valueCallbacks);
@@ -244,11 +244,6 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (void) dealloc {
-	if (_deallocing)
-		return;
-
-	_deallocing = YES;
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 #if (!defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE) && (!defined(COMMAND_LINE_UTILITY) || !COMMAND_LINE_UTILITY)
@@ -259,6 +254,11 @@ static const NSStringEncoding supportedEncodings[] = {
 		SCNetworkReachabilityUnscheduleFromRunLoop(_reachability, CFRunLoopGetMain(), kCFRunLoopDefaultMode);
 		CFRelease(_reachability);
 	}
+
+	[[_knownUsers allValues] makeObjectsPerformSelector:@selector(_connectionDestroyed)];
+	[[_knownRooms allValues] makeObjectsPerformSelector:@selector(_connectionDestroyed)];
+	[_joinedRooms makeObjectsPerformSelector:@selector(_connectionDestroyed)];
+	[_localUser _connectionDestroyed];
 
 	[_npassword release];
 	[_roomsCache release];

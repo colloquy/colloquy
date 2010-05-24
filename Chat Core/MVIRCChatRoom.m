@@ -8,7 +8,7 @@
 @implementation MVIRCChatRoom
 - (id) initWithName:(NSString *) roomName andConnection:(MVIRCChatConnection *) roomConnection {
 	if( ( self = [self init] ) ) {
-		_connection = [roomConnection retain];
+		_connection = roomConnection; // prevent circular retain
 		_name = [roomName copyWithZone:nil];
 		_uniqueIdentifier = [[roomName lowercaseString] retain];
 		[_connection _addKnownRoom:self];

@@ -114,7 +114,6 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	[_dateConnected release];
 	[_dateDisconnected release];
 	[_attributes release];
-	[_connection release];
 
 	[super dealloc];
 }
@@ -434,6 +433,10 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 #pragma mark -
 
 @implementation MVChatUser (MVChatUserPrivate)
+- (void) _connectionDestroyed {
+	_connection = nil;
+}
+
 - (void) _setType:(MVChatUserType) type {
 	_type = type;
 }

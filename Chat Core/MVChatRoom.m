@@ -83,7 +83,6 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[_bannedUsers release];
 	[_modeAttributes release];
 	[_memberModes release];
-	[_connection release];
 
 	[super dealloc];
 }
@@ -142,7 +141,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (NSString *) displayName {
-	return [_connection displayNameForChatRoomNamed:[self name]];
+	return _connection ? [_connection displayNameForChatRoomNamed:[self name]] : [self name];
 }
 
 - (id) uniqueIdentifier {
@@ -502,6 +501,10 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 #pragma mark -
 
 @implementation MVChatRoom (MVChatRoomPrivate)
+- (void) _connectionDestroyed {
+	_connection = nil;
+}
+
 - (void) _addMemberUser:(MVChatUser *) user {
 	@synchronized( _memberUsers ) {
 		[_memberUsers addObject:user];

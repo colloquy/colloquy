@@ -151,7 +151,6 @@ extern NSString *MVChatConnectionErrorDomain;
 	BOOL _secure;
 	BOOL _roomListDirty;
 	BOOL _userDisconnected;
-	BOOL _deallocing;
 
 	NSDate *_lastConnectAttempt;
 	NSTimer *_reconnectTimer;

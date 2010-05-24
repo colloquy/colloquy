@@ -1,6 +1,7 @@
 #import "MVChatRoom.h"
 
 @interface MVChatRoom (MVChatRoomPrivate)
+- (void) _connectionDestroyed;
 - (void) _updateMemberUser:(MVChatUser *) user fromOldUniqueIdentifier:(id) identifier;
 - (void) _clearMemberUsers;
 - (void) _clearBannedUsers;
