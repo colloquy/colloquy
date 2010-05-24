@@ -408,13 +408,11 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		self.tableView.allowsSelectionDuringEditing = YES;
 	}
 
-	if ([self.tableView respondsToSelector:@selector(addGestureRecognizer:)] && !_longPressGestureRecognizer) {
+	if (!_longPressGestureRecognizer && [[UIDevice currentDevice].systemVersion doubleValue] >= 3.2) {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 		_longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_tableWasLongPressed:)];
 		_longPressGestureRecognizer.cancelsTouchesInView = NO;
 		_longPressGestureRecognizer.delaysTouchesBegan = YES;
-		if ([self.tableView respondsToSelector:@selector(setMinimumPressDuration:)])
-			_longPressGestureRecognizer.minimumPressDuration = 0.5;
 		[self.tableView addGestureRecognizer:_longPressGestureRecognizer];
 #endif
 	}
