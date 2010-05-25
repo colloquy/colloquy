@@ -75,11 +75,11 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 			}
 
 			if (!_selectedConnection && _sortedConnections.count)
-				_selectedConnection = [_sortedConnections objectAtIndex:0];
+				_selectedConnection = [[_sortedConnections objectAtIndex:0] retain];
 		} else {
 			if (lastSelectedConnectionIndex >= _sortedConnections.count && _sortedConnections.count)
-				_selectedConnection = [_sortedConnections lastObject];
-			else _selectedConnection = [_sortedConnections objectAtIndex:lastSelectedConnectionIndex];
+				_selectedConnection = [[_sortedConnections lastObject] retain];
+			else _selectedConnection = [[_sortedConnections objectAtIndex:lastSelectedConnectionIndex] retain];
 		}
 
 		[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] withAnimation:UITableViewRowAnimationNone];
@@ -277,7 +277,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 
 - (void) connectionChanged:(CQPreferencesListViewController *) sender {
 	id old = _selectedConnection;
-	_selectedConnection = (sender.selectedItemIndex != NSNotFound ? [_sortedConnections objectAtIndex:sender.selectedItemIndex] : nil);
+	_selectedConnection = (sender.selectedItemIndex != NSNotFound ? [[_sortedConnections objectAtIndex:sender.selectedItemIndex] retain] : nil);
 	[old release];
 
 	lastSelectedConnectionIndex = sender.selectedItemIndex;
