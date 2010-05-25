@@ -53,6 +53,7 @@ static BOOL showsChatIcons;
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_addedChatViewController:) name:CQChatControllerAddedChatViewControllerNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_connectionRemoved:) name:CQConnectionsControllerRemovedConnectionNotification object:nil];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshConnectionChatCells:) name:MVChatConnectionDidConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshConnectionChatCells:) name:MVChatConnectionDidDisconnectNotification object:nil];
@@ -209,6 +210,41 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 #pragma mark -
 
+- (void) _closeChatViewControllers:(NSArray *) viewControllersToClose forConnection:(MVChatConnection *) connection {
+	for (id <CQChatViewController> chatViewController in viewControllersToClose)
+		[[CQChatController defaultController] closeViewController:chatViewController];
+
+	if (!_active) {
+		_needsUpdate = YES;
+		return;
+	}
+
+	NSUInteger connectionSection = sectionIndexForConnection(connection);
+	if (connectionSection == NSNotFound)
+		return;
+
+	NSMutableArray *rowsToDelete = [[NSMutableArray alloc] init];
+
+	NSArray *allViewControllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
+	for (id <CQChatViewController> chatViewController in allViewControllers) {
+		NSIndexPath *indexPath = indexPathForChatController(chatViewController);
+		if (!indexPath)
+			continue;
+
+		[rowsToDelete addObject:indexPath];
+	}
+
+	if (allViewControllers.count == viewControllersToClose.count) {
+		[self.tableView beginUpdates];
+		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:connectionSection] withRowAnimation:UITableViewRowAnimationTop];
+		if (![CQChatController defaultController].chatViewControllers.count)
+			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+		[self.tableView endUpdates];
+	} else [self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:UITableViewRowAnimationTop];
+
+	[rowsToDelete release];
+}
+
 - (CQChatTableCell *) _chatTableCellForController:(id <CQChatViewController>) controller {
 	NSIndexPath *indexPath = indexPathForChatController(controller);
 	return (CQChatTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
@@ -241,6 +277,12 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 - (void) _addedChatViewController:(NSNotification *) notification {
 	id <CQChatViewController> controller = [notification.userInfo objectForKey:@"controller"];
 	[self chatViewControllerAdded:controller];
+}
+
+- (void) _connectionRemoved:(NSNotification *) notification {
+	MVChatConnection *connection = [notification.userInfo objectForKey:@"connection"];
+	NSArray *allViewControllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
+	[self _closeChatViewControllers:allViewControllers forConnection:connection];
 }
 
 - (void) _updateMessagePreview:(NSNotification *) notification {
@@ -569,7 +611,6 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		return;
 	}
 
-	NSMutableArray *rowsToDelete = [[NSMutableArray alloc] init];
 	NSMutableArray *viewsToClose = [[NSMutableArray alloc] init];
 	Class classToClose = Nil;
 
@@ -583,27 +624,10 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		if (![chatViewController.target isKindOfClass:classToClose])
 			continue;
 
-		NSIndexPath *indexPath = indexPathForChatController(chatViewController);
-		if (!indexPath)
-			continue;
-
-		[rowsToDelete addObject:indexPath];
 		[viewsToClose addObject:chatViewController];
 	}
 
-	for (id <CQChatViewController> chatViewController in viewsToClose)
-		[[CQChatController defaultController] closeViewController:chatViewController];
-
-	if (viewControllers.count == viewsToClose.count) {
-		[self.tableView beginUpdates];
-		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:header.section] withRowAnimation:UITableViewRowAnimationTop];
-		if (![CQChatController defaultController].chatViewControllers.count)
-			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-		[self.tableView endUpdates];
-	} else [self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:UITableViewRowAnimationTop];
-
-	[rowsToDelete release];
-	[viewsToClose release];
+	[self _closeChatViewControllers:viewsToClose forConnection:connection];
 }
 
 #pragma mark -
