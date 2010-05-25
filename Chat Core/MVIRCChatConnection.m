@@ -134,16 +134,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	return self;
 }
 
-- (void) finalize {
-	[self disconnect];
-	if( [_connectionThread respondsToSelector:@selector( cancel )] )
-		[_connectionThread cancel];
-	[super finalize];
-}
-
 - (void) dealloc {
-	[self disconnect];
-
 	[_chatConnection setDelegate:nil];
 
 	[_chatConnection release];
@@ -166,9 +157,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_uniqueIdentifier release];
 	[_umichNoIdentdCaptcha release];
 	[_failedNickname release];
-
-	if( [_connectionThread respondsToSelector:@selector( cancel )] )
-		[_connectionThread cancel];
 
 	[super dealloc];
 }
@@ -779,6 +767,8 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	if( sock != _chatConnection ) return;
 
+	[self retain];
+
 	id old = _chatConnection;
 	_chatConnection = nil;
 	[old setDelegate:nil];
@@ -827,6 +817,8 @@ static const NSStringEncoding supportedEncodings[] = {
 		while( ( rule = [enumerator nextObject] ) )
 			[rule removeMatchedUsersForConnection:self];
 	}
+
+	[self release];
 }
 
 - (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
