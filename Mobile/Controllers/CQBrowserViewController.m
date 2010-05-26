@@ -115,6 +115,8 @@ static NSURL *lastURL;
 - (void) close:(id) sender {
 	[webView stopLoading];
 
+	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+
 	id old = lastURL;
 	lastURL = [self.url retain];
 	[old release];
