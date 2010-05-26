@@ -618,12 +618,12 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if ([[CQConnectionsController defaultController] handleOpenURL:url])
 		return YES;
 
-	if (![self canOpenURL:url])
-		return NO;
-
 	BOOL loadLastURL = [url.absoluteString isCaseInsensitiveEqualToString:@"about:last"];
 	if (loadLastURL)
 		openWithBrowser = YES;
+
+	if (url && !loadLastURL && ![self canOpenURL:url])
+		return NO;
 
 	if (!loadLastURL && openWithBrowser && url && ![url.scheme isCaseInsensitiveEqualToString:@"http"] && ![url.scheme isCaseInsensitiveEqualToString:@"https"])
 		openWithBrowser = NO;
