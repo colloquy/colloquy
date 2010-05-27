@@ -28,9 +28,6 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	self.tableView.dataSource = nil;
-	self.tableView.delegate = nil;
-
 	[_helpSections release];
 	[_helpData release];
 	[_moviePlayer release];

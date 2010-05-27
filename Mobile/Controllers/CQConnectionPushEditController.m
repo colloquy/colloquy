@@ -16,9 +16,6 @@
 }
 
 - (void) dealloc {
-	self.tableView.dataSource = nil;
-	self.tableView.delegate = nil;
-
 	[_connection release];
 
 	[super dealloc];

@@ -46,6 +46,12 @@
 	return self;
 }
 
+- (void) dealloc {
+	AudioServicesDisposeSystemSoundID(_sound);
+
+	[super dealloc];
+}
+
 - (void) playSound {
 	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
 	if ((currentTime - _previousPlayTime) < 2.)
@@ -56,10 +62,5 @@
 	if ([[UIDevice currentDevice] isPodModel])
 		AudioServicesPlayAlertSound(_sound);
 	else AudioServicesPlaySystemSound(_sound);
-}
-
-- (void) dealloc {
-	AudioServicesDisposeSystemSoundID(_sound);
-	[super dealloc];
 }
 @end

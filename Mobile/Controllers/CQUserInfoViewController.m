@@ -65,9 +65,6 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	self.tableView.dataSource = nil;
-	self.tableView.delegate = nil;
-
 	[_user release];
 	[_updateInfoTimer release];
 	[_updateTimesTimer release];

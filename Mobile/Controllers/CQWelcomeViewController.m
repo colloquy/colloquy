@@ -25,9 +25,6 @@
 }
 
 - (void) dealloc {
-	self.tableView.dataSource = nil;
-	self.tableView.delegate = nil;
-
 	[_helpTopicsController release];
 
 	[super dealloc];

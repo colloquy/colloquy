@@ -21,9 +21,6 @@
 }
 
 - (void) dealloc {
-	self.tableView.dataSource = nil;
-	self.tableView.delegate = nil;
-
 	[_items release];
 	[_itemImage release];
 	[_addItemLabelText release];

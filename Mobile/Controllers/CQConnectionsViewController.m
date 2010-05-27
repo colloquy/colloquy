@@ -55,9 +55,6 @@
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	self.tableView.dataSource = nil;
-	self.tableView.delegate = nil;
-
 	[_connectTimeUpdateTimer release];
 
 	[super dealloc];
