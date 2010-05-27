@@ -57,10 +57,6 @@
     [self updateToolbarForInterfaceOrientation:interfaceOrientation animated:NO];
 }
 
-- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation {
-	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
-}
-
 #pragma mark -
 
 - (void) updateToolbarAnimated:(BOOL) animated {
