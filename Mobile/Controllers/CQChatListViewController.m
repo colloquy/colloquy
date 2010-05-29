@@ -150,12 +150,14 @@ static id <CQChatViewController> chatControllerForIndexPath(NSIndexPath *indexPa
 	MVChatConnection *connection = connectionForSection(indexPath.section);
 	if (connection) {
 		NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
-		return [controllers objectAtIndex:indexPath.row];
+		if (indexPath.row < controllers.count)
+			return [controllers objectAtIndex:indexPath.row];
 	}
 
 #if ENABLE(FILE_TRANSFERS)
 	NSArray *controllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
-	return [controllers objectAtIndex:indexPath.row];
+	if (indexPath.row < controllers.count)
+		return [controllers objectAtIndex:indexPath.row];
 #else
 	return nil;
 #endif
