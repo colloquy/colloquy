@@ -88,8 +88,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 #define CannotConnectToBouncerTag 2
 #define HelpAlertTag 3
 
-#define ChannelKeyTextFieldTag 4
-#define NickservPasswordTextFieldTag 5
+#define RoomPasswordTextFieldTag 4
+#define ServicesPasswordTextFieldTag 5
 
 @implementation CQConnectionsController
 + (CQConnectionsController *) defaultController {
@@ -283,7 +283,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		return;
 	}
 
-	if (alertView.tag != ChannelKeyTextFieldTag)
+	if (alertView.tag != RoomPasswordTextFieldTag)
 		return;
 
 	NSArray *inputFields = ((CQAlertView *)alertView).inputFields;
@@ -726,8 +726,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 			break;
 		case MVChatConnectionRoomPasswordIncorrectError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The room \"%@\" on \"%@\" is password protected, and you didn't supply the correct password.", "Room is full alert message"), room.displayName, connection.displayName];
-			placeholder = NSLocalizedString(@"Channel Key", @"Channel Key textfield placeholder");
-//			tag = ChannelKeyTextFieldTag;
+//			placeholder = NSLocalizedString(@"Room Password", @"Room Password textfield placeholder");
+//			tag = RoomPasswordTextFieldTag;
 			break;
 		case MVChatConnectionCantSendToRoomError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't send messages to \"%@\" due to some room restriction.", "Cant send message alert message"), room.displayName];
@@ -737,8 +737,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 			break;
 		case MVChatConnectionIdentifyToJoinRoomError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Identify with network services to join \"%@\" on \"%@\".", "Identify to join room alert message"), room.displayName, connection.displayName];
-			placeholder = NSLocalizedString(@"NickServ Password", @"NickServ Password textfield placeholder");
-//			tag = NickservPasswordTextFieldTag;
+//			placeholder = NSLocalizedString(@"Services Password", @"Services Password textfield placeholder");
+//			tag = ServicesPasswordTextFieldTag;
 			break;
 		case MVChatConnectionCantChangeNickError:
 			if (room) errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't change your nickname while in \"%@\" on \"%@\". Leave the room and try again.", "Can't change nick because of room alert message" ), room.displayName, connection.displayName];
@@ -770,7 +770,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if (tag) {
 		[alert addTextFieldWithPlaceholder:placeholder tag:tag secureTextEntry:YES];
 
-		buttonTitle = (tag == ChannelKeyTextFieldTag) ? NSLocalizedString(@"Join", @"Join button title") : NSLocalizedString(@"Connect", @"Connect button title");
+		buttonTitle = (tag == RoomPasswordTextFieldTag || tag == ServicesPasswordTextFieldTag) ? NSLocalizedString(@"Join", @"Join button title") : NSLocalizedString(@"Connect", @"Connect button title");
 	} else buttonTitle = NSLocalizedString(@"Help", @"Help button title");
 
 	[alert addButtonWithTitle:buttonTitle];
