@@ -87,9 +87,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 #define CannotConnectToBouncerConnectionTag 1
 #define CannotConnectToBouncerTag 2
 #define HelpAlertTag 3
-
-#define RoomPasswordTextFieldTag 4
-#define ServicesPasswordTextFieldTag 5
+#define NextAlertTag 4
+#define IncorrectRoomPasswordTag 5
+#define NotIdentifiedWithServicesTag 6
 
 @implementation CQConnectionsController
 + (CQConnectionsController *) defaultController {
@@ -283,27 +283,37 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		return;
 	}
 
-	if (alertView.tag != RoomPasswordTextFieldTag)
+	if (alertView.tag == NextAlertTag) {
+		UIAlertView *nextAlertView = ((CQAlertView *)alertView).userInfo;
+		[nextAlertView show];
 		return;
+	}
 
-	NSArray *inputFields = ((CQAlertView *)alertView).inputFields;
-	if (!inputFields.count)
-		return;
+	if (alertView.tag == IncorrectRoomPasswordTag || alertView.tag == NotIdentifiedWithServicesTag) {
+		UITextField *passwordField = [alertView performPrivateSelector:@"textField"];
+		NSString *password = passwordField.text;
+		if (!password.length)
+			return;
 
-	NSString *response = ((UITextField *)[inputFields objectAtIndex:0]).text;
-	if (!response.length)
-		return;
+		NSNotification *notification = ((CQAlertView *)alertView).userInfo;
+		NSError *error = [notification.userInfo objectForKey:@"error"];
+		MVChatConnection *connection = notification.object;
+		NSString *room = [error.userInfo objectForKey:@"room"];
 
-	NSNotification *notification = ((CQAlertView *)alertView).userInfo;
-	MVChatConnection *connection = notification.object;
+		NSString *roomPassword = nil;
+		if (alertView.tag == IncorrectRoomPasswordTag) {
+			[[CQKeychain standardKeychain] setPassword:password forServer:connection.uniqueIdentifier area:room];
+			roomPassword = password;
+		} else roomPassword = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:room];
 
-	NSError *error = [[notification userInfo] objectForKey:@"error"];
-	NSString *room = [[error userInfo] objectForKey:@"room"];
+		if (alertView.tag == NotIdentifiedWithServicesTag) {
+			connection.nicknamePassword = password;
+			[connection savePasswordsToKeychain];
+		}
 
-	[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:room andConnection:connection];
-	[connection joinChatRoomNamed:room withPassphrase:response];
-
-	[[CQKeychain standardKeychain] setPassword:response forServer:connection.uniqueIdentifier area:room];
+		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:room andConnection:connection];
+		[connection joinChatRoomNamed:room withPassphrase:roomPassword];
+	}
 }
 
 #pragma mark -
@@ -503,6 +513,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[connection removePersistentInformationObjectForKey:@"pushState"];
 
 	NSMutableArray *rooms = [connection.automaticJoinedRooms mutableCopy];
+	if (!rooms)
+		rooms = [[NSMutableArray alloc] init];
 
 	NSArray *previousRooms = [connection persistentInformationObjectForKey:@"previousRooms"];
 	if (previousRooms.count) {
@@ -561,22 +573,17 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[connection sendCommand:command withArguments:arguments];
 	}
 
-	NSUInteger roomCount = rooms.count;
-	if (roomCount) {
-		NSString *key = nil;
-		NSString *room = nil;
-		for (NSUInteger i = 0; i < roomCount; i++) {
-			room = [rooms objectAtIndex:i];
-			key = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:room];
+	for (NSUInteger i = 0; i < rooms.count; i++) {
+		NSString *room = [rooms objectAtIndex:i];
+		NSString *password = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:room];
 
-			if (key.length) {
-				room = [NSString stringWithFormat:@"%@ %@", room, key];
-				[rooms replaceObjectAtIndex:i withObject:room];
-			}
+		if (password.length) {
+			room = [NSString stringWithFormat:@"%@ %@", room, password];
+			[rooms replaceObjectAtIndex:i withObject:room];
 		}
-
-		[connection joinChatRoomsNamed:rooms];
 	}
+
+	[connection joinChatRoomsNamed:rooms];
 
 	if (connection.bouncerType == MVChatConnectionColloquyBouncer && connection.automaticCommands.count && rooms.count)
 		[connection sendRawMessage:@"BOUNCER autocommands stop"];
@@ -684,10 +691,17 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		case MVChatConnectionRoomIsFullError:
 		case MVChatConnectionInviteOnlyRoomError:
 		case MVChatConnectionBannedFromRoomError:
+#if !ENABLE(SECRETS)
 		case MVChatConnectionRoomPasswordIncorrectError:
+#endif
 		case MVChatConnectionIdentifyToJoinRoomError:
 			errorTitle = NSLocalizedString(@"Can't Join Room", @"Can't join room alert title");
 			break;
+#if ENABLE(SECRETS)
+		case MVChatConnectionRoomPasswordIncorrectError:
+			errorTitle = NSLocalizedString(@"Room Password", @"Room Password alert title");
+			break;
+#endif
 		case MVChatConnectionCantSendToRoomError:
 			errorTitle = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
 			break;
@@ -711,9 +725,12 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	NSString *roomName = [[error userInfo] objectForKey:@"room"];
 	MVChatRoom *room = (roomName ? [connection chatRoomWithName:roomName] : nil);
 
+	NSString *buttonTitle = NSLocalizedString(@"Help", @"Help button title");
 	NSString *errorMessage = nil;
 	NSString *placeholder = nil;
-	NSUInteger tag = 0;
+	NSUInteger tag = HelpAlertTag;
+	id userInfo = nil;
+
 	switch (error.code) {
 		case MVChatConnectionRoomIsFullError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The room \"%@\" on \"%@\" is full.", "Room is full alert message"), room.displayName, connection.displayName];
@@ -725,9 +742,15 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"You are banned from \"%@\" on \"%@\".", "Banned from room alert message"), room.displayName, connection.displayName];
 			break;
 		case MVChatConnectionRoomPasswordIncorrectError:
+#if ENABLE(SECRETS)
+			errorMessage = [NSString stringWithFormat:@"%@ - %@", room.displayName, connection.displayName];
+			buttonTitle = NSLocalizedString(@"Join", @"Join button title");
+			placeholder = NSLocalizedString(@"Password", @"Password placeholder");
+			tag = IncorrectRoomPasswordTag;
+			userInfo = notification;
+#else
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The room \"%@\" on \"%@\" is password protected, and you didn't supply the correct password.", "Room is full alert message"), room.displayName, connection.displayName];
-//			placeholder = NSLocalizedString(@"Room Password", @"Room Password textfield placeholder");
-//			tag = RoomPasswordTextFieldTag;
+#endif
 			break;
 		case MVChatConnectionCantSendToRoomError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't send messages to \"%@\" due to some room restriction.", "Cant send message alert message"), room.displayName];
@@ -735,11 +758,29 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		case MVChatConnectionRoomDoesNotSupportModesError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The room \"%@\" on \"%@\" doesn't support modes.", "Room does not support modes alert message"), room.displayName, connection.displayName];
 			break;
-		case MVChatConnectionIdentifyToJoinRoomError:
+		case MVChatConnectionIdentifyToJoinRoomError: {
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Identify with network services to join \"%@\" on \"%@\".", "Identify to join room alert message"), room.displayName, connection.displayName];
-//			placeholder = NSLocalizedString(@"Services Password", @"Services Password textfield placeholder");
-//			tag = ServicesPasswordTextFieldTag;
+
+#if ENABLE(SECRETS)
+			buttonTitle = NSLocalizedString(@"Identify", @"Identify button title");
+			tag = NextAlertTag;
+
+			CQAlertView *nextAlertView = [[CQAlertView alloc] init];
+			nextAlertView.tag = NotIdentifiedWithServicesTag;
+			nextAlertView.delegate = self;
+			nextAlertView.title = NSLocalizedString(@"Serivces Password", @"Serivces Password alert title");
+			nextAlertView.message = connection.displayName;
+			nextAlertView.userInfo = notification;
+
+			nextAlertView.cancelButtonIndex = [nextAlertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+			[nextAlertView addButtonWithTitle:NSLocalizedString(@"Identify", @"Identify button title")];
+
+			[nextAlertView addSecureTextFieldWithPlaceholder:NSLocalizedString(@"Password", @"Password placeholder")];
+
+			userInfo = [nextAlertView autorelease];
+#endif
 			break;
+		}
 		case MVChatConnectionCantChangeNickError:
 			if (room) errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't change your nickname while in \"%@\" on \"%@\". Leave the room and try again.", "Can't change nick because of room alert message" ), room.displayName, connection.displayName];
 			else errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't change nicknames too fast on \"%@\", wait and try again.", "Can't change nick too fast alert message"), connection.displayName];
@@ -758,20 +799,16 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if (!errorMessage) return;
 
 	CQAlertView *alert = [[CQAlertView alloc] init];
-	alert.tag = tag ? tag : HelpAlertTag;
+	alert.tag = tag;
 	alert.delegate = self;
 	alert.title = errorTitle;
 	alert.message = errorMessage;
-	alert.userInfo = notification;
+	alert.userInfo = userInfo;
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
-	NSString *buttonTitle = nil;
-	if (tag) {
-		[alert addTextFieldWithPlaceholder:placeholder tag:tag secureTextEntry:YES];
-
-		buttonTitle = (tag == RoomPasswordTextFieldTag || tag == ServicesPasswordTextFieldTag) ? NSLocalizedString(@"Join", @"Join button title") : NSLocalizedString(@"Connect", @"Connect button title");
-	} else buttonTitle = NSLocalizedString(@"Help", @"Help button title");
+	if (placeholder.length)
+		[alert addSecureTextFieldWithPlaceholder:placeholder];
 
 	[alert addButtonWithTitle:buttonTitle];
 
@@ -1308,6 +1345,17 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	[bouncer release];
 	[connections release];
+}
+@end
+
+#pragma mark -
+
+@implementation MVChatRoom (CQConnectionsControllerAdditions)
+- (void) joinWithSavedPassword {
+	NSString *password = [[CQKeychain standardKeychain] passwordForServer:self.connection.uniqueIdentifier area:self.name];
+	if (password.length)
+		[self.connection joinChatRoomNamed:self.name withPassphrase:password];
+	else [self join];
 }
 @end
 

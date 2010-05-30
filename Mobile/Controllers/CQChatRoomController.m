@@ -5,6 +5,7 @@
 #import "CQChatUserListViewController.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
+#import "CQKeychain.h"
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
 
@@ -176,7 +177,7 @@ static BOOL showLeaveEvents;
 
 - (void) join {
 	[self.connection connectAppropriately];
-	[self.room join];
+	[self.room joinWithSavedPassword];
 }
 
 - (void) part {
@@ -416,7 +417,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	if (self.room.modes & MVChatRoomInviteOnlyMode)
 		return;
 
-	[self.room performSelector:@selector(join) withObject:nil afterDelay:0.];
+	[self performSelector:@selector(join) withObject:nil afterDelay:0.];
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
@@ -469,7 +470,7 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoRejoinRoomsOnKick"]) {
-		[self.room performSelector:@selector(join) withObject:nil afterDelay:5.];
+		[self performSelector:@selector(join) withObject:nil afterDelay:5.];
 		return;
 	}
 
@@ -924,10 +925,8 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	if ((alertView.tag != ReconnectAlertTag && alertView.tag != RejoinRoomAlertTag) || buttonIndex == alertView.cancelButtonIndex)
 		return [super alertView:alertView clickedButtonAtIndex:buttonIndex];
 
-	if (alertView.tag == ReconnectAlertTag)
-		[self.connection connectAppropriately];
-
-	[self.room join];
+	if (alertView.tag == ReconnectAlertTag || alertView.tag == RejoinRoomAlertTag)
+		[self join];
 }
 
 #pragma mark -

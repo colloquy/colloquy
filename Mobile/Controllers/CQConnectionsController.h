@@ -1,4 +1,5 @@
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatRoom.h>
 
 #import "CQBouncerConnection.h"
 
@@ -77,6 +78,10 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 - (void) addBouncerSettings:(CQBouncerSettings *) settings;
 - (void) removeBouncerSettings:(CQBouncerSettings *) settings;
 - (void) removeBouncerSettingsAtIndex:(NSUInteger) index;
+@end
+
+@interface MVChatRoom (CQConnectionsControllerAdditions)
+- (void) joinWithSavedPassword;
 @end
 
 @interface MVChatConnection (CQConnectionsControllerAdditions)
