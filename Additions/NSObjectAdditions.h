@@ -3,6 +3,7 @@
 
 - (id) performPrivateSelector:(NSString *) selectorString;
 - (id) performPrivateSelector:(NSString *) selectorString withObject:(id) object;
+- (id) performPrivateSelector:(NSString *) selectorString withObject:(id) object withObject:(id) object;
 - (id) performPrivateSelector:(NSString *) selectorString withBoolean:(BOOL) boolean;
 - (id) performPrivateSelector:(NSString *) selectorString withUnsignedInteger:(NSUInteger) integer;
 - (id) performPrivateSelector:(NSString *) selectorString withRange:(NSRange) range;

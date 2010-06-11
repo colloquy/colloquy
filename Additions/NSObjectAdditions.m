@@ -38,6 +38,10 @@
 	SAFE_PERFORM((id (*)(id, SEL, id)), (self, selector, object), nil);
 }
 
+- (id) performPrivateSelector:(NSString *) selectorString withObject:(id) objectOne withObject:(id) objectTwo {
+	SAFE_PERFORM((id (*)(id, SEL, id, id)), (self, selector, objectOne, objectTwo), nil);
+}
+
 - (id) performPrivateSelector:(NSString *) selectorString withBoolean:(BOOL) boolean {
 	SAFE_PERFORM((id (*)(id, SEL, BOOL)), (self, selector, boolean), nil);
 }
