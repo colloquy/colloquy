@@ -41,6 +41,7 @@
 		return nil;
 	}
 
+	_soundName = [soundName copy];
 	_previousPlayTime = 0.;
 
 	return self;
@@ -49,8 +50,12 @@
 - (void) dealloc {
 	AudioServicesDisposeSystemSoundID(_sound);
 
+	[_soundName release];
+
 	[super dealloc];
 }
+
+@synthesize soundName = _soundName;
 
 - (void) playSound {
 	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];

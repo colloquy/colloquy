@@ -484,6 +484,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	notification.alertBody = NSLocalizedString(@"No background time remaining, so you have been disconnected.", "No background time remaining alert message");
 	notification.alertAction = NSLocalizedString(@"Open", "Open button title");
+	notification.soundName = UILocalNotificationDefaultSoundName;
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
 
@@ -501,6 +502,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	notification.alertBody = NSLocalizedString(@"You will be disconnected in less than a minute due to inactivity.", "Disconnected in less thn a minute alert message");
 	notification.alertAction = NSLocalizedString(@"Open", "Open button title");
+	notification.soundName = UILocalNotificationDefaultSoundName;
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
 

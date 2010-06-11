@@ -1411,7 +1411,7 @@ static BOOL showingKeyboard;
 	return [NSString stringWithFormat:@"%@ \u2014 %@", user.displayName, messageText];
 }
 
-- (void) _showHighlightedNotificationForMessage:(NSDictionary *) message {
+- (void) _showHighlightedNotificationForMessage:(NSDictionary *) message withSoundName:(NSString *) soundName {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	if (![[UIDevice currentDevice] isSystemFour] || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
 		return;
@@ -1419,6 +1419,7 @@ static BOOL showingKeyboard;
 	UILocalNotification *notification = [[UILocalNotification alloc] init];
 
 	notification.alertBody = [self _highlightedNotificationBodyForMessage:message];
+	notification.soundName = [soundName stringByAppendingPathExtension:@"aiff"];
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
 
@@ -1511,7 +1512,7 @@ static BOOL showingKeyboard;
 		if (privateMessageSound)
 			[privateMessageSound playSound];
 
-		[self _showHighlightedNotificationForMessage:message];
+		[self _showHighlightedNotificationForMessage:message withSoundName:privateMessageSound.soundName];
 	}
 
 	if (highlighted && self.available) {
@@ -1522,7 +1523,7 @@ static BOOL showingKeyboard;
 			[highlightSound playSound];
 
 		if (!directChat)
-			[self _showHighlightedNotificationForMessage:message];
+			[self _showHighlightedNotificationForMessage:message withSoundName:highlightSound.soundName];
 	}
 
 	if (!_recentMessages)
