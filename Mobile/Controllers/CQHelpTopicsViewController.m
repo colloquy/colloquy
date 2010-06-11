@@ -191,7 +191,6 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 
 		@try {
 			_moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:[info objectForKey:@"Screencast"]]];
-			_moviePlayer.movieControlMode = MPMovieControlModeDefault;
 			_moviePlayer.scalingMode = MPMovieScalingModeAspectFit;
 
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_screencastDidFinishPlaying) name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];

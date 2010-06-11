@@ -202,9 +202,9 @@ static inline NSString *newStringWithBytes(const char *bytes, NSUInteger length)
 		consumeWhitespace();
 	}
 
-#undef checkAndMarkIfDone()
-#undef consumeWhitespace()
-#undef notEndOfLine()
+#undef checkAndMarkIfDone
+#undef consumeWhitespace
+#undef notEndOfLine
 
 end:
 	if (command && commandLength) {
