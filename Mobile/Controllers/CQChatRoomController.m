@@ -919,6 +919,14 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	self.room.encoding = self.encoding;
 }
 
+- (NSString *) _highlightedNotificationBodyForMessage:(NSDictionary *) message {
+	MVChatUser *user = [message objectForKey:@"user"];
+	NSString *messageText = [message objectForKey:@"messagePlain"];
+	if ([[message objectForKey:@"action"] boolValue])
+		return [NSString stringWithFormat:@"%@\n%@ %@", self.room.displayName, user.displayName, messageText];
+	return [NSString stringWithFormat:@"%@ \u2014 %@\n%@", self.room.displayName, user.displayName, messageText];
+}
+
 #pragma mark -
 
 - (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {	

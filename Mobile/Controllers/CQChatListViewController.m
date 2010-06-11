@@ -64,6 +64,8 @@ static BOOL showsChatIcons;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshChatCell:) name:MVChatUserNicknameChangedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshChatCell:) name:MVChatUserStatusChangedNotification object:nil];
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_unreadCountChanged) name:CQChatControllerChangedTotalImportantUnreadCountNotification object:nil];
+
 #if ENABLE(FILE_TRANSFERS)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFileTransferCell:) name:MVFileTransferFinishedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFileTransferCell:) name:MVFileTransferErrorOccurredNotification object:nil];
@@ -435,6 +437,21 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 #endif
 }
 
+- (void) _willBecomeActive:(NSNotification *) notification {
+	[CQChatController defaultController].totalImportantUnreadCount = 0;
+}
+
+- (void) _unreadCountChanged {
+	NSInteger totalImportantUnreadCount = [CQChatController defaultController].totalImportantUnreadCount;
+	if (!_active && totalImportantUnreadCount) {
+		self.navigationItem.title = [NSString stringWithFormat:NSLocalizedString(@"%@ (%u)", @"Unread count view title, uses the view's normal title with a number"), self.title, totalImportantUnreadCount];
+		self.parentViewController.tabBarItem.badgeValue = [NSString stringWithFormat:@"%u", totalImportantUnreadCount];
+	} else {
+		self.navigationItem.title = self.title;
+		self.parentViewController.tabBarItem.badgeValue = nil;
+	}
+}
+
 #if ENABLE(FILE_TRANSFERS)
 - (void) _refreshFileTransferCell:(NSNotification *) notification {
 	if (!_active) {
@@ -491,6 +508,10 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 	_active = YES;
 
+	[CQChatController defaultController].totalImportantUnreadCount = 0;
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+
 	[super viewWillAppear:animated];
 
 	if ([[UIDevice currentDevice] isPadModel]) {
@@ -506,6 +527,8 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 
 	if ([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation))
 		self.tableView.contentInset = _previousContentInset;

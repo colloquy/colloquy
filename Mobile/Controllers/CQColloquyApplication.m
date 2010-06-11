@@ -346,6 +346,11 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) applicationWillTerminate:(UIApplication *) application {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour])
+		[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+#endif
+
 	NSTimeInterval runTime = ABS([_launchDate timeIntervalSinceNow]);
 	[[CQAnalyticsController defaultController] setObject:[NSNumber numberWithDouble:runTime] forKey:@"run-time"];
 }

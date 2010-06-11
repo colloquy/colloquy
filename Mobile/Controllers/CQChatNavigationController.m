@@ -15,7 +15,6 @@
 
 	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_unreadCountChanged) name:CQChatControllerChangedTotalImportantUnreadCountNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 
 	return self;
@@ -42,20 +41,6 @@
 	}
 
 	[[CQChatController defaultController] showPendingChatControllerAnimated:NO];
-}
-
-- (void) viewWillAppear:(BOOL) animated {
-	[super viewWillAppear:animated];
-
-	[CQChatController defaultController].totalImportantUnreadCount = 0;
-
-	_active = YES;
-}
-
-- (void) viewWillDisappear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-
-	_active = NO;
 }
 
 #pragma mark -
@@ -95,17 +80,6 @@
 
 - (void) _showNextChatController {
 	[[CQChatController defaultController] showPendingChatControllerAnimated:YES];
-}
-
-- (void) _unreadCountChanged {
-	NSInteger totalImportantUnreadCount = [CQChatController defaultController].totalImportantUnreadCount;
-	if ((!_active || self.topViewController != _chatListViewController) && totalImportantUnreadCount) {
-		_chatListViewController.navigationItem.title = [NSString stringWithFormat:NSLocalizedString(@"%@ (%u)", @"Unread count view title, uses the view's normal title with a number"), self.title, totalImportantUnreadCount];
-		self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%u", totalImportantUnreadCount];
-	} else {
-		_chatListViewController.navigationItem.title = self.title;
-		self.tabBarItem.badgeValue = nil;
-	}
 }
 
 - (void) _userDefaultsChanged {

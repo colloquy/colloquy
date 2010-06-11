@@ -3,6 +3,8 @@
 @property (nonatomic, readonly, retain) NSString *model;
 #endif
 
+- (BOOL) isSystemFour;
+
 - (BOOL) isPhoneModel;
 - (BOOL) isPodModel;
 - (BOOL) isPadModel;

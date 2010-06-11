@@ -488,6 +488,11 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	_totalImportantUnreadCount = count;
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour])
+		[UIApplication sharedApplication].applicationIconBadgeNumber = count;
+#endif
+
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerChangedTotalImportantUnreadCountNotification object:self];
 }
 

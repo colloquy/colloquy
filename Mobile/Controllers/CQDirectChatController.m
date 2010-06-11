@@ -365,6 +365,8 @@ static BOOL showingKeyboard;
 
 	_active = YES;
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+
 	[self _addPendingComponentsAnimated:YES];
 
 	[transcriptView performSelector:@selector(flashScrollIndicators) withObject:nil afterDelay:0.1];
@@ -395,6 +397,8 @@ static BOOL showingKeyboard;
 
 	_active = NO;
 	_allowEditingToEnd = YES;
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 
 	if (![[UIDevice currentDevice] isPadModel]) {
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
@@ -1336,6 +1340,19 @@ static BOOL showingKeyboard;
 	[self.connection addChatUserWatchRule:_watchRule];
 }
 
+- (void) _willBecomeActive:(NSNotification *) notification {
+	if (_unreadHighlightedMessages)
+		[CQChatController defaultController].totalImportantUnreadCount -= _unreadHighlightedMessages;
+
+	if (_unreadMessages && self.user)
+		[CQChatController defaultController].totalImportantUnreadCount -= _unreadMessages;
+
+	_unreadMessages = 0;
+	_unreadHighlightedMessages = 0;
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
+}
+
 - (void) _didConnect:(NSNotification *) notification {
 	[self addEventMessage:NSLocalizedString(@"Connected to the server.", "Connected to server event message") withIdentifier:@"reconnected"];
 
@@ -1384,6 +1401,30 @@ static BOOL showingKeyboard;
 		[[CQChatController defaultController].chatPresentationController updateToolbarAnimated:YES];
 
 	[item release];
+}
+
+- (NSString *) _highlightedNotificationBodyForMessage:(NSDictionary *) message {
+	MVChatUser *user = [message objectForKey:@"user"];
+	NSString *messageText = [message objectForKey:@"messagePlain"];
+	if ([[message objectForKey:@"action"] boolValue])
+		return [NSString stringWithFormat:@"%@ %@", user.displayName, messageText];
+	return [NSString stringWithFormat:@"%@ \u2014 %@", user.displayName, messageText];
+}
+
+- (void) _showHighlightedNotificationForMessage:(NSDictionary *) message {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if (![[UIDevice currentDevice] isSystemFour] || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
+		return;
+
+	UILocalNotification *notification = [[UILocalNotification alloc] init];
+
+	notification.alertBody = [self _highlightedNotificationBodyForMessage:message];
+	notification.alertAction = NSLocalizedString(@"View", "View button title");
+
+	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+
+	[notification release];
+#endif
 }
 
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo {
@@ -1445,8 +1486,14 @@ static BOOL showingKeyboard;
 	NSMutableDictionary *message = operation.processedMessageInfo;
 	BOOL highlighted = [[message objectForKey:@"highlighted"] boolValue];
 
+	BOOL active = _active;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour])
+		active &= ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
+#endif
+
 	MVChatUser *user = [message objectForKey:@"user"];
-	if (!user.localUser && !_active && self.available) {
+	if (!user.localUser && !active && self.available) {
 		if (highlighted) ++_unreadHighlightedMessages;
 		else ++_unreadMessages;
 
@@ -1464,6 +1511,8 @@ static BOOL showingKeyboard;
 
 		if (privateMessageSound)
 			[privateMessageSound playSound];
+
+		[self _showHighlightedNotificationForMessage:message];
 	}
 
 	if (highlighted && self.available) {
@@ -1472,6 +1521,9 @@ static BOOL showingKeyboard;
 
 		if (highlightSound && (!directChat || (directChat && !privateMessageSound)))
 			[highlightSound playSound];
+
+		if (!directChat)
+			[self _showHighlightedNotificationForMessage:message];
 	}
 
 	if (!_recentMessages)
