@@ -1419,7 +1419,6 @@ static BOOL showingKeyboard;
 	UILocalNotification *notification = [[UILocalNotification alloc] init];
 
 	notification.alertBody = [self _highlightedNotificationBodyForMessage:message];
-	notification.alertAction = NSLocalizedString(@"View", "View button title");
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
 

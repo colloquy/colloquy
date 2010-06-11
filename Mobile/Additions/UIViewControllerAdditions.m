@@ -8,7 +8,7 @@
 @implementation UIViewController (UIViewControllerAdditions)
 - (void) resizeForViewInPopoverUsingTableView:(UITableView *) tableView {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
-	if (![self respondsToSelector:@selector(setContentSizeForViewInPopover:)])
+	if (![[UIDevice currentDevice] isPadModel])
 		return;
 
 	CGFloat width = self.contentSizeForViewInPopover.width;

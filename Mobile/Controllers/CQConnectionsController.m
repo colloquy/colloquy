@@ -122,6 +122,13 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batteryStateChanged) name:UIDeviceBatteryStateDidChangeNotification object:nil];
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour]) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+	}
+#endif
+
 	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
 
 #if TARGET_IPHONE_SIMULATOR
@@ -454,7 +461,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 - (void) _possiblyEndBackgroundTask {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if (![[UIApplication sharedApplication] respondsToSelector:@selector(endBackgroundTask:)])
+	if (![[UIDevice currentDevice] isSystemFour])
 		return;
 
 	if (_connectedCount || _connectingCount || _backgroundTask == UIBackgroundTaskInvalid)
@@ -466,6 +473,62 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+- (void) _showNoTimeRemainingAlert {
+	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
+		return;
+
+	if (!self.connectedConnections.count)
+		return;
+
+	UILocalNotification *notification = [[UILocalNotification alloc] init];
+
+	notification.alertBody = NSLocalizedString(@"No background time remaining, so you have been disconnected.", "No background time remaining alert message");
+	notification.alertAction = NSLocalizedString(@"Open", "Open button title");
+
+	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+
+	[notification release];
+}
+
+- (void) _showRemainingTimeAlert {
+	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
+		return;
+
+	if (!self.connectedConnections.count)
+		return;
+
+	UILocalNotification *notification = [[UILocalNotification alloc] init];
+
+	notification.alertBody = NSLocalizedString(@"You will be disconnected in less than a minute due to inactivity.", "Disconnected in less thn a minute alert message");
+	notification.alertAction = NSLocalizedString(@"Open", "Open button title");
+
+	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+
+	[notification release];
+}
+
+- (void) _didEnterBackground {
+	NSTimeInterval remainingTime = [UIApplication sharedApplication].backgroundTimeRemaining;
+
+	if (remainingTime <= 0.) {
+		[self _showNoTimeRemainingAlert];
+		return;
+	}
+
+	if (remainingTime <= 60.) {
+		[self _showRemainingTimeAlert];
+		return;
+	}
+
+	remainingTime -= 60.;
+
+	[self performSelector:@selector(_showRemainingTimeAlert) withObject:nil afterDelay:remainingTime];
+}
+
+- (void) _willEnterForeground {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_showRemainingTimeAlert) object:nil];
+}
+
 - (void) _backgroundTaskEnding {
 	[self saveConnections];
 
@@ -504,7 +567,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIApplication sharedApplication] respondsToSelector:@selector(beginBackgroundTaskWithExpirationHandler:)]) {
+	if ([[UIDevice currentDevice] isSystemFour]) {
 		if (_backgroundTask == UIBackgroundTaskInvalid)
 			_backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{ [self _backgroundTaskEnding]; }];
 	}
