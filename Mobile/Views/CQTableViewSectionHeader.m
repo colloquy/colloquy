@@ -53,7 +53,7 @@
 	_frame = frame;
 	frame.origin.y -= 1.;
 	frame.size.height += 1.;
-	super.frame = frame;
+	[super setFrame:frame];
 }
 
 - (CGRect) frame {
