@@ -34,7 +34,6 @@ typedef enum {
 	MVChatUser *_user;
 	MVDirectChatConnectionStatus _status;
 	NSError *_lastError;
-	NSUInteger _hash;
 	BOOL _releasing;
 }
 + (id) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive;
