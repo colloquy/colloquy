@@ -122,6 +122,8 @@
 		1CA2652111C35F4800AB4E44 /* roomIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2651F11C35F4800AB4E44 /* roomIcon@2x.png */; };
 		1CA2652211C35F4800AB4E44 /* roomIconSmall@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2652011C35F4800AB4E44 /* roomIconSmall@2x.png */; };
 		1CA2652911C35F5F00AB4E44 /* directChatIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2652811C35F5F00AB4E44 /* directChatIcon@2x.png */; };
+		1CA2653A11C4435500AB4E44 /* connections@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2653911C4435500AB4E44 /* connections@2x.png */; };
+		1CA2653E11C4459800AB4E44 /* colloquies@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2653D11C4459800AB4E44 /* colloquies@2x.png */; };
 		1CA3DC581027984A008B1AD2 /* CQWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */; };
 		1CA3DCEA1027AEFF008B1AD2 /* help.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA3DCE81027AEFF008B1AD2 /* help.png */; };
 		1CA3DD5510287BF3008B1AD2 /* CQHelpTopicsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA3DD5410287BF3008B1AD2 /* CQHelpTopicsViewController.m */; };
@@ -383,6 +385,8 @@
 		1CA2651F11C35F4800AB4E44 /* roomIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "roomIcon@2x.png"; sourceTree = "<group>"; };
 		1CA2652011C35F4800AB4E44 /* roomIconSmall@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "roomIconSmall@2x.png"; sourceTree = "<group>"; };
 		1CA2652811C35F5F00AB4E44 /* directChatIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "directChatIcon@2x.png"; sourceTree = "<group>"; };
+		1CA2653911C4435500AB4E44 /* connections@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "connections@2x.png"; sourceTree = "<group>"; };
+		1CA2653D11C4459800AB4E44 /* colloquies@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "colloquies@2x.png"; sourceTree = "<group>"; };
 		1CA3DC561027984A008B1AD2 /* CQWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQWelcomeViewController.h; path = Mobile/Controllers/CQWelcomeViewController.h; sourceTree = "<group>"; };
 		1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQWelcomeViewController.m; path = Mobile/Controllers/CQWelcomeViewController.m; sourceTree = "<group>"; };
 		1CA3DCE81027AEFF008B1AD2 /* help.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = help.png; sourceTree = "<group>"; };
@@ -910,8 +914,10 @@
 			isa = PBXGroup;
 			children = (
 				1CA264D111C33A8000AB4E44 /* bouncer@2x.png */,
+				1CA2653D11C4459800AB4E44 /* colloquies@2x.png */,
 				1CA264E811C3494000AB4E44 /* connectedBadgeDim@2x.png */,
 				1CA264E911C3494000AB4E44 /* connectingBadgeDim@2x.png */,
+				1CA2653911C4435500AB4E44 /* connections@2x.png */,
 				1CA2652811C35F5F00AB4E44 /* directChatIcon@2x.png */,
 				1CA264E611C3488E00AB4E44 /* errorBadgeDim@2x.png */,
 				1CA2651F11C35F4800AB4E44 /* roomIcon@2x.png */,
@@ -1209,6 +1215,8 @@
 				1CA2652111C35F4800AB4E44 /* roomIcon@2x.png in Resources */,
 				1CA2652211C35F4800AB4E44 /* roomIconSmall@2x.png in Resources */,
 				1CA2652911C35F5F00AB4E44 /* directChatIcon@2x.png in Resources */,
+				1CA2653A11C4435500AB4E44 /* connections@2x.png in Resources */,
+				1CA2653E11C4459800AB4E44 /* colloquies@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
