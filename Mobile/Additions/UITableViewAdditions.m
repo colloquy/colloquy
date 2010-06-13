@@ -13,16 +13,7 @@
 	if (selected)
 		[self deselectRowAtIndexPath:indexPath animated:NO];
 
-	if ([self respondsToSelector:@selector(reloadRowsAtIndexPaths:withRowAnimation:)]) {
-		[self reloadRowsAtIndexPaths:indexPaths withRowAnimation:animation];
-	} else {
-		[self beginUpdates];
-
-		[self deleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
-		[self insertRowsAtIndexPaths:indexPaths withRowAnimation:animation];
-
-		[self endUpdates];
-	}
+	[self reloadRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 
 	[self setContentOffset:contentOffset animated:NO];
 
