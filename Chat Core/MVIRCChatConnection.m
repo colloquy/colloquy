@@ -652,7 +652,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[pool drain];
 	pool = nil;
 
-	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus || [_chatConnection isConnected] ) {
+	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
 		pool = [[NSAutoreleasePool allocWithZone:nil] init];
 		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
 		[pool drain];

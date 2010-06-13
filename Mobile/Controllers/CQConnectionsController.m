@@ -18,6 +18,7 @@
 #import "dlfcn.h"
 
 #import <ChatCore/MVChatConnection.h>
+#import <ChatCore/MVChatConnectionPrivate.h>
 #import <ChatCore/MVChatRoom.h>
 
 NSString *CQConnectionsControllerAddedConnectionNotification = @"CQConnectionsControllerAddedConnectionNotification";
@@ -553,9 +554,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) _didEnterBackground {
-	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQBackgroundTimeRemainingAlert"])
-		return;
-
 	NSTimeInterval remainingTime = [UIApplication sharedApplication].backgroundTimeRemaining;
 
 	_allowedBackgroundTime = remainingTime;
@@ -576,6 +574,11 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) _willEnterForeground {
+	for (MVChatConnection *connection in _connections) {
+		if (connection.status == MVChatConnectionSuspendedStatus)
+			[connection connectAppropriately];
+	}
+
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_showRemainingTimeAlert) object:nil];
 
 	[_timeRemainingLocalNotifiction release];
@@ -583,15 +586,19 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) _backgroundTaskExpired {
+	[self _showDisconnectedAlert];
+
 	[self saveConnections];
 
-	for (MVChatConnection *connection in _connections)
+	for (MVChatConnection *connection in _connections) {
+		BOOL wasConnected = connection.connected;
 		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+		if (wasConnected)
+			[connection _setStatus:MVChatConnectionSuspendedStatus];
+	}
 
 	[[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
 	_backgroundTask = UIBackgroundTaskInvalid;
-
-	[self _showDisconnectedAlert];
 }
 #endif
 
