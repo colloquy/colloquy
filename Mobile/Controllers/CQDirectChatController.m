@@ -34,6 +34,8 @@ static BOOL graphicalEmoticons;
 static BOOL naturalChatActions;
 static BOOL vibrateOnHighlight;
 static BOOL vibrateOnPrivateMessage;
+static BOOL localNotificationOnHighlight;
+static BOOL localNotificationOnPrivateMessage;
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
 - (void) _addPendingComponent:(id) component;
@@ -63,6 +65,8 @@ static BOOL showingKeyboard;
 	naturalChatActions = [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"];
 	vibrateOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"];
 	vibrateOnPrivateMessage = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnPrivateMessage"];
+	localNotificationOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLocalNotificationOnHighlight"];
+	localNotificationOnPrivateMessage = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLocalNotificationOnPrivateMessage"];
 
 	NSString *soundName = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
 
@@ -1519,7 +1523,8 @@ static BOOL showingKeyboard;
 		if (privateMessageSound)
 			[privateMessageSound playSound];
 
-		[self _showHighlightedNotificationForMessage:message withSoundName:privateMessageSound.soundName];
+		if (localNotificationOnPrivateMessage)
+			[self _showHighlightedNotificationForMessage:message withSoundName:privateMessageSound.soundName];
 	}
 
 	if (highlighted && self.available) {
@@ -1529,7 +1534,7 @@ static BOOL showingKeyboard;
 		if (highlightSound && (!directChat || (directChat && !privateMessageSound)))
 			[highlightSound playSound];
 
-		if (!directChat)
+		if (localNotificationOnHighlight && !directChat)
 			[self _showHighlightedNotificationForMessage:message withSoundName:highlightSound.soundName];
 	}
 

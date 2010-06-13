@@ -74,6 +74,10 @@
 	<false/>
 	<key>CQBackgroundTimeRemainingAlert</key>
 	<true/>
+	<key>CQShowLocalNotificationOnHighlight</key>
+	<true/>
+	<key>CQShowLocalNotificationOnPrivateMessage</key>
+	<true/>
 	<key>JVQuitMessage</key>
 	<string>Colloquy for iPhone - http://colloquy.mobi</string>
 </dict>
