@@ -1414,7 +1414,7 @@ static BOOL showingKeyboard;
 	[item release];
 }
 
-- (NSString *) _highlightedNotificationBodyForMessage:(NSDictionary *) message {
+- (NSString *) _localNotificationBodyForMessage:(NSDictionary *) message {
 	MVChatUser *user = [message objectForKey:@"user"];
 	NSString *messageText = [message objectForKey:@"messagePlain"];
 	if ([[message objectForKey:@"action"] boolValue])
@@ -1422,14 +1422,20 @@ static BOOL showingKeyboard;
 	return [NSString stringWithFormat:@"%@ \u2014 %@", user.displayName, messageText];
 }
 
-- (void) _showHighlightedNotificationForMessage:(NSDictionary *) message withSoundName:(NSString *) soundName {
+- (NSDictionary *) _localNotificationUserInfoForMessage:(NSDictionary *) message {
+	MVChatUser *user = [message objectForKey:@"user"];
+	return [NSDictionary dictionaryWithObjectsAndKeys:user.connection.uniqueIdentifier, @"c", user.nickname, @"n", nil];
+}
+
+- (void) _showLocalNotificationForMessage:(NSDictionary *) message withSoundName:(NSString *) soundName {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	if (![[UIDevice currentDevice] isSystemFour] || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
 		return;
 
 	UILocalNotification *notification = [[UILocalNotification alloc] init];
 
-	notification.alertBody = [self _highlightedNotificationBodyForMessage:message];
+	notification.alertBody = [self _localNotificationBodyForMessage:message];
+	notification.userInfo = [self _localNotificationUserInfoForMessage:message];
 	notification.soundName = [soundName stringByAppendingPathExtension:@"aiff"];
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
@@ -1524,7 +1530,7 @@ static BOOL showingKeyboard;
 			[privateMessageSound playSound];
 
 		if (localNotificationOnPrivateMessage)
-			[self _showHighlightedNotificationForMessage:message withSoundName:privateMessageSound.soundName];
+			[self _showLocalNotificationForMessage:message withSoundName:privateMessageSound.soundName];
 	}
 
 	if (highlighted && self.available) {
@@ -1535,7 +1541,7 @@ static BOOL showingKeyboard;
 			[highlightSound playSound];
 
 		if (localNotificationOnHighlight && !directChat)
-			[self _showHighlightedNotificationForMessage:message withSoundName:highlightSound.soundName];
+			[self _showLocalNotificationForMessage:message withSoundName:highlightSound.soundName];
 	}
 
 	if (!_recentMessages)

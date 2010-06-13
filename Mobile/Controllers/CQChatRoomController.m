@@ -925,7 +925,11 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	self.room.encoding = self.encoding;
 }
 
-- (NSString *) _highlightedNotificationBodyForMessage:(NSDictionary *) message {
+- (NSDictionary *) _localNotificationUserInfoForMessage:(NSDictionary *) message {
+	return [NSDictionary dictionaryWithObjectsAndKeys:self.connection.uniqueIdentifier, @"c", self.room.name, @"r", nil];
+}
+
+- (NSString *) _localNotificationBodyForMessage:(NSDictionary *) message {
 	MVChatUser *user = [message objectForKey:@"user"];
 	NSString *messageText = [message objectForKey:@"messagePlain"];
 	if ([[message objectForKey:@"action"] boolValue])

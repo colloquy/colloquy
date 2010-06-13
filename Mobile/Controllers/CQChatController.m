@@ -590,7 +590,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if (room) {
 		CQChatRoomController *controller = [self chatViewControllerForRoom:room ifExists:YES];
 		if (controller) {
-			[self showChatController:controller animated:YES];
+			[self showChatController:controller animated:[UIView areAnimationsEnabled]];
 			return;
 		}
 	}
@@ -610,7 +610,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if (!controller)
 		return;
 
-	[self showChatController:controller animated:YES];
+	[self showChatController:controller animated:[UIView areAnimationsEnabled]];
 }
 
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
@@ -635,6 +635,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 			[_chatNavigationController popToRootViewControllerAnimated:animated];
 		} else {
+			[_chatNavigationController popToRootViewControllerAnimated:NO];
 			[_chatNavigationController pushViewController:(UIViewController *)controller animated:animated];
 
 			[_nextController release];

@@ -223,6 +223,42 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateAnalytics) name:NSUserDefaultsDidChangeNotification object:nil];
 }
 
+- (void) handleNotificationWithUserInfo:(NSDictionary *) userInfo {
+	if (!userInfo.count)
+		return;
+
+	NSString *connectionServer = [userInfo objectForKey:@"s"];
+	NSString *connectionIdentifier = [userInfo objectForKey:@"c"];
+	if (connectionServer.length || connectionIdentifier.length) {
+		NSString *roomName = [userInfo objectForKey:@"r"];
+		NSString *senderNickname = [userInfo objectForKey:@"n"];
+
+		MVChatConnection *connection = nil;
+
+		if (connectionIdentifier.length)
+			connection = [[CQConnectionsController defaultController] connectionForUniqueIdentifier:connectionIdentifier];
+		if (!connection && connectionServer.length)
+			connection = [[CQConnectionsController defaultController] connectionForServerAddress:connectionServer];
+
+		if (connection) {
+			[connection connectAppropriately];
+
+			BOOL animationEnabled = [UIView areAnimationsEnabled];
+			[UIView setAnimationsEnabled:NO];
+
+			if (![[UIDevice currentDevice] isPadModel])
+				self.tabBarController.selectedViewController = [CQChatController defaultController].chatNavigationController;;
+
+			if (roomName.length)
+				[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:connection];
+			else if (senderNickname.length)
+				[[CQChatController defaultController] showChatControllerForUserNicknamed:senderNickname andConnection:connection];
+
+			[UIView setAnimationsEnabled:animationEnabled];
+		}
+	}
+}
+
 #pragma mark -
 
 - (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
@@ -272,38 +308,19 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[_mainWindow addSubview:_mainViewController.view];
 	[_mainWindow makeKeyAndVisible];
 
-	NSDictionary *pushInfo = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-	NSString *connectionServer = [pushInfo objectForKey:@"s"];
-	NSString *connectionIdentifier = [pushInfo objectForKey:@"c"];
-	if (connectionServer.length || connectionIdentifier.length) {
-		NSString *roomName = [pushInfo objectForKey:@"r"];
-		NSString *senderNickname = [pushInfo objectForKey:@"n"];
-
-		MVChatConnection *connection = nil;
-
-		if (connectionIdentifier.length)
-			connection = [[CQConnectionsController defaultController] connectionForUniqueIdentifier:connectionIdentifier];
-		if (!connection && connectionServer.length)
-			connection = [[CQConnectionsController defaultController] connectionForServerAddress:connectionServer];
-
-		if (connection) {
-			[connection connectAppropriately];
-
-			if (roomName.length) {
-				[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:connection];
-
-				[self showColloquies:nil];
-			} else if (senderNickname.length) {
-				[[CQChatController defaultController] showChatControllerForUserNicknamed:senderNickname andConnection:connection];
-
-				[self showColloquies:nil];
-			}
-		}
-	}
+	[self handleNotificationWithUserInfo:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]];
 
 	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];
 
 	return YES;
+}
+
+- (void) applicationWillEnterForeground:(UIApplication *) application {
+	[self cancelAllLocalNotifications];
+}
+
+- (void) application:(UIApplication *) application didReceiveLocalNotification:(UILocalNotification *) notification {
+	[self handleNotificationWithUserInfo:notification.userInfo];
 }
 
 - (void) application:(UIApplication *) application didReceiveRemoteNotification:(NSDictionary *) userInfo {
