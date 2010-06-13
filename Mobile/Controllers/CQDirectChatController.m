@@ -1315,7 +1315,8 @@ static BOOL showingKeyboard;
 		_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDirectChatEncoding"];
 
 	transcriptView.styleIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
-	self.view.backgroundColor = transcriptView.backgroundColor;
+	if ([self isViewLoaded] && transcriptView)
+		self.view.backgroundColor = transcriptView.backgroundColor;
 
 	NSString *completionBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"];
 	chatInputBar.autocomplete = ![completionBehavior isEqualToString:@"Disabled"];
