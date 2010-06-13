@@ -55,6 +55,9 @@ static BOOL showingKeyboard;
 
 @implementation CQDirectChatController
 + (void) userDefaultsChanged {
+	if (![NSThread isMainThread])
+		return;
+
 	timestampInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQTimestampInterval"];
 	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
 	naturalChatActions = [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"];
@@ -1311,6 +1314,9 @@ static BOOL showingKeyboard;
 }
 
 - (void) _userDefaultsChanged {
+	if (![NSThread isMainThread])
+		return;
+
 	if (self.user)
 		_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDirectChatEncoding"];
 

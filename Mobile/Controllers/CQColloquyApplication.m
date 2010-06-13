@@ -138,6 +138,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) userDefaultsChanged {
+	if (![NSThread isMainThread])
+		return;
+
 	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
 	if ([style hasSuffix:@"-dark"] || [style isEqualToString:@"notes"])
 		[[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];

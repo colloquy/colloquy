@@ -50,6 +50,9 @@ static CQSoundController *fileTransferSound;
 
 @implementation CQChatController
 + (void) userDefaultsChanged {
+	if (![NSThread isMainThread])
+		return;
+
 	alwaysShowNotices = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"];
 	vibrateOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"];
 

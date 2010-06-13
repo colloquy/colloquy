@@ -38,6 +38,9 @@ static BOOL showLeaveEvents;
 
 @implementation CQChatRoomController
 + (void) userDefaultsChanged {
+	if (![NSThread isMainThread])
+		return;
+
 	showJoinEvents = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowJoinEvents"];
 	showHostmasksOnJoin = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnJoin"];
 	showHostmasksOnPart = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnPart"];
@@ -912,6 +915,9 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 }
 
 - (void) _userDefaultsChanged {
+	if (![NSThread isMainThread])
+		return;
+
 	[super _userDefaultsChanged];
 
 	_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQChatRoomEncoding"];

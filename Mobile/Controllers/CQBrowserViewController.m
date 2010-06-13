@@ -427,6 +427,9 @@ static NSURL *lastURL;
 #pragma mark -
 
 - (void) _userDefaultsChanged {
+	if (![NSThread isMainThread])
+		return;
+
 	navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 	toolbar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 }

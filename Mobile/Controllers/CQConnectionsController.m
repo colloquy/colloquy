@@ -736,6 +736,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) _userDefaultsChanged {
+	if (![NSThread isMainThread])
+		return;
+
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 }
 

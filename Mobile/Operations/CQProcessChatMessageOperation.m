@@ -10,6 +10,9 @@ static BOOL stripMessageFormatting;
 
 @implementation CQProcessChatMessageOperation
 + (void) userDefaultsChanged {
+	if (![NSThread isMainThread])
+		return;
+
 	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
 	stripMessageFormatting = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"];
 }

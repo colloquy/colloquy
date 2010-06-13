@@ -83,6 +83,9 @@
 }
 
 - (void) _userDefaultsChanged {
+	if (![NSThread isMainThread])
+		return;
+
 	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 }
 @end

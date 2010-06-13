@@ -19,6 +19,9 @@ static BOOL showFullRoomNames;
 
 @implementation CQChatRoomListViewController
 + (void) userDefaultsChanged {
+	if (![NSThread isMainThread])
+		return;
+
 	showFullRoomNames = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowFullRoomNames"];
 }
 
@@ -32,7 +35,7 @@ static BOOL showFullRoomNames;
 
 	[[NSNotificationCenter defaultCenter] addObserver:[CQChatRoomListViewController class] selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 
-	[CQChatRoomListViewController userDefaultsChanged];
+	[self userDefaultsChanged];
 }
 
 - (id) init {

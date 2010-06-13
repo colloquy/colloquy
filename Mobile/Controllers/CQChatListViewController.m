@@ -19,6 +19,9 @@ static BOOL showsChatIcons;
 
 @implementation CQChatListViewController
 + (void) userDefaultsChanged {
+	if (![NSThread isMainThread])
+		return;
+
 	showsChatIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"];
 }
 
