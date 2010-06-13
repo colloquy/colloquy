@@ -126,6 +126,18 @@
 		1CA2653E11C4459800AB4E44 /* colloquies@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2653D11C4459800AB4E44 /* colloquies@2x.png */; };
 		1CA2655A11C44B0900AB4E44 /* members@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2655911C44B0900AB4E44 /* members@2x.png */; };
 		1CA2656211C44FC900AB4E44 /* info@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2656111C44FC900AB4E44 /* info@2x.png */; };
+		1CA2657211C455E500AB4E44 /* userAdmin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2656B11C455E500AB4E44 /* userAdmin@2x.png */; };
+		1CA2657311C455E500AB4E44 /* userFounder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2656C11C455E500AB4E44 /* userFounder@2x.png */; };
+		1CA2657411C455E500AB4E44 /* userHalfOperator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2656D11C455E500AB4E44 /* userHalfOperator@2x.png */; };
+		1CA2657511C455E500AB4E44 /* userNormal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2656E11C455E500AB4E44 /* userNormal@2x.png */; };
+		1CA2657611C455E500AB4E44 /* userOperator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2656F11C455E500AB4E44 /* userOperator@2x.png */; };
+		1CA2657711C455E500AB4E44 /* userSuperOperator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2657011C455E500AB4E44 /* userSuperOperator@2x.png */; };
+		1CA2657811C455E500AB4E44 /* userVoice@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2657111C455E500AB4E44 /* userVoice@2x.png */; };
+		1CA2657C11C457CC00AB4E44 /* browserSafari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2657B11C457CC00AB4E44 /* browserSafari@2x.png */; };
+		1CA2659211C4588300AB4E44 /* browserInstapaper@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2659111C4588300AB4E44 /* browserInstapaper@2x.png */; };
+		1CA2659711C45B0000AB4E44 /* browserBack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2659511C45B0000AB4E44 /* browserBack@2x.png */; };
+		1CA2659811C45B0000AB4E44 /* browserReload@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2659611C45B0000AB4E44 /* browserReload@2x.png */; };
+		1CA2659C11C45C4B00AB4E44 /* browserStop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2659B11C45C4B00AB4E44 /* browserStop@2x.png */; };
 		1CA3DC581027984A008B1AD2 /* CQWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */; };
 		1CA3DCEA1027AEFF008B1AD2 /* help.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA3DCE81027AEFF008B1AD2 /* help.png */; };
 		1CA3DD5510287BF3008B1AD2 /* CQHelpTopicsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA3DD5410287BF3008B1AD2 /* CQHelpTopicsViewController.m */; };
@@ -391,6 +403,18 @@
 		1CA2653D11C4459800AB4E44 /* colloquies@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "colloquies@2x.png"; sourceTree = "<group>"; };
 		1CA2655911C44B0900AB4E44 /* members@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "members@2x.png"; sourceTree = "<group>"; };
 		1CA2656111C44FC900AB4E44 /* info@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info@2x.png"; sourceTree = "<group>"; };
+		1CA2656B11C455E500AB4E44 /* userAdmin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userAdmin@2x.png"; sourceTree = "<group>"; };
+		1CA2656C11C455E500AB4E44 /* userFounder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userFounder@2x.png"; sourceTree = "<group>"; };
+		1CA2656D11C455E500AB4E44 /* userHalfOperator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userHalfOperator@2x.png"; sourceTree = "<group>"; };
+		1CA2656E11C455E500AB4E44 /* userNormal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userNormal@2x.png"; sourceTree = "<group>"; };
+		1CA2656F11C455E500AB4E44 /* userOperator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userOperator@2x.png"; sourceTree = "<group>"; };
+		1CA2657011C455E500AB4E44 /* userSuperOperator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userSuperOperator@2x.png"; sourceTree = "<group>"; };
+		1CA2657111C455E500AB4E44 /* userVoice@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userVoice@2x.png"; sourceTree = "<group>"; };
+		1CA2657B11C457CC00AB4E44 /* browserSafari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "browserSafari@2x.png"; sourceTree = "<group>"; };
+		1CA2659111C4588300AB4E44 /* browserInstapaper@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "browserInstapaper@2x.png"; sourceTree = "<group>"; };
+		1CA2659511C45B0000AB4E44 /* browserBack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "browserBack@2x.png"; sourceTree = "<group>"; };
+		1CA2659611C45B0000AB4E44 /* browserReload@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "browserReload@2x.png"; sourceTree = "<group>"; };
+		1CA2659B11C45C4B00AB4E44 /* browserStop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "browserStop@2x.png"; sourceTree = "<group>"; };
 		1CA3DC561027984A008B1AD2 /* CQWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQWelcomeViewController.h; path = Mobile/Controllers/CQWelcomeViewController.h; sourceTree = "<group>"; };
 		1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQWelcomeViewController.m; path = Mobile/Controllers/CQWelcomeViewController.m; sourceTree = "<group>"; };
 		1CA3DCE81027AEFF008B1AD2 /* help.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = help.png; sourceTree = "<group>"; };
@@ -918,6 +942,11 @@
 			isa = PBXGroup;
 			children = (
 				1CA264D111C33A8000AB4E44 /* bouncer@2x.png */,
+				1CA2659511C45B0000AB4E44 /* browserBack@2x.png */,
+				1CA2659111C4588300AB4E44 /* browserInstapaper@2x.png */,
+				1CA2659611C45B0000AB4E44 /* browserReload@2x.png */,
+				1CA2657B11C457CC00AB4E44 /* browserSafari@2x.png */,
+				1CA2659B11C45C4B00AB4E44 /* browserStop@2x.png */,
 				1CA2653D11C4459800AB4E44 /* colloquies@2x.png */,
 				1CA264E811C3494000AB4E44 /* connectedBadgeDim@2x.png */,
 				1CA264E911C3494000AB4E44 /* connectingBadgeDim@2x.png */,
@@ -931,6 +960,13 @@
 				1CA2651111C35C1100AB4E44 /* sectionHeader@2x.png */,
 				1CA2651211C35C1100AB4E44 /* sectionHeaderHighlighted@2x.png */,
 				1CA264BA11C339BD00AB4E44 /* server@2x.png */,
+				1CA2656B11C455E500AB4E44 /* userAdmin@2x.png */,
+				1CA2656C11C455E500AB4E44 /* userFounder@2x.png */,
+				1CA2656D11C455E500AB4E44 /* userHalfOperator@2x.png */,
+				1CA2656E11C455E500AB4E44 /* userNormal@2x.png */,
+				1CA2656F11C455E500AB4E44 /* userOperator@2x.png */,
+				1CA2657011C455E500AB4E44 /* userSuperOperator@2x.png */,
+				1CA2657111C455E500AB4E44 /* userVoice@2x.png */,
 			);
 			name = "Images (2x)";
 			sourceTree = "<group>";
@@ -1225,6 +1261,18 @@
 				1CA2653E11C4459800AB4E44 /* colloquies@2x.png in Resources */,
 				1CA2655A11C44B0900AB4E44 /* members@2x.png in Resources */,
 				1CA2656211C44FC900AB4E44 /* info@2x.png in Resources */,
+				1CA2657211C455E500AB4E44 /* userAdmin@2x.png in Resources */,
+				1CA2657311C455E500AB4E44 /* userFounder@2x.png in Resources */,
+				1CA2657411C455E500AB4E44 /* userHalfOperator@2x.png in Resources */,
+				1CA2657511C455E500AB4E44 /* userNormal@2x.png in Resources */,
+				1CA2657611C455E500AB4E44 /* userOperator@2x.png in Resources */,
+				1CA2657711C455E500AB4E44 /* userSuperOperator@2x.png in Resources */,
+				1CA2657811C455E500AB4E44 /* userVoice@2x.png in Resources */,
+				1CA2657C11C457CC00AB4E44 /* browserSafari@2x.png in Resources */,
+				1CA2659211C4588300AB4E44 /* browserInstapaper@2x.png in Resources */,
+				1CA2659711C45B0000AB4E44 /* browserBack@2x.png in Resources */,
+				1CA2659811C45B0000AB4E44 /* browserReload@2x.png in Resources */,
+				1CA2659C11C45C4B00AB4E44 /* browserStop@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
