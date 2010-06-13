@@ -140,6 +140,20 @@
 			<key>DefaultValue</key>
 			<string>Stoof</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Time Remaining</string>
+			<key>Key</key>
+			<string>CQBackgroundTimeRemainingAlert</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
 	</array>
 </dict>
 </plist>

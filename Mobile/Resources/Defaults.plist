@@ -72,6 +72,8 @@
 	<false/>
 	<key>CQShowHostmaskOnPart</key>
 	<false/>
+	<key>CQBackgroundTimeRemainingAlert</key>
+	<true/>
 	<key>JVQuitMessage</key>
 	<string>Colloquy for iPhone - http://colloquy.mobi</string>
 </dict>

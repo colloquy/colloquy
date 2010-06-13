@@ -166,6 +166,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[_directConnections release];
 	[_bouncerConnections release];
 	[_bouncerChatConnections release];
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	[_timeRemainingLocalNotifiction release];
+#endif
 
 	[super dealloc];
 }
@@ -477,6 +480,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
 		return;
 
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQBackgroundTimeRemainingAlert"])
+		return;
+
 	if (!self.connectedConnections.count)
 		return;
 
@@ -491,16 +497,27 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[notification release];
 }
 
-- (void) _showRemainingTimeAlert {
+- (void) _showDisconnectedAlert {
 	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
+		return;
+
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQBackgroundTimeRemainingAlert"])
 		return;
 
 	if (!self.connectedConnections.count)
 		return;
 
+	if (_timeRemainingLocalNotifiction) {
+		[[UIApplication sharedApplication] cancelLocalNotification:_timeRemainingLocalNotifiction];
+		[_timeRemainingLocalNotifiction release];
+		_timeRemainingLocalNotifiction = nil;
+	}
+
 	UILocalNotification *notification = [[UILocalNotification alloc] init];
 
-	notification.alertBody = NSLocalizedString(@"You will be disconnected in less than a minute due to inactivity.", "Disconnected in less thn a minute alert message");
+	NSUInteger minutes = ceil(_allowedBackgroundTime / 60.);
+
+	notification.alertBody = [NSString stringWithFormat:NSLocalizedString(@"You have been disconnected due to %u minutes of inactivity.", "Disconnected due to inactivity alert message"), minutes];
 	notification.alertAction = NSLocalizedString(@"Open", "Open button title");
 	notification.soundName = UILocalNotificationDefaultSoundName;
 
@@ -509,8 +526,39 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[notification release];
 }
 
+- (void) _showRemainingTimeAlert {
+	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
+		return;
+
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQBackgroundTimeRemainingAlert"])
+		return;
+
+	if (!self.connectedConnections.count)
+		return;
+
+	if (_timeRemainingLocalNotifiction) {
+		[[UIApplication sharedApplication] cancelLocalNotification:_timeRemainingLocalNotifiction];
+		[_timeRemainingLocalNotifiction release];
+	}
+
+	UILocalNotification *notification = [[UILocalNotification alloc] init];
+
+	notification.alertBody = NSLocalizedString(@"You will be disconnected in less than a minute due to inactivity.", "Disconnected in less than a minute alert message");
+	notification.alertAction = NSLocalizedString(@"Open", "Open button title");
+	notification.soundName = UILocalNotificationDefaultSoundName;
+
+	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+
+	_timeRemainingLocalNotifiction = notification;
+}
+
 - (void) _didEnterBackground {
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQBackgroundTimeRemainingAlert"])
+		return;
+
 	NSTimeInterval remainingTime = [UIApplication sharedApplication].backgroundTimeRemaining;
+
+	_allowedBackgroundTime = remainingTime;
 
 	if (remainingTime <= 0.) {
 		[self _showNoTimeRemainingAlert];
@@ -529,9 +577,12 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 - (void) _willEnterForeground {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_showRemainingTimeAlert) object:nil];
+
+	[_timeRemainingLocalNotifiction release];
+	_timeRemainingLocalNotifiction = nil;
 }
 
-- (void) _backgroundTaskEnding {
+- (void) _backgroundTaskExpired {
 	[self saveConnections];
 
 	for (MVChatConnection *connection in _connections)
@@ -539,6 +590,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	[[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
 	_backgroundTask = UIBackgroundTaskInvalid;
+
+	[self _showDisconnectedAlert];
 }
 #endif
 
@@ -571,7 +624,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	if ([[UIDevice currentDevice] isSystemFour]) {
 		if (_backgroundTask == UIBackgroundTaskInvalid)
-			_backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{ [self _backgroundTaskEnding]; }];
+			_backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{ [self _backgroundTaskExpired]; }];
 	}
 #endif
 
