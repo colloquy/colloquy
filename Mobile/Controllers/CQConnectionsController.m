@@ -303,8 +303,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if (alertView.tag == IncorrectRoomPasswordTag || alertView.tag == NotIdentifiedWithServicesTag) {
 		UITextField *passwordField = [alertView performPrivateSelector:@"textField"];
 		NSString *password = passwordField.text;
-		if (!password.length)
-			return;
 
 		NSNotification *notification = ((CQAlertView *)alertView).userInfo;
 		NSError *error = [notification.userInfo objectForKey:@"error"];
@@ -313,17 +311,18 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 		NSString *roomPassword = nil;
 		if (alertView.tag == IncorrectRoomPasswordTag) {
-			[[CQKeychain standardKeychain] setPassword:password forServer:connection.uniqueIdentifier area:room];
 			roomPassword = password;
-		} else roomPassword = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:room];
-
-		if (alertView.tag == NotIdentifiedWithServicesTag) {
+			[[CQKeychain standardKeychain] setPassword:password forServer:connection.uniqueIdentifier area:room];
+		} else if (alertView.tag == NotIdentifiedWithServicesTag) {
 			connection.nicknamePassword = password;
 			[connection savePasswordsToKeychain];
 		}
 
 		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:room andConnection:connection];
-		[connection joinChatRoomNamed:room withPassphrase:roomPassword];
+
+		if (roomPassword.length)
+			[connection joinChatRoomNamed:room withPassphrase:roomPassword];
+		else [connection joinChatRoomNamed:room];
 	}
 }
 
@@ -699,7 +698,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	}
 
 	for (NSUInteger i = 0; i < rooms.count; i++) {
-		NSString *room = [rooms objectAtIndex:i];
+		NSString *room = [connection properNameForChatRoomNamed:[rooms objectAtIndex:i]];
 		NSString *password = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:room];
 
 		if (password.length) {
@@ -1478,17 +1477,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 #pragma mark -
 
-@implementation MVChatRoom (CQConnectionsControllerAdditions)
-- (void) joinWithSavedPassword {
-	NSString *password = [[CQKeychain standardKeychain] passwordForServer:self.connection.uniqueIdentifier area:self.name];
-	if (password.length)
-		[self.connection joinChatRoomNamed:self.name withPassphrase:password];
-	else [self join];
-}
-@end
-
-#pragma mark -
-
 @implementation MVChatConnection (CQConnectionsControllerAdditions)
 + (NSString *) defaultNickname {
 	NSString *defaultNickname = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQDefaultNickname"];
@@ -1579,6 +1567,14 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if (!name.length)
 		return self.server;
 	return name;
+}
+
+#pragma mark -
+
+- (void) joinChatRoomNamed:(NSString *) room {
+	room = [self properNameForChatRoomNamed:room];
+	NSString *password = [[CQKeychain standardKeychain] passwordForServer:self.uniqueIdentifier area:room];
+	[self joinChatRoomNamed:room withPassphrase:password];
 }
 
 #pragma mark -

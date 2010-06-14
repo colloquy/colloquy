@@ -82,10 +82,6 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 - (void) removeBouncerSettingsAtIndex:(NSUInteger) index;
 @end
 
-@interface MVChatRoom (CQConnectionsControllerAdditions)
-- (void) joinWithSavedPassword;
-@end
-
 @interface MVChatConnection (CQConnectionsControllerAdditions)
 + (NSString *) defaultNickname;
 + (NSString *) defaultUsernameWithNickname:(NSString *) nickname;

@@ -442,7 +442,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( !_pendingJoinRoomNames )
 		_pendingJoinRoomNames = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 
-	room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 	room = [self properNameForChatRoomNamed:room];
 
 	if( ![room length] )
@@ -504,10 +503,12 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (NSString *) properNameForChatRoomNamed:(NSString *) room {
 	if( ! [room length] ) return room;
+	room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 	return ( [[self chatRoomNamePrefixes] characterIsMember:[room characterAtIndex:0]] ? room : [@"#" stringByAppendingString:room] );
 }
 
 - (NSString *) displayNameForChatRoomNamed:(NSString *) room {
+	room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 	if ([room length] > 2 && [room characterAtIndex:1] == '#')
 		return [room substringFromIndex:2];
 	if ([room length] > 1 && [room characterAtIndex:1] != '#')

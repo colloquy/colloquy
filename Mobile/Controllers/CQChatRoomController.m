@@ -180,7 +180,7 @@ static BOOL showLeaveEvents;
 
 - (void) join {
 	[self.connection connectAppropriately];
-	[self.room joinWithSavedPassword];
+	[self.room join];
 }
 
 - (void) part {

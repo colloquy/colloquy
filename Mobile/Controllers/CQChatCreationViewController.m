@@ -1,11 +1,12 @@
 #import "CQChatCreationViewController.h"
 
 #import "CQChatController.h"
-#import "CQConnectionsController.h"
 #import "CQChatEditViewController.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
+#import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
+#import "CQKeychain.h"
 
 #import <ChatCore/MVChatConnection.h>
 
@@ -102,7 +103,11 @@
 
 		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:connection];
 
-		[connection joinChatRoomNamed:roomName withPassphrase:editViewController.password];
+		if (editViewController.password.length) {
+			[connection joinChatRoomNamed:roomName withPassphrase:editViewController.password];
+
+			[[CQKeychain standardKeychain] setPassword:editViewController.password forServer:connection.uniqueIdentifier area:roomName];
+		} else [connection joinChatRoomNamed:roomName];
 	} else if (editViewController.name.length) {
 		MVChatUser *user = [[connection chatUsersWithNickname:editViewController.name] anyObject];
 		CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];

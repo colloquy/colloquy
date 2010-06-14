@@ -32,7 +32,7 @@
 }
 
 - (NSString *) password {
-	NSString *room = self.room;
+	NSString *room = [_connection properNameForChatRoomNamed:self.room];
 
 	if (!room.length)
 		return nil;
@@ -48,15 +48,13 @@
 
 	switch (sender.tag) {
 	case RoomPasswordRow:
-		room = self.room;
+		room = [_connection properNameForChatRoomNamed:self.room];
 		password = sender.textField.text;
 
 		if (!room.length)
 			return;
 
-		if (password.length)
-			[[CQKeychain standardKeychain] setPassword:password forServer:_connection.uniqueIdentifier area:room];
-		else [[CQKeychain standardKeychain] removePasswordForServer:_connection.uniqueIdentifier area:room];
+		[[CQKeychain standardKeychain] setPassword:password forServer:_connection.uniqueIdentifier area:room];
 		break;
 	default:
 		[super listItemChanged:sender];

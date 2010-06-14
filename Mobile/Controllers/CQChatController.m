@@ -363,7 +363,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	}
 
 	if (alertView.tag == ChatRoomInviteAlertTag) {
-		[(MVChatRoom *)userInfo joinWithSavedPassword];
+		[(MVChatRoom *)userInfo join];
 #if ENABLE(FILE_TRANSFERS)
 	} else if (alertView.tag == FileDownloadAlertTag) {
 		MVDownloadFileTransfer *transfer = userInfo;

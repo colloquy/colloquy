@@ -854,7 +854,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	NSString *room = nil;
 
 	while( ( room = [enumerator nextObject] ) )
-		if( [room length] ) [self joinChatRoomNamed:room withPassphrase:nil];
+		if( [room length] ) [self joinChatRoomNamed:room];
 }
 
 - (void) joinChatRoomNamed:(NSString *) room {
