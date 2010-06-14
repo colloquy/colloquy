@@ -1,5 +1,6 @@
 #import "CQChatEditViewController.h"
 
+#import "CQBouncerSettings.h"
 #import "CQChatController.h"
 #import "CQChatRoomListViewController.h"
 #import "CQColloquyApplication.h"
@@ -114,8 +115,11 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 
 		NSUInteger selectedConnectionIndex = [_sortedConnections indexOfObjectIdenticalTo:_selectedConnection];
 		NSMutableArray *connectionTitles = [[NSMutableArray alloc] init];
-		for (MVChatConnection *connection in _sortedConnections)
-			[connectionTitles addObject:connection.displayName];
+		for (MVChatConnection *connection in _sortedConnections) {
+			if (connection.directConnection)
+				[connectionTitles addObject:connection.displayName];
+			else [connectionTitles addObject:[NSString stringWithFormat:@"%@ (%@)", connection.displayName, connection.bouncerSettings.displayName]];
+		}
 
 		listViewController.title = NSLocalizedString(@"Connections", @"Connections view title");
 		listViewController.itemImage = [UIImage imageNamed:@"server.png"];
