@@ -1113,6 +1113,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #pragma mark -
 
 - (void) _willConnect {
+	MVAssertMainThreadRequired();
 	MVSafeAdoptAssign( _lastError, nil );
 
 	_nextAltNickIndex = 0;
@@ -1120,7 +1121,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 	[[self localUser] _setIdentified:NO];
 
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionWillConnectNotification object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatConnectionWillConnectNotification object:self];
 }
 
 - (void) _didConnect {

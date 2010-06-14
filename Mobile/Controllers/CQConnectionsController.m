@@ -791,6 +791,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 
+	MVChatConnection *connection = notification.object;
+	[connection removePersistentInformationObjectForKey:@"tryBouncerFirst"];
+
 	[self _possiblyEndBackgroundTask];
 }
 
@@ -1710,6 +1713,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) connectDirectly {
+	[self removePersistentInformationObjectForKey:@"tryBouncerFirst"];
+
 	self.temporaryDirectConnection = YES;
 
 	[self connect];
