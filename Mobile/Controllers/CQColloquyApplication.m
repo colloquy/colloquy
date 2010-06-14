@@ -232,6 +232,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if (connectionServer.length || connectionIdentifier.length) {
 		NSString *roomName = [userInfo objectForKey:@"r"];
 		NSString *senderNickname = [userInfo objectForKey:@"n"];
+		NSString *action = [userInfo objectForKey:@"a"];
 
 		MVChatConnection *connection = nil;
 
@@ -249,10 +250,13 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 			if (![[UIDevice currentDevice] isPadModel])
 				self.tabBarController.selectedViewController = [CQChatController defaultController].chatNavigationController;;
 
-			if (roomName.length)
+			if (roomName.length) {
+				if ([action isEqualToString:@"j"])
+					[connection joinChatRoomNamed:roomName];
 				[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:connection];
-			else if (senderNickname.length)
+			} else if (senderNickname.length) {
 				[[CQChatController defaultController] showChatControllerForUserNicknamed:senderNickname andConnection:connection];
+			}
 
 			[UIView setAnimationsEnabled:animationEnabled];
 		}

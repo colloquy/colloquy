@@ -327,12 +327,30 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 	MVChatRoom *room = [connection chatRoomWithName:roomName];
 
+	NSString *message = [NSString stringWithFormat:NSLocalizedString(@"You are invited to \"%@\" by \"%@\" on \"%@\".", "Invited to join room alert message"), room.displayName, user.displayName, connection.displayName];
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour] && [UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+		UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+
+		localNotification.alertBody = message;
+		localNotification.alertAction = NSLocalizedString(@"Join", "Join button title");
+		localNotification.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:connection.uniqueIdentifier, @"c", room.name, @"r", @"j", @"a", nil];
+		localNotification.soundName = UILocalNotificationDefaultSoundName;
+
+		[[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+
+		[localNotification release];
+		return;
+	}
+#endif
+
 	CQAlertView *alert = [[CQAlertView alloc] init];
 	alert.tag = ChatRoomInviteAlertTag;
 	alert.userInfo = room;
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"Invited to Room", "Invited to room alert title");
-	alert.message = [NSString stringWithFormat:NSLocalizedString(@"You were invited to \"%@\" by \"%@\" on \"%@\".", "Invited to join room alert message"), room.displayName, user.displayName, connection.displayName];
+	alert.message = message;
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
@@ -363,7 +381,9 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	}
 
 	if (alertView.tag == ChatRoomInviteAlertTag) {
-		[(MVChatRoom *)userInfo join];
+		MVChatRoom *room = userInfo;
+		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:room.name andConnection:room.connection];
+		[room join];
 #if ENABLE(FILE_TRANSFERS)
 	} else if (alertView.tag == FileDownloadAlertTag) {
 		MVDownloadFileTransfer *transfer = userInfo;
