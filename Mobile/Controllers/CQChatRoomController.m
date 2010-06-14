@@ -77,6 +77,7 @@ static BOOL showLeaveEvents;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberNicknameChanged:) name:MVChatUserNicknameChangedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberModeChanged:) name:MVChatRoomUserModeChangedNotification object:target];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_roomModesChanged:) name:MVChatRoomModesChangedNotification object:target];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberBanned:) name:MVChatRoomUserBannedNotification object:target];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_memberBanRemoved:) name:MVChatRoomUserBanRemovedNotification object:target];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_bannedMembersSynced:) name:MVChatRoomBannedUsersSyncedNotification object:target];
@@ -718,7 +719,8 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 		}
 	}
 
-	[self addEventMessageAsHTML:message withIdentifier:identifier];
+	if (message.length && identifier.length)
+		[self addEventMessageAsHTML:message withIdentifier:identifier];
 
 	if (!_currentUserListViewController) {
 		_membersNeedSorted = YES;
@@ -738,6 +740,179 @@ static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, voi
 	}
 
 	[_currentUserListViewController moveUserAtIndex:originalIndex toIndex:newIndex];
+}
+
+- (void) _roomModesChanged:(NSNotification *) notification {
+	MVChatUser *user = [notification.userInfo objectForKey:@"by"];
+	if (!user)
+		return;
+
+	if ([user.nickname rangeOfString:@"."].location != NSNotFound)
+		return; // This is a server telling us the initial modes when we join, ignore these.
+
+	NSUInteger changedModes = [[notification.userInfo objectForKey:@"changedModes"] unsignedIntegerValue];
+	NSUInteger newModes = [self.room modes];
+
+	while (changedModes) {
+		NSString *message = nil;
+		NSString *identifier = nil;
+		id parameter = nil;
+
+		if (changedModes & MVChatRoomPrivateMode) {
+			changedModes &= ~MVChatRoomPrivateMode;
+			identifier = @"chatRoomPrivateMode";
+			if (newModes & MVChatRoomPrivateMode) {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You made this room private.", "private room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ made this room private.", "someone else private room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+			} else {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You made this room public.", "public room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ made this room public.", "someone else public room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+			}
+		} else if (changedModes & MVChatRoomSecretMode) {
+			changedModes &= ~MVChatRoomSecretMode;
+			identifier = @"chatRoomSecretMode";
+			if (newModes & MVChatRoomSecretMode) {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You made this room secret.", "secret room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ made this room secret.", "someone else secret room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+			} else {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You made this room no longer a secret.", "no longer secret room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ made this room no longer a secret.", "someone else no longer secret room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+			}
+		} else if (changedModes & MVChatRoomInviteOnlyMode) {
+			changedModes &= ~MVChatRoomInviteOnlyMode;
+			identifier = @"chatRoomInviteOnlyMode";
+			if (newModes & MVChatRoomInviteOnlyMode) {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You made this room invite only.", "invite only room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ made this room invite only.", "someone else invite only room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+			} else {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You made this room no longer invite only.", "no longer invite only room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ made this room no longer invite only.", "someone else no longer invite only room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+			}
+		} else if (changedModes & MVChatRoomNormalUsersSilencedMode) {
+			changedModes &= ~MVChatRoomNormalUsersSilencedMode;
+			identifier = @"chatRoomNormalUsersSilencedMode";
+			if (newModes & MVChatRoomNormalUsersSilencedMode) {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You made this room moderated for normal users.", "moderated for normal users room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ made this room moderated for normal users.", "someone else moderated for normal users room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+			} else {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You made this room no longer moderated for normal users.", "no longer moderated for normal users room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ made this room no longer moderated for normal users.", "someone else no longer moderated for normal users room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+			}
+		} else if (changedModes & MVChatRoomOperatorsSilencedMode) {
+			changedModes &= ~MVChatRoomOperatorsSilencedMode;
+			identifier = @"chatRoomOperatorsSilencedMode";
+			if (newModes & MVChatRoomOperatorsSilencedMode) {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You made this room moderated for operators.", "moderated for operators room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ made this room moderated for operators.", "someone else moderated for operators room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+			} else {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You made this room no longer moderated for operators.", "no longer moderated for operators room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ made this room no longer moderated for operators.", "someone else no longer moderated for operators room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+			}
+		} else if (changedModes & MVChatRoomOperatorsOnlySetTopicMode) {
+			changedModes &= ~MVChatRoomOperatorsOnlySetTopicMode;
+			identifier = @"MVChatRoomOperatorsOnlySetTopicMode";
+			if (newModes & MVChatRoomOperatorsOnlySetTopicMode) {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You changed this room to require operator status to change the topic.", "require op to set topic room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ changed this room to require operator status to change the topic.", "someone else required op to set topic room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+			} else {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You changed this room to allow anyone to change the topic.", "don't require op to set topic room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ changed this room to allow anyone to change the topic.", "someone else don't required op to set topic room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+			}
+		} else if (changedModes & MVChatRoomNoOutsideMessagesMode) {
+			changedModes &= ~MVChatRoomNoOutsideMessagesMode;
+			identifier = @"chatRoomNoOutsideMessagesMode";
+			if (newModes & MVChatRoomNoOutsideMessagesMode) {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You changed this room to prohibit outside messages.", "prohibit outside messages room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ changed this room to prohibit outside messages.", "someone else prohibit outside messages room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+			} else {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You changed this room to permit outside messages.", "permit outside messages room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ changed this room to permit outside messages.", "someone else permit outside messages room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+			}
+		} else if (changedModes & MVChatRoomPassphraseToJoinMode) {
+			changedModes &= ~MVChatRoomPassphraseToJoinMode;
+			identifier = @"chatRoomPassphraseToJoinMode";
+			if (newModes & MVChatRoomPassphraseToJoinMode) {
+				parameter = [self.room attributeForMode:MVChatRoomPassphraseToJoinMode];
+				if (user.localUser) {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"You changed this room to require a password of \"%@\".", "password required room status message") stringByEncodingXMLSpecialCharactersAsEntities], [parameter stringByEncodingXMLSpecialCharactersAsEntities]];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ changed this room to require a password of \"%@\".", "someone else password required room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], [parameter stringByEncodingXMLSpecialCharactersAsEntities]];
+				}
+
+				[[CQKeychain standardKeychain] setPassword:parameter forServer:self.connection.uniqueIdentifier area:self.room.name];
+			} else {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You changed this room to no longer require a password.", "no longer passworded room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ changed this room to no longer require a password.", "someone else no longer passworded room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+
+				[[CQKeychain standardKeychain] removePasswordForServer:self.connection.uniqueIdentifier area:self.room.name];
+			}
+		} else if (changedModes & MVChatRoomLimitNumberOfMembersMode) {
+			changedModes &= ~MVChatRoomLimitNumberOfMembersMode;
+			identifier = @"chatRoomLimitNumberOfMembersMode";
+			if (newModes & MVChatRoomLimitNumberOfMembersMode) {
+				parameter = [self.room attributeForMode:MVChatRoomLimitNumberOfMembersMode];
+				if (user.localUser) {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"You set a limit on the number of room members to %@.", "member limit room status message") stringByEncodingXMLSpecialCharactersAsEntities], parameter];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ set a limit on the number of room members to %@.", "someone else member limit room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], parameter];
+				}
+			} else {
+				if (user.localUser) {
+					message = [NSLocalizedString(@"You removed the room member limit.", "no member limit room status message") stringByEncodingXMLSpecialCharactersAsEntities];
+				} else {
+					message = [NSString stringWithFormat:[NSLocalizedString(@"%@ removed the room member limit.", "someone else no member limit room status message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user]];
+				}
+			}
+		}
+
+		if (message.length && identifier.length)
+			[self addEventMessageAsHTML:message withIdentifier:identifier];
+	}
 }
 
 - (void) _memberBanned:(NSNotification *) notification {
