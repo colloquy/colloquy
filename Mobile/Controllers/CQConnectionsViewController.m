@@ -80,6 +80,8 @@
 #pragma mark -
 
 - (void) _startUpdatingConnectTimes {
+	NSAssert(_active, @"This should only be called when the view is active (visible).");
+
 	if (!_connectTimeUpdateTimer)
 		_connectTimeUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(_updateConnectTimes) userInfo:nil repeats:YES] retain];
 }
@@ -106,6 +108,13 @@
 
 	_active = YES;
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour]) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+	}
+#endif
+
 	[self.tableView reloadData];
 
 	[self _startUpdatingConnectTimes];
@@ -115,6 +124,13 @@
 	[super viewWillDisappear:animated];
 
 	_active = NO;
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour]) {
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+	}
+#endif
 
 	[self _stopUpdatingConnectTimes];
 }
@@ -127,6 +143,20 @@
 }
 
 #pragma mark -
+
+- (void) _didEnterBackground {
+	_active = NO;
+
+	[self _stopUpdatingConnectTimes];
+}
+
+- (void) _willEnterForeground {
+	_active = YES;
+
+	[self.tableView reloadData];
+
+	[self _startUpdatingConnectTimes];
+}
 
 - (void) _didChange:(NSNotification *) notification {
 	if (_active)
