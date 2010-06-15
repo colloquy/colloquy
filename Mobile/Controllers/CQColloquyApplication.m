@@ -222,6 +222,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[analyticsController setObject:information forKey:@"locale"];
 
 	[analyticsController setObject:([[UIDevice currentDevice] isSystemFour] && [UIDevice currentDevice].multitaskingSupported ? @"1" : @"0") forKey:@"multitasking-supported"];
+	[analyticsController setObject:([[UIDevice currentDevice] isSystemFour] ? [NSNumber numberWithDouble:[UIScreen mainScreen].scale] : @"1") forKey:@"screen-scale-factor"];
 
 	if (_deviceToken.length)
 		[analyticsController setObject:_deviceToken forKey:@"device-push-token"];
