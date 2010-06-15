@@ -372,7 +372,12 @@ static BOOL showingKeyboard;
 
 	_active = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour])
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+#endif
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 
 	[self _addPendingComponentsAnimated:YES];
 
@@ -404,6 +409,11 @@ static BOOL showingKeyboard;
 
 	_active = NO;
 	_allowEditingToEnd = YES;
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour])
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+#endif
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 
@@ -1351,7 +1361,11 @@ static BOOL showingKeyboard;
 	[self.connection addChatUserWatchRule:_watchRule];
 }
 
-- (void) _willBecomeActive:(NSNotification *) notification {
+- (void) _willEnterForeground {
+	[self _addPendingComponentsAnimated:NO];
+}
+
+- (void) _willBecomeActive {
 	if (_unreadHighlightedMessages)
 		[CQChatController defaultController].totalImportantUnreadCount -= _unreadHighlightedMessages;
 
@@ -1479,7 +1493,13 @@ static BOOL showingKeyboard;
 	while (_pendingComponents.count > 300)
 		[_pendingComponents removeObjectAtIndex:0];
 
-	if (!transcriptView || !_active)
+	BOOL active = _active;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour])
+		active &= ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
+#endif
+
+	if (!transcriptView || !active)
 		return;
 
 	if (!hadPendingComponents)
