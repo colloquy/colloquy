@@ -60,7 +60,6 @@
 	else self.connectDate = connection.connectedDate;
 
 	switch (connection.status) {
-	default:
 	case MVChatConnectionDisconnectedStatus:
 		if (connection.waitingToReconnect)
 			self.status = CQConnectionTableCellReconnectingStatus;
@@ -76,6 +75,9 @@
 		break;
 	case MVChatConnectionConnectedStatus:
 		self.status = CQConnectionTableCellConnectedStatus;
+		break;
+	case MVChatConnectionSuspendedStatus:
+		self.status = CQConnectionTableCellReconnectingStatus;
 		break;
 	}
 
