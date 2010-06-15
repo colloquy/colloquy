@@ -153,6 +153,7 @@
 		1CA2662C11C4B36200AB4E44 /* Icon-114.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2662B11C4B36200AB4E44 /* Icon-114.png */; };
 		1CA2663811C4BA9200AB4E44 /* help@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2663711C4BA9200AB4E44 /* help@2x.png */; };
 		1CA2663C11C4BE1A00AB4E44 /* new@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2663B11C4BE1A00AB4E44 /* new@2x.png */; };
+		1CA26BBB11C7415000AB4E44 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE7FF770FA3D003001C7B17 /* RegexKitLite.m */; };
 		1CA3DC581027984A008B1AD2 /* CQWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */; };
 		1CA3DCEA1027AEFF008B1AD2 /* help.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA3DCE81027AEFF008B1AD2 /* help.png */; };
 		1CA3DD5510287BF3008B1AD2 /* CQHelpTopicsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA3DD5410287BF3008B1AD2 /* CQHelpTopicsViewController.m */; };
@@ -206,8 +207,6 @@
 		1CE3FB120D8A3DC100FB035F /* CQConnectionCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */; };
 		1CE69F820EE2F50100389442 /* ChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CE69F810EE2F50100389442 /* ChatView.xib */; };
 		1CE69FD90EE317F200389442 /* CQChatInputBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE69FD80EE317F200389442 /* CQChatInputBar.m */; };
-		1CE7FF790FA3D003001C7B17 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE7FF770FA3D003001C7B17 /* RegexKitLite.m */; };
-		1CE7FF9E0FA3D064001C7B17 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE7FF9D0FA3D064001C7B17 /* libicucore.dylib */; };
 		1CF50C150ED8AFBE00CBE5E3 /* CQKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */; };
 		1CF50C870ED8BE1100CBE5E3 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF50C860ED8BE1100CBE5E3 /* Security.framework */; };
 		1CF50EAF0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */; };
@@ -516,7 +515,6 @@
 		1CE69FD80EE317F200389442 /* CQChatInputBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatInputBar.m; sourceTree = "<group>"; };
 		1CE7FF770FA3D003001C7B17 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexKitLite.m; path = "Chat Core/RegexKitLite.m"; sourceTree = "<group>"; };
 		1CE7FF780FA3D003001C7B17 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexKitLite.h; path = "Chat Core/RegexKitLite.h"; sourceTree = "<group>"; };
-		1CE7FF9D0FA3D064001C7B17 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQKeychain.h; path = Mobile/Controllers/CQKeychain.h; sourceTree = "<group>"; };
 		1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQKeychain.m; path = Mobile/Controllers/CQKeychain.m; sourceTree = "<group>"; };
 		1CF50C860ED8BE1100CBE5E3 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -590,7 +588,6 @@
 				1CF50C870ED8BE1100CBE5E3 /* Security.framework in Frameworks */,
 				1CBC07CE0F0741E400EEBCFB /* SystemConfiguration.framework in Frameworks */,
 				1C124A720F097575008F181B /* AudioToolbox.framework in Frameworks */,
-				1CE7FF9E0FA3D064001C7B17 /* libicucore.dylib in Frameworks */,
 				1CD84C2B10040AB300E56A7E /* MediaPlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1129,7 +1126,6 @@
 				1CF50C860ED8BE1100CBE5E3 /* Security.framework */,
 				1CBC07CD0F0741E400EEBCFB /* SystemConfiguration.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
-				1CE7FF9D0FA3D064001C7B17 /* libicucore.dylib */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -1401,7 +1397,6 @@
 				1C1254A40F0D8D7F008F181B /* CQChatCreationViewController.m in Sources */,
 				1C1255670F0EAA69008F181B /* CQChatEditViewController.m in Sources */,
 				9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */,
-				1CE7FF790FA3D003001C7B17 /* RegexKitLite.m in Sources */,
 				89E87C090FA0450800B49230 /* CQSoundController.m in Sources */,
 				1C633C9C0FABD06C00BB5866 /* CQConnectionPushEditController.m in Sources */,
 				1C6341640FAF30B600BB5866 /* CQBouncerSettings.m in Sources */,
@@ -1441,6 +1436,7 @@
 				1CDDE9AB118C8DB300C83EBE /* CQViewController.m in Sources */,
 				1CDDE9C5118C8EB700C83EBE /* CQTableViewController.m in Sources */,
 				1CDDE9F6118CD2B800C83EBE /* NSObjectAdditions.m in Sources */,
+				1CA26BBB11C7415000AB4E44 /* RegexKitLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

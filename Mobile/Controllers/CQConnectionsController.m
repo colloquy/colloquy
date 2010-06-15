@@ -37,43 +37,17 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 #pragma mark -
 
-#define WEAK_FRAMEWORK(framework) \
-static void* framework##Framework(void) \
-{ \
-	static void *frameworkHandle; \
-	if (UNLIKELY(!frameworkHandle)) \
-		frameworkHandle = dlopen("/System/Library/Frameworks/" #framework ".framework/" #framework, RTLD_LAZY); \
-	if (LIKELY(!!frameworkHandle)) \
-		return frameworkHandle; \
-	NSCAssert(NO, @"Couldn't dlopen the " #framework " framework."); \
-	return NULL; \
-}
-
-#define WEAK_FUNCTION(framework, functionName, resultType, parameterDeclarations, parameterNames, defaultValue) \
-resultType functionName parameterDeclarations; \
-\
-resultType functionName parameterDeclarations \
-{ \
-	static resultType (*functionPointer) parameterDeclarations; \
-	if (UNLIKELY(!functionPointer)) \
-		functionPointer = dlsym(framework##Framework(), #functionName); \
-	if (LIKELY(!!functionPointer)) \
-		return functionPointer parameterNames; \
-	NSCAssert(NO, @"Couldn't find " #functionName " in " #framework " framework with dlsym."); \
-	return defaultValue; \
-}
-
 #if ENABLE(SECRETS)
 #define kIOMessageSystemWillSleep 0xe0000280
 #define kIOMessageCanSystemSleep 0xe0000270
 
 typedef void (*IOServiceInterestCallback)(void *context, mach_port_t service, uint32_t messageType, void *messageArgument);
 
-WEAK_FRAMEWORK(IOKit);
-WEAK_FUNCTION(IOKit, IORegisterForSystemPower, mach_port_t, (void *context, void *notificationPort, IOServiceInterestCallback callback, mach_port_t *notifier), (context, notificationPort, callback, notifier), 0);
-WEAK_FUNCTION(IOKit, IONotificationPortGetRunLoopSource, CFRunLoopSourceRef, (void *notify), (notify), NULL);
-WEAK_FUNCTION(IOKit, IOAllowPowerChange, int, (mach_port_t kernelPort, long notification), (kernelPort, notification), 0);
-WEAK_FUNCTION(IOKit, IOCancelPowerChange, int, (mach_port_t kernelPort, long notification), (kernelPort, notification), 0);
+MVWeakFramework(IOKit);
+MVWeakFunction(IOKit, IORegisterForSystemPower, mach_port_t, (void *context, void *notificationPort, IOServiceInterestCallback callback, mach_port_t *notifier), (context, notificationPort, callback, notifier), 0);
+MVWeakFunction(IOKit, IONotificationPortGetRunLoopSource, CFRunLoopSourceRef, (void *notify), (notify), NULL);
+MVWeakFunction(IOKit, IOAllowPowerChange, int, (mach_port_t kernelPort, long notification), (kernelPort, notification), 0);
+MVWeakFunction(IOKit, IOCancelPowerChange, int, (mach_port_t kernelPort, long notification), (kernelPort, notification), 0);
 
 static mach_port_t rootPowerDomainPort;
 

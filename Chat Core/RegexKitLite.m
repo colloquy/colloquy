@@ -504,6 +504,24 @@ RKL_STATIC_INLINE id    rkl_ReleaseObject             (id obj)                  
 #pragma mark ICU function prototypes
 
 // ICU functions.  See http://www.icu-project.org/apiref/icu4c/uregex_8h.html Tweaked slightly from the originals, but functionally identical.
+
+#if defined(MVWeakLibrary) && defined(MVWeakFunction) && defined(MVWeakVoidFunction) && ((defined(TARGET_OS_EMBEDDED) && (TARGET_OS_EMBEDDED != 0)) || (defined(TARGET_OS_IPHONE) && (TARGET_OS_IPHONE != 0)))
+MVWeakLibrary(icucore);
+MVWeakFunction(icucore, u_errorName, const char *, (int32_t status), (status), NULL);
+MVWeakFunction(icucore, u_strlen, int32_t, (const UniChar *s), (s), 0);
+MVWeakFunction(icucore, uregex_appendReplacement, int32_t, (uregex *regexp, const UniChar *replacementText, int32_t replacementLength, UniChar **destBuf, int32_t *destCapacity, int32_t *status), (regexp, replacementText, replacementLength, destBuf, destCapacity, status), 0);
+MVWeakFunction(icucore, uregex_appendTail, int32_t, (uregex *regexp, UniChar **destBuf, int32_t *destCapacity, int32_t *status), (regexp, destBuf, destCapacity, status), 0);
+MVWeakVoidFunction(icucore, uregex_close, (uregex *regexp), (regexp), void);
+MVWeakFunction(icucore, uregex_end, int32_t, (uregex *regexp, int32_t groupNum, int32_t *status), (regexp, groupNum, status), -1);
+MVWeakFunction(icucore, uregex_find, BOOL, (uregex *regexp, int32_t location, int32_t *status), (regexp, location, status), NO);
+MVWeakFunction(icucore, uregex_findNext, BOOL, (uregex *regexp, int32_t *status), (regexp, status), NO);
+MVWeakFunction(icucore, uregex_groupCount, int32_t, (uregex *regexp, int32_t *status), (regexp, status), 0);
+MVWeakFunction(icucore, uregex_open, uregex *, (const UniChar *pattern, int32_t patternLength, RKLRegexOptions flags, UParseError *parseError, int32_t *status), (pattern, patternLength, flags, parseError, status), NULL);
+MVWeakVoidFunction(icucore, uregex_reset, (uregex *regexp, int32_t newIndex, int32_t *status), (regexp, newIndex, status), void);
+MVWeakVoidFunction(icucore, uregex_setText, (uregex *regexp, const UniChar *text, int32_t textLength, int32_t *status), (regexp, text, textLength, status), void);
+MVWeakFunction(icucore, uregex_start, int32_t, (uregex *regexp, int32_t groupNum, int32_t *status), (regexp, groupNum, status), -1);
+MVWeakFunction(icucore, uregex_clone, uregex *, (const uregex *regexp, int32_t *status), (regexp, status), NULL);
+#else
 const char *RKL_ICU_FUNCTION_APPEND(u_errorName)              (                                                                                                                             int32_t  status) RKL_WARN_UNUSED_PURE;
 int32_t     RKL_ICU_FUNCTION_APPEND(u_strlen)                 (const UniChar *s)                                                                                                                             RKL_WARN_UNUSED_PURE_NONNULL_ARGS(1);
 int32_t     RKL_ICU_FUNCTION_APPEND(uregex_appendReplacement) (      uregex  *regexp,  const UniChar *replacementText, int32_t replacementLength, UniChar **destBuf, int32_t *destCapacity, int32_t *status) RKL_WARN_UNUSED_NONNULL_ARGS(1,2,4,5,6);
@@ -518,6 +536,7 @@ void        RKL_ICU_FUNCTION_APPEND(uregex_reset)             (      uregex  *re
 void        RKL_ICU_FUNCTION_APPEND(uregex_setText)           (      uregex  *regexp,  const UniChar *text, int32_t textLength,                                                             int32_t *status) RKL_NONNULL_ARGS(1,2,4);
 int32_t     RKL_ICU_FUNCTION_APPEND(uregex_start)             (      uregex  *regexp,  int32_t groupNum,                                                                                    int32_t *status) RKL_WARN_UNUSED_NONNULL_ARGS(1,3);
 uregex     *RKL_ICU_FUNCTION_APPEND(uregex_clone)             (const uregex  *regexp,                                                                                                       int32_t *status) RKL_WARN_UNUSED_NONNULL_ARGS(1,2);
+#endif
 
 ////////////
 #pragma mark -
