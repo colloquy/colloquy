@@ -76,7 +76,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 	BOOL _releasing;
 }
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 @property(readonly) MVChatConnection *connection;
 
 @property(readonly) NSURL *url;
@@ -197,7 +197,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 
 #if ENABLE(SCRIPTING)
 @interface MVChatRoom (MVChatRoomScripting)
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 @property(readonly) NSString *scriptUniqueIdentifier;
 @property(readonly) NSScriptObjectSpecifier *objectSpecifier;
 #else

@@ -171,7 +171,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 @property(readonly) MVChatConnectionType type;
 
 @property(copy) NSString *uniqueIdentifier;
@@ -525,7 +525,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #if ENABLE(SCRIPTING)
 @interface MVChatConnection (MVChatConnectionScripting)
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 @property(readonly) NSNumber *scriptUniqueIdentifier;
 #else
 - (NSNumber *) scriptUniqueIdentifier;

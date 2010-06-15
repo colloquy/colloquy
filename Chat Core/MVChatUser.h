@@ -84,7 +84,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 + (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host;
 + (id) wildcardUserWithFingerprint:(NSString *) fingerprint;
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 @property(readonly) MVChatConnection *connection;
 @property(readonly) MVChatUserType type;
 
@@ -196,7 +196,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 
 #if ENABLE(SCRIPTING)
 @interface MVChatUser (MVChatUserScripting)
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 @property(readonly) NSString *scriptUniqueIdentifier;
 @property(readonly) NSScriptObjectSpecifier *objectSpecifier;
 #else
