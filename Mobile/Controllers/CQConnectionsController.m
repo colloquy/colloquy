@@ -462,12 +462,26 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 }
 
+- (BOOL) _anyConnectionsConnectedOrConnecting {
+	for (MVChatConnection *connection in _connections)
+		if (connection.status == MVChatConnectionConnectedStatus || connection.status == MVChatConnectionConnectingStatus)
+			return YES;
+	return NO;
+}
+
+- (BOOL) _anyConnectionsReconnecting {
+	for (MVChatConnection *connection in _connections)
+		if (connection.waitingToReconnect)
+			return YES;
+	return NO;
+}
+
 - (void) _possiblyEndBackgroundTask {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	if (![[UIDevice currentDevice] isSystemFour])
 		return;
 
-	if (_connectedCount || _connectingCount || _backgroundTask == UIBackgroundTaskInvalid)
+	if ([self _anyConnectionsConnectedOrConnecting] || [self _anyConnectionsReconnecting] || _backgroundTask == UIBackgroundTaskInvalid)
 		return;
 
 	[[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
@@ -483,7 +497,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQBackgroundTimeRemainingAlert"])
 		return;
 
-	if (!self.connectedConnections.count)
+	if (![self _anyConnectionsConnectedOrConnecting])
 		return;
 
 	UILocalNotification *notification = [[UILocalNotification alloc] init];
@@ -504,7 +518,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQBackgroundTimeRemainingAlert"])
 		return;
 
-	if (!self.connectedConnections.count)
+	if (![self _anyConnectionsConnectedOrConnecting])
 		return;
 
 	if (_timeRemainingLocalNotifiction) {
@@ -533,7 +547,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQBackgroundTimeRemainingAlert"])
 		return;
 
-	if (!self.connectedConnections.count)
+	if (![self _anyConnectionsConnectedOrConnecting])
 		return;
 
 	if (_timeRemainingLocalNotifiction) {
@@ -616,13 +630,11 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 - (BOOL) _shouldDisableIdleTimer {
 	if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateCharging)
 		return YES;
-	return ((_connectedCount || _connectingCount) && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIdleTimerDisabled"]);
+	return ([self _anyConnectionsConnectedOrConnecting] && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIdleTimerDisabled"]);
 }
 
 - (void) _willConnect:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
-
-	++_connectingCount;
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -716,18 +728,12 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) _didConnectOrDidNotConnect:(NSNotification *) notification {
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-
-	if (_connectedCount)
-		--_connectingCount;
+	if (![self _anyConnectionsConnectedOrConnecting])
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
 - (void) _didNotConnect:(NSNotification *) notification {
 	[self _didConnectOrDidNotConnect:notification];
-
-	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
-
-	[self _possiblyEndBackgroundTask];
 
 	MVChatConnection *connection = notification.object;
 	BOOL userDisconnected = [[notification.userInfo objectForKey:@"userDisconnected"] boolValue];
@@ -739,6 +745,19 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[connection connect];
 		return;
 	}
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour] && connection.waitingToReconnect) {
+		if (ABS([connection.nextReconnectAttemptDate timeIntervalSinceNow]) >= [UIApplication sharedApplication].backgroundTimeRemaining) {
+			[connection cancelPendingReconnectAttempts];
+			[connection _setStatus:MVChatConnectionSuspendedStatus];
+		}
+	}
+#endif
+
+	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
+
+	[self _possiblyEndBackgroundTask];
 
 	if (connection.reconnectAttemptCount > 0 || userDisconnected)
 		return;
@@ -774,8 +793,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) _didConnect:(NSNotification *) notification {
-	++_connectedCount;
-
 	[self _didConnectOrDidNotConnect:notification];
 
 	MVChatConnection *connection = notification.object;
@@ -786,9 +803,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
-	if (_connectedCount)
-		--_connectedCount;
-
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 
 	MVChatConnection *connection = notification.object;
@@ -1199,7 +1213,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		break;
 	case kIOMessageCanSystemSleep:
 		// System wants to go to sleep, but we can cancel it if we have connected connections.
-		if (_connectedCount || _connectingCount)
+		if ([self _anyConnectionsConnectedOrConnecting])
 			IOCancelPowerChange(rootPowerDomainPort, messageArgument);
 		else IOAllowPowerChange(rootPowerDomainPort, messageArgument);
 		break;
