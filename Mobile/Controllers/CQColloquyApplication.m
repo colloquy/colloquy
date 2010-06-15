@@ -141,6 +141,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if (![NSThread isMainThread])
 		return;
 
+	[self updateAnalytics];
+
 	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
 	if ([style hasSuffix:@"-dark"] || [style isEqualToString:@"notes"])
 		[[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
@@ -148,6 +150,13 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) performDeferredLaunchWork {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour] && [UIDevice currentDevice].multitaskingSupported && ![[NSUserDefaults standardUserDefaults] objectForKey:@"CQDisabledBuiltInBrowserForMultitasking"]) {
+		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CQDisableBuiltInBrowser"];
+		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CQDisabledBuiltInBrowserForMultitasking"];
+	}
+#endif
+
 	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
 	NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 
@@ -220,7 +229,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[self updateAnalytics];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateAnalytics) name:NSUserDefaultsDidChangeNotification object:nil];
 }
 
 - (void) handleNotificationWithUserInfo:(NSDictionary *) userInfo {
