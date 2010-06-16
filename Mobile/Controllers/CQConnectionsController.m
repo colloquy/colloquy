@@ -709,8 +709,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) _didConnectOrDidNotConnect:(NSNotification *) notification {
-	if (![self _anyConnectingConnections])
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
 - (void) _didNotConnect:(NSNotification *) notification {
