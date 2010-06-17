@@ -73,8 +73,6 @@
 	cell.textField.returnKeyType = UIReturnKeyDefault;
 	cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-
-	cell.target = self;
 	cell.textEditAction = @selector(listItemChanged:);
 
 	return cell;

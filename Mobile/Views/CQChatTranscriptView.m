@@ -77,7 +77,12 @@
 
 #pragma mark -
 
-@synthesize delegate;
+@synthesize transcriptDelegate;
+
+- (void) setDelegate:(id <UIWebViewDelegate>) delegate {
+	NSAssert(NO, @"Should not be called. Use transcriptDelegate instead.");
+}
+
 @synthesize styleIdentifier = _styleIdentifier;
 
 - (void) setStyleIdentifier:(NSString *) styleIdentifier {
@@ -190,8 +195,8 @@
 	if (navigationType != UIWebViewNavigationTypeLinkClicked)
 		return NO;
 
-	if ([delegate respondsToSelector:@selector(transcriptView:handleOpenURL:)])
-		if ([delegate transcriptView:self handleOpenURL:request.URL])
+	if ([transcriptDelegate respondsToSelector:@selector(transcriptView:handleOpenURL:)])
+		if ([transcriptDelegate transcriptView:self handleOpenURL:request.URL])
 			return NO;
 
 	[[UIApplication sharedApplication] openURL:request.URL];

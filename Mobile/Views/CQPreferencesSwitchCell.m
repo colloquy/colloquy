@@ -25,14 +25,14 @@
 @synthesize switchControl = _switchControl;
 
 - (SEL) switchAction {
-	NSArray *actions = [_switchControl actionsForTarget:self.target forControlEvent:UIControlEventValueChanged];
+	NSArray *actions = [_switchControl actionsForTarget:nil forControlEvent:UIControlEventValueChanged];
 	if (!actions.count) return NULL;
 	return NSSelectorFromString([actions objectAtIndex:0]);
 }
 
 - (void) setSwitchAction:(SEL) action {
-	[_switchControl removeTarget:self.target action:NULL forControlEvents:UIControlEventValueChanged];
-	[_switchControl addTarget:self.target action:action forControlEvents:UIControlEventValueChanged];
+	[_switchControl removeTarget:nil action:NULL forControlEvents:UIControlEventValueChanged];
+	[_switchControl addTarget:nil action:action forControlEvents:UIControlEventValueChanged];
 }
 
 - (BOOL) isOn {

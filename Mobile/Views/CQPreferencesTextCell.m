@@ -79,7 +79,6 @@ static CQPreferencesTextCell *currentEditingCell;
 	[_textField resignFirstResponder];
 
 	self.textLabel.text = @"";
-	self.target = nil;
 	self.accessoryType = UITableViewCellAccessoryNone;
 }
 
@@ -155,8 +154,8 @@ static CQPreferencesTextCell *currentEditingCell;
 }
 
 - (void) textFieldDidEndEditing:(UITextField *) textField {
-	if (self.textEditAction && (!self.target || [self.target respondsToSelector:self.textEditAction]))
-		[[UIApplication sharedApplication] sendAction:self.textEditAction to:self.target from:self forEvent:nil];
+	if (self.textEditAction)
+		[[UIApplication sharedApplication] sendAction:self.textEditAction to:nil from:self forEvent:nil];
 
 	if (currentEditingCell == self) {
 		id old = currentEditingCell;

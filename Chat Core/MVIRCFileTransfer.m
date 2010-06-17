@@ -21,7 +21,11 @@
 	[ret _setSource:path];
 	[ret _setPassive:passive];
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
+	NSNumber *size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[ret source] error:NULL] objectForKey:NSFileSize];
+#else
 	NSNumber *size = [[[NSFileManager defaultManager] fileAttributesAtPath:[ret source] traverseLink:YES] objectForKey:NSFileSize];
+#endif
 	[ret _setFinalSize:[size unsignedLongLongValue]];
 
 	NSString *fileName = [[ret source] lastPathComponent];
@@ -286,7 +290,11 @@
 
 - (void) acceptByResumingIfPossible:(BOOL) resume {
 	if( resume ) {
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
+		NSNumber *size = [[[NSFileManager defaultManager] attributesOfItemAtPath:[self destination] error:NULL] objectForKey:NSFileSize];
+#else
 		NSNumber *size = [[[NSFileManager defaultManager] fileAttributesAtPath:[self destination] traverseLink:YES] objectForKey:NSFileSize];
+#endif
 		BOOL fileExists = [[NSFileManager defaultManager] isWritableFileAtPath:[self destination]];
 
 		if( fileExists && [size unsignedLongLongValue] < [self finalSize] ) {

@@ -131,7 +131,6 @@ static BOOL pushAvailable = YES;
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section == ServerTableSection) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
-		cell.target = self;
 
 		if (indexPath.row == 0) {
 			cell.textLabel.text = NSLocalizedString(@"Description", @"Description connection setting label");
@@ -205,13 +204,10 @@ static BOOL pushAvailable = YES;
 			cell.accessibilityHint = NSLocalizedString(@"Required", @"Voiceover required label");
 		}
 
-		cell.target = self;
-
 		return cell;
 	} else if (pushAvailable && indexPath.section == PushTableSection && indexPath.row == 0) {
 		CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 
-		cell.target = self;
 		cell.switchAction = @selector(pushEnabled:);
 		cell.textLabel.text = NSLocalizedString(@"Push Notifications", @"Push Notifications connection setting label");
 
@@ -242,7 +238,6 @@ static BOOL pushAvailable = YES;
 	} else if (indexPath.section == DeleteTableSection && indexPath.row == 0) {
 		CQPreferencesDeleteCell *cell = [CQPreferencesDeleteCell reusableTableViewCellInTableView:tableView];
 
-		cell.target = self;
 		cell.deleteAction = @selector(deleteBouncer:);
 
 		[cell.deleteButton setTitle:NSLocalizedString(@"Delete Bouncer", @"Delete Bouncer button title") forState:UIControlStateNormal];

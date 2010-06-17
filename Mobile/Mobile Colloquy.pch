@@ -3,8 +3,6 @@
 #define LIKELY(x) __builtin_expect((x), 1)
 #define UNLIKELY(x) __builtin_expect((x), 0)
 
-#ifdef __OBJC__
-
 #if !defined(__IPHONE_3_2)
 #define __IPHONE_3_2 30200
 #endif
@@ -12,6 +10,11 @@
 #if !defined(__IPHONE_4_0)
 #define __IPHONE_4_0 40000
 #endif
+
+#undef __IPHONE_OS_VERSION_MIN_REQUIRED
+#define __IPHONE_OS_VERSION_MIN_REQUIRED __IPHONE_3_1
+
+#ifdef __OBJC__
 
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>

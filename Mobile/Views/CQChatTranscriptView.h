@@ -2,7 +2,7 @@
 
 @interface CQChatTranscriptView : UIWebView <UIWebViewDelegate> {
 	@protected
-	IBOutlet id <CQChatTranscriptViewDelegate> delegate;
+	IBOutlet id <CQChatTranscriptViewDelegate> transcriptDelegate;
 	UIView *_blockerView;
 	NSMutableArray *_pendingPreviousSessionComponents;
 	NSMutableArray *_pendingComponents;
@@ -10,7 +10,7 @@
 	BOOL _scrolling;
 	BOOL _loading;
 }
-@property (nonatomic, assign) id <CQChatTranscriptViewDelegate> delegate;
+@property (nonatomic, assign) id <CQChatTranscriptViewDelegate> transcriptDelegate;
 
 @property (nonatomic, copy) NSString *styleIdentifier;
 

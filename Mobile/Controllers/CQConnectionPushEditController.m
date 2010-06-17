@@ -64,7 +64,6 @@
 	if (indexPath.section == PushEnabledTableSection && indexPath.row == 0) {
 		CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 
-		cell.target = self;
 		cell.switchAction = @selector(pushEnabled:);
 		cell.textLabel.text = NSLocalizedString(@"Push Notifications", @"Push Notifications connection setting label");
 		cell.on = _connection.pushNotifications;

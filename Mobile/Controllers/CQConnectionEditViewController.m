@@ -252,7 +252,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section == ServerTableSection) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
-		cell.target = self;
 
 		if (indexPath.row == 1) {
 			cell.textLabel.text = NSLocalizedString(@"Address", @"Address connection setting label");
@@ -301,7 +300,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		return cell;
 	} else if (indexPath.section == IdentityTableSection) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
-		cell.target = self;
 
 		if (indexPath.row == 0) {
 			cell.textLabel.text = NSLocalizedString(@"Nickname", @"Nickname connection setting label");
@@ -332,7 +330,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		if (indexPath.row == 0) {
 			CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 
-			cell.target = self;
 			cell.switchAction = @selector(autoConnectChanged:);
 			cell.textLabel.text = NSLocalizedString(@"Connect at Launch", @"Connect at Launch connection setting label");
 			cell.on = _connection.automaticallyConnect;
@@ -368,7 +365,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	} else if (indexPath.section == DeleteTableSection && indexPath.row == 0) {
 		CQPreferencesDeleteCell *cell = [CQPreferencesDeleteCell reusableTableViewCellInTableView:tableView];
 
-		cell.target = self;
 		cell.deleteAction = @selector(deleteConnection:);
 
 		[cell.deleteButton setTitle:NSLocalizedString(@"Delete Connection", @"Delete Connection button title") forState:UIControlStateNormal];

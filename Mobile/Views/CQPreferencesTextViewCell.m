@@ -66,7 +66,6 @@
 	[_textView endEditing:YES];
 	[_textView resignFirstResponder];
 
-	self.target = nil;
 	self.accessoryType = UITableViewCellAccessoryNone;
 	self.selectionStyle = UITableViewCellSelectionStyleNone;
 }

@@ -83,7 +83,6 @@
 		cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
 		cell.tag = RoomPasswordRow;
 
-		cell.target = self;
 		cell.textEditAction = @selector(listItemChanged:);
 
 		return cell;

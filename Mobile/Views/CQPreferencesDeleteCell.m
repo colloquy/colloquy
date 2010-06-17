@@ -50,13 +50,13 @@
 @synthesize deleteButton = _deleteButton;
 
 - (SEL) deleteAction {
-	NSArray *actions = [_deleteButton actionsForTarget:self.target forControlEvent:UIControlEventTouchUpInside];
+	NSArray *actions = [_deleteButton actionsForTarget:nil forControlEvent:UIControlEventTouchUpInside];
 	if (!actions.count) return NULL;
 	return NSSelectorFromString([actions objectAtIndex:0]);
 }
 
 - (void) setDeleteAction:(SEL) action {
-	[_deleteButton removeTarget:self.target action:NULL forControlEvents:UIControlEventTouchUpInside];
-	[_deleteButton addTarget:self.target action:action forControlEvents:UIControlEventTouchUpInside];
+	[_deleteButton removeTarget:nil action:NULL forControlEvents:UIControlEventTouchUpInside];
+	[_deleteButton addTarget:nil action:action forControlEvents:UIControlEventTouchUpInside];
 }
 @end

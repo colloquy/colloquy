@@ -181,7 +181,6 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 		}
 
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
-		cell.target = self;
 
 		if (indexPath.section == 1 && indexPath.row == 0) {
 			cell.textField.text = _name;

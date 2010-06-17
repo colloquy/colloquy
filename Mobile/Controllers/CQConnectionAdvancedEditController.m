@@ -300,7 +300,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 
 			unsigned short defaultPort = (_connection.secure ? 994 : 6667);
 
-			cell.target = self;
 			cell.textEditAction = @selector(serverPortChanged:);
 			cell.textLabel.text = NSLocalizedString(@"Server Port", @"Server Port connection setting label");
 			cell.textField.text = (_connection.serverPort == defaultPort ? @"" : [NSString stringWithFormat:@"%hu", _connection.serverPort]);
@@ -319,7 +318,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		} else if (indexPath.row == 1) {
 			CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 
-			cell.target = self;
 			cell.switchAction = @selector(secureChanged:);
 			cell.textLabel.text = NSLocalizedString(@"Use SSL", @"Use SSL connection setting label");
 			cell.on = _connection.secure;
@@ -386,8 +384,6 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			cell.accessibilityLabel = NSLocalizedString(@"Nickname password.", @"Voiceover nickname password label");
  			cell.accessibilityHint = NSLocalizedString(@"Optional", @"Voiceover optional label");
 		}
-
-		cell.target = self;
 
 		return cell;
 	} else if (indexPath.section == IdentitiesTableSection && indexPath.row == 0) {
