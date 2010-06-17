@@ -482,6 +482,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	if ([[UIDevice currentDevice] isPadModel]) {
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
 		self.tableView.allowsSelectionDuringEditing = YES;
+		self.clearsSelectionOnViewWillAppear = NO;
 	}
 
 	if (!_longPressGestureRecognizer && [[UIDevice currentDevice].systemVersion doubleValue] >= 3.2) {
@@ -517,14 +518,9 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 	[super viewWillAppear:animated];
 
-	if ([[UIDevice currentDevice] isPadModel]) {
-		if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
-			_previousContentInset = self.tableView.contentInset;
-			self.tableView.contentInset = UIEdgeInsetsZero;
-		}
-
-		[self.tableView scrollToRowAtIndexPath:selectedIndexPath atScrollPosition:UITableViewScrollPositionNone animated:NO];
-		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+	if ([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
+		_previousContentInset = self.tableView.contentInset;
+		self.tableView.contentInset = UIEdgeInsetsZero;
 	}
 }
 
