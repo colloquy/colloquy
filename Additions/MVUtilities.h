@@ -43,7 +43,7 @@
 	NSAssert2( [NSThread currentThread] == (thread), @"Method needs to run on %@, not %@.", (thread), [NSThread currentThread] )
 
 #define MVWeakFramework(framework) \
-static void* framework##Framework(void) \
+static void* framework##Library(void) \
 { \
 	static void *frameworkHandle; \
 	if (UNLIKELY(!frameworkHandle)) \
@@ -55,7 +55,7 @@ static void* framework##Framework(void) \
 }
 
 #define MVWeakLibrary(library) \
-static void* library##Framework(void) \
+static void* library##Library(void) \
 { \
 	static void *libraryHandle; \
 	if (UNLIKELY(!libraryHandle)) \
@@ -66,31 +66,46 @@ static void* library##Framework(void) \
 	return NULL; \
 }
 
-#define MVWeakFunction(framework, functionName, resultType, parameterDeclarations, parameterNames, defaultValue) \
-resultType functionName parameterDeclarations; \
+#define MVWeakFunction(library, functionName, resultType, parameterDeclarations, parameterNames, defaultValue) \
+static resultType initial_##functionName parameterDeclarations; \
 \
-resultType functionName parameterDeclarations \
-{ \
-	static resultType (*functionPointer) parameterDeclarations; \
-	if (UNLIKELY(!functionPointer)) \
-		functionPointer = dlsym(framework##Framework(), #functionName); \
-	if (LIKELY(!!functionPointer)) \
-		return functionPointer parameterNames; \
-	NSCAssert(NO, @"Couldn't find " #functionName " in " #framework " framework with dlsym."); \
+resultType (*functionName) parameterDeclarations = initial_##functionName; \
+\
+static resultType noop_##functionName parameterDeclarations { \
 	return defaultValue; \
+} \
+\
+static resultType initial_##functionName parameterDeclarations { \
+	resultType (*functionPointer) parameterDeclarations = dlsym(library##Library(), #functionName); \
+\
+	if (LIKELY(!!functionPointer)) { \
+		functionName = functionPointer; \
+	} else { \
+		NSCAssert(NO, @"Couldn't find " #functionName " in " #library " library with dlsym."); \
+		functionName = noop_##functionName; \
+	} \
+\
+	return functionName parameterNames; \
 }
 
-#define MVWeakVoidFunction(framework, functionName, parameterDeclarations, parameterNames, defaultValue) \
-void functionName parameterDeclarations; \
+#define MVWeakVoidFunction(library, functionName, parameterDeclarations, parameterNames, defaultValue) \
+static void initial_##functionName parameterDeclarations; \
 \
-void functionName parameterDeclarations \
-{ \
-	static void (*functionPointer) parameterDeclarations; \
-	if (UNLIKELY(!functionPointer)) \
-		functionPointer = dlsym(framework##Framework(), #functionName); \
+void (*functionName) parameterDeclarations = initial_##functionName; \
+\
+static void noop_##functionName parameterDeclarations { \
+	return; \
+} \
+\
+static void initial_##functionName parameterDeclarations { \
+	void (*functionPointer) parameterDeclarations = dlsym(library##Library(), #functionName); \
+\
 	if (LIKELY(!!functionPointer)) { \
-		functionPointer parameterNames; \
-		return; \
+		functionName = functionPointer; \
+	} else { \
+		NSCAssert(NO, @"Couldn't find " #functionName " in " #library " library with dlsym."); \
+		functionName = noop_##functionName; \
 	} \
-	NSCAssert(NO, @"Couldn't find " #functionName " in " #framework " framework with dlsym."); \
+\
+	functionName parameterNames; \
 }
