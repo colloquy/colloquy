@@ -338,11 +338,11 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 	_localRequest = localRequest;
 }
 
-- (void) _setPassiveIdentifier:(NSUInteger) identifier {
+- (void) _setPassiveIdentifier:(long long) identifier {
 	_passiveId = identifier;
 }
 
-- (NSUInteger) _passiveIdentifier {
+- (long long) _passiveIdentifier {
 	return _passiveId;
 }
 

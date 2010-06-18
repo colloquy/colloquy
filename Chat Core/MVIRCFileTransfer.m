@@ -197,17 +197,17 @@
 
 #pragma mark -
 
-- (void) _setPassiveIdentifier:(NSUInteger) identifier {
+- (void) _setPassiveIdentifier:(long long) identifier {
 	_passiveId = identifier;
 }
 
-- (NSUInteger) _passiveIdentifier {
+- (long long) _passiveIdentifier {
 	return _passiveId;
 }
 
 #pragma mark -
 
-- (void) _setFileNameQuoted:(NSUInteger) quoted {
+- (void) _setFileNameQuoted:(BOOL) quoted {
 	_fileNameQuoted = quoted;
 }
 
@@ -412,17 +412,17 @@
 
 #pragma mark -
 
-- (void) _setPassiveIdentifier:(NSUInteger) identifier {
+- (void) _setPassiveIdentifier:(long long) identifier {
 	_passiveId = identifier;
 }
 
-- (NSUInteger) _passiveIdentifier {
+- (long long) _passiveIdentifier {
 	return _passiveId;
 }
 
 #pragma mark -
 
-- (void) _setFileNameQuoted:(NSUInteger) quoted {
+- (void) _setFileNameQuoted:(BOOL) quoted {
 	_fileNameQuoted = quoted;
 }
 

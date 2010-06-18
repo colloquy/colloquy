@@ -13,15 +13,15 @@
 	BOOL _readData;
 	BOOL _doneSending;
 	BOOL _releasing;
-	NSUInteger _passiveId;
+	long long _passiveId;
 }
 - (void) _setupAndStart;
 - (void) _sendNextPacket;
 
-- (void) _setPassiveIdentifier:(NSUInteger) identifier;
-- (NSUInteger) _passiveIdentifier;
+- (void) _setPassiveIdentifier:(long long) identifier;
+- (long long) _passiveIdentifier;
 
-- (void) _setFileNameQuoted:(NSUInteger) quoted;
+- (void) _setFileNameQuoted:(BOOL) quoted;
 - (BOOL) _fileNameQuoted;
 @end
 
@@ -33,16 +33,16 @@
 	BOOL _fileNameQuoted;
 	BOOL _turbo;
 	BOOL _releasing;
-	NSUInteger _passiveId;
+	long long _passiveId;
 }
 - (void) _setupAndStart;
 
 - (void) _setTurbo:(BOOL) turbo;
 - (BOOL) _turbo;
 
-- (void) _setPassiveIdentifier:(NSUInteger) identifier;
-- (NSUInteger) _passiveIdentifier;
+- (void) _setPassiveIdentifier:(long long) identifier;
+- (long long) _passiveIdentifier;
 
-- (void) _setFileNameQuoted:(NSUInteger) quoted;
+- (void) _setFileNameQuoted:(BOOL) quoted;
 - (BOOL) _fileNameQuoted;
 @end

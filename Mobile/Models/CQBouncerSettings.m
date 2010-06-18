@@ -26,7 +26,7 @@
 	else _identifier = [[NSString locallyUniqueString] copy];
 
 	if ([info objectForKey:@"bouncerType"])
-		self.type = [[info objectForKey:@"bouncerType"] unsignedLongLongValue];
+		self.type = [[info objectForKey:@"bouncerType"] unsignedLongValue];
 
 	if ([info objectForKey:@"bouncerDescription"])
 		self.displayName = [info objectForKey:@"bouncerDescription"];
