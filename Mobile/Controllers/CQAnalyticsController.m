@@ -30,9 +30,9 @@ static NSString *applicationName;
 
 	_data = [[NSMutableDictionary alloc] initWithCapacity:10];
 
-	[_data setObject:[[UIDevice currentDevice] model] forKey:@"device-model"];
-	[_data setObject:[[UIDevice currentDevice] systemName] forKey:@"device-system-name"];
-	[_data setObject:[[UIDevice currentDevice] systemVersion] forKey:@"device-system-version"];
+	[_data setObject:[UIDevice currentDevice].modelIdentifier forKey:@"device-model"];
+	[_data setObject:[UIDevice currentDevice].systemName forKey:@"device-system-name"];
+	[_data setObject:[UIDevice currentDevice].systemVersion forKey:@"device-system-version"];
 
 	if (!applicationName)
 		applicationName = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"] copy];

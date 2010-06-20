@@ -7,8 +7,6 @@
 #import "CQUserInfoController.h"
 #import "CQUserInfoViewController.h"
 
-#import "UIViewControllerAdditions.h"
-
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 #import <ChatCore/MVChatConnection.h>

@@ -1,13 +1,9 @@
 #import "CQAwayStatusViewController.h"
 
 #import "CQPreferencesListViewController.h"
-
 #import "CQTextView.h"
-
-#import "MVIRCChatConnection.h"
 #import "MVChatUser.h"
-
-#import "UIDeviceAdditions.h"
+#import "MVIRCChatConnection.h"
 
 @interface CQPreferencesListViewController (Private)
 - (void) editItemAtIndex:(NSUInteger) index;

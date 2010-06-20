@@ -1,5 +1,4 @@
 #import "UIViewControllerAdditions.h"
-#import "UITableViewAdditions.h"
 
 #define MinimumPopoverHeight 320
 #define MaximumPortraitPopoverHeight 876 // 921 (default) - 45 (height of a UITextField)

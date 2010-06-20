@@ -3,8 +3,6 @@
 #import "CQPreferencesTextViewCell.h"
 #import "CQTextView.h"
 
-#import "UIDeviceAdditions.h"
-
 @interface CQPreferencesTextViewCell (Private)
 @property (nonatomic, readonly) CGFloat height;
 @end

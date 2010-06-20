@@ -8,8 +8,6 @@
 #import "CQConnectionsController.h"
 #import "CQConnectionsNavigationController.h"
 
-#import "UIViewControllerAdditions.h"
-
 #import <ChatCore/MVChatConnection.h>
 
 #define ConnectSheetTag 1

@@ -1,7 +1,5 @@
 @interface UIDevice (UIDeviceColloquyAdditions)
-#if TARGET_IPHONE_SIMULATOR
-@property (nonatomic, readonly, retain) NSString *model;
-#endif
+@property (nonatomic, readonly) NSString *modelIdentifier;
 
 - (BOOL) isSystemFour;
 

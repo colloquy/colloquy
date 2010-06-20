@@ -47,6 +47,7 @@
 #import "UINavigationControllerAdditions.h"
 #import "UITableViewAdditions.h"
 #import "UITableViewCellAdditions.h"
+#import "UIViewControllerAdditions.h"
 
 #endif
 
