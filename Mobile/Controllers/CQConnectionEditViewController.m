@@ -16,14 +16,17 @@ static unsigned short ServerTableSection = 0;
 static unsigned short PushTableSection = 1;
 static unsigned short IdentityTableSection = 2;
 static unsigned short AutomaticTableSection = 3;
-static unsigned short AdvancedTableSection = 4;
-static unsigned short DeleteTableSection = 5;
+static unsigned short MultitaskTableSection = 4;
+static unsigned short AdvancedTableSection = 5;
+static unsigned short DeleteTableSection = 6;
 
 #if TARGET_IPHONE_SIMULATOR
 static BOOL pushAvailable = NO;
 #else
 static BOOL pushAvailable = YES;
 #endif
+
+static BOOL multitaskingAvailable = NO;
 
 static inline __attribute__((always_inline)) BOOL isDefaultValue(NSString *string) {
 	return [string isEqualToString:@"<<default>>"];
@@ -41,10 +44,18 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		return nil;
 
 	if (!pushAvailable) {
-		IdentityTableSection = 1;
-		AutomaticTableSection = 2;
-		AdvancedTableSection = 3;
-		DeleteTableSection = 4;
+		--IdentityTableSection;
+		--AutomaticTableSection;
+		--MultitaskTableSection;
+		--AdvancedTableSection;
+		--DeleteTableSection;
+	}
+
+	multitaskingAvailable = ([[UIDevice currentDevice] isSystemFour] && [UIDevice currentDevice].multitaskingSupported);
+
+	if (!multitaskingAvailable) {
+		--AdvancedTableSection;
+		--DeleteTableSection;
 	}
 
 	return self;
@@ -146,9 +157,14 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 #pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
+	NSInteger count = 7;
 	if (self.newConnection || !_connection.directConnection)
-		return (pushAvailable ? 5 : 4);
-	return (pushAvailable ? 6 : 5);
+		count -= 1;
+	if (!pushAvailable)
+		count -= 1;
+	if (!multitaskingAvailable)
+		count -= 1;
+	return count;
 }
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
@@ -160,6 +176,8 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		return 2;
 	if (section == AutomaticTableSection)
 		return 2;
+	if (multitaskingAvailable && section == MultitaskTableSection)
+		return 1;
 	if (section == AdvancedTableSection)
 		return 1;
 	if (section == DeleteTableSection)
@@ -355,6 +373,18 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 			return cell;
 		}
+	} else if (multitaskingAvailable && indexPath.section == MultitaskTableSection && indexPath.row == 0) {
+		CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
+
+		cell.switchAction = @selector(multitaskingChanged:);
+		cell.textLabel.text = NSLocalizedString(@"Multitasking", @"Multitasking connection setting label");
+		cell.on = _connection.multitaskingSupported;
+
+		if (_connection.multitaskingSupported)
+			cell.accessibilityLabel = NSLocalizedString(@"Multitasking: On", @"Voiceover multitasking on label");
+		else cell.accessibilityLabel = NSLocalizedString(@"Multitasking: Off", @"Voiceover multitasking off label");
+
+		return cell;
 	} else if (indexPath.section == AdvancedTableSection && indexPath.row == 0) {
 		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 
@@ -443,6 +473,10 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 - (void) automaticJoinRoomsChanged:(CQPreferencesListViewController *) sender {
 	_connection.automaticJoinedRooms = sender.items;
+}
+
+- (void) multitaskingChanged:(CQPreferencesSwitchCell *) sender {
+	_connection.multitaskingSupported = sender.on;
 }
 
 - (void) deleteConnection:(id) sender {

@@ -662,7 +662,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	pool = [[NSAutoreleasePool allocWithZone:nil] init];
 
 	// make sure the connection has sent all the delegate calls it has scheduled
-	[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.]];
+	[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
 
 	if( _connectionThread == [NSThread currentThread] )
 		_connectionThread = nil;

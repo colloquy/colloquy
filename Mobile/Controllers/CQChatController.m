@@ -712,6 +712,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		connection.username = [connection.preferredNickname lowercaseString];
 		connection.encoding = [MVChatConnection defaultEncoding];
 		connection.automaticallyConnect = NO;
+		connection.multitaskingSupported = YES;
 		connection.secure = NO;
 		connection.serverPort = 6667;
 

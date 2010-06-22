@@ -12,6 +12,7 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 	UIBarButtonItem *_colloquiesBarButtonItem;
 	UIToolbar *_toolbar;
 	NSDate *_launchDate;
+	NSDate *_resumeDate;
 	NSString *_deviceToken;
 	NSUInteger _networkIndicatorStack;
 	BOOL _showingTabBar;
@@ -47,8 +48,12 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 
 - (void) registerForRemoteNotifications;
 
-@property (nonatomic, readonly) NSSet *handledURLSchemes;
 @property (nonatomic, readonly) NSDate *launchDate;
+@property (nonatomic, retain) NSDate *resumeDate;
+
+- (void) submitRunTime;
+
+@property (nonatomic, readonly) NSSet *handledURLSchemes;
 @property (nonatomic, readonly) NSString *deviceToken;
 @property (nonatomic, readonly) NSArray *highlightWords;
 @property (nonatomic, readonly) UIColor *tintColor;

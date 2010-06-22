@@ -33,6 +33,16 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	return (CQColloquyApplication *)[UIApplication sharedApplication];
 }
 
+- (id) init {
+	if (!(self = [super init]))
+		return nil;
+
+	_launchDate = [[NSDate alloc] init];
+	_resumeDate = [_launchDate copy];
+
+	return self;
+}
+
 - (void) dealloc {
 	[_mainWindow release];
 	[_mainViewController release];
@@ -41,6 +51,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[_connectionsBarButtonItem release];
 	[_connectionsPopoverController release];
 	[_launchDate release];
+	[_resumeDate release];
 	[_deviceToken release];
 
 	[super dealloc];
@@ -49,6 +60,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 #pragma mark -
 
 @synthesize launchDate = _launchDate;
+@synthesize resumeDate = _resumeDate;
 @synthesize deviceToken = _deviceToken;
 
 #pragma mark -
@@ -222,7 +234,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[analyticsController setObject:information forKey:@"locale"];
 
 	[analyticsController setObject:([[UIDevice currentDevice] isSystemFour] && [UIDevice currentDevice].multitaskingSupported ? @"1" : @"0") forKey:@"multitasking-supported"];
-	[analyticsController setObject:([[UIDevice currentDevice] isSystemFour] ? [NSNumber numberWithDouble:[UIScreen mainScreen].scale] : @"1") forKey:@"screen-scale-factor"];
+	[analyticsController setObject:([[UIDevice currentDevice] isSystemFour] ? [NSNumber numberWithDouble:[UIScreen mainScreen].scale] : [NSNumber numberWithUnsignedInteger:1]) forKey:@"screen-scale-factor"];
 
 	if (_deviceToken.length)
 		[analyticsController setObject:_deviceToken forKey:@"device-push-token"];
@@ -280,7 +292,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 
-	_launchDate = [[NSDate alloc] init];
 	_deviceToken = [[[NSUserDefaults standardUserDefaults] stringForKey:@"CQPushDeviceToken"] retain];
 	_showingTabBar = YES;
 
@@ -386,8 +397,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 #endif
 
-	NSTimeInterval runTime = ABS([_launchDate timeIntervalSinceNow]);
-	[[CQAnalyticsController defaultController] setObject:[NSNumber numberWithDouble:runTime] forKey:@"run-time"];
+	[self submitRunTime];
 }
 
 #pragma mark -
@@ -609,6 +619,11 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if ([controller respondsToSelector:@selector(dismissPopoversAnimated:)])
 		[controller dismissPopoversAnimated:animated];
 #endif
+}
+
+- (void) submitRunTime {
+	NSTimeInterval runTime = ABS([_resumeDate timeIntervalSinceNow]);
+	[[CQAnalyticsController defaultController] setObject:[NSNumber numberWithDouble:runTime] forKey:@"run-time"];
 }
 
 #pragma mark -

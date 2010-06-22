@@ -27,6 +27,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	_connection.realName = @"<<default>>";
 	_connection.username = @"<<default>>";
 	_connection.automaticallyConnect = YES;
+	_connection.multitaskingSupported = YES;
 	_connection.secure = NO;
 	_connection.serverPort = 6667;
 	_connection.encoding = [MVChatConnection defaultEncoding];

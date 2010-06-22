@@ -98,7 +98,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batteryStateChanged) name:UIDeviceBatteryStateDidChangeNotification object:nil];
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIDevice currentDevice] isSystemFour]) {
+	if ([[UIDevice currentDevice] isSystemFour] && [UIDevice currentDevice].multitaskingSupported) {
+		_backgroundTask = UIBackgroundTaskInvalid;
+
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
 	}
@@ -178,6 +180,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	if (url.user.length) {
 		MVChatConnection *connection = [[MVChatConnection alloc] initWithURL:url];
+
+		connection.multitaskingSupported = YES;
 
 		[self addConnection:connection];
 
@@ -335,6 +339,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		chatConnection.bouncerUsername = connection.settings.username;
 		chatConnection.bouncerPassword = connection.settings.password;
 
+		chatConnection.multitaskingSupported = YES;
 		chatConnection.pushNotifications = YES;
 
 		newConnection = YES;
@@ -457,9 +462,14 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	return NO;
 }
 
+- (void) _possiblyEndBackgroundTaskSoon {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_possiblyEndBackgroundTask) object:nil];
+	[self performSelector:@selector(_possiblyEndBackgroundTask) withObject:nil afterDelay:5.];
+}
+
 - (void) _possiblyEndBackgroundTask {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if (![[UIDevice currentDevice] isSystemFour])
+	if (![[UIDevice currentDevice] isSystemFour] || ![UIDevice currentDevice].multitaskingSupported)
 		return;
 
 	if ([self _anyConnectedOrConnectingConnections] || [self _anyReconnectingConnections] || _backgroundTask == UIBackgroundTaskInvalid)
@@ -472,6 +482,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 - (void) _showNoTimeRemainingAlert {
+	if (![UIDevice currentDevice].multitaskingSupported)
+		return;
+
 	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
 		return;
 
@@ -512,7 +525,10 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	NSUInteger minutes = ceil(_allowedBackgroundTime / 60.);
 
-	notification.alertBody = [NSString stringWithFormat:NSLocalizedString(@"You have been disconnected due to %u minutes of inactivity.", "Disconnected due to inactivity alert message"), minutes];
+	if (minutes)
+		notification.alertBody = [NSString stringWithFormat:NSLocalizedString(@"You have been disconnected due to %u minutes of inactivity.", "Disconnected due to inactivity alert message"), minutes];
+	else notification.alertBody = NSLocalizedString(@"You have been disconnected.", "Disconnected alert message");
+
 	notification.alertAction = NSLocalizedString(@"Open", "Open button title");
 	notification.soundName = UILocalNotificationDefaultSoundName;
 
@@ -547,10 +563,24 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	_timeRemainingLocalNotifiction = notification;
 }
 
+- (void) _disconnectNonMultitaskingConnections {
+	for (MVChatConnection *connection in _connections) {
+		if (connection.multitaskingSupported)
+			continue;
+
+		BOOL wasConnected = connection.connected || connection.status == MVChatConnectionConnectingStatus;
+		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+		if (wasConnected)
+			[connection _setStatus:MVChatConnectionSuspendedStatus];
+	}
+}
+
 - (void) _didEnterBackground {
 	NSTimeInterval remainingTime = [UIApplication sharedApplication].backgroundTimeRemaining;
 
 	_allowedBackgroundTime = remainingTime;
+
+	[self _disconnectNonMultitaskingConnections];
 
 	if (remainingTime <= 0.) {
 		[self _showNoTimeRemainingAlert];
@@ -568,6 +598,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) _willEnterForeground {
+	if (_backgroundTask == UIBackgroundTaskInvalid)
+		[CQColloquyApplication sharedApplication].resumeDate = [NSDate date];
+
 	for (MVChatConnection *connection in _connections) {
 		if (connection.status == MVChatConnectionSuspendedStatus)
 			[connection connectAppropriately];
@@ -585,11 +618,13 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[self saveConnections];
 
 	for (MVChatConnection *connection in _connections) {
-		BOOL wasConnected = connection.connected;
+		BOOL wasConnected = connection.connected || connection.status == MVChatConnectionConnectingStatus;
 		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 		if (wasConnected)
 			[connection _setStatus:MVChatConnectionSuspendedStatus];
 	}
+
+	[[CQColloquyApplication sharedApplication] submitRunTime];
 
 	[[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
 	_backgroundTask = UIBackgroundTaskInvalid;
@@ -621,7 +656,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIDevice currentDevice] isSystemFour]) {
+	if ([[UIDevice currentDevice] isSystemFour] && [UIDevice currentDevice].multitaskingSupported) {
 		if (_backgroundTask == UIBackgroundTaskInvalid)
 			_backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{ [self _backgroundTaskExpired]; }];
 	}
@@ -727,7 +762,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	}
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIDevice currentDevice] isSystemFour] && connection.waitingToReconnect) {
+	if ([[UIDevice currentDevice] isSystemFour] && [UIDevice currentDevice].multitaskingSupported && connection.waitingToReconnect) {
 		if (ABS([connection.nextReconnectAttemptDate timeIntervalSinceNow]) >= [UIApplication sharedApplication].backgroundTimeRemaining) {
 			[connection cancelPendingReconnectAttempts];
 			[connection _setStatus:MVChatConnectionSuspendedStatus];
@@ -737,7 +772,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 
-	[self _possiblyEndBackgroundTask];
+	[self _possiblyEndBackgroundTaskSoon];
 
 	if (connection.reconnectAttemptCount > 0 || userDisconnected)
 		return;
@@ -788,7 +823,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	MVChatConnection *connection = notification.object;
 	[connection removePersistentInformationObjectForKey:@"tryBouncerFirst"];
 
-	[self _possiblyEndBackgroundTask];
+	[self _possiblyEndBackgroundTaskSoon];
 }
 
 - (void) _userDefaultsChanged {
@@ -970,6 +1005,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	if ([info objectForKey:@"automatic"])
 		[persistentInformation setObject:[info objectForKey:@"automatic"] forKey:@"automatic"];
+	if ([info objectForKey:@"multitasking"])
+		[persistentInformation setObject:[info objectForKey:@"multitasking"] forKey:@"multitasking"];
+	else [persistentInformation setObject:[NSNumber numberWithBool:YES] forKey:@"multitasking"];
 	if ([info objectForKey:@"push"])
 		[persistentInformation setObject:[info objectForKey:@"push"] forKey:@"push"];
 	if ([info objectForKey:@"rooms"])
@@ -1034,6 +1072,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	NSMutableDictionary *persistentInformation = [connection.persistentInformation mutableCopy];
 	if ([persistentInformation objectForKey:@"automatic"])
 		[info setObject:[persistentInformation objectForKey:@"automatic"] forKey:@"automatic"];
+	if ([persistentInformation objectForKey:@"multitasking"])
+		[info setObject:[persistentInformation objectForKey:@"multitasking"] forKey:@"multitasking"];
 	if ([persistentInformation objectForKey:@"push"])
 		[info setObject:[persistentInformation objectForKey:@"push"] forKey:@"push"];
 	if ([[persistentInformation objectForKey:@"rooms"] count])
@@ -1046,6 +1086,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[info setObject:[persistentInformation objectForKey:@"bouncerIdentifier"] forKey:@"bouncer"];
 
 	[persistentInformation removeObjectForKey:@"automatic"];
+	[persistentInformation removeObjectForKey:@"multitasking"];
 	[persistentInformation removeObjectForKey:@"push"];
 	[persistentInformation removeObjectForKey:@"pushState"];
 	[persistentInformation removeObjectForKey:@"rooms"];
@@ -1609,6 +1650,19 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 - (BOOL) automaticallyConnect {
 	return [[self persistentInformationObjectForKey:@"automatic"] boolValue];
+}
+
+#pragma mark -
+
+- (void) setMultitaskingSupported:(BOOL) multitaskingSupported {
+	if (multitaskingSupported == self.multitaskingSupported)
+		return;
+
+	[self setPersistentInformationObject:[NSNumber numberWithBool:multitaskingSupported] forKey:@"multitasking"];
+}
+
+- (BOOL) multitaskingSupported {
+	return [[self persistentInformationObjectForKey:@"multitasking"] boolValue];
 }
 
 #pragma mark -

@@ -48,7 +48,7 @@
 
 - (CGFloat) tableView:(UITableView *) tableView heightForFooterInSection:(NSInteger) section {
 	if (section == PushEnabledTableSection)
-		return 100.;
+		return 120.;
 	return 0.;
 }
 
