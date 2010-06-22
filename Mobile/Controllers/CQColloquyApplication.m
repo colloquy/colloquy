@@ -233,8 +233,10 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	information = [[NSLocale autoupdatingCurrentLocale] localeIdentifier];
 	[analyticsController setObject:information forKey:@"locale"];
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	[analyticsController setObject:([[UIDevice currentDevice] isSystemFour] && [UIDevice currentDevice].multitaskingSupported ? @"1" : @"0") forKey:@"multitasking-supported"];
 	[analyticsController setObject:([[UIDevice currentDevice] isSystemFour] ? [NSNumber numberWithDouble:[UIScreen mainScreen].scale] : [NSNumber numberWithUnsignedInteger:1]) forKey:@"screen-scale-factor"];
+#endif
 
 	if (_deviceToken.length)
 		[analyticsController setObject:_deviceToken forKey:@"device-push-token"];
@@ -341,6 +343,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	return YES;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 - (void) applicationWillEnterForeground:(UIApplication *) application {
 	[self cancelAllLocalNotifications];
 }
@@ -348,6 +351,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) application:(UIApplication *) application didReceiveLocalNotification:(UILocalNotification *) notification {
 	[self handleNotificationWithUserInfo:notification.userInfo];
 }
+#endif
 
 - (void) application:(UIApplication *) application didReceiveRemoteNotification:(NSDictionary *) userInfo {
 	NSDictionary *apsInfo = [userInfo objectForKey:@"aps"];
