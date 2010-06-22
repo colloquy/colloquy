@@ -196,6 +196,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[self performSelectorOnMainThread:@selector( cancelPendingReconnectAttempts ) withObject:nil waitUntilDone:YES];
 
 	if( _status == MVChatConnectionConnectedStatus ) {
+		_userDisconnected = YES;
 		if( [reason length] ) {
 			NSData *msg = [[self class] _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 			[self sendRawMessageImmediatelyWithComponents:@"QUIT :", msg, nil];
@@ -799,7 +800,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( _status == MVChatConnectionConnectingStatus ) {
 		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
 	} else {
-		if( _lastError )
+		if( _lastError && !_userDisconnected )
 			_status = MVChatConnectionServerDisconnectedStatus;
 		[self performSelectorOnMainThread:@selector( _didDisconnect ) withObject:nil waitUntilDone:NO];
 	}
