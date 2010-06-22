@@ -39,9 +39,14 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 #pragma mark -
 
 @implementation CQConnectionEditViewController
-- (id) init {
-	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
-		return nil;
+
++ (void) initialize {
+	static BOOL initialized;
+
+	if (initialized)
+		return;
+
+	initialized = YES;
 
 	if (!pushAvailable) {
 		--IdentityTableSection;
@@ -57,7 +62,11 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		--AdvancedTableSection;
 		--DeleteTableSection;
 	}
+}
 
+- (id) init {
+	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
+		return nil;
 	return self;
 }
 
@@ -363,13 +372,14 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 			cell.textLabel.text = NSLocalizedString(@"Join Rooms", @"Join Rooms connection setting label");
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-			if (_connection.automaticJoinedRooms.count) {
-				cell.detailTextLabel.text = [_connection.automaticJoinedRooms componentsJoinedByString:@", "];
-			} else {
-				cell.detailTextLabel.text = NSLocalizedString(@"None", @"None label");
-			}
+			NSArray *rooms = _connection.automaticJoinedRooms;
+			if (rooms.count)
+				cell.detailTextLabel.text = [NSString stringWithFormat:@"%u", rooms.count];
+			else cell.detailTextLabel.text = NSLocalizedString(@"None", @"None label");
 
-			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Join Rooms: %@", @"Voiceover join rooms label"), cell.detailTextLabel.text];
+			if (rooms.count)
+				cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Join Rooms: %u rooms", @"Voiceover join rooms label"), rooms.count];
+			else cell.accessibilityLabel = NSLocalizedString(@"Join Rooms: None", @"Voiceover join rooms none label");
 
 			return cell;
 		}
