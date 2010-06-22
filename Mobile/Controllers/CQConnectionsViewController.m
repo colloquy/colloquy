@@ -374,9 +374,11 @@
 		sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Fully Disconnect", @"Fully Disconnect button title")];
 	}
 
-	if (connection.awayStatusMessage)
-		[sheet addButtonWithTitle:NSLocalizedString(@"Remove Away Status", "Remove Away Status button title")];
-	else [sheet addButtonWithTitle:NSLocalizedString(@"Set Away Status…", "Set Away Status… button title")];
+	if (connection.connected) {
+		if (connection.awayStatusMessage)
+			[sheet addButtonWithTitle:NSLocalizedString(@"Remove Away Status", "Remove Away Status button title")];
+		else [sheet addButtonWithTitle:NSLocalizedString(@"Set Away Status…", "Set Away Status… button title")];
+	}
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
@@ -412,7 +414,7 @@
 			else [connection sendRawMessageImmediatelyWithComponents:@"SQUIT :", [MVChatConnection defaultQuitMessage], nil];
 		} else if (!connection.directConnection && buttonIndex == 0) {
 			[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
-		} else {
+		} else if (connection.connected) {
 			if (connection.awayStatusMessage) {
 				connection.awayStatusMessage = nil;
 			} else {
