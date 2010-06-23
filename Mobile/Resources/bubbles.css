@@ -5,9 +5,7 @@ body {
 }
 
 .message-wrapper {
-	float: left;
 	text-align: left;
-	clear: left;
 	margin-top: 6px;
 	padding-bottom: 6px;
 }
@@ -17,31 +15,31 @@ body {
 }
 
 .message-wrapper.self {
-	float: right;
 	text-align: right;
-	clear: right;
 }
 
 .message-wrapper.action {
-	float: none;
 	text-align: center !important;
 	color: rgb(25%, 25%, 25%);
 	margin-top: 0;
 	padding-bottom: 0;
-	clear: both;
 }
 
 .message-wrapper.action.previous-session {
 	color: rgb(35%, 35%, 35%);
 }
 
-.message:not(.action) {
-	display: inline-block;
+.message {
 	white-space: pre-wrap;
 	word-wrap: break-word;
 	-webkit-line-break: after-white-space;
 	-webkit-nbsp-mode: space;
+}
+
+.message:not(.action) {
+	display: inline-block;
 	-webkit-box-sizing: border-box;
+	max-width: 98%;
 }
 
 .message-wrapper:not(.action):not(.self) .message {
