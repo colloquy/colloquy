@@ -1334,7 +1334,12 @@ static BOOL showingKeyboard;
 	if (self.user)
 		_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDirectChatEncoding"];
 
-	transcriptView.styleIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
+	NSString *styleIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
+	if (![styleIdentifier isEqualToString:transcriptView.styleIdentifier]) {
+		transcriptView.styleIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
+		[transcriptView addPreviousSessionComponents:_recentMessages];
+	}
+
 	if ([self isViewLoaded] && transcriptView)
 		self.view.backgroundColor = transcriptView.backgroundColor;
 
