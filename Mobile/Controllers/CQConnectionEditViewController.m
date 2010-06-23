@@ -387,12 +387,12 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 
 		cell.switchAction = @selector(multitaskingChanged:);
-		cell.textLabel.text = NSLocalizedString(@"Multitasking", @"Multitasking connection setting label");
+		cell.textLabel.text = NSLocalizedString(@"Allow Multitasking", @"Multitasking connection setting label");
 		cell.on = _connection.multitaskingSupported;
 
 		if (_connection.multitaskingSupported)
-			cell.accessibilityLabel = NSLocalizedString(@"Multitasking: On", @"Voiceover multitasking on label");
-		else cell.accessibilityLabel = NSLocalizedString(@"Multitasking: Off", @"Voiceover multitasking off label");
+			cell.accessibilityLabel = NSLocalizedString(@"Allow Multitasking: On", @"Voiceover allow multitasking on label");
+		else cell.accessibilityLabel = NSLocalizedString(@"Allow Multitasking: Off", @"Voiceover allow multitasking off label");
 
 		return cell;
 	} else if (indexPath.section == AdvancedTableSection && indexPath.row == 0) {
