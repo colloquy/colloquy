@@ -99,6 +99,14 @@
 		self.backgroundColor = [UIColor colorWithRed:(253. / 255.) green:(251. / 255.) blue:(138. / 255.) alpha:1.];
 	else self.backgroundColor = [UIColor whiteColor];
 
+#if ENABLE(SECRETS)
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
+	UIScrollView *scrollView = [self performPrivateSelector:@"_scrollView"];
+	if (scrollView)
+		scrollView.indicatorStyle = [styleIdentifier hasSuffix:@"-dark"] ? UIScrollViewIndicatorStyleWhite : UIScrollViewIndicatorStyleDefault;
+#endif
+#endif
+
 	_blockerView.backgroundColor = self.backgroundColor;
 
 	[self reset];
