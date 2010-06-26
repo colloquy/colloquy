@@ -1337,7 +1337,8 @@ static BOOL showingKeyboard;
 	NSString *styleIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
 	if (![styleIdentifier isEqualToString:transcriptView.styleIdentifier]) {
 		transcriptView.styleIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
-		[transcriptView addPreviousSessionComponents:_recentMessages];
+		if ([_recentMessages count])
+			[transcriptView addPreviousSessionComponents:_recentMessages];
 	}
 
 	if ([self isViewLoaded] && transcriptView)
