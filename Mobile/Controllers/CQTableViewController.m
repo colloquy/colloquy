@@ -4,12 +4,6 @@
 - (id) initWithStyle:(UITableViewStyle) style {
 	if (!(self = [super initWithStyle:style]))
 		return nil;
-
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIDevice currentDevice] isSystemFour])
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_reloadTableView) name:UIApplicationWillEnterForegroundNotification object:nil];
-#endif
-
 	return self;
 }
 
@@ -32,6 +26,26 @@
 	if (![[UIDevice currentDevice] isPadModel] && interfaceOrientation == UIDeviceOrientationPortraitUpsideDown)
 		return NO;
 	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
+}
+
+#pragma mark -
+
+- (void) viewWillAppear:(BOOL) animated {
+	[super viewWillAppear:animated];
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour])
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_reloadTableView) name:UIApplicationWillEnterForegroundNotification object:nil];
+#endif
+}
+
+- (void) viewWillDisappear:(BOOL) animated {
+	[super viewWillDisappear:animated];
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour])
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+#endif
 }
 
 #pragma mark -
