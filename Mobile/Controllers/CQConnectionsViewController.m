@@ -151,8 +151,6 @@
 - (void) _willEnterForeground {
 	_active = YES;
 
-	[self.tableView reloadData];
-
 	[self _startUpdatingConnectTimes];
 }
 
