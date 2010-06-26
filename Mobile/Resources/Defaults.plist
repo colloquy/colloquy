@@ -80,5 +80,7 @@
 	<true/>
 	<key>JVQuitMessage</key>
 	<string>Colloquy for iPhone - http://colloquy.mobi</string>
+	<key>CQAwayStatus</key>
+	<string>Colloquy for iPhone</string>
 </dict>
 </plist>

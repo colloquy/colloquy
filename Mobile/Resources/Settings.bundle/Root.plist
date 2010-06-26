@@ -42,6 +42,18 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
+			<string>Away Status</string>
+			<key>Key</key>
+			<string>CQAwayStatus</string>
+			<key>DefaultValue</key>
+			<string>Colloquy for iPhone</string>
+			<key>AutocapitalizationType</key>
+			<string>Sentences</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
 			<string>Quit Message</string>
 			<key>Key</key>
 			<string>JVQuitMessage</string>

@@ -595,6 +595,13 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	remainingTime -= 60.;
 
 	[self performSelector:@selector(_showRemainingTimeAlert) withObject:nil afterDelay:remainingTime];
+
+	for (MVChatConnection *connection in _connections) {
+		if (!connection.awayStatusMessage.length) {
+			connection.awayStatusMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQAwayMessage"];
+			_automaticallySetConnectionAwayStatus = YES;
+		}
+	}
 }
 
 - (void) _willEnterForeground {
@@ -604,6 +611,11 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	for (MVChatConnection *connection in _connections) {
 		if (connection.status == MVChatConnectionSuspendedStatus)
 			[connection connectAppropriately];
+
+		if (connection.awayStatusMessage.length && _automaticallySetConnectionAwayStatus) {
+			connection.awayStatusMessage = nil;
+			_automaticallySetConnectionAwayStatus = NO;
+		}
 	}
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_showRemainingTimeAlert) object:nil];
