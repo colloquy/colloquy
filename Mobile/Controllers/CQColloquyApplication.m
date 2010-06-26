@@ -632,6 +632,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) submitRunTime {
 	NSTimeInterval runTime = ABS([_resumeDate timeIntervalSinceNow]);
 	[[CQAnalyticsController defaultController] setObject:[NSNumber numberWithDouble:runTime] forKey:@"run-time"];
+	[[CQAnalyticsController defaultController] synchronizeSynchronously];
 }
 
 #pragma mark -

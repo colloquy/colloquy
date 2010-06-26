@@ -68,12 +68,16 @@
 	<string></string>
 	<key>CQTimestampInterval</key>
 	<integer>180</integer>
+	<key>CQMultitaskingTimeout</key>
+	<integer>600</integer>
 	<key>CQShowHostmaskOnJoin</key>
 	<false/>
 	<key>CQShowHostmaskOnPart</key>
 	<false/>
 	<key>CQBackgroundTimeRemainingAlert</key>
 	<true/>
+	<key>CQShowDisconnectedInBackgroundAlert</key>
+	<false/>
 	<key>CQShowLocalNotificationOnHighlight</key>
 	<true/>
 	<key>CQShowLocalNotificationOnPrivateMessage</key>

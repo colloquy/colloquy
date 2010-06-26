@@ -135,7 +135,7 @@ static NSString *applicationName;
 	[_data setObject:applicationName forKey:@"application-name"];
 
 	NSMutableURLRequest *request = [self _urlRequest];
-	[request setTimeoutInterval:15.];
+	[request setTimeoutInterval:5.];
 
 	[NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL];
 

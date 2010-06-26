@@ -475,6 +475,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if ([self _anyConnectedOrConnectingConnections] || [self _anyReconnectingConnections] || _backgroundTask == UIBackgroundTaskInvalid)
 		return;
 
+	[[CQColloquyApplication sharedApplication] submitRunTime];
+
 	[[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
 	_backgroundTask = UIBackgroundTaskInvalid;
 #endif
@@ -496,7 +498,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	UILocalNotification *notification = [[UILocalNotification alloc] init];
 
-	notification.alertBody = NSLocalizedString(@"No background time remaining, so you have been disconnected.", "No background time remaining alert message");
+	notification.alertBody = NSLocalizedString(@"No multitasking time remaining, so you have been disconnected.", "No multitasking time remaining alert message");
 	notification.alertAction = NSLocalizedString(@"Open", "Open button title");
 	notification.soundName = UILocalNotificationDefaultSoundName;
 
@@ -509,23 +511,22 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
 		return;
 
-	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQBackgroundTimeRemainingAlert"])
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowDisconnectedInBackgroundAlert"])
+		return;
+
+	if (![[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"])
 		return;
 
 	if (![self _anyConnectedOrConnectingConnections])
 		return;
 
-	if (_timeRemainingLocalNotifiction) {
-		[[UIApplication sharedApplication] cancelLocalNotification:_timeRemainingLocalNotifiction];
-		[_timeRemainingLocalNotifiction release];
-		_timeRemainingLocalNotifiction = nil;
-	}
-
 	UILocalNotification *notification = [[UILocalNotification alloc] init];
 
 	NSUInteger minutes = ceil(_allowedBackgroundTime / 60.);
 
-	if (minutes)
+	if (minutes == 1)
+		notification.alertBody = [NSString stringWithFormat:NSLocalizedString(@"You have been disconnected due to 1 minute of inactivity.", "Disconnected due to 1 minute of inactivity alert message"), minutes];
+	else if (minutes > 1)
 		notification.alertBody = [NSString stringWithFormat:NSLocalizedString(@"You have been disconnected due to %u minutes of inactivity.", "Disconnected due to inactivity alert message"), minutes];
 	else notification.alertBody = NSLocalizedString(@"You have been disconnected.", "Disconnected alert message");
 
@@ -575,26 +576,51 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	}
 }
 
+- (void) _disconnectForSuspend {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
+
+	if (_timeRemainingLocalNotifiction) {
+		[[UIApplication sharedApplication] cancelLocalNotification:_timeRemainingLocalNotifiction];
+		[_timeRemainingLocalNotifiction release];
+		_timeRemainingLocalNotifiction = nil;
+	}
+
+	[self _showDisconnectedAlert];
+
+	[self saveConnections];
+
+	for (MVChatConnection *connection in _connections) {
+		BOOL wasConnected = connection.connected || connection.status == MVChatConnectionConnectingStatus;
+		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+		if (wasConnected)
+			[connection _setStatus:MVChatConnectionSuspendedStatus];
+	}
+}
+
 - (void) _didEnterBackground {
 	NSTimeInterval remainingTime = [UIApplication sharedApplication].backgroundTimeRemaining;
+	NSTimeInterval multitaskingTimeout = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"];
+
+	remainingTime = MIN(remainingTime, multitaskingTimeout);
 
 	_allowedBackgroundTime = remainingTime;
 
 	[self _disconnectNonMultitaskingConnections];
 
-	if (remainingTime <= 0.) {
-		[self _showNoTimeRemainingAlert];
+	if (remainingTime <= 10.) {
+		if (multitaskingTimeout > 10.)
+			[self _showNoTimeRemainingAlert];
+		[self _disconnectForSuspend];
 		return;
 	}
 
-	if (remainingTime <= 60.) {
-		[self _showRemainingTimeAlert];
-		return;
+	remainingTime -= 10.;
+	[self performSelector:@selector(_disconnectForSuspend) withObject:nil afterDelay:remainingTime];
+
+	if (_allowedBackgroundTime >= 90.) {
+		remainingTime -= 60.;
+		[self performSelector:@selector(_showRemainingTimeAlert) withObject:nil afterDelay:remainingTime];
 	}
-
-	remainingTime -= 60.;
-
-	[self performSelector:@selector(_showRemainingTimeAlert) withObject:nil afterDelay:remainingTime];
 
 	for (MVChatConnection *connection in _connections) {
 		if (!connection.awayStatusMessage.length) {
@@ -618,6 +644,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		}
 	}
 
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_disconnectForSuspend) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_showRemainingTimeAlert) object:nil];
 
 	[_timeRemainingLocalNotifiction release];
@@ -625,17 +652,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) _backgroundTaskExpired {
-	[self _showDisconnectedAlert];
-
-	[self saveConnections];
-
-	for (MVChatConnection *connection in _connections) {
-		BOOL wasConnected = connection.connected || connection.status == MVChatConnectionConnectingStatus;
-		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
-		if (wasConnected)
-			[connection _setStatus:MVChatConnectionSuspendedStatus];
-	}
-
 	[[CQColloquyApplication sharedApplication] submitRunTime];
 
 	[[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];

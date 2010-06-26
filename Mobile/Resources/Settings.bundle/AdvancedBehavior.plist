@@ -96,6 +96,32 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Key</key>
+			<string>CQMultitaskingTimeout</string>
+			<key>Title</key>
+			<string>Multitasking</string>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>60</integer>
+				<integer>120</integer>
+				<integer>300</integer>
+				<integer>600</integer>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Disabled</string>
+				<string>1 Minute</string>
+				<string>2 Minutes</string>
+				<string>5 Minutes</string>
+				<string>10 Minutes</string>
+			</array>
+			<key>DefaultValue</key>
+			<integer>600</integer>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>Text Input</string>

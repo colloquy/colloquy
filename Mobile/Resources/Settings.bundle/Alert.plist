@@ -76,7 +76,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Background Alert</string>
+			<string>Multitasking Alert</string>
 			<key>Key</key>
 			<string>CQShowLocalNotificationOnHighlight</string>
 			<key>DefaultValue</key>
@@ -154,7 +154,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Background Alert</string>
+			<string>Multitasking Alert</string>
 			<key>Key</key>
 			<string>CQShowLocalNotificationOnPrivateMessage</string>
 			<key>DefaultValue</key>
@@ -163,6 +163,8 @@
 		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Multitasking</string>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -173,6 +175,16 @@
 			<string>CQBackgroundTimeRemainingAlert</string>
 			<key>DefaultValue</key>
 			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Disconnected</string>
+			<key>Key</key>
+			<string>CQShowDisconnectedInBackgroundAlert</string>
+			<key>DefaultValue</key>
+			<false/>
 		</dict>
 	</array>
 </dict>
