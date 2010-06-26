@@ -136,10 +136,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	information = [[NSLocale autoupdatingCurrentLocale] localeIdentifier];
 	[analyticsController setObject:information forKey:@"locale"];
 
-	if (_deviceToken.length)
-		[analyticsController setObject:_deviceToken forKey:@"device-push-token"];
-
 	[analyticsController setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"] lowercaseString] forKey:@"autocomplete-behavior"];
+
+	[analyticsController setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQMultitaskingTimeout"] forKey:@"multitasking-timeout"];
 
 	NSInteger showNotices = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"];
 	information = (!showNotices ? @"auto" : (showNotices == 1 ? @"all" : @"none"));
@@ -244,10 +243,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	if (_deviceToken.length)
 		[analyticsController setObject:_deviceToken forKey:@"device-push-token"];
-
-	[analyticsController setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQMultitaskingTimeout"] forKey:@"multitasking-timeout"];
-
-	[analyticsController setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"] lowercaseString] forKey:@"autocomplete-behavior"];
 
 	[self updateAnalytics];
 
