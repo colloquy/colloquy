@@ -5,8 +5,10 @@
 	if (!(self = [super initWithStyle:style]))
 		return nil;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableView) name:NSUserDefaultsDidChangeNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadTableView) name:UIApplicationWillEnterForegroundNotification object:nil];
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour])
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_reloadTableView) name:UIApplicationWillEnterForegroundNotification object:nil];
+#endif
 
 	return self;
 }
@@ -34,7 +36,7 @@
 
 #pragma mark -
 
-- (void) reloadTableView {
+- (void) _reloadTableView {
 	if ([self isViewLoaded])
 		[self.tableView reloadData];
 }
