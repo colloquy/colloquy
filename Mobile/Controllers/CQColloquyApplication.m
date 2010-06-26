@@ -245,6 +245,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if (_deviceToken.length)
 		[analyticsController setObject:_deviceToken forKey:@"device-push-token"];
 
+	[analyticsController setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQMultitaskingTimeout"] forKey:@"multitasking-timeout"];
+
 	[analyticsController setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"] lowercaseString] forKey:@"autocomplete-behavior"];
 
 	[self updateAnalytics];
