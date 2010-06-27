@@ -8,7 +8,6 @@
 	MVChatConnection *_connection;
 
 	UILongPressGestureRecognizer *_longPressGestureRecognizer;
-	NSMutableDictionary *_defaultAwayStatusCache;
 }
 @property (nonatomic, retain) MVChatConnection *connection;
 @end
