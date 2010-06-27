@@ -63,9 +63,7 @@
 		return;
 
 	_previousPlayTime = currentTime;
-	
-	if ([[UIDevice currentDevice] isPodModel])
-		AudioServicesPlayAlertSound(_sound);
-	else AudioServicesPlaySystemSound(_sound);
+
+	AudioServicesPlaySystemSound(_sound);
 }
 @end
