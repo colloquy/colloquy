@@ -388,7 +388,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 		cell.switchAction = @selector(multitaskingChanged:);
 		cell.textLabel.text = NSLocalizedString(@"Allow Multitasking", @"Multitasking connection setting label");
-		cell.on = _connection.multitaskingSupported;
+		cell.on = _connection.multitaskingSupported && [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"] > 0;
 
 		if (_connection.multitaskingSupported)
 			cell.accessibilityLabel = NSLocalizedString(@"Allow Multitasking: On", @"Voiceover allow multitasking on label");
@@ -486,6 +486,20 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 }
 
 - (void) multitaskingChanged:(CQPreferencesSwitchCell *) sender {
+	if (sender.on && ![[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"]) {
+		[[NSUserDefaults standardUserDefaults] setDouble:300 forKey:@"CQMultitaskingTimeout"];
+
+		UIAlertView *alert = [[UIAlertView alloc] init];
+
+		alert.title = NSLocalizedString(@"Multitasking Enabled", @"Multitasking enabled alert title");
+		alert.message = NSLocalizedString(@"Multitasking was disabled for Colloquy, but has been enabled again with a timeout of 5 minutes.", @"Multitasking enabled alert message");
+
+		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+
+		[alert show];
+		[alert release];
+	}
+
 	_connection.multitaskingSupported = sender.on;
 }
 
