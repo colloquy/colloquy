@@ -101,6 +101,9 @@
 	if (gestureReconizer.state != UIGestureRecognizerStateBegan)
 		return;
 
+	if (self.tableView.editing)
+		return;
+
 	NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:[gestureReconizer locationInView:self.tableView]];
 	if (!indexPath)
 		return;
