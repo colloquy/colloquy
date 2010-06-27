@@ -12,6 +12,10 @@
 - (void) editItemAtIndex:(NSUInteger) index;
 @end
 
+@interface CQAwayStatusViewController (Private)
+- (BOOL) statusIsDefaultAwayStatus:(NSString *) status;
+@end
+
 @implementation CQAwayStatusViewController
 @synthesize connection = _connection;
 
@@ -27,9 +31,13 @@
 	if (defaultAwayStatus.length && ![awayStatuses containsObject:defaultAwayStatus])
 		[awayStatuses addObject:defaultAwayStatus];
 	else {
-		NSUInteger indexOfDefaultAwayStatus = [awayStatuses indexOfObject:defaultAwayStatus];
-		if (indexOfDefaultAwayStatus) {
-			[awayStatuses removeObjectAtIndex:indexOfDefaultAwayStatus];
+		if (![self statusIsDefaultAwayStatus:[awayStatuses objectAtIndex:0]]) {
+			for (NSUInteger i = 0; i <  awayStatuses.count; i++) {
+				NSString *status = [awayStatuses objectAtIndex:i];
+				if ([self statusIsDefaultAwayStatus:status])
+					[awayStatuses removeObjectAtIndex:i];
+			}
+
 			[awayStatuses insertObject:defaultAwayStatus atIndex:0];
 		}
 	}
