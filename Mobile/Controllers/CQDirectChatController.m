@@ -512,11 +512,11 @@ static BOOL showingKeyboard;
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/away", @"/say", @"/raw", @"/quote", @"/join", @"/list", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops", @"/whois",
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/join", @"/list", @"/away", @"/whois", @"/say", @"/raw", @"/quote", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops",
 #if ENABLE(FILE_TRANSFERS)
 								   @"/dcc",
 #endif
-								   @"/google", @"/wikipedia", @"/amazon", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/ipod", @"/music", @"/squit", @"/welcome", @"/sysinfo", nil];
+								   @"/aaway", @"/anick", @"/aquit", @"/google", @"/wikipedia", @"/amazon", @"/safari", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/ipod", @"/music", @"/squit", @"/welcome", @"/sysinfo", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -549,9 +549,9 @@ static BOOL showingKeyboard;
 	[self performSelector:@selector(resetDidSendRecently) withObject:nil afterDelay:0.5];
 
 	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"] && text.length > 1) {
-		static NSArray *commandsNotRequiringConnection;
+		static NSSet *commandsNotRequiringConnection;
 		if (!commandsNotRequiringConnection)
-			commandsNotRequiringConnection = [[NSArray alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", @"list", @"join", @"welcome", @"token", @"resetbadge", @"tweet", nil];
+			commandsNotRequiringConnection = [[NSSet alloc] initWithObjects:@"google", @"wikipedia", @"amazon", @"safari", @"browser", @"url", @"connect", @"reconnect", @"clear", @"help", @"faq", @"search", @"list", @"join", @"welcome", @"token", @"resetbadge", @"tweet", @"aquit", @"anick", @"aaway", nil];
 
 		// Send as a command.
 		NSScanner *scanner = [NSScanner scannerWithString:text];
@@ -661,8 +661,30 @@ static BOOL showingKeyboard;
 	return [self _handleURLCommandWithArguments:arguments preferBuiltInBrowser:YES];
 }
 
-- (BOOL) handleUrlCommandWithArguments:(NSString *) arguments {
+- (BOOL) handleSafariCommandWithArguments:(NSString *) arguments {
 	return [self _handleURLCommandWithArguments:arguments preferBuiltInBrowser:NO];
+}
+
+- (BOOL) handleUrlCommandWithArguments:(NSString *) arguments {
+	return [self handleSafariCommandWithArguments:arguments];
+}
+
+- (BOOL) handleAquitCommandWithArguments:(NSString *) arguments {
+	for (MVChatConnection *connection in [CQConnectionsController defaultController].connectedConnections)
+		[connection disconnectWithReason:arguments];
+	return YES;
+}
+
+- (BOOL) handleAawayCommandWithArguments:(NSString *) arguments {
+	for (MVChatConnection *connection in [CQConnectionsController defaultController].connectedConnections)
+		[connection setAwayStatusMessage:arguments];
+	return YES;
+}
+
+- (BOOL) handleAnickCommandWithArguments:(NSString *) arguments {
+	for (MVChatConnection *connection in [CQConnectionsController defaultController].connectedConnections)
+		connection.nickname = arguments;
+	return YES;
 }
 
 - (BOOL) handleJoinCommandWithArguments:(NSString *) arguments {
