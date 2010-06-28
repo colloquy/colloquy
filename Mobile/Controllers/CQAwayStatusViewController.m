@@ -32,7 +32,7 @@
 		[awayStatuses addObject:defaultAwayStatus];
 	else {
 		if (![self statusIsDefaultAwayStatus:[awayStatuses objectAtIndex:0]]) {
-			for (NSUInteger i = 0; i <  awayStatuses.count; i++) {
+			for (NSUInteger i = 1; i <  awayStatuses.count; i++) {
 				NSString *status = [awayStatuses objectAtIndex:i];
 				if ([self statusIsDefaultAwayStatus:status])
 					[awayStatuses removeObjectAtIndex:i];
