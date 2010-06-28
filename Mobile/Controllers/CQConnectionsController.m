@@ -130,6 +130,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	_bouncerConnections = [[NSMutableSet alloc] initWithCapacity:2];
 	_bouncerChatConnections = [[NSMutableDictionary alloc] initWithCapacity:2];
 
+	_automaticallySetConnectionAwayStatus = [[NSMutableDictionary alloc] initWithCapacity:5];
+
 	[self _loadConnectionList];
 
 	return self;
@@ -146,6 +148,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	[_timeRemainingLocalNotifiction release];
 #endif
+
+	[_automaticallySetConnectionAwayStatus release];
 
 	[super dealloc];
 }
@@ -625,7 +629,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	for (MVChatConnection *connection in _connections) {
 		if (!connection.awayStatusMessage.length) {
 			connection.awayStatusMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQAwayMessage"];
-			_automaticallySetConnectionAwayStatus = YES;
+			[_automaticallySetConnectionAwayStatus setObject:[NSNumber numberWithBool:YES] forKey:connection];
 		}
 	}
 }
@@ -638,9 +642,11 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		if (connection.status == MVChatConnectionSuspendedStatus)
 			[connection connectAppropriately];
 
-		if (connection.awayStatusMessage.length && _automaticallySetConnectionAwayStatus) {
-			connection.awayStatusMessage = nil;
-			_automaticallySetConnectionAwayStatus = NO;
+		if (connection.awayStatusMessage.length && _automaticallySetConnectionAwayStatus.count) {
+			if ([[_automaticallySetConnectionAwayStatus objectForKey:connection] boolValue]) {
+				connection.awayStatusMessage = nil;
+				[_automaticallySetConnectionAwayStatus removeObjectForKey:connection];
+			}
 		}
 	}
 
