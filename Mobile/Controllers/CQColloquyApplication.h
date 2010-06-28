@@ -46,6 +46,10 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 - (void) hideTabBarWithTransition:(BOOL) transition;
 - (void) showTabBarWithTransition:(BOOL) transition;
 
+- (BOOL) areNotificationBadgesAllowed;
+- (BOOL) areNotificationSoundsAllowed;
+- (BOOL) areNotificationAlertsAllowed;
+
 - (void) registerForRemoteNotifications;
 
 @property (nonatomic, readonly) NSDate *launchDate;

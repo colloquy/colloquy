@@ -359,7 +359,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if (!apsInfo.count)
 		return;
 
-	self.applicationIconBadgeNumber = [[apsInfo objectForKey:@"badge"] integerValue];
+	if ([self areNotificationBadgesAllowed])
+		self.applicationIconBadgeNumber = [[apsInfo objectForKey:@"badge"] integerValue];
 }
 
 - (void) application:(UIApplication *) application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *) deviceToken {
@@ -397,10 +398,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) applicationWillTerminate:(UIApplication *) application {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	if ([[UIDevice currentDevice] isSystemFour])
 		[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
-#endif
 
 	[self submitRunTime];
 }
@@ -793,6 +792,30 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 #pragma mark -
+
+- (BOOL) areNotificationBadgesAllowed {
+	return (!_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeBadge);
+}
+
+- (BOOL) areNotificationSoundsAllowed {
+	return (!_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeSound);
+}
+
+- (BOOL) areNotificationAlertsAllowed {
+	return (!_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeAlert);
+}
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+- (void) presentLocalNotificationNow:(UILocalNotification *) notification {
+	if (![self areNotificationAlertsAllowed])
+		notification.alertBody = nil;
+	if (![self areNotificationSoundsAllowed])
+		notification.soundName = nil;
+	if (![self areNotificationBadgesAllowed])
+		notification.applicationIconBadgeNumber = 0;
+	[super presentLocalNotificationNow:notification];
+}
+#endif
 
 - (void) registerForRemoteNotifications {
 #if !TARGET_IPHONE_SIMULATOR
