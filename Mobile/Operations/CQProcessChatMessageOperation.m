@@ -44,6 +44,7 @@ static BOOL stripMessageFormatting;
 
 	_message = [messageInfo retain];
 	_encoding = NSUTF8StringEncoding;
+	_fallbackEncoding = NSISOLatin1StringEncoding;
 
 	return self;
 }
@@ -63,6 +64,7 @@ static BOOL stripMessageFormatting;
 @synthesize processedMessageInfo = _processedMessage;
 @synthesize highlightNickname = _highlightNickname;
 @synthesize encoding = _encoding;
+@synthesize fallbackEncoding = _fallbackEncoding;
 @synthesize target = _target;
 @synthesize action = _action;
 @synthesize userInfo = _userInfo;
@@ -165,7 +167,9 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 		return nil;
 
 	NSMutableString *messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:_encoding];
-	if (!messageString && _encoding != NSISOLatin1StringEncoding)
+	if (!messageString && _fallbackEncoding != _encoding)
+		messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:_fallbackEncoding];
+	if (!messageString && _encoding != NSISOLatin1StringEncoding && _fallbackEncoding != NSISOLatin1StringEncoding)
 		messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:NSISOLatin1StringEncoding];
 	if (!messageString)
 		messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:NSASCIIStringEncoding];

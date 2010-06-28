@@ -1245,17 +1245,18 @@ static BOOL showingKeyboard;
 - (void) addMessage:(NSDictionary *) message {
 	NSParameterAssert(message != nil);
 
+	CQProcessChatMessageOperation *operation = [[CQProcessChatMessageOperation alloc] initWithMessageInfo:message];
+	operation.highlightNickname = self.connection.nickname;
+	operation.encoding = self.encoding;
+	operation.fallbackEncoding = self.connection.encoding;
+
+	operation.target = self;
+	operation.action = @selector(_messageProcessed:);
+
 	if (!chatMessageProcessingQueue) {
 		chatMessageProcessingQueue = [[NSOperationQueue alloc] init];
 		chatMessageProcessingQueue.maxConcurrentOperationCount = 1;
 	}
-
-	CQProcessChatMessageOperation *operation = [[CQProcessChatMessageOperation alloc] initWithMessageInfo:message];
-	operation.highlightNickname = self.connection.nickname;
-	operation.encoding = self.encoding;
-
-	operation.target = self;
-	operation.action = @selector(_messageProcessed:);
 
 	[chatMessageProcessingQueue addOperation:operation];
 
@@ -1488,9 +1489,13 @@ static BOOL showingKeyboard;
 
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo {
 	CQProcessChatMessageOperation *operation = [[CQProcessChatMessageOperation alloc] initWithMessageData:messageData];
+	operation.highlightNickname = self.connection.nickname;
 	operation.encoding = self.encoding;
+	operation.fallbackEncoding = self.connection.encoding;
+
 	operation.target = target;
 	operation.action = action;
+
 	operation.userInfo = userInfo;
 
 	if (!messageData) {

@@ -3,6 +3,7 @@
 	NSMutableDictionary *_processedMessage;
 	NSString *_highlightNickname;
 	NSStringEncoding _encoding;
+	NSStringEncoding _fallbackEncoding;
 	id _target;
 	SEL _action;
 	id _userInfo;
@@ -11,7 +12,9 @@
 - (id) initWithMessageInfo:(NSDictionary *) messageInfo;
 
 @property (copy) NSString *highlightNickname;
+
 @property NSStringEncoding encoding;
+@property NSStringEncoding fallbackEncoding;
 
 @property (readonly) NSMutableDictionary *processedMessageInfo;
 @property (readonly) NSString *processedMessageAsHTML;
