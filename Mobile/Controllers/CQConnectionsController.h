@@ -36,7 +36,7 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 	UILocalNotification *_timeRemainingLocalNotifiction;
 	UIBackgroundTaskIdentifier _backgroundTask;
 	NSTimeInterval _allowedBackgroundTime;
-	NSMutableDictionary *_automaticallySetConnectionAwayStatus;
+	NSMutableSet *_automaticallySetConnectionAwayStatus;
 #endif
 }
 + (CQConnectionsController *) defaultController;
