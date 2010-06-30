@@ -16,6 +16,7 @@
 #import "CQKeychain.h"
 
 #import "dlfcn.h"
+#import "tgmath.h"
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatConnectionPrivate.h>
@@ -130,8 +131,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	_bouncerConnections = [[NSMutableSet alloc] initWithCapacity:2];
 	_bouncerChatConnections = [[NSMutableDictionary alloc] initWithCapacity:2];
 
-	_automaticallySetConnectionAwayStatus = [[NSMutableDictionary alloc] initWithCapacity:5];
-
 	[self _loadConnectionList];
 
 	return self;
@@ -148,8 +147,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	[_timeRemainingLocalNotifiction release];
 #endif
-
-	[_automaticallySetConnectionAwayStatus release];
 
 	[super dealloc];
 }
@@ -602,10 +599,12 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) _didEnterBackground {
+	_automaticallySetConnectionAwayStatus = [[NSMutableDictionary alloc] initWithCapacity:5];
+
 	NSTimeInterval remainingTime = [UIApplication sharedApplication].backgroundTimeRemaining;
 	NSTimeInterval multitaskingTimeout = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"];
 
-	remainingTime = MIN(remainingTime, multitaskingTimeout);
+	remainingTime = fmin(remainingTime, multitaskingTimeout);
 
 	_allowedBackgroundTime = remainingTime;
 
@@ -629,7 +628,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	for (MVChatConnection *connection in _connections) {
 		if (!connection.awayStatusMessage.length) {
 			connection.awayStatusMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQAwayMessage"];
-			[_automaticallySetConnectionAwayStatus setObject:[NSNumber numberWithBool:YES] forKey:connection];
+			[_automaticallySetConnectionAwayStatus setObject:[NSNumber numberWithBool:YES] forKey:connection.server];
 		}
 	}
 }
@@ -643,7 +642,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 			[connection connectAppropriately];
 
 		if (connection.awayStatusMessage.length && _automaticallySetConnectionAwayStatus.count) {
-			if ([[_automaticallySetConnectionAwayStatus objectForKey:connection] boolValue]) {
+			if ([[_automaticallySetConnectionAwayStatus objectForKey:connection.server] boolValue]) {
 				connection.awayStatusMessage = nil;
 				[_automaticallySetConnectionAwayStatus removeObjectForKey:connection];
 			}
@@ -655,6 +654,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	[_timeRemainingLocalNotifiction release];
 	_timeRemainingLocalNotifiction = nil;
+
+	[_automaticallySetConnectionAwayStatus release];
 }
 
 - (void) _backgroundTaskExpired {
