@@ -1395,6 +1395,8 @@ static BOOL showingKeyboard;
 }
 
 - (void) _willBecomeActive {
+	[self _addPendingComponentsAnimated:NO];
+
 	if (_unreadHighlightedMessages)
 		[CQChatController defaultController].totalImportantUnreadCount -= _unreadHighlightedMessages;
 
