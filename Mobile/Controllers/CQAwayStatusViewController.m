@@ -25,7 +25,7 @@
 
 	self.title = NSLocalizedString(@"Create Away Status…", @"Create Away Status title");
 	NSMutableArray *awayStatuses = [[[NSUserDefaults standardUserDefaults] arrayForKey:@"CQAwayStatuses"] mutableCopy];
-	if (!awayStatuses.count)
+	if (!awayStatuses)
 		awayStatuses = [[NSMutableArray alloc] init];
 	NSString *defaultAwayStatus = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQAwayStatus"];
 	if (defaultAwayStatus.length && ![awayStatuses containsObject:defaultAwayStatus])
