@@ -625,6 +625,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[self performSelector:@selector(_showRemainingTimeAlert) withObject:nil afterDelay:remainingTime];
 	}
 
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQAutoAwayOnBackgrounding"])
+		return;
+
 	for (MVChatConnection *connection in _connections) {
 		if (!connection.awayStatusMessage.length) {
 			connection.awayStatusMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQAwayMessage"];

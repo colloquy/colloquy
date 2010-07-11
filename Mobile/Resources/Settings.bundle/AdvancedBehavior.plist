@@ -46,16 +46,6 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Open Links in Safari</string>
-			<key>Key</key>
-			<string>CQDisableBuiltInBrowser</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
 			<string>History on Reconnect</string>
 			<key>Key</key>
 			<string>CQHistoryOnReconnect</string>
@@ -96,11 +86,17 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Multitasking</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Key</key>
 			<string>CQMultitaskingTimeout</string>
 			<key>Title</key>
-			<string>Multitasking</string>
+			<string>Multitask For:</string>
 			<key>Values</key>
 			<array>
 				<integer>0</integer>
@@ -119,6 +115,26 @@
 			</array>
 			<key>DefaultValue</key>
 			<integer>600</integer>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Open Links in Safari</string>
+			<key>Key</key>
+			<string>CQDisableBuiltInBrowser</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Auto Away</string>
+			<key>Key</key>
+			<string>CQAutoAwayOnBackgrounding</string>
+			<key>DefaultValue</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>Type</key>

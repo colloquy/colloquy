@@ -86,5 +86,7 @@
 	<string>Colloquy for iPhone - http://colloquy.mobi</string>
 	<key>CQAwayStatus</key>
 	<string>Colloquy for iPhone</string>
+	<key>CQAutoAwayOnBackgrounding</key>
+	<true/>
 </dict>
 </plist>
