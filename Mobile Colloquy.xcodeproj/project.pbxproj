@@ -233,7 +233,6 @@
 		925C594C1177CB63001995E0 /* CQModalNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C594B1177CB63001995E0 /* CQModalNavigationController.m */; };
 		925C59591177D84C001995E0 /* CQAwayStatusController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C59581177D84C001995E0 /* CQAwayStatusController.m */; };
 		92A24DA7114C918300897373 /* CQPreferencesListChannelEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */; };
-		92CAD37D11DF0BE000A145AE /* CQVoiceoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CAD37C11DF0BE000A145AE /* CQVoiceoverController.m */; };
 		92D30F2C116D2B020060EE33 /* UIViewControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */; };
 		92F3BE5011716FE700A4F554 /* CQPreferencesTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F3BE4F11716FE700A4F554 /* CQPreferencesTextViewCell.m */; };
 		92F3BF80117186AF00A4F554 /* CQTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F3BF7F117186AF00A4F554 /* CQTextView.m */; };
@@ -562,8 +561,6 @@
 		925C59581177D84C001995E0 /* CQAwayStatusController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQAwayStatusController.m; sourceTree = "<group>"; };
 		92A24DA5114C918300897373 /* CQPreferencesListChannelEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListChannelEditViewController.h; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.h; sourceTree = "<group>"; };
 		92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListChannelEditViewController.m; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.m; sourceTree = "<group>"; };
-		92CAD37B11DF0BE000A145AE /* CQVoiceoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQVoiceoverController.h; path = Mobile/Controllers/CQVoiceoverController.h; sourceTree = "<group>"; };
-		92CAD37C11DF0BE000A145AE /* CQVoiceoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQVoiceoverController.m; path = Mobile/Controllers/CQVoiceoverController.m; sourceTree = "<group>"; };
 		92D30F2A116D2B020060EE33 /* UIViewControllerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIViewControllerAdditions.h; path = Mobile/Additions/UIViewControllerAdditions.h; sourceTree = "<group>"; };
 		92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIViewControllerAdditions.m; path = Mobile/Additions/UIViewControllerAdditions.m; sourceTree = "<group>"; };
 		92F3BE4E11716FE700A4F554 /* CQPreferencesTextViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPreferencesTextViewCell.h; sourceTree = "<group>"; };
@@ -814,8 +811,6 @@
 				1CFCBA331114FB2500EA5F10 /* CQWelcomeController.h */,
 				1CA3DC571027984A008B1AD2 /* CQWelcomeViewController.m */,
 				1CA3DC561027984A008B1AD2 /* CQWelcomeViewController.h */,
-				92CAD37C11DF0BE000A145AE /* CQVoiceoverController.m */,
-				92CAD37B11DF0BE000A145AE /* CQVoiceoverController.h */,
 			);
 			name = General;
 			path = ../..;
@@ -1442,7 +1437,6 @@
 				1CDDE9C5118C8EB700C83EBE /* CQTableViewController.m in Sources */,
 				1CDDE9F6118CD2B800C83EBE /* NSObjectAdditions.m in Sources */,
 				1CA26BBB11C7415000AB4E44 /* RegexKitLite.m in Sources */,
-				92CAD37D11DF0BE000A145AE /* CQVoiceoverController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
