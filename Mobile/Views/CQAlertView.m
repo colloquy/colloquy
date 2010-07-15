@@ -1,9 +1,5 @@
 #import "CQAlertView.h"
 
-#define TextFieldHorizontalMargin 20
-#define TextFieldHeight 25
-#define TextFieldHeightWithSeparator 35
-
 @implementation CQAlertView
 - (id) init {
 	if (!(self = [super init]))
