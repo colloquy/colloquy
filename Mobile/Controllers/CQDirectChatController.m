@@ -1587,7 +1587,7 @@ static BOOL showingKeyboard;
 		if (localNotificationOnPrivateMessage)
 			[self _showLocalNotificationForMessage:message withSoundName:privateMessageSound.soundName];
 
-		if (UIAccessibilityIsVoiceOverRunning()) {
+		if ([[UIDevice currentDevice] isSystemFour] && UIAccessibilityIsVoiceOverRunning()) {
 			NSString *argument = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ privately messaged you, saying: %@", @"%@ privately messaged you, saying: %@"), user.nickname, message];
 			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, argument);
 			[argument release];
@@ -1604,7 +1604,7 @@ static BOOL showingKeyboard;
 		if (localNotificationOnHighlight && !directChat)
 			[self _showLocalNotificationForMessage:message withSoundName:highlightSound.soundName];
 
-		if (UIAccessibilityIsVoiceOverRunning()) {
+		if ([[UIDevice currentDevice] isSystemFour] && UIAccessibilityIsVoiceOverRunning()) {
 			NSString *argument = [[NSString alloc] initWithFormat:NSLocalizedString(@"In %@, %@: %@", @"In <room>, <user>: <message>"), nil, user.nickname, message];
 			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, argument);
 			[argument release];
@@ -1623,7 +1623,7 @@ static BOOL showingKeyboard;
 	[self _addPendingComponent:message];
 
 	if (!user.localUser) {
-		if (UIAccessibilityIsVoiceOverRunning()) {
+		if ([[UIDevice currentDevice] isSystemFour] && UIAccessibilityIsVoiceOverRunning()) {
 			NSString *argument = [[NSString alloc] initWithFormat:@"%@: %@", user.nickname, message];
 			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, argument);
 			[argument release];
