@@ -358,7 +358,7 @@ static NSComparisonResult sortMembersByStatus(MVChatUser *user1, MVChatUser *use
 	if (user1Status < user2Status)
 		return NSOrderedDescending;
 
-	return sortMembersByNickname(user1, user2, NULL);
+	return [user1.displayName caseInsensitiveCompare:user2.displayName];
 }
 
 static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, void *context) {
