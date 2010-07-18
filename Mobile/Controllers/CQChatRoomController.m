@@ -303,7 +303,7 @@ static BOOL showLeaveEvents;
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/join", @"/away", @"/topic", @"/kick", @"/ban", @"/kickban", @"/mode", @"/op", @"/voice", @"/halfop", @"/quiet", @"/deop", @"/devoice", @"/dehalfop", @"/dequiet", @"/unban", @"/bankick", @"/cycle", @"/hop", nil];
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/join", @"/away", @"/topic", @"/kick", @"/ban", @"/kickban", @"/mode", @"/op", @"/voice", @"/halfop", @"/quiet", @"/deop", @"/devoice", @"/dehalfop", @"/dequiet", @"/unban", @"/bankick", @"/cycle", @"/hop", @"/amsg", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -334,39 +334,34 @@ static BOOL showLeaveEvents;
 
 #pragma mark -
 
-static NSInteger sortMembersByStatus(MVChatUser *user1, MVChatUser *user2, void *context) {
+static unsigned char userStatus(MVChatUser *user, CQChatRoomController *room) {
+	unsigned long modes = [room.room modesForMemberUser:user];
+
+	if (user.serverOperator) return 6;
+	if (modes & MVChatRoomMemberFounderMode) return 5;
+	if (modes & MVChatRoomMemberAdministratorMode) return 4;
+	if (modes & MVChatRoomMemberOperatorMode) return 3;
+	if (modes & MVChatRoomMemberHalfOperatorMode) return 2;
+	if (modes & MVChatRoomMemberVoicedMode) return 1;
+
+	return 0;
+}
+
+static NSComparisonResult sortMembersByStatus(MVChatUser *user1, MVChatUser *user2, void *context) {
 	CQChatRoomController *room = (CQChatRoomController *)context;
 
-	unsigned char user1Status = 0;
-	unsigned char user2Status = 0;
-
-	unsigned long modes = [room.room modesForMemberUser:user1];
-
-	if (user1.serverOperator) user1Status = 6;
-	else if (modes & MVChatRoomMemberFounderMode) user1Status = 5;
-	else if (modes & MVChatRoomMemberAdministratorMode) user1Status = 4;
-	else if (modes & MVChatRoomMemberOperatorMode) user1Status = 3;
-	else if (modes & MVChatRoomMemberHalfOperatorMode) user1Status = 2;
-	else if (modes & MVChatRoomMemberVoicedMode) user1Status = 1;
-
-	modes = [[room target] modesForMemberUser:user2];
-
-	if (user2.serverOperator) user2Status = 6;
-	else if (modes & MVChatRoomMemberFounderMode) user2Status = 5;
-	else if (modes & MVChatRoomMemberAdministratorMode) user2Status = 4;
-	else if (modes & MVChatRoomMemberOperatorMode) user2Status = 3;
-	else if (modes & MVChatRoomMemberHalfOperatorMode) user2Status = 2;
-	else if (modes & MVChatRoomMemberVoicedMode) user2Status = 1;
+	unsigned char user1Status = userStatus(user1, room);
+	unsigned char user2Status = userStatus(user2, room);
 
 	if (user1Status > user2Status)
 		return NSOrderedAscending;
 	if (user1Status < user2Status)
 		return NSOrderedDescending;
 
-	return [user1.displayName caseInsensitiveCompare:user2.displayName];
+	return sortMembersByNickname(user1, user2, NULL);
 }
 
-static NSInteger sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, void *context) {
+static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *user2, void *context) {
 	return [user1.displayName caseInsensitiveCompare:user2.displayName];
 }
 
