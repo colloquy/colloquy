@@ -1049,27 +1049,6 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
-- (NSArray *) componentsSeparatedByXMLTags {
-	if( [self rangeOfString:@"<"].location == NSNotFound )
-		return [NSArray arrayWithObject:self];
-
-	NSScanner *scanner = [[NSScanner allocWithZone:nil] initWithString:self];
-	[scanner setCharactersToBeSkipped:nil];
-
-	NSMutableArray *result = [[NSMutableArray allocWithZone:nil] init];
-
-	NSString *component = @"";
-	while( ! [scanner isAtEnd] ) {
-		if( [scanner scanUpToXMLTagIntoString:&component] )
-			[result addObject:component];
-		[scanner scanXMLTagIntoString:NULL];
-	}
-
-	[scanner release];
-
-	return [result autorelease];
-}
-
 - (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(NSUInteger) limit {
 	return [self componentsSeparatedByCharactersInSet:separator limit:limit remainingString:NULL];
 }

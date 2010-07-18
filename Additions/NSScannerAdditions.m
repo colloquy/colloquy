@@ -4,32 +4,6 @@
 #import "NSScannerAdditions.h"
 
 @implementation NSScanner (NSScannerAdditions)
-- (BOOL) scanCharacterInto:(unichar *) unicharValue {
-	if( ! [self isAtEnd] ) {
-		NSUInteger location = [self scanLocation];
-		*unicharValue = [[self string] characterAtIndex:location];
-		[self setScanLocation:( location + 1 )];
-		return YES;
-	}
-
-	return NO;
-}
-
-- (BOOL) scanStringLength:(NSUInteger) maxLength intoString:(NSString **) stringValue {
-	if( ! [self isAtEnd] ) {
-		NSUInteger location = [self scanLocation];
-		NSString *source = [self string];
-		NSUInteger length = MIN( maxLength, [source length] - location );
-		if( length > 0 ) {
-			*stringValue = [[self string] substringWithRange:NSMakeRange( location, length )];
-			[self setScanLocation:( location + length )];
-			return YES;
-		}
-	}
-
-	return NO;
-}
-
 - (BOOL) scanCharactersFromSet:(NSCharacterSet *) scanSet maxLength:(NSUInteger) maxLength intoString:(NSString **) stringValue {
 	if( ! [self isAtEnd] ) {
 		NSUInteger location = [self scanLocation];
@@ -54,23 +28,5 @@
 	}
 
 	return NO;
-}
-
-- (BOOL) scanXMLTagIntoString:(NSString **) stringValue {
-	if( ![self scanString:@"<" intoString:NULL] )
-		return NO;
-
-	NSString *tag = nil;
-	BOOL result = [self scanUpToString:@">" intoString:&tag];
-	if( result ) [self scanString:@">" intoString:NULL];
-
-	if( result && stringValue )
-		*stringValue = [NSString stringWithFormat:@"<%@>", tag];
-
-	return result;
-}
-
-- (BOOL) scanUpToXMLTagIntoString:(NSString **) stringValue {
-	return [self scanUpToString:@"<" intoString:stringValue];
 }
 @end

@@ -1,18 +1,8 @@
 #import "NSDictionaryAdditions.h"
 
 @implementation NSDictionary (NSDictionaryAdditions)
-+ (id) dictionaryWithKeys:(id *) keys fromDictionary:(NSDictionary *) dictionary {
-	return [[[[self class] alloc] initWithKeys:keys fromDictionary:dictionary] autorelease];
-}
-
 - (id) initWithKeys:(id *) keys fromDictionary:(NSDictionary *) dictionary {
-	NSMutableDictionary *result = [[NSMutableDictionary alloc] initWithKeys:keys fromDictionary:dictionary];
-
-	self = [self initWithDictionary:result];
-
-	[result release];
-
-	return self;
+	return [[NSMutableDictionary alloc] initWithKeys:keys fromDictionary:dictionary];
 }
 @end
 

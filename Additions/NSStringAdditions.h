@@ -45,8 +45,6 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 
 - (NSString *) stringWithDomainNameSegmentOfAddress;
 
-- (NSArray *) componentsSeparatedByXMLTags;
-
 - (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(NSUInteger) limit;
 - (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(NSUInteger) limit remainingString:(NSString **) remainder;
 
