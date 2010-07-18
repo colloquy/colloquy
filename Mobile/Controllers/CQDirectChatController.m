@@ -516,7 +516,7 @@ static BOOL showingKeyboard;
 #if ENABLE(FILE_TRANSFERS)
 								   @"/dcc",
 #endif
-								   @"/aaway", @"/anick", @"/aquit", @"/google", @"/wikipedia", @"/amazon", @"/safari", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/ipod", @"/music", @"/squit", @"/welcome", @"/sysinfo", nil];
+								   @"/aaway", @"/anick", @"/aquit", @"/amsg", @"/ame", @"/google", @"/wikipedia", @"/amazon", @"/safari", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/ipod", @"/music", @"/squit", @"/welcome", @"/sysinfo", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -617,10 +617,7 @@ static BOOL showingKeyboard;
 			[scanner release];
 		}
 
-		[_target sendMessage:text withEncoding:self.encoding asAction:action];
-
-		NSData *messageData = [text dataUsingEncoding:self.encoding allowLossyConversion:YES];
-		[self addMessage:messageData fromUser:self.connection.localUser asAction:action withIdentifier:[NSString locallyUniqueString]];
+		[self sendMessage:text asAction:action];
 	}
 
 	return YES;
@@ -688,12 +685,22 @@ static BOOL showingKeyboard;
 }
 
 - (BOOL) handleAmsgCommandWithArguments:(NSString *) arguments {
-	for (MVChatConnection *connection in [CQConnectionsController defaultController].connectedConnections) {
-		for (MVChatRoom *room in connection.joinedChatRooms) {
-			CQChatRoomController *controller = [[CQChatController defaultController] chatViewControllerForRoom:room onConnection:connection ifExists:NO];
+	NSArray *rooms = [[CQChatController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
+	for (CQChatRoomController *controller in rooms) {
+		if (!controller.connection.connected)
+			continue;
+		[controller sendMessage:arguments asAction:NO];
+	}
 
-			[controller chatInputBar:nil sendText:arguments];
-		}
+	return YES;
+}
+
+- (BOOL) handleAmeCommandWithArguments:(NSString *) arguments {
+	NSArray *rooms = [[CQChatController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
+	for (CQChatRoomController *controller in rooms) {
+		if (!controller.connection.connected)
+			continue;
+		[controller sendMessage:arguments asAction:YES];
 	}
 
 	return YES;
@@ -821,10 +828,7 @@ static BOOL showingKeyboard;
 		message = NSLocalizedString(@"is not currently listening to music.", @"Not listening to music message");
 	}
 
-	[_target sendMessage:message withEncoding:self.encoding asAction:YES];
-
-	NSData *messageData = [message dataUsingEncoding:self.encoding allowLossyConversion:YES];
-	[self addMessage:messageData fromUser:self.connection.localUser asAction:YES withIdentifier:[NSString locallyUniqueString]];
+	[self sendMessage:message asAction:YES];
 
 	return YES;
 }
@@ -994,10 +998,7 @@ static BOOL showingKeyboard;
 		message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iPhone OS %@ with %.0f%% battery life remaining.", @"System info message with battery level"), version, orientation, [UIDevice currentDevice].localizedModel, [UIDevice currentDevice].systemVersion, [UIDevice currentDevice].batteryLevel * 100.];
 	else message = [NSString stringWithFormat:NSLocalizedString(@"is running Mobile Colloquy %@ in %@ mode on an %@ running iPhone OS %@.", @"System info message"), version, orientation, [UIDevice currentDevice].localizedModel, [UIDevice currentDevice].systemVersion];
 
-	[_target sendMessage:message withEncoding:self.encoding asAction:YES];
-
-	NSData *messageData = [message dataUsingEncoding:self.encoding allowLossyConversion:YES];
-	[self addMessage:messageData fromUser:self.connection.localUser asAction:YES withIdentifier:[NSString locallyUniqueString]];
+	[self sendMessage:message asAction:YES];
 
 	return YES;
 }
@@ -1218,6 +1219,15 @@ static BOOL showingKeyboard;
 
 	if (_active)
 		[UIView commitAnimations];
+}
+
+#pragma mark -
+
+- (void) sendMessage:(NSString *) message asAction:(BOOL) action {
+	[_target sendMessage:message withEncoding:self.encoding asAction:action];
+
+	NSData *messageData = [message dataUsingEncoding:self.encoding allowLossyConversion:YES];
+	[self addMessage:messageData fromUser:self.connection.localUser asAction:action withIdentifier:[NSString locallyUniqueString]];
 }
 
 #pragma mark -

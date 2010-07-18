@@ -770,16 +770,12 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 #pragma mark -
 
-- (CQChatRoomController *) chatViewControllerForRoom:(MVChatRoom *) room onConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
+- (CQChatRoomController *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists {
 	NSParameterAssert(room != nil);
 
 	for (id <CQChatViewController> controller in _chatControllers)
-		if ([controller isMemberOfClass:[CQChatRoomController class]] && controller.target == room) {
-			if (!connection.server.length)
+		if ([controller isMemberOfClass:[CQChatRoomController class]] && controller.target == room)
 				return (CQChatRoomController *)controller;
-			if ([controller.connection.server isEqualToString:connection.server])
-				return (CQChatRoomController *)controller;
-		}
 
 	CQChatRoomController *controller = nil;
 
@@ -795,10 +791,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	}
 
 	return nil;
-}
-
-- (CQChatRoomController *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists {
-	return [self chatViewControllerForRoom:room onConnection:nil ifExists:exists];
 }
 
 - (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists {
