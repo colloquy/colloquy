@@ -687,6 +687,18 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
+- (BOOL) handleAmsgCommandWithArguments:(NSString *) arguments {
+	for (MVChatConnection *connection in [CQConnectionsController defaultController].connectedConnections) {
+		for (MVChatRoom *room in connection.joinedChatRooms) {
+			CQChatRoomController *controller = [[CQChatController defaultController] chatViewControllerForRoom:room onConnection:connection ifExists:NO];
+
+			[controller chatInputBar:nil sendText:arguments];
+		}
+	}
+
+	return YES;
+}
+
 - (BOOL) handleJoinCommandWithArguments:(NSString *) arguments {
 	if (![arguments stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length) {
 		CQChatCreationViewController *creationViewController = [[CQChatCreationViewController alloc] init];
