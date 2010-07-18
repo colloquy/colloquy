@@ -677,7 +677,7 @@ static BOOL showingKeyboard;
 
 - (BOOL) handleAawayCommandWithArguments:(NSString *) arguments {
 	for (MVChatConnection *connection in [CQConnectionsController defaultController].connectedConnections)
-		[connection setAwayStatusMessage:arguments];
+		connection.awayStatusMessage = arguments;
 	return YES;
 }
 
