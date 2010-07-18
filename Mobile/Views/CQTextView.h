@@ -1,4 +1,4 @@
-@interface CQTextView : UITextView <UITextViewDelegate> {
+@interface CQTextView : UITextView {
 @protected
 	NSString *_placeholder;
 
