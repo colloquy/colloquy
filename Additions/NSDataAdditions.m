@@ -146,25 +146,6 @@ static char encodingTable[64] = {
 
 #pragma mark -
 
-- (BOOL) hasPrefix:(NSData *) prefix {
-	NSUInteger length = [prefix length];
-	if( ! prefix || ! length || [self length] < length ) return NO;
-	return ( memcmp( [self bytes], [prefix bytes], length ) == 0 );
-}
-
-- (BOOL) hasPrefixBytes:(const void *) prefix length:(NSUInteger) length {
-	if( ! prefix || ! length || [self length] < length ) return NO;
-	return ( memcmp( [self bytes], prefix, length ) == 0 );
-}
-
-#pragma mark -
-
-- (BOOL) hasSuffix:(NSData *) suffix {
-	NSUInteger length = [suffix length];
-	if( ! suffix || ! length || [self length] < length ) return NO;
-	return ( memcmp( ((const char *)[self bytes] + ([self length] - length)), [suffix bytes], length ) == 0 );
-}
-
 - (BOOL) hasSuffixBytes:(const void *) suffix length:(NSUInteger) length {
 	if( ! suffix || ! length || [self length] < length ) return NO;
 	return ( memcmp( ((const char *)[self bytes] + ([self length] - length)), suffix, length ) == 0 );
