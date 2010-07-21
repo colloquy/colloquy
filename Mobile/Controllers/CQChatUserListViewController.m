@@ -25,6 +25,8 @@ static NSString *membersFilteredCountFormat;
 #define FileTransfersEnabled 0
 #endif
 
+#define UserIdleTime 300
+
 @implementation CQChatUserListViewController
 + (void) initialize {
 	membersSingleCountFormat = [NSLocalizedString(@"Members (%u)", @"Members with single count view title") retain];
@@ -49,6 +51,7 @@ static NSString *membersFilteredCountFormat;
 	[_currentSearchString release];
 	[_room release];
 	[_searchBar release];
+	[_selectedIndexPath release];
 
 	[super dealloc];
 }
@@ -95,6 +98,17 @@ static NSString *membersFilteredCountFormat;
 
 	if ([[UIDevice currentDevice] isPadModel])
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
+}
+
+- (void) viewWillAppear:(BOOL) animated {
+	[super viewWillAppear:animated];
+
+	if (_selectedIndexPath) {
+		[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:_selectedIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+
+		[_selectedIndexPath release];
+		_selectedIndexPath = nil;
+	}
 }
 
 #pragma mark -
@@ -390,6 +404,14 @@ static NSString *membersFilteredCountFormat;
 	if (![[UIDevice currentDevice] isPadModel])
 		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
+	if (user.awayStatusMessage.length || user.idleTime >= UserIdleTime) {
+		cell.imageView.alpha = .5;
+		cell.textLabel.alpha = .5;
+	} else {
+		cell.imageView.alpha = 1.;
+		cell.textLabel.alpha = 1.;
+	}
+
 	return cell;
 }
 
@@ -432,6 +454,8 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
+	_selectedIndexPath = [indexPath retain];
+
 	CQUserInfoViewController *userInfoViewController = [[CQUserInfoViewController alloc] init];
 	userInfoViewController.user = [_matchedUsers objectAtIndex:indexPath.row];
 
@@ -476,6 +500,8 @@ static NSString *membersFilteredCountFormat;
 			CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
 			[[CQChatController defaultController] showChatController:chatController animated:YES];
 		} else if (buttonIndex == [self userInfoButtonIndex]) {
+			_selectedIndexPath = [selectedIndexPath retain];
+
 			CQUserInfoController *userInfoController = [[CQUserInfoController alloc] init];
 			userInfoController.user = user;
 
