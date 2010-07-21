@@ -56,7 +56,9 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		--DeleteTableSection;
 	}
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	multitaskingAvailable = ([[UIDevice currentDevice] isSystemFour] && [UIDevice currentDevice].multitaskingSupported);
+#endif
 
 	if (!multitaskingAvailable) {
 		--AdvancedTableSection;

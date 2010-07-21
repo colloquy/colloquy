@@ -1609,11 +1609,14 @@ static BOOL showingKeyboard;
 		if (localNotificationOnPrivateMessage)
 			[self _showLocalNotificationForMessage:message withSoundName:privateMessageSound.soundName];
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 		if ([[UIDevice currentDevice] isSystemFour] && UIAccessibilityIsVoiceOverRunning()) {
 			NSString *argument = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ privately messaged you, saying: %@", @"%@ privately messaged you, saying: %@"), user.nickname, message];
 			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, argument);
 			[argument release];
 		}
+#endif
+
 	}
 
 	if (highlighted && self.available) {
@@ -1626,11 +1629,14 @@ static BOOL showingKeyboard;
 		if (localNotificationOnHighlight && !directChat)
 			[self _showLocalNotificationForMessage:message withSoundName:highlightSound.soundName];
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 		if ([[UIDevice currentDevice] isSystemFour] && UIAccessibilityIsVoiceOverRunning()) {
 			NSString *argument = [[NSString alloc] initWithFormat:NSLocalizedString(@"In %@, %@: %@", @"In <room>, <user>: <message>"), nil, user.nickname, message];
 			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, argument);
 			[argument release];
 		}
+#endif
+
 	}
 
 	if (!_recentMessages)
@@ -1645,11 +1651,13 @@ static BOOL showingKeyboard;
 	[self _addPendingComponent:message];
 
 	if (!user.localUser) {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 		if ([[UIDevice currentDevice] isSystemFour] && UIAccessibilityIsVoiceOverRunning()) {
 			NSString *argument = [[NSString alloc] initWithFormat:@"%@: %@", user.nickname, message];
 			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, argument);
 			[argument release];
 		}
+#endif
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
 	}
