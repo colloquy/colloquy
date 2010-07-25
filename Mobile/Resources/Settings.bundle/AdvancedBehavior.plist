@@ -96,7 +96,7 @@
 			<key>Key</key>
 			<string>CQMultitaskingTimeout</string>
 			<key>Title</key>
-			<string>Multitask For:</string>
+			<string>Multitask Timeout</string>
 			<key>Values</key>
 			<array>
 				<integer>0</integer>
@@ -107,7 +107,7 @@
 			</array>
 			<key>Titles</key>
 			<array>
-				<string>Disabled</string>
+				<string>Immediate</string>
 				<string>1 Minute</string>
 				<string>2 Minutes</string>
 				<string>5 Minutes</string>
