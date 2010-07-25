@@ -1058,10 +1058,10 @@ static BOOL showingKeyboard;
 		return YES;
 	}
 
-	[self addEventMessageAsHTML:NSLocalizedString(@"Your device token is only shown locally and is:", @"Your device token is only shown locally and is:") withIdentifier:@"token"];
-	[self addEventMessageAsHTML:[CQColloquyApplication sharedApplication].deviceToken withIdentifier:@"token"];
+	[self addEventMessage:NSLocalizedString(@"Your device token is only shown locally and is:", @"Your device token is only shown locally and is:") withIdentifier:@"token"];
+	[self addEventMessage:[CQColloquyApplication sharedApplication].deviceToken withIdentifier:@"token"];
 #else
-	[self addEventMessageAsHTML:@"Push notifications not supported in the simulator." withIdentifier:@"token"];
+	[self addEventMessage:@"Push notifications not supported in the simulator." withIdentifier:@"token"];
 #endif
 
 	return YES;
@@ -1235,10 +1235,18 @@ static BOOL showingKeyboard;
 @synthesize recentMessages = _recentMessages;
 
 - (void) addEventMessage:(NSString *) messageString withIdentifier:(NSString *) identifier {
-	[self addEventMessageAsHTML:[messageString stringByEncodingXMLSpecialCharactersAsEntities] withIdentifier:identifier];
+	[self addEventMessage:messageString withIdentifier:identifier announceWithVoiceOver:NO];
+}
+
+- (void) addEventMessage:(NSString *) messageString withIdentifier:(NSString *) identifier announceWithVoiceOver:(BOOL) announce {
+	[self addEventMessageAsHTML:[messageString stringByEncodingXMLSpecialCharactersAsEntities] withIdentifier:identifier announceWithVoiceOver:announce];
 }
 
 - (void) addEventMessageAsHTML:(NSString *) messageString withIdentifier:(NSString *) identifier {
+	[self addEventMessageAsHTML:messageString withIdentifier:identifier announceWithVoiceOver:NO];
+}
+
+- (void) addEventMessageAsHTML:(NSString *) messageString withIdentifier:(NSString *) identifier announceWithVoiceOver:(BOOL) announce {
 	NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
 
 	[message setObject:@"event" forKey:@"type"];
@@ -1249,6 +1257,19 @@ static BOOL showingKeyboard;
 	[self _addPendingComponent:message];
 
 	[message release];
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
+	if ([[UIDevice currentDevice] isSystemFour] && UIAccessibilityIsVoiceOverRunning()) {
+		NSString *voiceOverAnnouncement = nil;
+		NSString *plainMessage = [messageString stringByStrippingXMLTags];
+
+		if ([self isMemberOfClass:[CQDirectChatController class]])
+			voiceOverAnnouncement = [messageString stringByStrippingXMLTags];
+		else voiceOverAnnouncement = [NSString stringWithFormat:NSLocalizedString(@"In %@, %@", @"VoiceOver event announcement when in a chat room"), self.title, plainMessage];
+
+		UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, voiceOverAnnouncement);
+	}
+#endif
 }
 
 - (void) addMessage:(NSData *) messageData fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier {
@@ -1303,7 +1324,7 @@ static BOOL showingKeyboard;
 	dateFormatter.timeStyle = NSDateFormatterShortStyle;
 	NSString *timestamp = [[dateFormatter stringFromDate:[NSDate date]] stringByEncodingXMLSpecialCharactersAsEntities];
 
-	[self addEventMessageAsHTML:timestamp withIdentifier:@"timestamp"];
+	[self addEventMessage:timestamp withIdentifier:@"timestamp"];
 
 	[dateFormatter release];
 

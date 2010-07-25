@@ -202,7 +202,7 @@ static BOOL showLeaveEvents;
 	[self _updateRightBarButtonItemAnimated:YES];
 
 	if (++_joinCount > 1)
-		[self addEventMessage:NSLocalizedString(@"You joined the room.", "Joined room event message") withIdentifier:@"rejoined"];
+		[self addEventMessage:NSLocalizedString(@"You joined the room.", "Joined room event message") withIdentifier:@"rejoined" announceWithVoiceOver:YES];
 
 	[self _displayCurrentTopicOnlyIfSet:YES];
 
@@ -387,15 +387,15 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	MVChatUser *user = [operation.userInfo objectForKey:@"author"];
 	if (user.localUser && topicString.length) {
 		NSString *eventMessageFormat = [NSLocalizedString(@"Current chat topic is \"%@\", set by you.", "Current topic set by you event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, topicString] withIdentifier:@"topic"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, topicString] withIdentifier:@"topic" announceWithVoiceOver:YES];
 	} else if (user && topicString.length) {
 		NSString *eventMessageFormat = [NSLocalizedString(@"Current chat topic is \"%@\", set by %@.", "Current topic event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, topicString, [self _markupForMemberUser:user]] withIdentifier:@"topic"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, topicString, [self _markupForMemberUser:user]] withIdentifier:@"topic" announceWithVoiceOver:YES];
 	} else if (topicString.length) {
 		NSString *eventMessageFormat = [NSLocalizedString(@"Current chat topic is \"%@\".", "Current topic with no user event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, topicString] withIdentifier:@"topic"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, topicString] withIdentifier:@"topic" announceWithVoiceOver:YES];
 	} else if (!onlyIfSet) {
-		[self addEventMessage:NSLocalizedString(@"No chat topic is set.", "No chat topic event message") withIdentifier:@"topic"];
+		[self addEventMessage:NSLocalizedString(@"No chat topic is set.", "No chat topic event message") withIdentifier:@"topic" announceWithVoiceOver:YES];
 	}
 }
 
@@ -432,7 +432,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 }
 
 - (void) _partedRoom:(NSNotification *) notification {
-	[self addEventMessage:NSLocalizedString(@"You left the room.", "Left room event message") withIdentifier:@"parted"];
+	[self addEventMessage:NSLocalizedString(@"You left the room.", "Left room event message") withIdentifier:@"parted" announceWithVoiceOver:YES];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
@@ -452,10 +452,10 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	if (reason.length) {
 		NSString *eventMessageFormat = [NSLocalizedString(@"You were kicked from the room by %@. (%@)", "You were kicked from the room with reason event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user], reason] withIdentifier:@"kicked"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user], reason] withIdentifier:@"kicked" announceWithVoiceOver:YES];
 	} else {
 		NSString *eventMessageFormat = [NSLocalizedString(@"You were kicked from the room by %@.", "You were kicked from the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user]] withIdentifier:@"kicked"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user]] withIdentifier:@"kicked" announceWithVoiceOver:YES];
 	}
 }
 
@@ -499,10 +499,10 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	if (user.localUser) {
 		NSString *eventMessageFormat = [NSLocalizedString(@"You changed the topic to \"%@\".", "You changed the room topic event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, topicString] withIdentifier:@"topicChanged"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, topicString] withIdentifier:@"topicChanged" announceWithVoiceOver:YES];
 	} else {
 		NSString *eventMessageFormat = [NSLocalizedString(@"%@ changed the topic to \"%@\".", "User changed the room topic event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user], topicString] withIdentifier:@"topicChanged"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user], topicString] withIdentifier:@"topicChanged" announceWithVoiceOver:YES];
 	}
 }
 
@@ -715,7 +715,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	}
 
 	if (message.length && identifier.length)
-		[self addEventMessageAsHTML:message withIdentifier:identifier];
+		[self addEventMessageAsHTML:message withIdentifier:identifier announceWithVoiceOver:YES];
 
 	if (!_currentUserListViewController) {
 		_membersNeedSorted = YES;
@@ -906,7 +906,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		}
 
 		if (message.length && identifier.length)
-			[self addEventMessageAsHTML:message withIdentifier:identifier];
+			[self addEventMessageAsHTML:message withIdentifier:identifier announceWithVoiceOver:YES];
 	}
 }
 
@@ -918,10 +918,10 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	if (user.localUser) {
 		NSString *message = [NSString stringWithFormat:NSLocalizedString(@"You set a ban on %@.", "You set a ban in the room event message"), bannedUser.description];
-		[self addEventMessage:message withIdentifier:@"memberBanned"];
+		[self addEventMessage:message withIdentifier:@"memberBanned" announceWithVoiceOver:YES];
 	} else {
 		NSString *eventMessageFormat = [NSLocalizedString(@"%@ set a ban on %@.", "User set a ban in the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user], [bannedUser.description stringByEncodingXMLSpecialCharactersAsEntities]] withIdentifier:@"memberBanned"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user], [bannedUser.description stringByEncodingXMLSpecialCharactersAsEntities]] withIdentifier:@"memberBanned" announceWithVoiceOver:YES];
 	}
 }
 
@@ -931,10 +931,10 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	if (user.localUser) {
 		NSString *message = [NSString stringWithFormat:NSLocalizedString(@"You removed the ban on %@.", "You removed a ban in the room event message"), bannedUser.description];
-		[self addEventMessage:message withIdentifier:@"banRemoved"];
+		[self addEventMessage:message withIdentifier:@"banRemoved" announceWithVoiceOver:YES];
 	} else {
 		NSString *eventMessageFormat = [NSLocalizedString(@"%@ removed the ban on %@.", "User removed a ban in the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user], [bannedUser.description stringByEncodingXMLSpecialCharactersAsEntities]] withIdentifier:@"banRemoved"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user], [bannedUser.description stringByEncodingXMLSpecialCharactersAsEntities]] withIdentifier:@"banRemoved" announceWithVoiceOver:YES];
 	}
 }
 
@@ -992,7 +992,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 			userInformation = [NSString stringWithFormat:@"%@!%@@%@", [self _markupForMemberUser:user], user.username, user.address];
 		else userInformation = [self _markupForMemberUser:user];
 
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:@"memberJoined"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:@"memberJoined" announceWithVoiceOver:YES];
 	}
 
 	[_orderedMembers addObject:user];
@@ -1019,10 +1019,10 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	if (reason.length) {
 		NSString *eventMessageFormat = [NSLocalizedString(@"%@ left the room. (%@)", "User has left the room with reason event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation, reason] withIdentifier:@"memberParted"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation, reason] withIdentifier:@"memberParted" announceWithVoiceOver:YES];
 	} else {
 		NSString *eventMessageFormat = [NSLocalizedString(@"%@ left the room.", "User has left the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
-		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:@"memberParted"];
+		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:@"memberParted" announceWithVoiceOver:YES];
 	}
 }
 
@@ -1055,18 +1055,18 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	if (byUser.localUser) {
 		if (reason.length) {
 			NSString *eventMessageFormat = [NSLocalizedString(@"You kicked %@ from the room. (%@)", "You kicked a user from the room with reason event message") stringByEncodingXMLSpecialCharactersAsEntities];
-			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation, reason] withIdentifier:@"memberKicked"];
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation, reason] withIdentifier:@"memberKicked" announceWithVoiceOver:YES];
 		} else {
 			NSString *eventMessageFormat = [NSLocalizedString(@"You kicked %@ from the room.", "You kicked a user from the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
-			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:@"memberKicked"];
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation] withIdentifier:@"memberKicked" announceWithVoiceOver:YES];
 		}
 	} else {
 		if (reason.length) {
 			NSString *eventMessageFormat = [NSLocalizedString(@"%@ was kicked from the room by %@. (%@)", "A user was kicked from the room with reason event message") stringByEncodingXMLSpecialCharactersAsEntities];
-			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation, [self _markupForMemberUser:byUser], reason] withIdentifier:@"memberKicked"];
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation, [self _markupForMemberUser:byUser], reason] withIdentifier:@"memberKicked" announceWithVoiceOver:YES];
 		} else {
 			NSString *eventMessageFormat = [NSLocalizedString(@"%@ was kicked from the room by %@.", "A user was kicked from the room event message") stringByEncodingXMLSpecialCharactersAsEntities];
-			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation, [self _markupForMemberUser:byUser]] withIdentifier:@"memberKicked"];
+			[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, userInformation, [self _markupForMemberUser:byUser]] withIdentifier:@"memberKicked" announceWithVoiceOver:YES];
 		}
 	}
 }

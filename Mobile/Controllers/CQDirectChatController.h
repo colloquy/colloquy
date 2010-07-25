@@ -57,5 +57,8 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 - (void) addMessage:(NSDictionary *) message;
 
 - (void) addEventMessage:(NSString *) message withIdentifier:(NSString *) identifier;
+- (void) addEventMessage:(NSString *) message withIdentifier:(NSString *) identifier announceWithVoiceOver:(BOOL) announce;
+
 - (void) addEventMessageAsHTML:(NSString *) message withIdentifier:(NSString *) identifier;
+- (void) addEventMessageAsHTML:(NSString *) message withIdentifier:(NSString *) identifier announceWithVoiceOver:(BOOL) announce;
 @end
