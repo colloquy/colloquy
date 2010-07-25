@@ -40,13 +40,19 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Default Messages</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
-			<string>Away Status</string>
+			<string>Away</string>
 			<key>Key</key>
 			<string>CQAwayStatus</string>
 			<key>DefaultValue</key>
-			<string>Colloquy for iPhone</string>
+			<string>Colloquy for iPhone - http://colloquy.mobi</string>
 			<key>AutocapitalizationType</key>
 			<string>Sentences</string>
 		</dict>
@@ -54,7 +60,7 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 			<key>Title</key>
-			<string>Quit Message</string>
+			<string>Quit</string>
 			<key>Key</key>
 			<string>JVQuitMessage</string>
 			<key>DefaultValue</key>
