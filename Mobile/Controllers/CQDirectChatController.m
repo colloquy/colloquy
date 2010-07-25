@@ -1264,7 +1264,7 @@ static BOOL showingKeyboard;
 		NSString *plainMessage = [messageString stringByStrippingXMLTags];
 
 		if ([self isMemberOfClass:[CQDirectChatController class]])
-			voiceOverAnnouncement = [messageString stringByStrippingXMLTags];
+			voiceOverAnnouncement = plainMessage;
 		else voiceOverAnnouncement = [NSString stringWithFormat:NSLocalizedString(@"In %@, %@", @"VoiceOver event announcement when in a chat room"), self.title, plainMessage];
 
 		UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, voiceOverAnnouncement);
