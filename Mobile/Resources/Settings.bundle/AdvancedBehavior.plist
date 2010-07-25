@@ -132,7 +132,7 @@
 			<key>Title</key>
 			<string>Auto Away</string>
 			<key>Key</key>
-			<string>CQAutoAwayOnBackgrounding</string>
+			<string>CQAutoAwayWhenMultitasking</string>
 			<key>DefaultValue</key>
 			<true/>
 		</dict>

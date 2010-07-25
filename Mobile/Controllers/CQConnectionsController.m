@@ -146,6 +146,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[_bouncerChatConnections release];
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	[_timeRemainingLocalNotifiction release];
+	[_automaticallySetConnectionAwayStatus release];
 #endif
 
 	[super dealloc];
@@ -599,7 +600,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) _didEnterBackground {
-	_automaticallySetConnectionAwayStatus = [[NSMutableSet alloc] initWithCapacity:5];
+	_automaticallySetConnectionAwayStatus = [[NSMutableSet alloc] init];
 
 	NSTimeInterval remainingTime = [UIApplication sharedApplication].backgroundTimeRemaining;
 	NSTimeInterval multitaskingTimeout = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"];
@@ -625,13 +626,13 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[self performSelector:@selector(_showRemainingTimeAlert) withObject:nil afterDelay:remainingTime];
 	}
 
-	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQAutoAwayOnBackgrounding"])
-		return;
-
-	for (MVChatConnection *connection in _connections) {
-		if (!connection.awayStatusMessage.length) {
-			connection.awayStatusMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQAwayMessage"];
-			[_automaticallySetConnectionAwayStatus addObject:connection];
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQAutoAwayWhenMultitasking"]) {
+		NSString *defaultAwayMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQAwayMessage"];
+		for (MVChatConnection *connection in _connections) {
+			if (!connection.awayStatusMessage.length) {
+				connection.awayStatusMessage = defaultAwayMessage;
+				[_automaticallySetConnectionAwayStatus addObject:connection];
+			}
 		}
 	}
 }
@@ -644,9 +645,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		if (connection.status == MVChatConnectionSuspendedStatus)
 			[connection connectAppropriately];
 
-		if (connection.awayStatusMessage.length && _automaticallySetConnectionAwayStatus.count)
-			if ([_automaticallySetConnectionAwayStatus containsObject:connection])
-				connection.awayStatusMessage = nil;
+		if ([_automaticallySetConnectionAwayStatus containsObject:connection])
+			connection.awayStatusMessage = nil;
 	}
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_disconnectForSuspend) object:nil];
@@ -656,6 +656,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	_timeRemainingLocalNotifiction = nil;
 
 	[_automaticallySetConnectionAwayStatus release];
+	_automaticallySetConnectionAwayStatus = nil;
 }
 
 - (void) _backgroundTaskExpired {
