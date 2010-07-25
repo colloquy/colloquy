@@ -162,6 +162,20 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Only First Message</string>
+			<key>Key</key>
+			<string>CQPrivateMessageAlertTimeout</string>
+			<key>DefaultValue</key>
+			<false/>
+			<key>TrueValue</key>
+			<integer>300</integer>
+			<key>FalseValue</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>Multitasking</string>

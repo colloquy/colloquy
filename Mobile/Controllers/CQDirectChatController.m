@@ -30,6 +30,7 @@ NSString *CQChatViewControllerUnreadMessagesUpdatedNotification = @"CQChatViewCo
 static CQSoundController *privateMessageSound;
 static CQSoundController *highlightSound;
 static NSTimeInterval timestampInterval;
+static NSTimeInterval privateMessageAlertTimeout;
 static BOOL graphicalEmoticons;
 static BOOL naturalChatActions;
 static BOOL vibrateOnHighlight;
@@ -61,6 +62,7 @@ static BOOL showingKeyboard;
 		return;
 
 	timestampInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQTimestampInterval"];
+	privateMessageAlertTimeout = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQPrivateMessageAlertTimeout"];
 	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
 	naturalChatActions = [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"];
 	vibrateOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"];
@@ -1618,28 +1620,48 @@ static BOOL showingKeyboard;
 			++[CQChatController defaultController].totalImportantUnreadCount;
 	}
 
+	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
+
 	BOOL directChat = [self isMemberOfClass:[CQDirectChatController class]];
+	BOOL privateAlertsAllowed = (!privateMessageAlertTimeout || (currentTime - _lastMessageTime) >= privateMessageAlertTimeout);
+	BOOL vibrated = NO;
+	BOOL playedSound = NO;
+	BOOL showedAlert = NO;
 
-	if (!user.localUser && directChat) {
-		if (vibrateOnPrivateMessage)
+	_lastMessageTime = currentTime;
+
+	if (!user.localUser && directChat && privateAlertsAllowed) {
+		if (vibrateOnPrivateMessage && !vibrated) {
 			[CQSoundController vibrate];
+			vibrated = YES;
+		}
 
-		if (privateMessageSound)
+		if (privateMessageSound && !playedSound) {
 			[privateMessageSound playSound];
+			playedSound = YES;
+		}
 
-		if (localNotificationOnPrivateMessage)
+		if (localNotificationOnPrivateMessage && !showedAlert) {
 			[self _showLocalNotificationForMessage:message withSoundName:privateMessageSound.soundName];
+			showedAlert = YES;
+		}
 	}
 
 	if (highlighted && self.available) {
-		if (vibrateOnHighlight)
+		if (vibrateOnHighlight && !vibrated) {
 			[CQSoundController vibrate];
+			vibrated = YES;
+		}
 
-		if (highlightSound && (!directChat || (directChat && !privateMessageSound)))
+		if (highlightSound && !playedSound) {
 			[highlightSound playSound];
+			playedSound = YES;
+		}
 
-		if (localNotificationOnHighlight && !directChat)
+		if (localNotificationOnHighlight && !showedAlert) {
 			[self _showLocalNotificationForMessage:message withSoundName:highlightSound.soundName];
+			showedAlert = YES;
+		}
 	}
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0

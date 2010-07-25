@@ -44,6 +44,7 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 	BOOL _showDeviceTokenWhenRegistered;
 
 	NSTimeInterval _lastTimestampTime;
+	NSTimeInterval _lastMessageTime;
 }
 - (id) initWithTarget:(id) target;
 
