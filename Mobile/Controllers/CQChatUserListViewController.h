@@ -10,8 +10,6 @@
 	NSString *_currentSearchString;
 	MVChatRoom *_room;
 	UISearchBar *_searchBar;
-
-	NSIndexPath *_selectedIndexPath;
 }
 @property (nonatomic, copy) NSArray *users;
 @property (nonatomic, retain) MVChatRoom *room;
