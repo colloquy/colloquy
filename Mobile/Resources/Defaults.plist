@@ -85,8 +85,8 @@
 	<key>JVQuitMessage</key>
 	<string>Colloquy for iPhone - http://colloquy.mobi</string>
 	<key>CQAwayStatus</key>
-	<string>Colloquy for iPhone</string>
+	<string>Colloquy for iPhone - http://colloquy.mobi</string>
 	<key>CQAutoAwayWhenMultitasking</key>
-	<false/>
+	<true/>
 </dict>
 </plist>
