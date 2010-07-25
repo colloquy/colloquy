@@ -148,11 +148,11 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[analyticsController setObject:information forKey:@"quit-message"];
 }
 
-- (void) setDefaultStatusStringForKey:(NSString *) key {
-	NSString *statusMessage = [[NSUserDefaults standardUserDefaults] stringForKey:key];
-	if ([statusMessage hasCaseInsensitiveSubstring:@"Colloquy for iPhone"]) {
-		statusMessage = [NSString stringWithFormat:NSLocalizedString(@"Colloquy for %@ - http://colloquy.mobi", @"Status message, with the device name inserted"), [UIDevice currentDevice].localizedModel];
-		[[NSUserDefaults standardUserDefaults] setObject:statusMessage forKey:key];
+- (void) setDefaultMessageStringForKey:(NSString *) key {
+	NSString *message = [[NSUserDefaults standardUserDefaults] stringForKey:key];
+	if ([message hasCaseInsensitiveSubstring:@"Colloquy for iPhone"]) {
+		message = [NSString stringWithFormat:NSLocalizedString(@"Colloquy for %@ - http://colloquy.mobi", @"Status message, with the device name inserted"), [UIDevice currentDevice].localizedModel];
+		[[NSUserDefaults standardUserDefaults] setObject:message forKey:key];
 	}
 }
 
@@ -194,10 +194,13 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		[preferences release];
 
 		if (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVSetUpDefaultQuitMessage"]) {
-			[self setDefaultStatusStringForKey:@"JVQuitMessage"];
-			[self setDefaultStatusStringForKey:@"CQAwayStatus"];
-
+			[self setDefaultMessageStringForKey:@"JVQuitMessage"];
 			[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVSetUpDefaultQuitMessage"];
+		}
+
+		if (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVSetUpDefaultAwayMessage"]) {
+			[self setDefaultMessageStringForKey:@"CQAwayStatus"];
+			[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVSetUpDefaultAwayMessage"];
 		}
 
 		if (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count)
