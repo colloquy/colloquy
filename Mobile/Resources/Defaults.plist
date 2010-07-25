@@ -87,6 +87,6 @@
 	<key>CQAwayStatus</key>
 	<string>Colloquy for iPhone</string>
 	<key>CQAutoAwayOnBackgrounding</key>
-	<true/>
+	<false/>
 </dict>
 </plist>
