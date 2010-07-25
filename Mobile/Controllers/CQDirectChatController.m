@@ -1608,15 +1608,6 @@ static BOOL showingKeyboard;
 
 		if (localNotificationOnPrivateMessage)
 			[self _showLocalNotificationForMessage:message withSoundName:privateMessageSound.soundName];
-
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-		if ([[UIDevice currentDevice] isSystemFour] && UIAccessibilityIsVoiceOverRunning()) {
-			NSString *argument = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ privately messaged you, saying: %@", @"%@ privately messaged you, saying: %@"), user.nickname, message];
-			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, argument);
-			[argument release];
-		}
-#endif
-
 	}
 
 	if (highlighted && self.available) {
@@ -1628,16 +1619,24 @@ static BOOL showingKeyboard;
 
 		if (localNotificationOnHighlight && !directChat)
 			[self _showLocalNotificationForMessage:message withSoundName:highlightSound.soundName];
+	}
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-		if ([[UIDevice currentDevice] isSystemFour] && UIAccessibilityIsVoiceOverRunning()) {
-			NSString *argument = [[NSString alloc] initWithFormat:NSLocalizedString(@"In %@, %@: %@", @"In <room>, <user>: <message>"), nil, user.nickname, message];
-			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, argument);
-			[argument release];
-		}
-#endif
+	if ([[UIDevice currentDevice] isSystemFour] && UIAccessibilityIsVoiceOverRunning() && !user.localUser) {
+		NSString *voiceOverAnnouncement = nil;
 
+		if (directChat && highlighted)
+			voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ highlighted you, privately saying: %@", @"VoiceOver announcement when highlighted in a direct chat"), user.displayName, message];
+		else if (directChat)
+			voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ privately said: %@", @"VoiceOver announcement when in a direct chat"), user.displayName, message];
+		else if (highlighted)
+			voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ highlighted you in %@, saying: %@", @"VoiceOver announcement when highlighted in a chat room"), user.displayName, self.title, message];
+		else voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ in %@ said: %@", @"VoiceOver announcement when in a chat room"), user.displayName, self.title, message];
+
+		UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, voiceOverAnnouncement);
+		[voiceOverAnnouncement release];
 	}
+#endif
 
 	if (!_recentMessages)
 		_recentMessages = [[NSMutableArray alloc] init];
@@ -1650,16 +1649,7 @@ static BOOL showingKeyboard;
 
 	[self _addPendingComponent:message];
 
-	if (!user.localUser) {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-		if ([[UIDevice currentDevice] isSystemFour] && UIAccessibilityIsVoiceOverRunning()) {
-			NSString *argument = [[NSString alloc] initWithFormat:@"%@: %@", user.nickname, message];
-			UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, argument);
-			[argument release];
-		}
-#endif
-
+	if (!user.localUser)
 		[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
-	}
 }
 @end
