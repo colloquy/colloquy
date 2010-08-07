@@ -46,6 +46,7 @@ static BOOL localNotificationOnPrivateMessage;
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command;
 - (void) _forceRegsignKeyboard;
 - (void) _userDefaultsChanged;
+- (BOOL) _canAnnounceWithVoiceOverAndMessageIsImportant:(BOOL) important;
 @end
 
 #pragma mark -
@@ -1261,7 +1262,7 @@ static BOOL showingKeyboard;
 	[message release];
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIDevice currentDevice] isSystemFour] && UIAccessibilityIsVoiceOverRunning()) {
+	if ([self _canAnnounceWithVoiceOverAndMessageIsImportant:NO]) {
 		NSString *voiceOverAnnouncement = nil;
 		NSString *plainMessage = [messageString stringByStrippingXMLTags];
 
@@ -1600,6 +1601,15 @@ static BOOL showingKeyboard;
 	[_pendingComponents removeAllObjects];
 }
 
+- (BOOL) _canAnnounceWithVoiceOverAndMessageIsImportant:(BOOL) important {
+	if (![[UIDevice currentDevice] isSystemFour])
+		return NO;
+	id visibleChatController = [CQChatController defaultController].visibleChatController;
+	if (!important && visibleChatController && visibleChatController != self)
+		return NO;
+	return UIAccessibilityIsVoiceOverRunning();
+}
+
 - (void) _messageProcessed:(CQProcessChatMessageOperation *) operation {
 	NSMutableDictionary *message = operation.processedMessageInfo;
 	BOOL highlighted = [[message objectForKey:@"highlighted"] boolValue];
@@ -1666,7 +1676,7 @@ static BOOL showingKeyboard;
 	}
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIDevice currentDevice] isSystemFour] && UIAccessibilityIsVoiceOverRunning() && !user.localUser) {
+	if (!user.localUser && [self _canAnnounceWithVoiceOverAndMessageIsImportant:(directChat || highlighted)]) {
 		NSString *voiceOverAnnouncement = nil;
 
 		if (directChat && highlighted)
