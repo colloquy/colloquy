@@ -146,6 +146,11 @@ static char encodingTable[64] = {
 
 #pragma mark -
 
+- (BOOL) hasPrefixBytes:(const void *) prefix length:(NSUInteger) length {
+	if( ! prefix || ! length || [self length] < length ) return NO;
+	return ( memcmp( [self bytes], prefix, length ) == 0 );
+}
+
 - (BOOL) hasSuffixBytes:(const void *) suffix length:(NSUInteger) length {
 	if( ! suffix || ! length || [self length] < length ) return NO;
 	return ( memcmp( ((const char *)[self bytes] + ([self length] - length)), suffix, length ) == 0 );
