@@ -1326,7 +1326,7 @@ static BOOL showingKeyboard;
 	dateFormatter.timeStyle = NSDateFormatterShortStyle;
 	NSString *timestamp = [[dateFormatter stringFromDate:[NSDate date]] stringByEncodingXMLSpecialCharactersAsEntities];
 
-	[self addEventMessage:timestamp withIdentifier:@"timestamp"];
+	[self addEventMessage:timestamp withIdentifier:@"timestamp" announceWithVoiceOver:NO];
 
 	[dateFormatter release];
 
