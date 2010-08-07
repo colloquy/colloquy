@@ -1416,7 +1416,8 @@ static BOOL showingKeyboard;
 	chatInputBar.autocomplete = ![completionBehavior isEqualToString:@"Disabled"];
 	chatInputBar.spaceCyclesCompletions = [completionBehavior isEqualToString:@"Keyboard"];
 
-	chatInputBar.autocorrect = ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableChatAutocorrection"];
+	BOOL autocorrect = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableChatAutocorrection"];
+	chatInputBar.autocorrect = !autocorrect;
 
 	chatInputBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
