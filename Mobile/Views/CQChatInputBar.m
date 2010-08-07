@@ -143,6 +143,13 @@
 
 @synthesize autocorrect = _autocorrect;
 
+#if !ENABLE(SECRETS)
+- (void) setAutocorrect:(BOOL) autocorrect {
+	// Do nothing, autocorrection can't be enabled if we don't use secrets, since it would
+	// appear over our completion popup and fight with the entered text.
+}
+#endif
+
 - (UIColor *) tintColor {
 	return _backgroundView.tintColor;
 }
@@ -153,13 +160,6 @@
 	_inputField.keyboardAppearance = ([color isEqual:[UIColor blackColor]] ? UIKeyboardAppearanceAlert : UIKeyboardAppearanceDefault);
 	_backgroundView.tintColor = color;
 }
-
-#if ENABLE(SECRETS)
-- (void) setAutocorrect:(BOOL) autocorrect {
-	// Do nothing, autocorrection can't be enabled if we don't use secrets, since it would
-	// appear over our completion popup and fight with the entered text.
-}
-#endif
 
 #pragma mark -
 
@@ -334,7 +334,6 @@ retry:
 
 	_inputField.autocorrectionType = (_autocorrect ? UITextAutocorrectionTypeDefault : UITextAutocorrectionTypeNo);
 
-	[self _updateTextTraits];
 	[self hideCompletions];
 
 	return YES;
@@ -510,7 +509,6 @@ retry:
 	_inputField.text = @"";
 	_inputField.autocorrectionType = (_autocorrect ? UITextAutocorrectionTypeDefault : UITextAutocorrectionTypeNo);
 
-	[self _updateTextTraits];
 	[self hideCompletions];
 }
 @end
