@@ -1262,7 +1262,7 @@ static BOOL showingKeyboard;
 	[message release];
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([self _canAnnounceWithVoiceOverAndMessageIsImportant:NO]) {
+	if (announce && [self _canAnnounceWithVoiceOverAndMessageIsImportant:NO]) {
 		NSString *voiceOverAnnouncement = nil;
 		NSString *plainMessage = [messageString stringByStrippingXMLTags];
 
