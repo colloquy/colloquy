@@ -80,8 +80,10 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	[passwordQuery setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
 
 	OSStatus status = SecItemCopyMatching((CFDictionaryRef)passwordQuery, (CFTypeRef *)&resultData);
-	if (status == noErr && resultData)
+	if (status == noErr && resultData) {
 		string = [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
+		[resultData release];
+	}
 
 	[passwordQuery release];
 #else
