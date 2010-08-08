@@ -1660,20 +1660,14 @@ static BOOL showingKeyboard;
 	}
 
 	if (highlighted && self.available) {
-		if (vibrateOnHighlight && !vibrated) {
+		if (vibrateOnHighlight && !vibrated)
 			[CQSoundController vibrate];
-			vibrated = YES;
-		}
 
-		if (highlightSound && !playedSound) {
+		if (highlightSound && !playedSound)
 			[highlightSound playSound];
-			playedSound = YES;
-		}
 
-		if (localNotificationOnHighlight && !showedAlert) {
+		if (localNotificationOnHighlight && !showedAlert)
 			[self _showLocalNotificationForMessage:message withSoundName:highlightSound.soundName];
-			showedAlert = YES;
-		}
 	}
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
