@@ -1047,6 +1047,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) _refreshList {
+	if (_reloadingData)
+		return;
+
+	_reloadingData = YES;
+
 	id selectItem = [self selectedListItem];
 
 	[chatViewsOutlineView reloadData];
@@ -1054,6 +1059,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	if( selectItem )
 		[chatViewsOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:[chatViewsOutlineView rowForItem:selectItem]] byExtendingSelection:NO];
+
+	_reloadingData = NO;
 }
 
 - (void) _refreshPreferences {

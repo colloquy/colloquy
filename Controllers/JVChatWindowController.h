@@ -22,6 +22,7 @@ extern NSString *JVChatViewPboardType;
 	id <JVChatViewController> _activeViewController;
 	BOOL _usesSmallIcons;
 	BOOL _showDelayed;
+	BOOL _reloadingData;
 }
 - (NSString *) identifier;
 - (void) setIdentifier:(NSString *) identifier;
