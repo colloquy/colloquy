@@ -395,8 +395,12 @@ static NSMenu *favoritesMenu = nil;
 		return;
 	}
 
+	MVChatConnectionType type = [self newTypeToConnectionType];
+
 	NSMutableCharacterSet *allowedCharacters = (NSMutableCharacterSet *)[NSMutableCharacterSet alphanumericCharacterSet];
-	[allowedCharacters addCharactersInString:@"`_-|^{}[]@"];
+	if (type == MVChatConnectionXMPPType)
+		[allowedCharacters addCharactersInString:@"`_-|^{}[]"];
+	else [allowedCharacters addCharactersInString:@"`_-|^{}[]@"];
 
 	NSCharacterSet *illegalCharacters = [allowedCharacters invertedSet];
 
@@ -435,8 +439,6 @@ static NSMenu *favoritesMenu = nil;
 	}
 
 	[openConnection orderOut:nil];
-
-	MVChatConnectionType type = [self newTypeToConnectionType];
 
 	MVChatConnection *connection = [[[MVChatConnection alloc] initWithType:type] autorelease];
 	[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];
