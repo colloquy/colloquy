@@ -4,6 +4,13 @@
 #import "MVConnectionsController.h"
 #import "MVTableView.h"
 
+@interface NSDisclosureButtonCell
++ (id) alloc;
+- (id) initWithCell:(NSCell *) cell;
+@end
+
+#pragma mark -
+
 @interface JVChatRoomBrowser (JVChatRoomBrowserPrivate)
 - (void) _needToRefreshResults:(id) sender;
 - (void) _refreshResults:(id) sender;
@@ -84,10 +91,7 @@
 
 	[roomsTable setDoubleAction:@selector( joinRoom: )];
 
-	NSButtonCell *cell = [[NSButtonCell alloc] init];
-	[cell setBezelStyle:NSRoundedDisclosureBezelStyle];
-	[showBrowser setCell:cell];
-	[cell release];
+	[showBrowser setCell:[[[NSDisclosureButtonCell alloc] initWithCell:[showBrowser cell]] autorelease]];
 
 	[searchField setAction:@selector( filterResults: )];
 	[searchField setTarget:self];
