@@ -40,13 +40,6 @@ static NSMenu *favoritesMenu = nil;
 
 #pragma mark -
 
-@interface NSDisclosureButtonCell : NSCell
-+ (id) alloc;
-- (id) initWithCell:(NSCell *) cell;
-@end
-
-#pragma mark -
-
 @interface NSAlert (LeopardOnly)
 - (void) setAccessoryView:(NSView *) view;
 @end
@@ -224,7 +217,8 @@ static NSMenu *favoritesMenu = nil;
 	[toolbar setAutosavesConfiguration:YES];
 	[[self window] setToolbar:toolbar];
 
-	NSDisclosureButtonCell *cell = [[NSDisclosureButtonCell alloc] initWithCell:[showDetails cell]];
+	NSButtonCell *cell = [[NSButtonCell alloc] init];
+	[cell setBezelStyle:NSRoundedDisclosureBezelStyle];
 	[showDetails setCell:cell];
 	[cell release];
 
