@@ -1006,6 +1006,9 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 - (NSString *) stringByStrippingIllegalXMLCharacters {
 	NSMutableCharacterSet *illegalSet = [[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 0x1f )] mutableCopyWithZone:nil];
+
+	[illegalSet removeCharactersInRange:NSMakeRange( 0x09, 1 )];
+
 	[illegalSet addCharactersInRange:NSMakeRange( 0x7f, 1 )];
 	[illegalSet addCharactersInRange:NSMakeRange( 0xfffe, 1 )];
 	[illegalSet addCharactersInRange:NSMakeRange( 0xffff, 1 )];
