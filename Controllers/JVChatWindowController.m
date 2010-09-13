@@ -247,9 +247,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (void) close {
-	[[JVChatController defaultController] performSelector:@selector( disposeChatWindowController: ) withObject:self afterDelay:0.];
 	[[self window] orderOut:nil];
 	[super close];
+	[[JVChatController defaultController] performSelector:@selector( disposeChatWindowController: ) withObject:self afterDelay:0.];
 }
 
 - (IBAction) closeCurrentPanel:(id) sender {
