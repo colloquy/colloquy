@@ -291,6 +291,7 @@
 		1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; };
 		1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; };
 		1CF803F1070C948000C9B54C /* NSURLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */; };
+		891E8467123F0AEF00EC3C0F /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 891E8466123F0AEF00EC3C0F /* NSCharacterSetAdditions.m */; };
 		891EF3D1106426CB00CCEA35 /* PFMoveApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 891EF3D0106426CB00CCEA35 /* PFMoveApplicationController.m */; };
 		89EB91AA0F269BEF0028B3E3 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; };
 		9220565E11018298005CD72D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9220565D11018298005CD72D /* NSDateAdditions.m */; };
@@ -885,6 +886,8 @@
 		1CF8030C070C893500C9B54C /* libsilc.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilc.framework; path = Frameworks/libsilc.framework; sourceTree = SOURCE_ROOT; };
 		1CF8030D070C893500C9B54C /* libsilcclient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsilcclient.framework; path = Frameworks/libsilcclient.framework; sourceTree = SOURCE_ROOT; };
 		1CF9BB9A04FBE96D00A8FE6E /* room.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = room.png; path = Resources/room.png; sourceTree = SOURCE_ROOT; };
+		891E8465123F0AEF00EC3C0F /* NSCharacterSetAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSCharacterSetAdditions.h; path = Additions/NSCharacterSetAdditions.h; sourceTree = "<group>"; };
+		891E8466123F0AEF00EC3C0F /* NSCharacterSetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSCharacterSetAdditions.m; path = Additions/NSCharacterSetAdditions.m; sourceTree = "<group>"; };
 		891EF3D0106426CB00CCEA35 /* PFMoveApplicationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFMoveApplicationController.m; path = Controllers/PFMoveApplicationController.m; sourceTree = "<group>"; };
 		891EF4091064278200CCEA35 /* PFMoveApplicationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFMoveApplicationController.h; path = Controllers/PFMoveApplicationController.h; sourceTree = "<group>"; };
 		89EB91A90F269BEF0028B3E3 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
@@ -1689,16 +1692,18 @@
 				1C018BF90A26930500C18024 /* Basic.pch */,
 				1C6A112906BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m */,
 				1C6A112806BC0C9E00A66340 /* NSAttributedStringMoreAdditions.h */,
-				1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */,
-				1CD4BD9305AA309A00F72EE6 /* NSURLAdditions.h */,
-				1C0730E30677A63B008D8AD9 /* NSImageAdditions.m */,
-				1C0730E20677A63B008D8AD9 /* NSImageAdditions.h */,
 				1CABF8760656414100801C15 /* NSBundleAdditions.m */,
 				1CABF8750656414100801C15 /* NSBundleAdditions.h */,
-				1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */,
-				1C4671E306D7759100071DC6 /* NSTextStorageAdditions.h */,
+				891E8466123F0AEF00EC3C0F /* NSCharacterSetAdditions.m */,
+				891E8465123F0AEF00EC3C0F /* NSCharacterSetAdditions.h */,
 				9220565D11018298005CD72D /* NSDateAdditions.m */,
 				9220565C11018298005CD72D /* NSDateAdditions.h */,
+				1C0730E30677A63B008D8AD9 /* NSImageAdditions.m */,
+				1C0730E20677A63B008D8AD9 /* NSImageAdditions.h */,
+				1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */,
+				1C4671E306D7759100071DC6 /* NSTextStorageAdditions.h */,
+				1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */,
+				1CD4BD9305AA309A00F72EE6 /* NSURLAdditions.h */,
 			);
 			indentWidth = 4;
 			name = "Other Sources & Additions";
@@ -2039,6 +2044,7 @@
 			};
 			buildConfigurationList = 1C041A700854E97700A5A5BA /* Build configuration list for PBXProject "Colloquy" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -2580,6 +2586,7 @@
 				1C6266D4103CC9A900A6B346 /* JVAnalyticsController.m in Sources */,
 				891EF3D1106426CB00CCEA35 /* PFMoveApplicationController.m in Sources */,
 				9220565E11018298005CD72D /* NSDateAdditions.m in Sources */,
+				891E8467123F0AEF00EC3C0F /* NSCharacterSetAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

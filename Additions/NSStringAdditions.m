@@ -1,6 +1,8 @@
 #import "NSStringAdditions.h"
 
+#import "NSCharacterSetAdditions.h"
 #import "NSScannerAdditions.h"
+
 #import "RegexKitLite.h"
 
 #import <sys/time.h>
@@ -1005,16 +1007,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 #pragma mark -
 
 - (NSString *) stringByStrippingIllegalXMLCharacters {
-	NSMutableCharacterSet *illegalSet = [[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 0x1f )] mutableCopyWithZone:nil];
-
-	[illegalSet removeCharactersInRange:NSMakeRange( 0x09, 1 )];
-
-	[illegalSet addCharactersInRange:NSMakeRange( 0x7f, 1 )];
-	[illegalSet addCharactersInRange:NSMakeRange( 0xfffe, 1 )];
-	[illegalSet addCharactersInRange:NSMakeRange( 0xffff, 1 )];
-
-	NSRange range = [self rangeOfCharacterFromSet:illegalSet];
-	[illegalSet release];
+	NSRange range = [self rangeOfCharacterFromSet:[NSCharacterSet illegalXMLCharacterSet]];
 
 	if( range.location == NSNotFound )
 		return self;
@@ -1207,11 +1200,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 #pragma mark -
 
 - (void) stripIllegalXMLCharacters {
-	NSMutableCharacterSet *illegalSet = [[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 0x1f )] mutableCopyWithZone:nil];
-	[illegalSet addCharactersInRange:NSMakeRange( 0x7f, 1 )];
-	[illegalSet addCharactersInRange:NSMakeRange( 0xfffe, 1 )];
-	[illegalSet addCharactersInRange:NSMakeRange( 0xffff, 1 )];
-
+	NSCharacterSet *illegalSet = [NSCharacterSet illegalXMLCharacterSet];
 	NSRange range = [self rangeOfCharacterFromSet:illegalSet];
 	while( range.location != NSNotFound ) {
 		[self deleteCharactersInRange:range];
