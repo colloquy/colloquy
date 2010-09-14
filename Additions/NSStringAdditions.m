@@ -1206,8 +1206,6 @@ static NSCharacterSet *typicalEmoticonCharacters;
 		[self deleteCharactersInRange:range];
 		range = [self rangeOfCharacterFromSet:illegalSet];
 	}
-
-	[illegalSet release];
 }
 
 - (void) stripXMLTags {
