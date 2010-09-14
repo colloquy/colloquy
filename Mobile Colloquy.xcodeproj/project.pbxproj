@@ -224,6 +224,7 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8900D7340FBFB2D900DE3E3B /* Servers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8900D7330FBFB2D900DE3E3B /* Servers.plist */; };
+		891E84D4123F0C8C00EC3C0F /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 891E84D3123F0C8C00EC3C0F /* NSCharacterSetAdditions.m */; };
 		8957DEE11086BA3700F21648 /* CQTableViewSectionHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 8957DEE01086BA3700F21648 /* CQTableViewSectionHeader.m */; };
 		896E84610F15AB6C00D810FE /* notes.css in Resources */ = {isa = PBXBuildFile; fileRef = 896E84600F15AB6C00D810FE /* notes.css */; };
 		897C0D670F99154500F9D8B5 /* browserInstapaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 897C0D660F99154500F9D8B5 /* browserInstapaper.png */; };
@@ -545,6 +546,8 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Mobile/main.m; sourceTree = "<group>"; };
 		8900D7330FBFB2D900DE3E3B /* Servers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Servers.plist; sourceTree = "<group>"; };
+		891E84D2123F0C8C00EC3C0F /* NSCharacterSetAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSCharacterSetAdditions.h; path = Additions/NSCharacterSetAdditions.h; sourceTree = "<group>"; };
+		891E84D3123F0C8C00EC3C0F /* NSCharacterSetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSCharacterSetAdditions.m; path = Additions/NSCharacterSetAdditions.m; sourceTree = "<group>"; };
 		8957DEDF1086BA3700F21648 /* CQTableViewSectionHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQTableViewSectionHeader.h; sourceTree = "<group>"; };
 		8957DEE01086BA3700F21648 /* CQTableViewSectionHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQTableViewSectionHeader.m; sourceTree = "<group>"; };
 		896E84600F15AB6C00D810FE /* notes.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = notes.css; sourceTree = "<group>"; };
@@ -1062,6 +1065,8 @@
 				1CFCB9B81114EED200EA5F10 /* UINavigationControllerAdditions.h */,
 				92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */,
 				92D30F2A116D2B020060EE33 /* UIViewControllerAdditions.h */,
+				891E84D3123F0C8C00EC3C0F /* NSCharacterSetAdditions.m */,
+				891E84D2123F0C8C00EC3C0F /* NSCharacterSetAdditions.h */,
 				1C0932670D80CA4800A2705D /* NSDataAdditions.m */,
 				1C0932660D80CA4800A2705D /* NSDataAdditions.h */,
 				1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */,
@@ -1442,6 +1447,7 @@
 				1CDDE9C5118C8EB700C83EBE /* CQTableViewController.m in Sources */,
 				1CDDE9F6118CD2B800C83EBE /* NSObjectAdditions.m in Sources */,
 				1CA26BBB11C7415000AB4E44 /* RegexKitLite.m in Sources */,
+				891E84D4123F0C8C00EC3C0F /* NSCharacterSetAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
