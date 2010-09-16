@@ -9,6 +9,11 @@
 #import "JVDetailCell.h"
 #import "MVMenuButton.h"
 
+typedef enum {
+	JVChatViewOrganizationTypeDefault = 0,
+	JVChatViewOrganizationTypeAlphabetical,
+} JVChatViewOrganizationType;
+
 NSString *JVToolbarToggleChatDrawerItemIdentifier = @"JVToolbarToggleChatDrawerItem";
 NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
@@ -332,7 +337,18 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (void) addChatViewController:(id <JVChatViewController>) controller {
-	[self insertChatViewController:controller atIndex:[_views count]];
+	NSInteger organizationType = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatViewOrganizationType"];
+	if( organizationType == JVChatViewOrganizationTypeDefault ) {
+		[self insertChatViewController:controller atIndex:[_views count]];
+	} else if( organizationType == JVChatViewOrganizationTypeAlphabetical ) {
+		NSUInteger i = 0;
+		for( i = 0; i < [_views count]; i++ ) {
+			if( [[[_views objectAtIndex:i] title] caseInsensitiveCompare:[controller title]] == NSOrderedDescending )
+				break;
+		}
+
+		[self insertChatViewController:controller atIndex:i];
+	}
 }
 
 - (void) insertChatViewController:(id <JVChatViewController>) controller atIndex:(NSUInteger) index {

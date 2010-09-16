@@ -60,6 +60,8 @@
 	<true/>
 	<key>JVShowConnectionsWindowOnLaunch</key>
 	<true/>
+	<key>JVChatViewOrganizationType</key>
+	<integer>0</integer>
 	<key>MVChatSendOnReturn</key>
 	<true/>
 	<key>MVChatActionOnReturn</key>
