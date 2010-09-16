@@ -338,7 +338,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (void) addChatViewController:(id <JVChatViewController>) controller {
 	NSInteger organizationType = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatViewOrganizationType"];
-	NSLog(@"is: %d, should be: %d", organizationType, JVChatViewOrganizationTypeAlphabetical);
+
 	if( organizationType == JVChatViewOrganizationTypeAlphabetical ) {
 		NSUInteger i = 0;
 		for( i = 0; i < [_views count]; i++ ) {
