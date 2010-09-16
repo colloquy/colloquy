@@ -338,9 +338,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (void) addChatViewController:(id <JVChatViewController>) controller {
 	NSInteger organizationType = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatViewOrganizationType"];
-	if( organizationType == JVChatViewOrganizationTypeDefault ) {
-		[self insertChatViewController:controller atIndex:[_views count]];
-	} else if( organizationType == JVChatViewOrganizationTypeAlphabetical ) {
+	NSLog(@"is: %d, should be: %d", organizationType, JVChatViewOrganizationTypeAlphabetical);
+	if( organizationType == JVChatViewOrganizationTypeAlphabetical ) {
 		NSUInteger i = 0;
 		for( i = 0; i < [_views count]; i++ ) {
 			if( [[[_views objectAtIndex:i] title] caseInsensitiveCompare:[controller title]] == NSOrderedDescending )
@@ -348,7 +347,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		}
 
 		[self insertChatViewController:controller atIndex:i];
+	} else {
+		[self insertChatViewController:controller atIndex:[_views count]];
 	}
+
 }
 
 - (void) insertChatViewController:(id <JVChatViewController>) controller atIndex:(NSUInteger) index {
