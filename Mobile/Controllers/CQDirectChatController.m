@@ -122,6 +122,7 @@ static BOOL showingKeyboard;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didRecieveDeviceToken:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_customStyleSheetLoaded:) name:CQChatTranscriptCustomizedNotification object:nil];
 
 	if ([[UIDevice currentDevice] isPadModel]) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -1425,6 +1426,10 @@ static BOOL showingKeyboard;
 
 	NSString *capitalizationBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocapitalizationBehavior"];
 	chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
+}
+
+- (void) _customStyleSheetLoaded:(NSNotification *) notification {
+	[transcriptView reset];
 }
 
 - (void) _userNicknameDidChange:(NSNotification *) notification {

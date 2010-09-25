@@ -22,6 +22,8 @@ NSString *CQChatControllerAddedChatViewControllerNotification = @"CQChatControll
 NSString *CQChatControllerRemovedChatViewControllerNotification = @"CQChatControllerRemovedChatViewControllerNotification";
 NSString *CQChatControllerChangedTotalImportantUnreadCountNotification = @"CQChatControllerChangedTotalImportantUnreadCountNotification";
 
+NSString *CQChatTranscriptCustomizedNotification = @"CQChatTranscriptCustomizedNotification";
+
 #define ChatRoomInviteAlertTag 1
 
 #if ENABLE(FILE_TRANSFERS)
@@ -45,6 +47,9 @@ static CQSoundController *highlightSound;
 static BOOL vibrateOnFileTransfer;
 static CQSoundController *fileTransferSound;
 #endif
+
+static NSString *chatTranscriptFont;
+static NSUInteger chatTranscriptFontSize;
 
 #pragma mark -
 
@@ -75,6 +80,68 @@ static CQSoundController *fileTransferSound;
 	fileTransferSound = ([soundName isEqualToString:@"None"] ? nil : [[CQSoundController alloc] initWithSoundNamed:soundName]);
 	[old release];
 #endif
+
+	BOOL transcriptStyleNeedsUpdating = NO;
+
+	old = chatTranscriptFont;
+	chatTranscriptFont = [[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptFont"] copy];
+
+	if (![old isEqualToString:chatTranscriptFont])
+		transcriptStyleNeedsUpdating = YES;
+
+	[old release];
+
+	NSString *chatTranscriptFontSizeLiteral = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptFontSize"];
+	NSUInteger newChatTranscriptFontSize = 14; // Default is 14px
+
+	if ([[UIDevice currentDevice] isPadModel]) {
+		if ([chatTranscriptFontSizeLiteral isEqualToString:@"smallest"])
+			newChatTranscriptFontSize = 8;
+		else if ([chatTranscriptFontSizeLiteral isEqualToString:@"smaller"])
+			newChatTranscriptFontSize = 10;
+		else if ([chatTranscriptFontSizeLiteral isEqualToString:@"small"])
+			newChatTranscriptFontSize = 12;
+		else if ([chatTranscriptFontSizeLiteral isEqualToString:@"large"])
+			newChatTranscriptFontSize = 16;
+		else if ([chatTranscriptFontSizeLiteral isEqualToString:@"larger"])
+			newChatTranscriptFontSize = 18;
+		else if ([chatTranscriptFontSizeLiteral isEqualToString:@"largest"])
+			newChatTranscriptFontSize = 20;
+	} else {
+		if ([chatTranscriptFontSizeLiteral isEqualToString:@"smallest"])
+			newChatTranscriptFontSize = 11;
+		else if ([chatTranscriptFontSizeLiteral isEqualToString:@"smaller"])
+			newChatTranscriptFontSize = 12;
+		else if ([chatTranscriptFontSizeLiteral isEqualToString:@"small"])
+			newChatTranscriptFontSize = 13;
+		else if ([chatTranscriptFontSizeLiteral isEqualToString:@"large"])
+			newChatTranscriptFontSize = 15;
+		else if ([chatTranscriptFontSizeLiteral isEqualToString:@"larger"])
+			newChatTranscriptFontSize = 16;
+		else if ([chatTranscriptFontSizeLiteral isEqualToString:@"largest"])
+			newChatTranscriptFontSize = 17;
+	}
+
+	if (!transcriptStyleNeedsUpdating && newChatTranscriptFontSize != chatTranscriptFontSize) {
+		transcriptStyleNeedsUpdating = YES;
+
+		chatTranscriptFontSize = newChatTranscriptFontSize;
+	}
+
+	NSString *variantCSSPath = [[[NSFileManager defaultManager] localDocumentsDirectoryPath] stringByAppendingPathComponent:@"variant.css"];
+
+	if (!transcriptStyleNeedsUpdating) {
+		[[NSFileManager defaultManager] removeItemAtPath:variantCSSPath error:nil];
+		return;
+	}
+
+	NSString *variantCSS = nil;
+	if (chatTranscriptFont.length)
+		variantCSS = [NSString stringWithFormat:@"body { font-size: %ld; font-family: %@; }", chatTranscriptFontSize, chatTranscriptFont];
+	else variantCSS = [NSString stringWithFormat:@"body { font-size: %ld; }", chatTranscriptFontSize];
+
+	if ([variantCSS writeToFile:variantCSSPath atomically:YES encoding:NSUTF8StringEncoding error:nil])
+		[[NSNotificationCenter defaultCenter] postNotificationName:CQChatTranscriptCustomizedNotification object:nil];
 }
 
 + (void) initialize {

@@ -352,7 +352,9 @@
 
 - (NSString *) _contentHTML {
 	NSString *templateString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
-	return [NSString stringWithFormat:templateString, _styleIdentifier];
+	NSString *variantCSSPath = [[[NSFileManager defaultManager] localDocumentsDirectoryPath] stringByAppendingPathComponent:@"variant.css"];
+
+	return [NSString stringWithFormat:templateString, _styleIdentifier, variantCSSPath];
 }
 
 - (void) _checkIfLoadingFinished {
