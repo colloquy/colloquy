@@ -27,8 +27,6 @@
 NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewControllerRecentMessagesUpdatedNotification";
 NSString *CQChatViewControllerUnreadMessagesUpdatedNotification = @"CQChatViewControllerUnreadMessagesUpdatedNotification";
 
-NSString *CQChatTranscriptCustomizedNotification = @"CQChatTranscriptCustomizedNotification";
-
 static CQSoundController *privateMessageSound;
 static CQSoundController *highlightSound;
 static NSTimeInterval timestampInterval;
@@ -126,7 +124,6 @@ static BOOL showingKeyboard;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didRecieveDeviceToken:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_customStyleSheetLoaded:) name:CQChatTranscriptCustomizedNotification object:nil];
 
 	if ([[UIDevice currentDevice] isPadModel]) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -1424,7 +1421,9 @@ static BOOL showingKeyboard;
 	chatTranscriptFontSize = 14; // Default is 14px
 
 	if ([[UIDevice currentDevice] isPadModel]) {
-		if ([chatTranscriptFontSizeLiteral isEqualToString:@"smallest"])
+		if (!chatTranscriptFontSizeLiteral.length) { // normal size, already set
+			// do nothing
+		} else if ([chatTranscriptFontSizeLiteral isEqualToString:@"smallest"])
 			chatTranscriptFontSize = 8;
 		else if ([chatTranscriptFontSizeLiteral isEqualToString:@"smaller"])
 			chatTranscriptFontSize = 10;
@@ -1437,7 +1436,9 @@ static BOOL showingKeyboard;
 		else if ([chatTranscriptFontSizeLiteral isEqualToString:@"largest"])
 			chatTranscriptFontSize = 20;
 	} else {
-		if ([chatTranscriptFontSizeLiteral isEqualToString:@"smallest"])
+		if (!chatTranscriptFontSizeLiteral.length) { // normal size, already set
+			// do nothing
+		} else if ([chatTranscriptFontSizeLiteral isEqualToString:@"smallest"])
 			chatTranscriptFontSize = 11;
 		else if ([chatTranscriptFontSizeLiteral isEqualToString:@"smaller"])
 			chatTranscriptFontSize = 12;
@@ -1454,13 +1455,12 @@ static BOOL showingKeyboard;
 	if ([self isViewLoaded] && transcriptView)
 		self.view.backgroundColor = transcriptView.backgroundColor;
 
-	if (chatTranscriptFontSize != chatTranscriptFontSize)
-		chatTranscriptFontSize = chatTranscriptFontSize;
-
 	if (chatTranscriptFontSize) {
 		if (chatTranscriptFont.length)
 			transcriptView.styleVariant = [NSString stringWithFormat:@"body { font-size: %ldpx; font-family: %@; }", chatTranscriptFontSize, chatTranscriptFont];
-		else transcriptView.styleVariant = [NSString stringWithFormat:@"body { font-size: %ldpx; }", chatTranscriptFontSize];
+		else if (chatTranscriptFontSize != 14)
+			transcriptView.styleVariant = [NSString stringWithFormat:@"body { font-size: %ldpx; }", chatTranscriptFontSize];
+		else transcriptView.styleVariant = nil;
 	}
 
 	NSString *completionBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"];
@@ -1474,10 +1474,6 @@ static BOOL showingKeyboard;
 
 	NSString *capitalizationBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocapitalizationBehavior"];
 	chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
-}
-
-- (void) _customStyleSheetLoaded:(NSNotification *) notification {
-	[transcriptView reset];
 }
 
 - (void) _userNicknameDidChange:(NSNotification *) notification {
