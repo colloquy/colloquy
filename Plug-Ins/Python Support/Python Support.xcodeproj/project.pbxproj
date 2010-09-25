@@ -166,6 +166,7 @@
 			isa = PBXProject;
 			buildConfigurationList = 1C7F306F0855489300D41FB0 /* Build configuration list for PBXProject "Python Support" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -237,8 +238,6 @@
 					dynamic_lookup,
 					"-weak_library",
 					/System/Library/Frameworks/Python.framework/Versions/2.5/Python,
-					"-weak_library",
-					/System/Library/Frameworks/Python.framework/Versions/2.3/Python,
 				);
 				PRODUCT_NAME = "Python Support";
 				WRAPPER_EXTENSION = plugin;
@@ -263,8 +262,6 @@
 					dynamic_lookup,
 					"-weak_library",
 					/System/Library/Frameworks/Python.framework/Versions/2.5/Python,
-					"-weak_library",
-					/System/Library/Frameworks/Python.framework/Versions/2.3/Python,
 				);
 				PRODUCT_NAME = "Python Support";
 				WRAPPER_EXTENSION = plugin;
