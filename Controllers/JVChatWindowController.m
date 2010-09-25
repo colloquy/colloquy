@@ -12,6 +12,7 @@
 typedef enum {
 	JVChatViewOrganizationTypeDefault = 0,
 	JVChatViewOrganizationTypeAlphabetical,
+	JVChatViewOrganizationTypeByNetworkAndRoom,
 } JVChatViewOrganizationType;
 
 NSString *JVToolbarToggleChatDrawerItemIdentifier = @"JVToolbarToggleChatDrawerItem";
@@ -346,6 +347,16 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 				break;
 		}
 
+		[self insertChatViewController:controller atIndex:i];
+	} else if ( organizationType == JVChatViewOrganizationTypeByNetworkAndRoom ) {
+		NSUInteger i = 0;
+		NSString* newControllerConnection = [NSString stringWithFormat:@"%@ %@ %@", [[controller connection] server], [[controller connection] nickname], [controller title]];
+		for( i = 0; i < [_views count]; i++ ) {
+			NSString* oldControllerConnection = [NSString stringWithFormat:@"%@ %@ %@", [(MVChatConnection*)[[_views objectAtIndex:i] connection] server], [(MVChatConnection*)[[_views objectAtIndex:i] connection] nickname], [[_views objectAtIndex:i] title]];
+			if( [oldControllerConnection caseInsensitiveCompare:newControllerConnection] == NSOrderedDescending )
+				break;
+		}
+		
 		[self insertChatViewController:controller atIndex:i];
 	} else {
 		[self insertChatViewController:controller atIndex:[_views count]];
