@@ -23,7 +23,11 @@
 </log>
 */
 
-@interface JVChatTranscriptMetadataExtractor : NSObject <NSXMLParserDelegate> {
+@interface JVChatTranscriptMetadataExtractor : NSObject 
+#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_5
+<NSXMLParserDelegate>
+#endif
+{
 	BOOL inEnvelope;
 	BOOL inMessage;
 	NSString *lastElement;

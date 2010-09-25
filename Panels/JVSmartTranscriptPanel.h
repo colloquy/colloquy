@@ -1,6 +1,10 @@
 #import "JVChatTranscriptPanel.h"
 
-@interface JVSmartTranscriptPanel : JVChatTranscriptPanel <NSCoding, NSTableViewDataSource, NSTableViewDelegate> {
+@interface JVSmartTranscriptPanel : JVChatTranscriptPanel <NSCoding
+#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_5
+, NSTableViewDataSource, NSTableViewDelegate
+#endif
+> {
 	IBOutlet NSWindow *settingsSheet;
 	IBOutlet NSTableView *subviewTableView;
 	IBOutlet NSPopUpButton *operation;

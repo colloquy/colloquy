@@ -1,7 +1,11 @@
 @class JVChatTranscriptPanel;
 @class JVChatMessage;
 
-@interface JVTranscriptFindWindowController : NSWindowController <NSTableViewDataSource, NSTableViewDelegate> {
+@interface JVTranscriptFindWindowController : NSWindowController 
+#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_5
+<NSTableViewDataSource, NSTableViewDelegate>
+#endif
+{
 	@private
 	IBOutlet NSTableView *subviewTableView;
 	IBOutlet NSPopUpButton *operation;

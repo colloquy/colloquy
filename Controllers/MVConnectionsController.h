@@ -2,7 +2,11 @@
 
 @class MVChatConnection;
 
-@interface MVConnectionsController : NSWindowController <JVInspectionDelegator, NSToolbarDelegate> {
+@interface MVConnectionsController : NSWindowController <JVInspectionDelegator
+#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_5
+, NSToolbarDelegate
+#endif
+> {
 @private
 	IBOutlet NSTableView *connections;
 	IBOutlet NSPanel *openConnection;

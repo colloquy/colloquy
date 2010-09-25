@@ -1,6 +1,10 @@
 #import "NSPreferences.h"
 
-@interface JVInterfacePreferences : NSPreferencesModule <NSTableViewDataSource, NSTableViewDelegate> {
+@interface JVInterfacePreferences : NSPreferencesModule
+#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_5
+<NSTableViewDataSource, NSTableViewDelegate>
+#endif
+{
 	IBOutlet NSTableView *windowSetsTable;
 	IBOutlet NSTableView *rulesTable;
 	IBOutlet NSButton *deleteWindowButton;

@@ -3,7 +3,11 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 
 @class MVFileTransfer;
 
-@interface MVFileTransferController : NSWindowController <NSToolbarDelegate, NSOpenSavePanelDelegate> {
+@interface MVFileTransferController : NSWindowController
+#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_5
+<NSToolbarDelegate, NSOpenSavePanelDelegate>
+#endif
+{
 @private
 	IBOutlet NSProgressIndicator *progressBar;
 	IBOutlet NSTextField *transferStatus;
