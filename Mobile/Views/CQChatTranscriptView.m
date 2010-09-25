@@ -2,6 +2,8 @@
 
 #import <ChatCore/MVChatUser.h>
 
+#define DefaultFontSize 14
+
 #if ENABLE(SECRETS)
 @interface UIScroller : UIView
 @property (nonatomic) BOOL showBackgroundShadow;
@@ -68,7 +70,7 @@
 	super.delegate = nil;
 
 	[_blockerView release];
-	[_styleVariant release];
+	[_fontFamily release];
 	[_styleIdentifier release];
 	[_pendingComponents release];
 	[_pendingPreviousSessionComponents release];
@@ -110,20 +112,31 @@
 
 	_blockerView.backgroundColor = self.backgroundColor;
 
-	[self reset];
+	[self resetSoon];
 }
 
-@synthesize styleVariant = _styleVariant;
+@synthesize fontFamily = _fontFamily;
 
-- (void) setStyleVariant:(NSString *) styleVariant {
-	if ([_styleVariant isEqualToString:styleVariant])
+- (void) setFontFamily:(NSString *) fontFamily {
+	if ([_fontFamily isEqualToString:fontFamily])
 		return;
 
-	id old = _styleVariant;
-	_styleVariant = [styleVariant copy];
+	id old = _fontFamily;
+	_fontFamily = [fontFamily copy];
 	[old release];
 
-	[self reset];
+	[self resetSoon];
+}
+
+@synthesize fontSize = _fontSize;
+
+- (void) setFontSize:(NSUInteger) fontSize {
+	if (_fontSize == fontSize)
+		return;
+
+	_fontSize = fontSize;
+
+	[self resetSoon];
 }
 
 #pragma mark -
@@ -288,13 +301,33 @@
 #endif
 }
 
+- (void) resetSoon {
+	if (_resetPending)
+		return;
+
+	_resetPending = YES;
+	[self performSelector:@selector(reset) withObject:nil afterDelay:0];
+}
+
 - (void) reset {
+	_resetPending = NO;
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(reset) object:nil];
+
 	[self stopLoading];
 
 	_blockerView.hidden = NO;
 
+	[_pendingPreviousSessionComponents release];
+	_pendingPreviousSessionComponents = nil;
+
+	[_pendingComponents release];
+	_pendingComponents = nil;
+
 	_loading = YES;
 	[self loadHTMLString:[self _contentHTML] baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
+
+	if ([transcriptDelegate respondsToSelector:@selector(transcriptViewWasReset:)])
+		[transcriptDelegate transcriptViewWasReset:self];
 }
 
 #pragma mark -
@@ -364,10 +397,25 @@
 	self.styleIdentifier = @"standard";
 }
 
+- (NSString *) _variantStyleString {
+	NSMutableString *styleString = [[NSMutableString alloc] init];
+
+	if (_fontFamily.length)
+		[styleString appendFormat:@"font-family: %@; ", _fontFamily];
+	if (_fontSize && _fontSize != DefaultFontSize)
+		[styleString appendFormat:@"font-size: %ldpx; ", _fontSize];
+
+	if (styleString.length) {
+		[styleString insertString:@"body { " atIndex:0];
+		[styleString appendString:@"}"];
+	}
+
+	return [styleString autorelease];
+}
+
 - (NSString *) _contentHTML {
 	NSString *templateString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
-
-	return [NSString stringWithFormat:templateString, _styleIdentifier, _styleVariant];
+	return [NSString stringWithFormat:templateString, _styleIdentifier, [self _variantStyleString]];
 }
 
 - (void) _checkIfLoadingFinished {
