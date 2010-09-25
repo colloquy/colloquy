@@ -626,8 +626,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[self performSelector:@selector(_showRemainingTimeAlert) withObject:nil afterDelay:remainingTime];
 	}
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQAutoAwayWhenMultitasking"]) {
-		NSString *defaultAwayMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQAwayMessage"];
+	NSString *defaultAwayMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQAwayStatus"];
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQAutoAwayWhenMultitasking"] && defaultAwayMessage.length) {
 		for (MVChatConnection *connection in _connections) {
 			if (!connection.awayStatusMessage.length) {
 				connection.awayStatusMessage = defaultAwayMessage;
