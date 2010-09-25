@@ -248,7 +248,7 @@
 - (void) addPreviousSessionComponents:(NSArray *) components {
 	NSParameterAssert(components != nil);
 
-	if (_loading) {
+	if (_loading || _resetPending) {
 		if (_pendingPreviousSessionComponents) [_pendingPreviousSessionComponents addObjectsFromArray:components];
 		else _pendingPreviousSessionComponents = [components mutableCopy];
 		return;
@@ -260,7 +260,7 @@
 - (void) addComponents:(NSArray *) components animated:(BOOL) animated {
 	NSParameterAssert(components != nil);
 
-	if (_loading) {
+	if (_loading || _resetPending) {
 		if (_pendingComponents) [_pendingComponents addObjectsFromArray:components];
 		else _pendingComponents = [components mutableCopy];
 		return;
@@ -272,7 +272,7 @@
 - (void) addComponent:(NSDictionary *) component animated:(BOOL) animated {
 	NSParameterAssert(component != nil);
 
-	if (_loading) {
+	if (_loading || _resetPending) {
 		if (!_pendingComponents)
 			_pendingComponents = [[NSMutableArray alloc] init];
 		[_pendingComponents addObject:component];
@@ -316,12 +316,6 @@
 	[self stopLoading];
 
 	_blockerView.hidden = NO;
-
-	[_pendingPreviousSessionComponents release];
-	_pendingPreviousSessionComponents = nil;
-
-	[_pendingComponents release];
-	_pendingComponents = nil;
 
 	_loading = YES;
 	[self loadHTMLString:[self _contentHTML] baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
@@ -395,6 +389,8 @@
 	[self addSubview:_blockerView];
 
 	self.styleIdentifier = @"standard";
+
+	[self resetSoon];
 }
 
 - (NSString *) _variantStyleString {

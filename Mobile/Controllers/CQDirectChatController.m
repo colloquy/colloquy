@@ -349,13 +349,6 @@ static BOOL showingKeyboard;
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 
-	if (_pendingPreviousSessionComponents.count) {
-		[transcriptView addPreviousSessionComponents:_pendingPreviousSessionComponents];
-
-		[_pendingPreviousSessionComponents release];
-		_pendingPreviousSessionComponents = nil;
-	}
-
 	[self _addPendingComponentsAnimated:NO];
 
 	if (![[UIDevice currentDevice] isPadModel]) {
@@ -1105,8 +1098,14 @@ static BOOL showingKeyboard;
 }
 
 - (void) transcriptViewWasReset:(CQChatTranscriptView *) view {
-	if ([_recentMessages count])
+	if (_pendingPreviousSessionComponents.count) {
+		[view addPreviousSessionComponents:_pendingPreviousSessionComponents];
+
+		[_pendingPreviousSessionComponents release];
+		_pendingPreviousSessionComponents = nil;
+	} else if (_recentMessages.count) {
 		[view addPreviousSessionComponents:_recentMessages];
+	}
 }
 
 #pragma mark -

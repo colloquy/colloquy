@@ -8,7 +8,7 @@
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
-			<string>Transcript Style</string>
+			<string>Style</string>
 			<key>Key</key>
 			<string>CQChatTranscriptStyle</string>
 			<key>Values</key>
