@@ -415,11 +415,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[_activeViewController release];
 	_activeViewController = nil;
 
-	NSEnumerator *enumerator = [_views objectEnumerator];
-	id <JVChatViewController> controller = nil;
-
-	while( ( controller = [enumerator nextObject] ) )
-		[controller setWindowController:nil];
+	[_views makeObjectsPerformSelector:@selector(setWindowController:) withObject:nil];
 
 	[_views removeAllObjects];
 
