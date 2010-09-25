@@ -19,6 +19,8 @@
 extern NSString *CQChatViewControllerRecentMessagesUpdatedNotification;
 extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 
+extern NSString *CQChatTranscriptCustomizedNotification;
+
 @interface CQDirectChatController : CQViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQBrowserViewControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
 	@protected
 	IBOutlet CQChatInputBar *chatInputBar;

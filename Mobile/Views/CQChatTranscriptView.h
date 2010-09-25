@@ -7,12 +7,14 @@
 	NSMutableArray *_pendingPreviousSessionComponents;
 	NSMutableArray *_pendingComponents;
 	NSString *_styleIdentifier;
+	NSString *_styleVariant;
 	BOOL _scrolling;
 	BOOL _loading;
 }
 @property (nonatomic, assign) id <CQChatTranscriptViewDelegate> transcriptDelegate;
 
 @property (nonatomic, copy) NSString *styleIdentifier;
+@property (nonatomic, copy) NSString *styleVariant;
 
 - (void) addPreviousSessionComponents:(NSArray *) components;
 - (void) addComponents:(NSArray *) components animated:(BOOL) animated;

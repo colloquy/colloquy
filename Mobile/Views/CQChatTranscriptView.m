@@ -68,6 +68,7 @@
 	super.delegate = nil;
 
 	[_blockerView release];
+	[_styleVariant release];
 	[_styleIdentifier release];
 	[_pendingComponents release];
 	[_pendingPreviousSessionComponents release];
@@ -108,6 +109,22 @@
 #endif
 
 	_blockerView.backgroundColor = self.backgroundColor;
+
+	[self reset];
+}
+
+@synthesize styleVariant = _styleVariant;
+
+- (void) setStyleVariant:(NSString *) styleVariant {
+	if ([_styleVariant isEqualToString:styleVariant])
+		return;
+	NSLog(@"setting");
+	NSLog(@"%@", _styleVariant);
+	NSLog(@"%@", styleVariant);
+
+	id old = _styleVariant;
+	_styleVariant = [styleVariant copy];
+	[old release];
 
 	[self reset];
 }
@@ -352,9 +369,8 @@
 
 - (NSString *) _contentHTML {
 	NSString *templateString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
-	NSString *variantCSSPath = [[[NSFileManager defaultManager] localDocumentsDirectoryPath] stringByAppendingPathComponent:@"variant.css"];
 
-	return [NSString stringWithFormat:templateString, _styleIdentifier, variantCSSPath];
+	return [NSString stringWithFormat:templateString, _styleIdentifier, _styleVariant];
 }
 
 - (void) _checkIfLoadingFinished {

@@ -19,8 +19,6 @@ extern NSString *CQChatControllerAddedChatViewControllerNotification;
 extern NSString *CQChatControllerRemovedChatViewControllerNotification;
 extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 
-extern NSString *CQChatTranscriptCustomizedNotification;
-
 @interface CQChatController : NSObject <UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate> {
 	@protected
 	NSMutableArray *_chatControllers;
