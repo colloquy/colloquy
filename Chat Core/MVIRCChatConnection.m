@@ -2637,7 +2637,7 @@ end:
 								continue;
 							if( ! [[transfer user] isEqualToChatUser:sender] )
 								continue;
-							if( [transfer _passiveIdentifier] == (NSUInteger)passiveId )
+							if( [transfer _passiveIdentifier] == passiveId )
 								break;
 						}
 					}
@@ -2695,7 +2695,7 @@ end:
 							continue;
 
 						BOOL portMatches = ( ! passive && [transfer port] == port );
-						BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == (NSUInteger)passiveId );
+						BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == passiveId );
 
 						if( portMatches || passiveIdMatches ) {
 							[transfer _setTransfered:(unsigned long long)size];
@@ -2731,7 +2731,7 @@ end:
 							continue;
 
 						BOOL portMatches = ( ! passive && [transfer port] == port );
-						BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == (NSUInteger)passiveId );
+						BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == passiveId );
 
 						if( portMatches || passiveIdMatches ) {
 							[transfer _setTransfered:(unsigned long long)size];
@@ -2773,7 +2773,7 @@ end:
 									continue;
 								if( ! [[directChat user] isEqualToChatUser:sender] )
 									continue;
-								if( [directChat _passiveIdentifier] == (NSUInteger)passiveId )
+								if( [directChat _passiveIdentifier] == passiveId )
 									break;
 							}
 						}
@@ -2861,7 +2861,7 @@ end:
 								continue;
 
 							BOOL portMatches = ( portKnown && ! passive && [transfer port] == port );
-							BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == (NSUInteger)passiveId );
+							BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == passiveId );
 
 							if( fileMatches || portMatches || passiveIdMatches )
 								[transfer cancel];
