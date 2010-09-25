@@ -219,9 +219,10 @@ enum {
     Boolean success; 
     BOOL okay; 
     SCNetworkConnectionFlags status;
-    success = SCNetworkCheckReachabilityByName("www.apple.com", &status); 
-    okay = success && (status & kSCNetworkFlagsReachable) && !(status & kSCNetworkFlagsConnectionRequired); 
-    
+	SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL, "www.apple.com");
+	success = SCNetworkReachabilityGetFlags(reachability, &status);
+	CFRelease(reachability);
+    okay = success && (status & kSCNetworkFlagsReachable) && !(status & kSCNetworkFlagsConnectionRequired);
     return okay;
 }
 
