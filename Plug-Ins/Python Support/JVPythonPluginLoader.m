@@ -122,16 +122,11 @@
 - (void) reloadPlugins {
 	if( ! _manager ) return;
 
-	NSArray *paths = [[_manager class] pluginSearchPaths];
-	NSString *file = nil, *path = nil;
-
 	NSMutableSet *foundModules = [NSMutableSet set];
 	NSFileManager *fm = [NSFileManager defaultManager];
 
-	NSEnumerator *enumerator = [paths objectEnumerator];
-	while( ( path = [enumerator nextObject] ) ) {
-		NSEnumerator *denumerator = [[fm directoryContentsAtPath:path] objectEnumerator];
-		while( ( file = [denumerator nextObject] ) ) {
+	for( NSString *path in [[_manager class] pluginSearchPaths] ) {
+		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			if( [[file pathExtension] isEqualToString:@"pyc"] || [[file pathExtension] isEqualToString:@"py"] || [[file pathExtension] isEqualToString:@"pyo"] ) {
 				if( ! _pyobjcInstalled ) {
 					[self displayInstallationWarning];

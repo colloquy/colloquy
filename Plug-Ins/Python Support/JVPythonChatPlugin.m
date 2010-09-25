@@ -134,7 +134,7 @@ NSString *JVPythonErrorDomain = @"JVPythonErrorDomain";
 	}
 
 	if( [fm fileExistsAtPath:path] ) {
-		NSDictionary *info = [fm fileAttributesAtPath:path traverseLink:YES];
+		NSDictionary *info = [fm attributesOfItemAtPath:[self scriptFilePath] error:nil];
 		NSDate *fileModDate = [info fileModificationDate];
 		if( [fileModDate compare:_modDate] == NSOrderedDescending && [fileModDate compare:[NSDate date]] == NSOrderedAscending ) { // newer script file
 			[_modDate autorelease];

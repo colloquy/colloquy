@@ -308,11 +308,10 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 - (void) checkForModifications:(NSNotification *) notification {
 	if( ! [[self scriptFilePath] length] ) return;
 
-	NSFileManager *fm = [NSFileManager defaultManager];
 	NSString *path = [self scriptFilePath];
 
-	if( [fm fileExistsAtPath:path] ) {
-		NSDictionary *info = [fm fileAttributesAtPath:path traverseLink:YES];
+	if( [[NSFileManager defaultManager] fileExistsAtPath:path] ) {
+		NSDictionary *info = [[NSFileManager defaultManager] attributesOfItemAtPath:[self scriptFilePath] error:nil];
 		NSDate *fileModDate = [info fileModificationDate];
 		if( [fileModDate compare:_modDate] == NSOrderedDescending && [fileModDate compare:[NSDate date]] == NSOrderedAscending ) { // newer script file
 			[_modDate autorelease];

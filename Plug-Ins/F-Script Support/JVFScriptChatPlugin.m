@@ -144,7 +144,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 
 - (void) checkForModifications:(NSNotification *) notification {
 	if( [self scriptFilePath] && [[NSFileManager defaultManager] fileExistsAtPath:[self scriptFilePath]] ) {
-		NSDictionary *info = [[NSFileManager defaultManager] fileAttributesAtPath:[self scriptFilePath] traverseLink:YES];
+		NSDictionary *info = [[NSFileManager defaultManager] attributesOfItemAtPath:[self scriptFilePath] error:nil];
 		NSDate *fileModDate = [info fileModificationDate];
 		if( [fileModDate compare:_modDate] == NSOrderedDescending && [fileModDate compare:[NSDate date]] == NSOrderedAscending ) { // newer script file
 			[_modDate autorelease];

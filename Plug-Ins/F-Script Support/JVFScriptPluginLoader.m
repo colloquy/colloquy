@@ -139,13 +139,8 @@
 - (void) reloadPlugins {
 	if( ! _manager ) return;
 
-	NSArray *paths = [[_manager class] pluginSearchPaths];
-	NSString *file = nil, *path = nil;
-
-	NSEnumerator *enumerator = [paths objectEnumerator];
-	while( ( path = [enumerator nextObject] ) ) {
-		NSEnumerator *denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
-		while( ( file = [denumerator nextObject] ) ) {
+	for( NSString *path in [[_manager class] pluginSearchPaths] ) {
+		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			if( [[file pathExtension] isEqualToString:@"fscript"] ) {
 				if( ! _fscriptInstalled ) {
 					[self displayInstallationWarning];

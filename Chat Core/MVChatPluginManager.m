@@ -81,13 +81,8 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 		[_plugins removeAllObjects];
 	}
 
-	NSArray *paths = [[self class] pluginSearchPaths];
-	NSEnumerator *enumerator = [paths objectEnumerator];
-	NSString *file = nil, *path = nil;
-
-	while( ( path = [enumerator nextObject] ) ) {
-		NSEnumerator *denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
-		while( ( file = [denumerator nextObject] ) ) {
+	for( NSString *path in [[self class] pluginSearchPaths] ) {
+		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			if( [[file pathExtension] isEqualToString:@"bundle"] || [[file pathExtension] isEqualToString:@"plugin"] ) {
 				NSBundle *bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]];
 				if( [bundle load] && [[bundle principalClass] conformsToProtocol:@protocol( MVChatPlugin )] ) {

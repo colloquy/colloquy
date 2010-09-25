@@ -118,14 +118,8 @@
 - (void) reloadPlugins {
 	if( ! _manager ) return;
 
-	NSFileManager *fm = [NSFileManager defaultManager];
-	NSArray *paths = [[_manager class] pluginSearchPaths];
-	NSString *file = nil, *path = nil;
-
-	NSEnumerator *enumerator = [paths objectEnumerator];
-	while( ( path = [enumerator nextObject] ) ) {
-		NSEnumerator *denumerator = [[fm directoryContentsAtPath:path] objectEnumerator];
-		while( ( file = [denumerator nextObject] ) ) {
+	for( NSString *path in [[_manager class] pluginSearchPaths] ) {
+		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			if( [[file pathExtension] isEqualToString:@"js"] ) {
 				NSString *pathExt = [path stringByAppendingPathComponent:file];
 				JVJavaScriptChatPlugin *plugin = [[JVJavaScriptChatPlugin alloc] initWithScriptAtPath:pathExt withManager:_manager];
