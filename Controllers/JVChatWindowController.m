@@ -608,9 +608,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		return YES;
 	} else if( [menuItem action] == @selector( toggleViewsDrawer: ) ) {
 		if( [viewsDrawer state] == NSDrawerClosedState || [viewsDrawer state] == NSDrawerClosingState ) {
-			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Show Drawer", "show drawer menu title" )]];
+			[menuItem setTitle:NSLocalizedString( @"Show Drawer", "show drawer menu title" )];
 		} else {
-			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Hide Drawer", "hide drawer menu title" )]];
+			[menuItem setTitle:NSLocalizedString( @"Hide Drawer", "hide drawer menu title" )];
 		}
 		return YES;
 	} else if( [menuItem action] == @selector( getInfo: ) ) {

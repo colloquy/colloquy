@@ -305,7 +305,7 @@
 	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@ (%@).inetloc", _target, [[self connection] server]] stringByExpandingTildeInPath];
 
 	[url writeToInternetLocationFile:path];
-	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:path];
+	[[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] ofItemAtPath:path error:nil];
 	[[NSWorkspace sharedWorkspace] noteFileSystemChanged:path];
 
 	[MVConnectionsController refreshFavoritesMenu];
@@ -1039,8 +1039,8 @@
 	NSString *ctxmessage = nil;
 	if( user ) {
 		if( [user isLocalUser] ) {
-			message = [NSString stringWithFormat:NSLocalizedString( @"You have been bricked.", "you have been bricked status message" )];
-			ctxmessage = [NSString stringWithFormat:NSLocalizedString( @"You have been bricked.", "bubble message user bricked string" )];
+			message = NSLocalizedString( @"You have been bricked.", "you have been bricked status message" );
+			ctxmessage = NSLocalizedString( @"You have been bricked.", "bubble message user bricked string" );
 		} else {
 			NSString *name = [user nickname];
 			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> has been bricked.", "a user has been bricked status message" ), [name stringByEncodingXMLSpecialCharactersAsEntities]];
@@ -1049,8 +1049,8 @@
 
 		[self addEventMessageToDisplay:message withName:@"userBricked" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:user, @"who", nil]];
 	} else {
-		message = [NSString stringWithFormat:NSLocalizedString( @"A brick flies off into the ether.", "a brick flies off into the ether status message" )];
-		ctxmessage = [NSString stringWithFormat:NSLocalizedString( @"A brick flies off into the ether.", "bubble message nobody bricked string" )];
+		message = NSLocalizedString( @"A brick flies off into the ether.", "a brick flies off into the ether status message" );
+		ctxmessage = NSLocalizedString( @"A brick flies off into the ether.", "bubble message nobody bricked string" );
 
 		[self addEventMessageToDisplay:message withName:@"userBricked" andAttributes:nil];
 	}

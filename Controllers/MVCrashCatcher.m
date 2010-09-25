@@ -53,7 +53,7 @@
 #pragma mark -
 
 - (void) connectionDidFinishLoading:(NSURLConnection *) connection {
-	[[NSFileManager defaultManager] removeFileAtPath:logPath handler:nil];
+	[[NSFileManager defaultManager] removeItemAtPath:logPath error:nil];
 	[self autorelease];
 }
 
@@ -104,7 +104,7 @@
 }
 
 - (IBAction) dontSend:(id) sender {
-	[[NSFileManager defaultManager] removeFileAtPath:logPath handler:nil];
+	[[NSFileManager defaultManager] removeItemAtPath:logPath error:nil];
 
 	[[NSApplication sharedApplication] stopModal];
 	[window orderOut:nil];

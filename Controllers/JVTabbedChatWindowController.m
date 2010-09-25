@@ -178,9 +178,9 @@
 		return NO;
 	} else if( [menuItem action] == @selector( toggleTabBarVisible: ) ) {
 		if( ! _tabIsShowing ) {
-			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Show Tab Bar", "show tab bar menu title" )]];
+			[menuItem setTitle:NSLocalizedString( @"Show Tab Bar", "show tab bar menu title" )];
 		} else {
-			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Hide Tab Bar", "hide tab bar menu title" )]];
+			[menuItem setTitle:NSLocalizedString( @"Hide Tab Bar", "hide tab bar menu title" )];
 		}
 		return YES;
 	} else if( [menuItem action] == @selector( getInfo: ) ) {

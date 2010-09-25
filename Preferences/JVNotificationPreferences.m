@@ -132,7 +132,7 @@
 			first = YES;
 			continue;
 		}
-		enumerator = [[fm directoryContentsAtPath:aPath] objectEnumerator];
+		enumerator = [[fm contentsOfDirectoryAtPath:aPath error:nil] objectEnumerator];
 		NSEnumerator *oldEnum = nil;
 		NSString *oldPath = nil;
 		NSInteger indentationLevel = 0;
@@ -148,7 +148,7 @@
 			BOOL isDir;
 			if( ! oldEnum && [fm fileExistsAtPath:newPath isDirectory:&isDir] && isDir ) {
 				oldEnum = enumerator;
-				enumerator = [[fm directoryContentsAtPath:newPath] objectEnumerator];
+				enumerator = [[fm contentsOfDirectoryAtPath:newPath error:nil] objectEnumerator];
 				oldPath = aPath;
 				aPath = newPath;
 				if( first ) [availableSounds addItem:[NSMenuItem separatorItem]];

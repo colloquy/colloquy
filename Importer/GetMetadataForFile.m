@@ -23,7 +23,7 @@
 </log>
 */
 
-@interface JVChatTranscriptMetadataExtractor : NSObject {
+@interface JVChatTranscriptMetadataExtractor : NSObject <NSXMLParserDelegate> {
 	BOOL inEnvelope;
 	BOOL inMessage;
 	NSString *lastElement;
@@ -168,7 +168,7 @@ Boolean GetMetadataForFile( void *thisInterface, CFMutableDictionaryRef attribut
 	NSURL *file = [NSURL fileURLWithPath:(NSString *) pathToFile];
 	NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:file];
 
-	unsigned long long fileSize = [[fm fileAttributesAtPath:(NSString *) pathToFile traverseLink:YES] fileSize];
+	unsigned long long fileSize = [[[fm attributesOfItemAtPath:(NSString *) pathToFile error:nil] objectForKey:NSFileSize] unsignedLongLongValue];
 	unsigned capacity = ( fileSize ? fileSize / 3 : 5000 ); // the message content takes up about a third of the XML file's size
 
 	JVChatTranscriptMetadataExtractor *extractor = [[JVChatTranscriptMetadataExtractor alloc] initWithCapacity:capacity];

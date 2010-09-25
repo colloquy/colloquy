@@ -645,14 +645,14 @@ static NSMenu *smartTranscriptMenu = nil;
 		}
 	} else if( [error code] == MVChatConnectionOutOfBricksError ) {
 		NSAlert *alert = [[[NSAlert alloc] init] autorelease];
-		[alert setMessageText:[NSString stringWithFormat:NSLocalizedString( @"Out of bricks", "out of bricks alert dialog title" )]];
-		[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"The user you specified could not be bricked because you are out of bricks. You can regain some more when somebody else bricks you.", "out of bricks alert dialog message" )]];
+		[alert setMessageText:NSLocalizedString( @"Out of bricks", "out of bricks alert dialog title" )];
+		[alert setInformativeText:NSLocalizedString( @"The user you specified could not be bricked because you are out of bricks. You can regain some more when somebody else bricks you.", "out of bricks alert dialog message" )];
 		[alert setAlertStyle:NSInformationalAlertStyle];
 		[alert runModal];
 	} else if( [error code] == MVChatConnectionProtocolError ) {
 		NSString *reason = [[error userInfo] objectForKey:@"reason"];
 		NSAlert *alert = [[[NSAlert alloc] init] autorelease];
-		[alert setMessageText:[NSString stringWithFormat:NSLocalizedString( @"Chat protocol error", "malformed packet alert dialog title" )]];
+		[alert setMessageText:NSLocalizedString( @"Chat protocol error", "malformed packet alert dialog title" )];
 		[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"Client got a malformed packet: %@", "malformed packet alert dialog message" ), reason]];
 		[alert setAlertStyle:NSInformationalAlertStyle];
 		[alert runModal];

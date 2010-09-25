@@ -1,7 +1,7 @@
 @class JVChatTranscriptPanel;
 @class JVChatMessage;
 
-@interface JVTranscriptFindWindowController : NSWindowController {
+@interface JVTranscriptFindWindowController : NSWindowController <NSTableViewDataSource, NSTableViewDelegate> {
 	@private
 	IBOutlet NSTableView *subviewTableView;
 	IBOutlet NSPopUpButton *operation;

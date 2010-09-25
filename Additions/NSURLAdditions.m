@@ -35,7 +35,7 @@
 	if( ! ( [[path pathExtension] isEqualToString:@"inetloc"] || [[path pathExtension] isEqualToString:@"webloc"] || [[path pathExtension] isEqualToString:@"ftploc"] || [[path pathExtension] isEqualToString:@"mailloc"] || [[path pathExtension] isEqualToString:@"afploc"] ) )
 		path = [path stringByAppendingPathExtension:@"inetloc"];
 
-	[[NSFileManager defaultManager] removeFileAtPath:path handler:nil];
+	[[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 
 	NSString *parentPath = [path stringByDeletingLastPathComponent];
 	NSString *pathName = [path lastPathComponent];
@@ -55,7 +55,7 @@
 
 	if( ( fileRefNum = FSOpenResFile( &ref, fsWrPerm ) ) == -1 ) {
 		if( NSDebugEnabled ) NSLog( @"Couldn't open inetloc at: %@", path );
-		[[NSFileManager defaultManager] removeFileAtPath:path handler:nil];
+		[[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 		return;
 	}
 
@@ -88,6 +88,6 @@
 	CloseResFile( fileRefNum );
 
 	// Set the file type/creator
-	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:'ilge'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'MACS'], NSFileHFSCreatorCode, nil] atPath:path];
+	[[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:'ilge'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'MACS'], NSFileHFSCreatorCode, nil] ofItemAtPath:path error:nil];
 }
 @end

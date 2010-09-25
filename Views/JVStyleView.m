@@ -925,7 +925,8 @@ quickEnd:
 		NSRect scrollerFrame = [[scrollView verticalScroller] frame];
 		NSScroller *oldScroller = scroller;
 		scroller = [[[JVMarkedScroller alloc] initWithFrame:scrollerFrame] autorelease];
-		[scroller setFloatValue:[oldScroller floatValue] knobProportion:[oldScroller knobProportion]];
+		[scroller setKnobProportion:[oldScroller knobProportion]];
+		[scroller setDoubleValue:[oldScroller floatValue]];
 		[scrollView setVerticalScroller:scroller];
 	}
 }

@@ -1,6 +1,6 @@
 #import "NSPreferences.h"
 
-@interface JVInterfacePreferences : NSPreferencesModule {
+@interface JVInterfacePreferences : NSPreferencesModule <NSTableViewDataSource, NSTableViewDelegate> {
 	IBOutlet NSTableView *windowSetsTable;
 	IBOutlet NSTableView *rulesTable;
 	IBOutlet NSButton *deleteWindowButton;

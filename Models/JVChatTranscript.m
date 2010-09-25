@@ -808,7 +808,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 - (void) setFilePath:(NSString *) filePath {
 	if( filePath && ! [[NSFileManager defaultManager] fileExistsAtPath:filePath] ) {
 		BOOL success = [[NSFileManager defaultManager] createFileAtPath:filePath contents:[NSData data] attributes:nil];
-		if( success ) [[NSFileManager defaultManager] removeFileAtPath:filePath handler:nil]; // remove the blank until we need to write the real file, since we now know it will likely work
+		if( success ) [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil]; // remove the blank until we need to write the real file, since we now know it will likely work
 		else filePath = nil; // since we can't write no use in keeping the path
 	} else if( filePath && ! [[NSFileManager defaultManager] isWritableFileAtPath:filePath] ) {
 		filePath = nil; // the file isn't writable, no use in keeping the path
@@ -1026,7 +1026,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 	NSFileManager *fm = [NSFileManager defaultManager];
 	if( [fm fileExistsAtPath:[self filePath]] && ! [fm isWritableFileAtPath:[self filePath]] ) return;
 
-	unsigned long long fileSize = [[fm fileAttributesAtPath:[self filePath] traverseLink:YES] fileSize];
+	unsigned long long fileSize = [[fm attributesOfItemAtPath:[self filePath] error:nil] fileSize];
 	if( fileSize > 0 && fileSize < 6 ) { // the file is too small to be a viable log file, return now
 		[self setAutomaticallyWritesChangesToFile:NO];
 		return;
@@ -1122,7 +1122,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 }
 
 - (void) _changeFileAttributesAtPath:(NSString *) path {
-	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] atPath:path];
+	[[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, [NSNumber numberWithUnsignedLong:'coTr'], NSFileHFSTypeCode, [NSNumber numberWithUnsignedLong:'coRC'], NSFileHFSCreatorCode, nil] ofItemAtPath:path error:nil];
 
 	if( _logFile ) {
 		NSString *beganDateString = [[self dateBegan] description];

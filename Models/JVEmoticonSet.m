@@ -28,11 +28,11 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 	NSEnumerator *enumerator = [paths objectEnumerator];
 	NSString *path = nil;
 	while( ( path = [enumerator nextObject] ) ) {
-		NSEnumerator *denumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:path] objectEnumerator];
+		NSEnumerator *denumerator = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] objectEnumerator];
 		NSString *file = nil;
 		while( ( file = [denumerator nextObject] ) ) {
 			NSString *fullPath = [path stringByAppendingPathComponent:file];
-			NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:fullPath traverseLink:YES];
+			NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:nil];
 			if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyEmoticons"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coEm' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
 				NSBundle *bundle = nil;
 				JVEmoticonSet *emoticon = nil;

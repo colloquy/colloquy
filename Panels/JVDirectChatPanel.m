@@ -179,21 +179,21 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 				NSString *logs = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
 				NSFileManager *fileManager = [NSFileManager defaultManager];
 
-				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
+				if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
 
 				NSInteger org = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatTranscriptFolderOrganization"];
 				if( org == 1 ) {
 					logs = [logs stringByAppendingPathComponent:[[self user] serverAddress]];
-					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
+					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
 				} else if( org == 2 ) {
 					logs = [logs stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@)", [self target], [[self user] serverAddress]]];
-					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
+					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
 				} else if( org == 3 ) {
 					logs = [logs stringByAppendingPathComponent:[[self user] serverAddress]];
-					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
+					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
 
 					logs = [logs stringByAppendingPathComponent:[self title]];
-					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs attributes:nil];
+					if( ! [fileManager fileExistsAtPath:logs] ) [fileManager createDirectoryAtPath:logs withIntermediateDirectories:YES attributes:nil error:nil];
 				}
 
 				NSString *logName = nil;
@@ -1063,10 +1063,10 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 		if ( newlineCount > messageLimit ) {
 			NSAlert *alert = [[[NSAlert alloc] init] autorelease];
-			[alert setMessageText:[NSString stringWithFormat:NSLocalizedString( @"Multiple lines detected", "multiple lines detected alert dialog title")]];
+			[alert setMessageText:NSLocalizedString( @"Multiple lines detected", "multiple lines detected alert dialog title")];
 			[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"You are about to send a message with %d lines. Are you sure you want to do this?", "about to send a %d line message alert dialog message" ), newlineCount]];
-			[alert addButtonWithTitle:[NSString stringWithFormat:NSLocalizedString( @"Send", "Send alert dialog button title" )]];
-			[alert addButtonWithTitle:[NSString stringWithFormat:NSLocalizedString( @"Cancel", "Cancel alert dialog button title" )]];
+			[alert addButtonWithTitle:NSLocalizedString( @"Send", "Send alert dialog button title" )];
+			[alert addButtonWithTitle:NSLocalizedString( @"Cancel", "Cancel alert dialog button title" )];
 			[alert setAlertStyle:NSWarningAlertStyle];
 
 			if ( [alert runModal] == NSAlertSecondButtonReturn ) return;
@@ -1863,7 +1863,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
 
 	if( ! [_personImageData length] ) {
-		[[NSFileManager defaultManager] removeFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [me uniqueId]] handler:nil];
+		[[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [me uniqueId]] error:nil];
 	} else {
 		NSImage *icon = [[[NSImage alloc] initWithData:_personImageData] autorelease];
 		NSData *imageData = [icon TIFFRepresentation];
@@ -1877,7 +1877,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 - (void) _saveBuddyIcon:(JVBuddy *) buddy {
 	NSData *imageData = [[buddy picture] TIFFRepresentation];
 	if( ! [imageData length] ) {
-		[[NSFileManager defaultManager] removeFileAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]] handler:nil];
+		[[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"/tmp/%@.tif", [buddy uniqueIdentifier]] error:nil];
 		return;
 	}
 
