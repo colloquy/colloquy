@@ -118,9 +118,6 @@
 - (void) setStyleVariant:(NSString *) styleVariant {
 	if ([_styleVariant isEqualToString:styleVariant])
 		return;
-	NSLog(@"setting");
-	NSLog(@"%@", _styleVariant);
-	NSLog(@"%@", styleVariant);
 
 	id old = _styleVariant;
 	_styleVariant = [styleVariant copy];
