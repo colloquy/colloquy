@@ -313,8 +313,10 @@
 	NSMutableArray *rooms = [[[MVConnectionsController defaultController] joinRoomsForConnection:[self connection]] mutableCopy];
 	if( [(NSMenuItem *)sender state] == NSOnState ) {
 		for( id object in rooms )
-			if( [_target isEqual:[[self connection] chatRoomWithName:(NSString *)object]] )
+			if( [_target isEqual:[[self connection] chatRoomWithName:(NSString *)object]] ) {
 				[rooms removeObject:object];
+				break;
+			}
 	} else [rooms addObject:[_target name]];
 
 	[[MVConnectionsController defaultController] setJoinRooms:rooms forConnection:[self connection]];
