@@ -17,7 +17,7 @@ static void gradientInterpolate( void *info, CGFloat const *inData, CGFloat *out
 
 @implementation JVSideOutlineView
 - (NSColor *) _highlightColorForCell:(NSCell *) cell {
-	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4 && [super respondsToSelector:_cmd] )
+	if( [super respondsToSelector:_cmd] )
 		return [super _highlightColorForCell:cell];
 
     // return nil to prevent normal selection drawing
@@ -25,7 +25,7 @@ static void gradientInterpolate( void *info, CGFloat const *inData, CGFloat *out
 }
 
 - (void) _highlightRow:(int) row clipRect:(NSRect) clip {
-	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4 && [super respondsToSelector:_cmd] )
+	if( [super respondsToSelector:_cmd] )
 		return [super _highlightRow:row clipRect:clip];
 
 	NSRect highlight = [self rectOfRow:row];
@@ -52,7 +52,7 @@ static void gradientInterpolate( void *info, CGFloat const *inData, CGFloat *out
 }
 
 - (void) drawBackgroundInClipRect:(NSRect) clipRect {
-	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4 && [super respondsToSelector:_cmd] )
+	if( [super respondsToSelector:_cmd] )
 		return [super drawBackgroundInClipRect:clipRect];
 
 	static NSColor *backgroundColor = nil;

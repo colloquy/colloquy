@@ -38,10 +38,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 			return nil;
 		}
 
-		NSString *contents = nil;
-		if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-			contents = [NSString performSelector:@selector( stringWithContentsOfFile: ) withObject:path];
-		else contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
+		NSString *contents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
 
 		FSInterpreterResult *result = [[self scriptInterpreter] execute:contents];
 		if( ! [result isOk] ) {
@@ -106,10 +103,7 @@ NSString *JVFScriptErrorDomain = @"JVFScriptErrorDomain";
 		if( ! [identifier isEqualToString:@"sys"] )
 			[[self scriptInterpreter] setObject:nil forIdentifier:identifier];
 
-	NSString *contents = nil;
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) // test for 10.3
-		contents = [NSString performSelector:@selector( stringWithContentsOfFile: ) withObject:[self scriptFilePath]];
-	else contents = [NSString stringWithContentsOfFile:[self scriptFilePath] encoding:NSUTF8StringEncoding error:NULL];
+	NSString *contents = [NSString stringWithContentsOfFile:[self scriptFilePath] encoding:NSUTF8StringEncoding error:NULL];
 
 	FSInterpreterResult *result = [[self scriptInterpreter] execute:contents];
 

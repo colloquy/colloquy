@@ -160,7 +160,7 @@ static BOOL applicationIsTerminating = NO;
 #pragma mark -
 
 - (IBAction) checkForUpdate:(id) sender {
-	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_3 ) { // test for 10.3
+	if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_4 ) { // test for 10.4
 		NSRunInformationalAlertPanel( @"Panther is no longer supported.", @"You are running the last version of Colloquy that is supported for Panther (10.3.9). Please update to Leopard or Tiger to receive further updates and support for Colloquy.", nil, nil, nil );
 		return;
 	}
@@ -648,22 +648,20 @@ static BOOL applicationIsTerminating = NO;
 #pragma mark -
 
 - (void) updateDockTile {
-	if ( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4 ) {
-		if ( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowDockBadge"] ) {
-			unsigned int totalHighlightCount = 0;
+	if ( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowDockBadge"] ) {
+		unsigned int totalHighlightCount = 0;
 
-			for( JVChatRoomPanel *room in [[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] )
-				totalHighlightCount += [room newHighlightMessagesWaiting];
+		for( JVChatRoomPanel *room in [[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] )
+			totalHighlightCount += [room newHighlightMessagesWaiting];
 
-			for( JVChatRoomPanel *directChat in [[JVChatController defaultController] chatViewControllersOfClass:[JVDirectChatPanel class]] )
-				totalHighlightCount += [directChat newMessagesWaiting];
+		for( JVChatRoomPanel *directChat in [[JVChatController defaultController] chatViewControllersOfClass:[JVDirectChatPanel class]] )
+			totalHighlightCount += [directChat newMessagesWaiting];
 
-			[[NSApp dockTile] setBadgeLabel:( totalHighlightCount == 0 ? nil : [NSString stringWithFormat:@"%u", totalHighlightCount] )];
-			[[NSApp dockTile] display];
-		} else {
-			[[NSApp dockTile] setBadgeLabel:nil];
-			[[NSApp dockTile] display];
-		}
+		[[NSApp dockTile] setBadgeLabel:( totalHighlightCount == 0 ? nil : [NSString stringWithFormat:@"%u", totalHighlightCount] )];
+		[[NSApp dockTile] display];
+	} else {
+		[[NSApp dockTile] setBadgeLabel:nil];
+		[[NSApp dockTile] display];
 	}
 }
 @end

@@ -41,8 +41,7 @@ typedef NSUInteger NSTableViewSelectionHighlightStyle;
 
 	[chatViewsOutlineView setAllowsEmptySelection:NO];
 
-	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4 )
-		[chatViewsOutlineView setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleSourceList];
+	[chatViewsOutlineView setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleSourceList];
 
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSidebarSelectedRowHasBlackText"] )
 		[[[chatViewsOutlineView outlineTableColumn] dataCell] setBoldAndWhiteOnHighlight:YES];
@@ -53,10 +52,8 @@ typedef NSUInteger NSTableViewSelectionHighlightStyle;
 
 - (CGFloat) outlineView:(NSOutlineView *) outlineView heightOfRowByItem:(id) item {
 	BOOL smallIcons = ([outlineView levelForItem:item] || _usesSmallIcons);
-	if( floor( NSAppKitVersionNumber ) > NSAppKitVersionNumber10_4 && smallIcons )
-		return 18.;
 	if( smallIcons )
-		return 16.;
+		return 18.;
 	return 34.;
 }
 
