@@ -850,10 +850,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 	if( ! [rooms count] ) return;
 
-	NSEnumerator *enumerator = [rooms objectEnumerator];
-	NSString *room = nil;
-
-	while( ( room = [enumerator nextObject] ) )
+	for( NSString *room in rooms )
 		if( [room length] ) [self joinChatRoomNamed:room];
 }
 
@@ -1574,8 +1571,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	if( [target isKindOfClass:[NSArray class]] ) targets = target;
 	else targets = [NSArray arrayWithObject:target];
 
-	NSEnumerator *enumerator = [targets objectEnumerator];
-	while( ( target = [enumerator nextObject] ) ) {
+	for( target in targets ) {
 		if( ! [target isKindOfClass:[MVChatUser class]] && ! [target isKindOfClass:[MVChatRoom class]] )
 			continue;
 
@@ -1695,8 +1691,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	if( [connection isKindOfClass:[NSArray class]] ) targets = connection;
 	else targets = [NSArray arrayWithObject:connection];
 
-	NSEnumerator *enumerator = [targets objectEnumerator];
-	while( ( connection = [enumerator nextObject] ) ) {
+	for( connection in targets ) {
 		if( ! [connection isKindOfClass:[MVChatConnection class]] ) continue;
 		[connection sendRawMessage:message immediately:realPriority];
 	}
@@ -1748,8 +1743,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	if( [connection isKindOfClass:[NSArray class]] ) targets = connection;
 	else targets = [NSArray arrayWithObject:connection];
 
-	NSEnumerator *enumerator = [targets objectEnumerator];
-	while( ( connection = [enumerator nextObject] ) ) {
+	for( connection in targets ) {
 		if( ! [connection isKindOfClass:[MVChatConnection class]] ) continue;
 		if( [room isKindOfClass:[NSArray class]] ) [connection joinChatRoomsNamed:room];
 		else [connection joinChatRoomNamed:room];

@@ -337,10 +337,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	if( ! [rooms count] )
 		return;
 
-	NSEnumerator *enumerator = [rooms objectEnumerator];
-	NSString *room = nil;
-
-	while( ( room = [enumerator nextObject] ) ) {
+	for( NSString *room in rooms ) {
 		if( [room length] ) {
 			[self joinChatRoomNamed:room withPassphrase:nil];
 			break;

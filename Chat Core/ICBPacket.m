@@ -155,9 +155,7 @@
 		l += [_fields count];
 
 		// Add the fields themselves to the packet length.
-		NSEnumerator *e = [_fields objectEnumerator];
-		NSString *f;
-		while( ( f = [e nextObject] ) )
+		for( NSString *f in _fields )
 			l += [f length];
 	}
 

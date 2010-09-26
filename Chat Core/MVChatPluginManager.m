@@ -136,11 +136,9 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 - (NSArray *) pluginsOfClass:(Class) class thatRespondToSelector:(SEL) selector {
 	NSParameterAssert( selector != NULL );
 
-	NSEnumerator *enumerator = [_plugins objectEnumerator];
 	NSMutableArray *qualified = [[[NSMutableArray allocWithZone:nil] init] autorelease];
-	id plugin = nil;
 
-	while( ( plugin = [enumerator nextObject] ) )
+	for( id plugin in _plugins )
 		if( ( ! class || ( class && [plugin isKindOfClass:class] ) ) && [plugin respondsToSelector:selector] )
 			[qualified addObject:plugin];
 

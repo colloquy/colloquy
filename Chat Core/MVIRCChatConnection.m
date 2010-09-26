@@ -390,10 +390,8 @@ static const NSStringEncoding supportedEncodings[] = {
 		_pendingJoinRoomNames = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 
 	NSMutableArray *roomList = [[NSMutableArray allocWithZone:nil] initWithCapacity:[rooms count]];
-	NSEnumerator *enumerator = [rooms objectEnumerator];
-	NSString *room = nil;
 
-	while( ( room = [enumerator nextObject] ) ) {
+	for( NSString *room in rooms ) {
 		room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 
 		if( ![room length] )
@@ -1302,9 +1300,7 @@ end:
 			}
 		} else if( [command isCaseInsensitiveEqualToString:@"op"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
-			NSEnumerator *enumerator = [users objectEnumerator];
-			NSString *userString = nil;
-			while( ( userString = [enumerator nextObject] ) ) {
+			for( NSString *userString in users ) {
 				if( [userString length] ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room setMode:MVChatRoomMemberOperatorMode forMemberUser:user];
@@ -1315,9 +1311,8 @@ end:
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"deop"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
-			NSEnumerator *enumerator = [users objectEnumerator];
-			NSString *userString = nil;
-			while( ( userString = [enumerator nextObject] ) ) {
+
+			for( NSString *userString in users ) {
 				if( [userString length] ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room removeMode:MVChatRoomMemberOperatorMode forMemberUser:user];
@@ -1328,9 +1323,8 @@ end:
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"halfop"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
-			NSEnumerator *enumerator = [users objectEnumerator];
-			NSString *userString = nil;
-			while( ( userString = [enumerator nextObject] ) ) {
+
+			for( NSString *userString in users ) {
 				if( [userString length] ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
@@ -1341,9 +1335,8 @@ end:
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"dehalfop"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
-			NSEnumerator *enumerator = [users objectEnumerator];
-			NSString *userString = nil;
-			while( ( userString = [enumerator nextObject] ) ) {
+
+			for( NSString *userString in users ) {
 				if( [userString length] ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room removeMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
@@ -1354,9 +1347,8 @@ end:
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"voice"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
-			NSEnumerator *enumerator = [users objectEnumerator];
-			NSString *userString = nil;
-			while( ( userString = [enumerator nextObject] ) ) {
+
+			for( NSString *userString in users ) {
 				if( [userString length] ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room setMode:MVChatRoomMemberVoicedMode forMemberUser:user];
@@ -1367,9 +1359,8 @@ end:
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"devoice"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
-			NSEnumerator *enumerator = [users objectEnumerator];
-			NSString *userString = nil;
-			while( ( userString = [enumerator nextObject] ) ) {
+
+			for( NSString *userString in users ) {
 				if( [userString length] ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room removeMode:MVChatRoomMemberVoicedMode forMemberUser:user];
@@ -1380,9 +1371,8 @@ end:
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"quiet"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
-			NSEnumerator *enumerator = [users objectEnumerator];
-			NSString *userString = nil;
-			while( ( userString = [enumerator nextObject] ) ) {
+
+			for( NSString *userString in users ) {
 				if( [userString length] ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room setMode:MVChatRoomMemberQuietedMode forMemberUser:user];
@@ -1393,9 +1383,8 @@ end:
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"dequiet"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
-			NSEnumerator *enumerator = [users objectEnumerator];
-			NSString *userString = nil;
-			while( ( userString = [enumerator nextObject] ) ) {
+
+			for( NSString *userString in users ) {
 				if( [userString length] ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room removeMode:MVChatRoomMemberQuietedMode forMemberUser:user];
@@ -1406,9 +1395,8 @@ end:
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"ban"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
-			NSEnumerator *enumerator = [users objectEnumerator];
-			NSString *userString = nil;
-			while( ( userString = [enumerator nextObject] ) ) {
+
+			for( NSString *userString in users ) {
 				if( [userString length] ) {
 					MVChatUser *user = nil;
 					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] ) {
@@ -1425,9 +1413,8 @@ end:
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"unban"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
-			NSEnumerator *enumerator = [users objectEnumerator];
-			NSString *userString = nil;
-			while( ( userString = [enumerator nextObject] ) ) {
+
+			for( NSString *userString in users ) {
 				if( [userString length] ) {
 					MVChatUser *user = nil;
 					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] ) {
@@ -1493,23 +1480,21 @@ end:
 		return;
 	} else if( [command isCaseInsensitiveEqualToString:@"j"] || [command isCaseInsensitiveEqualToString:@"join"] ) {
 		NSString *roomsString = MVChatStringAsString(arguments);
-		NSArray *rooms = [roomsString componentsSeparatedByString:@","];
-		NSEnumerator *enumerator = [rooms objectEnumerator];
-		NSString *room = nil;
+		NSArray *roomStrings = [roomsString componentsSeparatedByString:@","];
+		NSMutableArray *roomsToJoin = [[NSMutableArray allocWithZone:nil] initWithCapacity:[roomStrings count]];
 
-		rooms = [[NSMutableArray allocWithZone:nil] initWithCapacity:[rooms count]];
-		while( ( room = [enumerator nextObject] ) ) {
+		for( NSString *room in roomStrings ) {
 			room = [room stringByTrimmingCharactersInSet:whitespaceCharacters];
 			if( [room length] )
-				[(NSMutableArray *)rooms addObject:room];
+				[roomsToJoin addObject:room];
 		}
 
-		if( [rooms count])
-			[self joinChatRoomsNamed:rooms];
+		if( [roomsToJoin count])
+			[self joinChatRoomsNamed:roomsToJoin];
 		else if( isRoom )
 			[target join];
 
-		[rooms release];
+		[roomsToJoin release];
 
 		return;
 	} else if( [command isCaseInsensitiveEqualToString:@"part"] || [command isCaseInsensitiveEqualToString:@"leave"] ) {
@@ -1532,10 +1517,7 @@ end:
 			return;
 		}
 
-		NSEnumerator *enumerator = [rooms objectEnumerator];
-		NSString *roomName = nil;
-
-		while( ( roomName = [enumerator nextObject] ) )
+		for( NSString *roomName in rooms )
 			[[self joinedChatRoomWithName:roomName] partWithReason:reason];
 
 		return;
@@ -1822,9 +1804,7 @@ end:
 			[matchedUsers unionSet:[rule matchedChatUsers]];
 	}
 
-	NSEnumerator *enumerator = [matchedUsers objectEnumerator];
-	MVChatUser *user = nil;
-	while( ( user = [enumerator nextObject] ) )
+	for( MVChatUser *user in matchedUsers )
 		[self _scheduleWhoisForUser:user];
 }
 
@@ -1855,10 +1835,7 @@ end:
 	[_lastSentIsonNicknames release];
 	_lastSentIsonNicknames = [[NSMutableSet allocWithZone:nil] initWithCapacity:( [_chatUserWatchRules count] * 5 )];
 
-	NSEnumerator *enumerator = [matchedUsers objectEnumerator];
-	MVChatUser *user = nil;
-
-	while( ( user = [enumerator nextObject] ) ) {
+	for( MVChatUser *user in matchedUsers ) {
 		if( ! [[user connection] isEqual:self] )
 			continue;
 
@@ -2037,9 +2014,7 @@ end:
 	if( ! _serverInformation )
 		_serverInformation = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
 
-	NSEnumerator *enumerator = [parameters objectEnumerator];
-	NSString *feature = nil;
-	while( ( feature = [enumerator nextObject] ) ) {
+	for( NSString *feature in parameters ) {
 		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"WATCH"] ) {
 			_watchCommandSupported = YES;
 
@@ -3298,10 +3273,8 @@ end:
 
 		NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 		NSArray *users = [names componentsSeparatedByString:@" "];
-		NSEnumerator *enumerator = [users objectEnumerator];
-		NSString *nick = nil;
 
-		while( ( nick = [enumerator nextObject] ) ) {
+		for( NSString *nick in users ) {
 			if( ! [nick length] ) continue;
 
 			NSString *nickLower = [nick lowercaseString];
@@ -3317,8 +3290,7 @@ end:
 		}
 
 		if( ! _isonSentCount ) {
-			enumerator = [_lastSentIsonNicknames objectEnumerator];
-			while( ( nick = [enumerator nextObject] ) ) {
+			for( NSString *nick in _lastSentIsonNicknames ) {
 				MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
 				[self _markUserAsOffline:user];
 			}
@@ -3329,10 +3301,8 @@ end:
 	} else if( [parameters count] == 2 ) {
 		NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 		NSArray *users = [names componentsSeparatedByString:@" "];
-		NSEnumerator *enumerator = [users objectEnumerator];
-		NSString *nick = nil;
 
-		while( ( nick = [enumerator nextObject] ) ) {
+		for( NSString *nick in users ) {
 			if( ! [nick length] ) continue;
 
 			MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
@@ -3392,10 +3362,8 @@ end:
 			NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
 			NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
 			NSArray *members = [names componentsSeparatedByString:@" "];
-			NSEnumerator *enumerator = [members objectEnumerator];
-			NSString *memberName = nil;
 
-			while( ( memberName = [enumerator nextObject] ) ) {
+			for( NSString *memberName in members ) {
 				if( ! [memberName length] ) break;
 
 				MVChatRoomMemberMode modes = [self _stripModePrefixesFromNickname:&memberName];
@@ -3641,11 +3609,9 @@ end:
 		NSString *rooms = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 		NSArray *chanArray = [[rooms stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
 		NSMutableArray *results = [[NSMutableArray allocWithZone:nil] initWithCapacity:[chanArray count]];
-		NSEnumerator *enumerator = [chanArray objectEnumerator];
-		NSString *room = nil;
 
 		NSCharacterSet *nicknamePrefixes = [self _nicknamePrefixes];
-		while( ( room = [enumerator nextObject] ) ) {
+		for( NSString *room in chanArray ) {
 			NSRange prefixRange = [room rangeOfCharacterFromSet:nicknamePrefixes options:NSAnchoredSearch];
 			if( prefixRange.location != NSNotFound )
 				room = [room substringFromIndex:( prefixRange.location + prefixRange.length )];
