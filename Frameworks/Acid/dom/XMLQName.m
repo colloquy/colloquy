@@ -84,7 +84,7 @@ XMLQNameManager* QNManager;
     return [QNManager lookup:name withURI:uri];
 }
 
-+(XMLQName*) construct:(const char*)name;
++(XMLQName*) construct:(const char*)name
 {
     return [QNManager lookup:name];
 }
@@ -99,7 +99,7 @@ XMLQNameManager* QNManager;
     return [self compare:other] == NSOrderedSame;
 }
 
--(NSComparisonResult) compare:(id)other;
+-(NSComparisonResult) compare:(id)other
 {
     NSString* other_name = [other name];
     NSString* other_uri  = [other uri];

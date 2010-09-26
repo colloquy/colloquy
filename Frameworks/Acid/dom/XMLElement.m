@@ -93,7 +93,7 @@
 // Extended initializers
 -(id) initWithQName:(XMLQName*)qname
      withAttributes:(NSMutableDictionary*)atts
-     withDefaultURI:(NSString*)uri;
+     withDefaultURI:(NSString*)uri
 {
     [self init];
 
@@ -110,7 +110,7 @@
     return [self initWithQName:qname withDefaultURI:[qname uri]];
 }
 
--(id) initWithQName:(XMLQName*)qname withDefaultURI:(NSString*)uri;
+-(id) initWithQName:(XMLQName*)qname withDefaultURI:(NSString*)uri
 {
     [self init];
     _name  = [qname retain];

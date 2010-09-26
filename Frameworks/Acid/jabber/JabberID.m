@@ -396,7 +396,7 @@ static NSMutableDictionary* G_cache;
     return [self compare:other] == NSOrderedSame;
 }
 
--(NSComparisonResult) compare:(JabberID*)other;
+-(NSComparisonResult) compare:(JabberID*)other
 {
 	if (self == other)
 		return NSOrderedSame;

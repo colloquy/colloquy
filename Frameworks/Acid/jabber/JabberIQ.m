@@ -95,7 +95,7 @@ NSString* QUERY_PATH = @"/iq[@id='%@']";
     return [self retain];
 }
 
--(void) executeTo:(JabberID*)targetjid;
+-(void) executeTo:(JabberID*)targetjid
 {
     [self putAttribute:@"to" withValue:[targetjid completeID]];
     [self execute];
