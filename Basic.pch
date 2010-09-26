@@ -4,24 +4,14 @@
 #define MAC_OS_X_VERSION_10_5 1050
 #endif
 
+#ifndef MAC_OS_X_VERSION_10_6
+#define MAC_OS_X_VERSION_10_6 1060
+#endif
+
 #ifdef __OBJC__
 
 #import <Cocoa/Cocoa.h>
 #import <Foundation/NSDebug.h>
-
-#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4
-#if __LP64__ || NS_BUILD_32_LIKE_64
-typedef long NSInteger;
-typedef unsigned long NSUInteger;
-#else
-typedef int NSInteger;
-typedef unsigned int NSUInteger;
-#endif
-#define NSIntegerMax LONG_MAX
-#define NSIntegerMin LONG_MIN
-#define NSUIntegerMax ULONG_MAX
-#define NSINTEGER_DEFINED 1
-#endif
 
 #ifndef CGFLOAT_DEFINED
 #ifdef __LP64__
