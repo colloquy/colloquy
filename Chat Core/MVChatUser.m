@@ -340,9 +340,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 #pragma mark -
 
 - (void) refreshAttributes {
-	NSEnumerator *enumerator = [[self supportedAttributes] objectEnumerator];
-	NSString *attribute = nil;
-	while( ( attribute = [enumerator nextObject] ) )
+	for( NSString *attribute in [self supportedAttributes] )
 		[self refreshAttributeForKey:attribute];
 }
 

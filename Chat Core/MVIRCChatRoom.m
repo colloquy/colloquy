@@ -225,9 +225,7 @@
 	NSString *uniqueIdentfier = [identifier lowercaseString];
 
 	@synchronized( _memberUsers ) {
-		MVChatUser *user = nil;
-		NSEnumerator *enumerator = [_memberUsers objectEnumerator];
-		while( ( user = [enumerator nextObject] ) )
+		for( MVChatUser *user in _memberUsers )
 			if( [[user uniqueIdentifier] isEqualToString:uniqueIdentfier] )
 				return user;
 	}

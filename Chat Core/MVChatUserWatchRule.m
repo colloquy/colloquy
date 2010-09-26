@@ -168,10 +168,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 
 - (void) removeMatchedUsersForConnection:(MVChatConnection *) connection {
 	@synchronized( _matchedChatUsers ) {
-		NSEnumerator *enumerator = [[[_matchedChatUsers copy] autorelease] objectEnumerator];
-		MVChatUser *user = nil;
-
-		while( ( user = [enumerator nextObject] ) ) {
+		for( MVChatUser *user in [[_matchedChatUsers copy] autorelease] ) {
 			if( [[user connection] isEqual:connection] ) {
 				[user retain];
 				[_matchedChatUsers removeObject:user];

@@ -159,15 +159,14 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 	NSParameterAssert( invocation != nil );
 	NSParameterAssert( [invocation selector] != NULL );
 
-	NSEnumerator *enumerator = [[self pluginsOfClass:class thatRespondToSelector:[invocation selector]] objectEnumerator];
-	id plugin = nil;
+	NSArray *plugins = [self pluginsOfClass:class thatRespondToSelector:[invocation selector]];
 
-	if( ! enumerator ) return nil;
+	if( ! plugins ) return nil;
 
 	NSMutableArray *results = [[[NSMutableArray allocWithZone:nil] init] autorelease];
 	NSMethodSignature *sig = [invocation methodSignature];
 
-	while( ( plugin = [enumerator nextObject] ) ) {
+	for ( id plugin in plugins ) {
 		@try {
 			[invocation invokeWithTarget:plugin];
 		} @catch ( NSException *exception ) {

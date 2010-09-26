@@ -180,13 +180,11 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 
 			MVChatUser *member = [self _chatUserWithClientEntry:signoff_client];
 			NSData *reasonData = ( signoff_message ? [[NSData allocWithZone:nil] initWithBytes:signoff_message length:strlen( signoff_message )] : nil );
-			NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
-			MVChatRoom *room = nil;
 
 			[self _markUserAsOffline:member];
 
 			NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:member, @"user", reasonData, @"reason", nil];
-			while( ( room = [enumerator nextObject] ) ) {
+			for( MVChatRoom *room in [self joinedChatRooms] ) {
 				if( ! [room isJoined] || ! [room hasUser:member] ) continue;
 				[room _removeMemberUser:member];
 				[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification object:room userInfo:info];
@@ -207,10 +205,7 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 
 			[self _updateKnownUser:user withClientEntry:newclient];
 
-			NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
-			MVChatRoom *room = nil;
-
-			while( ( room = [enumerator nextObject] ) ) {
+			for( MVChatRoom *room in [self joinedChatRooms] ) {
 				if( ! [room isJoined] || ! [room hasUser:user] ) continue;
 				[room _updateMemberUser:user fromOldUniqueIdentifier:oldIdentifier];
 			}
@@ -238,12 +233,10 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 
 				MVChatUser *member = [self _chatUserWithClientEntry:signoff_client];
 				NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:member, @"user", reasonData, @"reason", nil];
-				NSEnumerator *enumerator = [joinedRooms objectEnumerator];
-				MVChatRoom *room = nil;
 
 				[self _markUserAsOffline:member];
 
-				while( ( room = [enumerator nextObject] ) ) {
+				for( MVChatRoom *room in joinedRooms ) {
 					if( ! [room isJoined] || ! [room hasUser:member] ) continue;
 					[room _removeMemberUser:member];
 					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification object:room userInfo:info];
@@ -458,12 +451,10 @@ static void silc_notify( SilcClient client, SilcClientConnection conn, SilcNotif
 			NSData *reasonData = [[NSData allocWithZone:nil] initWithBytes:quitReasonString length:strlen( quitReasonString )];
 			MVChatUser *member = [self _chatUserWithClientEntry:killed];
 			NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:member, @"user", reasonData, @"reason", nil];
-			NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
-			MVChatRoom *room = nil;
 
 			[self _markUserAsOffline:member];
 
-			while( ( room = [enumerator nextObject] ) ) {
+			for( MVChatRoom *room in [self joinedChatRooms] ) {
 				if( ! [room isJoined] || ! [room hasUser:member] ) continue;
 				[room _removeMemberUser:member];
 				[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification object:room userInfo:info];
@@ -576,10 +567,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 
 		[(MVSILCChatUser *)[self localUser] updateWithClientEntry:conn -> local_entry];
 
-		NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
-		MVChatRoom *room = nil;
-
-		while( ( room = [enumerator nextObject] ) ) {
+		for( MVChatRoom *room in [self joinedChatRooms] ) {
 			if( ! [room isJoined] || ! [room hasUser:[self localUser]] ) continue;
 			[room _updateMemberUser:[self localUser] fromOldUniqueIdentifier:oldIdentifier];
 		}
@@ -707,10 +695,7 @@ static void silc_connected( SilcClient client, SilcClientConnection conn, SilcCl
 		SilcLock( [self _silcClient] );
 
 		@synchronized( [self _queuedCommands] ) {
-			NSEnumerator *enumerator = [[self _queuedCommands] objectEnumerator];
-			NSString *command = nil;
-
-			while( ( command = [enumerator nextObject] ) )
+			for( NSString *command in [self _queuedCommands] )
 				[self sendRawMessage:command];
 
 			[[self _queuedCommands] removeAllObjects];

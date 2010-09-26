@@ -366,9 +366,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	NSMutableSet *users = [[NSMutableSet allocWithZone:nil] init];
 
 	@synchronized( _memberUsers ) {
-		NSEnumerator *enumerator = [_memberUsers objectEnumerator];
-		MVChatUser *user = nil;
-		while( ( user = [enumerator nextObject] ) )
+		for( MVChatUser *user in _memberUsers )
 			if( [self modesForMemberUser:user] & newModes )
 				[users addObject:user];
 	}
@@ -380,9 +378,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	NSMutableSet *users = [[NSMutableSet allocWithZone:nil] init];
 
 	@synchronized( _memberUsers ) {
-		NSEnumerator *enumerator = [_memberUsers objectEnumerator];
-		MVChatUser *user = nil;
-		while( ( user = [enumerator nextObject] ) )
+		for( MVChatUser *user in _memberUsers )
 			if( [[user nickname] isEqualToString:nickname] )
 				[users addObject:user];
 	}
@@ -394,9 +390,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	NSMutableSet *users = [[NSMutableSet allocWithZone:nil] init];
 
 	@synchronized( _memberUsers ) {
-		NSEnumerator *enumerator = [_memberUsers objectEnumerator];
-		MVChatUser *user = nil;
-		while( ( user = [enumerator nextObject] ) )
+		for( MVChatUser *user in _memberUsers )
 			if( [[user fingerprint] isEqualToString:fingerprint] )
 				[users addObject:user];
 	}
@@ -406,9 +400,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 - (MVChatUser *) memberUserWithUniqueIdentifier:(id) identifier {
 	@synchronized( _memberUsers ) {
-		MVChatUser *user = nil;
-		NSEnumerator *enumerator = [_memberUsers objectEnumerator];
-		while( ( user = [enumerator nextObject] ) )
+		for( MVChatUser *user in _memberUsers )
 			if( [[user uniqueIdentifier] isEqual:identifier] )
 				return user;
 	}
@@ -658,10 +650,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (MVChatUser *) valueInMemberUsersArrayWithName:(NSString *) memberName {
-	NSEnumerator *enumerator = [[self memberUsers] objectEnumerator];
-	MVChatUser *user = nil;
-
-	while( ( user = [enumerator nextObject] ) )
+	for( MVChatUser *user in [self memberUsers] )
 		if( [[user nickname] isCaseInsensitiveEqualToString:memberName] )
 			return user;
 

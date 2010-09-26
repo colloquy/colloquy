@@ -886,10 +886,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
 	@synchronized( _joinedRooms ) {
-		NSEnumerator *enumerator = [_joinedRooms objectEnumerator];
-		MVChatRoom *room = nil;
-
-		while( ( room = [enumerator nextObject] ) )
+		for( MVChatRoom *room in _joinedRooms )
 			if( [[room name] isEqualToString:name] )
 				return [[room retain] autorelease];
 	}
@@ -907,10 +904,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (MVChatRoom *) chatRoomWithName:(NSString *) name {
 	@synchronized( _knownRooms ) {
-		NSEnumerator *enumerator = [_knownRooms objectEnumerator];
-		MVChatRoom *room = nil;
-
-		while( ( room = [enumerator nextObject] ) )
+		for( MVChatRoom *room in _knownRooms )
 			if( [[room name] isEqualToString:name] )
 				return [[room retain] autorelease];
 	}
@@ -1181,10 +1175,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	if( _status != MVChatConnectionSuspendedStatus && _status != MVChatConnectionServerDisconnectedStatus )
 		_status = MVChatConnectionDisconnectedStatus;
 
-	NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
-	MVChatRoom *room = nil;
-
-	while( ( room = [enumerator nextObject] ) ) {
+	for( MVChatRoom *room in [self joinedChatRooms] ) {
 		if( ! [room isJoined] ) continue;
 		[room _setDateParted:[NSDate date]];
 	}
@@ -1243,12 +1234,11 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (void) _pruneKnownUsers {
 	@synchronized( _knownUsers ) {
 		NSMutableArray *removeList = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_knownUsers count]];
-		NSEnumerator *keyEnumerator = [_knownUsers keyEnumerator];
-		NSEnumerator *enumerator = [_knownUsers objectEnumerator];
-		id key = nil, object = nil;
 
-		while( ( key = [keyEnumerator nextObject] ) && ( object = [enumerator nextObject] ) )
+		for( id key in [_knownUsers allKeys] ) {
+			id object = [_knownUsers objectForKey:key];
 			if( [object retainCount] == 1 ) [removeList addObject:key];
+		}
 
 		[_knownUsers removeObjectsForKeys:removeList];
 		[removeList release];
@@ -1284,9 +1274,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (NSUInteger) _watchRulesMatchingUser:(MVChatUser *) user {
 	NSUInteger count = 0;
 	@synchronized( _chatUserWatchRules ) {
-		NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
-		MVChatUserWatchRule *rule = nil;
-		while( ( rule = [enumerator nextObject] ) ) {
+		for( MVChatUserWatchRule *rule in _chatUserWatchRules) {
 			if( [rule matchChatUser:user] )
 				count++;
 		}
@@ -1315,9 +1303,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 		[user retain]; // retain since removeMatchedUser might hold the last reference
 
 		@synchronized( _chatUserWatchRules ) {
-			NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
-			MVChatUserWatchRule *rule = nil;
-			while( ( rule = [enumerator nextObject] ) )
+			for( MVChatUserWatchRule *rule in _chatUserWatchRules)
 				[rule removeMatchedUser:user];
 		}
 
@@ -1421,10 +1407,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 }
 
 - (MVChatUser *) valueInKnownChatUsersArrayWithName:(NSString *) name {
-	NSEnumerator *enumerator = [[self knownChatUsers] objectEnumerator];
-	MVChatUser *user = nil;
-
-	while( ( user = [enumerator nextObject] ) )
+	for( MVChatUser *user in [self knownChatUsers] )
 		if( [[user nickname] isCaseInsensitiveEqualToString:name] )
 			return user;
 
@@ -1442,10 +1425,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 }
 
 - (MVChatRoom *) valueInJoinedChatRoomsArrayWithUniqueID:(id) identifier {
-	NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
-	MVChatRoom *room = nil;
-
-	while( ( room = [enumerator nextObject] ) )
+	for( MVChatRoom *room in [self joinedChatRooms] )
 		if( [[room scriptUniqueIdentifier] isEqual:identifier] )
 			return room;
 

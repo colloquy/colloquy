@@ -546,9 +546,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		}
 	} else {
 		@synchronized( _knownUsers ) {
-			NSEnumerator *enumerator = [_knownUsers objectEnumerator];
-			MVChatUser *user = nil;
-			while( ( user = [enumerator nextObject] ) )
+			for( MVChatUser *user in _knownUsers )
 				[rule matchChatUser:user];
 		}
 	}
@@ -804,17 +802,12 @@ static const NSStringEncoding supportedEncodings[] = {
 	}
 
 	@synchronized( _knownUsers ) {
-		NSEnumerator *enumerator = [_knownUsers objectEnumerator];
-		MVChatUser *user = nil;
-
-		while( ( user = [enumerator nextObject] ) )
+		for( MVChatUser *user in _knownUsers )
 			[user _setStatus:MVChatUserUnknownStatus];
 	}
 
 	@synchronized( _chatUserWatchRules ) {
-		NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
-		MVChatUserWatchRule *rule = nil;
-		while( ( rule = [enumerator nextObject] ) )
+		for( MVChatUserWatchRule *rule in _chatUserWatchRules )
 			[rule removeMatchedUsersForConnection:self];
 	}
 
@@ -1659,10 +1652,7 @@ end:
 
 #if !ENABLE(BOUNCER_MODE)
 	@synchronized( _joinedRooms ) {
-		NSEnumerator *enumerator = [_joinedRooms objectEnumerator];
-		MVChatRoom *room = nil;
-
-		while( ( room = [enumerator nextObject] ) )
+		for( MVChatRoom *room in _joinedRooms )
 			if( [[room memberUsers] count] <= JVMaximumMembersForWhoRequest )
 				[self sendRawMessageWithFormat:@"WHO %@", [room name]];
 	}
@@ -1798,9 +1788,7 @@ end:
 	@synchronized( _chatUserWatchRules ) {
 		if( ! [_chatUserWatchRules count] ) return; // nothing to do, return and wait until the next scheduled fire
 
-		NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
-		MVChatUserWatchRule *rule = nil;
-		while( ( rule = [enumerator nextObject] ) )
+		for( MVChatUserWatchRule *rule in _chatUserWatchRules )
 			[matchedUsers unionSet:[rule matchedChatUsers]];
 	}
 
@@ -1821,9 +1809,7 @@ end:
 	@synchronized( _chatUserWatchRules ) {
 		if( ! [_chatUserWatchRules count] ) return; // nothing to do, return and wait until the next scheduled fire
 
-		NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
-		MVChatUserWatchRule *rule = nil;
-		while( ( rule = [enumerator nextObject] ) )
+		for( MVChatUserWatchRule *rule in _chatUserWatchRules )
 			[matchedUsers unionSet:[rule matchedChatUsers]];
 	}
 
@@ -1860,10 +1846,7 @@ end:
 	}
 
 	@synchronized( _chatUserWatchRules ) {
-		NSEnumerator *enumerator = [_chatUserWatchRules objectEnumerator];
-		MVChatUserWatchRule *rule = nil;
-
-		while( ( rule = [enumerator nextObject] ) ) {
+		for( MVChatUserWatchRule *rule in _chatUserWatchRules ) {
 			NSString *nick = [rule nickname];
 			NSString *nickLower = [nick lowercaseString];
 
@@ -2022,10 +2005,7 @@ end:
 			[request setString:@"WATCH "];
 
 			@synchronized( _chatUserWatchRules ) {
-				NSEnumerator *ruleEnumerator = [_chatUserWatchRules objectEnumerator];
-				MVChatUserWatchRule *rule = nil;
-
-				while( ( rule = [ruleEnumerator nextObject] ) ) {
+				for( MVChatUserWatchRule *rule in _chatUserWatchRules ) {
 					NSString *nick = [rule nickname];
 					if( nick && ! [rule nicknameIsRegularExpression] ) {
 						if( ( [nick length] + [request length] + 1 ) > JVMaximumWatchCommandLength ) {
@@ -2604,8 +2584,7 @@ end:
 					MVIRCUploadFileTransfer *transfer = nil;
 
 					@synchronized( _directClientConnections ) {
-						NSEnumerator *enumerator = [_directClientConnections objectEnumerator];
-						while( ( transfer = [enumerator nextObject] ) ) {
+						for( transfer in _directClientConnections ) {
 							if( ! [transfer isUpload] )
 								continue;
 							if( ! [transfer isPassive] )
@@ -2659,9 +2638,7 @@ end:
 				port %= 65536; // some clients use ports greater than 65535, mod with 65536 to get the real port
 
 				@synchronized( _directClientConnections ) {
-					NSEnumerator *enumerator = [_directClientConnections objectEnumerator];
-					MVIRCDownloadFileTransfer *transfer = nil;
-					while( ( transfer = [enumerator nextObject] ) ) {
+					for( MVIRCDownloadFileTransfer *transfer in _directClientConnections ) {
 						if( ! [transfer isDownload] )
 							continue;
 						if( [transfer isPassive] != passive )
@@ -2695,9 +2672,7 @@ end:
 				port %= 65536; // some clients use ports greater than 65535, mod with 65536 to get the real port
 
 				@synchronized( _directClientConnections ) {
-					NSEnumerator *enumerator = [_directClientConnections objectEnumerator];
-					MVIRCUploadFileTransfer *transfer = nil;
-					while( ( transfer = [enumerator nextObject] ) ) {
+					for( MVIRCUploadFileTransfer *transfer in _directClientConnections ) {
 						if( ! [transfer isUpload] )
 							continue;
 						if( [transfer isPassive] != passive )
@@ -2742,8 +2717,7 @@ end:
 						MVDirectChatConnection *directChat = nil;
 
 						@synchronized( _directClientConnections ) {
-							NSEnumerator *enumerator = [_directClientConnections objectEnumerator];
-							while( ( directChat = [enumerator nextObject] ) ) {
+							for( directChat in _directClientConnections ) {
 								if( ! [directChat isPassive] )
 									continue;
 								if( ! [[directChat user] isEqualToChatUser:sender] )
@@ -2821,9 +2795,7 @@ end:
 					port %= 65536; // some clients use ports greater than 65535, mod with 65536 to get the real port
 
 					@synchronized( _directClientConnections ) {
-						NSEnumerator *enumerator = [[[_directClientConnections copy] autorelease] objectEnumerator];
-						MVIRCUploadFileTransfer *transfer = nil;
-						while( ( transfer = [enumerator nextObject] ) ) {
+						for( MVIRCUploadFileTransfer *transfer in [[_directClientConnections copy] autorelease] ) {
 							if( ! [transfer isUpload] )
 								continue;
 							if( [transfer isPassive] != passive )
@@ -2938,9 +2910,7 @@ end:
 		if( ! [reason isKindOfClass:[NSData class]] ) reason = nil;
 		NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:sender, @"user", reason, @"reason", nil];
 
-		MVChatRoom *room = nil;
-		NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
-		while( ( room = [enumerator nextObject] ) ) {
+		for( MVChatRoom *room in [self joinedChatRooms] ) {
 			if( ! [room isJoined] || ! [room hasUser:sender] ) continue;
 			[room _removeMemberUser:sender];
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomUserPartedNotification object:room userInfo:info];
@@ -3250,10 +3220,7 @@ end:
 			note = [NSNotification notificationWithName:MVChatUserNicknameChangedNotification object:sender userInfo:[NSDictionary dictionaryWithObjectsAndKeys:oldNickname, @"oldNickname", nil]];
 		}
 
-		NSEnumerator *enumerator = [[self joinedChatRooms] objectEnumerator];
-		MVChatRoom *room = nil;
-
-		while( ( room = [enumerator nextObject] ) ) {
+		for( MVChatRoom *room in [self joinedChatRooms] ) {
 			if( ! [room isJoined] || ! [room hasUser:sender] ) continue;
 			[room _updateMemberUser:sender fromOldUniqueIdentifier:oldIdentifier];
 		}
@@ -4076,9 +4043,7 @@ end:
 			NSMutableString *captchaReply = [NSMutableString string];
 			BOOL empty = NO;
 			while( !empty ) {
-				NSMutableString *row = nil;
-				NSEnumerator *enumerator = [_umichNoIdentdCaptcha objectEnumerator];
-				while( ( row = [enumerator nextObject] ) ) {
+				for( NSMutableString *row in _umichNoIdentdCaptcha ) {
 					[testString appendString:[row substringToIndex:1]];
 					[row deleteCharactersInRange:NSMakeRange(0, 1)];
 					if( ![row length] ) empty = YES;
