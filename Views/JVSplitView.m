@@ -4,10 +4,7 @@
 @implementation JVSplitView
 - (NSString *) stringWithSavedPosition {
 	NSMutableString *result = [NSMutableString string];
-	NSEnumerator *subviews = [[self subviews] objectEnumerator];
-	NSView *subview = nil;
-
-	while( ( subview = [subviews nextObject] ) ) {
+	for( NSView *subview in [self subviews]) {
 		if( [result length] ) [result appendString:@";"];
 		[result appendString:NSStringFromRect( [subview frame] )];
 	}

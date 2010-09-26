@@ -63,11 +63,10 @@
 	NSString *words = [highlightWords stringValue];
 	AGRegex *regex = [AGRegex regexWithPattern:@"(?:\\s|^)(/.*?/)(?:\\s|$)"];
 	NSArray *matches = [regex findAllInString:words];
-	NSEnumerator *e = [matches objectEnumerator];
-	AGRegexMatch *match;
-	while( match = [e nextObject] ) {
+
+	for( AGRegexMatch *match in matches )
 		[components addObject:[match groupAtIndex:1]];
-	}
+
 	words = [regex replaceWithString:@"" inString:words];
 	[components addObjectsFromArray:[words componentsSeparatedByString:@" "]];
 	[components removeObject:@""];
@@ -76,12 +75,9 @@
 
 - (void) buildEventsMenu {
 	NSMenuItem *menuItem = nil;
-	NSEnumerator *enumerator = nil;
 	NSMenu *availableEvents = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-	NSDictionary *info = nil;
 
-	enumerator = [[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"notifications" ofType:@"plist"]] objectEnumerator];
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSDictionary *info in [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"notifications" ofType:@"plist"]] ) {
 		if( ! [info objectForKey:@"seperator"] ) {
 			menuItem = [[[NSMenuItem alloc] initWithTitle:[info objectForKey:@"title"] action:NULL keyEquivalent:@""] autorelease];
 			[menuItem setRepresentedObject:[info objectForKey:@"identifier"]];
@@ -94,14 +90,11 @@
 
 - (void) buildSoundsMenu {
 	NSMenuItem *menuItem = nil;
-	NSEnumerator *enumerator = nil;
-	id sound = nil;
 	BOOL first = YES;
 
 	NSMenu *availableSounds = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 
-	enumerator = [[[NSBundle mainBundle] pathsForResourcesOfType:@"aiff" inDirectory:@"Sounds"] objectEnumerator];
-	while( sound = [enumerator nextObject] ) {
+	for( id sound in [[NSBundle mainBundle] pathsForResourcesOfType:@"aiff" inDirectory:@"Sounds"] ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[[sound lastPathComponent] stringByDeletingPathExtension] action:NULL keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:[sound lastPathComponent]];
 		[menuItem setImage:[NSImage imageNamed:@"sound"]];
@@ -118,9 +111,7 @@
 		@"/System/Library/Sounds",
 		[@"~/Library/Sounds" stringByExpandingTildeInPath],
 		nil];
-	NSEnumerator *pathEnum = [paths objectEnumerator];
-	NSString *aPath;
-	while( aPath = [pathEnum nextObject] ) {
+	for( NSString *aPath in paths ) {
 		if( [aPath isEqualToString:@"-"] ) {
 			first = YES;
 			continue;

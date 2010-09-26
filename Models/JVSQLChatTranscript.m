@@ -473,12 +473,9 @@ static int _specificElementsInRangeCallback( void *context, int fieldCount, char
 			return nil;
 		}
 
-		NSEnumerator *kenumerator = [[event attributes] keyEnumerator];
-		NSEnumerator *enumerator = [[event attributes] objectEnumerator];
-		NSString *key = nil;
-		id value = nil;
+		for( NSString *key in [self attributes] ) {
+			id value = [[self attributes] objectForKey:key];
 
-		while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
 			sqlite3_reset( compiledQuery );
 			sqlite3_bind_text( compiledQuery, 1, "event", 5, SQLITE_STATIC ); // entity
 			sqlite3_bind_int64( compiledQuery, 2, eventIdentifier ); // link

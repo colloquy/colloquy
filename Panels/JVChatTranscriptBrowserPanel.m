@@ -214,10 +214,7 @@ NSString *criteria[4] = { @"server", @"target", @"session", nil };
 	if( [[searchField stringValue] length] ) {
 		if( criteria[_selectedTag] ) {
 			NSMutableArray *filtered = [NSMutableArray arrayWithCapacity:[_transcripts count]];
-			NSEnumerator *enumerator = [_transcripts objectEnumerator];
-			NSDictionary *d = nil;
-
-			while( ( d = [enumerator nextObject] ) ) {
+			for( NSDictionary *d in _transcripts ) {
 				if( [[d objectForKey:criteria[_selectedTag]] rangeOfString:[searchField stringValue]].location != NSNotFound ) {
 					[filtered addObject:d];
 				}

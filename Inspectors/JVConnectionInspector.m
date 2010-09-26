@@ -396,9 +396,7 @@
 }
 
 - (NSString *) comboBox:(NSComboBox *) comboBox completedString:(NSString *) substring {
-	NSEnumerator *enumerator = [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] objectEnumerator];
-	NSString *server = nil;
-	while( ( server = [enumerator nextObject] ) )
+	for( NSString *server in [[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] )
 		if( [server hasPrefix:substring] ) return server;
 	return nil;
 }

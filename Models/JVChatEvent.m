@@ -139,13 +139,8 @@
 			xmlFreeDoc( msgDoc );
 		}
 
-		NSEnumerator *kenumerator = [[self attributes] keyEnumerator];
-		NSEnumerator *enumerator = [[self attributes] objectEnumerator];
-		NSString *key = nil;
-		id value = nil;
-
-		while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
-			msgStr = NULL;
+		for( NSString *key in [self attributes] ) {
+			id value = [[self attributes] objectForKey:key];
 
 			if( [value respondsToSelector:@selector( xmlDescriptionWithTagName: )] ) {
 				msgStr = [(NSString *)[value performSelector:@selector( xmlDescriptionWithTagName: ) withObject:key] UTF8String];

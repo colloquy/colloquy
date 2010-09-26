@@ -54,12 +54,9 @@
 
 		// a list of recievers
 		if( [subject isKindOfClass:[NSArray class]] ) {
-			id subj = nil, result = nil;
-			NSEnumerator *enumerator = [subject objectEnumerator];
 			NSMutableArray *results = [[NSMutableArray allocWithZone:nil] initWithCapacity:[subject count]];
-
-			while( ( subj = [enumerator nextObject] ) ) {
-				result = nil;
+			for( id subj in subject ) {
+				id result = nil;
 				if( [subj respondsToSelector:selector] )
 					result = [subj performSelector:selector withObject:self];
 				if( result ) [results addObject:result];

@@ -77,13 +77,11 @@
 	NSBitmapImageRep *imageRep = nil;
 	NSData *imageData = nil;
 
-	NSEnumerator *enumerator = [[self representations] objectEnumerator];
-	id object = nil;
-
 	// Look for an existing representation in the NSBitmapImageRep class.
-	while( ! imageRep && ( object = [enumerator nextObject] ) )
-		if( [object isKindOfClass:[NSBitmapImageRep class]] )
+	for( id object in [self representations] ) {
+		if( object && [object isKindOfClass:[NSBitmapImageRep class]] )
 			imageRep = object;
+	}
 
 	if( ! imageRep ) {
 		imageRep = [NSBitmapImageRep imageRepWithData:[self TIFFRepresentation]];

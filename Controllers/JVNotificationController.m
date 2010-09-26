@@ -142,13 +142,12 @@ static JVNotificationController *sharedInstance = nil;
 }
 
 - (void) bubbleDidFadeOut:(KABubbleWindowController *) bubble {
-	NSEnumerator *e = [[[_bubbles copy] autorelease] objectEnumerator];
-	NSEnumerator *ke = [[[_bubbles copy] autorelease] keyEnumerator];
-	KABubbleWindowController *cBubble = nil;
-	NSString *key = nil;
-
-	while( ( key = [ke nextObject] ) && ( cBubble = [e nextObject] ) )
-		if( cBubble == bubble ) [_bubbles removeObjectForKey:key];
+	NSMutableDictionary *bubbles = [[_bubbles copy] autorelease];
+	for( NSString *key in bubbles ) {
+		KABubbleWindowController *cBubble = [bubbles objectForKey:key];
+		if( cBubble == bubble )
+			[_bubbles removeObjectForKey:key];
+	}
 }
 
 - (void) _playSound:(NSString *) path {
@@ -174,13 +173,12 @@ static JVNotificationController *sharedInstance = nil;
 }
 
 - (NSDictionary *) registrationDictionaryForGrowl {
-	NSEnumerator *enumerator = [[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"notifications" ofType:@"plist"]] objectEnumerator];
 	NSMutableArray *notifications = [NSMutableArray array];
-	NSDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) )
+	for( NSDictionary *info in [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"notifications" ofType:@"plist"]] ) {
 		if( ! [info objectForKey:@"seperator"] )
 			[notifications addObject:[info objectForKey:@"identifier"]];
+		
+	}
 
 	return [NSDictionary dictionaryWithObjectsAndKeys:notifications, GROWL_NOTIFICATIONS_ALL, notifications, GROWL_NOTIFICATIONS_DEFAULT, nil];
 }

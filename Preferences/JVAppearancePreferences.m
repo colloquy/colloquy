@@ -419,21 +419,17 @@
 		for( NSString *style in sarray ) {
 			// Parse all the selectors in the style.
 			AGRegex *regex = [AGRegex regexWithPattern:@"(\\S.*?)\\s*\{([^\\}]*?)\\}" options:( AGRegexCaseInsensitive | AGRegexDotAll )];
-			NSEnumerator *selectors = [regex findEnumeratorInString:style];
-			AGRegexMatch *selector = nil;
 
 			NSMutableArray *styleLayout = [NSMutableArray array];
 			[styleLayouts addObject:styleLayout];
 
 			// Step through the selectors.
-			while( ( selector = [selectors nextObject] ) ) {
+			for( AGRegexMatch *selector in [regex findAllInString:style] ) {
 				// Parse all the properties for the selector.
 				regex = [AGRegex regexWithPattern:@"(\\S*?):\\s*(.*?);" options:( AGRegexCaseInsensitive | AGRegexDotAll )];
-				NSEnumerator *properties = [regex findEnumeratorInString:[selector groupAtIndex:2]];
-				AGRegexMatch *property = nil;
 
 				// Step through all the properties and build a dictionary on this selector/property/value combo.
-				while( ( property = [properties nextObject] ) ) {
+				for( AGRegexMatch *property in [regex findAllInString:[selector groupAtIndex:2]] ) {
 					NSMutableDictionary *propertyInfo = [NSMutableDictionary dictionary];
 					NSString *p = [property groupAtIndex:1];
 					NSString *s = [selector groupAtIndex:1];

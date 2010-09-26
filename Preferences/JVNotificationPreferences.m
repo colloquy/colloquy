@@ -94,14 +94,11 @@
 
 - (void) buildSoundsMenu {
 	NSMenuItem *menuItem = nil;
-	NSEnumerator *enumerator = nil;
-	id sound = nil;
 	BOOL first = YES;
 
 	NSMenu *availableSounds = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 
-	enumerator = [[[NSBundle mainBundle] pathsForResourcesOfType:@"aiff" inDirectory:@"Sounds"] objectEnumerator];
-	while( ( sound = [enumerator nextObject] ) ) {
+	for( id sound in [[NSBundle mainBundle] pathsForResourcesOfType:@"aiff" inDirectory:@"Sounds"] ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[[sound lastPathComponent] stringByDeletingPathExtension] action:NULL keyEquivalent:@""] autorelease];
 		[menuItem setRepresentedObject:[sound lastPathComponent]];
 		[menuItem setImage:[NSImage imageNamed:@"sound"]];
@@ -124,7 +121,7 @@
 			first = YES;
 			continue;
 		}
-		enumerator = [[fm contentsOfDirectoryAtPath:aPath error:nil] objectEnumerator];
+		NSEnumerator *enumerator = [[fm contentsOfDirectoryAtPath:aPath error:nil] objectEnumerator];
 		NSEnumerator *oldEnum = nil;
 		NSString *oldPath = nil;
 		NSInteger indentationLevel = 0;

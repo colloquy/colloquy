@@ -241,9 +241,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 - (IBAction) editSettings:(id) sender {
 	[[self editingRules] removeAllObjects];
 
-	id rule = nil;
-	NSEnumerator *enumerator = [[self rules] objectEnumerator];
-	while( ( rule = [enumerator nextObject] ) )
+	for( id rule in [self rules] )
 		[[self editingRules] addObject:[[rule copy] autorelease]];
 
 	if( ! [[self editingRules] count] ) [self addRow:nil];
@@ -301,9 +299,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	BOOL ignore = _ignoreCase;
 	BOOL match = ( andOperation ? YES : NO );
 
-	NSEnumerator *rules = [[self rules] objectEnumerator];
-	JVTranscriptCriterionController *rule = nil;
-	while( ( rule = [rules nextObject] ) ) {
+	for( JVTranscriptCriterionController *rule in [self rules] ) {
 		BOOL localMatch = [rule matchMessage:message fromChatView:view ignoringCase:ignore];
 		match = ( andOperation ? ( match & localMatch ) : ( match | localMatch ) );
 		if( ! localMatch && andOperation ) break; // fails, this wont match with all rules

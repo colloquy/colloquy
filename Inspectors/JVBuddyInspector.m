@@ -57,9 +57,7 @@
 	while( [voices numberOfItems] > 2 )
 		[voices removeItemAtIndex:2];
 
-	NSEnumerator *enumerator = [[NSSpeechSynthesizer availableVoices] objectEnumerator];
-	NSString *voiceIdentifier = nil;
-	while( ( voiceIdentifier = [enumerator nextObject] ) ) {
+	for( NSString *voiceIdentifier in [[NSSpeechSynthesizer availableVoices] objectEnumerator] ) {
 		[voices addItemWithTitle:[[NSSpeechSynthesizer attributesForVoice:voiceIdentifier] objectForKey:NSVoiceName]];
 		[[voices lastItem] setRepresentedObject:voiceIdentifier];
 	}

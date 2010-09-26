@@ -199,10 +199,7 @@ static void generateUniqueMachineIdentifier() {
 - (NSData *) _requestBody {
 	NSMutableString *resultString = [[NSMutableString alloc] initWithCapacity:1024];
 
-	NSEnumerator *enumerator = [_data keyEnumerator];
-	NSString *key = nil;
-
-	while ((key = [enumerator nextObject])) {
+	for( NSString *key in _data ) {
 		NSString *value = [[_data objectForKey:key] description];
 
 		key = [key stringByEncodingIllegalURLCharacters];
