@@ -84,7 +84,6 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 + (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host;
 + (id) wildcardUserWithFingerprint:(NSString *) fingerprint;
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 @property(readonly) MVChatConnection *connection;
 @property(readonly) MVChatUserType type;
 
@@ -122,46 +121,6 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 @property(readonly) NSSet *supportedAttributes;
 @property(readonly) NSDictionary *attributes;
 
-#else
-
-- (MVChatConnection *) connection;
-- (MVChatUserType) type;
-
-- (MVChatUserStatus) status;
-- (NSData *) awayStatusMessage;
-
-- (NSDate *) dateConnected;
-- (NSDate *) dateDisconnected;
-- (NSDate *) dateUpdated;
-
-- (NSTimeInterval) idleTime;
-- (NSTimeInterval) lag;
-
-- (NSString *) displayName;
-- (NSString *) nickname;
-- (NSString *) realName;
-- (NSString *) username;
-- (NSString *) address;
-- (NSString *) serverAddress;
-
-- (id) uniqueIdentifier;
-- (NSData *) publicKey;
-- (NSString *) fingerprint;
-
-- (NSUInteger) supportedModes;
-- (NSUInteger) modes;
-
-- (NSSet *) supportedAttributes;
-- (NSDictionary *) attributes;
-#endif
-
-- (BOOL) isRemoteUser;
-- (BOOL) isLocalUser;
-- (BOOL) isWildcardUser;
-
-- (BOOL) isIdentified;
-- (BOOL) isServerOperator;
-
 - (BOOL) isEqual:(id) object;
 - (BOOL) isEqualToChatUser:(MVChatUser *) anotherUser;
 
@@ -196,12 +155,7 @@ extern NSString *MVChatUserAttributeUpdatedNotification;
 
 #if ENABLE(SCRIPTING)
 @interface MVChatUser (MVChatUserScripting)
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 @property(readonly) NSString *scriptUniqueIdentifier;
 @property(readonly) NSScriptObjectSpecifier *objectSpecifier;
-#else
-- (NSString *) scriptUniqueIdentifier;
-- (NSScriptObjectSpecifier *) objectSpecifier;
-#endif
 @end
 #endif

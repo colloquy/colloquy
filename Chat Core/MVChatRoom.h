@@ -75,8 +75,6 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 	NSUInteger _hash;
 	BOOL _releasing;
 }
-
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 @property(readonly) MVChatConnection *connection;
 
 @property(readonly) NSURL *url;
@@ -105,44 +103,11 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 @property(readonly) NSSet *memberUsers;
 @property(readonly) NSSet *bannedUsers;
 
-#else
-
-- (MVChatConnection *) connection;
-
-- (NSURL *) url;
-- (NSString *) name;
-- (NSString *) displayName;
-- (id) uniqueIdentifier;
-
-- (NSDate *) dateJoined;
-- (NSDate *) dateParted;
-
-- (NSStringEncoding) encoding;
-- (void) setEncoding:(NSStringEncoding) encoding;
-
-- (NSData *) topic;
-- (MVChatUser *) topicAuthor;
-- (NSDate *) dateTopicChanged;
-
-- (NSSet *) supportedAttributes;
-- (NSDictionary *) attributes;
-
-- (NSUInteger) supportedModes;
-- (NSUInteger) supportedMemberUserModes;
-- (NSUInteger) modes;
-
-- (MVChatUser *) localMemberUser;
-- (NSSet *) memberUsers;
-- (NSSet *) bannedUsers;
-#endif
-
 - (BOOL) isEqual:(id) object;
 - (BOOL) isEqualToChatRoom:(MVChatRoom *) anotherUser;
 
 - (NSComparisonResult) compare:(MVChatRoom *) otherRoom;
 - (NSComparisonResult) compareByUserCount:(MVChatRoom *) otherRoom;
-
-- (BOOL) isJoined;
 
 - (void) join;
 - (void) part;
@@ -197,12 +162,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 
 #if ENABLE(SCRIPTING)
 @interface MVChatRoom (MVChatRoomScripting)
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 @property(readonly) NSString *scriptUniqueIdentifier;
 @property(readonly) NSScriptObjectSpecifier *objectSpecifier;
-#else
-- (NSString *) scriptUniqueIdentifier;
-- (NSScriptObjectSpecifier *) objectSpecifier;
-#endif
 @end
 #endif

@@ -9,11 +9,7 @@ extern NSString *MVChatPluginManagerDidReloadPluginsNotification;
 + (MVChatPluginManager *) defaultManager;
 + (NSArray *) pluginSearchPaths;
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5
 @property(readonly) NSArray *plugins;
-#else
-- (NSArray *) plugins;
-#endif
 
 - (void) reloadPlugins;
 - (void) addPlugin:(id) plugin;

@@ -171,7 +171,6 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 @property(readonly) MVChatConnectionType type;
 
 @property(copy) NSString *uniqueIdentifier;
@@ -246,183 +245,6 @@ extern NSString *MVChatConnectionErrorDomain;
 @property(readonly) MVChatConnectionStatus status;
 @property(readonly) NSUInteger lag;
 
-#else
-
-- (MVChatConnectionType) type;
-
-#pragma mark -
-
-- (NSString *) uniqueIdentifier;
-- (void) setUniqueIdentifier:(NSString *) uniqueIdentifier;
-
-#pragma mark -
-
-- (NSSet *) supportedFeatures;
-- (const NSStringEncoding *) supportedStringEncodings;
-
-#pragma mark -
-
-- (NSError *) lastError;
-
-#pragma mark -
-
-- (NSString *) urlScheme;
-- (NSURL *) url;
-
-#pragma mark -
-
-- (void) setEncoding:(NSStringEncoding) encoding;
-- (NSStringEncoding) encoding;
-
-#pragma mark -
-
-- (void) setRealName:(NSString *) name;
-- (NSString *) realName;
-
-#pragma mark -
-
-- (void) setNickname:(NSString *) nickname;
-- (NSString *) nickname;
-
-- (void) setPreferredNickname:(NSString *) nickname;
-- (NSString *) preferredNickname;
-
-#pragma mark -
-
-- (void) setAlternateNicknames:(NSArray *) nicknames;
-- (NSArray *) alternateNicknames;
-- (NSString *) nextAlternateNickname;
-
-#pragma mark -
-
-- (void) setNicknamePassword:(NSString *) password;
-- (NSString *) nicknamePassword;
-
-#pragma mark -
-
-- (NSString *) certificateServiceName;
-- (NSString *) certificatePassword;
-
-#pragma mark -
-
-- (void) setPassword:(NSString *) password;
-- (NSString *) password;
-
-#pragma mark -
-
-- (void) setUsername:(NSString *) username;
-- (NSString *) username;
-
-#pragma mark -
-
-- (void) setServer:(NSString *) server;
-- (NSString *) server;
-
-#pragma mark -
-
-- (void) setServerPort:(unsigned short) port;
-- (unsigned short) serverPort;
-
-#pragma mark -
-
-- (void) setOutgoingChatFormat:(MVChatMessageFormat) format;
-- (MVChatMessageFormat) outgoingChatFormat;
-
-#pragma mark -
-
-- (void) setSecure:(BOOL) ssl;
-
-#pragma mark -
-
-- (void) setPersistentInformation:(NSDictionary *) information;
-- (NSDictionary *) persistentInformation;
-
-#pragma mark -
-
-- (void) setProxyType:(MVChatConnectionProxy) type;
-- (MVChatConnectionProxy) proxyType;
-
-#pragma mark -
-
-- (void) setProxyServer:(NSString *) address;
-- (NSString *) proxyServer;
-
-#pragma mark -
-
-- (void) setProxyServerPort:(unsigned short) port;
-- (unsigned short) proxyServerPort;
-
-#pragma mark -
-
-- (void) setProxyUsername:(NSString *) username;
-- (NSString *) proxyUsername;
-
-#pragma mark -
-
-- (void) setProxyPassword:(NSString *) password;
-- (NSString *) proxyPassword;
-
-#pragma mark -
-
-- (void) setBouncerType:(MVChatConnectionBouncer) type;
-- (MVChatConnectionBouncer) bouncerType;
-
-#pragma mark -
-
-- (void) setBouncerServer:(NSString *) address;
-- (NSString *) bouncerServer;
-
-#pragma mark -
-
-- (void) setBouncerServerPort:(unsigned short) port;
-- (unsigned short) bouncerServerPort;
-
-#pragma mark -
-
-- (void) setBouncerUsername:(NSString *) username;
-- (NSString *) bouncerUsername;
-
-#pragma mark -
-
-- (void) setBouncerPassword:(NSString *) password;
-- (NSString *) bouncerPassword;
-
-#pragma mark -
-
-- (void) setBouncerDeviceIdentifier:(NSString *) identifier;
-- (NSString *) bouncerDeviceIdentifier;
-
-#pragma mark -
-
-- (void) setBouncerConnectionIdentifier:(NSString *) identifier;
-- (NSString *) bouncerConnectionIdentifier;
-
-#pragma mark -
-
-- (NSSet *) knownChatRooms;
-- (NSSet *) joinedChatRooms;
-- (NSCharacterSet *) chatRoomNamePrefixes;
-
-#pragma mark -
-
-- (NSSet *) knownChatUsers;
-- (MVChatUser *) localUser;
-
-#pragma mark -
-
-- (NSSet *) chatUserWatchRules;
-
-#pragma mark -
-
-- (MVChatString *) awayStatusMessage;
-- (void) setAwayStatusMessage:(MVChatString *) message;
-
-#pragma mark -
-
-- (MVChatConnectionStatus) status;
-- (NSUInteger) lag;
-#endif
-
 #pragma mark -
 
 - (id) persistentInformationObjectForKey:(id) key;
@@ -431,9 +253,6 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #pragma mark -
 
-- (BOOL) isSecure;
-- (BOOL) isConnected;
-- (BOOL) isWaitingToReconnect;
 - (unsigned short) reconnectAttemptCount;
 - (NSDate *) connectedDate;
 - (NSDate *) nextReconnectAttemptDate;
@@ -525,11 +344,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 #if ENABLE(SCRIPTING)
 @interface MVChatConnection (MVChatConnectionScripting)
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 @property(readonly) NSNumber *scriptUniqueIdentifier;
-#else
-- (NSNumber *) scriptUniqueIdentifier;
-#endif
 @end
 #endif
 

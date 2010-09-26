@@ -45,7 +45,8 @@ typedef enum {
 + (void) setAutoPortMappingEnabled:(BOOL) enable;
 + (BOOL) isAutoPortMappingEnabled;
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
+- (id) initWithUser:(MVChatUser *) user;
+
 @property(readonly, getter=isUpload) BOOL upload;
 @property(readonly, getter=isDownload) BOOL download;
 @property(readonly, getter=isPassive) BOOL passive;
@@ -63,29 +64,6 @@ typedef enum {
 
 @property(readonly) MVChatUser *user;
 
-#else
-
-- (MVFileTransferStatus) status;
-- (NSError *) lastError;
-
-- (unsigned long long) finalSize;
-- (unsigned long long) transfered;
-
-- (NSDate *) startDate;
-- (unsigned long long) startOffset;
-
-- (NSString *) host;
-- (unsigned short) port;
-
-- (MVChatUser *) user;
-#endif
-
-- (id) initWithUser:(MVChatUser *) user;
-
-- (BOOL) isUpload;
-- (BOOL) isDownload;
-- (BOOL) isPassive;
-
 - (void) cancel;
 @end
 
@@ -97,11 +75,7 @@ typedef enum {
 }
 + (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive;
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 @property(readonly) NSString *source;
-#else
-- (NSString *) source;
-#endif
 @end
 
 #pragma mark -
@@ -112,14 +86,8 @@ typedef enum {
 	NSString *_destination;
 	NSString *_originalFileName;
 }
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 @property(copy) NSString *destination;
 @property(readonly) NSString *originalFileName;
-#else
-- (NSString *) destination;
-- (void) setDestination:(NSString *) path;
-- (NSString *) originalFileName;
-#endif
 
 - (void) setDestination:(NSString *) path renameIfFileExists:(BOOL) allow;
 

@@ -27,7 +27,6 @@ extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
 - (void) removeMatchedUser:(MVChatUser *) user;
 - (void) removeMatchedUsersForConnection:(MVChatConnection *) connection;
 
-#if MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_5 || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
 @property(readonly) NSSet *matchedChatUsers;
 
 @property(copy) NSString *nickname;
@@ -48,35 +47,4 @@ extern NSString *MVChatUserWatchRuleRemovedMatchedUserNotification;
 
 @property(copy) NSArray *applicableServerDomains;
 
-#else
-
-- (NSSet *) matchedChatUsers;
-
-- (NSString *) nickname;
-- (void) setNickname:(NSString *) nickname;
-- (BOOL) nicknameIsRegularExpression;
-
-- (NSString *) realName;
-- (void) setRealName:(NSString *) realName;
-- (BOOL) realNameIsRegularExpression;
-
-- (NSString *) username;
-- (void) setUsername:(NSString *) username;
-- (BOOL) usernameIsRegularExpression;
-
-- (NSString *) address;
-- (void) setAddress:(NSString *) address;
-- (BOOL) addressIsRegularExpression;
-
-- (NSData *) publicKey;
-- (void) setPublicKey:(NSData *) publicKey;
-
-- (BOOL) isInterim;
-- (void) setInterim:(BOOL) interim;
-
-- (NSArray *) applicableServerDomains;
-- (void) setApplicableServerDomains:(NSArray *) serverDomains;
-#endif
-
-- (BOOL) isInterim;
 @end
