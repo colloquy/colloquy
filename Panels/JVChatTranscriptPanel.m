@@ -653,8 +653,11 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		if( [ret count] ) [ret addObject:[NSMenuItem separatorItem]];
 
 		for( NSArray *items in results ) {
-			for( item in items )
+			if( ![items conformsToProtocol:@protocol(NSFastEnumeration)] ) continue;
+
+			for( item in items ) {
 				if( [item isKindOfClass:[NSMenuItem class]] ) [ret addObject:item];
+			}
 		}
 
 		if( [[ret lastObject] isSeparatorItem] )
