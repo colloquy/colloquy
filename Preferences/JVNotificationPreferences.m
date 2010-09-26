@@ -125,6 +125,7 @@
 		NSEnumerator *oldEnum = nil;
 		NSString *oldPath = nil;
 		NSInteger indentationLevel = 0;
+		id sound = nil;
 		while( ( sound = [enumerator nextObject] ) || oldEnum ) {
 			if( ! sound && oldEnum ) {
 				enumerator = oldEnum;
