@@ -71,76 +71,15 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 @implementation MVFileTransferController
 + (NSString *) userPreferredDownloadFolder {
-	OSStatus err = noErr;
-	ICInstance inst = NULL;
-	ICFileSpec folder;
-	long length = kICFileSpecHeaderSize;
-	FSRef ref;
-	char path[PATH_MAX];
+	NSString *preferredDownloadFolder = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVUserPreferredDownloadFolder"];
 
-	memset( path, 0, PATH_MAX );
-
-	if( ( err = ICStart( &inst, 'coRC' ) ) != noErr )
-		goto finish;
-
-	ICGetPref( inst, kICDownloadFolder, NULL, &folder, &length );
-	ICStop( inst );
-
-	Boolean wasChanged = NO;
-	AliasHandle aliasHandle = NULL;
-	err = PtrToHand(&folder.alias, (Handle *)&aliasHandle, ( length - kICFileSpecHeaderSize ));
-
-	if( ( err = FSResolveAlias( NULL, aliasHandle, &ref, &wasChanged ) ) != noErr || !wasChanged ) {
-#ifndef __LP64__
-		if( ( err = FSpMakeFSRef( &folder.fss, &ref ) ) != noErr )
-			goto finish;
-		else
-#endif
-			goto finish;
-	}
-
-	if( ( err = FSRefMakePath( &ref, (unsigned char *)path, PATH_MAX ) ) != noErr )
-		goto finish;
-
-finish:
-
-	if( ! strlen( path ) )
+	if( !preferredDownloadFolder.length )
 		return [@"~/Downloads" stringByExpandingTildeInPath];
-
-	return [NSString stringWithUTF8String:path];
+	return preferredDownloadFolder;
 }
 
 + (void) setUserPreferredDownloadFolder:(NSString *) path {
-	OSStatus err = noErr;
-	ICInstance inst = NULL;
-	ICFileSpec *dir = NULL;
-	FSRef ref;
-	AliasHandle alias;
-	NSUInteger length = 0;
-
-	if( ( err = FSPathMakeRef( (unsigned char *)[path UTF8String], &ref, NULL ) ) != noErr )
-		return;
-
-	if( ( err = FSNewAliasMinimal( &ref, &alias ) ) != noErr )
- 		return;
-
-	length = ( kICFileSpecHeaderSize + GetHandleSize( (Handle) alias ) );
-	dir = malloc( length );
-	memset( dir, 0, length );
-
-	if( ( err = FSGetCatalogInfo( &ref, kFSCatInfoNone, NULL, NULL, &dir -> fss, NULL ) ) != noErr )
-		return;
-
-	memcpy( &dir -> alias, *alias, length - kICFileSpecHeaderSize );
-
-	if( ( err = ICStart( &inst, 'coRC' ) ) != noErr )
-		return;
-
-	ICSetPref( inst, kICDownloadFolder, kICAttrNoChange, dir, length );
-	ICStop( inst );
-
-	free( dir );
-	DisposeHandle( (Handle) alias );
+	[[NSUserDefaults standardUserDefaults] setObject:path forKey:@"JVUserPreferredDownloadFolder"];
 }
 
 #pragma mark -
