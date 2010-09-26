@@ -396,12 +396,10 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				LIBRARY_STYLE = DYNAMIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
-				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-fconstant-cfstrings";
 				PREBINDING = YES;
 				SDKROOT = macosx10.5;
-				"SDKROOT[arch=x86_64]" = macosx10.6;
 				SYMROOT = ../../build;
 				UNSTRIPPED_PRODUCT = YES;
 				VALID_ARCHS = "x86_64 i386 ppc ppc7400 ppc970";
@@ -523,11 +521,9 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				LIBRARY_STYLE = DYNAMIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
-				"MACOSX_DEPLOYMENT_TARGET[arch=x86_64]" = 10.6;
 				OTHER_CFLAGS = "-fconstant-cfstrings";
 				PREBINDING = YES;
 				SDKROOT = macosx10.5;
-				"SDKROOT[arch=x86_64]" = macosx10.6;
 				SYMROOT = ../../build;
 				UNSTRIPPED_PRODUCT = YES;
 				VALID_ARCHS = "x86_64 i386 ppc ppc7400 ppc970";

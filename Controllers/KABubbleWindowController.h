@@ -1,8 +1,4 @@
-@interface KABubbleWindowController : NSWindowController
-#if MAC_OS_X_VERSION_MIN_REQUIRED > MAC_OS_X_VERSION_10_5
-<NSWindowDelegate>
-#endif
-{
+@interface KABubbleWindowController : NSWindowController {
 	id _delegate;
 	NSTimer *_animationTimer;
 	NSUInteger _depth;
