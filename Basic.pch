@@ -13,15 +13,6 @@
 #import <Cocoa/Cocoa.h>
 #import <Foundation/NSDebug.h>
 
-#ifndef CGFLOAT_DEFINED
-#ifdef __LP64__
-typedef double CGFloat;
-#else
-typedef float CGFloat;
-#endif
-#define CGFLOAT_DEFINED 1
-#endif
-
 CF_EXPORT CFRunLoopRef CFRunLoopGetMain(void);
 
 #endif
