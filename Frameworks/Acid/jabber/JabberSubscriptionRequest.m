@@ -120,7 +120,7 @@ NSString* JXML_SUB_CANCEL_REQUEST = @"/presence[@type='unsubscribe']"; // unsubs
     return r;
 }
 
--(JabberSubscriptionRequest*) deny;
+-(JabberSubscriptionRequest*) deny
 {
     JabberSubscriptionRequest* r = [[JabberSubscriptionRequest alloc] initWithRecipient:_from];
     [r putAttribute:@"type" withValue:@"unsubscribed"];

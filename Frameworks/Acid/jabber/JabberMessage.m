@@ -66,7 +66,7 @@ XPathQuery* QRY_DELAY;
     return self;
 }
 
--(id) initWithRecipient:(JabberID*)jid andBody:(NSString*)b;
+-(id) initWithRecipient:(JabberID*)jid andBody:(NSString*)b
 {
     [self initWithRecipient:jid];
     [self addUniqueIDAttribute];

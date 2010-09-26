@@ -131,14 +131,14 @@
 	[_socket readDataWithTimeout:-1. tag:0];
 }
 
-- (void) socketDidDisconnect:(AsyncSocket *)sock;
+- (void) socketDidDisconnect:(AsyncSocket *)sock
 {
     [_timer invalidate];
     _timer = nil;
     [_session postNotificationName:JSESSION_ENDED object:self];
 }
 
-- (void) socket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err;
+- (void) socket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err
 {
     [_session postNotificationName:JSESSION_ERROR_CONNECT_FAILED object:nil];
 }
