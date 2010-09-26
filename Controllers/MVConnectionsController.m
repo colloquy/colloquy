@@ -66,17 +66,14 @@ static NSMenu *favoritesMenu = nil;
 + (void) refreshFavoritesMenu {
 	if( ! favoritesMenu ) favoritesMenu = [[NSMenu alloc] initWithTitle:@""];
 
-	NSMenuItem *menuItem = nil;
-	NSEnumerator *enumerator = [[[[favoritesMenu itemArray] copy] autorelease] objectEnumerator];
-	while( ( menuItem = [enumerator nextObject] ) )
+	for( NSMenuItem *menuItem in [[[favoritesMenu itemArray] copy] autorelease] )
 		[favoritesMenu removeItem:menuItem];
 
 	NSURL *url = nil;
-	NSString *item = nil;
 	NSMutableArray *rooms = [NSMutableArray array], *roomNames = [NSMutableArray array];
 
-	enumerator = [[NSFileManager defaultManager] enumeratorAtPath:[@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath]];
-	while( ( item = [enumerator nextObject] ) ) {
+	NSString *path = [@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath];
+	for( NSString *item in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 		if( [[item pathExtension] isEqualToString:@"inetloc"] ) {
 			url = [NSURL URLWithInternetLocationFile:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@", item] stringByExpandingTildeInPath]];
 			if( url ) {
@@ -86,6 +83,7 @@ static NSMenu *favoritesMenu = nil;
 		}
 	}
 
+	NSMenuItem *menuItem = nil;
 	if( ! [rooms count] ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"No Favorites", "no favorites menu title" ) action:NULL keyEquivalent:@""] autorelease];
 		[favoritesMenu addItem:menuItem];
@@ -95,7 +93,8 @@ static NSMenu *favoritesMenu = nil;
 	NSImage *icon = [[[NSImage imageNamed:@"room"] copy] autorelease];
 	[icon setScalesWhenResized:YES];
 	[icon setSize:NSMakeSize( 16., 16. )];
-	enumerator = [rooms objectEnumerator];
+	NSEnumerator *enumerator = [rooms objectEnumerator];
+	NSString *item = nil;
 	while( ( url = [enumerator nextObject] ) && ( item = [nameEnumerator nextObject] ) ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( _connectToFavorite: ) keyEquivalent:@""] autorelease];
 		[menuItem setImage:icon];
@@ -410,10 +409,7 @@ static NSMenu *favoritesMenu = nil;
 		return;
 	}
 
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	NSDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSDictionary *info in _bookmarks ) {
 		MVChatConnection *connection = [info objectForKey:@"connection"];
 
 		if( [[connection server] isEqualToString:[newAddress stringValue]] && [connection serverPort] == [newPort intValue] &&
@@ -590,10 +586,8 @@ static NSMenu *favoritesMenu = nil;
 
 - (NSArray *) connections {
 	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	id info = nil;
 
-	while( ( info = [enumerator nextObject] ) ) {
+	for( id info in _bookmarks ) {
 		MVChatConnection *connection = [info objectForKey:@"connection"];
 		if( connection ) [ret addObject:connection];
 	}
@@ -603,10 +597,8 @@ static NSMenu *favoritesMenu = nil;
 
 - (NSArray *) connectedConnections {
 	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	id info = nil;
 
-	while( ( info = [enumerator nextObject] ) ) {
+	for( id info in _bookmarks ) {
 		MVChatConnection *connection = [info objectForKey:@"connection"];
 		if( [connection isConnected] )
 			[ret addObject:connection];
@@ -624,12 +616,10 @@ static NSMenu *favoritesMenu = nil;
 
 - (NSArray *) connectionsForServerAddress:(NSString *) address {
 	NSMutableArray *ret = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	id info = nil;
 
 	address = [address stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@". \t\n"]];
 
-	while( ( info = [enumerator nextObject] ) ) {
+	for( id info in _bookmarks ) {
 		MVChatConnection *connection = [info objectForKey:@"connection"];
 		NSString *server = [connection server];
 		NSRange range = [server rangeOfString:address options:( NSCaseInsensitiveSearch | NSLiteralSearch | NSBackwardsSearch | NSAnchoredSearch ) range:NSMakeRange( 0, [server length] )];
@@ -641,10 +631,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (BOOL) managesConnection:(MVChatConnection *) connection {
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	NSDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) )
+	for( NSDictionary *info in _bookmarks )
 		if( [[info objectForKey:@"connection"] isEqual:connection] )
 			return YES;
 
@@ -689,11 +676,9 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) removeConnection:(MVChatConnection *) connection {
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	NSDictionary *info = nil;
 	unsigned index = 0;
 
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSDictionary *info in _bookmarks ) {
 		if( [[info objectForKey:@"connection"] isEqual:connection] )
 			break;
 		index++;
@@ -770,10 +755,7 @@ static NSMenu *favoritesMenu = nil;
 			target = [[[url path] substringFromIndex:1] stringByDecodingIllegalURLCharacters];
 		}
 
-		NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-		NSDictionary *info = nil;
-
-		while( ( info = [enumerator nextObject] ) ) {
+		for( NSDictionary *info in _bookmarks ) {
 			MVChatConnection *connection = [info objectForKey:@"connection"];
 
 			if( [[connection server] isEqualToString:[url host]] &&
@@ -824,10 +806,7 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark -
 
 - (void) setAutoConnect:(BOOL) autoConnect forConnection:(MVChatConnection *) connection {
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	NSMutableDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in _bookmarks ) {
 		if( [info objectForKey:@"connection"] == connection ) {
 			if( autoConnect ) [info setObject:[NSNumber numberWithBool:NO] forKey:@"temporary"];
 			[info setObject:[NSNumber numberWithBool:autoConnect] forKey:@"automatic"];
@@ -838,10 +817,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (BOOL) autoConnectForConnection:(MVChatConnection *) connection {
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	NSMutableDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in _bookmarks ) {
 		if( [info objectForKey:@"connection"] == connection ) {
 			return [[info objectForKey:@"automatic"] boolValue];
 		}
@@ -853,10 +829,7 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark -
 
 - (void) setShowConsoleOnConnect:(BOOL) autoConsole forConnection:(MVChatConnection *) connection {
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	NSMutableDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in _bookmarks ) {
 		if( [info objectForKey:@"connection"] == connection ) {
 			[info setObject:[NSNumber numberWithBool:autoConsole] forKey:@"showConsole"];
 			[self _saveBookmarkList];
@@ -866,10 +839,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (BOOL) showConsoleOnConnectForConnection:(MVChatConnection *) connection {
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	NSMutableDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in _bookmarks ) {
 		if( [info objectForKey:@"connection"] == connection ) {
 			return [[info objectForKey:@"showConsole"] boolValue];
 		}
@@ -882,10 +852,7 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark -
 
 - (void) setJoinRooms:(NSArray *) rooms forConnection:(MVChatConnection *) connection {
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	NSMutableDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in _bookmarks ) {
 		if( [info objectForKey:@"connection"] == connection ) {
 			if( [rooms count] ) [info setObject:[[rooms mutableCopy] autorelease] forKey:@"rooms"];
 			else [info removeObjectForKey:@"rooms"];
@@ -896,10 +863,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (NSMutableArray *) joinRoomsForConnection:(MVChatConnection *) connection {
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	NSMutableDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in _bookmarks ) {
 		if( [info objectForKey:@"connection"] == connection ) {
 			NSMutableArray *ret = [info objectForKey:@"rooms"];
 			if( ! ret ) {
@@ -916,10 +880,7 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark -
 
 - (void) setConnectCommands:(NSString *) commands forConnection:(MVChatConnection *) connection {
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	NSMutableDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in _bookmarks ) {
 		if( [info objectForKey:@"connection"] == connection ) {
 			if( commands ) [info setObject:[[commands mutableCopy] autorelease] forKey:@"commands"];
 			else [info removeObjectForKey:@"commands"];
@@ -930,10 +891,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (NSString *) connectCommandsForConnection:(MVChatConnection *) connection {
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	NSMutableDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in _bookmarks ) {
 		if( [info objectForKey:@"connection"] == connection ) {
 			return [info objectForKey:@"commands"];
 		}
@@ -945,10 +903,7 @@ static NSMenu *favoritesMenu = nil;
 #pragma mark -
 
 - (void) setIgnoreRules:(NSArray *) ignores forConnection:(MVChatConnection *) connection {
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	NSMutableDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in _bookmarks ) {
 		if( [info objectForKey:@"connection"] == connection ) {
 			if( [ignores count] ) {
 				NSMutableArray *copy = (id)ignores;
@@ -963,10 +918,7 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (NSMutableArray *) ignoreRulesForConnection:(MVChatConnection *) connection {
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	NSMutableDictionary *info = nil;
-
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in _bookmarks ) {
 		if( [info objectForKey:@"connection"] == connection ) {
 			NSMutableArray *ret = [info objectForKey:@"ignores"];
 			if( ! ret ) {
@@ -1153,12 +1105,8 @@ static NSMenu *favoritesMenu = nil;
 			if( [menu numberOfItems ] && ! [[[menu itemArray] lastObject] isSeparatorItem] )
 				[menu addItem:[NSMenuItem separatorItem]];
 
-			NSArray *items = nil;
-			NSEnumerator *enumerator = [results objectEnumerator];
-			while( ( items = [enumerator nextObject] ) ) {
-				if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
-				NSEnumerator *ienumerator = [items objectEnumerator];
-				while( ( item = [ienumerator nextObject] ) )
+			for( NSArray *items in results ) {
+				for( item in items )
 					if( [item isKindOfClass:[NSMenuItem class]] ) [menu addItem:item];
 			}
 		}
@@ -1358,9 +1306,7 @@ static NSMenu *favoritesMenu = nil;
 
 - (NSString *) comboBox:(NSComboBox *) comboBox completedString:(NSString *) substring {
 	if( comboBox == newAddress ) {
-		NSEnumerator *enumerator = [[[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] objectEnumerator];
-		NSString *server = nil;
-		while( ( server = [enumerator nextObject] ) )
+		for( NSString *server in [[NSUserDefaults standardUserDefaults] arrayForKey:@"JVChatServers"] )
 			if( [server hasPrefix:substring] ) return server;
 	}
 
@@ -1656,10 +1602,8 @@ static NSMenu *favoritesMenu = nil;
 
 	NSUInteger roomCount = 0;
 	NSMutableArray *saveList = [NSMutableArray arrayWithCapacity:[_bookmarks count]];
-	NSEnumerator *enumerator = [_bookmarks objectEnumerator];
-	id info = nil;
 
-	while( ( info = [enumerator nextObject] ) ) {
+	for( id info in _bookmarks ) {
 		if( ! [[info objectForKey:@"temporary"] boolValue] ) {
 			MVChatConnection *connection = [info objectForKey:@"connection"];
 			if( ! connection ) continue;
@@ -1690,10 +1634,8 @@ static NSMenu *favoritesMenu = nil;
 				[data setObject:[connection persistentInformation] forKey:@"persistentInformation"];
 
 			NSMutableArray *permIgnores = [NSMutableArray array];
-			NSEnumerator *ie = [[info objectForKey:@"ignores"] objectEnumerator];
-			KAIgnoreRule *rule = nil;
 
-			while( ( rule = [ie nextObject] ) ) {
+			for( KAIgnoreRule *rule in [info objectForKey:@"ignores"] ) {
 				if( [rule isPermanent] ) {
 					NSData *archive = [NSKeyedArchiver archivedDataWithRootObject:rule];
 					if( archive ) [permIgnores addObject:archive];
@@ -1722,15 +1664,13 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) _loadBookmarkList {
 	NSArray *list = [[NSUserDefaults standardUserDefaults] arrayForKey:@"MVChatBookmarks"];
-	NSEnumerator *enumerator = [list objectEnumerator];
-	NSMutableDictionary *info = nil;
 
 	[self _deregisterNotificationsForConnection:nil]; // deregister all connections
 
 	[_bookmarks release];
 	_bookmarks = [[NSMutableArray alloc] init];
 
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in list ) {
 		info = [NSMutableDictionary dictionaryWithDictionary:info];
 
 		MVChatConnection *connection = nil;
@@ -1776,10 +1716,7 @@ static NSMenu *favoritesMenu = nil;
 			[connection setAlternateNicknames:[info objectForKey:@"alternateNicknames"]];
 
 		NSMutableArray *permIgnores = [NSMutableArray array];
-		NSEnumerator *ie = [[info objectForKey:@"ignores"] objectEnumerator];
-		NSData *rule = nil;
-
-		while( ( rule = [ie nextObject] ) ) {
+		for( NSData *rule in [info objectForKey:@"ignores"] ) {
 			NSData *archive = [NSKeyedUnarchiver unarchiveObjectWithData:rule];
 			if( archive ) [permIgnores addObject:archive];
 		}
@@ -1812,14 +1749,13 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _validateToolbar {
-	NSEnumerator *enumerator = [[[[self window] toolbar] visibleItems] objectEnumerator];
-	NSToolbarItem *item = nil;
 	BOOL noneSelected = YES;
 	MVChatConnectionStatus status = MVChatConnectionDisconnectedStatus;
 
 	if( [connections selectedRow] != -1 ) noneSelected = NO;
 	if( ! noneSelected ) status = [(MVChatConnection *)[[_bookmarks objectAtIndex:[connections selectedRow]] objectForKey:@"connection"] status];
-	while( ( item = [enumerator nextObject] ) ) {
+
+	for( NSToolbarItem *item in [[[self window] toolbar] visibleItems] ) {
 		if( [[item itemIdentifier] isEqualToString:MVToolbarConnectToggleItemIdentifier] ) {
 			if( noneSelected ) {
 				[item setLabel:NSLocalizedString( @"New", "new connection title" )];
@@ -1937,10 +1873,8 @@ static NSMenu *favoritesMenu = nil;
 
 - (void) _autoJoinRoomsForConnection:(MVChatConnection *) connection {
 	NSMutableArray *roomIdentifiers = [[self joinRoomsForConnection:connection] mutableCopy];
-	NSEnumerator *enumerator = [[[JVChatController defaultController] chatViewControllersWithConnection:connection] objectEnumerator];
-	JVChatRoomPanel *chatRoomController = nil;
 
-	while( ( chatRoomController = [enumerator nextObject] ) ) {
+	for( JVChatRoomPanel *chatRoomController in [[JVChatController defaultController] chatViewControllersWithConnection:connection] ) {
 		if( ![chatRoomController isMemberOfClass:NSClassFromString(@"JVChatRoomPanel")] )
 			continue;
 
@@ -1976,10 +1910,8 @@ static NSMenu *favoritesMenu = nil;
 
 	NSString *strcommands = [self connectCommandsForConnection:connection];
 
-	NSEnumerator *commands = [[strcommands componentsSeparatedByString:@"\n"] objectEnumerator];
-	NSMutableString *command = nil;
 	if( ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ) ) {
-		while( ( command = [commands nextObject] ) ) {
+		for( NSMutableString *command in [strcommands componentsSeparatedByString:@"\n"] ) {
 			command = [[command mutableCopy] autorelease];
 			[command replaceOccurrencesOfString:@"%@" withString:[connection nickname] options:NSLiteralSearch range:NSMakeRange( 0, [command length] )];
 
@@ -2033,11 +1965,8 @@ static NSMenu *favoritesMenu = nil;
 
 	NSString *strcommands = [self connectCommandsForConnection:connection];
 
-	NSEnumerator *commands = [[strcommands componentsSeparatedByString:@"\n"] objectEnumerator];
-	NSMutableString *command = nil;
-
 	if( ! ( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ) ) {
-		while( ( command = [commands nextObject] ) ) {
+		for( NSMutableString *command in [strcommands componentsSeparatedByString:@"\n"] ) {
 			command = [[command mutableCopy] autorelease];
 			[command replaceOccurrencesOfString:@"%@" withString:[connection nickname] options:NSLiteralSearch range:NSMakeRange( 0, [command length] )];
 
@@ -2214,13 +2143,9 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (MVChatConnection *) valueInChatConnectionsWithUniqueID:(id) identifier {
-	NSEnumerator *enumerator = [[self chatConnections] objectEnumerator];
-	MVChatConnection *connection = nil;
-
-	while( ( connection = [enumerator nextObject] ) ) {
+	for( MVChatConnection *connection in [self chatConnections] )
 		if( [[connection scriptUniqueIdentifier] isEqual:identifier] )
 			return connection;
-	}
 
 	return nil;
 }

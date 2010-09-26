@@ -161,9 +161,7 @@
 			return NO;
 		} else if( ! [command caseInsensitiveCompare:@"op"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
-			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg = nil;
-			while( ( arg = [e nextObject] ) ) {
+			for( NSString *arg in args ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] setMode:MVChatRoomMemberOperatorMode forMemberUser:user];
@@ -172,9 +170,7 @@
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"deop"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
-			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg = nil;
-			while( ( arg = [e nextObject] ) ) {
+			for( NSString *arg in args ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] removeMode:MVChatRoomMemberOperatorMode forMemberUser:user];
@@ -183,9 +179,7 @@
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"halfop"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
-			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg = nil;
-			while( ( arg = [e nextObject] ) ) {
+			for( NSString *arg in args ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
@@ -194,9 +188,7 @@
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"dehalfop"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
-			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg = nil;
-			while( ( arg = [e nextObject] ) ) {
+			for( NSString *arg in args ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] removeMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
@@ -205,9 +197,7 @@
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"voice"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
-			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg = nil;
-			while( ( arg = [e nextObject] ) ) {
+			for( NSString *arg in args ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] setMode:MVChatRoomMemberVoicedMode forMemberUser:user];
@@ -216,9 +206,7 @@
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"devoice"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
-			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg = nil;
-			while( ( arg = [e nextObject] ) ) {
+			for( NSString *arg in args ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] removeMode:MVChatRoomMemberVoicedMode forMemberUser:user];
@@ -227,9 +215,7 @@
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"quiet"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
-			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg = nil;
-			while( ( arg = [e nextObject] ) ) {
+			for( NSString *arg in args ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] setMode:MVChatRoomMemberQuietedMode forMemberUser:user];
@@ -238,9 +224,7 @@
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"dequiet"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
-			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg = nil;
-			while( ( arg = [e nextObject] ) ) {
+			for( NSString *arg in args ) {
 				if( [arg length] ) {
 					MVChatUser *user = [[[room target] memberUsersWithNickname:arg] anyObject];
 					if( user ) [[room target] removeMode:MVChatRoomMemberQuietedMode forMemberUser:user];
@@ -249,9 +233,7 @@
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"ban"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
-			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg = nil;
-			while( ( arg = [e nextObject] ) ) {
+			for( NSString *arg in args ) {
 				if( [arg length] ) {
 					MVChatUser *user = nil;
 					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] || ! [[room target] memberUsersWithNickname:arg] ) {
@@ -266,9 +248,7 @@
 			return YES;
 		} else if( ! [command caseInsensitiveCompare:@"unban"] ) {
 			NSArray *args = [[arguments string] componentsSeparatedByString:@" "];
-			NSEnumerator *e = [args objectEnumerator];
-			NSString *arg = nil;
-			while( ( arg = [e nextObject] ) ) {
+			for( NSString *arg in args ) {
 				if( [arg length] ) {
 					MVChatUser *user = nil;
 					if ( [arg hasCaseInsensitiveSubstring:@"!"] || [arg hasCaseInsensitiveSubstring:@"@"] || ! [[room target] memberUsersWithNickname:arg] ) {
@@ -529,11 +509,7 @@
 		[connection joinChatRoomNamed:[arguments stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
 		return YES;
 	} else if( [arguments length] && [channels count] > 1 ) {
-		NSEnumerator *chanEnum = [channels objectEnumerator];
-		NSString *channel = nil;
-
-		channels = [NSMutableArray array];
-		while( ( channel = [chanEnum nextObject] ) ) {
+		for( NSString *channel in channels ) {
 			channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 			if( [channel length] )
 				[(NSMutableArray *)channels addObject:channel];
@@ -561,10 +537,8 @@
 	} else if( [channels count] > 1 ) {
 		NSString *message = [[args subarrayWithRange:NSMakeRange(1, [args count] - 1)] componentsJoinedByString:@" "];
 		NSAttributedString *reason = [[[NSAttributedString alloc] initWithString:message] autorelease];
-		NSEnumerator *chanEnum = [channels objectEnumerator];
-		NSString *channel = nil;
 
-		while( ( channel = [chanEnum nextObject] ) ) {
+		for( NSString *channel in channels ) {
 			//channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 			if( [channel length] ) [[connection joinedChatRoomWithName:channel] partWithReason:reason];
 		}
@@ -651,10 +625,7 @@
 
 	BOOL action = ( ! [command caseInsensitiveCompare:@"ame"] || ! [command caseInsensitiveCompare:@"bract"] );
 
-	NSEnumerator *enumerator = [[[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] objectEnumerator];
-	JVChatRoomPanel *room = nil;
-
-	while( ( room = [enumerator nextObject] ) ) {
+	for( JVChatRoomPanel *room in [[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] ) {
 		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:message sender:[[room connection] localUser]];
 		[cmessage setAction:action];
 		[room sendMessage:cmessage];
@@ -665,17 +636,13 @@
 }
 
 - (BOOL) handleMassAwayWithMessage:(NSAttributedString *) message {
-	NSEnumerator *enumerator = [[[MVConnectionsController defaultController] connectedConnections] objectEnumerator];
-	id item = nil;
-	while( ( item = [enumerator nextObject] ) )
+	for( id item in [[MVConnectionsController defaultController] connectedConnections] )
 		[item setAwayStatusMessage:message];
 	return YES;
 }
 
 - (BOOL) handleMassNickChangeWithName:(NSString *) nickname {
-	NSEnumerator *enumerator = [[[MVConnectionsController defaultController] connectedConnections] objectEnumerator];
-	id item = nil;
-	while( ( item = [enumerator nextObject] ) )
+	for( id item in [[MVConnectionsController defaultController] connectedConnections] )
 		[item setNickname:nickname];
 	return YES;
 }
@@ -815,11 +782,11 @@
 		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, [argsArray count] - offset )];
 
 	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:[view connection]];
-	NSEnumerator *enumerator = [rules objectEnumerator];
-	KAIgnoreRule *rule = nil;
-	while( ( rule = [enumerator nextObject] ) ) {
+	for( NSUInteger i = 0; i < rules.count; i++ ) {
+		KAIgnoreRule *rule = [rules objectAtIndex:i];
 		if( ( ![rule user] || [[rule user] isCaseInsensitiveEqualToString:memberString] ) && ( ![rule message] || [[rule message] isCaseInsensitiveEqualToString:messageString] ) && ( ![rule rooms] || [[rule rooms] isEqualToArray:rooms] ) ) {
-			[rules removeObjectIdenticalTo:rule];
+			[rules removeObjectAtIndex:i];
+			i--;
 			break;
 		}
 	}

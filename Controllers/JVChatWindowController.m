@@ -119,9 +119,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[viewsDrawer setDelegate:nil];
 	[chatViewsOutlineView setDelegate:nil];
 
-	NSEnumerator *enumerator = [_views objectEnumerator];
-	id <JVChatViewController> controller = nil;
-	while( ( controller = [enumerator nextObject] ) )
+	for( id <JVChatViewController> controller in _views )
 		[controller setWindowController:nil];
 
 	[_activeViewController release];
@@ -473,10 +471,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSParameterAssert( connection != nil );
 
 	NSMutableArray *ret = [NSMutableArray array];
-	NSEnumerator *enumerator = [_views objectEnumerator];
 	id <JVChatViewController> controller = nil;
 
-	while( ( controller = [enumerator nextObject] ) )
+	for( controller in _views )
 		if( [controller connection] == connection )
 			[ret addObject:controller];
 
@@ -488,10 +485,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSAssert( [class conformsToProtocol:@protocol( JVChatViewController )], @"The tab controller class must conform to the JVChatViewController protocol." );
 
 	NSMutableArray *ret = [NSMutableArray array];
-	NSEnumerator *enumerator = [_views objectEnumerator];
 	id <JVChatViewController> controller = nil;
 
-	while( ( controller = [enumerator nextObject] ) )
+	for( controller in _views )
 		if( [controller isMemberOfClass:class] )
 			[ret addObject:controller];
 
@@ -729,10 +725,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( [results count] ) {
-		NSEnumerator *enumerator = [results objectEnumerator];
 		NSArray *identifiers = nil;
 
-		while( ( identifiers = [enumerator nextObject] ) )
+		for( identifiers in results )
 			if( [identifiers isKindOfClass:[NSArray class]] && [identifiers count] )
 				[result addObjectsFromArray:identifiers];
 	}
@@ -857,10 +852,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]] ) {
 		if( [item respondsToSelector:@selector( acceptsDraggedFileOfType: )] ) {
 			NSArray *files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
-			NSEnumerator *enumerator = [files objectEnumerator];
 			id file = nil;
 
-			while( ( file = [enumerator nextObject] ) )
+			for( file in files )
 				if( [item acceptsDraggedFileOfType:[file pathExtension]] )
 					return NSDragOperationMove;
 
@@ -876,12 +870,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSPasteboard *board = [info draggingPasteboard];
 	if( [board availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]] ) {
 		NSArray *files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
-		NSEnumerator *enumerator = [files objectEnumerator];
 		id file = nil;
 
 		if( ! [item respondsToSelector:@selector( acceptsDraggedFileOfType: )] || ! [item respondsToSelector:@selector( handleDraggedFile: )] ) return NO;
 
-		while( ( file = [enumerator nextObject] ) )
+		for( file in files )
 			if( [item acceptsDraggedFileOfType:[file pathExtension]] )
 				[item handleDraggedFile:file];
 
@@ -962,12 +955,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSMenu *menu = [chatViewsOutlineView menu];
 	NSMenu *newMenu = ( [item respondsToSelector:@selector( menu )] ? [item menu] : nil );
 
-	NSEnumerator *enumerator = [[[[menu itemArray] copyWithZone:nil] autorelease] objectEnumerator];
-	while( ( menuItem = [enumerator nextObject] ) )
+	for( menuItem in [[[menu itemArray] copyWithZone:nil] autorelease] )
 		[menu removeItem:menuItem];
 
-	enumerator = [[[[newMenu itemArray] copyWithZone:nil] autorelease] objectEnumerator];
-	while( ( menuItem = [enumerator nextObject] ) ) {
+	for( menuItem in [[[newMenu itemArray] copyWithZone:nil] autorelease] ) {
 		[newMenu removeItem:menuItem];
 		[menu addItem:menuItem];
 	}
@@ -987,12 +978,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 			[menu addItem:[NSMenuItem separatorItem]];
 
 		NSArray *items = nil;
-		enumerator = [results objectEnumerator];
-		while( ( items = [enumerator nextObject] ) ) {
+		for( items in results ) {
 			if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
-			NSEnumerator *ienumerator = [items objectEnumerator];
-			while( ( menuItem = [ienumerator nextObject] ) )
-				if( [menuItem isKindOfClass:[NSMenuItem class]] ) [menu addItem:menuItem];
+			for( menuItem in items)
+				if( [menuItem isKindOfClass:[NSMenuItem class]] )
+					[menu addItem:menuItem];
 		}
 
 		if( [[[menu itemArray] lastObject] isSeparatorItem] )
@@ -1101,12 +1091,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[[self window] saveFrameUsingName:@"Chat Window"];
 		[[self window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [self identifier]]];
 	} else {
-		NSEnumerator *enumerator = [[self allChatViewControllers] objectEnumerator];
-		id <JVChatViewController> controller = nil;
-
 		[[self window] saveFrameUsingName:@"Chat Window"];
 
-		while( ( controller = [enumerator nextObject] ) )
+		for( id <JVChatViewController> controller in [self allChatViewControllers])
 			[[self window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [controller identifier]]];
 	}
 }
@@ -1141,10 +1128,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (id <JVChatViewController>) valueInChatViewsWithUniqueID:(id) identifier {
-	NSEnumerator *enumerator = [[self chatViews] objectEnumerator];
-	id <JVChatViewController, JVChatListItemScripting> view = nil;
-
-	while( ( view = [enumerator nextObject] ) )
+	for( id <JVChatViewController, JVChatListItemScripting> view in [self chatViews] )
 		if( [[view uniqueIdentifier] isEqual:identifier] )
 			return view;
 
@@ -1152,13 +1136,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (id <JVChatViewController>) valueInChatViewsWithName:(NSString *) name {
-	NSEnumerator *enumerator = [[self chatViews] objectEnumerator];
-	id <JVChatViewController> view = nil;
-
-	while( ( view = [enumerator nextObject] ) )
+	for( id <JVChatViewController, JVChatListItemScripting> view in [self chatViews] )
 		if( [[view title] isEqualToString:name] )
 			return view;
-
+	
 	return nil;
 }
 
@@ -1191,10 +1172,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (NSArray *) chatViewsWithClass:(Class) class {
 	NSMutableArray *ret = [NSMutableArray array];
-	NSEnumerator *enumerator = [[self chatViews] objectEnumerator];
-	id <JVChatViewController> item = nil;
 
-	while( ( item = [enumerator nextObject] ) )
+	for( id <JVChatViewController> item in [self chatViews] )
 		if( [item isMemberOfClass:class] )
 			[ret addObject:item];
 
@@ -1210,10 +1189,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (id <JVChatViewController>) valueInChatViewsWithName:(NSString *) name andClass:(Class) class {
-	NSEnumerator *enumerator = [[self chatViewsWithClass:class] objectEnumerator];
-	id <JVChatViewController> view = nil;
-
-	while( ( view = [enumerator nextObject] ) )
+	for( id <JVChatViewController> view in [self chatViewsWithClass:class] )
 		if( [[view title] isEqualToString:name] )
 			return view;
 

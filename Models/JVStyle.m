@@ -42,12 +42,8 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Styles", bundleName]];
 	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Styles", bundleName]];
 
-	NSEnumerator *enumerator = [paths objectEnumerator];
-	NSString *path = nil;
-	while( ( path = [enumerator nextObject] ) ) {
-		NSEnumerator *denumerator = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] objectEnumerator];
-		NSString *file = nil;
-		while( ( file = [denumerator nextObject] ) ) {
+	for( NSString *path in paths ) {
+		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			NSString *fullPath = [path stringByAppendingPathComponent:file];
 			NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:NO];
 			if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyStyle"] == NSOrderedSame || [[file pathExtension] caseInsensitiveCompare:@"fireStyle"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coSt' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
@@ -71,10 +67,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 + (id) styleWithIdentifier:(NSString *) identifier {
-	NSEnumerator *enumerator = [allStyles objectEnumerator];
-	JVStyle *style = nil;
-
-	while( ( style = [enumerator nextObject] ) )
+	for( JVStyle *style in allStyles )
 		if( [[style identifier] isEqualToString:identifier] )
 			return style;
 
@@ -325,10 +318,8 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	if( ! _variants ) {
 		NSMutableArray *ret = [NSMutableArray array];
 		NSArray *files = [_bundle pathsForResourcesOfType:@"css" inDirectory:@"Variants"];
-		NSEnumerator *enumerator = [files objectEnumerator];
-		NSString *file = nil;
 
-		while( ( file = [enumerator nextObject] ) )
+		for( NSString *file in files )
 			[ret addObject:[[file lastPathComponent] stringByDeletingPathExtension]];
 
 		[self _setVariants:ret];
@@ -341,10 +332,8 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	if( ! _userVariants ) {
 		NSMutableArray *ret = [NSMutableArray array];
 		NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[[NSString stringWithFormat:@"~/Library/Application Support/%@/Styles/Variants/%@/", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"], [self identifier]] stringByExpandingTildeInPath] error:nil];
-		NSEnumerator *enumerator = [files objectEnumerator];
-		NSString *file = nil;
 
-		while( ( file = [enumerator nextObject] ) )
+		for( NSString *file in files )
 			if( [[file pathExtension] isEqualToString:@"css"] || [[file pathExtension] isEqualToString:@"colloquyVariant"] )
 				[ret addObject:[[file lastPathComponent] stringByDeletingPathExtension]];
 
@@ -523,17 +512,15 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 @implementation JVStyle (JVStylePrivate)
 + (const char **) _xsltParamArrayWithDictionary:(NSDictionary *) dictionary {
-	NSEnumerator *keyEnumerator = [dictionary keyEnumerator];
-	NSEnumerator *enumerator = [dictionary objectEnumerator];
-	NSString *key = nil;
-	NSString *value = nil;
 	const char **temp = NULL, **ret = NULL;
 
 	if( ! [dictionary count] ) return NULL;
 
 	ret = temp = malloc( ( ( [dictionary count] * 2 ) + 1 ) * sizeof( char * ) );
 
-	while( ( key = [keyEnumerator nextObject] ) && ( value = [enumerator nextObject] ) ) {
+	for( NSString *key in dictionary ) {
+		NSString *value = [dictionary objectForKey:key];
+
 		*(temp++) = (char *) strdup( [key UTF8String] );
 		*(temp++) = (char *) strdup( [value UTF8String] );
 	}

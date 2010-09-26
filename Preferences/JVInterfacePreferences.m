@@ -81,13 +81,12 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	_windowSets = ( [data length] ? [NSKeyedUnarchiver unarchiveObjectWithData:data] : [NSMutableArray array] );
 	[_windowSets retain];
 
-	NSEnumerator *enumerator = [_windowSets objectEnumerator];
 	NSMutableDictionary *info = nil;
 	BOOL haveCurrentWindow = NO;
 	BOOL haveNewWindow = NO;
 	BOOL haveServerWindow = NO;
 
-	while( ( info = [enumerator nextObject] ) ) {
+	for( info in _windowSets ) {
 		NSString *value = [info objectForKey:@"special"];
 		if( [[info objectForKey:@"currentWindow"] boolValue] ) { // old method
 			[info setObject:@"currentWindow" forKey:@"special"]; // add new method of identifying
@@ -140,11 +139,9 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 - (NSString *) titleForRules:(NSArray *) rules booleanAndOperation:(BOOL) operation {
 	NSMutableString *title = [NSMutableString string];
-	NSEnumerator *enumerator = [rules objectEnumerator];
-	id rule = nil;
 	BOOL first = YES;
 
-	while( ( rule = [enumerator nextObject] ) ) {
+	for( id rule in rules ) {
 		if( ! first && operation ) [title appendString:NSLocalizedString( @" and ", "operation label, interface preferences" )];
 		else if( ! first && ! operation ) [title appendString:NSLocalizedString( @" or ", "operation label, interface preferences" )];
 		[title appendString:[rule description]];
@@ -156,11 +153,9 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 - (NSImage *) iconForRules:(NSArray *) rules {
 	NSImage *icon = [NSImage imageNamed:@"gearSmall"];
-	NSEnumerator *enumerator = [rules objectEnumerator];
-	JVChatViewCriterionController *rule = nil;
 	BOOL multipleType = NO;
 
-	while( ( rule = [enumerator nextObject] ) ) {
+	for( JVChatViewCriterionController *rule in rules ) {
 		if( ! multipleType && [rule kind] == JVChatViewTypeCriterionKind && [rule operation] == JVChatViewIsEqualCriterionOperation ) {
 			if( [[rule query] intValue] == 1 ) icon = [NSImage imageNamed:@"roomTab"];
 			else if( [[rule query] intValue] == 2 ) icon = [NSImage imageNamed:@"privateChatTabNewMessage"];
@@ -578,16 +573,12 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 #pragma mark -
 
 - (IBAction) changeSortByStatus:(id) sender {
-	NSEnumerator *enumerator = [[[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] objectEnumerator];
-	JVChatRoomPanel *room = nil;
-	while( ( room = [enumerator nextObject] ) )
+	for( JVChatRoomPanel *room in [[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] )
 		[room resortMembers];
 }
 
 - (IBAction) changeShowFullRoomName:(id) sender {
-	NSEnumerator *enumerator = [[[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] objectEnumerator];
-	JVChatRoomPanel *room = nil;
-	while( ( room = [enumerator nextObject] ) )
+	for( JVChatRoomPanel *room in [[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] )
 		[[room windowController] reloadListItem:room andChildren:NO];
 }
 @end

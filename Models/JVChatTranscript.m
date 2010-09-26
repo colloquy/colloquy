@@ -355,10 +355,8 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 - (NSArray *) appendElements:(NSArray *) elements {
 	NSMutableArray *ret = [[NSMutableArray allocWithZone:nil] initWithCapacity:[elements count]];
-	NSEnumerator *enumerator = [elements objectEnumerator];
-	id element = nil;
 
-	while( ( element = [enumerator nextObject] ) ) {
+	for( id element in elements ) {
 		if( ! [element conformsToProtocol:@protocol( JVChatTranscriptElement )] ) continue;
 		@synchronized( ( [element transcript] ? (id) [element transcript] : (id) element ) ) {
 			id newElement = nil;
@@ -631,13 +629,11 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 }
 
 - (NSArray *) appendMessages:(NSArray *) messages forceNewEnvelope:(BOOL) forceEnvelope {
-	NSEnumerator *enumerator = [messages objectEnumerator];
-	JVChatMessage *message = nil;
 	NSMutableArray *ret = [[NSMutableArray allocWithZone:nil] initWithCapacity:[messages count]];
 
 	if( forceEnvelope ) _requiresNewEnvelope = YES;
 
-	while( ( message = [enumerator nextObject] ) ) {
+	for( JVChatMessage *message in messages ) {
 		if( ! [message isKindOfClass:[JVChatMessage class]] ) continue;
 		@synchronized( ( [message transcript] ? (id) [message transcript] : (id) message ) ) {
 			message = [self appendMessage:message];
@@ -1041,8 +1037,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		NSMutableString *logElement = [NSMutableString string];
 		[logElement appendFormat:@"<%s", root -> name];
 
-		xmlAttrPtr prop = NULL;
-		for( prop = root -> properties; prop; prop = prop -> next ) {
+		for( xmlAttrPtr prop = root -> properties; prop; prop = prop -> next ) {
 			xmlChar *value = xmlGetProp( root, prop -> name );
 			if( value ) {
 				[logElement appendFormat:@" %s=\"%s\"", prop -> name, value];

@@ -36,18 +36,13 @@ static NSMenu *smartTranscriptMenu = nil;
 	if( ! smartTranscriptMenu ) smartTranscriptMenu = [[NSMenu alloc] initWithTitle:@""];
 
 	NSMenuItem *menuItem = nil;
-	NSEnumerator *enumerator = [[[[smartTranscriptMenu itemArray] copy] autorelease] objectEnumerator];
-	while( ( menuItem = [enumerator nextObject] ) )
+	for( menuItem in [[[smartTranscriptMenu itemArray] copy] autorelease])
 		[smartTranscriptMenu removeItem:menuItem];
 
 	NSMutableArray *items = [NSMutableArray arrayWithArray:[[[self defaultController] smartTranscripts] allObjects]];
 	[items sortUsingSelector:@selector( compare: )];
 
-	enumerator = [items objectEnumerator];
-
-	JVSmartTranscriptPanel *panel = nil;
-
-	while( ( panel = [enumerator nextObject] ) ) {
+	for( JVSmartTranscriptPanel *panel in items ) {
 		NSString *title = [panel title];
 		if( [panel newMessagesWaiting] > 0 ) title = [NSString stringWithFormat:@"%@ (%d)", [panel title], [panel newMessagesWaiting]];
 		menuItem = [[[NSMenuItem alloc] initWithTitle:title action:@selector( showView: ) keyEquivalent:@""] autorelease];
@@ -80,9 +75,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 		[self _reloadPreferedWindowRuleSets];
 
-		NSEnumerator *smartTranscriptsEnumerator = [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVSmartTranscripts"] objectEnumerator];
-		NSData *archivedSmartTranscript = nil;
-		while( ( archivedSmartTranscript = [smartTranscriptsEnumerator nextObject] ) ) {
+		for (NSData *archivedSmartTranscript in [[NSUserDefaults standardUserDefaults] objectForKey:@"JVSmartTranscripts"]) {
 			id object = [NSKeyedUnarchiver unarchiveObjectWithData:archivedSmartTranscript];
 			if( object ) [_chatControllers addObject:object];
 		}
@@ -123,23 +116,16 @@ static NSMenu *smartTranscriptMenu = nil;
 - (void) addViewControllerToPreferedWindowController:(id <JVChatViewController>) controller userInitiated:(BOOL) initiated {
 	JVChatWindowController *windowController = nil;
 
-	NSEnumerator *wenumerator = [_windowRuleSets objectEnumerator];
-	NSDictionary *windowSet = nil;
 	BOOL finalMatch = NO;
 
-	while( ( windowSet = [wenumerator nextObject] ) ) {
-		NSEnumerator *renumerator = [[windowSet objectForKey:@"rules"] objectEnumerator];
-		NSDictionary *ruleSet = nil;
-
-		while( ( ruleSet = [renumerator nextObject] ) ) {
+	NSDictionary *windowSet = nil;
+	for( windowSet in _windowRuleSets ) {
+		for( NSDictionary *ruleSet in [windowSet objectForKey:@"rules"]) {
 			BOOL andOperation = ( [[ruleSet objectForKey:@"operation"] intValue] == 2 );
 			BOOL ignore = [[ruleSet objectForKey:@"ignoreCase"] boolValue];
 			BOOL match = ( andOperation ? YES : NO );
 
-			NSEnumerator *cenumerator = [[ruleSet objectForKey:@"criterion"] objectEnumerator];
-			JVChatViewCriterionController *criterion = nil;
-
-			while( ( criterion = [cenumerator nextObject] ) ) {
+			for( JVChatViewCriterionController *criterion in [ruleSet objectForKey:@"criterion"]) {
 				BOOL localMatch = [criterion matchChatView:controller ignoringCase:ignore];
 				match = ( andOperation ? ( match & localMatch ) : ( match | localMatch ) );
 				if( ! localMatch && andOperation ) break; // fails, this wont match with all rules
@@ -157,8 +143,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	if( finalMatch && windowSet ) {
 		if( [[windowSet objectForKey:@"special"] isEqualToString:@"currentWindow"] || [[windowSet objectForKey:@"currentWindow"] boolValue] ) {
-			wenumerator = [_chatWindows objectEnumerator];
-			while( ( windowController = [wenumerator nextObject] ) )
+			for( windowController in _chatWindows )
 				if( [[windowController window] isMainWindow] ) break;
 			if( ! windowController ) windowController = [_chatWindows anyObject];
 		} else if( [[windowSet objectForKey:@"special"] isEqualToString:@"newWindow"] ) {
@@ -200,10 +185,9 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (JVChatWindowController *) chatWindowControllerWithIdentifier:(NSString *) identifier {
-	NSEnumerator *enumerator = [_chatWindows objectEnumerator];
 	JVChatWindowController *windowController = nil;
 
-	while( ( windowController = [enumerator nextObject] ) )
+	for( windowController in _chatWindows )
 		if( [[windowController identifier] isEqualToString:identifier] )
 			break;
 
@@ -218,9 +202,7 @@ static NSMenu *smartTranscriptMenu = nil;
 - (void) disposeChatWindowController:(JVChatWindowController *) controller {
 	NSParameterAssert( controller != nil );
 
-	id view = nil;
-	NSEnumerator *enumerator = [[controller allChatViewControllers] objectEnumerator];
-	while( ( view = [enumerator nextObject] ) )
+	for( id view in [controller allChatViewControllers] )
 		[self disposeViewController:view];
 
 	[_chatWindows removeObject:controller];
@@ -233,14 +215,10 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (NSSet *) chatViewControllersWithConnection:(MVChatConnection *) connection {
-	NSMutableSet *ret = [NSMutableSet set];
-	id <JVChatViewController> item = nil;
-	NSEnumerator *enumerator = nil;
-
 	NSParameterAssert( connection != nil );
 
-	enumerator = [_chatControllers objectEnumerator];
-	while( ( item = [enumerator nextObject] ) )
+	NSMutableSet *ret = [NSMutableSet set];
+	for( id <JVChatViewController> item in _chatControllers )
 		if( [item connection] == connection )
 			[ret addObject:item];
 
@@ -248,32 +226,24 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (NSSet *) chatViewControllersOfClass:(Class) class {
+	NSParameterAssert( class != nil );
+	
 	NSMutableSet *ret = [NSMutableSet set];
-	id <JVChatViewController> item = nil;
-	NSEnumerator *enumerator = nil;
-
-	NSParameterAssert( class != NULL );
-
-	enumerator = [_chatControllers objectEnumerator];
-	while( ( item = [enumerator nextObject] ) )
+	for( id <JVChatViewController> item in _chatControllers )
 		if( [item isMemberOfClass:class] )
 			[ret addObject:item];
-
+	
 	return ret;
 }
 
 - (NSSet *) chatViewControllersKindOfClass:(Class) class {
+	NSParameterAssert( class != nil );
+	
 	NSMutableSet *ret = [NSMutableSet set];
-	id <JVChatViewController> item = nil;
-	NSEnumerator *enumerator = nil;
-
-	NSParameterAssert( class != NULL );
-
-	enumerator = [_chatControllers objectEnumerator];
-	while( ( item = [enumerator nextObject] ) )
+	for( id <JVChatViewController> item in _chatControllers )
 		if( [item isKindOfClass:class] )
 			[ret addObject:item];
-
+	
 	return ret;
 }
 
@@ -282,10 +252,9 @@ static NSMenu *smartTranscriptMenu = nil;
 - (JVChatRoomPanel *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists {
 	NSParameterAssert( room != nil );
 
-	NSEnumerator *enumerator = [_chatControllers objectEnumerator];
 	id ret = nil;
 
-	while( ( ret = [enumerator nextObject] ) )
+	for( ret in _chatControllers )
 		if( [ret isMemberOfClass:[JVChatRoomPanel class]] && [[ret target] isEqual:room] )
 			break;
 
@@ -306,10 +275,9 @@ static NSMenu *smartTranscriptMenu = nil;
 - (JVDirectChatPanel *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
 	NSParameterAssert( user != nil );
 
-	NSEnumerator *enumerator = [_chatControllers objectEnumerator];
 	id ret = nil;
 
-	while( ( ret = [enumerator nextObject] ) )
+	for( ret in _chatControllers )
 		if( [ret isMemberOfClass:[JVDirectChatPanel class]] && [[ret target] isEqual:user] )
 			break;
 
@@ -330,10 +298,9 @@ static NSMenu *smartTranscriptMenu = nil;
 - (JVDirectChatPanel *) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
 	NSParameterAssert( connection != nil );
 
-	NSEnumerator *enumerator = [_chatControllers objectEnumerator];
 	id ret = nil;
 
-	while( ( ret = [enumerator nextObject] ) )
+	for( ret in _chatControllers )
 		if( [ret isMemberOfClass:[JVDirectChatPanel class]] && [[ret target] isEqual:connection] )
 			break;
 
@@ -376,10 +343,8 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (void) saveSmartTranscripts {
 	NSMutableArray *smartTranscripts = [NSMutableArray array];
-	NSEnumerator *enumerator = [[self smartTranscripts] objectEnumerator];
-	JVSmartTranscriptPanel *smartTranscript = nil;
 
-	while( ( smartTranscript = [enumerator nextObject] ) ) {
+	for( JVSmartTranscriptPanel *smartTranscript in [self smartTranscripts] ) {
 		NSData *archived = [NSKeyedArchiver archivedDataWithRootObject:smartTranscript];
 		if( archived ) [smartTranscripts addObject:archived];
 	}
@@ -405,10 +370,9 @@ static NSMenu *smartTranscriptMenu = nil;
 - (JVChatConsolePanel *) chatConsoleForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
 	NSParameterAssert( connection != nil );
 
-	NSEnumerator *enumerator = [_chatControllers objectEnumerator];
 	id <JVChatViewController> ret = nil;
 
-	while( ( ret = [enumerator nextObject] ) )
+	for( ret in _chatControllers )
 		if( [ret isMemberOfClass:[JVChatConsolePanel class]] && [ret connection] == connection )
 			break;
 
@@ -805,10 +769,7 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (id <JVChatViewController>) valueInChatViewsWithUniqueID:(id) identifier {
-	NSEnumerator *enumerator = [[[JVChatController defaultController] allChatViewControllers] objectEnumerator];
-	id <JVChatViewController, JVChatListItemScripting> view = nil;
-
-	while( ( view = [enumerator nextObject] ) )
+	for( id <JVChatViewController, JVChatListItemScripting> view in [[JVChatController defaultController] allChatViewControllers] ) 
 		if( [view conformsToProtocol:@protocol( JVChatListItemScripting )] &&
 			[[view uniqueIdentifier] isEqual:identifier] ) return view;
 
@@ -816,10 +777,7 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (id <JVChatViewController>) valueInChatViewsWithName:(NSString *) name {
-	NSEnumerator *enumerator = [[[JVChatController defaultController] allChatViewControllers] objectEnumerator];
-	id <JVChatViewController> view = nil;
-
-	while( ( view = [enumerator nextObject] ) )
+	for( id <JVChatViewController> view in [[JVChatController defaultController] allChatViewControllers] )
 		if( [[view title] isEqualToString:name] )
 			return view;
 
@@ -862,10 +820,7 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (id <JVChatViewController>) valueInChatViewsWithName:(NSString *) name andClass:(Class) class {
-	NSEnumerator *enumerator = [[self chatViewsWithClass:class] objectEnumerator];
-	id <JVChatViewController> view = nil;
-
-	while( ( view = [enumerator nextObject] ) )
+	for( id <JVChatViewController> view  in [self chatViewsWithClass:class] )
 		if( [[view title] isEqualToString:name] )
 			return view;
 

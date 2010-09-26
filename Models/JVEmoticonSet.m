@@ -25,12 +25,8 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 	[paths addObject:[NSString stringWithFormat:@"/Library/Application Support/%@/Emoticons", bundleName]];
 	[paths addObject:[NSString stringWithFormat:@"/Network/Library/Application Support/%@/Emoticons", bundleName]];
 
-	NSEnumerator *enumerator = [paths objectEnumerator];
-	NSString *path = nil;
-	while( ( path = [enumerator nextObject] ) ) {
-		NSEnumerator *denumerator = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] objectEnumerator];
-		NSString *file = nil;
-		while( ( file = [denumerator nextObject] ) ) {
+	for( NSString *path in paths ) {
+		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			NSString *fullPath = [path stringByAppendingPathComponent:file];
 			NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:nil];
 			if( /* [[NSWorkspace sharedWorkspace] isFilePackageAtPath:fullPath] && */ ( [[file pathExtension] caseInsensitiveCompare:@"colloquyEmoticons"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coEm' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
@@ -56,10 +52,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 	if( [identifier isEqualToString:@"cc.javelin.colloquy.emoticons.text-only"] )
 		return [self textOnlyEmoticonSet];
 
-	NSEnumerator *enumerator = [allEmoticonSets objectEnumerator];
-	JVEmoticonSet *emoticon = nil;
-
-	while( ( emoticon = [enumerator nextObject] ) )
+	for( JVEmoticonSet *emoticon in allEmoticonSets )
 		if( [[emoticon identifier] isEqualToString:identifier] )
 			return emoticon;
 
@@ -144,25 +137,18 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 	if( ! [string length] ) return;
 
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
-	NSEnumerator *keyEnumerator = [[self emoticonMappings] keyEnumerator];
-	NSEnumerator *objEnumerator = [[self emoticonMappings] objectEnumerator];
-	NSEnumerator *srcEnumerator = nil;
-	NSString *str = nil;
-	NSString *key = nil;
-	NSArray *obj = nil;
 
-	while( ( key = [keyEnumerator nextObject] ) && ( obj = [objEnumerator nextObject] ) ) {
-		srcEnumerator = [obj objectEnumerator];
-		while( ( str = [srcEnumerator nextObject] ) ) {
+	for( NSString *key in [self emoticonMappings] ) {
+		NSArray *obj = [[self emoticonMappings] objectForKey:key];
+
+		for( NSString *str in obj ) {
 			NSMutableString *search = [str mutableCopy];
 			[search escapeCharactersInSet:escapeSet];
 
 			AGRegex *regex = [[AGRegex alloc] initWithPattern:[NSString stringWithFormat:@"(?<=\\s|^)%@(?=\\s|$)", search]];
 			NSArray *matches = [regex findAllInString:[string string]];
-			NSEnumerator *enumerator = [matches objectEnumerator];
-			AGRegexMatch *match = nil;
 
-			while( ( match = [enumerator nextObject] ) ) {
+			for( AGRegexMatch *match in matches ) {
 				NSRange foundRange = [match range];
 				NSString *startHTML = [string attribute:@"XHTMLStart" atIndex:foundRange.location effectiveRange:NULL];
 				NSString *endHTML = [string attribute:@"XHTMLEnd" atIndex:foundRange.location effectiveRange:NULL];
@@ -212,11 +198,10 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 - (NSArray *) emoticonMenuItems {
 	NSMutableArray *ret = [NSMutableArray array];
-	NSEnumerator *enumerator = [_emoticonMenu objectEnumerator];
 	NSMenuItem *menuItem = nil;
 	NSDictionary *info = nil;
 
-	while( ( info = [enumerator nextObject] ) ) {
+	for( info in _emoticonMenu ) {
 		if( ! [(NSString *)[info objectForKey:@"name"] length] ) continue;
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[info objectForKey:@"name"] action:NULL keyEquivalent:@""] autorelease];
 		if( [(NSString *)[info objectForKey:@"image"] length] )

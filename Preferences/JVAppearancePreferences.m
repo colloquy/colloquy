@@ -203,12 +203,8 @@
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease], *subMenu = nil;
 	NSMenuItem *menuItem = nil, *subMenuItem = nil;
 
-	NSEnumerator *enumerator = [[[[JVStyle styles] allObjects] sortedArrayUsingSelector:@selector( compare: )] objectEnumerator];
-	NSEnumerator *venumerator = nil;
-	JVStyle *style = nil;
 	id item = nil;
-
-	while( ( style = [enumerator nextObject] ) ) {
+	for( JVStyle *style in [[[JVStyle styles] allObjects] sortedArrayUsingSelector:@selector( compare: )] ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[style displayName] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", nil]];
@@ -227,8 +223,7 @@
 			if( [_style isEqualTo:style] && ! variant ) [subMenuItem setState:NSOnState];
 			[subMenu addItem:subMenuItem];
 
-			venumerator = [variants objectEnumerator];
-			while( ( item = [venumerator nextObject] ) ) {
+			for( item in variants ) {
 				subMenuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
 				[subMenuItem setTarget:self];
 				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
@@ -239,8 +234,7 @@
 
 			if( [userVariants count] ) [subMenu addItem:[NSMenuItem separatorItem]];
 
-			venumerator = [userVariants objectEnumerator];
-			while( ( item = [venumerator nextObject] ) ) {
+			for( item in userVariants ) {
 				subMenuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
 				[subMenuItem setTarget:self];
 				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
@@ -259,15 +253,13 @@
 }
 
 - (void) updateEmoticonsMenu {
-	NSEnumerator *enumerator = [[[[JVEmoticonSet emoticonSets] allObjects] sortedArrayUsingSelector:@selector( compare: )] objectEnumerator];
 	NSMenu *menu = nil;
 	NSMenuItem *menuItem = nil;
 	JVEmoticonSet *defaultEmoticon = [_style defaultEmoticonSet];
-	JVEmoticonSet *emoticon = nil;
 
 	menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 
-	emoticon = [JVEmoticonSet textOnlyEmoticonSet];
+	JVEmoticonSet *emoticon = [JVEmoticonSet textOnlyEmoticonSet];
 	menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeDefaultEmoticons: ) keyEquivalent:@""] autorelease];
 	[menuItem setTarget:self];
 	[menuItem setRepresentedObject:[emoticon identifier]];
@@ -276,7 +268,7 @@
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	while( ( emoticon = [enumerator nextObject] ) ) {
+	for( JVEmoticonSet *emoticon in [[[JVEmoticonSet emoticonSets] allObjects] sortedArrayUsingSelector:@selector( compare: )] ) {
 		if( ! [[emoticon displayName] length] ) continue;
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeDefaultEmoticons: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];
@@ -329,14 +321,12 @@
 	[menu addItem:menuItem];
 
 	NSArray *files = [[_style bundle] pathsForResourcesOfType:nil inDirectory:[options objectForKey:@"folder"]];
-	NSEnumerator *enumerator = [files objectEnumerator];
 	NSString *resourcePath = [[_style bundle] resourcePath];
-	NSString *path = nil;
 	BOOL matched = NO;
 
 	if( [files count] ) [menu addItem:[NSMenuItem separatorItem]];
 
-	while( ( path = [enumerator nextObject] ) ) {
+	for( NSString *path in files ) {
 		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
 		NSImageRep *sourceImageRep = [icon bestRepresentationForDevice:nil];
 		NSImage *smallImage = [[[NSImage alloc] initWithSize:NSMakeSize( 12., 12. )] autorelease];
@@ -359,7 +349,7 @@
 		}
 	}
 
-	path = [options objectForKey:@"path"];
+	NSString *path = [options objectForKey:@"path"];
 	if( ! matched && [path length] ) {
 		[menu addItem:[NSMenuItem separatorItem]];
 
@@ -413,26 +403,20 @@
 	NSString *css = _userStyle;
 	css = [css stringByAppendingString:[_style contentsOfMainStyleSheet]];
 
-	NSEnumerator *enumerator = [_styleOptions objectEnumerator];
-	NSMutableDictionary *info = nil;
-
 	// Step through each options.
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in _styleOptions ) {
 		NSMutableArray *styleLayouts = [NSMutableArray array];
 		NSArray *sarray = nil;
-		NSEnumerator *senumerator = nil;
 		if( ! [info objectForKey:@"style"] ) continue;
 		if( [[info objectForKey:@"style"] isKindOfClass:[NSArray class]] && [[info objectForKey:@"type"] isEqualToString:@"list"] )
 			sarray = [info objectForKey:@"style"];
 		else sarray = [NSArray arrayWithObject:[info objectForKey:@"style"]];
-		senumerator = [sarray objectEnumerator];
 
 		[info removeObjectForKey:@"value"]; // Clear any old values, we will get the new value later on.
 
 		// Step through each style choice per option, colors have only one; lists have one style per list item.
 		NSUInteger count = 0;
-		NSString *style = nil;
-		while( ( style = [senumerator nextObject] ) ) {
+		for( NSString *style in sarray ) {
 			// Parse all the selectors in the style.
 			AGRegex *regex = [AGRegex regexWithPattern:@"(\\S.*?)\\s*\{([^\\}]*?)\\}" options:( AGRegexCaseInsensitive | AGRegexDotAll )];
 			NSEnumerator *selectors = [regex findEnumeratorInString:style];
@@ -616,11 +600,8 @@
 		if( [[info objectForKey:@"type"] isEqualToString:@"list"] ) {
 			[info setObject:object forKey:@"value"];
 
-			NSEnumerator *enumerator = [[[info objectForKey:@"layouts"] objectAtIndex:[object intValue]] objectEnumerator];
-			NSDictionary *styleInfo = nil;
-			while( ( styleInfo = [enumerator nextObject] ) ) {
+			for( NSDictionary *styleInfo in [[info objectForKey:@"layouts"] objectAtIndex:[object intValue]] )
 				[self setStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:[styleInfo objectForKey:@"value"]];
-			}
 
 			[self saveStyleOptions];
 		} else if( [[info objectForKey:@"type"] isEqualToString:@"file"] ) {
@@ -631,9 +612,7 @@
 
 			[info setObject:object forKey:@"value"];
 
-			NSEnumerator *enumerator = [[[info objectForKey:@"layouts"] objectAtIndex:0] objectEnumerator];
-			NSDictionary *styleInfo = nil;
-			while( ( styleInfo = [enumerator nextObject] ) ) {
+			for( NSDictionary *styleInfo in [[info objectForKey:@"layouts"] objectAtIndex:0] ) {
 				NSString *setting = [NSString stringWithFormat:[styleInfo objectForKey:@"value"], path];
 				[self setStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:setting];
 			}
@@ -656,11 +635,9 @@
 
 	NSArray *style = [[info objectForKey:@"layouts"] objectAtIndex:0];
 	NSString *value = [[cell color] CSSAttributeValue];
-	NSEnumerator *enumerator = [style objectEnumerator];
-	NSDictionary *styleInfo = nil;
 	NSString *setting = nil;
 
-	while( ( styleInfo = [enumerator nextObject] ) ) {
+	for( NSDictionary *styleInfo in style ) {
 		setting = [NSString stringWithFormat:[styleInfo objectForKey:@"value"], value];
 		[self setStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:setting];
 	}
@@ -686,10 +663,8 @@
 	[info setObject:value forKey:@"path"];
 
 	NSArray *style = [[info objectForKey:@"layouts"] objectAtIndex:0];
-	NSEnumerator *enumerator = [style objectEnumerator];
-	NSDictionary *styleInfo = nil;
 
-	while( ( styleInfo = [enumerator nextObject] ) ) {
+	for( NSDictionary *styleInfo in style ) {
 		NSString *setting = [NSString stringWithFormat:[styleInfo objectForKey:@"value"], value];
 		[self setStyleProperty:[styleInfo objectForKey:@"property"] forSelector:[styleInfo objectForKey:@"selector"] toValue:setting];
 	}
@@ -723,11 +698,9 @@
 		} else if( [[options objectForKey:@"type"] isEqualToString:@"list"] ) {
 			NSPopUpButtonCell *cell = [[NSPopUpButtonCell new] autorelease];
 			NSMutableArray *localizedOptions = [NSMutableArray array];
-			NSString *optionTitle = nil;
-			NSEnumerator *enumerator = [[options objectForKey:@"options"] objectEnumerator];
-			while( ( optionTitle = [enumerator nextObject] ) ) {
+
+			for( NSString *optionTitle in [options objectForKey:@"options"] )
 				[localizedOptions addObject:NSLocalizedString( optionTitle, "title of style option value" )];
-			}
 			[cell setControlSize:NSSmallControlSize];
 			[cell setFont:[NSFont menuFontOfSize:[NSFont smallSystemFontSize]]];
 			[cell addItemsWithTitles:localizedOptions];

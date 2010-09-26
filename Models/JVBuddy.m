@@ -80,9 +80,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		if( [string isKindOfClass:[NSString class]] )
 			_person = [[[ABAddressBook sharedAddressBook] recordForUniqueId:string] retain];
 
-		NSEnumerator *enumerator = [[dictionary objectForKey:@"rules"] objectEnumerator];
-		NSDictionary *ruleDictionary = nil;
-		while( ( ruleDictionary = [enumerator nextObject] ) ) {
+		for( NSDictionary *ruleDictionary in [dictionary objectForKey:@"rules"] ) {
 			MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:nil] initWithDictionaryRepresentation:ruleDictionary];
 			if( rule ) [self addWatchRule:rule];
 			[rule release];
@@ -129,11 +127,9 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 - (NSDictionary *) dictionaryRepresentation {
 	NSMutableDictionary *dictionary = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:8];
 
-	NSEnumerator *enumerator = [_rules objectEnumerator];
 	NSMutableArray *rules = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_rules count]];
-	MVChatUserWatchRule *rule = nil;
 
-	while( ( rule = [enumerator nextObject] ) ) {
+	for( MVChatUserWatchRule *rule in _rules ) {
 		NSDictionary *dictRep = [rule dictionaryRepresentation];
 		if( dictRep ) [rules addObject:dictRep];
 	}
@@ -173,15 +169,9 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 #pragma mark -
 
 - (void) registerWithConnection:(MVChatConnection *) connection {
-	NSEnumerator *enumerator = [_rules objectEnumerator];
-	MVChatUserWatchRule *rule = nil;
-
-	while( ( rule = [enumerator nextObject] ) ) {
+	for( MVChatUserWatchRule *rule in _rules ) {
 		if( [[rule applicableServerDomains] count] ) {
-			NSEnumerator *domainEnumerator = [[rule applicableServerDomains] objectEnumerator];
-			NSString *domain = nil;
-
-			while( ( domain = [domainEnumerator nextObject] ) ) {
+			for( NSString *domain in [rule applicableServerDomains] ) {
 				if( [[[connection server] stringWithDomainNameSegmentOfAddress] isCaseInsensitiveEqualToString:[domain stringWithDomainNameSegmentOfAddress]] ) {
 					[connection addChatUserWatchRule:rule];
 					break;
@@ -192,42 +182,24 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 - (void) registerWithApplicableConnections {
-	NSEnumerator *enumerator = [_rules objectEnumerator];
-	MVChatUserWatchRule *rule = nil;
-
-	while( ( rule = [enumerator nextObject] ) ) {
+	for( MVChatUserWatchRule *rule in _rules ) {
 		if( [[rule applicableServerDomains] count] ) {
-			NSEnumerator *domainEnumerator = [[rule applicableServerDomains] objectEnumerator];
-			NSString *domain = nil;
-
-			while( ( domain = [domainEnumerator nextObject] ) ) {
-				NSEnumerator *connectionEnumerator = [[[MVConnectionsController defaultController] connectionsForServerAddress:domain] objectEnumerator];
-				MVChatConnection *connection = nil;
-
-				while( ( connection = [connectionEnumerator nextObject] ) )
+			for( NSString *domain in [rule applicableServerDomains] ) {
+				for( MVChatConnection *connection in [[MVConnectionsController defaultController] connectionsForServerAddress:domain] )
 					[connection addChatUserWatchRule:rule];
 			}
 		} else {
-			NSEnumerator *connectionEnumerator = [[[MVConnectionsController defaultController] connections] objectEnumerator];
-			MVChatConnection *connection = nil;
-
-			while( ( connection = [connectionEnumerator nextObject] ) )
+			for( MVChatConnection *connection in [[MVConnectionsController defaultController] connections] )
 				[connection addChatUserWatchRule:rule];
 		}
 	}
 }
-
+	
 - (void) unregisterWithConnection:(MVChatConnection *) connection {
-	NSEnumerator *enumerator = [_rules objectEnumerator];
-	MVChatUserWatchRule *rule = nil;
-
-	while( ( rule = [enumerator nextObject] ) )
+	for( MVChatUserWatchRule *rule in _rules )
 		[connection removeChatUserWatchRule:rule];
 
-	enumerator = [[[_users copy] autorelease] objectEnumerator];
-	MVChatUser *user = nil;
-
-	while( ( user = [enumerator nextObject] ) )
+	for( MVChatUser *user in [[_users copy] autorelease] )
 		if( [[user connection] isEqual:connection] )
 			[_users removeObject:user];
 
@@ -236,14 +208,8 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 - (void) unregisterWithConnections {
-	NSEnumerator *enumerator = [_rules objectEnumerator];
-	MVChatUserWatchRule *rule = nil;
-
-	while( ( rule = [enumerator nextObject] ) ) {
-		NSEnumerator *connectionEnumerator = [[[MVConnectionsController defaultController] connections] objectEnumerator];
-		MVChatConnection *connection = nil;
-
-		while( ( connection = [connectionEnumerator nextObject] ) )
+	for( MVChatUserWatchRule *rule in _rules ) {
+		for (MVChatConnection *connection in [[MVConnectionsController defaultController] connections] )
 			[connection removeChatUserWatchRule:rule];
 	}
 
@@ -622,10 +588,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 - (void) _disconnected:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
-	NSEnumerator *enumerator = [[[_users copy] autorelease] objectEnumerator];
-	MVChatUser *user = nil;
-
-	while( ( user = [enumerator nextObject] ) )
+	for( MVChatUser *user in [[_users copy] autorelease])
 		if( [[user connection] isEqual:connection] )
 			[self _removeUser:user];
 }

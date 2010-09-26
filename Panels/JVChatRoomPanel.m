@@ -283,9 +283,7 @@
 		[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Add \"%@ (%@)\"", "add to favorites contextual menu"), _target, [[self connection] server]]];
 	else if( [menuItem action] == @selector( toggleAutoJoin: ) ) {
 		[menuItem setState:NSOffState];
-		NSEnumerator *enumerator = [[[MVConnectionsController defaultController] joinRoomsForConnection:[self connection]] objectEnumerator];
-		id object = nil;
-		while( (object = [enumerator nextObject]) )
+		for( id object in [[MVConnectionsController defaultController] joinRoomsForConnection:[self connection]] )
 			if( [_target isEqual:[[self connection] chatRoomWithName:(NSString *)object]] )
 				[menuItem setState:NSOnState];
 	}
@@ -314,9 +312,7 @@
 - (IBAction) toggleAutoJoin:(id) sender {
 	NSMutableArray *rooms = [[[MVConnectionsController defaultController] joinRoomsForConnection:[self connection]] mutableCopy];
 	if( [(NSMenuItem *)sender state] == NSOnState ) {
-		NSEnumerator *enumerator = [rooms objectEnumerator];
-		id object = nil;
-		while( (object = [enumerator nextObject]) )
+		for( id object in rooms )
 			if( [_target isEqual:[[self connection] chatRoomWithName:(NSString *)object]] )
 				[rooms removeObject:object];
 	} else [rooms addObject:[_target name]];
@@ -375,9 +371,8 @@
 	}
 
 	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
-	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
 
-	while( ( member = [enumerator nextObject] ) ) {
+	for( member in _sortedMembers ) {
 		NSMutableString *escapedName = [[member nickname] mutableCopy];
 		[escapedName escapeCharactersInSet:escapeSet];
 
@@ -388,10 +383,8 @@
 		[pattern release];
 
 		NSArray *matches = [regex findAllInString:[message bodyAsPlainText]];
-		NSEnumerator *enumerator = [matches objectEnumerator];
-		AGRegexMatch *match = nil;
 
-		while( ( match = [enumerator nextObject] ) ) {
+		for( AGRegexMatch *match in matches ) {
 			NSRange foundRange = [match range];
 			// don't highlight nicks in the middle of a link
 			if( ! [[message body] attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL] ) {
@@ -437,10 +430,7 @@
 	[_nextMessageAlertMembers makeObjectsPerformSelector:@selector( _detach )];
 	[_nextMessageAlertMembers removeAllObjects];
 
-	NSEnumerator *enumerator = [[[self target] memberUsers] objectEnumerator];
-	MVChatUser *member = nil;
-
-	while( ( member = [enumerator nextObject] ) ) {
+	for( MVChatUser *member in [[self target] memberUsers] ) {
 		JVChatRoomMember *listItem = [[JVChatRoomMember alloc] initWithRoom:self andUser:member];
 		[_sortedMembers addObject:listItem];
 		[listItem release];
@@ -512,10 +502,9 @@
 	if( ! [name length] ) return nil;
 
 	NSMutableSet *ret = [NSMutableSet set];
-	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
 	JVChatRoomMember *member = nil;
 
-	while( ( member = [enumerator nextObject] ) ) {
+	for( member in _sortedMembers ) {
 		if( [[member nickname] caseInsensitiveCompare:name] == NSOrderedSame ) {
 			[ret addObject:member];
 		} else if( [[member realName] caseInsensitiveCompare:name] == NSOrderedSame ) {
@@ -531,10 +520,9 @@
 - (JVChatRoomMember *) firstChatRoomMemberWithName:(NSString *) name {
 	if( ! [name length] ) return nil;
 
-	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
 	JVChatRoomMember *member = nil;
 
-	while( ( member = [enumerator nextObject] ) ) {
+	for( member in _sortedMembers ) {
 		if( [[member nickname] caseInsensitiveCompare:name] == NSOrderedSame ) {
 			return member;
 		} else if( [[member title] caseInsensitiveCompare:name] == NSOrderedSame ) {
@@ -548,10 +536,9 @@
 - (JVChatRoomMember *) chatRoomMemberForUser:(MVChatUser *) user {
 	if( ! user ) return nil;
 
-	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
 	JVChatRoomMember *member = nil;
 
-	while( ( member = [enumerator nextObject] ) )
+	for( member in _sortedMembers )
 		if( [[member user] isEqualToChatUser:user] )
 			return member;
 
@@ -559,10 +546,9 @@
 }
 
 - (JVChatRoomMember *) localChatRoomMember {
-	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
 	JVChatRoomMember *member = nil;
 
-	while( ( member = [enumerator nextObject] ) )
+	for( member in _sortedMembers )
 		if( [[member user] isLocalUser] )
 			return member;
 
@@ -601,15 +587,13 @@
 		NSMenuItem *item = nil;
 
 		if( mbr ) {
-			NSEnumerator *enumerator = [[[mbr menu] itemArray] objectEnumerator];
-			while( ( item = [enumerator nextObject] ) ) {
+			for( item in [[mbr menu] itemArray] ) {
 				item = [item copy];
 				[ret addObject:item];
 				[item release];
 			}
 		} else if( user ) {
-			NSEnumerator *enumerator = [[user standardMenuItems] objectEnumerator];
-			while( ( item = [enumerator nextObject] ) )
+			for( item in [user standardMenuItems] )
 				[ret addObject:item];
 		}
 
@@ -626,11 +610,8 @@
 			[ret addObject:[NSMenuItem separatorItem]];
 
 			NSArray *items = nil;
-			NSEnumerator *enumerator = [results objectEnumerator];
-			while( ( items = [enumerator nextObject] ) ) {
-				if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
-				NSEnumerator *ienumerator = [items objectEnumerator];
-				while( ( item = [ienumerator nextObject] ) )
+			for( items in results ) {
+				for( item in items )
 					if( [item isKindOfClass:[NSMenuItem class]] ) [ret addObject:item];
 			}
 
@@ -670,9 +651,7 @@
 #pragma mark TextView/Input Support
 
 - (NSArray *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix {
-	NSEnumerator *enumerator = nil;
 	NSMutableArray *possibleCompletion = [NSMutableArray array];
-	NSString *name = nil;
 
 	if( [prefix isEqualToString:@""] ) {
 		if( [_preferredTabCompleteNicknames count] )
@@ -680,22 +659,20 @@
 		return possibleCompletion;
 	}
 
-	enumerator = [_preferredTabCompleteNicknames objectEnumerator];
-	while( ( name = [enumerator nextObject] ) )
+	for( NSString *name in _preferredTabCompleteNicknames )
 		if( [name rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == NSOrderedSame )
 			[possibleCompletion addObject:name];
 
-	enumerator = [_sortedMembers objectEnumerator];
-	while( ( name = [[enumerator nextObject] nickname] ) )
-		if( ! [possibleCompletion containsObject:name]
-			&& [name rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == NSOrderedSame )
-				[possibleCompletion addObject:name];
+	for( MVChatUser *user in _sortedMembers ) {
+		NSString *name = [user nickname];
+		if( ! [possibleCompletion containsObject:name] && [name rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == NSOrderedSame )
+			[possibleCompletion addObject:name];
+	}
 
 	static NSArray *commands;
 	if (!commands) commands = [[NSArray alloc] initWithObjects:@"/topic ", @"/kick ", @"/ban ", @"/kickban ", @"/op ", @"/voice ", @"/halfop ", @"/quiet ", @"/deop ", @"/devoice ", @"/dehalfop ", @"/dequiet ", @"/unban ", @"/bankick ", @"/cycle ", @"/hop ", @"/me ", @"/msg ", @"/nick ", @"/away ", @"/say ", @"/raw ", @"/quote ", @"/join ", @"/quit ", @"/disconnect ", @"/query ", @"/umode ", @"/globops ", @"/google ", @"/part ", nil];
-	enumerator = [commands objectEnumerator];
 
-	while( ( name = [enumerator nextObject] ) )
+	for( NSString *name in commands )
 		if ([name hasCaseInsensitivePrefix:prefix])
 			[possibleCompletion addObject:name];
 
@@ -711,15 +688,18 @@
 - (NSArray *) textView:(NSTextView *) textView completions:(NSArray *) words forPartialWordRange:(NSRange) charRange indexOfSelectedItem:(NSInteger *) index {
 	NSEvent *event = [[NSApplication sharedApplication] currentEvent];
 	NSString *search = [[[send textStorage] string] substringWithRange:charRange];
-	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
 	NSMutableArray *ret = [NSMutableArray array];
-	NSString *name = nil;
 	NSString *suffix = ( ! ( [event modifierFlags] & NSAlternateKeyMask ) ? ( charRange.location == 0 ? @": " : @" " ) : @"" );
 	NSUInteger length = [search length];
 
-	while( length && ( name = [[enumerator nextObject] nickname] ) )
+	for( MVChatUser *user in _sortedMembers ) {
+		if (!length) break;
+
+		NSString *name = [user nickname];
+
 		if( length <= [name length] && [search caseInsensitiveCompare:[name substringToIndex:length]] == NSOrderedSame )
 			[ret addObject:[name stringByAppendingString:suffix]];
+	}
 
 	unichar chr = 0;
 	if( [[event charactersIgnoringModifiers] length] )
@@ -1451,9 +1431,8 @@
 	if( userInfo ) {
 		NSArray *added = [userInfo objectForKey:@"added"];
 		if( added ) {
-			NSEnumerator *enumerator = [added objectEnumerator];
 			MVChatUser *member = nil;
-			while( ( member = [enumerator nextObject] ) ) {
+			for( member in added ) {
 				if( ! [self chatRoomMemberForUser:member] ) {
 					JVChatRoomMember *listItem = [[JVChatRoomMember alloc] initWithRoom:self andUser:member];
 					[_sortedMembers addObject:listItem];
@@ -1464,9 +1443,8 @@
 
 		NSArray *removed = [userInfo objectForKey:@"removed"];
 		if( removed ) {
-			NSEnumerator *enumerator = [removed objectEnumerator];
 			MVChatUser *member = nil;
-			while( ( member = [enumerator nextObject] ) ) {
+			for( member in removed ) {
 				JVChatRoomMember *listItem = [self chatRoomMemberForUser:member];
 				if( listItem ) {
 					[listItem _detach];
@@ -1535,10 +1513,9 @@
 }
 
 - (JVChatRoomMember *) valueInChatMembersWithUniqueID:(id) identifier {
-	NSEnumerator *enumerator = [_sortedMembers objectEnumerator];
 	JVChatRoomMember *member = nil;
 
-	while( ( member = [enumerator nextObject] ) )
+	for( member in _sortedMembers )
 		if( [[member uniqueIdentifier] isEqual:identifier] )
 			return member;
 

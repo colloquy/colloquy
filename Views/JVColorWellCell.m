@@ -7,10 +7,8 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 @implementation JVColorWellCell
 + (void) colorPanelColorChanged:(NSNotification *) notification {
 	NSColorPanel *panel = [notification object];
-	NSEnumerator *enumerator = [colorWellCells objectEnumerator];
-	JVColorWellCell *cell = nil;
 
-	while( ( cell = [enumerator nextObject] ) ) {
+	for( JVColorWellCell *cell in colorWellCells ) {
 		if( [cell isActive] ) {
 			[cell setColor:[panel color]];
 			[[NSNotificationCenter defaultCenter] postNotificationName:JVColorWellCellColorDidChangeNotification object:cell userInfo:nil];
@@ -19,10 +17,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 }
 
 + (void) colorPanelClosed:(NSNotification *) notification {
-	NSEnumerator *enumerator = [colorWellCells objectEnumerator];
-	JVColorWellCell *cell = nil;
-
-	while( ( cell = [enumerator nextObject] ) )
+	for( JVColorWellCell *cell in colorWellCells )
 		if( [cell isActive] ) [cell deactivate];
 }
 
@@ -151,10 +146,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 
 - (void) activate:(BOOL) exclusive {
 	if( exclusive ) {
-		NSEnumerator *enumerator = [colorWellCells objectEnumerator];
-		JVColorWellCell *cell = nil;
-
-		while( ( cell = [enumerator nextObject] ) ) {
+		for( JVColorWellCell *cell in colorWellCells ) {
 			if( cell != self && [cell isActive] ) [cell deactivate];
 		}
 	}

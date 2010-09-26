@@ -335,9 +335,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[_encodingMenu release];
 	[_spillEncodingMenu release];
 
-	NSEnumerator *enumerator = [_waitingAlerts objectEnumerator];
-	id alert = nil;
-	while( ( alert = [enumerator nextObject] ) )
+	for( id alert in _waitingAlerts )
 		NSReleaseAlertPanel( alert );
 
 	[_waitingAlerts release];
@@ -471,8 +469,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	NSMenuItem *item = nil;
 
 	NSArray *standardItems = [[self user] standardMenuItems];
-	NSEnumerator *enumerator = [standardItems objectEnumerator];
-	while( ( item = [enumerator nextObject] ) )
+	for( item in standardItems )
 		if( [item action] != @selector( startDirectChat: ) )
 			[menu addItem:item];
 
@@ -835,11 +832,9 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		if( [self connection] )
 			[names addObject:[[self connection] nickname]];
 
-		NSEnumerator *enumerator = [names objectEnumerator];
 		AGRegex *regex = nil;
-		NSString *name = nil;
 
-		while( ( name = [enumerator nextObject] ) ) {
+		for( NSString *name in names ) {
 			if( ! [name length] ) continue;
 
 			if( [name hasPrefix:@"/"] && [name hasSuffix:@"/"] && [name length] > 1 ) {
@@ -851,10 +846,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 			}
 
 			NSArray *matches = [regex findAllInString:[messageString string]];
-			NSEnumerator *enumerator = [matches objectEnumerator];
-			AGRegexMatch *match = nil;
 
-			while( ( match = [enumerator nextObject] ) ) {
+			for( AGRegexMatch *match in matches ) {
 				NSRange foundRange = [match range];
 				NSMutableSet *classes = [NSMutableSet setWithSet:[messageString attribute:@"CSSClasses" atIndex:foundRange.location effectiveRange:NULL]];
 				[classes addObject:@"highlight"];
@@ -1052,10 +1045,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		NSUInteger messageLimit = 5;
 
 		NSArray *lines = [[[send textStorage] string] componentsSeparatedByString:@"\n"];
-		NSEnumerator *enumerator = [lines objectEnumerator];
-		NSString *line = nil;
 
-		while( ( line = [enumerator nextObject] ) )
+		for( NSString *line in lines )
 			if( [line length] ) newlineCount++;
 
 		if ( [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVWarnOnLargeMessageLimit"] unsignedIntValue] > 1 )
@@ -1313,8 +1304,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 }
 
 - (NSArray *) textView:(NSTextView *) textView stringCompletionsForPrefix:(NSString *) prefix {
-	NSEnumerator *enumerator = nil;
-	NSString *name = nil;
 	NSMutableArray *possibleCompletion = [NSMutableArray array];
 
 	if( [[self title] rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch )].location == 0 )
@@ -1324,9 +1313,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	static NSArray *commands;
 	if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me ", @"/msg ", @"/nick ", @"/away ", @"/say ", @"/raw ", @"/quote ", @"/join ", @"/quit ", @"/disconnect ", @"/query ", @"/umode ", @"/google ", @"/part ", nil];
-	enumerator = [commands objectEnumerator];
 
-	while( ( name = [enumerator nextObject] ) )
+	for( NSString *name in commands )
 		if ([name hasCaseInsensitivePrefix:prefix])
 			[possibleCompletion addObject:name];
 
@@ -1553,12 +1541,9 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
 	NSMutableArray *ret = [NSMutableArray array];
 
-	NSMenuItem *item = nil;
-	NSUInteger i = 0;
 	BOOL found = NO;
 
-	for( i = 0; i < [defaultMenuItems count]; i++ ) {
-		item = [defaultMenuItems objectAtIndex:i];
+	for( NSMenuItem *item in defaultMenuItems ) {
 		switch( [item tag] ) {
 			case WebMenuItemTagCopy:
 			case WebMenuItemTagDownloadLinkToDisk:
@@ -1623,10 +1608,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	// catch IRC rooms like "#room" but not HTML colors like "#ab12ef" nor HTML entities like "&#135;" or "&amp;"
 	AGRegex *regex = [AGRegex regexWithPattern:@"\\B(?<!&)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&#]{2,}\\b" options:AGRegexCaseInsensitive];
 	NSArray *matches = [regex findAllInString:[message string]];
-	NSEnumerator *enumerator = [matches objectEnumerator];
-	AGRegexMatch *match = nil;
 
-	while( ( match = [enumerator nextObject] ) ) {
+	for( AGRegexMatch *match in matches ) {
 		NSRange foundRange = [match range];
 		id currentLink = [message attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
 		if( ! currentLink ) [message addAttribute:NSLinkAttributeName value:[NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[self connection] server], [match group]] range:foundRange];
@@ -1662,18 +1645,16 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 }
 
 - (void) _alertSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	NSEnumerator *kenumerator = nil, *enumerator = nil;
-	id key = nil, value = nil;
-
 	[[NSApplication sharedApplication] endSheet:sheet];
 	[sheet orderOut:nil];
 
 	[_waitingAlerts removeObjectIdenticalTo:sheet];
 
-	kenumerator = [_waitingAlertNames keyEnumerator];
-	enumerator = [_waitingAlertNames objectEnumerator];
-	while( ( key = [kenumerator nextObject] ) && ( value = [enumerator nextObject] ) )
+	id key = nil;
+	for( key in _waitingAlertNames ) {
+		id value = [_waitingAlertNames objectForKey:key];
 		if( value == sheet ) break;
+	}
 
 	if( key ) [_waitingAlertNames removeObjectForKey:key];
 
@@ -1753,8 +1734,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		count++;
 
 	NSArray *menuItems = [[self emoticons] emoticonMenuItems];
-	enumerator = [menuItems objectEnumerator];
-	while( ( menuItem = [enumerator nextObject] ) ) {
+	for( menuItem in menuItems ) {
 		[menuItem setAction:@selector( _insertEmoticon: )];
 		[menuItem setTarget:self];
 		[menu insertItem:menuItem atIndex:count++];
@@ -2122,8 +2102,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	if( [target isKindOfClass:[NSArray class]] ) targets = target;
 	else targets = [NSArray arrayWithObject:target];
 
-	NSEnumerator *enumerator = [targets objectEnumerator];
-	while( ( target = [enumerator nextObject] ) ) {
+	for( target in targets ) {
 		if( ! [target isKindOfClass:[JVDirectChatPanel class]] ) continue;
 		[target addEventMessageToDisplay:message withName:name andAttributes:attributes];
 	}

@@ -129,10 +129,8 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (void) save {
 	NSMutableArray *list = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_buddyList count]];
-	NSEnumerator *enumerator = [_buddyList objectEnumerator];
-	JVBuddy *buddy = nil;
 
-	while( ( buddy = [enumerator nextObject] ) ) {
+	for( JVBuddy *buddy in _buddyList ) {
 		NSDictionary *buddyRep = [buddy dictionaryRepresentation];
 		if( buddyRep ) [list addObject:buddyRep];
 	}
@@ -182,10 +180,7 @@ static MVBuddyListController *sharedInstance = nil;
 #pragma mark -
 
 - (JVBuddy *) buddyForUser:(MVChatUser *) user {
-	NSEnumerator *enumerator = [_onlineBuddies objectEnumerator];
-	JVBuddy *buddy = nil;
-
-	while( ( buddy = [enumerator nextObject] ) )
+	for( JVBuddy *buddy in _onlineBuddies )
 		if( [[buddy users] containsObject:user] )
 			return buddy;
 
@@ -317,10 +312,8 @@ static MVBuddyListController *sharedInstance = nil;
 	[rule setNickname:[nickname stringValue]];
 
 	NSMutableArray *newServers = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_addServers count]];
-	NSEnumerator *enumerator = [_addServers objectEnumerator];
-	NSString *server = nil;
 
-	while( ( server = [enumerator nextObject] ) ) {
+	for( NSString *server in _addServers ) {
 		server = [server stringWithDomainNameSegmentOfAddress];
 		if( [server length] )
 			[newServers addObject:server];
@@ -644,13 +637,10 @@ static MVBuddyListController *sharedInstance = nil;
 			NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 			[menu setAutoenablesItems:NO];
 
-			NSEnumerator *userEnumerator = [ordered objectEnumerator];
 			MVChatUser *activeUser = [buddy activeUser];
-			NSMenuItem *item = nil;
-			MVChatUser *user = nil;
 
-			while( ( user = [userEnumerator nextObject] ) ) {
-				item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [user nickname], [user serverAddress]] action:NULL keyEquivalent:@""];
+			for( MVChatUser *user in ordered ) {
+				NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [user nickname], [user serverAddress]] action:NULL keyEquivalent:@""];
 				if( [user isEqualToChatUser:activeUser] ) [item setState:NSOnState];
 				[menu addItem:item];
 				[item release];
@@ -773,10 +763,8 @@ static MVBuddyListController *sharedInstance = nil;
 		JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 		MVChatUser *user = [buddy activeUser];
 		NSArray *files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
-		NSEnumerator *enumerator = [files objectEnumerator];
-		id file = nil;
 
-		while( ( file = [enumerator nextObject] ) )
+		for( id file in files )
 			[[MVFileTransferController defaultController] addFileTransfer:[user sendFile:file passively:passive]];
 
 		return YES;
@@ -902,10 +890,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[_oldPositions release];
 	_oldPositions = [[NSMutableArray arrayWithCapacity:[_buddyOrder count]] retain];
 
-	NSEnumerator *enumerator = [_buddyOrder objectEnumerator];
-	id object = nil;
-
-	while( ( object = [enumerator nextObject] ) )
+	for( id object in _buddyOrder )
 		[_oldPositions addObject:[NSNumber numberWithUnsignedLong:[oldOrder indexOfObject:object]]];
 
 	visibleRows = [buddies rowsInRect:[buddies visibleRect]];
@@ -972,10 +957,7 @@ static MVBuddyListController *sharedInstance = nil;
 	NSArray *list = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatBuddies"];
 	if( ! [list count] ) return;
 
-	NSEnumerator *enumerator = [list objectEnumerator];
-	NSString *identifier = nil;
-
-	while( ( identifier = [enumerator nextObject] ) ) {
+	for( NSString *identifier in list ) {
 		ABPerson *person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:identifier];
 		if( ! person ) continue;
 
@@ -994,9 +976,8 @@ static MVBuddyListController *sharedInstance = nil;
 		[buddy setAddressBookPersonRecord:person];
 
 		value = [person valueForProperty:@"IRCNickname"];
-		unsigned count = [value count];
 
-		for( NSUInteger i = 0; i < count; i++ ) {
+		for( NSUInteger i = 0; i < [value count]; i++ ) {
 			NSString *nick = [value valueAtIndex:i];
 			NSString *server = [[value labelAtIndex:i] stringWithDomainNameSegmentOfAddress];
 			if( ! [nick length] || ! [server length] )
@@ -1026,10 +1007,7 @@ static MVBuddyListController *sharedInstance = nil;
 	NSArray *list = [[NSArray allocWithZone:nil] initWithContentsOfFile:[@"~/Library/Application Support/Colloquy/Buddy List.plist" stringByExpandingTildeInPath]];
 	if( ! [list count] ) [self _importOldBuddyList];
 
-	NSEnumerator *enumerator = [list objectEnumerator];
-	NSDictionary *buddyDictionary = nil;
-
-	while( ( buddyDictionary = [enumerator nextObject] ) ) {
+	for( NSDictionary *buddyDictionary in list ) {
 		JVBuddy *buddy = [[JVBuddy allocWithZone:[self zone]] initWithDictionaryRepresentation:buddyDictionary];
 		if( buddy ) [self addBuddy:buddy];
 		[buddy release];
@@ -1040,11 +1018,9 @@ static MVBuddyListController *sharedInstance = nil;
 
 - (NSMenu *) _menuForBuddy:(JVBuddy *) buddy {
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
-	NSMenuItem *item = nil;
 
 	NSArray *standardItems = [[buddy activeUser] standardMenuItems];
-	NSEnumerator *enumerator = [standardItems objectEnumerator];
-	while( ( item = [enumerator nextObject] ) ) {
+	for( NSMenuItem *item in standardItems ) {
 		if( [item action] == @selector( addBuddy: ) )
 			continue;
 		if( [item action] == @selector( toggleIgnore: ) )
@@ -1065,14 +1041,10 @@ static MVBuddyListController *sharedInstance = nil;
 		if( [menu numberOfItems ] && ! [[[menu itemArray] lastObject] isSeparatorItem] )
 			[menu addItem:[NSMenuItem separatorItem]];
 
-		NSArray *items = nil;
-		NSMenuItem *item = nil;
-		NSEnumerator *enumerator = [results objectEnumerator];
-		while( ( items = [enumerator nextObject] ) ) {
-			if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
-			NSEnumerator *ienumerator = [items objectEnumerator];
-			while( ( item = [ienumerator nextObject] ) )
-				if( [item isKindOfClass:[NSMenuItem class]] ) [menu addItem:item];
+		for( NSArray *items in results ) {
+			for( NSMenuItem *item in items )
+				if( [item isKindOfClass:[NSMenuItem class]] )
+					[menu addItem:item];
 		}
 
 		if( [[[menu itemArray] lastObject] isSeparatorItem] )
@@ -1127,10 +1099,7 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (JVBuddy *) valueInBuddiesWithUniqueID:(id) identifier {
-	NSEnumerator *enumerator = [_buddyList objectEnumerator];
-	JVBuddy *buddy = nil;
-
-	while( ( buddy = [enumerator nextObject] ) )
+	for( JVBuddy *buddy in _buddyList )
 		if( [[buddy uniqueIdentifier] isEqualTo:identifier] )
 			return buddy;
 
@@ -1138,10 +1107,7 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (JVBuddy *) valueInBuddiesWithName:(NSString *) name {
-	NSEnumerator *enumerator = [_buddyList objectEnumerator];
-	JVBuddy *buddy = nil;
-
-	while( ( buddy = [enumerator nextObject] ) )
+	for( JVBuddy *buddy in _buddyList )
 		if( [[buddy compositeName] isEqualToString:name] )
 			return buddy;
 

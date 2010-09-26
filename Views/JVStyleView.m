@@ -541,10 +541,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	}
 
 	JVMarkedScroller *scroller = [self verticalMarkedScroller];
-	NSEnumerator *enumerator = [messages objectEnumerator];
-	JVChatMessage *message = nil;
-
-	while( ( message = [enumerator nextObject] ) ) {
+	for( JVChatMessage *message in messages ) {
 		NSInteger loc = [self _locationOfMessage:message];
 		if( loc != NSNotFound ) [scroller addMarkAt:loc];
 	}
@@ -772,9 +769,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	for( unsigned long i = elementCount; i > ( elementCount - MIN( [self scrollbackLimit], elementCount ) ); i -= MIN( 25u, i ) ) {
 		NSArray *elements = [transcript elementsInRange:NSMakeRange( i - MIN( 25u, i ), MIN( 25u, i ) )];
 
-		id element = nil;
-		NSEnumerator *enumerator = [elements objectEnumerator];
-		while( ( element = [enumerator nextObject] ) )
+		for( id element in elements )
 			if( [element isKindOfClass:[JVChatMessage class]] && [element isHighlighted] )
 				[highlightedMsgs addObject:element];
 

@@ -22,10 +22,7 @@ static NSMutableSet *inspectors = nil;
 }
 
 + (JVInspectorController *) inspectorOfObject:(id <JVInspection>) object {
-	NSEnumerator *e = [inspectors objectEnumerator];
-	JVInspectorController *inspector = nil;
-
-	while( ( inspector = [e nextObject] ) )
+	for( JVInspectorController *inspector in inspectors )
 		if( [inspector inspectedObject] == object )
 			return inspector;
 

@@ -47,14 +47,12 @@
 - (KAIgnoreRule *) _tempIgnoreRule {
 	NSString *ignoreSuffix = NSLocalizedString( @" (Temporary)", "temporary ignore title suffix" );
 	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:[self connection]];
-	NSEnumerator *enumerator = [rules objectEnumerator];
-	KAIgnoreRule *rule = nil;
 
-	while( ( rule = [enumerator nextObject] ) )
-		if( ! [rule isPermanent] && [[rule friendlyName] hasSuffix:ignoreSuffix]
-			&& [rule matchUser:self message:nil inView:nil] != JVNotIgnored ) break;
+	for( KAIgnoreRule *rule in rules )
+		if( ! [rule isPermanent] && [[rule friendlyName] hasSuffix:ignoreSuffix] && [rule matchUser:self message:nil inView:nil] != JVNotIgnored )
+			return rule;
 
-	return rule;
+	return nil;
 }
 
 - (NSArray *) standardMenuItems {
@@ -123,7 +121,6 @@
 
 - (IBAction) sendFile:(id) sender {
 	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
-	NSString *path = nil;
 	NSOpenPanel *panel = [NSOpenPanel openPanel];
 	[panel setResolvesAliases:YES];
 	[panel setCanChooseFiles:YES];
@@ -150,9 +147,8 @@
 	[view release];
 
 	if( [panel runModalForTypes:nil] == NSOKButton ) {
-		NSEnumerator *enumerator = [[panel filenames] objectEnumerator];
 		passive = [passiveButton state];
-		while( ( path = [enumerator nextObject] ) )
+		for( NSString *path in [panel filenames] )
 			[[MVFileTransferController defaultController] addFileTransfer:[self sendFile:path passively:passive]];
 	}
 }

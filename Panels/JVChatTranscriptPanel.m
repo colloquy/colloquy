@@ -652,12 +652,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	if( [results count] ) {
 		if( [ret count] ) [ret addObject:[NSMenuItem separatorItem]];
 
-		NSArray *items = nil;
-		NSEnumerator *enumerator = [results objectEnumerator];
-		while( ( items = [enumerator nextObject] ) ) {
-			if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
-			NSEnumerator *ienumerator = [items objectEnumerator];
-			while( ( item = [ienumerator nextObject] ) )
+		for( NSArray *items in results ) {
+			for( item in items )
 				if( [item isKindOfClass:[NSMenuItem class]] ) [ret addObject:item];
 		}
 
@@ -777,10 +773,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 	if( ! [_searchQuery length] ) return;
 
-	NSEnumerator *messages = [[[self transcript] messages] objectEnumerator];
-	JVChatMessage *message = nil;
-
-	while( ( message = [messages nextObject] ) )
+	for( JVChatMessage *message in [[self transcript] messages] )
 		[self quickSearchMatchMessage:message];
 }
 
@@ -799,11 +792,9 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (void) _changeStyleMenuSelection {
-	NSEnumerator *enumerator = [[_styleMenu itemArray] objectEnumerator];
-	NSMenuItem *menuItem = nil;
 	BOOL hasPerRoomStyle = [self _usingSpecificStyle];
 
-	while( ( menuItem = [enumerator nextObject] ) ) {
+	for( NSMenuItem *menuItem in [_styleMenu itemArray] ) {
 		if( [menuItem tag] != 5 ) continue;
 
 		if( [[self style] isEqualTo:[menuItem representedObject]] && hasPerRoomStyle ) [menuItem setState:NSOnState];
@@ -811,9 +802,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		else if( [[self style] isEqualTo:[menuItem representedObject]] && ! hasPerRoomStyle ) [menuItem setState:NSMixedState];
 		else [menuItem setState:NSOffState];
 
-		NSEnumerator *senumerator = [[[menuItem submenu] itemArray] objectEnumerator];
-		NSMenuItem *subMenuItem = nil;
-		while( ( subMenuItem = [senumerator nextObject] ) ) {
+		for( NSMenuItem *subMenuItem in [[menuItem submenu] itemArray] ) {
 			JVStyle *style = [[subMenuItem representedObject] objectForKey:@"style"];
 			NSString *variant = [[subMenuItem representedObject] objectForKey:@"variant"];
 			if( [subMenuItem action] == @selector( changeStyleVariant: ) && [[self style] isEqualTo:style] && ( [[self styleVariant] isEqualToString:variant] || ( ! [self styleVariant] && ! variant ) ) )
@@ -831,8 +820,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		menu = [[NSMenu alloc] initWithTitle:NSLocalizedString( @"Style", "choose style toolbar menu title" )];
 		_styleMenu = menu;
 	} else {
-		NSEnumerator *enumerator = [[[[menu itemArray] copy] autorelease] objectEnumerator];
-		while( ( menuItem = [enumerator nextObject] ) )
+		for( menuItem in [[[menu itemArray] copy] autorelease] )
 			if( [menuItem tag] || [menuItem isSeparatorItem] )
 				[menu removeItem:menuItem];
 	}
@@ -845,12 +833,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	NSEnumerator *enumerator = [[[[JVStyle styles] allObjects] sortedArrayUsingSelector:@selector( compare: )] objectEnumerator];
-	NSEnumerator *venumerator = nil;
-	JVStyle *style = nil;
-	id item = nil;
-
-	while( ( style = [enumerator nextObject] ) ) {
+	for( JVStyle *style in [[[JVStyle styles] allObjects] sortedArrayUsingSelector:@selector( compare: )] ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[style displayName] action:@selector( changeStyle: ) keyEquivalent:@""] autorelease];
 		[menuItem setTag:5];
 		[menuItem setTarget:self];
@@ -868,8 +851,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 			[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", nil]];
 			[subMenu addItem:subMenuItem];
 
-			venumerator = [variants objectEnumerator];
-			while( ( item = [venumerator nextObject] ) ) {
+			for( id item in variants ) {
 				subMenuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( changeStyleVariant: ) keyEquivalent:@""] autorelease];
 				[subMenuItem setTarget:self];
 				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
@@ -878,8 +860,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 			if( [userVariants count] ) [subMenu addItem:[NSMenuItem separatorItem]];
 
-			venumerator = [userVariants objectEnumerator];
-			while( ( item = [venumerator nextObject] ) ) {
+			for( id item in userVariants ) {
 				subMenuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( changeStyleVariant: ) keyEquivalent:@""] autorelease];
 				[subMenuItem setTarget:self];
 				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
@@ -916,13 +897,12 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (void) _changeEmoticonsMenuSelection {
-	NSEnumerator *enumerator = nil;
-	NSMenuItem *menuItem = nil;
 	BOOL hasPerRoomEmoticons = [self _usingSpecificEmoticons];
 
-	enumerator = [[[[_emoticonMenu itemWithTag:20] submenu] itemArray] objectEnumerator];
-	if( ! enumerator ) enumerator = [[_emoticonMenu itemArray] objectEnumerator];
-	while( ( menuItem = [enumerator nextObject] ) ) {
+	NSArray *array = [[[_emoticonMenu itemWithTag:20] submenu] itemArray];
+	if (!array.count) array = [_emoticonMenu itemArray];
+
+	for( NSMenuItem *menuItem in array ) {
 		if( [menuItem tag] ) continue;
 		if( [[self emoticons] isEqualTo:[menuItem representedObject]] && hasPerRoomEmoticons ) [menuItem setState:NSOnState];
 		else if( ! [menuItem representedObject] && ! hasPerRoomEmoticons ) [menuItem setState:NSOnState];
@@ -932,17 +912,14 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (void) _updateEmoticonsMenu {
-	NSEnumerator *enumerator = nil;
 	NSMenu *menu = nil;
 	NSMenuItem *menuItem = nil;
-	JVEmoticonSet *emoticon = nil;
 
 	if( ! ( menu = _emoticonMenu ) ) {
 		menu = [[NSMenu alloc] initWithTitle:@""];
 		_emoticonMenu = menu;
 	} else {
-		NSEnumerator *enumerator = [[[[menu itemArray] copy] autorelease] objectEnumerator];
-		while( ( menuItem = [enumerator nextObject] ) )
+		for( menuItem in [[[menu itemArray] copy] autorelease] )
 			[menu removeItem:menuItem];
 	}
 
@@ -960,8 +937,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	enumerator = [[[[JVEmoticonSet emoticonSets] allObjects] sortedArrayUsingSelector:@selector( compare: )] objectEnumerator];
-	while( ( emoticon = [enumerator nextObject] ) ) {
+	for( JVEmoticonSet *emoticon in [[[JVEmoticonSet emoticonSets] allObjects] sortedArrayUsingSelector:@selector( compare: )] ) {
 		if( ! [[emoticon displayName] length] ) continue;
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeEmoticons: ) keyEquivalent:@""] autorelease];
 		[menuItem setTarget:self];

@@ -66,11 +66,8 @@
 	NSString *words = [highlightWords stringValue];
 
 	AGRegex *regex = [AGRegex regexWithPattern:@"(?<=\\s|^)([/\"'].*?[/\"'])(?=\\s|$)"];
-	NSArray *matches = [regex findAllInString:words];
-	NSEnumerator *e = [matches objectEnumerator];
 
-	AGRegexMatch *match = nil;
-	while( ( match = [e nextObject] ) )
+	for( AGRegexMatch *match in [regex findAllInString:words] )
 		[components addObject:[match groupAtIndex:1]];
 
 	words = [regex replaceWithString:@"" inString:words];
@@ -82,15 +79,11 @@
 }
 
 - (void) buildEventsMenu {
-	NSMenuItem *menuItem = nil;
-	NSEnumerator *enumerator = nil;
 	NSMenu *availableEvents = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-	NSDictionary *info = nil;
 
-	enumerator = [[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"notifications" ofType:@"plist"]] objectEnumerator];
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSDictionary *info in [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"notifications" ofType:@"plist"]] ) {
 		if( ! [info objectForKey:@"seperator"] ) {
-			menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( [info objectForKey:@"title"], "notification event menu items, notification preferences" ) action:NULL keyEquivalent:@""] autorelease];
+			NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( [info objectForKey:@"title"], "notification event menu items, notification preferences" ) action:NULL keyEquivalent:@""] autorelease];
 			[menuItem setRepresentedObject:[info objectForKey:@"identifier"]];
 			[availableEvents addItem:menuItem];
 		} else [availableEvents addItem:[NSMenuItem separatorItem]];
@@ -125,9 +118,8 @@
 		@"/System/Library/Sounds",
 		[@"~/Library/Sounds" stringByExpandingTildeInPath],
 		nil];
-	NSEnumerator *pathEnum = [paths objectEnumerator];
-	NSString *aPath = nil;
-	while( ( aPath = [pathEnum nextObject] ) ) {
+
+	for( NSString *aPath in paths ) {
 		if( [aPath isEqualToString:@"-"] ) {
 			first = YES;
 			continue;

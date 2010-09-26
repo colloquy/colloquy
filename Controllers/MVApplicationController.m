@@ -424,10 +424,9 @@ static BOOL applicationIsTerminating = NO;
 	NSString *quitString = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVSleepMessage"];
 	NSAttributedString *quitAttributedString = ( quitString ? [[NSAttributedString alloc] initWithString:quitString] : nil );
 	NSArray *openedConnections = [[MVConnectionsController defaultController] connectedConnections];
-	NSEnumerator *enumerator = [openedConnections objectEnumerator];
 	MVChatConnection *connection = nil;
 
-	while ( ( connection = [enumerator nextObject] ) ) {
+	for ( connection in openedConnections ) {
 		NSMutableDictionary *connectionInformation = [[NSMutableDictionary alloc] init];
 
 		[connection disconnectWithReason:quitAttributedString];
@@ -450,10 +449,9 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (void) _receiveWakeNotification:(NSNotification *) notification {
-	NSEnumerator *enumerator = [_previouslyConnectedConnections objectEnumerator];
 	NSDictionary *connectionInformation = nil;
 
-	while ( ( connectionInformation = [enumerator nextObject] ) ) {
+	for ( connectionInformation in _previouslyConnectedConnections ) {
 		MVChatConnection *connection = [connectionInformation objectForKey:@"connection"];
 		[connection connect];
 
@@ -616,13 +614,8 @@ static BOOL applicationIsTerminating = NO;
 
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( [results count] ) {
-		NSArray *items = nil;
-		NSMenuItem *item = nil;
-		NSEnumerator *enumerator = [results objectEnumerator];
-		while( ( items = [enumerator nextObject] ) ) {
-			if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
-			NSEnumerator *ienumerator = [items objectEnumerator];
-			while( ( item = [ienumerator nextObject] ) )
+		for( NSArray *items in results ) {
+			for( NSMenuItem *item in items )
 				if( [item isKindOfClass:[NSMenuItem class]] ) [menu addItem:item];
 		}
 
@@ -659,19 +652,11 @@ static BOOL applicationIsTerminating = NO;
 		if ( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowDockBadge"] ) {
 			unsigned int totalHighlightCount = 0;
 
-			NSEnumerator *chatRoomEnumerator = [[[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] objectEnumerator];
-			JVChatRoomPanel *room = nil;
-
-			while( ( room = [chatRoomEnumerator nextObject] ) ) {
+			for( JVChatRoomPanel *room in [[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] )
 				totalHighlightCount += [room newHighlightMessagesWaiting];
-			}
 
-			NSEnumerator *directChatEnumerator = [[[JVChatController defaultController] chatViewControllersOfClass:[JVDirectChatPanel class]] objectEnumerator];
-			JVChatRoomPanel *directChat = nil;
-
-			while( ( directChat = [directChatEnumerator nextObject] ) ) {
+			for( JVChatRoomPanel *directChat in [[JVChatController defaultController] chatViewControllersOfClass:[JVDirectChatPanel class]] )
 				totalHighlightCount += [directChat newMessagesWaiting];
-			}
 
 			[[NSApp dockTile] setBadgeLabel:( totalHighlightCount == 0 ? nil : [NSString stringWithFormat:@"%u", totalHighlightCount] )];
 			[[NSApp dockTile] display];

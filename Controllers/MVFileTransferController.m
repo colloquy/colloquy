@@ -280,9 +280,8 @@ finish:
 - (void) addFileTransfer:(MVFileTransfer *) transfer {
 	NSParameterAssert( transfer != nil );
 
-	NSEnumerator *enumerator = [_transferStorage objectEnumerator];
 	NSMutableDictionary *info = nil;
-	while( ( info = [enumerator nextObject] ) )
+	for( info in _transferStorage )
 		if( [[info objectForKey:@"controller"] isEqualTo:transfer] )
 			return;
 
@@ -413,13 +412,10 @@ finish:
 }
 
 - (void) tableViewSelectionDidChange:(NSNotification *) notification {
-	NSEnumerator *enumerator = nil;
-	NSToolbarItem *item = nil;
 	BOOL noneSelected = YES;
 
-	enumerator = [[[[self window] toolbar] visibleItems] objectEnumerator];
 	if( [currentFiles selectedRow] != -1 ) noneSelected = NO;
-	while( ( item = [enumerator nextObject] ) ) {
+	for( NSToolbarItem *item in [[[self window] toolbar] visibleItems] ) {
 		if( [[item itemIdentifier] isEqual:MVToolbarStopItemIdentifier] ) {
 			if( ! noneSelected && [currentFiles numberOfSelectedRows] == 1 && [[[self _infoForTransferAtIndex:[currentFiles selectedRow]] objectForKey:@"status"] unsignedIntValue] != MVFileTransferDoneStatus )
 				[item setAction:@selector( stopSelectedTransfer: )];
@@ -435,21 +431,20 @@ finish:
 		}
 	}
 
-	enumerator = [currentFiles selectedRowEnumerator];
+	NSEnumerator *enumerator = [currentFiles selectedRowEnumerator];
 	[_calculationItems removeAllObjects];
 	id fileItem = nil;
+
 	while( ( fileItem = [enumerator nextObject] ) )
 		[_calculationItems addObject:[self _infoForTransferAtIndex:[fileItem unsignedIntValue]]];
 }
 
 - (BOOL) tableView:(NSTableView *) view writeRows:(NSArray *) rows toPasteboard:(NSPasteboard *) board {
-	NSEnumerator *enumerator = [rows objectEnumerator];
 	NSMutableArray *array = [NSMutableArray array];
-	id row = nil;
 
 	[board declareTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,nil] owner:self];
 
-	while( ( row = [enumerator nextObject] ) ) {
+	for( id row in rows ) {
 		NSString *path = [[self _infoForTransferAtIndex:[row unsignedIntValue]] objectForKey:@"path"];
 		if( path ) [array addObject:path];
 	}
@@ -519,11 +514,8 @@ finish:
 - (void) download:(NSURLDownload *) download decideDestinationWithSuggestedFilename:(NSString *) filename {
 	if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAskForTransferSaveLocation"] ) {
 		NSString *path = [[[self class] userPreferredDownloadFolder] stringByAppendingPathComponent:filename];
-		NSEnumerator *enumerator = nil;
-		NSMutableDictionary *info = nil;
 
-		enumerator = [_transferStorage objectEnumerator];
-		while( ( info = [enumerator nextObject] ) ) {
+		for( NSMutableDictionary *info in _transferStorage ) {
 			if( [info objectForKey:@"controller"] == download ) {
 				[info setObject:path forKey:@"path"];
 				break;
@@ -538,11 +530,7 @@ finish:
 }
 
 - (void) download:(NSURLDownload *) download didReceiveResponse:(NSURLResponse *) response {
-	NSEnumerator *enumerator = nil;
-	NSMutableDictionary *info = nil;
-
-	enumerator = [_transferStorage objectEnumerator];
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in _transferStorage ) {
 		if( [info objectForKey:@"controller"] == download ) {
 			[info setObject:[NSNumber numberWithUnsignedLongLong:0] forKey:@"transfered"];
 
@@ -561,11 +549,7 @@ finish:
 }
 
 - (void) download:(NSURLDownload *) download didReceiveDataOfLength:(NSUInteger) length {
-	NSEnumerator *enumerator = nil;
-	NSMutableDictionary *info = nil;
-
-	enumerator = [_transferStorage objectEnumerator];
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in _transferStorage ) {
 		if( [info objectForKey:@"controller"] == download ) {
 			NSTimeInterval timeslice = [[info objectForKey:@"started"] timeIntervalSinceNow] * -1;
 			unsigned long long transfered = [[info objectForKey:@"transfered"] unsignedLongLongValue] + length;
@@ -594,11 +578,7 @@ finish:
 }
 
 - (void) downloadDidFinish:(NSURLDownload *) download {
-	NSEnumerator *enumerator = nil;
-	NSMutableDictionary *info = nil;
-
-	enumerator = [[[_transferStorage copy] autorelease] objectEnumerator];
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in [[_transferStorage copy] autorelease] ) {
 		if( [info objectForKey:@"controller"] == download ) {
 			[info setObject:[NSNumber numberWithUnsignedLong:MVFileTransferDoneStatus] forKey:@"status"];
 
@@ -620,11 +600,7 @@ finish:
 }
 
 - (void) download:(NSURLDownload *) download didFailWithError:(NSError *) error {
-	NSEnumerator *enumerator = nil;
-	NSMutableDictionary *info = nil;
-
-	enumerator = [_transferStorage objectEnumerator];
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in _transferStorage ) {
 		if( [info objectForKey:@"controller"] == download ) {
 			[info setObject:[NSNumber numberWithUnsignedLong:MVFileTransferErrorStatus] forKey:@"status"];
 			[currentFiles reloadData];
@@ -644,11 +620,8 @@ finish:
 
 - (void) _fileTransferStarted:(NSNotification *) notification {
 	MVDownloadFileTransfer *transfer = [notification object];
-	NSEnumerator *enumerator = nil;
-	NSMutableDictionary *info = nil;
 
-	enumerator = [[[_transferStorage copy] autorelease] objectEnumerator];
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in [[_transferStorage copy] autorelease] ){
 		if( [[info objectForKey:@"controller"] isEqualTo:transfer] ) {
 			if( [transfer startDate] ) [info setObject:[transfer startDate] forKey:@"startDate"];
 			break;
@@ -660,11 +633,8 @@ finish:
 
 - (void) _fileTransferFinished:(NSNotification *) notification {
 	MVFileTransfer *transfer = [notification object];
-	NSEnumerator *enumerator = nil;
-	NSMutableDictionary *info = nil;
 
-	enumerator = [[[_transferStorage copy] autorelease] objectEnumerator];
-	while( ( info = [enumerator nextObject] ) ) {
+	for( NSMutableDictionary *info in [[_transferStorage copy] autorelease] ) {
 		if( [[info objectForKey:@"controller"] isEqualTo:transfer] ) {
 			if( [transfer isDownload] ) {
 				NSString *path = [(MVDownloadFileTransfer *)transfer destination];
@@ -766,11 +736,8 @@ finish:
 	[sheet autorelease];
 
 	if( returnCode == NSOKButton ) {
-		NSEnumerator *enumerator = nil;
 		NSMutableDictionary *info = nil;
-
-		enumerator = [_transferStorage objectEnumerator];
-		while( ( info = [enumerator nextObject] ) ) {
+		for( info in _transferStorage ) {
 			if( [info objectForKey:@"controller"] == download ) {
 				if( sheet ) [info setObject:[sheet filename] forKey:@"path"];
 				break;
@@ -779,13 +746,9 @@ finish:
 
 		[download setDestination:[info objectForKey:@"path"] allowOverwrite:YES];
 	} else {
-		NSEnumerator *enumerator = nil;
-		NSMutableDictionary *info = nil;
-
 		[download cancel];
 
-		enumerator = [_transferStorage objectEnumerator];
-		while( ( info = [enumerator nextObject] ) ) {
+		for( NSMutableDictionary *info in _transferStorage ) {
 			if( [info objectForKey:@"controller"] == download ) {
 				[info setObject:[NSNumber numberWithUnsignedLong:MVFileTransferStoppedStatus] forKey:@"status"];
 				break;
@@ -809,8 +772,6 @@ finish:
 
 - (void) _updateProgress:(id) sender {
 	NSString *str = nil;
-	NSEnumerator *enumerator = nil;
-	NSMutableDictionary *info = nil;
 	unsigned long long totalSizeUp = 0, totalTransferedUp = 0, totalTransfered = 0, totalSize = 0;
 	unsigned long long totalSizeDown = 0, totalTransferedDown = 0;
 	double upRate = 0., downRate = 0., avgRate = 0.;
@@ -818,9 +779,10 @@ finish:
 
 	if( sender && ! [[self window] isVisible] ) return;
 
-	if( [_calculationItems count] ) enumerator = [_calculationItems objectEnumerator];
-	else enumerator = [_transferStorage objectEnumerator];
-	while( ( info = [enumerator nextObject] ) ) {
+	id enumerateThrough = nil;
+	if( [_calculationItems count] ) enumerateThrough = _calculationItems;
+	else enumerateThrough = _transferStorage;
+	for( NSMutableDictionary *info in enumerateThrough) {
 		id controller = [info objectForKey:@"controller"];
 		if( [controller isKindOfClass:[MVFileTransfer class]] ) {
 			MVFileTransfer *transferController = controller;

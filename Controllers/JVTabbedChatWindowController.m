@@ -215,9 +215,7 @@
 - (void) customTabViewDidChangeOrderOfTabViewItems:(AICustomTabsView *) view {
 	[_views removeAllObjects];
 
-	NSEnumerator *tabs = [[tabView tabViewItems] objectEnumerator];
-	JVChatTabItem *tab = nil;
-	while( ( tab = [tabs nextObject] ) )
+	for( JVChatTabItem *tab in [tabView tabViewItems] )
 		[_views addObject:[tab chatViewController]];
 }
 
@@ -287,14 +285,13 @@
 			if( [menu numberOfItems ] && ! [[[menu itemArray] lastObject] isSeparatorItem] )
 				[menu addItem:[NSMenuItem separatorItem]];
 
-			NSArray *items = nil;
-			NSMenuItem *item = nil;
-			NSEnumerator *enumerator = [results objectEnumerator];
-			while( ( items = [enumerator nextObject] ) ) {
-				if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
-				NSEnumerator *ienumerator = [items objectEnumerator];
-				while( ( item = [ienumerator nextObject] ) )
-					if( [item isKindOfClass:[NSMenuItem class]] ) [menu addItem:item];
+			for( NSArray *items in results ) {
+				if( ! [items respondsToSelector:@selector( objectEnumerator )] )
+					continue;
+
+				for( NSMenuItem *item in items ) 
+					if( [item isKindOfClass:[NSMenuItem class]] )
+						[menu addItem:item];
 			}
 
 			if( [[[menu itemArray] lastObject] isSeparatorItem] )
@@ -321,11 +318,9 @@
 	if( ! [[(JVChatTabItem *)tabViewItem chatViewController] respondsToSelector:@selector( acceptsDraggedFileOfType: )] ) return NO;
 
 	NSArray *files = [pasteboard propertyListForType:NSFilenamesPboardType];
-	NSEnumerator *enumerator = [files objectEnumerator];
 	BOOL accepted = NO;
-	id file = nil;
 
-	while( ( file = [enumerator nextObject] ) ) {
+	for( id file in files ) {
 		if( [(NSObject *)[(JVChatTabItem *)tabViewItem chatViewController] acceptsDraggedFileOfType:[file pathExtension]] ) {
 			[(NSObject *)[(JVChatTabItem *)tabViewItem chatViewController] handleDraggedFile:file];
 			accepted = YES;

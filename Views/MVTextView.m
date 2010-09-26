@@ -32,8 +32,6 @@
 
 - (void) interpretKeyEvents:(NSArray *) eventArray {
 	NSMutableArray *newArray = [[NSMutableArray allocWithZone:nil] init];
-	NSEnumerator *e = [eventArray objectEnumerator];
-	NSEvent *anEvent = nil;
 
 	if( ! [self isEditable] ) {
 		[newArray release];
@@ -41,7 +39,7 @@
 		return;
 	}
 
-	while( ( anEvent = [e nextObject] ) ) {
+	for( NSEvent *anEvent in eventArray ) {
 		if( [self checkKeyEvent:anEvent] ) {
 			if( [newArray count] > 0 ) {
 				[super interpretKeyEvents:newArray];

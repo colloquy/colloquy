@@ -355,9 +355,7 @@
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 	NSMenuItem *item = nil;
 
-	NSArray *standardItems = [_user standardMenuItems];
-	NSEnumerator *enumerator = [standardItems objectEnumerator];
-	while( ( item = [enumerator nextObject] ) )
+	for( item in [_user standardMenuItems] )
 		[menu addItem:item];
 
 	NSUInteger localUserModes = ( [[self connection] localUser] ? [(MVChatRoom *)[_room target] modesForMemberUser:[[self connection] localUser]] : 0 );

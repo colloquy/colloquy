@@ -290,9 +290,7 @@
 }
 
 - (NSString *) comboBox:(NSComboBox *) comboBox completedString:(NSString *) substring {
-	NSEnumerator *enumerator = [_roomOrder objectEnumerator];
-	NSString *room = nil;
-	while( ( room = [enumerator nextObject] ) )
+	for( NSString *room in _roomOrder )
 		if( [room hasPrefix:substring] ) return room;
 	return nil;
 }
@@ -440,13 +438,10 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 
 @implementation JVChatRoomBrowser (JVChatRoomBrowserPrivate)
 - (void) _connectionChange:(NSNotification *) notification {
-	NSEnumerator *enumerator = [[[MVConnectionsController defaultController] connections] objectEnumerator];
-	MVChatConnection *connection = nil;
 	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-	NSMenuItem *item = nil;
 
-	while( ( connection = [enumerator nextObject] ) ) {
-		item = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [connection server], [connection nickname]] action:NULL keyEquivalent:@""] autorelease];
+	for( MVChatConnection *connection in [[MVConnectionsController defaultController] connections] ) {
+		NSMenuItem *item = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [connection server], [connection nickname]] action:NULL keyEquivalent:@""] autorelease];
 
 		NSImage *icon = nil;
 		if( [connection isConnected] ) icon = [NSImage imageNamed:@"connected"];
@@ -503,16 +498,13 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 		goto refresh;
 	}
 
-	NSEnumerator *enumerator = [_roomResults keyEnumerator];
-	NSEnumerator *venumerator = [_roomResults objectEnumerator];
-	NSString *room = nil;
-	NSMutableDictionary *info = nil;
-
 	[_roomOrder removeAllObjects]; // this is far more efficient than doing a containsObject: and a removeObject: during the while
 
 	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:[_connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
 
-	while( ( room = [enumerator nextObject] ) && ( info = [venumerator nextObject] ) ) {
+	for( NSString *room in _roomResults ) {
+		NSMutableDictionary *info = [_roomResults objectForKey:room];
+
 		if( [room rangeOfString:_currentFilter options:NSCaseInsensitiveSearch].location != NSNotFound ) {
 			[_roomOrder addObject:room];
 			continue;

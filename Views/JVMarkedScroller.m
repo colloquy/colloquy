@@ -84,14 +84,12 @@ struct _mark {
 
 	NSBezierPath *lines = [NSBezierPath bezierPath];
 	NSMutableArray *lineArray = [NSMutableArray array];
-	enumerator = [_marks objectEnumerator];
-	NSValue *currentMark = nil;
 
 	unsigned long long currentPosition = ( _currentMark != NSNotFound ? _currentMark : [self floatValue] * [self contentViewLength] );
 	BOOL foundNext = NO, foundPrevious = NO;
 	NSRect knobRect = [self rectForPart:NSScrollerKnob];
 
-	while( ( currentMark = [enumerator nextObject] ) ) {
+	for( NSValue *currentMark in _marks ) {
 		struct _mark mark;
 		[currentMark getValue:&mark];
 		unsigned long long value = mark.location;
@@ -198,13 +196,10 @@ struct _mark {
 #pragma mark -
 
 - (void) updateNextAndPreviousMarks {
-	NSEnumerator *enumerator = [_marks objectEnumerator];
-	NSValue *currentMark = nil;
-
 	unsigned long long currentPosition = ( _currentMark != NSNotFound ? _currentMark : [self floatValue] * [self contentViewLength] );
 	BOOL foundNext = NO, foundPrevious = NO;
 
-	while( ( currentMark = [enumerator nextObject] ) ) {
+	for( NSValue *currentMark in _marks ) {
 		struct _mark mark;
 		[currentMark getValue:&mark];
 		unsigned long long value = mark.location;
@@ -284,11 +279,9 @@ struct _mark {
 - (void) jumpToMarkWithIdentifier:(NSString *) identifier {
 	_jumpingToMark = YES;
 
-	NSEnumerator *e = [_marks objectEnumerator];
-	NSValue *obj = nil;
 	BOOL foundMark = NO;
 
-	while( ( obj = [e nextObject] ) ) {
+	for( NSValue *obj in _marks ) {
 		struct _mark mark;
 		[obj getValue:&mark];
 		if( [mark.identifier isEqualToString:identifier] ) {
@@ -311,7 +304,6 @@ struct _mark {
 - (void) shiftMarksAndShadedAreasBy:(long long) displacement {
 	BOOL negative = ( displacement >= 0 ? NO : YES );
 	NSMutableSet *shiftedMarks = [NSMutableSet set];
-	NSValue *location = nil;
 	unsigned long long unsignedDisplacement = (unsigned long long)ABS( displacement );
 
 	if( ! ( negative && _nearestPreviousMark < unsignedDisplacement ) ) _nearestPreviousMark += unsignedDisplacement;
@@ -323,8 +315,7 @@ struct _mark {
 	if( ! ( negative && _currentMark < unsignedDisplacement ) ) _currentMark += unsignedDisplacement;
 	else _currentMark = NSNotFound;
 
-	NSEnumerator *enumerator = [_marks objectEnumerator];
-	while( ( location = [enumerator nextObject] ) ) {
+	for( NSValue *location in _marks ) {
 		struct _mark mark;
 		[location getValue:&mark];
 		if( ! ( negative && mark.location < unsignedDisplacement ) ) {
@@ -339,7 +330,7 @@ struct _mark {
 	NSNumber *start = nil;
 	NSNumber *stop = nil;
 
-	enumerator = [_shades objectEnumerator];
+	NSEnumerator *enumerator = [_shades objectEnumerator];
 	while( ( start = [enumerator nextObject] ) && ( ( stop = [enumerator nextObject] ) || YES ) ) {
 		unsigned long long shiftedStart = [start unsignedLongLongValue];
 
@@ -398,9 +389,7 @@ struct _mark {
 }
 
 - (void) removeMarkWithIdentifier:(NSString *) identifier {
-	NSEnumerator *e = [[[_marks copy] autorelease] objectEnumerator];
-	NSValue *obj = nil;
-	while( ( obj = [e nextObject] ) ) {
+	for( NSValue *obj in [[_marks copy] autorelease] ) {
 		struct _mark mark;
 		[obj getValue:&mark];
 		if( [mark.identifier isEqualToString:identifier] ) {
@@ -412,10 +401,7 @@ struct _mark {
 }
 
 - (void) removeMarksGreaterThan:(unsigned long long) location {
-	NSEnumerator *enumerator = [[[_marks copy] autorelease] objectEnumerator];
-	NSValue *obj = nil;
-
-	while( ( obj = [enumerator nextObject] ) ) {
+	for( NSValue *obj in [[_marks copy] autorelease] ) {
 		struct _mark mark;
 		[obj getValue:&mark];
 		if( mark.location > location )
@@ -426,10 +412,7 @@ struct _mark {
 }
 
 - (void) removeMarksLessThan:(unsigned long long) location {
-	NSEnumerator *enumerator = [[[_marks copy] autorelease] objectEnumerator];
-	NSValue *obj = nil;
-
-	while( ( obj = [enumerator nextObject] ) ) {
+	for( NSValue *obj in [[_marks copy] autorelease] ) {
 		struct _mark mark;
 		[obj getValue:&mark];
 		if( mark.location < location )
@@ -440,10 +423,7 @@ struct _mark {
 }
 
 - (void) removeMarksInRange:(NSRange) range {
-	NSEnumerator *enumerator = [[[_marks copy] autorelease] objectEnumerator];
-	NSValue *obj = nil;
-
-	while( ( obj = [enumerator nextObject] ) ) {
+	for( NSValue *obj in [[_marks copy] autorelease] ) {
 		struct _mark mark;
 		[obj getValue:&mark];
 		if( NSLocationInRange( mark.location, range ) )

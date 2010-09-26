@@ -311,11 +311,8 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 - (void) makeLinkAttributesAutomatically {
 	// catch well-formed urls like "http://www.apple.com", "www.apple.com" or "irc://irc.javelin.cc"
 	AGRegex *regex = [AGRegex regexWithPattern:@"\\b(?:[a-zA-Z][a-zA-Z0-9+.-]{2,6}:(?://){0,1}|www\\.)[\\p{L}\\p{N}$\\-_+*'=\\|/\\\\)}\\]%@&#~,:;.!?][\\p{L}\\p{N}$\\-_+*'=\\|/\\\\(){}[\\]%@&#~,:;.!?]{3,}[\\p{L}\\p{N}$\\-_+*=\\|/\\\\({%@&#~]" options:AGRegexCaseInsensitive];
-	NSArray *matches = [regex findAllInString:[self string]];
-	NSEnumerator *enumerator = [matches objectEnumerator];
-	AGRegexMatch *match = nil;
 
-	while( ( match = [enumerator nextObject] ) ) {
+	for( AGRegexMatch *match in [regex findAllInString:[self string]] ) {
 		NSRange foundRange = [match range];
 		NSString *currentLink = [self attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
 		if( ! currentLink ) [self addAttribute:NSLinkAttributeName value:( [[match group] hasCaseInsensitivePrefix:@"www."] ? [@"http://" stringByAppendingString:[match group]] : [match group] ) range:foundRange];
@@ -323,11 +320,8 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 
 	// catch well-formed email addresses like "timothy@hatcher.name" or "timothy@javelin.cc"
 	regex = [AGRegex regexWithPattern:@"[\\p{L}\\p{N}.+\\-_]+@(?:[\\p{L}\\-_]+\\.)+[\\w]{2,}" options:AGRegexCaseInsensitive];
-	matches = [regex findAllInString:[self string]];
-	enumerator = [matches objectEnumerator];
-	match = nil;
 
-	while( ( match = [enumerator nextObject] ) ) {
+	for( AGRegexMatch *match in [regex findAllInString:[self string]] ) {
 		NSRange foundRange = [match range];
 		NSString *currentLink = [self attribute:NSLinkAttributeName atIndex:foundRange.location effectiveRange:NULL];
 		if( ! currentLink ) {
