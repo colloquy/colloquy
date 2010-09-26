@@ -337,24 +337,28 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (void) addChatViewController:(id <JVChatViewController>) controller {
 	NSInteger organizationType = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatViewOrganizationType"];
-	NSUInteger i = 0;
+	NSUInteger i = [_views count];
 
-	if( organizationType == JVChatViewOrganizationTypeAlphabetical ) {
-		for( i = 0; i < [_views count]; i++ ) {
-			if( [[[_views objectAtIndex:i] title] caseInsensitiveCompare:[controller title]] == NSOrderedDescending ) {
+	if ( organizationType != 0 ) {
+		NSMutableArray* sortDescriptors = [NSMutableArray array];
+
+		switch ( organizationType ) {
+			case JVChatViewOrganizationTypeByNetworkAndRoom:
+				[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"connection.server" ascending:YES] autorelease]];
+				[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"connection.preferredNickname" ascending:YES] autorelease]];
+			case JVChatViewOrganizationTypeAlphabetical:
+				[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"className" ascending:YES] autorelease]];
+				[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES] autorelease]];
 				break;
-			}
-		}
-	} else if ( organizationType == JVChatViewOrganizationTypeByNetworkAndRoom ) {
-		NSString* newControllerConnection = [NSString stringWithFormat:@"%@ %@ %@", [[controller connection] server], [[controller connection] nickname], [controller title]];
-		for( i = 0; i < [_views count]; i++ ) {
-			NSString* oldControllerConnection = [NSString stringWithFormat:@"%@ %@ %@", [(MVChatConnection*)[[_views objectAtIndex:i] connection] server], [(MVChatConnection*)[[_views objectAtIndex:i] connection] nickname], [[_views objectAtIndex:i] title]];
-			if( [oldControllerConnection caseInsensitiveCompare:newControllerConnection] == NSOrderedDescending ) {
+			default:
 				break;
-			}
 		}
-	} else {
-		i = [_views count];
+
+		NSMutableArray* sortedViews = [_views mutableCopy];
+		[sortedViews addObject:controller];
+		[sortedViews sortUsingDescriptors:sortDescriptors];
+		i = [sortedViews indexOfObject:controller];
+		[sortedViews release];
 	}
 
 	[self insertChatViewController:controller atIndex:i];
