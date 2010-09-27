@@ -546,8 +546,10 @@ static const NSStringEncoding supportedEncodings[] = {
 		}
 	} else {
 		@synchronized( _knownUsers ) {
-			for( MVChatUser *user in _knownUsers )
+			for( id key in _knownUsers ) {
+				MVChatUser *user = [_knownUsers objectForKey:key];
 				[rule matchChatUser:user];
+			}
 		}
 	}
 }
@@ -802,8 +804,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	}
 
 	@synchronized( _knownUsers ) {
-		for( MVChatUser *user in _knownUsers )
+		for( id key in _knownUsers ) {
+			MVChatUser *user = [_knownUsers objectForKey:key];
 			[user _setStatus:MVChatUserUnknownStatus];
+		}
 	}
 
 	@synchronized( _chatUserWatchRules ) {

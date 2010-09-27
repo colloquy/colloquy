@@ -904,9 +904,11 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (MVChatRoom *) chatRoomWithName:(NSString *) name {
 	@synchronized( _knownRooms ) {
-		for( MVChatRoom *room in _knownRooms )
+		for( id key in _knownRooms ) {
+			MVChatRoom *room = [_knownRooms objectForKey:key];
 			if( [[room name] isEqualToString:name] )
 				return [[room retain] autorelease];
+		}
 	}
 
 	return nil;
@@ -1235,7 +1237,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	@synchronized( _knownUsers ) {
 		NSMutableArray *removeList = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_knownUsers count]];
 
-		for( id key in [_knownUsers allKeys] ) {
+		for( id key in _knownUsers ) {
 			id object = [_knownUsers objectForKey:key];
 			if( [object retainCount] == 1 ) [removeList addObject:key];
 		}
