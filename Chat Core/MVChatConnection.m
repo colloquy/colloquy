@@ -230,8 +230,8 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (id) initWithServer:(NSString *) serverAddress type:(MVChatConnectionType) serverType port:(unsigned short) port user:(NSString *) localNickname {
 	if( ( self = [self initWithType:serverType] ) ) {
-		if( [localNickname length] ) [self setNickname:localNickname];
-		if( [serverAddress length] ) [self setServer:serverAddress];
+		if( localNickname.length ) [self setNickname:localNickname];
+		if( serverAddress.length ) [self setServer:serverAddress];
 		[self setServerPort:port];
 	}
 
@@ -301,7 +301,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) setUniqueIdentifier:(NSString *) uniqueIdentifier {
 	NSParameterAssert( uniqueIdentifier != nil );
-	NSParameterAssert( [uniqueIdentifier length] > 0 );
+	NSParameterAssert( uniqueIdentifier.length > 0 );
 	MVSafeCopyAssign( _uniqueIdentifier, uniqueIdentifier );
 }
 
@@ -344,8 +344,8 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (void) connectToServer:(NSString *) address onPort:(unsigned short) port asUser:(NSString *) nick {
-	if( [nick length] ) [self setNickname:nick];
-	if( [address length] ) [self setServer:address];
+	if( nick.length ) [self setNickname:nick];
+	if( address.length ) [self setServer:address];
 	[self setServerPort:port];
 	[self disconnect];
 	[self connect];
@@ -521,7 +521,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 		_reachability = NULL;
 	}
 
-	if( ! [server length] )
+	if( ! server.length )
 		return;
 
 	SCNetworkReachabilityContext context = { 0, self, NULL, NULL, NULL };
@@ -699,7 +699,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (void) setPersistentInformation:(NSDictionary *) information {
 	@synchronized( _persistentInformation ) {
-		if( [information count] ) [_persistentInformation setDictionary:information];
+		if( information.count ) [_persistentInformation setDictionary:information];
 		else [_persistentInformation removeAllObjects];
 	}
 }
@@ -848,10 +848,10 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (void) joinChatRoomsNamed:(NSArray *) rooms {
 	NSParameterAssert( rooms != nil );
 
-	if( ! [rooms count] ) return;
+	if( ! rooms.count ) return;
 
 	for( NSString *room in rooms )
-		if( [room length] ) [self joinChatRoomNamed:room];
+		if( room.length ) [self joinChatRoomNamed:room];
 }
 
 - (void) joinChatRoomNamed:(NSString *) room {
@@ -1235,7 +1235,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (void) _pruneKnownUsers {
 	@synchronized( _knownUsers ) {
-		NSMutableArray *removeList = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_knownUsers count]];
+		NSMutableArray *removeList = [[NSMutableArray allocWithZone:nil] initWithCapacity:_knownUsers.count];
 
 		for( id key in _knownUsers ) {
 			id object = [_knownUsers objectForKey:key];

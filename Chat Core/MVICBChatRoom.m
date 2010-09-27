@@ -73,7 +73,7 @@
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 	NSString *messageString = message;
 #endif
-	if( [_memberUsers count] > 1 )
+	if( _memberUsers.count > 1 )
 		[(MVICBChatConnection *)_connection ctsOpenPacket:messageString];
 }
 

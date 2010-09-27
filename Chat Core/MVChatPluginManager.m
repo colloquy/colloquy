@@ -71,7 +71,7 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerWillReloadPluginsNotification object:self];
 
-	if( [_plugins count] ) {
+	if( _plugins.count ) {
 		NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), nil];
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 		[invocation setSelector:@selector( unload )];
@@ -142,7 +142,7 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 		if( ( ! class || ( class && [plugin isKindOfClass:class] ) ) && [plugin respondsToSelector:selector] )
 			[qualified addObject:plugin];
 
-	return ( [qualified count] ? qualified : nil );
+	return ( qualified.count ? qualified : nil );
 }
 
 #pragma mark -
@@ -190,7 +190,7 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 				free( ret );
 				[results addObject:res];
 				if( [res isKindOfClass:[NSNumber class]] && stop && [res boolValue] ) return results;
-			} else if( [results count] ) [results addObject:[NSNull null]];
+			} else if( results.count ) [results addObject:[NSNull null]];
 		}
 	}
 

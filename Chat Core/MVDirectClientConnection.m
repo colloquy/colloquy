@@ -16,7 +16,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	NSURL *url = [NSURL URLWithString:@"http://colloquy.info/ip.php"];
 	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:3.];
 	NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL];
-	if( [result length] >= 6 && [result length] <= 40 ) // should be a valid IPv4 or IPv6 address
+	if( result.length >= 6 && result.length <= 40 ) // should be a valid IPv4 or IPv6 address
 		address = [[[NSString allocWithZone:nil] initWithData:result encoding:NSASCIIStringEncoding] autorelease];
 	if( address && [address rangeOfString:@"."].location != NSNotFound )
 		return [NSString stringWithFormat:@"%lu", ntohl( inet_addr( [address UTF8String] ) )];

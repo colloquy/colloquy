@@ -14,12 +14,12 @@
 
 	[scanner scanCharactersFromSet:hex intoString:&code];
 
-	if( [code length] == 6 ) { // decode colors like #ffee33
+	if( code.length == 6 ) { // decode colors like #ffee33
 		unsigned color = 0;
 		scanner = [NSScanner scannerWithString:code];
 		if( ! [scanner scanHexInt:&color] ) return nil;
 		return [self colorWithCalibratedRed:( ( ( color >> 16 ) & 0xff ) / 255. ) green:( ( ( color >> 8 ) & 0xff ) / 255. ) blue:( ( color & 0xff ) / 255. ) alpha:1.];
-	} else if( [code length] == 3 ) {  // decode short-hand colors like #fe3
+	} else if( code.length == 3 ) {  // decode short-hand colors like #fe3
 		unsigned color = 0;
 		scanner = [NSScanner scannerWithString:code];
 		if( ! [scanner scanHexInt:&color] ) return nil;

@@ -57,7 +57,7 @@
 
 - (void) partWithReason:(MVChatString *) reason {
 	if( ! [self isJoined] ) return;
-	if( [reason length] ) [[self connection] sendRawMessageWithFormat:@"LEAVE %@ %@", [self name], reason];
+	if( reason.length ) [[self connection] sendRawMessageWithFormat:@"LEAVE %@ %@", [self name], reason];
 	else [[self connection] sendRawMessageWithFormat:@"LEAVE %@", [self name]];
 	[self _setDateParted:[NSDate date]];
 }

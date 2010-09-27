@@ -189,7 +189,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 #endif
 
 	if( [[attributes objectForKey:@"action"] boolValue] ) {
-		NSMutableData *newMsg = [[NSMutableData allocWithZone:nil] initWithCapacity:[msg length] + 11];
+		NSMutableData *newMsg = [[NSMutableData allocWithZone:nil] initWithCapacity:msg.length + 11];
 		[newMsg appendBytes:"\001ACTION " length:8];
 		[newMsg appendData:msg];
 		[newMsg appendBytes:"\001\x0D\x0A" length:3];
@@ -241,9 +241,9 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection didReadData:(NSData *) data withTag:(long) tag {
 	const char *bytes = (const char *)[data bytes];
-	NSUInteger len = [data length];
+	NSUInteger len = data.length;
 	const char *end = bytes + len - 2; // minus the line endings
-	BOOL ctcp = ( *bytes == '\001' && [data length] > 3 ); // three is the one minimum line ending and two \001 chars
+	BOOL ctcp = ( *bytes == '\001' && data.length > 3 ); // three is the one minimum line ending and two \001 chars
 
 	if( *end != '\x0D' )
 		end = bytes + len - 1; // this client only uses \x0A for the message line ending, lets work with it

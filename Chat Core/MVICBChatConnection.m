@@ -165,7 +165,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (void) setNickname:(NSString *) newNickname {
 	NSParameterAssert( newNickname );
-	NSParameterAssert( [newNickname length] > 0 );
+	NSParameterAssert( newNickname.length > 0 );
 
 	if( ! [newNickname isEqualToString:_nickname] ) {
 		if( [self isConnected] )
@@ -186,10 +186,10 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 }
 
 - (void) setServer:(NSString *) newServer {
-	if( [newServer length] >= 6 && [newServer hasPrefix:@"icb://"] )
+	if( newServer.length >= 6 && [newServer hasPrefix:@"icb://"] )
 		newServer = [newServer substringFromIndex:6];
 	NSParameterAssert( newServer );
-	NSParameterAssert( [newServer length] > 0 );
+	NSParameterAssert( newServer.length > 0 );
 
 	id old = _server;
 	_server = [newServer copyWithZone:nil];
@@ -208,7 +208,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (void) setUsername:(NSString *) newUsername {
 	NSParameterAssert( newUsername );
-	NSParameterAssert( [newUsername length] > 0 );
+	NSParameterAssert( newUsername.length > 0 );
 
 	id old = _username;
 	_username = [newUsername copyWithZone:nil];
@@ -334,11 +334,11 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 - (void) joinChatRoomsNamed:(NSArray *) rooms {
 	NSParameterAssert( rooms != nil );
 
-	if( ! [rooms count] )
+	if( ! rooms.count )
 		return;
 
 	for( NSString *room in rooms ) {
-		if( [room length] ) {
+		if( room.length ) {
 			[self joinChatRoomNamed:room withPassphrase:nil];
 			break;
 		}
@@ -448,7 +448,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (void) _sendQueue {
 	@synchronized( _sendQueue ) {
-		if( ! [_sendQueue count] ) {
+		if( ! _sendQueue.count ) {
 			_sendQueueProcessing = NO;
 			return;
 		}
@@ -459,7 +459,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 		data = [[_sendQueue objectAtIndex:0] retain];
 		[_sendQueue removeObjectAtIndex:0];
 
-		if( [_sendQueue count] )
+		if( _sendQueue.count )
 			[self performSelector:@selector( _sendQueue ) withObject:nil];
 		else
 			_sendQueueProcessing = NO;
@@ -523,7 +523,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 - (void) socket:(AsyncSocket *) sock
          didReadData:(NSData *) data withTag:(long) tag {
 	if( tag == 0 ) {
-		NSAssert( [data length] == 1, @"read mismatch" );
+		NSAssert( data.length == 1, @"read mismatch" );
 		NSUInteger len = (NSUInteger)
 			(((const char *)[data bytes])[0]) & 0xFF;
 		if( len == 0 )
@@ -634,11 +634,11 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	NSParameterAssert( message );
 	NSParameterAssert( who );
 
-	size_t maxlen = 250 - [who length];
+	size_t maxlen = 250 - who.length;
 
 	do {
 		NSString *part;
-		if( [message length] < maxlen ) {
+		if( message.length < maxlen ) {
 			part = message;
 			message = nil;
 		} else {
@@ -688,7 +688,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 	do {
 		NSString *part;
-		if( [message length] < 255 ) {
+		if( message.length < 255 ) {
 			part = message;
 			message = nil;
 		} else {
@@ -752,7 +752,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	while( i->type != '\0' ) {
 		if( i->type == [packet type] ) {
 			NSArray *fields = [packet fields];
-			NSInteger count = [fields count];
+			NSInteger count = fields.count;
 
 			if( count < i->minfields || ( i->maxfields != -1 &&
 										  count > i->maxfields ) ) {
@@ -776,7 +776,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (void) stcBeepPacket:(NSArray *) fields {
 	NSParameterAssert( fields );
-	NSParameterAssert( [fields count] == 1 );
+	NSParameterAssert( fields.count == 1 );
 
 	NSString *who = [fields objectAtIndex:0];
 
@@ -791,7 +791,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (void) stcCommandOutputPacket:(NSArray *) fields {
 	NSParameterAssert( fields );
-	NSParameterAssert( [fields count] >= 1 );
+	NSParameterAssert( fields.count >= 1 );
 
 	NSString *type = [fields objectAtIndex:0];
 	NSString *selname = [NSString stringWithFormat:@"stcCommandOutputPacket%@:",
@@ -834,7 +834,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (void) stcExitPacket:(NSArray *) fields {
 	NSParameterAssert( fields );
-	NSParameterAssert( [fields count] == 0 );
+	NSParameterAssert( fields.count == 0 );
 
 	[self performSelectorOnMainThread:@selector( disconnect )
           withObject:nil waitUntilDone:NO];
@@ -842,7 +842,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (void) stcErrorPacket:(NSArray *) fields {
 	NSParameterAssert( fields );
-	NSParameterAssert( [fields count] == 1 );
+	NSParameterAssert( fields.count == 1 );
 
 	NSString *message = [fields objectAtIndex:0];
 	NSRange r;
@@ -885,7 +885,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (void) stcImportantPacket:(NSArray *) fields {
 	NSParameterAssert( fields );
-	NSParameterAssert( [fields count] == 2 );
+	NSParameterAssert( fields.count == 2 );
 
 	NSString *category = [fields objectAtIndex:0];
 	NSString *text = [fields objectAtIndex:1];
@@ -900,7 +900,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (void) stcLoginPacket:(NSArray *) fields {
 	NSParameterAssert( fields );
-	NSParameterAssert( [fields count] == 0 );
+	NSParameterAssert( fields.count == 0 );
 
 	[self performSelectorOnMainThread:@selector( _didConnect )
 		  withObject:nil waitUntilDone:NO];
@@ -927,7 +927,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (void) stcOpenPacket:(NSArray *) fields {
 	NSParameterAssert( fields );
-	NSParameterAssert( [fields count] == 2 );
+	NSParameterAssert( fields.count == 2 );
 
 	NSString *who = [fields objectAtIndex:0];
 	NSString *msg = [fields objectAtIndex:1];
@@ -947,7 +947,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (void) stcPersonalPacket:(NSArray *) fields {
 	NSParameterAssert( fields );
-	NSParameterAssert( [fields count] == 2 );
+	NSParameterAssert( fields.count == 2 );
 
 	NSString *who = [fields objectAtIndex:0];
 	NSString *msg = [fields objectAtIndex:1];
@@ -965,9 +965,9 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (void) stcPingPacket:(NSArray *) fields {
 	NSParameterAssert( fields );
-	NSParameterAssert( [fields count] <= 1 );
+	NSParameterAssert( fields.count <= 1 );
 
-	if( [fields count] == 1 ) {
+	if( fields.count == 1 ) {
 		NSString *ident = [fields objectAtIndex:0];
 		[self ctsPongPacketWithId:ident];
 	} else
@@ -976,24 +976,24 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 - (void) stcPongPacket:(NSArray *) fields {
 	NSParameterAssert( fields );
-	NSParameterAssert( [fields count] <= 1 );
+	NSParameterAssert( fields.count <= 1 );
 }
 
 - (void) stcProtocolPacket:(NSArray *) fields {
 	NSParameterAssert( fields );
-	NSParameterAssert( [fields count] >= 1 && [fields count] <= 3 );
+	NSParameterAssert( fields.count >= 1 && fields.count <= 3 );
 }
 
 - (void) stcStatusPacket:(NSArray *) fields {
 	NSParameterAssert( fields );
-	NSParameterAssert( [fields count] == 2 );
+	NSParameterAssert( fields.count == 2 );
 
 	NSString *category = [fields objectAtIndex:0];
 
-	NSMutableString *tmp = [NSMutableString stringWithCapacity:[category length]];
+	NSMutableString *tmp = [NSMutableString stringWithCapacity:category.length];
 	[tmp setString:category];
 	[tmp replaceOccurrencesOfString:@"-" withString:@""
-	     options:NSLiteralSearch range:NSMakeRange(0, [category length])];
+	     options:NSLiteralSearch range:NSMakeRange(0, category.length)];
 	NSString *selname = [NSString stringWithFormat:@"stcStatusPacket%@:", tmp];
 
 	SEL selector = NSSelectorFromString(selname);
@@ -1205,7 +1205,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 		MVChatUser *sender =
 		    [self chatUserWithUniqueIdentifier:[msg substringToIndex:r.location]];
 		NSString *topic = [msg substringFromIndex:r.location + r.length];
-		NSUInteger l = [topic length];
+		NSUInteger l = topic.length;
 		if( l < 2 || ( [topic characterAtIndex:0] != '"' ||
 			           [topic characterAtIndex:l - 1] != '"' ) ) {
 			[self _postProtocolError:@"Received an invalid topic"];

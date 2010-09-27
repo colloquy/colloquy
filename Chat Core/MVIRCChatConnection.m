@@ -197,7 +197,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	if( _status == MVChatConnectionConnectedStatus ) {
 		_userDisconnected = YES;
-		if( [reason length] ) {
+		if( reason.length ) {
 			NSData *msg = [[self class] _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 			[self sendRawMessageImmediatelyWithComponents:@"QUIT :", msg, nil];
 		} else [self sendRawMessage:@"QUIT" immediately:YES];
@@ -223,7 +223,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) setNickname:(NSString *) newNickname {
 	NSParameterAssert( newNickname != nil );
-	NSParameterAssert( [newNickname length] > 0 );
+	NSParameterAssert( newNickname.length > 0 );
 
 	BOOL connectiongOrConnected = ( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus );
 
@@ -246,7 +246,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) setPreferredNickname:(NSString *) newNickname {
 	NSParameterAssert( newNickname != nil );
-	NSParameterAssert( [newNickname length] > 0 );
+	NSParameterAssert( newNickname.length > 0 );
 
 	MVSafeCopyAssign( _nickname, newNickname );
 
@@ -280,7 +280,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) setUsername:(NSString *) newUsername {
 	NSParameterAssert( newUsername != nil );
-	NSParameterAssert( [newUsername length] > 0 );
+	NSParameterAssert( newUsername.length > 0 );
 	MVSafeCopyAssign( _username, newUsername );
 }
 
@@ -291,12 +291,12 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setServer:(NSString *) newServer {
-	if( [newServer length] >= 6 && [newServer hasPrefix:@"irc://"] )
+	if( newServer.length >= 6 && [newServer hasPrefix:@"irc://"] )
 		newServer = [newServer substringFromIndex:6];
-	else if( [newServer length] >= 7 && [newServer hasPrefix:@"ircs://"] )
+	else if( newServer.length >= 7 && [newServer hasPrefix:@"ircs://"] )
 		newServer = [newServer substringFromIndex:7];
 	NSParameterAssert( newServer != nil );
-	NSParameterAssert( [newServer length] > 0 );
+	NSParameterAssert( newServer.length > 0 );
 	MVSafeCopyAssign( _server, newServer );
 
 	[super setServer:newServer];
@@ -355,7 +355,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	if( ! now ) {
 		@synchronized( _sendQueue ) {
-			now = ! [_sendQueue count];
+			now = ! _sendQueue.count;
 		}
 
 		if( now ) now = ( ! _queueWait || [_queueWait timeIntervalSinceNow] <= 0. );
@@ -384,17 +384,17 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) joinChatRoomsNamed:(NSArray *) rooms {
 	NSParameterAssert( rooms != nil );
 
-	if( ! [rooms count] ) return;
+	if( ! rooms.count ) return;
 
 	if( !_pendingJoinRoomNames )
 		_pendingJoinRoomNames = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 
-	NSMutableArray *roomList = [[NSMutableArray allocWithZone:nil] initWithCapacity:[rooms count]];
+	NSMutableArray *roomList = [[NSMutableArray allocWithZone:nil] initWithCapacity:rooms.count];
 
 	for( NSString *room in rooms ) {
 		room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 
-		if( ![room length] )
+		if( !room.length )
 			continue;
 
 		if( [room rangeOfString:@" "].location == NSNotFound ) { // join non-password rooms in bulk
@@ -404,7 +404,7 @@ static const NSStringEncoding supportedEncodings[] = {
 			[roomList addObject:room];
 			[_pendingJoinRoomNames addObject:room];
 		} else { // has a password, join separately
-			if( [roomList count] ) {
+			if( roomList.count ) {
 				// join all requested rooms before this one so we do things in order
 				[self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
 				[roomList removeAllObjects]; // clear list since we joined them
@@ -412,7 +412,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 			NSString *password = nil;
 			NSArray *components = [room componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet] limit:1 remainingString:&password];
-			if( ![components count])
+			if( !components.count)
 				continue;
 
 			room = [self properNameForChatRoomNamed:[components objectAtIndex:0]];
@@ -422,35 +422,35 @@ static const NSStringEncoding supportedEncodings[] = {
 			continue;
 		}
 
-		if( [roomList count] >= 10 ) {
+		if( roomList.count >= 10 ) {
 			// join all requested rooms up to this point so we don't send too long of a list
 			[self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
 			[roomList removeAllObjects]; // clear list since we joined them
 		}
 	}
 
-	if( [roomList count] ) [self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
+	if( roomList.count ) [self sendRawMessageWithFormat:@"JOIN %@", [roomList componentsJoinedByString:@","]];
 
 	[roomList release];
 }
 
 - (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase {
 	NSParameterAssert( room != nil );
-	NSParameterAssert( [room length] > 0 );
+	NSParameterAssert( room.length > 0 );
 
 	if( !_pendingJoinRoomNames )
 		_pendingJoinRoomNames = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
 
 	room = [self properNameForChatRoomNamed:room];
 
-	if( ![room length] )
+	if( !room.length )
 		return;
 
 	MVChatRoom *chatRoom = [self chatRoomWithUniqueIdentifier:room];
 	if( [chatRoom isJoined] )
 		return;
 
-	if( [passphrase length] ) {
+	if( passphrase.length ) {
 		NSString *previousPassphrase = [chatRoom attributeForMode:MVChatRoomPassphraseToJoinMode];
 		if( ![previousPassphrase isEqualToString:passphrase] )
 			[_pendingJoinRoomNames removeObject:room];
@@ -461,7 +461,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	[_pendingJoinRoomNames addObject:room];
 
-	if( [passphrase length] ) {
+	if( passphrase.length ) {
 		[chatRoom _setMode:MVChatRoomPassphraseToJoinMode withAttribute:passphrase];
 		[self sendRawMessageWithFormat:@"JOIN %@ %@", room, passphrase];
 	} else {
@@ -501,16 +501,16 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (NSString *) properNameForChatRoomNamed:(NSString *) room {
-	if( ! [room length] ) return room;
+	if( ! room.length ) return room;
 	room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 	return ( [[self chatRoomNamePrefixes] characterIsMember:[room characterAtIndex:0]] ? room : [@"#" stringByAppendingString:room] );
 }
 
 - (NSString *) displayNameForChatRoomNamed:(NSString *) room {
 	room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-	if ([room length] > 2 && [room characterAtIndex:1] == '#')
+	if (room.length > 2 && [room characterAtIndex:1] == '#')
 		return [room substringFromIndex:2];
-	if ([room length] > 1 && [room characterAtIndex:1] != '#')
+	if (room.length > 1 && [room characterAtIndex:1] != '#')
 		return [room substringFromIndex:1];
 	return room;
 }
@@ -578,7 +578,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (void) setAwayStatusMessage:(MVChatString *) message {
-	if( [message length] ) {
+	if( message.length ) {
 		MVSafeCopyAssign( _awayMessage, message );
 
 		NSData *msg = [[self class] _flattenedIRCDataForMessage:message withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
@@ -630,7 +630,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	_failedNicknameCount = 1;
 	_nicknameShortened = NO;
 
-	NSString *server = (_bouncer != MVChatConnectionNoBouncer && [_bouncerServer length] ? _bouncerServer : _server);
+	NSString *server = (_bouncer != MVChatConnectionNoBouncer && _bouncerServer.length ? _bouncerServer : _server);
 	unsigned short serverPort = (_bouncer != MVChatConnectionNoBouncer ? (_bouncerServerPort ? _bouncerServerPort : 6667) : _serverPort);
 
 	if( ! [_chatConnection connectToHost:server onPort:serverPort error:NULL] )
@@ -822,24 +822,24 @@ static const NSStringEncoding supportedEncodings[] = {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	NSString *password = _password;
-	NSString *username = ( [_username length] ? _username : @"anonymous" );
+	NSString *username = ( _username.length ? _username : @"anonymous" );
 
 	if( _bouncer == MVChatConnectionGenericBouncer ) {
 		if( _bouncerPassword ) password = _bouncerPassword;
-		if( [_bouncerUsername length] ) username = _bouncerUsername;
+		if( _bouncerUsername.length ) username = _bouncerUsername;
 	} else if( _bouncer == MVChatConnectionColloquyBouncer ) {
 		// PASS <account> [ '~' <device-identifier> ] ':' <account-pass> [ ':' <server-pass> ]
 		NSMutableString *mutablePassword = [NSMutableString string];
 
-		[mutablePassword appendString:( [_bouncerUsername length] ? _bouncerUsername : @"anonymous" )];
-		if( [_bouncerDeviceIdentifier length] ) [mutablePassword appendFormat:@"~%@", _bouncerDeviceIdentifier];
-		[mutablePassword appendFormat:@":%@", ( [_bouncerPassword length] ? _bouncerPassword : @"" )];
-		if( [password length] ) [mutablePassword appendFormat:@":%@", password];
+		[mutablePassword appendString:( _bouncerUsername.length ? _bouncerUsername : @"anonymous" )];
+		if( _bouncerDeviceIdentifier.length ) [mutablePassword appendFormat:@"~%@", _bouncerDeviceIdentifier];
+		[mutablePassword appendFormat:@":%@", ( _bouncerPassword.length ? _bouncerPassword : @"" )];
+		if( password.length ) [mutablePassword appendFormat:@":%@", password];
 
 		password = mutablePassword;
 
 		// USER <connection-identifier> | ([ ('irc' | 'ircs') '://' ] <username> '@' <server> [ ':' <server-port> ])
-		if( [_bouncerConnectionIdentifier length] ) {
+		if( _bouncerConnectionIdentifier.length ) {
 			username = _bouncerConnectionIdentifier;
 		} else {
 			NSMutableString *mutableUsername = [NSMutableString string];
@@ -852,9 +852,9 @@ static const NSStringEncoding supportedEncodings[] = {
 		}
 	}
 
-	if( [password length] ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
+	if( password.length ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self preferredNickname]];
-	[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", username, ( [_realName length] ? _realName : @"Anonymous User" )];
+	[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", username, ( _realName.length ? _realName : @"Anonymous User" )];
 
 	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:JVPeriodicEventsInterval];
 	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:JVPingServerInterval];
@@ -887,10 +887,10 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) _processIncomingMessage:(NSData *) data fromServer:(BOOL) fromServer {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	NSString *rawString = [self _newStringWithBytes:[data bytes] length:[data length]];
+	NSString *rawString = [self _newStringWithBytes:[data bytes] length:data.length];
 
 	const char *line = (const char *)[data bytes];
-	NSUInteger len = [data length];
+	NSUInteger len = data.length;
 	const char *end = line + len - 2; // minus the line endings
 
 	if( *end != '\x0D' )
@@ -1001,7 +1001,7 @@ end:
 			MVChatUser *chatUser = nil;
 			// if user is not null that shows it was a user not a server sender.
 			// the sender was also a user if senderString equals the current local nickname (some bouncers will do this).
-			if( ( [senderString length] && user && userLength ) || [senderString isEqualToString:_currentNickname] ) {
+			if( ( senderString.length && user && userLength ) || [senderString isEqualToString:_currentNickname] ) {
 				chatUser = [self chatUserWithUniqueIdentifier:senderString];
 				if( ! [chatUser address] && host && hostLength ) {
 					NSString *hostString = [self _newStringWithBytes:host length:hostLength];
@@ -1046,19 +1046,19 @@ end:
 	// the trailing CR-LF. Thus, there are 510 characters maximum allowed
 	// for the command and its parameters.
 
-	if( [data length] > JVMaximumCommandLength ) [data setLength:JVMaximumCommandLength];
+	if( data.length > JVMaximumCommandLength ) [data setLength:JVMaximumCommandLength];
 
 	if ([data hasSuffixBytes:"\x0D" length:1]) {
 		[data appendBytes:"\x0A" length:1];
 	} else if (![data hasSuffixBytes:"\x0D\x0A" length:2]) {
 		if ([data hasSuffixBytes:"\x0A" length:1])
-			[data replaceBytesInRange:NSMakeRange(([data length] - 1), 1) withBytes:"\x0D\x0A" length:2];
+			[data replaceBytesInRange:NSMakeRange((data.length - 1), 1) withBytes:"\x0D\x0A" length:2];
 		else [data appendBytes:"\x0D\x0A" length:2];
 	}
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
 
-	NSString *stringWithPasswordsHidden = [string stringByReplacingOccurrencesOfRegex:@"(^PASS |IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:RKLCaseless range:NSMakeRange(0, [string length]) error:NULL];
+	NSString *stringWithPasswordsHidden = [string stringByReplacingOccurrencesOfRegex:@"(^PASS |IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:RKLCaseless range:NSMakeRange(0, string.length) error:NULL];
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:stringWithPasswordsHidden, @"message", data, @"messageData", [NSNumber numberWithBool:YES], @"outbound", nil]];
 
@@ -1120,7 +1120,7 @@ end:
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 #endif
 
-	if( ! [msg length] ) {
+	if( ! msg.length ) {
 		[msg release];
 		return;
 	}
@@ -1145,14 +1145,14 @@ end:
 		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@%@ :\001ACTION ", targetPrefix, targetName];
 		NSUInteger bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
 
-		if ( [msg length] > bytesLeft ) [self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
+		if ( msg.length > bytesLeft ) [self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
 		else [self sendRawMessageWithComponents:prefix, msg, @"\001", nil];
 		[prefix release];
 	} else {
 		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@%@ :", targetPrefix, targetName];
 		NSUInteger bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
 
-		if ( [msg length] > bytesLeft )	[self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
+		if ( msg.length > bytesLeft )	[self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
 		else [self sendRawMessageWithComponents:prefix, msg, nil];
 
 		[prefix release];
@@ -1165,18 +1165,18 @@ end:
 	NSUInteger bytesRemainingForMessage = bytesLeft;
 	BOOL hasWhitespaceInString = YES;
 
-	while ( [msg length] ) {
+	while ( msg.length ) {
 		NSMutableData *msgCutDown = [[msg subdataWithRange:NSMakeRange( 0, bytesRemainingForMessage )] mutableCopy];
 
 		for ( ; ! [self validCharacterToSend:(((char *)[msgCutDown bytes]) + bytesRemainingForMessage - 1) whitespaceInString:hasWhitespaceInString] ; bytesRemainingForMessage-- ) {
-			if ( ! [msgCutDown length] ) {
+			if ( ! msgCutDown.length ) {
 				hasWhitespaceInString = NO;
 				bytesRemainingForMessage = bytesLeft;
 				[msgCutDown release];
 				msgCutDown = [[msg subdataWithRange:NSMakeRange( 0, bytesRemainingForMessage )] mutableCopy];
 			}
-			else if ( [msg length] < bytesLeft ) break;
-			else [msgCutDown setLength:[msgCutDown length] - 1];
+			else if ( msg.length < bytesLeft ) break;
+			else [msgCutDown setLength:msgCutDown.length - 1];
 		}
 
 		if ( [prefix hasCaseInsensitiveSubstring:@"\001ACTION"]	) [self sendRawMessageWithComponents:prefix, msgCutDown, @"\001", nil];
@@ -1185,8 +1185,8 @@ end:
 
 		[msgCutDown release];
 
-		if ( [msg length] >= bytesRemainingForMessage ) bytesRemainingForMessage = bytesLeft;
-		else bytesRemainingForMessage = [msg length];
+		if ( msg.length >= bytesRemainingForMessage ) bytesRemainingForMessage = bytesLeft;
+		else bytesRemainingForMessage = msg.length;
 	}
 }
 
@@ -1242,13 +1242,13 @@ end:
 			NSString *roomName = nil;
 
 			[argumentsScanner scanUpToCharactersFromSet:whitespaceCharacters intoString:&nick];
-			if( ![nick length] ) return;
+			if( !nick.length ) return;
 			if( ![argumentsScanner isAtEnd] ) [argumentsScanner scanUpToCharactersFromSet:whitespaceCharacters intoString:&roomName];
 
-			[self sendRawMessage:[NSString stringWithFormat:@"INVITE %@ %@", nick, ( [roomName length] ? roomName : [room name] )]];
+			[self sendRawMessage:[NSString stringWithFormat:@"INVITE %@ %@", nick, ( roomName.length ? roomName : [room name] )]];
 			return;
 		} else if( [command isCaseInsensitiveEqualToString:@"topic"] || [command isCaseInsensitiveEqualToString:@"t"] ) {
-			if( [arguments length] ) {
+			if( arguments.length ) {
 				[room changeTopic:arguments];
 				return;
 			}
@@ -1256,11 +1256,11 @@ end:
 			NSString *member = nil;
 			[argumentsScanner scanUpToCharactersFromSet:whitespaceCharacters intoString:&member];
 
-			if( [member length] ) {
+			if( member.length ) {
 				MVChatString *reason = nil;
-				if( [arguments length] >= [argumentsScanner scanLocation] + 1 )
+				if( arguments.length >= [argumentsScanner scanLocation] + 1 )
 #if USE(ATTRIBUTED_CHAT_STRING)
-					reason = [arguments attributedSubstringFromRange:NSMakeRange( [argumentsScanner scanLocation] + 1, ( [arguments length] - [argumentsScanner scanLocation] - 1 ) )];
+					reason = [arguments attributedSubstringFromRange:NSMakeRange( [argumentsScanner scanLocation] + 1, ( arguments.length - [argumentsScanner scanLocation] - 1 ) )];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 					reason = [arguments	substringFromIndex:( [argumentsScanner scanLocation] + 1 )];
 #endif
@@ -1273,11 +1273,11 @@ end:
 			NSString *member = nil;
 			[argumentsScanner scanUpToCharactersFromSet:whitespaceCharacters intoString:&member];
 
-			if( [member length] ) {
+			if( member.length ) {
 				MVChatString *reason = nil;
-				if( [arguments length] >= [argumentsScanner scanLocation] + 1 )
+				if( arguments.length >= [argumentsScanner scanLocation] + 1 )
 #if USE(ATTRIBUTED_CHAT_STRING)
-					reason = [arguments attributedSubstringFromRange:NSMakeRange( [argumentsScanner scanLocation] + 1, ( [arguments length] - [argumentsScanner scanLocation] - 1 ) )];
+					reason = [arguments attributedSubstringFromRange:NSMakeRange( [argumentsScanner scanLocation] + 1, ( arguments.length - [argumentsScanner scanLocation] - 1 ) )];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 					reason = [arguments	substringFromIndex:( [argumentsScanner scanLocation] + 1 )];
 #endif
@@ -1298,103 +1298,103 @@ end:
 		} else if( [command isCaseInsensitiveEqualToString:@"op"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
 			for( NSString *userString in users ) {
-				if( [userString length] ) {
+				if( userString.length ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room setMode:MVChatRoomMemberOperatorMode forMemberUser:user];
 				}
 			}
 
-			if( [users count] )
+			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"deop"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
 
 			for( NSString *userString in users ) {
-				if( [userString length] ) {
+				if( userString.length ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room removeMode:MVChatRoomMemberOperatorMode forMemberUser:user];
 				}
 			}
 
-			if( [users count] )
+			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"halfop"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
 
 			for( NSString *userString in users ) {
-				if( [userString length] ) {
+				if( userString.length ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room setMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
 				}
 			}
 
-			if( [users count] )
+			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"dehalfop"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
 
 			for( NSString *userString in users ) {
-				if( [userString length] ) {
+				if( userString.length ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room removeMode:MVChatRoomMemberHalfOperatorMode forMemberUser:user];
 				}
 			}
 
-			if( [users count] )
+			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"voice"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
 
 			for( NSString *userString in users ) {
-				if( [userString length] ) {
+				if( userString.length ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room setMode:MVChatRoomMemberVoicedMode forMemberUser:user];
 				}
 			}
 
-			if( [users count] )
+			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"devoice"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
 
 			for( NSString *userString in users ) {
-				if( [userString length] ) {
+				if( userString.length ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room removeMode:MVChatRoomMemberVoicedMode forMemberUser:user];
 				}
 			}
 
-			if( [users count] )
+			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"quiet"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
 
 			for( NSString *userString in users ) {
-				if( [userString length] ) {
+				if( userString.length ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room setMode:MVChatRoomMemberQuietedMode forMemberUser:user];
 				}
 			}
 
-			if( [users count] )
+			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"dequiet"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
 
 			for( NSString *userString in users ) {
-				if( [userString length] ) {
+				if( userString.length ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
 					if( user ) [room removeMode:MVChatRoomMemberQuietedMode forMemberUser:user];
 				}
 			}
 
-			if( [users count] )
+			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"ban"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
 
 			for( NSString *userString in users ) {
-				if( [userString length] ) {
+				if( userString.length ) {
 					MVChatUser *user = nil;
 					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] ) {
 						if ( ! [userString hasCaseInsensitiveSubstring:@"!"] && [userString hasCaseInsensitiveSubstring:@"@"] )
@@ -1406,13 +1406,13 @@ end:
 				}
 			}
 
-			if( [users count] )
+			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"unban"] ) {
 			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
 
 			for( NSString *userString in users ) {
-				if( [userString length] ) {
+				if( userString.length ) {
 					MVChatUser *user = nil;
 					if ( [userString hasCaseInsensitiveSubstring:@"!"] || [userString hasCaseInsensitiveSubstring:@"@"] ) {
 						if ( ! [userString hasCaseInsensitiveSubstring:@"!"] && [userString hasCaseInsensitiveSubstring:@"@"] )
@@ -1424,7 +1424,7 @@ end:
 				}
 			}
 
-			if( [users count] )
+			if( users.count )
 				return;
 		}
 	}
@@ -1436,17 +1436,17 @@ end:
 		[argumentsScanner scanUpToCharactersFromSet:whitespaceCharacters intoString:&targetName];
 		[argumentsScanner scanCharactersFromSet:whitespaceCharacters maxLength:1 intoString:NULL];
 
-		if( ![targetName length] ) return;
+		if( !targetName.length ) return;
 
 		if( ![argumentsScanner isAtEnd] ) {
 #if USE(ATTRIBUTED_CHAT_STRING)
-			msg = [arguments attributedSubstringFromRange:NSMakeRange( [argumentsScanner scanLocation], [arguments length] - [argumentsScanner scanLocation] )];
+			msg = [arguments attributedSubstringFromRange:NSMakeRange( [argumentsScanner scanLocation], arguments.length - [argumentsScanner scanLocation] )];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 			msg = [arguments substringFromIndex:[argumentsScanner scanLocation]];
 #endif
 		}
 
-		if( ![msg length] ) return;
+		if( !msg.length ) return;
 
 		NSString *roomTargetName = targetName;
 		NSString *targetPrefix = nil;
@@ -1455,11 +1455,11 @@ end:
 		[scanner setCharactersToBeSkipped:nil];
 		[scanner scanCharactersFromSet:[self _nicknamePrefixes] intoString:&targetPrefix];
 
-		if( [targetPrefix length] )
-			roomTargetName = [targetName substringFromIndex:[targetPrefix length]];
+		if( targetPrefix.length )
+			roomTargetName = [targetName substringFromIndex:targetPrefix.length];
 
 		MVChatRoom *room = nil;
-		if( [command isCaseInsensitiveEqualToString:@"msg"] && [roomTargetName length] >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
+		if( [command isCaseInsensitiveEqualToString:@"msg"] && roomTargetName.length >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
 			room = [self chatRoomWithUniqueIdentifier:roomTargetName];
 
 		BOOL echo = (isUser || isRoom || [command isCaseInsensitiveEqualToString:@"query"]);
@@ -1478,15 +1478,15 @@ end:
 	} else if( [command isCaseInsensitiveEqualToString:@"j"] || [command isCaseInsensitiveEqualToString:@"join"] ) {
 		NSString *roomsString = MVChatStringAsString(arguments);
 		NSArray *roomStrings = [roomsString componentsSeparatedByString:@","];
-		NSMutableArray *roomsToJoin = [[NSMutableArray allocWithZone:nil] initWithCapacity:[roomStrings count]];
+		NSMutableArray *roomsToJoin = [[NSMutableArray allocWithZone:nil] initWithCapacity:roomStrings.count];
 
 		for( NSString *room in roomStrings ) {
 			room = [room stringByTrimmingCharactersInSet:whitespaceCharacters];
-			if( [room length] )
+			if( room.length )
 				[roomsToJoin addObject:room];
 		}
 
-		if( [roomsToJoin count])
+		if( roomsToJoin.count)
 			[self joinChatRoomsNamed:roomsToJoin];
 		else if( isRoom )
 			[target join];
@@ -1499,17 +1499,17 @@ end:
 		[argumentsScanner scanUpToCharactersFromSet:whitespaceCharacters intoString:&roomsString];
 
 		MVChatString *reason = nil;
-		if( [roomsString length] ) {
-			if( [arguments length] >= [argumentsScanner scanLocation] + 1 )
+		if( roomsString.length ) {
+			if( arguments.length >= [argumentsScanner scanLocation] + 1 )
 #if USE(ATTRIBUTED_CHAT_STRING)
-				reason = [arguments attributedSubstringFromRange:NSMakeRange( [argumentsScanner scanLocation] + 1, ( [arguments length] - [argumentsScanner scanLocation] - 1 ) )];
+				reason = [arguments attributedSubstringFromRange:NSMakeRange( [argumentsScanner scanLocation] + 1, ( arguments.length - [argumentsScanner scanLocation] - 1 ) )];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
 				reason = [arguments	substringFromIndex:( [argumentsScanner scanLocation] + 1 )];
 #endif
 		}
 
 		NSArray *rooms = [roomsString componentsSeparatedByString:@","];
-		if( ![rooms count] || [roomsString isEqualToString:@"-"] ) {
+		if( !rooms.count || [roomsString isEqualToString:@"-"] ) {
 			if( isRoom ) [target partWithReason:reason];
 			return;
 		}
@@ -1542,7 +1542,7 @@ end:
 	if( [command hasPrefix:@"/"] )
 		command = [command substringFromIndex:1];
 
-	if( arguments && [arguments length] > 0 ) {
+	if( arguments && arguments.length > 0 ) {
 		NSData *argumentsData = [[self class] _flattenedIRCDataForMessage:arguments withEncoding:[self encoding] andChatFormat:[self outgoingChatFormat]];
 		[self sendRawMessageWithComponents:command, @" ", argumentsData, nil];
 	} else [self sendRawMessage:command];
@@ -1694,7 +1694,7 @@ end:
 	[self _stopSendQueue];
 
 	@synchronized( _sendQueue ) {
-		if( [_sendQueue count] )
+		if( _sendQueue.count )
 			[self _startSendQueue];
 	}
 }
@@ -1703,7 +1703,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	@synchronized( _sendQueue ) {
-		if( ! [_sendQueue count] ) {
+		if( ! _sendQueue.count ) {
 			_sendQueueProcessing = NO;
 			return;
 		}
@@ -1719,8 +1719,8 @@ end:
 		data = [[_sendQueue objectAtIndex:0] retain];
 		[_sendQueue removeObjectAtIndex:0];
 
-		if( [_sendQueue count] )
-			[self performSelector:@selector( _sendQueue ) withObject:nil afterDelay:MIN( [self minimumSendQueueDelay] + ( [_sendQueue count] * [self sendQueueDelayIncrement] ), [self maximumSendQueueDelay] )];
+		if( _sendQueue.count )
+			[self performSelector:@selector( _sendQueue ) withObject:nil afterDelay:MIN( [self minimumSendQueueDelay] + ( _sendQueue.count * [self sendQueueDelayIncrement] ), [self maximumSendQueueDelay] )];
 		else _sendQueueProcessing = NO;
 	}
 
@@ -1770,14 +1770,14 @@ end:
 
 	[_pendingWhoisUsers addObject:user];
 
-	if( [_pendingWhoisUsers count] == 1 )
+	if( _pendingWhoisUsers.count == 1 )
 		[self _whoisNextScheduledUser];
 }
 
 - (void) _whoisNextScheduledUser {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [_pendingWhoisUsers count] ) {
+	if( _pendingWhoisUsers.count ) {
 		MVChatUser *user = [_pendingWhoisUsers anyObject];
 		[user refreshInformation];
 	}
@@ -1790,7 +1790,7 @@ end:
 
 	NSMutableSet *matchedUsers = [NSMutableSet set];
 	@synchronized( _chatUserWatchRules ) {
-		if( ! [_chatUserWatchRules count] ) return; // nothing to do, return and wait until the next scheduled fire
+		if( ! _chatUserWatchRules.count ) return; // nothing to do, return and wait until the next scheduled fire
 
 		for( MVChatUserWatchRule *rule in _chatUserWatchRules )
 			[matchedUsers unionSet:[rule matchedChatUsers]];
@@ -1807,11 +1807,11 @@ end:
 
 	[self performSelector:@selector( _checkWatchedUsers ) withObject:nil afterDelay:JVWatchedUserISONDelay];
 
-	if( [_lastSentIsonNicknames count] ) return; // there is already pending ISON requests, skip this round to catch up
+	if( _lastSentIsonNicknames.count ) return; // there is already pending ISON requests, skip this round to catch up
 
 	NSMutableSet *matchedUsers = [NSMutableSet set];
 	@synchronized( _chatUserWatchRules ) {
-		if( ! [_chatUserWatchRules count] ) return; // nothing to do, return and wait until the next scheduled fire
+		if( ! _chatUserWatchRules.count ) return; // nothing to do, return and wait until the next scheduled fire
 
 		for( MVChatUserWatchRule *rule in _chatUserWatchRules )
 			[matchedUsers unionSet:[rule matchedChatUsers]];
@@ -1823,7 +1823,7 @@ end:
 	_isonSentCount = 0;
 
 	[_lastSentIsonNicknames release];
-	_lastSentIsonNicknames = [[NSMutableSet allocWithZone:nil] initWithCapacity:( [_chatUserWatchRules count] * 5 )];
+	_lastSentIsonNicknames = [[NSMutableSet allocWithZone:nil] initWithCapacity:( _chatUserWatchRules.count * 5 )];
 
 	for( MVChatUser *user in matchedUsers ) {
 		if( ! [[user connection] isEqual:self] )
@@ -1832,8 +1832,8 @@ end:
 		NSString *nick = [user nickname];
 		NSString *nickLower = [nick lowercaseString];
 
-		if( [nick length] && ! [_lastSentIsonNicknames containsObject:nickLower] ) {
-			if( ( [nick length] + [request length] ) > JVMaximumISONCommandLength ) {
+		if( nick.length && ! [_lastSentIsonNicknames containsObject:nickLower] ) {
+			if( ( nick.length + request.length ) > JVMaximumISONCommandLength ) {
 				[self sendRawMessage:request];
 				[request release];
 				_isonSentCount++;
@@ -1854,8 +1854,8 @@ end:
 			NSString *nick = [rule nickname];
 			NSString *nickLower = [nick lowercaseString];
 
-			if( [nick length] && ! [rule nicknameIsRegularExpression] && ! [_lastSentIsonNicknames containsObject:nickLower] ) {
-				if( ( [nick length] + [request length] ) > JVMaximumISONCommandLength ) {
+			if( nick.length && ! [rule nicknameIsRegularExpression] && ! [_lastSentIsonNicknames containsObject:nickLower] ) {
+				if( ( nick.length + request.length ) > JVMaximumISONCommandLength ) {
 					[self sendRawMessage:request];
 					[request release];
 					_isonSentCount++;
@@ -1941,9 +1941,9 @@ end:
 	NSMutableDictionary *prefixes = [_serverInformation objectForKey:@"roomMemberPrefixTable"];
 
 	NSUInteger i = 0;
-	NSUInteger length = [nickname length];
+	NSUInteger length = nickname.length;
 	for( i = 0; i < length; ++i ) {
-		if( [prefixes count] ) {
+		if( prefixes.count ) {
 			NSNumber *prefix = [prefixes objectForKey:[NSString stringWithFormat:@"%c", [nickname characterAtIndex:i]]];
 			if( prefix ) modes |= [prefix unsignedLongValue];
 			else break;
@@ -1974,7 +1974,7 @@ end:
 	MVSafeCopyAssign( _realServer, sender );
 
 	// set the current nick name if it is not the same as what re requested (some servers/bouncers will give us a new nickname)
-	if( [parameters count] >= 1 ) {
+	if( parameters.count >= 1 ) {
 		NSString *nick = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		if( ! [nick isEqualToString:[self nickname]] ) {
 			[self _setCurrentNickname:nick];
@@ -2012,7 +2012,7 @@ end:
 				for( MVChatUserWatchRule *rule in _chatUserWatchRules ) {
 					NSString *nick = [rule nickname];
 					if( nick && ! [rule nicknameIsRegularExpression] ) {
-						if( ( [nick length] + [request length] + 1 ) > JVMaximumWatchCommandLength ) {
+						if( ( nick.length + request.length + 1 ) > JVMaximumWatchCommandLength ) {
 							[self sendRawMessage:request];
 							[request release];
 
@@ -2033,7 +2033,7 @@ end:
 //			[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
 		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"CHANTYPES="] ) {
 			NSString *types = [feature substringFromIndex:10]; // length of "CHANTYPES="
-			if( [types length] )
+			if( types.length )
 				MVSafeRetainAssign( _roomPrefixes, [NSCharacterSet characterSetWithCharactersInString:types] );
 		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"PREFIX="] ) {
 			NSScanner *scanner = [NSScanner scannerWithString:feature];
@@ -2049,8 +2049,8 @@ end:
 						[_supportedFeatures removeObject:MVChatRoomMemberOperatorFeature];
 					}
 
-					NSMutableDictionary *modesTable = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:[modes length]];
-					NSUInteger length = [modes length];
+					NSMutableDictionary *modesTable = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:modes.length];
+					NSUInteger length = modes.length;
 					NSUInteger i = 0;
 					for( i = 0; i < length; i++ ) {
 						MVChatRoomMemberMode mode = MVChatRoomMemberNoModes;
@@ -2078,15 +2078,15 @@ end:
 						}
 					}
 
-					if( [modesTable count] ) [_serverInformation setObject:modesTable forKey:@"roomMemberModeTable"];
+					if( modesTable.count ) [_serverInformation setObject:modesTable forKey:@"roomMemberModeTable"];
 					[_serverInformation setObject:[NSCharacterSet characterSetWithCharactersInString:modes] forKey:@"roomMemberModes"];
 					[modesTable release];
 				}
 
 				NSString *prefixes = [feature substringFromIndex:[scanner scanLocation]];
-				if( [prefixes length] ) {
-					NSMutableDictionary *prefixTable = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:[modes length]];
-					NSUInteger length = [prefixes length];
+				if( prefixes.length ) {
+					NSMutableDictionary *prefixTable = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:modes.length];
+					NSUInteger length = prefixes.length;
 					NSUInteger i = 0;
 					for( i = 0; i < length; i++ ) {
 						MVChatRoomMemberMode mode = [self _modeForNicknamePrefixCharacter:[prefixes characterAtIndex:i]];
@@ -2097,7 +2097,7 @@ end:
 						}
 					}
 
-					if( [prefixTable count] ) [_serverInformation setObject:prefixTable forKey:@"roomMemberPrefixTable"];
+					if( prefixTable.count ) [_serverInformation setObject:prefixTable forKey:@"roomMemberPrefixTable"];
 					[_serverInformation setObject:[NSCharacterSet characterSetWithCharactersInString:prefixes] forKey:@"roomMemberPrefixes"];
 					[prefixTable release];
 				}
@@ -2111,11 +2111,11 @@ end:
 
 	if( ! [self isConnected] ) {
 		NSString *nick = [self nextAlternateNickname];
-		if( ! [nick length] && [parameters count] >= 2 ) {
+		if( ! nick.length && parameters.count >= 2 ) {
 			NSString *lastNickTried = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
 			if( ( _failedNickname && [_failedNickname isCaseInsensitiveEqualToString:lastNickTried] ) || _nicknameShortened) {
-				nick = [NSString stringWithFormat:@"%@-%d", [lastNickTried substringToIndex:([lastNickTried length] - 2)], _failedNicknameCount];
+				nick = [NSString stringWithFormat:@"%@-%d", [lastNickTried substringToIndex:(lastNickTried.length - 2)], _failedNicknameCount];
 
 				_nicknameShortened = YES;
 
@@ -2126,12 +2126,12 @@ end:
 
 		if ( ! _failedNickname ) _failedNickname = [[self _stringFromPossibleData:[parameters objectAtIndex:1]] copy];
 
-		if( [nick length] ) [self setNickname:nick];
+		if( nick.length ) [self setNickname:nick];
 	} else {
 		// "<current nickname> <new nickname> :Cannot change nick"
 		// - Sent to a user who is changing their nickname to a nickname someone else is actively using.
 
-		if( [parameters count] >= 2 ) {
+		if( parameters.count >= 2 ) {
 			NSString *usedNickname = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 			NSString *newNickname = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
@@ -2177,7 +2177,7 @@ end:
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 #endif
 
-	if( ! [message length] ) return;
+	if( ! message.length ) return;
 
 	if( room ) {
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:room userInfo:privmsgInfo];
@@ -2196,9 +2196,9 @@ end:
 	else if( !sender )
 		sender = [self chatUserWithUniqueIdentifier:[self server]];
 
-	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
+	if( parameters.count == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *targetName = [parameters objectAtIndex:0];
-		if( ! [targetName length] ) return;
+		if( ! targetName.length ) return;
 
 		NSScanner *scanner = [NSScanner scannerWithString:targetName];
 		[scanner setCharactersToBeSkipped:nil];
@@ -2210,13 +2210,13 @@ end:
 
 		NSMutableData *msgData = [parameters objectAtIndex:1];
 		const char *bytes = (const char *)[msgData bytes];
-		BOOL ctcp = ( *bytes == '\001' && [msgData length] > 2 );
+		BOOL ctcp = ( *bytes == '\001' && msgData.length > 2 );
 
 		[sender _setIdleTime:0.];
 		[self _markUserAsOnline:sender];
 
 		MVChatRoom *room = nil;
-		if( [roomTargetName length] >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
+		if( roomTargetName.length >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
 			room = [self chatRoomWithUniqueIdentifier:roomTargetName];
 
 		MVChatUser *targetUser = nil;
@@ -2263,17 +2263,17 @@ end:
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 #endif
 
-	if( ! [message length] ) return;
+	if( ! message.length ) return;
 
 	if( room ) {
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:room userInfo:noticeInfo];
 	} else {
 		if( [[sender nickname] isCaseInsensitiveEqualToString:[self server]] || ( _realServer && [[sender nickname] isCaseInsensitiveEqualToString:_realServer] ) || [[sender nickname] isCaseInsensitiveEqualToString:@"irc.umich.edu"] ) {
-			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
+			NSString *msg = [self _newStringWithBytes:[message bytes] length:message.length];
 
 			// Auto reply to servers asking us to send a PASS because they could not detect an identd
 			if (![self isConnected]) {
-				NSString *matchedPassword = [msg stringByMatching:@"/QUOTE PASS (\\w+)" options:RKLCaseless inRange:NSMakeRange(0, [msg length]) capture:1 error:NULL];
+				NSString *matchedPassword = [msg stringByMatching:@"/QUOTE PASS (\\w+)" options:RKLCaseless inRange:NSMakeRange(0, msg.length) capture:1 error:NULL];
 				if( matchedPassword ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", matchedPassword];
 				if( [[self server] hasCaseInsensitiveSubstring:@"ustream"] ) {
 					if( [msg isEqualToString:@"This is a registered nick, either choose another nick or enter the password by doing: /PASS <password>"] ) {
@@ -2304,11 +2304,11 @@ end:
 				handled = YES;
 			if( !handled && [msg isEqualToString:@"To complete your connection to this server, type \"/QUOTE PONG :cookie\", where cookie is the following ascii."] )
 				handled = YES;
-			if( !handled && [msg isMatchedByRegex:@"\\*\\*\\* Notice -- If you see.*? connections.*? from" options:RKLCaseless inRange:NSMakeRange(0, [msg length]) error:NULL] )
+			if( !handled && [msg isMatchedByRegex:@"\\*\\*\\* Notice -- If you see.*? connections.*? from" options:RKLCaseless inRange:NSMakeRange(0, msg.length) error:NULL] )
 				handled = YES;
-			if( !handled && [msg isMatchedByRegex:@"\\*\\*\\* Notice -- please disregard them, as they are the .+? in action" options:RKLCaseless inRange:NSMakeRange(0, [msg length]) error:NULL] )
+			if( !handled && [msg isMatchedByRegex:@"\\*\\*\\* Notice -- please disregard them, as they are the .+? in action" options:RKLCaseless inRange:NSMakeRange(0, msg.length) error:NULL] )
 				handled = YES;
-			if( !handled && [msg isMatchedByRegex:@"on .+? ca .+?\\(.+?\\) ft .+?\\(.+?\\)" options:RKLCaseless inRange:NSMakeRange(0, [msg length]) error:NULL] )
+			if( !handled && [msg isMatchedByRegex:@"on .+? ca .+?\\(.+?\\) ft .+?\\(.+?\\)" options:RKLCaseless inRange:NSMakeRange(0, msg.length) error:NULL] )
 				handled = YES;
 
 			if( handled ) [noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
@@ -2318,7 +2318,7 @@ end:
 		} else if( ![self isConnected] && [[sender nickname] isCaseInsensitiveEqualToString:@"Welcome"] ) {
 			// Workaround for psybnc bouncers which are configured to combine multiple networks in one bouncer connection. These bouncers don't send a 001 command on connect...
 			// Catch ":Welcome!psyBNC@lam3rz.de NOTICE * :psyBNC2.3.2-7" on these connections instead:
-			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
+			NSString *msg = [self _newStringWithBytes:[message bytes] length:message.length];
 			if( [msg hasCaseInsensitiveSubstring:@"psyBNC"] )
 				[self performSelector:@selector( _handleConnect ) withObject:nil inThread:_connectionThread waitUntilDone:NO];
 			[msg release];
@@ -2327,7 +2327,7 @@ end:
 		   ( [[sender nickname] isEqualToString:@"Q"] && [[self server] hasCaseInsensitiveSubstring:@"quakenet"] ) ||
 		   ( [[sender nickname] isEqualToString:@"X"] && [[self server] hasCaseInsensitiveSubstring:@"undernet"] ) ||
 		   ( [[sender nickname] isEqualToString:@"AuthServ"] && [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) ) {
-			NSString *msg = [self _newStringWithBytes:[message bytes] length:[message length]];
+			NSString *msg = [self _newStringWithBytes:[message bytes] length:message.length];
 
 			if( [msg hasCaseInsensitiveSubstring:@"password accepted"] ||				// Nickserv/*
 			   [msg hasCaseInsensitiveSubstring:@"you are now identified"] ||			// NickServ/freenode
@@ -2422,9 +2422,9 @@ end:
 	else if( !sender )
 		sender = [self chatUserWithUniqueIdentifier:[self server]];
 
-	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
+	if( parameters.count == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *targetName = [parameters objectAtIndex:0];
-		if( ! [targetName length] ) return;
+		if( ! targetName.length ) return;
 
 		NSScanner *scanner = [NSScanner scannerWithString:targetName];
 		[scanner setCharactersToBeSkipped:nil];
@@ -2436,10 +2436,10 @@ end:
 
 		NSMutableData *msgData = [parameters objectAtIndex:1];
 		const char *bytes = (const char *)[msgData bytes];
-		BOOL ctcp = ( *bytes == '\001' && [msgData length] > 2 );
+		BOOL ctcp = ( *bytes == '\001' && msgData.length > 2 );
 
 		MVChatRoom *room = nil;
-		if( [roomTargetName length] >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
+		if( roomTargetName.length >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
 			room = [self chatRoomWithUniqueIdentifier:roomTargetName];
 
 		MVChatUser *targetUser = nil;
@@ -2476,7 +2476,7 @@ end:
 	id target = [ctcpInfo objectForKey:@"target"];
 
 	const char *line = (const char *)[data bytes] + 1; // skip the \001 char
-	const char *end = line + [data length] - 2; // minus the first and last \001 char
+	const char *end = line + data.length - 2; // minus the first and last \001 char
 	const char *current = line;
 
 	while( line != end && *line != ' ' ) line++;
@@ -2543,9 +2543,9 @@ end:
 			[sender sendSubcodeReply:command withArguments:[[NSDate date] description]];
 		} else if( [command isCaseInsensitiveEqualToString:@"PING"] ) {
 			// only reply with packets less than 100 bytes, anything over that is bad karma
-			if( [arguments length] < 100 ) [sender sendSubcodeReply:command withArguments:arguments];
+			if( arguments.length < 100 ) [sender sendSubcodeReply:command withArguments:arguments];
 		} else if( [command isCaseInsensitiveEqualToString:@"DCC"] ) {
-			NSString *msg = [self _newStringWithBytes:[arguments bytes] length:[arguments length]];
+			NSString *msg = [self _newStringWithBytes:[arguments bytes] length:arguments.length];
 			NSString *subCommand = nil;
 			NSString *fileName = nil;
 			BOOL quotedFileName = NO;
@@ -2763,7 +2763,7 @@ end:
 		}
 	} else {
 		if( [command isCaseInsensitiveEqualToString:@"DCC"] ) {
-			NSString *msg = [self _newStringWithBytes:[arguments bytes] length:[arguments length]];
+			NSString *msg = [self _newStringWithBytes:[arguments bytes] length:arguments.length];
 			NSString *subCommand = nil;
 
 			NSCharacterSet *whitespace = [NSCharacterSet whitespaceCharacterSet];
@@ -2855,7 +2855,7 @@ end:
 - (void) _handleJoinWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
+	if( parameters.count >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *name = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		MVChatRoom *room = [self chatRoomWithName:name];
 
@@ -2878,14 +2878,14 @@ end:
 - (void) _handlePartWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
+	if( parameters.count >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *roomName = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:roomName];
 		if( ! room ) return;
 
 		[room _removeMemberUser:sender];
 
-		NSData *reason = ( [parameters count] >= 2 ? [parameters objectAtIndex:1] : nil );
+		NSData *reason = ( parameters.count >= 2 ? [parameters objectAtIndex:1] : nil );
 		if( ! [reason isKindOfClass:[NSData class]] ) reason = nil;
 
 		if( [sender isLocalUser] ) {
@@ -2900,7 +2900,7 @@ end:
 - (void) _handleQuitWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
+	if( parameters.count >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		if( [sender isLocalUser] ) {
 			_userDisconnected = YES;
 			[[self _chatConnection] disconnect];
@@ -2932,12 +2932,12 @@ end:
 	if( [sender isKindOfClass:[NSString class]] )
 		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
 
-	if( [parameters count] >= 2 && [sender isKindOfClass:[MVChatUser class]] ) {
+	if( parameters.count >= 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:0]];
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		if( ! room || ! user ) return;
 
-		NSData *reason = ( [parameters count] == 3 ? [parameters objectAtIndex:2] : nil );
+		NSData *reason = ( parameters.count == 3 ? [parameters objectAtIndex:2] : nil );
 		if( ! [reason isKindOfClass:[NSData class]] ) reason = nil;
 		if( [user isLocalUser] ) {
 			[room _setDateParted:[NSDate date]];
@@ -2988,7 +2988,7 @@ end:
 	if( [sender isKindOfClass:[NSString class]] )
 		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
 
-	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
+	if( parameters.count == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:0]];
 		NSData *topic = [parameters objectAtIndex:1];
 		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
@@ -3012,14 +3012,14 @@ end:
 	NSUInteger argModes = 0;
 	NSUInteger value = 0;
 	NSMutableArray *argsNeeded = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
-	NSUInteger i = 0, count = [parameters count];
+	NSUInteger i = 0, count = parameters.count;
 	while( i < count ) {
 		NSString *param = [self _stringFromPossibleData:[parameters objectAtIndex:i++]];
-		if( [param length] ) {
+		if( param.length ) {
 			char chr = [param characterAtIndex:0];
 			if( chr == '+' || chr == '-' ) {
 				unsigned enabled = YES;
-				NSUInteger j = 0, length = [param length];
+				NSUInteger j = 0, length = param.length;
 				while( j < length ) {
 					chr = [param characterAtIndex:j++];
 					switch( chr ) {
@@ -3084,7 +3084,7 @@ end:
 							break;
 						default: {
 							NSMutableDictionary *supportedModes = [_serverInformation objectForKey:@"roomMemberModeTable"];
-							if( [supportedModes count] ) {
+							if( supportedModes.count ) {
 								value = [[supportedModes objectForKey:[NSString stringWithFormat:@"%c", chr]] unsignedLongValue];
 								if( value ) goto queue;
 							}
@@ -3092,7 +3092,7 @@ end:
 					}
 				}
 			} else {
-				if( [argsNeeded count] ) {
+				if( argsNeeded.count ) {
 					NSUInteger value = [[argsNeeded objectAtIndex:0] unsignedLongValue];
 					BOOL enabled = ( ( value & enabledHighBit ) ? YES : NO );
 					NSUInteger mode = ( value & ~enabledHighBit );
@@ -3144,11 +3144,11 @@ end:
 	if( [sender isKindOfClass:[NSString class]] )
 		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
 
-	if( [parameters count] >= 2 ) {
+	if( parameters.count >= 2 ) {
 		NSString *targetName = [parameters objectAtIndex:0];
-		if( [targetName length] >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]] ) {
+		if( targetName.length >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]] ) {
 			MVChatRoom *room = [self chatRoomWithUniqueIdentifier:targetName];
-			[self _parseRoomModes:[parameters subarrayWithRange:NSMakeRange( 1, [parameters count] - 1)] forRoom:room fromSender:sender];
+			[self _parseRoomModes:[parameters subarrayWithRange:NSMakeRange( 1, parameters.count - 1)] forRoom:room fromSender:sender];
 		} else {
 			// user modes not handled yet
 		}
@@ -3158,9 +3158,9 @@ end:
 - (void) _handle324WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_CHANNELMODEIS
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 3 ) {
+	if( parameters.count >= 3 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
-		[self _parseRoomModes:[parameters subarrayWithRange:NSMakeRange( 2, [parameters count] - 2)] forRoom:room fromSender:nil];
+		[self _parseRoomModes:[parameters subarrayWithRange:NSMakeRange( 2, parameters.count - 2)] forRoom:room fromSender:nil];
 	}
 }
 
@@ -3170,8 +3170,8 @@ end:
 - (void) _handlePingWithParameters:(NSArray *) parameters fromSender:(id) sender {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 1 ) {
-		if( [parameters count] == 1 )
+	if( parameters.count >= 1 ) {
+		if( parameters.count == 1 )
 			[self sendRawMessageImmediatelyWithComponents:@"PONG :", [parameters objectAtIndex:0], nil];
 		else [self sendRawMessageImmediatelyWithComponents:@"PONG ", [parameters objectAtIndex:1], @" :", [parameters objectAtIndex:0], nil];
 
@@ -3188,7 +3188,7 @@ end:
 	if( [sender isKindOfClass:[NSString class]] )
 		sender = [self chatUserWithUniqueIdentifier:(NSString *) sender];
 
-	if( [parameters count] == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
+	if( parameters.count == 2 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *roomName = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
 		[self _markUserAsOnline:sender];
@@ -3205,7 +3205,7 @@ end:
 - (void) _handleNickWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] == 1 && [sender isKindOfClass:[MVChatUser class]] ) {
+	if( parameters.count == 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *nick = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		NSString *oldNickname = [[sender nickname] retain];
 		NSString *oldIdentifier = [[sender uniqueIdentifier] retain];
@@ -3239,14 +3239,14 @@ end:
 - (void) _handle303WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ISON
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] == 2 && _isonSentCount > 0 ) {
+	if( parameters.count == 2 && _isonSentCount > 0 ) {
 		_isonSentCount--;
 
 		NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 		NSArray *users = [names componentsSeparatedByString:@" "];
 
 		for( NSString *nick in users ) {
-			if( ! [nick length] ) continue;
+			if( ! nick.length ) continue;
 
 			NSString *nickLower = [nick lowercaseString];
 			if( [_lastSentIsonNicknames containsObject:nickLower] ) {
@@ -3269,12 +3269,12 @@ end:
 			[_lastSentIsonNicknames release];
 			_lastSentIsonNicknames = nil;
 		}
-	} else if( [parameters count] == 2 ) {
+	} else if( parameters.count == 2 ) {
 		NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 		NSArray *users = [names componentsSeparatedByString:@" "];
 
 		for( NSString *nick in users ) {
-			if( ! [nick length] ) continue;
+			if( ! nick.length ) continue;
 
 			MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
 			if( ! [[user nickname] isEqualToString:nick] && [[user nickname] isCaseInsensitiveEqualToString:nick] )
@@ -3290,7 +3290,7 @@ end:
 - (void) _handle301WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_AWAY
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] == 3 ) {
+	if( parameters.count == 3 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		NSData *awayMsg = [parameters objectAtIndex:2];
 		if( ! [awayMsg isKindOfClass:[NSData class]] ) awayMsg = nil;
@@ -3327,7 +3327,7 @@ end:
 - (void) _handle353WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_NAMREPLY
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] == 4 ) {
+	if( parameters.count == 4 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:2]];
 		if( room && ! [room _namesSynced] ) {
 			NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
@@ -3335,7 +3335,7 @@ end:
 			NSArray *members = [names componentsSeparatedByString:@" "];
 
 			for( NSString *memberName in members ) {
-				if( ! [memberName length] ) break;
+				if( ! memberName.length ) break;
 
 				MVChatRoomMemberMode modes = [self _stripModePrefixesFromNickname:&memberName];
 				MVChatUser *member = [self chatUserWithUniqueIdentifier:memberName];
@@ -3353,7 +3353,7 @@ end:
 - (void) _handle366WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ENDOFNAMES
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 2 ) {
+	if( parameters.count >= 2 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		if( room && ! [room _namesSynced] ) {
 			[room _setNamesSynced:YES];
@@ -3375,13 +3375,13 @@ end:
 - (void) _handle352WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOREPLY
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 7 ) {
+	if( parameters.count >= 7 ) {
 		MVChatUser *member = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:5]];
 		[member _setUsername:[parameters objectAtIndex:2]];
 		[member _setAddress:[parameters objectAtIndex:3]];
 
 		NSString *statusString = [self _stringFromPossibleData:[parameters objectAtIndex:6]];
-		unichar userStatus = ( [statusString length] ? [statusString characterAtIndex:0] : 0 );
+		unichar userStatus = ( statusString.length ? [statusString characterAtIndex:0] : 0 );
 		if( userStatus == 'H' ) {
 			[member _setAwayStatusMessage:nil];
 			[member _setStatus:MVChatUserAvailableStatus];
@@ -3389,14 +3389,14 @@ end:
 			[member _setStatus:MVChatUserAwayStatus];
 		}
 
-		[member _setServerOperator:( [statusString length] >= 2 && [statusString characterAtIndex:1] == '*' )];
+		[member _setServerOperator:( statusString.length >= 2 && [statusString characterAtIndex:1] == '*' )];
 
-		if( [parameters count] >= 8 ) {
+		if( parameters.count >= 8 ) {
 			NSString *lastParam = [self _stringFromPossibleData:[parameters objectAtIndex:7]];
 			NSRange range = [lastParam rangeOfCharacterFromSet:[NSCharacterSet whitespaceCharacterSet]];
 			if( range.location != NSNotFound ) {
 				NSString *name = [lastParam substringFromIndex:range.location + range.length];
-				if( [name length] ) [member _setRealName:name];
+				if( name.length ) [member _setRealName:name];
 				else [member _setRealName:nil];
 			} else [member _setRealName:nil];
 		}
@@ -3408,7 +3408,7 @@ end:
 - (void) _handle315WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ENDOFWHO
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 2 ) {
+	if( parameters.count >= 2 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomMemberUsersSyncedNotification object:room];
 	}
@@ -3420,7 +3420,7 @@ end:
 - (void) _handle322WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_LIST
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] == 4 ) {
+	if( parameters.count == 4 ) {
 		NSString *room = [parameters objectAtIndex:1];
 		NSUInteger users = [[parameters objectAtIndex:2] intValue];
 		NSData *topic = [parameters objectAtIndex:3];
@@ -3438,10 +3438,10 @@ end:
 - (void) _handle367WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_BANLIST
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 3 ) {
+	if( parameters.count >= 3 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		MVChatUser *user = [MVChatUser wildcardUserFromString:[self _stringFromPossibleData:[parameters objectAtIndex:2]]];
-		if( [parameters count] >= 5 ) {
+		if( parameters.count >= 5 ) {
 			[user setAttribute:[parameters objectAtIndex:3] forKey:MVChatUserBanServerAttribute];
 
 			NSString *dateString = [self _stringFromPossibleData:[parameters objectAtIndex:4]];
@@ -3460,7 +3460,7 @@ end:
 - (void) _handle368WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ENDOFBANLIST
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 2 ) {
+	if( parameters.count >= 2 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[room _setBansSynced:YES];
 		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomBannedUsersSyncedNotification object:room];
@@ -3473,7 +3473,7 @@ end:
 - (void) _handle332WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_TOPIC
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] == 3 ) {
+	if( parameters.count == 3 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		NSData *topic = [parameters objectAtIndex:2];
 		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
@@ -3484,7 +3484,7 @@ end:
 - (void) _handle333WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_TOPICWHOTIME_IRCU
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 4 ) {
+	if( parameters.count >= 4 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		MVChatUser *author = [MVChatUser wildcardUserFromString:[parameters objectAtIndex:2]];
 		[room _setTopicAuthor:author];
@@ -3504,7 +3504,7 @@ end:
 - (void) _handle311WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISUSER
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] == 6 ) {
+	if( parameters.count == 6 ) {
 		NSString *nick = [parameters objectAtIndex:1];
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
 		if( ! [[user nickname] isEqualToString:nick] && [[user nickname] isCaseInsensitiveEqualToString:nick] )
@@ -3523,7 +3523,7 @@ end:
 - (void) _handle312WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISSERVER
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 3 ) {
+	if( parameters.count >= 3 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		[user _setServerAddress:[self _stringFromPossibleData:[parameters objectAtIndex:2]]];
 	}
@@ -3532,7 +3532,7 @@ end:
 - (void) _handle313WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISOPERATOR
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 2 ) {
+	if( parameters.count >= 2 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[user _setServerOperator:YES];
 	}
@@ -3541,14 +3541,14 @@ end:
 - (void) _handle317WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISIDLE
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 3 ) {
+	if( parameters.count >= 3 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		NSString *idleTime = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 		[user _setIdleTime:[idleTime doubleValue]];
 		[user _setDateConnected:nil];
 
 		// parameter 4 is connection time on some servers
-		if( [parameters count] >= 4 ) {
+		if( parameters.count >= 4 ) {
 			NSString *connectedTime = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
 			NSTimeInterval time = [connectedTime doubleValue];
 			if( time > JVFirstViableTimestamp )
@@ -3560,7 +3560,7 @@ end:
 - (void) _handle318WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ENDOFWHOIS
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 2 ) {
+	if( parameters.count >= 2 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[user _setDateUpdated:[NSDate date]];
 
@@ -3576,10 +3576,10 @@ end:
 - (void) _handle319WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISCHANNELS
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] == 3 ) {
+	if( parameters.count == 3 ) {
 		NSString *rooms = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 		NSArray *chanArray = [[rooms stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
-		NSMutableArray *results = [[NSMutableArray allocWithZone:nil] initWithCapacity:[chanArray count]];
+		NSMutableArray *results = [[NSMutableArray allocWithZone:nil] initWithCapacity:chanArray.count];
 
 		NSCharacterSet *nicknamePrefixes = [self _nicknamePrefixes];
 		for( NSString *room in chanArray ) {
@@ -3587,10 +3587,10 @@ end:
 			if( prefixRange.location != NSNotFound )
 				room = [room substringFromIndex:( prefixRange.location + prefixRange.length )];
 			room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-			if( [room length] ) [results addObject:room];
+			if( room.length ) [results addObject:room];
 		}
 
-		if( [results count] ) {
+		if( results.count ) {
 			MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 			[user setAttribute:results forKey:MVChatUserKnownRoomsAttribute];
 		}
@@ -3602,7 +3602,7 @@ end:
 - (void) _handle320WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISIDENTIFIED
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] == 3 ) {
+	if( parameters.count == 3 ) {
 		NSString *comment = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 		if( [comment hasCaseInsensitiveSubstring:@"identified"] ) {
 			MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
@@ -3617,7 +3617,7 @@ end:
 - (void) _handle401WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOSUCHNICK
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 2 ) {
+	if( parameters.count >= 2 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[self _markUserAsOffline:user];
 
@@ -3654,7 +3654,7 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	// some servers send back 402 (No such server) when we send our double nickname WHOIS requests, treat as a user
-	if( [parameters count] >= 2 ) {
+	if( parameters.count >= 2 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[self _markUserAsOffline:user];
 		if( [_pendingWhoisUsers containsObject:user] ) {
@@ -3679,7 +3679,7 @@ end:
 	// "<channel name> :Cannot send to channel"
 	// - Sent to a user who is either (a) not on a channel which is mode +n or (b) not a chanop (or mode +v) on a channel which has mode +m set or where the user is banned and is trying to send a PRIVMSG message to that channel.
 
-	if( [parameters count] >= 2 ) {
+	if( parameters.count >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
@@ -3719,7 +3719,7 @@ end:
 - (void) _handle421WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_UNKNOWNCOMMAND
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 2 ) {
+	if( parameters.count >= 2 ) {
 		NSString *command = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 		if( [command isCaseInsensitiveEqualToString:@"NickServ"] ) {
 			// the NickServ command isn't supported, this is an older server
@@ -3753,7 +3753,7 @@ end:
 	// "<current nickname> <new nickname> <channel name> :Cannot change nickname while banned on channel"
 	// - Sent to a user who is changing their nick in a room where it is prohibited.
 
-	if( [parameters count] >= 3 ) {
+	if( parameters.count >= 3 ) {
 		NSString *possibleRoom = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 		if( [self joinedChatRoomWithUniqueIdentifier:possibleRoom] ) {
 			NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:3];
@@ -3774,7 +3774,7 @@ end:
 	// "<current nickname> <channel name> :Cannot change nickname while banned on channel or channel is moderated"
 	// - Sent to a user who is changing their nick in a room where it is prohibited.
 
-	if( [parameters count] >= 2 ) {
+	if( parameters.count >= 2 ) {
 		NSString *possibleRoom = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 		if( [self joinedChatRoomWithUniqueIdentifier:possibleRoom] ) {
 			NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:3];
@@ -3795,7 +3795,7 @@ end:
 	// "<current nickname> <new nickname|channel name> :Cannot change nick"
 	// - Sent to a user who is either (a) changing their nickname to fast or (b) changing their nick in a room where it is prohibited.
 
-	if( [parameters count] >= 3 ) {
+	if( parameters.count >= 3 ) {
 		NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:2];
 		[userInfo setObject:self forKey:@"connection"];
 
@@ -3842,7 +3842,7 @@ end:
 - (void) _handle471WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_CHANNELISFULL
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 2 ) {
+	if( parameters.count >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
 		NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
@@ -3857,7 +3857,7 @@ end:
 - (void) _handle473WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_INVITEONLYCHAN
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 2 ) {
+	if( parameters.count >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
 		MVChatRoom *chatRoom = [self chatRoomWithUniqueIdentifier:room];
@@ -3877,7 +3877,7 @@ end:
 - (void) _handle474WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BANNEDFROMCHAN
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 2 ) {
+	if( parameters.count >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
 		[_pendingJoinRoomNames removeObject:room];
@@ -3894,7 +3894,7 @@ end:
 - (void) _handle475WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BADCHANNELKEY
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 2 ) {
+	if( parameters.count >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
 		MVChatRoom *chatRoom = [self chatRoomWithUniqueIdentifier:room];
@@ -3919,7 +3919,7 @@ end:
 	// - Unreal3.2.7: "<channel> :You need a registered nick to join that channel."
 	// - bahamut-1.8(04)/DALnet: <channel> :You need to identify to a registered nick to join that channel. For help with registering your nickname, type "/msg NickServ@services.dal.net help register" or see http://docs.dal.net/docs/nsemail.html
 
-	if( [parameters count] >= 3 ) {
+	if( parameters.count >= 3 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 		NSString *errorLiteralReason = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 
@@ -3944,9 +3944,9 @@ end:
 - (void) _handleErrorWithParameters:(NSArray *) parameters fromSender:(id) sender { // ERROR message: http://tools.ietf.org/html/rfc2812#section-3.7.4
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	NSLog(@"ERROR parameter count: %d.", [parameters count]);
+	NSLog(@"ERROR parameter count: %d.", parameters.count);
 
-	if( [parameters count] == 1 ) {
+	if( parameters.count == 1 ) {
 		NSLog(@"0: %@", [self _stringFromPossibleData:[parameters objectAtIndex:0]]);
 	}
 }
@@ -3958,7 +3958,7 @@ end:
 	// "<channel> Please register with services and use the IDENTIFY command (/msg nickserv help) to speak in this channel"
 	//  freenode/hyperion sends 506 if the user is not identified and tries to talk on a room with mode +R
 
-	if( [parameters count] == 3 ) {
+	if( parameters.count == 3 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 		NSString *errorLiteralReason = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 
@@ -3981,7 +3981,7 @@ end:
 - (void) _handle604WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_NOWON_BAHAMUT_UNREAL
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 4 ) {
+	if( parameters.count >= 4 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		[user _setUsername:[parameters objectAtIndex:2]];
 		[user _setAddress:[parameters objectAtIndex:3]];
@@ -3996,7 +3996,7 @@ end:
 - (void) _handle600WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_LOGON_BAHAMUT_UNREAL
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( [parameters count] >= 4 )
+	if( parameters.count >= 4 )
 		[self _handle604WithParameters:parameters fromSender:sender]; // do everything we do above
 }
 
@@ -4006,14 +4006,14 @@ end:
 - (void) _handle998WithParameters:(NSArray *) parameters fromSender:(id) sender { // undefined code, irc.umich.edu (efnet) uses this to show a captcha to users without identd (= us) which we have to reply to
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	if( ![self isConnected] && [parameters count] == 2 ) {
+	if( ![self isConnected] && parameters.count == 2 ) {
 		if( !_umichNoIdentdCaptcha ) _umichNoIdentdCaptcha = [[NSMutableArray alloc] init];
 
 		NSMutableString *parameterString = [[self _stringFromPossibleData:[parameters objectAtIndex:1]] mutableCopy];
 		[_umichNoIdentdCaptcha addObject:parameterString];
 		[parameterString release];
 
-		if( [_umichNoIdentdCaptcha count] == 7 ) {
+		if( _umichNoIdentdCaptcha.count == 7 ) {
 			NSDictionary *captchaAlphabet = [NSDictionary dictionaryWithObjectsAndKeys:
 										  @"A", @"     /     /_    / /   / _   / /_   \\ \\_    \\ _     \\ \\     \\_      \\ ",
 										  @"B", @" ||||| _    _ _ | |_ ______ _ ) )_  \\ < /   | |  ",
@@ -4050,7 +4050,7 @@ end:
 				for( NSMutableString *row in _umichNoIdentdCaptcha ) {
 					[testString appendString:[row substringToIndex:1]];
 					[row deleteCharactersInRange:NSMakeRange(0, 1)];
-					if( ![row length] ) empty = YES;
+					if( !row.length ) empty = YES;
 				}
 				if( [captchaAlphabet objectForKey:testString] ) {
 					[captchaReply appendString:[captchaAlphabet objectForKey:testString]];

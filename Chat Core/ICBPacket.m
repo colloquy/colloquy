@@ -68,7 +68,7 @@
 
 - (id) initFromRawData:(NSData *) raw {
 	if( ( self = [super init] ) ) {
-		NSUInteger length = [raw length];
+		NSUInteger length = raw.length;
 		const char *bytes = (const char *)[raw bytes];
 
 		// Note that 'raw' does not include the length byte.
@@ -125,15 +125,15 @@
 
 - (NSString *) description {
 	NSString *s = [NSString stringWithFormat:@"Length: %d, type: %c, ",
-	                                         [self length], _type];
+	                                         self.length, _type];
 
-	if( [_fields count] == 0 )
+	if( _fields.count == 0 )
 		s = [s stringByAppendingString:@"no fields"];
 	else {
 		s = [s stringByAppendingString:@"fields: "];
-		for( NSUInteger i = 0; i < [_fields count]; i++ ) {
+		for( NSUInteger i = 0; i < _fields.count; i++ ) {
 			const NSString *f = [_fields objectAtIndex:i];
-			if (i < [_fields count] - 1)
+			if (i < _fields.count - 1)
 				s = [s stringByAppendingFormat:@"%@, ", f];
 			else
 				s = [s stringByAppendingFormat:@"%@", f];
@@ -150,13 +150,13 @@
 - (NSUInteger) length {
 	NSUInteger l = 2;
 
-	if( [_fields count] > 0 ) {
+	if( _fields.count > 0 ) {
 		// Add the separators and null terminator to the packet length.
-		l += [_fields count];
+		l += _fields.count;
 
 		// Add the fields themselves to the packet length.
 		for( NSString *f in _fields )
-			l += [f length];
+			l += f.length;
 	}
 
 	return l;
@@ -172,11 +172,11 @@
 
 	// Fill the packet data.
 	data[0] = '\0';
-	for( NSUInteger i = 0; i < [_fields count]; i++) {
+	for( NSUInteger i = 0; i < _fields.count; i++) {
 		const NSString *f = [_fields objectAtIndex:i];
 
 		length = strlcat(data, [f UTF8String], maxDataLength);
-		if (i < [_fields count] - 1)
+		if (i < _fields.count - 1)
 			length = strlcat(data, "\x01", maxDataLength);
 	}
 	NSAssert( length < 255, @"Packet too long" );
@@ -186,7 +186,7 @@
 	raw[0] = length + 2; // 1 byte for type, 1 for null character.
 	raw[1] = _type;
 
-	NSAssert( [self length] == length + 3, @"Length mismatch" );
+	NSAssert( self.length == length + 3, @"Length mismatch" );
 	return [NSData dataWithBytes:raw length:length + 3];
 }
 

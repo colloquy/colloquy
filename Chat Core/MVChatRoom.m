@@ -157,7 +157,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	if( [self supportedModes] & MVChatRoomPassphraseToJoinMode )
 		passphrase = [self attributeForMode:MVChatRoomPassphraseToJoinMode];
 
-	if ([passphrase length])
+	if (passphrase.length)
 		[[self connection] joinChatRoomNamed:[self name] withPassphrase:passphrase];
 	else [[self connection] joinChatRoomNamed:[self name]];
 }

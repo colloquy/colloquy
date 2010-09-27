@@ -8,7 +8,7 @@
 	if( ! [self isAtEnd] ) {
 		NSUInteger location = [self scanLocation];
 		NSString *source = [self string];
-		NSUInteger length = MIN( maxLength, [source length] - location );
+		NSUInteger length = MIN( maxLength, source.length - location );
 		if( length > 0 ) {
 			unichar *chars = calloc( length, sizeof( unichar ) );
 			[source getCharacters:chars range:NSMakeRange( location, length )];

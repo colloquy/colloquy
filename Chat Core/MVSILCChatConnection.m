@@ -547,7 +547,7 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 
 				silc_channel_payload_list_free( list );
 
-				if( [chanArray count] ) [user setAttribute:chanArray forKey:MVChatUserKnownRoomsAttribute];
+				if( chanArray.count ) [user setAttribute:chanArray forKey:MVChatUserKnownRoomsAttribute];
 			}
 
 			[chanArray release];
@@ -1038,7 +1038,7 @@ static SilcClientOperations silcClientOps = {
 	SilcClientConnectionParams params;
 	memset( &params, 0, sizeof( params ) );
 	params.detach_data = ( detachInfo ? (unsigned char *)[detachInfo bytes] : NULL );
-	params.detach_data_len = ( detachInfo ? [detachInfo length] : 0 );
+	params.detach_data_len = ( detachInfo ? detachInfo.length : 0 );
 
 	SilcLock( [self _silcClient] );
 	if( silc_client_connect_to_server( [self _silcClient], &params, [self serverPort], (char *) [[self server] UTF8String], self ) == -1 )
@@ -1056,7 +1056,7 @@ static SilcClientOperations silcClientOps = {
 
 	_sentQuitCommand = YES;
 
-	if( [reason length] ) {
+	if( reason.length ) {
 		const char *msg = [MVSILCChatConnection _flattenedSILCStringForMessage:reason andChatFormat:[self outgoingChatFormat]];
 		[self sendRawMessageWithFormat:@"QUIT %s", msg];
 	} else {
@@ -1094,7 +1094,7 @@ static SilcClientOperations silcClientOps = {
 
 - (void) setNickname:(NSString *) newNickname {
 	NSParameterAssert( newNickname != nil );
-	NSParameterAssert( [newNickname length] > 0 );
+	NSParameterAssert( newNickname.length > 0 );
 	if( ! [self _silcClient] ) return;
 
 	if( [self _silcClient] -> nickname) free( [self _silcClient] -> nickname );
@@ -1144,7 +1144,7 @@ static SilcClientOperations silcClientOps = {
 
 - (void) setPassword:(NSString *) newPassword {
 	[_silcPassword release];
-	if( [newPassword length] ) _silcPassword = [newPassword copyWithZone:nil];
+	if( newPassword.length ) _silcPassword = [newPassword copyWithZone:nil];
 	else _silcPassword = nil;
 }
 
@@ -1156,7 +1156,7 @@ static SilcClientOperations silcClientOps = {
 
 - (void) setUsername:(NSString *) newUsername {
 	NSParameterAssert( newUsername != nil );
-	NSParameterAssert( [newUsername length] > 0 );
+	NSParameterAssert( newUsername.length > 0 );
 	if( ! [self _silcClient] ) return;
 
 	if( [self _silcClient] -> username ) free( [self _silcClient] -> username );
@@ -1171,7 +1171,7 @@ static SilcClientOperations silcClientOps = {
 #pragma mark -
 
 - (void) setServer:(NSString *) newServer {
-	if( [newServer length] >= 7 && [newServer hasPrefix:@"silc://"] )
+	if( newServer.length >= 7 && [newServer hasPrefix:@"silc://"] )
 		newServer = [newServer substringFromIndex:7];
 	MVSafeCopyAssign( _silcServer, newServer );
 
@@ -1208,8 +1208,8 @@ static SilcClientOperations silcClientOps = {
 
 	if( alwaysAccept ) {
 		NSData *pk = [dictionary objectForKey:@"pk"];
-		NSString *filename = [self _publicKeyFilename:[[dictionary objectForKey:@"connType"] unsignedLongValue] andPublicKey:(unsigned char *)[pk bytes] withLen:[pk length] usingSilcConn:conn];
-		silc_pkcs_save_public_key_data( [filename fileSystemRepresentation], (unsigned char *)[pk bytes], [pk length], SILC_PKCS_FILE_PEM);
+		NSString *filename = [self _publicKeyFilename:[[dictionary objectForKey:@"connType"] unsignedLongValue] andPublicKey:(unsigned char *)[pk bytes] withLen:pk.length usingSilcConn:conn];
+		silc_pkcs_save_public_key_data( [filename fileSystemRepresentation], (unsigned char *)[pk bytes], pk.length, SILC_PKCS_FILE_PEM);
 	}
 }
 
@@ -1225,7 +1225,7 @@ static SilcClientOperations silcClientOps = {
 	if( [command hasPrefix:@"/"] )
 		command = [command substringFromIndex:1];
 
-	if( argumentsString && [argumentsString length] > 0 )
+	if( argumentsString && argumentsString.length > 0 )
 		[self sendRawMessage:[NSString stringWithFormat:@"%@ %@", command, argumentsString]];
 	else
 		[self sendRawMessage:command];
@@ -1260,8 +1260,8 @@ static SilcClientOperations silcClientOps = {
 
 - (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase {
 	NSParameterAssert( room != nil );
-	NSParameterAssert( [room length] > 0 );
-	if( [passphrase length] ) [self sendRawMessageWithFormat:@"JOIN %@ %@", [self properNameForChatRoomNamed:room], passphrase];
+	NSParameterAssert( room.length > 0 );
+	if( passphrase.length ) [self sendRawMessageWithFormat:@"JOIN %@ %@", [self properNameForChatRoomNamed:room], passphrase];
 	else [self sendRawMessageWithFormat:@"JOIN %@", [self properNameForChatRoomNamed:room]];
 }
 
@@ -1332,7 +1332,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 
 	SilcUnlock( [self _silcClient] );
 
-	return ( [results count] ? results : nil );
+	return ( results.count ? results : nil );
 }
 
 - (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
@@ -1382,7 +1382,7 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 	[_awayMessage release];
 	_awayMessage = nil;
 
-	if( [message length] ) {
+	if( message.length ) {
 		_awayMessage = [message copy];
 
 		[self sendRawMessage:@"UMODE +g"];

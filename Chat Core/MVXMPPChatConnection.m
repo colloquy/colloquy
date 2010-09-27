@@ -114,7 +114,7 @@
 
 - (void) setNickname:(NSString *) newNickname {
 	NSParameterAssert( newNickname != nil );
-	NSParameterAssert( [newNickname length] > 0 );
+	NSParameterAssert( newNickname.length > 0 );
 	MVSafeCopyAssign( _nickname, newNickname );
 }
 
@@ -150,7 +150,7 @@
 
 - (void) setUsername:(NSString *) newUsername {
 	NSParameterAssert( newUsername != nil );
-	NSParameterAssert( [newUsername length] > 0 );
+	NSParameterAssert( newUsername.length > 0 );
 	MVSafeCopyAssign( _username, newUsername );
 }
 
@@ -161,10 +161,10 @@
 #pragma mark -
 
 - (void) setServer:(NSString *) newServer {
-	if( [newServer length] >= 7 && [newServer hasPrefix:@"xmpp://"] )
+	if( newServer.length >= 7 && [newServer hasPrefix:@"xmpp://"] )
 		newServer = [newServer substringFromIndex:7];
 	NSParameterAssert( newServer != nil );
-	NSParameterAssert( [newServer length] > 0 );
+	NSParameterAssert( newServer.length > 0 );
 	MVSafeCopyAssign( _server, newServer );
 
 	[super setServer:newServer];
@@ -213,7 +213,7 @@
 
 - (void) joinChatRoomNamed:(NSString *) room withPassphrase:(NSString *) passphrase {
 	NSParameterAssert( room != nil );
-	NSParameterAssert( [room length] > 0 );
+	NSParameterAssert( room.length > 0 );
 
 	/* Example:
 	<presence from='hag66@shakespeare.lit/pda' to='darkcave@macbeth.shakespeare.lit/thirdwitch'>
@@ -237,7 +237,7 @@
 	[presence addElement:[self _capabilitiesElement]];
 	XMLElement *x = [presence addElement:[self _multiUserChatExtensionElement]];
 
-	if ([passphrase length])
+	if (passphrase.length)
 		[[x addElementWithName:@"password"] addCData:passphrase];
 
 	[_session sendElement:presence];
@@ -341,7 +341,7 @@
 		[invocation setArgument:&msgAttributes atIndex:5];
 
 		[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
-		if( ! [msgData length] ) return;
+		if( ! msgData.length ) return;
 
 		if( room ) {
 			[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:room userInfo:msgAttributes];

@@ -187,7 +187,7 @@
 	MVAssertCorrectThreadRequired( [_directClientConnection connectionThread] );
 
 	NSData *data = [_fileHandle readDataOfLength:DCCPacketSize];
-	if( [data length] > 0 ) [_directClientConnection writeData:data withTimeout:-1 withTag:[data length]];
+	if( data.length > 0 ) [_directClientConnection writeData:data withTimeout:-1 withTag:data.length];
 	else _doneSending = YES;
 }
 
@@ -347,7 +347,7 @@
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection didReadData:(NSData *) data withTag:(long) tag {
-	unsigned long long progress = [self transfered] + [data length];
+	unsigned long long progress = [self transfered] + data.length;
 	[self _setTransfered:progress];
 
 	[_fileHandle writeData:data];

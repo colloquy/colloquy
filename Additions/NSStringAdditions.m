@@ -566,11 +566,11 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
 	// Search for CTCP/2 encoding tags and act on them
-	NSMutableData *newData = [NSMutableData dataWithCapacity:[data length]];
+	NSMutableData *newData = [NSMutableData dataWithCapacity:data.length];
 	NSStringEncoding currentEncoding = encoding;
 
 	const char *bytes = [data bytes];
-	NSUInteger length = [data length];
+	NSUInteger length = data.length;
 	NSUInteger i = 0, j = 0, start = 0, end = 0;
 	for( i = 0, start = 0; i < length; i++ ) {
 		if( bytes[i] == '\006' ) {
@@ -584,7 +584,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 			if( bytes[j++] == 'E' ) {
 				NSString *encodingStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + j ) length:( i - j ) encoding:NSASCIIStringEncoding];
 				NSStringEncoding newEncoding = 0;
-				if( ! [encodingStr length] ) { // if no encoding is declared, go back to user default
+				if( ! encodingStr.length ) { // if no encoding is declared, go back to user default
 					newEncoding = encoding;
 				} else if( [encodingStr isEqualToString:@"U"] ) {
 					newEncoding = NSUTF8StringEncoding;
@@ -649,7 +649,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 		}
 	}
 
-	if( [newData length] > 0 || currentEncoding != encoding ) {
+	if( newData.length > 0 || currentEncoding != encoding ) {
 		if( start < length ) {
 			NSData *subData = nil;
 			if( currentEncoding != NSUTF8StringEncoding ) {
@@ -669,7 +669,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 		data = newData;
 	}
 
-	if( encoding != NSUTF8StringEncoding && isValidUTF8( [data bytes], [data length] ) )
+	if( encoding != NSUTF8StringEncoding && isValidUTF8( [data bytes], data.length ) )
 		encoding = NSUTF8StringEncoding;
 
 	NSString *message = [[NSString allocWithZone:nil] initWithData:data encoding:encoding];
@@ -911,7 +911,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 		NSString *text = nil;
  		[scanner scanUpToCharactersFromSet:formatCharacters intoString:&text];
 
-		if( [text length] )
+		if( text.length )
 			[ret appendString:[text stringByEncodingXMLSpecialCharactersAsEntities]];
 	}
 
@@ -923,27 +923,27 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 #pragma mark -
 
 - (BOOL) isCaseInsensitiveEqualToString:(NSString *) string {
-	return [self compare:string options:NSCaseInsensitiveSearch range:NSMakeRange( 0, [self length] )] == NSOrderedSame;
+	return [self compare:string options:NSCaseInsensitiveSearch range:NSMakeRange( 0, self.length )] == NSOrderedSame;
 }
 
 - (BOOL) hasCaseInsensitivePrefix:(NSString *) prefix {
-	return [self rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch ) range:NSMakeRange( 0, [self length] )].location != NSNotFound;
+	return [self rangeOfString:prefix options:( NSCaseInsensitiveSearch | NSAnchoredSearch ) range:NSMakeRange( 0, self.length )].location != NSNotFound;
 }
 
 - (BOOL) hasCaseInsensitiveSuffix:(NSString *) suffix {
-	return [self rangeOfString:suffix options:( NSCaseInsensitiveSearch | NSBackwardsSearch | NSAnchoredSearch ) range:NSMakeRange( 0, [self length] )].location != NSNotFound;
+	return [self rangeOfString:suffix options:( NSCaseInsensitiveSearch | NSBackwardsSearch | NSAnchoredSearch ) range:NSMakeRange( 0, self.length )].location != NSNotFound;
 }
 
 - (BOOL) hasCaseInsensitiveSubstring:(NSString *) substring {
-	return [self rangeOfString:substring options:NSCaseInsensitiveSearch range:NSMakeRange( 0, [self length] )].location != NSNotFound;
+	return [self rangeOfString:substring options:NSCaseInsensitiveSearch range:NSMakeRange( 0, self.length )].location != NSNotFound;
 }
 
 #pragma mark -
 
 + (NSString *) stringByReversingString:(NSString *) normalString {
-	NSMutableString *reversedString = [[NSMutableString alloc] initWithCapacity:[normalString length]];
+	NSMutableString *reversedString = [[NSMutableString alloc] initWithCapacity:normalString.length];
 
-	for (NSInteger index = [normalString length] - 1; index >= 0; index--)
+	for (NSInteger index = normalString.length - 1; index >= 0; index--)
 		[reversedString appendString:[normalString substringWithRange:NSMakeRange(index, 1)]];
 
 	return [reversedString autorelease];
@@ -1035,7 +1035,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 	if( ! ipAddress ) {
 		NSArray *parts = [self componentsSeparatedByString:@"."];
-		NSUInteger count = [parts count];
+		NSUInteger count = parts.count;
 		if( count > 2 )
 			ret = [NSString stringWithFormat:@"%@.%@", [parts objectAtIndex:(count - 2)], [parts objectAtIndex:(count - 1)]];
 	}
@@ -1089,7 +1089,7 @@ static NSCharacterSet *emojiCharacters;
 static NSCharacterSet *typicalEmoticonCharacters;
 
 - (BOOL) containsEmojiCharacters {
-	return [self containsEmojiCharactersInRange:NSMakeRange(0, [self length])];
+	return [self containsEmojiCharactersInRange:NSMakeRange(0, self.length)];
 }
 
 - (BOOL) containsEmojiCharactersInRange:(NSRange) range {
@@ -1134,11 +1134,11 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	if( range.location == NSNotFound )
 		return;
 
-	[self replaceOccurrencesOfString:@"&" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
-	[self replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
-	[self replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
-	[self replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
-	[self replaceOccurrencesOfString:@"'" withString:@"&apos;" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
+	[self replaceOccurrencesOfString:@"&" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
+	[self replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
+	[self replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
+	[self replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
+	[self replaceOccurrencesOfString:@"'" withString:@"&apos;" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
 }
 
 - (void) decodeXMLSpecialCharacterEntities {
@@ -1146,11 +1146,11 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	if( range.location == NSNotFound )
 		return;
 
-	[self replaceOccurrencesOfString:@"&lt;" withString:@"<" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
-	[self replaceOccurrencesOfString:@"&gt;" withString:@">" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
-	[self replaceOccurrencesOfString:@"&quot;" withString:@"\"" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
-	[self replaceOccurrencesOfString:@"&apos;" withString:@"'" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
-	[self replaceOccurrencesOfString:@"&amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, [self length] )];
+	[self replaceOccurrencesOfString:@"&lt;" withString:@"<" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
+	[self replaceOccurrencesOfString:@"&gt;" withString:@">" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
+	[self replaceOccurrencesOfString:@"&quot;" withString:@"\"" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
+	[self replaceOccurrencesOfString:@"&apos;" withString:@"'" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
+	[self replaceOccurrencesOfString:@"&amp;" withString:@"&" options:NSLiteralSearch range:NSMakeRange( 0, self.length )];
 }
 
 #pragma mark -
@@ -1175,15 +1175,15 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (void) replaceCharactersInSet:(NSCharacterSet *) set withString:(NSString *) string {
-	NSRange range = NSMakeRange(0, [self length]);
-	NSUInteger stringLength = [string length];
+	NSRange range = NSMakeRange(0, self.length);
+	NSUInteger stringLength = string.length;
 
 	NSRange replaceRange;
 	while( ( replaceRange = [self rangeOfCharacterFromSet:set options:NSLiteralSearch range:range] ).location != NSNotFound ) {
 		[self replaceCharactersInRange:replaceRange withString:string];
 
 		range.location = replaceRange.location + stringLength;
-		range.length = [self length] - replaceRange.location;
+		range.length = self.length - replaceRange.location;
 	}
 }
 
@@ -1209,26 +1209,26 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (void) stripXMLTags {
-	NSRange searchRange = NSMakeRange(0, [self length]);
+	NSRange searchRange = NSMakeRange(0, self.length);
 	while (1) {
 		NSRange tagStartRange = [self rangeOfString:@"<" options:NSLiteralSearch range:searchRange];
 		if (tagStartRange.location == NSNotFound)
 			break;
 
-		NSRange tagEndRange = [self rangeOfString:@">" options:NSLiteralSearch range:NSMakeRange(tagStartRange.location, ([self length] - tagStartRange.location))];
+		NSRange tagEndRange = [self rangeOfString:@">" options:NSLiteralSearch range:NSMakeRange(tagStartRange.location, (self.length - tagStartRange.location))];
 		if (tagEndRange.location == NSNotFound)
 			break;
 
 		[self deleteCharactersInRange:NSMakeRange(tagStartRange.location, (NSMaxRange(tagEndRange) - tagStartRange.location))];
 
-		searchRange = NSMakeRange(tagStartRange.location, ([self length] - tagStartRange.location));
+		searchRange = NSMakeRange(tagStartRange.location, (self.length - tagStartRange.location));
 	}
 }
 
 #pragma mark -
 
 - (void) substituteEmoticonsForEmoji {
-	NSRange range = NSMakeRange(0, [self length]);
+	NSRange range = NSMakeRange(0, self.length);
 	[self substituteEmoticonsForEmojiInRange:&range];
 }
 
@@ -1275,7 +1275,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (void) substituteEmojiForEmoticons {
-	NSRange range = NSMakeRange(0, [self length]);
+	NSRange range = NSMakeRange(0, self.length);
 	[self substituteEmojiForEmoticonsInRange:&range encodeXMLSpecialCharactersAsEntities:NO];
 }
 
@@ -1293,21 +1293,21 @@ static NSCharacterSet *typicalEmoticonCharacters;
 				if (encode) emoticon = [emoticon stringByEncodingXMLSpecialCharactersAsEntities];
 
 				NSString *replacement = nil;
-				if (emojiRange.location == 0 && (emojiRange.location + 1) == [self length])
+				if (emojiRange.location == 0 && (emojiRange.location + 1) == self.length)
 					replacement = [emoticon retain];
-				else if (emojiRange.location > 0 && (emojiRange.location + 1) == [self length] && [self characterAtIndex:(emojiRange.location - 1)] == ' ')
+				else if (emojiRange.location > 0 && (emojiRange.location + 1) == self.length && [self characterAtIndex:(emojiRange.location - 1)] == ' ')
 					replacement = [emoticon retain];
-				else if ([self characterAtIndex:(emojiRange.location - 1)] == ' ' || ((emojiRange.location + 1) < [self length] && [self characterAtIndex:(emojiRange.location + 1)] == ' '))
+				else if ([self characterAtIndex:(emojiRange.location - 1)] == ' ' || ((emojiRange.location + 1) < self.length && [self characterAtIndex:(emojiRange.location + 1)] == ' '))
 					replacement = [emoticon retain];
 				else if (emojiRange.location == 0 || [self characterAtIndex:(emojiRange.location - 1)] == ' ')
 					replacement = [[NSString alloc] initWithFormat:@"%@ ", emoticon];
-				else if ((emojiRange.location + 1) == [self length] || [self characterAtIndex:(emojiRange.location + 1)] == ' ')
+				else if ((emojiRange.location + 1) == self.length || [self characterAtIndex:(emojiRange.location + 1)] == ' ')
 					replacement = [[NSString alloc] initWithFormat:@" %@", emoticon];
 				else replacement = [[NSString alloc] initWithFormat:@" %@ ", emoticon];
 
 				[self replaceCharactersInRange:NSMakeRange(emojiRange.location, 1) withString:replacement];
 
-				range->length += ([replacement length] - 1);
+				range->length += (replacement.length - 1);
 
 				[replacement release];
 				break;

@@ -37,7 +37,7 @@
 - (void) partWithReason:(MVChatString *) reason {
 	if( ! [self isJoined] ) return;
 
-	if( [reason length] ) {
+	if( reason.length ) {
 		NSData *reasonData = [MVIRCChatConnection _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
 		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PART %@ :", [self name]];
 		[[self connection] sendRawMessageWithComponents:prefix, reasonData, nil];
@@ -289,7 +289,7 @@
 	NSString *regexForIPv6Addresses = @"/^\\s*((([0-9A-Fa-f]{1,4}:){7}(([0-9A-Fa-f]{1,4})|:))|(([0-9A-Fa-f]{1,4}:){6}(:|((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})|(:[0-9A-Fa-f]{1,4})))|(([0-9A-Fa-f]{1,4}:){5}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){4}(:[0-9A-Fa-f]{1,4}){0,1}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){3}(:[0-9A-Fa-f]{1,4}){0,2}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:){2}(:[0-9A-Fa-f]{1,4}){0,3}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(([0-9A-Fa-f]{1,4}:)(:[0-9A-Fa-f]{1,4}){0,4}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(:(:[0-9A-Fa-f]{1,4}){0,5}((:((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})?)|((:[0-9A-Fa-f]{1,4}){1,2})))|(((25[0-5]|2[0-4]\\d|[01]?\\d{1,2})(\\.(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){3})))(%.+)?\\s*$/";
 
 	if ( [addressMask hasCaseInsensitiveSuffix:@"IP"] ) {
-		addressMaskToBan = [[addressMask substringToIndex:[addressMask length] - 2] stringByAppendingString:@"*"];
+		addressMaskToBan = [[addressMask substringToIndex:addressMask.length - 2] stringByAppendingString:@"*"];
 	} else if ( [addressMask isMatchedByRegex:regexForIPv4Addresses] || [addressMask isMatchedByRegex:regexForIPv6Addresses] ) {
 		NSString *reversedIP = [NSString stringByReversingString:addressMask];
 		scanner = [NSScanner scannerWithString:reversedIP];
@@ -297,14 +297,14 @@
 		[scanner setCharactersToBeSkipped:nil];
 		[scanner scanUpToCharactersFromSet:newSectionOfHostmaskCharacterSet intoString:&addressMaskToRemove];
 
-		addressMaskToBan = [[addressMask substringToIndex:([addressMask length] - [addressMaskToRemove length])] stringByAppendingString:@"*"];
+		addressMaskToBan = [[addressMask substringToIndex:(addressMask.length - addressMaskToRemove.length)] stringByAppendingString:@"*"];
 	} else {
 		scanner = [NSScanner scannerWithString:addressMask];
 
 		[scanner setCharactersToBeSkipped:nil];
 		[scanner scanUpToCharactersFromSet:newSectionOfHostmaskCharacterSet intoString:&addressMaskToRemove];
 
-		addressMaskToBan = [addressMaskToBan stringByAppendingString:[addressMask substringFromIndex:[addressMaskToRemove length]]];
+		addressMaskToBan = [addressMaskToBan stringByAppendingString:[addressMask substringFromIndex:addressMaskToRemove.length]];
 	}
 
 	if ( ! [scanner isAtEnd] )

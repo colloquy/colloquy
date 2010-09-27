@@ -57,9 +57,9 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 + (id) wildcardUserFromString:(NSString *) mask {
 	NSArray *parts = [mask componentsSeparatedByString:@"!"];
-	if( [parts count] == 1 )
+	if( parts.count == 1 )
 		return [self wildcardUserWithNicknameMask:[parts objectAtIndex:0] andHostMask:nil];
-	if( [parts count] >= 2 )
+	if( parts.count >= 2 )
 		return [self wildcardUserWithNicknameMask:[parts objectAtIndex:0] andHostMask:[parts objectAtIndex:1]];
 	return [self wildcardUserWithNicknameMask:mask andHostMask:nil];
 }
@@ -69,15 +69,15 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	ret -> _type = MVChatWildcardUserType;
 
 	NSArray *parts = [nickname componentsSeparatedByString:@"@"];
-	if( [parts count] >= 1 )
+	if( parts.count >= 1 )
 		ret -> _nickname = [[parts objectAtIndex:0] copyWithZone:[ret zone]];
-	if( [parts count] >= 2 )
+	if( parts.count >= 2 )
 		ret -> _serverAddress = [[parts objectAtIndex:1] copyWithZone:[ret zone]];
 
 	parts = [host componentsSeparatedByString:@"@"];
-	if( [parts count] >= 1 )
+	if( parts.count >= 1 )
 		ret -> _username = [[parts objectAtIndex:0] copyWithZone:[ret zone]];
-	if( [parts count] >= 2 )
+	if( parts.count >= 2 )
 		ret -> _address = [[parts objectAtIndex:1] copyWithZone:[ret zone]];
 
 	return [ret autorelease];

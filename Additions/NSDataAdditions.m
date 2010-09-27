@@ -33,8 +33,8 @@ static char encodingTable[64] = {
 		// Convert the string to ASCII data.
 		base64Data = [string dataUsingEncoding:NSASCIIStringEncoding];
 		base64Bytes = [base64Data bytes];
-		mutableData = [NSMutableData dataWithCapacity:[base64Data length]];
-		lentext = [base64Data length];
+		mutableData = [NSMutableData dataWithCapacity:base64Data.length];
+		lentext = base64Data.length;
 
 		while( YES ) {
 			if( ixtext >= lentext ) break;
@@ -90,9 +90,9 @@ static char encodingTable[64] = {
 
 - (NSString *) base64EncodingWithLineLength:(NSUInteger) lineLength {
 	const unsigned char	*bytes = [self bytes];
-	NSMutableString *result = [NSMutableString stringWithCapacity:[self length]];
+	NSMutableString *result = [NSMutableString stringWithCapacity:self.length];
 	unsigned long ixtext = 0;
-	unsigned long lentext = [self length];
+	unsigned long lentext = self.length;
 	long ctremaining = 0;
 	unsigned char inbuf[3], outbuf[4];
 	unsigned short i = 0;
@@ -147,12 +147,12 @@ static char encodingTable[64] = {
 #pragma mark -
 
 - (BOOL) hasPrefixBytes:(const void *) prefix length:(NSUInteger) length {
-	if( ! prefix || ! length || [self length] < length ) return NO;
+	if( ! prefix || ! length || self.length < length ) return NO;
 	return ( memcmp( [self bytes], prefix, length ) == 0 );
 }
 
 - (BOOL) hasSuffixBytes:(const void *) suffix length:(NSUInteger) length {
-	if( ! suffix || ! length || [self length] < length ) return NO;
-	return ( memcmp( ((const char *)[self bytes] + ([self length] - length)), suffix, length ) == 0 );
+	if( ! suffix || ! length || self.length < length ) return NO;
+	return ( memcmp( ((const char *)[self bytes] + (self.length - length)), suffix, length ) == 0 );
 }
 @end

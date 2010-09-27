@@ -117,7 +117,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	[options release];
 
 	NSRange limitRange, effectiveRange;
-	limitRange = NSMakeRange( 0, [result length] );
+	limitRange = NSMakeRange( 0, result.length );
 	while( limitRange.length > 0 ) {
 		NSColor *color = [result attribute:NSForegroundColorAttributeName atIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
 		if( [[color HTMLAttributeValue] isEqualToString:@"#01FE02"] ) // strip the color if it matched
@@ -138,7 +138,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	if( [[options objectForKey:@"FullDocument"] boolValue] )
 		[ret appendString:@"<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body>"];
 
-	limitRange = NSMakeRange( 0, [self length] );
+	limitRange = NSMakeRange( 0, self.length );
 	while( limitRange.length > 0 ) {
 		NSDictionary *dict = [self attributesAtIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
 
@@ -157,17 +157,17 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		NSMutableString *styleString = [NSMutableString stringWithString:( style ? style : @"" )];
 
 		if( foregoundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
-			if( [styleString length] && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
+			if( styleString.length && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
 			[styleString appendFormat:@"color: %@", [foregoundColor CSSAttributeValue]];
 		}
 
 		if( backgroundColor && ! [[options objectForKey:@"IgnoreFontColors"] boolValue] ) {
-			if( [styleString length] && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
+			if( styleString.length && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
 			[styleString appendFormat:@"background-color: %@", [backgroundColor CSSAttributeValue]];
 		}
 
 		if( ! [[options objectForKey:@"IgnoreFonts"] boolValue] ) {
-			if( [styleString length] && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
+			if( styleString.length && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
 			NSString *family = [currentFont familyName];
 			if( [family rangeOfString:@" "].location != NSNotFound )
 				family = [NSString stringWithFormat:@"'%@'", family];
@@ -175,7 +175,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		}
 
 		if( ! [[options objectForKey:@"IgnoreFontSizes"] boolValue] ) {
-			if( [styleString length] && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
+			if( styleString.length && ! [styleString hasSuffix:@";"] ) [styleString appendString:@";"];
 			[styleString appendFormat:@"font-size: %.1fpt", [currentFont pointSize]];
 		}
 
@@ -189,16 +189,16 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			if( [[dict objectForKey:NSStrikethroughStyleAttributeName] boolValue] ) strikethrough = YES;
 		}
 
-		if( [styleString length] ) [spanString appendFormat:@" style=\"%@\"", styleString];
-		if( [classes count] ) [spanString appendFormat:@" class=\"%@\"", [[classes allObjects] componentsJoinedByString:@" "]];
+		if( styleString.length ) [spanString appendFormat:@" style=\"%@\"", styleString];
+		if( classes.count ) [spanString appendFormat:@" class=\"%@\"", [[classes allObjects] componentsJoinedByString:@" "]];
 		[spanString appendString:@">"];
 
-		if( [classes count] || [styleString length] ) [ret appendString:spanString];
+		if( classes.count || styleString.length ) [ret appendString:spanString];
 		if( bold ) [ret appendString:@"<b>"];
 		if( italic ) [ret appendString:@"<i>"];
 		if( underline ) [ret appendString:@"<u>"];
 		if( strikethrough ) [ret appendString:@"<s>"];
-		if( [htmlStart length] ) [ret appendString:htmlStart];
+		if( htmlStart.length ) [ret appendString:htmlStart];
 		if( link ) {
 			[ret appendFormat:@"<a href=\"%@\"", [[link description] stringByEncodingXMLSpecialCharactersAsEntities]];
 			if( title ) [ret appendFormat:@" title=\"%@\"", [title stringByEncodingXMLSpecialCharactersAsEntities]];
@@ -208,12 +208,12 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		[ret appendString:[[[self attributedSubstringFromRange:effectiveRange] string] stringByEncodingXMLSpecialCharactersAsEntities]];
 
 		if( link ) [ret appendString:@"</a>"];
-		if( [htmlEnd length] ) [ret appendString:htmlEnd];
+		if( htmlEnd.length ) [ret appendString:htmlEnd];
 		if( strikethrough ) [ret appendString:@"</s>"];
 		if( underline ) [ret appendString:@"</u>"];
 		if( italic ) [ret appendString:@"</i>"];
 		if( bold ) [ret appendString:@"</b>"];
-		if( [classes count] || [styleString length] ) [ret appendString:@"</span>"];
+		if( classes.count || styleString.length ) [ret appendString:@"</span>"];
 
 		limitRange = NSMakeRange( NSMaxRange( effectiveRange ), NSMaxRange( limitRange ) - NSMaxRange( effectiveRange ) );
 	}
@@ -235,9 +235,9 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
 	// Search for CTCP/2 encoding tags and act on them
-	NSMutableData *newData = [NSMutableData dataWithCapacity:[data length]];
+	NSMutableData *newData = [NSMutableData dataWithCapacity:data.length];
 	const char *bytes = [data bytes];
-	NSUInteger length = [data length];
+	NSUInteger length = data.length;
 	NSUInteger i = 0, j = 0, start = 0, end = 0;
 	NSStringEncoding currentEncoding = encoding;
 	for( i = 0, start = 0; i < length; i++ ) {
@@ -252,7 +252,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 			if( bytes[j++] == 'E' ) {
 				NSString *encodingStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + j ) length:( i - j ) encoding:NSASCIIStringEncoding];
 				NSStringEncoding newEncoding = 0;
-				if( ! [encodingStr length] ) { // if no encoding is declared, go back to user default
+				if( ! encodingStr.length ) { // if no encoding is declared, go back to user default
 					newEncoding = encoding;
 				} else if( [encodingStr isEqualToString:@"U"] ) {
 					newEncoding = NSUTF8StringEncoding;
@@ -317,7 +317,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		}
 	}
 
-	if( [newData length] > 0 || currentEncoding != encoding ) {
+	if( newData.length > 0 || currentEncoding != encoding ) {
 		if( start < length ) {
 			NSData *subData = nil;
 			if( currentEncoding != NSUTF8StringEncoding ) {
@@ -337,10 +337,10 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 		data = newData;
 	}
 
-	if( encoding != NSUTF8StringEncoding && isValidUTF8( [data bytes], [data length] ) )
+	if( encoding != NSUTF8StringEncoding && isValidUTF8( [data bytes], data.length ) )
 		encoding = NSUTF8StringEncoding;
 
-	NSString *message = [[[NSString allocWithZone:nil] initWithBytes:[data bytes] length:[data length] encoding:encoding] autorelease];
+	NSString *message = [[[NSString allocWithZone:nil] initWithBytes:[data bytes] length:data.length encoding:encoding] autorelease];
 	if( ! message ) {
 		[self release];
 		return nil;
@@ -577,7 +577,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 		NSString *text = nil;
  		[scanner scanUpToCharactersFromSet:formatCharacters intoString:&text];
-		if( [text length] ) {
+		if( text.length ) {
 			id new = [[[self class] allocWithZone:nil] initWithString:text attributes:attributes];
 			[ret appendAttributedString:new];
 			[new release];
@@ -589,11 +589,11 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 - (NSData *) _mIRCFormatWithOptions:(NSDictionary *) options {
 	NSRange limitRange, effectiveRange;
-	NSMutableData *ret = [[NSMutableData allocWithZone:nil] initWithCapacity:( [self length] + 20 )];
+	NSMutableData *ret = [[NSMutableData allocWithZone:nil] initWithCapacity:( self.length + 20 )];
 	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedLongValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
-	limitRange = NSMakeRange( 0, [self length] );
+	limitRange = NSMakeRange( 0, self.length );
 	while( limitRange.length > 0 ) {
 		NSDictionary *dict = [self attributesAtIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
 
@@ -670,7 +670,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 
 - (NSData *) _CTCP2FormatWithOptions:(NSDictionary *) options {
 	NSRange limitRange, effectiveRange;
-	NSMutableData *ret = [[NSMutableData allocWithZone:nil] initWithCapacity:( [self length] + 40 )];
+	NSMutableData *ret = [[NSMutableData allocWithZone:nil] initWithCapacity:( self.length + 40 )];
 	NSStringEncoding encoding = [[options objectForKey:@"StringEncoding"] unsignedLongValue];
 	if( ! encoding ) encoding = NSISOLatin1StringEncoding;
 
@@ -719,7 +719,7 @@ NSString *NSChatCTCPTwoFormatType = @"NSChatCTCPTwoFormatType";
 	BOOL wasBold = NO, wasItalic = NO, wasUnderline = NO, wasStrikethrough = NO;
 	NSColor *oldForeground = nil, *oldBackground = nil;
 	id oldLink = nil;
-	limitRange = NSMakeRange( 0, [self length] );
+	limitRange = NSMakeRange( 0, self.length );
 	while( limitRange.length > 0 ) {
 		NSDictionary *dict = [self attributesAtIndex:limitRange.location longestEffectiveRange:&effectiveRange inRange:limitRange];
 
