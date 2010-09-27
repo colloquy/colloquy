@@ -340,15 +340,16 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSUInteger i = [_views count];
 
 	if ( organizationType != 0 ) {
+		SEL localizedCaseInsensitive = @selector(localizedCaseInsensitiveCompare:);
 		NSMutableArray* sortDescriptors = [NSMutableArray array];
 
 		switch ( organizationType ) {
 			case JVChatViewOrganizationTypeByNetworkAndRoom:
-				[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"connection.server" ascending:YES] autorelease]];
-				[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"connection.preferredNickname" ascending:YES] autorelease]];
+				[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"connection.server" ascending:YES selector:localizedCaseInsensitive] autorelease]];
+				[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"connection.preferredNickname" ascending:YES selector:localizedCaseInsensitive] autorelease]];
 			case JVChatViewOrganizationTypeAlphabetical:
 				[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"className" ascending:YES] autorelease]];
-				[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES] autorelease]];
+				[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES selector:localizedCaseInsensitive] autorelease]];
 				break;
 			default:
 				break;
