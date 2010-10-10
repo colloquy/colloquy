@@ -1085,6 +1085,15 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
+- (NSString *) fileName {
+	NSString *fileName = [self lastPathComponent];
+	NSString *fileExtension = [NSString stringWithFormat:@".%@", [self pathExtension]];
+
+	return [fileName stringByReplacingOccurrencesOfString:fileExtension withString:@""];
+}
+
+#pragma mark -
+
 static NSCharacterSet *emojiCharacters;
 static NSCharacterSet *typicalEmoticonCharacters;
 

@@ -1,7 +1,8 @@
 #import "MVChatPluginManager.h"
 #import "NSFileManagerAdditions.h"
-#import "NSNumberAdditions.h"
 #import "NSMethodSignatureAdditions.h"
+#import "NSNumberAdditions.h"
+#import "NSStringAdditions.h"
 
 static MVChatPluginManager *sharedInstance = nil;
 NSString *MVChatPluginManagerWillReloadPluginsNotification = @"MVChatPluginManagerWillReloadPluginsNotification";

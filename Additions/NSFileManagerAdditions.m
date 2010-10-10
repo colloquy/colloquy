@@ -26,7 +26,7 @@ static inline void markArchitectureAsActiveForCPUType(MVArchitectures *architect
 }
 
 static inline void swapIntsInHeader(uint8_t *bytes, unsigned length) {
-	for (unsigned i = 0; i < length; i += 4)
+	for (NSUInteger i = 0; i < length; i += 4)
 		*(uint32_t *)(bytes + i) = OSSwapInt32(*(uint32_t *)(bytes + i));
 }
 

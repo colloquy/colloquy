@@ -501,6 +501,8 @@ static BOOL applicationIsTerminating = NO;
 		[webCacheClass setDisabled:YES];
 	}
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( invalidPluginsFound: ) name:MVChatPluginManagerDidFindInvalidPluginsNotification object:nil];
+
 	[MVChatPluginManager defaultManager];
 	[MVConnectionsController defaultController];
 	[JVChatController defaultController];
@@ -643,6 +645,34 @@ static BOOL applicationIsTerminating = NO;
 		return NO;
 	}
 	return YES;
+}
+
+#pragma mark -
+
+- (void) invalidPluginsFound:(NSNotification *) notification {
+	NSArray *invalidPlugins = notification.object;
+
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = (invalidPlugins.count > 1) ? NSLocalizedString( @"Unable to load plugins", @"Unable to load plugins message text" ) : NSLocalizedString( @"Unable to load a plugin", @"Unable to load a plugin message text" );
+
+	NSString *informativeText = nil;
+	if( invalidPlugins.count > 1 ) {
+		informativeText = NSLocalizedString( @"Colloquy is unable to load the following plugins:\n", @"Colloquy is unable to load the following plugins:\n. informative text");
+		for( NSString *pluginName in invalidPlugins ) {
+			pluginName = [pluginName fileName];
+			informativeText = [informativeText stringByAppendingFormat:@"%@\n", pluginName];
+		}
+	} else {
+		NSString *pluginName = [[invalidPlugins lastObject] fileName];
+		informativeText = [NSString stringWithFormat:NSLocalizedString( @"Colloquy is unable to load the plugin named \"%@\"", @"Colloquy is unable to load the plugin named \"%@\" informative text"), pluginName];
+	}
+
+	alert.informativeText = informativeText;
+	alert.alertStyle = NSWarningAlertStyle;
+
+	[alert addButtonWithTitle:NSLocalizedString( @"OK", @"OK button title" )];
+
+	[alert runModal];
 }
 
 #pragma mark -

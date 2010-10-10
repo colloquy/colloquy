@@ -48,6 +48,8 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 - (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(NSUInteger) limit;
 - (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(NSUInteger) limit remainingString:(NSString **) remainder;
 
+- (NSString *) fileName;
+
 - (BOOL) containsEmojiCharacters;
 - (BOOL) containsEmojiCharactersInRange:(NSRange) range;
 - (NSRange) rangeOfEmojiCharactersInRange:(NSRange) range;
