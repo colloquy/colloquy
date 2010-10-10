@@ -45,7 +45,7 @@ static inline void swapIntsInHeader(uint8_t *bytes, unsigned length) {
 		return architectures;
 	}
 
-	void *bytes = (void *)[data bytes];
+	uint8_t *bytes = (void *)[data bytes];
 	uint32_t magic = *(uint32_t *)bytes;
 
 	if (data.length >= sizeof(struct mach_header_64)) {
