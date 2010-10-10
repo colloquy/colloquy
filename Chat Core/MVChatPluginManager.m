@@ -1,10 +1,12 @@
 #import "MVChatPluginManager.h"
+#import "NSFileManagerAdditions.h"
 #import "NSNumberAdditions.h"
 #import "NSMethodSignatureAdditions.h"
 
 static MVChatPluginManager *sharedInstance = nil;
 NSString *MVChatPluginManagerWillReloadPluginsNotification = @"MVChatPluginManagerWillReloadPluginsNotification";
 NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManagerDidReloadPluginsNotification";
+NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginManagerDidFindInvalidPluginsNotification";
 
 #pragma mark -
 
@@ -81,10 +83,17 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 		[_plugins removeAllObjects];
 	}
 
+	NSMutableArray *invalidPluginList = [[NSMutableArray alloc] init];
 	for( NSString *path in [[self class] pluginSearchPaths] ) {
 		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			if( [[file pathExtension] isEqualToString:@"bundle"] || [[file pathExtension] isEqualToString:@"plugin"] ) {
 				NSBundle *bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]];
+				if( ![[NSFileManager defaultManager] canExecutePluginAtPath:bundle.executablePath] ) {
+					[invalidPluginList addObject:[NSString stringWithFormat:@"%@/%@", path, file]];
+
+					continue;
+				}
+
 				if( [bundle load] && [[bundle principalClass] conformsToProtocol:@protocol( MVChatPlugin )] ) {
 					id plugin = [[[bundle principalClass] allocWithZone:nil] initWithManager:self];
 					if( plugin ) [self addPlugin:plugin];
@@ -94,7 +103,10 @@ NSString *MVChatPluginManagerDidReloadPluginsNotification = @"MVChatPluginManage
 		}
 	}
 
+	if (invalidPluginList.count) [[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerDidFindInvalidPluginsNotification object:invalidPluginList];
 	[[NSNotificationCenter defaultCenter] postNotificationName:MVChatPluginManagerDidReloadPluginsNotification object:self];
+
+	[invalidPluginList release];
 
 	_reloadingPlugins = NO;
 }

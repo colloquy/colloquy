@@ -1,5 +1,6 @@
 extern NSString *MVChatPluginManagerWillReloadPluginsNotification;
 extern NSString *MVChatPluginManagerDidReloadPluginsNotification;
+extern NSString *MVChatPluginManagerDidFindInvalidPluginsNotification;
 
 @interface MVChatPluginManager : NSObject {
 	@private
