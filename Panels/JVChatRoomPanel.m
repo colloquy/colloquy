@@ -613,6 +613,8 @@
 
 			NSArray *items = nil;
 			for( items in results ) {
+				if( ![items conformsToProtocol:@protocol(NSFastEnumeration)] ) continue;
+
 				for( item in items )
 					if( [item isKindOfClass:[NSMenuItem class]] ) [ret addObject:item];
 			}
