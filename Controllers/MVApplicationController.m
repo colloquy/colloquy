@@ -650,6 +650,12 @@ static BOOL applicationIsTerminating = NO;
 #pragma mark -
 
 - (void) invalidPluginsFound:(NSNotification *) notification {
+	if( [NSDate timeIntervalSinceReferenceDate] - [_launchDate timeIntervalSinceReferenceDate] < 5. ) {
+		[self performSelector:@selector(invalidPluginsFound:) withObject:notification afterDelay:5.];
+
+		return;
+	}
+
 	NSArray *invalidPlugins = notification.object;
 
 	NSAlert *alert = [[NSAlert alloc] init];
@@ -658,13 +664,11 @@ static BOOL applicationIsTerminating = NO;
 	NSString *informativeText = nil;
 	if( invalidPlugins.count > 1 ) {
 		informativeText = NSLocalizedString( @"Colloquy is unable to load the following plugins:\n", @"Colloquy is unable to load the following plugins:\n. informative text");
-		for( NSString *pluginName in invalidPlugins ) {
-			pluginName = [pluginName fileName];
-			informativeText = [informativeText stringByAppendingFormat:@"%@\n", pluginName];
-		}
+		for( NSString *pluginName in invalidPlugins )
+			informativeText = [informativeText stringByAppendingFormat:@"%@\n", [pluginName fileName]];
 	} else {
 		NSString *pluginName = [[invalidPlugins lastObject] fileName];
-		informativeText = [NSString stringWithFormat:NSLocalizedString( @"Colloquy is unable to load the plugin named \"%@\"", @"Colloquy is unable to load the plugin named \"%@\" informative text"), pluginName];
+		informativeText = [NSString stringWithFormat:NSLocalizedString( @"Colloquy is unable to load the plugin named \"%@\".", @"Colloquy is unable to load the plugin named \"%@\". informative text"), pluginName];
 	}
 
 	alert.informativeText = informativeText;
