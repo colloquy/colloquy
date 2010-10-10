@@ -44,6 +44,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 		return nil;
 
 	_plugins = [[NSMutableArray allocWithZone:nil] init];
+	_invalidPlugins = [[NSMutableDictionary allocWithZone:nil] init];
 	[self reloadPlugins];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( applicationWillTerminate: ) name:NSApplicationWillTerminateNotification object:[NSApplication sharedApplication]];
@@ -61,6 +62,7 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 	if( self == sharedInstance ) sharedInstance = nil;
 
 	[_plugins release];
+	[_invalidPlugins release];
 
 	[super dealloc];
 }
@@ -88,8 +90,20 @@ NSString *MVChatPluginManagerDidFindInvalidPluginsNotification = @"MVChatPluginM
 		for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
 			if( [[file pathExtension] isEqualToString:@"bundle"] || [[file pathExtension] isEqualToString:@"plugin"] ) {
 				NSBundle *bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]];
+				NSString *bundleIdentifier = [[bundle infoDictionary] objectForKey:@"CFBundleIdentifier"];
+				NSString *previousPluginVersion = [_invalidPlugins objectForKey:bundleIdentifier];
+				NSString *pluginVersion = [[bundle infoDictionary] objectForKey:@"CFBundleVersion"];
+
+				if( pluginVersion.length ) {
+					if( [previousPluginVersion isCaseInsensitiveEqualToString:pluginVersion] )
+						continue;
+					else [_invalidPlugins removeObjectForKey:bundleIdentifier];
+				}
+
 				if( ![[NSFileManager defaultManager] canExecutePluginAtPath:bundle.executablePath] ) {
 					[invalidPluginList addObject:[NSString stringWithFormat:@"%@/%@", path, file]];
+
+					[_invalidPlugins setObject:pluginVersion forKey:bundleIdentifier];
 
 					continue;
 				}
