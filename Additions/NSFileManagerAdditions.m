@@ -45,20 +45,19 @@ static inline void swapIntsInHeader(uint8_t *bytes, unsigned length) {
 		return architectures;
 	}
 
-	uint32_t magic = *(uint32_t *)[data bytes];
+	void *bytes = (void *)[data bytes];
+	uint32_t magic = *(uint32_t *)bytes;
 
 	if (data.length >= sizeof(struct mach_header_64)) {
 		if (magic == MH_MAGIC || magic == MH_CIGAM) { // 32-bit, thin
-			struct mach_header *header = (struct mach_header *)[data bytes];
+			struct mach_header *header = (struct mach_header *)bytes;
 
 			markArchitectureAsActiveForCPUType(&architectures, header->cputype);
 		} else if (magic == MH_MAGIC_64 || magic == MH_CIGAM_64) { // 64-bit, thin
-			struct mach_header_64 *header = (struct mach_header_64 *)[data bytes];
+			struct mach_header_64 *header = (struct mach_header_64 *)bytes;
 
 			markArchitectureAsActiveForCPUType(&architectures, header->cputype);
 		} else if (magic == FAT_MAGIC || magic == FAT_CIGAM) { // fat
-			void *bytes = (void *)[data bytes];
-
 			if (magic == FAT_CIGAM)
 				swapIntsInHeader(bytes, data.length);
 
