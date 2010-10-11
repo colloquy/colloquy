@@ -104,7 +104,7 @@
 		</dict>
 	</array>
 	<key>LSMinimumSystemVersion</key>
-	<string>10.4</string>
+	<string>10.5</string>
 	<key>LSArchitecturePriority</key>
 	<array>
 		<string>x86_64</string>
