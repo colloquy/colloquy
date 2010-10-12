@@ -1042,6 +1042,7 @@ static MVBuddyListController *sharedInstance = nil;
 			[menu addItem:[NSMenuItem separatorItem]];
 
 		for( NSArray *items in results ) {
+			if( ![items conformsToProtocol:@protocol(NSFastEnumeration)] ) continue;
 			for( NSMenuItem *item in items )
 				if( [item isKindOfClass:[NSMenuItem class]] )
 					[menu addItem:item];

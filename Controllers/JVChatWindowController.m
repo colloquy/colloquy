@@ -984,7 +984,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 		NSArray *items = nil;
 		for( items in results ) {
-			if( ! [items respondsToSelector:@selector( objectEnumerator )] ) continue;
+			if( ![items conformsToProtocol:@protocol(NSFastEnumeration)] ) continue;
 			for( menuItem in items)
 				if( [menuItem isKindOfClass:[NSMenuItem class]] )
 					[menu addItem:menuItem];

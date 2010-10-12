@@ -617,6 +617,7 @@ static BOOL applicationIsTerminating = NO;
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( [results count] ) {
 		for( NSArray *items in results ) {
+			if( ![items conformsToProtocol:@protocol(NSFastEnumeration)] ) continue;
 			for( NSMenuItem *item in items )
 				if( [item isKindOfClass:[NSMenuItem class]] ) [menu addItem:item];
 		}

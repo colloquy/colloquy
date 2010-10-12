@@ -286,8 +286,7 @@
 				[menu addItem:[NSMenuItem separatorItem]];
 
 			for( NSArray *items in results ) {
-				if( ! [items respondsToSelector:@selector( objectEnumerator )] )
-					continue;
+				if( ![items conformsToProtocol:@protocol(NSFastEnumeration)] ) continue;
 
 				for( NSMenuItem *item in items ) 
 					if( [item isKindOfClass:[NSMenuItem class]] )

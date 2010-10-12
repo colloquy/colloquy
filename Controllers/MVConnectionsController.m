@@ -1106,6 +1106,7 @@ static NSMenu *favoritesMenu = nil;
 				[menu addItem:[NSMenuItem separatorItem]];
 
 			for( NSArray *items in results ) {
+				if( ![items conformsToProtocol:@protocol(NSFastEnumeration)] ) continue;
 				for( item in items )
 					if( [item isKindOfClass:[NSMenuItem class]] ) [menu addItem:item];
 			}
