@@ -678,6 +678,8 @@ static BOOL applicationIsTerminating = NO;
 	[alert addButtonWithTitle:NSLocalizedString( @"OK", @"OK button title" )];
 
 	[alert runModal];
+
+	[alert release];
 }
 
 #pragma mark -
