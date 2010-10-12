@@ -837,6 +837,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	[menu addItem:[NSMenuItem separatorItem]];
 
 	for( JVStyle *style in [[[JVStyle styles] allObjects] sortedArrayUsingSelector:@selector( compare: )] ) {
+		if( !style.displayName.length ) continue;
+
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[style displayName] action:@selector( changeStyle: ) keyEquivalent:@""] autorelease];
 		[menuItem setTag:5];
 		[menuItem setTarget:self];
