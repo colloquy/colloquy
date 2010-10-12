@@ -208,7 +208,7 @@ static NSUInteger bubbleWindowDepth = 0;
 
 - (NSMethodSignature *) methodSignatureForSelector:(SEL) selector {
 	if( [[[self window] contentView] respondsToSelector:selector] )
-		return [(NSObject *)[[self window] contentView] methodSignatureForSelector:selector];
+		return [[[self window] contentView] methodSignatureForSelector:selector];
 	else return [super methodSignatureForSelector:selector];
 }
 @end

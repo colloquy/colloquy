@@ -13,17 +13,6 @@ static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat
 #pragma mark -
 
 @implementation KABubbleWindowView
-- (id) initWithFrame:(NSRect) frame {
-	if( ( self = [super initWithFrame:frame] ) ) {
-		_icon = nil;
-		_title = nil;
-		_text = nil;
-		_target = nil;
-		_action = NULL;
-	}
-	return self;
-}
-
 - (void) dealloc {
 	[_icon release];
 	[_title release];
