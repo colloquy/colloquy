@@ -14,8 +14,8 @@
 		_speechQueue = [[NSMutableArray alloc] initWithCapacity:15];
 		_synthesizers = [[NSArray alloc] initWithObjects:[[[NSSpeechSynthesizer alloc] initWithVoice:nil] autorelease], [[[NSSpeechSynthesizer alloc] initWithVoice:nil] autorelease], [[[NSSpeechSynthesizer alloc] initWithVoice:nil] autorelease], nil];
 
-		for( NSUInteger i = 0; i < [_synthesizers count]; i++ )
-			[[_synthesizers objectAtIndex:i] setDelegate:self];
+		for( NSSpeechSynthesizer *synthesizer in _synthesizers )
+			synthesizer.delegate = self;
 	}
 
 	return self;
@@ -32,8 +32,8 @@
 }
 
 - (void) startSpeakingString:(NSString *) string usingVoice:(NSString *) voice {
-	for( NSUInteger i = 0; i < [_synthesizers count]; i++ ) {
-		NSSpeechSynthesizer *synth = [_synthesizers objectAtIndex:i];
+
+	for( NSSpeechSynthesizer *synth in _synthesizers ) {
 		if( ! [synth isSpeaking] ) {
 			[synth setVoice:voice];
 			[synth startSpeakingString:string];
