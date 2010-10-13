@@ -3,50 +3,54 @@
 
 @implementation MVCrashCatcher
 + (void) check {
-	if( [[NSBundle bundleWithIdentifier:@"com.unsanity.smartcrashreports"] isLoaded] )
-		return; // user has Unsanity Smart Crash Reports installed, don't use our own reporter
 	[[MVCrashCatcher alloc] init]; // Released when the window is closed.
 }
 
 #pragma mark -
 
 - (id) init {
-	if( ( self = [super init] ) ) {
-		NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-		logPath = [[[NSString stringWithFormat:@"~/Library/Logs/CrashReporter/%@.crash.log", programName] stringByExpandingTildeInPath] retain];
+	if (!(self = [super init]))
+		return nil;
 
-		if( [[NSFileManager defaultManager] fileExistsAtPath:logPath] ) [NSBundle loadNibNamed:@"MVCrashCatcher" owner:self];
-		else [self autorelease];
+	NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+	NSString *logDirectory = nil;
+	if( floor( NSAppKitVersionNumber ) == NSAppKitVersionNumber10_5 ) logDirectory = [@"~/Library/Logs/CrashReporter/" stringByExpandingTildeInPath];
+	else logDirectory = [@"~/Library/Logs/DiagnosticReports/" stringByExpandingTildeInPath]; // files in CrashReporter/ are really symlinks to files in this dir in 10.6+
+
+	// If there are multiple crash reports, only get the latest one. Also deletes older crash reports; we don't want to show the error on n launches for an unknown number of n
+	for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:logDirectory error:nil] ) {
+		if( [file hasCaseInsensitivePrefix:programName] ) {
+			[[NSFileManager defaultManager] removeItemAtPath:logPath error:nil];
+			id old = logPath;
+			logPath = [[logDirectory stringByAppendingPathComponent:file] retain];
+			[old release];
+		}
 	}
+
+	if( logPath.length ) [NSBundle loadNibNamed:@"MVCrashCatcher" owner:self];
+	else [self autorelease];
 
 	return nil;
 }
 
 - (void) dealloc {
-	[urlConnection release];
-	urlConnection = nil;
-
 	[window close];
-	window = nil;
 
 	[logPath release];
-	logPath = nil;
 
 	[super dealloc];
 }
 
 - (void) awakeFromNib {
 	NSString *logContent = [NSString stringWithContentsOfFile:logPath encoding:NSUTF8StringEncoding error:NULL];
-
-	// get only the last crash trace, there is hardly ever more than one since we delete the file. it can still happen
-	logContent = [[logContent componentsSeparatedByString:@"**********"] lastObject];
 	logContent = [logContent stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 
 	NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-	[description setStringValue:[NSString stringWithFormat:NSLocalizedString( @"%@ encountered an unrecoverable error during a previous session. Please enter any details you may recall about what you were doing when the application crashed. This will help us to improve future releases of %@.", "crash message" ), programName, programName]];
-	[log setString:logContent];
+	description.stringValue = [NSString stringWithFormat:NSLocalizedString( @"%@ encountered an unrecoverable error during a previous session. Please enter any details you may recall about what you were doing when the application crashed. This will help us to improve future releases of %@.", "crash message" ), programName, programName];
+	log.string = logContent;
 
 	[window center];
+
 	[[NSApplication sharedApplication] runModalForWindow:window];
 }
 
@@ -67,9 +71,9 @@
 	NSMutableString *body = [NSMutableString stringWithCapacity:40960];
 
 	NSDictionary *systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/ServerVersion.plist"];
-	if( ! [systemVersion count] ) systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+	if( ! systemVersion.count ) systemVersion = [NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
 
-	NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
+	NSDictionary *clientVersion = [NSBundle mainBundle].infoDictionary;
 
 	[body appendFormat:@"app_version=%@%%20(%@)&", [[clientVersion objectForKey:@"CFBundleShortVersionString"] stringByEncodingIllegalURLCharacters], [[clientVersion objectForKey:@"CFBundleVersion"] stringByEncodingIllegalURLCharacters]];
 	[body appendFormat:@"os_version=%@:%@&", [[systemVersion objectForKey:@"ProductUserVisibleVersion"] stringByEncodingIllegalURLCharacters], [[systemVersion objectForKey:@"ProductBuildVersion"] stringByEncodingIllegalURLCharacters]];
@@ -86,18 +90,18 @@
 	sysctl( selector, 2, &memory, &length, NULL, 0 );
 
 	[body appendFormat:@"machine_config=%s%%20(%d%%20MB)&", model, (int) ( memory / (uint64_t) 1024 / (uint64_t) 1024 )];
-	[body appendFormat:@"feedback_comments=%@&", [[[comments string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByEncodingIllegalURLCharacters]];
+	[body appendFormat:@"feedback_comments=%@&", [[comments.string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] stringByEncodingIllegalURLCharacters]];
 
 	NSData *trace = [[log string] dataUsingEncoding:NSUTF8StringEncoding];
 	[body appendFormat:@"page_source=%@", ( trace ? [trace base64Encoding] : @"" )];
 
 	NSURL *url = [NSURL URLWithString:@"http://colloquy.info/crash.php"];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10.];
-	[request setHTTPMethod:@"POST"];
+	request.HTTPMethod = @"POST";
 	[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
 	[request setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES]];
 
-	urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	[NSURLConnection connectionWithRequest:request delegate:self];
 
 	[[NSApplication sharedApplication] stopModal];
 	[window orderOut:nil];
