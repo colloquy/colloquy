@@ -45,9 +45,7 @@
 		parentPath = [parentPath substringToIndex:parentPath.length - [parentPath lastPathComponent].length];
 
 	NSString *pathName = [path substringFromIndex:parentPath.length];
-	NSLog(@"%@", path);
-	NSLog(@"%@", parentPath);
-	NSLog(@"%@", pathName);
+
 	const char *fileSystemPath = [[NSFileManager defaultManager] fileSystemRepresentationWithPath:parentPath];
 
 	FSRef ref, parentRef;
