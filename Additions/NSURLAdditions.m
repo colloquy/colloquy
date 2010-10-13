@@ -37,7 +37,7 @@
 
 	[[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 
-	// go through path components appending everything, until we get to a folder. this will be 1 in every case, except that in which a / is in the filename
+	// go through path components removing the last component, until we get to a folder. this will be 1 in every case, except that in which a / is in the filename
 	NSString *parentPath = [path stringByDeletingLastPathComponent];
 	BOOL isDirectory;
 
