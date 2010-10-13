@@ -3,7 +3,7 @@
 
 @implementation MVCrashCatcher
 + (void) check {
-	if( floor( NSAppKitVersionNumber ) == NSAppKitVersionNumber10_5 ) && [[NSBundle bundleWithIdentifier:@"com.unsanity.smartcrashreports"] isLoaded] )
+	if( floor( NSAppKitVersionNumber ) == NSAppKitVersionNumber10_5 && [[NSBundle bundleWithIdentifier:@"com.unsanity.smartcrashreports"] isLoaded] )
 		return;
 	[[MVCrashCatcher alloc] init]; // Released when the window is closed.
 }
