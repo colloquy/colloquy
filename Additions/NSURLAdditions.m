@@ -37,8 +37,17 @@
 
 	[[NSFileManager defaultManager] removeItemAtPath:path error:nil];
 
+	// go through path components appending everything, until we get to a folder. this will be 1 in every case, except that in which a / is in the filename
 	NSString *parentPath = [path stringByDeletingLastPathComponent];
-	NSString *pathName = [path lastPathComponent];
+	BOOL isDirectory;
+
+	while( ![[NSFileManager defaultManager] fileExistsAtPath:parentPath isDirectory:&isDirectory] && !isDirectory )
+		parentPath = [parentPath substringToIndex:parentPath.length - [parentPath lastPathComponent].length];
+
+	NSString *pathName = [path substringFromIndex:parentPath.length];
+	NSLog(@"%@", path);
+	NSLog(@"%@", parentPath);
+	NSLog(@"%@", pathName);
 	const char *fileSystemPath = [[NSFileManager defaultManager] fileSystemRepresentationWithPath:parentPath];
 
 	FSRef ref, parentRef;
