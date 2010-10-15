@@ -321,6 +321,16 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self showChatViewController:[_views objectAtIndex:index]];
 }
 
+- (void) swipeWithEvent:(NSEvent *) event {
+	CGFloat deltaX = [event deltaX];
+	CGFloat deltaY = [event deltaY];
+
+	if( deltaX > 0 || deltaY > 0 )
+		[self selectPreviousPanel:nil];
+	else if( deltaX < 0 || deltaY < 0 )
+		[self selectNextPanel:nil];
+}
+
 #pragma mark -
 
 - (id <JVChatViewController>) activeChatViewController {
