@@ -325,10 +325,15 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	CGFloat deltaX = [event deltaX];
 	CGFloat deltaY = [event deltaY];
 
-	if( deltaX > 0 || deltaY > 0 )
-		[self selectPreviousPanel:nil];
-	else if( deltaX < 0 || deltaY < 0 )
-		[self selectNextPanel:nil];
+	if( deltaX > 0 || deltaY > 0 ) {
+		if( [event modifierFlags] & NSAlternateKeyMask )
+			[self selectPreviousActivePanel:nil];
+		else [self selectPreviousPanel:nil];
+	} else if( deltaX < 0 || deltaY < 0 ) {
+		if( [event modifierFlags] & NSAlternateKeyMask )
+			[self selectNextActivePanel:nil];
+		else [self selectNextPanel:nil];
+	}
 }
 
 #pragma mark -
