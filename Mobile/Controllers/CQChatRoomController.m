@@ -251,6 +251,65 @@ static BOOL showLeaveEvents;
 
 #pragma mark -
 
+- (void) addToFavorites {
+	
+}
+
+- (void) removeFromFavorites {
+	
+}
+
+- (void) saveTranscript {
+	
+}
+
+- (void) showChannelModes {
+	
+}
+
+#pragma mark -
+
+- (void) addItemsToToolbar {
+	UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+	flexibleItem.isAccessibilityElement = NO;
+
+	UIBarButtonItem *membersItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showMembers)];
+	membersItem.accessibilityLabel = NSLocalizedString(@"Members List", @"Voiceover members list label");
+
+	UIBarButtonItem *favoriteItem = nil;
+	if (YES /*channel isn't in the favorites*/) {
+		favoriteItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStylePlain target:self action:@selector(addToFavorites)];
+		favoriteItem.accessibilityLabel = NSLocalizedString(@"Favorite Channel", @"Voiceover Favorite channel list label");
+	} else {
+		favoriteItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStylePlain target:self action:@selector(removeFromFavorites)];
+		favoriteItem.accessibilityLabel = NSLocalizedString(@"Favorite Channel", @"Voiceover Favorite channel list label");
+	}
+
+	UIBarButtonItem *saveItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStylePlain target:self action:@selector(saveTranscript)];
+	saveItem.accessibilityLabel = NSLocalizedString(@"Save transcript", @"Voiceover save transcript label");
+
+	UIBarButtonItem *channelItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showChannelModes)];
+	channelItem.accessibilityLabel = NSLocalizedString(@"Channel modes", @"Voiceover Channel modes list label");
+
+	self.toolbar.items = [NSArray arrayWithObjects:flexibleItem, membersItem, flexibleItem, favoriteItem, flexibleItem, saveItem, flexibleItem, channelItem, flexibleItem, nil];
+
+	[flexibleItem release];
+	[membersItem release];
+	[favoriteItem release];
+	[saveItem release];
+	[channelItem release];
+
+	/*
+	 - Channel modes
+		- Back
+		- Ban list
+		- Channel Topic
+		- Other modes
+	 */
+}
+
+#pragma mark -
+
 - (void) dismissPopoversAnimated:(BOOL) animated {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	[_currentUserListPopoverController dismissPopoverAnimated:animated];
