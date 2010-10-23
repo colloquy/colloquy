@@ -19,6 +19,8 @@ static BOOL showHostmasksOnPart;
 static BOOL showLeaveEvents;
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
+@property (nonatomic, readwrite, retain) UIToolbar *toolbar;
+
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _didDisconnect:(NSNotification *) notification;
 - (void) _userDefaultsChanged;
@@ -1136,10 +1138,13 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	UIBarButtonItem *item = nil;
 
 	if (self.available) {
-		BOOL isPadModel = [[UIDevice currentDevice] isPadModel];
-		UIBarButtonItemStyle style = (isPadModel ? UIBarButtonItemStylePlain : UIBarButtonItemStyleBordered);
-		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:isPadModel ? @"members-large.png" : @"members.png"] style:style target:self action:@selector(showMembers)];
-		item.accessibilityLabel = NSLocalizedString(@"Members List", @"Voiceover members list label");
+		if ([[UIDevice currentDevice] isPadModel]) {
+			item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members-large.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showMembers)];
+			item.accessibilityLabel = NSLocalizedString(@"Members List", @"Voiceover members list label");
+		} else {
+			item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showToolbar)];
+			item.accessibilityLabel = NSLocalizedString(@"Show action toolbar", @"Voiceover show action toolbar label");
+		}
 	} else {
 		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Join", "Join button title") style:UIBarButtonItemStyleDone target:self action:@selector(join)];	
 		item.accessibilityLabel = NSLocalizedString(@"Join Room", @"Voiceover join room label");
