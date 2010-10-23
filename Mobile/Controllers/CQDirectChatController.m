@@ -122,10 +122,34 @@ static BOOL showingKeyboard;
 
 	CGRect frame = self.navigationController.navigationBar.frame;
 	frame.origin.y = frame.size.height;
-	frame.size.height = 0;
+	frame.size.height = 44;
+	frame.origin.y -= frame.size.height;
 	_toolbar.frame = frame;
 
 	_toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+
+	UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+	flexibleItem.isAccessibilityElement = NO;
+
+	UIBarButtonItem *memberItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserInformation)];
+	memberItem.accessibilityLabel = NSLocalizedString(@"User information", @"Voiceover user information label");
+
+	UIBarButtonItem *ignoreItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStylePlain target:self action:@selector(ignoreUser)];
+	memberItem.accessibilityLabel = NSLocalizedString(@"Ignore user", @"Voiceover ignore user label");
+
+	UIBarButtonItem *saveItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStylePlain target:self action:@selector(saveTranscript)];
+	memberItem.accessibilityLabel = NSLocalizedString(@"Save transcript", @"Voiceover save transcript label");
+
+	UIBarButtonItem *sendItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStylePlain target:self action:@selector(sendFile)];
+	memberItem.accessibilityLabel = NSLocalizedString(@"Send File", @"Voiceover send file label");
+
+	_toolbar.items = [NSArray arrayWithObjects:flexibleItem, memberItem, flexibleItem, ignoreItem, flexibleItem, saveItem, flexibleItem, sendItem, flexibleItem, nil];
+
+	[sendItem release];
+	[saveItem release];
+	[ignoreItem release];
+	[memberItem release];
+	[flexibleItem release];
 
 	[self.view addSubview:_toolbar];
 
@@ -348,7 +372,7 @@ static BOOL showingKeyboard;
 		[UIView beginAnimations:nil context:nil];
 	}
 
-	frame.size.height = 44.;
+	frame.origin.y += frame.size.height;
 	_toolbar.frame = frame;
 
 	if ([UIView areAnimationsEnabled])
@@ -365,7 +389,7 @@ static BOOL showingKeyboard;
 	}
 
 	CGRect frame = _toolbar.frame;
-	frame.size.height = 0.;
+	frame.origin.y -= frame.size.height;
 	_toolbar.frame = frame;
 
 	if ([UIView areAnimationsEnabled])
@@ -388,6 +412,18 @@ static BOOL showingKeyboard;
 	[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
 
 	[userInfoController release];
+}
+
+- (void) ignoreUser {
+	
+}
+
+- (void) saveTranscript {
+	
+}
+
+- (void) sendFile {
+	
 }
 
 #pragma mark -
