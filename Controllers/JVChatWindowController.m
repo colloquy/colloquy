@@ -35,6 +35,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 @interface JVChatWindowController (JVChatWindowControllerPrivate)
 - (void) _claimMenuCommands;
 - (void) _resignMenuCommands;
+- (void) _refreshMenuWithItem:(id) item;
 - (void) _refreshSelectionMenu;
 - (void) _refreshToolbar;
 - (void) _refreshWindow;
@@ -78,7 +79,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[chatViewsOutlineView setDoubleAction:@selector( _doubleClickedListItem: )];
 	[chatViewsOutlineView setAutoresizesOutlineColumn:YES];
 	[chatViewsOutlineView registerForDraggedTypes:[NSArray arrayWithObjects:JVChatViewPboardType, NSFilenamesPboardType, nil]];
-	[chatViewsOutlineView setMenu:[[[NSMenu allocWithZone:nil] initWithTitle:@""] autorelease]];
+	NSMenu *menu = [[[NSMenu allocWithZone:nil] initWithTitle:@""] autorelease];
+	[menu setDelegate:self];
+	[chatViewsOutlineView setMenu:menu];
 
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
 
@@ -234,7 +237,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (IBAction) getInfo:(id) sender {
-	id item = [self selectedListItem];
+	NSInteger row = [chatViewsOutlineView clickedRow];
+	id item = [chatViewsOutlineView itemAtRow:row];
 	if( [item conformsToProtocol:@protocol( JVInspection )] ) {
 		if( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSAlternateKeyMask )
 			[JVInspectorController showInspector:sender];
@@ -618,6 +622,15 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 #pragma mark -
 
+// On Mac OS 10.5 and above, NSTableView and NSOutlineView have better contextual menu support. We now see a highlighted item for what was clicked on and update the menu accordingly
+- (void) menuNeedsUpdate:(NSMenu *) menu {
+	NSInteger clickedRow = [chatViewsOutlineView clickedRow];
+	id item = [chatViewsOutlineView itemAtRow:clickedRow];
+	if( item )
+		[self _refreshMenuWithItem:item];
+	
+}
+
 - (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
 	if( [menuItem action] == @selector( toggleSmallDrawerIcons: ) ) {
 		[menuItem setState:( _usesSmallIcons ? NSOnState : NSOffState )];
@@ -630,7 +643,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		}
 		return YES;
 	} else if( [menuItem action] == @selector( getInfo: ) ) {
-		id item = [self selectedListItem];
+		NSInteger row = [chatViewsOutlineView clickedRow];
+		id item = [chatViewsOutlineView itemAtRow:row];
 		if( [item conformsToProtocol:@protocol( JVInspection )] ) return YES;
 		else return NO;
 	} else if( [menuItem action] == @selector( closeCurrentPanel: ) ) {
@@ -970,7 +984,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) _refreshSelectionMenu {
 	id item = [self selectedListItem];
 	if( ! item ) item = [self activeChatViewController];
+	[self _refreshMenuWithItem:item];
+}
 
+- (void) _refreshMenuWithItem:(id) item {
 	id menuItem = nil;
 	NSMenu *menu = [chatViewsOutlineView menu];
 	NSMenu *newMenu = ( [item respondsToSelector:@selector( menu )] ? [item menu] : nil );
