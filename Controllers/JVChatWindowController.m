@@ -35,6 +35,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 @interface JVChatWindowController (JVChatWindowControllerPrivate)
 - (void) _claimMenuCommands;
 - (void) _resignMenuCommands;
+- (void) _emptyOutlineMenu;
 - (void) _refreshMenuWithItem:(id) item;
 - (void) _refreshSelectionMenu;
 - (void) _refreshToolbar;
@@ -238,7 +239,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (IBAction) getInfo:(id) sender {
 	NSInteger row = [chatViewsOutlineView clickedRow];
-	id item = [chatViewsOutlineView itemAtRow:row];
+	id item = [chatViewsOutlineView itemAtRow:row]; // get the row the user right-clicked
 	if( [item conformsToProtocol:@protocol( JVInspection )] ) {
 		if( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSAlternateKeyMask )
 			[JVInspectorController showInspector:sender];
@@ -626,9 +627,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) menuNeedsUpdate:(NSMenu *) menu {
 	NSInteger clickedRow = [chatViewsOutlineView clickedRow];
 	id item = [chatViewsOutlineView itemAtRow:clickedRow];
-	if( item )
+	if( item ) {
 		[self _refreshMenuWithItem:item];
-	
+	} else {
+		[self _emptyOutlineMenu];
+	}
 }
 
 - (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
@@ -644,7 +647,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		return YES;
 	} else if( [menuItem action] == @selector( getInfo: ) ) {
 		NSInteger row = [chatViewsOutlineView clickedRow];
-		id item = [chatViewsOutlineView itemAtRow:row];
+		id item = [chatViewsOutlineView itemAtRow:row]; // get the row the user right-clicked
 		if( [item conformsToProtocol:@protocol( JVInspection )] ) return YES;
 		else return NO;
 	} else if( [menuItem action] == @selector( closeCurrentPanel: ) ) {
@@ -979,6 +982,20 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	id item = [self selectedListItem];
 	if( [item respondsToSelector:@selector( doubleClicked: )] )
 		[item doubleClicked:sender];
+}
+
+/*
+ * Removes all items from the outline menu.
+ */
+- (void) _emptyOutlineMenu {
+	NSMenu *menu = [chatViewsOutlineView menu];
+	if( [menu respondsToSelector:@selector(removeAllItems)] ) {
+		[menu removeAllItems]; // 10.6
+	} else { // 10.0 and up 
+		for( int i = 0;i < [[menu itemArray] count]; i++ ) {
+			[menu removeItemAtIndex:i];
+		}
+	}
 }
 
 - (void) _refreshSelectionMenu {
