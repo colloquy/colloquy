@@ -990,11 +990,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) _emptyOutlineMenu {
 	NSMenu *menu = [chatViewsOutlineView menu];
 	if( [menu respondsToSelector:@selector(removeAllItems)] ) {
-		[menu removeAllItems]; // 10.6
+		[menu performSelector:@selector(removeAllItems)]; // 10.6
 	} else { // 10.0 and up 
-		for( NSUInteger i = 0;i < [menu itemArray].count; i++ ) {
-			[menu removeItemAtIndex:i];
-		}
+		for( NSMenuItem *menuItem in [[[menu itemArray] copyWithZone:nil] autorelease] )
+			[menu removeItem:menuItem];
 	}
 }
 
