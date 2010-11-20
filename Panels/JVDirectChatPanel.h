@@ -66,6 +66,8 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 - (void) echoSentMessageToDisplay:(JVMutableChatMessage *) message;
 - (JVMutableChatMessage *) currentMessage;
 
+- (void) addMessageToHistory:(id)message;
+
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context;
 
 - (NSUInteger) newMessagesWaiting;

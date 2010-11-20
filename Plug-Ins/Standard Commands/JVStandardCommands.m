@@ -608,6 +608,7 @@
 	if( chatView && [msg length] ) {
 		JVMutableChatMessage *cmessage = [JVMutableChatMessage messageWithText:msg sender:[connection localUser]];
 		[chatView sendMessage:cmessage];
+		[chatView addMessageToHistory:msg];
 		[chatView echoSentMessageToDisplay:cmessage];
 		return YES;
 	} else if( ( user || room ) && [msg length] ) {

@@ -998,6 +998,18 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 }
 
 #pragma mark -
+#pragma mark History manipulation
+
+- (void) addMessageToHistory:(id) message {
+	if( ! [message length] ) return;
+	if( [_sendHistory count] )
+		[_sendHistory replaceObjectAtIndex:0 withObject:[[[NSAttributedString alloc] initWithString:@""] autorelease]];
+	[_sendHistory insertObject:[[message copy] autorelease] atIndex:1];
+	if( [_sendHistory count] > [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatMaximumHistory"] unsignedIntValue] )
+		[_sendHistory removeObjectAtIndex:[_sendHistory count] - 1];	
+}
+
+#pragma mark -
 #pragma mark Notifications Handling
 
 /**
@@ -1066,11 +1078,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 
 	_historyIndex = 0;
 	if( ! [[send string] length] ) return;
-	if( [_sendHistory count] )
-		[_sendHistory replaceObjectAtIndex:0 withObject:[[[NSAttributedString alloc] initWithString:@""] autorelease]];
-	[_sendHistory insertObject:[[[send textStorage] copy] autorelease] atIndex:1];
-	if( [_sendHistory count] > [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatMaximumHistory"] unsignedIntValue] )
-		[_sendHistory removeObjectAtIndex:[_sendHistory count] - 1];
+	[self addMessageToHistory:[send textStorage]];
 
 	if( [sender isKindOfClass:[NSNumber class]] && [sender boolValue] ) action = YES;
 
