@@ -16,6 +16,7 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 	NSString *_deviceToken;
 	NSUInteger _networkIndicatorStack;
 	BOOL _showingTabBar;
+	UIActionSheet *_visibleActionSheet;
 }
 + (CQColloquyApplication *) sharedApplication;
 

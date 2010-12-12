@@ -468,15 +468,18 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) showActionSheet:(UIActionSheet *) sheet forSender:(id) sender animated:(BOOL) animated {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	if (sender && [[UIDevice currentDevice] isPadModel]) {
+		id old = _visibleActionSheet;
+		[old dismissWithClickedButtonIndex:[old cancelButtonIndex] animated:NO];
+		[old release];
+		_visibleActionSheet = [sheet retain];
+
 		if ([sender isKindOfClass:[UIBarButtonItem class]]) {
 			[sheet showFromBarButtonItem:sender animated:animated];
-			return;
 		}
 
 		if ([sender isKindOfClass:[UIView class]]) {
 			UIView *view = sender;
 			[sheet showFromRect:view.bounds inView:view animated:animated];
-			return;
 		}
 	}
 #endif
