@@ -45,16 +45,12 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 
 	NSTimeInterval _lastTimestampTime;
 	NSTimeInterval _lastMessageTime;
-
-	UIToolbar *_toolbar;
 }
 - (id) initWithTarget:(id) target;
 
 @property (nonatomic, readonly) MVChatUser *user;
 
 @property (nonatomic, readonly) NSArray *recentMessages;
-
-@property (nonatomic, readonly) UIToolbar *toolbar;
 
 - (void) sendMessage:(NSString *) message asAction:(BOOL) action;
 

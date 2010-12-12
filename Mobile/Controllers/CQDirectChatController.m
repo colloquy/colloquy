@@ -58,8 +58,6 @@ static BOOL showingKeyboard;
 #pragma mark -
 
 @implementation CQDirectChatController
-@synthesize toolbar = _toolbar;
-
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -117,18 +115,6 @@ static BOOL showingKeyboard;
 		return nil;
 
 	_target = [target retain];
-
-	_toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
-
-	CGRect frame = self.navigationController.navigationBar.frame;
-	frame.origin.y = frame.size.height;
-	frame.size.height = 44;
-	frame.origin.y -= frame.size.height;
-	_toolbar.frame = frame;
-
-	_toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-
-	[self.view addSubview:_toolbar];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_awayStatusChanged:) name:MVChatConnectionSelfAwayStatusChangedNotification object:self.connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:self.connection];
@@ -335,48 +321,6 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (void) showToolbar {
-	CGRect frame = _toolbar.frame;
-	CGSize screenSize = [UIScreen mainScreen].bounds.size;
-	if (UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation))
-		frame.size.width = fmax(screenSize.width, screenSize.height);
-	else frame.size.width = fmin(screenSize.width, screenSize.height);
-	_toolbar.frame = frame;
-
-	if ([UIView areAnimationsEnabled]) {
-		[UIView setAnimationDuration:.4];
-		[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-		[UIView beginAnimations:nil context:nil];
-	}
-
-	frame.origin.y += frame.size.height;
-	_toolbar.frame = frame;
-
-	if ([UIView areAnimationsEnabled])
-		[UIView commitAnimations];
-
-	self.navigationItem.rightBarButtonItem.action = @selector(hideToolbar);
-}
-
-- (void) hideToolbar {
-	if ([UIView areAnimationsEnabled]) {
-		[UIView setAnimationDuration:.1];
-		[UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
-		[UIView beginAnimations:nil context:nil];
-	}
-
-	CGRect frame = _toolbar.frame;
-	frame.origin.y -= frame.size.height;
-	_toolbar.frame = frame;
-
-	if ([UIView areAnimationsEnabled])
-		[UIView commitAnimations];
-
-	self.navigationItem.rightBarButtonItem.action = @selector(showToolbar);
-}
-
-#pragma mark -
-
 - (void) showUserInformation {
 	if (!self.user)
 		return;
@@ -391,45 +335,6 @@ static BOOL showingKeyboard;
 	[userInfoController release];
 }
 
-- (void) ignoreUser {
-	
-}
-
-- (void) saveTranscript {
-	
-}
-
-- (void) sendFile {
-	
-}
-
-#pragma mark -
-
-- (void) addItemsToToolbar {
-	UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-	flexibleItem.isAccessibilityElement = NO;
-
-	UIBarButtonItem *memberItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserInformation)];
-	memberItem.accessibilityLabel = NSLocalizedString(@"User information", @"Voiceover user information label");
-
-	UIBarButtonItem *ignoreItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStylePlain target:self action:@selector(ignoreUser)];
-	memberItem.accessibilityLabel = NSLocalizedString(@"Ignore user", @"Voiceover ignore user label");
-
-	UIBarButtonItem *saveItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStylePlain target:self action:@selector(saveTranscript)];
-	memberItem.accessibilityLabel = NSLocalizedString(@"Save transcript", @"Voiceover save transcript label");
-
-	UIBarButtonItem *sendItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStylePlain target:self action:@selector(sendFile)];
-	memberItem.accessibilityLabel = NSLocalizedString(@"Send File", @"Voiceover send file label");
-
-	_toolbar.items = [NSArray arrayWithObjects:flexibleItem, memberItem, flexibleItem, ignoreItem, flexibleItem, saveItem, flexibleItem, sendItem, flexibleItem, nil];
-
-	[sendItem release];
-	[saveItem release];
-	[ignoreItem release];
-	[memberItem release];
-	[flexibleItem release];
-}
-
 #pragma mark -
 
 - (void) viewDidLoad {
@@ -439,8 +344,6 @@ static BOOL showingKeyboard;
 	chatInputBar.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
 
 	[self _userDefaultsChanged];
-
-	[self addItemsToToolbar];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -1558,8 +1461,6 @@ static BOOL showingKeyboard;
 
 	NSString *capitalizationBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocapitalizationBehavior"];
 	chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
-
-	_toolbar.barStyle = self.navigationController.navigationBar.barStyle;
 }
 
 - (void) _userNicknameDidChange:(NSNotification *) notification {
@@ -1625,13 +1526,10 @@ static BOOL showingKeyboard;
 	UIBarButtonItem *item = nil;
 
 	if (self.connection.connected) {
-		if ([[UIDevice currentDevice] isPadModel]) {
-			item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info-large.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showUserInformation)];
-			item.accessibilityLabel = NSLocalizedString(@"User information", @"Voiceover user information label");
-		} else {
-			item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showToolbar)];
-			item.accessibilityLabel = NSLocalizedString(@"Show action toolbar", @"Voiceover show action toolbar label");
-		}
+        BOOL isPadModel = [[UIDevice currentDevice] isPadModel]; 
+		UIBarButtonItemStyle style = (isPadModel ? UIBarButtonItemStylePlain : UIBarButtonItemStyleBordered); 
+		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:isPadModel ? @"info-large.png" : @"info.png"] style:style target:self action:@selector(showUserInformation)]; 
+		item.accessibilityLabel = NSLocalizedString(@"User Information", @"Voiceover user information label"); 
 	} else {
 		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", "Connect button title") style:UIBarButtonItemStyleDone target:self.connection action:@selector(connect)];
 		item.accessibilityLabel = NSLocalizedString(@"Connect to Server", @"Voiceover connect to server label");

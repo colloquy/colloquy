@@ -19,8 +19,6 @@ static BOOL showHostmasksOnPart;
 static BOOL showLeaveEvents;
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
-@property (nonatomic, readwrite, retain) UIToolbar *toolbar;
-
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _didDisconnect:(NSNotification *) notification;
 - (void) _userDefaultsChanged;
@@ -247,65 +245,6 @@ static BOOL showLeaveEvents;
 		_showingMembersInNavigationController = YES;
 		[self.navigationController pushViewController:_currentUserListViewController animated:YES];
 	}
-}
-
-#pragma mark -
-
-- (void) addToFavorites {
-	
-}
-
-- (void) removeFromFavorites {
-	
-}
-
-- (void) saveTranscript {
-	
-}
-
-- (void) showChannelModes {
-	
-}
-
-#pragma mark -
-
-- (void) addItemsToToolbar {
-	UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-	flexibleItem.isAccessibilityElement = NO;
-
-	UIBarButtonItem *membersItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showMembers)];
-	membersItem.accessibilityLabel = NSLocalizedString(@"Members List", @"Voiceover members list label");
-
-	UIBarButtonItem *favoriteItem = nil;
-	if (YES /*channel isn't in the favorites*/) {
-		favoriteItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStylePlain target:self action:@selector(addToFavorites)];
-		favoriteItem.accessibilityLabel = NSLocalizedString(@"Favorite Channel", @"Voiceover Favorite channel list label");
-	} else {
-		favoriteItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStylePlain target:self action:@selector(removeFromFavorites)];
-		favoriteItem.accessibilityLabel = NSLocalizedString(@"Favorite Channel", @"Voiceover Favorite channel list label");
-	}
-
-	UIBarButtonItem *saveItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStylePlain target:self action:@selector(saveTranscript)];
-	saveItem.accessibilityLabel = NSLocalizedString(@"Save transcript", @"Voiceover save transcript label");
-
-	UIBarButtonItem *channelItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showChannelModes)];
-	channelItem.accessibilityLabel = NSLocalizedString(@"Channel modes", @"Voiceover Channel modes list label");
-
-	self.toolbar.items = [NSArray arrayWithObjects:flexibleItem, membersItem, flexibleItem, favoriteItem, flexibleItem, saveItem, flexibleItem, channelItem, flexibleItem, nil];
-
-	[flexibleItem release];
-	[membersItem release];
-	[favoriteItem release];
-	[saveItem release];
-	[channelItem release];
-
-	/*
-	 - Channel modes
-		- Back
-		- Ban list
-		- Channel Topic
-		- Other modes
-	 */
 }
 
 #pragma mark -
@@ -1197,13 +1136,10 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	UIBarButtonItem *item = nil;
 
 	if (self.available) {
-		if ([[UIDevice currentDevice] isPadModel]) {
-			item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members-large.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showMembers)];
-			item.accessibilityLabel = NSLocalizedString(@"Members List", @"Voiceover members list label");
-		} else {
-			item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"members.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showToolbar)];
-			item.accessibilityLabel = NSLocalizedString(@"Show action toolbar", @"Voiceover show action toolbar label");
-		}
+        BOOL isPadModel = [[UIDevice currentDevice] isPadModel]; 
+		UIBarButtonItemStyle style = (isPadModel ? UIBarButtonItemStylePlain : UIBarButtonItemStyleBordered); 
+		item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:isPadModel ? @"members-large.png" : @"members.png"] style:style target:self action:@selector(showMembers)]; 
+		item.accessibilityLabel = NSLocalizedString(@"Members List", @"Voiceover members list label"); 
 	} else {
 		item = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Join", "Join button title") style:UIBarButtonItemStyleDone target:self action:@selector(join)];	
 		item.accessibilityLabel = NSLocalizedString(@"Join Room", @"Voiceover join room label");
