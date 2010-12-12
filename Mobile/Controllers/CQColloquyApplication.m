@@ -53,6 +53,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[_launchDate release];
 	[_resumeDate release];
 	[_deviceToken release];
+	[_visibleActionSheet release];
 
 	[super dealloc];
 }
