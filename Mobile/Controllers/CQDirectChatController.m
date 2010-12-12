@@ -356,8 +356,9 @@ static BOOL showingKeyboard;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 	}
 
-	if (_showingKeyboard || hardwareKeyboard)
+	if (_showingKeyboard || hardwareKeyboard) {
 		[chatInputBar becomeFirstResponder];
+	}
 
 	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
 		[[CQColloquyApplication sharedApplication] hideTabBarWithTransition:YES];
@@ -1129,10 +1130,6 @@ static BOOL showingKeyboard;
 
 	[[[notification userInfo] objectForKey:UIKeyboardCenterBeginUserInfoKey] getValue:&beginCenterPoint];
 	[[[notification userInfo] objectForKey:UIKeyboardCenterEndUserInfoKey] getValue:&endCenterPoint];
-
-	// Keyboard is sliding horizontal, so don't change.
-	if (beginCenterPoint.y == endCenterPoint.y)
-		return;
 
 	_showingKeyboard = YES;
 
