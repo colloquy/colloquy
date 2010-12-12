@@ -477,13 +477,13 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		if ([sender isKindOfClass:[UIBarButtonItem class]]) {
 			[sheet showFromBarButtonItem:sender animated:animated];
 			_visibleActionSheet = [sheet retain];
-		}
-
-		if ([sender isKindOfClass:[UIView class]]) {
+		} else if ([sender isKindOfClass:[UIView class]]) {
 			UIView *view = sender;
 			[sheet showFromRect:view.bounds inView:view animated:animated];
 			_visibleActionSheet = [sheet retain];
 		}
+
+		return;
 	}
 #endif
 
