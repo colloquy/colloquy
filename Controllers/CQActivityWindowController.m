@@ -364,7 +364,12 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 		return YES;
 	}
 
-	return (([NSDate timeIntervalSinceReferenceDate] - _rowLastClickedTime) > 1.);	
+	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
+	BOOL shouldExpandOrCollapse = ((currentTime - _rowLastClickedTime) > 1.);
+
+	_rowLastClickedTime = currentTime;
+
+	return shouldExpandOrCollapse;
 }
 
 #pragma mark -
