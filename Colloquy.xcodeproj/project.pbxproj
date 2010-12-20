@@ -295,6 +295,7 @@
 		891EF3D1106426CB00CCEA35 /* PFMoveApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 891EF3D0106426CB00CCEA35 /* PFMoveApplicationController.m */; };
 		895BCD3912BD39400082AB5A /* CQActivityWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 895BCD3812BD39400082AB5A /* CQActivityWindow.xib */; };
 		895BCD3D12BD39850082AB5A /* CQActivityWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 895BCD3C12BD39850082AB5A /* CQActivityWindowController.m */; };
+		895BD35212BEE1B60082AB5A /* CQGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 895BD35112BEE1B60082AB5A /* CQGroupCell.m */; };
 		89EB91AA0F269BEF0028B3E3 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; };
 		9220565E11018298005CD72D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9220565D11018298005CD72D /* NSDateAdditions.m */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
@@ -895,6 +896,8 @@
 		895BCD3812BD39400082AB5A /* CQActivityWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = CQActivityWindow.xib; path = Resources/CQActivityWindow.xib; sourceTree = "<group>"; };
 		895BCD3B12BD39850082AB5A /* CQActivityWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQActivityWindowController.h; path = Controllers/CQActivityWindowController.h; sourceTree = "<group>"; };
 		895BCD3C12BD39850082AB5A /* CQActivityWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQActivityWindowController.m; path = Controllers/CQActivityWindowController.m; sourceTree = "<group>"; };
+		895BD35012BEE1B60082AB5A /* CQGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQGroupCell.h; path = Views/CQGroupCell.h; sourceTree = "<group>"; };
+		895BD35112BEE1B60082AB5A /* CQGroupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQGroupCell.m; path = Views/CQGroupCell.m; sourceTree = "<group>"; };
 		89EB91A90F269BEF0028B3E3 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		9220565C11018298005CD72D /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		9220565D11018298005CD72D /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDateAdditions.m; path = Additions/NSDateAdditions.m; sourceTree = "<group>"; };
@@ -1480,6 +1483,8 @@
 				1C0730D106777678008D8AD9 /* ESFloater.h */,
 				1C415F250B350CA300239EB3 /* JVToolbarItem.m */,
 				1C415F240B350CA300239EB3 /* JVToolbarItem.h */,
+				895BD35112BEE1B60082AB5A /* CQGroupCell.m */,
+				895BD35012BEE1B60082AB5A /* CQGroupCell.h */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2597,6 +2602,7 @@
 				9220565E11018298005CD72D /* NSDateAdditions.m in Sources */,
 				891E8467123F0AEF00EC3C0F /* NSCharacterSetAdditions.m in Sources */,
 				895BCD3D12BD39850082AB5A /* CQActivityWindowController.m in Sources */,
+				895BD35212BEE1B60082AB5A /* CQGroupCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,6 +1,7 @@
 @interface CQActivityWindowController : NSWindowController <NSOutlineViewDataSource, NSOutlineViewDelegate> {
 @private
 	NSMapTable *_activity;
+	NSTimeInterval _rowLastClickedTime;
 
 	IBOutlet NSOutlineView *_outlineView;
 }

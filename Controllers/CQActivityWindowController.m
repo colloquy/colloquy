@@ -2,6 +2,8 @@
 
 #import "MVConnectionsController.h"
  
+#import "CQGroupCell.h"
+
 #define CQFileTransferInactiveWaitLimit 300 // in seconds
 
 NSString *CQActivityTypeFileTransfer = @"CQActivityTypeFileTransfer";
@@ -14,6 +16,9 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 - (NSUInteger) _fileTransferCountForConnection:(MVChatConnection *) connection;
 - (NSUInteger) _directChatConnectionCount;
 - (NSUInteger) _invitationCountForConnection:(MVChatConnection *) connection;
+
+- (BOOL) _isHeaderItem:(id) item;
+- (BOOL) _shouldExpandOrCollapse;
 
 - (void) _appendActivity:(id) activity forConnection:(id) connection;
 @end
@@ -28,12 +33,12 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 		return sharedActivityWindowController;
 
 	creatingSharedInstance = YES;
-	sharedActivityWindowController = [[CQActivityWindowController alloc] initWithWindowNibName:nil];
+	sharedActivityWindowController = [[CQActivityWindowController alloc] init];
 
 	return sharedActivityWindowController;
 }
 
-- (id) initWithWindowNibName:(NSString *) windowNibName {
+- (id) init {
 	if (!(self = [super initWithWindowNibName:@"CQActivityWindow"]))
 		return nil;
 
@@ -82,9 +87,6 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 #pragma mark -
 
 - (void) connectionDidConnect:(NSNotification *) notification {
-	if ([MVConnectionsController defaultController].connectedConnections.count > 2)
-		return;
-
 	MVChatConnection *connection = notification.object;
 
 	[_activity setObject:[NSMutableArray array] forKey:connection];
@@ -220,7 +222,7 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView isItemExpandable:(id) item {
-	return ([item isKindOfClass:[MVChatConnection class]] || item == CQDirectChatConnectionKey); // top level, shows the connection name
+	return [self _isHeaderItem:item]; // top level, shows the connection name
 }
 
 - (NSInteger) outlineView:(NSOutlineView *) outlineView numberOfChildrenOfItem:(id) item {
@@ -246,29 +248,46 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 	return [item description];
 }
 
-#pragma mark -
-
-- (CGFloat) outlineView:(NSOutlineView *) outlineView heightOfRowByItem:(id) item {
-	return ([self outlineView:outlineView isItemExpandable:item]) ? 22. : 50.;
+- (BOOL) outlineView:(NSOutlineView *) outlineView isGroupItem:(id) item {
+	return [self _isHeaderItem:item]; // top level, shows the connection name
 }
 
+#pragma mark -
+
 - (NSCell *) outlineView:(NSOutlineView *) outlineView dataCellForTableColumn:(NSTableColumn *) tableColumn item:(id) item {
-	NSString *text = nil;
-	if ([item isKindOfClass:[MVChatConnection class]])
-		text = ((MVChatConnection *)item).server;
-	if (item == CQDirectChatConnectionKey)
-		text = NSLocalizedString(@"Direct Chat Invites", @"Direct Chat Invites header title");
-	if (!text.length)
-		text = [item description];
-	return [[[NSCell alloc] initTextCell:text] autorelease];
+	if ([item isKindOfClass:[MVChatConnection class]]) {
+		CQGroupCell *cell = [[CQGroupCell alloc] initTextCell:((MVChatConnection *)item).server];
+		cell.unansweredActivityCount = [outlineView isItemExpanded:item] ? 0 : ((NSArray *)[_activity objectForKey:item]).count;
+		return [cell autorelease];
+	}
+
+	if (item == CQDirectChatConnectionKey) {
+		CQGroupCell *cell = [[CQGroupCell alloc] initTextCell:NSLocalizedString(@"Direct Chat Invites", @"Direct Chat Invites header title")];
+		cell.unansweredActivityCount = [outlineView isItemExpanded:item] ? 0 : ((NSArray *)[_activity objectForKey:item]).count;
+		return [cell autorelease];
+	}
+
+	return [[[NSCell alloc] initTextCell:[item description]] autorelease];
+}
+
+- (CGFloat) outlineView:(NSOutlineView *) outlineView heightOfRowByItem:(id) item {
+	return (item && [self _isHeaderItem:item]) ? 19. : 50.;
+}
+
+- (BOOL) outlineView:(NSOutlineView *) outlineView shouldCollapseItem:(id) item {
+	return [self _shouldExpandOrCollapse];
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldEditTableColumn:(NSTableColumn *) tableColumn item:(id) item {
 	return NO;
 }
 
+- (BOOL) outlineView:(NSOutlineView *) outlineView shouldExpandItem:(id) item {
+	return [self _shouldExpandOrCollapse];
+}
+
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldSelectItem:(id) item {
-	return ![self outlineView:outlineView isItemExpandable:item];
+	return ![self _isHeaderItem:item];
 }
 
 - (NSString *) outlineView:(NSOutlineView *) outlineView toolTipForCell:(NSCell *) cell rect:(NSRectPointer) rect tableColumn:(NSTableColumn *) tableColumn item:(id) item mouseLocation:(NSPoint) mouseLocation {
@@ -330,6 +349,22 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 
 - (NSUInteger) _invitationCountForConnection:(MVChatConnection *) connection {
 	return [self _countForType:CQActivityTypeChatInvite inConnection:connection];
+}
+
+#pragma mark -
+
+- (BOOL) _isHeaderItem:(id) item {
+	return ([item isKindOfClass:[MVChatConnection class]] || item == CQDirectChatConnectionKey);
+}
+
+- (BOOL) _shouldExpandOrCollapse {
+	if (!_rowLastClickedTime) {
+		_rowLastClickedTime = [NSDate timeIntervalSinceReferenceDate];
+
+		return YES;
+	}
+
+	return (([NSDate timeIntervalSinceReferenceDate] - _rowLastClickedTime) > 1.);	
 }
 
 #pragma mark -
