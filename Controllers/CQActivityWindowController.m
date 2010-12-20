@@ -344,7 +344,7 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 	if (type == CQActivityTypeChatInvite) {
 		NSUInteger insertionPoint = 0;
 		for (NSDictionary *existingActivity in activities) {
-			type = [existingActivity objectForKey:@"type"]
+			type = [existingActivity objectForKey:@"type"];
 			if (type == CQActivityTypeFileTransfer) // File transfers are at the end.
 				break;
 
