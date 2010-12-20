@@ -104,8 +104,6 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 
 - (void) chatRoomInvitationAccepted:(NSNotification *) notification {
 	MVChatRoom *room = notification.object;
-	if (![[MVConnectionsController defaultController] managesConnection:room.connection])
-		  return;
 
 	for (NSMutableDictionary *dictionary in [_activity objectForKey:room.connection]) {
 		if ([dictionary objectForKey:@"type"] != CQActivityTypeChatInvite)
@@ -124,15 +122,12 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 }
 
 - (void) chatRoomInvitationReceived:(NSNotification *) notification {
-	MVChatConnection *connection = notification.object;
-	if (![[MVConnectionsController defaultController] managesConnection:connection])
-		return;
-
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinChatRoomOnInvite"])
 		return;
 
 	// if we're already in the room, ignore it
 
+	MVChatConnection *connection = notification.object;
 	NSMutableDictionary *chatRoomInfo = [notification.userInfo mutableCopy];
 	[chatRoomInfo setObject:CQActivityTypeChatInvite forKey:@"type"];
 	[self _appendActivity:chatRoomInfo forConnection:connection];
