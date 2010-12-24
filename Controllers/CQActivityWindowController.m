@@ -5,10 +5,18 @@
 #import "CQGroupCell.h"
 
 #define CQFileTransferInactiveWaitLimit 300 // in seconds
+#define CQExpandCollapseRowInterval .5
 
 NSString *CQActivityTypeFileTransfer = @"CQActivityTypeFileTransfer";
 NSString *CQActivityTypeChatInvite = @"CQActivityTypeChatInvite";
 NSString *CQActivityTypeDirectChatInvite = @"CQActivityTypeDirectChatInvite";
+
+NSString *CQActivityStatusInvalid = @"CQActivityStatusInvalid";
+NSString *CQActivityStatusPending = @"CQActivityStatusPending";
+NSString *CQActivityStatusComplete = @"CQActivityStatusComplete";
+NSString *CQActivityStatusAccepted = @"CQActivityStatusAccepted";
+NSString *CQActivityStatusRejected = @"CQActivityStatusRejected";
+
 
 NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 
@@ -96,7 +104,8 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 	MVChatConnection *connection = notification.object;
 
 	for (NSMutableDictionary *dictionary in [_activity objectForKey:connection]) {
-		// mark everything as inactive/invalid for the connection
+		if (![dictionary objectForKey:@"status"])
+			[dictionary setObject:CQActivityStatusInvalid forKey:@"status"];
 	}
 
 	[_outlineView reloadData];
@@ -115,7 +124,7 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 		if (![room isEqualToChatRoom:activityRoom]) // can we just use == here?
 			continue;
 
-		// mark item as checked in the list
+		[dictionary setObject:CQActivityStatusAccepted forKey:@"status"];
 
 		[_outlineView reloadData];
 
@@ -127,11 +136,18 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinChatRoomOnInvite"])
 		return;
 
-	// if we're already in the room, ignore it
-
+	NSString *name = [notification.userInfo objectForKey:@"room"];
 	MVChatConnection *connection = notification.object;
+	for (NSDictionary *dictionary in [_activity objectForKey:connection]) { // if we already have an invite and its pending, ignore it
+		if ([[dictionary objectForKey:@"room"] isCaseInsensitiveEqualToString:name]) {
+			if ([dictionary objectForKey:@"status"] == CQActivityStatusPending)
+				return;
+		}
+	}
+
 	NSMutableDictionary *chatRoomInfo = [notification.userInfo mutableCopy];
 	[chatRoomInfo setObject:CQActivityTypeChatInvite forKey:@"type"];
+	[chatRoomInfo setObject:CQActivityStatusPending forKey:@"status"];
 	[self _appendActivity:chatRoomInfo forConnection:connection];
 	[chatRoomInfo release];
 
@@ -143,11 +159,20 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 #pragma mark -
 
 - (void) directChatDidConnect:(NSNotification *) notification {
-	// mark as accepted
+	MVDirectChatConnection *connection = notification.object;
+
+	for (NSMutableDictionary *dictionary in [_activity objectForKey:CQDirectChatConnectionKey]) {
+		// find the connection
+		[dictionary setObject:CQActivityStatusAccepted forKey:@"status"];
+	}
 }
 
 - (void) directChatErrorOccurred:(NSNotification *) notification {
-	// mark as error
+	MVDirectChatConnection *connection = notification.object;
+	for (NSMutableDictionary *dictionary in [_activity objectForKey:CQDirectChatConnectionKey]) {
+		// find the connection
+		[dictionary setObject:CQActivityStatusInvalid forKey:@"status"];
+	}
 }
 
 - (void) directChatOfferReceived:(NSNotification *) notification {
@@ -155,6 +180,7 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 
 	NSMutableDictionary *chatRoomInfo = [notification.userInfo mutableCopy];
 	[chatRoomInfo setObject:CQActivityTypeDirectChatInvite forKey:@"type"];
+	[chatRoomInfo setObject:CQActivityStatusPending forKey:@"status"];
 	[self _appendActivity:chatRoomInfo forConnection:connection];
 	[chatRoomInfo release];
 
@@ -168,8 +194,9 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 - (void) fileTransferWasOffered:(NSNotification *) notification {
 	MVFileTransfer *transfer = notification.object;
 
-	NSMutableDictionary *fileTransferInfo = [[NSDictionary dictionaryWithObjectsAndKeys:CQActivityTypeFileTransfer, @"type", transfer, @"transfer", nil] mutableCopy];
+	NSMutableDictionary *fileTransferInfo = [[NSMutableDictionary dictionaryWithObjectsAndKeys:CQActivityTypeFileTransfer, @"type", transfer, @"transfer", nil] mutableCopy];
 	[fileTransferInfo setObject:CQActivityTypeFileTransfer forKey:@"type"];
+	[fileTransferInfo setObject:CQActivityStatusPending forKey:@"status"];
 	[self _appendActivity:fileTransferInfo forConnection:transfer.user.connection];
 	[fileTransferInfo release];
 
@@ -185,20 +212,39 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(invalidateFileTransfer:) object:transfer];
 
-	// mark as started / start tracking progress
+	for (NSMutableDictionary *dictionary in [_activity objectForKey:transfer.user.connection]) {
+		if ([dictionary objectForKey:@"transfer"] != transfer)
+			continue;
+
+		[dictionary setObject:CQActivityStatusAccepted forKey:@"status"];
+
+		// start tracking progress
+	}
 
 	[self orderFrontIfNecessary];
 }
 
 - (void) fileTransferDidFinish:(NSNotification *) notification {
-	// mark as done
+	MVFileTransfer *transfer = notification.object;
+	for (NSMutableDictionary *dictionary in [_activity objectForKey:transfer.user.connection]) {
+		if ([dictionary objectForKey:@"transfer"] != transfer)
+			continue;
 
+		[dictionary setObject:CQActivityStatusComplete forKey:@"status"];
+	}
+	
 	[self orderFrontIfNecessary];
 }
 
 - (void) fileTransferErrorReceived:(NSNotification *) notification {
-	// mark as invalid
-	
+	MVFileTransfer *transfer = notification.object;
+	for (NSMutableDictionary *dictionary in [_activity objectForKey:transfer.user.connection]) {
+		if ([dictionary objectForKey:@"transfer"] != transfer)
+			continue;
+
+		[dictionary setObject:CQActivityStatusInvalid forKey:@"status"];
+	}
+
 	[self orderFrontIfNecessary];
 }
 
@@ -365,7 +411,7 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 	}
 
 	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
-	BOOL shouldExpandOrCollapse = ((currentTime - _rowLastClickedTime) > 1.);
+	BOOL shouldExpandOrCollapse = ((currentTime - _rowLastClickedTime) > CQExpandCollapseRowInterval);
 
 	_rowLastClickedTime = currentTime;
 
@@ -377,27 +423,20 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 - (void) _appendActivity:(NSDictionary *) activity forConnection:(id) connection {
 	NSMutableArray *activities = [_activity objectForKey:connection];
 	NSString *type = [activity objectForKey:@"type"];
-	if (type == CQActivityTypeFileTransfer) { // file transfers are sorted by time added, so just add to the end
+	if (type == CQActivityTypeFileTransfer) // file transfers are sorted by time added, so just add to the end
 		[activities addObject:activity];
-	}
 
 	if (type == CQActivityTypeChatInvite) {
 		NSUInteger insertionPoint = 0;
 		for (NSDictionary *existingActivity in activities) {
 			type = [existingActivity objectForKey:@"type"];
-			if (type == CQActivityTypeFileTransfer) // File transfers are at the end.
+			if (type == CQActivityTypeFileTransfer) // File transfers are at the end and we want to insert above it
 				break;
 
 			if (type == CQActivityTypeChatInvite)
 				continue;
 
-			id newRoom = [activity objectForKey:@"room"];
-			id existingRoom = [existingActivity objectForKey:@"room"];
-			NSComparisonResult comparisonResult = [newRoom compare:existingRoom];
-			if (comparisonResult == NSOrderedSame /* and the existingActivity is still pending */) // don't show multiple invites for the same room
-				return;
-
-			if (comparisonResult == NSOrderedDescending)
+			if ([[activity objectForKey:@"room"] compare:[existingActivity objectForKey:@"room"]] == NSOrderedDescending)
 				insertionPoint++;
 			else break;
 		}
