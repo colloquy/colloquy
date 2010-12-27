@@ -297,7 +297,6 @@
 		895BCD3D12BD39850082AB5A /* CQActivityWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 895BCD3C12BD39850082AB5A /* CQActivityWindowController.m */; };
 		895BD35212BEE1B60082AB5A /* CQGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 895BD35112BEE1B60082AB5A /* CQGroupCell.m */; };
 		8980EAEE12C462BD00A05283 /* CQDualButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8980EAED12C462BD00A05283 /* CQDualButtonCell.m */; };
-		8980EB3D12C4695600A05283 /* CQChatInviteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8980EB3C12C4695600A05283 /* CQChatInviteCell.m */; };
 		89EB91AA0F269BEF0028B3E3 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; };
 		89EC3AD112C87BB100C6FB64 /* CQOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 89EC3AD012C87BB100C6FB64 /* CQOutlineView.m */; };
 		9220565E11018298005CD72D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9220565D11018298005CD72D /* NSDateAdditions.m */; };
@@ -903,8 +902,6 @@
 		895BD35112BEE1B60082AB5A /* CQGroupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQGroupCell.m; path = Views/CQGroupCell.m; sourceTree = "<group>"; };
 		8980EAEC12C462BD00A05283 /* CQDualButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQDualButtonCell.h; path = Views/CQDualButtonCell.h; sourceTree = "<group>"; };
 		8980EAED12C462BD00A05283 /* CQDualButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQDualButtonCell.m; path = Views/CQDualButtonCell.m; sourceTree = "<group>"; };
-		8980EB3B12C4695600A05283 /* CQChatInviteCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQChatInviteCell.h; path = Views/CQChatInviteCell.h; sourceTree = "<group>"; };
-		8980EB3C12C4695600A05283 /* CQChatInviteCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQChatInviteCell.m; path = Views/CQChatInviteCell.m; sourceTree = "<group>"; };
 		89EB91A90F269BEF0028B3E3 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		89EC3ACF12C87BB100C6FB64 /* CQOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQOutlineView.h; path = Views/CQOutlineView.h; sourceTree = "<group>"; };
 		89EC3AD012C87BB100C6FB64 /* CQOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQOutlineView.m; path = Views/CQOutlineView.m; sourceTree = "<group>"; };
@@ -1492,8 +1489,6 @@
 				1C0730D106777678008D8AD9 /* ESFloater.h */,
 				1C415F250B350CA300239EB3 /* JVToolbarItem.m */,
 				1C415F240B350CA300239EB3 /* JVToolbarItem.h */,
-				8980EB3C12C4695600A05283 /* CQChatInviteCell.m */,
-				8980EB3B12C4695600A05283 /* CQChatInviteCell.h */,
 				8980EAED12C462BD00A05283 /* CQDualButtonCell.m */,
 				8980EAEC12C462BD00A05283 /* CQDualButtonCell.h */,
 				895BD35112BEE1B60082AB5A /* CQGroupCell.m */,
@@ -2619,7 +2614,6 @@
 				895BCD3D12BD39850082AB5A /* CQActivityWindowController.m in Sources */,
 				895BD35212BEE1B60082AB5A /* CQGroupCell.m in Sources */,
 				8980EAEE12C462BD00A05283 /* CQDualButtonCell.m in Sources */,
-				8980EB3D12C4695600A05283 /* CQChatInviteCell.m in Sources */,
 				89EC3AD112C87BB100C6FB64 /* CQOutlineView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
