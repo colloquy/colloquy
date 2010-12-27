@@ -1125,7 +1125,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 				}
 
 				if( [subMsg length] ) {
-					JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:subMsg sender:[[self connection] localUser]];
+					MVChatUser* localUser = ( [[self target] isKindOfClass:[MVChatRoom class]] ? [[self target] localMemberUser] : [[self connection] localUser] );
+					JVMutableChatMessage *cmessage = [[JVMutableChatMessage alloc] initWithText:subMsg sender:localUser];
 					[cmessage setAction:action];
 
 					[self sendMessage:cmessage];
