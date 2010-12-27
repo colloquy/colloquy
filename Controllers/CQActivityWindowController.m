@@ -103,10 +103,9 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 - (void) connectionDidDisconnect:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
 
-	for (NSMutableDictionary *dictionary in [_activity objectForKey:connection]) {
+	for (NSMutableDictionary *dictionary in [_activity objectForKey:connection])
 		if (![dictionary objectForKey:@"status"])
 			[dictionary setObject:CQActivityStatusInvalid forKey:@"status"];
-	}
 
 	[_outlineView reloadData];
 }
@@ -138,12 +137,10 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 
 	NSString *name = [notification.userInfo objectForKey:@"room"];
 	MVChatConnection *connection = notification.object;
-	for (NSDictionary *dictionary in [_activity objectForKey:connection]) { // if we already have an invite and its pending, ignore it
-		if ([[dictionary objectForKey:@"room"] isCaseInsensitiveEqualToString:name]) {
+	for (NSDictionary *dictionary in [_activity objectForKey:connection]) // if we already have an invite and its pending, ignore it
+		if ([[dictionary objectForKey:@"room"] isCaseInsensitiveEqualToString:name])
 			if ([dictionary objectForKey:@"status"] == CQActivityStatusPending)
 				return;
-		}
-	}
 
 	NSMutableDictionary *chatRoomInfo = [notification.userInfo mutableCopy];
 	[chatRoomInfo setObject:CQActivityTypeChatInvite forKey:@"type"];
@@ -200,7 +197,7 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 	[self _appendActivity:fileTransferInfo forConnection:transfer.user.connection];
 	[fileTransferInfo release];
 
-	[self performSelector:@selector(_invalidateItemForFileTransfer:) withObject:transfer afterDelay:CQFileTransferInactiveWaitLimit];
+	// start delayed cancellation of the file transfer
 
 	[_outlineView reloadData];
 
@@ -210,7 +207,7 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 - (void) fileTransferDidStart:(NSNotification *) notification {
 	MVFileTransfer *transfer = notification.object;
 
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(invalidateFileTransfer:) object:transfer];
+	// cancel delayed cancellatioin of the file transfer
 
 	for (NSMutableDictionary *dictionary in [_activity objectForKey:transfer.user.connection]) {
 		if ([dictionary objectForKey:@"transfer"] != transfer)
@@ -257,9 +254,8 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 			NSArray *activity = [_activity objectForKey:key];
 			if (!activity.count)
 				continue;
-			if (childAtIndex == count) {
+			if (childAtIndex == count)
 				return key;
-			}
 			count++;
 		}
 	}
@@ -274,11 +270,9 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 - (NSInteger) outlineView:(NSOutlineView *) outlineView numberOfChildrenOfItem:(id) item {
 	if (!item) {
 		NSUInteger count = 0;
-		for (id key in _activity) {
-			NSArray *activity = [_activity objectForKey:key];
-			if (activity.count)
+		for (id key in _activity)
+			if (((NSArray *)[_activity objectForKey:key]).count)
 				count++;
-		}
 		return count;
 	}
 
@@ -343,33 +337,32 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 		if (invites) {
 			if (invites > 1) {
 				if (fileTransfers) {
-					if (fileTransfers > 1) {
-						return [NSString stringWithFormat:@"%ld file transfers and %ld chat room invites on %@", fileTransfers, invites, ((MVChatConnection *)item).server];
-					}
-					return [NSString stringWithFormat:@"1 file transfer and %ld chat room invites on %@", invites, ((MVChatConnection *)item).server];
+					if (fileTransfers > 1)
+						return [NSString stringWithFormat:NSLocalizedString(@"%ld file transfers and %ld chat room invites on %@", @"tooltip"), fileTransfers, invites, ((MVChatConnection *)item).server];
+					return [NSString stringWithFormat:NSLocalizedString(@"1 file transfer and %ld chat room invites on %@", @"tooltip"), invites, ((MVChatConnection *)item).server];
 				}
-				return [NSString stringWithFormat:@"%ld chat room invites on %@", fileTransfers, ((MVChatConnection *)item).server];
+				return [NSString stringWithFormat:NSLocalizedString(@"%ld chat room invites on %@", @"tooltip"), fileTransfers, ((MVChatConnection *)item).server];
 			}
 			if (fileTransfers) {
 				if (fileTransfers > 1) {
-					return [NSString stringWithFormat:@"%ld file transfers and 1 chat room invite on %@", fileTransfers, ((MVChatConnection *)item).server];
+					return [NSString stringWithFormat:NSLocalizedString(@"%ld file transfers and 1 chat room invite on %@", @"tooltip"), fileTransfers, ((MVChatConnection *)item).server];
 				}
-				return [NSString stringWithFormat:@"1 file transfer and 1 chat room invite on %@", fileTransfers, ((MVChatConnection *)item).server];
+				return [NSString stringWithFormat:NSLocalizedString(@"1 file transfer and 1 chat room invite on %@", @"tooltip"), fileTransfers, ((MVChatConnection *)item).server];
 			}
-			return [NSString stringWithFormat:@"1 chat room invite on %@", fileTransfers, ((MVChatConnection *)item).server];
+			return [NSString stringWithFormat:NSLocalizedString(@"1 chat room invite on %@", @"tooltip"), fileTransfers, ((MVChatConnection *)item).server];
 		}
 		if (fileTransfers) {
 			if (fileTransfers > 1)
-				return [NSString stringWithFormat:@"%ld file transfers on %@", fileTransfers, ((MVChatConnection *)item).server];
-			return [NSString stringWithFormat:@"1 file transfer on %@", fileTransfers, ((MVChatConnection *)item).server];
+				return [NSString stringWithFormat:NSLocalizedString(@"%ld file transfers on %@", @"tooltip"), fileTransfers, ((MVChatConnection *)item).server];
+			return [NSString stringWithFormat:NSLocalizedString(@"1 file transfer on %@", @"tooltip"), fileTransfers, ((MVChatConnection *)item).server];
 		}
 	}
 
 	if (item == CQDirectChatConnectionKey) {
 		NSUInteger count = [self _directChatConnectionCount];
 		if (count > 1)
-			return [NSString stringWithFormat:@"%ld direct chat invitations", count];
-		return [NSString stringWithFormat:@"1 direct chat invitation", count];
+			return [NSString stringWithFormat:NSLocalizedString(@"%ld direct chat invitations", @"tooltip"), count];
+		return [NSString stringWithFormat:NSLocalizedString(@"1 direct chat invitation", @"tooltip"), count];
 	}
 
 	return nil;

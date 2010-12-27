@@ -172,7 +172,7 @@ NSString *CQMouseStateClickKey = @"CQMouseStateClickKey";
 
 #pragma mark -
 
-- (BOOL)trackMouse:(NSEvent *) mouseEvent inRect:(NSRect) cellFrame ofView:(NSView *) controlView untilMouseUp:(BOOL) untilMouseUp {
+- (BOOL) trackMouse:(NSEvent *) mouseEvent inRect:(NSRect) cellFrame ofView:(NSView *) controlView untilMouseUp:(BOOL) untilMouseUp {
 	self.controlView = controlView;
 
 	NSRect leftButtonRect = [self _leftButtonCellFrameFromRect:cellFrame];
