@@ -92,19 +92,11 @@
 - (NSUInteger) hitTestForEvent:(NSEvent *) event inRect:(NSRect) cellFrame ofView:(NSView *) controlView {
 	CGPoint point = [controlView convertPoint:event.locationInWindow fromView:nil];
 
-	if (!_hideLeftButton && NSMouseInRect(point, [self _leftButtonCellFrameFromRect:cellFrame], [controlView isFlipped])) {
-		_leftButtonCell.state = NSOnState;
+	if (!_hideLeftButton && NSMouseInRect(point, [self _leftButtonCellFrameFromRect:cellFrame], [controlView isFlipped]))
 		return (NSCellHitContentArea | NSCellHitTrackableArea);
-	} else {
-		_leftButtonCell.state = NSOffState;
-	}
 
-	if (NSMouseInRect(point, [self _rightButtonCellFrameFromRect:cellFrame], [controlView isFlipped])) {
-		_rightButtonCell.state = NSOnState;
+	if (NSMouseInRect(point, [self _rightButtonCellFrameFromRect:cellFrame], [controlView isFlipped]))
 		return (NSCellHitContentArea | NSCellHitTrackableArea);
-	} else {
-		_rightButtonCell.state = NSOffState;
-	}
 
 	return [super hitTestForEvent:event inRect:cellFrame ofView:controlView];
 }
@@ -138,49 +130,18 @@
 }
 
 - (void) mouseEntered:(NSEvent *) event {
-	NSLog(@"%@", event.trackingArea.userInfo);
-	// get event's trackingArea's frame and see which button it intersects. set that mouseover BOOL to YES
+	if ([[event.trackingArea.userInfo objectForKey:@"Position"] isEqualToString:@"Left"])
+		_mouseoverInLeftButton = YES;
+	else _mouseoverInRightButton = YES;
 
 	[(NSControl *)self.controlView updateCell:self];
 }
 
 - (void) mouseExited:(NSEvent *) event {
-	// get event's trackingArea's frame and see which button it intersects. set that mouseover BOOL to NO
-	
+	if ([[event.trackingArea.userInfo objectForKey:@"Position"] isEqualToString:@"Left"])
+		_mouseoverInLeftButton = NO;
+	else _mouseoverInRightButton = NO;
 
 	[(NSControl *)self.controlView updateCell:self];
 }
-
-/*- (BOOL) trackMouse:(NSEvent *) event inRect:(NSRect) cellFrame ofView:(NSView *) controlView untilMouseUp:(BOOL) untilMouseUp {
-	[super trackMouse:event inRect:cellFrame ofView:controlView untilMouseUp:untilMouseUp];
-
-	NSLog(@"tracking");
-
-	if ([self hitTestForEvent:event inRect:cellFrame ofView:controlView] != (NSCellHitContentArea | NSCellHitTrackableArea))
-		return YES;
-
-	if (event.type != NSLeftMouseDown)
-		return YES;
-
-	BOOL clicked = NO;
-	while (event.type != NSLeftMouseUp) {
-		[controlView setNeedsDisplayInRect:cellFrame];
-
-		clicked = [self hitTestForEvent:event inRect:cellFrame ofView:controlView] == (NSCellHitContentArea | NSCellHitTrackableArea);
-		if (!clicked)
-			[NSApp sendEvent:event];
-
-		event = [controlView.window nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSMouseEnteredMask | NSMouseExitedMask)];
-	}
-
-	if (!clicked)
-		return YES;
-
-	CGPoint point = [controlView convertPoint:event.locationInWindow fromView:nil];
-	if (!_hideLeftButton && NSMouseInRect(point, [self _leftButtonCellFrameFromRect:cellFrame], [controlView isFlipped]))
-		[_leftButtonCell.target performSelector:_leftButtonCell.action withObject:_leftButtonCell];
-	else if (NSMouseInRect(point, [self _rightButtonCellFrameFromRect:cellFrame], [controlView isFlipped]))
-		[_rightButtonCell.target performSelector:_rightButtonCell.action withObject:_rightButtonCell];
-	return YES;
- }*/
 @end
