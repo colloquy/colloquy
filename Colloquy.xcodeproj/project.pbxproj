@@ -3205,7 +3205,6 @@
 					DEBUG,
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 				);
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				ONLY_ACTIVE_ARCH = YES;
 				SYMROOT = build;
 			};
@@ -3269,7 +3268,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				SYMROOT = build;
 			};
 			name = Release;
