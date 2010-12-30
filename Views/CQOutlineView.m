@@ -2,6 +2,12 @@
 
 #import "CQOutlineView.h"
 
+@interface NSCell (CQGroupCell)
+- (void) mouseEntered:(NSEvent *) event;
+- (void) mouseExited:(NSEvent *) event;
+- (void) addTrackingAreasForView:(NSView *) controlView inRect:(NSRect) cellFrame withUserInfo:(NSDictionary *) userInfo mouseLocation:(NSPoint) mouseLocation;
+@end
+
 @implementation CQOutlineView
 - (id) init {
 	if (!(self = [super init]))
