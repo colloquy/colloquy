@@ -1,7 +1,5 @@
 #import "JVAnalyticsController.h"
 
-#import "NSStringAdditions.h"
-
 #include <sys/sysctl.h>
 
 #include <IOKit/IOKitLib.h>
