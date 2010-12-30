@@ -151,7 +151,7 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 	[self _appendActivity:chatRoomInfo forConnection:connection];
 	[chatRoomInfo release];
 
-	[_outlineView reloadItem:connection reloadChildren:YES];
+	[_outlineView reloadData];
 
 	[self orderFrontIfNecessary];
 }
@@ -193,25 +193,12 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 	[self _appendActivity:chatRoomInfo forConnection:CQDirectChatConnectionKey];
 	[chatRoomInfo release];
 
-	[_outlineView reloadItem:CQDirectChatConnectionKey reloadChildren:YES];
+	[_outlineView reloadData];
 
 	[self orderFrontIfNecessary];
 }
 
 #pragma mark -
-
-- (void) fileTransferWasOffered:(NSNotification *) notification {
-	MVFileTransfer *transfer = notification.object;
-
-	NSMutableDictionary *fileTransferInfo = [[NSMutableDictionary dictionaryWithObjectsAndKeys:CQActivityTypeFileTransfer, @"type", transfer, @"transfer", nil] mutableCopy];
-	[fileTransferInfo setObject:CQActivityTypeFileTransfer forKey:@"type"];
-	[self _appendActivity:fileTransferInfo forConnection:transfer.user.connection];
-	[fileTransferInfo release];
-
-	[_outlineView reloadItem:transfer.user.connection reloadChildren:YES];
-
-	[self orderFrontIfNecessary];
-}
 
 - (void) fileTransferDidStart:(NSNotification *) notification {
 	MVFileTransfer *transfer = notification.object;
@@ -252,6 +239,19 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 
 		break;
 	}
+
+	[self orderFrontIfNecessary];
+}
+
+- (void) fileTransferWasOffered:(NSNotification *) notification {
+	MVFileTransfer *transfer = notification.object;
+
+	NSMutableDictionary *fileTransferInfo = [[NSMutableDictionary dictionaryWithObjectsAndKeys:CQActivityTypeFileTransfer, @"type", transfer, @"transfer", nil] mutableCopy];
+	[fileTransferInfo setObject:CQActivityTypeFileTransfer forKey:@"type"];
+	[self _appendActivity:fileTransferInfo forConnection:transfer.user.connection];
+	[fileTransferInfo release];
+
+	[_outlineView reloadData];
 
 	[self orderFrontIfNecessary];
 }
