@@ -296,9 +296,10 @@
 		895BCD3912BD39400082AB5A /* CQActivityWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 895BCD3812BD39400082AB5A /* CQActivityWindow.xib */; };
 		895BCD3D12BD39850082AB5A /* CQActivityWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 895BCD3C12BD39850082AB5A /* CQActivityWindowController.m */; };
 		895BD35212BEE1B60082AB5A /* CQGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 895BD35112BEE1B60082AB5A /* CQGroupCell.m */; };
-		8980EAEE12C462BD00A05283 /* CQDualButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8980EAED12C462BD00A05283 /* CQDualButtonCell.m */; };
+		8980EAEE12C462BD00A05283 /* CQButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8980EAED12C462BD00A05283 /* CQButtonCell.m */; };
 		89EB91AA0F269BEF0028B3E3 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; };
 		89EC3AD112C87BB100C6FB64 /* CQOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 89EC3AD012C87BB100C6FB64 /* CQOutlineView.m */; };
+		89EC3F2112C96FD300C6FB64 /* CQTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 89EC3F2012C96FD300C6FB64 /* CQTitleCell.m */; };
 		9220565E11018298005CD72D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9220565D11018298005CD72D /* NSDateAdditions.m */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
@@ -900,11 +901,13 @@
 		895BCD3C12BD39850082AB5A /* CQActivityWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQActivityWindowController.m; path = Controllers/CQActivityWindowController.m; sourceTree = "<group>"; };
 		895BD35012BEE1B60082AB5A /* CQGroupCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQGroupCell.h; path = Views/CQGroupCell.h; sourceTree = "<group>"; };
 		895BD35112BEE1B60082AB5A /* CQGroupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQGroupCell.m; path = Views/CQGroupCell.m; sourceTree = "<group>"; };
-		8980EAEC12C462BD00A05283 /* CQDualButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQDualButtonCell.h; path = Views/CQDualButtonCell.h; sourceTree = "<group>"; };
-		8980EAED12C462BD00A05283 /* CQDualButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQDualButtonCell.m; path = Views/CQDualButtonCell.m; sourceTree = "<group>"; };
+		8980EAEC12C462BD00A05283 /* CQButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQButtonCell.h; path = Views/CQButtonCell.h; sourceTree = "<group>"; };
+		8980EAED12C462BD00A05283 /* CQButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQButtonCell.m; path = Views/CQButtonCell.m; sourceTree = "<group>"; };
 		89EB91A90F269BEF0028B3E3 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		89EC3ACF12C87BB100C6FB64 /* CQOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQOutlineView.h; path = Views/CQOutlineView.h; sourceTree = "<group>"; };
 		89EC3AD012C87BB100C6FB64 /* CQOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQOutlineView.m; path = Views/CQOutlineView.m; sourceTree = "<group>"; };
+		89EC3F1F12C96FD300C6FB64 /* CQTitleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQTitleCell.h; path = Views/CQTitleCell.h; sourceTree = "<group>"; };
+		89EC3F2012C96FD300C6FB64 /* CQTitleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQTitleCell.m; path = Views/CQTitleCell.m; sourceTree = "<group>"; };
 		9220565C11018298005CD72D /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		9220565D11018298005CD72D /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDateAdditions.m; path = Additions/NSDateAdditions.m; sourceTree = "<group>"; };
 		A1429C720901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Languages/Italian.lproj/Colloquy.nib; sourceTree = "<group>"; };
@@ -1489,12 +1492,14 @@
 				1C0730D106777678008D8AD9 /* ESFloater.h */,
 				1C415F250B350CA300239EB3 /* JVToolbarItem.m */,
 				1C415F240B350CA300239EB3 /* JVToolbarItem.h */,
-				8980EAED12C462BD00A05283 /* CQDualButtonCell.m */,
-				8980EAEC12C462BD00A05283 /* CQDualButtonCell.h */,
+				8980EAED12C462BD00A05283 /* CQButtonCell.m */,
+				8980EAEC12C462BD00A05283 /* CQButtonCell.h */,
 				895BD35112BEE1B60082AB5A /* CQGroupCell.m */,
 				895BD35012BEE1B60082AB5A /* CQGroupCell.h */,
 				89EC3AD012C87BB100C6FB64 /* CQOutlineView.m */,
 				89EC3ACF12C87BB100C6FB64 /* CQOutlineView.h */,
+				89EC3F2012C96FD300C6FB64 /* CQTitleCell.m */,
+				89EC3F1F12C96FD300C6FB64 /* CQTitleCell.h */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2613,8 +2618,9 @@
 				891E8467123F0AEF00EC3C0F /* NSCharacterSetAdditions.m in Sources */,
 				895BCD3D12BD39850082AB5A /* CQActivityWindowController.m in Sources */,
 				895BD35212BEE1B60082AB5A /* CQGroupCell.m in Sources */,
-				8980EAEE12C462BD00A05283 /* CQDualButtonCell.m in Sources */,
+				8980EAEE12C462BD00A05283 /* CQButtonCell.m in Sources */,
 				89EC3AD112C87BB100C6FB64 /* CQOutlineView.m in Sources */,
+				89EC3F2112C96FD300C6FB64 /* CQTitleCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3199,6 +3205,7 @@
 					DEBUG,
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				ONLY_ACTIVE_ARCH = YES;
 				SYMROOT = build;
 			};
@@ -3262,6 +3269,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C6A13ED08666E62009EE6D2 /* Common Settings.xcconfig */;
 			buildSettings = {
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				SYMROOT = build;
 			};
 			name = Release;

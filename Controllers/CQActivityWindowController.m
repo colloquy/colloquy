@@ -2,6 +2,7 @@
 
 #import "MVConnectionsController.h"
 
+#import "CQTitleCell.h"
 #import "CQGroupCell.h"
 
 #define CQFileTransferInactiveWaitLimit 300 // in seconds
@@ -11,9 +12,7 @@ NSString *CQActivityTypeFileTransfer = @"CQActivityTypeFileTransfer";
 NSString *CQActivityTypeChatInvite = @"CQActivityTypeChatInvite";
 NSString *CQActivityTypeDirectChatInvite = @"CQActivityTypeDirectChatInvite";
 
-NSString *CQActivityStatusInvalid = @"CQActivityStatusInvalid";
 NSString *CQActivityStatusPending = @"CQActivityStatusPending";
-NSString *CQActivityStatusComplete = @"CQActivityStatusComplete";
 NSString *CQActivityStatusAccepted = @"CQActivityStatusAccepted";
 NSString *CQActivityStatusRejected = @"CQActivityStatusRejected";
 
@@ -52,6 +51,10 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 	_activity = [[NSMapTable alloc] initWithKeyOptions:NSMapTableZeroingWeakMemory valueOptions:NSMapTableStrongMemory capacity:[[MVConnectionsController defaultController] connections].count];
 	[_activity setObject:[NSMutableArray array] forKey:CQDirectChatConnectionKey];
 
+	_timeFormatter = [[NSDateFormatter alloc] init];
+	_timeFormatter.dateStyle = NSDateFormatterNoStyle;
+	_timeFormatter.timeStyle = NSDateFormatterShortStyle;
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatRoomInvitationAccepted:) name:MVChatRoomJoinedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatRoomInvitationReceived:) name:MVChatRoomInvitedNotification object:nil];
 
@@ -71,8 +74,10 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 }
 
 - (void) dealloc {
+	[_titleCell release];
 	[_groupCell release];
 	[_activity release];
+	[_timeFormatter release];
 
 	[super dealloc];
 }
@@ -103,11 +108,7 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 - (void) connectionDidDisconnect:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
 
-	for (NSMutableDictionary *dictionary in [_activity objectForKey:connection])
-		if (![dictionary objectForKey:@"status"])
-			[dictionary setObject:CQActivityStatusInvalid forKey:@"status"];
-
-	[_outlineView reloadData];
+	[_outlineView reloadItem:connection reloadChildren:YES];
 }
 
 #pragma mark -
@@ -125,7 +126,7 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 
 		[dictionary setObject:CQActivityStatusAccepted forKey:@"status"];
 
-		[_outlineView reloadData];
+		[_outlineView reloadItem:dictionary];
 
 		break;
 	}
@@ -138,17 +139,19 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 	NSString *name = [notification.userInfo objectForKey:@"room"];
 	MVChatConnection *connection = notification.object;
 	for (NSDictionary *dictionary in [_activity objectForKey:connection]) // if we already have an invite and its pending, ignore it
-		if ([[dictionary objectForKey:@"room"] isCaseInsensitiveEqualToString:name])
+		if ([[dictionary objectForKey:@"room"] isCaseInsensitiveEqualToString:name]) // will @"room"'s value always be a string?
 			if ([dictionary objectForKey:@"status"] == CQActivityStatusPending)
 				return;
 
 	NSMutableDictionary *chatRoomInfo = [notification.userInfo mutableCopy];
 	[chatRoomInfo setObject:CQActivityTypeChatInvite forKey:@"type"];
 	[chatRoomInfo setObject:CQActivityStatusPending forKey:@"status"];
+	[chatRoomInfo setObject:connection forKey:@"connection"];
+	[chatRoomInfo setObject:[NSDate date] forKey:@"date"];
 	[self _appendActivity:chatRoomInfo forConnection:connection];
 	[chatRoomInfo release];
 
-	[_outlineView reloadData];
+	[_outlineView reloadItem:connection reloadChildren:YES];
 
 	[self orderFrontIfNecessary];
 }
@@ -158,19 +161,26 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 - (void) directChatDidConnect:(NSNotification *) notification {
 	MVDirectChatConnection *connection = notification.object;
 
-	for (NSMutableDictionary *dictionary in [_activity objectForKey:CQDirectChatConnectionKey]) {
-		if ([dictionary objectForKey:@"transfer"] != connection)
+	for (NSDictionary *dictionary in [_activity objectForKey:CQDirectChatConnectionKey]) {
+		if ([dictionary objectForKey:@"connection"] != connection)
 			continue;
-		[dictionary setObject:CQActivityStatusAccepted forKey:@"status"];
+
+		[_outlineView reloadItem:dictionary];
+
+		break;
 	}
 }
 
 - (void) directChatErrorOccurred:(NSNotification *) notification {
 	MVDirectChatConnection *connection = notification.object;
-	for (NSMutableDictionary *dictionary in [_activity objectForKey:CQDirectChatConnectionKey]) {
-		if ([dictionary objectForKey:@"transfer"] != connection)
+
+	for (NSDictionary *dictionary in [_activity objectForKey:CQDirectChatConnectionKey]) {
+		if ([dictionary objectForKey:@"connection"] != connection)
 			continue;
-		[dictionary setObject:CQActivityStatusInvalid forKey:@"status"];
+
+		[_outlineView reloadItem:dictionary];
+
+		break;
 	}
 }
 
@@ -179,12 +189,11 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 
 	NSMutableDictionary *chatRoomInfo = [notification.userInfo mutableCopy];
 	[chatRoomInfo setObject:CQActivityTypeDirectChatInvite forKey:@"type"];
-	[chatRoomInfo setObject:CQActivityStatusPending forKey:@"status"];
 	[chatRoomInfo setObject:connection forKey:@"connection"];
 	[self _appendActivity:chatRoomInfo forConnection:CQDirectChatConnectionKey];
 	[chatRoomInfo release];
 
-	[_outlineView reloadData];
+	[_outlineView reloadItem:CQDirectChatConnectionKey reloadChildren:YES];
 
 	[self orderFrontIfNecessary];
 }
@@ -196,13 +205,10 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 
 	NSMutableDictionary *fileTransferInfo = [[NSMutableDictionary dictionaryWithObjectsAndKeys:CQActivityTypeFileTransfer, @"type", transfer, @"transfer", nil] mutableCopy];
 	[fileTransferInfo setObject:CQActivityTypeFileTransfer forKey:@"type"];
-	[fileTransferInfo setObject:CQActivityStatusPending forKey:@"status"];
 	[self _appendActivity:fileTransferInfo forConnection:transfer.user.connection];
 	[fileTransferInfo release];
 
-	// start delayed cancellation of the file transfer
-
-	[_outlineView reloadData];
+	[_outlineView reloadItem:transfer.user.connection reloadChildren:YES];
 
 	[self orderFrontIfNecessary];
 }
@@ -210,15 +216,13 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 - (void) fileTransferDidStart:(NSNotification *) notification {
 	MVFileTransfer *transfer = notification.object;
 
-	// cancel delayed cancellatioin of the file transfer
-
-	for (NSMutableDictionary *dictionary in [_activity objectForKey:transfer.user.connection]) {
+	for (NSDictionary *dictionary in [_activity objectForKey:transfer.user.connection]) {
 		if ([dictionary objectForKey:@"transfer"] != transfer)
 			continue;
 
-		[dictionary setObject:CQActivityStatusAccepted forKey:@"status"];
+		[_outlineView reloadItem:dictionary];
 
-		// start tracking progress
+		break;
 	}
 
 	[self orderFrontIfNecessary];
@@ -226,11 +230,13 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 
 - (void) fileTransferDidFinish:(NSNotification *) notification {
 	MVFileTransfer *transfer = notification.object;
-	for (NSMutableDictionary *dictionary in [_activity objectForKey:transfer.user.connection]) {
+	for (NSDictionary *dictionary in [_activity objectForKey:transfer.user.connection]) {
 		if ([dictionary objectForKey:@"transfer"] != transfer)
 			continue;
 
-		[dictionary setObject:CQActivityStatusComplete forKey:@"status"];
+		[_outlineView reloadItem:dictionary];
+		
+		break;
 	}
 	
 	[self orderFrontIfNecessary];
@@ -238,11 +244,13 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 
 - (void) fileTransferErrorReceived:(NSNotification *) notification {
 	MVFileTransfer *transfer = notification.object;
-	for (NSMutableDictionary *dictionary in [_activity objectForKey:transfer.user.connection]) {
+	for (NSDictionary *dictionary in [_activity objectForKey:transfer.user.connection]) {
 		if ([dictionary objectForKey:@"transfer"] != transfer)
 			continue;
 
-		[dictionary setObject:CQActivityStatusInvalid forKey:@"status"];
+		[_outlineView reloadItem:dictionary];
+
+		break;
 	}
 
 	[self orderFrontIfNecessary];
@@ -303,11 +311,19 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 			_groupCell = [[CQGroupCell alloc] initTextCell:@""];
 		return _groupCell;
 	}
+
+	NSString *type = [item objectForKey:@"type"];
+	if (type == CQActivityTypeChatInvite || type == CQActivityTypeDirectChatInvite) {
+		if (!_titleCell)
+			_titleCell = [[CQTitleCell alloc] init];
+		return _titleCell;
+	}
+
 	return nil;
 }
 
 - (CGFloat) outlineView:(NSOutlineView *) outlineView heightOfRowByItem:(id) item {
-	return (item && [self _isHeaderItem:item]) ? 19. : 50.;
+	return (item && [self _isHeaderItem:item]) ? 19. : 40.;
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldCollapseItem:(id) item {
@@ -368,7 +384,118 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 			groupCell.title = NSLocalizedString(@"Direct Chat Invites", @"Direct Chat Invites header title");
 		else groupCell.title = ((MVChatConnection *)item).server;
 		groupCell.unansweredActivityCount = [outlineView isItemExpanded:item] ? 0 : ((NSArray *)[_activity objectForKey:item]).count;
+
+		return;
 	}
+
+	CQTitleCell *titleCell = (CQTitleCell *)cell;
+	titleCell.leftButtonCell.target = self;
+	titleCell.rightButtonCell.target = self;
+
+	NSString *title = nil;
+	NSString *subtitle = nil;
+	BOOL hidesLeftButton = NO;
+
+	NSString *titleFormat = nil;
+
+	NSString *type = [item objectForKey:@"type"];
+	MVChatUser *user = [item objectForKey:@"user"];
+	NSDate *date = [item objectForKey:@"date"];
+	if (type == CQActivityTypeChatInvite) {
+		NSString *status = [item objectForKey:@"status"];
+		if (status == CQActivityStatusAccepted) {
+			titleFormat = NSLocalizedString(@"Joined %@ on %@", @"cell label text format");
+			// subtitle: @"lastMessageHere";
+
+			titleCell.leftButtonCell.action = @selector(showChatPanel:); // magnifying glass
+			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:); // x
+		} else if (status == CQActivityStatusPending) {
+			titleFormat = NSLocalizedString(@"Invited to %@ on %@", @"cell label text format");
+			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"By %@ at %@", @"by (user) at (time) cell label subtitle text"), user.nickname, [_timeFormatter stringFromDate:date]];
+
+			titleCell.leftButtonCell.action = @selector(acceptChatInvite:); // check
+			titleCell.rightButtonCell.action = @selector(rejectChatInvite:); // x
+		} else if (status == CQActivityStatusRejected) {
+			titleFormat = NSLocalizedString(@"Ignored invite to %@ on %@", @"Ignored invite to (room) on (server) cell label text format");
+			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"Invited by %@ at %@", @"by (user) at (time) cell label subtitle text"), user.nickname, [_timeFormatter stringFromDate:date]];
+
+			titleCell.leftButtonCell.action = @selector(requestChatInvite:); // retry circle, /knock's
+			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:); // x
+		}
+
+		title = [[NSString alloc] initWithFormat:titleFormat, [item objectForKey:@"room"], ((MVChatConnection *)[item objectForKey:@"connection"]).server];
+	}
+
+	if (type == CQActivityTypeDirectChatInvite) {
+		MVDirectChatConnection *connection = [item objectForKey:@"connection"];
+		switch (connection.status) {
+		case MVDirectChatConnectionConnectedStatus:
+			titleFormat = NSLocalizedString(@"Accepted direct chat with %@", @"cell label text format"); // left: show, right: close
+			// subtitle: show last chat line
+
+			titleCell.leftButtonCell.action = @selector(showChatPanel:); // magnifying glass
+			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:); // x
+			break;
+		case MVDirectChatConnectionWaitingStatus:
+			titleFormat = NSLocalizedString(@"Direct chat request from %@", @"cell label text format"); // left: accept, right: reject
+			// show shared chat rooms
+
+			titleCell.leftButtonCell.action = @selector(acceptChatInvite:); // check
+			titleCell.rightButtonCell.action = @selector(rejectChatInvite:); // x
+			break;
+		case MVDirectChatConnectionDisconnectedStatus:
+			hidesLeftButton = YES; // right: close/remove
+			titleFormat = NSLocalizedString(@"Ended direct chat with %@", @"cell label text format");
+			// show last chat line
+
+			titleCell.leftButtonCell.action = @selector(showChatPanel:); // magnifying glass
+			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:); // x
+			break;
+		case MVDirectChatConnectionErrorStatus:
+			titleFormat = NSLocalizedString(@"Error during direct chat with %@", @"cell label text format");
+			// show error reason
+
+			titleCell.leftButtonCell.action = @selector(requestChatInvite:); // retry circle, new dcc chat session
+			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:); // x
+			break;
+		}
+
+		title = [[NSString alloc] initWithFormat:titleFormat, connection.user.displayName];
+	}
+
+	if (type == CQActivityTypeFileTransfer) {
+		// if its done or cancelled, only show one button
+	}
+
+	titleCell.hidesLeftButton = hidesLeftButton;
+
+	titleCell.titleText = title;
+	[title release];
+
+	titleCell.subtitleText = subtitle;
+	[subtitle release];
+}
+
+#pragma mark -
+
+- (void) showChatPanel:(id) sender {
+	
+}
+
+- (void) removeRowFromWindow:(id) sender {
+	
+}
+
+- (void) acceptChatInvite:(id) sender {
+	
+}
+
+- (void) rejectChatInvite:(id) sender {
+	// set rejected date
+}
+
+- (void) requestChatInvite:(id) sender {
+	
 }
 
 #pragma mark -
@@ -444,9 +571,7 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 		NSUInteger insertionPoint = 0;
 		id newUser = [activity objectForKey:@"user"];
 		for (NSDictionary *existingActivity in activities) {
-			id existingUser = [existingActivity objectForKey:@"user"];
-			NSComparisonResult comparisonResult = [newUser compare:existingUser];
-			if (comparisonResult != NSOrderedDescending) // multiple dcc chat sessions for the same username are valid, added to the end, after the current ones.
+			if ([newUser compare:[existingActivity objectForKey:@"user"]] != NSOrderedDescending) // multiple dcc chat sessions for the same username are valid, added to the end, after the current ones.
 				insertionPoint++;
 			else break;
 		}

@@ -1,4 +1,5 @@
 @class CQGroupCell;
+@class CQTitleCell;
 
 @interface CQActivityWindowController : NSWindowController {
 @private
@@ -8,6 +9,9 @@
 	IBOutlet NSOutlineView *_outlineView;
 
 	CQGroupCell *_groupCell;
+	CQTitleCell *_titleCell;
+
+	NSDateFormatter *_timeFormatter;
 }
 + (CQActivityWindowController *) sharedController;
 
