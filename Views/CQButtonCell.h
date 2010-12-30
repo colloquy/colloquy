@@ -5,7 +5,7 @@ extern NSString *CQMouseStateDefaultKey;
 extern NSString *CQMouseStateHoverKey;
 extern NSString *CQMouseStateClickKey;
 
-@interface CQDualButtonCell : NSCell {
+@interface CQButtonCell : NSCell {
 @private
 	NSButtonCell *_leftButtonCell;
 	NSButtonCell *_rightButtonCell;
@@ -20,8 +20,4 @@ extern NSString *CQMouseStateClickKey;
 @property (nonatomic, readonly) NSButtonCell *rightButtonCell;
 @property (nonatomic) BOOL hidesLeftButton;
 @property (nonatomic, retain) NSDictionary *mouseStates;
-
-- (void) mouseEntered:(NSEvent *) event;
-- (void) mouseExited:(NSEvent *) event;
-- (void) addTrackingAreasForView:(NSView *) controlView inRect:(NSRect) cellFrame withUserInfo:(NSDictionary *) userInfo mouseLocation:(NSPoint) mouseLocation;
 @end

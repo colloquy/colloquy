@@ -1,4 +1,4 @@
-#import "CQDualButtonCell.h"
+#import "CQButtonCell.h"
 
 #define CQMouseStateDefault 0
 #define CQMouseStateHover 1
@@ -19,7 +19,7 @@ NSString *CQMouseStateClickKey = @"CQMouseStateClickKey";
 
 #pragma mark -
 
-@implementation CQDualButtonCell
+@implementation CQButtonCell
 @synthesize rightButtonCell = _rightButtonCell;
 @synthesize leftButtonCell = _leftButtonCell;
 @synthesize hidesLeftButton = _hideLeftButton;
@@ -57,7 +57,7 @@ NSString *CQMouseStateClickKey = @"CQMouseStateClickKey";
 }
 
 - (id) copyWithZone:(NSZone *) zone {
-	CQDualButtonCell *cell = (CQDualButtonCell *)[super copyWithZone:zone];
+	CQButtonCell *cell = (CQButtonCell *)[super copyWithZone:zone];
 	cell->_rightButtonCell = [_rightButtonCell retain];
 	cell->_leftButtonCell = [_leftButtonCell retain];
 	cell->_hideLeftButton = _hideLeftButton;
