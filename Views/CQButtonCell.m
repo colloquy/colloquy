@@ -197,13 +197,13 @@ NSString *CQMouseStateClickKey = @"CQMouseStateClickKey";
 	}
 
 	if (_leftButtonMouseState == CQMouseStateClick) {
-		[_leftButtonCell trackMouse:mouseEvent inRect:leftButtonRect ofView:controlView untilMouseUp:untilMouseUp];
+		[_leftButtonCell.target performSelector:_leftButtonCell.action withObject:self afterDelay:0.];
 		_leftButtonMouseState = CQMouseStateHover;
 		[controlView setNeedsDisplayInRect:cellFrame];
 	}
 
 	if (_rightButtonMouseState == CQMouseStateClick) {
-		[_rightButtonCell trackMouse:mouseEvent inRect:rightButtonRect ofView:controlView untilMouseUp:untilMouseUp];
+		[_rightButtonCell.target performSelector:_rightButtonCell.action withObject:self afterDelay:0.];
 		_rightButtonMouseState = CQMouseStateHover;
 		[controlView setNeedsDisplayInRect:cellFrame];
 	}
