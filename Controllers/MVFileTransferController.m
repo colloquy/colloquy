@@ -19,7 +19,7 @@ static MVFileTransferController *sharedInstance = nil;
 + (void) setUserPreferredDownloadFolder:(NSString *) path {
 	if ([[NSFileManager defaultManager] isWritableFileAtPath:path])
 		[[NSUserDefaults standardUserDefaults] setObject:path forKey:@"JVUserPreferredDownloadFolder"];
-	else NSRunAlertPanel(NSLocalizedString(@"Unable to Set Download Folder", "Unable to Set Download Folder title"), [NSString stringWithFormat:NSLocalizedString(@"Colloquy is unable to set \"%@\" to the download folder. Please try a different location.", @"Colloquy is unable to set \"%@\" to the download folder. Please try a different location. error message"), path], NSLocalizedString(@"Ok", @"Ok button"));
+	else NSRunAlertPanel(NSLocalizedString(@"Unable to Set Download Folder", "Unable to Set Download Folder title"), [NSString stringWithFormat:NSLocalizedString(@"Colloquy is unable to set \"%@\" to the download folder. Please try a different location.", @"Colloquy is unable to set \"%@\" to the download folder. Please try a different location. error message"), path], NSLocalizedString(@"Ok", @"Ok button"), nil, nil);
 }
 
 #pragma mark -
