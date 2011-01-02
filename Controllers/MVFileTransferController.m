@@ -11,7 +11,7 @@ static MVFileTransferController *sharedInstance = nil;
 + (NSString *) userPreferredDownloadFolder {
 	NSString *preferredDownloadFolder = [[NSUserDefaults standardUserDefaults] stringForKey:@"JVUserPreferredDownloadFolder"];
 
-	if( !preferredDownloadFolder.length )
+	if (!preferredDownloadFolder.length)
 		return [@"~/Downloads" stringByExpandingTildeInPath];
 	return preferredDownloadFolder;
 }
@@ -19,9 +19,7 @@ static MVFileTransferController *sharedInstance = nil;
 + (void) setUserPreferredDownloadFolder:(NSString *) path {
 	if ([[NSFileManager defaultManager] isWritableFileAtPath:path])
 		[[NSUserDefaults standardUserDefaults] setObject:path forKey:@"JVUserPreferredDownloadFolder"];
-	else {
-		// fail, somehow
-	}
+	else NSRunAlertPanel(NSLocalizedString(@"Unable to Set Download Folder", "Unable to Set Download Folder title"), [NSString stringWithFormat:NSLocalizedString(@"Colloquy is unable to set \"%@\" to the download folder. Please try a different location.", @"Colloquy is unable to set \"%@\" to the download folder. Please try a different location. error message"), path], NSLocalizedString(@"Ok", @"Ok button"));
 }
 
 #pragma mark -
@@ -36,7 +34,7 @@ static MVFileTransferController *sharedInstance = nil;
 	if (!(self = [super init]))
 		return nil;
 
-	_safeFileExtentions = [[NSSet allocWithZone:nil] initWithObjects:@"jpg", @"jpeg", @"gif", @"png", @"tif", @"tiff", @"psd", @"pdf", @"txt", @"rtf", @"html", @"htm", @"swf", @"mp3", @"wma", @"wmv", @"ogg", @"ogm", @"mov", @"mpg", @"mpeg", @"m1v", @"m2v", @"mp4", @"avi", @"vob", @"avi", @"asx", @"asf", @"pls", @"m3u", @"rmp", @"aif", @"aiff", @"aifc", @"wav", @"wave", @"m4a", @"m4p", @"m4b", @"dmg", @"udif", @"ndif", @"dart", @"sparseimage", @"cdr", @"dvdr", @"iso", @"img", @"toast", @"rar", @"sit", @"sitx", @"bin", @"hqx", @"zip", @"gz", @"tgz", @"tar", @"bz", @"bz2", @"tbz", @"z", @"taz", @"uu", @"uue", @"colloquytranscript", @"torrent",nil];
+	_safeFileExtentions = [[NSSet allocWithZone:nil] initWithObjects:@"jpg", @"jpeg", @"gif", @"png", @"tif", @"tiff", @"psd", @"pdf", @"txt", @"rtf", @"html", @"htm", @"swf", @"mp3", @"wma", @"wmv", @"ogg", @"ogm", @"mov", @"mpg", @"mpeg", @"m1v", @"m2v", @"mp4", @"avi", @"vob", @"avi", @"asx", @"asf", @"pls", @"m3u", @"rmp", @"aif", @"aiff", @"aifc", @"wav", @"wave", @"m4a", @"m4p", @"m4b", @"dmg", @"udif", @"ndif", @"dart", @"sparseimage", @"cdr", @"dvdr", @"iso", @"img", @"toast", @"rar", @"sit", @"sitx", @"bin", @"hqx", @"zip", @"gz", @"tgz", @"tar", @"bz", @"bz2", @"tbz", @"z", @"taz", @"uu", @"uue", @"colloquytranscript", @"torrent", nil];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileTransferDidFinish:) name:MVFileTransferFinishedNotification object:nil];
 
