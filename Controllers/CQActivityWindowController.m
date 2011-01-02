@@ -546,14 +546,13 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 
 - (void) showChatPanel:(id) sender {
 	id item = [_outlineView itemAtRow:[sender clickedRow]];
-	
 }
 
 - (void) removeRowFromWindow:(id) sender {
 	id item = [_outlineView itemAtRow:[sender clickedRow]];
 	if ([item objectForKey:@"type"] == CQActivityTypeFileTransfer)
 		[item removeObjectForKey:@"cell"];
-	[[_outlineView parentForItem:item] removeObjectIdenticalTo:item];
+	[[_activity objectForKey:[_outlineView parentForItem:item]] removeObjectIdenticalTo:item];
 	[_outlineView reloadData];
 }
 
@@ -610,6 +609,7 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 	id room = [item objectForKey:@"room"];
 	if ([room isKindOfClass:[MVChatRoom class]]) room = ((MVChatRoom *)room).name;
 	[[item objectForKey:@"connection"] joinChatRoomNamed:room];
+	[item setObject:CQActivityStatusAccepted forKey:@"status"];
 
 	[_outlineView reloadItem:item];
 }
