@@ -1,7 +1,4 @@
 #import "MVFileTransferController.h"
-#import "MVBuddyListController.h"
-#import "JVBuddy.h"
-#import "JVDetailCell.h"
 
 static MVFileTransferController *sharedInstance = nil;
 
@@ -35,8 +32,6 @@ static MVFileTransferController *sharedInstance = nil;
 		return nil;
 
 	_safeFileExtentions = [[NSSet allocWithZone:nil] initWithObjects:@"jpg", @"jpeg", @"gif", @"png", @"tif", @"tiff", @"psd", @"pdf", @"txt", @"rtf", @"html", @"htm", @"swf", @"mp3", @"wma", @"wmv", @"ogg", @"ogm", @"mov", @"mpg", @"mpeg", @"m1v", @"m2v", @"mp4", @"avi", @"vob", @"avi", @"asx", @"asf", @"pls", @"m3u", @"rmp", @"aif", @"aiff", @"aifc", @"wav", @"wave", @"m4a", @"m4p", @"m4b", @"dmg", @"udif", @"ndif", @"dart", @"sparseimage", @"cdr", @"dvdr", @"iso", @"img", @"toast", @"rar", @"sit", @"sitx", @"bin", @"hqx", @"zip", @"gz", @"tgz", @"tar", @"bz", @"bz2", @"tbz", @"z", @"taz", @"uu", @"uue", @"colloquytranscript", @"torrent", nil];
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileTransferDidFinish:) name:MVFileTransferFinishedNotification object:nil];
 
 	[MVFileTransfer setFileTransferPortRange:NSRangeFromString([[NSUserDefaults standardUserDefaults] stringForKey:@"JVFileTransferPortRange"])];
 	[MVFileTransfer setAutoPortMappingEnabled:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoOpenTransferPorts"]];

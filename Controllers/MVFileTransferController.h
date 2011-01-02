@@ -1,6 +1,4 @@
-@class MVFileTransfer;
-
-@interface MVFileTransferController : NSWindowController {
+@interface MVFileTransferController : NSObject {
 @private
 	NSSet *_safeFileExtentions;
 }
