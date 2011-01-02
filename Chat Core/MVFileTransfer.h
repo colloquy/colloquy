@@ -2,6 +2,7 @@
 @class MVChatUser;
 
 extern NSString *MVDownloadFileTransferOfferNotification;
+extern NSString *MVFileTransferDataTransferredNotification;
 extern NSString *MVFileTransferStartedNotification;
 extern NSString *MVFileTransferFinishedNotification;
 extern NSString *MVFileTransferErrorOccurredNotification;

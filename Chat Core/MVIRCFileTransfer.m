@@ -143,6 +143,9 @@
 	}
 
 	[self _sendNextPacket];
+
+	if (_turbo)
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferDataTransferredNotification object:self];
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection didReadData:(NSData *) data withTag:(long) tag {
@@ -159,6 +162,7 @@
 	} else {
 		// not finished, read for the next bytes received acknowledgment packet
 		[_directClientConnection readDataToLength:4 withTimeout:-1. withTag:0];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferDataTransferredNotification object:self];
 	}
 }
 
@@ -365,7 +369,10 @@
 		[self _setStatus:MVFileTransferDoneStatus];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
 		[_directClientConnection disconnectAfterWriting];
-	} else [_directClientConnection readDataWithTimeout:-1. withTag:0];
+	} else {
+		[_directClientConnection readDataWithTimeout:-1. withTag:0];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferDataTransferredNotification object:self];
+	}
 }
 
 #pragma mark -

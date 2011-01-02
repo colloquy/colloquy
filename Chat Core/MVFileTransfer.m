@@ -15,6 +15,7 @@
 #endif
 
 NSString *MVDownloadFileTransferOfferNotification = @"MVDownloadFileTransferOfferNotification";
+NSString *MVFileTransferDataTransferredNotification = @"MVFileTransferDataTransferredNotification";
 NSString *MVFileTransferStartedNotification = @"MVFileTransferStartedNotification";
 NSString *MVFileTransferFinishedNotification = @"MVFileTransferFinishedNotification";
 NSString *MVFileTransferErrorOccurredNotification = @"MVFileTransferErrorOccurredNotification";

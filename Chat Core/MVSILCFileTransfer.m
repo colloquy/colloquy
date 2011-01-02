@@ -42,6 +42,7 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 
 		case SILC_CLIENT_FILE_MONITOR_GET:
 		case SILC_CLIENT_FILE_MONITOR_PUT:
+			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferDataTransferredNotification object:self];
 			break;
 	}
 }
