@@ -263,7 +263,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (IBAction) closeCurrentPanel:(id) sender {
 	if( [[self allChatViewControllers] count] == 1 ) [[self window] performClose:sender];
-	else [[JVChatController defaultController] disposeViewController:_activeViewController];
+
+	[[JVChatController defaultController] disposeViewController:_activeViewController];
 }
 
 - (IBAction) detachCurrentPanel:(id) sender {
