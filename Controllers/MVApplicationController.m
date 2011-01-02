@@ -251,7 +251,7 @@ static BOOL applicationIsTerminating = NO;
 	[[JVPreferencesController sharedPreferences] showPreferencesPanel];
 }
 
-- (IBAction) showTransferManager:(id) sender {
+- (IBAction) showActivityManager:(id) sender {
 	if ( [[CQActivityWindowController sharedController].window isKeyWindow] )
 		[[CQActivityWindowController sharedController] hideActivityWindow:nil];
 	else [[CQActivityWindowController sharedController] showActivityWindow:nil];
