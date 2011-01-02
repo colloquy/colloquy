@@ -592,14 +592,15 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 				return fileTransferCell;
 			}
 		} else {
-			// check the state
-			CQDownloadCell *fileTransferCell = [item objectForKey:@"cell"];
-			if (!fileTransferCell) {
-				// Make a new cell for each file transfer; otherwise we'll be reusing the same progress indicator view for multiple cells.
-				fileTransferCell = [[CQDownloadCell alloc] init];
-				[item setObject:fileTransferCell forKey:@"cell"];
+			if ([item objectForKey:@"status"] == CQActivityStatusAccepted) {
+				CQDownloadCell *fileTransferCell = [item objectForKey:@"cell"];
+				if (!fileTransferCell) {
+					// Make a new cell for each file transfer; otherwise we'll be reusing the same progress indicator view for multiple cells.
+					fileTransferCell = [[CQDownloadCell alloc] init];
+					[item setObject:fileTransferCell forKey:@"cell"];
+				}
+				return fileTransferCell;
 			}
-			return fileTransferCell;
 		}
 
 		if (!_titleCell)
