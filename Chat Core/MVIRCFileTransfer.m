@@ -143,9 +143,6 @@
 	}
 
 	[self _sendNextPacket];
-
-	if (_turbo)
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferDataTransferredNotification object:self];
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection didReadData:(NSData *) data withTag:(long) tag {
