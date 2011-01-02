@@ -300,6 +300,8 @@
 		89EB91AA0F269BEF0028B3E3 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; };
 		89EC3AD112C87BB100C6FB64 /* CQOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 89EC3AD012C87BB100C6FB64 /* CQOutlineView.m */; };
 		89EC3F2112C96FD300C6FB64 /* CQTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 89EC3F2012C96FD300C6FB64 /* CQTitleCell.m */; };
+		89EC43BE12CC7B8A00C6FB64 /* CQFileTransferCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 89EC43BD12CC7B8A00C6FB64 /* CQFileTransferCell.m */; };
+		89EC441A12CD688B00C6FB64 /* CQSubtitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 89EC441912CD688B00C6FB64 /* CQSubtitleCell.m */; };
 		9220565E11018298005CD72D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9220565D11018298005CD72D /* NSDateAdditions.m */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
@@ -908,6 +910,10 @@
 		89EC3AD012C87BB100C6FB64 /* CQOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQOutlineView.m; path = Views/CQOutlineView.m; sourceTree = "<group>"; };
 		89EC3F1F12C96FD300C6FB64 /* CQTitleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQTitleCell.h; path = Views/CQTitleCell.h; sourceTree = "<group>"; };
 		89EC3F2012C96FD300C6FB64 /* CQTitleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQTitleCell.m; path = Views/CQTitleCell.m; sourceTree = "<group>"; };
+		89EC43BC12CC7B8A00C6FB64 /* CQFileTransferCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQFileTransferCell.h; path = Views/CQFileTransferCell.h; sourceTree = "<group>"; };
+		89EC43BD12CC7B8A00C6FB64 /* CQFileTransferCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQFileTransferCell.m; path = Views/CQFileTransferCell.m; sourceTree = "<group>"; };
+		89EC441812CD688B00C6FB64 /* CQSubtitleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQSubtitleCell.h; path = Views/CQSubtitleCell.h; sourceTree = "<group>"; };
+		89EC441912CD688B00C6FB64 /* CQSubtitleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQSubtitleCell.m; path = Views/CQSubtitleCell.m; sourceTree = "<group>"; };
 		9220565C11018298005CD72D /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		9220565D11018298005CD72D /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDateAdditions.m; path = Additions/NSDateAdditions.m; sourceTree = "<group>"; };
 		A1429C720901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Languages/Italian.lproj/Colloquy.nib; sourceTree = "<group>"; };
@@ -1500,6 +1506,10 @@
 				89EC3ACF12C87BB100C6FB64 /* CQOutlineView.h */,
 				89EC3F2012C96FD300C6FB64 /* CQTitleCell.m */,
 				89EC3F1F12C96FD300C6FB64 /* CQTitleCell.h */,
+				89EC441912CD688B00C6FB64 /* CQSubtitleCell.m */,
+				89EC441812CD688B00C6FB64 /* CQSubtitleCell.h */,
+				89EC43BD12CC7B8A00C6FB64 /* CQFileTransferCell.m */,
+				89EC43BC12CC7B8A00C6FB64 /* CQFileTransferCell.h */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -2621,6 +2631,8 @@
 				8980EAEE12C462BD00A05283 /* CQButtonCell.m in Sources */,
 				89EC3AD112C87BB100C6FB64 /* CQOutlineView.m in Sources */,
 				89EC3F2112C96FD300C6FB64 /* CQTitleCell.m in Sources */,
+				89EC43BE12CC7B8A00C6FB64 /* CQFileTransferCell.m in Sources */,
+				89EC441A12CD688B00C6FB64 /* CQSubtitleCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

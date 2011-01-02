@@ -1,8 +1,11 @@
 #import "CQActivityWindowController.h"
 
 #import "MVConnectionsController.h"
+#import "MVFileTransfer.h"
+#import "JVChatController.h"
 
-#import "CQTitleCell.h"
+#import "CQFileTransferCell.h"
+#import "CQSubtitleCell.h"
 #import "CQGroupCell.h"
 
 #define CQFileTransferInactiveWaitLimit 300 // in seconds
@@ -137,7 +140,17 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 		return;
 
 	NSString *name = [notification.userInfo objectForKey:@"room"];
-	MVChatConnection *connection = notification.object;
+
+	// The notification object is a string if we receive an invite in the first few seconds of Colloquy being open, work around that and make sure we have a MVChatConnection to work with instead.
+	id connection = notification.object;
+	if (![connection isKindOfClass:[MVChatConnection class]])
+		connection = [[MVConnectionsController  defaultController] connectionForServerAddress:connection];
+
+	if (!connection) {
+		NSLog(@"Failed to find a connection for: %@. Unable to join room after invite.", notification.object);
+		return;
+	}
+
 	for (NSDictionary *dictionary in [_activity objectForKey:connection]) // if we already have an invite and its pending, ignore it
 		if ([[dictionary objectForKey:@"room"] isCaseInsensitiveEqualToString:name]) // will @"room"'s value always be a string?
 			if ([dictionary objectForKey:@"status"] == CQActivityStatusPending)
@@ -182,6 +195,8 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 
 		break;
 	}
+
+	[self orderFrontIfNecessary];
 }
 
 - (void) directChatOfferReceived:(NSNotification *) notification {
@@ -202,7 +217,7 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 
 - (void) fileTransferDidStart:(NSNotification *) notification {
 	MVFileTransfer *transfer = notification.object;
-
+	NSLog(@"started");
 	for (NSDictionary *dictionary in [_activity objectForKey:transfer.user.connection]) {
 		if ([dictionary objectForKey:@"transfer"] != transfer)
 			continue;
@@ -315,7 +330,25 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 	NSString *type = [item objectForKey:@"type"];
 	if (type == CQActivityTypeChatInvite || type == CQActivityTypeDirectChatInvite) {
 		if (!_titleCell)
-			_titleCell = [[CQTitleCell alloc] init];
+			_titleCell = [[CQSubtitleCell alloc] init];
+		return _titleCell;
+	}
+
+	if (type == CQActivityTypeFileTransfer) {
+		MVFileTransfer *transfer = [item objectForKey:@"transfer"];
+		if (transfer.status == MVFileTransferNormalStatus) {
+			CQFileTransferCell *fileTransferCell = [item objectForKey:@"cell"];
+			if (!fileTransferCell) {
+				// Make a new cell for each file transfer; otherwise we'll be reusing the same progress indicator view for multiple cells.
+				fileTransferCell = [[CQFileTransferCell alloc] init];
+				[item setObject:fileTransferCell forKey:@"cell"];
+			}
+
+			return fileTransferCell;
+		}
+
+		if (!_titleCell)
+			_titleCell = [[CQSubtitleCell alloc] init];
 		return _titleCell;
 	}
 
@@ -464,7 +497,38 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 	}
 
 	if (type == CQActivityTypeFileTransfer) {
-		// if its done or cancelled, only show one button
+		MVFileTransfer *transfer = [item objectForKey:@"transfer"];
+
+		if ([transfer isKindOfClass:[MVDownloadFileTransfer class]])
+			title = [((MVDownloadFileTransfer *)transfer).originalFileName retain];
+		else title = [[((MVUploadFileTransfer *)transfer).source lastPathComponent] retain];
+
+		CQFileTransferCell *fileTransferCell = [item objectForKey:@"cell"];
+		if (fileTransferCell == cell) {
+			fileTransferCell.progressIndicator.doubleValue = transfer.transfered / transfer.finalSize;
+
+			// subtitle: x KB of y MB (zz KB/s)— a minutes remaining
+
+			return;
+		}
+
+		titleCell.leftButtonCell.action = @selector(acceptFileTransfer:);
+		titleCell.rightButtonCell.action = @selector(rejectFileTransfer:);
+
+		switch (transfer.status) {
+		case MVFileTransferDoneStatus:
+			break;
+		case MVFileTransferHoldingStatus:
+			break;
+		case MVFileTransferStoppedStatus:
+			break;
+		case MVFileTransferErrorStatus:
+			break;
+		case MVFileTransferNormalStatus:
+			// handled by checking if the file transfer cell is returned -- which only happens in this status
+		default:
+			break;
+		}
 	}
 
 	titleCell.hidesLeftButton = hidesLeftButton;
@@ -472,30 +536,100 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 	titleCell.titleText = title;
 	[title release];
 
-	titleCell.subtitleText = subtitle;
-	[subtitle release];
+	if ([cell respondsToSelector:@selector(setSubtitleText:)]) {
+		[cell setSubtitleText:subtitle];
+		[subtitle release];
+	}
 }
 
 #pragma mark -
 
 - (void) showChatPanel:(id) sender {
+	id item = [_outlineView itemAtRow:[sender clickedRow]];
 	
 }
 
 - (void) removeRowFromWindow:(id) sender {
-	
+	id item = [_outlineView itemAtRow:[sender clickedRow]];
+	if ([item objectForKey:@"type"] == CQActivityTypeFileTransfer)
+		[item removeObjectForKey:@"cell"];
+	[[_outlineView parentForItem:item] removeObjectIdenticalTo:item];
+	[_outlineView reloadData];
 }
 
+#pragma mark -
+
+- (void) cancelFileTransfer:(id) sender {
+	id item = [_outlineView itemAtRow:[sender clickedRow]];
+	if ([item objectForKey:@"type"] != CQActivityTypeFileTransfer)
+		return;
+	MVFileTransfer *transfer = [item objectForKey:@"transfer"];
+	[transfer cancel];
+	[_outlineView reloadItem:item];
+}
+
+- (void) acceptFileTransfer:(id) sender {
+	id item = [_outlineView itemAtRow:[sender clickedRow]];
+	MVDownloadFileTransfer *transfer = [item objectForKey:@"transfer"];
+	[transfer acceptByResumingIfPossible:YES];
+	[_outlineView reloadItem:item];
+}
+
+- (void) rejectFileTransfer:(id) sender {
+	id item = [_outlineView itemAtRow:[sender clickedRow]];
+	MVDownloadFileTransfer *transfer = [item objectForKey:@"transfer"];
+	[transfer reject];
+	[_outlineView reloadItem:item];
+}
+
+- (void) showFileTransferFileInFinder:(id) sender {
+	id item = [_outlineView itemAtRow:[sender clickedRow]];
+	MVFileTransfer *transfer = [item objectForKey:@"transfer"];
+	NSString *destination = nil;
+
+	if ([transfer isKindOfClass:[MVUploadFileTransfer class]]) {
+		NSString *source = ((MVUploadFileTransfer *)transfer).source;
+		destination = [source stringByReplacingOccurrencesOfString:[source lastPathComponent] withString:@""];
+	} else destination = ((MVDownloadFileTransfer *)transfer).destination;
+
+	[[NSWorkspace sharedWorkspace] openFile:destination];
+}
+
+#pragma mark -
+
 - (void) acceptChatInvite:(id) sender {
-	
+	id item = [_outlineView itemAtRow:[sender clickedRow]];
+	if ([item objectForKey:@"type"] == CQDirectChatConnectionKey) {
+		MVDirectChatConnection *connection = [item objectForKey:@"connection"];
+		[[JVChatController defaultController] chatViewControllerForDirectChatConnection:connection ifExists:NO userInitiated:NO];
+		[connection initiate];
+
+		return;
+	}
+
+	id room = [item objectForKey:@"room"];
+	if ([room isKindOfClass:[MVChatRoom class]]) room = ((MVChatRoom *)room).name;
+	[[item objectForKey:@"connection"] joinChatRoomNamed:room];
+
+	[_outlineView reloadItem:item];
 }
 
 - (void) rejectChatInvite:(id) sender {
-	// set rejected date
+	id item = [_outlineView itemAtRow:[sender clickedRow]];
+	[item setObject:[NSDate date] forKey:@"date"];
+	[item setObject:CQActivityStatusRejected forKey:@"status"];
+	[_outlineView reloadItem:item];
 }
 
 - (void) requestChatInvite:(id) sender {
-	
+	id item = [_outlineView itemAtRow:[sender clickedRow]];
+	if ([item objectForKey:@"type"] == CQDirectChatConnectionKey) {
+		// start a new dcc chat
+
+		return;
+	}
+
+	// /knock
 }
 
 #pragma mark -

@@ -1,15 +1,16 @@
 @class CQGroupCell;
-@class CQTitleCell;
+@class CQSubtitleCell;
+@class CQFileTransferCell;
 
 @interface CQActivityWindowController : NSWindowController {
 @private
 	NSMapTable *_activity;
-	NSTimeInterval _rowLastClickedTime;
 
+	NSTimeInterval _rowLastClickedTime;
 	IBOutlet NSOutlineView *_outlineView;
 
 	CQGroupCell *_groupCell;
-	CQTitleCell *_titleCell;
+	CQSubtitleCell *_titleCell;
 
 	NSDateFormatter *_timeFormatter;
 }

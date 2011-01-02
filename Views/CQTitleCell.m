@@ -7,7 +7,7 @@
 
 @implementation CQTitleCell
 @synthesize titleText = _titleText;
-@synthesize subtitleText = _subtitleText;
+@synthesize attributes = _attributes;
 
 - (id) init {
 	if (!(self = [super init]))
@@ -28,7 +28,6 @@
 - (void) dealloc {
 	[_attributes release];
 	[_titleText release];
-	[_subtitleText release];
 
 	[super dealloc];
 }
@@ -36,16 +35,13 @@
 - (id) copyWithZone:(NSZone *) zone {
 	CQTitleCell *cell = (CQTitleCell *)[super copyWithZone:zone];
 	cell->_attributes = [_attributes retain];
-	cell->_titleText = [_titleText copy];
-	cell->_subtitleText = [_subtitleText copy];
+	cell->_titleText = [_titleText retain];
 	return cell;
 }
 
 #pragma mark -
 
-- (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView {
-	[super drawWithFrame:cellFrame inView:controlView];
-
+- (NSRect) _titleCellFrameFromRect:(NSRect) cellFrame {
 	NSRect textRect = cellFrame;
 	if (self.hidesLeftButton) {
 		NSRect leftRect = [self _leftButtonCellFrameFromRect:cellFrame];
@@ -54,17 +50,25 @@
 		NSRect rightRect = [self _rightButtonCellFrameFromRect:cellFrame];
 		textRect.size.width -= (textRect.size.width - rightRect.origin.x);
 	}
-
+	
 	if (self.image) {
 #define ImageTextPadding 10.
 		CGFloat offset = (self.image.size.width + ImageTextPadding);
 		textRect.origin.x += offset;
 		textRect.size.width -= offset;
 	}
-
+	
 #define CellTopPadding 4.
 	textRect.origin.y += CellTopPadding;
 	textRect.size.height -= CellTopPadding;
+
+	return textRect;
+}
+
+#pragma mark -
+
+- (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView {
+	[super drawWithFrame:cellFrame inView:controlView];
 
 	BOOL highlighted = ([self isHighlighted] && controlView.window.firstResponder == controlView && [controlView.window isKeyWindow] && [[NSApplication sharedApplication] isActive]);
 	if (!highlighted)
@@ -72,19 +76,6 @@
 	else [_attributes setObject:[NSColor whiteColor] forKey:NSForegroundColorAttributeName];
 	[_attributes setObject:[[NSFontManager sharedFontManager] fontWithFamily:@"Lucida Grande" traits:0 weight:5 size:12.] forKey:NSFontAttributeName];
 
-	[_titleText drawInRect:textRect withAttributes:_attributes];
-
-	if (!highlighted)
-		[_attributes setObject:[NSColor colorWithCalibratedRed:(121. / 255.) green:(121. / 255.) blue:(121. / 255.) alpha:1.] forKey:NSForegroundColorAttributeName];
-	// else don't change the color; its already white from drawing the title
-	[_attributes setObject:[[NSFontManager sharedFontManager] fontWithFamily:@"Lucida Grande" traits:0 weight:5 size:10.] forKey:NSFontAttributeName];
-
-#define CellTitleSubtitlePadding 4.
-	NSSize titleSize = [_titleText sizeWithAttributes:_attributes];
-	CGFloat offset = titleSize.height + CellTitleSubtitlePadding;
-	textRect.origin.y += offset;
-	textRect.size.height -= offset;
-
-	[_subtitleText drawInRect:textRect withAttributes:_attributes];
+	[_titleText drawInRect:[self _titleCellFrameFromRect:cellFrame] withAttributes:_attributes];
 }
 @end
