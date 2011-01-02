@@ -1,7 +1,7 @@
 #import "JVChatUserInspector.h"
 #import "JVChatRoomPanel.h"
 #import "JVBuddy.h"
-#import "MVFileTransferController.h"
+#import "CQActivityWindowController.h"
 #import "NSDateAdditions.h"
 
 @implementation JVDirectChatPanel (JVDirectChatPanelInspection)

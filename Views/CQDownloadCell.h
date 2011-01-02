@@ -1,6 +1,6 @@
 #import "CQTitleCell.h"
 
-@interface CQFileTransferCell : CQTitleCell {
+@interface CQDownloadCell : CQTitleCell {
 @private
 	NSProgressIndicator *_progressIndicator;
 	NSString *_subtitleText;

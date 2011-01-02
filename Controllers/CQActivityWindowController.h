@@ -1,6 +1,9 @@
+NSString *MVPrettyFileSize( unsigned long long size );
+NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
+
 @class CQGroupCell;
 @class CQSubtitleCell;
-@class CQFileTransferCell;
+@class CQDownloadCell;
 
 @interface CQActivityWindowController : NSWindowController {
 @private
@@ -18,4 +21,6 @@
 
 - (IBAction) showActivityWindow:(id) sender;
 - (IBAction) hideActivityWindow:(id) sender;
+
+- (void) downloadFileAtURL:(NSURL *) url toLocalFile:(NSString *) path;
 @end

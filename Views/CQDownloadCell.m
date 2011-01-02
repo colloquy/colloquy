@@ -1,13 +1,13 @@
-#import "CQFileTransferCell.h"
+#import "CQDownloadCell.h"
 
 // This is really a private category for methods and properties in CQTitleCell, if it is as such, the compiler throws warnings. Having it as a category for a subclass will
 // cause the compiler to see that attributes is a NSMutableDictionary and not a NSDictionary and not throw any warnings.
-@interface CQFileTransferCell (Private)
+@interface CQDownloadCell (Private)
 @property (nonatomic, readonly) NSMutableDictionary *attributes;
 - (NSRect) _titleCellFrameFromRect:(NSRect) cellFrame;
 @end
 
-@implementation CQFileTransferCell
+@implementation CQDownloadCell
 @synthesize subtitleText = _subtitleText;
 @synthesize progressIndicator = _progressIndicator;
 
@@ -32,7 +32,7 @@
 }
 
 - (id) copyWithZone:(NSZone *) zone {
-	CQFileTransferCell *cell = (CQFileTransferCell *)[super copyWithZone:zone];
+	CQDownloadCell *cell = (CQDownloadCell *)[super copyWithZone:zone];
 	cell->_progressIndicator = [_progressIndicator retain];
 	cell->_subtitleText = [_subtitleText retain];
 	return cell;

@@ -149,7 +149,7 @@
 	if( [panel runModalForTypes:nil] == NSOKButton ) {
 		passive = [passiveButton state];
 		for( NSString *path in [panel filenames] )
-			[[MVFileTransferController defaultController] addFileTransfer:[self sendFile:path passively:passive]];
+			[[NSNotificationCenter defaultCenter] postNotificationName:MVFileTransferStartedNotification object:[self sendFile:path passively:passive]];
 	}
 }
 

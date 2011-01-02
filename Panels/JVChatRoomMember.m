@@ -342,7 +342,7 @@
 
 - (void) handleDraggedFile:(NSString *) path {
 	BOOL passive = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVSendFilesPassively"];
-	[[MVFileTransferController defaultController] addFileTransfer:[_user sendFile:path passively:passive]];
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVFileTransferStartedNotification object:[_user sendFile:path passively:passive]];
 }
 
 #pragma mark -
