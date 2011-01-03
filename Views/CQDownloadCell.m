@@ -2,6 +2,9 @@
 
 // This is really a private category for methods and properties in CQTitleCell, if it is as such, the compiler throws warnings. Having it as a category for a subclass will
 // cause the compiler to see that attributes is a NSMutableDictionary and not a NSDictionary and not throw any warnings.
+
+#define CellPadding 4.
+
 @interface CQDownloadCell (Private)
 @property (nonatomic, readonly) NSMutableDictionary *attributes;
 - (NSRect) _titleCellFrameFromRect:(NSRect) cellFrame;
@@ -18,6 +21,8 @@
 	_progressIndicator = [[NSProgressIndicator alloc] init];
 	_progressIndicator.usesThreadedAnimation = YES;
 	_progressIndicator.style = NSProgressIndicatorBarStyle;
+	_progressIndicator.minValue = 0.;
+	_progressIndicator.maxValue = 1.;
 
 	[_progressIndicator startAnimation:nil];
 
@@ -39,26 +44,25 @@
 	return cell;
 }
 
+#pragma mark -
+
 - (NSRect) _progressIndicatorCellFrameFromRect:(NSRect) cellFrame {
 	NSRect progressRect = [self _titleCellFrameFromRect:cellFrame];
 
-#define CellTitleProgressIndicatorPadding 4.
-	CGFloat offset = _progressIndicator.frame.size.height + CellTitleProgressIndicatorPadding;
-	progressRect.origin.y += offset;
-	progressRect.size.height -= offset;
+	progressRect.origin.y += _progressIndicator.frame.size.height + CellPadding;
+	progressRect.size.height = NSProgressIndicatorPreferredAquaThickness;
 
 	return progressRect;
 }
 
 - (NSRect) _subtitleCellFrameFromRect:(NSRect) cellFrame {
-	NSRect textRect = [self _progressIndicatorCellFrameFromRect:cellFrame];
+	NSRect textRect = [self _titleCellFrameFromRect:cellFrame];
+	NSRect progressRect = [self _progressIndicatorCellFrameFromRect:cellFrame];
 
-#define CellTitleSubtitlePadding 4.
-	NSSize titleSize = [self.titleText sizeWithAttributes:self.attributes];
-	CGFloat offset = titleSize.height + CellTitleSubtitlePadding;
-	textRect.origin.y += offset;
-	textRect.size.height -= offset;
-	
+	NSSize titleSize = [self.subtitleText sizeWithAttributes:self.attributes];
+	textRect.size.height = titleSize.height;
+	textRect.origin.y = progressRect.origin.y + progressRect.size.height + CellPadding;
+
 	return textRect;
 }
 
@@ -67,17 +71,26 @@
 - (void) drawWithFrame:(NSRect) cellFrame inView:(NSView *) controlView {
 	[super drawWithFrame:cellFrame inView:controlView];
 
-	BOOL highlighted = ([self isHighlighted] && controlView.window.firstResponder == controlView && [controlView.window isKeyWindow] && [[NSApplication sharedApplication] isActive]);
-
 	_progressIndicator.frame = [self _progressIndicatorCellFrameFromRect:cellFrame];
 	if (_progressIndicator.superview != controlView)
 		[controlView addSubview:_progressIndicator];
 
+	NSRect newProgressRect = [self _progressIndicatorCellFrameFromRect:cellFrame];
+	if (!NSEqualRects(newProgressRect, _progressIndicator.frame))
+		_progressIndicator.frame = newProgressRect;
+
+	BOOL highlighted = ([self isHighlighted] && controlView.window.firstResponder == controlView && [controlView.window isKeyWindow] && [[NSApplication sharedApplication] isActive]);
 	if (!highlighted)
 		[self.attributes setObject:[NSColor colorWithCalibratedRed:(121. / 255.) green:(121. / 255.) blue:(121. / 255.) alpha:1.] forKey:NSForegroundColorAttributeName];
 	// else don't change the color; its already white from drawing the title
 	[self.attributes setObject:[[NSFontManager sharedFontManager] fontWithFamily:@"Lucida Grande" traits:0 weight:5 size:10.] forKey:NSFontAttributeName];
 
 	[_subtitleText drawInRect:[self _subtitleCellFrameFromRect:cellFrame] withAttributes:self.attributes];
+}
+
+#pragma mark -
+
+- (void) downloadFinished {
+	[_progressIndicator removeFromSuperview];
 }
 @end

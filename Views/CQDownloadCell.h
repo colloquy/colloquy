@@ -7,4 +7,6 @@
 }
 @property (nonatomic, copy) NSString *subtitleText;
 @property (nonatomic, readonly) NSProgressIndicator *progressIndicator;
+
+- (void) downloadFinished;
 @end
