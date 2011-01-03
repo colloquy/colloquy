@@ -26,7 +26,7 @@ NSString *CQActivityStatusRejected = @"CQActivityStatusRejected";
 NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 NSString *CQDirectDownloadKey = @"CQDirectDownloadKey";
 
-NSString *MVPrettyFileSize (unsigned long long size) {
+__inline__ __attribute__((always_inline)) NSString *MVPrettyFileSize (unsigned long long size) {
 	NSString *ret = nil;
 	if (size == 0.) ret = NSLocalizedString(@"Zero bytes", "no file size");
 	else if (size > 0. && size < 1024.) ret = [NSString stringWithFormat:NSLocalizedString(@"%lu bytes", "file size measured in bytes"), size];
@@ -37,7 +37,7 @@ NSString *MVPrettyFileSize (unsigned long long size) {
 	return ret;
 }
 
-NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
+__inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 	NSTimeInterval secs = [[NSDate date] timeIntervalSince1970] - date;
 	NSUInteger i = 0, stop = 0;
 	NSDictionary *desc = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"second", "singular second"), [NSNumber numberWithUnsignedLong:1], NSLocalizedString(@"minute", "singular minute"), [NSNumber numberWithUnsignedLong:60], NSLocalizedString(@"hour", "singular hour"), [NSNumber numberWithUnsignedLong:3600], NSLocalizedString(@"day", "singular day"), [NSNumber numberWithUnsignedLong:86400], NSLocalizedString(@"week", "singular week"), [NSNumber numberWithUnsignedLong:604800], NSLocalizedString(@"month", "singular month"), [NSNumber numberWithUnsignedLong:2628000], NSLocalizedString(@"year", "singular year"), [NSNumber numberWithUnsignedLong:31536000], nil];
@@ -75,8 +75,9 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 @interface CQActivityWindowController (Private)
 - (void) _setDestinationForTransfer:(MVFileTransfer *) transfer shouldAsk:(BOOL) shouldAsk;
 
-- (NSUInteger) _fileTransferCountForConnection:(MVChatConnection *) connection;
 - (NSUInteger) _directChatConnectionCount;
+- (NSUInteger) _directDownloadCount;
+- (NSUInteger) _fileTransferCountForConnection:(MVChatConnection *) connection;
 - (NSUInteger) _invitationCountForConnection:(MVChatConnection *) connection;
 
 - (BOOL) _isHeaderItem:(id) item;
@@ -119,6 +120,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(directChatErrorOccurred:) name:MVDirectChatConnectionDidConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(directChatOfferReceived:) name:MVDirectChatConnectionOfferNotification object:nil];
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileTransferDidReceiveData:) name:MVFileTransferDataTransferredNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileTransferWasOffered:) name:MVDownloadFileTransferOfferNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileTransferDidStart:) name:MVFileTransferStartedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fileTransferDidFinish:) name:MVFileTransferFinishedNotification object:nil];
@@ -213,7 +215,6 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 	NSMutableDictionary *chatRoomInfo = [notification.userInfo mutableCopy];
 	[chatRoomInfo setObject:CQActivityTypeChatInvite forKey:@"type"];
 	[chatRoomInfo setObject:CQActivityStatusPending forKey:@"status"];
-	[chatRoomInfo setObject:connection forKey:@"connection"];
 	[chatRoomInfo setObject:[NSDate date] forKey:@"date"];
 	[self _appendActivity:chatRoomInfo forConnection:connection];
 	[chatRoomInfo release];
@@ -271,12 +272,14 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 
 - (void) downloadDidFinish:(NSURLDownload *) download {
 	for (NSMutableDictionary *dictionary in [_activity objectForKey:CQDirectDownloadKey]) {
-		if ([dictionary objectForKey:@"controller"] != download)
+		if ([dictionary objectForKey:@"download"] != download)
 			continue;
 
 		[dictionary setObject:CQActivityStatusFinished forKey:@"status"];
 
 		[[MVFileTransferController defaultController] fileAtPathDidFinish:[dictionary objectForKey:@"path"]];
+
+		[dictionary removeObjectForKey:@"cell"];
 
 		if ([[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] == 2) {
 			[[_activity objectForKey:CQDirectDownloadKey] removeObject:dictionary];
@@ -290,6 +293,8 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 
 		break;
 	}
+
+	[self orderFrontIfNecessary];
 }
 
 - (void) downloadFileAtURL:(NSURL *) url toLocalFile:(NSString *) path {
@@ -300,22 +305,27 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		return;
 	}
 
-	if (path)
-		[download setDestination:path allowOverwrite:NO];
+	if (!path.length)
+		path = [[MVFileTransferController userPreferredDownloadFolder] stringByAppendingPathComponent:url.lastPathComponent];
+	[download setDestination:path allowOverwrite:NO];
 
 	NSMutableDictionary *item = [[NSMutableDictionary alloc] init];
 	[item setObject:[NSNumber numberWithUnsignedLongLong:0] forKey:@"transfered"];
 	[item setObject:[NSNumber numberWithDouble:0.] forKey:@"rate"];
 	[item setObject:[NSNumber numberWithUnsignedLongLong:0] forKey:@"size"];
-	[item setObject:download forKey:@"controller"];
+	[item setObject:download forKey:@"download"];
 	[item setObject:url forKey:@"url"];
 	[item setObject:CQActivityTypeDirectDownload forKey:@"type"];
-	[item setObject:path.length ? path :url.path.lastPathComponent forKey:@"path"];
+	[item setObject:path.length ? path : url.path.lastPathComponent forKey:@"path"];
 
 	[[_activity objectForKey:CQDirectDownloadKey] addObject:item];
 
 	[item release];
 	[download release];
+
+	[_outlineView reloadData];
+
+	[self orderFrontIfNecessary];
 }
 
 - (void) downloadFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
@@ -323,7 +333,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 
 	if (returnCode == NSOKButton) {
 		for (NSMutableDictionary *dictionary in [_activity objectForKey:CQDirectDownloadKey]) {
-			if ([dictionary objectForKey:@"controller"] != download)
+			if ([dictionary objectForKey:@"download"] != download)
 				continue;
 			if (sheet)
 				[dictionary setObject:[sheet filename] forKey:@"path"];
@@ -336,7 +346,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		[download cancel];
 
 		for (NSMutableDictionary *dictionary in [_activity objectForKey:CQDirectDownloadKey]) {
-			if ([dictionary objectForKey:@"controller"] != download)
+			if ([dictionary objectForKey:@"download"] != download)
 				continue;
 
 			[dictionary setObject:CQActivityStatusRejected forKey:@"status"];
@@ -354,10 +364,10 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 
 - (void) download:(NSURLDownload *) download decideDestinationWithSuggestedFilename:(NSString *) filename {
 	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVAskForTransferSaveLocation"]) {
-		NSString *path = [[[self class] userPreferredDownloadFolder] stringByAppendingPathComponent:filename];
+		NSString *path = [[MVFileTransferController userPreferredDownloadFolder] stringByAppendingPathComponent:filename];
 
 		for (NSMutableDictionary *info in [_activity objectForKey:CQDirectDownloadKey]) {
-			if ([info objectForKey:@"controller"] != download)
+			if ([info objectForKey:@"download"] != download)
 				continue;
 
 			[info setObject:path forKey:@"path"];
@@ -375,20 +385,23 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 
 - (void) download:(NSURLDownload *) download didFailWithError:(NSError *) error {
 	for (NSMutableDictionary *dictionary in [_activity objectForKey:CQDirectDownloadKey]) {
-		if ([dictionary objectForKey:@"controller"] != download)
+		if ([dictionary objectForKey:@"download"] != download)
 			continue;
 
 		[dictionary setObject:CQActivityStatusError forKey:@"status"];
+		[dictionary setObject:error forKey:@"error"];
 
 		[_outlineView reloadItem:dictionary];
 
 		break;
 	}
+
+	[self orderFrontIfNecessary];
 }
 
 - (void) download:(NSURLDownload *) download didReceiveDataOfLength:(NSUInteger) length {
 	for (NSMutableDictionary *dictionary in [_activity objectForKey:CQDirectDownloadKey]) {
-		if ([dictionary objectForKey:@"controller"] != download)
+		if ([dictionary objectForKey:@"download"] != download)
 			continue;
 
 		NSTimeInterval timeslice = [[dictionary objectForKey:@"started"] timeIntervalSinceNow] * -1;
@@ -415,7 +428,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 
 - (void) download:(NSURLDownload *) download didReceiveResponse:(NSURLResponse *) response {
 	for (NSMutableDictionary *dictionary in [_activity objectForKey:CQDirectDownloadKey]) {
-		if ([dictionary objectForKey:@"controller"] != download)
+		if ([dictionary objectForKey:@"download"] != download)
 			continue;
 
 		[dictionary setObject:[NSNumber numberWithUnsignedLongLong:0] forKey:@"transfered"];
@@ -453,11 +466,29 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 	[self orderFrontIfNecessary];
 }
 
-- (void) fileTransferDidFinish:(NSNotification *) notification {
+- (void) fileTransferDidReceiveData:(NSNotification *) notification {
 	MVFileTransfer *transfer = notification.object;
-	for (NSDictionary *dictionary in [_activity objectForKey:transfer.user.connection]) {
+	for (NSMutableDictionary *dictionary in [_activity objectForKey:transfer.user.connection]) {
 		if ([dictionary objectForKey:@"transfer"] != transfer)
 			continue;
+
+		NSTimeInterval timeslice = [transfer.startDate timeIntervalSinceNow] * -1;
+		if (transfer.transfered != transfer.finalSize)
+			[dictionary setObject:[NSNumber numberWithDouble:(transfer.transfered / timeslice)] forKey:@"rate"];
+
+		[_outlineView reloadItem:dictionary];
+
+		break;
+	}		
+}
+
+- (void) fileTransferDidFinish:(NSNotification *) notification {
+	MVFileTransfer *transfer = notification.object;
+	for (NSMutableDictionary *dictionary in [_activity objectForKey:transfer.user.connection]) {
+		if ([dictionary objectForKey:@"transfer"] != transfer)
+			continue;
+
+		[dictionary removeObjectForKey:@"cell"];
 
 		if ([transfer isDownload])
 			[[MVFileTransferController defaultController] fileAtPathDidFinish:((MVDownloadFileTransfer *)transfer).destination];
@@ -663,6 +694,12 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 			return [NSString stringWithFormat:NSLocalizedString(@"%ld direct chat invitations", @"tooltip"), count];
 		return [NSString stringWithFormat:NSLocalizedString(@"1 direct chat invitation", @"tooltip"), count];
 	}
+	if (item == CQDirectDownloadKey) {
+		NSUInteger count = [self _directDownloadCount];
+		if (count > 1)
+			return [NSString stringWithFormat:NSLocalizedString(@"%ld downloads", @"tooltip"), count];
+		return [NSString stringWithFormat:NSLocalizedString(@"1 download", @"tooltip"), count];
+	}
 	return nil;
 }
 
@@ -671,6 +708,8 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		CQGroupCell *groupCell = (CQGroupCell *)cell;
 		if (item == CQDirectChatConnectionKey)
 			groupCell.title = NSLocalizedString(@"Direct Chat Invites", @"Direct Chat Invites header title");
+		else if (item == CQDirectDownloadKey)
+			groupCell.title = NSLocalizedString(@"Downloads", @"Downloads header title");
 		else groupCell.title = ((MVChatConnection *)item).server;
 		groupCell.unansweredActivityCount = [outlineView isItemExpanded:item] ? 0 :((NSArray *)[_activity objectForKey:item]).count;
 
@@ -684,7 +723,6 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 	NSString *title = nil;
 	NSString *subtitle = nil;
 	BOOL hidesLeftButton = NO;
-
 	NSString *titleFormat = nil;
 
 	NSString *type = [item objectForKey:@"type"];
@@ -712,7 +750,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:); // x
 		}
 
-		title = [[NSString alloc] initWithFormat:titleFormat, [item objectForKey:@"room"], ((MVChatConnection *)[item objectForKey:@"connection"]).server];
+		title = [[NSString alloc] initWithFormat:titleFormat, [item objectForKey:@"room"], ((MVChatConnection *)[_outlineView parentForItem:item]).server];
 	}
 
 	if (type == CQActivityTypeDirectChatInvite) {
@@ -753,45 +791,102 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 	}
 
 	if (type == CQActivityTypeDirectDownload) {
+		NSString *size = MVPrettyFileSize([[item objectForKey:@"size"] unsignedLongLongValue]);
+		NSString *transferred = MVPrettyFileSize([[item objectForKey:@"transfered"] unsignedLongLongValue]);
+		NSString *rate = MVPrettyFileSize([[item objectForKey:@"rate"] unsignedLongLongValue]);
+		unsigned long long remainingBytes = [[item objectForKey:@"size"] unsignedLongLongValue] - [[item objectForKey:@"transfered"] unsignedLongLongValue];
+		unsigned long long rateValue = [[item objectForKey:@"rate"] unsignedLongLongValue];
+		NSString *eta = nil;
+		if (rateValue) {
+			NSTimeInterval etaValue = [[NSDate date] timeIntervalSince1970] + (remainingBytes / rateValue);
+			eta = MVReadableTime(etaValue, YES);
+		}
+		NSError *error = [item objectForKey:@"error"];
 
+		title = [[[item objectForKey:@"path"] lastPathComponent] retain];
+
+		NSString *status = [item objectForKey:@"status"];
+		BOOL rightButtonActionSet = NO;
+		if (status == CQActivityStatusError) {
+			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ (%@ - %ld)", @"x bytes of y bytes (error domain, error code) subtitle"), transferred, size, error.domain, error.code];
+			titleCell.leftButtonCell.action = @selector(retryDownload:);
+		} else if (status == CQActivityStatusFinished) {
+			subtitle = [size retain];
+			hidesLeftButton = YES;
+		} else if (status == CQActivityStatusAccepted) {
+			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ (%@) — %@", @"x bytes of y bytes, (rate) - eta subtitle"), transferred, size, rate, eta];
+			CQDownloadCell *downloadCell = [item objectForKey:@"cell"];
+			downloadCell.progressIndicator.doubleValue = [[item objectForKey:@"transfered"] unsignedLongLongValue] / [[item objectForKey:@"size"] unsignedLongLongValue];
+			titleCell.leftButtonCell.action = @selector(cancelDownload:);
+		} else if (status == CQActivityStatusPending) {
+			subtitle = NSLocalizedString(@"Preparing to download.", @"Preparing to download subtitle");
+			hidesLeftButton = YES;
+			titleCell.rightButtonCell.action = @selector(cancelDownload:);
+			rightButtonActionSet = YES;
+		} else if (status == CQActivityStatusRejected) {
+			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ — stopped", @"x bytes of y bytes - stopped subtitle"), transferred, size];
+			titleCell.leftButtonCell.action = @selector(retryDownload:);
+		}
+
+		if (!rightButtonActionSet)
+			titleCell.rightButtonCell.action = @selector(showFileInFinder:);
 	}
 
 	if (type == CQActivityTypeFileTransfer) {
 		MVFileTransfer *transfer = [item objectForKey:@"transfer"];
+		NSString *size = MVPrettyFileSize(transfer.finalSize);
+		NSString *transferred = MVPrettyFileSize(transfer.transfered);
+		NSString *rate = MVPrettyFileSize([[item objectForKey:@"rate"] unsignedLongLongValue]);
+		unsigned long long remainingBytes = transfer.finalSize - transfer.transfered;
+		unsigned long long rateValue = [[item objectForKey:@"rate"] unsignedLongLongValue];
+		NSString *eta = nil;
+		if (rateValue) {
+			NSTimeInterval etaValue = [[NSDate date] timeIntervalSince1970] + (remainingBytes / rateValue);
+			eta = MVReadableTime(etaValue, YES);
+		}
+		NSError *error = transfer.lastError;
 
-		if ([transfer isKindOfClass:[MVDownloadFileTransfer class]])
+		if ([transfer isDownload])
 			title = [((MVDownloadFileTransfer *)transfer).originalFileName retain];
 		else title = [[((MVUploadFileTransfer *)transfer).source lastPathComponent] retain];
 
-		CQDownloadCell *fileTransferCell = [item objectForKey:@"cell"];
-		if (fileTransferCell == cell) {
-			fileTransferCell.progressIndicator.doubleValue = transfer.transfered / transfer.finalSize;
-
-			// subtitle:x KB of y MB (zz KB/s)— a minutes remaining
-
-			return;
-		}
-
-		titleCell.leftButtonCell.action = @selector(acceptFileTransfer:);
-		titleCell.rightButtonCell.action = @selector(rejectFileTransfer:);
-
+		BOOL rightButtonActionSet = NO;
+		CQDownloadCell *downloadCell = nil;
 		switch (transfer.status) {
-		case MVFileTransferDoneStatus:
-			break;
-		case MVFileTransferHoldingStatus:
-			break;
-		case MVFileTransferStoppedStatus:
-			break;
 		case MVFileTransferErrorStatus:
+			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ (%@ - %ld)", @"x bytes of y bytes (error domain, error code) subtitle"), transferred, size, error.domain, error.code];
+			hidesLeftButton = YES;
+			break;
+		case MVFileTransferDoneStatus:
+			subtitle = [size retain];
+			hidesLeftButton = YES;
 			break;
 		case MVFileTransferNormalStatus:
-			// handled by checking if the file transfer cell is returned -- which only happens in this status
-		default:
+			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ (%@) — %@", @"x bytes of y bytes, (rate) - eta subtitle"), transferred, size, rate, eta];
+			downloadCell = [item objectForKey:@"cell"];
+			downloadCell.progressIndicator.doubleValue = transfer.transfered / transfer.finalSize;
+			titleCell.leftButtonCell.action = @selector(cancelFileTransfer:);
+			break;
+		case MVFileTransferHoldingStatus:
+			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"From %@ on %@", @"From %@ on %@ subtitle"), transfer.user.nickname, transfer.user.connection.server];
+			titleCell.leftButtonCell.action = @selector(acceptFileTransfer:);
+			titleCell.rightButtonCell.action = @selector(rejectFileTransfer:);
+			rightButtonActionSet = YES;
+			break;
+		case MVFileTransferStoppedStatus:
+			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ — stopped", @"x bytes of y bytes - stopped subtitle"), transferred, size];
+			hidesLeftButton = YES;
 			break;
 		}
+
+		if (!rightButtonActionSet)
+			titleCell.rightButtonCell.action = @selector(showFileInFinder:);
 	}
 
-	titleCell.hidesLeftButton = hidesLeftButton;
+	if (hidesLeftButton) {
+		titleCell.hidesLeftButton = YES;
+		titleCell.leftButtonCell.action = NULL;
+	} else titleCell.hidesLeftButton = NO;
 
 	titleCell.titleText = title;
 	[title release];
@@ -901,7 +996,6 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 - (void) acceptFileTransfer:(id) sender {
 	id item = [_outlineView itemAtRow:[sender clickedRow]];
 	MVDownloadFileTransfer *transfer = [item objectForKey:@"transfer"];
-
 	[self _setDestinationForTransfer:transfer shouldAsk:NO];
 }
 
@@ -912,17 +1006,37 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 	[_outlineView reloadItem:item];
 }
 
-- (void) showFileTransferFileInFinder:(id) sender {
+#pragma mark -
+
+- (void) showFileInFinder:(id) sender {
 	id item = [_outlineView itemAtRow:[sender clickedRow]];
-	MVFileTransfer *transfer = [item objectForKey:@"transfer"];
-	NSString *destination = nil;
+	NSString *file = nil;
 
-	if ([transfer isKindOfClass:[MVUploadFileTransfer class]]) {
-		NSString *source = ((MVUploadFileTransfer *)transfer).source;
-		destination = [source stringByReplacingOccurrencesOfString:[source lastPathComponent] withString:@""];
-	} else destination = ((MVDownloadFileTransfer *)transfer).destination;
+	if ([item objectForKey:@"type"] == CQActivityTypeFileTransfer) {
+		MVFileTransfer *transfer = [item objectForKey:@"transfer"];
+		if ([transfer isUpload]) {
+			NSString *source = ((MVUploadFileTransfer *)transfer).source;
+			file = [source stringByReplacingOccurrencesOfString:[source lastPathComponent] withString:@""];
+		} else file = ((MVDownloadFileTransfer *)transfer).destination;
+	} else file = [item objectForKey:@"path"];
 
-	[[NSWorkspace sharedWorkspace] selectFile:destination inFileViewerRootedAtPath:@""];
+	[[NSWorkspace sharedWorkspace] selectFile:file inFileViewerRootedAtPath:@""];
+}
+
+#pragma mark -
+
+- (void) cancelDownload:(id) sender {
+	id item = [_outlineView itemAtRow:[sender clickedRow]];
+	[[item objectForKey:@"download"] cancel];
+}
+
+- (void) retryDownload:(id) sender {
+	id item = [_outlineView itemAtRow:[sender clickedRow]];
+	WebDownload *oldDownload = [item objectForKey:@"download"];
+	WebDownload *newDownload = [[WebDownload alloc] initWithResumeData:oldDownload.resumeData delegate:self path:[item objectForKey:@"path"]];
+	[item replaceObject:oldDownload withObject:newDownload];
+	[newDownload release];
+	[_outlineView reloadItem:item];
 }
 
 #pragma mark -
@@ -930,7 +1044,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 - (void) acceptChatInvite:(id) sender {
 	id item = [_outlineView itemAtRow:[sender clickedRow]];
 	if ([item objectForKey:@"type"] == CQDirectChatConnectionKey) {
-		MVDirectChatConnection *connection = [item objectForKey:@"connection"];
+		MVDirectChatConnection *connection = [_outlineView parentForItem:item];
 		[[JVChatController defaultController] chatViewControllerForDirectChatConnection:connection ifExists:NO userInitiated:NO];
 		[connection initiate];
 
@@ -939,7 +1053,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 
 	id room = [item objectForKey:@"room"];
 	if ([room isKindOfClass:[MVChatRoom class]]) room = ((MVChatRoom *)room).name;
-	[[item objectForKey:@"connection"] joinChatRoomNamed:room];
+	[[_outlineView parentForItem:item] joinChatRoomNamed:room];
 	[item setObject:CQActivityStatusAccepted forKey:@"status"];
 
 	[_outlineView reloadItem:item];
@@ -966,7 +1080,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 #pragma mark -
 
 - (void) showChatPanel:(id) sender {
-	id item = [_outlineView itemAtRow:[sender clickedRow]];
+	
 }
 
 - (void) removeRowFromWindow:(id) sender {
@@ -991,7 +1105,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 	return [self _countForType:CQActivityTypeDirectChatInvite inConnection:CQDirectChatConnectionKey];
 }
 
-- (NSUInteger) _downloadCount {
+- (NSUInteger) _directDownloadCount {
 	return [self _countForType:CQActivityTypeDirectDownload inConnection:CQDirectDownloadKey];
 }
 
@@ -1036,7 +1150,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		NSUInteger insertionPoint = 0;
 		for (NSDictionary *existingActivity in activities) {
 			type = [existingActivity objectForKey:@"type"];
-			if (type == CQActivityTypeFileTransfer) // File transfers are at the end and we want to insert above it
+			if (type == CQActivityTypeFileTransfer || type == CQActivityTypeDirectDownload) // File transfers are at the end and we want to insert above it
 				break;
 
 			if (type == CQActivityTypeChatInvite)
