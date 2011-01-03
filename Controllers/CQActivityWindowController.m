@@ -386,6 +386,18 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 	}
 }
 
+- (void) download:(NSURLDownload *) download didCreateDestination:(NSString *) path {
+	for (NSMutableDictionary *dictionary in [_activity objectForKey:CQDirectDownloadKey]) {
+		if ([dictionary objectForKey:@"download"] != download)
+			continue;
+
+		if (![[dictionary objectForKey:@"path"] isEqualToString:path])
+			[dictionary setObject:path forKey:@"path"];
+
+		break;
+	}
+}
+
 - (void) download:(NSURLDownload *) download didFailWithError:(NSError *) error {
 	for (NSMutableDictionary *dictionary in [_activity objectForKey:CQDirectDownloadKey]) {
 		if ([dictionary objectForKey:@"download"] != download)
