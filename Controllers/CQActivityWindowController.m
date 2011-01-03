@@ -284,7 +284,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 
 		[dictionary removeObjectForKey:@"cell"];
 
-		if ([[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] == 2) {
+		if ([[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferredItems"] == 2) {
 			[[_activity objectForKey:CQDirectDownloadKey] removeObject:dictionary];
 
 			[_outlineView reloadData];
@@ -313,7 +313,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 	[download setDestination:path allowOverwrite:NO];
 
 	NSMutableDictionary *item = [[NSMutableDictionary alloc] init];
-	[item setObject:[NSNumber numberWithUnsignedLongLong:0] forKey:@"transfered"];
+	[item setObject:[NSNumber numberWithUnsignedLongLong:0] forKey:@"transferred"];
 	[item setObject:[NSNumber numberWithDouble:0.] forKey:@"rate"];
 	[item setObject:[NSNumber numberWithUnsignedLongLong:0] forKey:@"size"];
 	[item setObject:download forKey:@"download"];
@@ -408,17 +408,17 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 			continue;
 
 		NSTimeInterval timeslice = [[dictionary objectForKey:@"started"] timeIntervalSinceNow] * -1;
-		unsigned long long transfered = [[dictionary objectForKey:@"transfered"] unsignedLongLongValue] + length;
+		unsigned long long transferred = [[dictionary objectForKey:@"transferred"] unsignedLongLongValue] + length;
 
 		[dictionary setObject:CQActivityStatusAccepted forKey:@"status"];
-		[dictionary setObject:[NSNumber numberWithUnsignedLongLong:transfered] forKey:@"transfered"];
+		[dictionary setObject:[NSNumber numberWithUnsignedLongLong:transferred] forKey:@"transferred"];
 
 		unsigned long long size = [[dictionary objectForKey:@"size"] unsignedLongLongValue];
-		if (transfered > size)
-			[dictionary setObject:[NSNumber numberWithUnsignedLongLong:transfered] forKey:@"size"];
+		if (transferred > size)
+			[dictionary setObject:[NSNumber numberWithUnsignedLongLong:transferred] forKey:@"size"];
 
-		if (transfered != size)
-			[dictionary setObject:[NSNumber numberWithDouble:(transfered / timeslice)] forKey:@"rate"];
+		if (transferred != size)
+			[dictionary setObject:[NSNumber numberWithDouble:(transferred / timeslice)] forKey:@"rate"];
 
 		if (![dictionary objectForKey:@"started"])
 			[dictionary setObject:[NSDate date] forKey:@"started"];
@@ -434,7 +434,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 		if ([dictionary objectForKey:@"download"] != download)
 			continue;
 
-		[dictionary setObject:[NSNumber numberWithUnsignedLongLong:0] forKey:@"transfered"];
+		[dictionary setObject:[NSNumber numberWithUnsignedLongLong:0] forKey:@"transferred"];
 
 		unsigned long size = [response expectedContentLength];
 		if ((long)size == -1)
@@ -476,8 +476,8 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 			continue;
 
 		NSTimeInterval timeslice = [transfer.startDate timeIntervalSinceNow] * -1;
-		if (transfer.transfered != transfer.finalSize)
-			[dictionary setObject:[NSNumber numberWithDouble:(transfer.transfered / timeslice)] forKey:@"rate"];
+		if (transfer.transferred != transfer.finalSize)
+			[dictionary setObject:[NSNumber numberWithDouble:(transfer.transferred / timeslice)] forKey:@"rate"];
 
 		[_outlineView reloadItem:dictionary];
 
@@ -499,7 +499,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 		if ([transfer isDownload])
 			[[MVFileTransferController defaultController] fileAtPathDidFinish:((MVDownloadFileTransfer *)transfer).destination];
 
-		if ([[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] == 2) {
+		if ([[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferredItems"] == 2) {
 			[[_activity objectForKey:transfer.user.connection] removeObjectIdenticalTo:dictionary];
 			[_outlineView reloadData];
 
@@ -822,9 +822,9 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 
 	if (type == CQActivityTypeDirectDownload) {
 		NSString *size = MVPrettyFileSize([[item objectForKey:@"size"] unsignedLongLongValue]);
-		NSString *transferred = MVPrettyFileSize([[item objectForKey:@"transfered"] unsignedLongLongValue]);
+		NSString *transferred = MVPrettyFileSize([[item objectForKey:@"transferred"] unsignedLongLongValue]);
 		NSString *rate = MVPrettyFileSize([[item objectForKey:@"rate"] unsignedLongLongValue]);
-		unsigned long long remainingBytes = [[item objectForKey:@"size"] unsignedLongLongValue] - [[item objectForKey:@"transfered"] unsignedLongLongValue];
+		unsigned long long remainingBytes = [[item objectForKey:@"size"] unsignedLongLongValue] - [[item objectForKey:@"transferred"] unsignedLongLongValue];
 		unsigned long long rateValue = [[item objectForKey:@"rate"] unsignedLongLongValue];
 		NSString *eta = nil;
 		if (rateValue) {
@@ -846,9 +846,9 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 		} else if (status == CQActivityStatusAccepted) {
 			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ (%@/sec) — %@", @"x bytes of y bytes, (rate) - eta subtitle"), transferred, size, rate, eta];
 			CQDownloadCell *downloadCell = [item objectForKey:@"cell"];
-			unsigned long long transfered = [[item objectForKey:@"transfered"] unsignedLongLongValue];
+			unsigned long long transferred = [[item objectForKey:@"transferred"] unsignedLongLongValue];
 			unsigned long long size = [[item objectForKey:@"size"] unsignedLongLongValue];
-			downloadCell.progressIndicator.doubleValue = ((double)transfered / (double)size);
+			downloadCell.progressIndicator.doubleValue = ((double)transferred / (double)size);
 			titleCell.leftButtonCell.action = @selector(cancelDownload:);
 		} else if (status == CQActivityStatusPending) {
 			subtitle = NSLocalizedString(@"Preparing to download.", @"Preparing to download subtitle");
@@ -867,9 +867,9 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 	if (type == CQActivityTypeFileTransfer) {
 		MVFileTransfer *transfer = [item objectForKey:@"transfer"];
 		NSString *size = MVPrettyFileSize(transfer.finalSize);
-		NSString *transferred = MVPrettyFileSize(transfer.transfered);
+		NSString *transferred = MVPrettyFileSize(transfer.transferred);
 		NSString *rate = MVPrettyFileSize([[item objectForKey:@"rate"] unsignedLongLongValue]);
-		unsigned long long remainingBytes = transfer.finalSize - transfer.transfered;
+		unsigned long long remainingBytes = transfer.finalSize - transfer.transferred;
 		unsigned long long rateValue = [[item objectForKey:@"rate"] unsignedLongLongValue];
 		NSString *eta = nil;
 		if (rateValue) {
@@ -896,7 +896,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 		case MVFileTransferNormalStatus:
 			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ (%@/sec) — %@", @"x bytes of y bytes, (rate) - eta subtitle"), transferred, size, rate, eta];
 			downloadCell = [item objectForKey:@"cell"];
-			downloadCell.progressIndicator.doubleValue = (transfer.transfered / transfer.finalSize);
+			downloadCell.progressIndicator.doubleValue = (transfer.transferred / transfer.finalSize);
 			titleCell.leftButtonCell.action = @selector(cancelFileTransfer:);
 			break;
 		case MVFileTransferHoldingStatus:

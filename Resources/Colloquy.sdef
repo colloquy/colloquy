@@ -780,8 +780,8 @@
 			<property name="final size" code="fSzA" description="The final expected size (in bytes) of the file." type="integer" access="r">
 				<cocoa key="finalSize"/>
 			</property>
-			<property name="transfered size" code="TrzA" description="The current size (in bytes) this file has transfered." type="integer" access="r">
-				<cocoa key="transfered"/>
+			<property name="transferred size" code="TrzA" description="The current size (in bytes) this file has transferred." type="integer" access="r">
+				<cocoa key="transferred"/>
 			</property>
 		</class>
 		<command name="connect" code="ccoRconX" description="Connect to the server.">

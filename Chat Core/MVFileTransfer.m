@@ -101,8 +101,8 @@ static BOOL autoPortMapping = YES;
 	return _finalSize;
 }
 
-- (unsigned long long) transfered {
-	return _transfered;
+- (unsigned long long) transferred {
+	return _transferred;
 }
 
 #pragma mark -
@@ -150,8 +150,8 @@ static BOOL autoPortMapping = YES;
 	_finalSize = newFinalSize;
 }
 
-- (void) _setTransfered:(unsigned long long) newTransfered {
-	_transfered = newTransfered;
+- (void) _setTransferred:(unsigned long long) newTransferred {
+	_transferred = newTransferred;
 }
 
 - (void) _setStartOffset:(unsigned long long) newStartOffset {

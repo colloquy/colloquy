@@ -271,7 +271,7 @@
 	</dict>
 	<key>JVOpenSafeFiles</key>
 	<true/>
-	<key>JVRemoveTransferedItems</key>
+	<key>JVRemoveTransferredItems</key>
 	<integer>1</integer>
 	<key>JVChatDefaultStyle</key>
 	<string>cc.javelin.colloquy.style.standard</string>

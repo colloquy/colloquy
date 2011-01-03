@@ -29,7 +29,7 @@ typedef enum {
 @interface MVFileTransfer : NSObject {
 @protected
 	unsigned long long _finalSize;
-	unsigned long long _transfered;
+	unsigned long long _transferred;
 	NSDate *_startDate;
 	NSString *_host;
 	BOOL _passive;
@@ -55,7 +55,7 @@ typedef enum {
 @property(readonly) NSError *lastError;
 
 @property(readonly) unsigned long long finalSize;
-@property(readonly) unsigned long long transfered;
+@property(readonly) unsigned long long transferred;
 
 @property(readonly) NSDate *startDate;
 @property(readonly) unsigned long long startOffset;

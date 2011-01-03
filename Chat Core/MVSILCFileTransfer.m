@@ -24,7 +24,7 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 		case SILC_CLIENT_FILE_MONITOR_SEND:
 		case SILC_CLIENT_FILE_MONITOR_RECEIVE:
 			[transfer _setFinalSize:filesize];
-			[transfer _setTransfered:offset];
+			[transfer _setTransferred:offset];
 
 			if( filesize == offset ) {
 				 [transfer _setStatus:MVFileTransferDoneStatus];

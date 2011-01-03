@@ -1225,8 +1225,8 @@ resource 'aete' (0, "Colloquy Terminology") {
 				"The final expected size (in bytes) of the file.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12,
 
-				"transfered size", 'TrzA', 'long',
-				"The current size (in bytes) this file has transfered.",
+				"transferred size", 'TrzA', 'long',
+				"The current size (in bytes) this file has transferred.",
 				reserved, singleItem, notEnumerated, readOnly, Reserved12
 			},
 			{

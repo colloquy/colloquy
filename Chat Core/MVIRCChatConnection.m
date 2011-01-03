@@ -2654,7 +2654,7 @@ end:
 						BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == passiveId );
 
 						if( portMatches || passiveIdMatches ) {
-							[transfer _setTransfered:(unsigned long long)size];
+							[transfer _setTransferred:(unsigned long long)size];
 							[transfer _setStartOffset:(unsigned long long)size];
 							[transfer _setupAndStart];
 							break;
@@ -2688,7 +2688,7 @@ end:
 						BOOL passiveIdMatches = ( passive && [transfer _passiveIdentifier] == passiveId );
 
 						if( portMatches || passiveIdMatches ) {
-							[transfer _setTransfered:(unsigned long long)size];
+							[transfer _setTransferred:(unsigned long long)size];
 							[transfer _setStartOffset:(unsigned long long)size];
 							[sender sendSubcodeRequest:@"DCC ACCEPT" withArguments:[msg substringFromIndex:7]];
 							break;

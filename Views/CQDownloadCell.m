@@ -78,6 +78,7 @@
 	NSRect newProgressRect = [self _progressIndicatorCellFrameFromRect:cellFrame];
 	if (!NSEqualRects(newProgressRect, _progressIndicator.frame))
 		_progressIndicator.frame = newProgressRect;
+
 	BOOL highlighted = ([self isHighlighted] && controlView.window.firstResponder == controlView && [controlView.window isKeyWindow] && [[NSApplication sharedApplication] isActive]);
 	if (!highlighted)
 		[self.attributes setObject:[NSColor colorWithCalibratedRed:(121. / 255.) green:(121. / 255.) blue:(121. / 255.) alpha:1.] forKey:NSForegroundColorAttributeName];

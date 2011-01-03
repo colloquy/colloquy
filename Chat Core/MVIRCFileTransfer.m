@@ -121,7 +121,7 @@
 }
 
 - (void) directClientConnectionDidDisconnect:(MVDirectClientConnection *) connection {
-	if( [self status] != MVFileTransferDoneStatus && [self transfered] == [self finalSize] && _doneSending ) {
+	if( [self status] != MVFileTransferDoneStatus && [self transferred] == [self finalSize] && _doneSending ) {
 		[self _setStatus:MVFileTransferDoneStatus];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVFileTransferFinishedNotification object:self];
 	}
@@ -138,8 +138,8 @@
 - (void) directClientConnection:(MVDirectClientConnection *) connection didWriteDataWithTag:(long) tag {
 	if( ! _readData || [_fileHandle offsetInFile] > 0xffffffff ) {
 		// the transfer is in turbo mode or the file offset is larger than 4GB, so update the progress here
-		unsigned long long progress = [self transfered] + (unsigned long)tag;
-		[self _setTransfered:progress];
+		unsigned long long progress = [self transferred] + (unsigned long)tag;
+		[self _setTransferred:progress];
 	}
 
 	[self _sendNextPacket];
@@ -150,7 +150,7 @@
 	_readData = YES;
 
 	unsigned long bytes = ntohl( *( (unsigned long *) [data bytes] ) );
-	if( bytes > [self transfered] ) [self _setTransfered:bytes];
+	if( bytes > [self transferred] ) [self _setTransferred:bytes];
 
 	if( _doneSending && bytes == ( [self finalSize] & 0xffffffff ) ) {
 		[self _setStatus:MVFileTransferDoneStatus];
@@ -348,8 +348,8 @@
 }
 
 - (void) directClientConnection:(MVDirectClientConnection *) connection didReadData:(NSData *) data withTag:(long) tag {
-	unsigned long long progress = [self transfered] + data.length;
-	[self _setTransfered:progress];
+	unsigned long long progress = [self transferred] + data.length;
+	[self _setTransferred:progress];
 
 	[_fileHandle writeData:data];
 

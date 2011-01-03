@@ -359,12 +359,12 @@
 					<key>Name</key>
 					<string>status</string>
 				</dict>
-				<key>transfered</key>
+				<key>transferred</key>
 				<dict>
 					<key>Description</key>
-					<string>The current size (in bytes) this file has transfered.</string>
+					<string>The current size (in bytes) this file has transferred.</string>
 					<key>Name</key>
-					<string>transfered size</string>
+					<string>transferred size</string>
 				</dict>
 				<key>uniqueIdentifier</key>
 				<dict>

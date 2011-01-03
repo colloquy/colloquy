@@ -3,7 +3,7 @@
 @interface MVFileTransfer (MVFileTransferPrivate)
 - (void) _setStatus:(MVFileTransferStatus) status;
 - (void) _setFinalSize:(unsigned long long) finalSize;
-- (void) _setTransfered:(unsigned long long) transfered;
+- (void) _setTransferred:(unsigned long long) transferred;
 - (void) _setStartOffset:(unsigned long long) startOffset;
 - (void) _setStartDate:(NSDate *) startDate;
 - (void) _setHost:(NSString *) host;
