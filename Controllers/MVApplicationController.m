@@ -473,7 +473,7 @@ static BOOL applicationIsTerminating = NO;
 	PFMoveToApplicationsFolderIfNecessary();
 
 	[[NSUserDefaults standardUserDefaults] registerDefaults:[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:[[NSBundle mainBundle] bundleIdentifier] ofType:@"plist"]]];
-	if ([[[NSUserDefaults standardUserDefaults] allKeys] indexOfObject:@"JVRemoveTransferedItems"] != NSNotFound) {
+	if ([[[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys] indexOfObject:@"JVRemoveTransferedItems"] != NSNotFound) {
 		[[NSUserDefaults standardUserDefaults] setInteger:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] forKey:@"JVRemoveTransferredItems"];
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"JVRemoveTransferedItems"];
 	}
