@@ -25,6 +25,7 @@
 }
 
 - (void) dealloc {
+	[_progressIndicator removeFromSuperview];
 	[_progressIndicator release];
 	[_subtitleText release];
 
