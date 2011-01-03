@@ -49,7 +49,7 @@
 - (NSRect) _progressIndicatorCellFrameFromRect:(NSRect) cellFrame {
 	NSRect progressRect = [self _titleCellFrameFromRect:cellFrame];
 
-	progressRect.origin.y += _progressIndicator.frame.size.height + CellPadding;
+	progressRect.origin.y += (CellPadding + _progressIndicator.frame.size.height + CellPadding);
 	progressRect.size.height = NSProgressIndicatorPreferredAquaThickness;
 
 	return progressRect;
