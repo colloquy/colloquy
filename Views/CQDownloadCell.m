@@ -3,7 +3,7 @@
 // This is really a private category for methods and properties in CQTitleCell, if it is as such, the compiler throws warnings. Having it as a category for a subclass will
 // cause the compiler to see that attributes is a NSMutableDictionary and not a NSDictionary and not throw any warnings.
 
-#define CellPadding 4.
+#define CellPadding 3.
 
 @interface CQDownloadCell (Private)
 @property (nonatomic, readonly) NSMutableDictionary *attributes;
@@ -19,11 +19,11 @@
 		return nil;
 
 	_progressIndicator = [[NSProgressIndicator alloc] init];
-	_progressIndicator.usesThreadedAnimation = YES;
 	_progressIndicator.style = NSProgressIndicatorBarStyle;
 	_progressIndicator.minValue = 0.;
 	_progressIndicator.maxValue = 1.;
 
+	[_progressIndicator setIndeterminate:NO];
 	[_progressIndicator startAnimation:nil];
 
 	return self;
@@ -78,7 +78,6 @@
 	NSRect newProgressRect = [self _progressIndicatorCellFrameFromRect:cellFrame];
 	if (!NSEqualRects(newProgressRect, _progressIndicator.frame))
 		_progressIndicator.frame = newProgressRect;
-
 	BOOL highlighted = ([self isHighlighted] && controlView.window.firstResponder == controlView && [controlView.window isKeyWindow] && [[NSApplication sharedApplication] isActive]);
 	if (!highlighted)
 		[self.attributes setObject:[NSColor colorWithCalibratedRed:(121. / 255.) green:(121. / 255.) blue:(121. / 255.) alpha:1.] forKey:NSForegroundColorAttributeName];
@@ -90,7 +89,7 @@
 
 #pragma mark -
 
-- (void) downloadFinished {
+- (void) hideProgressIndicator {
 	[_progressIndicator removeFromSuperview];
 }
 @end

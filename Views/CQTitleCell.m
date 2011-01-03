@@ -58,7 +58,7 @@
 		textRect.size.width -= offset;
 	}
 	
-#define CellTopPadding 4.
+#define CellTopPadding 2.
 	textRect.origin.y += CellTopPadding;
 	textRect.size.height -= CellTopPadding;
 

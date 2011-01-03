@@ -8,5 +8,5 @@
 @property (nonatomic, copy) NSString *subtitleText;
 @property (nonatomic, readonly) NSProgressIndicator *progressIndicator;
 
-- (void) downloadFinished;
+- (void) hideProgressIndicator;
 @end

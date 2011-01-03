@@ -279,6 +279,9 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 
 		[[MVFileTransferController defaultController] fileAtPathDidFinish:[dictionary objectForKey:@"path"]];
 
+		CQDownloadCell *cell = [dictionary objectForKey:@"cell"];
+		[cell hideProgressIndicator];
+
 		[dictionary removeObjectForKey:@"cell"];
 
 		if ([[NSUserDefaults standardUserDefaults] integerForKey:@"JVRemoveTransferedItems"] == 2) {
@@ -488,6 +491,9 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 		if ([dictionary objectForKey:@"transfer"] != transfer)
 			continue;
 
+		CQDownloadCell *cell = [dictionary objectForKey:@"cell"];
+		[cell hideProgressIndicator];
+
 		[dictionary removeObjectForKey:@"cell"];
 
 		if ([transfer isDownload])
@@ -643,11 +649,35 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 }
 
 - (CGFloat) outlineView:(NSOutlineView *) outlineView heightOfRowByItem:(id) item {
-	return (item && [self _isHeaderItem:item]) ? 19. :40.;
+	if (item && [self _isHeaderItem:item])
+		return 19.;
+
+	CQDownloadCell *cell = [item objectForKey:@"cell"];
+	if (cell) {
+		if ([item objectForKey:@"type"] == CQActivityTypeFileTransfer) {
+			if (((MVFileTransfer *)[item objectForKey:@"transfer"]).status == MVFileTransferNormalStatus)
+				return 50.;
+		} else {
+			if ([item objectForKey:@"status"] == CQActivityStatusAccepted)
+				return 50.;
+		}
+	}
+
+	return 40.;
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldCollapseItem:(id) item {
-	return [self _shouldExpandOrCollapse];
+	if ([self _shouldExpandOrCollapse]) {
+		for (NSDictionary *dictionary in [_activity objectForKey:item]) {
+			CQDownloadCell *cell = [dictionary objectForKey:@"cell"];
+			if (cell)
+				[cell hideProgressIndicator];
+		}
+
+		return YES;
+	}
+
+	return NO;
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldEditTableColumn:(NSTableColumn *) tableColumn item:(id) item {
@@ -814,9 +844,11 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 			subtitle = [size retain];
 			hidesLeftButton = YES;
 		} else if (status == CQActivityStatusAccepted) {
-			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ (%@) — %@", @"x bytes of y bytes, (rate) - eta subtitle"), transferred, size, rate, eta];
+			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ (%@/sec) — %@", @"x bytes of y bytes, (rate) - eta subtitle"), transferred, size, rate, eta];
 			CQDownloadCell *downloadCell = [item objectForKey:@"cell"];
-			downloadCell.progressIndicator.doubleValue = [[item objectForKey:@"transfered"] unsignedLongLongValue] / [[item objectForKey:@"size"] unsignedLongLongValue];
+			unsigned long long transfered = [[item objectForKey:@"transfered"] unsignedLongLongValue];
+			unsigned long long size = [[item objectForKey:@"size"] unsignedLongLongValue];
+			downloadCell.progressIndicator.doubleValue = ((double)transfered / (double)size);
 			titleCell.leftButtonCell.action = @selector(cancelDownload:);
 		} else if (status == CQActivityStatusPending) {
 			subtitle = NSLocalizedString(@"Preparing to download.", @"Preparing to download subtitle");
@@ -862,9 +894,9 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 			hidesLeftButton = YES;
 			break;
 		case MVFileTransferNormalStatus:
-			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ (%@) — %@", @"x bytes of y bytes, (rate) - eta subtitle"), transferred, size, rate, eta];
+			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ (%@/sec) — %@", @"x bytes of y bytes, (rate) - eta subtitle"), transferred, size, rate, eta];
 			downloadCell = [item objectForKey:@"cell"];
-			downloadCell.progressIndicator.doubleValue = transfer.transfered / transfer.finalSize;
+			downloadCell.progressIndicator.doubleValue = (transfer.transfered / transfer.finalSize);
 			titleCell.leftButtonCell.action = @selector(cancelFileTransfer:);
 			break;
 		case MVFileTransferHoldingStatus:
