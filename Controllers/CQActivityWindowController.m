@@ -12,6 +12,11 @@
 #define CQFileTransferInactiveWaitLimit 300 // in seconds
 #define CQExpandCollapseRowInterval .5
 
+#define CQUnitKilobyte (1024.)
+#define CQUnitMegabyte (CQUnitKilobyte * 1024.)
+#define CQUnitGigabyte (CQUnitMegabyte * 1024.)
+#define CQUnitTerabyte (CQUnitGigabyte * 1024.)
+
 NSString *CQActivityTypeChatInvite = @"CQActivityTypeChatInvite";
 NSString *CQActivityTypeDirectChatInvite = @"CQActivityTypeDirectChatInvite";
 NSString *CQActivityTypeDirectDownload = @"CQActivityTypeDirectDownload";
@@ -27,46 +32,47 @@ NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 NSString *CQDirectDownloadKey = @"CQDirectDownloadKey";
 
 __inline__ __attribute__((always_inline)) NSString *MVPrettyFileSize (unsigned long long size) {
-	NSString *ret = nil;
-	if (size == 0.) ret = NSLocalizedString(@"Zero bytes", "no file size");
-	else if (size > 0. && size < 1024.) ret = [NSString stringWithFormat:NSLocalizedString(@"%lu bytes", "file size measured in bytes"), size];
-	else if (size >= 1024. && size < pow (1024., 2.)) ret = [NSString stringWithFormat:NSLocalizedString(@"%.1f KB", "file size measured in kilobytes"),  (size / 1024.)];
-	else if (size >= pow (1024., 2.) && size < pow (1024., 3.)) ret = [NSString stringWithFormat:NSLocalizedString(@"%.2f MB", "file size measured in megabytes"),  (size / pow (1024., 2.))];
-	else if (size >= pow (1024., 3.) && size < pow (1024., 4.)) ret = [NSString stringWithFormat:NSLocalizedString(@"%.3f GB", "file size measured in gigabytes"),  (size / pow (1024., 3.))];
-	else if (size >= pow (1024., 4.)) ret = [NSString stringWithFormat:NSLocalizedString(@"%.4f TB", "file size measured in terabytes"),  (size / pow (1024., 4.))];
-	return ret;
+	if (size == 0.) return NSLocalizedString(@"Zero bytes", "no file size");
+	else if (size > 0. && size < CQUnitKilobyte) return [NSString stringWithFormat:NSLocalizedString(@"%lu bytes", "file size measured in bytes"), size];
+	else if (size >= CQUnitKilobyte && size < CQUnitMegabyte) return [NSString stringWithFormat:NSLocalizedString(@"%.1f KB", "file size measured in kilobytes"),  (size / CQUnitKilobyte)];
+	else if (size >= CQUnitMegabyte && size < CQUnitGigabyte) return [NSString stringWithFormat:NSLocalizedString(@"%.2f MB", "file size measured in megabytes"),  (size / CQUnitMegabyte)];
+	else if (size >= CQUnitGigabyte && size < CQUnitTerabyte) return [NSString stringWithFormat:NSLocalizedString(@"%.3f GB", "file size measured in gigabytes"),  (size / CQUnitGigabyte)];
+	else if (size >= CQUnitTerabyte) return [NSString stringWithFormat:NSLocalizedString(@"%.4f TB", "file size measured in terabytes"),  (size / CQUnitTerabyte)];
+	return nil;
 }
 
 __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 	NSTimeInterval secs = [[NSDate date] timeIntervalSince1970] - date;
-	NSUInteger i = 0, stop = 0;
-	NSDictionary *desc = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"second", "singular second"), [NSNumber numberWithUnsignedLong:1], NSLocalizedString(@"minute", "singular minute"), [NSNumber numberWithUnsignedLong:60], NSLocalizedString(@"hour", "singular hour"), [NSNumber numberWithUnsignedLong:3600], NSLocalizedString(@"day", "singular day"), [NSNumber numberWithUnsignedLong:86400], NSLocalizedString(@"week", "singular week"), [NSNumber numberWithUnsignedLong:604800], NSLocalizedString(@"month", "singular month"), [NSNumber numberWithUnsignedLong:2628000], NSLocalizedString(@"year", "singular year"), [NSNumber numberWithUnsignedLong:31536000], nil];
-	NSDictionary *plural = [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"seconds", "plural seconds"), [NSNumber numberWithUnsignedLong:1], NSLocalizedString(@"minutes", "plural minutes"), [NSNumber numberWithUnsignedLong:60], NSLocalizedString(@"hours", "plural hours"), [NSNumber numberWithUnsignedLong:3600], NSLocalizedString(@"days", "plural days"), [NSNumber numberWithUnsignedLong:86400], NSLocalizedString(@"weeks", "plural weeks"), [NSNumber numberWithUnsignedLong:604800], NSLocalizedString(@"months", "plural months"), [NSNumber numberWithUnsignedLong:2628000], NSLocalizedString(@"years", "plural years"), [NSNumber numberWithUnsignedLong:31536000], nil];
-	NSDictionary *use = nil;
-	NSMutableArray *breaks = nil;
-	NSUInteger val = 0.;
-	NSString *retval = nil;
+	static NSArray *desc = nil;
+	if (!desc)
+		desc = [[NSArray alloc] initWithObjects:NSLocalizedString(@"second", "singular second"), NSLocalizedString(@"minute", "singular minute"), NSLocalizedString(@"hour", "singular hour"), NSLocalizedString(@"day", "singular day"), NSLocalizedString(@"week", "singular week"), NSLocalizedString(@"month", "singular month"), NSLocalizedString(@"year", "singular year"), nil];
+	static NSArray *plural = nil;
+	if (!plural)
+		plural = [[NSArray alloc] initWithObjects:NSLocalizedString(@"seconds", "plural seconds"), NSLocalizedString(@"minutes", "plural minutes"), NSLocalizedString(@"hours", "plural hours"), NSLocalizedString(@"days", "plural days"), NSLocalizedString(@"weeks", "plural weeks"), NSLocalizedString(@"months", "plural months"), NSLocalizedString(@"years", "plural years"), nil];
+	static NSArray *values = nil;
+	if (!values)
+		values = [[NSArray alloc] initWithObjects:[NSNumber numberWithUnsignedInteger:1], [NSNumber numberWithUnsignedInteger:60], [NSNumber numberWithUnsignedInteger:3600], [NSNumber numberWithUnsignedInteger:86400], [NSNumber numberWithUnsignedInteger:604800], [NSNumber numberWithUnsignedInteger:2628000], [NSNumber numberWithUnsignedInteger:31536000], nil];
 
-	if (secs < 0) secs *= -1;
+	if (secs < 0)
+		secs = fabs(secs);
 
-	breaks = [[[desc allKeys] mutableCopy] autorelease];
-	[breaks sortUsingSelector:@selector (compare:)];
+	NSUInteger i = 0;
+	while (i < values.count && secs >= [[values objectAtIndex:i] doubleValue]) i++;
+	if (i) i--;
 
-	while (i < [breaks count] && secs >= [[breaks objectAtIndex:i] doubleValue]) i++;
-	if (i > 0) i--;
-	stop = [[breaks objectAtIndex:i] unsignedIntValue];
+	NSUInteger stop = [[values objectAtIndex:i] unsignedIntegerValue];
+	NSUInteger val = (NSUInteger)(secs / (float)stop);
+	NSArray *use = (val > 1 ? plural : desc);
+	NSString *retval = [NSString stringWithFormat:@"%u %@", val, [use objectAtIndex:i]];
+	if (!longFormat || i <= 0)
+		return retval;
 
-	val = (NSUInteger)  (secs / (float) stop);
-	use =  (val > 1 ? plural :desc);
-	retval = [NSString stringWithFormat:@"%u %@", val, [use objectForKey:[NSNumber numberWithUnsignedLong:stop]]];
-	if (longFormat && i > 0) {
-		NSUInteger rest = (NSUInteger)  ((NSUInteger) secs % stop);
-		stop = [[breaks objectAtIndex:--i] unsignedIntValue];
-		rest = (NSUInteger)  (rest / (float) stop);
-		if (rest > 0) {
-			use =  (rest > 1 ? plural :desc);
-			retval = [retval stringByAppendingFormat:@" %u %@", rest, [use objectForKey:[breaks objectAtIndex:i]]];
-		}
+	NSUInteger rest = (NSUInteger)  ((NSUInteger) secs % stop);
+	stop = [[values objectAtIndex:--i] unsignedIntegerValue];
+	rest = (NSUInteger)(rest / (float)stop);
+	if (rest > 0) {
+		use =  (rest > 1 ? plural : desc);
+		retval = [retval stringByAppendingFormat:@" %u %@", rest, [use objectAtIndex:i--]];
 	}
 
 	return retval;
@@ -1063,7 +1069,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 			file = [source stringByReplacingOccurrencesOfString:[source lastPathComponent] withString:@""];
 		} else file = ((MVDownloadFileTransfer *)transfer).destination;
 	} else file = [item objectForKey:@"path"];
-	NSLog(@"%@", file);
+
 	[[NSWorkspace sharedWorkspace] selectFile:file inFileViewerRootedAtPath:@""];
 }
 
