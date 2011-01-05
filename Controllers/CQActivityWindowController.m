@@ -66,7 +66,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 	if (!longFormat || i <= 0)
 		return retval;
 
-	NSUInteger rest = (NSUInteger)  ((NSUInteger) secs % stop);
+	NSUInteger rest = (NSUInteger)((NSUInteger)secs % stop);
 	stop = [[values objectAtIndex:--i] unsignedIntegerValue];
 	rest = (NSUInteger)(rest / (float)stop);
 	if (rest > 0) {
@@ -85,7 +85,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 - (NSUInteger) _fileTransferCountForConnection:(MVChatConnection *) connection;
 - (NSUInteger) _invitationCountForConnection:(MVChatConnection *) connection;
 
-- (BOOL) _isHeaderItem:(id) item;
+- (BOOL) _isGroupItem:(id) item;
 - (BOOL) _shouldExpandOrCollapse;
 
 - (void) _appendActivity:(id) activity forConnection:(id) connection;
@@ -587,7 +587,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView isItemExpandable:(id) item {
-	return [self _isHeaderItem:item]; // top level, shows the connection name
+	return [self _isGroupItem:item]; // top level, shows the connection name
 }
 
 - (NSInteger) outlineView:(NSOutlineView *) outlineView numberOfChildrenOfItem:(id) item {
@@ -606,21 +606,21 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 	if ([item isKindOfClass:[MVChatConnection class]])
 		return ((MVChatConnection *)item).server;
 	if (item == CQDirectChatConnectionKey)
-		return NSLocalizedString(@"Direct Chat Invites", @"Direct Chat Invites header title");
+		return NSLocalizedString(@"Direct Chat Invites", @"Direct Chat Invites group title");
 	if (item == CQDirectDownloadKey)
-		return NSLocalizedString(@"Downloads", @"Downloads header title");
+		return NSLocalizedString(@"Downloads", @"Downloads group title");
 
 	return [item description];
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView isGroupItem:(id) item {
-	return [self _isHeaderItem:item]; // top level, shows the connection name
+	return [self _isGroupItem:item]; // top level, shows the connection name
 }
 
 #pragma mark -
 
 - (NSCell *) outlineView:(NSOutlineView *) outlineView dataCellForTableColumn:(NSTableColumn *) tableColumn item:(id) item {
-	if ([self _isHeaderItem:item]) {
+	if ([self _isGroupItem:item]) {
 		if (!_groupCell)
 			_groupCell = [[CQGroupCell alloc] initTextCell:@""];
 		return _groupCell;
@@ -666,7 +666,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 }
 
 - (CGFloat) outlineView:(NSOutlineView *) outlineView heightOfRowByItem:(id) item {
-	if (item && [self _isHeaderItem:item])
+	if (item && [self _isGroupItem:item])
 		return 19.;
 
 	CQDownloadCell *cell = [item objectForKey:@"cell"];
@@ -706,7 +706,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView shouldSelectItem:(id) item {
-	return ![self _isHeaderItem:item];
+	return ![self _isGroupItem:item];
 }
 
 - (NSString *) outlineView:(NSOutlineView *) outlineView toolTipForCell:(NSCell *) cell rect:(NSRectPointer) rect tableColumn:(NSTableColumn *) tableColumn item:(id) item mouseLocation:(NSPoint) mouseLocation {
@@ -754,9 +754,9 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 	if ([cell isKindOfClass:[CQGroupCell class]]) {
 		CQGroupCell *groupCell = (CQGroupCell *)cell;
 		if (item == CQDirectChatConnectionKey)
-			groupCell.title = NSLocalizedString(@"Direct Chat Invites", @"Direct Chat Invites header title");
+			groupCell.title = NSLocalizedString(@"Direct Chat Invites", @"Direct Chat Invites group title");
 		else if (item == CQDirectDownloadKey)
-			groupCell.title = NSLocalizedString(@"Downloads", @"Downloads header title");
+			groupCell.title = NSLocalizedString(@"Downloads", @"Downloads group title");
 		else groupCell.title = ((MVChatConnection *)item).server;
 		groupCell.unansweredActivityCount = [outlineView isItemExpanded:item] ? 0 :((NSArray *)[_activity objectForKey:item]).count;
 
@@ -1171,7 +1171,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 
 #pragma mark -
 
-- (BOOL) _isHeaderItem:(id) item {
+- (BOOL) _isGroupItem:(id) item {
 	return ([item isKindOfClass:[MVChatConnection class]] || item == CQDirectChatConnectionKey || item == CQDirectDownloadKey);
 }
 
