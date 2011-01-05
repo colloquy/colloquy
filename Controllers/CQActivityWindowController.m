@@ -309,7 +309,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 	}
 
 	if (!path.length)
-		path = [[MVFileTransferController userPreferredDownloadFolder] stringByAppendingPathComponent:url.lastPathComponent];
+		path = [[MVFileTransferController userPreferredDownloadFolder] stringByAppendingPathComponent:url.path.lastPathComponent];
 	[download setDestination:path allowOverwrite:NO];
 
 	NSMutableDictionary *item = [[NSMutableDictionary alloc] init];
@@ -1072,6 +1072,8 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 - (void) cancelDownload:(id) sender {
 	id item = [_outlineView itemAtRow:[sender clickedRow]];
 	[[item objectForKey:@"download"] cancel];
+	[item setObject:CQActivityStatusRejected forKey:@"status"];
+	[_outlineView reloadItem:item];
 }
 
 - (void) retryDownload:(id) sender {
@@ -1079,6 +1081,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 	WebDownload *oldDownload = [item objectForKey:@"download"];
 	WebDownload *newDownload = [[WebDownload alloc] initWithResumeData:oldDownload.resumeData delegate:self path:[item objectForKey:@"path"]];
 	[item replaceObject:oldDownload withObject:newDownload];
+	[item setObject:CQActivityStatusAccepted forKey:@"status"];
 	[newDownload release];
 	[_outlineView reloadItem:item];
 }
