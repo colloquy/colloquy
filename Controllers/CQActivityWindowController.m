@@ -1063,7 +1063,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 			file = [source stringByReplacingOccurrencesOfString:[source lastPathComponent] withString:@""];
 		} else file = ((MVDownloadFileTransfer *)transfer).destination;
 	} else file = [item objectForKey:@"path"];
-
+	NSLog(@"%@", file);
 	[[NSWorkspace sharedWorkspace] selectFile:file inFileViewerRootedAtPath:@""];
 }
 
@@ -1080,7 +1080,7 @@ __inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterv
 	id item = [_outlineView itemAtRow:[sender clickedRow]];
 	WebDownload *oldDownload = [item objectForKey:@"download"];
 	WebDownload *newDownload = [[WebDownload alloc] initWithResumeData:oldDownload.resumeData delegate:self path:[item objectForKey:@"path"]];
-	[item replaceObject:oldDownload withObject:newDownload];
+	[item setObject:newDownload forKey:@"download"];
 	[item setObject:CQActivityStatusAccepted forKey:@"status"];
 	[newDownload release];
 	[_outlineView reloadItem:item];
