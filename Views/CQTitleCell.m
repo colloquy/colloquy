@@ -43,14 +43,17 @@
 
 - (NSRect) _titleCellFrameFromRect:(NSRect) cellFrame {
 	NSRect textRect = cellFrame;
-	if (self.hidesLeftButton) {
-		NSRect leftRect = [self _leftButtonCellFrameFromRect:cellFrame];
-		textRect.size.width -= (textRect.size.width - leftRect.origin.x);
-	} else {
-		NSRect rightRect = [self _rightButtonCellFrameFromRect:cellFrame];
-		textRect.size.width -= (textRect.size.width - rightRect.origin.x);
-	}
-	
+	NSRect workingRect = CGRectZero;
+
+	if (self.hidesLeftButton)
+		workingRect = [self _rightButtonCellFrameFromRect:cellFrame];
+	else workingRect = [self _leftButtonCellFrameFromRect:cellFrame];
+
+	textRect.size.width = (cellFrame.size.width + cellFrame.origin.x) - textRect.origin.x;
+	textRect.size.width -= (cellFrame.size.width + cellFrame.origin.x) - workingRect.origin.x;
+#define ButtonPadding 5.;
+	textRect.size.width -= ButtonPadding;
+
 	if (self.image) {
 #define ImageTextPadding 10.
 		CGFloat offset = (self.image.size.width + ImageTextPadding);
