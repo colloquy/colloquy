@@ -12,11 +12,6 @@
 #define CQFileTransferInactiveWaitLimit 300 // in seconds
 #define CQExpandCollapseRowInterval .5
 
-#define CQUnitKilobyte (1024.)
-#define CQUnitMegabyte (CQUnitKilobyte * 1024.)
-#define CQUnitGigabyte (CQUnitMegabyte * 1024.)
-#define CQUnitTerabyte (CQUnitGigabyte * 1024.)
-
 NSString *CQActivityTypeChatInvite = @"CQActivityTypeChatInvite";
 NSString *CQActivityTypeDirectChatInvite = @"CQActivityTypeDirectChatInvite";
 NSString *CQActivityTypeDirectDownload = @"CQActivityTypeDirectDownload";
@@ -31,16 +26,50 @@ NSString *CQActivityStatusRejected = @"CQActivityStatusRejected";
 NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 NSString *CQDirectDownloadKey = @"CQDirectDownloadKey";
 
-__inline__ __attribute__((always_inline)) NSString *MVPrettyFileSize (unsigned long long size) {
-	if (size == 0.) return NSLocalizedString(@"Zero bytes", "no file size");
-	if (size < CQUnitKilobyte) return [NSString stringWithFormat:NSLocalizedString(@"%lu bytes", "file size measured in bytes"), size];
-	if (size < CQUnitMegabyte) return [NSString stringWithFormat:NSLocalizedString(@"%.1f KB", "file size measured in kilobytes"),  (size / CQUnitKilobyte)];
-	if (size < CQUnitGigabyte) return [NSString stringWithFormat:NSLocalizedString(@"%.2f MB", "file size measured in megabytes"),  (size / CQUnitMegabyte)];
-	if (size < CQUnitTerabyte) return [NSString stringWithFormat:NSLocalizedString(@"%.3f GB", "file size measured in gigabytes"),  (size / CQUnitGigabyte)];
-	return [NSString stringWithFormat:NSLocalizedString(@"%.4f TB", "file size measured in terabytes"),  (size / CQUnitTerabyte)];
+double CQUnitKilobyte (void);
+double CQUnitMegabyte (void);
+double CQUnitGigabyte (void);
+double CQUnitTerabyte (void);
+
+double CQUnitKilobyte (void) {
+	static NSUInteger result = 0;
+	if (!result)
+		result = (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_5) ? 1024 : 1000;
+	return result;
 }
 
-__inline__ __attribute__((always_inline)) NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
+double CQUnitMegabyte (void) {
+	static NSUInteger result = 0;
+	if (!result)
+		result = CQUnitKilobyte() * CQUnitKilobyte();
+	return result;
+}
+
+double CQUnitGigabyte (void) {
+	static NSUInteger result = 0;
+	if (!result)
+		result = CQUnitMegabyte() * CQUnitKilobyte();
+	return result;
+}
+
+double CQUnitTerabyte (void) {
+	static NSUInteger result = 0;
+	if (!result)
+		result = CQUnitGigabyte() * CQUnitKilobyte();
+	return result;
+}
+
+
+NSString *MVPrettyFileSize (unsigned long long size) {
+	if (size == 0.) return NSLocalizedString(@"Zero bytes", "no file size");
+	if (size < CQUnitKilobyte()) return [NSString stringWithFormat:NSLocalizedString(@"%lu bytes", "file size measured in bytes"), size];
+	if (size < CQUnitMegabyte()) return [NSString stringWithFormat:NSLocalizedString(@"%.1f KB", "file size measured in kilobytes"),  (size / CQUnitKilobyte())];
+	if (size < CQUnitGigabyte()) return [NSString stringWithFormat:NSLocalizedString(@"%.2f MB", "file size measured in megabytes"),  (size / CQUnitMegabyte())];
+	if (size < CQUnitTerabyte()) return [NSString stringWithFormat:NSLocalizedString(@"%.3f GB", "file size measured in gigabytes"),  (size / CQUnitGigabyte())];
+	return [NSString stringWithFormat:NSLocalizedString(@"%.4f TB", "file size measured in terabytes"),  (size / CQUnitTerabyte())];
+}
+
+NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 	NSTimeInterval secs = [[NSDate date] timeIntervalSince1970] - date;
 	static NSArray *desc = nil;
 	if (!desc)
