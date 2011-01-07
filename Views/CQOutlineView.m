@@ -37,6 +37,38 @@
 
 #pragma mark -
 
+#define CQOutlineViewReloadInterval .1
+
+- (void) reloadData {
+	if (!_lastReloadDataTime) {
+		[super reloadData];
+		_lastReloadDataTime = [NSDate timeIntervalSinceReferenceDate];
+		return;
+	}
+
+	if (([NSDate timeIntervalSinceReferenceDate] - _lastReloadDataTime) < CQOutlineViewReloadInterval)
+		return;
+
+	[super reloadData];
+	_lastReloadDataTime = [NSDate timeIntervalSinceReferenceDate];
+}
+	
+- (void) reloadItem:(id) item {
+	if (!_lastReloadDataTime) {
+		[super reloadItem:item];
+		_lastReloadDataTime = [NSDate timeIntervalSinceReferenceDate];
+		return;
+	}
+
+	if (([NSDate timeIntervalSinceReferenceDate] - _lastReloadDataTime) < CQOutlineViewReloadInterval)
+		return;
+
+	[super reloadItem:item];
+	_lastReloadDataTime = [NSDate timeIntervalSinceReferenceDate];
+}
+
+#pragma mark -
+
 - (void) updateTrackingAreas {
 	for (NSTrackingArea *area in [self trackingAreas])
 		if ((area.owner == self) && ([area.userInfo objectForKey:@"Row"]))
