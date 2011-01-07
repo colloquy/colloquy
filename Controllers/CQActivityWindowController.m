@@ -63,10 +63,10 @@ double CQUnitTerabyte (void) {
 NSString *MVPrettyFileSize (unsigned long long size) {
 	if (size == 0.) return NSLocalizedString(@"Zero bytes", "no file size");
 	if (size < CQUnitKilobyte()) return [NSString stringWithFormat:NSLocalizedString(@"%lu bytes", "file size measured in bytes"), size];
-	if (size < CQUnitMegabyte()) return [NSString stringWithFormat:NSLocalizedString(@"%.1f KB", "file size measured in kilobytes"),  (size / CQUnitKilobyte())];
-	if (size < CQUnitGigabyte()) return [NSString stringWithFormat:NSLocalizedString(@"%.2f MB", "file size measured in megabytes"),  (size / CQUnitMegabyte())];
-	if (size < CQUnitTerabyte()) return [NSString stringWithFormat:NSLocalizedString(@"%.3f GB", "file size measured in gigabytes"),  (size / CQUnitGigabyte())];
-	return [NSString stringWithFormat:NSLocalizedString(@"%.4f TB", "file size measured in terabytes"),  (size / CQUnitTerabyte())];
+	if (size < CQUnitMegabyte()) return [NSString stringWithFormat:NSLocalizedString(@"%.0f KB", "file size measured in kilobytes"),  (size / CQUnitKilobyte())];
+	if (size < CQUnitGigabyte()) return [NSString stringWithFormat:NSLocalizedString(@"%.1f MB", "file size measured in megabytes"),  (size / CQUnitMegabyte())];
+	if (size < CQUnitTerabyte()) return [NSString stringWithFormat:NSLocalizedString(@"%.2f GB", "file size measured in gigabytes"),  (size / CQUnitGigabyte())];
+	return [NSString stringWithFormat:NSLocalizedString(@"%.3f TB", "file size measured in terabytes"),  (size / CQUnitTerabyte())];
 }
 
 NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
