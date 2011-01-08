@@ -43,7 +43,7 @@
 
 - (NSRect) _titleCellFrameFromRect:(NSRect) cellFrame {
 	NSRect textRect = cellFrame;
-	NSRect workingRect = CGRectZero;
+	NSRect workingRect = { { 0, 0 }, { 0, 0 } };
 
 	if (self.hidesLeftButton)
 		workingRect = [self _rightButtonCellFrameFromRect:cellFrame];

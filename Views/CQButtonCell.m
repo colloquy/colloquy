@@ -133,7 +133,7 @@ NSString *CQMouseStateClickKey = @"CQMouseStateClickKey";
 }
 
 - (NSUInteger) hitTestForEvent:(NSEvent *) event inRect:(NSRect) cellFrame ofView:(NSView *) controlView {
-	CGPoint point = [controlView convertPoint:event.locationInWindow fromView:nil];
+	NSPoint point = [controlView convertPoint:event.locationInWindow fromView:nil];
 
 	if (!_hideLeftButton && NSMouseInRect(point, [self _leftButtonCellFrameFromRect:cellFrame], [controlView isFlipped]))
 		return (NSCellHitContentArea | NSCellHitTrackableArea);
