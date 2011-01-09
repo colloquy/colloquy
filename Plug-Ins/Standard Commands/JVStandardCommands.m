@@ -1,6 +1,6 @@
 #import "JVStandardCommands.h"
 #import "JVChatController.h"
-#import "MVFileTransferController.h"
+#import "CQActivityWindowController.h"
 #import "MVConnectionsController.h"
 #import "MVChatUserAdditions.h"
 #import "JVDirectChatPanel.h"
@@ -459,9 +459,9 @@
 
 	MVChatUser *user = [[connection chatUsersWithNickname:to] anyObject];
 
-	if( ! [path length] ) {
+	if( ! [path length] )
 		[user sendFile:nil];
-	} else [[MVFileTransferController defaultController] addFileTransfer:[user sendFile:path passively:passive]];
+	else [[NSNotificationCenter defaultCenter] postNotificationName:MVFileTransferStartedNotification object:[user sendFile:path passively:passive]];
 
 	return YES;
 }
