@@ -296,6 +296,18 @@
 		895BCD3D12BD39850082AB5A /* CQActivityWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 895BCD3C12BD39850082AB5A /* CQActivityWindowController.m */; };
 		895BD35212BEE1B60082AB5A /* CQGroupCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 895BD35112BEE1B60082AB5A /* CQGroupCell.m */; };
 		8980EAEE12C462BD00A05283 /* CQButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8980EAED12C462BD00A05283 /* CQButtonCell.m */; };
+		89BEB45612D95F340013C8E5 /* check-click.png in Resources */ = {isa = PBXBuildFile; fileRef = 89BEB44A12D95F340013C8E5 /* check-click.png */; };
+		89BEB45712D95F340013C8E5 /* check-default.png in Resources */ = {isa = PBXBuildFile; fileRef = 89BEB44B12D95F340013C8E5 /* check-default.png */; };
+		89BEB45812D95F340013C8E5 /* check-hover.png in Resources */ = {isa = PBXBuildFile; fileRef = 89BEB44C12D95F340013C8E5 /* check-hover.png */; };
+		89BEB45912D95F340013C8E5 /* magnifying-click.png in Resources */ = {isa = PBXBuildFile; fileRef = 89BEB44D12D95F340013C8E5 /* magnifying-click.png */; };
+		89BEB45A12D95F340013C8E5 /* magnifying-default.png in Resources */ = {isa = PBXBuildFile; fileRef = 89BEB44E12D95F340013C8E5 /* magnifying-default.png */; };
+		89BEB45B12D95F340013C8E5 /* magnifying-hover.png in Resources */ = {isa = PBXBuildFile; fileRef = 89BEB44F12D95F340013C8E5 /* magnifying-hover.png */; };
+		89BEB45C12D95F340013C8E5 /* retry-click.png in Resources */ = {isa = PBXBuildFile; fileRef = 89BEB45012D95F340013C8E5 /* retry-click.png */; };
+		89BEB45D12D95F340013C8E5 /* retry-default.png in Resources */ = {isa = PBXBuildFile; fileRef = 89BEB45112D95F340013C8E5 /* retry-default.png */; };
+		89BEB45E12D95F340013C8E5 /* retry-hover.png in Resources */ = {isa = PBXBuildFile; fileRef = 89BEB45212D95F340013C8E5 /* retry-hover.png */; };
+		89BEB45F12D95F340013C8E5 /* x-click.png in Resources */ = {isa = PBXBuildFile; fileRef = 89BEB45312D95F340013C8E5 /* x-click.png */; };
+		89BEB46012D95F340013C8E5 /* x-default.png in Resources */ = {isa = PBXBuildFile; fileRef = 89BEB45412D95F340013C8E5 /* x-default.png */; };
+		89BEB46112D95F340013C8E5 /* x-hover.png in Resources */ = {isa = PBXBuildFile; fileRef = 89BEB45512D95F340013C8E5 /* x-hover.png */; };
 		89EB91AA0F269BEF0028B3E3 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; };
 		89EC3AD112C87BB100C6FB64 /* CQOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 89EC3AD012C87BB100C6FB64 /* CQOutlineView.m */; };
 		89EC3F2112C96FD300C6FB64 /* CQTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 89EC3F2012C96FD300C6FB64 /* CQTitleCell.m */; };
@@ -899,6 +911,18 @@
 		895BD35112BEE1B60082AB5A /* CQGroupCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQGroupCell.m; path = Views/CQGroupCell.m; sourceTree = "<group>"; };
 		8980EAEC12C462BD00A05283 /* CQButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQButtonCell.h; path = Views/CQButtonCell.h; sourceTree = "<group>"; };
 		8980EAED12C462BD00A05283 /* CQButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQButtonCell.m; path = Views/CQButtonCell.m; sourceTree = "<group>"; };
+		89BEB44A12D95F340013C8E5 /* check-click.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "check-click.png"; path = "Resources/check-click.png"; sourceTree = "<group>"; };
+		89BEB44B12D95F340013C8E5 /* check-default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "check-default.png"; path = "Resources/check-default.png"; sourceTree = "<group>"; };
+		89BEB44C12D95F340013C8E5 /* check-hover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "check-hover.png"; path = "Resources/check-hover.png"; sourceTree = "<group>"; };
+		89BEB44D12D95F340013C8E5 /* magnifying-click.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "magnifying-click.png"; path = "Resources/magnifying-click.png"; sourceTree = "<group>"; };
+		89BEB44E12D95F340013C8E5 /* magnifying-default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "magnifying-default.png"; path = "Resources/magnifying-default.png"; sourceTree = "<group>"; };
+		89BEB44F12D95F340013C8E5 /* magnifying-hover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "magnifying-hover.png"; path = "Resources/magnifying-hover.png"; sourceTree = "<group>"; };
+		89BEB45012D95F340013C8E5 /* retry-click.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "retry-click.png"; path = "Resources/retry-click.png"; sourceTree = "<group>"; };
+		89BEB45112D95F340013C8E5 /* retry-default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "retry-default.png"; path = "Resources/retry-default.png"; sourceTree = "<group>"; };
+		89BEB45212D95F340013C8E5 /* retry-hover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "retry-hover.png"; path = "Resources/retry-hover.png"; sourceTree = "<group>"; };
+		89BEB45312D95F340013C8E5 /* x-click.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "x-click.png"; path = "Resources/x-click.png"; sourceTree = "<group>"; };
+		89BEB45412D95F340013C8E5 /* x-default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "x-default.png"; path = "Resources/x-default.png"; sourceTree = "<group>"; };
+		89BEB45512D95F340013C8E5 /* x-hover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "x-hover.png"; path = "Resources/x-hover.png"; sourceTree = "<group>"; };
 		89EB91A90F269BEF0028B3E3 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
 		89EC3ACF12C87BB100C6FB64 /* CQOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQOutlineView.h; path = Views/CQOutlineView.h; sourceTree = "<group>"; };
 		89EC3AD012C87BB100C6FB64 /* CQOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQOutlineView.m; path = Views/CQOutlineView.m; sourceTree = "<group>"; };
@@ -1669,6 +1693,25 @@
 			name = Controllers;
 			sourceTree = "<group>";
 		};
+		89BEB44912D95F1F0013C8E5 /* Activity Window Icons */ = {
+			isa = PBXGroup;
+			children = (
+				89BEB44A12D95F340013C8E5 /* check-click.png */,
+				89BEB44B12D95F340013C8E5 /* check-default.png */,
+				89BEB44C12D95F340013C8E5 /* check-hover.png */,
+				89BEB44D12D95F340013C8E5 /* magnifying-click.png */,
+				89BEB44E12D95F340013C8E5 /* magnifying-default.png */,
+				89BEB44F12D95F340013C8E5 /* magnifying-hover.png */,
+				89BEB45012D95F340013C8E5 /* retry-click.png */,
+				89BEB45112D95F340013C8E5 /* retry-default.png */,
+				89BEB45212D95F340013C8E5 /* retry-hover.png */,
+				89BEB45312D95F340013C8E5 /* x-click.png */,
+				89BEB45412D95F340013C8E5 /* x-default.png */,
+				89BEB45512D95F340013C8E5 /* x-hover.png */,
+			);
+			name = "Activity Window Icons";
+			sourceTree = "<group>";
+		};
 		CBF684F00820174000F498FB /* Metadata Importer */ = {
 			isa = PBXGroup;
 			children = (
@@ -1780,6 +1823,7 @@
 				1C258E55050B9656000001C8 /* Emoticons */,
 				F520458E01B1D37701EBB4B5 /* Sounds */,
 				F51F91D7037967CB01A35792 /* Chat.clr */,
+				89BEB44912D95F1F0013C8E5 /* Activity Window Icons */,
 				1CEE3A4C0577E14500AD6DE2 /* Buddy List Icons */,
 				F544999D018E46A501EE70DE /* Room Member Icons */,
 				F5ED0F46017CD77701EE70DE /* Toolbar Icons */,
@@ -2385,6 +2429,18 @@
 				1CC1B77D0A2D70FB0000A797 /* founder.png in Resources */,
 				1C6268E5103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem in Resources */,
 				895BCD3912BD39400082AB5A /* CQActivityWindow.xib in Resources */,
+				89BEB45612D95F340013C8E5 /* check-click.png in Resources */,
+				89BEB45712D95F340013C8E5 /* check-default.png in Resources */,
+				89BEB45812D95F340013C8E5 /* check-hover.png in Resources */,
+				89BEB45912D95F340013C8E5 /* magnifying-click.png in Resources */,
+				89BEB45A12D95F340013C8E5 /* magnifying-default.png in Resources */,
+				89BEB45B12D95F340013C8E5 /* magnifying-hover.png in Resources */,
+				89BEB45C12D95F340013C8E5 /* retry-click.png in Resources */,
+				89BEB45D12D95F340013C8E5 /* retry-default.png in Resources */,
+				89BEB45E12D95F340013C8E5 /* retry-hover.png in Resources */,
+				89BEB45F12D95F340013C8E5 /* x-click.png in Resources */,
+				89BEB46012D95F340013C8E5 /* x-default.png in Resources */,
+				89BEB46112D95F340013C8E5 /* x-hover.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
