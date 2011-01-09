@@ -59,9 +59,8 @@ double CQUnitTerabyte (void) {
 	return result;
 }
 
-
 NSString *MVPrettyFileSize (unsigned long long size) {
-	if (size == 0.) return NSLocalizedString(@"Zero bytes", "no file size");
+	if (size == 0) return NSLocalizedString(@"Zero bytes", "no file size");
 	if (size < CQUnitKilobyte()) return [NSString stringWithFormat:NSLocalizedString(@"%lu bytes", "file size measured in bytes"), size];
 	if (size < CQUnitMegabyte()) return [NSString stringWithFormat:NSLocalizedString(@"%.0f KB", "file size measured in kilobytes"),  (size / CQUnitKilobyte())];
 	if (size < CQUnitGigabyte()) return [NSString stringWithFormat:NSLocalizedString(@"%.1f MB", "file size measured in megabytes"),  (size / CQUnitMegabyte())];
@@ -107,6 +106,8 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 }
 
 @interface CQActivityWindowController (Private)
+- (void) _loadImagesForButtonsWithFormat:(NSString *) format;
+
 - (void) _setDestinationForTransfer:(MVFileTransfer *) transfer shouldAsk:(BOOL) shouldAsk;
 
 - (NSUInteger) _directChatConnectionCount;
@@ -147,6 +148,12 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 	_timeFormatter.dateStyle = NSDateFormatterNoStyle;
 	_timeFormatter.timeStyle = NSDateFormatterShortStyle;
 
+	_cellImages = [[NSMutableDictionary alloc] init];
+	[self _loadImagesForButtonsWithFormat:@"check"];
+	[self _loadImagesForButtonsWithFormat:@"magnifying"];
+	[self _loadImagesForButtonsWithFormat:@"retry"];
+	[self _loadImagesForButtonsWithFormat:@"x"];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatRoomInvitationAccepted:) name:MVChatRoomJoinedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chatRoomInvitationReceived:) name:MVChatRoomInvitedNotification object:nil];
 
@@ -177,6 +184,16 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 
 #pragma mark -
 
+- (void) _loadImagesForButtonsWithFormat:(NSString *) format {
+	NSMutableDictionary *images = [[NSMutableDictionary alloc] init];
+	[images setObject:[NSImage imageNamed:[NSString stringWithFormat:@"%@-default.png", format]] forKey:CQMouseStateDefaultKey];
+	[images setObject:[NSImage imageNamed:[NSString stringWithFormat:@"%@-hover.png", format]] forKey:CQMouseStateHoverKey];
+	[images setObject:[NSImage imageNamed:[NSString stringWithFormat:@"%@-click.png", format]] forKey:CQMouseStateClickKey];
+	[_cellImages setObject:images forKey:format];
+}
+
+#pragma mark -
+
 - (IBAction) showActivityWindow:(id) sender {
 	[self.window makeKeyAndOrderFront:nil];
 }
@@ -194,13 +211,11 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 
 - (void) connectionDidConnect:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
-
 	[_activity setObject:[NSMutableArray array] forKey:connection];
 }
 
 - (void) connectionDidDisconnect:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
-
 	[_outlineView reloadItem:connection reloadChildren:YES];
 }
 
@@ -214,7 +229,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 			continue;
 
 		MVChatRoom *activityRoom = [dictionary objectForKey:@"room"];
-		if (![room isEqualToChatRoom:activityRoom]) // can we just use == here?
+		if (![room isEqualToChatRoom:activityRoom])
 			continue;
 
 		[dictionary setObject:CQActivityStatusAccepted forKey:@"status"];
@@ -234,10 +249,10 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 	// The notification object is a string if we receive an invite in the first few seconds of Colloquy being open, work around that and make sure we have a MVChatConnection to work with instead.
 	id connection = notification.object;
 	if (![connection isKindOfClass:[MVChatConnection class]])
-		connection = [[MVConnectionsController  defaultController] connectionForServerAddress:connection];
+		connection = [[MVConnectionsController defaultController] connectionForServerAddress:connection];
 
 	if (!connection) {
-		NSLog(@"Failed to find a connection for:%@. Unable to join room after invite.", notification.object);
+		NSLog(@"Failed to find a connection for: %@. Unable to join room after invite.", notification.object);
 		return;
 	}
 
@@ -326,7 +341,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 			return;
 		}
 
-		[_outlineView reloadItem:dictionary];
+		[_outlineView reloadData];
 
 		break;
 	}
@@ -466,9 +481,6 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		if (transferred != size)
 			[dictionary setObject:[NSNumber numberWithDouble:(transferred / timeslice)] forKey:@"rate"];
 
-		if (![dictionary objectForKey:@"started"])
-			[dictionary setObject:[NSDate date] forKey:@"started"];
-
 		[_outlineView reloadItem:dictionary];
 
 		break;
@@ -488,7 +500,10 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 
 		[dictionary setObject:[NSNumber numberWithUnsignedLongLong:size] forKey:@"size"];
 
-		[_outlineView reloadItem:dictionary];
+		if (![dictionary objectForKey:@"started"])
+			[dictionary setObject:[NSDate date] forKey:@"started"];
+
+		[_outlineView reloadData];
 
 		break;
 	}
@@ -804,62 +819,81 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 	NSString *type = [item objectForKey:@"type"];
 	MVChatUser *user = [item objectForKey:@"user"];
 	NSDate *date = [item objectForKey:@"date"];
+	NSMutableDictionary *mouseStates = [[NSMutableDictionary alloc] init];
 	if (type == CQActivityTypeChatInvite) {
+		[mouseStates setObject:[_cellImages objectForKey:@"x"] forKey:CQDualButtonRightDictionaryKey];
+
 		NSString *status = [item objectForKey:@"status"];
 		if (status == CQActivityStatusAccepted) {
 			titleFormat = NSLocalizedString(@"Joined %@ on %@", @"cell label text format");
 			// subtitle:@"lastMessageHere";
 
-			titleCell.leftButtonCell.action = @selector(showChatPanel:); // magnifying glass
-			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:); // x
+			titleCell.leftButtonCell.action = @selector(showChatPanel:);
+			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:);
+
+			[mouseStates setObject:[_cellImages objectForKey:@"magnifying"] forKey:CQDualButtonLeftDictionaryKey];
 		} else if (status == CQActivityStatusPending) {
 			titleFormat = NSLocalizedString(@"Invited to %@ on %@", @"cell label text format");
 			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"By %@ at %@", @"by (user) at (time) cell label subtitle text"), user.nickname, [_timeFormatter stringFromDate:date]];
 
-			titleCell.leftButtonCell.action = @selector(acceptChatInvite:); // check
-			titleCell.rightButtonCell.action = @selector(rejectChatInvite:); // x
+			titleCell.leftButtonCell.action = @selector(acceptChatInvite:);
+			titleCell.rightButtonCell.action = @selector(rejectChatInvite:);
+
+			[mouseStates setObject:[_cellImages objectForKey:@"check"] forKey:CQDualButtonLeftDictionaryKey];
 		} else if (status == CQActivityStatusRejected) {
 			titleFormat = NSLocalizedString(@"Ignored invite to %@ on %@", @"Ignored invite to (room) on (server) cell label text format");
 			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"Invited by %@ at %@", @"by (user) at (time) cell label subtitle text"), user.nickname, [_timeFormatter stringFromDate:date]];
 
-			titleCell.leftButtonCell.action = @selector(requestChatInvite:); // retry circle, /knock's
-			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:); // x
+			titleCell.leftButtonCell.action = @selector(requestChatInvite:);
+			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:);
+
+			[mouseStates setObject:[_cellImages objectForKey:@"retry"] forKey:CQDualButtonLeftDictionaryKey];
 		}
 
 		title = [[NSString alloc] initWithFormat:titleFormat, [item objectForKey:@"room"], ((MVChatConnection *)[_outlineView parentForItem:item]).server];
 	}
 
 	if (type == CQActivityTypeDirectChatInvite) {
+		[mouseStates setObject:[_cellImages objectForKey:@"x"] forKey:CQDualButtonRightDictionaryKey];
+
 		MVDirectChatConnection *connection = [item objectForKey:@"connection"];
 		switch (connection.status) {
 		case MVDirectChatConnectionConnectedStatus:
-			titleFormat = NSLocalizedString(@"Accepted direct chat with %@", @"cell label text format"); // left:show, right:close
+			titleFormat = NSLocalizedString(@"Accepted direct chat with %@", @"cell label text format");
 			// subtitle:show last chat line
 
-			titleCell.leftButtonCell.action = @selector(showChatPanel:); // magnifying glass
-			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:); // x
+			titleCell.leftButtonCell.action = @selector(showChatPanel:);
+			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:);
+
+			[mouseStates setObject:[_cellImages objectForKey:@"magnifying"] forKey:CQDualButtonLeftDictionaryKey];
 			break;
 		case MVDirectChatConnectionWaitingStatus:
-			titleFormat = NSLocalizedString(@"Direct chat request from %@", @"cell label text format"); // left:accept, right:reject
+			titleFormat = NSLocalizedString(@"Direct chat request from %@", @"cell label text format");
 			// show shared chat rooms
 
-			titleCell.leftButtonCell.action = @selector(acceptChatInvite:); // check
-			titleCell.rightButtonCell.action = @selector(rejectChatInvite:); // x
+			titleCell.leftButtonCell.action = @selector(acceptChatInvite:);
+			titleCell.rightButtonCell.action = @selector(rejectChatInvite:);
+
+			[mouseStates setObject:[_cellImages objectForKey:@"check"] forKey:CQDualButtonLeftDictionaryKey];
 			break;
 		case MVDirectChatConnectionDisconnectedStatus:
-			hidesLeftButton = YES; // right:close/remove
+			hidesLeftButton = YES;
 			titleFormat = NSLocalizedString(@"Ended direct chat with %@", @"cell label text format");
 			// show last chat line
 
-			titleCell.leftButtonCell.action = @selector(showChatPanel:); // magnifying glass
-			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:); // x
+			titleCell.leftButtonCell.action = @selector(showChatPanel:);
+			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:);
+
+			[mouseStates setObject:[_cellImages objectForKey:@"magnifying"] forKey:CQDualButtonLeftDictionaryKey];
 			break;
 		case MVDirectChatConnectionErrorStatus:
 			titleFormat = NSLocalizedString(@"Error during direct chat with %@", @"cell label text format");
 			// show error reason
 
-			titleCell.leftButtonCell.action = @selector(requestChatInvite:); // retry circle, new dcc chat session
-			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:); // x
+			titleCell.leftButtonCell.action = @selector(requestChatInvite:);
+			titleCell.rightButtonCell.action = @selector(removeRowFromWindow:);
+
+			[mouseStates setObject:[_cellImages objectForKey:@"retry"] forKey:CQDualButtonLeftDictionaryKey];
 			break;
 		}
 
@@ -886,6 +920,8 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		if (status == CQActivityStatusError) {
 			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ (%@ - %ld)", @"x bytes of y bytes (error domain, error code) subtitle"), transferred, size, error.domain, error.code];
 			titleCell.leftButtonCell.action = @selector(retryDownload:);
+
+			[mouseStates setObject:[_cellImages objectForKey:@"retry"] forKey:CQDualButtonLeftDictionaryKey];
 		} else if (status == CQActivityStatusFinished) {
 			subtitle = [size retain];
 			hidesLeftButton = YES;
@@ -896,18 +932,27 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 			unsigned long long size = [[item objectForKey:@"size"] unsignedLongLongValue];
 			downloadCell.progressIndicator.doubleValue = ((double)transferred / (double)size);
 			titleCell.leftButtonCell.action = @selector(cancelDownload:);
+
+			[mouseStates setObject:[_cellImages objectForKey:@"x"] forKey:CQDualButtonLeftDictionaryKey];
 		} else if (status == CQActivityStatusPending) {
 			subtitle = NSLocalizedString(@"Preparing to download.", @"Preparing to download subtitle");
 			hidesLeftButton = YES;
 			titleCell.rightButtonCell.action = @selector(cancelDownload:);
 			rightButtonActionSet = YES;
+
+			[mouseStates setObject:[_cellImages objectForKey:@"x"] forKey:CQDualButtonRightDictionaryKey];
 		} else if (status == CQActivityStatusRejected) {
 			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ — stopped", @"x bytes of y bytes - stopped subtitle"), transferred, size];
 			titleCell.leftButtonCell.action = @selector(retryDownload:);
+
+			[mouseStates setObject:[_cellImages objectForKey:@"retry"] forKey:CQDualButtonLeftDictionaryKey];
 		}
 
-		if (!rightButtonActionSet)
+		if (!rightButtonActionSet) {
 			titleCell.rightButtonCell.action = @selector(showFileInFinder:);
+
+			[mouseStates setObject:[_cellImages objectForKey:@"magnifying"] forKey:CQDualButtonRightDictionaryKey];
+		}
 	}
 
 	if (type == CQActivityTypeFileTransfer) {
@@ -944,6 +989,8 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 			downloadCell = [item objectForKey:@"cell"];
 			downloadCell.progressIndicator.doubleValue = (transfer.transferred / transfer.finalSize);
 			titleCell.leftButtonCell.action = @selector(cancelFileTransfer:);
+
+			[mouseStates setObject:[_cellImages objectForKey:@"x"] forKey:CQDualButtonLeftDictionaryKey];
 			break;
 		case MVFileTransferHoldingStatus:
 			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"From %@ on %@", @"From %@ on %@ subtitle"), transfer.user.nickname, transfer.user.connection.server];
@@ -957,8 +1004,10 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 			break;
 		}
 
-		if (!rightButtonActionSet)
+		if (!rightButtonActionSet) {
 			titleCell.rightButtonCell.action = @selector(showFileInFinder:);
+			[mouseStates setObject:[_cellImages objectForKey:@"magnifying"] forKey:CQDualButtonRightDictionaryKey];
+		}
 	}
 
 	if (hidesLeftButton) {
@@ -973,6 +1022,9 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		[cell setSubtitleText:subtitle];
 		[subtitle release];
 	}
+
+	titleCell.mouseStates = mouseStates;
+	[mouseStates release];
 }
 
 #pragma mark -

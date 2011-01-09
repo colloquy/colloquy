@@ -16,6 +16,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
 	CQSubtitleCell *_titleCell;
 
 	NSDateFormatter *_timeFormatter;
+
+	NSMutableDictionary *_cellImages;
 }
 + (CQActivityWindowController *) sharedController;
 
