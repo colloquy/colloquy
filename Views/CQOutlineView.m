@@ -38,20 +38,6 @@
 #pragma mark -
 
 #define CQOutlineViewReloadInterval .1
-
-- (void) reloadData {
-	if (!_lastReloadDataTime) {
-		[super reloadData];
-		_lastReloadDataTime = [NSDate timeIntervalSinceReferenceDate];
-		return;
-	}
-
-	if (([NSDate timeIntervalSinceReferenceDate] - _lastReloadDataTime) < CQOutlineViewReloadInterval)
-		return;
-
-	[super reloadData];
-	_lastReloadDataTime = [NSDate timeIntervalSinceReferenceDate];
-}
 	
 - (void) reloadItem:(id) item {
 	if (!_lastReloadDataTime) {
