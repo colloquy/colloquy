@@ -1813,6 +1813,7 @@ static NSMenu *favoritesMenu = nil;
 	_passConnection = [connection retain];
 
 	[nicknameAuth center];
+	[nicknameAuth setLevel:NSModalPanelWindowLevel]; 
 	[nicknameAuth orderFront:nil];
 }
 
