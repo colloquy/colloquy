@@ -326,25 +326,19 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (BOOL) recentlyConnected {
-	if (_recentlyConnected)
-		return YES;
-
-	if (([NSDate timeIntervalSinceReferenceDate] - [_connectedDate timeIntervalSinceReferenceDate]) > 10)
-		_recentlyConnected = YES;
-
-	return _recentlyConnected;
+	return (([NSDate timeIntervalSinceReferenceDate] - [_connectedDate timeIntervalSinceReferenceDate]) > 10);
 }
 
 - (double) minimumSendQueueDelay {
-	return [self recentlyConnected] ? .5 : .25;
+	return self.recentlyConnected ? .5 : .25;
 }
 
 - (double) maximumSendQueueDelay {
-	return [self recentlyConnected] ? 1.5 : 2.;
+	return self.recentlyConnected ? 1.5 : 2.;
 }
 
 - (double) sendQueueDelayIncrement {
-	return [self recentlyConnected] ? .25 : .1;
+	return self.recentlyConnected ? .25 : .1;
 }
 
 #pragma mark -
