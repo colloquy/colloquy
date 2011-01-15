@@ -326,7 +326,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (BOOL) recentlyConnected {
-	return (([NSDate timeIntervalSinceReferenceDate] - [_connectedDate timeIntervalSinceReferenceDate]) > 10);
+	return (([NSDate timeIntervalSinceReferenceDate] - [_connectedDate timeIntervalSinceReferenceDate]) < 10.);
 }
 
 - (double) minimumSendQueueDelay {
@@ -3356,8 +3356,8 @@ end:
 
 #if !ENABLE(BOUNCER_MODE)
 			if( [[room memberUsers] count] <= JVMaximumMembersForWhoRequest )
-				[self sendRawMessageImmediatelyWithFormat:@"WHO %@", [room name]];
-			[self sendRawMessageImmediatelyWithFormat:@"MODE %@ b", [room name]];
+				[self sendRawMessage:[NSString stringWithFormat:@"WHO %@", [room name]]];
+			[self sendRawMessage:[NSString stringWithFormat:@"MODE %@ b", [room name]]];
 #endif
 		}
 	}
