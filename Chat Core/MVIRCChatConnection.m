@@ -326,7 +326,7 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 - (BOOL) recentlyConnected {
-	return (([NSDate timeIntervalSinceReferenceDate] - [_connectedDate timeIntervalSinceReferenceDate]) < 10.);
+	return (([NSDate timeIntervalSinceReferenceDate] - [_connectedDate timeIntervalSinceReferenceDate]) > 10.);
 }
 
 - (double) minimumSendQueueDelay {
