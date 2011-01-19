@@ -492,6 +492,15 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		if ([dictionary objectForKey:@"download"] != download)
 			continue;
 
+		if (((NSHTTPURLResponse *)response).statusCode != 200) {
+			[dictionary setObject:CQActivityStatusError forKey:@"status"];
+
+			[_outlineView reloadData];
+
+			return;
+		}
+
+		[dictionary setObject:CQActivityStatusAccepted forKey:@"status"];
 		[dictionary setObject:[NSNumber numberWithUnsignedLongLong:0] forKey:@"transferred"];
 
 		unsigned long size = [response expectedContentLength];
@@ -917,6 +926,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 
 		NSString *status = [item objectForKey:@"status"];
 		BOOL rightButtonActionSet = NO;
+		BOOL removeProgressIndicatorFromScreen = YES;
 		if (status == CQActivityStatusError) {
 			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ (%@ - %ld)", @"x bytes of y bytes (error domain, error code) subtitle"), transferred, size, error.domain, error.code];
 			titleCell.leftButtonCell.action = @selector(retryDownload:);
@@ -925,6 +935,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		} else if (status == CQActivityStatusFinished) {
 			subtitle = [size retain];
 			hidesLeftButton = YES;
+			[item removeObjectForKey:@"cell"];
 		} else if (status == CQActivityStatusAccepted) {
 			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ (%@/sec) — %@", @"x bytes of y bytes, (rate) - eta subtitle"), transferred, size, rate, eta];
 			CQDownloadCell *downloadCell = [item objectForKey:@"cell"];
@@ -934,6 +945,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 			titleCell.leftButtonCell.action = @selector(cancelDownload:);
 
 			[mouseStates setObject:[_cellImages objectForKey:@"x"] forKey:CQDualButtonLeftDictionaryKey];
+			removeProgressIndicatorFromScreen = NO;
 		} else if (status == CQActivityStatusPending) {
 			subtitle = NSLocalizedString(@"Preparing to download.", @"Preparing to download subtitle");
 			hidesLeftButton = YES;
@@ -952,6 +964,11 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 			titleCell.rightButtonCell.action = @selector(showFileInFinder:);
 
 			[mouseStates setObject:[_cellImages objectForKey:@"magnifying"] forKey:CQDualButtonRightDictionaryKey];
+		}
+
+		if (removeProgressIndicatorFromScreen) {
+			CQDownloadCell *downloadCell = [item objectForKey:@"cell"];
+			[downloadCell hideProgressIndicator];
 		}
 	}
 
@@ -1159,17 +1176,20 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 	id item = [_outlineView itemAtRow:[sender clickedRow]];
 	[[item objectForKey:@"download"] cancel];
 	[item setObject:CQActivityStatusRejected forKey:@"status"];
-	[_outlineView reloadItem:item];
+	[_outlineView reloadData];
 }
 
 - (void) retryDownload:(id) sender {
 	id item = [_outlineView itemAtRow:[sender clickedRow]];
+	if ([item objectForKey:@"status"] == CQActivityStatusPending)
+		return;
+
 	WebDownload *oldDownload = [item objectForKey:@"download"];
 	WebDownload *newDownload = [[WebDownload alloc] initWithResumeData:oldDownload.resumeData delegate:self path:[item objectForKey:@"path"]];
 	[item setObject:newDownload forKey:@"download"];
-	[item setObject:CQActivityStatusAccepted forKey:@"status"];
+	[item setObject:CQActivityStatusPending forKey:@"status"];
 	[newDownload release];
-	[_outlineView reloadItem:item];
+	[_outlineView reloadData];
 }
 
 #pragma mark -

@@ -784,7 +784,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	[tabBarController performPrivateSelector:@"hideBarWithTransition:" withUnsignedInteger:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
 
-	_showingTabBar = NO;	
+	_showingTabBar = NO;
 #endif
 }
 
