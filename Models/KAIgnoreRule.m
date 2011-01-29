@@ -34,8 +34,7 @@
 - (id) initWithCoder:(NSCoder *) coder {
 	if( [coder allowsKeyedCoding] )
 		return [self initForUser:[coder decodeObjectForKey:@"KAIgnoreUser"] message:[coder decodeObjectForKey:@"KAIgnoreMessage"] inRooms:[coder decodeObjectForKey:@"KAIgnoreRooms"] isPermanent:[coder decodeBoolForKey:@"KAIgnorePermanent"] friendlyName:[coder decodeObjectForKey:@"KAIgnoreFriendlyName"]];
-	else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
-	return nil;
+	[NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 }
 
 - (void) encodeWithCoder:(NSCoder *)coder {
@@ -45,7 +44,9 @@
 		[coder encodeObject:_rooms forKey:@"KAIgnoreRooms"];
 		[coder encodeBool:_permanent forKey:@"KAIgnorePermanent"];
 		[coder encodeObject:_friendlyName forKey:@"KAIgnoreFriendlyName"];
-	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
+	}
+
+	[NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 }
 
 - (void) dealloc {

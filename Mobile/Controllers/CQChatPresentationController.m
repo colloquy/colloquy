@@ -15,6 +15,7 @@
 - (void) dealloc {
 	[_toolbar release];
 	[_standardToolbarItems release];
+	[_topChatViewController release];
 
     [super dealloc];
 }

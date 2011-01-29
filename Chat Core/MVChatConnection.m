@@ -310,14 +310,14 @@ static const NSStringEncoding supportedEncodings[] = {
 - (NSSet *) supportedFeatures {
 	@synchronized( _supportedFeatures ) {
 		return [NSSet setWithSet:_supportedFeatures];
-	} return nil;
+	}
 }
 
 - (BOOL) supportsFeature:(NSString *) key {
 	NSParameterAssert( key != nil );
 	@synchronized( _supportedFeatures ) {
 		return [_supportedFeatures containsObject:key];
-	} return NO;
+	}
 }
 
 #pragma mark -
@@ -711,7 +711,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (id) persistentInformationObjectForKey:(id) key {
 	@synchronized( _persistentInformation ) {
 		return [_persistentInformation objectForKey:key];
-	} return nil;
+	}
 }
 
 - (void) removePersistentInformationObjectForKey:(id) key {
@@ -868,20 +868,20 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (NSSet *) knownChatRooms {
 	@synchronized( _knownRooms ) {
 		return [NSSet setWithArray:[_knownRooms allValues]];
-	} return nil;
+	}
 }
 
 - (NSSet *) joinedChatRooms {
 	@synchronized( _joinedRooms ) {
 		return [NSSet setWithSet:_joinedRooms];
-	} return nil;
+	}
 }
 
 - (MVChatRoom *) joinedChatRoomWithUniqueIdentifier:(id) identifier {
 	@synchronized( _joinedRooms ) {
 		MVChatRoom *room = [_knownRooms objectForKey:identifier];
 		return ([room isJoined] ? [[room retain] autorelease] : nil);
-	} return nil;
+	}
 }
 
 - (MVChatRoom *) joinedChatRoomWithName:(NSString *) name {
@@ -899,7 +899,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
 	@synchronized( _knownRooms ) {
 		return [[[_knownRooms objectForKey:identifier] retain] autorelease];
-	} return nil;
+	}
 }
 
 - (MVChatRoom *) chatRoomWithName:(NSString *) name {
@@ -933,7 +933,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (NSSet *) knownChatUsers {
 	@synchronized( _knownUsers ) {
 		return [NSSet setWithArray:[_knownUsers allValues]];
-	} return nil;
+	}
 }
 
 - (NSSet *) chatUsersWithNickname:(NSString *) nickname {
@@ -953,7 +953,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 	@synchronized( _knownUsers ) {
 		return [[[_knownUsers objectForKey:identifier] retain] autorelease];
-	} return nil;
+	}
 }
 
 - (MVChatUser *) localUser {
@@ -987,7 +987,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (NSSet *) chatUserWatchRules {
 	@synchronized( _chatUserWatchRules ) {
 		return [NSSet setWithSet:_chatUserWatchRules];
-	} return nil;
+	}
 }
 
 #pragma mark -

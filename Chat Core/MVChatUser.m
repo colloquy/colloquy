@@ -360,19 +360,19 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 - (NSDictionary *) attributes {
 	@synchronized( _attributes ) {
 		return [NSDictionary dictionaryWithDictionary:_attributes];
-	} return nil;
+	}
 }
 
 - (BOOL) hasAttributeForKey:(NSString *) key {
 	@synchronized( _attributes ) {
 		return ( [_attributes objectForKey:key] ? YES : NO );
-	} return NO;
+	}
 }
 
 - (id) attributeForKey:(NSString *) key {
 	@synchronized( _attributes ) {
 		return [_attributes objectForKey:key];
-	} return nil;
+	}
 }
 
 - (void) setAttribute:(id) attribute forKey:(id) key {

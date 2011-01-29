@@ -194,7 +194,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 	@synchronized( transcript ) {
 		if( ! [transcript document] ) return nil;
 		return [self transformXMLDocument:[transcript document] withParameters:parameters];
-	} return nil;
+	}
 }
 
 - (NSString *) transformChatTranscriptElement:(id <JVChatTranscriptElement>) element withParameters:(NSDictionary *) parameters {
@@ -212,7 +212,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		xmlFreeDoc( doc );
 
 		return result;
-	} return nil;
+	}
 }
 
 - (NSString *) transformChatMessage:(JVChatMessage *) message withParameters:(NSDictionary *) parameters {
@@ -233,7 +233,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		xmlFreeDoc( doc );
 
 		return result;
-	} return nil;
+	}
 }
 
 - (NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters {
@@ -294,7 +294,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 		[[self class] _freeXsltParamArray:params];
 
 		return ret;
-	} return nil;
+	}
 }
 
 #pragma mark -
@@ -311,7 +311,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 
 - (NSString *) mainVariantDisplayName {
 	NSString *name = [_bundle objectForInfoDictionaryKey:@"JVBaseStyleVariantName"];
-	return ( name ? name : NSLocalizedString( @"Normal", "normal style variant menu item title" ) );
+	return ( name.length ? name : NSLocalizedString( @"Normal", "normal style variant menu item title" ) );
 }
 
 - (NSArray *) variantStyleSheetNames {

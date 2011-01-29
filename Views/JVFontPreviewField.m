@@ -53,7 +53,6 @@
 	if( ! _showPointSize ) ret ^= NSFontPanelSizeModeMask;
 	if( ! _showFontFace ) ret ^= NSFontPanelFaceModeMask;
 	return ret;
-	return 0;
 }
 
 - (BOOL) becomeFirstResponder {

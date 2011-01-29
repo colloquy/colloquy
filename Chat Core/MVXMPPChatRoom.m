@@ -18,6 +18,11 @@
 	return self;
 }
 
+- (void) dealloc {
+	[_localMemberUser release];
+	[super dealloc];
+}
+
 #pragma mark -
 
 - (NSUInteger) supportedModes {

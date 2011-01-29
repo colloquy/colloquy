@@ -278,8 +278,6 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 		case JVBuddyActiveNickname:
 			return [self nickname];
 	}
-
-	return [self nickname];
 }
 
 - (NSString *) nickname {

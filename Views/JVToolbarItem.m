@@ -10,4 +10,9 @@
 - (id) representedObject {
 	return _representedObject;
 }
+
+- (void) dealloc {
+	[_representedObject release];
+	[super dealloc];
+}
 @end

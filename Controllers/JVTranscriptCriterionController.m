@@ -36,8 +36,9 @@
 		[self setQueryUnits:[coder decodeIntForKey:@"queryUnits"]];
 		[self setUsesSmartTranscriptCriterion:[coder decodeBoolForKey:@"smartTranscriptCriterion"]];
 		return self;
-	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
-	return nil;
+	}
+
+	[NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 }
 
 - (void) encodeWithCoder:(NSCoder *) coder {
@@ -47,7 +48,9 @@
 		[coder encodeInt:[self operation] forKey:@"operation"];
 		[coder encodeInt:[self queryUnits] forKey:@"queryUnits"];
 		[coder encodeBool:[self usesSmartTranscriptCriterion] forKey:@"smartTranscriptCriterion"];
-	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
+	}
+
+	[NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 }
 
 - (id) copyWithZone:(NSZone *) zone {
@@ -343,8 +346,6 @@
 			return YES;
 		}
 	}
-
-	return NO;
 }
 
 #pragma mark -

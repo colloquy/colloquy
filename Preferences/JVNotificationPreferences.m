@@ -1,6 +1,11 @@
 #import "JVNotificationPreferences.h"
 
 @implementation JVNotificationPreferences
+- (void) dealloc {
+	[_eventPrefs release];
+	[super dealloc];
+}
+
 - (NSString *) preferencesNibName {
 	return @"JVNotificationPreferences";
 }

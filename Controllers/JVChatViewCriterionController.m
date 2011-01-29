@@ -30,8 +30,9 @@
 		[self setQuery:[coder decodeObjectForKey:@"query"]];
 		[self setOperation:[coder decodeIntForKey:@"operation"]];
 		return self;
-	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
-	return nil;
+	}
+
+	[NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 }
 
 - (void) encodeWithCoder:(NSCoder *) coder {

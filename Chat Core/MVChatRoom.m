@@ -272,19 +272,19 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (NSDictionary *) attributes {
 	@synchronized( _attributes ) {
 		return [NSDictionary dictionaryWithDictionary:_attributes];
-	} return nil;
+	}
 }
 
 - (BOOL) hasAttributeForKey:(NSString *) key {
 	@synchronized( _attributes ) {
 		return ( [_attributes objectForKey:key] ? YES : NO );
-	} return NO;
+	}
 }
 
 - (id) attributeForKey:(NSString *) key {
 	@synchronized( _attributes ) {
 		return [_attributes objectForKey:key];
-	} return nil;
+	}
 }
 
 - (void) setAttribute:(id) attribute forKey:(id) key {
@@ -316,7 +316,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	NSParameterAssert( [self supportedModes] & mode );
 	@synchronized( _modeAttributes ) {
 		return [_modeAttributes objectForKey:[NSNumber numberWithUnsignedInt:mode]];
-	} return nil;
+	}
 }
 
 #pragma mark -
@@ -359,7 +359,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (NSSet *) memberUsers {
 	@synchronized( _memberUsers ) {
 		return [NSSet setWithSet:_memberUsers];
-	} return nil;
+	}
 }
 
 - (NSSet *) memberUsersWithModes:(NSUInteger) newModes {
@@ -412,7 +412,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	NSParameterAssert( user != nil );
 	@synchronized( _memberUsers ) {
 		return [_memberUsers containsObject:user];
-	} return NO;
+	}
 }
 
 #pragma mark -
@@ -427,7 +427,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (NSSet *) bannedUsers {
 	@synchronized( _bannedUsers ) {
 		return [NSSet setWithSet:_bannedUsers];
-	} return nil;
+	}
 }
 
 - (void) addBanForUser:(MVChatUser *) user {
@@ -453,7 +453,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	NSParameterAssert( user != nil );
 	@synchronized( _memberModes ) {
 		return [[_memberModes objectForKey:[user uniqueIdentifier]] unsignedLongValue];
-	} return 0;
+	}
 }
 
 #pragma mark -

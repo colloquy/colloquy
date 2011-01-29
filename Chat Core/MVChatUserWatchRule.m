@@ -152,7 +152,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 - (NSSet *) matchedChatUsers {
 	@synchronized( _matchedChatUsers ) {
 		return [NSSet setWithSet:_matchedChatUsers];
-	} return nil;
+	}
 }
 
 - (void) removeMatchedUser:(MVChatUser *) user {
