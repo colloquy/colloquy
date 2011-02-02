@@ -33,6 +33,8 @@
 	}
 
 	[NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
+
+	return nil; // Never reached, but gcc and clang both warn about "Control reaches end of non-void function"
 }
 
 - (void) encodeWithCoder:(NSCoder *) coder {
