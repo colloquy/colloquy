@@ -1,6 +1,6 @@
 #import "CQActivityWindowController.h"
 
-#import "MVConnectionsController.h"
+#import <MVConnectionsController.h>
 #import "MVFileTransfer.h"
 #import "MVFileTransferController.h"
 #import "JVChatController.h"
@@ -216,7 +216,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 
 - (void) connectionDidDisconnect:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
-	[_outlineView reloadItem:connection reloadChildren:YES];
+	[_outlineView reloadData];
 }
 
 #pragma mark -
@@ -455,7 +455,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		[dictionary setObject:CQActivityStatusError forKey:@"status"];
 		[dictionary setObject:error forKey:@"error"];
 
-		[_outlineView reloadItem:dictionary];
+		[_outlineView reloadData];
 
 		break;
 	}
