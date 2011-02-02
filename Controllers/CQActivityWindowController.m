@@ -215,7 +215,6 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 }
 
 - (void) connectionDidDisconnect:(NSNotification *) notification {
-	MVChatConnection *connection = notification.object;
 	[_outlineView reloadData];
 }
 
