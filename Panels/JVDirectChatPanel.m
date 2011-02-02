@@ -1000,7 +1000,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 #pragma mark -
 #pragma mark History manipulation
 
-- (void) addMessageToHistory:(id) message {
+- (void) addMessageToHistory:(NSAttributedString *) message {
 	if( ! [message length] ) return;
 	if( [_sendHistory count] )
 		[_sendHistory replaceObjectAtIndex:0 withObject:[[[NSAttributedString alloc] initWithString:@""] autorelease]];
