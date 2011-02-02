@@ -39,5 +39,5 @@ PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO
 SDKROOT = /Developer/SDKs/MacOSX10.5.sdk
 STRIP_INSTALLED_PRODUCT = NO
 VALID_ARCHS = x86_64 i386 ppc7400 ppc970 ppc
-WARNING_CFLAGS = -Wall -W -Wcast-align -Wchar-subscripts -Wformat-security -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-format-y2k -Wno-unused-parameter -Wbad-function-cast -Wmissing-declarations -Wnested-externs
+WARNING_CFLAGS = -Wmost -Wextra -Wcast-align -Wchar-subscripts -Wformat-security -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-format-y2k -Wno-unused-parameter -Wbad-function-cast -Wmissing-declarations -Wnested-externs
 ZERO_LINK = NO
