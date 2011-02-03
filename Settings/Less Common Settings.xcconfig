@@ -1,0 +1,5 @@
+#include "Common Settings.xcconfig"
+
+FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/Frameworks" "$(HOME)/Library/Frameworks" $(SYSTEM_LIBRARY_DIR)/PrivateFrameworks
+HEADER_SEARCH_PATHS = "$(SRCROOT)/Frameworks"
+LIBRARY_SEARCH_PATHS = "$(SRCROOT)/Frameworks"
