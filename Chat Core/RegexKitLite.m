@@ -1757,7 +1757,7 @@ static NSException *rkl_NSExceptionForRegex(NSString *regexString, RKLRegexOptio
   return([NSException exceptionWithName:RKLICURegexException reason:[NSString stringWithFormat:@"ICU regular expression error #%d, %s.", status, RKL_ICU_FUNCTION_APPEND(u_errorName)(status)] userInfo:rkl_userInfoDictionary((RKLUserInfoOptions)RKLUserInfoNone, regexString, options, parseError, status, NULL, NSNotFoundRange, NULL, NULL, 0L, (RKLRegexEnumerationOptions)RKLRegexEnumerationNoOptions, NULL)]);
 }
 
-static NSDictionary *rkl_makeAssertDictionary(const char *function, const char *file, int line, NSString *format, ...) {
+NS_FORMAT_FUNCTION(4,0) static NSDictionary *rkl_makeAssertDictionary(const char *function, const char *file, int line, NSString *format, ...) {
   va_list varArgsList;
   va_start(varArgsList, format);
   NSString * RKL_GC_VOLATILE formatString   = [[[NSString alloc] initWithFormat:format arguments:varArgsList] autorelease];
