@@ -12,7 +12,7 @@
  * @abstract       Callback for the dynamic store, just calls keysChanged: on 
  *                 the notification center.
  */
-void _IXSCNotificationCallback( SCDynamicStoreRef store, CFArrayRef changedKeys, void *info ) {	
+static void _IXSCNotificationCallback( SCDynamicStoreRef store, CFArrayRef changedKeys, void *info ) {	
 	NSEnumerator *keysE = [(NSArray *)changedKeys objectEnumerator];
 	NSString *key = nil;
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
