@@ -54,9 +54,11 @@
 	SAFE_PERFORM((id (*)(id, SEL, NSRange)), (self, selector, range), nil);
 }
 
+#if !defined(COMMAND_LINE_UTILITY)
 - (CGPoint) performPrivateSelectorReturningPoint:(NSString *) selectorString {
 	SAFE_PERFORM_RETURNING_SMALL_STRUCT((CGPoint (*)(id, SEL)), (self, selector), CGPointZero);
 }
+#endif
 
 - (BOOL) performPrivateSelectorReturningBoolean:(NSString *) selectorString {
 	SAFE_PERFORM((BOOL (*)(id, SEL)), (self, selector), NO);
