@@ -674,7 +674,7 @@
 		1C8BDCF1054345160035B84A /* JVChatUserInspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVChatUserInspector.h; path = Inspectors/JVChatUserInspector.h; sourceTree = "<group>"; };
 		1C8BDCF2054345160035B84A /* JVChatUserInspector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVChatUserInspector.m; path = Inspectors/JVChatUserInspector.m; sourceTree = "<group>"; };
 		1C8BDD2105436A020035B84A /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVChatMemberInspector.nib; sourceTree = "<group>"; };
-		1C8CE1EB05A921A00020D841 /* iTunes.scpt */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.scpt; name = iTunes.scpt; path = "Plug-Ins/iTunes/iTunes.scpt"; sourceTree = "<group>"; };
+		1C8CE1EB05A921A00020D841 /* iTunes.scpt */ = {isa = PBXFileReference; lastKnownFileType = file; name = iTunes.scpt; path = "Plug-Ins/iTunes/iTunes.scpt"; sourceTree = "<group>"; };
 		1C8CF8E1066530D60080A2F5 /* MVFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVFileTransfer.h; path = "Chat Core/MVFileTransfer.h"; sourceTree = "<group>"; };
 		1C9014BE07A2D798002942A7 /* MVChatUserAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatUserAdditions.h; path = Panels/MVChatUserAdditions.h; sourceTree = "<group>"; };
 		1C9014BF07A2D798002942A7 /* MVChatUserAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVChatUserAdditions.m; path = Panels/MVChatUserAdditions.m; sourceTree = "<group>"; };
@@ -2115,7 +2115,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = NO;
 			};
-			buildConfigurationList = 1C041A700854E97700A5A5BA /* Build configuration list for PBXProject "Colloquy" */;
+			buildConfigurationList = 1C041A700854E97700A5A5BA /* Build configuration list for PBXProject "Colloquy (Old)" */;
 			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -3388,7 +3388,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
-		1C041A700854E97700A5A5BA /* Build configuration list for PBXProject "Colloquy" */ = {
+		1C041A700854E97700A5A5BA /* Build configuration list for PBXProject "Colloquy (Old)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1C041DCC0855377900A5A5BA /* Release */,
