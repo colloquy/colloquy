@@ -2089,7 +2089,7 @@ Failed:
 							(void *)(&(pSockAddrV4->sin_addr)) :
 							(void *)(&(pSockAddrV6->sin6_addr));
 
-	const char *pStr = inet_ntop (pSockAddr->sa_family, pAddr, addrBuf, sizeof(addrBuf));
+	const char *pStr = inet_ntop (pSockAddr->sa_family, pAddr, addrBuf, (socklen_t)sizeof(addrBuf));
 	if (pStr == NULL) [NSException raise: NSInternalInconsistencyException
 								  format: @"Cannot convert address to string."];
 
@@ -2242,7 +2242,7 @@ Failed:
 #pragma mark Reading
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)readDataToLength:(size_t)length withTimeout:(NSTimeInterval)timeout tag:(long)tag;
+- (void)readDataToLength:(size_t)length withTimeout:(NSTimeInterval)timeout tag:(long)tag
 {
 	if(length == 0) return;
 	if(theFlags & kForbidReadsWrites) return;
