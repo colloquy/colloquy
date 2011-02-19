@@ -3127,7 +3127,7 @@ end:
 	[argsNeeded release];
 
 	NSUInteger changedModes = ( oldModes ^ [room modes] ) | argModes;
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:changedModes], @"changedModes", sender, @"by", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:changedModes], @"changedModes", sender, @"by", nil]];
 }
 
 - (void) _handleModeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
@@ -3420,7 +3420,7 @@ end:
 		NSData *topic = [parameters objectAtIndex:3];
 		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
 
-		NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInt:users], @"users", [NSDate date], @"cached", room, @"room", topic, @"topic", nil];
+		NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:users], @"users", [NSDate date], @"cached", room, @"room", topic, @"topic", nil];
 		[self performSelectorOnMainThread:@selector( _addRoomToCache: ) withObject:info waitUntilDone:NO];
 		[info release];
 	}
