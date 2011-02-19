@@ -1,0 +1,26 @@
+#define ENABLE(FEATURE) (defined(ENABLE_##FEATURE) && ENABLE_##FEATURE)
+
+#define LIKELY(x) __builtin_expect((x), 1)
+#define UNLIKELY(x) __builtin_expect((x), 0)
+
+#ifdef __OBJC__
+
+#ifdef COMMAND_LINE_UTILITY
+#import <Foundation/Foundation.h>
+#else
+#import <Cocoa/Cocoa.h>
+#endif
+
+#import <Foundation/NSDebug.h>
+
+#import "NSCharacterSetAdditions.h"
+#import "NSDataAdditions.h"
+#import "NSDictionaryAdditions.h"
+#import "NSNotificationAdditions.h"
+#import "NSObjectAdditions.h"
+#import "NSScannerAdditions.h"
+#import "NSStringAdditions.h"
+
+#endif
+
+#import "MVUtilities.h"

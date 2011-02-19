@@ -3,7 +3,6 @@
 #import "CQChatController.h"
 #import "CQChatCreationViewController.h"
 #import "CQChatInputBar.h"
-#import "CQChatInputField.h"
 #import "CQChatPresentationController.h"
 #import "CQChatRoomController.h"
 #import "CQChatTableCell.h"
