@@ -11,11 +11,16 @@
 
 #import "InterThreadMessaging.h"
 
-@interface NSObject (LeopardOnly)
+#if !ALWAYS_HAS_SYSTEM_SUPPORT
+@interface NSObject (ThreadPerformAdditions)
 - (void) performSelector:(SEL) selector onThread:(NSThread *) thread withObject:(id) object waitUntilDone:(BOOL) wait;
 @end
+#endif
 
-static BOOL useSystemThreadPerformSelector() {
+MVInline BOOL useSystemThreadPerformSelector() {
+#if ALWAYS_HAS_SYSTEM_SUPPORT
+	return YES;
+#else
 	static BOOL useSystemVersion = NO;
 	static BOOL checkedSystem = NO;
 
@@ -25,6 +30,7 @@ static BOOL useSystemThreadPerformSelector() {
 	}
 
 	return useSystemVersion;
+#endif
 }
 
 #if !ALWAYS_HAS_SYSTEM_SUPPORT
@@ -129,7 +135,7 @@ static void removeMessagePortForThread(NSThread *thread) {
 
 #endif
 
-static void performSelector(SEL selector, id receiver, id object, NSThread *thread, BOOL wait) {
+MVInline void performSelector(SEL selector, id receiver, id object, NSThread *thread, BOOL wait) {
 	if( ! thread || [thread isEqual:[NSThread currentThread]] ) {
 		[receiver performSelector:selector withObject:object];
 		return;
