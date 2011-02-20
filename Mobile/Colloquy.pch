@@ -1,7 +1,14 @@
 #define ENABLE(FEATURE) (defined(ENABLE_##FEATURE) && ENABLE_##FEATURE)
+#define SYSTEM(NAME) (defined(SYSTEM_##NAME) && SYSTEM_##NAME)
 
 #define LIKELY(x) __builtin_expect((x), 1)
 #define UNLIKELY(x) __builtin_expect((x), 0)
+
+#define SYSTEM_IOS 1
+
+#if TARGET_IPHONE_SIMULATOR
+#define SYSTEM_IOS_SIMULATOR 1
+#endif
 
 #if !defined(__IPHONE_3_2)
 #define __IPHONE_3_2 30200

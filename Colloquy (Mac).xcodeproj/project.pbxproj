@@ -7,6 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C15B1B81310CD46006FA16B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B1B71310CD46006FA16B /* JavaScriptCore.framework */; };
+		1C15B1B91310CFB5006FA16B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB9DC2130A7E6E009F679C /* SystemConfiguration.framework */; };
+		1C15B1DE1310D02A006FA16B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B1B71310CD46006FA16B /* JavaScriptCore.framework */; };
+		1C15B1EA1310DF8B006FA16B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C15B1E81310DF8B006FA16B /* MainMenu.xib */; };
+		1C15B1F61310EA70006FA16B /* CQColloquyApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B1F51310EA70006FA16B /* CQColloquyApplication.m */; };
+		1C15B1F81310EA92006FA16B /* Colloquy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B1F71310EA92006FA16B /* Colloquy.m */; };
+		1C15B1F91310EB91006FA16B /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B1C31310CFF5006FA16B /* AppKit.framework */; };
+		1C15B1FB1310EC4C006FA16B /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB9DAF130A7E29009F679C /* libicucore.dylib */; };
+		1C15B1FC1310EC65006FA16B /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C49130A770A009F679C /* NSCharacterSetAdditions.m */; };
+		1C15B1FD1310EC65006FA16B /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4B130A770A009F679C /* NSDataAdditions.m */; };
+		1C15B1FE1310EC65006FA16B /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4D130A770A009F679C /* NSDictionaryAdditions.m */; };
+		1C15B1FF1310EC65006FA16B /* NSNotificationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4F130A770A009F679C /* NSNotificationAdditions.m */; };
+		1C15B2001310EC65006FA16B /* NSObjectAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C51130A770A009F679C /* NSObjectAdditions.m */; };
+		1C15B2011310EC65006FA16B /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C53130A770A009F679C /* NSScannerAdditions.m */; };
+		1C15B2021310EC65006FA16B /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C55130A770A009F679C /* NSStringAdditions.m */; };
+		1C15B2031310EC8B006FA16B /* InterThreadMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8E13100B360088C737 /* InterThreadMessaging.m */; };
+		1C15B26013117BF4006FA16B /* CQAnalyticsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B25E13117BF4006FA16B /* CQAnalyticsController.m */; };
+		1C15B26213117F6E006FA16B /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B26113117F6D006FA16B /* IOKit.framework */; };
+		1C15B26B131183FC006FA16B /* CQKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B269131183FC006FA16B /* CQKeychain.m */; };
+		1C15B26D13118418006FA16B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B26C13118415006FA16B /* Security.framework */; };
+		1C15B26F13118763006FA16B /* ColloquyDaemon in Copy Executables */ = {isa = PBXBuildFile; fileRef = 8DD76FA10486AA7600D96B5E /* ColloquyDaemon */; };
 		1C716E9213100B360088C737 /* MVIRCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8313100B360088C737 /* MVIRCChatConnection.m */; };
 		1C716E9313100B360088C737 /* MVIRCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8513100B360088C737 /* MVIRCChatRoom.m */; };
 		1C716E9413100B360088C737 /* MVIRCChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8713100B360088C737 /* MVIRCChatUser.m */; };
@@ -29,13 +50,32 @@
 		1CCB9C5D130A770A009F679C /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C53130A770A009F679C /* NSScannerAdditions.m */; };
 		1CCB9C5E130A770A009F679C /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C55130A770A009F679C /* NSStringAdditions.m */; };
 		1CCB9DAC130A7D1B009F679C /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB9DAB130A7D1B009F679C /* CoreServices.framework */; };
-		1CCB9DB0130A7E29009F679C /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB9DAF130A7E29009F679C /* libicucore.dylib */; };
-		1CCB9DC3130A7E6E009F679C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB9DC2130A7E6E009F679C /* SystemConfiguration.framework */; };
 		8DD76F9A0486AA7600D96B5E /* ColloquyDaemon.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* ColloquyDaemon.m */; settings = {ATTRIBUTES = (); }; };
 		8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		1C15B1DC1310D01E006FA16B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DD76F960486AA7600D96B5E;
+			remoteInfo = "Colloquy Daemon";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
+		1C15B26E13118744006FA16B /* Copy Executables */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 6;
+			files = (
+				1C15B26F13118763006FA16B /* ColloquyDaemon in Copy Executables */,
+			);
+			name = "Copy Executables";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DD76F9E0486AA7600D96B5E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 8;
@@ -50,6 +90,20 @@
 /* Begin PBXFileReference section */
 		08FB7796FE84155DC02AAC07 /* ColloquyDaemon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColloquyDaemon.m; sourceTree = "<group>"; };
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		1C15B1B71310CD46006FA16B /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		1C15B1BE1310CFF5006FA16B /* Colloquy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C15B1C31310CFF5006FA16B /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		1C15B1E71310DF7E006FA16B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1C15B1E91310DF8B006FA16B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		1C15B1F41310EA70006FA16B /* CQColloquyApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQColloquyApplication.h; sourceTree = "<group>"; };
+		1C15B1F51310EA70006FA16B /* CQColloquyApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQColloquyApplication.m; sourceTree = "<group>"; };
+		1C15B1F71310EA92006FA16B /* Colloquy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Colloquy.m; sourceTree = "<group>"; };
+		1C15B25E13117BF4006FA16B /* CQAnalyticsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQAnalyticsController.m; sourceTree = "<group>"; };
+		1C15B25F13117BF4006FA16B /* CQAnalyticsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQAnalyticsController.h; sourceTree = "<group>"; };
+		1C15B26113117F6D006FA16B /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		1C15B269131183FC006FA16B /* CQKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQKeychain.m; sourceTree = "<group>"; };
+		1C15B26A131183FC006FA16B /* CQKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQKeychain.h; sourceTree = "<group>"; };
+		1C15B26C13118415006FA16B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		1C61A55213106225009DF5DF /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
 		1C61A5A113106AC7009DF5DF /* IXSCNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IXSCNotificationManager.h; path = ../Colloquy/Frameworks/PortMapper/framework/IXSCNotificationManager.h; sourceTree = "<group>"; };
 		1C61A5A213106AC7009DF5DF /* IXSCNotificationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IXSCNotificationManager.m; path = ../Colloquy/Frameworks/PortMapper/framework/IXSCNotificationManager.m; sourceTree = "<group>"; };
@@ -149,14 +203,26 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		1C15B1BB1310CFF5006FA16B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C15B26D13118418006FA16B /* Security.framework in Frameworks */,
+				1C15B26213117F6E006FA16B /* IOKit.framework in Frameworks */,
+				1C15B1DE1310D02A006FA16B /* JavaScriptCore.framework in Frameworks */,
+				1C15B1F91310EB91006FA16B /* AppKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DD76F9B0486AA7600D96B5E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C15B1B81310CD46006FA16B /* JavaScriptCore.framework in Frameworks */,
 				8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */,
 				1CCB9DAC130A7D1B009F679C /* CoreServices.framework in Frameworks */,
-				1CCB9DB0130A7E29009F679C /* libicucore.dylib in Frameworks */,
-				1CCB9DC3130A7E6E009F679C /* SystemConfiguration.framework in Frameworks */,
+				1C15B1B91310CFB5006FA16B /* SystemConfiguration.framework in Frameworks */,
+				1C15B1FB1310EC4C006FA16B /* libicucore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,9 +271,13 @@
 		08FB779DFE84155DC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1C15B1C31310CFF5006FA16B /* AppKit.framework */,
 				1CCB9DAB130A7D1B009F679C /* CoreServices.framework */,
 				08FB779EFE84155DC02AAC07 /* Foundation.framework */,
+				1C15B26113117F6D006FA16B /* IOKit.framework */,
+				1C15B1B71310CD46006FA16B /* JavaScriptCore.framework */,
 				1CCB9DAF130A7E29009F679C /* libicucore.dylib */,
+				1C15B26C13118415006FA16B /* Security.framework */,
 				1CCB9DC2130A7E6E009F679C /* SystemConfiguration.framework */,
 			);
 			name = Frameworks;
@@ -217,8 +287,18 @@
 			isa = PBXGroup;
 			children = (
 				8DD76FA10486AA7600D96B5E /* ColloquyDaemon */,
+				1C15B1BE1310CFF5006FA16B /* Colloquy.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		1C15B1B61310CD23006FA16B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1C15B1E71310DF7E006FA16B /* Info.plist */,
+				1C15B1E81310DF8B006FA16B /* MainMenu.xib */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		1C61A59E13106AC7009DF5DF /* Port Mapping Support */ = {
@@ -352,8 +432,7 @@
 				1C716EB013100D7E0088C737 /* Controllers */,
 				1C716EB113100D8A0088C737 /* Models */,
 			);
-			name = Shared;
-			path = Mac/Shared;
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		1C716EA913100CB80088C737 /* Daemon */ = {
@@ -370,8 +449,10 @@
 		1C716EAA13100D1D0088C737 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				1C15B1F71310EA92006FA16B /* Colloquy.m */,
 				1C716EAB13100D3B0088C737 /* Controllers */,
 				1C716EAC13100D460088C737 /* Models */,
+				1C15B1B61310CD23006FA16B /* Resources */,
 				1C716EAD13100D520088C737 /* Views */,
 			);
 			name = Application;
@@ -381,6 +462,8 @@
 		1C716EAB13100D3B0088C737 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				1C15B1F51310EA70006FA16B /* CQColloquyApplication.m */,
+				1C15B1F41310EA70006FA16B /* CQColloquyApplication.h */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -416,6 +499,10 @@
 		1C716EB013100D7E0088C737 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				1C15B25E13117BF4006FA16B /* CQAnalyticsController.m */,
+				1C15B25F13117BF4006FA16B /* CQAnalyticsController.h */,
+				1C15B269131183FC006FA16B /* CQKeychain.m */,
+				1C15B26A131183FC006FA16B /* CQKeychain.h */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -438,6 +525,25 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		1C15B1BD1310CFF5006FA16B /* Colloquy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1C15B1D81310CFF6006FA16B /* Build configuration list for PBXNativeTarget "Colloquy" */;
+			buildPhases = (
+				1C15B1BA1310CFF5006FA16B /* Sources */,
+				1C15B1BB1310CFF5006FA16B /* Frameworks */,
+				1C15B1BC1310CFF5006FA16B /* Resources */,
+				1C15B26E13118744006FA16B /* Copy Executables */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1C15B1DD1310D01E006FA16B /* PBXTargetDependency */,
+			);
+			name = Colloquy;
+			productName = Colloquy;
+			productReference = 1C15B1BE1310CFF5006FA16B /* Colloquy.app */;
+			productType = "com.apple.product-type.application";
+		};
 		8DD76F960486AA7600D96B5E /* Colloquy Daemon */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DEB927408733DD40010E9CD /* Build configuration list for PBXNativeTarget "Colloquy Daemon" */;
@@ -479,12 +585,43 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				1C15B1BD1310CFF5006FA16B /* Colloquy */,
 				8DD76F960486AA7600D96B5E /* Colloquy Daemon */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		1C15B1BC1310CFF5006FA16B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C15B1EA1310DF8B006FA16B /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		1C15B1BA1310CFF5006FA16B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C15B1F61310EA70006FA16B /* CQColloquyApplication.m in Sources */,
+				1C15B1F81310EA92006FA16B /* Colloquy.m in Sources */,
+				1C15B1FC1310EC65006FA16B /* NSCharacterSetAdditions.m in Sources */,
+				1C15B1FD1310EC65006FA16B /* NSDataAdditions.m in Sources */,
+				1C15B1FE1310EC65006FA16B /* NSDictionaryAdditions.m in Sources */,
+				1C15B1FF1310EC65006FA16B /* NSNotificationAdditions.m in Sources */,
+				1C15B2001310EC65006FA16B /* NSObjectAdditions.m in Sources */,
+				1C15B2011310EC65006FA16B /* NSScannerAdditions.m in Sources */,
+				1C15B2021310EC65006FA16B /* NSStringAdditions.m in Sources */,
+				1C15B2031310EC8B006FA16B /* InterThreadMessaging.m in Sources */,
+				1C15B26013117BF4006FA16B /* CQAnalyticsController.m in Sources */,
+				1C15B26B131183FC006FA16B /* CQKeychain.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DD76F990486AA7600D96B5E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -516,7 +653,42 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		1C15B1DD1310D01E006FA16B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8DD76F960486AA7600D96B5E /* Colloquy Daemon */;
+			targetProxy = 1C15B1DC1310D01E006FA16B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1C15B1E81310DF8B006FA16B /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1C15B1E91310DF8B006FA16B /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		1C15B1D91310CFF6006FA16B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = Mac/Application/Resources/Info.plist;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1C15B1DA1310CFF6006FA16B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = Mac/Application/Resources/Info.plist;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		1DEB927508733DD40010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -590,6 +762,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1C15B1D81310CFF6006FA16B /* Build configuration list for PBXNativeTarget "Colloquy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1C15B1D91310CFF6006FA16B /* Debug */,
+				1C15B1DA1310CFF6006FA16B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		1DEB927408733DD40010E9CD /* Build configuration list for PBXNativeTarget "Colloquy Daemon" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

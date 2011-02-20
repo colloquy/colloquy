@@ -37,6 +37,7 @@
 		1C1253290F0D4FC1008F181B /* standard-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C1253280F0D4FC1008F181B /* standard-dark.css */; };
 		1C1254A40F0D8D7F008F181B /* CQChatCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1254A30F0D8D7F008F181B /* CQChatCreationViewController.m */; };
 		1C1255670F0EAA69008F181B /* CQChatEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1255660F0EAA69008F181B /* CQChatEditViewController.m */; };
+		1C15B2681311838C006FA16B /* CQAnalyticsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B2661311838C006FA16B /* CQAnalyticsController.m */; };
 		1C16F77F0FFF049F008D7BB3 /* CQBouncerCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C16F77C0FFF049F008D7BB3 /* CQBouncerCreationViewController.m */; };
 		1C16F79B0FFF0789008D7BB3 /* CQBouncerEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C16F77E0FFF049F008D7BB3 /* CQBouncerEditViewController.m */; };
 		1C1896110E29CF74003CFED0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */; };
@@ -162,7 +163,6 @@
 		1CA3DEBC10290B0F008B1AD2 /* CQHelpTopicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA3DEBB10290B0F008B1AD2 /* CQHelpTopicViewController.m */; };
 		1CA3DEFD10291146008B1AD2 /* help-base.html in Resources */ = {isa = PBXBuildFile; fileRef = 1CA3DEFC10291146008B1AD2 /* help-base.html */; };
 		1CA3DF0110291176008B1AD2 /* help.css in Resources */ = {isa = PBXBuildFile; fileRef = 1CA3DF0010291176008B1AD2 /* help.css */; };
-		1CA6EBFF1020924C00310D59 /* CQAnalyticsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA6EBFE1020924C00310D59 /* CQAnalyticsController.m */; };
 		1CA7151A0EF47D6F006225CD /* CQUnreadCountView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CA715190EF47D6F006225CD /* CQUnreadCountView.m */; };
 		1CA718AA0EF5F136006225CD /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1CA718A90EF5F136006225CD /* Settings.bundle */; };
 		1CA9DF9D1196699D008149F9 /* info-large.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA9DF9C1196699D008149F9 /* info-large.png */; };
@@ -288,6 +288,8 @@
 		1C1255650F0EAA69008F181B /* CQChatEditViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatEditViewController.h; sourceTree = "<group>"; };
 		1C1255660F0EAA69008F181B /* CQChatEditViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatEditViewController.m; sourceTree = "<group>"; };
 		1C15B12913107243006FA16B /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
+		1C15B2661311838C006FA16B /* CQAnalyticsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQAnalyticsController.m; sourceTree = "<group>"; };
+		1C15B2671311838C006FA16B /* CQAnalyticsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQAnalyticsController.h; sourceTree = "<group>"; };
 		1C16F77B0FFF049F008D7BB3 /* CQBouncerCreationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQBouncerCreationViewController.h; sourceTree = "<group>"; };
 		1C16F77C0FFF049F008D7BB3 /* CQBouncerCreationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQBouncerCreationViewController.m; sourceTree = "<group>"; };
 		1C16F77D0FFF049F008D7BB3 /* CQBouncerEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQBouncerEditViewController.h; sourceTree = "<group>"; };
@@ -459,8 +461,6 @@
 		1CA3DEBB10290B0F008B1AD2 /* CQHelpTopicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQHelpTopicViewController.m; path = Mobile/Controllers/CQHelpTopicViewController.m; sourceTree = "<group>"; };
 		1CA3DEFC10291146008B1AD2 /* help-base.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "help-base.html"; sourceTree = "<group>"; };
 		1CA3DF0010291176008B1AD2 /* help.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = help.css; sourceTree = "<group>"; };
-		1CA6EBFD1020924C00310D59 /* CQAnalyticsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQAnalyticsController.h; path = Mobile/Controllers/CQAnalyticsController.h; sourceTree = "<group>"; };
-		1CA6EBFE1020924C00310D59 /* CQAnalyticsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQAnalyticsController.m; path = Mobile/Controllers/CQAnalyticsController.m; sourceTree = "<group>"; };
 		1CA715180EF47D6F006225CD /* CQUnreadCountView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQUnreadCountView.h; sourceTree = "<group>"; };
 		1CA715190EF47D6F006225CD /* CQUnreadCountView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQUnreadCountView.m; sourceTree = "<group>"; };
 		1CA718A90EF5F136006225CD /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -519,8 +519,8 @@
 		1CE69F810EE2F50100389442 /* ChatView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatView.xib; sourceTree = "<group>"; };
 		1CE69FD70EE317F200389442 /* CQChatInputBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatInputBar.h; sourceTree = "<group>"; };
 		1CE69FD80EE317F200389442 /* CQChatInputBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatInputBar.m; sourceTree = "<group>"; };
-		1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQKeychain.h; path = Mobile/Controllers/CQKeychain.h; sourceTree = "<group>"; };
-		1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQKeychain.m; path = Mobile/Controllers/CQKeychain.m; sourceTree = "<group>"; };
+		1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQKeychain.h; sourceTree = "<group>"; };
+		1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQKeychain.m; sourceTree = "<group>"; };
 		1CF50C860ED8BE1100CBE5E3 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListViewController.h; path = Mobile/Controllers/CQPreferencesListViewController.h; sourceTree = "<group>"; };
 		1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListViewController.m; path = Mobile/Controllers/CQPreferencesListViewController.m; sourceTree = "<group>"; };
@@ -652,6 +652,33 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		1C15B2631311838B006FA16B /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				1C15B2641311838C006FA16B /* Controllers */,
+				1C15B2651311838C006FA16B /* Models */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		1C15B2641311838C006FA16B /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1C15B2661311838C006FA16B /* CQAnalyticsController.m */,
+				1C15B2671311838C006FA16B /* CQAnalyticsController.h */,
+				1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */,
+				1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		1C15B2651311838C006FA16B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		1C16F7410FFF0269008D7BB3 /* Connections */ = {
 			isa = PBXGroup;
 			children = (
@@ -728,16 +755,12 @@
 		1C16F74A0FFF02D7008D7BB3 /* General */ = {
 			isa = PBXGroup;
 			children = (
-				1CA6EBFE1020924C00310D59 /* CQAnalyticsController.m */,
-				1CA6EBFD1020924C00310D59 /* CQAnalyticsController.h */,
 				1C0931010D80C6E900A2705D /* CQColloquyApplication.m */,
 				1C0931020D80C6E900A2705D /* CQColloquyApplication.h */,
 				1CA3DD5410287BF3008B1AD2 /* CQHelpTopicsViewController.m */,
 				1CA3DD5310287BF3008B1AD2 /* CQHelpTopicsViewController.h */,
 				1CA3DEBB10290B0F008B1AD2 /* CQHelpTopicViewController.m */,
 				1CA3DEBA10290B0E008B1AD2 /* CQHelpTopicViewController.h */,
-				1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */,
-				1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */,
 				925C594B1177CB63001995E0 /* CQModalNavigationController.m */,
 				925C594A1177CB63001995E0 /* CQModalNavigationController.h */,
 				92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */,
@@ -1040,6 +1063,7 @@
 			children = (
 				1C09310A0D80C71800A2705D /* Colloquy.pch */,
 				1C716EB313100F220088C737 /* Chat Core */,
+				1C15B2631311838B006FA16B /* Shared */,
 				1C09345E0D80D24100A2705D /* Controllers */,
 				1C63415F0FAF307B00BB5866 /* Models */,
 				1C0DBCA41005A538003BEEF3 /* Operations */,
@@ -1153,9 +1177,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1D6058900D05DD3D006BFB54 /* Colloquy App */ = {
+		1D6058900D05DD3D006BFB54 /* Colloquy */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Colloquy App" */;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Colloquy" */;
 			buildPhases = (
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
@@ -1166,7 +1190,7 @@
 			);
 			dependencies = (
 			);
-			name = "Colloquy App";
+			name = Colloquy;
 			productName = "Mobile Colloquy";
 			productReference = 1D6058910D05DD3D006BFB54 /* Colloquy.app */;
 			productType = "com.apple.product-type.application";
@@ -1195,7 +1219,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1D6058900D05DD3D006BFB54 /* Colloquy App */,
+				1D6058900D05DD3D006BFB54 /* Colloquy */,
 			);
 		};
 /* End PBXProject section */
@@ -1413,7 +1437,6 @@
 				1C0DBCA91005A57A003BEEF3 /* CQProcessChatMessageOperation.m in Sources */,
 				1C34A4981016C73800BAA714 /* CQChatRoomInfoTableCell.m in Sources */,
 				1C34A4A71016CC2500BAA714 /* CQChatRoomListViewController.m in Sources */,
-				1CA6EBFF1020924C00310D59 /* CQAnalyticsController.m in Sources */,
 				1CA3DC581027984A008B1AD2 /* CQWelcomeViewController.m in Sources */,
 				1CA3DD5510287BF3008B1AD2 /* CQHelpTopicsViewController.m in Sources */,
 				1CA3DEBC10290B0F008B1AD2 /* CQHelpTopicViewController.m in Sources */,
@@ -1456,6 +1479,7 @@
 				1C716EE613100F220088C737 /* MVDirectChatConnection.m in Sources */,
 				1C716EE713100F220088C737 /* MVDirectClientConnection.m in Sources */,
 				1C716EE813100F220088C737 /* MVFileTransfer.m in Sources */,
+				1C15B2681311838C006FA16B /* CQAnalyticsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1601,7 +1625,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Colloquy App" */ = {
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Colloquy" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,

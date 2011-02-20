@@ -6,16 +6,16 @@
       buildImplicitDependencies = "YES">
       <BuildActionEntries>
          <BuildActionEntry
-            buildForTesting = "NO"
+            buildForTesting = "YES"
             buildForRunning = "YES"
             buildForProfiling = "YES"
             buildForArchiving = "YES"
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8DD76F960486AA7600D96B5E"
-               BuildableName = "ColloquyDaemon"
-               BlueprintName = "Colloquy Daemon"
+               BlueprintIdentifier = "1C15B1BD1310CFF5006FA16B"
+               BuildableName = "Colloquy.app"
+               BlueprintName = "Colloquy"
                ReferencedContainer = "container:Colloquy (Mac).xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -40,9 +40,9 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8DD76F960486AA7600D96B5E"
-            BuildableName = "ColloquyDaemon"
-            BlueprintName = "Colloquy Daemon"
+            BlueprintIdentifier = "1C15B1BD1310CFF5006FA16B"
+            BuildableName = "Colloquy.app"
+            BlueprintName = "Colloquy"
             ReferencedContainer = "container:Colloquy (Mac).xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -59,9 +59,9 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8DD76F960486AA7600D96B5E"
-            BuildableName = "ColloquyDaemon"
-            BlueprintName = "Colloquy Daemon"
+            BlueprintIdentifier = "1C15B1BD1310CFF5006FA16B"
+            BuildableName = "Colloquy.app"
+            BlueprintName = "Colloquy"
             ReferencedContainer = "container:Colloquy (Mac).xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
