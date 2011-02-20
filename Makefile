@@ -1,29 +1,41 @@
 INSTALL_DIR := $(shell if [[ -d $(HOME)/Applications/Colloquy.app ]]; then echo $(HOME)/Applications; else echo /Applications; fi)
-BUILD_DIR = build/Release
+RELEASE_BUILD_DIR = build/Release
 PRODUCT_NAME = Colloquy.app
 
 CP = ditto --rsrc
 RM = rm
-COMMON_XCODE_OPTIONS = -project Colloquy.xcodeproj -target 'Colloquy (Application)'
+ZIP = ditto -c -k --keepParent --sequesterRsrc
+XCODEBUILD = xcodebuild
+
+COMMON_XCODE_OPTIONS = -workspace Colloquy.xcworkspace
+MAC_XCODE_SCHEME_OPTION = -scheme 'Colloquy (Mac)'
+IOS_XCODE_SCHEME_OPTION = -scheme 'Colloquy (iOS)'
+DEBUG_XCODE_CONFIG_OPTION = -configuration Debug
+RELEASE_XCODE_CONFIG_OPTION = -configuration Release
+CLEAN_XCODE_OPTION = clean
 
 all release r:
-	xcodebuild $(COMMON_XCODE_OPTIONS) -configuration Release build
+	$(XCODEBUILD) $(COMMON_XCODE_OPTIONS) $(MAC_XCODE_SCHEME_OPTION) $(RELEASE_XCODE_CONFIG_OPTION)
 
-development dev d:
-	xcodebuild $(COMMON_XCODE_OPTIONS) -configuration Development build
+debug d:
+	$(XCODEBUILD) $(COMMON_XCODE_OPTIONS) $(MAC_XCODE_SCHEME_OPTION) $(DEBUG_XCODE_CONFIG_OPTION)
 
 clean c:
-	xcodebuild -project Colloquy.xcodeproj -alltargets clean
+	$(XCODEBUILD) $(COMMON_XCODE_OPTIONS) $(MAC_XCODE_SCHEME_OPTION) $(CLEAN_XCODE_OPTION)
+
+clean-release cr:
+	$(XCODEBUILD) $(COMMON_XCODE_OPTIONS) $(MAC_XCODE_SCHEME_OPTION) $(RELEASE_XCODE_CONFIG_OPTION) $(CLEAN_XCODE_OPTION)
+
+clean-debug cd:
+	$(XCODEBUILD) $(COMMON_XCODE_OPTIONS) $(MAC_XCODE_SCHEME_OPTION) $(DEBUG_XCODE_CONFIG_OPTION) $(CLEAN_XCODE_OPTION)
 
 clean-all ca:
-	xcodebuild -project Colloquy.xcodeproj -alltargets clean -configuration Release
-	xcodebuild -project Colloquy.xcodeproj -alltargets clean -configuration Development
+	$(XCODEBUILD) $(COMMON_XCODE_OPTIONS) $(MAC_XCODE_SCHEME_OPTION) $(RELEASE_XCODE_CONFIG_OPTION) $(CLEAN_XCODE_OPTION)
+	$(XCODEBUILD) $(COMMON_XCODE_OPTIONS) $(MAC_XCODE_SCHEME_OPTION) $(DEBUG_XCODE_CONFIG_OPTION) $(CLEAN_XCODE_OPTION)
 
-install i: r
+install i: release
 	-$(RM) -rf $(INSTALL_DIR)/$(PRODUCT_NAME)
-	$(CP) $(BUILD_DIR)/$(PRODUCT_NAME) $(INSTALL_DIR)/$(PRODUCT_NAME)
+	$(CP) $(RELEASE_BUILD_DIR)/$(PRODUCT_NAME) $(INSTALL_DIR)/$(PRODUCT_NAME)
 
-zip z:
-	xcodebuild -project Colloquy.xcodeproj -alltargets clean -configuration Release
-	xcodebuild $(COMMON_XCODE_OPTIONS) -configuration Release build
-	ditto -c -k --keepParent --sequesterRsrc $(BUILD_DIR)/$(PRODUCT_NAME) $(BUILD_DIR)/$(PRODUCT_NAME).zip
+zip z: clean-release release
+	$(ZIP) $(RELEASE_BUILD_DIR)/$(PRODUCT_NAME) $(RELEASE_BUILD_DIR)/$(PRODUCT_NAME).zip
