@@ -436,6 +436,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	return [uniqueId autorelease];
 }
 
+#if ENABLE(SCRIPTING)
 + (unsigned long) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding {
 	switch( encoding ) {
 		default:
@@ -532,6 +533,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 	return NSUTF8StringEncoding; // default encoding
 }
+#endif
 
 #pragma mark -
 

@@ -16,8 +16,10 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 @interface NSString (NSStringAdditions)
 + (NSString *) locallyUniqueString;
 
+#if ENABLE(SCRIPTING)
 + (unsigned long) scriptTypedEncodingFromStringEncoding:(NSStringEncoding) encoding;
 + (NSStringEncoding) stringEncodingFromScriptTypedEncoding:(unsigned long) encoding;
+#endif
 
 + (NSArray *) knownEmoticons;
 + (NSSet *) knownEmojiWithEmoticons;
