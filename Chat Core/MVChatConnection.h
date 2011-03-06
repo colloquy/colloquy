@@ -151,6 +151,7 @@ extern NSString *MVChatConnectionErrorDomain;
 	unsigned short _bouncerServerPort;
 
 	BOOL _secure;
+	BOOL _requestsSASL;
 	BOOL _roomListDirty;
 	BOOL _userDisconnected;
 
@@ -211,6 +212,7 @@ extern NSString *MVChatConnectionErrorDomain;
 @property MVChatMessageFormat outgoingChatFormat;
 
 @property(getter=isSecure) BOOL secure;
+@property BOOL requestsSASL;
 
 @property(copy) NSDictionary *persistentInformation;
 

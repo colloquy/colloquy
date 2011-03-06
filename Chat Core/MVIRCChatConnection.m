@@ -848,16 +848,18 @@ static const NSStringEncoding supportedEncodings[] = {
 		}
 	}
 
-	[self sendRawMessageImmediatelyWithFormat:@"CAP LS"];
+	// Schedule an end to the capability negotiation in case it stalls the connection.
+	[self _sendEndCapabilityCommandAfterTimeout];
+
+	if( _requestsSASL ) [self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl"];
+	else [self _sendEndCapabilityCommand];
+
 	if( password.length ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self preferredNickname]];
 	[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", username, ( _realName.length ? _realName : @"Anonymous User" )];
 
 	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:JVPeriodicEventsInterval];
 	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:JVPingServerInterval];
-
-	// Schedule an end to the capability negotiation in case it stalls the connection.
-	[self _sendEndCapabilityCommandAfterTimeout];
 
 	[self _readNextMessageFromServer];
 }

@@ -135,6 +135,8 @@ static const NSStringEncoding supportedEncodings[] = {
 		_nextAltNickIndex = 0;
 		_roomListDirty = NO;
 
+		_requestsSASL = YES;
+
 		_status = MVChatConnectionDisconnectedStatus;
 		_proxy = MVChatConnectionNoProxy;
 		_bouncer = MVChatConnectionNoBouncer;
@@ -575,6 +577,16 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (BOOL) isSecure {
 	return _secure;
+}
+
+#pragma mark -
+
+- (void) setRequestsSASL:(BOOL) sasl {
+	_requestsSASL = sasl;
+}
+
+- (BOOL) requestsSASL {
+	return _requestsSASL;
 }
 
 #pragma mark -
