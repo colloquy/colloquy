@@ -848,12 +848,12 @@ static const NSStringEncoding supportedEncodings[] = {
 		}
 	}
 
-	if( _requestsSASL && self.nicknamePassword.length ) {
-		// Schedule an end to the capability negotiation in case it stalls the connection.
-		[self _sendEndCapabilityCommandAfterTimeout];
+	// Schedule an end to the capability negotiation in case it stalls the connection.
+	[self _sendEndCapabilityCommandAfterTimeout];
 
-		[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl"];
-	}
+	if( _requestsSASL && self.nicknamePassword.length )
+		[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl multi-prefix"];
+	else [self sendRawMessageImmediatelyWithFormat:@"CAP REQ :multi-prefix"];
 
 	if( password.length ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self preferredNickname]];
@@ -1194,7 +1194,7 @@ end:
 }
 
 - (NSUInteger) bytesRemainingForMessage:(NSString *) nickname withUsername:(NSString *) username withAddress:(NSString *) address withPrefix:(NSString *) prefix withEncoding:(NSStringEncoding) msgEncoding {
-	return ( sizeof(char) * 512 ) - [nickname lengthOfBytesUsingEncoding:msgEncoding] - [username lengthOfBytesUsingEncoding:msgEncoding] - [address lengthOfBytesUsingEncoding:msgEncoding] - [prefix lengthOfBytesUsingEncoding:msgEncoding];
+	return ( sizeof(char) * JVMaximumCommandLength ) - [nickname lengthOfBytesUsingEncoding:msgEncoding] - [username lengthOfBytesUsingEncoding:msgEncoding] - [address lengthOfBytesUsingEncoding:msgEncoding] - [prefix lengthOfBytesUsingEncoding:msgEncoding];
 }
 
 - (BOOL) validCharacterToSend:(char *) lastCharacter whitespaceInString:(BOOL) hasWhitespaceInString {
@@ -1972,6 +1972,11 @@ end:
 	[self performSelector:@selector(_sendEndCapabilityCommand) withObject:nil afterDelay:JVEndCapabilityTimeoutDelay];
 }
 
+- (void) _sendEndCapabilityCommandSoon {
+	[self _cancelScheduledSendEndCapabilityCommand];
+	[self performSelector:@selector(_sendEndCapabilityCommand) withObject:nil afterDelay:1.];
+}
+
 - (void) _sendEndCapabilityCommand {
 	[self _cancelScheduledSendEndCapabilityCommand];
 
@@ -1997,35 +2002,44 @@ end:
 
 	if( parameters.count >= 3 ) {
 		NSString *subCommand = [parameters objectAtIndex:1];
+		if( [subCommand isCaseInsensitiveEqualToString:@"LS"] || [subCommand isCaseInsensitiveEqualToString:@"ACK"] ) {
+			NSString *capabilitiesString = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
+			NSArray *capabilities = [capabilitiesString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+			for( NSString *capability in capabilities ) {
+				if( [capability isCaseInsensitiveEqualToString:@"sasl"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionSASLFeature];
+					}
 
-		NSString *capabilitiesString = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
-		NSArray *capabilities = [capabilitiesString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-		for( NSString *capability in capabilities ) {
-			if( [capability	isCaseInsensitiveEqualToString:@"sasl"] ) {
-				if( [subCommand isCaseInsensitiveEqualToString:@"NAK"] )
-					continue;
+					if( self.nicknamePassword.length ) {
+						if( [subCommand isCaseInsensitiveEqualToString:@"LS"] ) {
+							[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl"];
+							furtherNegotiation = YES;
+						} else if( [subCommand isCaseInsensitiveEqualToString:@"ACK"] ) {
+							[self sendRawMessageImmediatelyWithFormat:@"AUTHENTICATE PLAIN"];
+							furtherNegotiation = YES;
+						}
+					} else {
+						[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+					}
+				} else if( [capability isCaseInsensitiveEqualToString:@"multi-prefix"] ) {
+					@synchronized( _supportedFeatures ) {
+						[_supportedFeatures addObject:MVChatConnectionMultipleNicknamePrefixFeature];
+					}
 
-				@synchronized( _supportedFeatures ) {
-					[_supportedFeatures addObject:MVChatConnectionSASLFeature];
-				}
-
-				if( self.nicknamePassword.length ) {
 					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl"];
-						furtherNegotiation = YES;
-					} else if( [subCommand isCaseInsensitiveEqualToString:@"ACK"] ) {
-						[self sendRawMessageImmediatelyWithFormat:@"AUTHENTICATE PLAIN"];
+						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :multi-prefix"];
 						furtherNegotiation = YES;
 					}
-				} else {
-					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 				}
 			}
 		}
 	}
 
-	if( !furtherNegotiation )
-		[self _sendEndCapabilityCommand];
+	if( furtherNegotiation )
+		[self _sendEndCapabilityCommandAfterTimeout];
+	else
+		[self _sendEndCapabilityCommandSoon];
 }
 
 - (void) _handleAuthenticateWithParameters:(NSArray *) parameters fromSender:(id) sender {

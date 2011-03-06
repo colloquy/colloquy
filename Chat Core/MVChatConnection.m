@@ -41,6 +41,7 @@
 #endif
 
 NSString *MVChatConnectionSASLFeature = @"MVChatConnectionSASLFeature";
+NSString *MVChatConnectionMultipleNicknamePrefixFeature = @"MVChatConnectionMultipleNicknamePrefixFeature";
 
 NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
 NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectNotification";

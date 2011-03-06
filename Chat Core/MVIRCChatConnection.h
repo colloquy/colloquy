@@ -85,5 +85,6 @@
 
 - (void) _cancelScheduledSendEndCapabilityCommand;
 - (void) _sendEndCapabilityCommandAfterTimeout;
+- (void) _sendEndCapabilityCommandSoon;
 - (void) _sendEndCapabilityCommand;
 @end

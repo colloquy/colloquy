@@ -77,6 +77,7 @@ typedef enum {
 @class MVUploadFileTransfer;
 
 extern NSString *MVChatConnectionSASLFeature;
+extern NSString *MVChatConnectionMultipleNicknamePrefixFeature;
 
 extern NSString *MVChatConnectionWillConnectNotification;
 extern NSString *MVChatConnectionDidConnectNotification;
