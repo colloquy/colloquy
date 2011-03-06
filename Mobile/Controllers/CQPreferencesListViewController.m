@@ -49,13 +49,16 @@
 		NSArray *changedIndexPaths = [NSArray arrayWithObject:changedIndexPath];
 
 		if (_editingIndex < _items.count) {
-			if (_editingViewController.listItemText.length)
+			if (_editingViewController.listItemText.length) {
 				[_items replaceObjectAtIndex:_editingIndex withObject:_editingViewController.listItemText];
-			else [_items removeObjectAtIndex:_editingIndex];
+
+				[tableView updateCellAtIndexPath:changedIndexPath withAnimation:UITableViewRowAnimationFade];
+			} else {
+				[_items removeObjectAtIndex:_editingIndex];
+				[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:_editingIndex inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+			}
 
 			_pendingChanges = YES;
-
-			[tableView updateCellAtIndexPath:changedIndexPath withAnimation:UITableViewRowAnimationFade];
 		} else if (_editingViewController.listItemText.length) {
 			if (![_items containsObject:_editingViewController.listItemText]) {
 				[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
