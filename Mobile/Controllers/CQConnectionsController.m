@@ -363,6 +363,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	if ([[info objectForKey:@"password"] length])
 		chatConnection.password = [info objectForKey:@"password"];
 	chatConnection.secure = [[info objectForKey:@"secure"] boolValue];
+	chatConnection.requestsSASL = [[info objectForKey:@"requestsSASL"] boolValue];
 	chatConnection.alternateNicknames = [info objectForKey:@"alternateNicknames"];
 	chatConnection.encoding = [[info objectForKey:@"encoding"] unsignedIntegerValue];
 
@@ -1064,6 +1065,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	connection.proxyType = [[info objectForKey:@"proxy"] unsignedLongValue];
 	connection.secure = [[info objectForKey:@"secure"] boolValue];
 
+	if ([info objectForKey:@"requestsSASL"])
+		connection.requestsSASL = [[info objectForKey:@"requestsSASL"] boolValue];
+
 	if ([[info objectForKey:@"encoding"] unsignedLongValue])
 		connection.encoding = [[info objectForKey:@"encoding"] unsignedLongValue];
 	else connection.encoding = [MVChatConnection defaultEncoding];
@@ -1163,6 +1167,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[info setObject:connection.server forKey:@"server"];
 	[info setObject:connection.urlScheme forKey:@"type"];
 	[info setObject:[NSNumber numberWithBool:connection.secure] forKey:@"secure"];
+	[info setObject:[NSNumber numberWithBool:connection.requestsSASL] forKey:@"requestsSASL"];
 	[info setObject:[NSNumber numberWithLong:connection.proxyType] forKey:@"proxy"];
 	[info setObject:[NSNumber numberWithLong:connection.encoding] forKey:@"encoding"];
 	[info setObject:[NSNumber numberWithUnsignedShort:connection.serverPort] forKey:@"port"];
