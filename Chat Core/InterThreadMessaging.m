@@ -11,6 +11,8 @@
 
 #import "InterThreadMessaging.h"
 
+#import "MVUtilities.h"
+
 #if !ALWAYS_HAS_SYSTEM_SUPPORT
 @interface NSObject (ThreadPerformAdditions)
 - (void) performSelector:(SEL) selector onThread:(NSThread *) thread withObject:(id) object waitUntilDone:(BOOL) wait;

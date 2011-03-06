@@ -22,6 +22,6 @@
 // $Id: acid.h,v 1.1 2004/07/19 03:49:03 jtownsend Exp $
 //============================================================================
 
-#import "acid-dom.h"
-#import "acid-xpath.h"
-#import "acid-jabber.h"
+#import <Acid/acid-dom.h>
+#import <Acid/acid-xpath.h>
+#import <Acid/acid-jabber.h>
