@@ -848,7 +848,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		}
 	}
 
-	if( _requestsSASL ) {
+	if( _requestsSASL && self.nicknamePassword.length ) {
 		// Schedule an end to the capability negotiation in case it stalls the connection.
 		[self _sendEndCapabilityCommandAfterTimeout];
 
