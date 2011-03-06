@@ -3,154 +3,154 @@
 <plist version="1.0">
 <array>
 	<dict>
-		<key>Name</key>
-		<string>Abjects</string>
 		<key>Address</key>
 		<string>irc.abjects.net</string>
+		<key>Name</key>
+		<string>Abjects</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>AllNetwork</string>
 		<key>Address</key>
 		<string>irc.allnetwork.org</string>
+		<key>Name</key>
+		<string>AllNetwork</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>DALnet</string>
 		<key>Address</key>
 		<string>irc.dal.net</string>
+		<key>Name</key>
+		<string>DALnet</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>DarkSin</string>
 		<key>Address</key>
 		<string>irc.darksin.net</string>
+		<key>Name</key>
+		<string>DarkSin</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>EFNet</string>
 		<key>Address</key>
 		<string>irc.efnet.org</string>
+		<key>Name</key>
+		<string>EFNet</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>EsperNet</string>
 		<key>Address</key>
 		<string>irc.esper.net</string>
+		<key>Name</key>
+		<string>EsperNet</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>Foonetic</string>
 		<key>Address</key>
 		<string>irc.foonetic.net</string>
+		<key>Name</key>
+		<string>Foonetic</string>
 	</dict>
 	<dict>
+		<key>Address</key>
+		<string>chat.freenode.net</string>
 		<key>Name</key>
 		<string>Freenode</string>
-		<key>Address</key>
-		<string>irc.freenode.net</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>GameSurge</string>
 		<key>Address</key>
 		<string>irc.gamesurge.net</string>
+		<key>Name</key>
+		<string>GameSurge</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>GeekShed</string>
 		<key>Address</key>
 		<string>irc.geekshed.net</string>
+		<key>Name</key>
+		<string>GeekShed</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>IRCnet</string>
 		<key>Address</key>
 		<string>irc.ircnet.com</string>
+		<key>Name</key>
+		<string>IRCnet</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>IRCHighway</string>
 		<key>Address</key>
 		<string>irc.irchighway.net</string>
+		<key>Name</key>
+		<string>IRCHighway</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>ICQ</string>
 		<key>Address</key>
 		<string>irc.icq.com</string>
+		<key>Name</key>
+		<string>ICQ</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>MacNN</string>
 		<key>Address</key>
 		<string>irc.macnn.com</string>
+		<key>Name</key>
+		<string>MacNN</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>MacGeneration</string>
 		<key>Address</key>
 		<string>irc.macgeneration.com</string>
+		<key>Name</key>
+		<string>MacGeneration</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>OFTC</string>
 		<key>Address</key>
 		<string>irc.oftc.net</string>
+		<key>Name</key>
+		<string>OFTC</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>OGameNet</string>
 		<key>Address</key>
 		<string>irc.ogamenet.net</string>
+		<key>Name</key>
+		<string>OGameNet</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>QuakeNet</string>
 		<key>Address</key>
 		<string>irc.quakenet.org</string>
+		<key>Name</key>
+		<string>QuakeNet</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>Rizon</string>
 		<key>Address</key>
 		<string>irc.rizon.net</string>
+		<key>Name</key>
+		<string>Rizon</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>SKYROCK</string>
 		<key>Address</key>
 		<string>irc.skyrock.com</string>
+		<key>Name</key>
+		<string>SKYROCK</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>SynIRC</string>
 		<key>Address</key>
 		<string>irc.synirc.net</string>
+		<key>Name</key>
+		<string>SynIRC</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>SwiftIRC</string>
 		<key>Address</key>
 		<string>irc.swiftirc.net</string>
+		<key>Name</key>
+		<string>SwiftIRC</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>Undernet</string>
 		<key>Address</key>
 		<string>irc.undernet.org</string>
+		<key>Name</key>
+		<string>Undernet</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>Ustream</string>
 		<key>Address</key>
 		<string>chat2.ustream.tv</string>
+		<key>Name</key>
+		<string>Ustream</string>
 	</dict>
 	<dict>
-		<key>Name</key>
-		<string>WebChat</string>
 		<key>Address</key>
 		<string>irc.webchat.org</string>
+		<key>Name</key>
+		<string>WebChat</string>
 	</dict>
 </array>
 </plist>
