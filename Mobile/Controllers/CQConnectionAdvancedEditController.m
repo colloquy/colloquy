@@ -77,7 +77,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
 	switch (section) {
-		case SettingsTableSection: return 2;
+		case SettingsTableSection: return 3;
 		case AuthenticationTableSection: return 3;
 		case IdentitiesTableSection: return 1;
 		case AutomaticTableSection: return 1;
@@ -95,12 +95,14 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 }
 
 - (CGFloat) tableView:(UITableView *) tableView heightForFooterInSection:(NSInteger) section {
-	if (section == AuthenticationTableSection)
+	if (section == SettingsTableSection || section == AuthenticationTableSection)
 		return 50.;
 	return 0.;
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
+	if (section == SettingsTableSection)
+		return NSLocalizedString(@"Attempts to authenticate thru SASL with\nthe nickname and nickname password.", @"Settings section footer title");
 	if (section == AuthenticationTableSection)
 		return NSLocalizedString(@"The nickname password is used to\nauthenticate with services (e.g. NickServ).", @"Authentication section footer title");
 	return nil;
@@ -328,6 +330,19 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 			else cell.accessibilityLabel = NSLocalizedString(@"Use SSL: Off", @"Voiceover use SSL off label");
 
 			return cell;
+		} else if (indexPath.row == 2) {
+			CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
+
+			cell.switchAction = @selector(attemptSASLChanged:);
+			cell.textLabel.text = NSLocalizedString(@"Attempt SASL", @"Attempt SASL connection setting label");
+			cell.on = _connection.requestsSASL;
+			cell.switchControl.enabled = _connection.directConnection;
+
+			if (_connection.requestsSASL)
+				cell.accessibilityLabel = NSLocalizedString(@"Attempt SASL: On", @"Voiceover attempt SASL on label");
+			else cell.accessibilityLabel = NSLocalizedString(@"Attempt SASL: Off", @"Voiceover attempt SASL off label");
+
+			return cell;
 		}
 	} else if (indexPath.section == AuthenticationTableSection) {
 		CQPreferencesTextCell *cell = nil;
@@ -455,6 +470,10 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		_connection.serverPort = 6667;
 
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:SettingsTableSection] withAnimation:UITableViewRowAnimationNone];
+}
+
+- (void) attemptSASLChanged:(CQPreferencesSwitchCell *) sender {
+	_connection.requestsSASL = sender.on;
 }
 
 - (void) usernameChanged:(CQPreferencesTextCell *) sender {
