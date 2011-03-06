@@ -102,7 +102,7 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 - (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
 	if (section == SettingsTableSection)
-		return NSLocalizedString(@"Attempts to authenticate thru SASL with\nthe nickname and nickname password.", @"Settings section footer title");
+		return NSLocalizedString(@"Authentication via SASL uses your\nnickname and nickname password.", @"Settings section footer title");
 	if (section == AuthenticationTableSection)
 		return NSLocalizedString(@"The nickname password is used to\nauthenticate with services (e.g. NickServ).", @"Authentication section footer title");
 	return nil;
