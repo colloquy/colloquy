@@ -210,6 +210,12 @@
 		cell.textLabel.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 	else cell.textLabel.textColor = [UIColor blackColor];
 
+	if (self.editing)
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+	else if (indexPath.row == _selectedItemIndex)
+		cell.accessoryType = UITableViewCellAccessoryCheckmark;
+	else cell.accessoryType = UITableViewCellAccessoryNone;
+
 	return cell;
 }
 
@@ -264,14 +270,6 @@
 
 - (BOOL) tableView:(UITableView *) tableView canMoveRowAtIndexPath:(NSIndexPath *) indexPath {
 	return (indexPath.row < _items.count);
-}
-
-- (UITableViewCellAccessoryType) tableView:(UITableView *) tableView accessoryTypeForRowWithIndexPath:(NSIndexPath *) indexPath {
-	if (self.editing)
-		return UITableViewCellAccessoryDisclosureIndicator;
-	if (indexPath.row == _selectedItemIndex)
-		return UITableViewCellAccessoryCheckmark;
-	return UITableViewCellAccessoryNone;
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *) sourceIndexPath toProposedIndexPath:(NSIndexPath *) proposedDestinationIndexPath {
