@@ -1061,7 +1061,7 @@ end:
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
 
-	NSString *stringWithPasswordsHidden = [string stringByReplacingOccurrencesOfRegex:@"(^PASS |IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:RKLCaseless range:NSMakeRange(0, string.length) error:NULL];
+	NSString *stringWithPasswordsHidden = [string stringByReplacingOccurrencesOfRegex:@"(^PASS |^AUTHENTICATE (?!\\+$|PLAIN$)|IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:RKLCaseless range:NSMakeRange(0, string.length) error:NULL];
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:stringWithPasswordsHidden, @"message", data, @"messageData", [NSNumber numberWithBool:YES], @"outbound", nil]];
 
