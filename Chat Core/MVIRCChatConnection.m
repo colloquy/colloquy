@@ -848,11 +848,12 @@ static const NSStringEncoding supportedEncodings[] = {
 		}
 	}
 
-	// Schedule an end to the capability negotiation in case it stalls the connection.
-	[self _sendEndCapabilityCommandAfterTimeout];
+	if( _requestsSASL ) {
+		// Schedule an end to the capability negotiation in case it stalls the connection.
+		[self _sendEndCapabilityCommandAfterTimeout];
 
-	if( _requestsSASL ) [self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl"];
-	else [self _sendEndCapabilityCommand];
+		[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl"];
+	}
 
 	if( password.length ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self preferredNickname]];
