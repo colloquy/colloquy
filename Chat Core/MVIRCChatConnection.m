@@ -1991,10 +1991,8 @@ end:
 		NSArray *capabilities = [capabilitiesString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 		for( NSString *capability in capabilities ) {
 			if( [capability	isCaseInsensitiveEqualToString:@"sasl"] ) {
-				if( [subCommand isCaseInsensitiveEqualToString:@"NAK"] ) {
-					[self _sendEndCapabilityCommand];
-					return;
-				}
+				if( [subCommand isCaseInsensitiveEqualToString:@"NAK"] )
+					continue;
 
 				@synchronized( _supportedFeatures ) {
 					[_supportedFeatures addObject:MVChatConnectionSASLFeature];
@@ -2005,11 +2003,8 @@ end:
 						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl"];
 					else if( [subCommand isCaseInsensitiveEqualToString:@"ACK"] )
 						[self sendRawMessageImmediatelyWithFormat:@"AUTHENTICATE PLAIN"];
-					else [self _sendEndCapabilityCommand];
 				} else {
 					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
-
-					[self _sendEndCapabilityCommand];
 				}
 			}
 		}
