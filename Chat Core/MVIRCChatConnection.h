@@ -30,6 +30,7 @@
 	unsigned short _isonSentCount;
 	BOOL _watchCommandSupported;
 	BOOL _sendQueueProcessing;
+	BOOL _sentEndCapabilityCommand;
 	BOOL _pendingIdentificationAttempt;
 	NSMutableArray *_umichNoIdentdCaptcha;
 	NSString *_failedNickname;
@@ -83,6 +84,6 @@
 - (NSString *) _stringFromPossibleData:(id) input;
 
 - (void) _cancelScheduledSendEndCapabilityCommand;
-- (void) _sendEndCapabilityCommandSoon;
+- (void) _sendEndCapabilityCommandAfterTimeout;
 - (void) _sendEndCapabilityCommand;
 @end

@@ -619,6 +619,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_chatConnection enablePreBuffering];
 
 	_pendingIdentificationAttempt = NO;
+	_sentEndCapabilityCommand = NO;
 	_userDisconnected = NO;
 
 	_failedNickname = nil;
@@ -848,16 +849,15 @@ static const NSStringEncoding supportedEncodings[] = {
 	}
 
 	[self sendRawMessageImmediatelyWithFormat:@"CAP LS"];
-
-	// Abort the capability stuff after a timeout in case it stalls the connection.
-	[self _sendEndCapabilityCommandSoon];
-
 	if( password.length ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self preferredNickname]];
 	[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", username, ( _realName.length ? _realName : @"Anonymous User" )];
 
 	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:JVPeriodicEventsInterval];
 	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:JVPingServerInterval];
+
+	// Schedule an end to the capability negotiation in case it stalls the connection.
+	[self _sendEndCapabilityCommandAfterTimeout];
 
 	[self _readNextMessageFromServer];
 }
@@ -1964,13 +1964,19 @@ end:
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_sendEndCapabilityCommand) object:nil];
 }
 
-- (void) _sendEndCapabilityCommandSoon {
+- (void) _sendEndCapabilityCommandAfterTimeout {
 	[self _cancelScheduledSendEndCapabilityCommand];
 	[self performSelector:@selector(_sendEndCapabilityCommand) withObject:nil afterDelay:JVEndCapabilityTimeoutDelay];
 }
 
 - (void) _sendEndCapabilityCommand {
 	[self _cancelScheduledSendEndCapabilityCommand];
+
+	if( _sentEndCapabilityCommand )
+		return;
+
+	_sentEndCapabilityCommand = YES;
+
 	[self sendRawMessageImmediatelyWithFormat:@"CAP END"];
 }
 @end
@@ -1983,6 +1989,8 @@ end:
 
 - (void) _handleCapWithParameters:(NSArray *) parameters fromSender:(id) sender {
 	MVAssertCorrectThreadRequired( _connectionThread );
+
+	BOOL furtherNegotiation = NO;
 
 	if( parameters.count >= 3 ) {
 		NSString *subCommand = [parameters objectAtIndex:1];
@@ -1999,16 +2007,22 @@ end:
 				}
 
 				if( self.nicknamePassword.length ) {
-					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] )
+					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] ) {
 						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl"];
-					else if( [subCommand isCaseInsensitiveEqualToString:@"ACK"] )
+						furtherNegotiation = YES;
+					} else if( [subCommand isCaseInsensitiveEqualToString:@"ACK"] ) {
 						[self sendRawMessageImmediatelyWithFormat:@"AUTHENTICATE PLAIN"];
+						furtherNegotiation = YES;
+					}
 				} else {
 					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 				}
 			}
 		}
 	}
+
+	if( !furtherNegotiation )
+		[self _sendEndCapabilityCommand];
 }
 
 - (void) _handleAuthenticateWithParameters:(NSArray *) parameters fromSender:(id) sender {
@@ -2057,6 +2071,10 @@ end:
 
 - (void) _handle904WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SASLFAIL
 	MVAssertCorrectThreadRequired( _connectionThread );
+
+	[self.localUser _setIdentified:NO];
+
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 
 	[self _sendEndCapabilityCommand];
 }
