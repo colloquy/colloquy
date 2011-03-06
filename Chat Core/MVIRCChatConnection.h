@@ -81,4 +81,8 @@
 
 - (NSString *) _newStringWithBytes:(const char *) bytes length:(NSUInteger) length;
 - (NSString *) _stringFromPossibleData:(id) input;
+
+- (void) _cancelScheduledSendEndCapabilityCommand;
+- (void) _sendEndCapabilityCommandSoon;
+- (void) _sendEndCapabilityCommand;
 @end

@@ -471,6 +471,11 @@
 #define RPL_XINFO_ITHILDIN                       771
 #define RPL_XINFOSTART_ITHILDIN                  773
 #define RPL_XINFOEND_ITHILDIN                    774
+#define RPL_SASLSUCCESS                          903
+#define ERR_SASLFAIL                             904
+#define ERR_SASLTOOLONG                          905
+#define ERR_SASLABORTED                          906
+#define ERR_SASLALREADY                          907
 #define ERR_CANNOTDOCOMMAND_UNREAL               972
 #define ERR_CANNOTCHANGEUMODE_KINEIRCD           973 // <mode_char> :<reason>
 #define ERR_CANNOTCHANGECHANMODE_KINEIRCD_UNREAL 974 // <mode_char> :<reason>

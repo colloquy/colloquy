@@ -35,6 +35,7 @@
 #define JVPeriodicEventsInterval 600.
 #define JVWatchedUserWHOISDelay 300.
 #define JVWatchedUserISONDelay 60.
+#define JVEndCapabilityTimeoutDelay 45.
 #define JVMaximumCommandLength 510
 #define JVMaximumISONCommandLength JVMaximumCommandLength
 #define JVMaximumWatchCommandLength JVMaximumCommandLength
@@ -845,6 +846,11 @@ static const NSStringEncoding supportedEncodings[] = {
 			username = mutableUsername;
 		}
 	}
+
+	[self sendRawMessageImmediatelyWithFormat:@"CAP LS"];
+
+	// Abort the capability stuff after a timeout in case it stalls the connection.
+	[self _sendEndCapabilityCommandSoon];
 
 	if( password.length ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", password];
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self preferredNickname]];
@@ -1951,6 +1957,22 @@ end:
 	if( i ) *nicknamePtr = [nickname substringFromIndex:i];
 	return modes;
 }
+
+#pragma mark -
+
+- (void) _cancelScheduledSendEndCapabilityCommand {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_sendEndCapabilityCommand) object:nil];
+}
+
+- (void) _sendEndCapabilityCommandSoon {
+	[self _cancelScheduledSendEndCapabilityCommand];
+	[self performSelector:@selector(_sendEndCapabilityCommand) withObject:nil afterDelay:JVEndCapabilityTimeoutDelay];
+}
+
+- (void) _sendEndCapabilityCommand {
+	[self _cancelScheduledSendEndCapabilityCommand];
+	[self sendRawMessageImmediatelyWithFormat:@"CAP END"];
+}
 @end
 
 #pragma mark -
@@ -1959,8 +1981,113 @@ end:
 
 #pragma mark Connecting Replies
 
-- (void) _handle001WithParameters:(NSArray *) parameters fromSender:(id) sender {
+- (void) _handleCapWithParameters:(NSArray *) parameters fromSender:(id) sender {
 	MVAssertCorrectThreadRequired( _connectionThread );
+
+	if( parameters.count >= 3 ) {
+		NSString *subCommand = [parameters objectAtIndex:1];
+
+		NSString *capabilitiesString = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
+		NSArray *capabilities = [capabilitiesString componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+		for( NSString *capability in capabilities ) {
+			if( [capability	isCaseInsensitiveEqualToString:@"sasl"] ) {
+				if( [subCommand isCaseInsensitiveEqualToString:@"NAK"] ) {
+					[self _sendEndCapabilityCommand];
+					return;
+				}
+
+				@synchronized( _supportedFeatures ) {
+					[_supportedFeatures addObject:MVChatConnectionSASLFeature];
+				}
+
+				if( self.nicknamePassword.length ) {
+					if( [subCommand isCaseInsensitiveEqualToString:@"LS"] )
+						[self sendRawMessageImmediatelyWithFormat:@"CAP REQ :sasl"];
+					else if( [subCommand isCaseInsensitiveEqualToString:@"ACK"] )
+						[self sendRawMessageImmediatelyWithFormat:@"AUTHENTICATE PLAIN"];
+					else [self _sendEndCapabilityCommand];
+				} else {
+					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
+
+					[self _sendEndCapabilityCommand];
+				}
+			}
+		}
+	}
+}
+
+- (void) _handleAuthenticateWithParameters:(NSArray *) parameters fromSender:(id) sender {
+	MVAssertCorrectThreadRequired( _connectionThread );
+
+	if( parameters.count >= 1 && [[self _stringFromPossibleData:[parameters objectAtIndex:0]] isEqualToString:@"+"] ) {
+		NSData *usernameData = [self.preferredNickname dataUsingEncoding:self.encoding allowLossyConversion:YES];
+
+		NSMutableData *authenticateData = [usernameData mutableCopy];
+		[authenticateData appendBytes:"\0" length:1];
+		[authenticateData appendData:usernameData];
+		[authenticateData appendBytes:"\0" length:1];
+		[authenticateData appendData:[self.nicknamePassword dataUsingEncoding:self.encoding allowLossyConversion:YES]];
+
+		NSString *authString = [authenticateData base64EncodingWithLineLength:400];
+
+		NSArray *authStrings = [authString componentsSeparatedByString:@"\n"];
+		for( NSString *string in authStrings )
+			[self sendRawMessageImmediatelyWithComponents:@"AUTHENTICATE ", string, nil];
+
+		if( !authStrings.count || [[authStrings lastObject] length] == 400 ) {
+			// If empty or the last string was exactly 400 bytes we need to send an empty AUTHENTICATE to indicate we're done.
+			[self sendRawMessageImmediatelyWithFormat:@"AUTHENTICATE +"];
+		}
+	} else [self _sendEndCapabilityCommand];
+}
+
+- (void) _handle900WithParameters:(NSArray *) parameters fromSender:(id) sender {
+	MVAssertCorrectThreadRequired( _connectionThread );
+
+	if( parameters.count >= 4 ) {
+		NSString *message = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
+		if( [message hasCaseInsensitiveSubstring:@"You are now logged in as "] ) {
+			if( !self.localUser.identified )
+				[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidIdentifyWithServicesNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:sender, @"user", [parameters objectAtIndex:2], @"target", nil]];
+			[[self localUser] _setIdentified:YES];
+		}
+	}
+}
+
+- (void) _handle903WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_SASLSUCCESS
+	MVAssertCorrectThreadRequired( _connectionThread );
+
+	[self _sendEndCapabilityCommand];
+}
+
+- (void) _handle904WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SASLFAIL
+	MVAssertCorrectThreadRequired( _connectionThread );
+
+	[self _sendEndCapabilityCommand];
+}
+
+- (void) _handle905WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SASLTOOLONG
+	MVAssertCorrectThreadRequired( _connectionThread );
+
+	[self _sendEndCapabilityCommand];
+}
+
+- (void) _handle906WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SASLABORTED
+	MVAssertCorrectThreadRequired( _connectionThread );
+
+	[self _sendEndCapabilityCommand];
+}
+
+- (void) _handle907WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SASLALREADY
+	MVAssertCorrectThreadRequired( _connectionThread );
+
+	[self _sendEndCapabilityCommand];
+}
+
+- (void) _handle001WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WELCOME
+	MVAssertCorrectThreadRequired( _connectionThread );
+
+	[self _cancelScheduledSendEndCapabilityCommand];
 
 	[self performSelector:@selector( _handleConnect ) withObject:nil inThread:_connectionThread waitUntilDone:NO];
 
@@ -1981,7 +2108,7 @@ end:
 		_pendingIdentificationAttempt = NO;
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidIdentifyWithServicesNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Ustream", @"user", [self nickname], @"target", nil]];
 		[[self localUser] _setIdentified:YES];
-	} else {
+	} else if( !self.localUser.identified ) {
 		// Identify with services
 		[self _identifyWithServicesUsingNickname:[self preferredNickname]]; // identifying proactively -> preferred nickname
 	}
@@ -3830,7 +3957,6 @@ end:
 			[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionDidIdentifyWithServicesNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Ustream", @"user", [self nickname], @"target", nil]];
 		[[self localUser] _setIdentified:YES];
 	}
-
 }
 
 - (void) _handle471WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_CHANNELISFULL

@@ -40,6 +40,8 @@
 #import "MVXMPPChatConnection.h"
 #endif
 
+NSString *MVChatConnectionSASLFeature = @"MVChatConnectionSASLFeature";
+
 NSString *MVChatConnectionWillConnectNotification = @"MVChatConnectionWillConnectNotification";
 NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectNotification";
 NSString *MVChatConnectionDidNotConnectNotification = @"MVChatConnectionDidNotConnectNotification";
