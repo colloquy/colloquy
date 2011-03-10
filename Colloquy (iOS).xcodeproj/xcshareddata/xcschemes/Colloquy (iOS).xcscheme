@@ -70,7 +70,8 @@
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Distribution"
+      customArchiveName = "Colloquy"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
