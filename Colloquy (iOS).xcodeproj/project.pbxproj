@@ -48,6 +48,7 @@
 		1C34A4A71016CC2500BAA714 /* CQChatRoomListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C34A4A61016CC2500BAA714 /* CQChatRoomListViewController.m */; };
 		1C34A67010183ED900BAA714 /* personBlueSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C34A66F10183ED900BAA714 /* personBlueSmall.png */; };
 		1C34A6861018411B00BAA714 /* personWhiteSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C34A6851018411B00BAA714 /* personWhiteSmall.png */; };
+		1C3A8B2313293CC8005EB3A6 /* libSystem.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C3A8B2213293CC8005EB3A6 /* libSystem.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		1C3CD7961112357100FE29AA /* UIDeviceAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3CD7951112357100FE29AA /* UIDeviceAdditions.m */; };
 		1C3CDB651113D2E000FE29AA /* CQConnectionsNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3CDB641113D2E000FE29AA /* CQConnectionsNavigationController.m */; };
 		1C4CE6360FA03D7800215521 /* Beep 1.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1C4CE6250FA03D7800215521 /* Beep 1.aiff */; };
@@ -305,6 +306,7 @@
 		1C34A4A61016CC2500BAA714 /* CQChatRoomListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatRoomListViewController.m; sourceTree = "<group>"; };
 		1C34A66F10183ED900BAA714 /* personBlueSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = personBlueSmall.png; sourceTree = "<group>"; };
 		1C34A6851018411B00BAA714 /* personWhiteSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = personWhiteSmall.png; sourceTree = "<group>"; };
+		1C3A8B2213293CC8005EB3A6 /* libSystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSystem.dylib; path = usr/lib/libSystem.dylib; sourceTree = SDKROOT; };
 		1C3CD7941112357100FE29AA /* UIDeviceAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIDeviceAdditions.h; path = Mobile/Additions/UIDeviceAdditions.h; sourceTree = "<group>"; };
 		1C3CD7951112357100FE29AA /* UIDeviceAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIDeviceAdditions.m; path = Mobile/Additions/UIDeviceAdditions.m; sourceTree = "<group>"; };
 		1C3CDB631113D2E000FE29AA /* CQConnectionsNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQConnectionsNavigationController.h; sourceTree = "<group>"; };
@@ -587,6 +589,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C3A8B2313293CC8005EB3A6 /* libSystem.dylib in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				1C1896110E29CF74003CFED0 /* CoreGraphics.framework in Frameworks */,
@@ -1164,6 +1167,7 @@
 				1CBC07CD0F0741E400EEBCFB /* SystemConfiguration.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1C957EBB11F7EFF3001950FD /* libicucore.dylib */,
+				1C3A8B2213293CC8005EB3A6 /* libSystem.dylib */,
 			);
 			fileEncoding = 4;
 			indentWidth = 4;
@@ -1504,7 +1508,6 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
 				PROVISIONING_PROFILE = "";
@@ -1596,7 +1599,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = "";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1613,7 +1615,6 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
 				PROVISIONING_PROFILE = "";
