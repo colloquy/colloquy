@@ -38,25 +38,20 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	}
 
 	NSMutableDictionary *passwordEntry = createBaseDictionary(server, area);
-	NSMutableDictionary *attributesToUpdate = [[NSMutableDictionary alloc] init];
 
 	NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
-	[attributesToUpdate setObject:passwordData forKey:(id)kSecValueData];
-
-	OSStatus status = SecItemUpdate((CFDictionaryRef)passwordEntry, (CFDictionaryRef)attributesToUpdate);
-
-	[attributesToUpdate release];
-
-	if (status == noErr) {
-		[passwordEntry release];
-		return;
-	}
-
-	SecItemDelete((CFDictionaryRef)passwordEntry);
-
 	[passwordEntry setObject:passwordData forKey:(id)kSecValueData];
 
-	SecItemAdd((CFDictionaryRef)passwordEntry, NULL);
+	OSStatus status = SecItemAdd((CFDictionaryRef)passwordEntry, NULL);
+	if (status == errSecDuplicateItem) {
+		[passwordEntry removeObjectForKey:(id)kSecValueData];
+
+		NSMutableDictionary *attributesToUpdate = [[NSMutableDictionary alloc] initWithObjectsAndKeys:passwordData, (id)kSecValueData, nil];
+
+		status = SecItemUpdate((CFDictionaryRef)passwordEntry, (CFDictionaryRef)attributesToUpdate);
+
+		[attributesToUpdate release];
+	}
 
 	[passwordEntry release];
 #else

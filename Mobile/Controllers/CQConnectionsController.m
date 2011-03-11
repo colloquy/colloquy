@@ -1196,10 +1196,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 		[_bouncers addObject:settings];
 
-		// TEMP: read the bouncer password from the old account scheme using in the first beta.
-		if (!settings.password.length)
-			settings.password = [[CQKeychain standardKeychain] passwordForServer:settings.server area:settings.username];
-
 		NSMutableArray *bouncerChatConnections = [[NSMutableArray alloc] initWithCapacity:10];
 		[_bouncerChatConnections setObject:bouncerChatConnections forKey:settings.identifier];
 
@@ -1226,7 +1222,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		if (!connection)
 			continue;
 
-		// TEMP: skip any direct connections that have bouncer identifiers.
 		if (connection.bouncerIdentifier.length)
 			continue;
 
@@ -1304,7 +1299,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		roomCount += connection.knownChatRooms.count;
 
 		[connections addObject:connectionInfo];
-		[connection savePasswordsToKeychain];
 	}
 
 	NSMutableArray *bouncers = [[NSMutableArray alloc] initWithCapacity:_bouncers.count];
@@ -1325,7 +1319,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 			roomCount += connection.knownChatRooms.count;
 
 			[bouncerConnections addObject:connectionInfo];
-			[connection savePasswordsToKeychain];
 		}
 
 		if (bouncerConnections.count)
@@ -1346,6 +1339,16 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	[bouncers release];
 	[connections release];
+}
+
+- (void) saveConnectionPasswordsToKeychain {
+	for (MVChatConnection *connection in _directConnections)
+		[connection savePasswordsToKeychain];
+
+	for (CQBouncerSettings *settings in _bouncers) {
+		for (MVChatConnection *connection in [self bouncerChatConnectionsForIdentifier:settings.identifier])
+			[connection savePasswordsToKeychain];
+	}
 }
 
 #pragma mark -
@@ -1766,11 +1769,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 #pragma mark -
 
 - (void) savePasswordsToKeychain {
-	// Remove old passwords using the previous account naming scheme.
-	[[CQKeychain standardKeychain] removePasswordForServer:self.server area:self.preferredNickname];
-	[[CQKeychain standardKeychain] removePasswordForServer:self.server area:@"<<server password>>"];
-
-	// Store passwords using the new account naming scheme.
 	[[CQKeychain standardKeychain] setPassword:self.nicknamePassword forServer:self.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", self.preferredNickname]];
 	[[CQKeychain standardKeychain] setPassword:self.password forServer:self.uniqueIdentifier area:@"Server"];
 }
@@ -1778,14 +1776,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 - (void) loadPasswordsFromKeychain {
 	NSString *password = nil;
 
-	// Try reading passwords using the old account naming scheme.
-	if ((password = [[CQKeychain standardKeychain] passwordForServer:self.server area:self.preferredNickname]) && password.length)
-		self.nicknamePassword = password;
-
-	if ((password = [[CQKeychain standardKeychain] passwordForServer:self.server area:@"<<server password>>"]) && password.length)
-		self.password = password;
-
-	// Try reading password using the name account naming scheme.
 	if ((password = [[CQKeychain standardKeychain] passwordForServer:self.uniqueIdentifier area:[NSString stringWithFormat:@"Nickname %@", self.preferredNickname]]) && password.length)
 		self.nicknamePassword = password;
 

@@ -56,6 +56,7 @@
 - (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
 	if (viewController == _connectionsViewController && _wasEditing) {
 		[[CQConnectionsController defaultController] saveConnections];
+		[[CQConnectionsController defaultController] saveConnectionPasswordsToKeychain];
 		_wasEditing = NO;
 	}
 }

@@ -50,6 +50,7 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 @property (nonatomic, readonly) NSArray *bouncers;
 
 - (void) saveConnections;
+- (void) saveConnectionPasswordsToKeychain;
 
 - (BOOL) handleOpenURL:(NSURL *) url;
 
