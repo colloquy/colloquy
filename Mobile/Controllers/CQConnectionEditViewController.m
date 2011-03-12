@@ -89,12 +89,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	[super viewWillAppear:animated];
 }
 
-- (void) viewWillDisappear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-
-	[self endEditing];
-}
-
 #pragma mark -
 
 @synthesize newConnection = _newConnection;
@@ -460,6 +454,8 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	if (sender.textField.text.length)
 		_connection.preferredNickname = sender.textField.text;
 	else _connection.preferredNickname = (_newConnection ? @"<<default>>" : sender.textField.placeholder);
+
+	[_connection savePasswordsToKeychain];
 
 	sender.textField.text = (isDefaultValue(_connection.preferredNickname) ? @"" : _connection.preferredNickname);
 }
