@@ -48,7 +48,7 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 
 		NSMutableDictionary *attributesToUpdate = [[NSMutableDictionary alloc] initWithObjectsAndKeys:passwordData, (id)kSecValueData, nil];
 
-		status = SecItemUpdate((CFDictionaryRef)passwordEntry, (CFDictionaryRef)attributesToUpdate);
+		SecItemUpdate((CFDictionaryRef)passwordEntry, (CFDictionaryRef)attributesToUpdate);
 
 		[attributesToUpdate release];
 	}
