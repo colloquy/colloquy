@@ -47,11 +47,19 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL) animated {
+	[_connection loadPasswordsFromKeychain];
+
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:IdentitiesTableSection] withAnimation:UITableViewRowAnimationNone];
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:AutomaticTableSection] withAnimation:UITableViewRowAnimationNone];
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:EncodingsTableSection] withAnimation:UITableViewRowAnimationNone];
 
 	[super viewWillAppear:animated];
+}
+
+- (void) viewDidDisappear:(BOOL) animated {
+	[_connection savePasswordsToKeychain];
+
+	[super viewDidDisappear:animated];
 }
 
 #pragma mark -
