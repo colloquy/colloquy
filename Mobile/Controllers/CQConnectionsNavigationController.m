@@ -51,6 +51,16 @@
 	[self popToRootViewControllerAnimated:NO];
 }
 
+- (void) viewDidDisappear:(BOOL) animated {
+	[super viewDidDisappear:animated];
+
+	if (_wasEditing) {
+		[[CQConnectionsController defaultController] saveConnections];
+		[[CQConnectionsController defaultController] saveConnectionPasswordsToKeychain];
+		_wasEditing = NO;
+	}
+}
+
 #pragma mark -
 
 - (void) navigationController:(UINavigationController *) navigationController didShowViewController:(UIViewController *) viewController animated:(BOOL) animated {
