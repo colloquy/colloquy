@@ -89,6 +89,9 @@
 @synthesize styleIdentifier = _styleIdentifier;
 
 - (void) setStyleIdentifier:(NSString *) styleIdentifier {
+	NSParameterAssert(styleIdentifier);
+	NSParameterAssert(styleIdentifier.length);
+
 	if ([_styleIdentifier isEqualToString:styleIdentifier])
 		return;
 
@@ -118,7 +121,8 @@
 @synthesize fontFamily = _fontFamily;
 
 - (void) setFontFamily:(NSString *) fontFamily {
-	if ([_fontFamily isEqualToString:fontFamily])
+	// Since _fontFamily or fontFamily can be nil we also need to check pointer equality.
+	if (_fontFamily == fontFamily || [_fontFamily isEqualToString:fontFamily])
 		return;
 
 	id old = _fontFamily;
