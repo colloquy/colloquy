@@ -58,8 +58,10 @@ static kern_return_t findEthernetInterfaces(io_iterator_t *matchingServices) {
 		return KERN_FAILURE;
 
 	CFMutableDictionaryRef propertyMatchDict = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-	if (!propertyMatchDict)
+	if (!propertyMatchDict) {
+		CFRelease(matchingDict);
 		return KERN_FAILURE;
+	}
 
 	CFDictionarySetValue(propertyMatchDict, CFSTR(kIOPrimaryInterface), kCFBooleanTrue);
 	CFDictionarySetValue(matchingDict, CFSTR(kIOPropertyMatchKey), propertyMatchDict);
