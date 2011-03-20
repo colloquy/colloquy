@@ -1,11 +1,5 @@
 #import "NSMethodSignatureAdditions.h"
 
-@interface NSMethodSignature (NSMethodSignaturePrivate)
-+ (id) signatureWithObjCTypes:(const char *) types;
-@end
-
-#pragma mark -
-
 @implementation NSMethodSignature (NSMethodSignatureAdditions)
 + (id) methodSignatureWithReturnAndArgumentTypes:(const char *) retType, ... {
 	NSMutableString *types = [NSMutableString stringWithFormat:@"%s@:", retType];

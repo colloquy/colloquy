@@ -28,6 +28,7 @@
 		1C15B26B131183FC006FA16B /* CQKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B269131183FC006FA16B /* CQKeychain.m */; };
 		1C15B26D13118418006FA16B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B26C13118415006FA16B /* Security.framework */; };
 		1C15B26F13118763006FA16B /* ColloquyDaemon in Copy Executables */ = {isa = PBXBuildFile; fileRef = 8DD76FA10486AA7600D96B5E /* ColloquyDaemon */; };
+		1C15B2751311B621006FA16B /* CQJavaScriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B2741311B621006FA16B /* CQJavaScriptBridge.m */; };
 		1C716E9213100B360088C737 /* MVIRCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8313100B360088C737 /* MVIRCChatConnection.m */; };
 		1C716E9313100B360088C737 /* MVIRCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8513100B360088C737 /* MVIRCChatRoom.m */; };
 		1C716E9413100B360088C737 /* MVIRCChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8713100B360088C737 /* MVIRCChatUser.m */; };
@@ -42,6 +43,8 @@
 		1C716E9D13100B360088C737 /* MVDirectChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E7B13100B360088C737 /* MVDirectChatConnection.m */; };
 		1C716E9E13100B360088C737 /* MVDirectClientConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E7E13100B360088C737 /* MVDirectClientConnection.m */; };
 		1C716E9F13100B360088C737 /* MVFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8013100B360088C737 /* MVFileTransfer.m */; };
+		1CCADE7D1311FB9B00872A80 /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCADE7C1311FB9B00872A80 /* NSMethodSignatureAdditions.m */; };
+		1CCADE7E1311FB9B00872A80 /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCADE7C1311FB9B00872A80 /* NSMethodSignatureAdditions.m */; };
 		1CCB9C58130A770A009F679C /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C49130A770A009F679C /* NSCharacterSetAdditions.m */; };
 		1CCB9C59130A770A009F679C /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4B130A770A009F679C /* NSDataAdditions.m */; };
 		1CCB9C5A130A770A009F679C /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4D130A770A009F679C /* NSDictionaryAdditions.m */; };
@@ -104,6 +107,8 @@
 		1C15B269131183FC006FA16B /* CQKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQKeychain.m; sourceTree = "<group>"; };
 		1C15B26A131183FC006FA16B /* CQKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQKeychain.h; sourceTree = "<group>"; };
 		1C15B26C13118415006FA16B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		1C15B2731311B621006FA16B /* CQJavaScriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQJavaScriptBridge.h; sourceTree = "<group>"; };
+		1C15B2741311B621006FA16B /* CQJavaScriptBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQJavaScriptBridge.m; sourceTree = "<group>"; };
 		1C61A55213106225009DF5DF /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
 		1C61A5A113106AC7009DF5DF /* IXSCNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IXSCNotificationManager.h; path = ../Colloquy/Frameworks/PortMapper/framework/IXSCNotificationManager.h; sourceTree = "<group>"; };
 		1C61A5A213106AC7009DF5DF /* IXSCNotificationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IXSCNotificationManager.m; path = ../Colloquy/Frameworks/PortMapper/framework/IXSCNotificationManager.m; sourceTree = "<group>"; };
@@ -181,6 +186,8 @@
 		1C716E9013100B360088C737 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		1C716E9113100B360088C737 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		1C716EFF1310290D0088C737 /* Colloquy.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Colloquy.pch; path = Mac/Colloquy.pch; sourceTree = "<group>"; };
+		1CCADE7B1311FB9B00872A80 /* NSMethodSignatureAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSMethodSignatureAdditions.h; path = Additions/NSMethodSignatureAdditions.h; sourceTree = "<group>"; };
+		1CCADE7C1311FB9B00872A80 /* NSMethodSignatureAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSMethodSignatureAdditions.m; path = Additions/NSMethodSignatureAdditions.m; sourceTree = "<group>"; };
 		1CCB9C49130A770A009F679C /* NSCharacterSetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSCharacterSetAdditions.m; path = Additions/NSCharacterSetAdditions.m; sourceTree = "<group>"; };
 		1CCB9C4A130A770A009F679C /* NSCharacterSetAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSCharacterSetAdditions.h; path = Additions/NSCharacterSetAdditions.h; sourceTree = "<group>"; };
 		1CCB9C4B130A770A009F679C /* NSDataAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDataAdditions.m; path = Additions/NSDataAdditions.m; sourceTree = "<group>"; };
@@ -235,6 +242,7 @@
 				1C716EFF1310290D0088C737 /* Colloquy.pch */,
 				1C716E6A13100B360088C737 /* Chat Core */,
 				1C716EA813100C9A0088C737 /* Shared */,
+				1C15B2701311B5F3006FA16B /* Shared (Mac) */,
 				1C716EA913100CB80088C737 /* Daemon */,
 				1C716EAA13100D1D0088C737 /* Application */,
 				08FB7795FE84155DC02AAC07 /* Other Sources & Additions */,
@@ -255,6 +263,8 @@
 				1CCB9C4C130A770A009F679C /* NSDataAdditions.h */,
 				1CCB9C4D130A770A009F679C /* NSDictionaryAdditions.m */,
 				1CCB9C4E130A770A009F679C /* NSDictionaryAdditions.h */,
+				1CCADE7C1311FB9B00872A80 /* NSMethodSignatureAdditions.m */,
+				1CCADE7B1311FB9B00872A80 /* NSMethodSignatureAdditions.h */,
 				1CCB9C4F130A770A009F679C /* NSNotificationAdditions.m */,
 				1CCB9C50130A770A009F679C /* NSNotificationAdditions.h */,
 				1CCB9C51130A770A009F679C /* NSObjectAdditions.m */,
@@ -299,6 +309,32 @@
 				1C15B1E81310DF8B006FA16B /* MainMenu.xib */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		1C15B2701311B5F3006FA16B /* Shared (Mac) */ = {
+			isa = PBXGroup;
+			children = (
+				1C15B2711311B5F6006FA16B /* Controllers */,
+				1C15B2721311B5F6006FA16B /* Models */,
+			);
+			name = "Shared (Mac)";
+			path = Mac/Shared;
+			sourceTree = "<group>";
+		};
+		1C15B2711311B5F6006FA16B /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1C15B2741311B621006FA16B /* CQJavaScriptBridge.m */,
+				1C15B2731311B621006FA16B /* CQJavaScriptBridge.h */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		1C15B2721311B5F6006FA16B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		1C61A59E13106AC7009DF5DF /* Port Mapping Support */ = {
@@ -619,6 +655,7 @@
 				1C15B2031310EC8B006FA16B /* InterThreadMessaging.m in Sources */,
 				1C15B26013117BF4006FA16B /* CQAnalyticsController.m in Sources */,
 				1C15B26B131183FC006FA16B /* CQKeychain.m in Sources */,
+				1CCADE7D1311FB9B00872A80 /* NSMethodSignatureAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -648,6 +685,8 @@
 				1C716E9D13100B360088C737 /* MVDirectChatConnection.m in Sources */,
 				1C716E9E13100B360088C737 /* MVDirectClientConnection.m in Sources */,
 				1C716E9F13100B360088C737 /* MVFileTransfer.m in Sources */,
+				1C15B2751311B621006FA16B /* CQJavaScriptBridge.m in Sources */,
+				1CCADE7E1311FB9B00872A80 /* NSMethodSignatureAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

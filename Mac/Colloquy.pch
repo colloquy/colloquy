@@ -19,6 +19,7 @@
 #import "NSCharacterSetAdditions.h"
 #import "NSDataAdditions.h"
 #import "NSDictionaryAdditions.h"
+#import "NSMethodSignatureAdditions.h"
 #import "NSNotificationAdditions.h"
 #import "NSObjectAdditions.h"
 #import "NSScannerAdditions.h"
