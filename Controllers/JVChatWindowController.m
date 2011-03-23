@@ -256,6 +256,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 #pragma mark -
 
 - (void) close {
+	if( _closing )
+		return;
+
+	_closing = YES;
+
 	[[self window] orderOut:nil];
 	[super close];
 	[[JVChatController defaultController] performSelector:@selector( disposeChatWindowController: ) withObject:self afterDelay:0.];
@@ -679,6 +684,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 - (void) windowWillClose:(NSNotification *) notification {
     if( ! [[[[[NSApplication sharedApplication] keyWindow] windowController] className] isEqual:[self className]] )
 		[self _resignMenuCommands];
+	if( [[self window] isVisible] )
+		[self close];
+		
 }
 
 - (BOOL) windowShouldClose:(id) sender {

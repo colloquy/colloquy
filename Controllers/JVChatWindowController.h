@@ -23,6 +23,7 @@ extern NSString *JVChatViewPboardType;
 	BOOL _usesSmallIcons;
 	BOOL _showDelayed;
 	BOOL _reloadingData;
+	BOOL _closing;
 }
 - (NSString *) identifier;
 - (void) setIdentifier:(NSString *) identifier;
