@@ -7,6 +7,7 @@
 #import "JVChatRoomPanel.h"
 #import "JVChatRoomMember.h"
 #import "NSAttributedStringMoreAdditions.h"
+#import "NSDateAdditions.h"
 
 @interface JVChatTranscript (JVChatTranscriptPrivate)
 - (void) _loadMessage:(JVChatMessage *) message;
@@ -200,7 +201,7 @@
 
 		_node = child = xmlDocCopyNode( xmlDocGetRootElement( msgDoc ), _doc, 1 );
 		xmlSetProp( child, (xmlChar *) "id", (xmlChar *) [[self messageIdentifier] UTF8String] );
-		xmlSetProp( child, (xmlChar *) "received", (xmlChar *) [[[self date] description] UTF8String] );
+		xmlSetProp( child, (xmlChar *) "received", (xmlChar *) [[[self date] localizedDescription] UTF8String] );
 		if( [self isAction] ) xmlSetProp( child, (xmlChar *) "action", (xmlChar *) "yes" );
 		if( [self isHighlighted] ) xmlSetProp( child, (xmlChar *) "highlight", (xmlChar *) "yes" );
 		if( [self ignoreStatus] == JVMessageIgnored ) xmlSetProp( child, (xmlChar *) "ignored", (xmlChar *) "yes" );

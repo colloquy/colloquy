@@ -4,4 +4,6 @@
 + (NSString *) formattedShortDateStringForDate:(NSDate *) date;
 + (NSString *) formattedShortDateAndTimeStringForDate:(NSDate *) date;
 + (NSString *) formattedShortTimeStringForDate:(NSDate *) date;
+
+- (NSString *) localizedDescription;
 @end

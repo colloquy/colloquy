@@ -23,4 +23,10 @@
 + (NSString *) formattedShortTimeStringForDate:(NSDate *) date {
 	return [self formattedStringWithDate:date dateStyle:NSDateFormatterNoStyle timeStyle:NSDateFormatterShortStyle];
 }
+
+#pragma mark -
+
+- (NSString *) localizedDescription {
+	return [[NSDate date] descriptionWithCalendarFormat:@"%Y-%m-%d %H:%M:%S %z" timeZone:[NSTimeZone localTimeZone] locale:[NSLocale currentLocale]];
+}
 @end
