@@ -2,12 +2,32 @@
 
 @implementation NSDate (NSDateAdditions)
 + (NSString *) formattedStringWithDate:(NSDate *) date dateStyle:(NSDateFormatterStyle) dateStyle timeStyle:(NSDateFormatterStyle) timeStyle {
-	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-	[dateFormatter setDateStyle:dateStyle];
-	[dateFormatter setTimeStyle:timeStyle];
+	NSMutableSet *dateFormatters = [[[NSThread currentThread].threadDictionary objectForKey:@"dateFormatters"] retain];
+	if (!dateFormatters) {
+		dateFormatters = [[NSMutableSet alloc] initWithCapacity:3];
+		[[NSThread currentThread].threadDictionary setObject:dateFormatters forKey:@"dateFormatters"];
+	}
+
+	NSDateFormatter *dateFormatter = nil;
+	for (dateFormatter in dateFormatters) {
+		if (dateFormatter.dateStyle == dateStyle && dateFormatter.timeStyle == timeStyle) {
+			[dateFormatter retain];
+			break;
+		}
+
+		dateFormatter = nil;
+	}
+
+	if (!dateFormatter) {
+		dateFormatter = [[NSDateFormatter alloc] init];
+		dateFormatter.dateStyle = dateStyle;
+		dateFormatter.timeStyle = timeStyle;
+		[dateFormatters addObject:dateFormatter];
+	}
 
 	NSString *formattedDate = [dateFormatter stringFromDate:date];
 	[dateFormatter release];
+	[dateFormatters release];
 
 	return formattedDate;
 }
