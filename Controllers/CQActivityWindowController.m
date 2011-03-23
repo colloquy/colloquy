@@ -222,13 +222,15 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 
 - (void) chatRoomInvitationAccepted:(NSNotification *) notification {
 	MVChatRoom *room = notification.object;
-
 	for (NSMutableDictionary *dictionary in [_activity objectForKey:room.connection]) {
 		if ([dictionary objectForKey:@"type"] != CQActivityTypeChatInvite)
 			continue;
 
-		MVChatRoom *activityRoom = [dictionary objectForKey:@"room"];
-		if (![room isEqualToChatRoom:activityRoom])
+		id activityRoom = [dictionary objectForKey:@"room"];
+		if ([activityRoom isKindOfClass:[MVChatRoom class]])
+			activityRoom = ((MVChatRoom *)activityRoom).name;
+
+		if (![room.name isEqualToString:activityRoom])
 			continue;
 
 		[dictionary setObject:CQActivityStatusAccepted forKey:@"status"];
@@ -255,10 +257,14 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		return;
 	}
 
-	for (NSDictionary *dictionary in [_activity objectForKey:connection]) // if we already have an invite and its pending, ignore it
-		if ([[dictionary objectForKey:@"room"] isCaseInsensitiveEqualToString:name]) // will @"room"'s value always be a string?
+	for (NSDictionary *dictionary in [_activity objectForKey:connection]) { // if we already have an invite and its pending, ignore it
+		id room = [dictionary objectForKey:@"room"];
+		if ([room isKindOfClass:[MVChatRoom class]])
+			room = ((MVChatRoom *)room).name;
+		if ([room isCaseInsensitiveEqualToString:name])
 			if ([dictionary objectForKey:@"status"] == CQActivityStatusPending)
 				return;
+	}
 
 	NSMutableDictionary *chatRoomInfo = [notification.userInfo mutableCopy];
 	[chatRoomInfo setObject:CQActivityTypeChatInvite forKey:@"type"];
