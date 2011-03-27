@@ -104,9 +104,8 @@
 		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:connection];
 
 		if (editViewController.password.length) {
-			[connection joinChatRoomNamed:roomName withPassphrase:editViewController.password];
-
 			[[CQKeychain standardKeychain] setPassword:editViewController.password forServer:connection.uniqueIdentifier area:roomName];
+			[connection joinChatRoomNamed:roomName withPassphrase:editViewController.password];
 		} else [connection joinChatRoomNamed:roomName];
 	} else if (editViewController.name.length) {
 		MVChatUser *user = [[connection chatUsersWithNickname:editViewController.name] anyObject];

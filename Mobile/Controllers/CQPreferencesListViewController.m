@@ -200,10 +200,12 @@
 		cell.textLabel.text = [_items objectAtIndex:indexPath.row];
 		cell.imageView.image = _itemImage;
 	} else if (self.editing) {
+		cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 		cell.textLabel.textColor = [UIColor blackColor];
 		cell.textLabel.text = _addItemLabelText;
 		cell.imageView.image = nil;
 	} else {
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		cell.textLabel.textColor = [UIColor lightGrayColor];
 		cell.textLabel.text = _noItemsLabelText;
 		cell.imageView.image = nil;
@@ -213,9 +215,9 @@
 		cell.textLabel.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 	else cell.textLabel.textColor = [UIColor blackColor];
 
-	if (self.editing)
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-	else if (indexPath.row == _selectedItemIndex)
+	cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+	if (indexPath.row == _selectedItemIndex)
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
 	else cell.accessoryType = UITableViewCellAccessoryNone;
 
