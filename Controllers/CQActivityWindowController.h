@@ -1,5 +1,7 @@
-NSString *MVPrettyFileSize( unsigned long long size );
-NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat );
+typedef unsigned long long CQFileSize;
+
+NSString *MVPrettyFileSize(CQFileSize size);
+NSString *MVReadableTime(NSTimeInterval date, BOOL longFormat);
 
 @class CQGroupCell;
 @class CQSubtitleCell;

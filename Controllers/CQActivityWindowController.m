@@ -26,40 +26,40 @@ NSString *CQActivityStatusRejected = @"CQActivityStatusRejected";
 NSString *CQDirectChatConnectionKey = @"CQDirectChatConnectionKey";
 NSString *CQDirectDownloadKey = @"CQDirectDownloadKey";
 
-double CQUnitKilobyte (void);
-double CQUnitMegabyte (void);
-double CQUnitGigabyte (void);
-double CQUnitTerabyte (void);
+MVInline double CQUnitKilobyte (void);
+MVInline double CQUnitMegabyte (void);
+MVInline double CQUnitGigabyte (void);
+MVInline double CQUnitTerabyte (void);
 
-double CQUnitKilobyte (void) {
+MVInline double CQUnitKilobyte (void) {
 	static NSUInteger result = 0;
 	if (!result)
 		result = (floor(NSAppKitVersionNumber) <= NSAppKitVersionNumber10_5) ? 1024 : 1000;
 	return result;
 }
 
-double CQUnitMegabyte (void) {
+MVInline double CQUnitMegabyte (void) {
 	static NSUInteger result = 0;
 	if (!result)
 		result = CQUnitKilobyte() * CQUnitKilobyte();
 	return result;
 }
 
-double CQUnitGigabyte (void) {
+MVInline double CQUnitGigabyte (void) {
 	static NSUInteger result = 0;
 	if (!result)
 		result = CQUnitMegabyte() * CQUnitKilobyte();
 	return result;
 }
 
-double CQUnitTerabyte (void) {
+MVInline double CQUnitTerabyte (void) {
 	static NSUInteger result = 0;
 	if (!result)
 		result = CQUnitGigabyte() * CQUnitKilobyte();
 	return result;
 }
 
-NSString *MVPrettyFileSize (unsigned long long size) {
+NSString *MVPrettyFileSize (CQFileSize size) {
 	if (size == 0) return NSLocalizedString(@"Zero bytes", "no file size");
 	if (size < CQUnitKilobyte()) return [NSString stringWithFormat:NSLocalizedString(@"%lu bytes", "file size measured in bytes"), size];
 	if (size < CQUnitMegabyte()) return [NSString stringWithFormat:NSLocalizedString(@"%.0f KB", "file size measured in kilobytes"),  (size / CQUnitKilobyte())];
@@ -474,12 +474,12 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 			continue;
 
 		NSTimeInterval timeslice = [[dictionary objectForKey:@"started"] timeIntervalSinceNow] * -1;
-		unsigned long long transferred = [[dictionary objectForKey:@"transferred"] unsignedLongLongValue] + length;
+		CQFileSize transferred = [[dictionary objectForKey:@"transferred"] unsignedLongLongValue] + length;
 
 		[dictionary setObject:CQActivityStatusAccepted forKey:@"status"];
 		[dictionary setObject:[NSNumber numberWithUnsignedLongLong:transferred] forKey:@"transferred"];
 
-		unsigned long long size = [[dictionary objectForKey:@"size"] unsignedLongLongValue];
+		CQFileSize size = [[dictionary objectForKey:@"size"] unsignedLongLongValue];
 		if (transferred > size)
 			[dictionary setObject:[NSNumber numberWithUnsignedLongLong:transferred] forKey:@"size"];
 
@@ -497,7 +497,7 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		if ([dictionary objectForKey:@"download"] != download)
 			continue;
 
-		if (((NSHTTPURLResponse *)response).statusCode != 200) {
+		if ([response.URL.scheme hasCaseInsensitivePrefix:@"HTTP"] && ((NSHTTPURLResponse *)response).statusCode != 200) {
 			[dictionary setObject:CQActivityStatusError forKey:@"status"];
 
 			[_outlineView reloadData];
@@ -918,8 +918,8 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		NSString *size = MVPrettyFileSize([[item objectForKey:@"size"] unsignedLongLongValue]);
 		NSString *transferred = MVPrettyFileSize([[item objectForKey:@"transferred"] unsignedLongLongValue]);
 		NSString *rate = MVPrettyFileSize([[item objectForKey:@"rate"] unsignedLongLongValue]);
-		unsigned long long remainingBytes = [[item objectForKey:@"size"] unsignedLongLongValue] - [[item objectForKey:@"transferred"] unsignedLongLongValue];
-		unsigned long long rateValue = [[item objectForKey:@"rate"] unsignedLongLongValue];
+		CQFileSize remainingBytes = [[item objectForKey:@"size"] unsignedLongLongValue] - [[item objectForKey:@"transferred"] unsignedLongLongValue];
+		CQFileSize rateValue = [[item objectForKey:@"rate"] unsignedLongLongValue];
 		NSString *eta = nil;
 		if (rateValue) {
 			NSTimeInterval etaValue = [[NSDate date] timeIntervalSince1970] + (remainingBytes / rateValue);
@@ -944,8 +944,8 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		} else if (status == CQActivityStatusAccepted) {
 			subtitle = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ of %@ (%@/sec) — %@", @"x bytes of y bytes, (rate) - eta subtitle"), transferred, size, rate, eta];
 			CQDownloadCell *downloadCell = [item objectForKey:@"cell"];
-			unsigned long long transferred = [[item objectForKey:@"transferred"] unsignedLongLongValue];
-			unsigned long long size = [[item objectForKey:@"size"] unsignedLongLongValue];
+			CQFileSize transferred = [[item objectForKey:@"transferred"] unsignedLongLongValue];
+			CQFileSize size = [[item objectForKey:@"size"] unsignedLongLongValue];
 			downloadCell.progressIndicator.doubleValue = ((double)transferred / (double)size);
 			titleCell.leftButtonCell.action = @selector(cancelDownload:);
 
@@ -982,8 +982,8 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		NSString *size = MVPrettyFileSize(transfer.finalSize);
 		NSString *transferred = MVPrettyFileSize(transfer.transferred);
 		NSString *rate = MVPrettyFileSize([[item objectForKey:@"rate"] unsignedLongLongValue]);
-		unsigned long long remainingBytes = transfer.finalSize - transfer.transferred;
-		unsigned long long rateValue = [[item objectForKey:@"rate"] unsignedLongLongValue];
+		CQFileSize remainingBytes = transfer.finalSize - transfer.transferred;
+		CQFileSize rateValue = [[item objectForKey:@"rate"] unsignedLongLongValue];
 		NSString *eta = nil;
 		if (rateValue) {
 			NSTimeInterval etaValue = [[NSDate date] timeIntervalSince1970] + (remainingBytes / rateValue);
@@ -1190,7 +1190,10 @@ NSString *MVReadableTime (NSTimeInterval date, BOOL longFormat) {
 		return;
 
 	WebDownload *oldDownload = [item objectForKey:@"download"];
-	WebDownload *newDownload = [[WebDownload alloc] initWithResumeData:oldDownload.resumeData delegate:self path:[item objectForKey:@"path"]];
+	WebDownload *newDownload = nil;
+	if (oldDownload.resumeData.length)
+		newDownload = [[WebDownload alloc] initWithResumeData:oldDownload.resumeData delegate:self path:[item objectForKey:@"path"]];
+	else newDownload = [[WebDownload alloc] initWithRequest:[NSURLRequest requestWithURL:oldDownload.request.URL] delegate:self];
 	[item setObject:newDownload forKey:@"download"];
 	[item setObject:CQActivityStatusPending forKey:@"status"];
 	[newDownload release];
