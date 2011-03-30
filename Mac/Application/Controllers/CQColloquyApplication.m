@@ -1,5 +1,7 @@
 #import "CQColloquyApplication.h"
 
+#import "CQDaemonConnectionController.h"
+
 @implementation CQColloquyApplication
 + (CQColloquyApplication *) sharedApplication {
 	return (CQColloquyApplication *)[super sharedApplication];
@@ -29,6 +31,10 @@
 @synthesize launchDate = _launchDate;
 
 #pragma mark -
+
+- (void) applicationWillFinishLaunching:(NSNotification *) notification {
+	[CQDaemonConnectionController defaultController];
+}
 
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
 	// Do stuff here.
