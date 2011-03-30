@@ -65,6 +65,9 @@ NSString *CQColloquyDaemonWillTerminateNotification = @"CQColloquyDaemonWillTerm
 	if (_disableAutomaticTerminationCount)
 		--_disableAutomaticTerminationCount;
 
+	if (_disableAutomaticTerminationCount)
+		return;
+
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(terminate) object:nil];
 	[self performSelector:@selector(terminate) withObject:nil afterDelay:0.];
 }
