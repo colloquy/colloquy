@@ -1,8 +1,10 @@
 #import "CQButtonCell.h"
 
-#define CQMouseStateDefault 0
-#define CQMouseStateHover 1
-#define CQMouseStateClick 2
+typedef enum {
+	CQMouseStateDefault = 0,
+	CQMouseStateHover,
+	CQMouseStateClick
+} CQMouseState;
 
 NSString *CQDualButtonLeftDictionaryKey = @"CQDualButtonLeftDictionaryKey";
 NSString *CQDualButtonRightDictionaryKey = @"CQDualButtonRightDictionaryKey";
@@ -102,11 +104,11 @@ NSString *CQMouseStateClickKey = @"CQMouseStateClickKey";
 
 #pragma mark -
 
-- (NSImage *) _imageFromState:(NSInteger) state inDictionary:(NSDictionary *) dictionary {
+- (NSImage *) _imageFromState:(CQMouseState) state inDictionary:(NSDictionary *) dictionary {
 	if (!dictionary)
 		return nil;
 
-	switch (_leftButtonMouseState) {
+	switch (state) {
 	case CQMouseStateDefault:
 		return [dictionary objectForKey:CQMouseStateDefaultKey];
 	case CQMouseStateHover:
