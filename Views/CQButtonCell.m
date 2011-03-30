@@ -84,10 +84,10 @@ NSString *CQMouseStateClickKey = @"CQMouseStateClickKey";
 }
 
 - (NSRect) _rightButtonCellFrameFromRect:(NSRect) cellFrame {
-#define rightButtonBorderMargin 9.
+#define RightButtonBorderMargin 9.
 	NSRect rightFrame = NSMakeRect(0, 0, _rightButtonCell.image.size.width, _rightButtonCell.image.size.height);
-	rightFrame.origin.x = (cellFrame.origin.x + cellFrame.size.width) - (rightFrame.size.width + rightButtonBorderMargin);
-	rightFrame.origin.y = floorf(((cellFrame.size.height / 2) + rightFrame.size.height));
+	rightFrame.origin.x = (cellFrame.origin.x + cellFrame.size.width) - (rightFrame.size.width + RightButtonBorderMargin);
+	rightFrame.origin.y = floorf(cellFrame.origin.y + ((cellFrame.size.height / 2) - (rightFrame.size.height / 2.)));
 	return rightFrame;
 }
 
