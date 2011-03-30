@@ -1,5 +1,6 @@
 #import "JVChatEvent.h"
 #import "NSAttributedStringMoreAdditions.h"
+#import "NSDateAdditions.h"
 
 #import <libxml/tree.h>
 
@@ -119,7 +120,7 @@
 		xmlNodePtr root = xmlNewNode( NULL, (xmlChar *) "event" );
 		xmlSetProp( root, (xmlChar *) "id", (xmlChar *) [[self eventIdentifier] UTF8String] );
 		xmlSetProp( root, (xmlChar *) "name", (xmlChar *) [[self name] UTF8String] );
-		xmlSetProp( root, (xmlChar *) "occurred", (xmlChar *) [[[self date] description] UTF8String] );
+		xmlSetProp( root, (xmlChar *) "occurred", (xmlChar *) [[[self date] localizedDescription] UTF8String] );
 		xmlDocSetRootElement( _doc, root );
 
 		xmlDocPtr msgDoc = NULL;

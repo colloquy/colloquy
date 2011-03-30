@@ -100,7 +100,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 			_xmlLog = xmlNewDoc( (xmlChar *) "1.0" );
 			xmlDocSetRootElement( _xmlLog, xmlNewNode( NULL, (xmlChar *) "log" ) );
-			xmlSetProp( xmlDocGetRootElement( _xmlLog ), (xmlChar *) "began", (xmlChar *) [[[NSDate date] description] UTF8String] );
+			xmlSetProp( xmlDocGetRootElement( _xmlLog ), (xmlChar *) "began", (xmlChar *) [[[NSDate date] localizedDescription] UTF8String] );
 		}
 	}
 
@@ -700,7 +700,7 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 
 - (JVChatSession *) appendSession:(JVChatSession *) session {
 	xmlNodePtr sessionNode = xmlNewNode( NULL, (xmlChar *) "session" );
-	xmlSetProp( sessionNode, (xmlChar *) "started", (xmlChar *) [[[session startDate] description] UTF8String] );
+	xmlSetProp( sessionNode, (xmlChar *) "started", (xmlChar *) [[[session startDate] localizedDescription] UTF8String] );
 	xmlAddChild( xmlDocGetRootElement( _xmlLog ), sessionNode );
 
 	[self _enforceElementLimit];
