@@ -34,11 +34,15 @@
 		@throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Connection could not be registered. Another process likely has registered with the same name." userInfo:nil];
 	}
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(close) name:CQColloquyDaemonWillTerminateNotification object:nil];
+
 	return self;
 }
 
 - (void) dealloc {
 	NSAssert(!_localServerConnection, @"_localServerConnection should be nil");
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[_clientConnections release];
 
