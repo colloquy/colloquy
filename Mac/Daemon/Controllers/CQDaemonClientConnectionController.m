@@ -31,6 +31,10 @@
 
 	NSString *serverName = [NSString stringWithFormat:@"info.colloquy.daemon - %@", NSUserName()];
 	if (![_localServerConnection registerName:serverName]) {
+		[_localServerConnection invalidate];
+
+		MVSafeAdoptAssign(_localServerConnection, nil);
+
 		[self release];
 
 		@throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Connection could not be registered. Another process likely has registered with the same name." userInfo:nil];

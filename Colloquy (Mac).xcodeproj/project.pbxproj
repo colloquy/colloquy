@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C06222813492B29001D3201 /* ColloquyDaemon.sb in Resources */ = {isa = PBXBuildFile; fileRef = 1C06222713492B29001D3201 /* ColloquyDaemon.sb */; };
 		1C15B1B81310CD46006FA16B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B1B71310CD46006FA16B /* JavaScriptCore.framework */; };
 		1C15B1B91310CFB5006FA16B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB9DC2130A7E6E009F679C /* SystemConfiguration.framework */; };
 		1C15B1DE1310D02A006FA16B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B1B71310CD46006FA16B /* JavaScriptCore.framework */; };
@@ -102,6 +103,7 @@
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		1C0621F51348E575001D3201 /* CQDaemonClientConnectionPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQDaemonClientConnectionPrivate.h; sourceTree = "<group>"; };
 		1C06220E1348EDA0001D3201 /* CQDaemonConnectionPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQDaemonConnectionPrivate.h; sourceTree = "<group>"; };
+		1C06222713492B29001D3201 /* ColloquyDaemon.sb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ColloquyDaemon.sb; sourceTree = "<group>"; };
 		1C15B1B71310CD46006FA16B /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		1C15B1BE1310CFF5006FA16B /* Colloquy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C15B1C31310CFF5006FA16B /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -332,6 +334,7 @@
 			children = (
 				1C15B1E71310DF7E006FA16B /* Info.plist */,
 				1C15B1E81310DF8B006FA16B /* MainMenu.xib */,
+				1C06222713492B29001D3201 /* ColloquyDaemon.sb */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -684,6 +687,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C15B1EA1310DF8B006FA16B /* MainMenu.xib in Resources */,
+				1C06222813492B29001D3201 /* ColloquyDaemon.sb in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

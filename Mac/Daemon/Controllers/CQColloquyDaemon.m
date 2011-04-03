@@ -2,6 +2,8 @@
 
 #import "CQDaemonClientConnectionController.h"
 
+#import <sandbox.h>
+
 NSString * const CQColloquyDaemonWillTerminateNotification = @"CQColloquyDaemonWillTerminateNotification";
 
 @implementation CQColloquyDaemon
@@ -19,10 +21,30 @@ NSString * const CQColloquyDaemonWillTerminateNotification = @"CQColloquyDaemonW
 
 #pragma mark -
 
+- (void) enterSandbox {
+	NSString *sandboxProfilePath = [[NSBundle mainBundle] pathForResource:@"ColloquyDaemon" ofType:@"sb"];
+	if (!sandboxProfilePath.length)
+		return;
+
+	NSString *sandboxProfile = [NSString stringWithContentsOfFile:sandboxProfilePath encoding:NSUTF8StringEncoding error:NULL];
+	if (!sandboxProfile.length)
+		return;
+
+	char *error = NULL;
+	if (sandbox_init([sandboxProfile UTF8String], 0, &error)) {
+		NSString *exception = [NSString stringWithFormat:@"Failed to initialize sandbox profile '%@'. Due to error: %s.", sandboxProfilePath, error];
+		sandbox_free_error(error);
+
+		@throw exception;
+	}
+}
+
 - (void) run {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	_running = YES;
+
+	[self enterSandbox];
 
 	[CQDaemonClientConnectionController defaultController];
 
