@@ -1,5 +1,7 @@
 #import "CQDaemonLocalClientConnection.h"
 
+#import "CQDaemonClientConnectionPrivate.h"
+
 @implementation CQDaemonLocalClientConnection
 - (id) initWithConnection:(NSConnection *) connection {
 	if (!(self = [super init]))
@@ -9,13 +11,16 @@
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionDidDie:) name:NSConnectionDidDieNotification object:_connection];
 
+	[_connection setRootObject:self];
+	[[_connection rootProxy] setProtocolForProxy:@protocol(CQColloquyClient)];
+
+	[self _didConnect];
+
 	return self;
 }
 
 - (void) dealloc {
 	NSAssert(!_connection, @"_connection should be nil");
-
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[super dealloc];
 }
@@ -23,9 +28,11 @@
 #pragma mark -
 
 - (void) close {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:_connection];
+
 	[_connection invalidate];
-	[_connection release];
-	_connection = nil;
+
+	MVSafeAdoptAssign(_connection, nil);
 
 	[super close];
 }
@@ -34,5 +41,11 @@
 
 - (void) connectionDidDie:(NSNotification *) notification {
 	[self close];
+}
+
+#pragma mark -
+
+- (id <CQColloquyClient>) client {
+	return (id <CQColloquyClient>)[_connection rootProxy];
 }
 @end

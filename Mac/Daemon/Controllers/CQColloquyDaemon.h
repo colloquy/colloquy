@@ -1,4 +1,4 @@
-extern NSString *CQColloquyDaemonWillTerminateNotification;
+extern NSString * const CQColloquyDaemonWillTerminateNotification;
 
 @interface CQColloquyDaemon : NSObject {
 @private

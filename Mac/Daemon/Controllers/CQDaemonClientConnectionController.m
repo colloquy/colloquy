@@ -16,6 +16,8 @@
 	return sharedInstance;
 }
 
+#pragma mark -
+
 - (id) init {
 	if (!(self = [super init]))
 		return nil;
@@ -23,7 +25,7 @@
 	_clientConnections = [[NSMutableSet alloc] initWithCapacity:5];
 
 	_localServerConnection = [[NSConnection alloc] init];
-	[_localServerConnection setRootObject:[CQColloquyDaemon sharedDaemon]];
+	[_localServerConnection setRootObject:[NSNull null]];
 	[_localServerConnection addRunLoop:[NSRunLoop currentRunLoop]];
 	[_localServerConnection setDelegate:self];
 
@@ -85,8 +87,8 @@
 	[clientConnectionsCopy release];
 
 	[_localServerConnection invalidate];
-	[_localServerConnection release];
-	_localServerConnection = nil;
+
+	MVSafeAdoptAssign(_localServerConnection, nil);
 }
 
 #pragma mark -

@@ -1,5 +1,7 @@
 #import "CQLocalDaemonConnection.h"
 
+#import "CQDaemonConnectionPrivate.h"
+
 @implementation CQLocalDaemonConnection
 - (id) init {
 	if (!(self = [super init]))
@@ -21,10 +23,10 @@
 #pragma mark -
 
 - (void) launchDaemon {
-	if (_daemonRunning)
+	if (_launchingDaemon)
 		return;
 
-	_daemonRunning = YES;
+	_launchingDaemon = YES;
 
 	NSString *path = [[NSBundle mainBundle] pathForAuxiliaryExecutable:@"ColloquyDaemon"];
 	[NSTask launchedTaskWithLaunchPath:path arguments:[NSArray array]];
@@ -32,32 +34,54 @@
 
 - (void) daemonFinishedLaunching:(NSNotification *) notification {
 	[self connect];
+
+	_launchingDaemon = NO;
 }
 
 #pragma mark -
 
 - (void) connect {
+	if (_connection)
+		return;
+
 	[super connect];
 
 	NSString *serverName = [NSString stringWithFormat:@"info.colloquy.daemon - %@", NSUserName()];
-	_connection = [NSConnection connectionWithRegisteredName:serverName host:nil];
+	_connection = [[NSConnection connectionWithRegisteredName:serverName host:nil] retain];
 
 	if (!_connection) {
 		[self launchDaemon];
 		return;
 	}
 
-	// Asking for the rootProxy causes the connection to really connect.
-	[_connection rootProxy];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionDidDie:) name:NSConnectionDidDieNotification object:_connection];
 
-	_daemonRunning = YES;
+	[_connection setRootObject:self];
+	[[_connection rootProxy] setProtocolForProxy:@protocol(CQColloquyDaemon)];
+
+	[self _didConnect];
 }
 
 - (void) close {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSConnectionDidDieNotification object:_connection];
+
 	[_connection invalidate];
-	[_connection release];
-	_connection = nil;
+
+	MVSafeAdoptAssign(_connection, nil);
 
 	[super close];
+}
+
+#pragma mark -
+
+- (void) connectionDidDie:(NSNotification *) notification {
+	[self close];
+	[self connect];
+}
+
+#pragma mark -
+
+- (id <CQColloquyDaemon>) daemon {
+	return (id <CQColloquyDaemon>)[_connection rootProxy];
 }
 @end

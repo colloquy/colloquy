@@ -15,6 +15,8 @@
 	return sharedInstance;
 }
 
+#pragma mark -
+
 - (id) init {
 	if (!(self = [super init]))
 		return nil;

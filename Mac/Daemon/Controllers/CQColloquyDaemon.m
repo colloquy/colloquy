@@ -2,7 +2,7 @@
 
 #import "CQDaemonClientConnectionController.h"
 
-NSString *CQColloquyDaemonWillTerminateNotification = @"CQColloquyDaemonWillTerminateNotification";
+NSString * const CQColloquyDaemonWillTerminateNotification = @"CQColloquyDaemonWillTerminateNotification";
 
 @implementation CQColloquyDaemon
 + (CQColloquyDaemon *) sharedDaemon {

@@ -100,6 +100,8 @@
 /* Begin PBXFileReference section */
 		08FB7796FE84155DC02AAC07 /* ColloquyDaemon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColloquyDaemon.m; sourceTree = "<group>"; };
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		1C0621F51348E575001D3201 /* CQDaemonClientConnectionPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQDaemonClientConnectionPrivate.h; sourceTree = "<group>"; };
+		1C06220E1348EDA0001D3201 /* CQDaemonConnectionPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQDaemonConnectionPrivate.h; sourceTree = "<group>"; };
 		1C15B1B71310CD46006FA16B /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		1C15B1BE1310CFF5006FA16B /* Colloquy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Colloquy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C15B1C31310CFF5006FA16B /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -205,6 +207,8 @@
 		1C716E9013100B360088C737 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		1C716E9113100B360088C737 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		1C716EFF1310290D0088C737 /* Colloquy.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Colloquy.pch; path = Mac/Colloquy.pch; sourceTree = "<group>"; };
+		1CC1CA3313479F1300964CFD /* CQColloquyClientProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQColloquyClientProtocol.h; sourceTree = "<group>"; };
+		1CC1CA3413479F1300964CFD /* CQColloquyDaemonProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQColloquyDaemonProtocol.h; sourceTree = "<group>"; };
 		1CCADE7B1311FB9B00872A80 /* NSMethodSignatureAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSMethodSignatureAdditions.h; path = Additions/NSMethodSignatureAdditions.h; sourceTree = "<group>"; };
 		1CCADE7C1311FB9B00872A80 /* NSMethodSignatureAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSMethodSignatureAdditions.m; path = Additions/NSMethodSignatureAdditions.m; sourceTree = "<group>"; };
 		1CCB9C49130A770A009F679C /* NSCharacterSetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSCharacterSetAdditions.m; path = Additions/NSCharacterSetAdditions.m; sourceTree = "<group>"; };
@@ -337,6 +341,7 @@
 			children = (
 				1C15B2711311B5F6006FA16B /* Controllers */,
 				1C15B2721311B5F6006FA16B /* Models */,
+				1CC1CA3213479F1300964CFD /* Protocols */,
 			);
 			name = "Shared (Mac)";
 			path = Mac/Shared;
@@ -525,6 +530,7 @@
 				1C1EF0FE133F4D7D006FABCF /* CQDaemonConnectionController.h */,
 				1C1EF102133F516D006FABCF /* CQDaemonConnection.m */,
 				1C1EF101133F516D006FABCF /* CQDaemonConnection.h */,
+				1C06220E1348EDA0001D3201 /* CQDaemonConnectionPrivate.h */,
 				1C1EF105133F54CB006FABCF /* CQLocalDaemonConnection.m */,
 				1C1EF104133F54CB006FABCF /* CQLocalDaemonConnection.h */,
 			);
@@ -554,6 +560,7 @@
 				1C1EF107133F5562006FABCF /* CQDaemonClientConnectionController.h */,
 				1C1EF10B133F5587006FABCF /* CQDaemonClientConnection.m */,
 				1C1EF10A133F5586006FABCF /* CQDaemonClientConnection.h */,
+				1C0621F51348E575001D3201 /* CQDaemonClientConnectionPrivate.h */,
 				1C1EF110133FF51A006FABCF /* CQDaemonLocalClientConnection.m */,
 				1C1EF10D133FAE70006FABCF /* CQDaemonLocalClientConnection.h */,
 			);
@@ -583,6 +590,15 @@
 			children = (
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		1CC1CA3213479F1300964CFD /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				1CC1CA3413479F1300964CFD /* CQColloquyDaemonProtocol.h */,
+				1CC1CA3313479F1300964CFD /* CQColloquyClientProtocol.h */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 		1CCB9BEB130A72D4009F679C /* Settings */ = {

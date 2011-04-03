@@ -3,6 +3,6 @@
 @interface CQLocalDaemonConnection : CQDaemonConnection {
 @private
 	NSConnection *_connection;
-	BOOL _daemonRunning;
+	BOOL _launchingDaemon;
 }
 @end
