@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1C06222813492B29001D3201 /* ColloquyDaemon.sb in Resources */ = {isa = PBXBuildFile; fileRef = 1C06222713492B29001D3201 /* ColloquyDaemon.sb */; };
+		1C062247134A115C001D3201 /* ColloquyDaemon.sb in Resources */ = {isa = PBXBuildFile; fileRef = 1C06222713492B29001D3201 /* ColloquyDaemon.sb */; };
 		1C15B1B81310CD46006FA16B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B1B71310CD46006FA16B /* JavaScriptCore.framework */; };
 		1C15B1B91310CFB5006FA16B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB9DC2130A7E6E009F679C /* SystemConfiguration.framework */; };
 		1C15B1DE1310D02A006FA16B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B1B71310CD46006FA16B /* JavaScriptCore.framework */; };
@@ -687,7 +687,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C15B1EA1310DF8B006FA16B /* MainMenu.xib in Resources */,
-				1C06222813492B29001D3201 /* ColloquyDaemon.sb in Resources */,
+				1C062247134A115C001D3201 /* ColloquyDaemon.sb in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

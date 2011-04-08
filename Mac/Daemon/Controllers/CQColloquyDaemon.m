@@ -23,19 +23,22 @@ NSString * const CQColloquyDaemonWillTerminateNotification = @"CQColloquyDaemonW
 
 - (void) enterSandbox {
 	NSString *sandboxProfilePath = [[NSBundle mainBundle] pathForResource:@"ColloquyDaemon" ofType:@"sb"];
-	if (!sandboxProfilePath.length)
-		return;
+	if (!sandboxProfilePath.length) {
+		fprintf(stderr, "Sandbox profile 'ColloquyDaemon.sb' was not found.");
+		exit(EXIT_FAILURE);
+	}
 
 	NSString *sandboxProfile = [NSString stringWithContentsOfFile:sandboxProfilePath encoding:NSUTF8StringEncoding error:NULL];
-	if (!sandboxProfile.length)
-		return;
+	if (!sandboxProfile.length) {
+		fprintf(stderr, "Sandbox profile '%s' is empty.", [sandboxProfilePath fileSystemRepresentation]);
+		exit(EXIT_FAILURE);
+	}
 
 	char *error = NULL;
 	if (sandbox_init([sandboxProfile UTF8String], 0, &error)) {
-		NSString *exception = [NSString stringWithFormat:@"Failed to initialize sandbox profile '%@'. Due to error: %s.", sandboxProfilePath, error];
+		fprintf(stderr, "Failed to initialize sandbox profile '%s'. Due to error: %s.", [sandboxProfilePath fileSystemRepresentation], error);
 		sandbox_free_error(error);
-
-		@throw exception;
+		exit(EXIT_FAILURE);
 	}
 }
 
