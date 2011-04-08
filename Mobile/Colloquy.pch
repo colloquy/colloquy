@@ -1,8 +1,8 @@
 #define ENABLE(FEATURE) (defined(ENABLE_##FEATURE) && ENABLE_##FEATURE)
 #define SYSTEM(NAME) (defined(SYSTEM_##NAME) && SYSTEM_##NAME)
 
-#define LIKELY(x) __builtin_expect((x), 1)
-#define UNLIKELY(x) __builtin_expect((x), 0)
+#define LIKELY(x) __builtin_expect((x) ? 1 : 0, 1)
+#define UNLIKELY(x) __builtin_expect((x) ? 1 : 0, 0)
 
 #define SYSTEM_IOS 1
 

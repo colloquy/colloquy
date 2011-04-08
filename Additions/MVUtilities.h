@@ -48,7 +48,7 @@ static void* framework##Library(void) \
 	static void *frameworkHandle; \
 	if (UNLIKELY(!frameworkHandle)) \
 		frameworkHandle = dlopen("/System/Library/Frameworks/" #framework ".framework/" #framework, RTLD_LAZY); \
-	if (LIKELY(!!frameworkHandle)) \
+	if (LIKELY(frameworkHandle)) \
 		return frameworkHandle; \
 	NSCAssert(NO, @"Couldn't dlopen the " #framework " framework."); \
 	return NULL; \
@@ -60,7 +60,7 @@ static void* library##Library(void) \
 	static void *libraryHandle; \
 	if (UNLIKELY(!libraryHandle)) \
 		libraryHandle = dlopen("/usr/lib/lib" #library ".A.dylib", RTLD_LAZY); \
-	if (LIKELY(!!libraryHandle)) \
+	if (LIKELY(libraryHandle)) \
 		return libraryHandle; \
 	NSCAssert(NO, @"Couldn't dlopen the " #library " library."); \
 	return NULL; \
@@ -78,7 +78,7 @@ static resultType noop_##functionName parameterDeclarations { \
 static resultType initial_##functionName parameterDeclarations { \
 	resultType (*functionPointer) parameterDeclarations = dlsym(library##Library(), #functionName); \
 \
-	if (LIKELY(!!functionPointer)) { \
+	if (LIKELY(functionPointer)) { \
 		functionName = functionPointer; \
 	} else { \
 		NSCAssert(NO, @"Couldn't find " #functionName " in " #library " library with dlsym."); \
@@ -100,7 +100,7 @@ static void noop_##functionName parameterDeclarations { \
 static void initial_##functionName parameterDeclarations { \
 	void (*functionPointer) parameterDeclarations = dlsym(library##Library(), #functionName); \
 \
-	if (LIKELY(!!functionPointer)) { \
+	if (LIKELY(functionPointer)) { \
 		functionName = functionPointer; \
 	} else { \
 		NSCAssert(NO, @"Couldn't find " #functionName " in " #library " library with dlsym."); \
