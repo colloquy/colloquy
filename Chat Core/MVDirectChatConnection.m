@@ -48,7 +48,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 	return [ret autorelease];
 }
 
-- (void) release {
+- (oneway void) release {
 	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
 		_releasing = YES;
 		[(MVIRCChatConnection *)[[self user] connection] _removeDirectClientConnection:self];
