@@ -50,6 +50,19 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 	return result;
 }
 
+- (BOOL) isSystemFive {
+	static BOOL result;
+	static BOOL cached;
+
+	if (cached)
+		return result;
+
+	result = ([self.systemVersion doubleValue] >= 5.);
+	cached = YES;
+
+	return result;
+}
+
 - (BOOL) isPhoneModel {
 	static BOOL result;
 	static BOOL cached;

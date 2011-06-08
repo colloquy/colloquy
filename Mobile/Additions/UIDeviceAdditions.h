@@ -2,6 +2,7 @@
 @property (nonatomic, readonly) NSString *modelIdentifier;
 
 - (BOOL) isSystemFour;
+- (BOOL) isSystemFive;
 
 - (BOOL) isPhoneModel;
 - (BOOL) isPodModel;

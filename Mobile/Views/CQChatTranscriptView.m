@@ -24,9 +24,6 @@
 - (void) scrollerDidEndDragging:(UIScroller *) scroller willSmoothScroll:(BOOL) smooth;
 - (void) scrollerDidEndSmoothScrolling:(UIScroller *) scroller;
 - (UIScroller *) _scroller;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
-- (UIScrollView *) _scrollView;
-#endif
 @end
 #endif
 
@@ -43,6 +40,7 @@
 - (void) _addComponentsToTranscript:(NSArray *) components fromPreviousSession:(BOOL) previous animated:(BOOL) animated;
 - (NSString *) _contentHTML;
 - (void) _commonInitialization;
+- (UIScrollView *) scrollView;
 @end
 
 #pragma mark -
@@ -105,13 +103,9 @@
 		self.backgroundColor = [UIColor colorWithRed:(253. / 255.) green:(251. / 255.) blue:(138. / 255.) alpha:1.];
 	else self.backgroundColor = [UIColor whiteColor];
 
-#if ENABLE(SECRETS)
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
-	UIScrollView *scrollView = [self performPrivateSelector:@"_scrollView"];
+	UIScrollView *scrollView = self.scrollView;
 	if (scrollView)
 		scrollView.indicatorStyle = [styleIdentifier hasSuffix:@"-dark"] ? UIScrollViewIndicatorStyleWhite : UIScrollViewIndicatorStyleDefault;
-#endif
-#endif
 
 	_blockerView.backgroundColor = self.backgroundColor;
 
@@ -143,6 +137,20 @@
 	[self resetSoon];
 }
 
+- (UIScrollView *) scrollView {
+	if ([[UIDevice currentDevice] isSystemFive]) {
+		return [super scrollView];
+	}
+
+#if ENABLE(SECRETS)
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
+	return [self performPrivateSelector:@"_scrollView"];
+#endif
+#endif
+
+	return nil;
+}
+
 #pragma mark -
 
 - (BOOL) canBecomeFirstResponder {
@@ -158,22 +166,17 @@
 }
 
 - (void) didFinishScrolling {
-#if ENABLE(SECRETS)
 	CGPoint offset = CGPointZero;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
-	UIScrollView *scrollView = [self performPrivateSelector:@"_scrollView"];
+	UIScrollView *scrollView = self.scrollView;
 	if (scrollView) {
 		offset = scrollView.contentOffset;
-	} else
-#endif
-	{
+	} else {
 		id scroller = [self performPrivateSelector:@"_scroller"];
 		offset = [scroller performPrivateSelectorReturningPoint:@"offset"];
 	}
 
 	NSString *command = [NSString stringWithFormat:@"updateScrollPosition(%f)", offset.y];
 	[self stringByEvaluatingJavaScriptFromString:command];
-#endif
 
 	[self stringByEvaluatingJavaScriptFromString:@"resumeAutoscroll()"];
 
@@ -291,18 +294,13 @@
 }
 
 - (void) flashScrollIndicators {
-#if ENABLE(SECRETS)
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
-	UIScrollView *scrollView = [self performPrivateSelector:@"_scrollView"];
+	UIScrollView *scrollView = self.scrollView;
 	if (scrollView) {
 		[scrollView flashScrollIndicators];
-	} else
-#endif
-	{
+	} else {
 		id scroller = [self performPrivateSelector:@"_scroller"];
 		[scroller performPrivateSelector:@"displayScrollerIndicators"];
 	}
-#endif
 }
 
 - (void) resetSoon {
@@ -377,16 +375,10 @@
 - (void) _commonInitialization {
 	super.delegate = self;
 
-#if ENABLE(SECRETS)
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
-	UIScrollView *scrollView = [self performPrivateSelector:@"_scrollView"];
+	UIScrollView *scrollView = self.scrollView;
 	if (!scrollView)
-#else
-	id
-#endif
 		scrollView = [self performPrivateSelector:@"_scroller"];
 	[scrollView performPrivateSelector:@"setShowBackgroundShadow:" withBoolean:NO];
-#endif
 
 	_blockerView = [[UIView alloc] initWithFrame:self.bounds];
 	_blockerView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
