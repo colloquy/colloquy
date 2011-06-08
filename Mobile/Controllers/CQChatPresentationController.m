@@ -139,7 +139,7 @@
 
 @synthesize topChatViewController = _topChatViewController;
 
-- (void) setTopChatViewController:(id <CQChatViewController>) chatViewController {
+- (void) setTopChatViewController:(UIViewController <CQChatViewController> *) chatViewController {
 	if (chatViewController == _topChatViewController)
 		return;
 
