@@ -14,8 +14,6 @@
 #import <Cocoa/Cocoa.h>
 #endif
 
-#import <Foundation/NSDebug.h>
-
 #import "NSCharacterSetAdditions.h"
 #import "NSDataAdditions.h"
 #import "NSDictionaryAdditions.h"
