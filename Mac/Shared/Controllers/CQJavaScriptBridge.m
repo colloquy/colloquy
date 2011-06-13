@@ -107,7 +107,7 @@ MVInline id objectFromScriptObject(JSContextRef context, JSObjectRef scriptObjec
 	if (!rootScriptClass)
 		return nil;
 	if (scriptObject && (!context || JSValueIsObjectOfClass(context, scriptObject, rootScriptClass)))
-		return JSObjectGetPrivate(scriptObject);
+		return objc_unretainedObject(JSObjectGetPrivate(scriptObject));
 	return nil;
 }
 
@@ -115,7 +115,7 @@ MVInline NSHashTable *selectorsFromScriptFunctionObject(JSContextRef context, JS
 	if (!scriptFunctionClass)
 		return nil;
 	if (scriptObject && (!context || JSValueIsObjectOfClass(context, scriptObject, scriptFunctionClass)))
-		return JSObjectGetPrivate(scriptObject);
+		return objc_unretainedObject(JSObjectGetPrivate(scriptObject));
 	return nil;
 }
 
@@ -123,7 +123,7 @@ MVInline Class classFromScriptConstructorObject(JSContextRef context, JSObjectRe
 	if (!rootConstructorScriptClass)
 		return Nil;
 	if (scriptObject && (!context || JSValueIsObjectOfClass(context, scriptObject, rootConstructorScriptClass)))
-		return JSObjectGetPrivate(scriptObject);
+		return objc_unretainedObject(JSObjectGetPrivate(scriptObject));
 	return Nil;
 }
 
@@ -431,16 +431,20 @@ static bool isBlockedSelector(SEL selector) {
 
 	static NSHashTable *blockedSelectors = nil;
 	if (!blockedSelectors) {
-		blockedSelectors = NSCreateHashTable(NSNonOwnedPointerHashCallBacks, 8);
+		blockedSelectors = NSCreateHashTable(NSNonOwnedPointerHashCallBacks, 12);
 
-		NSHashInsertKnownAbsent(blockedSelectors, @selector(alloc));
-		NSHashInsertKnownAbsent(blockedSelectors, @selector(allocWithZone:));
-		NSHashInsertKnownAbsent(blockedSelectors, @selector(autorelease));
-		NSHashInsertKnownAbsent(blockedSelectors, @selector(dealloc));
-		NSHashInsertKnownAbsent(blockedSelectors, @selector(finalize));
-		NSHashInsertKnownAbsent(blockedSelectors, @selector(new));
-		NSHashInsertKnownAbsent(blockedSelectors, @selector(release));
-		NSHashInsertKnownAbsent(blockedSelectors, @selector(retain));
+		NSHashInsertKnownAbsent(blockedSelectors, NSSelectorFromString(@"alloc"));
+		NSHashInsertKnownAbsent(blockedSelectors, NSSelectorFromString(@"allocWithZone:"));
+		NSHashInsertKnownAbsent(blockedSelectors, NSSelectorFromString(@"autorelease"));
+		NSHashInsertKnownAbsent(blockedSelectors, NSSelectorFromString(@"copy"));
+		NSHashInsertKnownAbsent(blockedSelectors, NSSelectorFromString(@"copyWithZone:"));
+		NSHashInsertKnownAbsent(blockedSelectors, NSSelectorFromString(@"dealloc"));
+		NSHashInsertKnownAbsent(blockedSelectors, NSSelectorFromString(@"finalize"));
+		NSHashInsertKnownAbsent(blockedSelectors, NSSelectorFromString(@"mutableCopy"));
+		NSHashInsertKnownAbsent(blockedSelectors, NSSelectorFromString(@"mutableCopyWithZone:"));
+		NSHashInsertKnownAbsent(blockedSelectors, NSSelectorFromString(@"new"));
+		NSHashInsertKnownAbsent(blockedSelectors, NSSelectorFromString(@"release"));
+		NSHashInsertKnownAbsent(blockedSelectors, NSSelectorFromString(@"retain"));
 	}
 
 	return NSHashGet(blockedSelectors, selector) ? true : false;
@@ -930,7 +934,6 @@ static JSObjectRef scriptConstructorObjectCallAsConstructor(JSContextRef context
 	// Get 'object' again by using objectFromScriptObject since the init method might return another object or nil.
 	if ((object = objectFromScriptObject(context, (JSObjectRef)result))) {
 		// Release the object to balance the alloc. The script object has an ownership reference.
-		NSCAssert([object retainCount] > 1, @"retainCount should be greater than one here");
 		[object release];
 	}
 
@@ -1234,7 +1237,7 @@ static JSValueRef scriptValueForValue(JSContextRef context, void *value, const c
 		return stringScriptValue(context, *(char **)value);
 
 	case '@': // @encode(id), @encode(NSObject *), etc.
-		return scriptValueForObject(context, *(id *)value);
+		return scriptValueForObject(context, *(const id *)value);
 
 	default: // Unsupported type.
 		break;
