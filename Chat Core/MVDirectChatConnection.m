@@ -29,7 +29,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 + (id) directChatConnectionWithUser:(MVChatUser *) user passively:(BOOL) passive {
 	static NSUInteger passiveId = 0;
 
-	MVDirectChatConnection *ret = [(MVDirectChatConnection *)[MVDirectChatConnection allocWithZone:nil] initWithUser:user];
+	MVDirectChatConnection *ret = [(MVDirectChatConnection *)[MVDirectChatConnection alloc] initWithUser:user];
 	[ret _setLocalRequest:YES];
 	[ret _setPassive:passive];
 
@@ -111,7 +111,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 - (void) initiate {
 	if( [_directClientConnection connectionThread] ) return;
 
-	MVSafeAdoptAssign( _directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
+	MVSafeAdoptAssign( _directClientConnection, [[MVDirectClientConnection alloc] init] );
 	[_directClientConnection setDelegate:self];
 
 	if( _localRequest ) {
@@ -189,7 +189,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 #endif
 
 	if( [[attributes objectForKey:@"action"] boolValue] ) {
-		NSMutableData *newMsg = [[NSMutableData allocWithZone:nil] initWithCapacity:msg.length + 11];
+		NSMutableData *newMsg = [[NSMutableData alloc] initWithCapacity:msg.length + 11];
 		[newMsg appendBytes:"\001ACTION " length:8];
 		[newMsg appendData:msg];
 		[newMsg appendBytes:"\001\x0D\x0A" length:3];
@@ -198,7 +198,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 		[newMsg release];
 	} else {
-		NSMutableData *newMsg = [msg mutableCopyWithZone:nil];
+		NSMutableData *newMsg = [msg mutableCopy];
 		[newMsg appendBytes:"\x0D\x0A" length:2];
 
 		[self performSelector:@selector( _writeMessage: ) withObject:newMsg inThread:[_directClientConnection connectionThread]];
@@ -257,11 +257,11 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 		while( line != end && *line != ' ' ) line++;
 
-		NSString *command = [[NSString allocWithZone:nil] initWithBytes:current length:(line - current) encoding:NSASCIIStringEncoding];
+		NSString *command = [[NSString alloc] initWithBytes:current length:(line - current) encoding:NSASCIIStringEncoding];
 		NSData *arguments = nil;
 		if( line != end ) {
 			line++;
-			arguments = [[NSData allocWithZone:nil] initWithBytes:line length:(end - line)];
+			arguments = [[NSData alloc] initWithBytes:line length:(end - line)];
 		}
 
 		if( [command isCaseInsensitiveEqualToString:@"ACTION"] && arguments ) {
@@ -272,7 +272,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 		[command release];
 		[arguments release];
 	} else {
-		NSData *msg = [[NSData allocWithZone:nil] initWithBytes:bytes length:(end - bytes)];
+		NSData *msg = [[NSData alloc] initWithBytes:bytes length:(end - bytes)];
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionGotMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msg, @"message", [NSString locallyUniqueString], @"identifier", nil]];
 		[msg release];
 	}
@@ -305,7 +305,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 	static NSData *delimiter = nil;
 	// DCC chat messages end in \x0D\x0A, but some non-compliant clients only use \x0A
-	if( ! delimiter ) delimiter = [[NSData allocWithZone:nil] initWithBytes:"\x0A" length:1];
+	if( ! delimiter ) delimiter = [[NSData alloc] initWithBytes:"\x0A" length:1];
 	[_directClientConnection readDataToData:delimiter withTimeout:-1. withTag:0];
 }
 
@@ -351,7 +351,7 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 
 	MVSafeRetainAssign( _lastError, error );
 
-	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:error, @"error", nil];
+	NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:error, @"error", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVDirectChatConnectionErrorOccurredNotification object:self userInfo:info];
 	[info release];
 }

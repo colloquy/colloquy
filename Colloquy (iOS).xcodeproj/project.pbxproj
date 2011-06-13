@@ -289,7 +289,7 @@
 		1C1255650F0EAA69008F181B /* CQChatEditViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatEditViewController.h; sourceTree = "<group>"; };
 		1C1255660F0EAA69008F181B /* CQChatEditViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatEditViewController.m; sourceTree = "<group>"; };
 		1C15B12913107243006FA16B /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
-		1C15B2661311838C006FA16B /* CQAnalyticsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQAnalyticsController.m; sourceTree = "<group>"; };
+		1C15B2661311838C006FA16B /* CQAnalyticsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CQAnalyticsController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1C15B2671311838C006FA16B /* CQAnalyticsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQAnalyticsController.h; sourceTree = "<group>"; };
 		1C16F77B0FFF049F008D7BB3 /* CQBouncerCreationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQBouncerCreationViewController.h; sourceTree = "<group>"; };
 		1C16F77C0FFF049F008D7BB3 /* CQBouncerCreationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQBouncerCreationViewController.m; sourceTree = "<group>"; };
@@ -349,7 +349,7 @@
 		1C716EB613100F220088C737 /* ChatCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatCore.h; sourceTree = "<group>"; };
 		1C716EB713100F220088C737 /* MVAvailability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVAvailability.h; sourceTree = "<group>"; };
 		1C716EB813100F220088C737 /* MVChatString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVChatString.h; sourceTree = "<group>"; };
-		1C716EB913100F220088C737 /* MVChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVChatConnection.m; sourceTree = "<group>"; };
+		1C716EB913100F220088C737 /* MVChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MVChatConnection.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1C716EBA13100F220088C737 /* MVChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVChatConnection.h; sourceTree = "<group>"; };
 		1C716EBB13100F220088C737 /* MVChatConnectionPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVChatConnectionPrivate.h; sourceTree = "<group>"; };
 		1C716EBC13100F220088C737 /* MVChatRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVChatRoom.m; sourceTree = "<group>"; };
@@ -522,7 +522,7 @@
 		1CE69FD70EE317F200389442 /* CQChatInputBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatInputBar.h; sourceTree = "<group>"; };
 		1CE69FD80EE317F200389442 /* CQChatInputBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatInputBar.m; sourceTree = "<group>"; };
 		1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQKeychain.h; sourceTree = "<group>"; };
-		1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQKeychain.m; sourceTree = "<group>"; };
+		1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CQKeychain.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		1CF50C860ED8BE1100CBE5E3 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		1CF50EAD0ED9CD5300CBE5E3 /* CQPreferencesListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListViewController.h; path = Mobile/Controllers/CQPreferencesListViewController.h; sourceTree = "<group>"; };
 		1CF50EAE0ED9CD5300CBE5E3 /* CQPreferencesListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListViewController.m; path = Mobile/Controllers/CQPreferencesListViewController.m; sourceTree = "<group>"; };

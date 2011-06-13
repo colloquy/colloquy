@@ -62,7 +62,7 @@
 - (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments {
 	NSParameterAssert( command != nil );
 	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
-		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@ :\001%@ ", [self nickname], command];
+		NSString *prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@ :\001%@ ", [self nickname], command];
 		[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
 		[prefix release];
 	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
@@ -74,7 +74,7 @@
 	NSParameterAssert( command != nil );
 	if( [[self connection] status] == MVChatConnectionConnectingStatus ) {
 		if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
-			NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"NOTICE %@ :\001%@ ", [self nickname], command];
+			NSString *prefix = [[NSString alloc] initWithFormat:@"NOTICE %@ :\001%@ ", [self nickname], command];
 			[[self connection] sendRawMessageImmediatelyWithComponents:prefix, arguments, @"\001", nil];
 			[prefix release];
 		} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
@@ -82,7 +82,7 @@
 		} else [[self connection] sendRawMessageImmediatelyWithFormat:@"NOTICE %@ :\001%@\001", [self nickname], command];
 	} else {
 		if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
-			NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"NOTICE %@ :\001%@ ", [self nickname], command];
+			NSString *prefix = [[NSString alloc] initWithFormat:@"NOTICE %@ :\001%@ ", [self nickname], command];
 			[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
 			[prefix release];
 		} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
@@ -128,11 +128,11 @@
 		[self setAttribute:[NSNumber numberWithDouble:diff] forKey:MVChatUserPingAttribute];
 		[self setAttribute:nil forKey:@"MVChatUserPingSendDateAttribute"];
 	} else if( [command isCaseInsensitiveEqualToString:@"VERSION"] ) {
-		NSString *info = [[NSString allocWithZone:nil] initWithData:arguments encoding:[[self connection] encoding]];
+		NSString *info = [[NSString alloc] initWithData:arguments encoding:[[self connection] encoding]];
 		[self setAttribute:info forKey:MVChatUserClientInfoAttribute];
 		[info release];
 	} else if( [command isCaseInsensitiveEqualToString:@"TIME"] ) {
-		NSString *date = [[NSString allocWithZone:nil] initWithData:arguments encoding:[[self connection] encoding]];
+		NSString *date = [[NSString alloc] initWithData:arguments encoding:[[self connection] encoding]];
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
 		[self setAttribute:date forKey:MVChatUserLocalTimeAttribute];
 #else

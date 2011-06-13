@@ -9,7 +9,7 @@
 - (id) initWithName:(NSString *) roomName andConnection:(MVIRCChatConnection *) roomConnection {
 	if( ( self = [self init] ) ) {
 		_connection = roomConnection; // prevent circular retain
-		_name = [roomName copyWithZone:nil];
+		_name = [roomName copy];
 		_uniqueIdentifier = [[roomName lowercaseString] retain];
 		[_connection _addKnownRoom:self];
 	}
@@ -39,7 +39,7 @@
 
 	if( reason.length ) {
 		NSData *reasonData = [MVIRCChatConnection _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
-		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PART %@ :", [self name]];
+		NSString *prefix = [[NSString alloc] initWithFormat:@"PART %@ :", [self name]];
 		[[self connection] sendRawMessageWithComponents:prefix, reasonData, nil];
 		[prefix release];
 	} else [[self connection] sendRawMessageImmediatelyWithFormat:@"PART %@", [self name]];
@@ -50,7 +50,7 @@
 - (void) changeTopic:(MVChatString *) newTopic {
 	NSParameterAssert( newTopic != nil );
 	NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:newTopic withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
-	NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"TOPIC %@ :", [self name]];
+	NSString *prefix = [[NSString alloc] initWithFormat:@"TOPIC %@ :", [self name]];
 	[[self connection] sendRawMessageWithComponents:prefix, msg, nil];
 	[prefix release];
 }
@@ -72,7 +72,7 @@
 - (void) sendSubcodeRequest:(NSString *) command withArguments:(id) arguments {
 	NSParameterAssert( command != nil );
 	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
-		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@ :\001%@ ", [self name], command];
+		NSString *prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@ :\001%@ ", [self name], command];
 		[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
 		[prefix release];
 	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
@@ -83,7 +83,7 @@
 - (void) sendSubcodeReply:(NSString *) command withArguments:(id) arguments {
 	NSParameterAssert( command != nil );
 	if( arguments && [arguments isKindOfClass:[NSData class]] && [arguments length] ) {
-		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"NOTICE %@ :\001%@ ", [self name], command];
+		NSString *prefix = [[NSString alloc] initWithFormat:@"NOTICE %@ :\001%@ ", [self name], command];
 		[[self connection] sendRawMessageWithComponents:prefix, arguments, @"\001", nil];
 		[prefix release];
 	} else if( arguments && [arguments isKindOfClass:[NSString class]] && [arguments length] ) {
@@ -240,7 +240,7 @@
 
 	if( reason ) {
 		NSData *msg = [MVIRCChatConnection _flattenedIRCDataForMessage:reason withEncoding:[self encoding] andChatFormat:[[self connection] outgoingChatFormat]];
-		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"KICK %@ %@ :", [self name], [user nickname]];
+		NSString *prefix = [[NSString alloc] initWithFormat:@"KICK %@ %@ :", [self name], [user nickname]];
 		[[self connection] sendRawMessageImmediatelyWithComponents:prefix, msg, nil];
 		[prefix release];
 	} else [[self connection] sendRawMessageImmediatelyWithFormat:@"KICK %@ %@", [self name], [user nickname]];

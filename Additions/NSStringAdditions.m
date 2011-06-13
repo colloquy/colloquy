@@ -414,7 +414,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	NSUInteger q = [[NSProcessInfo processInfo] processIdentifier] ^ tv.tv_usec; // input (quotient)
 	NSUInteger r = 0; // remainder
 
-	NSMutableString *uniqueId = [[NSMutableString allocWithZone:nil] initWithCapacity:10];
+	NSMutableString *uniqueId = [[NSMutableString alloc] initWithCapacity:10];
 	[uniqueId appendFormat:@"%c", 'A' + ( random() % 26 )]; // always have a random letter first (more ambiguity)
 
 	#define baseConvert	do { \
@@ -584,7 +584,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 			if( i == j ) continue;
 
 			if( bytes[j++] == 'E' ) {
-				NSString *encodingStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + j ) length:( i - j ) encoding:NSASCIIStringEncoding];
+				NSString *encodingStr = [[NSString alloc] initWithBytes:( bytes + j ) length:( i - j ) encoding:NSASCIIStringEncoding];
 				NSStringEncoding newEncoding = 0;
 				if( ! encodingStr.length ) { // if no encoding is declared, go back to user default
 					newEncoding = encoding;
@@ -632,12 +632,12 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 					if( ( end - start ) > 0 ) {
 						NSData *subData = nil;
 						if( currentEncoding != NSUTF8StringEncoding ) {
-							NSString *tempStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + start ) length:( end - start ) encoding:currentEncoding];
+							NSString *tempStr = [[NSString alloc] initWithBytes:( bytes + start ) length:( end - start ) encoding:currentEncoding];
 							NSData *utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
 							if( utf8Data ) subData = [utf8Data retain];
 							[tempStr release];
 						} else {
-							subData = [[NSData allocWithZone:nil] initWithBytesNoCopy:(void *)( bytes + start ) length:( end - start )];
+							subData = [[NSData alloc] initWithBytesNoCopy:(void *)( bytes + start ) length:( end - start )];
 						}
 
 						if( subData ) [newData appendData:subData];
@@ -655,12 +655,12 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 		if( start < length ) {
 			NSData *subData = nil;
 			if( currentEncoding != NSUTF8StringEncoding ) {
-				NSString *tempStr = [[NSString allocWithZone:nil] initWithBytes:( bytes + start ) length:( length - start ) encoding:currentEncoding];
+				NSString *tempStr = [[NSString alloc] initWithBytes:( bytes + start ) length:( length - start ) encoding:currentEncoding];
 				NSData *utf8Data = [tempStr dataUsingEncoding:NSUTF8StringEncoding];
 				if( utf8Data ) subData = [utf8Data retain];
 				[tempStr release];
 			} else {
-				subData = [[NSData allocWithZone:nil] initWithBytesNoCopy:(void *)( bytes + start ) length:( length - start )];
+				subData = [[NSData alloc] initWithBytesNoCopy:(void *)( bytes + start ) length:( length - start )];
 			}
 
 			if( subData ) [newData appendData:subData];
@@ -674,7 +674,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	if( encoding != NSUTF8StringEncoding && isValidUTF8( [data bytes], data.length ) )
 		encoding = NSUTF8StringEncoding;
 
-	NSString *message = [[NSString allocWithZone:nil] initWithData:data encoding:encoding];
+	NSString *message = [[NSString alloc] initWithData:data encoding:encoding];
 	if( ! message ) {
 		[self release];
 		return nil;
@@ -959,7 +959,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	if( range.location == NSNotFound )
 		return self;
 
-	NSMutableString *result = [self mutableCopyWithZone:nil];
+	NSMutableString *result = [self mutableCopy];
 	[result encodeXMLSpecialCharactersAsEntities];
 	return [result autorelease];
 }
@@ -969,7 +969,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	if( range.location == NSNotFound )
 		return self;
 
-	NSMutableString *result = [self mutableCopyWithZone:nil];
+	NSMutableString *result = [self mutableCopy];
 	[result decodeXMLSpecialCharacterEntities];
 	return [result autorelease];
 }
@@ -981,7 +981,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	if( range.location == NSNotFound )
 		return self;
 
-	NSMutableString *result = [self mutableCopyWithZone:nil];
+	NSMutableString *result = [self mutableCopy];
 	[result escapeCharactersInSet:set];
 	return [result autorelease];
 }
@@ -991,7 +991,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	if( range.location == NSNotFound )
 		return self;
 
-	NSMutableString *result = [self mutableCopyWithZone:nil];
+	NSMutableString *result = [self mutableCopy];
 	[result replaceCharactersInSet:set withString:string];
 	return [result autorelease];
 }
@@ -1014,7 +1014,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	if( range.location == NSNotFound )
 		return self;
 
-	NSMutableString *result = [self mutableCopyWithZone:nil];
+	NSMutableString *result = [self mutableCopy];
 	[result stripIllegalXMLCharacters];
 	return [result autorelease];
 }
@@ -1023,7 +1023,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	if( [self rangeOfString:@"<"].location == NSNotFound )
 		return self;
 
-	NSMutableString *result = [self mutableCopyWithZone:nil];
+	NSMutableString *result = [self mutableCopy];
 	[result stripXMLTags];
 	return [result autorelease];
 }
@@ -1060,10 +1060,10 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 	if( ! limit ) limit = ULONG_MAX;
 
-	NSScanner *scanner = [[NSScanner allocWithZone:nil] initWithString:self];
+	NSScanner *scanner = [[NSScanner alloc] initWithString:self];
 	[scanner setCharactersToBeSkipped:nil];
 
-	NSMutableArray *result = [[NSMutableArray allocWithZone:nil] init];
+	NSMutableArray *result = [[NSMutableArray alloc] init];
 
 	NSUInteger count = 0;
 	NSString *component = @"";
@@ -1122,7 +1122,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 - (NSString *) stringBySubstitutingEmojiForEmoticons {
 	if (![self containsEmojiCharacters])
 		return self;
-	NSMutableString *result = [self mutableCopyWithZone:nil];
+	NSMutableString *result = [self mutableCopy];
 	[result substituteEmojiForEmoticons];
 	return [result autorelease];
 }
@@ -1130,7 +1130,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 - (NSString *) stringBySubstitutingEmoticonsForEmoji {
 	if (![self containsTypicalEmoticonCharacters])
 		return self;
-	NSMutableString *result = [self mutableCopyWithZone:nil];
+	NSMutableString *result = [self mutableCopy];
 	[result substituteEmoticonsForEmoji];
 	return [result autorelease];
 }
@@ -1171,7 +1171,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	if( range.location == NSNotFound )
 		return;
 
-	NSScanner *scanner = [[NSScanner allocWithZone:nil] initWithString:self];
+	NSScanner *scanner = [[NSScanner alloc] initWithString:self];
 
 	NSUInteger offset = 0;
 	while( ! [scanner isAtEnd] ) {

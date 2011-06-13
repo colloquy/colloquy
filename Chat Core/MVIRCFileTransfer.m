@@ -17,7 +17,7 @@
 + (id) transferWithSourceFile:(NSString *) path toUser:(MVChatUser *) user passively:(BOOL) passive {
 	static NSUInteger passiveId = 0;
 
-	MVIRCUploadFileTransfer *ret = [(MVIRCUploadFileTransfer *)[MVIRCUploadFileTransfer allocWithZone:nil] initWithUser:user];
+	MVIRCUploadFileTransfer *ret = [(MVIRCUploadFileTransfer *)[MVIRCUploadFileTransfer alloc] initWithUser:user];
 	[ret _setSource:path];
 	[ret _setPassive:passive];
 
@@ -177,7 +177,7 @@
 
 	[_fileHandle seekToFileOffset:[self startOffset]];
 
-	MVSafeAdoptAssign( _directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
+	MVSafeAdoptAssign( _directClientConnection, [[MVDirectClientConnection alloc] init] );
 	[_directClientConnection setDelegate:self];
 
 	if( ! [self isPassive] ) [_directClientConnection acceptConnectionOnFirstPortInRange:[[self class] fileTransferPortRange]];
@@ -357,7 +357,7 @@
 		// dcc only supports a 4 GB limit with these acknowledgment packets, we will acknowledge
 		// that we have all the bytes but keep reading if the file is over 4 GB
 		unsigned long progressToSend = htonl( progress & 0xffffffff );
-		NSData *length = [[NSData allocWithZone:nil] initWithBytes:&progressToSend length:4];
+		NSData *length = [[NSData alloc] initWithBytes:&progressToSend length:4];
 		[_directClientConnection writeData:length withTimeout:-1 withTag:0];
 		[length release];
 	}
@@ -389,7 +389,7 @@
 
 	[_fileHandle truncateFileAtOffset:[self startOffset]];
 
-	MVSafeAdoptAssign( _directClientConnection, [[MVDirectClientConnection allocWithZone:nil] init] );
+	MVSafeAdoptAssign( _directClientConnection, [[MVDirectClientConnection alloc] init] );
 	[_directClientConnection setDelegate:self];
 
 	if( [self isPassive] ) [_directClientConnection acceptConnectionOnFirstPortInRange:[[self class] fileTransferPortRange]];

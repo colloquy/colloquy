@@ -56,11 +56,11 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_attributes = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:2];
-		_memberUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:100];
-		_bannedUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
-		_modeAttributes = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:2];
-		_memberModes = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:100];
+		_attributes = [[NSMutableDictionary alloc] initWithCapacity:2];
+		_memberUsers = [[NSMutableSet alloc] initWithCapacity:100];
+		_bannedUsers = [[NSMutableSet alloc] initWithCapacity:5];
+		_modeAttributes = [[NSMutableDictionary alloc] initWithCapacity:2];
+		_memberModes = [[NSMutableDictionary alloc] initWithCapacity:100];
 		_encoding = NSUTF8StringEncoding;
 	}
 
@@ -294,7 +294,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 		else [_attributes removeObjectForKey:key];
 	}
 
-	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:key, @"attribute", nil];
+	NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:key, @"attribute", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomAttributeUpdatedNotification object:self userInfo:info];
 	[info release];
 }
@@ -363,7 +363,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (NSSet *) memberUsersWithModes:(NSUInteger) newModes {
-	NSMutableSet *users = [[NSMutableSet allocWithZone:nil] init];
+	NSMutableSet *users = [[NSMutableSet alloc] init];
 
 	@synchronized( _memberUsers ) {
 		for( MVChatUser *user in _memberUsers )
@@ -375,7 +375,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (NSSet *) memberUsersWithNickname:(NSString *) nickname {
-	NSMutableSet *users = [[NSMutableSet allocWithZone:nil] init];
+	NSMutableSet *users = [[NSMutableSet alloc] init];
 
 	@synchronized( _memberUsers ) {
 		for( MVChatUser *user in _memberUsers )
@@ -387,7 +387,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 }
 
 - (NSSet *) memberUsersWithFingerprint:(NSString *) fingerprint {
-	NSMutableSet *users = [[NSMutableSet allocWithZone:nil] init];
+	NSMutableSet *users = [[NSMutableSet alloc] init];
 
 	@synchronized( _memberUsers ) {
 		for( MVChatUser *user in _memberUsers )
@@ -632,7 +632,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[MVChatConnection class]];
 	NSScriptObjectSpecifier *container = [[self connection] objectSpecifier];
-	return [[[NSUniqueIDSpecifier allocWithZone:nil] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"joinedChatRoomsArray" uniqueID:[self scriptUniqueIdentifier]] autorelease];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"joinedChatRoomsArray" uniqueID:[self scriptUniqueIdentifier]] autorelease];
 }
 
 #pragma mark -

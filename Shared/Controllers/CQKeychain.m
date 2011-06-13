@@ -87,7 +87,7 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 
 	OSStatus status = SecKeychainFindInternetPassword(NULL, stringByteLength(server), [server UTF8String], 0, NULL, stringByteLength(area), [area UTF8String], 0, NULL, 0, 0, 0, &passwordLength, &password, NULL);
 	if (status == noErr)
-		string = [[NSString allocWithZone:nil] initWithBytes:(const void *)password length:passwordLength encoding:NSUTF8StringEncoding];
+		string = [[NSString alloc] initWithBytes:(const void *)password length:passwordLength encoding:NSUTF8StringEncoding];
 	SecKeychainItemFreeContent(NULL, password);
 #endif
 

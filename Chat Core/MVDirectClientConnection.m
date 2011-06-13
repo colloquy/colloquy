@@ -17,7 +17,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:3.];
 	NSData *result = [NSURLConnection sendSynchronousRequest:request returningResponse:NULL error:NULL];
 	if( result.length >= 6 && result.length <= 40 ) // should be a valid IPv4 or IPv6 address
-		address = [[[NSString allocWithZone:nil] initWithData:result encoding:NSASCIIStringEncoding] autorelease];
+		address = [[[NSString alloc] initWithData:result encoding:NSASCIIStringEncoding] autorelease];
 	if( address && [address rangeOfString:@"."].location != NSNotFound )
 		return [NSString stringWithFormat:@"%lu", ntohl( inet_addr( [address UTF8String] ) )];
 	return address;
@@ -89,7 +89,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 	if( ! _connectionThread ) return;
 
-	NSDictionary *info = [[NSDictionary allocWithZone:NULL] initWithObjectsAndKeys:[NSNumber numberWithUnsignedShort:port], @"port", host, @"host", nil];
+	NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithUnsignedShort:port], @"port", host, @"host", nil];
 	[self performSelector:@selector( _connect: ) withObject:info inThread:_connectionThread];
 	[info release];
 }
@@ -208,7 +208,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 - (void) _setupThread {
 	if( _connectionThread ) return;
 
-	_threadWaitLock = [[NSConditionLock allocWithZone:nil] initWithCondition:0];
+	_threadWaitLock = [[NSConditionLock alloc] initWithCondition:0];
 
 	[NSThread detachNewThreadSelector:@selector( _dccRunloop ) toTarget:self withObject:nil];
 
@@ -223,7 +223,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 	if( _acceptConnection || _connection ) return;
 
-	_connection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
+	_connection = [[AsyncSocket alloc] initWithDelegate:self];
 
 	NSString *host = [info objectForKey:@"host"];
 	NSNumber *port = [info objectForKey:@"port"];
@@ -239,7 +239,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 	if( _acceptConnection || _connection ) return;
 
-	_acceptConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
+	_acceptConnection = [[AsyncSocket alloc] initWithDelegate:self];
 
 	NSRange ports = [portsObject rangeValue];
 	NSUInteger port = ports.location;
@@ -328,7 +328,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 }
 
 - (oneway void) _dccRunloop {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[self retain];
 
 	[_threadWaitLock lockWhenCondition:0];
@@ -345,16 +345,16 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	pool = nil;
 
 	while( ! _done ) {
-		pool = [[NSAutoreleasePool allocWithZone:nil] init];
+		pool = [[NSAutoreleasePool alloc] init];
 
-		NSDate *timeout = [[NSDate allocWithZone:nil] initWithTimeIntervalSinceNow:5.];
+		NSDate *timeout = [[NSDate alloc] initWithTimeIntervalSinceNow:5.];
 		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeout];
 		[timeout release];
 
 		[pool drain];
 	}
 
-	pool = [[NSAutoreleasePool allocWithZone:nil] init];
+	pool = [[NSAutoreleasePool alloc] init];
 
 	// make sure the connection has sent all the delegate calls it has scheduled
 	[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.]];

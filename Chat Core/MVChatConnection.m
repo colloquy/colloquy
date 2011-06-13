@@ -141,19 +141,19 @@ static const NSStringEncoding supportedEncodings[] = {
 		_status = MVChatConnectionDisconnectedStatus;
 		_proxy = MVChatConnectionNoProxy;
 		_bouncer = MVChatConnectionNoBouncer;
-		_roomsCache = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5000];
-		_pendingRoomAdditions = [[NSMutableSet allocWithZone:nil] initWithCapacity:100];
-		_pendingRoomUpdates = [[NSMutableSet allocWithZone:nil] initWithCapacity:100];
-		_persistentInformation = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
-		_supportedFeatures = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
+		_roomsCache = [[NSMutableDictionary alloc] initWithCapacity:5000];
+		_pendingRoomAdditions = [[NSMutableSet alloc] initWithCapacity:100];
+		_pendingRoomUpdates = [[NSMutableSet alloc] initWithCapacity:100];
+		_persistentInformation = [[NSMutableDictionary alloc] initWithCapacity:5];
+		_supportedFeatures = [[NSMutableSet alloc] initWithCapacity:10];
 		_localUser = nil;
 
-		_joinedRooms = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
+		_joinedRooms = [[NSMutableSet alloc] initWithCapacity:10];
 
 		CFDictionaryValueCallBacks valueCallbacks = { 0, NULL, NULL, kCFTypeDictionaryValueCallBacks.copyDescription, kCFTypeDictionaryValueCallBacks.equal };
 		_knownRooms = (NSMutableDictionary *)CFDictionaryCreateMutable(NULL, 0, &kCFTypeDictionaryKeyCallBacks, &valueCallbacks);
 
-		_knownUsers = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:300];
+		_knownUsers = [[NSMutableDictionary alloc] initWithCapacity:300];
 
 #if (!defined(TARGET_OS_IPHONE) || !TARGET_OS_IPHONE) && (!defined(COMMAND_LINE_UTILITY) || !COMMAND_LINE_UTILITY)
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( _systemDidWake: ) name:NSWorkspaceDidWakeNotification object:[NSWorkspace sharedWorkspace]];
@@ -171,22 +171,22 @@ static const NSStringEncoding supportedEncodings[] = {
 	switch(connectionType) {
 #if ENABLE(ICB)
 	case MVChatConnectionICBType:
-		self = [[MVICBChatConnection allocWithZone:nil] init];
+		self = [[MVICBChatConnection alloc] init];
 		break;
 #endif
 #if ENABLE(IRC)
 	case MVChatConnectionIRCType:
-		self = [[MVIRCChatConnection allocWithZone:nil] init];
+		self = [[MVIRCChatConnection alloc] init];
 		break;
 #endif
 #if ENABLE(SILC)
 	case MVChatConnectionSILCType:
-		self = [[MVSILCChatConnection allocWithZone:nil] init];
+		self = [[MVSILCChatConnection alloc] init];
 		break;
 #endif
 #if ENABLE(XMPP)
 	case MVChatConnectionXMPPType:
-		self = [[MVXMPPChatConnection allocWithZone:nil] init];
+		self = [[MVXMPPChatConnection alloc] init];
 		break;
 #endif
 	default:
@@ -771,7 +771,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	va_list ap;
 	va_start( ap, format );
 
-	NSString *command = [[NSString allocWithZone:nil] initWithFormat:format arguments:ap];
+	NSString *command = [[NSString alloc] initWithFormat:format arguments:ap];
 
 	va_end( ap );
 
@@ -785,7 +785,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	va_list ap;
 	va_start( ap, format );
 
-	NSString *command = [[NSString allocWithZone:nil] initWithFormat:format arguments:ap];
+	NSString *command = [[NSString alloc] initWithFormat:format arguments:ap];
 
 	va_end( ap );
 
@@ -796,7 +796,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (void) sendRawMessageWithComponents:(id) firstComponent, ... {
 	NSParameterAssert( firstComponent != nil );
 
-	NSMutableData *data = [[NSMutableData allocWithZone:nil] initWithCapacity:512];
+	NSMutableData *data = [[NSMutableData alloc] initWithCapacity:512];
 	id object = firstComponent;
 
 	va_list ap;
@@ -823,7 +823,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 - (void) sendRawMessageImmediatelyWithComponents:(id) firstComponent, ... {
 	NSParameterAssert( firstComponent != nil );
 
-	NSMutableData *data = [[NSMutableData allocWithZone:nil] initWithCapacity:512];
+	NSMutableData *data = [[NSMutableData alloc] initWithCapacity:512];
 	id object = firstComponent;
 
 	va_list ap;
@@ -981,7 +981,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 	NSParameterAssert( rule != nil );
 
 	if( ! _chatUserWatchRules )
-		_chatUserWatchRules = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
+		_chatUserWatchRules = [[NSMutableSet alloc] initWithCapacity:10];
 
 	@synchronized( _chatUserWatchRules ) {
 		if( ! [_chatUserWatchRules containsObject:rule] )
@@ -1250,7 +1250,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (void) _pruneKnownUsers {
 	@synchronized( _knownUsers ) {
-		NSMutableArray *removeList = [[NSMutableArray allocWithZone:nil] initWithCapacity:_knownUsers.count];
+		NSMutableArray *removeList = [[NSMutableArray alloc] initWithCapacity:_knownUsers.count];
 
 		for( id key in _knownUsers ) {
 			id object = [_knownUsers objectForKey:key];
@@ -1381,9 +1381,9 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 - (NSTextStorage *) scriptTypedAwayMessage {
 #if USE(ATTRIBUTED_CHAT_STRING)
-	return [[[NSTextStorage allocWithZone:nil] initWithAttributedString:(NSAttributedString *)_awayMessage] autorelease];
+	return [[[NSTextStorage alloc] initWithAttributedString:(NSAttributedString *)_awayMessage] autorelease];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
-	return [[[NSTextStorage allocWithZone:nil] initWithString:(NSString *)_awayMessage] autorelease];
+	return [[[NSTextStorage alloc] initWithString:(NSString *)_awayMessage] autorelease];
 #endif
 }
 
@@ -1599,7 +1599,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 					cformat = nil;
 			}
 
-			NSDictionary *options = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:realEncoding], @"StringEncoding", cformat, @"FormatType", nil];
+			NSDictionary *options = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:realEncoding], @"StringEncoding", cformat, @"FormatType", nil];
 			NSData *msgData = [realMessage chatFormatWithOptions:options];
 			[options release];
 #elif USE(PLAIN_CHAT_STRING) || USE(HTML_CHAT_STRING)
@@ -1607,7 +1607,7 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 #endif
 
 			if( [target isKindOfClass:[MVChatRoom class]] ) {
-				NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:[[(MVChatRoom *)target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:realAction], @"action", nil];
+				NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:[[(MVChatRoom *)target connection] localUser], @"user", msgData, @"message", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:realAction], @"action", nil];
 				[[NSNotificationCenter defaultCenter] postNotificationName:MVChatRoomGotMessageNotification object:target userInfo:info];
 				[info release];
 			} // we can't really echo a private message with our current notifications

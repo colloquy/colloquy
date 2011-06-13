@@ -2,7 +2,7 @@
 
 @implementation NSCharacterSet (Additions)
 + (NSCharacterSet *) illegalXMLCharacterSet {
-	NSMutableCharacterSet *illegalSet = [[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 0x1f )] mutableCopyWithZone:nil];
+	NSMutableCharacterSet *illegalSet = [[NSCharacterSet characterSetWithRange:NSMakeRange( 0, 0x1f )] mutableCopy];
 
 	[illegalSet removeCharactersInRange:NSMakeRange( 0x09, 1 )];
 

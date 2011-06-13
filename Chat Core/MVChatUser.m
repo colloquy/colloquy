@@ -65,28 +65,28 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 + (id) wildcardUserWithNicknameMask:(NSString *) nickname andHostMask:(NSString *) host {
-	MVChatUser *ret = [[self allocWithZone:nil] init];
+	MVChatUser *ret = [[self alloc] init];
 	ret -> _type = MVChatWildcardUserType;
 
 	NSArray *parts = [nickname componentsSeparatedByString:@"@"];
 	if( parts.count >= 1 )
-		ret -> _nickname = [[parts objectAtIndex:0] copyWithZone:[ret zone]];
+		ret -> _nickname = [[parts objectAtIndex:0] copy];
 	if( parts.count >= 2 )
-		ret -> _serverAddress = [[parts objectAtIndex:1] copyWithZone:[ret zone]];
+		ret -> _serverAddress = [[parts objectAtIndex:1] copy];
 
 	parts = [host componentsSeparatedByString:@"@"];
 	if( parts.count >= 1 )
-		ret -> _username = [[parts objectAtIndex:0] copyWithZone:[ret zone]];
+		ret -> _username = [[parts objectAtIndex:0] copy];
 	if( parts.count >= 2 )
-		ret -> _address = [[parts objectAtIndex:1] copyWithZone:[ret zone]];
+		ret -> _address = [[parts objectAtIndex:1] copy];
 
 	return [ret autorelease];
 }
 
 + (id) wildcardUserWithFingerprint:(NSString *) fingerprint {
-	MVChatUser *ret = [[self allocWithZone:nil] init];
+	MVChatUser *ret = [[self alloc] init];
 	ret -> _type = MVChatWildcardUserType;
-	ret -> _fingerprint = [fingerprint copyWithZone:[ret zone]];
+	ret -> _fingerprint = [fingerprint copy];
 	return [ret autorelease];
 }
 
@@ -94,7 +94,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_attributes = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
+		_attributes = [[NSMutableDictionary alloc] initWithCapacity:5];
 		_type = MVChatRemoteUserType;
 		_status = MVChatUserUnknownStatus;
 	}
@@ -382,7 +382,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 		else [_attributes removeObjectForKey:key];
 	}
 
-	NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:key, @"attribute", nil];
+	NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:key, @"attribute", nil];
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatUserAttributeUpdatedNotification object:self userInfo:info];
 	[info release];
 }
@@ -440,7 +440,7 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 }
 
 - (void) _setUniqueIdentifier:(id) identifier {
-	MVSafeAdoptAssign( _uniqueIdentifier, ( [identifier conformsToProtocol:@protocol( NSCopying )] ? [identifier copyWithZone:nil] : [identifier retain] ) );
+	MVSafeAdoptAssign( _uniqueIdentifier, ( [identifier conformsToProtocol:@protocol( NSCopying )] ? [identifier copy] : [identifier retain] ) );
 }
 
 - (void) _setNickname:(NSString *) name {
@@ -533,12 +533,12 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	if( self == [[self connection] localUser] ) {
 		id classDescription = [NSClassDescription classDescriptionForClass:[MVChatConnection class]];
 		NSScriptObjectSpecifier *container = [[self connection] objectSpecifier];
-		return [[[NSPropertySpecifier allocWithZone:nil] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"localUser"] autorelease];
+		return [[[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"localUser"] autorelease];
 	}
 
 	id classDescription = [NSClassDescription classDescriptionForClass:[MVChatConnection class]];
 	NSScriptObjectSpecifier *container = [[self connection] objectSpecifier];
-	return [[[NSUniqueIDSpecifier allocWithZone:nil] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"knownChatUsersArray" uniqueID:[self scriptUniqueIdentifier]] autorelease];
+	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"knownChatUsersArray" uniqueID:[self scriptUniqueIdentifier]] autorelease];
 }
 
 - (void) refreshInformationScriptCommand:(NSScriptCommand *) command {

@@ -37,7 +37,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 }
 
 - (id) copyWithZone:(NSZone *) zone {
-	MVChatUserWatchRule *copy = [[MVChatUserWatchRule allocWithZone:zone] init];
+	MVChatUserWatchRule *copy = [[MVChatUserWatchRule alloc] init];
 
 	MVSafeCopyAssign( copy->_username, _username );
 	MVSafeCopyAssign( copy->_nickname, _nickname );
@@ -56,7 +56,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 }
 
 - (NSDictionary *) dictionaryRepresentation {
-	NSMutableDictionary *dictionary = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
+	NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithCapacity:5];
 	if( _username ) [dictionary setObject:[self username] forKey:@"username"];
 	if( _nickname ) [dictionary setObject:[self nickname] forKey:@"nickname"];
 	if( _realName ) [dictionary setObject:[self realName] forKey:@"realName"];
@@ -111,7 +111,7 @@ NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchR
 	if( ! user ) return NO;
 
 	if( ! _matchedChatUsers )
-		_matchedChatUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
+		_matchedChatUsers = [[NSMutableSet alloc] initWithCapacity:10];
 
 	NSRange maxRange = NSMakeRange(0, NSUIntegerMax);
 

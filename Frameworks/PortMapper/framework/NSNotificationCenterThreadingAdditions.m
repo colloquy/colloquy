@@ -23,7 +23,7 @@
 
 - (void) postNotificationOnMainThreadWithName:(NSString *)aName object:(id)anObject {
     if( pthread_main_np() ) return [self postNotificationName:aName object:anObject userInfo:nil];
-    NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:2];
+    NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:2];
     if (aName) {
         [info setObject:aName forKey:@"name"];
     }

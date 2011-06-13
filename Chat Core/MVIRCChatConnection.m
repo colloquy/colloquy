@@ -128,7 +128,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		_nickname = [_username retain];
 		_currentNickname = [_nickname retain];
 		_realName = [NSFullUserName() retain];
-		_localUser = [[MVIRCChatUser allocWithZone:nil] initLocalUserWithConnection:self];
+		_localUser = [[MVIRCChatUser alloc] initLocalUserWithConnection:self];
 		[self _resetSupportedFeatures];
 	}
 
@@ -181,7 +181,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) connect {
 	if( _status != MVChatConnectionDisconnectedStatus && _status != MVChatConnectionServerDisconnectedStatus && _status != MVChatConnectionSuspendedStatus ) return;
 
-	MVSafeAdoptAssign( _lastConnectAttempt, [[NSDate allocWithZone:nil] init] );
+	MVSafeAdoptAssign( _lastConnectAttempt, [[NSDate alloc] init] );
 	MVSafeRetainAssign( _queueWait, [NSDate dateWithTimeIntervalSinceNow:JVQueueWaitBeforeConnected] );
 
 	if( [_connectionThread respondsToSelector:@selector( cancel )] )
@@ -358,12 +358,12 @@ static const NSStringEncoding supportedEncodings[] = {
 	}
 
 	if( now && _connectionThread ) {
-		MVSafeAdoptAssign( _lastCommand, [[NSDate allocWithZone:nil] init] );
+		MVSafeAdoptAssign( _lastCommand, [[NSDate alloc] init] );
 
 		[self performSelector:@selector( _writeDataToServer: ) withObject:raw inThread:_connectionThread waitUntilDone:NO];
 	} else {
 		if( ! _sendQueue )
-			_sendQueue = [[NSMutableArray allocWithZone:nil] initWithCapacity:20];
+			_sendQueue = [[NSMutableArray alloc] initWithCapacity:20];
 
 		@synchronized( _sendQueue ) {
 			[_sendQueue addObject:raw];
@@ -382,9 +382,9 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( ! rooms.count ) return;
 
 	if( !_pendingJoinRoomNames )
-		_pendingJoinRoomNames = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
+		_pendingJoinRoomNames = [[NSMutableSet alloc] initWithCapacity:10];
 
-	NSMutableArray *roomList = [[NSMutableArray allocWithZone:nil] initWithCapacity:rooms.count];
+	NSMutableArray *roomList = [[NSMutableArray alloc] initWithCapacity:rooms.count];
 
 	for( NSString *room in rooms ) {
 		room = [room stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -434,7 +434,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	NSParameterAssert( room.length > 0 );
 
 	if( !_pendingJoinRoomNames )
-		_pendingJoinRoomNames = [[NSMutableSet allocWithZone:nil] initWithCapacity:10];
+		_pendingJoinRoomNames = [[NSMutableSet alloc] initWithCapacity:10];
 
 	room = [self properNameForChatRoomNamed:room];
 
@@ -477,7 +477,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (MVChatRoom *) chatRoomWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
 	MVChatRoom *room = [super chatRoomWithUniqueIdentifier:[identifier lowercaseString]];
-	if( ! room ) room = [[[MVIRCChatRoom allocWithZone:nil] initWithName:identifier andConnection:self] autorelease];
+	if( ! room ) room = [[[MVIRCChatRoom alloc] initWithName:identifier andConnection:self] autorelease];
 	return room;
 }
 
@@ -519,7 +519,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (MVChatUser *) chatUserWithUniqueIdentifier:(id) identifier {
 	NSParameterAssert( [identifier isKindOfClass:[NSString class]] );
 	MVChatUser *user = [super chatUserWithUniqueIdentifier:[identifier lowercaseString]];
-	if( ! user ) user = [[[MVIRCChatUser allocWithZone:nil] initWithNickname:identifier andConnection:self] autorelease];
+	if( ! user ) user = [[[MVIRCChatUser alloc] initWithNickname:identifier andConnection:self] autorelease];
 	return user;
 }
 
@@ -561,7 +561,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) fetchChatRoomList {
 	if( ! _cachedDate || ABS( [_cachedDate timeIntervalSinceNow] ) > 300. ) {
 		[self sendRawMessage:@"LIST"];
-		MVSafeAdoptAssign( _cachedDate, [[NSDate allocWithZone:nil] init] );
+		MVSafeAdoptAssign( _cachedDate, [[NSDate alloc] init] );
 	}
 }
 
@@ -611,7 +611,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	id old = _chatConnection;
-	_chatConnection = [[AsyncSocket allocWithZone:nil] initWithDelegate:self];
+	_chatConnection = [[AsyncSocket alloc] initWithDelegate:self];
 	[old setDelegate:nil];
 	[old disconnect];
 	[old release];
@@ -635,7 +635,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (oneway void) _ircRunloop {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	[NSThread prepareForInterThreadMessages];
 
@@ -649,12 +649,12 @@ static const NSStringEncoding supportedEncodings[] = {
 	pool = nil;
 
 	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
-		pool = [[NSAutoreleasePool allocWithZone:nil] init];
+		pool = [[NSAutoreleasePool alloc] init];
 		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
 		[pool drain];
 	}
 
-	pool = [[NSAutoreleasePool allocWithZone:nil] init];
+	pool = [[NSAutoreleasePool alloc] init];
 
 	// make sure the connection has sent all the delegate calls it has scheduled
 	[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
@@ -697,7 +697,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	if( [[self proxyServer] length] && [self proxyServerPort] ) {
 		if( _proxy == MVChatConnectionHTTPSProxy || _proxy == MVChatConnectionHTTPProxy ) {
-			NSMutableDictionary *settings = [[NSMutableDictionary allocWithZone:nil] init];
+			NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
 			if( _proxy == MVChatConnectionHTTPSProxy ) {
 				[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertyHTTPSProxyHost];
 				[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertyHTTPSProxyPort];
@@ -710,7 +710,7 @@ static const NSStringEncoding supportedEncodings[] = {
 			CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertyHTTPProxy, (CFDictionaryRef) settings );
 			[settings release];
 		} else if( _proxy == MVChatConnectionSOCKS4Proxy || _proxy == MVChatConnectionSOCKS5Proxy ) {
-			NSMutableDictionary *settings = [[NSMutableDictionary allocWithZone:nil] init];
+			NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
 
 			[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertySOCKSProxyHost];
 			[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertySOCKSProxyPort];
@@ -737,7 +737,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL );
 		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL );
 
-		NSMutableDictionary *settings = [[NSMutableDictionary allocWithZone:nil] init];
+		NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
 		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
 		[settings setObject:[NSNumber numberWithBool:NO] forKey:(NSString *)kCFStreamSSLValidatesCertificateChain];
 
@@ -908,7 +908,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	const char *command = NULL;
 	NSUInteger commandLength = 0;
 
-	NSMutableArray *parameters = [[NSMutableArray allocWithZone:nil] initWithCapacity:15];
+	NSMutableArray *parameters = [[NSMutableArray alloc] initWithCapacity:15];
 
 	// Parsing as defined in 2.3.1 at http://www.irchelp.org/irchelp/rfc/rfc2812.txt
 
@@ -965,7 +965,7 @@ static const NSStringEncoding supportedEncodings[] = {
 			id param = nil;
 			if( *line == ':' ) {
 				currentParameter = ++line;
-				param = [[NSMutableData allocWithZone:nil] initWithBytes:currentParameter length:(end - currentParameter)];
+				param = [[NSMutableData alloc] initWithBytes:currentParameter length:(end - currentParameter)];
 				done = YES;
 			} else {
 				currentParameter = line;
@@ -989,11 +989,11 @@ static const NSStringEncoding supportedEncodings[] = {
 end:
 	{
 		NSString *senderString = [self _newStringWithBytes:sender length:senderLength];
-		NSString *commandString = ((command && commandLength) ? [[NSString allocWithZone:nil] initWithBytes:command length:commandLength encoding:NSASCIIStringEncoding] : nil);
+		NSString *commandString = ((command && commandLength) ? [[NSString alloc] initWithBytes:command length:commandLength encoding:NSASCIIStringEncoding] : nil);
 
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:rawString, @"message", data, @"messageData", (senderString ? senderString : @""), @"sender", (commandString ? commandString : @""), @"command", parameters, @"parameters", [NSNumber numberWithBool:NO], @"outbound", [NSNumber numberWithBool:fromServer], @"fromServer", nil]];
 
-		NSString *selectorString = [[NSString allocWithZone:nil] initWithFormat:@"_handle%@WithParameters:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
+		NSString *selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
 		SEL selector = NSSelectorFromString( selectorString );
 
 		[selectorString release];
@@ -1038,9 +1038,9 @@ end:
 	if( [raw isKindOfClass:[NSMutableData class]] ) {
 		data = [raw retain];
 	} else if( [raw isKindOfClass:[NSData class]] ) {
-		data = [raw mutableCopyWithZone:nil];
+		data = [raw mutableCopy];
 	} else if( [raw isKindOfClass:[NSString class]] ) {
-		data = [[raw dataUsingEncoding:[self encoding] allowLossyConversion:YES] mutableCopyWithZone:nil];
+		data = [[raw dataUsingEncoding:[self encoding] allowLossyConversion:YES] mutableCopy];
 	}
 
 	// IRC messages are always lines of characters terminated with a CR-LF
@@ -1074,7 +1074,7 @@ end:
 
 	static NSData *delimiter = nil;
 	// IRC messages end in \x0D\x0A, but some non-compliant servers only use \x0A during the connecting phase
-	if( ! delimiter ) delimiter = [[NSData allocWithZone:nil] initWithBytes:"\x0A" length:1];
+	if( ! delimiter ) delimiter = [[NSData alloc] initWithBytes:"\x0A" length:1];
 	[_chatConnection readDataToData:delimiter withTimeout:-1. tag:0];
 }
 
@@ -1110,7 +1110,7 @@ end:
 	MVAssertMainThreadRequired();
 	NSParameterAssert( [target isKindOfClass:[MVChatUser class]] || [target isKindOfClass:[MVChatRoom class]] );
 
-	NSMutableData *msg = [[[self class] _flattenedIRCDataForMessage:message withEncoding:msgEncoding andChatFormat:[self outgoingChatFormat]] mutableCopyWithZone:nil];
+	NSMutableData *msg = [[[self class] _flattenedIRCDataForMessage:message withEncoding:msgEncoding andChatFormat:[self outgoingChatFormat]] mutableCopy];
 
 #if ENABLE(PLUGINS)
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( id ), @encode( NSDictionary * ), nil];
@@ -1145,14 +1145,14 @@ end:
 		targetPrefix = @"";
 
 	if( [[attributes objectForKey:@"action"] boolValue] ) {
-		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@%@ :\001ACTION ", targetPrefix, targetName];
+		NSString *prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@%@ :\001ACTION ", targetPrefix, targetName];
 		NSUInteger bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
 
 		if ( msg.length > bytesLeft ) [self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
 		else [self sendRawMessageWithComponents:prefix, msg, @"\001", nil];
 		[prefix release];
 	} else {
-		NSString *prefix = [[NSString allocWithZone:nil] initWithFormat:@"PRIVMSG %@%@ :", targetPrefix, targetName];
+		NSString *prefix = [[NSString alloc] initWithFormat:@"PRIVMSG %@%@ :", targetPrefix, targetName];
 		NSUInteger bytesLeft = [self bytesRemainingForMessage:[[self localUser] nickname] withUsername:[[self localUser] username] withAddress:[[self localUser] address] withPrefix:prefix withEncoding:msgEncoding];
 
 		if ( msg.length > bytesLeft )	[self sendBrokenDownMessage:msg withPrefix:prefix withEncoding:msgEncoding withMaximumBytes:bytesLeft];
@@ -1481,7 +1481,7 @@ end:
 	} else if( [command isCaseInsensitiveEqualToString:@"j"] || [command isCaseInsensitiveEqualToString:@"join"] ) {
 		NSString *roomsString = MVChatStringAsString(arguments);
 		NSArray *roomStrings = [roomsString componentsSeparatedByString:@","];
-		NSMutableArray *roomsToJoin = [[NSMutableArray allocWithZone:nil] initWithCapacity:roomStrings.count];
+		NSMutableArray *roomsToJoin = [[NSMutableArray alloc] initWithCapacity:roomStrings.count];
 
 		for( NSString *room in roomStrings ) {
 			room = [room stringByTrimmingCharactersInSet:whitespaceCharacters];
@@ -1730,14 +1730,14 @@ end:
 	[self _writeDataToServer:data];
 	[data release];
 
-	MVSafeAdoptAssign( _lastCommand, [[NSDate allocWithZone:nil] init] );
+	MVSafeAdoptAssign( _lastCommand, [[NSDate alloc] init] );
 }
 
 #pragma mark -
 
 - (void) _addDirectClientConnection:(id) connection {
 	if( ! _directClientConnections )
-		_directClientConnections = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
+		_directClientConnections = [[NSMutableSet alloc] initWithCapacity:5];
 	@synchronized( _directClientConnections ) {
 		if( connection ) [_directClientConnections addObject:connection];
 	}
@@ -1769,7 +1769,7 @@ end:
 		return;
 
 	if( ! _pendingWhoisUsers )
-		_pendingWhoisUsers = [[NSMutableSet allocWithZone:nil] initWithCapacity:50];
+		_pendingWhoisUsers = [[NSMutableSet alloc] initWithCapacity:50];
 
 	[_pendingWhoisUsers addObject:user];
 
@@ -1820,13 +1820,13 @@ end:
 			[matchedUsers unionSet:[rule matchedChatUsers]];
 	}
 
-	NSMutableString *request = [[NSMutableString allocWithZone:nil] initWithCapacity:JVMaximumISONCommandLength];
+	NSMutableString *request = [[NSMutableString alloc] initWithCapacity:JVMaximumISONCommandLength];
 	[request setString:@"ISON "];
 
 	_isonSentCount = 0;
 
 	[_lastSentIsonNicknames release];
-	_lastSentIsonNicknames = [[NSMutableSet allocWithZone:nil] initWithCapacity:( _chatUserWatchRules.count * 5 )];
+	_lastSentIsonNicknames = [[NSMutableSet alloc] initWithCapacity:( _chatUserWatchRules.count * 5 )];
 
 	for( MVChatUser *user in matchedUsers ) {
 		if( ! [[user connection] isEqual:self] )
@@ -1841,7 +1841,7 @@ end:
 				[request release];
 				_isonSentCount++;
 
-				request = [[NSMutableString allocWithZone:nil] initWithCapacity:JVMaximumISONCommandLength];
+				request = [[NSMutableString alloc] initWithCapacity:JVMaximumISONCommandLength];
 				[request setString:@"ISON "];
 			}
 
@@ -1863,7 +1863,7 @@ end:
 					[request release];
 					_isonSentCount++;
 
-					request = [[NSMutableString allocWithZone:nil] initWithCapacity:JVMaximumISONCommandLength];
+					request = [[NSMutableString alloc] initWithCapacity:JVMaximumISONCommandLength];
 					[request setString:@"ISON "];
 				}
 
@@ -1890,8 +1890,8 @@ end:
 		NSStringEncoding encoding = [self encoding];
 		if( encoding != NSUTF8StringEncoding && isValidUTF8( bytes, length ) )
 			encoding = NSUTF8StringEncoding;
-		NSString *ret = [[NSString allocWithZone:nil] initWithBytes:bytes length:length encoding:encoding];
-		if( ! ret && encoding != JVFallbackEncoding ) ret = [[NSString allocWithZone:nil] initWithBytes:bytes length:length encoding:JVFallbackEncoding];
+		NSString *ret = [[NSString alloc] initWithBytes:bytes length:length encoding:encoding];
+		if( ! ret && encoding != JVFallbackEncoding ) ret = [[NSString alloc] initWithBytes:bytes length:length encoding:JVFallbackEncoding];
 		return ret;
 	}
 
@@ -2150,13 +2150,13 @@ end:
 	MVAssertCorrectThreadRequired( _connectionThread );
 
 	if( ! _serverInformation )
-		_serverInformation = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:5];
+		_serverInformation = [[NSMutableDictionary alloc] initWithCapacity:5];
 
 	for( NSString *feature in parameters ) {
 		if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"WATCH"] ) {
 			_watchCommandSupported = YES;
 
-			NSMutableString *request = [[NSMutableString allocWithZone:nil] initWithCapacity:JVMaximumWatchCommandLength];
+			NSMutableString *request = [[NSMutableString alloc] initWithCapacity:JVMaximumWatchCommandLength];
 			[request setString:@"WATCH "];
 
 			@synchronized( _chatUserWatchRules ) {
@@ -2167,7 +2167,7 @@ end:
 							[self sendRawMessage:request];
 							[request release];
 
-							request = [[NSMutableString allocWithZone:nil] initWithCapacity:JVMaximumWatchCommandLength];
+							request = [[NSMutableString alloc] initWithCapacity:JVMaximumWatchCommandLength];
 							[request setString:@"WATCH "];
 						}
 
@@ -2200,7 +2200,7 @@ end:
 						[_supportedFeatures removeObject:MVChatRoomMemberOperatorFeature];
 					}
 
-					NSMutableDictionary *modesTable = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:modes.length];
+					NSMutableDictionary *modesTable = [[NSMutableDictionary alloc] initWithCapacity:modes.length];
 					NSUInteger length = modes.length;
 					NSUInteger i = 0;
 					for( i = 0; i < length; i++ ) {
@@ -2217,7 +2217,7 @@ end:
 						}
 
 						if( mode != MVChatRoomMemberNoModes ) {
-							NSString *key = [[NSString allocWithZone:nil] initWithFormat:@"%c", [modes characterAtIndex:i]];
+							NSString *key = [[NSString alloc] initWithFormat:@"%c", [modes characterAtIndex:i]];
 							[modesTable setObject:[NSNumber numberWithUnsignedLong:mode] forKey:key];
 							[key release];
 
@@ -2236,13 +2236,13 @@ end:
 
 				NSString *prefixes = [feature substringFromIndex:[scanner scanLocation]];
 				if( prefixes.length ) {
-					NSMutableDictionary *prefixTable = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:modes.length];
+					NSMutableDictionary *prefixTable = [[NSMutableDictionary alloc] initWithCapacity:modes.length];
 					NSUInteger length = prefixes.length;
 					NSUInteger i = 0;
 					for( i = 0; i < length; i++ ) {
 						MVChatRoomMemberMode mode = [self _modeForNicknamePrefixCharacter:[prefixes characterAtIndex:i]];
 						if( mode != MVChatRoomMemberNoModes ) {
-							NSString *key = [[NSString allocWithZone:nil] initWithFormat:@"%c", [prefixes characterAtIndex:i]];
+							NSString *key = [[NSString alloc] initWithFormat:@"%c", [prefixes characterAtIndex:i]];
 							[prefixTable setObject:[NSNumber numberWithUnsignedLong:mode] forKey:key];
 							[key release];
 						}
@@ -2379,7 +2379,7 @@ end:
 		if( ctcp ) {
 			[self _handleCTCP:msgData asRequest:YES fromSender:sender toTarget:target forRoom:room];
 		} else {
-			NSMutableDictionary *privmsgInfo = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", target, @"target", room, @"room", nil];
+			NSMutableDictionary *privmsgInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", target, @"target", room, @"room", nil];
 #if ENABLE(PLUGINS)
 			[self performSelectorOnMainThread:@selector( _handlePrivmsg: ) withObject:privmsgInfo waitUntilDone:NO];
 #else
@@ -2602,7 +2602,7 @@ end:
 		if( ctcp ) {
 			[self _handleCTCP:msgData asRequest:NO fromSender:sender toTarget:target forRoom:room];
 		} else {
-			NSMutableDictionary *noticeInfo = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", target, @"target", room, @"room", nil];
+			NSMutableDictionary *noticeInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", target, @"target", room, @"room", nil];
 #if ENABLE(PLUGINS)
 			[self performSelectorOnMainThread:@selector( _handleNotice: ) withObject:noticeInfo waitUntilDone:NO];
 #else
@@ -2636,7 +2636,7 @@ end:
 	NSMutableData *arguments = nil;
 	if( line != end ) {
 		line++;
-		arguments = [[NSMutableData allocWithZone:nil] initWithBytes:line length:(end - line)];
+		arguments = [[NSMutableData alloc] initWithBytes:line length:(end - line)];
 	}
 
 	if( [command isCaseInsensitiveEqualToString:@"ACTION"] && arguments ) {
@@ -2671,8 +2671,8 @@ end:
 
 	if( request ) {
 		if( [command isCaseInsensitiveEqualToString:@"VERSION"] ) {
-			NSDictionary *systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/ServerVersion.plist"];
-			if( !systemVersion ) systemVersion = [[NSDictionary allocWithZone:nil] initWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
+			NSDictionary *systemVersion = [[NSDictionary alloc] initWithContentsOfFile:@"/System/Library/CoreServices/ServerVersion.plist"];
+			if( !systemVersion ) systemVersion = [[NSDictionary alloc] initWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
 			NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
 
 #if __ppc__
@@ -2685,7 +2685,7 @@ end:
 			NSString *processor = @"Unknown Architecture";
 #endif
 
-			NSString *reply = [[NSString allocWithZone:nil] initWithFormat:@"%@ %@ (%@) - %@ %@ (%@) - %@", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [clientVersion objectForKey:@"CFBundleVersion"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductVersion"], processor, [clientVersion objectForKey:@"MVChatCoreCTCPVersionReplyInfo"]];
+			NSString *reply = [[NSString alloc] initWithFormat:@"%@ %@ (%@) - %@ %@ (%@) - %@", [clientVersion objectForKey:@"CFBundleName"], [clientVersion objectForKey:@"CFBundleShortVersionString"], [clientVersion objectForKey:@"CFBundleVersion"], [systemVersion objectForKey:@"ProductName"], [systemVersion objectForKey:@"ProductVersion"], processor, [clientVersion objectForKey:@"MVChatCoreCTCPVersionReplyInfo"]];
 			[sender sendSubcodeReply:command withArguments:reply];
 
 			[reply release];
@@ -2757,7 +2757,7 @@ end:
 						[transfer _setupAndStart];
 					}
 				} else {
-					MVIRCDownloadFileTransfer *transfer = [(MVIRCDownloadFileTransfer *)[MVIRCDownloadFileTransfer allocWithZone:nil] initWithUser:sender];
+					MVIRCDownloadFileTransfer *transfer = [(MVIRCDownloadFileTransfer *)[MVIRCDownloadFileTransfer alloc] initWithUser:sender];
 
 					if( port == 0 && passive ) {
 						[transfer _setPassiveIdentifier:passiveId];
@@ -2888,7 +2888,7 @@ end:
 							[directChat initiate];
 						}
 					} else {
-						MVDirectChatConnection *directChatConnection = [(MVDirectChatConnection *)[MVDirectChatConnection allocWithZone:nil] initWithUser:sender];
+						MVDirectChatConnection *directChatConnection = [(MVDirectChatConnection *)[MVDirectChatConnection alloc] initWithUser:sender];
 
 						if( port == 0 && passive ) {
 							[directChatConnection _setPassiveIdentifier:passiveId];
@@ -2983,7 +2983,7 @@ end:
 - (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender toTarget:(id) target forRoom:(MVChatRoom *) room {
 	MVAssertCorrectThreadRequired( _connectionThread );
 
-	NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithCapacity:4];
+	NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:4];
 
 	if( data ) [info setObject:data forKey:@"data"];
 	if( sender ) [info setObject:sender forKey:@"sender"];
@@ -3063,7 +3063,7 @@ end:
 
 		NSData *reason = [parameters objectAtIndex:0];
 		if( ! [reason isKindOfClass:[NSData class]] ) reason = nil;
-		NSDictionary *info = [[NSDictionary allocWithZone:nil] initWithObjectsAndKeys:sender, @"user", reason, @"reason", nil];
+		NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:sender, @"user", reason, @"reason", nil];
 
 		for( MVChatRoom *room in [self joinedChatRooms] ) {
 			if( ! [room isJoined] || ! [room hasUser:sender] ) continue;
@@ -3109,7 +3109,7 @@ end:
 
 	MVChatRoom *room = [topicInfo objectForKey:@"room"];
 	MVChatUser *author = [topicInfo objectForKey:@"author"];
-	NSMutableData *topic = [[topicInfo objectForKey:@"topic"] mutableCopyWithZone:nil];
+	NSMutableData *topic = [[topicInfo objectForKey:@"topic"] mutableCopy];
 
 #if ENABLE(PLUGINS)
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( void ), @encode( NSMutableData * ), @encode( MVChatRoom * ), @encode( MVChatUser * ), nil];
@@ -3162,7 +3162,7 @@ end:
 	NSUInteger oldModes = [room modes];
 	NSUInteger argModes = 0;
 	NSUInteger value = 0;
-	NSMutableArray *argsNeeded = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
+	NSMutableArray *argsNeeded = [[NSMutableArray alloc] initWithCapacity:10];
 	NSUInteger i = 0, count = parameters.count;
 	while( i < count ) {
 		NSString *param = [self _stringFromPossibleData:[parameters objectAtIndex:i++]];
@@ -3481,7 +3481,7 @@ end:
 	if( parameters.count == 4 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:2]];
 		if( room && ! [room _namesSynced] ) {
-			NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
+			NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 			NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
 			NSArray *members = [names componentsSeparatedByString:@" "];
 
@@ -3577,7 +3577,7 @@ end:
 		NSData *topic = [parameters objectAtIndex:3];
 		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
 
-		NSMutableDictionary *info = [[NSMutableDictionary allocWithZone:nil] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:users], @"users", [NSDate date], @"cached", room, @"room", topic, @"topic", nil];
+		NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:users], @"users", [NSDate date], @"cached", room, @"room", topic, @"topic", nil];
 		[self performSelectorOnMainThread:@selector( _addRoomToCache: ) withObject:info waitUntilDone:NO];
 		[info release];
 	}
@@ -3730,7 +3730,7 @@ end:
 	if( parameters.count == 3 ) {
 		NSString *rooms = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 		NSArray *chanArray = [[rooms stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
-		NSMutableArray *results = [[NSMutableArray allocWithZone:nil] initWithCapacity:chanArray.count];
+		NSMutableArray *results = [[NSMutableArray alloc] initWithCapacity:chanArray.count];
 
 		NSCharacterSet *nicknamePrefixes = [self _nicknamePrefixes];
 		for( NSString *room in chanArray ) {
