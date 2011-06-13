@@ -25,11 +25,9 @@
 		1C15B2021310EC65006FA16B /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C55130A770A009F679C /* NSStringAdditions.m */; };
 		1C15B2031310EC8B006FA16B /* InterThreadMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8E13100B360088C737 /* InterThreadMessaging.m */; };
 		1C15B26013117BF4006FA16B /* CQAnalyticsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B25E13117BF4006FA16B /* CQAnalyticsController.m */; };
-		1C15B26213117F6E006FA16B /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B26113117F6D006FA16B /* IOKit.framework */; };
-		1C15B26B131183FC006FA16B /* CQKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B269131183FC006FA16B /* CQKeychain.m */; };
-		1C15B26D13118418006FA16B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B26C13118415006FA16B /* Security.framework */; };
 		1C15B26F13118763006FA16B /* ColloquyDaemon in Copy Executables */ = {isa = PBXBuildFile; fileRef = 8DD76FA10486AA7600D96B5E /* ColloquyDaemon */; };
 		1C15B2751311B621006FA16B /* CQJavaScriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B2741311B621006FA16B /* CQJavaScriptBridge.m */; };
+		1C1A91751356C2A3004FC76B /* MVChatConnectionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1A91741356C2A3004FC76B /* MVChatConnectionAdditions.m */; };
 		1C1EF100133F4D7D006FABCF /* CQDaemonConnectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1EF0FF133F4D7D006FABCF /* CQDaemonConnectionController.m */; };
 		1C1EF103133F516D006FABCF /* CQDaemonConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1EF102133F516D006FABCF /* CQDaemonConnection.m */; };
 		1C1EF106133F54CC006FABCF /* CQLocalDaemonConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1EF105133F54CB006FABCF /* CQLocalDaemonConnection.m */; };
@@ -50,6 +48,9 @@
 		1C716E9D13100B360088C737 /* MVDirectChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E7B13100B360088C737 /* MVDirectChatConnection.m */; };
 		1C716E9E13100B360088C737 /* MVDirectClientConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E7E13100B360088C737 /* MVDirectClientConnection.m */; };
 		1C716E9F13100B360088C737 /* MVFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8013100B360088C737 /* MVFileTransfer.m */; };
+		1C8230CE13A5DB75009B8FB6 /* CQKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B269131183FC006FA16B /* CQKeychain.m */; };
+		1C8230CF13A5DB86009B8FB6 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B26C13118415006FA16B /* Security.framework */; };
+		1C8230D013A5DCE6009B8FB6 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B26113117F6D006FA16B /* IOKit.framework */; };
 		1CCADE7D1311FB9B00872A80 /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCADE7C1311FB9B00872A80 /* NSMethodSignatureAdditions.m */; };
 		1CCADE7E1311FB9B00872A80 /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCADE7C1311FB9B00872A80 /* NSMethodSignatureAdditions.m */; };
 		1CCB9C58130A770A009F679C /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C49130A770A009F679C /* NSCharacterSetAdditions.m */; };
@@ -61,6 +62,7 @@
 		1CCB9C5E130A770A009F679C /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C55130A770A009F679C /* NSStringAdditions.m */; };
 		1CCB9DAC130A7D1B009F679C /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB9DAB130A7D1B009F679C /* CoreServices.framework */; };
 		1CCF503D1336A2D0004294C9 /* CQColloquyDaemon.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCF503C1336A2D0004294C9 /* CQColloquyDaemon.m */; };
+		1CD4B77B1352169E0086EDE8 /* CQDaemonChatConnectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4B77A1352169E0086EDE8 /* CQDaemonChatConnectionController.m */; };
 		8DD76F9A0486AA7600D96B5E /* ColloquyDaemon.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* ColloquyDaemon.m */; settings = {ATTRIBUTES = (); }; };
 		8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -120,6 +122,8 @@
 		1C15B26C13118415006FA16B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		1C15B2731311B621006FA16B /* CQJavaScriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQJavaScriptBridge.h; sourceTree = "<group>"; };
 		1C15B2741311B621006FA16B /* CQJavaScriptBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQJavaScriptBridge.m; sourceTree = "<group>"; };
+		1C1A91731356C2A3004FC76B /* MVChatConnectionAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVChatConnectionAdditions.h; sourceTree = "<group>"; };
+		1C1A91741356C2A3004FC76B /* MVChatConnectionAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVChatConnectionAdditions.m; sourceTree = "<group>"; };
 		1C1EF0FE133F4D7D006FABCF /* CQDaemonConnectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQDaemonConnectionController.h; sourceTree = "<group>"; };
 		1C1EF0FF133F4D7D006FABCF /* CQDaemonConnectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQDaemonConnectionController.m; sourceTree = "<group>"; };
 		1C1EF101133F516D006FABCF /* CQDaemonConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQDaemonConnection.h; sourceTree = "<group>"; };
@@ -233,6 +237,8 @@
 		1CCB9DC2130A7E6E009F679C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		1CCF503B1336A2D0004294C9 /* CQColloquyDaemon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQColloquyDaemon.h; sourceTree = "<group>"; };
 		1CCF503C1336A2D0004294C9 /* CQColloquyDaemon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQColloquyDaemon.m; sourceTree = "<group>"; };
+		1CD4B7791352169E0086EDE8 /* CQDaemonChatConnectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQDaemonChatConnectionController.h; sourceTree = "<group>"; };
+		1CD4B77A1352169E0086EDE8 /* CQDaemonChatConnectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQDaemonChatConnectionController.m; sourceTree = "<group>"; };
 		8DD76FA10486AA7600D96B5E /* ColloquyDaemon */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ColloquyDaemon; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -241,10 +247,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C15B26D13118418006FA16B /* Security.framework in Frameworks */,
-				1C15B26213117F6E006FA16B /* IOKit.framework in Frameworks */,
 				1C15B1DE1310D02A006FA16B /* JavaScriptCore.framework in Frameworks */,
 				1C15B1F91310EB91006FA16B /* AppKit.framework in Frameworks */,
+				1C8230D013A5DCE6009B8FB6 /* IOKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,6 +262,7 @@
 				1CCB9DAC130A7D1B009F679C /* CoreServices.framework in Frameworks */,
 				1C15B1B91310CFB5006FA16B /* SystemConfiguration.framework in Frameworks */,
 				1C15B1FB1310EC4C006FA16B /* libicucore.dylib in Frameworks */,
+				1C8230CF13A5DB86009B8FB6 /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,6 +370,15 @@
 			children = (
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		1C1A91721356C25C004FC76B /* Additions */ = {
+			isa = PBXGroup;
+			children = (
+				1C1A91741356C2A3004FC76B /* MVChatConnectionAdditions.m */,
+				1C1A91731356C2A3004FC76B /* MVChatConnectionAdditions.h */,
+			);
+			path = Additions;
 			sourceTree = "<group>";
 		};
 		1C61A59E13106AC7009DF5DF /* Port Mapping Support */ = {
@@ -494,6 +509,7 @@
 		1C716EA813100C9A0088C737 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				1C1A91721356C25C004FC76B /* Additions */,
 				1C716EB013100D7E0088C737 /* Controllers */,
 				1C716EB113100D8A0088C737 /* Models */,
 			);
@@ -566,6 +582,8 @@
 				1C0621F51348E575001D3201 /* CQDaemonClientConnectionPrivate.h */,
 				1C1EF110133FF51A006FABCF /* CQDaemonLocalClientConnection.m */,
 				1C1EF10D133FAE70006FABCF /* CQDaemonLocalClientConnection.h */,
+				1CD4B77A1352169E0086EDE8 /* CQDaemonChatConnectionController.m */,
+				1CD4B7791352169E0086EDE8 /* CQDaemonChatConnectionController.h */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -709,7 +727,6 @@
 				1C15B2021310EC65006FA16B /* NSStringAdditions.m in Sources */,
 				1C15B2031310EC8B006FA16B /* InterThreadMessaging.m in Sources */,
 				1C15B26013117BF4006FA16B /* CQAnalyticsController.m in Sources */,
-				1C15B26B131183FC006FA16B /* CQKeychain.m in Sources */,
 				1CCADE7D1311FB9B00872A80 /* NSMethodSignatureAdditions.m in Sources */,
 				1C1EF100133F4D7D006FABCF /* CQDaemonConnectionController.m in Sources */,
 				1C1EF103133F516D006FABCF /* CQDaemonConnection.m in Sources */,
@@ -749,6 +766,9 @@
 				1C1EF109133F5562006FABCF /* CQDaemonClientConnectionController.m in Sources */,
 				1C1EF10C133F5587006FABCF /* CQDaemonClientConnection.m in Sources */,
 				1C1EF111133FF51C006FABCF /* CQDaemonLocalClientConnection.m in Sources */,
+				1CD4B77B1352169E0086EDE8 /* CQDaemonChatConnectionController.m in Sources */,
+				1C1A91751356C2A3004FC76B /* MVChatConnectionAdditions.m in Sources */,
+				1C8230CE13A5DB75009B8FB6 /* CQKeychain.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -845,7 +865,7 @@
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx;
+				SDKROOT = "";
 			};
 			name = Debug;
 		};
@@ -856,7 +876,7 @@
 				GCC_PREFIX_HEADER = Mac/Colloquy.pch;
 				HEADER_SEARCH_PATHS = "\"$(SOURCE_ROOT)\"";
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				SDKROOT = macosx;
+				SDKROOT = "";
 			};
 			name = Release;
 		};
