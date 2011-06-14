@@ -16,26 +16,15 @@
 		1C15B1F81310EA92006FA16B /* ColloquyApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B1F71310EA92006FA16B /* ColloquyApplication.m */; };
 		1C15B1F91310EB91006FA16B /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B1C31310CFF5006FA16B /* AppKit.framework */; };
 		1C15B1FB1310EC4C006FA16B /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB9DAF130A7E29009F679C /* libicucore.dylib */; };
-		1C15B1FC1310EC65006FA16B /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C49130A770A009F679C /* NSCharacterSetAdditions.m */; };
-		1C15B1FD1310EC65006FA16B /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4B130A770A009F679C /* NSDataAdditions.m */; };
-		1C15B1FE1310EC65006FA16B /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4D130A770A009F679C /* NSDictionaryAdditions.m */; };
-		1C15B1FF1310EC65006FA16B /* NSNotificationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4F130A770A009F679C /* NSNotificationAdditions.m */; };
-		1C15B2001310EC65006FA16B /* NSObjectAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C51130A770A009F679C /* NSObjectAdditions.m */; };
-		1C15B2011310EC65006FA16B /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C53130A770A009F679C /* NSScannerAdditions.m */; };
-		1C15B2021310EC65006FA16B /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C55130A770A009F679C /* NSStringAdditions.m */; };
-		1C15B2031310EC8B006FA16B /* InterThreadMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8E13100B360088C737 /* InterThreadMessaging.m */; };
 		1C15B26013117BF4006FA16B /* CQAnalyticsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B25E13117BF4006FA16B /* CQAnalyticsController.m */; };
 		1C15B26F13118763006FA16B /* ColloquyDaemon in Copy Executables */ = {isa = PBXBuildFile; fileRef = 8DD76FA10486AA7600D96B5E /* ColloquyDaemon */; };
 		1C15B2751311B621006FA16B /* CQJavaScriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B2741311B621006FA16B /* CQJavaScriptBridge.m */; };
-		1C1A91751356C2A3004FC76B /* MVChatConnectionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1A91741356C2A3004FC76B /* MVChatConnectionAdditions.m */; };
 		1C1EF100133F4D7D006FABCF /* CQDaemonConnectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1EF0FF133F4D7D006FABCF /* CQDaemonConnectionController.m */; };
 		1C1EF103133F516D006FABCF /* CQDaemonConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1EF102133F516D006FABCF /* CQDaemonConnection.m */; };
 		1C1EF106133F54CC006FABCF /* CQLocalDaemonConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1EF105133F54CB006FABCF /* CQLocalDaemonConnection.m */; };
 		1C1EF109133F5562006FABCF /* CQDaemonClientConnectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1EF108133F5562006FABCF /* CQDaemonClientConnectionController.m */; };
 		1C1EF10C133F5587006FABCF /* CQDaemonClientConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1EF10B133F5587006FABCF /* CQDaemonClientConnection.m */; };
 		1C1EF111133FF51C006FABCF /* CQDaemonLocalClientConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1EF110133FF51A006FABCF /* CQDaemonLocalClientConnection.m */; };
-		1C716E9713100B360088C737 /* InterThreadMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8E13100B360088C737 /* InterThreadMessaging.m */; };
-		1C8230CE13A5DB75009B8FB6 /* CQKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B269131183FC006FA16B /* CQKeychain.m */; };
 		1C8230CF13A5DB86009B8FB6 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B26C13118415006FA16B /* Security.framework */; };
 		1C8230D013A5DCE6009B8FB6 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C15B26113117F6D006FA16B /* IOKit.framework */; };
 		1CC42CC713A5EBEF00D6A4F0 /* MVFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8013100B360088C737 /* MVFileTransfer.m */; };
@@ -46,30 +35,25 @@
 		1CC42CCC13A5EC0900D6A4F0 /* MVChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E7313100B360088C737 /* MVChatRoom.m */; };
 		1CC42CCD13A5EC0D00D6A4F0 /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E7013100B360088C737 /* MVChatConnection.m */; };
 		1CC42CCE13A5EC1E00D6A4F0 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8C13100B360088C737 /* AsyncSocket.m */; };
-		1CC42CCF13A5EC2900D6A4F0 /* InterThreadMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8E13100B360088C737 /* InterThreadMessaging.m */; };
 		1CC42CD013A5EC2E00D6A4F0 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E9013100B360088C737 /* RegexKitLite.m */; };
 		1CC42CD113A5EC3800D6A4F0 /* MVIRCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8913100B360088C737 /* MVIRCFileTransfer.m */; };
 		1CC42CD213A5EC3C00D6A4F0 /* MVIRCChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8713100B360088C737 /* MVIRCChatUser.m */; };
 		1CC42CD313A5EC3F00D6A4F0 /* MVIRCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8513100B360088C737 /* MVIRCChatRoom.m */; };
 		1CC42CD413A5EC4300D6A4F0 /* MVIRCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8313100B360088C737 /* MVIRCChatConnection.m */; };
 		1CC42CD713A5EC7A00D6A4F0 /* Chat Core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC42CC313A5EB9200D6A4F0 /* Chat Core.a */; };
-		1CC42CD813A5F45800D6A4F0 /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C55130A770A009F679C /* NSStringAdditions.m */; };
-		1CC42CD913A5F45B00D6A4F0 /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C53130A770A009F679C /* NSScannerAdditions.m */; };
-		1CC42CDA13A5F45E00D6A4F0 /* NSObjectAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C51130A770A009F679C /* NSObjectAdditions.m */; };
-		1CC42CDB13A5F46000D6A4F0 /* NSNotificationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4F130A770A009F679C /* NSNotificationAdditions.m */; };
-		1CC42CDC13A5F46300D6A4F0 /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCADE7C1311FB9B00872A80 /* NSMethodSignatureAdditions.m */; };
-		1CC42CDD13A5F46500D6A4F0 /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4D130A770A009F679C /* NSDictionaryAdditions.m */; };
-		1CC42CDE13A5F46700D6A4F0 /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4B130A770A009F679C /* NSDataAdditions.m */; };
-		1CC42CDF13A5F46A00D6A4F0 /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C49130A770A009F679C /* NSCharacterSetAdditions.m */; };
-		1CCADE7D1311FB9B00872A80 /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCADE7C1311FB9B00872A80 /* NSMethodSignatureAdditions.m */; };
-		1CCADE7E1311FB9B00872A80 /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCADE7C1311FB9B00872A80 /* NSMethodSignatureAdditions.m */; };
-		1CCB9C58130A770A009F679C /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C49130A770A009F679C /* NSCharacterSetAdditions.m */; };
-		1CCB9C59130A770A009F679C /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4B130A770A009F679C /* NSDataAdditions.m */; };
-		1CCB9C5A130A770A009F679C /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4D130A770A009F679C /* NSDictionaryAdditions.m */; };
-		1CCB9C5B130A770A009F679C /* NSNotificationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4F130A770A009F679C /* NSNotificationAdditions.m */; };
-		1CCB9C5C130A770A009F679C /* NSObjectAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C51130A770A009F679C /* NSObjectAdditions.m */; };
-		1CCB9C5D130A770A009F679C /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C53130A770A009F679C /* NSScannerAdditions.m */; };
-		1CCB9C5E130A770A009F679C /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C55130A770A009F679C /* NSStringAdditions.m */; };
+		1CC42CF413A67EE900D6A4F0 /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C49130A770A009F679C /* NSCharacterSetAdditions.m */; };
+		1CC42CF513A67EE900D6A4F0 /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4B130A770A009F679C /* NSDataAdditions.m */; };
+		1CC42CF613A67EE900D6A4F0 /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4D130A770A009F679C /* NSDictionaryAdditions.m */; };
+		1CC42CF713A67EE900D6A4F0 /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCADE7C1311FB9B00872A80 /* NSMethodSignatureAdditions.m */; };
+		1CC42CF813A67EE900D6A4F0 /* NSNotificationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4F130A770A009F679C /* NSNotificationAdditions.m */; };
+		1CC42CF913A67EE900D6A4F0 /* NSObjectAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C51130A770A009F679C /* NSObjectAdditions.m */; };
+		1CC42CFA13A67EE900D6A4F0 /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C53130A770A009F679C /* NSScannerAdditions.m */; };
+		1CC42CFB13A67EE900D6A4F0 /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C55130A770A009F679C /* NSStringAdditions.m */; };
+		1CC42D0013A67F5D00D6A4F0 /* Additions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC42CF013A67EDA00D6A4F0 /* Additions.a */; };
+		1CC42D0113A67F6600D6A4F0 /* Additions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC42CF013A67EDA00D6A4F0 /* Additions.a */; };
+		1CC42D1A13A6811900D6A4F0 /* InterThreadMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8E13100B360088C737 /* InterThreadMessaging.m */; };
+		1CC42D1B13A6814B00D6A4F0 /* MVChatConnectionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1A91741356C2A3004FC76B /* MVChatConnectionAdditions.m */; };
+		1CC42D1C13A6815B00D6A4F0 /* CQKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B269131183FC006FA16B /* CQKeychain.m */; };
 		1CCB9DAC130A7D1B009F679C /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB9DAB130A7D1B009F679C /* CoreServices.framework */; };
 		1CCF503D1336A2D0004294C9 /* CQColloquyDaemon.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCF503C1336A2D0004294C9 /* CQColloquyDaemon.m */; };
 		1CD4B77B1352169E0086EDE8 /* CQDaemonChatConnectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4B77A1352169E0086EDE8 /* CQDaemonChatConnectionController.m */; };
@@ -91,6 +75,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1CC42CC213A5EB9200D6A4F0;
 			remoteInfo = "Chat Core";
+		};
+		1CC42CFC13A67F4900D6A4F0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1CC42CEF13A67EDA00D6A4F0;
+			remoteInfo = Additions;
+		};
+		1CC42CFE13A67F5100D6A4F0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1CC42CEF13A67EDA00D6A4F0;
+			remoteInfo = Additions;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -233,6 +231,7 @@
 		1CC1CA3313479F1300964CFD /* CQColloquyClientProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQColloquyClientProtocol.h; sourceTree = "<group>"; };
 		1CC1CA3413479F1300964CFD /* CQColloquyDaemonProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQColloquyDaemonProtocol.h; sourceTree = "<group>"; };
 		1CC42CC313A5EB9200D6A4F0 /* Chat Core.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "Chat Core.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CC42CF013A67EDA00D6A4F0 /* Additions.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = Additions.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CCADE7B1311FB9B00872A80 /* NSMethodSignatureAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSMethodSignatureAdditions.h; path = Additions/NSMethodSignatureAdditions.h; sourceTree = "<group>"; };
 		1CCADE7C1311FB9B00872A80 /* NSMethodSignatureAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSMethodSignatureAdditions.m; path = Additions/NSMethodSignatureAdditions.m; sourceTree = "<group>"; };
 		1CCB9C49130A770A009F679C /* NSCharacterSetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSCharacterSetAdditions.m; path = Additions/NSCharacterSetAdditions.m; sourceTree = "<group>"; };
@@ -265,6 +264,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CC42D0013A67F5D00D6A4F0 /* Additions.a in Frameworks */,
 				1C15B1DE1310D02A006FA16B /* JavaScriptCore.framework in Frameworks */,
 				1C15B1F91310EB91006FA16B /* AppKit.framework in Frameworks */,
 				1C8230D013A5DCE6009B8FB6 /* IOKit.framework in Frameworks */,
@@ -272,6 +272,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1CC42CC013A5EB9200D6A4F0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1CC42D0113A67F6600D6A4F0 /* Additions.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CC42CED13A67EDA00D6A4F0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -358,6 +366,7 @@
 				8DD76FA10486AA7600D96B5E /* ColloquyDaemon */,
 				1C15B1BE1310CFF5006FA16B /* Colloquy.app */,
 				1CC42CC313A5EB9200D6A4F0 /* Chat Core.a */,
+				1CC42CF013A67EDA00D6A4F0 /* Additions.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -667,6 +676,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1CC42CEE13A67EDA00D6A4F0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -683,6 +699,7 @@
 			);
 			dependencies = (
 				1C15B1DD1310D01E006FA16B /* PBXTargetDependency */,
+				1CC42CFF13A67F5100D6A4F0 /* PBXTargetDependency */,
 			);
 			name = Colloquy;
 			productName = Colloquy;
@@ -700,10 +717,28 @@
 			buildRules = (
 			);
 			dependencies = (
+				1CC42CFD13A67F4900D6A4F0 /* PBXTargetDependency */,
 			);
 			name = "Chat Core";
 			productName = ChatCore;
 			productReference = 1CC42CC313A5EB9200D6A4F0 /* Chat Core.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		1CC42CEF13A67EDA00D6A4F0 /* Additions */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1CC42CF313A67EDA00D6A4F0 /* Build configuration list for PBXNativeTarget "Additions" */;
+			buildPhases = (
+				1CC42CEC13A67EDA00D6A4F0 /* Sources */,
+				1CC42CED13A67EDA00D6A4F0 /* Frameworks */,
+				1CC42CEE13A67EDA00D6A4F0 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Additions;
+			productName = Additions;
+			productReference = 1CC42CF013A67EDA00D6A4F0 /* Additions.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		8DD76F960486AA7600D96B5E /* Colloquy Daemon */ = {
@@ -751,6 +786,7 @@
 				1C15B1BD1310CFF5006FA16B /* Colloquy */,
 				8DD76F960486AA7600D96B5E /* Colloquy Daemon */,
 				1CC42CC213A5EB9200D6A4F0 /* Chat Core */,
+				1CC42CEF13A67EDA00D6A4F0 /* Additions */,
 			);
 		};
 /* End PBXProject section */
@@ -774,16 +810,7 @@
 			files = (
 				1C15B1F61310EA70006FA16B /* CQColloquyApplication.m in Sources */,
 				1C15B1F81310EA92006FA16B /* ColloquyApplication.m in Sources */,
-				1C15B1FC1310EC65006FA16B /* NSCharacterSetAdditions.m in Sources */,
-				1C15B1FD1310EC65006FA16B /* NSDataAdditions.m in Sources */,
-				1C15B1FE1310EC65006FA16B /* NSDictionaryAdditions.m in Sources */,
-				1C15B1FF1310EC65006FA16B /* NSNotificationAdditions.m in Sources */,
-				1C15B2001310EC65006FA16B /* NSObjectAdditions.m in Sources */,
-				1C15B2011310EC65006FA16B /* NSScannerAdditions.m in Sources */,
-				1C15B2021310EC65006FA16B /* NSStringAdditions.m in Sources */,
-				1C15B2031310EC8B006FA16B /* InterThreadMessaging.m in Sources */,
 				1C15B26013117BF4006FA16B /* CQAnalyticsController.m in Sources */,
-				1CCADE7D1311FB9B00872A80 /* NSMethodSignatureAdditions.m in Sources */,
 				1C1EF100133F4D7D006FABCF /* CQDaemonConnectionController.m in Sources */,
 				1C1EF103133F516D006FABCF /* CQDaemonConnection.m in Sources */,
 				1C1EF106133F54CC006FABCF /* CQLocalDaemonConnection.m in Sources */,
@@ -802,20 +829,29 @@
 				1CC42CCC13A5EC0900D6A4F0 /* MVChatRoom.m in Sources */,
 				1CC42CCD13A5EC0D00D6A4F0 /* MVChatConnection.m in Sources */,
 				1CC42CCE13A5EC1E00D6A4F0 /* AsyncSocket.m in Sources */,
-				1CC42CCF13A5EC2900D6A4F0 /* InterThreadMessaging.m in Sources */,
 				1CC42CD013A5EC2E00D6A4F0 /* RegexKitLite.m in Sources */,
 				1CC42CD113A5EC3800D6A4F0 /* MVIRCFileTransfer.m in Sources */,
 				1CC42CD213A5EC3C00D6A4F0 /* MVIRCChatUser.m in Sources */,
 				1CC42CD313A5EC3F00D6A4F0 /* MVIRCChatRoom.m in Sources */,
 				1CC42CD413A5EC4300D6A4F0 /* MVIRCChatConnection.m in Sources */,
-				1CC42CD813A5F45800D6A4F0 /* NSStringAdditions.m in Sources */,
-				1CC42CD913A5F45B00D6A4F0 /* NSScannerAdditions.m in Sources */,
-				1CC42CDA13A5F45E00D6A4F0 /* NSObjectAdditions.m in Sources */,
-				1CC42CDB13A5F46000D6A4F0 /* NSNotificationAdditions.m in Sources */,
-				1CC42CDC13A5F46300D6A4F0 /* NSMethodSignatureAdditions.m in Sources */,
-				1CC42CDD13A5F46500D6A4F0 /* NSDictionaryAdditions.m in Sources */,
-				1CC42CDE13A5F46700D6A4F0 /* NSDataAdditions.m in Sources */,
-				1CC42CDF13A5F46A00D6A4F0 /* NSCharacterSetAdditions.m in Sources */,
+				1CC42D1B13A6814B00D6A4F0 /* MVChatConnectionAdditions.m in Sources */,
+				1CC42D1C13A6815B00D6A4F0 /* CQKeychain.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1CC42CEC13A67EDA00D6A4F0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1CC42CF413A67EE900D6A4F0 /* NSCharacterSetAdditions.m in Sources */,
+				1CC42CF513A67EE900D6A4F0 /* NSDataAdditions.m in Sources */,
+				1CC42CF613A67EE900D6A4F0 /* NSDictionaryAdditions.m in Sources */,
+				1CC42CF713A67EE900D6A4F0 /* NSMethodSignatureAdditions.m in Sources */,
+				1CC42CF813A67EE900D6A4F0 /* NSNotificationAdditions.m in Sources */,
+				1CC42CF913A67EE900D6A4F0 /* NSObjectAdditions.m in Sources */,
+				1CC42CFA13A67EE900D6A4F0 /* NSScannerAdditions.m in Sources */,
+				1CC42CFB13A67EE900D6A4F0 /* NSStringAdditions.m in Sources */,
+				1CC42D1A13A6811900D6A4F0 /* InterThreadMessaging.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -824,23 +860,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DD76F9A0486AA7600D96B5E /* ColloquyDaemon.m in Sources */,
-				1CCB9C58130A770A009F679C /* NSCharacterSetAdditions.m in Sources */,
-				1CCB9C59130A770A009F679C /* NSDataAdditions.m in Sources */,
-				1CCB9C5A130A770A009F679C /* NSDictionaryAdditions.m in Sources */,
-				1CCB9C5B130A770A009F679C /* NSNotificationAdditions.m in Sources */,
-				1CCB9C5C130A770A009F679C /* NSObjectAdditions.m in Sources */,
-				1CCB9C5D130A770A009F679C /* NSScannerAdditions.m in Sources */,
-				1CCB9C5E130A770A009F679C /* NSStringAdditions.m in Sources */,
-				1C716E9713100B360088C737 /* InterThreadMessaging.m in Sources */,
 				1C15B2751311B621006FA16B /* CQJavaScriptBridge.m in Sources */,
-				1CCADE7E1311FB9B00872A80 /* NSMethodSignatureAdditions.m in Sources */,
 				1CCF503D1336A2D0004294C9 /* CQColloquyDaemon.m in Sources */,
 				1C1EF109133F5562006FABCF /* CQDaemonClientConnectionController.m in Sources */,
 				1C1EF10C133F5587006FABCF /* CQDaemonClientConnection.m in Sources */,
 				1C1EF111133FF51C006FABCF /* CQDaemonLocalClientConnection.m in Sources */,
 				1CD4B77B1352169E0086EDE8 /* CQDaemonChatConnectionController.m in Sources */,
-				1C1A91751356C2A3004FC76B /* MVChatConnectionAdditions.m in Sources */,
-				1C8230CE13A5DB75009B8FB6 /* CQKeychain.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -856,6 +881,16 @@
 			isa = PBXTargetDependency;
 			target = 1CC42CC213A5EB9200D6A4F0 /* Chat Core */;
 			targetProxy = 1CC42CD513A5EC5B00D6A4F0 /* PBXContainerItemProxy */;
+		};
+		1CC42CFD13A67F4900D6A4F0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1CC42CEF13A67EDA00D6A4F0 /* Additions */;
+			targetProxy = 1CC42CFC13A67F4900D6A4F0 /* PBXContainerItemProxy */;
+		};
+		1CC42CFF13A67F5100D6A4F0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1CC42CEF13A67EDA00D6A4F0 /* Additions */;
+			targetProxy = 1CC42CFE13A67F5100D6A4F0 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -874,6 +909,7 @@
 		1C15B1D91310CFF6006FA16B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ARC_MIGRATION = precheck;
 				INFOPLIST_FILE = Mac/Application/Resources/Info.plist;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -882,6 +918,7 @@
 		1C15B1DA1310CFF6006FA16B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ARC_MIGRATION = precheck;
 				INFOPLIST_FILE = Mac/Application/Resources/Info.plist;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -911,9 +948,26 @@
 			};
 			name = Release;
 		};
+		1CC42CF113A67EDA00D6A4F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1CC42CF213A67EDA00D6A4F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		1DEB927508733DD40010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ARC_MIGRATION = precheck;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 					COMMAND_LINE_UTILITY,
@@ -925,6 +979,7 @@
 		1DEB927608733DD40010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ARC_MIGRATION = precheck;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 					COMMAND_LINE_UTILITY,
@@ -1004,6 +1059,16 @@
 				1CC42CC613A5EB9200D6A4F0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1CC42CF313A67EDA00D6A4F0 /* Build configuration list for PBXNativeTarget "Additions" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1CC42CF113A67EDA00D6A4F0 /* Debug */,
+				1CC42CF213A67EDA00D6A4F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1DEB927408733DD40010E9CD /* Build configuration list for PBXNativeTarget "Colloquy Daemon" */ = {
 			isa = XCConfigurationList;
