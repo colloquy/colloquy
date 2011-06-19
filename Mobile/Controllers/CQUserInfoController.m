@@ -5,6 +5,8 @@
 
 #import "CQUserInfoViewController.h"
 
+#import "MVChatUser.h"
+
 @implementation CQUserInfoController
 - (void) dealloc {
 	[_user release];

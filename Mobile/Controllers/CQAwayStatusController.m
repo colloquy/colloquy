@@ -1,6 +1,8 @@
 #import "CQAwayStatusController.h"
 #import "CQAwayStatusViewController.h"
 
+#import "MVChatConnection.h"
+
 @implementation CQAwayStatusController
 - (void) dealloc {
 	[_connection release];
