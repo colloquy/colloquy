@@ -96,20 +96,16 @@ static BOOL showsChatIcons;
 #pragma mark -
 
 static MVChatConnection *connectionForSection(NSUInteger section) {
-	NSArray *controllers = [CQChatController defaultController].chatViewControllers;
-	if (!controllers.count)
-		return nil;
-
 	NSUInteger workingCount = [CQConnectionsController defaultController].directConnections.count;
-	if (section <= workingCount) // direct connection
+	if (section <= workingCount)
 		return [[CQConnectionsController defaultController].directConnections objectAtIndex:section];
 
 	for (CQBouncerSettings *settings in [CQConnectionsController defaultController].bouncers) {
 		for (MVChatConnection *connection in [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:settings.identifier]) {
+			workingCount++;
+
 			if (workingCount == section)
 				return connection;
-
-			workingCount++;
 		}
 	}
 
@@ -117,10 +113,6 @@ static MVChatConnection *connectionForSection(NSUInteger section) {
 }
  
 static NSUInteger sectionIndexForConnection(MVChatConnection *connection) {
-	NSArray *controllers = [CQChatController defaultController].chatViewControllers;
-	if (!controllers.count)
-		return NSNotFound;
-
 	NSUInteger sectionIndex = [[CQConnectionsController defaultController].directConnections indexOfObjectIdenticalTo:connection];
 	if (sectionIndex != NSNotFound)
 		return sectionIndex;
@@ -170,28 +162,21 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 #endif
 		connection = ((id <CQChatViewController>) controller).connection;
 
-	MVChatConnection *currentConnection = nil;
-	NSUInteger sectionIndex = 0;
 	NSUInteger rowIndex = 0;
 
 	for (id <CQChatViewController> chatViewController in controllers) {
 #if ENABLE(FILE_TRANSFERS)
 		if ([chatViewController conformsToProtocol:@protocol(CQChatViewController)]) {
 #endif
-			if (chatViewController.connection != currentConnection) {
-				if (currentConnection) ++sectionIndex;
-				currentConnection = chatViewController.connection;
-			}
-
 			if (chatViewController == controller)
-				return [NSIndexPath indexPathForRow:rowIndex inSection:sectionIndex];
+				return [NSIndexPath indexPathForRow:rowIndex inSection:sectionIndexForConnection(chatViewController.connection)];
 
 			if (chatViewController.connection == connection && chatViewController != controller)
 				++rowIndex;
 #if ENABLE(FILE_TRANSFERS)
 		} else {
 			if (chatViewController == controller)
-				return [NSIndexPath indexPathForRow:rowIndex inSection:sectionIndex + 1];
+				return [NSIndexPath indexPathForRow:rowIndex inSection:chatViewController.connection + 1];
 			++rowIndex;
 		}
 #endif
@@ -569,7 +554,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	if (selectedIndexPath && changedIndexPath.section == selectedIndexPath.section) {
 		if (changedIndexPath.row <= selectedIndexPath.row)
 			selectedIndexPath = [NSIndexPath indexPathForRow:selectedIndexPath.row + 1 inSection:selectedIndexPath.section];
-		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+//		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 	}
 
 	if ([[UIDevice currentDevice] isPadModel])
