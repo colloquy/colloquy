@@ -1,6 +1,7 @@
 #import "CQChatListViewController.h"
 
 #import "CQActionSheet.h"
+#import "CQBouncerSettings.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
@@ -99,47 +100,36 @@ static MVChatConnection *connectionForSection(NSUInteger section) {
 	if (!controllers.count)
 		return nil;
 
-	MVChatConnection *currentConnection = nil;
-	NSUInteger sectionIndex = 0;
+	NSUInteger workingCount = [CQConnectionsController defaultController].directConnections.count;
+	if (section <= workingCount) // direct connection
+		return [[CQConnectionsController defaultController].directConnections objectAtIndex:section];
 
-	for (id <CQChatViewController> chatViewController in controllers) {
-#if ENABLE(FILE_TRANSFERS)
-		if (![chatViewController conformsToProtocol:@protocol(CQChatViewController)])
-			continue;
-#endif
+	for (CQBouncerSettings *settings in [CQConnectionsController defaultController].bouncers) {
+		for (MVChatConnection *connection in [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:settings.identifier]) {
+			if (workingCount == section)
+				return connection;
 
-		if (chatViewController.connection != currentConnection) {
-			if (currentConnection) ++sectionIndex;
-			currentConnection = chatViewController.connection;
+			workingCount++;
 		}
-
-		if (sectionIndex == section)
-			return chatViewController.connection;
 	}
 
 	return nil;
 }
-
+ 
 static NSUInteger sectionIndexForConnection(MVChatConnection *connection) {
 	NSArray *controllers = [CQChatController defaultController].chatViewControllers;
 	if (!controllers.count)
 		return NSNotFound;
 
-	MVChatConnection *currentConnection = nil;
-	NSUInteger sectionIndex = 0;
+	NSUInteger sectionIndex = [[CQConnectionsController defaultController].directConnections indexOfObjectIdenticalTo:connection];
+	if (sectionIndex != NSNotFound)
+		return sectionIndex;
 
-	for (id <CQChatViewController> chatViewController in controllers) {
-#if ENABLE(FILE_TRANSFERS)
-		if (![chatViewController conformsToProtocol:@protocol(CQChatViewController)])
-			continue;
-#endif
+	for (CQBouncerSettings *settings in [CQConnectionsController defaultController].bouncers) {
+		NSArray *connections = [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:settings.identifier];
+		sectionIndex = [connections indexOfObjectIdenticalTo:connection];
 
-		if (chatViewController.connection != currentConnection) {
-			if (currentConnection) ++sectionIndex;
-			currentConnection = chatViewController.connection;
-		}
-
-		if (chatViewController.connection == connection)
+		if (sectionIndex != NSNotFound)
 			return sectionIndex;
 	}
 
