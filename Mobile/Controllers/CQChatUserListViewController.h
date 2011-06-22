@@ -3,13 +3,14 @@
 @class MVChatUser;
 @class MVChatRoom;
 
-@interface CQChatUserListViewController : CQPreferencesTableViewController <UIActionSheetDelegate, UISearchBarDelegate> {
+@interface CQChatUserListViewController : CQPreferencesTableViewController <UIActionSheetDelegate, UISearchDisplayDelegate> {
 	@protected
 	NSMutableArray *_users;
 	NSMutableArray *_matchedUsers;
 	NSString *_currentSearchString;
 	MVChatRoom *_room;
 	UISearchBar *_searchBar;
+	UISearchDisplayController *_searchController;
 }
 @property (nonatomic, copy) NSArray *users;
 @property (nonatomic, retain) MVChatRoom *room;

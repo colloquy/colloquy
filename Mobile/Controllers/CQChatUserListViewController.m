@@ -45,12 +45,14 @@ static NSString *membersFilteredCountFormat;
 
 - (void) dealloc {
 	_searchBar.delegate = nil;
+	_searchController.delegate = nil;
 
 	[_users release];
 	[_matchedUsers release];
 	[_currentSearchString release];
 	[_room release];
 	[_searchBar release];
+	[_searchController release];
 
 	[super dealloc];
 }
@@ -85,11 +87,14 @@ static NSString *membersFilteredCountFormat;
 	_searchBar.tintColor = [UIColor colorWithRed:(190. / 255.) green:(199. / 255.) blue:(205. / 255.) alpha:1.]; 
 	_searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
 	_searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
-	_searchBar.delegate = self;
-
 	[_searchBar sizeToFit];
 
 	self.tableView.tableHeaderView = _searchBar;
+	
+	_searchController = [[UISearchDisplayController alloc] initWithSearchBar:_searchBar contentsController:self];
+	_searchController.searchResultsDataSource = self;
+	_searchController.searchResultsDelegate = self;
+	_searchController.delegate = self;
 
 	UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Members", @"Members back button label") style:UIBarButtonItemStylePlain target:nil action:nil];
 	self.navigationItem.backBarButtonItem = backButton;
@@ -199,11 +204,11 @@ static NSString *membersFilteredCountFormat;
 #pragma mark -
 
 - (void) insertUser:(MVChatUser *) user atIndex:(NSUInteger) index {
-	BOOL searchBarFocused = [_searchBar isFirstResponder];
+	BOOL searchBarFocused = [_searchController isActive];
 	[self _insertUser:user atIndex:index withAnimation:UITableViewRowAnimationLeft];
 
 	if (searchBarFocused)
-		[_searchBar becomeFirstResponder];
+		[_searchController setActive:YES animated:YES];
 
 	if ([[UIDevice currentDevice] isPadModel]) 
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
@@ -215,7 +220,7 @@ static NSString *membersFilteredCountFormat;
 
 	MVChatUser *user = [[_users objectAtIndex:oldIndex] retain];
 
-	BOOL searchBarFocused = [_searchBar isFirstResponder];
+	BOOL searchBarFocused = [_searchController isActive];
 
 	NSInteger oldMatchesIndex = [self _indexForRemovedMatchUser:user];
 	NSInteger newMatchesIndex = [self _indexForInsertedMatchUser:user withOriginalIndex:newIndex];
@@ -236,17 +241,17 @@ static NSString *membersFilteredCountFormat;
 	[self.tableView endUpdates];
 
 	if (searchBarFocused)
-		[_searchBar becomeFirstResponder];
+		[_searchController setActive:YES animated:YES];
 
 	[user release];
 }
 
 - (void) removeUserAtIndex:(NSUInteger) index {
-	BOOL searchBarFocused = [_searchBar isFirstResponder];
+	BOOL searchBarFocused = [_searchController isActive];
 	[self _removeUserAtIndex:index withAnimation:UITableViewRowAnimationRight];
 
 	if (searchBarFocused)
-		[_searchBar becomeFirstResponder];
+		[_searchController setActive:YES animated:YES];
 
 	if ([[UIDevice currentDevice] isPadModel])
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
@@ -261,24 +266,32 @@ static NSString *membersFilteredCountFormat;
 	if (matchesIndex == NSNotFound)
 		return;
 
-	BOOL searchBarFocused = [_searchBar isFirstResponder];
+	BOOL searchBarFocused = [_searchController isActive];
 
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:matchesIndex inSection:0] withAnimation:UITableViewRowAnimationFade];
 
 	if (searchBarFocused)
-		[_searchBar becomeFirstResponder];
+		[_searchController setActive:YES animated:YES];
 }
 
 #pragma mark -
 
-- (void) searchBar:(UISearchBar *) searchBar textDidChange:(NSString *) searchString {
+- (BOOL) searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *) searchString {
 	if ([searchString isEqualToString:_currentSearchString])
-		return;
-
+		return NO;
+	
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(filterUsers) object:nil];
-
+	
 	NSTimeInterval delay = (searchString.length ? (1. / (double)searchString.length) : (1. / 3.));
 	[self performSelector:@selector(filterUsers) withObject:nil afterDelay:delay];
+	
+	return NO;
+}
+
+- (void) searchDisplayControllerWillEndSearch:(UISearchDisplayController *) controller {
+	// The searching has probably ruined the _matchedUsers array, so rebuild it here when we display the main results table view/
+	[_matchedUsers setArray:_users];
+	[self.tableView reloadData];
 }
 
 #pragma mark -
@@ -311,7 +324,7 @@ static NSString *membersFilteredCountFormat;
 		NSSet *matchedUsersSet = [[NSSet alloc] initWithArray:_matchedUsers];
 		NSSet *previousUsersSet = [[NSSet alloc] initWithArray:previousUsersArray];
 
-		[self.tableView beginUpdates];
+		[_searchController.searchResultsTableView beginUpdates];
 
 		NSUInteger index = 0;
 		NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
@@ -322,7 +335,7 @@ static NSString *membersFilteredCountFormat;
 			++index;
 		}
 
-		[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+		[_searchController.searchResultsTableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
 
 		index = 0;
 
@@ -335,15 +348,15 @@ static NSString *membersFilteredCountFormat;
 			++index;
 		}
 
-		[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+		[_searchController.searchResultsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
 
-		[self.tableView endUpdates];
+		[_searchController.searchResultsTableView endUpdates];
 
 		[indexPaths release];
 		[previousUsersSet release];
 		[matchedUsersSet release];
 	} else {
-		[self.tableView reloadData];
+		[_searchController.searchResultsTableView reloadData];
 	}
 
 	id old = _currentSearchString;
