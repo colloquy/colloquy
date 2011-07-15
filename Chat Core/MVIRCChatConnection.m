@@ -635,34 +635,29 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (oneway void) _ircRunloop {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    autoreleasepool(^{
+		[NSThread prepareForInterThreadMessages];
 
-	[NSThread prepareForInterThreadMessages];
+		_connectionThread = [NSThread currentThread];
+		if( [_connectionThread respondsToSelector:@selector( setName: )] )
+			[_connectionThread setName:[[self url] absoluteString]];
 
-	_connectionThread = [NSThread currentThread];
-	if( [_connectionThread respondsToSelector:@selector( setName: )] )
-		[_connectionThread setName:[[self url] absoluteString]];
-
-	[self _connect];
-
-	[pool drain];
-	pool = nil;
+		[self _connect];
+	})
 
 	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
-		pool = [[NSAutoreleasePool alloc] init];
-		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
-		[pool drain];
+		autoreleasepool(^{
+			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
+		})
 	}
 
-	pool = [[NSAutoreleasePool alloc] init];
+    autoreleasepool(^{
+		// make sure the connection has sent all the delegate calls it has scheduled
+		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
 
-	// make sure the connection has sent all the delegate calls it has scheduled
-	[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
-
-	if( _connectionThread == [NSThread currentThread] )
-		_connectionThread = nil;
-
-	[pool drain];
+		if( _connectionThread == [NSThread currentThread] )
+			_connectionThread = nil;
+	})
 }
 
 #pragma mark -
@@ -3481,22 +3476,21 @@ end:
 	if( parameters.count == 4 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:2]];
 		if( room && ! [room _namesSynced] ) {
-			NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-			NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
-			NSArray *members = [names componentsSeparatedByString:@" "];
+			autoreleasepool(^{
+				NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
+				NSArray *members = [names componentsSeparatedByString:@" "];
 
-			for( NSString *memberName in members ) {
-				if( ! memberName.length ) break;
+				for( NSString *memberName in members ) {
+					if( ! memberName.length ) break;
 
-				MVChatRoomMemberMode modes = [self _stripModePrefixesFromNickname:&memberName];
-				MVChatUser *member = [self chatUserWithUniqueIdentifier:memberName];
-				[room _addMemberUser:member];
-				[room _setModes:modes forMemberUser:member];
+					MVChatRoomMemberMode modes = [self _stripModePrefixesFromNickname:&memberName];
+					MVChatUser *member = [self chatUserWithUniqueIdentifier:memberName];
+					[room _addMemberUser:member];
+					[room _setModes:modes forMemberUser:member];
 
-				[self _markUserAsOnline:member];
-			}
-
-			[pool drain];
+					[self _markUserAsOnline:member];
+				}
+			})
 		}
 	}
 }

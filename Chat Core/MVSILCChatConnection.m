@@ -1437,18 +1437,15 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 }
 
 - (void) _silcRunloop {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool allocWithZone:nil] init];
-
-	if( [[NSThread currentThread] respondsToSelector:@selector( setName: )] )
-		[[NSThread currentThread] setName:[[self url] absoluteString]];
-
-	[pool drain];
-	pool = nil;
+    autoreleasepool(^{
+		if( [[NSThread currentThread] respondsToSelector:@selector( setName: )] )
+			[[NSThread currentThread] setName:[[self url] absoluteString]];
+	})
 
 	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
-		pool = [[NSAutoreleasePool allocWithZone:nil] init];
-		silc_schedule_one( _silcClient -> schedule, -1 );
-		[pool drain];
+		autoreleasepool(^{
+			silc_schedule_one( _silcClient -> schedule, -1 );
+		})
 	}
 }
 

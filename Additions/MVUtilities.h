@@ -36,6 +36,22 @@
 #define MVSafeReturn(var) \
 	[[var retain] autorelease];
 
+#if __has_feature(objc_arc)
+	#define autoreleasepool(block) \
+	{ \
+		@autoreleasepool { \
+			block(); \
+		} \
+	}
+#else
+	#define autoreleasepool(block) \
+	{ \
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]; \
+		block(); \
+		[pool drain]; \
+	}
+#endif
+
 #define MVAssertMainThreadRequired() \
 	NSAssert1( pthread_main_np(), @"Method needs to run on the main thread, not %@.", [NSThread currentThread] )
 

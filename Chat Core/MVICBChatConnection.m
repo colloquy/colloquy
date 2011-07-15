@@ -375,43 +375,40 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 #pragma mark Connection thread
 
 - (oneway void) _runloop {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    autoreleasepool(^{
+        [_threadWaitLock lockWhenCondition:0];
 
-	[_threadWaitLock lockWhenCondition:0];
+        if( [_connectionThread respondsToSelector:@selector( cancel )] )
+            [_connectionThread cancel];
 
-	if( [_connectionThread respondsToSelector:@selector( cancel )] )
-		[_connectionThread cancel];
+        _connectionThread = [NSThread currentThread];
+        if( [_connectionThread respondsToSelector:@selector( setName: )] )
+            [_connectionThread setName:[[self url] absoluteString]];
+        [NSThread prepareForInterThreadMessages];
 
-	_connectionThread = [NSThread currentThread];
-	if( [_connectionThread respondsToSelector:@selector( setName: )] )
-		[_connectionThread setName:[[self url] absoluteString]];
-	[NSThread prepareForInterThreadMessages];
-
-	[_threadWaitLock unlockWithCondition:1];
-
-	[pool drain];
-	pool = nil;
+        [_threadWaitLock unlockWithCondition:1];
+    })
 
 	while( _status == MVChatConnectionConnectedStatus ||
            _status == MVChatConnectionConnectingStatus ||
            [_chatConnection isConnected] ) {
-		pool = [[NSAutoreleasePool alloc] init];
-		[[NSRunLoop currentRunLoop]
-            runMode:NSDefaultRunLoopMode
-            beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
-		[pool drain];
+        autoreleasepool(^{
+            [[NSRunLoop currentRunLoop]
+                runMode:NSDefaultRunLoopMode
+                beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
+        })
 	}
 
-	pool = [[NSAutoreleasePool alloc] init];
+    autoreleasepool(^{
+        // Make sure the connection has sent all the delegate calls it
+        // has scheduled.
+        [[NSRunLoop currentRunLoop]
+         runMode:NSDefaultRunLoopMode
+         beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.]];
 
-	// Make sure the connection has sent all the delegate calls it
-	// has scheduled.
-	[[NSRunLoop currentRunLoop]
-	 runMode:NSDefaultRunLoopMode
-	 beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.]];
-
-	if( [NSThread currentThread] == _connectionThread )
-		_connectionThread = nil;
+        if( [NSThread currentThread] == _connectionThread )
+            _connectionThread = nil;
+    })
 
 	[pool drain];
 }
