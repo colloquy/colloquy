@@ -409,8 +409,6 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
         if( [NSThread currentThread] == _connectionThread )
             _connectionThread = nil;
     })
-
-	[pool drain];
 }
 
 - (void) _connect {
