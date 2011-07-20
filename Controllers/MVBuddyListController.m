@@ -94,6 +94,12 @@ static MVBuddyListController *sharedInstance = nil;
 	[(NSPanel *)[self window] setHidesOnDeactivate:NO];
 	[[self window] setFrameAutosaveName:@"buddylist"];
 
+	NSWindowCollectionBehavior windowCollectionBehavior = NSWindowCollectionBehaviorDefault;
+	if( floor( NSAppKitVersionNumber ) >= NSAppKitVersionNumber10_6 )
+		windowCollectionBehavior |= (NSWindowCollectionBehaviorParticipatesInCycle | NSWindowCollectionBehaviorTransient);
+
+	[[self window] setCollectionBehavior:windowCollectionBehavior];
+
 	[buddies setVerticalMotionCanBeginDrag:NO];
 	[buddies setTarget:self];
 	[buddies setDoubleAction:@selector( messageSelectedBuddy: )];

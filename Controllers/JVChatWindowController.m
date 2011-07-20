@@ -102,6 +102,14 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[[self window] setIgnoresMouseEvents:NO];
 	[[self window] setOpaque:NO]; // let us poke transparant holes in the window
 
+	NSWindowCollectionBehavior windowCollectionBehavior = NSWindowCollectionBehaviorDefault;
+	if( floor( NSAppKitVersionNumber ) >= NSAppKitVersionNumber10_6 )
+		windowCollectionBehavior |= NSWindowCollectionBehaviorParticipatesInCycle;
+	if( floor( NSAppKitVersionNumber ) >= NSAppKitVersionNumber10_7 )
+		windowCollectionBehavior |= NSWindowCollectionBehaviorFullScreenPrimary;
+
+	[[self window] setCollectionBehavior:windowCollectionBehavior];
+
 	if( [[self window] respondsToSelector:@selector( _setContentHasShadow: )] )
 		[[self window] _setContentHasShadow:NO]; // this is new in Tiger
 

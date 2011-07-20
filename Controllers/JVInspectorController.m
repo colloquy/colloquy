@@ -86,6 +86,16 @@ static NSMutableSet *inspectors = nil;
 
 #pragma mark -
 
+- (void) windowDidLoad {
+	NSWindowCollectionBehavior windowCollectionBehavior = NSWindowCollectionBehaviorDefault;
+	if( floor( NSAppKitVersionNumber ) >= NSAppKitVersionNumber10_6 )
+		windowCollectionBehavior |= (NSWindowCollectionBehaviorParticipatesInCycle | NSWindowCollectionBehaviorTransient);
+
+	[[self window] setCollectionBehavior:windowCollectionBehavior];
+}
+
+#pragma mark -
+
 - (IBAction) show:(id) sender {
 	[self _loadInspector];
 	if( _locked && ! [[self window] isVisible] )

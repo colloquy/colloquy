@@ -106,6 +106,12 @@
 
 	[[self window] recalculateKeyViewLoop];
 
+	NSWindowCollectionBehavior windowCollectionBehavior = NSWindowCollectionBehaviorDefault;
+	if( floor( NSAppKitVersionNumber ) >= NSAppKitVersionNumber10_6 )
+		windowCollectionBehavior |= NSWindowCollectionBehaviorParticipatesInCycle;
+
+	[[self window] setCollectionBehavior:windowCollectionBehavior];
+
 	if( [connectionPopup indexOfSelectedItem] != -1 )
 		[[self window] makeFirstResponder:roomField];
 }

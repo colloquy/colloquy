@@ -223,6 +223,10 @@ static NSMenu *favoritesMenu = nil;
 	[toolbar setAutosavesConfiguration:YES];
 	[[self window] setToolbar:toolbar];
 
+	NSWindowCollectionBehavior windowCollectionBehavior = NSWindowCollectionBehaviorDefault;
+	if( floor( NSAppKitVersionNumber ) >= NSAppKitVersionNumber10_6 )
+		windowCollectionBehavior |= (NSWindowCollectionBehaviorParticipatesInCycle | NSWindowCollectionBehaviorTransient);
+
 	NSDisclosureButtonCell *cell = [[NSDisclosureButtonCell alloc] initWithCell:[showDetails cell]];
 	[showDetails setCell:cell];
 	[cell release];

@@ -4,6 +4,14 @@
 	#define NSAppKitVersionNumber10_5 949
 #endif 
 
+#ifndef NSAppKitVersionNumber10_6
+	#define NSAppKitVersionNumber10_6 1038
+#endif 
+
+#ifndef NSAppKitVersionNumber10_7
+	#define NSAppKitVersionNumber10_7 1138
+#endif 
+
 #ifdef __OBJC__
 
 #import <WebKit/WebKit.h>
