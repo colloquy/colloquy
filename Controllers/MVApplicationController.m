@@ -501,7 +501,7 @@ static BOOL applicationIsTerminating = NO;
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"] ) {
 		Class webCacheClass = NSClassFromString( @"WebCache" );
-		if( ! webCacheClass ) webCacheClass = NSClassFromString( @"WebCoreCache" );\
+		if( ! webCacheClass ) webCacheClass = NSClassFromString( @"WebCoreCache" );
 
 		[webCacheClass setDisabled:YES];
 	}
@@ -517,6 +517,16 @@ static BOOL applicationIsTerminating = NO;
 
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:20] setSubmenu:[MVConnectionsController favoritesMenu]];
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:30] setSubmenu:[JVChatController smartTranscriptMenu]];
+
+	NSMenu *viewMenu = [[[[NSApplication sharedApplication] mainMenu] itemAtIndex:3] submenu];
+	NSMenuItem *fullscreenItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Enter Full Screen", @"Enter Full Screen menu item") action:@selector(toggleFullScreen:) keyEquivalent:@"f"];
+	[fullscreenItem setKeyEquivalentModifierMask:(NSControlKeyMask | NSCommandKeyMask)];
+	[fullscreenItem setTarget:nil];
+
+	[viewMenu insertItem:fullscreenItem atIndex:6];
+	[viewMenu insertItem:[NSMenuItem separatorItem] atIndex:7];
+
+	[fullscreenItem release];
 
 	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( terminateWithoutConfirm: ) name:NSWorkspaceWillPowerOffNotification object:[NSWorkspace sharedWorkspace]];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( receiveSleepNotification: ) name:NSWorkspaceWillSleepNotification object:[NSWorkspace sharedWorkspace]];
