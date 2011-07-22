@@ -24,7 +24,7 @@ extern NSString *JVMachineStoppedIdlingNotification;
 - (IBAction) bugReportWebsite:(id) sender;
 
 - (IBAction) showPreferences:(id) sender;
-- (IBAction) showActivityManager:(id) sender;
+- (IBAction) showTransferManager:(id) sender;
 - (IBAction) showTranscriptBrowser:(id) sender;
 - (IBAction) showConnectionManager:(id) sender;
 - (IBAction) showBuddyList:(id) sender;

@@ -10,7 +10,7 @@
 //#import "JVSQLChatTranscript.h"
 #import "JVChatMessage.h"
 #import "MVConnectionsController.h"
-#import "CQActivityWindowController.h"
+#import "MVFileTransferController.h"
 #import "MVMenuButton.h"
 #import "NSPreferences.h"
 #import "JVAppearancePreferences.h"
@@ -359,7 +359,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 - (void) downloadLinkToDisk:(id) sender {
 	NSURL *url = [[sender representedObject] objectForKey:@"WebElementLinkURL"];
-	[[CQActivityWindowController sharedController] downloadFileAtURL:url toLocalFile:nil];
+	[[MVFileTransferController defaultController] downloadFileAtURL:url toLocalFile:nil];
 }
 
 #pragma mark -
@@ -715,7 +715,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 			if( [MVChatConnection supportsURLScheme:[url scheme]] ) {
 				[[MVConnectionsController defaultController] handleURL:url andConnectIfPossible:YES];
 			} else if( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSAlternateKeyMask ) {
-				[[CQActivityWindowController sharedController] downloadFileAtURL:url toLocalFile:nil];
+				[[MVFileTransferController defaultController] downloadFileAtURL:url toLocalFile:nil];
 			} else {
 				NSWorkspaceLaunchOptions options = ( [[actionInformation objectForKey:WebActionModifierFlagsKey] unsignedIntValue] & NSCommandKeyMask ? NSWorkspaceLaunchWithoutActivation : 0 );
 				[[NSWorkspace sharedWorkspace] openURLs:[NSArray arrayWithObject:url] withAppBundleIdentifier:nil options:options additionalEventParamDescriptor:nil launchIdentifiers:nil];

@@ -463,28 +463,42 @@ static NSMenu *smartTranscriptMenu = nil;
 }
 
 - (void) _invitedToRoom:(NSNotification *) notification {
+	NSString *room = [[notification userInfo] objectForKey:@"room"];
+	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
 	MVChatConnection *connection = [notification object];
 
 	if( ! [[MVConnectionsController defaultController] managesConnection:connection] ) return;
 
-	NSString *room = [[notification userInfo] objectForKey:@"room"];
-	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
+	NSString *title = NSLocalizedString( @"Chat Room Invite", "member invited to room title" );
+	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to join %@ by %@. Would you like to accept this invitation and join this room?", "you were invited to join a chat room status message" ), room, [user nickname]];
 
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:NSLocalizedString( @"Invited to Chat", "bubble title invited to room" ) forKey:@"title"];
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to %@ by %@.", "bubble message invited to room" ), room, [user nickname]] forKey:@"description"];
 	[[JVNotificationController defaultController] performNotification:@"JVChatRoomInvite" withContextInfo:context];
+
+	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinChatRoomOnInvite"] || NSRunInformationalAlertPanel( title, @"%@", NSLocalizedString( @"Join", "join button" ), NSLocalizedString( @"Decline", "decline button" ), nil, message ) == NSOKButton )
+		[connection joinChatRoomNamed:room];
 }
 
 - (void) _invitedToDirectChat:(NSNotification *) notification {
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
+	MVDirectChatConnection *connection = [notification object];
 
 	if( ! [[MVConnectionsController defaultController] managesConnection:[user connection]] ) return;
+
+	NSString *title = NSLocalizedString( @"Direct Chat Invite", "invited to direct chat title" );
+	NSString *message = [NSString stringWithFormat:NSLocalizedString( @"You were invited to participate in a chat with %@. Would you like to accept this invitation?", "you were invited to a direct chat status message" ), [user nickname]];
 
 	NSMutableDictionary *context = [NSMutableDictionary dictionary];
 	[context setObject:NSLocalizedString( @"Invited to Direct Chat", "bubble title invited to direct chat" ) forKey:@"title"];
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You were invited to participate in a chat with %@.", "bubble message invited to participate in a direct chat" ), [user nickname]] forKey:@"description"];
 	[[JVNotificationController defaultController] performNotification:@"JVDirectChatInvite" withContextInfo:context];
+
+	if( NSRunInformationalAlertPanel( title, @"%@", NSLocalizedString( @"Accept", "accept button" ), NSLocalizedString( @"Decline", "decline button" ), nil, message ) == NSOKButton ) {
+		[self chatViewControllerForDirectChatConnection:connection ifExists:NO userInitiated:NO];
+		[connection initiate];
+	}
 }
 
 - (void) _gotBeep:(NSNotification *) notification {

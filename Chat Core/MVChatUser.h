@@ -1,5 +1,5 @@
-#import <ChatCore/MVAvailability.h>
-#import <ChatCore/MVChatString.h>
+#import "MVAvailability.h"
+#import "MVChatString.h"
 
 typedef enum {
 	MVChatRemoteUserType = 'remT',

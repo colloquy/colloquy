@@ -773,7 +773,7 @@ static MVBuddyListController *sharedInstance = nil;
 		NSArray *files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
 
 		for( id file in files )
-			[[NSNotificationCenter defaultCenter] postNotificationName:MVFileTransferStartedNotification object:[user sendFile:file passively:passive]];
+			[[MVFileTransferController defaultController] addFileTransfer:[user sendFile:file passively:passive]];
 
 		return YES;
 	}

@@ -13,7 +13,6 @@
 #import "JVBehaviorPreferences.h"
 #import "MVConnectionsController.h"
 #import "MVFileTransferController.h"
-#import "CQActivityWindowController.h"
 #import "JVTranscriptPreferences.h"
 #import "MVBuddyListController.h"
 #import "JVChatController.h"
@@ -251,10 +250,10 @@ static BOOL applicationIsTerminating = NO;
 	[[JVPreferencesController sharedPreferences] showPreferencesPanel];
 }
 
-- (IBAction) showActivityManager:(id) sender {
-	if ( [[CQActivityWindowController sharedController].window isKeyWindow] )
-		[[CQActivityWindowController sharedController] hideActivityWindow:nil];
-	else [[CQActivityWindowController sharedController] showActivityWindow:nil];
+- (IBAction) showTransferManager:(id) sender {
+	if( [[[MVFileTransferController defaultController] window] isKeyWindow] )
+		[[MVFileTransferController defaultController] hideTransferManager:nil];
+	else [[MVFileTransferController defaultController] showTransferManager:nil];
 }
 
 - (IBAction) showConnectionManager:(id) sender {
@@ -513,7 +512,6 @@ static BOOL applicationIsTerminating = NO;
 	[JVChatController defaultController];
 	[MVFileTransferController defaultController];
 	[MVBuddyListController sharedBuddyList];
-	[CQActivityWindowController sharedController];
 
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:20] setSubmenu:[MVConnectionsController favoritesMenu]];
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:30] setSubmenu:[JVChatController smartTranscriptMenu]];

@@ -2,7 +2,7 @@
 #import "JVJavaScriptChatPlugin.h"
 #import "JVChatWindowController.h"
 
-#import <ChatCore/MVChatConnection.h>
+#import "MVChatConnection.h"
 
 @interface WebCoreStatistics
 + (void) setShouldPrintExceptions:(BOOL) print;
