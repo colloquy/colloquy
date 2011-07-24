@@ -915,6 +915,11 @@ quickEnd:
 	[scrollView setHasHorizontalScroller:NO];
 	[scrollView setAllowsHorizontalScrolling:NO];
 
+	if ([scrollView respondsToSelector:@selector(setVerticalScrollElasticity:)]) {
+		[scrollView setVerticalScrollElasticity:NSScrollElasticityNone];
+		[scrollView setHorizontalScrollElasticity:NSScrollElasticityNone];
+	}
+
 	JVMarkedScroller *scroller = (JVMarkedScroller *)[scrollView verticalScroller];
 	if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) {
 		NSRect scrollerFrame = [[scrollView verticalScroller] frame];
