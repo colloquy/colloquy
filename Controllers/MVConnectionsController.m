@@ -55,7 +55,12 @@ static NSMenu *favoritesMenu = nil;
 
 @implementation MVConnectionsController
 + (MVConnectionsController *) defaultController {
-	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
+	if( ! sharedInstance ) {
+		sharedInstance = [self alloc];
+		sharedInstance = [sharedInstance initWithWindowNibName:nil];
+	}
+
+	return sharedInstance;
 }
 
 + (NSMenu *) favoritesMenu {

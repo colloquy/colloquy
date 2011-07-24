@@ -24,7 +24,12 @@ static NSMenu *smartTranscriptMenu = nil;
 
 @implementation JVChatController
 + (JVChatController *) defaultController {
-	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] init] ) );
+	if( ! sharedInstance ) {
+		sharedInstance = [self alloc];
+		sharedInstance = [sharedInstance init];
+	}
+
+	return sharedInstance;
 }
 
 + (NSMenu *) smartTranscriptMenu {

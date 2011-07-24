@@ -25,7 +25,12 @@ static MVBuddyListController *sharedInstance = nil;
 
 @implementation MVBuddyListController
 + (MVBuddyListController *) sharedBuddyList {
-	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
+	if( ! sharedInstance ) {
+		sharedInstance = [self alloc];
+		sharedInstance = [sharedInstance initWithWindowNibName:nil];
+	}
+
+	return sharedInstance;
 }
 
 #pragma mark -
