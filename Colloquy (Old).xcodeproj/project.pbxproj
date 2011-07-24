@@ -13,6 +13,7 @@
 		0A6571BD0868800D001FF007 /* F-Script Support.plugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 0A7F243108556AC100FA3D9B /* F-Script Support.plugin */; };
 		0A6571D40868816B001FF007 /* Standard Commands.plugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1C51B4CD052DE14B00BB459B /* Standard Commands.plugin */; };
 		0AA8117B0826E08000A3BF2D /* default.js in Resources */ = {isa = PBXBuildFile; fileRef = 0AA811220826DB8800A3BF2D /* default.js */; };
+		1C043B4B13DC8B7200B8FD9E /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1C043B4913DC8B7200B8FD9E /* Credits.rtf */; };
 		1C05E1EF08F262F500E097BC /* ColloquyScripting.r in Rez */ = {isa = PBXBuildFile; fileRef = 1C7C76ED07DBA1D000FB5F83 /* ColloquyScripting.r */; };
 		1C05F4560828727D006FCB72 /* markDisplay.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C05F4550828727D006FCB72 /* markDisplay.png */; };
 		1C06052606471FFB002438AF /* JVMixedTableColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C06052406471FFB002438AF /* JVMixedTableColumn.m */; };
@@ -94,7 +95,6 @@
 		1C710C5009F323F8007B4515 /* splitviewDividerBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C710C4E09F323F8007B4515 /* splitviewDividerBackground.png */; };
 		1C7780DE08FA1D82006AD8E5 /* JVSpeechController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7780DC08FA1D81006AD8E5 /* JVSpeechController.m */; };
 		1C77822908FA4104006AD8E5 /* topicBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77822808FA4101006AD8E5 /* topicBackground.png */; };
-		1C77830708FA4BD3006AD8E5 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F5394C070378E44D01A35792 /* Credits.rtf */; };
 		1C77831208FA4EA2006AD8E5 /* topicToggleDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */; };
 		1C77831308FA4EA2006AD8E5 /* topicToggleUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */; };
 		1C7EF54006B341890037F173 /* roomTab.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7EF53D06B341890037F173 /* roomTab.png */; };
@@ -507,6 +507,7 @@
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		1C018BF90A26930500C18024 /* Basic.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Basic.pch; sourceTree = "<group>"; };
 		1C04394607CAFC7D00304949 /* AppleScript Support.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "AppleScript Support.xcodeproj"; path = "Plug-Ins/AppleScript Support/AppleScript Support.xcodeproj"; sourceTree = "<group>"; };
+		1C043B4A13DC8B7200B8FD9E /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = Languages/English.lproj/Credits.rtf; sourceTree = "<group>"; };
 		1C05F4550828727D006FCB72 /* markDisplay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = markDisplay.png; path = Resources/markDisplay.png; sourceTree = "<group>"; };
 		1C06052306471FFB002438AF /* JVMixedTableColumn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVMixedTableColumn.h; path = Views/JVMixedTableColumn.h; sourceTree = "<group>"; };
 		1C06052406471FFB002438AF /* JVMixedTableColumn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVMixedTableColumn.m; path = Views/JVMixedTableColumn.m; sourceTree = "<group>"; };
@@ -681,7 +682,6 @@
 		1C9982050603F097006C6417 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVNotificationPreferences.nib; sourceTree = "<group>"; };
 		1C9982AC0604BA1F006C6417 /* sound.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sound.png; path = Resources/sound.png; sourceTree = "<group>"; };
 		1C9982AF0604BEAA006C6417 /* notifications.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = notifications.plist; path = Resources/notifications.plist; sourceTree = "<group>"; };
-		1C9D85190C9869DD00BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Japanese; path = Languages/Japanese.lproj/Credits.rtf; sourceTree = "<group>"; };
 		1C9D851E0C9869F000BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Languages/Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1C9D85230C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Languages/Japanese.lproj/Colloquy.nib; sourceTree = "<group>"; };
 		1C9D85240C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Languages/Japanese.lproj/JVAppearancePreferences.nib; sourceTree = "<group>"; };
@@ -706,7 +706,6 @@
 		1C9D85370C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Languages/Japanese.lproj/MVCrashCatcher.nib; sourceTree = "<group>"; };
 		1C9D85390C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Languages/Japanese.lproj/MVSoftwareUpdate.nib; sourceTree = "<group>"; };
 		1C9D853A0C986A0700BB6C58 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Languages/Japanese.lproj/TSCustomBan.nib; sourceTree = "<group>"; };
-		1C9D853F0C986A2000BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = nb; path = Languages/nb.lproj/Credits.rtf; sourceTree = "<group>"; };
 		1C9D85400C986A2000BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = Languages/nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1C9D85450C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nb; path = Languages/nb.lproj/Colloquy.nib; sourceTree = "<group>"; };
 		1C9D85460C986A2C00BB6C58 /* nb */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nb; path = Languages/nb.lproj/JVAppearancePreferences.nib; sourceTree = "<group>"; };
@@ -794,8 +793,6 @@
 		1CCA510E0598108000F0A4CD /* Colloquy.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Colloquy.scriptTerminology; path = Resources/Colloquy.scriptTerminology; sourceTree = "<group>"; };
 		1CCB279D04FE93FE00A8FE6E /* JVDirectChatPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVDirectChatPanel.h; path = Panels/JVDirectChatPanel.h; sourceTree = "<group>"; };
 		1CCB279E04FE93FE00A8FE6E /* JVDirectChatPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVDirectChatPanel.m; path = Panels/JVDirectChatPanel.m; sourceTree = "<group>"; };
-		1CD4B6CA078209450003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = German; path = Languages/German.lproj/Credits.rtf; sourceTree = "<group>"; };
-		1CD4B703078209500003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Dutch; path = Languages/Dutch.lproj/Credits.rtf; sourceTree = "<group>"; };
 		1CD4B719078209990003620F /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = Languages/German.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1CD4B71B078209A20003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = Languages/Dutch.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1CD4B71D078209B10003620F /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Languages/Dutch.lproj/Colloquy.nib; sourceTree = "<group>"; };
@@ -957,11 +954,8 @@
 		A1429C9E0901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt_PT.lproj/MVCrashCatcher.nib; sourceTree = "<group>"; };
 		A1429CA00901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt_PT.lproj/MVSoftwareUpdate.nib; sourceTree = "<group>"; };
 		A1429CA10901F59900A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_PT; path = Languages/pt_PT.lproj/TSCustomBan.nib; sourceTree = "<group>"; };
-		A1429CA20901F5C400A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Italian; path = Languages/Italian.lproj/Credits.rtf; sourceTree = "<group>"; };
 		A1429CA40901F5C400A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = Languages/Italian.lproj/Localizable.strings; sourceTree = "<group>"; };
-		A1429CA50901F5E000A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = pt_PT; path = Languages/pt_PT.lproj/Credits.rtf; sourceTree = "<group>"; };
 		A1429CA70901F5E000A7BEEE /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_PT; path = Languages/pt_PT.lproj/Localizable.strings; sourceTree = "<group>"; };
-		A15DE0400957E10F0040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = zh_TW; path = Languages/zh_TW.lproj/Credits.rtf; sourceTree = "<group>"; };
 		A15DE0420957E1490040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = Languages/zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A15DE0F60957E1B10040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh_TW.lproj/Colloquy.nib; sourceTree = "<group>"; };
 		A15DE0F70957E1B20040042E /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh_TW.lproj/JVAppearancePreferences.nib; sourceTree = "<group>"; };
@@ -1032,7 +1026,6 @@
 		A18BC9F108FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Languages/Spanish.lproj/MVCrashCatcher.nib; sourceTree = "<group>"; };
 		A18BC9F308FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Languages/Spanish.lproj/MVSoftwareUpdate.nib; sourceTree = "<group>"; };
 		A18BC9F408FF569A0005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Languages/Spanish.lproj/TSCustomBan.nib; sourceTree = "<group>"; };
-		A18BC9FC08FF57060005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Spanish; path = Languages/Spanish.lproj/Credits.rtf; sourceTree = "<group>"; };
 		A18BC9FE08FF57060005DC2D /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Spanish; path = Languages/Spanish.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A18BC9FF08FF57480005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Languages/German.lproj/JVFind.nib; sourceTree = "<group>"; };
 		A18BCA1808FF57A20005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Languages/German.lproj/JVChatTranscriptBrowserPanel.nib; sourceTree = "<group>"; };
@@ -1046,7 +1039,6 @@
 		A18BCA2008FF58610005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Languages/Dutch.lproj/JVInterfacePreferences.nib; sourceTree = "<group>"; };
 		A18BCA2108FF588E0005DC2D /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Languages/Dutch.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
 		A18BCA2208FF589D0005DC2D /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Languages/German.lproj/JVSmartTranscriptFilterSheet.nib; sourceTree = "<group>"; };
-		A1E1610109228E4F004920E8 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = French; path = Languages/French.lproj/Credits.rtf; sourceTree = "<group>"; };
 		A1E1610309228E4F004920E8 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = Languages/French.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CB66DEA00631F8160034F76E /* Keychain.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Keychain.png; path = Resources/Keychain.png; sourceTree = "<group>"; };
 		CB66DEA10631F8160034F76E /* Stickies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Stickies.png; path = Resources/Stickies.png; sourceTree = "<group>"; };
@@ -1076,7 +1068,6 @@
 		F5394BEC0378E23701A35792 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/Colloquy.nib; sourceTree = "<group>"; };
 		F5394BF00378E23701A35792 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/MVCrashCatcher.nib; sourceTree = "<group>"; };
 		F5394BF20378E23701A35792 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/MVSoftwareUpdate.nib; sourceTree = "<group>"; };
-		F5394C080378E44D01A35792 /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = Languages/English.lproj/Credits.rtf; sourceTree = "<group>"; };
 		F5394C0C0378E44D01A35792 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = Languages/English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F544999E018E46CB01EE70DE /* person.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = person.png; path = Resources/person.png; sourceTree = "<group>"; };
 		F544999F018E46CB01EE70DE /* voice.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = voice.png; path = Resources/voice.png; sourceTree = "<group>"; };
@@ -1735,7 +1726,7 @@
 				F5DD34730382E5E501000102 /* Colloquy.icns */,
 				1C5959010507803F000001C8 /* Generic.icns */,
 				F52BA284037C13C201A35792 /* GPL.txt */,
-				F5394C070378E44D01A35792 /* Credits.rtf */,
+				1C043B4913DC8B7200B8FD9E /* Credits.rtf */,
 				F5394C0B0378E44D01A35792 /* Localizable.strings */,
 				F5BC17DD019655DC01A35792 /* info.colloquy.plist */,
 				1CEC004D0A20EF95004C2B86 /* transcriptSchema.sql */,
@@ -2354,7 +2345,6 @@
 				1CE6916F08B183C7006D9CA0 /* NSTextSuite.scriptTerminology in Resources */,
 				1CE6917008B183C8006D9CA0 /* NSTextSuite.scriptSuite in Resources */,
 				1C77822908FA4104006AD8E5 /* topicBackground.png in Resources */,
-				1C77830708FA4BD3006AD8E5 /* Credits.rtf in Resources */,
 				1C77831208FA4EA2006AD8E5 /* topicToggleDown.png in Resources */,
 				1C77831308FA4EA2006AD8E5 /* topicToggleUp.png in Resources */,
 				1C6E43C40955EFD7002D22E7 /* serverWindow.png in Resources */,
@@ -2385,6 +2375,7 @@
 				9200339B13D92578005B69BA /* Colloquy.nib in Resources */,
 				9200339D13D92581005B69BA /* Colloquy.nib in Resources */,
 				9200339F13D9258A005B69BA /* Colloquy.nib in Resources */,
+				1C043B4B13DC8B7200B8FD9E /* Credits.rtf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2696,6 +2687,14 @@
 				1C9D855C0C986A2C00BB6C58 /* nb */,
 			);
 			name = TSCustomBan.nib;
+			sourceTree = "<group>";
+		};
+		1C043B4913DC8B7200B8FD9E /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1C043B4A13DC8B7200B8FD9E /* English */,
+			);
+			name = Credits.rtf;
 			sourceTree = "<group>";
 		};
 		1C0A4C980799BDAF0093B702 /* JVFind.nib */ = {
@@ -3086,23 +3085,6 @@
 				1C9D855B0C986A2C00BB6C58 /* nb */,
 			);
 			name = MVSoftwareUpdate.nib;
-			sourceTree = SOURCE_ROOT;
-		};
-		F5394C070378E44D01A35792 /* Credits.rtf */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F5394C080378E44D01A35792 /* English */,
-				1CD4B6CA078209450003620F /* German */,
-				1CD4B703078209500003620F /* Dutch */,
-				A18BC9FC08FF57060005DC2D /* Spanish */,
-				A1429CA20901F5C400A7BEEE /* Italian */,
-				A1429CA50901F5E000A7BEEE /* pt_PT */,
-				A1E1610109228E4F004920E8 /* French */,
-				A15DE0400957E10F0040042E /* zh_TW */,
-				1C9D85190C9869DD00BB6C58 /* Japanese */,
-				1C9D853F0C986A2000BB6C58 /* nb */,
-			);
-			name = Credits.rtf;
 			sourceTree = SOURCE_ROOT;
 		};
 		F5394C0B0378E44D01A35792 /* Localizable.strings */ = {
