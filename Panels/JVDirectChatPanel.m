@@ -24,11 +24,12 @@
 #import "MVFileTransferController.h"
 #import "MVMenuButton.h"
 #import "MVTextView.h"
+#import "MVApplicationController.h"
 #import "NSAttributedStringMoreAdditions.h"
 #import "NSBundleAdditions.h"
-#import "NSURLAdditions.h"
-#import "MVApplicationController.h"
 #import "NSDateAdditions.h"
+#import "NSStringAdditions.h"
+#import "NSURLAdditions.h"
 
 static NSSet *actionVerbs = nil;
 

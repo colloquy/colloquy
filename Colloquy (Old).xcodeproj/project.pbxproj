@@ -306,6 +306,9 @@
 		9200339D13D92581005B69BA /* Colloquy.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5394BEB0378E23701A35792 /* Colloquy.nib */; };
 		9200339F13D9258A005B69BA /* Colloquy.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5394BEB0378E23701A35792 /* Colloquy.nib */; };
 		9220565E11018298005CD72D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9220565D11018298005CD72D /* NSDateAdditions.m */; };
+		928FB03113EE643E00A0DF4B /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 928FB03013EE643E00A0DF4B /* NSStringAdditions.m */; };
+		928FB03413EE648400A0DF4B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 928FB03313EE648400A0DF4B /* RegexKitLite.m */; };
+		928FB03613EE64C700A0DF4B /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 928FB03513EE64C700A0DF4B /* libicucore.dylib */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
 		CB742C020630E08200CF2B0E /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = CB742C000630E08200CF2B0E /* KAIgnoreRule.m */; };
@@ -908,6 +911,11 @@
 		9200339E13D9258A005B69BA /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh_TW.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
 		9220565C11018298005CD72D /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		9220565D11018298005CD72D /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDateAdditions.m; path = Additions/NSDateAdditions.m; sourceTree = "<group>"; };
+		928FB02F13EE643E00A0DF4B /* NSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSStringAdditions.h; path = Additions/NSStringAdditions.h; sourceTree = "<group>"; };
+		928FB03013EE643E00A0DF4B /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSStringAdditions.m; path = Additions/NSStringAdditions.m; sourceTree = "<group>"; };
+		928FB03213EE648400A0DF4B /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexKitLite.h; path = "Chat Core/RegexKitLite.h"; sourceTree = "<group>"; };
+		928FB03313EE648400A0DF4B /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexKitLite.m; path = "Chat Core/RegexKitLite.m"; sourceTree = "<group>"; };
+		928FB03513EE64C700A0DF4B /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		A1429C720901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Languages/Italian.lproj/Colloquy.nib; sourceTree = "<group>"; };
 		A1429C730901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Languages/Italian.lproj/JVAppearancePreferences.nib; sourceTree = "<group>"; };
 		A1429C740901F57A00A7BEEE /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Languages/Italian.lproj/JVBehaviorPreferences.nib; sourceTree = "<group>"; };
@@ -1152,6 +1160,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				928FB03613EE64C700A0DF4B /* libicucore.dylib in Frameworks */,
 				1CB2CD79052DDC560094AAA4 /* Cocoa.framework in Frameworks */,
 				1CB2CD7B052DDC560094AAA4 /* Security.framework in Frameworks */,
 				1CB2CD7C052DDC560094AAA4 /* WebKit.framework in Frameworks */,
@@ -1240,6 +1249,7 @@
 				1CF8030D070C893500C9B54C /* libsilcclient.framework */,
 				1CF5F8D107D537E50019DC13 /* Growl.framework */,
 				1CC1AE400A2987230000A797 /* sqlite3.a */,
+				928FB03513EE64C700A0DF4B /* libicucore.dylib */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -1695,6 +1705,8 @@
 				F50B0AA20170CAD701A84BDE /* main.m */,
 				1CF6511406EA22480073DEA8 /* Colloquy.pch */,
 				1C018BF90A26930500C18024 /* Basic.pch */,
+				928FB03313EE648400A0DF4B /* RegexKitLite.m */,
+				928FB03213EE648400A0DF4B /* RegexKitLite.h */,
 				1C6A112906BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m */,
 				1C6A112806BC0C9E00A66340 /* NSAttributedStringMoreAdditions.h */,
 				1CABF8760656414100801C15 /* NSBundleAdditions.m */,
@@ -1705,6 +1717,8 @@
 				9220565C11018298005CD72D /* NSDateAdditions.h */,
 				1C0730E30677A63B008D8AD9 /* NSImageAdditions.m */,
 				1C0730E20677A63B008D8AD9 /* NSImageAdditions.h */,
+				928FB03013EE643E00A0DF4B /* NSStringAdditions.m */,
+				928FB02F13EE643E00A0DF4B /* NSStringAdditions.h */,
 				1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */,
 				1C4671E306D7759100071DC6 /* NSTextStorageAdditions.h */,
 				1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */,
@@ -2604,6 +2618,8 @@
 				891EF3D1106426CB00CCEA35 /* PFMoveApplicationController.m in Sources */,
 				9220565E11018298005CD72D /* NSDateAdditions.m in Sources */,
 				891E8467123F0AEF00EC3C0F /* NSCharacterSetAdditions.m in Sources */,
+				928FB03113EE643E00A0DF4B /* NSStringAdditions.m in Sources */,
+				928FB03413EE648400A0DF4B /* RegexKitLite.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
