@@ -2469,6 +2469,33 @@ end:
 				[self performSelector:@selector( _handleConnect ) withObject:nil inThread:_connectionThread waitUntilDone:NO];
 			[msg release];
 
+		} else if ( [sender.nickname isEqualToString:@"Global"] && [sender.username isEqualToString:@"Global"] && [sender.address isEqualToString:@"Services.GameSurge.net"] && [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) {
+			// GameSurge's Global bot sends a 'message of the day' via multiple notices after connecting:
+			/*
+			 :------------- MESSAGE(S) OF THE DAY --------------
+			 :[users] Notice from feigling, posted 05:24 PM, 07/17/2008:
+			 :GameSurge provides a new service called SpamServ which moderates your channel. If you are interested in learning more about it read http://www.gamesurge.net/cms/SpamServ
+			 :[users] Notice from GameSurge, posted 09:44 AM, 03/24/2008:
+			 :Please remember that you should never give out your AuthServ account password to anyone. Network staff will not ask you for your password, and network services will never pm you requesting it. Recently malicious users have been posing as network services using nicknames such as "Info" and requesting passwords from users. These are scams.
+			 :[users] Notice from GameSurge, posted 09:27 AM, 01/20/2007:
+			 :Please be familiar with the GameSurge Acceptable Use Policy. All users on the network are required to abide by it. http://www.gamesurge.net/aup/
+			 :---------- END OF MESSAGE(S) OF THE DAY ----------
+			 */
+
+			NSString *msg = [self _newStringWithBytes:[message bytes] length:message.length];
+
+			if ( [msg isEqualToString:@"------------- MESSAGE(S) OF THE DAY --------------"] )
+				_gamesurgeGlobalBotMOTD = YES;
+
+			if ( _gamesurgeGlobalBotMOTD ) {
+				[noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];
+
+				if ( [msg isEqualToString:@"---------- END OF MESSAGE(S) OF THE DAY ----------"] )
+					_gamesurgeGlobalBotMOTD = NO;
+			}
+
+			[msg release];
+
 		} else if( [[sender nickname] isEqualToString:@"NickServ"] || [[sender nickname] isEqualToString:@"ChanServ"] ||
 		   ( [[sender nickname] isEqualToString:@"Q"] && [[self server] hasCaseInsensitiveSubstring:@"quakenet"] ) ||
 		   ( [[sender nickname] isEqualToString:@"X"] && [[self server] hasCaseInsensitiveSubstring:@"undernet"] ) ||

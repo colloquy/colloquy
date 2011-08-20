@@ -33,6 +33,7 @@
 	BOOL _sentEndCapabilityCommand;
 	BOOL _pendingIdentificationAttempt;
 	NSMutableArray *_umichNoIdentdCaptcha;
+	BOOL _gamesurgeGlobalBotMOTD;
 	NSString *_failedNickname;
 	NSInteger _failedNicknameCount;
 	BOOL _nicknameShortened;
