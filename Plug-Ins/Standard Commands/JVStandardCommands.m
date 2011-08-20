@@ -529,13 +529,14 @@
 - (BOOL) handlePartWithArguments:(NSString *) arguments forConnection:(MVChatConnection *) connection {
 	NSArray *args = [arguments componentsSeparatedByString:@" "];
 	NSArray *channels = [[args objectAtIndex:0] componentsSeparatedByString:@","];
+	
+	NSString *message = [[args subarrayWithRange:NSMakeRange(1, args.count - 1)] componentsJoinedByString:@" "];
+	NSAttributedString *reason = [[[NSAttributedString alloc] initWithString:message] autorelease];
 
 	if( channels.count == 1 ) {
-		[[connection joinedChatRoomWithName:[channels lastObject]] part];
+		[[connection joinedChatRoomWithName:[channels lastObject]] partWithReason:reason];
 		return YES;
 	} else if( channels.count > 1 ) {
-		NSString *message = [[args subarrayWithRange:NSMakeRange(1, args.count - 1)] componentsJoinedByString:@" "];
-		NSAttributedString *reason = [[[NSAttributedString alloc] initWithString:message] autorelease];
 
 		for( NSString *channel in channels ) {
 			//channel = [channel stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
