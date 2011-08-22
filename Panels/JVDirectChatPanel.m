@@ -1328,6 +1328,14 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		if ([name hasCaseInsensitivePrefix:prefix])
 			[possibleCompletion addObject:name];
 
+	for ( MVChatRoom* room in self.connection.knownChatRooms )
+	{
+		if ( [room.uniqueIdentifier hasCaseInsensitivePrefix:prefix] )
+			[possibleCompletion addObject:room.uniqueIdentifier];
+		if ( [room.displayName hasCaseInsensitivePrefix:prefix] )
+			[possibleCompletion addObject:room.displayName];
+	}
+
 	return possibleCompletion;
 }
 
