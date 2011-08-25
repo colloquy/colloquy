@@ -700,7 +700,7 @@ static BOOL applicationIsTerminating = NO;
 
 - (void) updateDockTile {
 	if ( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowDockBadge"] ) {
-		unsigned int totalHighlightCount = 0;
+		NSUInteger totalHighlightCount = 0;
 
 		for( JVChatRoomPanel *room in [[JVChatController defaultController] chatViewControllersOfClass:[JVChatRoomPanel class]] )
 			totalHighlightCount += [room newHighlightMessagesWaiting];
@@ -708,11 +708,12 @@ static BOOL applicationIsTerminating = NO;
 		for( JVChatRoomPanel *directChat in [[JVChatController defaultController] chatViewControllersOfClass:[JVDirectChatPanel class]] )
 			totalHighlightCount += [directChat newMessagesWaiting];
 
-		[[NSApp dockTile] setBadgeLabel:( totalHighlightCount == 0 ? nil : [NSString stringWithFormat:@"%u", totalHighlightCount] )];
+		[[NSApp dockTile] setBadgeLabel:( totalHighlightCount == 0 ? nil : [[NSNumber numberWithUnsignedInteger:totalHighlightCount] stringValue] )];
 		[[NSApp dockTile] display];
 	} else {
 		[[NSApp dockTile] setBadgeLabel:nil];
 		[[NSApp dockTile] display];
 	}
 }
+
 @end
