@@ -460,6 +460,10 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[items release];
 }
 
+- (BOOL) splitViewController:(UISplitViewController *) splitViewController shouldHideViewController:(UIViewController *) viewController inOrientation:(UIInterfaceOrientation) interfaceOrientation {
+	return NO;
+}
+
 #pragma mark -
 
 - (void) showActionSheet:(UIActionSheet *) sheet {
