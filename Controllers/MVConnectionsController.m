@@ -1626,6 +1626,8 @@ static NSMenu *favoritesMenu = nil;
 			[data setObject:[NSNumber numberWithBool:[[info objectForKey:@"automatic"] boolValue]] forKey:@"automatic"];
 			[data setObject:[NSNumber numberWithBool:[[info objectForKey:@"showConsole"] boolValue]] forKey:@"showConsole"];
 			[data setObject:[NSNumber numberWithBool:[connection isSecure]] forKey:@"secure"];
+			[data setObject:[NSNumber numberWithBool:connection.requestsSASL] forKey:@"requestsSASL"];
+			[data setObject:[NSNumber numberWithBool:connection.roomsWaitForIdentification] forKey:@"roomsWaitForIdentification"];
 			[data setObject:[NSNumber numberWithLong:[connection proxyType]] forKey:@"proxy"];
 			[data setObject:[NSNumber numberWithLong:[connection encoding]] forKey:@"encoding"];
 			[data setObject:[connection uniqueIdentifier] forKey:@"uniqueIdentifier"];
@@ -1736,8 +1738,10 @@ static NSMenu *favoritesMenu = nil;
 		}
 
 		[info setObject:permIgnores forKey:@"ignores"];
-
+		
 		[connection setSecure:[[info objectForKey:@"secure"] boolValue]];
+		connection.requestsSASL = [[info objectForKey:@"requestsSASL"] boolValue];
+		connection.roomsWaitForIdentification = [[info objectForKey:@"roomsWaitForIdentification"] boolValue];
 
 		[info setObject:connection forKey:@"connection"];
 
@@ -1960,7 +1964,7 @@ static NSMenu *favoritesMenu = nil;
 		}
 	}
 
-	if( [[connection nicknamePassword] length] && [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinWaitsForIdentification"] )
+	if( [[connection nicknamePassword] length] && [connection roomsWaitForIdentification] )
 		[self _autoJoinRoomsForConnection:connection];
 }
 
@@ -2017,7 +2021,7 @@ static NSMenu *favoritesMenu = nil;
 		}
 	}
 
-	if( ![[connection nicknamePassword] length] || ( [[connection nicknamePassword] length] && ![[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoJoinWaitsForIdentification"] ) )
+	if( ![[connection nicknamePassword] length] || ( [[connection nicknamePassword] length] && ![connection roomsWaitForIdentification] ) )
 		[self _autoJoinRoomsForConnection:connection];
 }
 

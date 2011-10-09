@@ -592,6 +592,16 @@ static void reachabilityCallback( SCNetworkReachabilityRef target, SCNetworkConn
 
 #pragma mark -
 
+- (void) setRoomsWaitForIdentification:(BOOL)roomsWaitForIdentification {
+	_roomsWaitForIdentification = roomsWaitForIdentification;
+}
+
+- (BOOL) roomsWaitForIdentification {
+	return _roomsWaitForIdentification;
+}
+
+#pragma mark -
+
 - (void) setProxyType:(MVChatConnectionProxy) newType {
 	_proxy = newType;
 }

@@ -29,6 +29,8 @@
 	IBOutlet NSButton *editRemoveRoom;
 	IBOutlet NSTextView *connectCommands;
 	IBOutlet NSButton *sslConnection;
+	IBOutlet NSButton *attemptSASLCheckbox;
+	IBOutlet NSButton *roomsWaitForIdentificationCheckbox;
 
 	IBOutlet NSTableView *editRules;
 	IBOutlet NSPanel *ruleSheet;
@@ -68,6 +70,8 @@
 - (IBAction) toggleAutoConnect:(id) sender;
 - (IBAction) toggleShowConsoleOnConnect:(id) sender;
 - (IBAction) toggleSSLConnection:(id) sender;
+- (IBAction) toggleAttemptSASL:(id)sender;
+- (IBAction) toggleRoomsWaitForIdentification:(id)sender;
 - (IBAction) changeProxy:(id) sender;
 
 - (IBAction) addRoom:(id) sender;

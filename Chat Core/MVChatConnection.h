@@ -153,6 +153,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 	BOOL _secure;
 	BOOL _requestsSASL;
+	BOOL _roomsWaitForIdentification;
 	BOOL _roomListDirty;
 	BOOL _userDisconnected;
 
@@ -214,6 +215,7 @@ extern NSString *MVChatConnectionErrorDomain;
 
 @property(getter=isSecure) BOOL secure;
 @property BOOL requestsSASL;
+@property BOOL roomsWaitForIdentification;
 
 @property(copy) NSDictionary *persistentInformation;
 

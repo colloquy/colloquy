@@ -51,7 +51,7 @@
 }
 
 - (NSSize) minSize {
-	return NSMakeSize( 275., 338. );
+	return NSMakeSize( 284., 338. );
 }
 
 - (NSString *) title {
@@ -70,6 +70,8 @@
 	[editAutomatic setState:[[MVConnectionsController defaultController] autoConnectForConnection:_connection]];
 	[editShowConsoleOnConnect setState:[[MVConnectionsController defaultController] showConsoleOnConnectForConnection:_connection]];
 	[sslConnection setState:[_connection isSecure]];
+	[attemptSASLCheckbox setState:_connection.requestsSASL];
+	[roomsWaitForIdentificationCheckbox setState:_connection.roomsWaitForIdentification];
 	[editAddress setObjectValue:[_connection server]];
 	[editProxy selectItemAtIndex:[editProxy indexOfItemWithTag:[_connection proxyType]]];
 	[editPort setIntValue:[_connection serverPort]];
@@ -197,6 +199,16 @@
 
 - (IBAction) toggleSSLConnection:(id) sender {
 	[_connection setSecure:[sender state]];
+}
+
+- (IBAction) toggleAttemptSASL:(id)sender
+{
+	_connection.requestsSASL = [sender state];
+}
+
+- (IBAction) toggleRoomsWaitForIdentification:(id)sender
+{
+	_connection.roomsWaitForIdentification = [sender state];
 }
 
 - (IBAction) changeProxy:(id) sender {
