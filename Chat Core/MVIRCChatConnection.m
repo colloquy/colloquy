@@ -2050,6 +2050,7 @@ end:
 		[authenticateData appendData:[self.nicknamePassword dataUsingEncoding:self.encoding allowLossyConversion:YES]];
 
 		NSString *authString = [authenticateData base64EncodingWithLineLength:400];
+		[authenticateData release];
 
 		NSArray *authStrings = [authString componentsSeparatedByString:@"\n"];
 		for( NSString *string in authStrings )
