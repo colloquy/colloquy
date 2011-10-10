@@ -1,6 +1,5 @@
 #import "CQChatUserListViewController.h"
 
-#import "CQActionSheet.h"
 #import "CQChatController.h"
 #import "CQColloquyApplication.h"
 #import "CQChatRoomController.h"
@@ -436,10 +435,11 @@ static NSString *membersFilteredCountFormat;
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 
-	CQActionSheet *sheet = [[CQActionSheet alloc] init];
+	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.tag = UserActionSheetTag;
 	sheet.delegate = self;
-	sheet.userInfo = cell;
+
+	[sheet associateObject:cell forKey:@"userInfo"];
 
 	NSUInteger localUserModes = (_room.connection.localUser ? [_room modesForMemberUser:_room.connection.localUser] : 0);
 	BOOL showOperatorActions = (localUserModes & (MVChatRoomMemberHalfOperatorMode | MVChatRoomMemberOperatorMode | MVChatRoomMemberAdministratorMode | MVChatRoomMemberFounderMode));
@@ -460,7 +460,7 @@ static NSString *membersFilteredCountFormat;
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sheet.userInfo animated:YES];
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:[sheet associatedObjectForKey:@"userInfo"] animated:YES];
 
 	[sheet release];
 }
@@ -540,10 +540,11 @@ static NSString *membersFilteredCountFormat;
 
 			NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 
-			CQActionSheet *operatorSheet = [[CQActionSheet alloc] init];
+			UIActionSheet *operatorSheet = [[UIActionSheet alloc] init];
 			operatorSheet.tag = OperatorActionSheetTag;
 			operatorSheet.delegate = self;
-			operatorSheet.userInfo = context;
+
+			[operatorSheet associateObject:context forKey:@"userInfo"];
 
 			operatorSheet.title = actionSheet.title;
 
@@ -603,7 +604,7 @@ static NSString *membersFilteredCountFormat;
 
 			operatorSheet.cancelButtonIndex = [operatorSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-			[[CQColloquyApplication sharedApplication] showActionSheet:operatorSheet forSender:((CQActionSheet *)actionSheet).userInfo animated:YES];
+			[[CQColloquyApplication sharedApplication] showActionSheet:operatorSheet forSender:[actionSheet associatedObjectForKey:@"userInfo"] animated:YES];
 
 			[operatorSheet release];
 			[context release];
@@ -611,7 +612,7 @@ static NSString *membersFilteredCountFormat;
 	} else if (actionSheet.tag == OperatorActionSheetTag) {
 		[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
 
-		id action = [((CQActionSheet *)actionSheet).userInfo objectForKey:[NSNumber numberWithUnsignedInteger:buttonIndex]];
+		id action = [[actionSheet associatedObjectForKey:@"userInfo"] objectForKey:[NSNumber numberWithUnsignedInteger:buttonIndex]];
 
 		if ([action isKindOfClass:[NSNumber class]]) {
 			MVChatRoomMemberMode mode = ([action unsignedIntegerValue] & 0x7FFF);

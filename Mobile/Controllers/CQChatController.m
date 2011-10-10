@@ -1,6 +1,5 @@
 #import "CQChatController.h"
 
-#import "CQActionSheet.h"
 #import "CQAlertView.h"
 #import "CQChatCreationViewController.h"
 #import "CQChatListViewController.h"
@@ -347,13 +346,13 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	CQAlertView *alert = [[CQAlertView alloc] init];
 	alert.tag = ChatRoomInviteAlertTag;
-	alert.userInfo = room;
 	alert.delegate = self;
 	alert.title = NSLocalizedString(@"Invited to Room", "Invited to room alert title");
 	alert.message = message;
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
+	[alert associateObject:room forKey:@"userInfo"];
 	[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join button title")];
 
 	if (vibrateOnHighlight)
@@ -370,7 +369,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 #pragma mark -
 
 - (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
-	id userInfo = ((CQAlertView *)alertView).userInfo;
+	id userInfo = [alertView associatedObjectForKey:@"userInfo"];
 
 	if (buttonIndex == alertView.cancelButtonIndex) {
 #if ENABLE(FILE_TRANSFERS)
@@ -416,7 +415,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		[creationViewController release];
 	} else if (actionSheet.tag == NewConnectionActionSheetTag) {
 		if (buttonIndex == 0) {
-			[[CQConnectionsController defaultController] showNewConnectionPrompt:((CQActionSheet *)actionSheet).userInfo];
+			[[CQConnectionsController defaultController] showNewConnectionPrompt:[actionSheet associatedObjectForKey:@"userInfo"]];
 		} else if (buttonIndex == 1) {
 			[self joinSupportRoom];
 		}
@@ -573,9 +572,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 #pragma mark -
 
 - (void) showNewChatActionSheet:(id) sender {
-	CQActionSheet *sheet = [[CQActionSheet alloc] init];
+	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
-	sheet.userInfo = sender;
+
+	[sheet associateObject:sender forKey:@"userInfo"];
 
 	if ([CQConnectionsController defaultController].connections.count) {
 		sheet.tag = NewChatActionSheetTag;

@@ -2,7 +2,6 @@
 
 #import "CQColloquyApplication.h"
 #import "CQPreferencesListViewController.h"
-#import "CQActionSheet.h"
 #import "CQTextView.h"
 
 #import "MVChatUser.h"
@@ -115,9 +114,9 @@
 	if ([self statusIsDefaultAwayStatus:cell.textLabel.text])
 		return;
 
-	CQActionSheet *awayStatusActionSheet = [[CQActionSheet alloc] init];
+	UIActionSheet *awayStatusActionSheet = [[UIActionSheet alloc] init];
 	awayStatusActionSheet.delegate = self;
-	awayStatusActionSheet.userInfo = cell;
+	[awayStatusActionSheet associateObject:cell forKey:@"userInfo"];
 
 	[awayStatusActionSheet addButtonWithTitle:NSLocalizedString(@"Make Default", @"Make Default button title")];
 
@@ -208,7 +207,7 @@
 	if (buttonIndex == actionSheet.destructiveButtonIndex)
 		return;
 	
-	UITableViewCell *cell = ((CQActionSheet *)actionSheet).userInfo;
+	UITableViewCell *cell = [actionSheet associatedObjectForKey:@"userInfo"];
 	NSString *awayStatus = cell.textLabel.text;
 
 	[[NSUserDefaults standardUserDefaults] setObject:awayStatus forKey:@"CQAwayStatus"];

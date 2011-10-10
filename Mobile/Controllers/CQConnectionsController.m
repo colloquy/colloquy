@@ -257,13 +257,13 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		return;
 
 	if (alertView.tag == CannotConnectToBouncerConnectionTag) {
-		MVChatConnection *connection = ((CQAlertView *)alertView).userInfo;
+		MVChatConnection *connection = [alertView associatedObjectForKey:@"userInfo"];
 		[connection connectDirectly];
 		return;
 	}
 
 	if (alertView.tag == CannotConnectToBouncerTag) {
-		CQBouncerSettings *settings = ((CQAlertView *)alertView).userInfo;
+		CQBouncerSettings *settings = [alertView associatedObjectForKey:@"userInfo"];
 		[_connectionsNavigationController editBouncer:settings];
 		[[CQColloquyApplication sharedApplication] showConnections:nil];
 		return;
@@ -275,7 +275,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	}
 
 	if (alertView.tag == NextAlertTag) {
-		UIAlertView *nextAlertView = ((CQAlertView *)alertView).userInfo;
+		UIAlertView *nextAlertView = [alertView associatedObjectForKey:@"userInfo"];
 		[nextAlertView show];
 		return;
 	}
@@ -284,7 +284,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		UITextField *passwordField = [alertView performPrivateSelector:@"textField"];
 		NSString *password = passwordField.text;
 
-		NSNotification *notification = ((CQAlertView *)alertView).userInfo;
+		NSNotification *notification = [alertView associatedObjectForKey:@"userInfo"];
 		NSError *error = [notification.userInfo objectForKey:@"error"];
 		MVChatConnection *connection = notification.object;
 		NSString *room = [error.userInfo objectForKey:@"room"];
@@ -404,13 +404,13 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		CQAlertView *alert = [[CQAlertView alloc] init];
 
 		alert.tag = CannotConnectToBouncerTag;
-		alert.userInfo = connection.settings;
 		alert.delegate = self;
 		alert.title = NSLocalizedString(@"Can't Connect to Bouncer", @"Can't Connect to Bouncer alert title");
 		alert.message = [NSString stringWithFormat:NSLocalizedString(@"Can't connect to the bouncer \"%@\". Check the bouncer settings and try again.", @"Can't connect to bouncer alert message"), connection.settings.displayName];
 
 		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
+		[alert associateObject:connection.settings forKey:@"userInfo"];
 		[alert addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings alert button title")];
 
 		[alert show];
@@ -828,7 +828,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[alert addButtonWithTitle:NSLocalizedString(@"Help", @"Help button title")];
 	} else {
 		alert.tag = CannotConnectToBouncerConnectionTag;
-		alert.userInfo = connection;
 		alert.delegate = self;
 
 		alert.title = NSLocalizedString(@"Can't Connect to Bouncer", @"Can't Connect to Bouncer alert title");
@@ -836,6 +835,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
+		[alert associateObject:connection forKey:@"userInfo"];
 		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
 	}
 
@@ -966,9 +966,10 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 			nextAlertView.delegate = self;
 			nextAlertView.title = NSLocalizedString(@"Serivces Password", @"Serivces Password alert title");
 			nextAlertView.message = connection.displayName;
-			nextAlertView.userInfo = notification;
 
 			nextAlertView.cancelButtonIndex = [nextAlertView addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+
+			[nextAlertView associateObject:notification	forKey:@"userInfo"];
 			[nextAlertView addButtonWithTitle:NSLocalizedString(@"Identify", @"Identify button title")];
 
 			[nextAlertView addSecureTextFieldWithPlaceholder:NSLocalizedString(@"Password", @"Password placeholder")];
@@ -999,13 +1000,13 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	alert.delegate = self;
 	alert.title = errorTitle;
 	alert.message = errorMessage;
-	alert.userInfo = userInfo;
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
 	if (placeholder.length)
 		[alert addSecureTextFieldWithPlaceholder:placeholder];
 
+	[alert associateObject:userInfo forKey:@"userInfo"];
 	[alert addButtonWithTitle:buttonTitle];
 
 	[alert show];

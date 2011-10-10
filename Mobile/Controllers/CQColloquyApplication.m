@@ -721,11 +721,11 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		else alert.title = NSLocalizedString(@"Open Link?", @"Open link alert title");
 
 		alert.message = NSLocalizedString(@"Opening this link will close Colloquy.", @"Opening link alert message");
-		alert.userInfo = url;
 		alert.delegate = self;
 
 		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
+		[alert associateObject:url forKey:@"userInfo"];
 		[alert addButtonWithTitle:NSLocalizedString(@"Open", @"Open button title")];
 
 		[alert show];
@@ -752,7 +752,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (alertView.tag != BrowserAlertTag || alertView.cancelButtonIndex == buttonIndex)
 		return;
-	[super openURL:((CQAlertView *)alertView).userInfo];
+	[super openURL:[alertView associatedObjectForKey:@"userInfo"]];
 }
 
 #pragma mark -

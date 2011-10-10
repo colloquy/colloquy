@@ -13,4 +13,7 @@
 #endif
 
 - (BOOL) performPrivateSelectorReturningBoolean:(NSString *) selectorString;
+
+- (void) associateObject:(id) object forKey:(void *) key;
+- (id) associatedObjectForKey:(void *) key;
 @end

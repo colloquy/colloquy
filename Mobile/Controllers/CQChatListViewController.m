@@ -1,6 +1,5 @@
 #import "CQChatListViewController.h"
 
-#import "CQActionSheet.h"
 #import "CQBouncerSettings.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
@@ -601,7 +600,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		return;
 	}
 
-	CQTableViewSectionHeader *header = ((CQActionSheet *)actionSheet).userInfo;
+	CQTableViewSectionHeader *header = [actionSheet associatedObjectForKey:@"userInfo"];
 
 	header.selected = NO;
 
@@ -650,9 +649,10 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 	header.selected = YES;
 
-	CQActionSheet *sheet = [[CQActionSheet alloc] init];
+	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
-	sheet.userInfo = header;
+
+	[sheet associateObject:header forKey:@"userInfo"];
 
 	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		sheet.title = connection.displayName;

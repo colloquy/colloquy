@@ -1,6 +1,7 @@
 #import "NSObjectAdditions.h"
 
 #import <objc/message.h>
+#import <objc/runtime.h>
 
 #if ENABLE(SECRETS)
 #define SAFE_PERFORM_BASE(function, cast, arguments, defaultValue) \
@@ -62,5 +63,15 @@
 
 - (BOOL) performPrivateSelectorReturningBoolean:(NSString *) selectorString {
 	SAFE_PERFORM((BOOL (*)(id, SEL)), (self, selector), NO);
+}
+
+#pragma mark -
+
+- (void) associateObject:(id) object forKey:(void *) key {
+	objc_setAssociatedObject(self, key, object, OBJC_ASSOCIATION_RETAIN);
+}
+
+- (id) associatedObjectForKey:(void *) key {
+	return objc_getAssociatedObject(self, key);
 }
 @end

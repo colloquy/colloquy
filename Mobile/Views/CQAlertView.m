@@ -10,16 +10,6 @@
 	return self;
 }
 
-- (void) dealloc {
-	[_userInfo release];
-
-	[super dealloc];
-}
-
-#pragma mark -
-
-@synthesize userInfo = _userInfo;
-
 #pragma mark -
 
 - (void) addTextFieldWithPlaceholder:(NSString *) placeholder andText:(NSString *) text {

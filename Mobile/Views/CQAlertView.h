@@ -1,9 +1,4 @@
-@interface CQAlertView : UIAlertView {
-	id _userInfo;
-}
-
-@property (nonatomic, retain) id userInfo;
-
+@interface CQAlertView : UIAlertView
 - (void) addTextFieldWithPlaceholder:(NSString *) placeholder andText:(NSString *) text;
 - (void) addSecureTextFieldWithPlaceholder:(NSString *) placeholder;
 @end
