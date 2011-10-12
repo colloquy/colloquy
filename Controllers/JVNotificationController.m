@@ -28,7 +28,7 @@ static JVNotificationController *sharedInstance = nil;
 		_bubbles = [[NSMutableDictionary dictionary] retain];
 		_sounds = [[NSMutableDictionary alloc] init];
 
-		_useGrowl = ( GrowlApplicationBridge && [GrowlApplicationBridge isGrowlInstalled] && ! [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] );
+		_useGrowl = ( GrowlApplicationBridge && ! [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] );
 
 		if( _useGrowl ) [GrowlApplicationBridge setGrowlDelegate:self];
 	}
