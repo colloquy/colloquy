@@ -17,7 +17,6 @@
 		1C0937820D8116FC00A2705D /* CQChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937800D8116FC00A2705D /* CQChatController.m */; };
 		1C0938950D813A6B00A2705D /* CQDirectChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937EB0D8126D400A2705D /* CQDirectChatController.m */; };
 		1C0938960D813A6C00A2705D /* CQChatRoomController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937ED0D8126D400A2705D /* CQChatRoomController.m */; };
-		1C0DBC7F100569E7003BEEF3 /* CQActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0DBC7E100569E7003BEEF3 /* CQActionSheet.m */; };
 		1C0DBCA91005A57A003BEEF3 /* CQProcessChatMessageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0DBCA81005A57A003BEEF3 /* CQProcessChatMessageOperation.m */; };
 		1C0EB67A0D8660E900B6F1BC /* errorBadgeDim.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0EB6780D8660E900B6F1BC /* errorBadgeDim.png */; };
 		1C0F686B0F144DBE002BB855 /* bubbles.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F686A0F144DBE002BB855 /* bubbles.css */; };
@@ -263,8 +262,6 @@
 		1C0937EC0D8126D400A2705D /* CQDirectChatController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQDirectChatController.h; sourceTree = "<group>"; };
 		1C0937ED0D8126D400A2705D /* CQChatRoomController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatRoomController.m; sourceTree = "<group>"; };
 		1C0937EE0D8126D400A2705D /* CQChatRoomController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatRoomController.h; sourceTree = "<group>"; };
-		1C0DBC7D100569E7003BEEF3 /* CQActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQActionSheet.h; sourceTree = "<group>"; };
-		1C0DBC7E100569E7003BEEF3 /* CQActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQActionSheet.m; sourceTree = "<group>"; };
 		1C0DBCA71005A57A003BEEF3 /* CQProcessChatMessageOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQProcessChatMessageOperation.h; sourceTree = "<group>"; };
 		1C0DBCA81005A57A003BEEF3 /* CQProcessChatMessageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQProcessChatMessageOperation.m; sourceTree = "<group>"; };
 		1C0EB6780D8660E900B6F1BC /* errorBadgeDim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = errorBadgeDim.png; sourceTree = "<group>"; };
@@ -891,8 +888,6 @@
 		1C82C18D0D83CEFE009ABD9F /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				1C0DBC7E100569E7003BEEF3 /* CQActionSheet.m */,
-				1C0DBC7D100569E7003BEEF3 /* CQActionSheet.h */,
 				1CBEA7341002CC5C00546847 /* CQAlertView.m */,
 				1CBEA7331002CC5C00546847 /* CQAlertView.h */,
 				1CE69FD80EE317F200389442 /* CQChatInputBar.m */,
@@ -1437,7 +1432,6 @@
 				1C16F77F0FFF049F008D7BB3 /* CQBouncerCreationViewController.m in Sources */,
 				1C16F79B0FFF0789008D7BB3 /* CQBouncerEditViewController.m in Sources */,
 				1CBEA7351002CC5C00546847 /* CQAlertView.m in Sources */,
-				1C0DBC7F100569E7003BEEF3 /* CQActionSheet.m in Sources */,
 				1C0DBCA91005A57A003BEEF3 /* CQProcessChatMessageOperation.m in Sources */,
 				1C34A4981016C73800BAA714 /* CQChatRoomInfoTableCell.m in Sources */,
 				1C34A4A71016CC2500BAA714 /* CQChatRoomListViewController.m in Sources */,
