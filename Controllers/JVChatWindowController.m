@@ -725,6 +725,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self _saveWindowFrame];
 }
 
+- (NSApplicationPresentationOptions) window:(NSWindow *) window willUseFullScreenPresentationOptions:(NSApplicationPresentationOptions) proposedOptions {
+	return (proposedOptions | NSApplicationPresentationAutoHideToolbar);
+}
+
 #pragma mark -
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) identifier willBeInsertedIntoToolbar:(BOOL) willBeInserted {
