@@ -164,17 +164,23 @@ static NSURL *lastURL;
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
-#if ENABLE(SECRECTS)
-	alert.title = NSLocalizedString(@"Instapaper Login", "Instapaper Login alert title");
-
-	[alert addButtonWithTitle:NSLocalizedString(@"Login", @"Login button title")];
-
-	[alert addTextFieldWithPlaceholder:NSLocalizedString(@"Username", @"Username textfield placeholder") andText:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQInstapaperUsername"]];
-	[alert addTextFieldWithPlaceholder:NSLocalizedString(@"Password (Optional)", @"Password (Optional) textfield placeholder") andText:nil];
+#if ENABLE(SECRETS)
+	BOOL secretsEnabled = YES;
 #else
-	alert.title = NSLocalizedString(@"No Instapaper Username", "No Instapaper username alert title");
-	alert.message = NSLocalizedString(@"You need to enter an Instapaper username in Colloquy's Settings.", "No Instapaper username alert message");
+	BOOL secretsEnabled = NO;
 #endif
+
+	if (secretsEnabled || [[UIDevice currentDevice] isSystemFive]) {
+		alert.title = NSLocalizedString(@"Instapaper Login", "Instapaper Login alert title");
+
+		[alert addButtonWithTitle:NSLocalizedString(@"Login", @"Login button title")];
+
+		[alert addTextFieldWithPlaceholder:NSLocalizedString(@"Username", @"Username textfield placeholder") andText:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQInstapaperUsername"]];
+		[alert addSecureTextFieldWithPlaceholder:NSLocalizedString(@"Password (Optional)", @"Password (Optional) textfield placeholder")];
+	} else {
+		alert.title = NSLocalizedString(@"No Instapaper Username", "No Instapaper username alert title");
+		alert.message = NSLocalizedString(@"You need to enter an Instapaper username in Colloquy's Settings.", "No Instapaper username alert message");
+	}
 
 	[alert show];
 
