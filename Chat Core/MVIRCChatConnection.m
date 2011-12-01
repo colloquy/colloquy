@@ -2301,6 +2301,65 @@ end:
 #pragma mark -
 #pragma mark Incoming Message Replies
 
+- (MVChatRoom*) _chatRoomFromMessageTarget:(NSString*)messageTarget
+{
+	// a room identifier consists of a chatroom prefix (for example #&+!) and the room name: #room
+	// additionally it can be pre-prefixed in PRIVMSG or NOTICE with a nickname prefix (for example @+), indicating a room message, that is only visible to room members with that user status: @#room
+	// some characters can occur in both groups (for example +), this was confusing the old code: +room
+
+	/*
+	 incomplete list of examples:
+	 regular rooms
+	 #room			#room
+	 @#room		@	#room
+	 +#room		+	#room <- could also be a double prefix, but unlikely
+	 @+#room	@+	#room
+	 rooms prefixed with + (no user modes). filtered messages are very unlikely here
+	 +room			+room
+	 @+room		@	+room
+	 ++room		+	+room <- could also be a double prefix, but unlikely
+	 @++room	@+	+room
+	 double room prefix (freenode)
+	 ##room			##room
+	 @##room	@	##room
+	 +##room	+	##room
+	 @+##room	@+	##room
+	 */
+
+	MVChatRoom *room = nil;
+
+	NSMutableCharacterSet* allPrefixesCharacterSet = [[self chatRoomNamePrefixes] mutableCopy];					// @+#
+	[allPrefixesCharacterSet formUnionWithCharacterSet:[self _nicknamePrefixes]];
+	NSMutableCharacterSet* ambiguousPrefixesCharacterSet = [[self chatRoomNamePrefixes] mutableCopy];			// +
+	[ambiguousPrefixesCharacterSet formIntersectionWithCharacterSet:[self _nicknamePrefixes]];
+	NSMutableCharacterSet* roomPrefixesCharacterSet = [[self chatRoomNamePrefixes] mutableCopy];				// #
+	[roomPrefixesCharacterSet formIntersectionWithCharacterSet:[ambiguousPrefixesCharacterSet invertedSet]];
+	NSMutableCharacterSet* nickPrefixesCharacterSet = [[self _nicknamePrefixes] mutableCopy];					// @
+	[nickPrefixesCharacterSet formIntersectionWithCharacterSet:[ambiguousPrefixesCharacterSet invertedSet]];
+
+	while ( !room && [messageTarget length] >= 1 ) {
+		// if the first char of the messageTarget is a nick prefix OR if the first char is ambiguous and the second char is also a prefix: remove the first char and repeat
+		if ( [nickPrefixesCharacterSet characterIsMember:[messageTarget characterAtIndex:0]] ||
+			( [ambiguousPrefixesCharacterSet characterIsMember:[messageTarget characterAtIndex:0]] && [messageTarget length] >= 2 && [allPrefixesCharacterSet characterIsMember:[messageTarget characterAtIndex:1]] ) )
+			messageTarget = [messageTarget substringFromIndex:1];
+		// if the first char is a room prefix OR the first char is ambiguous and the target has no further chars or no further prefix chars: use this string as unique identifier, end the loop
+		else if ( [roomPrefixesCharacterSet characterIsMember:[messageTarget characterAtIndex:0]] ||
+				 ( [ambiguousPrefixesCharacterSet characterIsMember:[messageTarget characterAtIndex:0]] && ( [messageTarget length] < 2 || ( [messageTarget length] >= 2 && ![allPrefixesCharacterSet characterIsMember:[messageTarget characterAtIndex:1]] ) ) ) )
+			room = [self chatRoomWithUniqueIdentifier:messageTarget];
+		// first char is not nick or room or ambiguous: not a room identifier, end the loop
+		else
+			break;
+	}
+
+	[allPrefixesCharacterSet release];
+	[ambiguousPrefixesCharacterSet release];
+	[roomPrefixesCharacterSet release];
+	[nickPrefixesCharacterSet release];
+
+	return room;
+}
+
+
 - (void) _handlePrivmsg:(NSMutableDictionary *) privmsgInfo {
 #if ENABLE(PLUGINS)
 	MVAssertMainThreadRequired();
@@ -2347,30 +2406,20 @@ end:
 		NSString *targetName = [parameters objectAtIndex:0];
 		if( ! targetName.length ) return;
 
-		NSScanner *scanner = [NSScanner scannerWithString:targetName];
-		[scanner setCharactersToBeSkipped:nil];
-		[scanner scanCharactersFromSet:[self _nicknamePrefixes] intoString:NULL];
-
-		NSString *roomTargetName = targetName;
-		if( [scanner scanLocation] )
-			roomTargetName = [targetName substringFromIndex:[scanner scanLocation]];
-
-		NSMutableData *msgData = [parameters objectAtIndex:1];
-		const char *bytes = (const char *)[msgData bytes];
-		BOOL ctcp = ( *bytes == '\001' && msgData.length > 2 );
-
 		[sender _setIdleTime:0.];
 		[self _markUserAsOnline:sender];
 
-		MVChatRoom *room = nil;
-		if( roomTargetName.length >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
-			room = [self chatRoomWithUniqueIdentifier:roomTargetName];
+		MVChatRoom *room = [self _chatRoomFromMessageTarget:targetName];
 
 		MVChatUser *targetUser = nil;
 		if( !room ) targetUser = [self chatUserWithUniqueIdentifier:targetName];
 
 		id target = room;
 		if( !target ) target = targetUser;
+
+		NSMutableData *msgData = [parameters objectAtIndex:1];
+		const char *bytes = (const char *)[msgData bytes];
+		BOOL ctcp = ( *bytes == '\001' && msgData.length > 2 );
 
 		if( ctcp ) {
 			[self _handleCTCP:msgData asRequest:YES fromSender:sender toTarget:target forRoom:room];
@@ -2600,27 +2649,20 @@ end:
 		NSString *targetName = [parameters objectAtIndex:0];
 		if( ! targetName.length ) return;
 
-		NSScanner *scanner = [NSScanner scannerWithString:targetName];
-		[scanner setCharactersToBeSkipped:nil];
-		[scanner scanCharactersFromSet:[self _nicknamePrefixes] intoString:NULL];
+		[sender _setIdleTime:0.];
+		[self _markUserAsOnline:sender];
 
-		NSString *roomTargetName = targetName;
-		if( [scanner scanLocation] )
-			roomTargetName = [targetName substringFromIndex:[scanner scanLocation]];
-
-		NSMutableData *msgData = [parameters objectAtIndex:1];
-		const char *bytes = (const char *)[msgData bytes];
-		BOOL ctcp = ( *bytes == '\001' && msgData.length > 2 );
-
-		MVChatRoom *room = nil;
-		if( roomTargetName.length >= 1 && [[self chatRoomNamePrefixes] characterIsMember:[roomTargetName characterAtIndex:0]] )
-			room = [self chatRoomWithUniqueIdentifier:roomTargetName];
+		MVChatRoom *room = [self _chatRoomFromMessageTarget:targetName];
 
 		MVChatUser *targetUser = nil;
 		if( !room ) targetUser = [self chatUserWithUniqueIdentifier:targetName];
 
 		id target = room;
 		if( !target ) target = targetUser;
+
+		NSMutableData *msgData = [parameters objectAtIndex:1];
+		const char *bytes = (const char *)[msgData bytes];
+		BOOL ctcp = ( *bytes == '\001' && msgData.length > 2 );
 
 		if( ctcp ) {
 			[self _handleCTCP:msgData asRequest:NO fromSender:sender toTarget:target forRoom:room];
