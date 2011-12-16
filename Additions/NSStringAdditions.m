@@ -1143,12 +1143,15 @@ static NSCharacterSet *typicalEmoticonCharacters;
 - (BOOL) isMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range error:(NSError **) error {
 	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:nil];
 	NSRange foundRange = [regularExpression rangeOfFirstMatchInString:self options:NSMatchingReportCompletion range:range];
+	[regularExpression release];
 	return foundRange.location != NSNotFound;
 }
 
 - (NSRange) rangeOfRegex:(NSString *) regex inRange:(NSRange) range {
 	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:0 error:nil];
-	return [regularExpression rangeOfFirstMatchInString:self options:NSMatchingReportCompletion range:range];
+	NSRange foundRange = [regularExpression rangeOfFirstMatchInString:self options:NSMatchingReportCompletion range:range];
+	[regularExpression release];
+	return foundRange;
 }
 
 - (NSString *) stringByMatching:(NSString *) regex capture:(NSInteger) capture {
@@ -1158,6 +1161,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 - (NSString *) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error {
 	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:nil];
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:capture range:range];
+	[regularExpression release];
 
 	if (result.range.location == NSNotFound)
 		return nil;
@@ -1177,6 +1181,8 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 		replacementString = [replacementString stringByReplacingCharactersInRange:result.range withString:replacement];
 	}
+
+	[regularExpression release];
 
 	return replacementString;
 }
