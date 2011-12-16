@@ -24,8 +24,6 @@
 #import "MVChatPluginManager.h"
 #endif
 
-#import "RegexKitLite.h"
-
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
 #import <CFNetwork/CFNetwork.h>
 #endif
@@ -1056,7 +1054,7 @@ end:
 
 	[_chatConnection writeData:data withTimeout:-1. tag:0];
 
-	NSString *stringWithPasswordsHidden = [string stringByReplacingOccurrencesOfRegex:@"(^PASS |^AUTHENTICATE (?!\\+$|PLAIN$)|IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:RKLCaseless range:NSMakeRange(0, string.length) error:NULL];
+	NSString *stringWithPasswordsHidden = [string stringByReplacingOccurrencesOfRegex:@"(^PASS |^AUTHENTICATE (?!\\+$|PLAIN$)|IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:NSRegularExpressionCaseInsensitive range:NSMakeRange(0, string.length) error:NULL];
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:stringWithPasswordsHidden, @"message", data, @"messageData", [NSNumber numberWithBool:YES], @"outbound", nil]];
 
@@ -2469,7 +2467,7 @@ end:
 
 			// Auto reply to servers asking us to send a PASS because they could not detect an identd
 			if (![self isConnected]) {
-				NSString *matchedPassword = [msg stringByMatching:@"/QUOTE PASS (\\w+)" options:RKLCaseless inRange:NSMakeRange(0, msg.length) capture:1 error:NULL];
+				NSString *matchedPassword = [msg stringByMatching:@"/QUOTE PASS (\\w+)" options:NSRegularExpressionCaseInsensitive inRange:NSMakeRange(0, msg.length) capture:1 error:NULL];
 				if( matchedPassword ) [self sendRawMessageImmediatelyWithFormat:@"PASS %@", matchedPassword];
 				if( [[self server] hasCaseInsensitiveSubstring:@"ustream"] ) {
 					if( [msg isEqualToString:@"This is a registered nick, either choose another nick or enter the password by doing: /PASS <password>"] ) {
@@ -2500,11 +2498,11 @@ end:
 				handled = YES;
 			if( !handled && [msg isEqualToString:@"To complete your connection to this server, type \"/QUOTE PONG :cookie\", where cookie is the following ascii."] )
 				handled = YES;
-			if( !handled && [msg isMatchedByRegex:@"\\*\\*\\* Notice -- If you see.*? connections.*? from" options:RKLCaseless inRange:NSMakeRange(0, msg.length) error:NULL] )
+			if( !handled && [msg isMatchedByRegex:@"\\*\\*\\* Notice -- If you see.*? connections.*? from" options:NSRegularExpressionCaseInsensitive inRange:NSMakeRange(0, msg.length) error:NULL] )
 				handled = YES;
-			if( !handled && [msg isMatchedByRegex:@"\\*\\*\\* Notice -- please disregard them, as they are the .+? in action" options:RKLCaseless inRange:NSMakeRange(0, msg.length) error:NULL] )
+			if( !handled && [msg isMatchedByRegex:@"\\*\\*\\* Notice -- please disregard them, as they are the .+? in action" options:NSRegularExpressionCaseInsensitive inRange:NSMakeRange(0, msg.length) error:NULL] )
 				handled = YES;
-			if( !handled && [msg isMatchedByRegex:@"on .+? ca .+?\\(.+?\\) ft .+?\\(.+?\\)" options:RKLCaseless inRange:NSMakeRange(0, msg.length) error:NULL] )
+			if( !handled && [msg isMatchedByRegex:@"on .+? ca .+?\\(.+?\\) ft .+?\\(.+?\\)" options:NSRegularExpressionCaseInsensitive inRange:NSMakeRange(0, msg.length) error:NULL] )
 				handled = YES;
 
 			if( handled ) [noticeInfo setObject:[NSNumber numberWithBool:YES] forKey:@"handled"];

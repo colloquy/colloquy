@@ -49,8 +49,6 @@
 		1C9CF4FE0615091400330D8D /* MVChatPluginManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C9CF4FF0615091500330D8D /* MVChatPluginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */; };
 		1C9CF5010615091700330D8D /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F52D043001873FC401EE70DE /* MVChatConnection.m */; };
-		1C9FFA140FA193F500748177 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9FFA120FA193F500748177 /* RegexKitLite.m */; };
-		1C9FFA150FA193F500748177 /* RegexKitLite.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C9FFA130FA193F500748177 /* RegexKitLite.h */; };
 		1C9FFB140FA1958300748177 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C9FFB130FA1958300748177 /* libicucore.dylib */; };
 		1CB643D50C84F1EF00B79FB0 /* MVChatString.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CB643D40C84F1EF00B79FB0 /* MVChatString.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1CCA51800598AFBA00F0A4CD /* ChatCore.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1CCA517E0598AFBA00F0A4CD /* ChatCore.scriptSuite */; };
@@ -100,7 +98,6 @@
 		92417D48149C019A0009B06E /* MVChatUserWatchRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8AAEFD09D69F2700CF29EB /* MVChatUserWatchRule.m */; };
 		92417D49149C019A0009B06E /* MVDirectClientConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0FE8A90B4F647D00855B9C /* MVDirectClientConnection.m */; };
 		92417D4A149C019A0009B06E /* MVDirectChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9C13380B50A7AC005F9F28 /* MVDirectChatConnection.m */; };
-		92417D52149C019A0009B06E /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C9FFA120FA193F500748177 /* RegexKitLite.m */; };
 		92417D53149C019A0009B06E /* NSFileManagerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */; };
 		92417D55149C019A0009B06E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB3C3705228EFD000001C8 /* SystemConfiguration.framework */; };
 		92417D59149C019A0009B06E /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEB167095BE3A000166A54 /* CoreServices.framework */; };
@@ -135,9 +132,7 @@
 		92417D8E149C019A0009B06E /* MVIRCNumerics.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CD62AA10962114500BD1DD2 /* MVIRCNumerics.h */; };
 		92417D8F149C019A0009B06E /* MVChatString.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CB643D40C84F1EF00B79FB0 /* MVChatString.h */; settings = {ATTRIBUTES = (); }; };
 		92417D90149C019A0009B06E /* MVAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C1895590E29CC19003CFED0 /* MVAvailability.h */; settings = {ATTRIBUTES = (); }; };
-		92417D91149C019A0009B06E /* RegexKitLite.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C9FFA130FA193F500748177 /* RegexKitLite.h */; };
 		92417D92149C019A0009B06E /* NSFileManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */; };
-		92417D99149C01AD0009B06E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92417D98149C01AD0009B06E /* Foundation.framework */; };
 		DD0A301B0BD8812D0054443A /* MVDirectClientConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DD0A301E0BD881560054443A /* MVDirectChatConnectionPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C9C14170B50B3AB005F9F28 /* MVDirectChatConnectionPrivate.h */; };
 		DD0A301F0BD881580054443A /* AsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CEEB163095BE36700166A54 /* AsyncSocket.h */; };
@@ -245,8 +240,6 @@
 		1C9C13370B50A7AC005F9F28 /* MVDirectChatConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectChatConnection.h; path = "Chat Core/MVDirectChatConnection.h"; sourceTree = "<group>"; };
 		1C9C13380B50A7AC005F9F28 /* MVDirectChatConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDirectChatConnection.m; path = "Chat Core/MVDirectChatConnection.m"; sourceTree = "<group>"; };
 		1C9C14170B50B3AB005F9F28 /* MVDirectChatConnectionPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDirectChatConnectionPrivate.h; path = "Chat Core/MVDirectChatConnectionPrivate.h"; sourceTree = "<group>"; };
-		1C9FFA120FA193F500748177 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegexKitLite.m; path = "Chat Core/RegexKitLite.m"; sourceTree = "<group>"; };
-		1C9FFA130FA193F500748177 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexKitLite.h; path = "Chat Core/RegexKitLite.h"; sourceTree = "<group>"; };
 		1C9FFB130FA1958300748177 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = /usr/lib/libicucore.dylib; sourceTree = "<absolute>"; };
 		1CB643D40C84F1EF00B79FB0 /* MVChatString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatString.h; path = "Chat Core/MVChatString.h"; sourceTree = "<group>"; };
 		1CCA517E0598AFBA00F0A4CD /* ChatCore.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ChatCore.scriptSuite; path = Resources/ChatCore.scriptSuite; sourceTree = "<group>"; };
@@ -286,7 +279,6 @@
 		899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSFileManagerAdditions.m; path = Additions/NSFileManagerAdditions.m; sourceTree = "<group>"; };
 		89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Less Common Settings.xcconfig"; path = "Settings/Less Common Settings.xcconfig"; sourceTree = "<group>"; };
 		92417D96149C019A0009B06E /* libChat Core.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libChat Core.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		92417D98149C01AD0009B06E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DD47412E0BD35A2E00D93AB9 /* MVXMPPChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVXMPPChatRoom.h; path = "Chat Core/MVXMPPChatRoom.h"; sourceTree = "<group>"; };
 		DD47412F0BD35A2E00D93AB9 /* MVXMPPChatRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVXMPPChatRoom.m; path = "Chat Core/MVXMPPChatRoom.m"; sourceTree = "<group>"; };
 		DDBB43A20BD5DF9400EC6E55 /* Acid.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Acid.xcodeproj; path = Frameworks/Acid/Acid.xcodeproj; sourceTree = "<group>"; };
@@ -322,7 +314,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				92417D99149C01AD0009B06E /* Foundation.framework in Frameworks */,
 				92417D55149C019A0009B06E /* SystemConfiguration.framework in Frameworks */,
 				92417D59149C019A0009B06E /* CoreServices.framework in Frameworks */,
 				92417D5C149C019A0009B06E /* libicucore.dylib in Frameworks */,
@@ -335,7 +326,6 @@
 		089C166AFE841209C02AAC07 /* Massinova Menu Extra */ = {
 			isa = PBXGroup;
 			children = (
-				92417D98149C01AD0009B06E /* Foundation.framework */,
 				1C386E7C1032464A00660864 /* Port Map.xcodeproj */,
 				F50B0A9F0170C89301A84BDE /* Sources & Headers */,
 				F50B0AA00170C89301A84BDE /* Other Sources & Additions */,
@@ -517,8 +507,6 @@
 				1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */,
 				1CEEB164095BE36700166A54 /* AsyncSocket.m */,
 				1CEEB163095BE36700166A54 /* AsyncSocket.h */,
-				1C9FFA120FA193F500748177 /* RegexKitLite.m */,
-				1C9FFA130FA193F500748177 /* RegexKitLite.h */,
 				1CD6290D096118B900BD1DD2 /* InterThreadMessaging.m */,
 				1CD6290C096118B900BD1DD2 /* InterThreadMessaging.h */,
 				1C1168CC0B45FA4700F57D2C /* Transmission.h */,
@@ -636,7 +624,6 @@
 				DD0A302D0BD881680054443A /* MVIRCNumerics.h in Headers */,
 				1CB643D50C84F1EF00B79FB0 /* MVChatString.h in Headers */,
 				1C18955A0E29CC19003CFED0 /* MVAvailability.h in Headers */,
-				1C9FFA150FA193F500748177 /* RegexKitLite.h in Headers */,
 				899F4EFE12617870003B9D9A /* NSFileManagerAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -674,7 +661,6 @@
 				92417D8C149C019A0009B06E /* MVIRCChatUser.h in Headers */,
 				92417D8D149C019A0009B06E /* MVIRCFileTransfer.h in Headers */,
 				92417D8E149C019A0009B06E /* MVIRCNumerics.h in Headers */,
-				92417D91149C019A0009B06E /* RegexKitLite.h in Headers */,
 				92417D92149C019A0009B06E /* NSFileManagerAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -870,7 +856,6 @@
 				DDF64CE60BD29E41009E8FF6 /* MVXMPPChatConnection.m in Sources */,
 				DDF64E1A0BD2CABE009E8FF6 /* MVXMPPChatUser.m in Sources */,
 				DD4741310BD35A2E00D93AB9 /* MVXMPPChatRoom.m in Sources */,
-				1C9FFA140FA193F500748177 /* RegexKitLite.m in Sources */,
 				899F4EFF12617870003B9D9A /* NSFileManagerAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -897,7 +882,6 @@
 				92417D48149C019A0009B06E /* MVChatUserWatchRule.m in Sources */,
 				92417D49149C019A0009B06E /* MVDirectClientConnection.m in Sources */,
 				92417D4A149C019A0009B06E /* MVDirectChatConnection.m in Sources */,
-				92417D52149C019A0009B06E /* RegexKitLite.m in Sources */,
 				92417D53149C019A0009B06E /* NSFileManagerAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

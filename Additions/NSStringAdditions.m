@@ -3,8 +3,6 @@
 #import "NSCharacterSetAdditions.h"
 #import "NSScannerAdditions.h"
 
-#import "RegexKitLite.h"
-
 #import <sys/time.h>
 
 struct EmojiEmoticonPair {
@@ -1134,6 +1132,53 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	NSMutableString *result = [self mutableCopy];
 	[result substituteEmoticonsForEmoji];
 	return [result autorelease];
+}
+
+#pragma mark -
+
+- (BOOL) isMatchedByRegex:(NSString *) regex {
+	return [self isMatchedByRegex:regex options:0 inRange:NSMakeRange(0, self.length) error:nil];
+}
+
+- (BOOL) isMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range error:(NSError **) error {
+	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:nil];
+	NSRange foundRange = [regularExpression rangeOfFirstMatchInString:self options:NSMatchingReportCompletion range:range];
+	return foundRange.location != NSNotFound;
+}
+
+- (NSRange) rangeOfRegex:(NSString *) regex inRange:(NSRange) range {
+	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:0 error:nil];
+	return [regularExpression rangeOfFirstMatchInString:self options:NSMatchingReportCompletion range:range];
+}
+
+- (NSString *) stringByMatching:(NSString *) regex capture:(NSInteger) capture {
+	return [self stringByMatching:regex options:0 inRange:NSMakeRange(0, self.length) capture:capture error:nil];
+}
+
+- (NSString *) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error {
+	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:nil];
+	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:capture range:range];
+
+	if (result.range.location == NSNotFound)
+		return nil;
+
+	return [self substringWithRange:result.range];
+}
+
+- (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
+	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:nil];
+	NSTextCheckingResult *result = nil;
+
+	NSString *replacementString = [[self copy] autorelease];
+
+	while ((result = [regularExpression firstMatchInString:self options:options range:searchRange])) {
+		if (result.range.location == NSNotFound)
+			break; 
+
+		replacementString = [replacementString stringByReplacingCharactersInRange:result.range withString:replacement];
+	}
+
+	return replacementString;
 }
 @end
 

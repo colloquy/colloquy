@@ -3,7 +3,6 @@
 #import "MVIRCChatConnection.h"
 #import "MVIRCChatUser.h"
 #import "NSStringAdditions.h"
-#import "RegexKitLite.h"
 
 @implementation MVIRCChatRoom
 - (id) initWithName:(NSString *) roomName andConnection:(MVIRCChatConnection *) roomConnection {
