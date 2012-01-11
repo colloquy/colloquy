@@ -278,7 +278,7 @@
 		899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerAdditions.h; path = Additions/NSFileManagerAdditions.h; sourceTree = "<group>"; };
 		899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSFileManagerAdditions.m; path = Additions/NSFileManagerAdditions.m; sourceTree = "<group>"; };
 		89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Less Common Settings.xcconfig"; path = "Settings/Less Common Settings.xcconfig"; sourceTree = "<group>"; };
-		92417D96149C019A0009B06E /* libChat Core.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libChat Core.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		92D4764E14BD4477002AFC8E /* libChat Core.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libChat Core.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD47412E0BD35A2E00D93AB9 /* MVXMPPChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVXMPPChatRoom.h; path = "Chat Core/MVXMPPChatRoom.h"; sourceTree = "<group>"; };
 		DD47412F0BD35A2E00D93AB9 /* MVXMPPChatRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVXMPPChatRoom.m; path = "Chat Core/MVXMPPChatRoom.m"; sourceTree = "<group>"; };
 		DDBB43A20BD5DF9400EC6E55 /* Acid.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Acid.xcodeproj; path = Frameworks/Acid/Acid.xcodeproj; sourceTree = "<group>"; };
@@ -333,7 +333,7 @@
 				1C9AE8DF086A5218008ED7AD /* Configurations */,
 				089C1671FE841209C02AAC07 /* Frameworks & Libraries */,
 				1CB2C8CC052DDA360094AAA4 /* Products */,
-				92417D96149C019A0009B06E /* libChat Core.a */,
+				92D4764E14BD4477002AFC8E /* libChat Core.a */,
 			);
 			name = "Massinova Menu Extra";
 			sourceTree = "<group>";
@@ -705,7 +705,7 @@
 			);
 			name = "Chat Core (Static Library)";
 			productName = "Chat Core (Framework)";
-			productReference = 92417D96149C019A0009B06E /* libChat Core.a */;
+			productReference = 92D4764E14BD4477002AFC8E /* libChat Core.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -904,6 +904,7 @@
 /* Begin XCBuildConfiguration section */
 		1C041DDC08553AD200A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
@@ -933,6 +934,7 @@
 			buildSettings = {
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				INSTALL_PATH = "@executable_path/../Frameworks/";
 				ONLY_ACTIVE_ARCH = YES;
 				SYMROOT = build;
 			};
@@ -940,6 +942,7 @@
 		};
 		1C7F2DB408553C1900D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
@@ -966,6 +969,7 @@
 			baseConfigurationReference = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREPROCESSOR_DEFINITIONS = NS_BLOCK_ASSERTIONS;
+				INSTALL_PATH = "@executable_path/../Frameworks/";
 				SYMROOT = build;
 			};
 			name = Release;
