@@ -185,6 +185,7 @@
 /* Begin XCBuildConfiguration section */
 		1C7F303F0855482D00D41FB0 /* Development */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
@@ -217,6 +218,7 @@
 		};
 		1C7F307A085548E700D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1C9AE8FB086A552A008ED7AD /* Common Settings.xcconfig */;
 			buildSettings = {
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
