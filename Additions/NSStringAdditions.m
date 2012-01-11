@@ -1175,7 +1175,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 	NSString *replacementString = [[self copy] autorelease];
 
-	while ((result = [regularExpression firstMatchInString:self options:options range:searchRange])) {
+	while ((result = [regularExpression firstMatchInString:replacementString options:options range:searchRange])) {
 		if (result.range.location == NSNotFound)
 			break; 
 
