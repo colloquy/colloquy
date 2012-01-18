@@ -112,7 +112,7 @@ static JVNotificationController *sharedInstance = nil;
 			identifier, GROWL_NOTIFICATION_NAME,
 			title, GROWL_NOTIFICATION_TITLE,
 			desc, GROWL_NOTIFICATION_DESCRIPTION,
-			[icon TIFFRepresentation], GROWL_NOTIFICATION_ICON,
+			[icon TIFFRepresentation], GROWL_NOTIFICATION_ICON_DATA,
 			[context objectForKey:@"coalesceKey"], GROWL_NOTIFICATION_IDENTIFIER,
 			// this next key is not guaranteed to be non-nil
 			// make sure it stays last, unless you want to ensure it's non-nil
