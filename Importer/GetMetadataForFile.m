@@ -23,7 +23,7 @@
 </log>
 */
 
-@interface JVChatTranscriptMetadataExtractor : NSObject {
+@interface JVChatTranscriptMetadataExtractor : NSObject <NSXMLParserDelegate> {
 	BOOL inEnvelope;
 	BOOL inMessage;
 	NSString *lastElement;

@@ -3,7 +3,7 @@
 @class MVTextView;
 @class MVChatConnection;
 
-@interface JVChatConsolePanel : NSObject <JVChatViewController, JVChatViewControllerScripting> {
+@interface JVChatConsolePanel : NSObject <JVChatViewController, JVChatViewControllerScripting, NSLayoutManagerDelegate> {
 	@protected
 	IBOutlet NSView *contents;
 	IBOutlet NSTextView *display;

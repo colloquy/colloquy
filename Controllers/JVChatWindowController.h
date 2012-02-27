@@ -10,7 +10,7 @@
 extern NSString *JVToolbarToggleChatDrawerItemIdentifier;
 extern NSString *JVChatViewPboardType;
 
-@interface JVChatWindowController : NSWindowController <JVInspectionDelegator> {
+@interface JVChatWindowController : NSWindowController <JVInspectionDelegator, NSMenuDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate, NSToolbarDelegate, NSWindowDelegate> {
 	@protected
 	IBOutlet NSDrawer *viewsDrawer;
 	IBOutlet NSOutlineView *chatViewsOutlineView;

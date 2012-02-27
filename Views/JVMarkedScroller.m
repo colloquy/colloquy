@@ -151,7 +151,8 @@ struct _mark {
 	if( ! _jumpingToMark ) _currentMark = NSNotFound;
 	if( ( [self floatValue] != position || [self knobProportion] != percent ) && ( [_marks count] || [_shades count] ) )
 		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
-	[super setFloatValue:position knobProportion:percent];
+	[super setDoubleValue:position];
+	[super setKnobProportion:percent];
 }
 
 - (NSMenu *) menuForEvent:(NSEvent *) event {

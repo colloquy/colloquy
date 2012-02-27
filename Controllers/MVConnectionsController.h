@@ -2,7 +2,7 @@
 
 @class MVChatConnection;
 
-@interface MVConnectionsController : NSWindowController <JVInspectionDelegator> {
+@interface MVConnectionsController : NSWindowController <JVInspectionDelegator, NSToolbarDelegate> {
 @private
 	IBOutlet NSTableView *connections;
 	IBOutlet NSPanel *openConnection;

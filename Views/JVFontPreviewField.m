@@ -34,6 +34,15 @@
 	[super dealloc];
 }
 
+- (id <JVFontPreviewFieldDelegate>)delegate {
+	return (id <JVFontPreviewFieldDelegate>)[super delegate];
+}
+
+- (void)setDelegate:(id <JVFontPreviewFieldDelegate>)anObject {
+	[super setDelegate:anObject];
+}
+
+
 - (void) selectFont:(id) sender {
 	NSFont *font = [sender convertFont:[self font]];
 

@@ -80,6 +80,8 @@ extern NSString *JVChatEventMessageWasProcessedNotification;
 - (IBAction) clear:(id) sender;
 - (IBAction) clearDisplay:(id) sender;
 - (IBAction) markDisplay:(id) sender;
+
+- (void) textDidChange:(NSNotification *) notification;
 @end
 
 @interface NSObject (MVChatPluginDirectChatSupport)

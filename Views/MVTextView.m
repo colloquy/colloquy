@@ -30,6 +30,16 @@
 
 #pragma mark -
 
+- (id <MVTextViewDelegate>)delegate {
+	return (id <MVTextViewDelegate>)[super delegate];
+}
+
+- (void)setDelegate:(id <MVTextViewDelegate>)anObject {
+	[super setDelegate:anObject];
+}
+
+#pragma mark -
+
 - (void) interpretKeyEvents:(NSArray *) eventArray {
 	NSMutableArray *newArray = [[NSMutableArray allocWithZone:nil] init];
 

@@ -1,3 +1,5 @@
+@protocol MVTextViewDelegate;
+
 @interface MVTextView : NSTextView {
     NSDictionary *defaultTypingAttributes;
 	NSSize lastPostedSize;
@@ -24,9 +26,12 @@
 - (BOOL) usesSystemCompleteOnTab;
 
 - (BOOL) autocompleteWithSuffix:(BOOL) suffix;
+
+- (id <MVTextViewDelegate>)delegate;
+- (void)setDelegate:(id <MVTextViewDelegate>)anObject;
 @end
 
-@interface NSObject (MVTextViewDelegate)
+@protocol MVTextViewDelegate <NSTextViewDelegate>
 - (BOOL) textView:(NSTextView *) textView functionKeyPressed:(NSEvent *) event;
 - (BOOL) textView:(NSTextView *) textView enterKeyPressed:(NSEvent *) event;
 - (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event;

@@ -4,7 +4,7 @@
 @class JVChatWindowController;
 @class JVFScriptChatPlugin;
 
-@interface JVFScriptConsolePanel : NSObject <JVChatViewController> {
+@interface JVFScriptConsolePanel : NSObject <JVChatViewController, NSToolbarDelegate> {
 	IBOutlet NSView *contents;
 	IBOutlet FSInterpreterView *console;
 	BOOL _nibLoaded;

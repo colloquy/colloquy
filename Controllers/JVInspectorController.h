@@ -28,7 +28,7 @@
 - (IBAction) getInfo:(id) sender;
 @end
 
-@interface JVInspectorController : NSWindowController {
+@interface JVInspectorController : NSWindowController <NSWindowDelegate> {
 	BOOL _locked;
 	id <JVInspection> _object;
 	id <JVInspector> _inspector;

@@ -450,6 +450,13 @@
 			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
 			remoteInfo = "JavaScript Support Plugin";
 		};
+		92BBC89314FB277C00D5D2F8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 92D4764E14BD4477002AFC8E;
+			remoteInfo = "Chat Core (Static Library)";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1548,6 +1555,7 @@
 			isa = PBXGroup;
 			children = (
 				1CEEAB16095BD23100166A54 /* ChatCore.framework */,
+				92BBC89414FB277C00D5D2F8 /* libChat Core.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2183,6 +2191,13 @@
 			fileType = wrapper.cfbundle;
 			path = "JavaScript Support.plugin";
 			remoteRef = 1CEF8F7F0A3AB7BB0054298A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		92BBC89414FB277C00D5D2F8 /* libChat Core.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libChat Core.a";
+			remoteRef = 92BBC89314FB277C00D5D2F8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -3164,6 +3179,7 @@
 					"$(HEADER_SEARCH_PATHS)",
 				);
 				INFOPLIST_FILE = Resources/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
@@ -3224,6 +3240,7 @@
 					"$(HEADER_SEARCH_PATHS)",
 				);
 				INFOPLIST_FILE = Resources/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
