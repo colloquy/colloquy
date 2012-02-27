@@ -13,7 +13,7 @@ extern NSString *JVToolbarEmoticonsItemIdentifier;
 extern NSString *JVToolbarFindItemIdentifier;
 extern NSString *JVToolbarQuickSearchItemIdentifier;
 
-@interface JVChatTranscriptPanel : NSObject <JVChatViewController, JVChatViewControllerScripting, NSOpenSavePanelDelegate, NSToolbarDelegate> {
+@interface JVChatTranscriptPanel : NSObject <JVChatViewController, JVChatViewControllerScripting, NSToolbarDelegate> {
 	@protected
 	IBOutlet NSView *contents;
 	IBOutlet JVStyleView *display;

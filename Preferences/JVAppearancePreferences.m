@@ -650,12 +650,16 @@
 	[openPanel setTreatsFilePackagesAsDirectories:NO];
 	[openPanel setCanChooseDirectories:NO];
 
-	NSArray *types = [NSArray arrayWithObjects:@"jpg",@"tif",@"tiff",@"jpeg",@"gif",@"png",@"pdf",nil];
+	NSArray *types = [NSArray arrayWithObjects:@"jpg", @"tif", @"tiff", @"jpeg", @"gif", @"png", @"pdf", nil];
 	NSString *value = [sender representedObject];
-	if( [openPanel runModalForDirectory:[value stringByDeletingLastPathComponent] file:[value lastPathComponent] types:types] != NSOKButton )
+
+	[openPanel setDirectoryURL:[NSURL fileURLWithPath:value isDirectory:NO]];
+	[openPanel setAllowedFileTypes:types];
+
+	if( [openPanel runModal] != NSOKButton )
 		return;
 
-	value = [openPanel filename];
+	value = [[openPanel URL] path];
 	[info setObject:value forKey:@"path"];
 
 	NSArray *style = [[info objectForKey:@"layouts"] objectAtIndex:0];

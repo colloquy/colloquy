@@ -1,6 +1,10 @@
 #import "JVFileTransferPreferences.h"
 #import "MVFileTransferController.h"
 
+@interface JVFileTransferPreferences (Private)
+- (void) saveDownloadsOpenPanelDidEnd:(NSOpenPanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
+@end
+
 @implementation JVFileTransferPreferences
 - (NSString *) preferencesNibName {
 	return @"JVFileTransferPreferences";
@@ -62,7 +66,10 @@
 		[openPanel setCanChooseFiles:NO];
 		[openPanel setAllowsMultipleSelection:NO];
 		[openPanel setResolvesAliases:NO];
-		[openPanel beginSheetForDirectory:[MVFileTransferController userPreferredDownloadFolder] file:nil types:nil modalForWindow:[[self viewForPreferenceNamed:nil] window] modalDelegate:self didEndSelector:@selector( saveDownloadsOpenPanelDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
+		[openPanel setDirectoryURL:[NSURL fileURLWithPath:[MVFileTransferController userPreferredDownloadFolder] isDirectory:YES]];
+		[openPanel beginWithCompletionHandler:^(NSInteger result) {
+			[self saveDownloadsOpenPanelDidEnd:openPanel returnCode:result contextInfo:NULL];
+		}];
 	} else if( [sender tag] == 2 ) {
 		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"JVAskForTransferSaveLocation"];
 	} else {
@@ -74,17 +81,17 @@
 	[sheet autorelease];
 	if( returnCode == NSOKButton ) {
 		NSMenuItem *menuItem = [saveDownloads itemAtIndex:[saveDownloads indexOfItemWithTag:2]];
-		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[sheet directory]];
+		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[[sheet directoryURL] path]];
 		[icon setScalesWhenResized:YES];
 		[icon setSize:NSMakeSize( 16., 16. )];
 
-		[menuItem setTitle:[[NSFileManager defaultManager] displayNameAtPath:[sheet directory]]];
+		[menuItem setTitle:[[NSFileManager defaultManager] displayNameAtPath:[[sheet directoryURL] path]]];
 		[menuItem setImage:icon];
-		[menuItem setRepresentedObject:[sheet directory]];
+		[menuItem setRepresentedObject:[[sheet directoryURL] path]];
 		[saveDownloads selectItem:menuItem];
 
 		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"JVAskForTransferSaveLocation"];
-		[MVFileTransferController setUserPreferredDownloadFolder:[sheet directory]];
+		[MVFileTransferController setUserPreferredDownloadFolder:[[sheet directoryURL] path]];
 	} else {
 		[saveDownloads selectItemAtIndex:[saveDownloads indexOfItemWithTag:1]];
 		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVAskForTransferSaveLocation"];

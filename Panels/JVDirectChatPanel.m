@@ -320,7 +320,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[send reset:nil];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatInputAutoResizes"] )
-		[(JVSplitView *)[[[send superview] superview] superview] setIsPaneSplitter:YES];
+		[(JVSplitView *)[[[send superview] superview] superview] setDividerStyle:NSSplitViewDividerStylePaneSplitter];
 }
 
 - (void) dealloc {

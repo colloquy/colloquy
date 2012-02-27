@@ -1,5 +1,9 @@
 #import "JVTranscriptPreferences.h"
 
+@interface JVTranscriptPreferences (Private)
+- (void) saveDownloadsOpenPanelDidEnd:(NSOpenPanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
+@end
+
 @implementation JVTranscriptPreferences
 - (NSString *) preferencesNibName {
 	return @"JVTranscriptPreferences";
@@ -45,7 +49,10 @@
 		[openPanel setCanChooseFiles:NO];
 		[openPanel setAllowsMultipleSelection:NO];
 		[openPanel setResolvesAliases:NO];
-		[openPanel beginSheetForDirectory:folder file:nil types:nil modalForWindow:[[self viewForPreferenceNamed:nil] window] modalDelegate:self didEndSelector:@selector( saveDownloadsOpenPanelDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
+		[openPanel setDirectoryURL:[NSURL fileURLWithPath:folder isDirectory:YES]];
+		[openPanel beginWithCompletionHandler:^(NSInteger result) {
+			[self saveDownloadsOpenPanelDidEnd:openPanel returnCode:result contextInfo:NULL];
+		}];
 	}
 }
 
@@ -53,15 +60,15 @@
 	[sheet autorelease];
 	if( returnCode == NSOKButton ) {
 		NSMenuItem *menuItem = [transcriptFolder itemAtIndex:[transcriptFolder indexOfItemWithTag:2]];
-		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[sheet directory]];
+		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[[sheet directoryURL] path]];
 		[icon setScalesWhenResized:YES];
 		[icon setSize:NSMakeSize( 16., 16. )];
 
-		[menuItem setTitle:[[NSFileManager defaultManager] displayNameAtPath:[sheet directory]]];
+		[menuItem setTitle:[[NSFileManager defaultManager] displayNameAtPath:[[sheet directoryURL] path]]];
 		[menuItem setImage:icon];
-		[menuItem setRepresentedObject:[sheet directory]];
+		[menuItem setRepresentedObject:[[sheet directoryURL] path]];
 
-		[[NSUserDefaults standardUserDefaults] setObject:[sheet directory] forKey:@"JVChatTranscriptFolder"];
+		[[NSUserDefaults standardUserDefaults] setObject:[[sheet directoryURL] path] forKey:@"JVChatTranscriptFolder"];
 	}
 
 	[transcriptFolder selectItemAtIndex:[transcriptFolder indexOfItemWithTag:2]];

@@ -192,7 +192,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
         message = [message substringFromIndex:( range.location + range.length )];
     }
 
-    NSBeginInformationalAlertSheet( title, nil, nil, nil, [sender window], nil, NULL, NULL, NULL, message );
+    NSBeginInformationalAlertSheet( title, nil, nil, nil, [sender window], nil, NULL, NULL, NULL, message, nil );
 }
 
 - (void) webViewShow:(WebView *) sender {

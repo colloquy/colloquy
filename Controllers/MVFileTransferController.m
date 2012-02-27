@@ -198,7 +198,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	WebDownload *download = [[[WebDownload alloc] initWithRequest:[NSURLRequest requestWithURL:url] delegate:self] autorelease];
 
 	if( ! download ) {
-		NSBeginAlertSheet( NSLocalizedString( @"Invalid URL", "Invalid URL title" ), nil, nil, nil, [self window], nil, nil, nil, nil, NSLocalizedString( @"The download URL is either invalid or unsupported.", "Invalid URL message" ) );
+		NSBeginAlertSheet( NSLocalizedString( @"Invalid URL", "Invalid URL title" ), nil, nil, nil, [self window], nil, nil, nil, nil, NSLocalizedString( @"The download URL is either invalid or unsupported.", "Invalid URL message" ), nil );
 		return;
 	}
 
@@ -294,19 +294,16 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 #pragma mark -
 
 - (IBAction) copy:(id) sender {
-	NSEnumerator *enumerator = [currentFiles selectedRowEnumerator];
 	NSMutableArray *array = [NSMutableArray array];
 	NSMutableString *string = [NSMutableString string];
-	id row = nil;
 
 	[[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObjects:NSFilenamesPboardType,NSStringPboardType,nil] owner:self];
 
-	while( ( row = [enumerator nextObject] ) ) {
-		NSUInteger i = [row unsignedIntValue];
+	[[currentFiles selectedRowIndexes] enumerateIndexesUsingBlock:^(NSUInteger i, BOOL *stop) {
 		[array addObject:[[self _infoForTransferAtIndex:i] objectForKey:@"path"]];
 		[string appendString:[[[self _infoForTransferAtIndex:i] objectForKey:@"path"] lastPathComponent]];
-		if( ! [[[enumerator allObjects] lastObject] isEqual:row] ) [string appendString:@"\n"];
-	}
+		if ( ! ( [[currentFiles selectedRowIndexes] lastIndex] == i ) ) [string appendString:@"\n"];
+	}];
 
 	[[NSPasteboard generalPasteboard] setPropertyList:array forType:NSFilenamesPboardType];
 	[[NSPasteboard generalPasteboard] setString:string forType:NSStringPboardType];
@@ -376,12 +373,10 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		}
 	}
 
-	NSEnumerator *enumerator = [currentFiles selectedRowEnumerator];
 	[_calculationItems removeAllObjects];
-	id fileItem = nil;
-
-	while( ( fileItem = [enumerator nextObject] ) )
-		[_calculationItems addObject:[self _infoForTransferAtIndex:[fileItem unsignedIntValue]]];
+	[[currentFiles selectedRowIndexes] enumerateIndexesUsingBlock:^(NSUInteger index, BOOL *stop) {
+		[_calculationItems addObject:[self _infoForTransferAtIndex:index]];
+	}];
 }
 
 - (BOOL) tableView:(NSTableView *) view writeRows:(NSArray *) rows toPasteboard:(NSPasteboard *) board {
@@ -470,7 +465,11 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		[self _downloadFileSavePanelDidEnd:nil returnCode:NSOKButton contextInfo:(void *)[download retain]];
 	} else {
 		NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
-		[savePanel beginSheetForDirectory:[[self class] userPreferredDownloadFolder] file:filename modalForWindow:nil modalDelegate:self didEndSelector:@selector( _downloadFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *)[download retain]];
+		[savePanel setDirectoryURL:[NSURL fileURLWithPath:[[self class] userPreferredDownloadFolder] isDirectory:YES]];
+		[savePanel setNameFieldStringValue:filename];
+		[savePanel beginWithCompletionHandler:^(NSInteger result) {
+			[self _downloadFileSavePanelDidEnd:savePanel returnCode:result contextInfo:(void *)[download retain]];
+		}];
 	}
 }
 
@@ -631,7 +630,10 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
 			[sheet close];
 			[savePanel setDelegate:self];
-			[savePanel beginSheetForDirectory:[[self class] userPreferredDownloadFolder] file:[transfer originalFileName] modalForWindow:nil modalDelegate:self didEndSelector:@selector( _incomingFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *)[transfer retain]];
+			[savePanel setDirectoryURL:[NSURL fileURLWithPath:[[self class] userPreferredDownloadFolder] isDirectory:YES]];
+			[savePanel beginWithCompletionHandler:^(NSInteger result) {
+				[self _incomingFileSavePanelDidEnd:savePanel returnCode:result contextInfo:(void *)[transfer retain]];
+			}];
 		}
 	} else [transfer reject];
 }
@@ -642,7 +644,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	[sheet autorelease];
 
 	if( returnCode == NSOKButton ) {
-		NSString *filename = ( [[sheet filename] hasSuffix:@".colloquyFake"] ? [[sheet filename] stringByDeletingPathExtension] : [sheet filename] );
+		NSURL *fileURL = [sheet URL];
+		NSString *filename = ( [[fileURL pathExtension] hasSuffix:@"colloquyFake"] ? [[fileURL path] stringByDeletingPathExtension] : [fileURL path] );
 		if( ! filename ) filename = [transfer destination];
 		NSNumber *size = [[[NSFileManager defaultManager] attributesOfItemAtPath:filename error:nil] objectForKey:NSFileSize];
 		BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filename];
@@ -662,7 +665,10 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
 			[sheet close];
 			[savePanel setDelegate:self];
-			[savePanel beginSheetForDirectory:[sheet directory] file:[filename lastPathComponent] modalForWindow:nil modalDelegate:self didEndSelector:@selector( _incomingFileSavePanelDidEnd:returnCode:contextInfo: ) contextInfo:(void *)[transfer retain]];
+			[savePanel setDirectoryURL:[sheet directoryURL]];
+			[savePanel beginWithCompletionHandler:^(NSInteger result) {
+				[self _incomingFileSavePanelDidEnd:savePanel returnCode:result contextInfo:(void *)[transfer retain]];
+			}];
 		} else {
 			BOOL resume = ( resumePossible && result == NSOKButton );
 			[transfer setDestination:filename renameIfFileExists:NO];
@@ -684,7 +690,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		NSMutableDictionary *info = nil;
 		for( info in _transferStorage ) {
 			if( [info objectForKey:@"controller"] == download ) {
-				if( sheet ) [info setObject:[sheet filename] forKey:@"path"];
+				if( sheet ) [info setObject:[[sheet URL] path] forKey:@"path"];
 				break;
 			}
 		}

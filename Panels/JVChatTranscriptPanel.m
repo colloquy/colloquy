@@ -45,6 +45,10 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 - (BOOL) _usingSpecificEmoticons;
 @end
 
+@interface JVChatTranscriptPanel (Private)
+- (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo;
+@end
+
 #pragma mark -
 
 @implementation JVChatTranscriptPanel
@@ -342,18 +346,21 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 - (IBAction) saveDocumentTo:(id) sender {
 	NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
-	[savePanel setDelegate:self];
 	[savePanel setCanSelectHiddenExtension:YES];
-	[savePanel setRequiredFileType:@"colloquyTranscript"];
-	[savePanel beginSheetForDirectory:NSHomeDirectory() file:[self title] modalForWindow:[_windowController window] modalDelegate:self didEndSelector:@selector( savePanelDidEnd:returnCode:contextInfo: ) contextInfo:NULL];
+	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:@"colloquyTranscript"]];
+	[savePanel setDirectoryURL:[NSURL fileURLWithPath:NSHomeDirectory() isDirectory:YES]];
+	[savePanel setNameFieldStringValue:[self title]];
+	[savePanel beginWithCompletionHandler:^(NSInteger result) {
+		[self savePanelDidEnd:savePanel returnCode:result contextInfo:NULL];
+	}];
 }
 
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
 	[sheet autorelease];
 	if( returnCode == NSOKButton ) {
-		[[self transcript] writeToFile:[sheet filename] atomically:YES];
-		[[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:[sheet isExtensionHidden]], NSFileExtensionHidden, nil] ofItemAtPath:[sheet filename] error:nil];
-		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:[sheet filename]]];
+		[[self transcript] writeToURL:[sheet URL] atomically:YES];
+		[[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:[sheet isExtensionHidden]], NSFileExtensionHidden, nil] ofItemAtPath:[[sheet URL] absoluteString] error:nil];
+		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[sheet URL]];
 	}
 }
 
@@ -679,7 +686,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
         message = [message substringFromIndex:( range.location + range.length )];
     }
 
-    NSBeginInformationalAlertSheet( title, nil, nil, nil, [sender window], nil, NULL, NULL, NULL, message );
+    NSBeginInformationalAlertSheet( title, nil, nil, nil, [sender window], nil, NULL, NULL, NULL, message, nil );
 }
 
 - (void) webView:(WebView *) sender decidePolicyForNavigationAction:(NSDictionary *) actionInformation request:(NSURLRequest *) request frame:(WebFrame *) frame decisionListener:(id <WebPolicyDecisionListener>) listener {

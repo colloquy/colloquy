@@ -62,7 +62,7 @@
 #pragma mark -
 
 - (void) resetCursorRects {
-	if( ! [self isPaneSplitter] )
+	if( ! [self dividerStyle] == NSSplitViewDividerStylePaneSplitter )
 		[super resetCursorRects];
 }
 
@@ -75,7 +75,7 @@
 	if( ! [self isVertical] ) {
 		rect.origin.y += 10.;
 		[[NSImage imageNamed:@"splitviewDividerBackground"] tileInRect:rect];
-		if( ! [self isPaneSplitter] )
+		if( ! [self dividerStyle] == NSSplitViewDividerStylePaneSplitter )
 			[[NSImage imageNamed:@"splitviewDimple"] compositeToPoint:NSMakePoint( ( NSWidth( rect ) / 2. ) - 3., rect.origin.y ) operation:NSCompositeCopy];
 	} else [super drawDividerInRect:rect];
 }

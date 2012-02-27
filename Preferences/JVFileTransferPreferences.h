@@ -1,6 +1,6 @@
 #import "NSPreferences.h"
 
-@interface JVFileTransferPreferences : NSPreferencesModule {
+@interface JVFileTransferPreferences : NSPreferencesModule <NSOpenSavePanelDelegate> {
 	IBOutlet NSPopUpButton *saveDownloads;
 	IBOutlet NSTextField *minRate;
 	IBOutlet NSTextField *maxRate;
