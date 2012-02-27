@@ -13,9 +13,7 @@
 		return nil;
 
 	NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-	NSString *logDirectory = nil;
-	if( floor( NSAppKitVersionNumber ) == NSAppKitVersionNumber10_5 ) logDirectory = [@"~/Library/Logs/CrashReporter/" stringByExpandingTildeInPath];
-	else logDirectory = [@"~/Library/Logs/DiagnosticReports/" stringByExpandingTildeInPath]; // files in CrashReporter/ are really symlinks to files in this dir in 10.6+
+	NSString *logDirectory = [@"~/Library/Logs/DiagnosticReports/" stringByExpandingTildeInPath]; // files in CrashReporter/ are really symlinks to files in this dir in 10.6+
 
 	// If there are multiple crash reports, only get the latest one. Also deletes older crash reports; we don't want to show the error on n launches for an unknown number of n
 	for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:logDirectory error:nil] ) {
