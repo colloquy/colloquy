@@ -67,7 +67,7 @@ static void silc_say( SilcClient client, SilcClientConnection conn, SilcClientMe
 		va_start( list, msg );
 
 		NSString *tmp = [NSString stringWithUTF8String:msg];
-		NSString *msgString = [[NSString allocWithZone:nil] initWithFormat:tmp arguments:list];
+		NSString *msgString = [[NSString alloc] initWithFormat:tmp arguments:list];
 		va_end( list );
 
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msgString, @"message", [NSNumber numberWithBool:NO], @"outbound", nil]];
@@ -648,6 +648,8 @@ static void silc_command_reply( SilcClient client, SilcClientConnection conn, Si
 		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomTopicChangedNotification object:room userInfo:nil];
 
 		silc_client_get_clients_by_list( client, conn, list_count, client_id_list, silc_channel_get_clients_per_list_callback, room );
+
+		[room release];
 	}	break;
 	case SILC_COMMAND_MOTD:
 		break;

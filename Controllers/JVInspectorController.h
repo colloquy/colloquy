@@ -36,7 +36,7 @@
 }
 + (JVInspectorController *) sharedInspector;
 + (IBAction) showInspector:(id) sender;
-+ (JVInspectorController *) inspectorOfObject:(id <JVInspection>) object;
++ (JVInspectorController *) inspectorOfObject:(id <JVInspection>) object NS_RETURNS_NOT_RETAINED;
 
 - (id) initWithObject:(id <JVInspection>) object lockedOn:(BOOL) locked;
 

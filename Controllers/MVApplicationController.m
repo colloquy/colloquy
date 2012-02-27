@@ -75,10 +75,10 @@ static BOOL applicationIsTerminating = NO;
 - (id) init {
 	if( ( self = [super init] ) ) {
 		mach_port_t masterPort = 0;
-		kern_return_t err = IOMasterPort( MACH_PORT_NULL, &masterPort );
+		IOMasterPort( MACH_PORT_NULL, &masterPort );
 
 		io_iterator_t hidIter = 0;
-		err = IOServiceGetMatchingServices( masterPort, IOServiceMatching( "IOHIDSystem" ), &hidIter );
+		IOServiceGetMatchingServices( masterPort, IOServiceMatching( "IOHIDSystem" ), &hidIter );
 
 		_hidEntry = IOIteratorNext( hidIter );
 		IOObjectRelease( hidIter );

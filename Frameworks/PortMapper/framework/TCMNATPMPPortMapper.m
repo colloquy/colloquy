@@ -270,13 +270,13 @@ Standardablauf:
         if ((i == protocol)||(protocol == TCMPortMappingTransportProtocolBoth)) {
             r = sendnewportmappingrequest(aNatPMPt, (i==TCMPortMappingTransportProtocolUDP)?NATPMP_PROTOCOL_UDP:NATPMP_PROTOCOL_TCP, [aPortMapping localPort],[aPortMapping desiredExternalPort], shouldRemove?0:3600);
         
-            do {
+            while(r==NATPMP_TRYAGAIN) {
                 FD_ZERO(&fds);
                 FD_SET(aNatPMPt->s, &fds);
                 getnatpmprequesttimeout(aNatPMPt, &timeout);
                 select(FD_SETSIZE, &fds, NULL, NULL, &timeout);
                 r = readnatpmpresponseorretry(aNatPMPt, &response);
-            } while(r==NATPMP_TRYAGAIN);
+            }
     
             if (r<0) {
                [aPortMapping setMappingStatus:TCMPortMappingStatusUnmapped];

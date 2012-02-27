@@ -7,6 +7,10 @@ static NSString *JVToolbarToggleVerboseItemIdentifier = @"JVToolbarToggleVerbose
 static NSString *JVToolbarTogglePrivateMessagesItemIdentifier = @"JVToolbarTogglePrivateMessagesItem";
 static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
+@interface JVChatConsolePanel (Private)
+- (void) textDidChange:(NSNotification *) notification;
+@end
+
 @implementation JVChatConsolePanel
 - (id) initWithConnection:(MVChatConnection *) connection {
 	if( ( self = [self init] ) ) {

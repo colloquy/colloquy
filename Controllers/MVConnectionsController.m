@@ -797,8 +797,6 @@ static NSMenu *favoritesMenu = nil;
 			[self newConnectionWithJoinRooms:( target ? [NSArray arrayWithObject:target] : nil )];
 
 			if( [url port] ) [newPort setObjectValue:[url port]];
-
-			handled = YES;
 		} else if( ! handled && [[url user] length] ) {
 			MVChatConnection *connection = [[[MVChatConnection alloc] initWithURL:url] autorelease];
 			[connection setEncoding:[[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"]];

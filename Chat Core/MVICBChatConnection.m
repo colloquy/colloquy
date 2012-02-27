@@ -473,6 +473,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 - (void) _sendPacket:(ICBPacket *) packet immediately:(BOOL) now {
 	NSData *data = [[packet rawData] retain];
 	[self sendRawMessage:data immediately:now];
+    [data release];
 
 	// XXX The message reported should really be raw...
 	[[NSNotificationCenter defaultCenter]
@@ -1176,7 +1177,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 	r = [msg rangeOfString:@"You are now in group "];
 	if( r.location == 0 ) {
-		NSString *name;
+		NSString *name = nil;
 
 		NSString *part = [msg substringFromIndex:r.length];
 		r = [part rangeOfString:@" as moderator"];

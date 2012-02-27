@@ -127,7 +127,11 @@ static void silc_client_file_monitor( SilcClient client, SilcClientConnection co
 		}
 
 		SilcUnlock( [[user connection] _silcClient] );
-	} else return nil;
+	} else {
+		[transfer release];
+
+		return nil;
+	}
 
 	return [transfer autorelease];
 }
