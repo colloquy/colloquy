@@ -272,7 +272,7 @@ static AGRegex *backrefPattern;
 		[repBuffer appendString:[rep substringWithRange:backrefRemainRange]];
 		// interpret case modifiers
 		for (k = 0; k < caseModIdx; k++) {
-			NSRange caseModRange;
+			NSRange caseModRange = { 0, 0 };
 			char caseModType = caseModVector[k].type;
 			switch (caseModType) {
 			case 'u':
