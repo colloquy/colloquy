@@ -102,7 +102,7 @@ NSString *JVToolbarMarkItemIdentifier = @"JVToolbarMarkItem";
 NSString *JVChatMessageWasProcessedNotification = @"JVChatMessageWasProcessedNotification";
 NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasProcessedNotification";
 
-@interface JVDirectChatPanel (JVDirectChatPrivate) <ABImageClient>
+@interface JVDirectChatPanel (JVDirectChatPrivate) <ABImageClient, MVTextViewDelegate>
 - (NSString *) _selfCompositeName;
 - (NSString *) _selfStoredNickname;
 - (void) _hyperlinkRoomNames:(NSMutableAttributedString *) message;

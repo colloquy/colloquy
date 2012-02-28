@@ -32,6 +32,7 @@
 @end
 
 @protocol MVTextViewDelegate <NSTextViewDelegate>
+@optional
 - (BOOL) textView:(NSTextView *) textView functionKeyPressed:(NSEvent *) event;
 - (BOOL) textView:(NSTextView *) textView enterKeyPressed:(NSEvent *) event;
 - (BOOL) textView:(NSTextView *) textView returnKeyPressed:(NSEvent *) event;
