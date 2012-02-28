@@ -328,11 +328,12 @@
 
 	for( NSString *path in files ) {
 		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
-		NSImageRep *sourceImageRep = [icon bestRepresentationForDevice:nil];
+		NSRect rect = NSMakeRect( 0., 0., 12., 12. );
+		NSImageRep *sourceImageRep = [icon bestRepresentationForRect:rect context:[NSGraphicsContext currentContext] hints:nil];
 		NSImage *smallImage = [[[NSImage alloc] initWithSize:NSMakeSize( 12., 12. )] autorelease];
 		[smallImage lockFocus];
 		[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationLow];
-		[sourceImageRep drawInRect:NSMakeRect( 0., 0., 12., 12. )];
+		[sourceImageRep drawInRect:rect];
 		[smallImage unlockFocus];
 
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[[[NSFileManager defaultManager] displayNameAtPath:path] stringByDeletingPathExtension] action:NULL keyEquivalent:@""] autorelease];
@@ -355,11 +356,12 @@
 
 		NSString *fullPath = ( [path isAbsolutePath] ? path : [resourcePath stringByAppendingPathComponent:path] );
 		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:fullPath];
-		NSImageRep *sourceImageRep = [icon bestRepresentationForDevice:nil];
+		NSRect rect = NSMakeRect( 0., 0., 12., 12. );
+		NSImageRep *sourceImageRep = [icon bestRepresentationForRect:rect context:[NSGraphicsContext currentContext] hints:nil];
 		NSImage *smallImage = [[[NSImage alloc] initWithSize:NSMakeSize( 12., 12. )] autorelease];
 		[smallImage lockFocus];
 		[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationLow];
-		[sourceImageRep drawInRect:NSMakeRect( 0., 0., 12., 12. )];
+		[sourceImageRep drawInRect:rect];
 		[smallImage unlockFocus];
 
 		menuItem = [[[NSMenuItem alloc] initWithTitle:[[NSFileManager defaultManager] displayNameAtPath:path] action:NULL keyEquivalent:@""] autorelease];

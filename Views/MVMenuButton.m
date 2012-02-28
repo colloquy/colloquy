@@ -97,11 +97,12 @@
 		[_toolbarItem setMaxSize:NSMakeSize( 32., 32. )];
 	} else if( controlSize == NSSmallControlSize ) {
 		if( ! _smallImage ) {
-			NSImageRep *sourceImageRep = [_orgImage bestRepresentationForDevice:nil];
+			NSRect rect = NSMakeRect( 0., 0., 24., 24. );
+			NSImageRep *sourceImageRep = [_orgImage bestRepresentationForRect:rect context:[NSGraphicsContext currentContext] hints:nil];
 			_smallImage = [[NSImage alloc] initWithSize:NSMakeSize( 24., 24. )];
 			[_smallImage lockFocus];
 			[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-			[sourceImageRep drawInRect:NSMakeRect( 0., 0., 24., 24. )];
+			[sourceImageRep drawInRect:rect];
 			[_smallImage unlockFocus];
 		}
 		[super setImage:_smallImage];
@@ -115,12 +116,13 @@
 	[_orgImage autorelease];
 	_orgImage = [[self image] copy];
 
-	NSImageRep *sourceImageRep = [image bestRepresentationForDevice:nil];
+	NSRect rect = NSMakeRect( 0., 0., 24., 24. );
+	NSImageRep *sourceImageRep = [_orgImage bestRepresentationForRect:rect context:[NSGraphicsContext currentContext] hints:nil];
 	[_smallImage autorelease];
 	_smallImage = [[NSImage alloc] initWithSize:NSMakeSize( 24., 24. )];
 	[_smallImage lockFocus];
 	[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-	[sourceImageRep drawInRect:NSMakeRect( 0., 0., 24., 24. )];
+	[sourceImageRep drawInRect:rect];
 	[_smallImage unlockFocus];
 
 	if( _size == NSRegularControlSize ) [super setImage:image];
