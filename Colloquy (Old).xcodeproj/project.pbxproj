@@ -292,9 +292,7 @@
 		1CF803F1070C948000C9B54C /* NSURLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */; };
 		891E8467123F0AEF00EC3C0F /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 891E8466123F0AEF00EC3C0F /* NSCharacterSetAdditions.m */; };
 		891EF3D1106426CB00CCEA35 /* PFMoveApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 891EF3D0106426CB00CCEA35 /* PFMoveApplicationController.m */; };
-		895BCD3912BD39400082AB5A /* CQActivityWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 895BCD3812BD39400082AB5A /* CQActivityWindow.xib */; };
 		89EB91AA0F269BEF0028B3E3 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; };
-		89FB4EDD12FAABBB00668905 /* Less Common Settings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */; };
 		9200338D13D92515005B69BA /* MVFileTransfer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 9200338B13D92515005B69BA /* MVFileTransfer.nib */; };
 		9200338F13D92530005B69BA /* Colloquy.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5394BEB0378E23701A35792 /* Colloquy.nib */; };
 		9200339113D92543005B69BA /* Colloquy.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5394BEB0378E23701A35792 /* Colloquy.nib */; };
@@ -2392,8 +2390,6 @@
 				1CC1B76F0A2D70DF0000A797 /* super-op.png in Resources */,
 				1CC1B77D0A2D70FB0000A797 /* founder.png in Resources */,
 				1C6268E5103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem in Resources */,
-				895BCD3912BD39400082AB5A /* CQActivityWindow.xib in Resources */,
-				89FB4EDD12FAABBB00668905 /* Less Common Settings.xcconfig in Resources */,
 				9200338D13D92515005B69BA /* MVFileTransfer.nib in Resources */,
 				9200338F13D92530005B69BA /* Colloquy.nib in Resources */,
 				9200339113D92543005B69BA /* Colloquy.nib in Resources */,
