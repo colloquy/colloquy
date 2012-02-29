@@ -4,6 +4,7 @@
 - (id) dataCellForRow:(int) row;
 @end
 
-@interface NSObject (JVMixedTableColumnDelegate)
+@protocol JVMixedTableColumnDelegate <NSTableViewDelegate>
+@optional
 - (id) tableView:(NSTableView *) tableView dataCellForRow:(int) row tableColumn:(NSTableColumn *) tableColumn;
 @end

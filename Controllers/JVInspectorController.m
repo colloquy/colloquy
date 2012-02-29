@@ -211,7 +211,7 @@ static NSMutableSet *inspectors = nil;
 
 - (void) _inspectWindow:(NSWindow *) window {
 	if( [[window delegate] conformsToProtocol:@protocol( JVInspectionDelegator )] ) {
-		id obj = [[window delegate] objectToInspect];
+		id obj = [[window delegate] performSelector:@selector(objectToInspect)];
 		if( obj != _object ) [self inspectObject:obj];
 	}
 }

@@ -11,13 +11,15 @@
 
 #pragma mark -
 
-@interface JVChatRoomBrowser (JVChatRoomBrowserPrivate)
+@interface JVChatRoomBrowser (Private)
 - (void) _needToRefreshResults:(id) sender;
 - (void) _refreshResults:(id) sender;
 - (void) _resortResults;
 - (void) _connectionChange:(NSNotification *) notification;
 - (void) _startFetch;
 - (void) _stopFetch;
+
+- (void) tableView:(NSTableView *) view didClickTableColumn:(NSTableColumn *) column;
 @end
 
 #pragma mark -

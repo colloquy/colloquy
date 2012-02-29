@@ -105,8 +105,8 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 - (JVChatTranscriptPanel *) focusedChatTranscriptPanel {
 	NSWindow *window = [[NSApplication sharedApplication] mainWindow];
 	if( [[window delegate] isKindOfClass:[JVChatWindowController class]] ) {
-		if( [[[window delegate] activeChatViewController] isKindOfClass:[JVChatTranscriptPanel class]] ) {
-			return (JVChatTranscriptPanel *)[[window delegate] activeChatViewController];
+		if( [[((id <JVChatViewController>)[window delegate]) activeChatViewController] isKindOfClass:[JVChatTranscriptPanel class]] ) {
+			return (JVChatTranscriptPanel *)[((id <JVChatViewController>)[window delegate]) activeChatViewController];
 		}
 	} return nil;
 }

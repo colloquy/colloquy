@@ -78,6 +78,10 @@ extern NSString *JVChatViewPboardType;
 @end
 
 @protocol JVChatViewController <JVChatListItem>
+@optional
+- (id <JVChatViewController>) activeChatViewController;
+
+@required
 - (MVChatConnection *) connection;
 
 - (JVChatWindowController *) windowController;

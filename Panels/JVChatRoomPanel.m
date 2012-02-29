@@ -326,7 +326,7 @@
 
 - (IBAction) changeEncoding:(id) sender {
 	[super changeEncoding:sender];
-	[[self target] setEncoding:[self encoding]];
+	[[self target] setValue:[NSNumber numberWithInt:[self encoding]] forKey:@"encoding"];
 	if( sender ) [self _topicChanged:nil];
 }
 
