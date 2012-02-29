@@ -29,7 +29,6 @@
 #import "NSBundleAdditions.h"
 #import "NSDateAdditions.h"
 #import "NSStringAdditions.h"
-#import "NSURLAdditions.h"
 
 static NSSet *actionVerbs = nil;
 
@@ -293,15 +292,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	[display setBodyTemplate:@"directChat"];
 
 	[self changeEncoding:nil];
-
-/*	if( [self isMemberOfClass:[JVDirectChatPanel class]] ) {
-		NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[self user] serverAddress], [[[self target] description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
-
-		NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Recent Acquaintances/%@ (%@).inetloc", [self target], [[self user] serverAddress]] stringByExpandingTildeInPath];
-
-		[url writeToInternetLocationFile:path];
-		[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:path];
-	} */
 
 	[send setHorizontallyResizable:YES];
 	[send setVerticallyResizable:YES];

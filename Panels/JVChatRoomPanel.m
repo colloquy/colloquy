@@ -9,7 +9,6 @@
 #import "JVChatMessage.h"
 #import "MVTextView.h"
 #import "JVStyleView.h"
-#import "NSURLAdditions.h"
 #import "NSAttributedStringMoreAdditions.h"
 #import "MVChatUserAdditions.h"
 #import "MVApplicationController.h"
@@ -77,12 +76,6 @@
 
 	[display setBodyTemplate:@"chatRoom"];
 	[display addBanner:@"roomTopicBanner"];
-
-/*	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[self connection] server], [[_target description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
-	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Recent Chat Rooms/%@ (%@).inetloc", _target, [[self connection] server]] stringByExpandingTildeInPath];
-
-	[url writeToInternetLocationFile:path];
-	[[NSFileManager defaultManager] changeFileAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] atPath:path]; */
 }
 
 - (void) dealloc {
@@ -300,12 +293,14 @@
 }
 
 - (IBAction) addToFavorites:(id) sender {
-	NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", [[self connection] urlScheme], [[self connection] server], [[_target description] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
-	NSString *path = [[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@ (%@).inetloc", _target, [[self connection] server]] stringByExpandingTildeInPath];
+	NSString *favoritesPath = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
+	NSMutableArray *favorites = [NSMutableArray arrayWithContentsOfFile:favoritesPath];
+	if (!favorites)
+		favorites = [NSMutableArray array];
 
-	[url writeToInternetLocationFile:path];
-	[[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSFileExtensionHidden, nil] ofItemAtPath:path error:nil];
-	[[NSWorkspace sharedWorkspace] noteFileSystemChanged:path];
+	[favorites addObject:[NSDictionary dictionaryWithObjectsAndKeys:[_target description], @"target", [[self connection] server], @"server", [[self connection] urlScheme], @"scheme", nil]];
+
+	[favorites writeToFile:favoritesPath atomically:YES];
 
 	[MVConnectionsController refreshFavoritesMenu];
 }

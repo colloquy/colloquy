@@ -1,3 +1,4 @@
+#import "NSURLAdditions.h"
 #import "MVApplicationController.h"
 #import "MVConnectionsController.h"
 #import "JVConnectionInspector.h"
@@ -8,7 +9,6 @@
 #import "MVKeyChain.h"
 //#import "JVChatRoomPanel.h"
 //#import "JVDirectChatPanel.h"
-#import "NSURLAdditions.h"
 #import <ChatCore/MVChatConnection.h>
 
 static MVConnectionsController *sharedInstance = nil;
@@ -74,18 +74,14 @@ static NSMenu *favoritesMenu = nil;
 	for( NSMenuItem *menuItem in [[[favoritesMenu itemArray] copy] autorelease] )
 		[favoritesMenu removeItem:menuItem];
 
-	NSURL *url = nil;
+	;
 	NSMutableArray *rooms = [NSMutableArray array], *roomNames = [NSMutableArray array];
 
-	NSString *path = [@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath];
-	for( NSString *item in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil] ) {
-		if( [[item pathExtension] isEqualToString:@"inetloc"] ) {
-			url = [NSURL URLWithInternetLocationFile:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@", item] stringByExpandingTildeInPath]];
-			if( url ) {
-				[rooms addObject:url];
-				[roomNames addObject:[item stringByDeletingPathExtension]];
-			}
-		}
+	NSString *path = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
+	NSArray *favorites = [NSArray arrayWithContentsOfFile:path];
+	for( NSDictionary *item in favorites ) {
+		[rooms addObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", [item objectForKey:@"scheme"], [item objectForKey:@"server"], [item objectForKey:@"target"]]]];
+		[roomNames addObject:[item objectForKey:@"target"]];
 	}
 
 	NSMenuItem *menuItem = nil;
@@ -100,6 +96,7 @@ static NSMenu *favoritesMenu = nil;
 	[icon setSize:NSMakeSize( 16., 16. )];
 	NSEnumerator *enumerator = [rooms objectEnumerator];
 	NSString *item = nil;
+	NSURL *url = nil;
 	while( ( url = [enumerator nextObject] ) && ( item = [nameEnumerator nextObject] ) ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( _connectToFavorite: ) keyEquivalent:@""] autorelease];
 		[menuItem setImage:icon];
@@ -156,6 +153,29 @@ static NSMenu *favoritesMenu = nil;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationQuitting: ) name:NSApplicationWillTerminateNotification object:nil];
 
 		[self _loadBookmarkList];
+
+		 // this can likely be removed when 3.0 starts, if we even keep MVConnectionsController around
+		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVFavoritesMigrated"] ) {
+			NSString *path = [@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath];
+
+			NSMutableArray *favorites = [NSMutableArray array];
+
+			NSArray *directoryContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+			for( NSString *item in directoryContents ) {
+				if( ! [[item pathExtension] isEqualToString:@"inetloc"] )
+					continue;
+
+				NSURL *url = [NSURL URLWithInternetLocationFile:[[NSString stringWithFormat:@"~/Library/Application Support/Colloquy/Favorites/%@", item] stringByExpandingTildeInPath]];
+				if( url ) {
+					[favorites addObject:[NSDictionary dictionaryWithObjectsAndKeys:[url.path lastPathComponent], @"target", url.host, @"server", url.scheme, @"scheme", nil]];
+
+					[[NSFileManager defaultManager] removeItemAtPath:item error:nil];
+				}
+			}
+
+			if ([favorites writeToFile:[@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath] atomically:YES])
+				[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVFavoritesMigrated"];
+		}
 	}
 
 	return self;
