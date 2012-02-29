@@ -448,7 +448,7 @@ static BOOL applicationIsTerminating = NO;
 
 		[connectionInformation release];
 	}
-	
+
 	[quitAttributedString release];
 }
 
@@ -496,8 +496,6 @@ static BOOL applicationIsTerminating = NO;
 - (void) applicationDidFinishLaunching:(NSNotification *) notification {
 	_launchDate = [[NSDate alloc] init];
 
-	[MVCrashCatcher check];
-
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVEnableAutomaticSoftwareUpdateCheck"] && NSAppKitVersionNumber >= NSAppKitVersionNumber10_4 ) {
 		_updater = [[SUUpdater allocWithZone:nil] init];
 		[_updater checkForUpdatesInBackground];
@@ -515,11 +513,8 @@ static BOOL applicationIsTerminating = NO;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( invalidPluginsFound: ) name:MVChatPluginManagerDidFindInvalidPluginsNotification object:nil];
 
-	[MVChatPluginManager defaultManager];
 	[MVConnectionsController defaultController];
 	[JVChatController defaultController];
-	[MVFileTransferController defaultController];
-	[MVBuddyListController sharedBuddyList];
 
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:20] setSubmenu:[MVConnectionsController favoritesMenu]];
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:30] setSubmenu:[JVChatController smartTranscriptMenu]];
@@ -550,28 +545,7 @@ static BOOL applicationIsTerminating = NO;
 		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVAskedToAllowAnalytics"];
 	}
 
-	JVAnalyticsController *analyticsController = [JVAnalyticsController defaultController];
-	if (analyticsController) {
-		NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-
-		NSString *information = [infoDictionary objectForKey:@"CFBundleName"];
-		[[JVAnalyticsController defaultController] setObject:information forKey:@"application-name"];
-
-		information = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-		[[JVAnalyticsController defaultController] setObject:information forKey:@"application-version"];
-
-		information = [infoDictionary objectForKey:@"CFBundleVersion"];
-		[[JVAnalyticsController defaultController] setObject:information forKey:@"application-build-version"];
-
-		[[JVAnalyticsController defaultController] setObject:[[NSLocale currentLocale] localeIdentifier] forKey:@"locale"];
-
-		NSInteger showNotices = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"];
-		information = (!showNotices ? @"none" : (showNotices == 1 ? @"all" : @"auto"));
-		[[JVAnalyticsController defaultController] setObject:information forKey:@"notices-behavior"];
-
-		information = ([[[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"] hasCaseInsensitiveSubstring:@"Get Colloquy"] ? @"default" : @"custom");
-		[[JVAnalyticsController defaultController] setObject:information forKey:@"quit-message"];
-	}
+	[self performSelector:@selector(_deferredLaunchingBehavior) withObject:nil afterDelay:0.];
 }
 
 - (void) applicationWillBecomeActive:(NSNotification *) notification {
@@ -724,4 +698,35 @@ static BOOL applicationIsTerminating = NO;
 	}
 }
 
+#pragma mark -
+
+- (void) _deferredLaunchingBehavior {
+	[MVCrashCatcher check];
+	[MVChatPluginManager defaultManager];
+	[MVFileTransferController defaultController];
+	[MVBuddyListController sharedBuddyList];
+
+	JVAnalyticsController *analyticsController = [JVAnalyticsController defaultController];
+	if (analyticsController) {
+		NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+
+		NSString *information = [infoDictionary objectForKey:@"CFBundleName"];
+		[[JVAnalyticsController defaultController] setObject:information forKey:@"application-name"];
+
+		information = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+		[[JVAnalyticsController defaultController] setObject:information forKey:@"application-version"];
+
+		information = [infoDictionary objectForKey:@"CFBundleVersion"];
+		[[JVAnalyticsController defaultController] setObject:information forKey:@"application-build-version"];
+
+		[[JVAnalyticsController defaultController] setObject:[[NSLocale currentLocale] localeIdentifier] forKey:@"locale"];
+
+		NSInteger showNotices = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"];
+		information = (!showNotices ? @"none" : (showNotices == 1 ? @"all" : @"auto"));
+		[[JVAnalyticsController defaultController] setObject:information forKey:@"notices-behavior"];
+
+		information = ([[[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"] hasCaseInsensitiveSubstring:@"Get Colloquy"] ? @"default" : @"custom");
+		[[JVAnalyticsController defaultController] setObject:information forKey:@"quit-message"];
+	}
+}
 @end
