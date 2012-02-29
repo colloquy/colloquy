@@ -406,13 +406,6 @@
 			remoteGlobalIDString = CBF685140820186F00F498FB;
 			remoteInfo = "Colloquy (Metadata Importer)";
 		};
-		1CBBDF5B08B6EA92002A8BA6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1CBBDF5608B6EA92002A8BA6 /* Ruby Support.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8D5B49B6048680CD000E48DA;
-			remoteInfo = "Python Support Plugin";
-		};
 		1CCE63750CC1FF8400365094 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0A60C15F0630D96D00DC6280 /* Chat Core.xcodeproj */;
@@ -768,7 +761,6 @@
 		1CBB23D604EFE24C000001C8 /* viewAlertSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = viewAlertSelected.png; path = Resources/viewAlertSelected.png; sourceTree = SOURCE_ROOT; };
 		1CBB23D904F03CA7000001C8 /* JVDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVDetailCell.h; path = Views/JVDetailCell.h; sourceTree = "<group>"; };
 		1CBB23DA04F03CA7000001C8 /* JVDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVDetailCell.m; path = Views/JVDetailCell.m; sourceTree = "<group>"; };
-		1CBBDF5608B6EA92002A8BA6 /* Ruby Support.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Ruby Support.xcodeproj"; path = "Plug-Ins/Ruby Support/Ruby Support.xcodeproj"; sourceTree = "<group>"; };
 		1CBC62E205488C73009E59E1 /* JVPreferencesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVPreferencesController.h; path = Controllers/JVPreferencesController.h; sourceTree = "<group>"; };
 		1CBC62E305488C73009E59E1 /* JVPreferencesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVPreferencesController.m; path = Controllers/JVPreferencesController.m; sourceTree = "<group>"; };
 		1CBC62E605488CBA009E59E1 /* NSPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSPreferences.h; path = Controllers/NSPreferences.h; sourceTree = "<group>"; };
@@ -1405,14 +1397,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1CBBDF5708B6EA92002A8BA6 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1CBBDF5C08B6EA92002A8BA6 /* Ruby Support.plugin */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		1CBC62F405488D5A009E59E1 /* Preference Modules */ = {
 			isa = PBXGroup;
 			children = (
@@ -1507,7 +1491,6 @@
 				1CEF8F340A3AB70E0054298A /* JavaScript Support */,
 				1CE3F7BC07C7B60A0049A366 /* F-Script Support */,
 				1C0A199A08B0416C00324E25 /* Python Support */,
-				1CE87EC308B6E98400538B50 /* Ruby Support */,
 				1CA56CCD042A713E00000102 /* iTunes */,
 			);
 			name = "Plug–Ins";
@@ -1528,14 +1511,6 @@
 				1CE3F9BB07C7C29A0049A366 /* F-Script Support.xcodeproj */,
 			);
 			name = "F-Script Support";
-			sourceTree = "<group>";
-		};
-		1CE87EC308B6E98400538B50 /* Ruby Support */ = {
-			isa = PBXGroup;
-			children = (
-				1CBBDF5608B6EA92002A8BA6 /* Ruby Support.xcodeproj */,
-			);
-			name = "Ruby Support";
 			sourceTree = "<group>";
 		};
 		1CEE3A4C0577E14500AD6DE2 /* Buddy List Icons */ = {
@@ -2119,10 +2094,6 @@
 					ProductGroup = 1C0A19A308B0418600324E25 /* Products */;
 					ProjectRef = 1C0A19A208B0418600324E25 /* Python Support.xcodeproj */;
 				},
-				{
-					ProductGroup = 1CBBDF5708B6EA92002A8BA6 /* Products */;
-					ProjectRef = 1CBBDF5608B6EA92002A8BA6 /* Ruby Support.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -2168,13 +2139,6 @@
 			fileType = wrapper.cfbundle;
 			path = "Python Support.plugin";
 			remoteRef = 1C0A19A608B0418600324E25 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		1CBBDF5C08B6EA92002A8BA6 /* Ruby Support.plugin */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "Ruby Support.plugin";
-			remoteRef = 1CBBDF5B08B6EA92002A8BA6 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		1CEEAB16095BD23100166A54 /* ChatCore.framework */ = {

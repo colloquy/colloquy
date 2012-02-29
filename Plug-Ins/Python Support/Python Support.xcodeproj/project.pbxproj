@@ -13,6 +13,30 @@
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		92BFCF2714FDF0DC001D02BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92BFCF2214FDF0DB001D02BB /* Chat Core.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
+		};
+		92BFCF2914FDF0DC001D02BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92BFCF2214FDF0DB001D02BB /* Chat Core.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 92BFCEAA14FDEF95001D02BB;
+			remoteInfo = "Chat Core (Static Library)";
+		};
+		92BFCF2C14FDF0E1001D02BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92BFCF2214FDF0DB001D02BB /* Chat Core.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1C51B46E052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -27,6 +51,7 @@
 		1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* Python Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Python Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+		92BFCF2214FDF0DB001D02BB /* Chat Core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Chat Core.xcodeproj"; path = "/Users/Zach/Projects/Colloquy/Plug-Ins/F-Script Support/../../Chat Core.xcodeproj"; sourceTree = "<absolute>"; };
 		A1F6108B0957E4BB001B65CD /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -45,6 +70,7 @@
 		089C166AFE841209C02AAC07 /* FScript Plugin */ = {
 			isa = PBXGroup;
 			children = (
+				92BFCF2214FDF0DB001D02BB /* Chat Core.xcodeproj */,
 				1C415F690B35122700239EB3 /* Template.py */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				32C88E010371C26100C91783 /* Other Sources */,
@@ -138,6 +164,15 @@
 			tabWidth = 4;
 			usesTabs = 1;
 		};
+		92BFCF2314FDF0DB001D02BB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				92BFCF2814FDF0DC001D02BB /* ChatCore.framework */,
+				92BFCF2A14FDF0DC001D02BB /* libChat Core.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -152,6 +187,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				92BFCF2D14FDF0E1001D02BB /* PBXTargetDependency */,
 			);
 			name = "Python Support Plugin";
 			productInstallPath = "$(HOME)/Library/Bundles";
@@ -177,12 +213,35 @@
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 92BFCF2314FDF0DB001D02BB /* Products */;
+					ProjectRef = 92BFCF2214FDF0DB001D02BB /* Chat Core.xcodeproj */;
+				},
+			);
 			projectRoot = ../..;
 			targets = (
 				8D5B49AC048680CD000E48DA /* Python Support Plugin */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		92BFCF2814FDF0DC001D02BB /* ChatCore.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ChatCore.framework;
+			remoteRef = 92BFCF2714FDF0DC001D02BB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		92BFCF2A14FDF0DC001D02BB /* libChat Core.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libChat Core.a";
+			remoteRef = 92BFCF2914FDF0DC001D02BB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		8D5B49AF048680CD000E48DA /* Resources */ = {
@@ -206,6 +265,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		92BFCF2D14FDF0E1001D02BB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Chat Core (Framework)";
+			targetProxy = 92BFCF2C14FDF0E1001D02BB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		0A61C80307E05F7200C326B4 /* Localizable.strings */ = {

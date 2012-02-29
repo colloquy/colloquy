@@ -12,6 +12,30 @@
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		92BFCF0F14FDF0BD001D02BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92BFCF0A14FDF0BD001D02BB /* Chat Core.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
+		};
+		92BFCF1114FDF0BD001D02BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92BFCF0A14FDF0BD001D02BB /* Chat Core.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 92BFCEAA14FDEF95001D02BB;
+			remoteInfo = "Chat Core (Static Library)";
+		};
+		92BFCF1414FDF0C0001D02BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 92BFCF0A14FDF0BD001D02BB /* Chat Core.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1C51B46E052DE0CB00BB459B;
+			remoteInfo = "Chat Core (Framework)";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -28,6 +52,7 @@
 		1CF7A61407CD661200965F52 /* compile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compile.png; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* AppleScript Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AppleScript Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		92BFCF0A14FDF0BD001D02BB /* Chat Core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Chat Core.xcodeproj"; path = "../../Chat Core.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +70,7 @@
 		089C166AFE841209C02AAC07 /* FScript Plugin */ = {
 			isa = PBXGroup;
 			children = (
+				92BFCF0A14FDF0BD001D02BB /* Chat Core.xcodeproj */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				1C9AE8FA086A552A008ED7AD /* Configurations */,
@@ -129,6 +155,15 @@
 			tabWidth = 4;
 			usesTabs = 1;
 		};
+		92BFCF0B14FDF0BD001D02BB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				92BFCF1014FDF0BD001D02BB /* ChatCore.framework */,
+				92BFCF1214FDF0BD001D02BB /* libChat Core.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -142,6 +177,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				92BFCF1514FDF0C0001D02BB /* PBXTargetDependency */,
 			);
 			name = "AppleScript Support Plugin";
 			productInstallPath = "$(HOME)/Library/Bundles";
@@ -163,12 +199,35 @@
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* FScript Plugin */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 92BFCF0B14FDF0BD001D02BB /* Products */;
+					ProjectRef = 92BFCF0A14FDF0BD001D02BB /* Chat Core.xcodeproj */;
+				},
+			);
 			projectRoot = ../..;
 			targets = (
 				8D5B49AC048680CD000E48DA /* AppleScript Support Plugin */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		92BFCF1014FDF0BD001D02BB /* ChatCore.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ChatCore.framework;
+			remoteRef = 92BFCF0F14FDF0BD001D02BB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		92BFCF1214FDF0BD001D02BB /* libChat Core.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libChat Core.a";
+			remoteRef = 92BFCF1114FDF0BD001D02BB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8D5B49B1048680CD000E48DA /* Sources */ = {
@@ -181,6 +240,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		92BFCF1514FDF0C0001D02BB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Chat Core (Framework)";
+			targetProxy = 92BFCF1414FDF0C0001D02BB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1C7F303F0855482D00D41FB0 /* Development */ = {
