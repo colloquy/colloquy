@@ -736,6 +736,13 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 #pragma mark -
 #pragma mark Messages & Events
 
+- (void) _performEmoticonSubstitutionOnStringIfNecessary:(NSMutableAttributedString *) string {
+	if ([self emoticons] == [JVEmoticonSet textOnlyEmoticonSet])
+		return;
+
+	[[self emoticons] performEmoticonSubstitution:string];
+}
+
 - (void) addEventMessageToDisplay:(NSString *) message withName:(NSString *) name andAttributes:(NSDictionary *) attributes {
 	if( ! _nibLoaded ) [self view];
 
@@ -825,7 +832,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[self _hyperlinkRoomNames:messageString];
 	}
 
-	[[self emoticons] performEmoticonSubstitution:messageString];
+	[self _performEmoticonSubstitutionOnStringIfNecessary:messageString];
 
 	if( ! [user isLocalUser] ) {
 		NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
@@ -1657,7 +1664,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[self _hyperlinkRoomNames:messageString];
 	}
 
-	[[self emoticons] performEmoticonSubstitution:messageString];
+	[self _performEmoticonSubstitutionOnStringIfNecessary:messageString];
 
 	return messageString;
 }
@@ -1709,7 +1716,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatDisableLinkHighlighting"] )
 			[messageString makeLinkAttributesAutomatically];
 
-		[[self emoticons] performEmoticonSubstitution:messageString];
+		[self _performEmoticonSubstitutionOnStringIfNecessary:messageString];
 
 		NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"IgnoreFonts", [NSNumber numberWithBool:YES], @"IgnoreFontSizes", nil];
 		NSString *msgString = [messageString HTMLFormatWithOptions:options];
