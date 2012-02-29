@@ -46,6 +46,7 @@
 		_sortedMembers = [[NSMutableArray allocWithZone:nil] initWithCapacity:100];
 		_preferredTabCompleteNicknames = [[NSMutableArray allocWithZone:nil] initWithCapacity:10];
 		_nextMessageAlertMembers = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
+		_memberRegexes = CFDictionaryCreateMutable(kCFAllocatorDefault, 0, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
 		_cantSendMessages = YES;
 		_kickedFromRoom = NO;
 		_banListSynced = NO;
@@ -372,17 +373,24 @@
 		[_nextMessageAlertMembers removeObject:[message sender]];
 	}
 
-	NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
+	static NSCharacterSet *escapeSet = nil;
+	if (!escapeSet)
+		escapeSet = [[NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"] retain];
 
 	for( member in _sortedMembers ) {
-		NSMutableString *escapedName = [[member nickname] mutableCopy];
-		[escapedName escapeCharactersInSet:escapeSet];
+		AGRegex *regex = (id)CFDictionaryGetValue(_memberRegexes, member);
+		if( !regex ) {
+			NSMutableString *escapedName = [[member nickname] mutableCopy];
+			[escapedName escapeCharactersInSet:escapeSet];
 
-		NSString *pattern = [[NSString alloc] initWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", escapedName];
-		AGRegex *regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
+			NSString *pattern = [[NSString alloc] initWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", escapedName];
+			regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
 
-		[escapedName release];
-		[pattern release];
+			[escapedName release];
+			[pattern release];
+
+			CFDictionarySetValue(_memberRegexes, member, regex);
+		}
 
 		NSArray *matches = [regex findAllInString:[message bodyAsPlainText]];
 
