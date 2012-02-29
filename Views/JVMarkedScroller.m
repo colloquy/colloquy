@@ -147,11 +147,18 @@ struct _mark {
 		[self drawKnob];
 }
 
-- (void) setFloatValue:(float) position knobProportion:(CGFloat) percent {
+- (void) setDoubleValue:(double) position {
 	if( ! _jumpingToMark ) _currentMark = NSNotFound;
-	if( ( [self floatValue] != position || [self knobProportion] != percent ) && ( [_marks count] || [_shades count] ) )
+	if( ( [self doubleValue] != position ) && ( [_marks count] || [_shades count] ) )
 		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
-	[super setFloatValue:position knobProportion:percent];
+	[super setDoubleValue:position];
+}
+
+- (void) setKnobProportion:(CGFloat) proportion {
+	if( ! _jumpingToMark ) _currentMark = NSNotFound;
+	if( ( [self knobProportion] != proportion ) && ( [_marks count] || [_shades count] ) )
+		[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
+	[super setKnobProportion:proportion];
 }
 
 - (NSMenu *) menuForEvent:(NSEvent *) event {
@@ -191,6 +198,12 @@ struct _mark {
 	[menu addItem:item];
 
 	return menu;
+}
+
+#pragma mark -
+
++ (BOOL) isCompatibleWithOverlayScrollers {
+	return YES;
 }
 
 #pragma mark -
