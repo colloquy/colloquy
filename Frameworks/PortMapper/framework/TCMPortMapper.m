@@ -6,6 +6,7 @@
 #import "NSNotificationCenterThreadingAdditions.h"
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <SystemConfiguration/SCSchemaDefinitions.h>
+#import <CommonCrypto/CommonCrypto.h>
 #import <sys/sysctl.h> 
 #import <err.h>
 #import <netinet/in.h>
@@ -313,7 +314,7 @@ enum {
     char hashstring[16*2+1];
     int i;
     NSData *dataToHash = [inString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:NO];
-    MD5([dataToHash bytes],[dataToHash length],digest);
+	CC_MD5([dataToHash bytes],[dataToHash length],digest);
     for(i=0;i<16;i++) sprintf(hashstring+i*2,"%02x",digest[i]);
     hashstring[i*2]=0;
     
