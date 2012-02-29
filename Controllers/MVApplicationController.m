@@ -40,26 +40,6 @@
 
 #pragma mark -
 
-#if !defined(MAC_OS_X_VERSION_10_5) || (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5)
-@interface NSAlert (LeopardOnly)
-- (void) setAccessoryView:(NSView *) view;
-@end
-
-@interface NSDockTile : NSObject
-@end
-
-@interface NSApplication (LeopardOnly)
-- (NSDockTile *) dockTile;
-@end
-
-@interface NSDockTile (LeopardOnly)
-- (void) setBadgeLabel:(NSString *) string;
-- (void) display;
-@end
-#endif
-
-#pragma mark -
-
 NSString *JVChatStyleInstalledNotification = @"JVChatStyleInstalledNotification";
 NSString *JVChatEmoticonSetInstalledNotification = @"JVChatEmoticonSetInstalledNotification";
 NSString *JVMachineBecameIdleNotification = @"JVMachineBecameIdleNotification";

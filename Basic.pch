@@ -2,23 +2,20 @@
 
 #define ENABLE(FEATURE) (defined(ENABLE_##FEATURE) && ENABLE_##FEATURE)
 
-#ifndef MAC_OS_X_VERSION_10_5
-#define MAC_OS_X_VERSION_10_5 1050
-#endif
-
+#ifndef __IPHONE_OS_VERSION_MIN_REQUIRED
 #ifndef MAC_OS_X_VERSION_10_6
-#define MAC_OS_X_VERSION_10_6 1060
+	#define MAC_OS_X_VERSION_10_6 1060
+#endif
 #endif
 
 #ifdef __OBJC__
-
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-#import <Foundation/Foundation.h>
+	#import <Foundation/Foundation.h>
 #else
-#import <Cocoa/Cocoa.h>
-#import <Foundation/NSDebug.h>
+	#import <Cocoa/Cocoa.h>
+	#import <Foundation/NSDebug.h>
 
-CF_EXPORT CFRunLoopRef CFRunLoopGetMain(void);
+	CF_EXPORT CFRunLoopRef CFRunLoopGetMain(void);
 
 #endif
 #endif

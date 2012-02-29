@@ -2,20 +2,6 @@
 #import "JVSideSplitView.h"
 #import "JVDetailCell.h"
 
-#if !defined(MAC_OS_X_VERSION_10_5) || (MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_5)
-enum {
-	NSTableViewSelectionHighlightStyleRegular = 0,
-	NSTableViewSelectionHighlightStyleSourceList = 1,
-};
-
-typedef NSUInteger NSTableViewSelectionHighlightStyle;
-
-@interface NSTableView (NewLeopardMethods)
-- (void) setSelectionHighlightStyle:(NSTableViewSelectionHighlightStyle) value;
-- (NSTableViewSelectionHighlightStyle) selectionHighlightStyle;
-@end
-#endif
-
 #pragma mark -
 
 @interface JVChatWindowController (JVChatWindowControllerPrivate)
