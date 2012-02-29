@@ -3144,7 +3144,6 @@
 				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				LLVM_LTO = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
@@ -3210,7 +3209,6 @@
 				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				LLVM_LTO = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
