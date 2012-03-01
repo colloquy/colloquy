@@ -373,6 +373,12 @@
 		escapeSet = [[NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"] retain];
 
 	for( member in _sortedMembers ) {
+		NSString *plainText = [message bodyAsPlainText];
+
+		// if the message is shorter than the nickname, it can't be a match. stop sooner
+		if( [[member nickname] length] > [plainText length] )
+			continue;
+
 		AGRegex *regex = (id)CFDictionaryGetValue(_memberRegexes, member);
 		if( !regex ) {
 			NSMutableString *escapedName = [[member nickname] mutableCopy];
@@ -387,7 +393,7 @@
 			CFDictionarySetValue(_memberRegexes, member, regex);
 		}
 
-		NSArray *matches = [regex findAllInString:[message bodyAsPlainText]];
+		NSArray *matches = [regex findAllInString:plainText];
 
 		for( AGRegexMatch *match in matches ) {
 			NSRange foundRange = [match range];
@@ -1025,6 +1031,8 @@
 	[_sortedMembers removeObjectIdenticalTo:mbr];
 	[_nextMessageAlertMembers removeObject:mbr];
 	[_windowController reloadListItem:self andChildren:YES];
+
+	CFDictionaryRemoveValue(_memberRegexes, mbr);
 }
 
 - (void) _userBricked:(NSNotification *) notification {
