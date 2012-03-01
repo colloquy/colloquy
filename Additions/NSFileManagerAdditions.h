@@ -3,7 +3,8 @@ typedef struct {
 	BOOL x86_64;
 	BOOL ppc32;
 	BOOL ppc64;
-	NSInteger unknown; // ARMv6, ARMv7, 68k, etc
+	BOOL arm;
+	NSInteger unknown; // 68k, MIPS, etc
 } MVArchitectures;
 
 @interface NSFileManager (Additions)

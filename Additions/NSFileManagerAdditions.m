@@ -19,6 +19,9 @@ static inline void markArchitectureAsActiveForCPUType(MVArchitectures *architect
 	case CPU_TYPE_X86_64:
 		(*architectures).x86_64 = YES;
 		break;
+	case CPU_TYPE_ARM
+		(*architectures).arm = YES;
+		break;
 	default:
 		(*architectures).unknown++;
 		break;
@@ -61,7 +64,7 @@ static inline void swapIntsInHeader(uint8_t *bytes, ssize_t length) {
 			if (magic == FAT_CIGAM)
 				swapIntsInHeader(bytes, data.length);
 
-			uint32_t numberOfArchitectures = ((struct fat_header *)((uint8_t *)bytes))->nfat_arch;
+			uint32_t numberOfArchitectures = ((struct fat_header *)bytes)->nfat_arch;
 			struct fat_arch *fatArchrchitectures = (struct fat_arch *)(bytes + sizeof(struct fat_header));
 
 			for (uint32_t i = 0; i < numberOfArchitectures; i++) {
