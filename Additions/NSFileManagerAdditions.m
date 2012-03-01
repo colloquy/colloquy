@@ -25,8 +25,8 @@ static inline void markArchitectureAsActiveForCPUType(MVArchitectures *architect
 }
 }
 
-static inline void swapIntsInHeader(uint8_t *bytes, unsigned length) {
-	for (NSUInteger i = 0; i < length; i += 4)
+static inline void swapIntsInHeader(uint8_t *bytes, ssize_t length) {
+	for (ssize_t i = 0; i < length; i += 4)
 		*(uint32_t *)(bytes + i) = OSSwapInt32(*(uint32_t *)(bytes + i));
 }
 
@@ -45,10 +45,10 @@ static inline void swapIntsInHeader(uint8_t *bytes, unsigned length) {
 		return architectures;
 	}
 
-	uint32_t *bytes = (void *)[data bytes];
-	uint32_t magic = *(uint8_t *)bytes;
-
 	if (data.length >= sizeof(struct mach_header_64)) {
+		uint8_t *bytes = (void *)[data bytes];
+		uint32_t magic = *(uint32_t *)bytes;
+
 		if (magic == MH_MAGIC || magic == MH_CIGAM) { // 32-bit, thin
 			struct mach_header *header = (struct mach_header *)bytes;
 
@@ -61,10 +61,10 @@ static inline void swapIntsInHeader(uint8_t *bytes, unsigned length) {
 			if (magic == FAT_CIGAM)
 				swapIntsInHeader(bytes, data.length);
 
-			NSUInteger numberOfArchitectures = ((struct fat_header *)bytes)->nfat_arch;
+			uint32_t numberOfArchitectures = ((struct fat_header *)((uint8_t *)bytes))->nfat_arch;
 			struct fat_arch *fatArchrchitectures = (struct fat_arch *)(bytes + sizeof(struct fat_header));
 
-			for (NSUInteger i = 0; i < numberOfArchitectures; i++) {
+			for (uint32_t i = 0; i < numberOfArchitectures; i++) {
 				struct fat_arch fatArchitecture = fatArchrchitectures[i];
 
 				markArchitectureAsActiveForCPUType(&architectures, fatArchitecture.cputype);
