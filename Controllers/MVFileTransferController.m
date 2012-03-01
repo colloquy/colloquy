@@ -1,7 +1,5 @@
 #import "MVFileTransferController.h"
 
-#import "MVFileTransfer.h"
-
 #import "JVDetailCell.h"
 
 static MVFileTransferController *sharedInstance = nil;
