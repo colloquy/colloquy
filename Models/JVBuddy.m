@@ -78,7 +78,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 		string = [dictionary objectForKey:@"addressBookPersonRecord"];
 		if( [string isKindOfClass:[NSString class]] )
-			_person = [[[ABAddressBook sharedAddressBook] recordForUniqueId:string] retain];
+			_person = (ABPerson *)[[[ABAddressBook sharedAddressBook] recordForUniqueId:string] retain];
 
 		for( NSDictionary *ruleDictionary in [dictionary objectForKey:@"rules"] ) {
 			MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:nil] initWithDictionaryRepresentation:ruleDictionary];

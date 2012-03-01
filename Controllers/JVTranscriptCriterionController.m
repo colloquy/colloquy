@@ -292,7 +292,7 @@
 			case JVTranscriptDayCriterionQueryUnits: comp *= 24.;
 			case JVTranscriptHourCriterionQueryUnits: comp *= 60.;
 			case JVTranscriptMinuteCriterionQueryUnits: comp *= 60.;
-			default: comp = comp; // no change
+			default: break; // no change
 		}
 
 		if( oper == JVTranscriptIsLessThanCriterionOperation ) return ( diff < comp );

@@ -25,7 +25,7 @@ static inline void markArchitectureAsActiveForCPUType(MVArchitectures *architect
 }
 }
 
-static inline void swapIntsInHeader(uint8_t *bytes, unsigned length) {
+static inline void swapIntsInHeader(uint32_t *bytes, unsigned length) {
 	for (NSUInteger i = 0; i < length; i += 4)
 		*(uint32_t *)(bytes + i) = OSSwapInt32(*(uint32_t *)(bytes + i));
 }
@@ -45,7 +45,7 @@ static inline void swapIntsInHeader(uint8_t *bytes, unsigned length) {
 		return architectures;
 	}
 
-	uint8_t *bytes = (void *)[data bytes];
+	uint32_t *bytes = (void *)[data bytes];
 	uint32_t magic = *(uint32_t *)bytes;
 
 	if (data.length >= sizeof(struct mach_header_64)) {

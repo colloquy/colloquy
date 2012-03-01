@@ -119,7 +119,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	return self;
 }
 
-- (void) release {
+- (oneway void) release {
 	if( ( [self retainCount] - 1 ) == 1 )
 		[_updateTimer invalidate];
 	[super release];

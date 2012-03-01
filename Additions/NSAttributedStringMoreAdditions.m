@@ -191,7 +191,7 @@ static NSMutableAttributedString *parseXHTMLTreeNode( xmlNode *node, NSDictionar
 		break;
 	case 'b':
 		if( ! strcmp( (char *) node -> name, "br" ) ) {
-			return [[[NSAttributedString alloc] initWithString:@"\n" attributes:newAttributes] autorelease]; // known to have no content, return now
+			return [[[NSMutableAttributedString alloc] initWithString:@"\n" attributes:newAttributes] autorelease]; // known to have no content, return now
 		} else if( ! strcmp( (char *) node -> name, "b" ) ) {
 			NSFont *font = [[NSFontManager sharedFontManager] convertFont:[newAttributes objectForKey:NSFontAttributeName] toHaveTrait:NSBoldFontMask];
 			if( font ) {

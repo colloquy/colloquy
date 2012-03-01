@@ -63,7 +63,7 @@ static MVBuddyListController *sharedInstance = nil;
 	return self;
 }
 
-- (void) release {
+- (oneway void) release {
 	if( ( [self retainCount] - 1 ) == 1 )
 		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _sortBuddiesAnimated: ) object:nil];
 	[super release];

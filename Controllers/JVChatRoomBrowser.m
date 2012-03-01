@@ -53,7 +53,7 @@
 	return [[self alloc] initWithConnection:connection];
 }
 
-- (void) release {
+- (oneway void) release {
 	if( ( [self retainCount] - 1 ) == 1 )
 		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _refreshResults: ) object:nil];
 	[super release];

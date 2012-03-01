@@ -77,7 +77,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	return ret;
 }
 
-- (void) release {
+- (oneway void) release {
 	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
 		_releasing = YES;
 		[colorWellCells removeObject:self];

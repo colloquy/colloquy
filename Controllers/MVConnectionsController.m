@@ -27,7 +27,7 @@ static NSMenu *favoritesMenu = nil;
 
 @interface MVConnectionsController (MVConnectionsControllerPrivate)
 - (void) _didIdentify:(NSNotification *) notification;
-- (void) _connect:(id) sender;
+- (IBAction)_connect:(id) sender;
 - (void) _refresh:(NSNotification *) notification;
 - (void) _loadInterfaceIfNeeded;
 - (void) _saveBookmarkList;
