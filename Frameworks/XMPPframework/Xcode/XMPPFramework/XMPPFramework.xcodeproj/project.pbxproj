@@ -204,7 +204,6 @@
 		9205A0F314FF4AD70059D624 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		9205A0F514FF4AEF0059D624 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		9205A0F714FF4AF80059D624 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		9205A0F914FF4B130059D624 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		9205A0FD14FF4B5E0059D624 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		9205A10C14FF4DA40059D624 /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Common Settings.xcconfig"; sourceTree = "<group>"; };
 		926E72B314FE29370051EFEE /* XMPPFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = XMPPFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -447,7 +446,6 @@
 			isa = PBXGroup;
 			children = (
 				9205A0F714FF4AF80059D624 /* AppKit.framework */,
-				9205A0F914FF4B130059D624 /* CFNetwork.framework */,
 				9205A0F114FF4ACE0059D624 /* CoreData.framework */,
 				9205A0F514FF4AEF0059D624 /* CoreLocation.framework */,
 				926E72BB14FE29370051EFEE /* Foundation.framework */,
@@ -1223,7 +1221,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../Vendor/libidn\"",
-					"$(SRCROOT)/Frameworks",
+					"$(SRCROOT)/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1250,7 +1248,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../Vendor/libidn\"",
-					"$(SRCROOT)/Frameworks",
+					"$(SRCROOT)/../../../../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";

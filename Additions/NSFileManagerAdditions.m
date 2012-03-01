@@ -25,8 +25,8 @@ static inline void markArchitectureAsActiveForCPUType(MVArchitectures *architect
 			(*architectures).armv6 = YES;
 			break;
 		case CPU_SUBTYPE_ARM_V7:
-		case CPU_SUBTYPE_ARM_V7F:
-		case CPU_SUBTYPE_ARM_V7K:
+//		case CPU_SUBTYPE_ARM_V7F:
+//		case CPU_SUBTYPE_ARM_V7K:
 			(*architectures).armv7 = YES;
 			break;
 		default:

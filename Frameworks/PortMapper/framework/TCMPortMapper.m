@@ -6,7 +6,7 @@
 #import "NSNotificationCenterThreadingAdditions.h"
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <SystemConfiguration/SCSchemaDefinitions.h>
-#import <CommonCrypto/CommonCrypto.h>
+#import <CommonCrypto/CommonDigest.h>
 #import <sys/sysctl.h> 
 #import <err.h>
 #import <netinet/in.h>
