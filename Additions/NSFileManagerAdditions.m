@@ -5,7 +5,7 @@
 #include <mach-o/fat.h>
 
 @implementation NSFileManager (Additions)
-static inline void markArchitectureAsActiveForCPUType(MVArchitectures *architectures, cpu_type_t cpuType) {
+static inline void markArchitectureAsActiveForCPUType(MVArchitectures *architectures, cpu_type_t cpuType, cpu_subtype_t cpuSubtype) {
 	switch (cpuType) {
 	case CPU_TYPE_POWERPC:
 		(*architectures).ppc32 = YES;
@@ -19,8 +19,20 @@ static inline void markArchitectureAsActiveForCPUType(MVArchitectures *architect
 	case CPU_TYPE_X86_64:
 		(*architectures).x86_64 = YES;
 		break;
-	case CPU_TYPE_ARM
-		(*architectures).arm = YES;
+	case CPU_TYPE_ARM:
+		switch (cpuSubtype) {
+		case CPU_SUBTYPE_ARM_V6:
+			(*architectures).armv6 = YES;
+			break;
+		case CPU_SUBTYPE_ARM_V7:
+		case CPU_SUBTYPE_ARM_V7F:
+		case CPU_SUBTYPE_ARM_V7K:
+			(*architectures).armv7 = YES;
+			break;
+		default:
+			(*architectures).unknown++;
+			break;
+		}
 		break;
 	default:
 		(*architectures).unknown++;
@@ -36,7 +48,7 @@ static inline void swapIntsInHeader(uint8_t *bytes, ssize_t length) {
 #pragma mark -
 
 - (MVArchitectures) architecturesForBinaryAtPath:(NSString *) path {
-	MVArchitectures architectures = { NO, NO, NO, NO, 0 };
+	MVArchitectures architectures = { NO, NO, NO, NO, NO, NO, 0 };
 
 	NSFileHandle *executableFile = [NSFileHandle fileHandleForReadingAtPath:path];
 	NSData *data = [executableFile readDataOfLength:512];
@@ -55,11 +67,11 @@ static inline void swapIntsInHeader(uint8_t *bytes, ssize_t length) {
 		if (magic == MH_MAGIC || magic == MH_CIGAM) { // 32-bit, thin
 			struct mach_header *header = (struct mach_header *)bytes;
 
-			markArchitectureAsActiveForCPUType(&architectures, header->cputype);
+			markArchitectureAsActiveForCPUType(&architectures, header->cputype, header->cpusubtype);
 		} else if (magic == MH_MAGIC_64 || magic == MH_CIGAM_64) { // 64-bit, thin
 			struct mach_header_64 *header = (struct mach_header_64 *)bytes;
 
-			markArchitectureAsActiveForCPUType(&architectures, header->cputype);
+			markArchitectureAsActiveForCPUType(&architectures, header->cputype, header->cpusubtype);
 		} else if (magic == FAT_MAGIC || magic == FAT_CIGAM) { // fat
 			if (magic == FAT_CIGAM)
 				swapIntsInHeader(bytes, data.length);
@@ -70,7 +82,7 @@ static inline void swapIntsInHeader(uint8_t *bytes, ssize_t length) {
 			for (uint32_t i = 0; i < numberOfArchitectures; i++) {
 				struct fat_arch fatArchitecture = fatArchrchitectures[i];
 
-				markArchitectureAsActiveForCPUType(&architectures, fatArchitecture.cputype);
+				markArchitectureAsActiveForCPUType(&architectures, fatArchitecture.cputype, fatArchitecture.cpusubtype);
 			}
 		} else architectures.unknown++;
 	}
@@ -91,6 +103,10 @@ static inline void swapIntsInHeader(uint8_t *bytes, ssize_t length) {
 	return validArchitectures.x86;
 #elif __x86_64__
 	return validArchitectures.x86_64;
+#elif __ARM_ARCH_6__
+	return validArchitectures.armv6;
+#elif __ARM_ARCH_7__
+	return validArchitectures.armv7;
 #else
 	return validArchitectures.unknown;
 #endif
@@ -98,5 +114,5 @@ static inline void swapIntsInHeader(uint8_t *bytes, ssize_t length) {
 @end
 
 NSString *NSStringFromMVArchitectures(MVArchitectures architectures) {
-	return [NSString stringWithFormat:@"(\n\tPPC 32-Bit: %d\n\tPPC 64-Bit: %d\n\tIntel x86: %d\n\tIntel x86_64: %d\n\tUnknown Architectures: %d\n)", architectures.ppc32, architectures.ppc64, architectures.x86, architectures.x86_64, architectures.unknown];
+	return [NSString stringWithFormat:@"(\n\tPPC 32-Bit: %d\n\tPPC 64-Bit: %d\n\tIntel x86: %d\n\tIntel x86_64: %d\n\tArmv6: %d\n\tArmv7: %d\n\tUnknown Architectures: %d\n)", architectures.ppc32, architectures.ppc64, architectures.x86, architectures.x86_64, architectures.armv6, architectures.armv7, architectures.unknown];
 }

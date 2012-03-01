@@ -3,7 +3,8 @@ typedef struct {
 	BOOL x86_64;
 	BOOL ppc32;
 	BOOL ppc64;
-	BOOL arm;
+	BOOL armv6;
+	BOOL armv7;
 	NSInteger unknown; // 68k, MIPS, etc
 } MVArchitectures;
 
