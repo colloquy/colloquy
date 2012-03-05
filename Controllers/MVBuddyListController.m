@@ -99,9 +99,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[(NSPanel *)[self window] setHidesOnDeactivate:NO];
 	[[self window] setFrameAutosaveName:@"buddylist"];
 
-	NSWindowCollectionBehavior windowCollectionBehavior = NSWindowCollectionBehaviorDefault;
-	if( floor( NSAppKitVersionNumber ) >= NSAppKitVersionNumber10_6 )
-		windowCollectionBehavior |= (NSWindowCollectionBehaviorParticipatesInCycle | NSWindowCollectionBehaviorTransient);
+	NSWindowCollectionBehavior windowCollectionBehavior = (NSWindowCollectionBehaviorDefault | NSWindowCollectionBehaviorParticipatesInCycle | NSWindowCollectionBehaviorTransient);
 	if( floor( NSAppKitVersionNumber ) >= NSAppKitVersionNumber10_7 )
 		windowCollectionBehavior |= NSWindowCollectionBehaviorFullScreenAuxiliary;
 

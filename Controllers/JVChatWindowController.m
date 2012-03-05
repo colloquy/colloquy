@@ -102,9 +102,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[[self window] setIgnoresMouseEvents:NO];
 	[[self window] setOpaque:NO]; // let us poke transparant holes in the window
 
-	NSWindowCollectionBehavior windowCollectionBehavior = NSWindowCollectionBehaviorDefault;
-	if( floor( NSAppKitVersionNumber ) >= NSAppKitVersionNumber10_6 )
-		windowCollectionBehavior |= NSWindowCollectionBehaviorParticipatesInCycle;
+	NSWindowCollectionBehavior windowCollectionBehavior = NSWindowCollectionBehaviorDefault | NSWindowCollectionBehaviorParticipatesInCycle;
 	if( floor( NSAppKitVersionNumber ) >= NSAppKitVersionNumber10_7 )
 		windowCollectionBehavior |= NSWindowCollectionBehaviorFullScreenPrimary;
 

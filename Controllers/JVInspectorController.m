@@ -87,9 +87,7 @@ static NSMutableSet *inspectors = nil;
 #pragma mark -
 
 - (void) windowDidLoad {
-	NSWindowCollectionBehavior windowCollectionBehavior = NSWindowCollectionBehaviorDefault;
-	if( floor( NSAppKitVersionNumber ) >= NSAppKitVersionNumber10_6 )
-		windowCollectionBehavior |= (NSWindowCollectionBehaviorParticipatesInCycle | NSWindowCollectionBehaviorTransient);
+	NSWindowCollectionBehavior windowCollectionBehavior = (NSWindowCollectionBehaviorDefault | NSWindowCollectionBehaviorParticipatesInCycle | NSWindowCollectionBehaviorTransient);
 	if( floor( NSAppKitVersionNumber ) >= NSAppKitVersionNumber10_7 )
 		windowCollectionBehavior |= NSWindowCollectionBehaviorFullScreenAuxiliary;
 

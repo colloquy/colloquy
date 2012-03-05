@@ -102,9 +102,7 @@
 
 	[[self window] recalculateKeyViewLoop];
 
-	NSWindowCollectionBehavior windowCollectionBehavior = NSWindowCollectionBehaviorDefault;
-	if( floor( NSAppKitVersionNumber ) >= NSAppKitVersionNumber10_6 )
-		windowCollectionBehavior |= NSWindowCollectionBehaviorParticipatesInCycle;
+	NSWindowCollectionBehavior windowCollectionBehavior = NSWindowCollectionBehaviorDefault | NSWindowCollectionBehaviorParticipatesInCycle;
 	if( floor( NSAppKitVersionNumber ) >= NSAppKitVersionNumber10_7 )
 		windowCollectionBehavior |= NSWindowCollectionBehaviorFullScreenAuxiliary;
 
