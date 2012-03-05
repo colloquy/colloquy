@@ -65,7 +65,9 @@
 - (void) willLoad {
 	[self buildEncodingMenu];
 
-	[tabView removeTabViewItem:[tabView tabViewItemAtIndex:[tabView indexOfTabViewItemWithIdentifier:@"Proxy"]]];
+	NSInteger tabViewIndex = [tabView indexOfTabViewItemWithIdentifier:@"Proxy"];
+	if( tabViewIndex != NSNotFound )
+		[tabView removeTabViewItem:[tabView tabViewItemAtIndex:tabViewIndex]];
 
 	[editAutomatic setState:[[MVConnectionsController defaultController] autoConnectForConnection:_connection]];
 	[editShowConsoleOnConnect setState:[[MVConnectionsController defaultController] showConsoleOnConnectForConnection:_connection]];
