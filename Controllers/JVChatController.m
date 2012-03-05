@@ -40,10 +40,9 @@ static NSMenu *smartTranscriptMenu = nil;
 + (void) refreshSmartTranscriptMenu {
 	if( ! smartTranscriptMenu ) smartTranscriptMenu = [[NSMenu alloc] initWithTitle:@""];
 
-	NSMenuItem *menuItem = nil;
-	for( menuItem in [[[smartTranscriptMenu itemArray] copy] autorelease])
-		[smartTranscriptMenu removeItem:menuItem];
+	[smartTranscriptMenu removeAllItems];
 
+	NSMenuItem *menuItem = nil;
 	NSMutableArray *items = [NSMutableArray arrayWithArray:[[[self defaultController] smartTranscripts] allObjects]];
 	[items sortUsingSelector:@selector( compare: )];
 

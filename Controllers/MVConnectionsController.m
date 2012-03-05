@@ -64,6 +64,7 @@ static NSMenu *favoritesMenu = nil;
 + (void) refreshFavoritesMenu {
 	if( ! favoritesMenu ) favoritesMenu = [[NSMenu alloc] initWithTitle:@""];
 
+	[favoritesMenu removeAllItems];
 	for( NSMenuItem *menuItem in [[[favoritesMenu itemArray] copy] autorelease] )
 		[favoritesMenu removeItem:menuItem];
 

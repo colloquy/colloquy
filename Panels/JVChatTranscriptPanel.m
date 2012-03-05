@@ -931,8 +931,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		menu = [[NSMenu alloc] initWithTitle:@""];
 		_emoticonMenu = menu;
 	} else {
-		for( menuItem in [[[menu itemArray] copy] autorelease] )
-			[menu removeItem:menuItem];
+		[menu removeAllItems];
 	}
 
 	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Style Default", "default style emoticons menu item title" ) action:@selector( changeEmoticons: ) keyEquivalent:@""] autorelease];

@@ -35,7 +35,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 @interface JVChatWindowController (JVChatWindowControllerPrivate)
 - (void) _claimMenuCommands;
 - (void) _resignMenuCommands;
-- (void) _emptyOutlineMenu;
 - (void) _refreshMenuWithItem:(id) item;
 - (void) _refreshSelectionMenu;
 - (void) _refreshToolbar;
@@ -642,7 +641,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( item ) {
 		[self _refreshMenuWithItem:item];
 	} else {
-		[self _emptyOutlineMenu];
+		[[chatViewsOutlineView menu] removeAllItems];
 	}
 }
 
@@ -1003,19 +1002,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[item doubleClicked:sender];
 }
 
-/*
- * Removes all items from the outline menu.
- */
-- (void) _emptyOutlineMenu {
-	NSMenu *menu = [chatViewsOutlineView menu];
-	if( [menu respondsToSelector:@selector(removeAllItems)] ) {
-		[menu performSelector:@selector(removeAllItems)]; // 10.6
-	} else { // 10.0 and up 
-		for( NSMenuItem *menuItem in [[[menu itemArray] copyWithZone:nil] autorelease] )
-			[menu removeItem:menuItem];
-	}
-}
-
 - (void) _refreshSelectionMenu {
 	id item = [self selectedListItem];
 	if( ! item ) item = [self activeChatViewController];
@@ -1027,8 +1013,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSMenu *menu = [chatViewsOutlineView menu];
 	NSMenu *newMenu = ( [item respondsToSelector:@selector( menu )] ? [item menu] : nil );
 
-	for( menuItem in [[[menu itemArray] copyWithZone:nil] autorelease] )
-		[menu removeItem:menuItem];
+	[menu removeAllItems];
 
 	for( menuItem in [[[newMenu itemArray] copyWithZone:nil] autorelease] ) {
 		[newMenu removeItem:menuItem];
@@ -1051,7 +1036,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 		NSArray *items = nil;
 		for( items in results ) {
-			if( ![items conformsToProtocol:@protocol(NSFastEnumeration)] ) continue;
+			if( ![items conformsToProtocol:@protocol(NSFastEnumeration)] )
+				continue;
+
 			for( menuItem in items)
 				if( [menuItem isKindOfClass:[NSMenuItem class]] )
 					[menu addItem:menuItem];
