@@ -241,7 +241,7 @@ static NSMenu *favoritesMenu = nil;
 	[toolbar setAutosavesConfiguration:YES];
 	[[self window] setToolbar:toolbar];
 
-	NSWindowCollectionBehavior windowCollectionBehavior = (NSWindowCollectionBehaviorDefault | NSWindowCollectionBehaviorParticipatesInCycle | NSWindowCollectionBehaviorTransient)
+	NSWindowCollectionBehavior windowCollectionBehavior = (NSWindowCollectionBehaviorDefault | NSWindowCollectionBehaviorParticipatesInCycle | NSWindowCollectionBehaviorTransient);
 	if( floor( NSAppKitVersionNumber ) >= NSAppKitVersionNumber10_7 )
 		windowCollectionBehavior |= NSWindowCollectionBehaviorFullScreenAuxiliary;
 
