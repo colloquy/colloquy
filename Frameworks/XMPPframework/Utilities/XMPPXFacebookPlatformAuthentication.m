@@ -47,7 +47,7 @@
             
         NSArray *components = [authStr componentsSeparatedByString:@"&"];
             
-        int i;
+        NSUInteger i;
         for(i = 0; i < [components count]; i++)
         {
             NSString *component = [components objectAtIndex:i];

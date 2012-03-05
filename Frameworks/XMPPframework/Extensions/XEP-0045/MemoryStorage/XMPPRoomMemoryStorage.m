@@ -227,7 +227,7 @@
 	XMPPJID *messageJid = [message from];
 	NSString *messageBody = [[message elementForName:@"body"] stringValue];
 	
-	NSInteger index;
+	NSUInteger index;
 	for (index = mid; index < [messages count]; index++)
 	{
 		XMPPRoomMessageMemoryStorageObject *currentMessage = [messages objectAtIndex:index];
