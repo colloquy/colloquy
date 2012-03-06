@@ -496,7 +496,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( [result length] ) {
 		_nextAppendMessageInterval *= 2.;
 
-		if( _nextAppendMessageInterval > .25 || YES ) {
+		if( _nextAppendMessageInterval > .25 ) {
 			[_messagesToAppend appendString:result];
 
 			NSTimeInterval delay = 1.;
@@ -525,8 +525,12 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( [result length] ) {
 		_nextAppendMessageInterval *= 2.;
 
-		if( _nextAppendMessageInterval > .5 || YES ) {
+		if( _nextAppendMessageInterval > .5 ) {
 			[_messagesToAppend appendString:result];
+
+			NSTimeInterval delay = 1.;
+			if (_nextAppendMessageInterval < 1.)
+				delay = _nextAppendMessageInterval;
 
 			[self performSelector:@selector( _appendMessages ) withObject:nil afterDelay:_nextAppendMessageInterval];
 			[self performSelector:@selector( _forceAppendMessages ) withObject:nil afterDelay:1.];
