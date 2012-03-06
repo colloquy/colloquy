@@ -29,6 +29,8 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 	BOOL _requiresFullMessage;
 	BOOL _rememberScrollPosition;
 	NSUInteger _lastScrollPosition;
+	NSMutableString *_messagesToAppend;
+	NSTimeInterval _nextAppendMessageInterval;
 }
 + (void) emptyCache;
 

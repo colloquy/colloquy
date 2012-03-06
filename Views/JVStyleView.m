@@ -167,6 +167,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		_emoticons = nil;
 		_domDocument = nil;
 		nextTextView = nil;
+		_messagesToAppend = [[NSMutableString alloc] init];
+		_nextAppendMessageInterval = .001;
 	}
 
 	return self;
@@ -192,6 +194,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[_domDocument release];
 	[_body release];
 	[_bodyTemplate release];
+	[_messagesToAppend release];
 
 	nextTextView = nil;
 	_transcript = nil;
@@ -203,6 +206,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	_domDocument = nil;
 	_body = nil;
 	_bodyTemplate = nil;
+	_messagesToAppend = nil;
 
 	[super dealloc];
 }
@@ -440,6 +444,33 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 #pragma mark -
 
+- (void) _appendMessages {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _forceAppendMessages ) object:nil];
+
+	@synchronized( _messagesToAppend ) {
+		if( ! _messagesToAppend.length ) {
+			_nextAppendMessageInterval /= 4;
+
+			return;
+		}
+
+		[self _appendMessage:_messagesToAppend];
+
+		id old = _messagesToAppend;
+		_messagesToAppend = [[NSMutableString alloc] init];
+		[old release];
+
+		_nextAppendMessageInterval /= 8;
+	}
+}
+
+- (void) _forceAppendMessages {
+	[self _appendMessages];
+}
+
+#pragma mark -
+
 - (BOOL) appendChatMessage:(JVChatMessage *) message {
 	if( ! _contentFrameReady ) return YES; // don't schedule this to fire later since the transcript will be processed
 
@@ -463,7 +494,23 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	}
 
 	if( [result length] ) {
-		[self _appendMessage:result];
+		_nextAppendMessageInterval *= 2.;
+
+		if( _nextAppendMessageInterval > .25 || YES ) {
+			[_messagesToAppend appendString:result];
+
+			NSTimeInterval delay = 1.;
+			if (_nextAppendMessageInterval < 1.)
+				delay = _nextAppendMessageInterval;
+
+			[self performSelector:@selector( _appendMessages ) withObject:nil afterDelay:delay];
+			[self performSelector:@selector( _forceAppendMessages ) withObject:nil afterDelay:1.];
+		} else {
+			[self _appendMessage:result];
+
+			_nextAppendMessageInterval /= 2.;
+		}
+
 		_requiresFullMessage = NO;
 	}
 
@@ -475,7 +522,20 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	NSString *result = [[self style] transformChatTranscriptElement:element withParameters:_styleParameters];
 
-	if( [result length] ) [self _appendMessage:result];
+	if( [result length] ) {
+		_nextAppendMessageInterval *= 2.;
+
+		if( _nextAppendMessageInterval > .5 || YES ) {
+			[_messagesToAppend appendString:result];
+
+			[self performSelector:@selector( _appendMessages ) withObject:nil afterDelay:_nextAppendMessageInterval];
+			[self performSelector:@selector( _forceAppendMessages ) withObject:nil afterDelay:1.];
+		} else {
+			[self _appendMessage:result];
+
+			_nextAppendMessageInterval /= 2.;
+		}
+	}
 
 	return ( [result length] ? YES : NO );
 }
