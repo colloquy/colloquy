@@ -31,6 +31,7 @@ extern NSString *JVStyleViewDidChangeStylesNotification;
 	NSUInteger _lastScrollPosition;
 	NSMutableString *_messagesToAppend;
 	NSTimeInterval _nextAppendMessageInterval;
+	NSTimeInterval _cacheMessagesMinimumInterval;
 }
 + (void) emptyCache;
 

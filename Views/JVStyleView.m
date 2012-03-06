@@ -10,7 +10,6 @@
 
 #define JVMessageIntervalMinimum .001
 #define JVMessageIntervalMaximum 1.
-#define JVCacheMessagesMinimumInterval .25
 
 NSString *JVStyleViewDidClearNotification = @"JVStyleViewDidClearNotification";
 NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesNotification";
@@ -173,6 +172,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		nextTextView = nil;
 		_messagesToAppend = [[NSMutableString alloc] init];
 		_nextAppendMessageInterval = JVMessageIntervalMinimum;
+		_cacheMessagesMinimumInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:@"JVCacheMessagesMinimumInterval"];
 	}
 
 	return self;
@@ -504,7 +504,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( [result length] ) {
 		_nextAppendMessageInterval *= 2.;
 
-		if( _nextAppendMessageInterval > JVCacheMessagesMinimumInterval ) {
+		if( _nextAppendMessageInterval > _cacheMessagesMinimumInterval ) {
 			[_messagesToAppend appendString:result];
 
 			NSTimeInterval delay = JVMessageIntervalMaximum;
@@ -535,7 +535,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( [result length] ) {
 		_nextAppendMessageInterval *= 2.;
 
-		if( _nextAppendMessageInterval > JVCacheMessagesMinimumInterval ) {
+		if( _nextAppendMessageInterval > _cacheMessagesMinimumInterval ) {
 			[_messagesToAppend appendString:result];
 
 			NSTimeInterval delay = JVMessageIntervalMaximum;

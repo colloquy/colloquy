@@ -42,6 +42,8 @@
 	<true/>
 	<key>JVChatMaximumHistory</key>
 	<integer>15</integer>
+	<key>JVCacheMessagesMinimumInterval</key>
+	<real>0.5</real>
 	<key>JVFileTransferPortRange</key>
 	<string>{1024, 24}</string>
 	<key>JVAutoOpenTransferPorts</key>
