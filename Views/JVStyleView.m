@@ -8,6 +8,10 @@
 
 #import <objc/objc-runtime.h>
 
+#define JVMessageIntervalMinimum .001
+#define JVMessageIntervalMaximum 1.
+#define JVCacheMessagesMinimumInterval .25
+
 NSString *JVStyleViewDidClearNotification = @"JVStyleViewDidClearNotification";
 NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesNotification";
 
@@ -168,7 +172,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		_domDocument = nil;
 		nextTextView = nil;
 		_messagesToAppend = [[NSMutableString alloc] init];
-		_nextAppendMessageInterval = .001;
+		_nextAppendMessageInterval = JVMessageIntervalMinimum;
 	}
 
 	return self;
@@ -451,6 +455,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	@synchronized( _messagesToAppend ) {
 		if( ! _messagesToAppend.length ) {
 			_nextAppendMessageInterval /= 4;
+			if( _nextAppendMessageInterval < JVMessageIntervalMinimum )
+				_nextAppendMessageInterval = JVMessageIntervalMinimum;
 
 			return;
 		}
@@ -462,6 +468,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		[old release];
 
 		_nextAppendMessageInterval /= 8;
+		if( _nextAppendMessageInterval < JVMessageIntervalMinimum )
+			_nextAppendMessageInterval = JVMessageIntervalMinimum;
 	}
 }
 
@@ -496,11 +504,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( [result length] ) {
 		_nextAppendMessageInterval *= 2.;
 
-		if( _nextAppendMessageInterval > .25 ) {
+		if( _nextAppendMessageInterval > JVCacheMessagesMinimumInterval ) {
 			[_messagesToAppend appendString:result];
 
-			NSTimeInterval delay = 1.;
-			if (_nextAppendMessageInterval < 1.)
+			NSTimeInterval delay = JVMessageIntervalMaximum;
+			if (_nextAppendMessageInterval < JVMessageIntervalMaximum)
 				delay = _nextAppendMessageInterval;
 
 			[self performSelector:@selector( _appendMessages ) withObject:nil afterDelay:delay];
@@ -509,6 +517,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 			[self _appendMessage:result];
 
 			_nextAppendMessageInterval /= 2.;
+			if( _nextAppendMessageInterval < JVMessageIntervalMinimum )
+				_nextAppendMessageInterval = JVMessageIntervalMinimum;
 		}
 
 		_requiresFullMessage = NO;
@@ -525,11 +535,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( [result length] ) {
 		_nextAppendMessageInterval *= 2.;
 
-		if( _nextAppendMessageInterval > .5 ) {
+		if( _nextAppendMessageInterval > JVCacheMessagesMinimumInterval ) {
 			[_messagesToAppend appendString:result];
 
-			NSTimeInterval delay = 1.;
-			if (_nextAppendMessageInterval < 1.)
+			NSTimeInterval delay = JVMessageIntervalMaximum;
+			if (_nextAppendMessageInterval < JVMessageIntervalMaximum)
 				delay = _nextAppendMessageInterval;
 
 			[self performSelector:@selector( _appendMessages ) withObject:nil afterDelay:_nextAppendMessageInterval];
@@ -538,6 +548,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 			[self _appendMessage:result];
 
 			_nextAppendMessageInterval /= 2.;
+			if( _nextAppendMessageInterval < JVMessageIntervalMinimum )
+				_nextAppendMessageInterval = JVMessageIntervalMinimum;
 		}
 	}
 
