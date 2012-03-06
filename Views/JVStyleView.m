@@ -502,24 +502,16 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	}
 
 	if( [result length] ) {
-		_nextAppendMessageInterval *= 2.;
+		[_messagesToAppend appendString:result];
 
-		if( _nextAppendMessageInterval > _cacheMessagesMinimumInterval ) {
-			[_messagesToAppend appendString:result];
+		_nextAppendMessageInterval *= 2;
 
-			NSTimeInterval delay = JVMessageIntervalMaximum;
-			if (_nextAppendMessageInterval < JVMessageIntervalMaximum)
-				delay = _nextAppendMessageInterval;
+		NSTimeInterval delay = _nextAppendMessageInterval;
+		if (_nextAppendMessageInterval > JVMessageIntervalMaximum)
+			delay = JVMessageIntervalMaximum;
 
-			[self performSelector:@selector( _appendMessages ) withObject:nil afterDelay:delay];
-			[self performSelector:@selector( _forceAppendMessages ) withObject:nil afterDelay:1.];
-		} else {
-			[self _appendMessage:result];
-
-			_nextAppendMessageInterval /= 2.;
-			if( _nextAppendMessageInterval < JVMessageIntervalMinimum )
-				_nextAppendMessageInterval = JVMessageIntervalMinimum;
-		}
+		[self performSelector:@selector( _appendMessages ) withObject:nil afterDelay:delay];
+		[self performSelector:@selector( _forceAppendMessages ) withObject:nil afterDelay:1.];
 
 		_requiresFullMessage = NO;
 	}
@@ -533,24 +525,16 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	NSString *result = [[self style] transformChatTranscriptElement:element withParameters:_styleParameters];
 
 	if( [result length] ) {
-		_nextAppendMessageInterval *= 2.;
+		[_messagesToAppend appendString:result];
 
-		if( _nextAppendMessageInterval > _cacheMessagesMinimumInterval ) {
-			[_messagesToAppend appendString:result];
+		_nextAppendMessageInterval *= 2;
 
-			NSTimeInterval delay = JVMessageIntervalMaximum;
-			if (_nextAppendMessageInterval < JVMessageIntervalMaximum)
-				delay = _nextAppendMessageInterval;
+		NSTimeInterval delay = _nextAppendMessageInterval;
+		if (_nextAppendMessageInterval > JVMessageIntervalMaximum)
+			delay = JVMessageIntervalMaximum;
 
-			[self performSelector:@selector( _appendMessages ) withObject:nil afterDelay:_nextAppendMessageInterval];
-			[self performSelector:@selector( _forceAppendMessages ) withObject:nil afterDelay:1.];
-		} else {
-			[self _appendMessage:result];
-
-			_nextAppendMessageInterval /= 2.;
-			if( _nextAppendMessageInterval < JVMessageIntervalMinimum )
-				_nextAppendMessageInterval = JVMessageIntervalMinimum;
-		}
+		[self performSelector:@selector( _appendMessages ) withObject:nil afterDelay:_nextAppendMessageInterval];
+		[self performSelector:@selector( _forceAppendMessages ) withObject:nil afterDelay:1.];
 	}
 
 	return ( [result length] ? YES : NO );
