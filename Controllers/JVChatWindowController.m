@@ -82,7 +82,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 	[menu setDelegate:self];
 	[chatViewsOutlineView setMenu:menu];
-	[menu autorelease];
+	[menu release];
 
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
 
@@ -1053,6 +1053,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[viewActionButton setEnabled:YES];
 		[viewActionButton setMenu:menu];
 	} else [viewActionButton setEnabled:NO];
+
+	[chatViewsOutlineView setMenu:[[menu copy] autorelease]];
 
 	[menu release];
 }
