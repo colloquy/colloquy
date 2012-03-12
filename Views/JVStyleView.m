@@ -452,16 +452,12 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _forceAppendMessages ) object:nil];
 
-	[_messagesToAppend retain];
-
 	@synchronized( _messagesToAppend ) {
 		if( ! _messagesToAppend.length ) {
-			_nextAppendMessageInterval /= 4;
+			_nextAppendMessageInterval /= 8;
 
 			if( _nextAppendMessageInterval < JVMessageIntervalMinimum )
 				_nextAppendMessageInterval = JVMessageIntervalMinimum;
-
-			[_messagesToAppend release];
 
 			return;
 		}
@@ -472,12 +468,10 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		_messagesToAppend = [[NSMutableString alloc] init];
 		[old release];
 
-		_nextAppendMessageInterval /= 8;
+		_nextAppendMessageInterval /= 4;
 		if( _nextAppendMessageInterval < JVMessageIntervalMinimum )
 			_nextAppendMessageInterval = JVMessageIntervalMinimum;
 	}
-
-	[_messagesToAppend release];
 }
 
 - (void) _forceAppendMessages {
