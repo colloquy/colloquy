@@ -166,7 +166,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		_transcript = nil;
 		_style = nil;
 		_styleVariant = nil;
-		_styleParameters = [[NSMutableDictionary dictionary] retain];
+		_styleParameters = [[NSMutableDictionary alloc] init];
 		_emoticons = nil;
 		_domDocument = nil;
 		nextTextView = nil;
@@ -452,11 +452,16 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _forceAppendMessages ) object:nil];
 
+	[_messagesToAppend retain];
+
 	@synchronized( _messagesToAppend ) {
 		if( ! _messagesToAppend.length ) {
 			_nextAppendMessageInterval /= 4;
+
 			if( _nextAppendMessageInterval < JVMessageIntervalMinimum )
 				_nextAppendMessageInterval = JVMessageIntervalMinimum;
+
+			[_messagesToAppend release];
 
 			return;
 		}
@@ -471,6 +476,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		if( _nextAppendMessageInterval < JVMessageIntervalMinimum )
 			_nextAppendMessageInterval = JVMessageIntervalMinimum;
 	}
+
+	[_messagesToAppend release];
 }
 
 - (void) _forceAppendMessages {
