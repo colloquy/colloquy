@@ -3,6 +3,8 @@
 @class JVChatRoomMember;
 @class MVChatUser;
 
+extern NSString *const MVFavoritesListDidUpdateNotification;
+
 @interface JVChatRoomPanel : JVDirectChatPanel {
 	@protected
 	NSMutableArray *_sortedMembers;
@@ -19,7 +21,7 @@
 - (void) joinChat:(id) sender;
 - (void) partChat:(id) sender;
 
-- (IBAction) addToFavorites:(id) sender;
+- (IBAction) toggleFavorites:(id) sender;
 
 - (NSSet *) chatRoomMembersWithName:(NSString *) name;
 - (JVChatRoomMember *) firstChatRoomMemberWithName:(NSString *) name;

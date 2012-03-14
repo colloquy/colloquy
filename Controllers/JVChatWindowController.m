@@ -115,6 +115,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[self _refreshPreferences];
 
 	[self _refreshList];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_favoritesListDidUpdate:) name:MVFavoritesListDidUpdateNotification object:nil];
 }
 
 - (void) dealloc {
@@ -1010,6 +1012,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) _refreshMenuWithItem:(id) item {
+	[MVConnectionsController refreshFavoritesMenu];
+
 	id menuItem = nil;
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 	[menu setDelegate:self];
@@ -1164,6 +1168,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (void) _switchViews:(id) sender {
 	[self showChatViewController:[sender representedObject]];
+}
+
+- (void) _favoritesListDidUpdate:(NSNotification *) notification {
+	[self _refreshMenuWithItem:notification.object];
 }
 @end
 

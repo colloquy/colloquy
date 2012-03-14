@@ -75,7 +75,7 @@ static NSMenu *favoritesMenu = nil;
 	NSArray *favorites = [NSArray arrayWithContentsOfFile:path];
 	for( NSDictionary *item in favorites ) {
 		[rooms addObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", [item objectForKey:@"scheme"], [item objectForKey:@"server"], [item objectForKey:@"target"]]]];
-		[roomNames addObject:[item objectForKey:@"target"]];
+		[roomNames addObject:[NSString stringWithFormat:@"%@ (%@)", [item objectForKey:@"target"], [item objectForKey:@"server"]]];
 	}
 
 	NSMenuItem *menuItem = nil;
@@ -101,7 +101,7 @@ static NSMenu *favoritesMenu = nil;
 
 	[favoritesMenu addItem:[NSMenuItem separatorItem]];
 
-	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") action:@selector( addToFavorites: ) keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") action:@selector( toggleFavorites: ) keyEquivalent:@""] autorelease];
 	[menuItem setEnabled:NO];
 	[menuItem setTag:10];
 	[favoritesMenu addItem:menuItem];

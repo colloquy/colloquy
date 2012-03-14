@@ -13,8 +13,11 @@
 #import "MVChatUserAdditions.h"
 #import "MVApplicationController.h"
 
+NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdateNotification";
+
 @interface JVChatRoomPanel (JVChatRoomPrivate)
 - (void) _topicChanged:(id) sender;
+- (NSInteger) _roomIndexInFavoritesMenu;
 @end
 
 #pragma mark -
@@ -210,7 +213,9 @@
 	[menu addItem:item];
 	[item release];
 
-	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") action:@selector( addToFavorites: ) keyEquivalent:@""];
+	if ([self _roomIndexInFavoritesMenu] != NSNotFound)
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Remove from Favorites", "add to favorites contextual menu") action:@selector( toggleFavorites: ) keyEquivalent:@""];
+	else item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") action:@selector( toggleFavorites: ) keyEquivalent:@""];
 	[item setTarget:self];
 	[menu addItem:item];
 	[item release];
@@ -273,9 +278,14 @@
 #pragma mark -
 
 - (BOOL) validateMenuItem:(NSMenuItem *) menuItem {
-	if( [menuItem action] == @selector( addToFavorites: ) && [menuItem tag] == 10 )
-		[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Add \"%@ (%@)\"", "add to favorites contextual menu"), _target, [[self connection] server]]];
-	else if( [menuItem action] == @selector( toggleAutoJoin: ) ) {
+	if( [menuItem action] == @selector( toggleFavorites: ) && [menuItem tag] == 10 ) {
+		NSInteger favoritesIndex = [self _roomIndexInFavoritesMenu];
+
+		if (favoritesIndex != NSNotFound)
+			[menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Remove \"%@ (%@)\"", "add to favorites contextual menu"), _target, [[self connection] server]]];
+		else [menuItem setTitle:[NSString stringWithFormat:NSLocalizedString( @"Add \"%@ (%@)\"", "add to favorites contextual menu"), _target, [[self connection] server]]];
+		[menuItem setTarget:self];
+	} else if( [menuItem action] == @selector( toggleAutoJoin: ) ) {
 		[menuItem setState:NSOffState];
 		for( id object in [[MVConnectionsController defaultController] joinRoomsForConnection:[self connection]] )
 			if( [_target isEqual:[[self connection] chatRoomWithName:(NSString *)object]] )
@@ -292,17 +302,22 @@
 	[display clear];
 }
 
-- (IBAction) addToFavorites:(id) sender {
+- (IBAction) toggleFavorites:(id) sender {
 	NSString *favoritesPath = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
 	NSMutableArray *favorites = [NSMutableArray arrayWithContentsOfFile:favoritesPath];
 	if (!favorites)
 		favorites = [NSMutableArray array];
 
-	[favorites addObject:[NSDictionary dictionaryWithObjectsAndKeys:[_target description], @"target", [[self connection] server], @"server", [[self connection] urlScheme], @"scheme", nil]];
+	NSInteger favoriteIndex = [self _roomIndexInFavoritesMenu];
+	if (favoriteIndex != NSNotFound)
+		[favorites removeObjectAtIndex:favoriteIndex];
+	else [favorites addObject:[NSDictionary dictionaryWithObjectsAndKeys:[_target description], @"target", [[self connection] server], @"server", [[self connection] urlScheme], @"scheme", nil]];
 
 	[favorites writeToFile:favoritesPath atomically:YES];
 
 	[MVConnectionsController refreshFavoritesMenu];
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:MVFavoritesListDidUpdateNotification object:self];
 }
 
 - (IBAction) toggleAutoJoin:(id) sender {
@@ -1526,6 +1541,30 @@
 
 - (void) _didClearDisplay:(NSNotification *) notification {
 	[self performSelector:@selector(_topicChanged:) withObject:nil afterDelay:0.3];
+}
+
+- (NSInteger) _roomIndexInFavoritesMenu {
+	NSString *favoritesPath = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
+	NSMutableArray *favorites = [NSMutableArray arrayWithContentsOfFile:favoritesPath];
+	if (!favorites)
+		return NSNotFound;
+
+	for (NSUInteger i = 0; i < favorites.count; i++) {
+		NSDictionary *favoritesDictionary = [favorites objectAtIndex:i];
+
+		if (![[favoritesDictionary objectForKey:@"scheme"] isCaseInsensitiveEqualToString:[[self connection] urlScheme]])
+			continue;
+
+		if (![[favoritesDictionary objectForKey:@"server"] isCaseInsensitiveEqualToString:[[self connection] server]])
+			continue;
+
+		if (![[favoritesDictionary objectForKey:@"target"] isCaseInsensitiveEqualToString:[_target description]])
+			continue;
+
+		return i;
+	}
+
+	return NSNotFound;
 }
 @end
 

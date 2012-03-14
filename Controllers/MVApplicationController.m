@@ -617,7 +617,7 @@ static BOOL applicationIsTerminating = NO;
 		Class controllerClass = [JVDirectChatPanel class];
 		NSSet *viewControllers = [chatController chatViewControllersKindOfClass:controllerClass];
 		return ( [viewControllers count] > 0 );
-	} else if( [menuItem action] == @selector( addToFavorites: ) ) {
+	} else if( [menuItem action] == @selector( toggleFavorites: ) ) {
 		[menuItem setTitle:NSLocalizedString( @"Add to Favorites", "add to favorites menu item")];
 		return NO;
 	}
