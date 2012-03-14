@@ -53,6 +53,9 @@ static NSMenu *favoritesMenu = nil;
 		sharedInstance = [sharedInstance initWithWindowNibName:nil];
 	}
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFavoritesMenu) name:MVChatRoomJoinedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshFavoritesMenu) name:MVChatRoomPartedNotification object:nil];
+
 	return sharedInstance;
 }
 
@@ -62,40 +65,56 @@ static NSMenu *favoritesMenu = nil;
 }
 
 + (void) refreshFavoritesMenu {
-	if( ! favoritesMenu ) favoritesMenu = [[NSMenu alloc] initWithTitle:@""];
-
-	[favoritesMenu removeAllItems];
-	for( NSMenuItem *menuItem in [[[favoritesMenu itemArray] copy] autorelease] )
-		[favoritesMenu removeItem:menuItem];
-
-	;
-	NSMutableArray *rooms = [NSMutableArray array], *roomNames = [NSMutableArray array];
+	if( ! favoritesMenu )
+		favoritesMenu = [[NSMenu alloc] initWithTitle:@""];
+	else [favoritesMenu removeAllItems];
 
 	NSString *path = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
 	NSArray *favorites = [NSArray arrayWithContentsOfFile:path];
-	for( NSDictionary *item in favorites ) {
-		[rooms addObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", [item objectForKey:@"scheme"], [item objectForKey:@"server"], [item objectForKey:@"target"]]]];
-		[roomNames addObject:[NSString stringWithFormat:@"%@ (%@)", [item objectForKey:@"target"], [item objectForKey:@"server"]]];
-	}
 
 	NSMenuItem *menuItem = nil;
-	if( ! [rooms count] ) {
+	if( ! [favorites count] ) {
 		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"No Favorites", "no favorites menu title" ) action:NULL keyEquivalent:@""] autorelease];
 		[favoritesMenu addItem:menuItem];
 	}
 
-	NSEnumerator *nameEnumerator = [roomNames objectEnumerator];
 	NSImage *icon = [[[NSImage imageNamed:@"room"] copy] autorelease];
 	[icon setScalesWhenResized:YES];
 	[icon setSize:NSMakeSize( 16., 16. )];
-	NSEnumerator *enumerator = [rooms objectEnumerator];
-	NSString *item = nil;
-	NSURL *url = nil;
-	while( ( url = [enumerator nextObject] ) && ( item = [nameEnumerator nextObject] ) ) {
-		menuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( _connectToFavorite: ) keyEquivalent:@""] autorelease];
+
+	for( NSDictionary *item in favorites ) {
+		NSString *scheme = [item objectForKey:@"scheme"];
+		NSString *server = [item objectForKey:@"server"];
+		NSString *target = [item objectForKey:@"target"];
+
+		menuItem = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", target, server] action:@selector( _connectToFavorite: ) keyEquivalent:@""] autorelease];
 		[menuItem setImage:icon];
 		[menuItem setTarget:self];
-		[menuItem setRepresentedObject:url];
+		[menuItem setRepresentedObject:[NSURL URLWithString:[NSString stringWithFormat:@"%@://%@/%@", [item objectForKey:@"scheme"], [item objectForKey:@"server"], [item objectForKey:@"target"]]]];
+
+		for (MVChatConnection *connection in [[MVConnectionsController defaultController] connections]) {
+			if (!(connection.isConnected || connection.status == MVChatConnectionConnectingStatus))
+				continue;
+
+			if (![connection.urlScheme isEqualToString:scheme])
+				continue;
+
+			if (![connection.server isEqualToString:server])
+				continue;
+
+			for (MVChatRoom *room in connection.joinedChatRooms) {
+				if (![room.name isEqualToString:target])
+					continue;
+
+				menuItem.state = NSOnState;
+
+				break;
+			}
+
+			if (menuItem.state == NSOnState)
+				break;
+		}
+
 		[favoritesMenu addItem:menuItem];
 	}
 
@@ -105,6 +124,12 @@ static NSMenu *favoritesMenu = nil;
 	[menuItem setEnabled:NO];
 	[menuItem setTag:10];
 	[favoritesMenu addItem:menuItem];
+}
+
++ (void) _refreshFavoritesMenu {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(refreshFavoritesMenu) object:nil];
+
+	[self performSelector:@selector(refreshFavoritesMenu) withObject:nil afterDelay:.0];
 }
 
 #pragma mark -
