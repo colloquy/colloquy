@@ -19,10 +19,6 @@
 	return NO;
 }
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_2
-#define _preferencesPanel (id)0
-#endif
-
 - (void) showPreferencesPanel {
 	[super showPreferencesPanel];
 	[_preferencesPanel setOpaque:NO]; // let us poke transparant holes in the window
