@@ -80,7 +80,6 @@
 		899F4EFE12617870003B9D9A /* NSFileManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */; };
 		899F4EFF12617870003B9D9A /* NSFileManagerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */; };
 		89FB4F2612FAAC6800668905 /* Less Common Settings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */; };
-		9205A10A14FF4D7F0059D624 /* XMPPFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9205A10714FF4D630059D624 /* XMPPFramework.framework */; };
 		92417D31149C019A0009B06E /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD020B305759347000F93B4 /* NSStringAdditions.m */; };
 		92417D33149C019A0009B06E /* NSNumberAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3D55BA05A4CBBE00F25F5E /* NSNumberAdditions.m */; };
 		92417D36149C019A0009B06E /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F52D043001873FC401EE70DE /* MVChatConnection.m */; };
@@ -171,20 +170,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 3180119E0D4DEC8400BE3B28;
 			remoteInfo = TCMPortMapper;
-		};
-		9205A10614FF4D630059D624 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9205A0FF14FF4D620059D624 /* XMPPFramework.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 926E72B314FE29370051EFEE;
-			remoteInfo = XMPPFramework;
-		};
-		9205A10814FF4D730059D624 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9205A0FF14FF4D620059D624 /* XMPPFramework.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 926E72B214FE29370051EFEE;
-			remoteInfo = XMPPFramework;
 		};
 		DDBB43A60BD5DF9400EC6E55 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -293,7 +278,6 @@
 		899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerAdditions.h; path = Additions/NSFileManagerAdditions.h; sourceTree = "<group>"; };
 		899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSFileManagerAdditions.m; path = Additions/NSFileManagerAdditions.m; sourceTree = "<group>"; };
 		89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Less Common Settings.xcconfig"; path = "Settings/Less Common Settings.xcconfig"; sourceTree = "<group>"; };
-		9205A0FF14FF4D620059D624 /* XMPPFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XMPPFramework.xcodeproj; path = Frameworks/XMPPframework/Xcode/XMPPFramework/XMPPFramework.xcodeproj; sourceTree = "<group>"; };
 		92BFCEAA14FDEF95001D02BB /* libChat Core.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libChat Core.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD47412E0BD35A2E00D93AB9 /* MVXMPPChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVXMPPChatRoom.h; path = "Chat Core/MVXMPPChatRoom.h"; sourceTree = "<group>"; };
 		DD47412F0BD35A2E00D93AB9 /* MVXMPPChatRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVXMPPChatRoom.m; path = "Chat Core/MVXMPPChatRoom.m"; sourceTree = "<group>"; };
@@ -314,7 +298,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9205A10A14FF4D7F0059D624 /* XMPPFramework.framework in Frameworks */,
 				1C51B485052DE0CB00BB459B /* SystemConfiguration.framework in Frameworks */,
 				1C51B487052DE0CB00BB459B /* Cocoa.framework in Frameworks */,
 				1C5A233F06FA4FEE00A51F10 /* libsilc.framework in Frameworks */,
@@ -343,7 +326,6 @@
 		089C166AFE841209C02AAC07 /* Massinova Menu Extra */ = {
 			isa = PBXGroup;
 			children = (
-				9205A0FF14FF4D620059D624 /* XMPPFramework.xcodeproj */,
 				1C386E7C1032464A00660864 /* Port Map.xcodeproj */,
 				F50B0A9F0170C89301A84BDE /* Sources & Headers */,
 				F50B0AA00170C89301A84BDE /* Other Sources & Additions */,
@@ -469,14 +451,6 @@
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 0;
-		};
-		9205A10014FF4D620059D624 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9205A10714FF4D630059D624 /* XMPPFramework.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
 		};
 		DDBB43A30BD5DF9400EC6E55 /* Products */ = {
 			isa = PBXGroup;
@@ -707,7 +681,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				9205A10914FF4D730059D624 /* PBXTargetDependency */,
 				DDBB43B90BD5DFB000EC6E55 /* PBXTargetDependency */,
 				1C386E871032466B00660864 /* PBXTargetDependency */,
 			);
@@ -775,10 +748,6 @@
 					ProductGroup = 1C386E7D1032464A00660864 /* Products */;
 					ProjectRef = 1C386E7C1032464A00660864 /* Port Map.xcodeproj */;
 				},
-				{
-					ProductGroup = 9205A10014FF4D620059D624 /* Products */;
-					ProjectRef = 9205A0FF14FF4D620059D624 /* XMPPFramework.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -794,13 +763,6 @@
 			fileType = wrapper.framework;
 			path = TCMPortMapper.framework;
 			remoteRef = 1C386E801032464A00660864 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9205A10714FF4D630059D624 /* XMPPFramework.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = XMPPFramework.framework;
-			remoteRef = 9205A10614FF4D630059D624 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		DDBB43A70BD5DF9400EC6E55 /* Acid.framework */ = {
@@ -931,11 +893,6 @@
 			isa = PBXTargetDependency;
 			name = TCMPortMapper;
 			targetProxy = 1C386E861032466B00660864 /* PBXContainerItemProxy */;
-		};
-		9205A10914FF4D730059D624 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = XMPPFramework;
-			targetProxy = 9205A10814FF4D730059D624 /* PBXContainerItemProxy */;
 		};
 		DDBB43B90BD5DFB000EC6E55 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
