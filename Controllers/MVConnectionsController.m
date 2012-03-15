@@ -2062,6 +2062,8 @@ static NSMenu *favoritesMenu = nil;
 	[context setObject:[NSString stringWithFormat:NSLocalizedString( @"You're now connected to %@ as %@.", "you are now connected bubble text" ), [connection server], [connection nickname]] forKey:@"description"];
 	[context setObject:[NSImage imageNamed:@"connect"] forKey:@"image"];
 	[[JVNotificationController defaultController] performNotification:@"JVChatConnected" withContextInfo:context];
+
+	[[NSProcessInfo processInfo] disableSuddenTermination];
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
@@ -2073,6 +2075,8 @@ static NSMenu *favoritesMenu = nil;
 		[context setObject:[NSImage imageNamed:@"disconnect"] forKey:@"image"];
 		[[JVNotificationController defaultController] performNotification:@"JVChatDisconnected" withContextInfo:context];
 	}
+
+	[[NSProcessInfo processInfo] enableSuddenTermination];
 }
 
 - (NSString *) _idleMessageString {

@@ -198,6 +198,8 @@
 			</dict>
 		</dict>
 	</array>
+	<key>NSSupportsSuddenTermination</key>
+	<true/>
 	<key>SmartCrashReports_CompanyName</key>
 	<string>Colloquy</string>
 	<key>SmartCrashReports_URL</key>
