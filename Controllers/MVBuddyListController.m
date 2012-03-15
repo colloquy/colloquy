@@ -115,11 +115,8 @@ static MVBuddyListController *sharedInstance = nil;
 	[theColumn setDataCell:prototypeCell];
 
 	[pickerView addProperty:kABNicknameProperty];
-	[pickerView addProperty:kABAIMInstantProperty];
-	[pickerView addProperty:kABJabberInstantProperty];
-	[pickerView addProperty:kABMSNInstantProperty];
-	[pickerView addProperty:kABYahooInstantProperty];
-	[pickerView addProperty:kABICQInstantProperty];
+	[pickerView addProperty:kABInstantMessageProperty];
+	[pickerView addProperty:kABSocialProfileProperty];
 	[pickerView addProperty:kABEmailProperty];
 
 	[pickerView setAllowsMultipleSelection:NO];
