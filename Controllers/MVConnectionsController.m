@@ -2064,6 +2064,7 @@ static NSMenu *favoritesMenu = nil;
 	[[JVNotificationController defaultController] performNotification:@"JVChatConnected" withContextInfo:context];
 
 	[[NSProcessInfo processInfo] disableSuddenTermination];
+	[[NSProcessInfo processInfo] disableAutomaticTermination:@"chat connection opened."];
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
@@ -2077,6 +2078,7 @@ static NSMenu *favoritesMenu = nil;
 	}
 
 	[[NSProcessInfo processInfo] enableSuddenTermination];
+	[[NSProcessInfo processInfo] enableAutomaticTermination:@"chat connection closed"];
 }
 
 - (NSString *) _idleMessageString {

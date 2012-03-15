@@ -526,6 +526,8 @@ static BOOL applicationIsTerminating = NO;
 	}
 
 	[self performSelector:@selector(_deferredLaunchingBehavior) withObject:nil afterDelay:0.];
+
+	[[NSProcessInfo processInfo] setAutomaticTerminationSupportEnabled:YES];
 }
 
 - (void) applicationWillBecomeActive:(NSNotification *) notification {
