@@ -709,6 +709,17 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	}
 }
 
+- (void) scrollToTop {
+	if( ! _contentFrameReady ) {
+		[self performSelector:_cmd withObject:nil afterDelay:0.25];
+		return;
+	}
+
+	DOMHTMLElement *body = [_domDocument body];
+	[body setInteger:0 forDOMProperty:@"scrollTop"];
+}
+
+
 - (void) scrollToBottom {
 	if( ! _contentFrameReady ) {
 		[self performSelector:_cmd withObject:nil afterDelay:0.25];
@@ -730,6 +741,16 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 	// check if we are near the bottom 15 pixels of the chat area
 	return ( ( frameHeight + scrollTop ) >= ( scrollHeight - 15 ) );
+}
+
+#pragma mark -
+
+- (void) scrollToBeginningOfDocument:(id) sender {
+	[self scrollToTop];
+}
+
+- (void) scrollToEndOfDocument:(id) sender {
+	[self scrollToBottom];
 }
 @end
 
