@@ -246,7 +246,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (IBAction) getInfo:(id) sender {
-	NSInteger row = [chatViewsOutlineView clickedRow];
+	NSInteger row = [chatViewsOutlineView selectedRow];
 	id item = [chatViewsOutlineView itemAtRow:row]; // get the row the user right-clicked
 	if( [item conformsToProtocol:@protocol( JVInspection )] ) {
 		if( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSAlternateKeyMask )
@@ -660,7 +660,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		}
 		return YES;
 	} else if( [menuItem action] == @selector( getInfo: ) ) {
-		NSInteger row = [chatViewsOutlineView clickedRow];
+		NSInteger row = [chatViewsOutlineView selectedRow];
 		id item = [chatViewsOutlineView itemAtRow:row]; // get the row the user right-clicked
 		if( [item conformsToProtocol:@protocol( JVInspection )] ) return YES;
 		else return NO;
