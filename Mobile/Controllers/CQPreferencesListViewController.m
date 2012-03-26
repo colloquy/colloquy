@@ -110,7 +110,7 @@
 
 @synthesize selectedItemIndex = _selectedItemIndex;
 
-- (void) setSelectedItemIndex:(NSUInteger) index {
+- (void) setSelectedItemIndex:(NSInteger) index {
 	_selectedItemIndex = (_allowEditing ? NSNotFound : index);
 }
 
@@ -195,7 +195,7 @@
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 
-	if (indexPath.row < _items.count) {
+	if (indexPath.row < (NSInteger)_items.count) {
 		cell.textLabel.textColor = [UIColor blackColor];
 		cell.textLabel.text = [_items objectAtIndex:indexPath.row];
 		cell.imageView.image = _itemImage;
@@ -253,7 +253,7 @@
 	if (!self.editing)
 		return UITableViewCellEditingStyleNone;
 
-	if (indexPath.row >= _items.count)
+	if (indexPath.row >= (NSInteger)_items.count)
 		return UITableViewCellEditingStyleInsert;
 
 	return UITableViewCellEditingStyleDelete;
@@ -274,17 +274,17 @@
 }
 
 - (BOOL) tableView:(UITableView *) tableView canMoveRowAtIndexPath:(NSIndexPath *) indexPath {
-	return (indexPath.row < _items.count);
+	return (indexPath.row < (NSInteger)_items.count);
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView targetIndexPathForMoveFromRowAtIndexPath:(NSIndexPath *) sourceIndexPath toProposedIndexPath:(NSIndexPath *) proposedDestinationIndexPath {
-	if (proposedDestinationIndexPath.row >= _items.count)
+	if (proposedDestinationIndexPath.row >= (NSInteger)_items.count)
 		return [NSIndexPath indexPathForRow:(_items.count - 1) inSection:0];
 	return proposedDestinationIndexPath;
 }
 
 - (void) tableView:(UITableView *) tableView moveRowAtIndexPath:(NSIndexPath *) fromIndexPath toIndexPath:(NSIndexPath *) toIndexPath {
-	if (toIndexPath.row >= _items.count)
+	if (toIndexPath.row >= (NSInteger)_items.count)
 		return;
 
 	id item = [[_items objectAtIndex:fromIndexPath.row] retain];

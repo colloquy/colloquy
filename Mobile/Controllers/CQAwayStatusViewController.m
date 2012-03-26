@@ -138,7 +138,7 @@
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
 
-	if (indexPath.row < _items.count) {
+	if (indexPath.row < (NSInteger)_items.count) {
 		cell.textLabel.adjustsFontSizeToFitWidth = YES;
 		cell.textLabel.minimumFontSize = 15.;
 		cell.textLabel.textColor = [UIColor blackColor];
@@ -157,7 +157,7 @@
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if (tableView.editing || indexPath.row > _items.count) {
+	if (tableView.editing || indexPath.row > (NSInteger)_items.count) {
 		CQPreferencesTextEditViewController *editingViewController = [[CQPreferencesTextEditViewController alloc] init];
 		editingViewController.delegate = self;
 		editingViewController.charactersRemainingBeforeDisplay = 25;

@@ -134,7 +134,7 @@ static id <CQChatViewController> chatControllerForIndexPath(NSIndexPath *indexPa
 	MVChatConnection *connection = connectionForSection(indexPath.section);
 	if (connection) {
 		NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
-		if (indexPath.row < controllers.count)
+		if (indexPath.row < (NSInteger)controllers.count)
 			return [controllers objectAtIndex:indexPath.row];
 	}
 

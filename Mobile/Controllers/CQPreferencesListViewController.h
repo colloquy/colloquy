@@ -11,7 +11,7 @@
 	NSString *_editViewTitle;
 	NSString *_editPlaceholder;
 	NSUInteger _editingIndex;
-	NSUInteger _selectedItemIndex;
+	NSInteger _selectedItemIndex;
 	CQPreferencesListEditViewController *_editingViewController;
 	id _customEditingViewController;
 	id _target;
@@ -20,7 +20,7 @@
 	BOOL _allowEditing;
 }
 @property (nonatomic) BOOL allowEditing;
-@property (nonatomic) NSUInteger selectedItemIndex;
+@property (nonatomic) NSInteger selectedItemIndex;
 @property (nonatomic, copy) NSArray *items;
 @property (nonatomic, retain) UIImage *itemImage;
 @property (nonatomic, copy) NSString *addItemLabelText;
