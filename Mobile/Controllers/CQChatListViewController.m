@@ -96,7 +96,7 @@ static BOOL showsChatIcons;
 
 static MVChatConnection *connectionForSection(NSUInteger section) {
 	NSUInteger workingCount = [CQConnectionsController defaultController].directConnections.count;
-	if (section <= workingCount)
+	if (workingCount && section <= workingCount)
 		return [[CQConnectionsController defaultController].directConnections objectAtIndex:section];
 
 	for (CQBouncerSettings *settings in [CQConnectionsController defaultController].bouncers) {
