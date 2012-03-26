@@ -45,13 +45,8 @@ static BOOL showsChatIcons;
 	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:[CQChatController defaultController] action:@selector(showNewChatActionSheet:)];
 	self.navigationItem.leftBarButtonItem = addItem;
 	[addItem release];
-	
-	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"New chat.", @"Voiceover new chat label");
-	self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"Manage chats.", @"Voiceover manage chats label");
 
-	self.editButtonItem.possibleTitles = [NSSet setWithObjects:NSLocalizedString(@"Manage", @"Manage button title"), NSLocalizedString(@"Done", @"Done button title"), nil];
-	self.editButtonItem.title = NSLocalizedString(@"Manage", @"Manage button title");
-	self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"New chat.", @"Voiceover new chat label");
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_addedChatViewController:) name:CQChatControllerAddedChatViewControllerNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_connectionRemoved:) name:CQConnectionsControllerRemovedConnectionNotification object:nil];
@@ -199,6 +194,9 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 
 	if (!viewControllersToClose.count)
 		viewControllersToClose = allViewControllers;
+
+	if (!(allViewControllers.count - viewControllersToClose.count))
+		[self.navigationItem setRightBarButtonItem:nil animated:[self isViewLoaded]];
 
 	if ([viewControllersToClose isEqualToArray:allViewControllers]) {
 		NSUInteger connectionSection = sectionIndexForConnection(connection);
@@ -525,6 +523,13 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		_needsUpdate = YES;
 		return;
 	}
+
+	self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"Manage chats.", @"Voiceover manage chats label");
+
+	self.editButtonItem.possibleTitles = [NSSet setWithObjects:NSLocalizedString(@"Manage", @"Manage button title"), NSLocalizedString(@"Done", @"Done button title"), nil];
+	self.editButtonItem.title = NSLocalizedString(@"Manage", @"Manage button title");
+
+	[self.navigationItem setRightBarButtonItem:self.editButtonItem animated:[self isViewLoaded]];
 
 	NSArray *controllers = nil;
 #if ENABLE(FILE_TRANSFERS)
