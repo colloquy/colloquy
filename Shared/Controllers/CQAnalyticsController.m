@@ -1,12 +1,16 @@
 #import "CQAnalyticsController.h"
 
-#if SYSTEM(MAC)
 #include <sys/sysctl.h>
 
+#if SYSTEM(MAC)
 #include <IOKit/IOKitLib.h>
 #include <IOKit/network/IOEthernetInterface.h>
 #include <IOKit/network/IONetworkInterface.h>
 #include <IOKit/network/IOEthernetController.h>
+#elif SYSTEM(IOS)
+#include <sys/socket.h>
+#include <net/if.h>
+#include <net/if_dl.h>
 #endif
 
 static NSString *applicationNameKey = @"application-name";
@@ -100,6 +104,7 @@ static kern_return_t getMACAddress(io_iterator_t intfIterator, UInt8 *MACAddress
 
 	return kernResult;
 }
+#endif
 
 static void generateDeviceIdentifier() {
 	if (deviceIdentifier)
@@ -109,6 +114,7 @@ static void generateDeviceIdentifier() {
 	if (deviceIdentifier)
 		return;
 
+#if SYSTEM(MAC)
 	kern_return_t kernResult = KERN_SUCCESS;
 	io_iterator_t intfIterator;
 	UInt8 MACAddress[kIOEthernetAddressSize];
@@ -118,18 +124,40 @@ static void generateDeviceIdentifier() {
 	if (kernResult == KERN_SUCCESS) {
 		kernResult = getMACAddress(intfIterator, MACAddress, sizeof(MACAddress));
 		if (kernResult == KERN_SUCCESS)
-			deviceIdentifier = [[NSString alloc] initWithFormat:@"%02x:%02x:%02x:%02x:%02x:%02x", MACAddress[0], MACAddress[1], MACAddress[2], MACAddress[3], MACAddress[4], MACAddress[5]];
+			deviceIdentifier = [NSString stringWithFormat:@"%02x:%02x:%02x:%02x:%02x:%02x", MACAddress[0], MACAddress[1], MACAddress[2], MACAddress[3], MACAddress[4], MACAddress[5]];
 	}
 
 	IOObjectRelease(intfIterator);
+#elif SYSTEM(IOS)
+	int	mib[6] = { CTL_NET, AF_ROUTE, 0, AF_LINK, NET_RT_IFLIST, if_nametoindex("en0") };
+	if (!mib[5])
+		goto fail;
+
+	size_t length = 0;
+	if (sysctl(mib, 6, NULL, &length, NULL, 0))
+		goto fail;
+
+	char *buffer = (char *)malloc(length);
+	if (!buffer || sysctl(mib, 6, buffer, &length, NULL, 0))
+		goto fail;
+
+	struct if_msghdr	 *ifm = (struct if_msghdr *)buffer;
+	struct sockaddr_dl *sockaddr = (struct sockaddr_dl *)(ifm + 1);
+	unsigned char *MACAddress = (unsigned char *)LLADDR(sockaddr);
+
+	deviceIdentifier = [NSString stringWithFormat:@"%02x:%02x:%02x:%02x:%02x:%02x", MACAddress[0], MACAddress[1], MACAddress[2], MACAddress[3], MACAddress[4], MACAddress[5]];
+
+	free(buffer);
+#endif
 
 	if (deviceIdentifier)
 		return;
 
+fail:
 	deviceIdentifier = [[[NSProcessInfo processInfo] globallyUniqueString] copy];
+
 	[[NSUserDefaults standardUserDefaults] setObject:deviceIdentifier forKey:@"JVUniqueMachineIdentifier"];
 }
-#endif
 
 #pragma mark -
 
@@ -159,23 +187,21 @@ static void generateDeviceIdentifier() {
 
 	if (!analyticsURL) {
 		[self release];
+
 		return nil;
 	}
 
 	_data = [[NSMutableDictionary alloc] initWithCapacity:10];
+
+	generateDeviceIdentifier();
 
 #if SYSTEM(IOS)
 	[_data setObject:[UIDevice currentDevice].modelIdentifier forKey:@"device-model"];
 	[_data setObject:[UIDevice currentDevice].systemName forKey:@"device-system-name"];
 	[_data setObject:[UIDevice currentDevice].systemVersion forKey:@"device-system-version"];
 
-	if (!deviceIdentifier)
-		deviceIdentifier = [[[UIDevice currentDevice] uniqueIdentifier] copy];
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
 #elif SYSTEM(MAC)
-	generateDeviceIdentifier();
-
 	NSDictionary *systemVersion = [[NSDictionary alloc] initWithContentsOfFile:@"/System/Library/CoreServices/ServerVersion.plist"];
 	if ( !systemVersion ) systemVersion = [[NSDictionary alloc] initWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
 
