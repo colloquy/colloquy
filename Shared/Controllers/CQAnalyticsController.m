@@ -247,6 +247,14 @@ fail:
 
 #pragma mark -
 
+- (NSString *) uniqueIdentifier {
+	generateDeviceIdentifier();
+
+	return [[NSUserDefaults standardUserDefaults] objectForKey:@"JVUniqueMachineIdentifier"];
+}
+
+#pragma mark -
+
 - (id) objectForKey:(NSString *) key {
 	return [_data objectForKey:key];
 }

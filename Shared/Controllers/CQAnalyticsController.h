@@ -4,6 +4,8 @@
 }
 + (CQAnalyticsController *) defaultController;
 
+@property (nonatomic, readonly) NSString *uniqueIdentifier;
+
 - (id) objectForKey:(NSString *) key;
 - (void) setObject:(id) object forKey:(NSString *) key;
 

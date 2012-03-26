@@ -726,7 +726,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[connection sendPushNotificationCommands];
 
 	if (connection.bouncerType == MVChatConnectionColloquyBouncer) {
-		connection.bouncerDeviceIdentifier = [UIDevice currentDevice].uniqueIdentifier;
+		connection.bouncerDeviceIdentifier = [CQAnalyticsController defaultController].uniqueIdentifier;
 
 		[connection sendRawMessageWithFormat:@"BOUNCER set encoding %u", connection.encoding];
 
