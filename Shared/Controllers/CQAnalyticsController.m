@@ -124,7 +124,7 @@ static void generateDeviceIdentifier() {
 	if (kernResult == KERN_SUCCESS) {
 		kernResult = getMACAddress(intfIterator, MACAddress, sizeof(MACAddress));
 		if (kernResult == KERN_SUCCESS)
-			deviceIdentifier = [NSString stringWithFormat:@"%02x:%02x:%02x:%02x:%02x:%02x", MACAddress[0], MACAddress[1], MACAddress[2], MACAddress[3], MACAddress[4], MACAddress[5]];
+			deviceIdentifier = [[NSString alloc] initWithFormat:@"%02x:%02x:%02x:%02x:%02x:%02x", MACAddress[0], MACAddress[1], MACAddress[2], MACAddress[3], MACAddress[4], MACAddress[5]];
 	}
 
 	IOObjectRelease(intfIterator);
@@ -145,7 +145,7 @@ static void generateDeviceIdentifier() {
 	struct sockaddr_dl *sockaddr = (struct sockaddr_dl *)(ifm + 1);
 	unsigned char *MACAddress = (unsigned char *)LLADDR(sockaddr);
 
-	deviceIdentifier = [NSString stringWithFormat:@"%02x:%02x:%02x:%02x:%02x:%02x", MACAddress[0], MACAddress[1], MACAddress[2], MACAddress[3], MACAddress[4], MACAddress[5]];
+	deviceIdentifier = [[NSString alloc] initWithFormat:@"%02x:%02x:%02x:%02x:%02x:%02x", MACAddress[0], MACAddress[1], MACAddress[2], MACAddress[3], MACAddress[4], MACAddress[5]];
 
 	free(buffer);
 #endif
