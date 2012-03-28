@@ -472,6 +472,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		if( _nextAppendMessageInterval < JVMessageIntervalMinimum )
 			_nextAppendMessageInterval = JVMessageIntervalMinimum;
 	}
+
+	_requiresFullMessage = NO;
 }
 
 - (void) _forceAppendMessages {
@@ -513,8 +515,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 		[self performSelector:@selector( _appendMessages ) withObject:nil afterDelay:delay];
 		[self performSelector:@selector( _forceAppendMessages ) withObject:nil afterDelay:1.];
-
-		_requiresFullMessage = NO;
 	}
 
 	return ( [result length] ? YES : NO );
