@@ -307,6 +307,13 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 #pragma mark -
+#pragma mark Web Search Support
+
+- (void) searchWeb:(id) sender {
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://google.com/search?q=%@", [display.selectedDOMRange.text stringByEncodingIllegalURLCharacters]]]];
+}
+
+#pragma mark -
 #pragma mark Scripting Support
 
 - (NSNumber *) uniqueIdentifier {
@@ -626,6 +633,10 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		case WebMenuItemTagDownloadImageToDisk:
 			[item setTarget:[sender UIDelegate]];
 			found = YES;
+			break;
+		case WebMenuItemTagSearchWeb:
+			[item setTarget:self];
+			[item setAction:@selector(searchWeb:)];
 			break;
 		}
 	}
