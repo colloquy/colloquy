@@ -310,7 +310,11 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #pragma mark Web Search Support
 
 - (void) searchWeb:(id) sender {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://google.com/search?q=%@", [display.selectedDOMRange.text stringByEncodingIllegalURLCharacters]]]];
+	NSString *searchEngineFormatter = [[NSUserDefaults standardUserDefaults] objectForKey:@"JVSearchEngineFormatter"];
+	if( [searchEngineFormatter rangeOfString:@"%@"].location == NSNotFound )
+		searchEngineFormatter = @"http://google.com/search?q=%@";
+
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithFormat:searchEngineFormatter, [display.selectedDOMRange.text stringByEncodingIllegalURLCharacters]]]];
 }
 
 #pragma mark -
@@ -637,6 +641,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		case WebMenuItemTagSearchWeb:
 			[item setTarget:self];
 			[item setAction:@selector(searchWeb:)];
+			[item setTitle:NSLocalizedString(@"Search the Web", @"Search the Web")];
 			break;
 		}
 	}
