@@ -11,7 +11,6 @@
 #import "MVChatuserWatchRule.h"
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
-#import "NSScannerAdditions.h"
 #import "NSDataAdditions.h"
 #import "MVUtilities.h"
 
@@ -1430,7 +1429,8 @@ end:
 		MVChatString *msg = nil;
 
 		[argumentsScanner scanUpToCharactersFromSet:whitespaceCharacters intoString:&targetName];
-		[argumentsScanner scanCharactersFromSet:whitespaceCharacters maxLength:1 intoString:NULL];
+		if( [whitespaceCharacters characterIsMember:[argumentsScanner.string characterAtIndex:argumentsScanner.scanLocation]] )
+			argumentsScanner.scanLocation++;
 
 		if( !targetName.length ) return;
 

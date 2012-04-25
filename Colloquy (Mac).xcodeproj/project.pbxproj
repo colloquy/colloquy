@@ -47,7 +47,6 @@
 		1CC42CF713A67EE900D6A4F0 /* NSMethodSignatureAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCADE7C1311FB9B00872A80 /* NSMethodSignatureAdditions.m */; };
 		1CC42CF813A67EE900D6A4F0 /* NSNotificationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C4F130A770A009F679C /* NSNotificationAdditions.m */; };
 		1CC42CF913A67EE900D6A4F0 /* NSObjectAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C51130A770A009F679C /* NSObjectAdditions.m */; };
-		1CC42CFA13A67EE900D6A4F0 /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C53130A770A009F679C /* NSScannerAdditions.m */; };
 		1CC42CFB13A67EE900D6A4F0 /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCB9C55130A770A009F679C /* NSStringAdditions.m */; };
 		1CC42D0013A67F5D00D6A4F0 /* Additions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC42CF013A67EDA00D6A4F0 /* Additions.a */; };
 		1CC42D0113A67F6600D6A4F0 /* Additions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CC42CF013A67EDA00D6A4F0 /* Additions.a */; };
@@ -244,8 +243,6 @@
 		1CCB9C50130A770A009F679C /* NSNotificationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSNotificationAdditions.h; path = Additions/NSNotificationAdditions.h; sourceTree = "<group>"; };
 		1CCB9C51130A770A009F679C /* NSObjectAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSObjectAdditions.m; path = Additions/NSObjectAdditions.m; sourceTree = "<group>"; };
 		1CCB9C52130A770A009F679C /* NSObjectAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSObjectAdditions.h; path = Additions/NSObjectAdditions.h; sourceTree = "<group>"; };
-		1CCB9C53130A770A009F679C /* NSScannerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSScannerAdditions.m; path = Additions/NSScannerAdditions.m; sourceTree = "<group>"; };
-		1CCB9C54130A770A009F679C /* NSScannerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSScannerAdditions.h; path = Additions/NSScannerAdditions.h; sourceTree = "<group>"; };
 		1CCB9C55130A770A009F679C /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSStringAdditions.m; path = Additions/NSStringAdditions.m; sourceTree = "<group>"; };
 		1CCB9C56130A770A009F679C /* NSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSStringAdditions.h; path = Additions/NSStringAdditions.h; sourceTree = "<group>"; };
 		1CCB9C57130A770A009F679C /* MVUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVUtilities.h; path = Additions/MVUtilities.h; sourceTree = "<group>"; };
@@ -336,8 +333,6 @@
 				1CCB9C50130A770A009F679C /* NSNotificationAdditions.h */,
 				1CCB9C51130A770A009F679C /* NSObjectAdditions.m */,
 				1CCB9C52130A770A009F679C /* NSObjectAdditions.h */,
-				1CCB9C53130A770A009F679C /* NSScannerAdditions.m */,
-				1CCB9C54130A770A009F679C /* NSScannerAdditions.h */,
 				1CCB9C55130A770A009F679C /* NSStringAdditions.m */,
 				1CCB9C56130A770A009F679C /* NSStringAdditions.h */,
 				1CCB9C57130A770A009F679C /* MVUtilities.h */,
@@ -868,7 +863,6 @@
 				1CC42CF713A67EE900D6A4F0 /* NSMethodSignatureAdditions.m in Sources */,
 				1CC42CF813A67EE900D6A4F0 /* NSNotificationAdditions.m in Sources */,
 				1CC42CF913A67EE900D6A4F0 /* NSObjectAdditions.m in Sources */,
-				1CC42CFA13A67EE900D6A4F0 /* NSScannerAdditions.m in Sources */,
 				1CC42CFB13A67EE900D6A4F0 /* NSStringAdditions.m in Sources */,
 				1CC42D1A13A6811900D6A4F0 /* InterThreadMessaging.m in Sources */,
 			);

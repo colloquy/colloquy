@@ -20,7 +20,6 @@
 #import "NSMethodSignatureAdditions.h"
 #import "NSNotificationAdditions.h"
 #import "NSObjectAdditions.h"
-#import "NSScannerAdditions.h"
 #import "NSStringAdditions.h"
 
 #endif
