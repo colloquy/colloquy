@@ -148,10 +148,10 @@ static void generateDeviceIdentifier() {
 	deviceIdentifier = [[NSString alloc] initWithFormat:@"%02x:%02x:%02x:%02x:%02x:%02x", MACAddress[0], MACAddress[1], MACAddress[2], MACAddress[3], MACAddress[4], MACAddress[5]];
 
 	free(buffer);
-#endif
 
 	if (deviceIdentifier)
 		return;
+#endif
 
 fail:
 	deviceIdentifier = [[[NSProcessInfo processInfo] globallyUniqueString] copy];
