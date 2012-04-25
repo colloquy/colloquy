@@ -4,15 +4,7 @@
 
 @implementation CQDaemonConnectionController
 + (CQDaemonConnectionController *) defaultController {
-	static BOOL creatingSharedInstance = NO;
-	static CQDaemonConnectionController *sharedInstance = nil;
-
-	if (!sharedInstance && !creatingSharedInstance) {
-		creatingSharedInstance = YES;
-		sharedInstance = [[self alloc] init];
-	}
-
-	return sharedInstance;
+	MVDefaultController;
 }
 
 #pragma mark -

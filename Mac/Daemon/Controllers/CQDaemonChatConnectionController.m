@@ -2,15 +2,7 @@
 
 @implementation CQDaemonChatConnectionController
 + (CQDaemonChatConnectionController *) defaultController {
-	static BOOL creatingSharedInstance = NO;
-	static CQDaemonChatConnectionController *sharedInstance = nil;
-
-	if (!sharedInstance && !creatingSharedInstance) {
-		creatingSharedInstance = YES;
-		sharedInstance = [[self alloc] init];
-	}
-
-	return sharedInstance;
+	MVDefaultController;
 }
 
 - (id) init {
