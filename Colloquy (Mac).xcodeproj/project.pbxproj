@@ -694,6 +694,7 @@
 				1C15B1BB1310CFF5006FA16B /* Frameworks */,
 				1C15B1BC1310CFF5006FA16B /* Resources */,
 				1C15B26E13118744006FA16B /* Copy Executables */,
+				92E571521547A5ED003F4996 /* Update Version Number */,
 			);
 			buildRules = (
 			);
@@ -802,6 +803,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		92E571521547A5ED003F4996 /* Update Version Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Update Version Number";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = "/usr/bin/perl -w";
+			shellScript = "# Xcode auto-versioning script for Subversion\n# by Axel Andersson, modified by Daniel Jalkut and Timothy Hatcher\n\nuse strict;\n\n# Get the current subversion revision number and use it to set the CFBundleVersion value\nmy $infoFile = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{INFOPLIST_PATH}\";\nmy $version = undef;\n$version = `/usr/bin/svnversion -n .` if -e \"/usr/bin/svnversion\";\n$version = `/usr/local/bin/svnversion -n .` if -e \"/usr/local/bin/svnversion\";\n$version = `/opt/local/bin/svnversion -n .` if -e \"/opt/local/bin/svnversion\";\n\n# Match the last group of digits:\n($version =~ m/(\\d+)[MS]*$/) && ($version = $1);\n\nif( $version ) {\n\topen( FH, \"$infoFile\" ) or die \"$0: $infoFile: $!\";\n\tmy $content = join( \"\", <FH> );\n\tclose( FH );\n\n\t$content =~ s/(\\s+<key>CFBundleVersion<\\/key>\\s+<string>).*?(<\\/string>)/$1$version$2/;\n\n\topen( FH, \">$infoFile\" ) or die \"$0: $infoFile: $!\";\n\tprint FH $content;\n\tclose( FH );\n}\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1C15B1BA1310CFF5006FA16B /* Sources */ = {
