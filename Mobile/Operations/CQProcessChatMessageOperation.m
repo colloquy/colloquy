@@ -101,7 +101,7 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 
 		NSString *linkHTMLString = nil;
 		if (room.length) {
-			linkHTMLString = [NSString stringWithFormat:@"<a href=\"irc:///%@\">%1$@</a>", room];
+			linkHTMLString = [NSString stringWithFormat:@"<a href=\"irc:///%@\">%@</a>", room, room];
 		} else if (url.length) {
 			NSURL *fullURL = [NSURL URLWithString:url];
 			if (!fullURL.scheme.length)
@@ -115,7 +115,7 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 				linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\">%@</a>", [fullURL absoluteString], url];
 			} else linkHTMLString = url;
 		} else if (email.length) {
-			linkHTMLString = [NSString stringWithFormat:@"<a href=\"mailto:%@\">%1$@</a>", email];
+			linkHTMLString = [NSString stringWithFormat:@"<a href=\"mailto:%@\">%@</a>", email, email];
 		}
 
 		if (linkHTMLString || (url && linkHTMLString.length != url.length)) {
