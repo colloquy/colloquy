@@ -12,6 +12,7 @@
 	return sharedInstance; \
 }
 
+#if !defined(__has_feature) || !__has_feature(objc_arc)
 #define MVSafeAdoptAssign(var, newExpression) \
 { \
 	id old = (var); \
@@ -46,20 +47,45 @@
 #define MVSafeReturn(var) \
 	[[var retain] autorelease];
 
-#if __has_feature(objc_arc)
-	#define autoreleasepool(block) \
-	{ \
-		@autoreleasepool { \
-			block(); \
-		} \
-	}
+#define autoreleasepool(block) \
+{ \
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]; \
+	block(); \
+	[pool drain]; \
+}
 #else
-	#define autoreleasepool(block) \
+#define MVSafeAdoptAssign(var, newExpression) \
+{ \
+	id old = (var); \
+	id new = (newExpression); \
+	(var) = new; \
+}
+
+#define MVSafeRetainAssign(var, newExpression) \
+{ \
+	id old = (var); \
+	id new = (newExpression); \
+	if (old != new) \
+		(var) = new; \
+}
+
+#define MVSafeCopyAssign(var, newExpression) \
+{ \
+	id old = (var); \
+	id new = (newExpression); \
+	if (old != new) \
+		(var) = [new copy]; \
+}
+
+#define MVSafeReturn(var) \
+	(var)
+
+#define autoreleasepool(block) \
 	{ \
-		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]; \
+	@autoreleasepool { \
 		block(); \
-		[pool drain]; \
-	}
+	} \
+}
 #endif
 
 #define MVAssertMainThreadRequired() \
