@@ -148,6 +148,9 @@ static BOOL showingKeyboard;
 }
 
 - (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
+	if (!(self = [super init]))
+		return nil;
+
 	if (!_target) {
 		NSString *nickname = [state objectForKey:@"user"];
 		if (!nickname) {

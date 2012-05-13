@@ -555,11 +555,11 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 		[self.tableView endUpdates];
 	} else [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
 
-	if (selectedIndexPath && changedIndexPath.section == selectedIndexPath.section) {
-		if (changedIndexPath.row <= selectedIndexPath.row)
-			selectedIndexPath = [NSIndexPath indexPathForRow:selectedIndexPath.row + 1 inSection:selectedIndexPath.section];
+//	if (selectedIndexPath && changedIndexPath.section == selectedIndexPath.section) {
+//		if (changedIndexPath.row <= selectedIndexPath.row)
+//			selectedIndexPath = [NSIndexPath indexPathForRow:selectedIndexPath.row + 1 inSection:selectedIndexPath.section];
 //		[self.tableView selectRowAtIndexPath:selectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-	}
+//	}
 
 	if ([[UIDevice currentDevice] isPadModel])
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
@@ -641,6 +641,8 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	}
 
 	[self _closeChatViewControllers:viewsToClose forConnection:connection withRowAnimation:UITableViewRowAnimationTop];
+
+	[viewsToClose release];
 }
 
 #pragma mark -

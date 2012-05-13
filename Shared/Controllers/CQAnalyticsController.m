@@ -138,8 +138,14 @@ static void generateDeviceIdentifier() {
 		goto fail;
 
 	char *buffer = (char *)malloc(length);
-	if (!buffer || sysctl(mib, 6, buffer, &length, NULL, 0))
+	if (!buffer)
 		goto fail;
+
+	if (sysctl(mib, 6, buffer, &length, NULL, 0)) {
+		free(buffer);
+
+		goto fail;
+	}
 
 	struct if_msghdr	 *ifm = (struct if_msghdr *)buffer;
 	struct sockaddr_dl *sockaddr = (struct sockaddr_dl *)(ifm + 1);
