@@ -269,7 +269,10 @@ static BOOL showingKeyboard;
 	NSMutableArray *messages = [[NSMutableArray alloc] init];
 
 	for (NSDictionary *message in _recentMessages) {
-		id sameKeys[] = {@"message", @"messagePlain", @"action", @"notice", @"highlighted", @"identifier", @"type", nil};
+		static NSArray *sameKeys = nil;
+		if (!sameKeys)
+			sameKeys = [NSArray arrayWithObjects:@"message", @"messagePlain", @"action", @"notice", @"highlighted", @"identifier", @"type", nil];
+
 		NSMutableDictionary *newMessage = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:message];
 
 		if ([[newMessage objectForKey:@"message"] isEqual:[newMessage objectForKey:@"messagePlain"]])

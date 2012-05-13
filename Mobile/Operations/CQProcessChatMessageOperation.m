@@ -241,7 +241,10 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 
 	[self _processMessageString:messageString];
 
-	id sameKeys[] = {@"user", @"action", @"notice", @"identifier", nil};
+	NSArray *sameKeys = nil;
+	if (!sameKeys)
+		sameKeys = [NSArray arrayWithObjects:@"user", @"action", @"notice", @"identifier", nil];
+
 	_processedMessage = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:_message];
 
 	[_processedMessage setObject:@"message" forKey:@"type"];
