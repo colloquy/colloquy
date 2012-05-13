@@ -822,7 +822,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 						else if( ! strikeStack )
 							[ret appendString:@"</strike>"];
 						break;
-					case 'C': // color
+					case 'C': { // color
 						if( [message characterAtIndex:[scanner scanLocation]] == '\006' ) { // reset colors
 							for( NSUInteger i = 0; i < colorStack; ++i )
 								[ret appendString:@"</span>"];
@@ -880,7 +880,7 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 								[ret appendString:@"</span>"];
 							colorStack = 0;
 						}
-					case 'F': // font size
+					} case 'F': // font size
 					case 'E': // encoding
 						// We actually handle this above, but there could be some encoding tags
 						// left over. For instance, ^FEU^F^FEU^F will leave one of the two tags behind.
