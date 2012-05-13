@@ -1654,14 +1654,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 #pragma mark -
 
-- (void) joinChatRoomNamed:(NSString *) room {
-	room = [self properNameForChatRoomNamed:room];
-	NSString *password = [[CQKeychain standardKeychain] passwordForServer:self.uniqueIdentifier area:room];
-	[self joinChatRoomNamed:room withPassphrase:password];
-}
-
-#pragma mark -
-
 - (void) setAutomaticJoinedRooms:(NSArray *) rooms {
 	NSParameterAssert(rooms != nil);
 

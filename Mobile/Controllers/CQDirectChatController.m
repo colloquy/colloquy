@@ -271,7 +271,7 @@ static BOOL showingKeyboard;
 	for (NSDictionary *message in _recentMessages) {
 		static NSArray *sameKeys = nil;
 		if (!sameKeys)
-			sameKeys = [NSArray arrayWithObjects:@"message", @"messagePlain", @"action", @"notice", @"highlighted", @"identifier", @"type", nil];
+			sameKeys = [[NSArray alloc] initWithObjects:@"message", @"messagePlain", @"action", @"notice", @"highlighted", @"identifier", @"type", nil];
 
 		NSMutableDictionary *newMessage = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:message];
 
