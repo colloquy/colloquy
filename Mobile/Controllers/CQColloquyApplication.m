@@ -786,6 +786,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if (!_showingTabBar)
 		return;
 
+	if ([[UIDevice currentDevice] isSystemFive])
+		return;
+
 	[tabBarController performPrivateSelector:@"hideBarWithTransition:" withUnsignedInteger:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
 
 	_showingTabBar = NO;
@@ -799,6 +802,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		return;
 
 	if (_showingTabBar)
+		return;
+
+	if ([[UIDevice currentDevice] isSystemFive])
 		return;
 
 	[tabBarController performPrivateSelector:@"showBarWithTransition:" withUnsignedInteger:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
