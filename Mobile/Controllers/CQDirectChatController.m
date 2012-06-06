@@ -627,22 +627,19 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (BOOL) _openURL:(NSURL *) url preferBuiltInBrowser:(BOOL) preferBrowser {
-	BOOL openWithBrowser = (preferBrowser || ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"]);
+- (BOOL) _openURL:(NSURL *) url {
+	[self _forceRegsignKeyboard];
 
-	if (openWithBrowser)
-		[self _forceRegsignKeyboard];
-
-	return [[CQColloquyApplication sharedApplication] openURL:url usingBuiltInBrowser:openWithBrowser withBrowserDelegate:self];
+	return [[CQColloquyApplication sharedApplication] openURL:url];
 }
 
-- (BOOL) _handleURLCommandWithArguments:(NSString *) arguments preferBuiltInBrowser:(BOOL) preferBrowser {
+- (BOOL) _handleURLCommandWithArguments:(NSString *) arguments {
 	NSScanner *scanner = [NSScanner scannerWithString:arguments];
 	NSString *urlString = nil;
 
 	[scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&urlString];
 
-	if (!preferBrowser && !urlString.length)
+	if (!urlString.length)
 		return NO;
 
 	if ([arguments isCaseInsensitiveEqualToString:@"last"])
@@ -651,17 +648,17 @@ static BOOL showingKeyboard;
 	NSURL *url = (urlString ? [NSURL URLWithString:urlString] : nil);
 	if (urlString && !url.scheme.length) url = [NSURL URLWithString:[@"http://" stringByAppendingString:urlString]];
 
-	[self _openURL:url preferBuiltInBrowser:preferBrowser];
+	[self _openURL:url];
 
 	return YES;
 }
 
 - (BOOL) handleBrowserCommandWithArguments:(NSString *) arguments {
-	return [self _handleURLCommandWithArguments:arguments preferBuiltInBrowser:YES];
+	return [self _handleURLCommandWithArguments:arguments];
 }
 
 - (BOOL) handleSafariCommandWithArguments:(NSString *) arguments {
-	return [self _handleURLCommandWithArguments:arguments preferBuiltInBrowser:NO];
+	return [self _handleURLCommandWithArguments:arguments];
 }
 
 - (BOOL) handleUrlCommandWithArguments:(NSString *) arguments {
@@ -901,13 +898,13 @@ static BOOL showingKeyboard;
 - (void) _handleSearchForURL:(NSString *) urlFormatString withQuery:(NSString *) query {
 	NSString *urlString = [NSString stringWithFormat:urlFormatString, [query stringByEncodingIllegalURLCharacters]];
 	NSURL *url = [NSURL URLWithString:urlString];
-	[self _openURL:url preferBuiltInBrowser:NO];
+	[self _openURL:url];
 }
 
 - (void) _handleSearchForURL:(NSString *) urlFormatString withQuery:(NSString *) query withLocale:(NSString *) languageCode {
 	NSString *urlString = [NSString stringWithFormat:urlFormatString, [query stringByEncodingIllegalURLCharacters], languageCode];
 	NSURL *url = [NSURL URLWithString:urlString];
-	[self _openURL:url preferBuiltInBrowser:NO];
+	[self _openURL:url];
 }
 
 - (BOOL) handleGoogleCommandWithArguments:(NSString *) arguments {
@@ -1075,20 +1072,9 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (void) browserViewController:(CQBrowserViewController *) browserViewController sendURL:(NSURL *) url {
-	NSString *existingText = chatInputBar.textField.text;
-	if (existingText.length)
-		chatInputBar.textField.text = [NSString stringWithFormat:@"%@ %@", existingText, url.absoluteString];
-	else chatInputBar.textField.text = url.absoluteString;
-
-	[browserViewController close:nil];
-}
-
-#pragma mark -
-
 - (BOOL) transcriptView:(CQChatTranscriptView *) view handleOpenURL:(NSURL *) url {
 	if (![url.scheme isCaseInsensitiveEqualToString:@"irc"] && ![url.scheme isCaseInsensitiveEqualToString:@"ircs"])
-		return [self _openURL:url preferBuiltInBrowser:NO];
+		return [self _openURL:url];
 
 	if (!url.host.length) {
 		NSString *target = @"";

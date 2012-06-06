@@ -1,4 +1,3 @@
-#import "CQBrowserViewController.h"
 #import "CQChatController.h"
 #import "CQChatInputBar.h"
 #import "CQChatTranscriptView.h"
@@ -19,7 +18,7 @@
 extern NSString *CQChatViewControllerRecentMessagesUpdatedNotification;
 extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 
-@interface CQDirectChatController : CQViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQBrowserViewControllerDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
+@interface CQDirectChatController : CQViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
 	@protected
 	IBOutlet CQChatInputBar *chatInputBar;
 	IBOutlet CQChatTranscriptView *transcriptView;

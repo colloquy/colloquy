@@ -30,10 +30,6 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 - (BOOL) isSpecialApplicationURL:(NSURL *) url;
 - (NSString *) applicationNameForURL:(NSURL *) url;
 
-- (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser;
-- (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser withBrowserDelegate:(id <CQBrowserViewControllerDelegate>) delegate;
-- (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser withBrowserDelegate:(id <CQBrowserViewControllerDelegate>) delegate promptForExternal:(BOOL) prompt;
-
 - (void) showActionSheet:(UIActionSheet *) sheet;
 - (void) showActionSheet:(UIActionSheet *) sheet forSender:(id) sender animated:(BOOL) animated;
 

@@ -190,18 +190,6 @@
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 			<key>Title</key>
-			<string>Accounts</string>
-			<key>File</key>
-			<string>Accounts</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSChildPaneSpecifier</string>
-			<key>Title</key>
 			<string>About</string>
 			<key>File</key>
 			<string>About</string>

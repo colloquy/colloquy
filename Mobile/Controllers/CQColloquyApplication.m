@@ -2,7 +2,6 @@
 
 #import "CQAlertView.h"
 #import "CQAnalyticsController.h"
-#import "CQBrowserViewController.h"
 #import "CQChatController.h"
 #import "CQChatCreationViewController.h"
 #import "CQChatNavigationController.h"
@@ -130,9 +129,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"] ? @"0" : @"1");
 	[analyticsController setObject:information forKey:@"browser"];
-
-	information = ([[NSUserDefaults standardUserDefaults] stringForKey:@"CQInstapaperUsername"].length ? @"1" : @"0");
-	[analyticsController setObject:information forKey:@"instapaper-setup"];
 
 	information = [[NSLocale autoupdatingCurrentLocale] localeIdentifier];
 	[analyticsController setObject:information forKey:@"locale"];
@@ -678,36 +674,17 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (BOOL) openURL:(NSURL *) url {
-	BOOL openWithBrowser = ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"];
-	return [self openURL:url usingBuiltInBrowser:openWithBrowser withBrowserDelegate:nil promptForExternal:openWithBrowser];
+	return [self openURL:url promptForExternal:YES];
 }
 
-- (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser {
-	return [self openURL:url usingBuiltInBrowser:openWithBrowser withBrowserDelegate:nil promptForExternal:openWithBrowser];
-}
-
-- (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser withBrowserDelegate:(id <CQBrowserViewControllerDelegate>) delegate {
-	return [self openURL:url usingBuiltInBrowser:openWithBrowser withBrowserDelegate:delegate promptForExternal:openWithBrowser];
-}
-
-- (BOOL) openURL:(NSURL *) url usingBuiltInBrowser:(BOOL) openWithBrowser withBrowserDelegate:(id <CQBrowserViewControllerDelegate>) delegate promptForExternal:(BOOL) prompt {
+- (BOOL) openURL:(NSURL *) url promptForExternal:(BOOL) prompt {
 	if ([[CQConnectionsController defaultController] handleOpenURL:url])
 		return YES;
 
-	BOOL loadLastURL = [url.absoluteString isCaseInsensitiveEqualToString:@"about:last"];
-	if (loadLastURL)
-		openWithBrowser = YES;
-
-	if (url && !loadLastURL && ![self canOpenURL:url])
+	if (url && ![self canOpenURL:url])
 		return NO;
 
-	if (!loadLastURL && openWithBrowser && url && ![url.scheme isCaseInsensitiveEqualToString:@"http"] && ![url.scheme isCaseInsensitiveEqualToString:@"https"])
-		openWithBrowser = NO;
-
-	if (!loadLastURL && openWithBrowser && [self isSpecialApplicationURL:url])
-		openWithBrowser = NO;
-
-	if (!openWithBrowser) {
+	if ([self isSpecialApplicationURL:url]) {
 		if (!prompt)
 			return [super openURL:url];
 
@@ -730,19 +707,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 		[alert show];
 		[alert release];
-
-		return YES;
-	}
-
-	CQBrowserViewController *browserController = [[CQBrowserViewController alloc] init];
-
-	if (loadLastURL) [browserController loadLastURL];
-	else if (url) [browserController loadURL:url];
-
-	browserController.delegate = delegate;
-	[_mainViewController presentModalViewController:browserController animated:YES];
-
-	[browserController release];
+	} else [super openURL:url];
 
 	return YES;
 }

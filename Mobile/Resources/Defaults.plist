@@ -30,8 +30,6 @@
 	<false/>
 	<key>CQDisableLandscape</key>
 	<false/>
-	<key>CQDisableBuiltInBrowser</key>
-	<false/>
 	<key>CQDisableChatAutocorrection</key>
 	<false/>
 	<key>MVChatNaturalActions</key>

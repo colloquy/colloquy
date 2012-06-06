@@ -122,16 +122,6 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Open Links in Safari</string>
-			<key>Key</key>
-			<string>CQDisableBuiltInBrowser</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
 			<string>Auto Away</string>
 			<key>Key</key>
 			<string>CQAutoAwayWhenMultitasking</string>

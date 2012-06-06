@@ -27,8 +27,6 @@
 		1C0F694F0F15035D002BB855 /* chromatic-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F694E0F15035D002BB855 /* chromatic-dark.css */; };
 		1C0F6A5B0F1508C9002BB855 /* chromatic.js in Resources */ = {isa = PBXBuildFile; fileRef = 1C0F6A550F150776002BB855 /* chromatic.js */; };
 		1C124A720F097575008F181B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C124A710F097575008F181B /* AudioToolbox.framework */; };
-		1C124AC20F09F014008F181B /* CQBrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C124AC10F09F014008F181B /* CQBrowserViewController.m */; };
-		1C124AD60F09F635008F181B /* Browser.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1C124AD50F09F635008F181B /* Browser.xib */; };
 		1C124B410F0A0244008F181B /* browserBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C124B3E0F0A0244008F181B /* browserBack.png */; };
 		1C124B420F0A0244008F181B /* browserReload.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C124B3F0F0A0244008F181B /* browserReload.png */; };
 		1C124B430F0A0244008F181B /* browserStop.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C124B400F0A0244008F181B /* browserStop.png */; };
@@ -273,9 +271,6 @@
 		1C0F694E0F15035D002BB855 /* chromatic-dark.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "chromatic-dark.css"; sourceTree = "<group>"; };
 		1C0F6A550F150776002BB855 /* chromatic.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = chromatic.js; sourceTree = "<group>"; };
 		1C124A710F097575008F181B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		1C124AC00F09F014008F181B /* CQBrowserViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQBrowserViewController.h; sourceTree = "<group>"; };
-		1C124AC10F09F014008F181B /* CQBrowserViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQBrowserViewController.m; sourceTree = "<group>"; };
-		1C124AD50F09F635008F181B /* Browser.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Browser.xib; sourceTree = "<group>"; };
 		1C124B3E0F0A0244008F181B /* browserBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserBack.png; sourceTree = "<group>"; };
 		1C124B3F0F0A0244008F181B /* browserReload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserReload.png; sourceTree = "<group>"; };
 		1C124B400F0A0244008F181B /* browserStop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserStop.png; sourceTree = "<group>"; };
@@ -620,7 +615,6 @@
 			isa = PBXGroup;
 			children = (
 				1C16F74A0FFF02D7008D7BB3 /* General */,
-				1C16F7440FFF0274008D7BB3 /* Browser */,
 				1C16F7410FFF0269008D7BB3 /* Connections */,
 				1C16F7470FFF0290008D7BB3 /* Colloquies */,
 			);
@@ -706,15 +700,6 @@
 				924B823E116FEB520007F1F8 /* CQAwayStatusViewController.h */,
 			);
 			name = Connections;
-			sourceTree = "<group>";
-		};
-		1C16F7440FFF0274008D7BB3 /* Browser */ = {
-			isa = PBXGroup;
-			children = (
-				1C124AC10F09F014008F181B /* CQBrowserViewController.m */,
-				1C124AC00F09F014008F181B /* CQBrowserViewController.h */,
-			);
-			name = Browser;
 			sourceTree = "<group>";
 		};
 		1C16F7470FFF0290008D7BB3 /* Colloquies */ = {
@@ -1136,7 +1121,6 @@
 				8900D7330FBFB2D900DE3E3B /* Servers.plist */,
 				1CB24E02101EBE4800217B50 /* verbs.plist */,
 				1C8CFE950F60E11900B672F9 /* Localizable.strings */,
-				1C124AD50F09F635008F181B /* Browser.xib */,
 				1CE69F810EE2F50100389442 /* ChatView.xib */,
 				9799B3B90F3C1E0100526B1E /* FileTransferTableCell.xib */,
 			);
@@ -1259,7 +1243,6 @@
 				1CC64C0F0EE98CC600DE91D0 /* userSuperOperator.png in Resources */,
 				1CC64C100EE98CC600DE91D0 /* userVoice.png in Resources */,
 				1CA718AA0EF5F136006225CD /* Settings.bundle in Resources */,
-				1C124AD60F09F635008F181B /* Browser.xib in Resources */,
 				1C124B410F0A0244008F181B /* browserBack.png in Resources */,
 				1C124B420F0A0244008F181B /* browserReload.png in Resources */,
 				1C124B430F0A0244008F181B /* browserStop.png in Resources */,
@@ -1421,7 +1404,6 @@
 				1CA7151A0EF47D6F006225CD /* CQUnreadCountView.m in Sources */,
 				1C20BE820EFEDF26005AD8A5 /* NSDictionaryAdditions.m in Sources */,
 				1CBCFF2D0F04632900EEBCFB /* CQTextCompletionView.m in Sources */,
-				1C124AC20F09F014008F181B /* CQBrowserViewController.m in Sources */,
 				1C1254A40F0D8D7F008F181B /* CQChatCreationViewController.m in Sources */,
 				1C1255670F0EAA69008F181B /* CQChatEditViewController.m in Sources */,
 				9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */,
