@@ -45,9 +45,7 @@
 		[coder encodeObject:_rooms forKey:@"KAIgnoreRooms"];
 		[coder encodeBool:_permanent forKey:@"KAIgnorePermanent"];
 		[coder encodeObject:_friendlyName forKey:@"KAIgnoreFriendlyName"];
-	}
-
-	[NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
+	} else [NSException raise:NSInvalidArchiveOperationException format:@"Only supports NSKeyedArchiver coders"];
 }
 
 - (void) dealloc {
