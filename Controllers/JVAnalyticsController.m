@@ -112,7 +112,7 @@ static void generateUniqueMachineIdentifier() {
 		return;
 
 	kern_return_t kernResult = KERN_SUCCESS;
-	io_iterator_t intfIterator;
+	io_iterator_t intfIterator = 0;
 	UInt8 MACAddress[kIOEthernetAddressSize];
 
 	kernResult = findEthernetInterfaces(&intfIterator);
