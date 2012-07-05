@@ -46,6 +46,7 @@
 #import "NSObjectAdditions.h"
 #import "NSDataAdditions.h"
 #import "NSDictionaryAdditions.h"
+#import "NSFileManagerMoreAdditions.h"
 #import "NSScannerAdditions.h"
 #import "NSStringAdditions.h"
 

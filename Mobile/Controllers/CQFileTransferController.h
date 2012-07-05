@@ -3,8 +3,6 @@
 
 #import "CQViewController.h"
 
-#if ENABLE(FILE_TRANSFERS)
-
 @class MVFileTransfer;
 @class CQFileTransferTableCell;
 
@@ -14,6 +12,7 @@
 	CQFileTransferTableCell *_cell;
 	NSTimer *_timer;
 }
+
 @property (nonatomic, readonly) MVFileTransfer *transfer;
 @property (nonatomic, assign) CQFileTransferTableCell *cell;
 @property (nonatomic, readonly) BOOL thumbnailAvailable;
@@ -21,5 +20,3 @@
 - (id) initWithTransfer:(MVFileTransfer *) transfer;
 - (UIImage *) thumbnailWithSize:(CGSize) size;
 @end
-
-#endif

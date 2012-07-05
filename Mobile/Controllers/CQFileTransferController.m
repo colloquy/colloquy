@@ -1,15 +1,12 @@
 //  Created by August Joki on 1/19/09.
 //  Copyright 2009 Concinnous Software. All rights reserved.
 
-#if ENABLE(FILE_TRANSFERS)
-
 #import "CQFileTransferController.h"
 #import "CQFileTransferTableCell.h"
 
 #import <ChatCore/MVFileTransfer.h>
 
 @implementation CQFileTransferController
-
 @synthesize transfer = _transfer;
 @synthesize cell = _cell;
 
@@ -77,10 +74,14 @@
 		MVDownloadFileTransfer *download = (MVDownloadFileTransfer *)_transfer;
 		path = download.destination;
 
-		if ([UIImage isValidImageFormat:path]) {
+		if ([NSFileManager isValidImageFormat:path]) {
 			UIImage *img = [UIImage imageWithContentsOfFile:path];
-			UIImageWriteToSavedPhotosAlbum(img, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
+			UIImageWriteToSavedPhotosAlbum(img, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
 			return;
+		} else if ([NSFileManager isValidVideoFormat:path] && UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(path)) {
+			UISaveVideoAtPathToSavedPhotosAlbum(path, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+		} else if ([NSFileManager isValidAudioFormat:path]) {
+			
 		}
 	}
 
@@ -107,6 +108,11 @@
 	[[NSFileManager defaultManager] removeItemAtPath:download.destination error:NULL];
 }
 
+- (void) video:(NSString *) videoPath didFinishSavingWithError:(NSError *) error contextInfo:(void *) contextInfo {
+	MVDownloadFileTransfer *download = (MVDownloadFileTransfer *)_transfer;
+	[[NSFileManager defaultManager] removeItemAtPath:download.destination error:NULL];
+}
+
 #pragma mark -
 
 - (BOOL) thumbnailAvailable {
@@ -125,17 +131,7 @@
 	if (![UIImage isValidImageFormat:path])
 		return nil;
 
-	UIImage *original = [UIImage imageWithContentsOfFile:path];
-
-	UIGraphicsBeginImageContext(size);
-	CGContextRef context = UIGraphicsGetCurrentContext();
-	CGContextTranslateCTM(context, 0., size.height);
-	CGContextScaleCTM(context, 1., -1.);
-	CGContextDrawImage(context, CGRectMake(0, 0, size.width, size.height), original.CGImage);
-	UIImage *thumbnail = UIGraphicsGetImageFromCurrentImageContext();
-	UIGraphicsEndImageContext();
-
-	return thumbnail;
+	return [[UIImage imageWithContentsOfFile:path] resizeToSize:size];
 }
 
 #pragma mark -
@@ -152,5 +148,3 @@
 	}
 }
 @end
-
-#endif

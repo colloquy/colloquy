@@ -172,6 +172,14 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+			<key>Title</key>
+			<string>File Transfers</string>
+			<key>File</key>
+			<string>FileTransfer</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>
 		<dict>

@@ -1,8 +1,6 @@
 //  Created by August Joki on 1/21/09.
 //  Copyright 2009 Concinnous Software. All rights reserved.
 
-#if ENABLE(FILE_TRANSFERS)
-
 #import "CQFileTransferTableCell.h"
 #import "CQFileTransferController.h"
 
@@ -32,13 +30,11 @@
 
 - (void) takeValuesFromController:(CQFileTransferController *) controller {
 	self.user = controller.transfer.user.displayName;
-	if ([controller.transfer isKindOfClass:[MVDownloadFileTransfer class]]) {
+	if ([controller.transfer isKindOfClass:[MVDownloadFileTransfer class]])
 		self.file = ((MVDownloadFileTransfer *)controller.transfer).originalFileName;
-	}
-	else {
-		self.file = [((MVUploadFileTransfer *)controller.transfer).source lastPathComponent];
-	}
-	self.progress = (double)controller.transfer.transfered/(double)controller.transfer.finalSize;
+	else self.file = [((MVUploadFileTransfer *)controller.transfer).source lastPathComponent];
+
+	self.progress = (double)controller.transfer.transferred/(double)controller.transfer.finalSize;
 	self.upload = controller.transfer.upload;
 
 	if (!_thumb && controller.thumbnailAvailable)
@@ -234,8 +230,10 @@
 	frame.origin.x = _userLabel.frame.origin.x;
 	frame.size.width = _userLabel.frame.size.width;
 	_fileLabel.frame = frame;
+
+#undef NO_ICON_LEFT_MARGIN
+#undef RIGHT_MARGIN
+#undef ICON_RIGHT_MARGIN
+#undef LABEL_SPACING
 }
-
 @end
-
-#endif

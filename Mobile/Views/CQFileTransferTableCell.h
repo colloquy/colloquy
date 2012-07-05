@@ -1,15 +1,13 @@
 //  Created by August Joki on 1/21/09.
 //  Copyright 2009 Concinnous Software. All rights reserved.
 
-#if ENABLE(FILE_TRANSFERS)
-
 #import <ChatCore/MVFileTransfer.h>
 
 @class MVChatUser;
 @class CQFileTransferController;
 
 @interface CQFileTransferTableCell : UITableViewCell {
-    @protected
+@private
 	IBOutlet UIImageView *_iconImageView;
 	IBOutlet UIProgressView *_progressView;
 	IBOutlet UILabel *_userLabel;
@@ -30,7 +28,4 @@
 @property (nonatomic) MVFileTransferStatus status;
 
 - (void) takeValuesFromController:(CQFileTransferController *) controller;
-
 @end
-
-#endif

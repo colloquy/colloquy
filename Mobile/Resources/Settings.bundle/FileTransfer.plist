@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Locations</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Save to Library</string>
+			<key>Key</key>
+			<string>CQSaveToLibrary</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Save Media to iTunes</string>
+			<key>Key</key>
+			<string>CQSaveToiTunes</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Behavior</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Only Transfer Media</string>
+			<key>Key</key>
+			<string>CQTransferMediaOnly</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Incoming Transfer Behavior</string>
+			<key>Key</key>
+			<string>CQFileDownloadAction</string>
+			<key>Values</key>
+			<array>
+				<string>Auto-Accept</string>
+				<string>Ask</string>
+				<string>Auto-Deny</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Auto-Accept</string>
+				<string>Ask</string>
+				<string>Auto-Deny</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>Ask</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Sending Image Quality</string>
+			<key>Key</key>
+			<string>CQImageFileTransferBehavior</string>
+			<key>Values</key>
+			<array>
+				<string>Ask</string>
+				<string>Low</string>
+				<string>Medium</string>
+				<string>High</string>
+				<string>Original</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Ask</string>
+				<string>Low Quality</string>
+				<string>Medium Quality</string>
+				<string>High Quality</string>
+				<string>Original Image</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>Ask</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Sending Video Quality</string>
+			<key>Key</key>
+			<string>CQVideoFileTransferBehavior</string>
+			<key>Values</key>
+			<array>
+				<string>Ask</string>
+				<string>Low</string>
+				<string>Medium</string>
+				<string>High</string>
+				<string>Original</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Ask</string>
+				<string>Low Quality</string>
+				<string>Medium Quality</string>
+				<string>High Quality</string>
+				<string>Original Image</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>Ask</string>
+		</dict>
+	</array>
+</dict>
+</plist>

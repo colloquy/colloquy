@@ -18,12 +18,6 @@ static NSString *membersFilteredCountFormat;
 
 #define SendMessageButtonIndex 0
 
-#if ENABLE(FILE_TRANSFERS)
-#define FileTransfersEnabled 1
-#else
-#define FileTransfersEnabled 0
-#endif
-
 #define UserIdleTime 600
 
 @implementation CQChatUserListViewController
@@ -64,14 +58,14 @@ static NSString *membersFilteredCountFormat;
 
 - (NSInteger) sendFileButtonIndex {
 	if ([[UIDevice currentDevice] isPadModel])
-		return FileTransfersEnabled ? 3 : 2;
-	return FileTransfersEnabled ? 2 : NSNotFound;
+		return 2;
+	return 1;
 }
 
 - (NSInteger) operatorActionsButtonIndex {
 	if ([[UIDevice currentDevice] isPadModel])
-		return FileTransfersEnabled ? 3 : 2;
-	return FileTransfersEnabled ? 2 : 1;
+		return 3;
+	return 2;
 }
 
 #pragma mark -
@@ -451,9 +445,7 @@ static NSString *membersFilteredCountFormat;
 	if ([[UIDevice currentDevice] isPadModel])
 		[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
 
-#if ENABLE(FILE_TRANSFERS)
 	[sheet addButtonWithTitle:NSLocalizedString(@"Send File", @"Send File button title")];
-#endif
 
 	if (showOperatorActions)
 		[sheet addButtonWithTitle:NSLocalizedString(@"Operator Actions...", @"Operator Actions button title")];
@@ -517,10 +509,8 @@ static NSString *membersFilteredCountFormat;
 			[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
 
 			[userInfoController release];
-#if ENABLE(FILE_TRANSFERS)
 		} else if (buttonIndex == [self sendFileButtonIndex]) {
 			[[CQChatController defaultController] showFilePickerWithUser:user];
-#endif
 		} else if (buttonIndex == [self operatorActionsButtonIndex]) {
 			NSSet *features = _room.connection.supportedFeatures;
 
