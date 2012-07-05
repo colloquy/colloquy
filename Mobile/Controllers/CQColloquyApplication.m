@@ -334,7 +334,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		_mainViewController = tabBarController;
 	}
 
-	[_mainWindow addSubview:_mainViewController.view];
+	_mainWindow.rootViewController = _mainViewController;
 	[_mainWindow makeKeyAndVisible];
 
 	[self handleNotificationWithUserInfo:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]];
