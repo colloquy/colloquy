@@ -128,7 +128,7 @@
 			path = ((MVDownloadFileTransfer *)_transfer).destination;
 	}
 
-	if (![UIImage isValidImageFormat:path])
+	if (![NSFileManager isValidImageFormat:path])
 		return nil;
 
 	return [[UIImage imageWithContentsOfFile:path] resizeToSize:size];
