@@ -228,6 +228,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 	label.font = [UIFont boldSystemFontOfSize:15.];
 	label.textColor = [UIColor colorWithRed:(85. / 255.) green:(102. / 255.) blue:(145. / 255.) alpha:1.];
 	label.highlightedTextColor = [UIColor whiteColor];
+	label.backgroundColor = [UIColor clearColor];
 
 	[helpCell.contentView addSubview:label];
 
