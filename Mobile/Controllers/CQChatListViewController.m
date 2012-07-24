@@ -792,6 +792,9 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 }
 
 - (CGFloat) tableView:(UITableView *) tableView heightForHeaderInSection:(NSInteger) section {
+	if (![CQChatController defaultController].chatViewControllers.count)
+		return 0.;
+
 	return 22.;
 }
 
