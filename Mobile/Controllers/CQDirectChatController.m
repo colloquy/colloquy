@@ -1110,55 +1110,14 @@ static BOOL showingKeyboard;
 #pragma mark -
 
 - (void) keyboardWillShow:(NSNotification *) notification {
-	CGPoint beginCenterPoint = CGPointZero;
-	CGPoint endCenterPoint = CGPointZero;
-
-	[[[notification userInfo] objectForKey:UIKeyboardCenterBeginUserInfoKey] getValue:&beginCenterPoint];
-	[[[notification userInfo] objectForKey:UIKeyboardCenterEndUserInfoKey] getValue:&endCenterPoint];
-
 	_showingKeyboard = YES;
 
 	if (![self isViewLoaded] || !self.view.window)
 		return;
 
-	NSValue *keyboardRectValue = [[notification userInfo] objectForKey:@"UIKeyboardFrameEndUserInfoKey"];
 	CGRect keyboardRect = CGRectZero;
-
-	if (keyboardRectValue) {
-		[keyboardRectValue getValue:&keyboardRect];
-
-		keyboardRect = [self.view convertRect:[self.view.window convertRect:keyboardRect fromWindow:nil] fromView:nil];
-	} else {
-		CGRect keyboardBounds = CGRectZero;
-		[[[notification userInfo] objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&keyboardBounds];
-
-		keyboardRect = keyboardBounds;
-		keyboardRect.origin.x = (endCenterPoint.x - (keyboardBounds.size.width / 2.));
-		keyboardRect.origin.y = (endCenterPoint.y - (keyboardBounds.size.height / 2.));
-
-		UIViewController *mainViewController = [CQColloquyApplication sharedApplication].mainViewController;
-		UIView *mainView = mainViewController.view;
-
-		keyboardRect = [self.view convertRect:keyboardRect fromView:mainView];
-
-		CGRect mainViewFrame = mainView.frame;
-		CGRect windowFrame = mainView.window.frame;
-
-		switch (mainViewController.interfaceOrientation) {
-			case UIInterfaceOrientationPortrait:
-				keyboardRect.origin.y -= mainViewFrame.origin.y;
-				break;
-			case UIInterfaceOrientationPortraitUpsideDown:
-				keyboardRect.origin.y -= (windowFrame.size.height - mainViewFrame.size.height);
-				break;
-			case UIInterfaceOrientationLandscapeRight:
-				keyboardRect.origin.y -= (windowFrame.size.width - mainViewFrame.size.width);
-				break;
-			case UIInterfaceOrientationLandscapeLeft:
-				keyboardRect.origin.y -= mainViewFrame.origin.x;
-				break;
-		}
-	}
+	[[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardRect];
+	keyboardRect = [self.view convertRect:[self.view.window convertRect:keyboardRect fromWindow:nil] fromView:nil];
 
 	NSTimeInterval animationDuration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
@@ -1180,16 +1139,6 @@ static BOOL showingKeyboard;
 }
 
 - (void) keyboardWillHide:(NSNotification *) notification {
-	CGPoint beginCenterPoint = CGPointZero;
-	CGPoint endCenterPoint = CGPointZero;
-
-	[[[notification userInfo] objectForKey:UIKeyboardCenterBeginUserInfoKey] getValue:&beginCenterPoint];
-	[[[notification userInfo] objectForKey:UIKeyboardCenterEndUserInfoKey] getValue:&endCenterPoint];
-
-	// Keyboard is sliding horizontal, so don't change.
-	if (beginCenterPoint.y == endCenterPoint.y)
-		return;
-
 	_showingKeyboard = NO;
 
 	if (![self isViewLoaded] || !self.view.window)
