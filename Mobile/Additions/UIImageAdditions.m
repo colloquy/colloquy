@@ -41,7 +41,7 @@
 		CGContextRelease(bitmap);
 		CGImageRelease(newImageRef);
 
-		return result;
+		return [result autorelease];
 	}
 }
 
