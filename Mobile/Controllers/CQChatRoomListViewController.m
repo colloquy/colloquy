@@ -132,6 +132,9 @@ static BOOL showFullRoomNames;
 	_selectedRoom = [[_connection properNameForChatRoomNamed:room] copy];
 	[old release];
 
+	if (!_matchedRooms.count)
+		return;
+
 	for (NSIndexPath *indexPath in self.tableView.indexPathsForVisibleRows) {
 		NSString *rowRoom = [_matchedRooms objectAtIndex:indexPath.row];
 		CQChatRoomInfoTableCell *cell = (CQChatRoomInfoTableCell *)[self.tableView cellForRowAtIndexPath:indexPath];
