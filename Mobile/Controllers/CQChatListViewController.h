@@ -3,7 +3,7 @@
 
 @protocol CQChatViewController;
 
-@interface CQChatListViewController : CQTableViewController <UIActionSheetDelegate> {
+@interface CQChatListViewController : CQTableViewController <UIActionSheetDelegate, UIDocumentInteractionControllerDelegate> {
 	@protected
 	UILongPressGestureRecognizer *_longPressGestureRecognizer;
 	UIActionSheet *_currentChatViewActionSheet;

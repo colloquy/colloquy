@@ -179,6 +179,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerAddedChatViewControllerNotification object:self userInfo:notificationInfo];
 }
 
+- (void) _addFileTransferController:(CQFileTransferController *) controller {
+	[self _addViewController:(id <CQChatViewController>)controller];
+}
+
 - (void) _joinedRoom:(NSNotification *) notification {
 	MVChatRoom *room = notification.object;
 	CQChatRoomController *roomController = [self chatViewControllerForRoom:room ifExists:NO];
@@ -226,6 +230,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	NSString *action = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQFileDownloadAction"];
 	if ([action isEqualToString:@"Auto-Accept"]) {
+		[self chatViewControllerForFileTransfer:transfer ifExists:NO];
+
 		NSString *filePath = [NSTemporaryDirectory() stringByAppendingPathComponent:transfer.originalFileName];
 		[transfer setDestination:filePath renameIfFileExists:YES];
 		[transfer acceptByResumingIfPossible:YES];
@@ -234,6 +240,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		[transfer reject];
 		return;
 	}
+
+	[self chatViewControllerForFileTransfer:transfer ifExists:NO];
 
 	NSString *file = transfer.originalFileName;
 	NSString *user = transfer.user.displayName;
@@ -252,8 +260,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if (vibrateOnFileTransfer)
 		[CQSoundController vibrate];
 
-	if (fileTransferSound)
-		[fileTransferSound playSound];
+	[fileTransferSound playSound];
 
 	[alert show];
 
@@ -797,7 +804,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if (!exists) {
 		CQFileTransferController *controller = [[CQFileTransferController alloc] initWithTransfer:transfer];
 		if (controller) {
-			[self _addViewController:controller];
+			[self _addFileTransferController:controller];
 			return [controller autorelease];
 		}
 	}
@@ -840,6 +847,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[controller retain];
 
 	NSUInteger controllerIndex = [_chatControllers indexOfObjectIdenticalTo:controller];
+
 	[_chatControllers removeObjectAtIndex:controllerIndex];
 
 	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObject:controller forKey:@"controller"];
