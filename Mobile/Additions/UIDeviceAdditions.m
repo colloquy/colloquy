@@ -57,13 +57,7 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 	if (cached)
 		return result;
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
-	if ([self respondsToSelector:@selector(userInterfaceIdiom)])
-		result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPhone) && [self.model hasCaseInsensitiveSubstring:@"Phone"];
-	else
-#endif
-		result = [self.model hasCaseInsensitiveSubstring:@"Phone"];
-
+	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPhone) && [self.model hasCaseInsensitiveSubstring:@"Phone"];
 	cached = YES;
 
 	return result;
@@ -76,13 +70,7 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 	if (cached)
 		return result;
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
-	if ([self respondsToSelector:@selector(userInterfaceIdiom)])
-		result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPhone) && [self.model hasCaseInsensitiveSubstring:@"Pod"];
-	else
-#endif
-		result = [self.model hasCaseInsensitiveSubstring:@"Pod"];
-
+	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPhone) && [self.model hasCaseInsensitiveSubstring:@"Pod"];
 	cached = YES;
 
 	return result;
@@ -95,11 +83,7 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 	if (cached)
 		return result;
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
-	if ([self respondsToSelector:@selector(userInterfaceIdiom)])
-		result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPad);
-#endif
-
+	result = (self.userInterfaceIdiom == UIUserInterfaceIdiomPad);
 	cached = YES;
 
 	return result;

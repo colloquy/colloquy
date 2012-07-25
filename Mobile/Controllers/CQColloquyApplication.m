@@ -72,10 +72,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (UISplitViewController *) splitViewController {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	if ([_mainViewController isKindOfClass:[UISplitViewController class]])
 		return (UISplitViewController *)_mainViewController;
-#endif
 	return nil;
 }
 
@@ -297,7 +295,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	_mainWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 
 	if ([[UIDevice currentDevice] isPadModel]) {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 		UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
 		splitViewController.delegate = self;
 
@@ -311,7 +308,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		[viewControllers release];
 
 		_mainViewController = splitViewController;
-#endif
 	} else {
 		UITabBarController *tabBarController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
 		tabBarController.delegate = self;
@@ -455,7 +451,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) showActionSheet:(UIActionSheet *) sheet forSender:(id) sender animated:(BOOL) animated {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	if (sender && [[UIDevice currentDevice] isPadModel]) {
 		id old = _visibleActionSheet;
 		[old dismissWithClickedButtonIndex:[old cancelButtonIndex] animated:NO];
@@ -473,7 +468,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 		return;
 	}
-#endif
 
 	UITabBar *tabBar = self.tabBarController.tabBar;
 	if (tabBar && !self.modalViewController) {
@@ -564,17 +558,13 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) toggleConnections:(id) sender {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	if (_connectionsPopoverController.popoverVisible)
 		[_connectionsPopoverController dismissPopoverAnimated:YES];
-	else
-#endif
-		[self showConnections:sender];
+	else [self showConnections:sender];
 }
 
 - (void) showConnections:(id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 		if (!_connectionsPopoverController)
 			_connectionsPopoverController = [[UIPopoverController alloc] initWithContentViewController:[CQConnectionsController defaultController].connectionsNavigationController];
 
@@ -582,7 +572,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 			[self dismissPopoversAnimated:NO];
 			[_connectionsPopoverController presentPopoverFromBarButtonItem:_connectionsBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 		}
-#endif
 	} else {
 		[[CQConnectionsController defaultController].connectionsNavigationController popToRootViewControllerAnimated:NO];
 		self.tabBarController.selectedViewController = [CQConnectionsController defaultController].connectionsNavigationController;
@@ -590,24 +579,19 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) toggleColloquies:(id) sender {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	if (_colloquiesPopoverController.popoverVisible)
 		[_colloquiesPopoverController dismissPopoverAnimated:YES];
-	else
-#endif
-		[self showColloquies:sender];
+	else [self showColloquies:sender];
 }
 
 - (void) showColloquies:(id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 		if (!UIInterfaceOrientationIsLandscape([UIDevice currentDevice].orientation)) {
 			if (!_colloquiesPopoverController.popoverVisible) {
 				[self dismissPopoversAnimated:NO];
 				[_colloquiesPopoverController presentPopoverFromBarButtonItem:_colloquiesBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 			}
 		}
-#endif
 	} else {
 		self.tabBarController.selectedViewController = [CQChatController defaultController].chatNavigationController;
 		[[CQChatController defaultController].chatNavigationController popToRootViewControllerAnimated:YES];
@@ -615,14 +599,12 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) dismissPopoversAnimated:(BOOL) animated {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	[_colloquiesPopoverController dismissPopoverAnimated:animated];
 	[_connectionsPopoverController dismissPopoverAnimated:animated];
 
 	id <CQChatViewController> controller = [CQChatController defaultController].visibleChatController;
 	if ([controller respondsToSelector:@selector(dismissPopoversAnimated:)])
 		[controller dismissPopoversAnimated:animated];
-#endif
 }
 
 - (void) submitRunTime {

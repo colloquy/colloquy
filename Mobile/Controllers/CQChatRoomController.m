@@ -228,7 +228,6 @@ static BOOL showLeaveEvents;
 	}
 
 	if ([[UIDevice currentDevice] isPadModel]) {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 		if (!_currentUserListPopoverController) {
 			_currentUserListPopoverController = [[UIPopoverController alloc] initWithContentViewController:_currentUserListViewController];
 			_currentUserListPopoverController.delegate = self;
@@ -239,7 +238,6 @@ static BOOL showLeaveEvents;
 
 			[_currentUserListPopoverController presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 		} else [_currentUserListPopoverController dismissPopoverAnimated:YES];
-#endif
 	} else {
 		if (!self.navigationController || _showingMembersInNavigationController)
 			return;
@@ -252,9 +250,7 @@ static BOOL showLeaveEvents;
 #pragma mark -
 
 - (void) dismissPopoversAnimated:(BOOL) animated {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	[_currentUserListPopoverController dismissPopoverAnimated:animated];
-#endif
 }
 
 #pragma mark -

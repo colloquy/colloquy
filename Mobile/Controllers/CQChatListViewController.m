@@ -406,7 +406,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) _tableWasLongPressed:(UILongPressGestureRecognizer *) gestureReconizer {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	if (gestureReconizer.state != UIGestureRecognizerStateBegan)
 		return;
 
@@ -432,7 +431,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	_currentChatViewActionSheet.delegate = self;
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:_currentChatViewActionSheet forSender:cell animated:YES];
-#endif
 }
 
 - (void) _willBecomeActive:(NSNotification *) notification {
@@ -478,13 +476,11 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		self.clearsSelectionOnViewWillAppear = NO;
 	}
 
-	if (!_longPressGestureRecognizer && [[UIDevice currentDevice].systemVersion doubleValue] >= 3.2) {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
+	if (!_longPressGestureRecognizer) {
 		_longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_tableWasLongPressed:)];
 		_longPressGestureRecognizer.cancelsTouchesInView = NO;
 		_longPressGestureRecognizer.delaysTouchesBegan = YES;
 		[self.tableView addGestureRecognizer:_longPressGestureRecognizer];
-#endif
 	}
 }
 

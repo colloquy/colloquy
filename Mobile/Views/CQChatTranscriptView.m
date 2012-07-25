@@ -29,13 +29,6 @@
 
 #pragma mark -
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED <= __IPHONE_3_1
-@interface UIWebView (UIWebViewScrollViewDelegate) <UIScrollViewDelegate>
-@end
-#endif
-
-#pragma mark -
-
 @interface CQChatTranscriptView (Internal)
 - (void) _addComponentsToTranscript:(NSArray *) components fromPreviousSession:(BOOL) previous animated:(BOOL) animated;
 - (NSString *) _contentHTML;
@@ -138,14 +131,11 @@
 }
 
 - (UIScrollView *) scrollView {
-	if ([[UIDevice currentDevice] isSystemFive]) {
+	if ([[UIDevice currentDevice] isSystemFive])
 		return [super scrollView];
-	}
 
 #if ENABLE(SECRETS)
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	return [self performPrivateSelector:@"_scrollView"];
-#endif
 #endif
 
 	return nil;

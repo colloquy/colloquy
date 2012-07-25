@@ -1,12 +1,11 @@
 #import "UIViewControllerAdditions.h"
 
-#define MinimumPopoverHeight 320
-#define MaximumPortraitPopoverHeight 876 // 921 (default) - 45 (height of a UITextField)
-#define MaximumLandscapePopoverHeight 620 // 665 (default) - 45 (height of a UITextField)
+#define CQMinimumPopoverHeight 320
+#define CQMaximumPortraitPopoverHeight 876 // 921 (default) - 45 (height of a UITextField)
+#define CQMaximumLandscapePopoverHeight 620 // 665 (default) - 45 (height of a UITextField)
 
 @implementation UIViewController (UIViewControllerAdditions)
 - (void) resizeForViewInPopoverUsingTableView:(UITableView *) tableView {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	if (![[UIDevice currentDevice] isPadModel])
 		return;
 
@@ -16,21 +15,20 @@
 	NSUInteger numberOfSections = [tableView numberOfSections];
 
 	if (!numberOfRows && numberOfSections == 1) {
-		self.contentSizeForViewInPopover = CGSizeMake(width, MinimumPopoverHeight);
+		self.contentSizeForViewInPopover = CGSizeMake(width, CQMinimumPopoverHeight);
 		return;
 	}
 
 	CGFloat height = (numberOfSections * tableView.sectionHeaderHeight) + (numberOfRows * tableView.rowHeight);
 
-	if (height > MinimumPopoverHeight) {
+	if (height > CQMinimumPopoverHeight) {
 		if (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)) {
-			if (height > MaximumPortraitPopoverHeight)
-				height = MaximumPortraitPopoverHeight;
-		} else if (height > MaximumLandscapePopoverHeight)
-			height = MaximumLandscapePopoverHeight;
-	} else height = MinimumPopoverHeight;
+			if (height > CQMaximumPortraitPopoverHeight)
+				height = CQMaximumPortraitPopoverHeight;
+		} else if (height > CQMaximumLandscapePopoverHeight)
+			height = CQMaximumLandscapePopoverHeight;
+	} else height = CQMinimumPopoverHeight;
 
 	self.contentSizeForViewInPopover = CGSizeMake(width, height);
-#endif
 }
 @end

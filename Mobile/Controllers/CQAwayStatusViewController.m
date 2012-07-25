@@ -65,13 +65,11 @@
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
-	if (!_longPressGestureRecognizer && [[UIDevice currentDevice].systemVersion doubleValue] >= 3.2) {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
+	if (!_longPressGestureRecognizer) {
 		_longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_tableWasLongPressed:)];
 		_longPressGestureRecognizer.cancelsTouchesInView = NO;
 		_longPressGestureRecognizer.delaysTouchesBegan = YES;
 		[self.tableView addGestureRecognizer:_longPressGestureRecognizer];
-#endif
 	}
 }
 
