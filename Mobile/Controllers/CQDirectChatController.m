@@ -148,8 +148,7 @@ static BOOL showingKeyboard;
 }
 
 - (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
-	if (!(self = [super init]))
-		return nil;
+	MVChatUser *user = nil;
 
 	if (!_target) {
 		NSString *nickname = [state objectForKey:@"user"];
@@ -158,18 +157,24 @@ static BOOL showingKeyboard;
 			return nil;
 		}
 
-		MVChatUser *user = [connection chatUserWithUniqueIdentifier:nickname];
+		user = [connection chatUserWithUniqueIdentifier:nickname];
 		if (!user) {
 			[self release];
 			return nil;
 		}
 
-		if (!(self = [self initWithTarget:user]))
-			return nil;
-
 		_revealKeyboard = NO;
 	}
 
+	if (!(self = [self initWithTarget:user]))
+		return nil;
+
+	[self restorePersistentState:state usingConnection:connection];
+
+	return self;
+}
+
+- (void) restorePersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
 	_active = [[state objectForKey:@"active"] boolValue];
 
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQHistoryOnReconnect"]) {
@@ -200,8 +205,6 @@ static BOOL showingKeyboard;
 	} else {
 		_recentMessages = [[NSMutableArray alloc] init];
 	}
-
-	return self;
 }
 
 - (void) dealloc {

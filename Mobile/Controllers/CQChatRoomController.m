@@ -108,7 +108,9 @@ static BOOL showLeaveEvents;
 	_joined = [[state objectForKey:@"joined"] boolValue];
 	_joinCount = 1;
 
-	return [super initWithPersistentState:state usingConnection:connection];
+	[super restorePersistentState:state usingConnection:connection];
+
+	return self;
 }
 
 - (void) dealloc {

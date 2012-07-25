@@ -83,6 +83,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 
 @optional
 - (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection;
+- (void) restorePersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection;
 - (void) close;
 
 - (void) dismissPopoversAnimated:(BOOL) animated;
