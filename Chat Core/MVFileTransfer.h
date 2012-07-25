@@ -26,6 +26,18 @@ typedef enum {
 	MVFileTransferKeyAgreementError = -6
 } MVFileTransferError;
 
+static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus status);
+static inline NSString *NSStringFromMVFileTransferStatus(MVFileTransferStatus status) {
+	switch(status) {
+	case MVFileTransferDoneStatus: return @"trDn";
+	case MVFileTransferNormalStatus: return @"trNo";
+	case MVFileTransferHoldingStatus: return @"trHo";
+	case MVFileTransferStoppedStatus: return @"trSt";
+	case MVFileTransferErrorStatus: return @"trEr";
+	default: return nil;
+	}
+}
+
 @interface MVFileTransfer : NSObject {
 @protected
 	unsigned long long _finalSize;
