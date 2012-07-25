@@ -29,90 +29,37 @@
 #pragma mark -
 
 - (void) takeValuesFromController:(CQFileTransferController *) controller {
-	self.user = controller.transfer.user.displayName;
+	_userLabel.text = controller.transfer.user.displayName;
 	if ([controller.transfer isKindOfClass:[MVDownloadFileTransfer class]])
-		self.file = ((MVDownloadFileTransfer *)controller.transfer).originalFileName;
-	else self.file = [((MVUploadFileTransfer *)controller.transfer).source lastPathComponent];
+		_fileLabel.text = ((MVDownloadFileTransfer *)controller.transfer).originalFileName;
+	else _fileLabel.text = [((MVUploadFileTransfer *)controller.transfer).source lastPathComponent];
 
-	self.progress = (double)controller.transfer.transferred/(double)controller.transfer.finalSize;
-	self.upload = controller.transfer.upload;
+	_progressView.progress = (double)controller.transfer.transferred/(double)controller.transfer.finalSize;
+	if (controller.transfer.upload) {
+		_upload = YES;
+		_userTitle.text = NSLocalizedString(@"To:", @"To: label");
+		_fileTitle.text = NSLocalizedString(@"Sending:", @"Sending: label");
+	} else {
+		_upload = NO;
+		_userTitle.text = NSLocalizedString(@"From:", @"From: label");
+		_fileTitle.text = NSLocalizedString(@"Receiving:", @"Receiving: label");
+	}
 
 	if (!_thumb && controller.thumbnailAvailable)
 		_thumb = [[controller thumbnailWithSize:CGSizeMake(55., 55.)] retain];
 
-	self.status = controller.transfer.status;
+	_status = controller.transfer.status;
+	NSLog(@"%@", NSStringFromMVFileTransferStatus(_status));
 
-	_controller = controller;
-	controller.cell = self;
-}
-
-
-- (BOOL) showsIcon {
-	return !_iconImageView.hidden;
-}
-
-- (void) setShowsIcon:(BOOL) show {
-	_iconImageView.hidden = !show;
-	[self setNeedsLayout];
-}
-
-- (NSString *) user {
-	return _userLabel.text;
-}
-
-- (void) setUser:(NSString *) user {
-	_userLabel.text = user;
-	[self setNeedsLayout];
-}
-
-- (NSString *) file {
-	return _fileLabel.text;
-}
-
-- (void) setFile:(NSString *) file {
-	_fileLabel.text = file;
-	[self setNeedsLayout];
-}
-
-- (BOOL) upload {
-	return _upload;
-}
-
-- (void) setUpload:(BOOL) upload {
-	_upload = upload;
-	if (_upload) {
-		_userTitle.text = NSLocalizedString(@"To:", @"To: label");
-		_fileTitle.text = NSLocalizedString(@"Sending:", @"Sending: label");
-	} else {
-		_userTitle.text = NSLocalizedString(@"From:", @"From: label");
-		_fileTitle.text = NSLocalizedString(@"Receiving:", @"Receiving: label");
-	}
-	[self setNeedsLayout];
-}
-
-- (float) progress {
-	return _progressView.progress;
-}
-
-- (void) setProgress:(float) progress {
-	_progressView.progress = progress;
-}
-
-- (MVFileTransferStatus) status {
-	return _status;
-}
-
-- (void) setStatus:(MVFileTransferStatus) status {
-	if (_status != status) {
-		[UIView beginAnimations:nil context:NULL];
-		_status = status;
-		if (_status == MVFileTransferNormalStatus) {
+	[UIView animateWithDuration:.3 animations:^{
+		if (_status == MVFileTransferNormalStatus || _status == MVFileTransferDoneStatus) {
 			_userLabel.alpha = _userTitle.alpha = kNormalAlpha;
 			_fileLabel.alpha = _fileTitle.alpha = kNormalAlpha;
 			_iconImageView.alpha = _progressView.alpha = kNormalAlpha;
 			if (_upload) {
-				//_iconImageView.image = [UIImage imageNamed:@"directChatIcon.png"];
-				_iconImageView.image = _thumb;
+				if (_thumb)
+					_iconImageView.image = _thumb;
+				else _iconImageView.image = [UIImage imageNamed:@"directChatIcon.png"];
 			} else {
 				_iconImageView.image = [UIImage imageNamed:@"directChatIcon.png"];
 			}
@@ -120,7 +67,7 @@
 			_userLabel.alpha = _userTitle.alpha = kOtherAlpha;
 			_fileLabel.alpha = _fileTitle.alpha = kOtherAlpha;
 			_iconImageView.alpha = _progressView.alpha = kOtherAlpha;
-
+			
 			if (_status == MVFileTransferDoneStatus) {
 				//_iconImageView.image = [UIImage imageNamed:@""];
 				_iconImageView.image = _thumb;
@@ -147,9 +94,20 @@
 				}
 			}
 		}
-		[UIView commitAnimations];
-		[self setNeedsLayout];
-	}
+	}];
+
+	_controller = controller;
+	controller.cell = self;
+}
+
+
+- (BOOL) showsIcon {
+	return !_iconImageView.hidden;
+}
+
+- (void) setShowsIcon:(BOOL) show {
+	_iconImageView.hidden = !show;
+	[self setNeedsLayout];
 }
 
 #pragma mark -

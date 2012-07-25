@@ -21,11 +21,6 @@
 }
 
 @property (nonatomic) BOOL showsIcon;
-@property (nonatomic) BOOL upload;
-@property (nonatomic, copy) NSString *user;
-@property (nonatomic, copy) NSString *file;
-@property (nonatomic) float progress;
-@property (nonatomic) MVFileTransferStatus status;
 
 - (void) takeValuesFromController:(CQFileTransferController *) controller;
 @end
