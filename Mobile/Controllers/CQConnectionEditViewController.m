@@ -26,8 +26,6 @@ static BOOL pushAvailable = NO;
 static BOOL pushAvailable = YES;
 #endif
 
-static BOOL multitaskingAvailable = NO;
-
 static inline __attribute__((always_inline)) BOOL isDefaultValue(NSString *string) {
 	return [string isEqualToString:@"<<default>>"];
 }
@@ -56,11 +54,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		--DeleteTableSection;
 	}
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	multitaskingAvailable = ([[UIDevice currentDevice] isSystemFour] && [UIDevice currentDevice].multitaskingSupported);
-#endif
-
-	if (!multitaskingAvailable) {
+	if (![UIDevice currentDevice].multitaskingSupported) {
 		--AdvancedTableSection;
 		--DeleteTableSection;
 	}
@@ -167,7 +161,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		count -= 1;
 	if (!pushAvailable)
 		count -= 1;
-	if (!multitaskingAvailable)
+	if (![UIDevice currentDevice].multitaskingSupported)
 		count -= 1;
 	return count;
 }
@@ -181,7 +175,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		return 2;
 	if (section == AutomaticTableSection)
 		return 2;
-	if (multitaskingAvailable && section == MultitaskTableSection)
+	if ([UIDevice currentDevice].multitaskingSupported && section == MultitaskTableSection)
 		return 1;
 	if (section == AdvancedTableSection)
 		return 1;
@@ -379,7 +373,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 			return cell;
 		}
-	} else if (multitaskingAvailable && indexPath.section == MultitaskTableSection && indexPath.row == 0) {
+	} else if ([UIDevice currentDevice].multitaskingSupported && indexPath.section == MultitaskTableSection && indexPath.row == 0) {
 		CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 
 		cell.switchAction = @selector(multitaskingChanged:);

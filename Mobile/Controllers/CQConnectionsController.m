@@ -98,14 +98,12 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batteryStateChanged) name:UIDeviceBatteryStateDidChangeNotification object:nil];
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIDevice currentDevice] isSystemFour] && [UIDevice currentDevice].multitaskingSupported) {
+	if ([UIDevice currentDevice].multitaskingSupported) {
 		_backgroundTask = UIBackgroundTaskInvalid;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
 	}
-#endif
 
 	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
 
@@ -144,10 +142,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[_directConnections release];
 	[_bouncerConnections release];
 	[_bouncerChatConnections release];
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	[_timeRemainingLocalNotifiction release];
 	[_automaticallySetConnectionAwayStatus release];
-#endif
 
 	[super dealloc];
 }
@@ -471,8 +467,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 }
 
 - (void) _possiblyEndBackgroundTask {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if (![[UIDevice currentDevice] isSystemFour] || ![UIDevice currentDevice].multitaskingSupported)
+	if (![UIDevice currentDevice].multitaskingSupported)
 		return;
 
 	if ([self _anyConnectedOrConnectingConnections] || [self _anyReconnectingConnections] || _backgroundTask == UIBackgroundTaskInvalid)
@@ -482,10 +477,8 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	[[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
 	_backgroundTask = UIBackgroundTaskInvalid;
-#endif
 }
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 - (void) _showNoTimeRemainingAlert {
 	if (![UIDevice currentDevice].multitaskingSupported)
 		return;
@@ -666,7 +659,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
 	_backgroundTask = UIBackgroundTaskInvalid;
 }
-#endif
 
 #if TARGET_IPHONE_SIMULATOR
 - (void) _gotRawConnectionMessage:(NSNotification *) notification {
@@ -692,12 +684,10 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIDevice currentDevice] isSystemFour] && [UIDevice currentDevice].multitaskingSupported) {
+	if ([UIDevice currentDevice].multitaskingSupported) {
 		if (_backgroundTask == UIBackgroundTaskInvalid)
 			_backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{ [self _backgroundTaskExpired]; }];
 	}
-#endif
 
 	[connection removePersistentInformationObjectForKey:@"pushState"];
 
@@ -798,14 +788,12 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		return;
 	}
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIDevice currentDevice] isSystemFour] && [UIDevice currentDevice].multitaskingSupported && connection.waitingToReconnect) {
+	if ([UIDevice currentDevice].multitaskingSupported && connection.waitingToReconnect) {
 		if (ABS([connection.nextReconnectAttemptDate timeIntervalSinceNow]) >= [UIApplication sharedApplication].backgroundTimeRemaining) {
 			[connection cancelPendingReconnectAttempts];
 			[connection _setStatus:MVChatConnectionSuspendedStatus];
 		}
 	}
-#endif
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 

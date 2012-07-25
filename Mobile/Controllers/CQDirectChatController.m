@@ -377,11 +377,7 @@ static BOOL showingKeyboard;
 
 	_active = YES;
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIDevice currentDevice] isSystemFour])
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
-#endif
-
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 
 	[self _addPendingComponentsAnimated:YES];
@@ -415,10 +411,7 @@ static BOOL showingKeyboard;
 	_active = NO;
 	_allowEditingToEnd = YES;
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIDevice currentDevice] isSystemFour])
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
-#endif
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 
@@ -1199,7 +1192,6 @@ static BOOL showingKeyboard;
 
 	[message release];
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	if (announce && [self _canAnnounceWithVoiceOverAndMessageIsImportant:NO]) {
 		NSString *voiceOverAnnouncement = nil;
 		NSString *plainMessage = [messageString stringByStrippingXMLTags];
@@ -1211,7 +1203,6 @@ static BOOL showingKeyboard;
 
 		UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, voiceOverAnnouncement);
 	}
-#endif
 }
 
 - (void) addMessage:(NSData *) messageData fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier {
@@ -1491,8 +1482,7 @@ static BOOL showingKeyboard;
 }
 
 - (void) _showLocalNotificationForMessage:(NSDictionary *) message withSoundName:(NSString *) soundName {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if (![[UIDevice currentDevice] isSystemFour] || [UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
+	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
 		return;
 
 	UILocalNotification *notification = [[UILocalNotification alloc] init];
@@ -1504,7 +1494,6 @@ static BOOL showingKeyboard;
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
 
 	[notification release];
-#endif
 }
 
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo {
@@ -1547,10 +1536,7 @@ static BOOL showingKeyboard;
 		[_pendingComponents removeObjectAtIndex:0];
 
 	BOOL active = _active;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIDevice currentDevice] isSystemFour])
-		active &= ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
-#endif
+	active &= ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
 
 	if (!transcriptView || !active)
 		return;
@@ -1573,8 +1559,6 @@ static BOOL showingKeyboard;
 }
 
 - (BOOL) _canAnnounceWithVoiceOverAndMessageIsImportant:(BOOL) important {
-	if (![[UIDevice currentDevice] isSystemFour])
-		return NO;
 	id visibleChatController = [CQChatController defaultController].visibleChatController;
 	if (!important && visibleChatController && visibleChatController != self)
 		return NO;
@@ -1586,10 +1570,7 @@ static BOOL showingKeyboard;
 	BOOL highlighted = [[message objectForKey:@"highlighted"] boolValue];
 
 	BOOL active = _active;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIDevice currentDevice] isSystemFour])
-		active &= ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
-#endif
+	active &= ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
 
 	MVChatUser *user = [message objectForKey:@"user"];
 	if (!user.localUser && !active && self.available) {
@@ -1640,7 +1621,6 @@ static BOOL showingKeyboard;
 			[self _showLocalNotificationForMessage:message withSoundName:highlightSound.soundName];
 	}
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	if (!user.localUser && [self _canAnnounceWithVoiceOverAndMessageIsImportant:(directChat || highlighted)]) {
 		NSString *voiceOverAnnouncement = nil;
 
@@ -1655,7 +1635,6 @@ static BOOL showingKeyboard;
 		UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, voiceOverAnnouncement);
 		[voiceOverAnnouncement release];
 	}
-#endif
 
 	if (!_recentMessages)
 		_recentMessages = [[NSMutableArray alloc] init];

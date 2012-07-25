@@ -207,14 +207,8 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 	} else if ([info objectForKey:@"Link"]) {
 		NSURL *url = [NSURL URLWithString:[info objectForKey:@"Link"]];
 
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"] && url) {
+		if (url) {
 			[[UIApplication sharedApplication] openURL:url];
-		} else if (url) {
-			[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
-
-			[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
-
-			[[UIApplication sharedApplication] performSelector:@selector(openURL:) withObject:url afterDelay:0.5];			
 		} else {
 			[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 		}

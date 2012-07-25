@@ -166,13 +166,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) performDeferredLaunchWork {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIDevice currentDevice] isSystemFour] && [UIDevice currentDevice].multitaskingSupported && ![[NSUserDefaults standardUserDefaults] objectForKey:@"CQDisabledBuiltInBrowserForMultitasking"]) {
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CQDisableBuiltInBrowser"];
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"CQDisabledBuiltInBrowserForMultitasking"];
-	}
-#endif
-
 	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
 	NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 
@@ -236,10 +229,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	information = [[NSLocale autoupdatingCurrentLocale] localeIdentifier];
 	[analyticsController setObject:information forKey:@"locale"];
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	[analyticsController setObject:([[UIDevice currentDevice] isSystemFour] && [UIDevice currentDevice].multitaskingSupported ? @"1" : @"0") forKey:@"multitasking-supported"];
-	[analyticsController setObject:([[UIDevice currentDevice] isSystemFour] ? [NSNumber numberWithDouble:[UIScreen mainScreen].scale] : [NSNumber numberWithUnsignedInteger:1]) forKey:@"screen-scale-factor"];
-#endif
+	[analyticsController setObject:([UIDevice currentDevice].multitaskingSupported ? @"1" : @"0") forKey:@"multitasking-supported"];
+	[analyticsController setObject:[NSNumber numberWithDouble:[UIScreen mainScreen].scale] forKey:@"screen-scale-factor"];
 
 	if (_deviceToken.length)
 		[analyticsController setObject:_deviceToken forKey:@"device-push-token"];
@@ -344,7 +335,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	return YES;
 }
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 - (void) applicationWillEnterForeground:(UIApplication *) application {
 	[self cancelAllLocalNotifications];
 }
@@ -352,7 +342,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) application:(UIApplication *) application didReceiveLocalNotification:(UILocalNotification *) notification {
 	[self handleNotificationWithUserInfo:notification.userInfo];
 }
-#endif
 
 - (void) application:(UIApplication *) application didReceiveRemoteNotification:(NSDictionary *) userInfo {
 	NSDictionary *apsInfo = [userInfo objectForKey:@"aps"];
@@ -398,8 +387,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (void) applicationWillTerminate:(UIApplication *) application {
-	if ([[UIDevice currentDevice] isSystemFour])
-		[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 
 	[self submitRunTime];
 }
@@ -792,7 +780,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	return (!_deviceToken || [self enabledRemoteNotificationTypes] & UIRemoteNotificationTypeAlert);
 }
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 - (void) presentLocalNotificationNow:(UILocalNotification *) notification {
 	if (![self areNotificationAlertsAllowed])
 		notification.alertBody = nil;
@@ -802,7 +789,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		notification.applicationIconBadgeNumber = 0;
 	[super presentLocalNotificationNow:notification];
 }
-#endif
 
 - (void) registerForRemoteNotifications {
 #if !TARGET_IPHONE_SIMULATOR

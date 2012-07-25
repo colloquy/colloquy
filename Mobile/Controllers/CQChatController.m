@@ -304,8 +304,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	NSString *message = [NSString stringWithFormat:NSLocalizedString(@"You are invited to \"%@\" by \"%@\" on \"%@\".", "Invited to join room alert message"), room.displayName, user.displayName, connection.displayName];
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
-	if ([[UIDevice currentDevice] isSystemFour] && [UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+	if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
 		UILocalNotification *localNotification = [[UILocalNotification alloc] init];
 
 		localNotification.alertBody = message;
@@ -318,7 +317,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		[localNotification release];
 		return;
 	}
-#endif
 
 	CQAlertView *alert = [[CQAlertView alloc] init];
 	alert.tag = ChatRoomInviteAlertTag;
@@ -471,7 +469,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	_totalImportantUnreadCount = count;
 
-	if ([[UIDevice currentDevice] isSystemFour] && [[CQColloquyApplication sharedApplication] areNotificationBadgesAllowed])
+	if ([CQColloquyApplication sharedApplication].areNotificationBadgesAllowed)
 		[UIApplication sharedApplication].applicationIconBadgeNumber = count;
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerChangedTotalImportantUnreadCountNotification object:self];
