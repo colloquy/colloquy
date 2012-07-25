@@ -41,4 +41,9 @@
 
 	return numberOfRows;
 }
+
+- (void) hideEmptyCells {
+	if (!self.tableFooterView)
+		self.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+}
 @end

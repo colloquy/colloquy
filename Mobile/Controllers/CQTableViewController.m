@@ -30,6 +30,10 @@
 
 #pragma mark -
 
+- (void) viewDidLoad {
+	[self.tableView hideEmptyCells];
+}
+
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 

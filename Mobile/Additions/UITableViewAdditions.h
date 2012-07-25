@@ -4,6 +4,8 @@
 - (void) performAction:(SEL) action forCell:(UITableViewCell *) cell sender:(id) sender;
 
 - (NSUInteger) numberOfRows;
+
+- (void) hideEmptyCells;
 @end
 
 @interface NSObject (UITableViewDelegateAdditions)
