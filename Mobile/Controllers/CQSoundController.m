@@ -27,7 +27,7 @@
 
 	NSURL *path = [[NSURL fileURLWithPath:pathString] absoluteURL];
 
-	if (!(self = [self init]))
+	if (!(self = [super init]))
 		return nil;
 
 	if (path) {
