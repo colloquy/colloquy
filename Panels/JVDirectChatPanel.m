@@ -11,7 +11,6 @@
 #import "JVEmoticonSet.h"
 #import "JVMarkedScroller.h"
 #import "JVNotificationController.h"
-//#import "JVSQLChatTranscript.h"
 #import "JVSpeechController.h"
 #import "JVSplitView.h"
 #import "JVStyle.h"
@@ -224,8 +223,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 				}
 
 				logs = [logs stringByAppendingPathComponent:logName];
-
-//				_sqlTestTranscript = [[JVSQLChatTranscript alloc] initWithContentsOfFile:[[logs stringByDeletingPathExtension] stringByAppendingPathExtension:@"colloquySQLTranscript"]];
 
 				if( [fileManager fileExistsAtPath:logs] )
 					[[self transcript] startNewSession];
@@ -753,7 +750,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[[self transcript] setElementLimit:( [display scrollbackLimit] * 2 )];
 
 	JVChatEvent *newEvent = [[self transcript] appendEvent:event];
-//	[_sqlTestTranscript appendEvent:event];
 	[display appendChatTranscriptElement:newEvent];
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVChatEventMessageWasProcessedNotification object:self userInfo:[NSDictionary dictionaryWithObject:newEvent forKey:@"event"]];
@@ -896,7 +892,6 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 		[[self transcript] setElementLimit:( [display scrollbackLimit] * 2 )];
 
 	JVChatMessage *newMessage = [[self transcript] appendMessage:cmessage];
-//	[_sqlTestTranscript appendMessage:cmessage];
 
 	if( [display appendChatMessage:newMessage] ) {
 		if( [cmessage isHighlighted] ) [display markScrollbarForMessage:newMessage];

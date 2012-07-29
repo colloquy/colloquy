@@ -260,7 +260,6 @@
 		1CE6917008B183C8006D9CA0 /* NSTextSuite.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 1C7C76E707DBA1C100FB5F83 /* NSTextSuite.scriptSuite */; };
 		1CE95886063F3BF90071C9C3 /* inspector.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CE95885063F3BF90071C9C3 /* inspector.png */; };
 		1CEC004F0A20EF99004C2B86 /* transcriptSchema.sql in Resources */ = {isa = PBXBuildFile; fileRef = 1CEC004D0A20EF95004C2B86 /* transcriptSchema.sql */; };
-		1CEC00540A20F030004C2B86 /* JVSQLChatTranscript.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEC00530A20F030004C2B86 /* JVSQLChatTranscript.m */; };
 		1CECE26006A37BEC00350564 /* JVBehaviorPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1CECE22F06A37A8300350564 /* JVBehaviorPreferences.nib */; };
 		1CEE3B010578421400AD6DE2 /* statusAvailable.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CEE3AFE0578421400AD6DE2 /* statusAvailable.png */; };
 		1CEE3B020578421400AD6DE2 /* statusAway.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CEE3AFF0578421400AD6DE2 /* statusAway.png */; };
@@ -859,8 +858,6 @@
 		1CE72A99052C79E700A8FE6E /* JVChatConsole.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVChatConsole.nib; path = Resources/JVChatConsole.nib; sourceTree = "<group>"; };
 		1CE95885063F3BF90071C9C3 /* inspector.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = inspector.png; path = Resources/inspector.png; sourceTree = "<group>"; };
 		1CEC004D0A20EF95004C2B86 /* transcriptSchema.sql */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = transcriptSchema.sql; path = Resources/transcriptSchema.sql; sourceTree = "<group>"; };
-		1CEC00520A20F030004C2B86 /* JVSQLChatTranscript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVSQLChatTranscript.h; path = Models/JVSQLChatTranscript.h; sourceTree = "<group>"; };
-		1CEC00530A20F030004C2B86 /* JVSQLChatTranscript.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JVSQLChatTranscript.m; path = Models/JVSQLChatTranscript.m; sourceTree = "<group>"; };
 		1CECE23006A37A8300350564 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Languages/English.lproj/JVBehaviorPreferences.nib; sourceTree = "<group>"; };
 		1CEE3AFE0578421400AD6DE2 /* statusAvailable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = statusAvailable.png; path = Resources/statusAvailable.png; sourceTree = "<group>"; };
 		1CEE3AFF0578421400AD6DE2 /* statusAway.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = statusAway.png; path = Resources/statusAway.png; sourceTree = "<group>"; };
@@ -1560,8 +1557,6 @@
 				1C66913707BFA76D008400F7 /* JVEmoticonSet.h */,
 				1CF79CBD07AC77E600696918 /* JVChatTranscript.m */,
 				1CF79CBC07AC77E600696918 /* JVChatTranscript.h */,
-				1CEC00530A20F030004C2B86 /* JVSQLChatTranscript.m */,
-				1CEC00520A20F030004C2B86 /* JVSQLChatTranscript.h */,
 				1C5EF36A07B45FBF004E66D3 /* JVChatSession.m */,
 				1C5EF36907B45FBF004E66D3 /* JVChatSession.h */,
 				1CD733CA05A0E2470080F952 /* JVChatMessage.m */,
@@ -2507,7 +2502,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C59A92009FDEBA3000682B8 /* JVChatWindowControllerTests.m in Sources */,
-				1CEC00540A20F030004C2B86 /* JVSQLChatTranscript.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
