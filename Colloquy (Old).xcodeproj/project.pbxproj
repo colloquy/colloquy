@@ -772,7 +772,6 @@
 		1CBECE390508D58F000001C8 /* JVChatWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVChatWindow.nib; path = Resources/JVChatWindow.nib; sourceTree = SOURCE_ROOT; };
 		1CBECE3A0508D58F000001C8 /* JVDirectChat.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = JVDirectChat.nib; path = Resources/JVDirectChat.nib; sourceTree = SOURCE_ROOT; };
 		1CBECE5D050A8D21000001C8 /* chooseStyle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = chooseStyle.png; path = "Resources/Toolbar Icons/chooseStyle.png"; sourceTree = SOURCE_ROOT; };
-		1CC1AE400A2987230000A797 /* sqlite3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = sqlite3.a; path = Frameworks/sqlite3.a; sourceTree = "<group>"; };
 		1CC1B76D0A2D70DF0000A797 /* super-op.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "super-op.png"; path = "Resources/super-op.png"; sourceTree = "<group>"; };
 		1CC1B77B0A2D70FB0000A797 /* founder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = founder.png; path = Resources/founder.png; sourceTree = "<group>"; };
 		1CC6FC500549FCD70075807C /* JVAppearancePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JVAppearancePreferences.h; path = Preferences/JVAppearancePreferences.h; sourceTree = "<group>"; };
@@ -1242,7 +1241,6 @@
 				1CF8030C070C893500C9B54C /* libsilc.framework */,
 				1CF8030D070C893500C9B54C /* libsilcclient.framework */,
 				1CF5F8D107D537E50019DC13 /* Growl.framework */,
-				1CC1AE400A2987230000A797 /* sqlite3.a */,
 				928FB03513EE64C700A0DF4B /* libicucore.dylib */,
 			);
 			name = "Linked Frameworks";
@@ -2464,7 +2462,6 @@
 				"$(SRCROOT)/Frameworks/Growl.framework",
 				"$(SRCROOT)/Frameworks/libsilc.framework",
 				"$(SRCROOT)/Frameworks/libsilcclient.framework",
-				"$(SRCROOT)/Frameworks/sqlite3.a",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
