@@ -28,7 +28,9 @@ static JVNotificationController *sharedInstance = nil;
 		_bubbles = [[NSMutableDictionary dictionary] retain];
 		_sounds = [[NSMutableDictionary alloc] init];
 
-		_useGrowl = ( GrowlApplicationBridge && ! [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] );
+		if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_8 )
+			_useGrowl = ( GrowlApplicationBridge && ! [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] );
+		// else, 10.8, use Notification Center
 
 		if( _useGrowl ) [GrowlApplicationBridge setGrowlDelegate:self];
 	}
@@ -119,7 +121,7 @@ static JVNotificationController *sharedInstance = nil;
 			[eventPrefs objectForKey:@"keepBubbleOnScreen"], GROWL_NOTIFICATION_STICKY,
 			nil];
 		[GrowlApplicationBridge notifyWithDictionary:notification];
-	} else {
+	} else if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_8 ) {
 		if( ( bubble = [_bubbles objectForKey:[context objectForKey:@"coalesceKey"]] ) ) {
 			[(id)bubble setTitle:title];
 			[(id)bubble setText:description];
@@ -138,6 +140,12 @@ static JVNotificationController *sharedInstance = nil;
 			[bubble setDelegate:self];
 			[_bubbles setObject:bubble forKey:[context objectForKey:@"coalesceKey"]];
 		}
+	} else {
+		NSUserNotification *notification = [[NSUserNotification alloc] init];
+		notification.title = title;
+		notification.informativeText = description;
+
+		[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
 	}
 }
 
