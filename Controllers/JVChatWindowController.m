@@ -72,7 +72,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	JVDetailCell *prototypeCell = [[JVDetailCell allocWithZone:nil] init];
 	[prototypeCell setFont:[NSFont toolTipsFontOfSize:11.]];
 	[column setDataCell:prototypeCell];
-	[prototypeCell release];
 
 	[chatViewsOutlineView setRefusesFirstResponder:YES];
 	[chatViewsOutlineView setAutoresizesOutlineColumn:NO];
@@ -82,7 +81,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 	[menu setDelegate:self];
 	[chatViewsOutlineView setMenu:menu];
-	[menu release];
 
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
 
@@ -134,10 +132,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	for( id <JVChatViewController> controller in _views )
 		[controller setWindowController:nil];
 
-	[_activeViewController release];
-	[_views release];
-	[_identifier release];
-	[_settings release];
 
 	_activeViewController = nil;
 	_views = nil;
@@ -145,7 +139,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	_settings = nil;
 	_showDelayed = NO;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -175,12 +168,10 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 - (void) setIdentifier:(NSString *) identifier {
 	id old = _identifier;
-	_identifier = [identifier copyWithZone:[self zone]];
-	[old release];
+	_identifier = [identifier copyWithZone:nil];
 
 	old = _settings;
 	_settings = [[NSMutableDictionary allocWithZone:nil] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]];
-	[old release];
 
 	if( [[self identifier] length] ) {
 		[[self window] setDelegate:nil]; // so we don't act on the windowDidResize notification
@@ -381,11 +372,11 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 		switch ( organizationType ) {
 			case JVChatViewOrganizationTypeByNetworkAndRoom:
-				[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"connection.server" ascending:YES selector:localizedCaseInsensitive] autorelease]];
-				[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"connection.preferredNickname" ascending:YES selector:localizedCaseInsensitive] autorelease]];
+				[sortDescriptors addObject:[[NSSortDescriptor alloc] initWithKey:@"connection.server" ascending:YES selector:localizedCaseInsensitive]];
+				[sortDescriptors addObject:[[NSSortDescriptor alloc] initWithKey:@"connection.preferredNickname" ascending:YES selector:localizedCaseInsensitive]];
 			case JVChatViewOrganizationTypeAlphabetical:
-				[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"className" ascending:YES] autorelease]];
-				[sortDescriptors addObject:[[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES selector:localizedCaseInsensitive] autorelease]];
+				[sortDescriptors addObject:[[NSSortDescriptor alloc] initWithKey:@"className" ascending:YES]];
+				[sortDescriptors addObject:[[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES selector:localizedCaseInsensitive]];
 				break;
 			default:
 				break;
@@ -395,7 +386,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[sortedViews addObject:controller];
 		[sortedViews sortUsingDescriptors:sortDescriptors];
 		i = [sortedViews indexOfObject:controller];
-		[sortedViews release];
 	}
 
 	[self insertChatViewController:controller atIndex:i];
@@ -439,7 +429,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSAssert1( [_views containsObject:controller], @"%@ is not a member of this window controller.", controller );
 
 	if( _activeViewController == controller ) {
-		[_activeViewController release];
 		_activeViewController = nil;
 	}
 
@@ -460,7 +449,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) removeAllChatViewControllers {
-	[_activeViewController release];
 	_activeViewController = nil;
 
 	[_views makeObjectsPerformSelector:@selector(setWindowController:) withObject:nil];
@@ -493,7 +481,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	id <JVChatViewController> oldController = [_views objectAtIndex:index];
 
 	if( _activeViewController == oldController ) {
-		[_activeViewController release];
 		_activeViewController = nil;
 	}
 
@@ -553,7 +540,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[toolbarItem setTarget:self];
 	[toolbarItem setAction:@selector( toggleViewsDrawer: )];
 
-	return [toolbarItem autorelease];
+	return toolbarItem;
 }
 
 - (IBAction) toggleViewsDrawer:(id) sender {
@@ -609,10 +596,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 			if( rowItem ) row = [_views indexOfObjectIdenticalTo:rowItem];
 
 			if( rowItem && row != NSNotFound ) {
-				[item retain];
 				[_views removeObjectAtIndex:index];
 				[_views insertObject:item atIndex:( index > row || ! row ? row : row - 1 )];
-				[item release];
 				[chatViewsOutlineView reloadData];
 			}
 		}
@@ -740,8 +725,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( toolbarItemForIdentifier:inView:willBeInsertedIntoToolbar: )];
-	[invocation setArgument:&identifier atIndex:2];
-	[invocation setArgument:&_activeViewController atIndex:3];
+	MVAddUnsafeUnretainedAddress(identifier, 2)
+	MVAddUnsafeUnretainedAddress(_activeViewController, 3)
 	[invocation setArgument:&willBeInserted atIndex:4];
 
 	NSArray *items = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
@@ -783,7 +768,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( toolbarItemIdentifiersForView: )];
-	[invocation setArgument:&_activeViewController atIndex:2];
+	MVAddUnsafeUnretainedAddress(_activeViewController, 2)
 
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( [results count] ) {
@@ -862,7 +847,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	NSImage *org = [item icon];
 
 	if( [org size].width > maxSideSize || [org size].height > maxSideSize ) {
-		NSImage *ret = [[[item icon] copyWithZone:nil] autorelease];
+		NSImage *ret = [[item icon] copyWithZone:nil];
 		[ret setScalesWhenResized:YES];
 		[ret setSize:NSMakeSize( maxSideSize, maxSideSize )];
 		org = ret;
@@ -945,7 +930,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		NSData *pointerData = [board dataForType:JVChatViewPboardType];
 		id <JVChatViewController> dragedController = nil;
 		[pointerData getBytes:&dragedController];
-		[dragedController retain];
 
 		if( [_views containsObject:dragedController] ) {
 			if( index != NSOutlineViewDropOnItemIndex && index >= (int) [_views indexOfObjectIdenticalTo:dragedController] ) index--;
@@ -957,7 +941,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		if( index == NSOutlineViewDropOnItemIndex ) [self addChatViewController:dragedController];
 		else [self insertChatViewController:dragedController atIndex:index];
 
-		[dragedController release];
 		return YES;
 	}
 
@@ -1024,7 +1007,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 	NSMenu *newMenu = ( [item respondsToSelector:@selector( menu )] ? [item menu] : nil );
 
-	for( menuItem in [[[newMenu itemArray] copyWithZone:nil] autorelease] ) {
+	for( menuItem in [[newMenu itemArray] copyWithZone:nil] ) {
 		[newMenu removeItem:menuItem];
 		[menu addItem:menuItem];
 	}
@@ -1035,8 +1018,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( ! view ) view = item;
 
 	[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
-	[invocation setArgument:&item atIndex:2];
-	[invocation setArgument:&view atIndex:3];
+	MVAddUnsafeUnretainedAddress(item, 2)
+	MVAddUnsafeUnretainedAddress(view, 3)
 
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( [results count] ) {
@@ -1062,9 +1045,8 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[viewActionButton setMenu:menu];
 	} else [viewActionButton setEnabled:NO];
 
-	[chatViewsOutlineView setMenu:[[menu copy] autorelease]];
+	[chatViewsOutlineView setMenu:[menu copy]];
 
-	[menu release];
 }
 
 - (void) _refreshWindow {
@@ -1078,9 +1060,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		if( [item respondsToSelector:@selector( willSelect )] )
 			[(NSObject *)item willSelect];
 
-		id old = _activeViewController;
-		_activeViewController = [item retain];
-		[old release];
+		_activeViewController = item;
 
 		[[self window] setContentView:[_activeViewController view]];
 		[[self window] makeFirstResponder:[[_activeViewController view] nextKeyView]];
@@ -1094,7 +1074,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	} else if( ! [_views count] || ! _activeViewController ) {
 		NSView *placeHolder = [[NSView alloc] initWithFrame:[[[self window] contentView] frame]];
 		[[self window] setContentView:placeHolder];
-		[placeHolder release];
 
 		[[[self window] toolbar] setDelegate:nil];
 		[[self window] setToolbar:nil];
@@ -1105,7 +1084,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) _refreshToolbar {
-	NSToolbar *oldToolbar = [[[self window] toolbar] retain];
+	NSToolbar *oldToolbar = [[self window] toolbar];
 	BOOL oldToolbarVisisble = [oldToolbar isVisible];
 
 	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:[_activeViewController toolbarIdentifier]];
@@ -1121,8 +1100,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[toolbar setVisible:oldToolbarVisisble];
 	}
 
-	[oldToolbar release];
-	[toolbar release];
 }
 
 - (void) _refreshWindowTitle {

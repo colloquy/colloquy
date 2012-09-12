@@ -32,7 +32,7 @@
     NSRect  frame;
 
     //Init
-    [super init];
+    if (!(self = [super init])) return nil;
     windowIsVisible = NO;
     visibilityTimer = nil;
     maxOpacity = WINDOW_FADE_MAX;
@@ -53,7 +53,7 @@
     staticView = [[NSImageView alloc] initWithFrame:frame];
 	[staticView setImage:inImage];
     [staticView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
-    [[panel contentView] addSubview:[staticView autorelease]];
+    [[panel contentView] addSubview:staticView];
 
     return(self);
 }
@@ -89,11 +89,10 @@
 //
 - (IBAction)close:(id)sender
 {
-    [visibilityTimer invalidate]; [visibilityTimer release]; visibilityTimer = nil;
+    [visibilityTimer invalidate];  visibilityTimer = nil;
     [panel orderOut:nil];
-    [panel release]; panel = nil;
+     panel = nil;
 
-    [self release];
 }
 
 //
@@ -112,7 +111,7 @@
 
         if(animate){
             if(!visibilityTimer){
-                visibilityTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/WINDOW_FADE_FPS) target:self selector:@selector(_updateWindowVisiblityTimer:) userInfo:nil repeats:YES] retain];
+                visibilityTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0/WINDOW_FADE_FPS) target:self selector:@selector(_updateWindowVisiblityTimer:) userInfo:nil repeats:YES];
             }
         }else{
             [self _setWindowOpacity:(windowIsVisible ? maxOpacity : WINDOW_FADE_MIN)];
@@ -136,7 +135,7 @@
 
     //
     if(alphaValue == maxOpacity || alphaValue == WINDOW_FADE_MIN){
-        [visibilityTimer invalidate]; [visibilityTimer release]; visibilityTimer = nil;
+        [visibilityTimer invalidate];  visibilityTimer = nil;
     }
 }
 

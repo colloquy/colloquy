@@ -65,7 +65,7 @@ static BOOL applicationIsTerminating = NO;
 
 		_isIdle = NO;
 		_lastIdle = 0.;
-		_idleCheck = [[NSTimer scheduledTimerWithTimeInterval:30. target:self selector:@selector( checkIdle: ) userInfo:nil repeats:YES] retain];
+		_idleCheck = [NSTimer scheduledTimerWithTimeInterval:30. target:self selector:@selector( checkIdle: ) userInfo:nil repeats:YES];
 	}
 
 	return self;
@@ -77,9 +77,7 @@ static BOOL applicationIsTerminating = NO;
 		_hidEntry = 0;
 	}
 
-	[_launchDate release];
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -94,7 +92,8 @@ static BOOL applicationIsTerminating = NO;
 
 - (NSTimeInterval) idleTime {
 	NSMutableDictionary *hidProperties = nil;
-	IORegistryEntryCreateCFProperties( _hidEntry, (CFMutableDictionaryRef *) &hidProperties, kCFAllocatorDefault, 0 );
+	CFMutableDictionaryRef hidPropertiesRef = (__bridge CFMutableDictionaryRef)hidProperties;
+	IORegistryEntryCreateCFProperties( _hidEntry, &hidPropertiesRef, kCFAllocatorDefault, 0 );
 
 	id hidIdleTimeObj = [hidProperties objectForKey:@"HIDIdleTime"];
 	unsigned long long result;
@@ -102,7 +101,6 @@ static BOOL applicationIsTerminating = NO;
 	if( [hidIdleTimeObj isKindOfClass:[NSData class]] ) [hidIdleTimeObj getBytes:&result];
 	else result = [hidIdleTimeObj longLongValue];
 
-	[hidProperties release];
 
 	return ( result / 1000000000. );
 }
@@ -119,9 +117,8 @@ static BOOL applicationIsTerminating = NO;
 
 			// reschedule the timer, to check for idle every 10 seconds
 			[_idleCheck invalidate];
-			[_idleCheck release];
 
-			_idleCheck = [[NSTimer scheduledTimerWithTimeInterval:10. target:self selector:@selector( checkIdle: ) userInfo:nil repeats:YES] retain];
+			_idleCheck = [NSTimer scheduledTimerWithTimeInterval:10. target:self selector:@selector( checkIdle: ) userInfo:nil repeats:YES];
 		}
 	} else {
 		if( idle > [[NSUserDefaults standardUserDefaults] integerForKey:@"JVIdleTime"] ) {
@@ -132,9 +129,8 @@ static BOOL applicationIsTerminating = NO;
 
 			// reschedule the timer, we will check every 2 seconds to catch the user's return quickly
 			[_idleCheck invalidate];
-			[_idleCheck release];
 
-			_idleCheck = [[NSTimer scheduledTimerWithTimeInterval:2. target:self selector:@selector( checkIdle: ) userInfo:nil repeats:YES] retain];
+			_idleCheck = [NSTimer scheduledTimerWithTimeInterval:2. target:self selector:@selector( checkIdle: ) userInfo:nil repeats:YES];
 		}
 	}
 
@@ -196,7 +192,7 @@ static BOOL applicationIsTerminating = NO;
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( setupPreferencesWithController: )];
-	[invocation setArgument:&controller atIndex:2];
+	MVAddUnsafeUnretainedAddress(controller, 2);
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
@@ -260,7 +256,7 @@ static BOOL applicationIsTerminating = NO;
 	NSString *path = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
 
 	NSArray *fileTypes = [NSArray arrayWithObject:@"colloquyTranscript"];
-	NSOpenPanel *openPanel = [[NSOpenPanel openPanel] retain];
+	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	[openPanel setCanChooseDirectories:NO];
 	[openPanel setCanChooseFiles:YES];
 	[openPanel setAllowsMultipleSelection:NO];
@@ -273,7 +269,6 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (void) openDocumentPanelDidEnd:(NSOpenPanel *) panel returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	[panel autorelease];
 	NSString *filename = [[panel URL] path];
 	NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filename error:nil];
 	if( returnCode == NSOKButton && [[NSFileManager defaultManager] isReadableFileAtPath:filename] && ( [[filename pathExtension] caseInsensitiveCompare:@"colloquyTranscript"] == NSOrderedSame || ( [[attributes objectForKey:NSFileHFSTypeCode] unsignedLongValue] == 'coTr' && [[attributes objectForKey:NSFileHFSCreatorCode] unsignedLongValue] == 'coRC' ) ) ) {
@@ -360,7 +355,6 @@ static BOOL applicationIsTerminating = NO;
 				[[JVAppearancePreferences sharedInstance] selectStyleWithIdentifier:[style identifier]];
 			}
 
-			[style release];
 
 			return YES;
 		} else {
@@ -426,10 +420,8 @@ static BOOL applicationIsTerminating = NO;
 
 		[_previouslyConnectedConnections addObject:connectionInformation];
 
-		[connectionInformation release];
 	}
 
-	[quitAttributedString release];
 }
 
 - (void) receiveWakeNotification:(NSNotification *) notification {
@@ -447,7 +439,6 @@ static BOOL applicationIsTerminating = NO;
 			[connection setAwayStatusMessage:[connectionInformation objectForKey:@"away"]];
 	}
 
-	[_previouslyConnectedConnections release];
 	_previouslyConnectedConnections = nil;
 }
 
@@ -482,7 +473,7 @@ static BOOL applicationIsTerminating = NO;
 		[_updater setUpdateCheckInterval:60. * 60. * 12.]; // check every 12 hours
 	}
 
-	[[MVColorPanel sharedColorPanel] attachColorList:[[[NSColorList alloc] initWithName:@"Chat" fromFile:[[NSBundle mainBundle] pathForResource:@"Chat" ofType:@"clr"]] autorelease]];
+	[[MVColorPanel sharedColorPanel] attachColorList:[[NSColorList alloc] initWithName:@"Chat" fromFile:[[NSBundle mainBundle] pathForResource:@"Chat" ofType:@"clr"]]];
 
 	if( [[NSUserDefaults standardUserDefaults] boolForKey:@"JVDisableWebCoreCache"] ) {
 		Class webCacheClass = NSClassFromString( @"WebCache" );
@@ -507,7 +498,6 @@ static BOOL applicationIsTerminating = NO;
 	[viewMenu insertItem:fullscreenItem atIndex:6];
 	[viewMenu insertItem:[NSMenuItem separatorItem] atIndex:7];
 
-	[fullscreenItem release];
 
 	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( terminateWithoutConfirm: ) name:NSWorkspaceWillPowerOffNotification object:[NSWorkspace sharedWorkspace]];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector( receiveSleepNotification: ) name:NSWorkspaceWillSleepNotification object:[NSWorkspace sharedWorkspace]];
@@ -558,7 +548,7 @@ static BOOL applicationIsTerminating = NO;
 		return NSTerminateNow; // no active connections, we can just quit now
 	if( ! [[[JVChatController defaultController] chatViewControllersKindOfClass:[JVDirectChatPanel class]] count] )
 		return NSTerminateNow; // no active chats, we can just quit now
-	NSAlert *confirmQuitAlert = [[[NSAlert alloc] init] autorelease];
+	NSAlert *confirmQuitAlert = [[NSAlert alloc] init];
 	[confirmQuitAlert setMessageText:NSLocalizedString( @"Are you sure you want to quit?", "are you sure you want to quit title" )];
 	[confirmQuitAlert setInformativeText:NSLocalizedString( @"Are you sure you want to quit Colloquy and disconnect from all active connections?", "are you sure you want to quit message" )];
 	[confirmQuitAlert addButtonWithTitle:NSLocalizedString( @"Quit", "quit button" )];
@@ -582,15 +572,15 @@ static BOOL applicationIsTerminating = NO;
 }
 
 - (NSMenu *) applicationDockMenu:(NSApplication *) sender {
-	NSMenu *menu = [[[NSMenu allocWithZone:[self zone]] initWithTitle:@""] autorelease];
+	NSMenu *menu = [[NSMenu allocWithZone:nil] initWithTitle:@""];
 
 	NSMethodSignature *signature = [NSMethodSignature methodSignatureWithReturnAndArgumentTypes:@encode( NSArray * ), @encode( id ), @encode( id ), nil];
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 	id view = nil;
 
 	[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
-	[invocation setArgument:&sender atIndex:2];
-	[invocation setArgument:&view atIndex:3];
+	MVAddUnsafeUnretainedAddress(sender, 2);
+	MVAddUnsafeUnretainedAddress(view, 2);
 
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( [results count] ) {
@@ -657,7 +647,6 @@ static BOOL applicationIsTerminating = NO;
 
 	[alert runModal];
 
-	[alert release];
 }
 
 #pragma mark -

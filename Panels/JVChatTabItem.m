@@ -4,15 +4,13 @@
 @implementation JVChatTabItem
 - (id) initWithChatViewController:(id <JVChatViewController>) controller {
 	if( ( self = [super initWithIdentifier:[controller identifier]] ) ) {
-		_controller = [controller retain];
+		_controller = controller;
 	}
 	return self;
 }
 
 - (void) dealloc {
-	[_controller release];
 	_controller = nil;
-	[super dealloc];
 }
 
 - (id <JVChatViewController>) chatViewController {
@@ -30,7 +28,7 @@
 		active = [(id)_controller statusImage];
 
 	if( [active size].width > 16. || [active size].height > 16. ) {
-		NSImage *ret = [[active copy] autorelease];
+		NSImage *ret = [active copy];
 		[ret setScalesWhenResized:YES];
 		[ret setSize:NSMakeSize( 16., 16. )];
 		active = ret;

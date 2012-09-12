@@ -8,10 +8,10 @@
 
 @implementation JVPreferencesController
 - (id) init {
-	_preferenceTitles = [[NSMutableArray array] retain];
-	_preferenceModules = [[NSMutableArray array] retain];
-	_currentSessionPreferenceViews = [[NSMutableDictionary dictionary] retain];
-	_masterPreferenceViews = [[NSMutableDictionary dictionary] retain];
+	_preferenceTitles = [NSMutableArray array];
+	_preferenceModules = [NSMutableArray array];
+	_currentSessionPreferenceViews = [NSMutableDictionary dictionary];
+	_masterPreferenceViews = [NSMutableDictionary dictionary];
 	return self;
 }
 

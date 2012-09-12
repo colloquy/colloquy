@@ -50,7 +50,7 @@ static NSSize		rightCapSize;
 //Create a new custom tab
 + (id)customTabForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView
 {
-    return([[[self alloc] initForTabViewItem:inTabViewItem customTabsView:inView] autorelease]);
+    return([[self alloc] initForTabViewItem:inTabViewItem customTabsView:inView]);
 }
 
 //init
@@ -58,18 +58,18 @@ static NSSize		rightCapSize;
 {
     static BOOL haveLoadedImages = NO;
 
-    [super init];
+    if (!(self = [super init])) return nil;
 
     //Share these images between all AICustomTabCell instances
     if(!haveLoadedImages){
-		tabFrontLeft = [[NSImage imageNamed:@"aquaTabLeft"] retain];
-		tabFrontMiddle = [[NSImage imageNamed:@"aquaTabMiddle"] retain];
-		tabFrontRight = [[NSImage imageNamed:@"aquaTabRight"] retain];
+		tabFrontLeft = [NSImage imageNamed:@"aquaTabLeft"];
+		tabFrontMiddle = [NSImage imageNamed:@"aquaTabMiddle"];
+		tabFrontRight = [NSImage imageNamed:@"aquaTabRight"];
 
-		tabCloseFront = [[NSImage imageNamed:@"aquaTabClose"] retain];
-		tabCloseBack = [[NSImage imageNamed:@"aquaTabCloseBack"] retain];
-		tabCloseFrontPressed = [[NSImage imageNamed:@"aquaTabClosePressed"] retain];
-		tabCloseFrontRollover = [[NSImage imageNamed:@"aquaTabCloseRollover"] retain];
+		tabCloseFront = [NSImage imageNamed:@"aquaTabClose"];
+		tabCloseBack = [NSImage imageNamed:@"aquaTabCloseBack"];
+		tabCloseFrontPressed = [NSImage imageNamed:@"aquaTabClosePressed"];
+		tabCloseFrontRollover = [NSImage imageNamed:@"aquaTabCloseRollover"];
 
 		leftCapSize = [tabFrontLeft size];
 		rightCapSize = [tabFrontRight size];
@@ -77,7 +77,7 @@ static NSSize		rightCapSize;
         haveLoadedImages = YES;
     }
 
-    tabViewItem = [inTabViewItem retain];
+    tabViewItem = inTabViewItem;
 	view = inView;
     allowsInactiveTabClosing = NO;
 	wasEnabled = YES;
@@ -92,13 +92,6 @@ static NSSize		rightCapSize;
 }
 
 //dealloc
-- (void)dealloc
-{
-	[attributedLabel release];
-	[tabViewItem release];
-
-    [super dealloc];
-}
 
 //Return the desired size of this tab
 - (NSSize)size
@@ -295,12 +288,11 @@ static NSSize		rightCapSize;
 	if(![label isEqualToString:[attributedLabel string]] || wasEnabled != [tabViewItem isEnabled] ){
 		wasEnabled = [tabViewItem isEnabled];
 		//Paragraph Style (Turn off clipping by word)
-		NSMutableParagraphStyle *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+		NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 		[paragraphStyle setAlignment:NSCenterTextAlignment];
 		[paragraphStyle setLineBreakMode:NSLineBreakByTruncatingTail];
 
 		//Update the attributed string
-		[attributedLabel release];
 		attributedLabel = [[NSAttributedString alloc] initWithString:[tabViewItem label] attributes:
 			[NSDictionary dictionaryWithObjectsAndKeys:
 				( wasEnabled ? [NSColor controlTextColor] : [[NSColor controlTextColor] colorWithAlphaComponent:0.5] ), NSForegroundColorAttributeName,

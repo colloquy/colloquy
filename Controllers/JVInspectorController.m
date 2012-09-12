@@ -36,7 +36,7 @@ static NSMutableSet *inspectors = nil;
 	panelRect.origin.x = 200; panelRect.origin.y = NSMaxY( [[NSScreen mainScreen] visibleFrame] ) + 400;
 	panelRect.size.width = 175; panelRect.size.height = 200;
 
-	NSWindow *panel = [[[NSPanel alloc] initWithContentRect:panelRect styleMask:( ( ! locked ? NSUtilityWindowMask : 0 ) | NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask ) backing:NSBackingStoreBuffered defer:YES] autorelease];
+	NSWindow *panel = [[NSPanel alloc] initWithContentRect:panelRect styleMask:( ( ! locked ? NSUtilityWindowMask : 0 ) | NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask ) backing:NSBackingStoreBuffered defer:YES];
 
 	if( locked ) {
 		[(NSPanel *)panel setFloatingPanel:YES];
@@ -48,11 +48,12 @@ static NSMutableSet *inspectors = nil;
 	[panel setDelegate:self];
 
 	if( ( self = [self initWithWindow:panel] ) ) {
+		_self = self;
 		_locked = locked;
-		_object = [object retain];
-		_inspector = [[_object inspector] retain];
+		_object = object;
+		_inspector = [_object inspector];
 		if( _locked ) {
-			if( ! inspectors ) inspectors = [[NSMutableSet set] retain];
+			if( ! inspectors ) inspectors = [NSMutableSet set];
 			[inspectors addObject:self];
 		} else [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( keyWindowChanged: ) name:NSWindowDidBecomeKeyNotification object:nil];
 		if( _object == nil )
@@ -75,13 +76,10 @@ static NSMutableSet *inspectors = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
-	[_object release];
-	[_inspector release];
 
 	_object = nil;
 	_inspector = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -115,12 +113,10 @@ static NSMutableSet *inspectors = nil;
 	if( [_inspector respondsToSelector:@selector( shouldUnload )] )
 		if( ! [(NSObject *)_inspector shouldUnload] ) return;
 
-	[_object autorelease];
-	_object = [object retain];
+	_object = object;
 
 	id oldInspector = _inspector;
-	[_inspector autorelease];
-	_inspector = [[_object inspector] retain];
+	_inspector = [_object inspector];
 	_inspectorLoaded = NO;
 
 	if( [[self window] isVisible] ) {
@@ -151,11 +147,10 @@ static NSMutableSet *inspectors = nil;
 	if( should ) {
 		[inspectors removeObject:self];
 		if( ! [inspectors count] ) {
-			[inspectors release];
 			inspectors = nil;
 		}
 
-		[self autorelease];
+		_self = nil;
 	}
 
 	return should;
@@ -197,7 +192,7 @@ static NSMutableSet *inspectors = nil;
 		_inspectorLoaded = YES;
 	} else {
 		[[self window] setTitle:NSLocalizedString( @"No Info", "no info inspector title" )];
-		[[self window] setContentView:[[[NSView alloc] initWithFrame:[[[self window] contentView] frame]] autorelease]];
+		[[self window] setContentView:[[NSView alloc] initWithFrame:[[[self window] contentView] frame]]];
 	}
 }
 

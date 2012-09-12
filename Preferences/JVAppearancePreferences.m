@@ -45,10 +45,8 @@
 	[preview setFrameLoadDelegate:nil];
 	[preview setPolicyDelegate:nil];
 
-	[_style release];
 	_style = nil;
 
-	[super dealloc];
 }
 
 - (NSString *) preferencesNibName {
@@ -88,8 +86,7 @@
 #pragma mark -
 
 - (void) setStyle:(JVStyle *) style {
-	[_style autorelease];
-	_style = [style retain];
+	_style = style;
 
 	JVChatTranscript *transcript = [JVChatTranscript chatTranscriptWithContentsOfURL:[_style previewTranscriptLocation]];
 	[preview setTranscript:transcript];
@@ -109,7 +106,7 @@
 	[optionsTable setRefusesFirstResponder:YES];
 
 	NSTableColumn *column = [optionsTable tableColumnWithIdentifier:@"key"];
-	JVDetailCell *prototypeCell = [[JVDetailCell new] autorelease];
+	JVDetailCell *prototypeCell = [JVDetailCell new];
 	[prototypeCell setFont:[NSFont boldSystemFontOfSize:11.]];
 	[prototypeCell setAlignment:NSRightTextAlignment];
 	[column setDataCell:prototypeCell];
@@ -141,7 +138,6 @@
 	if( style == _style ) {
 		[_style setDefaultVariantName:variant];
 
-		[_styleOptions autorelease];
 		_styleOptions = [[_style styleSheetOptions] mutableCopy];
 
 		[self updateChatStylesMenu];
@@ -164,7 +160,6 @@
 	[self updateChatStylesMenu];
 	[self updateEmoticonsMenu];
 
-	[_styleOptions autorelease];
 	_styleOptions = [[_style styleSheetOptions] mutableCopy];
 
 	[preview setPreferencesIdentifier:[_style identifier]];
@@ -200,12 +195,12 @@
 
 	_variantLocked = ! [_style isUserVariantName:variant];
 
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease], *subMenu = nil;
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""], *subMenu = nil;
 	NSMenuItem *menuItem = nil, *subMenuItem = nil;
 
 	id item = nil;
 	for( JVStyle *style in [[[JVStyle styles] allObjects] sortedArrayUsingSelector:@selector( compare: )] ) {
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[style displayName] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
+		menuItem = [[NSMenuItem alloc] initWithTitle:[style displayName] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""];
 		[menuItem setTarget:self];
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", nil]];
 		if( [_style isEqualTo:style] ) [menuItem setState:NSOnState];
@@ -215,16 +210,16 @@
 		NSArray *userVariants = [style userVariantStyleSheetNames];
 
 		if( [variants count] || [userVariants count] ) {
-			subMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+			subMenu = [[NSMenu alloc] initWithTitle:@""];
 
-			subMenuItem = [[[NSMenuItem alloc] initWithTitle:[style mainVariantDisplayName] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
+			subMenuItem = [[NSMenuItem alloc] initWithTitle:[style mainVariantDisplayName] action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""];
 			[subMenuItem setTarget:self];
 			[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", nil]];
 			if( [_style isEqualTo:style] && ! variant ) [subMenuItem setState:NSOnState];
 			[subMenu addItem:subMenuItem];
 
 			for( item in variants ) {
-				subMenuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
+				subMenuItem = [[NSMenuItem alloc] initWithTitle:item action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""];
 				[subMenuItem setTarget:self];
 				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
 				if( [_style isEqualTo:style] && [variant isEqualToString:item] )
@@ -235,7 +230,7 @@
 			if( [userVariants count] ) [subMenu addItem:[NSMenuItem separatorItem]];
 
 			for( item in userVariants ) {
-				subMenuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""] autorelease];
+				subMenuItem = [[NSMenuItem alloc] initWithTitle:item action:@selector( changeDefaultChatStyle: ) keyEquivalent:@""];
 				[subMenuItem setTarget:self];
 				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
 				if( [_style isEqualTo:style] && [variant isEqualToString:item] )
@@ -257,10 +252,10 @@
 	NSMenuItem *menuItem = nil;
 	JVEmoticonSet *defaultEmoticon = [_style defaultEmoticonSet];
 
-	menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	menu = [[NSMenu alloc] initWithTitle:@""];
 
 	JVEmoticonSet *emoticon = [JVEmoticonSet textOnlyEmoticonSet];
-	menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeDefaultEmoticons: ) keyEquivalent:@""] autorelease];
+	menuItem = [[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeDefaultEmoticons: ) keyEquivalent:@""];
 	[menuItem setTarget:self];
 	[menuItem setRepresentedObject:[emoticon identifier]];
 	if( [defaultEmoticon isEqual:emoticon] ) [menuItem setState:NSOnState];
@@ -270,7 +265,7 @@
 
 	for( JVEmoticonSet *emoticon in [[[JVEmoticonSet emoticonSets] allObjects] sortedArrayUsingSelector:@selector( compare: )] ) {
 		if( ! [[emoticon displayName] length] ) continue;
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeDefaultEmoticons: ) keyEquivalent:@""] autorelease];
+		menuItem = [[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeDefaultEmoticons: ) keyEquivalent:@""];
 		[menuItem setTarget:self];
 		[menuItem setRepresentedObject:[emoticon identifier]];
 		if( [defaultEmoticon isEqual:emoticon] ) [menuItem setState:NSOnState];
@@ -315,8 +310,8 @@
 #pragma mark -
 
 - (void) buildFileMenuForCell:(NSPopUpButtonCell *) cell andOptions:(NSMutableDictionary *) options {
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
-	NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"None", "no background image label" ) action:NULL keyEquivalent:@""] autorelease];
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+	NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"None", "no background image label" ) action:NULL keyEquivalent:@""];
 	[menuItem setRepresentedObject:@"none"];
 	[menu addItem:menuItem];
 
@@ -330,13 +325,13 @@
 		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
 		NSRect rect = NSMakeRect( 0., 0., 12., 12. );
 		NSImageRep *sourceImageRep = [icon bestRepresentationForRect:rect context:[NSGraphicsContext currentContext] hints:nil];
-		NSImage *smallImage = [[[NSImage alloc] initWithSize:NSMakeSize( 12., 12. )] autorelease];
+		NSImage *smallImage = [[NSImage alloc] initWithSize:NSMakeSize( 12., 12. )];
 		[smallImage lockFocus];
 		[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationLow];
 		[sourceImageRep drawInRect:rect];
 		[smallImage unlockFocus];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[[[NSFileManager defaultManager] displayNameAtPath:path] stringByDeletingPathExtension] action:NULL keyEquivalent:@""] autorelease];
+		menuItem = [[NSMenuItem alloc] initWithTitle:[[[NSFileManager defaultManager] displayNameAtPath:path] stringByDeletingPathExtension] action:NULL keyEquivalent:@""];
 		[menuItem setImage:smallImage];
 		[menuItem setRepresentedObject:path];
 		[menuItem setTag:5];
@@ -358,13 +353,13 @@
 		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:fullPath];
 		NSRect rect = NSMakeRect( 0., 0., 12., 12. );
 		NSImageRep *sourceImageRep = [icon bestRepresentationForRect:rect context:[NSGraphicsContext currentContext] hints:nil];
-		NSImage *smallImage = [[[NSImage alloc] initWithSize:NSMakeSize( 12., 12. )] autorelease];
+		NSImage *smallImage = [[NSImage alloc] initWithSize:NSMakeSize( 12., 12. )];
 		[smallImage lockFocus];
 		[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationLow];
 		[sourceImageRep drawInRect:rect];
 		[smallImage unlockFocus];
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[[NSFileManager defaultManager] displayNameAtPath:path] action:NULL keyEquivalent:@""] autorelease];
+		menuItem = [[NSMenuItem alloc] initWithTitle:[[NSFileManager defaultManager] displayNameAtPath:path] action:NULL keyEquivalent:@""];
 		[menuItem setImage:smallImage];
 		[menuItem setRepresentedObject:path];
 		[menuItem setTag:10];
@@ -376,7 +371,7 @@
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Other...", "other image label" ) action:@selector( selectImageFile: ) keyEquivalent:@""] autorelease];
+	menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Other...", "other image label" ) action:@selector( selectImageFile: ) keyEquivalent:@""];
 	[menuItem setTarget:self];
 	[menuItem setTag:10];
 	[menu addItem:menuItem];
@@ -539,9 +534,8 @@
 }
 
 - (void) setUserStyle:(NSString *) style {
-	[_userStyle autorelease];
-	if( ! style ) _userStyle = [[NSString string] retain];
-	else _userStyle = [style retain];
+	if( ! style ) _userStyle = [NSString string];
+	else _userStyle = style;
 }
 
 // Saves the custom variant to the user's area.
@@ -693,12 +687,12 @@
 		if( [options objectForKey:@"cell"] ) {
 			return [options objectForKey:@"cell"];
 		} else if( [[options objectForKey:@"type"] isEqualToString:@"color"] ) {
-			id cell = [[JVColorWellCell new] autorelease];
+			id cell = [JVColorWellCell new];
 			[cell setRepresentedObject:[NSNumber numberWithLong:row]];
 			[options setObject:cell forKey:@"cell"];
 			return cell;
 		} else if( [[options objectForKey:@"type"] isEqualToString:@"list"] ) {
-			NSPopUpButtonCell *cell = [[NSPopUpButtonCell new] autorelease];
+			NSPopUpButtonCell *cell = [NSPopUpButtonCell new];
 			NSMutableArray *localizedOptions = [NSMutableArray array];
 
 			for( NSString *optionTitle in [options objectForKey:@"options"] )
@@ -709,7 +703,7 @@
 			[options setObject:cell forKey:@"cell"];
 			return cell;
         } else if( [[options objectForKey:@"type"] isEqualToString:@"file"] ) {
-			NSPopUpButtonCell *cell = [[NSPopUpButtonCell new] autorelease];
+			NSPopUpButtonCell *cell = [NSPopUpButtonCell new];
 			[cell setControlSize:NSSmallControlSize];
 			[cell setFont:[NSFont menuFontOfSize:[NSFont smallSystemFontSize]]];
 			[self buildFileMenuForCell:cell andOptions:options];
@@ -738,7 +732,7 @@
 - (IBAction) createNewVariant:(id) sender {
 	[self closeNewVariantSheet:sender];
 
-	NSMutableString *name = [[[newVariantName stringValue] mutableCopy] autorelease];
+	NSMutableString *name = [[newVariantName stringValue] mutableCopy];
 	[name replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [name length] )];
 	[name replaceOccurrencesOfString:@":" withString:@"-" options:NSLiteralSearch range:NSMakeRange( 0, [name length] )];
 

@@ -9,7 +9,7 @@
 
 @implementation JVTranscriptCriterionController
 + (id) controller {
-	return [[[self alloc] init] autorelease];
+	return [[self alloc] init];
 }
 
 #pragma mark -
@@ -70,17 +70,12 @@
 }
 
 - (void) dealloc {
-	[subview release];
-	[kindMenu release];
-	[expandedKindMenu release];
-	[_query release];
 
 	subview = nil;
 	kindMenu = nil;
 	expandedKindMenu = nil;
 	_query = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -357,8 +352,7 @@
 }
 
 - (void) setQuery:(id) query {
-	[_query autorelease];
-	_query = [query retain];
+	_query = query;
 
 	if( [self format] == JVTranscriptTextCriterionFormat ) {
 		[textQuery setObjectValue:query];

@@ -18,13 +18,10 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	[ruleEditTable setDataSource:nil];
 	[ruleEditTable setDelegate:nil];
 
-	[_windowSets release];
-	[_editingRuleCriterion release];
 
 	_windowSets = nil;
 	_editingRuleCriterion = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -47,12 +44,12 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 - (void) awakeFromNib {
 	NSTableColumn *column = [windowSetsTable tableColumnWithIdentifier:@"window"];
-	JVDetailCell *prototypeCell = [[JVDetailCell new] autorelease];
+	JVDetailCell *prototypeCell = [JVDetailCell new];
 	[prototypeCell setFont:[NSFont toolTipsFontOfSize:11.]];
 	[column setDataCell:prototypeCell];
 
 	column = [rulesTable tableColumnWithIdentifier:@"rule"];
-	prototypeCell = [[JVDetailCell new] autorelease];
+	prototypeCell = [JVDetailCell new];
 	[prototypeCell setFont:[NSFont toolTipsFontOfSize:11.]];
 	[column setDataCell:prototypeCell];
 
@@ -71,15 +68,13 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	[ruleEditTable setRefusesFirstResponder:YES];
 
 	column = [ruleEditTable tableColumnWithIdentifier:@"criteria"];
-	[column setDataCell:[[JVViewCell new] autorelease]];
+	[column setDataCell:[JVViewCell new]];
 }
 
 - (void) initializeFromDefaults {
 	NSData *data = [[NSUserDefaults standardUserDefaults] dataForKey:@"JVChatWindowRuleSets"];
 
-	[_windowSets autorelease];
 	_windowSets = ( [data length] ? [NSKeyedUnarchiver unarchiveObjectWithData:data] : [NSMutableArray array] );
-	[_windowSets retain];
 
 	NSMutableDictionary *info = nil;
 	BOOL haveCurrentWindow = NO;
@@ -291,10 +286,9 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 		[[[info draggingPasteboard] dataForType:JVInterfacePreferencesWindowDragPboardType] getBytes:&index];
 		if( row > index ) row--;
 
-		id item = [[_windowSets objectAtIndex:index] retain];
+		id item = [_windowSets objectAtIndex:index];
 		[_windowSets removeObjectAtIndex:index];
 		[_windowSets insertObject:item atIndex:row];
-		[item release];
 
 		[windowSetsTable selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
 		[view reloadData];
@@ -501,8 +495,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 - (IBAction) addRuleSet:(id) sender {
 	_makingNewRuleSet = YES;
 
-	[_editingRuleCriterion autorelease];
-	_editingRuleCriterion = [[NSMutableArray array] retain];
+	_editingRuleCriterion = [NSMutableArray array];
 
 	[self addRuleCriterionRow:nil];
 	[self updateRuleEditPanelSize];
@@ -516,8 +509,7 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 
 	NSMutableDictionary *info = [[self selectedRules] objectAtIndex:_selectedRuleSet];
 
-	[_editingRuleCriterion autorelease];
-	_editingRuleCriterion = [[info objectForKey:@"criterion"] retain];
+	_editingRuleCriterion = [info objectForKey:@"criterion"];
 
 	[ignoreCase setState:[[info objectForKey:@"ignoreCase"] boolValue]];
 
@@ -548,7 +540,6 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 	[rulesTable reloadData];
 	[windowSetsTable reloadData];
 
-	[_editingRuleCriterion autorelease];
 	_editingRuleCriterion = nil;
 
 	if( _makingNewRuleSet ) {
@@ -563,7 +554,6 @@ static NSString *JVInterfacePreferencesWindowDragPboardType = @"JVInterfacePrefe
 - (IBAction) cancelRuleSet:(id) sender {
 	_makingNewRuleSet = NO;
 
-	[_editingRuleCriterion autorelease];
 	_editingRuleCriterion = nil;
 
 	[ruleEditPanel orderOut:nil];

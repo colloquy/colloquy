@@ -13,11 +13,11 @@ static NSUInteger bubbleWindowDepth = 0;
 #pragma mark -
 
 + (KABubbleWindowController *) bubble {
-	return [[[self alloc] init] autorelease];
+	return [[self alloc] init];
 }
 
 + (KABubbleWindowController *) bubbleWithTitle:(NSString *) title text:(id) text icon:(NSImage *) icon {
-	id ret = [[[self alloc] init] autorelease];
+	id ret = [[self alloc] init];
 	[ret setTitle:title];
 	if( [text isKindOfClass:[NSString class]] ) [ret setText:text];
 	else if( [text isKindOfClass:[NSAttributedString class]] ) [ret setAttributedText:text];
@@ -26,7 +26,7 @@ static NSUInteger bubbleWindowDepth = 0;
 }
 
 - (id) init {
-	NSPanel *panel = [[[NSPanel alloc] initWithContentRect:NSMakeRect( 0., 0., 270., 65. ) styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO] autorelease];
+	NSPanel *panel = [[NSPanel alloc] initWithContentRect:NSMakeRect( 0., 0., 270., 65. ) styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
 	[panel setBecomesKeyOnlyIfNeeded:YES];
 	[panel setHidesOnDeactivate:NO];
 	[panel setBackgroundColor:[NSColor clearColor]];
@@ -38,7 +38,7 @@ static NSUInteger bubbleWindowDepth = 0;
 	[panel setReleasedWhenClosed:YES];
 	[panel setDelegate:self];
 
-	KABubbleWindowView *view = [[[KABubbleWindowView alloc] initWithFrame:[panel frame]] autorelease];
+	KABubbleWindowView *view = [[KABubbleWindowView alloc] initWithFrame:[panel frame]];
 	[view setTarget:self];
 	[view setAction:@selector( _bubbleClicked: )];
 	[panel setContentView:view];
@@ -49,6 +49,7 @@ static NSUInteger bubbleWindowDepth = 0;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationDidSwitch: ) name:NSApplicationDidBecomeActiveNotification object:[NSApplication sharedApplication]];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _applicationDidSwitch: ) name:NSApplicationDidHideNotification object:[NSApplication sharedApplication]];
 
+	_self = self;
 	_depth = ++bubbleWindowDepth;
 	_autoFadeOut = YES;
 	_delegate = nil;
@@ -63,11 +64,7 @@ static NSUInteger bubbleWindowDepth = 0;
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[_target release];
-	[_representedObject release];
-	[_animationTimer invalidate];
-	[_animationTimer release];
-
+	_self = nil;
 	_target = nil;
 	_representedObject = nil;
 	_delegate = nil;
@@ -75,20 +72,18 @@ static NSUInteger bubbleWindowDepth = 0;
 
 	if( _depth == bubbleWindowDepth ) bubbleWindowDepth = 0;
 
-	[super dealloc];
 }
 
 #pragma mark -
 
 - (void) _stopTimer {
 	[_animationTimer invalidate];
-	[_animationTimer release];
 	_animationTimer = nil;
 }
 
 - (void) _waitBeforeFadeOut {
 	[self _stopTimer];
-	_animationTimer = [[NSTimer scheduledTimerWithTimeInterval:DISPLAY_TIME target:self selector:@selector( startFadeOut ) userInfo:nil repeats:NO] retain];
+	_animationTimer = [NSTimer scheduledTimerWithTimeInterval:DISPLAY_TIME target:self selector:@selector( startFadeOut ) userInfo:nil repeats:NO];
 }
 
 - (void) _fadeIn:(NSTimer *) inTimer {
@@ -109,7 +104,7 @@ static NSUInteger bubbleWindowDepth = 0;
 		if( [_delegate respondsToSelector:@selector( bubbleDidFadeOut: )] )
 			[_delegate bubbleDidFadeOut:self];
 		[self close];
-		[self autorelease]; // Relase, we retained when we faded in.
+		_self = nil; // Relase, we retained when we faded in.
 	}
 }
 
@@ -128,17 +123,17 @@ static NSUInteger bubbleWindowDepth = 0;
 - (void) startFadeIn {
 	if( [_delegate respondsToSelector:@selector( bubbleWillFadeIn: )] )
 		[_delegate bubbleWillFadeIn:self];
-	[self retain]; // Retain, after fade out we release.
+	 // Retain, after fade out we release.
 	[self showWindow:nil];
 	[self _stopTimer];
-	_animationTimer = [[NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector( _fadeIn: ) userInfo:nil repeats:YES] retain];
+	_animationTimer = [NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector( _fadeIn: ) userInfo:nil repeats:YES];
 }
 
 - (void) startFadeOut {
 	if( [_delegate respondsToSelector:@selector( bubbleWillFadeOut: )] )
 		[_delegate bubbleWillFadeOut:self];
 	[self _stopTimer];
-	_animationTimer = [[NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector( _fadeOut: ) userInfo:nil repeats:YES] retain];
+	_animationTimer = [NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector( _fadeOut: ) userInfo:nil repeats:YES];
 }
 
 #pragma mark -
@@ -158,8 +153,7 @@ static NSUInteger bubbleWindowDepth = 0;
 }
 
 - (void) setTarget:(id) object {
-	[_target autorelease];
-	_target = [object retain];
+	_target = object;
 }
 
 #pragma mark -
@@ -179,8 +173,7 @@ static NSUInteger bubbleWindowDepth = 0;
 }
 
 - (void) setRepresentedObject:(id) object {
-	[_representedObject autorelease];
-	_representedObject = [object retain];
+	_representedObject = object;
 }
 
 #pragma mark -

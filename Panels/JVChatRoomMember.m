@@ -35,7 +35,7 @@
 - (id) initWithRoom:(JVChatRoomPanel *) room andUser:(MVChatUser *) user {
 	if( ( self = [self init] ) ) {
 		_room = room; // prevent circular retain
-		_user = [user retain];
+		_user = user;
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserInformationUpdatedNotification object:user];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _refreshIcon: ) name:MVChatUserStatusChangedNotification object:user];
@@ -53,12 +53,10 @@
 - (void) dealloc {
 	[self _detach];
 
-	[_user release];
 
 	_room = nil;
 	_user = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -352,7 +350,7 @@
 }
 
 - (NSMenu *) menu {
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 	NSMenuItem *item = nil;
 
 	for( item in [_user standardMenuItems] )
@@ -368,32 +366,32 @@
 	if( localUserIsHalfOperator || localUserIsOperator || localUserIsAdministrator || localUserIsFounder ) {
 		[menu addItem:[NSMenuItem separatorItem]];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kick From Room", "kick from room contextual menu - admin only" ) action:@selector( kick: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kick From Room", "kick from room contextual menu - admin only" ) action:@selector( kick: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Kick From Room..."], "kick from room (customized) contextual menu - admin only" ) action:@selector( customKick: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Kick From Room..."], "kick from room (customized) contextual menu - admin only" ) action:@selector( customKick: ) keyEquivalent:@""];
 		[item setKeyEquivalentModifierMask:NSAlternateKeyMask];
 		[item setAlternate:YES];
 		[item setTarget:self];
 		[menu addItem:item];
 
 		if( [self address] ) {
-			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Ban From Room", "ban from room contextual menu - admin only" ) action:@selector( ban: ) keyEquivalent:@""] autorelease];
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Ban From Room", "ban from room contextual menu - admin only" ) action:@selector( ban: ) keyEquivalent:@""];
 			[item setTarget:self];
 			[menu addItem:item];
 
-			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Ban From Room..."], "ban from room (customized) contextual menu - admin only" ) action:@selector( customBan: ) keyEquivalent:@""] autorelease];
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Ban From Room..."], "ban from room (customized) contextual menu - admin only" ) action:@selector( customBan: ) keyEquivalent:@""];
 			[item setKeyEquivalentModifierMask:NSAlternateKeyMask];
 			[item setAlternate:YES];
 			[item setTarget:self];
 			[menu addItem:item];
 
-			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kick & Ban From Room", "kickban from room contextual menu - admin only" ) action:@selector( kickban: ) keyEquivalent:@""] autorelease];
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Kick & Ban From Room", "kickban from room contextual menu - admin only" ) action:@selector( kickban: ) keyEquivalent:@""];
 			[item setTarget:self];
 			[menu addItem:item];
 
-			item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Kick & Ban From Room..."], "kickban from room (customized) contextual menu - admin only" ) action:@selector( customKickban: ) keyEquivalent:@""] autorelease];
+			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( [NSString stringWithUTF8String:"Kick & Ban From Room..."], "kickban from room (customized) contextual menu - admin only" ) action:@selector( customKickban: ) keyEquivalent:@""];
 			[item setKeyEquivalentModifierMask:NSAlternateKeyMask];
 			[item setAlternate:YES];
 			[item setTarget:self];
@@ -409,14 +407,12 @@
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Founder", "founder contextual menu - admin only") action:@selector( toggleFounderStatus: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
-		[item release];
 	}
 
 	if( ( ( localUserIsAdministrator || localUserIsFounder ) && ( (localUserIsAdministrator && ! [self roomFounder]) || localUserIsFounder ) ) && ( [features containsObject:MVChatRoomMemberAdministratorFeature] ) ) {
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Administrator", "administrator contextual menu - admin only") action:@selector( toggleAdministratorStatus: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
-		[item release];
 	}
 
 	if( ( localUserIsOperator || localUserIsAdministrator || localUserIsFounder ) && ( (localUserIsOperator && ! ([self roomAdministrator] || [self roomFounder])) || (localUserIsAdministrator && ! [self roomFounder]) || localUserIsFounder ) ) {
@@ -424,14 +420,12 @@
 			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Operator", "operator contextual menu - admin only") action:@selector( toggleOperatorStatus: ) keyEquivalent:@""];
 			[item setTarget:self];
 			[menu addItem:item];
-			[item release];
 		}
 
 		if( [features containsObject:MVChatRoomMemberHalfOperatorFeature] ) {
 			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Half Operator", "half operator contextual menu - admin only") action:@selector( toggleHalfOperatorStatus: ) keyEquivalent:@""];
 			[item setTarget:self];
 			[menu addItem:item];
-			[item release];
 		}
 	}
 
@@ -440,14 +434,12 @@
 			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Voice", "voice contextual menu - admin only") action:@selector( toggleVoiceStatus: ) keyEquivalent:@""];
 			[item setTarget:self];
 			[menu addItem:item];
-			[item release];
 		}
 
 		if( [features containsObject:MVChatRoomMemberQuietedFeature] ) {
 			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Quieted", "quieted contextual menu - admin only") action:@selector( toggleQuietedStatus: ) keyEquivalent:@""];
 			[item setTarget:self];
 			[menu addItem:item];
-			[item release];
 		}
 	}
 
@@ -668,7 +660,7 @@
 	[[NSApplication sharedApplication] endSheet:banWindow];
 	[banWindow orderOut:self];
 
-	NSAttributedString *reason = [[[NSAttributedString alloc] initWithString:[firstField stringValue]] autorelease];
+	NSAttributedString *reason = [[NSAttributedString alloc] initWithString:[firstField stringValue]];
 	[[_room target] kickOutMemberUser:_user forReason:reason];
 }
 
@@ -687,7 +679,7 @@
 	MVChatUser *user = [MVChatUser wildcardUserFromString:[firstField stringValue]];
 	[[_room target] addBanForUser:user];
 
-	NSAttributedString *reason = [[[NSAttributedString alloc] initWithString:[secondField stringValue]] autorelease];
+	NSAttributedString *reason = [[NSAttributedString alloc] initWithString:[secondField stringValue]];
 	[[_room target] kickOutMemberUser:_user forReason:reason];
 }
 

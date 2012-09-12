@@ -4,7 +4,7 @@
 
 @implementation JVBuddy (JVBuddyInspection)
 - (id <JVInspector>) inspector {
-	return [[[JVBuddyInspector alloc] initWithBuddy:self] autorelease];
+	return [[JVBuddyInspector alloc] initWithBuddy:self];
 }
 @end
 
@@ -13,7 +13,7 @@
 @implementation JVBuddyInspector
 - (id) initWithBuddy:(JVBuddy *) buddy {
 	if( ( self = [self init] ) )
-		_buddy = [buddy retain];
+		_buddy = buddy;
 	return self;
 }
 
@@ -23,15 +23,11 @@
 	[identifiersTable setDataSource:nil];
 	[identifiersTable setDelegate:nil];
 
-	[_buddy release];
-	[_currentRule release];
-	[_editDomains release];
 
 	_buddy = nil;
 	_currentRule = nil;
 	_editDomains = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -87,10 +83,8 @@
 #pragma mark -
 
 - (IBAction) addIdentifier:(id) sender {
-	[_currentRule release];
 	_currentRule = [[MVChatUserWatchRule allocWithZone:nil] init];
 
-	[_editDomains release];
 	_editDomains = [[NSMutableArray allocWithZone:nil] init];
 
 	[identifierDomainsTable reloadData];
@@ -115,10 +109,8 @@
 	NSInteger index = [identifiersTable selectedRow];
 	if( index == -1 ) return;
 
-	[_currentRule release];
-	_currentRule = [[[_buddy watchRules] objectAtIndex:index] retain];
+	_currentRule = [[_buddy watchRules] objectAtIndex:index];
 
-	[_editDomains release];
 	_editDomains = [[NSMutableArray allocWithZone:nil] init];
 	if( [[_currentRule applicableServerDomains] count] ) {
 		[_editDomains setArray:[_currentRule applicableServerDomains]];
@@ -205,10 +197,8 @@
 		[identifiersTable reloadData];
 	}
 
-	[_currentRule release];
 	_currentRule = nil;
 
-	[_editDomains release];
 	_editDomains = nil;
 
 	[identifierDomainsTable reloadData];
@@ -277,7 +267,6 @@
 		voiceIdentifier = [[sender selectedItem] representedObject];
 		NSSpeechSynthesizer *synth = [[NSSpeechSynthesizer alloc] initWithVoice:voiceIdentifier];
 		[synth startSpeakingString:[[NSSpeechSynthesizer attributesForVoice:voiceIdentifier] objectForKey:NSVoiceDemoText]];
-		[synth release];
 	}
 
 	[_buddy setSpeechVoice:voiceIdentifier];

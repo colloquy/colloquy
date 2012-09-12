@@ -31,7 +31,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 	if( secs < 0 ) secs *= -1;
 
-	breaks = [[[desc allKeys] mutableCopy] autorelease];
+	breaks = [[desc allKeys] mutableCopy];
 	[breaks sortUsingSelector:@selector( compare: )];
 
 	while( i < [breaks count] && secs >= [[breaks objectAtIndex:i] doubleValue] ) i++;
@@ -117,15 +117,12 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	return self;
 }
 
-- (oneway void) release {
-	if( ( [self retainCount] - 1 ) == 1 )
-		[_updateTimer invalidate];
-	[super release];
-}
-
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	if( self == sharedInstance ) sharedInstance = nil;
+	if( self == sharedInstance ) {
+		sharedInstance = nil;
+		[_updateTimer invalidate];
+	}
 
 	[currentFiles setDataSource:nil];
 	[currentFiles setDelegate:nil];
@@ -133,21 +130,16 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	if( [self isWindowLoaded] )
 		[[[self window] toolbar] setDelegate:nil];
 
-	[_transferStorage release];
-	[_safeFileExtentions release];
-	[_calculationItems release];
-	[_updateTimer release];
 
 	_transferStorage = nil;
 	_safeFileExtentions = nil;
 	_calculationItems = nil;
 	_updateTimer = nil;
 
-	[super dealloc];
 }
 
 - (void) windowDidLoad {
-	NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:@"Transfers"] autorelease];
+	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"Transfers"];
 	NSTableColumn *theColumn = nil;
 
 	[(NSPanel *)[self window] setFloatingPanel:NO];
@@ -160,7 +152,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	[currentFiles setAutosaveTableColumns:YES];
 
 	theColumn = [currentFiles tableColumnWithIdentifier:@"file"];
-	JVDetailCell *prototypeCell = [[JVDetailCell new] autorelease];
+	JVDetailCell *prototypeCell = [JVDetailCell new];
 	[prototypeCell setFont:[NSFont systemFontOfSize:11.]];
 	[prototypeCell setLineBreakMode:NSLineBreakByTruncatingMiddle];
 	[theColumn setDataCell:prototypeCell];
@@ -193,7 +185,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 #pragma mark -
 
 - (void) downloadFileAtURL:(NSURL *) url toLocalFile:(NSString *) path {
-	WebDownload *download = [[[WebDownload alloc] initWithRequest:[NSURLRequest requestWithURL:url] delegate:self] autorelease];
+	WebDownload *download = [[WebDownload alloc] initWithRequest:[NSURLRequest requestWithURL:url] delegate:self];
 
 	if( ! download ) {
 		NSBeginAlertSheet( NSLocalizedString( @"Invalid URL", "Invalid URL title" ), nil, nil, nil, [self window], nil, nil, nil, nil, NSLocalizedString( @"The download URL is either invalid or unsupported.", "Invalid URL message" ), nil );
@@ -395,7 +387,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 #pragma mark Toolbar Support
 
 - (NSToolbarItem *) toolbar:(NSToolbar *) toolbar itemForItemIdentifier:(NSString *) itemIdent willBeInsertedIntoToolbar:(BOOL) willBeInserted {
-	NSToolbarItem *toolbarItem = [[[NSToolbarItem alloc] initWithItemIdentifier:itemIdent] autorelease];
+	NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:itemIdent];
 
 	if( [itemIdent isEqual:MVToolbarStopItemIdentifier] ) {
 		[toolbarItem setLabel:NSLocalizedString( @"Stop", "short toolbar stop button name" )];
@@ -460,13 +452,13 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 			}
 		}
 
-		[self _downloadFileSavePanelDidEnd:nil returnCode:NSOKButton contextInfo:(void *)[download retain]];
+		[self _downloadFileSavePanelDidEnd:nil returnCode:NSOKButton contextInfo:(void *)download];
 	} else {
-		NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
+		NSSavePanel *savePanel = [NSSavePanel savePanel];
 		[savePanel setDirectoryURL:[NSURL fileURLWithPath:[[self class] userPreferredDownloadFolder] isDirectory:YES]];
 		[savePanel setNameFieldStringValue:filename];
 		[savePanel beginWithCompletionHandler:^(NSInteger result) {
-			[self _downloadFileSavePanelDidEnd:savePanel returnCode:result contextInfo:(void *)[download retain]];
+			[self _downloadFileSavePanelDidEnd:savePanel returnCode:result contextInfo:(void *)download];
 		}];
 	}
 }
@@ -520,7 +512,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 }
 
 - (void) downloadDidFinish:(NSURLDownload *) download {
-	for( NSMutableDictionary *info in [[_transferStorage copy] autorelease] ) {
+	for( NSMutableDictionary *info in [_transferStorage copy] ) {
 		if( [info objectForKey:@"controller"] == download ) {
 			[info setObject:[NSNumber numberWithUnsignedLong:MVFileTransferDoneStatus] forKey:@"status"];
 
@@ -563,7 +555,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 - (void) _fileTransferStarted:(NSNotification *) notification {
 	MVDownloadFileTransfer *transfer = [notification object];
 
-	for( NSMutableDictionary *info in [[_transferStorage copy] autorelease] ){
+	for( NSMutableDictionary *info in [_transferStorage copy] ){
 		if( [[info objectForKey:@"controller"] isEqualTo:transfer] ) {
 			if( [transfer startDate] ) [info setObject:[transfer startDate] forKey:@"startDate"];
 			break;
@@ -576,7 +568,7 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 - (void) _fileTransferFinished:(NSNotification *) notification {
 	MVFileTransfer *transfer = [notification object];
 
-	for( NSMutableDictionary *info in [[_transferStorage copy] autorelease] ) {
+	for( NSMutableDictionary *info in [_transferStorage copy] ) {
 		if( [[info objectForKey:@"controller"] isEqualTo:transfer] ) {
 			if( [transfer isDownload] ) {
 				NSString *path = [(MVDownloadFileTransfer *)transfer destination];
@@ -603,43 +595,42 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 	MVDownloadFileTransfer *transfer = [notification object];
 
 	if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 3 ) {
-		[self _incomingFileSheetDidEnd:nil returnCode:NSOKButton contextInfo:(void *)[transfer retain]];
+		[self _incomingFileSheetDidEnd:nil returnCode:NSOKButton contextInfo:(void *)transfer];
 	} else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 2 ) {
 //		JVBuddy *buddy = [[MVBuddyListController sharedBuddyList] buddyForNickname:[transfer user] onServer:[(MVChatConnection *)[transfer connection] server]];
 //		if( buddy ) [self _incomingFileSheetDidEnd:nil returnCode:NSOKButton contextInfo:(void *)[transfer retain]];
 //		else
 		// transfer is released when the sheet closes
-		NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *)[transfer retain], NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer user], MVPrettyFileSize( [transfer finalSize] ) );
+		NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *)CFBridgingRetain(transfer), NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer user], MVPrettyFileSize( [transfer finalSize] ) );
 	} else if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVAutoAcceptFilesFrom"] == 1 ) {
-		NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *)[transfer retain], NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer user], MVPrettyFileSize( [transfer finalSize] ) );
+		NSBeginInformationalAlertSheet( NSLocalizedString( @"Incoming File Transfer", "new file transfer dialog title" ), NSLocalizedString( @"Accept", "accept button name" ), NSLocalizedString( @"Refuse", "refuse button name" ), nil, nil, self, @selector( _incomingFileSheetDidEnd:returnCode:contextInfo: ), NULL, (void *)CFBridgingRetain(transfer), NSLocalizedString( @"A file named \"%@\" is being sent to you from %@. This file is %@ in size.", "new file transfer dialog message" ), [transfer originalFileName], [transfer user], MVPrettyFileSize( [transfer finalSize] ) );
 	}
 }
 
 - (void) _incomingFileSheetDidEnd:(NSWindow *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	MVDownloadFileTransfer *transfer = [(MVDownloadFileTransfer *)contextInfo autorelease];
+	MVDownloadFileTransfer *transfer = (__bridge MVDownloadFileTransfer *)contextInfo;
 
 	if( returnCode == NSOKButton ) {
 		if( ! [[NSUserDefaults standardUserDefaults] boolForKey:@"JVAskForTransferSaveLocation"] ) {
 			NSString *path = [[[self class] userPreferredDownloadFolder] stringByAppendingPathComponent:[transfer originalFileName]];
 			[sheet close];
 			[transfer setDestination:path renameIfFileExists:NO];
-			[self _incomingFileSavePanelDidEnd:nil returnCode:NSOKButton contextInfo:(void *)[transfer retain]];
+			[self _incomingFileSavePanelDidEnd:nil returnCode:NSOKButton contextInfo:(void *)transfer];
 		} else {
-			NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
+			NSSavePanel *savePanel = [NSSavePanel savePanel];
 			[sheet close];
 			[savePanel setDelegate:self];
 			[savePanel setDirectoryURL:[NSURL fileURLWithPath:[[self class] userPreferredDownloadFolder] isDirectory:YES]];
 			[savePanel beginWithCompletionHandler:^(NSInteger result) {
-				[self _incomingFileSavePanelDidEnd:savePanel returnCode:result contextInfo:(void *)[transfer retain]];
+				[self _incomingFileSavePanelDidEnd:savePanel returnCode:result contextInfo:(void *)transfer];
 			}];
 		}
 	} else [transfer reject];
 }
 
 - (void) _incomingFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	MVDownloadFileTransfer *transfer = [(MVDownloadFileTransfer *)contextInfo autorelease];
+	MVDownloadFileTransfer *transfer = (__bridge MVDownloadFileTransfer *)contextInfo;
 	[sheet setDelegate:nil];
-	[sheet autorelease];
 
 	if( returnCode == NSOKButton ) {
 		NSURL *fileURL = [sheet URL];
@@ -660,12 +651,12 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 		} else if( fileExists ) result = NSRunAlertPanel( NSLocalizedString( @"Save", "save dialog title" ), NSLocalizedString( @"The file %@ in %@ already exists and can't be resumed. Replace it?", "replace transfer save dialog message" ), NSLocalizedString( @"Replace", "replace button name" ), ( sheet ? NSLocalizedString( @"Cancel", "cancel button" ) : NSLocalizedString( @"Save As...", "save as button name" ) ), nil, [[NSFileManager defaultManager] displayNameAtPath:filename], [filename stringByDeletingLastPathComponent] );
 
 		if( result == NSCancelButton ) {
-			NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
+			NSSavePanel *savePanel = [NSSavePanel savePanel];
 			[sheet close];
 			[savePanel setDelegate:self];
 			[savePanel setDirectoryURL:[sheet directoryURL]];
 			[savePanel beginWithCompletionHandler:^(NSInteger result) {
-				[self _incomingFileSavePanelDidEnd:savePanel returnCode:result contextInfo:(void *)[transfer retain]];
+				[self _incomingFileSavePanelDidEnd:savePanel returnCode:result contextInfo:(void *)transfer];
 			}];
 		} else {
 			BOOL resume = ( resumePossible && result == NSOKButton );
@@ -680,9 +671,8 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 #pragma mark URL Web Download Support
 
 - (void) _downloadFileSavePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	WebDownload *download = [(WebDownload *) contextInfo autorelease]; // for the previous retain
+	WebDownload *download = (__bridge WebDownload *)contextInfo;
 	[sheet setDelegate:nil];
-	[sheet autorelease];
 
 	if( returnCode == NSOKButton ) {
 		NSMutableDictionary *info = nil;
@@ -839,13 +829,12 @@ NSString *MVReadableTime( NSTimeInterval date, BOOL longFormat ) {
 
 - (void) _startUpdateTimerIfNeeded {
 	if( _updateTimer ) return;
-	_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector( _updateProgress: ) userInfo:nil repeats:YES] retain];
+	_updateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector( _updateProgress: ) userInfo:nil repeats:YES];
 }
 
 - (void) _stopUpdateTimerIfFinished {
 	if( ! _updateTimer || [_calculationItems count] ) return;
 	[_updateTimer invalidate];
-	[_updateTimer autorelease];
 	_updateTimer = nil;
 }
 @end

@@ -44,7 +44,7 @@
 - (IBAction) changeTranscriptFolder:(id) sender {
 	if( [sender tag] == 3 ) {
 		NSString *folder = [[[NSUserDefaults standardUserDefaults] stringForKey:@"JVChatTranscriptFolder"] stringByStandardizingPath];
-		NSOpenPanel *openPanel = [[NSOpenPanel openPanel] retain];
+		NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 		[openPanel setCanChooseDirectories:YES];
 		[openPanel setCanChooseFiles:NO];
 		[openPanel setAllowsMultipleSelection:NO];
@@ -57,7 +57,6 @@
 }
 
 - (void) saveDownloadsOpenPanelDidEnd:(NSOpenPanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	[sheet autorelease];
 	if( returnCode == NSOKButton ) {
 		NSMenuItem *menuItem = [transcriptFolder itemAtIndex:[transcriptFolder indexOfItemWithTag:2]];
 		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[[sheet directoryURL] path]];

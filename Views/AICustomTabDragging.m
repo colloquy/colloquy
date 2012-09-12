@@ -31,7 +31,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 //Init
 - (id)init
 {
-	[super init];
+	if (!(self = [super init])) return nil;
 	_destinationOfLastDrag = nil;
 	dragTabCell = nil;
 	sourceTabBar = nil;
@@ -45,8 +45,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 - (void)setDestinationTabView:(AICustomTabsView *)inDest
 {
 	if(inDest != destTabBar){
-		[destTabBar release];
-		destTabBar = [inDest retain];
+		destTabBar = inDest;
 	}
 	[tabDragWindow setDisplayingFullWindow:(!destTabBar) animate:YES];
 }
@@ -90,15 +89,15 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	[[NSNotificationCenter defaultCenter] postNotificationName:AICustomTabDragWillBegin object:self];
 
 	//Setup
-	[destTabBar release]; destTabBar = nil;
-	sourceTabBar = [sourceView retain];
-	dragTabCell = [inTabCell retain];
+	 destTabBar = nil;
+	sourceTabBar = sourceView;
+	dragTabCell = inTabCell;
 	selectTabAfterDrag = shouldSelect;
 
 	//Determine if the source window will hide as a result of this drag
 	sourceWindowWillHide = ([sourceTabBar removingLastTabHidesWindow] && [sourceTabBar numberOfTabViewItems] == 1);
 	if(!sourceWindowWillHide){
-		destTabBar = [sourceView retain];
+		destTabBar = sourceView;
 	}
 
 	//Adjust the drag offset so the cursor is atleast always touching the tab drag image
@@ -147,7 +146,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	[tabDragWindow closeWindow];
 	if(_destinationOfLastDrag){
 		[_destinationOfLastDrag resetCursorTracking];
-		[_destinationOfLastDrag release]; _destinationOfLastDrag= nil;
+		 _destinationOfLastDrag= nil;
 	}
 
 }
@@ -171,7 +170,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	}
 
 	//Remember the dest tab bar so we can reset cursor tracking (see dragTabCell:fromCustomTabsView:withEvent:)
-	_destinationOfLastDrag = [destTabBar retain];
+	_destinationOfLastDrag = destTabBar;
 	[self cleanupDrag];
 
 	//Post the dragging did finish notification
@@ -227,9 +226,9 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 //Clean up drag variables
 - (void)cleanupDrag
 {
-	[dragTabCell release]; dragTabCell = nil;
-	[destTabBar release]; destTabBar = nil;
-	[sourceTabBar release]; sourceTabBar = nil;
+	 dragTabCell = nil;
+	 destTabBar = nil;
+	 sourceTabBar = nil;
 }
 
 - (NSTabViewItem *)draggedTabViewItem

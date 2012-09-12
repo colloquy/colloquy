@@ -25,14 +25,11 @@
 }
 
 - (void) dealloc {
-	[_orgImage release];
-	[_smallImage release];
 
 	_orgImage = nil;
 	_smallImage = nil;
 	_toolbarItem = nil;
 
-	[super dealloc];
 }
 
 - (void) drawRect:(NSRect) rect {
@@ -113,12 +110,10 @@
 }
 
 - (void) setImage:(NSImage *) image {
-	[_orgImage autorelease];
 	_orgImage = [[self image] copy];
 
 	NSRect rect = NSMakeRect( 0., 0., 24., 24. );
 	NSImageRep *sourceImageRep = [_orgImage bestRepresentationForRect:rect context:[NSGraphicsContext currentContext] hints:nil];
-	[_smallImage autorelease];
 	_smallImage = [[NSImage alloc] initWithSize:NSMakeSize( 24., 24. )];
 	[_smallImage lockFocus];
 	[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
@@ -134,7 +129,6 @@
 }
 
 - (void) setSmallImage:(NSImage *) image {
-	[_smallImage autorelease];
 	_smallImage = [image copy];
 }
 

@@ -44,7 +44,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	}
 
 	if( ( self = [super initImageCell:nil] ) ) {
-		if( ! colorWellCells ) colorWellCells = [[NSMutableSet set] retain];
+		if( ! colorWellCells ) colorWellCells = [NSMutableSet set];
 		[colorWellCells addObject:self];
 		_releasing = NO;
 
@@ -71,30 +71,20 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 	ret -> _showsWebValue = _showsWebValue;
 	ret -> _releasing = NO;
 
-	if( ! colorWellCells ) colorWellCells = [[NSMutableSet set] retain];
+	if( ! colorWellCells ) colorWellCells = [NSMutableSet set];
 	[colorWellCells addObject:ret];
 
 	return ret;
 }
 
-- (oneway void) release {
-	if( ! _releasing && ( [self retainCount] - 1 ) == 1 ) {
-		_releasing = YES;
-		[colorWellCells removeObject:self];
-		if( ! [colorWellCells count] ) {
-			[colorWellCells autorelease];
-			colorWellCells = nil;
-		}
+- (void) dealloc {
+	[colorWellCells removeObject:self];
+	if( ! [colorWellCells count] ) {
+		colorWellCells = nil;
 	}
 
-	[super release];
-}
-
-- (void) dealloc {
-	[_color release];
 	_color = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -173,8 +163,7 @@ NSString *JVColorWellCellColorDidChangeNotification = @"JVColorWellCellColorDidC
 - (void) setColor:(NSColor *) color {
 	if( ! color || [_color isEqual:color] ) return;
 
-	[_color autorelease];
-	_color = [color retain];
+	_color = color;
 
 	if( [self isActive] )
 		[[NSColorPanel sharedColorPanel] setColor:_color];

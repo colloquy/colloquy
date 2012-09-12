@@ -14,16 +14,12 @@ static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat
 
 @implementation KABubbleWindowView
 - (void) dealloc {
-	[_icon release];
-	[_title release];
-	[_text release];
 
 	_icon = nil;
 	_title = nil;
 	_text = nil;
 	_target = nil;
 
-	[super dealloc];
 }
 
 - (void) drawRect:(NSRect) rect {
@@ -71,7 +67,6 @@ static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat
 	if( [_icon size].width > 32. || [_icon size].height > 32. ) { // Assume a square image.
 		NSRect rect = NSMakeRect( 0., 0., 32., 32. );
 		NSImageRep *sourceImageRep = [_icon bestRepresentationForRect:rect context:[NSGraphicsContext currentContext] hints:nil];
-		[_icon autorelease];
 		_icon = [[NSImage alloc] initWithSize:NSMakeSize( 32., 32. )];
 		[_icon lockFocus];
 		[[NSGraphicsContext currentContext] setImageInterpolation: NSImageInterpolationHigh];
@@ -87,25 +82,21 @@ static void KABubbleShadeInterpolate( void *info, CGFloat const *inData, CGFloat
 #pragma mark -
 
 - (void) setIcon:(NSImage *) icon {
-	[_icon autorelease];
-	_icon = [icon retain];
+	_icon = icon;
 	[self setNeedsDisplay:YES];
 }
 
 - (void) setTitle:(NSString *) title {
-	[_title autorelease];
 	_title = [title copy];
 	[self setNeedsDisplay:YES];
 }
 
 - (void) setAttributedText:(NSAttributedString *) text {
-	[_text autorelease];
 	_text = [text copy];
 	[self setNeedsDisplay:YES];
 }
 
 - (void) setText:(NSString *) text {
-	[_text autorelease];
 	_text = [[NSAttributedString alloc] initWithString:text attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont messageFontOfSize:11.], NSFontAttributeName, [NSColor controlTextColor], NSForegroundColorAttributeName, nil]];
 	[self setNeedsDisplay:YES];
 }

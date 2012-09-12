@@ -3,11 +3,9 @@
 
 @implementation JVChatSession
 - (void) dealloc {
-	[_startDate release];
 	_startDate = nil;
 	_transcript = nil;
 	_node = NULL;
-	[super dealloc];
 }
 
 #pragma mark -

@@ -49,7 +49,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	for( JVSmartTranscriptPanel *panel in items ) {
 		NSString *title = [panel title];
 		if( [panel newMessagesWaiting] > 0 ) title = [NSString stringWithFormat:@"%@ (%d)", [panel title], [panel newMessagesWaiting]];
-		menuItem = [[[NSMenuItem alloc] initWithTitle:title action:@selector( showView: ) keyEquivalent:@""] autorelease];
+		menuItem = [[NSMenuItem alloc] initWithTitle:title action:@selector( showView: ) keyEquivalent:@""];
 		if( [panel newMessagesWaiting] ) [menuItem setImage:[NSImage imageNamed:@"smartTranscriptTabActivity"]];
 		else [menuItem setImage:[NSImage imageNamed:@"smartTranscriptTab"]];
 		[menuItem setTarget:[self defaultController]];
@@ -58,13 +58,13 @@ static NSMenu *smartTranscriptMenu = nil;
 	}
 
 	if( ! [items count] ) {
-		menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"No Smart Transcripts", "no smart transcripts menu title" ) action:NULL keyEquivalent:@""] autorelease];
+		menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"No Smart Transcripts", "no smart transcripts menu title" ) action:NULL keyEquivalent:@""];
 		[smartTranscriptMenu addItem:menuItem];
 	}
 
 	[smartTranscriptMenu addItem:[NSMenuItem separatorItem]];
 
-	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"New Smart Transcript...", "new smart transcript menu title" ) action:@selector( _newSmartTranscript: ) keyEquivalent:@"n"] autorelease];
+	menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"New Smart Transcript...", "new smart transcript menu title" ) action:@selector( _newSmartTranscript: ) keyEquivalent:@"n"];
 	[menuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
 	[menuItem setTarget:[JVChatController defaultController]];
 	[smartTranscriptMenu addItem:menuItem];
@@ -104,15 +104,11 @@ static NSMenu *smartTranscriptMenu = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
-	[_chatWindows release];
-	[_chatControllers release];
-	[_windowRuleSets release];
 
 	_chatWindows = nil;
 	_chatControllers = nil;
 	_windowRuleSets = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -181,8 +177,8 @@ static NSMenu *smartTranscriptMenu = nil;
 - (JVChatWindowController *) createChatWindowController {
 	JVChatWindowController *windowController = nil;
 	if( [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatWindowInterface"] == 1 )
-		windowController = [[[JVTabbedChatWindowController alloc] init] autorelease];
-	else windowController = [[[JVSidebarChatWindowController alloc] init] autorelease];
+		windowController = [[JVTabbedChatWindowController alloc] init];
+	else windowController = [[JVSidebarChatWindowController alloc] init];
 	if( windowController )
 		[_chatWindows addObject:windowController];
 	return windowController;
@@ -263,7 +259,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			break;
 
 	if( ! ret && ! exists ) {
-		if( ( ret = [[[JVChatRoomPanel alloc] initWithTarget:room] autorelease] ) ) {
+		if( ( ret = [[JVChatRoomPanel alloc] initWithTarget:room] ) ) {
 			[_chatControllers addObject:ret];
 			[self addViewControllerToPreferedWindowController:ret userInitiated:YES];
 		}
@@ -286,7 +282,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			break;
 
 	if( ! ret && ! exists ) {
-		if( ( ret = [[[JVDirectChatPanel alloc] initWithTarget:user] autorelease] ) ) {
+		if( ( ret = [[JVDirectChatPanel alloc] initWithTarget:user] ) ) {
 			[_chatControllers addObject:ret];
 			[self addViewControllerToPreferedWindowController:ret userInitiated:initiated];
 		}
@@ -309,7 +305,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			break;
 
 	if( ! ret && ! exists ) {
-		if( ( ret = [[[JVDirectChatPanel alloc] initWithTarget:connection] autorelease] ) ) {
+		if( ( ret = [[JVDirectChatPanel alloc] initWithTarget:connection] ) ) {
 			[_chatControllers addObject:ret];
 			[self addViewControllerToPreferedWindowController:ret userInitiated:initiated];
 		}
@@ -320,7 +316,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (JVChatTranscriptPanel *) chatViewControllerForTranscript:(NSString *) filename {
 	id ret = nil;
-	if( ( ret = [[[JVChatTranscriptPanel alloc] initWithTranscript:filename] autorelease] ) ) {
+	if( ( ret = [[JVChatTranscriptPanel alloc] initWithTranscript:filename] ) ) {
 		[_chatControllers addObject:ret];
 		[self addViewControllerToPreferedWindowController:ret userInitiated:YES];
 	}
@@ -332,7 +328,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (JVSmartTranscriptPanel *) createSmartTranscript {
 	JVSmartTranscriptPanel *ret = nil;
-	if( ( ret = [[[JVSmartTranscriptPanel alloc] initWithSettings:nil] autorelease] ) ) {
+	if( ( ret = [[JVSmartTranscriptPanel alloc] initWithSettings:nil] ) ) {
 		[_chatControllers addObject:ret];
 		[self addViewControllerToPreferedWindowController:ret userInitiated:YES];
 		[ret editSettings:nil];
@@ -381,7 +377,7 @@ static NSMenu *smartTranscriptMenu = nil;
 			break;
 
 	if( ! ret && ! exists ) {
-		if( ( ret = [[[JVChatConsolePanel alloc] initWithConnection:connection] autorelease] ) ) {
+		if( ( ret = [[JVChatConsolePanel alloc] initWithConnection:connection] ) ) {
 			[_chatControllers addObject:ret];
 			[self addViewControllerToPreferedWindowController:ret userInitiated:YES];
 		}
@@ -408,7 +404,6 @@ static NSMenu *smartTranscriptMenu = nil;
 - (void) detachViewController:(id <JVChatViewController>) controller {
 	NSParameterAssert( controller != nil );
 
-	[controller retain];
 
 	JVChatWindowController *windowController = [self createChatWindowController];
 	[[controller windowController] removeChatViewController:controller];
@@ -423,7 +418,6 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	[windowController addChatViewController:controller];
 
-	[controller release];
 }
 
 #pragma mark -
@@ -596,7 +590,7 @@ static NSMenu *smartTranscriptMenu = nil;
 	NSError *error = [[notification userInfo] objectForKey:@"error"];
 	if( [error code] == MVChatConnectionErroneusNicknameError ) {
 		NSString *nickname = [[error userInfo] objectForKey:@"nickname"];
-		NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+		NSAlert *alert = [[NSAlert alloc] init];
 		[alert setMessageText:NSLocalizedString( @"Connection error", "connection error alert dialog title" )];
 		[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"Could not connect to server because the requested nickname (%@) was unavailable or invalid.", "connection error alert dialog message" ), nickname]];
 		[alert setAlertStyle:NSInformationalAlertStyle];
@@ -605,21 +599,21 @@ static NSMenu *smartTranscriptMenu = nil;
 		MVChatUser *user = [[error userInfo] objectForKey:@"user"];
 		JVDirectChatPanel *panel = [self chatViewControllerForUser:user ifExists:YES];
 		if( ! panel || ( panel && [[panel windowController] activeChatViewController] != panel ) ) {
-			NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+			NSAlert *alert = [[NSAlert alloc] init];
 			[alert setMessageText:[NSString stringWithFormat:NSLocalizedString( @"User \"%@\" is not online", "user not online alert dialog title" ), [user displayName]]];
 			[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"The user \"%@\" is not online and is unavailable until they reconnect.", "user not online alert dialog message" ), [user displayName]]];
 			[alert setAlertStyle:NSInformationalAlertStyle];
 			[alert runModal];
 		}
 	} else if( [error code] == MVChatConnectionOutOfBricksError ) {
-		NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+		NSAlert *alert = [[NSAlert alloc] init];
 		[alert setMessageText:NSLocalizedString( @"Out of bricks", "out of bricks alert dialog title" )];
 		[alert setInformativeText:NSLocalizedString( @"The user you specified could not be bricked because you are out of bricks. You can regain some more when somebody else bricks you.", "out of bricks alert dialog message" )];
 		[alert setAlertStyle:NSInformationalAlertStyle];
 		[alert runModal];
 	} else if( [error code] == MVChatConnectionProtocolError ) {
 		NSString *reason = [[error userInfo] objectForKey:@"reason"];
-		NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+		NSAlert *alert = [[NSAlert alloc] init];
 		[alert setMessageText:NSLocalizedString( @"Chat protocol error", "malformed packet alert dialog title" )];
 		[alert setInformativeText:[NSString stringWithFormat:NSLocalizedString( @"Client got a malformed packet: %@", "malformed packet alert dialog message" ), reason]];
 		[alert setAlertStyle:NSInformationalAlertStyle];
@@ -629,7 +623,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (IBAction) _checkMemos:(id) sender {
 	MVChatConnection *connection = [sender representedObject];
-	NSAttributedString *message = [[[NSAttributedString alloc] initWithString:@"read all"] autorelease];
+	NSAttributedString *message = [[NSAttributedString alloc] initWithString:@"read all"];
 	MVChatUser *user = [connection chatUserWithUniqueIdentifier:@"MemoServ"];
 	[user sendMessage:message withEncoding:[connection encoding] asAction:NO];
 	[self chatViewControllerForUser:user ifExists:NO];
@@ -641,8 +635,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 - (void) _reloadPreferedWindowRuleSets {
 	NSData *data = [[NSUserDefaults standardUserDefaults] dataForKey:@"JVChatWindowRuleSets"];
-	[_windowRuleSets autorelease];
-	_windowRuleSets = ( [data length] ? [[NSKeyedUnarchiver unarchiveObjectWithData:data] retain] : nil );
+	_windowRuleSets = ( [data length] ? [NSKeyedUnarchiver unarchiveObjectWithData:data] : nil );
 }
 @end
 
@@ -652,7 +645,7 @@ static NSMenu *smartTranscriptMenu = nil;
 - (NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
 	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
-	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatTranscripts" uniqueID:[self uniqueIdentifier]] autorelease];
+	return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatTranscripts" uniqueID:[self uniqueIdentifier]];
 }
 @end
 
@@ -662,7 +655,7 @@ static NSMenu *smartTranscriptMenu = nil;
 - (NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
 	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
-	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"smartTranscripts" uniqueID:[self uniqueIdentifier]] autorelease];
+	return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"smartTranscripts" uniqueID:[self uniqueIdentifier]];
 }
 @end
 
@@ -672,7 +665,7 @@ static NSMenu *smartTranscriptMenu = nil;
 - (NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
 	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
-	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"directChats" uniqueID:[self uniqueIdentifier]] autorelease];
+	return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"directChats" uniqueID:[self uniqueIdentifier]];
 }
 @end
 
@@ -682,7 +675,7 @@ static NSMenu *smartTranscriptMenu = nil;
 - (NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
 	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
-	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatRooms" uniqueID:[self uniqueIdentifier]] autorelease];
+	return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatRooms" uniqueID:[self uniqueIdentifier]];
 }
 @end
 
@@ -692,7 +685,7 @@ static NSMenu *smartTranscriptMenu = nil;
 - (NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[NSApplication class]];
 	NSScriptObjectSpecifier *container = [[NSApplication sharedApplication] objectSpecifier];
-	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatConsoles" uniqueID:[self uniqueIdentifier]] autorelease];
+	return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatConsoles" uniqueID:[self uniqueIdentifier]];
 }
 @end
 

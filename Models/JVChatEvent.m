@@ -6,11 +6,6 @@
 
 @implementation JVChatEvent
 - (void) dealloc {
-	[_eventIdentifier release];
-	[_date release];
-	[_name release];
-	[_message release];
-	[_attributes release];
 
 	_eventIdentifier = nil;
 	_date = nil;
@@ -24,7 +19,6 @@
 	if( _doc ) xmlFreeDoc( _doc );
 	_doc = NULL;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -34,11 +28,11 @@
 
 	@synchronized( _transcript ) {
 		xmlChar *prop = xmlGetProp( (xmlNode *) _node, (xmlChar *) "name" );
-		_name = ( prop ? [[NSString allocWithZone:[self zone]] initWithUTF8String:(char *) prop] : nil );
+		_name = ( prop ? [[NSString allocWithZone:nil] initWithUTF8String:(char *) prop] : nil );
 		xmlFree( prop );
 
 		prop = xmlGetProp( (xmlNode *) _node, (xmlChar *) "occurred" );
-		_date = ( prop ? [[NSDate allocWithZone:[self zone]] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
+		_date = ( prop ? [[NSDate allocWithZone:nil] initWithString:[NSString stringWithUTF8String:(char *) prop]] : nil );
 		xmlFree( prop );
 	}
 
@@ -53,7 +47,7 @@
 
 		do {
 			if( subNode -> type == XML_ELEMENT_NODE && ! strcmp( "message", (char *) subNode -> name ) ) {
-				_message = [[NSTextStorage allocWithZone:[self zone]] initWithXHTMLTree:subNode baseURL:nil defaultAttributes:nil];
+				_message = [[NSTextStorage allocWithZone:nil] initWithXHTMLTree:subNode baseURL:nil defaultAttributes:nil];
 				break;
 			}
 		} while( ( subNode = subNode -> next ) );
@@ -235,7 +229,7 @@
 
 @implementation JVMutableChatEvent
 + (id) chatEventWithName:(NSString *) name andMessage:(id) message {
-	return [[[self alloc] initWithName:name andMessage:message] autorelease];
+	return [[self alloc] initWithName:name andMessage:message];
 }
 
 #pragma mark -
@@ -265,14 +259,12 @@
 
 - (void) setDate:(NSDate *) date {
 	[self _setNode:NULL];
-	[_date autorelease];
-	_date = [date copyWithZone:[self zone]];
+	_date = [date copyWithZone:nil];
 }
 
 - (void) setName:(NSString *) name {
 	[self _setNode:NULL];
-	[_name autorelease];
-	_name = [name copyWithZone:[self zone]];
+	_name = [name copyWithZone:nil];
 }
 
 #pragma mark -
@@ -280,7 +272,7 @@
 - (void) setMessage:(id) message {
 	[self _setNode:NULL];
 	if( ! _message ) {
-		if( [message isKindOfClass:[NSTextStorage class]] ) _message = [message retain];
+		if( [message isKindOfClass:[NSTextStorage class]] ) _message = message;
 		else if( [message isKindOfClass:[NSAttributedString class]] ) _message = [[NSTextStorage alloc] initWithAttributedString:message];
 		else if( [message isKindOfClass:[NSString class]] ) _message = [[NSTextStorage alloc] initWithXHTMLFragment:(NSString *)message baseURL:nil defaultAttributes:nil];
 	} else if( _message && [message isKindOfClass:[NSAttributedString class]] ) {
@@ -292,7 +284,7 @@
 }
 
 - (void) setMessageAsPlainText:(NSString *) message {
-	[self setMessage:[[[NSAttributedString alloc] initWithString:message] autorelease]];
+	[self setMessage:[[NSAttributedString alloc] initWithString:message]];
 }
 
 - (void) setMessageAsHTML:(NSString *) message {
@@ -303,15 +295,13 @@
 
 - (void) setAttributes:(NSDictionary *) attributes {
 	[self _setNode:NULL];
-	[_attributes autorelease];
-	_attributes = [attributes copyWithZone:[self zone]];
+	_attributes = [attributes copyWithZone:nil];
 }
 
 #pragma mark -
 
 - (void) setEventIdentifier:(NSString *) identifier {
 	[self _setNode:NULL];
-	[_eventIdentifier autorelease];
-	_eventIdentifier = [identifier copyWithZone:[self zone]];
+	_eventIdentifier = [identifier copyWithZone:nil];
 }
 @end

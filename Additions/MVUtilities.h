@@ -161,3 +161,10 @@ static void initial_##functionName parameterDeclarations { \
 \
 	functionName parameterNames; \
 }
+
+#define MVAddUnsafeUnretainedAddress(var, index) \
+	do { \
+		__unsafe_unretained id unsafeVar##var = (var); \
+		[invocation setArgument:&unsafeVar##var atIndex:index]; \
+	} while (0);
+

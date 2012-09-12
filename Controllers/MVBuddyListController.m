@@ -63,24 +63,15 @@ static MVBuddyListController *sharedInstance = nil;
 	return self;
 }
 
-- (oneway void) release {
-	if( ( [self retainCount] - 1 ) == 1 )
-		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _sortBuddiesAnimated: ) object:nil];
-	[super release];
-}
-
 - (void) dealloc {
 	[self save];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	if( self == sharedInstance ) sharedInstance = nil;
+	if( self == sharedInstance ) {
+		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _sortBuddiesAnimated: ) object:nil];
+		sharedInstance = nil;
+	}
 
-	[_onlineBuddies release];
-	[_buddyList release];
-	[_buddyOrder release];
-	[_oldPositions release];
-	[_addPerson release];
-	[_addServers release];
 
 	_onlineBuddies = nil;
 	_buddyList = nil;
@@ -89,7 +80,6 @@ static MVBuddyListController *sharedInstance = nil;
 	_addPerson = nil;
 	_addServers = nil;
 
-	[super dealloc];
 }
 
 - (void) windowDidLoad {
@@ -110,7 +100,7 @@ static MVBuddyListController *sharedInstance = nil;
 	[buddies setDoubleAction:@selector( messageSelectedBuddy: )];
 
 	theColumn = [buddies tableColumnWithIdentifier:@"buddy"];
-	JVDetailCell *prototypeCell = [[JVDetailCell new] autorelease];
+	JVDetailCell *prototypeCell = [JVDetailCell new];
 	[prototypeCell setFont:[NSFont systemFontOfSize:11.]];
 	[theColumn setDataCell:prototypeCell];
 
@@ -144,7 +134,6 @@ static MVBuddyListController *sharedInstance = nil;
 	}
 
 	[list writeToFile:[@"~/Library/Application Support/Colloquy/Buddy List.plist" stringByExpandingTildeInPath] atomically:YES];
-	[list release];
 }
 
 #pragma mark -
@@ -213,10 +202,8 @@ static MVBuddyListController *sharedInstance = nil;
 		[[[self window] attachedSheet] orderOut:nil];
 	}
 
-	[_addPerson release];
 	_addPerson = nil;
 
-	[_addServers release];
 	_addServers = [[NSMutableSet allocWithZone:nil] init];
 
 	[[NSApplication sharedApplication] beginSheet:pickerWindow modalForWindow:[self window] modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
@@ -228,7 +215,6 @@ static MVBuddyListController *sharedInstance = nil;
 		[[[self window] attachedSheet] orderOut:nil];
 	}
 
-	[_addServers release];
 	_addServers = nil;
 }
 
@@ -239,7 +225,6 @@ static MVBuddyListController *sharedInstance = nil;
 	}
 
 	ABPerson *person = [[pickerView selectedRecords] lastObject];
-	[_addPerson release];
 	_addPerson = [[person uniqueId] copy];
 
 	[self showNewPersonSheet:nil];
@@ -267,7 +252,7 @@ static MVBuddyListController *sharedInstance = nil;
 			NSUInteger index = [value indexForIdentifier:[value primaryIdentifier]];
 			if( index != NSNotFound ) [email setObjectValue:[value valueAtIndex:index]];
 
-			[image setImage:[[[NSImage alloc] initWithData:[person imageData]] autorelease]];
+			[image setImage:[[NSImage alloc] initWithData:[person imageData]]];
 		}
 	}
 
@@ -290,10 +275,8 @@ static MVBuddyListController *sharedInstance = nil;
 	[email setObjectValue:@""];
 	[image setImage:nil];
 
-	[_addPerson release];
 	_addPerson = nil;
 
-	[_addServers release];
 	_addServers = nil;
 }
 
@@ -321,20 +304,17 @@ static MVBuddyListController *sharedInstance = nil;
 
 	NSMutableArray *newServers = [[NSMutableArray allocWithZone:nil] initWithCapacity:[_addServers count]];
 
-	for( NSString *server in _addServers ) {
+	for( __strong NSString *server in _addServers ) {
 		server = [server stringWithDomainNameSegmentOfAddress];
 		if( [server length] )
 			[newServers addObject:server];
 	}
 
 	[rule setApplicableServerDomains:newServers];
-	[newServers release];
 
 	[buddy addWatchRule:rule];
-	[rule release];
 
 	[self addBuddy:buddy];
-	[buddy release];
 
 	[self save];
 
@@ -344,10 +324,8 @@ static MVBuddyListController *sharedInstance = nil;
 	[email setObjectValue:@""];
 	[image setImage:nil];
 
-	[_addPerson release];
 	_addPerson = nil;
 
-	[_addServers release];
 	_addServers = nil;
 }
 
@@ -549,11 +527,10 @@ static MVBuddyListController *sharedInstance = nil;
 @implementation MVBuddyListController (MVBuddyListControllerDelegate)
 - (void) clear:(id) sender {
 	if( [buddies selectedRow] == -1 ) return;
-	JVBuddy *buddy = [[_buddyOrder objectAtIndex:[buddies selectedRow]] retain];
+	JVBuddy *buddy = [_buddyOrder objectAtIndex:[buddies selectedRow]];
 	[_buddyList removeObject:buddy];
 	[_onlineBuddies removeObject:buddy];
 	[_buddyOrder removeObjectIdenticalTo:buddy];
-	[buddy release];
 	[self _manuallySortAndUpdate];
 	[self save];
 }
@@ -583,7 +560,7 @@ static MVBuddyListController *sharedInstance = nil;
 		if( _showIcons ) {
 			JVBuddy *buddy = [_buddyOrder objectAtIndex:row];
 			NSImage *ret = [buddy picture];
-			if( ! ret ) ret = [[[NSImage imageNamed:@"largePerson"] copy] autorelease];
+			if( ! ret ) ret = [[NSImage imageNamed:@"largePerson"] copy];
 			if( [ret size].width > 32 || [ret size].height > 32 ) {
 				[ret setScalesWhenResized:YES];
 				[ret setSize:NSMakeSize( 32., 32. )];
@@ -651,13 +628,10 @@ static MVBuddyListController *sharedInstance = nil;
 				NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [user nickname], [user serverAddress]] action:NULL keyEquivalent:@""];
 				if( [user isEqualToChatUser:activeUser] ) [item setState:NSOnState];
 				[menu addItem:item];
-				[item release];
 			}
 
-			[ordered release];
 
 			[cell setMenu:menu];
-			[menu release];
 
 			[cell setArrowPosition:NSPopUpArrowAtCenter];
 			[cell setEnabled:YES];
@@ -699,7 +673,6 @@ static MVBuddyListController *sharedInstance = nil;
 
 	[buddy setActiveUser:[ordered objectAtIndex:[object unsignedIntValue]]];
 
-	[ordered release];
 
 	[buddies reloadData];
 	[self _sortBuddiesAnimated:nil];
@@ -819,15 +792,13 @@ static MVBuddyListController *sharedInstance = nil;
 - (void) _animateStep:(NSTimer *) timer {
 	static NSDate *start = nil;
 	if( ! _animationPosition ) {
-		[start release];
-		start = [[NSDate date] retain];
+		start = [NSDate date];
 	}
 
 	NSTimeInterval elapsed = fabs( [start timeIntervalSinceNow] );
 	_animationPosition = MIN( 1., elapsed / .25 );
 
 	if( fabs( _animationPosition - 1. ) <= 0.01 ) {
-		[start release];
 		start = nil;
 
 		[timer invalidate];
@@ -883,7 +854,6 @@ static MVBuddyListController *sharedInstance = nil;
 	[self _sortBuddies];
 
 	if( [oldOrder isEqualToArray:_buddyOrder] ) {
-		[oldOrder release];
 		return;
 	}
 
@@ -895,8 +865,7 @@ static MVBuddyListController *sharedInstance = nil;
 
 	_animating = YES;
 
-	[_oldPositions release];
-	_oldPositions = [[NSMutableArray arrayWithCapacity:[_buddyOrder count]] retain];
+	_oldPositions = [NSMutableArray arrayWithCapacity:[_buddyOrder count]];
 
 	for( id object in _buddyOrder )
 		[_oldPositions addObject:[NSNumber numberWithUnsignedLong:[oldOrder indexOfObject:object]]];
@@ -906,7 +875,6 @@ static MVBuddyListController *sharedInstance = nil;
 
 	[NSTimer scheduledTimerWithTimeInterval:( 1. / 240. ) target:self selector:@selector( _animateStep: ) userInfo:nil repeats:YES];
 
-	[oldOrder release];
 }
 
 - (void) _buddyChanged:(NSNotification *) notification {
@@ -969,9 +937,9 @@ static MVBuddyListController *sharedInstance = nil;
 		ABPerson *person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:identifier];
 		if( ! person ) continue;
 
-		JVBuddy *buddy = [[JVBuddy allocWithZone:[self zone]] init];
+		JVBuddy *buddy = [[JVBuddy allocWithZone:nil] init];
 
-		[buddy setPicture:[[[NSImage alloc] initWithData:[person imageData]] autorelease]];
+		[buddy setPicture:[[NSImage alloc] initWithData:[person imageData]]];
 		[buddy setGivenNickname:[person valueForProperty:kABNicknameProperty]];
 		[buddy setFirstName:[person valueForProperty:kABFirstNameProperty]];
 		[buddy setLastName:[person valueForProperty:kABLastNameProperty]];
@@ -997,13 +965,11 @@ static MVBuddyListController *sharedInstance = nil;
 
 			[buddy addWatchRule:rule];
 
-			[rule release];
 		}
 
 		if( buddy && [[buddy watchRules] count] )
 			[self addBuddy:buddy];
 
-		[buddy release];
 	}
 
 	[self save];
@@ -1016,12 +982,10 @@ static MVBuddyListController *sharedInstance = nil;
 	if( ! [list count] ) [self _importOldBuddyList];
 
 	for( NSDictionary *buddyDictionary in list ) {
-		JVBuddy *buddy = [[JVBuddy allocWithZone:[self zone]] initWithDictionaryRepresentation:buddyDictionary];
+		JVBuddy *buddy = [[JVBuddy allocWithZone:nil] initWithDictionaryRepresentation:buddyDictionary];
 		if( buddy ) [self addBuddy:buddy];
-		[buddy release];
 	}
 
-	[list release];
 }
 
 - (NSMenu *) _menuForBuddy:(JVBuddy *) buddy {
@@ -1041,8 +1005,8 @@ static MVBuddyListController *sharedInstance = nil;
 	id view = nil;
 
 	[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
-	[invocation setArgument:&buddy atIndex:2];
-	[invocation setArgument:&view atIndex:3];
+	MVAddUnsafeUnretainedAddress(buddy, 2);
+	MVAddUnsafeUnretainedAddress(view, 2);
 
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( [results count] ) {
@@ -1060,7 +1024,7 @@ static MVBuddyListController *sharedInstance = nil;
 			[menu removeItem:[[menu itemArray] lastObject]];
 	}
 
-	return [menu autorelease];
+	return menu;
 }
 @end
 
@@ -1070,7 +1034,7 @@ static MVBuddyListController *sharedInstance = nil;
 - (NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[MVBuddyListController class]];
 	NSScriptObjectSpecifier *container = [[MVBuddyListController sharedBuddyList] objectSpecifier];
-	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"buddies" uniqueID:[self uniqueIdentifier]] autorelease];
+	return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"buddies" uniqueID:[self uniqueIdentifier]];
 }
 @end
 
@@ -1094,11 +1058,10 @@ static MVBuddyListController *sharedInstance = nil;
 }
 
 - (void) removeFromBuddiesAtIndex:(NSUInteger) index {
-	JVBuddy *buddy = [[_buddyOrder objectAtIndex:index] retain];
+	JVBuddy *buddy = [_buddyOrder objectAtIndex:index];
 	[_buddyList removeObject:buddy];
 	[_onlineBuddies removeObject:buddy];
 	[_buddyOrder removeObjectIdenticalTo:buddy];
-	[buddy release];
 	[self _manuallySortAndUpdate];
 	[self save];
 }

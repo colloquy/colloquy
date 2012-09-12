@@ -27,7 +27,7 @@
 
 @implementation JVChatRoomPanel (JVChatRoomInspection)
 - (id <JVInspector>) inspector {
-	return [[[JVChatRoomInspector alloc] initWithRoom:self] autorelease];
+	return [[JVChatRoomInspector alloc] initWithRoom:self];
 }
 @end
 
@@ -36,7 +36,7 @@
 @implementation JVChatRoomInspector
 - (id) initWithRoom:(JVChatRoomPanel *) room {
 	if( ( self = [self init] ) )
-		_room = [room retain];
+		_room = room;
 	return self;
 }
 
@@ -46,13 +46,10 @@
 	[banRules setDataSource:nil];
 	[banRules setDelegate:nil];
 
-	[_room release];
-	[_latestBanList release];
 
 	_room = nil;
 	_latestBanList = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -85,7 +82,7 @@
 
 	[nameField setStringValue:[_room title]];
 
-	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 	[formatter setFormatterBehavior:NSDateFormatterBehavior10_4];
 	[formatter setDateStyle:NSDateFormatterShortStyle];
 	[formatter setTimeStyle:NSDateFormatterShortStyle];
@@ -157,7 +154,6 @@
 }
 
 - (IBAction) refreshBanList:(id) sender {
-	[_latestBanList autorelease];
 	_latestBanList = [[[[_room target] bannedUsers] allObjects] mutableCopy];
 
 	SEL sortSelector = NULL;
@@ -260,7 +256,7 @@
 	NSDate *date = [user attributeForKey:MVChatUserBanDateAttribute];
 	NSString *dateString = nil;
 
-	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 	[formatter setFormatterBehavior:NSDateFormatterBehavior10_4];
 	[formatter setDateStyle:NSDateFormatterShortStyle];
 	[formatter setTimeStyle:NSDateFormatterShortStyle];

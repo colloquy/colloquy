@@ -31,7 +31,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 @implementation JVStyle
 + (void) scanForStyles {
 	NSMutableSet *styles = [NSMutableSet set];
-	if( ! allStyles ) allStyles = [styles retain];
+	if( ! allStyles ) allStyles = styles;
 
 	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:5];
@@ -50,7 +50,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 				NSBundle *bundle = nil;
 				JVStyle *style = nil;
 				if( ( bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]] ) ) {
-					if( ( style = [[JVStyle newWithBundle:bundle] autorelease] ) ) [styles addObject:style];
+					if( ( style = [JVStyle newWithBundle:bundle] ) ) [styles addObject:style];
 					if( [allStyles containsObject:style] && allStyles != styles ) [style reload];
 				}
 			}
@@ -72,13 +72,13 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 			return style;
 
 	NSBundle *bundle = [NSBundle bundleWithIdentifier:identifier];
-	if( bundle ) return [[[JVStyle alloc] initWithBundle:bundle] autorelease];
+	if( bundle ) return [[JVStyle alloc] initWithBundle:bundle];
 
 	return nil;
 }
 
 + (id) newWithBundle:(NSBundle *) bundle {
-	id ret = [[self styleWithIdentifier:[bundle bundleIdentifier]] retain];
+	id ret = [self styleWithIdentifier:[bundle bundleIdentifier]];
 	if( ! ret ) ret = [[JVStyle alloc] initWithBundle:bundle];
 	return ret;
 }
@@ -119,7 +119,6 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 - (id) initWithBundle:(NSBundle *) bundle {
 	if( ( self = [self init] ) ) {
 		if( ! bundle ) {
-			[self release];
 			return nil;
 		}
 
@@ -143,13 +142,11 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[_parameters release];
 	_parameters = nil;
 
 	[self _setBundle:nil]; // this will dealloc all other dependant objects
 	[self unlink];
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -237,9 +234,8 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 - (NSString *) transformChatTranscriptElements:(NSArray *) elements withParameters:(NSDictionary *) parameters {
-	JVChatTranscript *transcript = [[JVChatTranscript allocWithZone:[self zone]] initWithElements:elements];
+	JVChatTranscript *transcript = [[JVChatTranscript allocWithZone:nil] initWithElements:elements];
 	NSString *ret = [self transformChatTranscript:transcript withParameters:parameters];
-	[transcript release];
 	return ret;
 }
 
@@ -409,8 +405,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 #pragma mark -
 
 - (void) setMainParameters:(NSDictionary *) parameters {
-	[_parameters autorelease];
-	_parameters = [parameters retain];
+	_parameters = parameters;
 }
 
 - (NSDictionary *) mainParameters {
@@ -551,8 +546,7 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 - (void) _setBundle:(NSBundle *) bundle {
-	[_bundle autorelease];
-	_bundle = [bundle retain];
+	_bundle = bundle;
 
 	[self setMainParameters:[NSDictionary dictionaryWithContentsOfFile:[_bundle pathForResource:@"parameters" ofType:@"plist"]]];
 
@@ -569,17 +563,14 @@ NSString *JVStyleVariantChangedNotification = @"JVStyleVariantChangedNotificatio
 }
 
 - (void) _setStyleOptions:(NSArray *) options {
-	[_styleOptions autorelease];
-	_styleOptions = [options retain];
+	_styleOptions = options;
 }
 
 - (void) _setVariants:(NSArray *) variants {
-	[_variants autorelease];
-	_variants = [variants retain];
+	_variants = variants;
 }
 
 - (void) _setUserVariants:(NSArray *) variants {
-	[_userVariants autorelease];
-	_userVariants = [variants retain];
+	_userVariants = variants;
 }
 @end

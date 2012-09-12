@@ -14,15 +14,15 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 @implementation JVChatConsolePanel
 - (id) initWithConnection:(MVChatConnection *) connection {
 	if( ( self = [self init] ) ) {
-		_sendHistory = [[NSMutableArray array] retain];
-		[_sendHistory insertObject:[[[NSAttributedString alloc] initWithString:@""] autorelease] atIndex:0];
+		_sendHistory = [NSMutableArray array];
+		[_sendHistory insertObject:[[NSAttributedString alloc] initWithString:@""] atIndex:0];
 
 		_sendHeight = 25.;
 		_historyIndex = 0;
 		_paused = NO;
 		_forceSplitViewPosition = YES;
 
-		_connection = [connection retain];
+		_connection = connection;
 		_verbose = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatVerboseConsoleMessages"];
 		_ignorePRIVMSG = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatConsolePanelIgnoreUserChatMessages"];
 
@@ -63,16 +63,12 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[contents release];
-	[_sendHistory release];
-	[_connection release];
 
 	contents = nil;
 	_connection = nil;
 	_sendHistory = nil;
 	_windowController = nil;
 
-	[super dealloc];
 }
 
 - (NSString *) description {
@@ -156,27 +152,27 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 #pragma mark -
 
 - (NSMenu *) menu {
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 	NSMenuItem *item = nil;
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""] autorelease];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""];
 	[item setTarget:_windowController];
 	[menu addItem:item];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Display", "clear console contextual menu item title" ) action:@selector( clearConsole: ) keyEquivalent:@""] autorelease];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Display", "clear console contextual menu item title" ) action:@selector( clearConsole: ) keyEquivalent:@""];
 	[item setTarget:self];
 	[menu addItem:item];
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
 	if( [[[self windowController] allChatViewControllers] count] > 1 ) {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""];
 		[item setRepresentedObject:self];
 		[item setTarget:[JVChatController defaultController]];
 		[menu addItem:item];
 	}
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""];
 	[item setTarget:self];
 	[menu addItem:item];
 
@@ -222,9 +218,9 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (void) addMessageToDisplay:(NSString *) message asOutboundMessage:(BOOL) outbound {
 	NSAttributedString *msg = nil;
-	NSMutableString *strMsg = [[message mutableCopy] autorelease];
+	NSMutableString *strMsg = [message mutableCopy];
 	NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
-	NSMutableParagraphStyle *para = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+	NSMutableParagraphStyle *para = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	NSUInteger numeric = 0;
 
 	if( [[self connection] type] == MVChatConnectionIRCType ) {
@@ -240,7 +236,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[strMsg replaceOccurrencesOfString:@"\r" withString:@"" options:NSAnchoredSearch | NSBackwardsSearch range:NSMakeRange( [strMsg length] - 1, 1 )];
 
 		if( ! outbound && ! _verbose ) {
-			NSMutableArray *parts = [[[strMsg componentsSeparatedByString:@" "] mutableCopy] autorelease];
+			NSMutableArray *parts = [[strMsg componentsSeparatedByString:@" "] mutableCopy];
 			NSString *tempStr = nil;
 			NSUInteger i = 0, c = 0;
 
@@ -292,7 +288,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	if( ! [scrollView hasVerticalScroller] || [scroller floatValue] >= 0.995 ) _scrollerIsAtBottom = YES;
 	else _scrollerIsAtBottom = NO;
 
-	msg = [[[NSAttributedString alloc] initWithString:strMsg attributes:attrs] autorelease];
+	msg = [[NSAttributedString alloc] initWithString:strMsg attributes:attrs];
 	[[display textStorage] beginEditing];
 	if( [[display string] length] )
 		[display replaceCharactersInRange:NSMakeRange( [[display string] length], 0 ) withString:@"\n"];
@@ -328,15 +324,15 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 	_historyIndex = 0;
 	if( ! [[send string] length] ) return;
 	if( [_sendHistory count] )
-		[_sendHistory replaceObjectAtIndex:0 withObject:[[[NSAttributedString alloc] initWithString:@""] autorelease]];
-	[_sendHistory insertObject:[[[send textStorage] copy] autorelease] atIndex:1];
+		[_sendHistory replaceObjectAtIndex:0 withObject:[[NSAttributedString alloc] initWithString:@""]];
+	[_sendHistory insertObject:[[send textStorage] copy] atIndex:1];
 	if( [_sendHistory count] > [[[NSUserDefaults standardUserDefaults] objectForKey:@"JVChatMaximumHistory"] unsignedIntValue] )
 		[_sendHistory removeObjectAtIndex:[_sendHistory count] - 1];
 
 	while( [[send string] length] ) {
 		range = [[[send textStorage] string] rangeOfString:@"\n"];
 		if( ! range.length ) range.location = [[send string] length];
-		subMsg = [[[[send textStorage] attributedSubstringFromRange:NSMakeRange( 0, range.location )] mutableCopy] autorelease];
+		subMsg = [[[send textStorage] attributedSubstringFromRange:NSMakeRange( 0, range.location )] mutableCopy];
 
 		if( ( [subMsg length] >= 1 && range.length ) || ( [subMsg length] && ! range.length ) ) {
 			if( [[subMsg string] hasPrefix:@"/"] ) {
@@ -355,10 +351,10 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 				NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 				[invocation setSelector:@selector( processUserCommand:withArguments:toConnection:inView: )];
-				[invocation setArgument:&command atIndex:2];
-				[invocation setArgument:&arguments atIndex:3];
-				[invocation setArgument:&_connection atIndex:4];
-				[invocation setArgument:&self atIndex:5];
+				MVAddUnsafeUnretainedAddress(command, 2)
+				MVAddUnsafeUnretainedAddress(arguments, 3)
+				MVAddUnsafeUnretainedAddress(_connection, 4)
+				MVAddUnsafeUnretainedAddress(self, 5)
 
 				NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 
@@ -389,7 +385,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (BOOL) upArrowKeyPressed {
 	if( ! _historyIndex && [_sendHistory count] )
-		[_sendHistory replaceObjectAtIndex:0 withObject:[[[send textStorage] copy] autorelease]];
+		[_sendHistory replaceObjectAtIndex:0 withObject:[[send textStorage] copy]];
 
 	_historyIndex++;
 
@@ -408,7 +404,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 
 - (BOOL) downArrowKeyPressed {
 	if( ! _historyIndex && [_sendHistory count] )
-		[_sendHistory replaceObjectAtIndex:0 withObject:[[[send textStorage] copy] autorelease]];
+		[_sendHistory replaceObjectAtIndex:0 withObject:[[send textStorage] copy]];
 	if( [[send string] length] ) _historyIndex--;
 	if( _historyIndex < 0 ) {
 		[send reset:nil];
@@ -547,7 +543,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( clearConsole: )];
 
-		return [toolbarItem autorelease];
+		return toolbarItem;
 	} else if( [identifier isEqual:JVToolbarToggleVerboseItemIdentifier] ) {
 		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
@@ -560,7 +556,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( toggleVerbose: )];
 
-		return [toolbarItem autorelease];
+		return toolbarItem;
 	} else if( [identifier isEqual:JVToolbarTogglePrivateMessagesItemIdentifier] ) {
 		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
@@ -573,7 +569,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( toggleMessages: )];
 
-		return [toolbarItem autorelease];
+		return toolbarItem;
 	}
 
 	return nil;

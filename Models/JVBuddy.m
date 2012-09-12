@@ -30,7 +30,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( ( self = [super init] ) ) {
 		_rules = [[NSMutableArray allocWithZone:nil] initWithCapacity:5];
 		_users = [[NSMutableSet allocWithZone:nil] initWithCapacity:5];
-		_uniqueIdentifier = [[NSString locallyUniqueString] retain];
+		_uniqueIdentifier = [NSString locallyUniqueString];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _registerWithConnection: ) name:MVChatConnectionDidConnectNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _disconnected: ) name:MVChatConnectionDidDisconnectNotification object:nil];
@@ -43,7 +43,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( ( self = [self init] ) ) {
 		NSData *data = [dictionary objectForKey:@"picture"];
 		if( [data isKindOfClass:[NSData class]] && [data length] )
-			_picture = [[NSKeyedUnarchiver unarchiveObjectWithData:data] retain];
+			_picture = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 
 		NSString *string = [dictionary objectForKey:@"firstName"];
 		if( [string isKindOfClass:[NSString class]] )
@@ -67,23 +67,20 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 		string = [dictionary objectForKey:@"uniqueIdentifier"];
 		if( [string isKindOfClass:[NSString class]] ) {
-			[_uniqueIdentifier release];
 			_uniqueIdentifier = [string copyWithZone:nil];
 		}
 
 		if( ! [_uniqueIdentifier length] ) {
-			[_uniqueIdentifier release];
-			_uniqueIdentifier = [[NSString locallyUniqueString] retain];
+			_uniqueIdentifier = [NSString locallyUniqueString];
 		}
 
 		string = [dictionary objectForKey:@"addressBookPersonRecord"];
 		if( [string isKindOfClass:[NSString class]] )
-			_person = (ABPerson *)[[[ABAddressBook sharedAddressBook] recordForUniqueId:string] retain];
+			_person = (ABPerson *)[[ABAddressBook sharedAddressBook] recordForUniqueId:string];
 
 		for( NSDictionary *ruleDictionary in [dictionary objectForKey:@"rules"] ) {
 			MVChatUserWatchRule *rule = [[MVChatUserWatchRule allocWithZone:nil] initWithDictionaryRepresentation:ruleDictionary];
 			if( rule ) [self addWatchRule:rule];
-			[rule release];
 		}
 	}
 
@@ -95,17 +92,6 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[_person release];
-	[_rules release];
-	[_users release];
-	[_activeUser release];
-	[_picture release];
-	[_firstName release];
-	[_lastName release];
-	[_primaryEmail release];
-	[_givenNickname release];
-	[_speechVoice release];
-	[_uniqueIdentifier release];
 
 	_person = nil;
 	_users = nil;
@@ -119,7 +105,6 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	_speechVoice = nil;
 	_uniqueIdentifier = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -135,7 +120,6 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	}
 
 	[dictionary setObject:rules forKey:@"rules"];
-	[rules release];
 
 	if( _picture ) {
 		NSData *imageData = [NSKeyedArchiver archivedDataWithRootObject:_picture];
@@ -163,7 +147,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( _person && [_person uniqueId] )
 		[dictionary setObject:[_person uniqueId] forKey:@"addressBookPersonRecord"];
 
-	return [dictionary autorelease];
+	return dictionary;
 }
 
 #pragma mark -
@@ -199,7 +183,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	for( MVChatUserWatchRule *rule in _rules )
 		[connection removeChatUserWatchRule:rule];
 
-	for( MVChatUser *user in [[_users copy] autorelease] )
+	for( MVChatUser *user in [_users copy] )
 		if( [[user connection] isEqual:connection] )
 			[_users removeObject:user];
 
@@ -227,9 +211,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( [_activeUser isEqual:user] )
 		return;
 
-	id old = _activeUser;
-	_activeUser = [user retain];
-	[old release];
+	_activeUser = user;
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:JVBuddyActiveUserChangedNotification object:self userInfo:nil];
 }
@@ -316,14 +298,12 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 	if( _picture )
 		return _picture;
 	if( _person )
-		return [[[NSImage alloc] initWithData:[_person imageData]] autorelease];
+		return [[NSImage alloc] initWithData:[_person imageData]];
 	return nil;
 }
 
 - (void) setPicture:(NSImage *) picture {
-	id old = _picture;
 	_picture = [picture copyWithZone:nil];
-	[old release];
 }
 
 #pragma mark -
@@ -386,33 +366,23 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 #pragma mark -
 
 - (void) setFirstName:(NSString *) name {
-	id old = _firstName;
 	_firstName = [name copyWithZone:nil];
-	[old release];
 }
 
 - (void) setLastName:(NSString *) name {
-	id old = _lastName;
 	_lastName = [name copyWithZone:nil];
-	[old release];
 }
 
 - (void) setPrimaryEmail:(NSString *) email {
-	id old = _primaryEmail;
 	_primaryEmail = [email copyWithZone:nil];
-	[old release];
 }
 
 - (void) setGivenNickname:(NSString *) name {
-	id old = _givenNickname;
 	_givenNickname = [name copyWithZone:nil];
-	[old release];
 }
 
 - (void) setSpeechVoice:(NSString *) voice {
-	id old = _speechVoice;
 	_speechVoice = [voice copyWithZone:nil];
-	[old release];
 }
 
 #pragma mark -
@@ -422,9 +392,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 }
 
 - (void) setAddressBookPersonRecord:(ABPerson *) record {
-	id old = _person;
-	_person = [record retain];
-	[old release];
+	_person = record;
 }
 
 - (void) editInAddressBook {
@@ -586,7 +554,7 @@ static JVBuddyName _mainPreferredName = JVBuddyFullName;
 
 - (void) _disconnected:(NSNotification *) notification {
 	MVChatConnection *connection = [notification object];
-	for( MVChatUser *user in [[_users copy] autorelease])
+	for( MVChatUser *user in [_users copy])
 		if( [[user connection] isEqual:connection] )
 			[self _removeUser:user];
 }

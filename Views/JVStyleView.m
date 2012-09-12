@@ -188,17 +188,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:JVStyleVariantChangedNotification object:nil];
 
-	[nextTextView release];
-	[_transcript release];
-	[_style release];
-	[_styleVariant release];
-	[_styleParameters release];
-	[_emoticons release];
-	[_mainDocument release];
-	[_domDocument release];
-	[_body release];
-	[_bodyTemplate release];
-	[_messagesToAppend release];
 
 	nextTextView = nil;
 	_transcript = nil;
@@ -212,7 +201,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	_bodyTemplate = nil;
 	_messagesToAppend = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -254,15 +242,13 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) setNextTextView:(NSTextView *) textView {
-	[nextTextView autorelease];
-	nextTextView = [textView retain];
+	nextTextView = textView;
 }
 
 #pragma mark -
 
 - (void) setTranscript:(JVChatTranscript *) transcript {
-	[_transcript autorelease];
-	_transcript = [transcript retain];
+	_transcript = transcript;
 }
 
 - (JVChatTranscript *) transcript {
@@ -281,11 +267,9 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		return;
 	}
 
-	[_style autorelease];
-	_style = [style retain];
+	_style = style;
 
-	[_styleVariant autorelease];
-	_styleVariant = [variant copyWithZone:[self zone]];
+	_styleVariant = [variant copyWithZone:nil];
 
 	// add single-quotes so that these are not interpreted as XPath expressions
 	[_styleParameters setObject:@"'/tmp/'" forKey:@"buddyIconDirectory"];
@@ -312,8 +296,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) setStyleVariant:(NSString *) variant {
-	[_styleVariant autorelease];
-	_styleVariant = [variant copyWithZone:[self zone]];
+	_styleVariant = [variant copyWithZone:nil];
 
 	if( _contentFrameReady ) {
 		[[self class] emptyCache];
@@ -336,8 +319,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) setBodyTemplate:(NSString *) bodyTemplate {
-	[_bodyTemplate autorelease];
-	_bodyTemplate = [bodyTemplate retain];
+	_bodyTemplate = bodyTemplate;
 }
 
 - (NSString *) bodyTemplate {
@@ -347,9 +329,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) setStyleParameters:(NSDictionary *) parameters {
-	id old = _styleParameters;
-	_styleParameters = [parameters mutableCopyWithZone:[self zone]];
-	[old release];
+	_styleParameters = [parameters mutableCopyWithZone:nil];
 }
 
 - (NSDictionary *) styleParameters {
@@ -359,8 +339,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 #pragma mark -
 
 - (void) setEmoticons:(JVEmoticonSet *) emoticons {
-	[_emoticons autorelease];
-	_emoticons = [emoticons retain];
+	_emoticons = emoticons;
 
 	if( _contentFrameReady ) {
 		[[self class] emptyCache];
@@ -464,9 +443,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 		[self _appendMessage:_messagesToAppend];
 
-		id old = _messagesToAppend;
 		_messagesToAppend = [[NSMutableString alloc] init];
-		[old release];
 
 		_nextAppendMessageInterval /= 4;
 		if( _nextAppendMessageInterval < JVMessageIntervalMinimum )
@@ -496,7 +473,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( _requiresFullMessage && consecutiveOffset > 0 ) {
 		NSArray *elements = [[NSArray allocWithZone:nil] initWithObjects:message, nil];
 		result = [[self style] transformChatTranscriptElements:elements withParameters:_styleParameters];
-		[elements release];
 	} else {
 		if( ! _requiresFullMessage && consecutiveOffset > 0 )
 			[_styleParameters setObject:@"'yes'" forKey:@"consecutiveMessage"];
@@ -626,8 +602,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	if( frame == [self mainFrame] ) {
 		_mainFrameReady = YES;
 
-		[_mainDocument autorelease];
-		_mainDocument = (DOMHTMLDocument *)[[frame DOMDocument] retain];
+		_mainDocument = (DOMHTMLDocument *)[frame DOMDocument];
 
 		WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
 		[contentFrame loadHTMLString:[self _contentHTMLWithBody:@""] baseURL:[self _baseURL]];
@@ -775,13 +750,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 	WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
 
 	id old = _domDocument;
-	_domDocument = (DOMHTMLDocument *)[[contentFrame DOMDocument] retain];
-	[old release];
+	_domDocument = (DOMHTMLDocument *)[contentFrame DOMDocument];
 
 	old = _body;
-	_body = (DOMHTMLElement *)[[_domDocument getElementById:@"contents"] retain];
-	if( ! _body ) _body = (DOMHTMLElement *)[[_domDocument body] retain];
-	[old release];
+	_body = (DOMHTMLElement *)[_domDocument getElementById:@"contents"];
+	if( ! _body ) _body = (DOMHTMLElement *)[_domDocument body];
 
 	if( ! _body ) {
 		// try again soon, the DOM is not ready yet
@@ -834,50 +807,46 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 }
 
 - (void) _switchStyle {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	@autoreleasepool {
 
-	[NSThread setThreadPriority:0.25];
+		[NSThread setThreadPriority:0.25];
 
-	[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.00025]]; // wait, WebKit might not be ready.
+		[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.00025]]; // wait, WebKit might not be ready.
 
-	JVStyle *style = [[self style] retain];
-	JVChatTranscript *transcript = [[self transcript] retain];
-	NSMutableArray *highlightedMsgs = [[NSMutableArray allocWithZone:nil] initWithCapacity:( [self scrollbackLimit] / 8 )];
-	NSMutableDictionary *parameters = [[NSMutableDictionary allocWithZone:nil] initWithDictionary:_styleParameters copyItems:NO];
-	unsigned long elementCount = [transcript elementCount];
+		JVStyle *style = [self style];
+		JVChatTranscript *transcript = [self transcript];
+		NSMutableArray *highlightedMsgs = [[NSMutableArray allocWithZone:nil] initWithCapacity:( [self scrollbackLimit] / 8 )];
+		NSMutableDictionary *parameters = [[NSMutableDictionary allocWithZone:nil] initWithDictionary:_styleParameters copyItems:NO];
+		unsigned long elementCount = [transcript elementCount];
 
-	[parameters setObject:@"'yes'" forKey:@"bulkTransform"];
+		[parameters setObject:@"'yes'" forKey:@"bulkTransform"];
 
-	for( unsigned long i = elementCount; i > ( elementCount - MIN( [self scrollbackLimit], elementCount ) ); i -= MIN( 25u, i ) ) {
-		NSArray *elements = [transcript elementsInRange:NSMakeRange( i - MIN( 25u, i ), MIN( 25u, i ) )];
+		for( unsigned long i = elementCount; i > ( elementCount - MIN( [self scrollbackLimit], elementCount ) ); i -= MIN( 25u, i ) ) {
+			NSArray *elements = [transcript elementsInRange:NSMakeRange( i - MIN( 25u, i ), MIN( 25u, i ) )];
 
-		for( id element in elements )
-			if( [element isKindOfClass:[JVChatMessage class]] && [element isHighlighted] )
-				[highlightedMsgs addObject:element];
+			for( id element in elements )
+				if( [element isKindOfClass:[JVChatMessage class]] && [element isHighlighted] )
+					[highlightedMsgs addObject:element];
 
-		NSString *result = [style transformChatTranscriptElements:elements withParameters:parameters];
+			NSString *result = [style transformChatTranscriptElements:elements withParameters:parameters];
 
-		if( [self style] != style ) goto quickEnd;
-		if( result ) {
-			[self performSelectorOnMainThread:@selector( _prependMessages: ) withObject:result waitUntilDone:YES];
-			[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.]]; // give time to other threads
+			if( [self style] != style ) goto quickEnd;
+			if( result ) {
+				[self performSelectorOnMainThread:@selector( _prependMessages: ) withObject:result waitUntilDone:YES];
+				[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.]]; // give time to other threads
+			}
 		}
-	}
 
-	_switchingStyles = NO;
-	[self performSelectorOnMainThread:@selector( markScrollbarForMessages: ) withObject:highlightedMsgs waitUntilDone:YES];
+		_switchingStyles = NO;
+		[self performSelectorOnMainThread:@selector( markScrollbarForMessages: ) withObject:highlightedMsgs waitUntilDone:YES];
 
 quickEnd:
-	[self performSelectorOnMainThread:@selector( _switchingStyleFinished: ) withObject:nil waitUntilDone:YES];
+		[self performSelectorOnMainThread:@selector( _switchingStyleFinished: ) withObject:nil waitUntilDone:YES];
 
-	NSNotification *note = [NSNotification notificationWithName:JVStyleViewDidChangeStylesNotification object:self userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
+		NSNotification *note = [NSNotification notificationWithName:JVStyleViewDidChangeStylesNotification object:self userInfo:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThread:note];
 
-	[highlightedMsgs release];
-	[parameters release];
-	[style release];
-	[transcript release];
-	[pool release];
+	}
 }
 
 - (void) _switchingStyleFinished:(id) sender {
@@ -920,7 +889,6 @@ quickEnd:
 		}
 	}
 
-	[transformedMessage release];
 	transformedMessage = nil;
 
 	// enforce the scrollback limit and shift scrollbar marks
@@ -963,7 +931,6 @@ quickEnd:
 	DOMHTMLElement *element = (DOMHTMLElement *)[_domDocument createElement:@"span"];
 	if( [result length] ) [element setInnerHTML:result];
 
-	[result release];
 	result = nil;
 
 	DOMNode *firstMessage = [_body firstChild];
@@ -1006,7 +973,7 @@ quickEnd:
 	if( scroller && ! [scroller isMemberOfClass:[JVMarkedScroller class]] ) {
 		NSRect scrollerFrame = [[scrollView verticalScroller] frame];
 		NSScroller *oldScroller = scroller;
-		scroller = [[[JVMarkedScroller alloc] initWithFrame:scrollerFrame] autorelease];
+		scroller = [[JVMarkedScroller alloc] initWithFrame:scrollerFrame];
 		[scroller setKnobProportion:[oldScroller knobProportion]];
 		[scroller setDoubleValue:[oldScroller floatValue]];
 		[scrollView setVerticalScroller:scroller];

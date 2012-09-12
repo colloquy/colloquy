@@ -25,7 +25,7 @@ extern const NSStringEncoding JVAllowedTextEncodings[];
 }
 
 - (void) buildEncodingMenu {
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 	NSMenuItem *menuItem = nil;
 	NSUInteger i = 0;
 	NSStringEncoding defaultEncoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
@@ -36,7 +36,7 @@ extern const NSStringEncoding JVAllowedTextEncodings[];
 			continue;
 		}
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:JVAllowedTextEncodings[i]] action:NULL keyEquivalent:@""] autorelease];
+		menuItem = [[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:JVAllowedTextEncodings[i]] action:NULL keyEquivalent:@""];
 		if( defaultEncoding == JVAllowedTextEncodings[i] ) [menuItem setState:NSOnState];
 		[menuItem setTag:JVAllowedTextEncodings[i]];
 		[menu addItem:menuItem];

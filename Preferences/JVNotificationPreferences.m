@@ -1,10 +1,6 @@
 #import "JVNotificationPreferences.h"
 
 @implementation JVNotificationPreferences
-- (void) dealloc {
-	[_eventPrefs release];
-	[super dealloc];
-}
 
 - (NSString *) preferencesNibName {
 	return @"JVNotificationPreferences";
@@ -31,8 +27,7 @@
 }
 
 - (void) switchEvent:(id) sender {
-	[_eventPrefs autorelease];
-	_eventPrefs = [[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[NSString stringWithFormat:@"JVNotificationSettings %@", [[chatActions selectedItem] representedObject]]]] retain];
+	_eventPrefs = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[NSString stringWithFormat:@"JVNotificationSettings %@", [[chatActions selectedItem] representedObject]]]];
 
 	BOOL boolValue = [[_eventPrefs objectForKey:@"playSound"] boolValue];
 	[playSound setState:boolValue];
@@ -84,11 +79,11 @@
 }
 
 - (void) buildEventsMenu {
-	NSMenu *availableEvents = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenu *availableEvents = [[NSMenu alloc] initWithTitle:@""];
 
 	for( NSDictionary *info in [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"notifications" ofType:@"plist"]] ) {
 		if( ! [info objectForKey:@"seperator"] ) {
-			NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( [info objectForKey:@"title"], "notification event menu items, notification preferences" ) action:NULL keyEquivalent:@""] autorelease];
+			NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( [info objectForKey:@"title"], "notification event menu items, notification preferences" ) action:NULL keyEquivalent:@""];
 			[menuItem setRepresentedObject:[info objectForKey:@"identifier"]];
 			[availableEvents addItem:menuItem];
 		} else [availableEvents addItem:[NSMenuItem separatorItem]];
@@ -101,10 +96,10 @@
 	NSMenuItem *menuItem = nil;
 	BOOL first = YES;
 
-	NSMenu *availableSounds = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenu *availableSounds = [[NSMenu alloc] initWithTitle:@""];
 
 	for( id sound in [[NSBundle mainBundle] pathsForResourcesOfType:@"aiff" inDirectory:@"Sounds"] ) {
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[[sound lastPathComponent] stringByDeletingPathExtension] action:NULL keyEquivalent:@""] autorelease];
+		menuItem = [[NSMenuItem alloc] initWithTitle:[[sound lastPathComponent] stringByDeletingPathExtension] action:NULL keyEquivalent:@""];
 		[menuItem setRepresentedObject:[sound lastPathComponent]];
 		[menuItem setImage:[NSImage imageNamed:@"sound"]];
 		[availableSounds addItem:menuItem];
@@ -121,7 +116,7 @@
 		[@"~/Library/Sounds" stringByExpandingTildeInPath],
 		nil];
 
-	for( NSString *aPath in paths ) {
+	for( __strong NSString *aPath in paths ) {
 		if( [aPath isEqualToString:@"-"] ) {
 			first = YES;
 			continue;
@@ -148,7 +143,7 @@
 				aPath = newPath;
 				if( first ) [availableSounds addItem:[NSMenuItem separatorItem]];
 				first = NO;
-				menuItem = [[[NSMenuItem alloc] initWithTitle:sound action:@selector( aRandomSelector:of:no:consequence: ) keyEquivalent:@""] autorelease];
+				menuItem = [[NSMenuItem alloc] initWithTitle:sound action:@selector( aRandomSelector:of:no:consequence: ) keyEquivalent:@""];
 				[menuItem setEnabled:NO];
 				[menuItem setImage:[NSImage imageNamed:@"folder"]];
 				[availableSounds addItem:menuItem];
@@ -158,7 +153,7 @@
 			if( [[sound pathExtension] isEqualToString:@"aif"] || [[sound pathExtension] isEqualToString:@"aiff"] || [[sound pathExtension] isEqualToString:@"wav"] ) {
 				if( first ) [availableSounds addItem:[NSMenuItem separatorItem]];
 				first = NO;
-				menuItem = [[[NSMenuItem alloc] initWithTitle:[sound stringByDeletingPathExtension] action:NULL keyEquivalent:@""] autorelease];
+				menuItem = [[NSMenuItem alloc] initWithTitle:[sound stringByDeletingPathExtension] action:NULL keyEquivalent:@""];
 				[menuItem setRepresentedObject:newPath];
 				[menuItem setImage:[NSImage imageNamed:@"sound"]];
 				[menuItem setIndentationLevel:indentationLevel];
@@ -199,7 +194,7 @@
 
 	if( [playSound state] == NSOnState ) {
 		if( ! [path isAbsolutePath] ) path = [[NSString stringWithFormat:@"%@/Sounds", [[NSBundle mainBundle] resourcePath]] stringByAppendingPathComponent:path];
-		NSSound *sound = [[[NSSound alloc] initWithContentsOfFile:path byReference:YES] autorelease];
+		NSSound *sound = [[NSSound alloc] initWithContentsOfFile:path byReference:YES];
 		[sound play];
 	}
 }

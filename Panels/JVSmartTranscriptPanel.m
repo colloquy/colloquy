@@ -31,8 +31,8 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	if( ( self = [self init] ) ) {
 		_settingsNibLoaded = [NSBundle loadNibNamed:@"JVSmartTranscriptFilterSheet" owner:self];
 
-		_rules = [[settings objectForKey:@"rules"] mutableCopyWithZone:[self zone]];
-		_title = [[settings objectForKey:@"title"] copyWithZone:[self zone]];
+		_rules = [[settings objectForKey:@"rules"] mutableCopyWithZone:nil];
+		_title = [[settings objectForKey:@"title"] copyWithZone:nil];
 		_operation = [[settings objectForKey:@"operation"] intValue];
 		_ignoreCase = [[settings objectForKey:@"ignoreCase"] boolValue];
 
@@ -69,15 +69,11 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	[subviewTableView setDataSource:nil];
 	[subviewTableView setDelegate:nil];
 
-	[_title release];
-	[_rules release];
-	[_editingRules release];
 
 	_rules = nil;
 	_editingRules = nil;
 	_title = nil;
 
-	[super dealloc];
 }
 
 - (void) awakeFromNib {
@@ -88,7 +84,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 		[subviewTableView setRefusesFirstResponder:YES];
 
 		NSTableColumn *column = [subviewTableView tableColumnWithIdentifier:@"criteria"];
-		[column setDataCell:[[JVViewCell new] autorelease]];
+		[column setDataCell:[JVViewCell new]];
 	}
 
 	if( ! _nibLoaded ) [super awakeFromNib];
@@ -129,23 +125,23 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 }
 
 - (NSMenu *) menu {
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 	NSMenuItem *item = nil;
 
 	if( [[[self windowController] allChatViewControllers] count] > 1 ) {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""];
 		[item setRepresentedObject:self];
 		[item setTarget:[JVChatController defaultController]];
 		[menu addItem:item];
 	}
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""];
 	[item setTarget:self];
 	[menu addItem:item];
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Delete", "delete contextual menu item title" ) action:@selector( dispose: ) keyEquivalent:@""] autorelease];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Delete", "delete contextual menu item title" ) action:@selector( dispose: ) keyEquivalent:@""];
 	[item setTarget:self];
 	[menu addItem:item];
 
@@ -242,7 +238,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	[[self editingRules] removeAllObjects];
 
 	for( id rule in [self rules] )
-		[[self editingRules] addObject:[[rule copy] autorelease]];
+		[[self editingRules] addObject:[rule copy]];
 
 	if( ! [[self editingRules] count] ) [self addRow:nil];
 
@@ -271,7 +267,6 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 	[[self rules] setArray:[self editingRules]];
 	[self closeEditSettingsSheet:sender];
 
-	[_title autorelease];
 	_title = [[titleField stringValue] copy];
 
 	_ignoreCase = ( [ignoreCase state] == NSOnState );
@@ -308,7 +303,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 
 	if( ! match ) return;
 
-	JVMutableChatMessage *localMessage = [[message mutableCopy] autorelease];
+	JVMutableChatMessage *localMessage = [message mutableCopy];
 	[localMessage setSource:[(JVDirectChatPanel *)view url]];
 	[localMessage setIgnoreStatus:JVNotIgnored];
 
@@ -418,7 +413,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( editSettings: )];
 
-		return [toolbarItem autorelease];
+		return toolbarItem;
 	} else if( [identifier isEqual:JVToolbarClearScrollbackItemIdentifier] ) {
 		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
@@ -431,7 +426,7 @@ static NSString *JVToolbarRuleSettingsItemIdentifier = @"JVToolbarRuleSettingsIt
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( clearDisplay: )];
 
-		return [toolbarItem autorelease];
+		return toolbarItem;
 	}
 
 	return [super toolbar:toolbar itemForItemIdentifier:identifier willBeInsertedIntoToolbar:willBeInserted];

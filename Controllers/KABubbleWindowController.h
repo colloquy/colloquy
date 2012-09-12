@@ -1,4 +1,5 @@
 @interface KABubbleWindowController : NSWindowController <NSWindowDelegate> {
+	id _self;
 	id _delegate;
 	NSTimer *_animationTimer;
 	NSUInteger _depth;

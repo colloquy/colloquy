@@ -21,9 +21,7 @@
 }
 
 - (void) dealloc {
-	[destination release];
 	destination = nil;
-	[super dealloc];
 }
 
 - (void) _forceSendAction:(BOOL) action notification:(BOOL) notification firstResponder:(BOOL) firstResponder {
@@ -59,7 +57,7 @@
 	[destination setAutosizesCells:YES];
 	[destination setState:NSOnState atRow:0 column:0];
 
-	[cell release]; // release the prototype cell
+	 // release the prototype cell
 
 	cell = [destination cellAtRow:0 column:0];
 	[cell setTitle:NSLocalizedString( @"Foreground Color", "color panel Foreground Color button" )];
@@ -76,6 +74,6 @@
 	[view addSubview:destination];
 	[destination setBoundsOrigin:NSZeroPoint];
 
-	return [view autorelease];
+	return view;
 }
 @end

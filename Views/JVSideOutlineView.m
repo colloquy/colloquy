@@ -43,7 +43,7 @@ static void gradientInterpolate( void *info, CGFloat const *inData, CGFloat *out
 
 	static NSColor *rowBottomLine = nil;
 	if( ! rowBottomLine )
-		rowBottomLine = [[NSColor colorWithCalibratedRed:( 140. / 255. ) green:( 152. / 255. ) blue:( 176. / 255. ) alpha:1.] retain];
+		rowBottomLine = [NSColor colorWithCalibratedRed:( 140. / 255. ) green:( 152. / 255. ) blue:( 176. / 255. ) alpha:1.];
 
 	[rowBottomLine set];
 
@@ -57,7 +57,7 @@ static void gradientInterpolate( void *info, CGFloat const *inData, CGFloat *out
 
 	static NSColor *backgroundColor = nil;
 	if( ! backgroundColor )
-		backgroundColor = [[NSColor colorWithCalibratedRed:( 229. / 255. ) green:( 237. / 255. ) blue:( 247. / 255. ) alpha:1.] retain];
+		backgroundColor = [NSColor colorWithCalibratedRed:( 229. / 255. ) green:( 237. / 255. ) blue:( 247. / 255. ) alpha:1.];
 
 	[backgroundColor set];
 	NSRectFill( clipRect );

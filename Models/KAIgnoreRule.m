@@ -8,7 +8,7 @@
 
 @implementation KAIgnoreRule
 + (id) ruleForUser:(NSString *) user message:(NSString *) message inRooms:(NSArray *) rooms isPermanent:(BOOL) permanent friendlyName:(NSString *) friendlyName {
-	return [[[KAIgnoreRule alloc] initForUser:user message:message inRooms:rooms isPermanent:permanent friendlyName:friendlyName] autorelease];
+	return [[KAIgnoreRule alloc] initForUser:user message:message inRooms:rooms isPermanent:permanent friendlyName:friendlyName];
 }
 
 #pragma mark -
@@ -23,8 +23,8 @@
 		[self setUser:user];
 		[self setMessage:message];
 
-		_rooms = [rooms copyWithZone:[self zone]];
-		_friendlyName = [friendlyName copyWithZone:[self zone]];
+		_rooms = [rooms copyWithZone:nil];
+		_friendlyName = [friendlyName copyWithZone:nil];
 		_permanent = permanent;
 	}
 
@@ -49,12 +49,6 @@
 }
 
 - (void) dealloc {
-	[_ignoredUser release];
-	[_ignoredMessage release];
-	[_rooms release];
-	[_userRegex release];
-	[_messageRegex release];
-	[_friendlyName release];
 
 	_ignoredUser = nil;
 	_ignoredMessage = nil;
@@ -63,7 +57,6 @@
 	_messageRegex = nil;
 	_friendlyName = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -116,8 +109,7 @@
 
 - (void) setFriendlyName:(NSString *) friendlyName {
     if( _friendlyName != friendlyName ) {
-        [_friendlyName release];
-        _friendlyName = [friendlyName copyWithZone:[self zone]];
+        _friendlyName = [friendlyName copyWithZone:nil];
     }
 }
 
@@ -128,8 +120,7 @@
 }
 
 - (void) setRooms:(NSArray *) rooms {
-    [_rooms autorelease];
-	_rooms = [rooms copyWithZone:[self zone]];
+	_rooms = [rooms copyWithZone:nil];
 }
 
 #pragma mark -
@@ -140,11 +131,9 @@
 
 - (void) setMessage:(NSString *) message {
     if( _ignoredMessage != message ) {
-        [_ignoredMessage release];
-        _ignoredMessage = [message copyWithZone:[self zone]];
+        _ignoredMessage = [message copyWithZone:nil];
     }
 
-	[_messageRegex release];
 	_messageRegex = nil;
 
 	if( message && ( [message length] > 2 ) && [message hasPrefix:@"/"] && [message hasSuffix:@"/"] )
@@ -159,11 +148,9 @@
 
 - (void) setUser:(NSString *) user {
     if( _ignoredUser != user ) {
-        [_ignoredUser release];
-        _ignoredUser = [user copyWithZone:[self zone]];
+        _ignoredUser = [user copyWithZone:nil];
     }
 
-	[_userRegex release];
 	_userRegex = nil;
 
 	if( user && ( [user length] > 2 ) && [user hasPrefix:@"/"] && [user hasSuffix:@"/"] )

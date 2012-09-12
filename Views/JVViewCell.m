@@ -6,14 +6,11 @@
 
 @implementation JVViewCell
 - (void) dealloc {
-	[_view release];
     _view = nil;
-    [super dealloc];
 }
 
 - (void) setView:(NSView *) view {
-	[_view autorelease];
-    _view = [view retain];
+    _view = view;
 }
 
 - (NSView *) view {

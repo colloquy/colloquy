@@ -5,7 +5,7 @@
 
 @implementation MVChatConnection (MVChatConnectionInspection)
 - (id <JVInspector>) inspector {
-	return [[[JVConnectionInspector alloc] initWithConnection:self] autorelease];
+	return [[JVConnectionInspector alloc] initWithConnection:self];
 }
 @end
 
@@ -13,7 +13,7 @@
 
 @implementation JVChatConsolePanel (JVChatConsolePanelInspection)
 - (id <JVInspector>) inspector {
-	return [[[JVConnectionInspector alloc] initWithConnection:[self connection]] autorelease];
+	return [[JVConnectionInspector alloc] initWithConnection:[self connection]];
 }
 @end
 
@@ -22,7 +22,7 @@
 @implementation JVConnectionInspector
 - (id) initWithConnection:(MVChatConnection *) connection {
 	if( ( self = [self init] ) )
-		_connection = [connection retain];
+		_connection = connection;
 	return self;
 }
 
@@ -36,11 +36,8 @@
 	[editRuleRooms setDataSource:nil];
 	[editRuleRooms setDelegate:nil];
 
-	[_connection release];
-	[_editingRooms release];
 	_connection = nil;
 	_editingRooms = nil;
-	[super dealloc];
 }
 
 #pragma mark -
@@ -87,13 +84,12 @@
 	NSString *commands = [[MVConnectionsController defaultController] connectCommandsForConnection:_connection];
 	if( commands) [connectCommands setString:commands];
 
-	[_editingRooms autorelease];
-	_editingRooms = [[NSMutableArray arrayWithArray:[[MVConnectionsController defaultController] joinRoomsForConnection:_connection]] retain];
+	_editingRooms = [NSMutableArray arrayWithArray:[[MVConnectionsController defaultController] joinRoomsForConnection:_connection]];
 
 	[editRooms reloadData];
 
 	NSTableColumn *column = [editRules tableColumnWithIdentifier:@"icon"];
-	NSImageCell *prototypeCell = [[NSImageCell new] autorelease];
+	NSImageCell *prototypeCell = [NSImageCell new];
 	[prototypeCell setImageAlignment:NSImageAlignRight];
 	[prototypeCell setImageFrameStyle:NSImageFrameNone];
 	[prototypeCell setImageScaling:NSScaleNone];
@@ -124,7 +120,7 @@
 #pragma mark -
 
 - (void) buildEncodingMenu {
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 	NSMenuItem *menuItem = nil;
 	NSUInteger i = 0;
 	NSStringEncoding defaultEncoding = [_connection encoding];
@@ -138,7 +134,7 @@
 			continue;
 		} */
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:supportedEncodings[i]] action:@selector( changeEncoding: ) keyEquivalent:@""] autorelease];
+		menuItem = [[NSMenuItem alloc] initWithTitle:[NSString localizedNameOfStringEncoding:supportedEncodings[i]] action:@selector( changeEncoding: ) keyEquivalent:@""];
 		if( defaultEncoding == supportedEncodings[i] ) [menuItem setState:NSOnState];
 		[menuItem setTag:supportedEncodings[i]];
 		[menuItem setTarget:self];
@@ -250,7 +246,6 @@
 }
 
 - (IBAction) addRule:(id) sender {
-	[_editingRuleRooms release];
 	_editingRuleRooms = [[NSMutableArray alloc] init];
 
 	[editRuleName setStringValue:@""];
@@ -271,7 +266,6 @@
 - (IBAction) configureRule:(id) sender {
 	KAIgnoreRule *rule = [_ignoreRules objectAtIndex:[editRules selectedRow]];
 
-	[_editingRuleRooms release];
 	_editingRuleRooms = [[rule rooms] mutableCopy];
 
 	NSString *user = [rule user];
@@ -372,7 +366,7 @@
 			else if( [rule user] ) return [NSImage imageNamed:@"person"];
 			else return [NSImage imageNamed:@"roomTabNewMessage"];
 		} else {
-			if( ! [rule isPermanent] ) return [[[NSAttributedString alloc] initWithString:[rule friendlyName] attributes:[NSDictionary dictionaryWithObject:[[NSColor blackColor] colorWithAlphaComponent:0.67] forKey:NSForegroundColorAttributeName]] autorelease];
+			if( ! [rule isPermanent] ) return [[NSAttributedString alloc] initWithString:[rule friendlyName] attributes:[NSDictionary dictionaryWithObject:[[NSColor blackColor] colorWithAlphaComponent:0.67] forKey:NSForegroundColorAttributeName]];
 			else return [rule friendlyName];
 		}
 	} else if( tableView == editRuleRooms ) return [_editingRuleRooms objectAtIndex:row];

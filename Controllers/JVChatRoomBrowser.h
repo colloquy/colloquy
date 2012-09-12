@@ -1,6 +1,7 @@
 @class MVChatConnection;
 
 @interface JVChatRoomBrowser : NSWindowController {
+	id _self;
 	IBOutlet NSTableView *roomsTable;
 	IBOutlet NSTabView *browserArea;
 	IBOutlet NSTabView *searchArea;

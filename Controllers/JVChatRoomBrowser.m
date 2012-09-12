@@ -20,6 +20,7 @@
 @implementation JVChatRoomBrowser
 - (id) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:@"JVChatRoomBrowser"] ) ) {
+		_self = self;
 		_connection = nil;
 		_roomResults = nil;
 		_roomOrder = nil;
@@ -46,13 +47,9 @@
 	return [[self alloc] initWithConnection:connection];
 }
 
-- (oneway void) release {
-	if( ( [self retainCount] - 1 ) == 1 )
-		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _refreshResults: ) object:nil];
-	[super release];
-}
-
 - (void) dealloc {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _refreshResults: ) object:nil];
+
 	[roomField setDelegate:nil];
 	[roomField setDataSource:nil];
 
@@ -61,11 +58,6 @@
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[_connection release];
-	[_currentFilter release];
-	[_roomResults release];
-	[_roomOrder release];
-	[_sortColumn release];
 
 	_connection = nil;
 	_currentFilter = nil;
@@ -73,7 +65,6 @@
 	_roomOrder = nil;
 	_sortColumn = nil;
 
-	[super dealloc];
 }
 
 - (void) windowDidLoad {
@@ -122,7 +113,11 @@
 
 	[super close];
 
-	[self performSelector:@selector( release ) withObject:nil afterDelay:0.];
+	[self performSelector:@selector( _nilOutSelf ) withObject:nil afterDelay:0.];
+}
+
+- (void) _nilOutSelf {
+	_self = nil;
 }
 
 #pragma mark -
@@ -226,7 +221,6 @@
 #pragma mark -
 
 - (void) setFilter:(NSString *) filter {
-	[_currentFilter autorelease];
 	_currentFilter = [filter copy];
 	[searchField setStringValue:_currentFilter];
 }
@@ -243,19 +237,16 @@
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:_connection];
 	}
 
-	[_connection autorelease];
-	_connection = [connection retain];
+	_connection = connection;
 
 	if( _connection && ! _collapsed )
 		[self _startFetch];
 
 	if( _connection ) [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _needToRefreshResults: ) name:MVChatConnectionChatRoomListUpdatedNotification object:_connection];
 
-	[_roomResults autorelease];
-	_roomResults = [[_connection chatRoomListResults] retain];
+	_roomResults = [_connection chatRoomListResults];
 
-	[_roomOrder autorelease];
-	_roomOrder = [[NSMutableArray array] retain];
+	_roomOrder = [NSMutableArray array];
 
 	[self _refreshResults:nil];
 
@@ -379,7 +370,6 @@
 
 	_ascending = ! ascending;
 
-	[_sortColumn autorelease];
 	_sortColumn = [[column identifier] copy];
 
 	NSInteger index = [roomsTable selectedRow];
@@ -391,7 +381,6 @@
 	if( selectedRoom ) index = [_roomOrder indexOfObject:selectedRoom];
 	else index = NSNotFound;
 
-	[selectedRoom release];
 
 	if( index != NSNotFound ) {
 		[roomsTable selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
@@ -423,14 +412,14 @@ static NSComparisonResult sortByRoomNameDescending( NSString *room1, NSString *r
 }
 
 static NSComparisonResult sortByNumberOfMembersAscending( NSString *room1, NSString *room2, void *context ) {
-	NSDictionary *info = context;
+	NSDictionary *info = (__bridge NSDictionary *)(context);
 	NSComparisonResult res = [(NSNumber *)[[info objectForKey:room1] objectForKey:@"users"] compare:[[info objectForKey:room2] objectForKey:@"users"]];
 	if( res != NSOrderedSame ) return res;
 	return [room1 caseInsensitiveCompare:room2];
 }
 
 static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSString *room2, void *context ) {
-	NSDictionary *info = context;
+	NSDictionary *info = (__bridge NSDictionary *)(context);
 	NSComparisonResult res = [(NSNumber *)[[info objectForKey:room2] objectForKey:@"users"] compare:[[info objectForKey:room1] objectForKey:@"users"]];
 	if( res != NSOrderedSame ) return res;
 	return [room1 caseInsensitiveCompare:room2];
@@ -440,14 +429,14 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 
 @implementation JVChatRoomBrowser (JVChatRoomBrowserPrivate)
 - (void) _connectionChange:(NSNotification *) notification {
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 
 	for( MVChatConnection *connection in [[MVConnectionsController defaultController] connections] ) {
-		NSMenuItem *item = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [connection server], [connection nickname]] action:NULL keyEquivalent:@""] autorelease];
+		NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@ (%@)", [connection server], [connection nickname]] action:NULL keyEquivalent:@""];
 
 		NSImage *icon = nil;
 		if( [connection isConnected] ) icon = [NSImage imageNamed:@"connected"];
-		else icon = [[[NSImage alloc] initWithSize:NSMakeSize( 9., 16. )] autorelease];
+		else icon = [[NSImage alloc] initWithSize:NSMakeSize( 9., 16. )];
 		[item setImage:icon];
 
 		[item setRepresentedObject:connection];
@@ -494,6 +483,7 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 - (void) _refreshResults:(id) sender {
 	NSInteger index = [roomsTable selectedRow];
 	NSString *selectedRoom = ( index != -1 && [_roomOrder count] ? [[_roomOrder objectAtIndex:index] copy] : nil );
+	NSMutableDictionary *options = nil;
 
 	if( _collapsed || ! [_currentFilter length] ) {
 		[_roomOrder setArray:[_roomResults allKeys]];
@@ -502,7 +492,7 @@ static NSComparisonResult sortByNumberOfMembersDescending( NSString *room1, NSSt
 
 	[_roomOrder removeAllObjects]; // this is far more efficient than doing a containsObject: and a removeObject: during the while
 
-	NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:[_connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
+	options = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:[_connection encoding]], @"StringEncoding", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageColors"]], @"IgnoreFontColors", [NSNumber numberWithBool:[[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"]], @"IgnoreFontTraits", [NSFont systemFontOfSize:11.], @"BaseFont", nil];
 
 	for( NSString *room in _roomResults ) {
 		NSMutableDictionary *info = [_roomResults objectForKey:room];
@@ -549,7 +539,6 @@ refresh:
 	if( selectedRoom ) index = [_roomOrder indexOfObject:selectedRoom];
 	else index = NSNotFound;
 
-	[selectedRoom release];
 
 	if( index != NSNotFound ) {
 		[roomsTable selectRowIndexes:[NSIndexSet indexSetWithIndex:index] byExtendingSelection:NO];
@@ -562,8 +551,8 @@ refresh:
 - (void) _resortResults {
 	if( _collapsed || ( [_sortColumn isEqualToString:@"room"] && _ascending ) ) [_roomOrder sortUsingFunction:sortByRoomNameAscending context:NULL];
 	else if( [_sortColumn isEqualToString:@"room"] && ! _ascending ) [_roomOrder sortUsingFunction:sortByRoomNameDescending context:NULL];
-	else if( [_sortColumn isEqualToString:@"members"] && _ascending ) [_roomOrder sortUsingFunction:sortByNumberOfMembersAscending context:_roomResults];
-	else if( [_sortColumn isEqualToString:@"members"] && ! _ascending ) [_roomOrder sortUsingFunction:sortByNumberOfMembersDescending context:_roomResults];
+	else if( [_sortColumn isEqualToString:@"members"] && _ascending ) [_roomOrder sortUsingFunction:sortByNumberOfMembersAscending context:(__bridge void *)(_roomResults)];
+	else if( [_sortColumn isEqualToString:@"members"] && ! _ascending ) [_roomOrder sortUsingFunction:sortByNumberOfMembersDescending context:(__bridge void *)(_roomResults)];
 
 	if( ! _collapsed ) [roomsTable noteNumberOfRowsChanged];
 	[roomField noteNumberOfItemsChanged];

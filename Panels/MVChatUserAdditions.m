@@ -62,32 +62,27 @@
 	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""];
 	[item setTarget:self];
 	[items addObject:item];
-	[item release];
 
 	if( ! [self isLocalUser] ) {
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send Message", "send message contextual menu") action:@selector( startChat: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[items addObject:item];
-		[item release];
 
 		if( [[self connection] type] == MVChatConnectionIRCType ) {
 			item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Initiate DCC Chat", "initiate DCC chat contextual menu") action:@selector( startDirectChat: ) keyEquivalent:@""];
 			[item setTarget:self];
 			[items addObject:item];
-			[item release];
 		}
 
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Send File...", "send file contextual menu") action:@selector( sendFile: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[items addObject:item];
-		[item release];
 	}
 
 	if( ! [[MVBuddyListController sharedBuddyList] buddyForUser:self] ) {
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add To Buddy List", "add to buddy list contextual menu") action:@selector( addBuddy: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[items addObject:item];
-		[item release];
 	}
 
 	if( ! [self isLocalUser] ) {
@@ -96,10 +91,9 @@
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Ignore", "ignore user contextual menu") action:@selector( toggleIgnore: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[items addObject:item];
-		[item release];
 	}
 
-	return [items autorelease];
+	return items;
 }
 
 - (IBAction) getInfo:(id) sender {
@@ -141,10 +135,8 @@
 
 	[view setFrame:frame];
 	[view addSubview:passiveButton];
-	[passiveButton release];
 
 	[panel setAccessoryView:view];
-	[view release];
 
 	[panel setAllowedFileTypes:nil];
 	if( [panel runModal] == NSOKButton ) {

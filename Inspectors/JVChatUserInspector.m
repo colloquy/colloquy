@@ -6,7 +6,7 @@
 
 @implementation JVDirectChatPanel (JVDirectChatPanelInspection)
 - (id <JVInspector>) inspector {
-	return [[[JVChatUserInspector alloc] initWithChatUser:[self target]] autorelease];
+	return [[JVChatUserInspector alloc] initWithChatUser:[self target]];
 }
 @end
 
@@ -14,7 +14,7 @@
 
 @implementation JVChatRoomMember (JVChatRoomMemberInspection)
 - (id <JVInspector>) inspector {
-	return [[[JVChatUserInspector alloc] initWithChatUser:[self user]] autorelease];
+	return [[JVChatUserInspector alloc] initWithChatUser:[self user]];
 }
 @end
 
@@ -22,7 +22,7 @@
 
 @implementation MVChatUser (MVChatUserInspection)
 - (id <JVInspector>) inspector {
-	return [[[JVChatUserInspector alloc] initWithChatUser:self] autorelease];
+	return [[JVChatUserInspector alloc] initWithChatUser:self];
 }
 @end
 
@@ -31,24 +31,19 @@
 @implementation JVChatUserInspector
 - (id) initWithChatUser:(MVChatUser *) user {
 	if( ( self = [self init] ) )
-		_user = [user retain];
+		_user = user;
 	return self;
 }
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[_localTimeUpdated release];
-	[_localTimeUpdateTimer release];
-	[_updateTimer release];
-	[_user release];
 
 	_localTimeUpdated = nil;
 	_localTimeUpdateTimer = nil;
 	_updateTimer = nil;
 	_user = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -80,8 +75,7 @@
 	[_user refreshInformation];
 
 	[_updateTimer invalidate];
-	[_updateTimer release];
-	_updateTimer = [[NSTimer scheduledTimerWithTimeInterval:120. target:self selector:@selector( updateInformation ) userInfo:nil repeats:YES] retain];
+	_updateTimer = [NSTimer scheduledTimerWithTimeInterval:120. target:self selector:@selector( updateInformation ) userInfo:nil repeats:YES];
 
 	[nickname setObjectValue:[_user nickname]];
 //	if( [[_user buddy] picture] )
@@ -94,15 +88,12 @@
 }
 
 - (void) didUnload {
-	[_localTimeUpdated release];
 	_localTimeUpdated = nil;
 
 	[_localTimeUpdateTimer invalidate];
-	[_localTimeUpdateTimer release];
 	_localTimeUpdateTimer = nil;
 
 	[_updateTimer invalidate];
-	[_updateTimer release];
 	_updateTimer = nil;
 }
 
@@ -138,10 +129,10 @@
 }
 
 - (oneway void) lookupAddress {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSString *ip = [[NSHost hostWithName:[_user address]] address];
-	[self performSelectorOnMainThread:@selector( gotAddress: ) withObject:ip waitUntilDone:YES];
-	[pool release];
+	@autoreleasepool {
+		NSString *ip = [[NSHost hostWithName:[_user address]] address];
+		[self performSelectorOnMainThread:@selector( gotAddress: ) withObject:ip waitUntilDone:YES];
+	}
 }
 
 - (void) infoUpdated:(NSNotification *) notification {
@@ -184,12 +175,11 @@
 		[ping setObjectValue:pingString];
 		[ping setToolTip:pingString];
 	} else if( [key isEqualToString:MVChatUserLocalTimeAttribute] ) {
-		[_localTimeUpdated release];
-		_localTimeUpdated = [[NSDate date] retain];
+		_localTimeUpdated = [NSDate date];
 
 		[self updateLocalTime];
 		if( ! _localTimeUpdateTimer )
-			_localTimeUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:10. target:self selector:@selector( updateLocalTime ) userInfo:nil repeats:YES] retain];
+			_localTimeUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:10. target:self selector:@selector( updateLocalTime ) userInfo:nil repeats:YES];
 	} else if( [key isEqualToString:MVChatUserClientInfoAttribute] ) {
 		[clientInfo setObjectValue:[_user attributeForKey:key]];
 		[clientInfo setToolTip:[_user attributeForKey:key]];
@@ -213,7 +203,6 @@
 	NSTimeInterval now = ABS( [_localTimeUpdated timeIntervalSinceNow] );
 	NSDate *adjustedDate = [[NSDate alloc] initWithTimeIntervalSinceNow:now];
 	NSString *formatedDate = [NSDate formattedShortDateAndTimeStringForDate:adjustedDate];
-	[adjustedDate release];
 
 	[localTime setObjectValue:formatedDate];
 	[localTime setToolTip:[formatedDate description]];

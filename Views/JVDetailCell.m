@@ -20,8 +20,8 @@
 
 - (id) copyWithZone:(NSZone *) zone {
 	JVDetailCell *cell = (JVDetailCell *)[super copyWithZone:zone];
-	cell -> _statusImage = [_statusImage retain];
-	cell -> _altImage = [_altImage retain];
+	cell -> _statusImage = _statusImage;
+	cell -> _altImage = _altImage;
 	cell -> _mainText = [_mainText copyWithZone:zone];
 	cell -> _infoText = [_infoText copyWithZone:zone];
 	cell -> _lineBreakMode = _lineBreakMode;
@@ -30,24 +30,18 @@
 }
 
 - (void) dealloc {
-	[_altImage release];
-	[_statusImage release];
-	[_mainText release];
-	[_infoText release];
 
 	_altImage = nil;
 	_statusImage = nil;
 	_mainText = nil;
 	_infoText = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
 
 - (void) setStatusImage:(NSImage *) image {
-	[_statusImage autorelease];
-	_statusImage = [image retain];
+	_statusImage = image;
 }
 
 - (NSImage *) statusImage {
@@ -77,8 +71,7 @@
 #pragma mark -
 
 - (void) setHighlightedImage:(NSImage *) image {
-	[_altImage autorelease];
-	_altImage = [image retain];
+	_altImage = image;
 }
 
 - (NSImage *) highlightedImage {
@@ -88,7 +81,6 @@
 #pragma mark -
 
 - (void) setMainText:(NSString *) text {
-	[_mainText autorelease];
 	_mainText = [text copy];
 }
 
@@ -99,7 +91,6 @@
 #pragma mark -
 
 - (void) setInformationText:(NSString *) text {
-	[_infoText autorelease];
 	_infoText = [text copy];
 }
 
@@ -133,7 +124,7 @@
 	float imageWidth = 0.;
 	BOOL highlighted = ( [self isHighlighted] && [[controlView window] firstResponder] == controlView && [[controlView window] isKeyWindow] && [[NSApplication sharedApplication] isActive] );
 
-	NSMutableParagraphStyle *paraStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+	NSMutableParagraphStyle *paraStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	[paraStyle setLineBreakMode:_lineBreakMode];
 	[paraStyle setAlignment:[self alignment]];
 
@@ -161,20 +152,19 @@
 		[subAttributes setObject:boldFont forKey:NSFontAttributeName];
 		[subAttributes setObject:whiteColor forKey:NSForegroundColorAttributeName];
 		[subAttributes setObject:shadow forKey:NSShadowAttributeName];
-		[shadow release];
 	}
 
 	if( highlighted && _altImage ) {
-		mainImage = [[self image] retain];
+		mainImage = [self image];
 		[self setImage:_altImage];
 	}
 
 	if( ! [self isEnabled] && [self image] ) {
-		NSImage *fadedImage = [[[NSImage alloc] initWithSize:[[self image] size]] autorelease];
+		NSImage *fadedImage = [[NSImage alloc] initWithSize:[[self image] size]];
 		[fadedImage lockFocus];
 		[[self image] dissolveToPoint:NSMakePoint( 0., 0. ) fraction:0.5];
 		[fadedImage unlockFocus];
-		curImage = [[self image] retain]; // curImage is autoreleased 9 lines down, analyzer is just confused by the ifs
+		curImage = [self image]; // curImage is autoreleased 9 lines down, analyzer is just confused by the ifs
 		[self setImage:fadedImage];
 	}
 
@@ -183,12 +173,10 @@
 
 	if( ! [self isEnabled] ) {
 		[self setImage:curImage];
-		[curImage autorelease];
 	}
 
 	if( highlighted && mainImage ) {
 		[self setImage:mainImage];
-		[mainImage autorelease];
 	}
 
 	if( [self image] ) {
@@ -229,7 +217,7 @@
 		}
 
 		NSFont *font = [[NSFontManager sharedFontManager] fontWithFamily:@"Helvetica" traits:NSBoldFontMask weight:9 size:11.];
-		NSMutableParagraphStyle *numberParaStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+		NSMutableParagraphStyle *numberParaStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 		[numberParaStyle setAlignment:NSCenterTextAlignment];
 
 		NSDictionary *statusNumberAttributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, numberParaStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, [NSNumber numberWithFloat:1.0], NSKernAttributeName, nil];

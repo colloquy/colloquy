@@ -1,9 +1,10 @@
 #import "MVCrashCatcher.h"
 #import <sys/sysctl.h>
 
+static MVCrashCatcher *crashCatcher = nil;
 @implementation MVCrashCatcher
 + (void) check {
-	[[MVCrashCatcher alloc] init]; // Released when the window is closed.
+	crashCatcher = [[MVCrashCatcher alloc] init]; // Released when the window is closed.
 }
 
 #pragma mark -
@@ -12,6 +13,8 @@
 	if (!(self = [super init]))
 		return nil;
 
+	_self = self;
+
 	NSString *programName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	NSString *logDirectory = [@"~/Library/Logs/DiagnosticReports/" stringByExpandingTildeInPath]; // files in CrashReporter/ are really symlinks to files in this dir in 10.6+
 
@@ -19,24 +22,20 @@
 	for( NSString *file in [[NSFileManager defaultManager] contentsOfDirectoryAtPath:logDirectory error:nil] ) {
 		if( [file hasCaseInsensitivePrefix:programName] ) {
 			[[NSFileManager defaultManager] removeItemAtPath:logPath error:nil];
-			id old = logPath;
-			logPath = [[logDirectory stringByAppendingPathComponent:file] retain];
-			[old release];
+			logPath = [logDirectory stringByAppendingPathComponent:file];
 		}
 	}
 
 	if( logPath.length ) [NSBundle loadNibNamed:@"MVCrashCatcher" owner:self];
-	else [self autorelease];
+	else return nil;
 
-	return nil;
+	return self;
 }
 
 - (void) dealloc {
 	[window close];
 
-	[logPath release];
-
-	[super dealloc];
+	crashCatcher = nil;
 }
 
 - (void) awakeFromNib {
@@ -56,11 +55,11 @@
 
 - (void) connectionDidFinishLoading:(NSURLConnection *) connection {
 	[[NSFileManager defaultManager] removeItemAtPath:logPath error:nil];
-	[self autorelease];
+	_self = nil;
 }
 
 - (void) connection:(NSURLConnection *) connection didFailWithError:(NSError *) error {
-	[self autorelease];
+	_self = nil;
 }
 
 #pragma mark -
@@ -111,7 +110,7 @@
 	[[NSApplication sharedApplication] stopModal];
 	[window orderOut:nil];
 
-	[self autorelease];
+	_self = nil;
 }
 
 - (BOOL) windowShouldClose:(id) sender {

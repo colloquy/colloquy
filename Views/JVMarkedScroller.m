@@ -1,16 +1,28 @@
 #import "JVMarkedScroller.h"
 
-struct _mark {
-	unsigned long long location;
-	NSString *identifier;
-	NSColor *color;
-};
+@interface JVMark : NSObject
++ (JVMark *) markWithLocation:(unsigned long long) location identifier:(NSString *) identifier color:(NSColor *) color;
+
+@property (nonatomic) unsigned long long location;
+@property (nonatomic, copy) NSString *identifier;
+@property (nonatomic, strong) NSColor *color;
+@end
+
+@implementation JVMark
++ (JVMark *) markWithLocation:(unsigned long long) location identifier:(NSString *) identifier color:(NSColor *) color {
+	JVMark *mark = [[JVMark alloc] init];
+	mark.location = location;
+	mark.identifier = identifier;
+	mark.color = color;
+	return mark;
+}
+@end
 
 @implementation JVMarkedScroller
 - (id) initWithFrame:(NSRect) frame {
 	if( ( self = [super initWithFrame:frame] ) ) {
-		_marks = [[NSMutableSet set] retain];
-		_shades = [[NSMutableArray array] retain];
+		_marks = [NSMutableSet set];
+		_shades = [NSMutableArray array];
 		_nearestPreviousMark = NSNotFound;
 		_nearestNextMark = NSNotFound;
 		_currentMark = NSNotFound;
@@ -19,13 +31,10 @@ struct _mark {
 }
 
 - (void) dealloc {
-	[_marks release];
-	[_shades release];
 
 	_marks = nil;
 	_shades = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -89,9 +98,7 @@ struct _mark {
 	BOOL foundNext = NO, foundPrevious = NO;
 	NSRect knobRect = [self rectForPart:NSScrollerKnob];
 
-	for( NSValue *currentMark in _marks ) {
-		struct _mark mark;
-		[currentMark getValue:&mark];
+	for( JVMark *mark in _marks ) {
 		unsigned long long value = mark.location;
 
 		if( value < currentPosition && ( ! foundPrevious || value > _nearestPreviousMark ) ) {
@@ -162,38 +169,38 @@ struct _mark {
 }
 
 - (NSMenu *) menuForEvent:(NSEvent *) event {
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 	NSMenuItem *item = nil;
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear All Marks", "clear all marks contextual menu item title" ) action:@selector( removeAllMarks ) keyEquivalent:@""] autorelease];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear All Marks", "clear all marks contextual menu item title" ) action:@selector( removeAllMarks ) keyEquivalent:@""];
 	[item setTarget:self];
 	[menu addItem:item];
 
 	if( sFlags.isHoriz ) {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Left", "clear marks from here left contextual menu") action:@selector( clearMarksHereLess: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Left", "clear marks from here left contextual menu") action:@selector( clearMarksHereLess: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Right", "clear marks from here right contextual menu") action:@selector( clearMarksHereGreater: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Right", "clear marks from here right contextual menu") action:@selector( clearMarksHereGreater: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
 	} else {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Up", "clear marks from here up contextual menu") action:@selector( clearMarksHereLess: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Up", "clear marks from here up contextual menu") action:@selector( clearMarksHereLess: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Down", "clear marks from here up contextual menu") action:@selector( clearMarksHereGreater: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Clear Marks from Here Down", "clear marks from here up contextual menu") action:@selector( clearMarksHereGreater: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
 	}
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Jump to Previous Mark", "jump to previous mark contextual menu") action:@selector( jumpToPreviousMark: ) keyEquivalent:@"["] autorelease];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Jump to Previous Mark", "jump to previous mark contextual menu") action:@selector( jumpToPreviousMark: ) keyEquivalent:@"["];
 	[item setTarget:self];
 	[menu addItem:item];
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Jump to Next Mark", "jump to next mark contextual menu") action:@selector( jumpToNextMark: ) keyEquivalent:@"]"] autorelease];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Jump to Next Mark", "jump to next mark contextual menu") action:@selector( jumpToNextMark: ) keyEquivalent:@"]"];
 	[item setTarget:self];
 	[menu addItem:item];
 
@@ -212,9 +219,7 @@ struct _mark {
 	unsigned long long currentPosition = ( _currentMark != NSNotFound ? _currentMark : [self floatValue] * [self contentViewLength] );
 	BOOL foundNext = NO, foundPrevious = NO;
 
-	for( NSValue *currentMark in _marks ) {
-		struct _mark mark;
-		[currentMark getValue:&mark];
+	for( JVMark *mark in _marks ) {
 		unsigned long long value = mark.location;
 
 		if( value < currentPosition && ( ! foundPrevious || value > _nearestPreviousMark ) ) {
@@ -294,9 +299,7 @@ struct _mark {
 
 	BOOL foundMark = NO;
 
-	for( NSValue *obj in _marks ) {
-		struct _mark mark;
-		[obj getValue:&mark];
+	for( JVMark *mark in _marks ) {
 		if( [mark.identifier isEqualToString:identifier] ) {
 			_currentMark = mark.location;
 			foundMark = YES;
@@ -328,12 +331,10 @@ struct _mark {
 	if( ! ( negative && _currentMark < unsignedDisplacement ) ) _currentMark += unsignedDisplacement;
 	else _currentMark = NSNotFound;
 
-	for( NSValue *location in _marks ) {
-		struct _mark mark;
-		[location getValue:&mark];
+	for( JVMark *mark in _marks ) {
 		if( ! ( negative && mark.location < unsignedDisplacement ) ) {
 			mark.location += unsignedDisplacement;
-			[shiftedMarks addObject:[NSValue value:&mark withObjCType:@encode( struct _mark )]];
+			[shiftedMarks addObject:mark];
 		}
 	}
 
@@ -378,8 +379,7 @@ struct _mark {
 }
 
 - (void) addMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier withColor:(NSColor *) color {
-	struct _mark mark = {location, identifier, color};
-	[_marks addObject:[NSValue value:&mark withObjCType:@encode( struct _mark )]];
+	[_marks addObject:[JVMark markWithLocation:location identifier:identifier color:color]];
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
@@ -396,17 +396,19 @@ struct _mark {
 }
 
 - (void) removeMarkAt:(unsigned long long) location withIdentifier:(NSString *) identifier withColor:(NSColor *) color {
-	struct _mark mark = {location, identifier, color};
-	[_marks removeObject:[NSValue value:&mark withObjCType:@encode( struct _mark )]];
+	for( JVMark *mark in [_marks copy] ) {
+		if (mark.location == location) {
+			[_marks removeObject:mark];
+			break;
+		}
+	}
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
 - (void) removeMarkWithIdentifier:(NSString *) identifier {
-	for( NSValue *obj in [[_marks copy] autorelease] ) {
-		struct _mark mark;
-		[obj getValue:&mark];
+	for( JVMark *mark in [_marks copy] ) {
 		if( [mark.identifier isEqualToString:identifier] ) {
-			[_marks removeObject:obj];
+			[_marks removeObject:mark];
 		}
 	}
 
@@ -414,33 +416,27 @@ struct _mark {
 }
 
 - (void) removeMarksGreaterThan:(unsigned long long) location {
-	for( NSValue *obj in [[_marks copy] autorelease] ) {
-		struct _mark mark;
-		[obj getValue:&mark];
+	for( JVMark *mark in [_marks copy] ) {
 		if( mark.location > location )
-			[_marks removeObject:obj];
+			[_marks removeObject:mark];
 	}
 
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
 - (void) removeMarksLessThan:(unsigned long long) location {
-	for( NSValue *obj in [[_marks copy] autorelease] ) {
-		struct _mark mark;
-		[obj getValue:&mark];
+	for( JVMark *mark in [_marks copy] ) {
 		if( mark.location < location )
-			[_marks removeObject:obj];
+			[_marks removeObject:mark];
 	}
 
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];
 }
 
 - (void) removeMarksInRange:(NSRange) range {
-	for( NSValue *obj in [[_marks copy] autorelease] ) {
-		struct _mark mark;
-		[obj getValue:&mark];
+	for( JVMark *mark in [_marks copy] ) {
 		if( NSLocationInRange( mark.location, range ) )
-			[_marks removeObject:obj];
+			[_marks removeObject:mark];
 	}
 
 	[self setNeedsDisplayInRect:[self rectForPart:NSScrollerKnobSlot]];

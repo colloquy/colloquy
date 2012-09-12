@@ -31,7 +31,7 @@
 }
 
 + (id) coerceString:(id) value toMessage:(Class) class {
-	return [[[JVMutableChatMessage allocWithZone:nil] initWithText:value sender:nil] autorelease];
+	return [[JVMutableChatMessage allocWithZone:nil] initWithText:value sender:nil];
 }
 
 + (id) coerceMessage:(id) value toString:(Class) class {
@@ -39,7 +39,7 @@
 }
 
 + (id) coerceTextStorage:(id) value toMessage:(Class) class {
-	return [[[JVMutableChatMessage allocWithZone:nil] initWithText:value sender:nil] autorelease];
+	return [[JVMutableChatMessage allocWithZone:nil] initWithText:value sender:nil];
 }
 
 + (id) coerceMessage:(id) value toTextStorage:(Class) class {
@@ -85,7 +85,6 @@
 		ret -> _bodyLoaded = YES;
 
 		// release anything alloced in [JVMutableChatMessage init] and [JVChatMessage init] that we copy below
-		[ret -> _date release];
 
 		ret -> _senderIsLocalUser = [self senderIsLocalUser];
 		ret -> _senderIdentifier = [[self senderIdentifier] copyWithZone:zone];
@@ -107,19 +106,7 @@
 }
 
 - (void) dealloc {
-	[_messageIdentifier release];
-	[_attributedMessage release];
-	[_date release];
-	[_source release];
-	[_objectSpecifier release];
-	[_attributes release];
 
-	[_senderIdentifier release];
-	[_senderName release];
-	[_senderNickname release];
-	[_senderHostmask release];
-	[_senderClass release];
-	[_senderBuddyIdentifier release];
 
 	_node = NULL;
 	_transcript = nil;
@@ -139,7 +126,6 @@
 	if( _doc ) xmlFreeDoc( _doc );
 	_doc = NULL;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -152,7 +138,7 @@
 
 		if( !msgStr) {
 			NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSSet setWithObjects:@"error", @"encoding", nil], @"CSSClasses", nil];
-			NSTextStorage *messageString = [[[NSTextStorage alloc] initWithString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" ) attributes:attributes] autorelease];
+			NSTextStorage *messageString = [[NSTextStorage alloc] initWithString:NSLocalizedString( @"incompatible encoding", "encoding of the message different than your current encoding" ) attributes:attributes];
 			htmlMessage = ( messageString ? [messageString HTMLFormatWithOptions:options] : @"" );
 			msgStr = [[NSString stringWithFormat:@"<message>%@</message>", [htmlMessage stringByStrippingIllegalXMLCharacters]] UTF8String];
 		}
@@ -335,9 +321,7 @@
 }
 
 - (void) setObjectSpecifier:(NSScriptObjectSpecifier *) objectSpecifier {
-	id old = _objectSpecifier;
-	_objectSpecifier = [objectSpecifier retain];
-	[old release];
+	_objectSpecifier = objectSpecifier;
 }
 
 #pragma mark -
@@ -381,7 +365,7 @@
 	if( [NSScriptCommand currentCommand] ) {
 		// this is a non-mutable message, give AppleScript a good error if this is a script command call
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:1000];
-		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The properties of message id %@ are read only.", key, [self messageIdentifier]]];
+		[[NSScriptCommand currentCommand] setScriptErrorString:[NSString stringWithFormat:@"The properties of message id %@ are read only.", key]];
 		return;
 	}
 
@@ -405,7 +389,7 @@
 }
 
 + (id) messageWithText:(id) body sender:(id) sender {
-	return [[[self allocWithZone:nil] initWithText:body sender:sender] autorelease];
+	return [[self allocWithZone:nil] initWithText:body sender:sender];
 }
 
 #pragma mark -
@@ -432,28 +416,22 @@
 }
 
 - (void) dealloc {
-	[_sender release];
 	_sender = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
 
 - (void) setDate:(NSDate *) date {
 	[self _setNode:NULL];
-	id old = _date;
-	_date = [date copyWithZone:[self zone]];
-	[old release];
+	_date = [date copyWithZone:nil];
 }
 
 #pragma mark -
 
 - (void) setSender:(id) sender {
 	[self _setNode:NULL];
-	id old = _sender;
-	_sender = [sender retain];
-	[old release];
+	_sender = sender;
 }
 
 - (id) sender {
@@ -535,7 +513,6 @@
 	} else if( _attributedMessage && [message isKindOfClass:[NSString class]] ) {
 		id string = [[NSAttributedString allocWithZone:nil] initWithString:(NSString *)message];
 		[_attributedMessage setAttributedString:string];
-		[string release];
 	}
 }
 
@@ -573,16 +550,12 @@
 
 - (void) setSource:(NSURL *) source {
 	[self _setNode:NULL];
-	id old = _source;
-	_source = [source copyWithZone:[self zone]];
-	[old release];
+	_source = [source copyWithZone:nil];
 }
 
 - (void) setMessageIdentifier:(NSString *) identifier {
 	[self _setNode:NULL];
-	id old = _messageIdentifier;
-	_messageIdentifier = [identifier copyWithZone:[self zone]];
-	[old release];
+	_messageIdentifier = [identifier copyWithZone:nil];
 }
 
 - (NSMutableDictionary *) attributes {
@@ -592,9 +565,7 @@
 
 - (void) setAttributes:(NSDictionary *) attributes {
 	[self _setNode:NULL];
-	id old = _attributes;
-	_attributes = [attributes mutableCopyWithZone:[self zone]];
-	[old release];
+	_attributes = [attributes mutableCopyWithZone:nil];
 }
 
 - (void) setAttribute:(id) object forKey:(id) key {

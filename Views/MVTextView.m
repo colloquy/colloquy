@@ -16,16 +16,12 @@
 }
 
 - (void) dealloc {
-	[defaultTypingAttributes release];
 	defaultTypingAttributes = nil;
 
-	[_lastCompletionMatch release];
 	_lastCompletionMatch = nil;
 
-	[_lastCompletionPrefix release];
 	_lastCompletionPrefix = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -44,7 +40,6 @@
 	NSMutableArray *newArray = [[NSMutableArray allocWithZone:nil] init];
 
 	if( ! [self isEditable] ) {
-		[newArray release];
 		[super interpretKeyEvents:eventArray];
 		return;
 	}
@@ -65,7 +60,6 @@
 	if( [newArray count] > 0 )
 		[super interpretKeyEvents:newArray];
 
-	[newArray release];
 }
 
 - (BOOL) checkKeyEvent:(NSEvent *) event {
@@ -131,7 +125,6 @@
 #pragma mark -
 
 - (void) setBaseFont:(NSFont *) font {
-	[defaultTypingAttributes release];
 	if( ! font ) {
 		font = [NSFont userFontOfSize:0.];
 		defaultTypingAttributes = [[NSDictionary allocWithZone:nil] init];
@@ -156,10 +149,8 @@
 		if( _lastCompletionMatch && _lastCompletionPrefix && [[self delegate] respondsToSelector:@selector( textView:selectedCompletion:fromPrefix: )] )
 			[[self delegate] textView:self selectedCompletion:_lastCompletionMatch fromPrefix:_lastCompletionPrefix];
 
-		[_lastCompletionMatch release];
 		_lastCompletionMatch = nil;
 
-		[_lastCompletionPrefix release];
 		_lastCompletionPrefix = nil;
 	}
 
@@ -170,7 +161,7 @@
 	NSRange limitRange, effectiveRange;
 	NSUInteger count = 0, i = 0;
 	NSRectArray rects = NULL;
-	NSCursor *linkCursor = [[[NSCursor allocWithZone:nil] initWithImage:[NSImage imageNamed:@"MVLinkCursor"] hotSpot:NSMakePoint( 6., 0. )] autorelease];
+	NSCursor *linkCursor = [[NSCursor allocWithZone:nil] initWithImage:[NSImage imageNamed:@"MVLinkCursor"] hotSpot:NSMakePoint( 6., 0. )];
 
 	[super resetCursorRects];
 	limitRange = NSMakeRange( 0, [[self string] length] );
@@ -225,7 +216,6 @@
 		else font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
 		[attributes setObject:font forKey:NSFontAttributeName];
 		[self setTypingAttributes:attributes];
-		[attributes release];
 	}
 }
 
@@ -258,7 +248,6 @@
 		else font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSItalicFontMask];
 		[attributes setObject:font forKey:NSFontAttributeName];
 		[self setTypingAttributes:attributes];
-		[attributes release];
 	}
 }
 
@@ -273,7 +262,6 @@
 		NSMutableDictionary *attributes = [[self typingAttributes] mutableCopyWithZone:nil];
 		[attributes setObject:color forKey:NSBackgroundColorAttributeName];
 		[self setTypingAttributes:attributes];
-		[attributes release];
 	} else [[self textStorage] addAttribute:NSBackgroundColorAttributeName value:color range:range];
 }
 
@@ -310,10 +298,8 @@
 		return YES;
 	}
 
-	[_lastCompletionMatch release];
 	_lastCompletionMatch = nil;
 
-	[_lastCompletionPrefix release];
 	_lastCompletionPrefix = nil;
 
 	NSMutableCharacterSet *allowedCharacters = (NSMutableCharacterSet *)[NSMutableCharacterSet alphanumericCharacterSet];
@@ -366,7 +352,6 @@
 		NSRange wordRange;
 		BOOL full = YES;
 
-		[_lastCompletionPrefix release];
 		_lastCompletionPrefix = [partialCompletion copyWithZone:nil];
 
 		if( curPos.location == [[self string] length] || [illegalCharacters characterIsMember:[[self string] characterAtIndex:curPos.location]] ) {
@@ -392,7 +377,6 @@
 			full = NO;
 		}
 
-		[_lastCompletionMatch release];
 		_lastCompletionMatch = [name copyWithZone:nil];
 
 		if ( suffix && wordRange.location == 0 )	{

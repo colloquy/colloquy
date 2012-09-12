@@ -19,6 +19,7 @@
 
 static NSString *AlertSuppressKey = @"moveToApplicationsFolderAlertSuppress";
 
+void showFailureAlert(void);
 void PFMoveToApplicationsFolderIfNecessary(void)
 {
 	// Don't run on Tiger.
@@ -47,14 +48,15 @@ void PFMoveToApplicationsFolderIfNecessary(void)
 	NSString *applicationsDirectory = [NSSearchPathForDirectoriesInDomains(NSApplicationDirectory, NSLocalDomainMask, YES) lastObject];
 	if (applicationsDirectory == nil) {
 		NSLog(@"ERROR -- Could not find the Applications directory");
-		goto fail;
+		showFailureAlert();
+		return;
 	}
 	
 	NSString *appBundleName = [path lastPathComponent];
 	NSError *error = nil;
 	
 	// Open up the alert
-	NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+	NSAlert *alert = [[NSAlert alloc] init];
 	[alert setMessageText:NSLocalizedString(@"Move to Applications folder?", nil)];
 	[alert setInformativeText:NSLocalizedString(@"I can move myself to the Applications folder if you'd like. This will keep your Downloads folder uncluttered.", nil)];
 	[alert setShowsSuppressionButton:YES];
@@ -76,14 +78,16 @@ void PFMoveToApplicationsFolderIfNecessary(void)
 															   files:[NSArray arrayWithObject:appBundleName]
 																 tag:NULL]) {
 				NSLog(@"ERROR -- Could not trash '%@'", destinationPath);
-				goto fail;
+				showFailureAlert();
+				return;
 			}
 		}
 		
 		// Copy myself to /Applications
 		if (![fm copyItemAtPath:path toPath:destinationPath error:&error]) {
 			NSLog(@"ERROR -- Could not copy myself to /Applications (%@)", error);
-			goto fail;
+			showFailureAlert();
+			return;
 		}
 		
 		// Put myself in Trash
@@ -93,7 +97,8 @@ void PFMoveToApplicationsFolderIfNecessary(void)
 														   files:[NSArray arrayWithObject:appBundleName]
 															 tag:NULL]) {
 			NSLog(@"ERROR -- Could not trash '%@'", path);
-			goto fail;
+			showFailureAlert();
+			return;
 		}
 		
 		// Relaunch
@@ -115,11 +120,13 @@ void PFMoveToApplicationsFolderIfNecessary(void)
 	
 	return;
 	
-fail:
- {
-	// Show failure message
-	NSAlert *alert = [[[NSAlert alloc] init] autorelease];
-	[alert setMessageText:NSLocalizedString(@"Could not move to Applications folder", nil)];
-	[alert runModal];
- }
+	showFailureAlert();
+}
+
+void showFailureAlert()
+{
+ // Show failure message
+ NSAlert *alert = [[NSAlert alloc] init];
+ [alert setMessageText:NSLocalizedString(@"Could not move to Applications folder", nil)];
+ [alert runModal];
 }

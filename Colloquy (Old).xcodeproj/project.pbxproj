@@ -23,7 +23,7 @@
 		1C0730CE0677765B008D8AD9 /* AICustomTabDragWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0730C60677765B008D8AD9 /* AICustomTabDragWindow.m */; };
 		1C0730D00677765B008D8AD9 /* AICustomTabsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0730C80677765B008D8AD9 /* AICustomTabsView.m */; };
 		1C0730D406777678008D8AD9 /* ESFloater.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0730D206777678008D8AD9 /* ESFloater.m */; };
-		1C0730E50677A63B008D8AD9 /* NSImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0730E30677A63B008D8AD9 /* NSImageAdditions.m */; };
+		1C0730E50677A63B008D8AD9 /* NSImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0730E30677A63B008D8AD9 /* NSImageAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1C0A19B008B041C200324E25 /* Python Support.plugin in Copy Plugins */ = {isa = PBXBuildFile; fileRef = 1C0A19A708B0418600324E25 /* Python Support.plugin */; };
 		1C0A4C9C0799BDB00093B702 /* JVFind.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C0A4C980799BDAF0093B702 /* JVFind.nib */; };
 		1C0A4C9D0799BDB00093B702 /* JVTranscriptCriterion.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C0A4C9A0799BDAF0093B702 /* JVTranscriptCriterion.nib */; };
@@ -59,13 +59,12 @@
 		1C4671E606D7759100071DC6 /* NSTextStorageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4671E406D7759100071DC6 /* NSTextStorageAdditions.m */; };
 		1C51B4C7052DE14B00BB459B /* JVStandardCommands.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3B4D570427BD5200000102 /* JVStandardCommands.m */; };
 		1C51B4C9052DE14B00BB459B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
-		1C59A92009FDEBA3000682B8 /* JVChatWindowControllerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C59A91F09FDEBA3000682B8 /* JVChatWindowControllerTests.m */; };
 		1C5EF35B07B45C1F004E66D3 /* JVChatEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5EF35907B45C1F004E66D3 /* JVChatEvent.m */; };
 		1C5EF36C07B45FBF004E66D3 /* JVChatSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C5EF36A07B45FBF004E66D3 /* JVChatSession.m */; };
 		1C6266D4103CC9A900A6B346 /* JVAnalyticsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6266D3103CC9A900A6B346 /* JVAnalyticsController.m */; };
 		1C6268E5103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem in Resources */ = {isa = PBXBuildFile; fileRef = 1C6268E4103E6D3400A6B346 /* SparkleUpdatePublicDSAKey.pem */; };
 		1C66913A07BFA76D008400F7 /* JVEmoticonSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C66913807BFA76D008400F7 /* JVEmoticonSet.m */; };
-		1C6A112B06BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A112906BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m */; };
+		1C6A112B06BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A112906BC0C9E00A66340 /* NSAttributedStringMoreAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1C6A40CA083FF6C600572AB6 /* JVInterfacePreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C6A40C8083FF6C600572AB6 /* JVInterfacePreferences.m */; };
 		1C6A429608400BEA00572AB6 /* window.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6A429508400BEA00572AB6 /* window.png */; };
 		1C6A42A708400E7900572AB6 /* targetWindow.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6A42A608400E7900572AB6 /* targetWindow.png */; };
@@ -288,8 +287,8 @@
 		1CF8030F070C893500C9B54C /* libsilcclient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; };
 		1CF80310070C894100C9B54C /* libsilc.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030C070C893500C9B54C /* libsilc.framework */; };
 		1CF80311070C894100C9B54C /* libsilcclient.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF8030D070C893500C9B54C /* libsilcclient.framework */; };
-		1CF803F1070C948000C9B54C /* NSURLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */; };
-		891E8467123F0AEF00EC3C0F /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 891E8466123F0AEF00EC3C0F /* NSCharacterSetAdditions.m */; };
+		1CF803F1070C948000C9B54C /* NSURLAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4BD9405AA309A00F72EE6 /* NSURLAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		891E8467123F0AEF00EC3C0F /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 891E8466123F0AEF00EC3C0F /* NSCharacterSetAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		891EF3D1106426CB00CCEA35 /* PFMoveApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 891EF3D0106426CB00CCEA35 /* PFMoveApplicationController.m */; };
 		89EB91AA0F269BEF0028B3E3 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; };
 		9200338D13D92515005B69BA /* MVFileTransfer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 9200338B13D92515005B69BA /* MVFileTransfer.nib */; };
@@ -302,9 +301,9 @@
 		9200339B13D92578005B69BA /* Colloquy.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5394BEB0378E23701A35792 /* Colloquy.nib */; };
 		9200339D13D92581005B69BA /* Colloquy.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5394BEB0378E23701A35792 /* Colloquy.nib */; };
 		9200339F13D9258A005B69BA /* Colloquy.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5394BEB0378E23701A35792 /* Colloquy.nib */; };
-		9220565E11018298005CD72D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9220565D11018298005CD72D /* NSDateAdditions.m */; };
-		928FB03113EE643E00A0DF4B /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 928FB03013EE643E00A0DF4B /* NSStringAdditions.m */; };
-		928FB03413EE648400A0DF4B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 928FB03313EE648400A0DF4B /* RegexKitLite.m */; };
+		9220565E11018298005CD72D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9220565D11018298005CD72D /* NSDateAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		928FB03113EE643E00A0DF4B /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 928FB03013EE643E00A0DF4B /* NSStringAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		928FB03413EE648400A0DF4B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 928FB03313EE648400A0DF4B /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		928FB03613EE64C700A0DF4B /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 928FB03513EE64C700A0DF4B /* libicucore.dylib */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
@@ -390,13 +389,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8D5B49AC048680CD000E48DA;
 			remoteInfo = "Python Support Plugin";
-		};
-		1C59A9A309FDF148000682B8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1CB2CCF5052DDC560094AAA4;
-			remoteInfo = "Colloquy (Application)";
 		};
 		1C7F30000855456D00D41FB0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -650,7 +642,6 @@
 		1C77822808FA4101006AD8E5 /* topicBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = topicBackground.png; path = Resources/topicBackground.png; sourceTree = "<group>"; };
 		1C77831008FA4EA2006AD8E5 /* topicToggleDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = topicToggleDown.png; path = Resources/topicToggleDown.png; sourceTree = "<group>"; };
 		1C77831108FA4EA2006AD8E5 /* topicToggleUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = topicToggleUp.png; path = Resources/topicToggleUp.png; sourceTree = "<group>"; };
-		1C7A60B709FDE8560029AC64 /* Colloquy Tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Colloquy Tests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C7B83C50668D732004F1EFE /* NSNotificationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSNotificationAdditions.h; path = Additions/NSNotificationAdditions.h; sourceTree = "<group>"; };
 		1C7C76E507DBA1C100FB5F83 /* NSCoreSuite.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = NSCoreSuite.scriptSuite; path = Resources/NSCoreSuite.scriptSuite; sourceTree = "<group>"; };
 		1C7C76E607DBA1C100FB5F83 /* NSCoreSuite.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = NSCoreSuite.scriptTerminology; path = Resources/NSCoreSuite.scriptTerminology; sourceTree = "<group>"; };
@@ -1142,13 +1133,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1C7A60B409FDE8560029AC64 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1CB2CD78052DDC560094AAA4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1387,7 +1371,6 @@
 				1CB2CD8C052DDC570094AAA4 /* Colloquy.app */,
 				1C51B4CD052DE14B00BB459B /* Standard Commands.plugin */,
 				CBF685150820186F00F498FB /* Colloquy.mdimporter */,
-				1C7A60B709FDE8560029AC64 /* Colloquy Tests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1958,25 +1941,6 @@
 			productReference = 1C51B4CD052DE14B00BB459B /* Standard Commands.plugin */;
 			productType = "com.apple.product-type.bundle";
 		};
-		1C7A60B609FDE8560029AC64 /* Colloquy Tests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1C7A60BB09FDE8580029AC64 /* Build configuration list for PBXNativeTarget "Colloquy Tests" */;
-			buildPhases = (
-				1C7A60B209FDE8560029AC64 /* Resources */,
-				1C7A60B309FDE8560029AC64 /* Sources */,
-				1C7A60B409FDE8560029AC64 /* Frameworks */,
-				1C7A60B509FDE8560029AC64 /* Run Tests */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				1C59A9A409FDF148000682B8 /* PBXTargetDependency */,
-			);
-			name = "Colloquy Tests";
-			productName = "Colloquy Tests";
-			productReference = 1C7A60B709FDE8560029AC64 /* Colloquy Tests.octest */;
-			productType = "com.apple.product-type.bundle";
-		};
 		1CB2CCF5052DDC560094AAA4 /* Colloquy (Application) */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1C041A680854E97700A5A5BA /* Build configuration list for PBXNativeTarget "Colloquy (Application)" */;
@@ -2093,7 +2057,6 @@
 				1CB2CCF5052DDC560094AAA4 /* Colloquy (Application) */,
 				1C51B4BB052DE14B00BB459B /* Standard Commands (Plug-In) */,
 				CBF685140820186F00F498FB /* Colloquy (Metadata Importer) */,
-				1C7A60B609FDE8560029AC64 /* Colloquy Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -2158,13 +2121,6 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
-		1C7A60B209FDE8560029AC64 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		1CB2CD0F052DDC560094AAA4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2418,20 +2374,6 @@
 			shellScript = "if [ -d \"$TARGET_BUILD_DIR/Bouncer.plugin\" ]; then\n\tditto \"$TARGET_BUILD_DIR/Bouncer.plugin\" \"$TARGET_BUILD_DIR/$PLUGINS_FOLDER_PATH/Bouncer.plugin\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		1C7A60B509FDE8560029AC64 /* Run Tests */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run Tests";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
 		1C91DEAC06972EC0007C1638 /* Remove Headers */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
@@ -2491,14 +2433,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C51B4C7052DE14B00BB459B /* JVStandardCommands.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1C7A60B309FDE8560029AC64 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1C59A92009FDEBA3000682B8 /* JVChatWindowControllerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2625,11 +2559,6 @@
 			isa = PBXTargetDependency;
 			name = "Python Support Plugin";
 			targetProxy = 1C0A19AE08B041A800324E25 /* PBXContainerItemProxy */;
-		};
-		1C59A9A409FDF148000682B8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1CB2CCF5052DDC560094AAA4 /* Colloquy (Application) */;
-			targetProxy = 1C59A9A309FDF148000682B8 /* PBXContainerItemProxy */;
 		};
 		1C7F30010855456D00D41FB0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3123,18 +3052,24 @@
 		1C041A6A0854E97700A5A5BA /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_ENABLE_SSE41_EXTENSIONS = YES;
 				GCC_ENABLE_SSE42_EXTENSIONS = YES;
 				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
 					"$(HEADER_SEARCH_PATHS)",
 				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				LLVM_LTO = YES;
+				OTHER_CFLAGS = (
+					"-fconstant-cfstrings",
+					"-Wno-arc-performSelector-leaks",
+				);
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
@@ -3161,6 +3096,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					DEBUG,
@@ -3188,18 +3124,24 @@
 		1C041DCA0855377900A5A5BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_ENABLE_SSE3_EXTENSIONS = YES;
 				GCC_ENABLE_SSE41_EXTENSIONS = YES;
 				GCC_ENABLE_SSE42_EXTENSIONS = YES;
 				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
 					"$(HEADER_SEARCH_PATHS)",
 				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				LLVM_LTO = YES;
+				OTHER_CFLAGS = (
+					"-fconstant-cfstrings",
+					"-Wno-arc-performSelector-leaks",
+				);
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lxslt",
@@ -3234,53 +3176,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 89FB4EDC12FAABBB00668905 /* Less Common Settings.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				SYMROOT = build;
 			};
 			name = Release;
-		};
-		1C7A60BD09FDE8580029AC64 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
-				);
-				GCC_FAST_OBJC_DISPATCH = YES;
-				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Cocoa,
-					"-framework",
-					SenTestingKit,
-				);
-				PRODUCT_NAME = "Colloquy Tests";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Release;
-		};
-		1C7A60BE09FDE8580029AC64 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
-				);
-				GCC_FAST_OBJC_DISPATCH = YES;
-				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Cocoa,
-					"-framework",
-					SenTestingKit,
-				);
-				PRODUCT_NAME = "Colloquy Tests";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
-				WRAPPER_EXTENSION = octest;
-			};
-			name = Development;
 		};
 /* End XCBuildConfiguration section */
 
@@ -3317,15 +3216,6 @@
 			buildConfigurations = (
 				1C041DCC0855377900A5A5BA /* Release */,
 				1C041A720854E97700A5A5BA /* Development */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
-		};
-		1C7A60BB09FDE8580029AC64 /* Build configuration list for PBXNativeTarget "Colloquy Tests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1C7A60BD09FDE8580029AC64 /* Release */,
-				1C7A60BE09FDE8580029AC64 /* Development */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;

@@ -11,7 +11,6 @@ static MVKeyChain *sharedInstance = nil;
 
 - (void) dealloc {
 	if( sharedInstance == self ) sharedInstance = nil;
-	[super dealloc];
 }
 
 - (void) setGenericPassword:(NSString *) password forService:(NSString *) service account:(NSString *) account {
@@ -41,7 +40,7 @@ static MVKeyChain *sharedInstance = nil;
 		SecKeychainItemFreeContent( NULL, p );
 	}
 
-	return [string autorelease];
+	return string;
 }
 
 - (void) removeGenericPasswordForService:(NSString *) service account:(NSString *) account {
@@ -82,7 +81,7 @@ static MVKeyChain *sharedInstance = nil;
 		SecKeychainItemFreeContent( NULL, p );
 	}
 
-	return [string autorelease];
+	return string;
 }
 
 - (void) removeInternetPasswordForServer:(NSString *) server securityDomain:(NSString *) domain account:(NSString *) account path:(NSString *) path port:(unsigned short) port protocol:(MVKeyChainProtocol) protocol authenticationType:(MVKeyChainAuthenticationType) authType {

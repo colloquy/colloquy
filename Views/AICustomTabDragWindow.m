@@ -22,17 +22,17 @@
 @implementation AICustomTabDragWindow
 + (AICustomTabDragWindow *)dragWindowForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent
 {
-	return([[[self alloc] initForCustomTabView:inTabView cell:inTabCell transparent:transparent] autorelease]);
+	return([[self alloc] initForCustomTabView:inTabView cell:inTabCell transparent:transparent]);
 }
 
 //init
 - (id)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent
 
 {
-	[super init];
+	if (!(self = [super init])) return nil;
 
-	floaterTabImage = [[self dragTabImageForTabCell:inTabCell inCustomTabsView:inTabView] retain];
-	floaterWindowImage = [[self dragWindowImageForWindow:[inTabView window] customTabsView:inTabView tabCell:inTabCell] retain];
+	floaterTabImage = [self dragTabImageForTabCell:inTabCell inCustomTabsView:inTabView];
+	floaterWindowImage = [self dragWindowImageForWindow:[inTabView window] customTabsView:inTabView tabCell:inTabCell];
 	useFancyAnimations = ( floaterWindowImage ? YES : NO );
 
 	if(useFancyAnimations){
@@ -57,12 +57,9 @@
 //dealloc
 - (void)dealloc
 {
-	[floaterTabImage release];
-	[floaterWindowImage release];
     [dragTabFloater close:nil];
     [dragWindowFloater close:nil];
 
-	[super dealloc];
 }
 
 //Toggle display of the full drag window
@@ -94,9 +91,9 @@
     NSImage     *dragTabImage = nil;
 
     if([customTabsView canDraw]){
-        dragTabImage = [[[NSImage alloc] init] autorelease];
+        dragTabImage = [[NSImage alloc] init];
         [customTabsView lockFocus];
-        [dragTabImage addRepresentation:[[[NSBitmapImageRep alloc] initWithFocusedViewRect:[tabCell frame]] autorelease]];
+        [dragTabImage addRepresentation:[[NSBitmapImageRep alloc] initWithFocusedViewRect:[tabCell frame]]];
         [customTabsView unlockFocus];
     }
 
@@ -113,19 +110,19 @@
 
     if([customTabsView canDraw] && [contentView canDraw]){
         //Get an image of the tab
-        tabImage = [[[NSImage alloc] init] autorelease];
+        tabImage = [[NSImage alloc] init];
         [customTabsView lockFocus];
-        [tabImage addRepresentation:[[[NSBitmapImageRep alloc] initWithFocusedViewRect:[tabCell frame]] autorelease]];
+        [tabImage addRepresentation:[[NSBitmapImageRep alloc] initWithFocusedViewRect:[tabCell frame]]];
         [customTabsView unlockFocus];
 
         //Get an image of the tabView content view
-        contentImage = [[[NSImage alloc] init] autorelease];
+        contentImage = [[NSImage alloc] init];
         [contentView lockFocus];
-        [contentImage addRepresentation:[[[NSBitmapImageRep alloc] initWithFocusedViewRect:[contentView frame]] autorelease]];
+        [contentImage addRepresentation:[[NSBitmapImageRep alloc] initWithFocusedViewRect:[contentView frame]]];
         [contentView unlockFocus];
 
         //Create a drag image the size of the window
-        dragWindowImage = [[[NSImage alloc] initWithSize:[[window contentView] frame].size] autorelease];
+        dragWindowImage = [[NSImage alloc] initWithSize:[[window contentView] frame].size];
         [dragWindowImage setBackgroundColor:[NSColor clearColor]];
         [dragWindowImage lockFocus];
 
@@ -151,7 +148,7 @@
 - (NSImage *)dragImage
 {
 	if(useFancyAnimations){
-		return([[[NSImage alloc] initWithSize:[floaterTabImage size]] autorelease]);
+		return([[NSImage alloc] initWithSize:[floaterTabImage size]]);
 	}else{
 		return(floaterTabImage);
 	}

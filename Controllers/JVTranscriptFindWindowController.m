@@ -12,6 +12,10 @@
 
 static JVTranscriptFindWindowController *sharedInstance = nil;
 
+@interface JVTranscriptFindWindowController (Private)
+- (void) endFindWithFoundMessage:(JVChatMessage *) foundMessage;
+@end
+
 @implementation JVTranscriptFindWindowController
 + (JVTranscriptFindWindowController *) sharedController {
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithWindowNibName:nil] ) );
@@ -40,13 +44,10 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	[subviewTableView setDataSource:nil];
 	[subviewTableView setDelegate:nil];
 
-	[_rules release];
-	[_results release];
 
 	_rules = nil;
 	_results = nil;
 
-	[super dealloc];
 }
 
 - (void) windowDidLoad {
@@ -57,7 +58,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	[subviewTableView setRefusesFirstResponder:YES];
 
 	NSTableColumn *column = [subviewTableView tableColumnWithIdentifier:@"criteria"];
-	[column setDataCell:[[JVViewCell new] autorelease]];
+	[column setDataCell:[JVViewCell new]];
 
 	[self addRow:nil];
 	[self performSelector:@selector( loadFindStringFromPasteboard )];
@@ -190,6 +191,11 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 
 	JVChatMessage *foundMessage = nil;
 	NSEnumerator *enumerator = [[self results] objectEnumerator];
+	NSArray *allMessages = [transcript messages];
+	NSRange range;
+	NSArray *rangeMsgs = nil;
+	NSEnumerator *messages = nil;
+	JVChatMessage *message = nil;
 
 	while( ( foundMessage = [enumerator nextObject] ) )
 		[[panel display] clearHighlightForMessage:foundMessage];
@@ -208,8 +214,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 	[resultProgress startAnimation:nil];
 	[resultProgress displayIfNeeded];
 
-	NSArray *allMessages = [transcript messages];
-	NSRange range;
+	allMessages = [transcript messages];
 
 	if( ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] ) {
 		NSUInteger index = [allMessages indexOfObjectIdenticalTo:[[self results] lastObject]];
@@ -228,9 +233,8 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 
 	_findPasteboardNeedsUpdated = YES;
 
-	NSArray *rangeMsgs = [transcript messagesInRange:range];
-	NSEnumerator *messages = [rangeMsgs objectEnumerator];
-	JVChatMessage *message = nil;
+	rangeMsgs = [transcript messagesInRange:range];
+	messages = [rangeMsgs objectEnumerator];
 
 	[resultProgress stopAnimation:nil];
 	[resultProgress setIndeterminate:NO];
@@ -297,6 +301,10 @@ end:
 	JVChatMessage *foundMessage = nil;
 	NSEnumerator *enumerator = [[self results] objectEnumerator];
 
+	NSArray *rangeMsgs = nil;
+	NSEnumerator *messages = nil;
+	JVChatMessage *message = nil;
+
 	while( ( foundMessage = [enumerator nextObject] ) )
 		[[panel display] clearHighlightForMessage:foundMessage];
 
@@ -305,7 +313,9 @@ end:
 	if( [[self results] count] && _lastMessageIndex > 0 && ! [self rulesChangedSinceLastFind] && [[[[self results] lastObject] transcript] isEqual:transcript] ) {
 		_lastMessageIndex--;
 		foundMessage = [[self results] objectAtIndex:_lastMessageIndex];
-		goto end;
+
+		[self endFindWithFoundMessage:foundMessage];
+		return;
 	}
 
 	[resultCount setObjectValue:@""];
@@ -321,22 +331,28 @@ end:
 		NSUInteger index = [allMessages indexOfObjectIdenticalTo:[[self results] objectAtIndex:0]];
 		if( index != NSNotFound && index > 1 ) {
 			range = NSMakeRange( 0, index );
-		} else goto end;
+		} else {
+			[self endFindWithFoundMessage:foundMessage];
+			return;
+		}
 	} else {
 		range = NSMakeRange( 0, [allMessages count] );
 		[[self results] removeAllObjects];
 		_lastMessageIndex = 0;
 	}
 
-	if( ! range.length ) goto end;
+	if( ! range.length ) {
+		[self endFindWithFoundMessage:foundMessage];
+		return;
+	}
 	if( [scrollbackOnly state] == NSOnState )
 		[hiddenResults setHidden:YES];
 
 	_findPasteboardNeedsUpdated = YES;
 
-	NSArray *rangeMsgs = [transcript messagesInRange:range];
-	NSEnumerator *messages = [rangeMsgs reverseObjectEnumerator];
-	JVChatMessage *message = nil;
+	rangeMsgs = [transcript messagesInRange:range];
+	messages = [rangeMsgs reverseObjectEnumerator];
+	message = nil;
 
 	[resultProgress stopAnimation:nil];
 	[resultProgress setIndeterminate:NO];
@@ -382,7 +398,11 @@ end:
 		}
 	}
 
-end:
+	[self endFindWithFoundMessage:foundMessage];
+}
+
+- (void) endFindWithFoundMessage:(JVChatMessage *) foundMessage {
+	JVChatTranscriptPanel *panel = [self focusedChatTranscriptPanel];
 
 	if( foundMessage ) {
 		[[panel display] highlightMessage:foundMessage];

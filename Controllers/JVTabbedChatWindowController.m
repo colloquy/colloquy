@@ -31,7 +31,7 @@
 
 - (id) initWithWindowNibName:(NSString *) windowNibName {
 	if( ( self = [super initWithWindowNibName:windowNibName] ) ) {
-		_tabItems = [[NSMutableArray array] retain];
+		_tabItems = [NSMutableArray array];
 		_tabIsShowing = YES;
 		_supressHiding = NO;
 		_autoHideTabBar = YES;
@@ -65,7 +65,7 @@
 
 	[super insertChatViewController:controller atIndex:index];
 
-	JVChatTabItem *newTab = [[[JVChatTabItem alloc] initWithChatViewController:controller] autorelease];
+	JVChatTabItem *newTab = [[JVChatTabItem alloc] initWithChatViewController:controller];
 
 	[_tabItems insertObject:newTab atIndex:index];
 	[tabView insertTabViewItem:newTab atIndex:index];
@@ -95,7 +95,7 @@
 	NSAssert( index <= [_views count], @"Index is beyond bounds." );
 	NSAssert( index <= [_tabItems count], @"Index is beyond bounds." );
 
-	JVChatTabItem *newTab = [[[JVChatTabItem alloc] initWithChatViewController:controller] autorelease];
+	JVChatTabItem *newTab = [[JVChatTabItem alloc] initWithChatViewController:controller];
 
 	[_tabItems replaceObjectAtIndex:index withObject:newTab];
 	[tabView removeTabViewItem:[tabView tabViewItemAtIndex:index]];
@@ -256,12 +256,10 @@
 			[[newWindowController window] saveFrameUsingName:[NSString stringWithFormat:@"Chat Window %@", [chatController identifier]]];
 		}
 
-		[chatController retain];
 		[[chatController windowController] removeChatViewController:chatController];
 
 		if( index > 0 ) [newWindowController insertChatViewController:chatController atIndex:index];
 		else [newWindowController addChatViewController:chatController];
-		[chatController release];
 	}
 
 	[self _supressTabBarHiding:NO];
@@ -277,8 +275,8 @@
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 		[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
-		[invocation setArgument:&object atIndex:2];
-		[invocation setArgument:&object atIndex:3];
+		MVAddUnsafeUnretainedAddress(object, 2);
+		MVAddUnsafeUnretainedAddress(object, 3);
 
 		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		if( [results count] ) {
@@ -350,7 +348,7 @@
 }
 
 - (id) outlineView:(NSOutlineView *) outlineView objectValueForTableColumn:(NSTableColumn *) tableColumn byItem:(id) item {
-	NSImage *ret = [[[item icon] copy] autorelease];
+	NSImage *ret = [[item icon] copy];
 	[ret setScalesWhenResized:YES];
 	[ret setSize:NSMakeSize( 16., 16. )];
 	return ret;
@@ -534,9 +532,7 @@
 		if( [item respondsToSelector:@selector( willSelect )] )
 			[(NSObject *)item willSelect];
 
-		id old = _activeViewController;
-		_activeViewController = [item retain];
-		[old release];
+		_activeViewController = item;
 
 		[[self window] makeFirstResponder:[[_activeViewController view] nextKeyView]];
 
@@ -547,7 +543,7 @@
 		if( [_activeViewController respondsToSelector:@selector( didSelect )] )
 			[(NSObject *)_activeViewController didSelect];
 	} else if( ! [_views count] || ! _activeViewController ) {
-		[[self window] setContentView:[[[NSView alloc] initWithFrame:[[[self window] contentView] frame]] autorelease]];
+		[[self window] setContentView:[[NSView alloc] initWithFrame:[[[self window] contentView] frame]]];
 		[[[self window] toolbar] setDelegate:nil];
 		[[self window] setToolbar:nil];
 		[[self window] makeFirstResponder:nil];

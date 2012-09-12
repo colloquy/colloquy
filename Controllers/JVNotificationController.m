@@ -25,7 +25,7 @@ static JVNotificationController *sharedInstance = nil;
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_bubbles = [[NSMutableDictionary dictionary] retain];
+		_bubbles = [NSMutableDictionary dictionary];
 		_sounds = [[NSMutableDictionary alloc] init];
 
 		if( floor( NSAppKitVersionNumber ) <= NSAppKitVersionNumber10_8 )
@@ -39,8 +39,6 @@ static JVNotificationController *sharedInstance = nil;
 }
 
 - (void) dealloc {
-	[_bubbles release];
-	[_sounds release];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
@@ -48,7 +46,6 @@ static JVNotificationController *sharedInstance = nil;
 	_bubbles = nil;
 	_sounds = nil;
 
-	[super dealloc];
 }
 
 - (void) performNotification:(NSString *) identifier withContextInfo:(NSDictionary *) context {
@@ -78,9 +75,9 @@ static JVNotificationController *sharedInstance = nil;
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( performNotification:withContextInfo:andPreferences: )];
-	[invocation setArgument:&identifier atIndex:2];
-	[invocation setArgument:&context atIndex:3];
-	[invocation setArgument:&eventPrefs atIndex:4];
+	MVAddUnsafeUnretainedAddress(identifier, 2)
+	MVAddUnsafeUnretainedAddress(context, 3)
+	MVAddUnsafeUnretainedAddress(eventPrefs, 4)
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 }
@@ -150,7 +147,7 @@ static JVNotificationController *sharedInstance = nil;
 }
 
 - (void) bubbleDidFadeOut:(KABubbleWindowController *) bubble {
-	NSMutableDictionary *bubbles = [[_bubbles copy] autorelease];
+	NSMutableDictionary *bubbles = [_bubbles copy];
 	for( NSString *key in bubbles ) {
 		KABubbleWindowController *cBubble = [bubbles objectForKey:key];
 		if( cBubble == bubble )
@@ -168,7 +165,6 @@ static JVNotificationController *sharedInstance = nil;
 	if( ! (sound = [_sounds objectForKey:path]) ) {
 		sound = [[NSSound alloc] initWithContentsOfFile:path byReference:YES];
 		[_sounds setObject:sound forKey:path];
-		[sound autorelease];
 	}
 
 	// When run on a laptop using battery power, the play method may block while the audio

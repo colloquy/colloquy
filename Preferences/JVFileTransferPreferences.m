@@ -61,7 +61,7 @@
 
 - (IBAction) changeSaveDownloads:(id) sender {
 	if( [sender tag] == 3 ) {
-		NSOpenPanel *openPanel = [[NSOpenPanel openPanel] retain];
+		NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 		[openPanel setCanChooseDirectories:YES];
 		[openPanel setCanChooseFiles:NO];
 		[openPanel setAllowsMultipleSelection:NO];
@@ -78,7 +78,6 @@
 }
 
 - (void) saveDownloadsOpenPanelDidEnd:(NSOpenPanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	[sheet autorelease];
 	if( returnCode == NSOKButton ) {
 		NSMenuItem *menuItem = [saveDownloads itemAtIndex:[saveDownloads indexOfItemWithTag:2]];
 		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:[[sheet directoryURL] path]];

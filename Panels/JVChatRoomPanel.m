@@ -89,15 +89,11 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	[_sortedMembers makeObjectsPerformSelector:@selector( _detach )];
 	[_nextMessageAlertMembers makeObjectsPerformSelector:@selector( _detach )];
 
-	[_sortedMembers release];
-	[_preferredTabCompleteNicknames release];
-	[_nextMessageAlertMembers release];
 
 	_sortedMembers = nil;
 	_preferredTabCompleteNicknames = nil;
 	_nextMessageAlertMembers = nil;
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -211,14 +207,12 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Get Info", "get info contextual menu item title" ) action:@selector( getInfo: ) keyEquivalent:@""];
 	[item setTarget:_windowController];
 	[menu addItem:item];
-	[item release];
 
 	if ([self _roomIndexInFavoritesMenu] != NSNotFound)
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Remove from Favorites", "add to favorites contextual menu") action:@selector( toggleFavorites: ) keyEquivalent:@""];
 	else item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Add to Favorites", "add to favorites contextual menu") action:@selector( toggleFavorites: ) keyEquivalent:@""];
 	[item setTarget:self];
 	[menu addItem:item];
-	[item release];
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
@@ -227,31 +221,26 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		[item setRepresentedObject:self];
 		[item setTarget:[JVChatController defaultController]];
 		[menu addItem:item];
-		[item release];
 	}
 
 	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""];
 	[item setTarget:self];
 	[menu addItem:item];
-	[item release];
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
 	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Auto Join", "auto join contextual menu") action:@selector( toggleAutoJoin: ) keyEquivalent:@""];
 	[item setTarget:self];
 	[menu addItem:item];
-	[item release];
 
 	if( [[self target] isJoined] ) {
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Leave Room", "leave room contextual menu item title" ) action:@selector( partChat: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
-		[item release];
 	} else {
 		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Rejoin Room", "rejoin room contextual menu item title" ) action:@selector( joinChat: ) keyEquivalent:@""];
 		[item setTarget:self];
 		[menu addItem:item];
-		[item release];
 	}
 
 	[menu addItem:[NSMenuItem separatorItem]];
@@ -260,9 +249,8 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	[item setEnabled:YES];
 	[item setTarget:self];
 	[menu addItem:item];
-	[item release];
 
-	return [menu autorelease];
+	return menu;
 }
 
 #pragma mark -
@@ -332,7 +320,6 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	[[MVConnectionsController defaultController] setJoinRooms:rooms forConnection:[self connection]];
 
-	[rooms release];
 }
 
 - (IBAction) changeEncoding:(id) sender {
@@ -385,7 +372,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 	static NSCharacterSet *escapeSet = nil;
 	if (!escapeSet)
-		escapeSet = [[NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"] retain];
+		escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 
 	for( member in _sortedMembers ) {
 		NSString *plainText = [message bodyAsPlainText];
@@ -394,7 +381,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		if( [[member nickname] length] > [plainText length] )
 			continue;
 
-		AGRegex *regex = (id)CFDictionaryGetValue(_memberRegexes, member);
+		AGRegex *regex = (id)CFDictionaryGetValue(_memberRegexes, (__bridge const void *)(member));
 		if( !regex ) {
 			NSMutableString *escapedName = [[member nickname] mutableCopy];
 			[escapedName escapeCharactersInSet:escapeSet];
@@ -402,10 +389,8 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 			NSString *pattern = [[NSString alloc] initWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", escapedName];
 			regex = [AGRegex regexWithPattern:pattern options:AGRegexCaseInsensitive];
 
-			[escapedName release];
-			[pattern release];
 
-			CFDictionarySetValue(_memberRegexes, member, regex);
+			CFDictionarySetValue(_memberRegexes, (__bridge const void *)(member), (__bridge const void *)(regex));
 		}
 
 		NSArray *matches = [regex findAllInString:plainText];
@@ -425,8 +410,8 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( processIncomingMessage:inView: )];
-	[invocation setArgument:&message atIndex:2];
-	[invocation setArgument:&self atIndex:3];
+	MVAddUnsafeUnretainedAddress(message, 2);
+	MVAddUnsafeUnretainedAddress(self, 3);
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:NO];
 }
@@ -459,7 +444,6 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	for( MVChatUser *member in [[self target] memberUsers] ) {
 		JVChatRoomMember *listItem = [[JVChatRoomMember alloc] initWithRoom:self andUser:member];
 		[_sortedMembers addObject:listItem];
-		[listItem release];
 	}
 
 	[self resortMembers];
@@ -473,7 +457,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( joinedRoom: )];
-	[invocation setArgument:&self atIndex:2];
+	MVAddUnsafeUnretainedAddress(self, 2);
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
@@ -497,7 +481,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 		[invocation setSelector:@selector( partingFromRoom: )];
-		[invocation setArgument:&self atIndex:2];
+		MVAddUnsafeUnretainedAddress(self, 2);
 
 		[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
@@ -616,7 +600,6 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 			for( item in [[mbr menu] itemArray] ) {
 				item = [item copy];
 				[ret addObject:item];
-				[item release];
 			}
 		} else if( user ) {
 			for( item in [user standardMenuItems] )
@@ -627,9 +610,12 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 		[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
-		if( mbr ) [invocation setArgument:&mbr atIndex:2];
-		else [invocation setArgument:&user atIndex:2];
-		[invocation setArgument:&self atIndex:3];
+		if( mbr ) {
+			MVAddUnsafeUnretainedAddress(mbr, 2);
+		} else {
+			MVAddUnsafeUnretainedAddress(user, 2);
+		}
+		MVAddUnsafeUnretainedAddress(self, 3);
 
 		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 		if( [results count] ) {
@@ -956,7 +942,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 - (void) _selfNicknameChanged:(NSNotification *) notification {
 	JVChatRoomMember *member = [self chatRoomMemberForUser:[[notification object] localUser]];
-	CFDictionaryRemoveValue(_memberRegexes, member);
+	CFDictionaryRemoveValue(_memberRegexes, (__bridge const void *)(member));
 
 	[self resortMembers];
 	[self addEventMessageToDisplay:[NSString stringWithFormat:NSLocalizedString( @"You are now known as <span class=\"member\">%@</span>.", "you changed nicknames" ), [[[self connection] nickname] stringByEncodingXMLSpecialCharactersAsEntities]] withName:@"newNickname" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[self localChatRoomMember], @"who", nil]];
@@ -970,7 +956,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	JVChatRoomMember *member = [self chatRoomMemberForUser:[notification object]];
 	if( ! member ) return;
 
-	CFDictionaryRemoveValue(_memberRegexes, member);
+	CFDictionaryRemoveValue(_memberRegexes, (__bridge const void *)(member));
 
 	NSString *oldNickname = [[notification userInfo] objectForKey:@"oldNickname"];
 
@@ -982,7 +968,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 - (void) _memberJoined:(NSNotification *) notification {
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
-	JVChatRoomMember *listItem = [[self chatRoomMemberForUser:user] retain];
+	JVChatRoomMember *listItem = [self chatRoomMemberForUser:user];
 
 	if( ! listItem ) {
 		listItem = [[JVChatRoomMember alloc] initWithRoom:self andUser:user];
@@ -998,8 +984,8 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( memberJoined:inRoom: )];
-	[invocation setArgument:&listItem atIndex:2];
-	[invocation setArgument:&self atIndex:3];
+	MVAddUnsafeUnretainedAddress(listItem, 2);
+	MVAddUnsafeUnretainedAddress(self, 3);
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
@@ -1010,7 +996,6 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 	[self performNotification:@"JVChatMemberJoinedRoom" withContextInfo:context];
 
-	[listItem release];
 }
 
 - (void) _memberParted:(NSNotification *) notification {
@@ -1024,9 +1009,9 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( memberParted:fromRoom:forReason: )];
-	[invocation setArgument:&mbr atIndex:2];
-	[invocation setArgument:&self atIndex:3];
-	[invocation setArgument:&rstring atIndex:4];
+	MVAddUnsafeUnretainedAddress(mbr, 2);
+	MVAddUnsafeUnretainedAddress(self, 3);
+	MVAddUnsafeUnretainedAddress(rstring, 4);
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
@@ -1052,7 +1037,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	[_nextMessageAlertMembers removeObject:mbr];
 	[_windowController reloadListItem:self andChildren:YES];
 
-	CFDictionaryRemoveValue(_memberRegexes, mbr);
+	CFDictionaryRemoveValue(_memberRegexes, (__bridge const void *)(mbr));
 }
 
 - (void) _userBricked:(NSNotification *) notification {
@@ -1084,8 +1069,8 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( userBricked:inRoom: )];
-	[invocation setArgument:&user atIndex:2];
-	[invocation setArgument:&self atIndex:3];
+	MVAddUnsafeUnretainedAddress(user, 2);
+	MVAddUnsafeUnretainedAddress(self, 3);
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
@@ -1108,13 +1093,13 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( kickedFromRoom:by:forReason: )];
-	[invocation setArgument:&self atIndex:2];
-	[invocation setArgument:&byMbr atIndex:3];
-	[invocation setArgument:&rstring atIndex:4];
+	MVAddUnsafeUnretainedAddress(self, 2);
+	MVAddUnsafeUnretainedAddress(byMbr, 3);
+	MVAddUnsafeUnretainedAddress(rstring, 4);
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
-	JVChatRoomMember *mbr = [[self localChatRoomMember] retain];
+	JVChatRoomMember *mbr = [self localChatRoomMember];
 	if( [_windowController selectedListItem] == mbr )
 		[_windowController showChatViewController:[_windowController activeChatViewController]];
 
@@ -1142,12 +1127,11 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		[self showAlert:NSGetInformationalAlertPanel( NSLocalizedString( @"You have been kicked from the chat room.", "you were removed by force from a chat room error message title" ), NSLocalizedString( @"You have been kicked from the chat room by %@ with the reason \"%@\" and cannot send further messages without rejoining.", "you were removed by force from a chat room error message" ), @"OK", nil, nil, ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( rstring ? [rstring string] : @"" ) ) withName:nil];
 	}
 
-	[mbr release];
 }
 
 - (void) _memberKicked:(NSNotification *) notification {
 	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
-	JVChatRoomMember *mbr = [[self chatRoomMemberForUser:user] retain];
+	JVChatRoomMember *mbr = [self chatRoomMemberForUser:user];
 	if( ! mbr ) return;
 
 	MVChatUser *byUser = [[notification userInfo] objectForKey:@"byUser"];
@@ -1158,10 +1142,10 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 	[invocation setSelector:@selector( memberKicked:fromRoom:by:forReason: )];
-	[invocation setArgument:&mbr atIndex:2];
-	[invocation setArgument:&self atIndex:3];
-	[invocation setArgument:&byMbr atIndex:4];
-	[invocation setArgument:&rstring atIndex:5];
+	MVAddUnsafeUnretainedAddress(mbr, 2);
+	MVAddUnsafeUnretainedAddress(self, 3);
+	MVAddUnsafeUnretainedAddress(byMbr, 4);
+	MVAddUnsafeUnretainedAddress(rstring, 2);
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 
@@ -1191,7 +1175,6 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 	[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
 	[self performNotification:@"JVChatMemberKicked" withContextInfo:context];
 
-	[mbr release];
 }
 
 - (void) _memberBanned:(NSNotification *) notification {
@@ -1479,7 +1462,6 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 				if( ! [self chatRoomMemberForUser:member] ) {
 					JVChatRoomMember *listItem = [[JVChatRoomMember alloc] initWithRoom:self andUser:member];
 					[_sortedMembers addObject:listItem];
-					[listItem release];
 				}
 			}
 		}
@@ -1521,9 +1503,9 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 		[invocation setSelector:@selector( topicChangedTo:inRoom:by: )];
-		[invocation setArgument:&topic atIndex:2];
-		[invocation setArgument:&self atIndex:3];
-		[invocation setArgument:&author atIndex:4];
+		MVAddUnsafeUnretainedAddress(topic, 2);
+		MVAddUnsafeUnretainedAddress(self, 3);
+		MVAddUnsafeUnretainedAddress(author, 4);
 
 		[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	}
@@ -1591,7 +1573,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 
 - (NSTextStorage *) scriptTypedTopic {
 	NSAttributedString *topic = [self _convertRawMessage:[[self target] topic] withBaseFont:[NSFont systemFontOfSize:11.]];
-	return [[[NSTextStorage alloc] initWithAttributedString:topic] autorelease];
+	return [[NSTextStorage alloc] initWithAttributedString:topic];
 }
 
 - (void) setScriptTypedTopic:(NSString *) topic {
@@ -1606,6 +1588,6 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 - (NSScriptObjectSpecifier *) objectSpecifier {
 	id classDescription = [NSClassDescription classDescriptionForClass:[JVChatRoomPanel class]];
 	NSScriptObjectSpecifier *container = [[self room] objectSpecifier];
-	return [[[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatMembers" uniqueID:[self uniqueIdentifier]] autorelease];
+	return [[NSUniqueIDSpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:container key:@"chatMembers" uniqueID:[self uniqueIdentifier]];
 }
 @end

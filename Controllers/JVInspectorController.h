@@ -29,6 +29,7 @@
 @end
 
 @interface JVInspectorController : NSWindowController <NSWindowDelegate> {
+	id _self;
 	BOOL _locked;
 	id <JVInspection> _object;
 	id <JVInspector> _inspector;

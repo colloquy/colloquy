@@ -95,9 +95,7 @@
 		if( [item respondsToSelector:@selector( willSelect )] )
 			[(NSObject *)item willSelect];
 
-		id old = _activeViewController;
-		_activeViewController = [item retain];
-		[old release];
+		_activeViewController = item;
 
 		[[[bodyView subviews] lastObject] removeFromSuperview];
 

@@ -58,14 +58,14 @@ static  NSImage			*tabDivider = nil;
 //Create a new custom tab view
 + (id)customTabViewWithFrame:(NSRect)frameRect
 {
-    return([[[self alloc] initWithFrame:frameRect] autorelease]);
+    return([[self alloc] initWithFrame:frameRect]);
 }
 
 //init
 - (id)initWithFrame:(NSRect)frameRect
 {
     //Init
-    [super initWithFrame:frameRect];
+    if (!(self = [super initWithFrame:frameRect])) return nil;
     arrangeCellTimer = nil;
     removingLastTabHidesWindow = YES;
 	allowsTabRearranging = YES;
@@ -83,10 +83,8 @@ static  NSImage			*tabDivider = nil;
 //Dealloc
 - (void)dealloc
 {
-	[dragCell release]; dragCell = nil;
-    [arrangeCellTimer invalidate]; [arrangeCellTimer release]; arrangeCellTimer = nil;
-    [tabCellArray release]; tabCellArray = nil;
-    [super dealloc];
+	_self = nil;
+    [arrangeCellTimer invalidate];
 }
 
 //Allow tab switching from the background
@@ -229,18 +227,14 @@ static  NSImage			*tabDivider = nil;
 		if(currentIndex < newIndex) newIndex--;
 
 		//Move via a remove and add :(
-		[tabCell retain];
 		[tabCellArray removeObject:tabCell];
 		[tabCellArray insertObject:tabCell atIndex:newIndex];
-		[tabCell release];
 
 		//Move the tab
 		ignoreTabNumberChange = YES;
-		[tabViewItem retain];
 		if([tabView indexOfTabViewItem:tabViewItem] < index) index--;
 		[tabView removeTabViewItem:tabViewItem];
 		[tabView insertTabViewItem:tabViewItem atIndex:index];
-		[tabViewItem release];
 		ignoreTabNumberChange = NO;
 
 		//Inform our delegate of the re-order
@@ -344,7 +338,7 @@ static  NSImage			*tabDivider = nil;
 {
 	//Clean up existing cells
 	[self stopCursorTracking];
-    [tabCellArray release]; tabCellArray = [[NSMutableArray alloc] init];
+     tabCellArray = [[NSMutableArray alloc] init];
 	selectedCustomTabCell = nil;
 
 	//Create a tab cell for each tabViewItem
@@ -405,11 +399,11 @@ static  NSImage			*tabDivider = nil;
 	tabGapIndex = index;
 
 	if(!arrangeCellTimer){ //Ignore the request if animation is already occuring
-		arrangeCellTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/CUSTOM_TABS_FPS)
+		arrangeCellTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0/CUSTOM_TABS_FPS)
 															 target:self
 														   selector:@selector(_arrangeCellTimer:)
 														   userInfo:nil
-															repeats:YES] retain];
+															repeats:YES];
 		[self _arrangeCellsAbsolute:NO];
 	}
 }
@@ -418,7 +412,7 @@ static  NSImage			*tabDivider = nil;
 - (void)_arrangeCellTimer:(NSTimer *)inTimer
 {
     if([self _arrangeCellsAbsolute:NO]){
-        [arrangeCellTimer invalidate]; [arrangeCellTimer release]; arrangeCellTimer = nil;
+        [arrangeCellTimer invalidate];  arrangeCellTimer = nil;
     }
 }
 
@@ -531,8 +525,8 @@ static  NSImage			*tabDivider = nil;
 
     //Load our images (Images are shared between all AICustomTabsView instances)
     if(!haveLoadedImages){
-		tabDivider = [[NSImage imageNamed:@"aquaTabDivider"] retain];
-		tabBackground = [[NSImage imageNamed:@"aquaTabBackground"] retain];
+		tabDivider = [NSImage imageNamed:@"aquaTabDivider"];
+		tabBackground = [NSImage imageNamed:@"aquaTabBackground"];
         haveLoadedImages = YES;
     }
 
@@ -678,8 +672,6 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 
 			dragCell = [self tabAtPoint:lastClickLocation];
 			if(dragCell){
-				[self retain];
-				[dragCell retain];
 
 				[self stopCursorTracking];
 				[[AICustomTabDragging sharedInstance] dragTabCell:dragCell
@@ -687,8 +679,8 @@ static NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 														withEvent:theEvent
 														selectTab:(!( [[[NSApplication sharedApplication] currentEvent] modifierFlags] & NSCommandKeyMask ))];
 
-				[dragCell release]; dragCell = nil;
-				[self autorelease];
+				 dragCell = nil;
+				_self = nil;
 			}
 		}
 

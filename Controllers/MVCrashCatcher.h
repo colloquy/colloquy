@@ -1,4 +1,5 @@
 @interface MVCrashCatcher : NSObject {
+	id _self;
 	IBOutlet NSTextView *comments;
 	IBOutlet NSTextView *log;
 	IBOutlet NSTextField *description;

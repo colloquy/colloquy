@@ -34,6 +34,7 @@
 @interface AICustomTabsView : NSView {
     IBOutlet	NSTabView			*tabView;
 
+	id                  _self;
     id					delegate;
     BOOL				allowsInactiveTabClosing;	//Allow closing of inactive tabs
 	BOOL				allowsTabRearranging;		//Allow tabs to be rearranged in the window

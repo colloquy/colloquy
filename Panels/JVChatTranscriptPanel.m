@@ -53,12 +53,11 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 @implementation JVChatTranscriptPanel
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_transcript = [[JVChatTranscript allocWithZone:[self zone]] init];
+		_transcript = [[JVChatTranscript allocWithZone:nil] init];
 
 		id classDescription = [NSClassDescription classDescriptionForClass:[JVChatTranscriptPanel class]];
 		id specifier = [[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"transcript"];
 		[_transcript setObjectSpecifier:specifier];
-		[specifier release];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateStylesMenu ) name:JVStylesScannedNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _updateStylesMenu ) name:JVNewStyleVariantAddedNotification object:nil];
@@ -71,21 +70,18 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 - (id) initWithTranscript:(NSString *) filename {
 	if( ( self = [self init] ) ) {
 		if( ! [[NSFileManager defaultManager] isReadableFileAtPath:filename] ) {
-			[self release];
 			return nil;
 		}
 
-		_transcript = [[JVChatTranscript allocWithZone:[self zone]] initWithContentsOfFile:filename];
+		_transcript = [[JVChatTranscript allocWithZone:nil] initWithContentsOfFile:filename];
 
 		if( ! _transcript ) {
-			[self release];
 			return nil;
 		}
 
 		id classDescription = [NSClassDescription classDescriptionForClass:[JVChatTranscriptPanel class]];
 		id specifier = [[NSPropertySpecifier alloc] initWithContainerClassDescription:classDescription containerSpecifier:[self objectSpecifier] key:@"transcript"];
 		[_transcript setObjectSpecifier:specifier];
-		[specifier release];
 
 		[[NSDocumentController sharedDocumentController] noteNewRecentDocumentURL:[NSURL fileURLWithPath:filename]];
 	}
@@ -119,12 +115,6 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	[display setFrameLoadDelegate:nil];
 	[display setPolicyDelegate:nil];
 
-	[contents release];
-	[_styleMenu release];
-	[_emoticonMenu release];
-	[_transcript release];
-	[_searchQuery release];
-	[_searchQueryRegex release];
 
 	contents = nil;
 	_styleMenu = nil;
@@ -134,7 +124,6 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	_searchQueryRegex = nil;
 	_windowController = nil;
 
-	[super dealloc];
 }
 
 - (NSString *) description {
@@ -228,17 +217,17 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (NSMenu *) menu {
-	NSMenu *menu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+	NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
 	NSMenuItem *item = nil;
 
 	if( [[[self windowController] allChatViewControllers] count] > 1 ) {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Detach From Window", "detach from window contextual menu item title" ) action:@selector( detachView: ) keyEquivalent:@""];
 		[item setRepresentedObject:self];
 		[item setTarget:[JVChatController defaultController]];
 		[menu addItem:item];
 	}
 
-	item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""] autorelease];
+	item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Close", "close contextual menu item title" ) action:@selector( close: ) keyEquivalent:@""];
 	[item setTarget:self];
 	[menu addItem:item];
 
@@ -278,17 +267,14 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 - (void) setSearchQuery:(NSString *) query {
 	if( query == _searchQuery || [query isEqualToString:_searchQuery] ) return;
 
-	[_searchQueryRegex autorelease];
 	_searchQueryRegex = nil;
-
-	[_searchQuery autorelease];
-	_searchQuery = ( [query length] ? [query copyWithZone:[self zone]] : nil );
+	_searchQuery = ( [query length] ? [query copyWithZone:nil] : nil );
 
 	if( [_searchQuery length] ) {
 		// we simply convert this to a regex and not allow patterns. later we will allow user supplied patterns
 		NSCharacterSet *escapeSet = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 		NSString *pattern = [_searchQuery stringByEscapingCharactersInSet:escapeSet];
-		_searchQueryRegex = [[AGRegex allocWithZone:[self zone]] initWithPattern:pattern options:AGRegexCaseInsensitive];
+		_searchQueryRegex = [[AGRegex allocWithZone:nil] initWithPattern:pattern options:AGRegexCaseInsensitive];
 	}
 
 	[self _refreshSearch];
@@ -348,7 +334,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 #pragma mark File Saving
 
 - (IBAction) saveDocumentTo:(id) sender {
-	NSSavePanel *savePanel = [[NSSavePanel savePanel] retain];
+	NSSavePanel *savePanel = [NSSavePanel savePanel];
 	[savePanel setCanSelectHiddenExtension:YES];
 	[savePanel setAllowedFileTypes:[NSArray arrayWithObject:@"colloquyTranscript"]];
 	[savePanel setDirectoryURL:[NSURL fileURLWithPath:NSHomeDirectory() isDirectory:YES]];
@@ -359,7 +345,6 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (void) savePanelDidEnd:(NSSavePanel *) sheet returnCode:(int) returnCode contextInfo:(void *) contextInfo {
-	[sheet autorelease];
 	if( returnCode == NSOKButton ) {
 		[[self transcript] writeToURL:[sheet URL] atomically:YES];
 		[[NSFileManager defaultManager] setAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:[sheet isExtensionHidden]], NSFileExtensionHidden, nil] ofItemAtPath:[[sheet URL] absoluteString] error:nil];
@@ -465,14 +450,14 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		[toolbarItem setImage:[NSImage imageNamed:@"reveal"]];
 		[toolbarItem setTarget:self];
 		[toolbarItem setAction:@selector( orderFrontFindPanel: )];
-		return [toolbarItem autorelease];
+		return toolbarItem;
 	} else if( [identifier isEqualToString:JVToolbarQuickSearchItemIdentifier] ) {
 		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Search", "search toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Search", "search patlette label" )];
 
-		NSSearchField *field = [[[NSSearchField alloc] initWithFrame:NSMakeRect( 0., 0., 150., 22. )] autorelease];
+		NSSearchField *field = [[NSSearchField alloc] initWithFrame:NSMakeRect( 0., 0., 150., 22. )];
 		[[field cell] setSendsWholeSearchString:NO];
 		[[field cell] setSendsSearchStringImmediately:NO];
 		[[field cell] setPlaceholderString:NSLocalizedString( @"Search Messages", "search field placeholder string" )];
@@ -489,23 +474,23 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		[toolbarItem setToolTip:NSLocalizedString( @"Search messages", "search toolbar item tooltip" )];
 		[toolbarItem setTarget:self];
 
-		NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Search", "search toolbar item menu representation title" ) action:@selector( performQuickSearch: ) keyEquivalent:@""] autorelease];
+		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Search", "search toolbar item menu representation title" ) action:@selector( performQuickSearch: ) keyEquivalent:@""];
 		[toolbarItem setMenuFormRepresentation:menuItem];
 
-		return [toolbarItem autorelease];
+		return toolbarItem;
 	} else if( [identifier isEqualToString:JVToolbarChooseStyleItemIdentifier] && ! willBeInserted ) {
 		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 		[toolbarItem setLabel:NSLocalizedString( @"Style", "choose style toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Style", "choose style toolbar item patlette label" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"chooseStyle"]];
-		return [toolbarItem autorelease];
+		return toolbarItem;
 	} else if( [identifier isEqualToString:JVToolbarChooseStyleItemIdentifier] && willBeInserted ) {
 		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Style", "choose style toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Style", "choose style toolbar item patlette label" )];
 
-		MVMenuButton *button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect( 0., 0., 32., 32. )] autorelease];
+		MVMenuButton *button = [[MVMenuButton alloc] initWithFrame:NSMakeRect( 0., 0., 32., 32. )];
 		[button setImage:[NSImage imageNamed:@"chooseStyle"]];
 		[button setDrawsArrow:YES];
 		[button setMenu:_styleMenu];
@@ -515,8 +500,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		[toolbarItem setTarget:self];
 		[toolbarItem setView:button];
 
-		NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Style", "choose style toolbar item menu representation title" ) action:NULL keyEquivalent:@""] autorelease];
-		NSImage *icon = [[[NSImage imageNamed:@"chooseStyle"] copy] autorelease];
+		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Style", "choose style toolbar item menu representation title" ) action:NULL keyEquivalent:@""];
+		NSImage *icon = [[NSImage imageNamed:@"chooseStyle"] copy];
 		[icon setScalesWhenResized:YES];
 		[icon setSize:NSMakeSize( 16., 16. )];
 		[menuItem setImage:icon];
@@ -524,20 +509,20 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 		[toolbarItem setMenuFormRepresentation:menuItem];
 
-		return [toolbarItem autorelease];
+		return toolbarItem;
 	} else if( [identifier isEqualToString:JVToolbarEmoticonsItemIdentifier] && ! willBeInserted ) {
 		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 		[toolbarItem setLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item patlette label" )];
 		[toolbarItem setImage:[NSImage imageNamed:@"emoticon"]];
-		return [toolbarItem autorelease];
+		return toolbarItem;
 	} else if( [identifier isEqualToString:JVToolbarEmoticonsItemIdentifier] && willBeInserted ) {
 		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
 		[toolbarItem setLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item patlette label" )];
 
-		MVMenuButton *button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect( 0., 0., 32., 32. )] autorelease];
+		MVMenuButton *button = [[MVMenuButton alloc] initWithFrame:NSMakeRect( 0., 0., 32., 32. )];
 		[button setImage:[NSImage imageNamed:@"emoticon"]];
 		[button setDrawsArrow:YES];
 		[button setMenu:_emoticonMenu];
@@ -547,8 +532,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		[toolbarItem setTarget:self];
 		[toolbarItem setView:button];
 
-		NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item menu representation title" ) action:NULL keyEquivalent:@""] autorelease];
-		NSImage *icon = [[[NSImage imageNamed:@"emoticon"] copy] autorelease];
+		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item menu representation title" ) action:NULL keyEquivalent:@""];
+		NSImage *icon = [[NSImage imageNamed:@"emoticon"] copy];
 		[icon setScalesWhenResized:YES];
 		[icon setSize:NSMakeSize( 16., 16. )];
 		[menuItem setImage:icon];
@@ -556,7 +541,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 		[toolbarItem setMenuFormRepresentation:menuItem];
 
-		return [toolbarItem autorelease];
+		return toolbarItem;
 	}
 
 	return nil;
@@ -603,7 +588,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 }
 
 - (NSArray *) webView:(WebView *) sender contextMenuItemsForElement:(NSDictionary *) element defaultMenuItems:(NSArray *) defaultMenuItems {
-	NSMutableArray *ret = [[defaultMenuItems mutableCopy] autorelease];
+	NSMutableArray *ret = [defaultMenuItems mutableCopy];
 	NSMenuItem *item = nil;
 	NSUInteger i = 0;
 	BOOL found = NO;
@@ -639,12 +624,12 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	}
 
 	if( ! found && ! [ret count] && ! [[element objectForKey:WebElementIsSelectedKey] boolValue] ) {
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Style", "choose style contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Style", "choose style contextual menu" ) action:NULL keyEquivalent:@""];
 		[item setSubmenu:_styleMenu];
 		[ret addObject:item];
 
-		item = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons contextual menu" ) action:NULL keyEquivalent:@""] autorelease];
-		NSMenu *menu = [[[self _emoticonsMenu] copy] autorelease];
+		item = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons contextual menu" ) action:NULL keyEquivalent:@""];
+		NSMenu *menu = [[self _emoticonsMenu] copy];
 		[item setSubmenu:menu];
 		[ret addObject:item];
 	}
@@ -660,8 +645,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	}
 
 	[invocation setSelector:@selector( contextualMenuItemsForObject:inView: )];
-	[invocation setArgument:&object atIndex:2];
-	[invocation setArgument:&self atIndex:3];
+	MVAddUnsafeUnretainedAddress(object, 2);
+	MVAddUnsafeUnretainedAddress(self, 3);
 
 	NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
 	if( [results count] ) {
@@ -721,8 +706,8 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
 
 		[invocation setSelector:@selector( handleClickedLink:inView: )];
-		[invocation setArgument:&url atIndex:2];
-		[invocation setArgument:&self atIndex:3];
+		MVAddUnsafeUnretainedAddress(url, 2);
+		MVAddUnsafeUnretainedAddress(self, 3);
 
 		NSArray *results = [[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation stoppingOnFirstSuccessfulReturn:YES];
 
@@ -757,7 +742,6 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	[window setReleasedWhenClosed:YES];
 	[newWebView setFrame:[[window contentView] frame]];
 	[window setContentView:newWebView];
-	[newWebView release];
 
 	return newWebView;
 }
@@ -838,12 +822,12 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		menu = [[NSMenu alloc] initWithTitle:NSLocalizedString( @"Style", "choose style toolbar menu title" )];
 		_styleMenu = menu;
 	} else {
-		for( menuItem in [[[menu itemArray] copy] autorelease] )
+		for( menuItem in [[menu itemArray] copy] )
 			if( [menuItem tag] || [menuItem isSeparatorItem] )
 				[menu removeItem:menuItem];
 	}
 
-	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Default", "default style menu item title" ) action:@selector( changeStyle: ) keyEquivalent:@""] autorelease];
+	menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Default", "default style menu item title" ) action:@selector( changeStyle: ) keyEquivalent:@""];
 	[menuItem setTag:5];
 	[menuItem setTarget:self];
 	[menuItem setRepresentedObject:nil];
@@ -854,7 +838,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 	for( JVStyle *style in [[[JVStyle styles] allObjects] sortedArrayUsingSelector:@selector( compare: )] ) {
 		if( !style.displayName.length ) continue;
 
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[style displayName] action:@selector( changeStyle: ) keyEquivalent:@""] autorelease];
+		menuItem = [[NSMenuItem alloc] initWithTitle:[style displayName] action:@selector( changeStyle: ) keyEquivalent:@""];
 		[menuItem setTag:5];
 		[menuItem setTarget:self];
 		[menuItem setRepresentedObject:style];
@@ -864,15 +848,15 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		NSArray *userVariants = [style userVariantStyleSheetNames];
 
 		if( [variants count] || [userVariants count] ) {
-			subMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+			subMenu = [[NSMenu alloc] initWithTitle:@""];
 
-			subMenuItem = [[[NSMenuItem alloc] initWithTitle:[style mainVariantDisplayName] action:@selector( changeStyleVariant: ) keyEquivalent:@""] autorelease];
+			subMenuItem = [[NSMenuItem alloc] initWithTitle:[style mainVariantDisplayName] action:@selector( changeStyleVariant: ) keyEquivalent:@""];
 			[subMenuItem setTarget:self];
 			[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", nil]];
 			[subMenu addItem:subMenuItem];
 
 			for( id item in variants ) {
-				subMenuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( changeStyleVariant: ) keyEquivalent:@""] autorelease];
+				subMenuItem = [[NSMenuItem alloc] initWithTitle:item action:@selector( changeStyleVariant: ) keyEquivalent:@""];
 				[subMenuItem setTarget:self];
 				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
 				[subMenu addItem:subMenuItem];
@@ -881,7 +865,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 			if( [userVariants count] ) [subMenu addItem:[NSMenuItem separatorItem]];
 
 			for( id item in userVariants ) {
-				subMenuItem = [[[NSMenuItem alloc] initWithTitle:item action:@selector( changeStyleVariant: ) keyEquivalent:@""] autorelease];
+				subMenuItem = [[NSMenuItem alloc] initWithTitle:item action:@selector( changeStyleVariant: ) keyEquivalent:@""];
 				[subMenuItem setTarget:self];
 				[subMenuItem setRepresentedObject:[NSDictionary dictionaryWithObjectsAndKeys:style, @"style", item, @"variant", nil]];
 				[subMenu addItem:subMenuItem];
@@ -895,7 +879,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Appearance Preferences...", "appearance preferences menu item title" ) action:@selector( _openAppearancePreferences: ) keyEquivalent:@""] autorelease];
+	menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Appearance Preferences...", "appearance preferences menu item title" ) action:@selector( _openAppearancePreferences: ) keyEquivalent:@""];
 	[menuItem setTarget:self];
 	[menuItem setTag:10];
 	[menu addItem:menuItem];
@@ -942,14 +926,14 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		[menu removeAllItems];
 	}
 
-	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Style Default", "default style emoticons menu item title" ) action:@selector( changeEmoticons: ) keyEquivalent:@""] autorelease];
+	menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Style Default", "default style emoticons menu item title" ) action:@selector( changeEmoticons: ) keyEquivalent:@""];
 	[menuItem setTarget:self];
 	[menuItem setRepresentedObject:nil];
 	[menu addItem:menuItem];
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	menuItem = [[[NSMenuItem alloc] initWithTitle:[[JVEmoticonSet textOnlyEmoticonSet] displayName] action:@selector( changeEmoticons: ) keyEquivalent:@""] autorelease];
+	menuItem = [[NSMenuItem alloc] initWithTitle:[[JVEmoticonSet textOnlyEmoticonSet] displayName] action:@selector( changeEmoticons: ) keyEquivalent:@""];
 	[menuItem setTarget:self];
 	[menuItem setRepresentedObject:[JVEmoticonSet textOnlyEmoticonSet]];
 	[menu addItem:menuItem];
@@ -958,7 +942,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 	for( JVEmoticonSet *emoticon in [[[JVEmoticonSet emoticonSets] allObjects] sortedArrayUsingSelector:@selector( compare: )] ) {
 		if( ! [[emoticon displayName] length] ) continue;
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeEmoticons: ) keyEquivalent:@""] autorelease];
+		menuItem = [[NSMenuItem alloc] initWithTitle:[emoticon displayName] action:@selector( changeEmoticons: ) keyEquivalent:@""];
 		[menuItem setTarget:self];
 		[menuItem setRepresentedObject:emoticon];
 		[menu addItem:menuItem];
@@ -966,7 +950,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 
 	[menu addItem:[NSMenuItem separatorItem]];
 
-	menuItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Appearance Preferences...", "appearance preferences menu item title" ) action:@selector( _openAppearancePreferences: ) keyEquivalent:@""] autorelease];
+	menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Appearance Preferences...", "appearance preferences menu item title" ) action:@selector( _openAppearancePreferences: ) keyEquivalent:@""];
 	[menuItem setTarget:self];
 	[menuItem setTag:10];
 	[menu addItem:menuItem];

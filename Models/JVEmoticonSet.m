@@ -14,7 +14,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 @implementation JVEmoticonSet
 + (void) scanForEmoticonSets {
 	NSMutableSet *styles = [NSMutableSet set];
-	if( ! allEmoticonSets ) allEmoticonSets = [styles retain];
+	if( ! allEmoticonSets ) allEmoticonSets = styles;
 
 	NSString *bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
 	NSMutableArray *paths = [NSMutableArray arrayWithCapacity:5];
@@ -33,7 +33,7 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 				NSBundle *bundle = nil;
 				JVEmoticonSet *emoticon = nil;
 				if( ( bundle = [NSBundle bundleWithPath:[path stringByAppendingPathComponent:file]] ) ) {
-					if( ( emoticon = [[JVEmoticonSet newWithBundle:bundle] autorelease] ) ) [styles addObject:emoticon];
+					if( ( emoticon = [JVEmoticonSet newWithBundle:bundle] ) ) [styles addObject:emoticon];
 				}
 			}
 		}
@@ -57,13 +57,13 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 			return emoticon;
 
 	NSBundle *bundle = [NSBundle bundleWithIdentifier:identifier];
-	if( bundle ) return [[[JVEmoticonSet alloc] initWithBundle:bundle] autorelease];
+	if( bundle ) return [[JVEmoticonSet alloc] initWithBundle:bundle];
 
 	return nil;
 }
 
 + (id) newWithBundle:(NSBundle *) bundle {
-	id ret = [[self emoticonSetWithIdentifier:[bundle bundleIdentifier]] retain];
+	id ret = [self emoticonSetWithIdentifier:[bundle bundleIdentifier]];
 	if( ! ret ) ret = [[JVEmoticonSet alloc] initWithBundle:bundle];
 	return ret;
 }
@@ -93,7 +93,6 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 - (id) initWithBundle:(NSBundle *) bundle {
 	if( ! bundle ) {
-		[self release];
 		return nil;
 	}
 
@@ -111,7 +110,6 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self _setBundle:nil]; // this will dealloc all other dependant objects
 	[self unlink];
-	[super dealloc];
 }
 
 #pragma mark -
@@ -158,8 +156,6 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 				[string addAttribute:@"XHTMLEnd" value:[@"</samp></span>" stringByAppendingString:endHTML] range:foundRange];
 			}
 
-			[search release];
-			[regex release];
 		}
 	}
 }
@@ -203,9 +199,9 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 	for( info in _emoticonMenu ) {
 		if( ! [(NSString *)[info objectForKey:@"name"] length] ) continue;
-		menuItem = [[[NSMenuItem alloc] initWithTitle:[info objectForKey:@"name"] action:NULL keyEquivalent:@""] autorelease];
+		menuItem = [[NSMenuItem alloc] initWithTitle:[info objectForKey:@"name"] action:NULL keyEquivalent:@""];
 		if( [(NSString *)[info objectForKey:@"image"] length] )
-			[menuItem setImage:[[[NSImage alloc] initWithContentsOfFile:[[self bundle] pathForResource:[info objectForKey:@"image"] ofType:nil]] autorelease]];
+			[menuItem setImage:[[NSImage alloc] initWithContentsOfFile:[[self bundle] pathForResource:[info objectForKey:@"image"] ofType:nil]]];
 		[menuItem setRepresentedObject:[info objectForKey:@"insert"]];
 		[ret addObject:menuItem];
 	}
@@ -237,16 +233,13 @@ NSString *JVEmoticonSetsScannedNotification = @"JVEmoticonSetsScannedNotificatio
 
 @implementation JVEmoticonSet (JVEmoticonSetPrivate)
 - (void) _setBundle:(NSBundle *) bundle {
-	[_bundle autorelease];
-	_bundle = [bundle retain];
+	_bundle = bundle;
 
 	NSString *path = [[self bundle] pathForResource:@"emoticons" ofType:@"plist"];
 	if( ! path ) path = [[NSBundle mainBundle] pathForResource:@"emoticons" ofType:@"plist"];
 
-	[_emoticonMappings autorelease];
-	_emoticonMappings = [[NSDictionary dictionaryWithContentsOfFile:path] retain];
+	_emoticonMappings = [NSDictionary dictionaryWithContentsOfFile:path];
 
-	[_emoticonMenu autorelease];
-	_emoticonMenu = [[NSArray arrayWithContentsOfFile:[[self bundle] pathForResource:@"menu" ofType:@"plist"]] retain];
+	_emoticonMenu = [NSArray arrayWithContentsOfFile:[[self bundle] pathForResource:@"menu" ofType:@"plist"]];
 }
 @end
