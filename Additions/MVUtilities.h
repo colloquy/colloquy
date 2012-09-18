@@ -47,10 +47,10 @@
 #define MVSafeReturn(var) \
 	[[var retain] autorelease];
 
-#define autoreleasepool(block) \
+#define MVAutoreleasePool(code) \
 { \
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]; \
-	block(); \
+	code \
 	[pool drain]; \
 }
 #else
@@ -80,11 +80,9 @@
 #define MVSafeReturn(var) \
 	(var)
 
-#define autoreleasepool(block) \
-	{ \
-	@autoreleasepool { \
-		block(); \
-	} \
+#define MVAutoreleasePool(code) \
+@autoreleasepool { \
+	code \
 }
 #endif
 
