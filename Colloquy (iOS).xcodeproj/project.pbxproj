@@ -42,6 +42,7 @@
 		1C20BE820EFEDF26005AD8A5 /* NSDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C20BE810EFEDF26005AD8A5 /* NSDictionaryAdditions.m */; };
 		1C2A046F0EDAFC2D004509AE /* CQPreferencesListEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */; };
 		1C2C995C1608E1680041F46C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C2C995B1608E1680041F46C /* Default-568h@2x.png */; };
+		1C2C99851609029C0041F46C /* Icon-144.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C2C99841609029C0041F46C /* Icon-144.png */; };
 		1C34A4981016C73800BAA714 /* CQChatRoomInfoTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C34A4971016C73800BAA714 /* CQChatRoomInfoTableCell.m */; };
 		1C34A4A71016CC2500BAA714 /* CQChatRoomListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C34A4A61016CC2500BAA714 /* CQChatRoomListViewController.m */; };
 		1C34A67010183ED900BAA714 /* personBlueSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C34A66F10183ED900BAA714 /* personBlueSmall.png */; };
@@ -297,6 +298,7 @@
 		1C2A046D0EDAFC2D004509AE /* CQPreferencesListEditViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListEditViewController.h; path = Mobile/Controllers/CQPreferencesListEditViewController.h; sourceTree = "<group>"; };
 		1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListEditViewController.m; path = Mobile/Controllers/CQPreferencesListEditViewController.m; sourceTree = "<group>"; };
 		1C2C995B1608E1680041F46C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		1C2C99841609029C0041F46C /* Icon-144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-144.png"; sourceTree = "<group>"; };
 		1C34A4961016C73800BAA714 /* CQChatRoomInfoTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatRoomInfoTableCell.h; sourceTree = "<group>"; };
 		1C34A4971016C73800BAA714 /* CQChatRoomInfoTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatRoomInfoTableCell.m; sourceTree = "<group>"; };
 		1C34A4A51016CC2500BAA714 /* CQChatRoomListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatRoomListViewController.h; sourceTree = "<group>"; };
@@ -1004,6 +1006,7 @@
 				1CA264E611C3488E00AB4E44 /* errorBadgeDim@2x.png */,
 				1CA2663711C4BA9200AB4E44 /* help@2x.png */,
 				1CA2662B11C4B36200AB4E44 /* Icon-114.png */,
+				1C2C99841609029C0041F46C /* Icon-144.png */,
 				1CA2656111C44FC900AB4E44 /* info@2x.png */,
 				1CA2655911C44B0900AB4E44 /* members@2x.png */,
 				1CA2663B11C4BE1A00AB4E44 /* new@2x.png */,
@@ -1360,6 +1363,7 @@
 				1CA2663C11C4BE1A00AB4E44 /* new@2x.png in Resources */,
 				92E2E65515BFD6740013B032 /* FileTransferTableCell.xib in Resources */,
 				1C2C995C1608E1680041F46C /* Default-568h@2x.png in Resources */,
+				1C2C99851609029C0041F46C /* Icon-144.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
