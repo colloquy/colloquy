@@ -46,13 +46,6 @@
 
 #define MVSafeReturn(var) \
 	[[var retain] autorelease];
-
-#define MVAutoreleasePool(code) \
-{ \
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init]; \
-	code \
-	[pool drain]; \
-}
 #else
 #define MVSafeAdoptAssign(var, newExpression) \
 { \
@@ -79,11 +72,6 @@
 
 #define MVSafeReturn(var) \
 	(var)
-
-#define MVAutoreleasePool(code) \
-@autoreleasepool { \
-	code \
-}
 #endif
 
 #define MVAssertMainThreadRequired() \

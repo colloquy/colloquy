@@ -632,7 +632,7 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (oneway void) _ircRunloop {
-    MVAutoreleasePool(
+    @autoreleasepool {
 		[NSThread prepareForInterThreadMessages];
 
 		_connectionThread = [NSThread currentThread];
@@ -640,21 +640,21 @@ static const NSStringEncoding supportedEncodings[] = {
 			[_connectionThread setName:[[self url] absoluteString]];
 
 		[self _connect];
-	);
-
-	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
-		MVAutoreleasePool(
-			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
-		);
 	}
 
-    MVAutoreleasePool(
+	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
+		@autoreleasepool {
+			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
+		}
+	}
+
+    @autoreleasepool {
 		// make sure the connection has sent all the delegate calls it has scheduled
 		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
 
 		if( _connectionThread == [NSThread currentThread] )
 			_connectionThread = nil;
-	);
+	}
 }
 
 #pragma mark -
@@ -3544,7 +3544,7 @@ end:
 	if( parameters.count == 4 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:2]];
 		if( room && ! [room _namesSynced] ) {
-			MVAutoreleasePool(
+			@autoreleasepool {
 				NSString *names = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
 				NSArray *members = [names componentsSeparatedByString:@" "];
 
@@ -3558,7 +3558,7 @@ end:
 
 					[self _markUserAsOnline:member];
 				}
-			);
+			}
 		}
 	}
 }

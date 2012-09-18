@@ -375,7 +375,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 #pragma mark Connection thread
 
 - (oneway void) _runloop {
-    autoreleasepool(^{
+    @autoreleasepool {
         [_threadWaitLock lockWhenCondition:0];
 
         if( [_connectionThread respondsToSelector:@selector( cancel )] )
@@ -387,19 +387,19 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
         [NSThread prepareForInterThreadMessages];
 
         [_threadWaitLock unlockWithCondition:1];
-    })
+    }
 
 	while( _status == MVChatConnectionConnectedStatus ||
            _status == MVChatConnectionConnectingStatus ||
            [_chatConnection isConnected] ) {
-        autoreleasepool(^{
+        @autoreleasepool {
             [[NSRunLoop currentRunLoop]
                 runMode:NSDefaultRunLoopMode
                 beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
-        })
+        }
 	}
 
-    autoreleasepool(^{
+    @autoreleasepool {
         // Make sure the connection has sent all the delegate calls it
         // has scheduled.
         [[NSRunLoop currentRunLoop]
@@ -408,7 +408,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
         if( [NSThread currentThread] == _connectionThread )
             _connectionThread = nil;
-    })
+    }
 }
 
 - (void) _connect {

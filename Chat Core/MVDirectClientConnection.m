@@ -328,7 +328,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 }
 
 - (oneway void) _dccRunloop {
-	MVAutoreleasePool(
+	@autoreleasepool {
 		[self retain];
 
 		[_threadWaitLock lockWhenCondition:0];
@@ -340,17 +340,17 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 		[NSThread setThreadPriority:0.75];
 
 		[_threadWaitLock unlockWithCondition:1];
-	);
+	}
 
 	while( ! _done ) {
-		MVAutoreleasePool(
+		@autoreleasepool {
 			NSDate *timeout = [[NSDate alloc] initWithTimeIntervalSinceNow:5.];
 			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:timeout];
 			[timeout release];
-		);
+		}
 	}
 
-	MVAutoreleasePool(
+	@autoreleasepool {
 		// make sure the connection has sent all the delegate calls it has scheduled
 		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.]];
 
@@ -359,6 +359,6 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 		[self _finish];
 		[self release];
-	);
+	}
 }
 @end

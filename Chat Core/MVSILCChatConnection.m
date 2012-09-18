@@ -1439,15 +1439,15 @@ static void usersFoundCallback( SilcClient client, SilcClientConnection conn, Si
 }
 
 - (void) _silcRunloop {
-    autoreleasepool(^{
+    @autoreleasepool {
 		if( [[NSThread currentThread] respondsToSelector:@selector( setName: )] )
 			[[NSThread currentThread] setName:[[self url] absoluteString]];
-	})
+	}
 
 	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
-		autoreleasepool(^{
+		@autoreleasepool {
 			silc_schedule_one( _silcClient -> schedule, -1 );
-		})
+		}
 	}
 }
 
