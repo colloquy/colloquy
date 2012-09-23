@@ -57,9 +57,13 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (NSInteger) sendFileButtonIndex {
+#if defined(FILE_TRANSFER)
 	if ([[UIDevice currentDevice] isPadModel])
 		return 2;
 	return 1;
+#else
+	return -1;
+#endif
 }
 
 - (NSInteger) operatorActionsButtonIndex {
@@ -445,7 +449,9 @@ static NSString *membersFilteredCountFormat;
 	if ([[UIDevice currentDevice] isPadModel])
 		[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
 
+#if defined(FILE_TRANSFER)
 	[sheet addButtonWithTitle:NSLocalizedString(@"Send File", @"Send File button title")];
+#endif
 
 	if (showOperatorActions)
 		[sheet addButtonWithTitle:NSLocalizedString(@"Operator Actions...", @"Operator Actions button title")];
