@@ -67,7 +67,15 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 	}
 
 	if (!_selectedConnection) {
-		if (lastSelectedConnectionIndex == NSNotFound) {
+		MVChatConnection *visibleConnection = [[[CQChatController defaultController] visibleChatController] connection];
+
+		if (visibleConnection != nil) {
+			_selectedConnection = [visibleConnection retain];
+		} else if (lastSelectedConnectionIndex != NSNotFound) {
+			if (lastSelectedConnectionIndex >= _sortedConnections.count && _sortedConnections.count)
+				_selectedConnection = [[_sortedConnections lastObject] retain];
+			else _selectedConnection = [[_sortedConnections objectAtIndex:lastSelectedConnectionIndex] retain];
+		} else {
 			for (MVChatConnection *connection in _sortedConnections) {
 				if (connection.connected) {
 					_selectedConnection = [connection retain];
@@ -77,10 +85,6 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 
 			if (!_selectedConnection && _sortedConnections.count)
 				_selectedConnection = [[_sortedConnections objectAtIndex:0] retain];
-		} else {
-			if (lastSelectedConnectionIndex >= _sortedConnections.count && _sortedConnections.count)
-				_selectedConnection = [[_sortedConnections lastObject] retain];
-			else _selectedConnection = [[_sortedConnections objectAtIndex:lastSelectedConnectionIndex] retain];
 		}
 
 		[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] withAnimation:UITableViewRowAnimationNone];

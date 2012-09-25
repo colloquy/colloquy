@@ -210,7 +210,7 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 					cell.accessibilityLabel = NSLocalizedString(@"Rooms: None", @"Voiceover rooms none label");
 				}
 
-				cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 			} else {
 				cell.detailTextLabel.text = notAvailableString;
 				cell.accessibilityLabel = NSLocalizedString(@"Rooms not available.", @"Voiceover rooms not available label");
@@ -247,11 +247,6 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 	return cell;
 }
 
-- (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
-	if (indexPath.section == 2 && indexPath.row == 1)
-		[self showJoinedRooms:nil];
-}
-
 #if ENABLE(SECRETS)
 - (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {
 	return YES;
@@ -274,6 +269,10 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 #endif
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	if (indexPath.section == 2 && indexPath.row == 1) {
+		[self showJoinedRooms:nil];
+	}
+
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 

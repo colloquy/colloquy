@@ -297,6 +297,8 @@ static NSString *membersFilteredCountFormat;
 	// The searching has probably ruined the _matchedUsers array, so rebuild it here when we display the main results table view/
 	[_matchedUsers setArray:_users];
 	[self.tableView reloadData];
+
+	self.title = [NSString stringWithFormat:membersSingleCountFormat, _users.count];
 }
 
 #pragma mark -

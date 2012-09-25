@@ -18,6 +18,7 @@
 				<string>standard-grey-dark</string>
 				<string>chromatic</string>
 				<string>chromatic-dark</string>
+				<string>chromatic-redux</string>
 				<string>bubbles</string>
 				<string>notes</string>
 			</array>
@@ -28,6 +29,7 @@
 				<string>Standard Grey</string>
 				<string>Chromatic</string>
 				<string>Chromatic Dark</string>
+				<string>Chromatic Redux</string>
 				<string>Bubbles</string>
 				<string>Notes</string>
 			</array>

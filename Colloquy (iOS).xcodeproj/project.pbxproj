@@ -231,6 +231,8 @@
 		89997FAC0F171EB600CF0AA2 /* standard-grey-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */; };
 		89E87C090FA0450800B49230 /* CQSoundController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E87C080FA0450800B49230 /* CQSoundController.m */; };
 		924108D615A5605A001F7681 /* NSFileManagerMoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 924108D515A5605A001F7681 /* NSFileManagerMoreAdditions.m */; };
+		9247414316119CCC009132B5 /* chromatic-redux.css in Resources */ = {isa = PBXBuildFile; fileRef = 9247414116119CCC009132B5 /* chromatic-redux.css */; };
+		9247414416119CCC009132B5 /* chromatic-redux.js in Sources */ = {isa = PBXBuildFile; fileRef = 9247414216119CCC009132B5 /* chromatic-redux.js */; };
 		924B823A116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 924B8239116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m */; };
 		924B8240116FEB520007F1F8 /* CQAwayStatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 924B823F116FEB520007F1F8 /* CQAwayStatusViewController.m */; };
 		925C594C1177CB63001995E0 /* CQModalNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C594B1177CB63001995E0 /* CQModalNavigationController.m */; };
@@ -560,6 +562,8 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		924108D415A5605A001F7681 /* NSFileManagerMoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerMoreAdditions.h; path = Additions/NSFileManagerMoreAdditions.h; sourceTree = "<group>"; };
 		924108D515A5605A001F7681 /* NSFileManagerMoreAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSFileManagerMoreAdditions.m; path = Additions/NSFileManagerMoreAdditions.m; sourceTree = "<group>"; };
+		9247414116119CCC009132B5 /* chromatic-redux.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "chromatic-redux.css"; sourceTree = "<group>"; };
+		9247414216119CCC009132B5 /* chromatic-redux.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "chromatic-redux.js"; sourceTree = "<group>"; };
 		924B8238116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesTextEditViewController.h; path = Mobile/Controllers/CQPreferencesTextEditViewController.h; sourceTree = "<group>"; };
 		924B8239116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesTextEditViewController.m; path = Mobile/Controllers/CQPreferencesTextEditViewController.m; sourceTree = "<group>"; };
 		924B823E116FEB520007F1F8 /* CQAwayStatusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQAwayStatusViewController.h; sourceTree = "<group>"; };
@@ -1048,6 +1052,8 @@
 				896E84600F15AB6C00D810FE /* notes.css */,
 				1C0F6A550F150776002BB855 /* chromatic.js */,
 				1C8408BE0F1552A7004665DC /* chromatic-dark.js */,
+				9247414116119CCC009132B5 /* chromatic-redux.css */,
+				9247414216119CCC009132B5 /* chromatic-redux.js */,
 				1C0F686C0F1452A7002BB855 /* bubbles.js */,
 				1C6D45BE10FAD85900BE77ED /* notes.js */,
 			);
@@ -1364,6 +1370,7 @@
 				92E2E65515BFD6740013B032 /* FileTransferTableCell.xib in Resources */,
 				1C2C995C1608E1680041F46C /* Default-568h@2x.png in Resources */,
 				1C2C99851609029C0041F46C /* Icon-144.png in Resources */,
+				9247414316119CCC009132B5 /* chromatic-redux.css in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1480,6 +1487,7 @@
 				1C716EE813100F220088C737 /* MVFileTransfer.m in Sources */,
 				1C15B2681311838C006FA16B /* CQAnalyticsController.m in Sources */,
 				924108D615A5605A001F7681 /* NSFileManagerMoreAdditions.m in Sources */,
+				9247414416119CCC009132B5 /* chromatic-redux.js in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

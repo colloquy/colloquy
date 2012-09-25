@@ -1,0 +1,133 @@
+@import url(chromatic.css);
+
+.sender {
+    font-weight: bold;
+}
+
+.sender.user0 {
+    color: #0080ff; 
+}
+
+.sender.user1 {
+    color: #059005; 
+}
+
+.sender.user2 {
+    color: #a80054; 
+}
+
+.sender.user3 {
+    color: #9b0db1; 
+}
+
+.sender.user4 {
+    color: #108860; 
+}
+
+.sender.user5 {
+    color: #7F4FFF; 
+}
+
+.sender.user6 {
+    color: #58701a; 
+}
+
+.sender.user7 {
+    color: #620a8e; 
+}
+
+.sender.user8 {
+    color: #BB0008; 
+}
+
+.sender.user9 {
+    color: #44345f; 
+}
+
+.sender.user10 {
+    color: #2f5353; 
+}
+
+.sender.user11 {
+    color: #904000; 
+}
+
+.sender.user12 {
+    color: #808000; 
+}
+
+.sender.user13 {
+    color: #57797e; 
+}
+
+.sender.user14 {
+    color: #3333dd; 
+}
+
+.sender.user15 {
+    color: #5f4d22; 
+}
+
+.sender.user16 {
+    color: #706616;
+}
+
+.sender.user17 {
+    color: #46799c;
+}
+
+.sender.user18 {
+    color: #80372e;
+}
+
+.sender.user19 {
+    color: #8F478E;
+}
+
+.sender.user20 {
+    color: #5b9e4c;
+}
+
+.sender.user21 {
+    color: #13826c;
+}
+
+.sender.user22 {
+    color: #b13637;
+}
+
+.sender.user23 {
+    color: #e45d59;
+}
+
+.sender.user24 {
+    color: #1b51ae;
+}
+
+.sender.user25 {
+    color: #4855ac;
+}
+
+.sender.user26 {
+    color: #7f1d86;
+}
+
+.sender.user27 {
+    color: #73643f;
+}
+
+.sender.user28 {
+    color: #0b9578;
+}
+
+.sender.user29 {
+    color: #569c96;
+}
+
+.sender.user30 {
+    color: #08465f;
+}
+
+.subsequent:not(.highlight) .sender {
+    opacity: 0.8;
+}
