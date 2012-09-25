@@ -416,6 +416,7 @@ static BOOL showingKeyboard;
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 
 	if (![[UIDevice currentDevice] isPadModel]) {
+		[self.view endEditing:YES];
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
 	}

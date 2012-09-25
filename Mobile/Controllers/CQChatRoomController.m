@@ -118,6 +118,7 @@ static BOOL showLeaveEvents;
 
 	[_orderedMembers release];
 	[_currentUserListPopoverController release];
+	[_currentUserListNavigationController release];
 	[_currentUserListViewController release];
 
 	[super dealloc];
@@ -128,8 +129,10 @@ static BOOL showLeaveEvents;
 - (void) viewDidAppear:(BOOL) animated {
 	[super viewDidAppear:animated];
 
-	if (_showingMembersInNavigationController) {
-		_showingMembersInNavigationController = NO;
+	if (_showingMembersInModalController) {
+		_showingMembersInModalController = NO;
+		[_currentUserListNavigationController release];
+		_currentUserListNavigationController = nil;
 		[_currentUserListViewController release];
 		_currentUserListViewController = nil;
 	}
@@ -137,9 +140,6 @@ static BOOL showLeaveEvents;
 
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
-
-	if (!_showingMembersInNavigationController)
-		[[CQColloquyApplication sharedApplication] showTabBarWithTransition:YES];
 }
 
 #pragma mark -
@@ -239,11 +239,15 @@ static BOOL showLeaveEvents;
 			[_currentUserListPopoverController presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 		} else [_currentUserListPopoverController dismissPopoverAnimated:YES];
 	} else {
-		if (!self.navigationController || _showingMembersInNavigationController)
+		if (!self.navigationController || _showingMembersInModalController)
 			return;
 
-		_showingMembersInNavigationController = YES;
-		[self.navigationController pushViewController:_currentUserListViewController animated:YES];
+		if (!_currentUserListNavigationController) {
+			_currentUserListNavigationController = [[UINavigationController alloc] initWithRootViewController:_currentUserListViewController];
+		}
+
+		_showingMembersInModalController = YES;
+		[self.navigationController presentModalViewController:_currentUserListNavigationController animated:YES];
 	}
 }
 

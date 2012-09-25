@@ -605,18 +605,24 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		_chatPresentationController.topChatViewController = controller;
 		[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
 	} else {
-		if (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController) {
-			id old = _nextController;
-			_nextController = [controller retain];
-			[old release];
-
-			[_chatNavigationController popToRootViewControllerAnimated:animated];
-		} else {
+		if (_chatNavigationController.modalViewController != nil) {
 			[_chatNavigationController popToRootViewControllerAnimated:NO];
-			[_chatNavigationController pushViewController:(UIViewController *)controller animated:animated];
+			[_chatNavigationController pushViewController:(UIViewController *)controller animated:NO];
+			[_chatNavigationController dismissModalViewControllerAnimated:animated];
+		} else {
+			if (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController) {
+				id old = _nextController;
+				_nextController = [controller retain];
+				[old release];
 
-			[_nextController release];
-			_nextController = nil;
+				[_chatNavigationController popToRootViewControllerAnimated:animated];
+			} else {
+				[_chatNavigationController popToRootViewControllerAnimated:NO];
+				[_chatNavigationController pushViewController:(UIViewController *)controller animated:animated];
+
+				[_nextController release];
+				_nextController = nil;
+			}
 		}
 	}
 }

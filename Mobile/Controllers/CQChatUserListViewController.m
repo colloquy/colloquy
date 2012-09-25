@@ -97,6 +97,10 @@ static NSString *membersFilteredCountFormat;
 	_searchController.searchResultsDelegate = self;
 	_searchController.delegate = self;
 
+	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissFromDoneButton)];
+	self.navigationItem.rightBarButtonItem = doneButton;
+	[doneButton release];
+
 	UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Members", @"Members back button label") style:UIBarButtonItemStylePlain target:nil action:nil];
 	self.navigationItem.backBarButtonItem = backButton;
 	[backButton release];
@@ -628,4 +632,11 @@ static NSString *membersFilteredCountFormat;
 		}
 	}
 }
+
+#pragma mark - 
+
+- (void) dismissFromDoneButton {
+	[self dismissModalViewControllerAnimated:YES];
+}
+
 @end
