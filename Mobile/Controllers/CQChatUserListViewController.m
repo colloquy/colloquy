@@ -57,7 +57,7 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (NSInteger) sendFileButtonIndex {
-#if defined(FILE_TRANSFER)
+#if ENABLE(SENDING_FILES)
 	if ([[UIDevice currentDevice] isPadModel])
 		return 2;
 	return 1;
@@ -67,9 +67,13 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (NSInteger) operatorActionsButtonIndex {
+#if ENABLE(SENDING_FILES)
+	return [self sendFileButtonIndex] + 1;
+#else
 	if ([[UIDevice currentDevice] isPadModel])
-		return 3;
-	return 2;
+		return 2;
+	return 1;
+#endif
 }
 
 #pragma mark -
@@ -449,7 +453,7 @@ static NSString *membersFilteredCountFormat;
 	if ([[UIDevice currentDevice] isPadModel])
 		[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
 
-#if defined(FILE_TRANSFER)
+#if ENABLE(SENDING_FILES)
 	[sheet addButtonWithTitle:NSLocalizedString(@"Send File", @"Send File button title")];
 #endif
 
