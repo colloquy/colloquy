@@ -99,10 +99,9 @@ static MVChatConnection *connectionForSection(NSUInteger section) {
 
 	for (CQBouncerSettings *settings in [CQConnectionsController defaultController].bouncers) {
 		for (MVChatConnection *connection in [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:settings.identifier]) {
-			workingCount++;
-
 			if (workingCount == section)
 				return connection;
+			workingCount++;
 		}
 	}
 
