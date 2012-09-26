@@ -1,6 +1,8 @@
 //  Created by August Joki on 1/21/09.
 //  Copyright 2009 Concinnous Software. All rights reserved.
 
+#if ENABLE(FILE_TRANSFERS)
+
 #import <ChatCore/MVFileTransfer.h>
 
 @class MVChatUser;
@@ -24,3 +26,5 @@
 
 - (void) takeValuesFromController:(CQFileTransferController *) controller;
 @end
+
+#endif

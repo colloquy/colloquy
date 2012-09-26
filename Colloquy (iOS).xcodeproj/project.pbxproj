@@ -240,7 +240,6 @@
 		92A24DA7114C918300897373 /* CQPreferencesListChannelEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */; };
 		92A54AA515AD1DDD00F21FC5 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */; };
 		92D30F2C116D2B020060EE33 /* UIViewControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */; };
-		92E2E65515BFD6740013B032 /* FileTransferTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92E2E65415BFD6740013B032 /* FileTransferTableCell.xib */; };
 		92F3BE5011716FE700A4F554 /* CQPreferencesTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F3BE4F11716FE700A4F554 /* CQPreferencesTextViewCell.m */; };
 		92F3BF80117186AF00A4F554 /* CQTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F3BF7F117186AF00A4F554 /* CQTextView.m */; };
 		9717342C0F2D1CA100DA9CDB /* UIImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9717342B0F2D1CA100DA9CDB /* UIImageAdditions.m */; };
@@ -1367,7 +1366,6 @@
 				1CA2662C11C4B36200AB4E44 /* Icon-114.png in Resources */,
 				1CA2663811C4BA9200AB4E44 /* help@2x.png in Resources */,
 				1CA2663C11C4BE1A00AB4E44 /* new@2x.png in Resources */,
-				92E2E65515BFD6740013B032 /* FileTransferTableCell.xib in Resources */,
 				1C2C995C1608E1680041F46C /* Default-568h@2x.png in Resources */,
 				1C2C99851609029C0041F46C /* Icon-144.png in Resources */,
 				9247414316119CCC009132B5 /* chromatic-redux.css in Resources */,

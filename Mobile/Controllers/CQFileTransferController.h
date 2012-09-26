@@ -1,6 +1,8 @@
 //  Created by August Joki on 1/19/09.
 //  Copyright 2009 Concinnous Software. All rights reserved.
 
+#if ENABLE(FILE_TRANSFERS)
+
 #import "CQViewController.h"
 
 @class MVFileTransfer;
@@ -20,3 +22,5 @@
 - (id) initWithTransfer:(MVFileTransfer *) transfer;
 - (UIImage *) thumbnailWithSize:(CGSize) size;
 @end
+
+#endif

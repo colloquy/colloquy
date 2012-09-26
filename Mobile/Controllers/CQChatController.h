@@ -10,8 +10,10 @@
 @class MVDirectChatConnection;
 @protocol CQChatViewController;
 
+#if ENABLE(FILE_TRANSFERS)
 @class CQFileTransferController;
 @class MVFileTransfer;
+#endif
 
 extern NSString *CQChatControllerAddedChatViewControllerNotification;
 extern NSString *CQChatControllerRemovedChatViewControllerNotification;
@@ -50,7 +52,9 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 - (void) showPendingChatControllerAnimated:(BOOL) animated;
 - (BOOL) hasPendingChatController;
 
+#if ENABLE(FILE_TRANSFERS)
 - (void) showFilePickerWithUser:(MVChatUser *) user;
+#endif
 
 - (void) joinSupportRoom;
 
@@ -66,7 +70,9 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 - (BOOL) connectionHasAnyChatRooms:(MVChatConnection *) connection;
 - (BOOL) connectionHasAnyPrivateChats:(MVChatConnection *) connection;
 
+#if ENABLE(FILE_TRANSFERS)
 - (CQFileTransferController *) chatViewControllerForFileTransfer:(MVFileTransfer *) transfer ifExists:(BOOL) exists;
+#endif
 
 - (void) visibleChatControllerWasHidden;
 

@@ -56,18 +56,16 @@ static NSString *membersFilteredCountFormat;
 	return [[UIDevice currentDevice] isPadModel] ? 1 : NSNotFound;
 }
 
+#if ENABLE(FILE_TRANSFERS)
 - (NSInteger) sendFileButtonIndex {
-#if ENABLE(SENDING_FILES)
 	if ([[UIDevice currentDevice] isPadModel])
 		return 2;
 	return 1;
-#else
-	return -1;
-#endif
 }
+#endif
 
 - (NSInteger) operatorActionsButtonIndex {
-#if ENABLE(SENDING_FILES)
+#if ENABLE(FILE_TRANSFERS)
 	return [self sendFileButtonIndex] + 1;
 #else
 	if ([[UIDevice currentDevice] isPadModel])
@@ -459,7 +457,7 @@ static NSString *membersFilteredCountFormat;
 	if ([[UIDevice currentDevice] isPadModel])
 		[sheet addButtonWithTitle:NSLocalizedString(@"User Information", @"User Information button title")];
 
-#if ENABLE(SENDING_FILES)
+#if ENABLE(FILE_TRANSFERS)
 	[sheet addButtonWithTitle:NSLocalizedString(@"Send File", @"Send File button title")];
 #endif
 
@@ -525,8 +523,10 @@ static NSString *membersFilteredCountFormat;
 			[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
 
 			[userInfoController release];
+#if ENABLE(FILE_TRANSFERS)
 		} else if (buttonIndex == [self sendFileButtonIndex]) {
 			[[CQChatController defaultController] showFilePickerWithUser:user];
+#endif
 		} else if (buttonIndex == [self operatorActionsButtonIndex]) {
 			NSSet *features = _room.connection.supportedFeatures;
 
