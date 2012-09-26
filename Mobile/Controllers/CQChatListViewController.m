@@ -107,18 +107,23 @@ static MVChatConnection *connectionForSection(NSUInteger section) {
 
 	return nil;
 }
- 
+
 static NSUInteger sectionIndexForConnection(MVChatConnection *connection) {
-	NSUInteger sectionIndex = [[CQConnectionsController defaultController].directConnections indexOfObjectIdenticalTo:connection];
+	NSArray *directConnections = [CQConnectionsController defaultController].directConnections;
+	NSUInteger sectionIndex = [directConnections indexOfObjectIdenticalTo:connection];
 	if (sectionIndex != NSNotFound)
 		return sectionIndex;
 
+	sectionIndex = directConnections.count;
+
 	for (CQBouncerSettings *settings in [CQConnectionsController defaultController].bouncers) {
 		NSArray *connections = [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:settings.identifier];
-		sectionIndex = [connections indexOfObjectIdenticalTo:connection];
+		NSUInteger index = [connections indexOfObjectIdenticalTo:connection];
 
-		if (sectionIndex != NSNotFound)
-			return sectionIndex;
+		if (index != NSNotFound)
+			return sectionIndex + index;
+
+		sectionIndex += connections.count;
 	}
 
 	return NSNotFound;
