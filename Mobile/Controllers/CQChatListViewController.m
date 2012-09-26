@@ -99,37 +99,50 @@ static BOOL showsChatIcons;
 #pragma mark -
 
 static MVChatConnection *connectionForSection(NSUInteger section) {
-	NSUInteger workingCount = [CQConnectionsController defaultController].directConnections.count;
-	if (workingCount && section < workingCount)
-		return [[CQConnectionsController defaultController].directConnections objectAtIndex:section];
+	NSArray *controllers = [CQChatController defaultController].chatViewControllers;
+	if (!controllers.count)
+		return nil;
 
-	for (CQBouncerSettings *settings in [CQConnectionsController defaultController].bouncers) {
-		for (MVChatConnection *connection in [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:settings.identifier]) {
-			if (workingCount == section)
-				return connection;
-			workingCount++;
+	MVChatConnection *currentConnection = nil;
+	NSUInteger sectionCount = 0;
+
+	for (id <CQChatViewController> chatViewController in controllers) {
+		if (![chatViewController conformsToProtocol:@protocol(CQChatViewController)])
+			continue;
+
+		if (chatViewController.connection != currentConnection) {
+			if (currentConnection)
+				++sectionCount;
+			currentConnection = chatViewController.connection;
 		}
+
+		if (section == sectionCount)
+			return chatViewController.connection;
 	}
 
 	return nil;
 }
 
 static NSUInteger sectionIndexForConnection(MVChatConnection *connection) {
-	NSArray *directConnections = [CQConnectionsController defaultController].directConnections;
-	NSUInteger sectionIndex = [directConnections indexOfObjectIdenticalTo:connection];
-	if (sectionIndex != NSNotFound)
-		return sectionIndex;
+	NSArray *controllers = [CQChatController defaultController].chatViewControllers;
+	if (!controllers.count)
+		return NSNotFound;
 
-	sectionIndex = directConnections.count;
+	MVChatConnection *currentConnection = nil;
+	NSUInteger sectionCount = 0;
 
-	for (CQBouncerSettings *settings in [CQConnectionsController defaultController].bouncers) {
-		NSArray *connections = [[CQConnectionsController defaultController] bouncerChatConnectionsForIdentifier:settings.identifier];
-		NSUInteger index = [connections indexOfObjectIdenticalTo:connection];
+	for (id <CQChatViewController> chatViewController in controllers) {
+		if (![chatViewController conformsToProtocol:@protocol(CQChatViewController)])
+			continue;
 
-		if (index != NSNotFound)
-			return sectionIndex + index;
+		if (chatViewController.connection != currentConnection) {
+			if (currentConnection)
+				++sectionCount;
+			currentConnection = chatViewController.connection;
+		}
 
-		sectionIndex += connections.count;
+		if (chatViewController.connection == connection)
+			return sectionCount;
 	}
 
 	return NSNotFound;
@@ -145,18 +158,30 @@ static id <CQChatViewController> chatControllerForIndexPath(NSIndexPath *indexPa
 	if (!indexPath)
 		return nil;
 
-	MVChatConnection *connection = connectionForSection(indexPath.section);
-	if (connection) {
-		NSArray *controllers = [[CQChatController defaultController] chatViewControllersForConnection:connection];
-		if (indexPath.row < (NSInteger)controllers.count)
-			return [controllers objectAtIndex:indexPath.row];
-	}
+	NSArray *controllers = [CQChatController defaultController].chatViewControllers;
+	if (!controllers.count)
+		return nil;
 
-#if ENABLE(FILE_TRANSFERS)
-	NSArray *controllers = [[CQChatController defaultController] chatViewControllersKindOfClass:[CQFileTransferController class]];
-	if (indexPath.row < (NSInteger)controllers.count)
-		return [controllers objectAtIndex:indexPath.row];
-#endif
+	MVChatConnection *currentConnection = nil;
+	NSInteger sectionCount = 0;
+	NSInteger rowCount = 0;
+
+	for (id <CQChatViewController> chatViewController in controllers) {
+		if (![chatViewController conformsToProtocol:@protocol(CQChatViewController)])
+			continue;
+
+		if (chatViewController.connection != currentConnection) {
+			rowCount = 0;
+			if (currentConnection)
+				++sectionCount;
+			currentConnection = chatViewController.connection;
+		}
+
+		if (indexPath.section == sectionCount && indexPath.row == rowCount)
+			return chatViewController;
+
+		++rowCount;
+	}
 
 	return nil;
 }
@@ -169,28 +194,25 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 	if (!controllers.count)
 		return nil;
 
-	MVChatConnection *connection = nil;
-	if ([controller conformsToProtocol:@protocol(CQChatViewController)])
-		connection = ((id <CQChatViewController>) controller).connection;
-
-	NSUInteger rowIndex = 0;
+	MVChatConnection *currentConnection = nil;
+	NSInteger sectionCount = 0;
+	NSInteger rowCount = 0;
 
 	for (id <CQChatViewController> chatViewController in controllers) {
-		if ([chatViewController conformsToProtocol:@protocol(CQChatViewController)]) {
-			if (chatViewController == controller)
-				return [NSIndexPath indexPathForRow:rowIndex inSection:sectionIndexForConnection(chatViewController.connection)];
+		if (![chatViewController conformsToProtocol:@protocol(CQChatViewController)])
+			continue;
 
-			if (chatViewController.connection == connection && chatViewController != controller)
-				++rowIndex;
-#if ENABLE(FILE_TRANSFERS)
-		} else if (![chatViewController isKindOfClass:[CQFileTransferController class]]) {
-			if (chatViewController == controller)
-				return [NSIndexPath indexPathForRow:rowIndex inSection:sectionIndexForConnection(chatViewController.connection) + 1];
-			++rowIndex;
-		} else {
-			return [NSIndexPath indexPathForRow:rowIndex inSection:sectionIndexForTransfers()];
-#endif
+		if (chatViewController.connection != currentConnection) {
+			rowCount = 0;
+			if (currentConnection)
+				++sectionCount;
+			currentConnection = chatViewController.connection;
 		}
+
+		if (chatViewController == controller)
+			return [NSIndexPath indexPathForRow:rowCount inSection:sectionCount];
+
+		++rowCount;
 	}
 
 	return nil;
@@ -270,15 +292,18 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		if (!indexPath)
 			continue;
 
+		[[CQChatController defaultController] closeViewController:chatViewController];
 		[rowsToDelete addObject:indexPath];
 	}
 
-	if (rowsToDelete.count) {
-		for (id <CQChatViewController> chatViewController in viewControllersToClose)
-			[[CQChatController defaultController] closeViewController:chatViewController];
+	NSAssert(rowsToDelete.count == viewControllersToClose.count, @"All controllers must have a row.");
 
-		[self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:animation];
+	if (rowsToDelete.count != viewControllersToClose.count) {
+		[self.tableView reloadData];
+		return;
 	}
+
+	[self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:animation];
 
 	[rowsToDelete release];
 }
@@ -619,8 +644,9 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	}
 
 	NSIndexPath *indexPath = indexPathForChatController(controller);
-	if (indexPath.section == NSNotFound)
+	if (!indexPath)
 		return;
+
 	[self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:animatedScroll];
 	[self.tableView selectRowAtIndexPath:indexPath animated:animatedSelection scrollPosition:UITableViewScrollPositionNone];
 }
