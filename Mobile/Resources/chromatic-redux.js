@@ -48,10 +48,17 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
     if (self) className += " self";
     else className += (" user" + (senderHash(senderNickname) % 30));
 
-    var senderElement = document.createElement("div");
-    senderElement.className = className;
-    senderElement.textContent = senderText(senderNickname, highlighted, action, self);
-    messageWrapperElement.appendChild(senderElement);
+	var aElement = document.createElement("a");
+	aElement.setAttribute("href", "colloquy://" + senderNickname);
+	aElement.setAttribute("style", "text-decoration: none");
+
+	var senderElement = document.createElement("div");
+	senderElement.className = className;
+	senderElement.appendChild(aElement);
+	senderElement.textContent = senderText(senderNickname, highlighted, action, self);
+
+	aElement.appendChild(senderElement);
+	messageWrapperElement.appendChild(aElement);
 
     var messageElement = document.createElement("div");
     messageElement.className = "message";

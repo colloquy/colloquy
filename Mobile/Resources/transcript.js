@@ -92,9 +92,14 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 	className = "sender";
 	if (self) className += " self";
 
+	var aElement = document.createElement("a");
+	aElement.setAttribute("href", "colloquy://" + senderNickname);
+	aElement.setAttribute("style", "text-decoration: none");
+	aElement.textContent = senderText(senderNickname, highlighted, action, self);
+
 	var senderElement = document.createElement("div");
 	senderElement.className = className;
-	senderElement.textContent = senderText(senderNickname, highlighted, action, self);
+	senderElement.appendChild(aElement);
 	messageWrapperElement.appendChild(senderElement);
 
 	var messageElement = document.createElement("div");

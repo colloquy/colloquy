@@ -333,14 +333,7 @@ static BOOL showingKeyboard;
 	if (!self.user)
 		return;
 
-	CQUserInfoController *userInfoController = [[CQUserInfoController alloc] init];
-	userInfoController.user = self.user;
-
-	[self _forceRegsignKeyboard];
-
-	[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
-
-	[userInfoController release];
+	[self _showUserInfoControllerForUser:self.user];
 }
 
 #pragma mark -
@@ -1002,23 +995,14 @@ static BOOL showingKeyboard;
 #pragma mark -
 
 - (BOOL) handleWhoisCommandWithArguments:(NSString *) arguments {
-	CQUserInfoController *userInfoController = [[CQUserInfoController alloc] init];
-
 	if (arguments.length) {
 		NSString *nick = [[arguments componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] objectAtIndex:0];
-		userInfoController.user = [[self.connection chatUsersWithNickname:nick] anyObject];
+		[self _showUserInfoControllerForUserNamed:nick];
 	} else if (self.user) {
-		userInfoController.user = self.user;
+		[self _showUserInfoControllerForUser:self.user];
 	} else {
-		[userInfoController release];
 		return NO;
 	}
-
-	[self _forceRegsignKeyboard];
-
-	[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
-
-	[userInfoController release];
 
 	return YES;
 }
@@ -1084,6 +1068,10 @@ static BOOL showingKeyboard;
 	[[UIApplication sharedApplication] openURL:url];
 
 	return YES;
+}
+
+- (void) transcriptView:(CQChatTranscriptView *) transcriptView handleNicknameTap:(NSString *) nickname {
+	[self _showUserInfoControllerForUserNamed:nickname];
 }
 
 - (void) transcriptViewWasReset:(CQChatTranscriptView *) view {
@@ -1297,6 +1285,23 @@ static BOOL showingKeyboard;
 
 	if (buttonIndex == 0)
 		[self showUserInformation];
+}
+
+#pragma mark -
+
+- (void) _showUserInfoControllerForUserNamed:(NSString *) nickname {
+	[self _showUserInfoControllerForUser:[[self.connection chatUsersWithNickname:nickname] anyObject]];
+}
+
+- (void) _showUserInfoControllerForUser:(MVChatUser *) user {
+	CQUserInfoController *userInfoController = [[CQUserInfoController alloc] init];
+	userInfoController.user = user;
+
+	[self _forceRegsignKeyboard];
+
+	[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
+
+	[userInfoController release];
 }
 
 #pragma mark -

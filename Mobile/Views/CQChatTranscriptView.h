@@ -33,5 +33,6 @@
 @protocol CQChatTranscriptViewDelegate <NSObject>
 @optional
 - (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url;
+- (void) transcriptView:(CQChatTranscriptView *) transcriptView handleNicknameTap:(NSString *) nickname;
 - (void) transcriptViewWasReset:(CQChatTranscriptView *) transcriptView;
 @end

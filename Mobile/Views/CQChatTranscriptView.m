@@ -227,6 +227,13 @@
 	if (navigationType != UIWebViewNavigationTypeLinkClicked)
 		return NO;
 
+	if ([request.URL.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
+		if ([transcriptDelegate respondsToSelector:@selector(transcriptView:handleNicknameTap:)])
+			[transcriptDelegate transcriptView:self handleNicknameTap:request.URL.host];
+
+		return NO;
+	}
+
 	if ([transcriptDelegate respondsToSelector:@selector(transcriptView:handleOpenURL:)])
 		if ([transcriptDelegate transcriptView:self handleOpenURL:request.URL])
 			return NO;
