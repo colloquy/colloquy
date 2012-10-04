@@ -12,6 +12,7 @@
 	BOOL _scrolling;
 	BOOL _loading;
 	BOOL _resetPending;
+	CGPoint _lastTouchLocation;
 }
 @property (nonatomic, assign) id <CQChatTranscriptViewDelegate> transcriptDelegate;
 
@@ -33,6 +34,6 @@
 @protocol CQChatTranscriptViewDelegate <NSObject>
 @optional
 - (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url;
-- (void) transcriptView:(CQChatTranscriptView *) transcriptView handleNicknameTap:(NSString *) nickname;
+- (void) transcriptView:(CQChatTranscriptView *) transcriptView handleNicknameTap:(NSString *) nickname atLocation:(CGPoint) location;
 - (void) transcriptViewWasReset:(CQChatTranscriptView *) transcriptView;
 @end

@@ -1070,7 +1070,7 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
-- (void) transcriptView:(CQChatTranscriptView *) transcriptView handleNicknameTap:(NSString *) nickname {
+- (void) transcriptView:(CQChatTranscriptView *) transcriptView handleNicknameTap:(NSString *) nickname atLocation:(CGPoint) location {
 	[self _showUserInfoControllerForUserNamed:nickname];
 }
 

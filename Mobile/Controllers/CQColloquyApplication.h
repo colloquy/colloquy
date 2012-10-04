@@ -31,6 +31,7 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 - (NSString *) applicationNameForURL:(NSURL *) url;
 
 - (void) showActionSheet:(UIActionSheet *) sheet;
+- (void) showActionSheet:(UIActionSheet *) sheet fromPoint:(CGPoint) point;
 - (void) showActionSheet:(UIActionSheet *) sheet forSender:(id) sender animated:(BOOL) animated;
 
 @property (nonatomic, readonly) UIViewController *mainViewController;

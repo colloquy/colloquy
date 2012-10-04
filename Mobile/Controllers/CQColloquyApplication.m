@@ -450,7 +450,15 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	[self showActionSheet:sheet forSender:nil animated:YES];
 }
 
+- (void) showActionSheet:(UIActionSheet *) sheet fromPoint:(CGPoint) point {
+	[self showActionSheet:sheet forSender:nil orFromPoint:point animated:YES];
+}
+
 - (void) showActionSheet:(UIActionSheet *) sheet forSender:(id) sender animated:(BOOL) animated {
+	[self showActionSheet:sheet forSender:sender orFromPoint:CGPointZero animated:animated];
+}
+
+- (void) showActionSheet:(UIActionSheet *) sheet forSender:(id) sender orFromPoint:(CGPoint) point animated:(BOOL) animated {
 	if (sender && [[UIDevice currentDevice] isPadModel]) {
 		id old = _visibleActionSheet;
 		[old dismissWithClickedButtonIndex:[old cancelButtonIndex] animated:NO];
@@ -477,6 +485,12 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 	if ([sender isKindOfClass:[UIView class]]) {
 		[sheet showInView:sender];
+		return;
+	}
+
+	NSLog(@"showing from %@", NSStringFromCGPoint(point));
+	if (!CGPointEqualToPoint(point, CGPointZero)) {
+		[sheet showFromRect:(CGRect){ point, { 0, 0 } } inView:_mainViewController.view animated:animated];
 		return;
 	}
 

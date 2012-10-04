@@ -220,6 +220,16 @@
 
 #pragma mark -
 
+- (UIView *) hitTest:(CGPoint) point withEvent:(UIEvent *) event {
+	UIView *view = [super hitTest:point withEvent:event];
+
+	_lastTouchLocation = [[UIApplication sharedApplication].keyWindow convertPoint:point fromView:self];
+
+	return view;
+}
+
+#pragma mark -
+
 - (BOOL) webView:(UIWebView *) webView shouldStartLoadWithRequest:(NSURLRequest *) request navigationType:(UIWebViewNavigationType) navigationType {
 	if (navigationType == UIWebViewNavigationTypeOther)
 		return YES;
@@ -228,8 +238,8 @@
 		return NO;
 
 	if ([request.URL.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
-		if ([transcriptDelegate respondsToSelector:@selector(transcriptView:handleNicknameTap:)])
-			[transcriptDelegate transcriptView:self handleNicknameTap:request.URL.host];
+		if ([transcriptDelegate respondsToSelector:@selector(transcriptView:handleNicknameTap:atLocation:)])
+			[transcriptDelegate transcriptView:self handleNicknameTap:request.URL.host atLocation:_lastTouchLocation];
 
 		return NO;
 	}
