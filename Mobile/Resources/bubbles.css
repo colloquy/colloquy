@@ -68,6 +68,11 @@ body {
 	margin: -6px -1px -4px -1px;
 }
 
+.nickname {
+	-webkit-touch-callout: none;
+	text-decoration: none;
+}
+
 .sender {
 	color: rgb(40%, 40%, 40%);
 	margin-top: -1px;

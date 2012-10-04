@@ -55,6 +55,12 @@ body {
 	color: rgb(170, 34, 17);
 }
 
+.nickname {
+	-webkit-touch-callout: none;
+	text-decoration: none;
+}
+
+
 .event {
 	font-size: smaller;
 	line-height: 1.1em;

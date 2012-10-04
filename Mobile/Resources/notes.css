@@ -37,6 +37,11 @@ body {
 	border-bottom: none;
 }
 
+.nickname {
+	-webkit-touch-callout: none;
+	text-decoration: none;
+}
+
 .sender {
 	display: inline;
 	color: #61150f;

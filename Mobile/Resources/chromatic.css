@@ -59,6 +59,11 @@ a {
 	margin-left: -6px;
 }
 
+.nickname {
+	-webkit-touch-callout: none;
+	text-decoration: none;
+}
+
 .sender {
 	display: inline;
 	color: hsl(40, 75%, 40%);
