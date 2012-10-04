@@ -129,12 +129,14 @@ static BOOL showingKeyboard;
 		_showingKeyboard = showingKeyboard;
 	}
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_nicknameDidChange:) name:MVChatUserNicknameChangedNotification object:nil];
+
 	if (self.user) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:self.user];
+
 		[self _updateRightBarButtonItemAnimated:NO];
 
 		_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDirectChatEncoding"];
-
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:self.user];
 
 		_watchRule = [[MVChatUserWatchRule alloc] init];
 		_watchRule.nickname = self.user.nickname;
@@ -1398,6 +1400,12 @@ static BOOL showingKeyboard;
 
 	NSString *capitalizationBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocapitalizationBehavior"];
 	chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
+}
+
+- (void) _nicknameDidChange:(NSNotification *) notification {
+	MVChatUser *user = (MVChatUser *)notification.object;
+
+	[transcriptView noteNicknameChangedFrom:[notification.userInfo objectForKey:@"oldNickname"] to:user.nickname];
 }
 
 - (void) _userNicknameDidChange:(NSNotification *) notification {

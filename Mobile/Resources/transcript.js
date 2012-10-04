@@ -80,6 +80,16 @@ function senderText(senderNickname, highlighted, action, self) {
 	return (action ? "\u2022\u2008" : "" ) + senderNickname + (action ? " " : ": ");
 }
 
+function nicknameChanged(from, to) {
+	var className = "nickname " + from;
+	var url = "colloquy://" + to;
+
+	var elements = document.getElementsByClassName(className);
+	for (var i = 0; i < elements.length; i++) {
+		elements[i].setAttribute("href", url);
+	}
+}
+
 function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession) {
 	var className = "message-wrapper";
 	if (action) className += " action";
@@ -93,7 +103,7 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 	if (self) className += " self";
 
 	var aElement = document.createElement("a");
-	aElement.className = "nickname"
+	aElement.className = "nickname " + senderNickname;
 	aElement.setAttribute("href", "colloquy://" + senderNickname);
 	aElement.textContent = senderText(senderNickname, highlighted, action, self);
 

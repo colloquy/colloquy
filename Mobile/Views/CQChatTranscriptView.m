@@ -296,6 +296,10 @@
 	[self _addComponentsToTranscript:[NSArray arrayWithObject:component] fromPreviousSession:NO animated:animated];
 }
 
+- (void) noteNicknameChangedFrom:(NSString *) oldNickname to:(NSString *) newNickname {
+	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"nicknameChanged(\"%@\", \"%@\")", oldNickname, newNickname]];
+}
+
 - (void) scrollToBottomAnimated:(BOOL) animated {
 	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollToBottom(%@)", (animated ? @"true" : @"false")]];
 }

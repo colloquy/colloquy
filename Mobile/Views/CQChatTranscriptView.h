@@ -24,6 +24,8 @@
 - (void) addComponents:(NSArray *) components animated:(BOOL) animated;
 - (void) addComponent:(NSDictionary *) component animated:(BOOL) animated;
 
+- (void) noteNicknameChangedFrom:(NSString *) oldNickname to:(NSString *) newNickname;
+
 - (void) scrollToBottomAnimated:(BOOL) animated;
 - (void) flashScrollIndicators;
 

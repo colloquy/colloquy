@@ -488,9 +488,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		return;
 	}
 
-	NSLog(@"showing from %@", NSStringFromCGPoint(point));
 	if (!CGPointEqualToPoint(point, CGPointZero)) {
-		[sheet showFromRect:(CGRect){ point, { 0, 0 } } inView:_mainViewController.view animated:animated];
+		[sheet showFromRect:(CGRect){ point, { 1., 1. } } inView:_mainViewController.view animated:animated];
 		return;
 	}
 
