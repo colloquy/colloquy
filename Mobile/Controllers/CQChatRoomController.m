@@ -13,6 +13,8 @@
 #import <ChatCore/MVChatRoom.h>
 #import <ChatCore/MVChatUser.h>
 
+#import "UIActionSheetAdditions.h"
+
 static BOOL showJoinEvents;
 static BOOL showHostmasksOnJoin;
 static BOOL showHostmasksOnPart;
@@ -334,6 +336,16 @@ static BOOL showLeaveEvents;
 		[completions addObjectsFromArray:[super chatInputBar:inputBar completionsForWordWithPrefix:word inRange:range]];
 
 	return [completions autorelease];
+}
+
+#pragma mark -
+
+- (void) transcriptView:(CQChatTranscriptView *) transcriptView handleNicknameTap:(NSString *) nickname {
+	MVChatUser *user = [[self.connection chatUsersWithNickname:nickname] anyObject];
+	UIActionSheet *sheet = [UIActionSheet userActionSheetForUser:user inRoom:self.room showingUserInformation:YES];
+	sheet.title = nickname;
+
+	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:nil animated:YES];
 }
 
 #pragma mark -
