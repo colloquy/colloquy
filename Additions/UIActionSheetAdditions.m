@@ -163,7 +163,6 @@
 		}
 	} else if (actionSheet.tag == OperatorActionSheetTag) {
 		id action = [[actionSheet associatedObjectForKey:@"userInfo"] objectForKey:[NSNumber numberWithUnsignedInteger:buttonIndex]];
-		NSLog(@"action: %@", action);
 
 		if ([action isKindOfClass:[NSNumber class]]) {
 			MVChatRoomMemberMode mode = ([action unsignedIntegerValue] & 0x7FFF);
