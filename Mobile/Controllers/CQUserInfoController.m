@@ -7,6 +7,8 @@
 
 #import "MVChatUser.h"
 
+#import "CQColloquyApplication.h"
+
 @implementation CQUserInfoController
 - (void) dealloc {
 	[_user release];
@@ -29,6 +31,8 @@
 	UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(close:)];
 	_rootViewController.navigationItem.leftBarButtonItem = doneItem;
 	[doneItem release];
+
+	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 }
 
 #pragma mark -
