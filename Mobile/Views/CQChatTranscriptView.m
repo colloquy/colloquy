@@ -221,11 +221,9 @@
 #pragma mark -
 
 - (UIView *) hitTest:(CGPoint) point withEvent:(UIEvent *) event {
-	UIView *view = [super hitTest:point withEvent:event];
-
 	_lastTouchLocation = [[UIApplication sharedApplication].keyWindow convertPoint:point fromView:self];
 
-	return view;
+	return [super hitTest:point withEvent:event];;
 }
 
 #pragma mark -
