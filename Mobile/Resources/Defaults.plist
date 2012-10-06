@@ -62,8 +62,8 @@
 	<string></string>
 	<key>CQDefaultRealName</key>
 	<string></string>
-	<key>CQDefaultNickname</key>
-	<string></string>
+	<key>CQSplitSwipeOrientations</key>
+	<integer>0</integer>
 	<key>CQTimestampInterval</key>
 	<integer>180</integer>
 	<key>CQPrivateMessageAlertTimeout</key>

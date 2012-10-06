@@ -74,6 +74,36 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
+			<string>iPad</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Swipe to Show Connections</string>
+			<key>Key</key>
+			<string>CQSplitSwipeOrientations</string>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>3</integer>
+				<integer>12</integer>
+				<integer>15</integer>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Never</string>
+				<string>Portrait</string>
+				<string>Landscape</string>
+				<string>All Orientations</string>
+			</array>
+			<key>DefaultValue</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
 			<string>Default Encodings</string>
 		</dict>
 		<dict>

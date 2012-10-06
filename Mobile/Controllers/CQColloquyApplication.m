@@ -155,6 +155,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	if (![NSThread isMainThread])
 		return;
 
+	if ([UIDevice currentDevice].isPadModel)
+		[self reloadSplitViewController];
 	[self updateAnalytics];
 
 	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
@@ -280,6 +282,34 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #pragma mark -
 
+- (void) reloadSplitViewController {
+	[_colloquiesPopoverController release];
+	_colloquiesPopoverController = nil;
+
+	[_colloquiesBarButtonItem release];
+	_colloquiesBarButtonItem = nil;
+
+	UISplitViewController *oldSplitViewController = [self splitViewController];
+	oldSplitViewController.delegate = nil;
+	oldSplitViewController.viewControllers = nil;
+	[_mainViewController release];
+
+	UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
+	splitViewController.delegate = self;
+
+	_connectionsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connections", @"Connections button title") style:UIBarButtonItemStyleBordered target:self action:@selector(toggleConnections:)];
+
+	CQChatPresentationController *presentationController = [CQChatController defaultController].chatPresentationController;
+	[presentationController setStandardToolbarItems:[NSArray arrayWithObject:_connectionsBarButtonItem] animated:NO];
+
+	NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQChatController defaultController].chatNavigationController, presentationController, nil];
+	splitViewController.viewControllers = viewControllers;
+	[viewControllers release];
+	
+	_mainViewController = splitViewController;
+	_mainWindow.rootViewController = _mainViewController;
+}
+
 - (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
 	NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]];
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
@@ -287,27 +317,15 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 	_deviceToken = [[[NSUserDefaults standardUserDefaults] stringForKey:@"CQPushDeviceToken"] retain];
 	_showingTabBar = YES;
 
-	[self userDefaultsChanged];
-
 	[CQConnectionsController defaultController];
 	[CQChatController defaultController];
 
 	_mainWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 
+	[self userDefaultsChanged];
+
 	if ([[UIDevice currentDevice] isPadModel]) {
-		UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
-		splitViewController.delegate = self;
-
-		_connectionsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connections", @"Connections button title") style:UIBarButtonItemStyleBordered target:self action:@selector(toggleConnections:)];
-
-		CQChatPresentationController *presentationController = [CQChatController defaultController].chatPresentationController;
-		[presentationController setStandardToolbarItems:[NSArray arrayWithObject:_connectionsBarButtonItem] animated:NO];
-
-		NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQChatController defaultController].chatNavigationController, presentationController, nil];
-		splitViewController.viewControllers = viewControllers;
-		[viewControllers release];
-
-		_mainViewController = splitViewController;
+		// do nothing; everything is set up in -userDefaultsChanged now
 	} else {
 		UITabBarController *tabBarController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
 		tabBarController.delegate = self;
@@ -319,9 +337,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 		tabBarController.selectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQSelectedTabIndex"];
 
 		_mainViewController = tabBarController;
+		_mainWindow.rootViewController = _mainViewController;
 	}
 
-	_mainWindow.rootViewController = _mainViewController;
 	[_mainWindow makeKeyAndVisible];
 
 	[self handleNotificationWithUserInfo:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]];
@@ -441,7 +459,7 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (BOOL) splitViewController:(UISplitViewController *) splitViewController shouldHideViewController:(UIViewController *) viewController inOrientation:(UIInterfaceOrientation) interfaceOrientation {
-	return NO;
+	return [[NSUserDefaults standardUserDefaults] integerForKey:@"CQSplitSwipeOrientations"] & (1 << interfaceOrientation);
 }
 
 #pragma mark -
