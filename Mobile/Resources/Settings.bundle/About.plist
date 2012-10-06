@@ -108,6 +108,16 @@
 			<key>Type</key>
 			<string>PSTitleValueSpecifier</string>
 			<key>Title</key>
+			<string>Grant Paul</string>
+			<key>Key</key>
+			<string>CQCreditsDeveloperJane</string>
+			<key>DefaultValue</key>
+			<string>Programmer</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
 			<string>Aaron Stepanik</string>
 			<key>Key</key>
 			<string>CQCreditsTesterAaron</string>
