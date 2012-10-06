@@ -1405,6 +1405,9 @@ static BOOL showingKeyboard;
 - (void) _nicknameDidChange:(NSNotification *) notification {
 	MVChatUser *user = (MVChatUser *)notification.object;
 
+	if (![user.connection isEqual:[_target connection]])
+		return;
+
 	[transcriptView noteNicknameChangedFrom:[notification.userInfo objectForKey:@"oldNickname"] to:user.nickname];
 }
 
