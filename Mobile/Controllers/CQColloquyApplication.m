@@ -11,6 +11,13 @@
 #import "CQWelcomeController.h"
 #import "RegexKitLite.h"
 
+typedef enum {
+	CQSidebarOrientationNone,
+	CQSidebarOrientationPortrait,
+	CQSidebarOrientationLandscape,
+	CQSidebarOrientationAll
+} CQSidebarOrientation;
+
 #if ENABLE(SECRETS)
 typedef enum {
     UITabBarTransitionNone,
@@ -459,7 +466,20 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (BOOL) splitViewController:(UISplitViewController *) splitViewController shouldHideViewController:(UIViewController *) viewController inOrientation:(UIInterfaceOrientation) interfaceOrientation {
-	return [[NSUserDefaults standardUserDefaults] integerForKey:@"CQSplitSwipeOrientations"] & (1 << interfaceOrientation);
+	NSUInteger allowedOrientation = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQSplitSwipeOrientations"];
+	if (allowedOrientation == CQSidebarOrientationNone)
+		return NO;
+
+	if (allowedOrientation == CQSidebarOrientationAll)
+		return YES;
+
+	if (UIInterfaceOrientationIsLandscape(interfaceOrientation) && (allowedOrientation == CQSidebarOrientationLandscape))
+		return YES;
+
+	if (UIInterfaceOrientationIsPortrait(interfaceOrientation) && (allowedOrientation == CQSidebarOrientationPortrait))
+		return YES;
+
+	return NO;
 }
 
 #pragma mark -
