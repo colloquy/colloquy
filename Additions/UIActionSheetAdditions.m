@@ -120,6 +120,9 @@
 
 	operatorSheet.cancelButtonIndex = [operatorSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
+	[context release];
+
+
 	return [operatorSheet autorelease];
 }
 

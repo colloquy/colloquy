@@ -300,6 +300,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	if (rowsToDelete.count != viewControllersToClose.count) {
 		[self.tableView reloadData];
+		[rowsToDelete release];
 		return;
 	}
 
