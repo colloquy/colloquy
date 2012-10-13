@@ -637,11 +637,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 - (void) showColloquies:(id) sender {
 	if ([[UIDevice currentDevice] isPadModel]) {
-		if (!UIInterfaceOrientationIsLandscape([UIDevice currentDevice].orientation)) {
-			if (!_colloquiesPopoverController.popoverVisible) {
-				[self dismissPopoversAnimated:NO];
-				[_colloquiesPopoverController presentPopoverFromBarButtonItem:_colloquiesBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-			}
+		if (!_colloquiesPopoverController.popoverVisible) {
+			[self dismissPopoversAnimated:NO];
+			[_colloquiesPopoverController presentPopoverFromBarButtonItem:_colloquiesBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
 		}
 	} else {
 		self.tabBarController.selectedViewController = [CQChatController defaultController].chatNavigationController;
