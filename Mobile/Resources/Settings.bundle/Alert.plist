@@ -63,8 +63,10 @@
 			<string>Beep 1</string>
 		</dict>
 		<dict>
-			<key>OnlyDisplayOnInterfaceIdiom</key>
-			<string>Phone</string>
+			<key>SupportedUserInterfaceIdioms</key>
+			<array>
+				<string>Phone</string>
+			</array>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
@@ -143,8 +145,10 @@
 			<string>Stoof</string>
 		</dict>
 		<dict>
-			<key>OnlyDisplayOnInterfaceIdiom</key>
-			<string>Phone</string>
+			<key>SupportedUserInterfaceIdioms</key>
+			<array>
+				<string>Phone</string>
+			</array>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
