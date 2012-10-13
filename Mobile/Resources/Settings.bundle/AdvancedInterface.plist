@@ -71,16 +71,12 @@
 			<false/>
 		</dict>
 		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>iPad</string>
-		</dict>
-		<dict>
+			<key>OnlyDisplayOnInterfaceIdiom</key>
+			<string>Pad</string>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
-			<string>Swipe to Show Connections</string>
+			<string>Auto Hide Sidebar</string>
 			<key>Key</key>
 			<string>CQSplitSwipeOrientations</string>
 			<key>Values</key>
@@ -95,7 +91,7 @@
 				<string>Never</string>
 				<string>Portrait</string>
 				<string>Landscape</string>
-				<string>All Orientations</string>
+				<string>Always</string>
 			</array>
 			<key>DefaultValue</key>
 			<integer>0</integer>
