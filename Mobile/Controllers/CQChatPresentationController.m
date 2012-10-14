@@ -80,12 +80,14 @@
 		[titleLabel sizeToFit];
 
 		UIBarButtonItem *leftSpaceItem = nil;
-		if ([[[NSLocale currentLocale] localeIdentifier] hasCaseInsensitivePrefix:@"en"]) {
+		// Only used a fixed space if there are 2 standard toolbar buttons. This means the sidebar is hidden
+		// and we should try to center the title to the device.
+		if (_standardToolbarItems.count == 2 && [[[NSLocale currentLocale] localeIdentifier] hasCaseInsensitivePrefix:@"en"]) {
 			leftSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
 
 			// This calculation makes a big assumption about the width of the right side buttons.
 			// So this is only correct for English, and needs updated if the right buttons change in width.
-			CGFloat offset = UIDeviceOrientationIsPortrait(interfaceOrientation) ? 182. : 240.;
+			CGFloat offset = UIDeviceOrientationIsPortrait(interfaceOrientation) ? 182. : 310.;
 			leftSpaceItem.width = offset - (titleLabel.frame.size.width / 2.);
 		} else leftSpaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 
