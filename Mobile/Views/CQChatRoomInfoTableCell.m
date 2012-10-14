@@ -141,7 +141,7 @@
 
 	frame = _iconImageView.frame;
 	frame.size = [_iconImageView sizeThatFits:_iconImageView.bounds.size];
-	frame.origin.x = ICON_LEFT_MARGIN;
+	frame.origin.x = CGRectGetMaxX(_checkmarkImageView.frame) + ICON_LEFT_MARGIN;
 	frame.origin.y = round((contentRect.size.height / 2.) - (frame.size.height / 2.));
 	_iconImageView.frame = frame;
 
