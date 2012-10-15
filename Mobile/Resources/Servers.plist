@@ -142,12 +142,6 @@
 	</dict>
 	<dict>
 		<key>Address</key>
-		<string>chat2.ustream.tv</string>
-		<key>Name</key>
-		<string>Ustream</string>
-	</dict>
-	<dict>
-		<key>Address</key>
 		<string>irc.webchat.org</string>
 		<key>Name</key>
 		<string>WebChat</string>
