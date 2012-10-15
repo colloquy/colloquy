@@ -68,7 +68,6 @@
 		// Removing the tab view item will cause outlet connections below to become
 		// invalid e.g. editProxy may be a zombie and crash when messaged.
 		// So we'll zero out the outlet as well to avoid that ...
-		// editProxy = nil;
 		editProxy = nil;
 	}
 
