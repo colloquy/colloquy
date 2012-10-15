@@ -63,8 +63,14 @@
 	[self buildEncodingMenu];
 
 	NSInteger tabViewIndex = [tabView indexOfTabViewItemWithIdentifier:@"Proxy"];
-	if( tabViewIndex != NSNotFound )
+	if( tabViewIndex != NSNotFound ) {
 		[tabView removeTabViewItem:[tabView tabViewItemAtIndex:tabViewIndex]];
+		// Removing the tab view item will cause outlet connections below to become
+		// invalid e.g. editProxy may be a zombie and crash when messaged.
+		// So we'll zero out the outlet as well to avoid that ...
+		// editProxy = nil;
+		editProxy = nil;
+	}
 
 	[editAutomatic setState:[[MVConnectionsController defaultController] autoConnectForConnection:_connection]];
 	[editShowConsoleOnConnect setState:[[MVConnectionsController defaultController] showConsoleOnConnectForConnection:_connection]];
