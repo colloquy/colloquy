@@ -808,7 +808,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) _switchStyle {
 	@autoreleasepool {
-
 		[NSThread setThreadPriority:0.25];
 
 		[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.00025]]; // wait, WebKit might not be ready.
@@ -833,7 +832,6 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 			if( [self style] != style ) goto quickEnd;
 			if( result ) {
 				[self performSelectorOnMainThread:@selector( _prependMessages: ) withObject:result waitUntilDone:YES];
-				[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.]]; // give time to other threads
 			}
 		}
 
