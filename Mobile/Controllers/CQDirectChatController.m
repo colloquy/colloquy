@@ -645,6 +645,12 @@ static BOOL showingKeyboard;
 	return YES;
 }
 
+- (BOOL) handleConsoleCommandWithArguments:(NSString *) arguments {
+	[CQConnectionsController defaultController].shouldLogRawMessagesToConsole = [arguments isCaseInsensitiveEqualToString:@"on"];
+
+	return YES;
+}
+
 - (BOOL) handleBrowserCommandWithArguments:(NSString *) arguments {
 	return [self _handleURLCommandWithArguments:arguments];
 }

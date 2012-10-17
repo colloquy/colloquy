@@ -107,9 +107,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
 
-#if TARGET_IPHONE_SIMULATOR
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
-#endif
 
 #if ENABLE(SECRETS)
 	if ([[UIDevice currentDevice].systemVersion doubleValue] < 3.2) {
@@ -131,6 +129,12 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	[self _loadConnectionList];
 
+#if TARGET_IPHONE_SIMULATOR
+	_shouldLogRawMessagesToConsole = YES;
+#else
+	_shouldLogRawMessagesToConsole = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQLogRawMessagesToConsole"];
+#endif
+
 	return self;
 }
 
@@ -146,6 +150,16 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[_automaticallySetConnectionAwayStatus release];
 
 	[super dealloc];
+}
+
+#pragma mark -
+
+@synthesize shouldLogRawMessagesToConsole = _shouldLogRawMessagesToConsole;
+
+- (void) setShouldLogRawMessagesToConsole:(BOOL) shouldLogRawMessagesToConsole {
+	_shouldLogRawMessagesToConsole = shouldLogRawMessagesToConsole;
+
+	[[NSUserDefaults standardUserDefaults] setBool:_shouldLogRawMessagesToConsole forKey:@"CQLogRawMessagesToConsole"];
 }
 
 #pragma mark -
@@ -660,8 +674,10 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	_backgroundTask = UIBackgroundTaskInvalid;
 }
 
-#if TARGET_IPHONE_SIMULATOR
 - (void) _gotRawConnectionMessage:(NSNotification *) notification {
+	if (!_shouldLogRawMessagesToConsole)
+		return;
+
 	MVChatConnection *connection = notification.object;
 	NSString *message = [[notification userInfo] objectForKey:@"message"];
 	BOOL outbound = [[[notification userInfo] objectForKey:@"outbound"] boolValue];
@@ -670,7 +686,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		NSLog(@"%@ (via %@): %@ %@", connection.server, connection.bouncerServer, (outbound ? @"<<" : @">>"), message);
 	else NSLog(@"%@: %@ %@", connection.server, (outbound ? @"<<" : @">>"), message);
 }
-#endif
 
 - (BOOL) _shouldDisableIdleTimer {
 	if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateCharging)

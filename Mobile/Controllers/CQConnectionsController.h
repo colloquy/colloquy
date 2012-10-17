@@ -36,6 +36,7 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 	UIBackgroundTaskIdentifier _backgroundTask;
 	NSTimeInterval _allowedBackgroundTime;
 	NSMutableSet *_automaticallySetConnectionAwayStatus;
+	BOOL _shouldLogRawMessagesToConsole;
 }
 + (CQConnectionsController *) defaultController;
 
@@ -46,6 +47,8 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 
 @property (nonatomic, readonly) NSArray *directConnections;
 @property (nonatomic, readonly) NSArray *bouncers;
+
+@property (nonatomic) BOOL shouldLogRawMessagesToConsole;
 
 - (void) saveConnections;
 - (void) saveConnectionPasswordsToKeychain;
