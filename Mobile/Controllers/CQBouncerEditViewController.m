@@ -112,14 +112,6 @@ static BOOL pushAvailable = YES;
 	return nil;
 }
 
-- (CGFloat) tableView:(UITableView *) tableView heightForFooterInSection:(NSInteger) section {
-	if (section == ServerTableSection)
-		return 50.;
-	if (section == PushTableSection && pushAvailable)
-		return 50.;
-	return 0.;
-}
-
 - (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
 	if (section == ServerTableSection)
 		return NSLocalizedString(@"Requires a Mac running Colloquy with\nthe bouncer enabled in Preferences.", @"Bouncer Server section footer title");

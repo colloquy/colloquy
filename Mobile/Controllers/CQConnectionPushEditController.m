@@ -46,12 +46,6 @@
 	return 0;
 }
 
-- (CGFloat) tableView:(UITableView *) tableView heightForFooterInSection:(NSInteger) section {
-	if (section == PushEnabledTableSection)
-		return 120.;
-	return 0.;
-}
-
 - (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
 	if (section == PushEnabledTableSection && [[UIDevice currentDevice] isPadModel])
 		return NSLocalizedString(@"Private messages and highlighted room messages\nare pushed. Push notifications require connecting\nto a push aware bouncer.", @"Push Notification section footer title");

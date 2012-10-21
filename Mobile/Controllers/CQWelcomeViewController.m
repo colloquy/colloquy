@@ -58,12 +58,6 @@
 	return nil;
 }
 
-- (CGFloat) tableView:(UITableView *) tableView heightForFooterInSection:(NSInteger) section {
-	if (section == NewConnectionsTableSection)
-		return 75.;
-	return 0.;
-}
-
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 

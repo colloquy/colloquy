@@ -102,12 +102,6 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 	}
 }
 
-- (CGFloat) tableView:(UITableView *) tableView heightForFooterInSection:(NSInteger) section {
-	if (section == SettingsTableSection || section == AuthenticationTableSection)
-		return 50.;
-	return 0.;
-}
-
 - (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
 	if (section == SettingsTableSection)
 		return NSLocalizedString(@"Authentication via SASL uses your\nnickname and nickname password.", @"Settings section footer title");
