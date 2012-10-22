@@ -1,6 +1,20 @@
 #import "NSDateAdditions.h"
 
 @implementation NSDate (NSDateAdditions)
++ (NSString *) formattedStringWithDate:(NSDate *) date dateFormat:(NSString *) format {
+	NSDateFormatter *dateFormatter = [[NSThread currentThread].threadDictionary objectForKey:format];
+	if (!dateFormatter) {
+		dateFormatter = [[NSDateFormatter alloc] init];
+		dateFormatter.dateFormat = format;
+
+		[[NSThread currentThread].threadDictionary setObject:dateFormatter forKey:format];
+
+		[dateFormatter release];
+	}
+
+	return [dateFormatter stringFromDate:date];
+}
+
 + (NSString *) formattedStringWithDate:(NSDate *) date dateStyle:(NSDateFormatterStyle) dateStyle timeStyle:(NSDateFormatterStyle) timeStyle {
 	NSMutableSet *dateFormatters = [[[NSThread currentThread].threadDictionary objectForKey:@"dateFormatters"] retain];
 	if (!dateFormatters) {
@@ -47,6 +61,6 @@
 #pragma mark -
 
 - (NSString *) localizedDescription {
-	return [[NSDate date] descriptionWithCalendarFormat:@"%Y-%m-%d %H:%M:%S %z" timeZone:[NSTimeZone localTimeZone] locale:[NSLocale currentLocale]];
+	return [NSDate formattedStringWithDate:[NSDate date] dateFormat:@"yyyy-MM-dd HH:mm:ss ZZZ"];
 }
 @end

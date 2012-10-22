@@ -12,6 +12,7 @@
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
 #import "NSDataAdditions.h"
+#import "NSDateAdditions.h"
 #import "MVUtilities.h"
 
 #if USE(ATTRIBUTED_CHAT_STRING)
@@ -2754,7 +2755,7 @@ end:
 			[reply release];
 			[systemVersion release];
 		} else if( [command isCaseInsensitiveEqualToString:@"TIME"] ) {
-			[sender sendSubcodeReply:command withArguments:[[NSDate date] description]];
+			[sender sendSubcodeReply:command withArguments:[[NSDate date] localizedDescription]];
 		} else if( [command isCaseInsensitiveEqualToString:@"PING"] ) {
 			// only reply with packets less than 100 bytes, anything over that is bad karma
 			if( arguments.length < 100 ) [sender sendSubcodeReply:command withArguments:arguments];
