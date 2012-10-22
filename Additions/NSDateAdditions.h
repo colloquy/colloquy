@@ -1,5 +1,5 @@
 @interface NSDate (NSDateAdditions)
-+ (NSString *) formattedStringWithDate:(NSDate *) date dateStyle:(NSDateFormatterStyle) dateStyle timeStyle:(NSDateFormatterStyle) timeStyle;
++ (NSString *) formattedStringWithDate:(NSDate *) date dateStyle:(int /*NSDateFormatterStyle*/) dateStyle timeStyle:(int /*NSDateFormatterStyle*/) timeStyle;
 
 + (NSString *) formattedShortDateStringForDate:(NSDate *) date;
 + (NSString *) formattedShortDateAndTimeStringForDate:(NSDate *) date;

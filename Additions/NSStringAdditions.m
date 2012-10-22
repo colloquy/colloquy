@@ -414,14 +414,14 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	NSUInteger r = 0; // remainder
 
 	NSMutableString *uniqueId = [[NSMutableString alloc] initWithCapacity:10];
-	[uniqueId appendFormat:@"%c", 'A' + ( random() % 26 )]; // always have a random letter first (more ambiguity)
+	[uniqueId appendFormat:@"%c", (char)('A' + ( random() % 26 ))]; // always have a random letter first (more ambiguity)
 
 	#define baseConvert	do { \
 		r = q % m; \
 		q = q / m; \
 		if( r >= 10 ) r = 'A' + ( r - 10 ); \
 		else r = '0' + r; \
-		[uniqueId appendFormat:@"%c", r]; \
+		[uniqueId appendFormat:@"%c", (char)r]; \
 	} while( q ) \
 
 	baseConvert;

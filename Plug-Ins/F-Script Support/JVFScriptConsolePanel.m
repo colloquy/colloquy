@@ -135,7 +135,7 @@
 #pragma mark -
 
 - (NSString *) identifier {
-	return [NSString stringWithFormat:@"F-Script Console %x", self];
+	return [NSString stringWithFormat:@"F-Script Console %p", self];
 }
 
 - (MVChatConnection *) connection {

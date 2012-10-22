@@ -81,7 +81,7 @@
 }
 
 - (void) setMemberCount:(NSUInteger) memberCount {
-	_memberCountLabel.text = [NSString stringWithFormat:@"%lu", memberCount];
+	_memberCountLabel.text = [NSString stringWithFormat:@"%d", memberCount];
 	_memberCountLabel.hidden = (memberCount ? NO : YES);
 	_memberIconImageView.hidden = (memberCount ? NO : YES);
 

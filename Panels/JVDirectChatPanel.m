@@ -207,8 +207,8 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 					nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
 
 					while( ! nameFound ) {
-						if( org ) logName = [NSString stringWithFormat:@"%@ %d.colloquyTranscript", [self target], i++];
-						else logName = [NSString stringWithFormat:@"%@ (%@) %d.colloquyTranscript", [self target], [[self user] serverAddress], i++];
+						if( org ) logName = [NSString stringWithFormat:@"%@ %ld.colloquyTranscript", [self target], i++];
+						else logName = [NSString stringWithFormat:@"%@ (%@) %ld.colloquyTranscript", [self target], [[self user] serverAddress], i++];
 						nameFound = ! [fileManager fileExistsAtPath:[logs stringByAppendingPathComponent:logName]];
 					}
 				} else if( session == 1 ) {

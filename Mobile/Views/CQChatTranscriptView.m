@@ -404,7 +404,7 @@
 	if (_fontFamily.length)
 		[styleString appendFormat:@"font-family: %@; ", _fontFamily];
 	if (_fontSize && _fontSize != DefaultFontSize)
-		[styleString appendFormat:@"font-size: %ldpx; ", _fontSize];
+		[styleString appendFormat:@"font-size: %dpx; ", _fontSize];
 
 	if (styleString.length) {
 		[styleString insertString:@"body { " atIndex:0];

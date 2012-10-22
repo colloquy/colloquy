@@ -48,7 +48,7 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	for( JVSmartTranscriptPanel *panel in items ) {
 		NSString *title = [panel title];
-		if( [panel newMessagesWaiting] > 0 ) title = [NSString stringWithFormat:@"%@ (%d)", [panel title], [panel newMessagesWaiting]];
+		if( [panel newMessagesWaiting] > 0 ) title = [NSString stringWithFormat:@"%@ (%ld)", [panel title], [panel newMessagesWaiting]];
 		menuItem = [[NSMenuItem alloc] initWithTitle:title action:@selector( showView: ) keyEquivalent:@""];
 		if( [panel newMessagesWaiting] ) [menuItem setImage:[NSImage imageNamed:@"smartTranscriptTabActivity"]];
 		else [menuItem setImage:[NSImage imageNamed:@"smartTranscriptTab"]];

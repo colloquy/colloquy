@@ -103,7 +103,7 @@ NSString *JVJavaScriptErrorDomain = @"JVJavaScriptErrorDomain";
 	return self;
 }
 
-- (void) release {
+- (oneway void) release {
 	if( ( [self retainCount] - 1 ) == 1 && _scriptGlobalsAdded )
 		[self performSelector:@selector(removeScriptGlobalsForWebView:) withObject:_webview afterDelay:0];
 	[super release];

@@ -19,7 +19,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	if( result.length >= 6 && result.length <= 40 ) // should be a valid IPv4 or IPv6 address
 		address = [[[NSString alloc] initWithData:result encoding:NSASCIIStringEncoding] autorelease];
 	if( address && [address rangeOfString:@"."].location != NSNotFound )
-		return [NSString stringWithFormat:@"%lu", ntohl( inet_addr( [address UTF8String] ) )];
+		return [NSString stringWithFormat:@"%d", ntohl( inet_addr( [address UTF8String] ) )];
 	return address;
 }
 

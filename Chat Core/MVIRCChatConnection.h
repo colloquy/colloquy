@@ -35,7 +35,7 @@
 	NSMutableArray *_umichNoIdentdCaptcha;
 	BOOL _gamesurgeGlobalBotMOTD;
 	NSString *_failedNickname;
-	NSInteger _failedNicknameCount;
+	short _failedNicknameCount;
 	BOOL _nicknameShortened;
 }
 + (NSArray *) defaultServerPorts;

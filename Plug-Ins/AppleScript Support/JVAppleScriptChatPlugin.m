@@ -112,7 +112,7 @@
 	return [self initWithScript:script atPath:path withManager:manager];
 }
 
-- (void) release {
+- (oneway void) release {
 	if( ( [self retainCount] - 1 ) == 1 )
 		[_idleTimer invalidate];
 	[super release];

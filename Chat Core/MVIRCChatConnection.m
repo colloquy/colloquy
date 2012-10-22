@@ -2793,7 +2793,7 @@ end:
 				if( [address rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@".:"]].location == NSNotFound ) {
 					unsigned ip4 = 0;
 					sscanf( [address UTF8String], "%u", &ip4 );
-					address = [NSString stringWithFormat:@"%lu.%lu.%lu.%lu", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
+					address = [NSString stringWithFormat:@"%d.%d.%d.%d", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
 				}
 
 				port %= 65536; // some clients use ports greater than 65535, mod with 65536 to get the real port
@@ -2925,7 +2925,7 @@ end:
 				if( [address rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@".:"]].location == NSNotFound ) {
 					unsigned ip4 = 0;
 					sscanf( [address UTF8String], "%u", &ip4 );
-					address = [NSString stringWithFormat:@"%lu.%lu.%lu.%lu", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
+					address = [NSString stringWithFormat:@"%d.%d.%d.%d", (ip4 & 0xff000000) >> 24, (ip4 & 0x00ff0000) >> 16, (ip4 & 0x0000ff00) >> 8, (ip4 & 0x000000ff)];
 				}
 
 				port %= 65536; // some clients use ports greater than 65535, mod with 65536 to get the real port

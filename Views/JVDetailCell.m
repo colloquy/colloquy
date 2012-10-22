@@ -222,7 +222,7 @@
 
 		NSDictionary *statusNumberAttributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, numberParaStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, [NSNumber numberWithFloat:1.0], NSKernAttributeName, nil];
 
-		NSString *statusText = [NSString stringWithFormat:@"%d", ( _statusNumber ? _statusNumber : _importantStatusNumber )];
+		NSString *statusText = [NSString stringWithFormat:@"%ld", ( _statusNumber ? _statusNumber : _importantStatusNumber )];
 		NSSize numberSize = [statusText sizeWithAttributes:statusNumberAttributes];
 		statusWidth = numberSize.width + 12.;
 
@@ -239,7 +239,7 @@
 			[mainPath closePath];
 
 			if( _importantStatusNumber ) {
-				NSString *importantStatusText = [NSString stringWithFormat:@"%d", _importantStatusNumber];
+				NSString *importantStatusText = [NSString stringWithFormat:@"%ld", _importantStatusNumber];
 				numberSize = [importantStatusText sizeWithAttributes:statusNumberAttributes];
 				float mainStatusWidth = statusWidth;
 				statusWidth += numberSize.width + 10.;

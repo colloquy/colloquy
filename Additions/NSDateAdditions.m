@@ -15,7 +15,7 @@
 	return [dateFormatter stringFromDate:date];
 }
 
-+ (NSString *) formattedStringWithDate:(NSDate *) date dateStyle:(NSDateFormatterStyle) dateStyle timeStyle:(NSDateFormatterStyle) timeStyle {
++ (NSString *) formattedStringWithDate:(NSDate *) date dateStyle:(int) dateStyle timeStyle:(int) timeStyle {
 	NSMutableDictionary *dateFormatters = [[NSThread currentThread].threadDictionary objectForKey:@"dateFormatters"];
 	if (!dateFormatters) {
 		dateFormatters = [NSMutableDictionary dictionary];

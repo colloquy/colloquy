@@ -264,7 +264,7 @@ static NSString *JVToolbarClearItemIdentifier = @"JVToolbarClearItem";
 			}
 
 			strMsg = (NSMutableString *) [parts componentsJoinedByString:@" "];
-			if( numeric ) strMsg = [NSString stringWithFormat:@"%03u: %@", numeric, strMsg];
+			if( numeric ) strMsg = [NSString stringWithFormat:@"%03ld: %@", numeric, strMsg];
 		} else if( outbound && ! _verbose ) {
 			if( [strMsg rangeOfString:@"NOTICE"].location != NSNotFound && [strMsg rangeOfString:@"\001"].location != NSNotFound ) {
 				[strMsg replaceOccurrencesOfString:@"NOTICE" withString:@"CTCP REPLY" options:NSAnchoredSearch range:NSMakeRange( 0, 6 )];

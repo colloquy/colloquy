@@ -153,7 +153,7 @@ static NSMenu *favoritesMenu = nil;
 		type = MVChatConnectionXMPPType;
 		break;
 	default:
-		NSAssert1( NO, @"Unsupported connection type %d", [[newType selectedItem] tag] );
+		NSAssert1( NO, @"Unsupported connection type %ld", [[newType selectedItem] tag] );
 	}
 
 	return type;
