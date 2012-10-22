@@ -10,7 +10,7 @@
 		return nil;
 	}
 
-	short fileRefNum = 0;
+	ResFileRefNum fileRefNum = 0;
 	if( ( fileRefNum = FSOpenResFile( &ref, fsRdPerm ) ) == -1 ) {
 		if( NSDebugEnabled ) NSLog(@"Couldn't open inetloc file at: %@", path);
 		return nil;
