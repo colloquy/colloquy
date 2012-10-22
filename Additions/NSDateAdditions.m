@@ -16,34 +16,27 @@
 }
 
 + (NSString *) formattedStringWithDate:(NSDate *) date dateStyle:(NSDateFormatterStyle) dateStyle timeStyle:(NSDateFormatterStyle) timeStyle {
-	NSMutableSet *dateFormatters = [[[NSThread currentThread].threadDictionary objectForKey:@"dateFormatters"] retain];
+	NSMutableDictionary *dateFormatters = [[NSThread currentThread].threadDictionary objectForKey:@"dateFormatters"];
 	if (!dateFormatters) {
-		dateFormatters = [[NSMutableSet alloc] initWithCapacity:3];
+		dateFormatters = [NSMutableDictionary dictionary];
+
 		[[NSThread currentThread].threadDictionary setObject:dateFormatters forKey:@"dateFormatters"];
 	}
 
-	NSDateFormatter *dateFormatter = nil;
-	for (dateFormatter in dateFormatters) {
-		if (dateFormatter.dateStyle == dateStyle && dateFormatter.timeStyle == timeStyle) {
-			[dateFormatter retain];
-			break;
-		}
-
-		dateFormatter = nil;
-	}
+	NSString *key = [NSString stringWithFormat:@"%d-%d", dateStyle, timeStyle];
+	NSDateFormatter *dateFormatter = [dateFormatters objectForKey:key];
 
 	if (!dateFormatter) {
 		dateFormatter = [[NSDateFormatter alloc] init];
 		dateFormatter.dateStyle = dateStyle;
 		dateFormatter.timeStyle = timeStyle;
-		[dateFormatters addObject:dateFormatter];
+
+		[dateFormatters setObject:dateFormatter forKey:key];
+
+		[dateFormatter release];
 	}
 
-	NSString *formattedDate = [dateFormatter stringFromDate:date];
-	[dateFormatter release];
-	[dateFormatters release];
-
-	return formattedDate;
+	return [dateFormatter stringFromDate:date];
 }
 
 + (NSString *) formattedShortDateStringForDate:(NSDate *) date {
