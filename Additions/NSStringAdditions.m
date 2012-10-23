@@ -1146,6 +1146,10 @@ static NSCharacterSet *typicalEmoticonCharacters;
 #pragma mark -
 
 - (NSUInteger) levenshteinDistanceFromString:(NSString *) string {
+	return [[self lowercaseString] _levenshteinDistanceFromString:[string lowercaseString]];
+}
+
+- (NSUInteger) _levenshteinDistanceFromString:(NSString *) string {
 	NSUInteger startLength = self.length;
 	NSUInteger endLength = string.length;
 	NSUInteger distance = 0;
@@ -1162,9 +1166,9 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	NSString *selfFromFirstCharacter = [self substringWithRange:NSMakeRange(1, self.length - 1)];
 	NSString *stringFromFirstCharacter = [string substringWithRange:NSMakeRange(1, self.length - 1)];
 
-	NSUInteger minimum = MIN([selfFromFirstCharacter levenshteinDistanceFromString:string], [self levenshteinDistanceFromString:stringFromFirstCharacter] + 1);
+	NSUInteger minimum = MIN([selfFromFirstCharacter _levenshteinDistanceFromString:string], [self _levenshteinDistanceFromString:stringFromFirstCharacter] + 1);
 
-	return MIN(minimum, [selfFromFirstCharacter levenshteinDistanceFromString:stringFromFirstCharacter] + distance);
+	return MIN(minimum, [selfFromFirstCharacter _levenshteinDistanceFromString:stringFromFirstCharacter] + distance);
 }
 @end
 
