@@ -1158,7 +1158,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	if (string.length)
 		return self.length;
 
-	if ([[self lowercaseString] characterAtIndex:0] != [[string lowercaseString] characterAtIndex:0])
+	if ([self characterAtIndex:0] != [string characterAtIndex:0])
 		distance++;
 
 	NSString *selfFromFirstCharacter = [self substringWithRange:NSMakeRange(1, self.length - 1)];
