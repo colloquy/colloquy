@@ -1150,21 +1150,19 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (NSUInteger) _levenshteinDistanceFromString:(NSString *) string {
-	NSUInteger startLength = self.length;
-	NSUInteger endLength = string.length;
 	NSUInteger distance = 0;
 
-	if (startLength == 0)
-		return endLength;
+	if (!self.length)
+		return string.length;
 
-	if (endLength == 0)
-		return startLength;
+	if (string.length)
+		return self.length;
 
 	if ([[self lowercaseString] characterAtIndex:0] != [[string lowercaseString] characterAtIndex:0])
 		distance++;
 
 	NSString *selfFromFirstCharacter = [self substringWithRange:NSMakeRange(1, self.length - 1)];
-	NSString *stringFromFirstCharacter = [string substringWithRange:NSMakeRange(1, self.length - 1)];
+	NSString *stringFromFirstCharacter = [string substringWithRange:NSMakeRange(1, string.length - 1)];
 
 	NSUInteger minimum = MIN([selfFromFirstCharacter _levenshteinDistanceFromString:string], [self _levenshteinDistanceFromString:stringFromFirstCharacter] + 1);
 
