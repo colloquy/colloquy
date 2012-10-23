@@ -70,6 +70,8 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 - (NSString *) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error;
 
 - (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error;
+
+- (NSUInteger) levenshteinDistanceFromString:(NSString *) string;
 @end
 
 @interface NSMutableString (NSMutableStringAdditions)

@@ -400,10 +400,6 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	return [NSString stringWithFormat:@"#%02X%02X%02X", red, green, blue];
 }
 
-@interface NSString (NewInLeopard)
-- (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) characters;
-@end
-
 @implementation NSString (NSStringAdditions)
 + (NSString *) locallyUniqueString {
 	struct timeval tv;
@@ -1046,46 +1042,6 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 
 #pragma mark -
 
-- (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(NSUInteger) limit {
-	return [self componentsSeparatedByCharactersInSet:separator limit:limit remainingString:NULL];
-}
-
-- (NSArray *) componentsSeparatedByCharactersInSet:(NSCharacterSet *) separator limit:(NSUInteger) limit remainingString:(NSString **) remainder {
-	if( ! limit && ! remainder && [self respondsToSelector:@selector(componentsSeparatedByCharactersInSet:)] )
-		return [self componentsSeparatedByCharactersInSet:separator];
-
-	if( [self rangeOfCharacterFromSet:separator].location == NSNotFound )
-		return [NSArray arrayWithObject:self];
-
-	if( ! limit ) limit = ULONG_MAX;
-
-	NSScanner *scanner = [[NSScanner alloc] initWithString:self];
-	[scanner setCharactersToBeSkipped:nil];
-
-	NSMutableArray *result = [[NSMutableArray alloc] init];
-
-	NSUInteger count = 0;
-	NSString *component = @"";
-	while( ! [scanner isAtEnd] ) {
-		[scanner scanUpToCharactersFromSet:separator intoString:&component];
-		[scanner scanCharactersFromSet:separator intoString:NULL];
-
-		[result addObject:component];
-
-		if (++count >= limit)
-			break;
-	}
-
-	if( remainder )
-		*remainder = [self substringFromIndex:[scanner scanLocation]];
-
-	[scanner release];
-
-	return [result autorelease];
-}
-
-#pragma mark -
-
 - (NSString *) fileName {
 	NSString *fileName = [self lastPathComponent];
 	NSString *fileExtension = [NSString stringWithFormat:@".%@", [self pathExtension]];
@@ -1185,6 +1141,30 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	[regularExpression release];
 
 	return replacementString;
+}
+
+#pragma mark -
+
+- (NSUInteger) levenshteinDistanceFromString:(NSString *) string {
+	NSUInteger startLength = self.length;
+	NSUInteger endLength = string.length;
+	NSUInteger distance = 0;
+
+	if (startLength == 0)
+		return endLength;
+
+	if (endLength == 0)
+		return startLength;
+
+	if ([self characterAtIndex:0] != [string characterAtIndex:0])
+		distance++;
+
+	NSString *selfFromFirstCharacter = [self substringWithRange:NSMakeRange(1, self.length - 1)];
+	NSString *stringFromFirstCharacter = [string substringWithRange:NSMakeRange(1, self.length - 1)];
+
+	NSUInteger minimum = MIN([selfFromFirstCharacter levenshteinDistanceFromString:string], [self levenshteinDistanceFromString:stringFromFirstCharacter] + 1);
+
+	return MIN(minimum, [selfFromFirstCharacter levenshteinDistanceFromString:stringFromFirstCharacter] + distance);
 }
 @end
 
