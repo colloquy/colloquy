@@ -404,7 +404,12 @@ static const NSStringEncoding supportedEncodings[] = {
 			}
 
 			NSString *password = nil;
-			NSArray *components = [room componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet] limit:1 remainingString:&password];
+			NSArray *components = [room componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+			if (components.count) {
+				password = [[components subarrayWithRange:NSMakeRange(1, (components.count - 1))] componentsJoinedByString:@""];
+				components = [components subarrayWithRange:NSMakeRange(0, 1)];
+			}
+
 			if( !components.count)
 				continue;
 
@@ -1292,7 +1297,7 @@ end:
 				return;
 			}
 		} else if( [command isCaseInsensitiveEqualToString:@"op"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
+			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 			for( NSString *userString in users ) {
 				if( userString.length ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
@@ -1303,7 +1308,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"deop"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
+			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
@@ -1315,7 +1320,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"halfop"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
+			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
@@ -1327,7 +1332,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"dehalfop"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
+			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
@@ -1339,7 +1344,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"voice"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
+			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
@@ -1351,7 +1356,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"devoice"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
+			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
@@ -1363,7 +1368,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"quiet"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
+			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
@@ -1375,7 +1380,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"dequiet"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
+			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
@@ -1387,7 +1392,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"ban"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
+			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
@@ -1405,7 +1410,7 @@ end:
 			if( users.count )
 				return;
 		} else if( [command isCaseInsensitiveEqualToString:@"unban"] ) {
-			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters limit:0];
+			NSArray *users = [MVChatStringAsString(arguments) componentsSeparatedByCharactersInSet:whitespaceCharacters];
 
 			for( NSString *userString in users ) {
 				if( userString.length ) {
