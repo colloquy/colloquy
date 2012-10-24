@@ -400,6 +400,33 @@ static NSString *colorForHTML( unsigned char red, unsigned char green, unsigned 
 	return [NSString stringWithFormat:@"#%02X%02X%02X", red, green, blue];
 }
 
+static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherString) {
+	NSUInteger stringLength = strlen(string);
+	NSUInteger otherStringLength = strlen(otherString);
+	NSUInteger distances[stringLength + 1][otherStringLength + 1];
+
+	memset(distances, -1, sizeof(distances));
+
+	for (NSUInteger i = 0; i <= stringLength; i++)
+		distances[i][0] = i;
+
+	for (NSUInteger i = 0; i <= otherStringLength; i++)
+		distances[0][i] = i;
+
+	for (NSUInteger i = 1; i <= stringLength; i++) {
+		for (NSUInteger j = 1; j <= otherStringLength; j++) {
+			if (string[(i - 1)] == otherString[(j - 1)])
+				distances[i][j] = distances[(i - 1)][(j - 1)];
+			else {
+				NSUInteger minimum = MIN(distances[(i - 1)][j], distances[i][(j - 1)]);
+				distances[i][j] = (MIN(minimum, distances[(i - 1)][(j - 1)]) + 1);
+			}
+		}
+	}
+
+	return distances[stringLength][otherStringLength];
+}
+
 @implementation NSString (NSStringAdditions)
 + (NSString *) locallyUniqueString {
 	struct timeval tv;
@@ -1146,27 +1173,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 #pragma mark -
 
 - (NSUInteger) levenshteinDistanceFromString:(NSString *) string {
-	return [[self lowercaseString] _levenshteinDistanceFromString:[string lowercaseString]];
-}
-
-- (NSUInteger) _levenshteinDistanceFromString:(NSString *) string {
-	NSUInteger distance = 0;
-
-	if (!self.length)
-		return string.length;
-
-	if (string.length)
-		return self.length;
-
-	if ([self characterAtIndex:0] != [string characterAtIndex:0])
-		distance++;
-
-	NSString *selfFromFirstCharacter = [self substringWithRange:NSMakeRange(1, self.length - 1)];
-	NSString *stringFromFirstCharacter = [string substringWithRange:NSMakeRange(1, string.length - 1)];
-
-	NSUInteger minimum = MIN([selfFromFirstCharacter _levenshteinDistanceFromString:string], [self _levenshteinDistanceFromString:stringFromFirstCharacter] + 1);
-
-	return MIN(minimum, [selfFromFirstCharacter _levenshteinDistanceFromString:stringFromFirstCharacter] + distance);
+	return levenshteinDistanceBetweenStrings((char *)[[self lowercaseString] UTF8String], (char *)[[string lowercaseString] UTF8String]);
 }
 @end
 
