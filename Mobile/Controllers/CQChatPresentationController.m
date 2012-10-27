@@ -155,6 +155,10 @@
 		frame.size.height -= _toolbar.frame.size.height;
 		view.frame = frame;
 
+		frame = _toolbar.frame;
+		frame.size.width = view.frame.size.width;
+		_toolbar.frame = frame;
+
 		[_topChatViewController viewWillAppear:NO];
 	}
 
