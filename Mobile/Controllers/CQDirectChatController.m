@@ -1601,6 +1601,7 @@ static BOOL showingKeyboard;
 	NSMutableDictionary *message = operation.processedMessageInfo;
 	BOOL highlighted = [[message objectForKey:@"highlighted"] boolValue];
 	BOOL notice = [[message objectForKey:@"notice"] boolValue];
+	BOOL action = [[message objectForKey:@"action"] boolValue];
 
 	BOOL active = _active;
 	active &= ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
@@ -1657,13 +1658,23 @@ static BOOL showingKeyboard;
 	if (!user.localUser && [self _canAnnounceWithVoiceOverAndMessageIsImportant:(directChat || highlighted)]) {
 		NSString *voiceOverAnnouncement = nil;
 
-		if (directChat && highlighted)
-			voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ highlighted you, privately saying: %@", @"VoiceOver announcement when highlighted in a direct chat"), user.displayName, operation.processedMessageAsPlainText];
-		else if (directChat || notice)
-			voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ privately said: %@", @"VoiceOver announcement when in a direct chat"), user.displayName, operation.processedMessageAsPlainText];
-		else if (highlighted)
-			voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ highlighted you in %@, saying: %@", @"VoiceOver announcement when highlighted in a chat room"), user.displayName, self.title, operation.processedMessageAsPlainText];
-		else voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ in %@ said: %@", @"VoiceOver announcement when in a chat room"), user.displayName, self.title, operation.processedMessageAsPlainText];
+		if (action) {
+			if (directChat && highlighted)
+				voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ highlighted you, privately %@", @"VoiceOver notice announcement when highlighted in a direct chat"), user.displayName, operation.processedMessageAsPlainText];
+			else if (directChat || notice)
+				voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ privately %@", @"VoiceOver notice announcement when in a direct chat"), user.displayName, operation.processedMessageAsPlainText];
+			else if (highlighted)
+				voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ highlighted you in %@, %@", @"VoiceOver notice announcement when highlighted in a chat room"), user.displayName, self.title, operation.processedMessageAsPlainText];
+			else voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ in %@ %@", @"VoiceOver notice announcement when in a chat room"), user.displayName, self.title, operation.processedMessageAsPlainText];
+		} else {
+			if (directChat && highlighted)
+				voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ highlighted you, privately saying: %@", @"VoiceOver announcement when highlighted in a direct chat"), user.displayName, operation.processedMessageAsPlainText];
+			else if (directChat || notice)
+				voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ privately said: %@", @"VoiceOver announcement when in a direct chat"), user.displayName, operation.processedMessageAsPlainText];
+			else if (highlighted)
+				voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ highlighted you in %@, saying: %@", @"VoiceOver announcement when highlighted in a chat room"), user.displayName, self.title, operation.processedMessageAsPlainText];
+			else voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ in %@ said: %@", @"VoiceOver announcement when in a chat room"), user.displayName, self.title, operation.processedMessageAsPlainText];
+		}
 
 		UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, voiceOverAnnouncement);
 		[voiceOverAnnouncement release];
