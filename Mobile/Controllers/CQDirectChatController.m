@@ -1570,8 +1570,11 @@ static BOOL showingKeyboard;
 	if (!transcriptView || !active)
 		return;
 
-	if (!hadPendingComponents)
+	if (!hadPendingComponents) {
+		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_addPendingComponents) object:nil];
+
 		[self performSelector:@selector(_addPendingComponents) withObject:nil afterDelay:0.1];
+	}
 }
 
 - (void) _addPendingComponents {
@@ -1597,6 +1600,7 @@ static BOOL showingKeyboard;
 - (void) _messageProcessed:(CQProcessChatMessageOperation *) operation {
 	NSMutableDictionary *message = operation.processedMessageInfo;
 	BOOL highlighted = [[message objectForKey:@"highlighted"] boolValue];
+	BOOL notice = [[message objectForKey:@"notice"] boolValue];
 
 	BOOL active = _active;
 	active &= ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
@@ -1655,7 +1659,7 @@ static BOOL showingKeyboard;
 
 		if (directChat && highlighted)
 			voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ highlighted you, privately saying: %@", @"VoiceOver announcement when highlighted in a direct chat"), user.displayName, operation.processedMessageAsPlainText];
-		else if (directChat)
+		else if (directChat || notice)
 			voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ privately said: %@", @"VoiceOver announcement when in a direct chat"), user.displayName, operation.processedMessageAsPlainText];
 		else if (highlighted)
 			voiceOverAnnouncement = [[NSString alloc] initWithFormat:NSLocalizedString(@"%@ highlighted you in %@, saying: %@", @"VoiceOver announcement when highlighted in a chat room"), user.displayName, self.title, operation.processedMessageAsPlainText];
