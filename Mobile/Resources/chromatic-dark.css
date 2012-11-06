@@ -9,7 +9,7 @@ a {
 	color: rgb(139, 189, 223);
 }
 
-.message-wrapper {
+.notice-wrapper, .message-wrapper {
 	border-top-color: rgba(255, 255, 255, 0.125);
 }
 
@@ -17,25 +17,25 @@ a {
 	background-color: rgb(30, 30, 40);
 }
 
-.message-wrapper.previous-session:last-child {
+.notice-wrapper.previous-session:last-child, .message-wrapper.previous-session:last-child {
 	border-bottom-color: rgba(255, 255, 255, 0.125);
 }
 
-.message-wrapper:not(.highlight) + .event {
+.notice-wrapper:not(.highlight) + .event, .message-wrapper:not(.highlight) + .event {
 	border-top: 1px solid rgba(255, 255, 255, 0.125);
 }
 
-.message-wrapper.previous-session:not(.highlight) + .event {
+.notice-wrapper.previous-session:not(.highlight) + .event, .message-wrapper.previous-session:not(.highlight) + .event {
 	border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.message-wrapper.highlight {
+.notice-wrapper.highlight, .message-wrapper.highlight {
 	background-image: none;
 	background-color: rgb(20, 40, 70);
 	border-bottom-color: rgba(255, 255, 255, 0.125);
 }
 
-.message-wrapper.highlight .sender {
+.notice-wrapper.highlight .sender, .message-wrapper.highlight .sender {
 	text-shadow: black 0 1px 2px;
 }
 

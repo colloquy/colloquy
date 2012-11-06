@@ -64,9 +64,13 @@ function appendComponents(components, previousSession, suppressScroll, suppressS
 		var component = components[i];
 		if (component.type === "message") {
 			if (component.self) alwaysScroll = true;
-			appendMessage(container, component.sender, component.message, component.highlighted, component.action, component.self, previousSession);
-		} else if (component.type === "event")
+			appendMessage(container, component.sender, component.message, component.highlighted, component.action, component.self, previousSession, 'message');
+		} else if (component.type === "event") {
 			appendEventMessage(container, component.message, component.identifier, previousSession);
+		} else if (component.type === "notice") {
+			if (component.self) alwaysScroll = true;
+			appendMessage(container, component.sender, component.message, component.highlighted, component.action, component.self, previousSession, 'notice');
+		}
 	}
 
 	if (componentsLength > 1)
@@ -76,8 +80,8 @@ function appendComponents(components, previousSession, suppressScroll, suppressS
 		scrollToBottom(!suppressScrollAnimation);
 }
 
-function senderText(senderNickname, highlighted, action, self) {
-	return (action ? "\u2022\u2008" : "" ) + senderNickname + (action ? " " : ": ");
+function senderText(senderNickname, highlighted, action, notice, self) {
+	return (notice ? "—" : "") + (action ? "\u2022\u2008" : "" ) + senderNickname + (action ? " " : ": ");
 }
 
 function nicknameChanged(from, to) {
@@ -90,8 +94,8 @@ function nicknameChanged(from, to) {
 	}
 }
 
-function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession) {
-	var className = "message-wrapper";
+function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession, type) {
+	var className = type + "-wrapper";
 	if (action) className += " action";
 	if (highlighted) className += " highlight";
 	if (previousSession) className += " previous-session";
@@ -105,7 +109,7 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 	var aElement = document.createElement("a");
 	aElement.className = "nickname " + senderNickname;
 	aElement.setAttribute("href", "colloquy://" + senderNickname);
-	aElement.textContent = senderText(senderNickname, highlighted, action, self);
+	aElement.textContent = senderText(senderNickname, highlighted, action, type === "notice", self);
 
 	var senderElement = document.createElement("div");
 	senderElement.className = className;
@@ -113,7 +117,7 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 	messageWrapperElement.appendChild(senderElement);
 
 	var messageElement = document.createElement("div");
-	messageElement.className = "message";
+	messageElement.className = type;
 	messageElement.innerHTML = messageHTML;
 	messageWrapperElement.appendChild(messageElement);
 

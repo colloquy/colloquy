@@ -351,8 +351,10 @@
 			continue;
 
 		NSString *escapedMessage = [messageString stringByEscapingCharactersInSet:escapedCharacters];
+		BOOL isMessage = [type isEqualToString:@"message"];
+		BOOL isNotice = [[component objectForKey:@"notice"] boolValue];
 
-		if ([type isEqualToString:@"message"]) {
+		if (isMessage || isNotice) {
 			MVChatUser *user = [component objectForKey:@"user"];
 			if (!user)
 				continue;
@@ -362,7 +364,9 @@
 
 			NSString *escapedNickname = [user.nickname stringByEscapingCharactersInSet:escapedCharacters];
 
-			[command appendFormat:@"{type:'message',sender:'%@',message:'%@',highlighted:%@,action:%@,self:%@},", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
+			if (isNotice)
+				[command appendFormat:@"{type:'notice',sender:'%@',message:'%@',highlighted:%@,action:%@,self:%@},", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
+			else [command appendFormat:@"{type:'message',sender:'%@',message:'%@',highlighted:%@,action:%@,self:%@},", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
 		} else if ([type isEqualToString:@"event"]) {
 			NSString *identifier = [component objectForKey:@"identifier"];
 			if (!identifier)

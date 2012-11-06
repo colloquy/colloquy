@@ -29,8 +29,8 @@ function senderHash(nickname) {
     return result;
 }
 
-function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession) {
-    var className = "message-wrapper";
+function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession, type) {
+    var className = type + "-wrapper";
     if (action) className += " action";
     if (highlighted) className += " highlight";
     if (previousSession) className += " previous-session";
@@ -55,13 +55,13 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 	var senderElement = document.createElement("div");
 	senderElement.className = className;
 	senderElement.appendChild(aElement);
-	senderElement.textContent = senderText(senderNickname, highlighted, action, self);
+	senderElement.textContent = senderText(senderNickname, highlighted, action, type === "notice", self);
 
 	aElement.appendChild(senderElement);
 	messageWrapperElement.appendChild(aElement);
 
     var messageElement = document.createElement("div");
-    messageElement.className = "message";
+    messageElement.className = type;
     messageElement.innerHTML = messageHTML;
     messageWrapperElement.appendChild(messageElement);
 

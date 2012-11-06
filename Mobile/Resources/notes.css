@@ -9,7 +9,7 @@ body {
 	border-top: 1px solid rgba(20, 20, 200, 0.1);
 }
 
-.message-wrapper {
+.notice-wrapper, .message-wrapper {
 	padding: 1px 8px 1px 30px;
 	border-bottom: 1px solid rgba(20, 20, 200, 0.1);
 }
@@ -18,22 +18,26 @@ body {
 	opacity: 0.6;
 }
 
-.event + .message-wrapper {
+.event + .notice-wrapper, .event + .message-wrapper {
 	border-bottom: 1px solid rgba(20, 20, 200, .1);
 }
 
-.message-wrapper:not(.highlight) + .event {
+.notice-wrapper:before {
+	margin-right: 0.3ex;
+}
+
+.notice-wrapper:not(.highlight) + .event, .message-wrapper:not(.highlight) + .event {
 	border-bottom: 1px solid rgba(20, 20, 200, .1);
 }
 
-.message-wrapper.highlight {
+.notice-wrapper.highlight, .message-wrapper.highlight {
 	background-image: url(notesBackground.png);
 	background-color: rgb(253, 253, 222);
 	background-repeat: repeat-y;
 	border-bottom: 1px solid rgba(20, 20, 200, 0.1);
 }
 
-.message-wrapper.highlight + .message-wrapper {
+.notice-wrapper.highlight + .notice-wrapper, .message-wrapper.highlight + .message-wrapper {
 	border-bottom: none;
 }
 
@@ -67,7 +71,7 @@ body {
 	-webkit-nbsp-mode: space;
 }
 
-.message {
+.notice, .message {
 	display: inline;
 	white-space: pre-wrap;
 	word-wrap: break-word;

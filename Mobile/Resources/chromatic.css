@@ -9,12 +9,12 @@ a {
 	color: hsl(220, 65%, 40%);
 }
 
-.message-wrapper {
+.notice-wrapper, .message-wrapper {
 	padding: 3px 8px;
 	border-top: 1px solid rgba(0, 0, 0, 0.075);
 }
 
-.message-wrapper.subsequent:not(.highlight) + .message-wrapper:not(.highlight) {
+.notice-wrapper.subsequent:not(.highlight) + .notice-wrapper:not(.highlight), .message-wrapper.subsequent:not(.highlight) + .message-wrapper:not(.highlight) {
 	margin-top: -2px;
 	padding-top: 0;
 	border-top: none;
@@ -28,34 +28,38 @@ a {
 	opacity: 0.7;
 }
 
-.message-wrapper:first-child:not(.previous-session) {
+.notice-wrapper:before {
+	margin-right: 0.3ex;
+}
+
+.notice-wrapper:first-child:not(.previous-session), .message-wrapper:first-child:not(.previous-session) {
 	border-top: none;
 }
 
-.message-wrapper.previous-session:last-child {
+.notice-wrapper.previous-session:last-child, .message-wrapper.previous-session:last-child {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.075);
 }
 
-.message-wrapper:not(.highlight) + .event {
+.notice-wrapper:not(.highlight) + .event, .message-wrapper:not(.highlight) + .event {
 	border-top: 1px solid rgba(0, 0, 0, 0.075);
 }
 
-.message-wrapper.highlight {
+.notice-wrapper.highlight, .message-wrapper.highlight {
 	background-color: rgb(230, 240, 100);
 	background-image: url(gradientHighlight.png);
 	background-repeat: repeat-x;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.075);
 }
 
-.message-wrapper.highlight .sender {
+.notice-wrapper.highlight .sender, .message-wrapper.highlight .sender {
 	text-shadow: white 0 1px 2px;
 }
 
-.message-wrapper.highlight + .message-wrapper {
+.notice-wrapper.highlight + .notice-wrapper, .message-wrapper.highlight + .message-wrapper {
 	border-top: none;
 }
 
-.message-wrapper.action .sender {
+.notice-wrapper.action .sender, .message-wrapper.action .sender {
 	margin-left: -6px;
 }
 
@@ -161,7 +165,7 @@ a {
 	-webkit-nbsp-mode: space;
 }
 
-.message {
+.notice, .message {
 	display: inline;
 	white-space: pre-wrap;
 	word-wrap: break-word;

@@ -1,3 +1,3 @@
-function senderText(senderNickname, highlighted, action, self) {
-	return (action ? "\u2022" : "" ) + senderNickname + (action ? " " : ": ");
+function senderText(senderNickname, highlighted, action, notice, self) {
+	return (notice ? "—" : "") + (action ? "\u2022" : "" ) + senderNickname + (action ? " " : ": ");
 }
