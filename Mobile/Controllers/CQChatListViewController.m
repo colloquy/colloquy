@@ -305,10 +305,13 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (rowsToDelete.count != viewControllersToClose.count) {
 		[self.tableView reloadData];
 		[rowsToDelete release];
+
 		return;
 	}
 
+	[self.tableView beginUpdates];
 	[self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:animation];
+	[self.tableView endUpdates];
 
 	[rowsToDelete release];
 }
