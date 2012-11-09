@@ -13,6 +13,8 @@
 	BOOL _active;
 	BOOL _needsUpdate;
 }
+@property (nonatomic) BOOL active;
+
 - (void) chatViewControllerAdded:(id) controller;
 
 - (void) selectChatViewController:(id) controller animatedSelection:(BOOL) animatedSelection animatedScroll:(BOOL) animatedScroll;

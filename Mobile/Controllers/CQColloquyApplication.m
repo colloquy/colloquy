@@ -4,6 +4,7 @@
 #import "CQAnalyticsController.h"
 #import "CQChatController.h"
 #import "CQChatCreationViewController.h"
+#import "CQChatListViewController.h"
 #import "CQChatNavigationController.h"
 #import "CQChatPresentationController.h"
 #import "CQConnectionsController.h"
@@ -414,6 +415,14 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 #pragma mark -
+
+- (void)splitViewController:(UISplitViewController *) splitViewController popoverController:(UIPopoverController *) popoverController willPresentViewController:(UIViewController *) viewController {
+	if (![viewController isKindOfClass:[CQChatNavigationController class]])
+		return;
+
+	CQChatNavigationController *navigationController = (CQChatNavigationController *)viewController;
+	((CQChatListViewController *)(navigationController.topViewController)).active = YES;
+}
 
 - (void) splitViewController:(UISplitViewController *) splitViewController willHideViewController:(UIViewController *) viewController withBarButtonItem:(UIBarButtonItem *) barButtonItem forPopoverController:(UIPopoverController *) popoverController {
 	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;

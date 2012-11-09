@@ -18,6 +18,8 @@
 static BOOL showsChatIcons;
 
 @implementation CQChatListViewController
+@synthesize active = _active;
+
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -82,6 +84,8 @@ static BOOL showsChatIcons;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_updateUnreadMessages:) name:CQChatViewControllerUnreadMessagesUpdatedNotification object:nil];
 	}
+
+	_needsUpdate = YES;
 
 	return self;
 }
@@ -489,6 +493,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 - (void) _willBecomeActive:(NSNotification *) notification {
 	[CQChatController defaultController].totalImportantUnreadCount = 0;
+
+	_active = YES;
 }
 
 - (void) _unreadCountChanged {
