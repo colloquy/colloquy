@@ -838,6 +838,10 @@ static BOOL showingKeyboard;
 	return [self handleMusicCommandWithArguments:arguments];
 }
 
+- (BOOL) handleNpCommandWithArguments:(NSString *) arguments {
+	return [self handleMusicCommandWithArguments:arguments];
+}
+
 - (BOOL) handleSquitCommandWithArguments:(NSString *) arguments {
 	if (self.connection.directConnection)
 		return NO;
