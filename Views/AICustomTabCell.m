@@ -221,7 +221,6 @@ static NSSize		rightCapSize;
 
     //Pre-calc some dimensions
     labelSize = [tabViewItem sizeOfLabel:NO];
-    middleSourceWidth = [tabFrontMiddle size].width;
     middleRightEdge = (rect.origin.x + rect.size.width - rightCapSize.width);
     middleLeftEdge = (rect.origin.x + leftCapSize.width);
 

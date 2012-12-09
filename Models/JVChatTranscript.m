@@ -1330,31 +1330,26 @@ NSString *JVChatTranscriptUpdatedNotification = @"JVChatTranscriptUpdatedNotific
 		do {
 			if( subNode -> type == XML_ELEMENT_NODE && ! strcmp( "sender", (char *) subNode -> name ) ) {
 				xmlChar *prop = xmlNodeGetContent( subNode );
-				id old = _senderName;
 				if( prop ) _senderName = [[NSString allocWithZone:nil] initWithUTF8String:(char *) prop];
 				else _senderName = nil;
 				xmlFree( prop );
 
 				prop = xmlGetProp( subNode, (xmlChar *) "nickname" );
-				old = _senderNickname;
 				if( prop ) _senderNickname = [[NSString allocWithZone:nil] initWithUTF8String:(char *) prop];
 				else _senderNickname = nil;
 				xmlFree( prop );
 
 				prop = xmlGetProp( subNode, (xmlChar *) "identifier" );
-				old = _senderIdentifier;
 				if( prop ) _senderIdentifier = [[NSString allocWithZone:nil] initWithUTF8String:(char *) prop];
 				else _senderIdentifier = nil;
 				xmlFree( prop );
 
 				prop = xmlGetProp( subNode, (xmlChar *) "hostmask" );
-				old = _senderHostmask;
 				if( prop ) _senderHostmask = [[NSString allocWithZone:nil] initWithUTF8String:(char *) prop];
 				else _senderHostmask = nil;
 				xmlFree( prop );
 
 				prop = xmlGetProp( subNode, (xmlChar *) "class" );
-				old = _senderClass;
 				if( prop ) _senderClass = [[NSString allocWithZone:nil] initWithUTF8String:(char *) prop];
 				else _senderClass = nil;
 				xmlFree( prop );

@@ -191,7 +191,7 @@ static JVTranscriptFindWindowController *sharedInstance = nil;
 
 	JVChatMessage *foundMessage = nil;
 	NSEnumerator *enumerator = [[self results] objectEnumerator];
-	NSArray *allMessages = [transcript messages];
+	NSArray *allMessages = nil;
 	NSRange range;
 	NSArray *rangeMsgs = nil;
 	NSEnumerator *messages = nil;

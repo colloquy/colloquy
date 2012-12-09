@@ -167,10 +167,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) setIdentifier:(NSString *) identifier {
-	id old = _identifier;
 	_identifier = [identifier copyWithZone:nil];
-
-	old = _settings;
 	_settings = [[NSMutableDictionary allocWithZone:nil] initWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:[self userDefaultsPreferencesKey]]];
 
 	if( [[self identifier] length] ) {

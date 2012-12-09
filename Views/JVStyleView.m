@@ -509,6 +509,7 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 		NSTimeInterval delay = _nextAppendMessageInterval;
 		if (_nextAppendMessageInterval > JVMessageIntervalMaximum)
 			delay = JVMessageIntervalMaximum;
+		_nextAppendMessageInterval = delay;
 
 		[self performSelector:@selector( _appendMessages ) withObject:nil afterDelay:_nextAppendMessageInterval];
 		[self performSelector:@selector( _forceAppendMessages ) withObject:nil afterDelay:1.];
@@ -749,10 +750,8 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 - (void) _contentFrameIsReady {
 	WebFrame *contentFrame = [[self mainFrame] findFrameNamed:@"content"];
 
-	id old = _domDocument;
 	_domDocument = (DOMHTMLDocument *)[contentFrame DOMDocument];
 
-	old = _body;
 	_body = (DOMHTMLElement *)[_domDocument getElementById:@"contents"];
 	if( ! _body ) _body = (DOMHTMLElement *)[_domDocument body];
 
