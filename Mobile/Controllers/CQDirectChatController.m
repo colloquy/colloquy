@@ -1115,7 +1115,7 @@ static BOOL showingKeyboard;
 - (void) keyboardWillShow:(NSNotification *) notification {
 	_showingKeyboard = YES;
 
-	if (![self isViewLoaded] || !self.view.window)
+	if (_showingKeyboard || ![self isViewLoaded] || !self.view.window)
 		return;
 
 	CGRect keyboardRect = CGRectZero;
@@ -1142,15 +1142,18 @@ static BOOL showingKeyboard;
 }
 
 - (void) keyboardWillHide:(NSNotification *) notification {
+	if (!_showingKeyboard)
+		return;
+
 	_showingKeyboard = NO;
 
-	if (![self isViewLoaded] || !self.view.window)
+	if (![self isViewLoaded])
 		return;
 
 	NSTimeInterval animationDuration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 
-	if (_active) {
+	if (_active && self.view.window) {
 		[UIView beginAnimations:nil context:NULL];
 		[UIView setAnimationDuration:animationDuration];
 		[UIView setAnimationCurve:animationCurve];
