@@ -86,6 +86,36 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Key</key>
+			<string>CQScrollbackLength</string>
+			<key>Title</key>
+			<string>Scrollback Length</string>
+			<key>Values</key>
+			<array>
+				<integer>100</integer>
+				<integer>200</integer>
+				<integer>300</integer>
+				<integer>400</integer>
+				<integer>500</integer>
+				<integer>1000</integer>
+				<integer>1500</integer>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>100 Lines</string>
+				<string>200 Lines</string>
+				<string>300 Lines</string>
+				<string>400 Lines</string>
+				<string>500 Lines</string>
+				<string>1000 Lines</string>
+				<string>1500 Lines</string>
+			</array>
+			<key>DefaultValue</key>
+			<integer>300</integer>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>Multitasking</string>

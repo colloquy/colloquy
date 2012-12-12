@@ -5,6 +5,7 @@ var currentScrollTop = 0;
 var targetScrollTop = 0;
 var animationComplete = 0;
 var autoscrollSuspended = false;
+var scrollbackLimit = 300;
 
 function animateScroll(target, duration, callback) {
 	function cubicInOut(t, b, c, d) {
@@ -138,10 +139,16 @@ function appendEventMessage(container, messageHTML, identifier, previousSession)
 	container.appendChild(eventElement);
 }
 
+function setScrollbackLimit(limit) {
+	scrollbackLimit = limit;
+
+	enforceScrollbackLimit();
+}
+
 function enforceScrollbackLimit() {
-	if (document.body.childNodes.length < 300)
+	if (document.body.childNodes.length < scrollbackLimit)
 		return;
-	while (document.body.childNodes.length > 275)
+	while (document.body.childNodes.length > (scrollbackLimit - 25))
 		document.body.removeChild(document.body.firstChild);
 	scrollToBottom(false, true);
 }

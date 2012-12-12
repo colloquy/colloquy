@@ -48,6 +48,8 @@
 	<string>Beep 1</string>
 	<key>CQShowLeaveEvents</key>
 	<true/>
+	<key>CQScrollbackLength</key>
+	<integer>300</integer>
 	<key>CQShowJoinEvents</key>
 	<true/>
 	<key>CQShowsChatIcons</key>

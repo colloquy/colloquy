@@ -26,6 +26,8 @@
 NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewControllerRecentMessagesUpdatedNotification";
 NSString *CQChatViewControllerUnreadMessagesUpdatedNotification = @"CQChatViewControllerUnreadMessagesUpdatedNotification";
 
+static NSString *CQScrollbackLengthDidChangeNotification = @"CQScrollbackLengthDidChangeNotification";
+
 static CQSoundController *privateMessageSound;
 static CQSoundController *highlightSound;
 static NSTimeInterval timestampInterval;
@@ -36,6 +38,7 @@ static BOOL vibrateOnHighlight;
 static BOOL vibrateOnPrivateMessage;
 static BOOL localNotificationOnHighlight;
 static BOOL localNotificationOnPrivateMessage;
+static NSUInteger scrollbackLength;
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
 - (void) _addPendingComponent:(id) component;
@@ -69,6 +72,13 @@ static BOOL showingKeyboard;
 	vibrateOnPrivateMessage = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnPrivateMessage"];
 	localNotificationOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLocalNotificationOnHighlight"];
 	localNotificationOnPrivateMessage = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLocalNotificationOnPrivateMessage"];
+
+	NSInteger newScrollbackLength = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQScrollbackLength"];
+	if (newScrollbackLength != scrollbackLength) {
+		scrollbackLength = newScrollbackLength;
+
+		[[NSNotificationCenter defaultCenter] postNotificationName:CQScrollbackLengthDidChangeNotification object:nil];
+	}
 
 	NSString *soundName = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
 
@@ -145,6 +155,10 @@ static BOOL showingKeyboard;
 
 		_revealKeyboard = YES;
 	}
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollbackLengthDidChange:) name:CQScrollbackLengthDidChangeNotification object:nil];
+
+	[self setScrollbackLength:scrollbackLength];
 
 	return self;
 }
@@ -1110,6 +1124,10 @@ static BOOL showingKeyboard;
 	[self _forceRegsignKeyboard];
 }
 
+- (void) setScrollbackLength:(NSUInteger) scrollbackLength {
+	[transcriptView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setScrollbackLimit(%d)", scrollbackLength]];
+}
+
 #pragma mark -
 
 - (void) keyboardWillShow:(NSNotification *) notification {
@@ -1163,6 +1181,12 @@ static BOOL showingKeyboard;
 
 	if (_active)
 		[UIView commitAnimations];
+}
+
+#pragma mark -
+
+- (void) scrollbackLengthDidChange:(NSNotification *) notification {
+	[self setScrollbackLength:scrollbackLength];
 }
 
 #pragma mark -
