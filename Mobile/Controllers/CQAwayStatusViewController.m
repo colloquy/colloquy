@@ -23,9 +23,11 @@
 		return nil;
 
 	self.title = NSLocalizedString(@"Create Away Status…", @"Create Away Status title");
+
 	NSMutableArray *awayStatuses = [[[NSUserDefaults standardUserDefaults] arrayForKey:@"CQAwayStatuses"] mutableCopy];
 	if (!awayStatuses)
 		awayStatuses = [[NSMutableArray alloc] init];
+
 	NSString *defaultAwayStatus = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQAwayStatus"];
 	if (defaultAwayStatus.length && ![awayStatuses containsObject:defaultAwayStatus])
 		[awayStatuses addObject:defaultAwayStatus];
@@ -69,6 +71,7 @@
 		_longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_tableWasLongPressed:)];
 		_longPressGestureRecognizer.cancelsTouchesInView = NO;
 		_longPressGestureRecognizer.delaysTouchesBegan = YES;
+
 		[self.tableView addGestureRecognizer:_longPressGestureRecognizer];
 	}
 }
@@ -132,7 +135,6 @@
 	return 1;
 }
 
-
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
 
@@ -149,8 +151,6 @@
 }
 
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	if ([self statusIsDefaultAwayStatus:[tableView cellForRowAtIndexPath:indexPath].textLabel.text])
-		return nil;
 	return indexPath;
 }
 
@@ -173,9 +173,7 @@
 
 		_connection.awayStatusMessage = [_items objectAtIndex:indexPath.row];
 
-		// Better way to close the view?
-		UIBarButtonItem *doneItem = self.navigationItem.leftBarButtonItem;
-		[doneItem.target performSelector:doneItem.action];
+		[self.navigationController dismissModalViewControllerAnimated:YES];
 	}
 }
 
