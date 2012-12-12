@@ -11,29 +11,37 @@
 		1C0A13F508B0374800324E25 /* JVPythonChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0A13F408B0374800324E25 /* JVPythonChatPlugin.m */; };
 		1C4FD36807C6BC25000EA451 /* JVPythonPluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4FD36607C6BC25000EA451 /* JVPythonPluginLoader.m */; };
 		8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
+		9295C9821678302E009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9295C9811678302E009F9014 /* ChatCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		92CA1B7815000AA500F3B926 /* PBXContainerItemProxy */ = {
+		9295C9781678301E009F9014 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 92CA1B7315000AA400F3B926 /* Chat Core.xcodeproj */;
+			containerPortal = 9295C9701678301D009F9014 /* Colloquy (Old).xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 1C51B48B052DE0CB00BB459B;
-			remoteInfo = "Chat Core (Framework)";
+			remoteGlobalIDString = 1CB2CD8C052DDC570094AAA4;
+			remoteInfo = "Colloquy (Application)";
 		};
-		92CA1B7A15000AA500F3B926 /* PBXContainerItemProxy */ = {
+		9295C97A1678301E009F9014 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 92CA1B7315000AA400F3B926 /* Chat Core.xcodeproj */;
+			containerPortal = 9295C9701678301D009F9014 /* Colloquy (Old).xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 92BFCEAA14FDEF95001D02BB;
-			remoteInfo = "Chat Core (Static Library)";
+			remoteGlobalIDString = 1C51B4CD052DE14B00BB459B;
+			remoteInfo = "Standard Commands (Plug-In)";
 		};
-		92CA1B7C15000AAC00F3B926 /* PBXContainerItemProxy */ = {
+		9295C97C1678301E009F9014 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 92CA1B7315000AA400F3B926 /* Chat Core.xcodeproj */;
+			containerPortal = 9295C9701678301D009F9014 /* Colloquy (Old).xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CBF685150820186F00F498FB;
+			remoteInfo = "Colloquy (Metadata Importer)";
+		};
+		9295C97F1678302A009F9014 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9295C9701678301D009F9014 /* Colloquy (Old).xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 1C51B46E052DE0CB00BB459B;
-			remoteInfo = "Chat Core (Framework)";
+			remoteGlobalIDString = 1CB2CCF5052DDC560094AAA4;
+			remoteInfo = "Colloquy (Application)";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -51,7 +59,8 @@
 		1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* Python Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Python Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
-		92CA1B7315000AA400F3B926 /* Chat Core.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Chat Core.xcodeproj"; path = "../../Chat Core.xcodeproj"; sourceTree = "<group>"; };
+		9295C9701678301D009F9014 /* Colloquy (Old).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Colloquy (Old).xcodeproj"; path = "/Users/zach/Desktop/Colloquy-AppleScript/Colloquy (Old).xcodeproj"; sourceTree = "<absolute>"; };
+		9295C9811678302E009F9014 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChatCore.framework; path = ../../build/Development/ChatCore.framework; sourceTree = "<group>"; };
 		A1F6108B0957E4BB001B65CD /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9295C9821678302E009F9014 /* ChatCore.framework in Frameworks */,
 				8D5B49B4048680CD000E48DA /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -70,7 +80,8 @@
 		089C166AFE841209C02AAC07 /* FScript Plugin */ = {
 			isa = PBXGroup;
 			children = (
-				92CA1B7315000AA400F3B926 /* Chat Core.xcodeproj */,
+				9295C9811678302E009F9014 /* ChatCore.framework */,
+				9295C9701678301D009F9014 /* Colloquy (Old).xcodeproj */,
 				1C415F690B35122700239EB3 /* Template.py */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				32C88E010371C26100C91783 /* Other Sources */,
@@ -164,11 +175,12 @@
 			tabWidth = 4;
 			usesTabs = 1;
 		};
-		92CA1B7415000AA400F3B926 /* Products */ = {
+		9295C9711678301D009F9014 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				92CA1B7915000AA500F3B926 /* ChatCore.framework */,
-				92CA1B7B15000AA500F3B926 /* libChat Core.a */,
+				9295C9791678301E009F9014 /* Colloquy.app */,
+				9295C97B1678301E009F9014 /* Standard Commands.plugin */,
+				9295C97D1678301E009F9014 /* Colloquy.mdimporter */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -187,7 +199,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				92CA1B7D15000AAC00F3B926 /* PBXTargetDependency */,
+				9295C9801678302A009F9014 /* PBXTargetDependency */,
 			);
 			name = "Python Support Plugin";
 			productInstallPath = "$(HOME)/Library/Bundles";
@@ -215,8 +227,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 92CA1B7415000AA400F3B926 /* Products */;
-					ProjectRef = 92CA1B7315000AA400F3B926 /* Chat Core.xcodeproj */;
+					ProductGroup = 9295C9711678301D009F9014 /* Products */;
+					ProjectRef = 9295C9701678301D009F9014 /* Colloquy (Old).xcodeproj */;
 				},
 			);
 			projectRoot = ../..;
@@ -227,18 +239,25 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		92CA1B7915000AA500F3B926 /* ChatCore.framework */ = {
+		9295C9791678301E009F9014 /* Colloquy.app */ = {
 			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ChatCore.framework;
-			remoteRef = 92CA1B7815000AA500F3B926 /* PBXContainerItemProxy */;
+			fileType = wrapper.application;
+			path = Colloquy.app;
+			remoteRef = 9295C9781678301E009F9014 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		92CA1B7B15000AA500F3B926 /* libChat Core.a */ = {
+		9295C97B1678301E009F9014 /* Standard Commands.plugin */ = {
 			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libChat Core.a";
-			remoteRef = 92CA1B7A15000AA500F3B926 /* PBXContainerItemProxy */;
+			fileType = wrapper.cfbundle;
+			path = "Standard Commands.plugin";
+			remoteRef = 9295C97A1678301E009F9014 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9295C97D1678301E009F9014 /* Colloquy.mdimporter */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = Colloquy.mdimporter;
+			remoteRef = 9295C97C1678301E009F9014 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -267,10 +286,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		92CA1B7D15000AAC00F3B926 /* PBXTargetDependency */ = {
+		9295C9801678302A009F9014 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = "Chat Core (Framework)";
-			targetProxy = 92CA1B7C15000AAC00F3B926 /* PBXContainerItemProxy */;
+			name = "Colloquy (Application)";
+			targetProxy = 9295C97F1678302A009F9014 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -290,6 +309,11 @@
 		1C7F306C0855489300D41FB0 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../build/Development\"",
+				);
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					../../Additions,
@@ -301,8 +325,6 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
 					"-weak_library",
 					/System/Library/Frameworks/Python.framework/Versions/2.5/Python,
 				);
@@ -314,6 +336,11 @@
 		1C7F306E0855489300D41FB0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Colloquy.app/Contents/MacOS/Colloquy";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../build/Development\"",
+				);
 				GCC_PREFIX_HEADER = ../../Basic.pch;
 				HEADER_SEARCH_PATHS = (
 					../../Additions,
@@ -325,8 +352,6 @@
 				);
 				INFOPLIST_FILE = Info.plist;
 				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
 					"-weak_library",
 					/System/Library/Frameworks/Python.framework/Versions/2.5/Python,
 				);
