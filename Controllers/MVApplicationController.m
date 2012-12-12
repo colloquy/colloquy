@@ -486,6 +486,7 @@ static BOOL applicationIsTerminating = NO;
 
 	[MVConnectionsController defaultController];
 	[JVChatController defaultController];
+	[MVChatPluginManager defaultManager];
 
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:20] setSubmenu:[MVConnectionsController favoritesMenu]];
 	[[[[[[NSApplication sharedApplication] mainMenu] itemAtIndex:1] submenu] itemWithTag:30] setSubmenu:[JVChatController smartTranscriptMenu]];
@@ -673,7 +674,6 @@ static BOOL applicationIsTerminating = NO;
 
 - (void) _deferredLaunchingBehavior {
 	[MVCrashCatcher check];
-	[MVChatPluginManager defaultManager];
 	[MVFileTransferController defaultController];
 	[MVBuddyListController sharedBuddyList];
 
