@@ -299,7 +299,8 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 
 	_idleTimeStart = ([NSDate timeIntervalSinceReferenceDate] - _user.idleTime);
 
-	[self.tableView reloadData];
+	if ([self isViewLoaded])
+		[self.tableView reloadData];
 }
 
 - (void) _idleTimeUpdated:(NSNotification *) notification {
