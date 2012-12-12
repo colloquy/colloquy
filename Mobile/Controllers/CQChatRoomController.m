@@ -478,6 +478,8 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 }
 
 - (void) _kicked:(NSNotification *) notification {
+	[self _updateRightBarButtonItemAnimated:YES];
+
 	NSData *reasonData = [notification.userInfo objectForKey:@"reason"];
 	MVChatUser *user = [notification.userInfo objectForKey:@"byUser"];
 
