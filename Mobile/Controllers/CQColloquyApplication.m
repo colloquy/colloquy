@@ -35,6 +35,8 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 
 #define BrowserAlertTag 1
 
+static NSMutableArray *highlightWords;
+
 @implementation CQColloquyApplication
 + (CQColloquyApplication *) sharedApplication {
 	return (CQColloquyApplication *)[UIApplication sharedApplication];
@@ -104,7 +106,6 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 }
 
 - (NSArray *) highlightWords {
-	static NSMutableArray *highlightWords;
 	if (!highlightWords) {
 		highlightWords = [[NSMutableArray alloc] init];
 
@@ -162,6 +163,9 @@ NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyA
 - (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
+
+	[highlightWords release];
+	highlightWords = nil;
 
 	if ([UIDevice currentDevice].isPadModel)
 		[self reloadSplitViewController];
