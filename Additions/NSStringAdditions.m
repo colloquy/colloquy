@@ -1131,10 +1131,15 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (NSRange) rangeOfRegex:(NSString *) regex inRange:(NSRange) range {
+	return [self rangeOfRegex:regex options:NSMatchingReportCompletion inRange:range capture:0 error:nil];
+}
+
+- (NSRange) rangeOfRegex:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error {
 	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:0 error:nil];
-	NSRange foundRange = [regularExpression rangeOfFirstMatchInString:self options:NSMatchingReportCompletion range:range];
+	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:options range:range];
 	[regularExpression release];
-	return foundRange;
+
+	return [result rangeAtIndex:capture];
 }
 
 - (NSString *) stringByMatching:(NSString *) regex capture:(NSInteger) capture {
@@ -1143,26 +1148,45 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 - (NSString *) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error {
 	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:nil];
-	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:capture range:range];
+	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:options range:range];
 	[regularExpression release];
 
-	if (result.range.location == NSNotFound)
+	NSRange resultRange = [result rangeAtIndex:capture];
+
+	if (resultRange.location == NSNotFound)
 		return nil;
 
-	return [self substringWithRange:result.range];
+	return [self substringWithRange:resultRange];
+}
+
+- (NSArray *) captureComponentsMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options range:(NSRange) range error:(NSError *) error {
+	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:nil];
+	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:options range:range];
+
+	NSMutableArray *results = [NSMutableArray array];
+
+	NSLog(@"ranges: %d", result.numberOfRanges);
+	for (NSUInteger i = 1; i < (result.numberOfRanges - 1); i++)
+		[results addObject:[self substringWithRange:[result rangeAtIndex:i]]];
+
+	return [[results copy] autorelease];
+}
+
+- (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement {
+	return [self stringByReplacingOccurrencesOfRegex:regex withString:replacement options:0 range:NSMakeRange(0, self.length) error:nil];
 }
 
 - (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
 	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:nil];
 	NSTextCheckingResult *result = nil;
 
-	NSString *replacementString = [[self copy] autorelease];
+	NSMutableString *replacementString = [[self mutableCopy] autorelease];
 
 	while ((result = [regularExpression firstMatchInString:replacementString options:options range:searchRange])) {
 		if (result.range.location == NSNotFound)
 			break; 
 
-		replacementString = [replacementString stringByReplacingCharactersInRange:result.range withString:replacement];
+		[replacementString replaceCharactersInRange:result.range withString:replacement];
 	}
 
 	[regularExpression release];

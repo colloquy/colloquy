@@ -1,7 +1,8 @@
 #import "CQProcessChatMessageOperation.h"
 
 #import "CQColloquyApplication.h"
-#import "RegexKitLite.h"
+
+#import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatUser.h>
 
@@ -90,9 +91,9 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 	// Catch well-formed email addresses like "user@example.com" or "user@example.co.uk".
 	static NSString *urlRegex = @"(\\B(?<!&amp;)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&;#]{2,}\\b)|\\b((?:[a-z][\\w-]+:(?:/{1,3}|[a-z0-9%])|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\((?:[^\\s()<>]+|(?:\\([^\\s()<>]+\\)))*\\))+(?:\\((?:[^\\s()<>]+|(?:\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))|([\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+@(?:[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+\\.)+[\\w]{2,})";
 
-	NSRange matchedRange = [string rangeOfRegex:urlRegex options:RKLCaseless inRange:*textRange capture:0 error:NULL];
+	NSRange matchedRange = [string rangeOfRegex:urlRegex options:NSRegularExpressionCaseInsensitive inRange:*textRange capture:0 error:NULL];
 	while (matchedRange.location != NSNotFound) {
-		NSArray *components = [string captureComponentsMatchedByRegex:urlRegex options:RKLCaseless range:matchedRange error:NULL];
+		NSArray *components = [string captureComponentsMatchedByRegex:urlRegex options:NSRegularExpressionCaseInsensitive range:matchedRange error:NULL];
 		NSCAssert(components.count == 4, @"component count needs to be 4");
 
 		NSString *room = [components objectAtIndex:1];
@@ -128,7 +129,7 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 		if (!matchRange.length)
 			break;
 
-		matchedRange = [string rangeOfRegex:urlRegex options:RKLCaseless inRange:matchRange capture:0 error:NULL];
+		matchedRange = [string rangeOfRegex:urlRegex options:NSRegularExpressionCaseInsensitive inRange:matchRange capture:0 error:NULL];
 	}
 }
 
@@ -231,7 +232,7 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 				regex = [NSString stringWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", highlightWord];
 			}
 
-			if ([stylelessMessageString isMatchedByRegex:regex options:RKLCaseless inRange:NSMakeRange(0, stylelessMessageString.length) error:NULL])
+			if ([stylelessMessageString isMatchedByRegex:regex options:NSRegularExpressionCaseInsensitive inRange:NSMakeRange(0, stylelessMessageString.length) error:NULL])
 				highlighted = YES;
 
 			if (highlighted)

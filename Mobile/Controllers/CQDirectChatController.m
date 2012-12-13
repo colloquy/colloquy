@@ -11,7 +11,7 @@
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
 #import "CQUserInfoController.h"
-#import "RegexKitLite.h"
+#import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
