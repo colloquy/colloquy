@@ -1133,7 +1133,7 @@ static BOOL showingKeyboard;
 - (void) keyboardWillShow:(NSNotification *) notification {
 	_showingKeyboard = YES;
 
-	if (_showingKeyboard || ![self isViewLoaded] || !self.view.window)
+	if (![self isViewLoaded] || !self.view.window)
 		return;
 
 	CGRect keyboardRect = CGRectZero;
