@@ -520,7 +520,7 @@ static BOOL showingKeyboard;
 
 	if ([word hasPrefix:@"/"]) {
 		static NSArray *commands;
-		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/join", @"/list", @"/away", @"/whois", @"/say", @"/raw", @"/quote", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/umode", @"/globops",
+		if (!commands) commands = [[NSArray alloc] initWithObjects:@"/me", @"/msg", @"/nick", @"/join", @"/list", @"/away", @"/whois", @"/say", @"/raw", @"/quote", @"/quit", @"/disconnect", @"/query", @"/part", @"/notice", @"/onotice", @"/umode", @"/globops",
 #if ENABLE(FILE_TRANSFERS)
 		@"/dcc",
 #endif
@@ -770,6 +770,39 @@ static BOOL showingKeyboard;
 
 	// Return NO so the command is handled in ChatCore.
 	return NO;
+}
+
+- (BOOL) handleNoticeCommandWithArguments:(NSString *) arguments {
+	NSScanner *argumentsScanner = [NSScanner scannerWithString:arguments];
+	argumentsScanner.charactersToBeSkipped = nil;
+
+	NSString *target = nil;
+	[argumentsScanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&target];
+
+	if (target.length > 2) {
+		MVChatRoom *room = nil;
+		if ([[self.connection chatRoomNamePrefixes] characterIsMember:[target characterAtIndex:0]])
+			room = [self.connection chatRoomWithUniqueIdentifier:target];
+		else if ([[self.connection chatRoomNamePrefixes] characterIsMember:[target characterAtIndex:1]])
+			room = [self.connection chatRoomWithUniqueIdentifier:[target substringFromIndex:1]];
+
+		if (!room)
+			return NO;
+
+		NSString *message = [arguments substringFromIndex:argumentsScanner.scanLocation];
+		NSData *messageData = [message dataUsingEncoding:self.connection.encoding];
+		CQChatRoomController *controller = [[CQChatController defaultController] chatViewControllerForRoom:room ifExists:YES];
+		[controller addMessage:@{ @"message": messageData, @"type": @"message", @"notice": @(YES), @"user": self.connection.localUser }];
+	}
+
+	// Return NO so the command is handled in ChatCore.
+	return NO;
+}
+
+- (BOOL) handleOnoticeCommandWithArguments:(NSString *) arguments {
+	if ([arguments hasPrefix:@"@"])
+		return [self handleNoticeCommandWithArguments:arguments];
+	return [self handleNoticeCommandWithArguments:[@"@" stringByAppendingString:arguments]];
 }
 
 - (BOOL) handleQueryCommandWithArguments:(NSString *) arguments {
