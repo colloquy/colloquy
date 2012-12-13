@@ -433,6 +433,8 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 - (void) serverChanged:(CQPreferencesTextCell *) sender {
 	if (sender.textField.text.length || _newConnection) {
+		if ([sender.textField.text isEqualToString:@"irc://"] || [sender.textField.text isEqualToString:@"ircs://"])
+			return;
 		_connection.server = (sender.textField.text.length ? sender.textField.text : @"<<placeholder>>");
 		if (!_newConnection)
 			self.title = _connection.displayName;
