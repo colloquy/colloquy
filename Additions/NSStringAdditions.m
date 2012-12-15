@@ -1162,6 +1162,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 - (NSArray *) captureComponentsMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options range:(NSRange) range error:(NSError *) error {
 	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:nil];
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:options range:range];
+	[regularExpression release];
 
 	NSMutableArray *results = [NSMutableArray array];
 
