@@ -185,19 +185,16 @@ static NSMutableArray *highlightWords;
 		NSString *displayVersion = [NSString stringWithFormat:@"%@ (%@)", version, [infoDictionary objectForKey:@"CFBundleVersion"]];
 		[[NSUserDefaults standardUserDefaults] setObject:displayVersion forKey:@"CQCurrentVersion"];
 
-		BOOL showsEmoji = [UIDevice currentDevice].isSystemSix;
-		if (!showsEmoji) {
+		if (![UIDevice currentDevice].isSystemSix) {
 			NSString *preferencesPath = [@"~/../../Library/Preferences/com.apple.Preferences.plist" stringByStandardizingPath];
 			NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:preferencesPath];
 
-			showsEmoji = (preferences && ![[preferences objectForKey:@"KeyboardEmojiEverywhere"] boolValue]);
+			if ((preferences && ![[preferences objectForKey:@"KeyboardEmojiEverywhere"] boolValue])) {
+				[preferences setValue:[NSNumber numberWithBool:YES] forKey:@"KeyboardEmojiEverywhere"];
+				[preferences writeToFile:preferencesPath atomically:YES];
+			}
 
 			[preferences release];
-		}
-
-		if (showsEmoji) {
-			[preferences setValue:[NSNumber numberWithBool:YES] forKey:@"KeyboardEmojiEverywhere"];
-			[preferences writeToFile:preferencesPath atomically:YES];
 		}
 
 		if (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVSetUpDefaultQuitMessage"]) {
