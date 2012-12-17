@@ -701,7 +701,7 @@ static NSMutableArray *highlightWords;
 
 - (BOOL) isSpecialApplicationURL:(NSURL *) url {
 #if !TARGET_IPHONE_SIMULATOR
-	return (url && ([url.host hasCaseInsensitiveSubstring:@"maps.google."] || [url.host hasCaseInsensitiveSubstring:@"youtube."] || [url.host hasCaseInsensitiveSubstring:@"phobos.apple."]));
+	return (url && ((![UIDevice currentDevice].isRunningOS6 && [url.host hasCaseInsensitiveSubstring:@"maps.google."]) || [url.host hasCaseInsensitiveSubstring:@"youtube."] || [url.host hasCaseInsensitiveSubstring:@"phobos.apple."]));
 #else
 	return NO;
 #endif
@@ -713,7 +713,7 @@ static NSMutableArray *highlightWords;
 	NSString *scheme = url.scheme;
 #if !TARGET_IPHONE_SIMULATOR
 	NSString *host = url.host;
-	if ([host hasCaseInsensitiveSubstring:@"maps.google."])
+	if (![UIDevice currentDevice].isRunningOS6 && [host hasCaseInsensitiveSubstring:@"maps.google."])
 		return NSLocalizedString(@"Maps", @"Maps application name");
 	if ([host hasCaseInsensitiveSubstring:@"youtube."])
 		return NSLocalizedString(@"YouTube", @"YouTube application name");
