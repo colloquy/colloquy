@@ -250,7 +250,6 @@ static NSMutableArray *highlightWords;
 	[self updateAnalytics];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
-	[[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"CQSplitSwipeOrientations" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:NULL];
 }
 
 - (void) handleNotificationWithUserInfo:(NSDictionary *) userInfo {
@@ -296,9 +295,11 @@ static NSMutableArray *highlightWords;
 #pragma mark -
 
 - (void) reloadSplitViewController {
-	if (self.modalViewController)
-		return;
+	[_connectionsPopoverController dismissPopoverAnimated:YES];
+	[_connectionsPopoverController release];
+	_connectionsPopoverController = nil;
 
+	[_colloquiesPopoverController dismissPopoverAnimated:YES];
 	[_colloquiesPopoverController release];
 	_colloquiesPopoverController = nil;
 
@@ -366,6 +367,18 @@ static NSMutableArray *highlightWords;
 
 - (void) applicationWillEnterForeground:(UIApplication *) application {
 	[self cancelAllLocalNotifications];
+
+	NSNumber *newSwipeOrientationValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQSplitSwipeOrientations"];
+
+	if (![_oldSwipeOrientationValue isEqualToNumber:newSwipeOrientationValue]) {
+		if (self.modalViewController)
+			_userDefaultsChanged = YES;
+		else [self reloadSplitViewController];
+	}
+}
+
+- (void) applicationWillResignActive:(UIApplication *) application {
+	_oldSwipeOrientationValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQSplitSwipeOrientations"];
 }
 
 - (void) application:(UIApplication *) application didReceiveLocalNotification:(UILocalNotification *) notification {
@@ -419,22 +432,6 @@ static NSMutableArray *highlightWords;
 	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 
 	[self submitRunTime];
-}
-
-#pragma mark -
-
-- (void) observeValueForKeyPath:(NSString *) keyPath ofObject:(id) object change:(NSDictionary *) change context:(void *) context {
-	if (object != [NSUserDefaults standardUserDefaults])
-		return;
-
-	if (![keyPath isEqualToString:@"CQSplitSwipeOrientations"])
-		return;
-
-	NSNumber *old = [change objectForKey:NSKeyValueChangeOldKey];
-	NSNumber *new = [change objectForKey:NSKeyValueChangeNewKey];
-
-	if (![old isEqualToNumber:new])
-		[self reloadSplitViewController];
 }
 
 #pragma mark -
@@ -605,6 +602,12 @@ static NSMutableArray *highlightWords;
 
 - (void) dismissModalViewControllerAnimated:(BOOL) animated {
 	[_mainViewController dismissModalViewControllerAnimated:animated];
+
+	if (_userDefaultsChanged) {
+		_userDefaultsChanged = NO;
+
+		[self reloadSplitViewController];
+	}
 }
 
 #pragma mark -

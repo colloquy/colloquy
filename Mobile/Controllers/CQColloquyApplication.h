@@ -17,6 +17,8 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 	NSUInteger _networkIndicatorStack;
 	BOOL _showingTabBar;
 	UIActionSheet *_visibleActionSheet;
+	NSNumber *_oldSwipeOrientationValue;
+	BOOL _userDefaultsChanged;
 }
 + (CQColloquyApplication *) sharedApplication;
 
