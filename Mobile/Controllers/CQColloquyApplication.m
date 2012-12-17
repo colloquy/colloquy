@@ -167,8 +167,6 @@ static NSMutableArray *highlightWords;
 	[highlightWords release];
 	highlightWords = nil;
 
-	if ([UIDevice currentDevice].isPadModel)
-		[self reloadSplitViewController];
 	[self updateAnalytics];
 
 	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
@@ -252,6 +250,7 @@ static NSMutableArray *highlightWords;
 	[self updateAnalytics];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"CQSplitSwipeOrientations" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:NULL];
 }
 
 - (void) handleNotificationWithUserInfo:(NSDictionary *) userInfo {
@@ -297,15 +296,15 @@ static NSMutableArray *highlightWords;
 #pragma mark -
 
 - (void) reloadSplitViewController {
+	if (self.modalViewController)
+		return;
+
 	[_colloquiesPopoverController release];
 	_colloquiesPopoverController = nil;
 
 	[_colloquiesBarButtonItem release];
 	_colloquiesBarButtonItem = nil;
 
-	UISplitViewController *oldSplitViewController = [self splitViewController];
-	oldSplitViewController.delegate = nil;
-	oldSplitViewController.viewControllers = nil;
 	[_mainViewController release];
 
 	UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
@@ -320,8 +319,10 @@ static NSMutableArray *highlightWords;
 	splitViewController.viewControllers = viewControllers;
 	[viewControllers release];
 	
-	_mainViewController = splitViewController;
+	_mainViewController = [splitViewController retain];
 	_mainWindow.rootViewController = _mainViewController;
+
+	[splitViewController release];
 }
 
 - (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
@@ -339,7 +340,7 @@ static NSMutableArray *highlightWords;
 	[self userDefaultsChanged];
 
 	if ([[UIDevice currentDevice] isPadModel]) {
-		// do nothing; everything is set up in -userDefaultsChanged now
+		[self reloadSplitViewController];
 	} else {
 		UITabBarController *tabBarController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
 		tabBarController.delegate = self;
@@ -418,6 +419,22 @@ static NSMutableArray *highlightWords;
 	[UIApplication sharedApplication].applicationIconBadgeNumber = 0;
 
 	[self submitRunTime];
+}
+
+#pragma mark -
+
+- (void) observeValueForKeyPath:(NSString *) keyPath ofObject:(id) object change:(NSDictionary *) change context:(void *) context {
+	if (object != [NSUserDefaults standardUserDefaults])
+		return;
+
+	if (![keyPath isEqualToString:@"CQSplitSwipeOrientations"])
+		return;
+
+	NSNumber *old = [change objectForKey:NSKeyValueChangeOldKey];
+	NSNumber *new = [change objectForKey:NSKeyValueChangeNewKey];
+
+	if (![old isEqualToNumber:new])
+		[self reloadSplitViewController];
 }
 
 #pragma mark -
