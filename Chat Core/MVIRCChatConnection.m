@@ -6,7 +6,7 @@
 #import "MVDirectChatConnectionPrivate.h"
 #import "MVChatString.h"
 
-#import "AsyncSocket.h"
+#import "GCDAsyncSocket.h"
 #import "InterThreadMessaging.h"
 #import "MVChatuserWatchRule.h"
 #import "NSNotificationAdditions.h"
@@ -606,20 +606,16 @@ static const NSStringEncoding supportedEncodings[] = {
 #pragma mark -
 
 @implementation MVIRCChatConnection (MVIRCChatConnectionPrivate)
-- (AsyncSocket *) _chatConnection {
+- (GCDAsyncSocket *) _chatConnection {
 	return _chatConnection;
 }
 
 - (void) _connect {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	id old = _chatConnection;
-	_chatConnection = [[AsyncSocket alloc] initWithDelegate:self];
+	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)];
 	[old setDelegate:nil];
 	[old disconnect];
 	[old release];
-
-	[_chatConnection enablePreBuffering];
 
 	_pendingIdentificationAttempt = NO;
 	_sentEndCapabilityCommand = NO;
@@ -641,6 +637,7 @@ static const NSStringEncoding supportedEncodings[] = {
     @autoreleasepool {
 		[NSThread prepareForInterThreadMessages];
 
+		_connectionDelegateQueue = dispatch_queue_create([[self description] UTF8String], DISPATCH_QUEUE_SERIAL);
 		_connectionThread = [NSThread currentThread];
 		if( [_connectionThread respondsToSelector:@selector( setName: )] )
 			[_connectionThread setName:[[self url] absoluteString]];
@@ -658,8 +655,10 @@ static const NSStringEncoding supportedEncodings[] = {
 		// make sure the connection has sent all the delegate calls it has scheduled
 		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
 
-		if( _connectionThread == [NSThread currentThread] )
+		if( _connectionThread == [NSThread currentThread] ) {
 			_connectionThread = nil;
+			dispatch_release(_connectionDelegateQueue);
+		}
 	}
 }
 
@@ -690,75 +689,13 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (BOOL) socketWillConnect:(AsyncSocket *) sock {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
-	if( [[self proxyServer] length] && [self proxyServerPort] ) {
-		if( _proxy == MVChatConnectionHTTPSProxy || _proxy == MVChatConnectionHTTPProxy ) {
-			NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
-			if( _proxy == MVChatConnectionHTTPSProxy ) {
-				[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertyHTTPSProxyHost];
-				[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertyHTTPSProxyPort];
-			} else {
-				[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertyHTTPProxyHost];
-				[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertyHTTPProxyPort];
-			}
-
-			CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertyHTTPProxy, (CFDictionaryRef) settings );
-			CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertyHTTPProxy, (CFDictionaryRef) settings );
-			[settings release];
-		} else if( _proxy == MVChatConnectionSOCKS4Proxy || _proxy == MVChatConnectionSOCKS5Proxy ) {
-			NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
-
-			[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertySOCKSProxyHost];
-			[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertySOCKSProxyPort];
-
-			if( [[self proxyUsername] length] )
-				[settings setObject:[self proxyUsername] forKey:(NSString *)kCFStreamPropertySOCKSUser];
-			if( [[self proxyPassword] length] )
-				[settings setObject:[self proxyPassword] forKey:(NSString *)kCFStreamPropertySOCKSPassword];
-
-			if( _proxy == MVChatConnectionSOCKS4Proxy )
-				[settings setObject:(NSString *)kCFStreamSocketSOCKSVersion4 forKey:(NSString *)kCFStreamPropertySOCKSVersion];
-
-			CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySOCKSProxy, (CFDictionaryRef) settings );
-			CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySOCKSProxy, (CFDictionaryRef) settings );
-			[settings release];
-		}
-	}
-
-	BOOL secure = _secure;
-	if( _bouncer == MVChatConnectionColloquyBouncer )
-		secure = NO; // This should always be YES in the future when the bouncer supports secure connections.
-
-	if( secure ) {
-		CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL );
-		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL );
-
-		NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
-		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
-		[settings setObject:[NSNumber numberWithBool:NO] forKey:(NSString *)kCFStreamSSLValidatesCertificateChain];
-
-		CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
-		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
-
-		[settings release];
-	}
-
-	return YES;
-}
-
-- (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
+- (void) socket:(GCDAsyncSocket *) sock willDisconnectWithError:(NSError *) error {
 	if( sock != _chatConnection ) return;
 
 	MVSafeRetainAssign( _lastError, error );
 }
 
-- (void) socketDidDisconnect:(AsyncSocket *) sock {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
+- (void) socketDidDisconnect:(GCDAsyncSocket *) sock withError:(NSError *) err {
 	if( sock != _chatConnection ) return;
 
 	[self retain];
@@ -812,8 +749,53 @@ static const NSStringEncoding supportedEncodings[] = {
 	[self release];
 }
 
-- (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
-	MVAssertCorrectThreadRequired( _connectionThread );
+- (void) socket:(GCDAsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
+	//	if( [[self proxyServer] length] && [self proxyServerPort] ) {
+	//		if( _proxy == MVChatConnectionHTTPSProxy || _proxy == MVChatConnectionHTTPProxy ) {
+	//			NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
+	//			if( _proxy == MVChatConnectionHTTPSProxy ) {
+	//				[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertyHTTPSProxyHost];
+	//				[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertyHTTPSProxyPort];
+	//			} else {
+	//				[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertyHTTPProxyHost];
+	//				[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertyHTTPProxyPort];
+	//			}
+	//
+	//			CFReadStreamSetProperty( [sock readStream], kCFStreamPropertyHTTPProxy, (CFDictionaryRef) settings );
+	//			CFWriteStreamSetProperty( [sock writeStream], kCFStreamPropertyHTTPProxy, (CFDictionaryRef) settings );
+	//			[settings release];
+	//		} else if( _proxy == MVChatConnectionSOCKS4Proxy || _proxy == MVChatConnectionSOCKS5Proxy ) {
+	//			NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
+	//
+	//			[settings setObject:[self proxyServer] forKey:(NSString *)kCFStreamPropertySOCKSProxyHost];
+	//			[settings setObject:[NSNumber numberWithUnsignedShort:[self proxyServerPort]] forKey:(NSString *)kCFStreamPropertySOCKSProxyPort];
+	//
+	//			if( [[self proxyUsername] length] )
+	//				[settings setObject:[self proxyUsername] forKey:(NSString *)kCFStreamPropertySOCKSUser];
+	//			if( [[self proxyPassword] length] )
+	//				[settings setObject:[self proxyPassword] forKey:(NSString *)kCFStreamPropertySOCKSPassword];
+	//
+	//			if( _proxy == MVChatConnectionSOCKS4Proxy )
+	//				[settings setObject:(NSString *)kCFStreamSocketSOCKSVersion4 forKey:(NSString *)kCFStreamPropertySOCKSVersion];
+	//
+	//			CFReadStreamSetProperty( [sock readStream], kCFStreamPropertySOCKSProxy, (CFDictionaryRef) settings );
+	//			CFWriteStreamSetProperty( [sock writeStream], kCFStreamPropertySOCKSProxy, (CFDictionaryRef) settings );
+	//			[settings release];
+	//		}
+	//	}
+
+	BOOL secure = _secure;
+	if( _bouncer == MVChatConnectionColloquyBouncer )
+		secure = NO; // This should always be YES in the future when the bouncer supports secure connections.
+
+	if( secure ) {
+		NSMutableDictionary *settings = [NSMutableDictionary dictionary];
+		[settings setObject:(id)kCFBooleanTrue forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
+		[settings setObject:(id)kCFBooleanFalse forKey:(NSString *)kCFStreamSSLValidatesCertificateChain];
+		[settings setObject:(id)kCFStreamSocketSecurityLevelNegotiatedSSL forKey:(id)kCFStreamSSLLevel];
+		
+		[sock startTLS:settings];
+	}
 
 	NSString *password = _password;
 	NSString *username = ( _username.length ? _username : @"anonymous" );
@@ -863,9 +845,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[self _readNextMessageFromServer];
 }
 
-- (void) socket:(AsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
+- (void) socket:(GCDAsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
 	[self _processIncomingMessage:data fromServer:YES];
 
 	[self _readNextMessageFromServer];
@@ -886,8 +866,6 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (void) _processIncomingMessage:(NSData *) data fromServer:(BOOL) fromServer {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	NSString *rawString = [self _newStringWithBytes:[data bytes] length:data.length];
 
 	const char *line = (const char *)[data bytes];
@@ -1028,8 +1006,6 @@ end:
 #pragma mark -
 
 - (void) _writeDataToServer:(id) raw {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	NSMutableData *data = nil;
 	NSString *string = [[self _stringFromPossibleData:raw] retain];
 
@@ -1068,12 +1044,8 @@ end:
 }
 
 - (void) _readNextMessageFromServer {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
-	static NSData *delimiter = nil;
 	// IRC messages end in \x0D\x0A, but some non-compliant servers only use \x0A during the connecting phase
-	if( ! delimiter ) delimiter = [[NSData alloc] initWithBytes:"\x0A" length:1];
-	[_chatConnection readDataToData:delimiter withTimeout:-1. tag:0];
+	[_chatConnection readDataToData:[GCDAsyncSocket LFData] withTimeout:-1. tag:0];
 }
 
 #pragma mark -
@@ -1603,7 +1575,6 @@ end:
 #pragma mark -
 
 - (void) _handleConnect {
-	MVAssertCorrectThreadRequired( _connectionThread );
 	MVSafeRetainAssign( _queueWait, [NSDate dateWithTimeIntervalSinceNow:0.5] );
 	[self _resetSendQueueInterval];
 	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
@@ -1650,8 +1621,6 @@ end:
 #pragma mark -
 
 - (void) _periodicEvents {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	[_pendingJoinRoomNames removeAllObjects];
 
 	[self _pruneKnownUsers];
@@ -1668,14 +1637,11 @@ end:
 }
 
 - (void) _pingServer {
-	MVAssertCorrectThreadRequired( _connectionThread );
 	[self sendRawMessageImmediatelyWithFormat:@"PING %@", [self server]];
 	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:JVPingServerInterval];
 }
 
 - (void) _startSendQueue {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( _sendQueueProcessing ) return;
 	_sendQueueProcessing = YES;
 
@@ -1685,14 +1651,11 @@ end:
 }
 
 - (void) _stopSendQueue {
-	MVAssertCorrectThreadRequired( _connectionThread );
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _sendQueue ) object:nil];
 	_sendQueueProcessing = NO;
 }
 
 - (void) _resetSendQueueInterval {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	[self _stopSendQueue];
 
 	@synchronized( _sendQueue ) {
@@ -1702,8 +1665,6 @@ end:
 }
 
 - (void) _sendQueue {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	@synchronized( _sendQueue ) {
 		if( ! _sendQueue.count ) {
 			_sendQueueProcessing = NO;
@@ -1761,8 +1722,6 @@ end:
 #pragma mark -
 
 - (void) _scheduleWhoisForUser:(MVChatUser *) user {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// Don't WHOIS server operators, since they can often see the WHOIS request and get annoyed.
 	if( [user isServerOperator] )
 		return;
@@ -1777,8 +1736,6 @@ end:
 }
 
 - (void) _whoisNextScheduledUser {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( _pendingWhoisUsers.count ) {
 		MVChatUser *user = [_pendingWhoisUsers anyObject];
 		[user refreshInformation];
@@ -1786,8 +1743,6 @@ end:
 }
 
 - (void) _whoisWatchedUsers {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
 
 	NSMutableSet *matchedUsers = [NSMutableSet set];
@@ -1803,8 +1758,6 @@ end:
 }
 
 - (void) _checkWatchedUsers {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( _watchCommandSupported ) return; // we don't need to call this anymore, return before we reschedule
 
 	[self performSelector:@selector( _checkWatchedUsers ) withObject:nil afterDelay:JVWatchedUserISONDelay];
@@ -1995,8 +1948,6 @@ end:
 #pragma mark Connecting Replies
 
 - (void) _handleCapWithParameters:(NSArray *) parameters fromSender:(id) sender {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	BOOL furtherNegotiation = NO;
 
 	if( parameters.count >= 3 ) {
@@ -2042,8 +1993,6 @@ end:
 }
 
 - (void) _handleAuthenticateWithParameters:(NSArray *) parameters fromSender:(id) sender {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 1 && [[self _stringFromPossibleData:[parameters objectAtIndex:0]] isEqualToString:@"+"] ) {
 		NSData *usernameData = [self.preferredNickname dataUsingEncoding:self.encoding allowLossyConversion:YES];
 
@@ -2068,8 +2017,6 @@ end:
 }
 
 - (void) _handle900WithParameters:(NSArray *) parameters fromSender:(id) sender {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 4 ) {
 		NSString *message = [self _stringFromPossibleData:[parameters objectAtIndex:3]];
 		if( [message hasCaseInsensitiveSubstring:@"You are now logged in as "] ) {
@@ -2081,14 +2028,10 @@ end:
 }
 
 - (void) _handle903WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_SASLSUCCESS
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	[self _sendEndCapabilityCommand];
 }
 
 - (void) _handle904WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SASLFAIL
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	[self.localUser _setIdentified:NO];
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
@@ -2097,26 +2040,18 @@ end:
 }
 
 - (void) _handle905WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SASLTOOLONG
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	[self _sendEndCapabilityCommand];
 }
 
 - (void) _handle906WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SASLABORTED
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	[self _sendEndCapabilityCommand];
 }
 
 - (void) _handle907WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SASLALREADY
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	[self _sendEndCapabilityCommand];
 }
 
 - (void) _handle001WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WELCOME
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	[self _cancelScheduledSendEndCapabilityCommand];
 
 	[self performSelector:@selector( _handleConnect ) withObject:nil inThread:_connectionThread waitUntilDone:NO];
@@ -2147,8 +2082,6 @@ end:
 }
 
 - (void) _handle005WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ISUPPORT
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( ! _serverInformation )
 		_serverInformation = [[NSMutableDictionary alloc] initWithCapacity:5];
 
@@ -2258,8 +2191,6 @@ end:
 }
 
 - (void) _handle433WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NICKNAMEINUSE
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( ! [self isConnected] ) {
 		NSString *nick = [self nextAlternateNickname];
 		if( ! nick.length && parameters.count >= 2 ) {
@@ -2368,7 +2299,6 @@ end:
 #if ENABLE(PLUGINS)
 	MVAssertMainThreadRequired();
 #else
-	MVAssertCorrectThreadRequired( _connectionThread );
 #endif
 
 	MVChatRoom *room = [privmsgInfo objectForKey:@"room"];
@@ -2397,8 +2327,6 @@ end:
 }
 
 - (void) _handlePrivmsgWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// if the sender is a server lets make a user for the server name
 	// this is not ideal but the notifications need user objects
 	if( [sender isKindOfClass:[NSString class]] )
@@ -2443,7 +2371,6 @@ end:
 #if ENABLE(PLUGINS)
 	MVAssertMainThreadRequired();
 #else
-	MVAssertCorrectThreadRequired( _connectionThread );
 #endif
 
 	id target = [noticeInfo objectForKey:@"target"];
@@ -2640,8 +2567,6 @@ end:
 }
 
 - (void) _handleNoticeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// if the sender is a server lets make a user for the server name
 	// this is not ideal but the notifications need user objects
 	if( [sender isKindOfClass:[NSString class]] )
@@ -2686,7 +2611,6 @@ end:
 #if ENABLE(PLUGINS)
 	MVAssertMainThreadRequired();
 #else
-	MVAssertCorrectThreadRequired( _connectionThread );
 #endif
 
 	BOOL request = [[ctcpInfo objectForKey:@"request"] boolValue];
@@ -3050,8 +2974,6 @@ end:
 }
 
 - (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender toTarget:(id) target forRoom:(MVChatRoom *) room {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	NSMutableDictionary *info = [[NSMutableDictionary alloc] initWithCapacity:4];
 
 	if( data ) [info setObject:data forKey:@"data"];
@@ -3073,8 +2995,6 @@ end:
 #pragma mark Room Replies
 
 - (void) _handleJoinWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *name = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		MVChatRoom *room = [self chatRoomWithName:name];
@@ -3096,8 +3016,6 @@ end:
 }
 
 - (void) _handlePartWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *roomName = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		MVChatRoom *room = [self joinedChatRoomWithUniqueIdentifier:roomName];
@@ -3118,8 +3036,6 @@ end:
 }
 
 - (void) _handleQuitWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		if( [sender isLocalUser] ) {
 			_userDisconnected = YES;
@@ -3145,8 +3061,6 @@ end:
 }
 
 - (void) _handleKickWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// if the sender is a server lets make a user for the server name
 	// this is not ideal but the notifications need user objects
 	if( [sender isKindOfClass:[NSString class]] )
@@ -3172,8 +3086,6 @@ end:
 - (void) _handleTopic:(NSDictionary *)topicInfo {
 #if ENABLE(PLUGINS)
 	MVAssertMainThreadRequired();
-#else
-	MVAssertCorrectThreadRequired(_connectionThread);
 #endif
 
 	MVChatRoom *room = [topicInfo objectForKey:@"room"];
@@ -3201,8 +3113,6 @@ end:
 }
 
 - (void) _handleTopicWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// if the sender is a server lets make a user for the server name
 	// this is not ideal but the notifications need user objects
 	if( [sender isKindOfClass:[NSString class]] )
@@ -3357,8 +3267,6 @@ end:
 }
 
 - (void) _handleModeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// if the sender is a server lets make a user for the server name
 	// this is not ideal but the notifications need user objects
 	if( [sender isKindOfClass:[NSString class]] )
@@ -3376,8 +3284,6 @@ end:
 }
 
 - (void) _handle324WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_CHANNELMODEIS
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 3 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		[self _parseRoomModes:[parameters subarrayWithRange:NSMakeRange( 2, parameters.count - 2)] forRoom:room fromSender:nil];
@@ -3388,8 +3294,6 @@ end:
 #pragma mark Misc. Replies
 
 - (void) _handlePingWithParameters:(NSArray *) parameters fromSender:(id) sender {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 1 ) {
 		if( parameters.count == 1 )
 			[self sendRawMessageImmediatelyWithComponents:@"PONG :", [parameters objectAtIndex:0], nil];
@@ -3401,8 +3305,6 @@ end:
 }
 
 - (void) _handleInviteWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// if the sender is a server lets make a user for the server name
 	// this is not ideal but the notifications need user objects
 	if( [sender isKindOfClass:[NSString class]] )
@@ -3423,8 +3325,6 @@ end:
 }
 
 - (void) _handleNickWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count == 1 && [sender isKindOfClass:[MVChatUser class]] ) {
 		NSString *nick = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
 		NSString *oldNickname = [[sender nickname] retain];
@@ -3457,8 +3357,6 @@ end:
 }
 
 - (void) _handle303WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ISON
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count == 2 && _isonSentCount > 0 ) {
 		_isonSentCount--;
 
@@ -3508,8 +3406,6 @@ end:
 #pragma mark Away Replies
 
 - (void) _handle301WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_AWAY
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count == 3 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		NSData *awayMsg = [parameters objectAtIndex:2];
@@ -3525,8 +3421,6 @@ end:
 }
 
 - (void) _handle305WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_UNAWAY
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	[[self localUser] _setAwayStatusMessage:nil];
 	[[self localUser] _setStatus:MVChatUserAvailableStatus];
 
@@ -3534,8 +3428,6 @@ end:
 }
 
 - (void) _handle306WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_NOWAWAY
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	[[self localUser] _setStatus:MVChatUserAwayStatus];
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionSelfAwayStatusChangedNotification object:self userInfo:nil];
@@ -3545,8 +3437,6 @@ end:
 #pragma mark NAMES Replies
 
 - (void) _handle353WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_NAMREPLY
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count == 4 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:2]];
 		if( room && ! [room _namesSynced] ) {
@@ -3570,8 +3460,6 @@ end:
 }
 
 - (void) _handle366WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ENDOFNAMES
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 2 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		if( room && ! [room _namesSynced] ) {
@@ -3592,8 +3480,6 @@ end:
 #pragma mark WHO Replies
 
 - (void) _handle352WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOREPLY
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 7 ) {
 		MVChatUser *member = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:5]];
 		[member _setUsername:[parameters objectAtIndex:2]];
@@ -3625,8 +3511,6 @@ end:
 }
 
 - (void) _handle315WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ENDOFWHO
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 2 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		if( room ) [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomMemberUsersSyncedNotification object:room];
@@ -3637,8 +3521,6 @@ end:
 #pragma mark Channel List Reply
 
 - (void) _handle322WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_LIST
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count == 4 ) {
 		NSString *room = [parameters objectAtIndex:1];
 		NSUInteger users = [[parameters objectAtIndex:2] intValue];
@@ -3655,8 +3537,6 @@ end:
 #pragma mark Ban List Replies
 
 - (void) _handle367WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_BANLIST
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 3 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		MVChatUser *user = [MVChatUser wildcardUserFromString:[self _stringFromPossibleData:[parameters objectAtIndex:2]]];
@@ -3677,8 +3557,6 @@ end:
 }
 
 - (void) _handle368WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ENDOFBANLIST
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 2 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[room _setBansSynced:YES];
@@ -3690,8 +3568,6 @@ end:
 #pragma mark Topic Replies
 
 - (void) _handle332WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_TOPIC
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count == 3 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		NSData *topic = [parameters objectAtIndex:2];
@@ -3701,8 +3577,6 @@ end:
 }
 
 - (void) _handle333WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_TOPICWHOTIME_IRCU
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 4 ) {
 		MVChatRoom *room = [self chatRoomWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		MVChatUser *author = [MVChatUser wildcardUserFromString:[parameters objectAtIndex:2]];
@@ -3721,8 +3595,6 @@ end:
 #pragma mark WHOIS Replies
 
 - (void) _handle311WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISUSER
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count == 6 ) {
 		NSString *nick = [parameters objectAtIndex:1];
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:nick];
@@ -3740,8 +3612,6 @@ end:
 }
 
 - (void) _handle312WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISSERVER
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 3 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		[user _setServerAddress:[self _stringFromPossibleData:[parameters objectAtIndex:2]]];
@@ -3749,8 +3619,6 @@ end:
 }
 
 - (void) _handle313WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISOPERATOR
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 2 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[user _setServerOperator:YES];
@@ -3758,8 +3626,6 @@ end:
 }
 
 - (void) _handle317WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISIDLE
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 3 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		NSString *idleTime = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
@@ -3777,8 +3643,6 @@ end:
 }
 
 - (void) _handle318WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ENDOFWHOIS
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 2 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[user _setDateUpdated:[NSDate date]];
@@ -3793,8 +3657,6 @@ end:
 }
 
 - (void) _handle319WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISCHANNELS
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count == 3 ) {
 		NSString *rooms = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 		NSArray *chanArray = [[rooms stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] componentsSeparatedByString:@" "];
@@ -3819,8 +3681,6 @@ end:
 }
 
 - (void) _handle320WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WHOISIDENTIFIED
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count == 3 ) {
 		NSString *comment = [self _stringFromPossibleData:[parameters objectAtIndex:2]];
 		if( [comment hasCaseInsensitiveSubstring:@"identified"] ) {
@@ -3834,8 +3694,6 @@ end:
 #pragma mark Error Replies
 
 - (void) _handle401WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOSUCHNICK
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 2 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
 		[self _markUserAsOffline:user];
@@ -3870,8 +3728,6 @@ end:
 }
 
 - (void) _handle402WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOSUCHSERVER
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// some servers send back 402 (No such server) when we send our double nickname WHOIS requests, treat as a user
 	if( parameters.count >= 2 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[self _stringFromPossibleData:[parameters objectAtIndex:1]]];
@@ -3893,8 +3749,6 @@ end:
 */
 
 - (void) _handle404WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_CANNOTSENDTOCHAN
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// "<channel name> :Cannot send to channel"
 	// - Sent to a user who is either (a) not on a channel which is mode +n or (b) not a chanop (or mode +v) on a channel which has mode +m set or where the user is banned and is trying to send a PRIVMSG message to that channel.
 
@@ -3921,8 +3775,6 @@ end:
  */
 
 - (void) _handle410WithParameters:(NSArray *) parameters fromSender:(id) sender { // "services down" (freenode/hyperion) or "Invalid CAP subcommand" (freenode/ircd-seven, not supported here)
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// "No services can currently be detected" (same as 440, which is the "standard" numeric for this error)
 	// - Send to us after trying to identify with /nickserv, ui should ask the user wether to go ahead with the autojoin without identification (= no host/ip cloaks)
 
@@ -3936,8 +3788,6 @@ end:
 }
 
 - (void) _handle421WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_UNKNOWNCOMMAND
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 2 ) {
 		NSString *command = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 		if( [command isCaseInsensitiveEqualToString:@"NickServ"] ) {
@@ -3967,8 +3817,6 @@ end:
  */
 
 - (void) _handle435WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BANONCHAN Bahamut (also ERR_SERVICECONFUSED on Unreal, not implemented here)
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// "<current nickname> <new nickname> <channel name> :Cannot change nickname while banned on channel"
 	// - Sent to a user who is changing their nick in a room where it is prohibited.
 
@@ -3988,8 +3836,6 @@ end:
 }
 
 - (void) _handle437WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BANNICKCHANGE Unreal (also ERR_UNAVAILRESOURCE in RFC2812, not implemented here)
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// "<current nickname> <channel name> :Cannot change nickname while banned on channel or channel is moderated"
 	// - Sent to a user who is changing their nick in a room where it is prohibited.
 
@@ -4009,8 +3855,6 @@ end:
 }
 
 - (void) _handle438WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NICKTOOFAST_IRCU
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// "<current nickname> <new nickname|channel name> :Cannot change nick"
 	// - Sent to a user who is either (a) changing their nickname to fast or (b) changing their nick in a room where it is prohibited.
 
@@ -4032,8 +3876,6 @@ end:
 }
 
 - (void) _handle440WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SERVICESDOWN_BAHAMUT_UNREAL (also freenode/ircd-seven)
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// "NickServ Services are currently down. Please try again later."
 	// - Send to us after trying to identify with /nickserv, ui should ask the user wether to go ahead with the autojoin without identification (= no host/ip cloaks)
 
@@ -4058,8 +3900,6 @@ end:
 }
 
 - (void) _handle471WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_CHANNELISFULL
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
@@ -4073,8 +3913,6 @@ end:
 }
 
 - (void) _handle473WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_INVITEONLYCHAN
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
@@ -4093,8 +3931,6 @@ end:
 }
 
 - (void) _handle474WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BANNEDFROMCHAN
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
@@ -4110,8 +3946,6 @@ end:
 }
 
 - (void) _handle475WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BADCHANNELKEY
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 2 ) {
 		NSString *room = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
@@ -4130,8 +3964,6 @@ end:
 }
 
 - (void) _handle477WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_NOCHANMODES_RFC2812 or ERR_NEEDREGGEDNICK_BAHAMUT_IRCU_UNREAL
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// I:	rfc 2812: "<channel> :Channel doesn't support modes"
 	// II:	more common non standard room mode +R:
 	// - Unreal3.2.7: "<channel> :You need a registered nick to join that channel."
@@ -4160,8 +3992,6 @@ end:
 
 /* for ticket #1303
 - (void) _handleErrorWithParameters:(NSArray *) parameters fromSender:(id) sender { // ERROR message: http://tools.ietf.org/html/rfc2812#section-3.7.4
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	NSLog(@"ERROR parameter count: %d.", parameters.count);
 
 	if( parameters.count == 1 ) {
@@ -4171,8 +4001,6 @@ end:
 */
 
 - (void) _handle506WithParameters:(NSArray *) parameters fromSender:(id) sender { // freenode/hyperion: identify with services to talk in this room
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	// "<channel> Please register with services and use the IDENTIFY command (/msg nickserv help) to speak in this channel"
 	//  freenode/hyperion sends 506 if the user is not identified and tries to talk on a room with mode +R
 
@@ -4197,8 +4025,6 @@ end:
 #pragma mark Watch Replies
 
 - (void) _handle604WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_NOWON_BAHAMUT_UNREAL
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 4 ) {
 		MVChatUser *user = [self chatUserWithUniqueIdentifier:[parameters objectAtIndex:1]];
 		[user _setUsername:[parameters objectAtIndex:2]];
@@ -4212,8 +4038,6 @@ end:
 }
 
 - (void) _handle600WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_LOGON_BAHAMUT_UNREAL
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( parameters.count >= 4 )
 		[self _handle604WithParameters:parameters fromSender:sender]; // do everything we do above
 }
@@ -4222,8 +4046,6 @@ end:
 #pragma mark Watch Replies
 
 - (void) _handle998WithParameters:(NSArray *) parameters fromSender:(id) sender { // undefined code, irc.umich.edu (efnet) uses this to show a captcha to users without identd (= us) which we have to reply to
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( ![self isConnected] && parameters.count == 2 ) {
 		if( !_umichNoIdentdCaptcha ) _umichNoIdentdCaptcha = [[NSMutableArray alloc] init];
 

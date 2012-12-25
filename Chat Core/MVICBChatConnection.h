@@ -34,7 +34,7 @@
 
 #import "MVChatConnection.h"
 
-@class AsyncSocket;
+@class GCDAsyncSocket;
 @class MVICBChatRoom;
 
 @interface MVICBChatConnection : MVChatConnection {
@@ -48,7 +48,8 @@
 
 	MVICBChatRoom *_room;
 
-	AsyncSocket *_chatConnection;
+	GCDAsyncSocket *_chatConnection;
+    dispatch_queue_t _connectionDelegateQueue;
 	NSThread *_connectionThread;
 	NSConditionLock *_threadWaitLock;
 	BOOL _loggedIn;

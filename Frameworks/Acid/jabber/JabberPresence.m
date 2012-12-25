@@ -38,11 +38,9 @@ XPathQuery* QRY_SIGN;
         NSString* type = [atts objectForKey:JABBER_TYPE_ATTRIB_QN];
         if ((type == nil) || ([type isEqual:@"unavailable"]))
             return [[JabberPresence alloc] initWithQName:qname withAttributes:atts withDefaultURI:default_uri];
-        else
             return nil;
     }
-    else
-        return nil;
+    return nil;
 }
 
 +(void) initialize

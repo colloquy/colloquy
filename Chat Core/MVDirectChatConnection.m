@@ -11,6 +11,8 @@
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
 
+#import "GCDAsyncSocket.h"
+
 #if USE(ATTRIBUTED_CHAT_STRING)
 #import "NSAttributedStringAdditions.h"
 #endif
@@ -296,17 +298,12 @@ NSString *MVDirectChatConnectionErrorDomain = @"MVDirectChatConnectionErrorDomai
 }
 
 - (void) _writeMessage:(NSData *) message {
-	MVAssertCorrectThreadRequired( [_directClientConnection connectionThread] );
 	[_directClientConnection writeData:message withTimeout:-1 withTag:0];
 }
 
 - (void) _readNextMessage {
-	MVAssertCorrectThreadRequired( [_directClientConnection connectionThread] );
-
-	static NSData *delimiter = nil;
 	// DCC chat messages end in \x0D\x0A, but some non-compliant clients only use \x0A
-	if( ! delimiter ) delimiter = [[NSData alloc] initWithBytes:"\x0A" length:1];
-	[_directClientConnection readDataToData:delimiter withTimeout:-1. withTag:0];
+	[_directClientConnection readDataToData:[GCDAsyncSocket LFData] withTimeout:-1. withTag:0];
 }
 
 - (void) _setStatus:(MVDirectChatConnectionStatus) newStatus {

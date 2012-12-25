@@ -39,8 +39,7 @@ XPathQuery* QRY_DELAY;
 {
     if ([qname isEqual:JABBER_MESSAGE_QN])
         return [[JabberMessage alloc] initWithQName:qname withAttributes:atts withDefaultURI:default_uri];
-    else
-        return nil;
+    return nil;
 }
 
 +(void) initialize
@@ -57,7 +56,7 @@ XPathQuery* QRY_DELAY;
 
 -(id) initWithRecipient:(JabberID*)jid
 {
-    [super initWithQName:JABBER_MESSAGE_QN];
+    if (!(self = [super initWithQName:JABBER_MESSAGE_QN])) return nil;
 
     // Setup "to" attribute
     to = [jid retain];
@@ -68,7 +67,7 @@ XPathQuery* QRY_DELAY;
 
 -(id) initWithRecipient:(JabberID*)jid andBody:(NSString*)b
 {
-    [self initWithRecipient:jid];
+    if (!(self = [self initWithRecipient:jid])) return nil;
     [self addUniqueIDAttribute];
     [[self addElementWithName:@"body"] addCData:b];
     body = [b retain];

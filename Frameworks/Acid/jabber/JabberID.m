@@ -187,7 +187,7 @@ static NSMutableDictionary* G_cache;
 
     // Ok, this particular string wasn't found -- let's parse
     // and string prep before looking again
-    [super init];
+	if (!(self = [super init])) return nil;
 
     if ([JabberID parseString:jidstring
                   intoUsername:&_username

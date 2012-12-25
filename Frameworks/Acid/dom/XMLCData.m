@@ -42,22 +42,23 @@
 // Custom initializers
 -(id) initWithString:(NSString*)s  // Assumes unescaped data
 {
-    [self init];
-    _text = [[NSMutableString alloc] initWithString:s];    
+	if (!(self = [self init])) return nil;
+
+    _text = [[NSMutableString alloc] initWithString:s];
     return self;
 }
 
  
 -(id) initWithCharPtr:(const char*)cptr ofLength:(unsigned)clen  // Assumes unescaped data
 {
-    [self init];
+	if (!(self = [self init])) return nil;
     _text = [[NSMutableString alloc] initWithUTF8String:cptr length:clen];
     return self;
 }
 
 -(id) initWithEscapedCharPtr:(const char*)cptr ofLength:(unsigned)clen
 {
-    [self init];
+	if (!(self = [self init])) return nil;
     _text = [XMLCData unescape:cptr ofLength:clen];
     [_text retain];
     return self;

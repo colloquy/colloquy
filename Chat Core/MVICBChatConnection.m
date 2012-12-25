@@ -42,7 +42,7 @@
 #import "MVICBChatRoom.h"
 #import "MVICBChatUser.h"
 
-#import "AsyncSocket.h"
+#import "GCDAsyncSocket.h"
 #import "ICBPacket.h"
 #import "InterThreadMessaging.h"
 #import "MVUtilities.h"
@@ -75,11 +75,11 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 - (void) _startSendQueue;
 - (void) _stopSendQueue;
 - (void) _sendQueue;
-- (void) socket:(AsyncSocket *) sock
+- (void) socket:(GCDAsyncSocket *) sock
          didConnectToHost:(NSString *) host port:(UInt16) port;
-- (void) socket:(AsyncSocket *) sock
+- (void) socket:(GCDAsyncSocket *) sock
 	     didReadData:(NSData *) data withTag:(long) tag;
-- (void) socketDidDisconnect:(AsyncSocket *)sock;
+- (void) socketDidDisconnect:(GCDAsyncSocket *)sock;
 - (void) _writeDataToServer:(id) raw;
 - (void) _readNextMessageFromServer;
 - (void) _joinChatRoomNamed:(NSString *) name
@@ -381,6 +381,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
         if( [_connectionThread respondsToSelector:@selector( cancel )] )
             [_connectionThread cancel];
 
+		_connectionDelegateQueue = dispatch_queue_create([[self description] UTF8String], DISPATCH_QUEUE_SERIAL);
         _connectionThread = [NSThread currentThread];
         if( [_connectionThread respondsToSelector:@selector( setName: )] )
             [_connectionThread setName:[[self url] absoluteString]];
@@ -406,8 +407,10 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
          runMode:NSDefaultRunLoopMode
          beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.]];
 
-        if( [NSThread currentThread] == _connectionThread )
+        if( [NSThread currentThread] == _connectionThread ) {
             _connectionThread = nil;
+            dispatch_release(_connectionDelegateQueue);
+        }
     }
 }
 
@@ -416,9 +419,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	[_chatConnection disconnect];
 	[_chatConnection release];
 
-	_chatConnection = [[AsyncSocket alloc] initWithDelegate:self];
-
-	[_chatConnection enablePreBuffering];
+	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue];
 
 	if( ! [_chatConnection connectToHost:[self server]
 	                       onPort:[self serverPort]
@@ -510,13 +511,13 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 
 #pragma mark AsyncSocket notifications
 
-- (void) socket:(AsyncSocket *) sock
+- (void) socket:(GCDAsyncSocket *) sock
          didConnectToHost:(NSString *) host port:(UInt16) port {
 	[self ctsLoginPacket];
 	[self _readNextMessageFromServer];
 }
 
-- (void) socket:(AsyncSocket *) sock
+- (void) socket:(GCDAsyncSocket *) sock
          didReadData:(NSData *) data withTag:(long) tag {
 	if( tag == 0 ) {
 		NSAssert( data.length == 1, @"read mismatch" );
@@ -534,7 +535,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	}
 }
 
-- (void) socketDidDisconnect:(AsyncSocket *) sock {
+- (void) socketDidDisconnect:(GCDAsyncSocket *) sock {
 	[self _didDisconnect];
 }
 

@@ -58,7 +58,7 @@
 
 -(id) init
 {
-    [super init];
+	if (!(self = [super init])) return nil;
     _items = [[NSMutableArray alloc] init];
     return self;
 }

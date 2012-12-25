@@ -42,7 +42,7 @@
 @implementation XP_AttrValue
 -(id) initWithName:(NSString*)name withValue:(NSString*)value
 {
-    [super init];
+	if (!(self = [super init])) return nil;
     _name = [name retain];
 
     if ([value characterAtIndex:[value length]-1] == '*')
@@ -60,7 +60,7 @@
 
 -(id) initInvertedWithName:(NSString*)name withValue:(NSString*)value
 {
-    [self initWithName:name withValue:value];
+    if (!(self = [self initWithName:name withValue:value])) return nil;
     _invert = YES;
     return self;
 }
@@ -112,7 +112,7 @@
 @implementation XP_JIDAttrValue
 -(id) initWithName:(NSString*)name withValue:(NSString*)value
 {
-    [super init];
+	if (!(self = [super init])) return nil;
     _name = [name retain];
     _value = [[JabberID alloc] initWithEscapedString:value];
 
@@ -121,7 +121,7 @@
 
 -(id) initInvertedWithName:(NSString*)name withValue:(NSString*)value
 {
-    [self initWithName:name withValue:value];
+    if (!(self = [self initWithName:name withValue:value])) return nil;
     _invert = YES;
     return self;
 }
@@ -173,7 +173,7 @@
 @implementation XP_Namespace
 -(id) initWithNS:(NSString*)namespace
 {
-    [super init];
+	if (!(self = [super init])) return nil;
     _xmlns = [namespace retain];
     return self;
 }

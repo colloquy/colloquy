@@ -58,7 +58,7 @@ NSString* QUERY_PATH = @"/iq[@id='%@']";
 
 -(id) initWithSession:(JabberSession*)s 
 {
-    [super initWithQName:JABBER_IQ_QN];
+    if (!(self = [super initWithQName:JABBER_IQ_QN])) return nil;
     _session = s;
     _query = [NSString stringWithFormat:QUERY_PATH, [self addUniqueIDAttribute]];
     [_query retain];

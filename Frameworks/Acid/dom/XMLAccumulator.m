@@ -29,7 +29,7 @@
 
 -(id) init:(NSMutableString*)data 
 {
-    [super init];
+    if (!(self = [super init])) return nil;
     _prefixes = [[NSMutableDictionary alloc] init];
     _overrides = [[NSMutableDictionary alloc] init];
     _data = [data retain];

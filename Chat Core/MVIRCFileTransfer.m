@@ -1,6 +1,6 @@
 #import "MVIRCFileTransfer.h"
 
-#import "AsyncSocket.h"
+#import "GCDAsyncSocket.h"
 #import "InterThreadMessaging.h"
 #import "MVChatUser.h"
 #import "MVDirectClientConnection.h"

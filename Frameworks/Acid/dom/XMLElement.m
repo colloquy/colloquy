@@ -40,7 +40,7 @@
 
 -(id) initWithArray:(NSArray*)elems
 {
-    [self init];
+	if (!(self = [self init])) return nil;
     _elements = [elems retain];
     _index = 0;
     return self;
@@ -75,7 +75,7 @@
 // Basic initializers
 -(id) init
 {
-    [super init];
+	if (!(self = [super init])) return nil;
     _attribs  = [[NSMutableDictionary alloc] init];
     _children = [[NSMutableArray alloc] init];
     return self;
@@ -95,7 +95,7 @@
      withAttributes:(NSMutableDictionary*)atts
      withDefaultURI:(NSString*)uri
 {
-    [self init];
+	if (!(self = [self init])) return nil;
 
     _name  = [qname retain];
     _defaultURI = [uri retain];
@@ -112,7 +112,7 @@
 
 -(id) initWithQName:(XMLQName*)qname withDefaultURI:(NSString*)uri
 {
-    [self init];
+	if (!(self = [self init])) return nil;
     _name  = [qname retain];
     _defaultURI = [uri retain];
 

@@ -55,7 +55,7 @@ NSString* STREAM_ROOT = @"<stream:stream xmlns='jabber:client' xmlns:stream='htt
 
 -(id) init
 {
-    [super init];
+	if (!(self = [super init])) return nil;
     _ncenter     = [NSNotificationCenter defaultCenter];
     _curr_id = (intptr_t)self;
     _expressions = [[NSMutableDictionary alloc] init];

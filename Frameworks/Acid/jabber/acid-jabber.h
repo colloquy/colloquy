@@ -45,6 +45,7 @@
 */
 @interface JabberSocket : NSObject <XMLElementStreamListener>
 {
+	dispatch_queue_t  _connectionDelegateQueue;
     AsyncSocket*      _socket;
     XMLElementStream* _parser;
     JabberSession*    _session;

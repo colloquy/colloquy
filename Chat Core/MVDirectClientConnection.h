@@ -1,6 +1,6 @@
 #import <ChatCore/MVAvailability.h>
 
-@class AsyncSocket;
+@class GCDAsyncSocket;
 @class TCMPortMapping;
 
 NSString *MVDCCFriendlyAddress( NSString *address );
@@ -8,12 +8,13 @@ NSString *MVDCCFriendlyAddress( NSString *address );
 @interface MVDirectClientConnection : NSObject {
 @private
 	id _delegate;
-	AsyncSocket *_connection;
-	AsyncSocket *_acceptConnection;
+	GCDAsyncSocket *_connection;
+	GCDAsyncSocket *_acceptConnection;
 #if ENABLE(AUTO_PORT_MAPPING)
 	TCMPortMapping *_portMapping;
 #endif
 	NSThread *_connectionThread;
+	dispatch_queue_t _connectionDelegateQueue;
 	NSConditionLock *_threadWaitLock;
 	unsigned short _port;
 	BOOL _done;

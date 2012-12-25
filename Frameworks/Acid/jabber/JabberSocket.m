@@ -23,7 +23,7 @@
 //============================================================================
 
 #import "acid.h"
-#import "AsyncSocket.h"
+#import "GCDAsyncSocket.h"
 
 @interface JabberSocket (PRIVATE)
 -(void) onKeepAliveTick:(NSTimer*)t;
@@ -33,9 +33,11 @@
 
 -(id) initWithJabberSession:(JabberSession*)session
 {
-    [super init];
+    if (!(self = [super init]))
+		return nil;
 
-    _socket = [[NSClassFromString(@"AsyncSocket") alloc] initWithDelegate:self];
+	_connectionDelegateQueue = dispatch_queue_create([[self description] UTF8String], 0);
+    _socket = [[NSClassFromString(@"GCDAsyncSocket") alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue];
     _session = [session retain];    
 
     return self;
@@ -47,6 +49,7 @@
     [_socket release];
     [_session release];
     _session = nil;
+	dispatch_release(_connectionDelegateQueue);
     [super dealloc];
 }
 
@@ -100,31 +103,23 @@
 -(void) onDocumentEnd
 {}
 
-- (BOOL) socketWillConnect:(AsyncSocket *)sock {
-	if( _useSSL ) {
-		CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL );
-		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySocketSecurityLevel, kCFStreamSocketSecurityLevelNegotiatedSSL );
-
-		NSMutableDictionary *settings = [[NSMutableDictionary allocWithZone:nil] init];
+- (void) socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
+{
+	if (_useSSL) {
+		NSMutableDictionary *settings = [[NSMutableDictionary alloc] init];
 		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
+		[settings setObject:(id)kCFStreamSocketSecurityLevelNegotiatedSSL forKey:(id)kCFStreamPropertySocketSecurityLevel];
 
-		CFReadStreamSetProperty( [sock getCFReadStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
-		CFWriteStreamSetProperty( [sock getCFWriteStream], kCFStreamPropertySSLSettings, (CFDictionaryRef) settings );
-
+		[_socket startTLS:settings];
 		[settings release];
 	}
 
-	return YES;
-}
-
-- (void) socket:(AsyncSocket *)sock didConnectToHost:(NSString *)host port:(UInt16)port
-{
 	[_session postNotificationName:JSESSION_CONNECTED object:self];
 	_parser = [[XMLElementStream alloc] initWithListener:self];
 	[_socket readDataWithTimeout:-1. tag:0];
 }
 
-- (void) socket:(AsyncSocket *)sock didReadData:(NSData*)data withTag:(long)tag
+- (void) socket:(GCDAsyncSocket *)sock didReadData:(NSData*)data withTag:(long)tag
 {
     [_session postNotificationName:JSESSION_RAWDATA_IN object:data];
     [_parser pushData:[data bytes] ofSize:[data length]];
@@ -138,7 +133,7 @@
     [_session postNotificationName:JSESSION_ENDED object:self];
 }
 
-- (void) socket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err
+- (void) socket:(GCDAsyncSocket *)sock willDisconnectWithError:(NSError *)err
 {
     [_session postNotificationName:JSESSION_ERROR_CONNECT_FAILED object:nil];
 }

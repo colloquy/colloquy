@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		922453C2168905B700BFF3FF /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 922453C1168905B700BFF3FF /* GCDAsyncSocket.h */; };
 		DD4A10890BD5DA910051366F /* xmlparse.c in Sources */ = {isa = PBXBuildFile; fileRef = DD4A10770BD5DA910051366F /* xmlparse.c */; };
 		DD4A108A0BD5DA910051366F /* xmlrole.c in Sources */ = {isa = PBXBuildFile; fileRef = DD4A10780BD5DA910051366F /* xmlrole.c */; };
 		DD4A108C0BD5DA910051366F /* xmltok.c in Sources */ = {isa = PBXBuildFile; fileRef = DD4A107A0BD5DA910051366F /* xmltok.c */; };
@@ -53,7 +54,6 @@
 		DDBE55BA0BD187D5004ED228 /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DDBE55B90BD187D5004ED228 /* libcrypto.dylib */; };
 		DDE46AAD0BD7246C0064D202 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDE46AAC0BD7246C0064D202 /* CoreServices.framework */; };
 		DDF45AC40BD5CC500050911E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
-		DDF45BBD0BD5CD6D0050911E /* AsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = DDF45BBC0BD5CD6D0050911E /* AsyncSocket.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +62,7 @@
 		1CF24BFC0C6E26F2006BD6A5 /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* Acid.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Acid.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		922453C1168905B700BFF3FF /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncSocket.h; path = "../../../Chat Core/GCDAsyncSocket.h"; sourceTree = "<group>"; };
 		DD438C530BD87CBD0042117F /* Acid.exp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.exports; path = Acid.exp; sourceTree = "<group>"; };
 		DD4A106D0BD5DA910051366F /* ascii.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ascii.h; sourceTree = "<group>"; };
 		DD4A106E0BD5DA910051366F /* asciitab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asciitab.h; sourceTree = "<group>"; };
@@ -131,7 +132,6 @@
 		DDBE55B90BD187D5004ED228 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = /usr/lib/libcrypto.dylib; sourceTree = "<absolute>"; };
 		DDCB77A00BD5CB8700693892 /* Acid.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Acid.pch; sourceTree = "<group>"; };
 		DDE46AAC0BD7246C0064D202 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
-		DDF45BBC0BD5CD6D0050911E /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncSocket.h; path = "../../Chat Core/AsyncSocket.h"; sourceTree = SOURCE_ROOT; };
 		DDF45C0C0BD5CF0E0050911E /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -296,7 +296,7 @@
 		DD8ADF9F0BD1741A009AB74D /* utility */ = {
 			isa = PBXGroup;
 			children = (
-				DDF45BBC0BD5CD6D0050911E /* AsyncSocket.h */,
+				922453C1168905B700BFF3FF /* GCDAsyncSocket.h */,
 				DD8ADFA40BD1741A009AB74D /* esession */,
 				DD8ADFAC0BD1741A009AB74D /* idn */,
 			);
@@ -366,8 +366,8 @@
 				DD8ADFE70BD1741A009AB74D /* acid-jabber.h in Headers */,
 				DD8AE0090BD1741A009AB74D /* acid-xpath.h in Headers */,
 				DD8ADFEA0BD1741A009AB74D /* JabberID.h in Headers */,
-				DDF45BBD0BD5CD6D0050911E /* AsyncSocket.h in Headers */,
 				DD5BB1140BD5DAE9005DDA42 /* expat.h in Headers */,
+				922453C2168905B700BFF3FF /* GCDAsyncSocket.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

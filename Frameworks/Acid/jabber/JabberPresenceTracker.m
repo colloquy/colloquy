@@ -99,7 +99,7 @@ the same [node@]domain, but differing by resource.
 
 -(id) initWithJID:(JabberID*)jid
 {
-    [super init];
+	if (!(self = [super init])) return nil;
     _packets = [[NSMutableArray alloc] init];
     _userhost_jid = [jid userhostJID];
     [_userhost_jid retain];
@@ -200,7 +200,7 @@ the same [node@]domain, but differing by resource.
 
 -(id) initWithSession:(id)session
 {
-    [super init];
+	if (!(self = [super init])) return nil;
     _items = [[NSMutableDictionary alloc] init];
     _session = session;
     [_session addObserver:self selector:@selector(onSessionStarted:)

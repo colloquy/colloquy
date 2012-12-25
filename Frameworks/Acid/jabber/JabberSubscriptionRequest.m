@@ -50,7 +50,7 @@ NSString* JXML_SUB_CANCEL_REQUEST = @"/presence[@type='unsubscribe']"; // unsubs
 
 -(id) initWithRecipient:(JabberID*)jid
 {
-    [super initWithQName:JABBER_PRESENCE_QN];
+    if (!(self = [super initWithQName:JABBER_PRESENCE_QN])) return nil;
 
     // Setup "to" attribute
     [self putAttribute:@"to" withValue:[jid completeID]];

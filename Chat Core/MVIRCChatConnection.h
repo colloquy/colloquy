@@ -2,13 +2,14 @@
 #import "MVChatConnectionPrivate.h"
 #import "MVChatRoom.h"
 
-@class AsyncSocket;
+@class GCDAsyncSocket;
 @class MVChatUser;
 @class MVFileTransfer;
 
 @interface MVIRCChatConnection : MVChatConnection {
 @private
-	AsyncSocket *_chatConnection;
+	GCDAsyncSocket *_chatConnection;
+	dispatch_queue_t _connectionDelegateQueue;
 	NSThread *_connectionThread;
 	NSDate *_queueWait;
 	NSDate *_lastCommand;
@@ -44,7 +45,7 @@
 #pragma mark -
 
 @interface MVChatConnection (MVIRCChatConnectionPrivate)
-- (AsyncSocket *) _chatConnection;
+- (GCDAsyncSocket *) _chatConnection;
 - (void) _readNextMessageFromServer;
 - (void) _processIncomingMessage:(NSData *) data fromServer:(BOOL) fromServer;
 

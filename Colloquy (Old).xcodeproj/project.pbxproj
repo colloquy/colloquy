@@ -3237,6 +3237,7 @@
 				9295C92716782ECB009F9014 /* Development */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
 		};
 /* End XCConfigurationList section */
 	};

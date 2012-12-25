@@ -1,6 +1,6 @@
 #import "MVDirectClientConnection.h"
 
-#import "AsyncSocket.h"
+#import "GCDAsyncSocket.h"
 #import "InterThreadMessaging.h"
 #import "MVChatConnectionPrivate.h"
 #import "MVFileTransfer.h"
@@ -77,6 +77,9 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	[_portMapping release];
 #endif
 
+	if (_connectionDelegateQueue)
+		dispatch_release(_connectionDelegateQueue);
+
 	[super dealloc];
 }
 
@@ -126,22 +129,18 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 #pragma mark -
 
 - (void) readDataToLength:(size_t) length withTimeout:(NSTimeInterval) timeout withTag:(long) tag {
-	MVAssertCorrectThreadRequired( _connectionThread );
 	[_connection readDataToLength:length withTimeout:timeout tag:tag];
 }
 
 - (void) readDataToData:(NSData *) data withTimeout:(NSTimeInterval) timeout withTag:(long) tag {
-	MVAssertCorrectThreadRequired( _connectionThread );
 	[_connection readDataToData:data withTimeout:timeout tag:tag];
 }
 
 - (void) readDataWithTimeout:(NSTimeInterval) timeout withTag:(long) tag {
-	MVAssertCorrectThreadRequired( _connectionThread );
 	[_connection readDataWithTimeout:timeout tag:tag];
 }
 
 - (void) writeData:(NSData *) data withTimeout:(NSTimeInterval) timeout withTag:(long) tag {
-	MVAssertCorrectThreadRequired( _connectionThread );
 	[_connection writeData:data withTimeout:timeout tag:tag];
 }
 
@@ -157,9 +156,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 #pragma mark -
 
-- (void) socket:(AsyncSocket *) sock didAcceptNewSocket:(AsyncSocket *) newSocket {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
+- (void) socket:(GCDAsyncSocket *) sock didAcceptNewSocket:(GCDAsyncSocket *) newSocket {
 	if( ! _connection ) _connection = [newSocket retain];
 	else [newSocket disconnect];
 
@@ -170,33 +167,28 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	[old release];
 }
 
-- (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
-	MVAssertCorrectThreadRequired( _connectionThread );
+- (void) socket:(GCDAsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
 	if( [_delegate respondsToSelector:@selector( directClientConnection:didConnectToHost:port: )] )
 		[_delegate directClientConnection:self didConnectToHost:host port:port];
 }
 
-- (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {
-	MVAssertCorrectThreadRequired( _connectionThread );
+- (void) socket:(GCDAsyncSocket *) sock willDisconnectWithError:(NSError *) error {
 	if( [_delegate respondsToSelector:@selector( directClientConnection:willDisconnectWithError: )] )
 		[_delegate directClientConnection:self willDisconnectWithError:error];
 }
 
-- (void) socketDidDisconnect:(AsyncSocket *) sock {
-	MVAssertCorrectThreadRequired( _connectionThread );
+- (void) socketDidDisconnect:(GCDAsyncSocket *) sock {
 	if( [_delegate respondsToSelector:@selector( directClientConnectionDidDisconnect: )] )
 		[_delegate directClientConnectionDidDisconnect:self];
 	_done = YES;
 }
 
-- (void) socket:(AsyncSocket *) sock didWriteDataWithTag:(long) tag {
-	MVAssertCorrectThreadRequired( _connectionThread );
+- (void) socket:(GCDAsyncSocket *) sock didWriteDataWithTag:(long) tag {
 	if( [_delegate respondsToSelector:@selector( directClientConnection:didWriteDataWithTag: )] )
 		[_delegate directClientConnection:self didWriteDataWithTag:tag];
 }
 
-- (void) socket:(AsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
-	MVAssertCorrectThreadRequired( _connectionThread );
+- (void) socket:(GCDAsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
 	if( [_delegate respondsToSelector:@selector( directClientConnection:didReadData:withTag: )] )
 		[_delegate directClientConnection:self didReadData:data withTag:tag];
 }
@@ -219,11 +211,9 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 }
 
 - (void) _connect:(NSDictionary *) info {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( _acceptConnection || _connection ) return;
 
-	_connection = [[AsyncSocket alloc] initWithDelegate:self];
+	_connection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue];
 
 	NSString *host = [info objectForKey:@"host"];
 	NSNumber *port = [info objectForKey:@"port"];
@@ -235,11 +225,9 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 }
 
 - (void) _acceptConnectionOnFirstPortInRange:(NSValue *) portsObject {
-	MVAssertCorrectThreadRequired( _connectionThread );
-
 	if( _acceptConnection || _connection ) return;
 
-	_acceptConnection = [[AsyncSocket alloc] initWithDelegate:self];
+	_acceptConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue];
 
 	NSRange ports = [portsObject rangeValue];
 	NSUInteger port = ports.location;
@@ -333,9 +321,9 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 		[_threadWaitLock lockWhenCondition:0];
 
+		_connectionDelegateQueue = dispatch_queue_create([[self description] UTF8String], DISPATCH_QUEUE_SERIAL);
 		_connectionThread = [NSThread currentThread];
-		if( [_connectionThread respondsToSelector:@selector( setName: )] )
-			[_connectionThread setName:[self description]];
+		[_connectionThread setName:[self description]];
 		[NSThread prepareForInterThreadMessages];
 		[NSThread setThreadPriority:0.75];
 

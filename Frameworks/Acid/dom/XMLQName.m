@@ -45,7 +45,7 @@ XMLQNameManager* QNManager;
 
 -(id) initWithName:(NSString*)name inURI:(NSString*)uri
 {
-    [super init];
+    if (!(self = [super init])) return nil;
     _name = [name retain];
     _uri  = [uri retain];
     return self;
@@ -130,7 +130,7 @@ XMLQNameManager* QNManager;
         return QNManager;
     }
 
-    [super init];
+    if (!(self = [super init])) return nil;
     _uri_map = [[NSMutableDictionary alloc] init];
 
     return self;

@@ -61,7 +61,6 @@
 		1CE4631E095ECD7300AB7732 /* MVChatRoomPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CE4631D095ECD7300AB7732 /* MVChatRoomPrivate.h */; };
 		1CE4632F095ECDE600AB7732 /* MVFileTransferPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CE4632E095ECDE600AB7732 /* MVFileTransferPrivate.h */; };
 		1CE4633C095ECE4F00AB7732 /* MVChatConnectionPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CE4633B095ECE4F00AB7732 /* MVChatConnectionPrivate.h */; };
-		1CEEB166095BE36700166A54 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEEB164095BE36700166A54 /* AsyncSocket.m */; };
 		1CEEB173095BE3A000166A54 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEB167095BE3A000166A54 /* CoreServices.framework */; };
 		1CF4E5120698E9E900986498 /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CF4E5100698E9E900986498 /* NSDataAdditions.m */; };
 		1CF6513006EA23300073DEA8 /* MVChatConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = F52D043101873FC401EE70DE /* MVChatConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -80,6 +79,10 @@
 		899F4EFE12617870003B9D9A /* NSFileManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */; };
 		899F4EFF12617870003B9D9A /* NSFileManagerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */; };
 		89FB4F2612FAAC6800668905 /* Less Common Settings.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */; };
+		922453BB1689057200BFF3FF /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 922453B91689057200BFF3FF /* GCDAsyncSocket.h */; };
+		922453BC1689057200BFF3FF /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 922453B91689057200BFF3FF /* GCDAsyncSocket.h */; };
+		922453BD1689057200BFF3FF /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 922453BA1689057200BFF3FF /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		922453BE1689057200BFF3FF /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 922453BA1689057200BFF3FF /* GCDAsyncSocket.m */; };
 		92417D31149C019A0009B06E /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD020B305759347000F93B4 /* NSStringAdditions.m */; };
 		92417D33149C019A0009B06E /* NSNumberAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3D55BA05A4CBBE00F25F5E /* NSNumberAdditions.m */; };
 		92417D36149C019A0009B06E /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = F52D043001873FC401EE70DE /* MVChatConnection.m */; };
@@ -93,7 +96,6 @@
 		92417D3E149C019A0009B06E /* MVIRCChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C914B140705BFE100CBA5F1 /* MVIRCChatUser.m */; };
 		92417D3F149C019A0009B06E /* MVIRCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C914D340706148800CBA5F1 /* MVIRCChatRoom.m */; };
 		92417D44149C019A0009B06E /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C668DB807BF9C4C008400F7 /* NSScannerAdditions.m */; };
-		92417D46149C019A0009B06E /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CEEB164095BE36700166A54 /* AsyncSocket.m */; };
 		92417D47149C019A0009B06E /* InterThreadMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD6290D096118B900BD1DD2 /* InterThreadMessaging.m */; };
 		92417D48149C019A0009B06E /* MVChatUserWatchRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C8AAEFD09D69F2700CF29EB /* MVChatUserWatchRule.m */; };
 		92417D49149C019A0009B06E /* MVDirectClientConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0FE8A90B4F647D00855B9C /* MVDirectClientConnection.m */; };
@@ -122,7 +124,6 @@
 		92417D79149C019A0009B06E /* MVDirectChatConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C9C13370B50A7AC005F9F28 /* MVDirectChatConnection.h */; settings = {ATTRIBUTES = (); }; };
 		92417D7E149C019A0009B06E /* MVDirectClientConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */; settings = {ATTRIBUTES = (); }; };
 		92417D7F149C019A0009B06E /* MVDirectChatConnectionPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C9C14170B50B3AB005F9F28 /* MVDirectChatConnectionPrivate.h */; };
-		92417D80149C019A0009B06E /* AsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CEEB163095BE36700166A54 /* AsyncSocket.h */; };
 		92417D81149C019A0009B06E /* InterThreadMessaging.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CD6290C096118B900BD1DD2 /* InterThreadMessaging.h */; };
 		92417D82149C019A0009B06E /* Transmission.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C1168CC0B45FA4700F57D2C /* Transmission.h */; };
 		92417D8A149C019A0009B06E /* MVIRCChatConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C5A1A2206F8F4A000A51F10 /* MVIRCChatConnection.h */; };
@@ -133,9 +134,9 @@
 		92417D8F149C019A0009B06E /* MVChatString.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CB643D40C84F1EF00B79FB0 /* MVChatString.h */; settings = {ATTRIBUTES = (); }; };
 		92417D90149C019A0009B06E /* MVAvailability.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C1895590E29CC19003CFED0 /* MVAvailability.h */; settings = {ATTRIBUTES = (); }; };
 		92417D92149C019A0009B06E /* NSFileManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */; };
+		92BA71FF16890B66000AA0C5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92BA71FE16890B66000AA0C5 /* Security.framework */; };
 		DD0A301B0BD8812D0054443A /* MVDirectClientConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C0FE8A80B4F647D00855B9C /* MVDirectClientConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DD0A301E0BD881560054443A /* MVDirectChatConnectionPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C9C14170B50B3AB005F9F28 /* MVDirectChatConnectionPrivate.h */; };
-		DD0A301F0BD881580054443A /* AsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CEEB163095BE36700166A54 /* AsyncSocket.h */; };
 		DD0A30200BD881590054443A /* InterThreadMessaging.h in Headers */ = {isa = PBXBuildFile; fileRef = 1CD6290C096118B900BD1DD2 /* InterThreadMessaging.h */; };
 		DD0A30210BD881590054443A /* Transmission.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C1168CC0B45FA4700F57D2C /* Transmission.h */; };
 		DD0A30220BD8815D0054443A /* MVXMPPChatUser.h in Headers */ = {isa = PBXBuildFile; fileRef = DDF64E170BD2CABE009E8FF6 /* MVXMPPChatUser.h */; };
@@ -256,8 +257,6 @@
 		1CE4631D095ECD7300AB7732 /* MVChatRoomPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatRoomPrivate.h; path = "Chat Core/MVChatRoomPrivate.h"; sourceTree = "<group>"; };
 		1CE4632E095ECDE600AB7732 /* MVFileTransferPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVFileTransferPrivate.h; path = "Chat Core/MVFileTransferPrivate.h"; sourceTree = "<group>"; };
 		1CE4633B095ECE4F00AB7732 /* MVChatConnectionPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVChatConnectionPrivate.h; path = "Chat Core/MVChatConnectionPrivate.h"; sourceTree = "<group>"; };
-		1CEEB163095BE36700166A54 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncSocket.h; path = "Chat Core/AsyncSocket.h"; sourceTree = "<group>"; };
-		1CEEB164095BE36700166A54 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AsyncSocket.m; path = "Chat Core/AsyncSocket.m"; sourceTree = "<group>"; };
 		1CEEB167095BE3A000166A54 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		1CF4E50F0698E9E900986498 /* NSDataAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDataAdditions.h; path = Additions/NSDataAdditions.h; sourceTree = "<group>"; };
 		1CF4E5100698E9E900986498 /* NSDataAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDataAdditions.m; path = Additions/NSDataAdditions.m; sourceTree = "<group>"; };
@@ -278,6 +277,9 @@
 		899F4EFC12617870003B9D9A /* NSFileManagerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerAdditions.h; path = Additions/NSFileManagerAdditions.h; sourceTree = "<group>"; };
 		899F4EFD12617870003B9D9A /* NSFileManagerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSFileManagerAdditions.m; path = Additions/NSFileManagerAdditions.m; sourceTree = "<group>"; };
 		89FB4F2512FAAC6800668905 /* Less Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Less Common Settings.xcconfig"; path = "Settings/Less Common Settings.xcconfig"; sourceTree = "<group>"; };
+		922453B91689057200BFF3FF /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncSocket.h; path = "Chat Core/GCDAsyncSocket.h"; sourceTree = "<group>"; };
+		922453BA1689057200BFF3FF /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDAsyncSocket.m; path = "Chat Core/GCDAsyncSocket.m"; sourceTree = "<group>"; };
+		92BA71FE16890B66000AA0C5 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		92BFCEAA14FDEF95001D02BB /* libChat Core.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libChat Core.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD47412E0BD35A2E00D93AB9 /* MVXMPPChatRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVXMPPChatRoom.h; path = "Chat Core/MVXMPPChatRoom.h"; sourceTree = "<group>"; };
 		DD47412F0BD35A2E00D93AB9 /* MVXMPPChatRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVXMPPChatRoom.m; path = "Chat Core/MVXMPPChatRoom.m"; sourceTree = "<group>"; };
@@ -298,6 +300,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92BA71FF16890B66000AA0C5 /* Security.framework in Frameworks */,
 				1C51B485052DE0CB00BB459B /* SystemConfiguration.framework in Frameworks */,
 				1C51B487052DE0CB00BB459B /* Cocoa.framework in Frameworks */,
 				1C5A233F06FA4FEE00A51F10 /* libsilc.framework in Frameworks */,
@@ -353,6 +356,7 @@
 				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
 				1CEEB167095BE3A000166A54 /* CoreServices.framework */,
 				1CCB3C3705228EFD000001C8 /* SystemConfiguration.framework */,
+				92BA71FE16890B66000AA0C5 /* Security.framework */,
 				1C5A233D06FA4FEE00A51F10 /* libsilc.framework */,
 				1C5A233E06FA4FEE00A51F10 /* libsilcclient.framework */,
 				DDF64D520BD2A4F6009E8FF6 /* Acid.framework */,
@@ -505,8 +509,8 @@
 				1C9C14170B50B3AB005F9F28 /* MVDirectChatConnectionPrivate.h */,
 				1C2EF7EC0427A40B00000102 /* MVChatPluginManager.m */,
 				1C2EF7EB0427A40B00000102 /* MVChatPluginManager.h */,
-				1CEEB164095BE36700166A54 /* AsyncSocket.m */,
-				1CEEB163095BE36700166A54 /* AsyncSocket.h */,
+				922453BA1689057200BFF3FF /* GCDAsyncSocket.m */,
+				922453B91689057200BFF3FF /* GCDAsyncSocket.h */,
 				1CD6290D096118B900BD1DD2 /* InterThreadMessaging.m */,
 				1CD6290C096118B900BD1DD2 /* InterThreadMessaging.h */,
 				1C1168CC0B45FA4700F57D2C /* Transmission.h */,
@@ -607,7 +611,6 @@
 				322F54D10B53F6730023AE39 /* ICBPacket.h in Headers */,
 				DD0A301B0BD8812D0054443A /* MVDirectClientConnection.h in Headers */,
 				DD0A301E0BD881560054443A /* MVDirectChatConnectionPrivate.h in Headers */,
-				DD0A301F0BD881580054443A /* AsyncSocket.h in Headers */,
 				DD0A30200BD881590054443A /* InterThreadMessaging.h in Headers */,
 				DD0A30210BD881590054443A /* Transmission.h in Headers */,
 				DD0A30220BD8815D0054443A /* MVXMPPChatUser.h in Headers */,
@@ -625,6 +628,7 @@
 				1CB643D50C84F1EF00B79FB0 /* MVChatString.h in Headers */,
 				1C18955A0E29CC19003CFED0 /* MVAvailability.h in Headers */,
 				899F4EFE12617870003B9D9A /* NSFileManagerAdditions.h in Headers */,
+				922453BB1689057200BFF3FF /* GCDAsyncSocket.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -653,7 +657,6 @@
 				92417D8F149C019A0009B06E /* MVChatString.h in Headers */,
 				92417D90149C019A0009B06E /* MVAvailability.h in Headers */,
 				92417D7F149C019A0009B06E /* MVDirectChatConnectionPrivate.h in Headers */,
-				92417D80149C019A0009B06E /* AsyncSocket.h in Headers */,
 				92417D81149C019A0009B06E /* InterThreadMessaging.h in Headers */,
 				92417D82149C019A0009B06E /* Transmission.h in Headers */,
 				92417D8A149C019A0009B06E /* MVIRCChatConnection.h in Headers */,
@@ -662,6 +665,7 @@
 				92417D8D149C019A0009B06E /* MVIRCFileTransfer.h in Headers */,
 				92417D8E149C019A0009B06E /* MVIRCNumerics.h in Headers */,
 				92417D92149C019A0009B06E /* NSFileManagerAdditions.h in Headers */,
+				922453BC1689057200BFF3FF /* GCDAsyncSocket.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -844,7 +848,6 @@
 				431261C3072EE37A00720AD1 /* MVSILCFileTransfer.m in Sources */,
 				1C668DBA07BF9C4C008400F7 /* NSScannerAdditions.m in Sources */,
 				1C7C776A07DBBA4500FB5F83 /* NSScriptCommandAdditions.m in Sources */,
-				1CEEB166095BE36700166A54 /* AsyncSocket.m in Sources */,
 				1CD6296709611B9100BD1DD2 /* InterThreadMessaging.m in Sources */,
 				1C8AAEFF09D69F2700CF29EB /* MVChatUserWatchRule.m in Sources */,
 				1C0FE8AB0B4F647D00855B9C /* MVDirectClientConnection.m in Sources */,
@@ -857,6 +860,7 @@
 				DDF64E1A0BD2CABE009E8FF6 /* MVXMPPChatUser.m in Sources */,
 				DD4741310BD35A2E00D93AB9 /* MVXMPPChatRoom.m in Sources */,
 				899F4EFF12617870003B9D9A /* NSFileManagerAdditions.m in Sources */,
+				922453BD1689057200BFF3FF /* GCDAsyncSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -877,12 +881,12 @@
 				92417D3E149C019A0009B06E /* MVIRCChatUser.m in Sources */,
 				92417D3F149C019A0009B06E /* MVIRCChatRoom.m in Sources */,
 				92417D44149C019A0009B06E /* NSScannerAdditions.m in Sources */,
-				92417D46149C019A0009B06E /* AsyncSocket.m in Sources */,
 				92417D47149C019A0009B06E /* InterThreadMessaging.m in Sources */,
 				92417D48149C019A0009B06E /* MVChatUserWatchRule.m in Sources */,
 				92417D49149C019A0009B06E /* MVDirectClientConnection.m in Sources */,
 				92417D4A149C019A0009B06E /* MVDirectChatConnection.m in Sources */,
 				92417D53149C019A0009B06E /* NSFileManagerAdditions.m in Sources */,
+				922453BE1689057200BFF3FF /* GCDAsyncSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

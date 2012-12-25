@@ -229,7 +229,7 @@ NSString* XP_ROSTERPUSH = @"/iq[@type='set']/query[%jabber:iq:roster]";
 
 -(id) initWithSession:(id)session
 {
-    [super init];
+	if (!(self = [super init])) return nil;
     _session = session;
     [_session addObserver:self selector:@selector(onSessionStarted:)
                      name: JSESSION_STARTED];

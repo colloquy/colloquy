@@ -45,7 +45,7 @@
 @implementation BufferParser
 -(id) init
 {
-    [super init];
+	if (!(self = [super init])) return nil;
     _stream = [[XMLElementStream alloc] initWithListener:self];
     return self;
 }
@@ -137,7 +137,7 @@ static NSMutableArray* G_FACTORY;
 
 -(id) init
 {
-    [super init];
+	if (!(self = [super init])) return nil;
 
     _default_uri_stack = [[NSMutableArray alloc] initWithCapacity: 5];
 
@@ -157,7 +157,7 @@ static NSMutableArray* G_FACTORY;
 
 -(id) initWithListener: (id <XMLElementStreamListener>) listener
 {
-    [self init];
+	if (!(self = [self init])) return nil;
 
     // Assign pointer to _listener
     _listener = listener;
