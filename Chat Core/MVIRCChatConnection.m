@@ -613,6 +613,8 @@ static const NSStringEncoding supportedEncodings[] = {
 - (void) _connect {
 	id old = _chatConnection;
 	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)];
+	_chatConnection.preferIPv4OverIPv6 = NO;
+
 	[old setDelegate:nil];
 	[old disconnect];
 	[old release];

@@ -214,6 +214,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	if( _acceptConnection || _connection ) return;
 
 	_connection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue];
+	_connection.preferIPv4OverIPv6 = NO;
 
 	NSString *host = [info objectForKey:@"host"];
 	NSNumber *port = [info objectForKey:@"port"];
@@ -228,6 +229,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 	if( _acceptConnection || _connection ) return;
 
 	_acceptConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue];
+	_acceptConnection.preferIPv4OverIPv6 = NO;
 
 	NSRange ports = [portsObject rangeValue];
 	NSUInteger port = ports.location;

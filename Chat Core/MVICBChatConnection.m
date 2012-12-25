@@ -420,6 +420,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	[_chatConnection release];
 
 	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue];
+    _chatConnection.preferIPv4OverIPv6 = NO;
 
 	if( ! [_chatConnection connectToHost:[self server]
 	                       onPort:[self serverPort]
