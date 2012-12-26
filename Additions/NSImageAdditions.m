@@ -6,7 +6,7 @@
 + (NSImage *) imageNamed:(NSString *) name forClass:(Class) class {
 	NSBundle *ownerBundle = [NSBundle bundleForClass:class];
 	NSString *imagePath = [ownerBundle pathForImageResource:name];
-	return [[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease];
+	return [[NSImage alloc] initWithContentsOfFile:imagePath];
 }
 
 // Created for Adium by Evan Schoenberg on Tue Dec 02 2003 under the GPL.
@@ -40,8 +40,7 @@
 }
 
 + (NSImage *) imageWithBase64EncodedString:(NSString *) base64String {
-	NSImage	*result = [[NSImage alloc ] initWithBase64EncodedString:base64String];
-	return [result autorelease];
+	return [[NSImage alloc] initWithBase64EncodedString:base64String];
 }
 
 - (id) initWithBase64EncodedString:(NSString *) base64String {

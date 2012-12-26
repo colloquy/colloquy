@@ -39,7 +39,7 @@
 		1C0730CE0677765B008D8AD9 /* AICustomTabDragWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0730C60677765B008D8AD9 /* AICustomTabDragWindow.m */; };
 		1C0730D00677765B008D8AD9 /* AICustomTabsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0730C80677765B008D8AD9 /* AICustomTabsView.m */; };
 		1C0730D406777678008D8AD9 /* ESFloater.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0730D206777678008D8AD9 /* ESFloater.m */; };
-		1C0730E50677A63B008D8AD9 /* NSImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0730E30677A63B008D8AD9 /* NSImageAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C0730E50677A63B008D8AD9 /* NSImageAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0730E30677A63B008D8AD9 /* NSImageAdditions.m */; };
 		1C0A4C9C0799BDB00093B702 /* JVFind.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C0A4C980799BDAF0093B702 /* JVFind.nib */; };
 		1C0A4C9D0799BDB00093B702 /* JVTranscriptCriterion.nib in Resources */ = {isa = PBXBuildFile; fileRef = 1C0A4C9A0799BDAF0093B702 /* JVTranscriptCriterion.nib */; };
 		1C0A4CAC0799BDD00093B702 /* JVTranscriptCriterionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0A4CA80799BDD00093B702 /* JVTranscriptCriterionController.m */; };
