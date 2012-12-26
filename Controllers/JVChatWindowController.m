@@ -34,6 +34,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 @interface JVChatWindowController (JVChatWindowControllerPrivate)
 - (void) _claimMenuCommands;
+- (void) _deferRefreshSelectionMenu;
 - (void) _resignMenuCommands;
 - (void) _refreshMenuWithItem:(id) item;
 - (void) _refreshSelectionMenu;
@@ -600,8 +601,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		}
 	}
 
-	if( item == selectItem )
-		[self _refreshSelectionMenu];
+	if( item == selectItem ) {
+		[self _deferRefreshSelectionMenu];
+	}
 
 	if( selectItem )
 		[chatViewsOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:[chatViewsOutlineView rowForItem:selectItem]] byExtendingSelection:NO];
@@ -880,7 +882,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( [item conformsToProtocol:@protocol( JVChatViewController )] && item != (id) _activeViewController )
 		[self _refreshWindow];
 
-	[self _refreshSelectionMenu];
+	[self _deferRefreshSelectionMenu];
 }
 
 - (BOOL) outlineView:(NSOutlineView *) outlineView writeItems:(NSArray *) items toPasteboard:(NSPasteboard *) board {
@@ -989,7 +991,15 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[item doubleClicked:sender];
 }
 
+- (void) _deferRefreshSelectionMenu {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_refreshSelectionMenu) object:nil];
+	[self performSelector:@selector(_refreshSelectionMenu) withObject:nil afterDelay:0.];
+}
+
 - (void) _refreshSelectionMenu {
+	NSLog(@"%@", [NSThread callStackSymbols]);
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_refreshSelectionMenu) object:nil];
+
 	id item = [self selectedListItem];
 	if( ! item ) item = [self activeChatViewController];
 	[self _refreshMenuWithItem:item];
@@ -1042,8 +1052,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[viewActionButton setMenu:menu];
 	} else [viewActionButton setEnabled:NO];
 
-	[chatViewsOutlineView setMenu:[menu copy]];
-
+	[chatViewsOutlineView setMenu:menu];
 }
 
 - (void) _refreshWindow {

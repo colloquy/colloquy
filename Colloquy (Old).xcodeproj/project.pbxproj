@@ -3052,7 +3052,10 @@
 				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				HEADER_SEARCH_PATHS = (
+					/usr/include/libxml2,
+					"\"$(HEADER_SEARCH_PATHS)\"",
+				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				LLVM_LTO = YES;
 				OTHER_CFLAGS = (
@@ -3123,7 +3126,10 @@
 				GCC_ENABLE_SUPPLEMENTAL_SSE3_INSTRUCTIONS = YES;
 				GCC_PREFIX_HEADER = Colloquy.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				HEADER_SEARCH_PATHS = (
+					/usr/include/libxml2,
+					"\"$(HEADER_SEARCH_PATHS)\"",
+				);
 				INFOPLIST_FILE = Resources/Info.plist;
 				LLVM_LTO = YES;
 				OTHER_CFLAGS = (

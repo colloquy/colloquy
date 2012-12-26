@@ -6,6 +6,7 @@
 @interface JVChatWindowController (JVChatWindowControllerPrivate)
 - (void) _claimMenuCommands;
 - (void) _resignMenuCommands;
+- (void) _deferRefreshSelectionMenu;
 - (void) _refreshSelectionMenu;
 - (void) _refreshToolbar;
 - (void) _refreshWindow;
@@ -129,7 +130,7 @@
 		[chatViewsOutlineView sizeLastColumnToFit];
 
 		if( item == selectItem )
-			[self _refreshSelectionMenu];
+			[self _deferRefreshSelectionMenu];
 
 		if( selectItem )
 			[chatViewsOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:[chatViewsOutlineView rowForItem:selectItem]] byExtendingSelection:NO];
@@ -197,7 +198,7 @@
 	if( tabViewItem ) {
 		[self _refreshWindow];
 		[self _refreshList];
-		[self _refreshSelectionMenu];
+		[self _deferRefreshSelectionMenu];
 
 		id controller = [(JVChatTabItem *)tabViewItem chatViewController];
 		if( [controller respondsToSelector:@selector( preferenceForKey: )] && [controller preferenceForKey:@"expanded"] ) {
