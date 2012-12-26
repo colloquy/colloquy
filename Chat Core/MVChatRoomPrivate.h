@@ -12,6 +12,9 @@
 - (void) _setModes:(NSUInteger) modes forMemberUser:(MVChatUser *) user;
 - (void) _setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user;
 - (void) _removeMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user;
+- (void) _setDisciplineModes:(NSUInteger) modes forMemberUser:(MVChatUser *) user;
+- (void) _setDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user;
+- (void) _removeDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user;
 - (void) _setMode:(MVChatRoomMode) mode withAttribute:(id) attribute;
 - (void) _removeMode:(MVChatRoomMode) mode;
 - (void) _clearModes;

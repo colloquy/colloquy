@@ -109,12 +109,14 @@ MVChatRoomPassphraseToJoinMode = 1 << 7;
 MVChatRoomLimitNumberOfMembersMode = 1 << 8;
 
 MVChatRoomMemberNoModes = 0;
-MVChatRoomMemberQuietedMode = 1 << 0;
-MVChatRoomMemberVoicedMode = 1 << 1;
-MVChatRoomMemberHalfOperatorMode = 1 << 2;
-MVChatRoomMemberOperatorMode = 1 << 3;
-MVChatRoomMemberAdministratorMode = 1 << 4;
-MVChatRoomMemberFounderMode = 1 << 5;
+MVChatRoomMemberVoicedMode = 1 << 0;
+MVChatRoomMemberHalfOperatorMode = 1 << 1;
+MVChatRoomMemberOperatorMode = 1 << 2;
+MVChatRoomMemberAdministratorMode = 1 << 3;
+MVChatRoomMemberFounderMode = 1 << 4;
+
+MVChatRoomMemberNoDisciplineModes = 0,
+MVChatRoomMemberDisciplineQuietedMode = 1 << 0
 
 MVChatRemoteUserType = 'remT'.fourCharCode();
 MVChatLocalUserType = 'locL'.fourCharCode();

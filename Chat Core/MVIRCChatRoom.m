@@ -24,11 +24,14 @@
 
 - (NSUInteger) supportedMemberUserModes {
 	NSUInteger supported = ( MVChatRoomMemberVoicedMode | MVChatRoomMemberOperatorMode );
-	supported |= MVChatRoomMemberQuietedMode; // optional later
 	supported |= MVChatRoomMemberHalfOperatorMode; // optional later
 	supported |= MVChatRoomMemberAdministratorMode; // optional later
 	supported |= MVChatRoomMemberFounderMode; // optional later
 	return supported;
+}
+
+- (NSUInteger) supportedMemberDisciplineModes {
+	return MVChatRoomMemberDisciplineQuietedMode;
 }
 
 #pragma mark -
@@ -177,8 +180,6 @@
 	case MVChatRoomMemberVoicedMode:
 		[[self connection] sendRawMessageWithFormat:@"MODE %@ +v %@", [self name], [user nickname]];
 		break;
-	case MVChatRoomMemberQuietedMode:
-		[[self connection] sendRawMessageWithFormat:@"MODE %@ +q %@", [self name], [user nickname]];
 	default:
 		break;
 	}
@@ -203,8 +204,30 @@
 	case MVChatRoomMemberVoicedMode:
 		[[self connection] sendRawMessageWithFormat:@"MODE %@ -v %@", [self name], [user nickname]];
 		break;
-	case MVChatRoomMemberQuietedMode:
+	default:
+		break;
+	}
+}
+
+- (void) setDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user {
+	[super setDisciplineMode:mode forMemberUser:user];
+
+	switch (mode) {
+	case MVChatRoomMemberDisciplineQuietedMode:
+		[[self connection] sendRawMessageWithFormat:@"MODE %@ +q %@", [self name], [user nickname]];
+		break;
+	default:
+		break;
+	}
+}
+
+- (void) removeDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user {
+	[super removeDisciplineMode:mode forMemberUser:user];
+
+	switch (mode) {
+	case MVChatRoomMemberDisciplineQuietedMode:
 		[[self connection] sendRawMessageWithFormat:@"MODE %@ -q %@", [self name], [user nickname]];
+		break;
 	default:
 		break;
 	}

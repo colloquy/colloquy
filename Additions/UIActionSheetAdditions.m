@@ -43,7 +43,7 @@
 	return [sheet autorelease];
 }
 
-+ (UIActionSheet *) operatorActionSheetWithLocalUserModes:(NSUInteger) localUserModes targetingUserWithModes:(NSUInteger) selectedUserModes onRoomWithFeatures:(NSSet *) features {
++ (UIActionSheet *) operatorActionSheetWithLocalUserModes:(NSUInteger) localUserModes targetingUserWithModes:(NSUInteger) selectedUserModes disciplineModes:(NSUInteger) disciplineModes onRoomWithFeatures:(NSSet *) features {
 	NSMutableDictionary *context = [[NSMutableDictionary alloc] init];
 
 	UIActionSheet *operatorSheet = [[UIActionSheet alloc] init];
@@ -57,7 +57,7 @@
 	BOOL localUserIsAdministrator = (localUserModes & MVChatRoomMemberAdministratorMode);
 	BOOL localUserIsFounder = (localUserModes & MVChatRoomMemberFounderMode);
 
-	BOOL selectedUserIsQuieted = (selectedUserModes & MVChatRoomMemberQuietedMode);
+	BOOL selectedUserIsQuieted = (disciplineModes & MVChatRoomMemberDisciplineQuietedMode);
 	BOOL selectedUserHasVoice = (selectedUserModes & MVChatRoomMemberVoicedMode);
 	BOOL selectedUserIsHalfOperator = (selectedUserModes & MVChatRoomMemberHalfOperatorMode);
 	BOOL selectedUserIsOperator = (selectedUserModes & MVChatRoomMemberOperatorMode);
@@ -114,7 +114,7 @@
 			if (selectedUserIsQuieted) [operatorSheet addButtonWithTitle:NSLocalizedString(@"Remove Force Quiet", @"Rmeove Force Quiet button title")];
 			else [operatorSheet addButtonWithTitle:NSLocalizedString(@"Force Quiet", @"Force Quiet button title")];
 
-			[context setObject:[NSNumber numberWithUnsignedInteger:(MVChatRoomMemberQuietedMode | (selectedUserIsQuieted ? (1 << 16) : 0))] forKey:[NSNumber numberWithUnsignedInteger:(operatorSheet.numberOfButtons - 1)]];
+			[context setObject:[NSNumber numberWithUnsignedInteger:(MVChatRoomMemberDisciplineQuietedMode | (selectedUserIsQuieted ? (1 << 16) : 0))] forKey:[NSNumber numberWithUnsignedInteger:(operatorSheet.numberOfButtons - 1)]];
 		}
 	}
 
@@ -155,7 +155,7 @@
 			NSUInteger localUserModes = (room.connection.localUser ? [room modesForMemberUser:room.connection.localUser] : 0);
 			NSUInteger selectedUserModes = (user ? [room modesForMemberUser:user] : 0);
 
-			UIActionSheet *operatorSheet = [UIActionSheet operatorActionSheetWithLocalUserModes:localUserModes targetingUserWithModes:selectedUserModes onRoomWithFeatures:room.connection.supportedFeatures];
+			UIActionSheet *operatorSheet = [UIActionSheet operatorActionSheetWithLocalUserModes:localUserModes targetingUserWithModes:selectedUserModes disciplineModes:[room disciplineModesForMemberUser:user] onRoomWithFeatures:room.connection.supportedFeatures];
 			operatorSheet.delegate = operatorSheet;
 			operatorSheet.title = actionSheet.title;
 

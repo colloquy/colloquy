@@ -56,10 +56,12 @@ static MVCrashCatcher *crashCatcher = nil;
 - (void) connectionDidFinishLoading:(NSURLConnection *) connection {
 	[[NSFileManager defaultManager] removeItemAtPath:logPath error:nil];
 	_self = nil;
+	crashCatcher = nil;
 }
 
 - (void) connection:(NSURLConnection *) connection didFailWithError:(NSError *) error {
 	_self = nil;
+	crashCatcher = nil;
 }
 
 #pragma mark -
@@ -111,6 +113,7 @@ static MVCrashCatcher *crashCatcher = nil;
 	[window orderOut:nil];
 
 	_self = nil;
+	crashCatcher = nil;
 }
 
 - (BOOL) windowShouldClose:(id) sender {

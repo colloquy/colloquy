@@ -1,6 +1,6 @@
 #import "CQBouncerConnection.h"
 
-#import "AsyncSocket.h"
+#import "GCDAsyncSocket.h"
 #import "CQBouncerSettings.h"
 
 #import <objc/message.h>
@@ -91,7 +91,7 @@
 	if (!_settings.server.length || !_settings.serverPort)
 		return;
 
-	_socket = [[AsyncSocket alloc] initWithDelegate:self];
+	_socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)];
 	[_socket connectToHost:_settings.server onPort:_settings.serverPort error:NULL];
 }
 
@@ -99,7 +99,7 @@
 	[_socket disconnectAfterWriting];
 }
 
-- (void) socket:(AsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16)port {
+- (void) socket:(GCDAsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16)port {
 	[_error release];
 	_error = nil;
 
@@ -120,12 +120,12 @@
 	[self _readNextMessage];
 }
 
-- (void) socket:(AsyncSocket *) sock willDisconnectWithError:(NSError *) error {
+- (void) socket:(GCDAsyncSocket *) sock willDisconnectWithError:(NSError *) error {
 	[_error release];
 	_error = [error retain];
 }
 
-- (void) socketDidDisconnect:(AsyncSocket *) sock {
+- (void) socketDidDisconnect:(GCDAsyncSocket *) sock {
 	[_socket release];
 	_socket = nil;
 
@@ -133,7 +133,7 @@
 		[_delegate bouncerConnectionDidDisconnect:self withError:_error];
 }
 
-- (void) socket:(AsyncSocket *) sock didWriteDataWithTag:(long) tag {
+- (void) socket:(GCDAsyncSocket *) sock didWriteDataWithTag:(long) tag {
 	if (tag < 0)
 		[self disconnect];
 }
@@ -146,7 +146,7 @@ static inline NSString *newStringWithBytes(const char *bytes, NSUInteger length)
 	return nil;
 }
 
-- (void) socket:(AsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
+- (void) socket:(GCDAsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
 	const char *line = (const char *)data.bytes;
 	unsigned int len = data.length;
 	const char *end = line + len - 2; // minus the line endings

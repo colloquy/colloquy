@@ -67,33 +67,14 @@
 }
 
 - (NSComparisonResult) compareUsingStatus:(JVChatRoomMember *) member {
-	NSComparisonResult retVal = NSOrderedSame;
+	NSUInteger myStatus = [[_room target] modesForMemberUser:_user];
+	NSUInteger yourStatus = [[_room target] modesForMemberUser:member.user];
 
-	NSUInteger myStatus = 0;
-	if( [self serverOperator] ) myStatus = 6;
-	else if( [self roomFounder] ) myStatus = 5;
-	else if( [self roomAdministrator] ) myStatus = 4;
-	else if( [self operator] ) myStatus = 3;
-	else if( [self halfOperator] ) myStatus = 2;
-	else if( [self voice] ) myStatus = 1;
-
-	NSUInteger yourStatus = 0;
-	if( [member serverOperator] ) yourStatus = 6;
-	else if( [member roomFounder] ) yourStatus = 5;
-	else if( [member roomAdministrator] ) yourStatus = 4;
-	else if( [member operator] ) yourStatus = 3;
-	else if( [member halfOperator] ) yourStatus = 2;
-	else if( [member voice] ) yourStatus = 1;
-
-	if( myStatus > yourStatus ) {
-		retVal = NSOrderedAscending;
-	} else if( yourStatus > myStatus ) {
-		retVal = NSOrderedDescending;
-	} else {
-		retVal = [[self title] caseInsensitiveCompare:[member title]];
-	}
-
-	return retVal;
+	if( myStatus > yourStatus )
+		return NSOrderedAscending;
+	if( yourStatus > myStatus )
+		return NSOrderedDescending;
+	return [[self title] caseInsensitiveCompare:[member title]];
 }
 
 - (NSComparisonResult) compareUsingBuddyStatus:(JVChatRoomMember *) member {
@@ -171,7 +152,7 @@
 #pragma mark User Status
 
 - (BOOL) quieted {
-	return ( [[_room target] modesForMemberUser:_user] & MVChatRoomMemberQuietedMode );
+	return ( [[_room target] disciplineModesForMemberUser:_user] & MVChatRoomMemberDisciplineQuietedMode );
 }
 
 - (BOOL) voice {
@@ -554,8 +535,8 @@
 }
 
 - (IBAction) toggleQuietedStatus:(id) sender {
-	if( [self quieted] ) [[_room target] removeMode:MVChatRoomMemberQuietedMode forMemberUser:_user];
-	else [[_room target] setMode:MVChatRoomMemberQuietedMode forMemberUser:_user];
+	if( [self quieted] ) [[_room target] removeDisciplineMode:MVChatRoomMemberDisciplineQuietedMode forMemberUser:_user];
+	else [[_room target] setDisciplineMode:MVChatRoomMemberDisciplineQuietedMode forMemberUser:_user];
 }
 
 #pragma mark -

@@ -50,7 +50,11 @@
 }
 
 - (NSUInteger) supportedMemberUserModes {
-	return ( MVChatRoomMemberFounderMode | MVChatRoomMemberOperatorMode | MVChatRoomMemberQuietedMode );
+	return ( MVChatRoomMemberFounderMode | MVChatRoomMemberOperatorMode );
+}
+
+- (NSUInteger) supportedMemberDisciplineModes {
+	return MVChatRoomMemberDisciplineQuietedMode;
 }
 
 #pragma mark -
@@ -165,8 +169,6 @@
 	case MVChatRoomMemberOperatorMode:
 		[self _setChannelUserMode:SILC_CHANNEL_UMODE_CHANOP forUser:user];
 		break;
-	case MVChatRoomMemberQuietedMode:
-		[self _setChannelUserMode:SILC_CHANNEL_UMODE_QUIET forUser:user];
 	default:
 		break;
 	}
@@ -179,10 +181,30 @@
 	case MVChatRoomMemberOperatorMode:
 		[self _removeChannelUserMode:SILC_CHANNEL_UMODE_CHANOP forUser:user];
 		break;
-	case MVChatRoomMemberQuietedMode:
-		[self _removeChannelUserMode:SILC_CHANNEL_UMODE_QUIET forUser:user];
 	default:
 		break;
+	}
+}
+
+- (void) setDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user {
+	[super setDisciplineMode:mode forMemberUser:user];
+
+	switch( mode ) {
+		case MVChatRoomMemberDisciplineQuietedMode:
+			[self _setChannelUserMode:SILC_CHANNEL_UMODE_QUIET forUser:user];
+		default:
+			break;
+	}
+}
+
+- (void) removeDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user {
+	[super removeDisciplineMode:mode forMemberUser:user];
+
+	switch( mode ) {
+		case MVChatRoomMemberDisciplineQuietedMode:
+			[self _removeChannelUserMode:SILC_CHANNEL_UMODE_QUIET forUser:user];
+		default:
+			break;
 	}
 }
 

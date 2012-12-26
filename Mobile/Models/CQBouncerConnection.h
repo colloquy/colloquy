@@ -1,9 +1,9 @@
-@class AsyncSocket;
+@class GCDAsyncSocket;
 @class CQBouncerSettings;
 @protocol CQBouncerConnectionDelegate;
 
 @interface CQBouncerConnection : NSObject {
-	AsyncSocket *_socket;
+	GCDAsyncSocket *_socket;
 	CQBouncerSettings *_settings;
 	id <CQBouncerConnectionDelegate> _delegate;
 

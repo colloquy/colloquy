@@ -88,7 +88,6 @@
 		1C716EDC13100F220088C737 /* MVIRCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ECE13100F220088C737 /* MVIRCChatRoom.m */; };
 		1C716EDD13100F220088C737 /* MVIRCChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED013100F220088C737 /* MVIRCChatUser.m */; };
 		1C716EDE13100F220088C737 /* MVIRCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED213100F220088C737 /* MVIRCFileTransfer.m */; };
-		1C716EDF13100F220088C737 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED513100F220088C737 /* AsyncSocket.m */; };
 		1C716EE013100F220088C737 /* InterThreadMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED713100F220088C737 /* InterThreadMessaging.m */; };
 		1C716EE113100F220088C737 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED913100F220088C737 /* RegexKitLite.m */; };
 		1C716EE213100F220088C737 /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EB913100F220088C737 /* MVChatConnection.m */; };
@@ -232,6 +231,7 @@
 		897C0D670F99154500F9D8B5 /* browserInstapaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 897C0D660F99154500F9D8B5 /* browserInstapaper.png */; };
 		89997FAC0F171EB600CF0AA2 /* standard-grey-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */; };
 		89E87C090FA0450800B49230 /* CQSoundController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E87C080FA0450800B49230 /* CQSoundController.m */; };
+		9215E175168AE04100E7E77F /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9215E174168AE04100E7E77F /* GCDAsyncSocket.m */; };
 		922C1630163BDBCE00B01C3D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C162F163BDBCE00B01C3D /* NSDateAdditions.m */; };
 		924108D615A5605A001F7681 /* NSFileManagerMoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 924108D515A5605A001F7681 /* NSFileManagerMoreAdditions.m */; };
 		9247414316119CCC009132B5 /* chromatic-redux.css in Resources */ = {isa = PBXBuildFile; fileRef = 9247414116119CCC009132B5 /* chromatic-redux.css */; };
@@ -383,8 +383,6 @@
 		1C716ED213100F220088C737 /* MVIRCFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVIRCFileTransfer.m; sourceTree = "<group>"; };
 		1C716ED313100F220088C737 /* MVIRCFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVIRCFileTransfer.h; sourceTree = "<group>"; };
 		1C716ED413100F220088C737 /* MVIRCNumerics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVIRCNumerics.h; sourceTree = "<group>"; };
-		1C716ED513100F220088C737 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
-		1C716ED613100F220088C737 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
 		1C716ED713100F220088C737 /* InterThreadMessaging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InterThreadMessaging.m; sourceTree = "<group>"; };
 		1C716ED813100F220088C737 /* InterThreadMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterThreadMessaging.h; sourceTree = "<group>"; };
 		1C716ED913100F220088C737 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
@@ -565,6 +563,8 @@
 		89E87C070FA0450800B49230 /* CQSoundController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQSoundController.h; path = Mobile/Controllers/CQSoundController.h; sourceTree = "<group>"; };
 		89E87C080FA0450800B49230 /* CQSoundController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQSoundController.m; path = Mobile/Controllers/CQSoundController.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9215E173168AE04100E7E77F /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
+		9215E174168AE04100E7E77F /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
 		922C162E163BDBCE00B01C3D /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		922C162F163BDBCE00B01C3D /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDateAdditions.m; path = Additions/NSDateAdditions.m; sourceTree = "<group>"; };
 		924108D415A5605A001F7681 /* NSFileManagerMoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerMoreAdditions.h; path = Additions/NSFileManagerMoreAdditions.h; sourceTree = "<group>"; };
@@ -884,8 +884,8 @@
 		1C716EB513100F220088C737 /* Utility Classes */ = {
 			isa = PBXGroup;
 			children = (
-				1C716ED513100F220088C737 /* AsyncSocket.m */,
-				1C716ED613100F220088C737 /* AsyncSocket.h */,
+				9215E174168AE04100E7E77F /* GCDAsyncSocket.m */,
+				9215E173168AE04100E7E77F /* GCDAsyncSocket.h */,
 				1C716ED713100F220088C737 /* InterThreadMessaging.m */,
 				1C716ED813100F220088C737 /* InterThreadMessaging.h */,
 				1C716ED913100F220088C737 /* RegexKitLite.m */,
@@ -1492,7 +1492,6 @@
 				1C716EDC13100F220088C737 /* MVIRCChatRoom.m in Sources */,
 				1C716EDD13100F220088C737 /* MVIRCChatUser.m in Sources */,
 				1C716EDE13100F220088C737 /* MVIRCFileTransfer.m in Sources */,
-				1C716EDF13100F220088C737 /* AsyncSocket.m in Sources */,
 				1C716EE013100F220088C737 /* InterThreadMessaging.m in Sources */,
 				1C716EE113100F220088C737 /* RegexKitLite.m in Sources */,
 				1C716EE213100F220088C737 /* MVChatConnection.m in Sources */,
@@ -1506,6 +1505,7 @@
 				924108D615A5605A001F7681 /* NSFileManagerMoreAdditions.m in Sources */,
 				92F1C9E3161D936D0035A9AF /* UIActionSheetAdditions.m in Sources */,
 				922C1630163BDBCE00B01C3D /* NSDateAdditions.m in Sources */,
+				9215E175168AE04100E7E77F /* GCDAsyncSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

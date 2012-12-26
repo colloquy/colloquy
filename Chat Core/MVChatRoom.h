@@ -16,13 +16,17 @@ typedef enum {
 
 typedef enum {
 	MVChatRoomMemberNoModes = 0,
-	MVChatRoomMemberQuietedMode = 1 << 0,
-	MVChatRoomMemberVoicedMode = 1 << 1,
-	MVChatRoomMemberHalfOperatorMode = 1 << 2,
-	MVChatRoomMemberOperatorMode = 1 << 3,
-	MVChatRoomMemberAdministratorMode = 1 << 4,
-	MVChatRoomMemberFounderMode = 1 << 5
+	MVChatRoomMemberVoicedMode = 1 << 0,
+	MVChatRoomMemberHalfOperatorMode = 1 << 1,
+	MVChatRoomMemberOperatorMode = 1 << 2,
+	MVChatRoomMemberAdministratorMode = 1 << 3,
+	MVChatRoomMemberFounderMode = 1 << 4
 } MVChatRoomMemberMode;
+
+typedef enum {
+	MVChatRoomMemberNoDisciplineModes = 0,
+	MVChatRoomMemberDisciplineQuietedMode = 1 << 0
+} MVChatRoomMemberDisciplineMode;
 
 extern NSString *MVChatRoomMemberQuietedFeature;
 extern NSString *MVChatRoomMemberVoicedFeature;
@@ -70,6 +74,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 	NSMutableSet *_bannedUsers;
 	NSMutableDictionary *_modeAttributes;
 	NSMutableDictionary *_memberModes;
+	NSMutableDictionary *_disciplineMemberModes;
 	NSStringEncoding _encoding;
 	NSUInteger _modes;
 	NSUInteger _hash;
@@ -97,6 +102,7 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 
 @property(readonly) NSUInteger supportedModes;
 @property(readonly) NSUInteger supportedMemberUserModes;
+@property(readonly) NSUInteger supportedMemberDisciplineModes;
 @property(readonly) NSUInteger modes;
 
 @property(readonly) MVChatUser *localMemberUser;
@@ -152,10 +158,14 @@ extern NSString *MVChatRoomAttributeUpdatedNotification;
 - (void) removeBanForUser:(MVChatUser *) user;
 
 - (NSUInteger) modesForMemberUser:(MVChatUser *) user;
+- (NSUInteger) disciplineModesForMemberUser:(MVChatUser *) user;
 
 - (void) setModes:(NSUInteger) modes forMemberUser:(MVChatUser *) user;
 - (void) setMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user;
 - (void) removeMode:(MVChatRoomMemberMode) mode forMemberUser:(MVChatUser *) user;
+
+- (void) setDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user;
+- (void) removeDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user;
 @end
 
 #pragma mark -

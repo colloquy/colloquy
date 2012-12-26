@@ -1345,7 +1345,7 @@ end:
 			for( NSString *userString in users ) {
 				if( userString.length ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
-					if( user ) [room setMode:MVChatRoomMemberQuietedMode forMemberUser:user];
+					if( user ) [room setDisciplineMode:MVChatRoomMemberDisciplineQuietedMode forMemberUser:user];
 				}
 			}
 
@@ -1357,7 +1357,7 @@ end:
 			for( NSString *userString in users ) {
 				if( userString.length ) {
 					MVChatUser *user = [[room memberUsersWithNickname:userString] anyObject];
-					if( user ) [room removeMode:MVChatRoomMemberQuietedMode forMemberUser:user];
+					if( user ) [room removeDisciplineMode:MVChatRoomMemberDisciplineQuietedMode forMemberUser:user];
 				}
 			}
 

@@ -217,7 +217,7 @@
 			for( NSString *arg in args ) {
 				if( arg.length ) {
 					MVChatUser *user = [[room.target memberUsersWithNickname:arg] anyObject];
-					if( user ) [room.target setMode:MVChatRoomMemberQuietedMode forMemberUser:user];
+					if( user ) [room.target setDisciplineMode:MVChatRoomMemberDisciplineQuietedMode forMemberUser:user];
 				}
 			}
 			return YES;
@@ -226,7 +226,7 @@
 			for( NSString *arg in args ) {
 				if( arg.length ) {
 					MVChatUser *user = [[room.target memberUsersWithNickname:arg] anyObject];
-					if( user ) [room.target removeMode:MVChatRoomMemberQuietedMode forMemberUser:user];
+					if( user ) [room.target removeDisciplineMode:MVChatRoomMemberDisciplineQuietedMode forMemberUser:user];
 				}
 			}
 			return YES;

@@ -1406,7 +1406,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		} else {
 			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> had voice removed by <span class=\"member\">%@</span>.", "user no longer has special voice status and can't talk in moderated rooms status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		}
-	} else if( mode == MVChatRoomMemberQuietedMode && enabled ) {
+	} else if( mode == MVChatRoomMemberVoicedMode && enabled ) {
 		name = @"memberQuieted";
 		notificationKey = @"JVChatMemberQuieted";
 		title = NSLocalizedString( @"Room Member Quieted", "member quieted title" );
@@ -1422,7 +1422,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		} else {
 			message = [NSString stringWithFormat:NSLocalizedString( @"<span class=\"member\">%@</span> was quieted by <span class=\"member\">%@</span>.", "user was quieted by someone else in the room status message" ), ( mbr ? [[mbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities] ), ( byMbr ? [[byMbr title] stringByEncodingXMLSpecialCharactersAsEntities] : [[byUser nickname] stringByEncodingXMLSpecialCharactersAsEntities] )];
 		}
-	} else if( mode == MVChatRoomMemberQuietedMode && ! enabled ) {
+	} else if( mode == MVChatRoomMemberVoicedMode && ! enabled ) {
 		name = @"memberDequieted";
 		notificationKey = @"JVChatMemberDequieted";
 		title = NSLocalizedString( @"Quieted Room Member Annulled", "quieted member annulled title" );

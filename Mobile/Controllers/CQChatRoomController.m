@@ -706,7 +706,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		} else {
 			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ had voice removed by %@.", "User no longer has special voice status and can't talk in moderated rooms mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], [self _markupForMemberUser:byUser]];
 		}
-	} else if (mode == MVChatRoomMemberQuietedMode && enabled) {
+	} else if (mode == MVChatRoomMemberDisciplineQuietedMode && enabled) {
 		identifier = @"memberQuieted";
 		if (user.localUser && byUser.localUser) {
 			message = [NSLocalizedString(@"You quieted yourself.", "You quieted and can't talk ourself mode event message") stringByEncodingXMLSpecialCharactersAsEntities];
@@ -719,7 +719,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		} else {
 			message = [NSString stringWithFormat:[NSLocalizedString(@"%@ was quieted by %@.", "User was quieted by someone else in the room mode event message") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], [self _markupForMemberUser:byUser]];
 		}
-	} else if (mode == MVChatRoomMemberQuietedMode && !enabled) {
+	} else if (mode == MVChatRoomMemberDisciplineQuietedMode && !enabled) {
 		identifier = @"memberDequieted";
 		if (user.localUser && byUser.localUser) {
 			message = [NSLocalizedString(@"You made yourself no longer quieted.", "You are no longer quieted and can talk ourself mode event message") stringByEncodingXMLSpecialCharactersAsEntities];

@@ -61,6 +61,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 		_bannedUsers = [[NSMutableSet alloc] initWithCapacity:5];
 		_modeAttributes = [[NSMutableDictionary alloc] initWithCapacity:2];
 		_memberModes = [[NSMutableDictionary alloc] initWithCapacity:100];
+		_disciplineMemberModes = [[NSMutableDictionary alloc] initWithCapacity:100];
 		_encoding = NSUTF8StringEncoding;
 	}
 
@@ -83,6 +84,7 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	[_bannedUsers release];
 	[_modeAttributes release];
 	[_memberModes release];
+	[_disciplineMemberModes release];
 
 	[super dealloc];
 }
@@ -447,12 +449,24 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	return 0;
 }
 
+- (NSUInteger) supportedMemberDisciplineModes {
+	// subclass this method, if needed
+	return 0;
+}
+
 #pragma mark -
 
 - (NSUInteger) modesForMemberUser:(MVChatUser *) user {
 	NSParameterAssert( user != nil );
 	@synchronized( _memberModes ) {
 		return [[_memberModes objectForKey:[user uniqueIdentifier]] unsignedLongValue];
+	}
+}
+
+- (NSUInteger) disciplineModesForMemberUser:(MVChatUser *) user {
+	NSParameterAssert( user != nil );
+	@synchronized( _disciplineMemberModes ) {
+		return [[_disciplineMemberModes objectForKey:[user uniqueIdentifier]] unsignedLongValue];
 	}
 }
 
@@ -486,6 +500,18 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 // subclass this method, call super first
 }
 
+- (void) setDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user {
+	NSParameterAssert( user != nil );
+	NSParameterAssert( [self supportedMemberDisciplineModes] & mode );
+	// subclass this method, call super first
+}
+
+- (void) removeDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user {
+	NSParameterAssert( user != nil );
+	NSParameterAssert( [self supportedMemberDisciplineModes] & mode );
+	// subclass this method, call super first
+}
+
 #pragma mark -
 
 - (NSString *) description {
@@ -511,6 +537,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 		[_memberModes removeObjectForKey:[user uniqueIdentifier]];
 	} @synchronized( _memberUsers ) {
 		[_memberUsers removeObject:user];
+	} @synchronized( _disciplineMemberModes) {
+		[_disciplineMemberModes removeObjectForKey:[user uniqueIdentifier]];
 	}
 }
 
@@ -519,6 +547,8 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 		[_memberModes removeAllObjects];
 	} @synchronized( _memberUsers ) {
 		[_memberUsers removeAllObjects];
+	} @synchronized( _disciplineMemberModes) {
+		[_disciplineMemberModes removeAllObjects];
 	}
 }
 
@@ -557,6 +587,26 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 	@synchronized( _memberModes ) {
 		NSUInteger newModes = ( [[_memberModes objectForKey:[user uniqueIdentifier]] unsignedLongValue] & ~mode );
 		[_memberModes setObject:[NSNumber numberWithUnsignedLong:newModes] forKey:[user uniqueIdentifier]];
+	}
+}
+
+- (void) _setDisciplineModes:(NSUInteger) modes forMemberUser:(MVChatUser *) user {
+	@synchronized( _disciplineMemberModes ) {
+		[_disciplineMemberModes setObject:[NSNumber numberWithUnsignedLong:modes] forKey:[user uniqueIdentifier]];
+	}
+}
+
+- (void) _setDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user {
+	@synchronized( _disciplineMemberModes ) {
+		NSUInteger newModes = ( [[_disciplineMemberModes objectForKey:[user uniqueIdentifier]] unsignedLongValue] | mode );
+		[_disciplineMemberModes setObject:[NSNumber numberWithUnsignedLong:newModes] forKey:[user uniqueIdentifier]];
+	}
+}
+
+- (void) _removeDisciplineMode:(MVChatRoomMemberDisciplineMode) mode forMemberUser:(MVChatUser *) user {
+	@synchronized( _disciplineMemberModes ) {
+		NSUInteger newModes = ( [[_disciplineMemberModes objectForKey:[user uniqueIdentifier]] unsignedLongValue] & ~mode );
+		[_disciplineMemberModes setObject:[NSNumber numberWithUnsignedLong:newModes] forKey:[user uniqueIdentifier]];
 	}
 }
 
@@ -607,10 +657,20 @@ NSString *MVChatRoomAttributeUpdatedNotification = @"MVChatRoomAttributeUpdatedN
 - (void) _updateMemberUser:(MVChatUser *) user fromOldUniqueIdentifier:(id) identifier {
 	@synchronized( _memberModes ) {
 		NSNumber *userModes = [[_memberModes objectForKey:identifier] retain];
-		if( ! userModes ) return;
-		[_memberModes removeObjectForKey:identifier];
-		[_memberModes setObject:userModes forKey:[user uniqueIdentifier]];
-		[userModes release];
+		if( userModes ) {
+			[_memberModes removeObjectForKey:identifier];
+			[_memberModes setObject:userModes forKey:[user uniqueIdentifier]];
+			[userModes release];
+		}
+	}
+
+	@synchronized( _disciplineMemberModes ) {
+		NSNumber *userModes = [[_disciplineMemberModes objectForKey:identifier] retain];
+		if( userModes ) {
+			[_disciplineMemberModes removeObjectForKey:identifier];
+			[_disciplineMemberModes setObject:userModes forKey:[user uniqueIdentifier]];
+			[userModes release];
+		}
 	}
 }
 @end
