@@ -1315,10 +1315,12 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 	NSString *search = [[[send textStorage] string] substringWithRange:charRange];
 	NSMutableArray *ret = [NSMutableArray array];
 	NSString *suffix = ( ! ( [event modifierFlags] & NSAlternateKeyMask ) ? ( charRange.location == 0 ? @": " : @" " ) : @"" );
+	NSString *comparison = [[[self user] nickname] substringToIndex:[search length]];
 
-	if( [search length] <= [[self title] length] && [search caseInsensitiveCompare:[[[self user] nickname] substringToIndex:[search length]]] == NSOrderedSame )
+	if( [search length] <= [[self title] length] && comparison && [search caseInsensitiveCompare:comparison] == NSOrderedSame )
 		[ret addObject:[[self title] stringByAppendingString:suffix]];
-	if( [search length] <= [[[self connection] nickname] length] && [search caseInsensitiveCompare:[[[self connection] nickname] substringToIndex:[search length]]] == NSOrderedSame )
+	comparison = [[[self connection] nickname] substringToIndex:[search length]];
+	if( [search length] <= [[[self connection] nickname] length] && comparison && [search caseInsensitiveCompare:comparison] == NSOrderedSame )
 		[ret addObject:[[[self connection] nickname] stringByAppendingString:suffix]];
 
 	unichar chr = 0;
