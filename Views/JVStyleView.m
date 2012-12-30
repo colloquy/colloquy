@@ -807,9 +807,11 @@ NSString *JVStyleViewDidChangeStylesNotification = @"JVStyleViewDidChangeStylesN
 
 - (void) _switchStyle {
 	@autoreleasepool {
-		[NSThread setThreadPriority:0.25];
+		if (![NSThread isMainThread]) {
+			[NSThread setThreadPriority:0.25];
 
-		[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.00025]]; // wait, WebKit might not be ready.
+			[NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.00025]]; // wait, WebKit might not be ready.
+		}
 
 		JVStyle *style = [self style];
 		JVChatTranscript *transcript = [self transcript];
