@@ -39,7 +39,6 @@
 	_friendlyName = [friendlyName copy];
 	_permanent = permanent;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(<#selector#>) name:MVChatUserNicknameChangedNotification object:nil];
 	return self;
 }
 

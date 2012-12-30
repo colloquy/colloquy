@@ -307,13 +307,13 @@
 		89EB91AA0F269BEF0028B3E3 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89EB91A90F269BEF0028B3E3 /* Sparkle.framework */; };
 		9200338D13D92515005B69BA /* MVFileTransfer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 9200338B13D92515005B69BA /* MVFileTransfer.nib */; };
 		9220565E11018298005CD72D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9220565D11018298005CD72D /* NSDateAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		92823CF2168FFA0A000EC36E /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CF1168FFA0A000EC36E /* KAIgnoreRule.m */; };
 		928FB03113EE643E00A0DF4B /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 928FB03013EE643E00A0DF4B /* NSStringAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		928FB03413EE648400A0DF4B /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 928FB03313EE648400A0DF4B /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		928FB03613EE64C700A0DF4B /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 928FB03513EE64C700A0DF4B /* libicucore.dylib */; };
 		9295C85D1675E227009F9014 /* ChatCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEEAB16095BD23100166A54 /* ChatCore.framework */; };
 		CB66DEA20631F8160034F76E /* Keychain.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA00631F8160034F76E /* Keychain.png */; };
 		CB66DEA30631F8160034F76E /* Stickies.png in Resources */ = {isa = PBXBuildFile; fileRef = CB66DEA10631F8160034F76E /* Stickies.png */; };
-		CB742C020630E08200CF2B0E /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = CB742C000630E08200CF2B0E /* KAIgnoreRule.m */; };
 		CBF6855D08201B7300F498FB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CBF6852D0820190D00F498FB /* InfoPlist.strings */; };
 		CBF6855E08201B7300F498FB /* schema.strings in Resources */ = {isa = PBXBuildFile; fileRef = CBF6852F0820190D00F498FB /* schema.strings */; };
 		CBF6855F08201B7300F498FB /* schema.xml in Resources */ = {isa = PBXBuildFile; fileRef = CBF685340820190D00F498FB /* schema.xml */; };
@@ -889,6 +889,8 @@
 		9200339E13D9258A005B69BA /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Languages/zh_TW.lproj/MVFileTransfer.nib; sourceTree = "<group>"; };
 		9220565C11018298005CD72D /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		9220565D11018298005CD72D /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDateAdditions.m; path = Additions/NSDateAdditions.m; sourceTree = "<group>"; };
+		92823CF0168FFA0A000EC36E /* KAIgnoreRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KAIgnoreRule.h; path = Shared/Models/KAIgnoreRule.h; sourceTree = "<group>"; };
+		92823CF1168FFA0A000EC36E /* KAIgnoreRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KAIgnoreRule.m; path = Shared/Models/KAIgnoreRule.m; sourceTree = "<group>"; };
 		928FB02F13EE643E00A0DF4B /* NSStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSStringAdditions.h; path = Additions/NSStringAdditions.h; sourceTree = "<group>"; };
 		928FB03013EE643E00A0DF4B /* NSStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSStringAdditions.m; path = Additions/NSStringAdditions.m; sourceTree = "<group>"; };
 		928FB03213EE648400A0DF4B /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegexKitLite.h; path = "Chat Core/RegexKitLite.h"; sourceTree = "<group>"; };
@@ -1029,8 +1031,6 @@
 		A1E1610309228E4F004920E8 /* French */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = French; path = Languages/French.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CB66DEA00631F8160034F76E /* Keychain.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Keychain.png; path = Resources/Keychain.png; sourceTree = "<group>"; };
 		CB66DEA10631F8160034F76E /* Stickies.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Stickies.png; path = Resources/Stickies.png; sourceTree = "<group>"; };
-		CB742BFF0630E08200CF2B0E /* KAIgnoreRule.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = KAIgnoreRule.h; path = Models/KAIgnoreRule.h; sourceTree = "<group>"; };
-		CB742C000630E08200CF2B0E /* KAIgnoreRule.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = KAIgnoreRule.m; path = Models/KAIgnoreRule.m; sourceTree = "<group>"; };
 		CBF685150820186F00F498FB /* Colloquy.mdimporter */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Colloquy.mdimporter; sourceTree = BUILT_PRODUCTS_DIR; };
 		CBF6852E0820190D00F498FB /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = InfoPlist.strings; sourceTree = "<group>"; };
 		CBF685300820190D00F498FB /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = schema.strings; sourceTree = "<group>"; };
@@ -1540,8 +1540,8 @@
 				1CD733C905A0E2470080F952 /* JVChatMessage.h */,
 				1C5EF35907B45C1F004E66D3 /* JVChatEvent.m */,
 				1C5EF35807B45C1F004E66D3 /* JVChatEvent.h */,
-				CB742C000630E08200CF2B0E /* KAIgnoreRule.m */,
-				CB742BFF0630E08200CF2B0E /* KAIgnoreRule.h */,
+				92823CF1168FFA0A000EC36E /* KAIgnoreRule.m */,
+				92823CF0168FFA0A000EC36E /* KAIgnoreRule.h */,
 				F551EE490209FB3301EE70DE /* MVKeyChain.m */,
 				F551EE4A0209FB3301EE70DE /* MVKeyChain.h */,
 			);
@@ -2474,7 +2474,6 @@
 				1C9982B90604D94C006C6417 /* JVNotificationController.m in Sources */,
 				1CB37172060CC7E200F6A81F /* KABubbleWindowController.m in Sources */,
 				1CB3717A060CC81C00F6A81F /* KABubbleWindowView.m in Sources */,
-				CB742C020630E08200CF2B0E /* KAIgnoreRule.m in Sources */,
 				1C94370B0639F86700618CD9 /* JVMarkedScroller.m in Sources */,
 				1C06052606471FFB002438AF /* JVMixedTableColumn.m in Sources */,
 				1C06077C064A5DE8002438AF /* JVColorWellCell.m in Sources */,
@@ -2517,6 +2516,7 @@
 				891E8467123F0AEF00EC3C0F /* NSCharacterSetAdditions.m in Sources */,
 				928FB03113EE643E00A0DF4B /* NSStringAdditions.m in Sources */,
 				928FB03413EE648400A0DF4B /* RegexKitLite.m in Sources */,
+				92823CF2168FFA0A000EC36E /* KAIgnoreRule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
