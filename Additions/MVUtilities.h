@@ -49,10 +49,12 @@
 
 #define MVAutoreleasedReturn(var) \
 	return [var autorelease];
+
+#define MVAutorelease(var) \
+	[var autorelease];
 #else
 #define MVSafeAdoptAssign(var, newExpression) \
 { \
-	id old = (var); \
 	id new = (newExpression); \
 	(var) = new; \
 }
@@ -78,6 +80,9 @@
 
 #define MVAutoreleasedReturn(var) \
 	return var
+
+#define MVAutorelease(var) \
+	(var)
 #endif
 
 #define MVAssertMainThreadRequired() \

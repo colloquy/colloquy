@@ -89,7 +89,7 @@
 #pragma mark -
 
 - (NSString *) description {
-	NSString *description = [[[super description] copy] autorelease];
+	NSString *description = MVAutorelease([[super description] copy]);
 	return [description stringByAppendingFormat:@" permanent: %d, user: %@, mask: %@, message: %@, rooms: %@", _permanent, _ignoredUser, _ignoreMask, _ignoredMessage, _rooms];
 }
 
