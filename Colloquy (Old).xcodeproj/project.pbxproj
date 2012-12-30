@@ -3034,6 +3034,10 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREFIX_HEADER = Basic.pch;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/Frameworks\"",
+					Shared/Models,
+				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
 				PRODUCT_NAME = "Standard Commands";
 				WRAPPER_EXTENSION = plugin;
@@ -3108,6 +3112,10 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREFIX_HEADER = Basic.pch;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/Frameworks\"",
+					Shared/Models,
+				);
 				INFOPLIST_FILE = "Resources/Info-StandardCommands.plist";
 				PRODUCT_NAME = "Standard Commands";
 				WRAPPER_EXTENSION = plugin;

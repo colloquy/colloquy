@@ -18,6 +18,8 @@
 #import "NSURLAdditions.h"
 #import "NSDateAdditions.h"
 
+#import <AGRegex/AGRegex.h>
+
 NSString *JVToolbarChooseStyleItemIdentifier = @"JVToolbarChooseStyleItem";
 NSString *JVToolbarEmoticonsItemIdentifier = @"JVToolbarEmoticonsItem";
 NSString *JVToolbarFindItemIdentifier = @"JVToolbarFindItem";

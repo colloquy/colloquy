@@ -1,5 +1,6 @@
 #import "JVChatWindowController.h"
 
+@class AGRegex;
 @class JVStyleView;
 @class MVMenuButton;
 @class JVStyle;

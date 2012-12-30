@@ -15,30 +15,30 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		9295C9781678301E009F9014 /* PBXContainerItemProxy */ = {
+		92823D2916900FDA000EC36E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 9295C9701678301D009F9014 /* Colloquy (Old).xcodeproj */;
+			containerPortal = 92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 1CB2CD8C052DDC570094AAA4;
 			remoteInfo = "Colloquy (Application)";
 		};
-		9295C97A1678301E009F9014 /* PBXContainerItemProxy */ = {
+		92823D2B16900FDA000EC36E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 9295C9701678301D009F9014 /* Colloquy (Old).xcodeproj */;
+			containerPortal = 92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 1C51B4CD052DE14B00BB459B;
 			remoteInfo = "Standard Commands (Plug-In)";
 		};
-		9295C97C1678301E009F9014 /* PBXContainerItemProxy */ = {
+		92823D2D16900FDA000EC36E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 9295C9701678301D009F9014 /* Colloquy (Old).xcodeproj */;
+			containerPortal = 92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = CBF685150820186F00F498FB;
 			remoteInfo = "Colloquy (Metadata Importer)";
 		};
-		9295C97F1678302A009F9014 /* PBXContainerItemProxy */ = {
+		92823D2F16900FDE000EC36E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 9295C9701678301D009F9014 /* Colloquy (Old).xcodeproj */;
+			containerPortal = 92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 1CB2CCF5052DDC560094AAA4;
 			remoteInfo = "Colloquy (Application)";
@@ -59,7 +59,7 @@
 		1C9AE943086A59F5008ED7AD /* Common Settings.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Common Settings.xcconfig"; path = "../../Settings/Common Settings.xcconfig"; sourceTree = "<group>"; };
 		8D5B49B6048680CD000E48DA /* Python Support.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Python Support.plugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D5B49B7048680CD000E48DA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
-		9295C9701678301D009F9014 /* Colloquy (Old).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Colloquy (Old).xcodeproj"; path = "/Users/zach/Desktop/Colloquy-AppleScript/Colloquy (Old).xcodeproj"; sourceTree = "<absolute>"; };
+		92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Colloquy (Old).xcodeproj"; path = "/Users/zach/Desktop/Colloquy-For-Reverts/Colloquy (Old).xcodeproj"; sourceTree = "<absolute>"; };
 		9295C9811678302E009F9014 /* ChatCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChatCore.framework; path = ../../build/Development/ChatCore.framework; sourceTree = "<group>"; };
 		A1F6108B0957E4BB001B65CD /* zh_TW */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -80,8 +80,8 @@
 		089C166AFE841209C02AAC07 /* FScript Plugin */ = {
 			isa = PBXGroup;
 			children = (
+				92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */,
 				9295C9811678302E009F9014 /* ChatCore.framework */,
-				9295C9701678301D009F9014 /* Colloquy (Old).xcodeproj */,
 				1C415F690B35122700239EB3 /* Template.py */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				32C88E010371C26100C91783 /* Other Sources */,
@@ -175,12 +175,12 @@
 			tabWidth = 4;
 			usesTabs = 1;
 		};
-		9295C9711678301D009F9014 /* Products */ = {
+		92823D2316900FDA000EC36E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9295C9791678301E009F9014 /* Colloquy.app */,
-				9295C97B1678301E009F9014 /* Standard Commands.plugin */,
-				9295C97D1678301E009F9014 /* Colloquy.mdimporter */,
+				92823D2A16900FDA000EC36E /* Colloquy.app */,
+				92823D2C16900FDA000EC36E /* Standard Commands.plugin */,
+				92823D2E16900FDA000EC36E /* Colloquy.mdimporter */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -199,7 +199,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				9295C9801678302A009F9014 /* PBXTargetDependency */,
+				92823D3016900FDE000EC36E /* PBXTargetDependency */,
 			);
 			name = "Python Support Plugin";
 			productInstallPath = "$(HOME)/Library/Bundles";
@@ -227,8 +227,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 9295C9711678301D009F9014 /* Products */;
-					ProjectRef = 9295C9701678301D009F9014 /* Colloquy (Old).xcodeproj */;
+					ProductGroup = 92823D2316900FDA000EC36E /* Products */;
+					ProjectRef = 92823D2216900FDA000EC36E /* Colloquy (Old).xcodeproj */;
 				},
 			);
 			projectRoot = ../..;
@@ -239,25 +239,25 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		9295C9791678301E009F9014 /* Colloquy.app */ = {
+		92823D2A16900FDA000EC36E /* Colloquy.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = Colloquy.app;
-			remoteRef = 9295C9781678301E009F9014 /* PBXContainerItemProxy */;
+			remoteRef = 92823D2916900FDA000EC36E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		9295C97B1678301E009F9014 /* Standard Commands.plugin */ = {
+		92823D2C16900FDA000EC36E /* Standard Commands.plugin */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "Standard Commands.plugin";
-			remoteRef = 9295C97A1678301E009F9014 /* PBXContainerItemProxy */;
+			remoteRef = 92823D2B16900FDA000EC36E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		9295C97D1678301E009F9014 /* Colloquy.mdimporter */ = {
+		92823D2E16900FDA000EC36E /* Colloquy.mdimporter */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = Colloquy.mdimporter;
-			remoteRef = 9295C97C1678301E009F9014 /* PBXContainerItemProxy */;
+			remoteRef = 92823D2D16900FDA000EC36E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -286,10 +286,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		9295C9801678302A009F9014 /* PBXTargetDependency */ = {
+		92823D3016900FDE000EC36E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Colloquy (Application)";
-			targetProxy = 9295C97F1678302A009F9014 /* PBXContainerItemProxy */;
+			targetProxy = 92823D2F16900FDE000EC36E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -322,6 +322,7 @@
 					../../Models,
 					../../Panels,
 					../../Views,
+					../../Shared/Models,
 				);
 				INFOPLIST_FILE = Info.plist;
 				OTHER_LDFLAGS = (
@@ -349,6 +350,7 @@
 					../../Models,
 					../../Panels,
 					../../Views,
+					../../Shared/Models,
 				);
 				INFOPLIST_FILE = Info.plist;
 				OTHER_LDFLAGS = (
