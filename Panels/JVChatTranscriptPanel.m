@@ -496,6 +496,7 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		[button setImage:[NSImage imageNamed:@"chooseStyle"]];
 		[button setDrawsArrow:YES];
 		[button setMenu:_styleMenu];
+		[button setRetina:(self.window.backingScaleFactor > 1.0)];
 
 		[toolbarItem setToolTip:NSLocalizedString( @"Change chat style", "choose style toolbar item tooltip" )];
 		[button setToolbarItem:toolbarItem];
@@ -512,36 +513,36 @@ NSString *JVToolbarQuickSearchItemIdentifier = @"JVToolbarQuickSearchItem";
 		[toolbarItem setMenuFormRepresentation:menuItem];
 
 		return toolbarItem;
-	} else if( [identifier isEqualToString:JVToolbarEmoticonsItemIdentifier] && ! willBeInserted ) {
+	} else if( [identifier isEqualToString:JVToolbarEmoticonsItemIdentifier]) {
 		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 		[toolbarItem setLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item label" )];
 		[toolbarItem setPaletteLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item patlette label" )];
-		[toolbarItem setImage:[NSImage imageNamed:@"emoticon"]];
-		return toolbarItem;
-	} else if( [identifier isEqualToString:JVToolbarEmoticonsItemIdentifier] && willBeInserted ) {
-		NSToolbarItem *toolbarItem = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
 
-		[toolbarItem setLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item label" )];
-		[toolbarItem setPaletteLabel:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item patlette label" )];
+		NSImage *image = [NSImage imageNamed:@"emoticon.png"];
 
-		MVMenuButton *button = [[MVMenuButton alloc] initWithFrame:NSMakeRect( 0., 0., 32., 32. )];
-		[button setImage:[NSImage imageNamed:@"emoticon"]];
-		[button setDrawsArrow:YES];
-		[button setMenu:_emoticonMenu];
+		if ( willBeInserted ) {
+			MVMenuButton *button = [[MVMenuButton alloc] initWithFrame:NSMakeRect( 0., 0., 32., 32. )];
+			[button setRetina:(self.window.backingScaleFactor > 1.0)];
+			[button setImage:image];
+			[button setDrawsArrow:YES];
+			[button setMenu:_emoticonMenu];
 
-		[toolbarItem setToolTip:NSLocalizedString( @"Change Emoticons", "choose emoticons toolbar item tooltip" )];
-		[button setToolbarItem:toolbarItem];
-		[toolbarItem setTarget:self];
-		[toolbarItem setView:button];
+			[toolbarItem setToolTip:NSLocalizedString( @"Change Emoticons", "choose emoticons toolbar item tooltip" )];
+			[button setToolbarItem:toolbarItem];
+			[toolbarItem setTarget:self];
+			[toolbarItem setView:button];
 
-		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item menu representation title" ) action:NULL keyEquivalent:@""];
-		NSImage *icon = [[NSImage imageNamed:@"emoticon"] copy];
-		[icon setScalesWhenResized:YES];
-		[icon setSize:NSMakeSize( 16., 16. )];
-		[menuItem setImage:icon];
-		[menuItem setSubmenu:_emoticonMenu];
+			NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString( @"Emoticons", "choose emoticons toolbar item menu representation title" ) action:NULL keyEquivalent:@""];
+			NSImage *icon = [image copy];
+			[icon setScalesWhenResized:YES];
+			[icon setSize:NSMakeSize( 16., 16. )];
+			[menuItem setImage:icon];
+			[menuItem setSubmenu:_emoticonMenu];
 
-		[toolbarItem setMenuFormRepresentation:menuItem];
+			[toolbarItem setMenuFormRepresentation:menuItem];
+		} else {
+			[toolbarItem setImage:image];
+		}
 
 		return toolbarItem;
 	}

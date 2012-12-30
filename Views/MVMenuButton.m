@@ -1,9 +1,11 @@
 #import "MVMenuButton.h"
 
 @implementation MVMenuButton
-- (void) encodeWithCoder:(NSCoder *) coder {
-	[super encodeWithCoder:coder];
-}
+@synthesize controlSize = _controlSize;
+@synthesize smallImage = _smallImage;
+@synthesize toolbarItem = _toolbarItem;
+@synthesize drawsArrow = _drawsArrow;
+@synthesize retina = _retina;
 
 - (id) initWithFrame:(NSRect) frame {
 	if( ( self = [super initWithFrame:frame] ) ) {
@@ -24,26 +26,19 @@
 	return self;
 }
 
-- (void) dealloc {
-
-	_orgImage = nil;
-	_smallImage = nil;
-	_toolbarItem = nil;
-
-}
-
 - (void) drawRect:(NSRect) rect {
     [super drawRect:rect];
 
     if( [self drawsArrow] ) {
 	    NSBezierPath *path = [NSBezierPath bezierPath];
 
+		NSRect backingRect = [self convertRectToBacking:[self frame]];
 		if( _size == NSRegularControlSize ) {
-			[path moveToPoint:NSMakePoint( NSWidth( [self frame] ) - 6, NSHeight( [self frame] ) - 3 )];
+			[path moveToPoint:NSMakePoint( NSWidth( backingRect ) - 6, NSHeight( backingRect ) - 3 )];
 			[path relativeLineToPoint:NSMakePoint( 6, 0 )];
 			[path relativeLineToPoint:NSMakePoint( -3, 3 )];
 		} else if( _size == NSSmallControlSize ) {
-			[path moveToPoint:NSMakePoint( NSWidth( [self frame] ) - 4, NSHeight( [self frame] ) - 3 )];
+			[path moveToPoint:NSMakePoint( NSWidth( backingRect ) - 4, NSHeight( backingRect ) - 3 )];
 			[path relativeLineToPoint:NSMakePoint( 4, 0 )];
 			[path relativeLineToPoint:NSMakePoint( -2, 3 )];
 		}
@@ -88,7 +83,7 @@
 
 - (void) setControlSize:(NSControlSize) controlSize {
 	if( ! _orgImage ) _orgImage = [[self image] copy];
-	if( controlSize == NSRegularControlSize ) {
+	if( controlSize == NSRegularControlSize || _retina ) {
 		[super setImage:_orgImage];
 		[_toolbarItem setMinSize:NSMakeSize( 32., 32. )];
 		[_toolbarItem setMaxSize:NSMakeSize( 32., 32. )];
@@ -122,30 +117,6 @@
 
 	if( _size == NSRegularControlSize ) [super setImage:image];
 	else if( _size == NSSmallControlSize ) [super setImage:_smallImage];
-}
-
-- (NSImage *) smallImage {
-	return _smallImage;
-}
-
-- (void) setSmallImage:(NSImage *) image {
-	_smallImage = [image copy];
-}
-
-- (NSToolbarItem *) toolbarItem {
-	return _toolbarItem;
-}
-
-- (void) setToolbarItem:(NSToolbarItem *) item {
-	_toolbarItem = item;
-}
-
-- (BOOL) drawsArrow {
-	return _drawsArrow;
-}
-
-- (void) setDrawsArrow:(BOOL) arrow {
-	_drawsArrow = arrow;
 }
 
 - (id) accessibilityAttributeValue:(NSString *) attribute {
