@@ -521,7 +521,6 @@ static NSMenu *smartTranscriptMenu = nil;
 
 	if( ! [[MVConnectionsController defaultController] managesConnection:[user connection]] ) return;
 
-	NSLog(@"shouldIgnore: %d", [self shouldIgnoreUser:user withMessage:nil inView:nil] == JVNotIgnored);
 	if( ( [self shouldIgnoreUser:user withMessage:nil inView:nil] == JVNotIgnored ) ) {
 		JVDirectChatPanel *controller = [self chatViewControllerForDirectChatConnection:connection ifExists:NO userInitiated:NO];
 		[controller addMessageToDisplay:message fromUser:user withAttributes:[notification userInfo] withIdentifier:[[notification userInfo] objectForKey:@"identifier"] andType:JVChatMessageNormalType];
@@ -581,8 +580,6 @@ static NSMenu *smartTranscriptMenu = nil;
 		}
 	}
 
-	NSLog(@"hideFromUser: %d", hideFromUser);
-	NSLog(@"shouldIgnore: %d", [self shouldIgnoreUser:user withMessage:nil inView:nil] == JVNotIgnored);
 	if( ! hideFromUser && ( [self shouldIgnoreUser:user withMessage:nil inView:nil] == JVNotIgnored ) ) {
 		JVDirectChatPanel *controller = [self chatViewControllerForUser:user ifExists:NO userInitiated:NO];
 		JVChatMessageType type = ( [[[notification userInfo] objectForKey:@"notice"] boolValue] ? JVChatMessageNoticeType : JVChatMessageNormalType );
