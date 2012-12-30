@@ -39,6 +39,7 @@
 	_friendlyName = [friendlyName copy];
 	_permanent = permanent;
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(<#selector#>) name:MVChatUserNicknameChangedNotification object:nil];
 	return self;
 }
 
@@ -87,6 +88,11 @@
 #endif
 
 #pragma mark -
+
+- (NSString *) description {
+	NSString *description = [[[super description] copy] autorelease];
+	return [description stringByAppendingFormat:@" permanent: %d, user: %@, mask: %@, message: %@, rooms: %@", _permanent, _ignoredUser, _ignoreMask, _ignoredMessage, _rooms];
+}
 
 - (BOOL) isEqual:(id) object {
 	if (![object isKindOfClass:[self class]])

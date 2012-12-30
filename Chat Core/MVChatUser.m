@@ -306,6 +306,10 @@ NSString *MVChatUserAttributeUpdatedNotification = @"MVChatUserAttributeUpdatedN
 	return _serverAddress;
 }
 
+- (NSString *) maskRepresentation {
+	return nil;
+}
+
 #pragma mark -
 
 - (id) uniqueIdentifier {

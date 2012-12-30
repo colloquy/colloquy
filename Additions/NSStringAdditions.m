@@ -1078,6 +1078,41 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 
 #pragma mark -
 
+- (NSArray *) _IRCComponents {
+	NSArray *components = [self componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"!@ "]];
+
+	// given "nickname!username@hostmask realname", we want to get "nickname", "username", "hostmask" and "realname" back
+	if (components.count == 3 || components.count == 4)
+		return components;
+	return nil;
+}
+
+- (BOOL) isValidIRCMask {
+	// if we have a nickname matched, we have a valid IRC mask
+	return self.IRCNickname.length;
+}
+
+- (NSString *) IRCNickname {
+	return [self._IRCComponents objectAtIndex:0];
+}
+
+- (NSString *) IRCUsername {
+	return [self._IRCComponents objectAtIndex:1];
+}
+
+- (NSString *) IRCHostname {
+	return [self._IRCComponents objectAtIndex:2];
+}
+
+- (NSString *) IRCRealname {
+	NSArray *components = self._IRCComponents;
+	if (components.count == 4)
+		return [components objectAtIndex:3];
+	return nil;
+}
+
+#pragma mark -
+
 static NSCharacterSet *emojiCharacters;
 static NSCharacterSet *typicalEmoticonCharacters;
 
@@ -1397,5 +1432,9 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 		emojiRange = [self rangeOfEmojiCharactersInRange:NSMakeRange(emojiRange.location + 1, (NSMaxRange(*range) - emojiRange.location - 1))];
 	}
+}
+
+- (void) replaceStrings:(NSArray *) strings withStrings:(NSArray *) replacementStrings {
+	
 }
 @end

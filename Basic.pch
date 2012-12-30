@@ -1,13 +1,15 @@
 #import <Availability.h>
 
 #define ENABLE(FEATURE) (defined(ENABLE_##FEATURE) && ENABLE_##FEATURE)
+#define SYSTEM(NAME) (defined(SYSTEM_##NAME) && SYSTEM_##NAME)
+
+#define SYSTEM_MAC 1
 
 #ifdef __OBJC__
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 	#import <Foundation/Foundation.h>
 #else
 	#import <Cocoa/Cocoa.h>
-	#import <Foundation/NSDebug.h>
 
 	CF_EXPORT CFRunLoopRef CFRunLoopGetMain(void);
 

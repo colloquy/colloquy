@@ -8,9 +8,11 @@
 #import "CQChatTableCell.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
+#import "CQIgnoreRulesController.h"
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
 #import "CQUserInfoController.h"
+#import "KAIgnoreRule.h"
 #import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
@@ -73,7 +75,7 @@ static BOOL showingKeyboard;
 	localNotificationOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLocalNotificationOnHighlight"];
 	localNotificationOnPrivateMessage = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLocalNotificationOnPrivateMessage"];
 
-	NSInteger newScrollbackLength = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQScrollbackLength"];
+	NSUInteger newScrollbackLength = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQScrollbackLength"];
 	if (newScrollbackLength != scrollbackLength) {
 		scrollbackLength = newScrollbackLength;
 
@@ -524,7 +526,8 @@ static BOOL showingKeyboard;
 #if ENABLE(FILE_TRANSFERS)
 		@"/dcc",
 #endif
-		@"/aaway", @"/anick", @"/aquit", @"/amsg", @"/ame", @"/google", @"/wikipedia", @"/amazon", @"/safari", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/ipod", @"/music", @"/squit", @"/welcome", @"/sysinfo", nil];
+		@"/aaway", @"/anick", @"/aquit", @"/amsg", @"/ame", @"/google", @"/wikipedia", @"/amazon", @"/safari", @"/browser", @"/url", @"/clear", @"/nickserv", @"/chanserv", @"/help", @"/faq", @"/search", @"/ipod", @"/music", @"/squit", @"/welcome", @"/sysinfo",
+		@"/ignore", @"/unignore", nil];
 
 		for (NSString *command in commands) {
 			if ([command hasCaseInsensitivePrefix:word] && ![command isCaseInsensitiveEqualToString:word])
@@ -1089,6 +1092,26 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
+- (BOOL) handleIgnoreCommandWithArguments:(NSString *) arguments {
+	KAIgnoreRule *ignoreRule = nil;
+
+	if (arguments.isValidIRCMask)
+		ignoreRule = [KAIgnoreRule ruleForUser:nil mask:arguments message:nil inRooms:nil isPermanent:YES friendlyName:nil];
+	else ignoreRule = [KAIgnoreRule ruleForUser:arguments mask:nil message:nil inRooms:nil isPermanent:YES friendlyName:nil];
+
+	[self.connection.ignoreController addIgnoreRule:ignoreRule];
+
+	return YES;
+}
+
+- (BOOL) handleUnignoreCommandWithArguments:(NSString *) arguments {
+	[self.connection.ignoreController removeIgnoreRuleFromString:arguments];
+
+	return YES;
+}
+
+#pragma mark -
+
 - (BOOL) handleTokenCommandWithArguments:(NSString *) arguments {
 #if !TARGET_IPHONE_SIMULATOR
 	if (![CQColloquyApplication sharedApplication].deviceToken.length) {
@@ -1292,6 +1315,7 @@ static BOOL showingKeyboard;
 	operation.highlightNickname = self.connection.nickname;
 	operation.encoding = self.encoding;
 	operation.fallbackEncoding = self.connection.encoding;
+	operation.ignoreController = self.connection.ignoreController;
 
 	operation.target = self;
 	operation.action = @selector(_messageProcessed:);

@@ -39,6 +39,12 @@
 
 #pragma mark -
 
+- (NSString *) maskRepresentation {
+	return [NSString stringWithFormat:@"%@!%@@%@", self.nickname, self.username, self.address];
+}
+
+#pragma mark -
+
 - (NSUInteger) supportedModes {
 	return MVChatUserInvisibleMode;
 }

@@ -1,6 +1,7 @@
 #import "CQProcessChatMessageOperation.h"
 
 #import "CQColloquyApplication.h"
+#import "CQIgnoreRulesController.h"
 
 #import "NSStringAdditions.h"
 
@@ -10,6 +11,8 @@ static BOOL graphicalEmoticons;
 static BOOL stripMessageFormatting;
 
 @implementation CQProcessChatMessageOperation
+@synthesize ignoreController = _ignoreController;
+
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -212,10 +215,13 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	}
 
 	NSMutableString *messageString = [self _processMessageData:[_message objectForKey:@"message"]];
+	MVChatUser *user = [_message objectForKey:@"user"];
+
+	if ([_ignoreController shouldIgnoreMessage:messageString fromUser:user inRoom:_target])
+		return;
 
 	BOOL highlighted = NO;
 
-	MVChatUser *user = [_message objectForKey:@"user"];
 	if (user && !user.localUser && highlightWords.count) {
 		NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 		NSString *stylelessMessageString = [messageString stringByStrippingXMLTags];

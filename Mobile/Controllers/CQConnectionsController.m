@@ -13,6 +13,7 @@
 #import "CQConnectionCreationViewController.h"
 #import "CQConnectionEditViewController.h"
 #import "CQConnectionsViewController.h"
+#import "CQIgnoreRulesController.h"
 #import "CQKeychain.h"
 
 #import "dlfcn.h"
@@ -126,6 +127,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	_directConnections = [[NSMutableArray alloc] initWithCapacity:5];
 	_bouncerConnections = [[NSMutableSet alloc] initWithCapacity:2];
 	_bouncerChatConnections = [[NSMutableDictionary alloc] initWithCapacity:2];
+	_ignoreControllers = [[NSMutableDictionary alloc] initWithCapacity:2];
 
 	[self _loadConnectionList];
 
@@ -148,6 +150,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[_bouncerChatConnections release];
 	[_timeRemainingLocalNotifiction release];
 	[_automaticallySetConnectionAwayStatus release];
+	[_ignoreControllers release];
 
 	[super dealloc];
 }
@@ -1495,6 +1498,24 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 #pragma mark -
 
+- (CQIgnoreRulesController *) ignoreControllerForConnection:(MVChatConnection *) connection {
+	@synchronized(_ignoreControllers) {
+		CQIgnoreRulesController *ignoreController = [_ignoreControllers objectForKey:connection.uniqueIdentifier];
+		if (ignoreController)
+			return ignoreController;
+
+		ignoreController = [[CQIgnoreRulesController alloc] initWithConnection:connection];
+
+		[_ignoreControllers setObject:ignoreController forKey:connection.uniqueIdentifier];
+
+		[ignoreController release];
+
+		return ignoreController;
+	}
+}
+
+#pragma mark -
+
 - (CQBouncerSettings *) bouncerSettingsForIdentifier:(NSString *) identifier {
 	for (CQBouncerSettings *bouncer in _bouncers)
 		if ([bouncer.identifier isEqualToString:identifier])
@@ -1760,6 +1781,12 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 - (NSString *) bouncerIdentifier {
 	return [self persistentInformationObjectForKey:@"bouncerIdentifier"];
+}
+
+#pragma mark -
+
+- (CQIgnoreRulesController *) ignoreController {
+	return [[CQConnectionsController defaultController] ignoreControllerForConnection:self];
 }
 
 #pragma mark -

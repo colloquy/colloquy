@@ -6,18 +6,15 @@
 
 	FSRef ref;
 	if( FSPathMakeRef( (UInt8 *)fileSystemPath, &ref, NULL ) ) {
-		if( NSDebugEnabled ) NSLog( @"Couldn't make FSRef from: %@", path );
 		return nil;
 	}
 
 	ResFileRefNum fileRefNum = 0;
 	if( ( fileRefNum = FSOpenResFile( &ref, fsRdPerm ) ) == -1 ) {
-		if( NSDebugEnabled ) NSLog(@"Couldn't open inetloc file at: %@", path);
 		return nil;
 	}
 
 	if( ! Count1Resources('url ') ) {
-		if( NSDebugEnabled ) NSLog(@"Inetloc file '%@' contains no 'url ' resources", path);
 		CloseResFile( fileRefNum );
 		return nil;
 	}

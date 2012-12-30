@@ -49,6 +49,12 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 
 - (NSString *) fileName;
 
+- (BOOL) isValidIRCMask;
+- (NSString *) IRCNickname;
+- (NSString *) IRCUsername;
+- (NSString *) IRCHostname;
+- (NSString *) IRCRealname;
+
 - (BOOL) containsEmojiCharacters;
 - (BOOL) containsEmojiCharactersInRange:(NSRange) range;
 - (NSRange) rangeOfEmojiCharactersInRange:(NSRange) range;
@@ -95,4 +101,6 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 - (void) substituteEmojiForEmoticons;
 - (void) substituteEmojiForEmoticonsInRange:(NSRangePointer) range;
 - (void) substituteEmojiForEmoticonsInRange:(NSRangePointer) range encodeXMLSpecialCharactersAsEntities:(BOOL) encode;
+
+- (void) replaceStrings:(NSArray *) strings withStrings:(NSArray *) replacementStrings;
 @end

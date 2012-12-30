@@ -46,6 +46,9 @@
 
 #define MVSafeReturn(var) \
 	[[var retain] autorelease];
+
+#define MVAutoreleasedReturn(var) \
+	return [var autorelease];
 #else
 #define MVSafeAdoptAssign(var, newExpression) \
 { \
@@ -72,6 +75,9 @@
 
 #define MVSafeReturn(var) \
 	(var)
+
+#define MVAutoreleasedReturn(var) \
+	return var
 #endif
 
 #define MVAssertMainThreadRequired() \

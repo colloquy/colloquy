@@ -1,8 +1,12 @@
 #import "UIActionSheetAdditions.h"
 
 #import "CQColloquyApplication.h"
+#import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
+#import "CQIgnoreRulesController.h"
 #import "CQUserInfoController.h"
+
+#import "KAIgnoreRule.h"
 
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatRoom.h>
@@ -33,10 +37,15 @@
 	[sheet addButtonWithTitle:NSLocalizedString(@"Send File", @"Send File button title")];
 #endif
 
+	if ([room.connection.ignoreController hasIgnoreRuleForUser:user]) {
+		[sheet associateObject:[NSNull null] forKey:@"has-ignore-rule"];
+		[sheet addButtonWithTitle:NSLocalizedString(@"Unignore", @"Unignore")];
+	} else [sheet addButtonWithTitle:NSLocalizedString(@"Ignore", @"Ignore")];
+
 	NSUInteger localUserModes = (room.connection.localUser ? [room modesForMemberUser:room.connection.localUser] : 0);
 	BOOL showOperatorActions = (localUserModes & (MVChatRoomMemberHalfOperatorMode | MVChatRoomMemberOperatorMode | MVChatRoomMemberAdministratorMode | MVChatRoomMemberFounderMode));
 	if (showOperatorActions)
-		[sheet addButtonWithTitle:NSLocalizedString(@"Operator Actions...", @"Operator Actions button title")];
+		[sheet addButtonWithTitle:NSLocalizedString(@"Operator Actions…", @"Operator Actions button title")];
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
@@ -163,6 +172,10 @@
 			[operatorSheet associateObject:room forKey:@"room"];
 
 			[[CQColloquyApplication sharedApplication] showActionSheet:operatorSheet forSender:[actionSheet associatedObjectForKey:@"userInfo"] animated:YES];
+		} else if (buttonIndex == [self ignoreButtonIndex]) {
+			if ([self associatedObjectForKey:@"has-ignore-rule"])
+				[room.connection.ignoreController removeIgnoreRuleFromString:user.nickname];
+			else [room.connection.ignoreController addIgnoreRule:[KAIgnoreRule ruleForUser:user.nickname mask:nil message:nil inRooms:nil isPermanent:YES friendlyName:nil]];
 		}
 	} else if (actionSheet.tag == OperatorActionSheetTag) {
 		id action = [[actionSheet associatedObjectForKey:@"userInfo"] objectForKey:[NSNumber numberWithUnsignedInteger:buttonIndex]];
@@ -198,13 +211,13 @@
 }
 #endif
 
-- (NSInteger) operatorActionsButtonIndex {
-#if ENABLE(FILE_TRANSFERS)
-	return [self sendFileButtonIndex] + 1;
-#else
+- (NSInteger) ignoreButtonIndex {
 	if ([self associatedObjectForKey:@"showing-user-information"] || [[UIDevice currentDevice] isPadModel])
 		return 2;
 	return 1;
-#endif
+}
+
+- (NSInteger) operatorActionsButtonIndex {
+	return [self ignoreButtonIndex] + 1;
 }
 @end

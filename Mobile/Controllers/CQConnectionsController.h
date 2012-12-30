@@ -9,6 +9,8 @@
 @class CQConnectionsNavigationController;
 @class CQConnectionsViewController;
 @class CQDirectChatController;
+@class CQIgnoreRulesController;
+@class KAIgnoreRule;
 @class MVChatConnection;
 @class MVChatRoom;
 @class MVChatUser;
@@ -29,6 +31,7 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 	NSMutableArray *_bouncers;
 	NSMutableSet *_bouncerConnections;
 	NSMutableDictionary *_bouncerChatConnections;
+	NSMutableDictionary *_ignoreControllers;
 	BOOL _loadedConnections;
 	NSUInteger _connectingCount;
 	NSUInteger _connectedCount;
@@ -102,6 +105,7 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 @property (nonatomic, getter = isTemporaryDirectConnection) BOOL temporaryDirectConnection;
 @property (nonatomic, copy) NSString *bouncerIdentifier;
 @property (nonatomic, copy) CQBouncerSettings *bouncerSettings;
+@property (nonatomic, readonly) CQIgnoreRulesController *ignoreController;
 
 - (void) savePasswordsToKeychain;
 - (void) loadPasswordsFromKeychain;

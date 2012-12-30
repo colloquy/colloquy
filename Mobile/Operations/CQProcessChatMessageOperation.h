@@ -1,7 +1,10 @@
+@class CQIgnoreRulesController;
+
 @interface CQProcessChatMessageOperation : NSOperation {
 	NSDictionary *_message;
 	NSMutableDictionary *_processedMessage;
 	NSString *_highlightNickname;
+	CQIgnoreRulesController *_ignoreController;
 	NSStringEncoding _encoding;
 	NSStringEncoding _fallbackEncoding;
 	id _target;
@@ -12,6 +15,7 @@
 - (id) initWithMessageInfo:(NSDictionary *) messageInfo;
 
 @property (copy) NSString *highlightNickname;
+@property (retain) CQIgnoreRulesController *ignoreController;
 
 @property NSStringEncoding encoding;
 @property NSStringEncoding fallbackEncoding;
