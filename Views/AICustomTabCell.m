@@ -214,7 +214,7 @@ static NSSize		rightCapSize;
 //Draw.  Pass ignore selection to ignore whether this tab is selected or not when drawing
 - (void)drawWithFrame:(NSRect)rect inView:(NSView *)controlView ignoreSelection:(BOOL)ignoreSelection
 {
-    int		middleSourceWidth, middleRightEdge, middleLeftEdge;
+    int		middleRightEdge, middleLeftEdge;
     NSRect	sourceRect, destRect;
     NSSize	labelSize;
 	NSPoint destPoint;

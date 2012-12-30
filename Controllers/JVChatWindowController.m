@@ -997,7 +997,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 }
 
 - (void) _refreshSelectionMenu {
-	NSLog(@"%@", [NSThread callStackSymbols]);
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_refreshSelectionMenu) object:nil];
 
 	id item = [self selectedListItem];

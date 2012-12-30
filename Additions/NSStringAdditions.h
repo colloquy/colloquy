@@ -101,6 +101,4 @@ BOOL isValidUTF8( const char *string, NSUInteger length );
 - (void) substituteEmojiForEmoticons;
 - (void) substituteEmojiForEmoticonsInRange:(NSRangePointer) range;
 - (void) substituteEmojiForEmoticonsInRange:(NSRangePointer) range encodeXMLSpecialCharactersAsEntities:(BOOL) encode;
-
-- (void) replaceStrings:(NSArray *) strings withStrings:(NSArray *) replacementStrings;
 @end

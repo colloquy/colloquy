@@ -1201,7 +1201,6 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 	NSMutableArray *results = [NSMutableArray array];
 
-	NSLog(@"ranges: %d", result.numberOfRanges);
 	for (NSUInteger i = 1; i < (result.numberOfRanges - 1); i++)
 		[results addObject:[self substringWithRange:[result rangeAtIndex:i]]];
 
@@ -1432,9 +1431,5 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 		emojiRange = [self rangeOfEmojiCharactersInRange:NSMakeRange(emojiRange.location + 1, (NSMaxRange(*range) - emojiRange.location - 1))];
 	}
-}
-
-- (void) replaceStrings:(NSArray *) strings withStrings:(NSArray *) replacementStrings {
-	
 }
 @end
