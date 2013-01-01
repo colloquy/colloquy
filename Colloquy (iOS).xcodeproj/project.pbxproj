@@ -245,10 +245,7 @@
 		92823D32169114FA000EC36E /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92823D31169114FA000EC36E /* Twitter.framework */; };
 		92823D3516911677000EC36E /* CQConsoleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3416911677000EC36E /* CQConsoleController.m */; };
 		92823D47169123FD000EC36E /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D38169123FD000EC36E /* DDAbstractDatabaseLogger.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		92823D48169123FD000EC36E /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3A169123FD000EC36E /* DDASLLogger.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		92823D49169123FD000EC36E /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3C169123FD000EC36E /* DDFileLogger.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		92823D4A169123FD000EC36E /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3E169123FD000EC36E /* DDLog.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		92823D4B169123FD000EC36E /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D40169123FD000EC36E /* DDTTYLogger.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		92823D551691390E000EC36E /* CQProcessConsoleMessageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */; };
 		929EBE04162A33EE00F0CE6E /* chromatic-redux.js in Resources */ = {isa = PBXBuildFile; fileRef = 9247414216119CCC009132B5 /* chromatic-redux.js */; };
 		92A24DA7114C918300897373 /* CQPreferencesListChannelEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */; };
@@ -601,14 +598,8 @@
 		92823D3416911677000EC36E /* CQConsoleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQConsoleController.m; path = Mobile/Controllers/CQConsoleController.m; sourceTree = "<group>"; };
 		92823D37169123FD000EC36E /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDAbstractDatabaseLogger.h; path = Logging/DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
 		92823D38169123FD000EC36E /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDAbstractDatabaseLogger.m; path = Logging/DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
-		92823D39169123FD000EC36E /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDASLLogger.h; path = Logging/DDASLLogger.h; sourceTree = "<group>"; };
-		92823D3A169123FD000EC36E /* DDASLLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDASLLogger.m; path = Logging/DDASLLogger.m; sourceTree = "<group>"; };
-		92823D3B169123FD000EC36E /* DDFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDFileLogger.h; path = Logging/DDFileLogger.h; sourceTree = "<group>"; };
-		92823D3C169123FD000EC36E /* DDFileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDFileLogger.m; path = Logging/DDFileLogger.m; sourceTree = "<group>"; };
 		92823D3D169123FD000EC36E /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDLog.h; path = Logging/DDLog.h; sourceTree = "<group>"; };
 		92823D3E169123FD000EC36E /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDLog.m; path = Logging/DDLog.m; sourceTree = "<group>"; };
-		92823D3F169123FD000EC36E /* DDTTYLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDTTYLogger.h; path = Logging/DDTTYLogger.h; sourceTree = "<group>"; };
-		92823D40169123FD000EC36E /* DDTTYLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDTTYLogger.m; path = Logging/DDTTYLogger.m; sourceTree = "<group>"; };
 		92823D531691390E000EC36E /* CQProcessConsoleMessageOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQProcessConsoleMessageOperation.h; sourceTree = "<group>"; };
 		92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQProcessConsoleMessageOperation.m; sourceTree = "<group>"; };
 		92A24DA5114C918300897373 /* CQPreferencesListChannelEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListChannelEditViewController.h; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.h; sourceTree = "<group>"; };
@@ -1254,12 +1245,6 @@
 				92823D3D169123FD000EC36E /* DDLog.h */,
 				92823D38169123FD000EC36E /* DDAbstractDatabaseLogger.m */,
 				92823D37169123FD000EC36E /* DDAbstractDatabaseLogger.h */,
-				92823D3A169123FD000EC36E /* DDASLLogger.m */,
-				92823D39169123FD000EC36E /* DDASLLogger.h */,
-				92823D3C169123FD000EC36E /* DDFileLogger.m */,
-				92823D3B169123FD000EC36E /* DDFileLogger.h */,
-				92823D40169123FD000EC36E /* DDTTYLogger.m */,
-				92823D3F169123FD000EC36E /* DDTTYLogger.h */,
 			);
 			name = CocoaLumberjack;
 			sourceTree = "<group>";
@@ -1580,10 +1565,7 @@
 				92823CEF168FE6EC000EC36E /* KAIgnoreRule.m in Sources */,
 				92823D3516911677000EC36E /* CQConsoleController.m in Sources */,
 				92823D47169123FD000EC36E /* DDAbstractDatabaseLogger.m in Sources */,
-				92823D48169123FD000EC36E /* DDASLLogger.m in Sources */,
-				92823D49169123FD000EC36E /* DDFileLogger.m in Sources */,
 				92823D4A169123FD000EC36E /* DDLog.m in Sources */,
-				92823D4B169123FD000EC36E /* DDTTYLogger.m in Sources */,
 				92823D551691390E000EC36E /* CQProcessConsoleMessageOperation.m in Sources */,
 				922B1FE116926749002ECDFD /* MVDelegateLogger.m in Sources */,
 			);
