@@ -8,6 +8,7 @@
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
+#import "CQConsoleController.h"
 #import "CQDirectChatController.h"
 #if ENABLE(FILE_TRANSFERS)
 #import "CQFileTransferController.h"
@@ -636,6 +637,9 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 			[_chatNavigationController pushViewController:(UIViewController *)controller animated:NO];
 			[_chatNavigationController dismissModalViewControllerAnimated:animated];
 		} else {
+			if ([UIDevice currentDevice].isPhoneModel && !_chatNavigationController.rootViewController)
+				[[CQColloquyApplication sharedApplication] showColloquies:nil];
+
 			if (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController) {
 				id old = _nextController;
 				_nextController = [controller retain];
@@ -722,6 +726,31 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 #pragma mark -
 
 @synthesize chatViewControllers = _chatControllers;
+
+- (void) showConsoleForConnection:(MVChatConnection *) connection {
+	CQConsoleController *consoleController = [self chatViewControllerForConnection:connection ifExists:NO userInitiated:NO];
+
+	[self showChatController:consoleController animated:YES];
+}
+
+- (CQConsoleController *) chatViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
+	NSParameterAssert(connection != nil);
+
+	for (id <CQChatViewController> controller in _chatControllers)
+		if ([controller isMemberOfClass:[CQConsoleController class]] && controller.target == connection)
+			return (CQConsoleController *)controller;
+
+	CQConsoleController *controller = nil;
+
+	if (!exists) {
+		if ((controller = [[CQConsoleController alloc] initWithTarget:connection])) {
+			[self _addViewController:controller];
+			return [controller autorelease];
+		}
+	}
+
+	return nil;
+}
 
 - (NSArray *) chatViewControllersForConnection:(MVChatConnection *) connection {
 	NSParameterAssert(connection != nil);

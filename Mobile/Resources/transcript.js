@@ -71,6 +71,8 @@ function appendComponents(components, previousSession, suppressScroll, suppressS
 		} else if (component.type === "notice") {
 			if (component.self) alwaysScroll = true;
 			appendMessage(container, component.sender, component.message, component.highlighted, component.action, component.self, previousSession, 'notice');
+		} else if (component.type === "console") {
+			appendConsoleMessage(container, component.message, component.outbound);
 		}
 	}
 
@@ -125,6 +127,18 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 	messageWrapperElement.appendChild(messageElement);
 
 	container.appendChild(messageWrapperElement);
+}
+
+function appendConsoleMessage(container, messageHTML, outbound) {
+	var className = "console";
+	if (outbound) className += " outbound";
+
+	var consoleElement = document.createElement("div");
+	consoleElement.className = className;
+	consoleElement.innerHTML = messageHTML;
+
+	console.log(consoleElement);
+	container.appendChild(consoleElement);
 }
 
 function appendEventMessage(container, messageHTML, identifier, previousSession) {

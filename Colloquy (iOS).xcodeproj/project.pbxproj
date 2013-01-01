@@ -232,6 +232,7 @@
 		89997FAC0F171EB600CF0AA2 /* standard-grey-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */; };
 		89E87C090FA0450800B49230 /* CQSoundController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E87C080FA0450800B49230 /* CQSoundController.m */; };
 		9215E175168AE04100E7E77F /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9215E174168AE04100E7E77F /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		922B1FE116926749002ECDFD /* MVDelegateLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FE016926749002ECDFD /* MVDelegateLogger.m */; };
 		922C1630163BDBCE00B01C3D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C162F163BDBCE00B01C3D /* NSDateAdditions.m */; };
 		924108D615A5605A001F7681 /* NSFileManagerMoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 924108D515A5605A001F7681 /* NSFileManagerMoreAdditions.m */; };
 		9247414316119CCC009132B5 /* chromatic-redux.css in Resources */ = {isa = PBXBuildFile; fileRef = 9247414116119CCC009132B5 /* chromatic-redux.css */; };
@@ -241,6 +242,14 @@
 		925C59591177D84C001995E0 /* CQAwayStatusController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C59581177D84C001995E0 /* CQAwayStatusController.m */; };
 		92823CEC168FE6CB000EC36E /* CQIgnoreRulesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CEB168FE6CB000EC36E /* CQIgnoreRulesController.m */; };
 		92823CEF168FE6EC000EC36E /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CEE168FE6EC000EC36E /* KAIgnoreRule.m */; };
+		92823D32169114FA000EC36E /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92823D31169114FA000EC36E /* Twitter.framework */; };
+		92823D3516911677000EC36E /* CQConsoleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3416911677000EC36E /* CQConsoleController.m */; };
+		92823D47169123FD000EC36E /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D38169123FD000EC36E /* DDAbstractDatabaseLogger.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		92823D48169123FD000EC36E /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3A169123FD000EC36E /* DDASLLogger.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		92823D49169123FD000EC36E /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3C169123FD000EC36E /* DDFileLogger.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		92823D4A169123FD000EC36E /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3E169123FD000EC36E /* DDLog.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		92823D4B169123FD000EC36E /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D40169123FD000EC36E /* DDTTYLogger.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		92823D551691390E000EC36E /* CQProcessConsoleMessageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */; };
 		929EBE04162A33EE00F0CE6E /* chromatic-redux.js in Resources */ = {isa = PBXBuildFile; fileRef = 9247414216119CCC009132B5 /* chromatic-redux.js */; };
 		92A24DA7114C918300897373 /* CQPreferencesListChannelEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */; };
 		92A54AA515AD1DDD00F21FC5 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */; };
@@ -567,6 +576,8 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9215E173168AE04100E7E77F /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
 		9215E174168AE04100E7E77F /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
+		922B1FDF16926749002ECDFD /* MVDelegateLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDelegateLogger.h; path = Logging/MVDelegateLogger.h; sourceTree = "<group>"; };
+		922B1FE016926749002ECDFD /* MVDelegateLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDelegateLogger.m; path = Logging/MVDelegateLogger.m; sourceTree = "<group>"; };
 		922C162E163BDBCE00B01C3D /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		922C162F163BDBCE00B01C3D /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDateAdditions.m; path = Additions/NSDateAdditions.m; sourceTree = "<group>"; };
 		924108D415A5605A001F7681 /* NSFileManagerMoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerMoreAdditions.h; path = Additions/NSFileManagerMoreAdditions.h; sourceTree = "<group>"; };
@@ -585,6 +596,21 @@
 		92823CEB168FE6CB000EC36E /* CQIgnoreRulesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQIgnoreRulesController.m; sourceTree = "<group>"; };
 		92823CED168FE6EC000EC36E /* KAIgnoreRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KAIgnoreRule.h; sourceTree = "<group>"; };
 		92823CEE168FE6EC000EC36E /* KAIgnoreRule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KAIgnoreRule.m; sourceTree = "<group>"; };
+		92823D31169114FA000EC36E /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
+		92823D3316911677000EC36E /* CQConsoleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQConsoleController.h; path = Mobile/Controllers/CQConsoleController.h; sourceTree = "<group>"; };
+		92823D3416911677000EC36E /* CQConsoleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQConsoleController.m; path = Mobile/Controllers/CQConsoleController.m; sourceTree = "<group>"; };
+		92823D37169123FD000EC36E /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDAbstractDatabaseLogger.h; path = Logging/DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
+		92823D38169123FD000EC36E /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDAbstractDatabaseLogger.m; path = Logging/DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
+		92823D39169123FD000EC36E /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDASLLogger.h; path = Logging/DDASLLogger.h; sourceTree = "<group>"; };
+		92823D3A169123FD000EC36E /* DDASLLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDASLLogger.m; path = Logging/DDASLLogger.m; sourceTree = "<group>"; };
+		92823D3B169123FD000EC36E /* DDFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDFileLogger.h; path = Logging/DDFileLogger.h; sourceTree = "<group>"; };
+		92823D3C169123FD000EC36E /* DDFileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDFileLogger.m; path = Logging/DDFileLogger.m; sourceTree = "<group>"; };
+		92823D3D169123FD000EC36E /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDLog.h; path = Logging/DDLog.h; sourceTree = "<group>"; };
+		92823D3E169123FD000EC36E /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDLog.m; path = Logging/DDLog.m; sourceTree = "<group>"; };
+		92823D3F169123FD000EC36E /* DDTTYLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDTTYLogger.h; path = Logging/DDTTYLogger.h; sourceTree = "<group>"; };
+		92823D40169123FD000EC36E /* DDTTYLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDTTYLogger.m; path = Logging/DDTTYLogger.m; sourceTree = "<group>"; };
+		92823D531691390E000EC36E /* CQProcessConsoleMessageOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQProcessConsoleMessageOperation.h; sourceTree = "<group>"; };
+		92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQProcessConsoleMessageOperation.m; sourceTree = "<group>"; };
 		92A24DA5114C918300897373 /* CQPreferencesListChannelEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListChannelEditViewController.h; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.h; sourceTree = "<group>"; };
 		92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListChannelEditViewController.m; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.m; sourceTree = "<group>"; };
 		92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -610,6 +636,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92823D32169114FA000EC36E /* Twitter.framework in Frameworks */,
 				92A54AA515AD1DDD00F21FC5 /* libsqlite3.dylib in Frameworks */,
 				1C3A8B2313293CC8005EB3A6 /* libSystem.dylib in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
@@ -663,6 +690,8 @@
 			children = (
 				1C0DBCA81005A57A003BEEF3 /* CQProcessChatMessageOperation.m */,
 				1C0DBCA71005A57A003BEEF3 /* CQProcessChatMessageOperation.h */,
+				92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */,
+				92823D531691390E000EC36E /* CQProcessConsoleMessageOperation.h */,
 			);
 			name = Operations;
 			path = Mobile/Operations;
@@ -776,6 +805,8 @@
 			children = (
 				1C0931010D80C6E900A2705D /* CQColloquyApplication.m */,
 				1C0931020D80C6E900A2705D /* CQColloquyApplication.h */,
+				92823D3416911677000EC36E /* CQConsoleController.m */,
+				92823D3316911677000EC36E /* CQConsoleController.h */,
 				1CA3DD5410287BF3008B1AD2 /* CQHelpTopicsViewController.m */,
 				1CA3DD5310287BF3008B1AD2 /* CQHelpTopicsViewController.h */,
 				1CA3DEBB10290B0F008B1AD2 /* CQHelpTopicViewController.m */,
@@ -847,6 +878,7 @@
 		1C716EB313100F220088C737 /* Chat Core */ = {
 			isa = PBXGroup;
 			children = (
+				92823D36169123D5000EC36E /* Logging */,
 				1C716EB413100F220088C737 /* IRC Support */,
 				1C716EB513100F220088C737 /* Utility Classes */,
 				1C716EB613100F220088C737 /* ChatCore.h */,
@@ -1190,6 +1222,7 @@
 				1CD84C2A10040AB300E56A7E /* MediaPlayer.framework */,
 				1CF50C860ED8BE1100CBE5E3 /* Security.framework */,
 				1CBC07CD0F0741E400EEBCFB /* SystemConfiguration.framework */,
+				92823D31169114FA000EC36E /* Twitter.framework */,
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1C957EBB11F7EFF3001950FD /* libicucore.dylib */,
 				92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */,
@@ -1203,6 +1236,33 @@
 			tabWidth = 4;
 			usesTabs = 1;
 			wrapsLines = 0;
+		};
+		92823D36169123D5000EC36E /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				922B1FE016926749002ECDFD /* MVDelegateLogger.m */,
+				922B1FDF16926749002ECDFD /* MVDelegateLogger.h */,
+				92823D4F16912424000EC36E /* CocoaLumberjack */,
+			);
+			name = Logging;
+			sourceTree = "<group>";
+		};
+		92823D4F16912424000EC36E /* CocoaLumberjack */ = {
+			isa = PBXGroup;
+			children = (
+				92823D3E169123FD000EC36E /* DDLog.m */,
+				92823D3D169123FD000EC36E /* DDLog.h */,
+				92823D38169123FD000EC36E /* DDAbstractDatabaseLogger.m */,
+				92823D37169123FD000EC36E /* DDAbstractDatabaseLogger.h */,
+				92823D3A169123FD000EC36E /* DDASLLogger.m */,
+				92823D39169123FD000EC36E /* DDASLLogger.h */,
+				92823D3C169123FD000EC36E /* DDFileLogger.m */,
+				92823D3B169123FD000EC36E /* DDFileLogger.h */,
+				92823D40169123FD000EC36E /* DDTTYLogger.m */,
+				92823D3F169123FD000EC36E /* DDTTYLogger.h */,
+			);
+			name = CocoaLumberjack;
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
@@ -1518,6 +1578,14 @@
 				9215E175168AE04100E7E77F /* GCDAsyncSocket.m in Sources */,
 				92823CEC168FE6CB000EC36E /* CQIgnoreRulesController.m in Sources */,
 				92823CEF168FE6EC000EC36E /* KAIgnoreRule.m in Sources */,
+				92823D3516911677000EC36E /* CQConsoleController.m in Sources */,
+				92823D47169123FD000EC36E /* DDAbstractDatabaseLogger.m in Sources */,
+				92823D48169123FD000EC36E /* DDASLLogger.m in Sources */,
+				92823D49169123FD000EC36E /* DDFileLogger.m in Sources */,
+				92823D4A169123FD000EC36E /* DDLog.m in Sources */,
+				92823D4B169123FD000EC36E /* DDTTYLogger.m in Sources */,
+				92823D551691390E000EC36E /* CQProcessConsoleMessageOperation.m in Sources */,
+				922B1FE116926749002ECDFD /* MVDelegateLogger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -23,6 +23,8 @@
 #import <MediaPlayer/MPMusicPlayerController.h>
 #import <MediaPlayer/MPMediaItem.h>
 
+#import <Twitter/Twitter.h>
+
 #import <objc/message.h>
 
 NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewControllerRecentMessagesUpdatedNotification";
@@ -119,6 +121,15 @@ static BOOL showingKeyboard;
 
 + (void) keyboardWillHide {
 	showingKeyboard = NO;
+}
+
++ (NSOperationQueue *) chatMessageProcessingQueue {
+	if (!chatMessageProcessingQueue) {
+		chatMessageProcessingQueue = [[NSOperationQueue alloc] init];
+		chatMessageProcessingQueue.maxConcurrentOperationCount = 1;
+	}
+
+	return chatMessageProcessingQueue;
 }
 
 - (id) initWithTarget:(id) target {
@@ -280,6 +291,9 @@ static BOOL showingKeyboard;
 }
 
 - (NSDictionary *) persistentState {
+	if (!_target)
+		return nil;
+
 	NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
 
 	[state setObject:NSStringFromClass([self class]) forKey:@"class"];
@@ -558,6 +572,9 @@ static BOOL showingKeyboard;
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetDidSendRecently) object:nil];
 	[self performSelector:@selector(resetDidSendRecently) withObject:nil afterDelay:0.5];
+
+	if (!_target)
+		return YES;
 
 	if ([text hasPrefix:@"/"] && ![text hasPrefix:@"//"] && text.length > 1) {
 		static NSSet *commandsNotRequiringConnection;
@@ -1032,10 +1049,11 @@ static BOOL showingKeyboard;
 }
 
 - (BOOL) handleTweetCommandWithArguments:(NSString *) arguments {
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Tweet Support Removed", @"Twitter removed alert title") message:NSLocalizedString(@"Support was removed due to Twitter removing basic authentication support. Sorry for any inconvenience.", @"Twitter support was removed message") delegate:nil cancelButtonTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title") otherButtonTitles:nil, nil];
+	TWTweetComposeViewController *tweetComposeViewController = [[TWTweetComposeViewController alloc] init];
+	tweetComposeViewController.completionHandler = ^(TWTweetComposeViewControllerResult result) {
 
-	[alert show];
-	[alert release];
+	};
+	[self.navigationController presentModalViewController:tweetComposeViewController animated:YES];
 
 	return YES;
 }
@@ -1320,12 +1338,7 @@ static BOOL showingKeyboard;
 	operation.target = self;
 	operation.action = @selector(_messageProcessed:);
 
-	if (!chatMessageProcessingQueue) {
-		chatMessageProcessingQueue = [[NSOperationQueue alloc] init];
-		chatMessageProcessingQueue.maxConcurrentOperationCount = 1;
-	}
-
-	[chatMessageProcessingQueue addOperation:operation];
+	[[CQDirectChatController chatMessageProcessingQueue] addOperation:operation];
 
 	[operation release];
 }
@@ -1631,12 +1644,7 @@ static BOOL showingKeyboard;
 		return;
 	}
 
-	if (!chatMessageProcessingQueue) {
-		chatMessageProcessingQueue = [[NSOperationQueue alloc] init];
-		chatMessageProcessingQueue.maxConcurrentOperationCount = 1;
-	}
-
-	[chatMessageProcessingQueue addOperation:operation];
+	[[CQDirectChatController chatMessageProcessingQueue] addOperation:operation];
 
 	[operation release];
 }

@@ -2,6 +2,8 @@
 
 @implementation UINavigationController (UINavigationControllerColloquyAdditions)
 - (UIViewController *) rootViewController {
-	return [self.viewControllers objectAtIndex:0];
+	if (self.viewControllers.count)
+		return [self.viewControllers objectAtIndex:0];
+	return nil;
 }
 @end

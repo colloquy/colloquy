@@ -375,6 +375,8 @@
 			NSString *escapedIdentifer = [identifier stringByEscapingCharactersInSet:escapedCharacters];
 
 			[command appendFormat:@"{type:'event',message:'%@',identifier:'%@'},", escapedMessage, escapedIdentifer];
+		} else if ([type isEqualToString:@"console"]) {
+			[command appendFormat:@"{type:'console',message:'%@',outbound:'%@'},", escapedMessage, [component objectForKey:@"outbound"]];
 		}
 	}
 

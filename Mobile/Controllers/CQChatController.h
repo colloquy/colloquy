@@ -58,6 +58,8 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 
 - (void) joinSupportRoom;
 
+- (void) showConsoleForConnection:(MVChatConnection *) connection;
+
 - (NSArray *) chatViewControllersForConnection:(MVChatConnection *) connection;
 - (NSArray *) chatViewControllersOfClass:(Class) class;
 - (NSArray *) chatViewControllersKindOfClass:(Class) class;

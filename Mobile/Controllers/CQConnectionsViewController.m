@@ -4,6 +4,7 @@
 #import "CQTableViewSectionHeader.h"
 #import "CQAwayStatusController.h"
 #import "CQBouncerSettings.h"
+#import "CQChatController.h"
 #import "CQConnectionTableCell.h"
 #import "CQConnectionsController.h"
 #import "CQConnectionsNavigationController.h"
@@ -332,6 +333,7 @@
 
 	sheet.title = connection.displayName;
 
+	[sheet addButtonWithTitle:NSLocalizedString(@"Show Console", @"Show Console")];
 	[sheet addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
 
 	if (connection.temporaryDirectConnection || !connection.directConnection)
@@ -356,6 +358,8 @@
 	sheet.tag = DisconnectSheetTag;
 
 	sheet.title = connection.displayName;
+
+	[sheet addButtonWithTitle:NSLocalizedString(@"Show Console", @"Show Console")];
 
 	if (connection.directConnection) {
 		sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
@@ -393,16 +397,20 @@
 		[connection cancelPendingReconnectAttempts];
 
 		if (buttonIndex == 0) {
+			[[CQChatController defaultController] showConsoleForConnection:connection];
+		} else if (buttonIndex == 1) {
 			connection.temporaryDirectConnection = NO;
 			[connection connect];
-		} else if (buttonIndex == 1 && (connection.temporaryDirectConnection || !connection.directConnection))
+		} else if (buttonIndex == 2 && (connection.temporaryDirectConnection || !connection.directConnection))
 			[connection connectDirectly];
 	} else if (actionSheet.tag == DisconnectSheetTag) {
 		if (buttonIndex == actionSheet.destructiveButtonIndex) {
 			if (connection.directConnection)
 				[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 			else [connection sendRawMessageImmediatelyWithComponents:@"SQUIT :", [MVChatConnection defaultQuitMessage], nil];
-		} else if (!connection.directConnection && buttonIndex == 0) {
+		} else if (buttonIndex == 0) {
+			[[CQChatController defaultController] showConsoleForConnection:connection];
+		} else if (!connection.directConnection && buttonIndex == 1) {
 			[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 		} else if (connection.connected) {
 			if (connection.awayStatusMessage) {
