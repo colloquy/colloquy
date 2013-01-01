@@ -637,8 +637,8 @@ static const NSStringEncoding supportedEncodings[] = {
     @autoreleasepool {
 		[NSThread prepareForInterThreadMessages];
 
-		NSString *queueName = [NSString stringWithFormat:@"info.colloquy.chatCore.connection-queue (%@)", [self description]];
-		_connectionDelegateQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
+		NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+		NSString *queueName = [NSString stringWithFormat:@"%@.connection-queue (%@)", bundleIdentifier, [self description]];		_connectionDelegateQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
 		_connectionThread = [NSThread currentThread];
 		if( [_connectionThread respondsToSelector:@selector( setName: )] )
 			[_connectionThread setName:[self description]];
