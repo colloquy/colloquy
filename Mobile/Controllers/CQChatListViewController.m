@@ -210,6 +210,7 @@ static NSIndexPath *indexPathForChatController(id <CQChatViewController> control
 			rowCount = 0;
 			if (currentConnection)
 				++sectionCount;
+
 			currentConnection = chatViewController.connection;
 		}
 
@@ -261,6 +262,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			[[CQChatController defaultController] closeViewController:chatViewController];
 
 		_needsUpdate = YES;
+
 		return;
 	}
 
@@ -296,9 +298,11 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		if (!indexPath)
 			continue;
 
-		[[CQChatController defaultController] closeViewController:chatViewController];
 		[rowsToDelete addObject:indexPath];
 	}
+
+	for (id <CQChatViewController> chatViewController in viewControllersToClose)
+		[[CQChatController defaultController] closeViewController:chatViewController];
 
 	NSAssert(rowsToDelete.count == viewControllersToClose.count, @"All controllers must have a row.");
 
