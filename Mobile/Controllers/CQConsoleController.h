@@ -4,8 +4,6 @@
 
 @class MVChatConnection;
 
-BOOL defaultForServer(NSString *defaultName, NSString *serverName);
-
 @interface CQConsoleController : CQDirectChatController <MVLoggingDelegate> {
 @private
 	MVChatConnection *_connection;

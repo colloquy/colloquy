@@ -1925,9 +1925,8 @@ end:
 
 	_sendEndCapabilityCommandAtTime = [NSDate timeIntervalSinceReferenceDate] + JVEndCapabilityTimeoutDelay;
 
-	__weak id weakSelf = self;
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(JVEndCapabilityTimeoutDelay * NSEC_PER_SEC)), _connectionDelegateQueue, ^{
-		[weakSelf _sendEndCapabilityCommand];
+		[self _sendEndCapabilityCommand];
 	});
 }
 
@@ -1936,9 +1935,8 @@ end:
 
 	_sendEndCapabilityCommandAtTime = [NSDate timeIntervalSinceReferenceDate] + 1.;
 
-	__weak id weakSelf = self;
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1. * NSEC_PER_SEC)), _connectionDelegateQueue, ^{
-		[weakSelf _sendEndCapabilityCommand];
+		[self _sendEndCapabilityCommand];
 	});
 }
 
