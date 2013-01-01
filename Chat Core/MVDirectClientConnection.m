@@ -213,7 +213,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 - (void) _connect:(NSDictionary *) info {
 	if( _acceptConnection || _connection ) return;
 
-	_connection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue];
+	_connection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue socketQueue:_connectionDelegateQueue];
 
 	NSString *host = [info objectForKey:@"host"];
 	NSNumber *port = [info objectForKey:@"port"];
@@ -227,7 +227,7 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 - (void) _acceptConnectionOnFirstPortInRange:(NSValue *) portsObject {
 	if( _acceptConnection || _connection ) return;
 
-	_acceptConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue];
+	_acceptConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue socketQueue:_connectionDelegateQueue];
 
 	NSRange ports = [portsObject rangeValue];
 	NSUInteger port = ports.location;
@@ -321,7 +321,8 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 
 		[_threadWaitLock lockWhenCondition:0];
 
-		_connectionDelegateQueue = dispatch_queue_create([[self description] UTF8String], DISPATCH_QUEUE_SERIAL);
+		NSString *queueName = [NSString stringWithFormat:@"info.colloquy.chatCore.connection-queue (%@)", [self description]];
+		_connectionDelegateQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
 		_connectionThread = [NSThread currentThread];
 		[_connectionThread setName:[self description]];
 		[NSThread prepareForInterThreadMessages];

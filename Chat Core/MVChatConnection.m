@@ -298,6 +298,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	return _hash;
 }
 
+- (NSString *) description {
+	return [[super description] stringByAppendingFormat:@" url: %@", [[self url] absoluteString]];
+}
+
 #pragma mark -
 
 - (NSString *) uniqueIdentifier {

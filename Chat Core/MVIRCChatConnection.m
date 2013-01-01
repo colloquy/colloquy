@@ -612,7 +612,7 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) _connect {
 	id old = _chatConnection;
-	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)];
+	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue socketQueue:_connectionDelegateQueue];
 	[old setDelegate:nil];
 	[old disconnect];
 	[old release];
@@ -637,10 +637,11 @@ static const NSStringEncoding supportedEncodings[] = {
     @autoreleasepool {
 		[NSThread prepareForInterThreadMessages];
 
-		_connectionDelegateQueue = dispatch_queue_create([[self description] UTF8String], DISPATCH_QUEUE_SERIAL);
+		NSString *queueName = [NSString stringWithFormat:@"info.colloquy.chatCore.connection-queue (%@)", [self description]];
+		_connectionDelegateQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
 		_connectionThread = [NSThread currentThread];
 		if( [_connectionThread respondsToSelector:@selector( setName: )] )
-			[_connectionThread setName:[[self url] absoluteString]];
+			[_connectionThread setName:[self description]];
 
 		[self _connect];
 	}

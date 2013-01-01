@@ -381,10 +381,11 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
         if( [_connectionThread respondsToSelector:@selector( cancel )] )
             [_connectionThread cancel];
 
-		_connectionDelegateQueue = dispatch_queue_create([[self description] UTF8String], DISPATCH_QUEUE_SERIAL);
+		NSString *queueName = [NSString stringWithFormat:@"info.colloquy.chatCore.connection-queue (%@)", [self description]];
+		_connectionDelegateQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
         _connectionThread = [NSThread currentThread];
         if( [_connectionThread respondsToSelector:@selector( setName: )] )
-            [_connectionThread setName:[[self url] absoluteString]];
+            [_connectionThread setName:[self description]];
         [NSThread prepareForInterThreadMessages];
 
         [_threadWaitLock unlockWithCondition:1];
@@ -419,7 +420,7 @@ static BOOL hasSubstring( NSString *str, NSString *substr, NSRange *r ) {
 	[_chatConnection disconnect];
 	[_chatConnection release];
 
-	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue];
+	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue socketQueue:_connectionDelegateQueue];
 
 	if( ! [_chatConnection connectToHost:[self server]
 	                       onPort:[self serverPort]
