@@ -1917,24 +1917,39 @@ end:
 #pragma mark -
 
 - (void) _cancelScheduledSendEndCapabilityCommand {
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_sendEndCapabilityCommand) object:nil];
+	_sendEndCapabilityCommandAtTime = 0.;
 }
 
 - (void) _sendEndCapabilityCommandAfterTimeout {
 	[self _cancelScheduledSendEndCapabilityCommand];
-	[self performSelector:@selector(_sendEndCapabilityCommand) withObject:nil afterDelay:JVEndCapabilityTimeoutDelay];
+
+	_sendEndCapabilityCommandAtTime = [NSDate timeIntervalSinceReferenceDate] + JVEndCapabilityTimeoutDelay;
+
+	__weak id weakSelf = self;
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(JVEndCapabilityTimeoutDelay * NSEC_PER_SEC)), _connectionDelegateQueue, ^{
+		[weakSelf _sendEndCapabilityCommand];
+	});
 }
 
 - (void) _sendEndCapabilityCommandSoon {
 	[self _cancelScheduledSendEndCapabilityCommand];
-	[self performSelector:@selector(_sendEndCapabilityCommand) withObject:nil afterDelay:1.];
+
+	_sendEndCapabilityCommandAtTime = [NSDate timeIntervalSinceReferenceDate] + 1.;
+
+	__weak id weakSelf = self;
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1. * NSEC_PER_SEC)), _connectionDelegateQueue, ^{
+		[weakSelf _sendEndCapabilityCommand];
+	});
 }
 
 - (void) _sendEndCapabilityCommand {
-	[self _cancelScheduledSendEndCapabilityCommand];
-
 	if( _sentEndCapabilityCommand )
 		return;
+
+	if( !_sendEndCapabilityCommandAtTime || [NSDate timeIntervalSinceReferenceDate] < _sendEndCapabilityCommandAtTime)
+		return;
+
+	[self _cancelScheduledSendEndCapabilityCommand];
 
 	_sentEndCapabilityCommand = YES;
 

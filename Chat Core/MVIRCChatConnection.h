@@ -32,6 +32,7 @@
 	BOOL _watchCommandSupported;
 	BOOL _sendQueueProcessing;
 	BOOL _sentEndCapabilityCommand;
+	NSTimeInterval _sendEndCapabilityCommandAtTime;
 	BOOL _pendingIdentificationAttempt;
 	NSMutableArray *_umichNoIdentdCaptcha;
 	BOOL _gamesurgeGlobalBotMOTD;
