@@ -236,8 +236,14 @@
 		return NO;
 
 	if ([request.URL.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
-		if ([transcriptDelegate respondsToSelector:@selector(transcriptView:handleNicknameTap:atLocation:)])
-			[transcriptDelegate transcriptView:self handleNicknameTap:request.URL.host atLocation:_lastTouchLocation];
+		if ([transcriptDelegate respondsToSelector:@selector(transcriptView:handleNicknameTap:atLocation:)]) {
+			NSRange endOfSchemeRange = [request.URL.absoluteString rangeOfString:@"://"];
+			if (endOfSchemeRange.location == NSNotFound)
+				return NO;
+
+			NSString *nickname = [[request.URL.absoluteString substringFromIndex:(endOfSchemeRange.location + endOfSchemeRange.length)] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+			[transcriptDelegate transcriptView:self handleNicknameTap:nickname atLocation:_lastTouchLocation];
+		}
 
 		return NO;
 	}
