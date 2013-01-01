@@ -1,7 +1,5 @@
 #import "CQConsoleController.h"
 
-#import "CQConsoleSettingsViewController.h"
-
 #import "CQProcessConsoleMessageOperation.h"
 
 #import "MVIRCChatConnection.h"
@@ -9,20 +7,30 @@
 #import "DDLog.h"
 #import "MVDelegateLogger.h"
 
-BOOL defaultForServer(NSString *defaultName, NSString *serverName) {
-	return [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"CQConsoleDisplay%@-%@", defaultName, serverName]];
-}
+#define defaultNamed(name) \
+	[[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"CQConsoleDisplay%@", name]];
 
-NSString *const CQConsoleHideNickKey = @"Nick";
-NSString *const CQConsoleHideTrafficKey = @"Traffic";
-NSString *const CQConsoleHideTopicKey = @"Topic";
-NSString *const CQConsoleHideMessagesKey = @"Messages";
-NSString *const CQConsoleHideModeKey = @"Mode";
-NSString *const CQConsoleHideNumericKey = @"Numeric";
-NSString *const CQConsoleHideUnknownKey = @"Unknown";
-NSString *const CQConsoleHideCtcpKey = @"Ctcp";
-NSString *const CQConsoleHidePingKey = @"Ping";
-NSString *const CQConsoleHideSocketKey = @"Socket";
+static BOOL hideNICKs;
+static BOOL hideTraffic; // JOIN, PART, KICK, INVITE
+static BOOL hideTOPICs;
+static BOOL hideMessages; // PRIVMSG, NOTICE
+static BOOL hideMODEs;
+static BOOL hideNumerics; // includes IRCv3 commands such as CAP and AUTHENTICATE
+static BOOL hideUnknown; // WALLOP, OLINEs, etc
+static BOOL hideCTCPs;
+static BOOL hidePINGs;
+static BOOL hideSocketInformation;
+
+static NSString *const CQConsoleHideNickKey = @"Nick";
+static NSString *const CQConsoleHideTrafficKey = @"Traffic";
+static NSString *const CQConsoleHideTopicKey = @"Topic";
+static NSString *const CQConsoleHideMessagesKey = @"Messages";
+static NSString *const CQConsoleHideModeKey = @"Mode";
+static NSString *const CQConsoleHideNumericKey = @"Numeric";
+static NSString *const CQConsoleHideUnknownKey = @"Unknown";
+static NSString *const CQConsoleHideCtcpKey = @"Ctcp";
+static NSString *const CQConsoleHidePingKey = @"Ping";
+static NSString *const CQConsoleHideSocketKey = @"Socket";
 
 @interface CQDirectChatController (Private)
 + (NSOperationQueue *) chatMessageProcessingQueue;
@@ -31,17 +39,33 @@ NSString *const CQConsoleHideSocketKey = @"Socket";
 @end
 
 @implementation CQConsoleController
++ (void) userDefaultsChanged {
+	hideNICKs = defaultNamed(CQConsoleHideNickKey);
+	hideTraffic = defaultNamed(CQConsoleHideTrafficKey);
+	hideTOPICs = defaultNamed(CQConsoleHideTopicKey);
+	hideMessages = defaultNamed(CQConsoleHideMessagesKey);
+	hideMODEs = defaultNamed(CQConsoleHideModeKey);
+	hideNumerics = defaultNamed(CQConsoleHideNumericKey);
+	hideCTCPs = defaultNamed(CQConsoleHideCtcpKey);
+	hidePINGs = defaultNamed(CQConsoleHidePingKey);
+	hideUnknown = defaultNamed(CQConsoleHideUnknownKey);
+	hideSocketInformation = defaultNamed(CQConsoleHideSocketKey);
+}
+
++ (void) initialize {
+	static dispatch_once_t pred;
+	dispatch_once(&pred, ^{
+		[self userDefaultsChanged];
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	});
+}
+
 - (id) initWithTarget:(id) target {
 	if (!(self = [super initWithTarget:nil]))
 		return self;
 
 	_connection = [target retain];
-
-	NSString *key = [NSString stringWithFormat:@"CQConsolePreferencesSet-%@", _connection.server];
-	if (![[NSUserDefaults standardUserDefaults] boolForKey:key]) {
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:key];
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"CQConsoleDisplaySocket-%@", _connection.server]];
-	}
 
 	_delegateLogger = [[MVDelegateLogger alloc] initWithDelegate:self];
 
@@ -70,24 +94,9 @@ NSString *const CQConsoleHideSocketKey = @"Socket";
 
 	self.navigationItem.title = NSLocalizedString(@"Console", @"Console view title");
 
-	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(showSettings:)];
+	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(emailLog:)];
 	self.navigationItem.rightBarButtonItem = settingsItem;
 	[settingsItem release];
-}
-
-- (void) viewWillAppear:(BOOL) animated {
-	[super viewWillAppear:animated];
-
-	_hideNICKs = defaultForServer(CQConsoleHideNickKey, _connection.server);
-	_hideTraffic = defaultForServer(CQConsoleHideTrafficKey, _connection.server);
-	_hideTOPICs = defaultForServer(CQConsoleHideTopicKey, _connection.server);
-	_hideMessages = defaultForServer(CQConsoleHideMessagesKey, _connection.server);
-	_hideMODEs = defaultForServer(CQConsoleHideModeKey, _connection.server);
-	_hideNumerics = defaultForServer(CQConsoleHideNumericKey, _connection.server);
-	_hideCTCPs = defaultForServer(CQConsoleHideCtcpKey, _connection.server);
-	_hidePINGs = defaultForServer(CQConsoleHidePingKey, _connection.server);
-	_hideUnknown = defaultForServer(CQConsoleHideUnknownKey, _connection.server);
-	_hideSocketInformation = defaultForServer(CQConsoleHideSocketKey, _connection.server);
 }
 
 #pragma mark -
@@ -117,10 +126,8 @@ NSString *const CQConsoleHideSocketKey = @"Socket";
 	[operation release];
 }
 
-- (void) showSettings:(id) sender {
-	CQConsoleSettingsViewController *settingsViewController = [[CQConsoleSettingsViewController alloc] initWithConnection:_connection];
-	[self.navigationController pushViewController:settingsViewController animated:YES];
-	[settingsViewController release];
+- (void) emailLog:(id) sender {
+	
 }
 
 #pragma mark -
@@ -140,7 +147,7 @@ NSString *const CQConsoleHideSocketKey = @"Socket";
 }
 
 - (void) socketTrafficDidOccur:(NSString *) socketTraffic context:(void *) context {
-	if (_hideSocketInformation)
+	if (hideSocketInformation)
 		return;
 
 	if (context != _connection._chatConnection)
@@ -152,23 +159,23 @@ NSString *const CQConsoleHideSocketKey = @"Socket";
 #pragma mark -
 
 - (void) _messageProcessed:(CQProcessConsoleMessageOperation *) operation {
-	if (_hideMessages && operation.messageType == CQConsoleMessageTypeMessage)
+	if (hideMessages && operation.messageType == CQConsoleMessageTypeMessage)
 		return;
-	if (_hideTraffic && operation.messageType == CQConsoleMessageTypeTraffic)
+	if (hideTraffic && operation.messageType == CQConsoleMessageTypeTraffic)
 		return;
-	if (_hideNICKs && operation.messageType == CQConsoleMessageTypeNick)
+	if (hideNICKs && operation.messageType == CQConsoleMessageTypeNick)
 		return;
-	if (_hideTOPICs && operation.messageType == CQConsoleMessageTypeTopic)
+	if (hideTOPICs && operation.messageType == CQConsoleMessageTypeTopic)
 		return;
-	if (_hideMODEs && operation.messageType == CQConsoleMessageTypeMode)
+	if (hideMODEs && operation.messageType == CQConsoleMessageTypeMode)
 		return;
-	if (_hideNumerics && operation.messageType == CQConsoleMessageTypeNumeric)
+	if (hideNumerics && operation.messageType == CQConsoleMessageTypeNumeric)
 		return;
-	if (_hideCTCPs && operation.messageType == CQConsoleMessageTypeCTCP)
+	if (hideCTCPs && operation.messageType == CQConsoleMessageTypeCTCP)
 		return;
-	if (_hidePINGs && operation.messageType == CQConsoleMessageTypePing)
+	if (hidePINGs && operation.messageType == CQConsoleMessageTypePing)
 		return;
-	if (_hideUnknown && operation.messageType == CQConsoleMessageTypeUnknown)
+	if (hideUnknown && operation.messageType == CQConsoleMessageTypeUnknown)
 		return;
 
 	[self _addPendingComponent:operation.processedMessageInfo];

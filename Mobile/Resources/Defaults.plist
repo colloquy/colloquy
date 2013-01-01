@@ -90,5 +90,25 @@
 	<string>Colloquy for iPhone - http://colloquy.mobi</string>
 	<key>CQAutoAwayWhenMultitasking</key>
 	<true/>
+	<key>CQConsoleDisplayNick</key>
+	<true/>
+	<key>CQConsoleDisplayTraffic</key>
+	<true/>
+	<key>CQConsoleDisplayTopic</key>
+	<true/>
+	<key>CQConsoleDisplayMessage</key>
+	<true/>
+	<key>CQConsoleDisplayMode</key>
+	<true/>
+	<key>CQConsoleDisplayNumeric</key>
+	<true/>
+	<key>CQConsoleDisplayCtcp</key>
+	<true/>
+	<key>CQConsoleDisplayPing</key>
+	<true/>
+	<key>CQConsoleDisplayUnknown</key>
+	<true/>
+	<key>CQConsoleDisplaySocket</key>
+	<false/>
 </dict>
 </plist>

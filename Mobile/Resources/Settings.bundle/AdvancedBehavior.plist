@@ -222,6 +222,50 @@
 			<key>DefaultValue</key>
 			<true/>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Console</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Room Traffic</string>
+			<key>Key</key>
+			<string>CQConsoleDisplayRoomTraffic</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Messages</string>
+			<key>Key</key>
+			<string>CQConsoleDisplayMessages</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Server Traffic</string>
+			<key>Key</key>
+			<string>CQConsoleDisplayServerTraffic</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+			<key>Title</key>
+			<string>Additional Options</string>
+			<key>File</key>
+			<string>Console</string>
+		</dict>
 	</array>
 </dict>
 </plist>

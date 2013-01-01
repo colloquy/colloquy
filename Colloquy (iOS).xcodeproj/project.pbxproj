@@ -233,7 +233,6 @@
 		89E87C090FA0450800B49230 /* CQSoundController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E87C080FA0450800B49230 /* CQSoundController.m */; };
 		9215E175168AE04100E7E77F /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9215E174168AE04100E7E77F /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		922B1FE116926749002ECDFD /* MVDelegateLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FE016926749002ECDFD /* MVDelegateLogger.m */; };
-		922B1FE41692696E002ECDFD /* CQConsoleSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FE31692696E002ECDFD /* CQConsoleSettingsViewController.m */; };
 		922C1630163BDBCE00B01C3D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C162F163BDBCE00B01C3D /* NSDateAdditions.m */; };
 		924108D615A5605A001F7681 /* NSFileManagerMoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 924108D515A5605A001F7681 /* NSFileManagerMoreAdditions.m */; };
 		9247414316119CCC009132B5 /* chromatic-redux.css in Resources */ = {isa = PBXBuildFile; fileRef = 9247414116119CCC009132B5 /* chromatic-redux.css */; };
@@ -579,8 +578,6 @@
 		9215E174168AE04100E7E77F /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
 		922B1FDF16926749002ECDFD /* MVDelegateLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDelegateLogger.h; path = Logging/MVDelegateLogger.h; sourceTree = "<group>"; };
 		922B1FE016926749002ECDFD /* MVDelegateLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDelegateLogger.m; path = Logging/MVDelegateLogger.m; sourceTree = "<group>"; };
-		922B1FE21692696E002ECDFD /* CQConsoleSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQConsoleSettingsViewController.h; path = Mobile/Controllers/CQConsoleSettingsViewController.h; sourceTree = "<group>"; };
-		922B1FE31692696E002ECDFD /* CQConsoleSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQConsoleSettingsViewController.m; path = Mobile/Controllers/CQConsoleSettingsViewController.m; sourceTree = "<group>"; };
 		922C162E163BDBCE00B01C3D /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		922C162F163BDBCE00B01C3D /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDateAdditions.m; path = Additions/NSDateAdditions.m; sourceTree = "<group>"; };
 		924108D415A5605A001F7681 /* NSFileManagerMoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerMoreAdditions.h; path = Additions/NSFileManagerMoreAdditions.h; sourceTree = "<group>"; };
@@ -810,8 +807,6 @@
 				1C0931020D80C6E900A2705D /* CQColloquyApplication.h */,
 				92823D3416911677000EC36E /* CQConsoleController.m */,
 				92823D3316911677000EC36E /* CQConsoleController.h */,
-				922B1FE31692696E002ECDFD /* CQConsoleSettingsViewController.m */,
-				922B1FE21692696E002ECDFD /* CQConsoleSettingsViewController.h */,
 				1CA3DD5410287BF3008B1AD2 /* CQHelpTopicsViewController.m */,
 				1CA3DD5310287BF3008B1AD2 /* CQHelpTopicsViewController.h */,
 				1CA3DEBB10290B0F008B1AD2 /* CQHelpTopicViewController.m */,
@@ -1591,7 +1586,6 @@
 				92823D4B169123FD000EC36E /* DDTTYLogger.m in Sources */,
 				92823D551691390E000EC36E /* CQProcessConsoleMessageOperation.m in Sources */,
 				922B1FE116926749002ECDFD /* MVDelegateLogger.m in Sources */,
-				922B1FE41692696E002ECDFD /* CQConsoleSettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
