@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
@@ -69,7 +69,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Colloquy</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Colloquy 2.4.1; Copyright © 2003-2012, Colloquy Project</string>
+	<string>Colloquy 2.4.1; Copyright © 2003-2013, Colloquy Project</string>
 	<key>CFBundleIconFile</key>
 	<string>Colloquy</string>
 	<key>CFBundleIdentifier</key>
@@ -103,20 +103,34 @@
 			</array>
 		</dict>
 	</array>
-	<key>LSMinimumSystemVersion</key>
-	<string>10.7</string>
 	<key>CFBundleVersion</key>
 	<string>source</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.7</string>
 	<key>MVChatCoreCTCPVersionReplyInfo</key>
 	<string>http://colloquy.info</string>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2003-2012, Colloquy Project</string>
+	<string>Copyright © 2003-2013, Colloquy Project</string>
 	<key>NSMainNibFile</key>
 	<string>Colloquy</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSSupportsSuddenTermination</key>
+	<true/>
+	<key>SUAllowsAutomaticUpdates</key>
+	<true/>
+	<key>SUCheckAtStartup</key>
+	<false/>
+	<key>SUFeedURL</key>
+	<string>http://colloquy.info/update.php?rss</string>
+	<key>SUPublicDSAKeyFile</key>
+	<string>SparkleUpdatePublicDSAKey.pem</string>
+	<key>SmartCrashReports_CompanyName</key>
+	<string>Colloquy</string>
+	<key>SmartCrashReports_URL</key>
+	<string>http://colloquy.info/crash.php</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -145,7 +159,7 @@
 		</dict>
 		<dict>
 			<key>UTTypeConformsTo</key>
-			<array>	
+			<array>
 				<string>com.apple.package</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -198,19 +212,5 @@
 			</dict>
 		</dict>
 	</array>
-	<key>NSSupportsSuddenTermination</key>
-	<true/>
-	<key>SmartCrashReports_CompanyName</key>
-	<string>Colloquy</string>
-	<key>SmartCrashReports_URL</key>
-	<string>http://colloquy.info/crash.php</string>
-	<key>SUFeedURL</key>
-	<string>http://colloquy.info/update.php?rss</string>
-	<key>SUCheckAtStartup</key>
-	<false/>
-	<key>SUAllowsAutomaticUpdates</key>
-	<true/>
-	<key>SUPublicDSAKeyFile</key>
-	<string>SparkleUpdatePublicDSAKey.pem</string>
 </dict>
 </plist>
