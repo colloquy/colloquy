@@ -1228,20 +1228,12 @@
 		92823D36169123D5000EC36E /* Logging */ = {
 			isa = PBXGroup;
 			children = (
-				922B1FE016926749002ECDFD /* MVDelegateLogger.m */,
-				922B1FDF16926749002ECDFD /* MVDelegateLogger.h */,
-				92823D4F16912424000EC36E /* CocoaLumberjack */,
-			);
-			name = Logging;
-			sourceTree = "<group>";
-		};
-		92823D4F16912424000EC36E /* CocoaLumberjack */ = {
-			isa = PBXGroup;
-			children = (
 				92823D3E169123FD000EC36E /* DDLog.m */,
 				92823D3D169123FD000EC36E /* DDLog.h */,
+				922B1FE016926749002ECDFD /* MVDelegateLogger.m */,
+				922B1FDF16926749002ECDFD /* MVDelegateLogger.h */,
 			);
-			name = CocoaLumberjack;
+			name = Logging;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
