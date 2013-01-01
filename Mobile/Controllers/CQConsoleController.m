@@ -1,5 +1,7 @@
 #import "CQConsoleController.h"
 
+#import "CQConsoleSettingsViewController.h"
+
 #import "CQProcessConsoleMessageOperation.h"
 
 #import "MVIRCChatConnection.h"
@@ -7,11 +9,20 @@
 #import "DDLog.h"
 #import "MVDelegateLogger.h"
 
-#define defaultForServer(default, server) \
-	[[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"CQConsoleDisplay%@-%@", default, server]];
+BOOL defaultForServer(NSString *defaultName, NSString *serverName) {
+	return [[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"CQConsoleDisplay%@-%@", defaultName, serverName]];
+}
 
-#define setDefaultForServer(default, server, value) \
-	[[NSUserDefaults standardUserDefaults] setBool:value forKey:[NSString stringWithFormat:@"CQConsoleDisplay%@-%@", default, server]];
+NSString *const CQConsoleHideNickKey = @"Nick";
+NSString *const CQConsoleHideTrafficKey = @"Traffic";
+NSString *const CQConsoleHideTopicKey = @"Topic";
+NSString *const CQConsoleHideMessagesKey = @"Messages";
+NSString *const CQConsoleHideModeKey = @"Mode";
+NSString *const CQConsoleHideNumericKey = @"Numeric";
+NSString *const CQConsoleHideUnknownKey = @"Unknown";
+NSString *const CQConsoleHideCtcpKey = @"Ctcp";
+NSString *const CQConsoleHidePingKey = @"Ping";
+NSString *const CQConsoleHideSocketKey = @"Socket";
 
 @interface CQDirectChatController (Private)
 + (NSOperationQueue *) chatMessageProcessingQueue;
@@ -29,8 +40,7 @@
 	NSString *key = [NSString stringWithFormat:@"CQConsolePreferencesSet-%@", _connection.server];
 	if (![[NSUserDefaults standardUserDefaults] boolForKey:key]) {
 		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:key];
-
-		setDefaultForServer(@"Socket", _connection.server, YES);
+		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"CQConsoleDisplaySocket-%@", _connection.server]];
 	}
 
 	_delegateLogger = [[MVDelegateLogger alloc] initWithDelegate:self];
@@ -58,22 +68,26 @@
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawMessage:) name:MVChatConnectionGotRawMessageNotification object:_connection];
 
-	self.title = NSLocalizedString(@"Console", @"Console view title");
+	self.navigationItem.title = NSLocalizedString(@"Console", @"Console view title");
+
+	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(showSettings:)];
+	self.navigationItem.rightBarButtonItem = settingsItem;
+	[settingsItem release];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 
-	_hideNICKs = defaultForServer(@"Nick", _connection.server);
-	_hideTraffic = defaultForServer(@"Traffic", _connection.server); // JOIN, PART, KICK, INVITE
-	_hideTOPICs = defaultForServer(@"Topic", _connection.server);
-	_hideMessages = defaultForServer(@"Messages", _connection.server); // PRIVMSG, NOTICE
-	_hideMODEs = defaultForServer(@"Mode", _connection.server);
-	_hideNumerics = defaultForServer(@"Numerics", _connection.server); // includes IRCv3 commands such as CAP and AUTHENTICATE
-	_hideCTCPs = defaultForServer(@"Ctcp", _connection.server);
-	_hidePINGs = defaultForServer(@"Ping", _connection.server);
-	_hideUnknown = defaultForServer(@"Unknown", _connection.server); // WALLOP, OLINEs, etc
-	_hideSocketInformation = defaultForServer(@"Socket", _connection.server);
+	_hideNICKs = defaultForServer(CQConsoleHideNickKey, _connection.server);
+	_hideTraffic = defaultForServer(CQConsoleHideTrafficKey, _connection.server);
+	_hideTOPICs = defaultForServer(CQConsoleHideTopicKey, _connection.server);
+	_hideMessages = defaultForServer(CQConsoleHideMessagesKey, _connection.server);
+	_hideMODEs = defaultForServer(CQConsoleHideModeKey, _connection.server);
+	_hideNumerics = defaultForServer(CQConsoleHideNumericKey, _connection.server);
+	_hideCTCPs = defaultForServer(CQConsoleHideCtcpKey, _connection.server);
+	_hidePINGs = defaultForServer(CQConsoleHidePingKey, _connection.server);
+	_hideUnknown = defaultForServer(CQConsoleHideUnknownKey, _connection.server);
+	_hideSocketInformation = defaultForServer(CQConsoleHideSocketKey, _connection.server);
 }
 
 #pragma mark -
@@ -101,6 +115,12 @@
 	[[CQDirectChatController chatMessageProcessingQueue] addOperation:operation];
 
 	[operation release];
+}
+
+- (void) showSettings:(id) sender {
+	CQConsoleSettingsViewController *settingsViewController = [[CQConsoleSettingsViewController alloc] initWithConnection:_connection];
+	[self.navigationController pushViewController:settingsViewController animated:YES];
+	[settingsViewController release];
 }
 
 #pragma mark -

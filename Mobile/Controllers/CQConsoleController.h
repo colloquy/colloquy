@@ -4,6 +4,19 @@
 
 @class MVChatConnection;
 
+BOOL defaultForServer(NSString *defaultName, NSString *serverName);
+
+extern NSString *const CQConsoleHideNickKey;
+extern NSString *const CQConsoleHideTrafficKey; // JOIN, PART, KICK, INVITE
+extern NSString *const CQConsoleHideTopicKey;
+extern NSString *const CQConsoleHideMessagesKey; // PRIVMSG, NOTICE
+extern NSString *const CQConsoleHideModeKey;
+extern NSString *const CQConsoleHideNumericKey; // includes IRCv3 commands such as CAP and AUTHENTICATE
+extern NSString *const CQConsoleHideUnknownKey; // WALLOP, OLINEs, etc
+extern NSString *const CQConsoleHideCtcpKey;
+extern NSString *const CQConsoleHidePingKey;
+extern NSString *const CQConsoleHideSocketKey;
+
 @interface CQConsoleController : CQDirectChatController <MVLoggingDelegate> {
 @private
 	MVChatConnection *_connection;
