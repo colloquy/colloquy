@@ -142,6 +142,12 @@ static NSString *const CQConsoleHideSocketKey = @"Socket";
 
 #pragma mark -
 
+- (void) _insertTimestamp {
+	// do nothing, this is a method from CQDirectChatController we don't want to execute
+}
+
+#pragma mark -
+
 - (void) _gotRawMessage:(NSNotification *) notification {
 	[self addMessage:notification.userInfo[@"message"] outbound:notification.userInfo[@"outbound"]];
 }
