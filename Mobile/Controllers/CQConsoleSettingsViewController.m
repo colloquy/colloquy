@@ -20,6 +20,10 @@ enum {
 	CQConsoleSettingsRowCount
 };
 
+MVInline void setDefaultForServer(NSString *defaultName, NSString *serverName, BOOL value) {
+	[[NSUserDefaults standardUserDefaults] setBool:value forKey:[NSString stringWithFormat:@"CQConsoleDisplay%@-%@", defaultName, serverName]];
+}
+
 @implementation CQConsoleSettingsViewController
 - (id) initWithConnection:(MVChatConnection *) connection {
 	if (!(self = [super init]))
@@ -56,50 +60,88 @@ enum {
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 	cell.switchControl.tag = indexPath.row;
+	cell.switchAction = @selector(settingChanged:);
 
 	switch (indexPath.row) {
 	case CQConsoleSettingsRowNick:
-		cell.textLabel.text = NSLocalizedString(@"Hide Nick Changes", @"Show Nick Changes cell label");
+		cell.textLabel.text = NSLocalizedString(@"Nick Changes", @"Show Nick Changes cell label");
 		cell.on = defaultForServer(CQConsoleHideNickKey, _connection.server);
 		break;
 	case CQConsoleSettingsRowTraffic:
-		cell.textLabel.text = NSLocalizedString(@"Hide Room Traffic", @"Hide Room Traffic cell label");
+		cell.textLabel.text = NSLocalizedString(@"Room Traffic", @"Room Traffic cell label");
 		cell.on = defaultForServer(CQConsoleHideTrafficKey, _connection.server);
 		break;
 	case CQConsoleSettingsRowTopic:
-		cell.textLabel.text = NSLocalizedString(@"Hide Topic Changes", @"Hide Topic Changes cell label");
+		cell.textLabel.text = NSLocalizedString(@"Topic Changes", @"Topic Changes cell label");
 		cell.on = defaultForServer(CQConsoleHideTopicKey, _connection.server);
 		break;
 	case CQConsoleSettingsRowMode:
-		cell.textLabel.text = NSLocalizedString(@"Hide Mode Changes", @"Hide Mode Changes cell label");
+		cell.textLabel.text = NSLocalizedString(@"Mode Changes", @"Mode Changes cell label");
 		cell.on = defaultForServer(CQConsoleHideModeKey, _connection.server);
 		break;
 	case CQConsoleSettingsRowMessage:
-		cell.textLabel.text = NSLocalizedString(@"Hide Messages", @"Hide Messages cell label");
+		cell.textLabel.text = NSLocalizedString(@"Messages", @"Messages cell label");
 		cell.on = defaultForServer(CQConsoleHideMessagesKey, _connection.server);
 		break;
 	case CQConsoleSettingsRowNumeric:
-		cell.textLabel.text = NSLocalizedString(@"Hide Server Traffic", @"Hide Server Traffic cell label");
+		cell.textLabel.text = NSLocalizedString(@"Server Traffic", @"Server Traffic cell label");
 		cell.on = defaultForServer(CQConsoleHideTrafficKey, _connection.server);
 		break;
 	case CQConsoleSettingsRowCTCP:
-		cell.textLabel.text = NSLocalizedString(@"Hide CTCP Messages", @"Hide CTCP Messages cell label");
+		cell.textLabel.text = NSLocalizedString(@"CTCP Messages", @"CTCP Messages cell label");
 		cell.on = defaultForServer(CQConsoleHideCtcpKey, _connection.server);
 		break;
 	case CQConsoleSettingsRowPing:
-		cell.textLabel.text = NSLocalizedString(@"Hide PING and PONGs", @"Hide PING and PONGs cell label");
+		cell.textLabel.text = NSLocalizedString(@"PING and PONGs", @"PING and PONGs cell label");
 		cell.on = defaultForServer(CQConsoleHidePingKey, _connection.server);
 		break;
 	case CQConsoleSettingsRowUnknown:
-		cell.textLabel.text = NSLocalizedString(@"Hide Other Messages", @"Hide Other Messages cell label");
+		cell.textLabel.text = NSLocalizedString(@"Other Messages", @"Other Messages cell label");
 		cell.on = defaultForServer(CQConsoleHideUnknownKey, _connection.server);
 		break;
 	case CQConsoleSettingsRowSocket:
-		cell.textLabel.text = NSLocalizedString(@"Hide Socket Traffic", @"Hide Socket Traffic cell label");
+		cell.textLabel.text = NSLocalizedString(@"Socket Traffic", @"Socket Traffic cell label");
 		cell.on = defaultForServer(CQConsoleHideSocketKey, _connection.server);
 		break;
 	}
 
 	return cell;
+}
+
+#pragma mark -
+
+- (void) settingChanged:(CQPreferencesSwitchCell *) sender {
+	switch (sender.switchControl.tag) {
+	case CQConsoleSettingsRowNick:
+		setDefaultForServer(CQConsoleHideNickKey, _connection.server, sender.on);
+		break;
+	case CQConsoleSettingsRowTraffic:
+		setDefaultForServer(CQConsoleHideTrafficKey, _connection.server, sender.on);
+		break;
+	case CQConsoleSettingsRowTopic:
+		setDefaultForServer(CQConsoleHideTopicKey, _connection.server, sender.on);
+		break;
+	case CQConsoleSettingsRowMode:
+		setDefaultForServer(CQConsoleHideModeKey, _connection.server, sender.on);
+		break;
+	case CQConsoleSettingsRowMessage:
+		setDefaultForServer(CQConsoleHideMessagesKey, _connection.server, sender.on);
+		break;
+	case CQConsoleSettingsRowNumeric:
+		setDefaultForServer(CQConsoleHideNumericKey, _connection.server, sender.on);
+		break;
+	case CQConsoleSettingsRowCTCP:
+		setDefaultForServer(CQConsoleHideCtcpKey, _connection.server, sender.on);
+		break;
+	case CQConsoleSettingsRowPing:
+		setDefaultForServer(CQConsoleHidePingKey, _connection.server, sender.on);
+		break;
+	case CQConsoleSettingsRowUnknown:
+		setDefaultForServer(CQConsoleHideUnknownKey, _connection.server, sender.on);
+		break;
+	case CQConsoleSettingsRowSocket:
+		setDefaultForServer(CQConsoleHideSocketKey, _connection.server, sender.on);
+		break;
+	}
 }
 @end
