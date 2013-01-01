@@ -34,12 +34,15 @@ static NSString *const CQConsoleHideSocketKey = @"Socket";
 
 @interface CQDirectChatController (Private)
 + (NSOperationQueue *) chatMessageProcessingQueue;
++ (void) userDefaultsChanged;
 
 - (void) _addPendingComponent:(id) component;
 @end
 
 @implementation CQConsoleController
 + (void) userDefaultsChanged {
+	[super userDefaultsChanged];
+
 	hideNICKs = defaultNamed(CQConsoleHideNickKey);
 	hideTraffic = defaultNamed(CQConsoleHideTrafficKey);
 	hideTOPICs = defaultNamed(CQConsoleHideTopicKey);
@@ -53,6 +56,8 @@ static NSString *const CQConsoleHideSocketKey = @"Socket";
 }
 
 + (void) initialize {
+	[super initialize];
+
 	static dispatch_once_t pred;
 	dispatch_once(&pred, ^{
 		[self userDefaultsChanged];
@@ -64,6 +69,9 @@ static NSString *const CQConsoleHideSocketKey = @"Socket";
 - (id) initWithTarget:(id) target {
 	if (!(self = [super initWithTarget:nil]))
 		return self;
+
+	transcriptView.dataDetectorTypes = UIDataDetectorTypeNone;
+	transcriptView.detectsPhoneNumbers = NO;
 
 	_connection = [target retain];
 
