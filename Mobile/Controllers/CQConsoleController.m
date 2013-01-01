@@ -159,23 +159,23 @@ static NSString *const CQConsoleHideSocketKey = @"Socket";
 #pragma mark -
 
 - (void) _messageProcessed:(CQProcessConsoleMessageOperation *) operation {
-	if (hideMessages && operation.messageType == CQConsoleMessageTypeMessage)
+	if (!hideMessages && operation.messageType == CQConsoleMessageTypeMessage)
 		return;
-	if (hideTraffic && operation.messageType == CQConsoleMessageTypeTraffic)
+	if (!hideTraffic && operation.messageType == CQConsoleMessageTypeTraffic)
 		return;
-	if (hideNICKs && operation.messageType == CQConsoleMessageTypeNick)
+	if (!hideNICKs && operation.messageType == CQConsoleMessageTypeNick)
 		return;
-	if (hideTOPICs && operation.messageType == CQConsoleMessageTypeTopic)
+	if (!hideTOPICs && operation.messageType == CQConsoleMessageTypeTopic)
 		return;
-	if (hideMODEs && operation.messageType == CQConsoleMessageTypeMode)
+	if (!hideMODEs && operation.messageType == CQConsoleMessageTypeMode)
 		return;
-	if (hideNumerics && operation.messageType == CQConsoleMessageTypeNumeric)
+	if (!hideNumerics && operation.messageType == CQConsoleMessageTypeNumeric)
 		return;
-	if (hideCTCPs && operation.messageType == CQConsoleMessageTypeCTCP)
+	if (!hideCTCPs && operation.messageType == CQConsoleMessageTypeCTCP)
 		return;
-	if (hidePINGs && operation.messageType == CQConsoleMessageTypePing)
+	if (!hidePINGs && operation.messageType == CQConsoleMessageTypePing)
 		return;
-	if (hideUnknown && operation.messageType == CQConsoleMessageTypeUnknown)
+	if (!hideUnknown && operation.messageType == CQConsoleMessageTypeUnknown)
 		return;
 
 	[self _addPendingComponent:operation.processedMessageInfo];
