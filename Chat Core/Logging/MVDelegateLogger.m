@@ -11,7 +11,7 @@
 }
 
 - (void) logMessage:(DDLogMessage *) logMessage {
-	[_delegate socketTrafficDidOccur:logMessage->logMsg context:logMessage->logContext];
+	[_delegate socketTrafficDidOccur:logMessage->logMsg context:(void *)logMessage->logContext];
 }
 
 - (NSString *) loggerName {

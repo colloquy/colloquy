@@ -70,7 +70,7 @@
 #import "DDLog.h"
 
 #define LogAsync   YES
-#define LogObjcContext self
+#define LogObjcContext (int)self
 #define LogCContext 65536
 
 #define LogObjc(flg, frmt, ...) LOG_OBJC_MAYBE(LogAsync, logLevel, flg, LogObjcContext, frmt, ##__VA_ARGS__)
@@ -90,7 +90,7 @@
 #define LogCTrace()             LogC(LOG_FLAG_VERBOSE, @"%@: %s", THIS_FILE, __FUNCTION__)
 
 // Log levels : off, error, warn, info, verbose
-static const int logLevel = LOG_LEVEL_VERBOSE;
+static const int logLevel = LOG_FLAG_INFO;
 
 #else
 
