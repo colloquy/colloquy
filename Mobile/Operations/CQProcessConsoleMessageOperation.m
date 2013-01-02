@@ -80,7 +80,7 @@ static NSRegularExpression *numericRegularExpression;
 - (void) main {
 	[_message replaceOccurrencesOfString:@"\n" withString:@"" options:(NSAnchoredSearch | NSBackwardsSearch) range:NSMakeRange(_message.length - 2, 2)];
 	[_message replaceOccurrencesOfString:@"\r" withString:@"" options:(NSAnchoredSearch | NSBackwardsSearch) range:NSMakeRange(_message.length - 1, 1)];
-	[_message replaceOccurrencesOfString:@":" withString:@"" options:NSAnchoredSearch range:NSMakeRange(0, 1)];
+	[_message replaceOccurrencesOfString:@":" withString:@"" options:NSAnchoredSearch range:NSMakeRange(0, MIN(1, (int)_message.length))];
 	[_message replaceOccurrencesOfString:@" :" withString:@" " options:NSLiteralSearch range:NSMakeRange(0, _message.length)];
 
 	[self _determineMessageType];
