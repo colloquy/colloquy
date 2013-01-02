@@ -1055,6 +1055,7 @@ static BOOL showingKeyboard;
 	};
 	[self.navigationController presentModalViewController:tweetComposeViewController animated:YES];
 
+	[tweetComposeViewController release];
 	return YES;
 }
 

@@ -217,8 +217,10 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	NSMutableString *messageString = [self _processMessageData:[_message objectForKey:@"message"]];
 	MVChatUser *user = [_message objectForKey:@"user"];
 
-	if ([_ignoreController shouldIgnoreMessage:messageString fromUser:user inRoom:_target])
+	if ([_ignoreController shouldIgnoreMessage:messageString fromUser:user inRoom:_target]) {
+		[highlightWords release];
 		return;
+	}
 
 	BOOL highlighted = NO;
 
