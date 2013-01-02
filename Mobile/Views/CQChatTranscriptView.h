@@ -13,9 +13,11 @@
 	BOOL _loading;
 	BOOL _resetPending;
 	CGPoint _lastTouchLocation;
+	BOOL _allowsStyleChanges;
 }
 @property (nonatomic, assign) id <CQChatTranscriptViewDelegate> transcriptDelegate;
 
+@property (nonatomic, assign) BOOL allowsStyleChanges;
 @property (nonatomic, copy) NSString *styleIdentifier;
 @property (nonatomic, copy) NSString *fontFamily;
 @property (nonatomic, assign) NSUInteger fontSize;

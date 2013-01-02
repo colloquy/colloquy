@@ -247,6 +247,7 @@
 		92823D3516911677000EC36E /* CQConsoleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3416911677000EC36E /* CQConsoleController.m */; };
 		92823D4A169123FD000EC36E /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3E169123FD000EC36E /* DDLog.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		92823D551691390E000EC36E /* CQProcessConsoleMessageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */; };
+		9290D7C21694F3A400ACF833 /* console.css in Resources */ = {isa = PBXBuildFile; fileRef = 9290D7C11694F3A400ACF833 /* console.css */; };
 		929EBE04162A33EE00F0CE6E /* chromatic-redux.js in Resources */ = {isa = PBXBuildFile; fileRef = 9247414216119CCC009132B5 /* chromatic-redux.js */; };
 		92A24DA7114C918300897373 /* CQPreferencesListChannelEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */; };
 		92A54AA515AD1DDD00F21FC5 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */; };
@@ -575,8 +576,8 @@
 		9215E174168AE04100E7E77F /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
 		922B1FDF16926749002ECDFD /* MVDelegateLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDelegateLogger.h; path = Logging/MVDelegateLogger.h; sourceTree = "<group>"; };
 		922B1FE016926749002ECDFD /* MVDelegateLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDelegateLogger.m; path = Logging/MVDelegateLogger.m; sourceTree = "<group>"; };
-		922B1FFF1692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesIgnoreEditViewController.h; path = Mobile/Controllers/CQPreferencesIgnoreEditViewController.h; sourceTree = "<group>"; };
-		922B20001692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesIgnoreEditViewController.m; path = Mobile/Controllers/CQPreferencesIgnoreEditViewController.m; sourceTree = "<group>"; };
+		922B1FFF1692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPreferencesIgnoreEditViewController.h; sourceTree = "<group>"; };
+		922B20001692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesIgnoreEditViewController.m; sourceTree = "<group>"; };
 		922C162E163BDBCE00B01C3D /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		922C162F163BDBCE00B01C3D /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDateAdditions.m; path = Additions/NSDateAdditions.m; sourceTree = "<group>"; };
 		924108D415A5605A001F7681 /* NSFileManagerMoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerMoreAdditions.h; path = Additions/NSFileManagerMoreAdditions.h; sourceTree = "<group>"; };
@@ -602,6 +603,7 @@
 		92823D3E169123FD000EC36E /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDLog.m; path = Logging/DDLog.m; sourceTree = "<group>"; };
 		92823D531691390E000EC36E /* CQProcessConsoleMessageOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQProcessConsoleMessageOperation.h; sourceTree = "<group>"; };
 		92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQProcessConsoleMessageOperation.m; sourceTree = "<group>"; };
+		9290D7C11694F3A400ACF833 /* console.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = console.css; sourceTree = "<group>"; };
 		92A24DA5114C918300897373 /* CQPreferencesListChannelEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListChannelEditViewController.h; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.h; sourceTree = "<group>"; };
 		92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListChannelEditViewController.m; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.m; sourceTree = "<group>"; };
 		92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -752,6 +754,8 @@
 				925C59571177D84C001995E0 /* CQAwayStatusController.h */,
 				924B823F116FEB520007F1F8 /* CQAwayStatusViewController.m */,
 				924B823E116FEB520007F1F8 /* CQAwayStatusViewController.h */,
+				922B20001692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.m */,
+				922B1FFF1692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.h */,
 			);
 			name = Connections;
 			sourceTree = "<group>";
@@ -804,8 +808,6 @@
 				1CA3DEBA10290B0E008B1AD2 /* CQHelpTopicViewController.h */,
 				925C594B1177CB63001995E0 /* CQModalNavigationController.m */,
 				925C594A1177CB63001995E0 /* CQModalNavigationController.h */,
-				922B20001692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.m */,
-				922B1FFF1692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.h */,
 				92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */,
 				92A24DA5114C918300897373 /* CQPreferencesListChannelEditViewController.h */,
 				1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */,
@@ -1089,6 +1091,7 @@
 			children = (
 				1CAE8BF20EE612DA00CE1AF8 /* base.html */,
 				1CAE8C850EE6190A00CE1AF8 /* transcript.js */,
+				9290D7C11694F3A400ACF833 /* console.css */,
 				1CAE8BF30EE612DA00CE1AF8 /* standard.css */,
 				1C1253280F0D4FC1008F181B /* standard-dark.css */,
 				89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */,
@@ -1435,6 +1438,7 @@
 				9247414316119CCC009132B5 /* chromatic-redux.css in Resources */,
 				1C1004F8162A4C30003090A9 /* members-large@2x.png in Resources */,
 				1C1004FB162A4D4F003090A9 /* info-large@2x.png in Resources */,
+				9290D7C21694F3A400ACF833 /* console.css in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -70,8 +70,6 @@ static NSString *const CQConsoleHideSocketKey = @"Socket";
 	if (!(self = [super initWithTarget:nil]))
 		return self;
 
-	transcriptView.dataDetectorTypes = UIDataDetectorTypeNone;
-
 	_connection = [target retain];
 
 	_delegateLogger = [[MVDelegateLogger alloc] initWithDelegate:self];
@@ -104,6 +102,10 @@ static NSString *const CQConsoleHideSocketKey = @"Socket";
 	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(emailLog:)];
 	self.navigationItem.rightBarButtonItem = settingsItem;
 	[settingsItem release];
+
+	transcriptView.dataDetectorTypes = UIDataDetectorTypeNone;
+	transcriptView.styleIdentifier = @"console";
+	transcriptView.allowsStyleChanges = NO;
 }
 
 #pragma mark -

@@ -77,13 +77,14 @@
 	NSAssert(NO, @"Should not be called. Use transcriptDelegate instead.");
 }
 
+@synthesize allowsStyleChanges = _allowsStyleChanges;
 @synthesize styleIdentifier = _styleIdentifier;
 
 - (void) setStyleIdentifier:(NSString *) styleIdentifier {
 	NSParameterAssert(styleIdentifier);
 	NSParameterAssert(styleIdentifier.length);
 
-	if ([_styleIdentifier isEqualToString:styleIdentifier])
+	if (!_allowsStyleChanges || [_styleIdentifier isEqualToString:styleIdentifier])
 		return;
 
 	id old = _styleIdentifier;
@@ -382,7 +383,7 @@
 
 			[command appendFormat:@"{type:'event',message:'%@',identifier:'%@'},", escapedMessage, escapedIdentifer];
 		} else if ([type isEqualToString:@"console"]) {
-			[command appendFormat:@"{type:'console',message:'%@',outbound:'%@'},", escapedMessage, [component objectForKey:@"outbound"]];
+			[command appendFormat:@"{type:'console',message:'%@',outbound:%@},", escapedMessage, ([[component objectForKey:@"outbound"] boolValue] ? @"true" : @"false")];
 		}
 	}
 
@@ -401,6 +402,7 @@
 		scrollView = [self performPrivateSelector:@"_scroller"];
 	[scrollView performPrivateSelector:@"setShowBackgroundShadow:" withBoolean:NO];
 
+	_allowsStyleChanges = YES;
 	_blockerView = [[UIView alloc] initWithFrame:self.bounds];
 	_blockerView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 	[self addSubview:_blockerView];
