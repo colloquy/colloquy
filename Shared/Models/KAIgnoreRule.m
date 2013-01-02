@@ -89,8 +89,7 @@
 #pragma mark -
 
 - (NSString *) description {
-	NSString *description = MVAutorelease([[super description] copy]);
-	return [description stringByAppendingFormat:@" permanent: %d, user: %@, mask: %@, message: %@, rooms: %@", _permanent, _ignoredUser, _ignoreMask, _ignoredMessage, _rooms];
+	return self.friendlyName;
 }
 
 - (BOOL) isEqual:(id) object {

@@ -2,10 +2,10 @@
 
 @interface CQPreferencesListEditViewController : CQPreferencesTableViewController {
 	@protected
-	NSString *_listItemText;
+	id _listItem;
 	NSString *_listItemPlaceholder;
 	BOOL _viewDisappearing;
 }
-@property (nonatomic, copy) NSString *listItemText;
+@property (nonatomic, copy) id listItem;
 @property (nonatomic, copy) NSString *listItemPlaceholder;
 @end

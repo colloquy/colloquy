@@ -4,11 +4,15 @@
 #import "CQConnectionAdvancedEditController.h"
 #import "CQConnectionPushEditController.h"
 #import "CQConnectionsController.h"
+#import "CQIgnoreRulesController.h"
+#import "CQPreferencesIgnoreEditViewController.h"
 #import "CQPreferencesListChannelEditViewController.h"
 #import "CQPreferencesDeleteCell.h"
 #import "CQPreferencesListViewController.h"
 #import "CQPreferencesSwitchCell.h"
 #import "CQPreferencesTextCell.h"
+#import "KAIgnoreRule.h"
+#import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
 
@@ -17,8 +21,9 @@ static unsigned short PushTableSection = 1;
 static unsigned short IdentityTableSection = 2;
 static unsigned short AutomaticTableSection = 3;
 static unsigned short MultitaskTableSection = 4;
-static unsigned short AdvancedTableSection = 5;
-static unsigned short DeleteTableSection = 6;
+static unsigned short IgnoreTableSection = 5;
+static unsigned short AdvancedTableSection = 6;
+static unsigned short DeleteTableSection = 7;
 
 #if TARGET_IPHONE_SIMULATOR
 static BOOL pushAvailable = NO;
@@ -51,10 +56,12 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		--AutomaticTableSection;
 		--MultitaskTableSection;
 		--AdvancedTableSection;
+		--IgnoreTableSection;
 		--DeleteTableSection;
 	}
 
 	if (![UIDevice currentDevice].multitaskingSupported) {
+		--IgnoreTableSection;
 		--AdvancedTableSection;
 		--DeleteTableSection;
 	}
@@ -156,7 +163,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 #pragma mark -
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *) tableView {
-	NSInteger count = 7;
+	NSInteger count = 8;
 	if (self.newConnection || !_connection.directConnection)
 		count -= 1;
 	if (!pushAvailable)
@@ -181,6 +188,8 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		return 1;
 	if (section == DeleteTableSection)
 		return 1;
+	if (section == IgnoreTableSection)
+		return 1;
 	return 0;
 }
 
@@ -190,6 +199,8 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	if (indexPath.section == AutomaticTableSection && indexPath.row == 1)
 		return indexPath;
 	if (indexPath.section == AdvancedTableSection && indexPath.row == 0)
+		return indexPath;
+	if (indexPath.section == IgnoreTableSection)
 		return indexPath;
 	return nil;
 }
@@ -234,6 +245,30 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		[self.navigationController pushViewController:listViewController animated:YES];
 
 		[editingViewController release];
+		[listViewController release];
+
+		return;
+	}
+
+	if (indexPath.section == IgnoreTableSection) {
+		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
+		listViewController.title = NSLocalizedString(@"Ignore List", @"Ignore List view title");
+		listViewController.items = _connection.ignoreController.ignoreRules;
+		listViewController.addItemLabelText = NSLocalizedString(@"Add New Ignore", @"Add New Ignore label");
+		listViewController.noItemsLabelText = NSLocalizedString(@"No Ignores Found", @"No Ignores Found");
+		listViewController.editViewTitle = NSLocalizedString(@"Edit Ignore Rule", @"Edit Ignore Rule");
+		listViewController.editPlaceholder = NSLocalizedString(@"Nickname", @"Nickname");
+
+		CQPreferencesIgnoreEditViewController *ignoreEditViewController = [[CQPreferencesIgnoreEditViewController alloc] initWithConnection:_connection];
+		listViewController.customEditingViewController = ignoreEditViewController;
+		listViewController.target = self;
+		listViewController.action = @selector(ignoreListChanged:);
+
+		[self endEditing];
+
+		[self.navigationController pushViewController:listViewController animated:YES];
+
+		[ignoreEditViewController release];
 		[listViewController release];
 
 		return;
@@ -392,6 +427,13 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		return cell;
+	} else if (indexPath.section == IgnoreTableSection) {
+		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
+
+		cell.textLabel.text = NSLocalizedString(@"Ignore List", @"Ignore List");
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+		return cell;
 	} else if (indexPath.section == DeleteTableSection && indexPath.row == 0) {
 		CQPreferencesDeleteCell *cell = [CQPreferencesDeleteCell reusableTableViewCellInTableView:tableView];
 
@@ -477,6 +519,23 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 - (void) automaticJoinRoomsChanged:(CQPreferencesListViewController *) sender {
 	_connection.automaticJoinedRooms = sender.items;
+}
+
+- (void) ignoreListChanged:(CQPreferencesListViewController *) sender {
+	for (KAIgnoreRule *rule in sender.items) {
+		if (!rule.user.length && !rule.mask.length)
+			continue;
+
+		if (![_connection.ignoreController.ignoreRules containsObject:rule])
+			[_connection.ignoreController addIgnoreRule:rule];
+	}
+
+	for (KAIgnoreRule *rule in _connection.ignoreController.ignoreRules) {
+		if (![sender.items containsObject:rule] || (!rule.user.length && !rule.mask.length))
+			[_connection.ignoreController removeIgnoreRule:rule];
+	}
+
+	[_connection.ignoreController synchronize];
 }
 
 - (void) multitaskingChanged:(CQPreferencesSwitchCell *) sender {

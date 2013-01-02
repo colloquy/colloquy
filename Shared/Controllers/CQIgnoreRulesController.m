@@ -49,7 +49,14 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 	[_ignoreRules addObject:ignoreRule];
 
 	if (ignoreRule.isPermanent)
-		[self synchronize];
+		[self synchronizeSoon];
+}
+
+- (void) removeIgnoreRule:(KAIgnoreRule *) ignoreRule {
+	[_ignoreRules removeObject:ignoreRule];
+
+	if (ignoreRule.isPermanent)
+		[self synchronizeSoon];
 }
 
 - (void) removeIgnoreRuleFromString:(NSString *) ignoreRuleString {
@@ -65,7 +72,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 	}
 
 	if (permanentIgnoreRuleWasRemoved)
-		[self synchronize];
+		[self synchronizeSoon];
 }
 
 #pragma mark -
@@ -86,7 +93,14 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 
 #pragma mark -
 
+- (void) synchronizeSoon {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(synchronize) object:nil];
+	[self performSelector:@selector(synchronize) withObject:nil afterDelay:.25];
+}
+
 - (void) synchronize {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(synchronize) object:nil];
+
 	NSMutableArray *permanentIgnores = [NSMutableArray array];
 
 	for (KAIgnoreRule *rule in _ignoreRules)

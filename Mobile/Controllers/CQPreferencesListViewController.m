@@ -48,9 +48,11 @@
 		NSIndexPath *changedIndexPath = [NSIndexPath indexPathForRow:_editingIndex inSection:0];
 		NSArray *changedIndexPaths = [NSArray arrayWithObject:changedIndexPath];
 
+#define validListItem(item) \
+	(([item isKindOfClass:[NSString class]] && [item length]) || (item && ![item isKindOfClass:[NSString class]]))
 		if (_editingIndex < _items.count) {
-			if (_editingViewController.listItemText.length) {
-				[_items replaceObjectAtIndex:_editingIndex withObject:_editingViewController.listItemText];
+			if (validListItem(_editingViewController.listItem)) {
+				[_items replaceObjectAtIndex:_editingIndex withObject:_editingViewController.listItem];
 
 				[tableView updateCellAtIndexPath:changedIndexPath withAnimation:UITableViewRowAnimationFade];
 			} else {
@@ -59,10 +61,10 @@
 			}
 
 			_pendingChanges = YES;
-		} else if (_editingViewController.listItemText.length) {
-			if (![_items containsObject:_editingViewController.listItemText]) {
+		} else if (validListItem(_editingViewController.listItem)) {
+			if (![_items containsObject:_editingViewController.listItem]) {
 				[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
-				[_items insertObject:_editingViewController.listItemText atIndex:_editingIndex];
+				[_items insertObject:_editingViewController.listItem atIndex:_editingIndex];
 				_pendingChanges = YES;
 
 				[tableView insertRowsAtIndexPaths:changedIndexPaths withRowAnimation:UITableViewRowAnimationFade];
@@ -70,6 +72,7 @@
 				[tableView selectRowAtIndexPath:changedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 			}
 		}
+#undef validListItem
 
 		[_editingViewController release];
 		_editingViewController = nil;
@@ -158,7 +161,7 @@
 	_editingIndex = index;
 
 	_editingViewController.title = _editViewTitle;
-	_editingViewController.listItemText = (index < _items.count ? [_items objectAtIndex:index] : @"");
+	_editingViewController.listItem = (index < _items.count ? [_items objectAtIndex:index] : @"");
 	_editingViewController.listItemPlaceholder = _editPlaceholder;
 
 	[self.navigationController pushViewController:_editingViewController animated:YES];
@@ -197,7 +200,10 @@
 
 	if (indexPath.row < (NSInteger)_items.count) {
 		cell.textLabel.textColor = [UIColor blackColor];
-		cell.textLabel.text = [_items objectAtIndex:indexPath.row];
+		id item = [_items objectAtIndex:indexPath.row];
+		if ([item isKindOfClass:[NSString class]])
+			cell.textLabel.text = item;
+		else cell.textLabel.text = [item description];
 		cell.imageView.image = _itemImage;
 	} else if (self.editing) {
 		cell.selectionStyle = UITableViewCellSelectionStyleBlue;

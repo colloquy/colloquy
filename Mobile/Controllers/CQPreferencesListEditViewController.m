@@ -10,7 +10,7 @@
 }
 
 - (void) dealloc {
-	[_listItemText release];
+	[_listItem release];
 	[_listItemPlaceholder release];
 
 	[super dealloc];
@@ -38,11 +38,11 @@
 
 #pragma mark -
 
-@synthesize listItemText = _listItemText;
+@synthesize listItem = _listItem;
 
-- (void) setListItemText:(NSString *) listItemText {
-	id old = _listItemText;
-	_listItemText = [listItemText copy];
+- (void) setListItem:(id) listItem {
+	id old = _listItem;
+	_listItem = [listItem retain];
 	[old release];
 
 	[self.tableView reloadData];
@@ -67,7 +67,7 @@
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 
-	cell.textField.text = _listItemText;
+	cell.textField.text = _listItem;
 	cell.textField.placeholder = _listItemPlaceholder;
 	cell.textField.clearButtonMode = UITextFieldViewModeAlways;
 	cell.textField.returnKeyType = UIReturnKeyDefault;
@@ -85,7 +85,7 @@
 #pragma mark -
 
 - (void) listItemChanged:(CQPreferencesTextCell *) sender {
-	self.listItemText = sender.textField.text;
+	self.listItem = sender.textField.text;
 
 	if (_viewDisappearing)
 		return;

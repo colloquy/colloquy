@@ -18,6 +18,7 @@ extern NSString *const CQIgnoreRulesNotSavedNotification;
 @property (nonatomic, readonly) NSArray *ignoreRules;
 
 - (void) addIgnoreRule:(KAIgnoreRule *) ignoreRule;
+- (void) removeIgnoreRule:(KAIgnoreRule *) ignoreRule;
 - (void) removeIgnoreRuleFromString:(NSString *) ignoreRuleString;
 
 - (BOOL) hasIgnoreRuleForUser:(MVChatUser *) user;

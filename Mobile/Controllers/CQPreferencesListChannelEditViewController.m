@@ -58,7 +58,7 @@
 #pragma mark -
 
 - (NSString *) room {
-	return _listItemText;
+	return _listItem;
 }
 
 - (NSString *) password {
