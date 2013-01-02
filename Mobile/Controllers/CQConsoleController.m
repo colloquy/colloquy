@@ -71,7 +71,6 @@ static NSString *const CQConsoleHideSocketKey = @"Socket";
 		return self;
 
 	transcriptView.dataDetectorTypes = UIDataDetectorTypeNone;
-	transcriptView.detectsPhoneNumbers = NO;
 
 	_connection = [target retain];
 
@@ -157,7 +156,7 @@ static NSString *const CQConsoleHideSocketKey = @"Socket";
 #pragma mark -
 
 - (void) _gotRawMessage:(NSNotification *) notification {
-	[self addMessage:notification.userInfo[@"message"] outbound:notification.userInfo[@"outbound"]];
+	[self addMessage:notification.userInfo[@"message"] outbound:[notification.userInfo[@"outbound"] boolValue]];
 }
 
 - (void) socketTrafficDidOccur:(NSString *) socketTraffic context:(void *) context {
