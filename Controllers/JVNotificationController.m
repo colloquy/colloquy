@@ -30,7 +30,7 @@ static JVNotificationController *sharedInstance = nil;
 
 		if( floor( NSAppKitVersionNumber ) < NSAppKitVersionNumber10_8 )
 			_useGrowl = ( GrowlApplicationBridge && ! [[[NSUserDefaults standardUserDefaults] objectForKey:@"DisableGrowl"] boolValue] );
-		// else, 10.8, use Notification Center
+		else [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:self];
 
 		if( _useGrowl ) [GrowlApplicationBridge setGrowlDelegate:self];
 	}
@@ -80,6 +80,14 @@ static JVNotificationController *sharedInstance = nil;
 	MVAddUnsafeUnretainedAddress(eventPrefs, 4)
 
 	[[MVChatPluginManager defaultManager] makePluginsPerformInvocation:invocation];
+}
+
+- (void) userNotificationCenter:(NSUserNotificationCenter *) center didActivateNotification:(NSUserNotification *) notification {
+	id target = [notification.userInfo objectForKey:@"target"];
+	SEL action = NSSelectorFromString([notification.userInfo objectForKey:@"action"]);
+
+	if ( target && action && [target respondsToSelector:action] )
+		[target performSelector:action withObject:nil];
 }
 @end
 
@@ -138,9 +146,12 @@ static JVNotificationController *sharedInstance = nil;
 			[_bubbles setObject:bubble forKey:[context objectForKey:@"coalesceKey"]];
 		}
 	} else {
+		NSLog(@"%@", context);
 		NSUserNotification *notification = [[NSUserNotification alloc] init];
 		notification.title = title;
-		notification.subtitle = description;
+		notification.subtitle = [context objectForKey:@"subtitle"];
+		if (!notification.subtitle.length)
+			notification.subtitle = description;
 
 		[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
 	}

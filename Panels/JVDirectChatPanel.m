@@ -915,6 +915,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 			[context setObject:[[self windowTitle] stringByAppendingString:@"JVChatPrivateMessage"] forKey:@"coalesceKey"];
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
+			[context setObject:[NSString stringWithFormat:@"%@: %@", self.target, [message bodyAsPlainText]] forKey:@"subtitle"];
 			[self performNotification:@"JVChatFirstMessage" withContextInfo:context];
 		} else if( [message ignoreStatus] == JVNotIgnored ) {
 			NSMutableDictionary *context = [NSMutableDictionary dictionary];
@@ -925,6 +926,7 @@ NSString *JVChatEventMessageWasProcessedNotification = @"JVChatEventMessageWasPr
 			[context setObject:[[self windowTitle] stringByAppendingString:@"JVChatPrivateMessage"] forKey:@"coalesceKey"];
 			[context setObject:self forKey:@"target"];
 			[context setObject:NSStringFromSelector( @selector( activate: ) ) forKey:@"action"];
+			[context setObject:[NSString stringWithFormat:@"%@: %@", self.target, [message bodyAsPlainText]] forKey:@"subtitle"];
 			[self performNotification:@"JVChatAdditionalMessages" withContextInfo:context];
 		}
 	}

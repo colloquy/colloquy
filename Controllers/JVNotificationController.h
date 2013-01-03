@@ -1,4 +1,4 @@
-@interface JVNotificationController : NSObject {
+@interface JVNotificationController : NSObject <NSUserNotificationCenterDelegate> {
 	NSMutableDictionary *_bubbles;
 	NSMutableDictionary *_sounds;
 	BOOL _useGrowl;
