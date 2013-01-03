@@ -680,7 +680,9 @@ static BOOL showingKeyboard;
 }
 
 - (BOOL) handleConsoleCommandWithArguments:(NSString *) arguments {
-	[CQConnectionsController defaultController].shouldLogRawMessagesToConsole = [arguments isCaseInsensitiveEqualToString:@"on"];
+	if (arguments.length)
+		[CQConnectionsController defaultController].shouldLogRawMessagesToConsole = [arguments isCaseInsensitiveEqualToString:@"on"];
+	else [[CQChatController defaultController] showConsoleForConnection:self.connection];
 
 	return YES;
 }
