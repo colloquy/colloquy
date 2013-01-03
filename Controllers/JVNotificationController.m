@@ -146,7 +146,6 @@ static JVNotificationController *sharedInstance = nil;
 			[_bubbles setObject:bubble forKey:[context objectForKey:@"coalesceKey"]];
 		}
 	} else {
-		NSLog(@"%@", context);
 		NSUserNotification *notification = [[NSUserNotification alloc] init];
 		notification.title = title;
 		notification.subtitle = [context objectForKey:@"subtitle"];
