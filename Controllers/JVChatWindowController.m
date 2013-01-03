@@ -625,12 +625,14 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 
 // On Mac OS 10.5 and above, NSTableView and NSOutlineView have better contextual menu support. We now see a highlighted item for what was clicked on and update the menu accordingly
 - (void) menuNeedsUpdate:(NSMenu *) menu {
-	NSInteger clickedRow = [chatViewsOutlineView clickedRow];
-	id item = [chatViewsOutlineView itemAtRow:clickedRow];
-	if( item ) {
-		[self _refreshMenuWithItem:item];
-	} else {
-		[[chatViewsOutlineView menu] removeAllItems];
+	if (menu == [chatViewsOutlineView menu]) {
+		NSInteger clickedRow = [chatViewsOutlineView clickedRow];
+		id item = [chatViewsOutlineView itemAtRow:clickedRow];
+		if( item ) {
+			[self _refreshMenuWithItem:item];
+		} else {
+			[[chatViewsOutlineView menu] removeAllItems];
+		}
 	}
 }
 
@@ -1051,7 +1053,7 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 		[viewActionButton setMenu:menu];
 	} else [viewActionButton setEnabled:NO];
 
-	[chatViewsOutlineView setMenu:menu];
+	[chatViewsOutlineView setMenu:[menu copy]];
 }
 
 - (void) _refreshWindow {
