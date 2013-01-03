@@ -67,13 +67,9 @@ static NSMenu *favoritesMenu = nil;
 }
 
 + (void) refreshFavoritesMenu {
-	if(  favoritesMenu ) {
-		for (NSMenuItem *item in favoritesMenu.itemArray) {
-			[item setTarget:nil];
-		}
-	}
-	favoritesMenu = [[NSMenu alloc] initWithTitle:@""];
-//	else [favoritesMenu removeAllItems];
+	if( ! favoritesMenu )
+		favoritesMenu = [[NSMenu alloc] initWithTitle:@""];
+	else [favoritesMenu removeAllItems];
 
 	NSString *path = [@"~/Library/Application Support/Colloquy/Favorites/Favorites.plist" stringByExpandingTildeInPath];
 	NSArray *favorites = [NSArray arrayWithContentsOfFile:path];
