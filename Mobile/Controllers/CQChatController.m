@@ -162,6 +162,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		if (chatController1.connection > chatController2.connection)
 			return NSOrderedDescending;
 
+		if ([chatController1 isMemberOfClass:[CQConsoleController class]])
+			return NSOrderedAscending;
+		if ([chatController2 isMemberOfClass:[CQConsoleController class]])
+			return NSOrderedDescending;
 		if ([chatController1 isMemberOfClass:[CQChatRoomController class]] && [chatController2 isMemberOfClass:[CQDirectChatController class]])
 			return NSOrderedAscending;
 		if ([chatController1 isMemberOfClass:[CQDirectChatController class]] && [chatController2 isMemberOfClass:[CQChatRoomController class]])
