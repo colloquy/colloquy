@@ -133,9 +133,9 @@
 
 - (void) addMessagePreview:(NSString *) message fromUser:(MVChatUser *) user asAction:(BOOL) action animated:(BOOL) animated {
 	NSString *labelText = nil;
-	if (action)
+	if (user && action)
 		labelText = [NSString stringWithFormat:@"%C %@ %@", (unichar)0x2022, user.displayName, message];
-	else if (_showsUserInMessagePreviews)
+	else if (user && _showsUserInMessagePreviews)
 		labelText = [NSString stringWithFormat:@"%@: %@", user.displayName, message];
 	else labelText = message;
 

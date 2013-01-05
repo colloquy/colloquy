@@ -5,6 +5,7 @@
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
+#import "CQConsoleController.h"
 #if ENABLE(FILE_TRANSFERS)
 #import "CQFileTransferController.h"
 #import "CQFileTransferTableCell.h"
@@ -343,7 +344,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		message = [message stringByDecodingXMLSpecialCharacterEntities];
 	}
 
-	if (!message || !user)
+	if (!message)
 		return;
 
 	[cell addMessagePreview:message fromUser:user asAction:action animated:animated];
@@ -401,7 +402,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	[cell takeValuesFromChatViewController:chatViewController];
 
-	if ([chatViewController isMemberOfClass:[CQDirectChatController class]])
+	if ([chatViewController isMemberOfClass:[CQDirectChatController class]] || [chatViewController isMemberOfClass:[CQConsoleController class]])
 		cell.showsUserInMessagePreviews = NO;
 
 	if (animated)

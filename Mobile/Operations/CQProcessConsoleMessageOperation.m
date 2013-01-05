@@ -95,10 +95,7 @@ static NSRegularExpression *numericRegularExpression;
 	[_processedMessage setObject:_message forKey:@"message"];
 	[_processedMessage setObject:@(_outbound) forKey:@"outbound"];
 
-	NSString *plainMessage = [messageString stringByStrippingXMLTags];
-	plainMessage = [plainMessage stringByDecodingXMLSpecialCharacterEntities];
-
-	[_processedMessage setObject:plainMessage forKey:@"messagePlain"];
+	[_processedMessage setObject:_message forKey:@"messagePlain"];
 
 	if (_target && _action)
 		[_target performSelectorOnMainThread:_action withObject:self waitUntilDone:NO];

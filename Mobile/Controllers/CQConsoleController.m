@@ -110,12 +110,32 @@ static NSString *const CQConsoleHideSocketKey = @"Socket";
 
 #pragma mark -
 
+- (BOOL) available {
+	return YES;
+}
+
 - (MVChatConnection *) connection {
 	return _connection;
 }
 
 - (id) target {
 	return _connection;
+}
+
+#pragma mark -
+
+- (NSString *) title {
+	return NSLocalizedString(@"Console", @"Console cell title");
+}
+
+#pragma mark -
+
+- (NSUInteger) unreadCount {
+	return 0;
+}
+
+- (NSUInteger) importantUnreadCount {
+	return 0;
 }
 
 #pragma mark -
@@ -192,6 +212,13 @@ static NSString *const CQConsoleHideSocketKey = @"Socket";
 		return;
 	if (!hideUnknown && operation.messageType == CQConsoleMessageTypeUnknown)
 		return;
+
+	if (!_recentMessages)
+		_recentMessages = [[NSMutableArray alloc] init];
+	[_recentMessages addObject:operation.processedMessageInfo];
+
+	while (_recentMessages.count > 10)
+		[_recentMessages removeObjectAtIndex:0];
 
 	[self _addPendingComponent:operation.processedMessageInfo];
 }
