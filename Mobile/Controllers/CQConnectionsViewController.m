@@ -333,8 +333,8 @@
 
 	sheet.title = connection.displayName;
 
-	[sheet addButtonWithTitle:NSLocalizedString(@"Show Console", @"Show Console")];
 	[sheet addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
+	[sheet addButtonWithTitle:NSLocalizedString(@"Show Console", @"Show Console")];
 
 	if (connection.temporaryDirectConnection || !connection.directConnection)
 		[sheet addButtonWithTitle:NSLocalizedString(@"Connect Directly", @"Connect Directly button title")];
@@ -359,14 +359,14 @@
 
 	sheet.title = connection.displayName;
 
-	[sheet addButtonWithTitle:NSLocalizedString(@"Show Console", @"Show Console")];
-
 	if (connection.directConnection) {
 		sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
 	} else {
 		[sheet addButtonWithTitle:NSLocalizedString(@"Disconnect", @"Disconnect button title")];
 		sheet.destructiveButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Fully Disconnect", @"Fully Disconnect button title")];
 	}
+
+	[sheet addButtonWithTitle:NSLocalizedString(@"Show Console", @"Show Console")];
 
 	if (connection.connected) {
 		if (connection.awayStatusMessage)
@@ -397,10 +397,10 @@
 		[connection cancelPendingReconnectAttempts];
 
 		if (buttonIndex == 0) {
-			[[CQChatController defaultController] showConsoleForConnection:connection];
-		} else if (buttonIndex == 1) {
 			connection.temporaryDirectConnection = NO;
 			[connection connect];
+		} else if (buttonIndex == 1) {
+			[[CQChatController defaultController] showConsoleForConnection:connection];
 		} else if (buttonIndex == 2 && (connection.temporaryDirectConnection || !connection.directConnection))
 			[connection connectDirectly];
 	} else if (actionSheet.tag == DisconnectSheetTag) {
@@ -408,10 +408,10 @@
 			if (connection.directConnection)
 				[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 			else [connection sendRawMessageImmediatelyWithComponents:@"SQUIT :", [MVChatConnection defaultQuitMessage], nil];
-		} else if (buttonIndex == 0) {
-			[[CQChatController defaultController] showConsoleForConnection:connection];
-		} else if (!connection.directConnection && buttonIndex == 1) {
+		} else if (!connection.directConnection && buttonIndex == 0) {
 			[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
+		} else if (buttonIndex == 1) {
+			[[CQChatController defaultController] showConsoleForConnection:connection];
 		} else if (connection.connected) {
 			if (connection.awayStatusMessage) {
 				connection.awayStatusMessage = nil;
