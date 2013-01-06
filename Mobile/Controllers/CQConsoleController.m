@@ -21,17 +21,6 @@ static BOOL hideCTCPs;
 static BOOL hidePINGs;
 static BOOL hideSocketInformation;
 
-static NSString *const CQConsoleHideNickKey = @"Nick";
-static NSString *const CQConsoleHideTrafficKey = @"Traffic";
-static NSString *const CQConsoleHideTopicKey = @"Topic";
-static NSString *const CQConsoleHideMessagesKey = @"Messages";
-static NSString *const CQConsoleHideModeKey = @"Mode";
-static NSString *const CQConsoleHideNumericKey = @"Numeric";
-static NSString *const CQConsoleHideUnknownKey = @"Unknown";
-static NSString *const CQConsoleHideCtcpKey = @"Ctcp";
-static NSString *const CQConsoleHidePingKey = @"Ping";
-static NSString *const CQConsoleHideSocketKey = @"Socket";
-
 @interface CQDirectChatController (Private)
 + (NSOperationQueue *) chatMessageProcessingQueue;
 + (void) userDefaultsChanged;
@@ -43,16 +32,16 @@ static NSString *const CQConsoleHideSocketKey = @"Socket";
 + (void) userDefaultsChanged {
 	[super userDefaultsChanged];
 
-	hideNICKs = defaultNamed(CQConsoleHideNickKey);
-	hideTraffic = defaultNamed(CQConsoleHideTrafficKey);
-	hideTOPICs = defaultNamed(CQConsoleHideTopicKey);
-	hideMessages = defaultNamed(CQConsoleHideMessagesKey);
-	hideMODEs = defaultNamed(CQConsoleHideModeKey);
-	hideNumerics = defaultNamed(CQConsoleHideNumericKey);
-	hideCTCPs = defaultNamed(CQConsoleHideCtcpKey);
-	hidePINGs = defaultNamed(CQConsoleHidePingKey);
-	hideUnknown = defaultNamed(CQConsoleHideUnknownKey);
-	hideSocketInformation = defaultNamed(CQConsoleHideSocketKey);
+	hideNICKs = defaultNamed(@"Nick");
+	hideTraffic = defaultNamed(@"Traffic");
+	hideTOPICs = defaultNamed(@"Topic");
+	hideMessages = defaultNamed(@"Messages");
+	hideMODEs = defaultNamed(@"Mode");
+	hideNumerics = defaultNamed(@"Numeric");
+	hideCTCPs = defaultNamed(@"Unknown");
+	hidePINGs = defaultNamed(@"Ping");
+	hideUnknown = defaultNamed(@"Ctcp");
+	hideSocketInformation = defaultNamed(@"Socket");
 }
 
 + (void) initialize {
@@ -98,10 +87,6 @@ static NSString *const CQConsoleHideSocketKey = @"Socket";
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawMessage:) name:MVChatConnectionGotRawMessageNotification object:_connection];
 
 	self.navigationItem.title = NSLocalizedString(@"Console", @"Console view title");
-
-	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(emailLog:)];
-	self.navigationItem.rightBarButtonItem = settingsItem;
-	[settingsItem release];
 
 	transcriptView.dataDetectorTypes = UIDataDetectorTypeNone;
 	transcriptView.styleIdentifier = @"console";
@@ -153,10 +138,6 @@ static NSString *const CQConsoleHideSocketKey = @"Socket";
 	[[CQDirectChatController chatMessageProcessingQueue] addOperation:operation];
 
 	[operation release];
-}
-
-- (void) emailLog:(id) sender {
-	
 }
 
 #pragma mark -
