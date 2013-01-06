@@ -26,6 +26,7 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 - (void) showWelcome:(id) sender;
 - (void) showConnections:(id) sender;
 - (void) showColloquies:(id) sender;
+- (void) showColloquies:(id) sender hidingTopViewController:(BOOL) hidingTopViewController;
 
 - (void) dismissPopoversAnimated:(BOOL) animated;
 

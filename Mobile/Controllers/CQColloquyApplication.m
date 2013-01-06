@@ -671,6 +671,10 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) showColloquies:(id) sender {
+	[self showColloquies:sender hidingTopViewController:YES];
+}
+
+- (void) showColloquies:(id) sender hidingTopViewController:(BOOL) hidingTopViewController {
 	if ([[UIDevice currentDevice] isPadModel]) {
 		if (!_colloquiesPopoverController.popoverVisible) {
 			[self dismissPopoversAnimated:NO];
@@ -678,7 +682,8 @@ static NSMutableArray *highlightWords;
 		}
 	} else {
 		self.tabBarController.selectedViewController = [CQChatController defaultController].chatNavigationController;
-		[[CQChatController defaultController].chatNavigationController popToRootViewControllerAnimated:YES];
+		if (hidingTopViewController)
+			[[CQChatController defaultController].chatNavigationController popToRootViewControllerAnimated:YES];
 	}
 }
 

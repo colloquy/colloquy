@@ -622,6 +622,9 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
+	if ([UIDevice currentDevice].isPhoneModel)
+		[[CQColloquyApplication sharedApplication] showColloquies:nil hidingTopViewController:NO];
+
 	if (_visibleChatController == controller)
 		return;
 
@@ -641,7 +644,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 			[_chatNavigationController pushViewController:(UIViewController *)controller animated:NO];
 			[_chatNavigationController dismissModalViewControllerAnimated:animated];
 		} else {
-			if ([UIDevice currentDevice].isPhoneModel && !_chatNavigationController.rootViewController)
+			if (!_chatNavigationController.rootViewController)
 				[[CQColloquyApplication sharedApplication] showColloquies:nil];
 
 			if (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController) {
