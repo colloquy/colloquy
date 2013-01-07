@@ -18,6 +18,7 @@ static NSRegularExpression *numericRegularExpression;
 @synthesize action = _action;
 @synthesize userInfo = _userInfo;
 @synthesize messageType = _messageType;
+@synthesize verbose = _verbose;
 
 - (id) initWithMessage:(NSString *) message outbound:(BOOL) outbound {
 	NSParameterAssert(message != nil);
@@ -55,24 +56,42 @@ static NSRegularExpression *numericRegularExpression;
 
 #pragma mark -
 
-- (void) _determineMessageType {
-	if (([_message hasCaseInsensitivePrefix:@"PRIVMSG"] || [_message hasCaseInsensitivePrefix:@"NOTICE"]))
+- (void) _determineMessageType:(NSString *) message {
+	if (([message hasCaseInsensitivePrefix:@"PRIVMSG"] || [message hasCaseInsensitivePrefix:@"NOTICE"]))
 		_messageType = CQConsoleMessageTypeMessage;
-	else if (([_message hasCaseInsensitivePrefix:@"JOIN"] || [_message hasCaseInsensitivePrefix:@"PART"] || [_message hasCaseInsensitivePrefix:@"KICK"] || [_message hasCaseInsensitivePrefix:@"INVITE"]))
+	else if (([message hasCaseInsensitivePrefix:@"JOIN"] || [message hasCaseInsensitivePrefix:@"PART"] || [message hasCaseInsensitivePrefix:@"KICK"] || [message hasCaseInsensitivePrefix:@"INVITE"]))
 		_messageType = CQConsoleMessageTypeTraffic;
-	else if ([_message hasCaseInsensitivePrefix:@"NICK"])
+	else if ([message hasCaseInsensitivePrefix:@"NICK"])
 		_messageType = CQConsoleMessageTypeNick;
-	else if ([_message hasCaseInsensitivePrefix:@"TOPIC"])
+	else if ([message hasCaseInsensitivePrefix:@"TOPIC"])
 		_messageType = CQConsoleMessageTypeTopic;
-	else if ([_message hasCaseInsensitivePrefix:@"MODE"])
+	else if ([message hasCaseInsensitivePrefix:@"MODE"])
 		_messageType = CQConsoleMessageTypeMode;
-	else if ([numericRegularExpression matchesInString:_message options:NSMatchingAnchored range:NSMakeRange(0, MIN(12, (int)_message.length))])
+	else if ([numericRegularExpression matchesInString:message options:NSMatchingAnchored range:NSMakeRange(0, MIN(12, (int)message.length))])
 		_messageType = CQConsoleMessageTypeNumeric;
-	else if ([_message hasCaseInsensitivePrefix:@"CTCP"])
+	else if ([message hasCaseInsensitivePrefix:@"CTCP"])
 		_messageType = CQConsoleMessageTypeCTCP;
-	else if (([_message hasCaseInsensitivePrefix:@"PING"] || [_message hasCaseInsensitivePrefix:@"PONG"]))
+	else if (([message hasCaseInsensitivePrefix:@"PING"] || [message hasCaseInsensitivePrefix:@"PONG"]))
 		_messageType = CQConsoleMessageTypePing;
 	else _messageType = CQConsoleMessageTypeUnknown;
+}
+
+- (NSString *) _stripServerFromMessage:(NSMutableString *) message {
+	NSRange spaceRange = [message rangeOfString:@" "];
+	if (spaceRange.location == NSNotFound)
+		return message;
+
+	NSString *potentialServer = [message substringToIndex:spaceRange.location];
+	if ([potentialServer rangeOfString:@"@"].location != NSNotFound)
+		return message;
+
+	if ([potentialServer rangeOfString:@"!"].location != NSNotFound)
+		return message;
+
+	if ([potentialServer rangeOfString:@"."].location == NSNotFound)
+		return message;
+
+	return [message substringFromIndex:(spaceRange.location + spaceRange.length)];
 }
 
 #pragma mark -
@@ -80,19 +99,31 @@ static NSRegularExpression *numericRegularExpression;
 - (void) main {
 	[_message replaceOccurrencesOfString:@"\n" withString:@"" options:(NSAnchoredSearch | NSBackwardsSearch) range:NSMakeRange(_message.length - 2, 2)];
 	[_message replaceOccurrencesOfString:@"\r" withString:@"" options:(NSAnchoredSearch | NSBackwardsSearch) range:NSMakeRange(_message.length - 1, 1)];
+
+	NSMutableString *verboseMessage = [_message mutableCopy];
+
 	[_message replaceOccurrencesOfString:@":" withString:@"" options:NSAnchoredSearch range:NSMakeRange(0, MIN(1, (int)_message.length))];
 	[_message replaceOccurrencesOfString:@" :" withString:@" " options:NSLiteralSearch range:NSMakeRange(0, _message.length)];
 
-	[self _determineMessageType];
+	NSString *strippedMessage = [self _stripServerFromMessage:_message];
+
+	[self _determineMessageType:strippedMessage];
 
 	_processedMessage = [[NSMutableDictionary alloc] init];
-
 	[_processedMessage setObject:@"console" forKey:@"type"];
-	[_processedMessage setObject:_message forKey:@"message"];
 	[_processedMessage setObject:@(_outbound) forKey:@"outbound"];
-	[_processedMessage setObject:_message forKey:@"messagePlain"];
+
+	if (_verbose) {
+		[_processedMessage setObject:verboseMessage forKey:@"message"];
+		[_processedMessage setObject:verboseMessage forKey:@"messagePlain"];
+	} else {
+		[_processedMessage setObject:strippedMessage forKey:@"message"];
+		[_processedMessage setObject:strippedMessage forKey:@"messagePlain"];
+	}
 
 	if (_target && _action)
 		[_target performSelectorOnMainThread:_action withObject:self waitUntilDone:NO];
+
+	[verboseMessage release];
 }
 @end

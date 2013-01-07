@@ -110,5 +110,7 @@
 	<true/>
 	<key>CQConsoleDisplaySocket</key>
 	<false/>
+	<key>CQConsoleDisplayVerbose</key>
+	<false/>
 </dict>
 </plist>

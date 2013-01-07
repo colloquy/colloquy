@@ -22,10 +22,12 @@ typedef enum {
 	BOOL _outbound;
 
 	CQConsoleMessageType _messageType;
+	BOOL _verbose;
 }
 
 - (id) initWithMessage:(NSString *) message outbound:(BOOL) outbound;
 
+@property BOOL verbose;
 @property NSStringEncoding encoding;
 @property NSStringEncoding fallbackEncoding;
 

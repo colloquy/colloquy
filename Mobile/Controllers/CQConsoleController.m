@@ -20,6 +20,7 @@ static BOOL hideUnknown; // WALLOP, OLINEs, etc
 static BOOL hideCTCPs;
 static BOOL hidePINGs;
 static BOOL hideSocketInformation;
+static BOOL verbose;
 
 @interface CQDirectChatController (Private)
 + (NSOperationQueue *) chatMessageProcessingQueue;
@@ -42,6 +43,8 @@ static BOOL hideSocketInformation;
 	hidePINGs = defaultNamed(@"Ping");
 	hideUnknown = defaultNamed(@"Ctcp");
 	hideSocketInformation = defaultNamed(@"Socket");
+
+	verbose = defaultNamed(@"Verbose");
 }
 
 + (void) initialize {
@@ -138,6 +141,8 @@ static BOOL hideSocketInformation;
 
 	operation.target = self;
 	operation.action = @selector(_messageProcessed:);
+
+	operation.verbose = verbose;
 
 	[[CQDirectChatController chatMessageProcessingQueue] addOperation:operation];
 

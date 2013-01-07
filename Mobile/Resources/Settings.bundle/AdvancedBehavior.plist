@@ -254,7 +254,7 @@
 			<key>Title</key>
 			<string>Server Traffic</string>
 			<key>Key</key>
-			<string>CQConsoleDisplayServerTraffic</string>
+			<string>CQConsoleDisplayNumeric</string>
 			<key>DefaultValue</key>
 			<true/>
 		</dict>
