@@ -713,7 +713,11 @@
 	if( offset < argsArray.count && ((NSString *)[argsArray objectAtIndex:offset]).length )
 		rooms = [argsArray subarrayWithRange:NSMakeRange( offset, argsArray.count - offset )];
 
-	KAIgnoreRule *rule = [KAIgnoreRule ruleForUser:memberString message:messageString inRooms:rooms isPermanent:permanent friendlyName:nil];
+	KAIgnoreRule *rule = nil;
+	if ( [memberString isValidIRCMask] )
+		rule = [KAIgnoreRule ruleForUser:nil mask:memberString message:messageString inRooms:rooms isPermanent:permanent friendlyName:nil];
+	else rule = [KAIgnoreRule ruleForUser:memberString message:messageString inRooms:rooms isPermanent:permanent friendlyName:nil];
+
 	NSMutableArray *rules = [[MVConnectionsController defaultController] ignoreRulesForConnection:view.connection];
 	[rules addObject:rule];
 

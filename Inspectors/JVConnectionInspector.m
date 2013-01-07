@@ -338,12 +338,21 @@
 		BOOL isPermanent = ( [makeRulePermanent state] == NSOnState );
 
 		if( _ignoreRuleIsNew ) {
-			KAIgnoreRule *rule = [KAIgnoreRule ruleForUser:user message:message inRooms:_editingRuleRooms isPermanent:isPermanent friendlyName:friendlyName];
+			KAIgnoreRule *rule = nil;
+			if ( [user isValidIRCMask] )
+				rule = [KAIgnoreRule ruleForUser:nil mask:user message:message inRooms:_editingRuleRooms isPermanent:isPermanent friendlyName:friendlyName];
+			else rule = [KAIgnoreRule ruleForUser:user message:message inRooms:_editingRuleRooms isPermanent:isPermanent friendlyName:friendlyName];
 			[_ignoreRules addObject:rule];
 			[editRules noteNumberOfRowsChanged];
 		} else {
 			KAIgnoreRule *rule = [_ignoreRules objectAtIndex:[editRules selectedRow]];
-			[rule setUser:user];
+			if ( [message isValidIRCMask] ) {
+				[rule setMask:user];
+				[rule setUser:nil];
+			} else {
+				[rule setUser:user];
+				[rule setMask:user];
+			}
 			[rule setMessage:message];
 			[rule setRooms:_editingRuleRooms];
 			[rule setPermanent:isPermanent];
