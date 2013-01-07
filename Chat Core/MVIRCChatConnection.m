@@ -3159,13 +3159,13 @@ end:
 	NSMutableArray *argsNeeded = [[NSMutableArray alloc] initWithCapacity:10];
 	NSUInteger i = 0, count = parameters.count;
 	NSMutableString *unsupportedModes = [NSMutableString string];
-	BOOL previousUnknownMode;
+	BOOL previousUnknownMode = YES;
 	while( i < count ) {
 		NSString *param = [self _stringFromPossibleData:[parameters objectAtIndex:i++]];
 		if( param.length ) {
 			char chr = [param characterAtIndex:0];
 			if( chr == '+' || chr == '-' ) {
-				unsigned enabled = YES;
+				BOOL enabled = YES;
 				NSUInteger j = 0, length = param.length;
 				while( j < length ) {
 					chr = [param characterAtIndex:j++];

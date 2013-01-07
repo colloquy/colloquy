@@ -85,16 +85,11 @@ static NSRegularExpression *numericRegularExpression;
 
 	[self _determineMessageType];
 
-	NSString *messageString = [_message stringByAddingPercentEscapesUsingEncoding:_encoding];
-	if (!messageString)
-		messageString = [_message stringByAddingPercentEscapesUsingEncoding:_fallbackEncoding];
-
 	_processedMessage = [[NSMutableDictionary alloc] init];
 
 	[_processedMessage setObject:@"console" forKey:@"type"];
 	[_processedMessage setObject:_message forKey:@"message"];
 	[_processedMessage setObject:@(_outbound) forKey:@"outbound"];
-
 	[_processedMessage setObject:_message forKey:@"messagePlain"];
 
 	if (_target && _action)
