@@ -939,6 +939,21 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 		}
 
 		if( message && mode ) [self addEventMessageToDisplay:message withName:@"modeChange" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? (id) mbr : (id) user ), @"by", mode, @"mode", ( [[[notification userInfo] objectForKey:@"enabled"] boolValue] ? @"yes" : @"no" ), @"enabled", parameter, @"parameter", nil]];
+
+		NSString *unsupportedModes = [notification.userInfo objectForKey:@"unsupportedModes"];
+		if (unsupportedModes.length) {
+			NSString *message = nil;
+			if (unsupportedModes.length > 2) {
+				if (user.localUser)
+					message = [NSString stringWithFormat:[NSLocalizedString(@"You set modes %@.", @"unknown modes changed") stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
+				else message = [NSString stringWithFormat:[NSLocalizedString(@"%@ set modes %@.", @"unknown modes changed") stringByEncodingXMLSpecialCharactersAsEntities], [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
+			} else {
+				if (user.localUser)
+					message = [NSString stringWithFormat:[NSLocalizedString(@"You set mode %@.", @"unknown mode changed") stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
+				else message = [NSString stringWithFormat:[NSLocalizedString(@"%@ set mode %@.", @"unknown mode changed") stringByEncodingXMLSpecialCharactersAsEntities], [[user nickname] stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
+			}
+
+			[self addEventMessageToDisplay:message withName:@"unknownRoomModesSet" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? (id) mbr : (id) user ), @"by", nil]];
 	}
 }
 
