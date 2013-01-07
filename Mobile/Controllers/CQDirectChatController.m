@@ -1790,7 +1790,9 @@ static BOOL showingKeyboard;
 
 	[self _addPendingComponent:message];
 
-	if (!user.localUser)
-		[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
+	if (!user.localUser) {
+		NSNotification *notification = [NSNotification notificationWithName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
+		[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP coalesceMask:NSNotificationCoalescingOnSender forModes:[NSArray arrayWithObject:NSRunLoopCommonModes]];
+	}
 }
 @end

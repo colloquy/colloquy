@@ -109,6 +109,10 @@ static BOOL hideSocketInformation;
 
 #pragma mark -
 
+- (UIImage *) icon {
+	return [UIImage imageNamed:@"console.png"];
+}
+
 - (NSString *) title {
 	return NSLocalizedString(@"Console", @"Console cell title");
 }
@@ -202,5 +206,8 @@ static BOOL hideSocketInformation;
 		[_recentMessages removeObjectAtIndex:0];
 
 	[self _addPendingComponent:operation.processedMessageInfo];
+
+	NSNotification *notification = [NSNotification notificationWithName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
+	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP coalesceMask:NSNotificationCoalescingOnSender forModes:[NSArray arrayWithObject:NSRunLoopCommonModes]];
 }
 @end
