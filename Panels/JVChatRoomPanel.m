@@ -954,6 +954,7 @@ NSString *const MVFavoritesListDidUpdateNotification = @"MVFavoritesListDidUpdat
 			}
 
 			[self addEventMessageToDisplay:message withName:@"unknownRoomModesSet" andAttributes:[NSDictionary dictionaryWithObjectsAndKeys:( mbr ? (id) mbr : (id) user ), @"by", nil]];
+		}
 	}
 }
 
