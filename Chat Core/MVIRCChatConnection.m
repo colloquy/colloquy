@@ -3158,6 +3158,8 @@ end:
 	NSUInteger value = 0;
 	NSMutableArray *argsNeeded = [[NSMutableArray alloc] initWithCapacity:10];
 	NSUInteger i = 0, count = parameters.count;
+	NSMutableString *unsupportedModes = [NSMutableString string];
+	BOOL previousUnknownMode;
 	while( i < count ) {
 		NSString *param = [self _stringFromPossibleData:[parameters objectAtIndex:i++]];
 		if( param.length ) {
@@ -3232,6 +3234,15 @@ end:
 							if( supportedModes.count ) {
 								value = [[supportedModes objectForKey:[NSString stringWithFormat:@"%c", chr]] unsignedLongValue];
 								if( value ) goto queue;
+								else {
+									if (!unsupportedModes.length || previousUnknownMode != enabled) {
+										previousUnknownMode = enabled;
+										if (previousUnknownMode) [unsupportedModes appendString:@"+"];
+										else [unsupportedModes appendString:@"-"];
+									}
+
+									[unsupportedModes appendFormat:@"%c", chr];
+								}
 							}
 						}
 					}
@@ -3278,7 +3289,7 @@ end:
 	[argsNeeded release];
 
 	NSUInteger changedModes = ( oldModes ^ [room modes] ) | argModes;
-	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:changedModes], @"changedModes", sender, @"by", nil]];
+	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomModesChangedNotification object:room userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:changedModes], @"changedModes", sender, @"by", [[unsupportedModes copy] autorelease], @"unsupportedModes", nil]];
 }
 
 - (void) _handleModeWithParameters:(NSArray *) parameters fromSender:(MVChatUser *) sender {

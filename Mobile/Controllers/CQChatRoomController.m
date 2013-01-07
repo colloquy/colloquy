@@ -928,6 +928,22 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		if (message.length && identifier.length)
 			[self addEventMessageAsHTML:message withIdentifier:identifier announceWithVoiceOver:YES];
 	}
+
+	NSString *unsupportedModes = [notification.userInfo objectForKey:@"unsupportedModes"];
+	if (unsupportedModes.length) {
+		NSString *message = nil;
+		if (unsupportedModes.length > 2) {
+			if (user.localUser)
+				message = [NSString stringWithFormat:[NSLocalizedString(@"You set modes %@.", @"unknown modes changed") stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
+			else message = [NSString stringWithFormat:[NSLocalizedString(@"%@ set modes %@.", @"unknown modes changed") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], unsupportedModes];
+		} else {
+			if (user.localUser)
+				message = [NSString stringWithFormat:[NSLocalizedString(@"You set mode %@.", @"unknown mode changed") stringByEncodingXMLSpecialCharactersAsEntities], unsupportedModes];
+			else message = [NSString stringWithFormat:[NSLocalizedString(@"%@ set mode %@.", @"unknown mode changed") stringByEncodingXMLSpecialCharactersAsEntities], [self _markupForMemberUser:user], unsupportedModes];
+		}
+
+		[self addEventMessageAsHTML:message withIdentifier:@"unknownRoomModesSet" announceWithVoiceOver:YES];
+	}
 }
 
 - (void) _memberBanned:(NSNotification *) notification {
