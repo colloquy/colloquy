@@ -99,6 +99,7 @@ extern NSString *CQConnectionsControllerRemovedBouncerSettingsNotification;
 @property (nonatomic, copy) NSArray *automaticJoinedRooms;
 @property (nonatomic, copy) NSArray *automaticCommands;
 @property (nonatomic) BOOL automaticallyConnect;
+@property (nonatomic) BOOL consoleOnLaunch;
 @property (nonatomic) BOOL multitaskingSupported;
 @property (nonatomic) BOOL pushNotifications;
 @property (nonatomic, readonly, getter = isDirectConnection) BOOL directConnection;

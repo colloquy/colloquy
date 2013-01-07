@@ -740,6 +740,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	[self showChatController:consoleController animated:YES];
 }
 
+- (CQConsoleController *) consoleViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
+	return [self chatViewControllerForConnection:connection ifExists:exists userInitiated:YES];
+}
+
 - (CQConsoleController *) chatViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
 	NSParameterAssert(connection != nil);
 

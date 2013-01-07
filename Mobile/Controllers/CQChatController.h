@@ -4,6 +4,7 @@
 @class CQChatNavigationController;
 @class CQChatPresentationController;
 @class CQChatRoomController;
+@class CQConsoleController;
 @class CQDirectChatController;
 @class MVChatConnection;
 @class MVChatUser;
@@ -64,6 +65,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 - (NSArray *) chatViewControllersOfClass:(Class) class;
 - (NSArray *) chatViewControllersKindOfClass:(Class) class;
 
+- (CQConsoleController *) consoleViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
 - (CQChatRoomController *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists;
 - (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists;
 - (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) requested;

@@ -699,6 +699,9 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 - (void) _willConnect:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
 
+	if (connection.consoleOnLaunch)
+		(void)[[CQChatController defaultController] consoleViewControllerForConnection:connection ifExists:NO];
+
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 
@@ -1711,6 +1714,19 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 - (BOOL) automaticallyConnect {
 	return [[self persistentInformationObjectForKey:@"automatic"] boolValue];
+}
+
+#pragma mark -
+
+- (void) setConsoleOnLaunch:(BOOL) consoleOnLaunch {
+	if (consoleOnLaunch == self.consoleOnLaunch)
+		return;
+
+	[self setPersistentInformationObject:[NSNumber numberWithBool:consoleOnLaunch] forKey:@"console-on-launch"];
+}
+
+- (BOOL) consoleOnLaunch {
+	return [[self persistentInformationObjectForKey:@"console-on-launch"] boolValue];
 }
 
 #pragma mark -

@@ -181,7 +181,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	if (section == IdentityTableSection)
 		return 2;
 	if (section == AutomaticTableSection)
-		return 2;
+		return 3;
 	if ([UIDevice currentDevice].multitaskingSupported && section == MultitaskTableSection)
 		return 1;
 	if (section == AdvancedTableSection)
@@ -196,7 +196,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (pushAvailable && indexPath.section == PushTableSection && indexPath.row == 0)
 		return indexPath;
-	if (indexPath.section == AutomaticTableSection && indexPath.row == 1)
+	if (indexPath.section == AutomaticTableSection && indexPath.row == 2)
 		return indexPath;
 	if (indexPath.section == AdvancedTableSection && indexPath.row == 0)
 		return indexPath;
@@ -221,7 +221,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		return;
 	}
 
-	if (indexPath.section == AutomaticTableSection && indexPath.row == 1) {
+	if (indexPath.section == AutomaticTableSection && indexPath.row == 2) {
 		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
 
 		listViewController.title = NSLocalizedString(@"Join Rooms", @"Join Rooms view title");
@@ -392,6 +392,18 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 			return cell;
 		} else if (indexPath.row == 1) {
+			CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
+
+			cell.switchAction = @selector(autoOpenConsoleChanged:);
+			cell.textLabel.text = NSLocalizedString(@"Show Console", @"Show Console connection setting label");
+			cell.on = _connection.consoleOnLaunch;
+
+			if (_connection.automaticallyConnect)
+				cell.accessibilityLabel = NSLocalizedString(@"Open Console on Launch: On", @"Voiceover connect at launch on label");
+			else cell.accessibilityLabel = NSLocalizedString(@"Open Console on Launch: Off", @"Voiceover connect at launch off label");
+
+			return cell;
+		} else if (indexPath.row == 2) {
 			UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue1 inTableView:tableView];
 
 			cell.textLabel.text = NSLocalizedString(@"Join Rooms", @"Join Rooms connection setting label");
@@ -515,6 +527,10 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 - (void) autoConnectChanged:(CQPreferencesSwitchCell *) sender {
 	_connection.automaticallyConnect = sender.on;
+}
+
+- (void) autoOpenConsoleChanged:(CQPreferencesSwitchCell *) sender {
+	_connection.consoleOnLaunch = sender.on;
 }
 
 - (void) automaticJoinRoomsChanged:(CQPreferencesListViewController *) sender {
