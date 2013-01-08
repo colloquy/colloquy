@@ -68,6 +68,8 @@ static BOOL verbose;
 
 	[DDLog addLogger:_delegateLogger];
 
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawMessage:) name:MVChatConnectionGotRawMessageNotification object:_connection];
+
 	return self;
 }
 
@@ -86,8 +88,6 @@ static BOOL verbose;
 
 - (void) viewDidLoad {
 	[super viewDidLoad];
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawMessage:) name:MVChatConnectionGotRawMessageNotification object:_connection];
 
 	self.navigationItem.title = NSLocalizedString(@"Console", @"Console view title");
 
