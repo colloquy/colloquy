@@ -4,6 +4,7 @@
 #import "CQIgnoreRulesController.h"
 
 #import "NSStringAdditions.h"
+#import "RegexKitLite.h"
 
 #import <ChatCore/MVChatUser.h>
 
@@ -95,8 +96,8 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 	static NSString *urlRegex = @"(\\B(?<!&amp;)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&;#]{2,}\\b)|\\b((?:[a-z][\\w-]+:(?:/{1,3}|[a-z0-9%])|www\\d{0,3}[.]|[a-z0-9.\\-]+[.][a-z]{2,4}/)(?:[^\\s()<>]+|\\((?:[^\\s()<>]+|(?:\\([^\\s()<>]+\\)))*\\))+(?:\\((?:[^\\s()<>]+|(?:\\([^\\s()<>]+\\)))*\\)|[^\\s`!()\\[\\]{};:'\".,<>?«»“”‘’]))|([\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+@(?:[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+\\.)+[\\w]{2,})";
 
 	NSRange matchedRange = [string rangeOfRegex:urlRegex options:NSRegularExpressionCaseInsensitive inRange:*textRange capture:0 error:NULL];
-	while (matchedRange.location != NSNotFound) {
-		NSArray *components = [string captureComponentsMatchedByRegex:urlRegex options:NSRegularExpressionCaseInsensitive range:matchedRange error:NULL];
+	while (matchedRange.location != NSNotFound && (matchedRange.location + matchedRange.length) > 0) {
+		NSArray *components = [string cq_captureComponentsMatchedByRegex:urlRegex options:RKLCaseless range:matchedRange error:NULL];
 		NSCAssert(components.count == 4, @"component count needs to be 4");
 
 		NSString *room = [components objectAtIndex:1];

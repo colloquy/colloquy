@@ -4,6 +4,8 @@
 #define LIKELY(x) __builtin_expect((x) ? 1 : 0, 1)
 #define UNLIKELY(x) __builtin_expect((x) ? 1 : 0, 0)
 
+#define RKL_PREPEND_TO_METHODS cq_
+
 #define SYSTEM_IOS 1
 
 #if TARGET_IPHONE_SIMULATOR

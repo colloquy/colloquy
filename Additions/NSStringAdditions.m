@@ -1199,6 +1199,9 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:options range:range];
 	[regularExpression release];
 
+	if (!result)
+		return nil;
+
 	NSMutableArray *results = [NSMutableArray array];
 
 	for (NSUInteger i = 1; i < (result.numberOfRanges - 1); i++)
