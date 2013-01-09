@@ -1174,7 +1174,10 @@ static NSCharacterSet *typicalEmoticonCharacters;
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:options range:range];
 	[regularExpression release];
 
-	return [result rangeAtIndex:capture];
+	NSRange foundRange = [result rangeAtIndex:capture];
+	if (!(foundRange.location + foundRange.length))
+		return NSMakeRange(NSNotFound, 0); // work around iOS 5/NSRegularExpression bug where it doesn't return NSNotFound when not found
+	return foundRange;
 }
 
 - (NSString *) stringByMatching:(NSString *) regex capture:(NSInteger) capture {
