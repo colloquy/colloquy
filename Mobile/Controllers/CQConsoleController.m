@@ -69,6 +69,7 @@ static BOOL verbose;
 	[DDLog addLogger:_delegateLogger];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawMessage:) name:MVChatConnectionGotRawMessageNotification object:_connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_connectionWillConnect:) name:MVChatConnectionWillConnectNotification object:_connection];
 
 	return self;
 }
@@ -214,5 +215,17 @@ static BOOL verbose;
 
 	NSNotification *notification = [NSNotification notificationWithName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
 	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP coalesceMask:NSNotificationCoalescingOnSender forModes:[NSArray arrayWithObject:NSRunLoopCommonModes]];
+}
+
+#pragma mark -
+
+- (void) _connectionWillConnect:(NSNotification *) notification {
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQConsoleDisplayClearOnConnect"])
+		return;
+
+	[self clearController];
+
+	[_recentMessages release];
+	_recentMessages = nil;
 }
 @end

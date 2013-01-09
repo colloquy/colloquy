@@ -653,6 +653,31 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
+- (void) clearController {
+	[_pendingComponents removeAllObjects];
+
+	[_pendingPreviousSessionComponents release];
+	_pendingPreviousSessionComponents = nil;
+
+	[_recentMessages release];
+	_recentMessages = nil;
+
+	if (_unreadHighlightedMessages)
+		[CQChatController defaultController].totalImportantUnreadCount -= _unreadHighlightedMessages;
+
+	if (_unreadMessages && self.user)
+		[CQChatController defaultController].totalImportantUnreadCount -= _unreadMessages;
+
+	_unreadMessages = 0;
+	_unreadHighlightedMessages = 0;
+
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
+
+	[transcriptView reset];
+}
+
+#pragma mark -
+
 - (BOOL) _openURL:(NSURL *) url {
 	[self _forceRegsignKeyboard];
 
@@ -832,26 +857,7 @@ static BOOL showingKeyboard;
 }
 
 - (BOOL) handleClearCommandWithArguments:(NSString *) arguments {
-	[_pendingComponents removeAllObjects];
-
-	[_pendingPreviousSessionComponents release];
-	_pendingPreviousSessionComponents = nil;
-
-	[_recentMessages release];
-	_recentMessages = nil;
-
-	if (_unreadHighlightedMessages)
-		[CQChatController defaultController].totalImportantUnreadCount -= _unreadHighlightedMessages;
-
-	if (_unreadMessages && self.user)
-		[CQChatController defaultController].totalImportantUnreadCount -= _unreadMessages;
-
-	_unreadMessages = 0;
-	_unreadHighlightedMessages = 0;
-
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
-
-	[transcriptView reset];
+	[self clearController];
 
 	return YES;
 }
