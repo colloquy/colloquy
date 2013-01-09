@@ -2565,7 +2565,7 @@ end:
 
 			// Catch "[#room] - Welcome to #room!" notices and show them in the room instead
 			NSString *possibleRoomPrefix = [msg stringByMatching:@"^[\\[\\(](.+?)[\\]\\)]" capture:1];
-			if( possibleRoomPrefix && [[self chatRoomNamePrefixes] characterIsMember:[possibleRoomPrefix characterAtIndex:0]] ) {
+			if( possibleRoomPrefix && possibleRoomPrefix.length && [[self chatRoomNamePrefixes] characterIsMember:[possibleRoomPrefix characterAtIndex:0]] ) {
 				MVChatRoom *roomInWelcomeToRoomNotice = [self chatRoomWithUniqueIdentifier:possibleRoomPrefix];
 				if( roomInWelcomeToRoomNotice ) {
 					[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatRoomGotMessageNotification object:roomInWelcomeToRoomNotice userInfo:noticeInfo];

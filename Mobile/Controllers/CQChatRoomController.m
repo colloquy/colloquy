@@ -349,9 +349,9 @@ static BOOL showLeaveEvents;
 	UIActionSheet *sheet = [UIActionSheet userActionSheetForUser:user inRoom:self.room showingUserInformation:YES];
 	sheet.title = nickname;
 
-	if ([UIDevice currentDevice].isPhoneModel)
-		[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:nil animated:YES];
-	else [[CQColloquyApplication sharedApplication] showActionSheet:sheet fromPoint:location];
+	if ([UIDevice currentDevice].isPadModel)
+		[[CQColloquyApplication sharedApplication] showActionSheet:sheet fromPoint:location];
+	else [[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:nil animated:YES];
 }
 
 #pragma mark -
@@ -359,14 +359,9 @@ static BOOL showLeaveEvents;
 static unsigned char userStatus(MVChatUser *user, CQChatRoomController *room) {
 	unsigned long modes = [room.room modesForMemberUser:user];
 
-	if (user.serverOperator) return 6;
-	if (modes & MVChatRoomMemberFounderMode) return 5;
-	if (modes & MVChatRoomMemberAdministratorMode) return 4;
-	if (modes & MVChatRoomMemberOperatorMode) return 3;
-	if (modes & MVChatRoomMemberHalfOperatorMode) return 2;
-	if (modes & MVChatRoomMemberVoicedMode) return 1;
-
-	return 0;
+	if (user.serverOperator)
+		return (MVChatRoomMemberFounderMode * 2);
+	return modes;
 }
 
 static NSComparisonResult sortMembersByStatus(MVChatUser *user1, MVChatUser *user2, void *context) {
