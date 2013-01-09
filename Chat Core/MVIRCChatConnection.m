@@ -333,11 +333,11 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (double) maximumSendQueueDelay {
-	return self.recentlyConnected ? 1.5 : 2.;
+	return self.recentlyConnected ? 1.5 : 3.;
 }
 
 - (double) sendQueueDelayIncrement {
-	return self.recentlyConnected ? .25 : .1;
+	return self.recentlyConnected ? .25 : .15;
 }
 
 #pragma mark -
