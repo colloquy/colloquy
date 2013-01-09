@@ -622,8 +622,11 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 - (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
-	if ([UIDevice currentDevice].isPhoneModel)
+	if (![UIDevice currentDevice].isPadModel) {
 		[[CQColloquyApplication sharedApplication] showColloquies:nil hidingTopViewController:NO];
+		if ([controller respondsToSelector:@selector(setHidesBottomBarWhenPushed:)])
+			((UIViewController *)controller).hidesBottomBarWhenPushed = YES;
+	}
 
 	if (_visibleChatController == controller)
 		return;
