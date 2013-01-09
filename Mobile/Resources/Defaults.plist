@@ -112,5 +112,7 @@
 	<false/>
 	<key>CQConsoleDisplayVerbose</key>
 	<false/>
+	<key>CQConsoleDisplayClearOnConnect</key>
+	<true/>
 </dict>
 </plist>
