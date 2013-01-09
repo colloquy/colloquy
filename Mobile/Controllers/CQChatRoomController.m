@@ -142,6 +142,8 @@ static BOOL showLeaveEvents;
 
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
+
+	[self dismissPopoversAnimated:animated];
 }
 
 #pragma mark -
@@ -299,6 +301,8 @@ static BOOL showLeaveEvents;
 	if (popoverController == _currentUserListPopoverController) {
 		[_currentUserListViewController release];
 		_currentUserListViewController = nil;
+		[_currentUserListPopoverController release];
+		_currentUserListPopoverController = nil;
 	}
 }
 

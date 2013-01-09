@@ -90,7 +90,7 @@
 #define LogCTrace()             LogC(LOG_FLAG_VERBOSE, @"%@: %s", THIS_FILE, __FUNCTION__)
 
 // Log levels : off, error, warn, info, verbose
-static const int logLevel = LOG_FLAG_INFO;
+static const int logLevel = LOG_FLAG_VERBOSE;
 
 #else
 
