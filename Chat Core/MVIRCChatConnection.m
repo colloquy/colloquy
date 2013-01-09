@@ -691,14 +691,10 @@ static const NSStringEncoding supportedEncodings[] = {
 
 #pragma mark -
 
-- (void) socket:(GCDAsyncSocket *) sock willDisconnectWithError:(NSError *) error {
+- (void) socketDidDisconnect:(GCDAsyncSocket *) sock withError:(NSError *) error {
 	if( sock != _chatConnection ) return;
 
 	MVSafeRetainAssign( _lastError, error );
-}
-
-- (void) socketDidDisconnect:(GCDAsyncSocket *) sock withError:(NSError *) err {
-	if( sock != _chatConnection ) return;
 
 	[self retain];
 
