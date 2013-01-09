@@ -1216,11 +1216,9 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 - (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
 	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:nil];
-	NSTextCheckingResult *result = nil;
+	NSMutableString *replacementString = [self mutableCopy];
 
-	NSMutableString *replacementString = [[self mutableCopy] autorelease];
-
-	while ((result = [regularExpression firstMatchInString:replacementString options:options range:searchRange])) {
+	for (NSTextCheckingResult *result in [regularExpression matchesInString:self options:optind range:searchRange]) {
 		if (result.range.location == NSNotFound)
 			break; 
 
@@ -1229,7 +1227,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 	[regularExpression release];
 
-	return replacementString;
+	return [replacementString autorelease];
 }
 
 #pragma mark -
