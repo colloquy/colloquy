@@ -150,6 +150,10 @@
 }
 #endif
 
+- (NSRange) caretRange {
+	return _inputField.selectionRange;
+}
+
 - (UIColor *) tintColor {
 	return _backgroundView.tintColor;
 }
@@ -176,6 +180,16 @@
 	else _inputField.returnKeyType = UIReturnKeySend;
 
 	[self _updateTextTraits];
+}
+
+- (void) showCompletionsForText:(NSString *) text inRange:(NSRange) range {
+	if (![delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)])
+		return;
+
+	NSArray *completions = [delegate chatInputBar:self completionsForWordWithPrefix:text inRange:range];
+	if (completions.count)
+		[self showCompletions:completions forText:text inRange:range];
+	else [self hideCompletions];
 }
 
 - (void) hideCompletions {

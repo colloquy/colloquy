@@ -28,10 +28,12 @@
 @property (nonatomic) BOOL autocorrect;
 
 @property (nonatomic, readonly) UITextField *textField;
+@property (nonatomic, readonly) NSRange caretRange;
 @property (nonatomic) UITextAutocapitalizationType autocapitalizationType;
 
 @property (nonatomic, readonly, getter=isShowingCompletions) BOOL showingCompletions;
 
+- (void) showCompletionsForText:(NSString *) text inRange:(NSRange) range;
 - (void) hideCompletions;
 @end
 

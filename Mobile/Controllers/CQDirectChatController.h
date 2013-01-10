@@ -44,6 +44,8 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 
 	NSTimeInterval _lastTimestampTime;
 	NSTimeInterval _lastMessageTime;
+
+	BOOL _isShowingCompletionsBeforeRotation;
 }
 - (id) initWithTarget:(id) target;
 

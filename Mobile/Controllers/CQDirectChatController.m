@@ -465,10 +465,30 @@ static BOOL showingKeyboard;
 	if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
 		[[CQColloquyApplication sharedApplication] hideTabBarWithTransition:NO];
 	else [[CQColloquyApplication sharedApplication] showTabBarWithTransition:NO];
+
+	_isShowingCompletionsBeforeRotation = chatInputBar.isShowingCompletions;
 }
 
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation) fromInterfaceOrientation {
 	[transcriptView scrollToBottomAnimated:NO];
+
+	if (_isShowingCompletionsBeforeRotation) {
+		NSRange possibleRange = [chatInputBar.textField.text rangeOfString:@" " options:NSBackwardsSearch range:NSMakeRange(0, chatInputBar.caretRange.location)];
+		NSString *lastWord = nil;
+		if (possibleRange.location != NSNotFound) {
+			lastWord = [chatInputBar.textField.text substringFromIndex:possibleRange.location];
+
+			possibleRange = NSMakeRange(possibleRange.location - possibleRange.length, possibleRange.length);
+		} else {
+			lastWord = chatInputBar.textField.text;
+
+			possibleRange = NSMakeRange(0, lastWord.length);
+		}
+
+		[chatInputBar showCompletionsForText:lastWord inRange:possibleRange];
+
+		_isShowingCompletionsBeforeRotation = NO;
+	}
 }
 
 - (void) didReceiveMemoryWarning {
