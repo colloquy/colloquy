@@ -382,7 +382,14 @@ retry:
 
 	NSString *word = [text substringWithRange:wordRange];
 	NSArray *completions = nil;
-	if (_autocomplete && !_disableCompletionUntilNextWord && word.length && ![self _hasMarkedText] && [delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
+	BOOL canShowCompletionForCurrentWord = textField.text.length;
+	if (canShowCompletionForCurrentWord) {
+		if (!((range.location + range.length) == textField.text.length)) // if we're in the middle of a line, only show completions if the next letter is a space
+			canShowCompletionForCurrentWord = [[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:[textField.text characterAtIndex:(range.location + range.length)]];
+		else canShowCompletionForCurrentWord = YES; // if we are at the end of the line, we can show completions since there's nothing else after it
+	} else canShowCompletionForCurrentWord = YES; // if we don't have any text, we can maybe show completions although we probably won't (not enough context yet)
+
+	if (_autocomplete && canShowCompletionForCurrentWord && !_disableCompletionUntilNextWord && word.length && ![self _hasMarkedText] && [delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
 		completions = [delegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
 		if (completions.count)
 			[self showCompletions:completions forText:text inRange:wordRange];
