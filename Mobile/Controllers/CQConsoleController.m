@@ -213,8 +213,7 @@ static BOOL verbose;
 
 	[self _addPendingComponent:operation.processedMessageInfo];
 
-	NSNotification *notification = [NSNotification notificationWithName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
-	[[NSNotificationQueue defaultQueue] enqueueNotification:notification postingStyle:NSPostASAP coalesceMask:NSNotificationCoalescingOnSender forModes:[NSArray arrayWithObject:NSRunLoopCommonModes]];
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
 }
 
 #pragma mark -

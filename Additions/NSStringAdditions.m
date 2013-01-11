@@ -1170,8 +1170,21 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (NSRange) rangeOfRegex:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error {
-	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:0 error:nil];
-	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:options range:range];
+	static NSMutableDictionary *regexCaches = nil;
+	if (!regexCaches)
+		regexCaches = [[NSMutableDictionary alloc] init];
+
+	NSError *e = nil;
+	NSString *key = [NSString stringWithFormat:@"%@-%d", regex, options];
+	NSRegularExpression *regularExpression = [[regexCaches objectForKey:key] retain];
+	if (!regularExpression) {
+		regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:&e];
+		if (regularExpression)
+			[regexCaches setObject:regularExpression forKey:key];
+		else return NSMakeRange(NSNotFound, 0);
+	}
+	
+	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingCompleted range:range];
 	[regularExpression release];
 
 	NSRange foundRange = [result rangeAtIndex:capture];
