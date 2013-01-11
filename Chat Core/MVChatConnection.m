@@ -48,6 +48,7 @@ NSString *MVChatConnectionDidConnectNotification = @"MVChatConnectionDidConnectN
 NSString *MVChatConnectionDidNotConnectNotification = @"MVChatConnectionDidNotConnectNotification";
 NSString *MVChatConnectionWillDisconnectNotification = @"MVChatConnectionWillDisconnectNotification";
 NSString *MVChatConnectionDidDisconnectNotification = @"MVChatConnectionDidDisconnectNotification";
+NSString *MVChatConnectionGotErrorNotification = @"MVChatConnectionGotErrorNotification";
 NSString *MVChatConnectionErrorNotification = @"MVChatConnectionErrorNotification";
 
 NSString *MVChatConnectionNeedNicknamePasswordNotification = @"MVChatConnectionNeedNicknamePasswordNotification";
@@ -281,6 +282,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_proxyUsername release];
 	[_proxyPassword release];
 	[_supportedFeatures release];
+	[_serverError release];
 
 	[super dealloc];
 }
@@ -373,6 +375,10 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (NSError *) lastError {
 	return _lastError;
+}
+
+- (NSError *) serverError {
+	return _serverError;
 }
 
 #pragma mark -

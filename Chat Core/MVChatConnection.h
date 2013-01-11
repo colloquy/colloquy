@@ -84,6 +84,7 @@ extern NSString *MVChatConnectionDidConnectNotification;
 extern NSString *MVChatConnectionDidNotConnectNotification;
 extern NSString *MVChatConnectionWillDisconnectNotification;
 extern NSString *MVChatConnectionDidDisconnectNotification;
+extern NSString *MVChatConnectionGotErrorNotification;
 extern NSString *MVChatConnectionErrorNotification;
 
 extern NSString *MVChatConnectionNeedNicknamePasswordNotification;
@@ -131,7 +132,8 @@ extern NSString *MVChatConnectionErrorDomain;
 	MVChatString *_awayMessage;
 
 	NSMutableDictionary *_persistentInformation;
-	NSError *_lastError;
+	NSError *_lastError; // socket errors
+	NSError *_serverError; // messages from the server
 
 	SCNetworkReachabilityRef _reachability;
 
@@ -184,6 +186,7 @@ extern NSString *MVChatConnectionErrorDomain;
 @property(readonly) const NSStringEncoding *supportedStringEncodings;
 
 @property(readonly) NSError *lastError;
+@property(readonly) NSError *serverError;
 
 @property(readonly) NSString *urlScheme;
 @property(readonly) NSURL *url;

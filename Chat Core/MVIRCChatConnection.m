@@ -4012,15 +4012,19 @@ end:
 	}
 }
 
-/* for ticket #1303
 - (void) _handleErrorWithParameters:(NSArray *) parameters fromSender:(id) sender { // ERROR message: http://tools.ietf.org/html/rfc2812#section-3.7.4
-	NSLog(@"ERROR parameter count: %d.", parameters.count);
-
 	if( parameters.count == 1 ) {
-		NSLog(@"0: %@", [self _stringFromPossibleData:[parameters objectAtIndex:0]]);
+		NSString *message = [self _stringFromPossibleData:[parameters objectAtIndex:0]];
+
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotErrorNotification object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys:message, @"message", nil]];
+
+		id old = _serverError;
+		_serverError = [[NSError errorWithDomain:MVChatConnectionErrorDomain code:0 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:message, NSLocalizedDescriptionKey, nil]] retain];
+		[old release];
+
+		[self disconnect];
 	}
 }
-*/
 
 - (void) _handle506WithParameters:(NSArray *) parameters fromSender:(id) sender { // freenode/hyperion: identify with services to talk in this room
 	// "<channel> Please register with services and use the IDENTIFY command (/msg nickserv help) to speak in this channel"

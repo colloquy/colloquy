@@ -98,6 +98,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_deviceTokenRecieved:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batteryStateChanged) name:UIDeviceBatteryStateDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotConnectionError:) name:MVChatConnectionGotErrorNotification object:nil];
 
 	if ([UIDevice currentDevice].multitaskingSupported) {
 		_backgroundTask = UIBackgroundTaskInvalid;
@@ -696,6 +697,19 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	return ([self _anyConnectedOrConnectingConnections] && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIdleTimerDisabled"]);
 }
 
+- (void) _gotConnectionError:(NSNotification *) notification {
+	MVChatConnection *connection = notification.object;
+
+	UIAlertView *alertView = [[UIAlertView alloc] init];
+	alertView.title = connection.displayName;
+	alertView.message = [notification.userInfo objectForKey:@"message"];
+	alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button title")];
+
+	[alertView show];
+
+	[alertView release];
+}
+
 - (void) _willConnect:(NSNotification *) notification {
 	MVChatConnection *connection = notification.object;
 
@@ -820,7 +834,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 
 	[self _possiblyEndBackgroundTaskSoon];
 
-	if (connection.reconnectAttemptCount > 0 || userDisconnected)
+	if (connection.reconnectAttemptCount > 0 || userDisconnected || connection.serverError.domain == MVChatConnectionErrorDomain)
 		return;
 
 	CQAlertView *alert = [[CQAlertView alloc] init];

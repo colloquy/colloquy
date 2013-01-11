@@ -1446,6 +1446,7 @@ static NSMenu *favoritesMenu = nil;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _didIdentify: ) name:MVChatConnectionDidIdentifyWithServicesNotification object:connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _machineDidBecomeIdle: ) name:JVMachineBecameIdleNotification object:connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _machineDidStopIdling: ) name:JVMachineStoppedIdlingNotification object:connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector( _gotConnectionError: ) name:MVChatConnectionGotErrorNotification object:connection];
 }
 
 - (void) _deregisterNotificationsForConnection:(MVChatConnection *) connection {
@@ -2050,6 +2051,17 @@ static NSMenu *favoritesMenu = nil;
 
 	[[NSProcessInfo processInfo] enableSuddenTermination];
 	[[NSProcessInfo processInfo] enableAutomaticTermination:@"chat connection closed"];
+}
+
+- (void) _gotConnectionError:(NSNotification *) notification {
+	MVChatConnection *connection = notification.object;
+
+	NSAlert *alert = [[NSAlert alloc] init];
+	alert.messageText = connection.server;
+	alert.informativeText = [notification.userInfo objectForKey:@"message"];
+	[alert addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button title")];
+
+	[alert runModal];
 }
 
 - (NSString *) _idleMessageString {
