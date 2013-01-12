@@ -1923,7 +1923,7 @@ end:
 	_sendEndCapabilityCommandAtTime = [NSDate timeIntervalSinceReferenceDate] + JVEndCapabilityTimeoutDelay;
 
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(JVEndCapabilityTimeoutDelay * NSEC_PER_SEC)), _connectionDelegateQueue, ^{
-		[self _sendEndCapabilityCommand];
+		[self _sendEndCapabilityCommandForcefully:NO];
 	});
 }
 
@@ -1933,15 +1933,15 @@ end:
 	_sendEndCapabilityCommandAtTime = [NSDate timeIntervalSinceReferenceDate] + 1.;
 
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1. * NSEC_PER_SEC)), _connectionDelegateQueue, ^{
-		[self _sendEndCapabilityCommand];
+		[self _sendEndCapabilityCommandForcefully:NO];
 	});
 }
 
-- (void) _sendEndCapabilityCommand {
+- (void) _sendEndCapabilityCommandForcefully:(BOOL) forcefully {
 	if( _sentEndCapabilityCommand )
 		return;
 
-	if( !_sendEndCapabilityCommandAtTime || [NSDate timeIntervalSinceReferenceDate] < _sendEndCapabilityCommandAtTime)
+	if( !forcefully && (!_sendEndCapabilityCommandAtTime || [NSDate timeIntervalSinceReferenceDate] < _sendEndCapabilityCommandAtTime))
 		return;
 
 	[self _cancelScheduledSendEndCapabilityCommand];
@@ -2024,7 +2024,7 @@ end:
 			// If empty or the last string was exactly 400 bytes we need to send an empty AUTHENTICATE to indicate we're done.
 			[self sendRawMessageImmediatelyWithFormat:@"AUTHENTICATE +"];
 		}
-	} else [self _sendEndCapabilityCommand];
+	} else [self _sendEndCapabilityCommandForcefully:YES];
 }
 
 - (void) _handle900WithParameters:(NSArray *) parameters fromSender:(id) sender {
@@ -2039,7 +2039,7 @@ end:
 }
 
 - (void) _handle903WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_SASLSUCCESS
-	[self _sendEndCapabilityCommand];
+	[self _sendEndCapabilityCommandForcefully:YES];
 }
 
 - (void) _handle904WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SASLFAIL
@@ -2047,19 +2047,19 @@ end:
 
 	[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:MVChatConnectionNeedNicknamePasswordNotification object:self userInfo:nil];
 
-	[self _sendEndCapabilityCommand];
+	[self _sendEndCapabilityCommandForcefully:YES];
 }
 
 - (void) _handle905WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SASLTOOLONG
-	[self _sendEndCapabilityCommand];
+	[self _sendEndCapabilityCommandForcefully:YES];
 }
 
 - (void) _handle906WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SASLABORTED
-	[self _sendEndCapabilityCommand];
+	[self _sendEndCapabilityCommandForcefully:YES];
 }
 
 - (void) _handle907WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_SASLALREADY
-	[self _sendEndCapabilityCommand];
+	[self _sendEndCapabilityCommandForcefully:YES];
 }
 
 - (void) _handle001WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WELCOME
@@ -2442,6 +2442,10 @@ end:
 				handled = YES;
 			if( !handled && [msg isEqualToString:@"To complete your connection to this server, type \"/QUOTE PONG :cookie\", where cookie is the following ascii."] )
 				handled = YES;
+			if( !handled && [msg hasCaseInsensitiveSubstring:@"*** Notice -- For more information please visit"] )
+				handled = YES;
+			if( !handled && [msg hasCaseInsensitiveSubstring:@"*** You are connected to"] )
+				handled = YES;
 			if( !handled && [msg isMatchedByRegex:@"\\*\\*\\* Notice -- If you see.*? connections.*? from" options:NSRegularExpressionCaseInsensitive inRange:NSMakeRange(0, msg.length) error:NULL] )
 				handled = YES;
 			if( !handled && [msg isMatchedByRegex:@"\\*\\*\\* Notice -- please disregard them, as they are the .+? in action" options:NSRegularExpressionCaseInsensitive inRange:NSMakeRange(0, msg.length) error:NULL] )
@@ -2518,6 +2522,7 @@ end:
 					  [msg hasCaseInsensitiveSubstring:@"nickname is registered"] ||
 					  [msg hasCaseInsensitiveSubstring:@"nickname is owned"] ||
 					  [msg hasCaseInsensitiveSubstring:@"nick belongs to another user"] ||
+					  [msg hasCaseInsensitiveSubstring:@"if you do not change your nickname"] ||
 					  ( [[self server] hasCaseInsensitiveSubstring:@"oftc"] && ( [msg isCaseInsensitiveEqualToString:@"getting this message because you are not on the access list for the"] || [msg isCaseInsensitiveEqualToString:[NSString stringWithFormat:@"\002%@\002 nickname.", [self nickname]]] ) ) ) {
 
 				[[self localUser] _setIdentified:NO];
