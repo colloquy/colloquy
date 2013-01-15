@@ -42,7 +42,7 @@ static BOOL verbose;
 	hideCTCPs = defaultNamed(@"Unknown");
 	hidePINGs = defaultNamed(@"Ping");
 	hideUnknown = defaultNamed(@"Ctcp");
-	hideSocketInformation = defaultNamed(@"Socket");
+	hideSocketInformation = !defaultNamed(@"Socket");
 
 	verbose = defaultNamed(@"Verbose");
 }
@@ -185,6 +185,10 @@ static BOOL verbose;
 #pragma mark -
 
 - (void) _messageProcessed:(CQProcessConsoleMessageOperation *) operation {
+	// For some reason, we occasionally get CQProcessChatMessageOperation's in here, which is bad
+	if (![operation respondsToSelector:@selector(messageType)])
+		return;
+
 	if (!hideMessages && operation.messageType == CQConsoleMessageTypeMessage)
 		return;
 	if (!hideTraffic && operation.messageType == CQConsoleMessageTypeTraffic)
