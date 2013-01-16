@@ -32,32 +32,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 @interface CQConnectionsController (CQConnectionsControllerPrivate)
 - (void) _loadConnectionList;
-#if ENABLE(SECRETS)
-- (void) _powerStateMessageReceived:(natural_t) messageType withArgument:(long) messageArgument;
-#endif
 @end
-
-#pragma mark -
-
-#if ENABLE(SECRETS)
-#define kIOMessageSystemWillSleep 0xe0000280
-#define kIOMessageCanSystemSleep 0xe0000270
-
-typedef void (*IOServiceInterestCallback)(void *context, mach_port_t service, uint32_t messageType, void *messageArgument);
-
-MVWeakFramework(IOKit);
-MVWeakFunction(IOKit, IORegisterForSystemPower, mach_port_t, (void *context, void *notificationPort, IOServiceInterestCallback callback, mach_port_t *notifier), (context, notificationPort, callback, notifier), 0);
-MVWeakFunction(IOKit, IONotificationPortGetRunLoopSource, CFRunLoopSourceRef, (void *notify), (notify), NULL);
-MVWeakFunction(IOKit, IOAllowPowerChange, int, (mach_port_t kernelPort, long notification), (kernelPort, notification), 0);
-MVWeakFunction(IOKit, IOCancelPowerChange, int, (mach_port_t kernelPort, long notification), (kernelPort, notification), 0);
-
-static mach_port_t rootPowerDomainPort;
-
-static void powerStateChange(void *context, mach_port_t service, natural_t messageType, void *messageArgument) {       
-	CQConnectionsController *self = context;
-	[self _powerStateMessageReceived:messageType withArgument:(long)messageArgument];
-}
-#endif
 
 #pragma mark -
 
@@ -98,7 +73,7 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_deviceTokenRecieved:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batteryStateChanged) name:UIDeviceBatteryStateDidChangeNotification object:nil];
-//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotConnectionError:) name:MVChatConnectionGotErrorNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotConnectionError:) name:MVChatConnectionGotErrorNotification object:nil];
 
 	if ([UIDevice currentDevice].multitaskingSupported) {
 		_backgroundTask = UIBackgroundTaskInvalid;
@@ -110,16 +85,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
-
-#if ENABLE(SECRETS)
-	if ([[UIDevice currentDevice].systemVersion doubleValue] < 3.2) {
-		mach_port_t powerNotifier = 0;
-		void *notificationPort = NULL;
-		rootPowerDomainPort = IORegisterForSystemPower(self, &notificationPort, powerStateChange, &powerNotifier);
-
-		CFRunLoopAddSource(CFRunLoopGetCurrent(), IONotificationPortGetRunLoopSource(notificationPort), kCFRunLoopCommonModes);
-	}
-#endif
 
 	_connectionsNavigationController = [[CQConnectionsNavigationController alloc] init];
 
@@ -1283,24 +1248,6 @@ static void powerStateChange(void *context, mach_port_t service, natural_t messa
 		[connection release];
 	}
 }
-
-#if ENABLE(SECRETS)
-- (void) _powerStateMessageReceived:(natural_t) messageType withArgument:(long) messageArgument {
-	switch (messageType) {
-	case kIOMessageSystemWillSleep:
-		// System will go to sleep, we can't prevent it.
-		for (MVChatConnection *connection in _connections)
-			[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
-		break;
-	case kIOMessageCanSystemSleep:
-		// System wants to go to sleep, but we can cancel it if we have connected connections.
-		if ([self _anyConnectedOrConnectingConnections])
-			IOCancelPowerChange(rootPowerDomainPort, messageArgument);
-		else IOAllowPowerChange(rootPowerDomainPort, messageArgument);
-		break;
-	}
-}
-#endif
 
 #pragma mark -
 
