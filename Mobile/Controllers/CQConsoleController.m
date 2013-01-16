@@ -155,7 +155,11 @@ static BOOL verbose;
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text {
 	[_connection sendRawMessage:text];
 
-	[self addMessage:@{ @"message": [text dataUsingEncoding:_connection.encoding], @"outbound": @(YES) }];
+	NSData *data = [text dataUsingEncoding:_connection.encoding];
+	if (!data)
+		return YES;
+
+	[self addMessage:@{ @"message": data, @"outbound": @(YES) }];
 
 	return YES;
 }
