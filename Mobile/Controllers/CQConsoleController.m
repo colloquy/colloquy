@@ -141,7 +141,7 @@ static BOOL verbose;
 	operation.fallbackEncoding = self.connection.encoding;
 
 	operation.target = self;
-	operation.action = @selector(_messageProcessed:);
+	operation.action = @selector(_consoleMessageProcessed:);
 
 	operation.verbose = verbose;
 
@@ -188,7 +188,7 @@ static BOOL verbose;
 
 #pragma mark -
 
-- (void) _messageProcessed:(CQProcessConsoleMessageOperation *) operation {
+- (void) _consoleMessageProcessed:(CQProcessConsoleMessageOperation *) operation {
 	// For some reason, we occasionally get CQProcessChatMessageOperation's in here, which is bad
 	if (![operation respondsToSelector:@selector(messageType)])
 		return;
