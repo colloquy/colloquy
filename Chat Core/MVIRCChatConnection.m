@@ -1570,6 +1570,21 @@ end:
 	[_localUser _setUniqueIdentifier:[currentNickname lowercaseString]];
 }
 
+- (NSString *) _nextPossibleNicknameFromNickname:(NSString *) nickname {
+	if( ( _failedNickname && [_failedNickname isCaseInsensitiveEqualToString:nickname] ) || _nicknameShortened) {
+		NSString *nick = [NSString stringWithFormat:@"%@-%d", [nickname substringToIndex:(nickname.length - 2)], _failedNicknameCount];
+
+		_nicknameShortened = YES;
+
+		if ( _failedNicknameCount < 9 ) _failedNicknameCount++;
+		else _failedNicknameCount = 1;
+
+		return nick;
+	}
+
+	return [nickname stringByAppendingString:@"_"];
+}
+
 #pragma mark -
 
 - (void) _handleConnect {
@@ -2207,14 +2222,7 @@ end:
 		if( ! nick.length && parameters.count >= 2 ) {
 			NSString *lastNickTried = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
-			if( ( _failedNickname && [_failedNickname isCaseInsensitiveEqualToString:lastNickTried] ) || _nicknameShortened) {
-				nick = [NSString stringWithFormat:@"%@-%d", [lastNickTried substringToIndex:(lastNickTried.length - 2)], _failedNicknameCount];
-
-				_nicknameShortened = YES;
-
-				if ( _failedNicknameCount < 9 ) _failedNicknameCount++;
-				else _failedNicknameCount = 1;
-			} else nick = [lastNickTried stringByAppendingString:@"_"];
+			nick = [self _nextPossibleNicknameFromNickname:lastNickTried];
 		}
 
 		if ( ! _failedNickname ) _failedNickname = [[self _stringFromPossibleData:[parameters objectAtIndex:1]] copy];
@@ -3833,15 +3841,17 @@ end:
  - Returned when a nickname parameter expected for a
  command and isn't found.*/
 
-/* TODO      _handle432    ERR_ERRONEUSNICKNAME
- "<nick> :Erroneous nickname"
+- (void) _handle432WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_ERRONEUSNICKNAME, "<nick> :Erroneous nickname"
+	NSString *identifier = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
- - Returned after receiving a NICK message which contains
- characters which do not fall in the defined set.  See
- section 2.3.1 for details on valid nicknames.
+	NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:2];
+	[userInfo setObject:self forKey:@"connection"];
+	[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"You can't change your nickname to \"%@\" on \"%@\".", "cant change nick because of server error" ), identifier, [self server]] forKey:NSLocalizedDescriptionKey];
 
- MVChatConnectionErroneusNicknameError
- */
+	[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionErroneusNicknameError userInfo:userInfo]];
+
+	[userInfo release];
+}
 
 - (void) _handle435WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BANONCHAN Bahamut (also ERR_SERVICECONFUSED on Unreal, not implemented here)
 	// "<current nickname> <new nickname> <channel name> :Cannot change nickname while banned on channel"
@@ -3865,14 +3875,25 @@ end:
 - (void) _handle437WithParameters:(NSArray *) parameters fromSender:(id) sender { // ERR_BANNICKCHANGE Unreal (also ERR_UNAVAILRESOURCE in RFC2812, not implemented here)
 	// "<current nickname> <channel name> :Cannot change nickname while banned on channel or channel is moderated"
 	// - Sent to a user who is changing their nick in a room where it is prohibited.
+	// oldnick newnick :Nick/channel is temporarily unavailable, on Freenode
+
+
+	NSString *identifier = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
 
 	if( parameters.count >= 2 ) {
-		NSString *possibleRoom = [self _stringFromPossibleData:[parameters objectAtIndex:1]];
-		if( [self joinedChatRoomWithUniqueIdentifier:possibleRoom] ) {
+		if( [self joinedChatRoomWithUniqueIdentifier:identifier] ) {
 			NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:3];
 			[userInfo setObject:self forKey:@"connection"];
-			[userInfo setObject:possibleRoom forKey:@"room"];
-			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again.", "cant change nick because of chatroom error" ), possibleRoom, [self server]] forKey:NSLocalizedDescriptionKey];
+			[userInfo setObject:identifier forKey:@"room"];
+			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"You can't change your nickname while in \"%@\" on \"%@\". Please leave the room and try again.", "cant change nick because of chatroom error" ), identifier, [self server]] forKey:NSLocalizedDescriptionKey];
+
+			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeNickError userInfo:userInfo]];
+
+			[userInfo release];
+		} else {
+			NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] initWithCapacity:2];
+			[userInfo setObject:self forKey:@"connection"];
+			[userInfo setObject:[NSString stringWithFormat:NSLocalizedString( @"Unable to change your nickname to \"%@\" on \"%@\".", "cant change nick because of server error" ), identifier, [self server]] forKey:NSLocalizedDescriptionKey];
 
 			[self _postError:[NSError errorWithDomain:MVChatConnectionErrorDomain code:MVChatConnectionCantChangeNickError userInfo:userInfo]];
 

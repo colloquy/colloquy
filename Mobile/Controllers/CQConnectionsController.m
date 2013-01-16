@@ -893,6 +893,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 			errorTitle = NSLocalizedString(@"Nickname in use", "Nickname in use alert title");
 			break;
 		case MVChatConnectionCantChangeNickError:
+		case MVChatConnectionErroneusNicknameError:
 			errorTitle = NSLocalizedString(@"Can't Change Nickname", "Can't change nickname alert title");
 			break;
 		case MVChatConnectionRoomDoesNotSupportModesError:
