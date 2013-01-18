@@ -30,6 +30,8 @@
 	image = [UIImage imageNamed:@"disclosureArrow.png"];
 	_disclosureImageView = [[UIImageView alloc] initWithImage:image];
 
+	self.showsDisclosureState = YES;
+
 	[self addSubview:_backgroundImageView];
 	[self addSubview:_textLabel];
 	[self addSubview:_disclosureImageView];
@@ -65,6 +67,9 @@
 - (void) setHighlighted:(BOOL) highlighted {
 	[super setHighlighted:highlighted];
 
+	if (!_showsDisclosureState)
+		return;
+
 	_backgroundImageView.alpha = (highlighted || self.selected ? 1. : 0.9);
 	_backgroundImageView.image = (highlighted || self.selected ? _backgroundHighlightedImage : _backgroundImage);
 }
@@ -72,8 +77,19 @@
 - (void) setSelected:(BOOL) selected {
 	[super setSelected:selected];
 
+	if (!_showsDisclosureState)
+		return;
+
 	_backgroundImageView.alpha = (selected || self.highlighted ? 1. : 0.9);
 	_backgroundImageView.image = (selected || self.highlighted ? _backgroundHighlightedImage : _backgroundImage);
+}
+
+- (void) setShowsDisclosureState:(BOOL) showsDisclosureState {
+	_showsDisclosureState = showsDisclosureState;
+
+	if (_showsDisclosureState)
+		_disclosureImageView.alpha = 1.;
+	else _disclosureImageView.alpha = 0.;
 }
 
 #pragma mark -
@@ -103,6 +119,7 @@
 
 #pragma mark -
 
+@synthesize showsDisclosureState = _showsDisclosureState;
 @synthesize disclosureImageView = _disclosureImageView;
 @synthesize textLabel = _textLabel;
 @synthesize section = _section;

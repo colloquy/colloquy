@@ -462,15 +462,16 @@
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
 	[super setEditing:editing animated:animated];
 
-	if ([CQConnectionsController defaultController].connections.count || [CQConnectionsController defaultController].bouncers.count) {
+	NSUInteger count = [CQConnectionsController defaultController].connections.count + [CQConnectionsController defaultController].bouncers.count;
+	if (count) {
 		NSIndexSet *insertionIndexSet = [NSIndexSet indexSetWithIndex:0];
 		BOOL hasConnectionsToRefresh = ([CQConnectionsController defaultController].bouncers.count || [CQConnectionsController defaultController].connections.count);
 		if (editing) {
 			[self.tableView insertSections:insertionIndexSet withRowAnimation:UITableViewRowAnimationTop];
-			if (hasConnectionsToRefresh) [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewScrollPositionNone];
+			if (hasConnectionsToRefresh) [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, count)] withRowAnimation:UITableViewScrollPositionNone];
 		} else {
 			[self.tableView deleteSections:insertionIndexSet withRowAnimation:UITableViewRowAnimationTop];
-			if (hasConnectionsToRefresh) [self.tableView reloadSections:insertionIndexSet withRowAnimation:UITableViewScrollPositionNone];
+			if (hasConnectionsToRefresh) [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, count)] withRowAnimation:UITableViewScrollPositionNone];
 		}
 	} else {
 		[self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.25];
@@ -549,7 +550,9 @@
 	view.textLabel.text = [self tableView:tableView titleForHeaderInSection:section];
 	view.section = section;
 
-	[view addTarget:self action:@selector(tableSectionHeaderSelected:) forControlEvents:UIControlEventTouchUpInside];
+	if (!(tableView.editing && section == 1))
+		[view addTarget:self action:@selector(tableSectionHeaderSelected:) forControlEvents:UIControlEventTouchUpInside];
+	else view.showsDisclosureState = NO;
 
 	return [view autorelease];
 }
