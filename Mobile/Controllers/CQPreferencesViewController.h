@@ -2,6 +2,7 @@
 
 @interface CQPreferencesViewController : CQTableViewController {
 	NSMutableArray *_preferences;
+	NSIndexPath *_selectedIndexPath;
 }
 
 - (id) initWithRootPlist;

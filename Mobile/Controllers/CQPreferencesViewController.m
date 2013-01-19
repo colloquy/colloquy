@@ -41,8 +41,21 @@ static NSString *const CQPSPreferenceSpecifiers = @"PreferenceSpecifiers";
 
 - (void) dealloc {
 	[_preferences release];
+	[_selectedIndexPath release];
 
 	[super dealloc];
+}
+
+#pragma mark -
+
+- (void) viewWillAppear:(BOOL) animated {
+	[super viewWillAppear:animated];
+
+	if (_selectedIndexPath) {
+		[self.tableView beginUpdates];
+		[self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:_selectedIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+		[self.tableView endUpdates];
+	}
 }
 
 #pragma mark -
@@ -107,22 +120,39 @@ static NSString *const CQPSPreferenceSpecifiers = @"PreferenceSpecifiers";
 	return [[_preferences objectAtIndex:section] objectForKey:CQPSTitle];
 }
 
+- (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
+	NSDictionary *rowDictionary = [[[_preferences objectAtIndex:indexPath.section] objectForKey:@"rows"] objectAtIndex:indexPath.row];
+	if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSTitleValueSpecifier])
+		return nil;
+	return indexPath;
+}
+
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	NSDictionary *rowDictionary = [[[_preferences objectAtIndex:indexPath.section] objectForKey:@"rows"] objectAtIndex:indexPath.row];
-	id value = [[NSUserDefaults standardUserDefaults] objectForKey:CQPSKey];
-	if (!value)
-		value = [rowDictionary objectForKey:CQPSDefaultValue];
+	id key = [rowDictionary objectForKey:CQPSKey];
+	id value = nil;
+	if (key) {
+		value = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+		if (!value)
+			value = [rowDictionary objectForKey:CQPSDefaultValue];
+	}
 
 	if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSTextFieldSpecifier]) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 		cell.textField.text = value;
 		cell.textLabel.text = [rowDictionary objectForKey:CQPSTitle];
+		cell.textFieldBlock = ^(UITextField *textField) {
+			[[NSUserDefaults standardUserDefaults] setObject:textField.text forKey:key];
+		};
 
 		return cell;
 	} else if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSToggleSwitchSpecifier]) {
 		CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 		cell.switchControl.on = [value boolValue];
 		cell.textLabel.text = [rowDictionary objectForKey:CQPSTitle];
+		cell.switchControlBlock = ^(UISwitch *switchControl) {
+			[[NSUserDefaults standardUserDefaults] setBool:switchControl.on forKey:key];
+		};
 
 		return cell;
 	} else if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSChildPaneSpecifier]) {
@@ -143,6 +173,7 @@ static NSString *const CQPSPreferenceSpecifiers = @"PreferenceSpecifiers";
 		return cell;
 	} else if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSTitleValueSpecifier]) {
 		UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue1 inTableView:tableView];
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		cell.textLabel.text = [rowDictionary objectForKey:CQPSTitle];
 		cell.detailTextLabel.text = [rowDictionary objectForKey:CQPSDefaultValue];
 
@@ -153,8 +184,11 @@ static NSString *const CQPSPreferenceSpecifiers = @"PreferenceSpecifiers";
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	UIViewController *viewController = nil;
+	id old = _selectedIndexPath;
+	_selectedIndexPath = [indexPath retain];
+	[old release];
 
+	UIViewController *viewController = nil;
 	NSDictionary *rowDictionary = [[[_preferences objectAtIndex:indexPath.section] objectForKey:@"rows"] objectAtIndex:indexPath.row];
 	if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSChildPaneSpecifier]) {
 		viewController = [[CQPreferencesViewController alloc] initWithPlistNamed:[rowDictionary objectForKey:CQPSFile]];
@@ -163,12 +197,22 @@ static NSString *const CQPSPreferenceSpecifiers = @"PreferenceSpecifiers";
 		preferencesListViewController.allowEditing = NO;
 		preferencesListViewController.items = [rowDictionary objectForKey:CQPSTitles];
 
-		id value = [[NSUserDefaults standardUserDefaults] objectForKey:CQPSKey];
+		id key = [rowDictionary objectForKey:CQPSKey];
+		id value = [[NSUserDefaults standardUserDefaults] objectForKey:key];
 		if (!value)
 			value = [rowDictionary objectForKey:CQPSDefaultValue];
 		preferencesListViewController.selectedItemIndex = [[rowDictionary objectForKey:CQPSValues] indexOfObject:value];
+		preferencesListViewController.preferencesListBlock = ^(CQPreferencesListViewController *editedPreferencesListViewController) {
+			id newValue = [[rowDictionary objectForKey:CQPSValues] objectAtIndex:editedPreferencesListViewController.selectedItemIndex];
+			[[NSUserDefaults standardUserDefaults] setObject:newValue forKey:key];
+		};
 
 		viewController = preferencesListViewController;
+	} else {
+		[_selectedIndexPath release];
+		_selectedIndexPath = nil;
+
+		return;
 	}
 
 	if (viewController) {

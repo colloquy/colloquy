@@ -1,6 +1,9 @@
 #import "CQTableViewController.h"
 
 @class CQPreferencesListEditViewController;
+@class CQPreferencesListViewController;
+
+typedef void (^CQPreferencesListBlock)(CQPreferencesListViewController *preferencesListViewController);
 
 @interface CQPreferencesListViewController : CQTableViewController {
 	@protected
@@ -16,6 +19,7 @@
 	id _customEditingViewController;
 	id _target;
 	SEL _action;
+	CQPreferencesListBlock _preferencesListBlock;
 	BOOL _pendingChanges;
 	BOOL _allowEditing;
 }
@@ -31,4 +35,5 @@
 
 @property (nonatomic, assign) id target;
 @property (nonatomic) SEL action;
+@property (nonatomic, copy) CQPreferencesListBlock preferencesListBlock;
 @end

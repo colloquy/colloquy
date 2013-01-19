@@ -30,6 +30,8 @@
 	[_editingViewController release];
 	[_customEditingViewController release];
 
+	self.preferencesListBlock = nil;
+
 	[super dealloc];
 }
 
@@ -87,12 +89,17 @@
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
-	if (_editingViewController || !_pendingChanges || !_action)
+	if (_editingViewController || !_pendingChanges || (!_action && !self.preferencesListBlock))
 		return;
 
 	if (!_target || [_target respondsToSelector:_action])
 		if ([[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil])
 			_pendingChanges = NO;
+
+	if (self.preferencesListBlock) {
+		self.preferencesListBlock(self);
+		_pendingChanges = NO;
+	}
 }
 
 #pragma mark -
@@ -128,6 +135,8 @@
 @synthesize target = _target;
 
 @synthesize action = _action;
+
+@synthesize preferencesListBlock = _preferencesListBlock;
 
 @synthesize itemImage = _itemImage;
 
@@ -183,6 +192,11 @@
 	if (!editing && _pendingChanges && _action && (!_target || [_target respondsToSelector:_action]))
 		if ([[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil])
 			_pendingChanges = NO;
+
+	if (self.preferencesListBlock) {
+		self.preferencesListBlock(self);
+		_pendingChanges = NO;
+	}
 }
 
 #pragma mark -

@@ -3,6 +3,8 @@
 static CQPreferencesTextCell *currentEditingCell;
 
 @implementation CQPreferencesTextCell
+@synthesize textFieldBlock = _textFieldBlock;
+
 + (CQPreferencesTextCell *) currentEditingCell {
 	return currentEditingCell;
 }
@@ -41,6 +43,8 @@ static CQPreferencesTextCell *currentEditingCell;
 	_textField.delegate = nil;
 
 	[_textField autorelease]; // Use autorelease to prevent a crash.
+
+	self.textFieldBlock = nil;
 
 	[super dealloc];
 }
@@ -156,6 +160,8 @@ static CQPreferencesTextCell *currentEditingCell;
 - (void) textFieldDidEndEditing:(UITextField *) textField {
 	if (self.textEditAction)
 		[[UIApplication sharedApplication] sendAction:self.textEditAction to:nil from:self forEvent:nil];
+	if (self.textFieldBlock)
+		self.textFieldBlock(textField);
 
 	if (currentEditingCell == self) {
 		id old = currentEditingCell;
