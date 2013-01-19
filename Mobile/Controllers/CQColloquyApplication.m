@@ -169,10 +169,7 @@ static NSMutableArray *highlightWords;
 
 	[self updateAnalytics];
 
-	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
-	if ([style hasSuffix:@"-dark"] || [style isEqualToString:@"notes"])
-		[[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
-	else [[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+	[[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
 }
 
 - (void) performDeferredLaunchWork {

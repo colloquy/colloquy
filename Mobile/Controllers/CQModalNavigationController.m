@@ -34,20 +34,6 @@
 	[self pushViewController:_rootViewController animated:NO];
 }
 
-- (void) viewWillAppear:(BOOL) animated {
-	[super viewWillAppear:animated];
-
-	_previousStatusBarStyle = [UIApplication sharedApplication].statusBarStyle;
-
-	[[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:animated];
-}
-
-- (void) viewWillDisappear:(BOOL) animated {
-	[super viewWillDisappear:animated];
-
-	[[UIApplication sharedApplication] setStatusBarStyle:_previousStatusBarStyle animated:animated];
-}
-
 #pragma mark -
 
 - (void) close:(id) sender {
