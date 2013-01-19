@@ -248,6 +248,7 @@
 		92823D4A169123FD000EC36E /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3E169123FD000EC36E /* DDLog.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		92823D551691390E000EC36E /* CQProcessConsoleMessageOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */; };
 		9290D7C21694F3A400ACF833 /* console.css in Resources */ = {isa = PBXBuildFile; fileRef = 9290D7C11694F3A400ACF833 /* console.css */; };
+		9292E93016A956E300F22070 /* CQPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9292E92F16A956E300F22070 /* CQPreferencesViewController.m */; };
 		929EBE04162A33EE00F0CE6E /* chromatic-redux.js in Resources */ = {isa = PBXBuildFile; fileRef = 9247414216119CCC009132B5 /* chromatic-redux.js */; };
 		92A24DA7114C918300897373 /* CQPreferencesListChannelEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */; };
 		92A54AA515AD1DDD00F21FC5 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */; };
@@ -606,6 +607,8 @@
 		92823D531691390E000EC36E /* CQProcessConsoleMessageOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQProcessConsoleMessageOperation.h; sourceTree = "<group>"; };
 		92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQProcessConsoleMessageOperation.m; sourceTree = "<group>"; };
 		9290D7C11694F3A400ACF833 /* console.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = console.css; sourceTree = "<group>"; };
+		9292E92E16A956E300F22070 /* CQPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesViewController.h; path = Mobile/Controllers/CQPreferencesViewController.h; sourceTree = "<group>"; };
+		9292E92F16A956E300F22070 /* CQPreferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesViewController.m; path = Mobile/Controllers/CQPreferencesViewController.m; sourceTree = "<group>"; };
 		92A24DA5114C918300897373 /* CQPreferencesListChannelEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListChannelEditViewController.h; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.h; sourceTree = "<group>"; };
 		92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListChannelEditViewController.m; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.m; sourceTree = "<group>"; };
 		92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -812,6 +815,8 @@
 				1CA3DEBA10290B0E008B1AD2 /* CQHelpTopicViewController.h */,
 				925C594B1177CB63001995E0 /* CQModalNavigationController.m */,
 				925C594A1177CB63001995E0 /* CQModalNavigationController.h */,
+				9292E92F16A956E300F22070 /* CQPreferencesViewController.m */,
+				9292E92E16A956E300F22070 /* CQPreferencesViewController.h */,
 				92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */,
 				92A24DA5114C918300897373 /* CQPreferencesListChannelEditViewController.h */,
 				1C2A046E0EDAFC2D004509AE /* CQPreferencesListEditViewController.m */,
@@ -1572,6 +1577,7 @@
 				92823D551691390E000EC36E /* CQProcessConsoleMessageOperation.m in Sources */,
 				922B1FE116926749002ECDFD /* MVDelegateLogger.m in Sources */,
 				922B20011692F19C002ECDFD /* CQPreferencesIgnoreEditViewController.m in Sources */,
+				9292E93016A956E300F22070 /* CQPreferencesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

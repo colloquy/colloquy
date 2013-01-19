@@ -9,6 +9,8 @@
 #import "CQConnectionsController.h"
 #import "CQConnectionsNavigationController.h"
 
+#import "CQPreferencesViewController.h"
+
 #import <ChatCore/MVChatConnection.h>
 
 #define ConnectSheetTag 1
@@ -23,9 +25,9 @@
 
 	self.title = NSLocalizedString(@"Connections", @"Connections view title");
 
-	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:[CQConnectionsController defaultController] action:@selector(showNewConnectionPrompt:)];
-	self.navigationItem.leftBarButtonItem = addItem;
-	[addItem release];
+	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(showPreferences:)];
+	self.navigationItem.leftBarButtonItem = settingsItem;
+	[settingsItem release];
 
 	self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
@@ -660,4 +662,16 @@
 		[UIPasteboard generalPasteboard].URL = connection.url;
 }
 #endif
+
+#pragma mark -
+
+- (void) showPreferences:(id) sender {
+	CQPreferencesViewController *preferencesViewController = [[CQPreferencesViewController alloc] initWithRootPlist];
+	CQModalNavigationController *modalNavigationController = [[CQModalNavigationController alloc] initWithRootViewController:preferencesViewController];
+
+	[self.navigationController presentModalViewController:modalNavigationController animated:[UIView areAnimationsEnabled]];
+
+	[modalNavigationController release];
+	[preferencesViewController release];
+}
 @end
