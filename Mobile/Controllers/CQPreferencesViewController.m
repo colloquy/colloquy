@@ -22,6 +22,7 @@ static NSString *const CQPSValues = @"Values";
 static NSString *const CQPSTitles = @"Titles";
 static NSString *const CQPSAutocorrectType = @"AutocorrectionType";
 static NSString *const CQPSPreferenceSpecifiers = @"PreferenceSpecifiers";
+static NSString *const CQPSSupportedUserInterfaceIdioms = @"SupportedUserInterfaceIdioms";
 
 @implementation CQPreferencesViewController
 - (id) initWithRootPlist {
@@ -96,7 +97,23 @@ static NSString *const CQPSPreferenceSpecifiers = @"PreferenceSpecifiers";
 				[_preferences addObject:workingSection];
 			}
 
-			[rows addObject:[[object copy] autorelease]];
+			NSArray *supportedInterfaceIdioms = [object objectForKey:CQPSSupportedUserInterfaceIdioms];
+			BOOL supportsCurrentInterfaceIdiom = YES;
+			if (supportedInterfaceIdioms) {
+				supportsCurrentInterfaceIdiom = NO;
+
+				for (NSString *userInterfaceIdiom in supportedInterfaceIdioms) {
+					if (([userInterfaceIdiom isEqualToString:@"Pad"] && [UIDevice currentDevice].isPadModel) || ([userInterfaceIdiom isEqualToString:@"Phone"] && ![UIDevice currentDevice].isPadModel)) {
+						supportsCurrentInterfaceIdiom = YES;
+
+						break;
+					}
+				}
+			}
+			
+
+			if (supportsCurrentInterfaceIdiom)
+				[rows addObject:[[object copy] autorelease]];
 
 			[rows release];
 		}
