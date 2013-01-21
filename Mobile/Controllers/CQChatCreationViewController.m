@@ -112,9 +112,5 @@
 		CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
 		[[CQChatController defaultController] showChatController:chatController animated:NO];
 	}
-
-	[[CQColloquyApplication sharedApplication] showColloquies:nil];
-
-	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 }
 @end
