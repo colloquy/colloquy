@@ -166,6 +166,22 @@
 
 #pragma mark -
 
+- (UITableViewCellAccessoryType) accessoryTypeForIndexPath:(NSIndexPath *) indexPath allowingForSelection:(BOOL) allowingForSelection {
+	if (allowingForSelection && indexPath.row == _selectedItemIndex)
+		return UITableViewCellAccessoryCheckmark;
+	if (_listType == CQPreferencesListTypeAudio)
+		return  UITableViewCellAccessoryDetailDisclosureButton;
+	if (_listType == CQPreferencesListTypeImage)
+		return  UITableViewCellAccessoryDetailDisclosureButton;
+	return  UITableViewCellAccessoryNone;
+}
+
+- (UITableViewCellAccessoryType) accessoryTypeForIndexPath:(NSIndexPath *) indexPath {
+	return [self accessoryTypeForIndexPath:indexPath allowingForSelection:YES];
+}
+
+#pragma mark -
+
 - (void) editItemAtIndex:(NSUInteger) index {
 	if (_customEditingViewController)
 		_editingViewController = [_customEditingViewController retain];
@@ -246,16 +262,7 @@
 	else cell.textLabel.textColor = [UIColor blackColor];
 
 	cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
-
-	if (indexPath.row == _selectedItemIndex)
-		cell.accessoryType = UITableViewCellAccessoryCheckmark;
-	else {
-		if (_listType == CQPreferencesListTypeAudio) {
-			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-		} else if (_listType == CQPreferencesListTypeImage) {
-			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-		} else cell.accessoryType = UITableViewCellAccessoryNone;
-	}
+	cell.accessoryType = [self accessoryTypeForIndexPath:indexPath];
 
 	return cell;
 }
@@ -271,14 +278,14 @@
 		[self editItemAtIndex:indexPath.row];
 	} else {
 		UITableViewCell *cell = (_selectedItemIndex != NSNotFound ? [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_selectedItemIndex inSection:0]] : nil);
-		cell.accessoryType = UITableViewCellAccessoryNone;
+		cell.accessoryType = [self accessoryTypeForIndexPath:[NSIndexPath indexPathForRow:_selectedItemIndex inSection:0] allowingForSelection:NO];
 		cell.textLabel.textColor = [UIColor blackColor];
 
 		_selectedItemIndex = indexPath.row;
 		_pendingChanges = YES;
 
 		cell = [tableView cellForRowAtIndexPath:indexPath];
-		cell.accessoryType = UITableViewCellAccessoryCheckmark;
+		cell.accessoryType = [self accessoryTypeForIndexPath:indexPath];
 		cell.textLabel.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 
 		[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
@@ -307,12 +314,6 @@
 		return;
 
 	if (_listType == CQPreferencesListTypeAudio) {
-		if (_audioPlayer.playing) {
-			[_audioPlayer stop];
-
-			return;
-		}
-
 		NSURL *audioURL = [NSURL fileURLWithPath:path];
 		if (![_audioPlayer.url isEqual:audioURL]) {
 			id old = _audioPlayer;
