@@ -404,7 +404,7 @@
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
 
-	[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
+	[self.tableView deselectRowAtIndexPath:selectedIndexPath animated:[UIView areAnimationsEnabled]];
 
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
@@ -562,14 +562,13 @@
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	MVChatConnection *connection = [self connectionAtIndexPath:indexPath];
 	if (self.editing) {
-		if (indexPath.section == 0)
+		if (indexPath.section == 0) {
 			[[CQConnectionsController defaultController] showNewConnectionPrompt:nil];
-		else [self.navigationController editConnection:connection];
+			[tableView deselectRowAtIndexPath:indexPath animated:[UIView areAnimationsEnabled]];
+		} else [self.navigationController editConnection:connection];
 	} else if (connection.status == MVChatConnectionConnectingStatus || connection.status == MVChatConnectionConnectedStatus)
 		[self confirmDisconnect:[tableView cellForRowAtIndexPath:indexPath]];
 	else [self confirmConnect:[tableView cellForRowAtIndexPath:indexPath]];
-
-	[tableView deselectRowAtIndexPath:indexPath animated:[UIView areAnimationsEnabled]];
 }
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {
