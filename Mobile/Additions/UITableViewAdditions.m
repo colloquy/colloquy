@@ -43,7 +43,11 @@
 }
 
 - (void) hideEmptyCells {
-	if (!self.tableFooterView)
-		self.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+	if (!self.tableFooterView) {
+		UIView *view = [[UIView alloc] initWithFrame:CGRectMake(1., 1., 1., 1.)];
+		view.backgroundColor = [UIColor clearColor];
+
+		self.tableFooterView = view;
+	}
 }
 @end
