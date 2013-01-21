@@ -464,7 +464,7 @@
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
 	[super setEditing:editing animated:animated];
 
-	NSUInteger count = [CQConnectionsController defaultController].connections.count + [CQConnectionsController defaultController].bouncers.count;
+	NSUInteger count = ([CQConnectionsController defaultController].connections.count ? 1 : 0) + [CQConnectionsController defaultController].bouncers.count;
 	if (count) {
 		NSIndexSet *insertionIndexSet = [NSIndexSet indexSetWithIndex:0];
 		BOOL hasConnectionsToRefresh = ([CQConnectionsController defaultController].bouncers.count || [CQConnectionsController defaultController].connections.count);
