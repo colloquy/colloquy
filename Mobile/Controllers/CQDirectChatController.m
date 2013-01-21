@@ -43,6 +43,7 @@ static BOOL vibrateOnPrivateMessage;
 static BOOL localNotificationOnHighlight;
 static BOOL localNotificationOnPrivateMessage;
 static NSUInteger scrollbackLength;
+static BOOL clearOnConnect;
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
 - (void) _addPendingComponent:(id) component;
@@ -76,6 +77,7 @@ static BOOL showingKeyboard;
 	vibrateOnPrivateMessage = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnPrivateMessage"];
 	localNotificationOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLocalNotificationOnHighlight"];
 	localNotificationOnPrivateMessage = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLocalNotificationOnPrivateMessage"];
+	clearOnConnect = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQClearOnConnect"];
 
 	NSUInteger newScrollbackLength = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQScrollbackLength"];
 	if (newScrollbackLength != scrollbackLength) {
@@ -139,6 +141,7 @@ static BOOL showingKeyboard;
 	_target = [target retain];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_awayStatusChanged:) name:MVChatConnectionSelfAwayStatusChangedNotification object:self.connection];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:self.connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didConnect:) name:MVChatConnectionDidConnectNotification object:self.connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didRecieveDeviceToken:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
@@ -1575,6 +1578,11 @@ static BOOL showingKeyboard;
 	_unreadHighlightedMessages = 0;
 
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
+}
+
+- (void) _willConnect:(NSNotification *) notification {
+	if (clearOnConnect)
+		[self clearController];
 }
 
 - (void) _didConnect:(NSNotification *) notification {

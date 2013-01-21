@@ -114,5 +114,7 @@
 	<false/>
 	<key>CQConsoleDisplayClearOnConnect</key>
 	<true/>
+	<key>CQClearOnConnect</key>
+	<false/>
 </dict>
 </plist>
