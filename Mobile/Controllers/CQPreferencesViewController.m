@@ -159,8 +159,8 @@ static NSString *const CQPSListTypeImage = @"Image";
 
 	if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSTextFieldSpecifier]) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
-		cell.textField.text = value;
-		cell.textLabel.text = [rowDictionary objectForKey:CQPSTitle];
+		cell.textField.text = [[NSBundle mainBundle] localizedStringForKey:value value:@"" table:nil];
+		cell.textLabel.text = [[NSBundle mainBundle] localizedStringForKey:[rowDictionary objectForKey:CQPSTitle] value:@"" table:nil];;
 		cell.textFieldBlock = ^(UITextField *textField) {
 			[[NSUserDefaults standardUserDefaults] setObject:textField.text forKey:key];
 		};
@@ -169,7 +169,7 @@ static NSString *const CQPSListTypeImage = @"Image";
 	} else if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSToggleSwitchSpecifier]) {
 		CQPreferencesSwitchCell *cell = [CQPreferencesSwitchCell reusableTableViewCellInTableView:tableView];
 		cell.switchControl.on = [value boolValue];
-		cell.textLabel.text = [rowDictionary objectForKey:CQPSTitle];
+		cell.textLabel.text = [[NSBundle mainBundle] localizedStringForKey:[rowDictionary objectForKey:CQPSTitle] value:@"" table:nil];
 		cell.switchControlBlock = ^(UISwitch *switchControl) {
 			[[NSUserDefaults standardUserDefaults] setBool:switchControl.on forKey:key];
 		};
@@ -178,14 +178,14 @@ static NSString *const CQPSListTypeImage = @"Image";
 	} else if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSChildPaneSpecifier]) {
 		UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue1 inTableView:tableView];
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-		cell.detailTextLabel.text = value;
-		cell.textLabel.text = [rowDictionary objectForKey:CQPSTitle];
+		cell.detailTextLabel.text = [[NSBundle mainBundle] localizedStringForKey:value value:@"" table:nil];
+		cell.textLabel.text = [[NSBundle mainBundle] localizedStringForKey:[rowDictionary objectForKey:CQPSTitle] value:@"" table:nil];
 
 		return cell;
 	} else if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSMultiValueSpecifier]) {
 		UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue1 inTableView:tableView];
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-		cell.textLabel.text = [rowDictionary objectForKey:CQPSTitle];
+		cell.textLabel.text = [[NSBundle mainBundle] localizedStringForKey:[rowDictionary objectForKey:CQPSTitle] value:@"" table:nil];
 
 		NSUInteger index = [[rowDictionary objectForKey:CQPSValues] indexOfObject:value];
 		cell.detailTextLabel.text = [[rowDictionary objectForKey:CQPSTitles] objectAtIndex:index];
@@ -194,8 +194,8 @@ static NSString *const CQPSListTypeImage = @"Image";
 	} else if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSTitleValueSpecifier]) {
 		UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue1 inTableView:tableView];
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		cell.textLabel.text = [rowDictionary objectForKey:CQPSTitle];
-		cell.detailTextLabel.text = [rowDictionary objectForKey:CQPSDefaultValue];
+		cell.textLabel.text = [[NSBundle mainBundle] localizedStringForKey:[rowDictionary objectForKey:CQPSTitle] value:@"" table:nil];
+		cell.detailTextLabel.text = [[NSBundle mainBundle] localizedStringForKey:[rowDictionary objectForKey:CQPSDefaultValue] value:@"" table:nil];
 
 		return cell;
 	}
