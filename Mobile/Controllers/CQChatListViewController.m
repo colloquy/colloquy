@@ -530,6 +530,18 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
+	BOOL hasChatController = NO;
+	for (MVChatConnection *connection in [CQConnectionsController defaultController].connections) {
+		hasChatController = [[CQChatController defaultController] chatViewControllersForConnection:connection].count;
+
+		if (hasChatController) {
+			[self.navigationItem setRightBarButtonItem:self.editButtonItem animated:YES];
+
+			break;
+		}
+	}
+
+
 	self.tableView.rowHeight = 62.;
 
 	if ([[UIDevice currentDevice] isPadModel]) {
