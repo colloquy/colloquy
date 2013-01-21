@@ -2,6 +2,8 @@
 #import "CQPreferencesListEditViewController.h"
 #import "CQPreferencesListChannelEditViewController.h"
 
+#import <AVFoundation/AVFoundation.h>
+
 @implementation CQPreferencesListViewController
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
@@ -160,6 +162,8 @@
 
 @synthesize customEditingViewController = _customEditingViewController;
 
+@synthesize listType = _listType;
+
 #pragma mark -
 
 - (void) editItemAtIndex:(NSUInteger) index {
@@ -239,7 +243,13 @@
 
 	if (indexPath.row == _selectedItemIndex)
 		cell.accessoryType = UITableViewCellAccessoryCheckmark;
-	else cell.accessoryType = UITableViewCellAccessoryNone;
+	else {
+		if (_listType == CQPreferencesListTypeAudio) {
+			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+		} else if (_listType == CQPreferencesListTypeImage) {
+			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+		} else cell.accessoryType = UITableViewCellAccessoryNone;
+	}
 
 	return cell;
 }
@@ -277,6 +287,35 @@
 		return UITableViewCellEditingStyleInsert;
 
 	return UITableViewCellEditingStyleDelete;
+}
+
+- (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
+	NSString *item = [_items objectAtIndex:indexPath.row];
+	NSString *path = nil;
+	if (_listType == CQPreferencesListTypeAudio)
+		path = [[NSBundle mainBundle] pathForResource:item ofType:@"aiff"];
+	else if (_listType == CQPreferencesListTypeImage)
+		path = [[NSBundle mainBundle] pathForResource:item ofType:@"png"];
+
+	if (!path.length)
+		return;
+
+	if (_listType == CQPreferencesListTypeAudio) {
+		if (_audioPlayer.playing) {
+			[_audioPlayer stop];
+
+			return;
+		}
+
+		NSURL *audioURL = [NSURL fileURLWithPath:path];
+		if (![_audioPlayer.url isEqual:audioURL]) {
+			id old = _audioPlayer;
+			_audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:nil];
+			[old release];
+		}
+
+		[_audioPlayer play];
+	}
 }
 
 - (BOOL) tableView:(UITableView *) tableView canEditRowAtIndexPath:(NSIndexPath *) indexPath {

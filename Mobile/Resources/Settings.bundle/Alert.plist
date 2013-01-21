@@ -11,6 +11,8 @@
 			<string>Highlight</string>
 		</dict>
 		<dict>
+			<key>ListType</key>
+			<string>Audio</string>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
@@ -93,6 +95,8 @@
 			<string>Private Message</string>
 		</dict>
 		<dict>
+			<key>ListType</key>
+			<string>Audio</string>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>

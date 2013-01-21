@@ -23,6 +23,9 @@ static NSString *const CQPSTitles = @"Titles";
 static NSString *const CQPSAutocorrectType = @"AutocorrectionType";
 static NSString *const CQPSPreferenceSpecifiers = @"PreferenceSpecifiers";
 static NSString *const CQPSSupportedUserInterfaceIdioms = @"SupportedUserInterfaceIdioms";
+static NSString *const CQPSListType = @"ListType";
+static NSString *const CQPSListTypeAudio = @"Audio";
+static NSString *const CQPSListTypeImage = @"Image";
 
 @implementation CQPreferencesViewController
 - (id) initWithRootPlist {
@@ -224,6 +227,11 @@ static NSString *const CQPSSupportedUserInterfaceIdioms = @"SupportedUserInterfa
 			[[NSUserDefaults standardUserDefaults] setObject:newValue forKey:key];
 		};
 
+		NSString *listType = [rowDictionary objectForKey:CQPSListType];
+		if ([listType isCaseInsensitiveEqualToString:CQPSListTypeAudio])
+			preferencesListViewController.listType = CQPreferencesListTypeAudio;
+		else if ([listType isCaseInsensitiveEqualToString:CQPSListTypeImage])
+			preferencesListViewController.listType = CQPreferencesListTypeImage;
 		viewController = preferencesListViewController;
 	} else {
 		[_selectedIndexPath release];
