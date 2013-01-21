@@ -100,7 +100,7 @@
 			<key>Key</key>
 			<string>CQScrollbackLength</string>
 			<key>Title</key>
-			<string>Scrollback Length</string>
+			<string>Scrollback</string>
 			<key>Values</key>
 			<array>
 				<integer>100</integer>
