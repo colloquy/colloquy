@@ -667,7 +667,9 @@
 
 - (void) showPreferences:(id) sender {
 	CQPreferencesViewController *preferencesViewController = [[CQPreferencesViewController alloc] initWithRootPlist];
+	preferencesViewController.title = NSLocalizedString(@"Settings", @"Settings view title");
 	CQModalNavigationController *modalNavigationController = [[CQModalNavigationController alloc] initWithRootViewController:preferencesViewController];
+	modalNavigationController.closeButtonItem = UIBarButtonSystemItemDone;
 
 	[self.navigationController presentModalViewController:modalNavigationController animated:[UIView areAnimationsEnabled]];
 
