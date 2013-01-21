@@ -9,6 +9,7 @@ typedef void (^CQPreferencesListBlock)(CQPreferencesListViewController *preferen
 typedef enum {
 	CQPreferencesListTypeNone,
 	CQPreferencesListTypeAudio,
+	CQPreferencesListTypeFont,
 	CQPreferencesListTypeImage
 } CQPreferencesListType;
 

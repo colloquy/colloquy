@@ -235,6 +235,12 @@
 		cell.imageView.image = nil;
 	}
 
+	if (_listType == CQPreferencesListTypeFont) {
+		UIFont *font = [UIFont fontWithName:cell.textLabel.text size:cell.textLabel.font.pointSize];
+		if (font) cell.textLabel.font = font;
+		else font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
+	}
+
 	if (indexPath.row == _selectedItemIndex)
 		cell.textLabel.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 	else cell.textLabel.textColor = [UIColor blackColor];

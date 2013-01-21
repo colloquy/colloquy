@@ -26,6 +26,7 @@ static NSString *const CQPSSupportedUserInterfaceIdioms = @"SupportedUserInterfa
 static NSString *const CQPSListType = @"ListType";
 static NSString *const CQPSListTypeAudio = @"Audio";
 static NSString *const CQPSListTypeImage = @"Image";
+static NSString *const CQPSListTypeFont = @"Font";
 
 @implementation CQPreferencesViewController
 - (id) initWithRootPlist {
@@ -232,6 +233,8 @@ static NSString *const CQPSListTypeImage = @"Image";
 			preferencesListViewController.listType = CQPreferencesListTypeAudio;
 		else if ([listType isCaseInsensitiveEqualToString:CQPSListTypeImage])
 			preferencesListViewController.listType = CQPreferencesListTypeImage;
+		else if ([listType isCaseInsensitiveEqualToString:CQPSListTypeFont])
+			preferencesListViewController.listType = CQPreferencesListTypeFont;
 		viewController = preferencesListViewController;
 	} else {
 		[_selectedIndexPath release];

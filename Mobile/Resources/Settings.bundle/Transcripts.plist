@@ -37,6 +37,8 @@
 			<string>standard</string>
 		</dict>
 		<dict>
+			<key>ListType</key>
+			<string>Font</string>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
@@ -49,9 +51,12 @@
 				<string>AmericanTypewriter</string>
 				<string>CourierNewPSMT</string>
 				<string>GeezaPro</string>
+				<string>GillSans</string>
 				<string>Helvetica</string>
 				<string>HelveticaNeue</string>
+				<string>HoeflerText-Regular</string>
 				<string>MarkerFelt-Thin</string>
+				<string>Optima-Regular</string>
 				<string>Thonburi</string>
 				<string>TimesNewRomanPSMT</string>
 				<string>Zapfino</string>
@@ -62,9 +67,12 @@
 				<string>American Typewriter</string>
 				<string>Courier New</string>
 				<string>Geeza Pro</string>
+				<string>Gill Sans</string>
 				<string>Helvetica</string>
 				<string>Helvetica Neue</string>
+				<string>Hoefler Text</string>
 				<string>Marker Felt</string>
+				<string>Optima</string>
 				<string>Thonburi</string>
 				<string>Times New Roman</string>
 				<string>Zapfino</string>
