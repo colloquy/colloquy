@@ -263,25 +263,32 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (!viewControllersToClose.count)
 		viewControllersToClose = allViewControllers;
 
-	if (!(allViewControllers.count - viewControllersToClose.count)) {
+	BOOL hasChatController = NO;
+	for (MVChatConnection *connection in [CQConnectionsController defaultController].connections) {
+		hasChatController = [[CQChatController defaultController] chatViewControllersForConnection:connection].count;
+
+		if (hasChatController)
+			break;
+	}
+
+	if (!hasChatController)
 		[self.navigationItem setRightBarButtonItem:nil animated:[self isViewLoaded]];
 
-		if ([viewControllersToClose isEqualToArray:allViewControllers]) {
-			NSUInteger connectionSection = sectionIndexForConnection(connection);
-			if (connectionSection == NSNotFound)
-				return;
-
-			for (id <CQChatViewController> chatViewController in viewControllersToClose)
-				[[CQChatController defaultController] closeViewController:chatViewController];
-
-			[self.tableView beginUpdates];
-			[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:connectionSection] withRowAnimation:animation];
-			if (![CQChatController defaultController].chatViewControllers.count)
-				[self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-			[self.tableView endUpdates];
-
+	if (!(allViewControllers.count - viewControllersToClose.count) && [viewControllersToClose isEqualToArray:allViewControllers]) {
+		NSUInteger connectionSection = sectionIndexForConnection(connection);
+		if (connectionSection == NSNotFound)
 			return;
-		}
+
+		for (id <CQChatViewController> chatViewController in viewControllersToClose)
+			[[CQChatController defaultController] closeViewController:chatViewController];
+
+		[self.tableView beginUpdates];
+		[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:connectionSection] withRowAnimation:animation];
+		if (![CQChatController defaultController].chatViewControllers.count)
+			[self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+		[self.tableView endUpdates];
+
+		return;
 	}
 
 	NSMutableArray *rowsToDelete = [[NSMutableArray alloc] init];
@@ -540,7 +547,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			break;
 		}
 	}
-
 
 	self.tableView.rowHeight = 62.;
 
