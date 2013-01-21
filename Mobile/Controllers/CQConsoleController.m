@@ -100,7 +100,7 @@ static BOOL verbose;
 #pragma mark -
 
 - (BOOL) available {
-	return YES;
+	return _connection.connected;
 }
 
 - (MVChatConnection *) connection {
