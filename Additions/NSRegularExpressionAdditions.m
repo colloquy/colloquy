@@ -1,38 +1,31 @@
 #import "NSRegularExpressionAdditions.h"
 
+static NSMutableDictionary *dangerousCache = nil;
+
 @implementation NSRegularExpression (Additions)
-+ (id) threadsafeCachedObjectForKey:(id) key {
-	return [NSThread currentThread].threadDictionary[key];
-}
-
-+ (void) cacheObject:(id) object inThreadsafeDictionaryWithKey:(id) key {
-	[NSThread currentThread].threadDictionary[key] = object;
-}
-
 + (NSRegularExpression *) cachedRegularExpressionWithPattern:(NSString *) pattern options:(NSRegularExpressionOptions) options error:(NSError *__autoreleasing*) error {
-	NSNumber *optionsNumber = [NSNumber numberWithInteger:options];
-	NSMutableDictionary *optionsDictionary = [self threadsafeCachedObjectForKey:optionsNumber];
-	NSRegularExpression *regularExpression;
+	static dispatch_once_t pred;
+	dispatch_once(&pred, ^{
+		dangerousCache = [[NSMutableDictionary alloc] init];
+	});
 	
-	if (!optionsDictionary)
-		goto makeOptionsDictionary;
-	
-	regularExpression = [self threadsafeCachedObjectForKey:optionsNumber];
+	return [self _cachedRegularExpressionWithPattern:pattern options:options error:error inCache:dangerousCache];
+}
+
++ (NSRegularExpression *) threadsafeCachedRegularExpressionWithPattern:(NSString *) pattern options:(NSRegularExpressionOptions) options error:(NSError *__autoreleasing*) error {
+	return [self _cachedRegularExpressionWithPattern:pattern options:options error:error inCache:[NSThread currentThread].threadDictionary];
+}
+
++ (NSRegularExpression *) _cachedRegularExpressionWithPattern:(NSString *) pattern options:(NSRegularExpressionOptions) options error:(NSError *__autoreleasing*) error inCache:(NSMutableDictionary *) cache {
+	NSString *key = [NSString stringWithFormat:@"%d-%@", options, pattern];
+	NSRegularExpression *regularExpression = cache[key];
 	
 	if (regularExpression)
 		return regularExpression;
 	
-	goto makeRegularExpression;
-	
-makeOptionsDictionary:
-	optionsDictionary = [NSMutableDictionary dictionary];
-	
-	[self cacheObject:optionsDictionary inThreadsafeDictionaryWithKey:optionsNumber];
-	
-makeRegularExpression:
 	regularExpression = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:nil];
 	
-	[optionsDictionary setObject:regularExpression forKey:pattern];
+	cache[key] = regularExpression;
 	
 	return regularExpression;
 }
