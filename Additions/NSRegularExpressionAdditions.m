@@ -1,24 +1,23 @@
 #import "NSRegularExpressionAdditions.h"
 
 @implementation NSRegularExpression (Additions)
-static NSMutableDictionary *regularExpressions = nil;
++ (id) threadsafeCachedObjectForKey:(id) key {
+	return [NSThread currentThread].threadDictionary[key];
+}
 
-+ (void) load {
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		regularExpressions = [[NSMutableDictionary alloc] init];
-	});
++ (void) cacheObject:(id) object inThreadsafeDictionaryWithKey:(id) key {
+	[NSThread currentThread].threadDictionary[key] = object;
 }
 
 + (NSRegularExpression *) cachedRegularExpressionWithPattern:(NSString *) pattern options:(NSRegularExpressionOptions) options error:(NSError *__autoreleasing*) error {
 	NSNumber *optionsNumber = [NSNumber numberWithInteger:options];
-	NSMutableDictionary *optionsDictionary = [regularExpressions objectForKey:optionsNumber];
+	NSMutableDictionary *optionsDictionary = [self threadsafeCachedObjectForKey:optionsNumber];
 	NSRegularExpression *regularExpression;
 	
 	if (!optionsDictionary)
 		goto makeOptionsDictionary;
 	
-	regularExpression = [optionsDictionary objectForKey:pattern];
+	regularExpression = [self threadsafeCachedObjectForKey:optionsNumber];
 	
 	if (regularExpression)
 		return regularExpression;
@@ -28,7 +27,7 @@ static NSMutableDictionary *regularExpressions = nil;
 makeOptionsDictionary:
 	optionsDictionary = [NSMutableDictionary dictionary];
 	
-	[regularExpressions setObject:optionsDictionary forKey:optionsNumber];
+	[self cacheObject:optionsDictionary inThreadsafeDictionaryWithKey:optionsNumber];
 	
 makeRegularExpression:
 	regularExpression = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:nil];
