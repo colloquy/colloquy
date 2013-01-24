@@ -110,7 +110,7 @@
 
 - (void) setFontFamily:(NSString *) fontFamily {
 	// Since _fontFamily or fontFamily can be nil we also need to check pointer equality.
-	if (_fontFamily == fontFamily || [_fontFamily isEqualToString:fontFamily])
+	if (!_allowsStyleChanges || _fontFamily == fontFamily || [_fontFamily isEqualToString:fontFamily])
 		return;
 
 	id old = _fontFamily;
