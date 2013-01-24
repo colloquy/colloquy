@@ -7,25 +7,17 @@
 	dispatch_once(&pred, ^{
 		dangerousCache = [[NSMutableDictionary alloc] init];
 	});
-	
-	return [self _cachedRegularExpressionWithPattern:pattern options:options error:error inCache:dangerousCache];
-}
 
-+ (NSRegularExpression *) threadsafeCachedRegularExpressionWithPattern:(NSString *) pattern options:(NSRegularExpressionOptions) options error:(NSError *__autoreleasing*) error {
-	return [self _cachedRegularExpressionWithPattern:pattern options:options error:error inCache:[NSThread currentThread].threadDictionary];
-}
-
-+ (NSRegularExpression *) _cachedRegularExpressionWithPattern:(NSString *) pattern options:(NSRegularExpressionOptions) options error:(NSError *__autoreleasing*) error inCache:(NSMutableDictionary *) cache {
 	NSString *key = [NSString stringWithFormat:@"%d-%@", options, pattern];
-	NSRegularExpression *regularExpression = cache[key];
-	
+	NSRegularExpression *regularExpression = dangerousCache[key];
+
 	if (regularExpression)
 		return regularExpression;
-	
+
 	regularExpression = [NSRegularExpression regularExpressionWithPattern:pattern options:options error:nil];
-	
-	cache[key] = regularExpression;
-	
+
+	dangerousCache[key] = regularExpression;
+
 	return regularExpression;
 }
 @end
