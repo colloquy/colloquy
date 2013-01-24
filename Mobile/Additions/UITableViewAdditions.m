@@ -48,6 +48,8 @@
 		view.backgroundColor = [UIColor clearColor];
 
 		self.tableFooterView = view;
+
+		[view release];
 	}
 }
 @end

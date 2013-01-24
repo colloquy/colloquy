@@ -254,7 +254,7 @@
 	if (_listType == CQPreferencesListTypeFont) {
 		UIFont *font = [UIFont fontWithName:cell.textLabel.text size:cell.textLabel.font.pointSize];
 		if (font) cell.textLabel.font = font;
-		else font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
+		else cell.textLabel.font = [UIFont systemFontOfSize:cell.textLabel.font.pointSize];
 	}
 
 	if (indexPath.row == _selectedItemIndex)
