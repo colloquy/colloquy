@@ -10,6 +10,7 @@
 
 static BOOL graphicalEmoticons;
 static BOOL stripMessageFormatting;
+static NSMutableDictionary *highlightRegexes;
 
 @implementation CQProcessChatMessageOperation
 @synthesize ignoreController = _ignoreController;
@@ -20,6 +21,10 @@ static BOOL stripMessageFormatting;
 
 	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
 	stripMessageFormatting = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"];
+
+	[highlightRegexes release];
+	highlightRegexes = nil;
+	highlightRegexes = [[NSMutableDictionary alloc] init];
 }
 
 + (void) initialize {
@@ -232,29 +237,47 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 
 	BOOL highlighted = NO;
 
-	if (user && !user.localUser && highlightWords.count) {
+	NSString *regex = [[highlightRegexes objectForKey:_highlightNickname] retain];
+	if (user && !regex && !user.localUser && highlightWords.count) {
 		NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
-		NSString *stylelessMessageString = [messageString stringByStrippingXMLTags];
 
+		NSMutableArray *processedHighlightWords = [NSMutableArray array];
+		NSMutableArray *processedHighlightCommands = [NSMutableArray array];
 		for (NSString *highlightWord in highlightWords) {
 			if (!highlightWord.length)
 				continue;
 
-			NSString *regex = nil;
-			if ([highlightWord hasPrefix:@"/"] && [highlightWord hasSuffix:@"/"] && highlightWord.length > 1) {
-				regex = [highlightWord substringWithRange:NSMakeRange(1, highlightWord.length - 2)];
-			} else {
-				highlightWord = [highlightWord stringByEscapingCharactersInSet:escapedCharacters];
-				regex = [NSString stringWithFormat:@"(?<=^|\\s|[^\\w])%@(?=$|\\s|[^\\w])", highlightWord];
-			}
-
-			if ([stylelessMessageString isMatchedByRegex:regex options:NSRegularExpressionCaseInsensitive inRange:NSMakeRange(0, stylelessMessageString.length) error:NULL])
-				highlighted = YES;
-
-			if (highlighted)
-				break;
+			if ([highlightWord hasPrefix:@"/"] && [highlightWord hasSuffix:@"/"] && highlightWord.length > 1)
+				[processedHighlightCommands addObject:[highlightWord substringWithRange:NSMakeRange(1, highlightWord.length - 2)]];
+			else [processedHighlightWords addObject:[highlightWord stringByEscapingCharactersInSet:escapedCharacters]];
 		}
+
+		NSMutableString *processingRegex = [NSMutableString string];
+		for (NSString *processedCommand in processedHighlightCommands)
+			[processingRegex appendFormat:@"(%@)|", processedCommand];
+
+		if (processingRegex.length)
+			[processingRegex deleteCharactersInRange:NSMakeRange(processingRegex.length - 1, 1)];
+
+		if (processedHighlightWords.count) {
+			[processingRegex appendString:@"(\\b)("];
+			for (NSString *processedWord in processedHighlightWords)
+				[processingRegex appendFormat:@"(%@)|", processedWord];
+			if (processingRegex.length)
+				[processingRegex deleteCharactersInRange:NSMakeRange(processingRegex.length - 1, 1)];
+			[processingRegex appendString:@")(\\b)"];
+		}
+
+		if (processingRegex.length)
+			[highlightRegexes setObject:processingRegex forKey:_highlightNickname];
+		regex = [processingRegex copy];
 	}
+
+	if (regex.length) {
+		NSString *stylelessMessageString = [messageString stringByStrippingXMLTags];
+		highlighted = [stylelessMessageString isMatchedByRegex:regex options:NSRegularExpressionCaseInsensitive inRange:NSMakeRange(0, stylelessMessageString.length) error:NULL];
+	}
+	[regex release];
 
 	[self _processMessageString:messageString];
 
