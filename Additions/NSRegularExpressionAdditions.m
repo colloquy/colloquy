@@ -1,9 +1,8 @@
 #import "NSRegularExpressionAdditions.h"
 
-static NSMutableDictionary *dangerousCache = nil;
-
 @implementation NSRegularExpression (Additions)
 + (NSRegularExpression *) cachedRegularExpressionWithPattern:(NSString *) pattern options:(NSRegularExpressionOptions) options error:(NSError *__autoreleasing*) error {
+	static NSMutableDictionary *dangerousCache = nil;
 	static dispatch_once_t pred;
 	dispatch_once(&pred, ^{
 		dangerousCache = [[NSMutableDictionary alloc] init];
