@@ -252,6 +252,7 @@
 		929EBE04162A33EE00F0CE6E /* chromatic-redux.js in Resources */ = {isa = PBXBuildFile; fileRef = 9247414216119CCC009132B5 /* chromatic-redux.js */; };
 		92A24DA7114C918300897373 /* CQPreferencesListChannelEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */; };
 		92A54AA515AD1DDD00F21FC5 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */; };
+		92AFF84A16B0CE4700940E5D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92AFF84916B0CE4700940E5D /* AVFoundation.framework */; };
 		92D30F2C116D2B020060EE33 /* UIViewControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */; };
 		92F1C9E3161D936D0035A9AF /* UIActionSheetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F1C9E2161D936D0035A9AF /* UIActionSheetAdditions.m */; };
 		92F3BE5011716FE700A4F554 /* CQPreferencesTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F3BE4F11716FE700A4F554 /* CQPreferencesTextViewCell.m */; };
@@ -612,6 +613,7 @@
 		92A24DA5114C918300897373 /* CQPreferencesListChannelEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListChannelEditViewController.h; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.h; sourceTree = "<group>"; };
 		92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListChannelEditViewController.m; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.m; sourceTree = "<group>"; };
 		92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		92AFF84916B0CE4700940E5D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		92D30F2A116D2B020060EE33 /* UIViewControllerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIViewControllerAdditions.h; path = Mobile/Additions/UIViewControllerAdditions.h; sourceTree = "<group>"; };
 		92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIViewControllerAdditions.m; path = Mobile/Additions/UIViewControllerAdditions.m; sourceTree = "<group>"; };
 		92E2E65415BFD6740013B032 /* FileTransferTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileTransferTableCell.xib; sourceTree = "<group>"; };
@@ -636,6 +638,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92AFF84A16B0CE4700940E5D /* AVFoundation.framework in Frameworks */,
 				92823D32169114FA000EC36E /* Twitter.framework in Frameworks */,
 				92A54AA515AD1DDD00F21FC5 /* libsqlite3.dylib in Frameworks */,
 				1C3A8B2313293CC8005EB3A6 /* libSystem.dylib in Frameworks */,
@@ -1222,6 +1225,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				92AFF84916B0CE4700940E5D /* AVFoundation.framework */,
 				1C124A710F097575008F181B /* AudioToolbox.framework */,
 				1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */,
 				1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */,
