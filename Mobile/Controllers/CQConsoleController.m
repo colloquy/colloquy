@@ -92,7 +92,6 @@ static BOOL verbose;
 
 	self.navigationItem.title = NSLocalizedString(@"Console", @"Console view title");
 
-	transcriptView.dataDetectorTypes = UIDataDetectorTypeNone;
 	transcriptView.styleIdentifier = @"console";
 	transcriptView.allowsStyleChanges = NO;
 }

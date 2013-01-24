@@ -24,11 +24,6 @@ typedef enum {
     UITabBarTransitionNone,
     UITabBarTransitionSlide
 } UITabBarTransition;
-
-@interface UITabBarController (UITabBarControllerPrivate)
-- (void) hideBarWithTransition:(UITabBarTransition) transition;
-- (void) showBarWithTransition:(UITabBarTransition) transition;
-@end
 #endif
 
 NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyApplicationDidRecieveDeviceTokenNotification";
@@ -328,7 +323,6 @@ static NSMutableArray *highlightWords;
 	[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 
 	_deviceToken = [[[NSUserDefaults standardUserDefaults] stringForKey:@"CQPushDeviceToken"] retain];
-	_showingTabBar = YES;
 
 	[CQConnectionsController defaultController];
 	[CQChatController defaultController];
@@ -794,44 +788,6 @@ static NSMutableArray *highlightWords;
 	if ([style isEqualToString:@"notes"])
 		return [UIColor colorWithRed:0.224 green:0.082 blue:0. alpha:1.];
 	return nil;
-}
-
-#pragma mark -
-
-- (void) hideTabBarWithTransition:(BOOL) transition {
-#if ENABLE(SECRETS)
-	UITabBarController *tabBarController = self.tabBarController;
-	if (!tabBarController)
-		return;
-
-	if (!_showingTabBar)
-		return;
-
-	if ([[UIDevice currentDevice] isSystemFive])
-		return;
-
-	[tabBarController performPrivateSelector:@"hideBarWithTransition:" withUnsignedInteger:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
-
-	_showingTabBar = NO;
-#endif
-}
-
-- (void) showTabBarWithTransition:(BOOL) transition {
-#if ENABLE(SECRETS)
-	UITabBarController *tabBarController = self.tabBarController;
-	if (!tabBarController)
-		return;
-
-	if (_showingTabBar)
-		return;
-
-	if ([[UIDevice currentDevice] isSystemFive])
-		return;
-
-	[tabBarController performPrivateSelector:@"showBarWithTransition:" withUnsignedInteger:(transition ? UITabBarTransitionSlide : UITabBarTransitionNone)];
-
-	_showingTabBar = YES;
-#endif
 }
 
 #pragma mark -

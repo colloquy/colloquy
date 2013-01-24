@@ -15,7 +15,6 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 	NSDate *_resumeDate;
 	NSString *_deviceToken;
 	NSUInteger _networkIndicatorStack;
-	BOOL _showingTabBar;
 	UIActionSheet *_visibleActionSheet;
 	NSNumber *_oldSwipeOrientationValue;
 	BOOL _userDefaultsChanged;
@@ -43,9 +42,6 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 - (void) presentModalViewController:(UIViewController *) modalViewController animated:(BOOL) animated;
 - (void) presentModalViewController:(UIViewController *) modalViewController animated:(BOOL) animated singly:(BOOL) singly;
 - (void) dismissModalViewControllerAnimated:(BOOL) animated;
-
-- (void) hideTabBarWithTransition:(BOOL) transition;
-- (void) showTabBarWithTransition:(BOOL) transition;
 
 - (BOOL) areNotificationBadgesAllowed;
 - (BOOL) areNotificationSoundsAllowed;

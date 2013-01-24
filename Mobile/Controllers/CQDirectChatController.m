@@ -380,6 +380,8 @@ static BOOL showingKeyboard;
 	chatInputBar.accessibilityTraits = UIAccessibilityTraitUpdatesFrequently;
 
 	[self _userDefaultsChanged];
+
+	transcriptView.dataDetectorTypes = UIDataDetectorTypeNone;
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -395,9 +397,6 @@ static BOOL showingKeyboard;
 	if (_showingKeyboard || hardwareKeyboard) {
 		[chatInputBar becomeFirstResponder];
 	}
-
-	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
-		[[CQColloquyApplication sharedApplication] hideTabBarWithTransition:YES];
 }
 
 - (void) viewDidAppear:(BOOL) animated {
@@ -450,9 +449,6 @@ static BOOL showingKeyboard;
 	}
 
 	[super viewWillDisappear:animated];
-
-	if ([self isMemberOfClass:[CQDirectChatController class]])
-		[[CQColloquyApplication sharedApplication] showTabBarWithTransition:YES];
 }
 
 - (void) viewDidDisappear:(BOOL) animated {
@@ -465,10 +461,6 @@ static BOOL showingKeyboard;
 }
 
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
-	if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
-		[[CQColloquyApplication sharedApplication] hideTabBarWithTransition:NO];
-	else [[CQColloquyApplication sharedApplication] showTabBarWithTransition:NO];
-
 	_isShowingCompletionsBeforeRotation = chatInputBar.isShowingCompletions;
 }
 
