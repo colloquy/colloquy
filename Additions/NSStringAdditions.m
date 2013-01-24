@@ -2,6 +2,7 @@
 
 #import "NSCharacterSetAdditions.h"
 #import "NSScannerAdditions.h"
+#import "NSRegularExpressionAdditions.h"
 
 #import <sys/time.h>
 
@@ -1159,9 +1160,8 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (BOOL) isMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range error:(NSError **) error {
-	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:nil];
+	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
 	NSRange foundRange = [regularExpression rangeOfFirstMatchInString:self options:NSMatchingReportCompletion range:range];
-	[regularExpression release];
 	return foundRange.location != NSNotFound;
 }
 
@@ -1170,22 +1170,8 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (NSRange) rangeOfRegex:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error {
-	static NSMutableDictionary *regexCaches = nil;
-	if (!regexCaches)
-		regexCaches = [[NSMutableDictionary alloc] init];
-
-	NSError *e = nil;
-	NSString *key = [NSString stringWithFormat:@"%@-%d", regex, options];
-	NSRegularExpression *regularExpression = [[regexCaches objectForKey:key] retain];
-	if (!regularExpression) {
-		regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:&e];
-		if (regularExpression)
-			[regexCaches setObject:regularExpression forKey:key];
-		else return NSMakeRange(NSNotFound, 0);
-	}
-	
+	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];	
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:NSMatchingCompleted range:range];
-	[regularExpression release];
 
 	NSRange foundRange = [result rangeAtIndex:capture];
 	if (!(foundRange.location + foundRange.length))
@@ -1198,9 +1184,8 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (NSString *) stringByMatching:(NSString *) regex options:(NSRegularExpressionOptions) options inRange:(NSRange) range capture:(NSInteger) capture error:(NSError **) error {
-	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:nil];
+	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:options range:range];
-	[regularExpression release];
 
 	NSRange resultRange = [result rangeAtIndex:capture];
 
@@ -1211,9 +1196,8 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (NSArray *) captureComponentsMatchedByRegex:(NSString *) regex options:(NSRegularExpressionOptions) options range:(NSRange) range error:(NSError *) error {
-	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:nil];
+	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
 	NSTextCheckingResult *result = [regularExpression firstMatchInString:self options:options range:range];
-	[regularExpression release];
 
 	if (!result)
 		return nil;
@@ -1231,7 +1215,7 @@ static NSCharacterSet *typicalEmoticonCharacters;
 }
 
 - (NSString *) stringByReplacingOccurrencesOfRegex:(NSString *) regex withString:(NSString *) replacement options:(NSRegularExpressionOptions) options range:(NSRange) searchRange error:(NSError **) error {
-	NSRegularExpression *regularExpression = [[NSRegularExpression alloc] initWithPattern:regex options:options error:nil];
+	NSRegularExpression *regularExpression = [NSRegularExpression cachedRegularExpressionWithPattern:regex options:options error:error];
 	NSMutableString *replacementString = [self mutableCopy];
 
 	for (NSTextCheckingResult *result in [regularExpression matchesInString:self options:optind range:searchRange]) {
@@ -1240,8 +1224,6 @@ static NSCharacterSet *typicalEmoticonCharacters;
 
 		[replacementString replaceCharactersInRange:result.range withString:replacement];
 	}
-
-	[regularExpression release];
 
 	return [replacementString autorelease];
 }
