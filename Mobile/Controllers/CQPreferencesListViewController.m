@@ -8,6 +8,10 @@ enum {
 	CQTableViewCellAccessoryPlay = (UITableViewCellAccessoryCheckmark + 10)
 };
 
+@interface CQPreferencesListViewController (Private)
+- (void) _previewAudioAlertAtIndex:(NSUInteger) index;
+@end
+
 @implementation CQPreferencesListViewController
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
@@ -324,6 +328,9 @@ enum {
 		cell.accessoryView = [self accessoryViewForAccessoryType:previouslySelectedAccessoryType];
 		cell.textLabel.textColor = [UIColor blackColor];
 
+		if (_selectedItemIndex == indexPath.row)
+			[self _previewAudioAlertAtIndex:_selectedItemIndex];
+
 		_selectedItemIndex = indexPath.row;
 		_pendingChanges = YES;
 
@@ -333,6 +340,7 @@ enum {
 		cell.accessoryView = [self accessoryViewForAccessoryType:accessoryType];
 		cell.textLabel.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 
+		// If the accessory type isn't custom, the accessory view will refresh right away. Otherwise, we help it out a bit.
 		if (previouslySelectedAccessoryType < CQTableViewCellAccessoryPlay) {
 			[tableView beginUpdates];
 			[tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:previouslySelectedIndexPath] withRowAnimation:UITableViewRowAnimationNone];
@@ -363,16 +371,8 @@ enum {
 	if (!path.length)
 		return;
 
-	if (_listType == CQPreferencesListTypeAudio) {
-		NSURL *audioURL = [NSURL fileURLWithPath:path];
-		if (![_audioPlayer.url isEqual:audioURL]) {
-			id old = _audioPlayer;
-			_audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:nil];
-			[old release];
-		}
-
-		[_audioPlayer play];
-	}
+	if (_listType == CQPreferencesListTypeAudio)
+		[self _previewAudioAlertAtIndex:indexPath.row];
 
 	// Call this ourselves because we have a custom accessory view, and it steals the tap from the cell otherwise
 	if ([self accessoryTypeForIndexPath:indexPath] >= CQTableViewCellAccessoryPlay)
@@ -413,5 +413,24 @@ enum {
 	[item release];
 
 	_pendingChanges = YES;
+}
+
+#pragma mark -
+
+- (void) _previewAudioAlertAtIndex:(NSUInteger) index {
+	NSString *item = [_items objectAtIndex:index];
+	NSString *path = [[NSBundle mainBundle] pathForResource:item ofType:@"aiff"];
+	if (!path)
+		return;
+
+	NSURL *audioURL = [NSURL fileURLWithPath:path];
+
+	if (![_audioPlayer.url isEqual:audioURL]) {
+		id old = _audioPlayer;
+		_audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:nil];
+		[old release];
+	}
+
+	[_audioPlayer play];
 }
 @end
