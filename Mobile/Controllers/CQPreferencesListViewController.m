@@ -4,6 +4,10 @@
 
 #import <AVFoundation/AVFoundation.h>
 
+enum {
+	CQTableViewCellAccessoryPlay = (UITableViewCellAccessoryCheckmark + 10)
+};
+
 @implementation CQPreferencesListViewController
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
@@ -31,6 +35,7 @@
 	[_editPlaceholder release];
 	[_editingViewController release];
 	[_customEditingViewController release];
+	[_audioPlayer release];
 
 	self.preferencesListBlock = nil;
 
@@ -166,18 +171,50 @@
 
 #pragma mark -
 
-- (UITableViewCellAccessoryType) accessoryTypeForIndexPath:(NSIndexPath *) indexPath allowingForSelection:(BOOL) allowingForSelection {
+- (int) accessoryTypeForIndexPath:(NSIndexPath *) indexPath allowingForSelection:(BOOL) allowingForSelection {
 	if (allowingForSelection && indexPath.row == _selectedItemIndex)
 		return UITableViewCellAccessoryCheckmark;
-	if (_listType == CQPreferencesListTypeAudio)
-		return  UITableViewCellAccessoryDetailDisclosureButton;
-	if (_listType == CQPreferencesListTypeImage)
-		return  UITableViewCellAccessoryDetailDisclosureButton;
+
+	NSString *item = [_items objectAtIndex:indexPath.row];
+	if (_listType == CQPreferencesListTypeAudio) {
+		NSString *path = [[NSBundle mainBundle] pathForResource:item ofType:@"aiff"];
+		if (path.length)
+			return  CQTableViewCellAccessoryPlay;
+	} else if (_listType == CQPreferencesListTypeImage) {
+		NSString *path = [[NSBundle mainBundle] pathForResource:item ofType:@"aiff"];
+		if (path.length)
+			return  UITableViewCellAccessoryDetailDisclosureButton;
+	}
 	return  UITableViewCellAccessoryNone;
+}
+
+- (UIView *) accessoryViewForAccessoryType:(int) accessoryType {
+	if (accessoryType != CQTableViewCellAccessoryPlay)
+		return nil;
+
+	UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"playAudioAccessory.png"] highlightedImage:[UIImage imageNamed:@"playAudioAccessory-pressed.png"]];
+	imageView.userInteractionEnabled = YES;
+
+	UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(customAccessoryViewTapped:)];
+	[imageView addGestureRecognizer:tapGestureRecognizer];
+	[tapGestureRecognizer release];
+
+	return [imageView autorelease];
 }
 
 - (UITableViewCellAccessoryType) accessoryTypeForIndexPath:(NSIndexPath *) indexPath {
 	return [self accessoryTypeForIndexPath:indexPath allowingForSelection:YES];
+}
+
+#pragma mark -
+
+- (void) customAccessoryViewTapped:(UITapGestureRecognizer *) tapGesturRecognizer {
+	CGPoint point = [tapGesturRecognizer locationInView:tapGesturRecognizer.view];
+	point = [tapGesturRecognizer.view convertPoint:point toView:self.tableView];
+
+	NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+	if ([self.tableView.delegate respondsToSelector:@selector(tableView:accessoryButtonTappedForRowWithIndexPath:)])
+		[self.tableView.delegate tableView:self.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];
 }
 
 #pragma mark -
@@ -262,7 +299,9 @@
 	else cell.textLabel.textColor = [UIColor blackColor];
 
 	cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
-	cell.accessoryType = [self accessoryTypeForIndexPath:indexPath];
+	int accessoryType = [self accessoryTypeForIndexPath:indexPath];
+	cell.accessoryType = accessoryType;
+	cell.accessoryView = [self accessoryViewForAccessoryType:accessoryType];
 
 	return cell;
 }
@@ -277,17 +316,28 @@
 	if (_allowEditing) {
 		[self editItemAtIndex:indexPath.row];
 	} else {
-		UITableViewCell *cell = (_selectedItemIndex != NSNotFound ? [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_selectedItemIndex inSection:0]] : nil);
-		cell.accessoryType = [self accessoryTypeForIndexPath:[NSIndexPath indexPathForRow:_selectedItemIndex inSection:0] allowingForSelection:NO];
+		NSIndexPath *previouslySelectedIndexPath = [NSIndexPath indexPathForRow:_selectedItemIndex inSection:0];
+		
+		UITableViewCell *cell = (_selectedItemIndex != NSNotFound ? [tableView cellForRowAtIndexPath:previouslySelectedIndexPath] : nil);
+		int previouslySelectedAccessoryType = [self accessoryTypeForIndexPath:previouslySelectedIndexPath];
+		cell.accessoryType = previouslySelectedAccessoryType;
+		cell.accessoryView = [self accessoryViewForAccessoryType:previouslySelectedAccessoryType];
 		cell.textLabel.textColor = [UIColor blackColor];
 
 		_selectedItemIndex = indexPath.row;
 		_pendingChanges = YES;
 
 		cell = [tableView cellForRowAtIndexPath:indexPath];
-		cell.accessoryType = [self accessoryTypeForIndexPath:indexPath];
+		int accessoryType = [self accessoryTypeForIndexPath:indexPath];
+		cell.accessoryType = accessoryType;
+		cell.accessoryView = [self accessoryViewForAccessoryType:accessoryType];
 		cell.textLabel.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
 
+		if (previouslySelectedAccessoryType < CQTableViewCellAccessoryPlay) {
+			[tableView beginUpdates];
+			[tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:previouslySelectedIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+			[tableView endUpdates];
+		}
 		[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 	}
 }
@@ -323,6 +373,10 @@
 
 		[_audioPlayer play];
 	}
+
+	// Call this ourselves because we have a custom accessory view, and it steals the tap from the cell otherwise
+	if ([self accessoryTypeForIndexPath:indexPath] >= CQTableViewCellAccessoryPlay)
+		[self tableView:tableView didSelectRowAtIndexPath:indexPath];
 }
 
 - (BOOL) tableView:(UITableView *) tableView canEditRowAtIndexPath:(NSIndexPath *) indexPath {
