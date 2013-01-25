@@ -665,14 +665,10 @@
 #pragma mark -
 
 - (void) showPreferences:(id) sender {
-	CQPreferencesViewController *preferencesViewController = [[CQPreferencesViewController alloc] initWithRootPlist];
-	preferencesViewController.title = NSLocalizedString(@"Settings", @"Settings view title");
-	CQModalNavigationController *modalNavigationController = [[CQModalNavigationController alloc] initWithRootViewController:preferencesViewController];
-	modalNavigationController.closeButtonItem = UIBarButtonSystemItemDone;
+	CQPreferencesViewController *preferencesViewController = [[CQPreferencesViewController alloc] init];
 
-	[self.navigationController presentModalViewController:modalNavigationController animated:[UIView areAnimationsEnabled]];
+	[[CQColloquyApplication sharedApplication] presentModalViewController:preferencesViewController animated:[UIView areAnimationsEnabled]];
 
-	[modalNavigationController release];
 	[preferencesViewController release];
 }
 @end
