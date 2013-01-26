@@ -111,7 +111,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	0
 };
 
-@implementation MVIRCChatConnection
+@implementation MVIRCChatConnection {
+	NSTimeInterval _nextPingTimeInterval;
+}
+
 + (NSArray *) defaultServerPorts {
 	return [NSArray arrayWithObjects:[NSNumber numberWithUnsignedShort:6667],[NSNumber numberWithUnsignedShort:6660],[NSNumber numberWithUnsignedShort:6669],[NSNumber numberWithUnsignedShort:7000],[NSNumber numberWithUnsignedShort:994], nil];
 }
@@ -719,7 +722,6 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	_isonSentCount = 0;
 
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _pingServer ) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _periodicEvents ) object:nil];
 //	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _whoisWatchedUsers ) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _checkWatchedUsers ) object:nil];
@@ -838,7 +840,7 @@ static const NSStringEncoding supportedEncodings[] = {
 	[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", username, ( _realName.length ? _realName : @"Anonymous User" )];
 
 	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:JVPeriodicEventsInterval];
-	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:JVPingServerInterval];
+	[self _pingServerAfterInterval];
 
 	[self _readNextMessageFromServer];
 }
@@ -995,6 +997,8 @@ end:
 
 			[self performSelector:selector withObject:parameters withObject:( chatUser ? (id) chatUser : (id) senderString )];
 		}
+		
+		[self _pingServerAfterInterval];
 	}
 
 	[rawString release];
@@ -1650,8 +1654,23 @@ end:
 }
 
 - (void) _pingServer {
-	[self sendRawMessageImmediatelyWithFormat:@"PING %@", [self server]];
-	[self performSelector:@selector( _pingServer ) withObject:nil afterDelay:JVPingServerInterval];
+	[self sendRawMessage:[@"PING " stringByAppendingString:_realServer]];
+}
+
+- (void) _pingServerAfterInterval {
+	if ( _status != MVChatConnectionConnectingStatus && _status != MVChatConnectionConnectedStatus)
+		return;
+
+	_nextPingTimeInterval = [NSDate timeIntervalSinceReferenceDate] + JVPingServerInterval ;
+	double delayInSeconds = JVPingServerInterval + 0.001;
+	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+	dispatch_after(popTime, _connectionDelegateQueue, ^(void){
+		NSTimeInterval nowTimeInterval = [NSDate timeIntervalSinceReferenceDate];
+		if (_nextPingTimeInterval < nowTimeInterval) {
+			_nextPingTimeInterval = nowTimeInterval + JVPingServerInterval;
+			[self _pingServer];
+		}
+	});
 }
 
 - (void) _startSendQueue {
