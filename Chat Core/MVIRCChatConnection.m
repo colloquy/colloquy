@@ -1654,7 +1654,7 @@ end:
 }
 
 - (void) _pingServer {
-	[self sendRawMessage:[@"PING " stringByAppendingString:_realServer]];
+	[self sendRawMessage:[@"PING " stringByAppendingString:_realServer?:self.server] immediately:YES];
 }
 
 - (void) _pingServerAfterInterval {
@@ -1662,7 +1662,7 @@ end:
 		return;
 
 	_nextPingTimeInterval = [NSDate timeIntervalSinceReferenceDate] + JVPingServerInterval ;
-	double delayInSeconds = JVPingServerInterval + 0.001;
+	double delayInSeconds = JVPingServerInterval + 1.;
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
 	dispatch_after(popTime, _connectionDelegateQueue, ^(void){
 		NSTimeInterval nowTimeInterval = [NSDate timeIntervalSinceReferenceDate];
