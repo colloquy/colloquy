@@ -148,9 +148,16 @@ static JVNotificationController *sharedInstance = nil;
 	} else {
 		NSUserNotification *notification = [[NSUserNotification alloc] init];
 		notification.title = title;
-		notification.subtitle = [context objectForKey:@"subtitle"];
-		if (!notification.subtitle.length)
-			notification.subtitle = description;
+		NSString *notificationSubtitle = context[@"subtitle"];
+		if (!notificationSubtitle.length) {
+			if ([description isKindOfClass:[NSString class]]) {
+				notificationSubtitle = description;
+			}
+			else if ([description isKindOfClass:[NSAttributedString class]]) {
+				notificationSubtitle = [description string];
+			}
+		}
+		notification.subtitle = notificationSubtitle;
 
 		[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
 	}
