@@ -9,8 +9,6 @@
 @interface MVIRCChatConnection : MVChatConnection {
 @private
 	GCDAsyncSocket *_chatConnection;
-	dispatch_queue_t _connectionDelegateQueue;
-	NSThread *_connectionThread;
 	NSDate *_queueWait;
 	NSDate *_lastCommand;
 	NSMutableArray *_sendQueue;
@@ -47,8 +45,11 @@
 
 @interface MVChatConnection (MVIRCChatConnectionPrivate)
 - (GCDAsyncSocket *) _chatConnection;
+- (void) _connect;
+
 - (void) _readNextMessageFromServer;
 - (void) _processIncomingMessage:(NSData *) data fromServer:(BOOL) fromServer;
+- (void) _writeDataToServer:(id) raw;
 
 - (void) _handleCTCP:(NSMutableData *) data asRequest:(BOOL) request fromSender:(MVChatUser *) sender toTarget:(id) target forRoom:(MVChatRoom *) room;
 

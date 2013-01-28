@@ -112,6 +112,8 @@ static const NSStringEncoding supportedEncodings[] = {
 };
 
 @implementation MVIRCChatConnection {
+	dispatch_queue_t _connectionQueue;
+
 	NSTimeInterval _nextPingTimeInterval;
 }
 
@@ -160,6 +162,9 @@ static const NSStringEncoding supportedEncodings[] = {
 	[_umichNoIdentdCaptcha release];
 	[_failedNickname release];
 
+	if (_connectionQueue)
+		dispatch_release(_connectionQueue);
+
 	[super dealloc];
 }
 
@@ -185,13 +190,9 @@ static const NSStringEncoding supportedEncodings[] = {
 	MVSafeAdoptAssign( _lastConnectAttempt, [[NSDate alloc] init] );
 	MVSafeRetainAssign( _queueWait, [NSDate dateWithTimeIntervalSinceNow:JVQueueWaitBeforeConnected] );
 
-	if( [_connectionThread respondsToSelector:@selector( cancel )] )
-		[_connectionThread cancel];
-	_connectionThread = nil;
-
 	[self _willConnect]; // call early so other code has a chance to change our info
 
-	[NSThread detachNewThreadSelector:@selector( _ircRunloop ) toTarget:self withObject:nil];
+	[self _connect];
 }
 
 - (void) disconnectWithReason:(MVChatString *) reason {
@@ -205,8 +206,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		} else [self sendRawMessage:@"QUIT" immediately:YES];
 	} else if( _status == MVChatConnectionConnectingStatus ) {
 		_userDisconnected = YES;
-		if( _connectionThread )
-			[[self _chatConnection] performSelector:@selector( disconnect ) inThread:_connectionThread waitUntilDone:NO];
+		[self._chatConnection disconnect];
 	}
 }
 
@@ -358,10 +358,11 @@ static const NSStringEncoding supportedEncodings[] = {
 		if( now ) now = ( ! _lastCommand || [_lastCommand timeIntervalSinceNow] <= (-[self minimumSendQueueDelay]) );
 	}
 
-	if( now && _connectionThread ) {
+	if( now ) {
 		MVSafeAdoptAssign( _lastCommand, [[NSDate alloc] init] );
-
-		[self performSelector:@selector( _writeDataToServer: ) withObject:raw inThread:_connectionThread waitUntilDone:NO];
+		dispatch_async(_connectionQueue, ^{
+			[self _writeDataToServer:raw];
+		});
 	} else {
 		if( ! _sendQueue )
 			_sendQueue = [[NSMutableArray alloc] initWithCapacity:20];
@@ -370,8 +371,11 @@ static const NSStringEncoding supportedEncodings[] = {
 			[_sendQueue addObject:raw];
 		}
 
-		if( ! _sendQueueProcessing && _connectionThread )
-			[self performSelector:@selector( _startSendQueue ) withObject:nil inThread:_connectionThread waitUntilDone:NO];
+		if( ! _sendQueueProcessing ) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[self _startSendQueue];
+			});
+		}
 	}
 }
 
@@ -614,11 +618,20 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (void) _connect {
+	NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+	NSString *queueName = [NSString stringWithFormat:@"%@.connection-queue (%@)", bundleIdentifier, [self description]];
+	dispatch_queue_t connectionQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
+
 	id old = _chatConnection;
-	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionDelegateQueue socketQueue:_connectionDelegateQueue];
+	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:connectionQueue socketQueue:connectionQueue];
 	[old setDelegate:nil];
 	[old disconnect];
 	[old release];
+
+	if (_connectionQueue) {
+		dispatch_release(_connectionQueue);
+	}
+	_connectionQueue = connectionQueue;
 
 	_pendingIdentificationAttempt = NO;
 	_sentEndCapabilityCommand = NO;
@@ -634,37 +647,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	if( ! [_chatConnection connectToHost:server onPort:serverPort error:NULL] )
 		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
 	else [self _resetSendQueueInterval];
-}
-
-- (oneway void) _ircRunloop {
-    @autoreleasepool {
-		[NSThread prepareForInterThreadMessages];
-
-		NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
-		NSString *queueName = [NSString stringWithFormat:@"%@.connection-queue (%@)", bundleIdentifier, [self description]];
-		_connectionDelegateQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
-		_connectionThread = [NSThread currentThread];
-		if( [_connectionThread respondsToSelector:@selector( setName: )] )
-			[_connectionThread setName:[self description]];
-
-		[self _connect];
-	}
-
-	while( _status == MVChatConnectionConnectedStatus || _status == MVChatConnectionConnectingStatus ) {
-		@autoreleasepool {
-			[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
-		}
-	}
-
-    @autoreleasepool {
-		// make sure the connection has sent all the delegate calls it has scheduled
-		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5.]];
-
-		if( _connectionThread == [NSThread currentThread] ) {
-			_connectionThread = nil;
-			dispatch_release(_connectionDelegateQueue);
-		}
-	}
 }
 
 #pragma mark -
@@ -793,7 +775,7 @@ static const NSStringEncoding supportedEncodings[] = {
 		[settings setObject:(id)kCFBooleanTrue forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
 		[settings setObject:(id)kCFBooleanFalse forKey:(NSString *)kCFStreamSSLValidatesCertificateChain];
 		[settings setObject:(id)kCFStreamSocketSecurityLevelNegotiatedSSL forKey:(id)kCFStreamSSLLevel];
-		
+
 		[sock startTLS:settings];
 	}
 
@@ -855,14 +837,10 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (void) processIncomingMessage:(id) raw fromServer:(BOOL) fromServer {
 	NSParameterAssert([raw isKindOfClass:[NSData class]]);
-	NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:raw, @"message", [NSNumber numberWithBool:fromServer], @"fromServer", nil];
-	[self performSelector:@selector(_processIncomingMessageWithInfo:) withObject:info inThread:_connectionThread waitUntilDone:NO];
-}
 
-- (void) _processIncomingMessageWithInfo:(NSDictionary *) info {
-	NSData *message	= [info objectForKey:@"message"];
-	NSNumber *fromServer = [info objectForKey:@"fromServer"];
-	[self _processIncomingMessage:message fromServer:[fromServer boolValue]];
+	dispatch_async(_connectionQueue, ^{
+		[self _processIncomingMessage:raw fromServer:fromServer];
+	});
 }
 
 - (void) _processIncomingMessage:(NSData *) data fromServer:(BOOL) fromServer {
@@ -997,7 +975,7 @@ end:
 
 			[self performSelector:selector withObject:parameters withObject:( chatUser ? (id) chatUser : (id) senderString )];
 		}
-		
+
 		[self _pingServerAfterInterval];
 	}
 
@@ -1104,11 +1082,9 @@ end:
 		MVChatRoom *room = ([target isKindOfClass:[MVChatRoom class]] ? target : nil);
 		NSNumber *action = ([[attributes objectForKey:@"action"] boolValue] ? [attributes objectForKey:@"action"] : [NSNumber numberWithBool:NO]);
 		NSMutableDictionary *privmsgInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:msg, @"message", [self localUser], @"user", [NSString locallyUniqueString], @"identifier", action, @"action", target, @"target", room, @"room", nil];
-#if ENABLE(PLUGINS)
-		[self performSelector:@selector( _handlePrivmsg: ) withObject:privmsgInfo];
-#else
-		[self performSelector:@selector( _handlePrivmsg: ) withObject:privmsgInfo inThread:_connectionThread waitUntilDone:NO];
-#endif
+		dispatch_async(_connectionQueue, ^{
+			[self performSelector:@selector(_handlePrivmsg:) withObject:privmsgInfo];
+		});
 	}
 
 	NSString *targetName = [target isKindOfClass:[MVChatRoom class]] ? [target name] : [target nickname];
@@ -1664,7 +1640,7 @@ end:
 	_nextPingTimeInterval = [NSDate timeIntervalSinceReferenceDate] + JVPingServerInterval ;
 	double delayInSeconds = JVPingServerInterval + 1.;
 	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-	dispatch_after(popTime, _connectionDelegateQueue, ^(void){
+	dispatch_after(popTime, _connectionQueue, ^(void){
 		NSTimeInterval nowTimeInterval = [NSDate timeIntervalSinceReferenceDate];
 		if (_nextPingTimeInterval < nowTimeInterval) {
 			_nextPingTimeInterval = nowTimeInterval + JVPingServerInterval;
@@ -1719,7 +1695,9 @@ end:
 		else _sendQueueProcessing = NO;
 	}
 
-	[self _writeDataToServer:data];
+	dispatch_async(_connectionQueue, ^{
+		[self _writeDataToServer:data];
+	});
 	[data release];
 
 	MVSafeAdoptAssign( _lastCommand, [[NSDate alloc] init] );
@@ -1956,7 +1934,7 @@ end:
 
 	_sendEndCapabilityCommandAtTime = [NSDate timeIntervalSinceReferenceDate] + JVEndCapabilityTimeoutDelay;
 
-	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(JVEndCapabilityTimeoutDelay * NSEC_PER_SEC)), _connectionDelegateQueue, ^{
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(JVEndCapabilityTimeoutDelay * NSEC_PER_SEC)), _connectionQueue, ^{
 		[self _sendEndCapabilityCommandForcefully:NO];
 	});
 }
@@ -1966,7 +1944,7 @@ end:
 
 	_sendEndCapabilityCommandAtTime = [NSDate timeIntervalSinceReferenceDate] + 1.;
 
-	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1. * NSEC_PER_SEC)), _connectionDelegateQueue, ^{
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1. * NSEC_PER_SEC)), _connectionQueue, ^{
 		[self _sendEndCapabilityCommandForcefully:NO];
 	});
 }
@@ -2099,7 +2077,7 @@ end:
 - (void) _handle001WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_WELCOME
 	[self _cancelScheduledSendEndCapabilityCommand];
 
-	[self performSelector:@selector( _handleConnect ) withObject:nil inThread:_connectionThread waitUntilDone:NO];
+	[self _handleConnect];
 
 	// set the _realServer because it's different from the server we connected to
 	MVSafeCopyAssign( _realServer, sender );
@@ -2335,6 +2313,10 @@ end:
 
 - (void) _handlePrivmsg:(NSMutableDictionary *) privmsgInfo {
 #if ENABLE(PLUGINS)
+	if (![NSThread isMainThread]) {
+		[self performSelectorOnMainThread:_cmd withObject:privmsgInfo waitUntilDone:NO];
+		return;
+	}
 	MVAssertMainThreadRequired();
 #else
 #endif
@@ -2395,11 +2377,7 @@ end:
 			[self _handleCTCP:msgData asRequest:YES fromSender:sender toTarget:target forRoom:room];
 		} else {
 			NSMutableDictionary *privmsgInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", target, @"target", room, @"room", nil];
-#if ENABLE(PLUGINS)
-			[self performSelectorOnMainThread:@selector( _handlePrivmsg: ) withObject:privmsgInfo waitUntilDone:NO];
-#else
 			[self _handlePrivmsg:privmsgInfo];
-#endif
 			[privmsgInfo release];
 		}
 	}
@@ -2407,6 +2385,10 @@ end:
 
 - (void) _handleNotice:(NSMutableDictionary *) noticeInfo {
 #if ENABLE(PLUGINS)
+	if (![NSThread isMainThread]) {
+		[self performSelectorOnMainThread:_cmd withObject:noticeInfo waitUntilDone:NO];
+		return;
+	}
 	MVAssertMainThreadRequired();
 #else
 #endif
@@ -2488,8 +2470,9 @@ end:
 			// Workaround for psybnc bouncers which are configured to combine multiple networks in one bouncer connection. These bouncers don't send a 001 command on connect...
 			// Catch ":Welcome!psyBNC@lam3rz.de NOTICE * :psyBNC2.3.2-7" on these connections instead:
 			NSString *msg = [self _newStringWithBytes:[message bytes] length:message.length];
-			if( [msg hasCaseInsensitiveSubstring:@"psyBNC"] )
-				[self performSelector:@selector( _handleConnect ) withObject:nil inThread:_connectionThread waitUntilDone:NO];
+			if( [msg hasCaseInsensitiveSubstring:@"psyBNC"] ) {
+				[self _handleConnect];
+			}
 			[msg release];
 
 		} else if ( [sender.nickname isEqualToString:@"Global"] && [sender.username isEqualToString:@"Global"] && [sender.address isEqualToString:@"Services.GameSurge.net"] && [[self server] hasCaseInsensitiveSubstring:@"gamesurge"] ) {
@@ -2640,11 +2623,7 @@ end:
 			[self _handleCTCP:msgData asRequest:NO fromSender:sender toTarget:target forRoom:room];
 		} else {
 			NSMutableDictionary *noticeInfo = [[NSMutableDictionary alloc] initWithObjectsAndKeys:msgData, @"message", sender, @"user", [NSString locallyUniqueString], @"identifier", [NSNumber numberWithBool:YES], @"notice", target, @"target", room, @"room", nil];
-#if ENABLE(PLUGINS)
-			[self performSelectorOnMainThread:@selector( _handleNotice: ) withObject:noticeInfo waitUntilDone:NO];
-#else
 			[self _handleNotice:noticeInfo];
-#endif
 			[noticeInfo release];
 		}
 	}
@@ -2652,6 +2631,10 @@ end:
 
 - (void) _handleCTCP:(NSDictionary *) ctcpInfo {
 #if ENABLE(PLUGINS)
+	if (![NSThread isMainThread]) {
+		[self performSelectorOnMainThread:_cmd withObject:ctcpInfo waitUntilDone:NO];
+		return;
+	}
 	MVAssertMainThreadRequired();
 #else
 #endif
@@ -3024,13 +3007,7 @@ end:
 	if( target ) [info setObject:target forKey:@"target"];
 	if( room ) [info setObject:room forKey:@"room"];
 	[info setObject:[NSNumber numberWithBool:request] forKey:@"request"];
-
-#if ENABLE(PLUGINS)
-	[self performSelectorOnMainThread:@selector( _handleCTCP: ) withObject:info waitUntilDone:NO];
-#else
 	[self _handleCTCP:info];
-#endif
-
 	[info release];
 }
 
@@ -3128,6 +3105,10 @@ end:
 
 - (void) _handleTopic:(NSDictionary *)topicInfo {
 #if ENABLE(PLUGINS)
+	if (![NSThread isMainThread]) {
+		[self performSelectorOnMainThread:_cmd withObject:topicInfo waitUntilDone:NO];
+		return;
+	}
 	MVAssertMainThreadRequired();
 #endif
 
@@ -3167,11 +3148,7 @@ end:
 		if( ! [topic isKindOfClass:[NSData class]] ) topic = nil;
 
 		NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:room, @"room", sender, @"author", topic, @"topic", nil];
-#if ENABLE(PLUGINS)
-		[self performSelectorOnMainThread:@selector( _handleTopic: ) withObject:info waitUntilDone:NO];
-#else
 		[self _handleTopic:info];
-#endif
 	}
 }
 
