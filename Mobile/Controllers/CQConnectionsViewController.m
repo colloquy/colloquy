@@ -504,7 +504,7 @@
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
-	if (section == 0)
+	if (section == 0 || (section == 1 && self.tableView.editing && ![CQConnectionsController defaultController].directConnections.count))
 		return nil;
 
 	if ((section == 1 && self.tableView.editing) || ((section == 0 && !self.tableView.editing) && [CQConnectionsController defaultController].directConnections.count && [CQConnectionsController defaultController].bouncers.count))
@@ -541,6 +541,10 @@
 - (CGFloat) tableView:(UITableView *) tableView heightForHeaderInSection:(NSInteger) section {
 	if (section == 0)
 		return 0.;
+
+	UIView *headerView = [self tableView:tableView viewForHeaderInSection:section];
+	if (!headerView)
+		return 0.;
 	return 22.;
 }
 
@@ -548,8 +552,12 @@
 	if (section == 0)
 		return nil;
 
+	NSString *title = [self tableView:tableView titleForHeaderInSection:section];
+	if (!title.length)
+		return nil;
+
 	CQTableViewSectionHeader *view = [[CQTableViewSectionHeader alloc] initWithFrame:CGRectZero];
-	view.textLabel.text = [self tableView:tableView titleForHeaderInSection:section];
+	view.textLabel.text = title;
 	view.section = section;
 
 	if (!(tableView.editing && section == 1))
