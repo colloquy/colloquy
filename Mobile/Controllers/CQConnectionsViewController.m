@@ -29,10 +29,7 @@
 	self.navigationItem.leftBarButtonItem = settingsItem;
 	[settingsItem release];
 
-	self.navigationItem.rightBarButtonItem = self.editButtonItem;
-
 	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"Add connection.", @"Voiceover add connection label");
-	self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"Edit connections.", @"Voiceover edit connections label");
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionNicknameAcceptedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didChange:) name:MVChatConnectionNicknameRejectedNotification object:nil];
@@ -115,6 +112,15 @@
 	[self.tableView reloadData];
 
 	[self _startUpdatingConnectTimes];
+
+	if (![CQConnectionsController defaultController].directConnections.count && ![CQConnectionsController defaultController].bouncers.count) {
+		self.editing = YES;
+
+		self.navigationItem.rightBarButtonItem = nil;
+	} else {
+		self.navigationItem.rightBarButtonItem = self.editButtonItem;
+		self.navigationItem.rightBarButtonItem.accessibilityLabel = NSLocalizedString(@"Edit connections.", @"Voiceover edit connections label");
+	}
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
@@ -477,6 +483,7 @@
 		}
 	} else {
 		[self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.25];
+		self.navigationItem.rightBarButtonItem = nil;
 	}
 }
 
