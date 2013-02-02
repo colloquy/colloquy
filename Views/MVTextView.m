@@ -17,10 +17,11 @@ static NSMutableSet *badOperations = nil;
 	dispatch_once(&pred, ^{
 		badOperations = [NSMutableSet set];
 
-		Method badMethod = class_getInstanceMethod([self class], @selector(main));
+		Class class = NSClassFromString(@"NSTextCheckingOperation");
+		Method badMethod = class_getInstanceMethod(class, @selector(main));
 		badImplementation = method_getImplementation(badMethod);
 
-		Method goodMethod = class_getInstanceMethod([self class], @selector(cq_main));
+		Method goodMethod = class_getInstanceMethod(class, @selector(cq_main));
 		IMP goodImplementation = method_getImplementation(goodMethod);
 
 		method_setImplementation(badMethod, goodImplementation);
