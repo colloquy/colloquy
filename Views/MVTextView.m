@@ -1,6 +1,44 @@
 #import "MVTextView.h"
 #import "JVTranscriptFindWindowController.h"
 
+#import <objc/runtime.h>
+
+// This is a workaround for a crash on 10.8-10.8.2 where any NSTextView would crash if the string "File:// /" (without the space) was entered
+// and can be removed when we drop support for 10.8.
+@interface NSTextCheckingOperation : NSOperation
+@end
+
+@implementation NSTextCheckingOperation (cq_Bugfix)
+static IMP badImplementation = NULL;
+static NSMutableSet *badOperations = nil;
+
++ (void) load {
+  	static dispatch_once_t pred;
+	dispatch_once(&pred, ^{
+		badOperations = [NSMutableSet set];
+
+		Method badMethod = class_getInstanceMethod([self class], @selector(main));
+		badImplementation = method_getImplementation(badMethod);
+
+		Method goodMethod = class_getInstanceMethod([self class], @selector(cq_main));
+		IMP goodImplementation = method_getImplementation(goodMethod);
+
+		method_setImplementation(badMethod, goodImplementation);
+	});
+}
+
+- (void) cq_main {
+	@try {
+		if (badImplementation != NULL) {
+			badImplementation(self, @selector(main));
+		}
+	} @catch (NSException *e) {
+		// Releasing operations that threw exceptions causes deadlock (and triggers other exceptions).
+		// So, in the interest of not crashing, leak them instead.
+		[badOperations addObject:self];
+	}
+}
+@end
 @interface MVTextView (MVTextViewPrivate)
 - (BOOL) checkKeyEvent:(NSEvent *) event;
 - (BOOL) triggerKeyEvent:(NSEvent *) event;
