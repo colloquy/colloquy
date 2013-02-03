@@ -125,13 +125,10 @@ static const NSStringEncoding supportedEncodings[] = {
 
 - (id) init {
 	if( ( self = [super init] ) ) {
-		_serverPort = 6667;
-		_server = @"irc.freenode.net";
-		_username = [NSUserName() retain];
-		_nickname = [_username retain];
-		_currentNickname = [_nickname retain];
-		_realName = [NSFullUserName() retain];
-		_localUser = [[MVIRCChatUser alloc] initLocalUserWithConnection:self];
+		NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
+		NSString *queueName = [bundleIdentifier stringByAppendingString:@".connection-queue"];
+		_connectionQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
+
 		[self _resetSupportedFeatures];
 	}
 
@@ -618,20 +615,11 @@ static const NSStringEncoding supportedEncodings[] = {
 }
 
 - (void) _connect {
-	NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
-	NSString *queueName = [NSString stringWithFormat:@"%@.connection-queue (%@)", bundleIdentifier, [self description]];
-	dispatch_queue_t connectionQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
-
 	id old = _chatConnection;
-	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:connectionQueue socketQueue:connectionQueue];
+	_chatConnection = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:_connectionQueue socketQueue:_connectionQueue];
 	[old setDelegate:nil];
 	[old disconnect];
 	[old release];
-
-	if (_connectionQueue) {
-		dispatch_release(_connectionQueue);
-	}
-	_connectionQueue = connectionQueue;
 
 	_pendingIdentificationAttempt = NO;
 	_sentEndCapabilityCommand = NO;
