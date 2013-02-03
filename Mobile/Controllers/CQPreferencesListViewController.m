@@ -179,6 +179,9 @@ enum {
 	if (allowingForSelection && indexPath.row == _selectedItemIndex)
 		return UITableViewCellAccessoryCheckmark;
 
+	if ((NSUInteger)indexPath.row >= _items.count)
+		return UITableViewCellAccessoryNone;
+
 	NSString *item = [_items objectAtIndex:indexPath.row];
 	if (_listType == CQPreferencesListTypeAudio) {
 		NSString *path = [[NSBundle mainBundle] pathForResource:item ofType:@"aiff"];
@@ -189,6 +192,7 @@ enum {
 		if (path.length)
 			return  UITableViewCellAccessoryDetailDisclosureButton;
 	}
+
 	return  UITableViewCellAccessoryNone;
 }
 
