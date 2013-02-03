@@ -25,7 +25,7 @@
 
 	self.title = NSLocalizedString(@"Connections", @"Connections view title");
 
-	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(showPreferences:)];
+	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showPreferences:)];
 	self.navigationItem.leftBarButtonItem = settingsItem;
 	[settingsItem release];
 

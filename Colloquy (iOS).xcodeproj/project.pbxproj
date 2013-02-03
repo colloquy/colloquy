@@ -235,6 +235,8 @@
 		922B1FE116926749002ECDFD /* MVDelegateLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FE016926749002ECDFD /* MVDelegateLogger.m */; };
 		922B20011692F19C002ECDFD /* CQPreferencesIgnoreEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B20001692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.m */; };
 		922C1630163BDBCE00B01C3D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C162F163BDBCE00B01C3D /* NSDateAdditions.m */; };
+		92312EB016B8D82100E3CA60 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 92312EAF16B8D82100E3CA60 /* settings.png */; };
+		92312EB316B8D82F00E3CA60 /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92312EB216B8D82F00E3CA60 /* settings@2x.png */; };
 		924108D615A5605A001F7681 /* NSFileManagerMoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 924108D515A5605A001F7681 /* NSFileManagerMoreAdditions.m */; };
 		9247414316119CCC009132B5 /* chromatic-redux.css in Resources */ = {isa = PBXBuildFile; fileRef = 9247414116119CCC009132B5 /* chromatic-redux.css */; };
 		924B823A116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 924B8239116FEB2F0007F1F8 /* CQPreferencesTextEditViewController.m */; };
@@ -590,6 +592,8 @@
 		922B20001692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesIgnoreEditViewController.m; sourceTree = "<group>"; };
 		922C162E163BDBCE00B01C3D /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		922C162F163BDBCE00B01C3D /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDateAdditions.m; path = Additions/NSDateAdditions.m; sourceTree = "<group>"; };
+		92312EAF16B8D82100E3CA60 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
+		92312EB216B8D82F00E3CA60 /* settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings@2x.png"; sourceTree = "<group>"; };
 		924108D415A5605A001F7681 /* NSFileManagerMoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerMoreAdditions.h; path = Additions/NSFileManagerMoreAdditions.h; sourceTree = "<group>"; };
 		924108D515A5605A001F7681 /* NSFileManagerMoreAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSFileManagerMoreAdditions.m; path = Additions/NSFileManagerMoreAdditions.m; sourceTree = "<group>"; };
 		9247414116119CCC009132B5 /* chromatic-redux.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "chromatic-redux.css"; sourceTree = "<group>"; };
@@ -1050,6 +1054,7 @@
 				1C9C34420FFF319C00F79731 /* sectionHeader.png */,
 				1C9C351B0FFFF2C500F79731 /* sectionHeaderHighlighted.png */,
 				1CB318DA0D8644E4006A7513 /* server.png */,
+				92312EAF16B8D82100E3CA60 /* settings.png */,
 				1C633FB70FAE528100BB5866 /* tableCellCheck.png */,
 				1C633FC10FAE56A600BB5866 /* tableCellCheckSelected.png */,
 				1CC64C030EE98CC600DE91D0 /* userAdmin.png */,
@@ -1105,6 +1110,7 @@
 				1CA2651111C35C1100AB4E44 /* sectionHeader@2x.png */,
 				1CA2651211C35C1100AB4E44 /* sectionHeaderHighlighted@2x.png */,
 				1CA264BA11C339BD00AB4E44 /* server@2x.png */,
+				92312EB216B8D82F00E3CA60 /* settings@2x.png */,
 				1CA265D311C4A69800AB4E44 /* tableCellCheck@2x.png */,
 				1CA265D411C4A69800AB4E44 /* tableCellCheckSelected@2x.png */,
 				1CA2656B11C455E500AB4E44 /* userAdmin@2x.png */,
@@ -1482,6 +1488,8 @@
 				9290604616B27A3E0095EC03 /* playAudioAccessory.png in Resources */,
 				9290604916B27A4A0095EC03 /* playAudioAccessory-pressed@2x.png in Resources */,
 				9290604A16B27A4A0095EC03 /* playAudioAccessory@2x.png in Resources */,
+				92312EB016B8D82100E3CA60 /* settings.png in Resources */,
+				92312EB316B8D82F00E3CA60 /* settings@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
