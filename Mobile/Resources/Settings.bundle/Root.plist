@@ -33,6 +33,8 @@
 			<string>Real Name</string>
 			<key>Key</key>
 			<string>CQDefaultRealName</string>
+			<key>CQPlaceholder</key>
+			<string>Space Separated</string>
 			<key>DefaultValue</key>
 			<string>Mobile User</string>
 			<key>AutocapitalizationType</key>

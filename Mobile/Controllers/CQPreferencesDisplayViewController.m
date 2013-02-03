@@ -20,8 +20,25 @@ static NSString *const CQPSDefaultValue = @"DefaultValue";
 static NSString *const CQPSFile = @"File";
 static NSString *const CQPSValues = @"Values";
 static NSString *const CQPSTitles = @"Titles";
+static NSString *const CQPSFooterText = @"FooterText";
 static NSString *const CQPSAutocorrectType = @"AutocorrectionType";
+static NSString *const CQPSAutocorrectionTypeDefault = @"Default";
+static NSString *const CQPSAutocorrectionTypeNo = @"No";
+static NSString *const CQPSAutocorrectionTypeYes = @"Yes";
+static NSString *const CQPSAutocapitalizationType = @"AutocapitalizationType";
+static NSString *const CQPSAutocapitalizationTypeNone = @"None";
+static NSString *const CQPSAutocapitalizationTypeSentences = @"Sentences";
+static NSString *const CQPSAutocapitalizationTypeWords = @"Words";
+static NSString *const CQPSAutocapitalizationTypeAllCharacters = @"AllCharacters";
+static NSString *const CQPSIsSecure = @"IsSecure";
+static NSString *const CQPSKeyboardType = @"KeyboardType";
+static NSString *const CQPSKeyboardTypeAlphabet = @"Alphabet";
+static NSString *const CQPSKeyboardTypeNumbersAndPunctuation = @"NumbersAndPunctuation";
+static NSString *const CQPSKeyboardTypeNumberPad = @"NumberPad";
+static NSString *const CQPSKeyboardTypeURL = @"URL";
+static NSString *const CQPSKeyboardTypeEmailAddress = @"EmailAddress";
 static NSString *const CQPSPreferenceSpecifiers = @"PreferenceSpecifiers";
+static NSString *const CQPSPlaceholder = @"CQPlaceholder";
 static NSString *const CQPSSupportedUserInterfaceIdioms = @"SupportedUserInterfaceIdioms";
 static NSString *const CQPSListType = @"ListType";
 static NSString *const CQPSListTypeAudio = @"Audio";
@@ -141,6 +158,10 @@ static NSString *const CQPSListTypeFont = @"Font";
 	return [[_preferences objectAtIndex:section] objectForKey:CQPSTitle];
 }
 
+- (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
+	return [[_preferences objectAtIndex:section] objectForKey:CQPSFooterText];
+}
+
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	NSDictionary *rowDictionary = [[[_preferences objectAtIndex:indexPath.section] objectForKey:@"rows"] objectAtIndex:indexPath.row];
 	if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSTitleValueSpecifier])
@@ -161,10 +182,45 @@ static NSString *const CQPSListTypeFont = @"Font";
 	if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSTextFieldSpecifier]) {
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 		cell.textField.text = [[NSBundle mainBundle] localizedStringForKey:value value:@"" table:nil];
+
+		if (!cell.textField.text.length && key)
+			cell.textField.text = [rowDictionary objectForKey:CQPSDefaultValue];
+
 		cell.textLabel.text = [[NSBundle mainBundle] localizedStringForKey:[rowDictionary objectForKey:CQPSTitle] value:@"" table:nil];;
 		cell.textFieldBlock = ^(UITextField *textField) {
 			[[NSUserDefaults standardUserDefaults] setObject:textField.text forKey:key];
 		};
+
+		NSString *autocorrectionType = [rowDictionary objectForKey:CQPSAutocorrectType];
+		if ([autocorrectionType isEqualToString:CQPSAutocorrectionTypeNo])
+			cell.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+		else if ([autocorrectionType isEqualToString:CQPSAutocorrectionTypeYes])
+			cell.textField.autocorrectionType = UITextAutocorrectionTypeYes;
+		else cell.textField.autocorrectionType = UITextAutocorrectionTypeDefault;
+
+		NSString *autocapitalizationType = [rowDictionary objectForKey:CQPSAutocapitalizationType];
+		if ([autocapitalizationType isEqualToString:CQPSAutocapitalizationTypeAllCharacters])
+			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeAllCharacters;
+		else if ([autocapitalizationType isEqualToString:CQPSAutocapitalizationTypeWords])
+			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeWords;
+		else if ([autocapitalizationType isEqualToString:CQPSAutocapitalizationTypeSentences])
+			cell.textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
+		else cell.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+
+		cell.textField.secureTextEntry = [[rowDictionary objectForKey:CQPSIsSecure] boolValue];
+
+		NSString *keyboardType = [rowDictionary objectForKey:CQPSKeyboardType];
+		if ([keyboardType isEqualToString:CQPSKeyboardTypeEmailAddress])
+			cell.textField.keyboardType = UIKeyboardTypeEmailAddress;
+		else if ([keyboardType isEqualToString:CQPSKeyboardTypeNumberPad])
+			cell.textField.keyboardType = UIKeyboardTypeNumberPad;
+		else if ([keyboardType isEqualToString:CQPSKeyboardTypeNumbersAndPunctuation])
+			cell.textField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+		else if ([keyboardType isEqualToString:CQPSKeyboardTypeURL])
+			cell.textField.keyboardType = UIKeyboardTypeURL;
+		else cell.textField.keyboardType = UIKeyboardTypeDefault;
+
+		cell.textField.placeholder = [rowDictionary objectForKey:CQPSPlaceholder];
 
 		return cell;
 	} else if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSToggleSwitchSpecifier]) {
