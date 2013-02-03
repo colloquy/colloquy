@@ -44,8 +44,7 @@
 
 - (void) hideEmptyCells {
 	if (!self.tableFooterView) {
-		UIView *view = [[UIView alloc] initWithFrame:CGRectMake(1., 1., 1., 1.)];
-		view.backgroundColor = [UIColor clearColor];
+		UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
 
 		self.tableFooterView = view;
 

@@ -31,7 +31,7 @@
 #pragma mark -
 
 - (void) viewDidLoad {
-	[self.tableView hideEmptyCells];
+	[self.tableView performSelectorOnMainThread:@selector(hideEmptyCells) withObject:nil waitUntilDone:YES];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
