@@ -129,6 +129,8 @@ static const NSStringEncoding supportedEncodings[] = {
 		NSString *queueName = [bundleIdentifier stringByAppendingString:@".connection-queue"];
 		_connectionQueue = dispatch_queue_create([queueName UTF8String], DISPATCH_QUEUE_SERIAL);
 
+		_localUser = [[MVIRCChatUser alloc] initLocalUserWithConnection:self];
+
 		[self _resetSupportedFeatures];
 	}
 
