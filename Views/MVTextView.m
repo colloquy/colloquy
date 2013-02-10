@@ -34,7 +34,6 @@ MVInline IMP swizzleSelectorWithSelectorForClass(Class class, SEL fromSelector, 
 			swizzledClass = textCheckingOperationClass;
 			badOperations = [NSMutableSet set];
 			badMainImplementation = swizzleSelectorWithSelectorForClass(swizzledClass, @selector(main), @selector(cq_main));
-			badStartImplementation = swizzleSelectorWithSelectorForClass(swizzledClass, @selector(start), @selector(cq_start));
 		}
 	});
 }
@@ -52,9 +51,6 @@ MVInline IMP swizzleSelectorWithSelectorForClass(Class class, SEL fromSelector, 
 			// Releasing operations that threw exceptions causes deadlock (and triggers other exceptions).
 			// So, in the interest of not crashing, leak them instead.
 			[badOperations addObject:self];
-		} else {
-			// Otherwise, we don't care about the exception, so, re-throw it and let the system do whatever.
-			@throw e;
 		}
 	}
 }
@@ -64,13 +60,6 @@ MVInline IMP swizzleSelectorWithSelectorForClass(Class class, SEL fromSelector, 
 		return;
 
 	[self cq_performIMP:badMainImplementation inTryCatchBlockWithSelector:@selector(main)];
-}
-
-- (void) cq_start {
-	if ([self class] != swizzledClass)
-		return;
-
-	[self cq_performIMP:badStartImplementation inTryCatchBlockWithSelector:@selector(start)];
 }
 @end
 
