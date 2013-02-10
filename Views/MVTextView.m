@@ -20,7 +20,7 @@ MVInline IMP swizzleSelectorWithSelectorForClass(Class class, SEL fromSelector, 
 	return badImplementation;
 }
 
-// This is a workaround for a crash on 10.8-10.8.2 where any NSTextView would crash if the string "File:// /" (without the space) was entered
+// This is a workaround for a crash on 10.8-10.8.2 where any NSTextView would crash if the string "File://" + any other character was entered
 // and can be removed when we drop support for 10.8.
 @interface NSTextCheckingOperation : NSOperation
 @end
@@ -63,20 +63,17 @@ MVInline IMP swizzleSelectorWithSelectorForClass(Class class, SEL fromSelector, 
 	if ([self class] != swizzledClass)
 		return;
 
-	if (![self respondsToSelector:@selector(cq_performIMP:inTryCatchBlockWithSelector:)])
-		badMainImplementation(self, @selector(main));
-	else [self cq_performIMP:badMainImplementation inTryCatchBlockWithSelector:@selector(main)];
+	[self cq_performIMP:badMainImplementation inTryCatchBlockWithSelector:@selector(main)];
 }
 
 - (void) cq_start {
 	if ([self class] != swizzledClass)
 		return;
 
-	if (![self respondsToSelector:@selector(cq_performIMP:inTryCatchBlockWithSelector:)])
-		badStartImplementation(self, @selector(start));
-	else [self cq_performIMP:badStartImplementation inTryCatchBlockWithSelector:@selector(start)];
+	[self cq_performIMP:badStartImplementation inTryCatchBlockWithSelector:@selector(start)];
 }
 @end
+
 @interface MVTextView (MVTextViewPrivate)
 - (BOOL) checkKeyEvent:(NSEvent *) event;
 - (BOOL) triggerKeyEvent:(NSEvent *) event;
