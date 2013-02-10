@@ -3,41 +3,64 @@
 
 #import <objc/runtime.h>
 
+static IMP badMainImplementation = NULL;
+static IMP badStartImplementation = NULL;
+static NSMutableSet *badOperations = nil;
+
+MVInline IMP swizzleSelectorWithSelectorForClass(Class class, SEL fromSelector, SEL toSelector) {
+	Method badMethod = class_getInstanceMethod(class, fromSelector);
+	IMP badImplementation = method_getImplementation(badMethod);
+
+	Method goodMethod = class_getInstanceMethod(class, toSelector);
+	IMP goodImplementation = method_getImplementation(goodMethod);
+
+	method_setImplementation(badMethod, goodImplementation);
+
+	return badImplementation;
+}
+
 // This is a workaround for a crash on 10.8-10.8.2 where any NSTextView would crash if the string "File:// /" (without the space) was entered
 // and can be removed when we drop support for 10.8.
 @interface NSTextCheckingOperation : NSOperation
 @end
 
 @implementation NSTextCheckingOperation (cq_Bugfix)
-static IMP badImplementation = NULL;
-static NSMutableSet *badOperations = nil;
-
 + (void) load {
-  	static dispatch_once_t pred;
+	static dispatch_once_t pred;
 	dispatch_once(&pred, ^{
 		badOperations = [NSMutableSet set];
 
-		Class class = NSClassFromString(@"NSTextCheckingOperation");
-		Method badMethod = class_getInstanceMethod(class, @selector(main));
-		badImplementation = method_getImplementation(badMethod);
-
-		Method goodMethod = class_getInstanceMethod(class, @selector(cq_main));
-		IMP goodImplementation = method_getImplementation(goodMethod);
-
-		method_setImplementation(badMethod, goodImplementation);
+		Class textCheckingOperationClass = NSClassFromString(@"NSTextCheckingOperation");
+		badMainImplementation = swizzleSelectorWithSelectorForClass(textCheckingOperationClass, @selector(main), @selector(cq_main));
+		badStartImplementation = swizzleSelectorWithSelectorForClass(textCheckingOperationClass, @selector(start), @selector(cq_start));
 	});
 }
 
-- (void) cq_main {
+- (void) cq_performIMP:(IMP) imp inTryCatchBlockWithSelector:(SEL) selector {
+	if (![self respondsToSelector:selector])
+		return;
+
 	@try {
-		if (badImplementation != NULL) {
-			badImplementation(self, @selector(main));
+		if (imp != NULL && selector != NULL) {
+			imp(self, selector);
 		}
 	} @catch (NSException *e) {
-		// Releasing operations that threw exceptions causes deadlock (and triggers other exceptions).
-		// So, in the interest of not crashing, leak them instead.
-		[badOperations addObject:self];
+		if ([e.reason hasCaseInsensitiveSubstring:@"File:///"]) {
+			// Releasing operations that threw exceptions causes deadlock (and triggers other exceptions).
+			// So, in the interest of not crashing, leak them instead.
+			[badOperations addObject:self];
+		} else {
+			@throw e;
+		}
 	}
+}
+
+- (void) cq_main {
+	[self cq_performIMP:badMainImplementation inTryCatchBlockWithSelector:@selector(main)];
+}
+
+- (void) cq_start {
+	[self cq_performIMP:badStartImplementation inTryCatchBlockWithSelector:@selector(start)];
 }
 @end
 @interface MVTextView (MVTextViewPrivate)
@@ -60,7 +83,6 @@ static NSMutableSet *badOperations = nil;
 	_lastCompletionMatch = nil;
 
 	_lastCompletionPrefix = nil;
-
 }
 
 #pragma mark -
