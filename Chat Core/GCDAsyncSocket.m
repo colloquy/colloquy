@@ -5555,7 +5555,7 @@ enum GCDAsyncSocketConfig
 				BOOL keepLooping = YES;
 				while (keepLooping)
 				{
-					size_t sslBytesToWrite = MIN(bytesRemaining, (size_t)32768);
+					size_t sslBytesToWrite = MIN(bytesRemaining, 32768);
 					size_t sslBytesWritten = 0;
 					
 					result = SSLWrite(sslContext, buffer, sslBytesToWrite, &sslBytesWritten);
@@ -6151,16 +6151,16 @@ static OSStatus SSLReadFunction(SSLConnectionRef connection, void *data, size_t 
 {
 	GCDAsyncSocket *asyncSocket = (__bridge GCDAsyncSocket *)connection;
 	
-	NSCAssert(dispatch_get_specific(asyncSocket->IsOnSocketQueueOrTargetQueueKey), @"What the deuce?");
-	
+	NSCAssert([asyncSocket currentQueueIsSocketQueue], @"What the deuce?");
+
 	return [asyncSocket sslReadWithBuffer:data length:dataLength];
 }
 
 static OSStatus SSLWriteFunction(SSLConnectionRef connection, const void *data, size_t *dataLength)
 {
 	GCDAsyncSocket *asyncSocket = (__bridge GCDAsyncSocket *)connection;
-	
-	NSCAssert(dispatch_get_specific(asyncSocket->IsOnSocketQueueOrTargetQueueKey), @"What the deuce?");
+
+	NSCAssert([asyncSocket currentQueueIsSocketQueue], @"What the deuce?");
 	
 	return [asyncSocket sslWriteWithBuffer:data length:dataLength];
 }
