@@ -28,11 +28,12 @@ MVInline IMP swizzleSelectorWithSelectorForClass(Class class, SEL fromSelector, 
 + (void) load {
 	static dispatch_once_t pred;
 	dispatch_once(&pred, ^{
-		badOperations = [NSMutableSet set];
-
 		Class textCheckingOperationClass = NSClassFromString(@"NSTextCheckingOperation");
-		badMainImplementation = swizzleSelectorWithSelectorForClass(textCheckingOperationClass, @selector(main), @selector(cq_main));
-		badStartImplementation = swizzleSelectorWithSelectorForClass(textCheckingOperationClass, @selector(start), @selector(cq_start));
+		if (self == textCheckingOperationClass) {
+			badOperations = [NSMutableSet set];
+			badMainImplementation = swizzleSelectorWithSelectorForClass(textCheckingOperationClass, @selector(main), @selector(cq_main));
+			badStartImplementation = swizzleSelectorWithSelectorForClass(textCheckingOperationClass, @selector(start), @selector(cq_start));
+		}
 	});
 }
 
@@ -45,7 +46,7 @@ MVInline IMP swizzleSelectorWithSelectorForClass(Class class, SEL fromSelector, 
 			imp(self, selector);
 		}
 	} @catch (NSException *e) {
-		if ([e.reason hasCaseInsensitiveSubstring:@"File:///"]) {
+		if ([e.reason hasCaseInsensitiveSubstring:@"File://"]) {
 			// Releasing operations that threw exceptions causes deadlock (and triggers other exceptions).
 			// So, in the interest of not crashing, leak them instead.
 			[badOperations addObject:self];
@@ -56,11 +57,15 @@ MVInline IMP swizzleSelectorWithSelectorForClass(Class class, SEL fromSelector, 
 }
 
 - (void) cq_main {
-	[self cq_performIMP:badMainImplementation inTryCatchBlockWithSelector:@selector(main)];
+	if (![self respondsToSelector:@selector(cq_performIMP:inTryCatchBlockWithSelector:)])
+		badMainImplementation(self, @selector(main));
+	else [self cq_performIMP:badMainImplementation inTryCatchBlockWithSelector:@selector(main)];
 }
 
 - (void) cq_start {
-	[self cq_performIMP:badStartImplementation inTryCatchBlockWithSelector:@selector(start)];
+	if (![self respondsToSelector:@selector(cq_performIMP:inTryCatchBlockWithSelector:)])
+		badStartImplementation(self, @selector(start));
+	else [self cq_performIMP:badStartImplementation inTryCatchBlockWithSelector:@selector(start)];
 }
 @end
 @interface MVTextView (MVTextViewPrivate)
