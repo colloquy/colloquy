@@ -3,6 +3,7 @@
 
 #import <objc/runtime.h>
 
+static Class swizzledClass = Nil;
 static IMP badMainImplementation = NULL;
 static IMP badStartImplementation = NULL;
 static NSMutableSet *badOperations = nil;
@@ -30,9 +31,10 @@ MVInline IMP swizzleSelectorWithSelectorForClass(Class class, SEL fromSelector, 
 	dispatch_once(&pred, ^{
 		Class textCheckingOperationClass = NSClassFromString(@"NSTextCheckingOperation");
 		if (self == textCheckingOperationClass) {
+			swizzledClass = textCheckingOperationClass;
 			badOperations = [NSMutableSet set];
-			badMainImplementation = swizzleSelectorWithSelectorForClass(textCheckingOperationClass, @selector(main), @selector(cq_main));
-			badStartImplementation = swizzleSelectorWithSelectorForClass(textCheckingOperationClass, @selector(start), @selector(cq_start));
+			badMainImplementation = swizzleSelectorWithSelectorForClass(swizzledClass, @selector(main), @selector(cq_main));
+			badStartImplementation = swizzleSelectorWithSelectorForClass(swizzledClass, @selector(start), @selector(cq_start));
 		}
 	});
 }
@@ -51,18 +53,25 @@ MVInline IMP swizzleSelectorWithSelectorForClass(Class class, SEL fromSelector, 
 			// So, in the interest of not crashing, leak them instead.
 			[badOperations addObject:self];
 		} else {
+			// Otherwise, we don't care about the exception, so, re-throw it and let the system do whatever.
 			@throw e;
 		}
 	}
 }
 
 - (void) cq_main {
+	if ([self class] != swizzledClass)
+		return;
+
 	if (![self respondsToSelector:@selector(cq_performIMP:inTryCatchBlockWithSelector:)])
 		badMainImplementation(self, @selector(main));
 	else [self cq_performIMP:badMainImplementation inTryCatchBlockWithSelector:@selector(main)];
 }
 
 - (void) cq_start {
+	if ([self class] != swizzledClass)
+		return;
+
 	if (![self respondsToSelector:@selector(cq_performIMP:inTryCatchBlockWithSelector:)])
 		badStartImplementation(self, @selector(start));
 	else [self cq_performIMP:badStartImplementation inTryCatchBlockWithSelector:@selector(start)];
