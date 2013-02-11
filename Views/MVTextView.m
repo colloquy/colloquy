@@ -5,7 +5,6 @@
 
 static Class swizzledClass = Nil;
 static IMP badMainImplementation = NULL;
-static IMP badStartImplementation = NULL;
 static NSMutableSet *badOperations = nil;
 
 MVInline IMP swizzleSelectorWithSelectorForClass(Class class, SEL fromSelector, SEL toSelector) {
@@ -42,16 +41,18 @@ MVInline IMP swizzleSelectorWithSelectorForClass(Class class, SEL fromSelector, 
 	if (![self respondsToSelector:selector])
 		return;
 
+	if (self.isCancelled)
+		return;
+
 	@try {
-		if (imp != NULL && selector != NULL) {
+		if (self && imp && selector)
 			imp(self, selector);
-		}
 	} @catch (NSException *e) {
-		if ([e.reason hasCaseInsensitiveSubstring:@"File://"]) {
-			// Releasing operations that threw exceptions causes deadlock (and triggers other exceptions).
-			// So, in the interest of not crashing, leak them instead.
-			[badOperations addObject:self];
-		}
+		NSLog(@"%@. %@ (%@) %@", e.name, e.reason, e.userInfo, [NSThread callStackSymbols]);
+
+		// Releasing operations that threw exceptions causes deadlock (and triggers other exceptions).
+		// So, in the interest of not crashing, leak them instead.
+		[badOperations addObject:self];
 	}
 }
 
