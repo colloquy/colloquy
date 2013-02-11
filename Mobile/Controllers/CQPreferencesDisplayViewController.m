@@ -17,6 +17,10 @@ static NSString *const CQPSType = @"Type";
 static NSString *const CQPSTitle = @"Title";
 static NSString *const CQPSKey = @"Key";
 static NSString *const CQPSDefaultValue = @"DefaultValue";
+static NSString *const CQPSAction = @"CQAction";
+static NSString *const CQPSAddress = @"CQAddress";
+static NSString *const CQPSLink = @"Link";
+static NSString *const CQPSEmail = @"Email";
 static NSString *const CQPSFile = @"File";
 static NSString *const CQPSValues = @"Values";
 static NSString *const CQPSTitles = @"Titles";
@@ -165,7 +169,8 @@ static NSString *const CQPSListTypeFont = @"Font";
 - (NSIndexPath *) tableView:(UITableView *) tableView willSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	NSDictionary *rowDictionary = [[[_preferences objectAtIndex:indexPath.section] objectForKey:@"rows"] objectAtIndex:indexPath.row];
 	if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSTitleValueSpecifier])
-		return nil;
+		if (![rowDictionary objectForKey:CQPSAction])
+			return nil;
 	return indexPath;
 }
 
@@ -250,9 +255,11 @@ static NSString *const CQPSListTypeFont = @"Font";
 		return cell;
 	} else if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSTitleValueSpecifier]) {
 		UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue1 inTableView:tableView];
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		if ([rowDictionary objectForKey:CQPSAction])
+			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+		else cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		cell.textLabel.text = [[NSBundle mainBundle] localizedStringForKey:[rowDictionary objectForKey:CQPSTitle] value:@"" table:nil];
-		cell.detailTextLabel.text = [[NSBundle mainBundle] localizedStringForKey:[rowDictionary objectForKey:CQPSDefaultValue] value:@"" table:nil];
+		cell.detailTextLabel.text = [[NSBundle mainBundle] localizedStringForKey:value value:@"" table:nil];
 
 		return cell;
 	}
@@ -292,6 +299,22 @@ static NSString *const CQPSListTypeFont = @"Font";
 		else if ([listType isCaseInsensitiveEqualToString:CQPSListTypeFont])
 			preferencesListViewController.listType = CQPreferencesListTypeFont;
 		viewController = preferencesListViewController;
+	} else if ([[rowDictionary objectForKey:CQPSType] isEqualToString:CQPSTitleValueSpecifier]) {
+		NSString *address = [rowDictionary objectForKey:CQPSAddress];
+		if ([[rowDictionary objectForKey:CQPSAction] isEqualToString:CQPSLink])
+			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:address]];
+		else if ([[rowDictionary objectForKey:CQPSAction] isEqualToString:CQPSEmail]) {
+			MFMailComposeViewController *mailComposeViewController = [[MFMailComposeViewController alloc] init];
+			mailComposeViewController.mailComposeDelegate = self;
+			mailComposeViewController.toRecipients = [NSArray arrayWithObject:address];
+			mailComposeViewController.subject = NSLocalizedString(@"Mobile Colloquy Support", @"Mobile Colloquy Support subject header");
+
+			[self.navigationController presentModalViewController:mailComposeViewController animated:[UIView areAnimationsEnabled]];
+
+			[mailComposeViewController release];
+		}
+
+		[tableView deselectRowAtIndexPath:indexPath animated:[UIView areAnimationsEnabled]];
 	} else {
 		[_selectedIndexPath release];
 		_selectedIndexPath = nil;
@@ -306,5 +329,9 @@ static NSString *const CQPSListTypeFont = @"Font";
 	}
 
 	[viewController release];
+}
+
+- (void) mailComposeController:(MFMailComposeViewController *) controller didFinishWithResult:(MFMailComposeResult) result error:(NSError *) error {
+	[controller dismissModalViewControllerAnimated:[UIView areAnimationsEnabled]];
 }
 @end

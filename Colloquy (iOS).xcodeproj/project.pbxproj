@@ -232,6 +232,7 @@
 		89997FAC0F171EB600CF0AA2 /* standard-grey-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */; };
 		89E87C090FA0450800B49230 /* CQSoundController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E87C080FA0450800B49230 /* CQSoundController.m */; };
 		9215E175168AE04100E7E77F /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9215E174168AE04100E7E77F /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		92196C9E16C911310020FE35 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92196C9D16C911310020FE35 /* MessageUI.framework */; };
 		922B1FE116926749002ECDFD /* MVDelegateLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FE016926749002ECDFD /* MVDelegateLogger.m */; };
 		922B20011692F19C002ECDFD /* CQPreferencesIgnoreEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B20001692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.m */; };
 		922C1630163BDBCE00B01C3D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C162F163BDBCE00B01C3D /* NSDateAdditions.m */; };
@@ -586,6 +587,7 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9215E173168AE04100E7E77F /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
 		9215E174168AE04100E7E77F /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
+		92196C9D16C911310020FE35 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		922B1FDF16926749002ECDFD /* MVDelegateLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVDelegateLogger.h; path = Logging/MVDelegateLogger.h; sourceTree = "<group>"; };
 		922B1FE016926749002ECDFD /* MVDelegateLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MVDelegateLogger.m; path = Logging/MVDelegateLogger.m; sourceTree = "<group>"; };
 		922B1FFF1692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQPreferencesIgnoreEditViewController.h; sourceTree = "<group>"; };
@@ -656,6 +658,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92196C9E16C911310020FE35 /* MessageUI.framework in Frameworks */,
 				92AFF84A16B0CE4700940E5D /* AVFoundation.framework in Frameworks */,
 				92823D32169114FA000EC36E /* Twitter.framework in Frameworks */,
 				92A54AA515AD1DDD00F21FC5 /* libsqlite3.dylib in Frameworks */,
@@ -1259,6 +1262,7 @@
 				1D3623EB0D0F72F000981E51 /* CoreGraphics.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				1CD84C2A10040AB300E56A7E /* MediaPlayer.framework */,
+				92196C9D16C911310020FE35 /* MessageUI.framework */,
 				1CF50C860ED8BE1100CBE5E3 /* Security.framework */,
 				1CBC07CD0F0741E400EEBCFB /* SystemConfiguration.framework */,
 				92823D31169114FA000EC36E /* Twitter.framework */,

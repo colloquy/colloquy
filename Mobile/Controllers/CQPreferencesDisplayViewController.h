@@ -1,6 +1,8 @@
 #import "CQTableViewController.h"
 
-@interface CQPreferencesDisplayViewController : CQTableViewController {
+#import <MessageUI/MessageUI.h>
+
+@interface CQPreferencesDisplayViewController : CQTableViewController <MFMailComposeViewControllerDelegate> {
 	NSMutableArray *_preferences;
 	NSIndexPath *_selectedIndexPath;
 }

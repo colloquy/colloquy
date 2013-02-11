@@ -436,7 +436,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 			[connection removePersistentInformationObjectForKey:@"previousRooms"];
 	}
 
-	return rooms;
+	return [rooms autorelease];
 }
 
 - (BOOL) _anyConnectedOrConnectingConnections {
@@ -762,8 +762,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	if (connection.bouncerType == MVChatConnectionColloquyBouncer && connection.automaticCommands.count && rooms.count)
 		[connection sendRawMessage:@"BOUNCER autocommands stop"];
-
-	[rooms release];
 }
 
 - (void) _didConnectOrDidNotConnect:(NSNotification *) notification {
@@ -850,6 +848,8 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	}
 
 	[connection joinChatRoomsNamed:rooms];
+
+	[rooms release];
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {

@@ -172,7 +172,11 @@ static NSMutableArray *highlightWords;
 	NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 
 	if (![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastVersionUsed"] isEqualToString:version]) {
-		NSString *displayVersion = [NSString stringWithFormat:@"%@ (%@)", version, [infoDictionary objectForKey:@"CFBundleVersion"]];
+		NSString *bundleVersion = [infoDictionary objectForKey:@"CFBundleVersion"];
+		NSString *displayVersion = nil;
+		if (bundleVersion.length)
+			displayVersion = [NSString stringWithFormat:@"%@ (%@)", version, bundleVersion];
+		else displayVersion = version;
 		[[NSUserDefaults standardUserDefaults] setObject:displayVersion forKey:@"CQCurrentVersion"];
 
 		if (![UIDevice currentDevice].isSystemSix) {
