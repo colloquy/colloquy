@@ -137,7 +137,6 @@ function appendConsoleMessage(container, messageHTML, outbound) {
 	consoleElement.className = className;
 	consoleElement.innerHTML = messageHTML;
 
-	console.log(consoleElement);
 	container.appendChild(consoleElement);
 }
 
@@ -151,6 +150,17 @@ function appendEventMessage(container, messageHTML, identifier, previousSession)
 	eventElement.innerHTML = messageHTML;
 
 	container.appendChild(eventElement);
+}
+
+function markScrollback() {
+	var container = document.body;
+	if (container.lastChild.className === "mark")
+		return;
+
+	var markElement = document.createElement("hr");
+	markElement.className = "mark";
+
+	container.appendChild(markElement);
 }
 
 function setScrollbackLimit(limit) {

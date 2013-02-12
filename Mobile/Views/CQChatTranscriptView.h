@@ -31,6 +31,8 @@
 - (void) scrollToBottomAnimated:(BOOL) animated;
 - (void) flashScrollIndicators;
 
+- (void) markScrollback;
+
 - (void) reset;
 - (void) resetSoon;
 @end

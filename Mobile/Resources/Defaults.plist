@@ -116,5 +116,7 @@
 	<true/>
 	<key>CQClearOnConnect</key>
 	<false/>
+	<key>CQMarkScrollbackOnMultitasking</key>
+	<true/>
 </dict>
 </plist>

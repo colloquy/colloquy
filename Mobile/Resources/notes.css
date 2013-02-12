@@ -1,3 +1,5 @@
+@import url(common.css);
+
 body {
 	background-color: rgb(253, 251, 138);
 	background-image: url(gradientHighlight.png), url(notesBackground.png);

@@ -47,6 +47,7 @@ static BOOL localNotificationOnHighlight;
 static BOOL localNotificationOnPrivateMessage;
 static NSUInteger scrollbackLength;
 static BOOL clearOnConnect;
+static BOOL markScrollbackOnMultitasking;
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
 - (void) _addPendingComponent:(id) component;
@@ -81,6 +82,7 @@ static BOOL showingKeyboard;
 	localNotificationOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLocalNotificationOnHighlight"];
 	localNotificationOnPrivateMessage = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLocalNotificationOnPrivateMessage"];
 	clearOnConnect = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQClearOnConnect"];
+	markScrollbackOnMultitasking = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQMarkScrollbackOnMultitasking"];
 
 	NSUInteger newScrollbackLength = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQScrollbackLength"];
 	if (newScrollbackLength != scrollbackLength) {
@@ -390,6 +392,8 @@ static BOOL showingKeyboard;
 	[self _userDefaultsChanged];
 
 	transcriptView.dataDetectorTypes = UIDataDetectorTypeNone;
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -712,6 +716,15 @@ static BOOL showingKeyboard;
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerUnreadMessagesUpdatedNotification object:self];
 
 	[transcriptView reset];
+}
+
+#pragma mark -
+
+- (void) markScrollback {
+	if (!markScrollbackOnMultitasking)
+		return;
+
+	[transcriptView markScrollback];
 }
 
 #pragma mark -
@@ -1579,6 +1592,10 @@ static BOOL showingKeyboard;
 	_watchRule.nickname = self.user.nickname;
 
 	[self.connection addChatUserWatchRule:_watchRule];
+}
+
+- (void) _didEnterBackground {
+	[self markScrollback];
 }
 
 - (void) _willEnterForeground {

@@ -151,7 +151,7 @@
 - (void) willStartScrolling {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(didFinishScrollingRecently) object:nil];
 
-	[self stringByEvaluatingJavaScriptFromString:@"suspendAutoscroll()"];
+	[super stringByEvaluatingJavaScriptFromString:@"suspendAutoscroll()"];
 
 	_scrolling = YES;
 }
@@ -167,9 +167,9 @@
 	}
 
 	NSString *command = [NSString stringWithFormat:@"updateScrollPosition(%f)", offset.y];
-	[self stringByEvaluatingJavaScriptFromString:command];
+	[super stringByEvaluatingJavaScriptFromString:command];
 
-	[self stringByEvaluatingJavaScriptFromString:@"resumeAutoscroll()"];
+	[super stringByEvaluatingJavaScriptFromString:@"resumeAutoscroll()"];
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(didFinishScrollingRecently) object:nil];
 	[self performSelector:@selector(didFinishScrollingRecently) withObject:nil afterDelay:0.5];
@@ -302,11 +302,11 @@
 }
 
 - (void) noteNicknameChangedFrom:(NSString *) oldNickname to:(NSString *) newNickname {
-	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"nicknameChanged(\"%@\", \"%@\")", oldNickname, newNickname]];
+	[super stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"nicknameChanged(\"%@\", \"%@\")", oldNickname, newNickname]];
 }
 
 - (void) scrollToBottomAnimated:(BOOL) animated {
-	[self stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollToBottom(%@)", (animated ? @"true" : @"false")]];
+	[super stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollToBottom(%@)", (animated ? @"true" : @"false")]];
 }
 
 - (void) flashScrollIndicators {
@@ -317,6 +317,10 @@
 		id scroller = [self performPrivateSelector:@"_scroller"];
 		[scroller performPrivateSelector:@"displayScrollerIndicators"];
 	}
+}
+
+- (void) markScrollback {
+	[super stringByEvaluatingJavaScriptFromString:@"markScrollback()"];
 }
 
 - (void) resetSoon {
@@ -340,6 +344,14 @@
 
 	if ([transcriptDelegate respondsToSelector:@selector(transcriptViewWasReset:)])
 		[transcriptDelegate transcriptViewWasReset:self];
+}
+
+#pragma mark -
+
+- (NSString *) stringByEvaluatingJavaScriptFromString:(NSString *) script {
+	NSLog(@"Refusing to evaluate %@\n%@", script, [NSThread callStackSymbols]);
+
+	return nil;
 }
 
 #pragma mark -
@@ -389,7 +401,7 @@
 
 	[command appendFormat:@"],%@,false,%@)", (previousSession ? @"true" : @"false"), (animated ? @"false" : @"true")];
 
-	[self stringByEvaluatingJavaScriptFromString:command];
+	[super stringByEvaluatingJavaScriptFromString:command];
 
 	[command release];
 }
@@ -434,7 +446,7 @@
 }
 
 - (void) _checkIfLoadingFinished {
-	NSString *result = [self stringByEvaluatingJavaScriptFromString:@"isDocumentReady()"];
+	NSString *result = [super stringByEvaluatingJavaScriptFromString:@"isDocumentReady()"];
 	if (![result isEqualToString:@"true"]) {
 		[self performSelector:_cmd withObject:nil afterDelay:0.05];
 		return;
