@@ -47,6 +47,20 @@
 			<string>support@colloquy.mobi</string>
 		</dict>
 		<dict>
+			<key>CQAction</key>
+			<string>Link</string>
+			<key>CQAddress</key>
+			<string>http://twitter.com/colloquyapp</string>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+			<key>Title</key>
+			<string>Twitter</string>
+			<key>Key</key>
+			<string>CQTwitterAccount</string>
+			<key>DefaultValue</key>
+			<string>@colloquyapp</string>
+		</dict>
+		<dict>
 			<key>CQAddress</key>
 			<string>irc://irc.freenode.net/colloquy-mobile</string>
 			<key>CQAction</key>
