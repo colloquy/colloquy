@@ -66,6 +66,16 @@
 #endif
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideCompletions) name:UIDeviceOrientationDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+
+	_animationDuration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
+
+	_accessoryButton = [[UIButton buttonWithType:UIButtonTypeInfoDark] retain];
+
+	[_accessoryButton addTarget:self action:@selector(accessoryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+
+	[self addSubview:_accessoryButton];
 }
 
 #pragma mark -
@@ -98,6 +108,7 @@
 	[_completionView release];
 	[_completions release];
 	[_backgroundView release];
+	[_accessoryButton release];
 
 	[super dealloc];
 }
@@ -127,6 +138,29 @@
 - (BOOL) canPerformAction:(SEL) action withSender:(id) sender {
 	[self hideCompletions];
 	return NO;
+}
+
+@dynamic accessoryView;
+
+- (UIImage *) accessoryView {
+	return [_accessoryButton imageForState:UIControlStateNormal];
+}
+
+- (void) setAccessoryView:(UIImage *) accessoryView {
+	id old = _accessoryButton;
+	if (accessoryView) {
+		_accessoryButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		[_accessoryButton setImage:accessoryView forState:UIControlStateNormal];
+
+		[_accessoryButton addTarget:self action:@selector(accessoryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+
+		[self addSubview:_accessoryButton];
+	}
+
+	[old removeFromSuperview];
+	[old release];
+
+	[self setNeedsLayout];
 }
 
 - (UITextAutocapitalizationType) autocapitalizationType {
@@ -289,6 +323,39 @@ retry:
 
 	if (_spaceCyclesCompletions)
 		[self performSelector:@selector(captureKeyboardForCompletions) withObject:nil afterDelay:CompletionsCaptureKeyboardDelay];
+}
+
+#pragma mark -
+
+- (void) accessoryButtonPressed:(id) sender {
+	if (delegate && [delegate respondsToSelector:@selector(chatInputBarAccessoryButtonPressed:)])
+		[delegate chatInputBarAccessoryButtonPressed:self];
+}
+
+#pragma mark -
+
+- (void) keyboardWillShow:(NSNotification *) notification {
+	_showingKeyboard = YES;
+
+	if (!self.window)
+		return;
+
+	_animationDuration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	_animationCurve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+
+	[self setNeedsLayout];
+}
+
+- (void) keyboardWillHide:(NSNotification *) notification {
+	if (!_showingKeyboard)
+		return;
+
+	_showingKeyboard = NO;
+
+	_animationDuration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	_animationCurve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+
+	[self setNeedsLayout];
 }
 
 #pragma mark -
@@ -466,6 +533,45 @@ retry:
 		_disableCompletionUntilNextWord = YES;
 
 	[self hideCompletions];
+}
+
+#pragma mark -
+
+- (void) layoutSubviews {
+	[super layoutSubviews];
+
+	[UIView setAnimationCurve:_animationCurve];
+	[UIView setAnimationDuration:_animationDuration];
+	[UIView beginAnimations:nil context:NULL];
+
+	_accessoryButton.center = _inputField.center;
+
+#define ButtonMargin 6.5
+#define ButtonWidth 18.
+	CGRect frame = _inputField.frame;
+	frame.size.width = _backgroundView.frame.size.width - (frame.origin.x * 2);
+	if (!_showingKeyboard) {
+		if ([UIDevice currentDevice].isRetina)
+			frame.size.width -= (ButtonWidth + ButtonMargin);
+		else frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
+	}
+	_inputField.frame = frame;
+
+	frame = _accessoryButton.frame;
+	if (!_showingKeyboard) {
+		if ([UIDevice currentDevice].isRetina)
+			frame.origin.x = CGRectGetMaxX(_inputField.frame) + ButtonMargin;
+		else frame.origin.x = CGRectGetMaxX(_inputField.frame) + floorf(ButtonMargin);
+		frame.size.width = ButtonWidth;
+	} else {
+		frame.size.width = 0.;
+	}
+	_accessoryButton.frame = frame;
+#undef ButtonMargin
+
+	[UIView commitAnimations];
+
+	_animationDuration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
 }
 
 #pragma mark -

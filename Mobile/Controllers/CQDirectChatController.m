@@ -27,6 +27,9 @@
 
 #import <objc/message.h>
 
+#define InfoActionSheet 1
+#define ActionsActionsSheet 2
+
 NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewControllerRecentMessagesUpdatedNotification";
 NSString *CQChatViewControllerUnreadMessagesUpdatedNotification = @"CQChatViewControllerUnreadMessagesUpdatedNotification";
 
@@ -341,6 +344,7 @@ static BOOL showingKeyboard;
 - (UIActionSheet *) actionSheet {
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
+	sheet.tag = InfoActionSheet;
 
 	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		sheet.title = self.user.displayName;
@@ -363,6 +367,10 @@ static BOOL showingKeyboard;
 }
 
 #pragma mark -
+
+- (void) showRecentlySentMessages {
+	// ...
+}
 
 - (void) showUserInformation {
 	if (!self.user)
@@ -492,6 +500,21 @@ static BOOL showingKeyboard;
 }
 
 #pragma mark -
+
+- (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) chatInputBar {
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
+	actionSheet.delegate = self;
+	actionSheet.tag = ActionsActionsSheet;
+
+	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+		actionSheet.title = self.user.displayName;
+
+	[actionSheet addButtonWithTitle:NSLocalizedString(@"Recent Messages", @"Recent Messages")];
+
+	actionSheet.cancelButtonIndex = [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+
+	[[CQColloquyApplication sharedApplication] showActionSheet:actionSheet];
+}
 
 - (BOOL) chatInputBarShouldEndEditing:(CQChatInputBar *) chatInputBar {
 	if (_showingAlert)
@@ -1416,8 +1439,13 @@ static BOOL showingKeyboard;
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
-	if (buttonIndex == 0)
-		[self showUserInformation];
+	if (actionSheet.tag == InfoActionSheet) {
+		if (buttonIndex == 0)
+			[self showUserInformation];
+	} else if (actionSheet.tag == ActionsActionsSheet) {
+		if (buttonIndex == 0)
+			[self showRecentlySentMessages];
+	}
 }
 
 #pragma mark -

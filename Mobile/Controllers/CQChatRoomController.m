@@ -7,6 +7,7 @@
 #import "CQConnectionsController.h"
 #import "CQKeychain.h"
 #import "CQProcessChatMessageOperation.h"
+#import "CQChatRoomInfoViewController.h"
 #import "CQSoundController.h"
 
 #import <ChatCore/MVChatConnection.h>
@@ -14,6 +15,10 @@
 #import <ChatCore/MVChatUser.h>
 
 #import "UIActionSheetAdditions.h"
+
+#define NicknameActionSheet 1
+#define JoinActionSheet 2
+#define ActionsActionSheet 3
 
 static BOOL showJoinEvents;
 static BOOL showHostmasksOnJoin;
@@ -268,6 +273,7 @@ static BOOL showLeaveEvents;
 - (UIActionSheet *) actionSheet {
 	UIActionSheet *sheet = [[UIActionSheet alloc] init];
 	sheet.delegate = self;
+	sheet.tag = JoinActionSheet;
 
 	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		sheet.title = self.room.displayName;
@@ -307,6 +313,22 @@ static BOOL showLeaveEvents;
 }
 
 #pragma mark -
+
+- (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) chatInputBar {
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
+	actionSheet.delegate = self;
+	actionSheet.tag = ActionsActionSheet;
+
+	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
+		actionSheet.title = self.user.displayName;
+
+	[actionSheet addButtonWithTitle:NSLocalizedString(@"Recent Messages", @"Recent Messages button title")];
+	[actionSheet addButtonWithTitle:NSLocalizedString(@"Room Info", @"Room Info button title")];
+
+	actionSheet.cancelButtonIndex = [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+
+	[[CQColloquyApplication sharedApplication] showActionSheet:actionSheet];
+}
 
 - (NSArray *) chatInputBar:(CQChatInputBar *) inputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range {
 	NSMutableArray *completions = [[NSMutableArray alloc] init];
@@ -348,6 +370,7 @@ static BOOL showLeaveEvents;
 	MVChatUser *user = [[self.connection chatUsersWithNickname:nickname] anyObject];
 	UIActionSheet *sheet = [UIActionSheet userActionSheetForUser:user inRoom:self.room showingUserInformation:YES];
 	sheet.title = nickname;
+	sheet.tag = NicknameActionSheet;
 
 	if ([UIDevice currentDevice].isPadModel)
 		[[CQColloquyApplication sharedApplication] showActionSheet:sheet fromPoint:location];
@@ -1158,10 +1181,20 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	if (buttonIndex == actionSheet.cancelButtonIndex)
 		return;
 
-	if (buttonIndex == 0) {
-		if (buttonIndex == actionSheet.destructiveButtonIndex)
-			[self part];
-		else [self join];
+	if (actionSheet.tag == JoinActionSheet) {
+		if (buttonIndex == 0) {
+			if (buttonIndex == actionSheet.destructiveButtonIndex)
+				[self part];
+			else [self join];
+		}
+	} else if (actionSheet.tag == ActionsActionSheet) {
+		if (buttonIndex == 0) {
+			[self showRecentlySentMessages];
+		} else if (buttonIndex == 1) {
+			CQChatRoomInfoViewController *roomInfoViewController = [[CQChatRoomInfoViewController alloc] initWithRoom:_target];
+			[[CQColloquyApplication sharedApplication] presentModalViewController:roomInfoViewController animated:[UIView areAnimationsEnabled]];
+			[roomInfoViewController release];
+		}
 	}
 }
 

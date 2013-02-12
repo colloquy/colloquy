@@ -18,6 +18,10 @@
 	BOOL _autocorrect;
 	BOOL _autocapitalizeNextLetter;
 	UITextAutocapitalizationType _defaultAutocapitalizationType;
+	UIViewAnimationCurve _animationCurve;
+	NSTimeInterval _animationDuration;
+	BOOL _showingKeyboard;
+	UIButton *_accessoryButton;
 }
 @property (nonatomic, assign) id <CQChatInputBarDelegate> delegate;
 
@@ -35,6 +39,8 @@
 
 - (void) showCompletionsForText:(NSString *) text inRange:(NSRange) range;
 - (void) hideCompletions;
+
+@property (nonatomic, copy) UIImage *accessoryView;
 @end
 
 @protocol CQChatInputBarDelegate <NSObject>
@@ -46,4 +52,5 @@
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text;
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar shouldAutocorrectWordWithPrefix:(NSString *) word;
 - (NSArray *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range;
+- (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) chatInputBar;
 @end

@@ -101,4 +101,23 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 
 	return result;
 }
+
+static BOOL isRetinaResultCached = NO;
+- (BOOL) isRetina {
+	static BOOL result;
+
+	if (isRetinaResultCached)
+		return result;
+
+	result = [UIApplication sharedApplication].keyWindow.screen.scale > 1.;
+	isRetinaResultCached = YES;
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(cq_windowDidBecomeKey:) name:UIWindowDidBecomeKeyNotification object:nil];
+
+	return result;
+}
+
+- (void) cq_windowDidBecomeKey:(NSNotification *) notification {
+	isRetinaResultCached = NO;
+}
 @end

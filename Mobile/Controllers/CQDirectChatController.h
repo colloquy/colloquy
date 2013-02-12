@@ -55,6 +55,8 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 
 - (void) clearController;
 
+- (void) showRecentlySentMessages;
+
 - (void) sendMessage:(NSString *) message asAction:(BOOL) action;
 
 - (void) addMessage:(NSData *) message fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier;
