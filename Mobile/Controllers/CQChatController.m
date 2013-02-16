@@ -4,6 +4,7 @@
 #import "CQChatCreationViewController.h"
 #import "CQChatListViewController.h"
 #import "CQChatNavigationController.h"
+#import "CQChatOrderingController.h"
 #import "CQChatPresentationController.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
@@ -51,6 +52,8 @@ static CQSoundController *fileTransferSound;
 #pragma mark -
 
 @implementation CQChatController
+@synthesize nextRoomConnection = _nextRoomConnection;
+
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -115,8 +118,6 @@ static CQSoundController *fileTransferSound;
 	if ([[UIDevice currentDevice] isPadModel])
 		_chatPresentationController = [[CQChatPresentationController alloc] init];
 
-	_chatControllers = [[NSMutableArray alloc] init];
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_joinedRoom:) name:MVChatRoomJoinedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRoomMessage:) name:MVChatRoomGotMessageNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotPrivateMessage:) name:MVChatConnectionGotPrivateMessageNotification object:nil];
@@ -135,7 +136,6 @@ static CQSoundController *fileTransferSound;
 
 	[_chatNavigationController release];
 	[_chatPresentationController release];
-	[_chatControllers release];
 	[_nextController release];
 	[_nextRoomConnection release];
 	[_fileUser release];
@@ -145,68 +145,9 @@ static CQSoundController *fileTransferSound;
 
 #pragma mark -
 
-static NSComparisonResult sortControllersAscending(id controller1, id controller2, void *context) {
-	if ([controller1 isKindOfClass:[CQDirectChatController class]] && [controller2 isKindOfClass:[CQDirectChatController class]]) {
-		CQDirectChatController *chatController1 = controller1;
-		CQDirectChatController *chatController2 = controller2;
-		NSComparisonResult result = [chatController1.connection.displayName caseInsensitiveCompare:chatController2.connection.displayName];
-		if (result != NSOrderedSame)
-			return result;
-
-		result = [chatController1.connection.nickname caseInsensitiveCompare:chatController2.connection.nickname];
-		if (result != NSOrderedSame)
-			return result;
-
-		if (chatController1.connection < chatController2.connection)
-			return NSOrderedAscending;
-		if (chatController1.connection > chatController2.connection)
-			return NSOrderedDescending;
-
-		if ([chatController1 isMemberOfClass:[CQConsoleController class]])
-			return NSOrderedAscending;
-		if ([chatController2 isMemberOfClass:[CQConsoleController class]])
-			return NSOrderedDescending;
-		if ([chatController1 isMemberOfClass:[CQChatRoomController class]] && [chatController2 isMemberOfClass:[CQDirectChatController class]])
-			return NSOrderedAscending;
-		if ([chatController1 isMemberOfClass:[CQDirectChatController class]] && [chatController2 isMemberOfClass:[CQChatRoomController class]])
-			return NSOrderedDescending;
-
-		return [chatController1.title caseInsensitiveCompare:chatController2.title];
-	}
-
-	if ([controller1 isKindOfClass:[CQDirectChatController class]])
-		return NSOrderedAscending;
-
-	if ([controller2 isKindOfClass:[CQDirectChatController class]])
-		return NSOrderedDescending;
-
-	return NSOrderedSame;
-}
-
-#pragma mark -
-
-- (void) _sortChatControllers {
-	[_chatControllers sortUsingFunction:sortControllersAscending context:NULL];
-}
-
-- (void) _addViewController:(id <CQChatViewController>) controller {
-	[_chatControllers addObject:controller];
-
-	[self _sortChatControllers];
-
-	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObject:controller forKey:@"controller"];
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerAddedChatViewControllerNotification object:self userInfo:notificationInfo];
-}
-
-#if ENABLE(FILE_TRANSFERS)
-- (void) _addFileTransferController:(CQFileTransferController *) controller {
-	[self _addViewController:(id <CQChatViewController>)controller];
-}
-#endif
-
 - (void) _joinedRoom:(NSNotification *) notification {
 	MVChatRoom *room = notification.object;
-	CQChatRoomController *roomController = [self chatViewControllerForRoom:room ifExists:NO];
+	CQChatRoomController *roomController = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:NO];
 	[roomController didJoin];
 }
 
@@ -214,7 +155,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	// We do this here to make sure we catch early messages right when we join (this includes dircproxy's dump).
 	MVChatRoom *room = notification.object;
 
-	CQChatRoomController *controller = [self chatViewControllerForRoom:room ifExists:NO];
+	CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:NO];
 	[controller addMessage:notification.userInfo];
 }
 
@@ -226,7 +167,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	BOOL hideFromUser = NO;
 	if ([[notification.userInfo objectForKey:@"notice"] boolValue]) {
-		if (![self chatViewControllerForUser:user ifExists:YES])
+		if (![[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:YES])
 			hideFromUser = YES;
 
 		if ( alwaysShowNotices == 1 || ( alwaysShowNotices == 0 && ![[notification userInfo] objectForKey:@"handled"] ) )
@@ -234,7 +175,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	}
 
 	if (!hideFromUser) {
-		CQDirectChatController *controller = [self chatViewControllerForUser:user ifExists:NO userInitiated:NO];
+		CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:NO userInitiated:NO];
 		[controller addMessage:notification.userInfo];
 	}
 }
@@ -242,7 +183,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 - (void) _gotDirectChatMessage:(NSNotification *) notification {
 	MVDirectChatConnection *connection = notification.object;
 
-	CQDirectChatController *controller = [self chatViewControllerForDirectChatConnection:connection ifExists:NO];
+	CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForDirectChatConnection:connection ifExists:NO];
 	[controller addMessage:notification.userInfo];
 }
 
@@ -509,7 +450,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 #pragma mark -
 
 - (NSDictionary *) persistentStateForConnection:(MVChatConnection *) connection {
-	NSArray *controllers = [self chatViewControllersForConnection:connection];
+	NSArray *controllers = [[CQChatOrderingController defaultController] chatViewControllersForConnection:connection];
 	if (!controllers.count)
 		return nil;
 
@@ -546,7 +487,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		if (!controller)
 			continue;
 
-		[_chatControllers addObject:controller];
+		[[CQChatOrderingController defaultController] addViewController:controller];
 		[controller release];
 
 		if ([[controllerState objectForKey:@"active"] boolValue]) {
@@ -555,8 +496,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 			[old release];
 		}
 	}
-
-	[self _sortChatControllers];
 }
 
 #pragma mark -
@@ -596,7 +535,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	MVChatRoom *room = (roomName.length ? [connection chatRoomWithName:roomName] : nil);
 	if (room) {
-		CQChatRoomController *controller = [self chatViewControllerForRoom:room ifExists:YES];
+		CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:YES];
 		if (controller) {
 			[self showChatController:controller animated:[UIView areAnimationsEnabled]];
 			return;
@@ -614,7 +553,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if (!user)
 		return;
 
-	CQDirectChatController *controller = [self chatViewControllerForUser:user ifExists:NO];
+	CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:NO];
 	if (!controller)
 		return;
 
@@ -735,174 +674,10 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 #pragma mark -
 
-@synthesize chatViewControllers = _chatControllers;
-
 - (void) showConsoleForConnection:(MVChatConnection *) connection {
-	CQConsoleController *consoleController = [self chatViewControllerForConnection:connection ifExists:NO userInitiated:NO];
+	CQConsoleController *consoleController = [[CQChatOrderingController defaultController] chatViewControllerForConnection:connection ifExists:NO userInitiated:NO];
 
 	[self showChatController:consoleController animated:YES];
-}
-
-- (CQConsoleController *) consoleViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists {
-	return [self chatViewControllerForConnection:connection ifExists:exists userInitiated:YES];
-}
-
-- (CQConsoleController *) chatViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
-	NSParameterAssert(connection != nil);
-
-	for (id <CQChatViewController> controller in _chatControllers)
-		if ([controller isMemberOfClass:[CQConsoleController class]] && controller.target == connection)
-			return (CQConsoleController *)controller;
-
-	CQConsoleController *controller = nil;
-
-	if (!exists) {
-		if ((controller = [[CQConsoleController alloc] initWithTarget:connection])) {
-			[self _addViewController:controller];
-			return [controller autorelease];
-		}
-	}
-
-	return nil;
-}
-
-- (NSArray *) chatViewControllersForConnection:(MVChatConnection *) connection {
-	NSParameterAssert(connection != nil);
-
-	NSMutableArray *result = [NSMutableArray array];
-
-	for (id controller in _chatControllers)
-		if ([controller conformsToProtocol:@protocol(CQChatViewController)] && ((id <CQChatViewController>) controller).connection == connection)
-			[result addObject:controller];
-
-	return result;
-}
-
-- (NSArray *) chatViewControllersOfClass:(Class) class {
-	NSParameterAssert(class != NULL);
-
-	NSMutableArray *result = [NSMutableArray array];
-
-	for (id controller in _chatControllers)
-		if ([controller isMemberOfClass:class])
-			[result addObject:controller];
-
-	return result;
-}
-
-- (NSArray *) chatViewControllersKindOfClass:(Class) class {
-	NSParameterAssert(class != NULL);
-
-	NSMutableArray *result = [NSMutableArray array];
-
-	for (id controller in _chatControllers)
-		if ([controller isKindOfClass:class])
-			[result addObject:controller];
-
-	return result;
-}
-
-#pragma mark -
-
-- (CQChatRoomController *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists {
-	NSParameterAssert(room != nil);
-
-	for (id <CQChatViewController> controller in _chatControllers)
-		if ([controller isMemberOfClass:[CQChatRoomController class]] && controller.target == room)
-				return (CQChatRoomController *)controller;
-
-	CQChatRoomController *controller = nil;
-
-	if (!exists) {
-		if ((controller = [[CQChatRoomController alloc] initWithTarget:room])) {
-			[self _addViewController:controller];
-
-			if (room.connection == _nextRoomConnection)
-				[self showChatController:controller animated:YES];
-
-			return [controller autorelease];
-		}
-	}
-
-	return nil;
-}
-
-- (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists {
-	return [self chatViewControllerForUser:user ifExists:exists userInitiated:YES];
-}
-
-- (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) initiated {
-	NSParameterAssert(user != nil);
-
-	for (id <CQChatViewController> controller in _chatControllers)
-		if ([controller isMemberOfClass:[CQDirectChatController class]] && controller.target == user)
-			return (CQDirectChatController *)controller;
-
-	CQDirectChatController *controller = nil;
-
-	if (!exists) {
-		if ((controller = [[CQDirectChatController alloc] initWithTarget:user])) {
-			[self _addViewController:controller];
-			return [controller autorelease];
-		}
-	}
-
-	return nil;
-}
-
-- (CQDirectChatController *) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists {
-	NSParameterAssert(connection != nil);
-
-	for (id <CQChatViewController> controller in _chatControllers)
-		if ([controller isMemberOfClass:[CQDirectChatController class]] && controller.target == connection)
-			return (CQDirectChatController *)controller;
-
-	CQDirectChatController *controller = nil;
-
-	if (!exists) {
-		if ((controller = [[CQDirectChatController alloc] initWithTarget:connection])) {
-			[self _addViewController:controller];
-			return [controller autorelease];
-		}
-	}
-
-	return nil;
-}
-
-#if ENABLE(FILE_TRANSFERS)
-- (CQFileTransferController *) chatViewControllerForFileTransfer:(MVFileTransfer *) transfer ifExists:(BOOL) exists {
-	NSParameterAssert(transfer != nil);
-
-	for (id controller in _chatControllers)
-		if ([controller isMemberOfClass:[CQFileTransferController class]] && ((CQFileTransferController *)controller).transfer == transfer)
-			return controller;
-
-	if (!exists) {
-		CQFileTransferController *controller = [[CQFileTransferController alloc] initWithTransfer:transfer];
-		if (controller) {
-			[self _addFileTransferController:controller];
-			return [controller autorelease];
-		}
-	}
-
-	return nil;
-}
-#endif
-
-#pragma mark -
-
-- (BOOL) connectionHasAnyChatRooms:(MVChatConnection *) connection {
-	for (id <CQChatViewController> chatViewController in [self chatViewControllersForConnection:connection])
-		if ([chatViewController.target isKindOfClass:[MVChatRoom class]])
-			return YES;
-	return NO;
-}
-
-- (BOOL) connectionHasAnyPrivateChats:(MVChatConnection *) connection {
-	for (id <CQChatViewController> chatViewController in [self chatViewControllersForConnection:connection])
-		if ([chatViewController.target isKindOfClass:[MVChatUser class]])
-			return YES;
-	return NO;
 }
 
 #pragma mark -
@@ -923,18 +698,18 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	[controller retain];
 
-	NSUInteger controllerIndex = [_chatControllers indexOfObjectIdenticalTo:controller];
+	NSUInteger controllerIndex = [[CQChatOrderingController defaultController] indexOfViewController:controller];
 
-	[_chatControllers removeObjectAtIndex:controllerIndex];
+	[[CQChatOrderingController defaultController] removeViewController:controller];
 
 	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObject:controller forKey:@"controller"];
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerRemovedChatViewControllerNotification object:self userInfo:notificationInfo];
 
 	if ([[UIDevice currentDevice] isPadModel] && _visibleChatController == controller) {
-		if (_chatControllers.count) {
+		if ([CQChatOrderingController defaultController].chatViewControllers.count) {
 			if (!controllerIndex)
 				controllerIndex = 1;
-			[self performSelector:@selector(_showChatControllerUnanimated:) withObject:[_chatControllers objectAtIndex:(controllerIndex - 1)] afterDelay:0.];
+			[self performSelector:@selector(_showChatControllerUnanimated:) withObject:[[CQChatOrderingController defaultController].chatViewControllers objectAtIndex:(controllerIndex - 1)] afterDelay:0.];
 		} else [self showChatController:nil animated:YES];
 	}
 

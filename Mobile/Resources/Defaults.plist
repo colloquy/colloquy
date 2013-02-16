@@ -118,5 +118,11 @@
 	<false/>
 	<key>CQMarkScrollbackOnMultitasking</key>
 	<true/>
+	<key>CQSingleFingerSwipe</key>
+	<integer>1</integer>
+	<key>CQDoubleFingerSwipe</key>
+	<integer>2</integer>
+	<key>CQTripleFingerSwipe</key>
+	<integer>3</integer>
 </dict>
 </plist>

@@ -102,6 +102,96 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
+			<string>Gestures</string>
+		</dict>
+		<dict>
+			<key>SupportedUserInterfaceIdioms</key>
+			<array>
+				<string>Pad</string>
+			</array>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Single Swipe</string>
+			<key>Key</key>
+			<string>CQSingleFingerSwipe</string>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+				<integer>3</integer>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Disabled</string>
+				<string>Next Room</string>
+				<string>Next Active Room</string>
+				<string>Next Highlight</string>
+			</array>
+			<key>DefaultValue</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>SupportedUserInterfaceIdioms</key>
+			<array>
+				<string>Pad</string>
+			</array>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Double Swipe</string>
+			<key>Key</key>
+			<string>CQDoubleFingerSwipe</string>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+				<integer>3</integer>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Disabled</string>
+				<string>Next Room</string>
+				<string>Next Active Room</string>
+				<string>Next Highlight</string>
+			</array>
+			<key>DefaultValue</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>SupportedUserInterfaceIdioms</key>
+			<array>
+				<string>Pad</string>
+			</array>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Triple Swipe</string>
+			<key>Key</key>
+			<string>CQTripleFingerSwipe</string>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+				<integer>3</integer>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>Disabled</string>
+				<string>Next Room</string>
+				<string>Next Active Room</string>
+				<string>Next Highlight</string>
+			</array>
+			<key>DefaultValue</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
 			<string>Default Encodings</string>
 		</dict>
 		<dict>

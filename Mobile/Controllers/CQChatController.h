@@ -22,7 +22,6 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 
 @interface CQChatController : NSObject <UIActionSheetDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
 	@protected
-	NSMutableArray *_chatControllers;
 	CQChatNavigationController *_chatNavigationController;
 	CQChatPresentationController *_chatPresentationController;
 	id <CQChatViewController> _nextController;
@@ -37,7 +36,7 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 @property (nonatomic, readonly) CQChatNavigationController *chatNavigationController;
 @property (nonatomic, readonly) CQChatPresentationController *chatPresentationController;
 
-@property (nonatomic, readonly) NSArray *chatViewControllers;
+@property (nonatomic, readonly) MVChatConnection *nextRoomConnection;
 
 @property (nonatomic) NSInteger totalImportantUnreadCount;
 
@@ -60,19 +59,6 @@ extern NSString *CQChatControllerChangedTotalImportantUnreadCountNotification;
 - (void) joinSupportRoom;
 
 - (void) showConsoleForConnection:(MVChatConnection *) connection;
-
-- (NSArray *) chatViewControllersForConnection:(MVChatConnection *) connection;
-- (NSArray *) chatViewControllersOfClass:(Class) class;
-- (NSArray *) chatViewControllersKindOfClass:(Class) class;
-
-- (CQConsoleController *) consoleViewControllerForConnection:(MVChatConnection *) connection ifExists:(BOOL) exists;
-- (CQChatRoomController *) chatViewControllerForRoom:(MVChatRoom *) room ifExists:(BOOL) exists;
-- (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists;
-- (CQDirectChatController *) chatViewControllerForUser:(MVChatUser *) user ifExists:(BOOL) exists userInitiated:(BOOL) requested;
-- (CQDirectChatController *) chatViewControllerForDirectChatConnection:(MVDirectChatConnection *) connection ifExists:(BOOL) exists;
-
-- (BOOL) connectionHasAnyChatRooms:(MVChatConnection *) connection;
-- (BOOL) connectionHasAnyPrivateChats:(MVChatConnection *) connection;
 
 #if ENABLE(FILE_TRANSFERS)
 - (CQFileTransferController *) chatViewControllerForFileTransfer:(MVFileTransfer *) transfer ifExists:(BOOL) exists;

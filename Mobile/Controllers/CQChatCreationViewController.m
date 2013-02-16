@@ -1,6 +1,7 @@
 #import "CQChatCreationViewController.h"
 
 #import "CQChatController.h"
+#import "CQChatOrderingController.h"
 #import "CQChatEditViewController.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
@@ -109,7 +110,7 @@
 		} else [connection joinChatRoomNamed:roomName];
 	} else if (editViewController.name.length) {
 		MVChatUser *user = [[connection chatUsersWithNickname:editViewController.name] anyObject];
-		CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
+		CQDirectChatController *chatController = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:NO];
 		[[CQChatController defaultController] showChatController:chatController animated:NO];
 	}
 }

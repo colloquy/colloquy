@@ -1,6 +1,7 @@
 #import "CQDirectChatController.h"
 
 #import "CQChatController.h"
+#import "CQChatOrderingController.h"
 #import "CQChatCreationViewController.h"
 #import "CQChatInputBar.h"
 #import "CQChatPresentationController.h"
@@ -29,6 +30,12 @@
 
 #define InfoActionSheet 1
 #define ActionsActionsSheet 2
+
+enum {
+	CQSwipeNextRoom,
+	CQSwipeNextActiveRoom,
+	CQSwipeNextHighlight
+} CQSwipeMeaning;
 
 NSString *CQChatViewControllerRecentMessagesUpdatedNotification = @"CQChatViewControllerRecentMessagesUpdatedNotification";
 NSString *CQChatViewControllerUnreadMessagesUpdatedNotification = @"CQChatViewControllerUnreadMessagesUpdatedNotification";
@@ -178,6 +185,8 @@ static BOOL showingKeyboard;
 	}
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollbackLengthDidChange:) name:CQScrollbackLengthDidChangeNotification object:nil];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 
 	[self setScrollbackLength:scrollbackLength];
 
@@ -392,8 +401,6 @@ static BOOL showingKeyboard;
 	[self _userDefaultsChanged];
 
 	transcriptView.dataDetectorTypes = UIDataDetectorTypeNone;
-
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -794,7 +801,7 @@ static BOOL showingKeyboard;
 }
 
 - (BOOL) handleAmsgCommandWithArguments:(NSString *) arguments {
-	NSArray *rooms = [[CQChatController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
+	NSArray *rooms = [[CQChatOrderingController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
 	for (CQChatRoomController *controller in rooms) {
 		if (!controller.connection.connected)
 			continue;
@@ -805,7 +812,7 @@ static BOOL showingKeyboard;
 }
 
 - (BOOL) handleAmeCommandWithArguments:(NSString *) arguments {
-	NSArray *rooms = [[CQChatController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
+	NSArray *rooms = [[CQChatOrderingController defaultController] chatViewControllersOfClass:[CQChatRoomController class]];
 	for (CQChatRoomController *controller in rooms) {
 		if (!controller.connection.connected)
 			continue;
@@ -855,12 +862,12 @@ static BOOL showingKeyboard;
 	if ([argumentsScanner isAtEnd] || arguments.length <= argumentsScanner.scanLocation + 1) {
 		if (targetName.length > 1 && [[self.connection chatRoomNamePrefixes] characterIsMember:[targetName characterAtIndex:0]]) {
 			MVChatRoom *room = [self.connection chatRoomWithUniqueIdentifier:targetName];
-			CQChatRoomController *controller = [[CQChatController defaultController] chatViewControllerForRoom:room ifExists:NO];
+			CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:NO];
 			[[CQChatController defaultController] showChatController:controller animated:YES];
 			return YES;
 		} else {
 			MVChatUser *user = [[self.connection chatUsersWithNickname:targetName] anyObject];
-			CQDirectChatController *controller = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
+			CQDirectChatController *controller = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:NO];
 			[[CQChatController defaultController] showChatController:controller animated:YES];
 			return YES;
 		}
@@ -889,7 +896,7 @@ static BOOL showingKeyboard;
 
 		NSString *message = [arguments substringFromIndex:argumentsScanner.scanLocation];
 		NSData *messageData = [message dataUsingEncoding:self.connection.encoding];
-		CQChatRoomController *controller = [[CQChatController defaultController] chatViewControllerForRoom:room ifExists:YES];
+		CQChatRoomController *controller = [[CQChatOrderingController defaultController] chatViewControllerForRoom:room ifExists:YES];
 		[controller addMessage:@{ @"message": messageData, @"type": @"message", @"notice": @(YES), @"user": self.connection.localUser }];
 	}
 
@@ -1213,7 +1220,22 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (BOOL) transcriptView:(CQChatTranscriptView *) view handleOpenURL:(NSURL *) url {
+- (void) transcriptView:(CQChatTranscriptView *) transcriptView receivedSwipeWithTouchCount:(NSUInteger) touchCount leftward:(BOOL) leftward {
+	id <CQChatViewController> nextViewController = nil;
+	if (leftward)
+		nextViewController = [[CQChatOrderingController defaultController] chatViewControllerFollowingChatController:self];
+	else nextViewController = [[CQChatOrderingController defaultController] chatViewControllerPreceedingChatController:self];
+
+	if (touchCount == CQSwipeNextRoom) {
+		[[CQChatController defaultController] showChatController:nextViewController animated:NO];
+	} else if (touchCount == CQSwipeNextActiveRoom) {
+
+	} else if (touchCount == CQSwipeNextHighlight) {
+
+	}
+}
+
+- (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url {
 	if (![url.scheme isCaseInsensitiveEqualToString:@"irc"] && ![url.scheme isCaseInsensitiveEqualToString:@"ircs"])
 		return [self _openURL:url];
 

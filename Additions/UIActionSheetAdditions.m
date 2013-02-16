@@ -1,6 +1,7 @@
 #import "UIActionSheetAdditions.h"
 
 #import "CQColloquyApplication.h"
+#import "CQChatOrderingController.h"
 #import "CQConnectionsController.h"
 #import "CQDirectChatController.h"
 #import "CQIgnoreRulesController.h"
@@ -146,7 +147,7 @@
 
 	if (actionSheet.tag == UserActionSheetTag) {
 		if (buttonIndex == SendMessageButtonIndex) {
-			CQDirectChatController *chatController = [[CQChatController defaultController] chatViewControllerForUser:user ifExists:NO];
+			CQDirectChatController *chatController = [[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:NO];
 			[[CQChatController defaultController] showChatController:chatController animated:YES];
 		} else if (buttonIndex == [self userInfoButtonIndex]) {
 			CQUserInfoController *userInfoController = [[CQUserInfoController alloc] init];

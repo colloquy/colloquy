@@ -221,6 +221,13 @@
 
 #pragma mark -
 
+- (void) swipeGestureRecognized:(UISwipeGestureRecognizer *) swipeGestureRecognizer {
+	if (transcriptDelegate && [transcriptDelegate respondsToSelector:@selector(transcriptView:receivedSwipeWithTouchCount:leftward:)])
+		[transcriptDelegate transcriptView:self receivedSwipeWithTouchCount:swipeGestureRecognizer.numberOfTouches leftward:(swipeGestureRecognizer.direction & UISwipeGestureRecognizerDirectionLeft)];
+}
+
+#pragma mark -
+
 - (UIView *) hitTest:(CGPoint) point withEvent:(UIEvent *) event {
 	_lastTouchLocation = [[UIApplication sharedApplication].keyWindow.rootViewController.view convertPoint:point fromView:self];
 
@@ -422,6 +429,16 @@
 	self.styleIdentifier = @"standard";
 
 	[self resetSoon];
+
+	for (NSUInteger i = 1; i <= 3; i++) {
+		UISwipeGestureRecognizer *swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGestureRecognized:)];
+		swipeGestureRecognizer.numberOfTouchesRequired = i;
+		swipeGestureRecognizer.direction = (UISwipeGestureRecognizerDirectionLeft | UISwipeGestureRecognizerDirectionRight);
+
+		[self addGestureRecognizer:swipeGestureRecognizer];
+
+		[swipeGestureRecognizer release];
+	}
 }
 
 - (NSString *) _variantStyleString {

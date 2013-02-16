@@ -7,6 +7,7 @@
 #import "CQBouncerCreationViewController.h"
 #import "CQBouncerEditViewController.h"
 #import "CQChatController.h"
+#import "CQChatOrderingController.h"
 #import "CQChatRoomController.h"
 #import "CQColloquyApplication.h"
 #import "CQConnectionsNavigationController.h"
@@ -695,7 +696,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	MVChatConnection *connection = notification.object;
 
 	if (connection.consoleOnLaunch)
-		(void)[[CQChatController defaultController] consoleViewControllerForConnection:connection ifExists:NO];
+		(void)[[CQChatOrderingController defaultController] consoleViewControllerForConnection:connection ifExists:NO];
 
 	[UIApplication sharedApplication].idleTimerDisabled = [self _shouldDisableIdleTimer];
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
