@@ -188,8 +188,11 @@ static NSString *const CQPSListTypeFont = @"Font";
 		CQPreferencesTextCell *cell = [CQPreferencesTextCell reusableTableViewCellInTableView:tableView];
 		cell.textField.text = [[NSBundle mainBundle] localizedStringForKey:value value:@"" table:nil];
 
-		if (!cell.textField.text.length && key)
-			cell.textField.text = [rowDictionary objectForKey:CQPSDefaultValue];
+		if (!cell.textField.text.length) {
+			if (value)
+				cell.textField.text = value;
+			else cell.textField.text = [rowDictionary objectForKey:CQPSDefaultValue];
+		}
 
 		cell.textLabel.text = [[NSBundle mainBundle] localizedStringForKey:[rowDictionary objectForKey:CQPSTitle] value:@"" table:nil];;
 		cell.textFieldBlock = ^(UITextField *textField) {
