@@ -678,7 +678,9 @@ static const NSStringEncoding supportedEncodings[] = {
 	[old setDelegate:nil];
 	[old release];
 
-	[self _stopSendQueue];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self _stopSendQueue];
+	});
 
 	@synchronized( _sendQueue ) {
 		[_sendQueue removeAllObjects];
@@ -694,9 +696,11 @@ static const NSStringEncoding supportedEncodings[] = {
 
 	_isonSentCount = 0;
 
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _periodicEvents ) object:nil];
-//	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _whoisWatchedUsers ) object:nil];
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _checkWatchedUsers ) object:nil];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _periodicEvents ) object:nil];
+//		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _whoisWatchedUsers ) object:nil];
+		[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _checkWatchedUsers ) object:nil];
+	});
 
 	if( _status == MVChatConnectionConnectingStatus ) {
 		[self performSelectorOnMainThread:@selector( _didNotConnect ) withObject:nil waitUntilDone:NO];
@@ -811,7 +815,10 @@ static const NSStringEncoding supportedEncodings[] = {
 	[self sendRawMessageImmediatelyWithFormat:@"NICK %@", [self preferredNickname]];
 	[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", username, ( _realName.length ? _realName : @"Anonymous User" )];
 
-	[self performSelector:@selector( _periodicEvents ) withObject:nil afterDelay:JVPeriodicEventsInterval];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self performSelector:@selector(_periodicEvents) withObject:nil afterDelay:JVPeriodicEventsInterval];
+	});
+
 	[self _pingServerAfterInterval];
 
 	[self _readNextMessageFromServer];
@@ -1559,8 +1566,10 @@ end:
 
 - (void) _handleConnect {
 	MVSafeRetainAssign( _queueWait, [NSDate dateWithTimeIntervalSinceNow:0.5] );
-	[self _resetSendQueueInterval];
-	[self performSelectorOnMainThread:@selector( _didConnect ) withObject:nil waitUntilDone:NO];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self _resetSendQueueInterval];
+		[self _didConnect];
+	});
 }
 
 - (void) _identifyWithServicesUsingNickname:(NSString *) nickname {
@@ -1604,6 +1613,7 @@ end:
 #pragma mark -
 
 - (void) _periodicEvents {
+	MVAssertMainThreadRequired();
 	[_pendingJoinRoomNames removeAllObjects];
 
 	[self _pruneKnownUsers];
@@ -1640,6 +1650,7 @@ end:
 }
 
 - (void) _startSendQueue {
+	MVAssertMainThreadRequired();
 	if( _sendQueueProcessing ) return;
 	_sendQueueProcessing = YES;
 
@@ -1649,11 +1660,13 @@ end:
 }
 
 - (void) _stopSendQueue {
+	MVAssertMainThreadRequired();
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector( _sendQueue ) object:nil];
 	_sendQueueProcessing = NO;
 }
 
 - (void) _resetSendQueueInterval {
+	MVAssertMainThreadRequired();
 	[self _stopSendQueue];
 
 	@synchronized( _sendQueue ) {
@@ -1663,6 +1676,7 @@ end:
 }
 
 - (void) _sendQueue {
+	MVAssertMainThreadRequired();
 	@synchronized( _sendQueue ) {
 		if( ! _sendQueue.count ) {
 			_sendQueueProcessing = NO;
@@ -1742,22 +1756,24 @@ end:
 	}
 }
 
-- (void) _whoisWatchedUsers {
-	[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
-
-	NSMutableSet *matchedUsers = [NSMutableSet set];
-	@synchronized( _chatUserWatchRules ) {
-		if( ! _chatUserWatchRules.count ) return; // nothing to do, return and wait until the next scheduled fire
-
-		for( MVChatUserWatchRule *rule in _chatUserWatchRules )
-			[matchedUsers unionSet:[rule matchedChatUsers]];
-	}
-
-	for( MVChatUser *user in matchedUsers )
-		[self _scheduleWhoisForUser:user];
-}
+//- (void) _whoisWatchedUsers {
+//	MVAssertMainThreadRequired();
+//	[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
+//
+//	NSMutableSet *matchedUsers = [NSMutableSet set];
+//	@synchronized( _chatUserWatchRules ) {
+//		if( ! _chatUserWatchRules.count ) return; // nothing to do, return and wait until the next scheduled fire
+//
+//		for( MVChatUserWatchRule *rule in _chatUserWatchRules )
+//			[matchedUsers unionSet:[rule matchedChatUsers]];
+//	}
+//
+//	for( MVChatUser *user in matchedUsers )
+//		[self _scheduleWhoisForUser:user];
+//}
 
 - (void) _checkWatchedUsers {
+	MVAssertMainThreadRequired();
 	if( _watchCommandSupported ) return; // we don't need to call this anymore, return before we reschedule
 
 	[self performSelector:@selector( _checkWatchedUsers ) withObject:nil afterDelay:JVWatchedUserISONDelay];
@@ -2091,7 +2107,9 @@ end:
 		[self _identifyWithServicesUsingNickname:[self preferredNickname]]; // identifying proactively -> preferred nickname
 	}
 
-	[self performSelector:@selector( _checkWatchedUsers ) withObject:nil afterDelay:2.];
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self performSelector:@selector(_checkWatchedUsers) withObject:nil afterDelay:2.];
+	});
 }
 
 - (void) _handle005WithParameters:(NSArray *) parameters fromSender:(id) sender { // RPL_ISUPPORT
@@ -2127,7 +2145,10 @@ end:
 
 			[request release];
 
-//			[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
+//			dispatch_async(dispatch_get_main_queue(), ^{
+//				[self performSelector:@selector( _whoisWatchedUsers ) withObject:nil afterDelay:JVWatchedUserWHOISDelay];
+//			});
+
 		} else if( [feature isKindOfClass:[NSString class]] && [feature hasPrefix:@"CHANTYPES="] ) {
 			NSString *types = [feature substringFromIndex:10]; // length of "CHANTYPES="
 			if( types.length )
