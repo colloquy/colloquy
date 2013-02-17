@@ -12,7 +12,7 @@
 
 @implementation CQPreferencesTextEditViewController
 @synthesize delegate = _delegate;
-@synthesize listItemText = _listItemText;
+@synthesize listItem = _listItemText;
 @synthesize listItemPlaceholder = _listItemPlaceholder;
 @synthesize charactersRemainingBeforeDisplay = _charactersRemainingBeforeDisplay;
 

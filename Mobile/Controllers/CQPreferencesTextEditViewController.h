@@ -20,7 +20,7 @@
 	UILabel *_footerLabel;
 }
 @property (nonatomic, retain) id <CQPreferencesTextEditViewDelegate> delegate;
-@property (nonatomic, copy) NSString *listItemText;
+@property (nonatomic, copy) NSString *listItem;
 @property (nonatomic, copy) NSString *listItemPlaceholder;
 @property (nonatomic) NSInteger charactersRemainingBeforeDisplay;
 @end
