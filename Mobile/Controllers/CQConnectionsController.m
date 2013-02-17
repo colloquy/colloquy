@@ -767,6 +767,8 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	if (connection.bouncerType == MVChatConnectionColloquyBouncer && connection.automaticCommands.count && rooms.count)
 		[connection sendRawMessage:@"BOUNCER autocommands stop"];
+
+	[rooms release];
 }
 
 - (void) _didConnectOrDidNotConnect:(NSNotification *) notification {
