@@ -105,10 +105,6 @@
 			<string>Gestures</string>
 		</dict>
 		<dict>
-			<key>SupportedUserInterfaceIdioms</key>
-			<array>
-				<string>Pad</string>
-			</array>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
@@ -133,10 +129,6 @@
 			<integer>1</integer>
 		</dict>
 		<dict>
-			<key>SupportedUserInterfaceIdioms</key>
-			<array>
-				<string>Pad</string>
-			</array>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
@@ -161,10 +153,6 @@
 			<integer>2</integer>
 		</dict>
 		<dict>
-			<key>SupportedUserInterfaceIdioms</key>
-			<array>
-				<string>Pad</string>
-			</array>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>

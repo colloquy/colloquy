@@ -31,7 +31,8 @@
 #define InfoActionSheet 1
 #define ActionsActionsSheet 2
 
-enum {
+typedef enum {
+	CQSwipeDisabled,
 	CQSwipeNextRoom,
 	CQSwipeNextActiveRoom,
 	CQSwipeNextHighlight
@@ -55,6 +56,9 @@ static BOOL localNotificationOnPrivateMessage;
 static NSUInteger scrollbackLength;
 static BOOL clearOnConnect;
 static BOOL markScrollbackOnMultitasking;
+static NSUInteger singleSwipeGesture;
+static NSUInteger doubleSwipeGesture;
+static NSUInteger tripleSwipeGesture;
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
 - (void) _addPendingComponent:(id) component;
@@ -90,6 +94,9 @@ static BOOL showingKeyboard;
 	localNotificationOnPrivateMessage = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLocalNotificationOnPrivateMessage"];
 	clearOnConnect = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQClearOnConnect"];
 	markScrollbackOnMultitasking = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQMarkScrollbackOnMultitasking"];
+	singleSwipeGesture = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQSingleFingerSwipe"];
+	doubleSwipeGesture = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDoubleFingerSwipe"];
+	tripleSwipeGesture = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQTripleFingerSwipe"];;
 
 	NSUInteger newScrollbackLength = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQScrollbackLength"];
 	if (newScrollbackLength != scrollbackLength) {
@@ -1221,18 +1228,31 @@ static BOOL showingKeyboard;
 #pragma mark -
 
 - (void) transcriptView:(CQChatTranscriptView *) transcriptView receivedSwipeWithTouchCount:(NSUInteger) touchCount leftward:(BOOL) leftward {
+	CQSwipeMeaning meaning = CQSwipeDisabled;
+	if (touchCount == 1)
+		meaning = singleSwipeGesture;
+	else if (touchCount == 2)
+		meaning = doubleSwipeGesture;
+	else if (touchCount == 3)
+		meaning = tripleSwipeGesture;
+
 	id <CQChatViewController> nextViewController = nil;
-	if (leftward)
-		nextViewController = [[CQChatOrderingController defaultController] chatViewControllerFollowingChatController:self];
-	else nextViewController = [[CQChatOrderingController defaultController] chatViewControllerPreceedingChatController:self];
+	if (meaning == CQSwipeNextRoom) {
+		if (leftward)
+			nextViewController = [[CQChatOrderingController defaultController] chatViewControllerFollowingChatController:self requiringActivity:NO requiringHighlight:NO];
+		else nextViewController = [[CQChatOrderingController defaultController] chatViewControllerPreceedingChatController:self requiringActivity:NO requiringHighlight:NO];
+	} else if (meaning == CQSwipeNextActiveRoom) {
+		if (leftward)
+			nextViewController = [[CQChatOrderingController defaultController] chatViewControllerFollowingChatController:self requiringActivity:YES requiringHighlight:NO];
+		else nextViewController = [[CQChatOrderingController defaultController] chatViewControllerPreceedingChatController:self requiringActivity:YES requiringHighlight:NO];
+	} else if (meaning == CQSwipeNextHighlight) {
+		if (leftward)
+			nextViewController = [[CQChatOrderingController defaultController] chatViewControllerFollowingChatController:self requiringActivity:NO requiringHighlight:YES];
+		else nextViewController = [[CQChatOrderingController defaultController] chatViewControllerPreceedingChatController:self requiringActivity:NO requiringHighlight:YES];
+	} else return;
 
-	if (touchCount == CQSwipeNextRoom) {
+	if (nextViewController)
 		[[CQChatController defaultController] showChatController:nextViewController animated:NO];
-	} else if (touchCount == CQSwipeNextActiveRoom) {
-
-	} else if (touchCount == CQSwipeNextHighlight) {
-
-	}
 }
 
 - (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url {

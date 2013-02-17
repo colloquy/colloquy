@@ -9,6 +9,8 @@
 #import <ChatCore/MVChatConnection.h>
 #import <ChatCore/MVChatUser.h>
 
+typedef BOOL (^CQMatchingResult)(id <CQChatViewController> chatViewController);
+
 static NSComparisonResult sortControllersAscending(id controller1, id controller2, void *context) {
 	if ([controller1 isKindOfClass:[CQDirectChatController class]] && [controller2 isKindOfClass:[CQDirectChatController class]]) {
 		CQDirectChatController *chatController1 = controller1;
@@ -272,17 +274,85 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 #pragma mark -
 
-- (id <CQChatViewController>) chatViewControllerPreceedingChatController:(id <CQChatViewController>) chatViewController {
-	NSUInteger index = [_chatControllers indexOfObjectIdenticalTo:chatViewController];
-	if (!index)
+- (id <CQChatViewController>) _enumerateChatViewControllersFromChatController:(id <CQChatViewController>) chatViewController withOption:(NSEnumerationOptions) options requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight {
+	if (_chatControllers.count < 2)
 		return [_chatControllers lastObject];
-	return [_chatControllers objectAtIndex:(index + 1)];
+
+	NSUInteger index = [_chatControllers indexOfObject:chatViewController];
+	NSArray *firstHalf = nil;
+	NSArray *secondHalf = nil;
+
+	if (options & NSEnumerationReverse) {
+		firstHalf = [_chatControllers subarrayWithRange:NSMakeRange(0, index)];
+		secondHalf = [_chatControllers subarrayWithRange:NSMakeRange((index + 1), (_chatControllers.count - (index + 1)))];
+	} else {
+		firstHalf = [_chatControllers subarrayWithRange:NSMakeRange((index + 1), (_chatControllers.count - (index + 1)))];
+		secondHalf = [_chatControllers subarrayWithRange:NSMakeRange(0, index)];
+	}
+
+	id <CQChatViewController> (^findNearestMatchForBlock)(CQMatchingResult) = ^(CQMatchingResult block) {
+		__block id <CQChatViewController> chatViewController = nil;
+		[firstHalf enumerateObjectsWithOptions:options usingBlock:^(id object, NSUInteger index, BOOL *stop) {
+			if (block(object)) {
+				chatViewController = object;
+
+				*stop = YES;
+			}
+		}];
+
+		if (!chatViewController) {
+			[secondHalf enumerateObjectsWithOptions:options usingBlock:^(id object, NSUInteger index, BOOL *stop) {
+				if (block(object)) {
+					chatViewController = object;
+
+					*stop = YES;
+				}
+			}];
+		}
+
+		return chatViewController;
+	};
+
+	if (requiringActivity && requiringHighlight) {
+		return findNearestMatchForBlock(^BOOL(id <CQChatViewController> chatViewController) {
+			return chatViewController.unreadCount && chatViewController.importantUnreadCount;
+		});
+	}
+
+	if (requiringHighlight) {
+		return findNearestMatchForBlock(^BOOL(id <CQChatViewController> chatViewController) {
+			return chatViewController.importantUnreadCount;
+		});
+	}
+
+	if (requiringActivity) {
+		return findNearestMatchForBlock(^BOOL(id <CQChatViewController> chatViewController) {
+			return chatViewController.unreadCount;
+		});
+	}
+	
+	return nil;
 }
 
-- (id <CQChatViewController>) chatViewControllerFollowingChatController:(id <CQChatViewController>) chatViewController {
-	NSUInteger index = [_chatControllers indexOfObjectIdenticalTo:chatViewController];
-	if (index == (_chatControllers.count - 1))
-		return [_chatControllers objectAtIndex:0];
-	return [_chatControllers objectAtIndex:(index + 1)];
+- (id <CQChatViewController>) chatViewControllerPreceedingChatController:(id <CQChatViewController>) chatViewController requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight {
+	if (!requiringActivity && !requiringHighlight) {
+		NSUInteger index = [_chatControllers indexOfObjectIdenticalTo:chatViewController];
+		if (!index)
+			return [_chatControllers lastObject];
+		return [_chatControllers objectAtIndex:(index + 1)];
+	}
+
+	return [self _enumerateChatViewControllersFromChatController:chatViewController withOption:NSEnumerationReverse requiringActivity:requiringActivity requiringHighlight:requiringHighlight];
+}
+
+- (id <CQChatViewController>) chatViewControllerFollowingChatController:(id <CQChatViewController>) chatViewController requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight {
+	if (!requiringActivity && !requiringHighlight) {
+		NSUInteger index = [_chatControllers indexOfObjectIdenticalTo:chatViewController];
+		if (index == (_chatControllers.count - 1))
+			return [_chatControllers objectAtIndex:0];
+		return [_chatControllers objectAtIndex:(index + 1)];
+	}
+
+	return [self _enumerateChatViewControllersFromChatController:chatViewController withOption:0 requiringActivity:requiringActivity requiringHighlight:requiringHighlight];
 }
 @end

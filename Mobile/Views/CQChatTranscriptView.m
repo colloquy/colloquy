@@ -433,7 +433,15 @@
 	for (NSUInteger i = 1; i <= 3; i++) {
 		UISwipeGestureRecognizer *swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGestureRecognized:)];
 		swipeGestureRecognizer.numberOfTouchesRequired = i;
-		swipeGestureRecognizer.direction = (UISwipeGestureRecognizerDirectionLeft | UISwipeGestureRecognizerDirectionRight);
+		swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+
+		[self addGestureRecognizer:swipeGestureRecognizer];
+
+		[swipeGestureRecognizer release];
+
+		swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGestureRecognized:)];
+		swipeGestureRecognizer.numberOfTouchesRequired = i;
+		swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
 
 		[self addGestureRecognizer:swipeGestureRecognizer];
 
