@@ -424,22 +424,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 }
 
-
-- (NSArray *) _automaticallyJoinedRoomsForConnection:(MVChatConnection *) connection resettingPersistentState:(BOOL) resettingPersistentState {
-	NSMutableArray *rooms = [connection.automaticJoinedRooms mutableCopy];
-	if (!rooms)
-		rooms = [[NSMutableArray alloc] init];
-
-	NSArray *previousRooms = [connection persistentInformationObjectForKey:@"previousRooms"];
-	if (previousRooms.count) {
-		[rooms addObjectsFromArray:previousRooms];
-		if (resettingPersistentState)
-			[connection removePersistentInformationObjectForKey:@"previousRooms"];
-	}
-
-	return [rooms autorelease];
-}
-
 - (BOOL) _anyConnectedOrConnectingConnections {
 	for (MVChatConnection *connection in _connections)
 		if (connection.status == MVChatConnectionConnectedStatus || connection.status == MVChatConnectionConnectingStatus)
@@ -708,7 +692,15 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	[connection removePersistentInformationObjectForKey:@"pushState"];
 
-	NSArray *rooms = [self _automaticallyJoinedRoomsForConnection:connection resettingPersistentState:NO];
+	NSMutableArray *rooms = [connection.automaticJoinedRooms mutableCopy];
+	if (!rooms)
+		rooms = [[NSMutableArray alloc] init];
+
+	NSArray *previousRooms = [connection persistentInformationObjectForKey:@"previousRooms"];
+	if (previousRooms.count) {
+		[rooms addObjectsFromArray:previousRooms];
+		[connection removePersistentInformationObjectForKey:@"previousRooms"];
+	}
 
 	CQBouncerSettings *bouncerSettings = connection.bouncerSettings;
 	if (bouncerSettings) {
@@ -760,6 +752,18 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 		[connection sendCommand:command withArguments:arguments];
 	}
+
+    for (NSUInteger i = 0; i < rooms.count; i++) {
+		NSString *room = [connection properNameForChatRoomNamed:[rooms objectAtIndex:i]];
+		NSString *password = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:room];
+
+		if (password.length) {
+			room = [NSString stringWithFormat:@"%@ %@", room, password];
+			[rooms replaceObjectAtIndex:i withObject:room];
+		}
+	}
+
+	[connection joinChatRoomsNamed:rooms];
 
 	if (connection.bouncerType == MVChatConnectionColloquyBouncer && connection.automaticCommands.count && rooms.count)
 		[connection sendRawMessage:@"BOUNCER autocommands stop"];
@@ -835,22 +839,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	if (!connection.directConnection)
 		connection.temporaryDirectConnection = NO;
-
-	NSMutableArray *rooms = [[self _automaticallyJoinedRoomsForConnection:connection resettingPersistentState:YES] mutableCopy];
-
-	for (NSUInteger i = 0; i < rooms.count; i++) {
-		NSString *room = [connection properNameForChatRoomNamed:[rooms objectAtIndex:i]];
-		NSString *password = [[CQKeychain standardKeychain] passwordForServer:connection.uniqueIdentifier area:room];
-
-		if (password.length) {
-			room = [NSString stringWithFormat:@"%@ %@", room, password];
-			[rooms replaceObjectAtIndex:i withObject:room];
-		}
-	}
-
-	[connection joinChatRoomsNamed:rooms];
-
-	[rooms release];
 }
 
 - (void) _didDisconnect:(NSNotification *) notification {
