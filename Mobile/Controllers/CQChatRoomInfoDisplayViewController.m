@@ -33,7 +33,7 @@ enum {
 		return nil;
 
 	_room = [room retain];
-	[_room refreshAttributes];
+	[_room.connection sendRawMessageWithFormat:@"MODE %@", _room.name];
 
 	NSMutableArray *items = [NSMutableArray array];
 	[items addObject:NSLocalizedString(@"Modes", @"Modes segment title")];
