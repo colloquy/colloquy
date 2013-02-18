@@ -8,6 +8,8 @@
 #define CQInactiveLineHeight 44.
 #define CQMaxLineHeight 84.
 
+static BOOL hardwareKeyboard;
+
 #if ENABLE(SECRETS)
 @interface UIKeyboardImpl : UIView
 + (UIKeyboardImpl *) activeInstance;
@@ -449,6 +451,13 @@ retry:
 	if ([string isEqualToString:@"\n"])
 		return [self textViewShouldReturn:textView];
 
+	if ([string isEqualToString:@"\t"]) {
+		hardwareKeyboard = YES;
+
+		if ([delegate respondsToSelector:@selector(chatInputBarShouldIndent:)] && ![delegate chatInputBarShouldIndent:self])
+			return NO;
+	}
+
 	if (_autocapitalizeNextLetter) {
 		_autocapitalizeNextLetter = NO;
 		_inputView.autocapitalizationType = _defaultAutocapitalizationType;
@@ -645,8 +654,8 @@ retry:
 
 - (BOOL) _hasMarkedText {
 #if ENABLE(SECRETS)
-	UITextRange *textRange = [_inputView performPrivateSelector:@"markedTextRange"];
-	return !textRange.empty;
+//	UITextRange *textRange = [_inputView performPrivateSelector:@"markedTextRange"];
+//	return !textRange.empty;
 #endif
 	return NO;
 }

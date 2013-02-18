@@ -494,19 +494,7 @@ static BOOL showingKeyboard;
 	[transcriptView scrollToBottomAnimated:NO];
 
 	if (_isShowingCompletionsBeforeRotation) {
-		NSRange possibleRange = [chatInputBar.textView.text rangeOfString:@" " options:NSBackwardsSearch range:NSMakeRange(0, chatInputBar.caretRange.location)];
-		NSString *lastWord = nil;
-		if (possibleRange.location != NSNotFound) {
-			lastWord = [chatInputBar.textView.text substringFromIndex:possibleRange.location];
-
-			possibleRange = NSMakeRange(possibleRange.location - possibleRange.length, possibleRange.length);
-		} else {
-			lastWord = chatInputBar.textView.text;
-
-			possibleRange = NSMakeRange(0, lastWord.length);
-		}
-
-		[chatInputBar showCompletionsForText:lastWord inRange:possibleRange];
+		[self _showChatCompletions];
 
 		_isShowingCompletionsBeforeRotation = NO;
 	}
@@ -717,6 +705,12 @@ static BOOL showingKeyboard;
 	chatInputBar.frame = frame;
 
 	return YES;
+}
+
+- (BOOL) chatInputBarShouldIndent:(CQChatInputBar *) chatInputBar {
+	hardwareKeyboard = YES;
+	[self _showChatCompletions];
+	return NO;
 }
 
 #pragma mark -
@@ -1530,6 +1524,24 @@ static BOOL showingKeyboard;
 	[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
 
 	[userInfoController release];
+}
+
+#pragma mark -
+
+- (void) _showChatCompletions {
+	NSRange possibleRange = [chatInputBar.textView.text rangeOfString:@" " options:NSBackwardsSearch range:NSMakeRange(0, chatInputBar.caretRange.location)];
+	NSString *lastWord = nil;
+	if (possibleRange.location != NSNotFound) {
+		lastWord = [chatInputBar.textView.text substringFromIndex:possibleRange.location];
+
+		possibleRange = NSMakeRange(possibleRange.location - possibleRange.length, possibleRange.length);
+	} else {
+		lastWord = chatInputBar.textView.text;
+
+		possibleRange = NSMakeRange(0, lastWord.length);
+	}
+
+	[chatInputBar showCompletionsForText:lastWord inRange:possibleRange];
 }
 
 #pragma mark -

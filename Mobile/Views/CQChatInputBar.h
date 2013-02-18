@@ -52,6 +52,7 @@
 - (void) chatInputBarDidBeginEditing:(CQChatInputBar *) chatInputBar;
 - (BOOL) chatInputBarShouldEndEditing:(CQChatInputBar *) chatInputBar;
 - (void) chatInputBarDidEndEditing:(CQChatInputBar *) chatInputBar;
+- (BOOL) chatInputBarShouldIndent:(CQChatInputBar *) chatInputBar;
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text;
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar shouldAutocorrectWordWithPrefix:(NSString *) word;
 - (NSArray *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range;
