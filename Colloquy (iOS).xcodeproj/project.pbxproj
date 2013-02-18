@@ -248,6 +248,10 @@
 		925C594C1177CB63001995E0 /* CQModalNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C594B1177CB63001995E0 /* CQModalNavigationController.m */; };
 		925C59591177D84C001995E0 /* CQAwayStatusController.m in Sources */ = {isa = PBXBuildFile; fileRef = 925C59581177D84C001995E0 /* CQAwayStatusController.m */; };
 		9271923C16CFA831003380F0 /* CQChatOrderingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9271923B16CFA831003380F0 /* CQChatOrderingController.m */; };
+		9271928A16D211DD003380F0 /* textField.png in Resources */ = {isa = PBXBuildFile; fileRef = 9271928816D211DD003380F0 /* textField.png */; };
+		9271928B16D211DD003380F0 /* textFieldDark.png in Resources */ = {isa = PBXBuildFile; fileRef = 9271928916D211DD003380F0 /* textFieldDark.png */; };
+		9271928E16D211EF003380F0 /* textField@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9271928C16D211EF003380F0 /* textField@2x.png */; };
+		9271928F16D211EF003380F0 /* textFieldDark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9271928D16D211EF003380F0 /* textFieldDark@2x.png */; };
 		92823CEC168FE6CB000EC36E /* CQIgnoreRulesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CEB168FE6CB000EC36E /* CQIgnoreRulesController.m */; };
 		92823CEF168FE6EC000EC36E /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CEE168FE6EC000EC36E /* KAIgnoreRule.m */; };
 		92823D32169114FA000EC36E /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92823D31169114FA000EC36E /* Twitter.framework */; };
@@ -619,6 +623,10 @@
 		925C59581177D84C001995E0 /* CQAwayStatusController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQAwayStatusController.m; sourceTree = "<group>"; };
 		9271923A16CFA831003380F0 /* CQChatOrderingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQChatOrderingController.h; sourceTree = "<group>"; };
 		9271923B16CFA831003380F0 /* CQChatOrderingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQChatOrderingController.m; sourceTree = "<group>"; };
+		9271928816D211DD003380F0 /* textField.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textField.png; sourceTree = "<group>"; };
+		9271928916D211DD003380F0 /* textFieldDark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textFieldDark.png; sourceTree = "<group>"; };
+		9271928C16D211EF003380F0 /* textField@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "textField@2x.png"; sourceTree = "<group>"; };
+		9271928D16D211EF003380F0 /* textFieldDark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "textFieldDark@2x.png"; sourceTree = "<group>"; };
 		92823CEA168FE6CB000EC36E /* CQIgnoreRulesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQIgnoreRulesController.h; sourceTree = "<group>"; };
 		92823CEB168FE6CB000EC36E /* CQIgnoreRulesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQIgnoreRulesController.m; sourceTree = "<group>"; };
 		92823CED168FE6EC000EC36E /* KAIgnoreRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KAIgnoreRule.h; sourceTree = "<group>"; };
@@ -1077,6 +1085,8 @@
 				92312EAF16B8D82100E3CA60 /* settings.png */,
 				1C633FB70FAE528100BB5866 /* tableCellCheck.png */,
 				1C633FC10FAE56A600BB5866 /* tableCellCheckSelected.png */,
+				9271928816D211DD003380F0 /* textField.png */,
+				9271928916D211DD003380F0 /* textFieldDark.png */,
 				1CC64C030EE98CC600DE91D0 /* userAdmin.png */,
 				1CC64C040EE98CC600DE91D0 /* userFounder.png */,
 				1CC64C050EE98CC600DE91D0 /* userHalfOperator.png */,
@@ -1133,6 +1143,8 @@
 				92312EB216B8D82F00E3CA60 /* settings@2x.png */,
 				1CA265D311C4A69800AB4E44 /* tableCellCheck@2x.png */,
 				1CA265D411C4A69800AB4E44 /* tableCellCheckSelected@2x.png */,
+				9271928C16D211EF003380F0 /* textField@2x.png */,
+				9271928D16D211EF003380F0 /* textFieldDark@2x.png */,
 				1CA2656B11C455E500AB4E44 /* userAdmin@2x.png */,
 				1CA2656C11C455E500AB4E44 /* userFounder@2x.png */,
 				1CA2656D11C455E500AB4E44 /* userHalfOperator@2x.png */,
@@ -1513,6 +1525,10 @@
 				92312EB016B8D82100E3CA60 /* settings.png in Resources */,
 				92312EB316B8D82F00E3CA60 /* settings@2x.png in Resources */,
 				92196CA616CA345D0020FE35 /* common.css in Resources */,
+				9271928A16D211DD003380F0 /* textField.png in Resources */,
+				9271928B16D211DD003380F0 /* textFieldDark.png in Resources */,
+				9271928E16D211EF003380F0 /* textField@2x.png in Resources */,
+				9271928F16D211EF003380F0 /* textFieldDark@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
