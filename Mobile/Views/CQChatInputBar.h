@@ -3,10 +3,10 @@
 @protocol CQChatInputBarDelegate;
 @class CQTextCompletionView;
 
-@interface CQChatInputBar : UIView <UITextFieldDelegate, CQTextCompletionViewDelegate> {
+@interface CQChatInputBar : UIView <UITextViewDelegate, CQTextCompletionViewDelegate> {
 	@protected
 	UIToolbar *_backgroundView;
-	UITextField *_inputField;
+	UITextView *_inputView;
 	IBOutlet id <CQChatInputBarDelegate> delegate;
 	CQTextCompletionView *_completionView;
 	NSArray *_completions;
@@ -22,6 +22,9 @@
 	NSTimeInterval _animationDuration;
 	BOOL _showingKeyboard;
 	UIButton *_accessoryButton;
+	CGFloat _previousContentHeight;
+	UIImageView *_overlayBackgroundView;
+	BOOL _shouldAnimateLayout;
 }
 @property (nonatomic, assign) id <CQChatInputBarDelegate> delegate;
 
@@ -31,7 +34,7 @@
 @property (nonatomic) BOOL spaceCyclesCompletions;
 @property (nonatomic) BOOL autocorrect;
 
-@property (nonatomic, readonly) UITextField *textField;
+@property (nonatomic, readonly) UITextView *textView;
 @property (nonatomic, readonly) NSRange caretRange;
 @property (nonatomic) UITextAutocapitalizationType autocapitalizationType;
 
@@ -53,4 +56,5 @@
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar shouldAutocorrectWordWithPrefix:(NSString *) word;
 - (NSArray *) chatInputBar:(CQChatInputBar *) chatInputBar completionsForWordWithPrefix:(NSString *) word inRange:(NSRange) range;
 - (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) chatInputBar;
+- (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar shouldChangeHeightBy:(CGFloat) difference;
 @end

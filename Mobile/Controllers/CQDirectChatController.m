@@ -494,14 +494,14 @@ static BOOL showingKeyboard;
 	[transcriptView scrollToBottomAnimated:NO];
 
 	if (_isShowingCompletionsBeforeRotation) {
-		NSRange possibleRange = [chatInputBar.textField.text rangeOfString:@" " options:NSBackwardsSearch range:NSMakeRange(0, chatInputBar.caretRange.location)];
+		NSRange possibleRange = [chatInputBar.textView.text rangeOfString:@" " options:NSBackwardsSearch range:NSMakeRange(0, chatInputBar.caretRange.location)];
 		NSString *lastWord = nil;
 		if (possibleRange.location != NSNotFound) {
-			lastWord = [chatInputBar.textField.text substringFromIndex:possibleRange.location];
+			lastWord = [chatInputBar.textView.text substringFromIndex:possibleRange.location];
 
 			possibleRange = NSMakeRange(possibleRange.location - possibleRange.length, possibleRange.length);
 		} else {
-			lastWord = chatInputBar.textField.text;
+			lastWord = chatInputBar.textView.text;
 
 			possibleRange = NSMakeRange(0, lastWord.length);
 		}
@@ -703,6 +703,18 @@ static BOOL showingKeyboard;
 
 		[self sendMessage:text asAction:action];
 	}
+
+	return YES;
+}
+
+- (BOOL) chatInputBar:(CQChatInputBar *) theChatInputBar shouldChangeHeightBy:(CGFloat) difference {
+	CGRect frame = transcriptView.frame;
+	frame.size.height += difference;
+	transcriptView.frame = frame;
+
+	frame = chatInputBar.frame;
+	frame.origin.y += difference;
+	chatInputBar.frame = frame;
 
 	return YES;
 }
