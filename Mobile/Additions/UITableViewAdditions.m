@@ -43,6 +43,9 @@
 }
 
 - (void) hideEmptyCells {
+	if (self.style == UITableViewStyleGrouped)
+		return;
+
 	if (!self.tableFooterView) {
 		UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
 

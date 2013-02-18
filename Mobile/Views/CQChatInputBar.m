@@ -216,7 +216,6 @@ static BOOL hardwareKeyboard;
 	[self layoutSubviews];
 }
 
-
 - (UIColor *) tintColor {
 	return _backgroundView.tintColor;
 }
