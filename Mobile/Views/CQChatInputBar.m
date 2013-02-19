@@ -84,11 +84,11 @@ static BOOL hardwareKeyboard;
 
 	_animationDuration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
 
-//	_accessoryButton = [[UIButton buttonWithType:UIButtonTypeInfoDark] retain];
+	_accessoryButton = [[UIButton buttonWithType:UIButtonTypeInfoDark] retain];
 
-//	[_accessoryButton addTarget:self action:@selector(accessoryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+	[_accessoryButton addTarget:self action:@selector(accessoryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 
-//	[self addSubview:_accessoryButton];
+	[self addSubview:_accessoryButton];
 
 	[self _resetTextViewHeight];
 }
@@ -613,7 +613,7 @@ retry:
 	_accessoryButton.center = _inputView.center;
 	CGRect frame = _backgroundView.frame;
 	frame.origin.y = 1.;
-	if (NO && !_showingKeyboard && !_inputView.text.length) {
+	if (!_showingKeyboard && !_inputView.text.length) {
 		if ([UIDevice currentDevice].isRetina)
 			frame.size.width -= (ButtonWidth + ButtonMargin);
 		else frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
@@ -625,7 +625,7 @@ retry:
 	frame.origin.y = ImageBorderInset;
 	frame.size.width = _backgroundView.frame.size.width - (frame.origin.x * 2);
 	frame.size.height = _backgroundView.frame.size.height - (ImageBorderInset * 2);
-	if (NO && !_showingKeyboard && !_inputView.text.length) {
+	if (!_showingKeyboard && !_inputView.text.length) {
 		if ([UIDevice currentDevice].isRetina)
 			frame.size.width -= (ButtonWidth + ButtonMargin);
 		else frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
@@ -633,7 +633,7 @@ retry:
 	_inputView.frame = frame;
 
 	frame = _accessoryButton.frame;
-	if (NO && !_showingKeyboard && !_inputView.text.length) {
+	if (!_showingKeyboard && !_inputView.text.length) {
 		if ([UIDevice currentDevice].isRetina)
 			frame.origin.x = CGRectGetMaxX(_inputView.frame) + ButtonMargin;
 		else frame.origin.x = CGRectGetMaxX(_inputView.frame) + floorf(ButtonMargin);

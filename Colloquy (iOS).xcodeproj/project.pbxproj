@@ -252,6 +252,7 @@
 		9271928B16D211DD003380F0 /* textFieldDark.png in Resources */ = {isa = PBXBuildFile; fileRef = 9271928916D211DD003380F0 /* textFieldDark.png */; };
 		9271928E16D211EF003380F0 /* textField@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9271928C16D211EF003380F0 /* textField@2x.png */; };
 		9271928F16D211EF003380F0 /* textFieldDark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9271928D16D211EF003380F0 /* textFieldDark@2x.png */; };
+		927192C616D3272E003380F0 /* CQImportantChatMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 927192C516D3272D003380F0 /* CQImportantChatMessageViewController.m */; };
 		92823CEC168FE6CB000EC36E /* CQIgnoreRulesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CEB168FE6CB000EC36E /* CQIgnoreRulesController.m */; };
 		92823CEF168FE6EC000EC36E /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CEE168FE6EC000EC36E /* KAIgnoreRule.m */; };
 		92823D32169114FA000EC36E /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92823D31169114FA000EC36E /* Twitter.framework */; };
@@ -627,6 +628,8 @@
 		9271928916D211DD003380F0 /* textFieldDark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = textFieldDark.png; sourceTree = "<group>"; };
 		9271928C16D211EF003380F0 /* textField@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "textField@2x.png"; sourceTree = "<group>"; };
 		9271928D16D211EF003380F0 /* textFieldDark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "textFieldDark@2x.png"; sourceTree = "<group>"; };
+		927192C416D3272D003380F0 /* CQImportantChatMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQImportantChatMessageViewController.h; sourceTree = "<group>"; };
+		927192C516D3272D003380F0 /* CQImportantChatMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQImportantChatMessageViewController.m; sourceTree = "<group>"; };
 		92823CEA168FE6CB000EC36E /* CQIgnoreRulesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQIgnoreRulesController.h; sourceTree = "<group>"; };
 		92823CEB168FE6CB000EC36E /* CQIgnoreRulesController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQIgnoreRulesController.m; sourceTree = "<group>"; };
 		92823CED168FE6EC000EC36E /* KAIgnoreRule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KAIgnoreRule.h; sourceTree = "<group>"; };
@@ -841,6 +844,8 @@
 				1CC64B2B0EE97F8B00DE91D0 /* CQChatUserListViewController.h */,
 				9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */,
 				9703B2190F2C0D0E00E623DF /* CQFileTransferController.h */,
+				927192C516D3272D003380F0 /* CQImportantChatMessageViewController.m */,
+				927192C416D3272D003380F0 /* CQImportantChatMessageViewController.h */,
 				1CFCBA2F1114FAFA00EA5F10 /* CQUserInfoController.m */,
 				1CFCBA2E1114FAFA00EA5F10 /* CQUserInfoController.h */,
 				1CFCBA281114F9FE00EA5F10 /* CQUserInfoViewController.m */,
@@ -1660,6 +1665,7 @@
 				92196CA316C918D10020FE35 /* CQChatRoomInfoDisplayViewController.m in Sources */,
 				92196CA416C918D10020FE35 /* CQChatRoomInfoViewController.m in Sources */,
 				9271923C16CFA831003380F0 /* CQChatOrderingController.m in Sources */,
+				927192C616D3272E003380F0 /* CQImportantChatMessageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

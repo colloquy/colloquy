@@ -13,6 +13,7 @@
 #import "CQPreferencesListViewController.h"
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
+#import "CQImportantChatMessageViewController.h"
 #import "CQUserInfoController.h"
 #import "KAIgnoreRule.h"
 #import "NSStringAdditions.h"
@@ -390,14 +391,8 @@ static BOOL showingKeyboard;
 #pragma mark -
 
 - (void) showRecentlySentMessages {
-	CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
-	listViewController.allowEditing = NO;
-	listViewController.items = _recentMessages;
-	listViewController.noItemsLabelText = NSLocalizedString(@"No sent messages", @"No sent messages");
-	listViewController.title = NSLocalizedString(@"Recent Messages", @"Recent Messages title");
-
+	CQImportantChatMessageViewController *listViewController = [[CQImportantChatMessageViewController alloc] initWithMessages:_recentMessages delegate:self];
 	CQModalNavigationController *modalNavigationController = [[CQModalNavigationController alloc] initWithRootViewController:listViewController];
-	modalNavigationController.closeButtonItem = UIBarButtonSystemItemDone;
 
 	[[CQColloquyApplication sharedApplication] presentModalViewController:modalNavigationController animated:[UIView areAnimationsEnabled]];
 
@@ -726,6 +721,18 @@ static BOOL showingKeyboard;
 	hardwareKeyboard = YES;
 	[self _showChatCompletions];
 	return NO;
+}
+
+#pragma mark -
+
+- (void) importantChatMessageViewController:(CQImportantChatMessageViewController *) importantChatMessageViewController didSelectMessage:(NSString *) message isAction:(BOOL) isAction {
+	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:[UIView areAnimationsEnabled]];
+
+	if (isAction)
+		chatInputBar.textView.text = [@"/me " stringByAppendingString:message];
+	else chatInputBar.textView.text = message;
+
+	[chatInputBar becomeFirstResponder];
 }
 
 #pragma mark -

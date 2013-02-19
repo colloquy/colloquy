@@ -1,6 +1,7 @@
 #import "CQChatController.h"
 #import "CQChatInputBar.h"
 #import "CQChatTranscriptView.h"
+#import "CQImportantChatMessageViewController.h"
 #import "CQViewController.h"
 
 #define ReconnectAlertTag 1
@@ -18,7 +19,7 @@
 extern NSString *CQChatViewControllerRecentMessagesUpdatedNotification;
 extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 
-@interface CQDirectChatController : CQViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
+@interface CQDirectChatController : CQViewController <CQChatViewController, CQChatInputBarDelegate, CQChatTranscriptViewDelegate, CQImportantChatMessageDelegate, UIAlertViewDelegate, UIActionSheetDelegate> {
 	@protected
 	IBOutlet CQChatInputBar *chatInputBar;
 	IBOutlet CQChatTranscriptView *transcriptView;
