@@ -27,6 +27,7 @@ extern NSString *CQChatViewControllerUnreadMessagesUpdatedNotification;
 	NSMutableArray *_pendingPreviousSessionComponents;
 	NSMutableArray *_pendingComponents;
 	NSMutableArray *_recentMessages;
+	NSMutableArray *_sentMessages;
 
 	id _target;
 	NSStringEncoding _encoding;

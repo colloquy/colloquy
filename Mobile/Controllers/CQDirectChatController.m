@@ -10,6 +10,7 @@
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 #import "CQIgnoreRulesController.h"
+#import "CQPreferencesListViewController.h"
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
 #import "CQUserInfoController.h"
@@ -196,6 +197,8 @@ static BOOL showingKeyboard;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 
 	[self setScrollbackLength:scrollbackLength];
+
+	_sentMessages = [[NSMutableArray alloc] init];
 
 	return self;
 }
@@ -387,7 +390,19 @@ static BOOL showingKeyboard;
 #pragma mark -
 
 - (void) showRecentlySentMessages {
-	// ...
+	CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
+	listViewController.allowEditing = NO;
+	listViewController.items = _recentMessages;
+	listViewController.noItemsLabelText = NSLocalizedString(@"No sent messages", @"No sent messages");
+	listViewController.title = NSLocalizedString(@"Recent Messages", @"Recent Messages title");
+
+	CQModalNavigationController *modalNavigationController = [[CQModalNavigationController alloc] initWithRootViewController:listViewController];
+	modalNavigationController.closeButtonItem = UIBarButtonSystemItemDone;
+
+	[[CQColloquyApplication sharedApplication] presentModalViewController:modalNavigationController animated:[UIView areAnimationsEnabled]];
+
+	[modalNavigationController release];
+	[listViewController release];
 }
 
 - (void) showUserInformation {
@@ -1375,6 +1390,10 @@ static BOOL showingKeyboard;
 
 - (void) sendMessage:(NSString *) message asAction:(BOOL) action {
 	[_target sendMessage:message withEncoding:self.encoding asAction:action];
+
+	[_sentMessages addObject:@{ @"message": message, @"action": @(action) }];
+	while (_sentMessages.count > 10)
+		[_sentMessages removeObjectAtIndex:0];
 
 	NSData *messageData = [message dataUsingEncoding:self.encoding allowLossyConversion:YES];
 	[self addMessage:messageData fromUser:self.connection.localUser asAction:action withIdentifier:[NSString locallyUniqueString]];
