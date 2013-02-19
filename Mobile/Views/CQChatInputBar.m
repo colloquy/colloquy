@@ -447,8 +447,11 @@ retry:
 }
 
 - (BOOL) textView:(UITextView *) textView shouldChangeTextInRange:(NSRange) range replacementText:(NSString *) string {
-	if ([string isEqualToString:@"\n"])
-		return [self textViewShouldReturn:textView];
+	if ([string isEqualToString:@"\n"]) {
+		[self textViewShouldReturn:textView];
+
+		return NO;
+	}
 
 	if ([string isEqualToString:@"\t"]) {
 		hardwareKeyboard = YES;
