@@ -11,6 +11,7 @@
 static BOOL graphicalEmoticons;
 static BOOL stripMessageFormatting;
 static NSMutableDictionary *highlightRegexes;
+static BOOL inlineImages;
 
 @implementation CQProcessChatMessageOperation
 @synthesize ignoreController = _ignoreController;
@@ -25,6 +26,7 @@ static NSMutableDictionary *highlightRegexes;
 	[highlightRegexes release];
 	highlightRegexes = nil;
 	highlightRegexes = [[NSMutableDictionary alloc] init];
+	inlineImages = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQInlineImages"];
 }
 
 + (void) initialize {
@@ -125,11 +127,15 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 				fullURL = [NSURL URLWithString:[@"http://" stringByAppendingString:url]];
 
 			if ([[CQColloquyApplication sharedApplication] canOpenURL:fullURL]) {
-				url = [url stringByReplacingOccurrencesOfString:@"/" withString:@"/\u200b"];
-				url = [url stringByReplacingOccurrencesOfString:@"?" withString:@"?\u200b"];
-				url = [url stringByReplacingOccurrencesOfString:@"=" withString:@"=\u200b"];
-				url = [url stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&amp;\u200b"];
-				linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\">%@</a>", [fullURL absoluteString], url];
+				if (inlineImages && [NSFileManager isValidImageFormat:fullURL.pathExtension]) {
+					linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\"><img src=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></a>", [fullURL absoluteString], [fullURL absoluteString]];
+				} else {
+					url = [url stringByReplacingOccurrencesOfString:@"/" withString:@"/\u200b"];
+					url = [url stringByReplacingOccurrencesOfString:@"?" withString:@"?\u200b"];
+					url = [url stringByReplacingOccurrencesOfString:@"=" withString:@"=\u200b"];
+					url = [url stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&amp;\u200b"];
+					linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\">%@</a>", [fullURL absoluteString], url];
+				}
 			} else linkHTMLString = url;
 		} else if (email.length) {
 			linkHTMLString = [NSString stringWithFormat:@"<a href=\"mailto:%@\">%@</a>", email, email];

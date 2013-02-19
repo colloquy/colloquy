@@ -124,5 +124,7 @@
 	<integer>2</integer>
 	<key>CQTripleFingerSwipe</key>
 	<integer>3</integer>
+	<key>CQInlineImages</key>
+	<true/>
 </dict>
 </plist>
