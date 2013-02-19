@@ -720,7 +720,7 @@ retry:
 
 - (void) _resetTextViewHeight {
 	self.height = CQInactiveLineHeight;
-	_inputView.contentOffset = CGPointZero;
+	_inputView.contentOffset = CGPointMake(0., 7.);
 	_inputView.contentInset = UIEdgeInsetsMake(-4., 0., 5., 0.);
 	_inputView.scrollEnabled = NO;
 }
