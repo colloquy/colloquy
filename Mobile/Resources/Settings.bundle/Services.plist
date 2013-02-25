@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PreferenceSpecifiers</key>
+	<array>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Bookmarking</string>
+			<key>Key</key>
+			<string>CQBookmarkingService</string>
+			<key>Values</key>
+			<array>
+				<string></string>
+				<string>CQBookmarkingServiceDelicious</string>
+				<string>CQBookmarkingServiceInstapaper</string>
+				<string>CQBookmarkingServicePinboard</string>
+				<string>CQBookmarkingServicePocket</string>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>None</string>
+				<string>Delicious</string>
+				<string>Instapaper</string>
+				<string>Pinboard</string>
+				<string>Pocket</string>
+			</array>
+			<key>DefaultValue</key>
+			<string>CQBookmarkingServicePocket</string>
+		</dict>
+	</array>
+</dict>
+</plist>

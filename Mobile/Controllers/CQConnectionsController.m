@@ -381,7 +381,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	NSMutableArray *connections = [_bouncerChatConnections objectForKey:connection.settings.identifier];
 
 	if (error && (!connections.count || [connection.userInfo isEqual:@"manual-refresh"])) {
-		CQAlertView *alert = [[CQAlertView alloc] init];
+		UIAlertView *alert = [[UIAlertView alloc] init];
 
 		alert.tag = CannotConnectToBouncerTag;
 		alert.delegate = self;
@@ -803,7 +803,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	if (connection.reconnectAttemptCount > 0 || userDisconnected || connection.serverError.domain == MVChatConnectionErrorDomain)
 		return;
 
-	CQAlertView *alert = [[CQAlertView alloc] init];
+	UIAlertView *alert = [[UIAlertView alloc] init];
 
 	if (connection.directConnection) {
 		alert.tag = HelpAlertTag;

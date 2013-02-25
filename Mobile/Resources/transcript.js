@@ -227,3 +227,18 @@ function scrollToBottom(animated, suppressEnforceScrollbackLimit) {
 function isDocumentReady() {
 	return (document.readyState === "complete");
 }
+
+function urlUnderTapAtPoint(x, y) {
+	var url = "";
+	var e = document.elementFromPoint(x,y);
+
+	while (e) {
+		if (e.href.length) {
+			url = e.href;
+			break;
+		}
+		e = e.parentNode;
+	}
+
+    return url;
+}

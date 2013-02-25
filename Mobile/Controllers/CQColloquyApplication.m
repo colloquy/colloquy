@@ -12,6 +12,8 @@
 #import "CQWelcomeController.h"
 #import "RegexKitLite.h"
 
+#import "CQPocketController.h"
+
 typedef enum {
 	CQSidebarOrientationNone,
 	CQSidebarOrientationPortrait,
@@ -420,6 +422,12 @@ static NSMutableArray *highlightWords;
 }
 
 - (BOOL) application:(UIApplication *) application handleOpenURL:(NSURL *) url {
+	if ([url.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"CQPocketShouldConvertTokenFromTokenNotification" object:nil];
+
+		return YES;
+	}
+
 	return [[CQConnectionsController defaultController] handleOpenURL:url];
 }
 

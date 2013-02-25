@@ -181,6 +181,12 @@
 
 #pragma mark -
 
+- (BOOL) gestureRecognizer:(UIGestureRecognizer *) gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *) otherGestureRecognizer {
+	return YES;
+}
+
+#pragma mark -
+
 #if ENABLE(SECRETS)
 - (void) scrollerWillStartDragging:(UIScroller *) scroller {
 	[super scrollerWillStartDragging:scroller];
@@ -220,6 +226,14 @@
 }
 
 #pragma mark -
+
+- (void) longPressGestureRecognizerRecognized:(UILongPressGestureRecognizer *) longPressGestureRecognizer {
+	CGPoint point = [longPressGestureRecognizer locationInView:self];
+	NSString *tappedURL = [super stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"urlUnderTapAtPoint(%d, %d)", (int)point.x, (int)point.y]];
+
+	if (transcriptDelegate && [transcriptDelegate respondsToSelector:@selector(transcriptView:handleLongPressURL:atLocation:)])
+		[transcriptDelegate transcriptView:self handleLongPressURL:[NSURL URLWithString:tappedURL] atLocation:_lastTouchLocation];
+}
 
 - (void) swipeGestureRecognized:(UISwipeGestureRecognizer *) swipeGestureRecognizer {
 	if (transcriptDelegate && [transcriptDelegate respondsToSelector:@selector(transcriptView:receivedSwipeWithTouchCount:leftward:)])
@@ -267,6 +281,8 @@
 
 - (void) webViewDidFinishLoad:(UIWebView *) webView {
 	[self performSelector:@selector(_checkIfLoadingFinished) withObject:nil afterDelay:0.];
+
+	[super stringByEvaluatingJavaScriptFromString:@"document.body.style.webkitTouchCallout='none';"];
 }
 
 #pragma mark -
@@ -447,6 +463,12 @@
 
 		[swipeGestureRecognizer release];
 	}
+
+	UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureRecognizerRecognized:)];
+	longPressGestureRecognizer.delegate = self;
+
+	[self addGestureRecognizer:longPressGestureRecognizer];
+	[longPressGestureRecognizer release];
 }
 
 - (NSString *) _variantStyleString {

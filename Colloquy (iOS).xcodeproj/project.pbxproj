@@ -239,6 +239,11 @@
 		922B1FE116926749002ECDFD /* MVDelegateLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B1FE016926749002ECDFD /* MVDelegateLogger.m */; };
 		922B20011692F19C002ECDFD /* CQPreferencesIgnoreEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922B20001692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.m */; };
 		922C1630163BDBCE00B01C3D /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C162F163BDBCE00B01C3D /* NSDateAdditions.m */; };
+		922C766B16D9B25400AEFCB4 /* CQBookmarkingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C766A16D9B25400AEFCB4 /* CQBookmarkingController.m */; };
+		922C767516D9C0E900AEFCB4 /* CQDeliciousController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C766E16D9C0E900AEFCB4 /* CQDeliciousController.m */; };
+		922C767616D9C0E900AEFCB4 /* CQInstapaperController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C767016D9C0E900AEFCB4 /* CQInstapaperController.m */; };
+		922C767716D9C0E900AEFCB4 /* CQPinboardController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C767216D9C0E900AEFCB4 /* CQPinboardController.m */; };
+		922C767816D9C0E900AEFCB4 /* CQPocketController.m in Sources */ = {isa = PBXBuildFile; fileRef = 922C767416D9C0E900AEFCB4 /* CQPocketController.m */; };
 		92312EB016B8D82100E3CA60 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 92312EAF16B8D82100E3CA60 /* settings.png */; };
 		92312EB316B8D82F00E3CA60 /* settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92312EB216B8D82F00E3CA60 /* settings@2x.png */; };
 		924108D615A5605A001F7681 /* NSFileManagerMoreAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 924108D515A5605A001F7681 /* NSFileManagerMoreAdditions.m */; };
@@ -608,6 +613,16 @@
 		922B20001692F19B002ECDFD /* CQPreferencesIgnoreEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQPreferencesIgnoreEditViewController.m; sourceTree = "<group>"; };
 		922C162E163BDBCE00B01C3D /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
 		922C162F163BDBCE00B01C3D /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDateAdditions.m; path = Additions/NSDateAdditions.m; sourceTree = "<group>"; };
+		922C766916D9B25400AEFCB4 /* CQBookmarkingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQBookmarkingController.h; path = Shared/Controllers/CQBookmarkingController.h; sourceTree = "<group>"; };
+		922C766A16D9B25400AEFCB4 /* CQBookmarkingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQBookmarkingController.m; path = Shared/Controllers/CQBookmarkingController.m; sourceTree = "<group>"; };
+		922C766D16D9C0E900AEFCB4 /* CQDeliciousController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQDeliciousController.h; path = Shared/Controllers/CQDeliciousController.h; sourceTree = "<group>"; };
+		922C766E16D9C0E900AEFCB4 /* CQDeliciousController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQDeliciousController.m; path = Shared/Controllers/CQDeliciousController.m; sourceTree = "<group>"; };
+		922C766F16D9C0E900AEFCB4 /* CQInstapaperController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQInstapaperController.h; path = Shared/Controllers/CQInstapaperController.h; sourceTree = "<group>"; };
+		922C767016D9C0E900AEFCB4 /* CQInstapaperController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQInstapaperController.m; path = Shared/Controllers/CQInstapaperController.m; sourceTree = "<group>"; };
+		922C767116D9C0E900AEFCB4 /* CQPinboardController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPinboardController.h; path = Shared/Controllers/CQPinboardController.h; sourceTree = "<group>"; };
+		922C767216D9C0E900AEFCB4 /* CQPinboardController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPinboardController.m; path = Shared/Controllers/CQPinboardController.m; sourceTree = "<group>"; };
+		922C767316D9C0E900AEFCB4 /* CQPocketController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPocketController.h; path = Shared/Controllers/CQPocketController.h; sourceTree = "<group>"; };
+		922C767416D9C0E900AEFCB4 /* CQPocketController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPocketController.m; path = Shared/Controllers/CQPocketController.m; sourceTree = "<group>"; };
 		92312EAF16B8D82100E3CA60 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings.png; sourceTree = "<group>"; };
 		92312EB216B8D82F00E3CA60 /* settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings@2x.png"; sourceTree = "<group>"; };
 		924108D415A5605A001F7681 /* NSFileManagerMoreAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSFileManagerMoreAdditions.h; path = Additions/NSFileManagerMoreAdditions.h; sourceTree = "<group>"; };
@@ -763,6 +778,7 @@
 		1C15B2641311838C006FA16B /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				927192F316D375B7003380F0 /* Bookmarking */,
 				1C15B2661311838C006FA16B /* CQAnalyticsController.m */,
 				1C15B2671311838C006FA16B /* CQAnalyticsController.h */,
 				92823CEB168FE6CB000EC36E /* CQIgnoreRulesController.m */,
@@ -1315,6 +1331,24 @@
 			usesTabs = 1;
 			wrapsLines = 0;
 		};
+		927192F316D375B7003380F0 /* Bookmarking */ = {
+			isa = PBXGroup;
+			children = (
+				922C766A16D9B25400AEFCB4 /* CQBookmarkingController.m */,
+				922C766916D9B25400AEFCB4 /* CQBookmarkingController.h */,
+				922C766E16D9C0E900AEFCB4 /* CQDeliciousController.m */,
+				922C766D16D9C0E900AEFCB4 /* CQDeliciousController.h */,
+				922C767016D9C0E900AEFCB4 /* CQInstapaperController.m */,
+				922C766F16D9C0E900AEFCB4 /* CQInstapaperController.h */,
+				922C767216D9C0E900AEFCB4 /* CQPinboardController.m */,
+				922C767116D9C0E900AEFCB4 /* CQPinboardController.h */,
+				922C767416D9C0E900AEFCB4 /* CQPocketController.m */,
+				922C767316D9C0E900AEFCB4 /* CQPocketController.h */,
+			);
+			name = Bookmarking;
+			path = ../..;
+			sourceTree = "<group>";
+		};
 		92823D36169123D5000EC36E /* Logging */ = {
 			isa = PBXGroup;
 			children = (
@@ -1334,6 +1368,7 @@
 			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Colloquy" */;
 			buildPhases = (
 				1D60588D0D05DD3D006BFB54 /* Resources */,
+				922C766C16D9BF4500AEFCB4 /* Insert API Keys */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
 				1D60588F0D05DD3D006BFB54 /* Frameworks */,
 				1C0C33330EEFA8E400062186 /* Update Build Info */,
@@ -1555,6 +1590,20 @@
 			shellScript = "use strict;\n\n# Get the current subversion revision number and use it to set the CFBundleVersion value\nmy $version = undef;\n$version = `/usr/bin/svnversion -n .` if -e \"/usr/bin/svnversion\";\n$version = `/usr/local/bin/svnversion -n .` if -e \"/usr/local/bin/svnversion\";\n$version = `/opt/local/bin/svnversion -n .` if -e \"/opt/local/bin/svnversion\";\n\n# Match the last group of digits:\n($version =~ m/(\\d+)[MS]*$/) && ($version = $1);\n\n# Get the Info.plist path, and remove the \".plist\" extension for the defualts command\nmy $infoFile = \"$ENV{BUILT_PRODUCTS_DIR}/$ENV{INFOPLIST_PATH}\";\n$infoFile =~ s/\\.plist$//;\n\n# Specify the build type\nmy $buildType = undef;\n$buildType = \"official\" if $ENV{BUILD_STYLE} eq \"Distribution\";\n\nif (defined $version || defined $buildType) {\n\t`defaults write \"$infoFile\" CFBundleVersion -string \"$version\"` if defined $version;\n\t`defaults write \"$infoFile\" CQBuildType -string \"$buildType\"` if defined $buildType;\n}";
 			showEnvVarsInLog = 0;
 		};
+		922C766C16D9BF4500AEFCB4 /* Insert API Keys */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Insert API Keys";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "if [ \"$(BUILD_STYLE)\" -eq \"Distribution\" ]; then\n    export KEY=`security 2>&1 >/dev/null find-generic-password -ga pocket-iphone |ruby -e 'print $1 if STDIN.gets =~ /^password: \"(.*)\"$/'`\n    perl -p -i -e 's/Pocket_iPhone_Consumer_Key/$(KEY)/g' \"$(SRCROOT)/Shared/Controllers/CQPocketController.m\"\n\n    export KEY=`security 2>&1 >/dev/null find-generic-password -ga pocket-ipad |ruby -e 'print $1 if STDIN.gets =~ /^password: \"(.*)\"$/'`\n    perl -p -i -e 's/Pocket_iPad_Consumer_Key/$(KEY)/g' \"$(SRCROOT)/Shared/Controllers/CQPocketController.m\"\nfi";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1666,6 +1715,11 @@
 				92196CA416C918D10020FE35 /* CQChatRoomInfoViewController.m in Sources */,
 				9271923C16CFA831003380F0 /* CQChatOrderingController.m in Sources */,
 				927192C616D3272E003380F0 /* CQImportantChatMessageViewController.m in Sources */,
+				922C766B16D9B25400AEFCB4 /* CQBookmarkingController.m in Sources */,
+				922C767516D9C0E900AEFCB4 /* CQDeliciousController.m in Sources */,
+				922C767616D9C0E900AEFCB4 /* CQInstapaperController.m in Sources */,
+				922C767716D9C0E900AEFCB4 /* CQPinboardController.m in Sources */,
+				922C767816D9C0E900AEFCB4 /* CQPocketController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

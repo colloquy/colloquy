@@ -1,6 +1,6 @@
 @protocol CQChatTranscriptViewDelegate;
 
-@interface CQChatTranscriptView : UIWebView <UIWebViewDelegate> {
+@interface CQChatTranscriptView : UIWebView <UIGestureRecognizerDelegate, UIWebViewDelegate> {
 	@protected
 	IBOutlet id <CQChatTranscriptViewDelegate> transcriptDelegate;
 	UIView *_blockerView;
@@ -42,5 +42,6 @@
 - (void) transcriptView:(CQChatTranscriptView *) transcriptView receivedSwipeWithTouchCount:(NSUInteger) touchCount leftward:(BOOL) leftward;
 - (BOOL) transcriptView:(CQChatTranscriptView *) transcriptView handleOpenURL:(NSURL *) url;
 - (void) transcriptView:(CQChatTranscriptView *) transcriptView handleNicknameTap:(NSString *) nickname atLocation:(CGPoint) location;
+- (void) transcriptView:(CQChatTranscriptView *) transcriptView handleLongPressURL:(NSURL *) url atLocation:(CGPoint) location;
 - (void) transcriptViewWasReset:(CQChatTranscriptView *) transcriptView;
 @end

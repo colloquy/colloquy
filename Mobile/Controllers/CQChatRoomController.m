@@ -1167,8 +1167,11 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 #pragma mark -
 
-- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {	
-	if ((alertView.tag != ReconnectAlertTag && alertView.tag != RejoinRoomAlertTag) || buttonIndex == alertView.cancelButtonIndex)
+- (void) alertView:(UIAlertView *) alertView clickedButtonAtIndex:(NSInteger) buttonIndex {
+	if (buttonIndex == alertView.cancelButtonIndex)
+		return;
+
+	if (alertView.tag != ReconnectAlertTag && alertView.tag != RejoinRoomAlertTag)
 		return [super alertView:alertView clickedButtonAtIndex:buttonIndex];
 
 	if (alertView.tag == ReconnectAlertTag || alertView.tag == RejoinRoomAlertTag)
@@ -1195,7 +1198,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 			[[CQColloquyApplication sharedApplication] presentModalViewController:roomInfoViewController animated:[UIView areAnimationsEnabled]];
 			[roomInfoViewController release];
 		}
-	}
+	} else [super actionSheet:actionSheet clickedButtonAtIndex:buttonIndex];
 }
 
 #pragma mark -

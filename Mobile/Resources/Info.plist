@@ -40,6 +40,14 @@
 				<string>ircs</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>Colloquy</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>colloquy</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>source</string>

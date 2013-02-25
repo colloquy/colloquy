@@ -126,5 +126,7 @@
 	<integer>3</integer>
 	<key>CQInlineImages</key>
 	<true/>
+	<key>CQBookmarkingService</key>
+	<string>CQBookmarkingServicePocket</string>
 </dict>
 </plist>

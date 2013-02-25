@@ -4,6 +4,26 @@
 - (id) initWithKeys:(NSArray *) keys fromDictionary:(NSDictionary *) dictionary {
 	return [[NSMutableDictionary alloc] initWithKeys:keys fromDictionary:dictionary];
 }
+
+- (NSData *) postDataRepresentation {
+	NSMutableData *body = [[NSMutableData alloc] init];
+
+	NSData *equals = [@"=" dataUsingEncoding:NSUTF8StringEncoding];
+	NSData *ampersand = [@"&" dataUsingEncoding:NSUTF8StringEncoding];
+
+	[self enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
+		[body appendData:[key dataUsingEncoding:NSUTF8StringEncoding]];
+		[body appendData:equals];
+
+		NSString *percentEncodedValue = [value stringByEncodingIllegalURLCharacters];
+		[body appendData:[percentEncodedValue dataUsingEncoding:NSUTF8StringEncoding]];
+		[body appendData:ampersand];
+	}];
+
+	if (body.length)
+		return [body subdataWithRange:NSMakeRange(0, body.length - 1)];
+	return [NSData data];
+}
 @end
 
 @implementation NSMutableDictionary (NSDictionaryAdditions)

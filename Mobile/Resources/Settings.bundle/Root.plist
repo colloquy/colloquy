@@ -192,6 +192,18 @@
 			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 			<key>Title</key>
+			<string>Services</string>
+			<key>File</key>
+			<string>Services</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSChildPaneSpecifier</string>
+			<key>Title</key>
 			<string>About</string>
 			<key>File</key>
 			<string>About</string>

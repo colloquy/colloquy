@@ -1,5 +1,6 @@
 #import "CQDirectChatController.h"
 
+#import "CQAlertView.h"
 #import "CQChatController.h"
 #import "CQChatOrderingController.h"
 #import "CQChatCreationViewController.h"
@@ -15,7 +16,14 @@
 #import "CQSoundController.h"
 #import "CQImportantChatMessageViewController.h"
 #import "CQUserInfoController.h"
+#import "CQDeliciousController.h"
+#import "CQInstapaperController.h"
+#import "CQPinboardController.h"
+#import "CQPocketController.h"
+
 #import "KAIgnoreRule.h"
+
+#import "NSObjectAdditions.h"
 #import "NSStringAdditions.h"
 
 #import <ChatCore/MVChatConnection.h>
@@ -30,8 +38,12 @@
 
 #import <objc/message.h>
 
-#define InfoActionSheet 1
-#define ActionsActionsSheet 2
+#define InfoActionSheet 1001
+#define ActionsActionSheet 1002
+#define URLActionSheet 1003
+
+#define CantSendMessageAlertView 100
+#define BookmarkLogInAlertView 101
 
 typedef enum {
 	CQSwipeDisabled,
@@ -98,7 +110,7 @@ static BOOL showingKeyboard;
 	markScrollbackOnMultitasking = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQMarkScrollbackOnMultitasking"];
 	singleSwipeGesture = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQSingleFingerSwipe"];
 	doubleSwipeGesture = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDoubleFingerSwipe"];
-	tripleSwipeGesture = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQTripleFingerSwipe"];;
+	tripleSwipeGesture = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQTripleFingerSwipe"];
 
 	NSUInteger newScrollbackLength = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQScrollbackLength"];
 	if (newScrollbackLength != scrollbackLength) {
@@ -118,6 +130,47 @@ static BOOL showingKeyboard;
 	old = highlightSound;
 	highlightSound = ([soundName isEqualToString:@"None"] ? nil : [[CQSoundController alloc] initWithSoundNamed:soundName]);
 	[old release];
+}
+
+- (void) didNotBookmarkLink:(NSNotification *) notification {
+	id <NSObject, CQBookmarking> activeService = [CQBookmarkingController activeService];
+
+	NSError *error = notification.userInfo[@"error"];
+	if (error.code == CQBookmarkingErrorAuthorization) {
+		if ([activeService respondsToSelector:@selector(authenticate)]) {
+			objc_msgSend(activeService, @selector(authenticate)); // [activeService authenticate]; throws a warning
+		} else {
+			CQAlertView *alertView = [[CQAlertView alloc] init];
+			alertView.delegate = self;
+			alertView.tag = BookmarkLogInAlertView;
+			alertView.title = [activeService serviceName];
+
+			[alertView addTextFieldWithPlaceholder:NSLocalizedString(@"Username or Email", @"Username or Email placeholder") andText:@""];
+			[alertView addSecureTextFieldWithPlaceholder:NSLocalizedString(@"Password", @"Password placeholder")];
+
+			[alertView addButtonWithTitle:NSLocalizedString(@"Log In", @"Log In button")];
+			alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button")];
+
+			[alertView associateObject:notification.object forKey:@"link"];
+
+			[alertView show];
+			[alertView release];
+		}
+	} else if (error.code == CQBookmarkingErrorServer) {
+		UIAlertView *alertView = [[UIAlertView alloc] init];
+		alertView.title = NSLocalizedString(@"Server Error", @"Server Error");
+		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@ due to a server error.", @"Unable to bookmark link server error message"), notification.object, [activeService serviceName]];
+		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
+		[alertView show];
+		[alertView release];
+	} else {
+		UIAlertView *alertView = [[UIAlertView alloc] init];
+		alertView.title = NSLocalizedString(@"Unknown Error", @"Unknown Error");
+		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@.", @"Unable to bookmark link message"), notification.object, [activeService serviceName]];
+		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
+		[alertView show];
+		[alertView release];
+	}
 }
 
 + (void) initialize {
@@ -433,6 +486,8 @@ static BOOL showingKeyboard;
 	if (_showingKeyboard || hardwareKeyboard) {
 		[chatInputBar becomeFirstResponder];
 	}
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didNotBookmarkLink:) name:CQBookmarkingDidNotSaveLinkNotification object:nil];
 }
 
 - (void) viewDidAppear:(BOOL) animated {
@@ -478,6 +533,8 @@ static BOOL showingKeyboard;
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:CQBookmarkingDidNotSaveLinkNotification object:nil];
+
 	if (![[UIDevice currentDevice] isPadModel]) {
 		[self.view endEditing:YES];
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
@@ -520,7 +577,7 @@ static BOOL showingKeyboard;
 - (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) chatInputBar {
 	UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
 	actionSheet.delegate = self;
-	actionSheet.tag = ActionsActionsSheet;
+	actionSheet.tag = ActionsActionSheet;
 
 	if (!([[UIDevice currentDevice] isPadModel] && UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)))
 		actionSheet.title = self.user.displayName;
@@ -1304,6 +1361,25 @@ static BOOL showingKeyboard;
 	[self _showUserInfoControllerForUserNamed:nickname];
 }
 
+- (void) transcriptView:(CQChatTranscriptView *) transcriptView handleLongPressURL:(NSURL *) url atLocation:(CGPoint) location {
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
+	actionSheet.delegate = self;
+	actionSheet.tag = URLActionSheet;
+	actionSheet.title = url.absoluteString;
+
+	[actionSheet addButtonWithTitle:NSLocalizedString(@"Open", @"Open button title")];
+	if ([CQBookmarkingController activeService])
+		[actionSheet addButtonWithTitle:[[CQBookmarkingController activeService] serviceName]];
+	[actionSheet addButtonWithTitle:NSLocalizedString(@"Copy", @"Copy button title")];
+	actionSheet.cancelButtonIndex = [actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
+
+	[actionSheet associateObject:url forKey:@"URL"];
+
+	[[CQColloquyApplication sharedApplication] showActionSheet:actionSheet fromPoint:location];
+
+	[actionSheet release];
+}
+
 - (void) transcriptViewWasReset:(CQChatTranscriptView *) view {
 	if (_pendingPreviousSessionComponents.count) {
 		[view addPreviousSessionComponents:_pendingPreviousSessionComponents];
@@ -1518,6 +1594,10 @@ static BOOL showingKeyboard;
 
 	if (alertView.tag == ReconnectAlertTag) 
 		[self.connection connectAppropriately];
+	else if (alertView.tag == BookmarkLogInAlertView) {
+		[[CQBookmarkingController activeService] setUsername:[alertView textFieldAtIndex:0].text password:[alertView textFieldAtIndex:1].text];
+		[[CQBookmarkingController activeService] bookmarkLink:[alertView associatedObjectForKey:@"link"]];
+	}
 }
 
 #pragma mark -
@@ -1529,9 +1609,19 @@ static BOOL showingKeyboard;
 	if (actionSheet.tag == InfoActionSheet) {
 		if (buttonIndex == 0)
 			[self showUserInformation];
-	} else if (actionSheet.tag == ActionsActionsSheet) {
+	} else if (actionSheet.tag == ActionsActionSheet) {
 		if (buttonIndex == 0)
 			[self showRecentlySentMessages];
+	} else if (actionSheet.tag == URLActionSheet) {
+		Class <CQBookmarking> bookmarkingService = [CQBookmarkingController activeService];
+		NSURL *URL = [actionSheet associatedObjectForKey:@"URL"];
+
+		if (buttonIndex == 0)
+			[[UIApplication sharedApplication] openURL:URL];
+		else if (bookmarkingService && buttonIndex == 1)
+			[bookmarkingService bookmarkLink:URL.absoluteString];
+		else if ((!bookmarkingService && buttonIndex == 1) || (bookmarkingService && buttonIndex == 2))
+			[[UIPasteboard generalPasteboard] addItems:@[URL]];
 	}
 }
 
@@ -1581,6 +1671,7 @@ static BOOL showingKeyboard;
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
 	UIAlertView *alert = [[UIAlertView alloc] init];
 	alert.delegate = self;
+	alert.tag = CantSendMessageAlertView;
 
 	alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
