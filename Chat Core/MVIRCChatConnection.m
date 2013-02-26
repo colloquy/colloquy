@@ -297,7 +297,6 @@ static const NSStringEncoding supportedEncodings[] = {
 	else if( newServer.length >= 7 && [newServer hasPrefix:@"ircs://"] )
 		newServer = [newServer substringFromIndex:7];
 	NSParameterAssert( newServer != nil );
-	NSParameterAssert( newServer.length > 0 );
 	MVSafeCopyAssign( _server, newServer );
 
 	[super setServer:newServer];

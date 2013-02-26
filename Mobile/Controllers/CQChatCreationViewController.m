@@ -100,7 +100,12 @@
 	[connection connectAppropriately];
 
 	if (_roomTarget) {
-		NSString *roomName = (editViewController.name.length ? [connection properNameForChatRoomNamed:editViewController.name] : @"#help");
+		NSString *roomName = nil;
+		if (editViewController.name.length)
+			roomName = [connection properNameForChatRoomNamed:editViewController.name];
+		else if ([connection.server hasCaseInsensitiveSubstring:@"undernet"])
+			roomName = @"#undernet";
+		else roomName = @"#help";
 
 		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:connection];
 

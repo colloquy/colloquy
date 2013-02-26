@@ -33,6 +33,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 @interface CQConnectionsController (CQConnectionsControllerPrivate)
 - (void) _loadConnectionList;
+- (void) _pruneKnownBadServers;
 @end
 
 #pragma mark -
@@ -43,6 +44,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 #define NextAlertTag 4
 #define IncorrectRoomPasswordTag 5
 #define NotIdentifiedWithServicesTag 6
+#define NoServerTag 7
 
 @implementation CQConnectionsController
 + (CQConnectionsController *) defaultController {
@@ -97,6 +99,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	_ignoreControllers = [[NSMutableDictionary alloc] initWithCapacity:2];
 
 	[self _loadConnectionList];
+	[self _pruneKnownBadServers];
 
 #if TARGET_IPHONE_SIMULATOR
 	_shouldLogRawMessagesToConsole = YES;
@@ -283,6 +286,17 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		if (roomPassword.length)
 			[connection joinChatRoomNamed:room withPassphrase:roomPassword];
 		else [connection joinChatRoomNamed:room];
+
+		return;
+	}
+
+	if (alertView.tag == NoServerTag) {
+		CQAlertView *colloquyAlertView = (CQAlertView *)alertView;
+		MVChatConnection *connection = [colloquyAlertView associatedObjectForKey:@"connection"];
+		connection.server = [colloquyAlertView textFieldAtIndex:0].text;
+
+		[connection cancelPendingReconnectAttempts];
+		[connection connect];
 	}
 }
 
@@ -800,12 +814,26 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	[self _possiblyEndBackgroundTaskSoon];
 
-	if (connection.reconnectAttemptCount > 0 || userDisconnected || connection.serverError.domain == MVChatConnectionErrorDomain)
+	if (connection.server.length && (connection.reconnectAttemptCount > 0 || userDisconnected || connection.serverError.domain == MVChatConnectionErrorDomain))
 		return;
 
-	UIAlertView *alert = [[UIAlertView alloc] init];
+	CQAlertView *alert = [[CQAlertView alloc] init];
 
-	if (connection.directConnection) {
+	if (!connection.server.length) {
+		alert.tag = NoServerTag;
+		alert.delegate = self;
+
+		alert.title = connection.displayName;
+		alert.message = [NSString stringWithFormat:NSLocalizedString(@"No server found for %@.", @"No server found for %@. alert message"), connection.displayName];
+
+		[alert addTextFieldWithPlaceholder:NSLocalizedString(@"irc.server.com", @"irc.server.com placeholder text") andText:nil];
+
+		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
+
+		[alert addButtonWithTitle:NSLocalizedString(@"Connect", @"Connect button title")];
+
+		[alert associateObject:connection forKey:@"connection"];
+	} else if (connection.directConnection) {
 		alert.tag = HelpAlertTag;
 		alert.delegate = self;
 
@@ -1227,6 +1255,17 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	if (_bouncers.count)
 		[self performSelector:@selector(_refreshBouncerConnectionLists) withObject:nil afterDelay:1.];
+}
+
+- (void) _pruneKnownBadServers {
+	for (MVChatConnection *connection in _connections) {
+		// irc.undernet.org`, which is a round robin that contains all of Undernet's  servers. The problem with this is that not all of their servers are accessible everywhere.
+		// Some servers block US connections, others are US-only. And some servers aren't necessarily up at all right now, due to DDoS (but are still in the round robin for up to two weeks).
+		// And for a long time, Mobile Colloquy had irc.undernet.org as the server address to connect to in the default server list. Bad us. Remove the bad server.
+		// (We will prompt the user for a new server elsewhere.)
+		if ([connection.server isCaseInsensitiveEqualToString:@"irc.undernet.org"])
+			connection.server = @"";
+	}
 }
 
 - (void) _connectAutomaticConnections {

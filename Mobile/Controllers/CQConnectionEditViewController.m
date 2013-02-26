@@ -133,7 +133,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		NSString *name = [serverInfo objectForKey:@"Name"];
 		NSString *address = [serverInfo objectForKey:@"Address"];
 		NSAssert(name.length, @"Server name required.");
-		NSAssert(address.length, @"Server address required.");
 
 		[servers addObject:name];
 
