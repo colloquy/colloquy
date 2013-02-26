@@ -36,6 +36,34 @@
 			<key>DefaultValue</key>
 			<string>CQBookmarkingServicePocket</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>@mentions</string>
+			<key>Key</key>
+			<string>CQMentionLinkService</string>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+			</array>
+			<key>Titles</key>
+			<array>
+				<string>None</string>
+				<string>Twitter</string>
+				<string>App.net</string>
+			</array>
+			<key>DefaultValue</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 </dict>
 </plist>

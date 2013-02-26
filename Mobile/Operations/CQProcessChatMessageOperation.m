@@ -8,10 +8,18 @@
 
 #import <ChatCore/MVChatUser.h>
 
+typedef enum {
+	CQMentionLinkServiceNone,
+	CQMentionLinkServiceTwitter,
+	CQMentionLinkServiceAppDotNet
+} CQMentionLinkService;
+
 static BOOL graphicalEmoticons;
 static BOOL stripMessageFormatting;
 static NSMutableDictionary *highlightRegexes;
 static BOOL inlineImages;
+static NSString *mentionServiceRegex;
+static NSString *mentionServiceReplacementFormat;
 
 @implementation CQProcessChatMessageOperation
 @synthesize ignoreController = _ignoreController;
@@ -27,6 +35,18 @@ static BOOL inlineImages;
 	highlightRegexes = nil;
 	highlightRegexes = [[NSMutableDictionary alloc] init];
 	inlineImages = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQInlineImages"];
+
+	CQMentionLinkService mentionService = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQMentionLinkService"];
+	if (mentionService == CQMentionLinkServiceAppDotNet) {
+		mentionServiceRegex = @"\\B@[a-zA-Z0-9_]{1,20}";
+		mentionServiceReplacementFormat = @"<a href=\"https://alpha.app.net/%@\">@%@</a>";
+	} else if (mentionService == CQMentionLinkServiceTwitter) {
+		mentionServiceRegex = @"\\B@[a-zA-Z0-9_]{1,20}";
+		mentionServiceReplacementFormat = @"<a href=\"https://twitter.com/%@\">@%@</a>";
+	} else {
+		mentionServiceRegex = nil;
+		mentionServiceReplacementFormat = nil;
+	}
 }
 
 + (void) initialize {
@@ -155,6 +175,24 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 	}
 }
 
+static void mentionChatReplacment(NSMutableString *string, NSRangePointer textRange) {
+	if (!mentionServiceRegex)
+		return;
+
+	NSRange matchedRange = [string rangeOfRegex:mentionServiceRegex options:NSRegularExpressionCaseInsensitive inRange:*textRange capture:0 error:NULL];
+	while (matchedRange.location != NSNotFound && (matchedRange.location + matchedRange.length) > 0) {
+		NSString *matchedText = [string substringWithRange:NSMakeRange(matchedRange.location + 1, matchedRange.length - 1)]; // trim off leading @
+		NSString *replacementString = [NSString stringWithFormat:mentionServiceReplacementFormat, matchedText, matchedText];
+		[string replaceCharactersInRange:matchedRange withString:replacementString];
+
+		NSRange matchRange = NSMakeRange(matchedRange.location + replacementString.length, (NSMaxRange(*textRange) - matchedRange.location - replacementString.length));
+		if (!matchRange.length || matchRange.length > string.length)
+			break;
+
+		matchedRange = [string rangeOfRegex:mentionServiceRegex options:NSRegularExpressionCaseInsensitive inRange:matchRange capture:0 error:NULL];
+	}
+}
+
 static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRangePointer range, void (*function)(NSMutableString *, NSRangePointer)) {
 	if (!html || !function || !range)
 		return;
@@ -215,10 +253,14 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 
 		range = NSMakeRange(0, messageString.length);
 		commonChatReplacment(messageString, &range);
+
+		range = NSMakeRange(0, messageString.length);
+		mentionChatReplacment(messageString, &range);
 		return;
 	}
 
 	applyFunctionToTextInMutableHTMLString(messageString, &range, commonChatReplacment);
+	applyFunctionToTextInMutableHTMLString(messageString, &range, mentionChatReplacment);
 }
 
 #pragma mark -

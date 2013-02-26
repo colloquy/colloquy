@@ -128,5 +128,7 @@
 	<true/>
 	<key>CQBookmarkingService</key>
 	<string>CQBookmarkingServicePocket</string>
+	<key>CQMentionLinkService</key>
+	<integer>1</integer>
 </dict>
 </plist>
