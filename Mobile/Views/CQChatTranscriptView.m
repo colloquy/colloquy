@@ -117,7 +117,7 @@
 	_fontFamily = [fontFamily copy];
 	[old release];
 
-	[self resetSoon];
+	[self _reloadVariantStyle];
 }
 
 @synthesize fontSize = _fontSize;
@@ -128,7 +128,18 @@
 
 	_fontSize = fontSize;
 
-	[self resetSoon];
+	[self _reloadVariantStyle];
+}
+
+@synthesize timestampOnLeft = _timestampOnLeft;
+
+- (void) setTimestampOnLeft:(BOOL) timestampOnLeft {
+	if (_timestampOnLeft == timestampOnLeft)
+		return;
+
+	_timestampOnLeft = timestampOnLeft;
+
+	[self _reloadVariantStyle];
 }
 
 - (UIScrollView *) scrollView {
@@ -230,6 +241,8 @@
 - (void) longPressGestureRecognizerRecognized:(UILongPressGestureRecognizer *) longPressGestureRecognizer {
 	CGPoint point = [longPressGestureRecognizer locationInView:self];
 	NSString *tappedURL = [super stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"urlUnderTapAtPoint(%d, %d)", (int)point.x, (int)point.y]];
+	if (!tappedURL.length)
+		return;
 
 	if (transcriptDelegate && [transcriptDelegate respondsToSelector:@selector(transcriptView:handleLongPressURL:atLocation:)])
 		[transcriptDelegate transcriptView:self handleLongPressURL:[NSURL URLWithString:tappedURL] atLocation:_lastTouchLocation];
@@ -489,6 +502,12 @@
 		[styleString appendFormat:@".timestamp { float: none; }"];
 
 	return [styleString autorelease];
+}
+
+- (void) _reloadVariantStyle {
+	NSString *javascript = [NSString stringWithFormat:@"document.getElementById('custom').innerHTML = '%@';", [self _variantStyleString]];
+
+	[super stringByEvaluatingJavaScriptFromString:javascript];
 }
 
 - (NSString *) _contentHTML {
