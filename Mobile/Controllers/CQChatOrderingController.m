@@ -335,11 +335,14 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 - (id <CQChatViewController>) chatViewControllerPreceedingChatController:(id <CQChatViewController>) chatViewController requiringActivity:(BOOL) requiringActivity requiringHighlight:(BOOL) requiringHighlight {
+	if (!_chatControllers.count)
+		return nil;
+
 	if (!requiringActivity && !requiringHighlight) {
 		NSUInteger index = [_chatControllers indexOfObjectIdenticalTo:chatViewController];
 		if (!index)
 			return [_chatControllers lastObject];
-		return [_chatControllers objectAtIndex:(index + 1)];
+		return [_chatControllers objectAtIndex:(index - 1)];
 	}
 
 	return [self _enumerateChatViewControllersFromChatController:chatViewController withOption:NSEnumerationReverse requiringActivity:requiringActivity requiringHighlight:requiringHighlight];
