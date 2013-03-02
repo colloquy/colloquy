@@ -5,7 +5,7 @@ function senderHash(nickname) {
 	return result;
 }
 
-function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession, type) {
+function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession, type, timestamp) {
 	var className = type + "-wrapper";
 	if (action) className += " action";
 	if (highlighted) className += " highlight";
@@ -23,6 +23,13 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 	className = "sender";
 	if (self) className += " self";
 	else className += (" user" + (senderHash(senderNickname) % 18));
+
+	if (!previousSession && timestamp !== null) {
+		var timestampElement = document.createElement("div");
+		timestampElement.className = "timestamp";
+		timestampElement.innerHTML = timestamp;
+		messageWrapperElement.appendChild(timestampElement);
+	}
 
 	var aElement = document.createElement("a");
 	aElement.className = "nickname"

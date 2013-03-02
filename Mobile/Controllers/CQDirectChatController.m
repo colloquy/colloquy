@@ -23,6 +23,7 @@
 
 #import "KAIgnoreRule.h"
 
+#import "NSDateAdditions.h"
 #import "NSObjectAdditions.h"
 #import "NSStringAdditions.h"
 
@@ -59,6 +60,8 @@ static NSString *CQScrollbackLengthDidChangeNotification = @"CQScrollbackLengthD
 
 static CQSoundController *privateMessageSound;
 static CQSoundController *highlightSound;
+static BOOL timestampEveryMessage;
+static NSString *timestampFormat;
 static NSTimeInterval timestampInterval;
 static NSTimeInterval privateMessageAlertTimeout;
 static BOOL graphicalEmoticons;
@@ -99,6 +102,8 @@ static BOOL showingKeyboard;
 		return;
 
 	timestampInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQTimestampInterval"];
+	timestampEveryMessage = (timestampInterval == -1);
+	timestampFormat = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQTimestampFormat"];
 	privateMessageAlertTimeout = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQPrivateMessageAlertTimeout"];
 	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
 	naturalChatActions = [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"];
@@ -1556,7 +1561,7 @@ static BOOL showingKeyboard;
 #pragma mark -
 
 - (void) _insertTimestamp {
-	if (!timestampInterval) return;
+	if (!timestampInterval || timestampEveryMessage) return;
 
 	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
 
@@ -1566,14 +1571,9 @@ static BOOL showingKeyboard;
 	if ((currentTime - _lastTimestampTime) <= timestampInterval)
 		return;
 
-	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-	dateFormatter.dateStyle = NSDateFormatterNoStyle;
-	dateFormatter.timeStyle = NSDateFormatterShortStyle;
-	NSString *timestamp = [[dateFormatter stringFromDate:[NSDate date]] stringByEncodingXMLSpecialCharactersAsEntities];
+	NSString *timestamp = [[NSDate formattedStringWithDate:[NSDate date] dateFormat:timestampFormat] stringByEncodingXMLSpecialCharactersAsEntities];
 
 	[self addEventMessage:timestamp withIdentifier:@"timestamp" announceWithVoiceOver:NO];
-
-	[dateFormatter release];
 
 	_lastTimestampTime = currentTime;
 }

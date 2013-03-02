@@ -405,10 +405,11 @@
 			BOOL highlighted = [[component objectForKey:@"highlighted"] boolValue];
 
 			NSString *escapedNickname = [user.nickname stringByEscapingCharactersInSet:escapedCharacters];
+			NSString *timestamp = [component objectForKey:@"timestamp"];
 
 			if (isNotice)
-				[command appendFormat:@"{type:'notice',sender:'%@',message:'%@',highlighted:%@,action:%@,self:%@},", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
-			else [command appendFormat:@"{type:'message',sender:'%@',message:'%@',highlighted:%@,action:%@,self:%@},", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false")];
+				[command appendFormat:@"{type:'notice',sender:'%@',message:'%@',highlighted:%@,action:%@,self:%@,timestamp:'%@'},", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false"), timestamp ? timestamp : @""];
+			else [command appendFormat:@"{type:'message',sender:'%@',message:'%@',highlighted:%@,action:%@,self:%@,timestamp:'%@'},", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false"), timestamp ? timestamp : @""];
 		} else if ([type isEqualToString:@"event"]) {
 			NSString *identifier = [component objectForKey:@"identifier"];
 			if (!identifier)
@@ -483,6 +484,9 @@
 		[styleString insertString:@"body { " atIndex:0];
 		[styleString appendString:@"}"];
 	}
+
+	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQTimestampOnLeft"])
+		[styleString appendFormat:@".timestamp { float: none; }"];
 
 	return [styleString autorelease];
 }

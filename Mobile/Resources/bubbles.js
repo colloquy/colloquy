@@ -1,4 +1,4 @@
-function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession, type) {
+function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession, type, timestamp) {
 	var className = type + "-wrapper";
 	if (action) className += " action";
 	if (highlighted) className += " highlight";
@@ -12,6 +12,13 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 	var messageElement = document.createElement("div");
 	messageElement.className = type;
 	messageWrapperElement.appendChild(messageElement);
+
+	if (!previousSession && timestamp !== null) {
+		var timestampElement = document.createElement("div");
+		timestampElement.className = "timestamp";
+		timestampElement.innerHTML = timestamp;
+		messageWrapperElement.appendChild(timestampElement);
+	}
 
 	var messageContentElement = document.createElement("div");
 	messageContentElement.className = "content";

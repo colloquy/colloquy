@@ -3,6 +3,7 @@
 #import "CQColloquyApplication.h"
 #import "CQIgnoreRulesController.h"
 
+#import "NSDateAdditions.h"
 #import "NSStringAdditions.h"
 #import "RegexKitLite.h"
 
@@ -20,6 +21,8 @@ static NSMutableDictionary *highlightRegexes;
 static BOOL inlineImages;
 static NSString *mentionServiceRegex;
 static NSString *mentionServiceReplacementFormat;
+static BOOL timestampEveryMessage;
+static NSString *timestampFormat;
 
 @implementation CQProcessChatMessageOperation
 @synthesize ignoreController = _ignoreController;
@@ -47,6 +50,9 @@ static NSString *mentionServiceReplacementFormat;
 		mentionServiceRegex = nil;
 		mentionServiceReplacementFormat = nil;
 	}
+
+	timestampEveryMessage = ([[NSUserDefaults standardUserDefaults] doubleForKey:@"CQTimestampInterval"] == -1);
+	timestampFormat = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQTimestampFormat"];
 }
 
 + (void) initialize {
@@ -337,6 +343,10 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 
 	[_processedMessage setObject:@"message" forKey:@"type"];
 	[_processedMessage setObject:messageString forKey:@"message"];
+	if (timestampEveryMessage) {
+		NSString *timestamp = [[NSDate formattedStringWithDate:[NSDate date] dateFormat:timestampFormat] stringByEncodingXMLSpecialCharactersAsEntities];
+		[_processedMessage setObject:timestamp forKey:@"timestamp"];
+	}
 
 	NSString *plainMessage = [messageString stringByStrippingXMLTags];
 	plainMessage = [plainMessage stringByDecodingXMLSpecialCharacterEntities];

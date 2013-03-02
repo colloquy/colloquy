@@ -29,7 +29,7 @@ function senderHash(nickname) {
     return result;
 }
 
-function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession, type) {
+function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession, type, timestamp) {
     var className = type + "-wrapper";
     if (action) className += " action";
     if (highlighted) className += " highlight";
@@ -43,6 +43,13 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
     messageWrapperElement.className = className;
     messageWrapperElement.senderNickname = senderNickname;
     messageWrapperElement.previousSession = previousSession;
+
+	if (!previousSession && timestamp !== null) {
+		var timestampElement = document.createElement("div");
+		timestampElement.className = "timestamp";
+		timestampElement.innerHTML = timestamp;
+		messageWrapperElement.appendChild(timestampElement);
+	}
 
     className = "sender";
     if (self) className += " self";

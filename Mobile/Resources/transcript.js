@@ -65,12 +65,12 @@ function appendComponents(components, previousSession, suppressScroll, suppressS
 		var component = components[i];
 		if (component.type === "message") {
 			if (component.self) alwaysScroll = true;
-			appendMessage(container, component.sender, component.message, component.highlighted, component.action, component.self, previousSession, 'message');
+			appendMessage(container, component.sender, component.message, component.highlighted, component.action, component.self, previousSession, 'message', component.timestamp);
 		} else if (component.type === "event") {
 			appendEventMessage(container, component.message, component.identifier, previousSession);
 		} else if (component.type === "notice") {
 			if (component.self) alwaysScroll = true;
-			appendMessage(container, component.sender, component.message, component.highlighted, component.action, component.self, previousSession, 'notice');
+			appendMessage(container, component.sender, component.message, component.highlighted, component.action, component.self, previousSession, 'notice', component.timestamp);
 		} else if (component.type === "console") {
 			appendConsoleMessage(container, component.message, component.outbound);
 		}
@@ -97,7 +97,7 @@ function nicknameChanged(from, to) {
 	}
 }
 
-function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession, type) {
+function appendMessage(container, senderNickname, messageHTML, highlighted, action, self, previousSession, type, timestamp) {
 	var className = type + "-wrapper";
 	if (action) className += " action";
 	if (highlighted) className += " highlight";
@@ -108,6 +108,13 @@ function appendMessage(container, senderNickname, messageHTML, highlighted, acti
 
 	className = "sender";
 	if (self) className += " self";
+
+	if (!previousSession && timestamp !== null) {
+		var timestampElement = document.createElement("div");
+		timestampElement.className = "timestamp";
+		timestampElement.innerHTML = timestamp;
+		messageWrapperElement.appendChild(timestampElement);
+	}
 
 	var aElement = document.createElement("a");
 	aElement.className = "nickname " + senderNickname;

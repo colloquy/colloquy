@@ -130,5 +130,9 @@
 	<string>CQBookmarkingServicePocket</string>
 	<key>CQMentionLinkService</key>
 	<integer>1</integer>
+	<key>CQTimestampFormat</key>
+	<string>hh:mm</string>
+	<key>CQTimestampOnLeft</key>
+	<string>NO</string>
 </dict>
 </plist>
