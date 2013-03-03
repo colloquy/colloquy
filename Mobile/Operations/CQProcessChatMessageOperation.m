@@ -350,7 +350,12 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	[_processedMessage setObject:@"message" forKey:@"type"];
 	[_processedMessage setObject:messageString forKey:@"message"];
 	if (timestampEveryMessage) {
-		NSString *timestamp = [[NSDate formattedStringWithDate:[NSDate date] dateFormat:timestampFormat] stringByEncodingXMLSpecialCharactersAsEntities];
+		NSString *timestamp = nil;
+		if (timestampFormat.length)
+			timestamp = [NSDate formattedStringWithDate:[NSDate date] dateFormat:timestampFormat];
+		else timestamp = [NSDate formattedShortTimeStringForDate:[NSDate date]];
+		timestamp = [timestamp stringByEncodingXMLSpecialCharactersAsEntities];
+
 		[_processedMessage setObject:timestamp forKey:@"timestamp"];
 	}
 

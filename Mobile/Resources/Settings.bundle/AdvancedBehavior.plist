@@ -163,7 +163,7 @@
 			<key>Key</key>
 			<string>CQTimestampFormat</string>
 			<key>DefaultValue</key>
-			<string>hh:mm</string>
+			<string></string>
 			<key>AutocapitalizationType</key>
 			<string>Sentences</string>
 		</dict>

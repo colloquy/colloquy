@@ -1576,7 +1576,11 @@ static BOOL showingKeyboard;
 	if ((currentTime - _lastTimestampTime) <= timestampInterval)
 		return;
 
-	NSString *timestamp = [[NSDate formattedStringWithDate:[NSDate date] dateFormat:timestampFormat] stringByEncodingXMLSpecialCharactersAsEntities];
+	NSString *timestamp = nil;
+	if (timestampFormat.length)
+		timestamp = [NSDate formattedStringWithDate:[NSDate date] dateFormat:timestampFormat];
+	else timestamp = [NSDate formattedShortTimeStringForDate:[NSDate date]];
+	timestamp = [timestamp stringByEncodingXMLSpecialCharactersAsEntities];
 
 	[self addEventMessage:timestamp withIdentifier:@"timestamp" announceWithVoiceOver:NO];
 
