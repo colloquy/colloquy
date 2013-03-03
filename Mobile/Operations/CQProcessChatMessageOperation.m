@@ -153,6 +153,12 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 				fullURL = [NSURL URLWithString:[@"http://" stringByAppendingString:url]];
 
 			if ([[CQColloquyApplication sharedApplication] canOpenURL:fullURL]) {
+				if ([fullURL.host hasCaseInsensitiveSubstring:@"imgur"] && ![NSFileManager isValidImageFormat:fullURL.pathExtension]) {
+					// rebuild URL, since we can't assume .png at the end (due to params and stuff)
+				} // else if twitpic
+				// elseif yfrog
+				// elseif cloud.app (?)
+
 				if (inlineImages && [NSFileManager isValidImageFormat:fullURL.pathExtension]) {
 					linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\"><img src=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></a>", [fullURL absoluteString], [fullURL absoluteString]];
 				} else {

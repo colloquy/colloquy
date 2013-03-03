@@ -63,6 +63,7 @@ static CQSoundController *highlightSound;
 static BOOL timestampEveryMessage;
 static NSString *timestampFormat;
 static NSTimeInterval timestampInterval;
+static BOOL timestampOnLeft;
 static NSTimeInterval privateMessageAlertTimeout;
 static BOOL graphicalEmoticons;
 static BOOL naturalChatActions;
@@ -104,6 +105,7 @@ static BOOL showingKeyboard;
 	timestampInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQTimestampInterval"];
 	timestampEveryMessage = (timestampInterval == -1);
 	timestampFormat = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQTimestampFormat"];
+	timestampOnLeft = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQTimestampOnLeft"];
 	privateMessageAlertTimeout = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQPrivateMessageAlertTimeout"];
 	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
 	naturalChatActions = [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"];
@@ -1740,6 +1742,7 @@ static BOOL showingKeyboard;
 	transcriptView.styleIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
 	transcriptView.fontFamily = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptFont"];
 	transcriptView.fontSize = chatTranscriptFontSize;
+	transcriptView.timestampOnLeft = timestampOnLeft;
 
 	if ([self isViewLoaded] && transcriptView)
 		self.view.backgroundColor = transcriptView.backgroundColor;

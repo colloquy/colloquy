@@ -14,6 +14,7 @@
 	BOOL _resetPending;
 	CGPoint _lastTouchLocation;
 	BOOL _allowsStyleChanges;
+	BOOL _timestampOnLeft;
 }
 @property (nonatomic, assign) id <CQChatTranscriptViewDelegate> transcriptDelegate;
 
@@ -21,6 +22,7 @@
 @property (nonatomic, copy) NSString *styleIdentifier;
 @property (nonatomic, copy) NSString *fontFamily;
 @property (nonatomic, assign) NSUInteger fontSize;
+@property (nonatomic, assign) BOOL timestampOnLeft;
 
 - (void) addPreviousSessionComponents:(NSArray *) components;
 - (void) addComponents:(NSArray *) components animated:(BOOL) animated;
