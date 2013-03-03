@@ -78,6 +78,19 @@
 }
 
 @synthesize allowsStyleChanges = _allowsStyleChanges;
+
+@synthesize allowSingleSwipeGesture = _allowSingleSwipeGesture;
+
+- (void) setAllowSingleSwipeGesture:(BOOL) allowSingleSwipeGesture {
+	if (allowSingleSwipeGesture == _allowSingleSwipeGesture)
+		return;
+
+	_allowSingleSwipeGesture = allowSingleSwipeGesture;
+
+	for (UISwipeGestureRecognizer *swipeGestureRecognizer in _singleSwipeGestureRecognizers)
+		swipeGestureRecognizer.enabled = _allowSingleSwipeGesture;
+}
+
 @synthesize styleIdentifier = _styleIdentifier;
 
 - (void) setStyleIdentifier:(NSString *) styleIdentifier {
@@ -471,20 +484,33 @@
 
 	[self resetSoon];
 
+	_allowSingleSwipeGesture = YES;
+
+	if ([UIDevice currentDevice].isPadModel)
+		_singleSwipeGestureRecognizers = [[NSMutableArray alloc] init];
+
 	for (NSUInteger i = 1; i <= 3; i++) {
 		UISwipeGestureRecognizer *swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGestureRecognized:)];
 		swipeGestureRecognizer.numberOfTouchesRequired = i;
 		swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+		swipeGestureRecognizer.cancelsTouchesInView = NO;
 
 		[self addGestureRecognizer:swipeGestureRecognizer];
+
+		if ([UIDevice currentDevice].isPadModel)
+			[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
 
 		[swipeGestureRecognizer release];
 
 		swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGestureRecognized:)];
 		swipeGestureRecognizer.numberOfTouchesRequired = i;
 		swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+		swipeGestureRecognizer.cancelsTouchesInView = NO;
 
 		[self addGestureRecognizer:swipeGestureRecognizer];
+
+		if ([UIDevice currentDevice].isPadModel)
+			[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
 
 		[swipeGestureRecognizer release];
 	}

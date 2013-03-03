@@ -164,9 +164,23 @@ static NSMutableArray *highlightWords;
 	[highlightWords release];
 	highlightWords = nil;
 
-	[self updateAnalytics];
+	if ([UIDevice currentDevice].isPadModel) {
+		NSNumber *newSwipeOrientationValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQSplitSwipeOrientations"];
 
-	[[CQColloquyApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:YES];
+		if (![_oldSwipeOrientationValue isEqualToNumber:newSwipeOrientationValue]) {
+			_oldSwipeOrientationValue = [newSwipeOrientationValue copy];
+
+			if (self.modalViewController)
+				_userDefaultsChanged = YES;
+			else [self reloadSplitViewController];
+
+			BOOL disableSingleSwipe = [self splitViewController:nil shouldHideViewController:nil inOrientation:UIInterfaceOrientationLandscapeLeft] || [self splitViewController:nil shouldHideViewController:nil inOrientation:UIInterfaceOrientationPortrait];
+			if (disableSingleSwipe)
+				[[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"CQSingleFingerSwipe"];
+		}
+	}
+
+	[self updateAnalytics];
 }
 
 - (void) performDeferredLaunchWork {
@@ -364,14 +378,6 @@ static NSMutableArray *highlightWords;
 
 - (void) applicationWillEnterForeground:(UIApplication *) application {
 	[self cancelAllLocalNotifications];
-
-	NSNumber *newSwipeOrientationValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQSplitSwipeOrientations"];
-
-	if (![_oldSwipeOrientationValue isEqualToNumber:newSwipeOrientationValue]) {
-		if (self.modalViewController)
-			_userDefaultsChanged = YES;
-		else [self reloadSplitViewController];
-	}
 }
 
 - (void) applicationWillResignActive:(UIApplication *) application {

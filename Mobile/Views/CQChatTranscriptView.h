@@ -15,6 +15,8 @@
 	CGPoint _lastTouchLocation;
 	BOOL _allowsStyleChanges;
 	BOOL _timestampOnLeft;
+	BOOL _allowSingleSwipeGesture;
+	NSMutableArray *_singleSwipeGestureRecognizers;
 }
 @property (nonatomic, assign) id <CQChatTranscriptViewDelegate> transcriptDelegate;
 
@@ -23,6 +25,7 @@
 @property (nonatomic, copy) NSString *fontFamily;
 @property (nonatomic, assign) NSUInteger fontSize;
 @property (nonatomic, assign) BOOL timestampOnLeft;
+@property (nonatomic, assign) BOOL allowSingleSwipeGesture;
 
 - (void) addPreviousSessionComponents:(NSArray *) components;
 - (void) addComponents:(NSArray *) components animated:(BOOL) animated;

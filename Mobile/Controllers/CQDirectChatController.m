@@ -477,6 +477,7 @@ static BOOL showingKeyboard;
 
 	[self _userDefaultsChanged];
 
+	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
 	transcriptView.dataDetectorTypes = UIDataDetectorTypeNone;
 }
 
@@ -562,6 +563,8 @@ static BOOL showingKeyboard;
 
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation) toInterfaceOrientation duration:(NSTimeInterval) duration {
 	_isShowingCompletionsBeforeRotation = chatInputBar.isShowingCompletions;
+
+	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:toInterfaceOrientation]);
 }
 
 - (void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation) fromInterfaceOrientation {
@@ -1743,6 +1746,7 @@ static BOOL showingKeyboard;
 	transcriptView.fontFamily = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptFont"];
 	transcriptView.fontSize = chatTranscriptFontSize;
 	transcriptView.timestampOnLeft = timestampOnLeft;
+	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
 
 	if ([self isViewLoaded] && transcriptView)
 		self.view.backgroundColor = transcriptView.backgroundColor;
