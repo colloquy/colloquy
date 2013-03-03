@@ -238,9 +238,17 @@
 
 #pragma mark -
 
+
 - (void) longPressGestureRecognizerRecognized:(UILongPressGestureRecognizer *) longPressGestureRecognizer {
 	CGPoint point = [longPressGestureRecognizer locationInView:self];
-	NSString *tappedURL = [super stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"urlUnderTapAtPoint(%d, %d)", (int)point.x, (int)point.y]];
+	NSString *tappedURL = nil;
+
+#define TappedPointOffset 15
+	for (int x = point.x - TappedPointOffset, i = 0; i < 3 && !tappedURL; x += TappedPointOffset, i++)
+		for (int y = point.y - TappedPointOffset, j = 0; j < 3 && !tappedURL; y += TappedPointOffset, j++)
+			tappedURL = [super stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"urlUnderTapAtPoint(%d, %d)", x, y]];
+#undef TappedPointOffset
+
 	if (!tappedURL.length)
 		return;
 
