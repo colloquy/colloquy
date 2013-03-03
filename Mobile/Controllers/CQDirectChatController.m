@@ -144,8 +144,8 @@ static BOOL showingKeyboard;
 
 	NSError *error = notification.userInfo[@"error"];
 	if (error.code == CQBookmarkingErrorAuthorization) {
-		if ([activeService respondsToSelector:@selector(authenticate)]) {
-			objc_msgSend(activeService, @selector(authenticate)); // [activeService authenticate]; throws a warning
+		if ([activeService respondsToSelector:@selector(authorize)]) {
+			[activeService authorize];
 		} else {
 			CQAlertView *alertView = [[CQAlertView alloc] init];
 			alertView.delegate = self;

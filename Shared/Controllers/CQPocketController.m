@@ -32,7 +32,12 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 
 + (void) _postServerErrorNotification {
 	NSError *error = [NSError errorWithDomain:CQBookmarkingErrorDomain code:CQBookmarkingErrorServer userInfo:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQBookmarkingDidSaveLinkNotification object:nil userInfo:@{ @"error": error }];
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:nil userInfo:@{ @"error": error }];
+}
+
++ (void) _postAuthenticationErrorNotificationForLink:(NSString *) link {
+	NSError *error = [NSError errorWithDomain:CQBookmarkingErrorDomain code:CQBookmarkingErrorAuthorization userInfo:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:link userInfo:@{ @"error": error }];
 }
 
 + (void) _shouldConvertTokenFromTokenNotification:(NSNotification *) notification {
@@ -81,6 +86,12 @@ NSString *const CQBookmarkingServicePocket = @"CQBookmarkingServicePocket";
 
 + (void) bookmarkLink:(NSString *) link {
 	NSString *token = [[CQKeychain standardKeychain] passwordForServer:@"pocket-token" area:@"bookmarking"];
+
+	if (!token) {
+		[self _postAuthenticationErrorNotificationForLink:link];
+		return;
+	}
+
 	NSMutableURLRequest *request = [self _postRequestWithURL:@"https://getpocket.com/v3/add"];
 	request.HTTPBody = @{ @"url": link, @"consumer_key": [self _consumerKey], @"access_token": token }.postDataRepresentation;
 
