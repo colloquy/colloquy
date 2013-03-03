@@ -236,7 +236,7 @@ function isDocumentReady() {
 }
 
 function urlUnderTapAtPoint(x, y) {
-	var url = "";
+	var url = null;
 	var e = document.elementFromPoint(x,y);
 
 	while (e) {

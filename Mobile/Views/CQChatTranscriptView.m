@@ -240,6 +240,9 @@
 
 
 - (void) longPressGestureRecognizerRecognized:(UILongPressGestureRecognizer *) longPressGestureRecognizer {
+	if (longPressGestureRecognizer.state != UIGestureRecognizerStateBegan)
+		return;
+
 	CGPoint point = [longPressGestureRecognizer locationInView:self];
 	NSString *tappedURL = nil;
 
@@ -248,9 +251,6 @@
 		for (int y = point.y - TappedPointOffset, j = 0; j < 3 && !tappedURL.length; y += TappedPointOffset, j++)
 			tappedURL = [super stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"urlUnderTapAtPoint(%d, %d)", x, y]];
 #undef TappedPointOffset
-
-	if (longPressGestureRecognizer.state != UIGestureRecognizerStateBegan)
-		return;
 
 	if (!tappedURL.length)
 		return;
