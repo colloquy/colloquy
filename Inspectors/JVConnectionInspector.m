@@ -89,7 +89,9 @@
 	NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
 	numberFormatter.numberStyle = NSNumberFormatterNoStyle;
 	[editPort setFormatter:numberFormatter];
-	[numberFormatter release];
+
+	[editPort removeAllItems];
+	[editPort addItemsWithObjectValues:[MVChatConnection defaultServerPortsForType:_connection.type]];
 
 	NSString *commands = [[MVConnectionsController defaultController] connectCommandsForConnection:_connection];
 	if( commands) [connectCommands setString:commands];

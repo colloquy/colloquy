@@ -273,7 +273,6 @@ static NSMenu *favoritesMenu = nil;
 	NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
 	numberFormatter.numberStyle = NSNumberFormatterNoStyle;
 	[newPort setFormatter:numberFormatter];
-	[numberFormatter release];
 }
 
 - (NSRect) windowWillUseStandardFrame:(NSWindow *) sender defaultFrame:(NSRect) defaultFrame {
