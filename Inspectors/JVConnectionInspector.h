@@ -22,7 +22,7 @@
 	IBOutlet NSTextField *editAddress;
 	IBOutlet NSPopUpButton *encoding;
 	IBOutlet NSPopUpButton *editProxy;
-	IBOutlet NSTextField *editPort;
+	IBOutlet NSComboBox *editPort;
 	IBOutlet NSButton *editAutomatic;
 	IBOutlet NSButton *editShowConsoleOnConnect;
 	IBOutlet NSTableView *editRooms;

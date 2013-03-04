@@ -86,6 +86,11 @@
 	[editRealName setObjectValue:[_connection realName]];
 	[editUsername setObjectValue:[_connection username]];
 
+	NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+	numberFormatter.numberStyle = NSNumberFormatterNoStyle;
+	[editPort setFormatter:numberFormatter];
+	[numberFormatter release];
+
 	NSString *commands = [[MVConnectionsController defaultController] connectCommandsForConnection:_connection];
 	if( commands) [connectCommands setString:commands];
 
