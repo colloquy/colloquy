@@ -70,8 +70,11 @@
 - (void) windowDidLoad {
 	NSTableColumn *theColumn = nil;
 
+	[roomsTable accessibilitySetOverrideValue:NSLocalizedString(@"Chat rooms", "VoiceOver title for chat rooms table") forAttribute:NSAccessibilityDescriptionAttribute];
+
 	theColumn = [roomsTable tableColumnWithIdentifier:@"members"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"personHeader"]];
+	[[theColumn headerCell] accessibilitySetOverrideValue:NSLocalizedString(@"Participants", "VoiceOver title for number of connected users in chat room browser table") forAttribute:NSAccessibilityDescriptionAttribute];
 
 	[self tableView:roomsTable didClickTableColumn:[roomsTable tableColumnWithIdentifier:_sortColumn]];
 
@@ -79,6 +82,7 @@
 
 	[showBrowser setBezelStyle:NSRoundedDisclosureBezelStyle];
 	[showBrowser setButtonType:NSOnOffButton];
+	[[showBrowser cell] accessibilitySetOverrideValue:NSLocalizedString(@"Show chat rooms", "VoiceOver title for disclosure checkbox for chat rooms table in Join room dialog") forAttribute:NSAccessibilityDescriptionAttribute];
 
 	[searchField setAction:@selector( filterResults: )];
 	[searchField setTarget:self];

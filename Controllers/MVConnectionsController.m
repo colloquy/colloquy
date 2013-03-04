@@ -233,6 +233,8 @@ static NSMenu *favoritesMenu = nil;
 	[[self window] setHidesOnDeactivate:NO];
 	[[self window] setResizeIncrements:NSMakeSize( 1, [connections rowHeight] + [connections intercellSpacing].height - 1. )];
 
+	[connections accessibilitySetOverrideValue:NSLocalizedString(@"Connections", "VoiceOver label for connections table") forAttribute:NSAccessibilityDescriptionAttribute];
+
 	theColumn = [connections tableColumnWithIdentifier:@"auto"];
 	[[theColumn headerCell] setImage:[NSImage imageNamed:@"autoHeader"]];
 
@@ -1061,15 +1063,23 @@ static NSMenu *favoritesMenu = nil;
 - (void) tableView:(NSTableView *) view willDisplayCell:(id) cell forTableColumn:(NSTableColumn *) column row:(NSInteger) row {
 	if( view == connections ) {
 		if( [[column identifier] isEqual:@"status"] ) {
+			NSString *imageName = nil;
+			NSString *title = nil;
 			if( [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] isConnected] ) {
-				if( [view editedRow] != row && ( [view selectedRow] != row || ! [[view window] isKeyWindow] || ( [view selectedRow] == row && [[view window] firstResponder] != view ) ) ) [cell setImage:[NSImage imageNamed:@"connected"]];
-				else [cell setImage:[NSImage imageNamed:@"connectedSelected"]];
+				if( [view editedRow] != row && ( [view selectedRow] != row || ! [[view window] isKeyWindow] || ( [view selectedRow] == row && [[view window] firstResponder] != view ) ) ) imageName = @"connected";
+				else imageName = @"connectedSelected";
+
+				title = NSLocalizedString(@"Connected", "VoiceOver title for connected image");
 			} else if( [(MVChatConnection *)[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] status] == MVChatConnectionConnectingStatus ) {
-				if( [view editedRow] != row && ( [view selectedRow] != row || ! [[view window] isKeyWindow] || ( [view selectedRow] == row && [[view window] firstResponder] != view ) ) ) [cell setImage:[NSImage imageNamed:@"connecting"]];
-				else [cell setImage:[NSImage imageNamed:@"connectingSelected"]];
+				if( [view editedRow] != row && ( [view selectedRow] != row || ! [[view window] isKeyWindow] || ( [view selectedRow] == row && [[view window] firstResponder] != view ) ) ) imageName = @"connecting";
+				else imageName = @"connectingSelected";
+
+				title = NSLocalizedString(@"Connecting", "VoiceOver title for connecting image");
 			} else {
-				[cell setImage:nil];
+				title = NSLocalizedString(@"Not connected", "VoiceOver title for not connected image");
 			}
+			[cell setImage:[NSImage imageNamed:imageName]];
+			[cell accessibilitySetOverrideValue:title forAttribute:NSAccessibilityValueDescriptionAttribute];
 		}
 	}
 }

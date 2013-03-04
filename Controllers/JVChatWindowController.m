@@ -84,6 +84,9 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	[chatViewsOutlineView setMenu:menu];
 
 	[favoritesButton setMenu:[MVConnectionsController favoritesMenu]];
+	[[favoritesButton cell] accessibilitySetOverrideValue:NSLocalizedString(@"Favorites", nil) forAttribute:NSAccessibilityDescriptionAttribute];
+
+	[[viewActionButton cell] accessibilitySetOverrideValue:NSLocalizedString(@"Actions", nil) forAttribute:NSAccessibilityDescriptionAttribute];
 
 	[self setShouldCascadeWindows:NO];
 	[self setWindowFrameAutosaveName:@""];
