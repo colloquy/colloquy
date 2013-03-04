@@ -1630,7 +1630,7 @@ static BOOL showingKeyboard;
 		else if (bookmarkingService && buttonIndex == 1)
 			[bookmarkingService bookmarkLink:URL.absoluteString];
 		else if ((!bookmarkingService && buttonIndex == 1) || (bookmarkingService && buttonIndex == 2))
-			[[UIPasteboard generalPasteboard] addItems:@[URL]];
+			[[UIPasteboard generalPasteboard] setURL:URL];
 	}
 }
 
