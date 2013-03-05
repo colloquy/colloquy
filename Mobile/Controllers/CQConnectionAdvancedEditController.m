@@ -297,6 +297,26 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 	}
 }
 
+- (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
+	if (indexPath.section != SettingsTableSection || indexPath.row != 0)
+		return;
+
+	CQPreferencesListViewController *portListViewController = [[CQPreferencesListViewController alloc] init];
+	portListViewController.allowEditing = NO;
+	portListViewController.items = [MVChatConnection defaultServerPortsForType:_connection.type];
+	portListViewController.selectedItemIndex = [portListViewController.items indexOfObject:@(_connection.serverPort)];
+	portListViewController.preferencesListBlock = ^(CQPreferencesListViewController *listViewController) {
+		if (listViewController.selectedItemIndex != NSNotFound) {
+			_connection.serverPort = [[listViewController.items objectAtIndex:listViewController.selectedItemIndex] shortValue];
+
+			[tableView beginUpdates];
+			[tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+			[tableView endUpdates];
+		}
+	};
+	[self.navigationController pushViewController:portListViewController animated:[UIView areAnimationsEnabled]];
+}
+
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section == SettingsTableSection) {
 		if (indexPath.row == 0) {
@@ -304,6 +324,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 
 			unsigned short defaultPort = (_connection.secure ? 994 : 6667);
 
+			cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 			cell.textEditAction = @selector(serverPortChanged:);
 			cell.textLabel.text = NSLocalizedString(@"Server Port", @"Server Port connection setting label");
 			cell.textField.text = (_connection.serverPort == defaultPort ? @"" : [NSString stringWithFormat:@"%hu", _connection.serverPort]);
