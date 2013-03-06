@@ -664,6 +664,8 @@ retry:
 }
 
 - (BOOL) _hasMarkedText {
+	if (!_inputView.markedTextRange)
+		return NO;
 	return !_inputView.markedTextRange.empty;
 }
 
