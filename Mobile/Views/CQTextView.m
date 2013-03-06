@@ -30,11 +30,11 @@
 #pragma mark -
 
 - (void) setText:(NSString *) text {
-	if (!text.length && _placeholder.text.length)
-		_placeholder.alpha = 1.;
-	else _placeholder.alpha = 0.;
-
 	[super setText:text];
+
+	if (text.length)
+		_placeholder.alpha = 0.;
+	else _placeholder.alpha = 1.;
 }
 
 - (NSString *) placeholder {
@@ -43,7 +43,9 @@
 
 - (void) setPlaceholder:(NSString *) placeholder {
 	_placeholder.text = placeholder;
-	_placeholder.alpha = _placeholder.text.length;
+	if (self.text.length)
+		_placeholder.alpha = 0.;
+	else if (_placeholder.text.length) _placeholder.alpha = _placeholder.text.length;
 
 	[_placeholder sizeToFit];
 
