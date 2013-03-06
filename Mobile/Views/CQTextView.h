@@ -1,11 +1,7 @@
 @interface CQTextView : UITextView {
 @protected
-	NSString *_placeholder;
-
-	UIColor *_textColor;
-	UIColor *_placeholderTextColor;
+	UILabel *_placeholder;
 }
+
 @property (nonatomic, copy) NSString *placeholder;
-@property (nonatomic, readonly) BOOL isPlaceholderText;
-@property (nonatomic, retain) UIColor *placeholderTextColor;
 @end

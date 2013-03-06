@@ -214,7 +214,7 @@
 #pragma mark -
 
 - (NSString *) stringForFooterWithTextView:(CQTextView *) textView {
-	if (textView.isPlaceholderText)
+	if (textView.text.length)
 		return nil;
 	if ([self integerForCountdownInFooterWithTextView:textView] == 1)
 		return NSLocalizedString(@"character remaining", @"character remaining tableview footer");
@@ -222,7 +222,7 @@
 }
 
 - (NSInteger) integerForCountdownInFooterWithTextView:(CQTextView *) textView {
-	if (textView.isPlaceholderText)
+	if (textView.text.length)
 		return 0;
 
 	NSString *prefix = [NSString stringWithFormat:@"AWAY %@", textView.text];
