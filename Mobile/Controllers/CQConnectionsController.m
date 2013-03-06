@@ -264,7 +264,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	}
 
 	if (alertView.tag == IncorrectRoomPasswordTag || alertView.tag == NotIdentifiedWithServicesTag) {
-		UITextField *passwordField = [alertView performPrivateSelector:@"textField"];
+		UITextField *passwordField = [alertView textFieldAtIndex:0];
 		NSString *password = passwordField.text;
 
 		NSNotification *notification = [alertView associatedObjectForKey:@"userInfo"];
@@ -904,17 +904,12 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		case MVChatConnectionRoomIsFullError:
 		case MVChatConnectionInviteOnlyRoomError:
 		case MVChatConnectionBannedFromRoomError:
-#if !ENABLE(SECRETS)
-		case MVChatConnectionRoomPasswordIncorrectError:
-#endif
 		case MVChatConnectionIdentifyToJoinRoomError:
 			errorTitle = NSLocalizedString(@"Can't Join Room", @"Can't join room alert title");
 			break;
-#if ENABLE(SECRETS)
 		case MVChatConnectionRoomPasswordIncorrectError:
 			errorTitle = NSLocalizedString(@"Room Password", @"Room Password alert title");
 			break;
-#endif
 		case MVChatConnectionCantSendToRoomError:
 			errorTitle = NSLocalizedString(@"Can't Send Message", @"Can't send message alert title");
 			break;
@@ -956,15 +951,11 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"You are banned from \"%@\" on \"%@\".", "Banned from room alert message"), room.displayName, connection.displayName];
 			break;
 		case MVChatConnectionRoomPasswordIncorrectError:
-#if ENABLE(SECRETS)
 			errorMessage = [NSString stringWithFormat:@"%@ - %@", room.displayName, connection.displayName];
 			buttonTitle = NSLocalizedString(@"Join", @"Join button title");
 			placeholder = NSLocalizedString(@"Password", @"Password placeholder");
 			tag = IncorrectRoomPasswordTag;
 			userInfo = notification;
-#else
-			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"The room \"%@\" on \"%@\" is password protected, and you didn't supply the correct password.", "Room is full alert message"), room.displayName, connection.displayName];
-#endif
 			break;
 		case MVChatConnectionCantSendToRoomError:
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Can't send messages to \"%@\" due to some room restriction.", "Cant send message alert message"), room.displayName];
@@ -975,7 +966,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		case MVChatConnectionIdentifyToJoinRoomError: {
 			errorMessage = [NSString stringWithFormat:NSLocalizedString(@"Identify with network services to join \"%@\" on \"%@\".", "Identify to join room alert message"), room.displayName, connection.displayName];
 
-#if ENABLE(SECRETS)
 			buttonTitle = NSLocalizedString(@"Identify", @"Identify button title");
 			tag = NextAlertTag;
 
@@ -993,7 +983,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 			[nextAlertView addSecureTextFieldWithPlaceholder:NSLocalizedString(@"Password", @"Password placeholder")];
 
 			userInfo = [nextAlertView autorelease];
-#endif
 			break;
 		}
 		case MVChatConnectionCantChangeNickError:

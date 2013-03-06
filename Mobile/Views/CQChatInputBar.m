@@ -664,11 +664,7 @@ retry:
 }
 
 - (BOOL) _hasMarkedText {
-#if ENABLE(SECRETS)
-//	UITextRange *textRange = [_inputView performPrivateSelector:@"markedTextRange"];
-//	return !textRange.empty;
-#endif
-	return NO;
+	return !_inputView.markedTextRange.empty;
 }
 
 - (void) _updateTextTraits {

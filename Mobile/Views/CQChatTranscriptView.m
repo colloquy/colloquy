@@ -4,29 +4,6 @@
 
 #define DefaultFontSize 14
 
-#if ENABLE(SECRETS)
-@interface UIScroller : UIView
-@property (nonatomic) BOOL showBackgroundShadow;
-@property (nonatomic) CGPoint offset;
-- (void) displayScrollerIndicators;
-@end
-
-#pragma mark -
-
-@interface UIScrollView (Private)
-@property (nonatomic) BOOL showBackgroundShadow;
-@end
-
-#pragma mark -
-
-@interface UIWebView (UIWebViewPrivate)
-- (void) scrollerWillStartDragging:(UIScroller *) scroller;
-- (void) scrollerDidEndDragging:(UIScroller *) scroller willSmoothScroll:(BOOL) smooth;
-- (void) scrollerDidEndSmoothScrolling:(UIScroller *) scroller;
-- (UIScroller *) _scroller;
-@end
-#endif
-
 #pragma mark -
 
 @interface CQChatTranscriptView (Internal)
@@ -155,17 +132,6 @@
 	[self _reloadVariantStyle];
 }
 
-- (UIScrollView *) scrollView {
-	if ([[UIDevice currentDevice] isSystemFive])
-		return [super scrollView];
-
-#if ENABLE(SECRETS)
-	return [self performPrivateSelector:@"_scrollView"];
-#endif
-
-	return nil;
-}
-
 #pragma mark -
 
 - (BOOL) canBecomeFirstResponder {
@@ -181,15 +147,7 @@
 }
 
 - (void) didFinishScrolling {
-	CGPoint offset = CGPointZero;
-	UIScrollView *scrollView = self.scrollView;
-	if (scrollView) {
-		offset = scrollView.contentOffset;
-	} else {
-		id scroller = [self performPrivateSelector:@"_scroller"];
-		offset = [scroller performPrivateSelectorReturningPoint:@"offset"];
-	}
-
+	CGPoint offset = self.scrollView.contentOffset;
 	NSString *command = [NSString stringWithFormat:@"updateScrollPosition(%f)", offset.y];
 	[super stringByEvaluatingJavaScriptFromString:command];
 
@@ -210,26 +168,6 @@
 }
 
 #pragma mark -
-
-#if ENABLE(SECRETS)
-- (void) scrollerWillStartDragging:(UIScroller *) scroller {
-	[super scrollerWillStartDragging:scroller];
-
-	[self willStartScrolling];
-}
-
-- (void) scrollerDidEndDragging:(UIScroller *) scroller willSmoothScroll:(BOOL) smooth {
-	[super scrollerDidEndDragging:scroller willSmoothScroll:smooth];
-
-	if (!smooth) [self didFinishScrolling];
-}
-
-- (void) scrollerDidEndSmoothScrolling:(UIScroller *) scroller {
-	[super scrollerDidEndSmoothScrolling:scroller];
-
-	[self didFinishScrolling];
-}
-#endif
 
 - (void) scrollViewWillBeginDragging:(UIScrollView *) scrollView {
 	[super scrollViewWillBeginDragging:scrollView];
@@ -370,13 +308,7 @@
 }
 
 - (void) flashScrollIndicators {
-	UIScrollView *scrollView = self.scrollView;
-	if (scrollView) {
-		[scrollView flashScrollIndicators];
-	} else {
-		id scroller = [self performPrivateSelector:@"_scroller"];
-		[scroller performPrivateSelector:@"displayScrollerIndicators"];
-	}
+	[self.scrollView flashScrollIndicators];
 }
 
 - (void) markScrollback {
@@ -470,10 +402,7 @@
 - (void) _commonInitialization {
 	super.delegate = self;
 
-	UIScrollView *scrollView = self.scrollView;
-	if (!scrollView)
-		scrollView = [self performPrivateSelector:@"_scroller"];
-	[scrollView performPrivateSelector:@"setShowBackgroundShadow:" withBoolean:NO];
+	[self.scrollView performPrivateSelector:@"setShowBackgroundShadow:" withBoolean:NO];
 
 	_allowsStyleChanges = YES;
 	_blockerView = [[UIView alloc] initWithFrame:self.bounds];

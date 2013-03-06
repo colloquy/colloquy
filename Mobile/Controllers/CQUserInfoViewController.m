@@ -113,9 +113,6 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellWithStyle:UITableViewCellStyleValue2 inTableView:tableView];
 	cell.accessoryType = UITableViewCellAccessoryNone;
-#if !ENABLE(SECRETS)
-	cell.selectionStyle = UITableViewCellSelectionStyleNone;
-#endif
 
 	NSInteger section = indexPath.section;
 	NSInteger row = indexPath.row;
@@ -247,7 +244,6 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 	return cell;
 }
 
-#if ENABLE(SECRETS)
 - (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {
 	return YES;
 }
@@ -266,7 +262,6 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 
 	[UIPasteboard generalPasteboard].string = selectedCell.detailTextLabel.text;
 }
-#endif
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (indexPath.section == 2 && indexPath.row == 1) {

@@ -5,14 +5,7 @@
 	if (!(self = [super init]))
 		return nil;
 
-	if ([[UIDevice currentDevice] isSystemFive]) {
-		_textFieldInformation = [[NSMutableArray alloc] init];
-	}
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_5_0
-	else {
-		[self performPrivateSelector:@"setGroupsTextFields:" withBoolean:YES];
-	}
-#endif
+	_textFieldInformation = [[NSMutableArray alloc] init];
 
 	return self;
 }
@@ -37,46 +30,31 @@
 }
 
 - (void) addTextFieldWithPlaceholder:(NSString *) placeholder andText:(NSString *) text {
-	if ([[UIDevice currentDevice] isSystemFive]) {
-		NSAssert(_textFieldInformation.count + 1 < 3, @"alertView's are limited to a max of 2 textfields as of iOS 5", nil);
+	NSAssert(_textFieldInformation.count + 1 < 3, @"alertView's are limited to a max of 2 textfields as of iOS 5", nil);
 
-		NSMutableDictionary *textFieldInformation = [NSMutableDictionary dictionary];
+	NSMutableDictionary *textFieldInformation = [NSMutableDictionary dictionary];
 
-		if (placeholder.length)
-			[textFieldInformation setObject:placeholder forKey:@"placeholder"];
-		if (text.length)
-			[textFieldInformation setObject:text forKey:@"text"];
+	if (placeholder.length)
+		[textFieldInformation setObject:placeholder forKey:@"placeholder"];
+	if (text.length)
+		[textFieldInformation setObject:text forKey:@"text"];
 
-		[_textFieldInformation addObject:textFieldInformation];
+	[_textFieldInformation addObject:textFieldInformation];
 
-		[self _updateTextFieldsForDisplay];
-	}
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_5_0
-	else {
-		[self performPrivateSelector:@"addTextFieldWithValue:label:" withObject:text withObject:placeholder];
-	}
-#endif
+	[self _updateTextFieldsForDisplay];
 }
 
 - (void) addSecureTextFieldWithPlaceholder:(NSString *) placeholder {
-	if ([[UIDevice currentDevice] isSystemFive]) {
-		NSAssert(_textFieldInformation.count + 1 < 3, @"alertView's are limited to a max of 2 textfields as of iOS 5", nil);
+	NSAssert(_textFieldInformation.count + 1 < 3, @"alertView's are limited to a max of 2 textfields as of iOS 5", nil);
 
-		NSMutableDictionary *textFieldInformation = [NSMutableDictionary dictionary];
+	NSMutableDictionary *textFieldInformation = [NSMutableDictionary dictionary];
 
-		if (placeholder.length)
-			[textFieldInformation setObject:placeholder forKey:@"placeholder"];
-		[textFieldInformation setObject:[NSNumber numberWithBool:YES] forKey:@"secure"];
+	if (placeholder.length)
+		[textFieldInformation setObject:placeholder forKey:@"placeholder"];
+	[textFieldInformation setObject:[NSNumber numberWithBool:YES] forKey:@"secure"];
 
-		[_textFieldInformation addObject:textFieldInformation];
+	[_textFieldInformation addObject:textFieldInformation];
 
-		[self _updateTextFieldsForDisplay];
-	}
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_5_0
-	else {
-		UITextField *textField = [self performPrivateSelector:@"addTextFieldWithValue:label:" withObject:nil withObject:placeholder];
-		textField.secureTextEntry = YES;
-	}
-#endif
+	[self _updateTextFieldsForDisplay];
 }
 @end

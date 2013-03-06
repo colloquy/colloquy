@@ -21,13 +21,6 @@ typedef enum {
 	CQSidebarOrientationAll
 } CQSidebarOrientation;
 
-#if ENABLE(SECRETS)
-typedef enum {
-    UITabBarTransitionNone,
-    UITabBarTransitionSlide
-} UITabBarTransition;
-#endif
-
 NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification = @"CQColloquyApplicationDidRecieveDeviceTokenNotification";
 
 #define BrowserAlertTag 1

@@ -313,7 +313,6 @@ static BOOL showFullRoomNames;
 		[[UIApplication sharedApplication] sendAction:_action to:_target from:self forEvent:nil];
 }
 
-#if ENABLE(SECRETS)
 - (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {
 	return !_showingUpdateRow;
 }
@@ -333,7 +332,6 @@ static BOOL showFullRoomNames;
 	if (action == @selector(copy:))
 		[UIPasteboard generalPasteboard].string = selectedRoom;
 }
-#endif
 
 #pragma mark -
 
