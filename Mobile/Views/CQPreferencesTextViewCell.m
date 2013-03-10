@@ -74,14 +74,14 @@
 	CGSize size = [UIScreen mainScreen].bounds.size;
 	BOOL landscapeOrientation = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation);
 
-	if ([[UIDevice currentDevice] isPadModel] || [[UIDevice currentDevice] isRetina]) {
+	if ([[UIDevice currentDevice] isPadModel]) {
+		if (landscapeOrientation)
+			return (CGFloat)MIN(size.height, size.width) / 3;
+		return (CGFloat)MIN(size.height, size.width) / 2;
+	} else if ([[UIDevice currentDevice] isRetina]) {
 		if (landscapeOrientation)
 			return (CGFloat)MIN(size.height, size.width) / 3;
 		return (CGFloat)MAX(size.height, size.width) / 2;
-	} else if ([[UIDevice currentDevice] isRetina]) {
-		if (landscapeOrientation)
-			return (CGFloat)MIN(size.height, size.width) / 4;
-		return (CGFloat)MAX(size.height, size.width) / 2.5;
 	} else {
 		if (landscapeOrientation)
 			return floor(((CGFloat)MIN(size.height, size.width) / 4));
