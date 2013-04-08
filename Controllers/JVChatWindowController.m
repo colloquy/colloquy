@@ -607,9 +607,6 @@ NSString *JVChatViewPboardType = @"Colloquy Chat View v1.0 pasteboard type";
 	if( item == selectItem ) {
 		[self _deferRefreshSelectionMenu];
 	}
-
-	if( selectItem )
-		[chatViewsOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:[chatViewsOutlineView rowForItem:selectItem]] byExtendingSelection:NO];
 }
 
 - (BOOL) isListItemExpanded:(id <JVChatListItem>) item {
