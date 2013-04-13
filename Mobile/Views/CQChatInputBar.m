@@ -64,9 +64,13 @@ static BOOL hardwareKeyboard;
 	_overlayBackgroundView.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth);
 	_overlayBackgroundView.userInteractionEnabled = YES;
 
+	_overlayBackgroundViewPiece = [[UIImageView alloc] initWithImage:nil];
+	_overlayBackgroundViewPiece.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth);
+
 	[_overlayBackgroundView addSubview:_inputView];
 
 	[self addSubview:_overlayBackgroundView];
+	[self addSubview:_overlayBackgroundViewPiece];
 
 	_autocomplete = YES;
 
@@ -226,9 +230,11 @@ static BOOL hardwareKeyboard;
 	if ([color isEqual:[UIColor blackColor]]) {
 		_inputView.keyboardAppearance = UIKeyboardAppearanceAlert;
 		_overlayBackgroundView.image = [[UIImage imageNamed:@"textFieldDark.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 20, 22, 20)];
+		_overlayBackgroundViewPiece.image = [[UIImage imageNamed:@"textFieldDarkPiece.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(1., 1., 1., 1.)];
 	} else {
 		_inputView.keyboardAppearance = UIKeyboardAppearanceDefault;
 		_overlayBackgroundView.image = [[UIImage imageNamed:@"textField.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 20, 22, 20)];
+		_overlayBackgroundViewPiece.image = [[UIImage imageNamed:@"textFieldPiece.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(1., 1., 1., 1.)];
 	}
 	_backgroundView.tintColor = color;
 
@@ -622,6 +628,11 @@ retry:
 		else frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
 	}
 	_overlayBackgroundView.frame = frame;
+
+	frame.origin.x = CGRectGetMaxX(frame);
+	frame.size.height = CGRectGetHeight(_overlayBackgroundView.frame);
+	frame.size.width = CGRectGetWidth(self.frame) - CGRectGetMinX(frame);
+	_overlayBackgroundViewPiece.frame = frame;
 
 #define ImageBorderInset 10.
 	frame = _inputView.frame;

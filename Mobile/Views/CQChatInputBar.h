@@ -24,6 +24,7 @@
 	UIButton *_accessoryButton;
 	CGFloat _previousContentHeight;
 	UIImageView *_overlayBackgroundView;
+	UIImageView *_overlayBackgroundViewPiece;
 	BOOL _shouldAnimateLayout;
 }
 @property (nonatomic, assign) id <CQChatInputBarDelegate> delegate;
