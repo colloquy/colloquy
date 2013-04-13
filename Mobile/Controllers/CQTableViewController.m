@@ -2,9 +2,7 @@
 
 @implementation CQTableViewController
 - (id) initWithStyle:(UITableViewStyle) style {
-	if (!(self = [super initWithStyle:style]))
-		return nil;
-	return self;
+	return (self = [super initWithStyle:style]);
 }
 
 - (void) dealloc {

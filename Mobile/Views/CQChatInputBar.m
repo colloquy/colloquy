@@ -128,6 +128,8 @@ static BOOL hardwareKeyboard;
 	[_completions release];
 	[_backgroundView release];
 	[_accessoryButton release];
+	[_overlayBackgroundView release];
+	[_overlayBackgroundViewPiece release];
 
 	[super dealloc];
 }

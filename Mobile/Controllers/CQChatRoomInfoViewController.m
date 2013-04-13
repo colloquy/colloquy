@@ -28,7 +28,7 @@
 
     [super viewDidLoad];
 
-	UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(close:)];
+	UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Close", @"Close button title") style:UIBarButtonItemStyleDone target:self action:@selector(close:)];
 	_rootViewController.navigationItem.leftBarButtonItem = doneItem;
 	[doneItem release];
 }

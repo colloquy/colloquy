@@ -18,6 +18,9 @@ static NSString *membersFilteredCountFormat;
 #define UserIdleTime 600
 
 @implementation CQChatUserListViewController
+@synthesize chatUserDelegate = _chatUserDelegate;
+@synthesize listMode = _listMode;
+
 + (void) initialize {
 	membersSingleCountFormat = [NSLocalizedString(@"Members (%u)", @"Members with single count view title") retain];
 	membersFilteredCountFormat = [NSLocalizedString(@"Members (%u of %u)", @"Members with filtered count view title") retain];
@@ -34,6 +37,7 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (void) dealloc {
+	_chatUserDelegate = nil;
 	_searchBar.delegate = nil;
 	_searchController.delegate = nil;
 
@@ -52,6 +56,8 @@ static NSString *membersFilteredCountFormat;
 - (void) viewDidLoad {
 	[super viewDidLoad];
 
+	if (_listMode == CQChatUserListModeBan)
+		return;
 	_searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
 	_searchBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin);
 	_searchBar.placeholder = NSLocalizedString(@"Search", @"Search placeholder text");
@@ -62,19 +68,19 @@ static NSString *membersFilteredCountFormat;
 	[_searchBar sizeToFit];
 
 	self.tableView.tableHeaderView = _searchBar;
-	
+
 	_searchController = [[UISearchDisplayController alloc] initWithSearchBar:_searchBar contentsController:self];
 	_searchController.searchResultsDataSource = self;
 	_searchController.searchResultsDelegate = self;
 	_searchController.delegate = self;
 
-	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissFromDoneButton)];
-	self.navigationItem.rightBarButtonItem = doneButton;
-	[doneButton release];
-
 	UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Members", @"Members back button label") style:UIBarButtonItemStylePlain target:nil action:nil];
 	self.navigationItem.backBarButtonItem = backButton;
 	[backButton release];
+
+	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissFromDoneButton)];
+	self.navigationItem.rightBarButtonItem = doneButton;
+	[doneButton release];
 
 	if ([[UIDevice currentDevice] isPadModel])
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
@@ -391,7 +397,7 @@ static NSString *membersFilteredCountFormat;
 		cell.imageView.image = [UIImage imageNamed:@"userNormal.png"];
 	}
 
-	if (![[UIDevice currentDevice] isPadModel])
+	if (_listMode == CQChatUserListModeRoom && ![[UIDevice currentDevice] isPadModel])
 		cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
 	if (user.status == MVChatUserAwayStatus || user.idleTime >= UserIdleTime) {
@@ -412,16 +418,27 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+	MVChatUser *user = [_matchedUsers objectAtIndex:indexPath.row];
 
-	UIActionSheet *sheet = [UIActionSheet userActionSheetForUser:[_matchedUsers objectAtIndex:indexPath.row] inRoom:_room showingUserInformation:NO];
-	sheet.title = cell.textLabel.text;
+	BOOL shouldPresentInformation = YES;
+	if (_chatUserDelegate && [_chatUserDelegate respondsToSelector:@selector(chatUserListViewController:shouldPresentInformationForUser:)])
+		shouldPresentInformation = [_chatUserDelegate chatUserListViewController:self shouldPresentInformationForUser:user];
 
-	[sheet associateObject:cell forKey:@"userInfo"];
+	if (shouldPresentInformation) {
+		UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 
-	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:cell animated:YES];
+		UIActionSheet *sheet = [UIActionSheet userActionSheetForUser:user inRoom:_room showingUserInformation:NO];
+		sheet.title = cell.textLabel.text;
 
-	[tableView deselectRowAtIndexPath:indexPath animated:NO];
+		[sheet associateObject:cell forKey:@"userInfo"];
+
+		[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:cell animated:YES];
+
+		[tableView deselectRowAtIndexPath:indexPath animated:NO];
+	}
+
+	if (_chatUserDelegate && [_chatUserDelegate respondsToSelector:@selector(chatUserListViewController:didSelectUser:)])
+		[_chatUserDelegate chatUserListViewController:self didSelectUser:user];
 }
 
 - (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
@@ -455,5 +472,4 @@ static NSString *membersFilteredCountFormat;
 - (void) dismissFromDoneButton {
 	[self dismissModalViewControllerAnimated:YES];
 }
-
 @end

@@ -5,7 +5,7 @@
 @interface CQChatRoomInfoDisplayViewController : CQTableViewController <UITextFieldDelegate, UITextViewDelegate> {
 @private
 	MVChatRoom *_room;
-	NSArray *_bans;
+	NSMutableArray *_bans;
 	UISegmentedControl *_segmentedControl;
 }
 

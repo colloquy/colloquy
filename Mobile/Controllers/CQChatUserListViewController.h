@@ -1,7 +1,19 @@
 #import "CQPreferencesTableViewController.h"
 
+@class CQChatUserListViewController;
 @class MVChatUser;
 @class MVChatRoom;
+
+typedef enum {
+	CQChatUserListModeRoom,
+	CQChatUserListModeBan
+} QChatUserListMode;
+
+@protocol CQChatUserListViewDelegate <NSObject>
+@optional
+- (BOOL) chatUserListViewController:(CQChatUserListViewController *) chatUserListViewController shouldPresentInformationForUser:(MVChatUser *) user;
+- (void) chatUserListViewController:(CQChatUserListViewController *) chatUserListViewController didSelectUser:(MVChatUser *) user;
+@end
 
 @interface CQChatUserListViewController : CQPreferencesTableViewController <UIActionSheetDelegate, UISearchDisplayDelegate> {
 	@protected
@@ -11,9 +23,14 @@
 	MVChatRoom *_room;
 	UISearchBar *_searchBar;
 	UISearchDisplayController *_searchController;
+	QChatUserListMode _listMode;
+	id <CQChatUserListViewDelegate> _chatUserDelegate;
 }
 @property (nonatomic, copy) NSArray *users;
 @property (nonatomic, retain) MVChatRoom *room;
+@property (nonatomic, assign) QChatUserListMode listMode;
+
+@property (nonatomic, assign) id <CQChatUserListViewDelegate> chatUserDelegate;
 
 - (void) filterUsersWithSearchString:(NSString *) searchString;
 
