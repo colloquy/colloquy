@@ -1,6 +1,14 @@
 var topicSize = 0;
 var topicToggled = false;
 
+function hideTopic() {
+	document.getElementById( 'topicArea' ).style.setProperty( 'display', 'none' );
+}
+
+function showTopic() {
+	document.getElementById( 'topicArea' ).style.setProperty( 'display', 'block' );
+}
+
 function toggleTopic( e ) {
 	if( e && e.altKey ) {
 		topicSize++;

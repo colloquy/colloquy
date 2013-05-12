@@ -1,0 +1,55 @@
+#topicRow {
+	height: 17px;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+}
+
+#topicArea {
+	position: relative;
+	background-repeat: repeat-x;
+	background-position: top;
+	border-bottom: 1px solid rgb( 154, 154, 154 );
+	overflow: hidden;
+	min-height: 23px;
+	height: 23px;
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcfcfc), color-stop(1%,#ededed), color-stop(100%,#dedede));
+}
+
+#topicMessage {
+	position: absolute;
+	top: 3px;
+	left: 0;
+	right: 0;
+	min-height: 15px;
+	padding: 0 20px 0 8px;
+	font-size: 14px;
+	font-family: Helvetica, sans-serif;
+	line-height: 17px;
+	text-align: center;
+	color: black !important;
+	word-wrap: break-word;
+	white-space: pre-wrap;
+	-webkit-line-break: after-white-space;
+	-webkit-nbsp-mode: space;
+}
+
+#topicMessage a {
+	color: blue !important;
+}
+
+#toggleButton {
+	position: absolute;
+	top: 4px;
+	right: 3px;
+	background-image: url(topicToggleDown.png);
+	width: 17px;
+	height: 16px;
+	z-index: 10;
+	cursor: default;
+}
+
+#toggleButton.up {
+	background-image: url(topicToggleUp.png);
+}

@@ -1,5 +1,11 @@
 @protocol CQChatTranscriptViewDelegate;
 
+typedef enum {
+	CQShowRoomTopicNever,
+	CQShowRoomTopicOnChange,
+	CQShowRoomTopicAlways
+} CQShowRoomTopic;
+
 @interface CQChatTranscriptView : UIWebView <UIGestureRecognizerDelegate, UIWebViewDelegate> {
 	@protected
 	IBOutlet id <CQChatTranscriptViewDelegate> transcriptDelegate;
@@ -17,6 +23,10 @@
 	BOOL _timestampOnLeft;
 	BOOL _allowSingleSwipeGesture;
 	NSMutableArray *_singleSwipeGestureRecognizers;
+	CQShowRoomTopic _showRoomTopic;
+	NSString *_roomTopic;
+	NSString *_roomTopicSetter;
+	BOOL _topicIsHidden;
 }
 @property (nonatomic, assign) id <CQChatTranscriptViewDelegate> transcriptDelegate;
 
@@ -32,6 +42,7 @@
 - (void) addComponent:(NSDictionary *) component animated:(BOOL) animated;
 
 - (void) noteNicknameChangedFrom:(NSString *) oldNickname to:(NSString *) newNickname;
+- (void) noteTopicChangeTo:(NSString *) newTopic by:(NSString *) username;
 
 - (void) scrollToBottomAnimated:(BOOL) animated;
 - (void) flashScrollIndicators;

@@ -437,6 +437,8 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	} else if (!onlyIfSet) {
 		[self addEventMessage:NSLocalizedString(@"No chat topic is set.", "No chat topic event message") withIdentifier:@"topic" announceWithVoiceOver:YES];
 	}
+
+	[transcriptView noteTopicChangeTo:topicString by:user.displayName];
 }
 
 - (void) _sortMembers {
@@ -546,6 +548,8 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		NSString *eventMessageFormat = [NSLocalizedString(@"%@ changed the topic to \"%@\".", "User changed the room topic event message") stringByEncodingXMLSpecialCharactersAsEntities];
 		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user], topicString] withIdentifier:@"topicChanged" announceWithVoiceOver:YES];
 	}
+
+	[transcriptView noteTopicChangeTo:topicString by:user.displayName];
 }
 
 - (void) _topicChanged:(NSNotification *) notification {

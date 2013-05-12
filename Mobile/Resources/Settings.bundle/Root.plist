@@ -98,6 +98,28 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Show Room Topic</string>
+			<key>Key</key>
+			<string>CQShowRoomTopic</string>
+			<key>Titles</key>
+			<array>
+				<string>Never</string>
+				<string>When Changed</string>
+				<string>Always</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+			</array>
+			<key>DefaultValue</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSChildPaneSpecifier</string>
 			<key>Title</key>
 			<string>Transcript Styling</string>

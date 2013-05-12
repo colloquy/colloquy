@@ -3,6 +3,9 @@
 #import <ChatCore/MVChatUser.h>
 
 #define DefaultFontSize 14
+#define HideRoomTopicDelay 30.
+
+static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNotification";
 
 #pragma mark -
 
@@ -35,6 +38,11 @@
 }
 
 - (void) dealloc {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self];
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:CQRoomTopicChangedNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
+
 	super.delegate = nil;
 
 	[_blockerView release];
@@ -42,6 +50,8 @@
 	[_styleIdentifier release];
 	[_pendingComponents release];
 	[_pendingPreviousSessionComponents release];
+	[_roomTopic release];
+	[_roomTopicSetter release];
 
 	[super dealloc];
 }
@@ -303,6 +313,39 @@
 	[super stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"nicknameChanged(\"%@\", \"%@\")", oldNickname, newNickname]];
 }
 
+- (void) noteTopicChangeTo:(NSString *) newTopic by:(NSString *) username {
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_hideRoomTopic) object:nil];
+
+	id old = _roomTopic;
+	_roomTopic = [newTopic copy];
+	[old release];
+
+	old = _roomTopicSetter;
+	_roomTopicSetter = [username copy];
+	[old release];
+
+	BOOL shouldHideTopic = NO;
+	if (_showRoomTopic == CQShowRoomTopicAlways) {
+		[super stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"changeTopic('%@', '%@', '%@')", newTopic, username, newTopic.length ? @"false" : @"true"]];
+	} else if (_showRoomTopic == CQShowRoomTopicOnChange) {
+		[super stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"changeTopic('%@', '%@', '%@')", newTopic, username, newTopic.length ? @"false" : @"true"]];
+
+		[self performSelector:@selector(_hideRoomTopic) withObject:nil afterDelay:HideRoomTopicDelay];
+	} else /*if (_showRoomTopic == CQShowRoomTopicNever)*/ {
+		shouldHideTopic = YES;
+	}
+
+	if (!_topicIsHidden && shouldHideTopic) {
+		_topicIsHidden = YES;
+		NSLog(@"hiding");
+		[super stringByEvaluatingJavaScriptFromString:@"hideTopic()"];
+	} else if (_topicIsHidden && !shouldHideTopic) {
+		_topicIsHidden = NO;
+		NSLog(@"showing");
+		[super stringByEvaluatingJavaScriptFromString:@"showTopic()"];
+	}
+}
+
 - (void) scrollToBottomAnimated:(BOOL) animated {
 	[super stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollToBottom(%@)", (animated ? @"true" : @"false")]];
 }
@@ -449,6 +492,20 @@
 
 	[self addGestureRecognizer:longPressGestureRecognizer];
 	[longPressGestureRecognizer release];
+
+	_showRoomTopic = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQShowRoomTopic"];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
+}
+
+- (void) _userDefaultsChanged:(NSNotification *) notification {
+	CQShowRoomTopic shouldShowRoomTopic = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQShowRoomTopic"];
+	if (_showRoomTopic == shouldShowRoomTopic)
+		return;
+
+	_showRoomTopic = shouldShowRoomTopic;
+
+	[self noteTopicChangeTo:_roomTopic by:_roomTopicSetter];
 }
 
 - (NSString *) _variantStyleString {
@@ -476,6 +533,13 @@
 	[super stringByEvaluatingJavaScriptFromString:javascript];
 }
 
+- (void) _roomTopicChanged:(NSNotification *) notification {
+	CQShowRoomTopic showRoomTopic = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQShowRoomTopic"];
+	if (showRoomTopic) {
+		
+	}
+}
+
 - (NSString *) _contentHTML {
 	NSString *templateString = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"base" ofType:@"html"] encoding:NSUTF8StringEncoding error:NULL];
 	return [NSString stringWithFormat:templateString, _styleIdentifier, [self _variantStyleString]];
@@ -501,6 +565,14 @@
 	_pendingComponents = nil;
 
 	[self performSelector:@selector(_unhideBlockerView) withObject:nil afterDelay:0.05];
+
+	if (_topicIsHidden) {
+		[super stringByEvaluatingJavaScriptFromString:@"hideTopic()"];
+	}
+}
+
+- (void) _hideRoomTopic {
+	[super stringByEvaluatingJavaScriptFromString:@"hideTopic()"];
 }
 
 - (void) _unhideBlockerView {
