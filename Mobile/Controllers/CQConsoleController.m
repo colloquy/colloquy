@@ -94,6 +94,8 @@ static BOOL verbose;
 
 	transcriptView.styleIdentifier = @"console";
 	transcriptView.allowsStyleChanges = NO;
+
+	[transcriptView noteTopicChangeTo:@"" by:@""];
 }
 
 #pragma mark -
