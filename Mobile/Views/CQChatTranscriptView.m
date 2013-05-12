@@ -324,24 +324,23 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	_roomTopicSetter = [username copy];
 	[old release];
 
-	BOOL shouldHideTopic = NO;
-	if (_showRoomTopic == CQShowRoomTopicAlways) {
-		[super stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"changeTopic('%@', '%@', '%@')", newTopic, username, newTopic.length ? @"false" : @"true"]];
-	} else if (_showRoomTopic == CQShowRoomTopicOnChange) {
+	BOOL shouldHideTopic = YES;
+	if (_showRoomTopic != CQShowRoomTopicNever && newTopic.length) {
+		shouldHideTopic = NO;
+
 		[super stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"changeTopic('%@', '%@', '%@')", newTopic, username, newTopic.length ? @"false" : @"true"]];
 
-		[self performSelector:@selector(_hideRoomTopic) withObject:nil afterDelay:HideRoomTopicDelay];
-	} else /*if (_showRoomTopic == CQShowRoomTopicNever)*/ {
-		shouldHideTopic = YES;
+		if (_showRoomTopic == CQShowRoomTopicOnChange)
+			[self performSelector:@selector(_hideRoomTopic) withObject:nil afterDelay:HideRoomTopicDelay];
 	}
 
 	if (!_topicIsHidden && shouldHideTopic) {
 		_topicIsHidden = YES;
-		NSLog(@"hiding");
+
 		[super stringByEvaluatingJavaScriptFromString:@"hideTopic()"];
 	} else if (_topicIsHidden && !shouldHideTopic) {
 		_topicIsHidden = NO;
-		NSLog(@"showing");
+
 		[super stringByEvaluatingJavaScriptFromString:@"showTopic()"];
 	}
 }
