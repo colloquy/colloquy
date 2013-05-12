@@ -14,7 +14,6 @@ MVInline size_t stringByteLength(NSString *string) {
 	return sharedInstance;
 }
 
-#if SYSTEM(IOS) && !SYSTEM(IOS_SIMULATOR)
 static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *account) {
 	NSCParameterAssert(server);
 
@@ -26,12 +25,10 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 
 	return query;
 }
-#endif
 
 - (void) setPassword:(NSString *) password forServer:(NSString *) server area:(NSString *) area {
 	NSParameterAssert(server);
 
-#if SYSTEM(IOS) && !SYSTEM(IOS_SIMULATOR)
 	if (!password.length) {
 		[self removePasswordForServer:server area:area];
 		return;
@@ -54,12 +51,6 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	}
 
 	[passwordEntry release];
-#else
-	[self removePasswordForServer:server area:area];
-
-	if (password.length)
-		SecKeychainAddInternetPassword(NULL, stringByteLength(server), [server UTF8String], 0, NULL, stringByteLength(area), [area UTF8String], 0, NULL, 0, 0, 0, stringByteLength(password), (void *) [password UTF8String], NULL);
-#endif
 }
 
 - (NSString *) passwordForServer:(NSString *) server area:(NSString *) area {
@@ -67,7 +58,6 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 
 	NSString *string = nil;
 
-#if SYSTEM(IOS) && !SYSTEM(IOS_SIMULATOR)
 	NSMutableDictionary *passwordQuery = createBaseDictionary(server, area);
 	NSData *resultData = nil;
 
@@ -81,15 +71,6 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	}
 
 	[passwordQuery release];
-#else
-	UInt32 passwordLength = 0;
-	void *password = NULL;
-
-	OSStatus status = SecKeychainFindInternetPassword(NULL, stringByteLength(server), [server UTF8String], 0, NULL, stringByteLength(area), [area UTF8String], 0, NULL, 0, 0, 0, &passwordLength, &password, NULL);
-	if (status == noErr)
-		string = [[NSString alloc] initWithBytes:(const void *)password length:passwordLength encoding:NSUTF8StringEncoding];
-	SecKeychainItemFreeContent(NULL, password);
-#endif
 
 	return [string autorelease];
 }
@@ -97,15 +78,8 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 - (void) removePasswordForServer:(NSString *) server area:(NSString *) area {
 	NSParameterAssert(server);
 
-#if SYSTEM(IOS) && !SYSTEM(IOS_SIMULATOR)
 	NSMutableDictionary *passwordQuery = createBaseDictionary(server, area);
 	SecItemDelete((CFDictionaryRef)passwordQuery);
 	[passwordQuery release];
-#else
-	SecKeychainItemRef keychainItem = NULL;
-	OSStatus status = SecKeychainFindInternetPassword(NULL, stringByteLength(server), [server UTF8String], 0, NULL, stringByteLength(area), [area UTF8String], 0, NULL, 0, 0, 0, NULL, NULL, &keychainItem);
-	if (status == noErr)
-		SecKeychainItemDelete(keychainItem);
-#endif
 }
 @end
