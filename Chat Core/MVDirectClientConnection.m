@@ -170,26 +170,23 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 - (void) socket:(GCDAsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
 	SEL selector = @selector( directClientConnection:didConnectToHost:port: );
 	if( [_delegate respondsToSelector:selector] ) {
-		NSMethodSignature *signature = [_delegate methodSignatureForSelector:selector];
-		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-		[invocation setSelector:selector];
-		[invocation setArgument:self atIndex:0];
-		[invocation setArgument:host atIndex:1];
-		[invocation setArgument:port atIndex:2];
-		[invocation performSelector:@selector(invokeWithTarget:) onThread:_connectionThread withObject:_delegate waitUntilDone:YES];
+		[self performSelector:@selector(_delegateMethodDidConnectToHostAndPort:) onThread:_connectionThread withObject:@{@"host": host, @"port": @(port)} waitUntilDone:YES];
 	}
+}
+
+- (void) _delegateMethodDidConnectToHostAndPort:(NSDictionary*)dictionary {
+	[_delegate directClientConnection:self didConnectToHost:dictionary[@"host"] port:[dictionary[@"port"] unsignedShortValue]];
 }
 
 - (void) socket:(GCDAsyncSocket *) sock willDisconnectWithError:(NSError *) error {
 	SEL selector = @selector( directClientConnection:willDisconnectWithError: );
 	if( [_delegate respondsToSelector:selector] ) {
-		NSMethodSignature *signature = [_delegate methodSignatureForSelector:selector];
-		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-		[invocation setSelector:selector];
-		[invocation setArgument:self atIndex:0];
-		[invocation setArgument:error atIndex:1];
-		[invocation performSelector:@selector(invokeWithTarget:) onThread:_connectionThread withObject:_delegate waitUntilDone:YES];
+		[self performSelector:@selector(_delegateMethodWillDisconnectWithError:) onThread:_connectionThread withObject:error waitUntilDone:YES];
 	}
+}
+
+- (void) _delegateMethodWillDisconnectWithError:(NSError *)error {
+	[_delegate directClientConnection:self willDisconnectWithError:error];
 }
 
 - (void) socketDidDisconnect:(GCDAsyncSocket *) sock {
@@ -203,27 +200,25 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 - (void) socket:(GCDAsyncSocket *) sock didWriteDataWithTag:(long) tag {
 	SEL selector = @selector( directClientConnection:didWriteDataWithTag: );
 	if( [_delegate respondsToSelector:selector] ) {
-		NSMethodSignature *signature = [_delegate methodSignatureForSelector:selector];
-		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-		[invocation setSelector:selector];
-		[invocation setArgument:self atIndex:0];
-		[invocation setArgument:tag atIndex:1];
-		[invocation performSelector:@selector(invokeWithTarget:) onThread:_connectionThread withObject:_delegate waitUntilDone:YES];
+		[self performSelector:@selector(_delegateMethodDidWriteDataWithTag:) onThread:_connectionThread withObject:@(tag) waitUntilDone:YES];
 	}
+}
+
+- (void) _delegateMethodDidWriteDataWithTag:(NSNumber *)tag {
+	[_delegate directClientConnection:self didWriteDataWithTag:[tag longValue]];
 }
 
 - (void) socket:(GCDAsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
 	SEL selector = @selector( directClientConnection:didReadData:withTag: );
 	if( [_delegate respondsToSelector:selector] ) {
-		NSMethodSignature *signature = [_delegate methodSignatureForSelector:selector];
-		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-		[invocation setSelector:selector];
-		[invocation setArgument:self atIndex:0];
-		[invocation setArgument:data atIndex:1];
-		[invocation setArgument:tag atIndex:2];
-		[invocation performSelector:@selector(invokeWithTarget:) onThread:_connectionThread withObject:_delegate waitUntilDone:YES];
+		[self performSelector:@selector(_delegateMethodDidReadDataWithTag:) onThread:_connectionThread withObject:@{@"data": data, @"tag": @(tag)} waitUntilDone:YES];
 	}
 }
+
+- (void) _delegateMethodDidReadDataWithTag:(NSDictionary*)dictionary {
+	[_delegate directClientConnection:self didReadData:dictionary[@"data"] withTag:[dictionary[@"tag"] longValue]];
+}
+
 @end
 
 #pragma mark -
