@@ -168,29 +168,61 @@ NSString *MVDCCFriendlyAddress( NSString *address ) {
 }
 
 - (void) socket:(GCDAsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16) port {
-	if( [_delegate respondsToSelector:@selector( directClientConnection:didConnectToHost:port: )] )
-		[_delegate directClientConnection:self didConnectToHost:host port:port];
+	SEL selector = @selector( directClientConnection:didConnectToHost:port: );
+	if( [_delegate respondsToSelector:selector] ) {
+		NSMethodSignature *signature = [_delegate methodSignatureForSelector:selector];
+		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+		[invocation setSelector:selector];
+		[invocation setArgument:self atIndex:0];
+		[invocation setArgument:host atIndex:1];
+		[invocation setArgument:port atIndex:2];
+		[invocation performSelector:@selector(invokeWithTarget:) onThread:_connectionThread withObject:_delegate waitUntilDone:YES];
+	}
 }
 
 - (void) socket:(GCDAsyncSocket *) sock willDisconnectWithError:(NSError *) error {
-	if( [_delegate respondsToSelector:@selector( directClientConnection:willDisconnectWithError: )] )
-		[_delegate directClientConnection:self willDisconnectWithError:error];
+	SEL selector = @selector( directClientConnection:willDisconnectWithError: );
+	if( [_delegate respondsToSelector:selector] ) {
+		NSMethodSignature *signature = [_delegate methodSignatureForSelector:selector];
+		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+		[invocation setSelector:selector];
+		[invocation setArgument:self atIndex:0];
+		[invocation setArgument:error atIndex:1];
+		[invocation performSelector:@selector(invokeWithTarget:) onThread:_connectionThread withObject:_delegate waitUntilDone:YES];
+	}
 }
 
 - (void) socketDidDisconnect:(GCDAsyncSocket *) sock {
-	if( [_delegate respondsToSelector:@selector( directClientConnectionDidDisconnect: )] )
-		[_delegate directClientConnectionDidDisconnect:self];
+	SEL selector = @selector( directClientConnectionDidDisconnect: );
+	if( [_delegate respondsToSelector:selector] ) {
+		[_delegate performSelector:selector onThread:_connectionThread withObject:self waitUntilDone:YES];
+	}
 	_done = YES;
 }
 
 - (void) socket:(GCDAsyncSocket *) sock didWriteDataWithTag:(long) tag {
-	if( [_delegate respondsToSelector:@selector( directClientConnection:didWriteDataWithTag: )] )
-		[_delegate directClientConnection:self didWriteDataWithTag:tag];
+	SEL selector = @selector( directClientConnection:didWriteDataWithTag: );
+	if( [_delegate respondsToSelector:selector] ) {
+		NSMethodSignature *signature = [_delegate methodSignatureForSelector:selector];
+		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+		[invocation setSelector:selector];
+		[invocation setArgument:self atIndex:0];
+		[invocation setArgument:tag atIndex:1];
+		[invocation performSelector:@selector(invokeWithTarget:) onThread:_connectionThread withObject:_delegate waitUntilDone:YES];
+	}
 }
 
 - (void) socket:(GCDAsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
-	if( [_delegate respondsToSelector:@selector( directClientConnection:didReadData:withTag: )] )
-		[_delegate directClientConnection:self didReadData:data withTag:tag];
+	SEL selector = @selector( directClientConnection:didReadData:withTag: );
+	if( [_delegate respondsToSelector:selector] ) {
+		NSMethodSignature *signature = [_delegate methodSignatureForSelector:selector];
+		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+		[invocation setSelector:selector];
+		[invocation setArgument:self atIndex:0];
+		[invocation setArgument:data atIndex:1];
+		[invocation setArgument:tag atIndex:2];
+		[invocation performSelector:@selector(invokeWithTarget:) onThread:_connectionThread withObject:_delegate waitUntilDone:YES];
+	}
 }
 @end
 
