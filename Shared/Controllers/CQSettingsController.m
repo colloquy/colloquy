@@ -56,10 +56,9 @@ NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotificat
 
 - (void) forwardInvocation:(NSInvocation *) invocation {
 	if (_settingsLocation == CQSettingsLocationCloud)
-		[invocation invokeWithTarget:[self _storeForLocation:CQSettingsLocationDevice]];
-	else [invocation invokeWithTarget:[self _defaultLocation]];
+		[invocation invokeWithTarget:[self _storeForLocation:CQSettingsLocationCloud]];
 
-	if (_settingsLocation == CQSettingsLocationCloud && _mirroringEnabled)
+	if (_settingsLocation == CQSettingsLocationDevice || _mirroringEnabled)
 		[invocation invokeWithTarget:[self _storeForLocation:CQSettingsLocationDevice]];
 }
 
