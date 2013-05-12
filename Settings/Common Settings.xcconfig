@@ -40,5 +40,5 @@ PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES
 SDKROOT = macosx
 STRIP_INSTALLED_PRODUCT = NO
 VALID_ARCHS = x86_64
-WARNING_CFLAGS = -Wmost -Wextra -Wcast-align -Wchar-subscripts -Wformat-security -Wpointer-arith -Wwrite-strings -Wno-format-y2k -Wno-unused-parameter -Wbad-function-cast -Wmissing-declarations -Wnested-externs
+WARNING_CFLAGS = -Wmost -Wextra -Wchar-subscripts -Wformat-security -Wpointer-arith -Wwrite-strings -Wno-format-y2k -Wno-unused-parameter -Wbad-function-cast -Wmissing-declarations -Wnested-externs
 ZERO_LINK = NO
