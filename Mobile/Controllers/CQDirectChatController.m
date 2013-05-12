@@ -267,24 +267,22 @@ static BOOL showingKeyboard;
 - (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
 	MVChatUser *user = nil;
 
-	if (!_target) {
-		NSString *nickname = [state objectForKey:@"user"];
-		if (!nickname) {
-			[self release];
-			return nil;
-		}
+	NSString *nickname = [state objectForKey:@"user"];
+	if (!nickname) {
+		[self release];
+		return nil;
+	}
 
-		user = [connection chatUserWithUniqueIdentifier:nickname];
-		if (!user) {
-			[self release];
-			return nil;
-		}
-
-		_revealKeyboard = NO;
+	user = [connection chatUserWithUniqueIdentifier:nickname];
+	if (!user) {
+		[self release];
+		return nil;
 	}
 
 	if (!(self = [self initWithTarget:user]))
 		return nil;
+
+	_revealKeyboard = NO;
 
 	[self restorePersistentState:state usingConnection:connection];
 
@@ -1398,6 +1396,8 @@ static BOOL showingKeyboard;
 		_pendingPreviousSessionComponents = nil;
 	} else if (_recentMessages.count) {
 		[view addPreviousSessionComponents:_recentMessages];
+
+		[_recentMessages removeAllObjects];
 	}
 }
 
