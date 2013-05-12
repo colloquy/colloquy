@@ -408,11 +408,11 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 #pragma mark -
 
 - (NSString *) _markupForUser:(MVChatUser *) user {
-	return [NSString stringWithFormat:@"<span class=\"user\">%@</span>", [user.nickname stringByEncodingXMLSpecialCharactersAsEntities]];
+	return [NSString stringWithFormat:@"<span class=\"user\"><a class=\"event\" style=\"padding: 1px 0px 4px; text-decoration: none; font-size: inherit;\" href=colloquy://%@>%@</a></span>", user.nickname, [user.nickname stringByEncodingXMLSpecialCharactersAsEntities]];
 }
 
 - (NSString *) _markupForMemberUser:(MVChatUser *) user {
-	return [NSString stringWithFormat:@"<span class=\"member user\">%@</span>", [user.nickname stringByEncodingXMLSpecialCharactersAsEntities]];
+	return [NSString stringWithFormat:@"<span class=\"member user\"><a class=\"event\" style=\"padding: 1px 0px 4px; text-decoration: none; font-size: inherit;\" href=colloquy://%@>%@</a></span>", user.nickname, [user.nickname stringByEncodingXMLSpecialCharactersAsEntities]];
 }
 
 - (void) _displayCurrentTopicOnlyIfSet:(BOOL) onlyIfSet {
