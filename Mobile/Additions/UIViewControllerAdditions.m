@@ -41,7 +41,7 @@
 	if (![UIDevice currentDevice].isPhoneModel)
 		supportedOrientations |= UIInterfaceOrientationMaskPortraitUpsideDown;
 
-	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"])
+	if (![[CQSettingsController settingsController] boolForKey:@"CQDisableLandscape"])
 		supportedOrientations |= UIInterfaceOrientationMaskLandscape;
 
 	return supportedOrientations;

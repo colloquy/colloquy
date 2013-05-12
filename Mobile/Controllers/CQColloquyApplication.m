@@ -99,7 +99,7 @@ static NSMutableArray *highlightWords;
 	if (!highlightWords) {
 		highlightWords = [[NSMutableArray alloc] init];
 
-		NSString *highlightWordsString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQHighlightWords"];
+		NSString *highlightWordsString = [[CQSettingsController settingsController] stringForKey:@"CQHighlightWords"];
 		if (highlightWordsString.length) {
 			[highlightWords addObjectsFromArray:[highlightWordsString cq_componentsMatchedByRegex:@"(?<=\\s|^)[/\"'](.*?)[/\"'](?=\\s|$)" capture:1]];
 
@@ -116,37 +116,37 @@ static NSMutableArray *highlightWords;
 - (void) updateAnalytics {
 	CQAnalyticsController *analyticsController = [CQAnalyticsController defaultController];
 
-	[analyticsController setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"] lowercaseString] forKey:@"transcript-style"];
+	[analyticsController setObject:[[[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptStyle"] lowercaseString] forKey:@"transcript-style"];
 
-	NSString *information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"] ? @"emoji" : @"text");
+	NSString *information = ([[CQSettingsController settingsController] boolForKey:@"CQGraphicalEmoticons"] ? @"emoji" : @"text");
 	[analyticsController setObject:information forKey:@"emoticon-style"];
 
-	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"] ? @"0" : @"1");
+	information = ([[CQSettingsController settingsController] boolForKey:@"CQDisableLandscape"] ? @"0" : @"1");
 	[analyticsController setObject:information forKey:@"landscape"];
 
-	information = ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableBuiltInBrowser"] ? @"0" : @"1");
+	information = ([[CQSettingsController settingsController] boolForKey:@"CQDisableBuiltInBrowser"] ? @"0" : @"1");
 	[analyticsController setObject:information forKey:@"browser"];
 
 	information = [[NSLocale autoupdatingCurrentLocale] localeIdentifier];
 	[analyticsController setObject:information forKey:@"locale"];
 
-	[analyticsController setObject:[[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"] lowercaseString] forKey:@"autocomplete-behavior"];
+	[analyticsController setObject:[[[CQSettingsController settingsController] stringForKey:@"CQChatAutocompleteBehavior"] lowercaseString] forKey:@"autocomplete-behavior"];
 
-	[analyticsController setObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"CQMultitaskingTimeout"] forKey:@"multitasking-timeout"];
+	[analyticsController setObject:[[CQSettingsController settingsController] objectForKey:@"CQMultitaskingTimeout"] forKey:@"multitasking-timeout"];
 
-	NSInteger showNotices = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"];
+	NSInteger showNotices = [[CQSettingsController settingsController] integerForKey:@"JVChatAlwaysShowNotices"];
 	information = (!showNotices ? @"auto" : (showNotices == 1 ? @"all" : @"none"));
 	[analyticsController setObject:information forKey:@"notices-behavior"];
 
-	information = ([[[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"] hasCaseInsensitiveSubstring:@"Colloquy for"] ? @"default" : @"custom");
+	information = ([[[CQSettingsController settingsController] stringForKey:@"JVQuitMessage"] hasCaseInsensitiveSubstring:@"Colloquy for"] ? @"default" : @"custom");
 	[analyticsController setObject:information forKey:@"quit-message"];
 }
 
 - (void) setDefaultMessageStringForKey:(NSString *) key {
-	NSString *message = [[NSUserDefaults standardUserDefaults] stringForKey:key];
+	NSString *message = [[CQSettingsController settingsController] stringForKey:key];
 	if ([message hasCaseInsensitiveSubstring:@"Colloquy for iPhone"]) {
 		message = [NSString stringWithFormat:NSLocalizedString(@"Colloquy for %@ - http://colloquy.mobi", @"Status message, with the device name inserted"), [UIDevice currentDevice].localizedModel];
-		[[NSUserDefaults standardUserDefaults] setObject:message forKey:key];
+		[[CQSettingsController settingsController] setObject:message forKey:key];
 	}
 }
 
@@ -158,7 +158,7 @@ static NSMutableArray *highlightWords;
 	highlightWords = nil;
 
 	if ([UIDevice currentDevice].isPadModel) {
-		NSNumber *newSwipeOrientationValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQSplitSwipeOrientations"];
+		NSNumber *newSwipeOrientationValue = [[CQSettingsController settingsController] objectForKey:@"CQSplitSwipeOrientations"];
 
 		if (![_oldSwipeOrientationValue isEqualToNumber:newSwipeOrientationValue]) {
 			_oldSwipeOrientationValue = [newSwipeOrientationValue copy];
@@ -169,7 +169,7 @@ static NSMutableArray *highlightWords;
 
 			BOOL disableSingleSwipe = [self splitViewController:nil shouldHideViewController:nil inOrientation:UIInterfaceOrientationLandscapeLeft] || [self splitViewController:nil shouldHideViewController:nil inOrientation:UIInterfaceOrientationPortrait];
 			if (disableSingleSwipe)
-				[[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"CQSingleFingerSwipe"];
+				[[CQSettingsController settingsController] setInteger:0 forKey:@"CQSingleFingerSwipe"];
 		}
 	}
 
@@ -180,13 +180,13 @@ static NSMutableArray *highlightWords;
 	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
 	NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
 
-	if (![[[NSUserDefaults standardUserDefaults] stringForKey:@"CQLastVersionUsed"] isEqualToString:version]) {
+	if (![[[CQSettingsController settingsController] stringForKey:@"CQLastVersionUsed"] isEqualToString:version]) {
 		NSString *bundleVersion = [infoDictionary objectForKey:@"CFBundleVersion"];
 		NSString *displayVersion = nil;
 		if (bundleVersion.length)
 			displayVersion = [NSString stringWithFormat:@"%@ (%@)", version, bundleVersion];
 		else displayVersion = version;
-		[[NSUserDefaults standardUserDefaults] setObject:displayVersion forKey:@"CQCurrentVersion"];
+		[[CQSettingsController settingsController] setObject:displayVersion forKey:@"CQCurrentVersion"];
 
 		if (![UIDevice currentDevice].isSystemSix) {
 			NSString *preferencesPath = [@"~/../../Library/Preferences/com.apple.Preferences.plist" stringByStandardizingPath];
@@ -200,20 +200,20 @@ static NSMutableArray *highlightWords;
 			[preferences release];
 		}
 
-		if (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVSetUpDefaultQuitMessage"]) {
+		if (![[CQSettingsController settingsController] boolForKey:@"JVSetUpDefaultQuitMessage"]) {
 			[self setDefaultMessageStringForKey:@"JVQuitMessage"];
-			[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVSetUpDefaultQuitMessage"];
+			[[CQSettingsController settingsController] setBool:YES forKey:@"JVSetUpDefaultQuitMessage"];
 		}
 
-		if (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVSetUpDefaultAwayMessage"]) {
+		if (![[CQSettingsController settingsController] boolForKey:@"JVSetUpDefaultAwayMessage"]) {
 			[self setDefaultMessageStringForKey:@"CQAwayStatus"];
-			[[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"JVSetUpDefaultAwayMessage"];
+			[[CQSettingsController settingsController] setBool:YES forKey:@"JVSetUpDefaultAwayMessage"];
 		}
 
 		if (![CQConnectionsController defaultController].connections.count && ![CQConnectionsController defaultController].bouncers.count)
 			[self showWelcome:nil];
 
-		[[NSUserDefaults standardUserDefaults] setObject:version forKey:@"CQLastVersionUsed"];
+		[[CQSettingsController settingsController] setObject:version forKey:@"CQLastVersionUsed"];
 	}
 
 	CQAnalyticsController *analyticsController = [CQAnalyticsController defaultController];
@@ -254,7 +254,7 @@ static NSMutableArray *highlightWords;
 
 	[self updateAnalytics];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 }
 
 - (void) handleNotificationWithUserInfo:(NSDictionary *) userInfo {
@@ -333,9 +333,9 @@ static NSMutableArray *highlightWords;
 
 - (BOOL) application:(UIApplication *) application didFinishLaunchingWithOptions:(NSDictionary *) launchOptions {
 	NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"]];
-	[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+	[[CQSettingsController settingsController] registerDefaults:defaults];
 
-	_deviceToken = [[[NSUserDefaults standardUserDefaults] stringForKey:@"CQPushDeviceToken"] retain];
+	_deviceToken = [[[CQSettingsController settingsController] stringForKey:@"CQPushDeviceToken"] retain];
 
 	[CQConnectionsController defaultController];
 	[CQChatController defaultController];
@@ -354,7 +354,7 @@ static NSMutableArray *highlightWords;
 		tabBarController.viewControllers = viewControllers;
 		[viewControllers release];
 
-		tabBarController.selectedIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQSelectedTabIndex"];
+		tabBarController.selectedIndex = [[CQSettingsController settingsController] integerForKey:@"CQSelectedTabIndex"];
 
 		_mainViewController = tabBarController;
 		_mainWindow.rootViewController = _mainViewController;
@@ -374,7 +374,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) applicationWillResignActive:(UIApplication *) application {
-	_oldSwipeOrientationValue = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQSplitSwipeOrientations"];
+	_oldSwipeOrientationValue = [[CQSettingsController settingsController] objectForKey:@"CQSplitSwipeOrientations"];
 }
 
 - (void) application:(UIApplication *) application didReceiveLocalNotification:(UILocalNotification *) notification {
@@ -393,7 +393,7 @@ static NSMutableArray *highlightWords;
 - (void) application:(UIApplication *) application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *) deviceToken {
 	if (!deviceToken.length) {
 		[[CQAnalyticsController defaultController] setObject:nil forKey:@"device-push-token"];
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:@"CQPushDeviceToken"];
+		[[CQSettingsController settingsController] removeObjectForKey:@"CQPushDeviceToken"];
 
 		[_deviceToken release];
 		_deviceToken = nil;
@@ -407,7 +407,7 @@ static NSMutableArray *highlightWords;
 		return;
 
 	[[CQAnalyticsController defaultController] setObject:deviceTokenString forKey:@"device-push-token"];
-	[[NSUserDefaults standardUserDefaults] setObject:deviceTokenString forKey:@"CQPushDeviceToken"];
+	[[CQSettingsController settingsController] setObject:deviceTokenString forKey:@"CQPushDeviceToken"];
 
 	id old = _deviceToken;
 	_deviceToken = [deviceTokenString retain];
@@ -497,7 +497,7 @@ static NSMutableArray *highlightWords;
 }
 
 - (BOOL) splitViewController:(UISplitViewController *) splitViewController shouldHideViewController:(UIViewController *) viewController inOrientation:(UIInterfaceOrientation) interfaceOrientation {
-	NSUInteger allowedOrientation = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQSplitSwipeOrientations"];
+	NSUInteger allowedOrientation = [[CQSettingsController settingsController] integerForKey:@"CQSplitSwipeOrientations"];
 	if (allowedOrientation == CQSidebarOrientationNone)
 		return NO;
 
@@ -784,7 +784,7 @@ static NSMutableArray *highlightWords;
 #pragma mark -
 
 - (void) tabBarController:(UITabBarController *) tabBarController didSelectViewController:(UIViewController *) viewController {
-	[[NSUserDefaults standardUserDefaults] setInteger:tabBarController.selectedIndex forKey:@"CQSelectedTabIndex"];
+	[[CQSettingsController settingsController] setInteger:tabBarController.selectedIndex forKey:@"CQSelectedTabIndex"];
 }
 
 #pragma mark -
@@ -793,7 +793,7 @@ static NSMutableArray *highlightWords;
 	if ([[UIDevice currentDevice] isPadModel])
 		return nil;
 
-	NSString *style = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
+	NSString *style = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptStyle"];
 	if ([style hasSuffix:@"-dark"])
 		return [UIColor blackColor];
 	if ([style isEqualToString:@"notes"])

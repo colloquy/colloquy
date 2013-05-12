@@ -15,7 +15,7 @@
 
 	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	return self;
 }

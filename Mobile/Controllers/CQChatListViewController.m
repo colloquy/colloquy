@@ -26,7 +26,7 @@ static BOOL showsChatIcons;
 	if (![NSThread isMainThread])
 		return;
 
-	showsChatIcons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"];
+	showsChatIcons = [[CQSettingsController settingsController] boolForKey:@"CQShowsChatIcons"];
 }
 
 + (void) initialize {
@@ -37,7 +37,7 @@ static BOOL showsChatIcons;
 
 	userDefaultsInitialized = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	[self userDefaultsChanged];
 }

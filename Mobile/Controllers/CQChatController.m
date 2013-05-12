@@ -58,23 +58,23 @@ static CQSoundController *fileTransferSound;
 	if (![NSThread isMainThread])
 		return;
 
-	alwaysShowNotices = [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatAlwaysShowNotices"];
-	vibrateOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"];
+	alwaysShowNotices = [[CQSettingsController settingsController] integerForKey:@"JVChatAlwaysShowNotices"];
+	vibrateOnHighlight = [[CQSettingsController settingsController] boolForKey:@"CQVibrateOnHighlight"];
 
 	id old = chatRoomInviteAction;
-	chatRoomInviteAction = [[[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatRoomInviteAction"] copy];
+	chatRoomInviteAction = [[[CQSettingsController settingsController] stringForKey:@"CQChatRoomInviteAction"] copy];
 	[old release];
 
-	NSString *soundName = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
+	NSString *soundName = [[CQSettingsController settingsController] stringForKey:@"CQSoundOnHighlight"];
 
 	old = highlightSound;
 	highlightSound = ([soundName isEqualToString:@"None"] ? nil : [[CQSoundController alloc] initWithSoundNamed:soundName]);
 	[old release];
 
 #if ENABLE(FILE_TRANSFERS)
-	vibrateOnFileTransfer = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnFileTransfer"];
+	vibrateOnFileTransfer = [[CQSettingsController settingsController] boolForKey:@"CQVibrateOnFileTransfer"];
 
-	soundName = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnFileTransfer"];
+	soundName = [[CQSettingsController settingsController] stringForKey:@"CQSoundOnFileTransfer"];
 
 	old = fileTransferSound;
 	fileTransferSound = ([soundName isEqualToString:@"None"] ? nil : [[CQSoundController alloc] initWithSoundNamed:soundName]);
@@ -90,7 +90,7 @@ static CQSoundController *fileTransferSound;
 
 	userDefaultsInitialized = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	[self userDefaultsChanged];
 }
@@ -191,7 +191,7 @@ static CQSoundController *fileTransferSound;
 - (void) _gotFileDownloadOffer:(NSNotification *) notification {
 	MVDownloadFileTransfer *transfer = notification.object;
 
-	NSString *action = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQFileDownloadAction"];
+	NSString *action = [[CQSettingsController settingsController] stringForKey:@"CQFileDownloadAction"];
 	if ([action isEqualToString:@"Auto-Accept"]) {
 		[self chatViewControllerForFileTransfer:transfer ifExists:NO];
 
@@ -405,7 +405,7 @@ static CQSoundController *fileTransferSound;
 
 #if ENABLE(FILE_TRANSFERS)
 - (void) imagePickerController:(UIImagePickerController *) picker didFinishPickingImage:(UIImage *) image editingInfo:(NSDictionary *) editingInfo {
-	NSString *behavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQImageFileTransferBehavior"];
+	NSString *behavior = [[CQSettingsController settingsController] stringForKey:@"CQImageFileTransferBehavior"];
 	if ([behavior isEqualToString:@"Ask"]) {
 		UIActionSheet *sheet = [[UIActionSheet alloc] init];
 		sheet.delegate = self;
@@ -721,7 +721,7 @@ static CQSoundController *fileTransferSound;
 
 @implementation MVIRCChatRoom (CQChatControllerAdditions)
 - (NSString *) displayName {
-	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"JVShowFullRoomNames"])
+	if (![[CQSettingsController settingsController] boolForKey:@"JVShowFullRoomNames"])
 		return [self.connection displayNameForChatRoomNamed:self.name];
 	return self.name;
 }

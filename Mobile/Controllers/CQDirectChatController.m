@@ -102,37 +102,37 @@ static BOOL showingKeyboard;
 	if (![NSThread isMainThread])
 		return;
 
-	timestampInterval = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQTimestampInterval"];
+	timestampInterval = [[CQSettingsController settingsController] doubleForKey:@"CQTimestampInterval"];
 	timestampEveryMessage = (timestampInterval == -1);
-	timestampFormat = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQTimestampFormat"];
-	timestampOnLeft = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQTimestampOnLeft"];
-	privateMessageAlertTimeout = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQPrivateMessageAlertTimeout"];
-	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
-	naturalChatActions = [[NSUserDefaults standardUserDefaults] boolForKey:@"MVChatNaturalActions"];
-	vibrateOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"];
-	vibrateOnPrivateMessage = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnPrivateMessage"];
-	localNotificationOnHighlight = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLocalNotificationOnHighlight"];
-	localNotificationOnPrivateMessage = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLocalNotificationOnPrivateMessage"];
-	clearOnConnect = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQClearOnConnect"];
-	markScrollbackOnMultitasking = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQMarkScrollbackOnMultitasking"];
-	singleSwipeGesture = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQSingleFingerSwipe"];
-	doubleSwipeGesture = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDoubleFingerSwipe"];
-	tripleSwipeGesture = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQTripleFingerSwipe"];
+	timestampFormat = [[CQSettingsController settingsController] objectForKey:@"CQTimestampFormat"];
+	timestampOnLeft = [[CQSettingsController settingsController] boolForKey:@"CQTimestampOnLeft"];
+	privateMessageAlertTimeout = [[CQSettingsController settingsController] doubleForKey:@"CQPrivateMessageAlertTimeout"];
+	graphicalEmoticons = [[CQSettingsController settingsController] boolForKey:@"CQGraphicalEmoticons"];
+	naturalChatActions = [[CQSettingsController settingsController] boolForKey:@"MVChatNaturalActions"];
+	vibrateOnHighlight = [[CQSettingsController settingsController] boolForKey:@"CQVibrateOnHighlight"];
+	vibrateOnPrivateMessage = [[CQSettingsController settingsController] boolForKey:@"CQVibrateOnPrivateMessage"];
+	localNotificationOnHighlight = [[CQSettingsController settingsController] boolForKey:@"CQShowLocalNotificationOnHighlight"];
+	localNotificationOnPrivateMessage = [[CQSettingsController settingsController] boolForKey:@"CQShowLocalNotificationOnPrivateMessage"];
+	clearOnConnect = [[CQSettingsController settingsController] boolForKey:@"CQClearOnConnect"];
+	markScrollbackOnMultitasking = [[CQSettingsController settingsController] boolForKey:@"CQMarkScrollbackOnMultitasking"];
+	singleSwipeGesture = [[CQSettingsController settingsController] integerForKey:@"CQSingleFingerSwipe"];
+	doubleSwipeGesture = [[CQSettingsController settingsController] integerForKey:@"CQDoubleFingerSwipe"];
+	tripleSwipeGesture = [[CQSettingsController settingsController] integerForKey:@"CQTripleFingerSwipe"];
 
-	NSUInteger newScrollbackLength = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQScrollbackLength"];
+	NSUInteger newScrollbackLength = [[CQSettingsController settingsController] integerForKey:@"CQScrollbackLength"];
 	if (newScrollbackLength != scrollbackLength) {
 		scrollbackLength = newScrollbackLength;
 
 		[[NSNotificationCenter defaultCenter] postNotificationName:CQScrollbackLengthDidChangeNotification object:nil];
 	}
 
-	NSString *soundName = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
+	NSString *soundName = [[CQSettingsController settingsController] stringForKey:@"CQSoundOnPrivateMessage"];
 
 	id old = privateMessageSound;
 	privateMessageSound = ([soundName isEqualToString:@"None"] ? nil : [[CQSoundController alloc] initWithSoundNamed:soundName]);
 	[old release];
 
-	soundName = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
+	soundName = [[CQSettingsController settingsController] stringForKey:@"CQSoundOnHighlight"];
 
 	old = highlightSound;
 	highlightSound = ([soundName isEqualToString:@"None"] ? nil : [[CQSoundController alloc] initWithSoundNamed:soundName]);
@@ -188,7 +188,7 @@ static BOOL showingKeyboard;
 
 	userDefaultsInitialized = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	[self userDefaultsChanged];
 
@@ -227,7 +227,7 @@ static BOOL showingKeyboard;
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didDisconnect:) name:MVChatConnectionDidDisconnectNotification object:self.connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didRecieveDeviceToken:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	if ([[UIDevice currentDevice] isPadModel]) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -243,7 +243,7 @@ static BOOL showingKeyboard;
 
 		[self _updateRightBarButtonItemAnimated:NO];
 
-		_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDirectChatEncoding"];
+		_encoding = [[CQSettingsController settingsController] integerForKey:@"CQDirectChatEncoding"];
 
 		_watchRule = [[MVChatUserWatchRule alloc] init];
 		_watchRule.nickname = self.user.nickname;
@@ -292,7 +292,7 @@ static BOOL showingKeyboard;
 - (void) restorePersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
 	_active = [[state objectForKey:@"active"] boolValue];
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQHistoryOnReconnect"]) {
+	if ([[CQSettingsController settingsController] boolForKey:@"CQHistoryOnReconnect"]) {
 		_pendingPreviousSessionComponents = [[NSMutableArray alloc] init];
 
 		for (NSDictionary *message in [state objectForKey:@"messages"]) {
@@ -1226,7 +1226,7 @@ static BOOL showingKeyboard;
 }
 
 - (BOOL) handleSysinfoCommandWithArguments:(NSString *) arguments {
-	NSString *version = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQCurrentVersion"];
+	NSString *version = [[CQSettingsController settingsController] stringForKey:@"CQCurrentVersion"];
 	NSString *orientation = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? NSLocalizedString(@"landscape", @"landscape orientation") : NSLocalizedString(@"portrait", @"portrait orientation");
 
 	NSString *message = nil;
@@ -1709,9 +1709,9 @@ static BOOL showingKeyboard;
 		return;
 
 	if (self.user)
-		_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQDirectChatEncoding"];
+		_encoding = [[CQSettingsController settingsController] integerForKey:@"CQDirectChatEncoding"];
 
-	NSString *chatTranscriptFontSizeString = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptFontSize"];
+	NSString *chatTranscriptFontSizeString = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFontSize"];
 	NSUInteger chatTranscriptFontSize = 0; // Default is 14px
 
 	if ([[UIDevice currentDevice] isPadModel]) {
@@ -1746,8 +1746,8 @@ static BOOL showingKeyboard;
 			chatTranscriptFontSize = 17;
 	}
 
-	transcriptView.styleIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptStyle"];
-	transcriptView.fontFamily = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatTranscriptFont"];
+	transcriptView.styleIdentifier = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptStyle"];
+	transcriptView.fontFamily = [[CQSettingsController settingsController] stringForKey:@"CQChatTranscriptFont"];
 	transcriptView.fontSize = chatTranscriptFontSize;
 	transcriptView.timestampOnLeft = timestampOnLeft;
 	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
@@ -1755,16 +1755,16 @@ static BOOL showingKeyboard;
 	if ([self isViewLoaded] && transcriptView)
 		self.view.backgroundColor = transcriptView.backgroundColor;
 
-	NSString *completionBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocompleteBehavior"];
+	NSString *completionBehavior = [[CQSettingsController settingsController] stringForKey:@"CQChatAutocompleteBehavior"];
 	chatInputBar.autocomplete = ![completionBehavior isEqualToString:@"Disabled"];
 	chatInputBar.spaceCyclesCompletions = [completionBehavior isEqualToString:@"Keyboard"];
 
-	BOOL autocorrect = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableChatAutocorrection"];
+	BOOL autocorrect = [[CQSettingsController settingsController] boolForKey:@"CQDisableChatAutocorrection"];
 	chatInputBar.autocorrect = !autocorrect;
 
 	chatInputBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
-	NSString *capitalizationBehavior = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQChatAutocapitalizationBehavior"];
+	NSString *capitalizationBehavior = [[CQSettingsController settingsController] stringForKey:@"CQChatAutocapitalizationBehavior"];
 	chatInputBar.autocapitalizationType = ([capitalizationBehavior isEqualToString:@"Sentences"] ? UITextAutocapitalizationTypeSentences : UITextAutocapitalizationTypeNone);
 }
 

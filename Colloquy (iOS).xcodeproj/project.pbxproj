@@ -284,6 +284,7 @@
 		92A55444173F68AA0046C359 /* topicToggleUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 92A55441173F68AA0046C359 /* topicToggleUp.png */; };
 		92AFF84A16B0CE4700940E5D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92AFF84916B0CE4700940E5D /* AVFoundation.framework */; };
 		92AFF85216B0D25D00940E5D /* NSRegularExpressionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AFF85116B0D25D00940E5D /* NSRegularExpressionAdditions.m */; };
+		92B257CA174023B300F303B5 /* CQSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B257C9174023B300F303B5 /* CQSettingsController.m */; };
 		92D30F2C116D2B020060EE33 /* UIViewControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */; };
 		92F1C9E3161D936D0035A9AF /* UIActionSheetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F1C9E2161D936D0035A9AF /* UIActionSheetAdditions.m */; };
 		92F3BE5011716FE700A4F554 /* CQPreferencesTextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F3BE4F11716FE700A4F554 /* CQPreferencesTextViewCell.m */; };
@@ -687,6 +688,9 @@
 		92AFF84916B0CE4700940E5D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		92AFF85016B0D25D00940E5D /* NSRegularExpressionAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSRegularExpressionAdditions.h; path = Additions/NSRegularExpressionAdditions.h; sourceTree = "<group>"; };
 		92AFF85116B0D25D00940E5D /* NSRegularExpressionAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSRegularExpressionAdditions.m; path = Additions/NSRegularExpressionAdditions.m; sourceTree = "<group>"; };
+		92B257C8174023B300F303B5 /* CQSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQSettingsController.h; sourceTree = "<group>"; };
+		92B257C9174023B300F303B5 /* CQSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQSettingsController.m; sourceTree = "<group>"; };
+		92B257D017403B2900F303B5 /* Colloquy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Colloquy.entitlements; path = ../../Colloquy.entitlements; sourceTree = "<group>"; };
 		92D30F2A116D2B020060EE33 /* UIViewControllerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIViewControllerAdditions.h; path = Mobile/Additions/UIViewControllerAdditions.h; sourceTree = "<group>"; };
 		92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIViewControllerAdditions.m; path = Mobile/Additions/UIViewControllerAdditions.m; sourceTree = "<group>"; };
 		92E2E65415BFD6740013B032 /* FileTransferTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileTransferTableCell.xib; sourceTree = "<group>"; };
@@ -801,6 +805,8 @@
 				92823CEA168FE6CB000EC36E /* CQIgnoreRulesController.h */,
 				1CF50C140ED8AFBE00CBE5E3 /* CQKeychain.m */,
 				1CF50C130ED8AFBE00CBE5E3 /* CQKeychain.h */,
+				92B257C9174023B300F303B5 /* CQSettingsController.m */,
+				92B257C8174023B300F303B5 /* CQSettingsController.h */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1303,6 +1309,7 @@
 				1CA2653811C3600F00AB4E44 /* Transcript Styles */,
 				1C840CBD0F1723F4004665DC /* iTunesArtwork */,
 				1C95B41C0FEC9BD900DAE9DF /* Entitlements.plist */,
+				92B257D017403B2900F303B5 /* Colloquy.entitlements */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				1CA718A90EF5F136006225CD /* Settings.bundle */,
 				1CA3DF0010291176008B1AD2 /* help.css */,
@@ -1752,6 +1759,7 @@
 				922C767616D9C0E900AEFCB4 /* CQInstapaperController.m in Sources */,
 				922C767716D9C0E900AEFCB4 /* CQPinboardController.m in Sources */,
 				922C767816D9C0E900AEFCB4 /* CQPocketController.m in Sources */,
+				92B257CA174023B300F303B5 /* CQSettingsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1787,7 +1795,7 @@
 		1C7F63A00FB3C50600E5FDD3 /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Mobile/Resources/Entitlements.plist;
+				CODE_SIGN_ENTITLEMENTS = Colloquy.entitlements;
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = NO;
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
@@ -1816,6 +1824,7 @@
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Colloquy.entitlements;
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = NO;
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
@@ -1843,6 +1852,7 @@
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Colloquy.entitlements;
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = NO;
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;

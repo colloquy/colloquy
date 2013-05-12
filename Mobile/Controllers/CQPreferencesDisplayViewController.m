@@ -179,7 +179,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 	id key = [rowDictionary objectForKey:CQPSKey];
 	id value = nil;
 	if (key) {
-		value = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+		value = [[CQSettingsController settingsController] objectForKey:key];
 		if (!value)
 			value = [rowDictionary objectForKey:CQPSDefaultValue];
 	}
@@ -196,7 +196,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 
 		cell.textLabel.text = [[NSBundle mainBundle] localizedStringForKey:[rowDictionary objectForKey:CQPSTitle] value:@"" table:nil];;
 		cell.textFieldBlock = ^(UITextField *textField) {
-			[[NSUserDefaults standardUserDefaults] setObject:textField.text forKey:key];
+			[[CQSettingsController settingsController] setObject:textField.text forKey:key];
 		};
 
 		NSString *autocorrectionType = [rowDictionary objectForKey:CQPSAutocorrectType];
@@ -236,7 +236,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 		cell.switchControl.on = [value boolValue];
 		cell.textLabel.text = [[NSBundle mainBundle] localizedStringForKey:[rowDictionary objectForKey:CQPSTitle] value:@"" table:nil];
 		cell.switchControlBlock = ^(UISwitch *switchControl) {
-			[[NSUserDefaults standardUserDefaults] setBool:switchControl.on forKey:key];
+			[[CQSettingsController settingsController] setBool:switchControl.on forKey:key];
 		};
 
 		return cell;
@@ -285,13 +285,13 @@ static NSString *const CQPSListTypeFont = @"Font";
 		preferencesListViewController.items = [rowDictionary objectForKey:CQPSTitles];
 
 		id key = [rowDictionary objectForKey:CQPSKey];
-		id value = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+		id value = [[CQSettingsController settingsController] objectForKey:key];
 		if (!value)
 			value = [rowDictionary objectForKey:CQPSDefaultValue];
 		preferencesListViewController.selectedItemIndex = [[rowDictionary objectForKey:CQPSValues] indexOfObject:value];
 		preferencesListViewController.preferencesListBlock = ^(CQPreferencesListViewController *editedPreferencesListViewController) {
 			id newValue = [[rowDictionary objectForKey:CQPSValues] objectAtIndex:editedPreferencesListViewController.selectedItemIndex];
-			[[NSUserDefaults standardUserDefaults] setObject:newValue forKey:key];
+			[[CQSettingsController settingsController] setObject:newValue forKey:key];
 		};
 
 		NSString *listType = [rowDictionary objectForKey:CQPSListType];

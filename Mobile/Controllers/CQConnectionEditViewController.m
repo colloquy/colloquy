@@ -225,7 +225,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 		listViewController.title = NSLocalizedString(@"Join Rooms", @"Join Rooms view title");
 		listViewController.items = _connection.automaticJoinedRooms;
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"])
+		if ([[CQSettingsController settingsController] boolForKey:@"CQShowsChatIcons"])
 			listViewController.itemImage = [UIImage imageNamed:@"roomIconSmall.png"];
 		listViewController.addItemLabelText = NSLocalizedString(@"Add chat room", @"Add chat room label");
 		listViewController.noItemsLabelText = NSLocalizedString(@"No chat rooms", @"No chat rooms label");
@@ -424,7 +424,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 		cell.switchAction = @selector(multitaskingChanged:);
 		cell.textLabel.text = NSLocalizedString(@"Allow Multitasking", @"Multitasking connection setting label");
-		cell.on = _connection.multitaskingSupported && [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"] > 0;
+		cell.on = _connection.multitaskingSupported && [[CQSettingsController settingsController] doubleForKey:@"CQMultitaskingTimeout"] > 0;
 
 		if (_connection.multitaskingSupported)
 			cell.accessibilityLabel = NSLocalizedString(@"Allow Multitasking: On", @"Voiceover allow multitasking on label");
@@ -554,8 +554,8 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 }
 
 - (void) multitaskingChanged:(CQPreferencesSwitchCell *) sender {
-	if (sender.on && ![[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"]) {
-		[[NSUserDefaults standardUserDefaults] setDouble:300 forKey:@"CQMultitaskingTimeout"];
+	if (sender.on && ![[CQSettingsController settingsController] doubleForKey:@"CQMultitaskingTimeout"]) {
+		[[CQSettingsController settingsController] setDouble:300 forKey:@"CQMultitaskingTimeout"];
 
 		UIAlertView *alert = [[UIAlertView alloc] init];
 

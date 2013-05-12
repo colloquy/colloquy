@@ -41,7 +41,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:CQRoomTopicChangedNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:CQSettingsDidChangeNotification object:nil];
 
 	super.delegate = nil;
 
@@ -492,13 +492,13 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[self addGestureRecognizer:longPressGestureRecognizer];
 	[longPressGestureRecognizer release];
 
-	_showRoomTopic = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQShowRoomTopic"];
+	_showRoomTopic = [[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged:) name:CQSettingsDidChangeNotification object:nil];
 }
 
 - (void) _userDefaultsChanged:(NSNotification *) notification {
-	CQShowRoomTopic shouldShowRoomTopic = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQShowRoomTopic"];
+	CQShowRoomTopic shouldShowRoomTopic = [[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
 	if (_showRoomTopic == shouldShowRoomTopic)
 		return;
 
@@ -520,7 +520,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 		[styleString appendString:@"}"];
 	}
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQTimestampOnLeft"])
+	if ([[CQSettingsController settingsController] boolForKey:@"CQTimestampOnLeft"])
 		[styleString appendFormat:@".timestamp { float: none; }"];
 
 	return [styleString autorelease];
@@ -533,7 +533,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 }
 
 - (void) _roomTopicChanged:(NSNotification *) notification {
-	CQShowRoomTopic showRoomTopic = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQShowRoomTopic"];
+	CQShowRoomTopic showRoomTopic = [[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
 	if (showRoomTopic) {
 		
 	}

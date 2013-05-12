@@ -127,7 +127,7 @@ enum {
 		CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
 		listViewController.title = NSLocalizedString(@"Rooms", @"Rooms List Title");
 		listViewController.items = self._ignoreRule.rooms;
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowsChatIcons"])
+		if ([[CQSettingsController settingsController] boolForKey:@"CQShowsChatIcons"])
 			listViewController.itemImage = [UIImage imageNamed:@"roomIconSmall.png"];
 		listViewController.addItemLabelText = NSLocalizedString(@"Add chat room", @"Add chat room label");
 		listViewController.noItemsLabelText = NSLocalizedString(@"No chat rooms", @"No chat rooms label");

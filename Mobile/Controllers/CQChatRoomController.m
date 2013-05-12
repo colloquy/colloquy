@@ -48,10 +48,10 @@ static BOOL showLeaveEvents;
 	if (![NSThread isMainThread])
 		return;
 
-	showJoinEvents = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowJoinEvents"];
-	showHostmasksOnJoin = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnJoin"];
-	showHostmasksOnPart = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowHostmaskOnPart"];
-	showLeaveEvents = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowLeaveEvents"];
+	showJoinEvents = [[CQSettingsController settingsController] boolForKey:@"CQShowJoinEvents"];
+	showHostmasksOnJoin = [[CQSettingsController settingsController] boolForKey:@"CQShowHostmaskOnJoin"];
+	showHostmasksOnPart = [[CQSettingsController settingsController] boolForKey:@"CQShowHostmaskOnPart"];
+	showLeaveEvents = [[CQSettingsController settingsController] boolForKey:@"CQShowLeaveEvents"];
 }
 
 + (void) initialize {
@@ -62,7 +62,7 @@ static BOOL showLeaveEvents;
 
 	userDefaultsInitialized = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	[self userDefaultsChanged];
 }
@@ -75,7 +75,7 @@ static BOOL showLeaveEvents;
 
 	_orderedMembers = [[NSMutableArray alloc] initWithCapacity:100];
 
-	_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQChatRoomEncoding"];
+	_encoding = [[CQSettingsController settingsController] integerForKey:@"CQChatRoomEncoding"];
 
 	self.room.encoding = self.encoding;
 
@@ -442,7 +442,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 }
 
 - (void) _sortMembers {
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVSortRoomMembersByStatus"])
+	if ([[CQSettingsController settingsController] boolForKey:@"JVSortRoomMembersByStatus"])
 		[_orderedMembers sortUsingFunction:sortMembersByStatus context:self];
 	else [_orderedMembers sortUsingFunction:sortMembersByNickname context:self];
 
@@ -512,7 +512,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionNicknameAcceptedNotification object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatRoomTopicChangedNotification object:nil];
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"JVAutoRejoinRoomsOnKick"]) {
+	if ([[CQSettingsController settingsController] boolForKey:@"JVAutoRejoinRoomsOnKick"]) {
 		[self performSelector:@selector(join) withObject:nil afterDelay:5.];
 		return;
 	}
@@ -527,7 +527,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	[alert addButtonWithTitle:NSLocalizedString(@"Rejoin", @"Rejoin alert button title")];
 
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQVibrateOnHighlight"])
+	if ([[CQSettingsController settingsController] boolForKey:@"CQVibrateOnHighlight"])
 		[CQSoundController vibrate];
 
 	[alert show];
@@ -1152,7 +1152,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 
 	[super _userDefaultsChanged];
 
-	_encoding = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQChatRoomEncoding"];
+	_encoding = [[CQSettingsController settingsController] integerForKey:@"CQChatRoomEncoding"];
 
 	self.room.encoding = self.encoding;
 }

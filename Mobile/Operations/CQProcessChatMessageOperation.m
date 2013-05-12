@@ -31,15 +31,15 @@ static NSString *timestampFormat;
 	if (![NSThread isMainThread])
 		return;
 
-	graphicalEmoticons = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQGraphicalEmoticons"];
-	stripMessageFormatting = [[NSUserDefaults standardUserDefaults] boolForKey:@"JVChatStripMessageFormatting"];
+	graphicalEmoticons = [[CQSettingsController settingsController] boolForKey:@"CQGraphicalEmoticons"];
+	stripMessageFormatting = [[CQSettingsController settingsController] boolForKey:@"JVChatStripMessageFormatting"];
 
 	[highlightRegexes release];
 	highlightRegexes = nil;
 	highlightRegexes = [[NSMutableDictionary alloc] init];
-	inlineImages = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQInlineImages"];
+	inlineImages = [[CQSettingsController settingsController] boolForKey:@"CQInlineImages"];
 
-	CQMentionLinkService mentionService = [[NSUserDefaults standardUserDefaults] integerForKey:@"CQMentionLinkService"];
+	CQMentionLinkService mentionService = [[CQSettingsController settingsController] integerForKey:@"CQMentionLinkService"];
 	if (mentionService == CQMentionLinkServiceAppDotNet) {
 		mentionServiceRegex = @"\\B@[a-zA-Z0-9_]{1,20}";
 		mentionServiceReplacementFormat = @"<a href=\"https://alpha.app.net/%@\">@%@</a>";
@@ -51,8 +51,8 @@ static NSString *timestampFormat;
 		mentionServiceReplacementFormat = nil;
 	}
 
-	timestampEveryMessage = ([[NSUserDefaults standardUserDefaults] doubleForKey:@"CQTimestampInterval"] == -1);
-	timestampFormat = [[NSUserDefaults standardUserDefaults] objectForKey:@"CQTimestampFormat"];
+	timestampEveryMessage = ([[CQSettingsController settingsController] doubleForKey:@"CQTimestampInterval"] == -1);
+	timestampFormat = [[CQSettingsController settingsController] objectForKey:@"CQTimestampFormat"];
 }
 
 + (void) initialize {
@@ -63,7 +63,7 @@ static NSString *timestampFormat;
 
 	userDefaultsInitialized = YES;
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	[self userDefaultsChanged];
 }

@@ -74,7 +74,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didNotConnect:) name:MVChatConnectionDidNotConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_errorOccurred:) name:MVChatConnectionErrorNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_deviceTokenRecieved:) name:CQColloquyApplicationDidRecieveDeviceTokenNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_batteryStateChanged) name:UIDeviceBatteryStateDidChangeNotification object:nil];
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotConnectionError:) name:MVChatConnectionGotErrorNotification object:nil];
 
@@ -104,7 +104,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 #if TARGET_IPHONE_SIMULATOR
 	_shouldLogRawMessagesToConsole = YES;
 #else
-	_shouldLogRawMessagesToConsole = [[NSUserDefaults standardUserDefaults] boolForKey:@"CQLogRawMessagesToConsole"];
+	_shouldLogRawMessagesToConsole = [[CQSettingsController settingsController] boolForKey:@"CQLogRawMessagesToConsole"];
 #endif
 
 	return self;
@@ -132,7 +132,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 - (void) setShouldLogRawMessagesToConsole:(BOOL) shouldLogRawMessagesToConsole {
 	_shouldLogRawMessagesToConsole = shouldLogRawMessagesToConsole;
 
-	[[NSUserDefaults standardUserDefaults] setBool:_shouldLogRawMessagesToConsole forKey:@"CQLogRawMessagesToConsole"];
+	[[CQSettingsController settingsController] setBool:_shouldLogRawMessagesToConsole forKey:@"CQLogRawMessagesToConsole"];
 }
 
 #pragma mark -
@@ -484,7 +484,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
 		return;
 
-	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQBackgroundTimeRemainingAlert"])
+	if (![[CQSettingsController settingsController] boolForKey:@"CQBackgroundTimeRemainingAlert"])
 		return;
 
 	if (![self _anyConnectedOrConnectingConnections])
@@ -505,10 +505,10 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
 		return;
 
-	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQShowDisconnectedInBackgroundAlert"])
+	if (![[CQSettingsController settingsController] boolForKey:@"CQShowDisconnectedInBackgroundAlert"])
 		return;
 
-	if (![[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"])
+	if (![[CQSettingsController settingsController] doubleForKey:@"CQMultitaskingTimeout"])
 		return;
 
 	if (![self _anyConnectedOrConnectingConnections])
@@ -536,7 +536,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground)
 		return;
 
-	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQBackgroundTimeRemainingAlert"])
+	if (![[CQSettingsController settingsController] boolForKey:@"CQBackgroundTimeRemainingAlert"])
 		return;
 
 	if (![self _anyConnectedOrConnectingConnections])
@@ -595,7 +595,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	_automaticallySetConnectionAwayStatus = [[NSMutableSet alloc] init];
 
 	NSTimeInterval remainingTime = [UIApplication sharedApplication].backgroundTimeRemaining;
-	NSTimeInterval multitaskingTimeout = [[NSUserDefaults standardUserDefaults] doubleForKey:@"CQMultitaskingTimeout"];
+	NSTimeInterval multitaskingTimeout = [[CQSettingsController settingsController] doubleForKey:@"CQMultitaskingTimeout"];
 
 	remainingTime = fmin(remainingTime, multitaskingTimeout);
 
@@ -618,8 +618,8 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		[self performSelector:@selector(_showRemainingTimeAlert) withObject:nil afterDelay:remainingTime];
 	}
 
-	NSString *defaultAwayMessage = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQAwayStatus"];
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:@"CQAutoAwayWhenMultitasking"] && defaultAwayMessage.length) {
+	NSString *defaultAwayMessage = [[CQSettingsController settingsController] stringForKey:@"CQAwayStatus"];
+	if ([[CQSettingsController settingsController] boolForKey:@"CQAutoAwayWhenMultitasking"] && defaultAwayMessage.length) {
 		for (MVChatConnection *connection in _connections) {
 			if (!connection.awayStatusMessage.length) {
 				connection.awayStatusMessage = defaultAwayMessage;
@@ -674,7 +674,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 - (BOOL) _shouldDisableIdleTimer {
 	if ([UIDevice currentDevice].batteryState >= UIDeviceBatteryStateCharging)
 		return YES;
-	return ([self _anyConnectedOrConnectingConnections] && [[NSUserDefaults standardUserDefaults] boolForKey:@"CQIdleTimerDisabled"]);
+	return ([self _anyConnectedOrConnectingConnections] && [[CQSettingsController settingsController] boolForKey:@"CQIdleTimerDisabled"]);
 }
 
 - (void) _gotConnectionError:(NSNotification *) notification {
@@ -1196,7 +1196,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	_loadedConnections = YES;
 
-	NSArray *bouncers = [[NSUserDefaults standardUserDefaults] arrayForKey:@"CQChatBouncers"];
+	NSArray *bouncers = [[CQSettingsController settingsController] arrayForKey:@"CQChatBouncers"];
 	for (NSDictionary *info in bouncers) {
 		CQBouncerSettings *settings = [[CQBouncerSettings alloc] initWithDictionaryRepresentation:info];
 		if (!settings)
@@ -1224,7 +1224,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		[settings release];
 	}
 
-	NSArray *connections = [[NSUserDefaults standardUserDefaults] arrayForKey:@"MVChatBookmarks"];
+	NSArray *connections = [[CQSettingsController settingsController] arrayForKey:@"MVChatBookmarks"];
 	for (NSDictionary *info in connections) {
 		MVChatConnection *connection = [self _chatConnectionWithDictionaryRepresentation:info];
 		if (!connection)
@@ -1329,9 +1329,9 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		[bouncers addObject:info];
 	}
 
-	[[NSUserDefaults standardUserDefaults] setObject:bouncers forKey:@"CQChatBouncers"];
-	[[NSUserDefaults standardUserDefaults] setObject:connections forKey:@"MVChatBookmarks"];
-	[[NSUserDefaults standardUserDefaults] synchronize];
+	[[CQSettingsController settingsController] setObject:bouncers forKey:@"CQChatBouncers"];
+	[[CQSettingsController settingsController] setObject:connections forKey:@"MVChatBookmarks"];
+	[[CQSettingsController settingsController] synchronize];
 
 	[[CQAnalyticsController defaultController] setObject:[NSNumber numberWithUnsignedInteger:roomCount] forKey:@"total-rooms"];
 	[[CQAnalyticsController defaultController] setObject:[NSNumber numberWithUnsignedInteger:pushConnectionCount] forKey:@"total-push-connections"];
@@ -1423,8 +1423,8 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	if (!connection) return;
 
 	if (!_directConnections.count) {
-		[[NSUserDefaults standardUserDefaults] setObject:connection.nickname forKey:@"CQDefaultNickname"];
-		[[NSUserDefaults standardUserDefaults] setObject:connection.realName forKey:@"CQDefaultRealName"];
+		[[CQSettingsController settingsController] setObject:connection.nickname forKey:@"CQDefaultNickname"];
+		[[CQSettingsController settingsController] setObject:connection.realName forKey:@"CQDefaultRealName"];
 	}
 
 	[_directConnections insertObject:connection atIndex:index];
@@ -1580,7 +1580,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 @implementation MVChatConnection (CQConnectionsControllerAdditions)
 + (NSString *) defaultNickname {
-	NSString *defaultNickname = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQDefaultNickname"];
+	NSString *defaultNickname = [[CQSettingsController settingsController] stringForKey:@"CQDefaultNickname"];
 	if (defaultNickname.length)
 		return defaultNickname;
 
@@ -1613,7 +1613,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 }
 
 + (NSString *) defaultRealName {
-	NSString *defaultRealName = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQDefaultRealName"];
+	NSString *defaultRealName = [[CQSettingsController settingsController] stringForKey:@"CQDefaultRealName"];
 	if (defaultRealName.length)
 		return defaultRealName;
 
@@ -1645,11 +1645,11 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 }
 
 + (NSString *) defaultQuitMessage {
-	return [[NSUserDefaults standardUserDefaults] stringForKey:@"JVQuitMessage"];
+	return [[CQSettingsController settingsController] stringForKey:@"JVQuitMessage"];
 }
 
 + (NSStringEncoding) defaultEncoding {
-	return [[NSUserDefaults standardUserDefaults] integerForKey:@"JVChatEncoding"];
+	return [[CQSettingsController settingsController] integerForKey:@"JVChatEncoding"];
 }
 
 #pragma mark -
@@ -1855,12 +1855,12 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		for (NSString *highlightWord in highlightWords)
 			[self sendRawMessageWithFormat:@"PUSH highlight-word :%@", highlightWord];
 
-		NSString *sound = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnHighlight"];
+		NSString *sound = [[CQSettingsController settingsController] stringForKey:@"CQSoundOnHighlight"];
 		if (sound.length && ![sound isEqualToString:@"None"])
 			[self sendRawMessageWithFormat:@"PUSH highlight-sound :%@.aiff", sound];
 		else [self sendRawMessageWithFormat:@"PUSH highlight-sound none"];
 
-		sound = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQSoundOnPrivateMessage"];
+		sound = [[CQSettingsController settingsController] stringForKey:@"CQSoundOnPrivateMessage"];
 		if (sound.length && ![sound isEqualToString:@"None"])
 			[self sendRawMessageWithFormat:@"PUSH message-sound :%@.aiff", sound];
 		else [self sendRawMessageWithFormat:@"PUSH message-sound none"];

@@ -8,7 +8,7 @@
 #import "MVDelegateLogger.h"
 
 #define defaultNamed(name) \
-	[[NSUserDefaults standardUserDefaults] boolForKey:[NSString stringWithFormat:@"CQConsoleDisplay%@", name]];
+	[[CQSettingsController settingsController] boolForKey:[NSString stringWithFormat:@"CQConsoleDisplay%@", name]];
 
 static BOOL hideNICKs;
 static BOOL hideTraffic; // JOIN, PART, KICK, INVITE
@@ -54,7 +54,7 @@ static BOOL verbose;
 	dispatch_once(&pred, ^{
 		[self userDefaultsChanged];
 
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 	});
 }
 
@@ -226,7 +226,7 @@ static BOOL verbose;
 #pragma mark -
 
 - (void) _connectionWillConnect:(NSNotification *) notification {
-	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"CQConsoleDisplayClearOnConnect"])
+	if (![[CQSettingsController settingsController] boolForKey:@"CQConsoleDisplayClearOnConnect"])
 		return;
 
 	[self clearController];

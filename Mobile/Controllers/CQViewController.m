@@ -6,6 +6,6 @@
 		return YES;
 	if (![[UIDevice currentDevice] isPadModel] && interfaceOrientation == UIDeviceOrientationPortraitUpsideDown)
 		return NO;
-	return ![[NSUserDefaults standardUserDefaults] boolForKey:@"CQDisableLandscape"];
+	return ![[CQSettingsController settingsController] boolForKey:@"CQDisableLandscape"];
 }
 @end

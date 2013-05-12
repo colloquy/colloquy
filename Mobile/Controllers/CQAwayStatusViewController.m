@@ -24,11 +24,11 @@
 
 	self.title = NSLocalizedString(@"Create Away Status…", @"Create Away Status title");
 
-	NSMutableArray *awayStatuses = [[[NSUserDefaults standardUserDefaults] arrayForKey:@"CQAwayStatuses"] mutableCopy];
+	NSMutableArray *awayStatuses = [[[CQSettingsController settingsController] arrayForKey:@"CQAwayStatuses"] mutableCopy];
 	if (!awayStatuses)
 		awayStatuses = [[NSMutableArray alloc] init];
 
-	NSString *defaultAwayStatus = [[NSUserDefaults standardUserDefaults] stringForKey:@"CQAwayStatus"];
+	NSString *defaultAwayStatus = [[CQSettingsController settingsController] stringForKey:@"CQAwayStatus"];
 	if (defaultAwayStatus.length && ![awayStatuses containsObject:defaultAwayStatus])
 		[awayStatuses addObject:defaultAwayStatus];
 	else {
@@ -79,19 +79,19 @@
 - (void) viewWillAppear:(BOOL) animated {
 	[super viewWillAppear:animated];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self.tableView selector:@selector(reloadData) name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self.tableView selector:@selector(reloadData) name:CQSettingsDidChangeNotification object:nil];
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
-	[[NSNotificationCenter defaultCenter] removeObserver:self.tableView name:NSUserDefaultsDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self.tableView name:CQSettingsDidChangeNotification object:nil];
 }
 
 #pragma mark -
 
 - (BOOL) statusIsDefaultAwayStatus:(NSString *) status {
-	return [status isEqualToString:[[NSUserDefaults standardUserDefaults] stringForKey:@"CQAwayStatus"]];
+	return [status isEqualToString:[[CQSettingsController settingsController] stringForKey:@"CQAwayStatus"]];
 }
 
 #pragma mark -
@@ -206,7 +206,7 @@
 	UITableViewCell *cell = [actionSheet associatedObjectForKey:@"userInfo"];
 	NSString *awayStatus = cell.textLabel.text;
 
-	[[NSUserDefaults standardUserDefaults] setObject:awayStatus forKey:@"CQAwayStatus"];
+	[[CQSettingsController settingsController] setObject:awayStatus forKey:@"CQAwayStatus"];
 
 	[self.tableView reloadData];
 }
@@ -242,7 +242,7 @@
 			[awayStatuses addObject:awayStatus];
 	}
 
-	[[NSUserDefaults standardUserDefaults] setObject:awayStatuses forKey:@"CQAwayStatuses"];
+	[[CQSettingsController settingsController] setObject:awayStatuses forKey:@"CQAwayStatuses"];
 
 	[awayStatuses release];
 }

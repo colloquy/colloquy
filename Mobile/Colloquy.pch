@@ -32,6 +32,8 @@
 #import "UITableViewCellAdditions.h"
 #import "UIViewControllerAdditions.h"
 
+#import "CQSettingsController.h"
+
 #endif
 
 #import "MVUtilities.h"
