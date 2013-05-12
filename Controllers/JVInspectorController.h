@@ -36,7 +36,7 @@
 	BOOL _inspectorLoaded;
 }
 + (JVInspectorController *) sharedInspector;
-+ (IBAction) showInspector:(id) sender;
++ (void /*IBAction*/) showInspector:(id) sender; // only works because this is already wired up
 + (JVInspectorController *) inspectorOfObject:(id <JVInspection>) object NS_RETURNS_NOT_RETAINED;
 
 - (id) initWithObject:(id <JVInspection>) object lockedOn:(BOOL) locked;

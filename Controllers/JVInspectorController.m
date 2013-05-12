@@ -17,7 +17,7 @@ static NSMutableSet *inspectors = nil;
 	return ( sharedInstance ? sharedInstance : ( sharedInstance = [[self alloc] initWithObject:nil lockedOn:NO] ) );
 }
 
-+ (IBAction) showInspector:(id) sender {
++ (void /*IBAction*/) showInspector:(id) sender {
 	[[self sharedInspector] show:sender];
 }
 

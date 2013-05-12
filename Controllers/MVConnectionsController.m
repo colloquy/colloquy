@@ -2155,11 +2155,11 @@ static NSMenu *favoritesMenu = nil;
 	[[JVChatController defaultController] chatConsoleForConnection:[[_bookmarks objectAtIndex:row] objectForKey:@"connection"] ifExists:NO];
 }
 
-+ (IBAction) _openFavoritesFolder:(id) sender {
++ (void /*IBAction*/) _openFavoritesFolder:(id) sender {
 	[[NSWorkspace sharedWorkspace] openFile:[@"~/Library/Application Support/Colloquy/Favorites" stringByExpandingTildeInPath]];
 }
 
-+ (IBAction) _connectToFavorite:(id) sender {
++ (void /*IBAction*/) _connectToFavorite:(id) sender {
 	if( ! [sender representedObject] ) return;
 	[[MVConnectionsController defaultController] handleURL:[sender representedObject] andConnectIfPossible:YES];
 }
