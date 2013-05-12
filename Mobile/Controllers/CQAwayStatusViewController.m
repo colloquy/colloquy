@@ -47,7 +47,7 @@
 	self.addItemLabelText = NSLocalizedString(@"New away status", @"New away status label");
 	self.noItemsLabelText = NSLocalizedString(@"No away statuses", @"No away statuses label");
 	self.editViewTitle = NSLocalizedString(@"Add status", @"Add status label");
-	self.editPlaceholder = [[NSString alloc] initWithFormat:NSLocalizedString(@"Away from my %@", @"Away from my %@ label"), [UIDevice currentDevice].model];;
+	self.editPlaceholder = [NSString stringWithFormat:NSLocalizedString(@"Away from my %@", @"Away from my %@ label"), [UIDevice currentDevice].model];
 
 	self.target = self;
 	self.action = @selector(updateAwayStatuses:);
