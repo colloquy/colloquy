@@ -40,6 +40,7 @@ static JVNotificationController *sharedInstance = nil;
 
 - (void) dealloc {
 
+	[[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	if( self == sharedInstance ) sharedInstance = nil;
 
@@ -148,6 +149,7 @@ static JVNotificationController *sharedInstance = nil;
 	} else {
 		NSUserNotification *notification = [[NSUserNotification alloc] init];
 		notification.title = title;
+
 		NSString *notificationSubtitle = context[@"subtitle"];
 		if (!notificationSubtitle.length) {
 			if ([description isKindOfClass:[NSString class]]) {

@@ -2068,14 +2068,14 @@ static NSMenu *favoritesMenu = nil;
 }
 
 - (void) _gotConnectionError:(NSNotification *) notification {
-	MVChatConnection *connection = notification.object;
-
-	NSAlert *alert = [[NSAlert alloc] init];
-	alert.messageText = connection.server;
-	alert.informativeText = [notification.userInfo objectForKey:@"message"];
-	[alert addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button title")];
-
-	[alert runModal];
+//	MVChatConnection *connection = notification.object;
+//
+//	NSAlert *alert = [[NSAlert alloc] init];
+//	alert.messageText = connection.server;
+//	alert.informativeText = [notification.userInfo objectForKey:@"message"];
+//	[alert addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button title")];
+//
+//	[alert runModal];
 }
 
 - (NSString *) _idleMessageString {
