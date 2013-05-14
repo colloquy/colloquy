@@ -312,7 +312,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 			mailComposeViewController.toRecipients = [NSArray arrayWithObject:address];
 			mailComposeViewController.subject = NSLocalizedString(@"Mobile Colloquy Support", @"Mobile Colloquy Support subject header");
 
-			[self.navigationController presentModalViewController:mailComposeViewController animated:[UIView areAnimationsEnabled]];
+			[self.navigationController presentViewController:mailComposeViewController animated:[UIView areAnimationsEnabled] completion:NULL];
 
 			[mailComposeViewController release];
 		}
@@ -335,6 +335,6 @@ static NSString *const CQPSListTypeFont = @"Font";
 }
 
 - (void) mailComposeController:(MFMailComposeViewController *) controller didFinishWithResult:(MFMailComposeResult) result error:(NSError *) error {
-	[controller dismissModalViewControllerAnimated:[UIView areAnimationsEnabled]];
+	[controller dismissViewControllerAnimated:[UIView areAnimationsEnabled] completion:NULL];
 }
 @end

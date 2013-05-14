@@ -581,10 +581,10 @@ static CQSoundController *fileTransferSound;
 		_chatPresentationController.topChatViewController = controller;
 		[_chatNavigationController selectChatViewController:controller animatedSelection:animated animatedScroll:animated];
 	} else {
-		if (_chatNavigationController.modalViewController != nil) {
+		if (_chatNavigationController.presentedViewController != nil) {
 			[_chatNavigationController popToRootViewControllerAnimated:NO];
 			[_chatNavigationController pushViewController:(UIViewController *)controller animated:NO];
-			[_chatNavigationController dismissModalViewControllerAnimated:animated];
+			[_chatNavigationController dismissViewControllerAnimated:animated completion:NULL];
 		} else {
 			if (!_chatNavigationController.rootViewController)
 				[[CQColloquyApplication sharedApplication] showColloquies:nil];

@@ -258,7 +258,7 @@ static BOOL showLeaveEvents;
 		}
 
 		_showingMembersInModalController = YES;
-		[self.navigationController presentModalViewController:_currentUserListNavigationController animated:YES];
+		[self.navigationController presentViewController:_currentUserListNavigationController animated:YES completion:NULL];
 	}
 }
 

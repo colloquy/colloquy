@@ -470,6 +470,6 @@ static NSString *membersFilteredCountFormat;
 #pragma mark -
 
 - (void) dismissFromDoneButton {
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:NULL];
 }
 @end

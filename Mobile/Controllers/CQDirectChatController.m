@@ -1229,7 +1229,7 @@ static BOOL showingKeyboard;
 	tweetComposeViewController.completionHandler = ^(TWTweetComposeViewControllerResult result) {
 
 	};
-	[self.navigationController presentModalViewController:tweetComposeViewController animated:YES];
+	[self.navigationController presentViewController:tweetComposeViewController animated:YES completion:NULL];
 
 	[tweetComposeViewController release];
 	return YES;

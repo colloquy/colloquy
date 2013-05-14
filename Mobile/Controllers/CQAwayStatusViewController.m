@@ -173,7 +173,7 @@
 
 		_connection.awayStatusMessage = [_items objectAtIndex:indexPath.row];
 
-		[self.navigationController dismissModalViewControllerAnimated:YES];
+		[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 	}
 }
 

@@ -570,7 +570,7 @@ static NSMutableArray *highlightWords;
 @synthesize mainViewController = _mainViewController;
 
 - (UIViewController *) modalViewController {
-	return _mainViewController.modalViewController;
+	return _mainViewController.presentedViewController;
 }
 
 - (void) presentModalViewController:(UIViewController *) modalViewController {
@@ -599,11 +599,11 @@ static NSMutableArray *highlightWords;
 		}
 	}
 
-	[_mainViewController presentModalViewController:modalViewController animated:animated];
+	[_mainViewController presentViewController:modalViewController animated:animated completion:NULL];
 }
 
 - (void) dismissModalViewControllerAnimated:(BOOL) animated {
-	[_mainViewController dismissModalViewControllerAnimated:animated];
+	[_mainViewController dismissViewControllerAnimated:animated completion:NULL];
 
 	if (_userDefaultsChanged) {
 		_userDefaultsChanged = NO;
