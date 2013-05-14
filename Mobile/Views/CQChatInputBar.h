@@ -3,6 +3,11 @@
 @protocol CQChatInputBarDelegate;
 @class CQTextCompletionView;
 
+typedef enum {
+	CQChatInputBarNotResponder,
+	CQChatInputBarResponder
+} CQChatInputBarResponderState;
+
 @interface CQChatInputBar : UIView <UITextViewDelegate, CQTextCompletionViewDelegate> {
 	@protected
 	UIToolbar *_backgroundView;
@@ -20,12 +25,13 @@
 	UITextAutocapitalizationType _defaultAutocapitalizationType;
 	UIViewAnimationCurve _animationCurve;
 	NSTimeInterval _animationDuration;
-	BOOL _showingKeyboard;
 	UIButton *_accessoryButton;
 	CGFloat _previousContentHeight;
 	UIImageView *_overlayBackgroundView;
 	UIImageView *_overlayBackgroundViewPiece;
 	BOOL _shouldAnimateLayout;
+	NSMutableDictionary *_accessoryImages;
+	CQChatInputBarResponderState _responderState;
 }
 @property (nonatomic, assign) id <CQChatInputBarDelegate> delegate;
 
@@ -44,7 +50,8 @@
 - (void) showCompletionsForText:(NSString *) text inRange:(NSRange) range;
 - (void) hideCompletions;
 
-@property (nonatomic, copy) UIImage *accessoryView;
+- (void) setAccessoryImage:(UIImage *) image forResponderState:(CQChatInputBarResponderState) responderState controlState:(UIControlState) controlState;
+- (UIImage *) accessoryImageForResponderState:(CQChatInputBarResponderState) responderState controlState:(UIControlState) controlState;
 @end
 
 @protocol CQChatInputBarDelegate <NSObject>

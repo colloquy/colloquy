@@ -477,6 +477,10 @@ static BOOL showingKeyboard;
 
 	transcriptView.allowSingleSwipeGesture = ([UIDevice currentDevice].isPhoneModel || ![[CQColloquyApplication sharedApplication] splitViewController:nil shouldHideViewController:nil inOrientation:[UIApplication sharedApplication].statusBarOrientation]);
 	transcriptView.dataDetectorTypes = UIDataDetectorTypeNone;
+
+	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clear.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateNormal];
+	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"clearPressed.png"] forResponderState:CQChatInputBarResponder controlState:UIControlStateHighlighted];
+	[chatInputBar setAccessoryImage:[UIImage imageNamed:@"info-dark.png"] forResponderState:CQChatInputBarNotResponder controlState:UIControlStateNormal];
 }
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -582,7 +586,13 @@ static BOOL showingKeyboard;
 
 #pragma mark -
 
-- (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) chatInputBar {
+- (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) theChatInputBar {
+	if ([theChatInputBar isFirstResponder]) {
+		theChatInputBar.textView.text = nil;
+
+		return;
+	}
+
 	UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
 	actionSheet.delegate = self;
 	actionSheet.tag = ActionsActionSheet;

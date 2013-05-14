@@ -314,7 +314,13 @@ static BOOL showLeaveEvents;
 
 #pragma mark -
 
-- (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) chatInputBar {
+- (void) chatInputBarAccessoryButtonPressed:(CQChatInputBar *) theChatInputBar {
+	if ([theChatInputBar isFirstResponder]) {
+		theChatInputBar.textView.text = nil;
+
+		return;
+	}
+
 	UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
 	actionSheet.delegate = self;
 	actionSheet.tag = ActionsActionSheet;

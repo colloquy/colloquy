@@ -88,13 +88,15 @@ static BOOL hardwareKeyboard;
 
 	_animationDuration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
 
-	_accessoryButton = [[UIButton buttonWithType:UIButtonTypeInfoDark] retain];
+	_accessoryButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 
 	[_accessoryButton addTarget:self action:@selector(accessoryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 
 	[self addSubview:_accessoryButton];
 
 	[self _resetTextViewHeight];
+
+	_accessoryImages = [[NSMutableDictionary alloc] init];
 }
 
 #pragma mark -
@@ -161,27 +163,25 @@ static BOOL hardwareKeyboard;
 	return NO;
 }
 
-@dynamic accessoryView;
+- (void) setAccessoryImage:(UIImage *) image forResponderState:(CQChatInputBarResponderState) responderState controlState:(UIControlState) controlState {
+	NSMutableDictionary *responderStateDictionary = _accessoryImages[@(responderState)];
+	if (!responderStateDictionary) {
+		responderStateDictionary = [NSMutableDictionary dictionary];
 
-- (UIImage *) accessoryView {
-	return [_accessoryButton imageForState:UIControlStateNormal];
-}
-
-- (void) setAccessoryView:(UIImage *) accessoryView {
-	id old = _accessoryButton;
-	if (accessoryView) {
-		_accessoryButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		[_accessoryButton setImage:accessoryView forState:UIControlStateNormal];
-
-		[_accessoryButton addTarget:self action:@selector(accessoryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-
-		[self addSubview:_accessoryButton];
+		_accessoryImages[@(responderState)] = responderStateDictionary;
 	}
 
-	[old removeFromSuperview];
-	[old release];
+	responderStateDictionary[@(controlState)] = image;
 
-	[self setNeedsLayout];
+	if (responderState == _responderState) {
+		[self _updateImagesForResponderState];
+
+		[self setNeedsLayout];
+	}
+}
+
+- (UIImage *) accessoryImageForResponderState:(CQChatInputBarResponderState) responderState controlState:(UIControlState) controlState {
+	return _accessoryImages[@(responderState)][@(controlState)];
 }
 
 - (UITextAutocapitalizationType) autocapitalizationType {
@@ -380,30 +380,28 @@ retry:
 #pragma mark -
 
 - (void) keyboardWillShow:(NSNotification *) notification {
-	_showingKeyboard = YES;
+	_responderState = CQChatInputBarResponder;
 
-	if (!self.window)
-		return;
+	_animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	_animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 
-	_animationDuration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-	_animationCurve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+	[self _updateImagesForResponderState];
 
+	_shouldAnimateLayout = NO;
 	[self setNeedsLayout];
 }
 
 - (void) keyboardWillHide:(NSNotification *) notification {
-	if (!_showingKeyboard)
-		return;
+	_responderState = CQChatInputBarNotResponder;
 
-	_showingKeyboard = NO;
+	_animationDuration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	_animationCurve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 
-	_animationDuration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-	_animationCurve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+	[self _updateImagesForResponderState];
 
+	_shouldAnimateLayout = NO;
 	[self setNeedsLayout];
 }
-
-#pragma mark -
 
 @synthesize delegate;
 
@@ -624,11 +622,9 @@ retry:
 	_accessoryButton.center = _inputView.center;
 	CGRect frame = _backgroundView.frame;
 	frame.origin.y = 1.;
-	if (!_showingKeyboard && !_inputView.text.length) {
-		if ([UIDevice currentDevice].isRetina)
-			frame.size.width -= (ButtonWidth + ButtonMargin);
-		else frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
-	}
+	if ([UIDevice currentDevice].isRetina)
+		frame.size.width -= (ButtonWidth + ButtonMargin);
+	else frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
 	_overlayBackgroundView.frame = frame;
 
 	frame.origin.x = CGRectGetMaxX(frame);
@@ -641,22 +637,18 @@ retry:
 	frame.origin.y = ImageBorderInset;
 	frame.size.width = _backgroundView.frame.size.width - (frame.origin.x * 2);
 	frame.size.height = _backgroundView.frame.size.height - (ImageBorderInset * 2);
-	if (!_showingKeyboard && !_inputView.text.length) {
-		if ([UIDevice currentDevice].isRetina)
-			frame.size.width -= (ButtonWidth + ButtonMargin);
-		else frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
-	}
+	if ([UIDevice currentDevice].isRetina)
+		frame.size.width -= (ButtonWidth + ButtonMargin);
+	else frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
 	_inputView.frame = frame;
 
 	frame = _accessoryButton.frame;
-	if (!_showingKeyboard && !_inputView.text.length) {
-		if ([UIDevice currentDevice].isRetina)
-			frame.origin.x = CGRectGetMaxX(_inputView.frame) + ButtonMargin;
-		else frame.origin.x = CGRectGetMaxX(_inputView.frame) + floorf(ButtonMargin);
-		frame.size.width = ButtonWidth;
-	} else {
-		frame.size.width = 0.;
-	}
+	if ([UIDevice currentDevice].isRetina)
+		frame.origin.x = CGRectGetMaxX(_inputView.frame) + ButtonMargin;
+	else frame.origin.x = CGRectGetMaxX(_inputView.frame) + floorf(ButtonMargin);
+	frame.size.width = ButtonWidth;
+	frame.size.height = ButtonWidth;
+
 	_accessoryButton.frame = frame;
 #undef ImageBorderInset
 #undef ButtonWidth
@@ -737,5 +729,21 @@ retry:
 	_inputView.contentOffset = CGPointMake(0., 7.);
 	_inputView.contentInset = UIEdgeInsetsMake(-4., 0., 5., 0.);
 	_inputView.scrollEnabled = NO;
+}
+
+#pragma mark -
+
+- (void) _updateImagesForResponderState {
+	UIImage *defaultImage = _accessoryImages[@(_responderState)][@(UIControlStateNormal)];
+	if (defaultImage)
+		[_accessoryButton setImage:defaultImage forState:UIControlStateNormal];
+	NSLog(@"defaultImage: %@", defaultImage);
+
+	UIImage *pressedImage = _accessoryImages[@(_responderState)][@(UIControlStateHighlighted)];
+	if (pressedImage)
+		[_accessoryButton setImage:pressedImage forState:UIControlStateHighlighted];
+	else [_accessoryButton setImage:nil forState:UIControlStateHighlighted];
+	NSLog(@"pressedImage: %@", pressedImage);
+	NSLog(@"%@", _accessoryButton);
 }
 @end
