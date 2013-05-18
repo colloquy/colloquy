@@ -14,6 +14,7 @@
 	CQChatUserListViewController *_currentUserListViewController;
 	UINavigationController *_currentUserListNavigationController;
 	UIPopoverController *_currentUserListPopoverController;
+	NSDictionary *_topicInformation;
 }
 - (MVChatRoom *) room;
 

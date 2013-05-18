@@ -43,6 +43,6 @@ extern NSString *const CQSettingsDidChangeNotification;
 @property (nonatomic) CQSettingsLocation settingsLocation;
 @property (nonatomic) BOOL mirroringEnabled; // send to CQSettingsLocationDevice as well, if using CQSettingsLocationCloud
 
-- (void) onLocation:(CQSettingsLocation) location block:(void (^) (id settingsController) ) block;
+- (void) onLocation:(CQSettingsLocation) location block:(void (^)(id settingsController)) block;
 @end
 

@@ -324,6 +324,10 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	_roomTopicSetter = [username copy];
 	[old release];
 
+	if (_loading || _resetPending) {
+		return;
+	}
+
 	BOOL shouldHideTopic = YES;
 	if (_showRoomTopic != CQShowRoomTopicNever && newTopic.length) {
 		shouldHideTopic = NO;
@@ -530,13 +534,6 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	NSString *javascript = [NSString stringWithFormat:@"document.getElementById('custom').innerHTML = '%@';", [self _variantStyleString]];
 
 	[super stringByEvaluatingJavaScriptFromString:javascript];
-}
-
-- (void) _roomTopicChanged:(NSNotification *) notification {
-	CQShowRoomTopic showRoomTopic = [[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
-	if (showRoomTopic) {
-		
-	}
 }
 
 - (NSString *) _contentHTML {

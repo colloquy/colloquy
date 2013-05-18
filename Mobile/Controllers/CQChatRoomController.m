@@ -26,6 +26,7 @@ static BOOL showHostmasksOnPart;
 static BOOL showLeaveEvents;
 
 @interface CQDirectChatController (CQDirectChatControllerPrivate)
+- (void) _addPendingComponentsAnimated:(BOOL) animated;
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
 - (void) _didDisconnect:(NSNotification *) notification;
 - (void) _userDefaultsChanged;
@@ -444,7 +445,17 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		[self addEventMessage:NSLocalizedString(@"No chat topic is set.", "No chat topic event message") withIdentifier:@"topic" announceWithVoiceOver:YES];
 	}
 
-	[transcriptView noteTopicChangeTo:topicString by:user.displayName];
+	[self _noteTopicChangeTo:topicString by:user.displayName];
+}
+
+- (void) _noteTopicChangeTo:(NSString *) topicString by:(NSString *) user {
+	if (transcriptView)
+		[transcriptView noteTopicChangeTo:topicString by:user];
+	else if (topicString && user) {
+		id old = _topicInformation;
+		_topicInformation = [@{ @"topic": topicString, @"user": user } copy];
+		[old release];
+	}
 }
 
 - (void) _sortMembers {
@@ -555,7 +566,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		[self addEventMessageAsHTML:[NSString stringWithFormat:eventMessageFormat, [self _markupForMemberUser:user], topicString] withIdentifier:@"topicChanged" announceWithVoiceOver:YES];
 	}
 
-	[transcriptView noteTopicChangeTo:topicString by:user.displayName];
+	[self _noteTopicChangeTo:topicString by:user.displayName];
 }
 
 - (void) _topicChanged:(NSNotification *) notification {
@@ -1173,6 +1184,19 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	if ([[message objectForKey:@"action"] boolValue])
 		return [NSString stringWithFormat:@"%@\n%@ %@", self.room.displayName, user.displayName, messageText];
 	return [NSString stringWithFormat:@"%@ \u2014 %@\n%@", self.room.displayName, user.displayName, messageText];
+}
+
+#pragma mark -
+
+- (void) _addPendingComponentsAnimated:(BOOL) animated {
+	if (_topicInformation) {
+		[self _noteTopicChangeTo:_topicInformation[@"topic"] by:_topicInformation[@"user"]];
+
+		[_topicInformation release];
+		_topicInformation = nil;
+	}
+
+	[super _addPendingComponentsAnimated:animated];
 }
 
 #pragma mark -
