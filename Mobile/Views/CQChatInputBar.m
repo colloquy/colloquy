@@ -232,11 +232,11 @@ static BOOL hardwareKeyboard;
 	if ([color isEqual:[UIColor blackColor]]) {
 		_inputView.keyboardAppearance = UIKeyboardAppearanceAlert;
 		_overlayBackgroundView.image = [[UIImage imageNamed:@"textFieldDark.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 20, 22, 20)];
-		_overlayBackgroundViewPiece.image = [[UIImage imageNamed:@"textFieldDarkPiece.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(1., 1., 1., 1.)];
+		_overlayBackgroundViewPiece.image = [[UIImage imageNamed:@"textFieldDarkPiece.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(22., 1., 22., 1.)];
 	} else {
 		_inputView.keyboardAppearance = UIKeyboardAppearanceDefault;
 		_overlayBackgroundView.image = [[UIImage imageNamed:@"textField.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(22, 20, 22, 20)];
-		_overlayBackgroundViewPiece.image = [[UIImage imageNamed:@"textFieldPiece.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(1., 1., 1., 1.)];
+		_overlayBackgroundViewPiece.image = [[UIImage imageNamed:@"textFieldPiece.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(22., 1., 22., 1.)];
 	}
 	_backgroundView.tintColor = color;
 
@@ -619,7 +619,6 @@ retry:
 
 #define ButtonMargin 6.5
 #define ButtonWidth 18.
-	_accessoryButton.center = _inputView.center;
 	CGRect frame = _backgroundView.frame;
 	frame.origin.y = 1.;
 	if ([UIDevice currentDevice].isRetina)
@@ -628,7 +627,6 @@ retry:
 	_overlayBackgroundView.frame = frame;
 
 	frame.origin.x = CGRectGetMaxX(frame);
-	frame.size.height = CGRectGetHeight(_overlayBackgroundView.frame);
 	frame.size.width = CGRectGetWidth(self.frame) - CGRectGetMinX(frame);
 	_overlayBackgroundViewPiece.frame = frame;
 
@@ -646,6 +644,7 @@ retry:
 	if ([UIDevice currentDevice].isRetina)
 		frame.origin.x = CGRectGetMaxX(_inputView.frame) + ButtonMargin;
 	else frame.origin.x = CGRectGetMaxX(_inputView.frame) + floorf(ButtonMargin);
+	frame.origin.y = (ButtonMargin * 2);
 	frame.size.width = ButtonWidth;
 	frame.size.height = ButtonWidth;
 
