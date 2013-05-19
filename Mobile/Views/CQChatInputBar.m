@@ -737,13 +737,10 @@ retry:
 	UIImage *defaultImage = _accessoryImages[@(_responderState)][@(UIControlStateNormal)];
 	if (defaultImage)
 		[_accessoryButton setImage:defaultImage forState:UIControlStateNormal];
-	NSLog(@"defaultImage: %@", defaultImage);
 
 	UIImage *pressedImage = _accessoryImages[@(_responderState)][@(UIControlStateHighlighted)];
 	if (pressedImage)
 		[_accessoryButton setImage:pressedImage forState:UIControlStateHighlighted];
 	else [_accessoryButton setImage:nil forState:UIControlStateHighlighted];
-	NSLog(@"pressedImage: %@", pressedImage);
-	NSLog(@"%@", _accessoryButton);
 }
 @end
