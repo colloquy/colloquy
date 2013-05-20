@@ -338,7 +338,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 			[self performSelector:@selector(_hideRoomTopic) withObject:nil afterDelay:HideRoomTopicDelay];
 	}
 
-	if (!_topicIsHidden && shouldHideTopic) {
+	if (shouldHideTopic) {
 		_topicIsHidden = YES;
 
 		[super stringByEvaluatingJavaScriptFromString:@"hideTopic()"];
@@ -562,9 +562,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 	[self performSelector:@selector(_unhideBlockerView) withObject:nil afterDelay:0.05];
 
-	if (_topicIsHidden) {
-		[super stringByEvaluatingJavaScriptFromString:@"hideTopic()"];
-	}
+	[self noteTopicChangeTo:_roomTopic by:_roomTopicSetter];
 }
 
 - (void) _hideRoomTopic {
