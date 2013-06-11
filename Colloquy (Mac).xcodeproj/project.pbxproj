@@ -18,7 +18,7 @@
 		1C15B1FB1310EC4C006FA16B /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CCB9DAF130A7E29009F679C /* libicucore.dylib */; };
 		1C15B26013117BF4006FA16B /* CQAnalyticsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B25E13117BF4006FA16B /* CQAnalyticsController.m */; };
 		1C15B26F13118763006FA16B /* ColloquyDaemon in Copy Executables */ = {isa = PBXBuildFile; fileRef = 8DD76FA10486AA7600D96B5E /* ColloquyDaemon */; };
-		1C15B2751311B621006FA16B /* CQJavaScriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B2741311B621006FA16B /* CQJavaScriptBridge.m */; };
+		1C15B2751311B621006FA16B /* CQJavaScriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C15B2741311B621006FA16B /* CQJavaScriptBridge.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1C1EF100133F4D7D006FABCF /* CQDaemonConnectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1EF0FF133F4D7D006FABCF /* CQDaemonConnectionController.m */; };
 		1C1EF103133F516D006FABCF /* CQDaemonConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1EF102133F516D006FABCF /* CQDaemonConnection.m */; };
 		1C1EF106133F54CC006FABCF /* CQLocalDaemonConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1EF105133F54CB006FABCF /* CQLocalDaemonConnection.m */; };
@@ -34,7 +34,6 @@
 		1CC42CCB13A5EC0500D6A4F0 /* MVChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E7613100B360088C737 /* MVChatUser.m */; };
 		1CC42CCC13A5EC0900D6A4F0 /* MVChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E7313100B360088C737 /* MVChatRoom.m */; };
 		1CC42CCD13A5EC0D00D6A4F0 /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E7013100B360088C737 /* MVChatConnection.m */; };
-		1CC42CCE13A5EC1E00D6A4F0 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8C13100B360088C737 /* AsyncSocket.m */; };
 		1CC42CD013A5EC2E00D6A4F0 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E9013100B360088C737 /* RegexKitLite.m */; };
 		1CC42CD113A5EC3800D6A4F0 /* MVIRCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8913100B360088C737 /* MVIRCFileTransfer.m */; };
 		1CC42CD213A5EC3C00D6A4F0 /* MVIRCChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716E8713100B360088C737 /* MVIRCChatUser.m */; };
@@ -58,6 +57,47 @@
 		1CD4B77B1352169E0086EDE8 /* CQDaemonChatConnectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CD4B77A1352169E0086EDE8 /* CQDaemonChatConnectionController.m */; };
 		8DD76F9A0486AA7600D96B5E /* ColloquyDaemon.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* ColloquyDaemon.m */; settings = {ATTRIBUTES = (); }; };
 		8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
+		92CAA3581767A576005A2072 /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA3561767A576005A2072 /* GCDAsyncSocket.h */; };
+		92CAA3591767A576005A2072 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA3571767A576005A2072 /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		92CAA3881767A5F4005A2072 /* IXSCNotificationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA35B1767A5F4005A2072 /* IXSCNotificationManager.h */; };
+		92CAA3891767A5F4005A2072 /* IXSCNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA35C1767A5F4005A2072 /* IXSCNotificationManager.m */; };
+		92CAA38A1767A5F4005A2072 /* declspec.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA35E1767A5F4005A2072 /* declspec.h */; };
+		92CAA38B1767A5F4005A2072 /* getgateway.c in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA35F1767A5F4005A2072 /* getgateway.c */; };
+		92CAA38C1767A5F4005A2072 /* getgateway.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA3601767A5F4005A2072 /* getgateway.h */; };
+		92CAA38D1767A5F4005A2072 /* natpmp.c in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA3621767A5F4005A2072 /* natpmp.c */; };
+		92CAA38E1767A5F4005A2072 /* natpmp.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA3631767A5F4005A2072 /* natpmp.h */; };
+		92CAA3901767A5F4005A2072 /* bsdqueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA3661767A5F4005A2072 /* bsdqueue.h */; };
+		92CAA3911767A5F4005A2072 /* codelength.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA3671767A5F4005A2072 /* codelength.h */; };
+		92CAA3921767A5F4005A2072 /* declspec.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA3681767A5F4005A2072 /* declspec.h */; };
+		92CAA3931767A5F4005A2072 /* igd_desc_parse.c in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA3691767A5F4005A2072 /* igd_desc_parse.c */; };
+		92CAA3941767A5F4005A2072 /* igd_desc_parse.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA36A1767A5F4005A2072 /* igd_desc_parse.h */; };
+		92CAA3951767A5F4005A2072 /* minisoap.c in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA36C1767A5F4005A2072 /* minisoap.c */; };
+		92CAA3961767A5F4005A2072 /* minisoap.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA36D1767A5F4005A2072 /* minisoap.h */; };
+		92CAA3971767A5F4005A2072 /* minissdpc.c in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA36E1767A5F4005A2072 /* minissdpc.c */; };
+		92CAA3981767A5F4005A2072 /* minissdpc.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA36F1767A5F4005A2072 /* minissdpc.h */; };
+		92CAA3991767A5F4005A2072 /* miniupnpc.c in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA3701767A5F4005A2072 /* miniupnpc.c */; };
+		92CAA39A1767A5F4005A2072 /* miniupnpc.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA3711767A5F4005A2072 /* miniupnpc.h */; };
+		92CAA39C1767A5F4005A2072 /* miniupnpcstrings.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA3731767A5F4005A2072 /* miniupnpcstrings.h */; };
+		92CAA39D1767A5F4005A2072 /* miniwget.c in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA3741767A5F4005A2072 /* miniwget.c */; };
+		92CAA39E1767A5F4005A2072 /* miniwget.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA3751767A5F4005A2072 /* miniwget.h */; };
+		92CAA39F1767A5F4005A2072 /* minixml.c in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA3761767A5F4005A2072 /* minixml.c */; };
+		92CAA3A01767A5F4005A2072 /* minixml.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA3771767A5F4005A2072 /* minixml.h */; };
+		92CAA3A11767A5F4005A2072 /* upnpcommands.c in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA3781767A5F4005A2072 /* upnpcommands.c */; };
+		92CAA3A21767A5F4005A2072 /* upnpcommands.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA3791767A5F4005A2072 /* upnpcommands.h */; };
+		92CAA3A31767A5F4005A2072 /* upnperrors.c in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA37A1767A5F4005A2072 /* upnperrors.c */; };
+		92CAA3A41767A5F4005A2072 /* upnperrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA37B1767A5F4005A2072 /* upnperrors.h */; };
+		92CAA3A51767A5F4005A2072 /* upnpreplyparse.c in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA37C1767A5F4005A2072 /* upnpreplyparse.c */; };
+		92CAA3A61767A5F4005A2072 /* upnpreplyparse.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA37D1767A5F4005A2072 /* upnpreplyparse.h */; };
+		92CAA3A71767A5F4005A2072 /* NSNotificationCenterThreadingAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA37E1767A5F4005A2072 /* NSNotificationCenterThreadingAdditions.h */; };
+		92CAA3A81767A5F4005A2072 /* NSNotificationCenterThreadingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA37F1767A5F4005A2072 /* NSNotificationCenterThreadingAdditions.m */; };
+		92CAA3A91767A5F4005A2072 /* TCMNATPMPPortMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA3801767A5F4005A2072 /* TCMNATPMPPortMapper.h */; };
+		92CAA3AA1767A5F4005A2072 /* TCMNATPMPPortMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA3811767A5F4005A2072 /* TCMNATPMPPortMapper.m */; };
+		92CAA3AC1767A5F4005A2072 /* TCMPortMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA3841767A5F4005A2072 /* TCMPortMapper.h */; };
+		92CAA3AD1767A5F4005A2072 /* TCMPortMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA3851767A5F4005A2072 /* TCMPortMapper.m */; };
+		92CAA3AE1767A5F4005A2072 /* TCMUPNPPortMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA3861767A5F4005A2072 /* TCMUPNPPortMapper.h */; };
+		92CAA3AF1767A5F4005A2072 /* TCMUPNPPortMapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA3871767A5F4005A2072 /* TCMUPNPPortMapper.m */; };
+		92CAA3B21767A85B005A2072 /* NSDateAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 92CAA3B01767A85B005A2072 /* NSDateAdditions.h */; };
+		92CAA3B31767A85B005A2072 /* NSDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92CAA3B11767A85B005A2072 /* NSDateAdditions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -151,44 +191,6 @@
 		1C1EF10D133FAE70006FABCF /* CQDaemonLocalClientConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQDaemonLocalClientConnection.h; sourceTree = "<group>"; };
 		1C1EF110133FF51A006FABCF /* CQDaemonLocalClientConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQDaemonLocalClientConnection.m; sourceTree = "<group>"; };
 		1C61A55213106225009DF5DF /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
-		1C61A5A113106AC7009DF5DF /* IXSCNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IXSCNotificationManager.h; path = ../Colloquy/Frameworks/PortMapper/framework/IXSCNotificationManager.h; sourceTree = "<group>"; };
-		1C61A5A213106AC7009DF5DF /* IXSCNotificationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IXSCNotificationManager.m; path = ../Colloquy/Frameworks/PortMapper/framework/IXSCNotificationManager.m; sourceTree = "<group>"; };
-		1C61A5A313106AC7009DF5DF /* NSNotificationCenterThreadingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSNotificationCenterThreadingAdditions.h; path = ../Colloquy/Frameworks/PortMapper/framework/NSNotificationCenterThreadingAdditions.h; sourceTree = "<group>"; };
-		1C61A5A413106AC7009DF5DF /* NSNotificationCenterThreadingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = NSNotificationCenterThreadingAdditions.m; path = ../Colloquy/Frameworks/PortMapper/framework/NSNotificationCenterThreadingAdditions.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		1C61A5A513106AC7009DF5DF /* TCMNATPMPPortMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCMNATPMPPortMapper.h; path = ../Colloquy/Frameworks/PortMapper/framework/TCMNATPMPPortMapper.h; sourceTree = "<group>"; };
-		1C61A5A613106AC7009DF5DF /* TCMNATPMPPortMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCMNATPMPPortMapper.m; path = ../Colloquy/Frameworks/PortMapper/framework/TCMNATPMPPortMapper.m; sourceTree = "<group>"; };
-		1C61A5A713106AC7009DF5DF /* TCMPortMapper_prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCMPortMapper_prefix.pch; path = ../Colloquy/Frameworks/PortMapper/framework/TCMPortMapper_prefix.pch; sourceTree = "<group>"; };
-		1C61A5A813106AC7009DF5DF /* TCMPortMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCMPortMapper.h; path = ../Colloquy/Frameworks/PortMapper/framework/TCMPortMapper.h; sourceTree = "<group>"; };
-		1C61A5A913106AC7009DF5DF /* TCMPortMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCMPortMapper.m; path = ../Colloquy/Frameworks/PortMapper/framework/TCMPortMapper.m; sourceTree = "<group>"; };
-		1C61A5AA13106AC7009DF5DF /* TCMUPNPPortMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCMUPNPPortMapper.h; path = ../Colloquy/Frameworks/PortMapper/framework/TCMUPNPPortMapper.h; sourceTree = "<group>"; };
-		1C61A5AB13106AC7009DF5DF /* TCMUPNPPortMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCMUPNPPortMapper.m; path = ../Colloquy/Frameworks/PortMapper/framework/TCMUPNPPortMapper.m; sourceTree = "<group>"; };
-		1C61A5AC13106AC7009DF5DF /* declspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = declspec.h; sourceTree = "<group>"; };
-		1C61A5AD13106AC7009DF5DF /* getgateway.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = getgateway.c; sourceTree = "<group>"; };
-		1C61A5AE13106AC7009DF5DF /* getgateway.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = getgateway.h; sourceTree = "<group>"; };
-		1C61A5AF13106AC7009DF5DF /* natpmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = natpmp.c; sourceTree = "<group>"; };
-		1C61A5B013106AC7009DF5DF /* natpmp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = natpmp.h; sourceTree = "<group>"; };
-		1C61A5B113106AC7009DF5DF /* bsdqueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bsdqueue.h; sourceTree = "<group>"; };
-		1C61A5B213106AC7009DF5DF /* codelength.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = codelength.h; sourceTree = "<group>"; };
-		1C61A5B313106AC7009DF5DF /* declspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = declspec.h; sourceTree = "<group>"; };
-		1C61A5B413106AC7009DF5DF /* igd_desc_parse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = igd_desc_parse.c; sourceTree = "<group>"; };
-		1C61A5B513106AC7009DF5DF /* igd_desc_parse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = igd_desc_parse.h; sourceTree = "<group>"; };
-		1C61A5B613106AC7009DF5DF /* minisoap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minisoap.c; sourceTree = "<group>"; };
-		1C61A5B713106AC7009DF5DF /* minisoap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minisoap.h; sourceTree = "<group>"; };
-		1C61A5B813106AC7009DF5DF /* minissdpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minissdpc.c; sourceTree = "<group>"; };
-		1C61A5B913106AC7009DF5DF /* minissdpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minissdpc.h; sourceTree = "<group>"; };
-		1C61A5BA13106AC7009DF5DF /* miniupnpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniupnpc.c; sourceTree = "<group>"; };
-		1C61A5BB13106AC7009DF5DF /* miniupnpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniupnpc.h; sourceTree = "<group>"; };
-		1C61A5BC13106AC7009DF5DF /* miniupnpcstrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniupnpcstrings.h; sourceTree = "<group>"; };
-		1C61A5BD13106AC7009DF5DF /* miniwget.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniwget.c; sourceTree = "<group>"; };
-		1C61A5BE13106AC7009DF5DF /* miniwget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniwget.h; sourceTree = "<group>"; };
-		1C61A5BF13106AC7009DF5DF /* minixml.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minixml.c; sourceTree = "<group>"; };
-		1C61A5C013106AC7009DF5DF /* minixml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minixml.h; sourceTree = "<group>"; };
-		1C61A5C113106AC7009DF5DF /* upnpcommands.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = upnpcommands.c; sourceTree = "<group>"; };
-		1C61A5C213106AC7009DF5DF /* upnpcommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = upnpcommands.h; sourceTree = "<group>"; };
-		1C61A5C313106AC7009DF5DF /* upnperrors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = upnperrors.c; sourceTree = "<group>"; };
-		1C61A5C413106AC7009DF5DF /* upnperrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = upnperrors.h; sourceTree = "<group>"; };
-		1C61A5C513106AC7009DF5DF /* upnpreplyparse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = upnpreplyparse.c; sourceTree = "<group>"; };
-		1C61A5C613106AC7009DF5DF /* upnpreplyparse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = upnpreplyparse.h; sourceTree = "<group>"; };
 		1C716E6D13100B360088C737 /* ChatCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatCore.h; sourceTree = "<group>"; };
 		1C716E6E13100B360088C737 /* MVAvailability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVAvailability.h; sourceTree = "<group>"; };
 		1C716E6F13100B360088C737 /* MVChatString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVChatString.h; sourceTree = "<group>"; };
@@ -220,8 +222,6 @@
 		1C716E8913100B360088C737 /* MVIRCFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVIRCFileTransfer.m; sourceTree = "<group>"; };
 		1C716E8A13100B360088C737 /* MVIRCFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVIRCFileTransfer.h; sourceTree = "<group>"; };
 		1C716E8B13100B360088C737 /* MVIRCNumerics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVIRCNumerics.h; sourceTree = "<group>"; };
-		1C716E8C13100B360088C737 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncSocket.m; sourceTree = "<group>"; };
-		1C716E8D13100B360088C737 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncSocket.h; sourceTree = "<group>"; };
 		1C716E8E13100B360088C737 /* InterThreadMessaging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InterThreadMessaging.m; sourceTree = "<group>"; };
 		1C716E8F13100B360088C737 /* InterThreadMessaging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterThreadMessaging.h; sourceTree = "<group>"; };
 		1C716E9013100B360088C737 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
@@ -254,6 +254,50 @@
 		1CD4B7791352169E0086EDE8 /* CQDaemonChatConnectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQDaemonChatConnectionController.h; sourceTree = "<group>"; };
 		1CD4B77A1352169E0086EDE8 /* CQDaemonChatConnectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQDaemonChatConnectionController.m; sourceTree = "<group>"; };
 		8DD76FA10486AA7600D96B5E /* ColloquyDaemon */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ColloquyDaemon; sourceTree = BUILT_PRODUCTS_DIR; };
+		92CAA3561767A576005A2072 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
+		92CAA3571767A576005A2072 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
+		92CAA35A1767A588005A2072 /* Colloquy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Colloquy.entitlements; sourceTree = "<group>"; };
+		92CAA35B1767A5F4005A2072 /* IXSCNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IXSCNotificationManager.h; path = Frameworks/PortMapper/framework/IXSCNotificationManager.h; sourceTree = SOURCE_ROOT; };
+		92CAA35C1767A5F4005A2072 /* IXSCNotificationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IXSCNotificationManager.m; path = Frameworks/PortMapper/framework/IXSCNotificationManager.m; sourceTree = SOURCE_ROOT; };
+		92CAA35E1767A5F4005A2072 /* declspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = declspec.h; sourceTree = "<group>"; };
+		92CAA35F1767A5F4005A2072 /* getgateway.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = getgateway.c; sourceTree = "<group>"; };
+		92CAA3601767A5F4005A2072 /* getgateway.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = getgateway.h; sourceTree = "<group>"; };
+		92CAA3611767A5F4005A2072 /* LICENCE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENCE; sourceTree = "<group>"; };
+		92CAA3621767A5F4005A2072 /* natpmp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = natpmp.c; sourceTree = "<group>"; };
+		92CAA3631767A5F4005A2072 /* natpmp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = natpmp.h; sourceTree = "<group>"; };
+		92CAA3661767A5F4005A2072 /* bsdqueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bsdqueue.h; sourceTree = "<group>"; };
+		92CAA3671767A5F4005A2072 /* codelength.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = codelength.h; sourceTree = "<group>"; };
+		92CAA3681767A5F4005A2072 /* declspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = declspec.h; sourceTree = "<group>"; };
+		92CAA3691767A5F4005A2072 /* igd_desc_parse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = igd_desc_parse.c; sourceTree = "<group>"; };
+		92CAA36A1767A5F4005A2072 /* igd_desc_parse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = igd_desc_parse.h; sourceTree = "<group>"; };
+		92CAA36B1767A5F4005A2072 /* LICENCE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENCE; sourceTree = "<group>"; };
+		92CAA36C1767A5F4005A2072 /* minisoap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minisoap.c; sourceTree = "<group>"; };
+		92CAA36D1767A5F4005A2072 /* minisoap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minisoap.h; sourceTree = "<group>"; };
+		92CAA36E1767A5F4005A2072 /* minissdpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minissdpc.c; sourceTree = "<group>"; };
+		92CAA36F1767A5F4005A2072 /* minissdpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minissdpc.h; sourceTree = "<group>"; };
+		92CAA3701767A5F4005A2072 /* miniupnpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniupnpc.c; sourceTree = "<group>"; };
+		92CAA3711767A5F4005A2072 /* miniupnpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniupnpc.h; sourceTree = "<group>"; };
+		92CAA3731767A5F4005A2072 /* miniupnpcstrings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniupnpcstrings.h; sourceTree = "<group>"; };
+		92CAA3741767A5F4005A2072 /* miniwget.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniwget.c; sourceTree = "<group>"; };
+		92CAA3751767A5F4005A2072 /* miniwget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniwget.h; sourceTree = "<group>"; };
+		92CAA3761767A5F4005A2072 /* minixml.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = minixml.c; sourceTree = "<group>"; };
+		92CAA3771767A5F4005A2072 /* minixml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minixml.h; sourceTree = "<group>"; };
+		92CAA3781767A5F4005A2072 /* upnpcommands.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = upnpcommands.c; sourceTree = "<group>"; };
+		92CAA3791767A5F4005A2072 /* upnpcommands.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = upnpcommands.h; sourceTree = "<group>"; };
+		92CAA37A1767A5F4005A2072 /* upnperrors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = upnperrors.c; sourceTree = "<group>"; };
+		92CAA37B1767A5F4005A2072 /* upnperrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = upnperrors.h; sourceTree = "<group>"; };
+		92CAA37C1767A5F4005A2072 /* upnpreplyparse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = upnpreplyparse.c; sourceTree = "<group>"; };
+		92CAA37D1767A5F4005A2072 /* upnpreplyparse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = upnpreplyparse.h; sourceTree = "<group>"; };
+		92CAA37E1767A5F4005A2072 /* NSNotificationCenterThreadingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSNotificationCenterThreadingAdditions.h; path = Frameworks/PortMapper/framework/NSNotificationCenterThreadingAdditions.h; sourceTree = SOURCE_ROOT; };
+		92CAA37F1767A5F4005A2072 /* NSNotificationCenterThreadingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSNotificationCenterThreadingAdditions.m; path = Frameworks/PortMapper/framework/NSNotificationCenterThreadingAdditions.m; sourceTree = SOURCE_ROOT; };
+		92CAA3801767A5F4005A2072 /* TCMNATPMPPortMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCMNATPMPPortMapper.h; path = Frameworks/PortMapper/framework/TCMNATPMPPortMapper.h; sourceTree = SOURCE_ROOT; };
+		92CAA3811767A5F4005A2072 /* TCMNATPMPPortMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCMNATPMPPortMapper.m; path = Frameworks/PortMapper/framework/TCMNATPMPPortMapper.m; sourceTree = SOURCE_ROOT; };
+		92CAA3841767A5F4005A2072 /* TCMPortMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCMPortMapper.h; path = Frameworks/PortMapper/framework/TCMPortMapper.h; sourceTree = SOURCE_ROOT; };
+		92CAA3851767A5F4005A2072 /* TCMPortMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCMPortMapper.m; path = Frameworks/PortMapper/framework/TCMPortMapper.m; sourceTree = SOURCE_ROOT; };
+		92CAA3861767A5F4005A2072 /* TCMUPNPPortMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCMUPNPPortMapper.h; path = Frameworks/PortMapper/framework/TCMUPNPPortMapper.h; sourceTree = SOURCE_ROOT; };
+		92CAA3871767A5F4005A2072 /* TCMUPNPPortMapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TCMUPNPPortMapper.m; path = Frameworks/PortMapper/framework/TCMUPNPPortMapper.m; sourceTree = SOURCE_ROOT; };
+		92CAA3B01767A85B005A2072 /* NSDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDateAdditions.h; path = Additions/NSDateAdditions.h; sourceTree = "<group>"; };
+		92CAA3B11767A85B005A2072 /* NSDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDateAdditions.m; path = Additions/NSDateAdditions.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -303,6 +347,7 @@
 		08FB7794FE84155DC02AAC07 /* Colloquy */ = {
 			isa = PBXGroup;
 			children = (
+				92CAA35A1767A588005A2072 /* Colloquy.entitlements */,
 				1C716EFF1310290D0088C737 /* Colloquy.pch */,
 				1C716E6A13100B360088C737 /* Chat Core */,
 				1C716EA813100C9A0088C737 /* Shared */,
@@ -325,6 +370,8 @@
 				1CCB9C4A130A770A009F679C /* NSCharacterSetAdditions.h */,
 				1CCB9C4B130A770A009F679C /* NSDataAdditions.m */,
 				1CCB9C4C130A770A009F679C /* NSDataAdditions.h */,
+				92CAA3B11767A85B005A2072 /* NSDateAdditions.m */,
+				92CAA3B01767A85B005A2072 /* NSDateAdditions.h */,
 				1CCB9C4D130A770A009F679C /* NSDictionaryAdditions.m */,
 				1CCB9C4E130A770A009F679C /* NSDictionaryAdditions.h */,
 				1CCADE7C1311FB9B00872A80 /* NSMethodSignatureAdditions.m */,
@@ -415,65 +462,21 @@
 		1C61A59E13106AC7009DF5DF /* Port Mapping Support */ = {
 			isa = PBXGroup;
 			children = (
-				1C61A59F13106AC7009DF5DF /* libnatpmp */,
-				1C61A5A013106AC7009DF5DF /* miniupnpc */,
-				1C61A5A113106AC7009DF5DF /* IXSCNotificationManager.h */,
-				1C61A5A213106AC7009DF5DF /* IXSCNotificationManager.m */,
-				1C61A5A313106AC7009DF5DF /* NSNotificationCenterThreadingAdditions.h */,
-				1C61A5A413106AC7009DF5DF /* NSNotificationCenterThreadingAdditions.m */,
-				1C61A5A513106AC7009DF5DF /* TCMNATPMPPortMapper.h */,
-				1C61A5A613106AC7009DF5DF /* TCMNATPMPPortMapper.m */,
-				1C61A5A713106AC7009DF5DF /* TCMPortMapper_prefix.pch */,
-				1C61A5A813106AC7009DF5DF /* TCMPortMapper.h */,
-				1C61A5A913106AC7009DF5DF /* TCMPortMapper.m */,
-				1C61A5AA13106AC7009DF5DF /* TCMUPNPPortMapper.h */,
-				1C61A5AB13106AC7009DF5DF /* TCMUPNPPortMapper.m */,
+				92CAA35D1767A5F4005A2072 /* libnatpmp */,
+				92CAA3651767A5F4005A2072 /* miniupnpc */,
+				92CAA35C1767A5F4005A2072 /* IXSCNotificationManager.m */,
+				92CAA35B1767A5F4005A2072 /* IXSCNotificationManager.h */,
+				92CAA37F1767A5F4005A2072 /* NSNotificationCenterThreadingAdditions.m */,
+				92CAA37E1767A5F4005A2072 /* NSNotificationCenterThreadingAdditions.h */,
+				92CAA3811767A5F4005A2072 /* TCMNATPMPPortMapper.m */,
+				92CAA3801767A5F4005A2072 /* TCMNATPMPPortMapper.h */,
+				92CAA3851767A5F4005A2072 /* TCMPortMapper.m */,
+				92CAA3841767A5F4005A2072 /* TCMPortMapper.h */,
+				92CAA3871767A5F4005A2072 /* TCMUPNPPortMapper.m */,
+				92CAA3861767A5F4005A2072 /* TCMUPNPPortMapper.h */,
 			);
 			name = "Port Mapping Support";
 			path = "../../Colloquy Bouncer";
-			sourceTree = "<group>";
-		};
-		1C61A59F13106AC7009DF5DF /* libnatpmp */ = {
-			isa = PBXGroup;
-			children = (
-				1C61A5AC13106AC7009DF5DF /* declspec.h */,
-				1C61A5AD13106AC7009DF5DF /* getgateway.c */,
-				1C61A5AE13106AC7009DF5DF /* getgateway.h */,
-				1C61A5AF13106AC7009DF5DF /* natpmp.c */,
-				1C61A5B013106AC7009DF5DF /* natpmp.h */,
-			);
-			name = libnatpmp;
-			path = ../Colloquy/Frameworks/PortMapper/framework/libnatpmp;
-			sourceTree = "<group>";
-		};
-		1C61A5A013106AC7009DF5DF /* miniupnpc */ = {
-			isa = PBXGroup;
-			children = (
-				1C61A5B113106AC7009DF5DF /* bsdqueue.h */,
-				1C61A5B213106AC7009DF5DF /* codelength.h */,
-				1C61A5B313106AC7009DF5DF /* declspec.h */,
-				1C61A5B413106AC7009DF5DF /* igd_desc_parse.c */,
-				1C61A5B513106AC7009DF5DF /* igd_desc_parse.h */,
-				1C61A5B613106AC7009DF5DF /* minisoap.c */,
-				1C61A5B713106AC7009DF5DF /* minisoap.h */,
-				1C61A5B813106AC7009DF5DF /* minissdpc.c */,
-				1C61A5B913106AC7009DF5DF /* minissdpc.h */,
-				1C61A5BA13106AC7009DF5DF /* miniupnpc.c */,
-				1C61A5BB13106AC7009DF5DF /* miniupnpc.h */,
-				1C61A5BC13106AC7009DF5DF /* miniupnpcstrings.h */,
-				1C61A5BD13106AC7009DF5DF /* miniwget.c */,
-				1C61A5BE13106AC7009DF5DF /* miniwget.h */,
-				1C61A5BF13106AC7009DF5DF /* minixml.c */,
-				1C61A5C013106AC7009DF5DF /* minixml.h */,
-				1C61A5C113106AC7009DF5DF /* upnpcommands.c */,
-				1C61A5C213106AC7009DF5DF /* upnpcommands.h */,
-				1C61A5C313106AC7009DF5DF /* upnperrors.c */,
-				1C61A5C413106AC7009DF5DF /* upnperrors.h */,
-				1C61A5C513106AC7009DF5DF /* upnpreplyparse.c */,
-				1C61A5C613106AC7009DF5DF /* upnpreplyparse.h */,
-			);
-			name = miniupnpc;
-			path = ../Colloquy/Frameworks/PortMapper/framework/miniupnpc;
 			sourceTree = "<group>";
 		};
 		1C716E6A13100B360088C737 /* Chat Core */ = {
@@ -527,8 +530,8 @@
 		1C716E6C13100B360088C737 /* Utility Classes */ = {
 			isa = PBXGroup;
 			children = (
-				1C716E8C13100B360088C737 /* AsyncSocket.m */,
-				1C716E8D13100B360088C737 /* AsyncSocket.h */,
+				92CAA3571767A576005A2072 /* GCDAsyncSocket.m */,
+				92CAA3561767A576005A2072 /* GCDAsyncSocket.h */,
 				1C716E8E13100B360088C737 /* InterThreadMessaging.m */,
 				1C716E8F13100B360088C737 /* InterThreadMessaging.h */,
 				1C716E9013100B360088C737 /* RegexKitLite.m */,
@@ -661,6 +664,51 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		92CAA35D1767A5F4005A2072 /* libnatpmp */ = {
+			isa = PBXGroup;
+			children = (
+				92CAA35E1767A5F4005A2072 /* declspec.h */,
+				92CAA35F1767A5F4005A2072 /* getgateway.c */,
+				92CAA3601767A5F4005A2072 /* getgateway.h */,
+				92CAA3611767A5F4005A2072 /* LICENCE */,
+				92CAA3621767A5F4005A2072 /* natpmp.c */,
+				92CAA3631767A5F4005A2072 /* natpmp.h */,
+			);
+			name = libnatpmp;
+			path = Frameworks/PortMapper/framework/libnatpmp;
+			sourceTree = SOURCE_ROOT;
+		};
+		92CAA3651767A5F4005A2072 /* miniupnpc */ = {
+			isa = PBXGroup;
+			children = (
+				92CAA3661767A5F4005A2072 /* bsdqueue.h */,
+				92CAA3671767A5F4005A2072 /* codelength.h */,
+				92CAA3681767A5F4005A2072 /* declspec.h */,
+				92CAA3691767A5F4005A2072 /* igd_desc_parse.c */,
+				92CAA36A1767A5F4005A2072 /* igd_desc_parse.h */,
+				92CAA36B1767A5F4005A2072 /* LICENCE */,
+				92CAA36C1767A5F4005A2072 /* minisoap.c */,
+				92CAA36D1767A5F4005A2072 /* minisoap.h */,
+				92CAA36E1767A5F4005A2072 /* minissdpc.c */,
+				92CAA36F1767A5F4005A2072 /* minissdpc.h */,
+				92CAA3701767A5F4005A2072 /* miniupnpc.c */,
+				92CAA3711767A5F4005A2072 /* miniupnpc.h */,
+				92CAA3731767A5F4005A2072 /* miniupnpcstrings.h */,
+				92CAA3741767A5F4005A2072 /* miniwget.c */,
+				92CAA3751767A5F4005A2072 /* miniwget.h */,
+				92CAA3761767A5F4005A2072 /* minixml.c */,
+				92CAA3771767A5F4005A2072 /* minixml.h */,
+				92CAA3781767A5F4005A2072 /* upnpcommands.c */,
+				92CAA3791767A5F4005A2072 /* upnpcommands.h */,
+				92CAA37A1767A5F4005A2072 /* upnperrors.c */,
+				92CAA37B1767A5F4005A2072 /* upnperrors.h */,
+				92CAA37C1767A5F4005A2072 /* upnpreplyparse.c */,
+				92CAA37D1767A5F4005A2072 /* upnpreplyparse.h */,
+			);
+			name = miniupnpc;
+			path = Frameworks/PortMapper/framework/miniupnpc;
+			sourceTree = SOURCE_ROOT;
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -668,6 +716,28 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92CAA3A71767A5F4005A2072 /* NSNotificationCenterThreadingAdditions.h in Headers */,
+				92CAA39C1767A5F4005A2072 /* miniupnpcstrings.h in Headers */,
+				92CAA39A1767A5F4005A2072 /* miniupnpc.h in Headers */,
+				92CAA3AC1767A5F4005A2072 /* TCMPortMapper.h in Headers */,
+				92CAA3981767A5F4005A2072 /* minissdpc.h in Headers */,
+				92CAA3961767A5F4005A2072 /* minisoap.h in Headers */,
+				92CAA3911767A5F4005A2072 /* codelength.h in Headers */,
+				92CAA3941767A5F4005A2072 /* igd_desc_parse.h in Headers */,
+				92CAA38E1767A5F4005A2072 /* natpmp.h in Headers */,
+				92CAA38C1767A5F4005A2072 /* getgateway.h in Headers */,
+				92CAA3921767A5F4005A2072 /* declspec.h in Headers */,
+				92CAA3A21767A5F4005A2072 /* upnpcommands.h in Headers */,
+				92CAA38A1767A5F4005A2072 /* declspec.h in Headers */,
+				92CAA39E1767A5F4005A2072 /* miniwget.h in Headers */,
+				92CAA3A01767A5F4005A2072 /* minixml.h in Headers */,
+				92CAA3881767A5F4005A2072 /* IXSCNotificationManager.h in Headers */,
+				92CAA3901767A5F4005A2072 /* bsdqueue.h in Headers */,
+				92CAA3A41767A5F4005A2072 /* upnperrors.h in Headers */,
+				92CAA3A91767A5F4005A2072 /* TCMNATPMPPortMapper.h in Headers */,
+				92CAA3A61767A5F4005A2072 /* upnpreplyparse.h in Headers */,
+				92CAA3581767A576005A2072 /* GCDAsyncSocket.h in Headers */,
+				92CAA3AE1767A5F4005A2072 /* TCMUPNPPortMapper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -675,6 +745,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92CAA3B21767A85B005A2072 /* NSDateAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -763,6 +834,18 @@
 			isa = PBXProject;
 			attributes = {
 				ORGANIZATIONNAME = "Colloquy Project";
+				TargetAttributes = {
+					1C15B1BD1310CFF5006FA16B = {
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
+					};
+				};
 			};
 			buildConfigurationList = 1DEB927808733DD40010E9CD /* Build configuration list for PBXProject "Colloquy (Mac)" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -835,21 +918,37 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92CAA3591767A576005A2072 /* GCDAsyncSocket.m in Sources */,
 				1CC42CC713A5EBEF00D6A4F0 /* MVFileTransfer.m in Sources */,
 				1CC42CC813A5EBFA00D6A4F0 /* MVDirectClientConnection.m in Sources */,
 				1CC42CC913A5EBFE00D6A4F0 /* MVDirectChatConnection.m in Sources */,
+				92CAA39F1767A5F4005A2072 /* minixml.c in Sources */,
+				92CAA3931767A5F4005A2072 /* igd_desc_parse.c in Sources */,
 				1CC42CCA13A5EC0200D6A4F0 /* MVChatUserWatchRule.m in Sources */,
+				92CAA3AA1767A5F4005A2072 /* TCMNATPMPPortMapper.m in Sources */,
 				1CC42CCB13A5EC0500D6A4F0 /* MVChatUser.m in Sources */,
 				1CC42CCC13A5EC0900D6A4F0 /* MVChatRoom.m in Sources */,
+				92CAA3A11767A5F4005A2072 /* upnpcommands.c in Sources */,
 				1CC42CCD13A5EC0D00D6A4F0 /* MVChatConnection.m in Sources */,
-				1CC42CCE13A5EC1E00D6A4F0 /* AsyncSocket.m in Sources */,
+				92CAA3A31767A5F4005A2072 /* upnperrors.c in Sources */,
 				1CC42CD013A5EC2E00D6A4F0 /* RegexKitLite.m in Sources */,
 				1CC42CD113A5EC3800D6A4F0 /* MVIRCFileTransfer.m in Sources */,
 				1CC42CD213A5EC3C00D6A4F0 /* MVIRCChatUser.m in Sources */,
+				92CAA38D1767A5F4005A2072 /* natpmp.c in Sources */,
+				92CAA3991767A5F4005A2072 /* miniupnpc.c in Sources */,
+				92CAA3AF1767A5F4005A2072 /* TCMUPNPPortMapper.m in Sources */,
 				1CC42CD313A5EC3F00D6A4F0 /* MVIRCChatRoom.m in Sources */,
 				1CC42CD413A5EC4300D6A4F0 /* MVIRCChatConnection.m in Sources */,
+				92CAA3A81767A5F4005A2072 /* NSNotificationCenterThreadingAdditions.m in Sources */,
+				92CAA3891767A5F4005A2072 /* IXSCNotificationManager.m in Sources */,
+				92CAA3AD1767A5F4005A2072 /* TCMPortMapper.m in Sources */,
 				1CC42D1B13A6814B00D6A4F0 /* MVChatConnectionAdditions.m in Sources */,
+				92CAA39D1767A5F4005A2072 /* miniwget.c in Sources */,
+				92CAA3971767A5F4005A2072 /* minissdpc.c in Sources */,
+				92CAA3A51767A5F4005A2072 /* upnpreplyparse.c in Sources */,
+				92CAA38B1767A5F4005A2072 /* getgateway.c in Sources */,
 				1CC42D1C13A6815B00D6A4F0 /* CQKeychain.m in Sources */,
+				92CAA3951767A5F4005A2072 /* minisoap.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -859,6 +958,7 @@
 			files = (
 				1CC42CF413A67EE900D6A4F0 /* NSCharacterSetAdditions.m in Sources */,
 				1CC42CF513A67EE900D6A4F0 /* NSDataAdditions.m in Sources */,
+				92CAA3B31767A85B005A2072 /* NSDateAdditions.m in Sources */,
 				1CC42CF613A67EE900D6A4F0 /* NSDictionaryAdditions.m in Sources */,
 				1CC42CF713A67EE900D6A4F0 /* NSMethodSignatureAdditions.m in Sources */,
 				1CC42CF813A67EE900D6A4F0 /* NSNotificationAdditions.m in Sources */,
@@ -923,7 +1023,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ARC_MIGRATION = precheck;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = Colloquy.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				INFOPLIST_FILE = Mac/Application/Resources/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -932,7 +1036,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ARC_MIGRATION = precheck;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = Colloquy.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				INFOPLIST_FILE = Mac/Application/Resources/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -940,6 +1048,7 @@
 		1CC42CC513A5EB9200D6A4F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				EXECUTABLE_PREFIX = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
@@ -952,6 +1061,7 @@
 		1CC42CC613A5EB9200D6A4F0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				EXECUTABLE_PREFIX = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
@@ -964,6 +1074,7 @@
 		1CC42CF113A67EDA00D6A4F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				EXECUTABLE_PREFIX = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -972,6 +1083,7 @@
 		1CC42CF213A67EDA00D6A4F0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = NO;
 				EXECUTABLE_PREFIX = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -981,6 +1093,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ARC_MIGRATION = precheck;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 					COMMAND_LINE_UTILITY,
@@ -993,6 +1106,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ARC_MIGRATION = precheck;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",
 					COMMAND_LINE_UTILITY,
@@ -1005,6 +1119,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C61A55213106225009DF5DF /* Base.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEPLOYMENT_POSTPROCESSING = NO;
@@ -1033,6 +1148,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C61A55213106225009DF5DF /* Base.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PREFIX_HEADER = Mac/Colloquy.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(GCC_PREPROCESSOR_DEFINITIONS)",

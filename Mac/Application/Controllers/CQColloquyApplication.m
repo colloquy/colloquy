@@ -15,15 +15,9 @@
 
 	self.delegate = self;
 
-	_launchDate = [[NSDate alloc] init];
+	_launchDate = [NSDate date];
 
 	return self;
-}
-
-- (void) dealloc {
-	[_launchDate release];
-
-	[super dealloc];
 }
 
 #pragma mark -

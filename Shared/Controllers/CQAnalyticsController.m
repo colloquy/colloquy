@@ -33,8 +33,7 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 	if (sysctlbyname(keyPath, buffer, &size, NULL, 0) == 0) {
 		NSData *bufferData = [[NSData alloc] initWithBytes:buffer length:(size - 1)]; // Trim off the last character which is \0.
 		NSString *result = [[NSString alloc] initWithData:bufferData encoding:NSASCIIStringEncoding];
-		[bufferData release];
-		return [result autorelease];
+		return result;
 	}
 
 	return @"";
@@ -192,8 +191,6 @@ fail:
 		return nil;
 
 	if (!analyticsURL) {
-		[self release];
-
 		return nil;
 	}
 
@@ -230,8 +227,6 @@ fail:
 	[_data setObject:[systemVersion objectForKey:@"ProductName"] forKey:@"machine-system-name"];
 	[_data setObject:[systemVersion objectForKey:@"ProductVersion"] forKey:@"machine-system-version"];
 
-	[systemVersion release];
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:NSApplicationWillTerminateNotification object:nil];
 #endif
 
@@ -245,10 +240,6 @@ fail:
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	[_data release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -277,7 +268,7 @@ fail:
 - (NSData *) _requestBody {
 	NSMutableString *resultString = [[NSMutableString alloc] initWithCapacity:1024];
 
-	for (NSString *key in _data) {
+	for (__strong NSString *key in _data) {
 		NSString *value = [[_data objectForKey:key] description];
 
 		key = [key stringByEncodingIllegalURLCharacters];
@@ -288,14 +279,11 @@ fail:
 		[resultString appendFormat:@"%@=%@", key, value];
 	}
 
-	NSData *resultData = [resultString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:NO];
-	[resultString release];
-
-	return resultData;
+	return [resultString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:NO];
 }
 
 - (NSMutableURLRequest *) _urlRequest {
-	NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:analyticsURL]] autorelease];
+	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:analyticsURL]];
 
 	[request setHTTPMethod:@"POST"];
 	[request setHTTPBody:[self _requestBody]];

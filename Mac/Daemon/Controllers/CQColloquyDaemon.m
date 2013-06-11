@@ -35,7 +35,7 @@ NSString * const CQColloquyDaemonWillTerminateNotification = @"CQColloquyDaemonW
 }
 
 - (void) run {
-	autoreleasepool(^{
+	@autoreleasepool {
 		_running = YES;
 
 		[self enterSandbox];
@@ -43,7 +43,7 @@ NSString * const CQColloquyDaemonWillTerminateNotification = @"CQColloquyDaemonW
 		[CQDaemonClientConnectionController defaultController];
 
 		[[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"info.colloquy.daemon.finishedLaunching" object:NSUserName() userInfo:nil deliverImmediately:YES];
-	});
+	}
 
 	NSRunLoop *runloop = [NSRunLoop currentRunLoop];
 	while (_running)

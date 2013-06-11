@@ -16,8 +16,6 @@
 	NSAssert(!_connection, @"_connection should be nil");
 
 	[[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -47,7 +45,7 @@
 	[super connect];
 
 	NSString *serverName = [NSString stringWithFormat:@"info.colloquy.daemon - %@", NSUserName()];
-	_connection = [[NSConnection connectionWithRegisteredName:serverName host:nil] retain];
+	_connection = [NSConnection connectionWithRegisteredName:serverName host:nil];
 
 	if (!_connection) {
 		[self launchDaemon];

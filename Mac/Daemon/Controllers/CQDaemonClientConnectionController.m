@@ -27,8 +27,6 @@
 
 		MVSafeAdoptAssign(_localServerConnection, nil);
 
-		[self release];
-
 		@throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Connection could not be registered. Another process likely has registered with the same name." userInfo:nil];
 	}
 
@@ -41,10 +39,6 @@
 	NSAssert(!_localServerConnection, @"_localServerConnection should be nil");
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	[_clientConnections release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -80,7 +74,6 @@
 - (void) close {
 	NSSet *clientConnectionsCopy = [_clientConnections copy];
 	[clientConnectionsCopy makeObjectsPerformSelector:@selector(close)];
-	[clientConnectionsCopy release];
 
 	[_localServerConnection invalidate];
 
@@ -92,7 +85,6 @@
 - (BOOL) connection:(NSConnection *) serverConnection shouldMakeNewConnection:(NSConnection *) incommingConnection {
 	CQDaemonLocalClientConnection *clientConnection = [[CQDaemonLocalClientConnection alloc] initWithConnection:incommingConnection];
 	[self addClientConnection:clientConnection];
-	[clientConnection release];
 
 	return YES;
 }

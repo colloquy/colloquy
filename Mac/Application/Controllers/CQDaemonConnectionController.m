@@ -19,14 +19,7 @@
 	[_daemonConnections addObject:localConnection];
 
 	[localConnection connect];
-	[localConnection release];
 
 	return self;
-}
-
-- (void) dealloc {
-	[_daemonConnections release];
-
-	[super dealloc];
 }
 @end

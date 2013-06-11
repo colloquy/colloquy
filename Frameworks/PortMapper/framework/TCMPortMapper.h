@@ -131,5 +131,7 @@ typedef enum {
 // private accessors
 - (NSMutableSet *)_upnpPortMappingsToRemove;
 
+- (void)didWake:(id) sender;
+- (void)willSleep:(id) sender;
 
 @end

@@ -7,7 +7,7 @@
 	if (!(self = [super init]))
 		return nil;
 
-	_connection = [connection retain];
+	_connection = connection;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionDidDie:) name:NSConnectionDidDieNotification object:_connection];
 
@@ -21,8 +21,6 @@
 
 - (void) dealloc {
 	NSAssert(!_connection, @"_connection should be nil");
-
-	[super dealloc];
 }
 
 #pragma mark -

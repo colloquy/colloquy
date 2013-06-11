@@ -199,8 +199,8 @@ enum {
         [center addObserver:self selector:@selector(decreaseWorkCount:) 
                 name:TCMNATPMPPortMapperDidEndWorkingNotification    object:_NATPMPPortMapper];
         
-        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(didWake:) name:NSWorkspaceDidWakeNotification object:nil];
-        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(willSleep:) name:NSWorkspaceWillSleepNotification object:nil];
+//        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(didWake:) name:NSWorkspaceDidWakeNotification object:nil];
+//        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self selector:@selector(willSleep:) name:NSWorkspaceWillSleepNotification object:nil];
     }
     return self;
 }
@@ -266,7 +266,7 @@ enum {
 //    NSLog(@"%s addresses:%@ masks:%@",__FUNCTION__,IPAddresses, subNetMasks);
     if (routerAddress) {
         NSString *ipAddress = nil;
-        int i;
+        NSUInteger i;
         for (i=0;i<[IPAddresses count];i++) {
             ipAddress = (NSString *) [IPAddresses objectAtIndex:i];
             NSString *subNetMask = (NSString *) [subNetMasks objectAtIndex:i];

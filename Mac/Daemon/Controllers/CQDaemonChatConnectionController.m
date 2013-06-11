@@ -13,10 +13,4 @@
 
 	return self;
 }
-
-- (void) dealloc {
-	[_connections release];
-
-	[super dealloc];
-}
 @end

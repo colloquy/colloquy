@@ -100,7 +100,7 @@ NSString * const TCMUPNPPortMapperDidEndWorkingNotification   =@"TCMUPNPPortMapp
 		[descriptionComponents removeAllObjects];
 		// there seems to be a hard limit of 40 characters at in the vigor routers - so length is of essence
 		// however since there seems to be a hard limit of 11 at at least one other router we need to take further action
-		int maxLength = 40;
+		NSUInteger maxLength = 40;
 		maxLength -= [prefix length];
 		maxLength -= [userID length];
 		maxLength -= 2;
