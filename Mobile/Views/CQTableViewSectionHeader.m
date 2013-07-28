@@ -5,34 +5,47 @@
 	if (!(self = [super initWithFrame:frame]))
 		return nil;
 
-	_backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+	if ([UIDevice currentDevice].isSystemSeven) {
+		self.backgroundColor = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
+	} else {
+		_backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
 
-	UIImage *image = [UIImage imageNamed:@"sectionHeader.png"];
-	image = [image stretchableImageWithLeftCapWidth:0. topCapHeight:0.];
+		UIImage *image = [UIImage imageNamed:@"sectionHeader.png"];
+		image = [image stretchableImageWithLeftCapWidth:0. topCapHeight:0.];
 
-	_backgroundImage = [image retain];
+		_backgroundImage = [image retain];
 
-	_backgroundImageView.alpha = 0.9;
-	_backgroundImageView.image = image;
+		_backgroundImageView.alpha = 0.9;
+		_backgroundImageView.image = image;
 
-	image = [UIImage imageNamed:@"sectionHeaderHighlighted.png"];
-	image = [image stretchableImageWithLeftCapWidth:0. topCapHeight:0.];
+		image = [UIImage imageNamed:@"sectionHeaderHighlighted.png"];
+		image = [image stretchableImageWithLeftCapWidth:0. topCapHeight:0.];
 
-	_backgroundHighlightedImage = [image retain];
+		_backgroundHighlightedImage = [image retain];
+
+		[self addSubview:_backgroundImageView];
+	}
 
 	_textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-	_textLabel.font = [UIFont boldSystemFontOfSize:18.];
-	_textLabel.textColor = [UIColor whiteColor];
+	if ([UIDevice currentDevice].isSystemSeven) {
+		UIFont *font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline2];
+		UIFontDescriptor *descriptor = font.fontDescriptor;
+		descriptor = [descriptor fontDescriptorWithSymbolicTraits:(descriptor.symbolicTraits | UIFontDescriptorTraitBold)];
+
+		_textLabel.font = [UIFont fontWithDescriptor:descriptor size:font.pointSize];
+	} else {
+		_textLabel.font = [UIFont boldSystemFontOfSize:18.];
+	}
+	_textLabel.textColor = [UIDevice currentDevice].isSystemSeven ? [UIColor colorWithWhite:(78. / 255.) alpha:1.] : [UIColor whiteColor];
 	_textLabel.backgroundColor = [UIColor clearColor];
 	_textLabel.shadowOffset = CGSizeMake(0., 1.);
 	_textLabel.shadowColor = [UIColor colorWithWhite:0. alpha:0.5];
 
-	image = [UIImage imageNamed:@"disclosureArrow.png"];
+	UIImage *image = [UIImage imageNamed:@"disclosureArrow.png"];
 	_disclosureImageView = [[UIImageView alloc] initWithImage:image];
 
 	self.showsDisclosureState = YES;
 
-	[self addSubview:_backgroundImageView];
 	[self addSubview:_textLabel];
 	[self addSubview:_disclosureImageView];
 
@@ -73,8 +86,16 @@
 	if (!_showsDisclosureState)
 		return;
 
-	_backgroundImageView.alpha = (highlighted || self.selected ? 1. : 0.9);
-	_backgroundImageView.image = (highlighted || self.selected ? _backgroundHighlightedImage : _backgroundImage);
+	if ([UIDevice currentDevice].isSystemSeven) {
+		[UIView animateWithDuration:(1. / 3.) animations:^{
+			if (highlighted || self.selected)
+				self.backgroundColor = [UIColor colorWithWhite:(228. / 255.) alpha:1.];
+			else self.backgroundColor = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
+		}];
+	} else {
+		_backgroundImageView.alpha = (highlighted || self.selected ? 1. : 0.9);
+		_backgroundImageView.image = (highlighted || self.selected ? _backgroundHighlightedImage : _backgroundImage);
+	}
 }
 
 - (void) setSelected:(BOOL) selected {
@@ -83,8 +104,16 @@
 	if (!_showsDisclosureState)
 		return;
 
-	_backgroundImageView.alpha = (selected || self.highlighted ? 1. : 0.9);
-	_backgroundImageView.image = (selected || self.highlighted ? _backgroundHighlightedImage : _backgroundImage);
+	if ([UIDevice currentDevice].isSystemSeven) {
+		[UIView animateWithDuration:(1. / 6.) animations:^{
+			if (selected || self.highlighted)
+				self.backgroundColor = [UIColor colorWithWhite:(228. / 255.) alpha:1.];
+			else self.backgroundColor = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
+		}];
+	} else {
+		_backgroundImageView.alpha = (selected || self.highlighted ? 1. : 0.9);
+		_backgroundImageView.image = (selected || self.highlighted ? _backgroundHighlightedImage : _backgroundImage);
+	}
 }
 
 - (void) setShowsDisclosureState:(BOOL) showsDisclosureState {
