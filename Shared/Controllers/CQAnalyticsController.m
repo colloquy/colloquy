@@ -191,6 +191,10 @@ fail:
 		return nil;
 
 	if (!analyticsURL) {
+#if SYSTEM(IOS)
+		[self release];
+#endif
+
 		return nil;
 	}
 
@@ -240,6 +244,10 @@ fail:
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
+#if SYSTEM(IOS)
+	[super dealloc];
+#endif
 }
 
 #pragma mark -
@@ -279,6 +287,8 @@ fail:
 		[resultString appendFormat:@"%@=%@", key, value];
 	}
 
+	MVAutorelease(resultString);
+
 	return [resultString dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:NO];
 }
 
@@ -290,7 +300,7 @@ fail:
 	[request setCachePolicy:NSURLRequestReloadIgnoringCacheData];
 	[request setTimeoutInterval:30.];
 
-	return request;
+	return MVAutorelease(request);
 }
 
 #pragma mark -
