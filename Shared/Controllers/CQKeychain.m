@@ -19,9 +19,9 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 
 	NSMutableDictionary *query = [[NSMutableDictionary alloc] init];
 
-	[query setObject:(id)kSecClassInternetPassword forKey:(id)kSecClass];
-	[query setObject:server forKey:(id)kSecAttrServer];
-	if (account) [query setObject:account forKey:(id)kSecAttrAccount];
+	query[(id)kSecClass] = (id)kSecClassInternetPassword;
+	query[(id)kSecAttrServer] = server;
+	if (account) query[(id)kSecAttrAccount] = account;
 
 	return query;
 }
@@ -37,7 +37,7 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	NSMutableDictionary *passwordEntry = createBaseDictionary(server, area);
 
 	NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
-	[passwordEntry setObject:passwordData forKey:(id)kSecValueData];
+	passwordEntry[(id)kSecValueData] = passwordData;
 
 	OSStatus status = SecItemAdd((CFDictionaryRef)passwordEntry, NULL);
 	if (status == errSecDuplicateItem) {
@@ -61,8 +61,8 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	NSMutableDictionary *passwordQuery = createBaseDictionary(server, area);
 	NSData *resultData = nil;
 
-	[passwordQuery setObject:(id)kCFBooleanTrue forKey:(id)kSecReturnData];
-	[passwordQuery setObject:(id)kSecMatchLimitOne forKey:(id)kSecMatchLimit];
+	passwordQuery[(id)kSecReturnData] = (id)kCFBooleanTrue;
+	passwordQuery[(id)kSecMatchLimit] = (id)kSecMatchLimitOne;
 
 	OSStatus status = SecItemCopyMatching((CFDictionaryRef)passwordQuery, (CFTypeRef *)&resultData);
 	if (status == noErr && resultData) {

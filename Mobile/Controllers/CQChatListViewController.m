@@ -334,12 +334,12 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 #endif
 
 - (void) _addMessagePreview:(NSDictionary *) info withEncoding:(NSStringEncoding) encoding toChatTableCell:(CQChatTableCell *) cell animated:(BOOL) animated {
-	MVChatUser *user = [info objectForKey:@"user"];
-	NSString *message = [info objectForKey:@"messagePlain"];
-	BOOL action = [[info objectForKey:@"action"] boolValue];
+	MVChatUser *user = info[@"user"];
+	NSString *message = info[@"messagePlain"];
+	BOOL action = [info[@"action"] boolValue];
 
 	if (!message) {
-		message = [info objectForKey:@"message"];
+		message = info[@"message"];
 		message = [message stringByStrippingXMLTags];
 		message = [message stringByDecodingXMLSpecialCharacterEntities];
 	}
@@ -351,12 +351,12 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 }
 
 - (void) _addedChatViewController:(NSNotification *) notification {
-	id <CQChatViewController> controller = [notification.userInfo objectForKey:@"controller"];
+	id <CQChatViewController> controller = notification.userInfo[@"controller"];
 	[self chatViewControllerAdded:controller];
 }
 
 - (void) _connectionRemoved:(NSNotification *) notification {
-	MVChatConnection *connection = [notification.userInfo objectForKey:@"connection"];
+	MVChatConnection *connection = notification.userInfo[@"connection"];
 	[self _closeChatViewControllers:nil forConnection:connection withRowAnimation:UITableViewRowAnimationTop];
 }
 
@@ -651,7 +651,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
 		[self.tableView insertSections:[NSIndexSet indexSetWithIndex:changedIndexPath.section] withRowAnimation:UITableViewRowAnimationTop];
 		[self.tableView endUpdates];
-	} else [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
+	} else [self.tableView insertRowsAtIndexPaths:@[changedIndexPath] withRowAnimation:UITableViewRowAnimationTop];
 
 //	if (selectedIndexPath && changedIndexPath.section == selectedIndexPath.section) {
 //		if (changedIndexPath.row <= selectedIndexPath.row)
@@ -866,8 +866,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			NSMutableArray *previewMessages = [[NSMutableArray alloc] initWithCapacity:2];
 
 			for (NSInteger i = (recentMessages.count - 1); i >= 0 && previewMessages.count < 2; --i) {
-				NSDictionary *message = [recentMessages objectAtIndex:i];
-				MVChatUser *user = [message objectForKey:@"user"];
+				NSDictionary *message = recentMessages[i];
+				MVChatUser *user = message[@"user"];
 				if (!user.localUser) [previewMessages insertObject:message atIndex:0];
 			}
 
@@ -968,7 +968,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	}
 #endif
 
-	[self _closeChatViewControllers:[NSArray arrayWithObject:chatViewController] forConnection:chatViewController.connection withRowAnimation:UITableViewRowAnimationRight];
+	[self _closeChatViewControllers:@[chatViewController] forConnection:chatViewController.connection withRowAnimation:UITableViewRowAnimationRight];
 }
 
 - (CGFloat) tableView:(UITableView *) tableView heightForHeaderInSection:(NSInteger) section {

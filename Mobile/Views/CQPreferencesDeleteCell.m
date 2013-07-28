@@ -52,7 +52,7 @@
 - (SEL) deleteAction {
 	NSArray *actions = [_deleteButton actionsForTarget:nil forControlEvent:UIControlEventTouchUpInside];
 	if (!actions.count) return NULL;
-	return NSSelectorFromString([actions objectAtIndex:0]);
+	return NSSelectorFromString(actions[0]);
 }
 
 - (void) setDeleteAction:(SEL) action {

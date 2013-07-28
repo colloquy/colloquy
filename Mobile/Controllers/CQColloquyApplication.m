@@ -84,11 +84,11 @@ static NSMutableArray *highlightWords;
 	if (!schemes) {
 		schemes = [[NSMutableSet alloc] init];
 
-		NSArray *urlTypes = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleURLTypes"];
+		NSArray *urlTypes = [NSBundle mainBundle].infoDictionary[@"CFBundleURLTypes"];
 		for (NSDictionary *type in urlTypes) {
-			NSArray *schemesForType = [type objectForKey:@"CFBundleURLSchemes"];
+			NSArray *schemesForType = type[@"CFBundleURLSchemes"];
 			for (NSString *scheme in schemesForType)
-				[schemes addObject:[scheme lowercaseString]];
+				[schemes addObject:scheme.lowercaseString];
 		}
 	}
 
@@ -178,10 +178,10 @@ static NSMutableArray *highlightWords;
 
 - (void) performDeferredLaunchWork {
 	NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-	NSString *version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+	NSString *version = infoDictionary[@"CFBundleShortVersionString"];
 
 	if (![[[CQSettingsController settingsController] stringForKey:@"CQLastVersionUsed"] isEqualToString:version]) {
-		NSString *bundleVersion = [infoDictionary objectForKey:@"CFBundleVersion"];
+		NSString *bundleVersion = infoDictionary[@"CFBundleVersion"];
 		NSString *displayVersion = nil;
 		if (bundleVersion.length)
 			displayVersion = [NSString stringWithFormat:@"%@ (%@)", version, bundleVersion];
@@ -192,8 +192,8 @@ static NSMutableArray *highlightWords;
 			NSString *preferencesPath = [@"~/../../Library/Preferences/com.apple.Preferences.plist" stringByStandardizingPath];
 			NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:preferencesPath];
 
-			if ((preferences && ![[preferences objectForKey:@"KeyboardEmojiEverywhere"] boolValue])) {
-				[preferences setValue:[NSNumber numberWithBool:YES] forKey:@"KeyboardEmojiEverywhere"];
+			if ((preferences && ![preferences[@"KeyboardEmojiEverywhere"] boolValue])) {
+				[preferences setValue:@(YES) forKey:@"KeyboardEmojiEverywhere"];
 				[preferences writeToFile:preferencesPath atomically:YES];
 			}
 
@@ -218,10 +218,10 @@ static NSMutableArray *highlightWords;
 
 	CQAnalyticsController *analyticsController = [CQAnalyticsController defaultController];
 
-	NSString *information = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+	NSString *information = infoDictionary[@"CFBundleShortVersionString"];
 	[analyticsController setObject:information forKey:@"application-version"];
 
-	information = [infoDictionary objectForKey:@"CFBundleVersion"];
+	information = infoDictionary[@"CFBundleVersion"];
 	[analyticsController setObject:information forKey:@"application-build-version"];
 
 #if TARGET_IPHONE_SIMULATOR
@@ -261,12 +261,12 @@ static NSMutableArray *highlightWords;
 	if (!userInfo.count)
 		return;
 
-	NSString *connectionServer = [userInfo objectForKey:@"s"];
-	NSString *connectionIdentifier = [userInfo objectForKey:@"c"];
+	NSString *connectionServer = userInfo[@"s"];
+	NSString *connectionIdentifier = userInfo[@"c"];
 	if (connectionServer.length || connectionIdentifier.length) {
-		NSString *roomName = [userInfo objectForKey:@"r"];
-		NSString *senderNickname = [userInfo objectForKey:@"n"];
-		NSString *action = [userInfo objectForKey:@"a"];
+		NSString *roomName = userInfo[@"r"];
+		NSString *senderNickname = userInfo[@"n"];
+		NSString *action = userInfo[@"a"];
 
 		MVChatConnection *connection = nil;
 
@@ -319,7 +319,7 @@ static NSMutableArray *highlightWords;
 	_connectionsBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connections", @"Connections button title") style:UIBarButtonItemStyleBordered target:self action:@selector(toggleConnections:)];
 
 	CQChatPresentationController *presentationController = [CQChatController defaultController].chatPresentationController;
-	[presentationController setStandardToolbarItems:[NSArray arrayWithObject:_connectionsBarButtonItem] animated:NO];
+	[presentationController setStandardToolbarItems:@[_connectionsBarButtonItem] animated:NO];
 
 	NSArray *viewControllers = [[NSArray alloc] initWithObjects:[CQChatController defaultController].chatNavigationController, presentationController, nil];
 	splitViewController.viewControllers = viewControllers;
@@ -362,7 +362,7 @@ static NSMutableArray *highlightWords;
 
 	[_mainWindow makeKeyAndVisible];
 
-	[self handleNotificationWithUserInfo:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]];
+	[self handleNotificationWithUserInfo:launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey]];
 
 	[self performSelector:@selector(performDeferredLaunchWork) withObject:nil afterDelay:1.];
 
@@ -382,12 +382,12 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) application:(UIApplication *) application didReceiveRemoteNotification:(NSDictionary *) userInfo {
-	NSDictionary *apsInfo = [userInfo objectForKey:@"aps"];
+	NSDictionary *apsInfo = userInfo[@"aps"];
 	if (!apsInfo.count)
 		return;
 
 	if ([self areNotificationBadgesAllowed])
-		self.applicationIconBadgeNumber = [[apsInfo objectForKey:@"badge"] integerValue];
+		self.applicationIconBadgeNumber = [apsInfo[@"badge"] integerValue];
 }
 
 - (void) application:(UIApplication *) application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *) deviceToken {
@@ -413,7 +413,7 @@ static NSMutableArray *highlightWords;
 	_deviceToken = [deviceTokenString retain];
 	[old release];
 
-	[[NSNotificationCenter defaultCenter] postNotificationName:CQColloquyApplicationDidRecieveDeviceTokenNotification object:self userInfo:[NSDictionary dictionaryWithObject:deviceTokenString forKey:@"deviceToken"]];
+	[[NSNotificationCenter defaultCenter] postNotificationName:CQColloquyApplicationDidRecieveDeviceTokenNotification object:self userInfo:@{@"deviceToken": deviceTokenString}];
 }
 
 - (void) application:(UIApplication *) application didFailToRegisterForRemoteNotificationsWithError:(NSError *) error {
@@ -450,7 +450,7 @@ static NSMutableArray *highlightWords;
 	CQChatPresentationController *chatPresentationController = [CQChatController defaultController].chatPresentationController;
 	NSMutableArray *items = [chatPresentationController.standardToolbarItems mutableCopy];
 
-	if ([items objectAtIndex:0] == barButtonItem) {
+	if (items[0] == barButtonItem) {
 		[items release];
 
 		return;
@@ -582,8 +582,8 @@ static NSMutableArray *highlightWords;
 }
 
 - (void) _presentModalViewControllerWithInfo:(NSDictionary *) info {
-	UIViewController *modalViewController = [info objectForKey:@"modalViewController"];
-	BOOL animated = [[info objectForKey:@"animated"] boolValue];
+	UIViewController *modalViewController = info[@"modalViewController"];
+	BOOL animated = [info[@"animated"] boolValue];
 
 	[self presentModalViewController:modalViewController animated:animated singly:YES];
 }
@@ -592,7 +592,7 @@ static NSMutableArray *highlightWords;
 	if (singly && self.modalViewController) {
 		[self dismissModalViewControllerAnimated:animated];
 		if (animated) {
-			NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:modalViewController, @"modalViewController", [NSNumber numberWithBool:animated], @"animated", nil];
+			NSDictionary *info = [[NSDictionary alloc] initWithObjectsAndKeys:modalViewController, @"modalViewController", @(animated), @"animated", nil];
 			[self performSelector:@selector(_presentModalViewControllerWithInfo:) withObject:info afterDelay:0.5];
 			[info release];
 			return;
@@ -700,7 +700,7 @@ static NSMutableArray *highlightWords;
 
 - (void) submitRunTime {
 	NSTimeInterval runTime = ABS([_resumeDate timeIntervalSinceNow]);
-	[[CQAnalyticsController defaultController] setObject:[NSNumber numberWithDouble:runTime] forKey:@"run-time"];
+	[[CQAnalyticsController defaultController] setObject:@(runTime) forKey:@"run-time"];
 	[[CQAnalyticsController defaultController] synchronizeSynchronously];
 }
 

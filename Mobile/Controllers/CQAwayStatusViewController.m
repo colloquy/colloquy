@@ -32,9 +32,9 @@
 	if (defaultAwayStatus.length && ![awayStatuses containsObject:defaultAwayStatus])
 		[awayStatuses addObject:defaultAwayStatus];
 	else {
-		if (![self statusIsDefaultAwayStatus:[awayStatuses objectAtIndex:0]]) {
+		if (![self statusIsDefaultAwayStatus:awayStatuses[0]]) {
 			for (NSUInteger i = 1; i <  awayStatuses.count; i++) {
-				NSString *status = [awayStatuses objectAtIndex:i];
+				NSString *status = awayStatuses[i];
 				if ([self statusIsDefaultAwayStatus:status])
 					[awayStatuses removeObjectAtIndex:i];
 			}
@@ -171,7 +171,7 @@
 		if (!_items.count)
 			return;
 
-		_connection.awayStatusMessage = [_items objectAtIndex:indexPath.row];
+		_connection.awayStatusMessage = _items[indexPath.row];
 
 		[self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 	}

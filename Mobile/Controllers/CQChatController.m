@@ -162,15 +162,15 @@ static CQSoundController *fileTransferSound;
 - (void) _gotPrivateMessage:(NSNotification *) notification {
 	MVChatUser *user = notification.object;
 
-	if (user.localUser && [notification.userInfo objectForKey:@"target"])
-		user = [notification.userInfo objectForKey:@"target"];
+	if (user.localUser && notification.userInfo[@"target"])
+		user = notification.userInfo[@"target"];
 
 	BOOL hideFromUser = NO;
-	if ([[notification.userInfo objectForKey:@"notice"] boolValue]) {
+	if ([notification.userInfo[@"notice"] boolValue]) {
 		if (![[CQChatOrderingController defaultController] chatViewControllerForUser:user ifExists:YES])
 			hideFromUser = YES;
 
-		if ( alwaysShowNotices == 1 || ( alwaysShowNotices == 0 && ![[notification userInfo] objectForKey:@"handled"] ) )
+		if ( alwaysShowNotices == 1 || ( alwaysShowNotices == 0 && ![notification userInfo][@"handled"] ) )
 			hideFromUser = NO;
 	}
 
@@ -253,7 +253,7 @@ static CQSoundController *fileTransferSound;
 #endif
 
 - (void) _invitedToRoom:(NSNotification *) notification {
-	NSString *roomName = [[notification userInfo] objectForKey:@"room"];
+	NSString *roomName = notification.userInfo[@"room"];
 	MVChatConnection *connection = [notification object];
 
 	if ([chatRoomInviteAction isEqualToString:@"Auto-Join"]) {
@@ -263,7 +263,7 @@ static CQSoundController *fileTransferSound;
 		return;
 	}
 
-	MVChatUser *user = [[notification userInfo] objectForKey:@"user"];
+	MVChatUser *user = notification.userInfo[@"user"];
 	MVChatRoom *room = [connection chatRoomWithName:roomName];
 
 	NSString *message = [NSString stringWithFormat:NSLocalizedString(@"You are invited to \"%@\" by \"%@\" on \"%@\".", "Invited to join room alert message"), room.displayName, user.displayName, connection.displayName];
@@ -273,7 +273,7 @@ static CQSoundController *fileTransferSound;
 
 		localNotification.alertBody = message;
 		localNotification.alertAction = NSLocalizedString(@"Join", "Join button title");
-		localNotification.userInfo = [NSDictionary dictionaryWithObjectsAndKeys:connection.uniqueIdentifier, @"c", room.name, @"r", @"j", @"a", nil];
+		localNotification.userInfo = @{@"c": connection.uniqueIdentifier, @"r": room.name, @"a": @"j"};
 		localNotification.soundName = UILocalNotificationDefaultSoundName;
 
 		[[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
@@ -462,14 +462,14 @@ static CQSoundController *fileTransferSound;
 			continue;
 
 		NSDictionary *controllerState = controller.persistentState;
-		if (!controllerState.count || ![controllerState objectForKey:@"class"])
+		if (!controllerState.count || !controllerState[@"class"])
 			continue;
 
 		[controllerStates addObject:controllerState];
 	}
 
 	if (controllerStates.count)
-		[state setObject:controllerStates forKey:@"chatControllers"];
+		state[@"chatControllers"] = controllerStates;
 
 	[controllerStates release];
 
@@ -477,8 +477,8 @@ static CQSoundController *fileTransferSound;
 }
 
 - (void) restorePersistentState:(NSDictionary *) state forConnection:(MVChatConnection *) connection {
-	for (NSDictionary *controllerState in [state objectForKey:@"chatControllers"]) {
-		NSString *className = [controllerState objectForKey:@"class"];
+	for (NSDictionary *controllerState in state[@"chatControllers"]) {
+		NSString *className = controllerState[@"class"];
 		Class class = NSClassFromString(className);
 		if (!class)
 			continue;
@@ -490,7 +490,7 @@ static CQSoundController *fileTransferSound;
 		[[CQChatOrderingController defaultController] addViewController:controller];
 		[controller release];
 
-		if ([[controllerState objectForKey:@"active"] boolValue]) {
+		if ([controllerState[@"active"] boolValue]) {
 			id old = _nextController;
 			_nextController = [controller retain];
 			[old release];
@@ -702,14 +702,14 @@ static CQSoundController *fileTransferSound;
 
 	[[CQChatOrderingController defaultController] removeViewController:controller];
 
-	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObject:controller forKey:@"controller"];
+	NSDictionary *notificationInfo = @{@"controller": controller};
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerRemovedChatViewControllerNotification object:self userInfo:notificationInfo];
 
 	if ([[UIDevice currentDevice] isPadModel] && _visibleChatController == controller) {
 		if ([CQChatOrderingController defaultController].chatViewControllers.count) {
 			if (!controllerIndex)
 				controllerIndex = 1;
-			[self performSelector:@selector(_showChatControllerUnanimated:) withObject:[[CQChatOrderingController defaultController].chatViewControllers objectAtIndex:(controllerIndex - 1)] afterDelay:0.];
+			[self performSelector:@selector(_showChatControllerUnanimated:) withObject:([CQChatOrderingController defaultController].chatViewControllers)[(controllerIndex - 1)] afterDelay:0.];
 		} else [self showChatController:nil animated:YES];
 	}
 

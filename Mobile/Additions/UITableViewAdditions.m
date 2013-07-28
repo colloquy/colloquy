@@ -4,7 +4,7 @@
 - (void) updateCellAtIndexPath:(NSIndexPath *) indexPath withAnimation:(UITableViewRowAnimation) animation {
 	NSParameterAssert(indexPath != nil);
 
-	NSArray *indexPaths = [NSArray arrayWithObject:indexPath];
+	NSArray *indexPaths = @[indexPath];
 
 	NSIndexPath *selectedIndexPath = [self indexPathForSelectedRow];
 	BOOL selected = (selectedIndexPath && indexPath.section == selectedIndexPath.section && indexPath.row == selectedIndexPath.row);

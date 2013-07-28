@@ -20,12 +20,12 @@
 	else self.alertViewStyle = UIAlertViewStyleLoginAndPasswordInput;
 
 	for (NSUInteger i = 0; i < _textFieldInformation.count; i++) {
-		NSDictionary *textFieldInformation = [_textFieldInformation objectAtIndex:i];
+		NSDictionary *textFieldInformation = _textFieldInformation[i];
 		UITextField *textField = [self textFieldAtIndex:i];
 
-		textField.placeholder = [textFieldInformation objectForKey:@"placeholder"];
-		textField.text = [textFieldInformation objectForKey:@"text"];
-		textField.secureTextEntry = !![textFieldInformation objectForKey:@"secure"];
+		textField.placeholder = textFieldInformation[@"placeholder"];
+		textField.text = textFieldInformation[@"text"];
+		textField.secureTextEntry = !!textFieldInformation[@"secure"];
 	}
 }
 
@@ -35,9 +35,9 @@
 	NSMutableDictionary *textFieldInformation = [NSMutableDictionary dictionary];
 
 	if (placeholder.length)
-		[textFieldInformation setObject:placeholder forKey:@"placeholder"];
+		textFieldInformation[@"placeholder"] = placeholder;
 	if (text.length)
-		[textFieldInformation setObject:text forKey:@"text"];
+		textFieldInformation[@"text"] = text;
 
 	[_textFieldInformation addObject:textFieldInformation];
 
@@ -50,8 +50,8 @@
 	NSMutableDictionary *textFieldInformation = [NSMutableDictionary dictionary];
 
 	if (placeholder.length)
-		[textFieldInformation setObject:placeholder forKey:@"placeholder"];
-	[textFieldInformation setObject:[NSNumber numberWithBool:YES] forKey:@"secure"];
+		textFieldInformation[@"placeholder"] = placeholder;
+	textFieldInformation[@"secure"] = @YES;
 
 	[_textFieldInformation addObject:textFieldInformation];
 

@@ -11,34 +11,34 @@
 static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFormat) {
 	static NSDictionary *singularWords;
 	if (!singularWords)
-		singularWords = [[NSDictionary alloc] initWithObjectsAndKeys:NSLocalizedString(@"second", "Singular second"), [NSNumber numberWithUnsignedInt:1], NSLocalizedString(@"minute", "Singular minute"), [NSNumber numberWithUnsignedInt:60], NSLocalizedString(@"hour", "Singular hour"), [NSNumber numberWithUnsignedInt:3600], NSLocalizedString(@"day", "Singular day"), [NSNumber numberWithUnsignedInt:86400], NSLocalizedString(@"week", "Singular week"), [NSNumber numberWithUnsignedInt:604800], NSLocalizedString(@"month", "Singular month"), [NSNumber numberWithUnsignedInt:2628000], NSLocalizedString(@"year", "Singular year"), [NSNumber numberWithUnsignedInt:31536000], nil];
+		singularWords = [[NSDictionary alloc] initWithObjectsAndKeys:NSLocalizedString(@"second", "Singular second"), @1U, NSLocalizedString(@"minute", "Singular minute"), @60U, NSLocalizedString(@"hour", "Singular hour"), @3600U, NSLocalizedString(@"day", "Singular day"), @86400U, NSLocalizedString(@"week", "Singular week"), @604800U, NSLocalizedString(@"month", "Singular month"), @2628000U, NSLocalizedString(@"year", "Singular year"), @31536000U, nil];
 
 	static NSDictionary *pluralWords;
 	if (!pluralWords)
-		pluralWords = [[NSDictionary alloc] initWithObjectsAndKeys:NSLocalizedString(@"seconds", "Plural seconds"), [NSNumber numberWithUnsignedInt:1], NSLocalizedString(@"minutes", "Plural minutes"), [NSNumber numberWithUnsignedInt:60], NSLocalizedString(@"hours", "Plural hours"), [NSNumber numberWithUnsignedInt:3600], NSLocalizedString(@"days", "Plural days"), [NSNumber numberWithUnsignedInt:86400], NSLocalizedString(@"weeks", "Plural weeks"), [NSNumber numberWithUnsignedInt:604800], NSLocalizedString(@"months", "Plural months"), [NSNumber numberWithUnsignedInt:2628000], NSLocalizedString(@"years", "Plural years"), [NSNumber numberWithUnsignedInt:31536000], nil];
+		pluralWords = [[NSDictionary alloc] initWithObjectsAndKeys:NSLocalizedString(@"seconds", "Plural seconds"), @1U, NSLocalizedString(@"minutes", "Plural minutes"), @60U, NSLocalizedString(@"hours", "Plural hours"), @3600U, NSLocalizedString(@"days", "Plural days"), @86400U, NSLocalizedString(@"weeks", "Plural weeks"), @604800U, NSLocalizedString(@"months", "Plural months"), @2628000U, NSLocalizedString(@"years", "Plural years"), @31536000U, nil];
 
 	static NSArray *breaks;
 	if (!breaks)
-		breaks = [[NSArray alloc] initWithObjects:[NSNumber numberWithUnsignedInt:1], [NSNumber numberWithUnsignedInt:60], [NSNumber numberWithUnsignedInt:3600], [NSNumber numberWithUnsignedInt:86400], [NSNumber numberWithUnsignedInt:604800], [NSNumber numberWithUnsignedInt:2628000], [NSNumber numberWithUnsignedInt:31536000], nil];
+		breaks = [[NSArray alloc] initWithObjects:@(1U), @(60U), @(3600U), @(86400U), @(604800U), @(2628000U), @(31536000U), nil];
 
 	NSTimeInterval seconds = ABS(interval);
 
 	NSUInteger i = 0;
-	while (i < [breaks count] && seconds >= [[breaks objectAtIndex:i] doubleValue]) ++i;
+	while (i < [breaks count] && seconds >= [breaks[i] doubleValue]) ++i;
 	if (i > 0) --i;
 
-	float stop = [[breaks objectAtIndex:i] floatValue];
+	float stop = [breaks[i] floatValue];
 	NSUInteger value = (seconds / stop);
 	NSDictionary *words = (value != 1 ? pluralWords : singularWords);
 
-	NSMutableString *result = [NSMutableString stringWithFormat:NSLocalizedString(@"%u %@", "Time with a unit word"), value, [words objectForKey:[NSNumber numberWithUnsignedInt:stop]]];
+	NSMutableString *result = [NSMutableString stringWithFormat:NSLocalizedString(@"%u %@", "Time with a unit word"), value, words[[NSNumber numberWithUnsignedInt:stop]]];
 	if (longFormat && i > 0) {
 		NSUInteger remainder = ((NSUInteger)seconds % (NSUInteger)stop);
-		stop = [[breaks objectAtIndex:--i] floatValue];
+		stop = [breaks[--i] floatValue];
 		remainder = (remainder / stop);
 		if (remainder) {
 			words = (remainder != 1 ? pluralWords : singularWords);
-			[result appendFormat:NSLocalizedString(@" %u %@", "Time with a unit word, appended to a previous larger unit of time"), remainder, [words objectForKey:[breaks objectAtIndex:i]]];
+			[result appendFormat:NSLocalizedString(@" %u %@", "Time with a unit word, appended to a previous larger unit of time"), remainder, words[breaks[i]]];
 		}
 	}
 

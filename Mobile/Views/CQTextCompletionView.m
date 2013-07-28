@@ -268,7 +268,7 @@
 			[delegate textCompletionViewDidClose:self];
 	} else {
 		if ([delegate respondsToSelector:@selector(textCompletionView:didSelectCompletion:)])
-			[delegate textCompletionView:self didSelectCompletion:[_completions objectAtIndex:_selectedCompletion]];
+			[delegate textCompletionView:self didSelectCompletion:_completions[_selectedCompletion]];
 	}
 
 	self.selectedCompletion = NSNotFound;

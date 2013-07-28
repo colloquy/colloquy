@@ -306,7 +306,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 		return;
 	}
 
-	[self _addComponentsToTranscript:[NSArray arrayWithObject:component] fromPreviousSession:NO animated:animated];
+	[self _addComponentsToTranscript:@[component] fromPreviousSession:NO animated:animated];
 }
 
 - (void) noteNicknameChangedFrom:(NSString *) oldNickname to:(NSString *) newNickname {
@@ -402,31 +402,31 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"\\'\""];
 
 	for (NSDictionary *component in components) {
-		NSString *type = [component objectForKey:@"type"];
-		NSString *messageString = [component objectForKey:@"message"];
+		NSString *type = component[@"type"];
+		NSString *messageString = component[@"message"];
 		if (!messageString)
 			continue;
 
 		NSString *escapedMessage = [messageString stringByEscapingCharactersInSet:escapedCharacters];
 		BOOL isMessage = [type isEqualToString:@"message"];
-		BOOL isNotice = [[component objectForKey:@"notice"] boolValue];
+		BOOL isNotice = [component[@"notice"] boolValue];
 
 		if (isMessage || isNotice) {
-			MVChatUser *user = [component objectForKey:@"user"];
+			MVChatUser *user = component[@"user"];
 			if (!user)
 				continue;
 
-			BOOL action = [[component objectForKey:@"action"] boolValue];
-			BOOL highlighted = [[component objectForKey:@"highlighted"] boolValue];
+			BOOL action = [component[@"action"] boolValue];
+			BOOL highlighted = [component[@"highlighted"] boolValue];
 
 			NSString *escapedNickname = [user.nickname stringByEscapingCharactersInSet:escapedCharacters];
-			NSString *timestamp = [component objectForKey:@"timestamp"];
+			NSString *timestamp = component[@"timestamp"];
 
 			if (isNotice)
 				[command appendFormat:@"{type:'notice',sender:'%@',message:'%@',highlighted:%@,action:%@,self:%@,timestamp:'%@'},", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false"), timestamp ? timestamp : @""];
 			else [command appendFormat:@"{type:'message',sender:'%@',message:'%@',highlighted:%@,action:%@,self:%@,timestamp:'%@'},", escapedNickname, escapedMessage, (highlighted ? @"true" : @"false"), (action ? @"true" : @"false"), (user.localUser ? @"true" : @"false"), timestamp ? timestamp : @""];
 		} else if ([type isEqualToString:@"event"]) {
-			NSString *identifier = [component objectForKey:@"identifier"];
+			NSString *identifier = component[@"identifier"];
 			if (!identifier)
 				continue;
 
@@ -434,7 +434,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 			[command appendFormat:@"{type:'event',message:'%@',identifier:'%@'},", escapedMessage, escapedIdentifer];
 		} else if ([type isEqualToString:@"console"]) {
-			[command appendFormat:@"{type:'console',message:'%@',outbound:%@},", escapedMessage, ([[component objectForKey:@"outbound"] boolValue] ? @"true" : @"false")];
+			[command appendFormat:@"{type:'console',message:'%@',outbound:%@},", escapedMessage, ([component[@"outbound"] boolValue] ? @"true" : @"false")];
 		}
 	}
 

@@ -143,8 +143,8 @@
 		for (NSUInteger i = 0; i < _chatPreviewLabels.count; ++i) {
 			if (i == 0)
 				continue;
-			UILabel *currentLabel = [_chatPreviewLabels objectAtIndex:i];
-			UILabel *previousLabel = [_chatPreviewLabels objectAtIndex:(i - 1)];
+			UILabel *currentLabel = _chatPreviewLabels[i];
+			UILabel *previousLabel = _chatPreviewLabels[(i - 1)];
 			previousLabel.text = currentLabel.text;
 
 			if (i == (_chatPreviewLabels.count - 1))
@@ -160,7 +160,7 @@
 	NSTimeInterval animationDelay = 0.;
 
 	if (_chatPreviewLabels.count >= _maximumMessagePreviews) {
-		UILabel *firstLabel = [[_chatPreviewLabels objectAtIndex:0] retain];
+		UILabel *firstLabel = [_chatPreviewLabels[0] retain];
 		[_chatPreviewLabels removeObjectAtIndex:0];
 
 		if (animated) {

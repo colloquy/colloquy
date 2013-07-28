@@ -307,7 +307,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 	portListViewController.selectedItemIndex = [portListViewController.items indexOfObject:@(_connection.serverPort)];
 	portListViewController.preferencesListBlock = ^(CQPreferencesListViewController *listViewController) {
 		if (listViewController.selectedItemIndex != NSNotFound) {
-			_connection.serverPort = [[listViewController.items objectAtIndex:listViewController.selectedItemIndex] shortValue];
+			_connection.serverPort = [(listViewController.items)[listViewController.selectedItemIndex] shortValue];
 
 			[tableView beginUpdates];
 			[tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];

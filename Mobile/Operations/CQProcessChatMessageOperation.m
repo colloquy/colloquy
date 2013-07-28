@@ -70,8 +70,8 @@ static NSString *timestampFormat;
 
 - (id) initWithMessageData:(NSData *) messageData {
 	if (messageData)
-		return [self initWithMessageInfo:[NSDictionary dictionaryWithObject:messageData forKey:@"message"]];
-	return [self initWithMessageInfo:[NSDictionary dictionary]];
+		return [self initWithMessageInfo:@{@"message": messageData}];
+	return [self initWithMessageInfo:@{}];
 }
 
 - (id) initWithMessageInfo:(NSDictionary *) messageInfo {
@@ -110,11 +110,11 @@ static NSString *timestampFormat;
 #pragma mark -
 
 - (NSString *) processedMessageAsHTML {
-	return [_processedMessage objectForKey:@"message"];
+	return _processedMessage[@"message"];
 }
 
 - (NSString *) processedMessageAsPlainText {
-	return [_processedMessage objectForKey:@"messagePlain"];
+	return _processedMessage[@"messagePlain"];
 }
 
 #pragma mark -
@@ -133,9 +133,9 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 		NSArray *components = [string cq_captureComponentsMatchedByRegex:urlRegex options:RKLCaseless range:matchedRange error:NULL];
 		NSCAssert(components.count == 4, @"component count needs to be 4");
 
-		NSString *room = [components objectAtIndex:1];
-		NSString *url = [components objectAtIndex:2];
-		NSString *email = [components objectAtIndex:3];
+		NSString *room = components[1];
+		NSString *url = components[2];
+		NSString *email = components[3];
 
 		NSString *linkHTMLString = nil;
 		if (room.length) {
@@ -287,8 +287,8 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 		highlightWords = mutableHighlightWords;
 	}
 
-	NSMutableString *messageString = [self _processMessageData:[_message objectForKey:@"message"]];
-	MVChatUser *user = [_message objectForKey:@"user"];
+	NSMutableString *messageString = [self _processMessageData:_message[@"message"]];
+	MVChatUser *user = _message[@"user"];
 
 	if ([_ignoreController shouldIgnoreMessage:messageString fromUser:user inRoom:_target]) {
 		[highlightWords release];
@@ -297,7 +297,7 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 
 	BOOL highlighted = NO;
 
-	NSString *regex = [[highlightRegexes objectForKey:_highlightNickname] retain];
+	NSString *regex = [highlightRegexes[_highlightNickname] retain];
 	if (user && !regex && !user.localUser && highlightWords.count) {
 		NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 
@@ -329,7 +329,7 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 		}
 
 		if (processingRegex.length)
-			[highlightRegexes setObject:processingRegex forKey:_highlightNickname];
+			highlightRegexes[_highlightNickname] = processingRegex;
 		regex = [processingRegex copy];
 	}
 
@@ -347,8 +347,8 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 
 	_processedMessage = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:_message];
 
-	[_processedMessage setObject:@"message" forKey:@"type"];
-	[_processedMessage setObject:messageString forKey:@"message"];
+	_processedMessage[@"type"] = @"message";
+	_processedMessage[@"message"] = messageString;
 	if (timestampEveryMessage) {
 		NSString *timestamp = nil;
 		if (timestampFormat.length)
@@ -356,16 +356,16 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 		else timestamp = [NSDate formattedShortTimeStringForDate:[NSDate date]];
 		timestamp = [timestamp stringByEncodingXMLSpecialCharactersAsEntities];
 
-		[_processedMessage setObject:timestamp forKey:@"timestamp"];
+		_processedMessage[@"timestamp"] = timestamp;
 	}
 
 	NSString *plainMessage = [messageString stringByStrippingXMLTags];
 	plainMessage = [plainMessage stringByDecodingXMLSpecialCharacterEntities];
 
-	[_processedMessage setObject:plainMessage forKey:@"messagePlain"];
+	_processedMessage[@"messagePlain"] = plainMessage;
 
 	if (highlighted)
-		[_processedMessage setObject:[NSNumber numberWithBool:YES] forKey:@"highlighted"];
+		_processedMessage[@"highlighted"] = @(YES);
 
 	[highlightWords release];
 

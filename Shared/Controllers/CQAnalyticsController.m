@@ -203,9 +203,9 @@ fail:
 	generateDeviceIdentifier();
 
 #if SYSTEM(IOS)
-	[_data setObject:[UIDevice currentDevice].modelIdentifier forKey:@"device-model"];
-	[_data setObject:[UIDevice currentDevice].systemName forKey:@"device-system-name"];
-	[_data setObject:[UIDevice currentDevice].systemVersion forKey:@"device-system-version"];
+	_data[@"device-model"] = [UIDevice currentDevice].modelIdentifier;
+	_data[@"device-system-name"] = [UIDevice currentDevice].systemName;
+	_data[@"device-system-version"] = [UIDevice currentDevice].systemVersion;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillTerminate) name:UIApplicationWillTerminateNotification object:nil];
 #elif SYSTEM(MAC)
@@ -235,7 +235,7 @@ fail:
 #endif
 
 	if (!applicationName)
-		applicationName = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"] copy];
+		applicationName = [[NSBundle mainBundle].infoDictionary[@"CFBundleName"] copy];
 
 	NSAssert([applicationName isEqualToString:@"Colloquy"], @"If you are not Colloquy, you need to change analyticsURL to a new URL or nil. Thanks!");
 
@@ -261,12 +261,12 @@ fail:
 #pragma mark -
 
 - (id) objectForKey:(NSString *) key {
-	return [_data objectForKey:key];
+	return _data[key];
 }
 
 - (void) setObject:(id) object forKey:(NSString *) key {
 	if (object) {
-		[_data setObject:object forKey:key];
+		_data[key] = object;
 		[self synchronizeSoon];
 	} else [_data removeObjectForKey:key];
 }
@@ -277,7 +277,7 @@ fail:
 	NSMutableString *resultString = [[NSMutableString alloc] initWithCapacity:1024];
 
 	for (__strong NSString *key in _data) {
-		NSString *value = [[_data objectForKey:key] description];
+		NSString *value = [_data[key] description];
 
 		key = [key stringByEncodingIllegalURLCharacters];
 		value = [value stringByEncodingIllegalURLCharacters];
@@ -318,8 +318,8 @@ fail:
 	_pendingSynchronize = NO;
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
 
-	[_data setObject:deviceIdentifier forKey:deviceIdentifierKey];
-	[_data setObject:applicationName forKey:applicationNameKey];
+	_data[deviceIdentifierKey] = deviceIdentifier;
+	_data[applicationNameKey] = applicationName;
 
 	[NSURLConnection connectionWithRequest:[self _urlRequest] delegate:nil];
 
@@ -333,8 +333,8 @@ fail:
 	_pendingSynchronize = NO;
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:_cmd object:nil];
 
-	[_data setObject:deviceIdentifier forKey:deviceIdentifierKey];
-	[_data setObject:applicationName forKey:applicationNameKey];
+	_data[deviceIdentifierKey] = deviceIdentifier;
+	_data[applicationNameKey] = applicationName;
 
 	NSMutableURLRequest *request = [self _urlRequest];
 	[request setTimeoutInterval:5.];

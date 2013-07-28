@@ -41,7 +41,7 @@
 - (SEL) switchAction {
 	NSArray *actions = [_switchControl actionsForTarget:nil forControlEvent:UIControlEventValueChanged];
 	if (!actions.count) return NULL;
-	return NSSelectorFromString([actions objectAtIndex:0]);
+	return NSSelectorFromString(actions[0]);
 }
 
 - (void) setSwitchAction:(SEL) action {

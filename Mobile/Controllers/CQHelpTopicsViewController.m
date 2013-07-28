@@ -95,14 +95,14 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
 	if (!_helpSections.count)
 		return 1;
-	return ((NSArray *)[_helpSections objectAtIndex:section]).count;
+	return ((NSArray *)_helpSections[section]).count;
 }
 
 - (NSString *) tableView:(UITableView *) tableView titleForHeaderInSection:(NSInteger) section {
 	if (_helpSections.count) {
-		NSArray *sectionItems = [_helpSections objectAtIndex:section];
-		NSDictionary *info = [sectionItems objectAtIndex:0];
-		return [info objectForKey:@"SectionHeader"];
+		NSArray *sectionItems = _helpSections[section];
+		NSDictionary *info = sectionItems[0];
+		return info[@"SectionHeader"];
 	}
 
 	return nil;
@@ -110,9 +110,9 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 
 - (NSString *) tableView:(UITableView *) tableView titleForFooterInSection:(NSInteger) section {
 	if (_helpSections.count) {
-		NSArray *sectionItems = [_helpSections objectAtIndex:section];
+		NSArray *sectionItems = _helpSections[section];
 		NSDictionary *info = [sectionItems lastObject];
-		return [info objectForKey:@"SectionFooter"];
+		return info[@"SectionFooter"];
 	}
 
 	return nil;
@@ -137,21 +137,21 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 
-	NSArray *sectionItems = [_helpSections objectAtIndex:indexPath.section];
-	NSDictionary *info = [sectionItems objectAtIndex:indexPath.row];
+	NSArray *sectionItems = _helpSections[indexPath.section];
+	NSDictionary *info = sectionItems[indexPath.row];
 
-	cell.textLabel.text = [info objectForKey:@"Title"];
+	cell.textLabel.text = info[@"Title"];
 
-	if ([info objectForKey:@"Content"]) {
+	if (info[@"Content"]) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		cell.accessoryView = nil;
-	} else if ([info objectForKey:@"Screencast"]) {
+	} else if (info[@"Screencast"]) {
 		UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screencast.png"] highlightedImage:[UIImage imageNamed:@"screencastSelected.png"]];
 		cell.accessoryView = imageView;
 		[imageView release];
-	} else if ([info objectForKey:@"Link"]) {
+	} else if (info[@"Link"]) {
 		UIImageView *imageView = nil;
-		NSURL *url = [NSURL URLWithString:[info objectForKey:@"Link"]];
+		NSURL *url = [NSURL URLWithString:info[@"Link"]];
 		if ([[CQColloquyApplication sharedApplication].handledURLSchemes containsObject:[url.scheme lowercaseString]])
 			imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatBubble.png"] highlightedImage:[UIImage imageNamed:@"chatBubbleSelected.png"]];		
 		else imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"web.png"] highlightedImage:[UIImage imageNamed:@"webSelected.png"]];		
@@ -172,25 +172,25 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 	if (!_helpSections.count)
 		return;
 
-	NSArray *sectionItems = [_helpSections objectAtIndex:indexPath.section];
-	NSDictionary *info = [sectionItems objectAtIndex:indexPath.row];
+	NSArray *sectionItems = _helpSections[indexPath.section];
+	NSDictionary *info = sectionItems[indexPath.row];
 
-	if ([info objectForKey:@"Content"]) {
-		CQHelpTopicViewController *helpTopicController = [[CQHelpTopicViewController alloc] initWithHTMLContent:[info objectForKey:@"Content"]];
+	if (info[@"Content"]) {
+		CQHelpTopicViewController *helpTopicController = [[CQHelpTopicViewController alloc] initWithHTMLContent:info[@"Content"]];
 		helpTopicController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
-		helpTopicController.title = [info objectForKey:@"Title"];
+		helpTopicController.title = info[@"Title"];
 
 		[self.navigationController pushViewController:helpTopicController animated:YES];
 
 		[helpTopicController release];
-	} else if ([info objectForKey:@"Screencast"]) {
+	} else if (info[@"Screencast"]) {
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];
 
 		[_moviePlayer release];
 		_moviePlayer = nil;
 
 		@try {
-			_moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:[info objectForKey:@"Screencast"]]];
+			_moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:info[@"Screencast"]]];
 			_moviePlayer.scalingMode = MPMovieScalingModeAspectFit;
 
 			[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_screencastDidFinishPlaying) name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];
@@ -204,8 +204,8 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 			[_moviePlayer release];
 			_moviePlayer = nil;
 		}
-	} else if ([info objectForKey:@"Link"]) {
-		NSURL *url = [NSURL URLWithString:[info objectForKey:@"Link"]];
+	} else if (info[@"Link"]) {
+		NSURL *url = [NSURL URLWithString:info[@"Link"]];
 
 		if (url) {
 			[[UIApplication sharedApplication] openURL:url];

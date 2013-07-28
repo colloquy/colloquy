@@ -94,7 +94,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 
 	[self _sortChatControllers];
 
-	NSDictionary *notificationInfo = [NSDictionary dictionaryWithObject:controller forKey:@"controller"];
+	NSDictionary *notificationInfo = @{@"controller": controller};
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQChatControllerAddedChatViewControllerNotification object:self userInfo:notificationInfo];
 }
 
@@ -342,7 +342,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 		NSUInteger index = [_chatControllers indexOfObjectIdenticalTo:chatViewController];
 		if (!index)
 			return [_chatControllers lastObject];
-		return [_chatControllers objectAtIndex:(index - 1)];
+		return _chatControllers[(index - 1)];
 	}
 
 	return [self _enumerateChatViewControllersFromChatController:chatViewController withOption:NSEnumerationReverse requiringActivity:requiringActivity requiringHighlight:requiringHighlight];
@@ -352,8 +352,8 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if (!requiringActivity && !requiringHighlight) {
 		NSUInteger index = [_chatControllers indexOfObjectIdenticalTo:chatViewController];
 		if (index == (_chatControllers.count - 1))
-			return [_chatControllers objectAtIndex:0];
-		return [_chatControllers objectAtIndex:(index + 1)];
+			return _chatControllers[0];
+		return _chatControllers[(index + 1)];
 	}
 
 	return [self _enumerateChatViewControllersFromChatController:chatViewController withOption:0 requiringActivity:requiringActivity requiringHighlight:requiringHighlight];

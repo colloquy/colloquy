@@ -73,7 +73,7 @@ enum {
 
 	UIBarButtonItem *flexibleBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
 	UIBarButtonItem *segmentedItem = [[UIBarButtonItem alloc] initWithCustomView:_segmentedControl];
-	NSArray *items = [NSArray arrayWithObjects:segmentedItem, nil];
+	NSArray *items = @[segmentedItem];
 	[segmentedItem release];
 	[flexibleBarButtonItem release];
 
@@ -177,7 +177,7 @@ enum {
 		}
 
 		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:[NSString stringWithFormat:@"%d", _segmentedControl.selectedSegmentIndex]];
-		cell.textLabel.text = [[_bans objectAtIndex:indexPath.row] description];
+		cell.textLabel.text = [_bans[indexPath.row] description];
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
 		return cell;

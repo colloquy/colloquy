@@ -125,7 +125,7 @@ static NSString *membersFilteredCountFormat;
 - (NSUInteger) _indexForInsertedMatchUser:(MVChatUser *) user withOriginalIndex:(NSUInteger) index {
 	NSInteger matchesIndex = NSNotFound;
 	for (NSInteger i = (index - 1); i >= 0; --i) {
-		MVChatUser *currentUser = [_users objectAtIndex:i];
+		MVChatUser *currentUser = _users[i];
 		matchesIndex = [_matchedUsers indexOfObjectIdenticalTo:currentUser];
 		if (matchesIndex != NSNotFound)
 			break;
@@ -152,7 +152,7 @@ static NSString *membersFilteredCountFormat;
 
 		[_matchedUsers insertObject:user atIndex:matchesIndex];
 
-		NSArray *indexPaths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
+		NSArray *indexPaths = @[[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
 		[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 	}
 
@@ -164,7 +164,7 @@ static NSString *membersFilteredCountFormat;
 - (void) _removeUserAtIndex:(NSUInteger) index withAnimation:(UITableViewRowAnimation) animation {
 	NSParameterAssert(index <= _users.count);
 
-	MVChatUser *user = [[_users objectAtIndex:index] retain];
+	MVChatUser *user = [_users[index] retain];
 
 	[_users removeObjectAtIndex:index];
 
@@ -172,7 +172,7 @@ static NSString *membersFilteredCountFormat;
 	if (matchesIndex != NSNotFound) {
 		[_matchedUsers removeObjectAtIndex:matchesIndex];
 
-		NSArray *indexPaths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
+		NSArray *indexPaths = @[[NSIndexPath indexPathForRow:matchesIndex inSection:0]];
 		[self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:animation];
 	}
 
@@ -200,7 +200,7 @@ static NSString *membersFilteredCountFormat;
 	if (oldIndex == newIndex)
 		return;
 
-	MVChatUser *user = [[_users objectAtIndex:oldIndex] retain];
+	MVChatUser *user = [_users[oldIndex] retain];
 
 	BOOL searchBarFocused = [_searchController isActive];
 
@@ -243,7 +243,7 @@ static NSString *membersFilteredCountFormat;
 - (void) updateUserAtIndex:(NSUInteger) index {
 	NSParameterAssert(index <= _users.count);
 
-	MVChatUser *user = [_users objectAtIndex:index];
+	MVChatUser *user = _users[index];
 	NSUInteger matchesIndex = [_matchedUsers indexOfObjectIdenticalTo:user];
 	if (matchesIndex == NSNotFound)
 		return;
@@ -372,7 +372,7 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
-	MVChatUser *user = [_matchedUsers objectAtIndex:indexPath.row];
+	MVChatUser *user = _matchedUsers[indexPath.row];
 
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 	cell.textLabel.text = user.nickname;
@@ -418,7 +418,7 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	MVChatUser *user = [_matchedUsers objectAtIndex:indexPath.row];
+	MVChatUser *user = _matchedUsers[indexPath.row];
 
 	BOOL shouldPresentInformation = YES;
 	if (_chatUserDelegate && [_chatUserDelegate respondsToSelector:@selector(chatUserListViewController:shouldPresentInformationForUser:)])
@@ -443,7 +443,7 @@ static NSString *membersFilteredCountFormat;
 
 - (void) tableView:(UITableView *) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *) indexPath {
 	CQUserInfoViewController *userInfoViewController = [[CQUserInfoViewController alloc] init];
-	userInfoViewController.user = [_matchedUsers objectAtIndex:indexPath.row];
+	userInfoViewController.user = _matchedUsers[indexPath.row];
 
 	[self.navigationController pushViewController:userInfoViewController animated:YES];
 
@@ -459,7 +459,7 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
-	MVChatUser *user = [_matchedUsers objectAtIndex:indexPath.row];
+	MVChatUser *user = _matchedUsers[indexPath.row];
 	if (!user)
 		return;
 

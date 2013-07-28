@@ -58,7 +58,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	else if (url.path.length > 1) target = [[url.path substringFromIndex:1] stringByDecodingIllegalURLCharacters];
 
 	if (target.length)
-		_connection.automaticJoinedRooms = [NSArray arrayWithObject:target];
+		_connection.automaticJoinedRooms = @[target];
 
 	_rootViewController.navigationItem.rightBarButtonItem.enabled = (url.host.length ? YES : NO);
 }

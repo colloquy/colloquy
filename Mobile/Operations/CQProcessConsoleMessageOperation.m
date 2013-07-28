@@ -47,11 +47,11 @@ static NSRegularExpression *numericRegularExpression;
 #pragma mark -
 
 - (NSString *) processedMessageAsHTML {
-	return [_processedMessage objectForKey:@"message"];
+	return _processedMessage[@"message"];
 }
 
 - (NSString *) processedMessageAsPlainText {
-	return [_processedMessage objectForKey:@"messagePlain"];
+	return _processedMessage[@"messagePlain"];
 }
 
 #pragma mark -
@@ -110,15 +110,15 @@ static NSRegularExpression *numericRegularExpression;
 	[self _determineMessageType:strippedMessage];
 
 	_processedMessage = [[NSMutableDictionary alloc] init];
-	[_processedMessage setObject:@"console" forKey:@"type"];
-	[_processedMessage setObject:@(_outbound) forKey:@"outbound"];
+	_processedMessage[@"type"] = @"console";
+	_processedMessage[@"outbound"] = @(_outbound);
 
 	if (_verbose) {
-		[_processedMessage setObject:verboseMessage forKey:@"message"];
-		[_processedMessage setObject:verboseMessage forKey:@"messagePlain"];
+		_processedMessage[@"message"] = verboseMessage;
+		_processedMessage[@"messagePlain"] = verboseMessage;
 	} else {
-		[_processedMessage setObject:strippedMessage forKey:@"message"];
-		[_processedMessage setObject:strippedMessage forKey:@"messagePlain"];
+		_processedMessage[@"message"] = strippedMessage;
+		_processedMessage[@"messagePlain"] = strippedMessage;
 	}
 
 	if (_target && _action)

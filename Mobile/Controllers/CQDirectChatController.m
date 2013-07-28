@@ -267,7 +267,7 @@ static BOOL showingKeyboard;
 - (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
 	MVChatUser *user = nil;
 
-	NSString *nickname = [state objectForKey:@"user"];
+	NSString *nickname = state[@"user"];
 	if (!nickname) {
 		[self release];
 		return nil;
@@ -290,22 +290,22 @@ static BOOL showingKeyboard;
 }
 
 - (void) restorePersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
-	_active = [[state objectForKey:@"active"] boolValue];
+	_active = [state[@"active"] boolValue];
 
 	if ([[CQSettingsController settingsController] boolForKey:@"CQHistoryOnReconnect"]) {
 		_pendingPreviousSessionComponents = [[NSMutableArray alloc] init];
 
-		for (NSDictionary *message in [state objectForKey:@"messages"]) {
+		for (NSDictionary *message in state[@"messages"]) {
 			NSMutableDictionary *messageCopy = [message mutableCopy];
 
 			MVChatUser *user = nil;
-			if ([[messageCopy objectForKey:@"localUser"] boolValue]) {
+			if ([messageCopy[@"localUser"] boolValue]) {
 				user = connection.localUser;
 				[messageCopy removeObjectForKey:@"localUser"];
-			} else user = [connection chatUserWithUniqueIdentifier:[messageCopy objectForKey:@"user"]];
+			} else user = [connection chatUserWithUniqueIdentifier:messageCopy[@"user"]];
 
 			if (user) {
-				[messageCopy setObject:user forKey:@"user"];
+				messageCopy[@"user"] = user;
 
 				[_pendingPreviousSessionComponents addObject:messageCopy];
 			}
@@ -382,13 +382,13 @@ static BOOL showingKeyboard;
 
 	NSMutableDictionary *state = [[NSMutableDictionary alloc] init];
 
-	[state setObject:NSStringFromClass([self class]) forKey:@"class"];
+	state[@"class"] = NSStringFromClass([self class]);
 
 	if ([CQChatController defaultController].visibleChatController == self)
-		[state setObject:[NSNumber numberWithBool:YES] forKey:@"active"];
+		state[@"active"] = @YES;
 
 	if (self.user)
-		[state setObject:self.user.nickname forKey:@"user"];
+		state[@"user"] = self.user.nickname;
 
 	NSMutableArray *messages = [[NSMutableArray alloc] init];
 
@@ -399,12 +399,12 @@ static BOOL showingKeyboard;
 
 		NSMutableDictionary *newMessage = [[NSMutableDictionary alloc] initWithKeys:sameKeys fromDictionary:message];
 
-		if ([[newMessage objectForKey:@"message"] isEqual:[newMessage objectForKey:@"messagePlain"]])
+		if ([newMessage[@"message"] isEqual:newMessage[@"messagePlain"]])
 			[newMessage removeObjectForKey:@"messagePlain"];
 
-		MVChatUser *user = [message objectForKey:@"user"];
-		if (user && !user.localUser) [newMessage setObject:user.nickname forKey:@"user"];
-		else if (user.localUser) [newMessage setObject:[NSNumber numberWithBool:YES] forKey:@"localUser"];
+		MVChatUser *user = message[@"user"];
+		if (user && !user.localUser) newMessage[@"user"] = user.nickname;
+		else if (user.localUser) newMessage[@"localUser"] = @YES;
 
 		[messages addObject:newMessage];
 
@@ -412,7 +412,7 @@ static BOOL showingKeyboard;
 	}
 
 	if (messages.count)
-		[state setObject:messages forKey:@"messages"];
+		state[@"messages"] = messages;
 
 	[messages release];
 
@@ -949,8 +949,8 @@ static BOOL showingKeyboard;
 	[self.connection connectAppropriately];
 
 	NSArray *rooms = [arguments componentsSeparatedByString:@","];
-	if (rooms.count == 1 && ((NSString *)[rooms objectAtIndex:0]).length)
-		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:[rooms objectAtIndex:0] andConnection:self.connection];
+	if (rooms.count == 1 && ((NSString *)rooms[0]).length)
+		[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:rooms[0] andConnection:self.connection];
 	else if (rooms.count > 1)
 		[[CQColloquyApplication sharedApplication] showColloquies:nil];
 
@@ -1154,8 +1154,8 @@ static BOOL showingKeyboard;
 
 - (BOOL) handleGoogleCommandWithArguments:(NSString *) arguments {
 	NSMutableArray *results = [self _findLocaleForQueryWithArguments:arguments];
-	NSString *languageCode = [results objectAtIndex:0];
-	NSString *query = [results objectAtIndex:1];
+	NSString *languageCode = results[0];
+	NSString *query = results[1];
 
 	[self _handleSearchForURL:@"http://www.google.com/m/search?q=%@&hl=%@" withQuery:query withLocale:languageCode];
 
@@ -1164,8 +1164,8 @@ static BOOL showingKeyboard;
 
 - (BOOL) handleWikipediaCommandWithArguments:(NSString *) arguments {
 	NSArray *results = [self _findLocaleForQueryWithArguments:arguments];
-	NSString *languageCode = [results objectAtIndex:0];
-	NSString *query = [results objectAtIndex:1];
+	NSString *languageCode = results[0];
+	NSString *query = results[1];
 
 	[self _handleSearchForURL:@"http://www.wikipedia.org/search-redirect.php?search=%@&language=%@" withQuery:query withLocale:languageCode];
 
@@ -1174,8 +1174,8 @@ static BOOL showingKeyboard;
 
 - (BOOL) handleAmazonCommandWithArguments:(NSString *) arguments {
 	NSArray *results = [self _findLocaleForQueryWithArguments:arguments];
-	NSString *languageCode = [results objectAtIndex:0];
-	NSString *query = [results objectAtIndex:1];
+	NSString *languageCode = results[0];
+	NSString *query = results[1];
 
 	if ([languageCode isCaseInsensitiveEqualToString:@"en_gb"])
 		[self _handleSearchForURL:@"http://www.amazon.co.uk/s/field-keywords=%@" withQuery:query withLocale:languageCode];
@@ -1253,7 +1253,7 @@ static BOOL showingKeyboard;
 
 - (BOOL) handleWhoisCommandWithArguments:(NSString *) arguments {
 	if (arguments.length) {
-		NSString *nick = [[arguments componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] objectAtIndex:0];
+		NSString *nick = [arguments componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]][0];
 		[self _showUserInfoControllerForUserNamed:nick];
 	} else if (self.user) {
 		[self _showUserInfoControllerForUser:self.user];
@@ -1437,11 +1437,11 @@ static BOOL showingKeyboard;
 		return;
 
 	CGRect keyboardRect = CGRectZero;
-	[[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardRect];
+	[[notification userInfo][UIKeyboardFrameEndUserInfoKey] getValue:&keyboardRect];
 	keyboardRect = [self.view convertRect:[self.view.window convertRect:keyboardRect fromWindow:nil] fromView:nil];
 
-	NSTimeInterval animationDuration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-	NSUInteger animationCurve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+	NSTimeInterval animationDuration = [[notification userInfo][UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	NSUInteger animationCurve = [[notification userInfo][UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 
 	if (_active) {
 		[UIView beginAnimations:nil context:NULL];
@@ -1468,8 +1468,8 @@ static BOOL showingKeyboard;
 	if (![self isViewLoaded])
 		return;
 
-	NSTimeInterval animationDuration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-	NSUInteger animationCurve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+	NSTimeInterval animationDuration = [[notification userInfo][UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+	NSUInteger animationCurve = [[notification userInfo][UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 
 	if (_active && self.view.window) {
 		[UIView beginAnimations:nil context:NULL];
@@ -1521,10 +1521,10 @@ static BOOL showingKeyboard;
 - (void) addEventMessageAsHTML:(NSString *) messageString withIdentifier:(NSString *) identifier announceWithVoiceOver:(BOOL) announce {
 	NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
 
-	[message setObject:@"event" forKey:@"type"];
+	message[@"type"] = @"event";
 
-	if (messageString) [message setObject:messageString forKey:@"message"];
-	if (identifier) [message setObject:identifier forKey:@"identifier"];
+	if (messageString) message[@"message"] = messageString;
+	if (identifier) message[@"identifier"] = identifier;
 
 	[self _addPendingComponent:message];
 
@@ -1546,10 +1546,10 @@ static BOOL showingKeyboard;
 - (void) addMessage:(NSData *) messageData fromUser:(MVChatUser *) user asAction:(BOOL) action withIdentifier:(NSString *) identifier {
 	NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
 
-	if (message) [message setObject:messageData forKey:@"message"];
-	if (user) [message setObject:user forKey:@"user"];
-	if (identifier) [message setObject:identifier forKey:@"identifier"];
-	[message setObject:[NSNumber numberWithBool:action] forKey:@"action"];
+	if (message) message[@"message"] = messageData;
+	if (user) message[@"user"] = user;
+	if (identifier) message[@"identifier"] = identifier;
+	message[@"action"] = @(action);
 
 	[self addMessage:message];
 
@@ -1784,7 +1784,7 @@ static BOOL showingKeyboard;
 	if (![user.connection isEqual:[_target connection]])
 		return;
 
-	[transcriptView noteNicknameChangedFrom:[notification.userInfo objectForKey:@"oldNickname"] to:user.nickname];
+	[transcriptView noteNicknameChangedFrom:(notification.userInfo)[@"oldNickname"] to:user.nickname];
 }
 
 - (void) _userNicknameDidChange:(NSNotification *) notification {
@@ -1877,16 +1877,16 @@ static BOOL showingKeyboard;
 }
 
 - (NSString *) _localNotificationBodyForMessage:(NSDictionary *) message {
-	MVChatUser *user = [message objectForKey:@"user"];
-	NSString *messageText = [message objectForKey:@"messagePlain"];
-	if ([[message objectForKey:@"action"] boolValue])
+	MVChatUser *user = message[@"user"];
+	NSString *messageText = message[@"messagePlain"];
+	if ([message[@"action"] boolValue])
 		return [NSString stringWithFormat:@"%@ %@", user.displayName, messageText];
 	return [NSString stringWithFormat:@"%@ \u2014 %@", user.displayName, messageText];
 }
 
 - (NSDictionary *) _localNotificationUserInfoForMessage:(NSDictionary *) message {
-	MVChatUser *user = [message objectForKey:@"user"];
-	return [NSDictionary dictionaryWithObjectsAndKeys:user.connection.uniqueIdentifier, @"c", user.nickname, @"n", nil];
+	MVChatUser *user = message[@"user"];
+	return @{@"c": user.connection.uniqueIdentifier, @"n": user.nickname};
 }
 
 - (void) _showLocalNotificationForMessage:(NSDictionary *) message withSoundName:(NSString *) soundName {
@@ -1973,14 +1973,14 @@ static BOOL showingKeyboard;
 
 - (void) _messageProcessed:(CQProcessChatMessageOperation *) operation {
 	NSMutableDictionary *message = operation.processedMessageInfo;
-	BOOL highlighted = [[message objectForKey:@"highlighted"] boolValue];
-	BOOL notice = [[message objectForKey:@"notice"] boolValue];
-	BOOL action = [[message objectForKey:@"action"] boolValue];
+	BOOL highlighted = [message[@"highlighted"] boolValue];
+	BOOL notice = [message[@"notice"] boolValue];
+	BOOL action = [message[@"action"] boolValue];
 
 	BOOL active = _active;
 	active &= ([UIApplication sharedApplication].applicationState == UIApplicationStateActive);
 
-	MVChatUser *user = [message objectForKey:@"user"];
+	MVChatUser *user = message[@"user"];
 	if (!user.localUser && !active && self.available) {
 		if (highlighted) ++_unreadHighlightedMessages;
 		else ++_unreadMessages;

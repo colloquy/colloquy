@@ -124,7 +124,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 	NSError *error = nil;
 	NSData *rootData = [NSKeyedArchiver archivedDataWithRootObject:permanentIgnores];
 	if (![rootData writeToFile:self._ignoreFilePath options:NSDataWritingAtomic error:&error])
-		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:CQIgnoreRulesNotSavedNotification object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:_connection, @"connection", error, @"error", nil]];
+		[[NSNotificationCenter defaultCenter] postNotificationOnMainThreadWithName:CQIgnoreRulesNotSavedNotification object:nil userInfo:@{@"connection": _connection, @"error": error}];
 }
 
 #pragma mark -
@@ -133,7 +133,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 	if (!_appSupportPath) {
 		NSString *appSupportPath = nil;
 		appSupportPath = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
-		appSupportPath = [appSupportPath stringByAppendingPathComponent:[[NSBundle mainBundle].infoDictionary objectForKey:(id)kCFBundleExecutableKey]];
+		appSupportPath = [appSupportPath stringByAppendingPathComponent:([NSBundle mainBundle].infoDictionary)[(id)kCFBundleExecutableKey]];
 
 		if (![[NSFileManager defaultManager] fileExistsAtPath:appSupportPath]) {
 			[[NSFileManager defaultManager] createDirectoryAtPath:appSupportPath withIntermediateDirectories:YES attributes:nil error:nil];

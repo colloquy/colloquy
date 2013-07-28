@@ -433,7 +433,7 @@ retry:
 		[_completionView retain];
 
 		if (_completionView.selectedCompletion != NSNotFound)
-			[self textCompletionView:_completionView didSelectCompletion:[_completionView.completions objectAtIndex:_completionView.selectedCompletion]];
+			[self textCompletionView:_completionView didSelectCompletion:_completionView.completions[_completionView.selectedCompletion]];
 		else [self hideCompletions];
 
 		[_completionView release];

@@ -97,7 +97,7 @@ NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotificat
 				id cloudStore = [self _storeForLocation:CQSettingsLocationCloud];
 
 				for (NSString *key in notification.userInfo[NSUbiquitousKeyValueStoreChangedKeysKey])
-					[localStore setObject:[cloudStore objectForKey:key] forKey:key];
+					localStore[key] = cloudStore[key];
 			}
 		}
 	}

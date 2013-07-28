@@ -34,7 +34,7 @@
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView];
 
-	NSString *roomName = [_rooms objectAtIndex:indexPath.row];
+	NSString *roomName = _rooms[indexPath.row];
 
 	cell.imageView.image = [UIImage imageNamed:@"roomIconSmall.png"];
 	cell.textLabel.text = [_connection chatRoomWithName:roomName].displayName;
@@ -48,7 +48,7 @@
 	sheet.delegate = self;
 
 	if (![[UIDevice currentDevice] isPadModel])
-		sheet.title = [_rooms objectAtIndex:indexPath.row];
+		sheet.title = _rooms[indexPath.row];
 
 	[sheet addButtonWithTitle:NSLocalizedString(@"Join Room", @"Join Room button title")];
 
@@ -68,7 +68,7 @@
 }
 
 - (void) tableView:(UITableView *) tableView performAction:(SEL) action forRowAtIndexPath:(NSIndexPath *) indexPath withSender:(id) sender {
-	NSString *roomName = [_rooms objectAtIndex:indexPath.row];
+	NSString *roomName = _rooms[indexPath.row];
 
 	if (action == @selector(copy:))
 		[UIPasteboard generalPasteboard].string = roomName;
@@ -86,7 +86,7 @@
 
 	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 
-	NSString *roomName = [_rooms objectAtIndex:selectedIndexPath.row];
+	NSString *roomName = _rooms[selectedIndexPath.row];
 	[[CQChatController defaultController] showChatControllerWhenAvailableForRoomNamed:roomName andConnection:_connection];
 	[_connection joinChatRoomNamed:roomName];
 }

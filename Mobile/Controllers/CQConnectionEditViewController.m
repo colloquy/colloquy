@@ -130,8 +130,8 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 	NSUInteger index = 0;
 	for (NSDictionary *serverInfo in _servers) {
-		NSString *name = [serverInfo objectForKey:@"Name"];
-		NSString *address = [serverInfo objectForKey:@"Address"];
+		NSString *name = serverInfo[@"Name"];
+		NSString *address = serverInfo[@"Address"];
 		NSAssert(name.length, @"Server name required.");
 
 		[servers addObject:name];
@@ -470,9 +470,9 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	if (sender.selectedItemIndex == NSNotFound)
 		return;
 
-	NSDictionary *serverInfo = [_servers objectAtIndex:sender.selectedItemIndex];
-	_connection.displayName = [serverInfo objectForKey:@"Name"];
-	_connection.server = [serverInfo objectForKey:@"Address"];
+	NSDictionary *serverInfo = _servers[sender.selectedItemIndex];
+	_connection.displayName = serverInfo[@"Name"];
+	_connection.server = serverInfo[@"Address"];
 
 	if (!_newConnection)
 		self.title = _connection.displayName;
