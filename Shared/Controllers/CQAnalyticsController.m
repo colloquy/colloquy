@@ -128,31 +128,33 @@ static void generateDeviceIdentifier() {
 
 	IOObjectRelease(intfIterator);
 #elif SYSTEM(IOS)
-	int	mib[6] = { CTL_NET, AF_ROUTE, 0, AF_LINK, NET_RT_IFLIST, if_nametoindex("en0") };
-	if (!mib[5])
-		goto fail;
+	if (![UIDevice currentDevice].isSystemSeven) {
+		int	mib[6] = { CTL_NET, AF_ROUTE, 0, AF_LINK, NET_RT_IFLIST, if_nametoindex("en0") };
+		if (!mib[5])
+			goto fail;
 
-	size_t length = 0;
-	if (sysctl(mib, 6, NULL, &length, NULL, 0))
-		goto fail;
+		size_t length = 0;
+		if (sysctl(mib, 6, NULL, &length, NULL, 0))
+			goto fail;
 
-	char *buffer = (char *)malloc(length);
-	if (!buffer)
-		goto fail;
+		char *buffer = (char *)malloc(length);
+		if (!buffer)
+			goto fail;
 
-	if (sysctl(mib, 6, buffer, &length, NULL, 0)) {
+		if (sysctl(mib, 6, buffer, &length, NULL, 0)) {
+			free(buffer);
+
+			goto fail;
+		}
+
+		struct if_msghdr	 *ifm = (struct if_msghdr *)buffer;
+		struct sockaddr_dl *sockaddr = (struct sockaddr_dl *)(ifm + 1);
+		unsigned char *MACAddress = (unsigned char *)LLADDR(sockaddr);
+
+		deviceIdentifier = [[NSString alloc] initWithFormat:@"%02x:%02x:%02x:%02x:%02x:%02x", MACAddress[0], MACAddress[1], MACAddress[2], MACAddress[3], MACAddress[4], MACAddress[5]];
+
 		free(buffer);
-
-		goto fail;
 	}
-
-	struct if_msghdr	 *ifm = (struct if_msghdr *)buffer;
-	struct sockaddr_dl *sockaddr = (struct sockaddr_dl *)(ifm + 1);
-	unsigned char *MACAddress = (unsigned char *)LLADDR(sockaddr);
-
-	deviceIdentifier = [[NSString alloc] initWithFormat:@"%02x:%02x:%02x:%02x:%02x:%02x", MACAddress[0], MACAddress[1], MACAddress[2], MACAddress[3], MACAddress[4], MACAddress[5]];
-
-	free(buffer);
 
 	if (deviceIdentifier)
 		return;
