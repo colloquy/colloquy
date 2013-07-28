@@ -552,6 +552,8 @@
 	UIView *headerView = [self tableView:tableView viewForHeaderInSection:section];
 	if (!headerView)
 		return 0.;
+	if ([UIDevice currentDevice].isSystemSeven)
+		return 35.;
 	return 22.;
 }
 

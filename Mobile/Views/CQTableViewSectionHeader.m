@@ -6,7 +6,7 @@
 		return nil;
 
 	if ([UIDevice currentDevice].isSystemSeven) {
-		self.backgroundColor = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
+		self.backgroundColor = [UIColor colorWithRed:(238. / 255.) green:(238. / 255.) blue:(244. / 255.) alpha:1.];
 	} else {
 		_backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
 
@@ -27,19 +27,21 @@
 	}
 
 	_textLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
 	if ([UIDevice currentDevice].isSystemSeven) {
 		UIFont *font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline2];
-		UIFontDescriptor *descriptor = font.fontDescriptor;
-		descriptor = [descriptor fontDescriptorWithSymbolicTraits:(descriptor.symbolicTraits | UIFontDescriptorTraitBold)];
 
-		_textLabel.font = [UIFont fontWithDescriptor:descriptor size:font.pointSize];
+		_textLabel.font = font;
 	} else {
+#endif
 		_textLabel.font = [UIFont boldSystemFontOfSize:18.];
+		_textLabel.shadowOffset = CGSizeMake(0., 1.);
+		_textLabel.shadowColor = [UIColor colorWithWhite:0. alpha:0.5];
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
 	}
-	_textLabel.textColor = [UIDevice currentDevice].isSystemSeven ? [UIColor colorWithWhite:(78. / 255.) alpha:1.] : [UIColor whiteColor];
+#endif
+	_textLabel.textColor = [UIDevice currentDevice].isSystemSeven ? [UIColor colorWithWhite:(63. / 255.) alpha:1.] : [UIColor whiteColor];
 	_textLabel.backgroundColor = [UIColor clearColor];
-	_textLabel.shadowOffset = CGSizeMake(0., 1.);
-	_textLabel.shadowColor = [UIColor colorWithWhite:0. alpha:0.5];
 
 	UIImage *image = [UIImage imageNamed:@"disclosureArrow.png"];
 	_disclosureImageView = [[UIImageView alloc] initWithImage:image];

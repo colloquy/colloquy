@@ -974,7 +974,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (CGFloat) tableView:(UITableView *) tableView heightForHeaderInSection:(NSInteger) section {
 	if (![CQChatOrderingController defaultController].chatViewControllers.count)
 		return 0.;
-
+	if ([UIDevice currentDevice].isSystemSeven)
+		return 35.;
 	return 22.;
 }
 
