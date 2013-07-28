@@ -379,7 +379,7 @@ enum {
 		[self _previewAudioAlertAtIndex:indexPath.row];
 
 	// Call this ourselves because we have a custom accessory view, and it steals the tap from the cell otherwise
-	if ([self accessoryTypeForIndexPath:indexPath] >= CQTableViewCellAccessoryPlay)
+	if ([self accessoryTypeForIndexPath:indexPath] >= (UITableViewCellAccessoryType)CQTableViewCellAccessoryPlay)
 		[self tableView:tableView didSelectRowAtIndexPath:indexPath];
 }
 
