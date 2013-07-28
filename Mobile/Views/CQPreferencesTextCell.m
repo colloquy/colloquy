@@ -23,7 +23,9 @@ static CQPreferencesTextCell *currentEditingCell;
 	_textField.font = [UIFont systemFontOfSize:17.];
 	_textField.adjustsFontSizeToFitWidth = YES;
 	_textField.minimumFontSize = 14.;
-	_textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
+	if ([UIDevice currentDevice].isSystemSeven)
+		_textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(118. / 255.) blue:(251. / 255.) alpha:1.];
+	else _textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(121. / 255.) blue:(251. / 255.) alpha:1.];
 	_textField.enablesReturnKeyAutomatically = NO;
 	_textField.returnKeyType = UIReturnKeyDone;
 
@@ -60,8 +62,13 @@ static CQPreferencesTextCell *currentEditingCell;
 		return;
 
 	if (selected) _textField.textColor = [UIColor whiteColor];
-	else if (!_enabled) _textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:0.5];
-	else _textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
+	else if ([UIDevice currentDevice].isSystemSeven) {
+		if (!_enabled) _textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(118. / 255.) blue:(251. / 255.) alpha:.5];
+		else _textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(118. / 255.) blue:(251. / 255.) alpha:1.];
+	} else {
+		if (!_enabled) _textField.textColor = [UIColor colorWithRed:(53. / 255.) green:(91. / 255.) blue:(238. / 255.) alpha:0.5];
+		else _textField.textColor = [UIColor colorWithRed:(53. / 255.) green:(91. / 255.) blue:(238. / 255.) alpha:1.];
+	}
 }
 
 - (void) prepareForReuse {
@@ -75,7 +82,9 @@ static CQPreferencesTextCell *currentEditingCell;
 	_textField.keyboardType = UIKeyboardTypeDefault;
 	_textField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
 	_textField.autocorrectionType = UITextAutocorrectionTypeDefault;
-	_textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
+	if ([UIDevice currentDevice].isSystemSeven)
+		_textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(118. / 255.) blue:(251. / 255.) alpha:1.];
+	else _textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(121. / 255.) blue:(251. / 255.) alpha:1.];
 	_textField.clearButtonMode = UITextFieldViewModeNever;
 	_textField.enabled = YES;
 
@@ -129,8 +138,13 @@ static CQPreferencesTextCell *currentEditingCell;
 
 	_enabled = enabled;
 
-	if (_enabled) _textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:1.];
-	else _textField.textColor = [UIColor colorWithRed:(50. / 255.) green:(79. / 255.) blue:(133. / 255.) alpha:0.5];
+	if ([UIDevice currentDevice].isSystemSeven) {
+		if (!_enabled) _textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(118. / 255.) blue:(251. / 255.) alpha:.5];
+		else _textField.textColor = [UIColor colorWithRed:(64. / 255.) green:(121. / 255.) blue:(251. / 255.) alpha:1.];
+	} else {
+		if (!_enabled) _textField.textColor = [UIColor colorWithRed:(53. / 255.) green:(91. / 255.) blue:(238. / 255.) alpha:0.5];
+		else _textField.textColor = [UIColor colorWithRed:(53. / 255.) green:(91. / 255.) blue:(238. / 255.) alpha:1.];
+	}
 }
 
 @synthesize textEditAction = _textEditAction;

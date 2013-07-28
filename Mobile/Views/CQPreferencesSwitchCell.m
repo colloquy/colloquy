@@ -8,7 +8,7 @@
 		return nil;
 
 	// Workaround the font showing up larger in edit vs new. Not sure why...
-	self.textLabel.font = [UIFont boldSystemFontOfSize:17.];
+	self.textLabel.font = [UIFont systemFontOfSize:17.];
 
 	self.selectionStyle = UITableViewCellSelectionStyleNone;
 
