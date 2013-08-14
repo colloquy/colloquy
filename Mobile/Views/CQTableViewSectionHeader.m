@@ -13,7 +13,7 @@
 		UIImage *image = [UIImage imageNamed:@"sectionHeader.png"];
 		image = [image stretchableImageWithLeftCapWidth:0. topCapHeight:0.];
 
-		_backgroundImage = [image retain];
+		_backgroundImage = image;
 
 		_backgroundImageView.alpha = 0.9;
 		_backgroundImageView.image = image;
@@ -21,7 +21,7 @@
 		image = [UIImage imageNamed:@"sectionHeaderHighlighted.png"];
 		image = [image stretchableImageWithLeftCapWidth:0. topCapHeight:0.];
 
-		_backgroundHighlightedImage = [image retain];
+		_backgroundHighlightedImage = image;
 
 		[self addSubview:_backgroundImageView];
 	}
@@ -57,15 +57,6 @@
 	return self;
 }
 
-- (void) dealloc {
-	[_textLabel release];
-	[_backgroundImageView release];
-	[_disclosureImageView release];
-	[_backgroundImage release];
-	[_backgroundHighlightedImage release];
-
-	[super dealloc];
-}
 
 #pragma mark -
 
