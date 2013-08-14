@@ -341,6 +341,8 @@ static NSMutableArray *highlightWords;
 	[CQChatController defaultController];
 
 	_mainWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+	if ([_mainWindow respondsToSelector:@selector(setTintColor:)])
+		_mainWindow.tintColor = [UIColor colorWithRed:(184. / 255.) green:(108. / 255.) blue:(196. / 255.) alpha:1.];
 
 	[self userDefaultsChanged];
 
