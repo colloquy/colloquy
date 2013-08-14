@@ -16,7 +16,7 @@ typedef enum {
 	NSString *_highlightNickname;
 	NSStringEncoding _encoding;
 	NSStringEncoding _fallbackEncoding;
-	id _target;
+	id __weak _target;
 	SEL _action;
 	id _userInfo;
 	BOOL _outbound;
@@ -36,7 +36,7 @@ typedef enum {
 @property (readonly) NSString *processedMessageAsPlainText;
 @property (readonly) CQConsoleMessageType messageType;
 
-@property (retain) id target;
+@property (weak) id target;
 @property SEL action;
-@property (retain) id userInfo;
+@property (strong) id userInfo;
 @end

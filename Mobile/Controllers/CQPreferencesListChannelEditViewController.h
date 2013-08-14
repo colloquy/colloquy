@@ -6,5 +6,5 @@
 	MVChatConnection *_connection;
 	NSString *_password;
 }
-@property (nonatomic, retain) MVChatConnection *connection;
+@property (nonatomic, strong) MVChatConnection *connection;
 @end

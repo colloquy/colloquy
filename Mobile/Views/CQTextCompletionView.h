@@ -2,7 +2,7 @@
 
 @interface CQTextCompletionView : UIView {
 	@protected
-	IBOutlet id <CQTextCompletionViewDelegate> delegate;
+	IBOutlet id <CQTextCompletionViewDelegate> __weak delegate;
 	CGSize _completionTextSizes[5];
 	NSUInteger _selectedCompletion;
 	NSArray *_completions;
@@ -11,7 +11,7 @@
 @property (nonatomic) NSUInteger selectedCompletion;
 @property (nonatomic, getter=isCloseSelected) BOOL closeSelected;
 
-@property (nonatomic, assign) id <CQTextCompletionViewDelegate> delegate;
+@property (nonatomic, weak) id <CQTextCompletionViewDelegate> delegate;
 @end
 
 @protocol CQTextCompletionViewDelegate <NSObject>

@@ -28,8 +28,6 @@ NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotificat
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSUbiquitousKeyValueStoreDidChangeExternallyNotification object:nil];
-
-	[super dealloc];
 }
 
 #pragma mark -

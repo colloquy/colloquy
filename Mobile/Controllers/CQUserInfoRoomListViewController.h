@@ -10,6 +10,6 @@
 	NSArray *_rooms;
 	MVChatConnection *_connection;
 }
-@property (nonatomic, retain) NSArray *rooms;
-@property (nonatomic, retain) MVChatConnection *connection;
+@property (nonatomic, strong) NSArray *rooms;
+@property (nonatomic, strong) MVChatConnection *connection;
 @end

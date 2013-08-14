@@ -6,5 +6,5 @@
 @protected
 	MVChatConnection *_connection;
 }
-@property (nonatomic, retain) MVChatConnection *connection;
+@property (nonatomic, strong) MVChatConnection *connection;
 @end

@@ -21,10 +21,6 @@
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	[_placeholder release];
-
-	[super dealloc];
 }
 
 #pragma mark -

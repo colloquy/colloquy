@@ -39,7 +39,7 @@ enum {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 
-	_room = [room retain];
+	_room = room;
 	[_room.connection sendRawMessageWithFormat:@"MODE %@", _room.name];
 
 	NSMutableArray *items = [NSMutableArray array];
@@ -57,12 +57,6 @@ enum {
 	return self;
 }
 
-- (void) dealloc {
-	[_room release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (void) viewDidLoad {
@@ -71,11 +65,8 @@ enum {
 	self.tableView.dataSource = self;
 	self.tableView.delegate = self;
 
-	UIBarButtonItem *flexibleBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:NULL];
 	UIBarButtonItem *segmentedItem = [[UIBarButtonItem alloc] initWithCustomView:_segmentedControl];
 	NSArray *items = @[segmentedItem];
-	[segmentedItem release];
-	[flexibleBarButtonItem release];
 
 	[self setToolbarItems:items animated:[UIView areAnimationsEnabled]];
 
@@ -160,7 +151,7 @@ enum {
 - (UITableViewCell *) tableView:(UITableView *) tableView cellForRowAtIndexPath:(NSIndexPath *) indexPath {
 	if (_segmentedControl.selectedSegmentIndex == CQChatRoomInfoTopic) {
 		CQPreferencesTextViewCell *textViewCell = [CQPreferencesTextViewCell reusableTableViewCellInTableView:tableView];
-		textViewCell.textView.text = [[[NSString alloc] initWithData:_room.topic encoding:_room.encoding] autorelease];
+		textViewCell.textView.text = [[NSString alloc] initWithData:_room.topic encoding:_room.encoding];
 		textViewCell.textView.placeholder = NSLocalizedString(@"Enter Room Topic", @"Enter Room Topic");
 		textViewCell.textView.delegate = self;
 		textViewCell.textView.dataDetectorTypes = UIDataDetectorTypeNone;
@@ -304,7 +295,7 @@ enum {
 	if ([text isEqualToString:@"\n"]) {
 		[textView resignFirstResponder];
 
-		NSString *currentTopic = [[[NSString alloc] initWithData:_room.topic encoding:_room.encoding] autorelease];;
+		NSString *currentTopic = [[NSString alloc] initWithData:_room.topic encoding:_room.encoding];;
 		if (![currentTopic isEqualToString:textView.text])
 			[_room changeTopic:textView.text];
 
@@ -328,9 +319,6 @@ enum {
 	chatUserListViewController.users = users.allObjects;
 
 	[self.navigationController pushViewController:chatUserListViewController animated:[UIView areAnimationsEnabled]];
-
-	[users release];
-	[chatUserListViewController release];
 }
 
 - (void) _segmentSelected:(id) sender {

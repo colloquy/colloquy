@@ -21,11 +21,6 @@
 
 - (void) dealloc {
 	_webView.delegate = nil;
-
-	[_webView release];
-	[_urlToHandle release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -45,7 +40,6 @@
 
 	[[UIApplication sharedApplication] performSelector:@selector(openURL:) withObject:_urlToHandle afterDelay:0.];
 
-	[_urlToHandle release];
 	_urlToHandle = nil;
 }
 
@@ -60,9 +54,7 @@
 		return NO;
 	}
 
-	id old = _urlToHandle;
-	_urlToHandle = [request.URL retain];
-	[old release];
+	_urlToHandle = request.URL;
 
 	[[CQColloquyApplication sharedApplication] dismissModalViewControllerAnimated:YES];
 

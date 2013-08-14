@@ -38,17 +38,6 @@
 	return self;
 }
 
-- (void) dealloc {
-	[_iconImageView release];
-	[_badgeImageView release];
-	[_serverLabel release];
-	[_nicknameLabel release];
-	[_timeLabel release];
-	[_connectDate release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (void) takeValuesFromConnection:(MVChatConnection *) connection {
@@ -124,13 +113,11 @@
 	}
 
 	if ([_timeLabel.text isEqualToString:newTime]) {
-		[newTime release];
 		return;
 	}
 
 	_timeLabel.text = newTime ? newTime : @"";
 
-	[newTime release];
 
 	[self setNeedsLayout];
 }
@@ -138,9 +125,7 @@
 @synthesize connectDate = _connectDate;
 
 - (void) setConnectDate:(NSDate *) connectDate {
-	id old = _connectDate;
-	_connectDate = [connectDate retain];
-	[old release];
+	_connectDate = [connectDate copy];
 
 	[self updateConnectTime];
 }

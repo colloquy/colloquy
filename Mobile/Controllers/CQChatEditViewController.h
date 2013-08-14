@@ -11,7 +11,7 @@
 	NSString *_password;
 }
 @property (nonatomic, getter=isRoomTarget) BOOL roomTarget;
-@property (nonatomic, retain) MVChatConnection *selectedConnection;
+@property (nonatomic, strong) MVChatConnection *selectedConnection;
 @property (nonatomic, readonly) NSString *name;
 @property (nonatomic, readonly) NSString *password;
 

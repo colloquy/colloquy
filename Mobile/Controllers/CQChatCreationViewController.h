@@ -12,7 +12,7 @@
 	NSString *_searchString;
 }
 @property (nonatomic, getter=isRoomTarget) BOOL roomTarget;
-@property (nonatomic, retain) MVChatConnection *selectedConnection;
+@property (nonatomic, strong) MVChatConnection *selectedConnection;
 
 - (void) showRoomListFilteredWithSearchString:(NSString *) searchString;
 @end

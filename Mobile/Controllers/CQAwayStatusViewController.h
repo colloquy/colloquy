@@ -9,5 +9,5 @@
 
 	UILongPressGestureRecognizer *_longPressGestureRecognizer;
 }
-@property (nonatomic, retain) MVChatConnection *connection;
+@property (nonatomic, strong) MVChatConnection *connection;
 @end

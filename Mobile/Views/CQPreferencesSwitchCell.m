@@ -21,14 +21,6 @@
 	return self;
 }
 
-- (void) dealloc {
-	self.switchControlBlock = nil;
-
-	[_switchControl release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (void) valueChanged:(id) sender {

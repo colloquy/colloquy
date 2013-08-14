@@ -112,17 +112,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	[_connectionsNavigationController release];
-	[_connections release];
-	[_directConnections release];
-	[_bouncerConnections release];
-	[_bouncerChatConnections release];
-	[_timeRemainingLocalNotifiction release];
-	[_automaticallySetConnectionAwayStatus release];
-	[_ignoreControllers release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -177,8 +166,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 			[connection joinChatRoomNamed:target];
 		} else [[CQColloquyApplication sharedApplication] showConnections:nil];
 
-		[connection release];
-
 		return YES;
 	}
 
@@ -200,14 +187,11 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
-
-	[sheet release];	
 }
 
 - (void) showBouncerCreationView:(id) sender {
 	CQBouncerCreationViewController *bouncerCreationViewController = [[CQBouncerCreationViewController alloc] init];
 	[[CQColloquyApplication sharedApplication] presentModalViewController:bouncerCreationViewController animated:YES];
-	[bouncerCreationViewController release];
 }
 
 - (void) showConnectionCreationView:(id) sender {
@@ -218,7 +202,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	CQConnectionCreationViewController *connectionCreationViewController = [[CQConnectionCreationViewController alloc] init];
 	connectionCreationViewController.url = url;
 	[[CQColloquyApplication sharedApplication] presentModalViewController:connectionCreationViewController animated:YES];
-	[connectionCreationViewController release];
 }
 
 #pragma mark -
@@ -307,7 +290,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	if (!connections) {
 		connections = [[NSMutableArray alloc] initWithCapacity:5];
 		_bouncerChatConnections[connection.settings.identifier] = connections;
-		[connections release];
 	}
 
 	NSString *connectionIdentifier = info[@"connectionIdentifier"];
@@ -342,8 +324,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 		[connections addObject:chatConnection];
 		[_connections addObject:chatConnection];
-
-		[chatConnection release];
 	}
 
 	[chatConnection setPersistentInformationObject:@YES forKey:@"stillExistsOnBouncer"];
@@ -387,8 +367,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		NSDictionary *notificationInfo = @{@"connection": chatConnection, @"index": @(index)};
 		[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerRemovedConnectionNotification object:self userInfo:notificationInfo];
 	}
-
-	[deletedConnections release];
 }
 
 - (void) bouncerConnectionDidDisconnect:(CQBouncerConnection *) connection withError:(NSError *) error {
@@ -408,8 +386,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		[alert addButtonWithTitle:NSLocalizedString(@"Settings", @"Settings alert button title")];
 
 		[alert show];
-
-		[alert release];
 	}
 
 	connection.delegate = nil;
@@ -497,8 +473,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	notification.soundName = UILocalNotificationDefaultSoundName;
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
-
-	[notification release];
 }
 
 - (void) _showDisconnectedAlert {
@@ -529,7 +503,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
 
-	[notification release];
 }
 
 - (void) _showRemainingTimeAlert {
@@ -544,7 +517,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	if (_timeRemainingLocalNotifiction) {
 		[[UIApplication sharedApplication] cancelLocalNotification:_timeRemainingLocalNotifiction];
-		[_timeRemainingLocalNotifiction release];
 	}
 
 	UILocalNotification *notification = [[UILocalNotification alloc] init];
@@ -575,7 +547,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	if (_timeRemainingLocalNotifiction) {
 		[[UIApplication sharedApplication] cancelLocalNotification:_timeRemainingLocalNotifiction];
-		[_timeRemainingLocalNotifiction release];
 		_timeRemainingLocalNotifiction = nil;
 	}
 
@@ -644,10 +615,8 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_disconnectForSuspend) object:nil];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_showRemainingTimeAlert) object:nil];
 
-	[_timeRemainingLocalNotifiction release];
 	_timeRemainingLocalNotifiction = nil;
 
-	[_automaticallySetConnectionAwayStatus release];
 	_automaticallySetConnectionAwayStatus = nil;
 }
 
@@ -686,8 +655,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button title")];
 
 	[alertView show];
-
-	[alertView release];
 }
 
 - (void) _willConnect:(NSNotification *) notification {
@@ -781,8 +748,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	if (connection.bouncerType == MVChatConnectionColloquyBouncer && connection.automaticCommands.count && rooms.count)
 		[connection sendRawMessage:@"BOUNCER autocommands stop"];
-
-	[rooms release];
 }
 
 - (void) _didConnectOrDidNotConnect:(NSNotification *) notification {
@@ -857,8 +822,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	}
 
 	[alert show];
-
-	[alert release];
 }
 
 - (void) _didConnect:(NSNotification *) notification {
@@ -982,7 +945,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 			[nextAlertView addSecureTextFieldWithPlaceholder:NSLocalizedString(@"Password", @"Password placeholder")];
 
-			userInfo = [nextAlertView autorelease];
+			userInfo = nextAlertView;
 			break;
 		}
 		case MVChatConnectionCantChangeNickError:
@@ -1017,8 +980,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	[alert addButtonWithTitle:buttonTitle];
 
 	[alert show];
-
-	[alert release];
 }
 
 #pragma mark -
@@ -1068,8 +1029,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 	connection.persistentInformation = persistentInformation;
 
-	[persistentInformation release];
-
 	connection.proxyType = [info[@"proxy"] unsignedLongValue];
 	connection.secure = [info[@"secure"] boolValue];
 
@@ -1111,7 +1070,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	if ((!bouncerSettings || bouncerSettings.pushNotifications) && connection.pushNotifications)
 		[[CQColloquyApplication sharedApplication] registerForRemoteNotifications];
 
-	return [connection autorelease];
+	return connection;
 }
 
 - (NSMutableDictionary *) _dictionaryRepresentationForConnection:(MVChatConnection *) connection {
@@ -1150,8 +1109,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	if (persistentInformation.count)
 		info[@"persistentInformation"] = persistentInformation;
 
-	[persistentInformation release];
-
 	info[@"wasConnected"] = @(connection.connected);
 
 	NSSet *joinedRooms = connection.joinedChatRooms;
@@ -1167,8 +1124,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 		if (previousJoinedRooms.count)
 			info[@"previousRooms"] = previousJoinedRooms;
-
-		[previousJoinedRooms release];
 	}
 
 	info[@"uniqueIdentifier"] = connection.uniqueIdentifier;
@@ -1187,7 +1142,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	if (connection.alternateNicknames.count)
 		info[@"alternateNicknames"] = connection.alternateNicknames;
 
-	return [info autorelease];
+	return info;
 }
 
 - (void) _loadConnectionList {
@@ -1219,9 +1174,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 			if (info[@"chatState"])
 				[[CQChatController defaultController] restorePersistentState:info[@"chatState"] forConnection:connection];
 		}
-
-		[bouncerChatConnections release];
-		[settings release];
 	}
 
 	NSArray *connections = [[CQSettingsController settingsController] arrayForKey:@"MVChatBookmarks"];
@@ -1274,8 +1226,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		[_bouncerConnections addObject:connection];
 
 		[connection connect];
-
-		[connection release];
 	}
 }
 
@@ -1324,7 +1274,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 		if (bouncerConnections.count)
 			info[@"connections"] = bouncerConnections;
-		[bouncerConnections release];
 
 		[bouncers addObject:info];
 	}
@@ -1337,9 +1286,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	[[CQAnalyticsController defaultController] setObject:@(pushConnectionCount) forKey:@"total-push-connections"];
 	[[CQAnalyticsController defaultController] setObject:@(_connections.count) forKey:@"total-connections"];
 	[[CQAnalyticsController defaultController] setObject:@(_bouncers.count) forKey:@"total-bouncers"];
-
-	[bouncers release];
-	[connections release];
 }
 
 - (void) saveConnectionPasswordsToKeychain {
@@ -1368,7 +1314,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		if (connection.connected)
 			[result addObject:connection];
 
-	return [result autorelease];
+	return result;
 }
 
 - (MVChatConnection *) connectionForUniqueIdentifier:(NSString *) identifier {
@@ -1437,16 +1383,14 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 }
 
 - (void) moveConnectionAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex {
-	MVChatConnection *connection = [_directConnections[oldIndex] retain];
+	MVChatConnection *connection = _directConnections[oldIndex];
 
 	[_directConnections removeObjectAtIndex:oldIndex];
 	[_directConnections insertObject:connection atIndex:newIndex];
 
 	NSDictionary *notificationInfo = @{@"connection": connection, @"index": @(newIndex), @"oldIndex": @(oldIndex)};
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerMovedConnectionNotification object:self userInfo:notificationInfo];
-
-	[connection release];
-
+																																																																																																																																																																																																																																																	
 	[self saveConnections];
 }
 
@@ -1457,7 +1401,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 }
 
 - (void) removeConnectionAtIndex:(NSUInteger) index {
-	MVChatConnection *connection = [_directConnections[index] retain];
+	MVChatConnection *connection = _directConnections[index];
 	if (!connection) return;
 
 	[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
@@ -1468,8 +1412,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	NSDictionary *notificationInfo = @{@"connection": connection, @"index": @(index)};
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerRemovedConnectionNotification object:self userInfo:notificationInfo];
 
-	[connection release];
-
 	[self saveConnections];
 }
 
@@ -1477,15 +1419,13 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 
 - (void) moveConnectionAtIndex:(NSUInteger) oldIndex toIndex:(NSUInteger) newIndex forBouncerIdentifier:(NSString *) identifier {
 	NSMutableArray *connections = _bouncerChatConnections[identifier];
-	MVChatConnection *connection = [connections[oldIndex] retain];
+	MVChatConnection *connection = connections[oldIndex];
 
 	[connections removeObjectAtIndex:oldIndex];
 	[connections insertObject:connection atIndex:newIndex];
 
 	NSDictionary *notificationInfo = @{@"connection": connection, @"index": @(newIndex)};
 	[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerMovedConnectionNotification object:self userInfo:notificationInfo];
-
-	[connection release];
 
 	[self saveConnections];
 }
@@ -1501,8 +1441,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		ignoreController = [[CQIgnoreRulesController alloc] initWithConnection:connection];
 
 		_ignoreControllers[connection.uniqueIdentifier] = ignoreController;
-
-		[ignoreController release];
 
 		return ignoreController;
 	}
@@ -1531,8 +1469,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	[_bouncerConnections addObject:connection];
 
 	[connection connect];
-
-	[connection release];
 }
 
 #pragma mark -
@@ -1553,9 +1489,9 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 }
 
 - (void) removeBouncerSettingsAtIndex:(NSUInteger) index {
-	CQBouncerSettings *bouncer = [_bouncers[index] retain];
+	CQBouncerSettings *bouncer = _bouncers[index];
 
-	NSArray *connections = [[self bouncerChatConnectionsForIdentifier:bouncer.identifier] retain];
+	NSArray *connections = [self bouncerChatConnectionsForIdentifier:bouncer.identifier];
 	for (MVChatConnection *connection in connections)
 		[connection disconnectWithReason:[MVChatConnection defaultQuitMessage]];
 
@@ -1570,9 +1506,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		NSDictionary *notificationInfo = @{@"connection": connection, @"index": [NSNumber numberWithUnsignedInteger:i]};
 		[[NSNotificationCenter defaultCenter] postNotificationName:CQConnectionsControllerRemovedConnectionNotification object:self userInfo:notificationInfo];
 	}
-
-	[bouncer release];
-	[connections release];
 }
 @end
 
@@ -1591,7 +1524,7 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 	if (!generatedNickname) {
 		NSCharacterSet *badCharacters = [[NSCharacterSet characterSetWithCharactersInString:@"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"] invertedSet];
 		NSArray *components = [[UIDevice currentDevice].name componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-		for (NSString *compontent in components) {
+		for (__strong NSString *compontent in components) {
 			if ([compontent isCaseInsensitiveEqualToString:@"iPhone"] || [compontent isCaseInsensitiveEqualToString:@"iPod"] || [compontent isCaseInsensitiveEqualToString:@"iPad"])
 				continue;
 			if ([compontent isEqualToString:@"3G"] || [compontent isEqualToString:@"3GS"] || [compontent isEqualToString:@"S"] || [compontent isCaseInsensitiveEqualToString:@"Touch"])

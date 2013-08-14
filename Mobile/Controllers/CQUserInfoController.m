@@ -10,14 +10,6 @@
 #import "CQColloquyApplication.h"
 
 @implementation CQUserInfoController
-- (void) dealloc {
-	[_user release];
-
-	[super dealloc];
-}
-
-#pragma mark -
-
 - (void) viewDidLoad {
 	if (!_rootViewController) {
 		CQUserInfoViewController *userInfoViewController = [[CQUserInfoViewController alloc] init];
@@ -30,7 +22,6 @@
 
 	UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(close:)];
 	_rootViewController.navigationItem.leftBarButtonItem = doneItem;
-	[doneItem release];
 
 	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 }
@@ -40,9 +31,7 @@
 @synthesize user = _user;
 
 - (void) setUser:(MVChatUser *) user {
-	id old = _user;
-	_user = [user retain];
-	[old release];
+	_user = user;
 
 	((CQUserInfoViewController *)_rootViewController).user = user;
 }

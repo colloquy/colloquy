@@ -128,15 +128,9 @@ static BOOL showingKeyboard;
 
 	NSString *soundName = [[CQSettingsController settingsController] stringForKey:@"CQSoundOnPrivateMessage"];
 
-	id old = privateMessageSound;
 	privateMessageSound = ([soundName isEqualToString:@"None"] ? nil : [[CQSoundController alloc] initWithSoundNamed:soundName]);
-	[old release];
-
 	soundName = [[CQSettingsController settingsController] stringForKey:@"CQSoundOnHighlight"];
-
-	old = highlightSound;
 	highlightSound = ([soundName isEqualToString:@"None"] ? nil : [[CQSoundController alloc] initWithSoundNamed:soundName]);
-	[old release];
 }
 
 - (void) didNotBookmarkLink:(NSNotification *) notification {
@@ -161,7 +155,6 @@ static BOOL showingKeyboard;
 			[alertView associateObject:notification.object forKey:@"link"];
 
 			[alertView show];
-			[alertView release];
 		}
 	} else if (error.code == CQBookmarkingErrorServer) {
 		UIAlertView *alertView = [[UIAlertView alloc] init];
@@ -169,14 +162,12 @@ static BOOL showingKeyboard;
 		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@ due to a server error.", @"Unable to bookmark link server error message"), notification.object, [activeService serviceName]];
 		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
 		[alertView show];
-		[alertView release];
 	} else {
 		UIAlertView *alertView = [[UIAlertView alloc] init];
 		alertView.title = NSLocalizedString(@"Unknown Error", @"Unknown Error");
 		alertView.message = [NSString stringWithFormat:NSLocalizedString(@"Unable to save \"%@\" to %@.", @"Unable to bookmark link message"), notification.object, [activeService serviceName]];
 		alertView.cancelButtonIndex = [alertView addButtonWithTitle:NSLocalizedString(@"Okay", @"Okay button")];
 		[alertView show];
-		[alertView release];
 	}
 }
 
@@ -219,7 +210,7 @@ static BOOL showingKeyboard;
 	if (!(self = [super initWithNibName:@"ChatView" bundle:nil]))
 		return nil;
 
-	_target = [target retain];
+	_target = target;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_awayStatusChanged:) name:MVChatConnectionSelfAwayStatusChangedNotification object:self.connection];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willConnect:) name:MVChatConnectionWillConnectNotification object:self.connection];
@@ -269,13 +260,11 @@ static BOOL showingKeyboard;
 
 	NSString *nickname = state[@"user"];
 	if (!nickname) {
-		[self release];
 		return nil;
 	}
 
 	user = [connection chatUserWithUniqueIdentifier:nickname];
 	if (!user) {
-		[self release];
 		return nil;
 	}
 
@@ -309,8 +298,6 @@ static BOOL showingKeyboard;
 
 				[_pendingPreviousSessionComponents addObject:messageCopy];
 			}
-
-			[messageCopy release];
 		}
 
 		_recentMessages = [_pendingPreviousSessionComponents mutableCopy];
@@ -327,16 +314,6 @@ static BOOL showingKeyboard;
 
 	if (_watchRule)
 		[self.connection removeChatUserWatchRule:_watchRule];
-
-	[chatInputBar release];
-	[transcriptView release];
-	[_watchRule release];
-	[_recentMessages release];
-	[_pendingPreviousSessionComponents release];
-	[_pendingComponents release];
-	[_target release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -408,15 +385,12 @@ static BOOL showingKeyboard;
 
 		[messages addObject:newMessage];
 
-		[newMessage release];
 	}
 
 	if (messages.count)
 		state[@"messages"] = messages;
 
-	[messages release];
-
-	return [state autorelease];
+	return state;
 }
 
 #pragma mark -
@@ -433,7 +407,7 @@ static BOOL showingKeyboard;
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	return [sheet autorelease];
+	return sheet;
 }
 
 #pragma mark -
@@ -453,9 +427,6 @@ static BOOL showingKeyboard;
 	CQModalNavigationController *modalNavigationController = [[CQModalNavigationController alloc] initWithRootViewController:listViewController];
 
 	[[CQColloquyApplication sharedApplication] presentModalViewController:modalNavigationController animated:[UIView areAnimationsEnabled]];
-
-	[modalNavigationController release];
-	[listViewController release];
 }
 
 - (void) showUserInformation {
@@ -698,7 +669,7 @@ static BOOL showingKeyboard;
 		}
 	}
 
-	return [completions autorelease];
+	return completions;
 }
 
 - (BOOL) chatInputBar:(CQChatInputBar *) chatInputBar sendText:(NSString *) text {
@@ -764,7 +735,6 @@ static BOOL showingKeyboard;
 			if (!actionVerbs) {
 				NSArray *verbs = [[NSArray alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"verbs" ofType:@"plist"]];
 				actionVerbs = [[NSSet alloc] initWithArray:verbs];
-				[verbs release];
 			}
 
 			NSScanner *scanner = [[NSScanner alloc] initWithString:text];
@@ -775,8 +745,6 @@ static BOOL showingKeyboard;
 
 			if ([actionVerbs containsObject:word])
 				action = YES;
-
-			[scanner release];
 		}
 
 		[self sendMessage:text asAction:action];
@@ -820,10 +788,7 @@ static BOOL showingKeyboard;
 - (void) clearController {
 	[_pendingComponents removeAllObjects];
 
-	[_pendingPreviousSessionComponents release];
 	_pendingPreviousSessionComponents = nil;
-
-	[_recentMessages release];
 	_recentMessages = nil;
 
 	if (_unreadHighlightedMessages)
@@ -947,7 +912,6 @@ static BOOL showingKeyboard;
 
 		[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
 
-		[creationViewController release];
 		return YES;
 	}
 
@@ -1110,8 +1074,6 @@ static BOOL showingKeyboard;
 
 	[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
 
-	[creationViewController release];
-
 	return YES;
 }
 
@@ -1131,7 +1093,7 @@ static BOOL showingKeyboard;
 		[results addObject:languageCode];
 		[results addObject:arguments];
 
-		return [results autorelease];
+		return results;
 	}
 
 	NSString *query = nil;
@@ -1142,7 +1104,7 @@ static BOOL showingKeyboard;
 	[results addObject:languageCode];
 	[results addObject:query];
 
-	return [results autorelease];
+	return results;
 }
 
 - (void) _handleSearchForURL:(NSString *) urlFormatString withQuery:(NSString *) query {
@@ -1236,7 +1198,6 @@ static BOOL showingKeyboard;
 	};
 	[self.navigationController presentViewController:tweetComposeViewController animated:YES completion:NULL];
 
-	[tweetComposeViewController release];
 	return YES;
 }
 
@@ -1399,15 +1360,12 @@ static BOOL showingKeyboard;
 	[actionSheet associateObject:url forKey:@"URL"];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:actionSheet fromPoint:location];
-
-	[actionSheet release];
 }
 
 - (void) transcriptViewWasReset:(CQChatTranscriptView *) view {
 	if (_pendingPreviousSessionComponents.count) {
 		[view addPreviousSessionComponents:_pendingPreviousSessionComponents];
 
-		[_pendingPreviousSessionComponents release];
 		_pendingPreviousSessionComponents = nil;
 	} else if (_recentMessages.count) {
 		[view addPreviousSessionComponents:_recentMessages];
@@ -1533,8 +1491,6 @@ static BOOL showingKeyboard;
 
 	[self _addPendingComponent:message];
 
-	[message release];
-
 	if (announce && [self _canAnnounceWithVoiceOverAndMessageIsImportant:NO]) {
 		NSString *voiceOverAnnouncement = nil;
 		NSString *plainMessage = [messageString stringByStrippingXMLTags];
@@ -1557,8 +1513,6 @@ static BOOL showingKeyboard;
 	message[@"action"] = @(action);
 
 	[self addMessage:message];
-
-	[message release];
 }
 
 - (void) addMessage:(NSDictionary *) message {
@@ -1574,8 +1528,6 @@ static BOOL showingKeyboard;
 	operation.action = @selector(_messageProcessed:);
 
 	[[CQDirectChatController chatMessageProcessingQueue] addOperation:operation];
-
-	[operation release];
 }
 
 #pragma mark -
@@ -1662,8 +1614,6 @@ static BOOL showingKeyboard;
 	[self _forceRegsignKeyboard];
 
 	[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
-
-	[userInfoController release];
 }
 
 #pragma mark -
@@ -1711,12 +1661,10 @@ static BOOL showingKeyboard;
 	} else if (self.user.status != MVChatUserAvailableStatus && self.user.status != MVChatUserAwayStatus) {
 		alert.message = NSLocalizedString(@"The user is not connected.", @"Can't send message to user because they are disconnected alert message");
 	} else {
-		[alert release];
 		return;
 	}
 
 	[alert show];
-	[alert release];
 }
 
 - (void) _userDefaultsChanged {
@@ -1878,7 +1826,6 @@ static BOOL showingKeyboard;
 	if (_active && [[UIDevice currentDevice] isPadModel])
 		[[CQChatController defaultController].chatPresentationController updateToolbarAnimated:YES];
 
-	[item release];
 }
 
 - (NSString *) _localNotificationBodyForMessage:(NSDictionary *) message {
@@ -1905,8 +1852,6 @@ static BOOL showingKeyboard;
 	notification.soundName = [soundName stringByAppendingPathExtension:@"aiff"];
 
 	[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
-
-	[notification release];
 }
 
 - (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo {
@@ -1923,13 +1868,11 @@ static BOOL showingKeyboard;
 	if (!messageData) {
 		if (target && action)
 			[target performSelectorOnMainThread:action withObject:operation waitUntilDone:NO];
-		[operation release];
 		return;
 	}
 
 	[[CQDirectChatController chatMessageProcessingQueue] addOperation:operation];
 
-	[operation release];
 }
 
 - (void) _addPendingComponent:(id) component {
@@ -2056,7 +1999,6 @@ static BOOL showingKeyboard;
 		}
 
 		UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification, voiceOverAnnouncement);
-		[voiceOverAnnouncement release];
 	}
 
 	if (!_recentMessages)

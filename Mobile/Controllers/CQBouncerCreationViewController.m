@@ -15,12 +15,6 @@
 	return self;
 }
 
-- (void) dealloc {
-	[_settings release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (void) viewDidLoad {
@@ -34,7 +28,6 @@
 
 	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Add", @"Add button title") style:UIBarButtonItemStyleDone target:self action:@selector(commit:)];
 	_rootViewController.navigationItem.rightBarButtonItem = addItem;
-	[addItem release];
 
 	_rootViewController.navigationItem.rightBarButtonItem.tag = UIBarButtonSystemItemSave;
 	_rootViewController.navigationItem.rightBarButtonItem.enabled = NO;

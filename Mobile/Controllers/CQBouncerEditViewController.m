@@ -35,12 +35,6 @@ static BOOL pushAvailable = YES;
 	return self;
 }
 
-- (void) dealloc {
-	[_settings release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 @synthesize newBouncer = _newBouncer;
@@ -58,9 +52,7 @@ static BOOL pushAvailable = YES;
 @synthesize settings = _settings;
 
 - (void) setSettings:(CQBouncerSettings *) settings {
-	id old = _settings;
-	_settings = [settings retain];
-	[old release];
+	_settings = settings;
 
 	if (!_newBouncer)
 		self.title = settings.displayName;
@@ -224,9 +216,7 @@ static BOOL pushAvailable = YES;
 		label.text = NSLocalizedString(@"Update Connection List", @"Update Connection List button label");
 		label.textAlignment = UITextAlignmentCenter;
 
-		[label release];
-
-		return [cell autorelease];
+		return cell;
 	} else if (indexPath.section == DeleteTableSection && indexPath.row == 0) {
 		CQPreferencesDeleteCell *cell = [CQPreferencesDeleteCell reusableTableViewCellInTableView:tableView];
 
@@ -313,7 +303,6 @@ static BOOL pushAvailable = YES;
 		[alert addButtonWithTitle:NSLocalizedString(@"Delete", @"Delete alert button title")];
 
 		[alert show];
-		[alert release];
 
 		return;
 	}
@@ -325,8 +314,6 @@ static BOOL pushAvailable = YES;
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
-
-	[sheet release];
 }
 
 #pragma mark -

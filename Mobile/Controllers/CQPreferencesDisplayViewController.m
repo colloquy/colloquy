@@ -65,13 +65,6 @@ static NSString *const CQPSListTypeFont = @"Font";
 	return self;
 }
 
-- (void) dealloc {
-	[_preferences release];
-	[_selectedIndexPath release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -102,9 +95,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 	__block NSMutableDictionary *workingSection = nil;
 	[preferences[CQPSPreferenceSpecifiers] enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
 		if ([object[CQPSType] isEqualToString:CQPSGroupSpecifier]) {
-			id old = workingSection;
 			workingSection = [object mutableCopy];
-			[old release];
 
 			workingSection[@"rows"] = [NSMutableArray array];
 
@@ -112,7 +103,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 		} else {
 			NSMutableArray *rows = nil;
 			if (_preferences.count)
-				rows = [_preferences[(_preferences.count - 1)][@"rows"] retain];
+				rows = _preferences[(_preferences.count - 1)][@"rows"];
 
 			if (!rows) {
 				rows = [[NSMutableArray alloc] init];
@@ -136,14 +127,10 @@ static NSString *const CQPSListTypeFont = @"Font";
 				}
 			}
 			
-
 			if (supportsCurrentInterfaceIdiom)
-				[rows addObject:[[object copy] autorelease]];
-
-			[rows release];
+				[rows addObject:[object copy]];
 		}
 	}];
-	[workingSection release];
 
 	[self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
 }
@@ -271,9 +258,7 @@ static NSString *const CQPSListTypeFont = @"Font";
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
-	id old = _selectedIndexPath;
-	_selectedIndexPath = [indexPath retain];
-	[old release];
+	_selectedIndexPath = indexPath;
 
 	UIViewController *viewController = nil;
 	NSDictionary *rowDictionary = _preferences[indexPath.section][@"rows"][indexPath.row];
@@ -313,13 +298,10 @@ static NSString *const CQPSListTypeFont = @"Font";
 			mailComposeViewController.subject = NSLocalizedString(@"Mobile Colloquy Support", @"Mobile Colloquy Support subject header");
 
 			[self.navigationController presentViewController:mailComposeViewController animated:[UIView areAnimationsEnabled] completion:NULL];
-
-			[mailComposeViewController release];
 		}
 
 		[tableView deselectRowAtIndexPath:indexPath animated:[UIView areAnimationsEnabled]];
 	} else {
-		[_selectedIndexPath release];
 		_selectedIndexPath = nil;
 
 		return;
@@ -330,8 +312,6 @@ static NSString *const CQPSListTypeFont = @"Font";
 
 		[self.navigationController pushViewController:viewController animated:[UIView areAnimationsEnabled]];
 	}
-
-	[viewController release];
 }
 
 - (void) mailComposeController:(MFMailComposeViewController *) controller didFinishWithResult:(MFMailComposeResult) result error:(NSError *) error {

@@ -6,7 +6,7 @@
 @interface CQPreferencesIgnoreEditViewController : CQPreferencesListEditViewController {
 @private
 	MVChatConnection *_connection;
-	KAIgnoreRule *_representedRule;
+	KAIgnoreRule *__weak _representedRule;
 }
 
 - (id) initWithConnection:(MVChatConnection *) connection;

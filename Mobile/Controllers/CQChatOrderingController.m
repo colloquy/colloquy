@@ -73,12 +73,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	return self;
 }
 
-- (void) dealloc {
-	[_chatControllers release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (void) _sortChatControllers {
@@ -126,7 +120,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if (!exists) {
 		if ((controller = [[CQConsoleController alloc] initWithTarget:connection])) {
 			[[CQChatOrderingController defaultController] addViewController:controller];
-			return [controller autorelease];
+			return controller;
 		}
 	}
 
@@ -187,7 +181,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 			if (room.connection == [CQChatController defaultController].nextRoomConnection)
 				[[CQChatController defaultController] showChatController:controller animated:YES];
 
-			return [controller autorelease];
+			return controller;
 		}
 	}
 
@@ -210,7 +204,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if (!exists) {
 		if ((controller = [[CQDirectChatController alloc] initWithTarget:user])) {
 			[[CQChatOrderingController defaultController] addViewController:controller];
-			return [controller autorelease];
+			return controller;
 		}
 	}
 
@@ -229,7 +223,7 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 	if (!exists) {
 		if ((controller = [[CQDirectChatController alloc] initWithTarget:connection])) {
 			[[CQChatOrderingController defaultController] addViewController:controller];
-			return [controller autorelease];
+			return controller;
 		}
 	}
 

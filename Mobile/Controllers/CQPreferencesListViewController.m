@@ -30,22 +30,6 @@ enum {
 	return self;
 }
 
-- (void) dealloc {
-	[_items release];
-	[_itemImage release];
-	[_addItemLabelText release];
-	[_noItemsLabelText release];
-	[_editViewTitle release];
-	[_editPlaceholder release];
-	[_editingViewController release];
-	[_customEditingViewController release];
-	[_audioPlayer release];
-
-	self.preferencesListBlock = nil;
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (void) viewDidLoad {
@@ -87,7 +71,6 @@ enum {
 		}
 #undef validListItem
 
-		[_editingViewController release];
 		_editingViewController = nil;
 	}
 
@@ -152,9 +135,7 @@ enum {
 @synthesize itemImage = _itemImage;
 
 - (void) setItemImage:(UIImage *) image {
-	id old = _itemImage;
-	_itemImage = [image retain];
-	[old release];
+	_itemImage = image;
 
 	[self.tableView reloadData];
 }
@@ -205,9 +186,8 @@ enum {
 
 	UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(customAccessoryViewTapped:)];
 	[imageView addGestureRecognizer:tapGestureRecognizer];
-	[tapGestureRecognizer release];
 
-	return [imageView autorelease];
+	return imageView;
 }
 
 - (UITableViewCellAccessoryType) accessoryTypeForIndexPath:(NSIndexPath *) indexPath {
@@ -229,7 +209,7 @@ enum {
 
 - (void) editItemAtIndex:(NSUInteger) index {
 	if (_customEditingViewController)
-		_editingViewController = [_customEditingViewController retain];
+		_editingViewController = _customEditingViewController;
 	else _editingViewController = [[CQPreferencesListEditViewController alloc] init];
 
 	_editingIndex = index;
@@ -411,10 +391,9 @@ enum {
 	if (toIndexPath.row >= (NSInteger)_items.count)
 		return;
 
-	id item = [_items[fromIndexPath.row] retain];
+	id item = _items[fromIndexPath.row];
 	[_items removeObject:item];
 	[_items insertObject:item atIndex:toIndexPath.row];
-	[item release];
 
 	_pendingChanges = YES;
 }
@@ -430,9 +409,7 @@ enum {
 	NSURL *audioURL = [NSURL fileURLWithPath:path];
 
 	if (![_audioPlayer.url isEqual:audioURL]) {
-		id old = _audioPlayer;
 		_audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:nil];
-		[old release];
 	}
 
 	[_audioPlayer play];

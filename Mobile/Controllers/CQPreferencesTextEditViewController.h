@@ -10,7 +10,7 @@
 
 @interface CQPreferencesTextEditViewController : CQPreferencesTableViewController {
 @protected
-	id <CQPreferencesTextEditViewDelegate> _delegate;
+	id <CQPreferencesTextEditViewDelegate> __weak _delegate;
 
 	NSString *_listItemText;
 	NSString *_listItemPlaceholder;
@@ -19,7 +19,7 @@
 
 	UILabel *_footerLabel;
 }
-@property (nonatomic, retain) id <CQPreferencesTextEditViewDelegate> delegate;
+@property (nonatomic, weak) id <CQPreferencesTextEditViewDelegate> delegate;
 @property (nonatomic, copy) NSString *listItem;
 @property (nonatomic, copy) NSString *listItemPlaceholder;
 @property (nonatomic) NSInteger charactersRemainingBeforeDisplay;

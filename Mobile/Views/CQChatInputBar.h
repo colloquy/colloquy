@@ -12,7 +12,7 @@ typedef enum {
 	@protected
 	UIToolbar *_backgroundView;
 	UITextView *_inputView;
-	IBOutlet id <CQChatInputBarDelegate> delegate;
+	IBOutlet id <CQChatInputBarDelegate> __weak delegate;
 	CQTextCompletionView *_completionView;
 	NSArray *_completions;
 	NSRange _completionRange;
@@ -33,9 +33,9 @@ typedef enum {
 	NSMutableDictionary *_accessoryImages;
 	CQChatInputBarResponderState _responderState;
 }
-@property (nonatomic, assign) id <CQChatInputBarDelegate> delegate;
+@property (nonatomic, weak) id <CQChatInputBarDelegate> delegate;
 
-@property (nonatomic, retain) UIColor *tintColor;
+@property (nonatomic, strong) UIColor *tintColor;
 
 @property (nonatomic) BOOL autocomplete;
 @property (nonatomic) BOOL spaceCyclesCompletions;

@@ -50,8 +50,6 @@
 		UIView *view = [[UIView alloc] initWithFrame:CGRectZero];
 
 		self.tableFooterView = view;
-
-		[view release];
 	}
 }
 @end

@@ -8,7 +8,7 @@
 
 	self.selectionStyle = UITableViewCellSelectionStyleNone;
 
-	_deleteButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
 
 	_deleteButton.frame = self.contentView.bounds;
 	_deleteButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -31,12 +31,6 @@
 	[_deleteButton setBackgroundImage:_deleteButtonImage forState:UIControlStateHighlighted];
 
 	return self;
-}
-
-- (void) dealloc {
-	[_deleteButton release];
-
-	[super dealloc];
 }
 
 - (UIView *) backgroundView {

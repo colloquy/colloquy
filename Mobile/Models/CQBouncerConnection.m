@@ -22,22 +22,6 @@
 
 - (void) dealloc {
 	[self disconnect];
-
-	[_settings release];
-	[_socket release];
-
-	[_connectionIdentifier release];
-	[_serverAddress release];
-	[_username release];
-	[_realName release];
-	[_password release];
-	[_nickname release];
-	[_nicknamePassword release];
-	[_alternateNicknames release];
-	[_error release];
-	[_userInfo release];
-
-	[super dealloc];
 }
 
 @synthesize settings = _settings;
@@ -55,13 +39,13 @@
 	if ([message hasSuffixBytes:"\x0D" length:1]) {
 		NSMutableData *mutableMessage = [message mutableCopy];
 		[mutableMessage appendBytes:"\x0A" length:1];
-		message = [mutableMessage autorelease];
+		message = mutableMessage;
 	} else if (![message hasSuffixBytes:"\x0D\x0A" length:2]) {
 		NSMutableData *mutableMessage = [message mutableCopy];
 		if ([mutableMessage hasSuffixBytes:"\x0A" length:1])
 			[mutableMessage replaceBytesInRange:NSMakeRange((mutableMessage.length - 1), 1) withBytes:"\x0D\x0A" length:2];
 		else [mutableMessage appendBytes:"\x0D\x0A" length:2];
-		message = [mutableMessage autorelease];
+		message = mutableMessage;
 	}
 
 	[_socket writeData:message withTimeout:-1. tag:0];
@@ -78,7 +62,6 @@
 	va_end(ap);
 
 	[self sendRawMessage:command];
-	[command release];
 }
 
 - (void) connect {
@@ -100,7 +83,6 @@
 }
 
 - (void) socket:(GCDAsyncSocket *) sock didConnectToHost:(NSString *) host port:(UInt16)port {
-	[_error release];
 	_error = nil;
 
 	if ([_delegate respondsToSelector:@selector(bouncerConnectionDidConnect:)])
@@ -121,12 +103,10 @@
 }
 
 - (void) socket:(GCDAsyncSocket *) sock willDisconnectWithError:(NSError *) error {
-	[_error release];
-	_error = [error retain];
+	_error = error;
 }
 
 - (void) socketDidDisconnect:(GCDAsyncSocket *) sock {
-	[_socket release];
 	_socket = nil;
 
 	if ([_delegate respondsToSelector:@selector(bouncerConnectionDidDisconnect:withError:)])
@@ -197,7 +177,6 @@ static inline NSString *newStringWithBytes(const char *bytes, NSUInteger length)
 		}
 
 		if (param) [parameters addObject:param];
-		[param release];
 
 		consumeWhitespace();
 	}
@@ -211,29 +190,15 @@ end:
 		NSString *commandString = [[NSString alloc] initWithBytes:command length:commandLength encoding:NSASCIIStringEncoding];
 		NSString *selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:", [commandString capitalizedString]];
 		SEL selector = NSSelectorFromString(selectorString);
-		[selectorString release];
 
 		if ([self respondsToSelector:selector])
 			((void(*)(id, SEL, id))objc_msgSend)(self, selector, parameters);
-
-		[commandString release];
 	}
-
-	[parameters release];
 
 	[self _readNextMessage];
 }
 
 - (void) _resetState {
-	[_connectionIdentifier release];
-	[_serverAddress release];
-	[_username release];
-	[_realName release];
-	[_password release];
-	[_nickname release];
-	[_nicknamePassword release];
-	[_alternateNicknames release];
-
 	_connectionIdentifier = nil;
 	_serverAddress = nil;
 	_username = nil;
@@ -349,8 +314,6 @@ end:
 			info[@"encoding"] = [NSNumber numberWithInteger:_encoding];
 
 		[_delegate bouncerConnection:self didRecieveConnectionInfo:info];
-
-		[info release];
 	}
 
 	[self _resetState];

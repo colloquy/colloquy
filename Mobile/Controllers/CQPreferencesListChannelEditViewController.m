@@ -19,13 +19,6 @@
 @implementation CQPreferencesListChannelEditViewController
 @synthesize connection = _connection;
 
-- (void) dealloc {
-	[_connection release];
-	[_password release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (void) savePasswordToKeychain {
@@ -36,9 +29,7 @@
 
 - (void) loadPasswordFromKeychain {
 	NSString *room = [_connection properNameForChatRoomNamed:self.room];
-	id old = _password;
 	_password = (room.length ? [[[CQKeychain standardKeychain] passwordForServer:_connection.uniqueIdentifier area:room] copy] : nil);
-	[old release];
 }
 
 #pragma mark -
@@ -70,9 +61,7 @@
 - (void) listItemChanged:(CQPreferencesTextCell *) sender {
 	switch (sender.tag) {
 	case RoomPasswordRow: {
-		id old = _password;
 		_password = [sender.textField.text copy];
-		[old release];
 		break;
 	}
 
@@ -83,12 +72,9 @@
 			id oldPassword = [_password copy];
 			[self loadPasswordFromKeychain];
 			if (!_password.length) {
-				id old = _password;
 				_password = oldPassword;
-				[old release];
 			} else {
 				[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:RoomPasswordRow inSection:0] withAnimation:UITableViewRowAnimationNone];
-				[oldPassword release];
 			}
 		} else {
 			[self loadPasswordFromKeychain];

@@ -18,13 +18,6 @@
 	return self;
 }
 
-- (void) dealloc {
-	[_connection release];
-	[_rooms release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (NSInteger) tableView:(UITableView *) tableView numberOfRowsInSection:(NSInteger) section {
@@ -56,7 +49,6 @@
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:[tableView cellForRowAtIndexPath:indexPath] animated:YES];
 
-	[sheet release];
 }
 
 - (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -98,9 +90,7 @@
 @synthesize rooms = _rooms;
 
 - (void) setRooms:(NSArray *) rooms {
-	id old = _rooms;
-	_rooms = [rooms retain];
-	[old release];
+	_rooms = rooms;
 
 	[self.tableView reloadData];
 }

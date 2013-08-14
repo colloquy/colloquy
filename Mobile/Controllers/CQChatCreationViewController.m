@@ -12,15 +12,6 @@
 #import <ChatCore/MVChatConnection.h>
 
 @implementation CQChatCreationViewController
-- (void) dealloc {
-	[_selectedConnection release];
-	[_searchString release];
-
-	[super dealloc];
-}
-
-#pragma mark -
-
 - (void) viewDidLoad {
 	if (!_rootViewController) {
 		CQChatEditViewController *editViewController = [[CQChatEditViewController alloc] init];
@@ -33,7 +24,6 @@
 	NSString *label = (_roomTarget ? NSLocalizedString(@"Join", @"Join button title") : NSLocalizedString(@"Chat", @"Chat button title"));
 	UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithTitle:label style:UIBarButtonItemStyleDone target:self action:@selector(commit:)];
 	_rootViewController.navigationItem.rightBarButtonItem = doneItem;
-	[doneItem release];
 
 	_rootViewController.navigationItem.rightBarButtonItem.tag = UIBarButtonSystemItemSave;
 	_rootViewController.navigationItem.rightBarButtonItem.enabled = (_roomTarget ? YES : NO);
@@ -43,7 +33,6 @@
 	if (_showListOnLoad) {
 		[(CQChatEditViewController *)_rootViewController showRoomListFilteredWithSearchString:_searchString];
 
-		[_searchString release];
 		_searchString = nil;
 
 		_showListOnLoad = NO;
@@ -65,9 +54,7 @@
 @synthesize selectedConnection = _selectedConnection;
 
 - (void) setSelectedConnection:(MVChatConnection *) connection {
-	id old = _selectedConnection;
-	_selectedConnection = [connection retain];
-	[old release];
+	_selectedConnection = connection;
 
 	((CQChatEditViewController *)_rootViewController).selectedConnection = connection;
 }
@@ -76,9 +63,7 @@
 
 - (void) showRoomListFilteredWithSearchString:(NSString *) searchString {
 	if (!_rootViewController) {
-		id old = _searchString;
 		_searchString = [searchString copy];
-		[old release];
 
 		_showListOnLoad = YES;
 		return;

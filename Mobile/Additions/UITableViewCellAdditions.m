@@ -25,7 +25,6 @@
 
 	NSString *identifier = [[NSString alloc] initWithFormat:identifierFormat, NSStringFromClass([self class])];
 	id cell = [self reusableTableViewCellWithStyle:style inTableView:tableView withIdentifier:identifier];
-	[identifier release];
 
 	return cell;
 }
@@ -38,7 +37,7 @@
 	id cell = [tableView dequeueReusableCellWithIdentifier:identifier];
 	if (cell) return cell;
 
-	return [[[[self class] alloc] initWithStyle:style reuseIdentifier:identifier] autorelease];
+	return [[[self class] alloc] initWithStyle:style reuseIdentifier:identifier];
 }
 
 #pragma mark -

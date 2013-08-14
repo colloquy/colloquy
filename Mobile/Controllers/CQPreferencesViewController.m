@@ -12,7 +12,6 @@
 
 	UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(close:)];
 	_rootViewController.navigationItem.rightBarButtonItem = doneItem;
-	[doneItem release];
 
     [super viewDidLoad];
 

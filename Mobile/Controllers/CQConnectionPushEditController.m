@@ -15,20 +15,12 @@
 	return self;
 }
 
-- (void) dealloc {
-	[_connection release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 @synthesize connection = _connection;
 
 - (void) setConnection:(MVChatConnection *) connection {
-	id old = _connection;
-	_connection = [connection retain];
-	[old release];
+	_connection = connection;
 
 	[self.tableView setContentOffset:CGPointZero animated:NO];
 	[self.tableView reloadData];

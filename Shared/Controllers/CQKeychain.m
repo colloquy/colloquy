@@ -19,9 +19,9 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 
 	NSMutableDictionary *query = [[NSMutableDictionary alloc] init];
 
-	query[(id)kSecClass] = (id)kSecClassInternetPassword;
-	query[(id)kSecAttrServer] = server;
-	if (account) query[(id)kSecAttrAccount] = account;
+	query[(__bridge id)kSecClass] = (__bridge id)kSecClassInternetPassword;
+	query[(__bridge id)kSecAttrServer] = server;
+	if (account) query[(__bridge id)kSecAttrAccount] = account;
 
 	return query;
 }
@@ -37,20 +37,16 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	NSMutableDictionary *passwordEntry = createBaseDictionary(server, area);
 
 	NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
-	passwordEntry[(id)kSecValueData] = passwordData;
+	passwordEntry[(__bridge id)kSecValueData] = passwordData;
 
-	OSStatus status = SecItemAdd((CFDictionaryRef)passwordEntry, NULL);
+	OSStatus status = SecItemAdd((__bridge CFDictionaryRef)passwordEntry, NULL);
 	if (status == errSecDuplicateItem) {
-		[passwordEntry removeObjectForKey:(id)kSecValueData];
+		[passwordEntry removeObjectForKey:(__bridge id)kSecValueData];
 
-		NSMutableDictionary *attributesToUpdate = [[NSMutableDictionary alloc] initWithObjectsAndKeys:passwordData, (id)kSecValueData, nil];
+		NSMutableDictionary *attributesToUpdate = [[NSMutableDictionary alloc] initWithObjectsAndKeys:passwordData, (__bridge id)kSecValueData, nil];
 
-		SecItemUpdate((CFDictionaryRef)passwordEntry, (CFDictionaryRef)attributesToUpdate);
-
-		[attributesToUpdate release];
+		SecItemUpdate((__bridge CFDictionaryRef)passwordEntry, (__bridge CFDictionaryRef)attributesToUpdate);
 	}
-
-	[passwordEntry release];
 }
 
 - (NSString *) passwordForServer:(NSString *) server area:(NSString *) area {
@@ -59,27 +55,24 @@ static NSMutableDictionary *createBaseDictionary(NSString *server, NSString *acc
 	NSString *string = nil;
 
 	NSMutableDictionary *passwordQuery = createBaseDictionary(server, area);
-	NSData *resultData = nil;
 
-	passwordQuery[(id)kSecReturnData] = (id)kCFBooleanTrue;
-	passwordQuery[(id)kSecMatchLimit] = (id)kSecMatchLimitOne;
+	passwordQuery[(__bridge id)kSecReturnData] = (id)kCFBooleanTrue;
+	passwordQuery[(__bridge id)kSecMatchLimit] = (__bridge id)kSecMatchLimitOne;
 
-	OSStatus status = SecItemCopyMatching((CFDictionaryRef)passwordQuery, (CFTypeRef *)&resultData);
-	if (status == noErr && resultData) {
-		string = [[NSString alloc] initWithData:resultData encoding:NSUTF8StringEncoding];
-		[resultData release];
+	CFTypeRef resultDataRef;
+	OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)passwordQuery, &resultDataRef);
+	if (status == noErr && resultDataRef) {
+		string = [[NSString alloc] initWithData:(__bridge NSData *)resultDataRef encoding:NSUTF8StringEncoding];
+		CFRelease(resultDataRef);
 	}
 
-	[passwordQuery release];
-
-	return [string autorelease];
+	return string;
 }
 
 - (void) removePasswordForServer:(NSString *) server area:(NSString *) area {
 	NSParameterAssert(server);
 
 	NSMutableDictionary *passwordQuery = createBaseDictionary(server, area);
-	SecItemDelete((CFDictionaryRef)passwordQuery);
-	[passwordQuery release];
+	SecItemDelete((__bridge CFDictionaryRef)passwordQuery);
 }
 @end

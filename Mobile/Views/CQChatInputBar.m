@@ -88,7 +88,7 @@ static BOOL hardwareKeyboard;
 
 	_animationDuration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
 
-	_accessoryButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_accessoryButton = [UIButton buttonWithType:UIButtonTypeCustom];
 
 	[_accessoryButton addTarget:self action:@selector(accessoryButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -124,16 +124,6 @@ static BOOL hardwareKeyboard;
 
 	_inputView.delegate = nil;
 	_completionView.delegate = nil;
-
-	[_inputView release];
-	[_completionView release];
-	[_completions release];
-	[_backgroundView release];
-	[_accessoryButton release];
-	[_overlayBackgroundView release];
-	[_overlayBackgroundViewPiece release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -280,9 +270,7 @@ static BOOL hardwareKeyboard;
 
 	_completionRange = NSMakeRange(NSNotFound, 0);
 
-	id old = _completions;
 	_completions = nil;
-	[old release];
 
 	_completionView.hidden = YES;
 	_completionView.completions = nil;
@@ -352,9 +340,7 @@ retry:
 - (void) showCompletions:(NSArray *) completions forText:(NSString *) text inRange:(NSRange) textRange {
 	_completionRange = textRange;
 
-	id old = _completions;
-	_completions = [completions retain];
-	[old release];
+	_completions = completions;
 
 	_inputView.returnKeyType = UIReturnKeySend;
 
@@ -430,13 +416,10 @@ retry:
 
 - (BOOL) textViewShouldReturn:(UITextView *) textView {
 	if (_completionCapturedKeyboard && self.showingCompletions) {
-		[_completionView retain];
-
 		if (_completionView.selectedCompletion != NSNotFound)
 			[self textCompletionView:_completionView didSelectCompletion:_completionView.completions[_completionView.selectedCompletion]];
 		else [self hideCompletions];
 
-		[_completionView release];
 		return YES;
 	}
 

@@ -8,16 +8,11 @@
 	if (!(self = [super init]))
 		return nil;
 
-	_room = [room retain];
+	_room = room;
 
 	return self;
 }
 
-- (void) dealloc {
-	[_room release];
-
-	[super dealloc];
-}
 
 - (void) viewDidLoad {
 	if (!_rootViewController) {
@@ -30,6 +25,5 @@
 
 	UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Close", @"Close button title") style:UIBarButtonItemStyleDone target:self action:@selector(close:)];
 	_rootViewController.navigationItem.leftBarButtonItem = doneItem;
-	[doneItem release];
 }
 @end

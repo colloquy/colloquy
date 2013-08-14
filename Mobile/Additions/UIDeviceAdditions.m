@@ -9,8 +9,7 @@ static NSString *hardwareInfoAsString(const char *keyPath) {
 	if (sysctlbyname(keyPath, buffer, &size, NULL, 0) == 0) {
 		NSData *bufferData = [[NSData alloc] initWithBytes:buffer length:(size - 1)]; // Trim off the last character which is \0.
 		NSString *result = [[NSString alloc] initWithData:bufferData encoding:NSASCIIStringEncoding];
-		[bufferData release];
-		return [result autorelease];
+		return result;
 	}
 
 	return @"";

@@ -24,13 +24,13 @@ typedef enum {
 	UISearchBar *_searchBar;
 	UISearchDisplayController *_searchController;
 	QChatUserListMode _listMode;
-	id <CQChatUserListViewDelegate> _chatUserDelegate;
+	id <CQChatUserListViewDelegate> __weak _chatUserDelegate;
 }
 @property (nonatomic, copy) NSArray *users;
-@property (nonatomic, retain) MVChatRoom *room;
+@property (nonatomic, strong) MVChatRoom *room;
 @property (nonatomic, assign) QChatUserListMode listMode;
 
-@property (nonatomic, assign) id <CQChatUserListViewDelegate> chatUserDelegate;
+@property (nonatomic, weak) id <CQChatUserListViewDelegate> chatUserDelegate;
 
 - (void) filterUsersWithSearchString:(NSString *) searchString;
 

@@ -27,7 +27,6 @@
 
 	UIBarButtonItem *settingsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"settings.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showPreferences:)];
 	self.navigationItem.leftBarButtonItem = settingsItem;
-	[settingsItem release];
 
 	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"Add connection.", @"Voiceover add connection label");
 
@@ -52,10 +51,6 @@
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	[_connectTimeUpdateTimer release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -81,12 +76,11 @@
 	NSAssert(_active, @"This should only be called when the view is active (visible).");
 
 	if (!_connectTimeUpdateTimer)
-		_connectTimeUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(_updateConnectTimes) userInfo:nil repeats:YES] retain];
+		_connectTimeUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(_updateConnectTimes) userInfo:nil repeats:YES];
 }
 
 - (void) _stopUpdatingConnectTimes {
 	[_connectTimeUpdateTimer invalidate];
-	[_connectTimeUpdateTimer release];
 	_connectTimeUpdateTimer = nil;
 }
 
@@ -369,8 +363,6 @@
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
-
-	[sheet release];
 }
 
 - (void) confirmDisconnect:(id) sender {
@@ -401,8 +393,6 @@
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
-
-	[sheet release];
 }
 
 #pragma mark -
@@ -444,8 +434,6 @@
 				awayStatusController.connection = connection;
 
 				[[CQColloquyApplication sharedApplication] presentModalViewController:awayStatusController animated:YES];
-
-				[awayStatusController release];
 			}
 		}
 	}
@@ -573,7 +561,7 @@
 		[view addTarget:self action:@selector(tableSectionHeaderSelected:) forControlEvents:UIControlEventTouchUpInside];
 	else view.showsDisclosureState = NO;
 
-	return [view autorelease];
+	return view;
 }
 
 - (void) tableView:(UITableView *) tableView didSelectRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -684,6 +672,5 @@
 
 	[[CQColloquyApplication sharedApplication] presentModalViewController:preferencesViewController animated:[UIView areAnimationsEnabled]];
 
-	[preferencesViewController release];
 }
 @end

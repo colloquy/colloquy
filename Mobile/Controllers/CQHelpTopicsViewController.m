@@ -27,12 +27,6 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	[_helpSections release];
-	[_helpData release];
-	[_moviePlayer release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -43,9 +37,7 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 
 	_loading = YES;
 
-	id old = _helpData;
 	_helpData = [[NSMutableData alloc] initWithCapacity:4096];
-	[old release];
 
 	NSString *urlString = [NSString stringWithFormat:CQHelpTopicsURLFormatString, [[NSLocale autoupdatingCurrentLocale] localeIdentifier]];
 	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:15.];
@@ -69,7 +61,6 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 
 	NSArray *help = [NSPropertyListSerialization propertyListFromData:_helpData mutabilityOption:NSPropertyListImmutable format:NULL errorDescription:NULL];
 
-	[_helpData release];
 	_helpData = nil;
 
 	if (help.count)
@@ -80,7 +71,6 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 - (void) connection:(NSURLConnection *) connection didFailWithError:(NSError *) error {
 	_loading = NO;
 
-	[_helpData release];
 	_helpData = nil;
 
 	[self loadDefaultHelpContent];
@@ -130,8 +120,6 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 
 		cell.accessoryView = spinner;
 
-		[spinner release];
-
 		return cell;
 	}
 
@@ -148,7 +136,6 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 	} else if (info[@"Screencast"]) {
 		UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"screencast.png"] highlightedImage:[UIImage imageNamed:@"screencastSelected.png"]];
 		cell.accessoryView = imageView;
-		[imageView release];
 	} else if (info[@"Link"]) {
 		UIImageView *imageView = nil;
 		NSURL *url = [NSURL URLWithString:info[@"Link"]];
@@ -156,7 +143,6 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 			imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatBubble.png"] highlightedImage:[UIImage imageNamed:@"chatBubbleSelected.png"]];		
 		else imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"web.png"] highlightedImage:[UIImage imageNamed:@"webSelected.png"]];		
 		cell.accessoryView = imageView;
-		[imageView release];
 	}
 
     return cell;
@@ -181,12 +167,9 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 		helpTopicController.title = info[@"Title"];
 
 		[self.navigationController pushViewController:helpTopicController animated:YES];
-
-		[helpTopicController release];
 	} else if (info[@"Screencast"]) {
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];
 
-		[_moviePlayer release];
 		_moviePlayer = nil;
 
 		@try {
@@ -201,7 +184,6 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 
 			[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];
 
-			[_moviePlayer release];
 			_moviePlayer = nil;
 		}
 	} else if (info[@"Link"]) {
@@ -223,16 +205,13 @@ static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?l
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:_moviePlayer];
 
 	[_moviePlayer stop];
-	[_moviePlayer release];
 	_moviePlayer = nil;
 
 	[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
 }
 
 - (void) _generateSectionsFromHelpContent:(NSArray *) help {
-	id old = _helpSections;
 	_helpSections = [[NSMutableArray alloc] initWithCapacity:5];
-	[old release];
 
 	NSUInteger i = 0;
 	NSUInteger sectionStart = 0;

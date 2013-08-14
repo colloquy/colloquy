@@ -43,7 +43,7 @@ static BOOL showFullRoomNames;
 		return nil;
 
 	_rooms = [[NSMutableArray alloc] init];
-	_matchedRooms = [_rooms retain];
+	_matchedRooms = _rooms;
 	_processedRooms = [[NSMutableSet alloc] init];
 	_showingUpdateRow = YES;
 
@@ -54,16 +54,6 @@ static BOOL showFullRoomNames;
 
 - (void) dealloc {
 	_searchBar.delegate = nil;
-
-	[_connection release];
-	[_rooms release];
-	[_matchedRooms release];
-	[_processedRooms release];
-	[_currentSearchString release];
-	[_searchBar release];
-	[_selectedRoom release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -96,9 +86,7 @@ static BOOL showFullRoomNames;
 - (void) setConnection:(MVChatConnection *) connection {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionChatRoomListUpdatedNotification object:_connection];
 
-	id old = _connection;
-	_connection = [connection retain];
-	[old release];
+	_connection = connection;
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_roomListUpdated:) name:MVChatConnectionChatRoomListUpdatedNotification object:connection];
 
@@ -109,9 +97,7 @@ static BOOL showFullRoomNames;
 	[_processedRooms removeAllObjects];
 	[_rooms setArray:[_connection.chatRoomListResults allKeys]];
 
-	old = _matchedRooms;
-	_matchedRooms = [_rooms retain];
-	[old release];
+	_matchedRooms = _rooms;
 
 	_showingUpdateRow = !_matchedRooms.count;
 
@@ -128,9 +114,7 @@ static BOOL showFullRoomNames;
 @synthesize selectedRoom = _selectedRoom;
 
 - (void) setSelectedRoom:(NSString *) room {
-	id old = _selectedRoom;
 	_selectedRoom = [[_connection properNameForChatRoomNamed:room] copy];
-	[old release];
 
 	if (!_matchedRooms.count)
 		return;
@@ -165,12 +149,10 @@ static BOOL showFullRoomNames;
 - (void) filterRoomsWithSearchString:(NSString *) searchString {
 	_searchBar.text = searchString;
 
-	NSArray *previousRoomsArray = [_matchedRooms retain];
+	NSArray *previousRoomsArray = _matchedRooms;
 
 	if (searchString.length) {
-		id old = _matchedRooms;
 		_matchedRooms = [[NSMutableArray alloc] init];
-		[old release];
 
 		NSArray *searchArray = (_currentSearchString && [searchString hasPrefix:_currentSearchString] ? previousRoomsArray : _rooms);
 		for (NSString *room in searchArray) {
@@ -179,9 +161,7 @@ static BOOL showFullRoomNames;
 			[_matchedRooms addObject:room];
 		}
 	} else {
-		id old = _matchedRooms;
-		_matchedRooms = [_rooms retain];
-		[old release];
+		_matchedRooms = _rooms;
 	}
 
 	if (ABS((NSInteger)(previousRoomsArray.count - _matchedRooms.count)) < 40) {
@@ -203,7 +183,6 @@ static BOOL showFullRoomNames;
 
 		index = 0;
 
-		[indexPaths release];
 		indexPaths = [[NSMutableArray alloc] init];
 
 		for (NSString *room in _matchedRooms) {
@@ -216,22 +195,16 @@ static BOOL showFullRoomNames;
 
 		[self.tableView endUpdates];
 
-		[indexPaths release];
-		[previousRoomsSet release];
-		[matchedRoomsSet release];
 	} else {
 		[self.tableView reloadData];
 	}
 
-	id old = _currentSearchString;
 	_currentSearchString = [searchString copy];
-	[old release];
 
 	[self _updateTitle];
 
 	[_searchBar becomeFirstResponder];
 
-	[previousRoomsArray release];
 }
 
 #pragma mark -
@@ -251,8 +224,6 @@ static BOOL showFullRoomNames;
 		[spinner startAnimating];
 
 		cell.accessoryView = spinner;
-
-		[spinner release];
 
 		return cell;
 	}
@@ -303,9 +274,7 @@ static BOOL showFullRoomNames;
 		else cell.accessoryType = UITableViewCellAccessoryNone;
 	}
 
-	id old = _selectedRoom;
 	_selectedRoom = [_matchedRooms[indexPath.row] copy];
-	[old release];
 
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 
@@ -347,7 +316,7 @@ static BOOL showFullRoomNames;
 #pragma mark -
 
 static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
-	NSDictionary *rooms = context;
+	NSDictionary *rooms = (__bridge NSDictionary *)(context);
 	NSDictionary *oneInfo = rooms[one];
 	NSDictionary *twoInfo = rooms[two];
 	NSUInteger oneUsers = [oneInfo[@"users"] unsignedIntegerValue];
@@ -362,7 +331,7 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 }
 
 - (void) _sortRooms {
-	[_rooms sortUsingFunction:sortUsingMemberCount context:_connection.chatRoomListResults];
+	[_rooms sortUsingFunction:sortUsingMemberCount context:(__bridge void *)(_connection.chatRoomListResults)];
 }
 
 - (void) _updateRoomsSoon {
@@ -439,7 +408,7 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 			[_matchedRooms addObjectsFromArray:[_processedRooms allObjects]];
 		}
 
-		[_matchedRooms sortUsingFunction:sortUsingMemberCount context:_connection.chatRoomListResults];
+		[_matchedRooms sortUsingFunction:sortUsingMemberCount context:(__bridge void *)(_connection.chatRoomListResults)];
 	}
 
 	if (animatedInsert) {
@@ -453,8 +422,6 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 		}
 
 		[self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
-
-		[indexPaths release];
 	} else {
 		[self.tableView reloadData];
 	}
@@ -533,6 +500,5 @@ static NSComparisonResult sortUsingMemberCount(id one, id two, void *context) {
 
 	[topicProcessingQueue addOperation:operation];
 
-	[operation release];
 }
 @end

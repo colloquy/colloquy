@@ -44,16 +44,6 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:CQSettingsDidChangeNotification object:nil];
 
 	super.delegate = nil;
-
-	[_blockerView release];
-	[_fontFamily release];
-	[_styleIdentifier release];
-	[_pendingComponents release];
-	[_pendingPreviousSessionComponents release];
-	[_roomTopic release];
-	[_roomTopicSetter release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -87,9 +77,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	if (!_allowsStyleChanges || [_styleIdentifier isEqualToString:styleIdentifier])
 		return;
 
-	id old = _styleIdentifier;
 	_styleIdentifier = [styleIdentifier copy];
-	[old release];
 
 	if ([styleIdentifier hasSuffix:@"-dark"])
 		self.backgroundColor = [UIColor blackColor];
@@ -113,9 +101,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	if (!_allowsStyleChanges || _fontFamily == fontFamily || [_fontFamily isEqualToString:fontFamily])
 		return;
 
-	id old = _fontFamily;
 	_fontFamily = [fontFamily copy];
-	[old release];
 
 	[self _reloadVariantStyle];
 }
@@ -316,13 +302,8 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 - (void) noteTopicChangeTo:(NSString *) newTopic by:(NSString *) username {
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_hideRoomTopic) object:nil];
 
-	id old = _roomTopic;
 	_roomTopic = [newTopic copy];
-	[old release];
-
-	old = _roomTopicSetter;
 	_roomTopicSetter = [username copy];
-	[old release];
 
 	if (_loading || _resetPending) {
 		return;
@@ -441,8 +422,6 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[command appendFormat:@"],%@,false,%@)", (previousSession ? @"true" : @"false"), (animated ? @"false" : @"true")];
 
 	[super stringByEvaluatingJavaScriptFromString:command];
-
-	[command release];
 }
 
 - (void) _commonInitialization {
@@ -475,8 +454,6 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 		if ([UIDevice currentDevice].isPadModel)
 			[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
 
-		[swipeGestureRecognizer release];
-
 		swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeGestureRecognized:)];
 		swipeGestureRecognizer.numberOfTouchesRequired = i;
 		swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
@@ -486,15 +463,12 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 		if ([UIDevice currentDevice].isPadModel)
 			[_singleSwipeGestureRecognizers addObject:swipeGestureRecognizer];
-
-		[swipeGestureRecognizer release];
 	}
 
 	UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGestureRecognizerRecognized:)];
 	longPressGestureRecognizer.delegate = self;
 
 	[self addGestureRecognizer:longPressGestureRecognizer];
-	[longPressGestureRecognizer release];
 
 	_showRoomTopic = [[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
 
@@ -527,7 +501,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	if ([[CQSettingsController settingsController] boolForKey:@"CQTimestampOnLeft"])
 		[styleString appendFormat:@".timestamp { float: none; }"];
 
-	return [styleString autorelease];
+	return styleString;
 }
 
 - (void) _reloadVariantStyle {
@@ -552,12 +526,10 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 	[self _addComponentsToTranscript:_pendingPreviousSessionComponents fromPreviousSession:YES animated:NO];
 
-	[_pendingPreviousSessionComponents release];
 	_pendingPreviousSessionComponents = nil;
 
 	[self _addComponentsToTranscript:_pendingComponents fromPreviousSession:NO animated:NO];
 
-	[_pendingComponents release];
 	_pendingComponents = nil;
 
 	[self performSelector:@selector(_unhideBlockerView) withObject:nil afterDelay:0.05];

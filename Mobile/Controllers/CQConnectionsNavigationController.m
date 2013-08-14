@@ -26,10 +26,6 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	self.delegate = nil;
-
-	[_connectionsViewController release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -77,8 +73,6 @@
 
 	_wasEditing = YES;
 	[self pushViewController:editViewController animated:YES];
-
-	[editViewController release];
 }
 
 - (void) editBouncer:(CQBouncerSettings *) settings {
@@ -87,8 +81,6 @@
 
 	_wasEditing = YES;
 	[self pushViewController:editViewController animated:YES];
-
-	[editViewController release];
 }
 
 #pragma mark -

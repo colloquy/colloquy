@@ -73,13 +73,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	return self;
 }
 
-- (void) dealloc {
-	[_connection release];
-	[_servers release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (void) viewWillAppear:(BOOL) animated {
@@ -107,9 +100,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 @synthesize connection = _connection;
 
 - (void) setConnection:(MVChatConnection *) connection {
-	id old = _connection;
-	_connection = [connection retain];
-	[old release];
+	_connection = connection;
 
 	if (!_newConnection)
 		self.title = connection.displayName;
@@ -122,7 +113,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 - (void) showDefaultServerList {
 	if (!_servers)
-		_servers = [[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Servers" ofType:@"plist"]] retain];
+		_servers = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Servers" ofType:@"plist"]];
 
 	CQPreferencesListViewController *listViewController = [[CQPreferencesListViewController alloc] init];
 	NSMutableArray *servers = [[NSMutableArray alloc] init];
@@ -154,9 +145,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	[self endEditing];
 
 	[self.navigationController pushViewController:listViewController animated:YES];
-
-	[listViewController release];
-	[servers release];
 }
 
 #pragma mark -
@@ -215,7 +203,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 		[self.navigationController pushViewController:pushEditViewController animated:YES];
 
-		[pushEditViewController release];
 
 		return;
 	}
@@ -243,9 +230,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 		[self.navigationController pushViewController:listViewController animated:YES];
 
-		[editingViewController release];
-		[listViewController release];
-
 		return;
 	}
 
@@ -267,9 +251,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 		[self.navigationController pushViewController:listViewController animated:YES];
 
-		[ignoreEditViewController release];
-		[listViewController release];
-
 		return;
 	}
 
@@ -283,8 +264,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		[self endEditing];
 
 		[self.navigationController pushViewController:advancedEditViewController animated:YES];
-
-		[advancedEditViewController release];
 
 		return;
 	}
@@ -565,7 +544,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		alert.cancelButtonIndex = [alert addButtonWithTitle:NSLocalizedString(@"Dismiss", @"Dismiss alert button title")];
 
 		[alert show];
-		[alert release];
 	}
 
 	_connection.multitaskingSupported = sender.on;
@@ -582,7 +560,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 		[alert addButtonWithTitle:NSLocalizedString(@"Delete", @"Delete alert button title")];
 
 		[alert show];
-		[alert release];
 
 		return;
 	}
@@ -594,8 +571,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
-
-	[sheet release];
 }
 
 #pragma mark -

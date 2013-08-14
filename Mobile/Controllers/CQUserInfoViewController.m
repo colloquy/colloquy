@@ -57,19 +57,13 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 
 	self.navigationItem.rightBarButtonItem = reloadItem;
 
-	[reloadItem release];
-
 	return self;
 }
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[_user release];
-	[_updateInfoTimer release];
-	[_updateTimesTimer release];
 
-	[super dealloc];
 }
 
 #pragma mark -
@@ -77,19 +71,17 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 - (void) viewDidAppear:(BOOL) animated {
 	[super viewDidAppear:animated];
 
-	_updateTimesTimer = [[NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(_updateTimes) userInfo:nil repeats:YES] retain];
-	_updateInfoTimer = [[NSTimer scheduledTimerWithTimeInterval:20. target:self selector:@selector(_updateInfo) userInfo:nil repeats:YES] retain];
+	_updateTimesTimer = [NSTimer scheduledTimerWithTimeInterval:1. target:self selector:@selector(_updateTimes) userInfo:nil repeats:YES];
+	_updateInfoTimer = [NSTimer scheduledTimerWithTimeInterval:20. target:self selector:@selector(_updateInfo) userInfo:nil repeats:YES];
 }
 
 - (void) viewWillDisappear:(BOOL) animated {
 	[super viewWillDisappear:animated];
 
 	[_updateTimesTimer invalidate];
-	[_updateTimesTimer release];
 	_updateTimesTimer = nil;
 
 	[_updateInfoTimer invalidate];
-	[_updateInfoTimer release];
 	_updateInfoTimer = nil;
 }
 
@@ -140,8 +132,6 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 				cell.detailTextLabel.text = notAvailableString;
 				cell.accessibilityLabel = NSLocalizedString(@"Away information not available.", @"Voiceover away information not available");
 			}
-
-			[value release];
 		}
 	} else if (section == 1) {
 		 if (row == 0) { // Class
@@ -279,8 +269,6 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 	roomsController.connection = _user.connection;
 
 	[self.navigationController pushViewController:roomsController animated:YES];
-
-	[roomsController release];
 }
 
 - (IBAction) refreshInformation:(id) sender {
@@ -335,9 +323,7 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserAwayStatusMessageChangedNotification object:_user];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserIdleTimeUpdatedNotification object:_user];
 
-	id old = _user;
-	_user = [user retain];
-	[old release];
+	_user = user;
 
 	_idleTimeStart = ([NSDate timeIntervalSinceReferenceDate] - _user.idleTime);
 

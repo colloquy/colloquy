@@ -13,13 +13,13 @@
 	BOOL _updatePending;
 	BOOL _showingUpdateRow;
 	NSString *_selectedRoom;
-	id _target;
+	id __weak _target;
 	SEL _action;
 }
-@property (nonatomic, retain) MVChatConnection *connection;
+@property (nonatomic, strong) MVChatConnection *connection;
 @property (nonatomic, copy) NSString *selectedRoom;
 
-@property (nonatomic, assign) id target;
+@property (nonatomic, weak) id target;
 @property (nonatomic) SEL action;
 
 - (void) filterRoomsWithSearchString:(NSString *) searchString;

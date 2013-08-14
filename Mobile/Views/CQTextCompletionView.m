@@ -57,7 +57,7 @@
 	CGFloat offset = CompletionMargin;
 	UIFont *font = CompletionFont;
 
-	for (NSString *completion in _completions) {
+	for (__strong NSString *completion in _completions) {
 		BOOL selected = (_selectedCompletion == i);
 		CGSize textSize = _completionTextSizes[i++];
 
@@ -125,11 +125,6 @@
 	[@"\u00d7" drawAtPoint:textPoint withFont:font];
 }
 
-- (void) dealloc {
-	[_completions release];
-
-	[super dealloc];
-}
 
 #pragma mark -
 
@@ -156,9 +151,7 @@
 		if (++i >= MaximumCompletions) break;
 	}
 
-	id old = _completions;
 	_completions = [[NSArray alloc] initWithObjects:objects count:i];
-	[old release];
 
 	_selectedCompletion = NSNotFound;
 
@@ -261,7 +254,6 @@
 	if (_selectedCompletion == NSNotFound)
 		return;
 
-	[self retain];
 
 	if (_selectedCompletion >= MaximumCompletions || _selectedCompletion >= _completions.count) {
 		if ([delegate respondsToSelector:@selector(textCompletionViewDidClose:)])
@@ -273,7 +265,6 @@
 
 	self.selectedCompletion = NSNotFound;
 
-	[self release];
 }
 
 - (void) touchesCancelled:(NSSet *) touches withEvent:(UIEvent *) event {

@@ -22,8 +22,8 @@ static NSString *membersFilteredCountFormat;
 @synthesize listMode = _listMode;
 
 + (void) initialize {
-	membersSingleCountFormat = [NSLocalizedString(@"Members (%u)", @"Members with single count view title") retain];
-	membersFilteredCountFormat = [NSLocalizedString(@"Members (%u of %u)", @"Members with filtered count view title") retain];
+	membersSingleCountFormat = NSLocalizedString(@"Members (%u)", @"Members with single count view title");
+	membersFilteredCountFormat = NSLocalizedString(@"Members (%u of %u)", @"Members with filtered count view title");
 }
 
 - (id) init {
@@ -40,15 +40,6 @@ static NSString *membersFilteredCountFormat;
 	_chatUserDelegate = nil;
 	_searchBar.delegate = nil;
 	_searchController.delegate = nil;
-
-	[_users release];
-	[_matchedUsers release];
-	[_currentSearchString release];
-	[_room release];
-	[_searchBar release];
-	[_searchController release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -76,11 +67,9 @@ static NSString *membersFilteredCountFormat;
 
 	UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Members", @"Members back button label") style:UIBarButtonItemStylePlain target:nil action:nil];
 	self.navigationItem.backBarButtonItem = backButton;
-	[backButton release];
 
 	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissFromDoneButton)];
 	self.navigationItem.rightBarButtonItem = doneButton;
-	[doneButton release];
 
 	if ([[UIDevice currentDevice] isPadModel])
 		[self resizeForViewInPopoverUsingTableView:self.tableView];
@@ -113,9 +102,7 @@ static NSString *membersFilteredCountFormat;
 @synthesize room = _room;
 
 - (void) setRoom:(MVChatRoom *) room {
-	id old = _room;
-	_room = [room retain];
-	[old release];
+	_room = room;
 
 	[self.tableView reloadData];
 }
@@ -164,7 +151,7 @@ static NSString *membersFilteredCountFormat;
 - (void) _removeUserAtIndex:(NSUInteger) index withAnimation:(UITableViewRowAnimation) animation {
 	NSParameterAssert(index <= _users.count);
 
-	MVChatUser *user = [_users[index] retain];
+	MVChatUser *user = _users[index];
 
 	[_users removeObjectAtIndex:index];
 
@@ -180,7 +167,6 @@ static NSString *membersFilteredCountFormat;
 		self.title = [NSString stringWithFormat:membersSingleCountFormat, _users.count];
 	else self.title = [NSString stringWithFormat:membersFilteredCountFormat, _matchedUsers.count, _users.count];
 
-	[user release];
 }
 
 #pragma mark -
@@ -200,7 +186,7 @@ static NSString *membersFilteredCountFormat;
 	if (oldIndex == newIndex)
 		return;
 
-	MVChatUser *user = [_users[oldIndex] retain];
+	MVChatUser *user = _users[oldIndex];
 
 	BOOL searchBarFocused = [_searchController isActive];
 
@@ -225,7 +211,6 @@ static NSString *membersFilteredCountFormat;
 	if (searchBarFocused)
 		[_searchController setActive:YES animated:YES];
 
-	[user release];
 }
 
 - (void) removeUserAtIndex:(NSUInteger) index {
@@ -285,12 +270,10 @@ static NSString *membersFilteredCountFormat;
 }
 
 - (void) filterUsersWithSearchString:(NSString *) searchString {
-	NSArray *previousUsersArray = [_matchedUsers retain];
+	NSArray *previousUsersArray = _matchedUsers;
 
 	if (searchString.length) {
-		id old = _matchedUsers;
 		_matchedUsers = [[NSMutableArray alloc] init];
-		[old release];
 
 		NSArray *searchArray = (_currentSearchString && [searchString hasPrefix:_currentSearchString] ? previousUsersArray : _users);
 		for (MVChatUser *user in searchArray) {
@@ -299,9 +282,7 @@ static NSString *membersFilteredCountFormat;
 			[_matchedUsers addObject:user];
 		}
 	} else {
-		id old = _matchedUsers;
 		_matchedUsers = [_users mutableCopy];
-		[old release];
 	}
 
 	if (ABS((NSInteger)(previousUsersArray.count - _matchedUsers.count)) < 40) {
@@ -323,7 +304,6 @@ static NSString *membersFilteredCountFormat;
 
 		index = 0;
 
-		[indexPaths release];
 		indexPaths = [[NSMutableArray alloc] init];
 
 		for (MVChatUser *user in _matchedUsers) {
@@ -336,24 +316,17 @@ static NSString *membersFilteredCountFormat;
 
 		[_searchController.searchResultsTableView endUpdates];
 
-		[indexPaths release];
-		[previousUsersSet release];
-		[matchedUsersSet release];
 	} else {
 		[_searchController.searchResultsTableView reloadData];
 	}
 
-	id old = _currentSearchString;
 	_currentSearchString = [searchString copy];
-	[old release];
 
 	if (_users.count == _matchedUsers.count)
 		self.title = [NSString stringWithFormat:membersSingleCountFormat, _users.count];
 	else self.title = [NSString stringWithFormat:membersFilteredCountFormat, _matchedUsers.count, _users.count];
 
 	[_searchBar becomeFirstResponder];
-
-	[previousUsersArray release];
 }
 
 #pragma mark -
@@ -446,8 +419,6 @@ static NSString *membersFilteredCountFormat;
 	userInfoViewController.user = _matchedUsers[indexPath.row];
 
 	[self.navigationController pushViewController:userInfoViewController animated:YES];
-
-	[userInfoViewController release];
 }
 
 - (BOOL) tableView:(UITableView *) tableView shouldShowMenuForRowAtIndexPath:(NSIndexPath *) indexPath {

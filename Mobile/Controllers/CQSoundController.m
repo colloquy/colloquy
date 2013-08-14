@@ -15,13 +15,11 @@
 
 - (id) initWithSoundNamed:(NSString *) soundName {
 	if (!soundName.length) {
-		[self release];
 		return nil;
 	}
 
 	NSString *pathString = [[NSBundle mainBundle] pathForResource:soundName ofType:@"aiff"];
 	if (!pathString.length) {
-		[self release];
 		return nil;
 	}
 
@@ -31,13 +29,11 @@
 		return nil;
 
 	if (path) {
-		OSStatus error = AudioServicesCreateSystemSoundID((CFURLRef)path, &_sound);
+		OSStatus error = AudioServicesCreateSystemSoundID((__bridge CFURLRef)path, &_sound);
 		if (error != kAudioServicesNoError) {
-			[self release];
 			return nil;
 		}
 	} else {
-		[self release];
 		return nil;
 	}
 
@@ -49,10 +45,6 @@
 
 - (void) dealloc {
 	AudioServicesDisposeSystemSoundID(_sound);
-
-	[_soundName release];
-
-	[super dealloc];
 }
 
 @synthesize soundName = _soundName;

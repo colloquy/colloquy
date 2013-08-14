@@ -45,17 +45,6 @@
 	return self;
 }
 
-- (void) dealloc {
-	[_iconImageView release];
-	[_memberIconImageView release];
-	[_nameLabel release];
-	[_topicLabel release];
-	[_memberCountLabel release];
-	[_checkmarkImageView release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (NSString *) name {

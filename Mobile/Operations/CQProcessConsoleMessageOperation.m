@@ -34,16 +34,6 @@ static NSRegularExpression *numericRegularExpression;
 	return self;
 }
 
-- (void) dealloc {
-	[_message release];
-	[_processedMessage release];
-	[_highlightNickname release];
-	[_target release];
-	[_userInfo release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (NSString *) processedMessageAsHTML {
@@ -124,6 +114,5 @@ static NSRegularExpression *numericRegularExpression;
 	if (_target && _action)
 		[_target performSelectorOnMainThread:_action withObject:self waitUntilDone:NO];
 
-	[verboseMessage release];
 }
 @end

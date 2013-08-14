@@ -17,7 +17,6 @@
 
 	UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(close:)];
 	_rootViewController.navigationItem.leftBarButtonItem = doneButton;
-	[doneButton release];
 }
 
 - (void) close:(id) sender {

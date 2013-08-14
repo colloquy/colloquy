@@ -50,7 +50,7 @@ extern NSString *CQColloquyApplicationDidRecieveDeviceTokenNotification;
 - (void) registerForRemoteNotifications;
 
 @property (nonatomic, readonly) NSDate *launchDate;
-@property (nonatomic, retain) NSDate *resumeDate;
+@property (nonatomic, strong) NSDate *resumeDate;
 
 - (void) submitRunTime;
 

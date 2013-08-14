@@ -7,7 +7,7 @@
 	CQIgnoreRulesController *_ignoreController;
 	NSStringEncoding _encoding;
 	NSStringEncoding _fallbackEncoding;
-	id _target;
+	id __weak _target;
 	SEL _action;
 	id _userInfo;
 }
@@ -15,7 +15,7 @@
 - (id) initWithMessageInfo:(NSDictionary *) messageInfo;
 
 @property (copy) NSString *highlightNickname;
-@property (retain) CQIgnoreRulesController *ignoreController;
+@property (strong) CQIgnoreRulesController *ignoreController;
 
 @property NSStringEncoding encoding;
 @property NSStringEncoding fallbackEncoding;
@@ -24,7 +24,7 @@
 @property (readonly) NSString *processedMessageAsHTML;
 @property (readonly) NSString *processedMessageAsPlainText;
 
-@property (retain) id target;
+@property (weak) id target;
 @property SEL action;
-@property (retain) id userInfo;
+@property (strong) id userInfo;
 @end

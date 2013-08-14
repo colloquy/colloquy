@@ -9,5 +9,5 @@
 	@protected
 	MVChatUser *_user;
 }
-@property (nonatomic, retain) MVChatUser *user;
+@property (nonatomic, strong) MVChatUser *user;
 @end

@@ -33,24 +33,16 @@ enum {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
 		return nil;
 
-	_connection = [connection retain];
+	_connection = connection;
 
 	return self;
-}
-
-- (void) dealloc {
-	[_connection release];
-
-	[super dealloc];
 }
 
 #pragma mark -
 
 - (KAIgnoreRule *) _ignoreRule {
 	if (![_listItem isKindOfClass:[KAIgnoreRule class]]) {
-		id old = _listItem;
 		_listItem = [[KAIgnoreRule alloc] init];
-		[old release];
 	}
 
 	return _listItem;
@@ -140,7 +132,6 @@ enum {
 
 		[self.navigationController pushViewController:listViewController animated:YES];
 
-		[listViewController release];
 	}
 
 	[tableView deselectRowAtIndexPath:indexPath animated:[UIView areAnimationsEnabled]];

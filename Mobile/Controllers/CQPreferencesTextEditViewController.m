@@ -40,15 +40,6 @@
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	[_delegate release];
-
-	[_listItemText release];
-	[_listItemPlaceholder release];
-
-	[_footerLabel release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -79,9 +70,7 @@
 	CQPreferencesTextViewCell *cell = (CQPreferencesTextViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
 	CQTextView *textView = cell.textView;
 
-	id old = _listItemText;
 	_listItemText = [textView.text copy];
-	[old release];
 
 	BOOL stringForFooterWithTextView = [_delegate respondsToSelector:@selector(stringForFooterWithTextView:)];
 	BOOL integerCountdown = [_delegate respondsToSelector:@selector(integerForCountdownInFooterWithTextView:)];

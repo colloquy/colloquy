@@ -1024,7 +1024,6 @@
 			buildSettings = {
 				CLANG_ARC_MIGRATION = precheck;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_ENTITLEMENTS = Colloquy.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				INFOPLIST_FILE = Mac/Application/Resources/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
@@ -1037,7 +1036,6 @@
 			buildSettings = {
 				CLANG_ARC_MIGRATION = precheck;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_ENTITLEMENTS = Colloquy.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				INFOPLIST_FILE = Mac/Application/Resources/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;

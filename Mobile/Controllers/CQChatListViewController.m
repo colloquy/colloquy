@@ -50,7 +50,6 @@ static BOOL showsChatIcons;
 
 	UIBarButtonItem *addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:[CQChatController defaultController] action:@selector(showNewChatActionSheet:)];
 	self.navigationItem.leftBarButtonItem = addItem;
-	[addItem release];
 
 	self.navigationItem.leftBarButtonItem.accessibilityLabel = NSLocalizedString(@"New chat.", @"Voiceover new chat label");
 
@@ -94,12 +93,6 @@ static BOOL showsChatIcons;
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	[_previousSelectedChatViewController release];
-	[_longPressGestureRecognizer release];
-	[_currentChatViewActionSheet release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -309,7 +302,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	if (rowsToDelete.count != viewControllersToClose.count) {
 		[self.tableView reloadData];
-		[rowsToDelete release];
 
 		return;
 	}
@@ -317,8 +309,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	[self.tableView beginUpdates];
 	[self.tableView deleteRowsAtIndexPaths:rowsToDelete withRowAnimation:animation];
 	[self.tableView endUpdates];
-
-	[rowsToDelete release];
 }
 
 - (CQChatTableCell *) _chatTableCellForController:(id <CQChatViewController>) controller {
@@ -490,8 +480,7 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	if (![chatViewController respondsToSelector:@selector(actionSheet)])
 		return;
 
-	[_currentChatViewActionSheet release];
-	_currentChatViewActionSheet = [[chatViewController actionSheet] retain];
+	_currentChatViewActionSheet = [chatViewController actionSheet];
 
 	_currentChatViewActionSheetDelegate = _currentChatViewActionSheet.delegate;
 	_currentChatViewActionSheet.delegate = self;
@@ -699,8 +688,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 			[_currentChatViewActionSheetDelegate actionSheet:actionSheet clickedButtonAtIndex:buttonIndex];
 
 		_currentChatViewActionSheetDelegate = nil;
-
-		[_currentChatViewActionSheet release];
 		_currentChatViewActionSheet = nil;
 
 		return;
@@ -742,8 +729,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	}
 
 	[self _closeChatViewControllers:viewsToClose forConnection:connection withRowAnimation:UITableViewRowAnimationTop];
-
-	[viewsToClose release];
 }
 
 #pragma mark -
@@ -792,8 +777,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:header animated:YES];
-
-	[sheet release];
 }
 
 #pragma mark -
@@ -873,8 +856,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 			for (NSDictionary *message in previewMessages)
 				[self _addMessagePreview:message withEncoding:directChatViewController.encoding toChatTableCell:cell animated:NO];
-
-			[previewMessages release];
 		}
 
 		return cell;
@@ -990,12 +971,12 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 
 	[view addTarget:self action:@selector(tableSectionHeaderSelected:) forControlEvents:UIControlEventTouchUpInside];
 
-	return [view autorelease];
+	return view;
 }
 
 - (void) tableView:(UITableView *) tableView willBeginEditingRowAtIndexPath:(NSIndexPath *) indexPath {
 	if ([[UIDevice currentDevice] isPadModel])
-		_previousSelectedChatViewController = [chatControllerForIndexPath([self.tableView indexPathForSelectedRow]) retain];
+		_previousSelectedChatViewController = chatControllerForIndexPath([self.tableView indexPathForSelectedRow]);
 }
 
 - (void) tableView:(UITableView *) tableView didEndEditingRowAtIndexPath:(NSIndexPath *) indexPath {
@@ -1004,7 +985,6 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		if (indexPath)
 			[self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 
-		[_previousSelectedChatViewController release];
 		_previousSelectedChatViewController = nil;
 	}
 }

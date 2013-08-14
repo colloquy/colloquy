@@ -16,9 +16,7 @@ static NSString *bookmarkingService;
 
 @implementation CQBookmarkingController
 + (void) userDefaultsChanged {
-	id old = bookmarkingService;
 	bookmarkingService = [[[NSUserDefaults standardUserDefaults] objectForKey:@"CQBookmarkingService"] copy];
-	[old release];
 }
 
 + (void) initialize {
@@ -56,7 +54,6 @@ static NSString *bookmarkingService;
 		NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 		NSScanner *scanner = [NSScanner scannerWithString:responseString];
 		[scanner scanInteger:&statusCode];
-		[responseString release];
 	}
 
 	if ((statusCode / 100) == 2) { // 200 (OK), 201 (Created) and 204 (No Content) are all used to indicate success

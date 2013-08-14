@@ -9,10 +9,10 @@
 /* Begin PBXBuildFile section */
 		1C0931030D80C6E900A2705D /* CQColloquyApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0931010D80C6E900A2705D /* CQColloquyApplication.m */; };
 		1C09313B0D80C8F600A2705D /* Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C09313A0D80C8F600A2705D /* Defaults.plist */; };
-		1C09327E0D80CA4800A2705D /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932670D80CA4800A2705D /* NSDataAdditions.m */; };
-		1C0932810D80CA4800A2705D /* NSNotificationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09326D0D80CA4800A2705D /* NSNotificationAdditions.m */; };
-		1C0932830D80CA4800A2705D /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932710D80CA4800A2705D /* NSScannerAdditions.m */; };
-		1C0932850D80CA4800A2705D /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932750D80CA4800A2705D /* NSStringAdditions.m */; };
+		1C09327E0D80CA4800A2705D /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932670D80CA4800A2705D /* NSDataAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C0932810D80CA4800A2705D /* NSNotificationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C09326D0D80CA4800A2705D /* NSNotificationAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C0932830D80CA4800A2705D /* NSScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932710D80CA4800A2705D /* NSScannerAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C0932850D80CA4800A2705D /* NSStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0932750D80CA4800A2705D /* NSStringAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1C0937330D80E72F00A2705D /* Icon-57.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C0937320D80E72F00A2705D /* Icon-57.png */; };
 		1C0937820D8116FC00A2705D /* CQChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937800D8116FC00A2705D /* CQChatController.m */; };
 		1C0938950D813A6B00A2705D /* CQDirectChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C0937EB0D8126D400A2705D /* CQDirectChatController.m */; };
@@ -84,19 +84,19 @@
 		1C6F68AB113AF10E00514C0C /* Default-Portrait.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C6F68A9113AF10E00514C0C /* Default-Portrait.png */; };
 		1C6F6930113C180000514C0C /* CQFileTransferController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9703B21A0F2C0D0E00E623DF /* CQFileTransferController.m */; };
 		1C6F6931113C181600514C0C /* CQFileTransferTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 97F85EBD0F2713CA008486E1 /* CQFileTransferTableCell.m */; };
-		1C716EDB13100F220088C737 /* MVIRCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ECC13100F220088C737 /* MVIRCChatConnection.m */; };
-		1C716EDC13100F220088C737 /* MVIRCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ECE13100F220088C737 /* MVIRCChatRoom.m */; };
-		1C716EDD13100F220088C737 /* MVIRCChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED013100F220088C737 /* MVIRCChatUser.m */; };
-		1C716EDE13100F220088C737 /* MVIRCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED213100F220088C737 /* MVIRCFileTransfer.m */; };
-		1C716EE013100F220088C737 /* InterThreadMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED713100F220088C737 /* InterThreadMessaging.m */; };
-		1C716EE113100F220088C737 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED913100F220088C737 /* RegexKitLite.m */; };
-		1C716EE213100F220088C737 /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EB913100F220088C737 /* MVChatConnection.m */; };
-		1C716EE313100F220088C737 /* MVChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EBC13100F220088C737 /* MVChatRoom.m */; };
-		1C716EE413100F220088C737 /* MVChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EBF13100F220088C737 /* MVChatUser.m */; };
-		1C716EE513100F220088C737 /* MVChatUserWatchRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EC213100F220088C737 /* MVChatUserWatchRule.m */; };
-		1C716EE613100F220088C737 /* MVDirectChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EC413100F220088C737 /* MVDirectChatConnection.m */; };
-		1C716EE713100F220088C737 /* MVDirectClientConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EC713100F220088C737 /* MVDirectClientConnection.m */; };
-		1C716EE813100F220088C737 /* MVFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EC913100F220088C737 /* MVFileTransfer.m */; };
+		1C716EDB13100F220088C737 /* MVIRCChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ECC13100F220088C737 /* MVIRCChatConnection.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C716EDC13100F220088C737 /* MVIRCChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ECE13100F220088C737 /* MVIRCChatRoom.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C716EDD13100F220088C737 /* MVIRCChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED013100F220088C737 /* MVIRCChatUser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C716EDE13100F220088C737 /* MVIRCFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED213100F220088C737 /* MVIRCFileTransfer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C716EE013100F220088C737 /* InterThreadMessaging.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED713100F220088C737 /* InterThreadMessaging.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C716EE113100F220088C737 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716ED913100F220088C737 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C716EE213100F220088C737 /* MVChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EB913100F220088C737 /* MVChatConnection.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C716EE313100F220088C737 /* MVChatRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EBC13100F220088C737 /* MVChatRoom.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C716EE413100F220088C737 /* MVChatUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EBF13100F220088C737 /* MVChatUser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C716EE513100F220088C737 /* MVChatUserWatchRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EC213100F220088C737 /* MVChatUserWatchRule.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C716EE613100F220088C737 /* MVDirectChatConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EC413100F220088C737 /* MVDirectChatConnection.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C716EE713100F220088C737 /* MVDirectClientConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EC713100F220088C737 /* MVDirectClientConnection.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1C716EE813100F220088C737 /* MVFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C716EC913100F220088C737 /* MVFileTransfer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1C79735B1029D0EF00649250 /* screencast.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C7973591029D0EF00649250 /* screencast.png */; };
 		1C79735C1029D0EF00649250 /* screencastSelected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C79735A1029D0EF00649250 /* screencastSelected.png */; };
 		1C7EBE6D0E01816C0018B0C8 /* CQPreferencesTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C7EBE6C0E01816C0018B0C8 /* CQPreferencesTextCell.m */; };
@@ -205,7 +205,7 @@
 		1CD949830D8E18DB00756ACD /* roomIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CD949810D8E18DB00756ACD /* roomIcon.png */; };
 		1CDDE9AB118C8DB300C83EBE /* CQViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9AA118C8DB300C83EBE /* CQViewController.m */; };
 		1CDDE9C5118C8EB700C83EBE /* CQTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9C4118C8EB700C83EBE /* CQTableViewController.m */; };
-		1CDDE9F6118CD2B800C83EBE /* NSObjectAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9F5118CD2B800C83EBE /* NSObjectAdditions.m */; };
+		1CDDE9F6118CD2B800C83EBE /* NSObjectAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CDDE9F5118CD2B800C83EBE /* NSObjectAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1CE3FB120D8A3DC100FB035F /* CQConnectionCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE3FB110D8A3DC100FB035F /* CQConnectionCreationViewController.m */; };
 		1CE69F820EE2F50100389442 /* ChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1CE69F810EE2F50100389442 /* ChatView.xib */; };
 		1CE69FD90EE317F200389442 /* CQChatInputBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE69FD80EE317F200389442 /* CQChatInputBar.m */; };
@@ -225,7 +225,7 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8900D7340FBFB2D900DE3E3B /* Servers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8900D7330FBFB2D900DE3E3B /* Servers.plist */; };
-		891E84D4123F0C8C00EC3C0F /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 891E84D3123F0C8C00EC3C0F /* NSCharacterSetAdditions.m */; };
+		891E84D4123F0C8C00EC3C0F /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 891E84D3123F0C8C00EC3C0F /* NSCharacterSetAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8957DEE11086BA3700F21648 /* CQTableViewSectionHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 8957DEE01086BA3700F21648 /* CQTableViewSectionHeader.m */; };
 		896E84610F15AB6C00D810FE /* notes.css in Resources */ = {isa = PBXBuildFile; fileRef = 896E84600F15AB6C00D810FE /* notes.css */; };
 		897C0D670F99154500F9D8B5 /* browserInstapaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 897C0D660F99154500F9D8B5 /* browserInstapaper.png */; };
@@ -269,7 +269,7 @@
 		9271928F16D211EF003380F0 /* textFieldDark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9271928D16D211EF003380F0 /* textFieldDark@2x.png */; };
 		927192C616D3272E003380F0 /* CQImportantChatMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 927192C516D3272D003380F0 /* CQImportantChatMessageViewController.m */; };
 		92823CEC168FE6CB000EC36E /* CQIgnoreRulesController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CEB168FE6CB000EC36E /* CQIgnoreRulesController.m */; };
-		92823CEF168FE6EC000EC36E /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CEE168FE6EC000EC36E /* KAIgnoreRule.m */; };
+		92823CEF168FE6EC000EC36E /* KAIgnoreRule.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823CEE168FE6EC000EC36E /* KAIgnoreRule.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		92823D32169114FA000EC36E /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92823D31169114FA000EC36E /* Twitter.framework */; };
 		92823D3516911677000EC36E /* CQConsoleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3416911677000EC36E /* CQConsoleController.m */; };
 		92823D4A169123FD000EC36E /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 92823D3E169123FD000EC36E /* DDLog.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -1819,6 +1819,7 @@
 		1C7F63A00FB3C50600E5FDD3 /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = NO;
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
@@ -1847,6 +1848,7 @@
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = NO;
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
@@ -1874,6 +1876,7 @@
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = NO;
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;

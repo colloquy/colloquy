@@ -10,7 +10,7 @@
 @property (nonatomic, copy) NSArray *standardToolbarItems;
 - (void) setStandardToolbarItems:(NSArray *) items animated:(BOOL) animated;
 
-@property (nonatomic, retain) id <CQChatViewController> topChatViewController;
+@property (nonatomic, strong) id <CQChatViewController> topChatViewController;
 
 - (void) updateToolbarAnimated:(BOOL) animated;
 - (void) updateToolbarForInterfaceOrientation:(UIInterfaceOrientation) interfaceOrientation animated:(BOOL) animated;

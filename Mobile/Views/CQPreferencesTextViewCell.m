@@ -39,9 +39,6 @@
 
 	[_textView endEditing:YES];
 	[_textView resignFirstResponder];
-	[_textView release];
-
-	[super dealloc];
 }
 
 #pragma mark -

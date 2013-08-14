@@ -12,14 +12,6 @@
 	return self;
 }
 
-- (void) dealloc {
-	[_toolbar release];
-	[_standardToolbarItems release];
-	[_topChatViewController release];
-
-    [super dealloc];
-}
-
 #pragma mark -
 
 - (void) loadView {
@@ -39,14 +31,11 @@
 	[_toolbar sizeToFit];
 
 	[view addSubview:_toolbar];
-
-	[view release];
 }
 
 - (void) viewDidUnload {
 	[super viewDidUnload];
 
-	[_toolbar release];
 	_toolbar = nil;
 }
 
@@ -98,10 +87,6 @@
 		[allItems addObject:titleItem];
 		[allItems addObject:rightSpaceItem];
 
-		[leftSpaceItem release];
-		[titleItem release];
-		[rightSpaceItem release];
-		[titleLabel release];
 	}
 
 	[allItems addObjectsFromArray:_topChatViewController.toolbarItems];
@@ -111,8 +96,6 @@
 		[allItems addObject:rightBarButtonItem];
 
 	[_toolbar setItems:allItems animated:animated];
-
-	[allItems release];
 }
 
 #pragma mark -
@@ -126,9 +109,7 @@
 - (void) setStandardToolbarItems:(NSArray *) items animated:(BOOL) animated {
 	NSParameterAssert(items);
 
-	id old = _standardToolbarItems;
 	_standardToolbarItems = [items copy];
-	[old release];
 
 	[self updateToolbarAnimated:animated];
 }
@@ -145,7 +126,7 @@
 
 	[oldViewController viewWillDisappear:NO];
 
-	_topChatViewController = [chatViewController retain];
+	_topChatViewController = chatViewController;
 
 	UIView *view = _topChatViewController.view;
 
@@ -167,7 +148,6 @@
 	[oldViewController.view removeFromSuperview];
 	[oldViewController viewDidDisappear:NO];
 
-	[oldViewController release];
 
 	[self updateToolbarAnimated:NO];
 

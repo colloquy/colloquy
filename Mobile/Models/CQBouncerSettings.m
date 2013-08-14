@@ -49,16 +49,6 @@
 	return self;
 }
 
-- (void) dealloc {
-	[_identifier release];
-	[_displayName release];
-	[_server release];
-	[_username release];
-	[_password release];
-
-	[super dealloc];
-}
-
 - (NSMutableDictionary *) dictionaryRepresentation {
 	NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
 
@@ -83,7 +73,7 @@
 	// Password is not included so it wont get written to NSUserDefaults be accident.
 	// The password is stored in the keychain and retrieved when needed.
 
-	return [result autorelease];
+	return result;
 }
 
 @synthesize identifier = _identifier;
@@ -112,9 +102,7 @@
 
 - (void) setPassword:(NSString *) password {
 	if (_password != password) {
-		id old = _password;
 		_password = [password copy];
-		[old release];
 	}
 
 	if (!_server.length || !_username.length)

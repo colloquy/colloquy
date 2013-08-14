@@ -16,7 +16,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 	if (!(self = [super init]))
 		return nil;
 
-	_connection = [connection retain];
+	_connection = connection;
 	_ignoreRules = [[NSMutableArray alloc] init];
 
 	for (NSData *data in [NSKeyedUnarchiver unarchiveObjectWithFile:self._ignoreFilePath])
@@ -25,18 +25,11 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 	return self;
 }
 
-- (void) dealloc {
-	[_connection release];
-	[_ignoreRules release];
-	[_appSupportPath release];
-
-	[super dealloc];
-}
 
 #pragma mark -
 
 - (NSArray *) ignoreRules {
-	return [[_ignoreRules copy] autorelease];
+	return [_ignoreRules copy];
 }
 
 #pragma mark -
@@ -62,7 +55,7 @@ NSString *const CQIgnoreRulesNotSavedNotification = @"CQIgnoreRulesNotSavedNotif
 - (void) removeIgnoreRuleFromString:(NSString *) ignoreRuleString {
 	BOOL permanentIgnoreRuleWasRemoved = NO;
 
-	for (KAIgnoreRule *rule in [[_ignoreRules copy] autorelease]) {
+	for (KAIgnoreRule *rule in [_ignoreRules copy]) {
 		if ([rule.user isEqualToString:ignoreRuleString] || [rule.mask isEqualToString:ignoreRuleString] || [rule.message isEqualToString:ignoreRuleString]) {
 			[_ignoreRules removeObject:rule];
 

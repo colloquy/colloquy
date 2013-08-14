@@ -10,7 +10,7 @@
 	BOOL _active;
 	BOOL _ignoreNotifications;
 }
-@property (nonatomic, readonly, retain) CQConnectionsNavigationController *navigationController;
+@property (nonatomic, readonly, strong) CQConnectionsNavigationController *navigationController;
 
 - (void) connectionAdded:(MVChatConnection *) connection;
 - (void) connectionRemovedAtIndexPath:(NSIndexPath *) indexPath;

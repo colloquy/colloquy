@@ -17,10 +17,6 @@ enum {
 
 - (void) dealloc {
 	_delegate = nil;
-
-	[_messages release];
-
-	[super dealloc];
 }
 
 #pragma mark -

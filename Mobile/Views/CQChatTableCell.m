@@ -32,15 +32,6 @@
 	return self;
 }
 
-- (void) dealloc {
-	[_iconImageView release];
-	[_unreadCountView release];
-	[_nameLabel release];
-	[_chatPreviewLabels release];
-
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (void) takeValuesFromChatViewController:(id <CQChatViewController>) controller {
@@ -160,11 +151,11 @@
 	NSTimeInterval animationDelay = 0.;
 
 	if (_chatPreviewLabels.count >= _maximumMessagePreviews) {
-		UILabel *firstLabel = [_chatPreviewLabels[0] retain];
+		UILabel *firstLabel = _chatPreviewLabels[0];
 		[_chatPreviewLabels removeObjectAtIndex:0];
 
 		if (animated) {
-			[UIView beginAnimations:nil context:firstLabel];
+			[UIView beginAnimations:nil context:(__bridge void *)(firstLabel)];
 			[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
 			[UIView setAnimationDuration:0.2];
 			[UIView setAnimationDelegate:self];
@@ -178,8 +169,6 @@
 		} else {
 			[firstLabel removeFromSuperview];
 		}
-
-		[firstLabel release];
 	}
 
 	UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -209,12 +198,10 @@
 
 		[UIView commitAnimations];
 	}
-
-	[label release];
 }
 
 - (void) labelFadeOutAnimationDidStop:(NSString *) animation finished:(NSNumber *) finished context:(void *) context {
-	UILabel *label = (UILabel *)context;
+	UILabel *label = (__bridge UILabel *)context;
 	[label removeFromSuperview];
 }
 

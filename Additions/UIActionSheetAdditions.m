@@ -50,7 +50,7 @@
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	return [sheet autorelease];
+	return sheet;
 }
 
 + (UIActionSheet *) operatorActionSheetWithLocalUserModes:(NSUInteger) localUserModes targetingUserWithModes:(NSUInteger) selectedUserModes disciplineModes:(NSUInteger) disciplineModes onRoomWithFeatures:(NSSet *) features {
@@ -130,10 +130,7 @@
 
 	operatorSheet.cancelButtonIndex = [operatorSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	[context release];
-
-
-	return [operatorSheet autorelease];
+	return operatorSheet;
 }
 
 #pragma mark -
@@ -156,7 +153,6 @@
 			[[CQColloquyApplication sharedApplication] dismissPopoversAnimated:YES];
 			[[CQColloquyApplication sharedApplication] presentModalViewController:userInfoController animated:YES];
 
-			[userInfoController release];
 #if ENABLE(FILE_TRANSFERS)
 		} else if (buttonIndex == [self sendFileButtonIndex]) {
 			[[CQChatController defaultController] showFilePickerWithUser:user];

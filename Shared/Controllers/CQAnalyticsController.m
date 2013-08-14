@@ -193,10 +193,6 @@ fail:
 		return nil;
 
 	if (!analyticsURL) {
-#if SYSTEM(IOS)
-		[self release];
-#endif
-
 		return nil;
 	}
 
@@ -246,10 +242,6 @@ fail:
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-#if SYSTEM(IOS)
-	[super dealloc];
-#endif
 }
 
 #pragma mark -

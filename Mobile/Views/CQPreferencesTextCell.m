@@ -43,12 +43,6 @@ static CQPreferencesTextCell *currentEditingCell;
 - (void) dealloc {
 	[_textField resignFirstResponder];
 	_textField.delegate = nil;
-
-	[_textField autorelease]; // Use autorelease to prevent a crash.
-
-	self.textFieldBlock = nil;
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -159,9 +153,7 @@ static CQPreferencesTextCell *currentEditingCell;
 }
 
 - (void) textFieldDidBeginEditing:(UITextField *) textField {
-	id old = currentEditingCell;
-	currentEditingCell = [self retain];
-	[old release];
+	currentEditingCell = self;
 }
 
 - (void) textFieldDidEndEditing:(UITextField *) textField {
@@ -171,9 +163,7 @@ static CQPreferencesTextCell *currentEditingCell;
 		self.textFieldBlock(textField);
 
 	if (currentEditingCell == self) {
-		id old = currentEditingCell;
 		currentEditingCell = nil;
-		[old release];
 	}
 }
 @end

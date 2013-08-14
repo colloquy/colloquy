@@ -35,12 +35,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	return self;
 }
 
-- (void) dealloc {
-	[_connection release];
-
-	[super dealloc];
-}
-
 - (NSURL *) url {
 	if (isPlaceholderValue(_connection.server))
 		return nil;
@@ -76,7 +70,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 	UIBarButtonItem *connectItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Connect", @"Connect button title") style:UIBarButtonItemStyleDone target:self action:@selector(commit:)];
 	_rootViewController.navigationItem.rightBarButtonItem = connectItem;
-	[connectItem release];
 
 	_rootViewController.navigationItem.rightBarButtonItem.tag = UIBarButtonSystemItemSave;
 	_rootViewController.navigationItem.rightBarButtonItem.enabled = (_connection.server.length && !isPlaceholderValue(_connection.server));

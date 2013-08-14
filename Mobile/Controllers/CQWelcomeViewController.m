@@ -17,18 +17,12 @@
 
 	UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Welcome", @"Welcome back button label") style:UIBarButtonItemStylePlain target:nil action:nil];
 	self.navigationItem.backBarButtonItem = backButton;
-	[backButton release];
 
 	_helpTopicsController = [[CQHelpTopicsViewController alloc] init];
 
 	return self;
 }
 
-- (void) dealloc {
-	[_helpTopicsController release];
-
-	[super dealloc];
-}
 
 #pragma mark -
 
@@ -98,8 +92,6 @@
 
 		[self.navigationController pushViewController:whatsNewController animated:YES];
 
-		[whatsNewController release];
-		[whatsNewContent release];
 	} else if (indexPath.section == HelpTableSection && indexPath.row == 0) {
 		_helpTopicsController.navigationItem.rightBarButtonItem = self.navigationItem.rightBarButtonItem;
 		[self.navigationController pushViewController:_helpTopicsController animated:YES];

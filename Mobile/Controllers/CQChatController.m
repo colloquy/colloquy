@@ -61,15 +61,11 @@ static CQSoundController *fileTransferSound;
 	alwaysShowNotices = [[CQSettingsController settingsController] integerForKey:@"JVChatAlwaysShowNotices"];
 	vibrateOnHighlight = [[CQSettingsController settingsController] boolForKey:@"CQVibrateOnHighlight"];
 
-	id old = chatRoomInviteAction;
 	chatRoomInviteAction = [[[CQSettingsController settingsController] stringForKey:@"CQChatRoomInviteAction"] copy];
-	[old release];
 
 	NSString *soundName = [[CQSettingsController settingsController] stringForKey:@"CQSoundOnHighlight"];
 
-	old = highlightSound;
 	highlightSound = ([soundName isEqualToString:@"None"] ? nil : [[CQSoundController alloc] initWithSoundNamed:soundName]);
-	[old release];
 
 #if ENABLE(FILE_TRANSFERS)
 	vibrateOnFileTransfer = [[CQSettingsController settingsController] boolForKey:@"CQVibrateOnFileTransfer"];
@@ -133,14 +129,6 @@ static CQSoundController *fileTransferSound;
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:_chatPresentationController];
-
-	[_chatNavigationController release];
-	[_chatPresentationController release];
-	[_nextController release];
-	[_nextRoomConnection release];
-	[_fileUser release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -278,7 +266,6 @@ static CQSoundController *fileTransferSound;
 
 		[[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
 
-		[localNotification release];
 		return;
 	}
 
@@ -300,8 +287,6 @@ static CQSoundController *fileTransferSound;
 		[highlightSound playSound];
 
 	[alert show];
-
-	[alert release];
 }
 
 #pragma mark -
@@ -336,7 +321,6 @@ static CQSoundController *fileTransferSound;
 
 - (void) actionSheet:(UIActionSheet *) actionSheet clickedButtonAtIndex:(NSInteger) buttonIndex {
 	if (buttonIndex == actionSheet.cancelButtonIndex) {
-		[_fileUser release];
 		_fileUser = nil;
 		return;
 	}
@@ -348,7 +332,6 @@ static CQSoundController *fileTransferSound;
 			creationViewController.roomTarget = YES;
 
 		[[CQColloquyApplication sharedApplication] presentModalViewController:creationViewController animated:YES];
-		[creationViewController release];
 	} else if (actionSheet.tag == NewConnectionActionSheetTag) {
 		if (buttonIndex == 0) {
 			[[CQConnectionsController defaultController] showNewConnectionPrompt:[actionSheet associatedObjectForKey:@"userInfo"]];
@@ -471,9 +454,7 @@ static CQSoundController *fileTransferSound;
 	if (controllerStates.count)
 		state[@"chatControllers"] = controllerStates;
 
-	[controllerStates release];
-
-	return [state autorelease];
+	return state;
 }
 
 - (void) restorePersistentState:(NSDictionary *) state forConnection:(MVChatConnection *) connection {
@@ -488,13 +469,9 @@ static CQSoundController *fileTransferSound;
 			continue;
 
 		[[CQChatOrderingController defaultController] addViewController:controller];
-		[controller release];
 
-		if ([controllerState[@"active"] boolValue]) {
-			id old = _nextController;
-			_nextController = [controller retain];
-			[old release];
-		}
+		if ([controllerState[@"active"] boolValue])
+			_nextController = controller;
 	}
 }
 
@@ -521,8 +498,6 @@ static CQSoundController *fileTransferSound;
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:sheet forSender:sender animated:YES];
-
-	[sheet release];
 }
 
 #pragma mark -
@@ -530,7 +505,6 @@ static CQSoundController *fileTransferSound;
 - (void) showChatControllerWhenAvailableForRoomNamed:(NSString *) roomName andConnection:(MVChatConnection *) connection {
 	NSParameterAssert(connection != nil);
 
-	[_nextRoomConnection release];
 	_nextRoomConnection = nil;
 
 	MVChatRoom *room = (roomName.length ? [connection chatRoomWithName:roomName] : nil);
@@ -542,11 +516,10 @@ static CQSoundController *fileTransferSound;
 		}
 	}
 
-	_nextRoomConnection = [connection retain];
+	_nextRoomConnection = connection;
 }
 
 - (void) showChatControllerForUserNicknamed:(NSString *) nickname andConnection:(MVChatConnection *) connection {
-	[_nextRoomConnection release];
 	_nextRoomConnection = nil;
 
 	MVChatUser *user = (nickname.length ? [[connection chatUsersWithNickname:nickname] anyObject] : nil);
@@ -570,12 +543,9 @@ static CQSoundController *fileTransferSound;
 	if (_visibleChatController == controller)
 		return;
 
-	[_nextRoomConnection release];
 	_nextRoomConnection = nil;
 
-	id old = _visibleChatController;
-	_visibleChatController = [controller retain];
-	[old release];
+	_visibleChatController = controller;
 
 	if ([[UIDevice currentDevice] isPadModel]) {
 		_chatPresentationController.topChatViewController = controller;
@@ -590,16 +560,13 @@ static CQSoundController *fileTransferSound;
 				[[CQColloquyApplication sharedApplication] showColloquies:nil];
 
 			if (animated && _chatNavigationController.topViewController != _chatNavigationController.rootViewController) {
-				id old = _nextController;
-				_nextController = [controller retain];
-				[old release];
+				_nextController = controller;
 
 				[_chatNavigationController popToRootViewControllerAnimated:animated];
 			} else {
 				[_chatNavigationController popToRootViewControllerAnimated:NO];
 				[_chatNavigationController pushViewController:(UIViewController *)controller animated:animated];
 
-				[_nextController release];
 				_nextController = nil;
 			}
 		}
@@ -659,8 +626,6 @@ static CQSoundController *fileTransferSound;
 		connection.serverPort = 6667;
 
 		[[CQConnectionsController defaultController] addConnection:connection];
-
-		[connection release];
 	}
 
 	[connection connectAppropriately];
@@ -687,16 +652,12 @@ static CQSoundController *fileTransferSound;
 }
 
 - (void) visibleChatControllerWasHidden {
-	id old = _visibleChatController;
 	_visibleChatController = nil;
-	[old release];
 }
 
 - (void) closeViewController:(id) controller {
 	if ([controller respondsToSelector:@selector(close)])
 		[controller close];
-
-	[controller retain];
 
 	NSUInteger controllerIndex = [[CQChatOrderingController defaultController] indexOfViewController:controller];
 
@@ -712,8 +673,6 @@ static CQSoundController *fileTransferSound;
 			[self performSelector:@selector(_showChatControllerUnanimated:) withObject:([CQChatOrderingController defaultController].chatViewControllers)[(controllerIndex - 1)] afterDelay:0.];
 		} else [self showChatController:nil animated:YES];
 	}
-
-	[controller release];
 }
 @end
 

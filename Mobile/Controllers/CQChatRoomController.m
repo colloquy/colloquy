@@ -100,13 +100,11 @@ static BOOL showLeaveEvents;
 - (id) initWithPersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
 	NSString *roomName = state[@"room"];
 	if (!roomName) {
-		[self release];
 		return nil;
 	}
 
 	MVChatRoom *room = [connection chatRoomWithName:roomName];
 	if (!room) {
-		[self release];
 		return nil;
 	}
 
@@ -123,13 +121,6 @@ static BOOL showLeaveEvents;
 
 - (void) dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	[_orderedMembers release];
-	[_currentUserListPopoverController release];
-	[_currentUserListNavigationController release];
-	[_currentUserListViewController release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -139,9 +130,7 @@ static BOOL showLeaveEvents;
 
 	if (_showingMembersInModalController) {
 		_showingMembersInModalController = NO;
-		[_currentUserListNavigationController release];
 		_currentUserListNavigationController = nil;
-		[_currentUserListViewController release];
 		_currentUserListViewController = nil;
 	}
 }
@@ -285,7 +274,7 @@ static BOOL showLeaveEvents;
 
 	sheet.cancelButtonIndex = [sheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
-	return [sheet autorelease];
+	return sheet;
 }
 
 #pragma mark -
@@ -306,9 +295,7 @@ static BOOL showLeaveEvents;
 
 - (void) popoverControllerDidDismissPopover:(UIPopoverController *) popoverController {
 	if (popoverController == _currentUserListPopoverController) {
-		[_currentUserListViewController release];
 		_currentUserListViewController = nil;
-		[_currentUserListPopoverController release];
 		_currentUserListPopoverController = nil;
 	}
 }
@@ -368,7 +355,7 @@ static BOOL showLeaveEvents;
 	if (completions.count < 10)
 		[completions addObjectsFromArray:[super chatInputBar:inputBar completionsForWordWithPrefix:word inRange:range]];
 
-	return [completions autorelease];
+	return completions;
 }
 
 #pragma mark -
@@ -395,7 +382,7 @@ static unsigned char userStatus(MVChatUser *user, CQChatRoomController *room) {
 }
 
 static NSComparisonResult sortMembersByStatus(MVChatUser *user1, MVChatUser *user2, void *context) {
-	CQChatRoomController *room = (CQChatRoomController *)context;
+	CQChatRoomController *room = (__bridge CQChatRoomController *)context;
 
 	unsigned char user1Status = userStatus(user1, room);
 	unsigned char user2Status = userStatus(user2, room);
@@ -452,16 +439,14 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	if (transcriptView)
 		[transcriptView noteTopicChangeTo:topicString by:user];
 	else if (topicString && user) {
-		id old = _topicInformation;
 		_topicInformation = [@{ @"topic": topicString, @"user": user } copy];
-		[old release];
 	}
 }
 
 - (void) _sortMembers {
 	if ([[CQSettingsController settingsController] boolForKey:@"JVSortRoomMembersByStatus"])
-		[_orderedMembers sortUsingFunction:sortMembersByStatus context:self];
-	else [_orderedMembers sortUsingFunction:sortMembersByNickname context:self];
+		[_orderedMembers sortUsingFunction:sortMembersByStatus context:(__bridge void *)(self)];
+	else [_orderedMembers sortUsingFunction:sortMembersByNickname context:(__bridge void *)(self)];
 
 	_membersNeedSorted = NO;
 }
@@ -548,7 +533,6 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		[CQSoundController vibrate];
 
 	[alert show];
-	[alert release];
 }
 
 - (void) _displayTopicChange:(CQProcessChatMessageOperation *) operation {
@@ -1192,7 +1176,6 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	if (_topicInformation) {
 		[self _noteTopicChangeTo:_topicInformation[@"topic"] by:_topicInformation[@"user"]];
 
-		[_topicInformation release];
 		_topicInformation = nil;
 	}
 
@@ -1230,7 +1213,6 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		} else if (buttonIndex == 1) {
 			CQChatRoomInfoViewController *roomInfoViewController = [[CQChatRoomInfoViewController alloc] initWithRoom:_target];
 			[[CQColloquyApplication sharedApplication] presentModalViewController:roomInfoViewController animated:[UIView areAnimationsEnabled]];
-			[roomInfoViewController release];
 		}
 	} else [super actionSheet:actionSheet clickedButtonAtIndex:buttonIndex];
 }
@@ -1255,7 +1237,6 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	if (_active && [[UIDevice currentDevice] isPadModel])
 		[[CQChatController defaultController].chatPresentationController updateToolbarAnimated:YES];
 
-	[item release];
 }
 
 - (void) _showCantSendMessagesWarningForCommand:(BOOL) command {
@@ -1278,11 +1259,9 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 		alert.message = NSLocalizedString(@"You are not a room member,\nrejoin and try again.", @"Can't send message to room because not a member alert message");
 		[alert addButtonWithTitle:NSLocalizedString(@"Join", @"Join button title")];
 	} else {
-		[alert release];
 		return;
 	}
 
 	[alert show];
-	[alert release];
 }
 @end

@@ -12,7 +12,7 @@
 	NSTimer *_updateInfoTimer;
 	NSTimeInterval _idleTimeStart;
 }
-@property (nonatomic, retain) MVChatUser *user;
+@property (nonatomic, strong) MVChatUser *user;
 
 - (IBAction) showJoinedRooms:(id) sender;
 - (IBAction) refreshInformation:(id) sender;

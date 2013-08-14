@@ -8,7 +8,7 @@ typedef enum {
 
 @interface CQChatTranscriptView : UIWebView <UIGestureRecognizerDelegate, UIWebViewDelegate> {
 	@protected
-	IBOutlet id <CQChatTranscriptViewDelegate> transcriptDelegate;
+	IBOutlet id <CQChatTranscriptViewDelegate> __weak transcriptDelegate;
 	UIView *_blockerView;
 	NSMutableArray *_pendingPreviousSessionComponents;
 	NSMutableArray *_pendingComponents;
@@ -28,7 +28,7 @@ typedef enum {
 	NSString *_roomTopicSetter;
 	BOOL _topicIsHidden;
 }
-@property (nonatomic, assign) id <CQChatTranscriptViewDelegate> transcriptDelegate;
+@property (nonatomic, weak) id <CQChatTranscriptViewDelegate> transcriptDelegate;
 
 @property (nonatomic, assign) BOOL allowsStyleChanges;
 @property (nonatomic, copy) NSString *styleIdentifier;

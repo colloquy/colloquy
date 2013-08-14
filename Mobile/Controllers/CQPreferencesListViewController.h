@@ -25,7 +25,7 @@ typedef enum {
 	NSInteger _selectedItemIndex;
 	CQPreferencesListEditViewController *_editingViewController;
 	id _customEditingViewController;
-	id _target;
+	id __weak _target;
 	SEL _action;
 	CQPreferencesListBlock _preferencesListBlock;
 	BOOL _pendingChanges;
@@ -38,14 +38,14 @@ typedef enum {
 @property (nonatomic) BOOL allowEditing;
 @property (nonatomic) NSInteger selectedItemIndex;
 @property (nonatomic, copy) NSArray *items;
-@property (nonatomic, retain) UIImage *itemImage;
+@property (nonatomic, strong) UIImage *itemImage;
 @property (nonatomic, copy) NSString *addItemLabelText;
 @property (nonatomic, copy) NSString *noItemsLabelText;
 @property (nonatomic, copy) NSString *editViewTitle;
 @property (nonatomic, copy) NSString *editPlaceholder;
-@property (nonatomic, retain) id customEditingViewController;
+@property (nonatomic, strong) id customEditingViewController;
 
-@property (nonatomic, assign) id target;
+@property (nonatomic, weak) id target;
 @property (nonatomic) SEL action;
 @property (nonatomic, copy) CQPreferencesListBlock preferencesListBlock;
 

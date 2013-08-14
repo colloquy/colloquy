@@ -34,7 +34,6 @@ static NSString *timestampFormat;
 	graphicalEmoticons = [[CQSettingsController settingsController] boolForKey:@"CQGraphicalEmoticons"];
 	stripMessageFormatting = [[CQSettingsController settingsController] boolForKey:@"JVChatStripMessageFormatting"];
 
-	[highlightRegexes release];
 	highlightRegexes = nil;
 	highlightRegexes = [[NSMutableDictionary alloc] init];
 	inlineImages = [[CQSettingsController settingsController] boolForKey:@"CQInlineImages"];
@@ -80,21 +79,11 @@ static NSString *timestampFormat;
 	if (!(self = [self init]))
 		return nil;
 
-	_message = [messageInfo retain];
+	_message = messageInfo;
 	_encoding = NSUTF8StringEncoding;
 	_fallbackEncoding = NSISOLatin1StringEncoding;
 
 	return self;
-}
-
-- (void) dealloc {
-	[_message release];
-	[_processedMessage release];
-	[_highlightNickname release];
-	[_target release];
-	[_userInfo release];
-
-	[super dealloc];
 }
 
 #pragma mark -
@@ -252,7 +241,7 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	if (!messageString)
 		messageString = [[NSMutableString alloc] initWithChatData:messageData encoding:NSASCIIStringEncoding];
 
-	return [messageString autorelease];
+	return messageString;
 }
 
 - (void) _processMessageString:(NSMutableString *) messageString {
@@ -278,12 +267,11 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 #pragma mark -
 
 - (void) main {
-	NSArray *highlightWords = [[CQColloquyApplication sharedApplication].highlightWords retain];
+	NSArray *highlightWords = [CQColloquyApplication sharedApplication].highlightWords;
 	if (_highlightNickname.length && ![highlightWords containsObject:_highlightNickname]) {
 		NSMutableArray *mutableHighlightWords = [highlightWords mutableCopy];
 		[mutableHighlightWords insertObject:_highlightNickname atIndex:0];
 
-		[highlightWords release];
 		highlightWords = mutableHighlightWords;
 	}
 
@@ -291,13 +279,12 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	MVChatUser *user = _message[@"user"];
 
 	if ([_ignoreController shouldIgnoreMessage:messageString fromUser:user inRoom:_target]) {
-		[highlightWords release];
 		return;
 	}
 
 	BOOL highlighted = NO;
 
-	NSString *regex = [highlightRegexes[_highlightNickname] retain];
+	NSString *regex = highlightRegexes[_highlightNickname];
 	if (user && !regex && !user.localUser && highlightWords.count) {
 		NSCharacterSet *escapedCharacters = [NSCharacterSet characterSetWithCharactersInString:@"^[]{}()\\.$*+?|"];
 
@@ -337,7 +324,6 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 		NSString *stylelessMessageString = [messageString stringByStrippingXMLTags];
 		highlighted = [stylelessMessageString isMatchedByRegex:regex options:NSRegularExpressionCaseInsensitive inRange:NSMakeRange(0, stylelessMessageString.length) error:NULL];
 	}
-	[regex release];
 
 	[self _processMessageString:messageString];
 
@@ -367,7 +353,6 @@ static void applyFunctionToTextInMutableHTMLString(NSMutableString *html, NSRang
 	if (highlighted)
 		_processedMessage[@"highlighted"] = @(YES);
 
-	[highlightWords release];
 
 	if (_target && _action)
 		[_target performSelectorOnMainThread:_action withObject:self waitUntilDone:NO];
