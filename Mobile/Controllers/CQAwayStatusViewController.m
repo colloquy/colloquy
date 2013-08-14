@@ -88,7 +88,6 @@
 #pragma mark -
 
 - (void) _tableWasLongPressed:(UILongPressGestureRecognizer *) gestureReconizer {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_3_2
 	if (gestureReconizer.state != UIGestureRecognizerStateBegan)
 		return;
 
@@ -115,7 +114,6 @@
 	awayStatusActionSheet.destructiveButtonIndex = [awayStatusActionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button title")];
 
 	[[CQColloquyApplication sharedApplication] showActionSheet:awayStatusActionSheet forSender:self animated:[UIView areAnimationsEnabled]];
-#endif
 }
 
 #pragma mark -

@@ -73,19 +73,6 @@
 	[coder encodeObject:_friendlyName forKey:@"KAIgnoreFriendlyName"];
 }
 
-#if SYSTEM(IOS)
-- (void) dealloc {
-	[_rooms release];
-	[_ignoredMessage release];
-	[_friendlyName release];
-	[_ignoredUser release];
-	[_userRegex release];
-	[_messageRegex release];
-
-	[super dealloc];
-}
-#endif
-
 #pragma mark -
 
 - (NSString *) description {

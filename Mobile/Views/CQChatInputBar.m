@@ -10,22 +10,6 @@
 
 static BOOL hardwareKeyboard;
 
-#if ENABLE(SECRETS)
-@interface UIKeyboardImpl : UIView
-+ (UIKeyboardImpl *) activeInstance;
-- (void) takeTextInputTraitsFromDelegate;
-- (void) takeTextInputTraitsFrom:(id <UITextInputTraits>) object;
-- (void) updateReturnKey:(BOOL) update;
-@end
-
-#pragma mark -
-
-@interface UITextField (UITextFieldPrivate)
-@property (nonatomic) NSRange selectionRange;
-- (BOOL) hasMarkedText;
-@end
-#endif
-
 #pragma mark -
 
 @interface CQChatInputBar (CQChatInputBarPrivate)
@@ -76,7 +60,6 @@ static BOOL hardwareKeyboard;
 
 #if ENABLE(SECRETS)
 	_inputView.autocorrectionType = UITextAutocorrectionTypeDefault;
-	_autocorrect = YES;
 #else
 	_inputView.autocorrectionType = UITextAutocorrectionTypeNo;
 	_autocorrect = NO;
@@ -663,7 +646,7 @@ retry:
 
 	NSAssert(keyboardClass, @"UIKeyboardImpl class does not exist.");
 
-	UIKeyboardImpl *keyboard = [keyboardClass performPrivateSelector:@"activeInstance"];
+	id keyboard = [keyboardClass performPrivateSelector:@"activeInstance"];
 	if (!keyboard)
 		return;
 
