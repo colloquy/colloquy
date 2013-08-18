@@ -24,6 +24,7 @@
 				<string>CQBookmarkingServiceInstapaper</string>
 				<string>CQBookmarkingServicePinboard</string>
 				<string>CQBookmarkingServicePocket</string>
+				<string>CQBookmarkingServiceSafariReadingList</string>
 			</array>
 			<key>Titles</key>
 			<array>
@@ -32,9 +33,10 @@
 				<string>Instapaper</string>
 				<string>Pinboard</string>
 				<string>Pocket</string>
+				<string>Safari Reading List</string>
 			</array>
 			<key>DefaultValue</key>
-			<string>CQBookmarkingServicePocket</string>
+			<string>CQBookmarkingServiceSafariReadingList</string>
 		</dict>
 		<dict>
 			<key>Type</key>

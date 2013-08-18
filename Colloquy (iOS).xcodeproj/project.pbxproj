@@ -281,6 +281,8 @@
 		9290604A16B27A4A0095EC03 /* playAudioAccessory@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9290604816B27A4A0095EC03 /* playAudioAccessory@2x.png */; };
 		9290D7C21694F3A400ACF833 /* console.css in Resources */ = {isa = PBXBuildFile; fileRef = 9290D7C11694F3A400ACF833 /* console.css */; };
 		9292E93016A956E300F22070 /* CQPreferencesDisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9292E92F16A956E300F22070 /* CQPreferencesDisplayViewController.m */; };
+		929BCAB917C0D2630046B081 /* CQSafariReadingListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 929BCAB817C0D2630046B081 /* CQSafariReadingListController.m */; };
+		929BCABB17C0D3D60046B081 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929BCABA17C0D3D60046B081 /* SafariServices.framework */; };
 		929EBE04162A33EE00F0CE6E /* chromatic-redux.js in Resources */ = {isa = PBXBuildFile; fileRef = 9247414216119CCC009132B5 /* chromatic-redux.js */; };
 		92A24DA7114C918300897373 /* CQPreferencesListChannelEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */; };
 		92A54AA515AD1DDD00F21FC5 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */; };
@@ -690,6 +692,9 @@
 		9290D7C11694F3A400ACF833 /* console.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = console.css; sourceTree = "<group>"; };
 		9292E92E16A956E300F22070 /* CQPreferencesDisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesDisplayViewController.h; path = Mobile/Controllers/CQPreferencesDisplayViewController.h; sourceTree = "<group>"; };
 		9292E92F16A956E300F22070 /* CQPreferencesDisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesDisplayViewController.m; path = Mobile/Controllers/CQPreferencesDisplayViewController.m; sourceTree = "<group>"; };
+		929BCAB717C0D2630046B081 /* CQSafariReadingListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQSafariReadingListController.h; path = Shared/Controllers/CQSafariReadingListController.h; sourceTree = "<group>"; };
+		929BCAB817C0D2630046B081 /* CQSafariReadingListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQSafariReadingListController.m; path = Shared/Controllers/CQSafariReadingListController.m; sourceTree = "<group>"; };
+		929BCABA17C0D3D60046B081 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		92A24DA5114C918300897373 /* CQPreferencesListChannelEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesListChannelEditViewController.h; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.h; sourceTree = "<group>"; };
 		92A24DA6114C918300897373 /* CQPreferencesListChannelEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesListChannelEditViewController.m; path = Mobile/Controllers/CQPreferencesListChannelEditViewController.m; sourceTree = "<group>"; };
 		92A54AA415AD1DDD00F21FC5 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -727,6 +732,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				929BCABB17C0D3D60046B081 /* SafariServices.framework in Frameworks */,
 				92196C9E16C911310020FE35 /* MessageUI.framework in Frameworks */,
 				92AFF84A16B0CE4700940E5D /* AVFoundation.framework in Frameworks */,
 				92823D32169114FA000EC36E /* Twitter.framework in Frameworks */,
@@ -1356,6 +1362,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				929BCABA17C0D3D60046B081 /* SafariServices.framework */,
 				92AFF84916B0CE4700940E5D /* AVFoundation.framework */,
 				1C124A710F097575008F181B /* AudioToolbox.framework */,
 				1C1895DF0E29CF1D003CFED0 /* CFNetwork.framework */,
@@ -1393,6 +1400,8 @@
 				922C767116D9C0E900AEFCB4 /* CQPinboardController.h */,
 				922C767416D9C0E900AEFCB4 /* CQPocketController.m */,
 				922C767316D9C0E900AEFCB4 /* CQPocketController.h */,
+				929BCAB817C0D2630046B081 /* CQSafariReadingListController.m */,
+				929BCAB717C0D2630046B081 /* CQSafariReadingListController.h */,
 			);
 			name = Bookmarking;
 			path = ../..;
@@ -1684,6 +1693,7 @@
 				1C0938950D813A6B00A2705D /* CQDirectChatController.m in Sources */,
 				1C0938960D813A6C00A2705D /* CQChatRoomController.m in Sources */,
 				1C82C1970D83CF1D009ABD9F /* CQChatTableCell.m in Sources */,
+				929BCAB917C0D2630046B081 /* CQSafariReadingListController.m in Sources */,
 				1C82C1A30D83D133009ABD9F /* CQConnectionTableCell.m in Sources */,
 				1C82C1AF0D83D30F009ABD9F /* CQConnectionsController.m in Sources */,
 				1C82C27D0D847EA4009ABD9F /* CQChatListViewController.m in Sources */,

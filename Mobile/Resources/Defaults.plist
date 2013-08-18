@@ -127,7 +127,7 @@
 	<key>CQInlineImages</key>
 	<true/>
 	<key>CQBookmarkingService</key>
-	<string>CQBookmarkingServicePocket</string>
+	<string>CQBookmarkingServiceSafariReadingList</string>
 	<key>CQMentionLinkService</key>
 	<integer>1</integer>
 	<key>CQTimestampFormat</key>
