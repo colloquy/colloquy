@@ -212,9 +212,6 @@ static BOOL hardwareKeyboard;
 		_overlayBackgroundViewPiece.image = [[UIImage imageNamed:@"textFieldPiece.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(22., 1., 22., 1.)];
 	}
 	_backgroundView.tintColor = color;
-
-	if (!_previousContentHeight)
-		_previousContentHeight = _inputView.contentSize.height;
 }
 
 #pragma mark -
@@ -509,29 +506,20 @@ retry:
 }
 
 - (void) textViewDidChange:(UITextView *) textView {
-	CGFloat contentHeight = textView.contentSize.height - textView.font.pointSize + 2.;
+	if (textView.hasText && textView.text.length) {
+		CGSize lineSize = [@"a" sizeWithFont:textView.font];
+		CGSize suggestedTextSize = [textView.text sizeWithFont:textView.font constrainedToSize:CGSizeMake(CGRectGetWidth(textView.frame), 90000) lineBreakMode:NSLineBreakByWordWrapping];
+		CGFloat numberOfLines = roundf(suggestedTextSize.height / lineSize.height);
+		CGFloat contentHeight = fminf((CQInactiveLineHeight + ((numberOfLines - 1) * CQLineHeight)), CQMaxLineHeight);
 
-	if (contentHeight == _previousContentHeight)
-		return;
+		if (contentHeight < CQMaxLineHeight)
+			textView.scrollEnabled = NO;
+		else textView.scrollEnabled = YES;
 
-	if (textView.hasText) {
-		if (contentHeight <= CQMaxLineHeight) {
-			CGFloat newHeight = fminf(contentHeight + CQLineHeight, CQMaxLineHeight);
-			self.height = newHeight;
-
-			if (_previousContentHeight > CQMaxLineHeight) {
-				textView.scrollEnabled = NO;
-			} else if (newHeight == CQMaxLineHeight) {
-				textView.scrollEnabled = YES;
-			}
-
-			contentHeight = newHeight;
-		}
+		self.height = floorf(contentHeight);
 	} else {
 		[self _resetTextViewHeight];
 	}
-
-	_previousContentHeight = contentHeight;
 }
 
 - (void) textViewDidChangeSelection:(UITextView *) textView {
@@ -664,7 +652,8 @@ retry:
 	else if ([keyboard respondsToSelector:takeTextInputTraitsFromSelector])
 		[keyboard performSelector:takeTextInputTraitsFromSelector withObject:_inputView];
 
-	[keyboard performPrivateSelector:@"updateReturnKey:" withBoolean:YES];
+	if (![UIDevice currentDevice].isSystemSeven)
+		[keyboard performPrivateSelector:@"updateReturnKey:" withBoolean:YES];
 #endif
 }
 

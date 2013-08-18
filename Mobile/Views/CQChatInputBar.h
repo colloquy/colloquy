@@ -26,7 +26,6 @@ typedef enum {
 	UIViewAnimationCurve _animationCurve;
 	NSTimeInterval _animationDuration;
 	UIButton *_accessoryButton;
-	CGFloat _previousContentHeight;
 	UIImageView *_overlayBackgroundView;
 	UIImageView *_overlayBackgroundViewPiece;
 	BOOL _shouldAnimateLayout;
