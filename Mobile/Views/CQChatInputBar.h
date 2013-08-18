@@ -28,7 +28,6 @@ typedef enum {
 	UIButton *_accessoryButton;
 	UIImageView *_overlayBackgroundView;
 	UIImageView *_overlayBackgroundViewPiece;
-	BOOL _shouldAnimateLayout;
 	NSMutableDictionary *_accessoryImages;
 	CQChatInputBarResponderState _responderState;
 }

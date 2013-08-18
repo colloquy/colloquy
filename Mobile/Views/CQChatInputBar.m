@@ -190,8 +190,6 @@ static BOOL hardwareKeyboard;
 	if (shouldSetHeight)
 		self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, height);
 
-	_shouldAnimateLayout = NO;
-
 	[self layoutSubviews];
 }
 
@@ -353,7 +351,6 @@ retry:
 
 	[self _updateImagesForResponderState];
 
-	_shouldAnimateLayout = NO;
 	[self setNeedsLayout];
 }
 
@@ -365,7 +362,6 @@ retry:
 
 	[self _updateImagesForResponderState];
 
-	_shouldAnimateLayout = NO;
 	[self setNeedsLayout];
 }
 
@@ -565,12 +561,6 @@ retry:
 - (void) layoutSubviews {
 	[super layoutSubviews];
 
-	if (_shouldAnimateLayout) {
-		[UIView setAnimationCurve:_animationCurve];
-		[UIView setAnimationDuration:_animationDuration];
-		[UIView beginAnimations:nil context:NULL];
-	}
-
 #define ButtonMargin 6.5
 #define ButtonWidth 18.
 	CGRect frame = _backgroundView.frame;
@@ -583,6 +573,10 @@ retry:
 	frame.origin.x = CGRectGetMaxX(frame);
 	frame.size.width = CGRectGetWidth(self.frame) - CGRectGetMinX(frame);
 	_overlayBackgroundViewPiece.frame = frame;
+
+	[UIView setAnimationCurve:_animationCurve];
+	[UIView setAnimationDuration:_animationDuration];
+	[UIView beginAnimations:nil context:NULL];
 
 #define ImageBorderInset 10.
 	frame = _inputView.frame;
@@ -607,12 +601,7 @@ retry:
 #undef ButtonWidth
 #undef ButtonMargin
 
-	if (_shouldAnimateLayout)
-		[UIView commitAnimations];
-
 	_animationDuration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
-
-	_shouldAnimateLayout = YES;
 }
 
 #pragma mark -
