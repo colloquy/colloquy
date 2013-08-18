@@ -31,7 +31,7 @@
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
 	if ([UIDevice currentDevice].isSystemSeven) {
-		_textLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline2];
+		_textLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
 		_textLabel.textColor = [UIColor colorWithWhite:(63. / 255.) alpha:1.];
 	} else {
 #endif
