@@ -24,12 +24,10 @@ NSString *const CQBookmarkingServicePinboard = @"CQBookmarkingServicePinboard";
 
 + (void) bookmarkLink:(NSString *) link {
 	link = [link stringByEncodingIllegalURLCharacters];
-	NSString *username = [[CQKeychain standardKeychain] passwordForServer:@"pinboard-username" area:@"bookmarking"];
-	NSString *password = [[CQKeychain standardKeychain] passwordForServer:@"pinboard-password" area:@"bookmarking"];
+	NSString *username = [[[CQKeychain standardKeychain] passwordForServer:@"pinboard-username" area:@"bookmarking"] stringByEncodingIllegalURLCharacters];
+	NSString *password = [[[CQKeychain standardKeychain] passwordForServer:@"pinboard-password" area:@"bookmarking"] stringByEncodingIllegalURLCharacters];
 	NSString *urlString = [NSString stringWithFormat:@"https://%@:%@@api.pinboard.in/v1/posts/add?url=%@&description=%@", username, password, link, link];
 
-	[NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.] queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-		[self handleBookmarkingResponse:response withData:data forLink:link];
-	}];
+	[self handleBookmarkingOfLink:urlString];
 }
 @end

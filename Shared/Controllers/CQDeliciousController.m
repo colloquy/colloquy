@@ -22,12 +22,10 @@ NSString *const CQBookmarkingServiceDelicious = @"CQBookmarkingServiceDelicious"
 
 + (void) bookmarkLink:(NSString *) link {
 	link = [link stringByEncodingIllegalURLCharacters];
-	NSString *username = [[CQKeychain standardKeychain] passwordForServer:@"delicious-username" area:@"bookmarking"];
-	NSString *password = [[CQKeychain standardKeychain] passwordForServer:@"delicious-password" area:@"bookmarking"];
+	NSString *username = [[[CQKeychain standardKeychain] passwordForServer:@"delicious-username" area:@"bookmarking"] stringByEncodingIllegalURLCharacters];
+	NSString *password = [[[CQKeychain standardKeychain] passwordForServer:@"delicious-password" area:@"bookmarking"] stringByEncodingIllegalURLCharacters];
 	NSString *urlString = [NSString stringWithFormat:@"https://%@:%@@api.del.icio.us/v1/posts/add?red=api&url=%@&description=%@", username, password, link, link];
 
-	[NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.] queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-		[self handleBookmarkingResponse:response withData:data forLink:link];
-	}];
+	[self handleBookmarkingOfLink:urlString];
 }
 @end

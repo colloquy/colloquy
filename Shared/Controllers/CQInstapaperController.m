@@ -28,8 +28,6 @@ NSString *const CQBookmarkingServiceInstapaper = @"CQBookmarkingServiceInstapape
 	NSString *password = [[[CQKeychain standardKeychain] passwordForServer:@"instapaper-password" area:@"bookmarking"] stringByEncodingIllegalURLCharacters];
 	NSString *urlString = [NSString stringWithFormat:@"https://www.instapaper.com/api/add?username=%@&password=%@&url=%@&auto_title=1", username, password, link];
 
-	[NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:urlString] cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.] queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-		[self handleBookmarkingResponse:response withData:data forLink:link];
-	}];
+	[self handleBookmarkingOfLink:urlString];
 }
 @end

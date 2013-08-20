@@ -47,6 +47,22 @@ static NSString *bookmarkingService;
 	return nil;
 }
 
++ (void) handleBookmarkingOfLink:(NSString *) link {
+	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:link]];
+	if (![NSURLConnection canHandleRequest:request]) {
+		NSError *error = [NSError errorWithDomain:CQBookmarkingErrorDomain code:CQBookmarkingErrorGeneric userInfo:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:CQBookmarkingDidNotSaveLinkNotification object:nil userInfo:@{
+			@"error": error, @"service": [[self class] serviceName]
+		}];
+
+		return;
+	}
+
+	[NSURLConnection sendAsynchronousRequest:request cachePolicy:NSURLRequestReloadIgnoringLocalAndRemoteCacheData timeoutInterval:10.] queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+		[self handleBookmarkingResponse:response withData:data forLink:link];
+	}];
+}
+
 + (void) handleBookmarkingResponse:(NSURLResponse *) response withData:(NSData *) data forLink:(NSString *) link {
 	NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
 	NSInteger statusCode = HTTPResponse.statusCode;

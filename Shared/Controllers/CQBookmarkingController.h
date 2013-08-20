@@ -28,5 +28,6 @@ extern NSString *const CQBookmarkingErrorDomain;
 @interface CQBookmarkingController : NSObject
 + (Class <CQBookmarking>) activeService;
 
++ (void) handleBookmarkingOfLink:(NSString *) link;
 + (void) handleBookmarkingResponse:(NSURLResponse *) response withData:(NSData *) data forLink:(NSString *) link;
 @end
