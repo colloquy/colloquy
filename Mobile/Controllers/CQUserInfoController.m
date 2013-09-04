@@ -28,8 +28,6 @@
 
 #pragma mark -
 
-@synthesize user = _user;
-
 - (void) setUser:(MVChatUser *) user {
 	_user = user;
 

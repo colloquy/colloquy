@@ -37,8 +37,6 @@ static BOOL pushAvailable = YES;
 
 #pragma mark -
 
-@synthesize newBouncer = _newBouncer;
-
 - (void) setNewBouncer:(BOOL) newBouncer {
 	if (_newBouncer ==  newBouncer)
 		return;
@@ -48,8 +46,6 @@ static BOOL pushAvailable = YES;
 	if (_newBouncer) self.title = NSLocalizedString(@"New Bouncer", @"New Bouncer view title");
 	else self.title = _settings.displayName;
 }
-
-@synthesize settings = _settings;
 
 - (void) setSettings:(CQBouncerSettings *) settings {
 	_settings = settings;

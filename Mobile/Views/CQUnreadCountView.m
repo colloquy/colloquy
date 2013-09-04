@@ -17,16 +17,12 @@
 	[self setNeedsDisplay];
 }
 
-@synthesize importantCount = _importantCount;
-
 - (void) setImportantCount:(NSUInteger) importantCount {
 	if (_importantCount == importantCount)
 		return;
 	_importantCount = importantCount;
 	[self setNeedsDisplay];
 }
-
-@synthesize highlighted = _highlighted;
 
 - (void) setHighlighted:(BOOL) highlighted {
 	if (_highlighted == highlighted)

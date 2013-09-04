@@ -14,6 +14,8 @@
 
 #import "CQPocketController.h"
 
+#import <QuartzCore/QuartzCore.h>
+
 typedef enum {
 	CQSidebarOrientationNone,
 	CQSidebarOrientationPortrait,
@@ -41,12 +43,6 @@ static NSMutableArray *highlightWords;
 
 	return self;
 }
-
-#pragma mark -
-
-@synthesize launchDate = _launchDate;
-@synthesize resumeDate = _resumeDate;
-@synthesize deviceToken = _deviceToken;
 
 #pragma mark -
 
@@ -506,6 +502,7 @@ static NSMutableArray *highlightWords;
 
 	UITabBar *tabBar = self.tabBarController.tabBar;
 	if (tabBar && !self.modalViewController) {
+		[CATransaction flush];
 		[sheet showFromTabBar:tabBar];
 		return;
 	}
@@ -524,8 +521,6 @@ static NSMutableArray *highlightWords;
 }
 
 #pragma mark -
-
-@synthesize mainViewController = _mainViewController;
 
 - (UIViewController *) modalViewController {
 	return _mainViewController.presentedViewController;

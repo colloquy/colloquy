@@ -11,13 +11,7 @@
 - (void) editItemAtIndex:(NSUInteger) index;
 @end
 
-@interface CQAwayStatusViewController (Private)
-- (BOOL) statusIsDefaultAwayStatus:(NSString *) status;
-@end
-
 @implementation CQAwayStatusViewController
-@synthesize connection = _connection;
-
 - (id) init {
 	if (!(self = [super init]))
 		return nil;

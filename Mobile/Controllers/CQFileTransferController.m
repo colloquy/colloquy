@@ -9,9 +9,6 @@
 #import <ChatCore/MVFileTransfer.h>
 
 @implementation CQFileTransferController
-@synthesize transfer = _transfer;
-@synthesize cell = _cell;
-
 - (id) initWithTransfer:(MVFileTransfer *) transfer {
 	if (!(self = [self init]))
 		return nil;

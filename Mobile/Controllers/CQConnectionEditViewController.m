@@ -68,9 +68,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 }
 
 - (id) init {
-	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
-		return nil;
-	return self;
+	return (self = [super initWithStyle:UITableViewStyleGrouped]);
 }
 
 #pragma mark -
@@ -85,8 +83,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 #pragma mark -
 
-@synthesize newConnection = _newConnection;
-
 - (void) setNewConnection:(BOOL)newConnection {
 	if (_newConnection ==  newConnection)
 		return;
@@ -96,8 +92,6 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 	if (_newConnection) self.title = NSLocalizedString(@"New Connection", @"New Connection view title");
 	else self.title = _connection.displayName;
 }
-
-@synthesize connection = _connection;
 
 - (void) setConnection:(MVChatConnection *) connection {
 	_connection = connection;

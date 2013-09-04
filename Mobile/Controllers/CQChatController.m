@@ -52,8 +52,6 @@ static CQSoundController *fileTransferSound;
 #pragma mark -
 
 @implementation CQChatController
-@synthesize nextRoomConnection = _nextRoomConnection;
-
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -412,11 +410,6 @@ static CQSoundController *fileTransferSound;
 #endif
 
 #pragma mark -
-
-@synthesize visibleChatController = _visibleChatController;
-@synthesize chatNavigationController = _chatNavigationController;
-@synthesize chatPresentationController = _chatPresentationController;
-@synthesize totalImportantUnreadCount = _totalImportantUnreadCount;
 
 - (void) setTotalImportantUnreadCount:(NSInteger) count {
 	if (count < 0)

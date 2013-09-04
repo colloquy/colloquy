@@ -3,8 +3,6 @@
 #import "CQColloquyApplication.h"
 
 @implementation CQModalNavigationController
-@synthesize closeButtonItem = _closeButtonItem;
-
 - (id) initWithRootViewController:(UIViewController *) rootViewController {
 	if (!(self = [self init]))
 		return nil;

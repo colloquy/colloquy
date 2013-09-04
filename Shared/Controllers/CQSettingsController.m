@@ -3,9 +3,6 @@
 NSString *const CQSettingsDidChangeNotification = @"CQSettingsDidChangeNotification";
 
 @implementation CQSettingsController
-@synthesize settingsLocation = _settingsLocation;
-@synthesize mirroringEnabled = _mirroringEnabled;
-
 + (instancetype)  settingsController {
 	static CQSettingsController *settingsController;
 	static dispatch_once_t onceToken;

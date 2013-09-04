@@ -141,11 +141,4 @@
 
 	[super layoutSubviews];
 }
-
-#pragma mark -
-
-@synthesize showsDisclosureState = _showsDisclosureState;
-@synthesize disclosureImageView = _disclosureImageView;
-@synthesize textLabel = _textLabel;
-@synthesize section = _section;
 @end

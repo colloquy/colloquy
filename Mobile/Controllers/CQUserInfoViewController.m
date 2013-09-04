@@ -313,8 +313,6 @@ static NSString *humanReadableTimeInterval(NSTimeInterval interval, BOOL longFor
 
 #pragma mark -
 
-@synthesize user = _user;
-
 - (void) setUser:(MVChatUser *) user {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserAttributeUpdatedNotification object:_user];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatUserInformationUpdatedNotification object:_user];

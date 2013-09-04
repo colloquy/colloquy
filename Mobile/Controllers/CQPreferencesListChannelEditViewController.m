@@ -17,10 +17,6 @@
 @end
 
 @implementation CQPreferencesListChannelEditViewController
-@synthesize connection = _connection;
-
-#pragma mark -
-
 - (void) savePasswordToKeychain {
 	NSString *room = [_connection properNameForChatRoomNamed:self.room];
 	if (room.length)

@@ -41,8 +41,6 @@
 
 #pragma mark -
 
-@synthesize roomTarget = _roomTarget;
-
 - (void) setRoomTarget:(BOOL) roomTarget {
 	_roomTarget = roomTarget;
 
@@ -50,8 +48,6 @@
 	editViewController.roomTarget = _roomTarget;
 	editViewController.navigationItem.rightBarButtonItem.enabled = (_roomTarget ? YES : NO);
 }
-
-@synthesize selectedConnection = _selectedConnection;
 
 - (void) setSelectedConnection:(MVChatConnection *) connection {
 	_selectedConnection = connection;

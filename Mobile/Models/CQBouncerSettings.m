@@ -76,15 +76,6 @@
 	return result;
 }
 
-@synthesize identifier = _identifier;
-@synthesize type = _type;
-@synthesize displayName = _displayName;
-@synthesize server = _server;
-@synthesize username = _username;
-@synthesize password = _password;
-@synthesize serverPort = _serverPort;
-@synthesize pushNotifications = _pushNotifications;
-
 - (NSString *) displayName {
 	return (_displayName.length ? _displayName : _server);
 }

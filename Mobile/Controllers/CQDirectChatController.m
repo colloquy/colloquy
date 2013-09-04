@@ -78,17 +78,6 @@ static NSUInteger singleSwipeGesture;
 static NSUInteger doubleSwipeGesture;
 static NSUInteger tripleSwipeGesture;
 
-@interface CQDirectChatController (CQDirectChatControllerPrivate)
-- (void) _addPendingComponent:(id) component;
-- (void) _addPendingComponentsAnimated:(BOOL) animated;
-- (void) _processMessageData:(NSData *) messageData target:(id) target action:(SEL) action userInfo:(id) userInfo;
-- (void) _updateRightBarButtonItemAnimated:(BOOL) animated;
-- (void) _showCantSendMessagesWarningForCommand:(BOOL) command;
-- (void) _forceRegsignKeyboard;
-- (void) _userDefaultsChanged;
-- (BOOL) _canAnnounceWithVoiceOverAndMessageIsImportant:(BOOL) important;
-@end
-
 #pragma mark -
 
 static NSOperationQueue *chatMessageProcessingQueue;
@@ -1466,8 +1455,6 @@ static BOOL showingKeyboard;
 }
 
 #pragma mark -
-
-@synthesize recentMessages = _recentMessages;
 
 - (void) addEventMessage:(NSString *) messageString withIdentifier:(NSString *) identifier {
 	[self addEventMessage:messageString withIdentifier:identifier announceWithVoiceOver:NO];

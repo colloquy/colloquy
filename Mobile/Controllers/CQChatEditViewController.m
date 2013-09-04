@@ -20,19 +20,11 @@ static NSUInteger lastSelectedConnectionIndex = NSNotFound;
 
 #pragma mark -
 
-@synthesize roomTarget = _roomTarget;
-
-@synthesize selectedConnection = _selectedConnection;
-
 - (void) setSelectedConnection:(MVChatConnection *) connection {
 	_selectedConnection = connection;
 
 	[self.tableView updateCellAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] withAnimation:UITableViewRowAnimationNone];
 }
-
-@synthesize name = _name;
-
-@synthesize password = _password;
 
 #pragma mark -
 

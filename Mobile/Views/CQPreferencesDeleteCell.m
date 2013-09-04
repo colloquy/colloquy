@@ -41,8 +41,6 @@
 	return nil;
 }
 
-@synthesize deleteButton = _deleteButton;
-
 - (SEL) deleteAction {
 	NSArray *actions = [_deleteButton actionsForTarget:nil forControlEvent:UIControlEventTouchUpInside];
 	if (!actions.count) return NULL;

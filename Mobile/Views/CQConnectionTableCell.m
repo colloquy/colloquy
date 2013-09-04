@@ -122,15 +122,11 @@
 	[self setNeedsLayout];
 }
 
-@synthesize connectDate = _connectDate;
-
 - (void) setConnectDate:(NSDate *) connectDate {
 	_connectDate = [connectDate copy];
 
 	[self updateConnectTime];
 }
-
-@synthesize status = _status;
 
 - (void) setStatus:(CQConnectionTableCellStatus) status {
 	if (_status == status)

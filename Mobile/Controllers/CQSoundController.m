@@ -47,8 +47,6 @@
 	AudioServicesDisposeSystemSoundID(_sound);
 }
 
-@synthesize soundName = _soundName;
-
 - (void) playSound {
 	NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
 	if ((currentTime - _previousPlayTime) < 2.)

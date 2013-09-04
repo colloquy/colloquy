@@ -18,9 +18,6 @@ static NSString *membersFilteredCountFormat;
 #define UserIdleTime 600
 
 @implementation CQChatUserListViewController
-@synthesize chatUserDelegate = _chatUserDelegate;
-@synthesize listMode = _listMode;
-
 + (void) initialize {
 	membersSingleCountFormat = NSLocalizedString(@"Members (%u)", @"Members with single count view title");
 	membersFilteredCountFormat = NSLocalizedString(@"Members (%u of %u)", @"Members with filtered count view title");
@@ -88,8 +85,6 @@ static NSString *membersFilteredCountFormat;
 
 #pragma mark -
 
-@synthesize users = _users;
-
 - (void) setUsers:(NSArray *) users {
 	[_users setArray:users];
 	[_matchedUsers setArray:users];
@@ -98,8 +93,6 @@ static NSString *membersFilteredCountFormat;
 
 	[self.tableView reloadData];
 }
-
-@synthesize room = _room;
 
 - (void) setRoom:(MVChatRoom *) room {
 	_room = room;

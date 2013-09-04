@@ -50,8 +50,6 @@ static NSComparisonResult sortControllersAscending(id controller1, id controller
 }
 
 @implementation CQChatOrderingController
-@synthesize chatViewControllers = _chatControllers;
-
 + (CQChatOrderingController *) defaultController {
 	static BOOL creatingSharedInstance = NO;
 	static CQChatOrderingController *sharedInstance = nil;

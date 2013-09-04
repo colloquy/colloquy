@@ -34,16 +34,6 @@ static BOOL showLeaveEvents;
 
 #pragma mark -
 
-@interface CQChatRoomController (CQChatRoomControllerPrivate)
-- (void) _updateRightBarButtonItemAnimated:(BOOL) animated;
-- (NSString *) _markupForUser:(MVChatUser *) user;
-- (NSString *) _markupForMemberUser:(MVChatUser *) user;
-- (void) _sortMembers;
-- (void) _displayCurrentTopicOnlyIfSet:(BOOL) onlyIfSet;
-@end
-
-#pragma mark -
-
 @implementation CQChatRoomController
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])

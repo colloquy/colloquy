@@ -5,11 +5,6 @@
 
 #import <objc/message.h>
 
-@interface CQBouncerConnection (CQBouncerConnectionPrivate)
-- (void) _readNextMessage;
-- (NSString *) _newStringWithBytes:(const char *) bytes length:(unsigned) length;
-@end
-
 @implementation CQBouncerConnection
 - (id) initWithBouncerSettings:(CQBouncerSettings *) settings {
 	if (!(self = [super init]))
@@ -23,10 +18,6 @@
 - (void) dealloc {
 	[self disconnect];
 }
-
-@synthesize settings = _settings;
-@synthesize delegate = _delegate;
-@synthesize userInfo = _userInfo;
 
 - (void) sendRawMessage:(id) raw {
 	NSParameterAssert(raw != nil);

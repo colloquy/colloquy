@@ -85,10 +85,6 @@
 
 #pragma mark -
 
-@synthesize connection = _connection;
-
-@synthesize rooms = _rooms;
-
 - (void) setRooms:(NSArray *) rooms {
 	_rooms = rooms;
 

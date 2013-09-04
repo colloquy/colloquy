@@ -128,10 +128,6 @@
 
 #pragma mark -
 
-@synthesize delegate;
-
-@synthesize completions = _completions;
-
 - (void) setCompletions:(NSArray *) completions {
 	UIFont *font = CompletionFont;
 

@@ -1,8 +1,6 @@
 #import "CQPreferencesSwitchCell.h"
 
 @implementation CQPreferencesSwitchCell
-@synthesize switchControlBlock = _switchControlBlock;
-
 - (id) initWithStyle:(UITableViewCellStyle) style reuseIdentifier:(NSString *) reuseIdentifier {
 	if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]))
 		return nil;
@@ -27,8 +25,6 @@
 	if (self.switchControlBlock)
 		self.switchControlBlock(sender);
 }
-
-@synthesize switchControl = _switchControl;
 
 - (SEL) switchAction {
 	NSArray *actions = [_switchControl actionsForTarget:nil forControlEvent:UIControlEventValueChanged];

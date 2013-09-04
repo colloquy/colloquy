@@ -7,12 +7,6 @@
 
 static NSString *CQHelpTopicsURLFormatString = @"http://colloquy.mobi/help.php?locale=%@";
 
-@interface CQHelpTopicsViewController (CQHelpTopicsViewControllerPrivate)
-- (void) _generateSectionsFromHelpContent:(NSArray *) help;
-@end
-
-#pragma mark -
-
 @implementation CQHelpTopicsViewController
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))

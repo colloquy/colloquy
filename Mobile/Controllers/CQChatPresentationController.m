@@ -100,8 +100,6 @@
 
 #pragma mark -
 
-@synthesize standardToolbarItems = _standardToolbarItems;
-
 - (void) setStandardToolbarItems:(NSArray *) items {
 	[self setStandardToolbarItems:items animated:YES];
 }
@@ -115,8 +113,6 @@
 }
 
 #pragma mark -
-
-@synthesize topChatViewController = _topChatViewController;
 
 - (void) setTopChatViewController:(UIViewController <CQChatViewController> *) chatViewController {
 	if (chatViewController == _topChatViewController)

@@ -11,14 +11,6 @@ static NSRegularExpression *numericRegularExpression;
 		numericRegularExpression = [[NSRegularExpression alloc] initWithPattern:@"\\d{3}|CAP|AUTHENTICATE" options:NSRegularExpressionCaseInsensitive error:nil];
 	});
 }
-@synthesize processedMessageInfo = _processedMessage;
-@synthesize encoding = _encoding;
-@synthesize fallbackEncoding = _fallbackEncoding;
-@synthesize target = _target;
-@synthesize action = _action;
-@synthesize userInfo = _userInfo;
-@synthesize messageType = _messageType;
-@synthesize verbose = _verbose;
 
 - (id) initWithMessage:(NSString *) message outbound:(BOOL) outbound {
 	NSParameterAssert(message != nil);

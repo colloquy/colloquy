@@ -56,9 +56,6 @@
 	else self.accessibilityLabel = self.name;
 }
 
-@synthesize maximumMessagePreviews = _maximumMessagePreviews;
-@synthesize showsUserInMessagePreviews = _showsUserInMessagePreviews;
-
 - (BOOL) showsIcon {
 	return !_iconImageView.hidden;
 }
@@ -104,8 +101,6 @@
 
 	[self setNeedsLayout];
 }
-
-@synthesize available = _available;
 
 - (void) setAvailable:(BOOL) available {
 	_available = available;

@@ -8,10 +8,6 @@ enum {
 	CQTableViewCellAccessoryPlay = (UITableViewCellAccessoryCheckmark + 10)
 };
 
-@interface CQPreferencesListViewController (Private)
-- (void) _previewAudioAlertAtIndex:(NSUInteger) index;
-@end
-
 @implementation CQPreferencesListViewController
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))
@@ -98,8 +94,6 @@ enum {
 
 #pragma mark -
 
-@synthesize allowEditing = _allowEditing;
-
 - (void) setAllowEditing:(BOOL) allowEditing {
 	_allowEditing = allowEditing;
 
@@ -112,35 +106,15 @@ enum {
 	}
 }
 
-@synthesize selectedItemIndex = _selectedItemIndex;
-
 - (void) setSelectedItemIndex:(NSInteger) index {
 	_selectedItemIndex = (_allowEditing ? NSNotFound : index);
 }
-
-@synthesize addItemLabelText = _addItemLabelText;
-
-@synthesize noItemsLabelText = _noItemsLabelText;
-
-@synthesize editViewTitle = _editViewTitle;
-
-@synthesize editPlaceholder = _editPlaceholder;
-
-@synthesize target = _target;
-
-@synthesize action = _action;
-
-@synthesize preferencesListBlock = _preferencesListBlock;
-
-@synthesize itemImage = _itemImage;
 
 - (void) setItemImage:(UIImage *) image {
 	_itemImage = image;
 
 	[self.tableView reloadData];
 }
-
-@synthesize items = _items;
 
 - (void) setItems:(NSArray *) items {
 	_pendingChanges = NO;
@@ -149,10 +123,6 @@ enum {
 
 	[self.tableView reloadData];
 }
-
-@synthesize customEditingViewController = _customEditingViewController;
-
-@synthesize listType = _listType;
 
 #pragma mark -
 

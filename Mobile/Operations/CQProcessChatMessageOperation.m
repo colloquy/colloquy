@@ -25,8 +25,6 @@ static BOOL timestampEveryMessage;
 static NSString *timestampFormat;
 
 @implementation CQProcessChatMessageOperation
-@synthesize ignoreController = _ignoreController;
-
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
@@ -85,16 +83,6 @@ static NSString *timestampFormat;
 
 	return self;
 }
-
-#pragma mark -
-
-@synthesize processedMessageInfo = _processedMessage;
-@synthesize highlightNickname = _highlightNickname;
-@synthesize encoding = _encoding;
-@synthesize fallbackEncoding = _fallbackEncoding;
-@synthesize target = _target;
-@synthesize action = _action;
-@synthesize userInfo = _userInfo;
 
 #pragma mark -
 

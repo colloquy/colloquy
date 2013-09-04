@@ -10,13 +10,6 @@
 static NSOperationQueue *topicProcessingQueue;
 static BOOL showFullRoomNames;
 
-@interface CQChatRoomListViewController (CQChatRoomListViewControllerPrivate)
-- (void) _processTopicData:(NSData *) topicData room:(NSString *) room;
-- (void) _sortRooms;
-- (void) _updateTitle;
-- (void) _updateVisibleTopics;
-@end
-
 @implementation CQChatRoomListViewController
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
@@ -77,12 +70,6 @@ static BOOL showFullRoomNames;
 
 #pragma mark -
 
-@synthesize target = _target;
-
-@synthesize action = _action;
-
-@synthesize connection = _connection;
-
 - (void) setConnection:(MVChatConnection *) connection {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MVChatConnectionChatRoomListUpdatedNotification object:_connection];
 
@@ -110,8 +97,6 @@ static BOOL showFullRoomNames;
 
 	[self _updateTitle];
 }
-
-@synthesize selectedRoom = _selectedRoom;
 
 - (void) setSelectedRoom:(NSString *) room {
 	_selectedRoom = [[_connection properNameForChatRoomNamed:room] copy];

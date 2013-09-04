@@ -3,8 +3,6 @@
 static CQPreferencesTextCell *currentEditingCell;
 
 @implementation CQPreferencesTextCell
-@synthesize textFieldBlock = _textFieldBlock;
-
 + (CQPreferencesTextCell *) currentEditingCell {
 	return currentEditingCell;
 }
@@ -46,8 +44,6 @@ static CQPreferencesTextCell *currentEditingCell;
 }
 
 #pragma mark -
-
-@synthesize textField = _textField;
 
 - (void) setSelected:(BOOL) selected animated:(BOOL) animated {
 	[super setSelected:selected animated:animated];
@@ -125,8 +121,6 @@ static CQPreferencesTextCell *currentEditingCell;
 	_textField.frame = frame;
 }
 
-@synthesize enabled = _enabled;
-
 - (void) setEnabled:(BOOL) enabled {
 	_textField.enabled = enabled;
 
@@ -140,8 +134,6 @@ static CQPreferencesTextCell *currentEditingCell;
 		else _textField.textColor = [UIColor colorWithRed:(53. / 255.) green:(91. / 255.) blue:(238. / 255.) alpha:1.];
 	}
 }
-
-@synthesize textEditAction = _textEditAction;
 
 - (BOOL) textFieldShouldBeginEditing:(UITextField *) textField {
 	return _enabled;

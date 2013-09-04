@@ -9,15 +9,6 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 #pragma mark -
 
-@interface CQChatTranscriptView (Internal)
-- (void) _addComponentsToTranscript:(NSArray *) components fromPreviousSession:(BOOL) previous animated:(BOOL) animated;
-- (NSString *) _contentHTML;
-- (void) _commonInitialization;
-- (UIScrollView *) scrollView;
-@end
-
-#pragma mark -
-
 @implementation CQChatTranscriptView
 - (id) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
@@ -48,15 +39,9 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 #pragma mark -
 
-@synthesize transcriptDelegate;
-
 - (void) setDelegate:(id <UIWebViewDelegate>) delegate {
 	NSAssert(NO, @"Should not be called. Use transcriptDelegate instead.");
 }
-
-@synthesize allowsStyleChanges = _allowsStyleChanges;
-
-@synthesize allowSingleSwipeGesture = _allowSingleSwipeGesture;
 
 - (void) setAllowSingleSwipeGesture:(BOOL) allowSingleSwipeGesture {
 	if (allowSingleSwipeGesture == _allowSingleSwipeGesture)
@@ -67,8 +52,6 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	for (UISwipeGestureRecognizer *swipeGestureRecognizer in _singleSwipeGestureRecognizers)
 		swipeGestureRecognizer.enabled = _allowSingleSwipeGesture;
 }
-
-@synthesize styleIdentifier = _styleIdentifier;
 
 - (void) setStyleIdentifier:(NSString *) styleIdentifier {
 	NSParameterAssert(styleIdentifier);
@@ -94,8 +77,6 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[self resetSoon];
 }
 
-@synthesize fontFamily = _fontFamily;
-
 - (void) setFontFamily:(NSString *) fontFamily {
 	// Since _fontFamily or fontFamily can be nil we also need to check pointer equality.
 	if (!_allowsStyleChanges || _fontFamily == fontFamily || [_fontFamily isEqualToString:fontFamily])
@@ -106,8 +87,6 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	[self _reloadVariantStyle];
 }
 
-@synthesize fontSize = _fontSize;
-
 - (void) setFontSize:(NSUInteger) fontSize {
 	if (_fontSize == fontSize)
 		return;
@@ -116,8 +95,6 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 	[self _reloadVariantStyle];
 }
-
-@synthesize timestampOnLeft = _timestampOnLeft;
 
 - (void) setTimestampOnLeft:(BOOL) timestampOnLeft {
 	if (_timestampOnLeft == timestampOnLeft)

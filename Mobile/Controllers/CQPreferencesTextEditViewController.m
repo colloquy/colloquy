@@ -6,15 +6,8 @@
 #import "MVIRCChatConnection.h"
 #import "MVChatUser.h"
 
-@interface CQPreferencesTextEditViewController (Private)
-- (void) updateFooterView;
-@end
-
 @implementation CQPreferencesTextEditViewController
-@synthesize delegate = _delegate;
 @synthesize listItem = _listItemText;
-@synthesize listItemPlaceholder = _listItemPlaceholder;
-@synthesize charactersRemainingBeforeDisplay = _charactersRemainingBeforeDisplay;
 
 - (id) init {
 	if (!(self = [super initWithStyle:UITableViewStyleGrouped]))

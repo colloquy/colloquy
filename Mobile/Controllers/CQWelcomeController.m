@@ -5,8 +5,6 @@
 #import "CQWelcomeViewController.h"
 
 @implementation CQWelcomeController
-@synthesize shouldShowOnlyHelpTopics = _shouldShowOnlyHelpTopics;
-
 - (void) viewDidLoad {
 	if (_shouldShowOnlyHelpTopics && !_rootViewController)
 		_rootViewController = [[CQHelpTopicsViewController alloc] init];

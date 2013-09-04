@@ -31,13 +31,6 @@ NSString *CQConnectionsControllerMovedConnectionNotification = @"CQConnectionsCo
 NSString *CQConnectionsControllerAddedBouncerSettingsNotification = @"CQConnectionsControllerAddedBouncerSettingsNotification";
 NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnectionsControllerRemovedBouncerSettingsNotification";
 
-@interface CQConnectionsController (CQConnectionsControllerPrivate)
-- (void) _loadConnectionList;
-- (void) _pruneKnownBadServers;
-@end
-
-#pragma mark -
-
 #define CannotConnectToBouncerConnectionTag 1
 #define CannotConnectToBouncerTag 2
 #define HelpAlertTag 3
@@ -115,8 +108,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 }
 
 #pragma mark -
-
-@synthesize shouldLogRawMessagesToConsole = _shouldLogRawMessagesToConsole;
 
 - (void) setShouldLogRawMessagesToConsole:(BOOL) shouldLogRawMessagesToConsole {
 	_shouldLogRawMessagesToConsole = shouldLogRawMessagesToConsole;
@@ -1297,13 +1288,6 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 			[connection savePasswordsToKeychain];
 	}
 }
-
-#pragma mark -
-
-@synthesize connectionsNavigationController = _connectionsNavigationController;
-@synthesize connections = _connections;
-@synthesize directConnections = _directConnections;
-@synthesize bouncers = _bouncers;
 
 #pragma mark -
 

@@ -165,12 +165,6 @@ static BOOL hardwareKeyboard;
 	_inputView.autocapitalizationType = autocapitalizationType;
 }
 
-@synthesize autocomplete = _autocomplete;
-
-@synthesize spaceCyclesCompletions = _spaceCyclesCompletions;
-
-@synthesize autocorrect = _autocorrect;
-
 #if !ENABLE(SECRETS)
 - (void) setAutocorrect:(BOOL) autocorrect {
 	// Do nothing, autocorrection can't be enabled if we don't use secrets, since it would
@@ -364,8 +358,6 @@ retry:
 
 	[self setNeedsLayout];
 }
-
-@synthesize delegate;
 
 - (BOOL) textViewShouldBeginEditing:(UITextView *) textView {
 	if ([delegate respondsToSelector:@selector(chatInputBarShouldBeginEditing:)])

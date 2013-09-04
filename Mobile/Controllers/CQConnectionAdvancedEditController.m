@@ -58,10 +58,6 @@ static inline __attribute__((always_inline)) NSString *currentPreferredNickname(
 
 #pragma mark -
 
-@synthesize newConnection = _newConnection;
-
-@synthesize connection = _connection;
-
 - (void) setConnection:(MVChatConnection *) connection {
 	_connection = connection;
 

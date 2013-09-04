@@ -17,8 +17,6 @@
 
 #pragma mark -
 
-@synthesize connection = _connection;
-
 - (void) setConnection:(MVChatConnection *) connection {
 	_connection = connection;
 

@@ -20,8 +20,6 @@
 static BOOL showsChatIcons;
 
 @implementation CQChatListViewController
-@synthesize active = _active;
-
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
