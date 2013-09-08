@@ -291,6 +291,7 @@
 		92AFF84A16B0CE4700940E5D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92AFF84916B0CE4700940E5D /* AVFoundation.framework */; };
 		92AFF85216B0D25D00940E5D /* NSRegularExpressionAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AFF85116B0D25D00940E5D /* NSRegularExpressionAdditions.m */; };
 		92B257CA174023B300F303B5 /* CQSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B257C9174023B300F303B5 /* CQSettingsController.m */; };
+		92BB78BD17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */; };
 		92D30F2C116D2B020060EE33 /* UIViewControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */; };
 		92DE5D7917420B05004437C9 /* info-dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 92DE5D7817420B05004437C9 /* info-dark.png */; };
 		92DE5D7B17420B0B004437C9 /* info-dark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92DE5D7A17420B0B004437C9 /* info-dark@2x.png */; };
@@ -706,6 +707,8 @@
 		92B257C8174023B300F303B5 /* CQSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQSettingsController.h; sourceTree = "<group>"; };
 		92B257C9174023B300F303B5 /* CQSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQSettingsController.m; sourceTree = "<group>"; };
 		92B257D017403B2900F303B5 /* Colloquy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Colloquy.entitlements; path = ../../Colloquy.entitlements; sourceTree = "<group>"; };
+		92BB78BB17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQIntroductoryGIFFrameOperation.h; sourceTree = "<group>"; };
+		92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQIntroductoryGIFFrameOperation.m; sourceTree = "<group>"; };
 		92D30F2A116D2B020060EE33 /* UIViewControllerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIViewControllerAdditions.h; path = Mobile/Additions/UIViewControllerAdditions.h; sourceTree = "<group>"; };
 		92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIViewControllerAdditions.m; path = Mobile/Additions/UIViewControllerAdditions.m; sourceTree = "<group>"; };
 		92DE5D7817420B05004437C9 /* info-dark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info-dark.png"; sourceTree = "<group>"; };
@@ -787,6 +790,8 @@
 		1C0DBCA41005A538003BEEF3 /* Operations */ = {
 			isa = PBXGroup;
 			children = (
+				92BB78BB17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.h */,
+				92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */,
 				1C0DBCA81005A57A003BEEF3 /* CQProcessChatMessageOperation.m */,
 				1C0DBCA71005A57A003BEEF3 /* CQProcessChatMessageOperation.h */,
 				92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */,
@@ -1739,6 +1744,7 @@
 				1CFCB9BA1114EED200EA5F10 /* UINavigationControllerAdditions.m in Sources */,
 				1CFCBA2A1114F9FE00EA5F10 /* CQUserInfoRoomListViewController.m in Sources */,
 				1CFCBA2B1114F9FE00EA5F10 /* CQUserInfoViewController.m in Sources */,
+				92BB78BD17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m in Sources */,
 				1CFCBA301114FAFA00EA5F10 /* CQUserInfoController.m in Sources */,
 				1CFCBA351114FB2500EA5F10 /* CQWelcomeController.m in Sources */,
 				1CFCC0C511172B2A00EA5F10 /* CQChatPresentationController.m in Sources */,
@@ -1816,20 +1822,38 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				GCC_WARN_UNINITIALIZED_AUTOS = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				PROVISIONING_PROFILE = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LLVM_VECTORIZE_LOOPS = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wextra",
+					"-Wchar-subscripts",
+					"-Wformat-security",
+					"-Wmissing-format-attribute",
+					"-Wpointer-arith",
+					"-Wwrite-strings",
+					"-Wno-format-y2k",
+					"-Wno-unused-parameter",
+					"-Wbad-function-cast",
+					"-Wmissing-declarations",
+					"-Wnested-externs",
+				);
 			};
 			name = Distribution;
 		};
 		1C7F63A00FB3C50600E5FDD3 /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = NO;
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
@@ -1858,7 +1882,6 @@
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = NO;
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
@@ -1886,7 +1909,6 @@
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
 				DEPLOYMENT_POSTPROCESSING = NO;
 				GCC_PREFIX_HEADER = Mobile/Colloquy.pch;
@@ -1916,18 +1938,37 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = "";
-				GCC_WARN_UNINITIALIZED_AUTOS = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LLVM_VECTORIZE_LOOPS = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wextra",
+					"-Wchar-subscripts",
+					"-Wformat-security",
+					"-Wmissing-format-attribute",
+					"-Wpointer-arith",
+					"-Wwrite-strings",
+					"-Wno-format-y2k",
+					"-Wno-unused-parameter",
+					"-Wbad-function-cast",
+					"-Wmissing-declarations",
+					"-Wnested-externs",
+				);
 			};
 			name = Debug;
 		};
@@ -1935,15 +1976,34 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1C15B12913107243006FA16B /* Base.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
+				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				GCC_WARN_UNINITIALIZED_AUTOS = NO;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				PROVISIONING_PROFILE = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LLVM_VECTORIZE_LOOPS = YES;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wextra",
+					"-Wchar-subscripts",
+					"-Wformat-security",
+					"-Wmissing-format-attribute",
+					"-Wpointer-arith",
+					"-Wwrite-strings",
+					"-Wno-format-y2k",
+					"-Wno-unused-parameter",
+					"-Wbad-function-cast",
+					"-Wmissing-declarations",
+					"-Wnested-externs",
+				);
 			};
 			name = Release;
 		};
