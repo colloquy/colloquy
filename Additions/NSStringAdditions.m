@@ -438,7 +438,7 @@ static NSUInteger levenshteinDistanceBetweenStrings(char *string, char *otherStr
 	NSUInteger r = 0; // remainder
 
 	NSMutableString *uniqueId = [[NSMutableString alloc] initWithCapacity:10];
-	[uniqueId appendFormat:@"%c", (char)('A' + ( random() % 26 ))]; // always have a random letter first (more ambiguity)
+	[uniqueId appendFormat:@"%c", (char)('A' + ( arc4random() % 26 ))]; // always have a random letter first (more ambiguity)
 
 	#define baseConvert	do { \
 		r = q % m; \
