@@ -7,6 +7,8 @@
 #define CompletionBubbleInset 6.5
 
 @implementation CQTextCompletionView
+@synthesize delegate = _delegate;
+
 - (id) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
 		return nil;

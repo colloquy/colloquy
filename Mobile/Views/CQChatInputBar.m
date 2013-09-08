@@ -21,6 +21,8 @@ static BOOL hardwareKeyboard;
 #pragma mark -
 
 @implementation CQChatInputBar
+@synthesize delegate = _delegate;
+
 - (void) _commonInitialization {
 	CGRect frame = self.bounds;
 

@@ -10,6 +10,8 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 #pragma mark -
 
 @implementation CQChatTranscriptView
+@synthesize transcriptDelegate = _transcriptDelegate;
+
 - (id) initWithFrame:(CGRect) frame {
 	if (!(self = [super initWithFrame:frame]))
 		return nil;
