@@ -1,9 +1,9 @@
+#import "CQBookmarkingController.h"
+
 NSString *const CQBookmarkingDidSaveLinkNotification = @"CQBookmarkingDidSaveLinkNotification";
 NSString *const CQBookmarkingDidNotSaveLinkNotification = @"CQBookmarkingDidNotSaveLinkNotification";
 
-NSString *const CQBookmarkingErrorDomain = @"CQBookmarkingErrorDomain";;
-
-#import "CQBookmarkingController.h"
+NSString *const CQBookmarkingErrorDomain = @"CQBookmarkingErrorDomain";
 
 #import "CQDeliciousController.h"
 #import "CQInstapaperController.h"

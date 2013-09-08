@@ -233,9 +233,12 @@ enum {
 			cell.textLabel.text = title;
 			cell.switchControl.on = (_room.modes & mode);
 			cell.switchControl.enabled = canEditModes;
+
+			__weak __typeof__((_room)) weakRoom = _room;
 			cell.switchControlBlock = ^(UISwitch *switchControl) {
-				if (switchControl.on) [_room setMode:mode];
-				else [_room removeMode:mode];
+				__strong __typeof__((weakRoom)) strongRoom = weakRoom;
+				if (switchControl.on) [strongRoom setMode:mode];
+				else [strongRoom removeMode:mode];
 			};
 			return cell;
 		}

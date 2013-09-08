@@ -526,7 +526,7 @@ static CQSoundController *fileTransferSound;
 	[self showChatController:controller animated:[UIView areAnimationsEnabled]];
 }
 
-- (void) showChatController:(id <CQChatViewController>) controller animated:(BOOL) animated {
+- (void) showChatController:(UIViewController <CQChatViewController> *) controller animated:(BOOL) animated {
 	if (![UIDevice currentDevice].isPadModel) {
 		[[CQColloquyApplication sharedApplication] showColloquies:nil hidingTopViewController:NO];
 		if ([controller respondsToSelector:@selector(setHidesBottomBarWhenPushed:)])

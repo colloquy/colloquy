@@ -286,9 +286,12 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 	portListViewController.allowEditing = NO;
 	portListViewController.items = [MVChatConnection defaultServerPortsForType:_connection.type];
 	portListViewController.selectedItemIndex = [portListViewController.items indexOfObject:@(_connection.serverPort)];
+
+	__weak __typeof__((_connection)) weakConnection = _connection;
 	portListViewController.preferencesListBlock = ^(CQPreferencesListViewController *listViewController) {
 		if (listViewController.selectedItemIndex != NSNotFound) {
-			_connection.serverPort = [(listViewController.items)[listViewController.selectedItemIndex] shortValue];
+			__strong __typeof__((weakConnection)) strongConnection = weakConnection;
+			strongConnection.serverPort = [(listViewController.items)[listViewController.selectedItemIndex] shortValue];
 
 			[tableView beginUpdates];
 			[tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];

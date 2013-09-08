@@ -93,24 +93,27 @@ static NSString *const CQPSListTypeFont = @"Font";
 		self.title = [plist capitalizedStringWithLocale:[NSLocale currentLocale]];
 
 	__block NSMutableDictionary *workingSection = nil;
+	__weak __typeof__((_preferences)) weakPreferences = _preferences;
 	[preferences[CQPSPreferenceSpecifiers] enumerateObjectsUsingBlock:^(id object, NSUInteger index, BOOL *stop) {
+		__strong  __typeof__((weakPreferences)) strongPreferences = weakPreferences;
+
 		if ([object[CQPSType] isEqualToString:CQPSGroupSpecifier]) {
 			workingSection = [object mutableCopy];
 
 			workingSection[@"rows"] = [NSMutableArray array];
 
-			[_preferences addObject:workingSection];
+			[strongPreferences addObject:workingSection];
 		} else {
 			NSMutableArray *rows = nil;
-			if (_preferences.count)
-				rows = _preferences[(_preferences.count - 1)][@"rows"];
+			if (strongPreferences.count)
+				rows = strongPreferences[(strongPreferences.count - 1)][@"rows"];
 
 			if (!rows) {
 				rows = [[NSMutableArray alloc] init];
 				workingSection = [[NSMutableDictionary alloc] init];
 				workingSection[@"rows"] = rows;
 
-				[_preferences addObject:workingSection];
+				[strongPreferences addObject:workingSection];
 			}
 
 			NSArray *supportedInterfaceIdioms = object[CQPSSupportedUserInterfaceIdioms];
