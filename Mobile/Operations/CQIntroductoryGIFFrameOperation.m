@@ -62,6 +62,7 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 }
 
 @synthesize introductoryFrameImage = _introductoryFrameImage;
+@synthesize introductoryFrameImageData = _introductoryFrameImageData;
 
 - (id) initWithURL:(NSURL *) url {
 	NSParameterAssert(url);
@@ -273,24 +274,34 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 
 #pragma mark -
 
+- (NSData *) introductoryFrameImageData {
+	if (_cancelled || !self._canParseFirstFrame || self._downloadingAnimatedGIF != CQParseResultAnimated)
+		return nil;
+
+	if (_introductoryFrameImageData)
+		return _introductoryFrameImageData;
+
+	NSMutableData *data = [[_data subdataWithRange:NSMakeRange(0, _introductoryFrameImageDescriptorEndBlock)] mutableCopy];
+	[data appendBytes:GIF89AFileTerminatorNumber length:GIF89AFileTerminatorLength]; // cut off any remaining data
+
+	_introductoryFrameImageData = [data copy];
+
+	return _introductoryFrameImageData;
+}
+
 #if TARGET_OS_IPHONE
 - (UIImage *) introductoryFrameImage {
 #else
 - (NSImage *) introductoryFrameImage {
 #endif
-	if (_cancelled || !self._canParseFirstFrame || self._downloadingAnimatedGIF != CQParseResultAnimated)
-		return nil;
-
 	if (_introductoryFrameImage)
 		return _introductoryFrameImage;
 
-	NSMutableData *data = [[_data subdataWithRange:NSMakeRange(0, _introductoryFrameImageDescriptorEndBlock)] mutableCopy];
-	[data appendBytes:GIF89AFileTerminatorNumber length:GIF89AFileTerminatorLength]; // cut off any remaining data
 
 #if TARGET_OS_IPHONE
-	_introductoryFrameImage = [[UIImage alloc] initWithData:data];
+	_introductoryFrameImage = [[UIImage alloc] initWithData:self.introductoryFrameImageData];
 #else
-	_introductoryFrameImage = [[NSImage alloc] initWithData:data];
+	_introductoryFrameImage = [[NSImage alloc] initWithData:self.introductoryFrameImageData];
 #endif
 
 	return _introductoryFrameImage;

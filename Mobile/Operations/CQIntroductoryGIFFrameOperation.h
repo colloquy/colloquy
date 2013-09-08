@@ -5,6 +5,7 @@
 
 @property (nonatomic, readonly) NSURL *url;
 
+@property (nonatomic, readonly) NSData *introductoryFrameImageData;
 #if TARGET_OS_IPHONE
 @property (nonatomic, readonly) UIImage *introductoryFrameImage;
 #else
@@ -16,4 +17,5 @@
 //   to wait for KVO notifications to come in.
 @property (weak) id target;
 @property SEL action; // Signature: - (void) operationCompleted:(CQIntroductoryGIFFrameOperation *) operation;
+@property (strong) id userInfo;
 @end

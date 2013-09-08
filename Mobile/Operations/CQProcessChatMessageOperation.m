@@ -15,6 +15,8 @@ typedef enum {
 	CQMentionLinkServiceAppDotNet
 } CQMentionLinkService;
 
+NSString *const CQInlineGIFImageKey = @"CQInlineGIFImageKey";
+
 static BOOL graphicalEmoticons;
 static BOOL stripMessageFormatting;
 static NSMutableDictionary *highlightRegexes;
@@ -106,6 +108,7 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 	static NSString *urlRegex = @"(\\B(?<!&amp;)#(?![\\da-fA-F]{6}\\b|\\d{1,3}\\b)[\\w-_.+&;#]{2,}\\b)|(\\b(?:[a-zA-Z][a-zA-Z0-9+.-]{2,6}:(?://){0,1}|www\\.)[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+[\\p{L}\\p{N}\\p{M}\\p{S}\\p{C}]\\)?)|([\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+@(?:[\\p{L}\\p{N}\\p{P}\\p{M}\\p{S}\\p{C}]+\\.)+[\\w]{2,})"; 
 
 	NSRange matchedRange = [string rangeOfRegex:urlRegex options:NSRegularExpressionCaseInsensitive inRange:*textRange capture:0 error:NULL];
+	NSMutableDictionary *foundGIFs = [NSMutableDictionary dictionary];
 	while (matchedRange.location != NSNotFound && (matchedRange.location + matchedRange.length) > 0) {
 		NSArray *components = [string cq_captureComponentsMatchedByRegex:urlRegex options:RKLCaseless range:matchedRange error:NULL];
 		NSCAssert(components.count == 4, @"component count needs to be 4");
@@ -130,14 +133,23 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 				fullURL = [NSURL URLWithString:[@"http://" stringByAppendingString:url]];
 
 			if ([[CQColloquyApplication sharedApplication] canOpenURL:fullURL]) {
-				if ([fullURL.host hasCaseInsensitiveSubstring:@"imgur"] && ![NSFileManager isValidImageFormat:fullURL.pathExtension]) {
+				if (![NSFileManager isValidImageFormat:fullURL.pathExtension]) {
+					NSString *temporaryURLString = nil;
+
 					// rebuild URL, since we can't assume .png at the end (due to params and stuff)
-				} // else if twitpic
-				// elseif yfrog
-				// elseif cloud.app (?)
+					if ([fullURL.host hasCaseInsensitiveSubstring:@"imgur"])
+						temporaryURLString = [NSString stringWithFormat:@"%@://%@%@.jpg", fullURL.scheme, fullURL.host, fullURL.path];
+					else if ([fullURL.host hasCaseInsensitiveSubstring:@"twitpic"])
+						temporaryURLString = [NSString stringWithFormat:@"%@://%@/show/full%@", fullURL.scheme, fullURL.host, fullURL.path];
+					fullURL = [NSURL URLWithString:temporaryURLString];
+				}
 
 				if (inlineImages && [NSFileManager isValidImageFormat:fullURL.pathExtension]) {
-					linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\"><img src=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></a>", [fullURL absoluteString], [fullURL absoluteString]];
+					if ([fullURL.pathExtension isCaseInsensitiveEqualToString:@"gif"]) {
+						NSNumber *key = @(fullURL.hash);
+						foundGIFs[key] = fullURL;
+						linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\"><img id=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></a>", @(fullURL.hash), [fullURL absoluteString]];
+					} else linkHTMLString = [NSString stringWithFormat:@"<a href=\"%@\"><img src=\"%@\" style=\"max-width: 100%%; max-height: 100%%\"></a>", [fullURL absoluteString], [fullURL absoluteString]];
 				} else {
 					url = [url stringByReplacingOccurrencesOfString:@"/" withString:@"/\u200b"];
 					url = [url stringByReplacingOccurrencesOfString:@"?" withString:@"?\u200b"];

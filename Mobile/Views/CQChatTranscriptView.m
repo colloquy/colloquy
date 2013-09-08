@@ -309,6 +309,11 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	}
 }
 
+- (void) insertImage:(NSString *) image forElementWithIdentifier:(NSString *) elementIdentifier {
+	NSString *command = [NSString stringWithFormat:@"var imageElement = document.getElementById('%@'); imageElement.src = '%@';", elementIdentifier, image];
+	[super stringByEvaluatingJavaScriptFromString:command];
+}
+
 - (void) scrollToBottomAnimated:(BOOL) animated {
 	[super stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"scrollToBottom(%@)", (animated ? @"true" : @"false")]];
 }

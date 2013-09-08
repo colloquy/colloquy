@@ -790,8 +790,8 @@
 		1C0DBCA41005A538003BEEF3 /* Operations */ = {
 			isa = PBXGroup;
 			children = (
-				92BB78BB17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.h */,
 				92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */,
+				92BB78BB17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.h */,
 				1C0DBCA81005A57A003BEEF3 /* CQProcessChatMessageOperation.m */,
 				1C0DBCA71005A57A003BEEF3 /* CQProcessChatMessageOperation.h */,
 				92823D541691390E000EC36E /* CQProcessConsoleMessageOperation.m */,

@@ -11,6 +11,7 @@
 #import "CQColloquyApplication.h"
 #import "CQConnectionsController.h"
 #import "CQIgnoreRulesController.h"
+#import "CQIntroductoryGIFFrameOperation.h"
 #import "CQPreferencesListViewController.h"
 #import "CQProcessChatMessageOperation.h"
 #import "CQSoundController.h"
@@ -1908,6 +1909,7 @@ static BOOL showingKeyboard;
 
 - (void) _messageProcessed:(CQProcessChatMessageOperation *) operation {
 	NSMutableDictionary *message = operation.processedMessageInfo;
+	if (!message) return;
 	BOOL highlighted = [message[@"highlighted"] boolValue];
 	BOOL notice = [message[@"notice"] boolValue];
 	BOOL action = [message[@"action"] boolValue];
@@ -2001,5 +2003,22 @@ static BOOL showingKeyboard;
 
 	if (!user.localUser)
 		[[NSNotificationCenter defaultCenter] postNotificationName:CQChatViewControllerRecentMessagesUpdatedNotification object:self];
+
+	[operation.processedMessageInfo[CQInlineGIFImageKey] enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
+		CQIntroductoryGIFFrameOperation *GIFOperation = [[CQIntroductoryGIFFrameOperation alloc] initWithURL:object];
+		GIFOperation.userInfo = @{ @"id": key };
+		GIFOperation.target = self;
+		GIFOperation.action = @selector(_GIFProcessed:);
+
+		[[CQDirectChatController chatMessageProcessingQueue] addOperation:GIFOperation];
+	}];
+}
+
+- (void) _GIFProcessed:(CQIntroductoryGIFFrameOperation *) operation {
+	NSString *imageString = operation.introductoryFrameImageData.base64Encoding;
+	if (!imageString.length)
+		imageString = operation.url.absoluteString;
+	[transcriptView insertImage:imageString forElementWithIdentifier:operation.userInfo[@"id"]];
+
 }
 @end

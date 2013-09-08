@@ -1,5 +1,7 @@
 @class CQIgnoreRulesController;
 
+extern NSString *const CQInlineGIFImageKey;
+
 @interface CQProcessChatMessageOperation : NSOperation {
 	NSDictionary *_message;
 	NSMutableDictionary *_processedMessage;

@@ -44,6 +44,9 @@ typedef enum {
 - (void) noteNicknameChangedFrom:(NSString *) oldNickname to:(NSString *) newNickname;
 - (void) noteTopicChangeTo:(NSString *) newTopic by:(NSString *) username;
 
+// image must be either a URL, or, a base64-encoded image
+- (void) insertImage:(NSString *) image forElementWithIdentifier:(NSString *) elementIdentifier;
+
 - (void) scrollToBottomAnimated:(BOOL) animated;
 - (void) flashScrollIndicators;
 

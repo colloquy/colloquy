@@ -400,8 +400,10 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 }
 
 - (void) _displayCurrentTopicOnlyIfSet:(BOOL) onlyIfSet {
-	NSDictionary *context = @{@"onlyIfSet": @(onlyIfSet), @"author": self.room.topicAuthor};
-	[self _processMessageData:self.room.topic target:self action:@selector(_displayProcessedTopic:) userInfo:context];
+	if (self.room.topicAuthor) {
+		NSDictionary *context = @{@"onlyIfSet": @(onlyIfSet), @"author": self.room.topicAuthor};
+		[self _processMessageData:self.room.topic target:self action:@selector(_displayProcessedTopic:) userInfo:context];
+	}
 }
 
 - (void) _displayProcessedTopic:(CQProcessChatMessageOperation *) operation {
