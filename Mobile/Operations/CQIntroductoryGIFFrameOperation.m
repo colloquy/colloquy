@@ -297,6 +297,9 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 	if (_introductoryFrameImage)
 		return _introductoryFrameImage;
 
+	NSData *data = self.introductoryFrameImageData;
+	if (!data.length)
+		return nil;
 
 #if TARGET_OS_IPHONE
 	_introductoryFrameImage = [[UIImage alloc] initWithData:self.introductoryFrameImageData];
