@@ -114,7 +114,7 @@
 
 #pragma mark -
 
-- (void) setTopChatViewController:(UIViewController <CQChatViewController> *) chatViewController {
+- (void) setTopChatViewController:(id <CQChatViewController>) chatViewController {
 	if (chatViewController == _topChatViewController)
 		return;
 

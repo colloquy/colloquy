@@ -11,8 +11,6 @@
 #import "JVDirectChatPanel.h"
 #endif
 
-#define then {
-
 @implementation KAIgnoreRule
 @synthesize mask = _ignoreMask;
 @synthesize message = _ignoredMessage;

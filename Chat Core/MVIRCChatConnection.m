@@ -2704,11 +2704,11 @@ end:
 			if( !systemVersion ) systemVersion = [[NSDictionary alloc] initWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"];
 			NSDictionary *clientVersion = [[NSBundle mainBundle] infoDictionary];
 
-#if __ppc__
+#if defined(__ppc__) && __ppc__
 			NSString *processor = @"PowerPC";
-#elif __i386__ || __x86_64__
+#elif (defined(__i386__) && __i386__) || (defined(__x86_64__) && __x86_64__)
 			NSString *processor = @"Intel";
-#elif __arm__
+#elif defined(__arm__) && __arm__
 			NSString *processor = @"ARM";
 #else
 			NSString *processor = @"Unknown Architecture";

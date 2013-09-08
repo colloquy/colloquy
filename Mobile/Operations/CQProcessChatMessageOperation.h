@@ -21,8 +21,8 @@
 @property NSStringEncoding fallbackEncoding;
 
 @property (readonly) NSMutableDictionary *processedMessageInfo;
-@property (readonly) NSString *processedMessageAsHTML;
-@property (readonly) NSString *processedMessageAsPlainText;
+@property (nonatomic, readonly) NSString *processedMessageAsHTML;
+@property (nonatomic, readonly) NSString *processedMessageAsPlainText;
 
 @property (weak) id target;
 @property SEL action;

@@ -6,6 +6,8 @@
 #import "NSNotificationAdditions.h"
 #import "NSStringAdditions.h"
 
+#import "MVChatConnection.h"
+
 NSString *MVChatUserWatchRuleMatchedNotification = @"MVChatUserWatchRuleMatchedNotification";
 NSString *MVChatUserWatchRuleRemovedMatchedUserNotification = @"MVChatUserWatchRuleRemovedMatchedUserNotification";
 

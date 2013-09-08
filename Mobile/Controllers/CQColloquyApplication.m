@@ -14,8 +14,6 @@
 
 #import "CQPocketController.h"
 
-#import <QuartzCore/QuartzCore.h>
-
 typedef enum {
 	CQSidebarOrientationNone,
 	CQSidebarOrientationPortrait,
@@ -502,7 +500,6 @@ static NSMutableArray *highlightWords;
 
 	UITabBar *tabBar = self.tabBarController.tabBar;
 	if (tabBar && !self.modalViewController) {
-		[CATransaction flush];
 		[sheet showFromTabBar:tabBar];
 		return;
 	}
