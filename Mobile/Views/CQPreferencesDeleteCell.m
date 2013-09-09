@@ -17,18 +17,23 @@
 
 	_deleteButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
 	_deleteButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-	_deleteButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.];
-	_deleteButton.titleLabel.shadowOffset = CGSizeMake(0., -1.);
+	if ([UIDevice currentDevice].isSystemSeven) {
+		_deleteButton.backgroundColor = [UIColor whiteColor];
+		[_deleteButton setTitleColor:[UIColor colorWithRed:(223. / 255.) green:(59. / 255.) blue:(42. / 255.) alpha:1.] forState:UIControlStateNormal];
+	} else {
+		_deleteButton.titleLabel.font = [UIFont boldSystemFontOfSize:20.];
+		_deleteButton.titleLabel.shadowOffset = CGSizeMake(0., -1.);
 
-	[_deleteButton setTitleShadowColor:[UIColor colorWithWhite:0. alpha:(1. / 3.)] forState:UIControlStateNormal];
+		[_deleteButton setTitleShadowColor:[UIColor colorWithWhite:0. alpha:(1. / 3.)] forState:UIControlStateNormal];
+
+		UIImage *_deleteButtonImage = [[UIImage imageNamed:@"deleteButtonNormal.png"] stretchableImageWithLeftCapWidth:6. topCapHeight:0.];
+		[_deleteButton setBackgroundImage:_deleteButtonImage forState:UIControlStateNormal];
+
+		_deleteButtonImage = [[UIImage imageNamed:@"deleteButtonPressed.png"] stretchableImageWithLeftCapWidth:6. topCapHeight:0.];
+		[_deleteButton setBackgroundImage:_deleteButtonImage forState:UIControlStateHighlighted];
+	}
 
 	[_deleteButton setTitle:NSLocalizedString(@"Delete", @"Delete button title") forState:UIControlStateNormal];
-
-	UIImage *_deleteButtonImage = [[UIImage imageNamed:@"deleteButtonNormal.png"] stretchableImageWithLeftCapWidth:6. topCapHeight:0.];
-	[_deleteButton setBackgroundImage:_deleteButtonImage forState:UIControlStateNormal];
-
-	_deleteButtonImage = [[UIImage imageNamed:@"deleteButtonPressed.png"] stretchableImageWithLeftCapWidth:6. topCapHeight:0.];
-	[_deleteButton setBackgroundImage:_deleteButtonImage forState:UIControlStateHighlighted];
 
 	return self;
 }

@@ -241,7 +241,8 @@ enum {
 		cell.imageView.image = nil;
 	} else {
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		cell.textLabel.textColor = [UIColor lightGrayColor];
+		if (![UIDevice currentDevice].isSystemSeven)
+			cell.textLabel.textColor = [UIColor lightGrayColor];
 		cell.textLabel.text = _noItemsLabelText;
 		cell.imageView.image = nil;
 	}
