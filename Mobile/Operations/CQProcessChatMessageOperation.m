@@ -143,7 +143,8 @@ static void commonChatReplacment(NSMutableString *string, NSRangePointer textRan
 						temporaryURLString = [NSString stringWithFormat:@"%@://%@%@.jpg", fullURL.scheme, fullURL.host, fullURL.path];
 					else if ([fullURL.host hasCaseInsensitiveSubstring:@"twitpic"])
 						temporaryURLString = [NSString stringWithFormat:@"%@://%@/show/full%@", fullURL.scheme, fullURL.host, fullURL.path];
-					fullURL = [NSURL URLWithString:temporaryURLString];
+					if (temporaryURLString.length)
+						fullURL = [NSURL URLWithString:temporaryURLString];
 				}
 
 				if (inlineImages && [NSFileManager isValidImageFormat:fullURL.pathExtension]) {
