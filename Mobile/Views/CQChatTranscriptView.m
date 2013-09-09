@@ -42,7 +42,7 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 #pragma mark -
 
 - (void) setDelegate:(id <UIWebViewDelegate>) delegate {
-	NSAssert(NO, @"Should not be called. Use transcriptDelegate instead.");
+	NSAssert(NO, @"Should not be called. Use _transcriptDelegate instead.");
 }
 
 - (void) setAllowSingleSwipeGesture:(BOOL) allowSingleSwipeGesture {
@@ -181,13 +181,13 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	if (!tappedURL.length)
 		return;
 
-	if (transcriptDelegate && [transcriptDelegate respondsToSelector:@selector(transcriptView:handleLongPressURL:atLocation:)])
-		[transcriptDelegate transcriptView:self handleLongPressURL:[NSURL URLWithString:tappedURL] atLocation:_lastTouchLocation];
+	if (_transcriptDelegate && [_transcriptDelegate respondsToSelector:@selector(transcriptView:handleLongPressURL:atLocation:)])
+		[_transcriptDelegate transcriptView:self handleLongPressURL:[NSURL URLWithString:tappedURL] atLocation:_lastTouchLocation];
 }
 
 - (void) swipeGestureRecognized:(UISwipeGestureRecognizer *) swipeGestureRecognizer {
-	if (transcriptDelegate && [transcriptDelegate respondsToSelector:@selector(transcriptView:receivedSwipeWithTouchCount:leftward:)])
-		[transcriptDelegate transcriptView:self receivedSwipeWithTouchCount:swipeGestureRecognizer.numberOfTouches leftward:(swipeGestureRecognizer.direction & UISwipeGestureRecognizerDirectionLeft)];
+	if (_transcriptDelegate && [_transcriptDelegate respondsToSelector:@selector(transcriptView:receivedSwipeWithTouchCount:leftward:)])
+		[_transcriptDelegate transcriptView:self receivedSwipeWithTouchCount:swipeGestureRecognizer.numberOfTouches leftward:(swipeGestureRecognizer.direction & UISwipeGestureRecognizerDirectionLeft)];
 }
 
 #pragma mark -
@@ -208,20 +208,20 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 		return NO;
 
 	if ([request.URL.scheme isCaseInsensitiveEqualToString:@"colloquy"]) {
-		if ([transcriptDelegate respondsToSelector:@selector(transcriptView:handleNicknameTap:atLocation:)]) {
+		if ([_transcriptDelegate respondsToSelector:@selector(transcriptView:handleNicknameTap:atLocation:)]) {
 			NSRange endOfSchemeRange = [request.URL.absoluteString rangeOfString:@"://"];
 			if (endOfSchemeRange.location == NSNotFound)
 				return NO;
 
 			NSString *nickname = [[request.URL.absoluteString substringFromIndex:(endOfSchemeRange.location + endOfSchemeRange.length)] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-			[transcriptDelegate transcriptView:self handleNicknameTap:nickname atLocation:_lastTouchLocation];
+			[_transcriptDelegate transcriptView:self handleNicknameTap:nickname atLocation:_lastTouchLocation];
 		}
 
 		return NO;
 	}
 
-	if ([transcriptDelegate respondsToSelector:@selector(transcriptView:handleOpenURL:)])
-		if ([transcriptDelegate transcriptView:self handleOpenURL:request.URL])
+	if ([_transcriptDelegate respondsToSelector:@selector(transcriptView:handleOpenURL:)])
+		if ([_transcriptDelegate transcriptView:self handleOpenURL:request.URL])
 			return NO;
 
 	[[UIApplication sharedApplication] openURL:request.URL];
@@ -345,8 +345,8 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 	_loading = YES;
 	[self loadHTMLString:[self _contentHTML] baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]]];
 
-	if ([transcriptDelegate respondsToSelector:@selector(transcriptViewWasReset:)])
-		[transcriptDelegate transcriptViewWasReset:self];
+	if ([_transcriptDelegate respondsToSelector:@selector(transcriptViewWasReset:)])
+		[_transcriptDelegate transcriptViewWasReset:self];
 }
 
 #pragma mark -
