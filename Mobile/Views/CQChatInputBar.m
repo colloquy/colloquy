@@ -180,8 +180,8 @@ static BOOL hardwareKeyboard;
 
 - (void) setHeight:(CGFloat) height {
 	BOOL shouldSetHeight = YES;
-	if (delegate && [delegate respondsToSelector:@selector(chatInputBar:shouldChangeHeightBy:)])
-		shouldSetHeight = [delegate chatInputBar:self shouldChangeHeightBy:(self.frame.size.height - height)];
+	if (_delegate && [_delegate respondsToSelector:@selector(chatInputBar:shouldChangeHeightBy:)])
+		shouldSetHeight = [_delegate chatInputBar:self shouldChangeHeightBy:(self.frame.size.height - height)];
 
 	if (shouldSetHeight)
 		self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, height);
@@ -226,10 +226,10 @@ static BOOL hardwareKeyboard;
 }
 
 - (void) showCompletionsForText:(NSString *) text inRange:(NSRange) range {
-	if (![delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)])
+	if (![_delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)])
 		return;
 
-	NSArray *completions = [delegate chatInputBar:self completionsForWordWithPrefix:text inRange:range];
+	NSArray *completions = [_delegate chatInputBar:self completionsForWordWithPrefix:text inRange:range];
 	if (completions.count)
 		[self showCompletions:completions forText:text inRange:range];
 	else [self hideCompletions];
@@ -333,8 +333,8 @@ retry:
 #pragma mark -
 
 - (void) accessoryButtonPressed:(id) sender {
-	if (delegate && [delegate respondsToSelector:@selector(chatInputBarAccessoryButtonPressed:)])
-		[delegate chatInputBarAccessoryButtonPressed:self];
+	if (_delegate && [_delegate respondsToSelector:@selector(chatInputBarAccessoryButtonPressed:)])
+		[_delegate chatInputBarAccessoryButtonPressed:self];
 }
 
 #pragma mark -
@@ -362,25 +362,25 @@ retry:
 }
 
 - (BOOL) textViewShouldBeginEditing:(UITextView *) textView {
-	if ([delegate respondsToSelector:@selector(chatInputBarShouldBeginEditing:)])
-		return [delegate chatInputBarShouldBeginEditing:self];
+	if ([_delegate respondsToSelector:@selector(chatInputBarShouldBeginEditing:)])
+		return [_delegate chatInputBarShouldBeginEditing:self];
 	return YES;
 }
 
 - (void) textViewDidBeginEditing:(UITextView *) textView {
-	if ([delegate respondsToSelector:@selector(chatInputBarDidBeginEditing:)])
-		[delegate chatInputBarDidBeginEditing:self];
+	if ([_delegate respondsToSelector:@selector(chatInputBarDidBeginEditing:)])
+		[_delegate chatInputBarDidBeginEditing:self];
 }
 
 - (BOOL) textViewShouldEndEditing:(UITextView *) textView {
-	if ([delegate respondsToSelector:@selector(chatInputBarShouldEndEditing:)])
-		return [delegate chatInputBarShouldEndEditing:self];
+	if ([_delegate respondsToSelector:@selector(chatInputBarShouldEndEditing:)])
+		return [_delegate chatInputBarShouldEndEditing:self];
 	return YES;
 }
 
 - (void) textViewDidEndEditing:(UITextView *) textView {
-	if ([delegate respondsToSelector:@selector(chatInputBarDidEndEditing:)])
-		[delegate chatInputBarDidEndEditing:self];
+	if ([_delegate respondsToSelector:@selector(chatInputBarDidEndEditing:)])
+		[_delegate chatInputBarDidEndEditing:self];
 	[self hideCompletions];
 }
 
@@ -393,7 +393,7 @@ retry:
 		return YES;
 	}
 
-	if (![delegate respondsToSelector:@selector(chatInputBar:sendText:)])
+	if (![_delegate respondsToSelector:@selector(chatInputBar:sendText:)])
 		return NO;
 
 	if (!_inputView.text.length)
@@ -415,7 +415,7 @@ retry:
 	if ([string isEqualToString:@"\t"]) {
 		hardwareKeyboard = YES;
 
-		if ([delegate respondsToSelector:@selector(chatInputBarShouldIndent:)] && ![delegate chatInputBarShouldIndent:self])
+		if ([_delegate respondsToSelector:@selector(chatInputBarShouldIndent:)] && ![_delegate chatInputBarShouldIndent:self])
 			return NO;
 	}
 
@@ -425,7 +425,7 @@ retry:
 		[self _updateTextTraits];
 	}
 
-	if (![delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:)])
+	if (![_delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![_delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:)])
 		return YES;
 
 	if (_spaceCyclesCompletions && _completionCapturedKeyboard && self.showingCompletions && [string isEqualToString:@" "] && !_completionView.closeSelected) {
@@ -468,8 +468,8 @@ retry:
 		else canShowCompletionForCurrentWord = YES; // if we are at the end of the line, we can show completions since there's nothing else after it
 	} else canShowCompletionForCurrentWord = YES; // if we don't have any text, we can maybe show completions although we probably won't (not enough context yet)
 
-	if (_autocomplete && canShowCompletionForCurrentWord && !_disableCompletionUntilNextWord && word.length && ![self _hasMarkedText] && [delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
-		completions = [delegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
+	if (_autocomplete && canShowCompletionForCurrentWord && !_disableCompletionUntilNextWord && word.length && ![self _hasMarkedText] && [_delegate respondsToSelector:@selector(chatInputBar:completionsForWordWithPrefix:inRange:)]) {
+		completions = [_delegate chatInputBar:self completionsForWordWithPrefix:word inRange:wordRange];
 		if (completions.count)
 			[self showCompletions:completions forText:text inRange:wordRange];
 		 else [self hideCompletions];
@@ -478,7 +478,7 @@ retry:
 	word = [text substringWithRange:wordRange];
 
 	UITextAutocorrectionType newAutocorrectionType = UITextAutocorrectionTypeDefault;
-	if (!_autocorrect || completions.count || ([delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![delegate chatInputBar:self shouldAutocorrectWordWithPrefix:word]))
+	if (!_autocorrect || completions.count || ([_delegate respondsToSelector:@selector(chatInputBar:shouldAutocorrectWordWithPrefix:)] && ![_delegate chatInputBar:self shouldAutocorrectWordWithPrefix:word]))
 		newAutocorrectionType = UITextAutocorrectionTypeNo;
 
 	if (newAutocorrectionType != _inputView.autocorrectionType) {
@@ -648,7 +648,7 @@ retry:
 	NSString *text = _inputView.text;
 	text = [text stringBySubstitutingEmojiForEmoticons];
 
-	if (![delegate chatInputBar:self sendText:text])
+	if (![_delegate chatInputBar:self sendText:text])
 		return;
 
 	_disableCompletionUntilNextWord = NO;

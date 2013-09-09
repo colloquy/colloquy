@@ -27,6 +27,8 @@ static BOOL timestampEveryMessage;
 static NSString *timestampFormat;
 
 @implementation CQProcessChatMessageOperation
+@synthesize processedMessageInfo = _processedMessage;
+
 + (void) userDefaultsChanged {
 	if (![NSThread isMainThread])
 		return;
