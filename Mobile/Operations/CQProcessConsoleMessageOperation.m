@@ -5,6 +5,8 @@
 static NSRegularExpression *numericRegularExpression;
 
 @implementation CQProcessConsoleMessageOperation
+@synthesize processedMessageInfo = _processedMessage;
+
 + (void) initialize {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
