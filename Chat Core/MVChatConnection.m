@@ -202,7 +202,7 @@ static const NSStringEncoding supportedEncodings[] = {
 - (id) initWithURL:(NSURL *) serverURL {
 	NSParameterAssert( [MVChatConnection supportsURLScheme:[serverURL scheme]] );
 
-	NSUInteger connectionType = 0;
+	MVChatConnectionType connectionType = 0;
 
 #if ENABLE(ICB)
 	if( [[serverURL scheme] isEqualToString:@"icb"] )

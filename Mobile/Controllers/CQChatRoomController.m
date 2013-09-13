@@ -1011,7 +1011,7 @@ static NSComparisonResult sortMembersByNickname(MVChatUser *user1, MVChatUser *u
 	}
 
 	for (MVChatUser *user in userInfo[@"removed"]) {
-		int index = [_orderedMembers indexOfObjectIdenticalTo:user];
+		NSUInteger index = [_orderedMembers indexOfObjectIdenticalTo:user];
 		if (index != NSNotFound) {
 			[_orderedMembers removeObjectAtIndex:index];
 			modifed = YES;

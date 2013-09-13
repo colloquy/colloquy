@@ -1289,11 +1289,11 @@ static BOOL showingKeyboard;
 - (void) transcriptView:(CQChatTranscriptView *) transcriptView receivedSwipeWithTouchCount:(NSUInteger) touchCount leftward:(BOOL) leftward {
 	CQSwipeMeaning meaning = CQSwipeDisabled;
 	if (touchCount == 1)
-		meaning = singleSwipeGesture;
+		meaning = (CQSwipeMeaning)singleSwipeGesture;
 	else if (touchCount == 2)
-		meaning = doubleSwipeGesture;
+		meaning = (CQSwipeMeaning)doubleSwipeGesture;
 	else if (touchCount == 3)
-		meaning = tripleSwipeGesture;
+		meaning = (CQSwipeMeaning)tripleSwipeGesture;
 
 	id <CQChatViewController> nextViewController = nil;
 	if (meaning == CQSwipeNextRoom) {

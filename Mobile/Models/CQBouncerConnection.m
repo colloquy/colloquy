@@ -119,14 +119,14 @@ static inline NSString *newStringWithBytes(const char *bytes, NSUInteger length)
 
 - (void) socket:(GCDAsyncSocket *) sock didReadData:(NSData *) data withTag:(long) tag {
 	const char *line = (const char *)data.bytes;
-	unsigned int len = data.length;
+	NSUInteger len = data.length;
 	const char *end = line + len - 2; // minus the line endings
 
 	if (*end != '\x0D')
 		end = line + len - 1; // this server only uses \x0A for the message line ending, lets work with it
 
 	const char *command = NULL;
-	unsigned commandLength = 0;
+	NSUInteger commandLength = 0;
 
 	NSMutableArray *parameters = [[NSMutableArray alloc] initWithCapacity:15];
 

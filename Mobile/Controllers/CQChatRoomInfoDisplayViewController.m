@@ -161,13 +161,13 @@ enum {
 
 	if (_segmentedControl.selectedSegmentIndex == CQChatRoomInfoBans) {
 		if ((NSUInteger)indexPath.row == _bans.count) {
-			UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:[NSString stringWithFormat:@"%d", _segmentedControl.selectedSegmentIndex]];
+			UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:[NSString stringWithFormat:@"%zd", _segmentedControl.selectedSegmentIndex]];
 			cell.textLabel.text = NSLocalizedString(@"Add Ban", @"Add Ban cell item");
 			cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 			return cell;
 		}
 
-		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:[NSString stringWithFormat:@"%d", _segmentedControl.selectedSegmentIndex]];
+		UITableViewCell *cell = [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:[NSString stringWithFormat:@"%zd", _segmentedControl.selectedSegmentIndex]];
 		cell.textLabel.text = [_bans[indexPath.row] description];
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
@@ -179,7 +179,7 @@ enum {
 		BOOL canEditModes = (localUserModes > MVChatRoomMemberVoicedMode) || _room.connection.localUser.isServerOperator;
 
 		NSString *title = nil;
-		NSUInteger mode = 0;
+		MVChatRoomMode mode = 0;
 		id attribute = nil;
 		UIKeyboardType keyboardType = UIKeyboardTypeDefault;
 
@@ -245,7 +245,7 @@ enum {
 	}
 
 	// should never reach this point, but, don't crash if we do
-	return [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:[NSString stringWithFormat:@"%d", _segmentedControl.selectedSegmentIndex]];
+	return [UITableViewCell reusableTableViewCellInTableView:tableView withIdentifier:[NSString stringWithFormat:@"%zd", _segmentedControl.selectedSegmentIndex]];
 }
 
 - (UITableViewCellEditingStyle) tableView:(UITableView *) tableView editingStyleForRowAtIndexPath:(NSIndexPath *) indexPath {

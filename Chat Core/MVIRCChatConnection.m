@@ -3266,7 +3266,7 @@ end:
 				if( argsNeeded.count ) {
 					NSUInteger value = [[argsNeeded objectAtIndex:0] unsignedLongValue];
 					BOOL enabled = ( ( value & enabledHighBit ) ? YES : NO );
-					NSUInteger mode = ( value & ~enabledHighBit );
+					int mode = ( value & ~enabledHighBit );
 
 					if( mode == MVChatRoomMemberFounderMode || mode == MVChatRoomMemberAdministratorMode || mode == MVChatRoomMemberOperatorMode || mode == MVChatRoomMemberHalfOperatorMode || mode == MVChatRoomMemberVoicedMode ) {
 						MVChatUser *member = [self chatUserWithUniqueIdentifier:param];

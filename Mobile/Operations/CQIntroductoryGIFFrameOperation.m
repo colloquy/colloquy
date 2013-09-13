@@ -57,8 +57,8 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 	NSURLConnection *_connection;
 	NSMutableData *_data;
 
-	uint32_t _introductoryFrameImageDescriptorStartBlock;
-	uint32_t _introductoryFrameImageDescriptorEndBlock;
+	uintptr_t _introductoryFrameImageDescriptorStartBlock;
+	uintptr_t _introductoryFrameImageDescriptorEndBlock;
 }
 
 @synthesize introductoryFrameImage = _introductoryFrameImage;
@@ -267,7 +267,7 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 #undef checkAndAdvance
 
 	// At this point, we're at the end of the first frame and can render an image. Save the position we wound up at for later use.
-	_introductoryFrameImageDescriptorEndBlock = (size_t)(bytes - ((uint32_t)_data.bytes));
+	_introductoryFrameImageDescriptorEndBlock = (uintptr_t)(bytes - ((uintptr_t)_data.bytes));
 
 	return YES;
 }

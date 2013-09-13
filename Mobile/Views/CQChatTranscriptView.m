@@ -454,13 +454,13 @@ static NSString *const CQRoomTopicChangedNotification = @"CQRoomTopicChangedNoti
 
 	[self addGestureRecognizer:longPressGestureRecognizer];
 
-	_showRoomTopic = [[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
+	_showRoomTopic = (CQShowRoomTopic)[[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged:) name:CQSettingsDidChangeNotification object:nil];
 }
 
 - (void) _userDefaultsChanged:(NSNotification *) notification {
-	CQShowRoomTopic shouldShowRoomTopic = [[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
+	CQShowRoomTopic shouldShowRoomTopic = (CQShowRoomTopic)[[CQSettingsController settingsController] integerForKey:@"CQShowRoomTopic"];
 	if (_showRoomTopic == shouldShowRoomTopic)
 		return;
 

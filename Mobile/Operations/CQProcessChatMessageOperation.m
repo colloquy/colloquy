@@ -40,7 +40,7 @@ static NSString *timestampFormat;
 	highlightRegexes = [[NSMutableDictionary alloc] init];
 	inlineImages = [[CQSettingsController settingsController] boolForKey:@"CQInlineImages"];
 
-	CQMentionLinkService mentionService = [[CQSettingsController settingsController] integerForKey:@"CQMentionLinkService"];
+	CQMentionLinkService mentionService = (CQMentionLinkService)[[CQSettingsController settingsController] integerForKey:@"CQMentionLinkService"];
 	if (mentionService == CQMentionLinkServiceAppDotNet) {
 		mentionServiceRegex = @"\\B@[a-zA-Z0-9_]{1,20}";
 		mentionServiceReplacementFormat = @"<a href=\"https://alpha.app.net/%@\">@%@</a>";
