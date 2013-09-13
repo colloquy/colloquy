@@ -166,16 +166,6 @@ static NSMutableArray *highlightWords;
 		else displayVersion = version;
 		[[CQSettingsController settingsController] setObject:displayVersion forKey:@"CQCurrentVersion"];
 
-		if (![UIDevice currentDevice].isSystemSix) {
-			NSString *preferencesPath = [@"~/../../Library/Preferences/com.apple.Preferences.plist" stringByStandardizingPath];
-			NSMutableDictionary *preferences = [[NSMutableDictionary alloc] initWithContentsOfFile:preferencesPath];
-
-			if ((preferences && ![preferences[@"KeyboardEmojiEverywhere"] boolValue])) {
-				[preferences setValue:@(YES) forKey:@"KeyboardEmojiEverywhere"];
-				[preferences writeToFile:preferencesPath atomically:YES];
-			}
-		}
-
 		if (![[CQSettingsController settingsController] boolForKey:@"JVSetUpDefaultQuitMessage"]) {
 			[self setDefaultMessageStringForKey:@"JVQuitMessage"];
 			[[CQSettingsController settingsController] setBool:YES forKey:@"JVSetUpDefaultQuitMessage"];
@@ -653,7 +643,7 @@ static NSMutableArray *highlightWords;
 
 - (BOOL) isSpecialApplicationURL:(NSURL *) url {
 #if !TARGET_IPHONE_SIMULATOR
-	return (url && ((![UIDevice currentDevice].isSystemSix && [url.host hasCaseInsensitiveSubstring:@"maps.google."]) || (![UIDevice currentDevice].isSystemSix && [url.host hasCaseInsensitiveSubstring:@"youtube."]) || [url.host hasCaseInsensitiveSubstring:@"phobos.apple."]));
+	return (url && ([url.host hasCaseInsensitiveSubstring:@"phobos.apple."]));
 #else
 	return NO;
 #endif
@@ -665,10 +655,6 @@ static NSMutableArray *highlightWords;
 	NSString *scheme = url.scheme;
 #if !TARGET_IPHONE_SIMULATOR
 	NSString *host = url.host;
-	if (![UIDevice currentDevice].isSystemSix && [host hasCaseInsensitiveSubstring:@"maps.google."])
-		return NSLocalizedString(@"Maps", @"Maps application name");
-	if (![UIDevice currentDevice].isSystemSix && [host hasCaseInsensitiveSubstring:@"youtube."])
-		return NSLocalizedString(@"YouTube", @"YouTube application name");
 	if ([host hasCaseInsensitiveSubstring:@"phobos.apple."])
 		return NSLocalizedString(@"iTunes", @"iTunes application name");
 	if ([scheme isCaseInsensitiveEqualToString:@"mailto"])

@@ -1,7 +1,6 @@
 @interface UIDevice (UIDeviceColloquyAdditions)
 @property (nonatomic, readonly) NSString *modelIdentifier;
 
-- (BOOL) isSystemSix;
 - (BOOL) isSystemSeven;
 
 - (BOOL) isPhoneModel;

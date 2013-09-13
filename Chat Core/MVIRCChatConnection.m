@@ -2708,7 +2708,7 @@ end:
 			NSString *processor = @"PowerPC";
 #elif (defined(__i386__) && __i386__) || (defined(__x86_64__) && __x86_64__)
 			NSString *processor = @"Intel";
-#elif defined(__arm__) && __arm__
+#elif (defined(__arm__) && __arm__) || (defined(__arm64__) && __arm64__)
 			NSString *processor = @"ARM";
 #else
 			NSString *processor = @"Unknown Architecture";

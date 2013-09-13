@@ -51,8 +51,7 @@
 	[self addSubview:_textLabel];
 	[self addSubview:_disclosureImageView];
 
-	if ([UIDevice currentDevice].isSystemSix)
-		self.accessibilityTraits |= UIAccessibilityTraitHeader;
+	self.accessibilityTraits |= UIAccessibilityTraitHeader;
 
 	return self;
 }
