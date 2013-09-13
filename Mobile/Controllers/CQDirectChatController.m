@@ -1378,7 +1378,7 @@ static BOOL showingKeyboard;
 }
 
 - (void) setScrollbackLength:(NSUInteger) scrollbackLength {
-	[transcriptView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setScrollbackLimit(%d)", scrollbackLength]];
+	[transcriptView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"setScrollbackLimit(%tu)", scrollbackLength]];
 }
 
 #pragma mark -

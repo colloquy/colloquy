@@ -383,7 +383,7 @@ static inline __attribute__((always_inline)) BOOL isPlaceholderValue(NSString *s
 
 			NSArray *rooms = _connection.automaticJoinedRooms;
 			if (rooms.count)
-				cell.detailTextLabel.text = [NSString stringWithFormat:@"%u", rooms.count];
+				cell.detailTextLabel.text = [NSString stringWithFormat:@"%tu", rooms.count];
 			else cell.detailTextLabel.text = NSLocalizedString(@"None", @"None label");
 
 			if (rooms.count)

@@ -495,8 +495,8 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 - (void) _unreadCountChanged {
 	NSInteger totalImportantUnreadCount = [CQChatController defaultController].totalImportantUnreadCount;
 	if (!_active && totalImportantUnreadCount) {
-		self.navigationItem.title = [NSString stringWithFormat:NSLocalizedString(@"%@ (%u)", @"Unread count view title, uses the view's normal title with a number"), self.title, totalImportantUnreadCount];
-		self.parentViewController.tabBarItem.badgeValue = [NSString stringWithFormat:@"%u", totalImportantUnreadCount];
+		self.navigationItem.title = [NSString stringWithFormat:NSLocalizedString(@"%@ (%tu)", @"Unread count view title, uses the view's normal title with a number"), self.title, totalImportantUnreadCount];
+		self.parentViewController.tabBarItem.badgeValue = [NSString stringWithFormat:@"%tu", totalImportantUnreadCount];
 	} else {
 		self.navigationItem.title = self.title;
 		self.parentViewController.tabBarItem.badgeValue = nil;

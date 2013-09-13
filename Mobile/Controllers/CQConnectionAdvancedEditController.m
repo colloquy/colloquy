@@ -415,7 +415,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		if (_connection.alternateNicknames.count) {
-			cell.detailTextLabel.text = [NSString stringWithFormat:@"%u", _connection.alternateNicknames.count];
+			cell.detailTextLabel.text = [NSString stringWithFormat:@"%tu", _connection.alternateNicknames.count];
 			cell.accessibilityLabel = [NSString stringWithFormat:NSLocalizedString(@"Alternate Nicknames: %u nicknames", @"Voiceover alternate nicknames count label"), _connection.alternateNicknames.count];
 		} else {
 			cell.detailTextLabel.text = NSLocalizedString(@"None", @"None label");
@@ -433,7 +433,7 @@ static NSString *localizedNameOfStringEncoding(NSStringEncoding encoding) {
 		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
 		NSArray *commands = _connection.automaticCommands;
-		if (commands.count) cell.detailTextLabel.text = [NSString stringWithFormat:@"%u", commands.count];
+		if (commands.count) cell.detailTextLabel.text = [NSString stringWithFormat:@"%tu", commands.count];
 		else cell.detailTextLabel.text = NSLocalizedString(@"None", @"None label");
 
 		if (commands.count)

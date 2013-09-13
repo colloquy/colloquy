@@ -104,10 +104,10 @@
 	self.tableView.tableFooterView = _footerLabel;
 
 	if (integerCountdown && stringForFooterWithTextView)
-		_footerLabel.text = [NSString stringWithFormat:@"%d %@", charactersRemaining, message];
+		_footerLabel.text = [NSString stringWithFormat:@"%tu %@", charactersRemaining, message];
 	else if (stringForFooterWithTextView)
 		_footerLabel.text = message;
-	else _footerLabel.text = [NSString stringWithFormat:@"%d", charactersRemaining];
+	else _footerLabel.text = [NSString stringWithFormat:@"%tu", charactersRemaining];
 
 	// only animate if we're showing up on screen for the first time
 	if (emptyFrame) {

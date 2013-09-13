@@ -11,7 +11,7 @@
 #if SYSTEM(MAC)
 	NSString *key = [NSString stringWithFormat:@"%ld-%@", options, pattern];
 #else
-	NSString *key = [NSString stringWithFormat:@"%d-%@", options, pattern];
+	NSString *key = [NSString stringWithFormat:@"%tu-%@", options, pattern];
 #endif
 	NSRegularExpression *regularExpression = dangerousCache[key];
 
