@@ -32,7 +32,9 @@
 	_nicknameLabel.highlightedTextColor = self.textLabel.highlightedTextColor;
 
 	_timeLabel.font = [UIFont systemFontOfSize:14.];
-	_timeLabel.textColor = [UIColor colorWithRed:0.19607843 green:0.29803922 blue:0.84313725 alpha:1.];
+	if ([UIDevice currentDevice].isSystemSeven)
+		_timeLabel.textColor = self.tintColor;
+	else _timeLabel.textColor = [UIColor colorWithRed:0.19607843 green:0.29803922 blue:0.84313725 alpha:1.];
 	_timeLabel.highlightedTextColor = self.textLabel.highlightedTextColor;
 
 	return self;
@@ -209,5 +211,9 @@
 	frame.origin.y = round(contentRect.size.height / 2.);
 	frame.size.width = _timeLabel.frame.origin.x - frame.origin.x - TEXT_RIGHT_MARGIN;
 	_nicknameLabel.frame = frame;
+}
+
+- (void) tintColorDidChange {
+	_timeLabel.textColor = self.tintColor;
 }
 @end
