@@ -121,7 +121,7 @@
 
 	if (indexPath.row < (NSInteger)_items.count) {
 		cell.textLabel.adjustsFontSizeToFitWidth = YES;
-		cell.textLabel.minimumFontSize = 15.;
+		cell.textLabel.minimumScaleFactor = (15. / cell.textLabel.font.pointSize);
 		cell.textLabel.textColor = [UIColor blackColor];
 	}
 

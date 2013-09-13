@@ -629,11 +629,16 @@ retry:
 	if (!takeTextInputTraitsFromSelector)
 		takeTextInputTraitsFromSelector = NSSelectorFromString(@"takeTextInputTraitsFrom:");
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+
 	NSAssert([keyboard respondsToSelector:takeTextInputTraitsFromDelegateSelector] || [keyboard respondsToSelector:takeTextInputTraitsFromSelector], @"UIKeyboardImpl does not respond to takeTextInputTraitsFromDelegate or takeTextInputTraitsFrom:.");
 	if ([keyboard respondsToSelector:takeTextInputTraitsFromDelegateSelector])
 		[keyboard performSelector:takeTextInputTraitsFromDelegateSelector];
 	else if ([keyboard respondsToSelector:takeTextInputTraitsFromSelector])
 		[keyboard performSelector:takeTextInputTraitsFromSelector withObject:_inputView];
+
+#pragma clang diagnostic pop
 
 	if (![UIDevice currentDevice].isSystemSeven)
 		[keyboard performPrivateSelector:@"updateReturnKey:" withBoolean:YES];

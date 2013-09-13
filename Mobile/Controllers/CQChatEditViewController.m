@@ -217,7 +217,7 @@ static NSInteger sortConnections(MVChatConnection *a, MVChatConnection *b, void 
 	[helpCell.contentView addSubview:label];
 
 	label.text = NSLocalizedString(@"Join Colloquy Support Room", @"Join Colloquy Support Room label");
-	label.textAlignment = UITextAlignmentCenter;
+	label.textAlignment = NSTextAlignmentCenter;
 
 	return helpCell;
 }

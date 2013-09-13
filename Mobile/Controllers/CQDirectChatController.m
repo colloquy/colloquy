@@ -36,7 +36,7 @@
 #import <MediaPlayer/MPMusicPlayerController.h>
 #import <MediaPlayer/MPMediaItem.h>
 
-#import <Twitter/Twitter.h>
+#import <Social/Social.h>
 
 #import <objc/message.h>
 
@@ -1182,11 +1182,9 @@ static BOOL showingKeyboard;
 }
 
 - (BOOL) handleTweetCommandWithArguments:(NSString *) arguments {
-	TWTweetComposeViewController *tweetComposeViewController = [[TWTweetComposeViewController alloc] init];
-	tweetComposeViewController.completionHandler = ^(TWTweetComposeViewControllerResult result) {
-
-	};
-	[self.navigationController presentViewController:tweetComposeViewController animated:YES completion:NULL];
+	SLComposeViewController *composeViewController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+	composeViewController.completionHandler = ^(SLComposeViewControllerResult result) { /* do nothing */ };
+	[self.navigationController presentViewController:composeViewController animated:YES completion:NULL];
 
 	return YES;
 }

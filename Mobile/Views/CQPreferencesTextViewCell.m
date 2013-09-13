@@ -17,7 +17,7 @@
 	_textView.scrollEnabled = [[UIDevice currentDevice] isPadModel] ? NO : YES;
 	_textView.font = [UIFont systemFontOfSize:17.];
 	_textView.keyboardType = UIKeyboardTypeDefault;
-	_textView.textAlignment = UITextAlignmentLeft;
+	_textView.textAlignment = NSTextAlignmentLeft;
 	_textView.autocapitalizationType = UITextAutocapitalizationTypeSentences;
 	_textView.autocorrectionType = UITextAutocorrectionTypeDefault;
 	_textView.enablesReturnKeyAutomatically = NO;
@@ -48,7 +48,7 @@
 	_textView.editable = YES;
 	_textView.scrollEnabled = ![[UIDevice currentDevice] isPadModel];
 	_textView.textColor = [UIColor blackColor];
-	_textView.textAlignment = UITextAlignmentLeft;
+	_textView.textAlignment = NSTextAlignmentLeft;
 	_textView.font = [UIFont systemFontOfSize:17.];
 	_textView.keyboardType = UIKeyboardTypeDefault;
 	_textView.autocapitalizationType = UITextAutocapitalizationTypeSentences;

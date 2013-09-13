@@ -19,7 +19,7 @@
 
 	_footerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 	_footerLabel.font = [UIFont systemFontOfSize:14.];
-	_footerLabel.textAlignment = UITextAlignmentCenter;
+	_footerLabel.textAlignment = NSTextAlignmentCenter;
 	_footerLabel.backgroundColor = [UIColor clearColor];
 	_footerLabel.adjustsFontSizeToFitWidth = NO;
 

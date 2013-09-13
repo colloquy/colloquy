@@ -16,7 +16,7 @@ static CQPreferencesTextCell *currentEditingCell;
 	_textField = [[UITextField alloc] initWithFrame:CGRectZero];
 
 	_textField.delegate = self;
-	_textField.textAlignment = UITextAlignmentLeft;
+	_textField.textAlignment = NSTextAlignmentLeft;
 	_textField.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
 	_textField.font = [UIFont systemFontOfSize:17.];
 	_textField.adjustsFontSizeToFitWidth = YES;

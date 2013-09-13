@@ -210,7 +210,7 @@ static BOOL pushAvailable = YES;
 		[cell.contentView addSubview:label];
 
 		label.text = NSLocalizedString(@"Update Connection List", @"Update Connection List button label");
-		label.textAlignment = UITextAlignmentCenter;
+		label.textAlignment = NSTextAlignmentCenter;
 
 		return cell;
 	} else if (indexPath.section == DeleteTableSection && indexPath.row == 0) {
