@@ -9,6 +9,7 @@ NSString *const CQBookmarkingErrorDomain = @"CQBookmarkingErrorDomain";
 #import "CQInstapaperController.h"
 #import "CQPinboardController.h"
 #import "CQPocketController.h"
+#import "CQSafariReadingListController.h"
 
 #import "CQKeychain.h"
 
@@ -44,6 +45,8 @@ static NSString *bookmarkingService;
 		return [CQPinboardController class];
 	if ([bookmarkingService isEqualToString:CQBookmarkingServicePocket])
 		return [CQPocketController class];
+	if ([bookmarkingService isEqualToString:CQBookmarkingServiceSafariReadingList])
+		return [CQSafariReadingListController class];
 	return nil;
 }
 

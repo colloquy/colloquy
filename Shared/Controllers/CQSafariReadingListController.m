@@ -16,6 +16,9 @@ NSString *const CQBookmarkingServiceSafariReadingList = @"CQBookmarkingServiceSa
 	if (![UIDevice currentDevice].isSystemSeven)
 		return;
 
+	if (![link hasPrefix:@"http"])
+		link = [@"http://" stringByAppendingString:link];
+
 	NSURL *linkURL = [NSURL URLWithString:link];
 	if (![SSReadingList supportsURL:linkURL]) {
 		NSError *error = [NSError errorWithDomain:CQBookmarkingErrorDomain code:CQBookmarkingErrorInvalidLink userInfo:nil];
