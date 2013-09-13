@@ -299,7 +299,7 @@ static NSMutableArray *highlightWords;
 
 	_mainWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	if ([_mainWindow respondsToSelector:@selector(setTintColor:)])
-		_mainWindow.tintColor = [UIColor colorWithRed:(184. / 255.) green:(108. / 255.) blue:(196. / 255.) alpha:1.];
+		_mainWindow.tintColor = [UIColor colorWithRed:0.427 green:0.086 blue:0.396 alpha:1];
 
 	[self userDefaultsChanged];
 
