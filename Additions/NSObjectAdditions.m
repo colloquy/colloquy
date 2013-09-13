@@ -18,7 +18,7 @@
 #define SAFE_PERFORM(cast, arguments, defaultValue) \
 	SAFE_PERFORM_BASE(objc_msgSend, cast, arguments, defaultValue)
 
-#if TARGET_IPHONE_SIMULATOR
+#if TARGET_IPHONE_SIMULATOR || (defined(__arm64__) && __arm64__)
 #define SAFE_PERFORM_RETURNING_SMALL_STRUCT(cast, arguments, defaultValue) \
 	SAFE_PERFORM_BASE(objc_msgSend, cast, arguments, defaultValue)
 #else
