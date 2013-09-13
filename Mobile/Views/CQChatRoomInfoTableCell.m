@@ -97,18 +97,12 @@
 }
 
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
-	if (animated) {
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationCurve:(editing ? UIViewAnimationCurveEaseIn : UIViewAnimationCurveEaseOut)];
-	}
+	[UIView animateWithDuration:.3 delay:.0 options:(editing ? UIViewAnimationOptionCurveEaseIn : UIViewAnimationOptionCurveEaseOut) animations:^{
+		[super setEditing:editing animated:animated];
 
-	[super setEditing:editing animated:animated];
-
-	_memberCountLabel.alpha = editing ? 0. : 1.;
-	_memberIconImageView.alpha = editing ? 0. : 1.;
-
-	if (animated)
-		[UIView commitAnimations];
+		_memberCountLabel.alpha = editing ? 0. : 1.;
+		_memberIconImageView.alpha = editing ? 0. : 1.;
+	} completion:NULL];
 }
 
 - (void) layoutSubviews {

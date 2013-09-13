@@ -97,14 +97,9 @@
 	if (height == _textView.frame.size.height && _textView.frame.size.width == self.contentView.frame.size.width)
 		return;
 
-	[UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:.25];
-	[UIView setAnimationBeginsFromCurrentState:YES];
-
-	_textView.frame = CGRectMake(0, 0, self.contentView.frame.size.width, height);
-
-	[UIView commitAnimations];
+	[UIView animateWithDuration:.25 delay:0. options:(UIViewAnimationOptionCurveEaseIn | UIViewAnimationOptionBeginFromCurrentState) animations:^{
+		_textView.frame = CGRectMake(0, 0, self.contentView.frame.size.width, height);
+	} completion:NULL];
 }
 
 #pragma mark -

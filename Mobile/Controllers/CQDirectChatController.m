@@ -1394,18 +1394,11 @@ static BOOL showingKeyboard;
 	NSTimeInterval animationDuration = [[notification userInfo][UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [[notification userInfo][UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 
-	if (_active) {
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:animationDuration];
-		[UIView setAnimationCurve:animationCurve];
-	}
-
-	CGRect frame = containerView.frame;
-	frame.size.height = keyboardRect.origin.y;
-	containerView.frame = frame;
-
-	if (_active)
-		[UIView commitAnimations];
+	[UIView animateWithDuration:(_active ? animationDuration : .0) delay:.0 options:(animationCurve << 16) animations:^{
+		CGRect frame = containerView.frame;
+		frame.size.height = keyboardRect.origin.y;
+		containerView.frame = frame;
+	} completion:NULL];
 
 	[transcriptView scrollToBottomAnimated:_active];
 }
@@ -1422,16 +1415,9 @@ static BOOL showingKeyboard;
 	NSTimeInterval animationDuration = [[notification userInfo][UIKeyboardAnimationDurationUserInfoKey] doubleValue];
 	NSUInteger animationCurve = [[notification userInfo][UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
 
-	if (_active && self.view.window) {
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:animationDuration];
-		[UIView setAnimationCurve:animationCurve];
-	}
-
-	containerView.frame = self.view.bounds;
-
-	if (_active)
-		[UIView commitAnimations];
+	[UIView animateWithDuration:((_active && self.view.window) ? animationDuration : .0) delay:.0 options:(animationCurve << 16) animations:^{
+		containerView.frame = self.view.bounds;
+	} completion:NULL];
 }
 
 #pragma mark -

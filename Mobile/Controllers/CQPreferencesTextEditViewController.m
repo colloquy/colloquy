@@ -87,14 +87,9 @@
 		if (emptyFrame)
 			return;
 
-		[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:.15];
-		[UIView setAnimationBeginsFromCurrentState:YES];
-
-		_footerLabel.frame = CGRectZero;
-
-		[UIView commitAnimations];
+		[UIView animateWithDuration:.15 delay:.0 options:(UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState) animations:^{
+			_footerLabel.frame = CGRectZero;
+		} completion:NULL];
 
 		return;
 	}
@@ -110,20 +105,12 @@
 	else _footerLabel.text = [NSString stringWithFormat:@"%tu", charactersRemaining];
 
 	// only animate if we're showing up on screen for the first time
-	if (emptyFrame) {
-		[UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:.15];
-		[UIView setAnimationBeginsFromCurrentState:YES];
-	}
+	[UIView animateWithDuration:(emptyFrame ? .15 : .0) delay:.0 options:(UIViewAnimationOptionCurveEaseOut | UIViewAnimationOptionBeginFromCurrentState) animations:^{
+		[_footerLabel sizeToFit];
 
-	[_footerLabel sizeToFit];
-
-	CGRect frame = _footerLabel.frame;
-	_footerLabel.frame = CGRectMake((self.tableView.frame.size.width / 2) - floor((frame.size.width / 2)), frame.origin.y, frame.size.width, frame.size.height);
-
-	if (emptyFrame)
-		[UIView commitAnimations];
+		CGRect frame = _footerLabel.frame;
+		_footerLabel.frame = CGRectMake((self.tableView.frame.size.width / 2) - floor((frame.size.width / 2)), frame.origin.y, frame.size.width, frame.size.height);
+	} completion:NULL];
 }
 
 #pragma mark -

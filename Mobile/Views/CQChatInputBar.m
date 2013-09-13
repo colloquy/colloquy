@@ -557,7 +557,7 @@ retry:
 
 #define ButtonMargin 6.5
 #define ButtonWidth 18.
-	CGRect frame = _backgroundView.frame;
+	__block CGRect frame = _backgroundView.frame;
 	frame.origin.y = 1.;
 	if ([UIDevice currentDevice].isRetina)
 		frame.size.width -= (ButtonWidth + ButtonMargin);
@@ -568,32 +568,30 @@ retry:
 	frame.size.width = CGRectGetWidth(self.frame) - CGRectGetMinX(frame);
 	_overlayBackgroundViewPiece.frame = frame;
 
-	[UIView setAnimationCurve:_animationCurve];
-	[UIView setAnimationDuration:_animationDuration];
-	[UIView beginAnimations:nil context:NULL];
-
+	[UIView animateWithDuration:_animationDuration delay:.0 options:(_animationCurve << 16) animations:^{
 #define ImageBorderInset 10.
-	frame = _inputView.frame;
-	frame.origin.y = ImageBorderInset;
-	frame.size.width = _backgroundView.frame.size.width - (frame.origin.x * 2);
-	frame.size.height = _backgroundView.frame.size.height - (ImageBorderInset * 2);
-	if ([UIDevice currentDevice].isRetina)
-		frame.size.width -= (ButtonWidth + ButtonMargin);
-	else frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
-	_inputView.frame = frame;
+		frame = _inputView.frame;
+		frame.origin.y = ImageBorderInset;
+		frame.size.width = _backgroundView.frame.size.width - (frame.origin.x * 2);
+		frame.size.height = _backgroundView.frame.size.height - (ImageBorderInset * 2);
+		if ([UIDevice currentDevice].isRetina)
+			frame.size.width -= (ButtonWidth + ButtonMargin);
+		else frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
+		_inputView.frame = frame;
 
-	frame = _accessoryButton.frame;
-	if ([UIDevice currentDevice].isRetina)
-		frame.origin.x = CGRectGetMaxX(_inputView.frame) + ButtonMargin;
-	else frame.origin.x = CGRectGetMaxX(_inputView.frame) + floorf(ButtonMargin);
-	frame.origin.y = (ButtonMargin * 2);
-	frame.size.width = ButtonWidth;
-	frame.size.height = ButtonWidth;
+		frame = _accessoryButton.frame;
+		if ([UIDevice currentDevice].isRetina)
+			frame.origin.x = CGRectGetMaxX(_inputView.frame) + ButtonMargin;
+		else frame.origin.x = CGRectGetMaxX(_inputView.frame) + floorf(ButtonMargin);
+		frame.origin.y = (ButtonMargin * 2);
+		frame.size.width = ButtonWidth;
+		frame.size.height = ButtonWidth;
 
-	_accessoryButton.frame = frame;
+		_accessoryButton.frame = frame;
 #undef ImageBorderInset
 #undef ButtonWidth
 #undef ButtonMargin
+	} completion:NULL];
 
 	_animationDuration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
 }

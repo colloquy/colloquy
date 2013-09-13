@@ -385,27 +385,19 @@ static NSIndexPath *indexPathForFileTransferController(CQFileTransferController 
 		return;
 #endif
 
-	if (animated)
-		[UIView beginAnimations:nil context:NULL];
+	[UIView animateWithDuration:(animated ? .3 : .0) animations:^{
+		[cell takeValuesFromChatViewController:chatViewController];
 
-	[cell takeValuesFromChatViewController:chatViewController];
-
-	if ([chatViewController isMemberOfClass:[CQDirectChatController class]] || [chatViewController isMemberOfClass:[CQConsoleController class]])
-		cell.showsUserInMessagePreviews = NO;
-
-	if (animated)
-		[UIView commitAnimations];
+		if ([chatViewController isMemberOfClass:[CQDirectChatController class]] || [chatViewController isMemberOfClass:[CQConsoleController class]])
+			cell.showsUserInMessagePreviews = NO;
+	}];
 }
 
 #if ENABLE(FILE_TRANSFERS)
 - (void) _refreshFileTransferCell:(CQFileTransferTableCell *) cell withController:(CQFileTransferController *) controller animated:(BOOL) animated {
-	if (animated)
-		[UIView beginAnimations:nil context:NULL];
-
-	[cell takeValuesFromController:controller];
-
-	if (animated)
-		[UIView commitAnimations];
+	[UIView animateWithDuration:(animated ? .3 : .0) animations:^{
+		[cell takeValuesFromController:controller];
+	}];
 }
 #endif
 
