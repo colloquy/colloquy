@@ -541,7 +541,8 @@
 	if (!headerView)
 		return 0.;
 	if ([UIDevice currentDevice].isSystemSeven)
-		return 35.;
+		if ([UIDevice currentDevice].isRetina)
+			return 22.5;
 	return 22.;
 }
 

@@ -6,7 +6,7 @@
 		return nil;
 
 	if ([UIDevice currentDevice].isSystemSeven) {
-		self.backgroundColor = [UIColor colorWithRed:(238. / 255.) green:(238. / 255.) blue:(244. / 255.) alpha:1.];
+		self.backgroundColor = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
 	} else {
 		_backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
 
@@ -31,7 +31,7 @@
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
 	if ([UIDevice currentDevice].isSystemSeven) {
-		_textLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
+		_textLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 		_textLabel.textColor = [UIColor colorWithWhite:(63. / 255.) alpha:1.];
 	} else {
 #endif
@@ -82,7 +82,7 @@
 		[UIView animateWithDuration:(1. / 3.) animations:^{
 			if (highlighted || self.selected)
 				self.backgroundColor = [UIColor colorWithWhite:(228. / 255.) alpha:1.];
-			else self.backgroundColor = [UIColor colorWithRed:(238. / 255.) green:(238. / 255.) blue:(244. / 255.) alpha:1.];
+			else self.backgroundColor = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
 		}];
 	} else {
 		_backgroundImageView.alpha = (highlighted || self.selected ? 1. : 0.9);
@@ -100,7 +100,7 @@
 		[UIView animateWithDuration:(1. / 6.) animations:^{
 			if (selected || self.highlighted)
 				self.backgroundColor = [UIColor colorWithWhite:(228. / 255.) alpha:1.];
-			else self.backgroundColor = [UIColor colorWithRed:(238. / 255.) green:(238. / 255.) blue:(244. / 255.) alpha:1.];
+			else self.backgroundColor = [UIColor colorWithWhite:(247. / 255.) alpha:1.];
 		}];
 	} else {
 		_backgroundImageView.alpha = (selected || self.highlighted ? 1. : 0.9);
