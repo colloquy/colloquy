@@ -29,10 +29,6 @@
 		1C1004F8162A4C30003090A9 /* members-large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C1004F7162A4C30003090A9 /* members-large@2x.png */; };
 		1C1004FB162A4D4F003090A9 /* info-large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C1004FA162A4D4F003090A9 /* info-large@2x.png */; };
 		1C124A720F097575008F181B /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C124A710F097575008F181B /* AudioToolbox.framework */; };
-		1C124B410F0A0244008F181B /* browserBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C124B3E0F0A0244008F181B /* browserBack.png */; };
-		1C124B420F0A0244008F181B /* browserReload.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C124B3F0F0A0244008F181B /* browserReload.png */; };
-		1C124B430F0A0244008F181B /* browserStop.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C124B400F0A0244008F181B /* browserStop.png */; };
-		1C124BE70F0A13ED008F181B /* browserSafari.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C124BE60F0A13ED008F181B /* browserSafari.png */; };
 		1C1253290F0D4FC1008F181B /* standard-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 1C1253280F0D4FC1008F181B /* standard-dark.css */; };
 		1C1254A40F0D8D7F008F181B /* CQChatCreationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1254A30F0D8D7F008F181B /* CQChatCreationViewController.m */; };
 		1C1255670F0EAA69008F181B /* CQChatEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1255660F0EAA69008F181B /* CQChatEditViewController.m */; };
@@ -137,11 +133,6 @@
 		1CA2657611C455E500AB4E44 /* userOperator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2656F11C455E500AB4E44 /* userOperator@2x.png */; };
 		1CA2657711C455E500AB4E44 /* userSuperOperator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2657011C455E500AB4E44 /* userSuperOperator@2x.png */; };
 		1CA2657811C455E500AB4E44 /* userVoice@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2657111C455E500AB4E44 /* userVoice@2x.png */; };
-		1CA2657C11C457CC00AB4E44 /* browserSafari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2657B11C457CC00AB4E44 /* browserSafari@2x.png */; };
-		1CA2659211C4588300AB4E44 /* browserInstapaper@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2659111C4588300AB4E44 /* browserInstapaper@2x.png */; };
-		1CA2659711C45B0000AB4E44 /* browserBack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2659511C45B0000AB4E44 /* browserBack@2x.png */; };
-		1CA2659811C45B0000AB4E44 /* browserReload@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2659611C45B0000AB4E44 /* browserReload@2x.png */; };
-		1CA2659C11C45C4B00AB4E44 /* browserStop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA2659B11C45C4B00AB4E44 /* browserStop@2x.png */; };
 		1CA265A911C49A8600AB4E44 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA265A811C49A8600AB4E44 /* Default@2x.png */; };
 		1CA265CB11C49FC800AB4E44 /* personBlueSmall@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA265C911C49FC800AB4E44 /* personBlueSmall@2x.png */; };
 		1CA265CC11C49FC800AB4E44 /* personWhiteSmall@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CA265CA11C49FC800AB4E44 /* personWhiteSmall@2x.png */; };
@@ -228,7 +219,6 @@
 		891E84D4123F0C8C00EC3C0F /* NSCharacterSetAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 891E84D3123F0C8C00EC3C0F /* NSCharacterSetAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8957DEE11086BA3700F21648 /* CQTableViewSectionHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 8957DEE01086BA3700F21648 /* CQTableViewSectionHeader.m */; };
 		896E84610F15AB6C00D810FE /* notes.css in Resources */ = {isa = PBXBuildFile; fileRef = 896E84600F15AB6C00D810FE /* notes.css */; };
-		897C0D670F99154500F9D8B5 /* browserInstapaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 897C0D660F99154500F9D8B5 /* browserInstapaper.png */; };
 		89997FAC0F171EB600CF0AA2 /* standard-grey-dark.css in Resources */ = {isa = PBXBuildFile; fileRef = 89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */; };
 		89E87C090FA0450800B49230 /* CQSoundController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E87C080FA0450800B49230 /* CQSoundController.m */; };
 		920B6D511719454F00879D86 /* textFieldDarkPiece.png in Resources */ = {isa = PBXBuildFile; fileRef = 920B6D501719454F00879D86 /* textFieldDarkPiece.png */; };
@@ -337,10 +327,6 @@
 		1C1004F7162A4C30003090A9 /* members-large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "members-large@2x.png"; sourceTree = "<group>"; };
 		1C1004FA162A4D4F003090A9 /* info-large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info-large@2x.png"; sourceTree = "<group>"; };
 		1C124A710F097575008F181B /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		1C124B3E0F0A0244008F181B /* browserBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserBack.png; sourceTree = "<group>"; };
-		1C124B3F0F0A0244008F181B /* browserReload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserReload.png; sourceTree = "<group>"; };
-		1C124B400F0A0244008F181B /* browserStop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserStop.png; sourceTree = "<group>"; };
-		1C124BE60F0A13ED008F181B /* browserSafari.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserSafari.png; sourceTree = "<group>"; };
 		1C1253280F0D4FC1008F181B /* standard-dark.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "standard-dark.css"; sourceTree = "<group>"; };
 		1C1254A20F0D8D7F008F181B /* CQChatCreationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CQChatCreationViewController.h; sourceTree = "<group>"; };
 		1C1254A30F0D8D7F008F181B /* CQChatCreationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CQChatCreationViewController.m; sourceTree = "<group>"; };
@@ -491,11 +477,6 @@
 		1CA2656F11C455E500AB4E44 /* userOperator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userOperator@2x.png"; sourceTree = "<group>"; };
 		1CA2657011C455E500AB4E44 /* userSuperOperator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userSuperOperator@2x.png"; sourceTree = "<group>"; };
 		1CA2657111C455E500AB4E44 /* userVoice@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "userVoice@2x.png"; sourceTree = "<group>"; };
-		1CA2657B11C457CC00AB4E44 /* browserSafari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "browserSafari@2x.png"; sourceTree = "<group>"; };
-		1CA2659111C4588300AB4E44 /* browserInstapaper@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "browserInstapaper@2x.png"; sourceTree = "<group>"; };
-		1CA2659511C45B0000AB4E44 /* browserBack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "browserBack@2x.png"; sourceTree = "<group>"; };
-		1CA2659611C45B0000AB4E44 /* browserReload@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "browserReload@2x.png"; sourceTree = "<group>"; };
-		1CA2659B11C45C4B00AB4E44 /* browserStop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "browserStop@2x.png"; sourceTree = "<group>"; };
 		1CA265A811C49A8600AB4E44 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		1CA265C911C49FC800AB4E44 /* personBlueSmall@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "personBlueSmall@2x.png"; sourceTree = "<group>"; };
 		1CA265CA11C49FC800AB4E44 /* personWhiteSmall@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "personWhiteSmall@2x.png"; sourceTree = "<group>"; };
@@ -612,7 +593,6 @@
 		8957DEDF1086BA3700F21648 /* CQTableViewSectionHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQTableViewSectionHeader.h; sourceTree = "<group>"; };
 		8957DEE01086BA3700F21648 /* CQTableViewSectionHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQTableViewSectionHeader.m; sourceTree = "<group>"; };
 		896E84600F15AB6C00D810FE /* notes.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = notes.css; sourceTree = "<group>"; };
-		897C0D660F99154500F9D8B5 /* browserInstapaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = browserInstapaper.png; sourceTree = "<group>"; };
 		89997FAB0F171EB600CF0AA2 /* standard-grey-dark.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "standard-grey-dark.css"; sourceTree = "<group>"; };
 		89E87C070FA0450800B49230 /* CQSoundController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQSoundController.h; path = Mobile/Controllers/CQSoundController.h; sourceTree = "<group>"; };
 		89E87C080FA0450800B49230 /* CQSoundController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQSoundController.m; path = Mobile/Controllers/CQSoundController.m; sourceTree = "<group>"; };
@@ -1106,11 +1086,6 @@
 			isa = PBXGroup;
 			children = (
 				1CBEA7C6100318EF00546847 /* bouncer.png */,
-				1C124B3E0F0A0244008F181B /* browserBack.png */,
-				897C0D660F99154500F9D8B5 /* browserInstapaper.png */,
-				1C124B3F0F0A0244008F181B /* browserReload.png */,
-				1C124BE60F0A13ED008F181B /* browserSafari.png */,
-				1C124B400F0A0244008F181B /* browserStop.png */,
 				1C0F69070F1497BF002BB855 /* bubbleLeft.png */,
 				1C0F69060F1497BF002BB855 /* bubbleRight.png */,
 				1CD468C0102A98AB00A7A49E /* chatBubble.png */,
@@ -1178,11 +1153,6 @@
 			isa = PBXGroup;
 			children = (
 				1CA264D111C33A8000AB4E44 /* bouncer@2x.png */,
-				1CA2659511C45B0000AB4E44 /* browserBack@2x.png */,
-				1CA2659111C4588300AB4E44 /* browserInstapaper@2x.png */,
-				1CA2659611C45B0000AB4E44 /* browserReload@2x.png */,
-				1CA2657B11C457CC00AB4E44 /* browserSafari@2x.png */,
-				1CA2659B11C45C4B00AB4E44 /* browserStop@2x.png */,
 				1CA265F911C4AEF300AB4E44 /* chatBubble@2x.png */,
 				1CA265FA11C4AEF300AB4E44 /* chatBubbleSelected@2x.png */,
 				922C8461174206E5008061B6 /* clear@2x.png */,
@@ -1513,10 +1483,6 @@
 				1CC64C0F0EE98CC600DE91D0 /* userSuperOperator.png in Resources */,
 				1CC64C100EE98CC600DE91D0 /* userVoice.png in Resources */,
 				1CA718AA0EF5F136006225CD /* Settings.bundle in Resources */,
-				1C124B410F0A0244008F181B /* browserBack.png in Resources */,
-				1C124B420F0A0244008F181B /* browserReload.png in Resources */,
-				1C124B430F0A0244008F181B /* browserStop.png in Resources */,
-				1C124BE70F0A13ED008F181B /* browserSafari.png in Resources */,
 				1C1253290F0D4FC1008F181B /* standard-dark.css in Resources */,
 				1C9E1A690F12E62600C18B55 /* info.png in Resources */,
 				1C0F686B0F144DBE002BB855 /* bubbles.css in Resources */,
@@ -1528,7 +1494,6 @@
 				1C840BFA0F15BD9A004665DC /* notesBackground.png in Resources */,
 				89997FAC0F171EB600CF0AA2 /* standard-grey-dark.css in Resources */,
 				1C8CFE970F60E11900B672F9 /* Localizable.strings in Resources */,
-				897C0D670F99154500F9D8B5 /* browserInstapaper.png in Resources */,
 				1C4CE6360FA03D7800215521 /* Beep 1.aiff in Resources */,
 				1C4CE6370FA03D7800215521 /* Beep 2.aiff in Resources */,
 				1C4CE6380FA03D7800215521 /* Bell 1.aiff in Resources */,
@@ -1595,11 +1560,6 @@
 				1CA2657611C455E500AB4E44 /* userOperator@2x.png in Resources */,
 				1CA2657711C455E500AB4E44 /* userSuperOperator@2x.png in Resources */,
 				1CA2657811C455E500AB4E44 /* userVoice@2x.png in Resources */,
-				1CA2657C11C457CC00AB4E44 /* browserSafari@2x.png in Resources */,
-				1CA2659211C4588300AB4E44 /* browserInstapaper@2x.png in Resources */,
-				1CA2659711C45B0000AB4E44 /* browserBack@2x.png in Resources */,
-				1CA2659811C45B0000AB4E44 /* browserReload@2x.png in Resources */,
-				1CA2659C11C45C4B00AB4E44 /* browserStop@2x.png in Resources */,
 				1CA265A911C49A8600AB4E44 /* Default@2x.png in Resources */,
 				1CA265CB11C49FC800AB4E44 /* personBlueSmall@2x.png in Resources */,
 				1CA265CC11C49FC800AB4E44 /* personWhiteSmall@2x.png in Resources */,
