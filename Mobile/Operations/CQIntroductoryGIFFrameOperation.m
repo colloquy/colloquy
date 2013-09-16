@@ -257,12 +257,13 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 	checkAndAdvance(GIFMinimumLZWCodeSizeLength);
 
 	// Scan past chunks of lzw data; each chunk is prefixed with its length. length of 0 is the end of the frame.
-	unsigned char length = 0;
+	// each chunk will be a maximum of 255 bits.
+	unsigned char *length;
 	do {
-		memcpy(&length, bytes, GIFMinimumLZWCodeSizeBlockLengthIdentifierLength);
+		length = (unsigned char *)bytes;
 		checkAndAdvance(GIFMinimumLZWCodeSizeBlockLengthIdentifierLength);
-		checkAndAdvance(length);
-	} while (length);
+		checkAndAdvance(*length);
+	} while (*length);
 
 #undef checkAndAdvance
 
@@ -283,6 +284,9 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 
 	NSMutableData *data = [[_data subdataWithRange:NSMakeRange(0, _introductoryFrameImageDescriptorEndBlock)] mutableCopy];
 	[data appendBytes:GIF89AFileTerminatorNumber length:GIF89AFileTerminatorLength]; // cut off any remaining data
+
+	if (!data.length)
+		return;
 
 	_introductoryFrameImageData = [data copy];
 
