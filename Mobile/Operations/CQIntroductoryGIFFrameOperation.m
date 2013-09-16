@@ -286,7 +286,7 @@ static const NSUInteger GIFMinimumLZWCodeSizeBlockLengthIdentifierLength = 1;
 	[data appendBytes:GIF89AFileTerminatorNumber length:GIF89AFileTerminatorLength]; // cut off any remaining data
 
 	if (!data.length)
-		return;
+		return nil;
 
 	_introductoryFrameImageData = [data copy];
 
