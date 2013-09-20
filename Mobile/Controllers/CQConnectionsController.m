@@ -78,9 +78,11 @@ NSString *CQConnectionsControllerRemovedBouncerSettingsNotification = @"CQConnec
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_willEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
 	}
 
-	[UIDevice currentDevice].batteryMonitoringEnabled = YES;
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_gotRawConnectionMessage:) name:MVChatConnectionGotRawMessageNotification object:nil];
+
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+		[UIDevice currentDevice].batteryMonitoringEnabled = YES;
+	});
 
 	_connectionsNavigationController = [[CQConnectionsNavigationController alloc] init];
 

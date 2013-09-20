@@ -62,8 +62,6 @@ static BOOL showLeaveEvents;
 	if (!(self = [super initWithTarget:target]))
 		return nil;
 
-	[self _updateRightBarButtonItemAnimated:NO];
-
 	_orderedMembers = [[NSMutableArray alloc] initWithCapacity:100];
 
 	_encoding = [[CQSettingsController settingsController] integerForKey:@"CQChatRoomEncoding"];

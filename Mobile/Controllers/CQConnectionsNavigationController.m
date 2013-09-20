@@ -11,12 +11,6 @@
 	if (!(self = [super init]))
 		return nil;
 
-	self.title = NSLocalizedString(@"Connections", @"Connections tab title");
-	self.tabBarItem.image = [UIImage imageNamed:@"connections.png"];
-	self.delegate = self;
-
-	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
-
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userDefaultsChanged) name:CQSettingsDidChangeNotification object:nil];
 
 	return self;
@@ -37,6 +31,12 @@
 		return;
 
 	_connectionsViewController = [[CQConnectionsViewController alloc] init];
+
+	self.title = NSLocalizedString(@"Connections", @"Connections tab title");
+	self.tabBarItem.image = [UIImage imageNamed:@"connections.png"];
+	self.delegate = self;
+
+	self.navigationBar.tintColor = [CQColloquyApplication sharedApplication].tintColor;
 
 	[self pushViewController:_connectionsViewController animated:NO];
 }

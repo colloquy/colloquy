@@ -78,6 +78,7 @@ static BOOL markScrollbackOnMultitasking;
 static NSUInteger singleSwipeGesture;
 static NSUInteger doubleSwipeGesture;
 static NSUInteger tripleSwipeGesture;
+static BOOL historyOnReconnect;
 
 #pragma mark -
 
@@ -108,6 +109,7 @@ static BOOL showingKeyboard;
 	singleSwipeGesture = [[CQSettingsController settingsController] integerForKey:@"CQSingleFingerSwipe"];
 	doubleSwipeGesture = [[CQSettingsController settingsController] integerForKey:@"CQDoubleFingerSwipe"];
 	tripleSwipeGesture = [[CQSettingsController settingsController] integerForKey:@"CQTripleFingerSwipe"];
+	historyOnReconnect = [[CQSettingsController settingsController] boolForKey:@"CQHistoryOnReconnect"];
 
 	NSUInteger newScrollbackLength = [[CQSettingsController settingsController] integerForKey:@"CQScrollbackLength"];
 	if (newScrollbackLength != scrollbackLength) {
@@ -222,8 +224,6 @@ static BOOL showingKeyboard;
 	if (self.user) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_userNicknameDidChange:) name:MVChatUserNicknameChangedNotification object:self.user];
 
-		[self _updateRightBarButtonItemAnimated:NO];
-
 		_encoding = [[CQSettingsController settingsController] integerForKey:@"CQDirectChatEncoding"];
 
 		_watchRule = [[MVChatUserWatchRule alloc] init];
@@ -271,7 +271,7 @@ static BOOL showingKeyboard;
 - (void) restorePersistentState:(NSDictionary *) state usingConnection:(MVChatConnection *) connection {
 	_active = [state[@"active"] boolValue];
 
-	if ([[CQSettingsController settingsController] boolForKey:@"CQHistoryOnReconnect"]) {
+	if (historyOnReconnect) {
 		_pendingPreviousSessionComponents = [[NSMutableArray alloc] init];
 
 		for (NSDictionary *message in state[@"messages"]) {
@@ -430,6 +430,8 @@ static BOOL showingKeyboard;
 
 - (void) viewDidLoad {
 	[super viewDidLoad];
+
+	[self _updateRightBarButtonItemAnimated:NO];
 
 	if ([UIDevice currentDevice].isSystemSeven) {
 		CGFloat topInset = CGRectGetHeight(self.navigationController.navigationBar.frame) + CGRectGetHeight([UIApplication sharedApplication].statusBarFrame);
