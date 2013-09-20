@@ -464,10 +464,10 @@
 		BOOL hasConnectionsToRefresh = ([CQConnectionsController defaultController].bouncers.count || [CQConnectionsController defaultController].connections.count);
 		if (editing) {
 			[self.tableView insertSections:insertionIndexSet withRowAnimation:UITableViewRowAnimationTop];
-			if (hasConnectionsToRefresh) [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, count)] withRowAnimation:UITableViewScrollPositionNone];
+			if (hasConnectionsToRefresh) [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, count)] withRowAnimation:UITableViewRowAnimationNone];
 		} else {
 			[self.tableView deleteSections:insertionIndexSet withRowAnimation:UITableViewRowAnimationTop];
-			if (hasConnectionsToRefresh) [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, count)] withRowAnimation:UITableViewScrollPositionNone];
+			if (hasConnectionsToRefresh) [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, count)] withRowAnimation:UITableViewRowAnimationNone];
 		}
 	} else {
 		[self.tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.25];
