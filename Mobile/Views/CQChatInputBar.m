@@ -605,14 +605,23 @@ retry:
 	_overlayBackgroundViewPiece.frame = frame;
 
 	[UIView animateWithDuration:_animationDuration delay:.0 options:(_animationCurve << 16) animations:^{
-#define ImageBorderInset 10.
-		frame = _inputView.frame;
-		frame.origin.y = ImageBorderInset;
+#define ImageBorderInset 12.
+		frame = self.bounds;
+		if ([UIDevice currentDevice].isSystemSeven)
+			if ([UIDevice currentDevice].isRetina)
+				frame = CGRectMake(6.5, 6.5, frame.size.width - 12., frame.size.height - 12.);
+			else frame = CGRectMake(6., 7., frame.size.width - 12., frame.size.height - 12.);
+		else frame = CGRectMake(6., 7., frame.size.width - 12., frame.size.height - 14.);
+
 		frame.size.width = _backgroundView.frame.size.width - (frame.origin.x * 2);
-		frame.size.height = _backgroundView.frame.size.height - (ImageBorderInset * 2);
 		if ([UIDevice currentDevice].isRetina)
 			frame.size.width -= (ButtonWidth + ButtonMargin);
 		else frame.size.width -= (ButtonWidth + floorf(ButtonMargin));
+
+		if ([UIDevice currentDevice].isSystemSeven) {
+			frame.size.height = (self.frame.size.height - (17));
+			frame.origin.y = (self.frame.size.height - frame.size.height) / 2.;
+		} else frame.size.height = _backgroundView.frame.size.height - (ImageBorderInset * 2);
 		_inputView.frame = frame;
 
 		frame = _accessoryButton.frame;
