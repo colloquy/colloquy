@@ -293,6 +293,8 @@
 		92B257CA174023B300F303B5 /* CQSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B257C9174023B300F303B5 /* CQSettingsController.m */; };
 		92B6661417ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 92B6661317ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf */; };
 		92B6661717ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92B6661617ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m */; };
+		92B6661B17EE437B00BA3DD9 /* Default-7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B6661A17EE437B00BA3DD9 /* Default-7@2x.png */; };
+		92B6661D17EE441D00BA3DD9 /* Default-7-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92B6661C17EE441D00BA3DD9 /* Default-7-568h@2x.png */; };
 		92BB78BD17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */; };
 		92D30F2C116D2B020060EE33 /* UIViewControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D30F2B116D2B020060EE33 /* UIViewControllerAdditions.m */; };
 		92DE5D7917420B05004437C9 /* info-dark.png in Resources */ = {isa = PBXBuildFile; fileRef = 92DE5D7817420B05004437C9 /* info-dark.png */; };
@@ -712,6 +714,8 @@
 		92B6661317ED7C5B00BA3DD9 /* OpenDyslexic-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenDyslexic-Regular.otf"; sourceTree = "<group>"; };
 		92B6661517ED7E0D00BA3DD9 /* CQPreferencesTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CQPreferencesTextViewController.h; path = Controllers/CQPreferencesTextViewController.h; sourceTree = "<group>"; };
 		92B6661617ED7E0D00BA3DD9 /* CQPreferencesTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CQPreferencesTextViewController.m; path = Controllers/CQPreferencesTextViewController.m; sourceTree = "<group>"; };
+		92B6661A17EE437B00BA3DD9 /* Default-7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-7@2x.png"; sourceTree = "<group>"; };
+		92B6661C17EE441D00BA3DD9 /* Default-7-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-7-568h@2x.png"; sourceTree = "<group>"; };
 		92BB78BB17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CQIntroductoryGIFFrameOperation.h; sourceTree = "<group>"; };
 		92BB78BC17DC48EA00CEE84B /* CQIntroductoryGIFFrameOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CQIntroductoryGIFFrameOperation.m; sourceTree = "<group>"; };
 		92D30F2A116D2B020060EE33 /* UIViewControllerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIViewControllerAdditions.h; path = Mobile/Additions/UIViewControllerAdditions.h; sourceTree = "<group>"; };
@@ -1195,6 +1199,8 @@
 				92FCEF85169A508C00F1CE76 /* console@2x.png */,
 				1CA265A811C49A8600AB4E44 /* Default@2x.png */,
 				1C2C995B1608E1680041F46C /* Default-568h@2x.png */,
+				92B6661A17EE437B00BA3DD9 /* Default-7@2x.png */,
+				92B6661C17EE441D00BA3DD9 /* Default-7-568h@2x.png */,
 				1CA2652811C35F5F00AB4E44 /* directChatIcon@2x.png */,
 				1CA265E911C4A8F100AB4E44 /* disclosureArrow@2x.png */,
 				1CA264E611C3488E00AB4E44 /* errorBadgeDim@2x.png */,
@@ -1504,6 +1510,7 @@
 				1C09313B0D80C8F600A2705D /* Defaults.plist in Resources */,
 				1C0937330D80E72F00A2705D /* Icon-57.png in Resources */,
 				1CB318DF0D8644E4006A7513 /* server.png in Resources */,
+				92B6661D17EE441D00BA3DD9 /* Default-7-568h@2x.png in Resources */,
 				92AD95FC17EC21230044B8B1 /* Icon-40@2x.png in Resources */,
 				1CB318E00D8644E4006A7513 /* connectingBadgeDim.png in Resources */,
 				1C0EB67A0D8660E900B6F1BC /* errorBadgeDim.png in Resources */,
@@ -1619,6 +1626,7 @@
 				1CA265D611C4A69800AB4E44 /* tableCellCheckSelected@2x.png in Resources */,
 				92AD95FE17EC21230044B8B1 /* Icon-76@2x.png in Resources */,
 				1CA265EA11C4A8F100AB4E44 /* disclosureArrow@2x.png in Resources */,
+				92B6661B17EE437B00BA3DD9 /* Default-7@2x.png in Resources */,
 				1CA265F511C4ADFB00AB4E44 /* web@2x.png in Resources */,
 				1CA265F611C4ADFB00AB4E44 /* webSelected@2x.png in Resources */,
 				1CA265FB11C4AEF300AB4E44 /* chatBubble@2x.png in Resources */,
